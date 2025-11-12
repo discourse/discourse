@@ -7,11 +7,9 @@
 tr_TR:
   admin_js:
     admin:
-      calendar: "Takvim"
       site_settings:
         categories:
           discourse_post_event: "Discourse Etkinliği"
-          discourse_calendar: "Discourse Takvimi"
   js:
     notifications:
       titles:
@@ -138,6 +136,7 @@ tr_TR:
           dk: "Danimarka"
           ee: "Estonya"
           el: "Yunanistan"
+          gr: "Yunanistan"
           es_an: "İspanya (es_an)"
           es_ar: "İspanya (es_ar)"
           es_ce: "İspanya (es_ce)"

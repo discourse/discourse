@@ -297,7 +297,7 @@ nl:
       header:
         logged_in_members: "Welkom terug, %{preferred_display_name}!"
         anonymous_members: "Welkom bij %{site_name}!"
-      search: "Zoeken"
+      search_placeholder: "Zoeken"
     themes:
       default_description: "Standaard"
       broken_theme_alert: "Je site werkt mogelijk niet omdat een thema/onderdeel fouten bevat. Zie de browserconsole voor meer informatie."
@@ -357,7 +357,7 @@ nl:
     joined: "Lid sinds"
     admin_title: "Beheer"
     show_more: "meer weergeven"
-    show_help: "opties"
+    show_help: "Opties"
     links: "Links"
     links_lowercase:
       one: "link"
@@ -590,6 +590,7 @@ nl:
       other: "%{count} nieuwe topics weergeven"
     preview: "voorbeeld"
     cancel: "Annuleren"
+    done: "Gereed"
     deleting: "Verwijderen…"
     save: "Wijzigingen opslaan"
     saving: "Opslaan…"
@@ -677,10 +678,6 @@ nl:
         claimed_by_you: "Je hebt dit item geclaimd en kunt het beoordelen."
         claimed_by_other: "Dit item kan alleen worden beoordeeld door <b>%{username}</b>."
         automatically_claimed_by: "Dit item wordt momenteel beoordeeld door <b>%{username}</b>."
-      claim:
-        title: "dit topic claimen"
-      unclaim:
-        help: "deze claim verwijderen"
       awaiting_approval: "Wacht op goedkeuring"
       delete: "Verwijderen"
       settings:
@@ -751,7 +748,7 @@ nl:
       replies:
         one: "%{count} antwoord"
         other: "%{count} antwoorden"
-      edit: "Bewerken"
+      edit: "Bericht bewerken"
       save: "Opslaan"
       cancel: "Annuleren"
       new_topic: "Door dit item goed te keuren, wordt eeen nieuw topic gemaakt"
@@ -773,7 +770,6 @@ nl:
           created_at: "Gemaakt op"
           created_at_asc: "Gemaakt op (omgekeerd)"
         priority:
-          title: "Minimale prioriteit"
           any: "(alle)"
           low: "Laag"
           medium: "Middel"
@@ -838,6 +834,7 @@ nl:
           title: "Bericht"
           noun: "bericht"
       flagged_as: "Gemarkeerd als"
+      user_label: "Gebruiker"
       assigned_to: "Toegewezen aan"
       moderator_actions: "Moderatoracties"
       timeline_and_notes: "Tijdlijn en opmerkingen"
@@ -861,13 +858,14 @@ nl:
         chars_remaining: "%{count} tekens resterend"
         delete_note: "Deze opmerking verwijderen"
         delete: "Verwijderen"
-      new_topic_label: "Nieuw topic"
+      topic_label: "Topic"
       queued_user: "Gebruiker in wachtrij"
       posted_in: "Geplaatst in"
       flagged_user: "Gemarkeerde gebruiker"
       review_user: "Gebruiker"
       need_help: "Hulp nodig?"
       copy_link: "Link kopiëren"
+      copy_link_feedback: "Link gekopieerd"
       view_source: "Bron weergeven"
       insights:
         title: "Inzichten"
@@ -875,9 +873,6 @@ nl:
         flagged_by_users:
           one: "Gemarkeerd door %{count} unieke gebruiker"
           other: "Gemarkeerd door %{count} unieke gebruikers"
-        similar_posts: "Soortgelijke eerdere berichten"
-        flagged_in_timeframe: "%{count} eerder gemarkeerd"
-        user_activity: "Gebruikersactiviteit"
         activities:
           new_account: "nieuw account"
           trust_level: "vertrouwensniveau: %{trustLevelName}"
@@ -1787,7 +1782,7 @@ nl:
         invalid: "Die gebruikersnaam is ongeldig. De naam mag alleen cijfers en letters bevatten."
       add_email:
         title: "E-mailadres toevoegen"
-        add: "toevoegen"
+        add: "Toevoegen"
       change_email:
         title: "E-mailadres wijzigen"
         taken: "Sorry, dat e-mailadres is niet beschikbaar."
@@ -2614,6 +2609,7 @@ nl:
       topic_count:
         one: "%{count} topic in deze categorie"
         other: "%{count} topics in deze categorie"
+      read_only: "alleen-lezen"
     timezone_input:
       ambiguous_ist: "IST is ambigu, selecteer een specifieke tijdzone (bijvoorbeeld Azië/Kolkata)"
     select_kit:
@@ -2699,7 +2695,7 @@ nl:
         title: "Bericht vertalen"
         select: "Selecteer vertaling"
         save: "Vertaling opslaan"
-        original_content: "Inhoud van origineel bericht"
+        translation: "Vertaling"
         placeholder: "Voer hier de vertaling voor het bericht in..."
       group_mentioned_limit:
         one: "<b>Waarschuwing!</b> Je hebt <a href='%{group_link}'>%{group}</a> genoemd, maar deze groep heeft meer leden dan de door een beheerder geconfigureerde vermeldingslimiet van %{count} gebruiker. Niemand krijgt een melding."
@@ -2847,6 +2843,9 @@ nl:
         create_topic:
           label: "Nieuw topic"
           desc: Maak een nieuw topic
+        create_personal_message:
+          label: "Nieuw bericht"
+          desc: "Een nieuw persoonlijk bericht maken"
         shared_draft:
           label: "Gedeeld concept"
           desc: "Maak een topicconcept dat alleen zichtbaar is voor toegestane gebruikers"
@@ -2855,7 +2854,6 @@ nl:
           desc: "Antwoorden zonder datum van laatste antwoord te wijzigen"
         toggle_unlisted:
           label: Onzichtbaar schakelen
-          desc: Onzichtbare topics zijn alleen toegankelijk voor leden via een rechtstreekse link
       reload: "Opnieuw laden"
       ignore: "Negeren"
       image_alt_text:
@@ -3339,9 +3337,7 @@ nl:
         one: "%{count} bericht in topic"
         other: "%{count} berichten in topic"
       create: "Nieuw topic"
-      create_disabled_category: "Je mag geen topics maken in deze categorie"
-      create_disabled_tag: "Je mag geen topics maken met deze tag"
-      create_long: "Nieuw topic maken"
+      create_long: "Maak een nieuw topic"
       open_draft: "Concept openen"
       private_message: "Bericht sturen"
       archive_message:
@@ -3508,9 +3504,6 @@ nl:
       auto_close_immediate:
         one: "Het laatste bericht in dit topic is al %{count} uur oud, dus het topic wordt meteen gesloten."
         other: "Het laatste bericht in dit topic is al %{count} uur oud, dus het topic wordt meteen gesloten."
-      auto_close_momentarily:
-        one: "Het laatste bericht in dit topic is al %{count} uur oud, dus het topic wordt gesloten."
-        other: "Het laatste bericht in dit topic is al %{count} uur oud, dus het topic wordt gesloten."
       timeline:
         back: "Terug"
         back_description: "Ga terug naar je laatste ongelezen bericht"
@@ -3781,6 +3774,9 @@ nl:
       title: "Nieuwste berichten"
       empty: "Er zijn geen berichten"
       aria_post_number: "%{title} - bericht %{postNumber}"
+      bulk:
+        clear_all: "Alles wissen"
+        actions: "Bulkacties"
     post:
       confirm_delete: "Weet je zeker dat je dit bericht wilt verwijderen?"
       quote_reply: "Citeren"
@@ -3892,10 +3888,7 @@ nl:
         attachment_upload_not_allowed_for_new_user: "Sorry, nieuwe gebruikers kunnen geen bijlagen uploaden."
         attachment_download_requires_login: "Sorry, je moet aangemeld zijn om bijlagen te downloaden."
       cancel_composer:
-        confirm: "Wat wil je doen met je bericht?"
         discard: "Weggooien"
-        save_draft: "Concept opslaan voor later"
-        keep_editing: "Blijven bewerken"
       via_email: "dit bericht is binnengekomen via e-mail"
       via_auto_generated_email: "dit bericht is binnengekomen via een automatisch gegenereerde e-mail"
       whisper: "dit bericht is alleen toegankelijk voor moderators"
@@ -4128,6 +4121,8 @@ nl:
       style: "Stijlen"
       background_color: "Kleur"
       foreground_color: "Tekstkleur"
+      color_validations:
+        cant_be_empty: "mag niet leeg zijn"
       styles:
         type: "Stijl"
         icon: "Pictogram"
@@ -4503,8 +4498,7 @@ nl:
       readonly: "Weergeven"
     preloader_text: "Laden"
     lightbox:
-      download: "downloaden"
-      open: "originele afbeelding"
+      download: "Downloaden"
       previous: "Vorige (pijltoets naar links)"
       next: "Volgende (pijltoets naar rechts)"
       counter: "%curr% van %total%"
@@ -4548,7 +4542,6 @@ nl:
         go_to_unread_post: "%{shortcut} Naar eerste ongelezen bericht"
       application:
         title: "Toepassing"
-        create: "%{shortcut} Nieuw topic maken"
         notifications: "%{shortcut} Meldingen openen"
         hamburger_menu: "%{shortcut} Navigatiemenu openen"
         user_profile_menu: "%{shortcut} Gebruikersmenu openen"
@@ -4689,7 +4682,6 @@ nl:
       choose_for_topic_required_group:
         one: "selecteer %{count} tag uit '%{name}…"
         other: "selecteer %{count} tags uit '%{name}…"
-      info: "Info"
       default_info: "Deze tag is niet beperkt tot categorieën en heeft geen synoniemen."
       staff_info: "Om beperkingen toe te voegen, moet je deze tag in een <a href=%{basePath}/tag_groups>taggroep</a> plaatsen."
       category_restricted: "Deze tag is beperkt tot categorieën waartoe je geen toegang hebt."
@@ -5215,6 +5207,7 @@ nl:
   admin_js:
     type_to_filter: "Typ om te filteren…"
     settings: "Instellingen"
+    reset_filter: "Resetten"
     admin:
       title: "Discourse-beheerder"
       moderator: "Moderator"
@@ -5247,6 +5240,21 @@ nl:
           title: "Plug-ins"
         advanced:
           title: "Geavanceerd"
+      upcoming_changes:
+        name: "Naam"
+        enabled: "Ingeschakeld"
+        select_groups: "Selecteer groepen…"
+        preview: "Voorbeeld"
+        impact_roles:
+          admins: "Beheerders"
+          moderators: "Moderators"
+          staff: "Medewerker"
+        filter:
+          all: "Alles"
+          enabled: "Ingeschakeld"
+          disabled: "Uitgeschakeld"
+          impact_type_feature: "Functie"
+          impact_type_other: "Anders"
       config:
         about:
           title: "Over je site"
@@ -5277,9 +5285,12 @@ nl:
           title: "Lokalisatie"
           header_description: "Configureer de interfacetaal van je community en andere lokalisatieopties voor je leden"
           keywords: "landinstellingen|taal|tijdzone|unicode|ltr"
-        login_and_authentication:
+        login:
           title: "Aanmelden en verificatie"
           header_description: "Configureer hoe gebruikers zich aanmelden en verifiëren, geheimen en sleutels, OAuth2-providers en meer"
+          sub_pages:
+            common_settings:
+              title: "Instellingen"
         logo:
           title: "Logo"
           header_description: "Configureer de logo's en pictogrammen die op je site worden gebruikt"
@@ -6446,7 +6457,6 @@ nl:
         copy_to_clipboard: "Kopiëren naar klembord"
         copied_to_clipboard: "Gekopieerd naar klembord"
         copy_to_clipboard_error: "Fout bij kopiëren van gegevens naar klembord"
-        theme_owner: "Niet bewerkbaar, eigendom van:"
         email_templates:
           title: "E-mailadres"
           subject: "Onderwerp"
@@ -6454,6 +6464,7 @@ nl:
           body: "Inhoud"
           revert: "Wijzigingen ongedaan maken"
           revert_confirm: "Weet je zeker dat je je wijzigingen ongedaan wilt maken?"
+          edit: "Bewerken"
         component:
           all_filter: "Alles"
           used_filter: "Gebruikt"
@@ -6675,6 +6686,8 @@ nl:
         schema:
           title: "Instelling %{name} bewerken"
           back_button: "Terug naar %{name}"
+          move_up: "Omhoog verplaatsen"
+          move_down: "Omlaag verplaatsen"
           fields:
             required: "*vereist"
             groups:
@@ -7451,7 +7464,6 @@ nl:
             cancel: "Annuleren"
         merging_user: "Gebruiker samenvoegen…"
         merge_failed: "Er is een fout opgetreden tijdens het samenvoegen van de gebruikers."
-        delete_posts_forbidden_because_staff: "Kan niet alle berichten van beheerders en moderators verwijderen."
         delete_forbidden:
           one: "Gebruikers kunnen niet worden verwijderd als ze berichten hebben geplaatst. Verwijder alle berichten voordat je een gebruiker probeert te verwijderen. (Berichten ouder dan %{count} dag kunnen niet worden verwijderd.)"
           other: "Gebruikers kunnen niet worden verwijderd als ze berichten hebben geplaatst. Verwijder alle berichten voordat je een gebruiker probeert te verwijderen. (Berichten ouder dan %{count} dagen kunnen niet worden verwijderd.)"

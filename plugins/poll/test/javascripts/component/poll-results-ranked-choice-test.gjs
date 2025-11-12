@@ -34,8 +34,6 @@ module("Poll | Component | poll-results-ranked-choice", function (hooks) {
   setupRenderingTest(hooks);
 
   test("Renders the ranked choice results component correctly", async function (assert) {
-    const self = this;
-
     this.setProperties({
       rankedChoiceOutcome: RANKED_CHOICE_OUTCOME,
     });
@@ -43,7 +41,7 @@ module("Poll | Component | poll-results-ranked-choice", function (hooks) {
     await render(
       <template>
         <PollResultsRankedChoice
-          @rankedChoiceOutcome={{self.rankedChoiceOutcome}}
+          @rankedChoiceOutcome={{this.rankedChoiceOutcome}}
         />
       </template>
     );
@@ -62,14 +60,12 @@ module("Poll | Component | poll-results-ranked-choice", function (hooks) {
   });
 
   test("Renders the ranked choice results component without error when outcome data is empty", async function (assert) {
-    const self = this;
-
     this.rankedChoiceOutcome = null;
 
     await render(
       <template>
         <PollResultsRankedChoice
-          @rankedChoiceOutcome={{self.rankedChoiceOutcome}}
+          @rankedChoiceOutcome={{this.rankedChoiceOutcome}}
         />
       </template>
     );

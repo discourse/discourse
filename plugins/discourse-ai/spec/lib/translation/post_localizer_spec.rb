@@ -87,6 +87,82 @@ describe DiscourseAi::Translation::PostLocalizer do
         expect(out.cooked).to eq(cooked)
       }.to_not change { PostLocalization.count }
     end
+
+    context "with cooked post processing" do
+      describe "oneboxing" do
+        fab!(:topic_to_onebox, :topic)
+
+        let(:onebox_url) { topic_to_onebox.url }
+        let(:post) { Fabricate(:post, raw: onebox_url) }
+        let(:translated_raw) { onebox_url }
+        let(:onebox_html) do
+          "<aside class=\"onebox\"><a href=\"#{onebox_url}\">#{topic_to_onebox.title}</a></aside>"
+        end
+
+        before { Oneboxer.stubs(:onebox).with(onebox_url, anything).returns(onebox_html) }
+
+        it "creates oneboxes in the cooked HTML" do
+          post_raw_translator_stub(
+            { text: post.raw, target_locale: "ja", translated: translated_raw },
+          )
+          localization = described_class.localize(post, "ja")
+          expect(localization.cooked).to include(onebox_html)
+        end
+      end
+
+      describe "image lightbox" do
+        fab!(:image_url) { "https://cat.com/image.png" }
+        fab!(:uploaded_image_url) { "https://cat.com/uploaded.png" }
+        fab!(:upload) do
+          Fabricate(
+            :upload,
+            url: uploaded_image_url,
+            width: 2000,
+            height: 1500,
+            original_filename: "test_image.png",
+          )
+        end
+        fab!(:post) { Fabricate(:post, raw: "![alt text](#{image_url})") }
+        fab!(:translated_raw) { "![alt text](#{image_url})" }
+
+        before do
+          SiteSetting.max_image_width = 500
+          SiteSetting.max_image_height = 500
+          Upload.stubs(:get_from_url).with(image_url).returns(upload)
+          upload.stubs(:create_thumbnail!)
+          upload.stubs(:thumbnail).returns(nil)
+          upload.stubs(:dominant_color).returns(nil)
+        end
+
+        it "processes images including optimize_image! in the cooked HTML" do
+          post_raw_translator_stub(
+            { text: post.raw, target_locale: "ja", translated: translated_raw },
+          )
+          localization = described_class.localize(post, "ja")
+          expect(localization.cooked).to include("lightbox-wrapper")
+          expect(localization.cooked).to include(uploaded_image_url)
+        end
+      end
+
+      it "continues translation even if post-processing fails" do
+        post_raw_translator_stub(
+          { text: post.raw, target_locale: "ja", translated: translated_raw },
+        )
+
+        LocalizedCookedPostProcessor
+          .any_instance
+          .stubs(:post_process)
+          .raises(Errno::ECONNREFUSED.new("Connection refused"))
+
+        expect {
+          localization = described_class.localize(post, "ja")
+          expect(localization).to be_a(PostLocalization)
+          expect(localization.raw).to eq(translated_raw)
+          expect(localization.cooked).to eq(cooked) # Basic cooked content without post-processing
+          expect(localization.persisted?).to eq(true)
+        }.to change { PostLocalization.count }.by(1)
+      end
+    end
   end
 
   describe ".has_relocalize_quota?" do

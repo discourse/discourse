@@ -50,6 +50,26 @@ describe "Custom sidebar sections", type: :system do
     expect(sidebar).to have_section_link("My preferences", target: "_self")
   end
 
+  it "prioritizes exact url matches over ember routes" do
+    sidebar_section = SidebarSection.find_by(section_type: "community")
+    sidebar_url = Fabricate(:sidebar_url, name: "Topics", value: "/latest")
+    sidebar_url_2 =
+      Fabricate(:sidebar_url, name: "Sorted latest", value: "/latest?ascending=true&order=posts")
+    Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+    Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_2)
+
+    sign_in user
+
+    visit("/latest?ascending=true&order=posts")
+    expect(sidebar).to have_exact_url_match_link("Sorted latest")
+    expect(sidebar).to have_no_active_links
+    expect(sidebar).to have_no_exact_url_match_link("everything")
+
+    visit("/latest")
+    expect(sidebar).to have_active_link("everything")
+    expect(sidebar).to have_no_exact_url_match_link("Sorted latest")
+  end
+
   it "allows the user to create custom section with `/` path" do
     SiteSetting.top_menu = "read|posted|latest"
 
@@ -163,12 +183,10 @@ describe "Custom sidebar sections", type: :system do
     sidebar.click_add_section_button
     sidebar.click_add_link_button
 
-    try_until_success do
-      is_focused =
-        page.evaluate_script("document.activeElement.classList.contains('multi-select-header')")
+    is_focused =
+      page.evaluate_script("document.activeElement.classList.contains('multi-select-header')")
 
-      expect(is_focused).to be true
-    end
+    expect(is_focused).to be true
   end
 
   it "accessibility - when customization modal is closed, trigger is refocused" do
@@ -180,11 +198,9 @@ describe "Custom sidebar sections", type: :system do
 
     expect(section_modal).to be_closed
 
-    try_until_success do
-      is_focused = page.evaluate_script("document.activeElement.classList.contains('add-section')")
+    is_focused = page.evaluate_script("document.activeElement.classList.contains('add-section')")
 
-      expect(is_focused).to be true
-    end
+    expect(is_focused).to be true
   end
 
   it "allows the user to edit custom section" do

@@ -1,0 +1,23 @@
+.c-routes.--search .c-search {
+  padding-block: 1.25rem;
+  margin-inline: 1rem;
+}
+
+.c-routes.--search .c-search,
+.c-drawer-routes.--search {
+  .alert {
+    margin-top: 0.5rem;
+  }
+}
+
+.chat-search__filters {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+
+  .filter-input-container {
+    width: 100%;
+    max-width: 500px;
+  }
+}

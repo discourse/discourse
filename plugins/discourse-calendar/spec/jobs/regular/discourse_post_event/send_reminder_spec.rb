@@ -363,7 +363,7 @@ describe Jobs::DiscoursePostEventSendReminder do
 
       def advance_to_next_occurrence
         freeze_time(recurring_event.original_starts_at + 1.day + 1.hour)
-        recurring_event.event_dates.pending.update_all(finished_at: Time.current - 1.hour)
+        recurring_event.event_dates.pending.update_all(finished_at: 1.hour.ago)
         recurring_event.set_next_date
       end
 
@@ -471,6 +471,39 @@ describe Jobs::DiscoursePostEventSendReminder do
         expect { send_reminder(expired_event) }.not_to change {
           going_user.reload.unread_notifications
         }
+      end
+    end
+
+    context "with DST transitions" do
+      fab!(:dst_user, :user)
+
+      it "maintains wall-clock time for events and reminders across DST transitions" do
+        start_time = Time.find_zone("America/New_York").parse("2025-10-29 11:00")
+
+        dst_event =
+          Fabricate(
+            :event,
+            post: Fabricate(:post),
+            reminders: "notification.5.minutes",
+            original_starts_at: start_time,
+            original_ends_at: start_time + 1.hour,
+            timezone: "America/New_York",
+            recurrence: "every_week",
+          )
+
+        DiscoursePostEvent::Invitee.create_attendance!(dst_user.id, dst_event.id, :going)
+
+        freeze_time(Time.find_zone("America/New_York").parse("2025-11-05 10:50"))
+
+        dst_event.set_next_date
+        monitor_job = Jobs::DiscourseCalendar::MonitorEventDates.new
+        monitor_job.execute({})
+
+        expect(dst_user.reload.unread_notifications).to eq(0)
+
+        freeze_time(Time.find_zone("America/New_York").parse("2025-11-05 10:55"))
+
+        expect { monitor_job.execute({}) }.to change { dst_user.reload.unread_notifications }.by(1)
       end
     end
   end

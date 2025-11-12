@@ -10,6 +10,7 @@ import DPageSubheader from "discourse/components/d-page-subheader";
 import avatar from "discourse/helpers/avatar";
 import formatDate from "discourse/helpers/format-date";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
@@ -32,7 +33,7 @@ export default class AutomationList extends Component {
         didConfirm: () => {
           try {
             automation.destroyRecord();
-            this.args.model.removeObject(automation);
+            removeValueFromArray(this.args.model.content, automation);
             automation = null;
           } catch (e) {
             popupAjaxError(e);
@@ -90,7 +91,7 @@ export default class AutomationList extends Component {
         </:actions>
       </DPageSubheader>
 
-      {{#if @model.length}}
+      {{#if @model.content.length}}
         <table class="d-admin-table automations">
           <thead>
             <tr>
@@ -113,7 +114,7 @@ export default class AutomationList extends Component {
             </tr>
           </thead>
           <tbody>
-            {{#each @model as |automation|}}
+            {{#each @model.content as |automation|}}
               <tr class="d-admin-row__content">
                 {{#if automation.script.not_found}}
                   <td

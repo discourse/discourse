@@ -151,7 +151,7 @@ th:
     welcome_banner:
       header:
         anonymous_members: "ยินดีต้อนรับสู่ %{site_name}!"
-      search: "ค้นหา"
+      search_placeholder: "ค้นหา"
     themes:
       default_description: "ค่าเริ่มต้น"
       only_admins: "(ข้อความนี้จะแสดงเฉพาะผู้ดูแลไซต์เท่านั้น)"
@@ -305,6 +305,7 @@ th:
       other: "ดู%{count}กระทู้ใหม่"
     preview: "แสดงตัวอย่าง"
     cancel: "ยกเลิก"
+    done: "เสร็จ"
     save: "บันทึกการเปลี่ยนแปลง"
     saved: "บันทึกแล้ว!"
     upload: "อัปโหลด"
@@ -353,7 +354,6 @@ th:
       title: "รีวิว"
       topic: "กระทู้:"
       filtered_user: "ผู้ใช้"
-      filtered_reviewed_by: "รีวิวโดย"
       show_all_topics: "แสดงกระทู้ทั้งหมด"
       deleted_post: "(โพสต์ถูกลบ)"
       deleted_user: "(ผู้ใช้ถูกลบ)"
@@ -382,7 +382,7 @@ th:
           other: "%{count} ผู้ใช้"
       replies:
         other: "%{count} ตอบ"
-      edit: "แก้ไข"
+      edit: "แก้ไขโพสต์"
       save: "บันทึก"
       cancel: "ยกเลิก"
       filters:
@@ -437,8 +437,10 @@ th:
         reviewable_post:
           title: "โพสต์"
           noun: "โพส"
+      user_label: "ผู้ใช้"
       notes:
         delete: "ลบ"
+      topic_label: "หัวข้อ"
       review_user: "ผู้ใช้"
       insights:
         activities:
@@ -1436,8 +1438,9 @@ th:
           desc: ตอบกลับโพสต์ที่เจาะจง
         reply_to_topic:
           label: ตอบกลับกระทู้
-        create_topic:
-          label: "กระทู้ใหม่"
+        create_personal_message:
+          label: "ข้อความใหม่"
+          desc: "สร้างข้อความส่วนตัวใหม่"
         shared_draft:
           label: "แบบร่างที่ถูกแบ่งปัน"
         toggle_topic_bump:
@@ -1659,7 +1662,6 @@ th:
       filter_to:
         other: " %{count} โพสต์ในกระทู้"
       create: "กระทู้ใหม่"
-      create_long: "สร้างกระทู้ใหม่"
       open_draft: "เปิดแบบร่าง"
       private_message: "เริ่มข้อความ"
       archive_message:
@@ -2319,7 +2321,6 @@ th:
         go_to_unread_post: "%{shortcut}ไปยังโพสต์แรกที่ยังไม่ได้อ่าน"
       application:
         title: "แอปพลิเคชัน"
-        create: "%{shortcut} สร้างกระทู้ใหม่"
         notifications: "%{shortcut} เปิดการแจ้งเตือน"
         user_profile_menu: "%{shortcut} เปิดเมนูผู้ใช้"
         show_incoming_updated_topics: "%{shortcut} แสดงกระทู้ที่อัปเดต"
@@ -2390,7 +2391,6 @@ th:
       selector_remove_filter: "เอาตัวกรองออก"
       tags: "แท็ก"
       choose_for_topic: "แท็กทางเลือก"
-      info: "ข้อมูล"
       tag_groups_info:
         other: "แท็กนี้เป็นของกลุ่มเหล่านี้: %{tag_groups}"
       category_restrictions:
@@ -2563,6 +2563,17 @@ th:
           title: "ความปลอดภัย"
         plugins:
           title: "ตัวเสริม"
+      upcoming_changes:
+        name: "ชื่อ"
+        preview: "แสดงตัวอย่าง"
+        impact_roles:
+          admins: "แอดมิน"
+          moderators: "ผู้ดูแลระบบ"
+          staff: "ทีมงาน"
+        filter:
+          all: "ทั้งหมด"
+          disabled: "ปิดใช้งานแล้ว"
+          impact_type_other: "อื่นๆ"
       config:
         developer:
           title: "นักพัฒนา"
@@ -2572,6 +2583,10 @@ th:
           title: "ไฟล์"
         legal:
           title: "กฎ"
+        login:
+          sub_pages:
+            common_settings:
+              title: "การตั้งค่า"
         logo:
           form:
             mobile: "โทรศัพท์"
@@ -2898,12 +2913,12 @@ th:
         delete: "ลบ"
         delete_confirm: 'คุณแน่ใจหรือว่าต้องการลบ "%{theme_name}"'
         color: "สี"
-        theme_owner: "ไม่สามารถแก้ไขได้ เป็นเจ้าของโดย:"
         email_templates:
           title: "อีเมล"
           subject: "หัวข้อ"
           revert: "ย้อนกลับการแก้ไข"
           revert_confirm: "คุณแน่ใจหรือว่าจะย้อนกลับการแก้ไข"
+          edit: "แก้ไข"
         component:
           all_filter: "ทั้งหมด"
           disabled_filter: "ปิดใช้งานแล้ว"
@@ -3218,7 +3233,6 @@ th:
             text: "ถ่ายโอน @%{username} ไปยัง @%{targetUsername}"
             transfer_and_delete: "ถ่ายโอนและลบ @%{username}"
             cancel: "ยกเลิก"
-        delete_posts_forbidden_because_staff: "ไม่สามารถลบโพสต์ทั้งหมดของแอดมินและผู้ดูแลระบบได้"
         deleted: "ผู้ใช้ถูกลบแล้ว"
         delete_failed: "มีข้อผิดพลาดขณะกำลังลบผู้ใช้นั้น กรุณาตรวจสอบอีกครั้งว่าโพสต์ทั้งหมดถูกลบก่อนลบผู้ใช้นั้น"
         send_activation_email: "ส่งอีเมลยืนยันตัวตน"

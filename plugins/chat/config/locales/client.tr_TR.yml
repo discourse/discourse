@@ -326,6 +326,8 @@ tr_TR:
       chat_message_separator:
         today: Bugün
         yesterday: Dün
+      search_view:
+        filter_placeholder: Mesajlarda ara
       members_view:
         filter_placeholder: Üye bul
         add_member: Üye Ekle
@@ -342,6 +344,7 @@ tr_TR:
         tabs:
           members: Üyeler
           settings: Ayarlar
+          search: Ara
         remove_member: "Kaldır"
       new_message_modal:
         title: Mesaj gönder
@@ -433,6 +436,7 @@ tr_TR:
           topic: "Konu"
       reviewable:
         type: "Sohbet mesajı"
+        message_in_channel: "Kanal"
       reactions:
         only_you: "<span>Şu şekilde tepki verdiniz: </span>:%{emoji}:"
         you_and_single_user: "<span>Siz ve %{username} şu şekilde tepki verdiniz: </span>:%{emoji}:"
@@ -495,6 +499,11 @@ tr_TR:
           create_export: "Dışa aktarma oluştur"
           confirm_export: "Bu, tüm kanallardaki tüm mesajları dışa aktarır ve sonucu size kişisel bir mesajla gönderir. Dışa aktarmak istediğinizden emin misiniz?"
           export_has_started: "Dışa aktarma başladı. Hazır olduğunda bir kişisel mesaj alacaksınız."
+      search:
+        no_results: "Sonuç bulunamadı"
+        sort:
+          relevance: "İlgi"
+          latest: "En son"
       my_threads:
         title: Konularım
         aria_label: "Konu listeme geç"
@@ -736,6 +745,8 @@ tr_TR:
         chat:
           title: Sohbet
     sidebar:
+      start_new_dm:
+        title: Kişisel sohbet oluşturun
       panels:
         chat:
           label: "Sohbet"

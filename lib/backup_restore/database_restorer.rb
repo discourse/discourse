@@ -104,17 +104,39 @@ module BackupRestore
         "CREATE SCHEMA", # PostgreSQL 11+
         "COMMENT ON SCHEMA", # PostgreSQL 11+
         "SET default_table_access_method", # PostgreSQL 12
+        "CREATE EXTENSION",
+        "COMMENT ON EXTENSION",
+        "\\\\restrict",
+        "\\\\unrestrict",
       ].join("|")
 
-      command = "sed -E '/^(#{unwanted_sql})/d' #{@db_dump_path}"
+      commands = [
+        "/^(#{unwanted_sql})/d;",
+        "/^CREATE FUNCTION discourse_functions/,/^\\$\\$;$/d",
+        "/^CREATE (SERVER|USER MAPPING|FOREIGN TABLE)/,/^ *\\);/d",
+      ]
+
       if BackupRestore.postgresql_major_version < 11
-        command = "#{command} | sed -E 's/^(CREATE TRIGGER.+EXECUTE) FUNCTION/\\1 PROCEDURE/'"
+        commands << "s/^(CREATE TRIGGER.+EXECUTE) FUNCTION/\\1 PROCEDURE/"
       end
-      command
+
+      <<~COMMAND
+        sed -E '
+          #{commands.join(";\n")}
+        ' #{@db_dump_path}
+      COMMAND
     end
 
     def restore_dump_command
-      "#{sed_command} | #{self.class.psql_command} 2>&1"
+      nonce = SecureRandom.hex
+
+      <<~CMD
+        (
+          printf '%s\\n' "\\\\restrict #{nonce}"
+          #{sed_command}
+          printf '%s\\n' "\\\\unrestrict #{nonce}"
+        ) | #{self.class.psql_command} 2>&1
+      CMD
     end
 
     def self.psql_command
@@ -155,6 +177,7 @@ module BackupRestore
               "SKIP_POST_DEPLOYMENT_MIGRATIONS" => "0",
               "SKIP_OPTIMIZE_ICONS" => "1",
               "DISABLE_TRANSLATION_OVERRIDES" => "1",
+              "SKIP_SEED_FU" => "1",
             },
             "rake",
             "db:migrate",

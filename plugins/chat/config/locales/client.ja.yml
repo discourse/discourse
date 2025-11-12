@@ -310,6 +310,8 @@ ja:
       chat_message_separator:
         today: 今日
         yesterday: 昨日
+      search_view:
+        filter_placeholder: メッセージを検索
       members_view:
         filter_placeholder: メンバーを検索
         add_member: メンバーを追加
@@ -326,6 +328,7 @@ ja:
         tabs:
           members: メンバー
           settings: 設定
+          search: 検索
         remove_member: "削除"
       new_message_modal:
         title: メッセージを送信する
@@ -405,6 +408,7 @@ ja:
           topic: "トピック"
       reviewable:
         type: "チャットメッセージ"
+        message_in_channel: "チャンネル"
       reactions:
         only_you: ":%{emoji}: <span>でリアクションしました</span>"
         you_and_single_user: "<span>あなたと %{username} が :%{emoji}: でリアクションしました</span>"
@@ -465,6 +469,10 @@ ja:
           create_export: "エクスポートを作成"
           confirm_export: "これにより、すべてのチャンネルからすべてのメッセージがエクスポートされ、その結果が個人メッセージで送信されます。エクスポートしてもよろしいですか？"
           export_has_started: "エクスポートが開始されました。準備ができたら PM が届きます。"
+      search:
+        sort:
+          relevance: "関連性の高い項目"
+          latest: "最新"
       my_threads:
         title: 自分のスレッド
         aria_label: "スレッドリストに切り替える"
@@ -696,6 +704,8 @@ ja:
         chat:
           title: チャット
     sidebar:
+      start_new_dm:
+        title: パーソナルチャットを作成
       panels:
         chat:
           label: "チャット"

@@ -17,36 +17,32 @@ module("Discourse Lazy Videos | Component | lazy-video", function (hooks) {
   };
 
   test("displays the correct video title", async function (assert) {
-    const self = this;
     await render(
-      <template><LazyVideo @videoAttributes={{self.attributes}} /></template>
+      <template><LazyVideo @videoAttributes={{this.attributes}} /></template>
     );
 
     assert.dom(".title-link").hasText(this.attributes.title);
   });
 
   test("uses the correct video start time", async function (assert) {
-    const self = this;
     await render(
-      <template><LazyVideo @videoAttributes={{self.attributes}} /></template>
+      <template><LazyVideo @videoAttributes={{this.attributes}} /></template>
     );
 
     assert.dom(".youtube-onebox").hasAttribute("data-video-start-time", "234");
   });
 
   test("displays the correct provider icon", async function (assert) {
-    const self = this;
     await render(
-      <template><LazyVideo @videoAttributes={{self.attributes}} /></template>
+      <template><LazyVideo @videoAttributes={{this.attributes}} /></template>
     );
 
     assert.dom(".icon.youtube-icon").exists();
   });
 
   test("uses the dominant color from the dom", async function (assert) {
-    const self = this;
     await render(
-      <template><LazyVideo @videoAttributes={{self.attributes}} /></template>
+      <template><LazyVideo @videoAttributes={{this.attributes}} /></template>
     );
 
     assert
@@ -55,9 +51,8 @@ module("Discourse Lazy Videos | Component | lazy-video", function (hooks) {
   });
 
   test("loads the iframe when clicked", async function (assert) {
-    const self = this;
     await render(
-      <template><LazyVideo @videoAttributes={{self.attributes}} /></template>
+      <template><LazyVideo @videoAttributes={{this.attributes}} /></template>
     );
     assert.dom(".lazy-video-container.video-loaded").doesNotExist();
 
@@ -66,15 +61,14 @@ module("Discourse Lazy Videos | Component | lazy-video", function (hooks) {
   });
 
   test("accepts an optional onLoadedVideo callback function", async function (assert) {
-    const self = this;
     this.set("foo", 1);
     this.set("onLoadedVideo", () => this.set("foo", 2));
 
     await render(
       <template>
         <LazyVideo
-          @videoAttributes={{self.attributes}}
-          @onLoadedVideo={{self.onLoadedVideo}}
+          @videoAttributes={{this.attributes}}
+          @onLoadedVideo={{this.onLoadedVideo}}
         />
       </template>
     );

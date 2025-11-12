@@ -25,13 +25,13 @@ module VideoConversion
         domain, path = url.split("/", 2)
 
         # Verify the domain contains our bucket
-        if !domain&.include?(SiteSetting.s3_upload_bucket)
+        if !domain&.include?(s3_upload_bucket)
           raise Discourse::InvalidParameters.new(
-                  "Upload URL domain for upload ID #{@upload.id} does not contain expected bucket name: #{SiteSetting.s3_upload_bucket}",
+                  "Upload URL domain for upload ID #{@upload.id} does not contain expected bucket name: #{s3_upload_bucket}",
                 )
         end
 
-        input_path = "s3://#{SiteSetting.s3_upload_bucket}/#{path}"
+        input_path = "s3://#{s3_upload_bucket}/#{path}"
         settings = build_conversion_settings(input_path, output_path)
 
         begin
@@ -102,7 +102,10 @@ module VideoConversion
       when "COMPLETE"
         STATUS_COMPLETE
       when "ERROR"
-        Rails.logger.error("MediaConvert job #{job_id} failed")
+        Rails.logger.error(
+          "MediaConvert job #{job_id} failed. Error Code: #{response.job.error_code}, " \
+            "Error Message: #{response.job.error_message}, Upload ID: #{@upload.id}",
+        )
         STATUS_ERROR
       when "SUBMITTED", "PROGRESSING"
         STATUS_PENDING
@@ -123,6 +126,10 @@ module VideoConversion
 
       begin
         url = "//#{s3_store.s3_bucket}.s3.dualstack.#{SiteSetting.s3_region}.amazonaws.com/#{path}"
+
+        # Set the correct ACL based on the original upload's security status
+        # This ensures the optimized video has the same permissions as the original
+        s3_store.update_file_access_control(path, @upload.secure?)
 
         optimized_video = create_optimized_video_record(output_path, new_sha1, object.size, url)
 
@@ -191,12 +198,17 @@ module VideoConversion
     end
 
     def create_basic_client(endpoint: nil)
-      Aws::MediaConvert::Client.new(
-        region: SiteSetting.s3_region,
-        credentials:
-          Aws::Credentials.new(SiteSetting.s3_access_key_id, SiteSetting.s3_secret_access_key),
-        endpoint: endpoint,
-      )
+      client_options = { region: SiteSetting.s3_region }
+      client_options[:endpoint] = endpoint if endpoint.present?
+
+      if !SiteSetting.s3_use_iam_profile
+        client_options[:credentials] = Aws::Credentials.new(
+          SiteSetting.s3_access_key_id,
+          SiteSetting.s3_secret_access_key,
+        )
+      end
+
+      Aws::MediaConvert::Client.new(client_options)
     end
 
     def update_posts_with_optimized_video
@@ -208,6 +220,14 @@ module VideoConversion
           Rails.logger.info("Rebaking post #{post.id} to use optimized video")
           post.rebake!
         end
+    end
+
+    def s3_upload_bucket
+      self.class.s3_upload_bucket
+    end
+
+    def self.s3_upload_bucket
+      SiteSetting.Upload.s3_upload_bucket
     end
 
     def build_conversion_settings(input_path, output_path)
@@ -225,7 +245,7 @@ module VideoConversion
             output_group_settings: {
               type: "FILE_GROUP_SETTINGS",
               file_group_settings: {
-                destination: "s3://#{SiteSetting.s3_upload_bucket}/#{output_path}",
+                destination: "s3://#{s3_upload_bucket}/#{output_path}",
               },
             },
             outputs: [

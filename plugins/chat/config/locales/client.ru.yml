@@ -358,6 +358,8 @@ ru:
       chat_message_separator:
         today: Сегодня
         yesterday: Вчера
+      search_view:
+        filter_placeholder: Искать в сообщениях
       members_view:
         filter_placeholder: Найти участников
         add_member: Добавить участника
@@ -374,6 +376,7 @@ ru:
         tabs:
           members: Участники
           settings: Настройки
+          search: Искать
         remove_member: "Удалить"
       new_message_modal:
         title: Отправка сообщения
@@ -495,6 +498,7 @@ ru:
           topic: "Тема"
       reviewable:
         type: "Сообщение чата"
+        message_in_channel: "Канал"
       reactions:
         only_you: "<span>Вы отреагировали с эмодзи</span>:%{emoji}:"
         you_and_single_user: "<span>Вы и %{username} отреагировали с эмодзи </span>:%{emoji}:"
@@ -561,6 +565,11 @@ ru:
           create_export: "Создать экспорт"
           confirm_export: "Экспортируются все сообщения со всех каналов и отправляются вам в личном сообщении. Действительно экспортировать?"
           export_has_started: "Экспорт начался. Когда он завершится, вы получите личное сообщение."
+      search:
+        no_results: "Ничего не найдено"
+        sort:
+          relevance: "По соответствию"
+          latest: "Последние"
       my_threads:
         title: Мои цепочки сообщений
         aria_label: "Перейти к моим цепочкам сообщений"
@@ -822,6 +831,9 @@ ru:
         chat:
           title: Чат
     sidebar:
+      start_new_dm:
+        text: Начать новый DM
+        title: Создать личный чат
       panels:
         chat:
           label: "Чат"

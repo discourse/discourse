@@ -15,6 +15,7 @@ Sidekiq.configure_server do |config|
   config.server_middleware do |chain|
     chain.add Sidekiq::Pausable
     chain.add Sidekiq::DiscourseEvent
+    chain.add Sidekiq::SuppressUserEmailErrors
   end
 
   if stuck_sidekiq_job_minutes = GlobalSetting.sidekiq_report_long_running_jobs_minutes

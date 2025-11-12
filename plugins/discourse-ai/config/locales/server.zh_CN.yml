@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  activerecord:
+    attributes:
+      llm_model:
+        name: "模型 ID"
+        max_prompt_tokens: "上下文窗口"
   discourse_automation:
     ai:
       flag_types:
@@ -23,10 +28,6 @@ zh_CN:
       llm_triage:
         title: 使用 AI 对帖子进行分类
         description: "使用大语言模型对帖子进行分类"
-        flagged_post: |
-          <div>模型的回答：</div>
-          <p>%%LLM_RESPONSE%%</p>
-          <b>由 <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a> 规则触发</b>。
         notify_author_pm:
           subject: "您的帖子已暂时移除供审核"
           body: |
@@ -77,7 +78,6 @@ zh_CN:
     composer_ai_helper_allowed_groups: "这些群组中的用户将在编辑器中看到 AI 助手按钮。"
     ai_helper_allowed_in_pm: "在私信中启用编辑器的 AI 助手。"
     ai_helper_model: "用于 AI 助手的模型。"
-    ai_helper_custom_prompts_allowed_groups: "这些群组中的用户将在 AI 助手中看到自定义提示选项。"
     ai_helper_automatic_chat_thread_title_delay: "在 AI 助手自动设置聊天对话标题之前的延迟（以分钟为单位）。"
     ai_helper_automatic_chat_thread_title: "根据话题内容自动设置聊天对话标题。"
     ai_helper_illustrate_post_model: "用于编辑器 AI 助手的为帖子创建插图功能的模型"
@@ -108,8 +108,9 @@ zh_CN:
     ai_bot_allowed_groups: "当 GPT 机器人可以访问私信时，它将回复这些群组的成员。"
     ai_bot_debugging_allowed_groups: "允许这些群组在帖子上看到显示原始 AI 请求和回答的调试按钮"
     ai_bot_public_sharing_allowed_groups: "允许这些群组通过唯一的公开链接与公众分享 AI 个人消息。注意：如果您的站点需要登录，分享时也需要登录。"
-    ai_bot_add_to_header: "在标题中显示按钮以使用 AI 机器人启动私信"
     ai_bot_github_access_token: "搭配使用 GitHub AI 工具所需的 GitHub 访问令牌（搜索支持需要）"
+    ai_discover_enabled: "启用发现搜索功能"
+    ai_discover_persona: "用于发现搜索功能的 Persona"
     ai_stability_api_key: "stability.ai API 的 API 密钥"
     ai_stability_engine: "用于 stability.ai API 的图片生成引擎"
     ai_stability_api_url: "stability.ai API 的 URL"
@@ -121,8 +122,7 @@ zh_CN:
     ai_discord_search_mode: "选择用于 Discord 搜索的搜索模式"
     ai_discord_search_persona: "用于 Discord 搜索的角色。"
     ai_discord_allowed_guilds: "允许机器人搜索的 Discord 公会（服务器）"
-    ai_bot_enable_dedicated_ux: "允许全屏机器人界面，而不是 PM"
-    ai_translation_enabled: "启用 AI 翻译功能"
+    ai_translation_enabled: "启用AI翻译功能"
     ai_translation_model: "用于翻译的模型。此模型必须支持翻译。角色可以覆盖此设置。"
     ai_translation_backfill_limit_to_public_content: "启用时，仅翻译公共类别中的内容。禁用时，群组 PM 和不公开类别中的内容也将发送以进行翻译。"
     ai_translation_max_post_length: "帖子翻译的最大字符数。超过此长度的帖子将不会被翻译。"
@@ -396,6 +396,9 @@ zh_CN:
         report_runner:
           name: "报告运行器"
           description: "报告自动化脚本中使用的默认角色"
+        discover:
+          name: "发现"
+          description: "发现功能中使用的默认 Persona（免费搜索）"
       topic_not_found: "总结不可用，找不到话题！"
       summarizing: "正在总结话题"
       searching: "搜索：'%{query}'"
@@ -593,6 +596,9 @@ zh_CN:
       updated: "已更新"
       set: "已设置"
       removed: "已移除"
+    translation:
+      errors:
+        disabled: "人工智能翻译功能未完全配置。"
     errors:
       quota_exceeded: "您已超出此模型的配额。请在 %{relative_time}后再试。"
       quota_required: "必须为此模型指定最大词元数或使用次数"

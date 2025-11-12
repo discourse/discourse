@@ -99,6 +99,8 @@ sq:
     reviewables:
       message_already_handled: "Faleminderit, mesazhi është rishikuar tashmë dhe nuk ka nevojë të raportohet përsëri."
       actions:
+        restore_message:
+          description: "Rikthe mesazhin që të shfaqet për përdoruesit"
         agree:
           title: "Pranuar"
         agree_and_keep_message:
@@ -168,7 +170,7 @@ sq:
         slug_contains_non_ascii_chars: "përmban karaktere të veçanta"
         is_already_in_use: "është tashmë në përdorim"
     bookmarkable:
-      notification_title: "mesazh në %{channel_name}"
+      notification_title_channel: "mesazh në %{channel_name}"
     personal_chat: "bisedë private"
     onebox:
       inline_to_message: "Mesazhi #%{message_id} nga %{username} – #%{chat_channel}"

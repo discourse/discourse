@@ -6,17 +6,34 @@
 
 hu:
   site_settings:
+    policy_enabled: "Engedélyezi a házirendeket?"
+    policy_restrict_to_staff_posts: "Az irányelvek csak a munkatársak bejegyzéseiben jelenhetnek meg."
     policy_easy_revoke: "Az elfogadás és a visszavonás gombok egyidejű megjelenítése"
+  discourse_policy:
+    errors:
+      user_missing: "A felhasználó nem létezik a csoportban"
+      group_not_found: "Nem található csoport a szabályzathoz"
+      no_policy: "Nincsenek bejegyzésre vonatkozó irányelvek"
+      staff_only: "A szabályzatok csak a személyzeti pozíciókra vonatkozhatnak"
+    error:
+      no_permission: "Nem engedélyezett"
   reports:
     unaccepted-policies:
+      title: Elfogadatlan szabályzatok
       labels:
         topic_id: Témaazonosító
         user_id: Felhasználói azonosító
   user_notifications:
     policy_email:
       from: "%{site_name}"
+      subject: "Egy szabályzat felülvizsgálatra szorul: %{topic_title}"
+      visit_topic: "Téma megtekintése"
+      visit_link_to_respond: "%{visit_topic_link} a válaszhoz."
+      unsubscribe: "Változtasd meg a %{email_preferences_link} vagy a %{unsubscribe_link} értéket a leiratkozáshoz."
+      your_policy_email_settings: "szabályzat szerinti e-mailek gyakorisági beállításai"
   unsubscribe:
     policy_emails:
+      select_title: "Szabályzatértesítési e-mailek gyakoriságának beállítása erre:"
       never: Soha
       when_away: Csak ha távol van
       always: Mindig

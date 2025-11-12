@@ -73,7 +73,7 @@ export default class ChatMessageReaction extends Component {
         type="button"
         title={{this.emojiString}}
         data-emoji-name={{@reaction.emoji}}
-        tabindex="0"
+        tabindex={{if @interactive "0" "-1"}}
         class={{concatClass
           "chat-message-reaction"
           (if @reaction.reacted "reacted")

@@ -3,11 +3,16 @@
 RSpec.describe "Topic voting", type: :system do
   fab!(:user)
   fab!(:admin) { Fabricate(:admin, trust_level: TrustLevel[4]) }
-  fab!(:category1) { Fabricate(:category) }
-  fab!(:category2) { Fabricate(:category) }
+  fab!(:category1, :category)
+  fab!(:category2, :category)
+  fab!(:voting_category) { Fabricate(:category, name: "voting category") }
   fab!(:topic1) { Fabricate(:topic, category: category1) }
   fab!(:topic2) { Fabricate(:topic, category: category1) }
   fab!(:topic3) { Fabricate(:topic, category: category2) }
+  fab!(:voting_topic1) { Fabricate(:topic, category: voting_category) }
+  fab!(:voting_topic2) { Fabricate(:topic, category: voting_category) }
+  fab!(:voting_topic3) { Fabricate(:topic, category: voting_category) }
+  fab!(:voting_topic4) { Fabricate(:topic, category: voting_category) }
   fab!(:post1) { Fabricate(:post, topic: topic1) }
   fab!(:post2) { Fabricate(:post, topic: topic2) }
 
@@ -31,7 +36,7 @@ RSpec.describe "Topic voting", type: :system do
       .toggle_setting("enable-topic-voting", "Allow users to vote on topics in this category")
       .save_settings
 
-    try_until_success { expect(Category.can_vote?(category1.id)).to eq(true) }
+    expect(Category.can_vote?(category1.id)).to eq(true)
 
     # make a vote
     category_page.visit(category1)
@@ -41,11 +46,13 @@ RSpec.describe "Topic voting", type: :system do
 
     expect(topic_page.vote_count).to have_text("0")
     topic_page.vote
-    expect(topic_page.vote_popup).to have_text("You have 9 votes left, see your votes")
+    expect(topic_page.vote_popup).to have_text(
+      I18n.t("js.topic_voting.see_votes", count: 9, max: 10),
+    )
     expect(topic_page.vote_count).to have_text("1")
 
     # visit user activity page
-    topic_page.click_vote_popup_activity
+    topic_page.click_my_votes
     expect(user_page.active_user_primary_navigation).to have_text("Activity")
     expect(user_page.active_user_secondary_navigation).to have_text("Votes")
     expect(page).to have_css(".topic-list-body tr[data-topic-id=\"#{topic1.id}\"]", text: "1 vote")
@@ -66,7 +73,9 @@ RSpec.describe "Topic voting", type: :system do
       category_page.visit(category1).select_topic(topic1)
       topic_page.vote
 
-      expect(topic_page).to have_votes_left_popup(0)
+      expect(topic_page.vote_popup).to have_text(
+        I18n.t("js.topic_voting.see_votes", count: 0, max: 1),
+      )
     end
   end
 end

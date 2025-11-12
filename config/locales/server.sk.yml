@@ -1413,8 +1413,6 @@ sk:
       yaxis: "Deň"
       description: "Požiadavky API na bežné kľúče API a používateľské kľúče API."
     consolidated_page_views_browser_detection:
-      title: "Konsolidované zobrazenia stránok s detekciou prehliadača (experimentálne)"
-      title_legacy: "Konsolidované zobrazenia stránok s detekciou prehliadača (experimentálne)"
       xaxis:
         page_view_anon_browser: "Anonymný prehliadač"
         page_view_logged_in_browser: "Prihlásený prehliadač"
@@ -1805,7 +1803,6 @@ sk:
     crawl_images: "Načítať obrázky z URL pre vloženie správnej výšky a šírky."
     download_remote_images_to_local: "Konverzia vzdialených obrázkov (s horúcimi odkazmi) na miestne obrázky ich stiahnutím; Tým sa zachová obsah aj v prípade, že sa obrázky v budúcnosti odstránia zo vzdialenej lokality."
     download_remote_images_threshold: "Minimálne miesto na lokálnom disku potrebné na stiahnutie obrázkov zo vzdialených zdrojov (v percentách)"
-    disabled_image_download_domains: "Nikdy nesťahovať obrázky z týchto domén. Zoznam oddeleny pipou \"|\"."
     block_hotlinked_media: "Zabráňte používateľom, aby vo svojich príspevkoch uvádzali vzdialené (horúce odkazy) médiá. Vzdialené médiá, ktoré nie sú stiahnuté prostredníctvom funkcie 'download_remote_images_to_local', budú nahradené zástupným odkazom."
     block_hotlinked_media_exceptions: "Zoznam základných adries URL, na ktoré sa nevzťahuje nastavenie block_hotlinked_media. Uveďte protokol (napr. https://example.com)."
     editing_grace_period: "Nevytvárať nové verzie editovaných príspevkov do (n) sekúnd po odoslaní príspevku."
@@ -1844,7 +1841,6 @@ sk:
     logo: "Obrázok loga v ľavom hornom rohu vašej stránky. Použite široký obdĺžnikový obrázok s výškou 120 a pomerom strán väčším ako 3:1. Ak zostane prázdny, zobrazí sa text názvu lokality."
     logo_small: "Malý obrázok loga v ľavom hornom rohu vašej stránky, ktorý vidíte pri posúvaní nadol. Použite štvorcový obrázok s rozmermi 120 × 120. Ak zostane prázdny, zobrazí sa domovský glyf."
     digest_logo: "Alternatívny obrázok loga, ktorý sa používa v hornej časti súhrnu e-mailu na vašej stránke. Použite široký obdĺžnikový obrázok. Nepoužívajte obrázok SVG. Ak zostane prázdny, použije sa obrázok z nastavenia `logo`."
-    mobile_logo: "Logo použité na mobilnej verzii vašej stránky. Použite široký obdĺžnikový obrázok s výškou 120 a pomerom strán väčším ako 3:1. Ak zostane prázdne, použije sa obrázok z nastavenia `logo`."
     logo_dark: "Alternatíva tmavej schémy pre nastavenie stránky \"logo\"."
     logo_small_dark: "Alternatíva tmavej schémy pre nastavenie stránky \"malé logo\"."
     mobile_logo_dark: "Alternatíva tmavej schémy pre nastavenie stránky \"mobilné logo\"."
@@ -1856,11 +1852,8 @@ sk:
     opengraph_image: "Predvolený obrázok opengraph, ktorý sa používa, ak stránka nemá iný vhodný obrázok. Ak zostane prázdny, použije sa large_icon"
     x_summary_large_image: "Karta Twitter \"súhrnný veľký obrázok\" (mal by mať šírku aspoň 280 a výšku aspoň 150, nemôže mať formát .svg). Ak zostane prázdne, bežné metadáta karty sa vygenerujú pomocou opengraph_image, pokiaľ to nie je tiež .svg"
     notification_email: "Odosieľateľ: email adresa použitá na zasielanie všetkých systémových emailov. Uvedená doména musí mať správne nastavené záznamy SPF, DKIM a opačný PTR aby email dorazil."
-    email_custom_headers: "Zoznam voliteľných emailových hlavičiek oddelených |"
     email_subject: "Prispôsobiteľný formát predmetu pre štandardné e-maily. Pozrite si <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Poskytuje používateľom podrobnejšie informácie o tom, prečo nemajú prístup k určitej téme. Poznámka: Je to menej bezpečné, pretože používatelia budú vedieť, či adresa URL odkazuje na platnú tému."
-    enforce_second_factor: "Vyžadujte od používateľov, aby pred prístupom do používateľského rozhrania Discourse povolili dvojfaktorové overovanie. Toto nastavenie nemá vplyv na overovanie API alebo poskytovateľa DiscourseConnect. Ak je zapnutá možnosť enforce_second_factor_on_external_auth, používatelia sa nebudú môcť prihlásiť pomocou externých poskytovateľov overovania po nastavení dvojfaktorového overovania."
-    enforce_second_factor_on_external_auth: "Vyžadujte od používateľov, aby vždy používali dvojfaktorové overovanie. Ak je táto funkcia zapnutá, zabráni používateľom prihlásiť sa pomocou externých metód overovania, ako sú napríklad prihlásenia cez sociálne siete, ak majú povolené dvojfaktorové overovanie. Keď je táto funkcia vypnutá, používatelia budú musieť potvrdiť svoje dvojfaktorové overenie len pri prihlasovaní pomocou používateľského mena a hesla. Pozrite si tiež nastavenie `enforce_second_factor` (vynútiť druhý faktor)."
     force_https: "Vynútiť, aby váš web používal iba HTTPS. UPOZORNENIE: NEZAPÍNAJTE to, kým neoveríte, že HTTPS je úplne nastavené a funguje úplne všade! Skontrolovali ste svoje CDN, všetky sociálne prihlásenia a akékoľvek externé logá / závislosti, aby ste sa uistili, že sú tiež kompatibilné s HTTPS?"
     summary_score_threshold: "Minimálne požadované skóre príspevku na to aby bol zahrnutý do 'Sumarizuj túto tému'"
     summary_posts_required: "Minimálny počet príspevkov v téme pred povolením funkcie 'Zhrnúť túto tému'. Zmeny v tomto nastavení budú uplatnené spätne do jedného týždňa."
@@ -1919,7 +1912,6 @@ sk:
     ga_universal_auto_link_domains: "Povoľte sledovanie medzi doménami v službe Google Universal Analytics. Odchádzajúce odkazy na tieto domény budú mať pridané ID klienta. Pozrite si <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>príručku sledovania medzi doménami od spoločnosti Google</a>."
     gtm_container_id: "Identifikátor kontajnera Google Tag Manager. napr: GTM-ABCD12E. <br/>Poznámka: Ak chcete používať GTM, keď je zapnutá politika zabezpečenia obsahu (CSP), pozrite si dokumentáciu k meta: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Používanie nonces v skriptov Google Tag Manager</a>."
     enable_escaped_fragments: "Ak sa nezistí žiadny webový prehľadávač, vráťte sa späť na rozhranie API Ajax-Crawling od spoločnosti Google. Pozrite si <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Umožniť moderátorom vytvárať a spravovať kategórie a skupiny"
     moderators_change_post_ownership: "Povoliť moderátorom zmeniť vlastníctvo príspevku"
     cors_origins: "Povoľ prameňom/origins použitie cross-origin dotazov (CORS). Každý prameň/origin musí obsahovať http:// alebo https://. Aby ste umožnili CORS, systémové premenná DISCOURSE_ENABLE_CORS musí byť nastavená na true."
     use_admin_ip_allowlist: "Správcovia sa môťu prihlásiť iba pokiaľ pristupujú z adresy uvedenej v zozname kontrolovaných IP adries (Admin > Logs > Screened Ips)"
@@ -1970,8 +1962,6 @@ sk:
     whispers_allowed_groups: "Povolenie súkromnej komunikácie v rámci tém pre členov určených skupín."
     hidden_post_visible_groups: "Povoliť členom týchto skupín zobrazovať skryté príspevky. Členovia personálu môžu vždy zobraziť skryté príspevky."
     allow_index_in_robots_txt: "V súbore robots.txt uveďte, že túto stránku môžu webové vyhľadávače indexovať. Tu môžete <a href='%{base_path}/admin/customize/robots'>prepísať svoj súbor robots.txt.</a> <b>UPOZORNENIE</b>: Nesprávne nakonfigurované pravidlá môžu zabrániť prehľadávaniu vašej lokality podľa očakávania."
-    blocked_email_domains: "Zoznam e-mailových domén oddelených zvislými čiarami, s ktorými si používatelia nemôžu registrovať účty. Subdomény sú automaticky spracované pre zadané domény. Zástupné znaky * a ? nie sú podporované. Príklad: mailinator.com|trashmail.net"
-    allowed_email_domains: "Zoznam e-mailových domén oddelených zvislými čiarami, v ktorých si používatelia MUSIA zaregistrovať účty. Subdomény sú automaticky spracované pre zadané domény. Zástupné znaky * a ? nie sú podporované. UPOZORNENIE: Používatelia s inými e-mailovými doménami ako sú uvedené nebudú povolení!"
     normalize_emails: "Skontroluj, či je normalizovaný e-mail jedinečný. Normalizovaný e-mail odstraňuje všetky bodky z používateľského mena a všetko medzi znakmi + a @."
     auto_approve_email_domains: "Používatelia s e-mailovými adresami z tohto zoznamu domén budú automaticky schválení. Subdomény sú automaticky spracované pre zadané domény. Zástupné symboly * a ? nie sú podporované."
     hide_email_address_taken: "Neinformujte používateľov o tom, že existuje konto s danou e-mailovou adresou počas registrácie alebo počas toku zabudnutého hesla. Pri požiadavkách na \"zabudnuté heslo\" vyžadujte celý e-mail."
@@ -2365,9 +2355,6 @@ sk:
     enable_category_group_moderation: "Umožniť skupinám moderovať obsah v konkrétnych kategóriách"
     group_in_subject: "Nastavenie %%{optional_pm} v predmete e-mailu na názov prvej skupiny v PM, pozri: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Prispôsobenie formátu predmetu pre štandardné e-maily</a>"
     allow_anonymous_mode: "Povoľte používateľom možnosť prepnúť na anonymný režim odosielania príspevkov. Keď je táto možnosť aktivovaná, používatelia sa môžu rozhodnúť, že ich identita bude pri vytváraní príspevkov alebo tém na celom webe skrytá. Pozrite si tiež časť `povoliť anonymné lajky`."
-    allow_likes_in_anonymous_mode: "Toto nastavenie povoľte, ak chcete používateľom, ktorí si anonymne prezerajú vašu stránku, umožniť lajkovanie príspevkov. Ak je táto možnosť aktivovaná, používatelia sa môžu rozhodnúť, že ich identita bude pri lajkovaní príspevkov alebo tém na stránke skrytá. Pozri tiež `povoliť_anonymný_režim`."
-    anonymous_posting_min_trust_level: "Minimálna úroveň dôvery na zapnutie anonymného prispievania."
-    anonymous_posting_allowed_groups: "Skupiny, ktoré môžu povoliť anonymné uverejňovanie"
     anonymous_account_duration_minutes: "Každých N minút vytvor nový anonymný účet na ochranu používateľskej anonymity. Príklad: Ak je nastavené na 600, akonáhle uplynie 600 minút od posledného príspevku A používateľ prepne do anonymného režimu, vytvorí sa nový anonymný účet."
     hide_user_profiles_from_public: "Vypnúť používateľské karty, profily a adresár pre anonymných používateľov."
     hide_new_user_profiles: "Skryť používateľské profily úrovne 1 alebo nižšej pred verejnými používateľmi a používateľmi úrovne 1 dôveryhodnosti, kým nepridajú prvý príspevok. Táto funkcia je bezpodmienečne zakázaná na stránkach must_approve_users a iba na pozvaných stránkach."
@@ -2385,7 +2372,6 @@ sk:
     clean_up_unused_staged_users_after_days: "Počet dní pred odstránením nezaktívnených používateľa (bez príspevkov). Ak chcete vypnúť čistenie, nastavte hodnotu 0."
     user_selected_primary_groups: "Umožniť používateľom nastaviť vlastnú primárnu skupinu"
     max_notifications_per_user: "Maximálny počet oznámení na používateľa, ak sa tento počet prekročí, staré oznámenia sa vymažú. Vykonáva sa týždenne. Nastavte na 0, ak chcete vypnúť"
-    allowed_user_website_domains: "Webová stránka používateľa sa overí na základe týchto domén. Zoznam oddeľovaný potrubím."
     allow_profile_backgrounds: "Povoliť používateľov nahranie pozadia do profilu."
     get_a_room_threshold: "Počet príspevkov, ktoré musí používateľ odoslať tej istej osobe v rovnakej téme, kým bude upozornený."
     dont_feed_the_trolls_threshold: "Počet príznakov od iných používateľov pred upozornením."
@@ -2468,7 +2454,6 @@ sk:
     disable_watched_word_checking_in_user_fields: "vypnutie kontroly sledovaných slov v užívateľských poliach"
     watched_words_regular_expressions: "Umožňuje používať regulárne výrazy na filtrovanie slov. Ak je táto funkcia povolená, zoskupuje citlivé slová podľa citlivosti veľkých a malých písmen. Potom zostaví všetky vybrané slová do jedného regulárneho výrazu a pridá hranice slov pre regulárne sledované slová. Následne táto metóda filtrovania založená na regexoch pridáva ďalšiu úroveň kontroly nad moderovaním obsahu tým, že podporuje zložitejšie vzory slov. Nastavenie tiež umožňuje jednoducho nahradiť pôvodný text náhradou podľa výberu."
     enable_fast_edit: "Pridá tlačidlo do ponuky výberu príspevku na úpravu malého výberu inline."
-    old_post_notice_days: "Počet dní, po ktorých sa oznámenie o odoslaní považuje za staré. To ho vizuálne odlišuje od novších oznámení na stránke."
     new_user_notice_tl: "Minimálna úroveň dôveryhodnosti potrebná na zobrazenie oznámení o nových príspevkoch používateľov."
     returning_user_notice_tl: "Minimálna úroveň dôveryhodnosti potrebná na zobrazenie oznámení o odoslaní príspevku vracajúceho sa používateľa."
     returning_users_days: "Koľko dní by malo uplynúť, kým sa používateľ považuje za vracajúceho sa."
@@ -2554,7 +2539,6 @@ sk:
     force_lowercase_tags: "Vynútiť, aby všetky nové značky boli písané výhradne malými písmenami."
     create_post_for_category_and_tag_changes: "Vytvorenie šepkaného príspevku pri zmene kategórie alebo značky témy, vyžaduje, aby boli povolené šepkané príspevky."
     automatically_clean_unused_tags: "Automaticky odstráňte značky, ktoré sa nepoužívajú na žiadne témy alebo osobné správy na dennej báze."
-    watched_precedence_over_muted: "Upozorniť ma na témy v kategóriách alebo značkách, ktoré sledujem a ktoré tiež patria do tých, ktoré som stlmil"
     company_name: "Názov vašej spoločnosti alebo organizácie. Ak pole ponecháte prázdne, neposkytnú sa žiadne všeobecné zmluvné podmienky ani oznámenie o ochrane osobných údajov."
     governing_law: "Uveďte jurisdikciu, ktorá upravuje právne aspekty stránky vrátane podmienok používania služby a zásad ochrany osobných údajov. Zvyčajne ide o krajinu alebo štát, v ktorom je spoločnosť prevádzkujúca lokalitu registrovaná alebo v ktorom podniká."
     city_for_disputes: "Uveďte mesto, ktoré sa použije ako súdna právomoc na riešenie akýchkoľvek sporov súvisiacich s používaním tohto fóra. Táto informácia sa zvyčajne uvádza v právnych dokumentoch, ako sú napríklad podmienky používania fóra."
@@ -2595,9 +2579,6 @@ sk:
     default_navigation_menu_categories: "Vybrané kategórie sa predvolene zobrazia v časti Kategórie navigačného menu."
     default_navigation_menu_tags: "Vybrané značky sa predvolene zobrazia v časti Značky v navigačnom menu."
     experimental_new_new_view_groups: 'Povoľte nový zoznam tém, ktorý kombinuje neprečítané a nové témy, a vytvorte naň odkaz "Všetko" v bočnom paneli.'
-    glimmer_post_stream_mode: "Ovládanie, či sa použije nová implementácia postreamu \"glimmer\". 'auto' sa zapne automaticky, akonáhle sú všetky vaše témy a doplnky pripravené. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
-    glimmer_post_stream_mode_auto_groups: "Povolenie novej implementácie postreamu \"glimmer\" v režime \"auto\" pre zadané skupiny používateľov. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
-    deactivate_widgets_rendering: "Zakázanie staršieho vykresľovacieho jadra widgetov. Tým sa zakážu všetky widgety, ktoré neboli aktualizované na komponenty Glimmer, a tiež sa bezpodmienečne povolí Glimmer Post Stream bez ohľadu na hodnotu nastavenia `glimmer_post_stream_mode`. Toto nastavenie sa neodporúča pre produkčné stránky, pretože môže narušiť existujúce témy a doplnky."
     experimental_form_templates: "Povoľte funkciu šablón formulárov. Šablóny spravujte v časti <a href='%{base_path}/admin/customize/form-templates'>Prispôsobiť / Šablóny</a>."
     show_preview_for_form_templates: "Povolenie funkcie náhľadu pre šablóny formulárov"
     lazy_load_categories_groups: "Lenivé načítanie informácií o kategórii len pre používateľov týchto skupín. To zlepšuje výkon na stránkach s mnohými kategóriami."
@@ -2613,7 +2594,6 @@ sk:
     view_raw_email_allowed_groups: "Skupiny, ktoré môžu zobraziť nespracovaný obsah e-mailu, ak bol príspevok vytvorený pomocou prichádzajúceho e-mailu. To zahŕňa hlavičky e-mailov a ďalšie technické informácie."
     rich_editor: "Povoľte editor formátovaného textu pre autora, aby všetci používatelia mohli prepínať medzi aktuálnym režimom Markdown a novým editorom formátovaného textu pre intuitívnejšiu a užívateľsky prívetivejšiu tvorbu textu."
     default_composition_mode: "Nastavenie predvoleného režimu pre skladateľa vašej komunity. Režim Rich text poskytuje modernejšie a známejšie písanie pre väčšinu používateľov, zatiaľ čo režim Markdown môže byť vhodný pre technickejšie publikum. Členovia môžu na prepínanie medzi režimami používať prepínač na paneli nástrojov kompozitora."
-    viewport_based_mobile_mode: "EXPERIMENTÁLNE: Vypnite režimy pre mobilné zariadenia/plochu založené na používateľskom agentovi a namiesto toho použite šírku zobrazenia."
     reviewable_ui_refresh: "Skupiny, ktoré môžu používať nové experimentálne používateľské rozhranie vo fronte revízií."
     content_localization_enabled: "Zobrazuje lokalizovaný obsah pre používateľov na základe ich prehliadača alebo jazykových preferencií používateľa. Takýto obsah môže zahŕňať kategórie, značky, príspevky a témy. Podporované lokálne jazyky sú nastavené v položke 'content localization supported locales'."
     content_localization_supported_locales: "Zoznam podporovaných lokálnych jazykov, do ktorých možno preložiť obsah používateľa. Vyžaduje \"povolená lokalizácia obsahu\"."
@@ -2719,7 +2699,6 @@ sk:
   filter:
     description:
       status: "Filtrovať témy podľa ich stavu"
-      in: "Filtrovanie tém podľa v osobných zoznamoch"
       order: "Triedenie tém podľa konkrétneho poľa"
       category: "Zobrazenie tém v konkrétnej kategórii"
       category_any: "Zobraziť témy v niektorej zo zadaných kategórií (oddelených čiarkami)"
@@ -2739,9 +2718,6 @@ sk:
       activity_after: "Zobrazenie tém s poslednou aktivitou po určitom dátume (RRRR-MM-DD alebo pred niekoľkými dňami)"
       created_before: "Zobraziť témy vytvorené pred dátumom (RRRR-MM-DD alebo pred niekoľkými dňami)"
       created_after: "Zobraziť témy vytvorené po určitom dátume (RRRR-MM-DD alebo pred niekoľkými dňami)"
-      created_by: "Zobraziť témy vytvorené konkrétnym používateľom"
-      created_by_user: "Zobraziť témy vytvorené používateľským menom (bez @)"
-      created_by_multiple: "Zobraziť témy vytvorené niektorým zo zadaných používateľov (oddelené čiarkou)"
       latest_post_before: "Zobraziť témy s posledným príspevkom pred dátumom (RRRR-MM-DD alebo pred niekoľkými dňami)"
       latest_post_after: "Zobraziť témy s posledným príspevkom po určitom dátume (RRRR-MM-DD alebo pred niekoľkými dňami)"
       likes_min: "Zobraziť témy s aspoň týmto počtom označení „Páči sa mi to“"
@@ -4226,12 +4202,6 @@ sk:
     account_second_factor_disabled:
       title: "Vypnuté dvojfaktorové overovanie"
       subject_template: "[%{email_prefix}] Dvojfaktorové overovanie vypnuté"
-      text_body_template: |
-        Dvojfaktorové overovanie bolo na vašom účte vypnuté na adrese %{site_name}. Teraz sa môžete prihlásiť len pomocou hesla; ďalší overovací kód sa už nevyžaduje.
-
-        Ak ste sa nerozhodli vypnúť dvojfaktorové overovanie, niekto mohol vaše konto kompromitovať.
-
-        Ak máte akékoľvek otázky, [kontaktujte náš priateľský personál](%{base_url}/o).
     digest:
       why: "Stručný prehľad %{site_link} od %{since}"
       since_last_visit: "Od Vašej poslednej návštevy"
@@ -4427,10 +4397,7 @@ sk:
   page_not_found:
     page_title: "Stránka nenájdená"
     title: "Stránka neexistuje alebo je privátna."
-    popular_topics: "Populárne"
-    recent_topics: "Nedávne"
     see_more: "Viac"
-    search_title: "Prehľadať tieto stránky"
     search_button: "Hľadať"
   offline:
     title: "Nie je možné načítať aplikáciu"
@@ -5560,12 +5527,24 @@ sk:
       reject_and_keep_deleted:
         title: "Ponechať príspevok odstránený"
         complete: "Príspevok zamietnutý a vymazaný."
+      scrub:
+        title: Záznam o čistení
       approve_and_restore:
         title: "Schváliť a obnoviť príspevok"
         complete: "Príspevok schválený a obnovený."
       approve_and_unhide:
         title: "Schváliť a Odkryť príspevok"
         complete: "Príspevok schválený a odkrytý"
+      no_action_post:
+        title: "Žiadna akcia"
+      delete_post:
+        title: "Odstrániť príspevok"
+        complete: "Príspevok zmazaný"
+      hide_post:
+        title: "Skryť príspevok"
+      restore_post:
+        title: "Obnoviť príspevok"
+        complete: "Príspevok bol obnovený"
       no_action_user:
         title: "Žiadna akcia"
       silence_user:
@@ -5579,6 +5558,8 @@ sk:
         complete: "Používateľ odstránený"
         reason: "Odstránené prostredníctvom poradia na kontrolu"
       delete_and_block_user:
+        complete: "Používateľ vymazaný a zablokovaný"
+      delete_user_block:
         complete: "Používateľ vymazaný a zablokovaný"
   email_style:
     html_missing_placeholder: "Šablóna html musí obsahovať %{placeholder}"

@@ -45,7 +45,7 @@ en:
       cannot_edit_default_poll_with_votes: "You cannot change a poll after the first %{minutes} minutes."
       cannot_edit_named_poll_with_votes: "You cannot change the poll named <strong>${name}</strong> after the first %{minutes} minutes."
     dynamic_poll:
-      enabled_hint: "This poll is dynamic. Options can be edited after posting."
+      enabled_hint: "Options can be added or removed."
 
     no_poll_with_this_name: "No poll named <strong>%{name}</strong> associated with this post."
 

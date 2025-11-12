@@ -13,6 +13,8 @@ de:
         validations:
           script_blank: "Skript darf nicht leer sein"
           trigger_blank: "Auslöser darf nicht leer sein"
+          script_missing_required_fields: "Dem Skript fehlen erforderliche Felder: %{fields}"
+          trigger_missing_required_fields: "Dem Trigger fehlen erforderliche Felder: %{fields}"
       fields:
         required_field: Feld `%{name}` muss bei `%{target}:%{target_name}` ausgefüllt sein.
         invalid_field: Die Komponente `%{component}` des Feldes kann nicht bei `%{target}:%{target_name}` verwendet werden.
@@ -66,6 +68,9 @@ de:
       topic:
         title: Thema
         description: Das zugehörige Skript wird nur für das angegebene Thema verwendet. Dies ist beispielsweise für Skripts nützlich, die eine Validierung durchführen
+      topic_closed:
+        title: Thema geschlossen
+        description: Löst ein Skript aus, wenn ein Thema geschlossen wird.
       after_post_cook:
         title: Nach Beitragsfinalisierung
         description: Wenn ein Beitragsinhalt finalisiert wird, wird die Automatisierung ausgelöst

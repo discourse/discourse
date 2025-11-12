@@ -707,7 +707,8 @@ ro:
         user_api: "API Utilizator"
       yaxis: "Zi"
     consolidated_page_views_browser_detection:
-      title_legacy: "Afișări de pagină consolidate cu detectarea navigatorului (experimental)"
+      title: "Afișări de pagină consolidate cu detectarea navigatorului (recomandat)"
+      title_legacy: "Afișări de pagină consolidate cu detectarea navigatorului (recomandat)"
       yaxis: "Zi"
       description: "Afișări de pagină pentru utilizatorii conectați, utilizatori anonimi, roboții de indexare cunoscuți și altele. Acest raport experimental asigură că solicitările de utilizatori conectați sau anonimi provin din navigatoare reale înainte de a le număra. Datele istorice pentru acest raport nu sunt disponibile; pentru datele istorice, consultă raportul „Afișări de pagină consolidate vechi”."
       description_legacy: "Afișări de pagină pentru utilizatorii conectați, utilizatori anonimi, roboții de indexare cunoscuți și altele. Acest raport experimental asigură că solicitările de utilizatori conectați sau anonimi provin din navigatoare reale înainte de a le număra. Datele istorice pentru acest raport nu sunt disponibile; pentru datele istorice, consultă raportul „Afișări de pagină consolidate”."
@@ -939,6 +940,7 @@ ro:
       poll_pop3_timeout: "Conexiunea la serverul POP3 a dat time-out. Mailurile primite nu au putut fi accesate. Te rugăm să verifici <a href='%{base_path}/admin/site_settings/category/email'>setările POP3</a> și furnizorul de servicii."
       poll_pop3_auth_error: "Conexiunea la serverul POP3 a eșuat cu o eroare de autentificare. Te rugăm să verifici <a href='%{base_path}/admin/site_settings/category/email'>setările POP3</a>."
       admin_sidebar_deprecation: "Vechiul aspect de administrare este depreciat în favoarea noului <a href='https://meta.discourse.org/t/-/289281'>aspect cu bară laterală</a> și va fi eliminat în următoarea versiune. Poți <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configura</a> acum noul aspect cu bară laterală pentru a-l alege înainte de această schimbare."
+      starttls_disabled: "Configurația emailurilor de ieșire are STARTTLS dezactivat. Acest lucru nu este aproape niciodată necesar. Ia în considerare eliminarea <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> din mediul tău. Te rog să consulți <a href='https://meta.discourse.org/t/387286'>acest subiect</a> pentru mai multe detalii."
     back_from_logster_text: "Înapoi la site"
   site_settings:
     disabled: "dezactivat"
@@ -965,7 +967,6 @@ ro:
     educate_until_posts: "Când utilizatorul începe să scrie primele (n) postări, arată panelul de instruire în spațiul pentru scris postarea."
     crawl_images: "Recuperează imaginile din URL-uri la distanță pentru a insera dimensiunile corecte de înălțime și lățime."
     download_remote_images_threshold: "Spațiul minim necesar pentru descărcarea imaginilor la distanță pe local (în procente)"
-    disabled_image_download_domains: "Imaginile la distanță nu vor mai fi descărcate de pe aceste domenii. Listă delimitată de simbolul | (pipe)."
     editing_grace_period: "Pentru (n) secunde după postare, editarea nu va crea o versiune nouă în istoricul postării."
     edit_history_visible_to_public: "Permite tuturor să vadă versiunile precedente ale unei postări editate. Când e dezactivat, ele pot fi văzute doar de membrii echipei."
     delete_removed_posts_after: "Postările șterse de către autor vor fi automat șterse după (n) de ore. Dacă este setat la 0, postările vor fi șterse imediat."
@@ -978,7 +979,6 @@ ro:
     post_onebox_maxlength: "Lungimea maximă a unei postări afișate în Onebox (în caractere)"
     onebox_locale: "Locala trimisă furnizorilor onebox. Dacă este lăsată necompletat, se va folosi locala implicită"
     notification_email: "Adresă expeditor: adresa de email folosită când se trimit toate emailurile esențiale ale sistemului. Domeniul specificat aici trebuie să aibă setate corect SPF, DKIM și reverse PTR pentru ca emailul să poată fi livrat."
-    email_custom_headers: "O listă delimitată cu simbolul | (pipe) a header-elor personalizate de email"
     email_subject: "Format de subiect personalizabil pentru emailurile standard. Vezi <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     force_https: "Forțează site-ul să folosească exclusiv HTTPS. ATENȚIE: NU activa această opțiune până nu ai verificat dacă HTTPS este configurat în întregime și funcționează absolut peste tot. Ai verificat, de asemenea, dacă și CND-ul, toate autentificările cu cont pe rețele de socializaer și toate logo-urile și dependențele externe sunt compatibile cu HTTPS?"
     summary_score_threshold: "Scorul minim necesar pentru ca o postare să fie inclusă în 'Rezumă acest subiect'"
@@ -1001,6 +1001,9 @@ ro:
     show_signup_form_username_instructions: Afișează instrucțiunile pentru numele de utilizator în formularul de înscriere.
     show_signup_form_full_name_instructions: Afișează instrucțiunile pentru numele complet în formularul de înscriere.
     show_signup_form_password_instructions: Afișează instrucțiunile pentru parolă în formularul de înscriere.
+    google_site_verification_token: Jeton de verificare pentru consola de căutare Google. Va fi inclus ca meta etichetă în antetul HTML.
+    moderators_manage_categories: "Permite moderatorilor să creeze și să gestioneze categorii"
+    moderators_manage_groups: "Permite moderatorilor să creeze și să gestioneze grupuri"
     cors_origins: "Origini permise pentru interogările inter-origini (CORS). Fiecare origine trebuie să includă http:// sau https://. Variabila env DISCOURSE_ENABLE_CORS trebuie setată pe true pentru a activa CORS."
     use_admin_ip_allowlist: "Adminii se pot autentifica numai dacă au o adresă IP definită în lista de IP-uri verificate (Admin > Rapoarte > IP-uri verificate) "
     allowed_iframes: "O listă de prefixe URL sursă pentru iframe pe care Discourse le poate permite în siguranță în postări. * poate fi folosit pentru a potrivi orice număr de caractere diferite de /."
@@ -1017,6 +1020,7 @@ ro:
     topics_per_period_in_top_page: "Numărul celor mai bune subiecte afișat când se selectează 'Afișează mai multe' cele mai bune subiecte."
     top_page_default_timeframe: "Perioada de timp implicită din prima pagină pentru utilizatorii anonimi (se ajustează automat pentru utilizatorii conectați pe baza ultimei lor vizite)."
     moderators_view_ips: "Permite moderatorilor să vadă adresele IP ale utilizatorilor."
+    moderators_change_trust_levels: "Permite moderatorilor să modifice nivelurile de încredere ale utilizatorilor."
     prioritize_username_in_ux: "Afișează întâi nume utilizator pe pagina utilizator, pe cardul utilizator și în postări (dacă e dezactivat, se afișează întâi numele)"
     enable_rich_text_paste: "Activează conversia automată din HTML în Markdown la lipirea textului în compozitor."
     email_token_valid_hours: "Tokenul uitat parolă / activează cont sunt valabili pentru (n) ore."
@@ -1033,7 +1037,7 @@ ro:
     auth_overrides_avatar: "Suprascrie avatarul local cu avatarul site-ului extern la fiecare conectare și previne modificările locale. Se aplică tuturor furnizorilor de autentificare."
     allow_new_registrations: "Permite înregistrarea noilor utilizatori. Debifați pentru a restricționa pe oricine să creeze un cont nou."
     enable_signup_cta: "Arată o notificare către utilizatorii anonimi care revin prin care să le ceri să se înregistreze pentru a avea un cont pe site."
-    enable_discourse_id: "Activează autentificarea prin Discourse ID, un serviciu de conectare unică ce permite utilizatorilor să se conecteze la mai multe site-uri Discourse folosind un singur cont. Furnizorii obișnuiți de conectare socială, cum ar fi Google, Facebook și Twitter, sunt acceptați fără configurare suplimentară. Consultă <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> pentru mai multe detalii."
+    enable_discourse_id: "Activează autentificarea prin Discourse ID, un serviciu de conectare unică ce permite utilizatorilor să se conecteze la mai multe site-uri Discourse folosind un singur cont. Furnizorii comuni de conectare socială, cum ar fi Google, Facebook, Apple și GitHub, sunt acceptați fără configurare suplimentară. Consultă <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> pentru mai multe detalii."
     google_oauth2_client_secret: "Secret client al aplicației tale Google."
     google_oauth2_hd_groups: "Preia grupurile Google ale utilizatorilor pe domeniul găzduit la autentificare. Grupurile Google preluate pot fi utilizate pentru a acorda automat calitatea de membru al grupului Discourse (consultă setările grupului). Pentru mai multe informații, vezi https://meta.discourse.org/t/226850"
     google_oauth2_verbose_logging: "Înregistrează diagnostice verbale legate de Google OAuth2 în <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -1207,8 +1211,6 @@ ro:
     max_daily_gravatar_crawls: "Numărul maxim zilnic de verificări pe care Discourse le va face pe Gravatar pentru a vedea dacă există avatare personalizate."
     enable_user_directory: "Furnizează un „carte de telefon” cu utilizatorii"
     allow_anonymous_mode: "Activează opțiunea pentru ca utilizatorii să treacă la modul anonim pentru postare. Când este activată, utilizatorii pot opta ca identitățile lor să fie ascunse atunci când creează postări sau subiecte pe tot site-ul. Vezi și „permite aprecieri anonime”."
-    allow_likes_in_anonymous_mode: "Activează această setare pentru a permite utilizatorilor care navighează anonim pe site-ul tău să aprecieze postările. Când este activată, utilizatorii pot opta ca identitățile lor să fie ascunse atunci când apreciază postărilor sau subiectele de pe site. Vezi și „permite modul anonim”."
-    anonymous_posting_min_trust_level: "Nivelul minim de încredere necesar pentru a putea activa postarea anonimă."
     anonymous_account_duration_minutes: "Pentru protejarea anonimității, creează un nou cont anonim la fiecare N minute pentru fiecare utilizator. Exemplu: dacă e setat la 600, imediat ce au trecut 600 de minute de la ultima postare șI utilizatorul a comutat pe anonim, va fi creat un nou cont anonim."
     hide_user_profiles_from_public: "Dezactivează cardurile, profilurile și „cartea de telefon” pentru utilizatorii anonimi."
     allow_users_to_hide_profile: "Permite utilizatorilor să-şi ascundă profilul şi prezenţa"
@@ -1243,6 +1245,7 @@ ro:
     auto_close_messages_post_count: "Numărul maxim de postări permise într-un mesaj privat înainte să fie închis automat (0 pentru dezactivare) "
     auto_close_topics_post_count: "Numărul maxim de postări permise într-un subiect înainte ca acesta să fie închis automat (0 pentru dezactivare)"
     code_formatting_style: "Butonul Cod din cadrul editorului va fi setat cu opțiunea implicită pe acest stil de formatare cod "
+    old_post_notice_days: "Numărul de zile după care notificările privind postările pentru utilizatorii noi și cei care revin vor fi ascunse. Notificarea oficială privind postarea va rămâne întotdeauna vizibilă."
     default_email_digest_frequency: "Frecvența implicită cu care utilizatorii primesc emailuri-rezumat."
     default_include_tl0_in_digests: "Implicit, include postări de la utilizatori noi în emailurile-rezumat. Utilizatorii pot schimba această opțiune din preferințele lor."
     default_email_mailing_list_mode: "Implicit, trimite un email pentru fiecare nou mesaj."
@@ -1286,9 +1289,6 @@ ro:
     welcome_banner_location: "Stabilește unde va apărea bannerul de bun venit pe pagină."
     welcome_banner_page_visibility: "Stabilește pe ce pagini va apărea bannerul de bun venit."
     experimental_new_new_view_groups: 'Activează o nouă listă de subiecte care combină subiectele necitite și cele noi și fă ca legătura „Toate” din bara laterală să ducă spre aceasta.'
-    deactivate_widgets_rendering: "Dezactivează motorul de randare a pieselor vechi. Aceasta va dezactiva toate piesele care nu au fost actualizate la componentele Glimmer și va forța activarea necondiționată a fluxului de postări Glimmer, indiferent de valoarea setării `glimmer_post_stream_mode`. Această setare nu este recomandată pentru site-urile de producție, deoarece poate deteriora temele și modulele existente."
-    floatkit_autocomplete_composer: "Activează meniul de completare automată bazat pe Floatkit în compozitor. Aceasta este o îmbunătățire a interfeței utilizator care va înlocui meniul actual de completare automată bazat pe jQuery."
-    floatkit_autocomplete_chat_composer: "Activează meniul de completare automată bazat pe Floatkit în compozitorul de discuții. Aceasta este o îmbunătățire a interfeței utilizator care va înlocui meniul actual de completare automată bazat pe jQuery."
     experimental_form_templates: "Activează caracteristica șabloane de formulare. Gestionează șabloanele la <a href='%{base_path}/admin/customize/form-templates'>Personalizare/șabloane</a>."
     show_preview_for_form_templates: "Activează funcționalitatea de previzualizare pentru șabloanele de formulare"
     experimental_impersonation: "Preia identitatea unui utilizator fără a fi nevoie să te deconectezi din contul tău de administrator."
@@ -1300,12 +1300,13 @@ ro:
     about_page_extra_groups_order: "Ordonarea grupurilor suplimentare pe pagina „Despre”."
     rich_editor: "Activează editorul îmbogățit pentru compoziție astfel încât toți utilizatorii să poată comuta între modul Markdown curent și noul editor de text îmbogățit pentru o compoziție mai intuitivă și mai ușor de utilizat."
     default_composition_mode: "Setează modul implicit pentru compozitorul comunității tale. Modul de text îmbogățit oferă o experienţă de scriere mai modernă, familiară pentru majoritatea utilizatorilor, în timp ce Markdown este potrivit pentru publicul mai tehnic. Membrii pot folosi o comutare în bara de instrumente a compozitorului pentru a comuta între moduri."
-    viewport_based_mobile_mode: "EXPERIMENTAL: Dezactivează modurile mobil/desktop bazate pe agent utilizator și folosește, în schimb, lățimea spațiului vizibil."
     reviewable_ui_refresh: "Grupuri care pot folosi noua interfață de utilizator experimentală în coada de revizuire."
+    viewport_based_mobile_mode: "Folosește lățimea ferestrei de vizualizare pentru a determina modurile mobil sau desktop. Această setare va fi eliminată în curând. Dacă ai nevoie să o dezactivezi, te rog să ne anunți <a href='https://meta.discourse.org/t/384280'>pe Meta</a>."
     content_localization_enabled: "Afișează conținutul localizat pentru utilizatori bazat pe preferințele lor de navigator sau de limbă ale utilizatorului. Acest conținut poate include categorii, etichete, postări și subiecte. Localele acceptate sunt setate în „locale disponibile pentru localizarea conținutului”."
     content_localization_supported_locales: "Lista localelor acceptate în care poate fi tradus conținutul. Necesită „localizarea conținutului activată”."
     content_localization_allowed_groups: "Grupuri care pot actualiza conținutul localizat. Necesită „localizarea conținutului activat”."
     content_localization_language_switcher: "Arată un comutator de limbă în antet, permițând vizitatorilor să schimbe între versiunile traduse Discourse și conținutul la care au contribuit utilizatorii. Folosește limbile definite în „locale acceptate din localizarea de conținut”"
+    fake_upcoming_change: "Aceasta este o modificare viitoare falsă, în scopuri de testare. Nu este nevoie să traduci acest șir."
     errors:
       invalid_email: "Adresă de email invalidă."
       invalid_username: "Nu există nici un utilizator cu acest nume de utilizator."
@@ -1350,7 +1351,7 @@ ro:
   filter:
     description:
       status: "Filtrează subiectele după starea lor"
-      in: "Filtrează subiectele după listele personale"
+      in: "Filtrează subiecte în listele personale"
       order: "Sortează subiectele după un anumit câmp"
       category: "Arată subiectele într-o anumită categorie"
       category_any: "Arată subiectele în oricare dintre categoriile specificate (separate prin virgulă)"
@@ -1370,9 +1371,6 @@ ro:
       activity_after: "Arată subiectele cu ultima activitate după o dată (AAAA-LL-ZZ sau acum câteva zile)"
       created_before: "Arată subiectele create înainte de o dată (AAAA-LL-ZZ sau acum câteva zile)"
       created_after: "Arată subiectele create după o dată (AAAA-LL-ZZ sau acum câteva zile)"
-      created_by: "Arată subiectele create de un anumit utilizator"
-      created_by_user: "Arată subiectele create de numele de utilizator (fără @)"
-      created_by_multiple: "Arată subiectele create de oricare dintre utilizatorii specificați (separați prin virgulă)"
       latest_post_before: "Arată subiectele cu ultima postare înainte de o dată (AAAA-LL-ZZ sau acum câteva zile)"
       latest_post_after: "Arată subiectele cu ultima postare după o dată (AAAA-LL-ZZ sau acum câteva zile)"
       likes_min: "Arată subiectele cu cel puțin atâtea aprecieri"
@@ -1953,11 +1951,14 @@ ro:
   page_not_found:
     page_title: "Pagina nu a fost găsită"
     title: "Oops! Această pagină nu există sau este privată."
-    popular_topics: "Populare"
-    recent_topics: "Recente"
+    subtitle: "Am căutat peste tot, dar nu am găsit pagina pe care o cauți."
+    popular_topics: "Subiecte populare"
+    recent_topics: "Subiecte recente"
     see_more: "Mai multe"
-    search_title: "Caută în site"
+    search_title: "Sau încerci căutarea?"
     search_button: "Caută"
+    home: "Du-mă acasă"
+    placeholder: "Caută subiecte după titlu sau cuvinte cheie…"
   login_required:
     welcome_message: "# Bine ai venit pe %{title}"
   upload:
@@ -2001,6 +2002,8 @@ ro:
     wcag_theme_name: "WCAG deschis"
     wcag_dark: "WCAG Închis"
     wcag_dark_theme_name: "WCAG Închis"
+    errors:
+      cannot_edit_remote_copies: "Modificările în copiile la distanță ale paletelor de culori nu sunt permise."
   edit_this_page: "Editează această pagină"
   csv_export:
     boolean_yes: "Da"
@@ -2364,6 +2367,12 @@ ro:
       approve_and_unhide:
         title: "Aprobă și reafișează postarea"
         complete: "Postare aprobată și afișată"
+      no_action_post:
+        title: "Nicio acțiune"
+      delete_post:
+        complete: "Postarea a fost ștearsă"
+      restore_post:
+        complete: "Postarea a fost restaurată"
       user_actions:
         bundle_title: "Ce vrei să faci cu utilizatorul?"
       no_action_user:
@@ -2385,6 +2394,10 @@ ro:
         description: "Șterge acest utilizator din forum"
         complete: "Utilizatorul a fost șters"
       delete_and_block_user:
+        title: "Șterge și blochează"
+        description: "Șterge utilizatorul și blochează-i IP-ul sau emailul"
+        complete: "Utilizatorul a fost șters și blocat"
+      delete_user_block:
         title: "Șterge și blochează"
         description: "Șterge utilizatorul și blochează-i IP-ul sau emailul"
         complete: "Utilizatorul a fost șters și blocat"

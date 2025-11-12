@@ -269,7 +269,7 @@ ja:
       header:
         logged_in_members: "%{preferred_display_name}、おかえりなさい！"
         anonymous_members: "%{site_name} へようこそ！"
-      search: "検索"
+      search_placeholder: "検索"
     themes:
       default_description: "デフォルト"
       broken_theme_alert: "テーマ / コンポーネントにエラーがあるため、サイトが動作しない可能性があります。詳細はブラウザコンソールを確認してください。"
@@ -534,6 +534,7 @@ ja:
       other: "%{count} 件の新規トピックを見る"
     preview: "プレビュー"
     cancel: "キャンセル"
+    done: "完了"
     deleting: "削除中..."
     save: "変更を保存"
     saving: "保存中…"
@@ -620,10 +621,6 @@ ja:
         claimed_by_you: "この項目を自分に割り当てたため、レビューできます。"
         claimed_by_other: "この項目は <b>%{username}</b> のみがレビューできます。"
         automatically_claimed_by: "この項目は現在、<b>%{username}</b> がレビューしています。"
-      claim:
-        title: "トピックを自分に割り当てる"
-      unclaim:
-        help: "この割り当てを削除する"
       awaiting_approval: "承認待ち"
       delete: "削除"
       settings:
@@ -687,7 +684,7 @@ ja:
           other: "ユーザー: %{count} 人"
       replies:
         other: "返信: %{count} 件"
-      edit: "編集"
+      edit: "投稿を編集"
       save: "保存"
       cancel: "キャンセル"
       new_topic: "この項目を承認すると新しいトピックが作成されます"
@@ -709,7 +706,6 @@ ja:
           created_at: "作成日"
           created_at_asc: "作成日 (昇順)"
         priority:
-          title: "最低優先度"
           any: "(すべて)"
           low: "低"
           medium: "普通"
@@ -774,6 +770,7 @@ ja:
           title: "投稿"
           noun: "投稿"
       flagged_as: "通報:"
+      user_label: "ユーザー"
       assigned_to: "割り当て先"
       moderator_actions: "モデレーターのアクション"
       timeline_and_notes: "タイムラインとメモ"
@@ -797,7 +794,7 @@ ja:
         chars_remaining: "残り %{count} 文字"
         delete_note: "このメモを削除する"
         delete: "削除"
-      new_topic_label: "新規トピック"
+      topic_label: "トピック"
       queued_user: "キューのユーザー"
       posted_in: "投稿先:"
       flagged_user: "通報されたユーザー"
@@ -810,9 +807,6 @@ ja:
         flag_volume: "通報回数"
         flagged_by_users:
           other: "%{count} 人のユニークユーザーによる通報"
-        similar_posts: "過去の同様の投稿"
-        flagged_in_timeframe: "過去に %{count} 回通報"
-        user_activity: "ユーザーアクティビティ"
         activities:
           new_account: "新規アカウント"
           trust_level: "信頼レベル: %{trustLevelName}"
@@ -2483,6 +2477,7 @@ ja:
         other: "+%{count} 個のサブカテゴリ"
       topic_count:
         other: "このカテゴリの %{count} 件のトピック"
+      read_only: "読み取り専用"
     timezone_input:
       ambiguous_ist: "IST はあいまいです。特定のタイムゾーンを選択してください（「アジア/コルカタ」など）"
     select_kit:
@@ -2565,7 +2560,7 @@ ja:
         title: "投稿の翻訳"
         select: "翻訳を選択"
         save: "翻訳を保存"
-        original_content: "元の投稿のコンテンツ"
+        translation: "翻訳"
         placeholder: "ここに投稿の翻訳を入力します..."
       group_mentioned_limit:
         other: "<b>警告！</b> <a href='%{group_link}'>%{group}</a> をメンションしましたが、このグループのメンバー数は、管理者がメンション数制限として設定した %{count} 人を超えています。そのため誰にも通知されません。"
@@ -2607,7 +2602,7 @@ ja:
       reply: "返信"
       cancel: "キャンセル"
       create_topic: "トピックを作成"
-      create_pm: "メッセージを送信"
+      create_pm: "メッセージを送信する"
       create_whisper: "ささやき"
       create_shared_draft: "共有の下書きを作成"
       edit_shared_draft: "共有の下書きを編集"
@@ -2704,6 +2699,9 @@ ja:
         create_topic:
           label: "新規トピック"
           desc: 新しいトピックを作成します
+        create_personal_message:
+          label: "新規メッセージ"
+          desc: "新しい個人メッセージを作成する"
         shared_draft:
           label: "共有の下書き"
           desc: "許可されたユーザーにのみ表示されるトピックの下書きを作成します"
@@ -2712,7 +2710,6 @@ ja:
           desc: "最新の返信日を変更せずに返信します"
         toggle_unlisted:
           label: 非表示の切り替え
-          desc: 非表示のトピックは、メンバーがダイレクトリンクでのみアクセスできます
       reload: "再読み込み"
       ignore: "無視する"
       image_alt_text:
@@ -3162,9 +3159,7 @@ ja:
       filter_to:
         other: "トピックの %{count} 件の投稿"
       create: "新規トピック"
-      create_disabled_category: "このカテゴリにトピックを作成することはできません"
-      create_disabled_tag: "このタグでトピックを作成することはできません"
-      create_long: "新しいトピックの作成"
+      create_long: "新しいトピックを作成します"
       open_draft: "下書きを開く"
       private_message: "メッセージを書く"
       archive_message:
@@ -3320,8 +3315,6 @@ ja:
         auto_delete_replies: "このトピックへの返信は、%{duration}後に自動的に削除されます。"
       auto_close_title: "自動クローズの設定"
       auto_close_immediate:
-        other: "このトピックは最終投稿からすでに %{count} 時間経過しているため、すぐにクローズされます。"
-      auto_close_momentarily:
         other: "このトピックは最終投稿からすでに %{count} 時間経過しているため、すぐにクローズされます。"
       timeline:
         back: "戻る"
@@ -3580,6 +3573,9 @@ ja:
       title: "最新の投稿"
       empty: "投稿はありません"
       aria_post_number: "%{title} - 投稿 #%{postNumber}"
+      bulk:
+        clear_all: "すべてクリア"
+        actions: "一括操作"
     post:
       confirm_delete: "この投稿を削除してもよろしいですか？"
       quote_reply: "引用"
@@ -3679,10 +3675,7 @@ ja:
         attachment_upload_not_allowed_for_new_user: "新規ユーザーはファイルを添付できません。"
         attachment_download_requires_login: "添付ファイルをダウンロードするには、ログインする必要があります。"
       cancel_composer:
-        confirm: "投稿をどうしますか？"
         discard: "破棄"
-        save_draft: "後で使用するために下書きとして保存"
-        keep_editing: "編集を続ける"
       via_email: "これはメールで投稿されました"
       via_auto_generated_email: "この投稿は自動生成メール経由で届きました"
       whisper: "この投稿はモデレーターの非公開のささやきです"
@@ -3906,6 +3899,8 @@ ja:
       style: "スタイル"
       background_color: "色"
       foreground_color: "テキストの色"
+      color_validations:
+        cant_be_empty: "空にできません"
       styles:
         type: "スタイル"
         icon: "アイコン"
@@ -4266,7 +4261,6 @@ ja:
     preloader_text: "読み込み中"
     lightbox:
       download: "ダウンロード"
-      open: "元の画像"
       previous: "前へ (左矢印キー)"
       next: "次へ (右矢印キー)"
       counter: "%curr% / %total%"
@@ -4310,7 +4304,6 @@ ja:
         go_to_unread_post: "%{shortcut} 最初の未読の投稿に移動"
       application:
         title: "アプリケーション"
-        create: "%{shortcut} 新しいトピックを作成"
         notifications: "%{shortcut} 通知を開く"
         hamburger_menu: "%{shortcut} ナビゲーションメニューを開く"
         user_profile_menu: "%{shortcut} ユーザーメニューを開く"
@@ -4444,7 +4437,6 @@ ja:
         other: "少なくとも %{count} 個のタグを選択してください…"
       choose_for_topic_required_group:
         other: "'%{name}' から %{count} 個のタグを選択…"
-      info: "情報"
       default_info: "このタグはどのカテゴリにも制限されておらず、同義語もありません。"
       staff_info: "制限を追加するには、このタグを<a href=%{basePath}/tag_groups>タググループ</a>に追加します。"
       category_restricted: "このタグは、アクセス権限のないカテゴリに制限されています。"
@@ -4951,6 +4943,7 @@ ja:
   admin_js:
     type_to_filter: "入力してフィルタ..."
     settings: "設定"
+    reset_filter: "リセット"
     admin:
       title: "Discourse の管理者"
       moderator: "モデレーター"
@@ -4983,6 +4976,21 @@ ja:
           title: "プラグイン"
         advanced:
           title: "高度"
+      upcoming_changes:
+        name: "名前"
+        enabled: "有効"
+        select_groups: "グループを選択…"
+        preview: "プレビュー"
+        impact_roles:
+          admins: "管理者"
+          moderators: "モデレーター"
+          staff: "スタッフ"
+        filter:
+          all: "すべて"
+          enabled: "有効"
+          disabled: "無効"
+          impact_type_feature: "機能"
+          impact_type_other: "その他"
       config:
         about:
           title: "サイトについて"
@@ -5013,9 +5021,12 @@ ja:
           title: "ローカリゼーション"
           header_description: "コミュニティーのインターフェース言語とメンバー向けのその他のローカリゼーションオプションを構成します"
           keywords: "ロケール|言語|タイムゾーン|Unicode|ltr"
-        login_and_authentication:
+        login:
           title: "ログインと認証"
           header_description: "ユーザーのログインと認証方法、シークレットと鍵、OAuth2 プロバイダーなどを構成します"
+          sub_pages:
+            common_settings:
+              title: "設定"
         logo:
           title: "ロゴ"
           header_description: "サイト全体で使用されるロゴとアイコンを構成します"
@@ -6172,7 +6183,6 @@ ja:
         copy_to_clipboard: "クリップボードにコピー"
         copied_to_clipboard: "クリップボードにコピーしました"
         copy_to_clipboard_error: "データをクリップボードにコピーする際にエラーが発生しました"
-        theme_owner: "編集できません。オーナー:"
         email_templates:
           title: "メール"
           subject: "件名"
@@ -6180,6 +6190,7 @@ ja:
           body: "本文"
           revert: "変更を戻す"
           revert_confirm: "変更を戻してよろしいですか？"
+          edit: "編集"
         component:
           all_filter: "すべて"
           used_filter: "使用中"
@@ -6400,6 +6411,8 @@ ja:
         schema:
           title: "%{name} 設定の編集"
           back_button: "%{name} に戻る"
+          move_up: "上に移動"
+          move_down: "下に移動"
           fields:
             required: "*必須"
             groups:
@@ -7171,7 +7184,6 @@ ja:
             cancel: "キャンセル"
         merging_user: "ユーザーをマージ中…"
         merge_failed: "ユーザーをマージ中にエラーが発生しました。"
-        delete_posts_forbidden_because_staff: "管理者とモデレーターのすべての投稿を削除できません。"
         delete_forbidden:
           other: "投稿が存在するユーザーを削除できません。ユーザーを削除する前にすべての投稿を削除してください。(%{count} 日以上経過した投稿は削除できません)"
         cant_delete_all_posts:

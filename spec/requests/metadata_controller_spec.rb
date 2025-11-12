@@ -223,6 +223,24 @@ RSpec.describe MetadataController do
         json = response.parsed_body
         expect(json["token"]).to eq(token)
         expect(json["domain"]).to eq(Discourse.current_hostname)
+        expect(json).to_not have_key("path")
+      end
+
+      context "when using subfolder" do
+        before { set_subfolder "/f" }
+
+        it "also returns the path" do
+          get "/.well-known/discourse-id-challenge"
+
+          expect(response.status).to eq(200)
+          expect(response.media_type).to eq("application/json")
+          expect(response.headers["Cache-Control"]).to eq("max-age=300, private")
+
+          json = response.parsed_body
+          expect(json["token"]).to eq(token)
+          expect(json["domain"]).to eq(Discourse.current_hostname)
+          expect(json["path"]).to eq(Discourse.base_path)
+        end
       end
     end
 
@@ -233,7 +251,7 @@ RSpec.describe MetadataController do
         get "/.well-known/discourse-id-challenge"
 
         expect(response.status).to eq(404)
-        expect(response.cache_control).to eq({})
+        expect(response["Cache-Control"]).to eq("no-cache, no-store")
       end
     end
   end

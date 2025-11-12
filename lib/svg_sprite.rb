@@ -95,6 +95,7 @@ module SvgSprite
         discourse-table
         discourse-text
         discourse-threads
+        discourse-chat-search
         discourse-add-translation
         download
         discourse-h1
@@ -115,6 +116,7 @@ module SvgSprite
         fab-facebook
         fab-facebook-square
         fab-github
+        fab-google
         fab-instagram
         fab-linkedin-in
         fab-linux

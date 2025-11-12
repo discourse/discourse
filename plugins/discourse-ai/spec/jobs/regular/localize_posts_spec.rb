@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 describe Jobs::LocalizePosts do
-  fab!(:post)
   subject(:job) { described_class.new }
+
+  fab!(:post)
 
   let(:locales) { %w[en ja de] }
 
@@ -38,6 +39,13 @@ describe Jobs::LocalizePosts do
 
   it "does nothing when ai_translation_backfill_hourly_rate is 0" do
     SiteSetting.ai_translation_backfill_hourly_rate = 0
+    DiscourseAi::Translation::PostLocalizer.expects(:localize).never
+
+    job.execute({ limit: 10 })
+  end
+
+  it "skips translation when credits are unavailable" do
+    DiscourseAi::Translation.expects(:credits_available_for_post_localization?).returns(false)
     DiscourseAi::Translation::PostLocalizer.expects(:localize).never
 
     job.execute({ limit: 10 })
@@ -137,6 +145,22 @@ describe Jobs::LocalizePosts do
     end
   end
 
+  context "when relocalize quota is exhausted" do
+    before { post.update(locale: "es") }
+
+    it "skips localization for posts that have exceeded quota for a specific locale" do
+      DiscourseAi::Translation::PostLocalizer::MAX_QUOTA_PER_DAY.times do
+        DiscourseAi::Translation::PostLocalizer.has_relocalize_quota?(post, "en")
+      end
+
+      DiscourseAi::Translation::PostLocalizer.expects(:localize).with(post, "en").never
+      DiscourseAi::Translation::PostLocalizer.expects(:localize).with(post, "ja").once
+      DiscourseAi::Translation::PostLocalizer.expects(:localize).with(post, "de").once
+
+      job.execute({ limit: 10 })
+    end
+  end
+
   describe "with public content limitation" do
     fab!(:private_category) { Fabricate(:private_category, group: Group[:staff]) }
     fab!(:private_topic) { Fabricate(:topic, category: private_category) }
@@ -144,7 +168,7 @@ describe Jobs::LocalizePosts do
 
     fab!(:public_post) { Fabricate(:post, locale: "es") }
 
-    fab!(:personal_pm_topic) { Fabricate(:private_message_topic) }
+    fab!(:personal_pm_topic, :private_message_topic)
     fab!(:personal_pm_post) { Fabricate(:post, topic: personal_pm_topic, locale: "es") }
 
     fab!(:group)

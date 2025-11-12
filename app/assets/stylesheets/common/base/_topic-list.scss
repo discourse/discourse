@@ -6,50 +6,6 @@
   --category-header-border: 1px solid var(--content-border-color);
 }
 
-#navigation-bar {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0;
-  margin-bottom: var(--nav-space);
-  margin-right: auto;
-}
-
-.navigation-controls {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-  margin-bottom: var(--nav-space);
-  gap: var(--nav-space) 0; // used if the buttons wrap
-
-  > * {
-    white-space: nowrap;
-
-    &:not(:last-child) {
-      margin-right: var(--space-2);
-    }
-  }
-
-  .select-kit-header {
-    height: 100%;
-  }
-
-  @include viewport.until(sm) {
-    .edit-category {
-      .d-button-label {
-        display: none;
-      }
-
-      .d-icon {
-        margin: 0;
-      }
-    }
-  }
-
-  .dismiss-container-top:empty {
-    display: none;
-  }
-}
-
 .category-heading {
   max-width: 100%;
 
@@ -140,6 +96,13 @@
     margin-bottom: var(--space-2);
     font-size: var(--font-down-2);
     word-break: break-word;
+
+    // special exception case because this class gets applied where it shouldn't, example in excerpts in bookmark pages
+    .only-emoji {
+      width: 1em;
+      height: 1em;
+      margin-block: 0;
+    }
   }
 }
 
@@ -414,6 +377,35 @@
     color: var(--danger-medium);
     font-size: var(--font-0);
     cursor: default;
+  }
+
+  .show-more {
+    &.has-topics {
+      @include viewport.from(md) {
+        position: absolute;
+        z-index: z("base");
+        width: auto;
+        right: 50%;
+        transform: translateX(50%);
+        font-size: var(--font-down-1-rem);
+
+        .alert {
+          border-radius: var(--d-border-radius-large);
+        }
+      }
+    }
+
+    .alert {
+      align-items: center;
+      gap: 0.5em;
+      margin: 0;
+      padding: var(--space-2) var(--space-4);
+
+      &.loading {
+        color: var(--primary-medium);
+        cursor: default;
+      }
+    }
   }
 }
 

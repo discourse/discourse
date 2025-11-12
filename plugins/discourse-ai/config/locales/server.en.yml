@@ -1,10 +1,17 @@
 en:
+  activerecord:
+    attributes:
+      llm_model:
+        name: "Model ID"
+        max_prompt_tokens: "Context window"
+
   discourse_automation:
     ai:
       flag_types:
         review: "Add post to review queue"
         review_hide: "Add post to review queue and hide post"
         review_delete: "Add post to review queue and delete post"
+        review_delete_silence: "Add post to review queue, delete post and silence user"
         spam: "Flag as spam and hide post"
         spam_silence: "Flag as spam, hide post and silence user"
     scriptables:
@@ -19,8 +26,8 @@ en:
         description: "Triage posts using a large language model"
         flagged_post: |
           <div>Response from the model:</div>
-          <p>%%LLM_RESPONSE%%</p>
-          <b>Triggered by the <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a> rule.</b>
+          <p>%{llm_response}</p>
+          <b>Triggered by the <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> rule.</b>
         notify_author_pm:
           subject: "Your post was temporarily removed for review"
           body: |
@@ -79,7 +86,6 @@ en:
     composer_ai_helper_allowed_groups: "Users on these groups will see the AI helper button in the composer."
     ai_helper_allowed_in_pm: "Enable the composer's AI helper in PMs."
     ai_helper_model: "Model to use for the AI helper."
-    ai_helper_custom_prompts_allowed_groups: "Users on these groups will see the custom prompt option in the AI helper."
     ai_helper_automatic_chat_thread_title_delay: "Delay in minutes before the AI helper automatically sets the chat thread title."
     ai_helper_automatic_chat_thread_title: "Automatically set the chat thread titles based on thread contents."
     ai_helper_illustrate_post_model: "Model to use for the composer AI helper's illustrate post feature"
@@ -96,6 +102,8 @@ en:
     ai_embeddings_semantic_search_use_hyde: "Use HyDE for semantic full page search. Uses an LLM to create an hypothetical post from the user search term to help with matches."
     ai_embeddings_semantic_quick_search_enabled: "Enable semantic search option in search menu popup."
     ai_embeddings_semantic_related_include_closed_topics: "Include closed topics in semantic search results"
+    ai_embeddings_semantic_related_age_penalty: "Apply exponential age penalty to topics in semantic search results. 0.0 = no penalty, 0.3 = gentle bias toward recently active content, 1.0+ = strong recency bias."
+    ai_embeddings_semantic_related_age_time_scale: "Time scale in days for age penalty calculation. Topics inactive this many days receive ~50% penalty with penalty=1.0. Use 365 for yearly scale, 90 for quarterly scale."
     ai_embeddings_semantic_search_hyde_model: "Model used to expand keywords to get better results during a semantic search"
     ai_embeddings_per_post_enabled: Generate embeddings for each post
 
@@ -113,8 +121,12 @@ en:
     ai_bot_allowed_groups: "When the GPT Bot has access to the PM, it will reply to members of these groups."
     ai_bot_debugging_allowed_groups: "Allow these groups to see a debug button on posts which displays the raw AI request and response"
     ai_bot_public_sharing_allowed_groups: "Allow these groups to share AI personal messages with the public via a unique publicly available link. Note: if your site requires login, shares will also require login."
-    ai_bot_add_to_header: "Display a button in the header to start a PM with a AI Bot"
+    ai_bot_add_to_header: "Display a button in the header to start a PM with an AI Bot"
+    ai_bot_add_to_community_section: "Display a link in the sidebar community section to start a PM with an AI Bot"
     ai_bot_github_access_token: "GitHub access token for use with GitHub AI tools (required for search support)"
+
+    ai_discover_enabled: "Enable the discovery search feature"
+    ai_discover_persona: "Persona to use for discovery search feature"
 
     ai_stability_api_key: "API key for the stability.ai API"
     ai_stability_engine: "Image generation engine to use for the stability.ai API"
@@ -129,13 +141,14 @@ en:
     ai_discord_search_mode: "Select the search mode to use for Discord search"
     ai_discord_search_persona: "The persona to use for Discord search."
     ai_discord_allowed_guilds: "Discord guilds (servers) where the bot is allowed to search"
-    ai_bot_enable_dedicated_ux: "Allow for full screen bot interface, instead of a PM"
 
-    ai_translation_enabled: "Enables the AI translation feature"
+    ai_translation_enabled: "Enable the AI translation feature"
     ai_translation_model: "The model to use for translation. This model must support translation. Personas can override this setting."
     ai_translation_backfill_limit_to_public_content: "When enabled, only content in public categories will be translated. When disabled, content in group PMs and private categories will also be sent for translation."
     ai_translation_max_post_length: "The maximum number of characters for a post to be translated. Posts longer than this will not be translated."
     ai_translation_backfill_max_age_days: "The maximum age of a post and topic to be translated. Posts and topics older than this will not be translated. 0 disables backfilling, but will not disable translation of new posts."
+    ai_translation_backfill_hourly_rate: "The number of posts and topics to translate per hour during backfill operations. Set to 0 to disable automatic backfilling of translations for existing content."
+    ai_translation_max_tokens_multiplier: "Multiplier to determine the maximum number of tokens to use for translation. By default, we set the max tokens to approximately two to five times the number of characters in the post. This multiplier can be adjusted to allow for thinking or reasoning models which will use more tokens."
 
   reviewables:
     reasons:
@@ -269,6 +282,8 @@ en:
     ai_helper:
       errors:
         completion_request_failed: "Something went wrong while trying to provide suggestions. Please, try again."
+        credit_limit_exceeded_user: "You've hit the AI credit limit for your plan. Responses will be unavailable until your limit resets %{reset_time}."
+        credit_limit_exceeded_bot: "AI responses are currently unavailable due to credit limits. Please try again %{reset_time}."
       prompts:
         translate: Translate to %{language}
         generate_titles: Suggest topic titles
@@ -413,6 +428,9 @@ en:
         report_runner:
           name: "Report runner"
           description: "Default persona used in the report automation script"
+        discover:
+          name: "Discover"
+          description: "Default persona used in the discoveries feature (complimentary search)"
 
       topic_not_found: "Summary unavailable, topic not found!"
       summarizing: "Summarizing topic"
@@ -632,6 +650,13 @@ en:
       set: "set"
       removed: "removed"
 
+    translation:
+      errors:
+        disabled: "The AI translation feature is not fully configured."
+
+    llm_credit_allocation:
+      limit_exceeded: "You have reached your AI credit limit. Please try again in %{reset_time}."
+
     errors:
       quota_exceeded: "You have exceeded the quota for this model. Please try again in %{relative_time}."
       quota_required: "You must specify maximum tokens or usages for this model"
@@ -651,3 +676,5 @@ en:
   dashboard:
     problem:
       ai_llm_status: "The LLM model: %{model_name} is encountering issues. Please check the <a href='%{url}'>model's configuration page</a>."
+      ai_credit_soft_limit: "%{model_name} has only %{percentage_remaining}% of credits remaining. Credits will reset at %{reset_date}. <a href='%{url}'>View AI models</a>"
+      ai_credit_hard_limit: "You have run out of AI credits for %{model_name}. AI features will be unavailable until %{reset_date}. <a href='%{url}'>View AI models</a>"

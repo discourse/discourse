@@ -167,7 +167,7 @@ vi:
       header:
         logged_in_members: "Chào mừng %{preferred_display_name} đã trở lại đây!"
         anonymous_members: "Chào mừng đến với %{site_name}!"
-      search: "Tìm kiếm"
+      search_placeholder: "Tìm kiếm"
     themes:
       default_description: "Mặc định"
       error_caused_by: "Gây ra bởi '%{name}'. <a target='blank' href='%{path}'>Nhấp vào đây</a> để cập nhật, cấu hình lại hoặc tắt."
@@ -218,7 +218,7 @@ vi:
     joined: "Đã tham gia"
     admin_title: "Quản trị"
     show_more: "hiện thêm"
-    show_help: "lựa chọn"
+    show_help: "Tùy chọn"
     links: "Liên kết"
     links_lowercase:
       other: "liên kết"
@@ -379,6 +379,7 @@ vi:
       other: "Xem %{count} chủ đề mới"
     preview: "xem trước"
     cancel: "Huỷ"
+    done: "Hoàn tất"
     deleting: "Đang xóa…"
     save: "Lưu thay đổi"
     saving: "Đang lưu…"
@@ -451,10 +452,6 @@ vi:
         required: "Bạn phải yêu cầu các mục trước khi bạn có thể xem xét chúng."
         claimed_by_you: "Bạn đã yêu cầu mặt hàng này và có thể xem xét nó."
         claimed_by_other: "Mục này chỉ có thể được xem xét bởi <b>%{username}</b> ."
-      claim:
-        title: "yêu cầu chủ đề này"
-      unclaim:
-        help: "xóa yêu cầu này"
       awaiting_approval: "Đang đợi Phê duyệt"
       delete: "Xóa"
       settings:
@@ -474,7 +471,6 @@ vi:
       topic: "Chủ đề:"
       filtered_topic: "Bạn đã lọc đến nội dung có thể xem lại trong một chủ đề."
       filtered_user: "Người dùng"
-      filtered_reviewed_by: "Xét bởi"
       show_all_topics: "hiển thị toàn bộ chủ đề"
       deleted_post: "(bài viết đã bị xóa)"
       deleted_user: "(người dùng đã bị xóa)"
@@ -510,7 +506,7 @@ vi:
           other: "%{count} người dùng"
       replies:
         other: "%{count} trả lời"
-      edit: "Sửa"
+      edit: "Sửa bài đăng"
       save: "Lưu"
       cancel: "Hủy"
       new_topic: "Phê duyệt mục này sẽ tạo một chủ đề mới"
@@ -531,7 +527,6 @@ vi:
           created_at: "Được tạo tại"
           created_at_asc: "Tạo tại (đảo ngược)"
         priority:
-          title: "Ưu tiên tối thiểu"
           any: "(bất kỳ)"
           low: "Thấp"
           medium: "Trung bình"
@@ -574,15 +569,15 @@ vi:
         reviewable_post:
           title: "Bài viết"
           noun: "bài đăng"
+      user_label: "Người dùng"
       timeline:
         flagged: "Gắn cờ"
       notes:
         delete: "Xóa"
-      new_topic_label: "Chủ đề mới"
+      topic_label: "Chủ đề"
       review_user: "Người dùng"
       view_source: "Xem mã nguồn"
       insights:
-        user_activity: "Hoạt động của người dùng"
         activities:
           new_account: "tài khoản mới"
           posts:
@@ -1294,7 +1289,7 @@ vi:
         invalid: "Username này không thích hợp. Nó chỉ chứa các ký tự là chữ cái và chữ số. "
       add_email:
         title: "Thêm Email"
-        add: "thêm vào"
+        add: "Thêm"
       change_email:
         title: "Thay đổi Email"
         taken: "Xin lỗi, email này không dùng được. "
@@ -1916,6 +1911,7 @@ vi:
         other: "+%{count} danh mục phụ"
       topic_count:
         other: "%{count} chủ đề trong danh mục này"
+      read_only: "chỉ đọc"
     select_kit:
       delete_item: "Xoá %{name}"
       filter_by: "Lọc theo: %{name}"
@@ -2013,7 +2009,6 @@ vi:
       reply: "Trả lời "
       cancel: "Huỷ"
       create_topic: "Tạo chủ đề"
-      create_pm: "Nhắn tin"
       create_whisper: "Thì thầm"
       create_shared_draft: "Tạo bản nháp được chia sẻ"
       edit_shared_draft: "Chỉnh sửa Bản nháp"
@@ -2089,8 +2084,11 @@ vi:
           label: Chuyển đổi nói thầm
           desc: Những lời thì thầm chỉ hiển thị với MOD
         create_topic:
-          label: "Chủ đề Mới"
+          label: "Chủ đề mới"
           desc: Tạo một chủ đề mới
+        create_personal_message:
+          label: "Tin nhắn mới"
+          desc: "Tạo một tin nhắn cá nhân mới"
         shared_draft:
           label: "Bản nháp được Chia sẻ"
           desc: "Nháp một chủ đề sẽ chỉ hiển thị cho người dùng được phép"
@@ -2460,7 +2458,7 @@ vi:
       filter_to:
         other: "%{count} bài viết trong chủ đề"
       create: "Chủ đề Mới"
-      create_long: "Tạo một Chủ đề mới"
+      create_long: "Tạo một chủ đề mới"
       open_draft: "Đăng bài"
       private_message: "Bắt đầu một thông điệp"
       archive_message:
@@ -2576,8 +2574,6 @@ vi:
       auto_close_title: "Tự động-Đóng các Cài đặt"
       auto_close_immediate:
         other: "Các bài mới nhất trong chủ đề này là đã %{count} giờ cũ, vì vậy đề tài sẽ đóng cửa ngay lập tức."
-      auto_close_momentarily:
-        other: "Bài cuối cùng trong chủ đề đã được %{count} giờ, vì vậy chủ đề sẽ được đóng lại trong giây lát."
       timeline:
         back: "Quay lại"
         back_description: "Quay lại bài viết chưa đọc cuối cùng của bạn"
@@ -2894,10 +2890,7 @@ vi:
         attachment_upload_not_allowed_for_new_user: "Xin lỗi, tài khoản mới không thể tải lên đính kèm."
         attachment_download_requires_login: "Xin lỗi, bạn cần đăng nhập để tải về đính kèm."
       cancel_composer:
-        confirm: "Bạn muốn làm gì với bài đăng của mình?"
         discard: "Hủy bỏ"
-        save_draft: "Lưu bản nháp để sử dụng sau"
-        keep_editing: "Tiếp tục chỉnh sửa"
       via_email: "bài viết này đăng qua email"
       via_auto_generated_email: "bài đăng này đến qua một email được tạo tự động"
       whisper: "bài viết này là lời nhắn từ điều hành viên"
@@ -3080,6 +3073,8 @@ vi:
       logo: "Logo của chuyên mục"
       background_image: "Ảnh nền của chuyên mục"
       background_color: "Màu sắc"
+      color_validations:
+        cant_be_empty: "không thể để trống"
       styles:
         icon: "Biểu tượng"
         emoji: "Emoji"
@@ -3371,8 +3366,7 @@ vi:
       readonly: "Xem"
     preloader_text: "Đang tải"
     lightbox:
-      download: "tải về"
-      open: "ảnh gốc"
+      download: "Tải xuống"
       previous: "Trước (Phím mũi tên trái)"
       next: "Tiếp theo (Phím mũi tên phải)"
       counter: "%curr% trên %total%"
@@ -3412,7 +3406,6 @@ vi:
         go_to_unread_post: "%{shortcut} Đi đến bài viết chưa đọc đầu tiên"
       application:
         title: "Ứng dụng"
-        create: "%{shortcut} Tạo mới chủ đề"
         notifications: "%{shortcut} Mở thông báo"
         user_profile_menu: "%{shortcut} Mở trình đơn thành viên"
         show_incoming_updated_topics: "%{shortcut} Show updated topics"
@@ -3517,7 +3510,6 @@ vi:
         other: "chọn ít nhất %{count} thẻ…"
       choose_for_topic_required_group:
         other: "chọn %{count} thẻ từ “%{name}”…"
-      info: "Thông tin"
       default_info: "Thẻ này không bị giới hạn đối với bất kỳ danh mục nào và không có từ đồng nghĩa."
       staff_info: "Để thêm các hạn chế, hãy đặt thẻ này vào <a href=%{basePath}/tag_groups>nhóm thẻ</a>."
       category_restricted: "Thẻ này bị hạn chế đối với các danh mục bạn không có quyền truy cập."
@@ -3778,6 +3770,7 @@ vi:
   admin_js:
     type_to_filter: "Gõ vào bộ lọc…"
     settings: "Cài đặt"
+    reset_filter: "Cài lại"
     admin:
       title: "Quản trị Diễn đàn"
       moderator: "Điều hành"
@@ -3807,6 +3800,18 @@ vi:
           title: "Plugins"
         advanced:
           title: "Nâng cao"
+      upcoming_changes:
+        name: "Tên"
+        select_groups: "Chọn nhóm…"
+        preview: "Xem trước"
+        impact_roles:
+          admins: "Quản trị"
+          moderators: "Điều hành viên"
+          staff: "Nhân viên"
+        filter:
+          all: "Tất cả"
+          disabled: "Vô hiệu hóa"
+          impact_type_other: "Khác"
       config:
         developer:
           title: "Nhà phát triển"
@@ -3818,6 +3823,10 @@ vi:
           title: "Tập tin"
         legal:
           title: "Legal"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Cài đặt"
         logo:
           form:
             mobile: "Điện thoại"
@@ -4438,7 +4447,6 @@ vi:
         copy_to_clipboard: "Sao chép vào clipboard"
         copied_to_clipboard: "Sao chép vào Clipboard"
         copy_to_clipboard_error: "Lỗi sao chép dữ liệu vào Clipboard"
-        theme_owner: "Không thể chỉnh sửa, thuộc sở hữu của:"
         email_templates:
           title: "Email"
           subject: "Chủ đề"
@@ -4446,6 +4454,7 @@ vi:
           body: "Nội dung"
           revert: "Hoàn nguyên thay đổi"
           revert_confirm: "Bạn có chắc chắn muốn hoàn nguyên các thay đổi?"
+          edit: "Sửa"
         component:
           all_filter: "All"
           disabled_filter: "Vô hiệu hóa"
@@ -5086,7 +5095,6 @@ vi:
             cancel: "Hủy"
         merging_user: "Đang hợp nhất người dùng…"
         merge_failed: "Đã xảy ra lỗi khi hợp nhất người dùng."
-        delete_posts_forbidden_because_staff: "Không thể xóa tất cả bài viết của quản trị và điều hành viên."
         delete_forbidden:
           other: "Không thể xóa tài khoản nếu họ có bài viết, hãy xóa tất cả các bài viết trước khi xóa tài khoản. (Không thể xóa các bài viết cũ hơn %{count} ngày.)"
         cant_delete_all_posts:

@@ -34,8 +34,6 @@ acceptance("Discourse Calendar - Upcoming Events Calendar", function (needs) {
         events: [
           {
             id: 67501,
-            starts_at: tomorrow().add(1, "hour"),
-            ends_at: null,
             timezone: "Asia/Calcutta",
             post: {
               id: 67501,
@@ -49,11 +47,19 @@ acceptance("Discourse Calendar - Upcoming Events Calendar", function (needs) {
             name: "Awesome Event",
             category_id: 1,
             rrule: `DTSTART:${tomorrow().add(1, "hour").format("YYYYMMDDTHHmmss")}Z\nRRULE:FREQ=DAILY;INTERVAL=1;UNTIL=${tomorrow().add(2, "days").format("YYYYMMDD")}`,
+            occurrences: [
+              {
+                starts_at: tomorrow().add(1, "hour"),
+                ends_at: null,
+              },
+              {
+                starts_at: tomorrow().add(1, "day").add(1, "hour"),
+                ends_at: null,
+              },
+            ],
           },
           {
             id: 67502,
-            starts_at: tomorrow(),
-            ends_at: null,
             timezone: "Asia/Calcutta",
             post: {
               id: 67501,
@@ -66,6 +72,12 @@ acceptance("Discourse Calendar - Upcoming Events Calendar", function (needs) {
             },
             name: "Another Awesome Event",
             category_id: 2,
+            occurrences: [
+              {
+                starts_at: tomorrow(),
+                ends_at: null,
+              },
+            ],
           },
         ],
       });

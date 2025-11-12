@@ -53,5 +53,5 @@ ur:
       web_hooks:
         voting_event:
           group_name: "موضوع ووٹنگ ایونٹ"
-          topic_upvote: "جب صارف کسی موضوع پر ووٹ دیتا ہے"
-          topic_unvote: "جب صارف کسی موضوع پر ووٹ نہیں ڈالتا ہے"
+          topic_upvote: "جب رکن کسی موضوع پر ووٹ دیتا ہے"
+          topic_unvote: "جب رکن کسی موضوع پر ووٹ نہیں ڈالتا ہے"

@@ -127,12 +127,18 @@ da:
             TL12: "TL1 til TL2"
             TL23: "TL2 til TL3"
             TL34: "TL3 til TL4"
+        point_in_time:
+          fields:
+            execute_at:
+              label: Udførsel
         topic:
           fields:
             restricted_topic:
               label: Emne ID
         post_created_edited:
           fields:
+            original_post_only:
+              label: Kun oprindelige indlæg
             action_type:
               label: Handlingstype
             valid_trust_levels:
@@ -141,6 +147,12 @@ da:
               label: Mærker
             restricted_categories:
               label: Kategorier
+            restricted_archetype:
+              label: Emne Type
+            excluded_groups:
+              label: Ekskluderede grupper
+            ignore_automated:
+              label: Ignorer automatiserede
             first_post_only:
               label: Kun første indlæg
             first_topic_only:
@@ -155,6 +167,8 @@ da:
           with_uploads: Overførsler
         user_updated:
           fields:
+            user_profile:
+              label: Bruger profilfelter
             custom_fields:
               label: Brugerdefinerede felter
             once_per_user:
@@ -171,8 +185,18 @@ da:
               label: Brugere
             restricted_group:
               label: Gruppe
+            ignore_staff:
+              label: Ignorer personale
+            ignore_group_members:
+              label: Ignorer gruppemedlemmer
+            ignore_automated:
+              label: Ignorer automatiseret
             valid_trust_levels:
               label: Gyldige tillidsniveauer
+        topic_tags_changed:
+          fields:
+            trigger_on:
+              label: Udløsning
         after_post_cook:
           fields:
             valid_trust_levels:
@@ -200,6 +224,12 @@ da:
           fields:
             topic:
               label: Emne ID
+        topic:
+          fields:
+            category:
+              label: Emne kategori
+            tags:
+              label: Emne mærker
         group_category_notification_default:
           fields:
             group:

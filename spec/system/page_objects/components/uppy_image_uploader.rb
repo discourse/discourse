@@ -39,7 +39,11 @@ module PageObjects
         @element.find(".image-uploader-lightbox-btn").click
       end
 
-      def has_lighbox_preview?
+      def close_lightbox_preview
+        find(".mfp-close").click
+      end
+
+      def has_lightbox_preview?
         has_css?(".mfp-container")
       end
     end

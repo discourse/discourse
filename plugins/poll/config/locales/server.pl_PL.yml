@@ -46,7 +46,7 @@ pl_PL:
       cannot_edit_default_poll_with_votes: "Nie możesz edytować ankiety po upłynięciu %{minutes} minut od jej publikacji."
       cannot_edit_named_poll_with_votes: "Nie możesz zmienić nazwy ankiety <strong>${name}</strong> po upłynięciu %{minutes} minut od jej publikacji."
     dynamic_poll:
-      enabled_hint: "Ankieta jest dynamiczna. Opcje można edytować po opublikowaniu."
+      enabled_hint: "Można dodawać i usuwać opcje."
     no_poll_with_this_name: "Ankieta <strong>%{name}</strong> nie jest przypisana do tego wpisu."
     post_is_deleted: "Nie można wykonywać akcji na usuniętym wpisie."
     user_cant_post_in_topic: "Nie możesz głosować, bo nie możesz odpowiadać w tym temacie."

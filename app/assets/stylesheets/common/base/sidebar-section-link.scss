@@ -42,7 +42,8 @@
     }
 
     &--active,
-    &.active {
+    &.active,
+    &.exact-url-match {
       background: var(--d-sidebar-active-background);
       color: var(--d-sidebar-active-color);
       font-weight: var(--d-sidebar-active-font-weight);

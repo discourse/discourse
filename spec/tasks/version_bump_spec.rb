@@ -28,17 +28,17 @@ RSpec.describe "tasks/version_bump" do
       FileUtils.mkdir_p "tmp"
 
       File.write(".gitignore", "tmp\n")
-      File.write("lib/version.rb", fake_version_rb("3.2.0.beta1-dev"))
+      File.write("lib/version.rb", fake_version_rb("3.2.0.beta1-latest"))
 
       run "git", "init"
       run "git", "checkout", "-b", "main"
       run "git", "add", "."
-      run "git", "commit", "-m", "Initial commit"
+      run "git", "-c", "commit.gpgsign=false", "commit", "-m", "Initial commit"
 
       run "git", "checkout", "-b", "stable"
       File.write("#{origin_path}/lib/version.rb", fake_version_rb("3.1.2"))
       run "git", "add", "."
-      run "git", "commit", "-m", "Previous stable version bump"
+      run "git", "-c", "commit.gpgsign=false", "commit", "-m", "Previous stable version bump"
 
       run "git", "checkout", "main"
       run "git", "config", "receive.denyCurrentBranch", "ignore"
@@ -58,7 +58,7 @@ RSpec.describe "tasks/version_bump" do
     Dir.chdir(origin_path) do
       # Commits are present with correct messages
       expect(run("git", "log", "--pretty=%s").lines.map(&:strip)).to eq(
-        ["Bump version to v3.2.0.beta2-dev", "Bump version to v3.2.0.beta1", "Initial commit"],
+        ["Bump version to v3.2.0.beta2-latest", "Bump version to v3.2.0.beta1", "Initial commit"],
       )
 
       # Expected tags present
@@ -76,9 +76,13 @@ RSpec.describe "tasks/version_bump" do
       end
 
       # Version numbers in version.rb are correct at all commits
-      expect(run "git", "show", "HEAD", "lib/version.rb").to include('STRING = "3.2.0.beta2-dev"')
+      expect(run "git", "show", "HEAD", "lib/version.rb").to include(
+        'STRING = "3.2.0.beta2-latest"',
+      )
       expect(run "git", "show", "HEAD~1", "lib/version.rb").to include('STRING = "3.2.0.beta1"')
-      expect(run "git", "show", "HEAD~2", "lib/version.rb").to include('STRING = "3.2.0.beta1-dev"')
+      expect(run "git", "show", "HEAD~2", "lib/version.rb").to include(
+        'STRING = "3.2.0.beta1-latest"',
+      )
     end
   end
 
@@ -116,7 +120,7 @@ RSpec.describe "tasks/version_bump" do
     Dir.chdir(origin_path) do
       # Commits are present with correct messages
       expect(run("git", "log", "--pretty=%s").lines.map(&:strip)).to eq(
-        ["Bump version to v3.3.0.beta1-dev", "Bump version to v3.2.0.beta1", "Initial commit"],
+        ["Bump version to v3.3.0.beta1-latest", "Bump version to v3.2.0.beta1", "Initial commit"],
       )
 
       # Expected tags present
@@ -134,9 +138,9 @@ RSpec.describe "tasks/version_bump" do
       end
 
       # Version numbers in version.rb are correct at all commits
-      expect(run "git", "show", "HEAD:lib/version.rb").to include('STRING = "3.3.0.beta1-dev"')
+      expect(run "git", "show", "HEAD:lib/version.rb").to include('STRING = "3.3.0.beta1-latest"')
       expect(run "git", "show", "HEAD~1:lib/version.rb").to include('STRING = "3.2.0.beta1"')
-      expect(run "git", "show", "HEAD~2:lib/version.rb").to include('STRING = "3.2.0.beta1-dev"')
+      expect(run "git", "show", "HEAD~2:lib/version.rb").to include('STRING = "3.2.0.beta1-latest"')
 
       # No changes to stable branch
       expect(run("git", "log", "--pretty=%s", "stable").lines.map(&:strip)).to eq(
@@ -188,16 +192,16 @@ RSpec.describe "tasks/version_bump" do
 
       File.write("firstfile.txt", "contents")
       run "git", "add", "firstfile.txt"
-      run "git", "commit", "-m", "security fix one, commit one"
+      run "git", "-c", "commit.gpgsign=false", "commit", "-m", "security fix one, commit one"
       File.write("secondfile.txt", "contents")
       run "git", "add", "secondfile.txt"
-      run "git", "commit", "-m", "security fix one, commit two"
+      run "git", "-c", "commit.gpgsign=false", "commit", "-m", "security fix one, commit two"
 
       run "git", "checkout", "main"
       run "git", "checkout", "-b", "security-fix-two"
       File.write("somefile.txt", "contents")
       run "git", "add", "somefile.txt"
-      run "git", "commit", "-m", "security fix two"
+      run "git", "-c", "commit.gpgsign=false", "commit", "-m", "security fix two"
     end
 
     Dir.chdir(local_path) do

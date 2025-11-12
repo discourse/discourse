@@ -7,11 +7,9 @@
 sv:
   admin_js:
     admin:
-      calendar: "Kalender"
       site_settings:
         categories:
           discourse_post_event: "Discourse-evenemang"
-          discourse_calendar: "Discourse-kalender"
   js:
     notifications:
       titles:
@@ -41,6 +39,7 @@ sv:
         title: "Region"
         none: "Ingen"
         use_current_region: "Använd nuvarande region"
+        select_region: "Välj en region ..."
         names:
           ar: "Argentina"
           at: "Österrike"
@@ -134,6 +133,7 @@ sv:
           dk: "Danmark"
           ee: "Estland"
           el: "Grekland"
+          gr: "Grekland"
           es_an: "Spanien (es_an)"
           es_ar: "Spanien (es_ar)"
           es_ce: "Spanien (es_ce)"

@@ -325,6 +325,8 @@ ug:
       chat_message_separator:
         today: بۈگۈن
         yesterday: تۈنۈگۈن
+      search_view:
+        filter_placeholder: ئۇچۇر ئىزدە
       members_view:
         filter_placeholder: ئەزا ئىزدە
         add_member: ئەزا قوش
@@ -341,6 +343,7 @@ ug:
         tabs:
           members: ئەزا
           settings: تەڭشەك
+          search: ئىزدە
         remove_member: "چىقىرىۋەت"
       new_message_modal:
         title: ئۇچۇر يوللا
@@ -432,6 +435,7 @@ ug:
           topic: "تېما"
       reviewable:
         type: "سۆھبەت ئۇچۇرى"
+        message_in_channel: "قانال"
       reactions:
         only_you: "<span>سىز </span>:%{emoji}بىلەن ئىنكاس قايتۇردىڭىز:"
         you_and_single_user: "<span>سىز ۋە %{username} </span>:%{emoji}بىلەن ئىنكاس قايتۇردى:"
@@ -494,6 +498,11 @@ ug:
           create_export: "چىقىرىش قۇر"
           confirm_export: "بارلىق قاناللاردىن ھەممە ئۇچۇرنى چىقىرىپ نەتىجىسىنى شەخسىي ئۇچۇردا سىزگە يوللايدۇ. راستتىنلا چىقىرامسىز؟"
           export_has_started: "چىقىرىش باشلاندى. چىقىرىش تەييار بولغاندا بىر شەخسىي ئۇچۇر تاپشۇرۇۋالىسىز."
+      search:
+        no_results: "ھېچقانداق نەتىجە تېپىلمىدى"
+        sort:
+          relevance: "مۇناسىۋىتى"
+          latest: "ئاخىرقى"
       my_threads:
         title: تېمام
         aria_label: "تېما تىزىمىمغا ئالماش"
@@ -734,6 +743,8 @@ ug:
         chat:
           title: سۆھبەت
     sidebar:
+      start_new_dm:
+        title: شەخسىي سۆھبەت قۇر
       panels:
         chat:
           label: "سۆھبەت"

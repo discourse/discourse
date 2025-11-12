@@ -37,7 +37,7 @@ describe "chat transcripts in rich editor", type: :system do
 
     cdp.copy_paste(
       markdown,
-      css_selector: PageObjects::Components::Composer::COMPOSER_INPUT_SELECTOR,
+      css_selector: PageObjects::Components::Composer.new.composer_input_selector,
     )
 
     expect(rich).to have_css(".chat-transcript", text: channel.name)
@@ -62,7 +62,7 @@ describe "chat transcripts in rich editor", type: :system do
 
     cdp.copy_paste(
       markdown,
-      css_selector: PageObjects::Components::Composer::COMPOSER_INPUT_SELECTOR,
+      css_selector: PageObjects::Components::Composer.new.composer_input_selector,
     )
 
     expect(rich).to have_css(".chat-transcript.chat-transcript-chained", count: 2)
@@ -86,5 +86,67 @@ describe "chat transcripts in rich editor", type: :system do
       ".chat-transcript:nth-of-type(2) .chat-transcript-messages",
       text: message_2.message,
     )
+  end
+
+  describe "sanitizing" do
+    before { SiteSetting.content_security_policy = false }
+
+    it "sanitizes thread title" do
+      channel.update!(threading_enabled: true)
+      thread =
+        Fabricate(
+          :chat_thread,
+          title: "Thread <video src=_ onloadstart=confirm(document.domain)>",
+          channel: channel,
+          with_replies: 2,
+        )
+
+      page.visit "/new-topic"
+      expect(composer).to be_opened
+      composer.focus
+
+      markdown =
+        Chat::TranscriptService.new(
+          channel,
+          current_user,
+          messages_or_ids: thread.replies.to_a.map(&:id),
+        ).generate_markdown
+
+      expect_no_alert do
+        cdp.copy_paste(
+          markdown,
+          css_selector: PageObjects::Components::Composer.new.composer_input_selector,
+        )
+
+        expect(rich).to have_css(".chat-transcript")
+      end
+    end
+
+    it "sanitizes channel title" do
+      channel.update!(
+        name: "Channel <video src=_ onloadstart=confirm(document.domain)>",
+        threading_enabled: true,
+      )
+
+      page.visit "/new-topic"
+      expect(composer).to be_opened
+      composer.focus
+
+      markdown =
+        Chat::TranscriptService.new(
+          channel,
+          current_user,
+          messages_or_ids: [message_1.id],
+        ).generate_markdown
+
+      expect_no_alert do
+        cdp.copy_paste(
+          markdown,
+          css_selector: PageObjects::Components::Composer.new.composer_input_selector,
+        )
+
+        expect(rich).to have_css(".chat-transcript")
+      end
+    end
   end
 end

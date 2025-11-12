@@ -26,7 +26,7 @@ ur:
       cant_act: "آپ دوسرے صارفین کو اسائین کردہ فلیگ پر کاروائی نہیں کر سکتے"
       cant_act_unclaimed: "فلَیگز پر عمل کرنے سے پہلے آپ کو یہ ٹاپک کَلَیم کرنا ہوگا۔"
       topic_search_placeholder: "عنوان یا پوسٹ مواد کے ذریعہ موضوعات تلاش کریں"
-      sidebar_name_filter_placeholder: "نام/صارف نام"
+      sidebar_name_filter_placeholder: "نام/اسمِ صارف"
       assigned: "تفویض کردہ"
       group_everyone: "ہر کوئی"
       assigned_to: "کو تفویض"
@@ -121,5 +121,5 @@ ur:
       titles:
         assigned: "تفویض کردہ"
     edit_assignments_modal:
-      topic: "ٹاپک"
+      topic: "موضوع"
       post: "پوسٹ"

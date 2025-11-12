@@ -80,7 +80,7 @@ module PageObjects
       end
 
       def has_no_errors?
-        !has_css?(".form-kit__errors")
+        has_no_css?(".form-kit__errors")
       end
 
       def control_type
@@ -90,6 +90,8 @@ module PageObjects
 
         if component.has_css?(".multi-select")
           "multi-select"
+        elsif component.has_css?("textarea")
+          "textarea"
         else
           raise "Unknown custom control"
         end
@@ -202,10 +204,7 @@ module PageObjects
       end
 
       def submit
-        page.execute_script(
-          "var form = arguments[0]; form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));",
-          find(component),
-        )
+        find("#{component} button[type='submit']").click
       end
 
       def reset

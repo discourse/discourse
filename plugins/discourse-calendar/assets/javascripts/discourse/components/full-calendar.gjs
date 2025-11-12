@@ -5,6 +5,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { modifier as modifierFn } from "ember-modifier";
 import loadFullCalendar from "discourse/lib/load-full-calendar";
 import DiscourseURL from "discourse/lib/url";
 import DiscoursePostEvent from "discourse/plugins/discourse-calendar/discourse/components/discourse-post-event";
@@ -18,10 +19,8 @@ const PostEventMenu = <template>
   <DiscoursePostEvent
     @linkToPost={{true}}
     @event={{@data.event}}
-    @eventId={{@data.eventId}}
     @onClose={{@data.onClose}}
     @withDescription={{false}}
-    @currentEventStart={{@data.currentEventStart}}
   />
 </template>;
 
@@ -36,6 +35,19 @@ export default class FullCalendar extends Component {
   @controller topic;
 
   calendar = null;
+
+  // TODO: remove this workaround when updating to fullcalendar v7
+  forceUpdateSize = modifierFn((element) => {
+    const observer = new ResizeObserver(() => {
+      this.calendar?.updateSize?.();
+    });
+
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
+    };
+  });
 
   willDestroy() {
     this.calendar?.destroy?.();
@@ -62,6 +74,7 @@ export default class FullCalendar extends Component {
 
     this.calendar = new calendarModule.Calendar(element, {
       locale: getCurrentBcp47Locale(),
+      eventDisplay: this.siteSettings.calendar_event_display ?? "auto",
       buttonText: getCalendarButtonsText(),
       timeZone: this.currentUser?.user_option?.timezone || "local",
       firstDay: this.firstDayOfWeek,
@@ -85,8 +98,8 @@ export default class FullCalendar extends Component {
         calendarModule.DayGrid,
         calendarModule.TimeGrid,
         calendarModule.List,
-        calendarModule.RRULE,
-        calendarModule.MomentTimezone,
+        calendarModule.MomentPlugin,
+        calendarModule.MomentTimezonePlugin,
       ],
       initialView: this.initialView,
       headerToolbar: this.headerToolbar,
@@ -133,8 +146,7 @@ export default class FullCalendar extends Component {
               modalForMobile: true,
               maxWidth: 500,
               data: {
-                currentEventStart: event.start,
-                eventId: postEvent.id,
+                event: postEvent,
                 onClose: () => {
                   this.menu.getByIdentifier("post-event-menu")?.close?.();
                 },
@@ -186,6 +198,7 @@ export default class FullCalendar extends Component {
     <div
       {{didInsert this.setupCalendar}}
       {{didUpdate this.updateCalendar @events this.capabilities.viewport.md}}
+      {{this.forceUpdateSize}}
       ...attributes
     >
       {{! The calendar will be rendered inside this div by the library }}

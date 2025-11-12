@@ -2045,16 +2045,16 @@ RSpec.describe Guardian do
       expect(Guardian.new(admin).can_change_primary_group?(user, group)).to eq(true)
     end
 
-    context "when moderators_manage_categories_and_groups site setting is enabled" do
-      before { SiteSetting.moderators_manage_categories_and_groups = true }
+    context "when moderators_manage_groups site setting is enabled" do
+      before { SiteSetting.moderators_manage_groups = true }
 
       it "returns true for moderators" do
         expect(Guardian.new(moderator).can_change_primary_group?(user, group)).to eq(true)
       end
     end
 
-    context "when moderators_manage_categories_and_groups site setting is disabled" do
-      before { SiteSetting.moderators_manage_categories_and_groups = false }
+    context "when moderators_manage_groups site setting is disabled" do
+      before { SiteSetting.moderators_manage_groups = false }
 
       it "returns false for moderators" do
         expect(Guardian.new(moderator).can_change_primary_group?(user, group)).to eq(false)

@@ -71,6 +71,7 @@ module DiscourseAi
             SpamDetector => -31,
             ContentCreator => -32,
             ReportRunner => -33,
+            Discover => -34,
           }
         end
 
@@ -284,7 +285,7 @@ module DiscourseAi
 
         return replaced if !context.format_dates
 
-        ::DiscourseAi::AiHelper::DateFormatter.process_date_placeholders(replaced, context.user)
+        DiscourseAi::AiHelper::DateFormatter.process_date_placeholders(replaced, context.user)
       end
 
       def tool_instance(tool_call, bot_user:, llm:, context:, existing_tools:)

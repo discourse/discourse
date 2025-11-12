@@ -127,7 +127,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Ollama do
   subject(:endpoint) { described_class.new(model) }
 
   fab!(:user)
-  fab!(:model) { Fabricate(:ollama_model) }
+  fab!(:model, :ollama_model)
 
   let(:ollama_mock) { OllamaMock.new(endpoint) }
 

@@ -13,7 +13,7 @@ RSpec.describe TopicHotScore do
 
       # this will come in with a score
       topic = Fabricate(:topic, created_at: 1.hour.ago, bumped_at: 2.minutes.ago)
-      post = Fabricate(:post, topic: topic, created_at: 2.minute.ago)
+      post = Fabricate(:post, topic: topic, created_at: 2.minutes.ago)
       PostActionCreator.like(user, post)
 
       TopicHotScore.update_scores
@@ -115,14 +115,20 @@ RSpec.describe TopicHotScore do
     end
 
     it "caches 10% of the hottest topic IDs" do
-      9.times { Fabricate(:topic, like_count: 3, last_posted_at: 10.minutes.ago) }
-      hottest_topic = Fabricate(:topic, like_count: 10, last_posted_at: 10.minutes.ago)
+      freeze_time
+
+      9.times do
+        Fabricate(:topic, like_count: 3, created_at: 2.weeks.ago, last_posted_at: 10.minutes.ago)
+      end
+      hottest_topic =
+        Fabricate(:topic, like_count: 10, created_at: 2.weeks.ago, last_posted_at: 10.minutes.ago)
 
       TopicHotScore.update_scores
 
       expect(TopicHotScore.hottest_topic_ids).to contain_exactly(hottest_topic.id)
 
-      hottest_topic_2 = Fabricate(:topic, like_count: 100, last_posted_at: 10.minutes.ago)
+      hottest_topic_2 =
+        Fabricate(:topic, like_count: 100, created_at: 2.weeks.ago, last_posted_at: 10.minutes.ago)
 
       TopicHotScore.update_scores
 
@@ -155,6 +161,37 @@ RSpec.describe TopicHotScore do
       ensure
         DiscourseEvent.off(:topic_hot_scores_updated, &blk)
       end
+    end
+
+    it "excludes category description topics from hot topics list" do
+      freeze_time
+
+      category = Fabricate(:category_with_definition)
+      category_topic = category.topic
+      category_topic.update!(
+        like_count: 100,
+        created_at: 2.weeks.ago,
+        last_posted_at: 10.minutes.ago,
+      )
+
+      9.times do
+        Fabricate(:topic, like_count: 3, created_at: 2.weeks.ago, last_posted_at: 10.minutes.ago)
+      end
+
+      regular_topic =
+        Fabricate(:topic, like_count: 10, created_at: 2.weeks.ago, last_posted_at: 10.minutes.ago)
+
+      TopicHotScore.update_scores
+
+      category_score = TopicHotScore.find_by(topic_id: category_topic.id)
+      regular_score = TopicHotScore.find_by(topic_id: regular_topic.id)
+
+      expect(category_score).to be_present
+      expect(category_score.score).to be > regular_score.score
+
+      hottest_ids = TopicHotScore.hottest_topic_ids
+
+      expect(hottest_ids).not_to include(category_topic.id)
     end
   end
 end

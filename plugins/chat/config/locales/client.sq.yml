@@ -82,6 +82,8 @@ sq:
       chat_message_separator:
         today: Sot
         yesterday: Dje
+      search_view:
+        filter_placeholder: Kërko mesazhet
       about_view:
         title: Titulli
         name: Emri
@@ -91,6 +93,7 @@ sq:
         tabs:
           members: Anëtarë
           settings: Rregullimet
+          search: Kërko
         remove_member: "Hiq"
       new_message_modal:
         filter: "Filtro"
@@ -119,6 +122,11 @@ sq:
         category_label: "Kategori"
         history_label: "Historia"
         members_label: "Anëtarë"
+      search:
+        no_results: "Nuk u gjet asnjë rezultat"
+        sort:
+          relevance: "Rëndësia"
+          latest: "Më të fundit"
       incoming_webhooks:
         back: "Kthehu mbrapa"
         description: "Përshkrimi"

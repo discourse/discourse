@@ -36,7 +36,7 @@ export default class ChatChannelName extends Component {
     }
     return this.prefersName
       ? this.users.map((user) => user.name || user.username).join(", ")
-      : this.users.mapBy("username").join(", ");
+      : this.users.map((user) => user.username).join(", ");
   }
 
   get channelColorStyle() {
@@ -78,14 +78,12 @@ export default class ChatChannelName extends Component {
           />
         {{/if}}
 
-        {{#if this.showPluginOutlet}}
-          <PluginOutlet
-            @name="after-chat-channel-username"
-            @outletArgs={{lazyHash user=@user}}
-            @tagName=""
-            @connectorTagName=""
-          />
-        {{/if}}
+        <PluginOutlet
+          @name="after-chat-channel-username"
+          @outletArgs={{if this.showPluginOutlet (lazyHash user=@user)}}
+          @tagName=""
+          @connectorTagName=""
+        />
 
         {{#if (has-block)}}
           {{yield}}

@@ -12,8 +12,10 @@ ur:
       title: "\U0001F610 نیوٹرل"
   discourse_ai:
     spam_detection:
-      bot_user_update_failed: "اسپام اسکیننگ بوٹ صارف کو اپ ڈیٹ کرنے میں ناکام"
+      bot_user_update_failed: "اسپام اسکیننگ بوٹ رکن کو اپ ڈیٹ کرنے میں ناکام"
     ai_bot:
+      personas:
+        default_llm_required: "چیٹ کو فعال کرنے سے پہلے ڈیفالٹ LLM ماڈل درکار ہے۔"
       tool_options:
         update_artifact:
           editor_llm:

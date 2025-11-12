@@ -297,7 +297,7 @@ it:
       header:
         logged_in_members: "Rieccoti, %{preferred_display_name}!"
         anonymous_members: "Ti diamo il benvenuto su %{site_name}!"
-      search: "Cerca"
+      search_placeholder: "Cerca"
     themes:
       default_description: "Predefinito"
       broken_theme_alert: "Il tuo sito potrebbe non funzionare a causa di errori in un tema/componente. Controlla la console del browser per maggiori informazioni."
@@ -357,7 +357,7 @@ it:
     joined: "Iscritto"
     admin_title: "Amministrazione"
     show_more: "mostra altro"
-    show_help: "opzioni"
+    show_help: "Opzioni"
     links: "Collegamenti"
     links_lowercase:
       one: "collegamento"
@@ -590,6 +590,7 @@ it:
       other: "Vedi %{count} nuovi argomenti"
     preview: "anteprima"
     cancel: "Annulla"
+    done: "Fatto"
     deleting: "Eliminazione…"
     save: "Salva Modifiche"
     saving: "Salvataggio…"
@@ -677,10 +678,6 @@ it:
         claimed_by_you: "Hai rivendicato questo elemento e puoi revisionarlo."
         claimed_by_other: "Questo elemento può essere rivisto esclusivamente da <b>%{username}</b>."
         automatically_claimed_by: "Questo articolo è attualmente in fase di revisione da parte di <b>%{username}</b>."
-      claim:
-        title: "rivendica questo argomento"
-      unclaim:
-        help: "rimuovi questa rivendicazione"
       awaiting_approval: "In attesa di approvazione"
       delete: "Elimina"
       settings:
@@ -751,7 +748,7 @@ it:
       replies:
         one: "%{count} risposta"
         other: "%{count} risposte"
-      edit: "Modifica"
+      edit: "Modifica Messaggio"
       save: "Salva"
       cancel: "Annulla"
       new_topic: "L'approvazione di questo elemento creerà un nuovo Argomento"
@@ -773,7 +770,6 @@ it:
           created_at: "Creato il"
           created_at_asc: "Creato il (inverso)"
         priority:
-          title: "Priorità Minima"
           any: "(qualsiasi)"
           low: "Bassa"
           medium: "Media"
@@ -838,6 +834,7 @@ it:
           title: "Messaggio"
           noun: "messaggio"
       flagged_as: "Contrassegnato come"
+      user_label: "Utente"
       assigned_to: "Assegnato a"
       moderator_actions: "Azioni del moderatore"
       timeline_and_notes: "Cronologia e note"
@@ -861,13 +858,14 @@ it:
         chars_remaining: "%{count} caratteri rimasti"
         delete_note: "Elimina questa nota"
         delete: "Elimina"
-      new_topic_label: "Nuovo argomento"
+      topic_label: "Argomento"
       queued_user: "Utente in coda"
       posted_in: "Pubblicato in"
       flagged_user: "Utente contrassegnato"
       review_user: "Utente"
       need_help: "Hai bisogno di aiuto?"
       copy_link: "Copia link"
+      copy_link_feedback: "Link copiato"
       view_source: "Visualizza origine"
       insights:
         title: "Approfondimenti"
@@ -875,9 +873,6 @@ it:
         flagged_by_users:
           one: "Segnalato da %{count} utente unico"
           other: "Segnalato da %{count} utenti diversi"
-        similar_posts: "Messaggi simili passati"
-        flagged_in_timeframe: "%{count} segnalati in precedenza"
-        user_activity: "Attività dell'utente"
         activities:
           new_account: "nuovo account"
           trust_level: "livello di attendibilità: %{trustLevelName}"
@@ -1787,7 +1782,7 @@ it:
         invalid: "Nome utente non valido: usa solo lettere e cifre"
       add_email:
         title: "Aggiungi email"
-        add: "aggiungi"
+        add: "Aggiungi"
       change_email:
         title: "Cambia email"
         taken: "Spiacenti, questa email non è disponibile."
@@ -2614,6 +2609,7 @@ it:
       topic_count:
         one: "%{count} argomento in questa categoria"
         other: "%{count} argomenti in questa categoria"
+      read_only: "sola lettura"
     timezone_input:
       ambiguous_ist: "IST è ambiguo, seleziona un fuso orario specifico (ad esempio: Asia/Kolkata)"
     select_kit:
@@ -2696,7 +2692,7 @@ it:
         title: "Traduzione del messaggio"
         select: "Seleziona la traduzione"
         save: "Salva la traduzione"
-        original_content: "Contenuto del messaggio originale"
+        translation: "Traduzione"
         placeholder: "Inserisci qui la traduzione del messaggio..."
       group_mentioned_limit:
         one: "<b>Attenzione!</b> Hai menzionato <a href='%{group_link}'>%{group}</a>, tuttavia questo gruppo ha più membri rispetto al limite di %{count} menzione di utente configurato dall'amministratore. Non ci saranno notifiche."
@@ -2842,8 +2838,11 @@ it:
           label: Attiva/disattiva sussurri
           desc: I Sussurri sono visibili solo ai membri dello staff
         create_topic:
-          label: "Nuovo Argomento"
+          label: "Nuovo argomento"
           desc: Crea un nuovo argomento
+        create_personal_message:
+          label: "Nuovo messaggio"
+          desc: "Crea un nuovo messaggio personale"
         shared_draft:
           label: "Bozza Condivisa"
           desc: "Crea una bozza di argomento che sarà visibile solo agli utenti autorizzati"
@@ -2852,7 +2851,6 @@ it:
           desc: "Rispondi senza cambiare la data dell'ultima risposta"
         toggle_unlisted:
           label: Attiva/disattiva non in elenco
-          desc: Argomenti non in elenco accessibili ai membri solo tramite link diretto
       reload: "Ricarica"
       ignore: "Ignora"
       image_alt_text:
@@ -3336,9 +3334,7 @@ it:
         one: "%{count} messaggio in questo argomento"
         other: "%{count} messaggi in questo argomento"
       create: "Nuovo Argomento"
-      create_disabled_category: "Non hai l'autorizzazione per creare argomenti in questa categoria"
-      create_disabled_tag: "Non hai l'autorizzazione per creare argomenti con questa etichetta"
-      create_long: "Crea un nuovo Argomento"
+      create_long: "Crea un nuovo argomento"
       open_draft: "Apri Bozza"
       private_message: "Inizia a scrivere un messaggio"
       archive_message:
@@ -3505,9 +3501,6 @@ it:
       auto_close_immediate:
         one: "L'ultimo messaggio nell'argomento risale a %{count} ora fa, per cui l'argomento verrà chiuso immediatamente."
         other: "L'ultimo messaggio nell'argomento risale a %{count} ore fa, per cui l'argomento verrà chiuso immediatamente."
-      auto_close_momentarily:
-        one: "L'ultimo messaggio dell'argomento risale a %{count} ora fa, quindi l'argomento verrà chiuso momentaneamente."
-        other: "L'ultimo messaggio dell'argomento risale a %{count} ore fa, quindi l'argomento verrà chiuso momentaneamente."
       timeline:
         back: "Indietro"
         back_description: "Torna indietro al tuo ultimo messaggio non letto"
@@ -3778,6 +3771,9 @@ it:
       title: "Ultimi messaggi"
       empty: "Non ci sono messaggi"
       aria_post_number: "%{title}, messaggio n. %{postNumber}"
+      bulk:
+        clear_all: "Deseleziona tutto"
+        actions: "Azioni collettive"
     post:
       confirm_delete: "Vuoi davvero eliminare questo messaggio?"
       quote_reply: "Cita"
@@ -3889,10 +3885,7 @@ it:
         attachment_upload_not_allowed_for_new_user: "Spiacenti, i nuovi utenti non possono caricare allegati."
         attachment_download_requires_login: "Spiacenti, devi effettuare l'accesso per poter scaricare gli allegati."
       cancel_composer:
-        confirm: "Cosa vorresti fare con il tuo messaggio?"
         discard: "Elimina"
-        save_draft: "Salva la bozza"
-        keep_editing: "Continua modifica"
       via_email: "questo messaggio è arrivato via email"
       via_auto_generated_email: "questo messaggio è arrivato tramite una email auto generata"
       whisper: "questo messaggio è un sussurro privato per i moderatori"
@@ -4125,6 +4118,8 @@ it:
       style: "Stili"
       background_color: "Colore"
       foreground_color: "Colore del testo"
+      color_validations:
+        cant_be_empty: "non può essere vuoto"
       styles:
         type: "Stile"
         icon: "Icona"
@@ -4500,8 +4495,7 @@ it:
       readonly: "Visualizza"
     preloader_text: "Caricamento"
     lightbox:
-      download: "scarica"
-      open: "immagine originale"
+      download: "Scarica"
       previous: "Precedente (tasto freccia a sinistra)"
       next: "Successivo (tasto freccia a destra)"
       counter: "%curr% di %total%"
@@ -4545,7 +4539,6 @@ it:
         go_to_unread_post: "%{shortcut} Vai al primo messaggio non letto"
       application:
         title: "Applicazione"
-        create: "%{shortcut} Crea un nuovo argomento"
         notifications: "%{shortcut} Apri notifiche"
         hamburger_menu: "%{shortcut} Apri il menu di navigazione"
         user_profile_menu: "%{shortcut} Apri menu utente"
@@ -4686,7 +4679,6 @@ it:
       choose_for_topic_required_group:
         one: "Seleziona %{count} etichetta da '%{name}'…"
         other: "Seleziona %{count} etichette da '%{name}'…"
-      info: "Info"
       default_info: "Questa etichetta non è limitata a nessuna categoria e non ha sinonimi."
       staff_info: "Per aggiungere restrizioni, metti questa etichetta in un <a href=%{basePath}/tag_groups>gruppo di etichette</a>"
       category_restricted: "Questa etichetta è limitata a categorie a cui non sei autorizzato ad accedere."
@@ -5212,6 +5204,7 @@ it:
   admin_js:
     type_to_filter: "Digita per filtrare…"
     settings: "Impostazioni"
+    reset_filter: "Reimposta"
     admin:
       title: "Amministratore Discourse"
       moderator: "Moderatore"
@@ -5244,6 +5237,21 @@ it:
           title: "Plugin"
         advanced:
           title: "Avanzato"
+      upcoming_changes:
+        name: "Nome"
+        enabled: "Abilitato"
+        select_groups: "Seleziona gruppi…"
+        preview: "Anteprima"
+        impact_roles:
+          admins: "Amministratori"
+          moderators: "Moderatori"
+          staff: "Staff"
+        filter:
+          all: "Tutte"
+          enabled: "Abilitato"
+          disabled: "Disabilitati"
+          impact_type_feature: "Funzionalità"
+          impact_type_other: "Altri"
       config:
         about:
           title: "Informazioni sul tuo sito"
@@ -5274,9 +5282,12 @@ it:
           title: "Localizzazione"
           header_description: "Configura la lingua dell'interfaccia della tua community e altre opzioni di localizzazione per i tuoi membri"
           keywords: "localizzazione|lingua|fusoorario|unicode|ltr"
-        login_and_authentication:
+        login:
           title: "Accesso e autenticazione"
           header_description: "Configura le modalità di accesso e autenticazione degli utenti, segreti e chiavi, fornitori OAuth2 e altro ancora"
+          sub_pages:
+            common_settings:
+              title: "Impostazioni"
         logo:
           title: "Logo"
           header_description: "Configura i loghi e le icone utilizzati nel tuo sito"
@@ -6443,7 +6454,6 @@ it:
         copy_to_clipboard: "Copia negli Appunti"
         copied_to_clipboard: "Copiato negli Appunti"
         copy_to_clipboard_error: "Errore durante la copia negli appunti"
-        theme_owner: "Non modificabile, di proprietà di:"
         email_templates:
           title: "Email"
           subject: "Oggetto"
@@ -6451,6 +6461,7 @@ it:
           body: "Corpo"
           revert: "Annulla Cambiamenti"
           revert_confirm: "Sei sicuro di voler annullare i cambiamenti?"
+          edit: "Modifica"
         component:
           all_filter: "Tutti"
           used_filter: "Usato"
@@ -6672,6 +6683,8 @@ it:
         schema:
           title: "Modifica l'impostazione %{name}"
           back_button: "Torna a %{name}"
+          move_up: "Sposta su"
+          move_down: "Sposta giù"
           fields:
             required: "*obbligatorio"
             groups:
@@ -7448,7 +7461,6 @@ it:
             cancel: "Annulla"
         merging_user: "Unione utente in corso…"
         merge_failed: "Si è verificato un errore durante l'unione degli utenti."
-        delete_posts_forbidden_because_staff: "Impossibile cancellare tutti i messaggi degli amministratori e dei moderatori."
         delete_forbidden:
           one: "Non è possibile cancellare utenti se hanno messaggi. Elimina tutti i messaggi prima di cancellare un utente (i messaggi più vecchi di %{count} giorno non possono essere cancellati)."
           other: "Non è possibile cancellare utenti se hanno messaggi. Elimina tutti i messaggi prima di cancellare un utente (i messaggi più vecchi di %{count} giorni non possono essere cancellati)."

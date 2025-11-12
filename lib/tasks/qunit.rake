@@ -5,11 +5,12 @@ task "qunit:test", %i[qunit_path filter] do |_, args|
   require "socket"
   require "chrome_installed_checker"
 
-  begin
-    ChromeInstalledChecker.run
-  rescue ChromeInstalledChecker::ChromeError => err
-    abort err.message
-  end
+  detected_browser =
+    begin
+      ChromeInstalledChecker.run
+    rescue ChromeInstalledChecker::ChromeError => err
+      abort err.message
+    end
 
   unless system("command -v pnpm >/dev/null;")
     abort "pnpm is not installed. See https://pnpm.io/installation"
@@ -99,7 +100,10 @@ task "qunit:test", %i[qunit_path filter] do |_, args|
     end
     puts "Rails server is warmed up"
 
-    env = { "UNICORN_PORT" => unicorn_port.to_s }
+    env = {
+      "UNICORN_PORT" => unicorn_port.to_s,
+      "TESTEM_DEFAULT_BROWSER" => ENV["TESTEM_DEFAULT_BROWSER"].presence || detected_browser,
+    }
     cmd = []
 
     parallel = ENV["QUNIT_PARALLEL"]
@@ -109,13 +113,7 @@ task "qunit:test", %i[qunit_path filter] do |_, args|
       # Bypass `ember test` - it only works properly for the `/tests` path.
       # We have to trigger a `build` manually so that JS is available for rails to serve.
       if !reuse_build
-        system(
-          "pnpm",
-          "ember",
-          "build",
-          chdir: "#{Rails.root}/app/assets/javascripts/discourse",
-          exception: true,
-        )
+        system("pnpm", "ember", "build", chdir: "#{Rails.root}/frontend/discourse", exception: true)
       end
 
       env["THEME_TEST_PAGES"] = if ENV["THEME_IDS"]
@@ -140,7 +138,7 @@ task "qunit:test", %i[qunit_path filter] do |_, args|
 
     # Print out all env for debugging purposes
     p env
-    system(env, *cmd, chdir: "#{Rails.root}/app/assets/javascripts/discourse")
+    system(env, *cmd, chdir: "#{Rails.root}/frontend/discourse")
 
     success &&= $?.success?
   ensure

@@ -195,7 +195,7 @@ te:
     welcome_banner:
       header:
         anonymous_members: "%{site_name} కు సుస్వాగతం!"
-      search: "వెతుకు"
+      search_placeholder: "వెతుకు"
     themes:
       default_description: "అప్రమేయ"
       error_caused_by: "'%{name}' వల్ల ఏర్పడింది. నవీకరించడానికి, మళ్లీ కాన్ఫిగర్ చేయడానికి లేదా నిలిపివేయడానికి <a target='blank' href='%{path}'>ఇక్కడ క్లిక్ చేయండి</a>."
@@ -247,7 +247,7 @@ te:
     joined: "చేరినారు"
     admin_title: "అడ్మిన్"
     show_more: "మరిన్ని చూపించండి"
-    show_help: "ఐచ్చికాలు"
+    show_help: "ఎంపికలు"
     links: "లింకులు"
     links_lowercase:
       one: "లంకె"
@@ -406,6 +406,7 @@ te:
       other: "%{count} కొత్త విషయాలను చూడండి"
     preview: "ప్రివ్యూ"
     cancel: "రద్దుచేయండి"
+    done: "పూర్తయింది"
     deleting: "తొలగించబడుతోంది…"
     save: "మార్పులను సేవ్ చేయండి"
     saving: "సేవ్ చేయబడుతోంది…"
@@ -480,10 +481,6 @@ te:
         required: "మీరు అంశాలను సమీక్షించే ముందు వాటిని తప్పనిసరిగా దావా చేయాలి."
         claimed_by_you: "మీరు ఈ అంశాన్ని దావా చేసారు మరియు దానిని సమీక్షించవచ్చు."
         claimed_by_other: "ఈ అంశాన్ని <b>%{username}</b> మాత్రమే సమీక్షించగలరు."
-      claim:
-        title: "ఈ అంశాన్ని దావా చేయండి"
-      unclaim:
-        help: "ఈ దావాను తీసివేయండి"
       awaiting_approval: "ఆమోదం కోసం ఎదురు చూస్తున్నాము"
       delete: "తొలగించండి"
       settings:
@@ -545,7 +542,7 @@ te:
       replies:
         one: "%{count} ప్రత్యుత్తరం"
         other: "%{count} ప్రత్యుత్తరాలు"
-      edit: "సవరించండి"
+      edit: "పోస్ట్‌ని సవరించండి"
       save: "సేవ్ చేయండి"
       cancel: "రద్దు చేయండి"
       new_topic: "ఈ విషయాన్ని ఆమోదించడం వలన కొత్త విషయం సృష్టించబడుతుంది"
@@ -566,7 +563,6 @@ te:
           created_at: "వద్ద సృష్టించబడింది"
           created_at_asc: "వద్ద సృష్టించబడింది (ఆరోహణ క్రమం)"
         priority:
-          title: "కనీస ప్రాధాన్యత"
           any: "(ఏదైనా)"
           low: "తక్కువ"
           medium: "మధ్యస్థం"
@@ -630,8 +626,10 @@ te:
         reviewable_post:
           title: "పోస్ట్"
           noun: "పోస్ట్"
+      user_label: "సభ్యుడు"
       notes:
         delete: "తొలగించు"
+      topic_label: "విషయం"
       review_user: "సభ్యుడు"
       insights:
         activities:
@@ -1429,7 +1427,7 @@ te:
         invalid: "ఆ సభ్యనామం చెల్లనిది. కేవలం సంఖ్యలు, అక్షరాలు మాత్రమే కలిగి ఉండాలి. "
       add_email:
         title: "ఇమెయిల్ జోడించండి"
-        add: "జోడించండి"
+        add: "కలుపు"
       change_email:
         title: "ఈమెయిల్ మార్చండి"
         taken: "క్షమించాలి. ఆ ఈమెయిల్ అందుబాటులో లేదు."
@@ -2108,6 +2106,7 @@ te:
       topic_count:
         one: "ఈ వర్గంలో %{count} విషయం"
         other: "ఈ వర్గంలోని %{count} విషయాలు"
+      read_only: "చదవడానికి మాత్రమే"
     select_kit:
       delete_item: "%{name} ని తొలగించండి"
       filter_by: "దీని ద్వారా ఫిల్టర్ చేయండి: %{name}"
@@ -2302,7 +2301,6 @@ te:
           label: గుసగుసలను టోగుల్ చేయండి
           desc: గుసగుసలు సిబ్బందికి మాత్రమే కనిపిస్తాయి
         create_topic:
-          label: "కొత్త విషయం"
           desc: కొత్త విషయం సృష్టించండి
         shared_draft:
           label: "షేర్ చేసిన చిత్తుప్రతి"
@@ -2747,7 +2745,6 @@ te:
         one: "విషయంలో %{count} పోస్ట్"
         other: "విషయంలో %{count} పోస్ట్‌లు"
       create: "కొత్త విషయం"
-      create_disabled_category: "ఈ వర్గంలో విషయాలను సృష్టించడానికి మీకు అనుమతి లేదు"
       create_long: "కొత్త విషయం సృష్టించండి"
       open_draft: "చిత్తుప్రతి తెరవండి"
       private_message: "సందేశాన్ని ప్రారంభించండి"
@@ -2907,9 +2904,6 @@ te:
       auto_close_immediate:
         one: "విషయంలోని చివరి పోస్ట్ ఇప్పటికే %{count} గంట పాతది, కాబట్టి విషయం వెంటనే మూసివేయబడుతుంది."
         other: "విషయంలోని చివరి పోస్ట్ ఇప్పటికే %{count} గంటల పాతది, కాబట్టి విషయం వెంటనే మూసివేయబడుతుంది."
-      auto_close_momentarily:
-        one: "విషయంలోని చివరి పోస్ట్ ఇప్పటికే %{count} గంట పాతది, కాబట్టి విషయం కొద్దిసేపటిలో మూసివేయబడుతుంది."
-        other: "విషయంలోని చివరి పోస్ట్ ఇప్పటికే %{count} గంటల పాతది, కాబట్టి విషయం కొద్దిసేపటిలో మూసివేయబడుతుంది."
       timeline:
         back: "వెనుకకు"
         back_description: "మీ చివరిగా చదవని పోస్ట్‌కి తిరిగి వెళ్లండి"
@@ -3263,10 +3257,7 @@ te:
         attachment_upload_not_allowed_for_new_user: "క్షమించాలి. కొత్త సభ్యులు జోడింపులు ఎగుమతి చేయలేరు."
         attachment_download_requires_login: "క్షమించాలి. జోడింపులు దిగుమతి చేసుకోవడానికి మీరు లాగిన్ అయి ఉండాలి."
       cancel_composer:
-        confirm: "మీరు మీ పోస్ట్‌తో ఏమి చేయాలనుకుంటున్నారు?"
         discard: "విస్మరించండి"
-        save_draft: "తర్వాత కోసం చిత్తుప్రతిను సేవ్ చేయండి"
-        keep_editing: "సవరించడం కొనసాగించండి"
       via_email: "ఈ పోస్ట్ ఇమెయిల్ ద్వారా వచ్చింది"
       via_auto_generated_email: "ఈ పోస్ట్ స్వయంచాలకంగా రూపొందించబడిన ఇమెయిల్ ద్వారా వచ్చింది"
       whisper: "ఈ పోస్ట్ మోడరేటర్‌ల కోసం ఒక ప్రైవేట్ గుసగుస"
@@ -3476,6 +3467,8 @@ te:
       background_image: "వర్గం నేపథ్య చిత్రం"
       background_image_dark: "డార్క్ వర్గం నేపథ్య చిత్రం"
       background_color: "రంగు"
+      color_validations:
+        cant_be_empty: "ఖాళీ ఉండకూడదు"
       styles:
         icon: "చిహ్నం"
         emoji: "ఇమోజి"
@@ -3808,8 +3801,7 @@ te:
       readonly: "చూడు"
     preloader_text: "లోడవుతోంది"
     lightbox:
-      download: "డౌన్‌లోడ్ చేయండి"
-      open: "అసలు చిత్రం"
+      download: "దిగుమతి"
       previous: "మునుపటి (లెఫ్ట్ అర్రౌ కీ)"
       next: "తదుపరి (రైట్ అర్రౌ కీ)"
       counter: "%total% లో %curr%"
@@ -3849,7 +3841,6 @@ te:
         go_to_unread_post: "%{shortcut} మొదటి చదవని పోస్ట్‌కి వెళ్లండి"
       application:
         title: "అనువర్తనం"
-        create: "%{shortcut} కొత్త విషయాన్ని సృష్టించండి"
         notifications: "%{shortcut} చదవని నోటిఫికేషన్‌లు"
         user_profile_menu: "%{shortcut} సభ్యుడు మెనుని తెరవండి"
         show_incoming_updated_topics: "%{shortcut} నవీకరించిన విషయాలను చూపించండి"
@@ -3967,7 +3958,6 @@ te:
       choose_for_topic_required_group:
         one: "'%{name}' నుండి %{count} ట్యాగ్‌ని ఎంచుకోండి…"
         other: "'%{name}' నుండి %{count} ట్యాగ్లను ఎంచుకోండి…"
-      info: "సమాచారం"
       default_info: "ఈ ట్యాగ్ ఏ వర్గాలకు పరిమితం చేయబడలేదు మరియు పర్యాయపదాలు లేవు."
       staff_info: "పరిమితులను జోడించడానికి, ఈ ట్యాగ్‌ను <a href=%{basePath}/tag_groups>ట్యాగ్ సమూహంలో ఉంచండి</a>."
       category_restricted: "ఈ ట్యాగ్ మీకు యాక్సెస్ చేయడానికి అనుమతి లేని వర్గాలకు పరిమితం చేయబడింది."
@@ -4390,6 +4380,7 @@ te:
   admin_js:
     type_to_filter: "ఫిల్టర్ చేయడానికి టైప్ చేయండి…"
     settings: "అమరికలు"
+    reset_filter: "రీసెట్ చేయండి"
     admin:
       title: "డిస్కోర్స్ అడ్మిన్"
       moderator: "నిర్వాహకుడు"
@@ -4418,6 +4409,19 @@ te:
           title: "చొప్పింతలు"
         advanced:
           title: "అధునాతన"
+      upcoming_changes:
+        name: "పేరు"
+        enabled: "ప్రారంభించబడింది"
+        select_groups: "సమూహాలను ఎంచుకోండి…"
+        preview: "ప్రివ్యూ"
+        impact_roles:
+          moderators: "నిర్వాహకులు"
+          staff: "సిబ్బంది"
+        filter:
+          all: "అన్నీ"
+          enabled: "ప్రారంభించబడింది"
+          disabled: "నిలిపివేయబడింది"
+          impact_type_other: "ఇతర"
       config:
         about:
           title: "మీ సైట్ గురించి"
@@ -4431,6 +4435,10 @@ te:
           title: "ఫైళ్లు"
         legal:
           title: "చట్టపరమైన"
+        login:
+          sub_pages:
+            common_settings:
+              title: "అమరికలు"
         logo:
           form:
             logo:
@@ -5146,7 +5154,6 @@ te:
         copy_to_clipboard: "క్లిప్‌బోర్డ్‌కు కాపీ చేయండి"
         copied_to_clipboard: "క్లిప్‌బోర్డ్‌కి కాపీ చేయబడింది"
         copy_to_clipboard_error: "క్లిప్‌బోర్డ్‌కి డేటాను కాపీ చేయడంలో లోపం"
-        theme_owner: "సవరించలేనిది, దీని యజమాని:"
         email_templates:
           title: "ఈమెయిల్"
           subject: "విషయం"
@@ -5154,6 +5161,7 @@ te:
           body: "బాడీ"
           revert: "మార్పులను తిరిగి మార్చండి"
           revert_confirm: "మీరు ఖచ్చితంగా మీ మార్పులను తిరిగి మార్చాలనుకుంటున్నారా?"
+          edit: "సవరించండి"
         component:
           all_filter: "అన్ని"
           used_filter: "ఉపయోగించబడిన"
@@ -5938,7 +5946,6 @@ te:
             cancel: "రద్దుచేయండి"
         merging_user: "సభ్యుని విలీనం చేస్తోంది…"
         merge_failed: "సభ్యులను విలీనం చేస్తున్నప్పుడు లోపం ఏర్పడింది."
-        delete_posts_forbidden_because_staff: "నిర్వాహకులు మరియు మోడరేటర్‌ల అన్ని పోస్ట్‌లను తొలగించలేరు."
         delete_forbidden:
           one: "సభ్యులు పోస్ట్‌లను కలిగి ఉంటే వారిని తొలగించలేరు. సభ్యుని తొలగించడానికి ప్రయత్నించే ముందు అన్ని పోస్ట్‌లను తొలగించండి. (%{count} రోజుల కంటే పాత పోస్ట్‌లు తొలగించబడవు.)"
           other: "సభ్యులు పోస్ట్‌లను కలిగి ఉంటే వారిని తొలగించలేరు. సభ్యుని తొలగించడానికి ప్రయత్నించే ముందు అన్ని పోస్ట్‌లను తొలగించండి. (%{count} రోజుల కంటే పాత పోస్ట్‌లు తొలగించబడవు.)"

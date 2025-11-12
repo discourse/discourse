@@ -39,7 +39,7 @@ module SiteSettingExtension
     # note optimised cause this is called a lot so avoiding .presence which
     # adds 2 method calls
     locale = current[:default_locale]
-    if locale && !locale.blank?
+    if locale && locale.present?
       locale
     else
       SiteSettings::DefaultsProvider::DEFAULT_LOCALE
@@ -90,6 +90,11 @@ module SiteSettingExtension
     @humanized_names[name] ||= humanized_name(name)
   end
 
+  def site_setting_group_ids
+    @site_setting_group_ids ||= {}
+    @site_setting_group_ids[provider.current_site] ||= {}
+  end
+
   def defaults
     @defaults ||= SiteSettings::DefaultsProvider.new(self)
   end
@@ -120,6 +125,19 @@ module SiteSettingExtension
 
   def requires_confirmation_settings
     @requires_confirmation_settings ||= {}
+  end
+
+  # Valid upcoming change metadata looks like this
+  # in site_settings.yml:
+  #
+  # setting_name:
+  #   setting_options...
+  #   upcoming_change:
+  #     status: "alpha" (see UpcomingChanges.statuses.keys)
+  #     impact: "feature,staff" (feature|other for the first part, staff|admins|moderators|all_members|developers for the second part)
+  #     learn_more_url: ""
+  def upcoming_change_metadata
+    @upcoming_change_metadata ||= {}
   end
 
   def hidden_settings_provider
@@ -210,6 +228,10 @@ module SiteSettingExtension
     themeable.select { |_, value| value }.keys.sort
   end
 
+  def upcoming_change_site_settings
+    upcoming_change_metadata.keys.sort
+  end
+
   def client_settings_json
     key = SiteSettingExtension.client_settings_cache_key
     json = Discourse.cache.fetch(key, expires_in: 30.minutes) { client_settings_json_uncached }
@@ -250,7 +272,7 @@ module SiteSettingExtension
     raise err if Rails.env.test?
 
     Rails.logger.error("Error while generating client_settings_json_uncached: #{err.message}")
-    nil
+    raise
   end
 
   def theme_site_settings_json_uncached(theme_id)
@@ -282,6 +304,7 @@ module SiteSettingExtension
     include_locale_setting: true,
     only_overridden: false,
     basic_attributes: false,
+    only_upcoming_changes: false,
     filter_categories: nil,
     filter_plugin: nil,
     filter_names: nil,
@@ -304,13 +327,18 @@ module SiteSettingExtension
 
     include_locale_setting = false if filter_categories.present? || filter_plugin.present?
 
+    # There is a hidden_site_settings modifier in HiddenSettingsProvider
+    # that can cause perf overhead, so instead of calling hidden_settings
+    # in a loop, we call it once here.
+    current_hidden_settings = hidden_settings
+
     defaults
       .all(default_locale)
       .reject do |setting_name, _|
         plugins[name] && !Discourse.plugins_by_name[plugins[name]].configurable?
       end
       .select do |setting_name, _|
-        is_hidden = hidden_settings.include?(setting_name)
+        is_hidden = current_hidden_settings.include?(setting_name)
 
         next true if !is_hidden
         next false if !include_hidden
@@ -339,16 +367,23 @@ module SiteSettingExtension
           true
         end
       end
-      .reject do |setting_name, _|
-        # Do not show themeable site settings all_settings list or in the UI, they
-        # are managed separately via the ThemeSiteSetting model.
-        themeable[setting_name]
+      .select do |setting_name, _|
+        if only_upcoming_changes
+          upcoming_change_metadata.key?(setting_name)
+        else
+          true
+        end
       end
       .map do |s, v|
         type_hash = type_supervisor.type_hash(s)
         default = defaults.get(s, default_locale).to_s
 
-        value = public_send(s)
+        if themeable[s]
+          value = public_send(s, { theme_id: SiteSetting.default_theme_id })
+        else
+          value = public_send(s)
+        end
+
         value = value.map(&:to_s).join("|") if type_hash[:type].to_s == "uploaded_image_list"
 
         if type_hash[:type].to_s == "upload" && default.to_i < Upload::SEEDED_ID_THRESHOLD
@@ -373,6 +408,7 @@ module SiteSettingExtension
             placeholder: placeholder(s),
             mandatory_values: mandatory_values[s],
             requires_confirmation: requires_confirmation_settings[s],
+            upcoming_change: only_upcoming_changes ? upcoming_change_metadata[s] : nil,
             themeable: themeable[s],
           )
           opts.merge!(type_hash)
@@ -435,6 +471,8 @@ module SiteSettingExtension
             )
           ]
 
+        refresh_site_setting_group_ids!
+
         defaults_view = defaults.all(new_hash[:default_locale])
 
         # add locale default and defaults based on default_locale, cause they are cached
@@ -450,18 +488,7 @@ module SiteSettingExtension
         uploads.clear
       end
 
-      if refresh_theme_site_settings
-        new_theme_site_settings = ThemeSiteSetting.generate_theme_map
-
-        theme_site_setting_changes, theme_site_setting_deletions =
-          diff_hash(new_theme_site_settings, theme_site_settings)
-
-        theme_site_setting_changes.each do |theme_id, settings|
-          theme_site_settings[theme_id] ||= {}
-          theme_site_settings[theme_id].merge!(settings)
-        end
-        theme_site_setting_deletions.each { |theme_id, _| theme_site_settings.delete(theme_id) }
-      end
+      refresh_theme_site_settings! if refresh_theme_site_settings
 
       clear_cache!(
         expire_theme_site_setting_cache:
@@ -470,7 +497,31 @@ module SiteSettingExtension
     end
   end
 
+  def refresh_site_setting_group_ids!
+    new_site_setting_group_ids_hash = SiteSettingGroup.generate_setting_group_map
+    site_setting_group_id_changes, site_setting_group_id_deletions =
+      diff_hash(new_site_setting_group_ids_hash, site_setting_group_ids)
+
+    site_setting_group_id_changes.each { |name, val| site_setting_group_ids[name] = val }
+    site_setting_group_id_deletions.each { |name, _| site_setting_group_ids.delete(name) }
+  end
+
+  def refresh_theme_site_settings!
+    new_theme_site_settings = ThemeSiteSetting.generate_theme_map
+
+    theme_site_setting_changes, theme_site_setting_deletions =
+      diff_hash(new_theme_site_settings, theme_site_settings)
+
+    theme_site_setting_changes.each do |theme_id, settings|
+      theme_site_settings[theme_id] ||= {}
+      theme_site_settings[theme_id].merge!(settings)
+    end
+
+    theme_site_setting_deletions.each { |theme_id, _| theme_site_settings.delete(theme_id) }
+  end
+
   SITE_SETTINGS_CHANNEL = "/site_settings"
+  CLIENT_SETTINGS_CHANNEL = "/client_settings"
 
   def ensure_listen_for_changes
     return if @listen_for_changes == false
@@ -631,13 +682,33 @@ module SiteSettingExtension
     DiscourseEvent.trigger(:theme_site_setting_changed, name, old_val, val)
   end
 
+  # NOTE: This will not refresh the current process' site settings, only other processes
+  # that are listening for changes. We check if the current process_id is != to the message
+  # process ID before refreshing in process_message.
+  #
+  # If you need to refresh the current process as well, call refresh! (or another
+  # method to update caches) directly.
   def notify_changed!
-    MessageBus.publish("/site_settings", process: process_id)
+    MessageBus.publish(SITE_SETTINGS_CHANNEL, process: process_id)
   end
 
   def notify_clients!(name, scoped_to = nil)
+    # Group-based upcoming changes cannot update clients, because we need
+    # to know a user to determine if the change is active for them.
+    #
+    # This is the same limitation that group-based site settings have --
+    # we cannot determine the full groups of a user on the client side,
+    # so we only use these in the CurrentUserSerializer to send down an
+    # attribute. Users will get the new value on page reload.
+    #
+    # If the upcoming change is not group-based then it's safe to just
+    # use the underlying site setting value.
+    if upcoming_change_site_settings.include?(name.to_sym) && UpcomingChanges.has_groups?(name)
+      return
+    end
+
     MessageBus.publish(
-      "/client_settings",
+      CLIENT_SETTINGS_CHANNEL,
       name: name,
       # default_locale is a special case, it is not themeable and we define
       # a custom getter for it, so we can just use the normal getter
@@ -887,6 +958,16 @@ module SiteSettingExtension
       end
     end
 
+    # Upcoming change settings have a supplemental array of group IDs that are used to opt-in
+    # certain groups to the change early. We use the data from SiteSettingGroup to define
+    # a getter with _groups_map on the end, e.g. allow_unlimited_uploads_groups_map,
+    # to avoid having to manually split and convert to integer for these settings.
+    if upcoming_change_metadata[name] && type_supervisor.get_type(name) == :bool
+      define_singleton_method("#{clean_name}_groups_map") do
+        site_setting_group_ids[name].presence || []
+      end
+    end
+
     # Same logic as above for other list type settings, with the caveat that normal
     # list settings are not necessarily integers, so we just want to handle the splitting.
     if %i[list emoji_list tag_list].include?(type_supervisor.get_type(name))
@@ -953,6 +1034,14 @@ module SiteSettingExtension
           opts[:requires_confirmation]
         end
       )
+
+      if opts[:upcoming_change]
+        upcoming_change_metadata[name] = opts[:upcoming_change]
+        impact_type, impact_role = upcoming_change_metadata[name][:impact].split(",")
+        upcoming_change_metadata[name][:impact_type] = impact_type
+        upcoming_change_metadata[name][:impact_role] = impact_role
+        upcoming_change_metadata[name][:status] = opts[:upcoming_change][:status].to_sym
+      end
 
       categories[name] = opts[:category] || :uncategorized
 

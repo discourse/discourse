@@ -64,14 +64,14 @@ describe "Upcoming Events", type: :system do
         end
       end
 
-      describe "without local time (UTC events)" do
+      describe "without local time" do
         it "displays event time converted to user timezone",
            timezone: "Australia/Brisbane",
            time: Time.utc(2025, 9, 10, 12, 0) do
           create_post(
             user: admin,
             category: Fabricate(:category),
-            title: "Event with UTC time",
+            title: "Event with CET time",
             raw:
               "[event timezone=CET start=\"2025-09-11 19:00\" end=\"2025-09-11 21:00\"]\n[/event]",
           )
@@ -79,9 +79,9 @@ describe "Upcoming Events", type: :system do
           upcoming_events.visit
           upcoming_events.open_year_view
 
-          expect(upcoming_events).to have_event_with_time("Event with UTC time", "1:00pm - 3:00pm")
+          expect(upcoming_events).to have_event_with_time("Event with CET time", "1:00pm - 3:00pm")
 
-          find("a", text: "Event with UTC time").click
+          find("a", text: "Event with CET time").click
 
           expect(page).to have_css(
             ".event__section.event-dates",
@@ -159,14 +159,14 @@ describe "Upcoming Events", type: :system do
         end
       end
 
-      describe "without local time (UTC events)" do
+      describe "without local time" do
         it "displays multiple occurrences converted to user timezone",
            timezone: "Australia/Brisbane",
            time: Time.utc(2025, 9, 10, 12, 0) do
           create_post(
             user: admin,
             category: Fabricate(:category),
-            title: "Recurring UTC event",
+            title: "Recurring CET event",
             raw:
               "[event recurrence=every_week timezone=CET start=\"2025-09-11 19:00\" end=\"2025-09-11 20:00\"]\n[/event]",
           )
@@ -184,7 +184,7 @@ describe "Upcoming Events", type: :system do
 
           find(
             "tr.fc-list-event:nth-child(2) .fc-list-event-title a",
-            text: "Recurring UTC event",
+            text: "Recurring CET event",
           ).click
 
           expect(page).to have_css(
@@ -196,7 +196,7 @@ describe "Upcoming Events", type: :system do
 
           find(
             "tr.fc-list-event:nth-child(4) .fc-list-event-title a",
-            text: "Recurring UTC event",
+            text: "Recurring CET event",
           ).click
 
           expect(page).to have_css(
@@ -264,10 +264,10 @@ describe "Upcoming Events", type: :system do
         upcoming_events.visit
 
         upcoming_events.expect_event_count(4)
-        upcoming_events.expect_event_at_position(post.topic.title, row: 3, col: 3)
-        upcoming_events.expect_event_at_position(post.topic.title, row: 4, col: 3)
-        upcoming_events.expect_event_at_position(post.topic.title, row: 5, col: 3)
-        upcoming_events.expect_event_at_position(post.topic.title, row: 6, col: 3)
+        upcoming_events.expect_event_at_position(post.topic.title, row: 3, col: 2)
+        upcoming_events.expect_event_at_position(post.topic.title, row: 4, col: 2)
+        upcoming_events.expect_event_at_position(post.topic.title, row: 5, col: 2)
+        upcoming_events.expect_event_at_position(post.topic.title, row: 6, col: 2)
       end
     end
   end
@@ -502,6 +502,81 @@ describe "Upcoming Events", type: :system do
         upcoming_events.expect_content("Sep 15 – 21, 2025")
         upcoming_events.expect_to_be_on_path("/upcoming-events/week/2025/9/15")
       end
+    end
+  end
+
+  describe "with calendar_event_display setting", time: Time.utc(2025, 6, 2, 19, 00) do
+    before do
+      create_post(
+        user: admin,
+        category: Fabricate(:category),
+        title: "This is a short meeting",
+        raw:
+          "[event recurrence=\"every_week\" start=\"2025-06-03 10:00\" end=\"2025-06-03 11:00\"]\n[/event]",
+      )
+    end
+
+    context "with block" do
+      before { SiteSetting.calendar_event_display = "block" }
+
+      it "renders block" do
+        visit("/upcoming-events/month/2025/9/16")
+
+        expect(page).to have_selector(".fc-daygrid-block-event")
+      end
+    end
+
+    context "with auto" do
+      before { SiteSetting.calendar_event_display = "auto" }
+
+      it "renders dot" do
+        visit("/upcoming-events/month/2025/9/16")
+
+        expect(page).to have_selector(".fc-daygrid-dot-event")
+      end
+    end
+  end
+
+  context "with tag color", time: Time.utc(2025, 6, 2, 19, 00) do
+    before do
+      SiteSetting.map_events_to_color = [
+        { type: "tag", color: "rgb(231, 76, 60)", slug: "awesome-tag" },
+      ].to_json
+
+      create_post(
+        user: admin,
+        category: Fabricate(:category),
+        topic: Fabricate(:topic, tags: [Fabricate(:tag, name: "awesome-tag")]),
+        title: "This is a short meeting",
+        raw: "[event start=\"2025-06-03 10:00\" end=\"2025-06-03 11:00\"]\n[/event]",
+      )
+    end
+
+    it "display the event with the correct color" do
+      visit("/upcoming-events/month/2025/6/16")
+
+      expect(get_rgb_color(find(".fc-daygrid-event-dot"), "borderColor")).to eq("rgb(231, 76, 60)")
+    end
+  end
+
+  context "with category color", time: Time.utc(2025, 6, 2, 19, 00) do
+    before do
+      SiteSetting.map_events_to_color = [
+        { type: "category", color: "rgb(231, 76, 60)", slug: "awesome-category" },
+      ].to_json
+
+      create_post(
+        user: admin,
+        category: Fabricate(:category, slug: "awesome-category"),
+        title: "This is a short meeting",
+        raw: "[event start=\"2025-06-03 10:00\" end=\"2025-06-03 11:00\"]\n[/event]",
+      )
+    end
+
+    it "display the event with the correct color" do
+      visit("/upcoming-events/month/2025/6/16")
+
+      expect(get_rgb_color(find(".fc-daygrid-event-dot"), "borderColor")).to eq("rgb(231, 76, 60)")
     end
   end
 end

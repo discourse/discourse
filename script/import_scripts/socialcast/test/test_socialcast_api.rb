@@ -2,8 +2,8 @@
 
 require "minitest/autorun"
 require "yaml"
-require_relative "../socialcast_api.rb"
-require_relative "./test_data.rb"
+require_relative "../socialcast_api"
+require_relative "test_data"
 
 class TestSocialcastApi < Minitest::Test
   DEBUG = false

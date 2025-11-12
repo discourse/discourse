@@ -7,7 +7,9 @@ module DiscourseAi
         plugin.add_to_serializer(:current_user, :can_summarize) do
           return false if !SiteSetting.ai_summarization_enabled
 
-          if (ai_persona = AiPersona.find_by(id: SiteSetting.ai_summarization_persona)).blank?
+          if (
+               ai_persona = AiPersona.find_by_id_from_cache(SiteSetting.ai_summarization_persona)
+             ).blank?
             return false
           end
           scope.user.in_any_groups?(ai_persona.allowed_group_ids.to_a)
@@ -19,6 +21,34 @@ module DiscourseAi
 
         plugin.add_to_serializer(:web_hook_topic_view, :summarizable) do
           scope.can_see_summary?(object.topic)
+        end
+
+        plugin.add_to_serializer(
+          :topic_view,
+          :ai_summary_record,
+          include_condition: -> { false },
+        ) do
+          return @ai_summary_record if defined?(@ai_summary_record)
+          @ai_summary_record =
+            object.topic.ai_summaries.find_by(summary_type: AiSummary.summary_types[:complete])
+        end
+
+        plugin.add_to_serializer(
+          :topic_view,
+          :ai_summary,
+          include_condition: -> do
+            DiscoursePluginRegistry.apply_modifier(:serialize_ai_summary, false) &&
+              scope.can_see_summary?(object.topic) && ai_summary_record.present?
+          end,
+        ) do
+          {
+            id: ai_summary_record.id,
+            summarized_text: ai_summary_record.summarized_text,
+            algorithm: ai_summary_record.algorithm,
+            outdated: ai_summary_record.outdated,
+            created_at: ai_summary_record.created_at,
+            updated_at: ai_summary_record.updated_at,
+          }
         end
 
         # Don't add gists to the following topic lists.

@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 ar:
+  activerecord:
+    attributes:
+      llm_model:
+        max_prompt_tokens: "نافذة السياق"
   discourse_automation:
     ai:
       flag_types:
@@ -22,10 +26,6 @@ ar:
       llm_triage:
         title: فرز المنشورات باستخدام الذكاء الاصطناعي
         description: "فرز المنشورات باستخدام نموذج اللغة الكبير"
-        flagged_post: |
-          <div>استجابة من النموذج:</div>
-          <p>%%LLM_RESPONSE%%</p>
-          <b>تم تشغيله من قِبل <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a> القاعدة.</b>
       llm_report:
         title: التقرير الدوري باستخدام الذكاء الاصطناعي
         description: "تقرير دوري قائم على نموذج اللغة الكبير"
@@ -68,7 +68,6 @@ ar:
     composer_ai_helper_allowed_groups: "سيرى المستخدمون في هذه المجموعات زر مساعد الذكاء الاصطناعي في أداة الإنشاء."
     ai_helper_allowed_in_pm: "تفعيل مساعد الذكاء الاصطناعي في الرسائل الخاصة."
     ai_helper_model: "النموذج المراد استخدامه لمساعد الذكاء الاصطناعي."
-    ai_helper_custom_prompts_allowed_groups: "سيرى المستخدمون في هذه المجموعات خيار رسالة المطالبة المخصَّصة في مساعد الذكاء الاصطناعي."
     ai_helper_automatic_chat_thread_title_delay: "التأخير بالدقائق قبل أن يقوم مساعد الذكاء الاصطناعي بتعيين عنوان سلسلة الدردشة تلقائيًا."
     ai_helper_automatic_chat_thread_title: "تعيين عناوين سلسلة الدردشة تلقائيًا بناءً على محتويات السلسلة."
     ai_helper_illustrate_post_model: "النموذج المراد استخدامه لميزة تزويد المنشور بالصور من مساعد الذكاء الاصطناعي في أداة الإنشاء"
@@ -99,7 +98,6 @@ ar:
     ai_bot_allowed_groups: "عندما يتمكن GPT Bot من الوصول إلى الرسالة الخاصة، فإنه سيرد على أعضاء هذه المجموعات."
     ai_bot_debugging_allowed_groups: "السماح لهذه المجموعات برؤية زر تصحيح الأخطاء في المنشورات التي تعرض طلب الذكاء الاصطناعي الأولي والرد"
     ai_bot_public_sharing_allowed_groups: "السماح لهذه المجموعات بمشاركة رسائل الذكاء الاصطناعي الشخصية مع العامة عبر رابط فريد متاح بشكلٍ علني. ملاحظة: إذا كان موقعك يتطلَّب تسجيل الدخول، فستتطلب المشاركة تسجيل الدخول أيضًا."
-    ai_bot_add_to_header: "عرض زر في الرأس لبدء رسالة خاصة مع روبوت ذكاء اصطناعي"
     ai_bot_github_access_token: "رمز وصول GitHub للاستخدام مع أدوات الذكاء الاصطناعي من GitHub (مطلوب لدعم البحث)"
     ai_stability_api_key: "مفتاح API لواجهة API المسماة stability.ai"
     ai_stability_engine: "محرك إنشاء الصور المراد استخدامه لواجهة API المسماة stability.ai"
@@ -112,8 +110,6 @@ ar:
     ai_discord_search_mode: "حدد وضع البحث الذي تريد استخدامه للبحث في Discord"
     ai_discord_search_persona: "الشخصية المستخدمة في بحث Discord."
     ai_discord_allowed_guilds: "مجتمعات (خوادم) Discord التي يُصرح للروبوت بالبحث فيها"
-    ai_bot_enable_dedicated_ux: "السماح باستخدام واجهة البوت بكامل الشاشة بدلًا من الرسائل الخاصة (PM)"
-    ai_translation_enabled: "تمكين ميزة الترجمة بالذكاء الاصطناعي"
     ai_translation_model: "النموذج المستخدم للترجمة. يجب أن يدعم هذا النموذج الترجمة. يمكن للشخصيات تغيير هذا الإعداد."
     ai_translation_backfill_limit_to_public_content: "عند التفعيل، سيتم ترجمة المحتوى في الفئات العامة فقط. عند التعطيل، سيتم أيضًا إرسال المحتوى في الرسائل الجماعية الخاصة والفئات الخاصة للترجمة."
     ai_translation_backfill_max_age_days: "الحد الأقصى لعمر المنشور والموضوع الذي سيتم ترجمته. المنشورات والموضوعات الأقدم من ذلك لن تُترجم. القيمة 0 تمنع الترجمة الرجعية، لكنها لن تمنع ترجمة المنشورات الجديدة."

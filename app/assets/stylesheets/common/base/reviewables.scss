@@ -3,6 +3,10 @@
 .reviewable {
   background: var(--d-content-background);
 
+  .reviewable-top-nav {
+    margin-bottom: 1em;
+  }
+
   .flagged-post-header {
     width: 100%;
     display: flex;
@@ -39,8 +43,9 @@
 
   .reviewable-container {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     margin-top: 1em;
+    gap: var(--space-4);
 
     @include viewport.until(sm) {
       flex-direction: column;
@@ -49,9 +54,8 @@
     .reviewable-list {
       flex: 1;
       box-sizing: border-box;
-      max-width: 760px; // Match topic post width
       min-width: 0;
-      margin-right: auto;
+      width: 100%;
 
       @include viewport.until(sm) {
         order: 2;
@@ -61,21 +65,76 @@
     }
 
     .reviewable-filters {
-      width: 250px;
+      width: 100%;
       height: 100%;
       box-sizing: border-box;
 
+      &.--expanded {
+        --column-gap: 5em;
+        gap: 0 var(--column-gap);
+
+        @include viewport.from(sm) {
+          display: grid;
+          grid-template-columns: repeat(2, calc(50% - (var(--column-gap) / 2)));
+        }
+
+        @include viewport.until(lg) {
+          --column-gap: 2em;
+        }
+
+        .reviewable-filters-actions {
+          grid-column: 1 / -1;
+          margin-top: var(--space-4);
+        }
+
+        .reviewable-filter {
+          margin: 0 0 1em 0;
+        }
+      }
+
+      &.--collapsed {
+        display: flex;
+        gap: var(--space-2);
+        align-items: end;
+
+        @include viewport.until(sm) {
+          flex-wrap: wrap;
+        }
+
+        .reviewable-filter {
+          flex: 1 1 50%;
+          min-width: 5em;
+
+          @include viewport.until(sm) {
+            &:nth-child(2) {
+              display: none;
+            }
+          }
+
+          .name {
+            min-width: 0;
+            display: block;
+
+            @include ellipsis;
+          }
+        }
+      }
+
+      .reviewable-filters-actions {
+        display: flex;
+        gap: var(--space-2);
+        justify-content: space-between;
+
+        @include viewport.until(sm) {
+          width: 100%;
+        }
+      }
+
       @include viewport.until(sm) {
         order: 1;
-        margin: 0 0 1em 0;
         padding: 0.5em 1em 1em 1em;
         width: 100%;
         background-color: var(--primary-very-low);
-
-        .reviewable-filters-actions {
-          display: flex;
-          justify-content: space-between;
-        }
 
         .reviewable-filter {
           .filter-label {
@@ -83,6 +142,20 @@
           }
         }
       }
+    }
+
+    .d-date-time-input-range {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+
+      .from {
+        margin: 0;
+      }
+    }
+
+    .d-date-time-input {
+      flex: 1 1 auto;
     }
 
     .reviewable-list + .reviewable-filters {
@@ -128,10 +201,13 @@
   }
 
   .reviewable-user-details {
-    border-bottom: 1px solid var(--content-border-color);
     padding-bottom: 0.25em;
     display: flex;
     margin-bottom: 0.5em;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid var(--content-border-color);
+    }
 
     .name {
       width: 8em;
@@ -158,8 +234,8 @@
 
 .reviewable-filters {
   background-color: var(--primary-very-low);
-  padding: 1em;
-  margin-bottom: 1em;
+  padding: var(--space-4) var(--space-6);
+  margin-bottom: var(--space-4);
 
   .topic-filter .btn {
     display: flex;
@@ -173,7 +249,7 @@
   .reviewable-filter {
     display: flex;
     flex-direction: column;
-    margin: 0 0 1em 0;
+    break-inside: avoid;
 
     .filter-label {
       margin: 0 0 0.5em 0;
@@ -277,6 +353,10 @@
   margin-block: 3rem;
   padding-bottom: 1em;
 
+  &:first-of-type {
+    margin-top: var(--space-4);
+  }
+
   .show-raw-email {
     color: var(--primary-medium);
     font-size: var(--font-down-2);
@@ -296,10 +376,6 @@
     }
   }
 
-  .names {
-    font-weight: bold;
-  }
-
   .post-contents-wrapper {
     width: 100%;
     margin-top: 1em;
@@ -314,7 +390,6 @@
   .reviewable-post-header {
     display: flex;
     justify-content: space-between;
-    width: var(--topic-body-width);
     align-items: center;
     max-width: 100%;
 
@@ -337,7 +412,6 @@
 
   .post-body {
     position: relative;
-    max-width: var(--topic-body-width);
     margin-top: 0.5em;
 
     &.is-collapsed {
@@ -479,6 +553,10 @@
     }
   }
 
+  &__meta-label {
+    font-weight: bold;
+  }
+
   .reviewable-contents {
     display: flex;
     flex-wrap: wrap;
@@ -545,12 +623,12 @@
   @include viewport.until(sm) {
     display: flex;
     width: 100%;
-    overflow-x: scroll;
+    overflow-x: auto;
     border-top: 1px solid var(--content-border-color);
   }
 
   &__table-wrapper {
-    overflow-x: scroll;
+    overflow-x: auto;
   }
 
   th {
@@ -652,7 +730,6 @@
 
 .reviewable-score-reason {
   margin: 0.5em 0;
-  max-width: var(--topic-body-width);
   margin-bottom: 0.5em;
 }
 
@@ -660,7 +737,6 @@
   margin: 0.5em 0;
 
   .reviewable-conversation-post {
-    max-width: var(--topic-body-width);
     margin-bottom: 0.5em;
 
     .username {

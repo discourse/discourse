@@ -662,7 +662,6 @@ sq:
     educate_until_posts: "When the user starts typing their first (n) new posts, show the pop-up new user education panel in the composer."
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
-    disabled_image_download_domains: "Remote images will never be downloaded from these domains. Pipe-delimited list."
     editing_grace_period: "For (n) seconds after posting, editing will not create a new version in the post history."
     edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view."
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
@@ -672,7 +671,6 @@ sq:
     post_excerpt_maxlength: "Gjatësia maksimale e një përmbledhjeje të një postimi. "
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
-    email_custom_headers: "A pipe-delimited list of custom email headers"
     summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"
     summary_percent_filter: "When a user clicks 'Summarize This Topic', show the top % of posts"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
@@ -802,7 +800,6 @@ sq:
     detect_custom_avatars: "Whether or not to check that users have uploaded custom profile pictures."
     max_daily_gravatar_crawls: "Maximum number of times Discourse will check Gravatar for custom avatars in a day"
     enable_user_directory: "Provide a directory of users for browsing"
-    anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting"
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
     enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
@@ -1179,10 +1176,7 @@ sq:
         Nëse nuk arrini të klikoni në linkun më siper, provoni ta kopjoni dhe ta ngjisni në shfletuesin tuaj.
   page_not_found:
     page_title: "Faqja nuk u gjet"
-    popular_topics: "Popullore"
-    recent_topics: "Më të fundit"
     see_more: "Më shumë"
-    search_title: "Kërko në këtë faqe"
     search_button: "Kërko"
   upload:
     edit_reason: "downloaded local copies of images"
@@ -1441,6 +1435,8 @@ sq:
           complete: "Përdoruesi u fshi."
       reject:
         title: "Refuzo"
+      delete_post:
+        complete: "Postimi u fshi"
       delete_user:
         complete: "Përdoruesi u fshi"
   fallback_username: "përdorues"

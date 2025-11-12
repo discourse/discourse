@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
 import CustomReaction from "../models/discourse-reactions-custom-reaction";
@@ -26,7 +26,7 @@ export default class DiscourseReactionsCounter extends Component {
   }
 
   reactionsChanged(data) {
-    data.reactions.uniq().forEach((reaction) => {
+    uniqueItemsFromArray(data.reactions).forEach((reaction) => {
       this.getUsers(reaction);
     });
   }
@@ -173,7 +173,7 @@ export default class DiscourseReactionsCounter extends Component {
       class={{this.classes}}
       {{on "mousedown" this.mouseDown}}
       {{on "mouseup" this.mouseUp}}
-      {{closeOnClickOutside this.clickOutside (hash)}}
+      {{closeOnClickOutside this.clickOutside}}
       {{on "touchstart" this.touchStart}}
       {{on "pointerover" this.pointerOver}}
       {{on "pointerout" this.pointerOut}}

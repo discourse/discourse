@@ -258,17 +258,25 @@ RSpec.describe NewPostManager do
     end
 
     context "with a fast typer" do
-      before { user.update!(trust_level: 0) }
+      before do
+        user.update!(trust_level: 0)
+        SiteSetting.notify_mods_when_user_silenced = true
+      end
 
       it "adds the silence reason in the system locale" do
         manager = build_manager_with("this is new post content")
 
         I18n.with_locale(:fr) do # Simulate french user
-          result = NewPostManager.default_handler(manager)
+          expect { NewPostManager.default_handler(manager) }.to change { user.silenced? }.to(
+            true,
+          ).and change { user.silence_reason }.to(
+                  I18n.t("user.new_user_typed_too_fast", locale: :en),
+                ).and change {
+                        Topic.where(
+                          "subtype = 'system_message' AND title LIKE '%silenced%' AND excerpt LIKE '%Reason - New user typed too fast%'",
+                        ).count
+                      }.by(1)
         end
-
-        expect(user.silenced?).to eq(true)
-        expect(user.silence_reason).to eq(I18n.t("user.new_user_typed_too_fast", locale: :en))
       end
 
       it "runs the watched words check before checking if the user is a fast typer" do
@@ -692,6 +700,8 @@ RSpec.describe NewPostManager do
     let(:user) { Fabricate(:user, refresh_auto_groups: true) }
     let(:admin) { Fabricate(:admin) }
 
+    before { SiteSetting.notify_mods_when_user_silenced = true }
+
     it "silences users if its their first post" do
       manager =
         NewPostManager.new(
@@ -703,9 +713,12 @@ RSpec.describe NewPostManager do
           first_post_checks: true,
         )
 
-      result = manager.perform
-      expect(result.action).to eq(:enqueued)
-      expect(user.silenced?).to be(true)
+      expect { @result = manager.perform }.to change { user.silenced? }.to(true).and change {
+              Topic.where(
+                "subtype = 'system_message' AND title LIKE '%silenced%' AND excerpt LIKE '%first email was flagged as spam%'",
+              ).count
+            }.by(1)
+      expect(@result.action).to eq(:enqueued)
     end
 
     it "doesn't silence or enqueue exempt users" do

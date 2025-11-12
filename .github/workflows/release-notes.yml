@@ -75,7 +75,7 @@ jobs:
           bin/rake "release_note:plugins:generate[ ${{ steps.dates.outputs.from }} , ${{ steps.dates.outputs.to }} , ./tmp/all-the-plugins/official/* , discourse ]" | tee tmp/notes/plugins.txt
 
       - name: Export files
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: release-notes
           path: ./tmp/notes/*.txt

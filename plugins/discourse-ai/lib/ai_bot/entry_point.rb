@@ -190,7 +190,7 @@ module DiscourseAi
               scope.user.in_any_groups?(SiteSetting.ai_bot_allowed_groups_map)
           end,
         ) do
-          bots_map = ::DiscourseAi::AiBot::EntryPoint.enabled_user_ids_and_models_map
+          bots_map = DiscourseAi::AiBot::EntryPoint.enabled_user_ids_and_models_map
 
           persona_users = AiPersona.persona_users(user: scope.user)
           if persona_users.present?
@@ -215,39 +215,6 @@ module DiscourseAi
         plugin.add_to_serializer(:current_user, :can_share_ai_bot_conversations) do
           scope.user.in_any_groups?(SiteSetting.ai_bot_public_sharing_allowed_groups_map)
         end
-
-        plugin.add_to_serializer(
-          :current_user,
-          :can_use_ai_bot_discover_persona,
-          include_condition: -> do
-            SiteSetting.ai_bot_enabled && scope.authenticated? &&
-              SiteSetting.ai_bot_discover_persona.present?
-          end,
-        ) do
-          persona_allowed_groups =
-            AiPersona.find_by(id: SiteSetting.ai_bot_discover_persona)&.allowed_group_ids.to_a
-
-          scope.user.in_any_groups?(persona_allowed_groups)
-        end
-
-        UserUpdater::OPTION_ATTR.push(:ai_search_discoveries)
-        plugin.add_to_serializer(
-          :user_option,
-          :ai_search_discoveries,
-          include_condition: -> do
-            SiteSetting.ai_bot_enabled && SiteSetting.ai_bot_discover_persona.present? &&
-              scope.authenticated?
-          end,
-        ) { object.ai_search_discoveries }
-
-        plugin.add_to_serializer(
-          :current_user_option,
-          :ai_search_discoveries,
-          include_condition: -> do
-            SiteSetting.ai_bot_enabled && SiteSetting.ai_bot_discover_persona.present? &&
-              scope.authenticated?
-          end,
-        ) { object.ai_search_discoveries }
 
         plugin.add_to_serializer(
           :topic_view,

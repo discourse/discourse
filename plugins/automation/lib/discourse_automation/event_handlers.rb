@@ -3,7 +3,8 @@
 module DiscourseAutomation
   module EventHandlers
     def self.handle_post_created_edited(post, action)
-      return if post.post_type != Post.types[:regular] || post.user_id < 0
+      return if post.post_type != Post.types[:regular]
+
       topic = post.topic
       return if topic.blank?
 
@@ -12,6 +13,8 @@ module DiscourseAutomation
       DiscourseAutomation::Automation
         .where(trigger: name, enabled: true)
         .find_each do |automation|
+          # allow scripts to opt-in to system posts via allow_system_posts setting
+          next if post.user_id < 0 && !automation.script_field("allow_system_posts")&.dig("value")
           action_type = automation.trigger_field("action_type")
           selected_action = action_type["value"]&.to_sym
 

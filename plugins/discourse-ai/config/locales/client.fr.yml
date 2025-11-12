@@ -277,6 +277,16 @@ fr:
         card: "Carte"
       translations:
         title: "Traductions"
+        stats:
+          eta_minutes:
+            one: "%{count} minute"
+            other: "%{count} minutes"
+          eta_hours:
+            one: "%{count} heure"
+            other: "%{count} heures"
+          eta_days:
+            one: "%{count} jour"
+            other: "%{count} jours"
         progress_chart:
           bar_done:
             one: "%{count} publication"
@@ -781,6 +791,7 @@ fr:
         cancel_streaming: "Arrêter de répondre"
         default_pm_prefix: "[MP de robot IA sans titre]"
         shortcut_title: "Démarrer une conversation avec un robot IA"
+        shortcut_link: "Robot IA"
         exit: "quitter le robot IA"
         share: "Copier la conversation avec l'IA"
         conversation_shared: "Conversation copiée"

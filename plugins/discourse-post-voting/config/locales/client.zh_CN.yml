@@ -30,10 +30,8 @@ zh_CN:
         label: "创建帖子投票话题"
       composer_actions:
         create_as_post_voting:
-          label: "切换帖子投票"
           desc: "话题将使用可投票的帖子创建"
         remove_as_post_voting:
-          label: "移除帖子投票"
           desc: "话题将以常规格式创建"
     vote:
       already_voted: "您只能为每个问题投一次票。"

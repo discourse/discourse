@@ -169,7 +169,7 @@ class InvitesController < ApplicationController
           show_warnings: true,
         )
       else
-        render json: failed_json, status: 422
+        render json: failed_json, status: :unprocessable_entity
       end
     rescue Invite::UserExists => e
       render_json_error(e.message)
@@ -329,9 +329,11 @@ class InvitesController < ApplicationController
     render json: success_json
   end
 
-  # For DiscourseConnect SSO, all invite acceptance is done
-  # via the SessionController#sso_login route
   def perform_accept_invitation
+    # When DiscourseConnect is enabled, all invite acceptance is done
+    # via the SSO flow (SessionController#sso_login)
+    raise Discourse::NotFound if SiteSetting.enable_discourse_connect
+
     params.require(:id)
     params.permit(
       :email,
@@ -344,14 +346,12 @@ class InvitesController < ApplicationController
       },
     )
 
-    raise Discourse::NotFound if SiteSetting.enable_discourse_connect
-
     invite = Invite.find_by(invite_key: params[:id])
     redeeming_user = current_user
 
     if invite.present?
       begin
-        attrs = { ip_address: request.remote_ip, session: session }
+        attrs = { ip_address: request.remote_ip, session: server_session }
 
         if redeeming_user
           attrs[:redeeming_user] = redeeming_user
@@ -378,11 +378,14 @@ class InvitesController < ApplicationController
              ActiveRecord::RecordNotSaved,
              ActiveRecord::LockWaitTimeout,
              Invite::UserExists => e
-        return render json: failed_json.merge(message: e.message), status: 412
+        return render json: failed_json.merge(message: e.message), status: :precondition_failed
       end
 
       if user.blank?
-        return render json: failed_json.merge(message: I18n.t("invite.not_found_json")), status: 404
+        return(
+          render json: failed_json.merge(message: I18n.t("invite.not_found_json")),
+                 status: :not_found
+        )
       end
 
       log_on_user(user) if !redeeming_user && user.active? && user.guardian.can_access_forum?
@@ -416,7 +419,7 @@ class InvitesController < ApplicationController
 
       render json: success_json.merge(response)
     else
-      render json: failed_json.merge(message: I18n.t("invite.not_found_json")), status: 404
+      render json: failed_json.merge(message: I18n.t("invite.not_found_json")), status: :not_found
     end
   end
 
@@ -459,10 +462,7 @@ class InvitesController < ApplicationController
       return render_json_error(I18n.t("rate_limiter.slow_down"))
     end
 
-    Invite
-      .pending(current_user)
-      .where("invites.email IS NOT NULL")
-      .find_each { |invite| invite.resend_invite }
+    Invite.pending(current_user).where.not(email: nil).find_each { |invite| invite.resend_invite }
 
     render json: success_json
   end
@@ -498,7 +498,9 @@ class InvitesController < ApplicationController
             DiscoursePluginRegistry.apply_modifier(:invite_bulk_csv_custom_error, nil, invites)
 
           if custom_error.present?
-            return render json: failed_json.merge(errors: [custom_error]), status: 422
+            return(
+              render json: failed_json.merge(errors: [custom_error]), status: :unprocessable_entity
+            )
           end
 
           Jobs.enqueue(:bulk_invite, invites: invites, current_user_id: current_user.id)
@@ -513,12 +515,13 @@ class InvitesController < ApplicationController
                          ),
                        ],
                      ),
-                   status: 422
+                   status: :unprocessable_entity
           else
             render json: success_json
           end
         else
-          render json: failed_json.merge(errors: [I18n.t("bulk_invite.error")]), status: 422
+          render json: failed_json.merge(errors: [I18n.t("bulk_invite.error")]),
+                 status: :unprocessable_entity
         end
       end
     end
@@ -532,8 +535,8 @@ class InvitesController < ApplicationController
     # Show email if the user already authenticated their email
     different_external_email = false
 
-    if session[:authentication]
-      auth_result = Auth::Result.from_session_data(session[:authentication], user: nil)
+    if server_session[:authentication]
+      auth_result = Auth::Result.from_session_data(server_session[:authentication], user: nil)
       if invite.email == auth_result.email
         email = invite.email
       else
@@ -577,7 +580,7 @@ class InvitesController < ApplicationController
       info[:username] = current_user.username
     end
 
-    secure_session["invite-key"] = invite.invite_key
+    server_session["invite-key"] = invite.invite_key
 
     respond_to do |format|
       format.html { store_preloaded("invite_info", MultiJson.dump(info)) }
@@ -610,20 +613,20 @@ class InvitesController < ApplicationController
   end
 
   def ensure_invites_allowed
-    if (
-         !SiteSetting.enable_local_logins && Discourse.enabled_auth_providers.count == 0 &&
-           !SiteSetting.enable_discourse_connect
-       )
-      raise Discourse::NotFound
-    end
+    return if SiteSetting.enable_local_logins
+    return if SiteSetting.enable_discourse_connect
+    return if Discourse.enabled_auth_providers.present?
+
+    raise Discourse::NotFound
   end
 
   def ensure_new_registrations_allowed
-    unless SiteSetting.allow_new_registrations
-      flash[:error] = I18n.t("login.new_registrations_disabled")
-      render layout: "no_ember"
-      false
-    end
+    return if SiteSetting.allow_new_registrations
+
+    flash[:error] = I18n.t("login.new_registrations_disabled")
+    render layout: "no_ember"
+
+    false
   end
 
   def groups_can_see_topic?(groups, topic)

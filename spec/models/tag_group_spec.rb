@@ -118,6 +118,15 @@ RSpec.describe TagGroup do
     end
   end
 
+  describe "#find_by_name_insensitive" do
+    fab!(:tag_group) { Fabricate(:tag_group, name: "Test-Tag-Group") }
+
+    it "finds by name case insensitively" do
+      expect(TagGroup.find_by_name_insensitive("test-tag-group")).to eq(tag_group)
+      expect(TagGroup.find_by_name_insensitive("TEST-TAG-GROUP")).to eq(tag_group)
+      expect(TagGroup.find_by_name_insensitive("TeSt-TaG-GrOuP")).to eq(tag_group)
+    end
+  end
   describe "tag_names=" do
     let(:tag_group) { Fabricate(:tag_group) }
     fab!(:tag)

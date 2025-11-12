@@ -12,9 +12,7 @@ module Migrations::Database::Schema
     end
 
     def output_table(table)
-      output_create_table_statement(table)
-      output_columns(table)
-      output_primary_key(table)
+      output_create_table_statement(table) { output_table_definitions(table) }
       output_indexes(table)
       @output.puts ""
     end
@@ -24,21 +22,28 @@ module Migrations::Database::Schema
     def output_create_table_statement(table)
       @output.puts "CREATE TABLE #{escape_identifier(table.name)}"
       @output.puts "("
-    end
-
-    def output_columns(table)
-      column_definitions = create_column_definitions(table)
-      column_definitions << "" if table.primary_key_column_names.size > 1
-      @output.puts column_definitions.join(",\n")
-    end
-
-    def output_primary_key(table)
-      if table.primary_key_column_names.size > 1
-        pk_definition =
-          table.primary_key_column_names.map { |name| escape_identifier(name) }.join(", ")
-        @output.puts "    PRIMARY KEY (#{pk_definition})"
-      end
+      yield
       @output.puts ");"
+    end
+
+    def output_table_definitions(table)
+      definitions = create_column_definitions(table)
+
+      if table.primary_key_column_names.size > 1
+        primary_key_column_names =
+          table.primary_key_column_names.map { |name| escape_identifier(name) }.join(", ")
+        definitions << "    PRIMARY KEY (#{primary_key_column_names})"
+      end
+
+      if table.constraints&.any?
+        definitions.concat(
+          table.constraints.map do |constraint|
+            "    CONSTRAINT #{escape_identifier(constraint.name)} CHECK (#{constraint.condition})"
+          end,
+        )
+      end
+
+      @output.puts definitions.join(",\n")
     end
 
     def create_column_definitions(table)
@@ -46,12 +51,12 @@ module Migrations::Database::Schema
       has_composite_primary_key = table.primary_key_column_names.size > 1
 
       max_column_name_length = columns.map { |c| escape_identifier(c.name).length }.max
-      max_datatype_length = columns.map { |c| convert_datatype(c.datatype).length }.max
+      max_datatype_length = columns.map { |c| convert_datatype(c.datatype, c.enum).length }.max
 
       columns.map do |c|
         definition = [
           escape_identifier(c.name).ljust(max_column_name_length),
-          convert_datatype(c.datatype).ljust(max_datatype_length),
+          convert_datatype(c.datatype, c.enum).ljust(max_datatype_length),
         ]
 
         if c.is_primary_key && !has_composite_primary_key
@@ -68,10 +73,11 @@ module Migrations::Database::Schema
       end
     end
 
-    def convert_datatype(type)
+    def convert_datatype(type, enum)
       case type
       when :blob, :boolean, :date, :datetime, :float, :integer, :numeric, :text
-        type.to_s.upcase
+        datatype = type.to_s.upcase
+        enum ? "ENUM_#{datatype}" : datatype
       when :inet
         "INET_TEXT"
       when :json

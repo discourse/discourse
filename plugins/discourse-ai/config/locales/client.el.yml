@@ -72,6 +72,12 @@ el:
               label: "Ετικέτες"
             canned_reply:
               label: "Απάντηση"
+            flag_type:
+              label: "Τύπος αναφοράς"
+              description: "Τύπος σημαίας που θα εφαρμοστεί στην ανάρτηση (ανεπιθύμητο ή απλώς αναγγελία για έλεγχο)"
+            flag_post:
+              label: "Αναφορά ανάρτησης"
+              description: "Αναφέρει την ανάρτηση (είτε ως ανεπιθύμητη είτε για έλεγχο)"
     discourse_ai:
       features:
         back: "Πίσω"
@@ -95,6 +101,16 @@ el:
         select_option: "Διαλέξτε μία επιλογή..."
       translations:
         title: "Μεταφράσεις"
+        stats:
+          eta_minutes:
+            one: "%{count} λεπτό"
+            other: "%{count} λεπτά"
+          eta_hours:
+            one: "%{count} ω"
+            other: "%{count} ω"
+          eta_days:
+            one: "%{count} ημ"
+            other: "%{count} ημ"
         progress_chart:
           bar_done:
             one: "%{count} ανάρτηση"

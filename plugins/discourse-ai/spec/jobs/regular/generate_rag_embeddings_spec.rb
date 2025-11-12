@@ -6,7 +6,7 @@ RSpec.describe Jobs::GenerateRagEmbeddings do
   before { enable_current_plugin }
 
   describe "#execute" do
-    fab!(:vector_def) { Fabricate(:embedding_definition) }
+    fab!(:vector_def, :embedding_definition)
 
     let(:expected_embedding) { [0.0038493] * vector_def.dimensions }
 

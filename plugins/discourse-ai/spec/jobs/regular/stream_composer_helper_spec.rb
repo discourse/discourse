@@ -10,7 +10,7 @@ RSpec.describe Jobs::StreamComposerHelper do
 
   describe "#execute" do
     let!(:input) { "I liek to eet pie fur brakefast becuz it is delishus." }
-    fab!(:user) { Fabricate(:leader) }
+    fab!(:user, :leader)
 
     before do
       Group.find(Group::AUTO_GROUPS[:trust_level_3]).add(user)

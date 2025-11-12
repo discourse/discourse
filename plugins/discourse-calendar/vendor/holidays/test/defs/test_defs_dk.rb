@@ -7,6 +7,10 @@ require File.expand_path(File.dirname(__FILE__)) + '/../test_helper'
 class DkDefinitionTests < Test::Unit::TestCase  # :nodoc:
 
   def test_dk
+    assert_equal "Store Bededag", (Holidays.on(Date.civil(2023, 5, 5), [:dk])[0] || {})[:name]
+
+    assert_nil (Holidays.on(Date.civil(2024, 4, 26), [:dk])[0] || {})[:name]
+
     assert_equal "Nytårsdag", (Holidays.on(Date.civil(2007, 1, 1), [:dk], [:informal])[0] || {})[:name]
 
     assert_equal "Fastelavn", (Holidays.on(Date.civil(2007, 2, 18), [:dk], [:informal])[0] || {})[:name]

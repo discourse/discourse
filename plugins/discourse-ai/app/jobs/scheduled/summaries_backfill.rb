@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::Jobs
+module Jobs
   class SummariesBackfill < ::Jobs::Scheduled
     every 5.minutes
     cluster_concurrency 1
@@ -9,6 +9,16 @@ module ::Jobs
       return if !SiteSetting.discourse_ai_enabled
       return if !SiteSetting.ai_summarization_enabled
       return if SiteSetting.ai_summary_backfill_maximum_topics_per_hour.zero?
+
+      llm_model = find_llm_model
+      return if llm_model.blank?
+
+      unless LlmCreditAllocation.credits_available?(llm_model)
+        Rails.logger.info(
+          "Summaries backfill skipped: insufficient credits. Will resume when credits reset.",
+        )
+        return
+      end
 
       system_user = Discourse.system_user
 
@@ -86,6 +96,13 @@ module ::Jobs
       return 0 if current_budget < 0
 
       current_budget
+    end
+
+    def find_llm_model
+      persona_klass = AiPersona.find_by_id_from_cache(SiteSetting.ai_summarization_persona)
+      return nil if persona_klass.blank?
+
+      DiscourseAi::Summarization.find_summarization_model(persona_klass)
     end
   end
 end

@@ -64,7 +64,6 @@
 .nav-stacked {
   @extend %nav;
   padding: 0;
-  background: var(--primary-low);
 
   li {
     border-bottom: 1px solid var(--content-border-color);

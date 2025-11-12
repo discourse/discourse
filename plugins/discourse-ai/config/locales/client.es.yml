@@ -281,9 +281,16 @@ es:
         admin_actions:
           translation_settings: "Ajustes de traducción"
           localization_settings: "Ajustes de localización"
-          disabled_state:
-            configure: "Configurar traducciones"
-            empty_label: "Las traducciones automáticas están desactivadas, haz clic a continuación para configurarlas"
+        stats:
+          eta_minutes:
+            one: "%{count} minuto"
+            other: "%{count} minutos"
+          eta_hours:
+            one: "%{count} hora"
+            other: "%{count} horas"
+          eta_days:
+            one: "%{count} día"
+            other: "%{count} días"
         progress_chart:
           bar_done:
             one: "%{count} publicación"
@@ -788,6 +795,7 @@ es:
         cancel_streaming: "Detener respuesta"
         default_pm_prefix: "[MP de bot de IA sin título]"
         shortcut_title: "Iniciar un MP con un bot de IA"
+        shortcut_link: "Bot de IA"
         exit: "salir de bot de IA"
         share: "Copiar conversación de IA"
         conversation_shared: "Conversación copiada"

@@ -64,7 +64,7 @@ export default class UpcomingEventsCalendar extends Component {
 
       let backgroundColor;
 
-      if (post.topic.tags) {
+      if (post?.topic?.tags) {
         const tagColorEntry = tagsColorsMap.find(
           (entry) =>
             entry.type === "tag" && post.topic.tags.includes(entry.slug)
@@ -75,7 +75,7 @@ export default class UpcomingEventsCalendar extends Component {
       if (!backgroundColor) {
         const categoryColorEntry = tagsColorsMap.find(
           (entry) =>
-            entry.type === "category" && entry.slug === post.topic.category_slug
+            entry.type === "category" && entry.slug === post?.category_slug
         );
         backgroundColor = categoryColorEntry?.color;
       }
@@ -85,22 +85,14 @@ export default class UpcomingEventsCalendar extends Component {
         backgroundColor = `#${categoryColor}`;
       }
 
-      let classNames;
-      if (moment(endsAt || startsAt).isBefore(moment())) {
-        classNames = "fc-past-event";
-      }
-
       return {
         extendedProps: { postEvent: event },
         title: formatEventName(event, this.currentUser?.user_option?.timezone),
-        rrule: event.rrule,
         start: startsAt,
         end: endsAt || startsAt,
-        duration: event.duration,
         allDay: !isNotFullDayEvent(moment(startsAt), moment(endsAt)),
-        url: getURL(`/t/-/${post.topic.id}/${post.post_number}`),
+        url: getURL(`/t/-/${post?.topic?.id}/${post?.post_number}`),
         backgroundColor,
-        classNames,
       };
     });
   }
@@ -143,7 +135,7 @@ export default class UpcomingEventsCalendar extends Component {
 
     const localDate = moment(info.view.currentStart)
       .clone()
-      .tz(this.currentUser?.user_option?.timezone);
+      .tz(this.currentUser?.user_option?.timezone ?? moment.tz.guess());
 
     this.router.replaceWith(
       this.router.currentRouteName,

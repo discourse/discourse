@@ -7,11 +7,9 @@
 fi:
   admin_js:
     admin:
-      calendar: "Kalenteri"
       site_settings:
         categories:
           discourse_post_event: "Discourse Event"
-          discourse_calendar: "Discourse Calendar"
   js:
     notifications:
       titles:
@@ -138,6 +136,7 @@ fi:
           dk: "Tanska"
           ee: "Viro"
           el: "Kreikka"
+          gr: "Kreikka"
           es_an: "Espanja (es_an)"
           es_ar: "Espanja (es_ar)"
           es_ce: "Espanja (es_ce)"

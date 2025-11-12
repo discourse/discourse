@@ -7,11 +7,9 @@
 fa_IR:
   admin_js:
     admin:
-      calendar: "تقویم"
       site_settings:
         categories:
           discourse_post_event: "رویداد دیسکورس"
-          discourse_calendar: "تقویم دیسکورس"
   js:
     notifications:
       titles:
@@ -135,6 +133,7 @@ fa_IR:
           dk: "دانمارک"
           ee: "استونی"
           el: "یونان"
+          gr: "یونان"
           es_an: "اسپانیا (es_an)"
           es_ar: "اسپانیا (es_ar)"
           es_ce: "اسپانیا (es_ce)"

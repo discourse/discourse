@@ -30,9 +30,7 @@ module DiscourseAi
 
             endpoints << DiscourseAi::Completions::Endpoints::Ollama if !Rails.env.production?
 
-            if Rails.env.test? || Rails.env.development?
-              endpoints << DiscourseAi::Completions::Endpoints::Fake
-            end
+            endpoints << DiscourseAi::Completions::Endpoints::Fake if Rails.env.local?
 
             endpoints.detect(-> { raise DiscourseAi::Completions::Llm::UNKNOWN_MODEL }) do |ek|
               ek.can_contact?(provider_name)
@@ -80,6 +78,8 @@ module DiscourseAi
           &blk
         )
           LlmQuota.check_quotas!(@llm_model, user)
+          LlmCreditAllocation.check_credits!(@llm_model)
+
           start_time = Time.now
 
           if cancel_manager && cancel_manager.cancelled?
@@ -135,6 +135,7 @@ module DiscourseAi
 
           cancel_manager_callback = nil
           cancelled = false
+          call_status = :error
 
           FinalDestination::HTTP.start(
             model_uri.host,
@@ -228,6 +229,7 @@ module DiscourseAi
                     response_raw: response_raw,
                     structured_output: structured_output,
                   )
+                call_status = :success
                 return response_data
               end
 
@@ -270,6 +272,7 @@ module DiscourseAi
                   blk.call("")
                 end
               end
+              call_status = :success
               return response_data
             ensure
               if log
@@ -281,7 +284,24 @@ module DiscourseAi
                 log.duration_msecs = (Time.now - start_time) * 1000
                 log.save!
                 LlmQuota.log_usage(@llm_model, user, log.request_tokens, log.response_tokens)
-                if Rails.env.development? && !ENV["DISCOURSE_AI_NO_DEBUG"]
+                LlmCreditAllocation.deduct_credits!(
+                  @llm_model,
+                  feature_name,
+                  log.request_tokens,
+                  log.response_tokens,
+                )
+
+                # Record Prometheus metrics
+                DiscourseAi::Completions::LlmMetric.record(
+                  llm_model: @llm_model,
+                  feature_name: feature_name,
+                  request_tokens: log.request_tokens || 0,
+                  response_tokens: log.response_tokens || 0,
+                  duration_ms: log.duration_msecs,
+                  status: call_status,
+                )
+
+                if Rails.env.development? && ENV["DISCOURSE_AI_DEBUG"]
                   puts "#{self.class.name}: request_tokens #{log.request_tokens} response_tokens #{log.response_tokens}"
                 end
               end
@@ -453,11 +473,7 @@ module DiscourseAi
           if xml_stripper
             response_data.map! do |partial|
               stripped = (xml_stripper << partial) if partial.is_a?(String)
-              if stripped.present?
-                stripped
-              else
-                partial
-              end
+              stripped.presence || partial
             end
             response_data << xml_stripper.finish
           end

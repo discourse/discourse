@@ -11,6 +11,13 @@ module Jobs
 
       return if !DiscourseAi::Translation.backfill_enabled?
 
+      unless DiscourseAi::Translation.credits_available_for_post_localization?
+        Rails.logger.info(
+          "Translation skipped for posts: insufficient credits. Will resume when credits reset.",
+        )
+        return
+      end
+
       locales = SiteSetting.content_localization_supported_locales.split("|")
       locales.each do |locale|
         base_locale = locale.split("_").first
@@ -30,6 +37,8 @@ module Jobs
         next if posts.empty?
 
         posts.each do |post|
+          next unless DiscourseAi::Translation::PostLocalizer.has_relocalize_quota?(post, locale)
+
           begin
             DiscourseAi::Translation::PostLocalizer.localize(post, locale)
           rescue FinalDestination::SSRFDetector::LookupFailedError

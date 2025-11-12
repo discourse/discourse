@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Admin leaderboards", type: :system do
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:current_user, :admin)
   let(:admin_leaderboard_page) { PageObjects::Pages::AdminLeaderboards.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
 
@@ -34,7 +34,7 @@ describe "Admin leaderboards", type: :system do
 
     expect(page).to have_content(I18n.t("js.gamification.leaderboard.save_success"))
 
-    expect(::DiscourseGamification::GamificationLeaderboard.last).to have_attributes(
+    expect(DiscourseGamification::GamificationLeaderboard.last).to have_attributes(
       name: "My leaderboard",
       from_date: 12.months.ago.end_of_month.to_date,
       to_date: 11.months.ago.end_of_month.to_date,
@@ -67,7 +67,7 @@ describe "Admin leaderboards", type: :system do
       dialog.click_danger
       expect(page).to have_content(I18n.t("js.gamification.leaderboard.delete_success"))
 
-      expect(::DiscourseGamification::GamificationLeaderboard.exists?(leaderboard.id)).to eq(false)
+      expect(DiscourseGamification::GamificationLeaderboard.exists?(leaderboard.id)).to eq(false)
     end
   end
 end

@@ -52,7 +52,7 @@ class TopicsFilter
       when "created-before"
         filter_by_created(before: filter_values)
       when "created-by"
-        filter_created_by_user(usernames: filter_values.flat_map { |value| value.split(",") })
+        filter_created_by(names: filter_values.flat_map { |value| value.split(",") })
       when "in"
         filter_in(values: filter_values)
       when "latest-post-after"
@@ -87,6 +87,8 @@ class TopicsFilter
         filter_tag_groups(values: key_prefixes.zip(filter_values))
       when "tag"
         filter_tags(values: key_prefixes.zip(filter_values))
+      when "locale"
+        filter_locale(values: key_prefixes.zip(filter_values))
       when "views-min"
         filter_by_number_of_views(min: filter_values)
       when "views-max"
@@ -108,7 +110,7 @@ class TopicsFilter
             SELECT topic_id
             FROM post_search_data
             JOIN posts ON posts.id = post_search_data.post_id
-            WHERE search_data @@ #{ts_query}
+            WHERE search_data @@ #{ts_query} AND NOT posts.hidden AND posts.deleted_at IS NULL #{whisper_condition("posts")}
           )
         SQL
     end
@@ -116,8 +118,8 @@ class TopicsFilter
     @scope
   end
 
-  def self.add_filter_by_status(status, &blk)
-    custom_status_filters[status] = blk
+  def self.add_filter_by_status(status, enabled: -> { true }, &block)
+    custom_status_filters[status] = { block:, enabled: }
   end
 
   def self.custom_status_filters
@@ -140,13 +142,13 @@ class TopicsFilter
       category = category_id.present? ? Category.find_by(id: category_id) : nil
 
       if @guardian.can_see_deleted_topics?(category)
-        @scope = @scope.unscope(where: :deleted_at).where("topics.deleted_at IS NOT NULL")
+        @scope = @scope.unscope(where: :deleted_at).where.not(topics: { deleted_at: nil })
       end
     when "public"
       @scope = @scope.joins(:category).where("NOT categories.read_restricted")
     else
       if custom_filter = TopicsFilter.custom_status_filters[status]
-        @scope = custom_filter.call(@scope)
+        @scope = custom_filter[:block].call(@scope) if custom_filter[:enabled].call
       end
     end
 
@@ -195,7 +197,7 @@ class TopicsFilter
       {
         name: "created-by:",
         description: I18n.t("filter.description.created_by"),
-        type: "username",
+        type: "username_group_list",
         delimiters: [{ name: ",", description: I18n.t("filter.description.created_by_multiple") }],
       },
       {
@@ -343,6 +345,17 @@ class TopicsFilter
       },
     )
 
+    # Locale filter
+    results.push(
+      {
+        name: "locale:",
+        description: I18n.t("filter.description.locale"),
+        type: "text",
+        delimiters: [{ name: ",", description: I18n.t("filter.description.locale_any") }],
+        prefixes: [{ name: "-", description: I18n.t("filter.description.exclude_locale") }],
+      },
+    )
+
     # this modifier allows custom plugins to add UI tips in the /filter route
     DiscoursePluginRegistry.apply_modifier(:topics_filter_options, results, guardian)
   end
@@ -482,7 +495,7 @@ class TopicsFilter
             topics.id NOT IN (
               SELECT p1.topic_id
               FROM posts p1
-              WHERE p1.user_id IN (:user_ids) AND p1.deleted_at IS NULL
+              WHERE p1.user_id IN (:user_ids) AND p1.deleted_at IS NULL #{whisper_condition("p1")}
               GROUP BY p1.topic_id
               HAVING COUNT(DISTINCT p1.user_id) = :user_count
             )
@@ -492,7 +505,7 @@ class TopicsFilter
             EXISTS (
               SELECT 1
               FROM posts p#{idx}
-              WHERE p#{idx}.topic_id = topics.id AND p#{idx}.user_id = #{uid} AND p#{idx}.deleted_at IS NULL
+              WHERE p#{idx}.topic_id = topics.id AND p#{idx}.user_id = #{uid} AND p#{idx}.deleted_at IS NULL #{whisper_condition("p#{idx}")}
               LIMIT 1
             )
           SQL
@@ -505,6 +518,7 @@ class TopicsFilter
                 FROM posts p
                 WHERE p.user_id IN (:user_ids)
                   AND p.deleted_at IS NULL
+                  #{whisper_condition("p")}
               )
             SQL
       end
@@ -545,7 +559,7 @@ class TopicsFilter
               SELECT 1
               FROM posts pg#{idx}
               JOIN group_users gu#{idx} ON gu#{idx}.user_id = pg#{idx}.user_id
-              WHERE pg#{idx}.topic_id = topics.id AND gu#{idx}.group_id = #{gid}
+              WHERE pg#{idx}.topic_id = topics.id AND gu#{idx}.group_id = #{gid} #{whisper_condition("pg#{idx}")}
             )
           SQL
       else
@@ -555,6 +569,7 @@ class TopicsFilter
                 FROM posts p
                 JOIN group_users gu ON gu.user_id = p.user_id
                 WHERE gu.group_id IN (:group_ids)
+                  #{whisper_condition("p")}
               )
             SQL
       end
@@ -644,12 +659,35 @@ class TopicsFilter
       SQL
   end
 
-  def filter_created_by_user(usernames:)
-    @scope =
-      @scope.joins(:user).where(
-        "users.username_lower IN (:usernames)",
-        usernames: usernames.map(&:downcase),
-      )
+  def filter_created_by(names:)
+    if names.include?("me") && @guardian.authenticated?
+      names = names.map { |n| n == "me" ? @guardian.user.username_lower : n }
+    end
+
+    if (user_ids = User.where("username_lower IN (?)", names.map(&:downcase)).pluck(:id)) &&
+         user_ids.any?
+      @scope = @scope.joins(:user).where(user_id: user_ids)
+      return
+    end
+
+    if (
+         group_ids =
+           Group
+             .visible_groups(@guardian.user)
+             .members_visible_groups(@guardian.user)
+             .where("lower(name) IN (?)", names.map(&:downcase))
+             .pluck(:id)
+       ) && group_ids.any?
+      @scope =
+        @scope
+          .joins(:user)
+          .joins("INNER JOIN group_users ON group_users.user_id = users.id")
+          .where("group_users.group_id IN (?)", group_ids)
+          .distinct(:id)
+      return
+    end
+
+    @scope = @scope.none
   end
 
   def apply_custom_filter!(scope:, filter_name:, values:)
@@ -677,6 +715,22 @@ class TopicsFilter
     end
   end
 
+  def topic_user_scope
+    @scope.where(
+      "tu.notification_level IN (:topic_notification_levels)",
+      topic_notification_levels: @topic_notification_levels.to_a,
+    )
+  end
+
+  def watching_first_post_scope
+    TopicQuery.watching_first_post_filter(@scope, @guardian.user)
+  end
+
+  def combine_scopes_with_or(scope1, scope2)
+    @scope.joins_values.concat(scope1.joins_values, scope2.joins_values).uniq!
+    @scope.merge(scope1.or(scope2))
+  end
+
   def filter_in(values:)
     values.uniq!
 
@@ -702,10 +756,12 @@ class TopicsFilter
             treat_as_new_topic_start_date: @guardian.user.user_option.treat_as_new_topic_start_date,
           )
       end
+
       if values.delete("new-replies")
         ensure_topic_users_reference!
         @scope = TopicQuery.unread_filter(@scope, whisperer: @guardian.user.whisperer?)
       end
+
       if values.delete("new")
         ensure_topic_users_reference!
         new_topics =
@@ -714,10 +770,7 @@ class TopicsFilter
             treat_as_new_topic_start_date: @guardian.user.user_option.treat_as_new_topic_start_date,
           )
         unread_topics = TopicQuery.unread_filter(@scope, whisperer: @guardian.user.whisperer?)
-        base = @scope
-        base.joins_values.dup.concat(new_topics.joins_values, unread_topics.joins_values)
-        base.joins_values.uniq!
-        @scope = base.merge(new_topics.or(unread_topics))
+        @scope = combine_scopes_with_or(new_topics, unread_topics)
       end
 
       if values.delete("unseen")
@@ -740,15 +793,20 @@ class TopicsFilter
               end
             end
         end
+      end
 
-        if @topic_notification_levels.present?
-          ensure_topic_users_reference!
-          @scope =
-            @scope.where(
-              "tu.notification_level IN (:topic_notification_levels)",
-              topic_notification_levels: @topic_notification_levels.to_a,
-            )
-        end
+      # watching_first_post is a category/tag-level notification, not a topic-level one
+      # We need to handle it separately from regular notification levels and combine with OR
+      has_watching_first_post = values.delete("watching_first_post")
+
+      if has_watching_first_post && @topic_notification_levels.present?
+        ensure_topic_users_reference!
+        @scope = combine_scopes_with_or(topic_user_scope, watching_first_post_scope)
+      elsif has_watching_first_post
+        @scope = @scope.merge(watching_first_post_scope)
+      elsif @topic_notification_levels.present?
+        ensure_topic_users_reference!
+        @scope = @scope.merge(topic_user_scope)
       end
     elsif values.present?
       @scope = @scope.none
@@ -902,6 +960,28 @@ class TopicsFilter
         .distinct(:id)
   end
 
+  def filter_locale(values:)
+    include_locales = []
+    exclude_locales = []
+
+    values.each do |key_prefix, value|
+      locales = value.split(",").map(&:strip).reject(&:blank?)
+      next if locales.empty?
+
+      if key_prefix == "-"
+        exclude_locales.concat(locales)
+      else
+        include_locales.concat(locales)
+      end
+    end
+
+    @scope = @scope.where(locale: include_locales) if include_locales.present?
+
+    if exclude_locales.present?
+      @scope = @scope.where("topics.locale IS NULL OR topics.locale NOT IN (?)", exclude_locales)
+    end
+  end
+
   ORDER_BY_MAPPINGS = {
     "activity" => {
       column: "topics.bumped_at",
@@ -943,7 +1023,7 @@ class TopicsFilter
       scope: -> do
         if @guardian.authenticated?
           ensure_topic_users_reference!
-          @scope.where("tu.last_visited_at IS NOT NULL")
+          @scope.where.not(tu: { last_visited_at: nil })
         else
           # make sure this works for anon (particularly selection)
           @scope.joins("LEFT JOIN topic_users tu ON 1 = 0")
@@ -981,5 +1061,13 @@ class TopicsFilter
     scope.joins(
       "INNER JOIN posts AS first_posts ON first_posts.topic_id = topics.id AND first_posts.post_number = 1",
     )
+  end
+
+  def whisper_condition(table_alias)
+    if @guardian.can_see_whispers?
+      ""
+    else
+      "AND #{table_alias}.post_type != #{Post.types[:whisper]}"
+    end
   end
 end

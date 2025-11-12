@@ -5,6 +5,17 @@
 # https://translate.discourse.org/
 
 hr:
+  topic:
+    post_voting:
+      answer_count:
+        one: "%{count} Odgovor"
+        few: "%{count} Odgovora"
+        other: "%{count} Odgovora"
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "Nema akcije"
   post_action_types:
     vote:
       title: "Glasaj"

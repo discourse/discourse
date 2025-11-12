@@ -7,11 +7,9 @@
 ar:
   admin_js:
     admin:
-      calendar: "التقويم"
       site_settings:
         categories:
           discourse_post_event: "حدث Discourse"
-          discourse_calendar: "تقويم Discourse"
   js:
     notifications:
       titles:
@@ -138,6 +136,7 @@ ar:
           dk: "الدنمارك"
           ee: "إستونيا"
           el: "اليونان"
+          gr: "اليونان"
           es_an: "إسبانيا (es_an)"
           es_ar: "إسبانيا (es_ar)"
           es_ce: "إسبانيا (es_ce)"

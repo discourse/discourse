@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "./page_objects/components/user_color_palette_selector"
+require_relative "page_objects/components/user_color_palette_selector"
 
 describe "Horizon theme | High level", type: :system do
   let!(:theme) do

@@ -20,6 +20,15 @@ module Migrations::Database::IntermediateDB
     SQL
     private_constant :SQL
 
+    # Creates a new `badge_groupings` record in the IntermediateDB.
+    #
+    # @param original_id   [Integer, String]
+    # @param created_at    [Time, nil]
+    # @param description   [String, nil]
+    # @param name          [String]
+    # @param position      [Integer]
+    #
+    # @return [void]
     def self.create(original_id:, created_at: nil, description: nil, name:, position:)
       ::Migrations::Database::IntermediateDB.insert(
         SQL,

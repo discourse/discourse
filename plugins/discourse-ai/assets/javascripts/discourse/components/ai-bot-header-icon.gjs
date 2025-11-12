@@ -6,12 +6,10 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
-import { composeAiBotMessage } from "../lib/ai-bot-helper";
 import { AI_CONVERSATIONS_PANEL } from "../services/ai-conversations-sidebar-manager";
 
 export default class AiBotHeaderIcon extends Component {
   @service appEvents;
-  @service composer;
   @service currentUser;
   @service navigationMenu;
   @service sidebarState;
@@ -48,7 +46,6 @@ export default class AiBotHeaderIcon extends Component {
   get clickShouldRouteOutOfConversations() {
     return (
       !this.navigationMenu.isHeaderDropdownMode &&
-      this.siteSettings.ai_bot_enable_dedicated_ux &&
       this.sidebarState.currentPanel?.key === AI_CONVERSATIONS_PANEL
     );
   }
@@ -58,23 +55,12 @@ export default class AiBotHeaderIcon extends Component {
       return getURL(this.aiConversationsSidebarManager.lastKnownAppURL || "/");
     }
 
-    if (this.siteSettings.ai_bot_enable_dedicated_ux) {
-      return getURL("/discourse-ai/ai-bot/conversations");
-    }
-
-    return null;
+    return getURL("/discourse-ai/ai-bot/conversations");
   }
 
   @action
   onClick() {
-    if (!this.siteSettings.ai_bot_enable_dedicated_ux) {
-      composeAiBotMessage(this.bots[0], this.composer);
-    }
-
-    if (
-      this.siteSettings.ai_bot_enable_dedicated_ux &&
-      !this.clickShouldRouteOutOfConversations
-    ) {
+    if (!this.clickShouldRouteOutOfConversations) {
       this.appEvents.trigger("discourse-ai:bot-header-icon-clicked");
     }
   }

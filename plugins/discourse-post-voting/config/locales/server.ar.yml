@@ -39,6 +39,26 @@ ar:
     post_voting_comment_enabled: "تفعيل التعليقات على المنشورات في موضوعات التصويت على المنشورات"
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "التي لم يتم اتخاذ إجراء بشأنها"
+        agree_and_keep_comment:
+          title: "إبقاء التعليق"
+          description: "الموافقة على البلاغ والاحتفاظ بالتعليق دون تغيير"
+        agree_and_keep_deleted:
+          title: "إبقاء التعليق محذوفًا"
+          description: "الموافقة على البلاغ وترك التعليق محذوفًا."
+        agree_and_restore:
+          title: "استعادة التعليق"
+          description: "استعادة التعليق حتى يتمكن المستخدمون من رؤيته."
+        agree_and_delete:
+          title: "حذف التعليق"
+          description: "حذف التعليق حتى لا يتمكن المستخدمون من رؤيته."
+        disagree_and_restore:
+          title: "عدم الموافقة واستعادة التعليق"
+          description: "استعادة التعليق حتى يتمكن جميع المستخدمين من رؤيته."
   post_action_types:
     vote:
       title: "تصويت"

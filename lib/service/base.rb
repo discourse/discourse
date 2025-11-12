@@ -98,8 +98,13 @@ module Service
         steps << ModelStep.new(name, step_name, optional:)
       end
 
-      def params(name = :default, default_values_from: nil, &block)
-        contract_class = Class.new(Service::ContractBase).tap { _1.class_eval(&block) }
+      def params(
+        name = :default,
+        default_values_from: nil,
+        base_class: Service::ContractBase,
+        &block
+      )
+        contract_class = Class.new(base_class).tap { _1.class_eval(&block) if block }
         const_set("#{name.to_s.classify.sub("Default", "")}Contract", contract_class)
         steps << ContractStep.new(name, class_name: contract_class, default_values_from:)
       end
@@ -128,6 +133,10 @@ module Service
 
       def try(*exceptions, &block)
         steps << TryStep.new(exceptions, &block)
+      end
+
+      def only_if(name, &block)
+        steps << OnlyIfStep.new(name, &block)
       end
     end
 
@@ -173,7 +182,7 @@ module Service
       end
 
       def type
-        self.class.name.split("::").last.downcase.sub(/^(\w+)step$/, "\\1")
+        self.class.name.split("::").last.underscore.sub(/^(\w+)_step$/, "\\1")
       end
 
       def with_runtime
@@ -230,14 +239,11 @@ module Service
       attr_reader :default_values_from
 
       def initialize(name, method_name = name, class_name: nil, default_values_from: nil)
-        super(name, method_name, class_name: class_name)
+        super(name, method_name, class_name:)
         @default_values_from = default_values_from
       end
 
       def run_step
-        attributes = class_name.attribute_names.map(&:to_sym)
-        default_values = {}
-        default_values = context[default_values_from].slice(*attributes) if default_values_from
         contract =
           class_name.new(
             **default_values.merge(context[:params].slice(*attributes)),
@@ -260,6 +266,16 @@ module Service
 
       def default?
         name.to_sym == :default
+      end
+
+      def default_values
+        return {} unless default_values_from
+        model = context[default_values_from]
+        (model.try(:attributes).try(:with_indifferent_access) || model).slice(*attributes)
+      end
+
+      def attributes
+        class_name.attribute_names.map(&:to_sym)
       end
     end
 
@@ -343,6 +359,24 @@ module Service
         context[@current_step.result_key].fail(raised_exception?: true, exception: e)
         context[result_key][:exception] = e
         context.fail!
+      end
+    end
+
+    # @!visibility private
+    class OnlyIfStep < Step
+      include StepsHelpers
+
+      attr_reader :steps
+
+      def initialize(name, &block)
+        super(name)
+        @steps = []
+        instance_exec(&block)
+      end
+
+      def run_step
+        return context[result_key][:skipped?] = true unless super
+        steps.each { |step| step.call(instance, context) }
       end
     end
 

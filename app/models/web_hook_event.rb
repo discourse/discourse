@@ -32,7 +32,7 @@ end
 #
 # Table name: web_hook_events
 #
-#  id               :integer          not null, primary key
+#  id               :bigint           not null, primary key
 #  duration         :integer          default(0)
 #  headers          :string
 #  payload          :text

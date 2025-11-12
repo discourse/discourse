@@ -88,6 +88,7 @@ describe "Admin About Config Area Page", type: :system do
 
   describe "the general settings card" do
     it "can saves its fields to their corresponding site settings" do
+      SiteSetting.experimental_lightbox = false
       config_area.visit
 
       image_file = file_from_fixtures("logo.png", "images")
@@ -105,7 +106,8 @@ describe "Admin About Config Area Page", type: :system do
       expect(config_area.general_settings_section.banner_image_uploader).to have_uploaded_image
 
       config_area.general_settings_section.banner_image_uploader.toggle_lightbox_preview
-      expect(config_area.general_settings_section.banner_image_uploader).to have_lighbox_preview
+      expect(config_area.general_settings_section.banner_image_uploader).to have_lightbox_preview
+      config_area.general_settings_section.banner_image_uploader.close_lightbox_preview
 
       config_area.general_settings_section.submit
 
@@ -134,7 +136,7 @@ describe "Admin About Config Area Page", type: :system do
         config_area.general_settings_section.submit
         expect(config_area.general_settings_section).to have_saved_successfully
 
-        try_until_success { expect(SiteSetting.about_banner_image).to eq(nil) }
+        expect(SiteSetting.about_banner_image).to eq(nil)
       end
 
       it "can upload an image using keyboard nav" do
@@ -148,7 +150,7 @@ describe "Admin About Config Area Page", type: :system do
         expect(config_area.general_settings_section.banner_image_uploader).to have_uploaded_image
       end
 
-      xit "can remove the uploaded image using keyboard nav" do
+      it "can remove the uploaded image using keyboard nav" do
         SiteSetting.about_banner_image = image_upload
 
         config_area.visit
@@ -158,7 +160,7 @@ describe "Admin About Config Area Page", type: :system do
         config_area.general_settings_section.submit
         expect(config_area.general_settings_section).to have_saved_successfully
 
-        try_until_success { expect(SiteSetting.about_banner_image).to eq(nil) }
+        expect(SiteSetting.about_banner_image).to eq(nil)
       end
 
       context "when login_required is true" do

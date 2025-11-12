@@ -135,21 +135,23 @@ class Admin::UsersController < Admin::StaffController
         )
       end
       on_failed_contract do |contract|
-        render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
       end
       on_model_not_found(:user) { raise Discourse::NotFound }
       on_failed_policy(:not_suspended_already) do |policy|
-        render json: failed_json.merge(message: policy.reason), status: 409
+        render json: failed_json.merge(message: policy.reason), status: :conflict
       end
       on_failed_policy(:can_suspend_all_users) { raise Discourse::InvalidAccess.new }
     end
   end
 
   def unsuspend
-    guardian.ensure_can_suspend!(@user)
+    guardian.ensure_can_unsuspend!(@user)
+
     @user.suspended_till = nil
     @user.suspended_at = nil
     @user.save!
+
     StaffActionLogger.new(current_user).log_user_unsuspend(@user)
 
     DiscourseEvent.trigger(:user_unsuspended, user: @user)
@@ -163,7 +165,7 @@ class Admin::UsersController < Admin::StaffController
       @user.logged_out
       render json: success_json
     else
-      render json: { error: I18n.t("admin_js.admin.users.id_not_found") }, status: 404
+      render json: { error: I18n.t("admin_js.admin.users.id_not_found") }, status: :not_found
     end
   end
 
@@ -335,11 +337,11 @@ class Admin::UsersController < Admin::StaffController
         )
       end
       on_failed_contract do |contract|
-        render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
       end
       on_model_not_found(:user) { raise Discourse::NotFound }
       on_failed_policy(:not_silenced_already) do |policy|
-        render json: failed_json.merge(message: policy.reason), status: 409
+        render json: failed_json.merge(message: policy.reason), status: :conflict
       end
       on_failed_policy(:can_silence_all_users) { raise Discourse::InvalidAccess.new }
     end
@@ -404,7 +406,7 @@ class Admin::UsersController < Admin::StaffController
                      count: user.posts.joins(:topic).count,
                    ),
                },
-               status: 403
+               status: :forbidden
       end
     end
   end
@@ -419,14 +421,16 @@ class Admin::UsersController < Admin::StaffController
         on_success { render json: { deleted: true } }
 
         on_failed_contract do |contract|
-          render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
+          render json: failed_json.merge(errors: contract.errors.full_messages),
+                 status: :bad_request
         end
 
         on_failed_policy(:can_delete_users) do
-          render json: failed_json.merge(errors: [I18n.t("user.cannot_bulk_delete")]), status: 403
+          render json: failed_json.merge(errors: [I18n.t("user.cannot_bulk_delete")]),
+                 status: :forbidden
         end
 
-        on_model_not_found(:users) { render json: failed_json, status: 404 }
+        on_model_not_found(:users) { render json: failed_json, status: :not_found }
       end
     end
   end
@@ -445,18 +449,14 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def sync_sso
-    return render body: nil, status: 404 unless SiteSetting.enable_discourse_connect
+    return render body: nil, status: :not_found unless SiteSetting.enable_discourse_connect
 
     begin
-      sso =
-        DiscourseConnect.parse(
-          "sso=#{params[:sso]}&sig=#{params[:sig]}",
-          secure_session: secure_session,
-        )
+      sso = DiscourseConnect.parse("sso=#{params[:sso]}&sig=#{params[:sig]}", server_session:)
     rescue DiscourseConnect::ParseError
       return(
         render json: failed_json.merge(message: I18n.t("discourse_connect.login_error")),
-               status: 422
+               status: :unprocessable_entity
       )
     end
 
@@ -465,10 +465,10 @@ class Admin::UsersController < Admin::StaffController
       DiscourseEvent.trigger(:sync_sso, user)
       render_serialized(user, AdminDetailedUserSerializer, root: false)
     rescue ActiveRecord::RecordInvalid => ex
-      render json: failed_json.merge(message: ex.message), status: 403
+      render json: failed_json.merge(message: ex.message), status: :forbidden
     rescue DiscourseConnect::BlankExternalId => ex
       render json: failed_json.merge(message: I18n.t("discourse_connect.blank_id_error")),
-             status: 422
+             status: :unprocessable_entity
     end
   end
 

@@ -146,7 +146,7 @@ class User < ActiveRecord::Base
 
   delegate :last_sent_email_address, to: :email_logs
 
-  validates_presence_of :username
+  validates :username, presence: true
   validate :username_validator, if: :will_save_change_to_username?
   validate :password_validator
   validate :name_validator, if: :will_save_change_to_name?
@@ -166,6 +166,12 @@ class User < ActiveRecord::Base
 
   before_validation :set_skip_validate_email
 
+  before_save :update_usernames
+  before_save :match_primary_group_changes
+  before_save :check_if_title_is_badged_granted
+  before_save :apply_watched_words, unless: :should_skip_user_fields_validation?
+  before_save :check_qualification_for_users_directory,
+              if: Proc.new { SiteSetting.bootstrap_mode_enabled }
   after_create :create_email_token
   after_create :create_user_stat
   after_create :create_user_option
@@ -182,13 +188,6 @@ class User < ActiveRecord::Base
 
   after_update :trigger_user_automatic_group_refresh, if: :saved_change_to_staged?
   after_update :change_display_name, if: :saved_change_to_name?
-
-  before_save :update_usernames
-  before_save :match_primary_group_changes
-  before_save :check_if_title_is_badged_granted
-  before_save :apply_watched_words, unless: :should_skip_user_fields_validation?
-  before_save :check_qualification_for_users_directory,
-              if: Proc.new { SiteSetting.bootstrap_mode_enabled }
 
   after_save :expire_tokens_if_password_changed
   after_save :clear_global_notice_if_needed
@@ -485,7 +484,7 @@ class User < ActiveRecord::Base
   end
 
   def effective_locale
-    if SiteSetting.allow_user_locale && self.locale.present?
+    if SiteSetting.allow_user_locale && self.locale.present? && I18n.locale_available?(self.locale)
       self.locale
     else
       SiteSetting.default_locale
@@ -929,8 +928,12 @@ class User < ActiveRecord::Base
     @raw_password = pw # still required to maintain compatibility with usage of password-related User interface
   end
 
+  def can_remove_password?
+    associated_accounts.present? || passkey_credential_ids.present?
+  end
+
   def remove_password
-    raise Discourse::InvalidAccess if associated_accounts.blank? && passkey_credential_ids.blank?
+    raise Discourse::InvalidAccess if !can_remove_password?
 
     user_password.destroy if user_password
   end
@@ -1915,14 +1918,6 @@ class User < ActiveRecord::Base
     in_any_groups?(SiteSetting.experimental_new_new_view_groups_map)
   end
 
-  def watched_precedence_over_muted
-    if user_option.watched_precedence_over_muted.nil?
-      SiteSetting.watched_precedence_over_muted
-    else
-      user_option.watched_precedence_over_muted
-    end
-  end
-
   def populated_required_custom_fields?
     UserField
       .for_all_users
@@ -1945,6 +1940,16 @@ class User < ActiveRecord::Base
       .real
       .where.not(id: self.id)
       .where(ip_address: self.ip_address, admin: false, moderator: false)
+  end
+
+  def upcoming_change_enabled?(upcoming_change)
+    setting_enabled = SiteSetting.public_send(upcoming_change)
+
+    if UpcomingChanges.has_groups?(upcoming_change)
+      return setting_enabled && in_any_groups?(UpcomingChanges.group_ids_for(upcoming_change))
+    end
+
+    setting_enabled
   end
 
   protected

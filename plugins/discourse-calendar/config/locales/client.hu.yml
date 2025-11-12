@@ -10,7 +10,6 @@ hu:
       site_settings:
         categories:
           discourse_post_event: "Discourse esemény"
-          discourse_calendar: "Discourse naptár"
   js:
     notifications:
       titles:
@@ -127,6 +126,7 @@ hu:
           dk: "Dánia"
           ee: "Észtország"
           el: "Görögország"
+          gr: "Görögország"
           es_an: "Spanyolország (es_an)"
           es_ar: "Spanyolország (es_ar)"
           es_ce: "Spanyolország (es_ce)"

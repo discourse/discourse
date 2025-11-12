@@ -326,6 +326,8 @@ nl:
       chat_message_separator:
         today: Vandaag
         yesterday: Gisteren
+      search_view:
+        filter_placeholder: Zoeken in berichten
       members_view:
         filter_placeholder: Leden zoeken
         add_member: Lid toevoegen
@@ -342,6 +344,7 @@ nl:
         tabs:
           members: Leden
           settings: Instellingen
+          search: Zoeken
         remove_member: "Verwijderen"
       new_message_modal:
         title: Bericht sturen
@@ -433,6 +436,7 @@ nl:
           topic: "Topic"
       reviewable:
         type: "Chatbericht"
+        message_in_channel: "Kanaal"
       reactions:
         only_you: "<span>Je hebt gereageerd met </span>:%{emoji}:"
         you_and_single_user: "<span>Jij en %{username} hebben gereageerd met </span>:%{emoji}:"
@@ -495,6 +499,11 @@ nl:
           create_export: "Export maken"
           confirm_export: "Hiermee worden alle berichten van alle kanalen geëxporteerd en wordt het resultaat naar jou gestuurd in een persoonlijk bericht. Weet je zeker dat je wilt exporteren?"
           export_has_started: "Het exporteren is begonnen. Je ontvangt een privébericht als het klaar is."
+      search:
+        no_results: "Geen resultaten gevonden"
+        sort:
+          relevance: "Relevantie"
+          latest: "Recent"
       my_threads:
         title: Mijn threads
         aria_label: "Wisselen naar mijn threadslijst"
@@ -736,6 +745,8 @@ nl:
         chat:
           title: Chat
     sidebar:
+      start_new_dm:
+        title: Maak een persoonlijke chat
       panels:
         chat:
           label: "Chat"

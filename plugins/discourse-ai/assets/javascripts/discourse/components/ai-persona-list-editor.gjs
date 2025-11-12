@@ -14,6 +14,7 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
 import AdminFilterControls from "admin/components/admin-filter-controls";
@@ -163,11 +164,13 @@ export default class AiPersonaListEditor extends Component {
     })
       .then((result) => {
         let persona = AiPersona.create(result);
-        let existingPersona = this.args.personas.findBy("id", persona.id);
+        let existingPersona = this.args.personas.content.find(
+          (item) => item.id === persona.id
+        );
         if (existingPersona) {
-          this.args.personas.removeObject(existingPersona);
+          removeValueFromArray(this.args.personas.content, existingPersona);
         }
-        this.args.personas.insertAt(0, persona);
+        this.args.personas.content.unshift(persona);
       })
       .catch((error) => {
         if (error.jqXHR?.status === 422) {
@@ -218,7 +221,7 @@ export default class AiPersonaListEditor extends Component {
             />
           </:actions>
         </DPageSubheader>
-        {{#if @personas}}
+        {{#if @personas.content}}
           <AdminFilterControls
             @array={{@personas.content}}
             @searchableProps={{this.searchableProps}}

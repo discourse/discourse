@@ -2,7 +2,7 @@
 
 require "omniauth-oauth2"
 
-module ::OmniAuth
+module OmniAuth
   module OpenIDConnect
     class DiscoveryError < Error
     end
@@ -39,7 +39,7 @@ module ::OmniAuth
       def discover!
         discovery_document = options[:discovery_document]
         if discovery_document.nil?
-          raise ::OmniAuth::OpenIDConnect::DiscoveryError.new("Discovery document is missing")
+          raise OmniAuth::OpenIDConnect::DiscoveryError.new("Discovery document is missing")
         end
 
         discovery_params = {
@@ -51,7 +51,7 @@ module ::OmniAuth
         discovery_params.each do |internal_key, external_key|
           val = discovery_document[external_key]
           if val.nil? || val.empty?
-            raise ::OmniAuth::OpenIDConnect::DiscoveryError.new(
+            raise OmniAuth::OpenIDConnect::DiscoveryError.new(
                     "missing discovery parameter #{external_key}",
                   )
           end
@@ -78,7 +78,7 @@ module ::OmniAuth
       def request_phase
         begin
           discover! if options[:discovery]
-        rescue ::OmniAuth::OpenIDConnect::DiscoveryError => e
+        rescue OmniAuth::OpenIDConnect::DiscoveryError => e
           return fail!(:openid_connect_discovery_error, e)
         end
 
@@ -131,7 +131,7 @@ module ::OmniAuth
           return oauth2_callback_phase if env["omniauth.error"]
 
           oauth2_callback_phase
-        rescue ::OmniAuth::OpenIDConnect::DiscoveryError => e
+        rescue OmniAuth::OpenIDConnect::DiscoveryError => e
           fail!(:openid_connect_discovery_error, e)
         rescue ::JWT::DecodeError => e
           fail!(:jwt_decode_failed, e)

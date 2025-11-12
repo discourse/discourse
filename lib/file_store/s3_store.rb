@@ -116,11 +116,6 @@ module FileStore
         path, etag = s3_helper.upload(file, path, options)
       end
 
-      if opts[:upload_id] && FileHelper.is_supported_video?(opts[:filename]) &&
-           SiteSetting.video_conversion_enabled
-        Jobs.enqueue(:convert_video, upload_id: opts[:upload_id])
-      end
-
       # return the upload url and etag
       [File.join(absolute_base_url, path), etag]
     end
@@ -192,11 +187,7 @@ module FileStore
     end
 
     def s3_upload_host
-      if SiteSetting.Upload.s3_cdn_url.present?
-        SiteSetting.Upload.s3_cdn_url
-      else
-        "https:#{absolute_base_url}"
-      end
+      SiteSetting.Upload.s3_cdn_url.presence || "https:#{absolute_base_url}"
     end
 
     def external?
@@ -338,6 +329,10 @@ module FileStore
       optimized_image_key = get_path_for_optimized_image(optimized_image)
       optimized_image_key.prepend(File.join(upload_path, "/")) if Rails.configuration.multisite
       update_access_control(optimized_image_key, secure, remove_existing_acl:)
+    end
+
+    def update_file_access_control(file_path, secure, remove_existing_acl: false)
+      update_access_control(file_path, secure, remove_existing_acl:)
     end
 
     def download_file(upload, destination_path)

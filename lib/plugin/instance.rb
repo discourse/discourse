@@ -45,7 +45,7 @@ end
 
 class Plugin::Instance
   attr_accessor :path, :metadata
-  attr_reader :admin_route
+  attr_reader :admin_route, :admin_login_route
 
   # Memoized array readers
   %i[
@@ -72,7 +72,7 @@ class Plugin::Instance
   end
 
   def seed_data
-    @seed_data ||= HashWithIndifferentAccess.new({})
+    @seed_data ||= ActiveSupport::HashWithIndifferentAccess.new({})
   end
 
   def seed_fu_filter(filter = nil)
@@ -293,7 +293,7 @@ class Plugin::Instance
   #     scope.where("word_count = 42")
   #   end
   def register_custom_filter_by_status(status, &block)
-    TopicsFilter.add_filter_by_status(status, &block)
+    TopicsFilter.add_filter_by_status(status, enabled: method(:enabled?), &block)
   end
 
   # Allows to define custom search order. Example usage:
@@ -301,7 +301,7 @@ class Plugin::Instance
   #     posts.reorder("(SELECT LENGTH(raw) FROM posts WHERE posts.topic_id = subquery.topic_id) DESC")
   #   end
   def register_search_advanced_order(trigger, &block)
-    Search.advanced_order(trigger, &block)
+    Search.advanced_order(trigger, enabled: method(:enabled?), &block)
   end
 
   # Allows to define custom search filters. Example usage:
@@ -309,7 +309,7 @@ class Plugin::Instance
   #     posts.where("(SELECT LENGTH(p2.raw) FROM posts p2 WHERE p2.id = posts.id) >= ?", match.to_i)
   #   end
   def register_search_advanced_filter(trigger, &block)
-    Search.advanced_filter(trigger, &block)
+    Search.advanced_filter(trigger, enabled: method(:enabled?), &block)
   end
 
   # Allows to define TopicView posts filters. Example usage:
@@ -317,7 +317,7 @@ class Plugin::Instance
   #     posts.where(wiki: true)
   #   end
   def register_topic_view_posts_filter(trigger, &block)
-    TopicView.add_custom_filter(trigger, &block)
+    TopicView.add_custom_filter(trigger, enabled: method(:enabled?), &block)
   end
 
   # Allows to add more user IDs to the list of preloaded users. This can be
@@ -327,7 +327,7 @@ class Plugin::Instance
   #     user_ids << Discourse::SYSTEM_USER_ID
   #   end
   def register_topic_list_preload_user_ids(&block)
-    TopicList.on_preload_user_ids(&block)
+    TopicList.on_preload_user_ids(enabled: method(:enabled?), &block)
   end
 
   # Allow to eager load additional tables in Search. Useful to avoid N+1 performance problems.
@@ -338,7 +338,7 @@ class Plugin::Instance
   # OR
   #   register_search_topic_eager_load(%i(example_table))
   def register_search_topic_eager_load(tables = nil, &block)
-    Search.custom_topic_eager_load(tables, &block)
+    Search.custom_topic_eager_load(tables, enabled: method(:enabled?), &block)
   end
 
   # Request a new size for topic thumbnails
@@ -359,7 +359,28 @@ class Plugin::Instance
   #     end
   #   end
   def register_site_categories_callback(&block)
-    Site.add_categories_callbacks(&block)
+    Site.add_categories_callbacks(enabled: method(:enabled?), &block)
+  end
+
+  # Add a category parameter that includes both controller param permission
+  # and transactional callback. This allows plugins to extend category updates
+  # with custom logic that runs within the same database transaction.
+  #
+  # The callback block receives the category instance and the parameter value.
+  # If the callback raises an exception, the entire category update will be rolled back.
+  #
+  # Example usage:
+  #   register_category_update_param_with_callback(:doc_index_topic_id) do |category, value|
+  #     DocCategories::CategoryIndexManager.new(category).assign!(value)
+  #   end
+  #
+  def register_category_update_param_with_callback(param_name, &callback)
+    reloadable_patch do |plugin|
+      DiscoursePluginRegistry.category_update_param_with_callback[param_name] = {
+        plugin: plugin,
+        callback: callback,
+      }
+    end
   end
 
   def register_upload_unused(&block)
@@ -374,7 +395,7 @@ class Plugin::Instance
   # Example usage:
   #   register_preloaded_category_custom_fields("custom_field")
   def register_preloaded_category_custom_fields(field)
-    Site.preloaded_category_custom_fields << field
+    reloadable_patch { Site.preloaded_category_custom_fields << field }
   end
 
   def register_problem_check(klass)
@@ -603,7 +624,7 @@ class Plugin::Instance
   def discourse_owned?
     return false if commit_hash.blank?
     parsed_commit_url = UrlHelper.relaxed_parse(self.commit_url)
-    return false if parsed_commit_url.blank?
+    return false if parsed_commit_url.blank? || parsed_commit_url.path.blank?
     github_org = parsed_commit_url.path.split("/")[1]
     (github_org == "discourse" || github_org == "discourse-org") &&
       parsed_commit_url.host == "github.com"
@@ -736,8 +757,7 @@ class Plugin::Instance
   end
 
   def register_email_poller(poller)
-    plugin = self
-    DiscoursePluginRegistry.register_mail_poller(poller) if plugin.enabled?
+    DiscoursePluginRegistry.register_mail_poller(poller) if enabled?
   end
 
   def register_asset(file, opts = nil)
@@ -879,6 +899,10 @@ class Plugin::Instance
   # grouping related settings in the UI.
   def register_site_setting_area(area)
     DiscoursePluginRegistry.site_setting_areas << area
+  end
+
+  def register_admin_config_login_route(location)
+    DiscoursePluginRegistry.admin_config_login_routes << location
   end
 
   def javascript_includes
@@ -1282,6 +1306,64 @@ class Plugin::Instance
 
   def register_search_group_query_callback(callback)
     DiscoursePluginRegistry.register_search_groups_set_query_callback(callback, self)
+  end
+
+  # Register a search index for a custom content type
+  #
+  # @param model_class [Class] The ActiveRecord model class
+  # @param search_data_class [Class] The search data class (e.g., Chat::MessageSearchData)
+  # @param index_version [Integer] The version number for this search index
+  # @param search_data [Proc] Block that extracts search data from an object, receives (object, indexer_helper)
+  #                          Should return hash with :a_weight, :b_weight, :c_weight, :d_weight keys
+  # @param load_unindexed_record_ids [Proc] Block that loads record IDs needing reindexing, receives (limit:, index_version:)
+  # @param enabled [Proc] Optional block that returns true/false to enable/disable the search index (default: -> { true })
+  #
+  # Example:
+  #   register_search_index(
+  #     enabled: -> { SiteSetting.chat_search_enabled },
+  #     model_class: Chat::Message,
+  #     search_data_class: Chat::MessageSearchData,
+  #     index_version: 1,
+  #     search_data: proc { |message, indexer_helper|
+  #       {
+  #         a_weight: message.message,
+  #         d_weight: indexer_helper.scrub_html(message.cooked)[0..600_000]
+  #       }
+  #     },
+  #     load_unindexed_record_ids: proc { |limit:, index_version:|
+  #       Chat::Message
+  #         .joins("LEFT JOIN chat_message_search_data ON chat_message_id = chat_messages.id")
+  #         .where(
+  #           "chat_message_search_data.locale IS NULL OR chat_message_search_data.locale != ? OR chat_message_search_data.version != ?",
+  #           SiteSetting.default_locale,
+  #           index_version,
+  #         )
+  #         .order("chat_messages.id ASC")
+  #         .limit(limit)
+  #         .pluck(:id)
+  #     }
+  #   )
+  def register_search_index(
+    model_class:,
+    search_data_class:,
+    index_version:,
+    search_data:,
+    load_unindexed_record_ids:,
+    enabled: -> { true }
+  )
+    table_name = model_class.table_name.singularize
+
+    handler = {
+      table_name:,
+      model_class:,
+      search_data_class:,
+      index_version:,
+      search_data:,
+      load_unindexed_record_ids: load_unindexed_record_ids,
+      enabled:,
+    }
+
+    DiscoursePluginRegistry.register_search_handler(handler, self)
   end
 
   # This is an experimental API and may be changed or removed in the future without deprecation.

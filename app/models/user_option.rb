@@ -23,9 +23,9 @@ class UserOption < ActiveRecord::Base
 
   self.primary_key = :user_id
   belongs_to :user
+  before_save :update_hide_profile_and_presence
   before_create :set_defaults
 
-  before_save :update_hide_profile_and_presence
   after_save :update_tracked_topics
 
   scope :human_users, -> { where("user_id > 0") }
@@ -109,6 +109,7 @@ class UserOption < ActiveRecord::Base
     self.sidebar_link_to_filtered_list = SiteSetting.default_sidebar_link_to_filtered_list
     self.sidebar_show_count_of_new_items = SiteSetting.default_sidebar_show_count_of_new_items
     self.composition_mode = SiteSetting.default_composition_mode
+    self.watched_precedence_over_muted = SiteSetting.default_watched_precedence_over_muted
 
     true
   end
@@ -292,6 +293,7 @@ end
 #  mailing_list_mode_frequency      :integer          default(1), not null
 #  new_topic_duration_minutes       :integer
 #  notification_level_when_replying :integer
+#  notify_on_linked_posts           :boolean          default(TRUE), not null
 #  oldest_search_log_date           :datetime
 #  seen_popups                      :integer          is an Array
 #  sidebar_link_to_filtered_list    :boolean          default(FALSE), not null
@@ -304,7 +306,7 @@ end
 #  timezone                         :string
 #  title_count_mode_key             :integer          default(0), not null
 #  topics_unread_when_closed        :boolean          default(TRUE), not null
-#  watched_precedence_over_muted    :boolean
+#  watched_precedence_over_muted    :boolean          default(FALSE), not null
 #  color_scheme_id                  :integer
 #  dark_scheme_id                   :integer
 #  homepage_id                      :integer

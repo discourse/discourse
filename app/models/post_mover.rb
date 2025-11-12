@@ -277,6 +277,7 @@ class PostMover
         created_at: post.created_at,
         guardian: Guardian.new(user),
         skip_jobs: true,
+        no_bump: true,
       )
     new_post = @post_creator.create!
 
@@ -301,12 +302,8 @@ class PostMover
     new_post.custom_fields = post.custom_fields
     new_post.save_custom_fields
 
-    # When freezing original, ensure the notification generated points
-    # to the newly created post, not the old OP
-    if @options[:freeze_original]
-      @post_ids_after_move =
-        @post_ids_after_move.map { |post_id| post_id == post.id ? new_post.id : post_id }
-    end
+    @post_ids_after_move =
+      @post_ids_after_move.map { |post_id| post_id == post.id ? new_post.id : post_id }
 
     DiscourseEvent.trigger(:first_post_moved, new_post, post)
     DiscourseEvent.trigger(:post_moved, new_post, original_topic.id, post)
@@ -520,7 +517,7 @@ class PostMover
       FROM post_timings pt
       JOIN temp_moved_posts mp ON (pt.topic_id = mp.old_topic_id AND pt.post_number = mp.old_post_number)
       WHERE mp.old_post_id <> mp.new_post_id
-        AND mp.old_post_id IN (:post_ids)
+        AND mp.new_post_id IN (:post_ids)
       ON CONFLICT (topic_id, post_number, user_id) DO UPDATE
         SET msecs = GREATEST(post_timings.msecs, excluded.msecs)
     SQL
@@ -700,7 +697,7 @@ class PostMover
 
   def update_last_post_stats
     post = destination_topic.ordered_posts.where.not(post_type: Post.types[:whisper]).last
-    if post && post_ids.include?(post.id)
+    if post && @post_ids_after_move.include?(post.id)
       attrs = {}
       attrs[:last_posted_at] = post.created_at
       attrs[:last_post_user_id] = post.user_id

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    holidays (8.4.1)
+    holidays (8.8.0)
 
 GEM
   remote: https://rubygems.org/
@@ -27,6 +27,7 @@ GEM
 PLATFORMS
   arm64-darwin-21
   arm64-darwin-22
+  x86_64-darwin-24
   x86_64-linux
 
 DEPENDENCIES

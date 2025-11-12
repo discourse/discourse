@@ -28,6 +28,19 @@
 
   .topic-navigation {
     overflow-anchor: none;
+
+    .btn-toggle-localized-content.--active {
+      background-image: linear-gradient(
+        to bottom,
+        rgb(var(--primary-rgb), 0.6) 100%,
+        rgb(var(--primary-rgb), 0.6) 100%
+      );
+      color: var(--d-button-default-text-color--hover);
+
+      .d-icon {
+        color: var(--d-button-default-text-color--hover);
+      }
+    }
   }
 
   // timeline
@@ -87,19 +100,6 @@
   @media screen and (width <= 924px) {
     grid-template-areas: "posts";
     grid-template-columns: auto;
-
-    .topic-navigation {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      grid-area: posts;
-      grid-row: 3;
-      width: auto;
-
-      .btn-toggle-localized-content {
-        height: 100%;
-      }
-    }
 
     .timeline-container:not(.timeline-fullscreen) {
       display: none; // hiding this because sometimes the JS switch lags and causes layout issues

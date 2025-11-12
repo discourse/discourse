@@ -19,6 +19,8 @@ ur:
       toggle_timezone_offset_title: "خطہ کا وقت کا فرق کو ٹوگل کریں۔"
       region:
         none: "کوئی نہیں"
+        names:
+          gr: "یونان"
       toolbar_button:
         today: "آج"
         month: "مہینہ"
@@ -82,6 +84,8 @@ ur:
           every_week: "ہر ہفتے اس ہفتے کے دن"
           every_two_weeks: "ہر دو ہفتے بعد اس ہفتے کے دن"
           every_four_weeks: "ہر چار ہفتے بعد اس ہفتے کے دن"
+        allow_chat:
+          label: "چیٹ انٹیگریشن"
         url:
           label: "URL"
           placeholder: "اختیاری"

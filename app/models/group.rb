@@ -50,6 +50,8 @@ class Group < ActiveRecord::Base
   before_save :downcase_incoming_email
   before_save :cook_bio
 
+  before_destroy :cache_group_users_for_destroyed_event, prepend: true
+  after_destroy :expire_cache
   after_save :destroy_deletions
   after_save :update_primary_group
   after_save :update_title
@@ -64,12 +66,10 @@ class Group < ActiveRecord::Base
   end
 
   after_save :expire_cache
-  after_destroy :expire_cache
 
   after_commit :automatic_group_membership, on: %i[create update]
   after_commit :trigger_group_created_event, on: :create
   after_commit :trigger_group_updated_event, on: :update
-  before_destroy :cache_group_users_for_destroyed_event, prepend: true
   after_commit :trigger_group_destroyed_event, on: :destroy
   after_commit :set_default_notifications, on: %i[create update]
 
@@ -348,7 +348,7 @@ class Group < ActiveRecord::Base
   end
 
   def smtp_from_address
-    self.email_from_alias.present? ? self.email_from_alias : self.email_username
+    email_from_alias.presence || email_username
   end
 
   def downcase_incoming_email
@@ -429,7 +429,7 @@ class Group < ActiveRecord::Base
         .preload(:topic, user: :groups, topic: :category)
         .references(:posts, :topics, :category)
         .where(groups: { id: id })
-        .where("topics.archetype <> ?", Archetype.private_message)
+        .where.not(topics: { archetype: Archetype.private_message })
         .where("topics.visible")
         .where(post_type: [Post.types[:regular], Post.types[:moderator_action]])
 
@@ -450,7 +450,7 @@ class Group < ActiveRecord::Base
         .joins(:group_mentions)
         .includes(:user, :topic, topic: :category)
         .references(:posts, :topics, :category)
-        .where("topics.archetype <> ?", Archetype.private_message)
+        .where.not(topics: { archetype: Archetype.private_message })
         .where(post_type: Post.types[:regular])
         .where("group_mentions.group_id = ?", self.id)
 
@@ -537,14 +537,11 @@ class Group < ActiveRecord::Base
     localized_name = I18n.t("groups.default_names.#{name}", locale: SiteSetting.default_locale)
     default_name = I18n.t("groups.default_names.#{name}")
 
-    group.name =
-      if can_use_name?(localized_name, group)
-        localized_name
-      elsif can_use_name?(default_name, group)
-        default_name
-      else
-        name.to_s
-      end
+    if can_use_name?(localized_name, group)
+      group.name = localized_name
+    elsif can_use_name?(default_name, group)
+      group.name = default_name
+    end
 
     # the everyone group is special, it can include non-users so there is no
     # way to have the membership in a table

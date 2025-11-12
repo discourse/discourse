@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 nl:
+  activerecord:
+    attributes:
+      llm_model:
+        max_prompt_tokens: "Contextvenster"
   discourse_automation:
     ai:
       flag_types:
@@ -22,10 +26,6 @@ nl:
       llm_triage:
         title: Berichten triageren met AI
         description: "Triageer berichten met behulp van een groot taalmodel"
-        flagged_post: |
-          <div>Reactie van het model:</div>
-          <p>%%LLM_RESPONSE%%</p>
-          <b>Getriggerd door de regel <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a>.</b>
       llm_report:
         title: Periodiek rapport met AI
         description: "Periodiek rapport op basis van een groot taalmodel"
@@ -68,7 +68,6 @@ nl:
     composer_ai_helper_allowed_groups: "Gebruikers in deze groepen zien de AI-hulpknop in de editor."
     ai_helper_allowed_in_pm: "Schakel de AI-hulp van de editor in in PB's."
     ai_helper_model: "Te gebruiken model voor de AI-hulp."
-    ai_helper_custom_prompts_allowed_groups: "Gebruikers in deze groepen zien de optie voor een aangepaste prompt in de AI-helper."
     ai_helper_automatic_chat_thread_title_delay: "Vertraging in minuten voordat de AI-helper automatisch de titel van de chatthread instelt."
     ai_helper_automatic_chat_thread_title: "Stel automatisch de titel van chatthreads in op basis van de threadinhoud."
     ai_helper_illustrate_post_model: "Te gebruiken model voor de berichtillustratiefunctie van de opstellings-AI-helper"
@@ -99,7 +98,6 @@ nl:
     ai_bot_allowed_groups: "Wanneer de GPT-bot toegang heeft tot het privébericht, zal deze reageren op leden van deze groepen."
     ai_bot_debugging_allowed_groups: "Geef deze groepen een debugknop bij berichten die het ruwe AI-verzoek en -antwoord weergeeft"
     ai_bot_public_sharing_allowed_groups: "Sta deze groepen toe persoonlijke AI-berichten met het publiek delen via een unieke, openbaar beschikbare link. Let op: als aanmelden vereist is op je site, is dat ook vereist voor delen."
-    ai_bot_add_to_header: "Geef een knop weer in de kop om een privéchat te starten met een AI-bot"
     ai_bot_github_access_token: "GitHub-toegangstoken voor gebruik met GitHub AI-tools (vereist voor zoekondersteuning)"
     ai_stability_api_key: "API-sleutel voor de stability.ai-API"
     ai_stability_engine: "Te gebruiken engine voor het genereren van afbeeldingen voor de stability.ai-API"
@@ -112,8 +110,6 @@ nl:
     ai_discord_search_mode: "Selecteer de zoekmodus die je wilt gebruiken voor de Discord-zoekfunctie"
     ai_discord_search_persona: "De persona om te gebruiken voor de Discord-zoekfunctie"
     ai_discord_allowed_guilds: "Discord-gilden (servers) waar de bot mag zoeken"
-    ai_bot_enable_dedicated_ux: "Sta dit toe voor een botinterface op het volledig scherm, in plaats van een PB"
-    ai_translation_enabled: "Schakelt de AI-vertaalfunctie in"
     ai_translation_model: "Het model om te gebruiken voor vertaling. Dit model moet vertaling ondersteunen. Persona's kunnen deze instelling overschrijven."
     ai_translation_backfill_limit_to_public_content: "Als dit is ingeschakeld, wordt alleen content in openbare categorieën vertaald. Als dit is uitgeschakeld, wordt ook content in groeps-PB's en privécategorieën vertaald."
     ai_translation_backfill_max_age_days: "De maximale leeftijd van een bericht en topic dat vertaald moet worden. Berichten en topics die ouder zijn dan dit worden niet vertaald. 0 schakelt het vertalen van eerdere berichten uit, maar niet van nieuwe berichten."

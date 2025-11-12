@@ -181,6 +181,7 @@ RSpec.describe Admin::UserFieldsController do
                 field_type: "confirm",
                 description: "muppet",
                 requirement: "optional",
+                show_on_signup: false,
               },
             }
 
@@ -189,6 +190,7 @@ RSpec.describe Admin::UserFieldsController do
           name: "fraggle",
           field_type: "confirm",
           required?: false,
+          show_on_signup?: false,
         )
       end
 

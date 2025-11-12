@@ -106,7 +106,7 @@ class DiscourseLti::LtiOmniauthStrategy
 
     session["omniauth.state"] = state
     session["omniauth.nonce"] = nonce
-    session["destination_url"] = target_link_uri
+    request.server_session["destination_url"] = target_link_uri
 
     params = {
       scope: "openid",

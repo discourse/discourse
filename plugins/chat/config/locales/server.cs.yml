@@ -23,7 +23,7 @@ cs:
     chat_archive_destination_topic_status: "Stav, ve kterém se má nacházet cílové téma po dokončení archivace kanálu. To platí pouze v případě, že cílové téma je nové, nikoliv existující."
     direct_message_enabled_groups: "Povolit uživatelům v těchto skupinách vytvářet soukromé chaty mezi uživateli. Poznámka: Redaktoři mohou vždy vytvářet soukromé chaty a uživatelé budou moci odpovídat na soukromé chaty iniciované uživateli, kteří mají oprávnění je vytvářet."
     chat_message_flag_allowed_groups: "Uživatelé v těchto skupinách mohou zprávy chatu nahlásit. Upozorňujeme, že správci a moderátoři mohou zprávy chatu nahásit vždy."
-    max_mentions_per_chat_message: "Maximální počet @name upozornění, která může uživatel použít v chatové zprávě."
+    max_mentions_per_chat_message: "Maximální počet zmínek @name, která může uživatel použít ve zprávě chatu."
     chat_max_direct_message_users: "Uživatelé nemohou při vytváření nové přímé zprávy přidat více než tento počet dalších uživatelů. Nastavením na 0 povolíte zprávy pouze sobě. Redaktoři jsou z tohoto nastavení vyňati."
     chat_allow_archiving_channels: "Umožnit redakci při uzavření kanálu archivovat zprávy do tématu."
     chat_editing_grace_period: "Po (n) sekund po odeslání chatu se po úpravách nezobrazí značka (upraveno) u zprávy chatu."
@@ -31,6 +31,7 @@ cs:
     chat_editing_grace_period_max_diff_high_trust: "Maximální počet povolených změn znaků v době odkladu úpravy chatu, pokud se změní více, zobrazí se značka (upraveno) u zprávy chatu (úroveň důvěry 2 a vyšší)."
     chat_preferred_index: "Preferovaný panel při načítání /chat"
     allow_chat_in_anonymous_mode: "Povolením tohoto nastavení umožníte uživatelům, kteří procházejí vaše stránky anonymně, používat chat. Toto nastavení vyžaduje, aby bylo povoleno nastavení `allow anonymous mode`."
+    chat_search_enabled: "Povolením tohoto nastavení umožníte uživatelům prohledávat zprávy chatu."
     errors:
       chat_default_channel: "Výchozí kanál chatu musí být veřejný kanál."
       direct_message_enabled_groups_invalid: "Pro toto nastavení musíte zadat alespoň jednu skupinu. Pokud nechcete, aby nikdo kromě redakce posílal přímé zprávy, vyberte skupinu redakce."
@@ -112,6 +113,17 @@ cs:
     reviewables:
       message_already_handled: "Děkujeme, ale tuto zprávu jsme již zkontrolovali a rozhodli jsme se, že ji není třeba znovu nahlašovat."
       actions:
+        message_actions:
+          bundle_title: "Co chcete se zprávou udělat?"
+        no_action_message:
+          title: "Bez akce"
+          description: "Ponechat zprávu tak, jak je."
+        delete_message:
+          title: "Smazat zprávu"
+          description: "Trvale smazat zprávu."
+        restore_message:
+          title: "Obnovit zprávu"
+          description: "Obnovit zprávu, aby ji uživatelé mohli vidět."
         agree:
           title: "Souhlas..."
         agree_and_keep_message:
@@ -206,7 +218,8 @@ cs:
         slug_contains_non_ascii_chars: "obsahuje znaky jiné než ASCII"
         is_already_in_use: "se již používá"
     bookmarkable:
-      notification_title: "zpráva v %{channel_name}"
+      notification_title_channel: "zpráva v %{channel_name}"
+      notification_title_direct_message: "konverzace s %{channel_name}"
     personal_chat: "soukromý chat"
     onebox:
       inline_to_message: "Zpráva #%{message_id} od %{username} – #%{chat_channel}"

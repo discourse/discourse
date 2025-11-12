@@ -36,7 +36,7 @@ module Holidays
             {:mday => 22, :year_ranges => { :limited => [2025] },:name => "Navratri Sthapana", :regions => [:in_mh, :in_gj]}],
       10 => [{:mday => 2, :observed => "to_weekday_if_weekend(date)", :observed_arguments => [:date], :name => "Gandhi Jayanti", :regions => [:in]},
             {:mday => 2, :year_ranges => { :limited => [2025] },:name => "Dussehra", :regions => [:in_mh, :in_tn, :in_gj]},
-            {:mday => 21, :year_ranges => { :limited => [2025] },:name => "Diwali", :regions => [:in]},
+            {:mday => 20, :year_ranges => { :limited => [2025] },:name => "Diwali", :regions => [:in]},
             {:mday => 22, :year_ranges => { :limited => [2025] },:name => "Govardhan Puja", :regions => [:in_mh, :in_gj]},
             {:mday => 31, :name => "Sardar Vallabhbhai Patel Jayanti", :regions => [:in_gj]}],
       11 => [{:mday => 1, :name => "Kannada Rajyothsava", :regions => [:in_ka]},

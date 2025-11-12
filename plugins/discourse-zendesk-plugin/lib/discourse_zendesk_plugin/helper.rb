@@ -80,15 +80,15 @@ module DiscourseZendeskPlugin
     end
 
     def update_topic_custom_fields(topic, ticket)
-      topic.custom_fields[::DiscourseZendeskPlugin::ZENDESK_ID_FIELD] = ticket["id"]
-      topic.custom_fields[::DiscourseZendeskPlugin::ZENDESK_API_URL_FIELD] = ticket["url"]
+      topic.custom_fields[DiscourseZendeskPlugin::ZENDESK_ID_FIELD] = ticket["id"]
+      topic.custom_fields[DiscourseZendeskPlugin::ZENDESK_API_URL_FIELD] = ticket["url"]
       topic.save_custom_fields
     end
 
     def update_post_custom_fields(post, comment)
       return if comment.blank?
 
-      post.custom_fields[::DiscourseZendeskPlugin::ZENDESK_ID_FIELD] = comment["id"]
+      post.custom_fields[DiscourseZendeskPlugin::ZENDESK_ID_FIELD] = comment["id"]
       post.save_custom_fields
     end
 
@@ -96,7 +96,7 @@ module DiscourseZendeskPlugin
       result = zendesk_client.users.search(query: user.email)
       return result.first if result.present? && result.size == 1
       zendesk_client.users.create(
-        name: (user.name.present? ? user.name : user.username),
+        name: user.name.presence || user.username,
         email: user.email,
         verified: true,
         role: "end-user",

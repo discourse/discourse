@@ -7,11 +7,9 @@
 sk:
   admin_js:
     admin:
-      calendar: "Kalendár"
       site_settings:
         categories:
           discourse_post_event: "Discourse udalosť"
-          discourse_calendar: "Kalendár Discourse"
   js:
     notifications:
       titles:
@@ -138,6 +136,7 @@ sk:
           dk: "Dánsko"
           ee: "Estónsko"
           el: "Grécko"
+          gr: "Grécko"
           es_an: "Španielsko (es_an)"
           es_ar: "Španielsko (es_ar)"
           es_ce: "Španielsko (es_ce)"

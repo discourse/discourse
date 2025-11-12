@@ -61,6 +61,7 @@ ru:
     calendar_automatic_holidays_enabled: "Автоматически задавать статус «праздники» по региону пользователя (отключить конкретные автоматически устанавливаемые праздники можно в настройках плагина)"
     event_participation_buttons: "Список кнопок участия в мероприятиях, которые могут использовать пользователи."
     sidebar_show_upcoming_events: "Показывать ссылку на предстоящие мероприятия на боковой панели в разделе «Еще»."
+    calendar_first_day_of_week: "Установите первый день недели для отображения календаря. Возможные варианты: суббота, воскресенье или понедельник."
   discourse_calendar:
     invite_user_notification: "Пользователь %{username} приглашает вас: %{description}"
     calendar_must_be_in_first_post: "Тег календаря может быть использован только в первой публикации темы."
@@ -86,6 +87,7 @@ ru:
           raw_invitees:
             only_group: "Мероприятие принимает только имена групп."
           ends_at_before_starts_at: "Мероприятие не может закончиться до того, как начнется."
+          max_attendees_reached: "Это мероприятие заполнено."
           start_must_be_present_and_a_valid_date: "В мероприятии должна быть установлена правильная дата начала."
           end_must_be_a_valid_date: "Дата окончания должна быть правильной."
           invalid_recurrence: "Повторение должно быть одним из следующих значений: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."

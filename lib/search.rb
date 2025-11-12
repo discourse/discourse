@@ -365,24 +365,24 @@ class Search
     @results
   end
 
-  def self.advanced_order(trigger, &block)
-    advanced_orders[trigger] = block
+  def self.advanced_order(trigger, enabled: -> { true }, &block)
+    advanced_orders[trigger] = { block:, enabled: }
   end
 
   def self.advanced_orders
     @advanced_orders ||= {}
   end
 
-  def self.advanced_filter(trigger, name: nil, &block)
-    advanced_filters[trigger] = { block:, name: }
+  def self.advanced_filter(trigger, name: nil, enabled: -> { true }, &block)
+    advanced_filters[trigger] = { block:, name:, enabled: }
   end
 
   def self.advanced_filters
     @advanced_filters ||= {}
   end
 
-  def self.custom_topic_eager_load(tables = nil, &block)
-    (@custom_topic_eager_loads ||= []) << (tables || block)
+  def self.custom_topic_eager_load(tables = nil, enabled: -> { true }, &block)
+    (@custom_topic_eager_loads ||= []) << { tables:, block:, enabled: }
   end
 
   def self.custom_topic_eager_loads
@@ -472,7 +472,7 @@ class Search
 
   advanced_filter(/\Ain:first|^f\z/i) { |posts| posts.where("posts.post_number = 1") }
 
-  advanced_filter(/\Ain:pinned\z/i) { |posts| posts.where("topics.pinned_at IS NOT NULL") }
+  advanced_filter(/\Ain:pinned\z/i) { |posts| posts.where.not(topics: { pinned_at: nil }) }
 
   advanced_filter(/\Ain:wiki\z/i) { |posts, match| posts.where(wiki: true) }
 
@@ -570,7 +570,7 @@ class Search
     end
   end
 
-  advanced_filter(/\Awith:images\z/i) { |posts| posts.where("posts.image_upload_id IS NOT NULL") }
+  advanced_filter(/\Awith:images\z/i) { |posts| posts.where.not(posts: { image_upload_id: nil }) }
 
   advanced_filter(/\Acategor(?:y|ies):(.+)\z/i) do |posts, terms|
     category_ids = []
@@ -811,6 +811,19 @@ class Search
     posts.where("topics.views <= ?", match.to_i)
   end
 
+  advanced_filter(/\Alocale:([a-zA-Z0-9_-]+)\z/i) do |posts, match|
+    case match.downcase
+    when "none", "null"
+      posts.where("posts.locale IS NULL")
+    when "any", "present"
+      posts.where("posts.locale IS NOT NULL")
+    else
+      locale = match.downcase.gsub("-", "_")
+      base_locale = locale.split("_").first
+      posts.where("posts.locale LIKE ?", "#{base_locale}%")
+    end
+  end
+
   def apply_filters(posts)
     @filters.each do |block, match|
       if block.arity == 1
@@ -866,9 +879,11 @@ class Search
       end
     elsif @order == :read && @guardian.user
       posts =
-        posts.joins(
-          "JOIN topic_users tu ON tu.topic_id = posts.topic_id AND tu.user_id = #{@guardian.user.id.to_i}",
-        ).where("tu.last_visited_at IS NOT NULL")
+        posts
+          .joins(
+            "JOIN topic_users tu ON tu.topic_id = posts.topic_id AND tu.user_id = #{@guardian.user.id.to_i}",
+          )
+          .where.not(tu: { last_visited_at: nil })
 
       if aggregate_search
         posts = posts.order("MAX(tu.last_visited_at) DESC")
@@ -880,8 +895,8 @@ class Search
     end
 
     if @order
-      advanced_order = Search.advanced_orders&.fetch(@order, nil)
-      posts = advanced_order.call(posts) if advanced_order
+      advanced_order = Search.advanced_orders[@order]
+      posts = advanced_order[:block].call(posts) if advanced_order.try(:[], :enabled).try(:call)
     end
 
     posts
@@ -934,6 +949,7 @@ class Search
         Search.advanced_filters.each do |matcher, options|
           block = options[:block]
           name = options[:name]
+          next unless options[:enabled].call
 
           case_insensitive_matcher =
             Regexp.new(matcher.source, matcher.options | Regexp::IGNORECASE)
@@ -1534,13 +1550,16 @@ class Search
 
   def posts_eager_loads(query)
     query = query.includes(:user, :post_search_data)
+    query = query.includes(:localizations) if SiteSetting.content_localization_enabled
     topic_eager_loads = [{ category: :parent_category }]
 
     topic_eager_loads << :tags if SiteSetting.tagging_enabled
+    topic_eager_loads << :localizations if SiteSetting.content_localization_enabled
 
     Search.custom_topic_eager_loads.each do |custom_loads|
+      next unless custom_loads[:enabled].call
       topic_eager_loads.concat(
-        custom_loads.is_a?(Array) ? custom_loads : custom_loads.call(search_pms: @search_pms).to_a,
+        custom_loads[:tables] || custom_loads[:block].call(search_pms: @search_pms).to_a,
       )
     end
 

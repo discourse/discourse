@@ -377,7 +377,24 @@ RSpec.describe ReviewableQueuedPost, type: :model do
 
     context "when reviewable_ui_refresh feature is enabled" do
       before do
+        SiteSetting.reviewable_old_moderator_actions = false
         allow_any_instance_of(Guardian).to receive(:can_see_reviewable_ui_refresh?).and_return(true)
+      end
+
+      it "creates separate bundles for post and user actions" do
+        actions = reviewable.actions_for(Guardian.new(admin))
+        bundle_ids = actions.bundles.map(&:id)
+
+        expect(bundle_ids).to include("#{reviewable.id}-post-actions")
+        expect(bundle_ids).to include("#{reviewable.id}-user-actions")
+      end
+
+      it "includes post actions in the post bundle" do
+        actions = reviewable.actions_for(Guardian.new(admin))
+
+        expect(actions.has?(:approve_post)).to eq(true)
+        expect(actions.has?(:reject_post)).to eq(true)
+        expect(actions.has?(:revise_and_reject_post)).to eq(true)
       end
 
       it "includes user actions in the user bundle" do

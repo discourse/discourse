@@ -266,9 +266,9 @@ hr:
   reading_time: "Vrijeme čitanja"
   likes: "Like-ova"
   too_many_replies:
-    one: "Žao nam je ali novi korisnici su privremeno ograničeni na %{count} odgovora u istoj temi."
-    few: "Žao nam je ali novi korisnici su privremeno ograničeni na %{count} odgovora u istoj temi."
-    other: "Žao nam je ali novi korisnici su privremeno ograničeni na %{count} odgovora u istoj temi."
+    one: "Žao nam je, ali novi korisnici su privremeno ograničeni na %{count} odgovora u istoj temi."
+    few: "Žao nam je, ali novi korisnici su privremeno ograničeni na %{count} odgovora u istoj temi."
+    other: "Žao nam je, ali novi korisnici su privremeno ograničeni na %{count} odgovora u istoj temi."
   max_consecutive_replies:
     one: "Nije dopušteno više odgovora za redom. Molimo uredite vaš prethodni odgovor ili pričekajte da vam netko drugi odgovori."
     few: "Dopušteno je najviše %{count} odgovora za redom. Molimo uredite vaš prethodni odgovor ili pričekajte da vam netko drugi odgovori."
@@ -312,6 +312,10 @@ hr:
     other: "Žao nam je, novi korisnici mogu spomenuti samo %{count} korisnika u objavi."
   no_embedded_media_allowed_group: "Nažalost, ne možete ugraditi medijske stavke u post."
   no_embedded_media_allowed: "Nažalost, novi korisnici ne mogu ugraditi medijske stavke u objave."
+  too_many_embedded_media:
+    one: "Žao nam je, novi korisnici mogu dodati samo jedan prilog u objavu."
+    few: "Žao nam je, novi korisnici mogu dodati najviše %{count} priloga u objavu."
+    other: "Žao nam je, novi korisnici mogu dodati najviše %{count} priloga u objavu."
   no_attachments_allowed: "Žao nam je novi korisnici ne mogu stavljati privitke u objave."
   too_many_attachments:
     one: "Žao nam je, novi korisnici mogu dodati samo jedan prilog u objavu."
@@ -417,12 +421,19 @@ hr:
       trust_level_3: "razina_povjerenja_3"
       trust_level_4: "razina_povjerenja_4"
     default_descriptions:
+      admins: "Odgovorni za konfiguriranje i održavanje ove stranice, s pristupom svim podacima o članovima i aktivnostima"
       moderators: "Odgovorni za odgovaranje na oznake, moderiranje rasprava i pomoć članovima s njihovim računima"
   education:
     until_posts:
       one: "%{count} objava"
       few: "%{count} objava"
       other: "%{count} objava"
+    "new-topic": |
+      Hvala na doprinosu u %{site_name}!
+
+      Prije nego što objavite, odaberite kategoriju ili oznaku kako biste grupirali ovu temu s povezanim raspravama kako bi je drugi lakše pronašli.
+
+      Za više savjeta i uputa o sudjelovanju u našoj zajednici, [pogledajte naše smjernice zajednice](%{base_path}/smjernice).
   activerecord:
     attributes:
       category:
@@ -739,6 +750,7 @@ hr:
     inappropriate:
       title: "Neprikladno"
     illegal:
+      short_description: "Ovo je nepravilno"
       email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Pošaljite poruku @%{username}"
@@ -761,17 +773,25 @@ hr:
     spam:
       title: "Nepoželjno"
       description: "Ova tema je reklama. Nije korisno niti relevantno ovoj stranici već služi u promotivne svrhe."
-      long_form: "označio kao nepoželjno"
+      long_form: "označio/la ovo kao nepoželjno"
       short_description: "Ovo je oglas"
     inappropriate:
       title: "Neprikladno"
-      long_form: "označio ovo kao neprikladno"
+      description: 'Ova tema sadrži sadržaj koji bi razumna osoba smatrala uvredljivim, nasilnim, mržnjom ispunjenim ponašanjem ili kršenjem <a href="%{base_path}/guidelines">naših smjernica zajednice</a>.'
+      long_form: "označio/la ovo kao neprikladno"
+      short_description: 'Kršenje <a href="%{base_path}/guidelines">smjernica naše zajednice</a>'
     notify_moderators:
       title: "Nešto drugo"
-      long_form: "označio za moderatorsku pozornost"
+      description: 'Ova tema zahtijeva opću pozornost osoblja na temelju <a href="%{base_path}/guidelines">smjernica</a>, <a href="%{tos_url}">Uvjeta korištenja</a>ili iz drugog razloga koji nije naveden gore.'
+      long_form: "označio/la za pozornost moderatora"
+      short_description: "Zahtijeva pažnju osoblja iz drugog razloga"
       email_title: 'Tema "%{title}" zahtjeva moderatorsku pozornost'
       email_body: "%{link}\n\n%{message}"
     illegal:
+      title: "Nezakonito"
+      description: "Ova tema zahtijeva pažnju osoblja jer vjerujem da sadrži sadržaj koji je nezakonit."
+      short_description: "Ovo je nezakonito"
+      email_title: 'Objava u "%{title}" zahtijeva pažnju osoblja'
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>Ovu je objavu zajednica označila zastavicom i privremeno je skrivena.</p>"
@@ -938,7 +958,7 @@ hr:
       xaxis: "Dan"
       yaxis: "Broj oznaka zastavicom"
     bookmarks:
-      title: "Zabilješke"
+      title: "Oznake"
       xaxis: "Dan"
       yaxis: "Broj novih zabilješki"
     users_by_trust_level:
@@ -1140,6 +1160,8 @@ hr:
       host_names: "Vaša config/database.yml datoteka koristi standardno ime lokalnog domaćina (localhost hostname). Ažurirajte je da koristi ime vaše stranice."
       queue_size: "Broj predbilježenih zadataka je %{queue_size}, što je velik broj. Ovo može biti pokazatelj problema za Sidekiq procesom(ima), ili trebate dodati još Sidekiq \"radnika\"."
       ram: "Server vam radi s manje od 1 GB ukupne memorije. Barem 1 GB se preporuča."
+      out_of_date_themes: "Dostupna su ažuriranja sljedećih tema:%{themes_list}"
+      unreachable_themes: "Nismo uspjeli provjeriti ima li ažuriranja sljedećih tema:%{themes_list}"
   site_settings:
     disabled: "onemogućen"
     allow_user_locale: "Dopustite korisnicima da odaberu vlastite postavke jezika sučelja"
@@ -1174,7 +1196,6 @@ hr:
     crawl_images: "Dohvatite slike s udaljenih URL-ova da biste umetnuli ispravne dimenzije širine i visine."
     download_remote_images_to_local: "Pretvorite udaljene (hotlinked) slike u lokalne slike njihovim preuzimanjem; Ovo čuva sadržaj čak i ako se slike u budućnosti uklone s udaljenog mjesta."
     download_remote_images_threshold: "Minimalni prostor na disku potreban za lokalno preuzimanje udaljenih slika (u postocima)"
-    disabled_image_download_domains: "Udaljene slike nikada neće biti preuzete s ovih domena. Popis odijeljen crtom."
     block_hotlinked_media: "Spriječite korisnike da u svoje postove uvedu udaljene (povezane) medije. Udaljeni medij koji nije preuzet putem 'download_remote_images_to_local' bit će zamijenjen vezom rezerviranog mjesta."
     block_hotlinked_media_exceptions: "Popis osnovnih URL-ova koji su izuzeti iz postavke block_hotlinked_media. Uključite protokol (npr. https://example.com)."
     editing_grace_period: "(n) sekundi nakon objavljivanja, uređivanje neće stvoriti novu verziju u povijesti postova."
@@ -1224,7 +1245,6 @@ hr:
     ga_universal_domain_name: "Google Universal Analytics naziv domene, npr.: mysite.com; pogledajte <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Omogućite Google Universal Analytics praćenje među domenama. Odlazne veze na te domene imat će dodan ID klijenta. Pogledajte <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Googleov vodič za praćenje među domenama.</a>"
     enable_escaped_fragments: "Vratite se na Googleov Ajax-Crawling API ako se ne otkrije alat za indeksiranje. Pogledajte <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Dopustite moderatorima stvaranje i upravljanje kategorijama i grupama"
     moderators_change_post_ownership: "Dopusti moderatorima promjenu vlasništva posta"
     cors_origins: "Dopušteni izvori za zahtjeve s različitim izvorima (CORS). Svako podrijetlo mora sadržavati http:// ili https://. Varijabla env DISCOURSE_ENABLE_CORS mora biti postavljena na true da bi se omogućio CORS."
     use_admin_ip_allowlist: "Administratori se mogu prijaviti samo ako su na IP adresi definiranoj na popisu Screened IPs (Administrator > Dnevnici > Screened Ips)."
@@ -1407,7 +1427,6 @@ hr:
     enable_group_directory: "Omogućite direktorij grupa za pregledavanje"
     enable_category_group_moderation: "Dopustite grupama moderiranje sadržaja u određenim kategorijama"
     group_in_subject: "Postavite %%{optional_pm} u predmetu e-pošte prema imenu prve grupe u PM-u, pogledajte: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Prilagodite format predmeta za standardne e-poruke</a>"
-    anonymous_posting_min_trust_level: "Minimalna razina povjerenja potrebna za omogućavanje anonimnog objavljivanja"
     show_copy_button_on_codeblocks: "Dodajte gumb kodnim blokovima za kopiranje sadržaja bloka u korisnički međuspremnik."
     embed_any_origin: "Dopusti sadržaj koji se može ugraditi bez obzira na podrijetlo. Ovo je potrebno za mobilne aplikacije sa statičnim HTML-om."
     embed_set_canonical_url: "Postavite kanonski URL za ugrađene teme na URL ugrađenog sadržaja."
@@ -1437,12 +1456,11 @@ hr:
     blur_tl0_flagged_posts_media: "Zamutite slike označenih objava kako biste sakrili potencijalno NSFW sadržaj."
     enable_page_publishing: "Dopustite članovima osoblja da objavljuju teme na novim URL-ovima s vlastitim stilom."
     show_published_pages_login_required: "Anonimni korisnici mogu vidjeti objavljene stranice, čak i kada je potrebna prijava."
-    default_other_skip_new_user_tips: "Preskoči savjete i značke novog korisnika."
+    default_other_skip_new_user_tips: "Preskočite savjete i značke za uvođenje novih korisnika."
     min_trust_level_to_tag_topics: "Minimalna razina povjerenja potrebna za označavanje tema"
     suppress_overlapping_tags_in_list: "Ako oznake odgovaraju točnim riječima u naslovima tema, nemojte prikazivati oznaku"
     remove_muted_tags_from_latest: "Ne prikazuj teme označene samo prigušenim oznakama na najnovijem popisu tema."
     force_lowercase_tags: "Prisilno navedite da sve nove oznake budu ispisane malim slovima."
-    watched_precedence_over_muted: "Obavijesti me o temama u kategorijama ili oznakama koje pratim, a koje također pripadaju onoj koju sam utišao."
     shared_drafts_category: "Omogućite značajku Dijeljene skice određivanjem kategorije za skice tema. Teme u ovoj kategoriji bit će potisnute s popisa tema za korisnike osoblja."
     shared_drafts_min_trust_level: "Dopustite korisnicima da vide i uređuju dijeljene skice."
     push_notifications_prompt: "Prikaži banner pristanka korisnika za push obavijesti. Ova postavka pokreće upit koji od korisnika traži dopuštenje za slanje push obavijesti. Pojavljuje se samo kada push obavijesti nisu već omogućene, podržava ih korisnikov uređaj i korisnik je ili objavio objavu ili koristi progresivnu web-aplikaciju (PWA). Upit se neće ponovno prikazati ako ga je korisnik već odbacio ili dao/odbio dopuštenje."
@@ -1657,13 +1675,13 @@ hr:
     title: "Otkaži pretplatu na Mailer"
     subject_template: "Potvrdite da više ne želite primati ažuriranja putem e-pošte od %{site_title}"
     text_body_template: |
-      Netko (možda vi?) je zatražio da se više ne šalju ažuriranja e-poštom od %{site_domain_name} na ovu adresu.
+      Netko (možda vi?) je zatražio da se više ne šalju ažuriranja e-mailom od %{site_domain_name} na ovu adresu.
       Ako to želite potvrditi, kliknite ovu poveznicu:
 
       %{confirm_unsubscribe_link}
 
 
-      Ako želite nastaviti primati ažuriranja e-poštom, možete zanemariti ovu e-poruku.
+      Ako želite nastaviti primati ažuriranja e-mailom, možete zanemariti ovu e-mail poruku.
   invite_mailer:
     title: "Pozovite Mailera"
     subject_template: "%{inviter_name} vas je pozvao na '%{topic_title}' na %{site_domain_name}"
@@ -1754,10 +1772,148 @@ hr:
     no_token: |
       Nažalost, ova veza za preuzimanje sigurnosne kopije već je korištena ili je istekla.
   system_messages:
+    reviewables_reminder:
+      subject_template: "U redu za pregled postoje stavke koje je potrebno pregledati"
+      text_body_template:
+        one: "%{mentions} Stavke su poslane prije više od %{count} sata. [Molimo vas da ih pregledate](%{base_url}/pregled)."
+        few: "%{mentions} Stavke su poslane prije više od %{count} sata. [Molimo vas da ih pregledate](%{base_url}/pregled)."
+        other: "%{mentions} Stavke su poslane prije više od %{count} sati. [Molimo vas da ih pregledate](%{base_url}/pregled)."
+    private_topic_title: "#%{id} teme"
+    contents_hidden: "Molimo vas da posjetite objavu kako biste vidjeli njen sadržaj."
+    post_hidden:
+      title: "Skrivena objava"
+      subject_template: "Objava skrivena zbog prijava članova zajednice"
+      text_body_template: |
+        Pozdrav,
+
+        Ovo je automatska poruka od %{site_name} kojom vas obavještavamo da je vaša objava skrivena.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        Ova je objava skrivena zbog prijava članova zajednice, stoga razmislite o tome kako možete prilagoditi svoju objavu na temelju njihovih povratnih informacija. **Možete urediti svoju objavu nakon %{edit_delay} minuta i automatski će se ponoviti prikazivanje.**
+
+        Međutim, ako zajednica drugi put prijavi objavu, ona će ostati skrivena dok je ne obradi osoblje.
+
+        Za dodatne upute pogledajte naše [smjernice zajednice](%{base_url}/smjernice).
+    reviewable_queued_post_revise_and_reject:
+      title: "Povratne informacije o vašoj objavi"
+      subject_template: "Povratne informacije o vašoj objavi u %{topic_title}"
+      text_body_template: |
+        Pozdrav %{username},
+
+        Pregledali smo vašu objavu u [%{topic_title}](%{topic_url}) i imamo povratne informacije za vas.
+
+        Razlog: %{reason}
+
+        Povratne informacije: %{feedback}
+
+        Možete urediti svoju izvornu objavu u nastavku i ponovno je poslati kako biste unijeli predložene promjene ili odgovoriti na ovu poruku ako imate bilo kakvih pitanja.
+
+        --------
+
+        %{original_post}
+
+        --------
+
+        Hvala,
+        %{site_name} Moderatori
+    reviewable_queued_post_revise_and_reject_new_topic:
+      title: "Povratne informacije o vašoj temi"
+      subject_template: 'Povratne informacije o novoj temi pod nazivom "%{topic_title}"'
+      text_body_template: |
+        Pozdrav %{username},
+
+        Pregledali smo vašu novu temu pod naslovom "%{topic_title}" i imamo povratne informacije za vas.
+
+        Razlog: %{reason}
+
+        Povratne informacije: %{feedback}
+
+        Možete urediti izvornu objavu svoje teme u nastavku i ponovno je poslati kako biste unijeli predložene promjene ili odgovoriti na ovu poruku ako imate bilo kakvih pitanja.
+
+        --------
+
+        %{original_post}
+
+        --------
+
+        Hvala,
+        %{site_name} Moderatori
+    post_hidden_again:
+      title: "Objava je opet skrivena"
+      subject_template: "Objava skrivena zbog prijava članova zajednice, osoblje obaviješteno"
+      text_body_template: |
+        Pozdrav,
+
+        Ovo je automatska poruka %{site_name}a kojom vas obavještavamo da je vaša objava ponovno skrivena.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        Članovi zajednica su prijavili ovu objavu i sada je skrivena. **Budući da je ova objava skrivena više puta, vaša će objava ostati skrivena dok je ne obradi član osoblja.**
+
+        Za dodatne upute pogledajte naše [smjernice zajednice](%{base_url}/smjernice).
     queued_by_staff:
-      title: "natpis čeka potvrdu"
+      title: "Objava zahtijeva odobrenje"
+      subject_template: "Osoblje sakrilo objavu, čeka odobrenje"
+      text_body_template: |
+        Pozdrav,
+
+        Ovo je automatska poruka od %{site_name} kojom vas obavještavamo da je vaša objava skrivena.
+
+        <%{base_url}%{url}>
+
+        Vaša će objava ostati skrivena dok je ne pregleda član osoblja.
+
+        Za dodatne upute pogledajte naše [smjernice zajednice](%{base_url}/smjernice).
+    flags_disagreed:
+      title: "Osoblje vratilo prijavljenu objavu"
+      subject_template: "Osoblje vratilo prijavljenu objavu"
+      text_body_template: |
+        Pozdrav,
+
+        Ovo je automatska poruka od %{site_name} kojom vas obavještavamo da je [vaša objava](%{base_url}%{url}) vraćena.
+
+        Zajednica je prijavila objavu, a član osoblja odlučio ju je vratiti.
+
+        [details="Kliknite za proširenje vraćene objave"]
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+        [/details]
+    flags_agreed_and_post_deleted:
+      title: "Osoblje je uklonilo označenu objavu"
+      subject_template: "Osoblje je uklonilo označenu objavu"
+      text_body_template: |
+        Pozdrav,
+
+        Ovo je automatska poruka od %{site_name} kojom vas obavještavamo da je [vaša objava](%{base_url}%{url}) uklonjena.
+
+        %{flag_reason}
+
+        Ovu je objavu označila zajednica, a član osoblja odlučio ju je ukloniti.
+
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+
+        Molimo vas da pregledate naše [smjernice zajednice](%{base_url}/smjernice) za detalje.
+    flags_agreed_and_post_deleted_for_responders:
+      title: "Odgovor s prijavljene objave je uklonilo osoblje"
+      subject_template: "Odgovor s prijavljene objave je uklonilo osoblje"
     welcome_user:
       subject_template: "Dobrodošli na %{site_name}"
+    welcome_staff:
+      subject_template: "Čestitamo, dobili ste status %{role} !"
+      text_body_template: |
+        Kolega/ica iz osoblja vam je dodijelio/la status %{role} .
+
+        Kao %{role}, sada imate pristup <a href='%{base_url}/admin' target='_blank'>administratorskom sučelju</a>.
+
+        S velikom moći dolazi i velika odgovornost. Ako ste novi u moderiranju, pogledajte [Vodič za moderiranje](https://meta.discourse.org/t/discourse-moderation-guide/63116) ili se obratite osoblju foruma za pomoć.
     welcome_invite:
       subject_template: "Dobrodošli na %{site_name}"
     email_reject_post_too_short:
@@ -1766,6 +1922,15 @@ hr:
         Žao nam je, ali vaša e-mail poruka za %{destination} (pod naslovom %{former_title}) nije uspjela.
 
         Radi promicanja dubljeg razgovora, vrlo kratki odgovori nisu dopušteni. Možete li odgovoriti s najmanje %{count} znakova? Alternativno, možete lajkati objavu putem e-maila tako da odgovorite s "+1".
+    new_user_of_the_month:
+      title: "Vi ste novi korisnik mjeseca!"
+      subject_template: "Vi ste novi korisnik mjeseca!"
+      text_body_template: |
+        Čestitamo, zaslužili ste nagradu **Novi korisnik mjeseca za %{month_year}**. :trophy:
+
+        Ova nagrada dodjeljuje se samo dvama novim korisnicima mjesečno i bit će trajno vidljiva na [stranici sa značkama](%{url}).
+
+        Brzo ste postali vrijedan član naše zajednice. Hvala što ste se pridružili i samo tako nastavite!
   unsubscribe_link: |
     Da biste otkazali pretplatu na ove e-mailove, [kliknite ovdje](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -2059,12 +2224,6 @@ hr:
     account_second_factor_disabled:
       title: "Dvofaktorska autentikacija onemogućena"
       subject_template: "[%{email_prefix}] Dvofaktorska autentikacija onemogućena"
-      text_body_template: |
-        Dvofaktorska autentikacija je onemogućena na vašem korisničkom računu na %{site_name}. Sada se možete prijaviti samo svojom zaporkom; dodatni autentikacijski kod više nije potreban.
-
-        Ako niste odabrali onemogućiti dvofaktorsku autentikaciju, netko je možda ugrozio vaš korisnički račun.
-
-        Ako imate pitanja, [kontaktirajte naše ljubazno osoblje](%{base_url}/o).
     digest:
       since_last_visit: "Od vašeg posljednjeg posjeta"
       new_topics: "Nove teme"
@@ -2259,9 +2418,7 @@ hr:
         Ovo je automatizirana poruka od %{site_name} koja vas obavještava da je [vaša objava] (%{base_url}%{post_url}) odobrena.
   page_not_found:
     page_title: "Stranica nije pronađena"
-    popular_topics: "Popularno"
     see_more: "Više"
-    search_title: "Pretraži ovu stranicu"
     search_button: "Pretraži"
   upload:
     unauthorized: "Nažalost, datoteka koju pokušavate prenijeti nije dopuštena (dopuštene ekstenzije: %{authorized_extensions})."
@@ -2270,75 +2427,280 @@ hr:
     boolean_yes: "Da"
     boolean_no: "Ne"
     rate_limit_error: "Objave mogu biti preuzimane jednom na dan, molimo pokušajte sutra."
+  static_topic_first_reply: |
+    Uredite prvu objavu u ovoj temi kako biste promijenili sadržaj %{page_name} stranice.
   guidelines_topic:
     guidelines_title: "Vodić za uporabu"
+    body: |
+      ## Ovo je civilizirano mjesto za javnu raspravu
+
+      Molimo vas da se prema ovom forumu odnosite s istim poštovanjem kao prema javnom parku. I mi smo zajednički resurs zajednice – mjesto za dijeljenje vještina, znanja i interesa kroz stalnu razmjenu mišljenja.
+
+      Ovo nisu stroga pravila, nego smjernice koje pomažu očuvati ovo mjesto ugodnim, prijateljskim i prikladnim za civiliziranu javnu raspravu.
+
+      ## Poboljšajte raspravu
+
+      Pomozite nam da ovo bude izvrsno mjesto za razmjenu mišljenja tako što ćete uvijek dodati nešto korisno i pozitivno, ma koliko malo. Ako niste sigurni doprinosi li vaša objava razgovoru, zastanite, razmislite i pokušajte ponovno kasnije.
+
+      Jedan od načina za poboljšanje rasprave jest otkrivanje onih koje se već vode. Provedite vrijeme pregledavajući objave prije nego što započnete vlastitu, pa ćete lakše pronaći ljude koji dijele vaše interese.
+
+      Poštujte objave i ljude koji u njima sudjeluju, čak i kada se ne slažete s njima.
+
+      ## Budite susretljivi, čak i kada se ne slažete
+
+      Neslaganje je dopušteno. Kritizirajte ideje, a ne osobe. Molimo vas da izbjegavate:
+
+      *vrijeđanje
+
+      *osobne napade
+
+      Umjesto toga, nudite promišljene uvide koji obogaćuju raspravu.
+
+      ## Vaše sudjelovanje je važno
+
+      Pomozite nam oblikovati budućnost zajednice tako da sudjelujete u objavama koje čine forum zanimljivim mjestom – i izbjegavajte one koje ga osiromašuju.
+
+      Forum nudi alate za prepoznavanje najboljih doprinosa: oznake, lajkove, prijave, odgovore, uređivanja, praćenje, obavijesti i drugo. Koristite ih kako biste poboljšali svoje i tuđe iskustvo.
+
+      Ostavimo zajednicu boljom nego što smo je zatekli.
+
+      ## Ako vidite problem, prijavite ga
+
+      Moderatori imaju posebne ovlasti i odgovorni su za forum. Ali i vi ste odgovorni. Uz vašu pomoć, moderatori mogu biti vodiči zajednice, a ne samo čuvari reda.
+
+      Kad naiđete na loše ponašanje, nemojte odgovarati – to ga samo potiče. Umjesto toga, prijavite ga. Ako se skupi dovoljno prijava, poduzet će se mjere, bilo automatski ili uz pomoć moderatora.
+
+      Moderatori zadržavaju pravo ukloniti bilo koju objavu ili korisnički račun u bilo kojem trenutku, iz bilo kojeg razloga. Oni ne pregledavaju nove objave unaprijed i ne snose odgovornost za sadržaj koji objavljuje zajednica.
+
+      ## Budite pristojni
+
+      Ništa ne narušava zdravu raspravu kao grubost:
+
+      *Budite pristojni. Ne objavljujte ništa što bi razumna osoba smatrala uvredljivim ili govorom mržnje.
+
+      *Održavajte čistoću. Ne objavljujte ništa opsceno ili seksualno eksplicitno.
+
+      *Poštujte druge. Ne uznemiravajte, ne vrijeđajte i ne razotkrivajte privatne podatke.
+
+      *Poštujte forum. Ne objavljujte neželjeni sadržaj i ne kvarite tuđe iskustvo.
+
+      Ako niste sigurni je li nešto primjereno, zapitajte se: “Kako bih se osjećao/la da ovo izađe na naslovnici dnevnih novina?”
+
+      ## Održavajte urednost
+
+      Trudite se objavljivati na pravom mjestu:
+
+      *ne započinjite objavu u krivoj kategoriji – pročitajte opise kategorija.
+
+      *ne objavljujte istu objavu u više kategorija.
+
+      *ne šaljite odgovore bez sadržaja.
+
+      *ne preusmjeravajte raspravu mijenjajući originalnu objavu.
+
+      *ne potpisujte objave – svaka već ima vaše korisničke podatke.
+
+      Umjesto „+1“ ili „Slažem se“, koristite gumb „Sviđa mi se“. Ako želite raspravu odvesti u drugom smjeru, otvorite povezanu objavu.
+
+      Ovo je javni forum, a rasprave indeksiraju tražilice. Zato neka jezik, poveznice i slike budu prikladni za obitelj i prijatelje
+
+      ## Objavljujte samo vlastite stvari
+
+      Nemojte dijeliti tuđe sadržaje bez dozvole. Ne smijete objavljivati poveznice, upute ili materijale koji krše autorska prava (npr. softver, glazbu, video ili slike), niti poticati kršenje zakona.
+
+      ## Powered by Schrack
+
+      Ovu stranicu vodi vaš prijateljski tim moderatora i vi, the community. Ako imate dodatna pitanja o tome kako stvari ovdje trebaju funkcionirati, otvorite novu temu i razgovarajmo! Ako postoji kritični ili hitni problem koji se ne može riješiti objavom ili prijavom, kontaktirajte moderatore.
   tos_topic:
     title: "Uvjeti korištenja"
   privacy_topic:
     title: "Izjava o privatnosti"
   badges:
+    mass_award:
+      errors:
+        invalid_csv: Naišli smo na pogrešku na liniji %{line_number}. Molimo potvrdite da CSV ima jednu e-poštu po retku.
+        too_many_csv_entries:
+          one: Previše unosa u CSV datoteci. Molimo vas da dostavite CSV datoteku s najviše %{count} unosom.
+          few: Previše unosa u CSV datoteci. Molimo vas da dostavite CSV datoteku s najviše %{count} unosa.
+          other: Previše unosa u CSV datoteci. Molimo vas da dostavite CSV datoteku s najviše %{count} unosa.
+        badge_disabled: Molimo, prvo aktivirajte značku %{badge_name} .
+        cant_grant_multiple_times: Ne možete dodijeliti značku %{badge_name} više puta jednom korisniku.
     editor:
       name: Urednik
       description: Prva izmjena objave
+      long_description: |
+        Ova značka se dodjeljuje prvi put kada uređujete jednu od svojih objava. Iako nećete moći zauvijek uređivati svoje objave, uređivanje se potiče - možete poboljšati formatiranje, ispraviti male pogreške ili dodati bilo što što ste propustili prilikom izvorne objave. Uredite kako biste svoje objave učinili još boljim!
+    wiki_editor:
+      name: Wiki urednik
+      description: Prvo uređivanje wiki
+      long_description: |
+        Ova značka se dodjeljuje prvi put kada uređujete jednu wiki objavu.
     basic_user:
       name: Osnovno
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Odobrene</a> sve osnovne funkcije
     member:
       name: Član
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Odobreni</a> pozivnica, grupne poruke, više lajkova
+      long_description: |
+        Ova značka se dodjeljuje kada dostignete 2. razinu povjerenja. Hvala vam što ste sudjelovali tijekom nekoliko tjedana kako biste se zaista pridružili našoj zajednici. Sada možete slati pozivnice sa svoje korisničke stranice ili pojedinačnih tema, kreirati grupne osobne poruke i imati više lajkova dnevno.
     regular:
       name: Stalni član
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Odobreno</a> prekategoriziraj, preimenuj, prati poveznice, wiki, više lajkova
+      long_description: |
+        Ova značka se dodjeljuje kada dostignete 3. razinu povjerenja. Hvala vam što ste redovito dio naše zajednice tijekom nekoliko mjeseci. Sada ste jedan od najaktivnijih čitatelja i pouzdan suradnik koji čini našu zajednicu sjajnom. Sada možete prekategorizirati i preimenovati teme, iskoristiti prednosti snažnijih zastavica neželjene pošte, a također ćete dobivati puno više lajkova dnevno.
     leader:
       name: Vođa
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Odobreno</a> globalno uređivanje, prikačivanje, zatvaranje, arhiviranje, razdvajanje i spajanje, više sviđanja
+      long_description: |
+        Ova značka se dodjeljuje kada dostignete razinu povjerenja 4. Vi ste vođa u ovoj zajednici koju je odabralo osoblje i svojim postupcima i riječima ovdje dajete pozitivan primjer ostatku zajednice. Imate mogućnost uređivanja svih objava, poduzimanja uobičajenih radnji moderatora tema kao što su prikvačivanje, zatvaranje, uklanjanje s popisa, arhiviranje, dijeljenje i spajanje.
     welcome:
       name: Dobrodošao
-      description: Primio like
+      description: Dobio/la like
+      long_description: |
+        Ova značka se dodjeljuje kada dobijete svoju prvu oznaku "sviđa mi se" na objavi. Čestitamo, objavili ste nešto što su vaši kolege članovi zajednice smatrali zanimljivim, cool ili korisnim!
     autobiographer:
       name: Autobiograf
+      description: Ispunjeni <a href="%{base_uri}/my/preferences/profile">podaci o profilu</a>
+      long_description: |
+        Ova značka se dodjeljuje za ispunjavanje <a href="%{base_uri}/my/preferences/profile">vašeg korisničkog profila</a> i odabir profilne slike. Ako zajednici date malo više informacija o tome tko ste i što vas zanima, zajednica postaje bolja i povezanija. Pridružite nam se!
     anniversary:
       name: Godišnjica
-      description: Aktivni član kroz jednu godinu, postao najmanje jednom
+      description: Aktivni član kroz jednu godinu s najmanje jednom objavom
+      long_description: |
+        Ova značka se dodjeljuje kada ste član godinu dana s barem jednom objavom u toj godini. Hvala vam što ste s nama i što doprinosite našoj zajednici. Ne bismo to mogli bez vas.
+    nice_post:
+      name: OK odgovor
+      description: Dobio/la 10 lajkova na odgovor
+      long_description: |
+        Ova značka se dodjeljuje kada vaš odgovor dobije 10 lajkova. Vaš odgovor je ostavio dojam na zajednicu i pomogao u pokretanju razgovora.
+    good_post:
+      name: Dobar odgovor
+      description: Dobio/la 25 lajkova na odgovor
+      long_description: |
+        Ova značka se dodjeljuje kada vaš odgovor dobije 25 lajkova. Vaš odgovor je bio izvanredan i učinio je razgovor mnogo zanimljivijim.
+    great_post:
+      name: Odličan odgovor
+      description: Dobio/la 50 lajkova na odgovor
+      long_description: |
+        Ova značka se dodjeljuje kada vaš odgovor dobije 50 lajkova. Ooo! Vaš odgovor je bio inspirativan, fascinantan, urnebesan ili pronicljiv i zajednica ga je jako cijenila!
     nice_topic:
-      name: Ljepa tema
+      name: Zgodna tema
+      description: Dobio/la 10 lajkova na temi
+      long_description: |
+        Ova značka se dodjeljuje kada vaša tema dobije 10 lajkova. Započeli ste zanimljiv razgovor u kojem je zajednica uživala.
     good_topic:
       name: Dobra tema
+      description: Dobio/la 25 lajkova na temi
+      long_description: |
+        Ova značka se dodjeljuje kada vaša tema dobije 25 lajkova. Započeli ste zanimljiv razgovor u kojem je zajednica uživala.
     great_topic:
       name: Odlična tema
+      description: Dobio/la 50 lajkova na temi
+      long_description: |
+        Ova značka se dodjeljuje kada vaša tema dobije 50 lajkova. Pokrenuli ste fascinantan razgovor i zajednici se svidjela živahna rasprava!
     nice_share:
-      name: Ljepo dijeljenje
-      description: Podijelio objavu s 25 jedinstvenih posjetitelja.
+      name: Korisno dijeljenje
+      description: Podijelio/la objavu s 25 jedinstvenih posjetitelja.
+      long_description: |
+        Ova značka se dodjeljuje za dijeljenje poveznice na koju je kliknulo 25 vanjskih posjetitelja. Hvala što širite vijest o našim raspravama i ovoj zajednici.
     good_share:
-      name: Dobro dijeljenje
-      description: Podijelio objavu s 300 jedinstvenih posjetitelja.
+      name: Sjajno dijeljenje
+      description: Podijelio/la objavu s 300 jedinstvenih posjetitelja
+      long_description: |
+        Ova značka se dodjeljuje za dijeljenje poveznice na koju je kliknulo 300 vanjskih posjetitelja. Dobar posao! Pokazali ste sjajnu raspravu mnogim novim ljudima i pomogli ovoj zajednici da raste.
     great_share:
-      name: Odlično dijeljenje
-      description: Podijelio objavu s 1000 jedinstvenih posjetitelja.
+      name: Odlična podjela
+      description: Podijelio/la objavu s 1000 jedinstvenih posjetitelja
+      long_description: |
+        Ova značka se dodjeljuje za dijeljenje poveznice na koju je kliknulo 1000 vanjskih posjetitelja. Vau! Promovirali ste zanimljivu raspravu pred ogromnom novom publikom i pomogli nam da značajno proširimo našu zajednicu!
     first_like:
-      name: Prvi like
-      description: Like-ao post
+      name: Prvi lajk
+      description: Lajkao/la objavu
+      long_description: |
+        Ova značka se dodjeljuje prvi put kada označite objavu sa "sviđa mi se" pomoću gumba :heart: . Lajkanje objava odličan je način da obavijestite ostale članove zajednice da je ono što su objavili bilo zanimljivo, korisno, fora ili zabavno. Podijelite ljubav!
     first_flag:
       name: Prva zastavica
-      description: Označio objavu
+      description: Stavio/la prvu zastavicu na objavu
+      long_description: |
+        Ova značka se dodjeljuje prvi put kada zastavicom označite objavu. Označavanjem svi pomažemo da ovo mjesto ostane ugodno za sve. Ako primijetite objave koje iz bilo kojeg razloga zahtijevaju pažnju moderatora, slobodno ih označite. Ako uočite problem, :flag_black: označite ga!
+    promoter:
+      name: Promotor
+      description: Pozvao/la korisnika
+      long_description: |
+        Ova značka se dodjeljuje kada nekoga pozovete da se pridruži zajednici putem gumba za poziv na vašoj korisničkoj stranici ili na dnu teme. Pozivanje prijatelja koji bi mogli biti zainteresirani za određene rasprave odličan je način za upoznavanje novih ljudi s našom zajednicom, hvala!
+    campaigner:
+      name: Aktivist/kinja
+      description: Pozvao/la 3 osnovna korisnika
+      long_description: |
+        Ova značka se dodjeljuje kada pozovete 3 osobe koje su potom provele dovoljno vremena na stranici da postanu osnovni korisnici. Živahnoj zajednici potreban je redoviti priljev novih članova koji redovito sudjeluju i dodaju novi život u razgovore.
     first_share:
       name: Prva podjela
-      description: Podijelio objavu
+      description: Podijelio/la objavu
+      long_description: |
+        Ova značka se dodjeljuje prvi put kada podijelite poveznicu na odgovor ili temu pomoću gumba za dijeljenje. Dijeljenje poveznica odličan je način da podijelite zanimljive rasprave s ostatkom svijeta i proširite svoju zajednicu.
     first_link:
       name: Prva poveznica
+      description: Dodao/la link na drugu temu
+      long_description: |
+        Ova značka se dodjeljuje prvi put kada dodate poveznicu na drugu temu. Povezivanje tema pomaže drugim čitateljima da pronađu zanimljive povezane razgovore, pokazujući veze između tema u oba smjera. Slobodno povezujte!
     first_quote:
       name: Prvi citat
+      description: Citirao/la objavu
+      long_description: |
+        Ova značka se dodjeljuje prvi put kada citirate objavu u svom odgovoru. Citiranje relevantnih dijelova ranijih objava u vašem odgovoru pomaže u održavanju povezanosti rasprava i održavanju njihove teme. Najlakši način citiranja je označavanje dijela objave, a zatim pritisak na bilo koji gumb za odgovor. Citirajte obilato!
     read_guidelines:
-      name: Pročitao smjernice
-      description: Pročitajte <a href="%{base_uri}/guidelines">smjernice zajednice</a>
+      name: Pročitao/la smjernice
+      description: Pročitajne <a href="%{base_uri}/guidelines">smjernice zajednice</a>
+      long_description: |
+        Ova značka dodjeljuje se za <a href="%{base_uri}/guidelines">čitanje smjernica zajednice</a>. Praćenje i dijeljenje ovih jednostavnih smjernica pomaže u izgradnji sigurne, zabavne i održive zajednice za sve. Uvijek zapamtite da postoji još jedno ljudsko biće, vrlo slično vama, s druge strane tog ekrana. Budite ljubazni!
     reader:
       name: Čitatelj
+      description: Pročitao/la svaki odgovor u temi s više od 100 odgovora
+      long_description: |
+        Ova značka se dodjeljuje prvi put kada pročitate dugu temu s više od 100 odgovora. Pažljivo čitanje razgovora pomaže vam da pratite raspravu, razumijete različita gledišta i vodi do zanimljivijih razgovora. Što više čitate, razgovor postaje bolji. Kao što volimo reći, čitanje je temeljno! :slight_smile:
+    appreciated:
+      name: Cijenjen/a
+      description: Dobio/la 1 lajk na 20 objava
+      long_description: |
+        Ova značka se dodjeljuje kada dobijete barem jedan lajk na 20 različitih objava. Zajednica uživa u vašim doprinosima razgovorima!
+    thank_you:
+      name: Hvala
+      description: Dobio/la 20 lajkova i dao/la 10 lajkova
+      long_description: |
+        Ova značka se dodjeljuje kada imate 20 lajkova i zauzvrat date 10 ili više lajkova. Kad netko lajka vaše objave, nađete vremena da pokažete da se vama sviđa i ono što drugi objavljuju.
     first_emoji:
       name: Prvi emotikon
       description: Korišten je emotikon u objavi
+      long_description: |
+        Ova značka se dodjeljuje prvi put kada dodate emotikon svojoj objavi :thumbsup:. Emotikoni vam omogućuju da prenesete emocije u svojim objavama, od sreće :smiley: preko tuge :anguished: do ljutnje :angry: i svega između :sunglasses:. Samo upišite : (dvotočka) ili pritisnite gumb alatne trake Emotikona u uređivaču kako biste odabrali između stotina izbora :ok_hand:
+    first_mention:
+      name: Prvo spominjanje
+      description: Spomenuo/la korisnika u objavi
+      long_description: |
+        Ova značka se dodjeljuje prvi put kada spomenete nečije @korisničko ime u svojoj objavi. Svako spominjanje generira obavijest toj osobi, tako da zna za vašu objavu. Samo počnite tipkati @ (simbol at) kako biste spomenuli bilo kojeg korisnika ili, ako je dopušteno, grupu – to je praktičan način da im nešto skrenete pozornost.
     first_onebox:
       long_description: |
         Ova značka se dodjeljuje kada prvi put objavite neku poveznicu samu u retku, koja se automatski proširuje u okvir sa sažetkom, naslovom i (ako je dostupno) slikom.
+    first_reply_by_email:
+      name: Prvi odgovor putem e-maila
+      description: Odgovorio/la na objavu putem e-maila
+      long_description: |
+        Ova značka se dodjeljuje prvi put kada odgovorite na objavu putem e-maila :e-mail:.
+    new_user_of_the_month:
+      name: "Novi korisnik mjeseca"
+      description: Izvanredni doprinosi u prvom mjesecu
+      long_description: |
+        Ova značka dodjeljuje se kako bi se čestitalo dvama novim korisnicima svaki mjesec za njihov izvrstan ukupni doprinos, mjereno time koliko često su njihove objave lajkane i od koga.
     enthusiast:
-      name: Entuzijast
-      description: Posjetio 10 dana za redom
+      name: Sljedbenik
+      description: Posjetio/la 10 dana za redom
+      long_description: |
+        Ova značka se dodjeljuje za posjet od 10 uzastopnih dana. Hvala vam što ste s nama više od tjedan dana!
+    aficionado:
+      name: Aficionado
+      description: Posjetio/la 100 dana za redom
+      long_description: |
+        Ova značka se dodjeljuje za posjet 100 uzastopnih dana. To je više od tri mjeseca!
     badge_title_metadata: "%{display_name} značka na %{site_title}"
   tags:
     title: "Oznake"
@@ -2437,6 +2799,7 @@ hr:
       reject_post:
         complete: "Objava je odbijena."
       approve_user:
+        title: "Odobri korisnika"
         complete: "Korisnik odobren."
       reject_user:
         delete:
@@ -2444,6 +2807,13 @@ hr:
           complete: "Korisnik izbrisan."
       reject:
         title: "Odbij"
+      scrub:
+        title: Obriši zapis
+      no_action_post:
+        title: "Nema akcije"
+      delete_post:
+        title: "Izbrišite objavu"
+        complete: "Post izbrisan"
       no_action_user:
         title: "Nema akcije"
       delete_user:
