@@ -279,6 +279,7 @@ end
 # Table name: tags
 #
 #  id                 :integer          not null, primary key
+#  locale             :string(20)
 #  name               :string           not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
