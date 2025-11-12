@@ -238,9 +238,9 @@ function wrapWithErrorHandler(func, messageKey) {
 }
 
 /**
- * @typedef {PluginApi} PluginApi
+ * @typedef {_PluginApi} PluginApi
  */
-class PluginApi {
+class _PluginApi {
   constructor(container) {
     this.container = container;
     this.h = h;
@@ -3460,7 +3460,7 @@ function getPluginApi() {
   let pluginApi = owner.lookup("plugin-api:main");
 
   if (!pluginApi) {
-    pluginApi = new PluginApi(owner);
+    pluginApi = new _PluginApi(owner);
     owner.registry.register("plugin-api:main", pluginApi, {
       instantiate: false,
     });
@@ -3475,7 +3475,7 @@ function getPluginApi() {
 /**
  * Executes the provided callback function with the `PluginApi` object.
  *
- * @param {(api: PluginApi, opts: object) => any} apiCodeCallback - The callback function to execute
+ * @param {(api: _PluginApi, opts: object) => any} apiCodeCallback - The callback function to execute
  * @param {object} [opts] - Optional additional options to pass to the callback function.
  * @returns {any} The result of the `callback` function, if executed
  */

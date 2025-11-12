@@ -3,6 +3,7 @@ import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
+/** @returns {any} */
 export function buildGroupPage(type) {
   return class GroupActivityPosts extends DiscourseRoute {
     type = type;

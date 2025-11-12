@@ -13,6 +13,7 @@ export default class AdminConfigAreasUserFieldsList extends Component {
   @service toasts;
   @service adminUserFields;
 
+  /** @type {any} */
   fieldTypes = UserField.fieldTypes();
 
   get fields() {

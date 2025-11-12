@@ -6,10 +6,10 @@
  * @property {number} topicId
  * @property {number} categoryId
  * @property {import("discourse/models/session").default} session
- * @property {import("float-kit/services/menu").default} menu
+ * @property {import("discourse/float-kit/services/menu").default} menu
  * @property {import("discourse/services/capabilities").default} capabilities
  * @property {import("discourse/services/modal").default} modal
- * @property {import("float-kit/services/toasts").default} toasts
+ * @property {import("discourse/float-kit/services/toasts").default} toasts
  * @property {import("discourse/models/site").default} site
  * @property {(toolbar: import("discourse/lib/composer/toolbar").ToolbarBase) => void} replaceToolbar
  * @property {(nodeView: import("discourse/static/prosemirror/lib/glimmer-node-view").default) => void} addGlimmerNodeView

@@ -97,6 +97,7 @@ class RouteNode {
   }
 }
 
+/** @returns {any} */
 export function mapRoutes() {
   const tree = new RouteNode("root");
   const extras = [];

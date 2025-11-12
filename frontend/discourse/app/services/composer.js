@@ -147,6 +147,9 @@ export default class ComposerService extends Service {
     this._showPreview = value;
   }
 
+  /**
+   * @returns {import("discourse/controllers/topic").default};
+   */
   get topicController() {
     return getOwner(this).lookup("controller:topic");
   }

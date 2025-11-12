@@ -12,6 +12,12 @@ export default class Tag extends RestModel {
 
   @discourseComputed("id")
   searchContext(id) {
-    return { type: "tag", id, tag: this, name: id };
+    return {
+      type: "tag",
+      id,
+      /** @type Tag */
+      tag: this,
+      name: id,
+    };
   }
 }

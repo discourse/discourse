@@ -303,6 +303,7 @@ export default class PresenceService extends Service {
   getChannel(channelName) {
     return PresenceChannel.create({
       name: channelName,
+      /** @type PresenceService */
       presenceService: this,
     });
   }

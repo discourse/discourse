@@ -25,6 +25,7 @@ export default class AdminUserFieldsForm extends Component {
   originalRequirement = this.args.userField.requirement;
   userField;
 
+  /** @returns {any} */
   get fieldTypes() {
     return UserField.fieldTypes();
   }

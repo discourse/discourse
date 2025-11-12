@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "es2021",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "experimentalDecorators": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "noEmitOnError": false,
+    "declaration": true,
+    "outDir": "declarations",
+    "composite": true,
+    "types": ["discourse/external-types"],
+  }
+}
