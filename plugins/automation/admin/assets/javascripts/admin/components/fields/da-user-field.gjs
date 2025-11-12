@@ -1,7 +1,7 @@
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
+import UserChooser from "discourse/select-kit/components/user-chooser";
 import { i18n } from "discourse-i18n";
-import UserChooser from "select-kit/components/user-chooser";
 import BaseField from "./da-base-field";
 import DAFieldDescription from "./da-field-description";
 import DAFieldLabel from "./da-field-label";

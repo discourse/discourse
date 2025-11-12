@@ -6,13 +6,13 @@ import { alias, empty, sort } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { compare } from "@ember/utils";
+import AdminUser from "discourse/admin/models/admin-user";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { grantableBadges } from "discourse/lib/grant-badge-utils";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import UserBadge from "discourse/models/user-badge";
 import { i18n } from "discourse-i18n";
-import AdminUser from "admin/models/admin-user";
 
 export default class AdminUserBadgesController extends Controller {
   @service dialog;

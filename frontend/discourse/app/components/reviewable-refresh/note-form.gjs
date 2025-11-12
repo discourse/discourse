@@ -1,7 +1,8 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import ExpandingTextArea from "discourse/components/expanding-text-area";
 import Form from "discourse/components/form";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -28,6 +29,11 @@ export default class ReviewableNoteForm extends Component {
   @action
   registerApi(api) {
     this.formApi = api;
+  }
+
+  @action
+  handleInput(setFn, event) {
+    setFn(event.target.value);
   }
 
   /**
@@ -88,24 +94,28 @@ export default class ReviewableNoteForm extends Component {
           as |field|
         >
           <div class="reviewable-note-form__textarea-wrapper">
-            <field.Textarea
-              placeholder={{i18n "review.notes.placeholder"}}
-              class="reviewable-note-form__textarea"
-              rows="4"
+            <field.Custom>
+              <ExpandingTextArea
+                @value={{field.value}}
+                @input={{fn this.handleInput field.set}}
+                @name={{field.name}}
+                placeholder={{i18n "review.notes.placeholder"}}
+                class="reviewable-note-form__textarea"
+                rows="1"
+              />
+            </field.Custom>
+            <PluginOutlet
+              @name="reviewable-note-form-after-note"
+              @connectorTagName="div"
+              @outletArgs={{lazyHash form=form reviewable=@reviewable}}
             />
           </div>
         </form.Field>
 
-        <PluginOutlet
-          @name="reviewable-note-form-after-note"
-          @connectorTagName="div"
-          @outletArgs={{lazyHash form=form}}
-        />
-
         <form.Actions>
           <form.Submit
             @label="review.notes.add_note_button"
-            class="btn-primary"
+            class="btn-small btn-primary"
           />
         </form.Actions>
       </Form>

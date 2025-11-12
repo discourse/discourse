@@ -1,9 +1,9 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import ThemesListItem from "discourse/admin/components/themes-list-item";
+import Theme from "discourse/admin/models/theme";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
-import ThemesListItem from "admin/components/themes-list-item";
-import Theme from "admin/models/theme";
 
 module("Integration | Component | themes-list-item", function (hooks) {
   setupRenderingTest(hooks);

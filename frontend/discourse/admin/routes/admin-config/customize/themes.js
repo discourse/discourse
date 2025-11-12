@@ -1,8 +1,8 @@
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import Theme from "discourse/admin/models/theme";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
-import Theme from "admin/models/theme";
 
 export default class AdminConfigThemesAndComponentsThemesRoute extends DiscourseRoute {
   queryParams = {

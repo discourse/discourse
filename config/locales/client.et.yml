@@ -205,7 +205,7 @@ et:
     joined: "Liitus"
     admin_title: "Admin"
     show_more: "kuva veel"
-    show_help: "suvandid"
+    show_help: "Suvandid"
     links: "Viited"
     links_lowercase:
       one: "viide"
@@ -410,7 +410,7 @@ et:
       replies:
         one: "%{count} vastus"
         other: "%{count} vastust"
-      edit: "Muuda"
+      edit: "Muuda postitust"
       save: "Salvesta"
       cancel: "Tühista"
       filters:
@@ -459,6 +459,7 @@ et:
       user_label: "Kasutaja"
       notes:
         delete: "Kustuta"
+      topic_label: "Teema"
       review_user: "Kasutaja"
       insights:
         activities:
@@ -2496,7 +2497,6 @@ et:
         next_prev: "%{shortcut} Järgmine/eelmine sektsioon"
       application:
         title: "Rakendus"
-        create: "%{shortcut} Loo uus teema"
         notifications: "%{shortcut} Ava teavitused"
         user_profile_menu: "%{shortcut} Ava kasutajamenüü"
         show_incoming_updated_topics: "%{shortcut} Näita uuendatud teemasid"

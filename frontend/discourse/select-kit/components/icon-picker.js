@@ -9,12 +9,12 @@ import {
   disableMissingIconWarning,
   enableMissingIconWarning,
 } from "discourse/lib/icon-library";
-import FilterForMore from "select-kit/components/filter-for-more";
-import MultiSelectComponent from "select-kit/components/multi-select";
+import FilterForMore from "discourse/select-kit/components/filter-for-more";
+import MultiSelectComponent from "discourse/select-kit/components/multi-select";
 import {
   MAIN_COLLECTION,
   pluginApiIdentifiers,
-} from "select-kit/components/select-kit";
+} from "discourse/select-kit/components/select-kit";
 
 const MORE_ICONS_COLLECTION = "MORE_ICONS_COLLECTION";
 const MAX_RESULTS_RETURNED = 200;

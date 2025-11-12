@@ -388,7 +388,7 @@ hr:
     joined: "Prijavljen"
     admin_title: "Administrator"
     show_more: "Prikaži više"
-    show_help: "postavke"
+    show_help: "Mogućnosti"
     links: "Linkovi"
     links_lowercase:
       one: "poveznica"
@@ -760,7 +760,7 @@ hr:
       topic: "Tema:"
       filtered_topic: "Filtrirali ste sadržaj na koji se mogu dodati osvrti u jednoj temi."
       filtered_user: "Korisnik"
-      filtered_reviewed_by: "Pregledano"
+      filtered_reviewed_by: "Pregledao"
       show_all_topics: "prikaži sve teme"
       deleted_post: "(post izbrisan)"
       deleted_user: "(korisnik izbrisan)"
@@ -816,7 +816,7 @@ hr:
         one: "%{count} odgovor"
         few: "%{count} odgovora"
         other: "%{count} odgovora"
-      edit: "Izmijeni"
+      edit: "Izmjeni objavu"
       save: "Spremi"
       cancel: "Odustani"
       new_topic: "Odobrenjem ove stavke kreirat će se nova tema"
@@ -838,7 +838,6 @@ hr:
           created_at: "Stvoreno"
           created_at_asc: "Stvoreno (obrnutim slijedom)"
         priority:
-          title: "Minimalni prioritet"
           any: "(bilo koji)"
           low: "Nizak"
           medium: "Srednji"
@@ -927,7 +926,7 @@ hr:
         chars_remaining: "Preostalo je %{count} znakova"
         delete_note: "Izbrišite ovu bilješku"
         delete: "Pobriši"
-      new_topic_label: "Nova tema"
+      topic_label: "Tema"
       queued_user: "Korisnik u redu čekanja"
       posted_in: "Objavljeno u"
       flagged_user: "Označeni korisnik"
@@ -943,9 +942,6 @@ hr:
           one: "Označio %{count} jedinstveni korisnik"
           few: "Označila %{count} jedinstvena korisnika"
           other: "Označilo %{count} jedinstvenih korisnika"
-        similar_posts: "Slične prošle objave"
-        flagged_in_timeframe: "Prethodno označeno: %{count} "
-        user_activity: "Aktivnost korisnika"
         activities:
           new_account: "novi račun"
           trust_level: "razina povjerenja: %{trustLevelName}"
@@ -2838,7 +2834,6 @@ hr:
         title: "Prevođenje objave"
         select: "Odaberite prijevod"
         save: "Spremite prijevod"
-        original_content: "Izvorni sadržaj objave"
         placeholder: "Ovdje unesite prijevod objave..."
       group_mentioned_limit:
         one: "<b>Upozorenje!</b> Spomenuli ste <a href='%{group_link}'>%{group}</a>, međutim ova grupa ima više članova od administratora konfiguriranog ograničenja spominjanja od %{count} korisnika. Nitko neće biti obaviješten."
@@ -3015,7 +3010,6 @@ hr:
           desc: "Odgovorite bez promjene zadnjeg datuma odgovora"
         toggle_unlisted:
           label: Uključi/isključi neobjavljeno
-          desc: Neobjavljene teme dostupne članovima samo putem izravne poveznice
       reload: "Ponovno učitaj"
       ignore: "Zanemari"
       image_alt_text:
@@ -4797,7 +4791,6 @@ hr:
         go_to_unread_post: "%{shortcut} Idi na prvi nepročitani post"
       application:
         title: "Aplikacija"
-        create: "%{shortcut} Otvori novu temu"
         notifications: "%{shortcut} Otvori obavijesti"
         hamburger_menu: "%{shortcut} Otvorite navigacijski izbornik"
         user_profile_menu: "%{shortcut} Otvori korisnički izbornik"

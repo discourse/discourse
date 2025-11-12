@@ -35,7 +35,6 @@ export const CRITICAL_DEPRECATIONS = [
   "discourse.script-tag-discourse-plugin",
   "discourse.post-stream-widget-overrides",
   "discourse.widgets-end-of-life",
-  "discourse.jquery-autocomplete",
 ];
 
 const REPLACEMENT_URLS = {};

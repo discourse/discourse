@@ -1413,8 +1413,6 @@ sk:
       yaxis: "Deň"
       description: "Požiadavky API na bežné kľúče API a používateľské kľúče API."
     consolidated_page_views_browser_detection:
-      title: "Konsolidované zobrazenia stránok s detekciou prehliadača (experimentálne)"
-      title_legacy: "Konsolidované zobrazenia stránok s detekciou prehliadača (experimentálne)"
       xaxis:
         page_view_anon_browser: "Anonymný prehliadač"
         page_view_logged_in_browser: "Prihlásený prehliadač"

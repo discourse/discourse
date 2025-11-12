@@ -5,8 +5,8 @@ import { service } from "@ember/service";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { i18n } from "discourse-i18n";
-import GroupChooser from "select-kit/components/group-chooser";
 
 export default class AdminConfigAreasAboutExtraGroups extends Component {
   @service site;

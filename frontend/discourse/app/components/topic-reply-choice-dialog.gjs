@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
 import icon from "discourse/helpers/d-icon";
 import discourseTags from "discourse/helpers/discourse-tags";
+import { eq } from "discourse/truth-helpers";
 
 const TopicLabelButton = <template>
   <DButton class={{@class}} @action={{@action}}>

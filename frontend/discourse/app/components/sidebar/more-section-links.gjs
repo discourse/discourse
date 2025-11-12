@@ -6,7 +6,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import DropdownMenu from "discourse/components/dropdown-menu";
-import DMenu from "float-kit/components/d-menu";
+import DMenu from "discourse/float-kit/components/d-menu";
 import MoreSectionLink from "./more-section-link";
 import MoreSectionTrigger from "./more-section-trigger";
 import SectionLinkButton from "./section-link-button";

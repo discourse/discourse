@@ -1,14 +1,16 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import DEditor from "discourse/components/d-editor";
 import TextField from "discourse/components/text-field";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import PostLocalization from "discourse/models/post-localization";
+import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import { i18n } from "discourse-i18n";
-import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 
 export default class PostTranslationEditor extends Component {
   @service composer;
@@ -103,6 +105,22 @@ export default class PostTranslationEditor extends Component {
     }
   }
 
+  @action
+  setupUploads(element) {
+    if (this.args.uppyComposerUpload && this.composer.allowUpload) {
+      this.args.uppyComposerUpload.setup(element);
+      this._uploadsSetup = true;
+    }
+  }
+
+  @action
+  teardownUploads(element) {
+    if (this._uploadsSetup && this.args.uppyComposerUpload) {
+      this.args.uppyComposerUpload.teardown(element);
+      this._uploadsSetup = false;
+    }
+  }
+
   <template>
     <div>
       <DropdownSelectBox
@@ -144,8 +162,13 @@ export default class PostTranslationEditor extends Component {
       @value={{readonly this.composer.model.reply}}
       @change={{this.handleInput}}
       @placeholder="composer.translations.placeholder"
+      @extraButtons={{@extraButtons}}
       @forcePreview={{true}}
       @processPreview={{false}}
+      @composerEvents={{true}}
+      @onPopupMenuAction={{this.composer.onPopupMenuAction}}
+      @popupMenuOptions={{this.composer.popupMenuOptions}}
+      @showLink={{@showLink}}
       @loading={{this.composer.loading}}
       @hijackPreview={{this.composer.hijackPreview}}
       @disabled={{this.composer.disableTextarea}}
@@ -157,6 +180,8 @@ export default class PostTranslationEditor extends Component {
         composer=this.composer.model
         editorType="composer"
       }}
+      {{didInsert this.setupUploads}}
+      {{willDestroy this.teardownUploads}}
     />
   </template>
 }

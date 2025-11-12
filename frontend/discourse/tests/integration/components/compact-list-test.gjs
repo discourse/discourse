@@ -1,9 +1,9 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import SiteSettingComponent from "discourse/admin/components/site-setting";
+import SiteSetting from "discourse/admin/models/site-setting";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import SiteSettingComponent from "admin/components/site-setting";
-import SiteSetting from "admin/models/site-setting";
 
 module("Integration | Component | compact-list site-setting", function (hooks) {
   setupRenderingTest(hooks);

@@ -9,10 +9,10 @@ import BulkTopicActions, {
 } from "discourse/components/modal/bulk-topic-actions";
 import DismissNew from "discourse/components/modal/dismiss-new";
 import DismissReadModal from "discourse/components/modal/dismiss-read";
+import DMenu from "discourse/float-kit/components/d-menu";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import DMenu from "float-kit/components/d-menu";
 
 const _customButtons = [];
 const _customOnSelection = {};

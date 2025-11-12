@@ -2,8 +2,8 @@ import { action } from "@ember/object";
 import { attributeBindings, classNames } from "@ember-decorators/component";
 import { makeArray } from "discourse/lib/helpers";
 import DiscourseURL from "discourse/lib/url";
-import MiniTagChooser from "select-kit/components/mini-tag-chooser";
-import { pluginApiIdentifiers } from "select-kit/components/select-kit";
+import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
+import { pluginApiIdentifiers } from "discourse/select-kit/components/select-kit";
 
 @attributeBindings("selectKit.options.categoryId:category-id")
 @classNames("tags-intersection-chooser")

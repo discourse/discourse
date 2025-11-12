@@ -7,12 +7,12 @@ import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 
 export default class CustomReaction extends RestModel {
-  static toggle(post, reactionId) {
+  static toggle(post, reactionId, appEvents) {
     return ajax(
       `/discourse-reactions/posts/${post.id}/custom-reactions/${reactionId}/toggle.json`,
       { type: "PUT" }
     ).then((result) => {
-      post.appEvents.trigger("discourse-reactions:reaction-toggled", {
+      appEvents.trigger("discourse-reactions:reaction-toggled", {
         post: result,
         reaction: result.current_user_reaction,
       });

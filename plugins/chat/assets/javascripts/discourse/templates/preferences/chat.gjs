@@ -1,12 +1,12 @@
 import { Input } from "@ember/component";
 import { array, concat, fn, get, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { eq } from "truth-helpers";
 import EmojiPicker from "discourse/components/emoji-picker";
 import SaveControls from "discourse/components/save-controls";
 import withEventValue from "discourse/helpers/with-event-value";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 
 export default <template>
   <label class="control-label">{{i18n "chat.title_capitalized"}}</label>

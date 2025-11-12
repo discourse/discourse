@@ -2,7 +2,7 @@
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import MiniTagChooser from "select-kit/components/mini-tag-chooser";
+import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 
 export default class ReviewableFieldTags extends Component {
   @action

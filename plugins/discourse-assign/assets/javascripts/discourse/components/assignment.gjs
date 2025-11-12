@@ -3,12 +3,12 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { not } from "truth-helpers";
 import TextArea from "discourse/components/textarea";
 import icon from "discourse/helpers/d-icon";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
+import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
-import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
 
 export default class Assignment extends Component {
   @service siteSettings;

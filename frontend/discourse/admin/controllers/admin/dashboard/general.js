@@ -1,14 +1,14 @@
 import { inject as controller } from "@ember/controller";
 import { computed } from "@ember/object";
 import { service } from "@ember/service";
+import { REPORT_MODES } from "discourse/admin/lib/constants";
+import AdminDashboard from "discourse/admin/models/admin-dashboard";
+import Report from "discourse/admin/models/report";
 import { setting } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
-import { REPORT_MODES } from "admin/lib/constants";
-import AdminDashboard from "admin/models/admin-dashboard";
-import Report from "admin/models/report";
 import AdminDashboardTabController from "../../admin-dashboard-tab";
 
 function staticReport(reportType) {

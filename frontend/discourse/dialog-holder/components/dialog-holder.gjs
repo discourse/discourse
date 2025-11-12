@@ -5,8 +5,8 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import A11yDialog from "a11y-dialog";
 import { modifier } from "ember-modifier";
-import { notEq, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import { notEq, or } from "discourse/truth-helpers";
 
 export default class DialogHolder extends Component {
   @service dialog;

@@ -401,7 +401,7 @@ en:
     joined: "Joined"
     admin_title: "Admin"
     show_more: "show more"
-    show_help: "options"
+    show_help: "Options"
     links: "Links"
     links_lowercase:
       one: "link"
@@ -780,7 +780,7 @@ en:
       topic: "Topic:"
       filtered_topic: "You have filtered to reviewable content in a single topic."
       filtered_user: "User"
-      filtered_reviewed_by: "Reviewed By"
+      filtered_reviewed_by: "Reviewed by"
       show_all_topics: "show all topics"
       deleted_post: "(post deleted)"
       deleted_user: "(user deleted)"
@@ -831,7 +831,7 @@ en:
       replies:
         one: "%{count} reply"
         other: "%{count} replies"
-      edit: "Edit"
+      edit: "Edit Post"
       save: "Save"
       cancel: "Cancel"
       new_topic: "Approving this item will create a new topic"
@@ -855,7 +855,7 @@ en:
           created_at_asc: "Created At (reverse)"
 
         priority:
-          title: "Minimum Priority"
+          title: "Minimum priority"
           any: "(any)"
           low: "Low"
           medium: "Medium"
@@ -927,6 +927,7 @@ en:
       post_flagged_as: "Post flagged as"
       chat_flagged_as: "Chat flagged as"
       queued_post_label: "Queued post"
+      queued_topic_label: "Queued topic"
       user_label: "User"
       assigned_to: "Assigned to"
       moderator_actions: "Moderator actions"
@@ -945,13 +946,13 @@ en:
         note_added_by: "Moderator note by %{username} · %{relativeDate}"
         no_events: "No timeline events to display"
       notes:
-        add_note_description: "Visible only to moderators. Use this note to add context or decisions about the review."
+        add_note_description: "Add a note to provide context to other moderators."
         add_note_button: "Add note"
         placeholder: "Write your note here..."
         chars_remaining: "%{count} characters remaining"
         delete_note: "Delete this note"
         delete: "Delete"
-      new_topic_label: "New topic"
+      topic_label: "Topic"
       queued_user: "Queued user"
       posted_in: "Posted in"
       flagged_user: "Flagged user"
@@ -967,9 +968,11 @@ en:
         flagged_by_users:
           one: "Flagged by %{count} unique user"
           other: "Flagged by %{count} unique users"
-        similar_posts: "Similar past posts"
-        flagged_in_timeframe: "%{count} flagged previously"
-        user_activity: "User activity"
+        similar_posts: "Past violations"
+        flagged_in_timeframe:
+          one: "%{count} confirmed flag"
+          other: "%{count} confirmed flags"
+        user_activity: "User info"
         activities:
           new_account: "new account"
           trust_level: "trust level: %{trustLevelName}"
@@ -1456,6 +1459,8 @@ en:
       new_private_message: "New Message"
       private_message: "Message"
       private_messages: "Messages"
+      upcoming_changes:
+        title: "Upcoming change enabled"
       user_notifications:
         filters:
           filter_by: "Filter By"
@@ -4950,7 +4955,7 @@ en:
         go_to_unread_post: "%{shortcut} Go to the first unread post"
       application:
         title: "Application"
-        create: "%{shortcut} Create a new topic"
+        create: "%{shortcut} Create a new topic or personal message"
         notifications: "%{shortcut} Open notifications"
         hamburger_menu: "%{shortcut} Open navigation menu"
         user_profile_menu: "%{shortcut} Open user menu"

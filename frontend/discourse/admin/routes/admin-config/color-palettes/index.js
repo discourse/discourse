@@ -1,8 +1,8 @@
 import Route from "@ember/routing/route";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import ColorScheme from "discourse/admin/models/color-scheme";
+import Theme from "discourse/admin/models/theme";
 import { ajax } from "discourse/lib/ajax";
-import ColorScheme from "admin/models/color-scheme";
-import Theme from "admin/models/theme";
 
 export default class AdminConfigColorPalettesIndexRoute extends Route {
   async model() {

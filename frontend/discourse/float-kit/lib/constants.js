@@ -91,7 +91,7 @@ export const MENU = {
   portalOutletId: "d-menu-portal-outlet",
 };
 
-import DDefaultToast from "float-kit/components/d-default-toast";
+import DDefaultToast from "discourse/float-kit/components/d-default-toast";
 
 export const TOAST = {
   options: {

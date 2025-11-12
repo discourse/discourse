@@ -2,13 +2,13 @@ import Component from "@glimmer/component";
 import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import DMenu from "discourse/float-kit/components/d-menu";
 import bodyClass from "discourse/helpers/body-class";
 import icon from "discourse/helpers/d-icon";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import DMenu from "float-kit/components/d-menu";
 import { TABLE_AI_LAYOUT, TABLE_LAYOUT } from "../services/gists";
 
 export default class AiGistToggle extends Component {

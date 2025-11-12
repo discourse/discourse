@@ -684,7 +684,7 @@ ja:
           other: "ユーザー: %{count} 人"
       replies:
         other: "返信: %{count} 件"
-      edit: "編集"
+      edit: "投稿を編集"
       save: "保存"
       cancel: "キャンセル"
       new_topic: "この項目を承認すると新しいトピックが作成されます"
@@ -706,7 +706,6 @@ ja:
           created_at: "作成日"
           created_at_asc: "作成日 (昇順)"
         priority:
-          title: "最低優先度"
           any: "(すべて)"
           low: "低"
           medium: "普通"
@@ -795,7 +794,7 @@ ja:
         chars_remaining: "残り %{count} 文字"
         delete_note: "このメモを削除する"
         delete: "削除"
-      new_topic_label: "新規トピック"
+      topic_label: "トピック"
       queued_user: "キューのユーザー"
       posted_in: "投稿先:"
       flagged_user: "通報されたユーザー"
@@ -808,9 +807,6 @@ ja:
         flag_volume: "通報回数"
         flagged_by_users:
           other: "%{count} 人のユニークユーザーによる通報"
-        similar_posts: "過去の同様の投稿"
-        flagged_in_timeframe: "過去に %{count} 回通報"
-        user_activity: "ユーザーアクティビティ"
         activities:
           new_account: "新規アカウント"
           trust_level: "信頼レベル: %{trustLevelName}"
@@ -2564,7 +2560,6 @@ ja:
         title: "投稿の翻訳"
         select: "翻訳を選択"
         save: "翻訳を保存"
-        original_content: "元の投稿のコンテンツ"
         translation: "翻訳"
         placeholder: "ここに投稿の翻訳を入力します..."
       group_mentioned_limit:
@@ -2715,7 +2710,6 @@ ja:
           desc: "最新の返信日を変更せずに返信します"
         toggle_unlisted:
           label: 非表示の切り替え
-          desc: 非表示のトピックは、メンバーがダイレクトリンクでのみアクセスできます
       reload: "再読み込み"
       ignore: "無視する"
       image_alt_text:
@@ -4310,7 +4304,6 @@ ja:
         go_to_unread_post: "%{shortcut} 最初の未読の投稿に移動"
       application:
         title: "アプリケーション"
-        create: "%{shortcut} 新しいトピックを作成"
         notifications: "%{shortcut} 通知を開く"
         hamburger_menu: "%{shortcut} ナビゲーションメニューを開く"
         user_profile_menu: "%{shortcut} ユーザーメニューを開く"

@@ -16,9 +16,9 @@ import { topicLevels } from "discourse/lib/notification-levels";
 import Category from "discourse/models/category";
 import Topic from "discourse/models/topic";
 import autoFocus from "discourse/modifiers/auto-focus";
+import CategoryChooser from "discourse/select-kit/components/category-chooser";
+import TagChooser from "discourse/select-kit/components/tag-chooser";
 import { i18n } from "discourse-i18n";
-import CategoryChooser from "select-kit/components/category-chooser";
-import TagChooser from "select-kit/components/tag-chooser";
 
 const _customActions = {};
 

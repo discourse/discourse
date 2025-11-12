@@ -354,7 +354,6 @@ th:
       title: "รีวิว"
       topic: "กระทู้:"
       filtered_user: "ผู้ใช้"
-      filtered_reviewed_by: "รีวิวโดย"
       show_all_topics: "แสดงกระทู้ทั้งหมด"
       deleted_post: "(โพสต์ถูกลบ)"
       deleted_user: "(ผู้ใช้ถูกลบ)"
@@ -383,7 +382,7 @@ th:
           other: "%{count} ผู้ใช้"
       replies:
         other: "%{count} ตอบ"
-      edit: "แก้ไข"
+      edit: "แก้ไขโพสต์"
       save: "บันทึก"
       cancel: "ยกเลิก"
       filters:
@@ -441,6 +440,7 @@ th:
       user_label: "ผู้ใช้"
       notes:
         delete: "ลบ"
+      topic_label: "หัวข้อ"
       review_user: "ผู้ใช้"
       insights:
         activities:
@@ -2321,7 +2321,6 @@ th:
         go_to_unread_post: "%{shortcut}ไปยังโพสต์แรกที่ยังไม่ได้อ่าน"
       application:
         title: "แอปพลิเคชัน"
-        create: "%{shortcut} สร้างกระทู้ใหม่"
         notifications: "%{shortcut} เปิดการแจ้งเตือน"
         user_profile_menu: "%{shortcut} เปิดเมนูผู้ใช้"
         show_incoming_updated_topics: "%{shortcut} แสดงกระทู้ที่อัปเดต"

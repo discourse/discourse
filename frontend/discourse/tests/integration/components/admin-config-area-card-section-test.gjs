@@ -1,7 +1,7 @@
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import AdminConfigAreaCardSection from "discourse/admin/components/admin-config-area-card-section";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import AdminConfigAreaCardSection from "admin/components/admin-config-area-card-section";
 
 module(
   "Integration | Component | AdminConfigAreaCardSection",

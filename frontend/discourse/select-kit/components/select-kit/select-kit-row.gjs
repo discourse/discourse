@@ -12,9 +12,9 @@ import {
 } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
 import { makeArray } from "discourse/lib/helpers";
+import { isValidInput } from "discourse/select-kit/lib/input-utils";
+import selectKitPropUtils from "discourse/select-kit/lib/select-kit-prop-utils";
 import { i18n } from "discourse-i18n";
-import { isValidInput } from "select-kit/lib/input-utils";
-import selectKitPropUtils from "select-kit/lib/select-kit-prop-utils";
 
 @classNames("select-kit-row")
 @tagName("li")

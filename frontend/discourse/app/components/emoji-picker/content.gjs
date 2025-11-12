@@ -8,7 +8,6 @@ import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
-import { eq, gt, includes, notEq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import FilterInput from "discourse/components/filter-input";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -32,6 +31,7 @@ import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import { emojiUrlFor } from "discourse/lib/text";
 import autoFocus from "discourse/modifiers/auto-focus";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
+import { eq, gt, includes, notEq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import DiversityMenu from "./diversity-menu";
 

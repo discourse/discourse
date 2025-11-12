@@ -178,7 +178,7 @@ sw:
     joined: "Alijiunga"
     admin_title: "Kiongozi"
     show_more: "onyesha zaidi"
-    show_help: "chaguo"
+    show_help: "Machaguo"
     links: "Viungo"
     links_lowercase:
       one: "Linki"
@@ -312,7 +312,7 @@ sw:
       replies:
         one: "%{count} jibu"
         other: "%{count} majibu"
-      edit: "Hariri"
+      edit: "Hariri Chapisho"
       save: "hifadhi"
       cancel: "Ghairi"
       filters:
@@ -350,6 +350,7 @@ sw:
       user_label: "Mtumiaji"
       notes:
         delete: "Futa"
+      topic_label: "Mada"
       review_user: "Mtumiaji"
       insights:
         activities:
@@ -2182,7 +2183,6 @@ sw:
         next_prev: "%{shortcut} Kifungu Kifuatacho/kilichopita"
       application:
         title: "Programu-tumizi"
-        create: "%{shortcut} Tengeneza mada mpya"
         notifications: "%{shortcut} Fungua taarifa"
         user_profile_menu: "%{shortcut} Fungua menyu ya mtumiaji"
         show_incoming_updated_topics: "%{shortcut} Onyesha mada zilizosasishwa"
