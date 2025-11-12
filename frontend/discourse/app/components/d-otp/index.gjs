@@ -8,6 +8,7 @@ import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import autoFocus from "discourse/modifiers/auto-focus";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import { i18n } from "discourse-i18n";
+/** @type {import("./slot.gjs").default} */
 import Slot from "./slot";
 
 const DEFAULT_SLOTS = 6;
