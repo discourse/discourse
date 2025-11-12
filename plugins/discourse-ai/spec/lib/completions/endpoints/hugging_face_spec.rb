@@ -1,116 +1,101 @@
 # frozen_string_literal: true
 
-require_relative "endpoint_compliance"
-
-class HuggingFaceMock < EndpointMock
-  def response(content)
-    {
-      id: "chatcmpl-6sZfAb30Rnv9Q7ufzFwvQsMpjZh8S",
-      object: "chat.completion",
-      created: 1_678_464_820,
-      model: "Llama2-*-chat-hf",
-      usage: {
-        prompt_tokens: 337,
-        completion_tokens: 162,
-        total_tokens: 499,
-      },
-      choices: [
-        { message: { role: "assistant", content: content }, finish_reason: "stop", index: 0 },
-      ],
-    }
-  end
-
-  def stub_response(prompt, response_text, tool_call: false)
-    WebMock
-      .stub_request(:post, "https://test.dev/v1/chat/completions")
-      .with(body: request_body(prompt))
-      .to_return(status: 200, body: JSON.dump(response(response_text)))
-  end
-
-  def stream_line(delta, finish_reason: nil)
-    +"data: " << {
-      id: "chatcmpl-#{SecureRandom.hex}",
-      object: "chat.completion.chunk",
-      created: 1_681_283_881,
-      model: "Llama2-*-chat-hf",
-      choices: [{ delta: { content: delta } }],
-      finish_reason: finish_reason,
-      index: 0,
-    }.to_json
-  end
-
-  def stub_raw(chunks)
-    WebMock.stub_request(:post, "https://test.dev/v1/chat/completions").to_return(
-      status: 200,
-      body: chunks,
-    )
-  end
-
-  def stub_streamed_response(prompt, deltas, tool_call: false)
-    chunks =
-      deltas.each_with_index.map do |_, index|
-        if index == (deltas.length - 1)
-          stream_line(deltas[index], finish_reason: "stop_sequence")
-        else
-          stream_line(deltas[index])
-        end
-      end
-
-    chunks = (chunks.join("\n\n") << "data: [DONE]").split("")
-
-    WebMock
-      .stub_request(:post, "https://test.dev/v1/chat/completions")
-      .with(body: request_body(prompt, stream: true))
-      .to_return(status: 200, body: chunks)
-
-    yield if block_given?
-  end
-
-  def request_body(prompt, stream: false, tool_call: false)
-    model
-      .default_options
-      .merge(messages: prompt)
-      .tap do |b|
-        b[:max_tokens] = 63_991
-        b[:stream] = true if stream
-      end
-      .to_json
-  end
-end
-
 RSpec.describe DiscourseAi::Completions::Endpoints::HuggingFace do
-  subject(:endpoint) { described_class.new(hf_model) }
-
   fab!(:hf_model)
   fab!(:user)
 
-  let(:hf_mock) { HuggingFaceMock.new(endpoint) }
+  before do
+    enable_current_plugin
+    AiApiAuditLog.destroy_all
+  end
 
-  let(:compliance) do
-    EndpointsCompliance.new(
-      self,
-      endpoint,
-      DiscourseAi::Completions::Dialects::OpenAiCompatible,
-      user,
+  let(:endpoint) { described_class.new(hf_model) }
+
+  def generic_prompt(tools: [])
+    DiscourseAi::Completions::Prompt.new(
+      "You write words",
+      messages: [{ type: :user, content: "write 3 words" }],
+      tools: tools,
     )
   end
 
-  before { enable_current_plugin }
+  def dialect(prompt = generic_prompt)
+    DiscourseAi::Completions::Dialects::OpenAiCompatible.new(prompt, hf_model)
+  end
+
+  def with_scripted_responses(responses, llm_model: hf_model, &block)
+    DiscourseAi::Completions::Llm.with_prepared_responses(
+      responses,
+      llm: llm_model,
+      transport: :scripted_http,
+      &block
+    )
+  end
 
   describe "#perform_completion!" do
     context "when using regular mode" do
-      context "with simple prompts" do
-        it "completes a trivial prompt and logs the response" do
-          compliance.regular_mode_simple_prompt(hf_mock)
+      it "completes a trivial prompt and logs the response" do
+        completion = "1. Serenity\n2. Laughter\n3. Adventure"
+        prompt = generic_prompt
+        open_ai_dialect = dialect(prompt)
+
+        request_tokens = endpoint.prompt_size(open_ai_dialect.translate)
+        response_tokens = hf_model.tokenizer_class.size(completion)
+        usage = {
+          prompt_tokens: request_tokens,
+          completion_tokens: response_tokens,
+          total_tokens: request_tokens + response_tokens,
+        }
+
+        with_scripted_responses([{ content: completion, usage: usage }]) do |scripted_http|
+          result = endpoint.perform_completion!(open_ai_dialect, user)
+
+          expect(result).to eq(completion)
+          expect(scripted_http.last_request["messages"].first["content"]).to include(
+            "write 3 words",
+          )
+
+          log = AiApiAuditLog.last
+          expect(log.provider_id).to eq(endpoint.provider_id)
+          expect(log.user_id).to eq(user.id)
+          expect(log.raw_request_payload).to eq(scripted_http.last_request_raw.body)
+
+          parsed_response = JSON.parse(log.raw_response_payload)
+          expect(parsed_response.dig("choices", 0, "message", "content")).to eq(completion)
+          expect(log.request_tokens).to eq(request_tokens)
+          expect(log.response_tokens).to eq(response_tokens)
         end
       end
     end
 
     describe "when using streaming mode" do
-      context "with simple prompts" do
-        it "completes a trivial prompt and logs the response" do
-          compliance.streaming_mode_simple_prompt(hf_mock)
+      it "completes a trivial prompt and logs the response" do
+        completion = "Mountain Tree Frog"
+        prompt = generic_prompt
+        streaming_dialect = dialect(prompt)
+        request_tokens = endpoint.prompt_size(streaming_dialect.translate)
+
+        cancel_manager = DiscourseAi::Completions::CancelManager.new
+        buffered = +""
+
+        with_scripted_responses([completion]) do
+          endpoint.perform_completion!(
+            streaming_dialect,
+            user,
+            cancel_manager: cancel_manager,
+          ) do |partial|
+            buffered << partial
+            cancel_manager.cancel! if buffered.split(" ").length == 2
+          end
         end
+
+        log = AiApiAuditLog.last
+        expect(log.provider_id).to eq(endpoint.provider_id)
+        expect(log.user_id).to eq(user.id)
+        expect(log.raw_request_payload).to be_present
+        expect(log.raw_response_payload).to be_present
+        expect(log.request_tokens).to eq(request_tokens)
+        expect(log.response_tokens).to eq(hf_model.tokenizer_class.size(buffered))
       end
     end
   end
