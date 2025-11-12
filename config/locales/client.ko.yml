@@ -170,7 +170,7 @@ ko:
       header:
         logged_in_members: "어서오세요, %{preferred_display_name}님!"
         anonymous_members: "%{site_name}에 오신 것을 환영합니다!"
-      search: "검색"
+      search_placeholder: "검색"
     themes:
       default_description: "기본"
       error_caused_by: "'%{name}' 테마에서 오류가 발생하였습니다. <a target='blank' href='%{path}'>여기</a>를 클릭해 테마를 업데이트 또는 재설정하거나, 테마 사용을 중지하세요."
@@ -408,6 +408,7 @@ ko:
       other: "%{count}개의 새 주제 보기"
     preview: "미리보기"
     cancel: "취소"
+    done: "완료"
     deleting: "삭제 중…"
     save: "변경사항 저장"
     saving: "저장 중…"
@@ -480,10 +481,6 @@ ko:
         required: "항목을 검토하려면 먼저 항목을 독점해야 합니다."
         claimed_by_you: "이 항목을 독점했으며 이제 검토할 수 있습니다."
         claimed_by_other: "이 항목은 <b>%{username}</b> 님만 검토할 수 있습니다."
-      claim:
-        title: "이 주제 독점하기"
-      unclaim:
-        help: "이 독점 신청 제거"
       awaiting_approval: "승인 대기중"
       delete: "삭제"
       settings:
@@ -539,7 +536,7 @@ ko:
           other: "사용자 %{count}명"
       replies:
         other: "댓글 %{count}개"
-      edit: "편집"
+      edit: "포스트 편집"
       save: "저장"
       cancel: "취소"
       new_topic: "이 항목을 승인하면 새 주제가 만들어집니다."
@@ -561,7 +558,6 @@ ko:
           created_at: "작성일"
           created_at_asc: "작성일(역순)"
         priority:
-          title: "최소 우선순위"
           any: "(모두)"
           low: "낮음"
           medium: "중간"
@@ -607,8 +603,10 @@ ko:
         reviewable_post:
           title: "게시물"
           noun: "글"
+      user_label: "사용자"
       notes:
         delete: "삭제하기"
+      topic_label: "글"
       review_user: "사용자"
       copy_link: "링크 복사"
       insights:
@@ -2009,6 +2007,7 @@ ko:
       reply: "댓글 달기"
       cancel: "취소"
       create_topic: "주제 생성"
+      create_pm: "전송"
       create_whisper: "귓속말"
       create_shared_draft: "공유 초안 생성"
       edit_shared_draft: "공유 초안 편집"
@@ -2079,8 +2078,9 @@ ko:
         toggle_whisper:
           label: 귓속말 토글
           desc: 귓속말은 운영진만 볼 수 있습니다
-        create_topic:
-          label: "새 주제"
+        create_personal_message:
+          label: "새 메시지"
+          desc: "새 개인 메시지 쓰기"
         shared_draft:
           label: "공유 초안"
           desc: "허용된 사용자만 볼 수 있는 주제 초안을 작성합니다"
@@ -2426,7 +2426,6 @@ ko:
       filter_to:
         other: "이 주제의 게시물 %{count}개"
       create: "새 주제"
-      create_long: "새 주제 생성"
       open_draft: "초안 열기"
       private_message: "메시지 시작"
       archive_message:
@@ -2539,8 +2538,6 @@ ko:
       auto_close_title: "자동 종료 설정"
       auto_close_immediate:
         other: "주제의 마지막 게시물은 이미 %{count} 시간이 지났으므로 이 주제는 즉시 종료됩니다."
-      auto_close_momentarily:
-        other: "주제의 마지막 게시물은 이미 %{count} 시간이 지났으므로 이 주제는 일시적으로 종료됩니다."
       timeline:
         back: "뒤로 가기"
         back_description: "읽지 않은 마지막 게시물로 이동합니다"
@@ -3326,7 +3323,6 @@ ko:
     preloader_text: "로딩 중"
     lightbox:
       download: "다운로드"
-      open: "원본 이미지"
       previous: "이전(왼쪽 화살표 키)"
       next: "다음(오른쪽 화살표 키)"
       counter: "%curr% / %total%"
@@ -3366,7 +3362,6 @@ ko:
         go_to_unread_post: "%{shortcut} 읽지 않은 첫 번째 게시물로 이동"
       application:
         title: "애플리케이션"
-        create: "%{shortcut} 새 주제 생성"
         notifications: "%{shortcut} 알림 열기"
         user_profile_menu: "%{shortcut} 사용자 메뉴 열기"
         show_incoming_updated_topics: "%{shortcut} 업데이트된 주제 보기"
@@ -3731,6 +3726,7 @@ ko:
   admin_js:
     type_to_filter: "필터 입력..."
     settings: "설정"
+    reset_filter: "리셋"
     admin:
       title: "Discourse 관리자"
       moderator: "운영자"
@@ -3758,6 +3754,19 @@ ko:
           title: "보안"
         plugins:
           title: "플러그인"
+      upcoming_changes:
+        name: "그룹명"
+        enabled: "활성화"
+        preview: "미리 보기"
+        impact_roles:
+          admins: "관리자"
+          moderators: "관리자"
+          staff: "스태프"
+        filter:
+          all: "모두"
+          enabled: "활성화"
+          disabled: "비활성"
+          impact_type_other: "기타"
       config:
         developer:
           title: "개발자"
@@ -5044,7 +5053,6 @@ ko:
             transfer_and_delete: "@%{username} 이전 및 삭제"
             cancel: "취소"
         merge_failed: "사용자를 병합하는 중에 오류가 발생했습니다."
-        delete_posts_forbidden_because_staff: "관리자 및 운영자의 게시물은 모두 삭제할 수 없습니다."
         delete_forbidden:
           other: "게시물이 있는 사용자는 삭제할 수 없습니다. 사용자를 삭제하기 전에 게시물을 모두 삭제해야 합니다. (%{count}일 이전에 작성한 글은 삭제할 수 없습니다.)"
         cant_delete_all_posts:

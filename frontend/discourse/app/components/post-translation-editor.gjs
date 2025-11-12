@@ -24,14 +24,22 @@ export default class PostTranslationEditor extends Component {
     if (this.composer.selectedTranslationLocale && !this.composer.model.reply) {
       const localization = await this.findCurrentLocalization();
       if (localization) {
-        this.composer.model.set("reply", localization.raw);
+        this.composer.model.setProperties({
+          reply: localization.raw,
+          originalText: localization.raw,
+        });
 
         if (localization?.topic_localization) {
-          this.composer.model.set(
-            "title",
-            localization.topic_localization.title
-          );
+          this.composer.model.setProperties({
+            title: localization.topic_localization.title,
+            originalTitle: localization.topic_localization.title,
+          });
         }
+      } else {
+        this.composer.model.setProperties({
+          originalText: "",
+          originalTitle: "",
+        });
       }
     }
   }
@@ -74,18 +82,23 @@ export default class PostTranslationEditor extends Component {
     const currentLocalization = await this.findCurrentLocalization();
 
     if (currentLocalization) {
-      this.composer.model.set("reply", currentLocalization.raw);
+      this.composer.model.setProperties({
+        reply: currentLocalization.raw,
+        originalText: currentLocalization.raw,
+      });
 
       if (currentLocalization?.topic_localization) {
-        this.composer.model.set(
-          "title",
-          currentLocalization.topic_localization.title
-        );
+        this.composer.model.setProperties({
+          title: currentLocalization.topic_localization.title,
+          originalTitle: currentLocalization.topic_localization.title,
+        });
       }
     } else {
       this.composer.model.setProperties({
         reply: "",
         title: "",
+        originalText: "",
+        originalTitle: "",
       });
     }
   }
@@ -112,14 +125,17 @@ export default class PostTranslationEditor extends Component {
 
     {{#if this.composer.model.post.firstPost}}
       <div class="topic-title-translator title-and-category with-preview">
-        <TextField
-          @value={{this.composer.model.title}}
-          @id="translated-topic-title"
-          @maxLength={{this.siteSettings.max_topic_title_length}}
-          @placeholder={{this.composer.model.topic.title}}
-          @disabled={{this.composer.loading}}
-          @autocomplete="off"
-        />
+        <div class="title-input-column">
+          <TextField
+            @value={{this.composer.model.title}}
+            @id="translated-topic-title"
+            @maxLength={{this.siteSettings.max_topic_title_length}}
+            @placeholder={{this.composer.model.topic.title}}
+            @disabled={{this.composer.loading}}
+            @autocomplete="off"
+          />
+        </div>
+        <div class="title-preview-spacer"></div>
       </div>
     {{/if}}
 

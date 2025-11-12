@@ -55,6 +55,16 @@ bg:
       modals:
         select_option: "Изберете опция..."
       translations:
+        stats:
+          eta_minutes:
+            one: "%{count} минута"
+            other: "%{count} минути "
+          eta_hours:
+            one: "%{count} час"
+            other: "%{count} часове "
+          eta_days:
+            one: "%{count} ден"
+            other: "%{count} дни"
         progress_chart:
           bar_done:
             one: "%{count} публикация"

@@ -3,6 +3,29 @@
 RSpec.describe ApplicationController do
   fab!(:user)
 
+  context "for cache control headers" do
+    it "sets the `no-cache, no-store` cache control response header when no error is raised" do
+      get "/latest"
+
+      expect(response.status).to eq(200)
+      expect(response.headers["Cache-Control"]).to eq("no-cache, no-store")
+    end
+
+    it "sets the `no-cache, no-store` cache control response header when ActionController::RoutingError is raised" do
+      get "/invalid-urlllllllllll"
+
+      expect(response.status).to eq(404)
+      expect(response.headers["Cache-Control"]).to eq("no-cache, no-store")
+    end
+
+    it "sets the `no-cache, no-store` cache control response header when Discourse::InvalidAccess is raised" do
+      get "/latest.json", headers: { HTTP_API_KEY: "invalid-api-key" }
+
+      expect(response.status).to eq(403)
+      expect(response.headers["Cache-Control"]).to eq("no-cache, no-store")
+    end
+  end
+
   context "when visiting an invalid URL" do
     it "displays the not found page with the user's active theme" do
       theme = Fabricate(:theme, user_selectable: true)
@@ -1304,25 +1327,84 @@ RSpec.describe ApplicationController do
       end
     end
 
-    context "with set_locale_from_param enabled" do
+    context "with set_locale_from_param" do
       context "when param locale differs from default locale" do
         before do
           SiteSetting.allow_user_locale = true
-          SiteSetting.set_locale_from_param = true
           SiteSetting.default_locale = "en"
         end
 
         context "with an anonymous user" do
           it "uses the locale from the param" do
+            SiteSetting.set_locale_from_param = true
+
             get "/latest?tl=es"
             expect(response.status).to eq(200)
             expect(main_locale_scripts(response.body)).to contain_exactly("es")
             expect(I18n.locale.to_s).to eq(SiteSettings::DefaultsProvider::DEFAULT_LOCALE) # doesn't leak after requests
           end
+
+          it "sets a cookie with the locale from the param for persistence" do
+            SiteSetting.set_locale_from_param = false
+            SiteSetting.set_locale_from_cookie = false
+            get "/latest?tl=ja"
+            expect(response.status).to eq(200)
+            expect(response.cookies["locale"]).to eq(nil)
+
+            SiteSetting.set_locale_from_param = true
+            SiteSetting.set_locale_from_cookie = false
+            get "/latest?tl=ja"
+            expect(response.status).to eq(200)
+            expect(response.cookies["locale"]).to eq(nil)
+
+            SiteSetting.set_locale_from_param = true
+            SiteSetting.set_locale_from_cookie = true
+            get "/latest?tl=ja"
+            expect(response.status).to eq(200)
+            expect(response.cookies["locale"]).to eq("ja")
+          end
+
+          it "does not set a cookie for invalid locales" do
+            SiteSetting.set_locale_from_param = true
+            SiteSetting.set_locale_from_cookie = true
+
+            get "/latest?tl=invalid_locale"
+            expect(response.status).to eq(200)
+            expect(response.cookies["locale"]).to be_nil
+          end
+
+          it "persists locale across requests via cookie" do
+            SiteSetting.set_locale_from_param = true
+            SiteSetting.set_locale_from_cookie = true
+
+            get "/latest?tl=ja"
+            expect(response.status).to eq(200)
+            expect(response.cookies["locale"]).to eq("ja")
+            expect(main_locale_scripts(response.body)).to contain_exactly("ja")
+
+            # next request without tl parameter should use the cookie
+            get "/latest", headers: { Cookie: "locale=ja" }
+            expect(response.status).to eq(200)
+            expect(main_locale_scripts(response.body)).to contain_exactly("ja")
+          end
+        end
+
+        context "with a logged-in user" do
+          fab!(:user) { Fabricate(:user, locale: "de") }
+
+          it "ignores the tl parameter and uses user's preference" do
+            sign_in(user)
+            get "/latest?tl=es"
+            expect(response.status).to eq(200)
+            expect(main_locale_scripts(response.body)).to contain_exactly("de")
+            expect(response.cookies["locale"]).to be_nil
+          end
         end
 
         context "when the preferred locale includes a region" do
           it "returns the locale and region separated by an underscore" do
+            SiteSetting.set_locale_from_param = true
+
             get "/latest?tl=zh-CN"
             expect(response.status).to eq(200)
             expect(main_locale_scripts(response.body)).to contain_exactly("zh_CN")

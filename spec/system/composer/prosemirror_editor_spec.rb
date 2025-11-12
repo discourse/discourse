@@ -1136,6 +1136,29 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("img[alt='img1'][data-orig-src]", count: 2)
     end
 
+    it "avoids triggering upload when unauthorized" do
+      SiteSetting.authorized_extensions = ""
+
+      valid_png_data_uri =
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+
+      cdp.allow_clipboard
+
+      open_composer
+
+      html = <<~HTML
+          <img src="#{valid_png_data_uri}" alt="img1" width="100" height="100">
+        HTML
+
+      cdp.copy_paste(html, html: true)
+
+      expect(rich).to have_no_css("img")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("")
+    end
+
     it "merges text with link marks created from parsing" do
       cdp.allow_clipboard
       open_composer
@@ -1522,6 +1545,59 @@ describe "Composer - ProseMirror editor", type: :system do
 
         expect(composer).to have_value("Hey @#{unicode_user.username} - how are you?")
       end
+    end
+  end
+
+  describe "with hashtags" do
+    fab!(:category_with_icon) { Fabricate(:category, icon: "bell", style_type: "icon") }
+    fab!(:catgeory_without_icon, :category)
+
+    it "correctly renders category with emoji hashtags after selecting from autocomplete" do
+      open_composer
+
+      composer.type_content("here is the ##{category_with_emoji.slug[0..1]}")
+      expect(composer).to have_hashtag_autocomplete
+
+      # the xpath here is to get the parent element, which is the actual hashtag-autocomplete__option
+      find(".hashtag-color--category-#{category_with_emoji.id}").find(:xpath, "..").click
+      expect(rich).to have_css(
+        ".hashtag-cooked .hashtag-category-emoji.hashtag-color--category-#{category_with_emoji.id} img.emoji[title='cat']",
+      )
+    end
+
+    it "correctly renders category with icon hashtags after selecting from autocomplete" do
+      open_composer
+
+      composer.type_content("here is the ##{category_with_icon.slug[0..1]}")
+      expect(composer).to have_hashtag_autocomplete
+
+      find(".hashtag-color--category-#{category_with_icon.id}").find(:xpath, "..").click
+      expect(rich).to have_css(
+        ".hashtag-cooked .hashtag-category-icon.hashtag-color--category-#{category_with_icon.id} svg.d-icon.d-icon-bell",
+      )
+      expect(rich).to have_css(".hashtag-cooked svg use[href='#bell']")
+    end
+
+    it "correctly renders category with square hashtags after selecting from autocomplete" do
+      open_composer
+
+      composer.type_content("here is the ##{catgeory_without_icon.slug[0..1]}")
+      expect(composer).to have_hashtag_autocomplete
+
+      find(".hashtag-color--category-#{catgeory_without_icon.id}").find(:xpath, "..").click
+      expect(rich).to have_css(
+        ".hashtag-cooked .hashtag-category-square.hashtag-color--category-#{catgeory_without_icon.id}",
+      )
+    end
+
+    it "correctly renders tag hashtags after selecting from autocomplete" do
+      open_composer
+
+      composer.type_content("##{tag.name[0..2]}")
+      expect(composer).to have_hashtag_autocomplete
+
+      find(".hashtag-color--tag-#{tag.id}").find(:xpath, "..").click
+      expect(rich).to have_css(".hashtag-cooked .d-icon.d-icon-tag.hashtag-color--tag-#{tag.id}")
     end
   end
 

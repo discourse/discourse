@@ -15,6 +15,8 @@ ko:
       user_cannot_send_direct_messages: "죄송합니다. 다이렉트 메시지를 보낼 수 없습니다."
     reviewables:
       actions:
+        no_action_message:
+          title: "조치 없음"
         agree:
           title: "동의..."
         agree_and_keep_message:

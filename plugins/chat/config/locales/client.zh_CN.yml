@@ -310,6 +310,8 @@ zh_CN:
       chat_message_separator:
         today: 今天
         yesterday: 昨天
+      search_view:
+        filter_placeholder: 搜索消息
       members_view:
         filter_placeholder: 查找成员
         add_member: 添加成员
@@ -326,6 +328,7 @@ zh_CN:
         tabs:
           members: 成员
           settings: 设置
+          search: 搜索
         remove_member: "移除"
       new_message_modal:
         title: 发送消息
@@ -405,6 +408,7 @@ zh_CN:
           topic: "话题"
       reviewable:
         type: "聊天消息"
+        message_in_channel: "频道"
       reactions:
         only_you: "<span>您回应了 </span>:%{emoji}:"
         you_and_single_user: "<span>您和 %{username} 回应了 </span>:%{emoji}:"
@@ -465,6 +469,10 @@ zh_CN:
           create_export: "创建导出"
           confirm_export: "这会从所有频道中导出所有消息，并通过私信将结果发送给您。确定要导出吗？"
           export_has_started: "导出已开始。导出完成后，您将收到一条私信。"
+      search:
+        sort:
+          relevance: "相关性"
+          latest: "最新"
       my_threads:
         title: 我的消息串
         aria_label: "切换到我的消息串列表"

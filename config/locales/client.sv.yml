@@ -195,7 +195,7 @@ sv:
     welcome_banner:
       header:
         anonymous_members: "Välkommen till %{site_name}!"
-      search: "Sök"
+      search_placeholder: "Sök"
     themes:
       default_description: "Standard"
       error_caused_by: "Orsakas av '%{name}'. <a target='blank' href='%{path}'>Klicka här</a> för att uppdatera, konfigurera eller inaktivera."
@@ -247,7 +247,7 @@ sv:
     joined: "Gick med"
     admin_title: "Admin"
     show_more: "visa mer"
-    show_help: "alternativ"
+    show_help: "Alternativ"
     links: "Länkar"
     links_lowercase:
       one: "länk"
@@ -408,6 +408,7 @@ sv:
       other: "Visa %{count} nya ämnen"
     preview: "förhandsgranska"
     cancel: "Avbryt"
+    done: "Klar"
     deleting: "Raderar…"
     save: "Spara ändringar"
     saving: "Sparar…"
@@ -482,10 +483,6 @@ sv:
         required: "Du måste göra anspråk innan du kan granska dem."
         claimed_by_you: "Du har gjort anspråk på detta och kan nu granska det."
         claimed_by_other: "Detta föremål kan enbart granskas av <b>%{username}</b>."
-      claim:
-        title: "Gör anspråk på ämne"
-      unclaim:
-        help: "ta bort detta anspråk"
       awaiting_approval: "Inväntar godkännande"
       delete: "Radera"
       settings:
@@ -548,7 +545,7 @@ sv:
       replies:
         one: "%{count} svar"
         other: "%{count} svar"
-      edit: "Redigera"
+      edit: "Ändra inlägg"
       save: "Spara"
       cancel: "Avbryt"
       new_topic: "Godkännande av detta föremål skapar ett nytt ämne"
@@ -569,7 +566,6 @@ sv:
           created_at: "Skapad den"
           created_at_asc: "Skapad den (omvänt)"
         priority:
-          title: "Lägsta prioritet"
           any: "(valfritt)"
           low: "Låg"
           medium: "Medium"
@@ -633,9 +629,12 @@ sv:
         reviewable_post:
           title: "Inlägg"
           noun: "inlägg"
+      user_label: "Användare"
       notes:
         delete: "Radera"
+      topic_label: "Ämne"
       review_user: "Användare"
+      copy_link_feedback: "Länken kopierad"
       insights:
         activities:
           posts:
@@ -2239,6 +2238,7 @@ sv:
       reply: "Svara"
       cancel: "Avbryt"
       create_topic: "Skapa ämne"
+      create_pm: "Skicka meddelande"
       create_whisper: "Viska"
       create_shared_draft: "Skapa delat utkast"
       edit_shared_draft: "Redigera delat utkast"
@@ -2314,8 +2314,10 @@ sv:
           label: Växla viskning
           desc: Viskningar är enbart synliga för personal
         create_topic:
-          label: "Nytt ämne"
           desc: Skapa ett nytt ämne
+        create_personal_message:
+          label: "Nytt meddelande"
+          desc: "Skapa ett nytt personligt meddelande"
         shared_draft:
           label: "Delat utkast"
           desc: "Skapa ett utkast av ett ämne vilket enbart kommer vara synligt för tillåtna användare"
@@ -2908,9 +2910,6 @@ sv:
       auto_close_immediate:
         one: "Senaste inlägget i det här ämnet är redan %{count} timme gammalt, så ämnet kommer att stängas omedelbart. "
         other: "Senaste inlägget i det här ämnet är redan %{count} timmar gammal, så ämnet kommer att stängas omedelbart. "
-      auto_close_momentarily:
-        one: "Senaste inlägget i det här ämnet är redan %{count} timme gammalt, så ämnet kommer att stängas för tillfället."
-        other: "Senaste inlägget i det här ämnet är redan %{count} timmar gammalt, så ämnet kommer att stängas för tillfället."
       timeline:
         back: "Tillbaka"
         back_description: "Gå tillbaka till ditt senaste olästa inlägg"
@@ -3806,8 +3805,7 @@ sv:
       readonly: "Se"
     preloader_text: "Laddar"
     lightbox:
-      download: "ladda ned"
-      open: "originalbild"
+      download: "Ladda ner"
       previous: "Föregående (Vänster piltangent)"
       next: "Nästa (höger piltangent)"
       counter: "%curr% av %total%"
@@ -3847,7 +3845,6 @@ sv:
         go_to_unread_post: "%{shortcut} Gå till det första olästa inlägget"
       application:
         title: "Applikation"
-        create: "%{shortcut} Skapa ett nytt ämne"
         notifications: "%{shortcut} Öppna aviseringar"
         user_profile_menu: "%{shortcut} Öppna användarmeny"
         show_incoming_updated_topics: "%{shortcut} Visa uppdaterade ämnen"
@@ -4386,6 +4383,7 @@ sv:
   admin_js:
     type_to_filter: "Skriv för att filtrera…"
     settings: "Inställningar"
+    reset_filter: "Återställ"
     admin:
       title: "Discourse-administratör"
       moderator: "Moderator"
@@ -4415,6 +4413,20 @@ sv:
           title: "Tillägg"
         advanced:
           title: "Avancerat"
+      upcoming_changes:
+        name: "Namn"
+        enabled: "Aktiverad"
+        select_groups: "Välj grupper…"
+        preview: "Förhandsgranska"
+        impact_roles:
+          admins: "Administratörer"
+          moderators: "Moderatorer"
+          staff: "Personal"
+        filter:
+          all: "Alla"
+          enabled: "Aktiverad"
+          disabled: "Inaktiverad"
+          impact_type_other: "Övrigt"
       config:
         about:
           title: "Om din webbplats"
@@ -5946,7 +5958,6 @@ sv:
             cancel: "Avbryt"
         merging_user: "Slår samman användare…"
         merge_failed: "Det uppstod ett fel vid sammanslagningen av användarna."
-        delete_posts_forbidden_because_staff: "Kan inte ta bort alla inlägg från administratörer och moderatorer."
         delete_forbidden:
           one: "Användare kan inte tas bort om de har inlägg. Radera alla inlägg innan du försöker ta bort en användare. (Inlägg som är äldre än %{count} dag kan ej raderas.)"
           other: "Användare kan inte tas bort om de har inlägg. Radera alla inlägg innan du försöker ta bort en användare. (Inlägg som är äldre än %{count} dagar kan ej raderas.)"

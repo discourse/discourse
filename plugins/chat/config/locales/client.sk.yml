@@ -345,6 +345,8 @@ sk:
       chat_message_separator:
         today: Dnes
         yesterday: Včera
+      search_view:
+        filter_placeholder: Hľadaj správy
       members_view:
         filter_placeholder: Nájdite členov
         add_member: Pridať člena
@@ -361,6 +363,7 @@ sk:
         tabs:
           members: Členovia
           settings: Nastavenia
+          search: Hľadať
         remove_member: "Odstrániť"
       new_message_modal:
         title: Odoslať správu
@@ -482,6 +485,7 @@ sk:
           topic: "Témy"
       reviewable:
         type: "Chatová správa"
+        message_in_channel: "Kanál"
       reactions:
         only_you: "<span>Reagovali ste na </span>:%{emoji}:"
         you_and_single_user: "<span>Vy a %{username} ste reagovali pomocou </span>:%{emoji}:"
@@ -548,6 +552,10 @@ sk:
           create_export: "Vytvoriť export"
           confirm_export: "Týmto spôsobom sa exportujú všetky správy zo všetkých kanálov a výsledok sa vám odošle v osobnej správe. Ste si istí, že chcete exportovať?"
           export_has_started: "Export sa začal. Keď bude hotový, budeme Vás informovať cez súkromnú správu."
+      search:
+        sort:
+          relevance: "Relevancia"
+          latest: "Najnovšie"
       my_threads:
         title: Moje vlákna
         aria_label: "Prepnúť na môj zoznam vlákien"

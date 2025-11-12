@@ -59,11 +59,11 @@ require_relative "../lib/require_dependency_backward_compatibility"
 
 module Discourse
   class Application < Rails::Application
-    def config.database_configuration
+    def config.database_configuration(variables_overrides: {})
       if Rails.env.production?
-        GlobalSetting.database_config
+        GlobalSetting.database_config(variables_overrides:)
       else
-        super
+        super()
       end
     end
 
@@ -92,6 +92,7 @@ module Discourse
     config.action_dispatch.cookies_serializer = :message_pack_allow_marshal
     config.action_controller.wrap_parameters_by_default = false
     config.active_support.cache_format_version = 7.1
+    config.active_record.dump_schema_after_migration = false
 
     # we skip it cause we configure it in the initializer
     # the railtie for message_bus would insert it in the

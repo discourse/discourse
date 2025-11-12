@@ -4,11 +4,7 @@ RSpec.describe SiteSetting do
   describe "topic_title_length" do
     it "returns a range of min/max topic title length" do
       expect(SiteSetting.topic_title_length).to eq(
-        (
-          SiteSetting.defaults[:min_topic_title_length]..SiteSetting.defaults[
-            :max_topic_title_length
-          ]
-        ),
+        SiteSetting.min_topic_title_length..SiteSetting.max_topic_title_length,
       )
     end
   end
@@ -16,7 +12,7 @@ RSpec.describe SiteSetting do
   describe "post_length" do
     it "returns a range of min/max post length" do
       expect(SiteSetting.post_length).to eq(
-        SiteSetting.defaults[:min_post_length]..SiteSetting.defaults[:max_post_length],
+        SiteSetting.min_post_length..SiteSetting.max_post_length,
       )
     end
   end
@@ -24,7 +20,7 @@ RSpec.describe SiteSetting do
   describe "first_post_length" do
     it "returns a range of min/max first post length" do
       expect(SiteSetting.first_post_length).to eq(
-        SiteSetting.defaults[:min_first_post_length]..SiteSetting.defaults[:max_post_length],
+        SiteSetting.min_first_post_length..SiteSetting.max_post_length,
       )
     end
   end
@@ -32,9 +28,7 @@ RSpec.describe SiteSetting do
   describe "private_message_title_length" do
     it "returns a range of min/max pm topic title length" do
       expect(SiteSetting.private_message_title_length).to eq(
-        SiteSetting.defaults[:min_personal_message_title_length]..SiteSetting.defaults[
-          :max_topic_title_length
-        ],
+        SiteSetting.min_personal_message_title_length..SiteSetting.max_topic_title_length,
       )
     end
   end
@@ -194,6 +188,111 @@ RSpec.describe SiteSetting do
 
     it "includes only settings for the specified category" do
       expect(SiteSetting.all_settings(filter_categories: ["required"]).count).to eq(12)
+    end
+  end
+
+  describe ".history_for" do
+    fab!(:admin)
+
+    it "returns an empty relation when no changes have been made" do
+      expect(SiteSetting.history_for(:title)).to be_empty
+    end
+
+    it "returns UserHistory records for the specified setting" do
+      StaffActionLogger.new(admin).log_site_setting_change(:title, "Old Title", "New Title")
+      StaffActionLogger.new(admin).log_site_setting_change(:title, "New Title", "Newer Title")
+
+      history = SiteSetting.history_for(:title)
+
+      expect(history.count).to eq(2)
+      expect(history.first.action).to eq(UserHistory.actions[:change_site_setting])
+      expect(history.first.subject).to eq("title")
+      expect(history.first.new_value).to eq("Newer Title")
+      expect(history.last.new_value).to eq("New Title")
+    end
+
+    it "returns only records for the specified setting" do
+      StaffActionLogger.new(admin).log_site_setting_change(:title, "Old", "New")
+      StaffActionLogger.new(admin).log_site_setting_change(
+        :contact_email,
+        "old@test.com",
+        "new@test.com",
+      )
+
+      history = SiteSetting.history_for(:title)
+
+      expect(history.count).to eq(1)
+      expect(history.first.subject).to eq("title")
+    end
+
+    it "returns records ordered by most recent first" do
+      StaffActionLogger.new(admin).log_site_setting_change(:title, "First", "Second")
+      StaffActionLogger.new(admin).log_site_setting_change(:title, "Second", "Third")
+
+      history = SiteSetting.history_for(:title)
+
+      expect(history.first.new_value).to eq("Third")
+      expect(history.last.new_value).to eq("Second")
+    end
+  end
+
+  describe "ImageQuality" do
+    describe "#png_to_jpg_quality" do
+      context "when set to zero" do
+        before { SiteSetting.png_to_jpg_quality = 0 }
+
+        it "falls back to unified image quality setting" do
+          expect(SiteSetting.ImageQuality.png_to_jpg_quality).to eq(SiteSetting.image_quality)
+        end
+      end
+
+      context "when set to any non-zero value" do
+        before { SiteSetting.png_to_jpg_quality = 42 }
+
+        it "uses the configured value" do
+          expect(SiteSetting.ImageQuality.png_to_jpg_quality).to eq(42)
+        end
+      end
+    end
+
+    describe "#recompress_original_jpg_quality" do
+      context "when set to zero" do
+        before { SiteSetting.recompress_original_jpg_quality = 0 }
+
+        it "falls back to unified image quality setting" do
+          expect(SiteSetting.ImageQuality.recompress_original_jpg_quality).to eq(
+            SiteSetting.image_quality,
+          )
+        end
+      end
+
+      context "when set to any non-zero value" do
+        before { SiteSetting.recompress_original_jpg_quality = 42 }
+
+        it "uses the configured value" do
+          expect(SiteSetting.ImageQuality.recompress_original_jpg_quality).to eq(42)
+        end
+      end
+    end
+
+    describe "#image_preview_jpg_quality" do
+      context "when set to zero" do
+        before { SiteSetting.image_preview_jpg_quality = 0 }
+
+        it "falls back to unified image quality setting" do
+          expect(SiteSetting.ImageQuality.image_preview_jpg_quality).to eq(
+            SiteSetting.image_quality,
+          )
+        end
+      end
+
+      context "when set to any non-zero value" do
+        before { SiteSetting.image_preview_jpg_quality = 42 }
+
+        it "uses the configured value" do
+          expect(SiteSetting.ImageQuality.image_preview_jpg_quality).to eq(42)
+        end
+      end
     end
   end
 

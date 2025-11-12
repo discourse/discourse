@@ -7,6 +7,8 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
   setupRenderingTest(hooks);
 
   test("with image", async function (assert) {
+    this.siteSettings.experimental_lightbox = false;
+
     await render(
       <template>
         <UppyImageUploader

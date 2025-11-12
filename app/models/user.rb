@@ -484,7 +484,7 @@ class User < ActiveRecord::Base
   end
 
   def effective_locale
-    if SiteSetting.allow_user_locale && self.locale.present?
+    if SiteSetting.allow_user_locale && self.locale.present? && I18n.locale_available?(self.locale)
       self.locale
     else
       SiteSetting.default_locale
@@ -1918,14 +1918,6 @@ class User < ActiveRecord::Base
     in_any_groups?(SiteSetting.experimental_new_new_view_groups_map)
   end
 
-  def watched_precedence_over_muted
-    if user_option.watched_precedence_over_muted.nil?
-      SiteSetting.watched_precedence_over_muted
-    else
-      user_option.watched_precedence_over_muted
-    end
-  end
-
   def populated_required_custom_fields?
     UserField
       .for_all_users
@@ -1948,6 +1940,16 @@ class User < ActiveRecord::Base
       .real
       .where.not(id: self.id)
       .where(ip_address: self.ip_address, admin: false, moderator: false)
+  end
+
+  def upcoming_change_enabled?(upcoming_change)
+    setting_enabled = SiteSetting.public_send(upcoming_change)
+
+    if UpcomingChanges.has_groups?(upcoming_change)
+      return setting_enabled && in_any_groups?(UpcomingChanges.group_ids_for(upcoming_change))
+    end
+
+    setting_enabled
   end
 
   protected

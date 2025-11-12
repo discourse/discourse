@@ -166,7 +166,7 @@ et:
     welcome_banner:
       header:
         anonymous_members: "Tere tulemast lehele %{site_name}!"
-      search: "Otsi"
+      search_placeholder: "Otsi"
     themes:
       default_description: "Vaikimisi"
     s3:
@@ -205,7 +205,7 @@ et:
     joined: "Liitus"
     admin_title: "Admin"
     show_more: "kuva veel"
-    show_help: "suvandid"
+    show_help: "Suvandid"
     links: "Viited"
     links_lowercase:
       one: "viide"
@@ -334,6 +334,7 @@ et:
       other: "Vaata %{count} uut teemat"
     preview: "eelvaade"
     cancel: "Tühista"
+    done: "Tehtud"
     deleting: "Kustutan..."
     save: "Salvesta muudatused"
     saving: "Salvestan..."
@@ -409,7 +410,7 @@ et:
       replies:
         one: "%{count} vastus"
         other: "%{count} vastust"
-      edit: "Muuda"
+      edit: "Muuda postitust"
       save: "Salvesta"
       cancel: "Tühista"
       filters:
@@ -455,8 +456,10 @@ et:
         reviewable_post:
           title: "Postitus"
           noun: "postitus"
+      user_label: "Kasutaja"
       notes:
         delete: "Kustuta"
+      topic_label: "Teema"
       review_user: "Kasutaja"
       insights:
         activities:
@@ -1503,8 +1506,8 @@ et:
         edit: Muuda
         reply_to_topic:
           label: Vasta teemale
-        create_topic:
-          label: "Uus teema"
+        create_personal_message:
+          label: "Uus sõnum"
         shared_draft:
           label: "Jagatud mustand"
       ignore: "Ignoreeri"
@@ -1722,7 +1725,6 @@ et:
         one: "%{count} postitus teemas"
         other: "%{count} postitust teemas"
       create: "Uus teema"
-      create_long: "Loo uus teema"
       open_draft: "Ava mustand"
       private_message: "Alusta sõnumit"
       archive_message:
@@ -2471,7 +2473,7 @@ et:
       readonly: "Vaata"
     preloader_text: "Laaditakse"
     lightbox:
-      download: "laadi alla"
+      download: "Laadi alla"
       counter: "%curr% %total%-st"
     keyboard_shortcuts_help:
       title: "Klaviatuuri kiirvalikud"
@@ -2495,7 +2497,6 @@ et:
         next_prev: "%{shortcut} Järgmine/eelmine sektsioon"
       application:
         title: "Rakendus"
-        create: "%{shortcut} Loo uus teema"
         notifications: "%{shortcut} Ava teavitused"
         user_profile_menu: "%{shortcut} Ava kasutajamenüü"
         show_incoming_updated_topics: "%{shortcut} Näita uuendatud teemasid"
@@ -2721,6 +2722,7 @@ et:
         categories: "Kõik kategooriad"
   admin_js:
     settings: "Sätted"
+    reset_filter: "Nulli"
     admin:
       title: "Discourse'i adminn"
       moderator: "Moderaator"
@@ -2739,6 +2741,19 @@ et:
           title: "Turve"
         plugins:
           title: "Pistikprogrammid"
+      upcoming_changes:
+        name: "Nimi"
+        enabled: "Sisse lülitatud"
+        preview: "Eelvaade"
+        impact_roles:
+          admins: "Adminnid"
+          moderators: "Moderaatorid"
+          staff: "Meeskond"
+        filter:
+          all: "Kõik"
+          enabled: "Sisse lülitatud"
+          disabled: "Välja lülitatud"
+          impact_type_other: "Muu"
       config:
         developer:
           title: "Arendaja"
@@ -3601,7 +3616,6 @@ et:
             cancel: "Tühista"
           confirmation:
             cancel: "Tühista"
-        delete_posts_forbidden_because_staff: "Ei saa kustutada adminnide ja moderaatorite kõiki postitusi."
         delete_forbidden:
           one: "Kasutajaid ei saa kustutada, kui neil on postitusi. Kustuta kõik postitused enne kasutaja kustutamist. (Postitusi, mis on vanemaid kui %{count} päev ei saa kustutada.)"
           other: "Kasutajaid ei saa kustutada, kui neil on postitusi. Kustuta kõik postitused enne kasutaja kustutamist. (Postitusi, mis on vanemaid kui %{count} päeva ei saa kustutada.)"

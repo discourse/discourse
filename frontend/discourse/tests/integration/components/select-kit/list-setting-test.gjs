@@ -12,14 +12,12 @@ module("Integration | Component | select-kit/list-setting", function (hooks) {
   });
 
   test("default", async function (assert) {
-    const self = this;
-
     this.set("value", ["bold", "italic"]);
     this.set("choices", ["bold", "italic", "underline"]);
 
     await render(
       <template>
-        <ListSetting @value={{self.value}} @choices={{self.choices}} />
+        <ListSetting @value={{this.value}} @choices={{this.choices}} />
       </template>
     );
 

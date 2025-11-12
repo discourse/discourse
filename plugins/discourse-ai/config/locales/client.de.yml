@@ -174,7 +174,6 @@ de:
               label: "PN-Absender"
               description: "Benutzer, der die PN sendet (Standard: System)"
             notify_author_pm_message:
-              label: "PN-Nachrichtentext"
               description: "Optionale benutzerdefinierte Nachricht die an den Autor gesendet werden soll"
             include_personal_messages:
               label: "Persönliche Nachrichten einbeziehen"
@@ -195,7 +194,6 @@ de:
           fields:
             tagger_persona:
               label: "KI-Persona"
-              description: "Die KI-Persona, die Beiträge analysiert und Schlagwörter hinzufügt"
             tag_mode:
               label: "Schlagwort-Auswahlmodus"
               description: "Wähle, wie die KI Schlagwörter auswählt"
@@ -323,6 +321,15 @@ de:
           enable_translations: "Automatische Übersetzungen aktivieren"
         stats:
           title: "Übersetzungsstatistiken"
+          eta_minutes:
+            one: "%{count} Minute"
+            other: "%{count} Minuten"
+          eta_hours:
+            one: "%{count} Stunde"
+            other: "%{count} Stunden"
+          eta_days:
+            one: "%{count} Tag"
+            other: "%{count} Tage"
         progress_chart:
           title: "Übersetzungsfortschritt"
           data_label: "%{percentage}%"
@@ -842,6 +849,7 @@ de:
         cancel_streaming: "Antwort abbrechen"
         default_pm_prefix: "[KI-Bot-PN ohne Titel]"
         shortcut_title: "Starte eine PN mit einem KI-Bot"
+        shortcut_link: "KI-Bot"
         exit: "KI-Bot verlassen"
         share: "KI-Unterhaltung kopieren"
         conversation_shared: "Unterhaltung kopiert"

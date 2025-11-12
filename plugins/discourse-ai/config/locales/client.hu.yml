@@ -62,6 +62,16 @@ hu:
         table: "Táblázat"
       translations:
         title: "Fordítások"
+        stats:
+          eta_minutes:
+            one: "%{count} perc"
+            other: "%{count} perc"
+          eta_hours:
+            one: "%{count} óra"
+            other: "%{count} óra"
+          eta_days:
+            one: "%{count} nap"
+            other: "%{count} nap"
         progress_chart:
           bar_done:
             one: "%{count} bejegyzés"

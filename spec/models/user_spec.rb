@@ -3749,4 +3749,29 @@ RSpec.describe User do
       )
     end
   end
+
+  describe "#effective_locale" do
+    before { SiteSetting.allow_user_locale = true }
+
+    it "returns the user's locale when it is valid" do
+      user.update!(locale: "fr")
+      expect(user.effective_locale).to eq("fr")
+    end
+
+    it "returns the default locale when user locale is invalid" do
+      user.update_columns(locale: "invalid")
+      expect(user.effective_locale).to eq(SiteSetting.default_locale)
+    end
+
+    it "returns the default locale when user locale is blank" do
+      user.update!(locale: nil)
+      expect(user.effective_locale).to eq(SiteSetting.default_locale)
+    end
+
+    it "returns the default locale when allow_user_locale is disabled" do
+      SiteSetting.allow_user_locale = false
+      user.update!(locale: "fr")
+      expect(user.effective_locale).to eq(SiteSetting.default_locale)
+    end
+  end
 end

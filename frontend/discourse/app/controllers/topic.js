@@ -64,17 +64,19 @@ export function registerCustomPostMessageCallback(type, callback) {
 }
 
 export default class TopicController extends Controller {
+  @service appEvents;
   @service composer;
+  @service currentUser;
   @service dialog;
   @service documentTitle;
-  @service screenTrack;
-  @service modal;
-  @service currentUser;
-  @service router;
-  @service siteSettings;
-  @service site;
-  @service appEvents;
+
+  @service header; // used in the template
   @service languageNameLookup;
+  @service modal;
+  @service router;
+  @service screenTrack;
+  @service site;
+  @service siteSettings;
 
   @tracked model;
 
@@ -134,6 +136,10 @@ export default class TopicController extends Controller {
     return BufferedProxy.create({
       content: this.model,
     });
+  }
+
+  get titleIsVisibleOnHeader() {
+    return !this.header.mainTopicTitleVisible;
   }
 
   updateQueryParams() {
@@ -547,7 +553,7 @@ export default class TopicController extends Controller {
 
   // Called when the topmost visible post on the page changes.
   @action
-  topVisibleChanged(event) {
+  async topVisibleChanged(event) {
     const { post, refresh } = event;
     if (!post) {
       return;
@@ -561,13 +567,13 @@ export default class TopicController extends Controller {
     }
 
     if (firstLoadedPost && firstLoadedPost === post) {
-      postStream.prependMore().then(() => refresh?.());
+      await postStream.prependMore();
+      refresh?.();
     }
   }
 
-  // Called the bottommost visible post on the page changes.
   @action
-  bottomVisibleChanged(event) {
+  async bottomVisibleChanged(event) {
     const { post, refresh } = event;
 
     const postStream = this.get("model.postStream");
@@ -578,9 +584,7 @@ export default class TopicController extends Controller {
       lastLoadedPost === post &&
       postStream.get("canAppendMore")
     ) {
-      // TODO (glimmer-post-stream) the Glimmer Post stream doesn't pass a refresh function
-      postStream.appendMore().then(() => refresh?.());
-      // show loading stuff
+      await postStream.appendMore();
       // TODO (glimmer-post-stream) the Glimmer Post stream doesn't pass a refresh function
       refresh?.();
     }
@@ -623,14 +627,26 @@ export default class TopicController extends Controller {
   }
 
   @action
-  removeAllowedUser(user) {
-    return this.get("model.details")
-      .removeAllowedUser(user)
-      .then(() => {
-        if (this.currentUser.id === user.id) {
-          this.router.transitionTo("userPrivateMessages", user);
-        }
+  async removeAllowedUser(user) {
+    if (this.currentUser.id === user.id) {
+      const isConfirmed = await this.dialog.yesNoConfirm({
+        message: i18n("post.controls.remove_yourself_from_pm"),
       });
+
+      if (!isConfirmed) {
+        return;
+      }
+    }
+
+    try {
+      await this.get("model.details").removeAllowedUser(user);
+
+      if (this.currentUser.id === user.id) {
+        this.router.transitionTo("userPrivateMessages", user);
+      }
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   @action
@@ -958,7 +974,11 @@ export default class TopicController extends Controller {
       warningsDisabled: true,
       hijackPreview: {
         component: DEditorOriginalTranslationPreview,
-        model: { postLocale: post.locale, rawPost: raw },
+        model: {
+          postLocale: post.locale,
+          rawPost: raw,
+          translationText: () => this.composer.model?.reply,
+        },
       },
       post,
       selectedTranslationLocale: this.currentUser?.effective_locale,

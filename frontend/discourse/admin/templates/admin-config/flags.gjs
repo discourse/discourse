@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
-import RouteTemplate from "ember-route-template";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DPageHeader from "discourse/components/d-page-header";
 import NavItem from "discourse/components/nav-item";
@@ -64,4 +63,4 @@ class FlagsTemplate extends Component {
   </template>
 }
 
-export default RouteTemplate(FlagsTemplate);
+export default FlagsTemplate;

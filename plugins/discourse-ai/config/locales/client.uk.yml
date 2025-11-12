@@ -174,7 +174,7 @@ uk:
               label: "Відправник особистих повідомлень"
               description: "Користувач, який надсилатиме особисте повідомлення (за замовчуванням – система)"
             notify_author_pm_message:
-              label: "Приватне повідомлення"
+              label: "Вміст PM"
               description: "Додаткове власне повідомлення для надсилання автору"
             include_personal_messages:
               label: "Включити особисті повідомлення"
@@ -195,7 +195,7 @@ uk:
           fields:
             tagger_persona:
               label: "ШІ Персона"
-              description: "Штучний інтелект для аналізу та позначення публікацій"
+              description: "Персона ШІ для аналізу та позначення тем"
             tag_mode:
               label: "Режим вибору тегів"
               description: "Виберіть, як ШІ вибиратиме теги"
@@ -336,15 +336,26 @@ uk:
           complete_language_detection_description: "Усі повідомленнях, що відповідають вимогам %{total} мають можливість використовувати свою мову."
           incomplete_language_detection_description: "%{done} з %{total} дописів, які відповідають вимогам, визначено їхню мову."
           backfill_disabled: "Автозаповнення вимкнено, перекладатимуться лише нові публікації."
-          description_tooltip:
-            one: 'Є %{count} публікація, яку можна перекласти.'
-            few: 'Є %{count} публікації, які можна перекласти.'
-            many: 'Є %{count} публікацій, які можна перекласти.'
-            other: 'Є %{count} публікацій, які можна перекласти.'
+          backfill_message: "<a href='%{settingsUrl}'>Налаштування заповнення</a> налаштовано на переклад усіх публікацій після %{date} — це, за оцінками, займе %{eta}."
+          eta_minutes:
+            one: "%{count} хвилина"
+            few: "%{count} хвилини"
+            many: "%{count} хвилин"
+            other: "%{count} хвилин"
+          eta_hours:
+            one: "%{count} година"
+            few: "%{count} години"
+            many: "%{count} годин"
+            other: "%{count} годин"
+          eta_days:
+            one: "%{count} день"
+            few: "%{count} дні"
+            many: "%{count} днів"
+            other: "%{count} днів"
         progress_chart:
           title: "Прогрес перекладу"
           data_label: "%{percentage}%"
-          tooltip_translated: "%{done} з %{total} дописів перекладено"
+          tooltip_translated: "%{done} з %{total} не-%{language} перекладених публікацій"
           bar_done:
             one: "%{count} повідомлення"
             few: "%{count} дописів"
@@ -883,6 +894,7 @@ uk:
         cancel_streaming: "Зупинити відповідь"
         default_pm_prefix: "[ПП від ШІ-бота без назви]"
         shortcut_title: "Почніть листування з AI-ботом"
+        shortcut_link: "ШІ-бот"
         exit: "вийти з ШІ-бота"
         share: "Копіювати розмову ШІ"
         conversation_shared: "Бесіду скопійовано"

@@ -290,4 +290,29 @@ RSpec.describe UsernameValidator do
       end
     end
   end
+
+  describe "#perform_validation" do
+    let!(:invalid_username) { "invalidusername" }
+    let!(:plugin) { Plugin::Instance.new }
+    let!(:modifier) { :username_validation }
+    let!(:add_error_block) do
+      Proc.new do |errors, context|
+        errors << "Plugin validation error message" if context.username == invalid_username
+      end
+    end
+
+    it "applies plugin modifiers for username validation" do
+      expect_valid(invalid_username, failure_reason: "Plugin validations should be called")
+
+      DiscoursePluginRegistry.register_modifier(plugin, modifier, &add_error_block)
+
+      expect_invalid(
+        invalid_username,
+        error_message: "Plugin validation error message",
+        failure_reason: "Plugin validations should be called",
+      )
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &add_error_block)
+    end
+  end
 end

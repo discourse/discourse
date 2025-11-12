@@ -1,3 +1,4 @@
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import DiscourseRoute from "discourse/routes/discourse";
 import CustomReaction from "../../models/discourse-reactions-custom-reaction";
 
@@ -10,8 +11,8 @@ export default class UserNotificationsReactionsReceived extends DiscourseRoute {
     include_likes: { refreshModel: true },
   };
 
-  model(params) {
-    return CustomReaction.findReactions(
+  async model(params) {
+    const list = await CustomReaction.findReactions(
       "reactions-received",
       this.modelFor("user").get("username"),
       {
@@ -19,6 +20,8 @@ export default class UserNotificationsReactionsReceived extends DiscourseRoute {
         includeLikes: params.include_likes,
       }
     );
+
+    return new TrackedArray(list);
   }
 
   setupController(controller, model) {

@@ -25,6 +25,7 @@ import { EditorView } from "prosemirror-view";
 import { getExtensions } from "discourse/lib/composer/rich-editor-extensions";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
+import { authorizesOneOrMoreExtensions } from "../../../lib/uploads";
 import { buildCommands, buildCustomState } from "../core/commands";
 import { buildInputRules } from "../core/inputrules";
 import { buildKeymap } from "../core/keymap";
@@ -77,6 +78,7 @@ export default class ProsemirrorEditor extends Component {
   @service site;
   @service siteSettings;
   @service appEvents;
+  @service currentUser;
 
   schema = createSchema(this.extensions, this.args.includeDefault);
   view;
@@ -214,6 +216,28 @@ export default class ProsemirrorEditor extends Component {
           next(() => this.args.focusOut?.());
           return false;
         },
+        paste: (view, event) => {
+          // When !authorizesOneOrMoreExtensions, we don't ComposerUpload#setup,
+          // which is originally responsible for preventDefault.
+          if (
+            event.clipboardData.files &&
+            !authorizesOneOrMoreExtensions(
+              this.currentUser.staff,
+              this.siteSettings
+            )
+          ) {
+            event.preventDefault();
+          }
+        },
+        drop: (view, event) => {
+          if (
+            [...event.dataTransfer.items].some((item) => item.kind === "file")
+          ) {
+            // Skip processing the drop event (e.g. Safari cross-window content drag),
+            // Uppy's DropTarget should handle that instead.
+            return true;
+          }
+        },
       },
       handleKeyDown: (view, event) => {
         // suppress if Enter/Tab and the autocomplete is open
@@ -242,7 +266,32 @@ export default class ProsemirrorEditor extends Component {
 
   @bind
   convertFromMarkdown(markdown) {
-    return this.parser.convert(this.schema, markdown);
+    try {
+      return this.parser.convert(this.schema, markdown);
+    } catch (e) {
+      if (e instanceof UnsupportedTokenError) {
+        this.dialog.alert({
+          message: i18n("composer.unsupported_token"),
+          didConfirm: this.args.toggleRichEditor,
+          didCancel: this.args.toggleRichEditor,
+        });
+
+        return this.schema.nodes.paragraph.create(
+          null,
+          markdown
+            // our html_block avoids double newlines
+            // because markdown-it closes the html block parsing at double newlines
+            .split("\n\n")
+            .filter(Boolean)
+            .map((line) =>
+              // this creates a dependency on having a html_block in the schema
+              this.schema.nodes.html_block.create(null, this.schema.text(line))
+            )
+        );
+      }
+
+      throw e;
+    }
   }
 
   @bind
@@ -255,7 +304,7 @@ export default class ProsemirrorEditor extends Component {
     }
 
     try {
-      const doc = this.convertFromMarkdown(value);
+      const doc = this.parser.convert(this.schema, value);
 
       const tr = this.view.state.tr;
       tr.replaceWith(0, this.view.state.doc.content.size, doc.content).setMeta(

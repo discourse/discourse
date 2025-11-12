@@ -107,6 +107,13 @@ id:
       modals:
         select_option: "Memilih sebuah pilihan..."
       translations:
+        stats:
+          eta_minutes:
+            other: "%{count} menit"
+          eta_hours:
+            other: "%{count} jam"
+          eta_days:
+            other: "%{count} hari"
         progress_chart:
           bar_done:
             other: "%{count} post"

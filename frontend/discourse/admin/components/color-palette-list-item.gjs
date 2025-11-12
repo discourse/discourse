@@ -172,7 +172,7 @@ export default class ColorPaletteListItem extends Component {
                 @route="adminConfig.colorPalettes.show"
                 @routeModels={{array @scheme.id}}
                 @label="admin.customize.colors.edit"
-                class="btn-secondary"
+                class="btn-default"
                 @disabled={{not this.canEdit}}
               />
             </:button>

@@ -37,7 +37,7 @@ export default class ReviewIndexController extends Controller {
   category_id = null;
   reviewables = null;
   topic_id = null;
-  filtersExpanded = this.site.desktopView;
+  filtersExpanded = false;
   username = "";
   reviewed_by = "";
   flagged_by = "";
@@ -126,14 +126,14 @@ export default class ReviewIndexController extends Controller {
       return;
     }
 
-    let newList = this.reviewables.filter(
+    let newList = this.reviewables.content.filter(
       (reviewable) => !ids.includes(reviewable.id)
     );
 
     if (newList.length === 0) {
       this.refreshModel();
     } else {
-      this.reviewables.setObjects(newList);
+      this.reviewables.content.splice(0, Infinity, ...newList);
     }
   }
 

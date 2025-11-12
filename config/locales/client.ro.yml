@@ -323,9 +323,10 @@ ro:
     back_button: "Înapoi"
     welcome_banner:
       header:
+        new_members: "Bine ai venit, %{preferred_display_name}!"
         logged_in_members: "Bine ai revenit, %{preferred_display_name}!"
         anonymous_members: "Bine ai venit pe %{site_name}!"
-      search: "Caută"
+      search_placeholder: "Caută"
     impersonation:
       notice: "Preiei identitatea utilizatorului %{username}"
       stop: "Oprește preluarea identității"
@@ -388,7 +389,7 @@ ro:
     joined: "Înregistrat"
     admin_title: "Admin"
     show_more: "arată mai mult"
-    show_help: "opțiuni"
+    show_help: "Opțiuni"
     links: "Legături"
     links_lowercase:
       one: "legătură"
@@ -591,6 +592,7 @@ ro:
       other: "Vezi %{count} de subiecte noi"
     preview: "previzualizează"
     cancel: "Anulare"
+    done: "Gata"
     save: "Salvează modificări"
     saved: "Salvat!"
     upload: "Încarcă"
@@ -664,9 +666,9 @@ ro:
         claimed_by_other: "Acest element poate fi revizuit numai de <b>%{username}</b>."
         automatically_claimed_by: "Acest element este revizuit momentan de <b>%{username}</b>."
       claim:
-        title: "revendică acest subiect"
+        title: "Revendică acest subiect"
       unclaim:
-        help: "elimină această revendicare"
+        help: "Elimină această revendicare"
       awaiting_approval: "În așteptarea aprobării"
       delete: "Șterge"
       settings:
@@ -739,7 +741,7 @@ ro:
         one: "%{count} răspuns"
         few: "%{count} răspunsuri"
         other: "%{count} de răspunsuri"
-      edit: "Editează"
+      edit: "Modifică postarea"
       save: "Salvează"
       cancel: "Anulează"
       new_topic: "Aprobarea acestui element va crea un subiect nou"
@@ -824,6 +826,11 @@ ro:
           title: "Articol"
           noun: "postare"
       flagged_as: "Semnalat ca"
+      post_flagged_as: "Postare semnalată ca"
+      chat_flagged_as: "Discuție semnalată ca"
+      queued_post_label: "Postare în coadă"
+      queued_topic_label: "Subiect adăugat în coadă"
+      user_label: "Utilizator"
       assigned_to: "Atribuit la"
       moderator_actions: "Acțiuni moderator"
       timeline_and_notes: "Cronologie și note"
@@ -847,21 +854,27 @@ ro:
         chars_remaining: "%{count} caractere rămase"
         delete_note: "Șterge această notă"
         delete: "Șterge"
-      new_topic_label: "Subiect nou"
+      topic_label: "Subiect"
       queued_user: "Utilizator în coadă"
       posted_in: "Postat în"
       flagged_user: "Utilizator semnalat"
       review_user: "Utilizator"
       need_help: "Ai nevoie de ajutor?"
       copy_link: "Copiază legătură"
+      copy_permalink_title: "copiază o legătură în clipboard către acest element verificabil"
+      copy_link_feedback: "Legătură copiată"
       view_source: "Vezi sursă"
       insights:
         flagged_by_users:
           one: "Semnalat de un utilizator unic"
           few: "Semnalat de %{count} utilizatori unici"
           other: "Semnalat de %{count} de utilizatori unici"
-        similar_posts: "Postări anterioare similare"
-        user_activity: "Activitate utilizator"
+        similar_posts: "Încălcări anterioare"
+        flagged_in_timeframe:
+          one: "o semnalizare confirmată"
+          few: "%{count} semnalizări confirmate"
+          other: "%{count} de semnalizări confirmate"
+        user_activity: "Informații utilizator"
         activities:
           new_account: "cont nou"
           trust_level: "nivel de încredere: %{trustLevelName}"
@@ -1289,6 +1302,8 @@ ro:
       new_private_message: "Mesaj nou"
       private_message: "Mesaj"
       private_messages: "Mesaje"
+      upcoming_changes:
+        title: "Modificare viitoare activată"
       user_notifications:
         filters:
           filter_by: "Filtrează după"
@@ -1940,6 +1955,11 @@ ro:
       no_results: "Fără rezultate"
       search: "Caută…"
       label: "Selectează opțiuni"
+    d_otp:
+      screen_reader:
+        one: Introduceți un număr
+        few: Introdu %{count} numere
+        other: Introdu %{count} de numere
     form_kit:
       reset: Resetare
       optional: opțional
@@ -2188,8 +2208,13 @@ ro:
         title: "Traducere postare"
         select: "Selectează traducere"
         save: "Salvează traducere"
-        original_content: "Conținut postare originală"
+        original_content: "Postare originală"
+        translation_preview: "Previzualizare traducere"
+        original: "Original"
+        translation: "Traducere"
+        no_translation_yet: "Începe să tastezi pentru a vedea previzualizarea traducerii..."
         placeholder: "Introdu aici traducerea pentru postare..."
+        show_raw_markdown: "Afișare brută"
       group_mentioned:
         one: "Menționând %{group} va notifica <a href='%{group_link}'>%{count} persoană</a>."
         few: "Menționând %{group} va notifica <a href='%{group_link}'>%{count} persoane</a>."
@@ -2296,12 +2321,15 @@ ro:
           label: Răspunde la subiect
           desc: Răspundeți subiectului, nu unei anumite postări
         create_topic:
-          label: "Discuție nouă"
+          label: "Subiect nou"
+        create_personal_message:
+          label: "Mesaj nou"
+          desc: "Creează un mesaj personal nou"
         toggle_topic_bump:
           label: "Comută bump pentru subiect"
         toggle_unlisted:
           label: Comută la nelistate
-          desc: Subiecte nelistate, accesibile membrilor doar prin legătură directă
+          desc: "Subiectele nelistate sunt accesibile doar prin legătură directă"
       reload: "Reîncarcă"
       ignore: "Ignoră"
       image_alt_text:
@@ -3451,8 +3479,11 @@ ro:
       readonly: "Doar citire"
     preloader_text: "Se încarcă"
     lightbox:
-      download: "descărcare"
+      download: "Descărcare"
+      image_info: "Informații despre imagine"
       counter: "%curr% din %total%"
+      zoom: "Zoom (tasta Z)"
+      error: "Imaginea nu poate fi încărcată"
     invalid_video_url: Acest videoclip nu poate fi redat deoarece adresa URL este nevalidă sau indisponibilă.
     keyboard_shortcuts_help:
       search_placeholder: "Caută o scurtătură după descriere sau combinație de taste"
@@ -3479,7 +3510,7 @@ ro:
         next_prev: "%{shortcut} Secțiunea următoare/anterioară"
       application:
         title: "Aplicație"
-        create: "Creează subiect nou"
+        create: "%{shortcut} Creează un subiect nou sau un mesaj personal"
         notifications: "%{shortcut} Deschide notificări"
         hamburger_menu: "%{shortcut} Deschide meniul de navigare"
         user_profile_menu: "%{shortcut} Deschide meniu utilizator"
@@ -3860,6 +3891,7 @@ ro:
   admin_js:
     type_to_filter: "Tastează pentru a filtra…"
     settings: "Opțiuni"
+    reset_filter: "Resetare"
     admin:
       title: "Admin Discourse"
       moderator: "Moderator"
@@ -3888,6 +3920,19 @@ ro:
           title: "Module"
         advanced:
           title: "Avansat"
+      upcoming_changes:
+        name: "Nume"
+        enabled: "Activate"
+        preview: "Previzualizează"
+        impact_roles:
+          admins: "Admini"
+          moderators: "Moderatori"
+          staff: "Echipa"
+        filter:
+          all: "Toate"
+          enabled: "Activate"
+          disabled: "Dezactivate"
+          impact_type_other: "Altele"
       config:
         about:
           title: "Despre site-ul tău"
@@ -5254,8 +5299,8 @@ ro:
             cancel: "Anulează"
           confirmation:
             cancel: "Anulează"
-        delete_forbidden_because_staff: "Administratorii nu pot fi șterși."
-        delete_posts_forbidden_because_staff: "Nu poți șterge mesajele administratorilor și moderatorilor."
+        delete_forbidden_because_admin: "Administratorii nu pot fi șterși."
+        delete_posts_forbidden_because_admin: "Nu pot șterge toate postările administratorilor."
         delete_forbidden:
           one: "Utilizatorii nu pot fi șterși dacă au postări. Șterge toate postările înainte de a încerca ștergerea unui utilizator. (Postările mai vechi de %{count} zi nu pot fi șterse)"
           few: "Utilizatorii nu pot fi șterși dacă au postări. Şterge toate postările înainte de a încerca ștergerea unui utilizator. (Postările mai vechi de %{count} zile nu pot fi șterse)"

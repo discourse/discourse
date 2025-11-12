@@ -27,16 +27,14 @@ module("Integration | Component | d-toggle-switch", function (hooks) {
   });
 
   test("it renders a label for the button", async function (assert) {
-    const self = this;
-
     I18n.translations[I18n.locale].js.test = { fooLabel: "foo" };
     this.set("state", true);
     await render(
       <template>
         <DToggleSwitch
-          @state={{self.state}}
-          @label={{self.label}}
-          @translatedLabel={{self.translatedLabel}}
+          @state={{this.state}}
+          @label={{this.label}}
+          @translatedLabel={{this.translatedLabel}}
         />
       </template>
     );

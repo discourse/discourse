@@ -12,6 +12,7 @@ import { and, eq, not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import ShareTopicModal from "discourse/components/modal/share-topic";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import PostA11yHeading from "discourse/components/post/a11y-heading";
 import PostActionsSummary from "discourse/components/post/actions-summary";
 import PostAvatar from "discourse/components/post/avatar";
 import PostCookedHtml from "discourse/components/post/cooked-html";
@@ -25,6 +26,7 @@ import TopicMap from "discourse/components/topic-map";
 import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { isTesting } from "discourse/lib/environment";
+import { relativeAge } from "discourse/lib/formatter";
 import getURL, { getAbsoluteURL } from "discourse/lib/get-url";
 import postActionFeedback from "discourse/lib/post-action-feedback";
 import { nativeShare } from "discourse/lib/pwa-utils";
@@ -37,6 +39,7 @@ import { clipboardCopy } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
 export default class Post extends Component {
+  @service a11y;
   @service appEvents;
   @service capabilities;
   @service currentUser;
@@ -118,10 +121,6 @@ export default class Post extends Component {
     return this.repliesAbove?.isResolved && this.repliesAbove.value.length > 0;
   }
 
-  get id() {
-    return `post_${this.args.post.post_number}`;
-  }
-
   get isFromCurrentUser() {
     return this.currentUser && this.currentUser.id === this.args.post.user_id;
   }
@@ -148,6 +147,22 @@ export default class Post extends Component {
 
   get minHeight() {
     return this.args.height ? `${this.args.height}px` : null;
+  }
+
+  get a11yHeadingText() {
+    // a11y.autoUpdatingRelativeDateRef is consumed to force the heading text to be auto-updated
+    const date =
+      this.a11y.autoUpdatingRelativeDateRef && this.args.post.displayDate
+        ? relativeAge(new Date(this.args.post.displayDate), {
+            format: "medium-with-ago-and-on",
+            wrapInSpan: false,
+          })
+        : "";
+
+    return i18n("post.accessible_heading", {
+      username: this.args.post.username,
+      date,
+    });
   }
 
   get repliesShown() {
@@ -227,7 +242,7 @@ export default class Post extends Component {
       after,
     });
 
-    replies.forEach((reply) => {
+    replies.content.forEach((reply) => {
       // the components expect a post model instance
       const replyAsPost = this.store.createRecord("post", reply);
       this.repliesBelow.push(replyAsPost);
@@ -378,7 +393,9 @@ export default class Post extends Component {
       postId: this.args.post.id,
     });
 
-    return replies.map((reply) => this.store.createRecord("post", reply));
+    return replies.content.map((reply) =>
+      this.store.createRecord("post", reply)
+    );
   }
 
   <template>
@@ -422,8 +439,9 @@ export default class Post extends Component {
           we need to only set it in the `div` when the post is cloaked.
           This is not ideal, but the post-stream component sets the `id` for the children to ensure
           all cloaked items can be referenced and we need to override it }}
-      id={{if @cloaked (concat "post_" @post.post_number)}}
+      id={{if @cloaked @elementId}}
     >
+      <PostA11yHeading @post={{@post}} @text={{this.a11yHeadingText}} />
       {{#unless @cloaked}}
         {{#let
           (lazyHash
@@ -440,7 +458,7 @@ export default class Post extends Component {
         }}
           <PluginOutlet @name="post-article" @outletArgs={{postOutletArgs}}>
             <article
-              id={{this.id}}
+              id={{@elementId}}
               class={{concatClass
                 "boxed"
                 "onscreen-post"
@@ -454,11 +472,7 @@ export default class Post extends Component {
                 (if @post.via_email "post--via-email via-email")
                 this.additionalArticleClasses
               }}
-              aria-label={{i18n
-                "share.post"
-                (hash postNumber=@post.post_number username=@post.username)
-              }}
-              role="region"
+              aria-labelledby={{concat "post-heading-" @post.post_number}}
               data-post-id={{@post.id}}
               data-topic-id={{@post.topicId}}
               data-user-id={{@post.user_id}}

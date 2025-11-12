@@ -9,31 +9,25 @@ module("Integration | Component | themes-list-item", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default theme", async function (assert) {
-    const self = this;
-
     this.set("theme", Theme.create({ name: "Test", default: true }));
 
-    await render(<template><ThemesListItem @theme={{self.theme}} /></template>);
+    await render(<template><ThemesListItem @theme={{this.theme}} /></template>);
 
     assert.dom(".d-icon-check").exists("shows default theme icon");
   });
 
   test("pending updates", async function (assert) {
-    const self = this;
-
     this.set(
       "theme",
       Theme.create({ name: "Test", remote_theme: { commits_behind: 6 } })
     );
 
-    await render(<template><ThemesListItem @theme={{self.theme}} /></template>);
+    await render(<template><ThemesListItem @theme={{this.theme}} /></template>);
 
     assert.dom(".d-icon-arrows-rotate").exists("shows pending update icon");
   });
 
   test("broken theme", async function (assert) {
-    const self = this;
-
     this.set(
       "theme",
       Theme.create({
@@ -42,14 +36,12 @@ module("Integration | Component | themes-list-item", function (hooks) {
       })
     );
 
-    await render(<template><ThemesListItem @theme={{self.theme}} /></template>);
+    await render(<template><ThemesListItem @theme={{this.theme}} /></template>);
 
     assert.dom(".d-icon-circle-exclamation").exists("shows broken theme icon");
   });
 
   test("with children", async function (assert) {
-    const self = this;
-
     this.childrenList = [1, 2, 3, 4, 5].map((num) =>
       Theme.create({ name: `Child ${num}`, component: true })
     );
@@ -63,7 +55,7 @@ module("Integration | Component | themes-list-item", function (hooks) {
       })
     );
 
-    await render(<template><ThemesListItem @theme={{self.theme}} /></template>);
+    await render(<template><ThemesListItem @theme={{this.theme}} /></template>);
 
     assert.deepEqual(
       document

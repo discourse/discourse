@@ -106,6 +106,10 @@ fi:
     reviewables:
       message_already_handled: "Kiitos, mutta olemme jo käsitelleet tämän viestin ja todenneet, ettei sitä tarvitse liputtaa uudelleen."
       actions:
+        no_action_message:
+          title: "Ei toimintaa"
+        restore_message:
+          description: "Palauta viesti, jotta käyttäjät näkevät sen."
         agree:
           title: "Hyväksy..."
         agree_and_keep_message:
@@ -184,7 +188,7 @@ fi:
         slug_contains_non_ascii_chars: "sisältää muita kuin ascii-merkkejä"
         is_already_in_use: "on jo käytössä"
     bookmarkable:
-      notification_title: "viesti kanavalla %{channel_name}"
+      notification_title_channel: "viesti kanavalla %{channel_name}"
     personal_chat: "henkilökohtainen chat"
     onebox:
       inline_to_message: "Viesti %{message_id}, lähettäjä: %{username} – #%{chat_channel}"

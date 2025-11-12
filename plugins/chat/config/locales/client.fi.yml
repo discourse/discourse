@@ -273,6 +273,8 @@ fi:
       chat_message_separator:
         today: Tänään
         yesterday: Eilen
+      search_view:
+        filter_placeholder: Hae viesteistä
       members_view:
         filter_placeholder: Etsi jäseniä
         add_member: Lisää jäsen
@@ -289,6 +291,7 @@ fi:
         tabs:
           members: Jäsenet
           settings: Asetukset
+          search: Haku
         remove_member: "Poista"
       new_message_modal:
         title: Lähetä viesti
@@ -380,6 +383,7 @@ fi:
           topic: "Ketju"
       reviewable:
         type: "Chat-viesti"
+        message_in_channel: "Kanava"
       reactions:
         only_you: "<span>Reagoit emojilla</span>:%{emoji}:"
         you_and_single_user: "<span>Sinä ja %{username} reagoitte emojilla </span>:%{emoji}:"
@@ -442,6 +446,11 @@ fi:
           create_export: "Luo vienti"
           confirm_export: "Tämä vie kaikki viestit kaikilta kanavilta ja lähettää tuloksen sinulle henkilökohtaisena viestinä. Haluatko varmasti viedä?"
           export_has_started: "Vienti on alkanut. Saat yksityisviestin, kun se on valmis."
+      search:
+        no_results: "Ei tuloksia"
+        sort:
+          relevance: "Osuvuus"
+          latest: "Tuoreimmat"
       my_threads:
         title: Omat ketjut
         aria_label: "Vaihda ketjuluettelooni"

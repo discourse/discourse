@@ -11,6 +11,8 @@ uk:
     login_with_amazon_client_secret: "Вхід за допомогою секретного ключа клієнта Amazon"
     login_with_amazon_scope: "Увійдіть зі сферами дії Amazon OAuth2 (через пробіл)"
     login_with_amazon_overrides_email: "Замінює адресу електронної пошти в обліковому записі користувача Discourse."
+    login_with_amazon_user_can_connect: "Дозволити існуючим користувачам підключати свої облікові записи Amazon у налаштуваннях."
+    login_with_amazon_user_can_revoke: "Дозволити користувачам скасовувати пов’язаний обліковий запис Amazon у налаштуваннях."
     errors:
       login_with_amazon_client_id_is_blank: "Перш ніж увімкнути цей параметр, ви маєте встановити \"вхід з ідентифікатором клієнта amazon\"."
       login_with_amazon_client_secret_is_blank: "Перш ніж увімкнути цей параметр, потрібно встановити «вхід із секретним ключем клієнта Amazon»."

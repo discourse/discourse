@@ -17,24 +17,20 @@ module(
     });
 
     test("displays tags", async function (assert) {
-      const self = this;
-
       this.set("value", ["foo", "bar"]);
 
       await render(
-        <template><MiniTagChooser @value={{self.value}} /></template>
+        <template><MiniTagChooser @value={{this.value}} /></template>
       );
 
       assert.strictEqual(this.subject.header().value(), "foo,bar");
     });
 
     test("create a tag", async function (assert) {
-      const self = this;
-
       this.set("value", ["foo", "bar"]);
 
       await render(
-        <template><MiniTagChooser @value={{self.value}} /></template>
+        <template><MiniTagChooser @value={{this.value}} /></template>
       );
 
       assert.strictEqual(this.subject.header().value(), "foo,bar");
@@ -56,13 +52,11 @@ module(
     });
 
     test("max_tags_per_topic", async function (assert) {
-      const self = this;
-
       this.set("value", ["foo", "bar"]);
       this.siteSettings.max_tags_per_topic = 2;
 
       await render(
-        <template><MiniTagChooser @value={{self.value}} /></template>
+        <template><MiniTagChooser @value={{this.value}} /></template>
       );
 
       assert.strictEqual(this.subject.header().value(), "foo,bar");
@@ -79,13 +73,11 @@ module(
     });
 
     test("disables search and shows limit when max_tags_per_topic is zero", async function (assert) {
-      const self = this;
-
       this.set("value", ["cat", "kit"]);
       this.siteSettings.max_tags_per_topic = 0;
 
       await render(
-        <template><MiniTagChooser @value={{self.value}} /></template>
+        <template><MiniTagChooser @value={{this.value}} /></template>
       );
 
       assert.strictEqual(this.subject.header().value(), "cat,kit");
@@ -103,14 +95,12 @@ module(
     });
 
     test("required_tag_group", async function (assert) {
-      const self = this;
-
       this.set("value", ["foo", "bar"]);
 
       await render(
         <template>
           <MiniTagChooser
-            @value={{self.value}}
+            @value={{this.value}}
             @options={{hash categoryId=1}}
           />
         </template>
@@ -169,16 +159,14 @@ module(
     });
 
     test("values in hiddenFromPreview will not display in preview", async function (assert) {
-      const self = this;
-
       this.set("value", ["foo", "bar"]);
       this.set("hiddenValues", ["foo"]);
 
       await render(
         <template>
           <MiniTagChooser
-            @options={{hash allowAny=true hiddenValues=self.hiddenValues}}
-            @value={{self.value}}
+            @options={{hash allowAny=true hiddenValues=this.hiddenValues}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -205,14 +193,12 @@ module(
     });
 
     test("displays tags and filter in header", async function (assert) {
-      const self = this;
-
       this.set("value", ["apple", "orange", "potato"]);
 
       await render(
         <template>
           <MiniTagChooser
-            @value={{self.value}}
+            @value={{this.value}}
             @options={{hash filterable=true useHeaderFilter=true}}
           />
         </template>
@@ -246,14 +232,12 @@ module(
     });
 
     test("removing a tag does not display the dropdown", async function (assert) {
-      const self = this;
-
       this.set("value", ["apple", "orange", "potato"]);
 
       await render(
         <template>
           <MiniTagChooser
-            @value={{self.value}}
+            @value={{this.value}}
             @options={{hash filterable=true useHeaderFilter=true}}
           />
         </template>
