@@ -751,6 +751,7 @@ en:
 
         provider_fields:
           access_key_id: "AWS Bedrock access key ID"
+          role_arn: "AWS Bedrock Role ARN"
           region: "AWS Bedrock region"
           organization: "Optional OpenAI organization ID"
           disable_system_prompt: "Disable system message in prompts"

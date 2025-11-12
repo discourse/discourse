@@ -30,4 +30,30 @@ RSpec.describe LlmModel do
       expect(seeded_model.credit_system_enabled?).to be true
     end
   end
+
+  describe "AWS Bedrock provider validation" do
+    fab!(:bedrock_model, :bedrock_model)
+
+    it "requires either access_key_id or role_arn" do
+      # Should fail with neither
+      bedrock_model.provider_params = { region: "us-east-1" }
+      expect(bedrock_model.valid?).to be false
+      expect(bedrock_model.errors[:base]).to include(
+        I18n.t("discourse_ai.llm_models.bedrock_missing_auth"),
+      )
+    end
+
+    it "is valid with access_key_id only" do
+      bedrock_model.provider_params = { region: "us-east-1", access_key_id: "test_key" }
+      expect(bedrock_model.valid?).to be true
+    end
+
+    it "is valid with role_arn only" do
+      bedrock_model.provider_params = {
+        region: "us-east-1",
+        role_arn: "arn:aws:iam::123:role/test",
+      }
+      expect(bedrock_model.valid?).to be true
+    end
+  end
 end

@@ -169,14 +169,28 @@ module DiscourseAi
 
         def prepare_request(payload)
           headers = { "content-type" => "application/json", "Accept" => "*/*" }
+          region = llm_model.lookup_custom_param("region")
 
           signer =
-            Aws::Sigv4::Signer.new(
-              access_key_id: llm_model.lookup_custom_param("access_key_id"),
-              region: llm_model.lookup_custom_param("region"),
-              secret_access_key: llm_model.api_key,
-              service: "bedrock",
-            )
+            if (credentials = llm_model.aws_bedrock_credentials)
+              # Use cached AWS role-based credentials with automatic refresh
+              creds = credentials.credentials
+              Aws::Sigv4::Signer.new(
+                access_key_id: creds.access_key_id,
+                secret_access_key: creds.secret_access_key,
+                session_token: creds.session_token,
+                region: region,
+                service: "bedrock",
+              )
+            else
+              # Use static access key credentials
+              Aws::Sigv4::Signer.new(
+                access_key_id: llm_model.lookup_custom_param("access_key_id"),
+                region: region,
+                secret_access_key: llm_model.api_key,
+                service: "bedrock",
+              )
+            end
 
           Net::HTTP::Post
             .new(model_uri)
