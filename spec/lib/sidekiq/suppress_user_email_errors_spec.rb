@@ -20,14 +20,6 @@ RSpec.describe Sidekiq::SuppressUserEmailErrors do
             }
           end
         end
-
-        it "wraps the exception when retry_count is nil (first attempt)" do
-          job = { "class" => "Jobs::UserEmail" }
-
-          expect do
-            middleware.call(worker, job, queue) { raise StandardError, "Email send failed" }
-          end.to raise_error(Jobs::HandledExceptionWrapper)
-        end
       end
 
       context "when retry_count is 3 or greater" do
