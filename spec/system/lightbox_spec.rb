@@ -215,7 +215,6 @@ describe "Lightbox | Photoswipe", type: :system do
 
   context "when missing data attributes" do
     it "preloads images and sets dimensions" do
-      upload_1.update(width: 400, height: 300)
       post.update(
         cooked:
           "<p><a href=\"#{upload_1.url}\" class=\"lightbox\" data-download-href=\"#{upload_1.url}\">[image]</a></p>",

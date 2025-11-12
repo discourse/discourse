@@ -246,7 +246,9 @@ export default async function lightbox(elem, siteSettings) {
       const missingDimensions = !targetWidth || !targetHeight;
       const missingMetaData = !item
         .querySelector(".meta")
-        ?.textContent.match(/x|×/);
+        ?.textContent.trim()
+        .split(/x|×/)
+        .every((v) => v && +v > 0);
 
       return hasImageSrc && missingDimensions && missingMetaData;
     });
