@@ -80,10 +80,20 @@ module("Integration | Component | DOTP", function (hooks) {
     assert.strictEqual(this.value, "12");
   });
 
+  test("@autofocus", async function (assert) {
+    await render(<template><DOTP /></template>);
+
+    assert.dom(".d-otp-slot[data-index='0'].--is-focused").exists();
+
+    await render(<template><DOTP @autofocus={{false}} /></template>);
+
+    assert.dom(".d-otp-slot[data-index='0'].--is-focused").doesNotExist();
+  });
+
   test("shows placeholder dashes for empty slots", async function (assert) {
     await render(<template><DOTP /></template>);
 
-    assert.dom(".d-otp-slot:nth-child(1)").hasText("​ -");
+    assert.dom(".d-otp-slot:nth-child(1)").hasText("​");
     assert.dom(".d-otp-slot:nth-child(2)").hasText("​ -");
     assert.dom(".d-otp-slot:nth-child(3)").hasText("​ -");
     assert.dom(".d-otp-slot:nth-child(4)").hasText("​ -");
