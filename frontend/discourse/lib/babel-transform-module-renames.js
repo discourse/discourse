@@ -10,11 +10,6 @@ export default function ({ types: t }) {
         ) {
           path.node.source = t.stringLiteral(`discourse/${moduleName}`);
         }
-
-        // TODO: REMOVE WITH VITE
-        // if (moduleName.startsWith(".") && moduleName.match(/\.g?js$/)) {
-        //   path.node.source = t.stringLiteral(moduleName.replace(/\.g?js$/, ""));
-        // }
       },
     },
   };

@@ -1,3 +1,5 @@
+// @ts-check
+
 /**
  * Interface for text manipulation with an underlying editor implementation.
  *

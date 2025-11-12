@@ -42,7 +42,6 @@
     "@jsquash/resize": "^2.1.0",
     "@messageformat/core": "^3.4.0",
     "@messageformat/runtime": "^3.0.2",
-    "@types/@glimmer__component": "npm:@glimmer/component@^2.0.0",
     "ace-builds": "^1.43.4",
     "chart.js": "3.5.1",
     "chartjs-plugin-datalabels": "2.2.0",
