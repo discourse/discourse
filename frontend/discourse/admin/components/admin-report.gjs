@@ -20,7 +20,10 @@ import ReportFilterCategoryComponent from "discourse/admin/components/report-fil
 import ReportFilterGroupComponent from "discourse/admin/components/report-filters/group";
 import ReportFilterListComponent from "discourse/admin/components/report-filters/list";
 import { REPORT_MODES } from "discourse/admin/lib/constants";
-import Report, { DAILY_LIMIT_DAYS, SCHEMA_VERSION } from "discourse/admin/models/report";
+import Report, {
+  DAILY_LIMIT_DAYS,
+  SCHEMA_VERSION,
+} from "discourse/admin/models/report";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";

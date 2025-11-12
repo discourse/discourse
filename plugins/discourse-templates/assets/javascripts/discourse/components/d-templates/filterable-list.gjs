@@ -9,7 +9,10 @@ import TextField from "discourse/components/text-field";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
-import { ALL_TAGS_ID, NO_TAG_ID } from "discourse/select-kit/components/tag-drop";
+import {
+  ALL_TAGS_ID,
+  NO_TAG_ID,
+} from "discourse/select-kit/components/tag-drop";
 import { i18n } from "discourse-i18n";
 import Item from "./item";
 import TagDrop from "./tag-drop";
