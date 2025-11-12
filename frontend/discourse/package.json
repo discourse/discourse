@@ -11,6 +11,7 @@
     "./select-kit/*": "./select-kit/*",
     "./float-kit/*": "./float-kit/*",
     "./truth-helpers/*": "./truth-helpers/*",
+    "./truth-helpers": "./truth-helpers/index.js",
     "./dialog-holder/*": "./dialog-holder/*",
     "./*": "./app/*"
   },
