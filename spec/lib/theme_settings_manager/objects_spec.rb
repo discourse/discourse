@@ -81,4 +81,22 @@ RSpec.describe ThemeSettingsManager::Objects do
       ).to contain_exactly(category_1, category_2, category_3)
     end
   end
+
+  describe "#upload" do
+    fab!(:upload)
+
+    it "returns an empty array when there are no properties of `upload` type" do
+      expect(theme_setting[:objects_setting].uploads).to eq([])
+    end
+
+    it "returns the upload record for all the properties of `upload` type in a flat array" do
+      new_value = [{ "image" => upload.id }]
+
+      theme_setting[:objects_with_uploads].value = new_value
+
+      expect(theme.reload.settings[:objects_with_uploads].value).to eq(new_value)
+
+      expect(theme.settings[:objects_with_uploads].uploads).to contain_exactly(upload)
+    end
+  end
 end
