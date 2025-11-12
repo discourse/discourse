@@ -9,7 +9,6 @@ import { i18n } from "discourse-i18n";
 const userDismissedPromptKey = "dismissed-prompt";
 
 export default class NotificationConsentBanner extends Component {
-  @service capabilities;
   @service currentUser;
   @service desktopNotifications;
   @service siteSettings;
@@ -40,15 +39,16 @@ export default class NotificationConsentBanner extends Component {
       pushNotificationKeyValueStore.removeItem(userDismissedPromptKey);
     }
 
-    this.bannerDismissed = pushNotificationKeyValueStore.getItem(
-      userDismissedPromptKey
-    ) != null;
+    this.bannerDismissed =
+      pushNotificationKeyValueStore.getItem(userDismissedPromptKey) != null;
   }
 
   get showNotificationPwaTip() {
-    return this.desktopNotifications.isPushNotificationsPreferred &&
-           this.desktopNotifications.isPushSupported &&
-           this.desktopNotifications.isPushPwaNeeded;
+    return (
+      this.desktopNotifications.isPushNotificationsPreferred &&
+      this.desktopNotifications.isPushSupported &&
+      this.desktopNotifications.isPushPwaNeeded
+    );
   }
 
   get showNotificationPromptBanner() {
@@ -56,7 +56,9 @@ export default class NotificationConsentBanner extends Component {
     if (this.desktopNotifications.isPushNotificationsPreferred) {
       // TODO: Eventually we want to show this banner even if a PWA is needed (and
       // guide users toward adding the app to their homescreen).
-      supported = this.desktopNotifications.isPushSupported && !this.desktopNotifications.isPushPwaNeeded;
+      supported =
+        this.desktopNotifications.isPushSupported &&
+        !this.desktopNotifications.isPushPwaNeeded;
     } else {
       supported = this.desktopNotifications.isSupported;
     }
@@ -74,7 +76,7 @@ export default class NotificationConsentBanner extends Component {
   @action
   async turnon() {
     if (await this.desktopNotifications.enable()) {
-      // Dismiss the banner iff notifications were successfully enabled.
+      // Dismiss the banner if notifications were successfully enabled.
       this.setBannerDismissed(true);
     } else {
       // TODO: Force a re-render to recheck our conditions. The below does not work for some reason.
