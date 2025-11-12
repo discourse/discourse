@@ -2771,7 +2771,7 @@ en:
     content_localization_supported_locales: "List of supported locales that user content can be translated to. Requires 'content localization enabled'."
     content_localization_allowed_groups: "Groups allowed to update localized content. Requires 'content localization enabled'."
     content_localization_language_switcher: "Show a language switcher in the header, allowing visitors to switch between translated versions of Discourse and user-contributed content. Uses languages defined in 'content localization supported locales'"
-    content_localization_crawler_param: "Serve localized content to web crawlers when 'content_localization enabled' and 'set_locale_from_param' is enabled. The list of supported locales is defined in 'content localization supported locales'."
+    content_localization_crawler_param: "Serve localized content to web crawlers when 'content localization enabled' and 'set locale from param' is enabled. The list of supported locales is defined in 'content localization supported locales'."
     enable_upcoming_changes: "Enable upcoming changes"
     fake_upcoming_change: "This is a fake upcoming change for testing purposes. No need to translate this string."
 
