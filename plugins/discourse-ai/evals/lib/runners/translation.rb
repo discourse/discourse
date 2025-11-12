@@ -6,12 +6,12 @@ module DiscourseAi
   module Evals
     module Runners
       class Translation < Base
-        FEATURE_PERSONA_MAP = {
+        OPERATIONS = {
           "locale_detector" => DiscourseAi::Personas::LocaleDetector,
           "post_raw_translator" => DiscourseAi::Personas::PostRawTranslator,
           "topic_title_translator" => DiscourseAi::Personas::TopicTitleTranslator,
           "short_text_translator" => DiscourseAi::Personas::ShortTextTranslator,
-        }
+        }.freeze
 
         def self.can_handle?(feature_name)
           feature_name&.start_with?("translation:")
@@ -19,7 +19,7 @@ module DiscourseAi
 
         def initialize(feature_name)
           @operation = feature_name
-          if !FEATURE_PERSONA_MAP.key?(@operation)
+          if !OPERATIONS.key?(@operation)
             raise ArgumentError, "Unsupported translation feature '#{feature_name}'"
           end
         end
@@ -35,11 +35,11 @@ module DiscourseAi
 
           if case_defs.present?
             case_defs.map do |case_args|
-              normalized_args = args.merge(case_args)
-              run_case(normalized_args, llm, wrap: true)
+              normalized_args = args.merge(case_args.symbolize_keys)
+              run_case(normalized_args, llm)
             end
           else
-            run_case(args, llm, wrap: false)
+            run_case(args, llm)
           end
         end
 
@@ -47,7 +47,7 @@ module DiscourseAi
 
         attr_reader :operation
 
-        def run_case(case_args, llm, wrap:)
+        def run_case(case_args, llm)
           content = extract_content(case_args)
           raise ArgumentError, "Translation evals require :input or :conversation" if content.blank?
 
@@ -55,58 +55,52 @@ module DiscourseAi
             if operation == "locale_detector"
               detect_locale(content, llm)
             else
-              target =
+              target_locale =
                 case_args[:target_locale].presence ||
                   raise(ArgumentError, "Translation evals require :target_locale")
-              translate_content(content, target, llm)
+              translate_content(content, target_locale, llm)
             end
 
-          wrap ? build_payload(case_args, content, output) : output
+          build_payload(case_args, content, output)
         end
 
         def detect_locale(content, llm)
-          persona, user = persona_for_operation
+          persona = persona_for_operation
           context =
             DiscourseAi::Personas::BotContext.new(
-              user: user,
+              user: system_user,
               skip_tool_details: true,
               feature_name: "translation/#{operation}",
               messages: [{ type: :user, content: content }],
             )
 
-          capture_response(persona, user, llm, context).strip
+          bot = DiscourseAi::Personas::Bot.as(system_user, persona: persona, model: llm)
+          capture_plain_response(bot, context).strip
         end
 
         def translate_content(content, target_locale, llm)
-          persona, user = persona_for_operation
+          persona = persona_for_operation
           payload = { content:, target_locale: }.to_json
           context =
             DiscourseAi::Personas::BotContext.new(
-              user: user,
+              user: system_user,
               skip_tool_details: true,
               feature_name: "translation/#{operation}",
               messages: [{ type: :user, content: payload }],
             )
 
-          capture_response(persona, user, llm, context).strip
-        end
-
-        def capture_response(persona, user, llm, context)
-          bot = DiscourseAi::Personas::Bot.as(user, persona: persona, model: llm)
-          buffer = +""
-
-          bot.reply(context) { |partial, _, type| buffer << partial if type.blank? }
-
-          buffer
+          bot = DiscourseAi::Personas::Bot.as(system_user, persona: persona, model: llm)
+          capture_plain_response(bot, context).strip
         end
 
         def build_payload(case_args, content, output)
-          {
-            result: output,
+          metadata = {
             message: content,
             target_locale: case_args[:target_locale],
             expected_locale: case_args[:expected_locale],
           }.compact
+
+          wrap_result(output, metadata)
         end
 
         def extract_content(case_args)
@@ -117,14 +111,13 @@ module DiscourseAi
           end
         end
 
+        def system_user
+          @user ||= Discourse.system_user
+        end
+
         def persona_for_operation
-          persona_class = FEATURE_PERSONA_MAP.fetch(operation)
-          persona_id = DiscourseAi::Personas::Persona.system_personas[persona_class]
-
-          persona_record = persona_id ? AiPersona.find_by_id_from_cache(persona_id) : nil
-          persona = persona_record&.class_instance&.new || persona_class.new
-
-          [persona, persona_record&.user || Discourse.system_user]
+          persona_class = OPERATIONS.fetch(operation)
+          resolve_persona(persona_class: persona_class)
         end
       end
     end

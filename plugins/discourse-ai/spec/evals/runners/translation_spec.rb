@@ -1,33 +1,28 @@
 # frozen_string_literal: true
 
 require_relative "../../../evals/lib/runners/translation"
+require_relative "../support/runner_helper"
 
 RSpec.describe DiscourseAi::Evals::Runners::Translation do
   fab!(:llm, :fake_model)
 
-  let(:bot_double) { instance_double(DiscourseAi::Personas::Bot) }
-
-  before do
-    allow(AiPersona).to receive(:find_by_id_from_cache).and_return(nil)
-    allow(DiscourseAi::Personas::Bot).to receive(:as).and_return(bot_double)
-  end
-
   describe "#run" do
     it "translates a single piece of content when no cases are provided" do
       runner = described_class.new("post_raw_translator")
-      allow(bot_double).to receive(:reply) { |_ctx, &blk| blk.call("Hola mundo", nil, nil) }
+      stub_runner_bot(response: "Hola mundo")
 
       eval_case = OpenStruct.new(args: { input: "Hello world", target_locale: "es" })
 
-      expect(runner.run(eval_case, llm)).to eq("Hola mundo")
+      result = runner.run(eval_case, llm)
+
+      expect(result[:raw]).to eq("Hola mundo")
+      expect(result[:metadata]).to include(target_locale: "es")
     end
 
     it "supports multiple cases and returns metadata for each entry" do
       runner = described_class.new("short_text_translator")
       responses = %w[Hola Salut]
-      allow(bot_double).to receive(:reply) do |_ctx, &blk|
-        blk.call(responses.shift, nil, nil)
-      end
+      stub_runner_bot { |blk| blk.call(responses.shift, nil, nil) }
 
       eval_case =
         OpenStruct.new(
@@ -40,20 +35,19 @@ RSpec.describe DiscourseAi::Evals::Runners::Translation do
       results = runner.run(eval_case, llm)
 
       expect(results.length).to eq(2)
-      expect(results[0][:message]).to eq("Hello")
-      expect(results[0][:target_locale]).to eq("es")
-      expect(results[0][:result]).to eq("Hola")
-      expect(results[1][:target_locale]).to eq("fr")
-      expect(results[1][:result]).to eq("Salut")
+      expect(results[0][:raw]).to eq("Hola")
+      expect(results[0][:metadata]).to include(message: "Hello", target_locale: "es")
+      expect(results[1][:metadata]).to include(target_locale: "fr", message: "Hi there")
+      expect(results[1][:raw]).to eq("Salut")
     end
 
     it "invokes the locale detector without requiring a target locale" do
       runner = described_class.new("locale_detector")
-      allow(bot_double).to receive(:reply) { |_ctx, &blk| blk.call("es", nil, nil) }
+      stub_runner_bot(response: "es")
 
       eval_case = OpenStruct.new(args: { input: "¿Cómo estás?" })
 
-      expect(runner.run(eval_case, llm)).to eq("es")
+      expect(runner.run(eval_case, llm)[:raw]).to eq("es")
     end
 
     it "raises when translation cases omit the target locale" do

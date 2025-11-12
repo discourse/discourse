@@ -1,25 +1,20 @@
 # frozen_string_literal: true
 
 require_relative "../../../evals/lib/runners/hyde"
+require_relative "../support/runner_helper"
 
 RSpec.describe DiscourseAi::Evals::Runners::Hyde do
   fab!(:llm, :fake_model)
 
-  let(:bot_double) { instance_double(DiscourseAi::Personas::Bot) }
-
-  before do
-    allow(AiPersona).to receive(:find_by_id_from_cache).and_return(nil)
-    allow(DiscourseAi::Personas::Bot).to receive(:as).and_return(bot_double)
-    allow(bot_double).to receive(:reply) { |_ctx, &blk| blk.call("Hypothetical post", nil, nil) }
-  end
+  before { stub_runner_bot(response: "Hypothetical post") }
 
   describe "#run" do
     it "returns a payload for a single query" do
       runner = described_class.new("hyde")
       result = runner.run(OpenStruct.new(args: { query: "How to theme Discourse" }), llm)
 
-      expect(result[:result]).to eq("Hypothetical post")
-      expect(result[:query]).to eq("How to theme Discourse")
+      expect(result[:raw]).to eq("Hypothetical post")
+      expect(result[:metadata]).to include(query: "How to theme Discourse")
     end
 
     it "evaluates multiple cases when provided" do
@@ -35,8 +30,8 @@ RSpec.describe DiscourseAi::Evals::Runners::Hyde do
         )
 
       expect(results.length).to eq(2)
-      expect(results.first[:result]).to eq("Hypothetical post")
-      expect(results.first[:query]).to eq("Discourse S3 backups")
+      expect(results.first[:raw]).to eq("Hypothetical post")
+      expect(results.first[:metadata]).to include(query: "Discourse S3 backups")
     end
 
     it "raises when the query is missing" do

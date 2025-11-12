@@ -90,10 +90,17 @@ module DiscourseAi
       end
 
       def classify_results(eval_case, result)
-        if result.is_a?(Array)
-          result.each { |r| r.merge!(classify_result(eval_case, r)) }
-        else
-          [classify_result(eval_case, result)]
+        entries = result.is_a?(Array) ? result : [result]
+
+        entries.map do |entry|
+          raw_value = entry.is_a?(Hash) && entry.key?(:raw) ? entry[:raw] : entry
+          metadata = entry.is_a?(Hash) ? entry[:metadata] : nil
+
+          classification = classify_result(eval_case, raw_value)
+
+          classification[:metadata] = metadata if metadata.present?
+
+          classification
         end
       end
 

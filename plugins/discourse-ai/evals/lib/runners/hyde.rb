@@ -33,7 +33,9 @@ module DiscourseAi
           query = case_args[:query].presence || case_args[:input].presence
           raise ArgumentError, "HyDE evals require :query or :input" if query.blank?
 
-          persona, user = persona_for_hyde
+          persona = resolve_persona(persona_class: DiscourseAi::Personas::ContentCreator)
+          user = Discourse.system_user
+
           context =
             DiscourseAi::Personas::BotContext.new(
               user: user,
@@ -42,26 +44,10 @@ module DiscourseAi
               messages: [{ type: :user, content: query }],
             )
 
-          { result: capture_response(persona, user, llm, context), query: query }
-        end
-
-        def capture_response(persona, user, llm, context)
           bot = DiscourseAi::Personas::Bot.as(user, persona: persona, model: llm)
-          buffer = +""
+          response = capture_plain_response(bot, context).strip
 
-          bot.reply(context) { |partial, _, type| buffer << partial if type.blank? }
-
-          buffer.strip
-        end
-
-        def persona_for_hyde
-          persona_id = SiteSetting.ai_embeddings_semantic_search_hyde_persona
-          persona_record = persona_id && AiPersona.find_by_id_from_cache(persona_id)
-
-          persona_instance =
-            persona_record&.class_instance&.new || DiscourseAi::Personas::ContentCreator.new
-
-          [persona_instance, persona_record&.user || Discourse.system_user]
+          wrap_result(response, { query: query })
         end
 
         def normalize_args(raw_args)

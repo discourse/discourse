@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "../../../evals/lib/runners/inference"
+require_relative "../support/runner_helper"
 
 RSpec.describe DiscourseAi::Evals::Runners::Inference do
   fab!(:llm, :fake_model)
@@ -11,14 +12,9 @@ RSpec.describe DiscourseAi::Evals::Runners::Inference do
       read_buffered_property: %w[concept_a concept_b],
     )
   end
-  let(:bot_double) { instance_double(DiscourseAi::Personas::Bot, persona: persona_instance) }
-  let(:persona_instance) { DiscourseAi::Personas::ConceptFinder.new }
-
   before do
-    allow(AiPersona).to receive(:find_by_id_from_cache).and_return(nil)
-    allow(DiscourseAi::Personas::Bot).to receive(:as).and_return(bot_double)
-    allow(bot_double).to receive(:reply) do |_context, &block|
-      block.call(structured_output, nil, :structured_output)
+    stub_runner_bot(persona: DiscourseAi::Personas::ConceptFinder.new) do |blk|
+      blk.call(structured_output, nil, :structured_output)
     end
   end
 
@@ -34,14 +30,14 @@ RSpec.describe DiscourseAi::Evals::Runners::Inference do
       runner = described_class.new("generate_concepts")
       result = runner.run(eval_case, llm)
 
-      expect(result).to eq("concept_a\nconcept_b")
+      expect(result[:raw]).to eq("concept_a\nconcept_b")
     end
 
     it "uses provided concept candidates for match_concepts" do
       eval_case =
         OpenStruct.new(args: { input: "Moderation queue updates", concepts: %w[queue ai] })
       runner = described_class.new("match_concepts")
-      expect(runner.run(eval_case, llm)).to eq("concept_a\nconcept_b")
+      expect(runner.run(eval_case, llm)[:raw]).to eq("concept_a\nconcept_b")
     end
 
     it "requires concepts for deduplicate_concepts" do

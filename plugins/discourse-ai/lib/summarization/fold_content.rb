@@ -158,7 +158,7 @@ module DiscourseAi
             skip_tool_details: true,
             feature_name: strategy.feature,
             resource_url: extras[:resource_path],
-            messages: strategy.as_llm_messages(content_in_window, extras),
+            messages: strategy.as_llm_messages(content_in_window, extras: extras),
           )
 
         summary = +""

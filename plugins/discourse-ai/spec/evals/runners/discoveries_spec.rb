@@ -1,25 +1,20 @@
 # frozen_string_literal: true
 
 require_relative "../../../evals/lib/runners/discoveries"
+require_relative "../support/runner_helper"
 
 RSpec.describe DiscourseAi::Evals::Runners::Discoveries do
   fab!(:llm, :fake_model)
 
-  let(:bot_double) { instance_double(DiscourseAi::Personas::Bot) }
-
-  before do
-    allow(AiPersona).to receive(:find_by_id_from_cache).and_return(nil)
-    allow(DiscourseAi::Personas::Bot).to receive(:as).and_return(bot_double)
-    allow(bot_double).to receive(:reply) { |_ctx, &blk| blk.call("Search overview", nil, nil) }
-  end
+  before { stub_runner_bot(response: "Search overview") }
 
   describe "#run" do
     it "returns a discovery payload with the model output" do
       runner = described_class.new("discoveries")
       result = runner.run(OpenStruct.new(args: { query: "chat integrations" }), llm)
 
-      expect(result[:result]).to eq("Search overview")
-      expect(result[:query]).to eq("chat integrations")
+      expect(result[:raw]).to eq("Search overview")
+      expect(result[:metadata]).to include(query: "chat integrations")
     end
 
     it "evaluates each provided case" do
@@ -31,7 +26,7 @@ RSpec.describe DiscourseAi::Evals::Runners::Discoveries do
         )
 
       expect(results.length).to eq(2)
-      expect(results.last[:query]).to eq("login security")
+      expect(results.last[:metadata]).to include(query: "login security")
     end
 
     it "raises when the query is missing" do

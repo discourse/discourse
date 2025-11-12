@@ -8,16 +8,19 @@ module DiscourseAi
       class Inference < Base
         OPERATIONS = {
           "generate_concepts" => {
-            persona: DiscourseAi::Personas::ConceptFinder,
+            persona_class: DiscourseAi::Personas::ConceptFinder,
             schema_key: :concepts,
+            schema_type: "array",
           },
           "match_concepts" => {
-            persona: DiscourseAi::Personas::ConceptMatcher,
+            persona_class: DiscourseAi::Personas::ConceptMatcher,
             schema_key: :matching_concepts,
+            schema_type: "array",
           },
           "deduplicate_concepts" => {
-            persona: DiscourseAi::Personas::ConceptDeduplicator,
+            persona_class: DiscourseAi::Personas::ConceptDeduplicator,
             schema_key: :streamlined_tags,
+            schema_type: "array",
           },
         }.freeze
 
@@ -32,16 +35,19 @@ module DiscourseAi
         def run(eval_case, llm)
           args = eval_case.args || {}
 
-          case operation
-          when "generate_concepts"
-            generate_concepts(args, llm)
-          when "match_concepts"
-            match_concepts(args, llm)
-          when "deduplicate_concepts"
-            deduplicate_concepts(args, llm)
-          else
-            raise ArgumentError, "Unsupported inference feature '#{operation}'"
-          end
+          response =
+            case operation
+            when "generate_concepts"
+              generate_concepts(args, llm)
+            when "match_concepts"
+              match_concepts(args, llm)
+            when "deduplicate_concepts"
+              deduplicate_concepts(args, llm)
+            else
+              raise ArgumentError, "Unsupported inference feature '#{operation}'"
+            end
+
+          response
         end
 
         private
@@ -52,15 +58,15 @@ module DiscourseAi
           content = conversation_to_text(args)
           raise ArgumentError, "Missing input for generate concepts eval" if content.blank?
 
-          persona = persona_instance(operation)
+          persona, user = persona_bundle(operation)
           context =
             build_ctx.tap do |ctx|
               ctx.messages = [{ type: :user, content: content }]
               ctx.inferred_concepts = args[:existing_concepts] || []
             end
 
-          values = capture_structured_output(persona, llm, context, operation)
-          format_response(values)
+          values = capture_structured_output(persona, user, llm, context, operation)
+          wrap_result(format_response(values), { query: content })
         end
 
         def match_concepts(args, llm)
@@ -70,7 +76,7 @@ module DiscourseAi
             raise ArgumentError, "Match concepts eval requires :input/:conversation and :concepts"
           end
 
-          persona = persona_instance(operation)
+          persona, user = persona_bundle(operation)
 
           context =
             build_ctx.tap do |ctx|
@@ -78,47 +84,42 @@ module DiscourseAi
               ctx.inferred_concepts = candidates
             end
 
-          values = capture_structured_output(persona, llm, context, operation)
-          format_response(values)
+          values = capture_structured_output(persona, user, llm, context, operation)
+          wrap_result(format_response(values), { query: content, concepts: candidates })
         end
 
         def deduplicate_concepts(args, llm)
           candidates = args[:concepts].to_a.map(&:to_s)
           raise ArgumentError, "Deduplicate concepts eval requires :concepts" if candidates.empty?
 
-          persona = persona_instance(operation)
+          persona, user = persona_bundle(operation)
 
           context =
             build_ctx.tap { |ctx| ctx.messages = [{ type: :user, content: candidates.join(", ") }] }
 
-          values = capture_structured_output(persona, llm, context, operation)
-          format_response(values)
+          values = capture_structured_output(persona, user, llm, context, operation)
+          wrap_result(format_response(values), { concepts: candidates })
         end
 
-        def persona_instance(op)
+        def persona_bundle(op)
           config = OPERATIONS.fetch(op) { raise ArgumentError }
-          persona_klass = config.dig(:persona)
-          persona_id = DiscourseAi::Personas::Persona.system_personas[persona_klass]
-          persona_record = AiPersona.find_by_id_from_cache(persona_id)
+          persona_klass = config.fetch(:persona_class)
 
-          persona_record&.class_instance&.new || persona_klass.new
+          resolve_persona(persona_class: persona_klass)
         end
 
-        def capture_structured_output(persona, llm, context, op)
+        def capture_structured_output(persona, user, llm, context, op)
           schema = OPERATIONS.fetch(op)
           schema_key = schema[:schema_key]
-          schema_type = schema[:schema_type]
+          schema_type = schema[:schema_type] || "array"
 
-          bot = DiscourseAi::Personas::Bot.as(Discourse.system_user, persona: persona, model: llm)
-          structured_output = nil
-
-          bot.reply(context) do |partial, _, type|
-            structured_output = partial if type == :structured_output
-          end
-
-          return [] unless structured_output && schema_key
-
-          structured_output.read_buffered_property(schema_key)
+          bot = DiscourseAi::Personas::Bot.as(user, persona: persona, model: llm)
+          capture_structured_response(
+            bot,
+            context,
+            schema_key: schema_key,
+            schema_type: schema_type,
+          )
         end
 
         def conversation_to_text(args)

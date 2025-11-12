@@ -16,9 +16,8 @@ module DiscourseAi
 
         def run(eval_case, llm)
           args = eval_case.args
+          persona = resolve_persona(persona_class: DiscourseAi::Personas::SpamDetector)
           user = Discourse.system_user
-          persona_id =
-            DiscourseAi::Personas::Persona.system_personas[DiscourseAi::Personas::SpamDetector]
 
           content = "- Topic title: #{args[:title]}\nPost content: #{args[:input]}"
 
@@ -34,31 +33,30 @@ module DiscourseAi
                 ctx.custom_instructions = args[:custom_instructions] if args[:custom_instructions]
               end
 
-          persona = AiPersona.find_by_id_from_cache(persona_id).class_instance.new
+          verdict = capture_verdict(persona, user, llm, context)
 
-          bot = DiscourseAi::Personas::Bot.as(user, persona: persona, model: llm)
-
-          verdict = nil
-
-          buffer_blk =
-            Proc.new do |partial, _, type|
-              if type == :structured_output
-                json_summary_schema_key = persona.response_format&.first.to_h
-                verdict = partial.read_buffered_property(json_summary_schema_key["key"]&.to_sym)
-              elsif type.blank?
-                # Assume response is a regular completion.
-                verdict = partial
-              end
-            end
-
-          bot.reply(context, &buffer_blk)
-
-          verdict.to_s
+          wrap_result(verdict.to_s, { feature: feature_name })
         end
 
         private
 
         attr_reader :feature_name
+
+        def capture_verdict(persona, user, llm, context)
+          bot = DiscourseAi::Personas::Bot.as(user, persona: persona, model: llm)
+          schema = persona.response_format&.first
+
+          if schema.present?
+            capture_structured_response(
+              bot,
+              context,
+              schema_key: schema["key"],
+              schema_type: schema["type"],
+            )
+          else
+            capture_plain_response(bot, context)
+          end
+        end
       end
     end
   end

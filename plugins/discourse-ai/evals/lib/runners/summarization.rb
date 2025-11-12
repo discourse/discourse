@@ -11,24 +11,14 @@ module DiscourseAi
         end
 
         def initialize(feature_name)
-          @feature_name = feature_name.split(":").last
+          @feature_name = feature_name
         end
 
         def run(eval_case, llm)
           args = eval_case.args
+          persona_class, strategy = persona_and_strategy
+          persona, = resolve_persona(persona_class: persona_class)
           user = Discourse.system_user
-
-          if regular_summaries?
-            persona_id =
-              DiscourseAi::Personas::Persona.system_personas[DiscourseAi::Personas::Summarizer]
-            strategy = DiscourseAi::Summarization::Strategies::TopicSummary.new(nil)
-          elsif gists?
-            persona_id =
-              DiscourseAi::Personas::Persona.system_personas[DiscourseAi::Personas::ShortSummarizer]
-            strategy = DiscourseAi::Summarization::Strategies::HotTopicGists.new(nil)
-          else
-            raise "Unknown summary type"
-          end
 
           extras = {
             resource_path: "#{Discourse.base_path}/t/-/1",
@@ -49,34 +39,47 @@ module DiscourseAi
               resource_url: "#{Discourse.base_path}/t/-/1",
               messages: strategy.as_llm_messages(content, extras: extras),
             )
-          persona = AiPersona.find_by_id_from_cache(persona_id).class_instance.new
 
-          bot = DiscourseAi::Personas::Bot.as(user, persona: persona, model: llm)
+          summary = capture_summary(persona, user, llm, context)
 
-          summary = +""
-
-          buffer_blk =
-            Proc.new do |partial, _, type|
-              if type == :structured_output
-                json_summary_schema_key = persona.response_format&.first.to_h
-                partial_summary =
-                  partial.read_buffered_property(json_summary_schema_key["key"]&.to_sym)
-
-                summary << partial_summary if !partial_summary.nil? && !partial_summary.empty?
-              elsif type.blank?
-                # Assume response is a regular completion.
-                summary << partial
-              end
-            end
-
-          bot.reply(context, &buffer_blk)
-
-          summary
+          wrap_result(summary, { feature: feature_name })
         end
 
         private
 
         attr_reader :feature_name
+
+        def persona_and_strategy
+          if regular_summaries?
+            [
+              DiscourseAi::Personas::Summarizer,
+              DiscourseAi::Summarization::Strategies::TopicSummary.new(nil),
+            ]
+          elsif gists?
+            [
+              DiscourseAi::Personas::ShortSummarizer,
+              DiscourseAi::Summarization::Strategies::HotTopicGists.new(nil),
+            ]
+          else
+            raise "Unknown summary type"
+          end
+        end
+
+        def capture_summary(persona, user, llm, context)
+          bot = DiscourseAi::Personas::Bot.as(user, persona: persona, model: llm)
+          schema = persona.response_format&.first
+
+          if schema.present?
+            capture_structured_response(
+              bot,
+              context,
+              schema_key: schema["key"],
+              schema_type: schema["type"],
+            )
+          else
+            capture_plain_response(bot, context)
+          end
+        end
 
         def extract_conversation(args)
           messages =

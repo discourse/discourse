@@ -48,7 +48,8 @@ module DiscourseAi
               custom_prompt: args[:custom_prompt],
             )
 
-          format_response(response)
+          formatted = format_response(response)
+          wrap_result(formatted, { helper_mode: helper_mode })
         end
 
         private
@@ -90,47 +91,23 @@ module DiscourseAi
         end
 
         def build_bot(llm, user)
-          persona =
-            persona_record_for_class(persona_class)&.class_instance&.new || persona_class.new
+          persona = resolve_persona(persona_class: persona_class)
+
           DiscourseAi::Personas::Bot.as(user, persona: persona, model: llm)
         end
 
-        def persona_record_for_class(klass)
-          persona_id = DiscourseAi::Personas::Persona.system_personas[klass]
-          AiPersona.find_by_id_from_cache(persona_id)
-        end
-
         def capture_response(bot, context)
-          schema_info = bot.persona.response_format&.first.to_h
-          schema_key = schema_info["key"]&.to_sym
-          schema_type = schema_info["type"]
-          helper_response = schema_type == "array" ? [] : +""
+          schema_info = bot.persona.response_format&.first
 
-          buffer_blk =
-            Proc.new do |partial, _, type|
-              if type == :structured_output && schema_key
-                helper_chunk = partial.read_buffered_property(schema_key)
-                next if helper_chunk.blank?
-
-                helper_response = append_structured(helper_response, helper_chunk, schema_type)
-              elsif type.blank?
-                helper_response << partial
-              end
-            end
-
-          bot.reply(context, &buffer_blk)
-          helper_response
-        end
-
-        def append_structured(current_response, chunk, schema_type)
-          case schema_type
-          when "array"
-            Array(chunk).each { |item| current_response << item if current_response.exclude?(item) }
-            current_response
-          when "string"
-            current_response << chunk
+          if schema_info.present?
+            capture_structured_response(
+              bot,
+              context,
+              schema_key: schema_info["key"],
+              schema_type: schema_info["type"],
+            )
           else
-            chunk
+            capture_plain_response(bot, context)
           end
         end
 
