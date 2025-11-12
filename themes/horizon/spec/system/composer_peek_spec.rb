@@ -12,14 +12,6 @@ describe "Composer peek", type: :system do
     sign_in(current_user)
   end
 
-  it "does not show composer peek for small windows" do
-    topic_page.visit_topic(topic)
-    topic_page.click_footer_reply
-    expect(composer).to be_opened
-
-    resize_window(width: 600) { expect(page).to have_no_css(".peek-mode-toggle") }
-  end
-
   it "turns on composer peek and remembers this preference on page load" do
     topic_page.visit_topic(topic)
     topic_page.click_footer_reply

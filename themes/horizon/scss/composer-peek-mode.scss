@@ -1,64 +1,96 @@
+@use "lib/viewport";
+
 .peek-mode-toggle {
   display: none;
 }
 
-@media screen and (width >= 1300px) {
-  html:not(.fullscreen-composer) {
-    .peek-mode-toggle svg {
-      transform: scaleX(-1);
+html:not(.fullscreen-composer) {
+  .peek-mode-toggle svg {
+    transform: scaleX(-1);
+  }
+
+  &.composer-open {
+    .full-width-enabled .peek-mode-toggle {
+      display: flex;
     }
 
-    &.composer-open {
-      .full-width-enabled .peek-mode-toggle {
-        display: flex;
-      }
+    .full-width-enabled.peek-mode-active {
+      #reply-control.hide-preview {
+        transition: none;
+        box-shadow: none;
+        border-radius: var(--d-border-radius-large);
 
-      .full-width-enabled.peek-mode-active {
-        #reply-control.hide-preview {
-          transition: none;
-          box-shadow: none;
-          border-radius: var(--d-border-radius-large);
-
-          .grippie {
-            display: none;
-          }
-
-          .reply-area {
-            padding-inline: 0.67em;
-          }
+        .grippie {
+          display: none;
         }
 
-        #reply-control:not(.fullscreen).hide-preview {
-          width: 100%;
-          right: var(--main-grid-gap);
-          top: var(--header-offset);
-          bottom: var(--main-grid-gap);
-          left: unset;
-          height: unset;
+        .toggle-minimize {
+          transform: rotate(-90deg);
+        }
+
+        .reply-area {
+          padding-inline: 0.67em;
+        }
+        width: 100%;
+        right: var(--main-grid-gap);
+        top: var(--header-offset);
+        bottom: var(--main-grid-gap);
+        left: unset;
+        height: unset;
+        min-width: 320px;
+
+        @include viewport.from(xl) {
           max-width: 36.5vw;
         }
 
-        &.has-sidebar-page {
-          #main-outlet-wrapper {
+        @include viewport.until(xl) {
+          max-width: 850px;
+          position: fixed;
+          box-shadow: var(--shadow-composer);
+        }
+      }
+
+      &.has-sidebar-page {
+        #main-outlet-wrapper {
+          @include viewport.from(xl) {
             grid-template-columns:
               var(--d-sidebar-width) calc(100vw - 38vw - var(--d-sidebar-width))
               1fr;
           }
         }
+      }
 
-        &:not(.has-sidebar-page) {
-          #main-outlet-wrapper {
-            grid-template-columns: 0 calc(100vw - 52vw) 1fr;
-          }
-
-          #reply-control:not(.fullscreen).hide-preview {
-            max-width: 46vw;
-          }
+      &:not(.has-sidebar-page) {
+        #main-outlet-wrapper {
+          grid-template-columns: 0 calc(100vw - 52vw) 1fr;
         }
 
-        .sidebar-wrapper .sidebar-container {
-          height: unset;
+        #reply-control:not(.fullscreen).hide-preview {
+          max-width: 46vw;
         }
+      }
+
+      .sidebar-wrapper .sidebar-container {
+        height: unset;
+      }
+    }
+  }
+}
+
+#reply-control.hide-preview {
+  &.draft {
+    .peek-mode-active & {
+      right: var(--main-grid-gap);
+      width: min-content !important;
+      margin: 0;
+      left: unset;
+      top: calc(var(--header-offset) + var(--main-outlet-padding-top));
+      border-radius: 0;
+      border-bottom-left-radius: var(--d-border-radius-large);
+      border-top-left-radius: var(--d-border-radius-large);
+
+      .toggle-fullscreen {
+        display: none;
       }
     }
   }
