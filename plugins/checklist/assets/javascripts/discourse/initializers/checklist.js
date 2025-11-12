@@ -4,7 +4,6 @@ import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { iconHTML } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { i18n } from "discourse-i18n";
 import richEditorExtension from "../../lib/rich-editor-extension";
 
 function initializePlugin(api) {
@@ -156,10 +155,7 @@ export function checklistSyntax(elem, postDecorator) {
           }
         );
 
-        await postModel.save({
-          raw: newRaw,
-          edit_reason: i18n("checklist.edit_reason"),
-        });
+        await postModel.save({ raw: newRaw });
 
         // TODO (glimmer-post-stream): remove the following code when removing the legacy post stream code
         if (postWidget) {
