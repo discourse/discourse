@@ -1,5 +1,6 @@
 .full-page-chat {
   #main-chat-outlet.chat-view {
+    height: calc(100vh - var(--header-offset));
     display: grid;
     grid-template-rows: 1fr auto;
     grid-template-areas:
@@ -11,9 +12,18 @@
     grid-area: list;
     padding-bottom: 0;
   }
+
+  .c-routes {
+    grid-area: list;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
 }
 
 .c-footer {
+  position: relative;
+
   &__item {
     .c-unread-indicator,
     .c-unread-indicator.-urgent {
