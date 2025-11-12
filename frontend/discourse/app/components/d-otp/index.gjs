@@ -109,7 +109,7 @@ export default class DOTP extends Component {
     const input = event.target;
     event.preventDefault(); // Prevent the call to input as we manually call it later
 
-    const clipboardData = event.clipboardData || window.clipboardData;
+    const { clipboardData } = event;
     if (!clipboardData) {
       return;
     }
