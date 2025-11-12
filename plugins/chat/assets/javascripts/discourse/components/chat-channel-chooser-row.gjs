@@ -1,5 +1,5 @@
 import { classNames } from "@ember-decorators/component";
-import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
+import SelectKitRowComponent from "discourse/select-kit/components/select-kit/select-kit-row";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 
 @classNames("chat-channel-chooser-row")

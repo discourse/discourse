@@ -6,8 +6,8 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { htmlSafe } from "@ember/template";
-import { eq } from "truth-helpers";
 import scrollIntoView from "discourse/modifiers/scroll-into-view";
+import { eq } from "discourse/truth-helpers";
 
 /**
  * Component for rendering rich hashtag autocomplete results for the DAutocomplete modifier.

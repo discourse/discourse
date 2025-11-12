@@ -4,9 +4,9 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { isBlank } from "@ember/utils";
-import { eq } from "truth-helpers";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 
 const HOUR = 60;
 const DAY = 24 * HOUR;

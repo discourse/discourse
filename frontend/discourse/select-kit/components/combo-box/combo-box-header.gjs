@@ -3,8 +3,8 @@ import { and, reads } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
-import { resolveComponent } from "select-kit/components/select-kit";
-import SingleSelectHeaderComponent from "select-kit/components/select-kit/single-select-header";
+import { resolveComponent } from "discourse/select-kit/components/select-kit";
+import SingleSelectHeaderComponent from "discourse/select-kit/components/select-kit/single-select-header";
 
 @classNames("combo-box-header")
 export default class ComboBoxHeader extends SingleSelectHeaderComponent {

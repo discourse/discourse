@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { or } from "truth-helpers";
+import { or } from "discourse/truth-helpers";
 import { showAlert } from "../../../lib/post-action-feedback";
 
 export default class PostMenuButtonWrapper extends Component {

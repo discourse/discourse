@@ -1,9 +1,9 @@
-import { and } from "truth-helpers";
 import CategoriesDisplay from "discourse/components/discovery/categories-display";
 import Layout from "discourse/components/discovery/layout";
 import Navigation from "discourse/components/discovery/navigation";
 import Topics from "discourse/components/discovery/topics";
 import TagInfo from "discourse/components/tag-info";
+import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default <template>

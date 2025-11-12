@@ -2,11 +2,11 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import icon from "discourse/helpers/d-icon";
-import { i18n } from "discourse-i18n";
 import {
   ALL_CATEGORIES_ID,
   NO_CATEGORIES_ID,
-} from "select-kit/components/category-drop";
+} from "discourse/select-kit/components/category-drop";
+import { i18n } from "discourse-i18n";
 
 export default class CategoryDropMoreCollection extends Component {
   tagName = "";

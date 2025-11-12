@@ -1,9 +1,9 @@
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import formatDate from "discourse/helpers/format-date";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import ListSetting from "discourse/select-kit/components/list-setting";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
-import ListSetting from "select-kit/components/list-setting";
 
 export default <template>
   <section id="patreon">

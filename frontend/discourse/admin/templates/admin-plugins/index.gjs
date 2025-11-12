@@ -1,13 +1,13 @@
 import { concat } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
+import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
+import AdminPluginsList from "discourse/admin/components/admin-plugins-list";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DPageHeader from "discourse/components/d-page-header";
 import NavItem from "discourse/components/nav-item";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
-import AdminFilterControls from "admin/components/admin-filter-controls";
-import AdminPluginsList from "admin/components/admin-plugins-list";
 
 export default <template>
   <div class="admin-plugins-list-container">

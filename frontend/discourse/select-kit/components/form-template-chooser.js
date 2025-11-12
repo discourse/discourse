@@ -1,11 +1,11 @@
 import { computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import FormTemplate from "discourse/models/form-template";
-import MultiSelectComponent from "select-kit/components/multi-select";
+import MultiSelectComponent from "discourse/select-kit/components/multi-select";
 import {
   pluginApiIdentifiers,
   selectKitOptions,
-} from "select-kit/components/select-kit";
+} from "discourse/select-kit/components/select-kit";
 
 @classNames("form-template-chooser")
 @selectKitOptions({

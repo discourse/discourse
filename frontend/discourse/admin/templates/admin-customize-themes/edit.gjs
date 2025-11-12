@@ -1,7 +1,7 @@
 import { LinkTo } from "@ember/routing";
+import AdminThemeEditor from "discourse/admin/components/admin-theme-editor";
 import DButton from "discourse/components/d-button";
 import { i18n } from "discourse-i18n";
-import AdminThemeEditor from "admin/components/admin-theme-editor";
 
 export default <template>
   <div class="current-style {{if @controller.maximized 'maximized'}}">

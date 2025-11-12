@@ -1,9 +1,9 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import concatClass from "discourse/helpers/concat-class";
+import { not } from "discourse/truth-helpers";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
 const Buttons = <template>

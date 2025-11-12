@@ -3,8 +3,8 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { allowOnlyNumericInput } from "discourse/lib/utilities";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import I18n, { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 
 const UNIT_KB = "kb";
 const UNIT_MB = "mb";

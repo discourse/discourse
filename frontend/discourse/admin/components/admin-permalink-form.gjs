@@ -4,14 +4,14 @@ import { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import { eq } from "truth-helpers";
+import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
+import Permalink from "discourse/admin/models/permalink";
 import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaCard from "admin/components/admin-config-area-card";
-import Permalink from "admin/models/permalink";
 
 const TYPE_TO_FIELD_MAP = {
   topic: "topicId",

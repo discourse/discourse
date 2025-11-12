@@ -2,8 +2,8 @@ import { hash } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
+import TagChooser from "discourse/select-kit/components/tag-chooser";
 import { i18n } from "discourse-i18n";
-import TagChooser from "select-kit/components/tag-chooser";
 
 const Tags = <template>
   {{#if @siteSettings.tagging_enabled}}

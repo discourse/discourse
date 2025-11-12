@@ -13,7 +13,6 @@ import { observes, on } from "@ember-decorators/object";
 import { BasePlugin } from "@uppy/core";
 import $ from "jquery";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
-import { gt } from "truth-helpers";
 import DEditor from "discourse/components/d-editor";
 import DEditorPreview from "discourse/components/d-editor-preview";
 import Wrapper from "discourse/components/form-template-field/wrapper";
@@ -45,8 +44,9 @@ import {
 import UppyComposerUpload from "discourse/lib/uppy/composer-upload";
 import { formatUsername } from "discourse/lib/utilities";
 import Composer from "discourse/models/composer";
+import FormTemplateChooser from "discourse/select-kit/components/form-template-chooser";
+import { gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import FormTemplateChooser from "select-kit/components/form-template-chooser";
 
 let uploadHandlers = [];
 export function addComposerUploadHandler(extensions, method) {

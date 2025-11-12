@@ -1,8 +1,8 @@
 import { fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import AdminAreaSettings from "discourse/admin/components/admin-area-settings";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import AdminAreaSettings from "admin/components/admin-area-settings";
 
 module("Integration | Component | AdminAreaSettings", function (hooks) {
   hooks.beforeEach(function () {

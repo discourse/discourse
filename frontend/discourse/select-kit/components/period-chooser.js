@@ -1,9 +1,9 @@
 import { action } from "@ember/object";
 import { oneWay, readOnly } from "@ember/object/computed";
 import { classNameBindings, classNames } from "@ember-decorators/component";
+import DropdownSelectBoxComponent from "discourse/select-kit/components/dropdown-select-box";
+import { selectKitOptions } from "discourse/select-kit/components/select-kit";
 import { i18n } from "discourse-i18n";
-import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-import { selectKitOptions } from "select-kit/components/select-kit";
 import PeriodChooserHeader from "./period-chooser/period-chooser-header";
 import PeriodChooserRow from "./period-chooser/period-chooser-row";
 

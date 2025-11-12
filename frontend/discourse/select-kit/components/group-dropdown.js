@@ -3,12 +3,12 @@ import { gte, reads } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
 import { setting } from "discourse/lib/computed";
 import DiscourseURL from "discourse/lib/url";
-import { i18n } from "discourse-i18n";
-import ComboBoxComponent from "select-kit/components/combo-box";
+import ComboBoxComponent from "discourse/select-kit/components/combo-box";
 import {
   pluginApiIdentifiers,
   selectKitOptions,
-} from "select-kit/components/select-kit";
+} from "discourse/select-kit/components/select-kit";
+import { i18n } from "discourse-i18n";
 
 @classNames("group-dropdown")
 @selectKitOptions({

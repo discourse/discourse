@@ -1,14 +1,14 @@
 import { fn } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
+import UppyBackupUploader from "discourse/admin/components/uppy-backup-uploader";
+import humanSize from "discourse/admin/helpers/human-size";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import DMenu from "discourse/float-kit/components/d-menu";
 import icon from "discourse/helpers/d-icon";
 import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
-import UppyBackupUploader from "admin/components/uppy-backup-uploader";
-import humanSize from "admin/helpers/human-size";
-import DMenu from "float-kit/components/d-menu";
 
 export default <template>
   <DPageSubheader @titleLabel={{i18n "admin.backups.files_title"}}>

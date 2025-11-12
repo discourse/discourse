@@ -6,14 +6,14 @@ import { setting } from "discourse/lib/computed";
 import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import DiscourseURL, { getCategoryAndTagUrl } from "discourse/lib/url";
-import { i18n } from "discourse-i18n";
-import ComboBoxComponent from "select-kit/components/combo-box";
-import FilterForMore from "select-kit/components/filter-for-more";
+import ComboBoxComponent from "discourse/select-kit/components/combo-box";
+import FilterForMore from "discourse/select-kit/components/filter-for-more";
 import {
   MAIN_COLLECTION,
   pluginApiIdentifiers,
   selectKitOptions,
-} from "select-kit/components/select-kit";
+} from "discourse/select-kit/components/select-kit";
+import { i18n } from "discourse-i18n";
 import TagDropHeader from "./tag-drop/tag-drop-header";
 import TagRow from "./tag-row";
 
