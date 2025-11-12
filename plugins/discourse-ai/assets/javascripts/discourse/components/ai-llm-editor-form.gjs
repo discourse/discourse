@@ -351,7 +351,6 @@ export default class AiLlmEditorForm extends Component {
       <form.Field
         @name="api_key"
         @title={{i18n "discourse_ai.llms.api_key"}}
-        @validation="required"
         @format="large"
         as |field|
       >
