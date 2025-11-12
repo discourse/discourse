@@ -215,6 +215,7 @@ export default class TagShowRoute extends DiscourseRoute {
   }
 }
 
+/** @returns {any} */
 export function buildTagRoute(routeConfig = {}) {
   return class extends TagShowRoute {
     routeConfig = routeConfig;

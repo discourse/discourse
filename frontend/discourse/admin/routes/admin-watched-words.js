@@ -11,6 +11,7 @@ export default class AdminWatchedWordsRoute extends DiscourseRoute {
     return i18n("admin.config.watched_words.title");
   }
 
+  /** @returns {any} */
   model() {
     return WatchedWord.findAll();
   }
