@@ -335,22 +335,8 @@
   }
 }
 
-.ai-category-suggester-content,
-.ai-tag-suggester-content,
-.ai-title-suggester-content {
-  z-index: z("composer", "dropdown");
-}
-
 .ai-suggestions-menu .btn {
   text-align: left;
-}
-
-.mobile-view {
-  .ai-category-suggester-content,
-  .ai-tag-suggester-content,
-  .ai-title-suggester-content {
-    z-index: z("modal", "dropdown");
-  }
 }
 
 .ai-category-suggester-content {
@@ -718,16 +704,20 @@
   }
 }
 
-.fk-d-menu[data-identifier="ai-composer-helper-menu"],
-.fk-d-menu[data-identifier="ai-title-suggester"] {
-  z-index: z("modal", "dialog");
+.fk-d-menu {
+  &[data-identifier="ai-composer-helper-menu"],
+  &[data-identifier="ai-title-suggester"],
+  &[data-identifier="ai-category-suggester"],
+  &[data-identifier="ai-tag-suggester"] {
+    z-index: z("modal", "dialog");
 
-  .fullscreen-composer & {
-    z-index: z("header") + 1;
-  }
+    .fullscreen-composer & {
+      z-index: z("header") + 1;
+    }
 
-  .mobile-view & {
-    z-index: z("mobile-composer");
+    .mobile-view & {
+      z-index: z("mobile-composer");
+    }
   }
 }
 
