@@ -4955,7 +4955,7 @@ en:
         go_to_unread_post: "%{shortcut} Go to the first unread post"
       application:
         title: "Application"
-        create: "%{shortcut} Create a new topic or a personal message"
+        create: "%{shortcut} Create a new topic or personal message"
         notifications: "%{shortcut} Open notifications"
         hamburger_menu: "%{shortcut} Open navigation menu"
         user_profile_menu: "%{shortcut} Open user menu"
