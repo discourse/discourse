@@ -73,7 +73,7 @@ export default class AdminBackupsRoute extends DiscourseRoute {
     } else {
       this.controllerFor("admin.backups.logs")
         .get("logs")
-        .pushObject(EmberObject.create(log));
+        .push(EmberObject.create(log));
     }
   }
 
