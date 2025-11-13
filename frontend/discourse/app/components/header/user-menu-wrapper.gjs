@@ -1,6 +1,10 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { service } from "@ember/service";
+import { waitForPromise } from "@ember/test-waiters";
 import { isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
 import { isDocumentRTL } from "discourse/lib/text-direction";
@@ -9,8 +13,12 @@ import closeOnClickOutside from "../../modifiers/close-on-click-outside";
 import UserMenu from "../user-menu/menu";
 
 export default class UserMenuWrapper extends Component {
+  @service site;
+
+  @tracked userMenuWrapper;
+
   @action
-  clickOutside(e) {
+  async clickOutside(e) {
     if (
       e.target.classList.contains("header-cloak") &&
       !prefersReducedMotion()
@@ -37,13 +45,62 @@ export default class UserMenuWrapper extends Component {
         easing: "ease-in",
       });
     } else {
-      this.args.toggleUserMenu();
+      try {
+        if (this.site.desktopView) {
+          await this.#animateMenu();
+        }
+      } finally {
+        this.localToggleUserMenu();
+      }
     }
+  }
+
+  @action
+  async setupWrapper(el) {
+    this.userMenuWrapper = el.querySelector(".menu-panel.drop-down");
+  }
+
+  async #animateMenu() {
+    this.userMenuWrapper.classList.add("is-exiting");
+
+    await waitForPromise(
+      Promise.all([this.#waitForAnimationEnd(this.userMenuWrapper)])
+    );
+  }
+
+  #waitForAnimationEnd(el) {
+    return new Promise((resolve) => {
+      const style = window.getComputedStyle(el);
+      const duration = parseFloat(style.animationDuration) * 1000 || 0;
+      const delay = parseFloat(style.animationDelay) * 1000 || 0;
+      const totalTime = duration + delay;
+
+      const timeoutId = setTimeout(
+        () => {
+          el.removeEventListener("animationend", handleAnimationEnd);
+          resolve();
+        },
+        Math.max(totalTime + 50, 50)
+      );
+
+      const handleAnimationEnd = () => {
+        clearTimeout(timeoutId);
+        el.removeEventListener("animationend", handleAnimationEnd);
+        resolve();
+      };
+
+      el.addEventListener("animationend", handleAnimationEnd);
+    });
+  }
+
+  async localToggleUserMenu() {
+    this.args.toggleUserMenu();
   }
 
   <template>
     <div
       class="user-menu-dropdown-wrapper"
+      {{didInsert this.setupWrapper}}
       {{closeOnClickOutside
         this.clickOutside
         (hash

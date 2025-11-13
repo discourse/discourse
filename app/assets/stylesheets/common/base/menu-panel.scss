@@ -51,6 +51,10 @@
   }
 
   @include d-animation(float-down, 250ms, ease);
+
+  &.is-exiting {
+    @include d-animation(dissolve, 250ms, ease);
+  }
 }
 
 .menu-panel {
