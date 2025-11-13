@@ -8,6 +8,7 @@ import { liftListItem, sinkListItem } from "prosemirror-schema-list";
 import { Selection, TextSelection } from "prosemirror-state";
 import { bind } from "discourse/lib/decorators";
 import escapeRegExp from "discourse/lib/escape-regexp";
+import { isImage } from "discourse/lib/uploads";
 import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import { hasMark, inNode, isNodeActive } from "./plugin-utils";
@@ -497,22 +498,44 @@ class ProsemirrorPlaceholderHandler {
       this.view.state.selection.$from.parent.type.name === "paragraph" &&
       this.view.state.selection.$from.parent.nodeSize === 2;
 
-    const imageNode = this.schema.nodes.image.create({
-      src: URL.createObjectURL(file.data),
-      alt: i18n("uploading_filename", { filename: file.name }),
-      title: file.id,
-      width: 120,
-      placeholder: true,
-    });
+    let toInsert;
 
-    this.view.dispatch(
-      this.view.state.tr.insert(
-        this.view.state.selection.from,
-        isEmptyParagraph
-          ? imageNode
-          : this.schema.nodes.paragraph.create(null, imageNode)
-      )
-    );
+    if (isImage(file.name)) {
+      const imageNode = this.schema.nodes.image.create({
+        src: URL.createObjectURL(file.data),
+        alt: i18n("uploading_filename", { filename: file.name }),
+        title: file.id,
+        width: 120,
+        placeholder: true,
+      });
+      toInsert = isEmptyParagraph
+        ? imageNode
+        : this.schema.nodes.paragraph.create(null, imageNode);
+
+      this.view.dispatch(
+        this.view.state.tr.insert(this.view.state.selection.from, toInsert)
+      );
+    } else {
+      const linkNode = this.schema.marks.link.create({
+        href: "#",
+        title: i18n("uploading_filename", { filename: file.name }),
+        "data-placeholder": true,
+      });
+      this.view.dispatch(
+        this.view.state.tr
+          .insertText(
+            i18n("uploading_filename", { filename: file.name }) + " ",
+            this.view.state.selection.from,
+            this.view.state.selection.to
+          )
+          .addMark(
+            this.view.state.selection.from,
+            this.view.state.selection.from +
+              i18n("uploading_filename", { filename: file.name }).length,
+            linkNode
+          )
+      );
+    }
   }
 
   progress() {}
@@ -524,6 +547,14 @@ class ProsemirrorPlaceholderHandler {
       if (node.type === this.schema.nodes.image && node.attrs.placeholder) {
         this.view.dispatch(this.view.state.tr.delete(pos, pos + node.nodeSize));
       }
+
+      if (
+        node.type === this.schema.nodes.text &&
+        node.marks.length > 0 &&
+        node.marks[0].attrs["data-placeholder"] === true
+      ) {
+        this.view.dispatch(this.view.state.tr.delete(pos, pos + node.nodesize));
+      }
     });
   }
 
@@ -534,7 +565,16 @@ class ProsemirrorPlaceholderHandler {
         node.attrs.placeholder &&
         node.attrs.title === file.id
       ) {
-        this.view.dispatch(this.view.state.tr.delete(pos, pos + node.nodeSize));
+        this.view.dispatch(this.view.state.tr.delete(pos, pos + node.nodesize));
+      }
+
+      if (
+        node.type === this.schema.nodes.text &&
+        node.marks.length > 0 &&
+        node.marks[0].attrs["data-placeholder"] === true &&
+        node.attrs.title === i18n("uploading_filename", { filename: file.name })
+      ) {
+        this.view.dispatch(this.view.state.tr.delete(pos, pos + node.nodesize));
       }
     });
   }
@@ -547,6 +587,15 @@ class ProsemirrorPlaceholderHandler {
         node.type === this.schema.nodes.image &&
         node.attrs.placeholder &&
         node.attrs.title === file.id
+      ) {
+        nodeToReplace = { node, pos };
+        return false;
+      }
+
+      if (
+        node.type === this.schema.nodes.text &&
+        node.marks.length > 0 &&
+        node.marks[0].attrs["data-placeholder"] === true
       ) {
         nodeToReplace = { node, pos };
         return false;

@@ -262,8 +262,21 @@ class LinkToolbarPluginView {
 
   #showFloatingToolbar() {
     const element = this.#view.domAtPos(this.#linkState.head).node;
-    const trigger =
-      element.nodeType === Node.TEXT_NODE ? element.parentElement : element;
+
+    let trigger;
+    switch (element.nodeType) {
+      case Node.ELEMENT_NODE:
+        trigger = element.children[0] || element;
+        break;
+      case Node.TEXT_NODE:
+        trigger = element.parentElement;
+        break;
+    }
+
+    if (trigger.dataset.placeholder === "true") {
+      this.#resetToolbar();
+      return;
+    }
 
     trigger.getBoundingClientRect = () => this.#getTriggerClientRect();
 

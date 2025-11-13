@@ -18,6 +18,7 @@ const extension = {
         markup: { default: null },
         attachment: { default: false },
         "data-orig-href": { default: null },
+        "data-placeholder": { default: null },
       },
       inclusive: false,
       parseDOM: [
@@ -29,6 +30,7 @@ const extension = {
               title: dom.getAttribute("title"),
               attachment: dom.classList.contains("attachment"),
               "data-orig-href": dom.getAttribute("data-orig-href"),
+              "data-placeholder": dom.getAttribute("data-placeholder"),
               markup: dom.getAttribute("data-markup"),
             };
           },
@@ -42,6 +44,7 @@ const extension = {
             title: node.attrs.title,
             class: node.attrs.attachment ? "attachment" : undefined,
             "data-orig-href": node.attrs["data-orig-href"] || undefined,
+            "data-placeholder": node.attrs["data-placeholder"] || undefined,
             "data-markup": node.attrs.markup || undefined,
           },
           0,
@@ -65,6 +68,7 @@ const extension = {
           markup: tok.markup || null,
           attachment,
           "data-orig-href": tok.attrGet("data-orig-href"),
+          "data-placeholder": tok.attrGet("data-placeholder"),
         };
       },
     },
