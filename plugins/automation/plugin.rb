@@ -28,6 +28,7 @@ module ::DiscourseAutomation
 
   AUTO_RESPONDER_TRIGGERED_IDS = "auto_responder_triggered_ids_json"
   USER_GROUP_MEMBERSHIP_THROUGH_BADGE_BULK_MODIFY_START_COUNT = 1000
+  REMOVE_UPLOAD_MARKUP_FROM_DELETED_POSTS_BATCH_SIZE = 1000
 
   def self.set_active_automation(id)
     Thread.current[:active_automation_id] = id

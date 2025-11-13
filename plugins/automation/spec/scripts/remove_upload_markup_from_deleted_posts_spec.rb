@@ -50,6 +50,17 @@ describe "RemoveUploadMarkupFromDeletedPosts" do
       expect(post.raw).to eq(raw)
     end
 
+    it "does not remove uploads from non-deleted posts" do
+      expect {
+        automation.trigger!
+        post.reload
+      }.to_not change { post.raw }
+
+      expect(post.custom_fields["uploads_removed_at"]).to be_nil
+      expect(upload_reference.reload).to be_present
+      expect(file_upload_reference.reload).to be_present
+    end
+
     it "adds a timestamp to the custom field uploads_removed_at" do
       expect {
         automation.trigger!
@@ -138,6 +149,17 @@ describe "RemoveUploadMarkupFromDeletedPosts" do
 
         expect(post.raw).to eq(raw)
       end
+    end
+
+    it "does not remove uploads from non-deleted posts" do
+      expect {
+        automation.trigger!
+        post.reload
+      }.to_not change { post.raw }
+
+      expect(post.custom_fields["uploads_removed_at"]).to be_nil
+      expect(upload_reference.reload).to be_present
+      expect(file_upload_reference.reload).to be_present
     end
 
     it "adds a timestamp to the custom field uploads_removed_at" do

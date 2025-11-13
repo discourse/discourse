@@ -30,7 +30,7 @@ DiscourseAutomation::Scriptable.add(
       )
       .where("post_custom_fields.post_id IS NULL")
       .distinct
-      .limit(1000)
+      .limit(DiscourseAutomation::REMOVE_UPLOAD_MARKUP_FROM_DELETED_POSTS_BATCH_SIZE)
       .each do |post|
         if updated_raw = post.raw.gsub!(upload_and_attachment_regex, "")
           if ok =
