@@ -1,6 +1,6 @@
 .full-page-chat {
   #main-chat-outlet.chat-view {
-    height: calc(100dvh - var(--header-offset));
+    height: calc(100dvh - var(--main-outlet-offset));
     display: grid;
     grid-template-rows: 1fr auto;
     grid-template-areas:
