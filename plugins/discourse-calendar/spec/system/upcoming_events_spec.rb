@@ -12,6 +12,7 @@ describe "Upcoming Events", type: :system do
   before do
     SiteSetting.calendar_enabled = true
     SiteSetting.discourse_post_event_enabled = true
+    SiteSetting.calendar_upcoming_events_default_view = "month"
     sign_in(admin)
   end
 
