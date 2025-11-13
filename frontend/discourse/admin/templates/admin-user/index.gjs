@@ -1,7 +1,9 @@
 import { fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";
-import { and, gt, not } from "truth-helpers";
+import AdminEditableField from "discourse/admin/components/admin-editable-field";
+import AdminUserExportsTable from "discourse/admin/components/admin-user-exports-table";
+import IpLookup from "discourse/admin/components/ip-lookup";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -12,12 +14,10 @@ import formatDuration from "discourse/helpers/format-duration";
 import i18nYesNo from "discourse/helpers/i18n-yes-no";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import GroupChooser from "discourse/select-kit/components/group-chooser";
+import { and, gt, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import AdminEditableField from "admin/components/admin-editable-field";
-import AdminUserExportsTable from "admin/components/admin-user-exports-table";
-import IpLookup from "admin/components/ip-lookup";
-import ComboBox from "select-kit/components/combo-box";
-import GroupChooser from "select-kit/components/group-chooser";
 
 export default <template>
   <section class="details {{unless @controller.model.active 'not-activated'}}">

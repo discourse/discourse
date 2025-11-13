@@ -1,7 +1,7 @@
 import { computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
+import DropdownSelectBoxComponent from "discourse/select-kit/components/dropdown-select-box";
 import { i18n } from "discourse-i18n";
-import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
 
 @classNames("categories-admin-dropdown")

@@ -4,6 +4,8 @@ import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
+import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
+import ColorPaletteEditor from "discourse/admin/components/color-palette-editor";
 import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
 import icon from "discourse/helpers/d-icon";
@@ -11,8 +13,6 @@ import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaCard from "admin/components/admin-config-area-card";
-import ColorPaletteEditor from "admin/components/color-palette-editor";
 
 export default class AdminConfigAreasColorPalette extends Component {
   @service toasts;

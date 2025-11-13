@@ -28,8 +28,8 @@ import {
 } from "discourse/lib/time-shortcut";
 import { now, parseCustomDatetime, startOfDay } from "discourse/lib/time-utils";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 
 const BOOKMARK_BINDINGS = {
   enter: { handler: "saveAndClose" },

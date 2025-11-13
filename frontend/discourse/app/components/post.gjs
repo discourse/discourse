@@ -8,7 +8,6 @@ import { service } from "@ember/service";
 import { TrackedArray, TrackedMap } from "@ember-compat/tracked-built-ins";
 import { TrackedAsyncData } from "ember-async-data";
 import { modifier } from "ember-modifier";
-import { and, eq, not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import ShareTopicModal from "discourse/components/modal/share-topic";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -36,6 +35,7 @@ import {
 } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import { clipboardCopy } from "discourse/lib/utilities";
+import { and, eq, not, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class Post extends Component {

@@ -1,8 +1,8 @@
 import { blur, click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import ValueList from "discourse/admin/components/value-list";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import ValueList from "admin/components/value-list";
 
 module("Integration | Component | value-list", function (hooks) {
   setupRenderingTest(hooks);

@@ -2,13 +2,13 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { and, not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import DMenu from "discourse/float-kit/components/d-menu";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import getURL from "discourse/lib/get-url";
-import DMenu from "float-kit/components/d-menu";
+import { and, not, or } from "discourse/truth-helpers";
 
 export default class TopicAdminMenu extends Component {
   @service adminTopicMenuButtons;

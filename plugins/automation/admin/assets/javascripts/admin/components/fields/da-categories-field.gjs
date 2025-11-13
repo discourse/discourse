@@ -2,7 +2,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { isBlank } from "@ember/utils";
 import Category from "discourse/models/category";
-import CategorySelector from "select-kit/components/category-selector";
+import CategorySelector from "discourse/select-kit/components/category-selector";
 import BaseField from "./da-base-field";
 import DAFieldDescription from "./da-field-description";
 import DAFieldLabel from "./da-field-label";

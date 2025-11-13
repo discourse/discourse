@@ -6,7 +6,6 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
-import { eq, notEq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import GroupSelector from "discourse/components/group-selector";
@@ -18,6 +17,7 @@ import { bind } from "discourse/lib/decorators";
 import discourseLater from "discourse/lib/later";
 import lightbox from "discourse/lib/lightbox";
 import Group from "discourse/models/group";
+import { eq, notEq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class UpcomingChangeItem extends Component {

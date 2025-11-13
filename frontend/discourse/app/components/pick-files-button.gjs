@@ -5,7 +5,6 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
-import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import noop from "discourse/helpers/noop";
 import discourseComputed, { bind } from "discourse/lib/decorators";
@@ -13,6 +12,7 @@ import {
   authorizedExtensions,
   authorizesAllExtensions,
 } from "discourse/lib/uploads";
+import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 // This picker is intended to be used with UppyUploadMixin or with

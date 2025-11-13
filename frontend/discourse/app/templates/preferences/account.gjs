@@ -1,7 +1,6 @@
 import { fn, get, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
-import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import EmailDropdown from "discourse/components/email-dropdown";
 import GoogleIcon from "discourse/components/google-icon";
@@ -15,9 +14,10 @@ import icon from "discourse/helpers/d-icon";
 import dasherize from "discourse/helpers/dasherize";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import FlairChooser from "discourse/select-kit/components/flair-chooser";
+import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
-import FlairChooser from "select-kit/components/flair-chooser";
 
 export default <template>
   <div class="control-group pref-username" data-setting-name="user-username">

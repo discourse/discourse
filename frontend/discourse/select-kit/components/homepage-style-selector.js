@@ -1,5 +1,5 @@
 import { classNames } from "@ember-decorators/component";
-import ComboBoxComponent from "select-kit/components/combo-box";
+import ComboBoxComponent from "discourse/select-kit/components/combo-box";
 import HomepageStyleSelectorRow from "./homepage-style-selector/homepage-style-selector-row";
 import { pluginApiIdentifiers } from "./select-kit";
 

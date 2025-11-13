@@ -1,5 +1,5 @@
-import { gt } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
+import { gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 const CharCounter = <template>

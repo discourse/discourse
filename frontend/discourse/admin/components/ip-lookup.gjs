@@ -4,17 +4,17 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { gt } from "truth-helpers";
+import AdminUser from "discourse/admin/models/admin-user";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
+import DMenu from "discourse/float-kit/components/d-menu";
 import avatar from "discourse/helpers/avatar";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { clipboardCopy } from "discourse/lib/utilities";
+import { gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import AdminUser from "admin/models/admin-user";
-import DMenu from "float-kit/components/d-menu";
 
 const MAX_ACCOUNTS_TO_DELETE = 50;
 

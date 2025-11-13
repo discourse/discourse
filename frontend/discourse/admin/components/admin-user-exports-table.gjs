@@ -3,13 +3,13 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { notEmpty } from "@ember/object/computed";
 import { service } from "@ember/service";
+import UserExport from "discourse/admin/models/user-export";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { exportEntity } from "discourse/lib/export-csv";
 import { i18n } from "discourse-i18n";
-import UserExport from "admin/models/user-export";
 
 const EXPORT_PROGRESS_CHANNEL = "/user-export-progress";
 

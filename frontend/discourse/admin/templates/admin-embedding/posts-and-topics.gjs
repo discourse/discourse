@@ -1,8 +1,8 @@
 import { hash } from "@ember/helper";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import Form from "discourse/components/form";
+import UserChooser from "discourse/select-kit/components/user-chooser";
 import { i18n } from "discourse-i18n";
-import UserChooser from "select-kit/components/user-chooser";
 
 export default <template>
   <DPageSubheader @titleLabel={{i18n "admin.embedding.posts_and_topics"}} />

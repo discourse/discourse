@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { apiInitializer } from "discourse/lib/api";
-import DTooltip from "float-kit/components/d-tooltip";
 
 class InlineFootnote extends Component {
   @action

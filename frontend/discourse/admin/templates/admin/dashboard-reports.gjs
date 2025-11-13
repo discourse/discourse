@@ -1,3 +1,3 @@
-import AdminReports from "admin/components/admin-reports";
+import AdminReports from "discourse/admin/components/admin-reports";
 
 export default <template><AdminReports /></template>

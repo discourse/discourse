@@ -3,10 +3,10 @@ import { A } from "@ember/array";
 import ArrayProxy from "@ember/array/proxy";
 import EmberObject from "@ember/object";
 import { not } from "@ember/object/computed";
+import ColorSchemeColor from "discourse/admin/models/color-scheme-color";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-import ColorSchemeColor from "admin/models/color-scheme-color";
 
 class ColorSchemes extends ArrayProxy {}
 
@@ -55,6 +55,7 @@ export default class ColorScheme extends EmberObject {
   init() {
     super.init(...arguments);
 
+    /** @type Array */
     const colors = A(this.colors ?? []);
     this.colors = colors.map((c) => {
       return ColorSchemeColor.create(c);
@@ -103,6 +104,7 @@ export default class ColorScheme extends EmberObject {
     const newScheme = ColorScheme.create({
       name: this.name,
       can_edit: true,
+      /** @type Array */
       colors: A(),
     });
     this.colors.forEach((c) => {
@@ -206,6 +208,7 @@ export default class ColorScheme extends EmberObject {
     });
   }
 
+  /** @returns {any} */
   destroy() {
     if (this.id) {
       return ajax(`/admin/color_schemes/${this.id}`, { type: "DELETE" });

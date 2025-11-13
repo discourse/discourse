@@ -2,11 +2,11 @@ import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { NodeSelection, TextSelection } from "prosemirror-state";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
+import { updatePosition } from "discourse/float-kit/lib/update-position";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
 import { rovingButtonBar } from "discourse/lib/roving-button-bar";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
-import { updatePosition } from "float-kit/lib/update-position";
 
 const AUTO_LINKS = ["autolink", "linkify"];
 const MENU_OFFSET = 12;

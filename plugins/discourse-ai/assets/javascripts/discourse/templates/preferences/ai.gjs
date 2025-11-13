@@ -1,7 +1,7 @@
 import { get } from "@ember/helper";
-import { eq } from "truth-helpers";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
 import SaveControls from "discourse/components/save-controls";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default <template>

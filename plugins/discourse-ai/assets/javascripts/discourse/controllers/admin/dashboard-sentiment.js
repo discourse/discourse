@@ -1,5 +1,5 @@
 import { computed } from "@ember/object";
-import AdminDashboardTabController from "admin/controllers/admin-dashboard-tab";
+import AdminDashboardTabController from "discourse/admin/controllers/admin-dashboard-tab";
 
 export default class AdminDashboardSentiment extends AdminDashboardTabController {
   @computed("startDate", "endDate")

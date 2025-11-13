@@ -2,7 +2,7 @@ import { computed } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import SelectedChoiceComponent from "select-kit/components/selected-choice";
+import SelectedChoiceComponent from "discourse/select-kit/components/selected-choice";
 
 @tagName("")
 export default class SelectedChoiceCategory extends SelectedChoiceComponent {

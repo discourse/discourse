@@ -1,3 +1,3 @@
-import AdminEmbeddingHostForm from "admin/components/admin-embedding-host-form";
+import AdminEmbeddingHostForm from "discourse/admin/components/admin-embedding-host-form";
 
 export default <template><AdminEmbeddingHostForm /></template>

@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Textarea } from "@ember/component";
-import { or } from "truth-helpers";
 import DModal from "discourse/components/d-modal";
+import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class WatchedWordTesting extends Component {

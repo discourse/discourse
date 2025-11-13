@@ -1,6 +1,6 @@
+import WatchedWord from "discourse/admin/models/watched-word";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
-import WatchedWord from "admin/models/watched-word";
 
 export default class AdminWatchedWordsRoute extends DiscourseRoute {
   queryParams = {
@@ -11,6 +11,7 @@ export default class AdminWatchedWordsRoute extends DiscourseRoute {
     return i18n("admin.config.watched_words.title");
   }
 
+  /** @returns {any} */
   model() {
     return WatchedWord.findAll();
   }

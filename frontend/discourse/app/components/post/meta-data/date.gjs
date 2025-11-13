@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { and } from "truth-helpers";
 import ShareTopicModal from "discourse/components/modal/share-topic";
 import RelativeDate from "discourse/components/relative-date";
 import concatClass from "discourse/helpers/concat-class";
+import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class PostMetaDataDate extends Component {

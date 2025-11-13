@@ -6,9 +6,9 @@ import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { setting } from "discourse/lib/computed";
 import Category from "discourse/models/category";
 import PermissionType from "discourse/models/permission-type";
+import CategoryRow from "discourse/select-kit/components/category-row";
+import ComboBoxComponent from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
-import CategoryRow from "select-kit/components/category-row";
-import ComboBoxComponent from "select-kit/components/combo-box";
 import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
 
 @classNames("category-chooser")

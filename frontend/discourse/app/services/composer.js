@@ -147,6 +147,9 @@ export default class ComposerService extends Service {
     this._showPreview = value;
   }
 
+  /**
+   * @returns {import("discourse/controllers/topic").default};
+   */
   get topicController() {
     return getOwner(this).lookup("controller:topic");
   }
@@ -1307,6 +1310,7 @@ export default class ComposerService extends Service {
         );
       }
 
+      this.set("model.loading", false);
       this.close();
       this.toasts.success({
         duration: "short",
@@ -1317,8 +1321,6 @@ export default class ComposerService extends Service {
       this.selectedTranslationLocale = null;
     } catch (e) {
       popupAjaxError(e);
-    } finally {
-      this.set("model.loading", false);
     }
   }
 
