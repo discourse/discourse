@@ -135,6 +135,11 @@ export default class Validator {
           error = true;
         }
         break;
+      case "checkbox":
+        if (value !== true) {
+          error = true;
+        }
+        break;
       default:
         if (isBlank(value)) {
           error = true;

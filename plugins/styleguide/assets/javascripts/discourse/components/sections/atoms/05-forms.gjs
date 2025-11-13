@@ -278,6 +278,18 @@ const Forms = <template>
       >
         <field.Input />
       </form.Field>
+
+      <form.Field
+        @name="accept_terms"
+        @title="Accept terms"
+        @validation="required"
+        @format="large"
+        as |field|
+      >
+        <field.Checkbox />
+      </form.Field>
+
+      <form.Submit />
     </Form>
   </StyleguideExample>
 </template>;
