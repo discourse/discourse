@@ -2344,12 +2344,15 @@ files:
     client: true
   composer_media_optimization_image_bytes_optimization_threshold:
     default: 524288
+    hidden: true
     client: true
   composer_media_optimization_image_resize_dimensions_threshold:
     default: 1920
+    hidden: true
     client: true
   composer_media_optimization_image_resize_width_target:
     default: 1920
+    hidden: true
     client: true
   composer_media_optimization_image_resize_pre_multiply:
     default: false
