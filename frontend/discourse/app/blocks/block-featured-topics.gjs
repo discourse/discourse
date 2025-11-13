@@ -33,7 +33,7 @@ export default class BlockFeaturedTopics extends Component {
       let results = [];
       results = data.topic_list.topics;
 
-      if (this.args?.shuffle === "true") {
+      if (this.args?.shuffle === true) {
         results = this.shuffle(results);
       }
       this.featuredTopics = results.slice(0, count);
