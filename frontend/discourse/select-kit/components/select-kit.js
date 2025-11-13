@@ -19,6 +19,7 @@ import { bind as bindDecorator } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import { normalize } from "discourse/select-kit/lib/input-utils";
 import {
   applyContentPluginApiCallbacks,
@@ -164,21 +165,21 @@ export default class SelectKit extends Component {
   @protoProp content = null;
   @protoProp value = null;
   @protoProp selectKit = null;
-  @protoProp mainCollection = null;
-  @protoProp errorsCollection = null;
   @protoProp options = null;
   @protoProp valueProperty = "id";
   @protoProp nameProperty = "name";
   @protoProp labelProperty = null;
   @protoProp titleProperty = null;
   @protoProp langProperty = null;
+  @trackedArray mainCollection = null;
+  @trackedArray errorsCollection = null;
 
   init() {
     super.init(...arguments);
 
     this._searchPromise = null;
 
-    this.set("errorsCollection", []);
+    this.errorsCollection = [];
     this._collections = [ERRORS_COLLECTION, MAIN_COLLECTION];
 
     !this.options && this.set("options", EmberObject.create({}));
@@ -446,7 +447,7 @@ export default class SelectKit extends Component {
 
   addError(error) {
     if (!this.errorsCollection.includes(error)) {
-      this.errorsCollection.pushObject(error);
+      this.errorsCollection.push(error);
     }
 
     this._safeAfterRender(() => this._updatePopper());
@@ -457,7 +458,7 @@ export default class SelectKit extends Component {
       return;
     }
 
-    this.set("errorsCollection", []);
+    this.errorsCollection = [];
   }
 
   prependCollection(identifier) {
@@ -469,7 +470,7 @@ export default class SelectKit extends Component {
   }
 
   insertCollectionAtIndex(identifier, index) {
-    this._collections.insertAt(index, identifier);
+    this._collections.splice(index, 0, identifier);
   }
 
   insertBeforeCollection(identifier, insertedIdentifier) {
@@ -761,7 +762,7 @@ export default class SelectKit extends Component {
           content.unshift(noneItem);
         }
 
-        this.set("mainCollection", content);
+        this.mainCollection = content;
 
         this.selectKit.setProperties({
           highlighted:
@@ -769,7 +770,7 @@ export default class SelectKit extends Component {
               ? this.itemForValue(this.value, this.mainCollection)
               : isEmpty(this.selectKit.filter)
                 ? null
-                : this.mainCollection.firstObject,
+                : this.mainCollection[0],
           isLoading: false,
           hasNoContent,
         });
@@ -815,9 +816,7 @@ export default class SelectKit extends Component {
   }
 
   _highlightLast() {
-    const highlighted = this.mainCollection.objectAt(
-      this.mainCollection.length - 1
-    );
+    const highlighted = this.mainCollection.at(-1);
     if (highlighted) {
       this._scrollToRow(highlighted, false);
       this.set("selectKit.highlighted", highlighted);
@@ -825,7 +824,7 @@ export default class SelectKit extends Component {
   }
 
   _highlightFirst() {
-    const highlighted = this.mainCollection.objectAt(0);
+    const highlighted = this.mainCollection[0];
     if (highlighted) {
       this._scrollToRow(highlighted, false);
       this.set("selectKit.highlighted", highlighted);
@@ -850,7 +849,7 @@ export default class SelectKit extends Component {
       }
     }
 
-    const highlighted = this.mainCollection.objectAt(highlightedIndex);
+    const highlighted = this.mainCollection[highlightedIndex];
     if (highlighted) {
       this._scrollToRow(highlighted, false);
       this.set("selectKit.highlighted", highlighted);
@@ -875,7 +874,7 @@ export default class SelectKit extends Component {
       }
     }
 
-    const highlighted = this.mainCollection.objectAt(highlightedIndex);
+    const highlighted = this.mainCollection[highlightedIndex];
     if (highlighted) {
       this._scrollToRow(highlighted, false);
       this.set("selectKit.highlighted", highlighted);
@@ -1087,7 +1086,7 @@ export default class SelectKit extends Component {
         );
       } else {
         const index = this.mainCollection.indexOf(this.value);
-        highlighted = this.mainCollection.objectAt(index);
+        highlighted = this.mainCollection[index];
       }
 
       if (highlighted) {
