@@ -495,9 +495,10 @@ describe "Upcoming Events", type: :system do
     end
 
     describe "configurable view" do
+      before { SiteSetting.calendar_upcoming_events_default_view = "day" }
+
       it "default view is controlled by calendar_upcoming_events_default_view setting",
          time: Time.utc(2025, 9, 15) do
-        SiteSetting.calendar_upcoming_events_default_view = "day"
         upcoming_events.visit
 
         upcoming_events.expect_content("September 15, 2025")
