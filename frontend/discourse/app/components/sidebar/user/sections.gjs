@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import BlockLayout from "discourse/components/block-layout";
+import BlockLayout from "discourse/components/block-frame";
 import ApiSections from "../api-sections";
 import CategoriesSection from "./categories-section";
 import CustomSections from "./custom-sections";

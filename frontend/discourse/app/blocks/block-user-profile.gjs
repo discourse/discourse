@@ -4,11 +4,11 @@ import { concat } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { or } from "truth-helpers";
 import { block } from "discourse/blocks";
 import avatar from "discourse/helpers/avatar";
 import dIcon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
+import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 @block("user-profile")
