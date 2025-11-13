@@ -58,6 +58,8 @@ class Admin::WatchedWordsController < Admin::StaffController
       begin
         content = Encodings.to_utf8(File.read(file.tempfile, mode: "rb"))
 
+        words_updated = 0
+
         CSV.parse(content) do |row|
           if row[0].present? && (!has_replacement || row[1].present?)
             watched_word =
@@ -68,16 +70,17 @@ class Admin::WatchedWordsController < Admin::StaffController
                 case_sensitive: "true" == row[2]&.strip&.downcase,
               )
             if watched_word.valid?
+              words_updated += 1
               StaffActionLogger.new(current_user).log_watched_words_creation(watched_word)
             end
           end
         end
 
-        data = { url: "/ok" }
+        data = { result: "ok", words_updated: words_updated }
       rescue => e
-        data = failed_json.merge(errors: [e.message])
+        data = failed_json.merge(errors: [e.message], words_updated: words_updated)
       end
-      MessageBus.publish("/uploads/txt", data.as_json, client_ids: [params[:client_id]])
+      MessageBus.publish("/watched_words/upload", data.as_json, client_ids: [params[:client_id]])
     end
 
     render json: success_json

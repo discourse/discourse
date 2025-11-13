@@ -16,8 +16,10 @@ export default class AdminWatchedWordsRoute extends DiscourseRoute {
     return WatchedWord.findAll();
   }
 
-  afterModel(model) {
-    const controller = this.controllerFor("adminWatchedWords");
-    controller.set("allWatchedWords", model);
+  setupController(controller, model) {
+    controller.setProperties({
+      allWatchedWords: model,
+      filteredWatchedWords: model,
+    });
   }
 }
