@@ -2,15 +2,14 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseLater from "discourse/lib/later";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 class ChatChannelSidebarMenuNotificationSubmenu extends Component {
-  @service currentUser;
   @service chatApi;
 
   @action
@@ -125,7 +124,6 @@ class ChatChannelSidebarMenuNotificationSubmenu extends Component {
 }
 
 export default class ChatChannelSidebarLinkMenu extends Component {
-  @service currentUser;
   @service chatApi;
   @service menu;
 
@@ -162,6 +160,9 @@ export default class ChatChannelSidebarLinkMenu extends Component {
       modalForMobile: true,
       placement: "right-start",
       data: { channel: this.channel },
+      onClose: () => {
+        this.args.close();
+      },
     });
   }
 
