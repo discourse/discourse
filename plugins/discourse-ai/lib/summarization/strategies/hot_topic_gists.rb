@@ -62,8 +62,8 @@ module DiscourseAi
           end
         end
 
-        def as_llm_messages(contents, extras: {})
-          content_title = extras[:title]
+        def as_llm_messages(contents)
+          content_title = target.title
           statements =
             contents.to_a.map { |item| "(#{item[:id]} #{item[:poster]} said: #{item[:text]} " }
 

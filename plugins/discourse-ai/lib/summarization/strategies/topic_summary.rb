@@ -38,11 +38,11 @@ module DiscourseAi
           end
         end
 
-        def as_llm_messages(contents, extras: {})
-          resource_path = extras[:resource_path]
-          content_title = extras[:title]
-          category_name = extras[:category_name]
-          tags = extras[:tag_names]
+        def as_llm_messages(contents)
+          resource_path = "#{Discourse.base_path}/t/-/#{target.id}"
+          content_title = target.title
+          category_name = target.category&.name
+          tags = target.tags&.map(&:name)&.sort
           input =
             contents.map { |item| "(#{item[:id]} #{item[:poster]} said: #{item[:text]} " }.join
 

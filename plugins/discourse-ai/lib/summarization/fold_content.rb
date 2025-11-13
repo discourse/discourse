@@ -144,21 +144,13 @@ module DiscourseAi
           end
         end
 
-        target = strategy.target
-        extras = {
-          title: target.title,
-          resource_path: "#{Discourse.base_path}/t/-/#{target.id}",
-          category_name: target.category&.name,
-          tag_names: target.tags&.map(&:name)&.sort,
-        }
-
         context =
           DiscourseAi::Personas::BotContext.new(
             user: user,
             skip_tool_details: true,
             feature_name: strategy.feature,
-            resource_url: extras[:resource_path],
-            messages: strategy.as_llm_messages(content_in_window, extras: extras),
+            resource_url: "#{Discourse.base_path}/t/-/#{strategy.target.id}",
+            messages: strategy.as_llm_messages(content_in_window),
           )
 
         summary = +""

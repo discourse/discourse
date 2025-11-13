@@ -16,20 +16,23 @@ module DiscourseAi
 
         def run(eval_case, llm)
           args = eval_case.args
-          persona_class, strategy = persona_and_strategy
-          persona, = resolve_persona(persona_class: persona_class)
+          conversation = extract_conversation(args)
           user = Discourse.system_user
 
-          extras = {
-            resource_path: "#{Discourse.base_path}/t/-/1",
-            title: "Eval topic for topic summarization",
-          }
-
-          conversation = extract_conversation(args)
+          topic =
+            Topic.new(
+              category: Category.last,
+              title: "Eval topic for topic summarization",
+              id: -99,
+              user_id: user.id,
+            )
           content =
             conversation.each_with_index.map do |text, index|
               { poster: user.username, id: index + 1, text: text }
             end
+
+          persona_class, strategy = persona_and_strategy(topic)
+          persona, = resolve_persona(persona_class: persona_class)
 
           context =
             DiscourseAi::Personas::BotContext.new(
@@ -37,7 +40,7 @@ module DiscourseAi
               skip_tool_details: true,
               feature_name: "evals/#{feature_name}",
               resource_url: "#{Discourse.base_path}/t/-/1",
-              messages: strategy.as_llm_messages(content, extras: extras),
+              messages: strategy.as_llm_messages(content),
             )
 
           summary = capture_summary(persona, user, llm, context)
@@ -49,16 +52,16 @@ module DiscourseAi
 
         attr_reader :feature_name
 
-        def persona_and_strategy
+        def persona_and_strategy(topic)
           if regular_summaries?
             [
               DiscourseAi::Personas::Summarizer,
-              DiscourseAi::Summarization::Strategies::TopicSummary.new(nil),
+              DiscourseAi::Summarization::Strategies::TopicSummary.new(topic),
             ]
           elsif gists?
             [
               DiscourseAi::Personas::ShortSummarizer,
-              DiscourseAi::Summarization::Strategies::HotTopicGists.new(nil),
+              DiscourseAi::Summarization::Strategies::HotTopicGists.new(topic),
             ]
           else
             raise "Unknown summary type"
