@@ -169,7 +169,7 @@ export default class ColorScheme extends EmberObject {
         data.colors = [];
         this.colors.forEach((c) => {
           if (!this.id || c.get("changed")) {
-            data.colors.pushObject(c.getProperties("name", "hex"));
+            data.colors.push(c.getProperties("name", "hex"));
           }
         });
       }
