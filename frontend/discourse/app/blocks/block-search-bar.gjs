@@ -8,8 +8,8 @@ import icon from "discourse/helpers/d-icon";
 @block("search-bar")
 export default class BlockSearchBar extends Component {
   <template>
-    {{bodyClass "block-search-bar"}}
-    <div class="block-search-bar block-search-bar__container">
+    {{bodyClass "block-search-bar--visible"}}
+    <div class="block-search-bar__container">
       <div class="block-search-bar__wrapper">
         <div class="block-search-bar__search-icon">
           {{icon "magnifying-glass"}}
