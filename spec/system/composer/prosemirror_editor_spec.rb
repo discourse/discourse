@@ -2175,7 +2175,7 @@ describe "Composer - ProseMirror editor", type: :system do
 
         expect(page).to have_css("[data-identifier='composer-image-toolbar']")
         expect(page).to have_css(".composer-image-toolbar__add-to-grid")
-        expect(page).to have_no_css(".composer-image-toolbar__remove-from-grid")
+        expect(page).to have_no_css(".composer-image-toolbar__move-outside-grid")
       end
 
       it "creates single-image grid" do
@@ -2205,35 +2205,35 @@ describe "Composer - ProseMirror editor", type: :system do
     end
 
     context "when images are within a grid" do
-      it "shows 'Remove from Grid' button for images inside grids" do
+      it "shows 'Move outside grid' button for images inside grids" do
         open_composer
         composer.type_content("[grid]![image1](upload://test1.png)![image2](upload://test2.png)")
 
         rich.all(".composer-image-grid .composer-image-node img").first.click
 
         expect(page).to have_css("[data-identifier='composer-image-toolbar']")
-        expect(page).to have_css(".composer-image-toolbar__remove-from-grid")
+        expect(page).to have_css(".composer-image-toolbar__move-outside-grid")
         expect(page).to have_no_css(".composer-image-toolbar__add-to-grid")
       end
 
-      it "removes image from grid" do
+      it "moves image outside grid" do
         open_composer
         composer.type_content("[grid]![image1](upload://test1.png)![image2](upload://test2.png)")
 
         # Click on the first image inside the grid to select it
         rich.all(".composer-image-grid .composer-image-node img").first.click
-        find(".composer-image-toolbar__remove-from-grid").click
+        find(".composer-image-toolbar__move-outside-grid").click
 
         expect(rich).to have_css(".composer-image-grid .composer-image-node img", count: 1)
         expect(rich).to have_css(".composer-image-node img", count: 2) # One in grid, one standalone
       end
 
-      it "removes last image from grid" do
+      it "moves last image outside grid" do
         open_composer
         composer.type_content("[grid]![image1](upload://test1.png)")
 
         rich.find(".composer-image-grid .composer-image-node img").click
-        find(".composer-image-toolbar__remove-from-grid").click
+        find(".composer-image-toolbar__move-outside-grid").click
 
         expect(rich).to have_css(".composer-image-node img", count: 1)
         expect(rich).to have_no_css(".composer-image-grid .composer-image-node img")

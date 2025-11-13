@@ -18,6 +18,7 @@ import markdownPaste from "./markdown-paste";
 import mention from "./mention";
 import onebox from "./onebox";
 import orderedList from "./ordered-list";
+import overrideDragGhost from "./override-drag-ghost";
 import quote from "./quote";
 import strikethrough from "./strikethrough";
 import table from "./table";
@@ -55,6 +56,7 @@ const defaultExtensions = [
   orderedList,
   bulletList,
   trailingInlineSpace,
+  overrideDragGhost,
   hardBreak,
   grid,
 ];

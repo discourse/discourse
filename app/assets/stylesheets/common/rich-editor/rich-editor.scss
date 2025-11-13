@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .ProseMirror-container {
   margin: 0;
   overscroll-behavior: contain;
@@ -179,8 +181,39 @@
     position: relative;
     border: 2px dashed var(--primary-low-mid);
     border-radius: var(--d-border-radius);
-    padding: var(--space-3) var(--space-1) var(--space-1) var(--space-1);
+    padding: var(--space-half) var(--space-2) var(--space-2) var(--space-2);
     margin-block: var(--space-4);
+
+    &__title {
+      display: flex;
+      align-items: center;
+      justify-content: end;
+      font-size: var(--font-down-1-rem);
+      color: var(--primary-medium);
+
+      svg {
+        font-size: var(--font-up-1-rem);
+        padding-inline: var(--space-2);
+
+        &:hover {
+          color: var(--primary);
+          cursor: pointer;
+        }
+      }
+    }
+
+    img:not(.ProseMirror-separator) {
+      @include viewport.until(md) {
+        width: 150px !important;
+        height: 150px !important;
+      }
+
+      @include viewport.from(md) {
+        width: 200px !important;
+        height: 200px !important;
+      }
+      object-fit: cover;
+    }
 
     &.ProseMirror-selectednode {
       outline-offset: -2px;

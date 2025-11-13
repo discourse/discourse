@@ -175,7 +175,7 @@ export default class ProsemirrorEditor extends Component {
         )
       ),
       keymap(baseKeymap),
-      dropCursor({ color: "var(--primary)" }),
+      dropCursor({ color: "var(--tertiary-high)", width: 4 }),
       gapCursor(),
       history(),
       ...extractPlugins(this.extensions, params, this.handleAsyncPlugin),

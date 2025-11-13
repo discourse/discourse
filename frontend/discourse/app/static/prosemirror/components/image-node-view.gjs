@@ -60,17 +60,17 @@ class ImageToolbar extends ToolbarBase {
 
     if (isInGrid) {
       this.addButton({
-        id: "image-remove-from-grid",
-        icon: "table-cells",
-        title: "composer.image_toolbar.remove_from_grid",
-        className: "composer-image-toolbar__remove-from-grid",
-        action: opts.removeFromGrid,
+        id: "image-move-outside-grid",
+        icon: "table-cells-minus",
+        title: "composer.image_toolbar.move_outside_grid",
+        className: "composer-image-toolbar__move-outside-grid",
+        action: opts.moveOutsideGrid,
         tabindex: 0,
       });
     } else {
       this.addButton({
         id: "image-add-to-grid",
-        icon: "table-cells",
+        icon: "table-cells-plus",
         title: "composer.image_toolbar.add_to_grid",
         className: "composer-image-toolbar__add-to-grid",
         action: opts.addToGrid,
@@ -117,12 +117,16 @@ export default class ImageNodeView extends Component {
       scaleDown: this.scaleDown.bind(this),
       scaleUp: this.scaleUp.bind(this),
       removeImage: this.removeImage.bind(this),
-      removeFromGrid: this.removeFromGrid.bind(this),
+      moveOutsideGrid: this.moveOutsideGrid.bind(this),
       addToGrid: this.addToGrid.bind(this),
-      canScaleDown: () =>
-        !this.args.node.attrs.scale || this.args.node.attrs.scale > MIN_SCALE,
-      canScaleUp: () =>
-        this.args.node.attrs.scale && this.args.node.attrs.scale < MAX_SCALE,
+      canScaleDown: () => {
+        const scale = this.args.node.attrs.scale ?? 100;
+        return scale > MIN_SCALE;
+      },
+      canScaleUp: () => {
+        const scale = this.args.node.attrs.scale ?? 100;
+        return scale < MAX_SCALE;
+      },
       isAltTextMenuOpen: () => this.altMenuInstance?.expanded,
       isInGrid: () => this.isInGrid,
     });
@@ -229,14 +233,14 @@ export default class ImageNodeView extends Component {
 
   @action
   scaleDown() {
-    const currentScale = this.args.node.attrs.scale || 100;
+    const currentScale = this.args.node.attrs.scale ?? 100;
     const newScale = Math.max(MIN_SCALE, currentScale - SCALE_STEP);
     this.scaleImage(newScale);
   }
 
   @action
   scaleUp() {
-    const currentScale = this.args.node.attrs.scale || 100;
+    const currentScale = this.args.node.attrs.scale ?? 100;
     const newScale = Math.min(MAX_SCALE, currentScale + SCALE_STEP);
     this.scaleImage(newScale);
   }
@@ -303,7 +307,7 @@ export default class ImageNodeView extends Component {
       return null;
     }
 
-    const scale = (this.args.node.attrs.scale || 100) / 100;
+    const scale = (this.args.node.attrs.scale ?? 100) / 100;
 
     return htmlSafe(`width: ${width * scale}px`);
   }
@@ -327,39 +331,25 @@ export default class ImageNodeView extends Component {
     const view = this.args.view;
     const { state } = view;
     const imageNode = this.args.node;
-    const $pos = state.doc.resolve(pos);
-
-    // Check if image is the only child in a paragraph
-    const parent = $pos.parent;
-    const isOnlyChildInParagraph =
-      parent.type.name === "paragraph" &&
-      parent.childCount === 1 &&
-      parent.firstChild === imageNode;
 
     const existingGrid = this.#findNearbyGrid(pos);
 
     if (existingGrid) {
-      this.#addToExistingGrid(
-        existingGrid,
+      this.#addToExistingGrid(existingGrid, pos, imageNode, state, view);
+    } else {
+      const $pos = state.doc.resolve(pos);
+
+      this.#createNewGrid(
         pos,
         imageNode,
-        isOnlyChildInParagraph,
+        this.#isImageOnlyChildInParagraph($pos),
         state,
         view
       );
-    } else {
-      this.#createNewGrid(pos, imageNode, isOnlyChildInParagraph, state, view);
     }
   }
 
-  #addToExistingGrid(
-    existingGrid,
-    pos,
-    imageNode,
-    isOnlyChildInParagraph,
-    state,
-    view
-  ) {
+  #addToExistingGrid(existingGrid, pos, imageNode, state, view) {
     const { node: gridNode, pos: gridPos, direction } = existingGrid;
     const tr = state.tr;
 
@@ -373,21 +363,40 @@ export default class ImageNodeView extends Component {
       // Insert at the end of the grid
       insertPos = gridPos + gridNode.nodeSize - 2;
       tr.insert(insertPos, paragraphWithImage);
+      const adjustedPos = pos + paragraphWithImage.nodeSize; // Account for the insertion
+      tr.delete(adjustedPos, adjustedPos + 1);
+
+      // if empty paragraph is left at adjustedPos, remove it explicitly
+      const $adjustedPos = tr.doc.resolve(adjustedPos);
+      if (
+        $adjustedPos.parent.type.name === "paragraph" &&
+        $adjustedPos.parent.content.size === 0
+      ) {
+        tr.delete(adjustedPos - 1, adjustedPos);
+      }
+
+      const newImagePos = insertPos + 1; // Insert position + paragraph boundary
+      tr.setSelection(
+        NodeSelection.create(tr.doc, newImagePos)
+      ).scrollIntoView();
     } else {
       // Insert at the beginning of the grid
-      insertPos = gridPos + 1; // After grid opening
-      tr.insert(insertPos, paragraphWithImage);
-    }
+      tr.insert(gridPos, paragraphWithImage);
+      tr.delete(pos, pos + 1);
 
-    const adjustedPos = pos + paragraphWithImage.nodeSize; // Account for the insertion
-    if (isOnlyChildInParagraph) {
-      tr.delete(adjustedPos - 1, adjustedPos + 1);
-    } else {
-      tr.delete(adjustedPos, adjustedPos + 1);
-    }
+      let imagePos = gridPos;
 
-    const newImagePos = insertPos + 1; // Insert position + paragraph boundary
-    tr.setSelection(NodeSelection.create(tr.doc, newImagePos)).scrollIntoView();
+      const $pos = tr.doc.resolve(pos);
+      if (
+        $pos.parent.type.name === "paragraph" &&
+        $pos.parent.content.size === 0
+      ) {
+        tr.delete(pos - 1, pos);
+        imagePos -= 2;
+      }
+
+      tr.setSelection(NodeSelection.create(tr.doc, imagePos)).scrollIntoView();
+    }
 
     view.dispatch(tr);
   }
@@ -414,6 +423,33 @@ export default class ImageNodeView extends Component {
     tr.setSelection(NodeSelection.create(tr.doc, imagePos)).scrollIntoView();
 
     view.dispatch(tr);
+  }
+
+  /**
+   * Check if the image at the resolved position is the only child in its paragraph.
+   * Uses position-based API for reliable detection instead of direct node comparison.
+   *
+   * @param {import("prosemirror-model").ResolvedPos} $pos - The resolved position of the image
+   * @returns {boolean} True if the image is the only child in a paragraph
+   */
+  #isImageOnlyChildInParagraph($pos) {
+    const parent = $pos.parent;
+
+    // Must be in a paragraph
+    if (parent.type.name !== "paragraph") {
+      return false;
+    }
+
+    // Paragraph must have exactly one child
+    if (parent.childCount !== 1) {
+      return false;
+    }
+
+    // The single child must be an image at the current position
+    const index = $pos.index();
+    const childAtIndex = parent.child(index);
+
+    return childAtIndex.type.name === "image";
   }
 
   #findNearbyGrid(pos) {
@@ -463,7 +499,7 @@ export default class ImageNodeView extends Component {
   }
 
   @action
-  removeFromGrid() {
+  moveOutsideGrid() {
     if (!this.isInGrid) {
       return;
     }
