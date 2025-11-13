@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "yaml"
+
 module DiscourseAi
   module Evals
     class PersonaPromptLoader
@@ -11,10 +13,8 @@ module DiscourseAi
 
       def find_prompt(key)
         entry = entries.find { |definition| definition[:key] == key }
-        entry&.dig(:system_prompt).presence
+        entry && entry[:system_prompt]
       end
-
-      private
 
       def entries
         @entries ||= Dir.glob(PERSONA_GLOB).sort.map { |path| load_entry(path) }.compact
@@ -23,12 +23,19 @@ module DiscourseAi
       def load_entry(path)
         yaml = YAML.load_file(path) || {}
 
-        key = yaml["key"].presence || File.basename(path, ".yml")
-        system_prompt = yaml["system_prompt"].to_s
+        key = yaml["key"]
+        key = File.basename(path, ".yml") if key.nil? || key.to_s.strip.empty?
+        return nil if key.nil?
 
-        return nil if key.blank? || system_prompt.blank?
+        system_prompt = yaml["system_prompt"]
+        system_prompt = system_prompt.to_s
+        return nil if system_prompt.strip.empty?
 
-        { key: key.to_s, system_prompt: system_prompt, description: yaml["description"] }
+        description = yaml["description"]
+        description = description.to_s.strip
+        description = nil if description.empty?
+
+        { key: key.to_s.strip, system_prompt: system_prompt, description: description }
       rescue Psych::SyntaxError => e
         warn "Warning: failed to load persona prompt from #{path}: #{e.message}"
         nil

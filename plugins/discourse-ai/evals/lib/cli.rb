@@ -12,7 +12,7 @@ class DiscourseAi::Evals::Cli
                   :list_personas,
                   :feature_key,
                   :judge,
-                  :persona_key
+                  :persona_keys
 
     def initialize(
       eval_name: nil,
@@ -23,7 +23,7 @@ class DiscourseAi::Evals::Cli
       list_personas: false,
       feature_key: nil,
       judge: nil,
-      persona_key: nil
+      persona_keys: []
     )
       @eval_name = eval_name
       @models = models
@@ -33,7 +33,14 @@ class DiscourseAi::Evals::Cli
       @list_personas = list_personas
       @feature_key = feature_key
       @judge = judge
-      @persona_key = persona_key
+      @persona_keys = persona_keys || []
+    end
+
+    def add_persona_key(key)
+      trimmed = key.to_s.strip
+      return if trimmed.empty?
+
+      @persona_keys << trimmed
     end
   end
 
@@ -77,9 +84,9 @@ class DiscourseAi::Evals::Cli
         ) { |judge| options.judge = judge }
 
         opts.on(
-          "--persona-key KEY",
-          "Replaces the runner system prompt using the YAML definition identified by KEY",
-        ) { |key| options.persona_key = key }
+          "--persona-keys KEYS",
+          "Comma-separated list of persona keys to run sequentially",
+        ) { |keys| keys.split(",").each { |key| options.add_persona_key(key) } }
       end
 
     show_help = ARGV.empty?

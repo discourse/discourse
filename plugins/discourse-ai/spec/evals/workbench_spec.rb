@@ -55,6 +55,7 @@ RSpec.describe DiscourseAi::Evals::Workbench do
 
       expect(DiscourseAi::Evals::Recorder).to have_received(:with_cassette).with(
         eval_case,
+        persona_key: "default",
         output: output,
       )
       expect(recorder).to have_received(:record_llm_results).with(

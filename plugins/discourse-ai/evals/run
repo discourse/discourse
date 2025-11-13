@@ -29,9 +29,16 @@ if options.list_features
   exit 0
 end
 
+DEFAULT_PERSONA_KEY = "default"
+
 if options.list_personas
-  DiscourseAi::Evals::PersonaPromptLoader.new.list.each do |key, description|
-    puts description.present? ? "#{key}: #{description}" : key
+  puts "#{DEFAULT_PERSONA_KEY}: built-in persona prompt"
+  DiscourseAi::Evals::PersonaPromptLoader.list.each do |key, description|
+    if description && !description.empty?
+      puts "#{key}: #{description}"
+    else
+      puts key
+    end
   end
   exit 0
 end
@@ -86,16 +93,29 @@ rescue StandardError => e
   end
 end
 
-persona_prompt_override = nil
-if options.persona_key.present?
-  persona_prompt_override =
-    DiscourseAi::Evals::PersonaPromptLoader.new.find_prompt(options.persona_key)
+persona_keys = Array(options.persona_keys).map { |key| key.to_s.strip }.reject(&:empty?).uniq
 
-  if persona_prompt_override.blank?
-    puts "Error: Unknown persona key '#{options.persona_key}'. Run --list-personas to view options."
-    exit 1
+persona_variants =
+  if persona_keys.empty?
+    [{ key: DEFAULT_PERSONA_KEY, prompt: nil }]
+  else
+    persona_keys.map do |key|
+      trimmed_key = key.to_s.strip
+
+      if trimmed_key.downcase == DEFAULT_PERSONA_KEY
+        { key: DEFAULT_PERSONA_KEY, prompt: nil }
+      else
+        prompt = DiscourseAi::Evals::PersonaPromptLoader.new.find_prompt(trimmed_key)
+
+        if prompt.nil? || prompt.strip.empty?
+          puts "Error: Unknown persona key '#{trimmed_key}'. Run --list-personas to view options."
+          exit 1
+        end
+
+        { key: trimmed_key, prompt: prompt }
+      end
+    end
   end
-end
 
 if selected_evals.any? { |eval_case| eval_case.judge.present? } && judge_llm.nil?
   message = "Error: Selected evaluations require a judge."
@@ -110,17 +130,31 @@ if selected_evals.any? { |eval_case| eval_case.judge.present? } && judge_llm.nil
   exit 1
 end
 
-playground =
-  DiscourseAi::Evals::Workbench.new(
-    output: $stdout,
-    judge_llm: judge_llm,
-    persona_prompt: persona_prompt_override,
-  )
+persona_variants.each do |variant|
+  if variant[:key]
+    label =
+      if variant[:key] == DEFAULT_PERSONA_KEY
+        "default (built-in)"
+      else
+        variant[:key]
+      end
 
-selected_evals.each do |eval_case|
-  if options.judge.present? && eval_case.judge.blank?
-    puts "Notice: Eval '#{eval_case.id}' has no judge block. --judge is ignored for this eval."
+    puts "\n=== Persona: #{label} ==="
   end
 
-  playground.run(eval_case: eval_case, llms: llms)
+  playground =
+    DiscourseAi::Evals::Workbench.new(
+      output: $stdout,
+      judge_llm: judge_llm,
+      persona_prompt: variant[:prompt],
+      persona_label: variant[:key],
+    )
+
+  selected_evals.each do |eval_case|
+    if options.judge.present? && eval_case.judge.blank?
+      puts "Notice: Eval '#{eval_case.id}' has no judge block. --judge is ignored for this eval."
+    end
+
+    playground.run(eval_case: eval_case, llms: llms)
+  end
 end
