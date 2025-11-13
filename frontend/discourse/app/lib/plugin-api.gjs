@@ -3318,7 +3318,7 @@ class _PluginApi {
     _addCategoryPropertyForSave(property);
   }
 
-  renderBlockLayout(name, blockConfig) {
+  renderBlocks(frame, blockConfig) {
     // TODO: Better validation
     const validateBlock = (block) => {
       if (!block.component) {
@@ -3326,7 +3326,7 @@ class _PluginApi {
       }
       if (!isBlock(block.component)) {
         throw new Error(
-          `Block component ${block.name} (${block.component}) in layout ${name} is not a valid block`
+          `Block component ${block.name} (${block.component}) in layout ${frame} is not a valid block`
         );
       }
     };
@@ -3347,7 +3347,7 @@ class _PluginApi {
       }
     });
 
-    blockConfigs.set(name, blockConfig);
+    blockConfigs.set(frame, blockConfig);
   }
 
   // eslint-disable-next-line no-unused-vars

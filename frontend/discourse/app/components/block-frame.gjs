@@ -5,7 +5,7 @@ import curryComponent from "ember-curry-component";
 import concatClass from "discourse/helpers/concat-class";
 import { blockConfigs } from "discourse/lib/plugin-api";
 
-export default class BlockLayout extends Component {
+export default class BlockFrame extends Component {
   @service discovery;
 
   get blocks() {

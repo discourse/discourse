@@ -3,13 +3,13 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { or } from "truth-helpers";
 import { block } from "discourse/blocks";
 import BasicTopicList from "discourse/components/basic-topic-list";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import dIcon from "discourse/helpers/d-icon";
 import Category from "discourse/models/category";
+import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 @block("featured-list")
