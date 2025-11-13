@@ -193,7 +193,7 @@ class LlmModel < ActiveRecord::Base
     return nil unless provider == BEDROCK_PROVIDER_NAME
 
     role_arn = lookup_custom_param("role_arn")
-    return nil unless role_arn
+    return nil if role_arn.blank?
 
     # Invalidate cache if role_arn changed
     if @cached_role_arn != role_arn
