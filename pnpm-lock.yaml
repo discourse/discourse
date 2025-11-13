@@ -702,15 +702,18 @@ importers:
 
   frontend/discourse-types:
     dependencies:
-      '@types/@glimmer__component':
-        specifier: npm:@glimmer/component@^2.0.0
-        version: '@glimmer/component@2.0.0'
-      '@types/@glint__ember-tsc':
-        specifier: npm:@glint/ember-tsc@^1.0.7
-        version: '@glint/ember-tsc@1.0.7(typescript@5.9.3)'
-      '@types/@glint__template':
-        specifier: npm:@glint/template@^1.7.2
-        version: '@glint/template@1.7.2'
+      '@glimmer/component':
+        specifier: ^2.0.0
+        version: 2.0.0
+      '@glint/ember-tsc':
+        specifier: ^1.0.7
+        version: 1.0.7(typescript@5.9.3)
+      '@glint/template':
+        specifier: ^1.7.2
+        version: 1.7.2
+      '@types/qunit':
+        specifier: ^2.19.13
+        version: 2.19.13
       ember-source:
         specifier: ~6.6.0
         version: 6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5)
