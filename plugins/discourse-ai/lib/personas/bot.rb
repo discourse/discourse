@@ -259,7 +259,7 @@ module DiscourseAi
       end
 
       def invoke_tool(tool, context, &update_blk)
-        show_placeholder = !context.skip_tool_details && !tool.class.allow_partial_tool_calls?
+        show_placeholder = !context.skip_show_thinking && !tool.class.allow_partial_tool_calls?
 
         update_blk.call("", build_placeholder(tool.summary, "")) if show_placeholder
 
@@ -276,7 +276,7 @@ module DiscourseAi
 
         if show_placeholder
           tool_details = build_placeholder(tool.summary, tool.details, custom_raw: tool.custom_raw)
-          update_blk.call(tool_details, nil, :tool_details)
+          update_blk.call(tool_details, nil, :thinking)
         elsif tool.custom_raw.present?
           update_blk.call(tool.custom_raw, nil, :custom_raw)
         end
@@ -293,21 +293,12 @@ module DiscourseAi
       end
 
       def build_placeholder(summary, details, custom_raw: nil)
-        placeholder = +(<<~HTML)
-        <details>
-          <summary>#{summary}</summary>
-          <p>#{details}</p>
-        </details>
-        HTML
+        # No nested details blocks - just output as plain text within thinking block
+        placeholder = +"**#{summary}**\n#{details}\n\n"
 
         if custom_raw
-          placeholder << "\n"
           placeholder << custom_raw
-        else
-          # we need this for cursor placeholder to work
-          # doing this in CSS is very hard
-          # if changing test with a custom tool such as search
-          placeholder << "<span></span>\n\n"
+          placeholder << "\n\n"
         end
 
         placeholder

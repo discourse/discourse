@@ -118,7 +118,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       JS
 
       tool_name = "custom-#{custom_tool.id}"
-      ai_persona.update!(tools: [[tool_name, nil, true]], tool_details: false)
+      ai_persona.update!(tools: [[tool_name, nil, true]], show_thinking: false)
 
       reply_post = nil
       prompts = nil
@@ -172,6 +172,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     end
 
     it "uses custom tool in conversation" do
+      ai_persona.update!(show_thinking: true)
       persona_klass = AiPersona.all_personas.find { |p| p.name == ai_persona.name }
       bot = DiscourseAi::Personas::Bot.as(bot_user, persona: persona_klass.new)
       playground = described_class.new(bot)
@@ -186,11 +187,11 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       end
 
       expected = <<~TXT.strip
-        <details>
-          <summary>searching for things</summary>
-          <p>did stuff</p>
+        <details><summary>#{I18n.t("discourse_ai.ai_bot.thinking")}</summary>
+        **searching for things**
+        did stuff
+
         </details>
-        <span></span>
 
         custom tool did stuff (maybe)
       TXT
@@ -992,8 +993,8 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       expect(last_post.raw).to include("I found stuff")
     end
 
-    it "supports disabling tool details" do
-      persona = Fabricate(:ai_persona, tool_details: false, tools: ["Search"])
+    it "supports disabling thinking" do
+      persona = Fabricate(:ai_persona, show_thinking: false, tools: ["Search"])
       bot = DiscourseAi::Personas::Bot.as(bot_user, persona: persona.class_instance.new)
       playground = described_class.new(bot)
 
@@ -1069,8 +1070,8 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         )
       end
 
-      it "properly returns an image when skipping tool details" do
-        persona.update!(tool_details: false)
+      it "properly returns an image when skipping thinking" do
+        persona.update!(show_thinking: false)
 
         WebMock.stub_request(:post, SiteSetting.ai_openai_image_generation_url).to_return(
           status: 200,
