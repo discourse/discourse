@@ -1,6 +1,6 @@
 {
   "name": "@discourse/types",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Types only",
   "license": "GPL-2.0-only",
   "author": "Discourse",
