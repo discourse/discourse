@@ -219,20 +219,6 @@
       outline-offset: -2px;
       border-radius: calc(var(--d-border-radius) + 2px);
     }
-
-    &::after {
-      position: absolute;
-      right: 0;
-      top: 0;
-      content: "GRID";
-      font-size: var(--font-down-2-rem);
-      color: var(--primary-medium);
-      z-index: 1;
-      background: var(--secondary-very-high);
-      padding: 0 var(--space-1);
-      border-bottom-left-radius: var(--d-border-radius);
-      border-top-right-radius: var(--d-border-radius);
-    }
   }
 
   .onebox-loading {
