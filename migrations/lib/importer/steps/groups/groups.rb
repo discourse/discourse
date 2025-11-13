@@ -17,6 +17,7 @@ module Migrations::Importer::Steps
     depends_on :uploads
     store_mapped_ids true
 
+    requires_shared_data :existing_usernames_lower, :existing_group_names_lower
     requires_mapping :ids_by_name, "SELECT name, id FROM groups"
     requires_set :existing_ids, "SELECT id FROM groups"
 
