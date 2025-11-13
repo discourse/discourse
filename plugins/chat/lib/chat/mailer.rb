@@ -42,7 +42,6 @@ module Chat
           JOIN user_options uo ON uo.user_id = u.id 
             AND uo.chat_enabled 
             AND uo.chat_email_frequency = #{UserOption.chat_email_frequencies[:when_away]}
-            AND uo.email_level <> #{UserOption.email_level_types[:never]}
           WHERE u.last_seen_at < now() - interval '15 minutes'
         ), unread_dms AS (
           SELECT DISTINCT uccm.user_id

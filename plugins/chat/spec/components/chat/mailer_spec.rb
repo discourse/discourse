@@ -83,9 +83,9 @@ describe Chat::Mailer do
         expect_not_enqueued
       end
 
-      it "does not queue a chat summary email when user has email level = never" do
+      it "enqueues a chat summary email even when user has core email level = never" do
         user.user_option.update!(email_level: UserOption.email_level_types[:never])
-        expect_not_enqueued
+        expect_enqueued
       end
 
       it "does not queue a chat summary email when chat message has been deleted" do
