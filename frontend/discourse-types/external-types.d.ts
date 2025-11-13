@@ -1,7 +1,7 @@
 /// <reference path="./node_modules/ember-source/types/stable/index.d.ts" />
 
 declare module "@glimmer/component" {
-  export { default } from "./node_modules/@glimmer/component/dist/index.js";
+  export { default } from "@types/glimmer__component";
 }
 
 declare module "@glint/template/-private/integration" {
@@ -24,7 +24,7 @@ declare module "@glint/template/-private/integration" {
     NamedArgsMarker,
     NamedArgNames,
     UnwrapNamedArgs,
-  } from "./node_modules/@glint/template/-private/index.d.ts";
+  } from "@types/glint__template/-private/integration";
 }
 
 declare module "@glint/ember-tsc/-private/dsl" {
@@ -51,7 +51,7 @@ declare module "@glint/ember-tsc/-private/dsl" {
     NamedArgsMarker,
     NamedArgNames,
     UnwrapNamedArgs,
-  } from "@types/@glint/ember-tsc/types/-private/dsl/index.d.ts";
+  } from "@types/glint__ember-tsc/-private/dsl";
 }
 
 declare module "qunit" {
