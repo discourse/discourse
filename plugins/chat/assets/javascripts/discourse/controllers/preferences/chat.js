@@ -62,11 +62,6 @@ export default class PreferencesChatController extends Controller {
     },
   ];
 
-  emailFrequencyOptions = [
-    { name: i18n("chat.email_frequency.never"), value: "never" },
-    { name: i18n("chat.email_frequency.when_away"), value: "when_away" },
-  ];
-
   headerIndicatorOptions = [
     {
       name: i18n("chat.header_indicator_preference.all_new"),

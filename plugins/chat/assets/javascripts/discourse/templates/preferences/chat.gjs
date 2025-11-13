@@ -117,27 +117,6 @@ export default <template>
 
   <div
     class="control-group chat-setting controls-dropdown"
-    data-setting-name="user_chat_email_frequency"
-  >
-    <label for="user_chat_email_frequency">
-      {{i18n "chat.email_frequency.title"}}
-    </label>
-    <ComboBox
-      @valueProperty="value"
-      @content={{@controller.emailFrequencyOptions}}
-      @value={{@controller.model.user_option.chat_email_frequency}}
-      @id="user_chat_email_frequency"
-      @onChange={{fn (mut @controller.model.user_option.chat_email_frequency)}}
-    />
-    {{#if (eq @controller.model.user_option.chat_email_frequency "when_away")}}
-      <div class="control-instructions">
-        {{i18n "chat.email_frequency.description"}}
-      </div>
-    {{/if}}
-  </div>
-
-  <div
-    class="control-group chat-setting controls-dropdown"
     data-setting-name="user_chat_header_indicator_preference"
   >
     <label for="user_chat_header_indicator_preference">
