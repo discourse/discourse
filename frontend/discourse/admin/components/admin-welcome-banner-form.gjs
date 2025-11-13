@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -9,6 +10,7 @@ import DMultiSelect from "discourse/components/d-multi-select";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import getURL from "discourse/lib/get-url";
 import I18n, { i18n } from "discourse-i18n";
 
 export default class AdminWelcomeBannerForm extends Component {
@@ -30,6 +32,15 @@ export default class AdminWelcomeBannerForm extends Component {
   @action
   registerApi(api) {
     this.formApi = api;
+  }
+
+  @action
+  handleUpload(fieldName, upload, { set }) {
+    if (upload) {
+      set(fieldName, getURL(upload.url));
+    } else {
+      set(fieldName, undefined);
+    }
   }
 
   async loadData() {
@@ -131,13 +142,12 @@ export default class AdminWelcomeBannerForm extends Component {
     let siteTextsChanged = false;
 
     try {
-      const imageUrl =
-        data.welcomeBannerImage?.url || data.welcomeBannerImage || "";
-
-      if (imageUrl !== this.originalFormData.welcomeBannerImage) {
+      if (
+        data.welcomeBannerImage !== this.originalFormData.welcomeBannerImage
+      ) {
         await ajax("/admin/site_settings/welcome_banner_image", {
           type: "PUT",
-          data: { welcome_banner_image: imageUrl },
+          data: { welcome_banner_image: data.welcomeBannerImage || "" },
         });
       }
 
@@ -275,7 +285,7 @@ export default class AdminWelcomeBannerForm extends Component {
 
       if (siteTextsChanged) {
         this.siteSettingChangeTracker.refreshPage({
-          welcome_banner_image: imageUrl,
+          welcome_banner_image: data.welcomeBannerImage,
           welcome_banner_text_color: data.welcomeBannerTextColor,
           welcome_banner_location: data.welcomeBannerLocation,
           welcome_banner_page_visibility: data.welcomeBannerPageVisibility,
@@ -329,6 +339,7 @@ export default class AdminWelcomeBannerForm extends Component {
           @description={{i18n
             "admin.config.welcome_banner.form.background_image.description"
           }}
+          @onSet={{fn this.handleUpload "welcomeBannerImage"}}
           as |field|
         >
           <field.Image @type="site_setting" />
