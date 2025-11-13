@@ -144,7 +144,7 @@ module DiscourseAi
                   Rails.logger.warn("DiscourseAi: Tool not found: #{partial.name}")
                 else
                   if partial.is_a?(DiscourseAi::Completions::Thinking)
-                    if partial.partial? && partial.message.present?
+                    if partial.partial? && partial.message.present? && !context.skip_show_thinking
                       update_blk.call(partial.message, nil, :thinking)
                     end
                     if !partial.partial?

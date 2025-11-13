@@ -492,14 +492,19 @@ module DiscourseAi
 
         new_custom_prompts =
           bot.reply(context) do |partial, placeholder, type|
-            if type == :thinking && !started_thinking
-              reply << "<details><summary>#{I18n.t("discourse_ai.ai_bot.thinking")}</summary>\n"
-              started_thinking = true
-            end
+            if !context.skip_show_thinking
+              is_response = (type == nil) || (type == :structured_output)
+              is_response &&= partial.present? if started_thinking
 
-            if type != :thinking && started_thinking
-              reply << "</details>\n\n"
-              started_thinking = false
+              if !is_response && !started_thinking
+                reply << "<details><summary>#{I18n.t("discourse_ai.ai_bot.thinking")}</summary>\n\n"
+                started_thinking = true
+              end
+
+              if is_response && started_thinking
+                reply << "</details>\n\n"
+                started_thinking = false
+              end
             end
 
             reply << partial
