@@ -2,6 +2,15 @@
 
 require_relative "recorder"
 require_relative "eval"
+require_relative "llm_repository"
+require_relative "runners/base"
+require_relative "runners/ai_helper"
+require_relative "runners/translation"
+require_relative "runners/hyde"
+require_relative "runners/discoveries"
+require_relative "runners/inference"
+require_relative "runners/spam"
+require_relative "runners/summarization"
 
 module DiscourseAi
   module Evals
@@ -12,7 +21,7 @@ module DiscourseAi
     # and feeds the aggregated results back to the Recorder. It intentionally
     # keeps higher-level scripts (`evals/run`) simple while centralizing
     # instrumentation and error handling.
-    class Playground
+    class Workbench
       def initialize(output: $stdout)
         @output = output
       end
@@ -21,58 +30,42 @@ module DiscourseAi
       # each one, recording structured logs along the way.
       #
       # @param eval_case [DiscourseAi::Evals::Eval] the scenario to run.
-      # @param llms [Array<#name,#vision?,#llm_model>] LLM wrappers selected by the CLI.
+      # @param llms [Array<LlmModel>] LLMs selected by the CLI.
       def run(eval_case:, llms:)
         recorder = Recorder.with_cassette(eval_case, output: output)
 
         llms.each do |llm|
+          llm_name = llm.display_name || llm.name
           start_time = Time.now.utc
-          if eval_case.vision && !llm.vision?
-            recorder.record_llm_skip(llm.name, "LLM does not support vision")
+
+          if eval_case.vision && !llm.vision_enabled?
+            recorder.record_llm_skip(llm_name, "LLM does not support vision")
             next
           end
 
           results = execute_eval(eval_case, llm)
-          recorder.record_llm_results(llm.name, results, start_time)
+          recorder.record_llm_results(llm_name, results, start_time)
         rescue DiscourseAi::Evals::Eval::EvalError => e
           recorder.record_llm_results(
-            llm.name,
+            llm_name,
             [{ result: :fail, message: e.message, context: e.context }],
             start_time,
           )
         rescue StandardError => e
-          recorder.record_llm_results(llm.name, [{ result: :fail, message: e.message }], start_time)
+          puts e.backtrace if !Rails.env.test?
+          recorder.record_llm_results(llm_name, [{ result: :fail, message: e.message }], start_time)
         end
       ensure
         recorder&.finish
       end
 
-      private
-
-      attr_reader :output
-
-      HELPER_MODES = {
-        "ai_helper:proofread" => DiscourseAi::AiHelper::Assistant::PROOFREAD,
-        "ai_helper:explain" => DiscourseAi::AiHelper::Assistant::EXPLAIN,
-        "ai_helper:smart_dates" => DiscourseAi::AiHelper::Assistant::REPLACE_DATES,
-        "ai_helper:title_suggestions" => DiscourseAi::AiHelper::Assistant::GENERATE_TITLES,
-        "ai_helper:markdown_tables" => DiscourseAi::AiHelper::Assistant::MARKDOWN_TABLE,
-        "ai_helper:custom_prompt" => DiscourseAi::AiHelper::Assistant::CUSTOM_PROMPT,
-        "ai_helper:translator" => DiscourseAi::AiHelper::Assistant::TRANSLATE,
-        "ai_helper:image_caption" => DiscourseAi::AiHelper::Assistant::IMAGE_CAPTION,
-      }.freeze
-
       def execute_eval(eval_case, llm)
         feature = eval_case.feature
 
+        runner = find_runner(feature)
         raw =
-          if (helper_mode = helper_mode_for(feature))
-            helper_args = eval_case.args
-            unless helper_args.is_a?(Hash)
-              raise ArgumentError,
-                    "Eval '#{eval_case.id}' must define helper args as a hash to use #{feature}"
-            end
-            helper(llm, helper_mode: helper_mode, **helper_args)
+          if runner
+            runner.run(eval_case, llm)
           elsif feature == "custom:pdf_to_text"
             pdf_to_text(llm, **eval_case.args)
           elsif feature == "custom:image_to_text"
@@ -81,8 +74,6 @@ module DiscourseAi
             DiscourseAi::Evals::PromptEvaluator.new(llm).prompt_call(eval_case.args)
           elsif feature == "custom:edit_artifact"
             edit_artifact(llm, **eval_case.args)
-          elsif feature&.start_with?("summarization:")
-            summarization(llm, **eval_case.args)
           else
             raise ArgumentError, "Unsupported eval feature '#{feature}'"
           end
@@ -90,17 +81,26 @@ module DiscourseAi
         classify_results(eval_case, raw)
       end
 
-      # @param feature [String] fully qualified feature key (module:feature).
-      # @return [String, nil] the Assistant mode constant to use for helper runs.
-      def helper_mode_for(feature)
-        HELPER_MODES[feature]
+      private
+
+      attr_reader :output
+
+      def find_runner(feature)
+        DiscourseAi::Evals::Runners::Base.find_runner(feature)
       end
 
       def classify_results(eval_case, result)
-        if result.is_a?(Array)
-          result.each { |r| r.merge!(classify_result(eval_case, r)) }
-        else
-          [classify_result(eval_case, result)]
+        entries = result.is_a?(Array) ? result : [result]
+
+        entries.map do |entry|
+          raw_value = entry.is_a?(Hash) && entry.key?(:raw) ? entry[:raw] : entry
+          metadata = entry.is_a?(Hash) ? entry[:metadata] : nil
+
+          classification = classify_result(eval_case, raw_value)
+
+          classification[:metadata] = metadata if metadata.present?
+
+          classification
         end
       end
 
@@ -150,7 +150,9 @@ module DiscourseAi
 
         if result.is_a?(String)
           prompt.sub!("{{output}}", result)
-          eval_case.args.each { |key, value| prompt.sub!("{{#{key}}}", value.to_s) }
+          eval_case.args.each do |key, value|
+            prompt.sub!("{{#{key}}}", format_placeholder_value(value))
+          end
         else
           prompt.sub!("{{output}}", result[:result])
           result.each { |key, value| prompt.sub!("{{#{key}}}", value.to_s) }
@@ -171,7 +173,7 @@ module DiscourseAi
           the following failed to preserve... etc...
         SUFFIX
 
-        judge_llm = DiscourseAi::Evals::Llm.choose(eval_case.judge[:llm]).first
+        judge_llm = DiscourseAi::Evals::LlmRepository.new.hydrate(eval_case.judge[:llm])
 
         DiscourseAi::Completions::Prompt.new(
           "You are an expert judge tasked at testing LLM outputs.",
@@ -179,7 +181,7 @@ module DiscourseAi
         )
 
         judge_result =
-          judge_llm.llm_model.to_llm.generate(prompt, user: Discourse.system_user, temperature: 0)
+          judge_llm.to_llm.generate(prompt, user: Discourse.system_user, temperature: 0)
 
         rating_match = judge_result.match(%r{\[RATING\](\d+)\[/RATING\]})
         rating = rating_match ? rating_match[1].to_i : 0
@@ -196,47 +198,9 @@ module DiscourseAi
         end
       end
 
-      # Execute an AI Helper prompt for the provided mode, handling optional
-      # locale switching and custom prompts used by certain helper features.
-      #
-      # @param llm [#llm_model] helper-capable LLM wrapper.
-      # @param helper_mode [String] Assistant mode constant (see HELPER_MODES).
-      # @param input [String] user input for the helper.
-      # @param locale [String, nil] optional locale to impersonate during the run.
-      # @param extra [Hash] optional keyword args such as :custom_prompt.
-      # @return [String] helper suggestion selected for evaluation.
-      def helper(llm, helper_mode:, input:, locale: nil, **extra)
-        helper = DiscourseAi::AiHelper::Assistant.new(helper_llm: llm.llm_model)
-        user = Discourse.system_user
-
-        if locale
-          user = User.new
-          class << user
-            attr_accessor :effective_locale
-          end
-
-          user.effective_locale = locale
-          user.admin = true
-        end
-
-        force_default_locale = extra.fetch(:force_default_locale, false)
-        custom_prompt = extra[:custom_prompt]
-
-        result =
-          helper.generate_and_send_prompt(
-            helper_mode,
-            input,
-            user,
-            force_default_locale: force_default_locale,
-            custom_prompt: custom_prompt,
-          )
-
-        result[:suggestions].first
-      end
-
       # Extract text from an image upload by delegating to the ImageToText helper.
       #
-      # @param llm [#llm_model] LLM wrapper backing the OCR step.
+      # @param llm [LlmModel] LLM backing the OCR step.
       # @param path [String] path to the source image used for OCR.
       # @return [String] text extracted from the image.
       def image_to_text(llm, path:)
@@ -247,7 +211,7 @@ module DiscourseAi
 
         text = +""
         DiscourseAi::Utils::ImageToText
-          .new(upload: upload, llm_model: llm.llm_model, user: Discourse.system_user)
+          .new(upload: upload, llm_model: llm, user: Discourse.system_user)
           .extract_text do |chunk, _error|
             text << chunk if chunk
             text << "\n\n" if chunk
@@ -259,7 +223,7 @@ module DiscourseAi
 
       # Extract text from a PDF, optionally falling back to LLM-guided OCR for pages.
       #
-      # @param llm [#llm_model] LLM wrapper passed to PdfToText for OCR guidance.
+      # @param llm [LlmModel] LLM passed to PdfToText for OCR guidance.
       # @param path [String] path to the PDF fixture.
       # @return [String] text aggregated across the PDF pages.
       def pdf_to_text(llm, path:)
@@ -270,7 +234,7 @@ module DiscourseAi
 
         text = +""
         DiscourseAi::Utils::PdfToText
-          .new(upload: upload, user: Discourse.system_user, llm_model: llm.llm_model)
+          .new(upload: upload, user: Discourse.system_user, llm_model: llm)
           .extract_text do |chunk|
             text << chunk if chunk
             text << "\n\n" if chunk
@@ -283,7 +247,7 @@ module DiscourseAi
 
       # Run the edit artifact flow, returning the final artifact contents.
       #
-      # @param llm [#llm_model] LLM wrapper used to produce diffs.
+      # @param llm [LlmModel] LLM used to produce diffs.
       # @param css_path [String] path to the CSS fixture.
       # @param js_path [String] path to the JS fixture.
       # @param html_path [String] path to the HTML fixture.
@@ -307,7 +271,7 @@ module DiscourseAi
         post = Post.new(topic_id: 1, id: 1)
         diff =
           DiscourseAi::AiBot::ArtifactUpdateStrategies::Diff.new(
-            llm: llm.llm_model.to_llm,
+            llm: llm.to_llm,
             post: post,
             user: Discourse.system_user,
             artifact: artifact,
@@ -358,29 +322,13 @@ module DiscourseAi
         false
       end
 
-      # Summarize the supplied input by going through the Topic summarization flow.
-      #
-      # @param llm [#llm_model, #llm_proxy] wrapper providing access to the model.
-      # @param input [String] text used to bootstrap the summarization context.
-      # @return [String] generated summary text.
-      def summarization(llm, input:)
-        topic =
-          Topic.new(
-            category: Category.last,
-            title: "Eval topic for topic summarization",
-            id: -99,
-            user_id: Discourse.system_user.id,
-          )
-        Post.new(topic: topic, id: -99, user_id: Discourse.system_user.id, raw: input)
-
-        strategy =
-          DiscourseAi::Summarization::FoldContent.new(
-            llm.llm_proxy,
-            DiscourseAi::Summarization::Strategies::TopicSummary.new(topic),
-          )
-
-        summary = DiscourseAi::TopicSummarization.new(strategy, Discourse.system_user).summarize
-        summary.summarized_text
+      def format_placeholder_value(value)
+        case value
+        when Array
+          value.join("\n\n")
+        else
+          value.to_s
+        end
       end
     end
   end
