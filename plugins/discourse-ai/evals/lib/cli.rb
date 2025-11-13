@@ -4,7 +4,7 @@ require_relative "features"
 
 class DiscourseAi::Evals::Cli
   class Options
-    attr_accessor :eval_name, :models, :list, :list_models, :list_features, :feature_key
+    attr_accessor :eval_name, :models, :list, :list_models, :list_features, :feature_key, :judge
 
     def initialize(
       eval_name: nil,
@@ -12,7 +12,8 @@ class DiscourseAi::Evals::Cli
       list: false,
       list_models: false,
       list_features: false,
-      feature_key: nil
+      feature_key: nil,
+      judge: nil
     )
       @eval_name = eval_name
       @models = models
@@ -20,6 +21,7 @@ class DiscourseAi::Evals::Cli
       @list_models = list_models
       @list_features = list_features
       @feature_key = feature_key
+      @judge = judge
     end
   end
 
@@ -52,6 +54,12 @@ class DiscourseAi::Evals::Cli
           "--feature KEY",
           "Feature key to evaluate (module_name:feature_name)",
         ) { |key| options.feature_key = key }
+
+        opts.on(
+          "-j",
+          "--judge NAME",
+          "LLM config used to judge eval outputs (defaults to gpt-4o when available)",
+        ) { |judge| options.judge = judge }
       end
 
     show_help = ARGV.empty?

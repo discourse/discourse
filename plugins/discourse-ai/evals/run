@@ -13,7 +13,6 @@ require_relative "lib/cli"
 
 features_registry =
   DiscourseAi::Evals::Features.new(modules: DiscourseAi::Configuration::Module.all)
-playground = DiscourseAi::Evals::Workbench.new(output: $stdout)
 
 options = DiscourseAi::Evals::Cli.parse_options!(features_registry)
 
@@ -62,4 +61,42 @@ if selected_evals.empty?
   exit 1
 end
 
-selected_evals.each { |eval_case| playground.run(eval_case: eval_case, llms: llms) }
+default_judge = "gpt-4o"
+judge_name = options.judge.presence || default_judge
+judge_llm = nil
+default_judge_error = nil
+
+begin
+  judge_llm = llm_repository.hydrate(judge_name)
+rescue StandardError => e
+  if options.judge.present?
+    puts "Error: #{e.message}"
+    exit 1
+  else
+    judge_llm = nil
+    default_judge_error = e.message
+  end
+end
+
+if selected_evals.any? { |eval_case| eval_case.judge.present? } && judge_llm.nil?
+  message = "Error: Selected evaluations require a judge."
+  if default_judge_error
+    message += " Configure '#{default_judge}' or pass --judge with an LLM config name."
+    message += "\n\n"
+    message += default_judge_error
+  else
+    message += " Pass --judge with an LLM config name."
+  end
+  puts message
+  exit 1
+end
+
+playground = DiscourseAi::Evals::Workbench.new(output: $stdout, judge_llm: judge_llm)
+
+selected_evals.each do |eval_case|
+  if judge_llm.present? && eval_case.judge.blank?
+    puts "Notice: Eval '#{eval_case.id}' has no judge block. --judge is ignored for this eval."
+  end
+
+  playground.run(eval_case: eval_case, llms: llms)
+end

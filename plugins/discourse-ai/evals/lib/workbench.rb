@@ -22,8 +22,9 @@ module DiscourseAi
     # keeps higher-level scripts (`evals/run`) simple while centralizing
     # instrumentation and error handling.
     class Workbench
-      def initialize(output: $stdout)
+      def initialize(output: $stdout, judge_llm: nil)
         @output = output
+        @judge_llm = judge_llm
       end
 
       # Iterate through the provided LLM adapters and execute the eval case for
@@ -83,7 +84,7 @@ module DiscourseAi
 
       private
 
-      attr_reader :output
+      attr_reader :output, :judge_llm
 
       def find_runner(feature)
         DiscourseAi::Evals::Runners::Base.find_runner(feature)
@@ -146,6 +147,13 @@ module DiscourseAi
       end
 
       def judge_result(eval_case, result)
+        if judge_llm.nil?
+          raise DiscourseAi::Evals::Eval::EvalError.new(
+                  "Evaluation '#{eval_case.id}' requires the --judge option to specify an LLM.",
+                  { eval_id: eval_case.id },
+                )
+        end
+
         prompt = eval_case.judge[:prompt].dup
 
         if result.is_a?(String)
@@ -172,8 +180,6 @@ module DiscourseAi
 
           the following failed to preserve... etc...
         SUFFIX
-
-        judge_llm = DiscourseAi::Evals::LlmRepository.new.hydrate(eval_case.judge[:llm])
 
         DiscourseAi::Completions::Prompt.new(
           "You are an expert judge tasked at testing LLM outputs.",
