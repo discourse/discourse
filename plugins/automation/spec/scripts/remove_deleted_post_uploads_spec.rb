@@ -3,8 +3,16 @@
 describe "RemoveDeletedPostUploads" do
   fab!(:topic)
   fab!(:upload)
+
+  fab!(:filename) { "small.pdf" }
+  fab!(:file) { file_from_fixtures(filename, "pdf") }
+  fab!(:file_upload) do
+    UploadCreator.new(file, filename, { skip_validations: true }).create_for(
+      Discourse.system_user.id,
+    )
+  end
   let!(:raw) do
-    "Hey it is a regular post with a link to [Discourse](https://www.discourse.org) and a #{upload.to_markdown}"
+    "Hey it is a regular post with a link to [Discourse](https://www.discourse.org) and a #{upload.to_markdown} #{file_upload.to_markdown}"
   end
 
   let!(:post) { Fabricate(:post, topic: topic, raw: raw) }
@@ -13,6 +21,11 @@ describe "RemoveDeletedPostUploads" do
   let!(:upload_reference) { Fabricate(:upload_reference, upload: upload, target: post) }
   let!(:deleted_upload_reference) do
     Fabricate(:upload_reference, upload: upload, target: deleted_post)
+  end
+
+  let!(:file_upload_reference) { Fabricate(:upload_reference, upload: file_upload, target: post) }
+  let!(:deleted_file_upload_reference) do
+    Fabricate(:upload_reference, upload: file_upload, target: deleted_post)
   end
 
   before { SiteSetting.discourse_automation_enabled = true }

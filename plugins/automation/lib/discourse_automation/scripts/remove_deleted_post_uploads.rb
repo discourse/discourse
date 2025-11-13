@@ -12,14 +12,17 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::REMOVE_DELETED
     uploads_deleted_at = Time.now
     edit_reason = I18n.t("discourse_automation.scriptables.remove_deleted_post_uploads.edit_reason")
 
+    # it matches both ![alt|size](upload://key) and [small.pdf|attachment](upload://key.pdf) (Number Bytes)
+    upload_and_attachment_regex =
+      %r{!?\[([^\]|]+)(?:\|[^\]]*)?\]\(upload://([A-Za-z0-9_-]+)[^)]*\)(?:\s*\([^)]*\))?}
+
     Post
       .with_deleted
       .where.not(deleted_at: nil)
       .joins(:upload_references)
       .where("upload_references.target_type = 'Post'")
       .each do |post|
-        if updated_raw =
-             post.raw.gsub!(%r{!\[([^\]|]+)(?:\|[^\]]*)?\]\(upload://([a-zA-Z0-9]+)[^)]+\)}, "")
+        if updated_raw = post.raw.gsub!(upload_and_attachment_regex, "")
           if ok =
                post.revise(
                  Discourse.system_user,
