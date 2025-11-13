@@ -645,6 +645,52 @@ RSpec.describe UserNotifications do
       end
     end
 
+    describe "optional placeholders in email body" do
+      it "should render optional_tags, optional_cat, optional_pm, and optional_re in body templates" do
+        custom_body = <<~BODY
+          You got a reply!
+
+          Category: %{optional_cat}
+          Tags: %{optional_tags}
+          PM marker: %{optional_pm}
+          Re marker: %{optional_re}
+
+          %{message}
+        BODY
+
+        TranslationOverride.upsert!(
+          I18n.locale,
+          "user_notifications.user_replied.text_body_template",
+          custom_body,
+        )
+
+        mail =
+          UserNotifications.user_replied(
+            user,
+            post: response,
+            notification_type: notification.notification_type,
+            notification_data_hash: notification.data_hash,
+          )
+
+        body = mail.body.to_s
+
+        expect(body).to include(tag2.name)
+        expect(body).to include(tag3.name)
+        expect(body).to include(category.name)
+
+        expect(body).not_to include("translation missing")
+        expect(body).not_to include("%{optional_tags}")
+        expect(body).not_to include("%{optional_cat}")
+        expect(body).not_to include("%{optional_pm}")
+        expect(body).not_to include("%{optional_re}")
+
+        TranslationOverride.revert!(
+          I18n.locale,
+          ["user_notifications.user_replied.text_body_template"],
+        )
+      end
+    end
+
     it "doesn't include details when private_email is enabled" do
       SiteSetting.private_email = true
       mail =
