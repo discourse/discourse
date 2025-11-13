@@ -2,10 +2,13 @@
 
 class ProblemCheckTracker < ActiveRecord::Base
   validates :identifier, presence: true, uniqueness: { scope: :target }
+  validates :target, presence: true
   validates :blips, presence: true, numericality: { greater_than_or_equal_to: 0 }
 
   scope :failing, -> { where("last_problem_at = last_run_at") }
   scope :passing, -> { where("last_success_at = last_run_at") }
+
+  before_destroy :silence_the_alarm
 
   def self.[](identifier, target = ProblemCheck::NO_TARGET)
     find_or_create_by(identifier:, target:)
@@ -57,16 +60,8 @@ class ProblemCheckTracker < ActiveRecord::Base
 
   private
 
-  def resolved_target
-    self.target || ProblemCheck::NO_TARGET
-  end
-
-  def details_with_target(details)
-    details.merge(target: resolved_target)
-  end
-
   def update_notice_details(details)
-    admin_notice.where(identifier:).update_all(details: details_with_target(details))
+    admin_notice.where(identifier:).update_all(details: details.merge(target:))
   end
 
   def sound_the_alarm?
@@ -76,7 +71,7 @@ class ProblemCheckTracker < ActiveRecord::Base
   def sound_the_alarm
     admin_notice.create_with(
       priority: check.priority,
-      details: details_with_target(self.details),
+      details: details.merge(target:),
     ).find_or_create_by(identifier:)
   end
 
@@ -85,7 +80,7 @@ class ProblemCheckTracker < ActiveRecord::Base
   end
 
   def admin_notice
-    AdminNotice.problem.where("details->>'target' = ?", resolved_target)
+    AdminNotice.problem.where("details->>'target' = ?", target)
   end
 end
 

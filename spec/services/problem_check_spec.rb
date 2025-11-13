@@ -144,16 +144,24 @@ RSpec.describe ProblemCheck do
       it { expect { passing_check.new.run }.to change { ProblemCheckTracker.passing.count }.by(1) }
     end
 
-    context "when targeted check has a no-target tracker" do
-      before do
-        ProblemCheckTracker.create!(
-          identifier: "multi_target_check",
-          target: ProblemCheck::NO_TARGET,
-        )
+    context "when targeted check is initialized with no target" do
+      context "when a tracker exists" do
+        before do
+          ProblemCheckTracker.create!(
+            identifier: "multi_target_check",
+            target: ProblemCheck::NO_TARGET,
+          )
+        end
+
+        it "deletes the tracker" do
+          expect { multi_target_check.new.run }.to change { ProblemCheckTracker.count }.by(-1)
+        end
       end
 
-      it "deletes the tracker" do
-        expect { multi_target_check.new.run }.to change { ProblemCheckTracker.count }.by(-1)
+      context "when a tracker does not exist" do
+        it "does nothing" do
+          expect { multi_target_check.new.run }.not_to change { ProblemCheckTracker.count }
+        end
       end
     end
 
