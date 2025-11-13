@@ -315,12 +315,13 @@ This matcher expects the service to succeed.
 
 ## Steps
 
-### `params(name = :default, default_values_from: nil, &block)`
+### `params(name = :default, default_values_from: nil, base_class: Service::ContractBase, &block)`
 
 **Arguments**
 
 - _name_: the name of the contract, in the case there is more than one. Defaults to `default`.
 - _default_values_from_: name of a model to use to pre-fill the contract values. This is useful when you want some values of a model to be updated through a contract while applying other default values. A real-world example is available in the [`Chat::UpdateChannel`](https://github.com/discourse/discourse/blob/main/plugins/chat/app/services/chat/update_channel.rb#L39) service.
+- _base_class_: the base class to use for the contract. This is particularly useful for reusing an existing contract (for example, you could have very similar contracts between a `Create` and a `Update` service). Defaults to `Service::ContractBase`.
 - _block_: the block containing all the validations, attribute definitions, etc.
 
 This step declares the use of a contract to validate input parameters. Parameters provided to the service will be passed to the contract if their name matches the attributes defined in the contract.
@@ -585,6 +586,53 @@ Some methods have been added to the contract object to make your life a bit easi
 
 - `#slice` and `#merge` are available.
 - `#to_hash` has been implemented, so the contract object will be automatically cast as a hash by Ruby depending on the context. For example, with an ActiveRecord model, you can do this: `user.update(**params)`.
+
+### Reusing contracts
+
+Sometimes, you may want to reuse a contract between different services. For example, you could have a `Create` and an `Update` service for the same concept, and both would share most of their contract logic.
+First, let’s create a (naive) `User::Create` service:
+
+```rb
+class User::Create
+  include Service::Base
+
+  params do
+    attribute :username, :string
+    attribute :email, :string
+    attribute :date_of_birth, :date
+
+    validates :username, presence: true, format: { with: /\A[a-zA-Z0-9]+\z/ }
+    validates :email, :date_of_birth, presence: true
+  end
+
+  policy :can_create_user
+  model :user, :create_user
+
+  …
+end
+```
+
+The important part here is the contract checking for a username, an email and a date of birth to allow creating a user.
+Now, let’s say we have another service to update a user, and you can update the same attributes. If we were to write a dedicated contract, that could be a bit tedious, as we’d want to be able to only update the username without having to update the email, for example.
+We can combine two options of the `params` step to help us, `default_values_from` and `base_class`:
+
+```rb
+class User::Update
+  include Service::Base
+
+  model :user
+  params default_values_from: :user, base_class: User::Create::Contract
+
+  private
+
+  def fetch_user(params:)
+    User.find_by(id: params.id)
+  end
+end
+```
+
+First, we fetch the user model to update. If `params.id` wasn’t provided or is invalid, the service will stop here.
+Then, we define the `params` step. Here, we tell the service to use the `User::Create::Contract` as the base class for the contract. This means all the attributes and validations defined in that contract will be available in this service too. Using the `default_values_from: :user` option tells the service to pre-fill the contract attributes with the values from the fetched user model. This way, if only the `username` attribute is provided, the `email` and `date_of_birth` attributes will be pre-filled with the current values from the user, thus passing the presence validations.
 
 ## Parameters
 
