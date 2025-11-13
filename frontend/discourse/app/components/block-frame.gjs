@@ -20,10 +20,19 @@ export default class BlockFrame extends Component {
 
     for (const block of blocks) {
       if (block.type === "conditional") {
-        if (
-          block.routes.includes("discovery") &&
-          this.discovery.onDiscoveryRoute
-        ) {
+        const shouldRender =
+          (block.routes.includes("discovery") &&
+            this.discovery.onDiscoveryRoute &&
+            !this.discovery.custom) ||
+          (block.routes.includes("homepage") && this.discovery.custom) ||
+          (block.routes.includes("category") && this.discovery.category) ||
+          (block.routes.includes("top-menu") &&
+            this.discovery.onDiscoveryRoute &&
+            !this.discovery.category &&
+            !this.discovery.tag &&
+            !this.discovery.custom);
+
+        if (shouldRender) {
           resolvedBlocks.push(...block.blocks);
         }
       } else {
