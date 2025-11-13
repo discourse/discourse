@@ -34,7 +34,7 @@ export default class BulkTopicActions extends Component {
   @tracked categoryId;
   @tracked loading;
   @tracked errors;
-  @tracked isSilent = false;
+  @tracked notifyUsers = false;
   @tracked closeNote = null;
 
   @tracked notificationLevelId = null;
@@ -86,7 +86,7 @@ export default class BulkTopicActions extends Component {
     const topicIds = [];
     const options = {};
 
-    if (this.isSilent) {
+    if (this.model.allowSilent && !this.notifyUsers) {
       operation.silent = true;
     }
 
@@ -437,14 +437,14 @@ export default class BulkTopicActions extends Component {
         {{#if @model.allowSilent}}
           <div class="topic-bulk-actions-options">
             <label
-              for="topic-bulk-action-options__silent"
+              for="topic-bulk-action-options__notify"
               class="checkbox-label"
             >
               <Input
-                id="topic-bulk-action-options__silent"
+                id="topic-bulk-action-options__notify"
                 @type="checkbox"
-                @checked={{this.isSilent}}
-              />{{i18n "topics.bulk.silent"}}</label>
+                @checked={{this.notifyUsers}}
+              />{{i18n "topics.bulk.notify"}}</label>
           </div>
         {{/if}}
 

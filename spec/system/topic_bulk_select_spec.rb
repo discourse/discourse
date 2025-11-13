@@ -209,6 +209,7 @@ describe "Topic bulk select", type: :system do
         topic_list.click_topic_checkbox(topics.third)
         topic_list_header.click_bulk_select_topics_dropdown
         topic_list_header.click_bulk_button("close-topics")
+        topic_bulk_actions_modal.click_notify
         topic_bulk_actions_modal.click_bulk_topics_confirm
         expect(topic_list).to have_closed_status(topics.third)
       end
@@ -234,7 +235,6 @@ describe "Topic bulk select", type: :system do
         topic_list.click_topic_checkbox(topics.first)
         topic_list_header.click_bulk_select_topics_dropdown
         topic_list_header.click_bulk_button("close-topics")
-        topic_bulk_actions_modal.click_silent # Check Silent
         topic_bulk_actions_modal.click_bulk_topics_confirm
         expect(topic_list).to have_closed_status(topics.first)
       end
