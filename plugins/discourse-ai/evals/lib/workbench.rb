@@ -22,9 +22,10 @@ module DiscourseAi
     # keeps higher-level scripts (`evals/run`) simple while centralizing
     # instrumentation and error handling.
     class Workbench
-      def initialize(output: $stdout, judge_llm: nil)
+      def initialize(output: $stdout, judge_llm: nil, persona_prompt: nil)
         @output = output
         @judge_llm = judge_llm
+        @persona_prompt = persona_prompt
       end
 
       # Iterate through the provided LLM adapters and execute the eval case for
@@ -84,10 +85,10 @@ module DiscourseAi
 
       private
 
-      attr_reader :output, :judge_llm
+      attr_reader :output, :judge_llm, :persona_prompt
 
       def find_runner(feature)
-        DiscourseAi::Evals::Runners::Base.find_runner(feature)
+        DiscourseAi::Evals::Runners::Base.find_runner(feature, persona_prompt)
       end
 
       def classify_results(eval_case, result)

@@ -9,6 +9,7 @@ require_relative "lib/prompts/single_test_runner"
 require_relative "lib/features"
 require_relative "lib/recorder"
 require_relative "lib/workbench"
+require_relative "lib/persona_prompt_loader"
 require_relative "lib/cli"
 
 features_registry =
@@ -25,6 +26,13 @@ end
 
 if options.list_features
   features_registry.print
+  exit 0
+end
+
+if options.list_personas
+  DiscourseAi::Evals::PersonaPromptLoader.new.list.each do |key, description|
+    puts description.present? ? "#{key}: #{description}" : key
+  end
   exit 0
 end
 
@@ -78,6 +86,17 @@ rescue StandardError => e
   end
 end
 
+persona_prompt_override = nil
+if options.persona_key.present?
+  persona_prompt_override =
+    DiscourseAi::Evals::PersonaPromptLoader.new.find_prompt(options.persona_key)
+
+  if persona_prompt_override.blank?
+    puts "Error: Unknown persona key '#{options.persona_key}'. Run --list-personas to view options."
+    exit 1
+  end
+end
+
 if selected_evals.any? { |eval_case| eval_case.judge.present? } && judge_llm.nil?
   message = "Error: Selected evaluations require a judge."
   if default_judge_error
@@ -91,10 +110,15 @@ if selected_evals.any? { |eval_case| eval_case.judge.present? } && judge_llm.nil
   exit 1
 end
 
-playground = DiscourseAi::Evals::Workbench.new(output: $stdout, judge_llm: judge_llm)
+playground =
+  DiscourseAi::Evals::Workbench.new(
+    output: $stdout,
+    judge_llm: judge_llm,
+    persona_prompt: persona_prompt_override,
+  )
 
 selected_evals.each do |eval_case|
-  if judge_llm.present? && eval_case.judge.blank?
+  if options.judge.present? && eval_case.judge.blank?
     puts "Notice: Eval '#{eval_case.id}' has no judge block. --judge is ignored for this eval."
   end
 

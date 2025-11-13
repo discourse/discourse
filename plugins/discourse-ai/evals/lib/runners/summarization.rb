@@ -10,10 +10,6 @@ module DiscourseAi
           full_feature_name&.start_with?("summarization:")
         end
 
-        def initialize(feature_name)
-          @feature_name = feature_name
-        end
-
         def run(eval_case, llm)
           args = eval_case.args
           conversation = extract_conversation(args)
@@ -32,7 +28,7 @@ module DiscourseAi
             end
 
           persona_class, strategy = persona_and_strategy(topic)
-          persona, = resolve_persona(persona_class: persona_class)
+          persona = resolve_persona(persona_class: persona_class)
 
           context =
             DiscourseAi::Personas::BotContext.new(
@@ -49,8 +45,6 @@ module DiscourseAi
         end
 
         private
-
-        attr_reader :feature_name
 
         def persona_and_strategy(topic)
           if regular_summaries?

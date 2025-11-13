@@ -4,7 +4,15 @@ require_relative "features"
 
 class DiscourseAi::Evals::Cli
   class Options
-    attr_accessor :eval_name, :models, :list, :list_models, :list_features, :feature_key, :judge
+    attr_accessor :eval_name,
+                  :models,
+                  :list,
+                  :list_models,
+                  :list_features,
+                  :list_personas,
+                  :feature_key,
+                  :judge,
+                  :persona_key
 
     def initialize(
       eval_name: nil,
@@ -12,16 +20,20 @@ class DiscourseAi::Evals::Cli
       list: false,
       list_models: false,
       list_features: false,
+      list_personas: false,
       feature_key: nil,
-      judge: nil
+      judge: nil,
+      persona_key: nil
     )
       @eval_name = eval_name
       @models = models
       @list = list
       @list_models = list_models
       @list_features = list_features
+      @list_personas = list_personas
       @feature_key = feature_key
       @judge = judge
+      @persona_key = persona_key
     end
   end
 
@@ -36,9 +48,12 @@ class DiscourseAi::Evals::Cli
           options.eval_name = eval_name
         end
 
-        opts.on("--list-models", "List models") { |model| options.list_models = true }
+        opts.on("--list-models", "List models") { options.list_models = true }
         opts.on("--list-features", "List features available for evals") do
           options.list_features = true
+        end
+        opts.on("--list-personas", "List persona definitions available to evals") do
+          options.list_personas = true
         end
 
         opts.on(
@@ -60,6 +75,11 @@ class DiscourseAi::Evals::Cli
           "--judge NAME",
           "LLM config used to judge eval outputs (defaults to gpt-4o when available)",
         ) { |judge| options.judge = judge }
+
+        opts.on(
+          "--persona-key KEY",
+          "Replaces the runner system prompt using the YAML definition identified by KEY",
+        ) { |key| options.persona_key = key }
       end
 
     show_help = ARGV.empty?
