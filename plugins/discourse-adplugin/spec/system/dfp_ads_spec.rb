@@ -4,15 +4,15 @@ describe "DFP External Ads", type: :system do
   before { enable_current_plugin }
 
   fab!(:user) { Fabricate(:user, trust_level: 1) }
-  fab!(:topic_with_posts)
+  fab!(:topic)
 
   before do
     SiteSetting.discourse_adplugin_enabled = true
     SiteSetting.dfp_publisher_id = "test_publisher_123"
     SiteSetting.dfp_through_trust_level = 2
 
-    # Create 20 posts so we can test nth post ads
-    20.times { Fabricate(:post, topic: topic_with_posts) }
+    # Create 20 posts so we ca` n test nth post ads
+    20.times { Fabricate(:post, topic: topic) }
   end
 
   describe "DFP ads with impression tracking" do
@@ -30,7 +30,7 @@ describe "DFP External Ads", type: :system do
 
       impression = AdPlugin::AdImpression.last
       expect(impression.ad_type).to eq("dfp")
-      expect(impression.house_ad_id).to be_nil
+      expect(impression.house_ad).to be_nil
       expect(impression.placement).to eq("topic-list-top")
     end
 
