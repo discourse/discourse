@@ -1,36 +1,38 @@
 import { tracked } from "@glimmer/tracking";
-import { A } from "@ember/array";
-import ArrayProxy from "@ember/array/proxy";
 import EmberObject from "@ember/object";
 import { not } from "@ember/object/computed";
 import ColorSchemeColor from "discourse/admin/models/color-scheme-color";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse/lib/decorators";
+import LegacyArrayLikeObject from "discourse/lib/legacy-array-like-object";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
 
-class ColorSchemes extends ArrayProxy {}
+class ColorSchemes extends LegacyArrayLikeObject {
+  @tracked loading = false;
+}
 
 export default class ColorScheme extends EmberObject {
-  static findAll() {
+  static async findAll() {
     const colorSchemes = ColorSchemes.create({ content: [], loading: true });
+    const all = await ajax("/admin/color_schemes");
 
-    return ajax("/admin/color_schemes").then((all) => {
-      all.forEach((colorScheme) => {
-        colorSchemes.pushObject(
-          ColorScheme.create({
-            id: colorScheme.id,
-            name: colorScheme.name,
-            is_base: colorScheme.is_base,
-            theme_id: colorScheme.theme_id,
-            theme_name: colorScheme.theme_name,
-            base_scheme_id: colorScheme.base_scheme_id,
-            user_selectable: colorScheme.user_selectable,
-            colors: colorScheme.colors,
-          })
-        );
-      });
-      return colorSchemes;
+    all.forEach((colorScheme) => {
+      colorSchemes.push(
+        ColorScheme.create({
+          id: colorScheme.id,
+          name: colorScheme.name,
+          is_base: colorScheme.is_base,
+          theme_id: colorScheme.theme_id,
+          theme_name: colorScheme.theme_name,
+          base_scheme_id: colorScheme.base_scheme_id,
+          user_selectable: colorScheme.user_selectable,
+          colors: colorScheme.colors,
+        })
+      );
     });
+
+    return colorSchemes;
   }
 
   static async find(id) {
@@ -49,6 +51,7 @@ export default class ColorScheme extends EmberObject {
 
   @tracked name;
   @tracked user_selectable;
+  @trackedArray colors;
 
   @not("id") newRecord;
 
@@ -56,7 +59,7 @@ export default class ColorScheme extends EmberObject {
     super.init(...arguments);
 
     /** @type Array */
-    const colors = A(this.colors ?? []);
+    const colors = this.colors ?? [];
     this.colors = colors.map((c) => {
       return ColorSchemeColor.create(c);
     });
@@ -105,10 +108,10 @@ export default class ColorScheme extends EmberObject {
       name: this.name,
       can_edit: true,
       /** @type Array */
-      colors: A(),
+      colors: [],
     });
     this.colors.forEach((c) => {
-      newScheme.colors.pushObject(
+      newScheme.colors.push(
         ColorSchemeColor.create(c.getProperties("name", "hex", "default_hex"))
       );
     });
