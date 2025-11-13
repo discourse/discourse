@@ -5886,7 +5886,7 @@ en:
 
         welcome_banner:
           title: "Welcome banner"
-          header_description: "Configure the welcome banner displayed to users on your site, including background image, text color, location, visibility, and customizable text for different user states"
+          header_description: "Configure the banner with search bar displayed to visitors on your site."
           saved: "Welcome banner settings saved successfully."
           form:
             enabled_themes:
