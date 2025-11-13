@@ -493,6 +493,17 @@ describe "Upcoming Events", type: :system do
       end
     end
 
+    describe "configurable view" do
+      SiteSetting.calendar_upcoming_events_default_view = "day"
+      it "default view is controlled by calendar_upcoming_events_default_view setting",
+         time: Time.utc(2025, 9, 15) do
+        upcoming_events.visit
+
+        upcoming_events.expect_content("September 15, 2025")
+        upcoming_events.expect_to_be_on_path("/upcoming-events/day/2025/9/15")
+      end
+    end
+
     describe "view switching" do
       it "switching from month to week view keeps the same day" do
         visit("/upcoming-events/month/2025/9/16")
