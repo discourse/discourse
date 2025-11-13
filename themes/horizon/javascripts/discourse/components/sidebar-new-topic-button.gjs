@@ -25,7 +25,7 @@ export default class SidebarNewTopicButton extends Component {
   get shouldRender() {
     return (
       this.currentUser &&
-      !this.router.currentRouteName.includes("admin") &&
+      !this.router.currentURL.startsWith("/admin") &&
       this.application.sidebarEnabled
     );
   }
