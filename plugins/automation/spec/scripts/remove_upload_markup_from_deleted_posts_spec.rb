@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "RemoveDeletedPostUploads" do
+describe "RemoveUploadMarkupFromDeletedPosts" do
   fab!(:topic)
   fab!(:upload)
 
@@ -34,7 +34,7 @@ describe "RemoveDeletedPostUploads" do
     fab!(:automation) do
       Fabricate(
         :automation,
-        script: DiscourseAutomation::Scripts::REMOVE_DELETED_POST_UPLOADS,
+        script: DiscourseAutomation::Scripts::REMOVE_UPLOAD_MARKUP_FROM_DELETED_POSTS,
         trigger: DiscourseAutomation::Triggers::RECURRING,
       )
     end
@@ -50,13 +50,21 @@ describe "RemoveDeletedPostUploads" do
       expect(post.raw).to eq(raw)
     end
 
-    it "adds a timestamp to the custom field uploads_deleted_at" do
+    it "adds a timestamp to the custom field uploads_removed_at" do
       expect {
         automation.trigger!
         deleted_post.reload
-      }.to change { deleted_post.custom_fields["uploads_deleted_at"] }.from(nil)
+      }.to change { deleted_post.custom_fields["uploads_removed_at"] }.from(nil)
 
-      expect(post.custom_fields["uploads_deleted_at"]).to be_nil
+      expect(post.custom_fields["uploads_removed_at"]).to be_nil
+    end
+
+    it "does not run again on posts that have already had uploads removed" do
+      deleted_post.custom_fields["uploads_removed_at"] = 1.day.ago
+      deleted_post.save_custom_fields
+      automation.trigger!
+      deleted_post.reload
+      expect(deleted_post.raw).to eq(raw)
     end
 
     context "with clean_up_uploads job" do
@@ -105,7 +113,7 @@ describe "RemoveDeletedPostUploads" do
     fab!(:automation) do
       Fabricate(
         :automation,
-        script: DiscourseAutomation::Scripts::REMOVE_DELETED_POST_UPLOADS,
+        script: DiscourseAutomation::Scripts::REMOVE_UPLOAD_MARKUP_FROM_DELETED_POSTS,
         trigger: DiscourseAutomation::Triggers::POINT_IN_TIME,
       )
     end
@@ -132,13 +140,13 @@ describe "RemoveDeletedPostUploads" do
       end
     end
 
-    it "adds a timestamp to the custom field uploads_deleted_at" do
+    it "adds a timestamp to the custom field uploads_removed_at" do
       expect {
         automation.trigger!
         deleted_post.reload
-      }.to change { deleted_post.custom_fields["uploads_deleted_at"] }.from(nil)
+      }.to change { deleted_post.custom_fields["uploads_removed_at"] }.from(nil)
 
-      expect(post.custom_fields["uploads_deleted_at"]).to be_nil
+      expect(post.custom_fields["uploads_removed_at"]).to be_nil
     end
   end
 end
