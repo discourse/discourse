@@ -80,9 +80,6 @@ files:
     destination_path: plugins/spoiler-alert/server.yml
     label: spoiler-alert
 
-  - source_path: plugins/checklist/config/locales/client.en.yml
-    destination_path: plugins/checklist/client.yml
-    label: checklist
   - source_path: plugins/checklist/config/locales/server.en.yml
     destination_path: plugins/checklist/server.yml
     label: checklist
