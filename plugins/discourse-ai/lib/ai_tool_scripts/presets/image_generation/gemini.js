@@ -1,3 +1,4 @@
+/* eslint-disable no-undef, no-unused-vars */
 const apiKey = "YOUR_GOOGLE_API_KEY";
 
 function invoke(params) {

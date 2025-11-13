@@ -1,3 +1,4 @@
+/* eslint-disable no-undef, no-unused-vars */
 let url;
 function invoke(p) {
   url = p.url;

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef, no-unused-vars */
 // note: this script uses the open.er-api.com service, it is only updated
 // once every 24 hours, for more up to date rates see: https://www.exchangerate-api.com
 function invoke(params) {

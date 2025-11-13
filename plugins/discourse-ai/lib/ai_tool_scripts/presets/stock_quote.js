@@ -1,3 +1,4 @@
+/* eslint-disable no-undef, no-unused-vars */
 function invoke(params) {
   const apiKey = "YOUR_ALPHAVANTAGE_API_KEY"; // Replace with your actual API key
   const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${params.symbol}&apikey=${apiKey}`;

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef, no-unused-vars */
 const apiKey = "YOUR_KEY";
 const model = "black-forest-labs/FLUX.1.1-pro";
 
