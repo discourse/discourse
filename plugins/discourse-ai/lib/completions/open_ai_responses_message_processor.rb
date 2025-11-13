@@ -45,18 +45,37 @@ module DiscourseAi::Completions
       when "response.output_text.delta"
         delta = json[:delta] || json["delta"]
         rval = delta if !delta.empty?
+      when "response.reasoning_summary_text.delta"
+        rval =
+          DiscourseAi::Completions::Thinking.new(
+            message: json[:delta],
+            signature: "",
+            partial: true,
+          )
       when "response.output_item.added"
         item = json[:item]
-        if item && item[:type] == "function_call"
-          handle_tool_stream(:start, item) { |finished| rval = finished }
+        if item
+          if item[:type] == "function_call"
+            handle_tool_stream(:start, item) { |finished| rval = finished }
+          end
         end
       when "response.function_call_arguments.delta"
         delta = json[:delta]
         handle_tool_stream(:progress, delta) { |finished| rval = finished } if delta
       when "response.output_item.done"
         item = json[:item]
-        if item && item[:type] == "function_call"
-          handle_tool_stream(:done, item) { |finished| rval = finished }
+        if item
+          if item[:type] == "function_call"
+            handle_tool_stream(:done, item) { |finished| rval = finished }
+          elsif item[:type] == "reasoning"
+            return(
+              DiscourseAi::Completions::Thinking.new(
+                message: item.dig(:summary, 0, :text),
+                signature: item[:encrypted_content],
+                partial: false,
+              )
+            )
+          end
         end
       end
 

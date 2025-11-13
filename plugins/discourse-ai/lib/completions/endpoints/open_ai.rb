@@ -80,12 +80,12 @@ module DiscourseAi
         def prepare_payload(prompt, model_params, dialect)
           payload = default_options.merge(model_params).merge(messages: prompt)
 
-          if reasoning_effort
-            if responses_api?
-              payload.merge!({ reasoning: { effort: reasoning_effort } })
-            else
-              payload.merge!({ reasoning_effort: reasoning_effort })
-            end
+          if responses_api?
+            hash = { summary: "auto" }
+            hash[:effort] = reasoning_effort if reasoning_effort
+            payload.merge!({ reasoning: hash })
+          elsif reasoning_effort
+            payload.merge!({ reasoning_effort: reasoning_effort })
           end
 
           if @streaming_mode
@@ -118,7 +118,11 @@ module DiscourseAi
             end
           end
 
-          convert_payload_to_responses_api!(payload) if responses_api?
+          if responses_api?
+            convert_payload_to_responses_api!(payload)
+            payload[:include] ||= []
+            payload[:include] << "reasoning.encrypted_content"
+          end
 
           payload
         end
