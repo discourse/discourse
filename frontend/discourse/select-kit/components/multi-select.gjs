@@ -93,9 +93,7 @@ export default class MultiSelect extends SelectKitComponent {
 
   select(value, item) {
     if (this.selectKit.hasSelection && this.selectKit.options.maximum === 1) {
-      this.selectKit.deselectByValue(
-        this.getValue(this.selectedContent.firstObject)
-      );
+      this.selectKit.deselectByValue(this.getValue(this.selectedContent[0]));
       next(() => {
         this.selectKit.select(value, item);
       });
@@ -193,7 +191,7 @@ export default class MultiSelect extends SelectKitComponent {
           const lastSelected = selected[selected.length - 1];
           if (lastSelected) {
             if (lastSelected === document.activeElement) {
-              this.deselect(this.selectedContent.lastObject);
+              this.deselect(this.selectedContent.at(-1));
             } else {
               lastSelected.focus();
             }
