@@ -1,9 +1,10 @@
 import Component from "@glimmer/component";
-import { concat } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import { service } from "@ember/service";
 import curryComponent from "ember-curry-component";
 import concatClass from "discourse/helpers/concat-class";
 import { blockConfigs } from "discourse/lib/plugin-api";
+import { or } from "discourse/truth-helpers";
 
 export default class BlockFrame extends Component {
   @service discovery;
@@ -64,7 +65,10 @@ const WrappedBlock = <template>
       @block.customClass
     }}
   >
-    {{#let (curryComponent @block.component @block.params) as |BlockComponent|}}
+    {{#let
+      (curryComponent @block.component (or @block.params (hash)))
+      as |BlockComponent|
+    }}
       <BlockComponent />
     {{/let}}
   </div>
