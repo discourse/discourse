@@ -9,7 +9,7 @@ module DiscourseAi
             raise NotImplemented
           end
 
-          def find_runner(feature)
+          def find_runner(feature, persona_prompt)
             registry = [
               DiscourseAi::Evals::Runners::AiHelper,
               DiscourseAi::Evals::Runners::Translation,
@@ -20,30 +20,32 @@ module DiscourseAi
               DiscourseAi::Evals::Runners::Inference,
             ]
             klass = registry.find { |runner| runner.can_handle?(feature) }
-            klass&.new(feature.split(":").last) if klass
+            klass&.new(feature.split(":").last, persona_prompt) if klass
           end
         end
 
-        attr_reader :feature
+        attr_reader :feature_name, :persona_prompt_override
 
-        def initialize(feature)
-          @feature = feature
+        def initialize(feature, persona_prompt_override = nil)
+          @feature_name = feature
+          @persona_prompt_override = persona_prompt_override
         end
 
         private
 
         def resolve_persona(persona_class: nil)
-          persona_id ||=
-            DiscourseAi::Personas::Persona.system_personas[persona_class] if persona_class
-          persona_record = persona_id && AiPersona.find_by_id_from_cache(persona_id)
-
-          persona_klass = persona_record&.class_instance || persona_class
-
-          if persona_klass.nil?
+          if persona_class.nil?
             raise ArgumentError, "Unable to resolve persona for runner (#{self.class.name})"
           end
 
-          persona_klass.new
+          persona = persona_class.new
+
+          if persona_prompt_override.present?
+            override = persona_prompt_override
+            persona.define_singleton_method(:system_prompt) { override }
+          end
+
+          persona
         end
 
         def capture_plain_response(bot, context)

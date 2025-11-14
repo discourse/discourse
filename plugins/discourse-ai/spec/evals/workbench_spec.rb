@@ -55,6 +55,7 @@ RSpec.describe DiscourseAi::Evals::Workbench do
 
       expect(DiscourseAi::Evals::Recorder).to have_received(:with_cassette).with(
         eval_case,
+        persona_key: "default",
         output: output,
       )
       expect(recorder).to have_received(:record_llm_results).with(
@@ -192,5 +193,56 @@ RSpec.describe DiscourseAi::Evals::Workbench do
         persona.tools ||= []
         persona.save!(validate: false)
       end
+  end
+
+  describe "#judge_result" do
+    let(:judge_eval_case) do
+      OpenStruct.new(
+        id: "judge-eval",
+        args: {
+          input: "Source content",
+        },
+        judge: {
+          criteria: "Score the output against the provided input, rewarding accuracy and clarity.",
+          pass_rating: 7,
+        },
+      )
+    end
+
+    it "raises a helpful error when no judge llm is configured" do
+      expect { workbench.send(:judge_result, judge_eval_case, "answer") }.to raise_error(
+        DiscourseAi::Evals::Eval::EvalError,
+        /requires the --judge option/,
+      )
+    end
+
+    it "returns a passing result when the rating meets the threshold" do
+      judge_llm = Fabricate(:fake_model)
+      workbench_with_judge = described_class.new(output: output, judge_llm: judge_llm)
+
+      response = { "rating" => 8, "explanation" => "good" }.to_json
+
+      result =
+        DiscourseAi::Completions::Llm.with_prepared_responses([response], llm: judge_llm) do
+          workbench_with_judge.send(:judge_result, judge_eval_case, "answer")
+        end
+
+      expect(result[:result]).to eq(:pass)
+    end
+
+    it "returns a failure when the rating is below the threshold" do
+      judge_llm = Fabricate(:fake_model)
+      workbench_with_judge = described_class.new(output: output, judge_llm: judge_llm)
+
+      response = { "rating" => 5, "explanation" => "needs work" }.to_json
+
+      result =
+        DiscourseAi::Completions::Llm.with_prepared_responses([response], llm: judge_llm) do
+          workbench_with_judge.send(:judge_result, judge_eval_case, "answer")
+        end
+
+      expect(result[:result]).to eq(:fail)
+      expect(result[:message]).to include("LLM Rating below threshold")
+    end
   end
 end

@@ -9,11 +9,11 @@ require_relative "lib/prompts/single_test_runner"
 require_relative "lib/features"
 require_relative "lib/recorder"
 require_relative "lib/workbench"
+require_relative "lib/persona_prompt_loader"
 require_relative "lib/cli"
 
 features_registry =
   DiscourseAi::Evals::Features.new(modules: DiscourseAi::Configuration::Module.all)
-playground = DiscourseAi::Evals::Workbench.new(output: $stdout)
 
 options = DiscourseAi::Evals::Cli.parse_options!(features_registry)
 
@@ -26,6 +26,20 @@ end
 
 if options.list_features
   features_registry.print
+  exit 0
+end
+
+default_persona_key = DiscourseAi::Evals::PersonaPromptLoader::DEFAULT_PERSONA_KEY
+
+if options.list_personas
+  puts "#{default_persona_key}: built-in persona prompt"
+  DiscourseAi::Evals::PersonaPromptLoader.list.each do |key, description|
+    if description && !description.empty?
+      puts "#{key}: #{description}"
+    else
+      puts key
+    end
+  end
   exit 0
 end
 
@@ -62,4 +76,85 @@ if selected_evals.empty?
   exit 1
 end
 
-selected_evals.each { |eval_case| playground.run(eval_case: eval_case, llms: llms) }
+default_judge = "gpt-4o"
+judge_name = options.judge.presence || default_judge
+judge_llm = nil
+default_judge_error = nil
+
+begin
+  judge_llm = llm_repository.hydrate(judge_name)
+rescue StandardError => e
+  if options.judge.present?
+    puts "Error: #{e.message}"
+    exit 1
+  else
+    judge_llm = nil
+    default_judge_error = e.message
+  end
+end
+
+persona_keys = Array(options.persona_keys).map { |key| key.to_s.strip }.reject(&:empty?).uniq
+
+persona_variants =
+  if persona_keys.empty?
+    [{ key: default_persona_key, prompt: nil }]
+  else
+    persona_keys.map do |key|
+      trimmed_key = key.to_s.strip
+
+      if trimmed_key.downcase == default_persona_key
+        { key: default_persona_key, prompt: nil }
+      else
+        prompt = DiscourseAi::Evals::PersonaPromptLoader.new.find_prompt(trimmed_key)
+
+        if prompt.nil? || prompt.strip.empty?
+          puts "Error: Unknown persona key '#{trimmed_key}'. Run --list-personas to view options."
+          exit 1
+        end
+
+        { key: trimmed_key, prompt: prompt }
+      end
+    end
+  end
+
+if selected_evals.any? { |eval_case| eval_case.judge.present? } && judge_llm.nil?
+  message = "Error: Selected evaluations require a judge."
+  if default_judge_error
+    message += " Configure '#{default_judge}' or pass --judge with an LLM config name."
+    message += "\n\n"
+    message += default_judge_error
+  else
+    message += " Pass --judge with an LLM config name."
+  end
+  puts message
+  exit 1
+end
+
+persona_variants.each do |variant|
+  if variant[:key]
+    label =
+      if variant[:key] == default_persona_key
+        "default (built-in)"
+      else
+        variant[:key]
+      end
+
+    puts "\n=== Persona: #{label} ==="
+  end
+
+  playground =
+    DiscourseAi::Evals::Workbench.new(
+      output: $stdout,
+      judge_llm: judge_llm,
+      persona_prompt: variant[:prompt],
+      persona_label: variant[:key],
+    )
+
+  selected_evals.each do |eval_case|
+    if options.judge.present? && eval_case.judge.blank?
+      puts "Notice: Eval '#{eval_case.id}' has no judge block. --judge is ignored for this eval."
+    end
+
+    playground.run(eval_case: eval_case, llms: llms)
+  end
+end
