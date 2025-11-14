@@ -569,7 +569,6 @@ export default class ChatComposer extends Component {
               emojiContext = {
                 emojiTermStart: currentCaretPos - incompleteMatch[1].length,
                 emojiTermEnd: currentCaretPos - 1,
-                term: incompleteMatch[1].substring(1),
               };
             }
           }
