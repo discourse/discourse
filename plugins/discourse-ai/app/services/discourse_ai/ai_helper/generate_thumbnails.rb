@@ -76,7 +76,7 @@ module DiscourseAi
 
       def parse_uploads
         captured_custom_raw = context[:captured_custom_raw]
-        upload_short_urls = captured_custom_raw.scan(%r{upload://[a-zA-Z0-9]{40}})
+        upload_short_urls = captured_custom_raw.scan(%r{upload://[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)?})
 
         context[:upload_short_urls] = upload_short_urls
         fail!("no_image_generated") if upload_short_urls.blank?
