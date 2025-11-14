@@ -92,6 +92,7 @@ en:
     ai_helper_enabled_features: "Select the features to enable in the AI helper."
     post_ai_helper_allowed_groups: "User groups allowed to access AI Helper features in posts"
     ai_helper_image_caption_model: "Select the model to use for generating image captions"
+    ai_helper_post_illustrator_persona: "The persona to use for the AI helper's illustrate post feature. Note: you must also create an image generation tool (Admin > Plugins > Discourse AI > Tools) for this feature to work."
 
     ai_embeddings_selected_model: "Use the selected model for generating embeddings."
     ai_embeddings_generate_for_pms: "Generate embeddings for personal messages."

@@ -146,6 +146,7 @@ discourse_ai:
       - dall_e_3
       - disabled
     area: "ai-features/ai_helper"
+    hidden: true
   ai_helper_enabled_features:
     client: true
     default: "suggestions|context_menu"
