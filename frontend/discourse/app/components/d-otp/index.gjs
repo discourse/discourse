@@ -19,7 +19,7 @@ const DEFAULT_SLOTS = 6;
  * @property {object} Args
  *
  * @property {number} [Args.slots] - Number of OTP input slots to display (defaults to 6)
- * @property {boolean} [Args.autofocus] - Whether to autofocus the input on mount (defaults to true)
+ * @property {boolean} [Args.autoFocus] - Whether to autoFocus the input on mount (defaults to true)
  * @property {function(string): void} [Args.onChange] - Callback invoked whenever the OTP value changes
  * @property {function(string): void} [Args.onFill] - Callback invoked when all OTP slots are filled
  *
@@ -36,8 +36,8 @@ export default class DOTP extends Component {
     return this.args.slots ?? DEFAULT_SLOTS;
   }
 
-  get autofocus() {
-    return this.args.autofocus ?? true;
+  get autoFocus() {
+    return this.args.autoFocus ?? true;
   }
 
   get isFilled() {
@@ -163,7 +163,7 @@ export default class DOTP extends Component {
           {{on "blur" this.onBlur}}
           {{on "paste" this.onPaste}}
           aria-label={{i18n "d_otp.screen_reader" count=this.slots}}
-          {{(if this.autofocus (modifier autoFocus))}}
+          {{(if this.autoFocus (modifier autoFocus))}}
           ...attributes
         />
       </div>

@@ -327,7 +327,6 @@ shared_examples "login scenarios" do
 
       totp = ROTP::TOTP.new(user_second_factor.data).now
       find("#login-second-factor").fill_in(with: totp)
-      login_form.click_login
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
@@ -342,7 +341,6 @@ shared_examples "login scenarios" do
 
       totp = ROTP::TOTP.new(user_second_factor.data).now
       find("#login-second-factor").fill_in(with: totp)
-      login_form.click_login
 
       expect(page).to have_current_path("/about")
     end
