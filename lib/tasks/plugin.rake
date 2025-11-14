@@ -233,7 +233,8 @@ task "plugin:qunit", :plugin do |t, args|
   cmd = "LOAD_PLUGINS=1 "
 
   if args[:plugin] == "*"
-    plugin_names = Dir.glob("plugins/*/test/**/*-test.js").map { |file| file.split("/")[1] }.uniq
+    plugin_names =
+      Dir.glob("plugins/*/test/**/*-test.{gjs,js}").map { |file| file.split("/")[1] }.uniq
     puts "Running qunit tests for all plugins: #{plugin_names.join(", ")}"
     cmd += "PLUGIN_TARGETS='#{plugin_names.join(",")}' "
   else
