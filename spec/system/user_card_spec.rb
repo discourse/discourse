@@ -74,6 +74,34 @@ describe "User Card", type: :system do
         expect(user_card).to have_profile_hidden
         expect(user_card).to have_filter_button
         expect(user_card.filter_button_text).to match(I18n.t("js.topic.filter_to", count: 2))
+
+        user_card.click_filter_button
+        expect(topic_page).to have_filtered_notice_text(
+          I18n.t("js.post.filtered_replies.viewing_posts_by", post_count: 2),
+        )
+      end
+    end
+
+    context "when user is deactivated" do
+      before do
+        another_user.update!(active: false)
+        # Sign in as regular user (not admin) to see deactivated user behavior
+        sign_in(user)
+      end
+
+      it "shows filter button with post count for deactivated user" do
+        topic_page.visit_topic(topic)
+        topic_page.click_post_author_avatar(first_post_by_another_user)
+
+        expect(user_card).to be_showing_user(another_user.username)
+        expect(user_card).to have_inactive_user
+        expect(user_card).to have_filter_button
+        expect(user_card.filter_button_text).to match(I18n.t("js.topic.filter_to", count: 2))
+
+        user_card.click_filter_button
+        expect(topic_page).to have_filtered_notice_text(
+          I18n.t("js.post.filtered_replies.viewing_posts_by", post_count: 2),
+        )
       end
     end
   end
