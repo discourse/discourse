@@ -85,6 +85,7 @@ describe TopicViewSerializer do
     end
 
     it "preserves existing topic_view preloads when loading reactions" do
+      Fabricate(:incoming_email, post: post_1, topic:, user: user_2)
       topic_view = TopicView.new(topic.id, user_1)
 
       queries =
@@ -92,7 +93,7 @@ describe TopicViewSerializer do
           TopicViewSerializer.new(topic_view, scope: Guardian.new(user_2), root: false).as_json
         end
 
-      expect(queries.select { |q| q.include?("incoming_email") }.size).to eq(0)
+      expect(queries).not_to include(a_string_matching(/incoming_email/i))
     end
   end
 
