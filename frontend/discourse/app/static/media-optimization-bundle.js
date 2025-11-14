@@ -77,7 +77,7 @@ globalThis.optimize = async function (
   // resize
   if (width > settings.resize_threshold) {
     try {
-      const target_dimensions = resizeWithAspect(
+      const targetDimensions = resizeWithAspect(
         width,
         height,
         settings.resize_target
@@ -88,8 +88,8 @@ globalThis.optimize = async function (
         height
       );
       const resizeResult = await resize(wrappedImageData, {
-        width: target_dimensions.width,
-        height: target_dimensions.height,
+        width: targetDimensions.width,
+        height: targetDimensions.height,
         method: "lanczos3",
         premultiply: settings.resize_pre_multiply,
         linearRGB: settings.resize_linear_rgb,
@@ -98,8 +98,8 @@ globalThis.optimize = async function (
         throw "Image corrupted during resize. Falling back to the original for encode";
       }
       maybeResized = resizeResult.data;
-      width = target_dimensions.width;
-      height = target_dimensions.height;
+      width = targetDimensions.width;
+      height = targetDimensions.height;
       logIfDebug(`Worker post resizing file: ${maybeResized.byteLength}`);
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -113,7 +113,7 @@ globalThis.optimize = async function (
 
   // mozJPEG re-encode
   const result = await encode(
-    new ImageData(maybeResized, width, height),
+    new ImageData(new Uint8ClampedArray(maybeResized), width, height),
     mozJpegDefaultOptions
   );
 
