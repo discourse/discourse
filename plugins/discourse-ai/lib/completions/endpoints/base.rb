@@ -113,7 +113,7 @@ module DiscourseAi
             wrapped = [result] if !result.is_a?(Array)
             wrapped.each do |partial|
               blk.call(partial)
-              break cancel_manager&.cancelled?
+              break if cancel_manager&.cancelled?
             end
             return result
           end

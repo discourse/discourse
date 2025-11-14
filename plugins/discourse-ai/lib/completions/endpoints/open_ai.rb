@@ -192,7 +192,10 @@ module DiscourseAi
         def processor
           @processor ||=
             if responses_api?
-              OpenAiResponsesMessageProcessor.new(partial_tool_calls: partial_tool_calls)
+              OpenAiResponsesMessageProcessor.new(
+                partial_tool_calls: partial_tool_calls,
+                output_thinking: output_thinking,
+              )
             else
               OpenAiMessageProcessor.new(partial_tool_calls: partial_tool_calls)
             end

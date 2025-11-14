@@ -3,7 +3,7 @@ module DiscourseAi::Completions
   class OpenAiResponsesMessageProcessor
     attr_reader :prompt_tokens, :completion_tokens, :cached_tokens
 
-    def initialize(partial_tool_calls: false)
+    def initialize(partial_tool_calls: false, output_thinking: false)
       @tool = nil # currently streaming ToolCall
       @tool_arguments = +""
       @prompt_tokens = nil
@@ -12,6 +12,7 @@ module DiscourseAi::Completions
       @partial_tool_calls = partial_tool_calls
       @streaming_parser = nil # JsonStreamingTracker, if used
       @has_new_data = false
+      @output_thinking = output_thinking
     end
 
     # @param json [Hash] full JSON response from responses.create / retrieve
@@ -23,6 +24,14 @@ module DiscourseAi::Completions
         type = item[:type]
 
         case type
+        when "reasoning"
+          if @output_thinking
+            result << DiscourseAi::Completions::Thinking.new(
+              message: item.dig(:summary, 0, :text).to_s,
+              signature: item[:encrypted_content],
+              partial: false,
+            )
+          end
         when "function_call"
           result << build_tool_call_from_item(item)
         when "message"
@@ -51,7 +60,7 @@ module DiscourseAi::Completions
             message: json[:delta],
             signature: "",
             partial: true,
-          )
+          ) if @output_thinking
       when "response.output_item.added"
         item = json[:item]
         if item
@@ -67,7 +76,7 @@ module DiscourseAi::Completions
         if item
           if item[:type] == "function_call"
             handle_tool_stream(:done, item) { |finished| rval = finished }
-          elsif item[:type] == "reasoning"
+          elsif item[:type] == "reasoning" && @output_thinking
             return(
               DiscourseAi::Completions::Thinking.new(
                 message: item.dig(:summary, 0, :text),

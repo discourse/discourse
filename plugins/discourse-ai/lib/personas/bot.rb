@@ -54,6 +54,8 @@ module DiscourseAi
         unless context.is_a?(BotContext)
           raise ArgumentError, "context must be an instance of BotContext"
         end
+        update_blk ||= proc {}
+
         context.cancel_manager ||= DiscourseAi::Completions::CancelManager.new
         current_llm = llm
         prompt = persona.craft_prompt(context, llm: current_llm)
@@ -85,6 +87,7 @@ module DiscourseAi
           allow_partial_tool_calls = persona.allow_partial_tool_calls?
           existing_tools = Set.new
           current_thinking = []
+          started_thinking = false
 
           result =
             current_llm.generate(
@@ -146,13 +149,17 @@ module DiscourseAi
                   if partial.is_a?(DiscourseAi::Completions::Thinking)
                     if partial.partial? && partial.message.present? && !context.skip_show_thinking
                       update_blk.call(partial.message, nil, :thinking)
+                      started_thinking = true
                     end
                     if !partial.partial?
                       # this will be dealt with later
                       raw_context << partial
                       current_thinking << partial
+                      if !started_thinking && partial.message.present?
+                        update_blk.call(partial.message, nil, :thinking)
+                      end
                     end
-                  elsif update_blk.present?
+                  else
                     if partial.is_a?(DiscourseAi::Completions::StructuredOutput)
                       update_blk.call(partial, nil, :structured_output)
                     else
