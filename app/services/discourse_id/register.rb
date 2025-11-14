@@ -3,7 +3,10 @@
 class DiscourseId::Register
   include Service::Base
 
-  params { attribute :force, :boolean, default: false }
+  params do
+    attribute :force, :boolean, default: false
+    attribute :update, :boolean, default: false
+  end
 
   policy :not_already_registered?
   step :request_challenge
@@ -15,6 +18,7 @@ class DiscourseId::Register
 
   def not_already_registered?(params:)
     return true if params.force
+    return true if params.update
 
     SiteSetting.discourse_id_client_id.blank? && SiteSetting.discourse_id_client_secret.blank?
   end
@@ -61,20 +65,28 @@ class DiscourseId::Register
     Discourse.redis.setex("discourse_id_challenge_token", 600, token)
   end
 
-  def register_with_challenge(token:)
+  def register_with_challenge(token:, params:)
     uri = URI("#{discourse_id_url}/register")
     use_ssl = Rails.env.production? || uri.scheme == "https"
 
-    request = Net::HTTP::Post.new(uri)
-    request.content_type = "application/json"
-    request.body = {
+    body = {
       client_name: SiteSetting.title,
       redirect_uri: "#{Discourse.base_url}/auth/discourse_id/callback",
       challenge_token: token,
       logo_uri: SiteSetting.site_logo_url.presence,
       logo_small_uri: SiteSetting.site_logo_small_url.presence,
       description: SiteSetting.site_description.presence,
-    }.compact.to_json
+    }
+
+    if params.update
+      body[:update] = true
+      body[:client_id] = SiteSetting.discourse_id_client_id
+      body[:client_secret] = SiteSetting.discourse_id_client_secret
+    end
+
+    request = Net::HTTP::Post.new(uri)
+    request.content_type = "application/json"
+    request.body = body.compact.to_json
 
     begin
       response = Net::HTTP.start(uri.hostname, uri.port, use_ssl:) { |http| http.request(request) }
@@ -93,7 +105,9 @@ class DiscourseId::Register
     end
   end
 
-  def store_credentials(data:)
+  def store_credentials(data:, params:)
+    return if params.update
+
     SiteSetting.discourse_id_client_id = data["client_id"]
     SiteSetting.discourse_id_client_secret = data["client_secret"]
   end
