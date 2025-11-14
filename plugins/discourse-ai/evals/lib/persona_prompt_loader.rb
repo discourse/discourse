@@ -5,6 +5,7 @@ require "yaml"
 module DiscourseAi
   module Evals
     class PersonaPromptLoader
+      DEFAULT_PERSONA_KEY = "default"
       PERSONA_GLOB = File.join(__dir__, "../personas/**/*.yml")
 
       def list

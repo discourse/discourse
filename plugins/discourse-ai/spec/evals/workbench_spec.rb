@@ -220,11 +220,12 @@ RSpec.describe DiscourseAi::Evals::Workbench do
       judge_llm = Fabricate(:fake_model)
       workbench_with_judge = described_class.new(output: output, judge_llm: judge_llm)
 
+      response = { "rating" => 8, "explanation" => "good" }.to_json
+
       result =
-        DiscourseAi::Completions::Llm.with_prepared_responses(
-          ["[RATING]8[/RATING] looks good"],
-          llm: judge_llm,
-        ) { workbench_with_judge.send(:judge_result, judge_eval_case, "answer") }
+        DiscourseAi::Completions::Llm.with_prepared_responses([response], llm: judge_llm) do
+          workbench_with_judge.send(:judge_result, judge_eval_case, "answer")
+        end
 
       expect(result[:result]).to eq(:pass)
     end
@@ -233,11 +234,12 @@ RSpec.describe DiscourseAi::Evals::Workbench do
       judge_llm = Fabricate(:fake_model)
       workbench_with_judge = described_class.new(output: output, judge_llm: judge_llm)
 
+      response = { "rating" => 5, "explanation" => "needs work" }.to_json
+
       result =
-        DiscourseAi::Completions::Llm.with_prepared_responses(
-          ["[RATING]5[/RATING] needs work"],
-          llm: judge_llm,
-        ) { workbench_with_judge.send(:judge_result, judge_eval_case, "answer") }
+        DiscourseAi::Completions::Llm.with_prepared_responses([response], llm: judge_llm) do
+          workbench_with_judge.send(:judge_result, judge_eval_case, "answer")
+        end
 
       expect(result[:result]).to eq(:fail)
       expect(result[:message]).to include("LLM Rating below threshold")

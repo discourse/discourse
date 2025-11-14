@@ -91,10 +91,38 @@ module DiscourseAi
           schema_properties = model_params[:response_format].dig(:json_schema, :schema, :properties)
           return response if schema_properties.blank?
 
+          parsed = parse_structured_response(response)
+
+          payload =
+            if parsed.is_a?(Hash)
+              schema_properties
+                .keys
+                .each_with_object({}) do |key, memo|
+                  string_key = key.to_s
+                  memo[key] = parsed[string_key] if parsed.key?(string_key)
+                end
+            else
+              { schema_properties.keys.first => response }
+            end
+
           output = DiscourseAi::Completions::StructuredOutput.new(schema_properties)
-          output << { schema_properties.keys.first => response }.to_json
+          output << payload.to_json
+          output.finish
 
           output
+        end
+
+        def parse_structured_response(response)
+          case response
+          when Hash
+            response
+          when String
+            JSON.parse(response)
+          else
+            nil
+          end
+        rescue JSON::ParserError
+          nil
         end
       end
     end
