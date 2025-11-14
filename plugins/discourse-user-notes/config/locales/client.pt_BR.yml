@@ -14,4 +14,3 @@ pt_BR:
       show: "Anotações de usuário(a) (%{count})"
       delete_confirm: "Tem certeza de que deseja excluir esta anotação de usuário(a)?"
       show_post: "Mostrar Postagem"
-      copy_reviewable_note: "Copiar observação para o perfil do(a) usuário(a)?"

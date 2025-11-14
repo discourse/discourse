@@ -742,6 +742,7 @@ pl_PL:
           fake: "Niestandardowe"
         provider_fields:
           access_key_id: "Identyfikator klucza dostępu AWS Bedrock"
+          role_arn: "Role ARN AWS Bedrock"
           region: "Region AWS Bedrock"
           organization: "Opcjonalny identyfikator organizacji OpenAI"
           disable_system_prompt: "Wyłącz wiadomość systemową w promptach"

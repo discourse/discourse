@@ -21,14 +21,6 @@ hr:
       voted_title: "Glas dan"
       voting_closed_title: "\U0001F510"
       voting_limit: "Limit"
-      votes_left:
-        one: "Preostao vam je %{count} glas, pogledajte <a href='%{path}'>svoje glasove</a>."
-        few: "Preostala su vam %{count} glasa, pogledajte <a href='%{path}'>vaše glasove</a>."
-        other: "Preostalo vam je %{count} glasova, pogledajte <a href='%{path}'>vaše glasove</a>."
-      votes_left_button_title:
-        one: "Preostao vam je %{count} glas."
-        few: "Preostala su vam %{count} glasa."
-        other: "Preostalo vam je %{count} glasova."
       votes:
         one: "%{count} glas"
         few: "%{count} glasa"

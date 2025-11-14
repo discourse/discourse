@@ -867,7 +867,6 @@ de:
         note_added_by: "Moderator-Notiz von %{username} · %{relativeDate}"
         no_events: "Keine Zeitleistenereignisse zum Anzeigen"
       notes:
-        add_note_description: "Nur für Moderatoren sichtbar. Verwende diese Notiz, um Kontext oder Entscheidungen zur Überprüfung hinzuzufügen."
         add_note_button: "Notiz hinzufügen"
         placeholder: "Schreib deine Notiz hier …"
         chars_remaining: "%{count} Zeichen verbleibend"
@@ -3298,7 +3297,6 @@ de:
         progress:
           one: "Fortschritt: <strong>%{count}</strong> Thema"
           other: "Fortschritt: <strong>%{count}</strong> Themen"
-        silent: "Führe diese Aktion lautlos durch."
         performing: "Massenoperationen werden durchgeführt, bitte warten …"
         completed: "Massenoperationen erfolgreich abgeschlossen!"
       none:
@@ -7233,7 +7231,6 @@ de:
           success: "Erfolg"
           exists: "Existiert bereits"
           upload: "Aus Datei hinzufügen"
-          upload_successful: "Hochladen erfolgreich. Wörter wurden hinzugefügt."
           case_sensitivity_label: "Groß- und Kleinschreibung wird unterschieden"
           case_sensitivity_description: "Nur Wörter mit passender Groß- und Kleinschreibung"
           html_label: "HTML"

@@ -12,6 +12,8 @@ el:
           poll: "Ψηφοφορία Discourse"
   js:
     poll:
+      dynamic:
+        enabled_hint: "Οι επιλογές μπορούν να προστεθούν ή να αφαιρεθούν."
       voters:
         one: "ψηφοφόρος"
         other: "ψηφοφόροι"
@@ -115,6 +117,7 @@ el:
       error_while_fetching_voters: "Συγνώμη, παρουσιάστηκε ένα σφάλμα κατά τη διαδικασία εμφάνισης των ψηφοφόρων."
       error_while_exporting_results: "Λυπάμαι, παρουσιάστηκε σφάλμα κατά την εξαγωγή αποτελεσμάτων δημοσκόπησης."
       ui_builder:
+        title: Δημιουργία ψηφοφορίας
         insert: Εισαγωγή ψηφοφορίας
         help:
           options_min_count: Επιλέξτε τουλάχιστον 1 επιλογή.
@@ -147,6 +150,8 @@ el:
           step: Βήμα
         poll_public:
           label: Προβολή ψηφοφόρων.
+        poll_dynamic:
+          label: Να επιτρέπεται η προσθήκη ή η αφαίρεση επιλογών μετά την δημοσίευση
         poll_title:
           label: Τίτλος (προαιρετικό)
         poll_options:

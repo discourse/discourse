@@ -2683,7 +2683,6 @@ te:
         progress:
           one: "పురోగతి: <strong>%{count}</strong> విషయం"
           other: "పురోగతి: <strong>%{count}</strong> విషయాలు"
-        silent: "ఈ చర్యను నిశ్శబ్దంగా చేయండి."
         performing: "సమూహ కార్యకలాపాలను అమలు చేస్తోంది, దయచేసి వేచి ఉండండి…"
         completed: "సమూహ కార్యకలాపాలు విజయవంతంగా పూర్తయ్యాయి!"
       none:
@@ -5663,7 +5662,6 @@ te:
           success: "విజయం"
           exists: "ఇప్పటికే ఉన్నది"
           upload: "ఫైల్ నుండి జోడించండి"
-          upload_successful: "అప్‌లోడ్ విజయవంతమైంది. పదాలు జోడించబడ్డాయి."
           case_sensitivity_label: "కేస్ సెన్సిటివ్"
           case_sensitivity_description: "సరిపోలే క్యారెక్టర్ కేసింగ్ ఉన్న పదాలు మాత్రమే"
           html_label: "HTML"

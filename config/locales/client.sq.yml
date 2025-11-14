@@ -2963,7 +2963,6 @@ sq:
         progress:
           one: "Progresi: <strong>%{count}</strong> temë"
           other: "Progresi: <strong>%{count}</strong> tema"
-        silent: "Kryeni këtë veprim në heshtje."
         performing: "Duke kryer operacione me shumicë, ju lutemi prisni…"
         completed: "Operacionet me shumicë përfunduan me sukses!"
       none:

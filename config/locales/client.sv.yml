@@ -2699,7 +2699,6 @@ sv:
         progress:
           one: "Förlopp: <strong>%{count}</strong> ämne"
           other: "Förlopp: <strong>%{count}</strong> ämnen"
-        silent: "Utför denna åtgärd tyst."
       none:
         unread: "Du har inga olästa ämnen."
         unseen: "Du har inga osedda ämnen."
@@ -5681,7 +5680,6 @@ sv:
           success: "Lyckades"
           exists: "Finns redan"
           upload: "Lägg till från fil"
-          upload_successful: "Uppladdning lyckades. Ord har lagts till."
           case_sensitivity_label: "Är skiftlägeskänsligt"
           case_sensitivity_description: "Endast ord med bokstäver i samma skiftläge"
           html_label: "HTML"

@@ -2944,7 +2944,6 @@ zh_TW:
           other: "所有標記將從 <b>%{count}</b> 個話題中移除。確定嗎？"
         progress:
           other: "進度： <strong>%{count}</strong> 個主題"
-        silent: "默認執行此動作。"
         performing: "正在執行批量作業，請稍候…"
         completed: "批量作業順利完成！"
       none:
@@ -6370,7 +6369,6 @@ zh_TW:
           success: "成功"
           exists: "已存在"
           upload: "從檔案新增"
-          upload_successful: "上傳成功，文字已被添加。"
           case_sensitivity_label: "是否區分大小寫"
           case_sensitivity_description: "僅限字符大小寫匹配的字詞"
           html_label: "HTML"

@@ -852,7 +852,6 @@ fr:
         note_added_by: "Note du modérateur par %{username} · %{relativeDate}"
         no_events: "Aucun événement de la chronologie à afficher"
       notes:
-        add_note_description: "Visible uniquement par les modérateurs. Utilisez cette note pour ajouter du contexte ou des décisions concernant l'avis."
         add_note_button: "Ajouter une note"
         placeholder: "Écrivez votre note ici..."
         chars_remaining: "%{count} caractères restants"
@@ -3262,7 +3261,6 @@ fr:
         progress:
           one: "Progression : <strong>%{count}</strong> sujet"
           other: "Progression : <strong>%{count}</strong> sujets"
-        silent: "Effectue cette action sans notification."
         performing: "Effectue des opérations groupées, merci de patienter…"
         completed: "Les opérations groupées sont terminées !"
       none:
@@ -7134,7 +7132,6 @@ fr:
           success: "Succès"
           exists: "Existe déjà"
           upload: "Ajouter à partir d'un fichier"
-          upload_successful: "Envoi effectué avec succès. Les mots et expressions à surveiller ont été ajoutés."
           case_sensitivity_label: "Est sensible à la casse"
           case_sensitivity_description: "Seulement les mots dont la casse des caractères correspond"
           html_label: "HTML"

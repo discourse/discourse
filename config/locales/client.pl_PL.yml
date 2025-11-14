@@ -1003,7 +1003,7 @@ pl_PL:
         note_added_by: "Uwaga moderatora %{username} - %{relativeDate}"
         no_events: "Brak zdarzeń na osi czasu do wyświetlenia"
       notes:
-        add_note_description: "Widoczne tylko dla moderatorów. Użyj tej uwagi, aby dodać kontekst lub decyzje dotyczące przeglądu."
+        add_note_description: "Dodaj uwagę, aby zapewnić kontekst innym moderatorom."
         add_note_button: "Dodaj uwagę"
         placeholder: "Tutaj napisz swoją uwagę..."
         chars_remaining: "Pozostałe znaki: %{count}"
@@ -3675,7 +3675,7 @@ pl_PL:
           few: "Postęp: <strong>%{count}</strong> tematy"
           many: "Postęp: <strong>%{count}</strong> tematów"
           other: "Postęp: <strong>%{count}</strong> tematów"
-        silent: "Wykonaj tę akcję po cichu."
+        notify: "Powiadom użytkowników o tej zmianie."
         performing: "Wykonywanie operacji zbiorczych, proszę czekać…"
         completed: "Operacje masowe zakończone pomyślnie!"
       none:
@@ -7883,7 +7883,7 @@ pl_PL:
           success: "Sukces"
           exists: "Już istnieje"
           upload: "Dodaj z pliku"
-          upload_successful: "Przesyłanie zakończone sukcesem. Słowa zostały dodane."
+          upload_successful: "Przesłanie zakończone powodzeniem. Słowa zostaną wkrótce przetworzone."
           case_sensitivity_label: "Rozróżniana jest wielkość liter"
           case_sensitivity_description: "Tylko słowa z dopasowaną wielkością liter"
           html_label: "HTML"

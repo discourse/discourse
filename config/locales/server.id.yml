@@ -1337,15 +1337,6 @@ id:
       subject_template: "Selamat datang ke %{site_name}!"
     tl2_promotion_message:
       subject_template: "Selamat atas promosi tingkat kepercayaan Anda!"
-    user_automatically_silenced:
-      text_body_template: |
-        Ini adalah pesan otomatis.
-
-        Pengguna baru [%{username}](%{user_url}) secara otomatis disenyapkan karena beberapa pengguna menandai kiriman (post) %{username}.
-
-        Harap [tinjau penanda](%{base_url}/review). Jika %{username} salah disenyapkan dari proses post, klik tombol nonaktifkan di [halaman admin untuk pengguna ini](%{user_url}).
-
-        Ambang batas ini dapat diubah melalui pengaturan situs `silence_new_user`.
     spam_post_blocked:
       subject_template: "Pengguna baru %{username} disuspensi atas penulisan tautan yang berulang-ulang kali"
     pending_users_reminder:

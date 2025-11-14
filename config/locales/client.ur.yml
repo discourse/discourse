@@ -858,7 +858,6 @@ ur:
         note_added_by: "نگران کا نوٹ بذریعہ %{username} · %{relativeDate}"
         no_events: "ظاہر کرنے کے لیے کوئی ٹائم لائن ایونٹس نہیں"
       notes:
-        add_note_description: "صرف منتظمین کے لیے مرئی۔ جائزہ کے بارے میں سیاق و سباق یا فیصلے شامل کرنے کے لیے اس نوٹ کا استعمال کریں۔"
         add_note_button: "نوٹ کا اضافہ"
         placeholder: "اپنا نوٹ یہاں لکھیں۔۔۔"
         chars_remaining: "%{count} حروف باقی ہیں"
@@ -3287,7 +3286,6 @@ ur:
         progress:
           one: "پیش رفت: <strong>%{count}</strong> موضوع"
           other: "پیش رفت: <strong>%{count}</strong> موضوعات"
-        silent: "یہ عمل کو خاموشی سے انجام۔"
         performing: "حجم آپریشنز ہو رہے ہیں، براہ کرم انتظار کریں۔۔۔"
         completed: "حجمی اختیارات کامیابی سے مکمل ہو گئے!"
       none:
@@ -6984,7 +6982,6 @@ ur:
           success: "کامیابی"
           exists: "پہلے سے موجود"
           upload: "فائل میں سے شامل کریں"
-          upload_successful: "اَپ لوڈ کامیاب ہوا۔ الفاظ شامل کردیے گئے ہیں۔"
           html_label: "HTML"
         test:
           button_label: "ٹیسٹ"

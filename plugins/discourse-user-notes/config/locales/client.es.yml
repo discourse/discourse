@@ -14,4 +14,3 @@ es:
       show: "Notas de usuario (%{count})"
       delete_confirm: "¿Seguro que quieres eliminar este nota del usuario?"
       show_post: "Mostrar publicación"
-      copy_reviewable_note: "¿Copiar nota en el perfil de usuario?"

@@ -1805,7 +1805,6 @@ cs:
     allow_duplicate_topic_titles_category: "Povolit témata se shodnými, duplicitními názvy, pokud se kategorie liší. Parametr allow_duplicate_topic_titles musí být zakázán."
     unique_posts_mins: "Kolik minut musí uplynout, než může uživatel zaslat příspěvek se stejným obsahem"
     educate_until_posts: "Když uživatel začne psát svých prvních (n) nových příspěvků, zobrazit v editoru vyskakovací panel pro vzdělávání nových uživatelů."
-    title: "Název tohoto webu. Viditelný pro všechny návštěvníky včetně anonymních uživatelů."
     site_description: "Popište tento web jednou větou. Viditelné pro všechny návštěvníky včetně anonymních uživatelů."
     short_site_description: "Stručný popis v několika slovech. Viditelný pro všechny návštěvníky včetně anonymních uživatelů."
     contact_email: "E-mailová adresa klíčové kontaktní osoby odpovědné za tento web. Používá se pro kritická oznámení a zobrazuje se také na <a href='%{base_path}/about' target='_blank'>/about</a>. Viditelná pro anonymní uživatele na veřejných stránkách."
@@ -3386,14 +3385,9 @@ cs:
     user_automatically_silenced:
       title: "Uživatel automaticky ztišen"
       subject_template: "Nový uživatel %{username} byl ztišen nahlášeními komunity"
-      text_body_template: |
-        Toto je automatická zpráva.
-
-        Nový uživatel [%{username}](%{user_url}) byl automaticky ztišen, protože více uživatelů nahlásilo jeho příspěvky.
-
-        Prosím [proveďte revizi](%{base_url}/review). Pokud byl %{username} nesprávně ztišen od zveřejňování příspěvků, klikněte na tlačítko Zrušit ztišení na [administrátorské stránce tohoto uživatele](%{user_url}).
-
-        Tuto prahovou hodnotu lze změnit pomocí nastavení `silence_new_user`.
+    user_automatically_silenced_with_reason:
+      title: "Uživatel automaticky ztišen"
+      subject_template: "Nový uživatel %{username} byl ztišen nahlášeními komunity"
     spam_post_blocked:
       text_body_template: |
         Toto je automatická zpráva.
@@ -4662,8 +4656,6 @@ cs:
         complete: "Nahlášení ignorováno."
       discard_post:
         title: "Zahodit příspěvek"
-      revise_and_reject_post:
-        title: "Revize příspěvku..."
       ignore:
         title: "ignorovat"
         complete: "Nahlášení ignorováno."

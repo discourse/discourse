@@ -341,6 +341,12 @@ he:
       forwarded: "העברת ההודעה שלעיל"
     topic_admin_menu: "פעולות על נושא"
     skip_to_main_content: "דילוג לתוכן הראשי"
+    skip_links_label: "דילוג על קישורי ניווט"
+    skip_to_post: "דילוג לפוסט %{post_number}"
+    skip_to_where_you_left_off: "דילוג למקום בו היית בפעם האחרונה (פוסט %{post_number})"
+    skip_to_where_you_left_off_last: "דילוג למקום בו היית בפעם האחרונה (תגובה אחרונה, פוסט %{post_number})"
+    skip_to_last_reply: "דילוג לתגובה האחרונה"
+    skip_to_top: "דילוג למעלה"
     skip_user_nav: "דילוג לתוכן הפרופיל"
     emails_are_disabled: "כל הדוא״ל היוצא הושבת באופן גורף על ידי הנהלת באתר. שום הודעת דוא״ל, מכל סוג שהוא, לא תישלח."
     emails_are_disabled_non_staff: "דוא״ל יוצא הושבת עבור משתמשים שאינם מהסגל."
@@ -351,6 +357,7 @@ he:
     back_button: "חזרה"
     welcome_banner:
       header:
+        new_members: "ברוך בואך, %{preferred_display_name}!"
         logged_in_members: "ברוך שובך, %{preferred_display_name}!"
         anonymous_members: "ברוך בואך אל %{site_name}!"
       search_placeholder: "חיפוש"
@@ -803,6 +810,10 @@ he:
         claimed_by_you: "דרשת את הפריט הזה ועכשיו יתאפשר לך לסקור אותו."
         claimed_by_other: "הפריט הזה זמין לסריקה רק על ידי <b>%{username}</b>."
         automatically_claimed_by: "הפריט הזה נבדק כרגע על ידי <b>%{username}</b>."
+      claim:
+        title: "דרישת נושא זה"
+      unclaim:
+        help: "הסרת דרישה זו"
       awaiting_approval: "בהמתנה לאישור"
       delete: "מחיקה"
       settings:
@@ -904,6 +915,7 @@ he:
           created_at: "מועד יצירה"
           created_at_asc: "מועד יצירה (הפוך)"
         priority:
+          title: "עדיפות מזערית"
           any: "(כלשהו)"
           low: "נמוכה"
           medium: "בינונית"
@@ -968,6 +980,10 @@ he:
           title: "פוסט"
           noun: "פוסט"
       flagged_as: "מסומן בתור"
+      post_flagged_as: "הפוסט סומן בתור"
+      chat_flagged_as: "השיחה סומנה בתור"
+      queued_post_label: "פוסט ממתין בתור"
+      queued_topic_label: "נושא ממתין בתור"
       user_label: "משתמש"
       assigned_to: "הוקצה לטובת"
       moderator_actions: "פעולות פיקוח"
@@ -977,6 +993,7 @@ he:
         target_created_by: "הפוסט נוצר על ידי %{username} · %{relativeDate}"
         flagged: "מסומן"
         flagged_as_by: "מסומן בתור %{flagReason} על ידי %{username} · %{relativeDate}"
+        claimed: "נדרש"
         claimed_by: "נדרש על ידי %{username} · %{relativeDate}"
         reviewed: "נבדק"
         reviewed_by: "נבדק על ידי %{username} · %{relativeDate}"
@@ -985,7 +1002,7 @@ he:
         note_added_by: "הערת פיקוח מאת %{username} · %{relativeDate}"
         no_events: "אין אירועי ציר זמן להצגה"
       notes:
-        add_note_description: "גלוי רק למפקחים. אפשר להשתמש בהערה הזאת כדי להוסיף הקשר או החלטות בנוסע לסקירה."
+        add_note_description: "אפשר להוסיף הערה כדי לספק הקשר למפקחים האחרים."
         add_note_button: "הוספת הערה"
         placeholder: "כאן ניתן לכתוב את ההערה שלך…"
         chars_remaining: "נותרו %{count} תווים"
@@ -998,6 +1015,7 @@ he:
       review_user: "משתמש"
       need_help: "אפשר להציע עזרה?"
       copy_link: "העתקת קישור"
+      copy_permalink_title: "העתקת קישור לפריט הזה שמיועד לסקירה ללוח הגזירים"
       copy_link_feedback: "הקישור הועתק"
       view_source: "הצגת המקור"
       insights:
@@ -1008,6 +1026,8 @@ he:
           two: "סומן על ידי %{count} משתמש/ים ייחודיים/ות"
           many: "סומן על ידי %{count} משתמש/ים ייחודיים/ות"
           other: "סומן על ידי %{count} משתמש/ים ייחודיים/ות"
+        similar_posts: "הפרות עבר"
+        user_activity: "פרטי משתמש"
         activities:
           new_account: "חשבון חדש"
           trust_level: "רמת אמון: %{trustLevelName}"
@@ -2508,6 +2528,12 @@ he:
       no_results: "אין תוצאות"
       search: "חיפוש…"
       label: "בחירת אפשרויות"
+    d_otp:
+      screen_reader:
+        one: נא למלא מספר
+        two: נא למלא שני מספרים
+        many: נא למלא %{count} מספרים
+        other: נא למלא %{count} מספרים
     form_kit:
       reset: איפוס
       optional: רשות
@@ -2974,8 +3000,13 @@ he:
         title: "תרגום פוסט"
         select: "בחירת תרגום"
         save: "שמירת תרגום"
+        original_content: "פוסט מקורי"
+        translation_preview: "תצוגת תרגום מקדימה"
+        original: "מקור"
         translation: "תרגום"
+        no_translation_yet: "יש להתחיל להקליד כדי לצפות בתצוגת התרגום המקדימה…"
         placeholder: "נא למלא כאן תרגום לפוסט…"
+        show_raw_markdown: "הצגת גולמי"
       group_mentioned_limit:
         one: "<b>זהירות!</b> ציינת את <a href='%{group_link}'>%{group}</a>, אך בקבוצה זו יש יותר חברים מההגבלה שהוגדרה על ידי הנהלת המערכת של עד משתמש %{count}. אף אחד לא יקבל הודעה."
         two: "<b>זהירות!</b> ציינת את <a href='%{group_link}'>%{group}</a>, אך בקבוצה זו יש יותר חברים מההגבלה שהוגדרה על ידי הנהלת המערכת של עד %{count} משתמשים. אף אחד לא יקבל הודעה."
@@ -3159,6 +3190,8 @@ he:
         toggle_topic_bump:
           label: "החלפת מצב הקפצת נושא"
           desc: "הגב מבלי לשנות את תאריך התגובה האחרונה"
+        toggle_unlisted:
+          desc: "נושאים מוסתרים נגישים רק באמצעות קישור ישיר"
       reload: "ריענון"
       ignore: "התעלמות"
       image_alt_text:
@@ -3635,7 +3668,7 @@ he:
           two: "התקדמות: <strong>%{count}</strong> נושאים"
           many: "התקדמות: <strong>%{count}</strong> נושאים"
           other: "התקדמות: <strong>%{count}</strong> נושאים"
-        silent: "לבצע את הפעולה הזאת בשקט."
+        notify: "להודיע למשתמשים על השינוי הזה."
         performing: "מתבצעות פעולות במרוכז, נא להמתין…"
         completed: "הפעולות במרוכזת הושלמו בהצלחה!"
       none:
@@ -4205,6 +4238,7 @@ he:
         clear_all: "לפנות הכול"
         actions: "פעולות במרוכז"
     post:
+      accessible_heading: "פוסט מאת %{username} %{date}"
       confirm_delete: "למחוק את הפוסט הזה?"
       quote_reply: "ציטוט"
       quote_reply_shortcut: "ציטוט (או בלחיצה על q)"
@@ -4228,8 +4262,13 @@ he:
       deleted_by_author_simple: "(הפוסט נמחק על ידי הכותב)"
       collapse: "צמצום"
       load_more_replies: "טעינת תגובות נוספות"
+      load_more_posts_above: "טעינת פוסטים נוספים מעל"
+      load_more_posts_below: "טעינת פוסטים נוספים מתחת"
       sr_collapse_replies: "צמצום תשובות מוטמעות"
       sr_load_more_replies: "טעינת תשובות מוטמעות נוספות"
+      loading_more_posts_above: "נטענים פוסטים נוספים מעל..."
+      loading_more_posts_below: "נטענים פוסטים נוספים מתחת..."
+      loading_complete: "הטעינה הושלמה"
       sr_date: "תאריך פרסום"
       sr_expand_replies:
         one: "לפוסט הזה יש תגובה אחת"
@@ -4419,6 +4458,7 @@ he:
         delete_post_notice: "מחיקת הודעה רשמית"
         remove_timer: "הסרת שעון עצר"
         edit_timer: "עריכת מתזמן"
+        remove_yourself_from_pm: "להסיר את עצמך מההודעה הזאת? לא תהיה לך יותר אפשרות לצפות בה או להגיב אליה."
       actions:
         people:
           like:
@@ -5005,6 +5045,7 @@ he:
     lightbox:
       download: "הורדה"
       open: "תמונה מקורית"
+      image_info: "פרטי תמונה"
       previous: "הקודם (מקש שמאלה)"
       next: "הבא (מקש ימינה)"
       counter: "%curr% מתוך %total%"
@@ -7806,7 +7847,6 @@ he:
           success: "הצלחה"
           exists: "כבר קיימת"
           upload: "הוספה מקובץ"
-          upload_successful: "העלאה הצליחה. מילים נוספו."
           case_sensitivity_label: "הוא תלוי רישיות"
           case_sensitivity_description: "רק מילים עם התאמת אותיות רישיות/קטנות"
           html_label: "HTML"

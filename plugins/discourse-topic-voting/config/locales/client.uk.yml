@@ -21,16 +21,9 @@ uk:
       voted_title: "Проголосували"
       voting_closed_title: "Закриті"
       voting_limit: "Обмеження"
-      votes_left:
-        one: "У вас залишився %{count} голос , див. <a href='%{path}'>ваші голоси</a>."
-        few: "У вас залишилося %{count} голоси, дивіться <a href='%{path}'>ваші голоси</a>."
-        many: "У вас залишилося %{count} голосів, дивіться <a href='%{path}'>ваші голоси</a>."
-        other: "У вас залишилося %{count} голосів, дивіться <a href='%{path}'>ваші голоси</a>."
-      votes_left_button_title:
-        one: "У вас залишилося %{count} голос."
-        few: "У вас залишилося %{count} голоси."
-        many: "У вас залишилося %{count} голосів."
-        other: "У вас залишилося %{count} голосів."
+      see_votes: "У вас залишилося %{count}/%{max} голосів"
+      locked: "Заблоковано"
+      locked_description: "Підвищіть рівень своєї довіри, щоб проголосувати"
       votes:
         one: "%{count} голос"
         few: "%{count} голосів"

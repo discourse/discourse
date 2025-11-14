@@ -74,7 +74,7 @@ da:
             categories:
               label: Begrænset til kategorier
             tags:
-              label: Begrænset til mærker
+              label: Begrænset til tags
             stalled_after:
               label: Gået i stå efter
         recurring:
@@ -144,7 +144,7 @@ da:
             valid_trust_levels:
               label: Gyldige tillidsniveauer
             restricted_tags:
-              label: Mærker
+              label: Tags
             restricted_categories:
               label: Kategorier
             restricted_archetype:
@@ -204,7 +204,7 @@ da:
             restricted_category:
               label: Kategori
             restricted_tags:
-              label: Mærker
+              label: Tags
       scriptables:
         zapier_webhook:
           fields:
@@ -219,7 +219,7 @@ da:
         auto_tag_topic:
           fields:
             tags:
-              label: Mærker
+              label: Tags
         post:
           fields:
             topic:
@@ -229,7 +229,7 @@ da:
             category:
               label: Emne kategori
             tags:
-              label: Emne mærker
+              label: Emnetags
         group_category_notification_default:
           fields:
             group:

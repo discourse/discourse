@@ -852,7 +852,6 @@ tr_TR:
         note_added_by: "%{username} tarafından moderatör notu · %{relativeDate}"
         no_events: "Gösterilecek zaman çizelgesi etkinliği yok"
       notes:
-        add_note_description: "Yalnızca moderatörler tarafından görülebilir. Bu notu incelemeyle ilgili bağlam veya kararlar eklemek için kullanın."
         add_note_button: "Not ekle"
         placeholder: "Notunuzu buraya yazın..."
         chars_remaining: "%{count} karakter kaldı"
@@ -3262,7 +3261,6 @@ tr_TR:
         progress:
           one: "İlerleme: <strong>%{count}</strong> konu"
           other: "İlerleme: <strong>%{count}</strong> konu"
-        silent: "Bu eylemi sessizce gerçekleştirin."
         performing: "Toplu işlemler gerçekleştiriliyor, lütfen bekleyin…"
         completed: "Toplu işlemler başarıyla tamamlandı!"
       none:
@@ -7134,7 +7132,6 @@ tr_TR:
           success: "Başarılı"
           exists: "Zaten mevcut"
           upload: "Dosyadan ekle"
-          upload_successful: "Yükleme başarılı. Kelimeler eklendi."
           case_sensitivity_label: "büyük/küçük harfe duyarlı"
           case_sensitivity_description: "Sadece eşleşen karakter muhafazası olan kelimeler"
           html_label: "HTML"

@@ -807,7 +807,6 @@ zh_CN:
         note_added_by: "%{username} 的版主注释 · %{relativeDate}"
         no_events: "没有可显示的时间线事件"
       notes:
-        add_note_description: "仅对版主可见。使用此注释来添加有关审核的背景信息或决定。"
         add_note_button: "添加注释"
         placeholder: "在这里写下您的注释…"
         chars_remaining: "剩余 %{count} 个字符"
@@ -3120,7 +3119,6 @@ zh_CN:
           other: "所有标签将从 <b>%{count}</b> 个话题中移除。确定吗？"
         progress:
           other: "进度：<strong>%{count}</strong> 个话题"
-        silent: "静默执行此操作。"
         performing: "正在执行批量操作，请稍候…"
         completed: "批量操作成功完成！"
       none:
@@ -6983,7 +6981,6 @@ zh_CN:
           success: "成功"
           exists: "已存在"
           upload: "从文件添加"
-          upload_successful: "上传成功。关注词已添加。"
           case_sensitivity_label: "是否区分大小写"
           case_sensitivity_description: "仅限字符大小写匹配的单词"
           html_label: "HTML"

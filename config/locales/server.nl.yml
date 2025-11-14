@@ -1644,7 +1644,6 @@ nl:
     allow_duplicate_topic_titles_category: "Topics met identieke, dubbele titels toestaan als de categorie anders is. allow_duplicate_topic_titles moet uitgeschakeld zijn."
     unique_posts_mins: "Hoeveel minuten iemand moet wachten voordat deze een bericht met dezelfde inhoud mag plaatsen"
     educate_until_posts: "De pop-up voor nieuwe gebruikers weergeven als een gebruiker begint met het typen van de eerste (n) nieuwe berichten in de berichteditor."
-    title: "De naam van deze site. Zichtbaar voor alle bezoekers, inclusief anonieme gebruikers."
     site_description: "Beschrijf deze site in één zin. Zichtbaar voor alle bezoekers, inclusief anonieme gebruikers."
     short_site_description: "Korte beschrijving in een paar woorden. Zichtbaar voor alle bezoekers, inclusief anonieme gebruikers."
     contact_email: "E-mailadres van de belangrijkste contactpersoon die verantwoordelijk is voor deze website. Wordt gebruikt voor kritieke meldingen en wordt weergegeven op de <a href='%{base_path}/about' target='_blank'>/over</a>-pagina. Zichtbaar voor anonieme gebruiker op openbare sites."
@@ -2408,7 +2407,6 @@ nl:
     sitemap_page_size: "Aantal URL's om op te nemen in elke sitemappagina. Maximaal 50.000"
     enable_user_status: "Sta gebruikers toe om een aangepast statusbericht in te stellen (emoji + beschrijving)."
     enable_user_tips: "Schakel nieuwe gebruikerstips in die belangrijke functies beschrijven voor gebruikers"
-    short_title: "De korte titel wordt gebruikt op het startscherm van de gebruiker, de starter, of andere plaatsen waar ruimte beperkt kan zijn. Beperk de naam tot 12 tekens."
     dashboard_hidden_reports: "Toestaan dat de opgegeven rapporten worden verborgen op het dashboard."
     dashboard_visible_tabs: "Kiezen welke dashboardtabbladen zichtbaar zijn."
     dashboard_general_tab_activity_metrics: "Kies rapporten die als activiteitsgegevens op het algemene tabblad worden weergegeven."
@@ -3608,14 +3606,9 @@ nl:
     user_automatically_silenced:
       title: "Gebruiker automatisch gedempt"
       subject_template: "Nieuwe gebruiker %{username} gedempt wegens markeringen door community"
-      text_body_template: |
-        Dit is een automatisch bericht.
-
-        De nieuwe gebruiker [%{username}](%{user_url}) is automatisch gedempt, omdat meerdere gebruikers een of meer berichten van %{username} hebben gemarkeerd.
-
-        [Beoordeel de markeringen](%{base_url}/review). Als %{username} ten onrechte is gedempt, klik dan op de knop voor opheffen van het dempen op [de beheerpagina van deze gebruiker](%{user_url}).
-
-        Deze drempel kan worden gewijzigd via de 'silence_new_user'-website-instellingen.
+    user_automatically_silenced_with_reason:
+      title: "Gebruiker automatisch gedempt"
+      subject_template: "Nieuwe gebruiker %{username} gedempt wegens markeringen door community"
     spam_post_blocked:
       title: "Spambericht geblokkeerd"
       subject_template: "Berichten van nieuwe gebruiker %{username} geblokkeerd vanwege herhaalde links"
@@ -5239,7 +5232,6 @@ nl:
         title: "Bericht weggooien"
         complete: "Bericht verworpen."
       revise_and_reject_post:
-        title: "Bericht herzien…"
         complete: "Bericht afgewezen in afwachting van herziening."
       ignore:
         title: "Negeren"

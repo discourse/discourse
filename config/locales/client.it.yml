@@ -852,7 +852,6 @@ it:
         note_added_by: "Note del moderatore di %{username} · %{relativeDate}"
         no_events: "Nessun evento nella cronologia da visualizzare"
       notes:
-        add_note_description: "Visibile solo ai moderatori. Utilizza queste note per aggiungere contesto o prendere decisioni sulla revisione."
         add_note_button: "Aggiungi note"
         placeholder: "Scrivi qui le tue note..."
         chars_remaining: "%{count} caratteri rimasti"
@@ -3259,7 +3258,6 @@ it:
         progress:
           one: "Avanzamento: <strong>%{count}</strong> argomento"
           other: "Avanzamento: <strong>%{count}</strong> argomenti"
-        silent: "Esegui questa azione in silenzio."
         performing: "Esecuzione di operazioni in blocco. Attendere…"
         completed: "Operazioni in blocco completate correttamente."
       none:
@@ -7131,7 +7129,6 @@ it:
           success: "Riuscito"
           exists: "Già esistente"
           upload: "Aggiungi dal file"
-          upload_successful: "Caricamento andato a buon fine. Le parole sono state aggiunte."
           case_sensitivity_label: "distingue fra maiuscole e minuscole"
           case_sensitivity_description: "Solo parole con maiuscole e minuscole corrispondenti"
           html_label: "HTML"

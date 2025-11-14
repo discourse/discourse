@@ -1351,6 +1351,9 @@ sw:
     user_automatically_silenced:
       title: "Mtumiaji Amenyamazishwa"
       subject_template: "Mtumiaji mpya %{username} amenyamazishwa na bendera za jumuia"
+    user_automatically_silenced_with_reason:
+      title: "Mtumiaji Amenyamazishwa"
+      subject_template: "Mtumiaji mpya %{username} amenyamazishwa na bendera za jumuia"
     spam_post_blocked:
       title: "Chapisho Taka Limezuiliwa"
       subject_template: "Machapisho ya mtumiaji mpya %{username} yamezuiliwa kwa sababu ya viungo vinavyojirudia"

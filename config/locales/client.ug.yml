@@ -869,7 +869,6 @@ ug:
         note_added_by: "%{username} · %{relativeDate} رىياسەتچى ئىزاھاتى"
         no_events: "كۆرسىتىدىغان ۋاقىت سىزىقى پائالىيىتى يوق"
       notes:
-        add_note_description: "رىياسەتچىگىلا كۆرۈنىدى. بۇ ئىزاھات ئارقىلىق تەكشۈرۈپ تەستىقلاشقا مۇناسىۋەتلىك مەزمۇن ياكى قارار قوشۇلىدۇ."
         add_note_button: "ئىزاھات قوش"
         placeholder: "بۇ جايغا ئىزاھاتىڭىزنى يېزىڭ…"
         chars_remaining: "%{count} ھەرپ قالدى"
@@ -3300,7 +3299,6 @@ ug:
         progress:
           one: "ئىلگىرىلىشى: <strong>%{count}</strong> تېما"
           other: "ئىلگىرىلىشى: <strong>%{count}</strong> تېما"
-        silent: "بۇ مەشغۇلاتنى جىمجىت ئىجرا قىلىدۇ."
         performing: "توپ مەشغۇلات ئىجرا قىلىۋاتىدۇ، سەل كۈتۈڭ…"
         completed: "توپ مەشغۇلات مۇۋەپپەقىيەتلىك تاماملاندى!"
       none:
@@ -5300,6 +5298,7 @@ ug:
       upcoming_changes:
         name: "ئىسمى"
         plugin: "قىستۇرما"
+        metadata: "تەپسىلىي سانلىق مەلۇمات"
         enabled: "قوزغىتىلدى"
         show_image: "سۈرەتنى كۆرسەت"
         groups_updated: "گۇرۇپپا يېڭىلاندى!"
@@ -7225,7 +7224,6 @@ ug:
           success: "مۇۋەپپەقىيەتلىك"
           exists: "ئاللىبۇرۇن مەۋجۇت"
           upload: "ھۆججەتتىن قوش"
-          upload_successful: "مۇۋەپپەقىيەتلىك يۈكلەندى. سۆز قوشۇلدى."
           case_sensitivity_label: "چوڭ كىچىك ھەرپكە سەزگۈر"
           case_sensitivity_description: "پەقەت چوڭ كىچىك ھەرپلەر ماس كەلگەن سۆزلا"
           html_label: "HTML"
