@@ -539,7 +539,9 @@ export default class PostStreamViewportTracker {
     const { target, isIntersecting } = entry;
     const post = elementsToPost.get(target);
 
-    if (isIntersecting) {
+    if (!post) {
+      return;
+    } else if (isIntersecting) {
       // entered the viewport
       this.#postsOnScreen[post.post_number] = { post, element: target };
     } else {
