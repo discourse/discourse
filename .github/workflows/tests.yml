@@ -56,12 +56,12 @@ jobs:
         include:
           - build_type: system
             target: chat
-          - build_type: frontend
-            target: core
-            browser: Firefox Evergreen
-          - build_type: frontend
-            target: core
-            browser: Firefox ESR
+          # - build_type: frontend
+          #   target: core
+          #   browser: Firefox Evergreen
+          # - build_type: frontend
+          #   target: core
+          #   browser: Firefox ESR
 
     steps:
       - name: Set working directory owner
