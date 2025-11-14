@@ -84,6 +84,8 @@ export default <template>
       }}
     />
 
+    <BlockLayout @name="hero-blocks" />
+
     <div id="main-outlet-wrapper" class="wrap" role="main">
       {{#if @controller.sidebarEnabled}}
         <SidebarWrapper
