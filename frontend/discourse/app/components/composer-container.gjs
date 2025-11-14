@@ -27,6 +27,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
+import forceScrollingElementPosition from "discourse/modifiers/force-scrolling-element-position";
 import grippieDragResize from "discourse/modifiers/grippie-drag-resize";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
@@ -122,6 +123,7 @@ export default class ComposerContainer extends Component {
 
         {{#if this.composer.model.viewOpenOrFullscreen}}
           <div
+            {{forceScrollingElementPosition}}
             role="dialog"
             aria-label={{this.composer.ariaLabel}}
             class="reply-area
