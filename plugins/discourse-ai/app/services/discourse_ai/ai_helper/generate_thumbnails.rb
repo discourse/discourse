@@ -89,11 +89,9 @@ module DiscourseAi
           upload_short_urls
             .map do |short_url|
               upload = Upload.find_by(sha1: Upload.sha1_from_short_url(short_url))
-              UploadSerializer.new(upload, root: false) if upload
+              UploadSerializer.new(upload, root: false).as_json if upload
             end
             .compact
-
-        fail!("no_image_generated") if thumbnails.empty?
 
         context[:thumbnails] = thumbnails
       end

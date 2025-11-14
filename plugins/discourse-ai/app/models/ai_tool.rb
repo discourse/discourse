@@ -294,6 +294,7 @@ end
 #  id                       :bigint           not null, primary key
 #  description              :string           not null
 #  enabled                  :boolean          default(TRUE), not null
+#  is_image_generation_tool :boolean          default(FALSE), not null
 #  name                     :string           not null
 #  parameters               :jsonb            not null
 #  rag_chunk_overlap_tokens :integer          default(10), not null

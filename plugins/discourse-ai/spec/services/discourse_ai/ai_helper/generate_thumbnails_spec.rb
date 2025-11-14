@@ -8,7 +8,6 @@ RSpec.describe DiscourseAi::AiHelper::GenerateThumbnails do
     fab!(:admin)
     fab!(:post_illustrator_persona) do
       AiPersona.create!(
-        id: -21,
         name: "Post Illustrator",
         description: "Generates images for posts",
         system_prompt: "Generate images",
@@ -38,7 +37,7 @@ RSpec.describe DiscourseAi::AiHelper::GenerateThumbnails do
     fab!(:upload) do
       Fabricate(
         :upload,
-        sha1: Upload.generate_digest_from_short_url("upload://test123"),
+        sha1: Upload.sha1_from_short_url("upload://test123"),
         original_filename: "test.png",
       )
     end
@@ -53,10 +52,7 @@ RSpec.describe DiscourseAi::AiHelper::GenerateThumbnails do
       SiteSetting.ai_helper_post_illustrator_persona = post_illustrator_persona.id
 
       # Configure PostIllustrator persona with the image tool
-      post_illustrator_persona.update!(
-        tools: [["custom-#{image_tool.id}", nil, true]],
-        force_tool_use: [["custom-#{image_tool.id}", nil, true]],
-      )
+      post_illustrator_persona.update!(tools: [["custom-#{image_tool.id}", nil, true]])
     end
 
     context "when text parameter is missing" do
@@ -80,7 +76,7 @@ RSpec.describe DiscourseAi::AiHelper::GenerateThumbnails do
     context "when persona has no image generation tool" do
       before do
         # Remove tools from persona
-        post_illustrator_persona.update!(tools: [], force_tool_use: [])
+        post_illustrator_persona.update!(tools: [])
       end
 
       it { is_expected.to fail_a_policy(:has_image_generation_tool) }
