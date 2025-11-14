@@ -929,9 +929,8 @@ class TopicView
         :deleted_by,
         :incoming_email,
         :image_upload,
-        :localizations,
       )
-
+    @posts = @posts.includes(:localizations) if SiteSetting.content_localization_enabled
     @posts = @posts.includes({ user: :user_status }) if SiteSetting.enable_user_status
 
     @posts = apply_default_scope(@posts)
