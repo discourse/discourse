@@ -4,11 +4,7 @@ import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import { modifier } from "ember-modifier";
 import componentForRow from "discourse/helpers/component-for-row";
-import {
-  disableBodyScroll,
-  enableBodyScroll,
-  locks,
-} from "discourse/lib/body-scroll-lock";
+import { getLockState, lock, unlock } from "discourse/lib/body-scroll-lock";
 import { resolveComponent } from "discourse/select-kit/components/select-kit";
 
 @tagName("")
@@ -20,17 +16,17 @@ export default class SelectKitCollection extends Component {
       return;
     }
 
-    const isChildOfLock = locks.some((lock) =>
-      lock.targetElement.contains(element)
+    const isChildOfLock = getLockState().lockedElements.some((locked) =>
+      locked.targetElement.contains(element)
     );
 
     if (isChildOfLock) {
-      disableBodyScroll(element);
+      lock(element);
     }
 
     return () => {
       if (isChildOfLock) {
-        enableBodyScroll(element);
+        unlock(element);
       }
     };
   });

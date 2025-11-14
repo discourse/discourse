@@ -1,7 +1,9 @@
 // @ts-check
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { translateModKey } from "discourse/lib/utilities";
+import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -82,7 +84,9 @@ export class ToolbarBase {
     createdButton.className ||= buttonAttrs.id;
     createdButton.condition ||= () => true;
 
-    createdButton.action = () => {
+    createdButton.action = async () => {
+      await waitForClosedKeyboard(this.context);
+
       const toolbarEvent = this.context.newToolbarEvent?.(
         buttonAttrs.trimLeading
       );
