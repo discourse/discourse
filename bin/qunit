@@ -273,10 +273,8 @@ class QunitRunner
       exit 0
     end
 
-    Dir.chdir(dir) do # rubocop:disable Discourse/NoChdir
-      system(env, *args)
-      exit $?.exitstatus
-    end
+    system(env, *args, chdir: dir)
+    exit $?.exitstatus
   end
 
   def convert_to_ember_relative_path(file_path)
