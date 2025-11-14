@@ -3,17 +3,28 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import { service } from "@ember/service";
 import { lock, unlock } from "discourse/lib/body-scroll-lock";
 import ChatScrollableList from "../modifiers/chat/scrollable-list";
 
 export default class ChatMessagesScroller extends Component {
+  @service site;
+
   @action
   lockBody(element) {
+    if (this.site.desktopView) {
+      return;
+    }
+
     lock(element, { reverseColumn: true });
   }
 
   @action
   unlockBody(element) {
+    if (this.site.desktopView) {
+      return;
+    }
+
     unlock(element);
   }
 

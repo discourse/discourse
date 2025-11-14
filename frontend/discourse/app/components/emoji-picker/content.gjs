@@ -69,6 +69,10 @@ export default class EmojiPicker extends Component {
   scrollableNode;
 
   setupSectionsNavScroll = modifierFn((element) => {
+    if (this.site.desktopView) {
+      return;
+    }
+
     lock(element);
 
     return () => {
@@ -78,13 +82,19 @@ export default class EmojiPicker extends Component {
 
   scrollListener = modifierFn((element) => {
     this.scrollableNode = element;
-    lock(element);
+    if (this.site.mobileView) {
+      lock(element);
+    }
+
     element.addEventListener("scroll", this._handleScroll);
 
     return () => {
       this.scrollableNode = null;
       element.removeEventListener("scroll", this._handleScroll);
-      unlock(element);
+
+      if (this.site.mobileView) {
+        unlock(element);
+      }
     };
   });
 
