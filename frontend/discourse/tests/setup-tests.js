@@ -53,6 +53,7 @@ import { loadSprites } from "../lib/svg-sprite-loader";
 import * as FakerModule from "@faker-js/faker";
 import { setLoadedFaker } from "discourse/lib/load-faker";
 
+const REPORT_MEMORY = false;
 let cancelled = false;
 let started = false;
 
@@ -186,6 +187,9 @@ function setupToolbar() {
 }
 
 function reportMemoryUsageAfterTests() {
+  if (!REPORT_MEMORY) {
+    return;
+  }
   QUnit.done(() => {
     const usageBytes = performance.memory?.usedJSHeapSize;
     let result;
