@@ -11,6 +11,7 @@ require_relative "runners/discoveries"
 require_relative "runners/inference"
 require_relative "runners/spam"
 require_relative "runners/summarization"
+require_relative "judge"
 
 module DiscourseAi
   module Evals
@@ -157,54 +158,7 @@ module DiscourseAi
                 )
         end
 
-        prompt = eval_case.judge[:prompt].dup
-
-        if result.is_a?(String)
-          prompt.sub!("{{output}}", result)
-          eval_case.args.each do |key, value|
-            prompt.sub!("{{#{key}}}", format_placeholder_value(value))
-          end
-        else
-          prompt.sub!("{{output}}", result[:result])
-          result.each { |key, value| prompt.sub!("{{#{key}}}", value.to_s) }
-        end
-
-        prompt += <<~SUFFIX
-
-          Reply with a rating from 1 to 10, where 10 is perfect and 1 is terrible.
-
-          example output:
-
-          [RATING]10[/RATING] perfect output
-
-          example output:
-
-          [RATING]5[/RATING]
-
-          the following failed to preserve... etc...
-        SUFFIX
-
-        DiscourseAi::Completions::Prompt.new(
-          "You are an expert judge tasked at testing LLM outputs.",
-          messages: [{ type: :user, content: prompt }],
-        )
-
-        judge_result =
-          judge_llm.to_llm.generate(prompt, user: Discourse.system_user, temperature: 0)
-
-        rating_match = judge_result.match(%r{\[RATING\](\d+)\[/RATING\]})
-        rating = rating_match ? rating_match[1].to_i : 0
-
-        if rating >= eval_case.judge[:pass_rating]
-          { result: :pass }
-        else
-          {
-            result: :fail,
-            message:
-              "LLM Rating below threshold, it was #{rating}, expecting #{eval_case.judge[:pass_rating]}",
-            context: judge_result,
-          }
-        end
+        DiscourseAi::Evals::Judge.new(eval_case: eval_case, judge_llm: judge_llm).evaluate(result)
       end
 
       # Extract text from an image upload by delegating to the ImageToText helper.
@@ -329,15 +283,6 @@ module DiscourseAi
         end
       rescue StandardError
         false
-      end
-
-      def format_placeholder_value(value)
-        case value
-        when Array
-          value.join("\n\n")
-        else
-          value.to_s
-        end
       end
     end
   end

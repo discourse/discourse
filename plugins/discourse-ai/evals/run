@@ -29,10 +29,10 @@ if options.list_features
   exit 0
 end
 
-DEFAULT_PERSONA_KEY = "default"
+default_persona_key = DiscourseAi::Evals::PersonaPromptLoader::DEFAULT_PERSONA_KEY
 
 if options.list_personas
-  puts "#{DEFAULT_PERSONA_KEY}: built-in persona prompt"
+  puts "#{default_persona_key}: built-in persona prompt"
   DiscourseAi::Evals::PersonaPromptLoader.list.each do |key, description|
     if description && !description.empty?
       puts "#{key}: #{description}"
@@ -97,13 +97,13 @@ persona_keys = Array(options.persona_keys).map { |key| key.to_s.strip }.reject(&
 
 persona_variants =
   if persona_keys.empty?
-    [{ key: DEFAULT_PERSONA_KEY, prompt: nil }]
+    [{ key: default_persona_key, prompt: nil }]
   else
     persona_keys.map do |key|
       trimmed_key = key.to_s.strip
 
-      if trimmed_key.downcase == DEFAULT_PERSONA_KEY
-        { key: DEFAULT_PERSONA_KEY, prompt: nil }
+      if trimmed_key.downcase == default_persona_key
+        { key: default_persona_key, prompt: nil }
       else
         prompt = DiscourseAi::Evals::PersonaPromptLoader.new.find_prompt(trimmed_key)
 
@@ -133,7 +133,7 @@ end
 persona_variants.each do |variant|
   if variant[:key]
     label =
-      if variant[:key] == DEFAULT_PERSONA_KEY
+      if variant[:key] == default_persona_key
         "default (built-in)"
       else
         variant[:key]
