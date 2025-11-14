@@ -12,6 +12,7 @@ const extension = {
       group: "block",
       createGapCursor: true,
       defining: true,
+      isolating: true,
       attrs: {
         username: { default: null },
         postNumber: { default: null },
