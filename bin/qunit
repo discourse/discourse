@@ -35,9 +35,7 @@ class QunitRunner
   end
 
   def run
-    if @dry_run
-      dry_run_tests
-    elsif @standalone_mode
+    if @standalone_mode
       run_standalone_mode
     elsif @file_paths.any?
       run_file_tests
@@ -217,41 +215,6 @@ class QunitRunner
     @file_paths = expanded.uniq
   end
 
-  def dry_run_tests
-    if @file_paths.empty?
-      puts "Error: No files specified"
-      exit 1
-    end
-
-    puts "Dry run - would execute the following tests:"
-    puts ""
-
-    @file_paths.each do |file_path|
-      @load_plugins = true if !@load_plugins && file_path.include?("plugins/")
-
-      relative_path = convert_to_ember_relative_path(file_path)
-      puts "File: #{file_path}"
-      puts "  ? Ember path: #{relative_path}"
-      puts ""
-    end
-
-    puts "=" * 60
-    puts "Total files: #{@file_paths.length}"
-    puts "Plugin mode: #{@load_plugins}"
-
-    file_path_filter = build_file_path_filter(@file_paths)
-
-    plugin_target = plugin_target_from_paths(@file_paths)
-    query = build_query_string(target: plugin_target)
-
-    puts ""
-    puts "Would run with:"
-    puts "  Target scope: #{plugin_target}" if query
-    puts "  ember exam --file-path \"#{file_path_filter}\" --path dist#{query ? " --query #{query}" : ""}"
-    puts "  (with LOAD_PLUGINS=1)" if @load_plugins
-    puts "=" * 60
-  end
-
   def run_file_tests
     if @file_paths.empty?
       puts "Error: No files specified"
@@ -351,7 +314,15 @@ class QunitRunner
       args << "--write-execution-file" if ENV["QUNIT_WRITE_EXECUTION_FILE"]
     end
 
-    puts "Executing #{args.inspect} with env: #{env.inspect}" if @verbose
+    puts <<~MESSAGE if @verbose || @dry_run
+        Executing: #{JSON.pretty_generate(args)}
+        with env: #{JSON.pretty_generate(env)}
+      MESSAGE
+
+    if @dry_run
+      puts "[dry-run] tests not executed"
+      exit 0
+    end
 
     Dir.chdir(dir) do # rubocop:disable Discourse/NoChdir
       system(env, *args)
@@ -398,6 +369,11 @@ class QunitRunner
   end
 
   def check_dev_environment!
+    if @dry_run
+      puts "[dry-run] skipping dev environment check"
+      return
+    end
+
     require "net/http"
 
     rails_ok = check_server(@rails_port, "Rails")
@@ -447,8 +423,12 @@ class QunitRunner
     unicorn_pid = nil
 
     begin
-      unicorn_pid =
-        Process.spawn(unicorn_env, File.join(rails_root, "bin", "unicorn"), pgroup: true)
+      if @dry_run
+        puts "[dry-run] - skipping unicorn startup"
+      else
+        unicorn_pid =
+          Process.spawn(unicorn_env, File.join(rails_root, "bin", "unicorn"), pgroup: true)
+      end
       wait_for_rails_server(@rails_port)
       run_ember_exam(
         query: build_standalone_query(include_filter: false, include_hidepassed: false),
@@ -466,6 +446,10 @@ class QunitRunner
   end
 
   def install_node_dependencies!
+    if @dry_run
+      puts "[dry-run] skipping pnpm install"
+      return
+    end
     system("pnpm", "install", exception: true)
   end
 
@@ -506,6 +490,11 @@ class QunitRunner
   end
 
   def wait_for_rails_server(port)
+    if @dry_run
+      puts "[dry-run] skipping Rails server warm-up"
+      return
+    end
+
     require "net/http"
     uri = URI("http://localhost:#{port}/srv/status")
     puts "Warming up Rails server"
@@ -531,6 +520,11 @@ class QunitRunner
   end
 
   def run_theme_build(unless_build_reused: false)
+    if @dry_run
+      puts "[dry-run] skipping ember build for themes"
+      return
+    end
+
     return if unless_build_reused
 
     system("pnpm", "ember", "build", chdir: frontend_dir, exception: true)
@@ -572,6 +566,10 @@ class QunitRunner
   end
 
   def stop_unicorn(pid, pid_path)
+    if @dry_run
+      puts "[dry-run] skipping unicorn shutdown"
+      return
+    end
     Process.kill("-KILL", pid)
   rescue Errno::ESRCH
   ensure
