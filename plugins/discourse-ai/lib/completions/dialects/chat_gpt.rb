@@ -122,6 +122,10 @@ module DiscourseAi
         def message_for_role(role, msg)
           content_array = []
 
+          if responses_api? && msg[:thinking_signature]
+            content_array << { type: "thinking_signature", signature: msg[:thinking_signature] }
+          end
+
           user_message = { role: }
 
           if msg[:id]
@@ -142,6 +146,7 @@ module DiscourseAi
               content: content_array.flatten,
               image_encoder: ->(details) { image_node(details) },
               text_encoder: ->(text) { text_node(text, role) },
+              other_encoder: ->(hash) { thinking_signature_node(hash) },
               allow_vision:,
             )
 
@@ -155,6 +160,10 @@ module DiscourseAi
           else
             content_array
           end
+        end
+
+        def thinking_signature_node(hash)
+          { type: "reasoning", encrypted_content: hash[:signature] } if responses_api?
         end
 
         def text_node(text, role)
