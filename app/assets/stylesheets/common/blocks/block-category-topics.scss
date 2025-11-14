@@ -1,0 +1,13 @@
+.block-category-topics {
+  &__layout {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+}
