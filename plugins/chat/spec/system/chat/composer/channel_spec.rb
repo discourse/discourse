@@ -145,8 +145,8 @@ RSpec.describe "Chat | composer | channel", type: :system do
       expect(actual_value).not_to end_with(incomplete_emoji_term),
       "Expected incomplete emoji term to be replaced with emoji but got: '#{actual_value}'"
 
-      expect(actual_value).to match(/Hello :\w+:$/),
-      "Expected format 'Hello :emoji_name:' but got: '#{actual_value}'"
+      expect(actual_value).to match(/Hello :\w+: $/),
+      "Expected format 'Hello :emoji_name: ' but got: '#{actual_value}'"
     end
   end
 end

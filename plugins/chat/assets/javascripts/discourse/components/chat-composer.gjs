@@ -427,11 +427,13 @@ export default class ChatComposer extends Component {
 
     if (context.emojiTermStart && context.emojiTermStart) {
       const value = textareaInteractor.textarea.value;
-      const newValue = `${value.substring(0, context.emojiTermStart)}:${emoji}:${value.substring(context.emojiTermEnd + 1)}`;
-      textareaInteractor.value = newValue;
-
-      const newPos = context.emojiTermStart + emoji.length + 2; // 2 for the surrounding colons
-      textareaInteractor.textarea.setSelectionRange(newPos, newPos);
+      const valueUpToCursor = `${value.substring(0, context.emojiTermStart)}:${emoji}: `;
+      const valueAfterCursor = value.substring(context.emojiTermEnd + 1);
+      textareaInteractor.value = `${valueUpToCursor}${valueAfterCursor}`;
+      textareaInteractor.textarea.setSelectionRange(
+        valueUpToCursor.length,
+        valueUpToCursor.length
+      );
     } else {
       textareaInteractor.emojiSelected(emoji);
     }
