@@ -2,6 +2,7 @@
   display: flex;
   align-items: center;
   position: relative;
+  width: min-content;
 }
 
 .d-otp-group {
@@ -55,7 +56,7 @@
 .d-otp-input {
   position: absolute;
   inset: 0;
-  width: 100%;
+  width: calc(100% + 40px);
   height: 100%;
   display: flex;
   text-align: left;
@@ -72,6 +73,11 @@
   font-size: var(--root-height);
   font-family: monospace;
   font-variant-numeric: tabular-nums;
+  clip-path: inset(0 40px 0 0);
+
+  &[data-com-onepassword-filled] {
+    background-clip: text;
+  }
 }
 
 @keyframes otp-cursor-blink {

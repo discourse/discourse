@@ -126,6 +126,12 @@ export default class LocalLoginForm extends Component {
   }
 
   @action
+  filledSecondFactorToken(otp) {
+    this.args.secondFactorTokenChanged(otp);
+    this.args.login();
+  }
+
+  @action
   handleForgotPassword(event) {
     event?.preventDefault();
 
@@ -260,6 +266,7 @@ export default class LocalLoginForm extends Component {
               {{on "keydown" this.loginOnEnter}}
               {{on "focusin" this.scrollInputIntoView}}
               @onChange={{fn (mut @secondFactorToken)}}
+              @onFill={{this.filledSecondFactorToken}}
               @secondFactorMethod={{@secondFactorMethod}}
               value={{@secondFactorToken}}
               id="login-second-factor"

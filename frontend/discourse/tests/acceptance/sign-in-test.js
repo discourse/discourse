@@ -98,7 +98,6 @@ acceptance("Signing In", function () {
       .isEnabled("enables the login button");
 
     await fillIn("#login-second-factor", "123456");
-    await click(".login-fullpage .btn-primary");
 
     assert
       .dom(".login-fullpage .btn-primary")

@@ -53,7 +53,6 @@ describe "Discourse Connect Provider", type: :system do
 
       totp = ROTP::TOTP.new(user_second_factor.data).now
       find("#login-second-factor").fill_in(with: totp)
-      login_form.click_login
 
       expect(page).to have_current_path(
         /#{Regexp.escape(return_url)}\?sso=.*&sig=[0-9a-f]+/,

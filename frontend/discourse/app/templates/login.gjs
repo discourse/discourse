@@ -96,6 +96,7 @@ export default <template>
                 @loginPasswordChanged={{@controller.loginPasswordChanged}}
                 @secondFactorMethod={{@controller.secondFactorMethod}}
                 @secondFactorToken={{@controller.secondFactorToken}}
+                @secondFactorTokenChanged={{@controller.secondFactorTokenChanged}}
                 @backupEnabled={{@controller.backupEnabled}}
                 @totpEnabled={{@controller.totpEnabled}}
                 @securityKeyAllowedCredentialIds={{@controller.securityKeyAllowedCredentialIds}}
