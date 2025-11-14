@@ -11,38 +11,31 @@ require_relative "../lib/chrome_installed_checker"
 class QunitRunner
   def initialize(args)
     @file_paths = []
-    @filter = nil
     @verbose = ENV["ACTIONS_STEP_DEBUG"] == "true"
     @dry_run = false
-
     @rails_port = ENV["UNICORN_PORT"]&.to_i || 3000
 
     @standalone_mode = false
+
     @parallel = ENV["QUNIT_PARALLEL"]
     @seed = ENV["QUNIT_SEED"]
-    @target = ENV["TARGET"]
-    @module = ENV["MODULE"]
     @theme_name = ENV["THEME_NAME"]
     @theme_url = ENV["THEME_URL"]
     @theme_id = ENV["THEME_ID"]
     @qunit_path = nil
     @rails_env = ENV["QUNIT_RAILS_ENV"] || "test"
-    @report_requests = ENV["REPORT_REQUESTS"] == "1"
-    @load_plugins = ENV["LOAD_PLUGINS"] == "1"
     @plugin_targets = []
+
+    @headless = true
 
     parse_options(args)
   end
 
   def run
     if @standalone_mode
-      run_standalone_mode
-    elsif @file_paths.any?
-      run_file_tests
-    elsif @filter
-      run_filter_tests
+      with_standalone_rails { run_tests }
     else
-      run_all_tests_quick
+      run_tests
     end
   end
 
@@ -54,9 +47,8 @@ class QunitRunner
         opts.banner = <<~BANNER
           Usage: bin/qunit [options] [files|directories]
 
-          Runs the Discourse QUnit suite through Ember Exam. With no arguments it runs
-          the entire suite against your dev servers; add --standalone to spin up an isolated
-          Rails/Ember stack (the same flow CI uses).
+          Runs the Discourse QUnit suite. By default, tests will be run against the running Rails server and existing JS assets.
+          Add --standalone to spin up an isolated Rails server and run a standalone asset build.
         BANNER
 
         opts.separator ""
@@ -68,61 +60,71 @@ class QunitRunner
 
         opts.on("--dry-run", "Show what would run without executing") { @dry_run = true }
 
-        opts.on("--rails-port PORT", Integer, "Rails server port (default: 3000)") do |port|
-          @rails_port = port
-        end
+        opts.on(
+          "--rails-port PORT",
+          Integer,
+          "Rails server port (default: 3000) (env: UNICORN_PORT)",
+        ) { |port| @rails_port = port }
 
         opts.on("--standalone", "Use standalone mode (spins up own test server)") do
           @standalone_mode = true
         end
 
-        opts.on("--parallel N", Integer, "Run tests in parallel (N workers)") do |n|
-          @parallel = n.to_s
+        opts.on(
+          "--parallel N",
+          Integer,
+          "Run tests in parallel (N workers) (env: QUNIT_PARALLEL)",
+        ) { |n| @parallel = n.to_s }
+
+        opts.on("--seed SEED", "Random seed for test order (env: QUNIT_SEED)") do |seed|
+          @seed = seed
         end
 
-        opts.on("--seed SEED", "Random seed for test order") { |seed| @seed = seed }
         opts.on(
           "--target TARGET",
-          "Target: 'core', 'plugins' (all plugins), or a single plugin name",
+          "Target: 'core', 'plugins' (all plugins), or comma separated plugin names",
         ) { |target| @target = target }
+
         opts.on("--module MODULE", "Run specific module") { |mod| @module = mod }
 
-        opts.on("--theme-name NAME", "Theme name for theme tests") { |name| @theme_name = name }
-
-        opts.on("--theme-url URL", "Theme URL for theme tests") { |url| @theme_url = url }
-        opts.on("--theme-id ID", "Theme ID for theme tests") { |id| @theme_id = id }
+        opts.on("--theme-name NAME", "Theme name for theme tests (env: THEME_NAME)") do |name|
+          @theme_name = name
+        end
+        opts.on("--theme-url URL", "Theme URL for theme tests (env: THEME_URL)") do
+          @theme_url = url
+        end
+        opts.on("--theme-id ID", "Theme ID for theme tests (env: THEME_ID)") { |id| @theme_id = id }
         opts.on("--qunit-path PATH", "QUnit path (e.g., /theme-qunit)") do |path|
           @qunit_path = path
         end
 
-        opts.on("--rails-env ENV", "Rails environment (default: test)") { |env| @rails_env = env }
+        opts.on("--rails-env ENV", "Rails environment (default: test) (env: RAILS_ENV)") do |env|
+          @rails_env = env
+        end
 
         opts.on("--report-requests", "Report HTTP requests during tests") do
           @report_requests = true
         end
 
-        opts.on("--load-plugins", "Load plugins") { @load_plugins = true }
+        opts.on("--[no-]headless", "Run tests in headless mode (env: QUNIT_HEADLESS)") do |h|
+          @headless = h
+        end
+
         opts.on("-v", "--verbose", "Verbose output") { @verbose = true }
+
         opts.on("-h", "--help", "Show this help message") do
           puts opts
           exit 0
         end
 
-        opts.separator ""
-        opts.separator "Notes:"
-        opts.separator "  - Files or directories ending in *-test.{js,gjs} flow through --file-path."
-        opts.separator "  - Paths containing plugins/ automatically enable plugin assets."
-        opts.separator "  - Environment defaults: EMBER_PORT, UNICORN_PORT, TARGET, MODULE, FILTER,"
-        opts.separator "    LOAD_PLUGINS, QUNIT_PARALLEL, QUNIT_SEED, QUNIT_SKIP_CORE, QUNIT_SINGLE_PLUGIN,"
-        opts.separator "    QUNIT_RAILS_ENV, QUNIT_PATH, THEME_NAME, THEME_URL, THEME_ID, REPORT_REQUESTS."
-
-        opts.separator ""
-        opts.separator "Examples:"
-        opts.separator "  bin/qunit frontend/discourse/tests/unit/models/user-test.js"
-        opts.separator "  bin/qunit --standalone --target plugins  # Run all plugin tests"
-        opts.separator "  bin/qunit --standalone --target chat     # Run single plugin tests"
-        opts.separator "  bin/qunit --standalone plugins/chat/test/javascripts/unit/lib/chat-audio-test.js"
-        opts.separator "  bin/qunit --standalone --filter \"Acceptance: Emoji\""
+        opts.separator <<~NOTES
+          \nExamples:
+            bin/qunit frontend/discourse/tests/unit/models/user-test.js
+            bin/qunit --standalone --target plugins  # Run all plugin tests
+            bin/qunit --standalone --target chat     # Run single plugin tests
+            bin/qunit --standalone plugins/chat/test/javascripts/unit/lib/chat-audio-test.js
+            bin/qunit --standalone --filter "Acceptance: Emoji"
+        NOTES
       end
 
     begin
@@ -134,43 +136,21 @@ class QunitRunner
       exit 1
     end
 
-    ensure_supported_target!(source: "--target")
+    ensure_supported_target!
 
     @file_paths = args
 
     detect_plugin_targets!
     expand_directory_paths!
-    apply_env_defaults!
-    auto_enable_plugin_loading_from_paths!
   end
 
   def detect_plugin_targets!
-    # Handle --target plugins (discover all)
-    if @target == "plugins"
+    if resolved_target.include?(",")
+      @plugin_targets = resolved_target.split(",").map(&:strip)
+      puts "Running tests for #{@plugin_targets.join(", ")}" if @verbose
+    elsif resolved_target == "plugins"
       @plugin_targets = find_all_plugins_with_tests
-      @load_plugins = true
       puts "Discovered #{@plugin_targets.length} plugins with tests" if @verbose
-      return
-    end
-
-    # Handle arguments that might be plugin names (not file paths)
-    # This happens when rake task passes plugin names for multi-target testing
-    potential_plugin_names = @file_paths.reject { |path| File.exist?(path) }
-    return if potential_plugin_names.empty?
-
-    plugins_dir = File.expand_path("../plugins", __dir__)
-    potential_plugin_names.each do |name|
-      plugin_path = File.join(plugins_dir, name)
-      if File.directory?(plugin_path)
-        @plugin_targets << resolve_plugin_namespace(name)
-      else
-        puts "Warning: '#{name}' is neither a file path nor a plugin directory"
-      end
-    end
-
-    if @plugin_targets.any?
-      @file_paths -= potential_plugin_names
-      @load_plugins = true
     end
   end
 
@@ -215,69 +195,35 @@ class QunitRunner
     @file_paths = expanded.uniq
   end
 
-  def run_file_tests
-    if @file_paths.empty?
-      puts "Error: No files specified"
-      exit 1
-    end
-
+  def run_tests
     ensure_file_paths_exist!
 
-    @file_paths.each do |file_path|
-      @load_plugins = true if !@load_plugins && file_path.include?("plugins/")
+    if @file_paths && @verbose
+      puts "Files to test: #{@file_paths.length}"
+      puts "  #{@file_paths.join("\n  ")}"
     end
 
-    puts "Files to test: #{@file_paths.length}" if @verbose
-    puts "  #{@file_paths.join("\n  ")}" if @verbose && @file_paths.length <= 10
-    puts "Load plugins: #{@load_plugins}" if @verbose
+    target = resolved_target
+    puts "Target: #{target}" if @verbose
 
     file_path_filter = build_file_path_filter(@file_paths)
 
-    puts "Using --file-path with #{@file_paths.length} file(s)" if @verbose
-
-    plugin_target = plugin_target_from_paths(@file_paths)
-    query = build_query_string(target: plugin_target)
-
-    puts "Target scope: #{plugin_target}" if plugin_target && @verbose
-
-    run_ember_exam(load_plugins: @load_plugins, file_path_filter: file_path_filter, query: query)
+    run_ember_exam(file_path_filter: file_path_filter, filter: @filter)
   end
 
-  def run_filter_tests
-    is_plugin = @load_plugins || @filter.downcase.include?("plugin") || @filter.include?("plugins/")
-
-    plugin_target = plugin_target_from_filter(@filter, is_plugin)
-    query = build_query_string(target: plugin_target)
-
-    puts "Target scope: #{plugin_target}" if plugin_target && @verbose
-
-    run_ember_exam(filter: @filter, load_plugins: is_plugin, query: query)
-  end
-
-  def run_all_tests_quick
-    if @plugin_targets.any?
-      puts "\nRunning tests for #{@plugin_targets.length} plugin(s) in parallel"
-      run_ember_exam(load_plugins: true)
-    else
-      load_plugins = should_load_plugins?
-      query = build_standalone_query(include_filter: false, include_hidepassed: false)
-      run_ember_exam(load_plugins: load_plugins, query: query)
-    end
-  end
-
-  def run_ember_exam(filter: nil, load_plugins:, file_path_filter: nil, query: nil)
+  def run_ember_exam(filter: nil, file_path_filter: nil)
     check_dev_environment!
 
     puts "\nRunning tests against Rails on localhost:#{@rails_port}"
+    puts "  Using existing build in frontend/discourse/dist" unless @standalone_mode
+
     if @plugin_targets.any?
       puts "  Plugins: #{@plugin_targets.join(", ")}"
     elsif file_path_filter
-      puts "  Using --file-path filter"
-      puts "  Additional filter: #{filter}" if filter
-    else
-      puts "  Filter: #{filter || "(none)"}"
+      puts "  Filtered by file path" if file_path_filter
     end
-    puts "  Load plugins: #{load_plugins}" if load_plugins
+    puts "  Filter: #{filter}" if filter
+    puts "  Load plugins: #{should_load_plugins?}"
     puts ""
 
     dir = frontend_dir
@@ -288,14 +234,17 @@ class QunitRunner
     end
 
     env = {}
-    env["LOAD_PLUGINS"] = "1" if load_plugins
+    env["LOAD_PLUGINS"] = should_load_plugins? ? "1" : "0"
     env["REPORT_REQUESTS"] = "1" if @report_requests
     env["UNICORN_PORT"] = @rails_port.to_s
     env["TESTEM_DEFAULT_BROWSER"] = ENV["TESTEM_DEFAULT_BROWSER"] || detect_browser
     env["PLUGIN_TARGETS"] = @plugin_targets.join(",") if @plugin_targets.any?
+    env["QUNIT_HEADLESS"] = "0" if !@headless
 
     parallel = !@plugin_targets.any? && present_string(@parallel)
     reuse_build = ENV["QUNIT_REUSE_BUILD"] == "1" || !@standalone_mode
+
+    query = build_query
 
     args = []
 
@@ -315,9 +264,9 @@ class QunitRunner
     end
 
     puts <<~MESSAGE if @verbose || @dry_run
-        Executing: #{JSON.pretty_generate(args)}
-        with env: #{JSON.pretty_generate(env)}
-      MESSAGE
+      Executing: #{JSON.pretty_generate(args)}
+      with env: #{JSON.pretty_generate(env)}
+    MESSAGE
 
     if @dry_run
       puts "[dry-run] tests not executed"
@@ -412,7 +361,7 @@ class QunitRunner
     end
   end
 
-  def run_standalone_mode
+  def with_standalone_rails(&block)
     puts "Running in standalone mode (spinning up test server)..." if @verbose
 
     ensure_pnpm_installed!
@@ -424,17 +373,13 @@ class QunitRunner
 
     begin
       if @dry_run
-        puts "[dry-run] - skipping unicorn startup"
+        puts "[dry-run] skipping unicorn startup"
       else
         unicorn_pid =
           Process.spawn(unicorn_env, File.join(rails_root, "bin", "unicorn"), pgroup: true)
       end
       wait_for_rails_server(@rails_port)
-      run_ember_exam(
-        query: build_standalone_query(include_filter: false, include_hidepassed: false),
-        load_plugins: should_load_plugins?,
-        file_path_filter: build_file_path_filter(@file_paths),
-      )
+      yield
     ensure
       stop_unicorn(unicorn_pid, unicorn_env["UNICORN_PID_PATH"]) if unicorn_pid
     end
@@ -486,6 +431,7 @@ class QunitRunner
       "LOGSTASH_UNICORN_URI" => nil,
       "UNICORN_WORKERS" => "1",
       "UNICORN_TIMEOUT" => "90",
+      "LOAD_PLUGINS" => should_load_plugins? ? "1" : "0",
     }
   end
 
@@ -550,19 +496,17 @@ class QunitRunner
     relative_paths.join(",")
   end
 
-  def build_standalone_query(include_filter: true, include_hidepassed: true)
+  def build_query
     params = {}
     params["seed"] = resolved_seed
-    params["hidepassed"] = 1 if include_hidepassed
     params["module"] = @module if @module
-    params["filter"] = @filter if include_filter && @filter
     params["theme_name"] = @theme_name if @theme_name
     params["theme_url"] = @theme_url if @theme_url
     params["theme_id"] = @theme_id if @theme_id
     params["target"] = resolved_target if resolved_target && !@plugin_targets.any?
     params["report_requests"] = "1" if @report_requests
 
-    build_query_string(params)
+    encode_query_string(params)
   end
 
   def stop_unicorn(pid, pid_path)
@@ -584,62 +528,40 @@ class QunitRunner
     @frontend_dir ||= File.expand_path("../frontend/discourse", __dir__)
   end
 
-  def plugin_target_from_paths(paths)
-    plugin_names = plugin_names_from_paths(paths)
-    return nil if plugin_names.empty?
-
-    ensure_single_plugin_target!(plugin_names, source: "paths")
-
-    if paths.any? { |path| !plugin_path?(path) }
-      abort "Error: Cannot mix plugin and core paths when targeting '#{plugin_names.first}'."
-    end
-
-    plugin_names.first
-  end
-
   def resolved_target
-    return @resolved_target if defined?(@resolved_target)
+    @resolved_target ||=
+      begin
+        implicit_target = (target_from_paths(@file_paths) if @file_paths.any?)
 
-    target = present_string(@target)
-    target ||= plugin_target_from_paths(@file_paths)
-    target ||= resolved_filter_target
+        if @target && implicit_target && @target != implicit_target
+          puts "Files are for '#{implicit_target}', but target was configured as '#{@target}'"
+          exit 1
+        end
 
-    @resolved_target = target
+        implicit_target || @target || "core"
+      end
   end
 
   def resolved_seed
-    return @resolved_seed if defined?(@resolved_seed)
-
-    @resolved_seed = present_string(@seed) || Random.new.seed
-  end
-
-  def resolved_filter_target
-    return nil unless @filter
-
-    plugin_target_from_filter(@filter, plugin_filter?)
-  end
-
-  def plugin_filter?
-    return false unless @filter
-
-    @load_plugins || @filter.downcase.include?("plugin") || @filter.include?("plugins/")
+    @resolved_seed ||= present_string(@seed) || Random.new.seed
   end
 
   def should_load_plugins?
-    return true if @load_plugins
-    return true if @file_paths.any? { |path| plugin_path?(path) }
-
-    target = resolved_target
-    target && target != "core"
+    resolved_target != "core"
   end
 
-  def plugin_names_from_paths(paths)
-    paths.filter_map { |path| plugin_name_from_path(path) }.uniq
+  def target_from_paths(paths)
+    targets = paths.map { |path| target_from_path(path) }.uniq
+    if targets.length > 1
+      puts "Error: Cannot mix multiple plugin/core targets when running specific files"
+      exit 1
+    end
+    targets.first
   end
 
-  def plugin_name_from_path(path)
+  def target_from_path(path)
     match = path.match(%r{(?:^|/)plugins/([^/]+)/})
-    return nil unless match
+    return "core" unless match
 
     resolve_plugin_namespace(match[1])
   end
@@ -648,18 +570,7 @@ class QunitRunner
     path.match?(%r{(?:^|/)plugins/})
   end
 
-  def plugin_target_from_filter(filter, is_plugin)
-    return nil unless is_plugin && filter
-
-    plugin_names = plugin_names_from_filter(filter)
-    return nil if plugin_names.empty?
-
-    ensure_single_plugin_target!(plugin_names, source: "--filter")
-
-    plugin_names.first
-  end
-
-  def build_query_string(params = {})
+  def encode_query_string(params = {})
     cleaned = params.compact
     return nil if cleaned.empty?
 
@@ -697,38 +608,7 @@ class QunitRunner
   end
 
   def normalize_plugin_test_path(path)
-    return "" unless path
-
     path.sub(%r{\Atests?/javascripts/}, "")
-  end
-
-  def auto_enable_plugin_loading_from_paths!
-    return if @load_plugins
-
-    @load_plugins = true if @file_paths.any? { |path| plugin_path?(path) }
-  end
-
-  def apply_env_defaults!
-    @parallel ||= ENV["QUNIT_PARALLEL"]
-    @seed ||= ENV["QUNIT_SEED"]
-
-    env_target = present_string(ENV["TARGET"])
-    @target ||= env_target
-    @module ||= ENV["MODULE"]
-    @qunit_single_plugin ||= ENV["QUNIT_SINGLE_PLUGIN"]
-    @theme_name ||= ENV["THEME_NAME"]
-    @theme_url ||= ENV["THEME_URL"]
-    @theme_id ||= ENV["THEME_ID"]
-    @qunit_path ||= ENV["QUNIT_PATH"]
-    @rails_env ||= ENV["QUNIT_RAILS_ENV"]
-    @report_requests ||= ENV["REPORT_REQUESTS"] == "1"
-    @load_plugins = ENV["LOAD_PLUGINS"] == "1" if @load_plugins.nil? && ENV.key?("LOAD_PLUGINS")
-    @filter ||= ENV["FILTER"]
-
-    ensure_supported_target!(source: "TARGET env var") if env_target
-
-    # Auto-enable plugin loading when targeting plugins
-    @load_plugins = true if @target && @target != "core" && !@load_plugins
   end
 
   def plugin_names_from_filter(filter)
@@ -737,20 +617,13 @@ class QunitRunner
     filter.scan(%r{plugins/([^/]+)/}).flatten.uniq.map { |dir| resolve_plugin_namespace(dir) }
   end
 
-  def ensure_single_plugin_target!(plugin_names, source: nil)
-    return if plugin_names.length <= 1
-
-    label = source ? " via #{source}" : ""
-    abort "Error: Multiple plugins detected#{label}: #{plugin_names.join(", ")}. Run one plugin at a time."
-  end
-
-  def ensure_supported_target!(source: "--target")
+  def ensure_supported_target!
     value = present_string(@target)
     return unless value
 
     normalized = value.downcase
     if normalized == "all"
-      abort "Error: Target 'all' is no longer supported. Use 'core' or 'plugins' via #{source}."
+      abort "Error: Target 'all' is no longer supported. Use 'core' or 'plugins'."
     end
   end
 end
