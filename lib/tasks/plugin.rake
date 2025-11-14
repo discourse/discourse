@@ -102,16 +102,6 @@ def update_plugin(plugin)
   abort("Unable to pull latest version of plugin #{plugin_path}") unless update_status
 end
 
-def plugin_test_directories_for(name)
-  base = Rails.root.join("plugins", name)
-  return [] unless Dir.exist?(base)
-
-  %w[test/javascripts test]
-    .map { |sub| base.join(sub) }
-    .select { |path| Dir.exist?(path) }
-    .map { |path| path.relative_path_from(Rails.root).to_s }
-end
-
 desc "update all plugins"
 task "plugin:update_all" do |t|
   # Loop through each directory
