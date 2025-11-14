@@ -294,7 +294,7 @@ class QunitRunner
     env["TESTEM_DEFAULT_BROWSER"] = ENV["TESTEM_DEFAULT_BROWSER"] || detect_browser
     env["PLUGIN_TARGETS"] = @plugin_targets.join(",") if @plugin_targets.any?
 
-    parallel = present_string(@parallel) && !@plugin_targets.any?
+    parallel = !@plugin_targets.any? && present_string(@parallel)
     reuse_build = ENV["QUNIT_REUSE_BUILD"] == "1" || !@standalone_mode
 
     args = []
