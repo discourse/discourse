@@ -74,6 +74,11 @@ describe "User Card", type: :system do
         expect(user_card).to have_profile_hidden
         expect(user_card).to have_filter_button
         expect(user_card.filter_button_text).to match(I18n.t("js.topic.filter_to", count: 2))
+
+        user_card.click_filter_button
+        expect(topic_page).to have_filtered_notice_text(
+          I18n.t("js.post.filtered_replies.viewing_posts_by", post_count: 2),
+        )
       end
     end
 
@@ -92,6 +97,11 @@ describe "User Card", type: :system do
         expect(user_card).to have_inactive_user
         expect(user_card).to have_filter_button
         expect(user_card.filter_button_text).to match(I18n.t("js.topic.filter_to", count: 2))
+
+        user_card.click_filter_button
+        expect(topic_page).to have_filtered_notice_text(
+          I18n.t("js.post.filtered_replies.viewing_posts_by", post_count: 2),
+        )
       end
     end
   end
