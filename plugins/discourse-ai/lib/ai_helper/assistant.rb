@@ -291,6 +291,11 @@ module DiscourseAi
 
       def persona_has_image_generation_tool?(persona)
         persona&.has_image_generation_tool?
+      rescue StandardError => e
+        Rails.logger.warn(
+          "Failed to check image generation tool for persona #{persona&.id}: #{e.message}",
+        )
+        false
       end
 
       def build_bot(helper_mode, user)
