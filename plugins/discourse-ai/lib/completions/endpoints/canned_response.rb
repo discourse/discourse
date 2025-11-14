@@ -44,33 +44,24 @@ module DiscourseAi
           raise response if response.is_a?(StandardError)
 
           @completions += 1
+          response_enum = response.is_a?(Array) ? response : [response]
           if block_given?
             cancelled = false
             cancel_fn = lambda { cancelled = true }
 
-            # We buffer and return tool invocations in one go.
-            as_array = response.is_a?(Array) ? response : [response]
-            as_array.each do |_response|
-              if is_tool?(_response)
-                yield(_response, cancel_fn)
-              elsif is_thinking?(_response)
-                yield(_response, cancel_fn)
-              elsif model_params[:response_format].present?
-                structured_output = as_structured_output(_response)
-                yield(structured_output, cancel_fn)
-              else
-                _response.each_char do |char|
-                  break if cancelled
-                  yield(char, cancel_fn)
-                end
-              end
+            response_enum.each do |chunk|
+              handle_response_chunk(chunk, cancel_fn) { |val| yield(val, cancel_fn) if !cancelled }
             end
           end
 
-          response = response.first if response.is_a?(Array) && response.length == 1
-          response = as_structured_output(response) if model_params[:response_format].present?
+          final_response =
+            if model_params[:response_format].present?
+              aggregate_structured_response(response_enum)
+            else
+              response_enum.length == 1 ? response_enum.first : response_enum
+            end
 
-          response
+          final_response
         end
 
         def tokenizer
@@ -78,6 +69,44 @@ module DiscourseAi
         end
 
         private
+
+        def handle_response_chunk(chunk, cancel_fn)
+          if is_tool?(chunk)
+            yield chunk
+          elsif is_thinking?(chunk)
+            yield chunk
+          elsif model_params[:response_format].present?
+            structured =
+              (
+                if chunk.is_a?(DiscourseAi::Completions::StructuredOutput)
+                  chunk
+                else
+                  as_structured_output(chunk)
+                end
+              )
+            yield structured
+          else
+            chunk.to_s.each_char { |char| yield char }
+          end
+        end
+
+        def aggregate_structured_response(response_enum)
+          schema_properties = model_params[:response_format].dig(:json_schema, :schema, :properties)
+          output = DiscourseAi::Completions::StructuredOutput.new(schema_properties)
+
+          response_enum.each do |chunk|
+            structured =
+              if chunk.is_a?(DiscourseAi::Completions::StructuredOutput)
+                chunk
+              else
+                as_structured_output(chunk)
+              end
+            output << structured.to_s
+          end
+
+          output.finish
+          output
+        end
 
         def is_thinking?(response)
           response.is_a?(DiscourseAi::Completions::Thinking)
@@ -95,6 +124,7 @@ module DiscourseAi
 
           payload =
             if parsed.is_a?(Hash)
+              parsed = parsed.stringify_keys
               schema_properties
                 .keys
                 .each_with_object({}) do |key, memo|

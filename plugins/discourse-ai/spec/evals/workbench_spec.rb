@@ -203,7 +203,7 @@ RSpec.describe DiscourseAi::Evals::Workbench do
           input: "Source content",
         },
         judge: {
-          prompt: "Score {{output}} against {{input}}",
+          criteria: "Score the output against the provided input, rewarding accuracy and clarity.",
           pass_rating: 7,
         },
       )
