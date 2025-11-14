@@ -6,6 +6,7 @@ require "json"
 require "fileutils"
 require "socket"
 require "uri"
+require "net/http"
 require_relative "../lib/chrome_installed_checker"
 
 class QunitRunner
@@ -321,8 +322,6 @@ class QunitRunner
       return
     end
 
-    require "net/http"
-
     rails_ok = check_server(@rails_port, "Rails")
 
     unless rails_ok
@@ -438,8 +437,6 @@ class QunitRunner
       puts "[dry-run] skipping Rails server warm-up"
       return
     end
-
-    require "net/http"
     uri = URI("http://localhost:#{port}/srv/status")
     puts "Warming up Rails server"
 
