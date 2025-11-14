@@ -20,6 +20,9 @@ patchedDependencies:
   ember-this-fallback@0.4.0:
     hash: znalyv6akdxlqfpmxunrdi3osa
     path: patches/ember-this-fallback@0.4.0.patch
+  http-proxy@1.18.1:
+    hash: vc2kfsffcvrsolo4uxmulpid3i
+    path: patches/http-proxy@1.18.1.patch
   licensee@11.1.1:
     hash: 55h346kvblvnigtrwrsh4hpona
     path: patches/licensee@11.1.1.patch
@@ -13814,7 +13817,7 @@ snapshots:
       heimdalljs-fs-monitor: 1.1.2
       heimdalljs-graph: 1.0.0
       heimdalljs-logger: 0.1.10
-      http-proxy: 1.18.1
+      http-proxy: 1.18.1(patch_hash=vc2kfsffcvrsolo4uxmulpid3i)
       inflection: 2.0.1
       inquirer: 9.3.8(@types/node@24.9.2)
       is-git-url: 1.0.0
@@ -15501,7 +15504,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  http-proxy@1.18.1:
+  http-proxy@1.18.1(patch_hash=vc2kfsffcvrsolo4uxmulpid3i):
     dependencies:
       eventemitter3: 4.0.7
       follow-redirects: 1.15.11
@@ -18609,7 +18612,7 @@ snapshots:
       express: 4.21.2
       fireworm: 0.7.2
       glob: 7.2.3
-      http-proxy: 1.18.1
+      http-proxy: 1.18.1(patch_hash=vc2kfsffcvrsolo4uxmulpid3i)
       js-yaml: 3.14.1
       lodash: 4.17.21
       mkdirp: 3.0.1
