@@ -187,6 +187,30 @@
     .user-card-avatar {
       margin-top: var(--avatar-margin);
       max-height: var(--avatar-width);
+      position: relative;
+
+      .own-avatar-pencil {
+        opacity: 0; // only visible on hover
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        font-size: 1.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: opacity 0.2s;
+
+        .d-icon {
+          background-color: rgb(var(--secondary-rgb), 0.75);
+          border-radius: 50%;
+          padding: 1.5rem;
+          color: var(--primary);
+        }
+      }
+
+      &:hover .own-avatar-pencil {
+        opacity: 0.75;
+      }
     }
 
     .avatar {
