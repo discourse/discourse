@@ -14,7 +14,7 @@ RSpec.describe DiscourseAi::Evals::Judge do
         input: "Source text",
       },
       judge: {
-        prompt: "Score {{output}} vs {{input}}",
+        criteria: "Score the candidate output based on how well it explains the input.",
         pass_rating: 7,
       },
     )
@@ -45,7 +45,7 @@ RSpec.describe DiscourseAi::Evals::Judge do
     judge.evaluate({ result: "hash-output" })
 
     expect(llm_proxy).to have_received(:generate).with(
-      include("hash-output"),
+      satisfy { |prompt| prompt.messages.any? { |msg| msg[:content].include?("hash-output") } },
       user: Discourse.system_user,
       temperature: 0,
       response_format: DiscourseAi::Evals::Judge::RESPONSE_FORMAT,

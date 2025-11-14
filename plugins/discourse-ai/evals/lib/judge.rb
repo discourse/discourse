@@ -2,11 +2,11 @@
 
 module DiscourseAi
   module Evals
-    # Evaluates model outputs using the judge configuration embedded in the eval.
+    # Evaluates model outputs using the criteria embedded in the eval.
     #
-    # Today it supports the single-output flow that compares one result against
-    # a rubric. The class encapsulates the placeholder substitution and rating
-    # parsing logic so future comparison judges can reuse the same entry point.
+    # Today it supports the single-output flow that scores one result against a
+    # rubric. It encapsulates prompt construction and rating parsing so future
+    # comparison judges can reuse the same entry point.
     class Judge
       RESPONSE_FORMAT = {
         type: "json_schema",
@@ -31,23 +31,22 @@ module DiscourseAi
       }.freeze
 
       def initialize(eval_case:, judge_llm:)
+        judge_config = eval_case.judge || {}
         @eval_case = eval_case
         @judge_llm = judge_llm
-        @config = eval_case.judge || {}
+        @criteria = judge_config[:criteria].presence || judge_config[:prompt].to_s
+        @pass_rating = judge_config[:pass_rating] || 10
       end
 
       def evaluate(result)
         prompt = build_prompt(result)
-
         response =
-          judge_llm
-            .to_llm
-            .generate(
-              prompt,
-              user: Discourse.system_user,
-              temperature: 0,
-              response_format: RESPONSE_FORMAT,
-            ) { |partial| structured_output = partial }
+          judge_llm.to_llm.generate(
+            prompt,
+            user: Discourse.system_user,
+            temperature: 0,
+            response_format: RESPONSE_FORMAT,
+          )
 
         parsed = parse_response(response)
         rating = parsed[:rating]
@@ -67,27 +66,50 @@ module DiscourseAi
 
       private
 
-      attr_reader :eval_case, :judge_llm, :config
+      attr_reader :eval_case, :judge_llm, :criteria, :pass_rating
 
       def build_prompt(result)
-        prompt = (config[:prompt] || "").dup
+        output_text, metadata = normalize_result(result)
+        sections = []
+        rubric_text =
+          if criteria.present?
+            criteria.strip
+          else
+            "Score the output purely on accuracy, completeness, and adherence to the task instructions."
+          end
 
-        if result.is_a?(String)
-          prompt.sub!("{{output}}", result)
-          inject_args(prompt)
-        else
-          prompt.sub!("{{output}}", result[:result].to_s)
-          result.each { |key, value| prompt.sub!("{{#{key}}}", value.to_s) }
-        end
+        sections << "Grading rubric:\n#{rubric_text}"
+        sections << "Candidate output:\n#{output_text}"
+        sections.concat(metadata)
 
-        prompt << prompt_suffix
+        sections << prompt_suffix
+
+        DiscourseAi::Completions::Prompt.new(
+          "You are an expert judge evaluating LLM outputs.",
+          messages: [{ type: :user, content: sections.join("\n\n") }],
+        )
       end
 
-      def inject_args(prompt)
-        args = eval_case.args
-        return unless args.respond_to?(:each)
+      def normalize_result(result)
+        if result.is_a?(String)
+          [result, formatted_args]
+        elsif result.is_a?(Hash)
+          output = result[:result].to_s
+          other_metadata =
+            result
+              .except(:result)
+              .map { |key, value| "extra #{key}:\n#{format_placeholder_value(value)}" }
+          [output, formatted_args + other_metadata]
+        else
+          [result.to_s, formatted_args]
+        end
+      end
 
-        args.each { |key, value| prompt.sub!("{{#{key}}}", format_placeholder_value(value)) }
+      def formatted_args
+        args = eval_case.args
+        return [] unless args.is_a?(Hash)
+
+        args.map { |key, value| "Source #{key}:\n#{format_placeholder_value(value)}" }
       end
 
       def format_placeholder_value(value)
@@ -131,10 +153,6 @@ module DiscourseAi
         end
 
         { rating: rating.to_i, explanation: explanation.to_s.strip, raw: raw }
-      end
-
-      def pass_rating
-        config[:pass_rating] || 10
       end
     end
   end
