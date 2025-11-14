@@ -409,7 +409,7 @@ ar:
       header:
         logged_in_members: "مرحبًا بعودتك يا %{preferred_display_name}!"
         anonymous_members: "مرحبًا بك في %{site_name}!"
-      search: "البحث"
+      search_placeholder: "البحث"
     themes:
       default_description: "افتراضي"
       broken_theme_alert: "قد لا يعمل موقعك بسبب وجود أخطاء في أحد السمات/المكوِّنات. راجع وحدة تحكم المتصفح للحصول على مزيد من المعلومات."
@@ -904,10 +904,6 @@ ar:
         claimed_by_you: "لقد طالبت بهذا العنصر ويمكنك مراجعته."
         claimed_by_other: "لا يمكن مراجعة هذا العنصر إلا بواسطة <b>%{username}</b>."
         automatically_claimed_by: "هذا العنصر قيد المراجعة حاليًا من طرف <b>%{username}</b>."
-      claim:
-        title: "المطالبة بهذا الموضوع"
-      unclaim:
-        help: "إزالة هذه المطالبة"
       awaiting_approval: "في انتظار الموافقة"
       delete: "حذف"
       settings:
@@ -1006,7 +1002,7 @@ ar:
         few: "%{count} ردود"
         many: "%{count} ردًا"
         other: "%{count} رد"
-      edit: "تعديل"
+      edit: "تعديل المنشور"
       save: "حفظ"
       cancel: "إلغاء"
       new_topic: "ستؤدي الموافقة على هذا العنصر إلى إنشاء موضوع جديد"
@@ -1028,7 +1024,6 @@ ar:
           created_at: "تاريخ الإنشاء"
           created_at_asc: "تاريخ الإنشاء (عكسي)"
         priority:
-          title: "الحد الأدنى للأولوية"
           any: "(أي)"
           low: "منخفضة"
           medium: "متوسطة"
@@ -1093,6 +1088,7 @@ ar:
           title: "المنشور"
           noun: "منشور"
       flagged_as: "صفة الإبلاغ"
+      user_label: "المستخدم"
       assigned_to: "معيَّنة إلى"
       moderator_actions: "الإجراءات المتاحة للمشرفين"
       timeline_and_notes: "المخطط الزمني والملاحظات"
@@ -1116,13 +1112,14 @@ ar:
         chars_remaining: "متبقي %{count} من الحروف"
         delete_note: "حذف هذه الملاحظة"
         delete: "حذف"
-      new_topic_label: "موضوع جديد"
+      topic_label: "الموضوع"
       queued_user: "مستخدم في قائمة الانتظار"
       posted_in: "نُشر في"
       flagged_user: "المستخدم المبلَّغ عنه"
       review_user: "المستخدم"
       need_help: "هل تحتاج إلى مساعدة؟"
       copy_link: "نسخ الرابط"
+      copy_link_feedback: "تم نسخ الرابط"
       view_source: "عرض المصدر"
       insights:
         title: "الرؤى"
@@ -1134,9 +1131,6 @@ ar:
           few: "جرى الإبلاغ بواسطة %{count} مستخدمين مختلفين"
           many: "جرى الإبلاغ بواسطة %{count} مستخدمًا مختلفًا"
           other: "جرى الإبلاغ بواسطة %{count} مستخدم مختلف"
-        similar_posts: "المنشورات السابقة المشابهة"
-        flagged_in_timeframe: "تم الإبلاغ عن %{count} سابقًا"
-        user_activity: "نشاط المستخدم"
         activities:
           new_account: "حساب جديد"
           trust_level: "مستوى الثقة: %{trustLevelName}"
@@ -3215,7 +3209,7 @@ ar:
         title: "جاري ترجمة المنشور"
         select: "اختر الترجمة"
         save: "احفظ الترجمة"
-        original_content: "المحتوى الأصلي للمنشور"
+        translation: "ترجمة"
         placeholder: "أدخل ترجمة المنشور هنا…"
       group_mentioned_limit:
         zero: "<b>تحذير!</b>لقد أشرت إلى <a href='%{group_link}'>%{group}</a>، لكن هذه المجموعة تتضمَّن عدد أعضاء أكثر من حد الإشارة الذي عيَّنه المسؤول وهو %{count} مستخدم. لن يتم إرسال إشعار إلى أي أحد."
@@ -3409,6 +3403,9 @@ ar:
         create_topic:
           label: "موضوع جديد"
           desc: أنشئ موضوعًا جديدًا
+        create_personal_message:
+          label: "رسالة جديدة"
+          desc: "إنشاء رسالة خاصة جديدة"
         shared_draft:
           label: "مسودة مشتركة"
           desc: "إنشاء مسودة الموضوع ستكون مرئية للمستخدمين المسموح لهم فقط"
@@ -3417,7 +3414,6 @@ ar:
           desc: "الرد دون تغيير تاريخ آخر رد"
         toggle_unlisted:
           label: تفعيل إلغاء الإدراج
-          desc: يُتاح الوصول إلى الموضوعات غير المدرجة للأعضاء فقط من خلال الرابط المباشر
       reload: "إعادة التحميل"
       ignore: "تجاهل"
       image_alt_text:
@@ -4037,7 +4033,7 @@ ar:
         many: "%{count} منشورًا في الموضوع"
         other: "%{count} منشور في الموضوع"
       create: "موضوع جديد"
-      create_long: "إنشاء موضوع جديد"
+      create_long: "أنشئ موضوعًا جديدًا"
       open_draft: "فتح المسودة"
       private_message: "إنشاء رسالة"
       archive_message:
@@ -5478,7 +5474,6 @@ ar:
         go_to_unread_post: "%{shortcut} الانتقال إلى أول منشور غير مقروء"
       application:
         title: "التطبيق"
-        create: "%{shortcut} إنشاء موضوع جديد"
         notifications: "%{shortcut} فتح الإخطارات"
         hamburger_menu: "%{shortcut} فتح قائمة التنقل"
         user_profile_menu: "%{shortcut} فتح قائمة المستخدم"
@@ -6249,6 +6244,7 @@ ar:
   admin_js:
     type_to_filter: "اكتب للتصفية…"
     settings: "الإعدادات"
+    reset_filter: "إعادة التعيين"
     admin:
       title: "مسؤول Discourse"
       moderator: "مشرف"
@@ -6281,6 +6277,21 @@ ar:
           title: "المكونات الإضافية"
         advanced:
           title: "متقدمة"
+      upcoming_changes:
+        name: "الاسم"
+        enabled: "مفعَّلة"
+        select_groups: "تحديد المجموعات…"
+        preview: "معاينة"
+        impact_roles:
+          admins: "المسؤولون"
+          moderators: "المشرفون"
+          staff: "فريق العمل"
+        filter:
+          all: "الكل"
+          enabled: "مفعَّلة"
+          disabled: "متوقفة"
+          impact_type_feature: "الميزة"
+          impact_type_other: "أخرى"
       config:
         about:
           title: "نبذة عن موقعك"
@@ -8623,7 +8634,6 @@ ar:
             cancel: "إلغاء"
         merging_user: "جارٍ دمج المستخدم…"
         merge_failed: "حدث خطأ في أثناء دمج المستخدمين."
-        delete_posts_forbidden_because_staff: "لا يمكن حذف جميع منشورات المسؤولين والمشرفين."
         delete_forbidden:
           zero: "لا يمكن حذف المستخدمين إذا كان لديهم منشورات. احذف كل المنشورات أولًا قبل محاولة حذف المستخدم. (لا يمكنك حذف المشاركات التي مضى عليها %{count} يوم.)"
           one: "لا يمكن حذف المستخدمين إذا كان لديهم منشورات. احذف كل المنشورات أولًا قبل محاولة حذف المستخدم. (لا يمكنك حذف المشاركات التي مضى عليها يوم واحد (%{count}))."

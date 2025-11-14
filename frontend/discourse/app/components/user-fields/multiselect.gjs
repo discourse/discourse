@@ -1,8 +1,8 @@
 import { concat, fn, hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import InputTip from "discourse/components/input-tip";
+import MultiSelect from "discourse/select-kit/components/multi-select";
 import { i18n } from "discourse-i18n";
-import MultiSelect from "select-kit/components/multi-select";
 import UserFieldBase from "./base";
 
 export default class UserFieldMultiselect extends UserFieldBase {

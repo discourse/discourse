@@ -104,7 +104,7 @@ discourse_ai:
   composer_ai_helper_allowed_groups:
     type: group_list
     list_type: compact
-    default: "3|14" # 3: @staff, 14: @trust_level_4
+    default: "3|11" # 3: @staff, 11: @trust_level_1
     allow_any: false
     refresh: true
     area: "ai-features/ai_helper"
@@ -128,7 +128,7 @@ discourse_ai:
   post_ai_helper_allowed_groups:
     type: group_list
     list_type: compact
-    default: "3|14" # 3: @staff, 14: @trust_level_4
+    default: "3|11" # 3: @staff, 11: @trust_level_1
     allow_any: false
     refresh: true
     area: "ai-features/ai_helper"
@@ -498,7 +498,6 @@ discourse_ai:
     min: 0
     max: 100000
     client: false
-    hidden: true
     area: "ai-features/translation"
   ai_translation_backfill_limit_to_public_content:
     default: true
@@ -513,6 +512,12 @@ discourse_ai:
     min: 0
     max: 20000
     client: false
+    area: "ai-features/translation"
+  ai_translation_max_tokens_multiplier:
+    default: 1.0
+    type: float
+    min: 1.0
+    max: 10.0
     area: "ai-features/translation"
   ai_translation_verbose_logs:
     default: false

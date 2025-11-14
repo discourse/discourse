@@ -1,8 +1,8 @@
 import { tracked } from "@glimmer/tracking";
 import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import Chart from "discourse/admin/components/chart";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import Chart from "admin/components/chart";
 
 module("Integration | Component | Chart", function (hooks) {
   setupRenderingTest(hooks);

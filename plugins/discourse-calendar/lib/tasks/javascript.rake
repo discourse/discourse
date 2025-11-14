@@ -37,7 +37,7 @@ task "javascript:update_constants" => :environment do
   end
 
   write_template(
-    "../../../plugins/discourse-calendar/assets/javascripts/discourse/lib/regions.js",
+    "../plugins/discourse-calendar/assets/javascripts/discourse/lib/regions.js",
     "update_constants",
     <<~JS,
     export const HOLIDAY_REGIONS = #{holiday_regions.to_json};

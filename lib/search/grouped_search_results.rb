@@ -78,6 +78,14 @@ class Search
 
     def blurb(post)
       opts = { term: @blurb_term, blurb_length: @blurb_length }
+
+      if SiteSetting.content_localization_enabled &&
+           (localization = post.get_localization(I18n.locale))
+        opts[:cooked] = localization.cooked
+        opts[:scrub] = true
+        return GroupedSearchResults.blurb_for(**opts)
+      end
+
       post_search_data_version = post&.post_search_data&.version
 
       if post_search_data_version.present? &&

@@ -3,13 +3,13 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { and, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import avatar from "discourse/helpers/bound-avatar-template";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import { and, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import PolicyBuilder from "./modal/policy-builder";
 
@@ -96,13 +96,13 @@ export default class PostPolicy extends Component {
 
   get remainingAcceptedUsers() {
     return (
-      (this.post?.policy_accepted_by_count || 0) -
-      (this.post?.policy_accepted_by || []).length
+      (this.post?.get("policy_accepted_by_count") || 0) -
+      (this.post?.get("policy_accepted_by") || []).length
     );
   }
 
   get acceptedUsers() {
-    return this.post?.policy_accepted_by || [];
+    return this.post?.get("policy_accepted_by") || [];
   }
 
   get remainingNotAcceptedUsers() {
@@ -212,7 +212,7 @@ export default class PostPolicy extends Component {
     event.preventDefault();
 
     try {
-      const result = await ajax(`/policy/accepted`, {
+      const result = await ajax(`/policy/not-accepted`, {
         data: {
           post_id: this.post.id,
           offset: this.post.policy_not_accepted_by.length,

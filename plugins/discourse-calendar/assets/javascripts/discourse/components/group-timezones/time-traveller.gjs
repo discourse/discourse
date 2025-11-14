@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import { not } from "discourse/truth-helpers";
 import roundTime from "../../lib/round-time";
 
 export default class TimeTraveller extends Component {

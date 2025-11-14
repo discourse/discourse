@@ -1,6 +1,6 @@
 import { fn } from "@ember/helper";
-import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 const Error = <template>

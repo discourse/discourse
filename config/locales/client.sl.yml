@@ -207,7 +207,7 @@ sl:
     welcome_banner:
       header:
         anonymous_members: "Dobrodošli na %{site_name}!"
-      search: "Išči"
+      search_placeholder: "Išči"
     themes:
       default_description: "Privzeto"
     s3:
@@ -251,7 +251,7 @@ sl:
     joined: "Pridružen"
     admin_title: "Admin"
     show_more: "Več"
-    show_help: "možnosti"
+    show_help: "Možnosti"
     links: "Povezave"
     links_lowercase:
       one: "povezava"
@@ -500,7 +500,6 @@ sl:
       topic: "Tema:"
       filtered_topic: "V eni temi ste filtrirali vsebino, ki jo je mogoče pregledati."
       filtered_user: "Uporabnik"
-      filtered_reviewed_by: "Pregledal"
       show_all_topics: "prikaži vse teme"
       deleted_post: "(prispevek izbrisan)"
       deleted_user: "(uporabnik izbrisan)"
@@ -533,7 +532,7 @@ sl:
         two: "%{count} odgovora"
         few: "%{count} odgovori"
         other: "%{count} odgovorov"
-      edit: "Uredi"
+      edit: "Uredi prispevek"
       save: "Shrani"
       cancel: "Prekliči"
       new_topic: "Odobritev tega elementa bo ustvarila novo temo"
@@ -553,7 +552,6 @@ sl:
           created_at: "Ustvarjeno"
           created_at_asc: "Ustvarjeno (obratno)"
         priority:
-          title: "Minimalna prednost"
           any: "(katerikoli)"
           low: "Nizka"
           medium: "Srednja"
@@ -604,9 +602,12 @@ sl:
         reviewable_post:
           title: "Prispevek"
           noun: "prispevek"
+      user_label: "Uporabnik"
       notes:
         delete: "Izbriši"
+      topic_label: "Tema"
       review_user: "Uporabnik"
+      copy_link_feedback: "Povezava kopirana"
       insights:
         activities:
           posts:
@@ -2080,8 +2081,9 @@ sl:
         toggle_whisper:
           label: Preklopi šepet
           desc: Šepeti so vidni samo članom osebja
-        create_topic:
-          label: "Nova tema"
+        create_personal_message:
+          label: "Novo ZS"
+          desc: "Odgovori v zasebno sporočilo"
         shared_draft:
           label: "Skupen osnutek"
         toggle_topic_bump:
@@ -2378,7 +2380,6 @@ sl:
         few: "%{count} prispevki v temi"
         other: "%{count} prispevkov v temi"
       create: "Nova tema"
-      create_long: "Ustvari novo temo"
       open_draft: "Odpri osnutek"
       private_message: "Novo zasebno sporočilo"
       archive_message:
@@ -3353,7 +3354,6 @@ sl:
         go_to_unread_post: "%{shortcut} Na prvi neprebran prispevek"
       application:
         title: "Aplikacija"
-        create: "%{shortcut} Ustvari novo temo"
         notifications: "%{shortcut} Odpri obvestila"
         user_profile_menu: "%{shortcut} Odpri uporabniški meni"
         show_incoming_updated_topics: "%{shortcut} Prikaži osvežene teme"
@@ -3721,6 +3721,7 @@ sl:
         categories: "Vse kategorije"
   admin_js:
     settings: "Nastavitve"
+    reset_filter: "Ponastavi"
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
@@ -3748,6 +3749,20 @@ sl:
           title: "Varnost"
         plugins:
           title: "Vtičniki"
+      upcoming_changes:
+        name: "Ime"
+        enabled: "Vključeno"
+        select_groups: "Izberi skupine…"
+        preview: "Predogled"
+        impact_roles:
+          admins: "Administratorji"
+          moderators: "Moderatorji"
+          staff: "Osebje"
+        filter:
+          all: "Vsi"
+          enabled: "Vključeno"
+          disabled: "Onemogočeno"
+          impact_type_other: "Drugo"
       config:
         developer:
           title: "Razvijalci"
@@ -4591,7 +4606,6 @@ sl:
           confirmation:
             cancel: "Prekliči"
         merging_user: "Združujem uporabnika…"
-        delete_posts_forbidden_because_staff: "Ne morete izbrisati vseh prispevkov od administratorjev ali moderatorjev."
         delete_forbidden:
           one: "Uporabnik ne more biti izbrisan, če ima prispevke. Izbrišite vse prispevke preden izbrišete uporabnika. (Prispevki starejši od %{count} dne ne morejo biti izbrisani.)"
           two: "Uporabnik ne more biti izbrisan, če ima prispevke. Izbrišite vse prispevke preden izbrišete uporabnika. (Prispevki starejši od %{count} dni ne morejo biti izbrisani.)"

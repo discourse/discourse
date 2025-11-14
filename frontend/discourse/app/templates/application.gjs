@@ -1,6 +1,6 @@
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import DialogHolder from "dialog-holder/components/dialog-holder";
-import { and, eq } from "truth-helpers";
+import A11yLiveRegions from "discourse/components/a11y/live-regions";
+import A11ySkipLinks from "discourse/components/a11y/skip-links";
 import CardContainer from "discourse/components/card-container";
 import ComposerContainer from "discourse/components/composer-container";
 import CustomHtml from "discourse/components/custom-html";
@@ -20,27 +20,25 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import PoweredByDiscourse from "discourse/components/powered-by-discourse";
 import PwaInstallBanner from "discourse/components/pwa-install-banner";
 import RenderGlimmerContainer from "discourse/components/render-glimmer-container";
-import Sidebar from "discourse/components/sidebar";
+import SidebarWrapper from "discourse/components/sidebar-wrapper";
 import SoftwareUpdatePrompt from "discourse/components/software-update-prompt";
 import TopicEntrance from "discourse/components/topic-entrance";
 import WelcomeBanner from "discourse/components/welcome-banner";
+import DialogHolder from "discourse/dialog-holder/components/dialog-holder";
+import DMenus from "discourse/float-kit/components/d-menus";
+import DToasts from "discourse/float-kit/components/d-toasts";
+import DTooltips from "discourse/float-kit/components/d-tooltips";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
-import { i18n } from "discourse-i18n";
-import DMenus from "float-kit/components/d-menus";
-import DToasts from "float-kit/components/d-toasts";
-import DTooltips from "float-kit/components/d-tooltips";
+import { eq } from "discourse/truth-helpers";
 
 export default <template>
   <DStyles />
   <DVirtualHeight />
 
   <DiscourseRoot {{didInsert @controller.trackDiscoursePainted}}>
-    {{#if @controller.showSkipToContent}}
-      <a href="#main-container" id="skip-link">{{i18n
-          "skip_to_main_content"
-        }}</a>
-    {{/if}}
+    <A11ySkipLinks.Container />
+
     <DDocument />
     <PageLoadingSlider />
     <PluginOutlet
@@ -86,12 +84,12 @@ export default <template>
     />
 
     <div id="main-outlet-wrapper" class="wrap" role="main">
-      <div class="sidebar-wrapper">
-        {{! empty div allows for animation }}
-        {{#if (and @controller.sidebarEnabled @controller.showSidebar)}}
-          <Sidebar @toggleSidebar={{@controller.toggleSidebar}} />
-        {{/if}}
-      </div>
+      {{#if @controller.sidebarEnabled}}
+        <SidebarWrapper
+          @showSidebar={{@controller.showSidebar}}
+          @toggleSidebar={{@controller.toggleSidebar}}
+        />
+      {{/if}}
 
       <LoadingSliderFallbackSpinner />
 
@@ -175,4 +173,6 @@ export default <template>
   <DMenus />
   <DTooltips />
   <DToasts />
+
+  <A11yLiveRegions />
 </template>

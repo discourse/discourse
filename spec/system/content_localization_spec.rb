@@ -37,6 +37,13 @@ describe "Content Localization" do
   let(:post_3_obj) { PageObjects::Components::Post.new(3) }
   let(:post_4_obj) { PageObjects::Components::Post.new(4) }
 
+  def scroll_to_post(post_number)
+    5.times do
+      break if page.has_css?("#post_#{post_number} .cooked", visible: :all, wait: 0)
+      page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+    end
+  end
+
   before do
     Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "孫子兵法からの人生戦略")
     Fabricate(:topic_localization, topic:, locale: "es", fancy_title: "Estrategias de vida de ...")
@@ -126,6 +133,37 @@ describe "Content Localization" do
       expect(post_3_obj.post).to have_content("A general is one who ..")
     end
 
+    context "with tl parameter" do
+      before do
+        SiteSetting.set_locale_from_param = true
+        SiteSetting.set_locale_from_cookie = true
+      end
+
+      fab!(:topic2) do
+        topic = Fabricate(:topic, title: "The Life of Oda Nobunaga", locale: "en", user: admin)
+        Fabricate(:post, topic:, locale: "en", raw: "Oda Nobunaga was a powerful daimyo ...")
+        topic
+      end
+      fab!(:topic_localization2) do
+        Fabricate(:topic_localization, topic: topic2, locale: "ja", fancy_title: "織田信長の生涯")
+      end
+
+      it "persists locale for anonymous users across page views" do
+        visit("/t/#{topic.id}?tl=ja")
+        expect(topic_page.topic_title).to have_content("孫子兵法からの人生戦略")
+
+        visit("/t/#{topic2.id}")
+        expect(topic_page.topic_title).to have_content("織田信長の生涯")
+      end
+
+      it "ignores tl parameter for logged-in users" do
+        sign_in(site_local_user)
+        visit("/t/#{topic.id}?tl=ja")
+
+        expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
+      end
+    end
+
     context "when editing" do
       let(:edit_localized_post_dialog) { PageObjects::Components::Dialog.new }
       let(:fast_editor) { PageObjects::Components::FastEditor.new }
@@ -190,6 +228,57 @@ describe "Content Localization" do
           I18n.t("js.post.revisions.locale.locale_removed"),
         )
         expect(post_history_modal.previous_locale).to have_content("English (US)")
+      end
+    end
+
+    context "when loading 20+ posts in stream" do
+      before do
+        highest = topic.highest_post_number
+        22.times do |i|
+          post_number = i + highest + 1
+          post =
+            Fabricate(
+              :post,
+              topic: topic,
+              locale: "ja",
+              raw: "Japanese content for post #{post_number}",
+              cooked: "<p>日本語コンテンツ #{post_number}</p>",
+            )
+
+          Fabricate(
+            :post_localization,
+            post:,
+            locale: "en",
+            cooked: "<p>English translation #{post_number}</p>",
+          )
+        end
+      end
+
+      let(:post_21_obj) { PageObjects::Components::Post.new(21) }
+
+      it "respects the show_original toggle for posts loaded dynamically when scrolling (20+ posts)" do
+        sign_in(site_local_user)
+        visit("/")
+
+        topic_page.visit_topic(topic)
+
+        expect(post_3_obj.post).to have_content("A general is one who ..")
+        expect(topic_page).to have_post_content(post_number: 3, content: "A general is one who ..")
+
+        scroll_to_post(21)
+
+        expect(page).to have_css("#post_21")
+        expect(topic_page).to have_post_content(post_number: 21, content: "English translation 21")
+
+        # toggle should show correct state of post content
+        page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+        scroll_to_post(21)
+        expect(post_21_obj.post).to have_content("日本語コンテンツ 21")
+
+        # refresh should show correct state of post content
+        page.refresh
+        scroll_to_post(21)
+        expect(post_21_obj.post).to have_content("日本語コンテンツ 21")
       end
     end
   end

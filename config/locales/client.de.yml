@@ -295,9 +295,10 @@ de:
     back_button: "Zurück"
     welcome_banner:
       header:
+        new_members: "Willkommen, %{preferred_display_name}!"
         logged_in_members: "Willkommen zurück, %{preferred_display_name}!"
         anonymous_members: "Willkommen bei %{site_name}!"
-      search: "Suche"
+      search_placeholder: "Suche"
     impersonation:
       notice: "Du verwendest derzeit die Rolle von %{username}"
       stop: "Nutzerrolle verlassen"
@@ -360,7 +361,7 @@ de:
     joined: "Beigetreten"
     admin_title: "Administration"
     show_more: "mehr anzeigen"
-    show_help: "Erweiterte Suche"
+    show_help: "Optionen"
     links: "Links"
     links_lowercase:
       one: "Link"
@@ -687,9 +688,9 @@ de:
         claimed_by_other: "Dieses Element kann nur von <b>%{username}</b> überprüft werden."
         automatically_claimed_by: "Dieses Element wird derzeit von <b>%{username}</b> überprüft."
       claim:
-        title: "dieses Thema reservieren"
+        title: "Dieses Thema reservieren"
       unclaim:
-        help: "diese Reservierung entfernen"
+        help: "Diese Reservierung entfernen"
       awaiting_approval: "Wartet auf Genehmigung"
       delete: "Löschen"
       settings:
@@ -760,7 +761,7 @@ de:
       replies:
         one: "%{count} Antwort"
         other: "%{count} Antworten"
-      edit: "Bearbeiten"
+      edit: "Beitrag bearbeiten"
       save: "Speichern"
       cancel: "Abbrechen"
       new_topic: "Das Bestätigen dieses Elements wird ein neues Thema erstellen"
@@ -782,7 +783,6 @@ de:
           created_at: "Erstellt am"
           created_at_asc: "Erstellt am (umgekehrt)"
         priority:
-          title: "Minimale Priorität"
           any: "(beliebig)"
           low: "Niedrig"
           medium: "Mittel"
@@ -847,6 +847,9 @@ de:
           title: "Beitrag"
           noun: "Beitrag"
       flagged_as: "Gemeldet als"
+      post_flagged_as: "Beitrag gemeldet als"
+      queued_post_label: "Beitrag in der Warteschlange"
+      user_label: "Benutzer"
       assigned_to: "Zugeordnet zu"
       moderator_actions: "Moderator-Aktionen"
       timeline_and_notes: "Zeitleiste & Notizen"
@@ -870,13 +873,15 @@ de:
         chars_remaining: "%{count} Zeichen verbleibend"
         delete_note: "Diese Notiz löschen"
         delete: "Löschen"
-      new_topic_label: "Neues Thema"
+      topic_label: "Thema"
       queued_user: "Benutzer in der Warteschlange"
       posted_in: "Veröffentlicht in"
       flagged_user: "Gemeldeter Benutzer"
       review_user: "Benutzer"
       need_help: "Brauchst du Hilfe?"
       copy_link: "Link kopieren"
+      copy_permalink_title: "Den Link zu diesem zu überprüfenden Element in die Zwischenablage kopieren"
+      copy_link_feedback: "Link kopiert"
       view_source: "Quelltext ansehen"
       insights:
         title: "Einblicke"
@@ -884,9 +889,6 @@ de:
         flagged_by_users:
           one: "Gemeldet von %{count} eindeutigen Benutzer"
           other: "Gemeldet von %{count} eindeutigen Benutzern"
-        similar_posts: "Ähnliche frühere Beiträge"
-        flagged_in_timeframe: "%{count} zuvor gemeldet"
-        user_activity: "Benutzeraktivität"
         activities:
           new_account: "neues Konto"
           trust_level: "Vertrauensstufe: %{trustLevelName}"
@@ -1695,6 +1697,7 @@ de:
         verify_identity: "Um fortzufahren, bestätige bitte deine Identität."
         title: "Passwort zurücksetzen"
         remove: "Passwort entfernen"
+        remove_disabled: "Das Konto benötigt mindestens eine andere Anmeldemethode (z. B. einen Passkey oder ein verknüpftes externes Konto), bevor das Passwort entfernt werden kann."
         remove_detail: "Dein Konto wird nicht mehr mit einem Passwort zugänglich sein, es sei denn, du setzt es zurück."
       second_factor_backup:
         title: "Wiederherstellungscodes für Zwei-Faktor-Authentifizierung"
@@ -1961,6 +1964,7 @@ de:
         first_time_and_daily: "Für das erste „Gefällt mir“ sowie maximal täglich"
         first_time: "Nur für das erste „Gefällt mir“ eines Beitrags"
         never: "Nie"
+      notify_on_linked_posts: "Benachrichtige mich, wenn jemand einen Link zu einem meiner Beiträge teilt"
       email_previous_replies:
         title: "Füge vorherige Beiträge ans Ende von E-Mails an"
         unless_emailed: "sofern noch nicht gesendet"
@@ -2282,6 +2286,10 @@ de:
       no_results: "Keine Ergebnisse"
       search: "Suchen …"
       label: "Optionen auswählen"
+    d_otp:
+      screen_reader:
+        one: Gib eine Zahl ein
+        other: Gib %{count} Zahlen ein
     form_kit:
       reset: Zurücksetzen
       optional: optional
@@ -2710,7 +2718,10 @@ de:
         title: "Beitrag übersetzen"
         select: "Übersetzung auswählen"
         save: "Übersetzung speichern"
-        original_content: "Inhalt des Originalbeitrags"
+        original_content: "Original-Beitrag"
+        translation_preview: "Übersetzungsvorschau"
+        original: "Original"
+        translation: "Übersetzen"
         placeholder: "Übersetzung für den Beitrag hier eingeben …"
       group_mentioned_limit:
         one: "<b>Warnung!</b> Du erwähnst <a href='%{group_link}'>%{group}</a>, jedoch übersteigt die Mitgliederzahl der Gruppe das vom Administrator konfigurierte Erwähnungslimit von %{count} Benutzer. Deshalb wird niemand benachrichtigt."
@@ -2867,6 +2878,9 @@ de:
         create_topic:
           label: "Neues Thema"
           desc: Erstelle ein neues Thema
+        create_personal_message:
+          label: "Neue Nachricht"
+          desc: "Erstelle eine neue persönliche Nachricht"
         shared_draft:
           label: "Gemeinsamer Entwurf"
           desc: "Entwurf eines Themas, das nur für erlaubte Benutzer sichtbar ist"
@@ -2875,7 +2889,6 @@ de:
           desc: "Antworten, ohne das Datum der neuesten Antwort zu ändern"
         toggle_unlisted:
           label: Sichtbarkeit umschalten
-          desc: Nicht aufgelistete Themen, die nur für Mitglieder über einen direkten Link zugänglich sind
       reload: "Neu laden"
       ignore: "Ignorieren"
       image_alt_text:
@@ -3360,7 +3373,7 @@ de:
         one: "%{count} Beitrag im Thema"
         other: "%{count} Beiträge im Thema"
       create: "Neues Thema"
-      create_long: "Ein neues Thema erstellen"
+      create_long: "Erstelle ein neues Thema"
       open_draft: "Entwurf öffnen"
       private_message: "Eine Unterhaltung beginnen"
       archive_message:
@@ -3448,7 +3461,7 @@ de:
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Durchstöbere alle Kategorien</a> oder <a href='%{basePath}/latest'>sieh dir die aktuellen Themen an</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Durchstöbere alle Kategorien</a>, <a href='%{basePath}/latest'>sieh dir die aktuellen Themen</a> oder die Top-Themen an:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Durchstöbere alle Schlagwörter</a> oder <a href='%{basePath}/latest'>sieh dir die aktuellen Themen an</a>."
-      browse_latest_topics: "Neueste Themen durchstöbern"
+      browse_latest_topics: "Aktuelle Themen durchstöbern"
       suggest_create_topic: Bereit, <a href>eine neue Unterhaltung zu beginnen?</a>
       jump_reply: "Zum ursprünglichen Ort des Beitrags springen"
       jump_reply_aria: "Zum Beitrag von @%{username} an dessen ursprünglichen Ort springen"
@@ -3990,6 +4003,7 @@ de:
         delete_post_notice: "Offizielle Mitteilung löschen"
         remove_timer: "Zeitschaltuhr deaktivieren"
         edit_timer: "Zeitschaltuhr bearbeiten"
+        remove_yourself_from_pm: "Bist du sicher, dass du dich aus dieser Nachricht entfernen möchtest? Dann wirst du sie nicht mehr sehen oder darauf antworten können."
       actions:
         people:
           like:
@@ -4532,6 +4546,7 @@ de:
     lightbox:
       download: "Herunterladen"
       open: "Originalbild"
+      image_info: "Bildinformationen"
       previous: "Zurück (linke Pfeiltaste)"
       next: "Weiter (rechte Pfeiltaste)"
       counter: "%curr% von %total%"
@@ -4577,7 +4592,6 @@ de:
         go_to_unread_post: "%{shortcut} Zum ersten ungelesenen Beitrag springen"
       application:
         title: "Anwendung"
-        create: "%{shortcut} Neues Thema erstellen"
         notifications: "%{shortcut} Benachrichtigungen öffnen"
         hamburger_menu: "%{shortcut} Navigationsmenü öffnen"
         user_profile_menu: "%{shortcut} Benutzermenü öffnen"
@@ -5252,6 +5266,7 @@ de:
   admin_js:
     type_to_filter: "Zum Filtern hier eingeben …"
     settings: "Einstellungen"
+    reset_filter: "Zurücksetzen"
     admin:
       title: "Discourse-Administrator"
       moderator: "Moderator"
@@ -5284,6 +5299,25 @@ de:
           title: "Plug-ins"
         advanced:
           title: "Erweitert "
+      upcoming_changes:
+        name: "Name"
+        plugin: "Plug-in"
+        enabled: "Aktiviert"
+        show_image: "Bild anzeigen"
+        groups_updated: "Gruppen aktualisiert!"
+        save_groups: "Gruppen speichern"
+        select_groups: "Gruppen auswählen …"
+        preview: "Vorschau"
+        impact_roles:
+          admins: "Administratoren"
+          moderators: "Moderatoren"
+          staff: "Team"
+        filter:
+          all: "Gesamt"
+          enabled: "Aktiviert"
+          disabled: "Deaktiviert"
+          impact_type_feature: "Funktion"
+          impact_type_other: "Sonstiges"
       config:
         about:
           title: "Über deine Website"
@@ -7530,8 +7564,7 @@ de:
             cancel: "Abbrechen"
         merging_user: "Benutzer wird zusammengeführt …"
         merge_failed: "Beim Zusammenführen der Benutzer ist ein Fehler aufgetreten."
-        delete_forbidden_because_staff: "Administratoren können nicht gelöscht werden."
-        delete_posts_forbidden_because_staff: "Löschen aller Beiträge von Administratoren und Moderatoren ist nicht möglich."
+        delete_forbidden_because_admin: "Administratoren können nicht gelöscht werden."
         delete_forbidden:
           one: "Benutzer können nicht gelöscht werden, wenn diese Beiträge haben. Lösche zuerst alle seine Beiträge, bevor du versuchst, einen Benutzer zu löschen. (Beiträge, die älter als %{count} Tag sind, können nicht gelöscht werden.)"
           other: "Benutzer können nicht gelöscht werden, wenn diese Beiträge haben. Lösche zuerst alle seine Beiträge, bevor du versuchst, einen Benutzer zu löschen. (Beiträge, die älter als %{count} Tage sind, können nicht gelöscht werden.)"

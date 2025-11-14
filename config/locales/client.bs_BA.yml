@@ -179,7 +179,7 @@ bs_BA:
     welcome_banner:
       header:
         anonymous_members: "Dobrodošli na %{site_name}!"
-      search: "Pretraži"
+      search_placeholder: "Pretraži"
     themes:
       default_description: "Uobičajen"
     s3:
@@ -222,7 +222,7 @@ bs_BA:
     joined: "Pridružio se"
     admin_title: "Admin"
     show_more: "prikaži još"
-    show_help: "opcije"
+    show_help: "Opcije"
     links: "Linkovi"
     links_lowercase:
       one: "link"
@@ -411,10 +411,6 @@ bs_BA:
         required: "VI morate tvrditi stavari prije ih morate cijeniti"
         claimed_by_you: "Vi ste tvrdili ovu stvar i sad ju možete pregledati "
         claimed_by_other: "Ovu stavku može revidirati samo korisnik<b>%{username}</b>"
-      claim:
-        title: "tvrdite ovu temu?"
-      unclaim:
-        help: "maknite ovu tvrdnju?"
       awaiting_approval: "čekanje odobrenje"
       delete: "Delete"
       settings:
@@ -436,7 +432,6 @@ bs_BA:
       topic: "Tema:"
       filtered_topic: "Filtrirali ste sadržaj koji se može pregledati u jednoj temi."
       filtered_user: "User"
-      filtered_reviewed_by: "Pregledao je"
       show_all_topics: "(pokaži sve teme)"
       deleted_post: "(post izbrisan)"
       deleted_user: "(korisnik izbrisan)"
@@ -480,7 +475,7 @@ bs_BA:
         one: "%{count} reply"
         few: "%{count} replies"
         other: "%{count}odgovora "
-      edit: "Izmijeni"
+      edit: "Izmjeni objavu"
       save: "Sačuvaj"
       cancel: "Odustani"
       new_topic: "Odobravanje ove stvari će napraviti novu temu"
@@ -501,7 +496,6 @@ bs_BA:
           created_at: "Napravjeno kod"
           created_at_asc: "Napravijeno kod (preokrenuti)"
         priority:
-          title: "Minimalni prioritet"
           any: "(bilo koji)"
           low: "Nisko"
           medium: "Srednije"
@@ -544,8 +538,10 @@ bs_BA:
         reviewable_post:
           title: "Objava"
           noun: "objava"
+      user_label: "User"
       notes:
         delete: "Delete"
+      topic_label: "Topic"
       review_user: "User"
       insights:
         activities:
@@ -1756,8 +1752,9 @@ bs_BA:
         toggle_whisper:
           label: Uključi Šapat
           desc: Šapati su vidljivi samo administratorima
-        create_topic:
-          label: "Nova tema"
+        create_personal_message:
+          label: "Nova poruka"
+          desc: "Kreiraj novu personalnu poruku"
         shared_draft:
           label: "Dijeljena skica"
         toggle_topic_bump:
@@ -2012,7 +2009,6 @@ bs_BA:
         few: "%{count} objave u temi"
         other: "%{count} objava u temi"
       create: "Nova tema"
-      create_long: "Otvori novu temu"
       open_draft: "Otvori skicu"
       private_message: "Piši poruku"
       archive_message:
@@ -2853,7 +2849,6 @@ bs_BA:
         go_to_unread_post: "%{shortcut} Idi na prvu nepročitanu poruku"
       application:
         title: "Aplikacija"
-        create: "%{shortcut} Otvori novu temu"
         notifications: "%{shortcut} Otvori notifikacije"
         user_profile_menu: "%{shortcut} Otvori meni korisnika"
         show_incoming_updated_topics: "%{shortcut} Pročitaj promjenje teme"
@@ -3155,6 +3150,7 @@ bs_BA:
         categories: "Sve kategorije"
   admin_js:
     settings: "Postavke"
+    reset_filter: "Resetovati"
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
@@ -3182,6 +3178,19 @@ bs_BA:
           title: "Security"
         plugins:
           title: "Pluginovi"
+      upcoming_changes:
+        name: "Ime"
+        enabled: "Omogućen"
+        preview: "Pregled"
+        impact_roles:
+          admins: "Admins"
+          moderators: "Moderators"
+          staff: "Staff"
+        filter:
+          all: "Sve"
+          enabled: "Omogućen"
+          disabled: "Neomogućen"
+          impact_type_other: "Other"
       config:
         developer:
           title: "Developer"
@@ -4248,7 +4257,6 @@ bs_BA:
             cancel: "Odustani"
           confirmation:
             cancel: "Odustani"
-        delete_posts_forbidden_because_staff: "Ne možete obrisati sve postove administratora i moderatora."
         delete_forbidden:
           one: "Korisnici se ne mogu izbrisati ako imaju postove. Izbrišite sve postove prije nego pokušate izbrisati korisnika. (Postovi stariji od %{count} dana stari ne mogu se izbrisati.)"
           few: "Korisnici se ne mogu izbrisati ako imaju postove. Izbrišite sve postove prije nego pokušate izbrisati korisnika. (Poruke starije od %{count} dana ne mogu se izbrisati.)"

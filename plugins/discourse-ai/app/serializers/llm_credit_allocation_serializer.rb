@@ -7,7 +7,6 @@ class LlmCreditAllocationSerializer < ApplicationSerializer
              :credits_remaining,
              :percentage_used,
              :percentage_remaining,
-             :last_reset_at,
              :next_reset_at,
              :soft_limit_percentage,
              :soft_limit_reached,

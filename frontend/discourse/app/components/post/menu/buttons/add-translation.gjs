@@ -7,11 +7,11 @@ import DEditorOriginalTranslationPreview from "discourse/components/d-editor-ori
 import DropdownMenu from "discourse/components/dropdown-menu";
 import PostTranslationsModal from "discourse/components/modal/post-translations";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import DMenu from "discourse/float-kit/components/d-menu";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import Composer from "discourse/models/composer";
 import { i18n } from "discourse-i18n";
-import DMenu from "float-kit/components/d-menu";
 
 export default class PostMenuAddTranslationButton extends Component {
   @service composer;
@@ -71,6 +71,7 @@ export default class PostMenuAddTranslationButton extends Component {
         model: {
           postLocale: this.args.post.locale,
           rawPost: raw,
+          translationText: () => this.composer.model?.reply,
         },
       },
       post: this.args.post,

@@ -1,8 +1,8 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { classNames } from "@ember-decorators/component";
-import { eq } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 @classNames("row")

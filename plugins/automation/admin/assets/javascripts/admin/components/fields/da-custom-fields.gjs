@@ -3,7 +3,7 @@ import { hash } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
-import MultiSelect from "select-kit/components/multi-select";
+import MultiSelect from "discourse/select-kit/components/multi-select";
 import BaseField from "./da-base-field";
 import DAFieldDescription from "./da-field-description";
 import DAFieldLabel from "./da-field-label";

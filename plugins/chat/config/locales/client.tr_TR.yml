@@ -436,6 +436,7 @@ tr_TR:
           topic: "Konu"
       reviewable:
         type: "Sohbet mesajı"
+        message_in_channel: "Kanal"
       reactions:
         only_you: "<span>Şu şekilde tepki verdiniz: </span>:%{emoji}:"
         you_and_single_user: "<span>Siz ve %{username} şu şekilde tepki verdiniz: </span>:%{emoji}:"

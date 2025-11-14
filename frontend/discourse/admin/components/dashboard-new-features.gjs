@@ -4,15 +4,15 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
+import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
+import DashboardNewFeatureItem from "discourse/admin/components/dashboard-new-feature-item";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaCard from "admin/components/admin-config-area-card";
-import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
-import DashboardNewFeatureItem from "admin/components/dashboard-new-feature-item";
 
 export default class DashboardNewFeatures extends Component {
   @service currentUser;

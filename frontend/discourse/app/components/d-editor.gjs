@@ -12,7 +12,6 @@ import curryComponent from "ember-curry-component";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { translations } from "pretty-text/emoji/data";
 import { Promise } from "rsvp";
-import { not } from "truth-helpers";
 import TextareaEditor from "discourse/components/composer/textarea-editor";
 import ToggleSwitch from "discourse/components/composer/toggle-switch";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
@@ -23,9 +22,9 @@ import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PopupInputTip from "discourse/components/popup-input-tip";
+import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import concatClass from "discourse/helpers/concat-class";
 import renderEmojiAutocomplete from "discourse/lib/autocomplete/emoji";
-import userAutocomplete from "discourse/lib/autocomplete/user";
 import Toolbar from "discourse/lib/composer/toolbar";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import discourseDebounce from "discourse/lib/debounce";
@@ -45,7 +44,11 @@ import {
   initUserStatusHtml,
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
-import { SKIP } from "discourse/modifiers/d-autocomplete";
+import {
+  EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP,
+  SKIP,
+} from "discourse/modifiers/d-autocomplete";
+import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 let _createCallbacks = [];
@@ -324,10 +327,10 @@ export default class DEditor extends Component {
       },
 
       onKeyUp: (text, cp) => {
-        const matches =
-          /(?:^|[\s.\?,@\/#!%&*;:\[\]{}=\-_()])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/gi.exec(
-            text.substring(0, cp)
-          );
+        const matches = new RegExp(
+          `(?:^|${EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP.source})(:(?!:).?[\\w-]*:?(?!:)(?:t\\d?)?:?) ?$`,
+          "gi"
+        ).exec(text.substring(0, cp));
 
         if (matches && matches[1]) {
           return [matches[1]];
@@ -472,7 +475,8 @@ export default class DEditor extends Component {
     }
 
     this.textManipulation.autocomplete({
-      template: userAutocomplete,
+      component: UserAutocompleteResults,
+      key: UserAutocompleteResults.TRIGGER_KEY,
       dataSource: (term) => {
         destroyUserStatuses();
         return userSearch({
@@ -487,7 +491,6 @@ export default class DEditor extends Component {
         });
       },
       onRender: (options) => renderUserStatusHtml(options),
-      key: "@",
       transformComplete: (v) => {
         validateSearchResult(v);
         return v.username || v.name;

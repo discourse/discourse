@@ -1362,8 +1362,8 @@ en:
       yaxis: "Day"
       description: "API requests for regular API keys and user API keys."
     consolidated_page_views_browser_detection:
-      title: "Consolidated Pageviews with Browser Detection (Experimental)"
-      title_legacy: "Consolidated Pageviews with Browser Detection (Experimental)"
+      title: "Consolidated Pageviews with Browser Detection (Recommended)"
+      title_legacy: "Consolidated Pageviews with Browser Detection (Recommended)"
       xaxis:
         page_view_anon_browser: "Anonymous Browser"
         page_view_logged_in_browser: "Logged In Browser"
@@ -1713,6 +1713,7 @@ en:
       category_style_deprecated: "Your Discourse is currently using a deprecated category style which will be removed before the final beta release of Discourse 3.2. Please refer to <a href='https://meta.discourse.org/t/282441'>Moving to a Single Category Style Site Setting</a> for instructions on how to keep your selected category style."
       maxmind_db_configuration: 'The server has been configured to use MaxMind databases for reverse IP lookups but a valid MaxMind account ID has not been configured which may result in MaxMind databases failing to download in the future. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">See this guide to learn more</a>.'
       admin_sidebar_deprecation: "The old admin layout is deprecated in favour of the new <a href='https://meta.discourse.org/t/-/289281'>sidebar layout</a> and will be removed in the next release. You can <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configure</a> the new sidebar layout now to opt in before that."
+      starttls_disabled: "The outgoing email configuration has STARTTLS disabled. This is almost never necessary. Consider removing <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> from your environment. Please refer to <a href='https://meta.discourse.org/t/387286'>this topic</a> for more details."
     back_from_logster_text: "Back to site"
 
   site_settings:
@@ -1758,7 +1759,7 @@ en:
     allow_duplicate_topic_titles_category: "Allow topics with identical, duplicate titles if the category is different. allow_duplicate_topic_titles must be disabled."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
     educate_until_posts: "When the user starts typing their first (n) new posts, show the pop-up new user education panel in the composer."
-    title: "The name of this site. Visible to all visitors including anonymous users."
+    title: "The name of this site. Visible to all visitors including anonymous users. Note that changing this title may send a prompt to users of the PWA asking them to either update or uninstall the app."
     site_description: "Describe this site in one sentence. Visible to all visitors including anonymous users."
     short_site_description: "Short description in a few words. Visible to all visitors including anonymous users."
     contact_email: "Email address of key contact responsible for this site. Used for critical notifications, and also displayed on <a href='%{base_path}/about' target='_blank'>/about</a>. Visible to anonymous users on public sites."
@@ -2710,7 +2711,7 @@ en:
     enable_user_status: "Allow users to set custom status message (emoji + description)."
     enable_user_tips: "Enable new user tips that describe key features to users"
 
-    short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. It should be limited to 12 characters."
+    short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. It should be limited to 12 characters. Note that changing this title may send a prompt to users of the PWA asking them to either update or uninstall the app."
 
     dashboard_hidden_reports: "Allow to hide the specified reports from the dashboard."
     dashboard_visible_tabs: "Choose which dashboard tabs are visible."
@@ -2736,7 +2737,7 @@ en:
     welcome_banner_image: "Set an image to display in the background of the welcome banner."
     welcome_banner_location: "Determines where on the page the welcome banner will appear."
     welcome_banner_page_visibility: "Determines on which pages the welcome banner will appear."
-    welcome_banner_text_color: "When the 'Welcome banner image' setting has been configured, use this setting to change the banner text color to ensure it remains readable. When left blank or when no image has been uploaded, the 'primary' color from the color palette will be used."
+    welcome_banner_text_color: "When the 'Welcome banner image' setting has been configured, use this setting to change the banner text color to ensure it remains readable. When left blank or when no image has been uploaded, the active theme controls the color."
 
     splash_screen: "Displays a temporary loading screen while site assets load"
     navigation_menu: "Specify sidebar or header dropdown as the main navigation menu for your site. Sidebar is recommended."
@@ -2746,9 +2747,6 @@ en:
     glimmer_post_stream_mode: "Control whether the new 'glimmer' post stream implementation is used. 'auto' will enable automatically once all your themes and plugins are ready."
     glimmer_post_stream_mode_auto_groups: "Enable the new 'glimmer' post stream implementation in 'auto' mode for the specified user groups."
     deactivate_widgets_rendering: "Disable the legacy widgets rendering engine. This will disable all widgets that have not been updated to Glimmer components, it will also force the Glimmer Post Stream to be enabled unconditionally regardless of the value of the `glimmer_post_stream_mode` setting."
-    floatkit_autocomplete_composer: "Enable the Floatkit-based autocomplete menu in composer. This is an UI enhancement that will replace the current JQuery-based autocomplete menu."
-    floatkit_autocomplete_input_fields: "Enable the Floatkit-based autocomplete menu for input fields in full page search and group selector fields. This is a UI enhancement that will replace the current jQuery-based autocomplete menu."
-    floatkit_autocomplete_chat_composer: "Enable the Floatkit-based autocomplete menu in chat composer. This is a UI enhancement that will replace the current jQuery-based autocomplete menu."
     experimental_form_templates: "Enable the form templates feature. Manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
     show_preview_for_form_templates: "Enable the preview for form templates feature"
     lazy_load_categories_groups: "Lazy load category information only for users of these groups. This improves performance on sites with many categories."
@@ -2773,8 +2771,9 @@ en:
     content_localization_supported_locales: "List of supported locales that user content can be translated to. Requires 'content localization enabled'."
     content_localization_allowed_groups: "Groups allowed to update localized content. Requires 'content localization enabled'."
     content_localization_language_switcher: "Show a language switcher in the header, allowing visitors to switch between translated versions of Discourse and user-contributed content. Uses languages defined in 'content localization supported locales'"
+    content_localization_crawler_param: "Serve localized content to web crawlers when 'content localization enabled' and 'set locale from param' is enabled. The list of supported locales is defined in 'content localization supported locales'."
     enable_upcoming_changes: "Enable upcoming changes"
-
+    fake_upcoming_change: "This is a fake upcoming change for testing purposes. No need to translate this string."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -4042,7 +4041,20 @@ en:
       text_body_template: |
         This is an automated message.
 
-        The new user [%{username}](%{user_url}) was automatically silenced because multiple users flagged %{username}'s post(s).
+        The new user [%{username}](%{user_url}) was automatically silenced.
+
+        Please [review the flags](%{base_url}/review). If %{username} was incorrectly silenced from posting, click the unsilence button on [the admin page for this user](%{user_url}).
+
+        This threshold can be changed via the `silence_new_user` site settings.
+    user_automatically_silenced_with_reason:
+      title: "User Automatically Silenced"
+      subject_template: "New user %{username} silenced by community flags"
+      text_body_template: |
+        This is an automated message.
+
+        The new user [%{username}](%{user_url}) was automatically silenced.
+
+        Reason - %{reason}
 
         Please [review the flags](%{base_url}/review). If %{username} was incorrectly silenced from posting, click the unsilence button on [the admin page for this user](%{user_url}).
 
@@ -5812,7 +5824,7 @@ en:
         title: "Discard Post"
         complete: "Post discarded."
       revise_and_reject_post:
-        title: "Revise Post..."
+        title: "Request Revision..."
         complete: "Post rejected pending revision."
       ignore:
         title: "Ignore"

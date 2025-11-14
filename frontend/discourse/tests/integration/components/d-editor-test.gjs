@@ -11,6 +11,7 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DEditor from "discourse/components/d-editor";
+import DMenus from "discourse/float-kit/components/d-menus";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setCaretPosition } from "discourse/lib/utilities";
@@ -24,7 +25,6 @@ import {
   setTextareaSelection,
 } from "discourse/tests/helpers/textarea-selection-helper";
 import { i18n } from "discourse-i18n";
-import DMenus from "float-kit/components/d-menus";
 
 module("Integration | Component | d-editor", function (hooks) {
   setupRenderingTest(hooks);

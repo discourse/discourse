@@ -13,8 +13,8 @@ import DiscoursePostEventInvitees from "discourse/plugins/discourse-calendar/dis
 export default class DiscoursePostEventApi extends Service {
   eventsPromise = null;
 
-  async event(id) {
-    const result = await this.#getRequest(`/events/${id}`);
+  async event(id, data = {}) {
+    const result = await this.#getRequest(`/events/${id}`, data);
     return DiscoursePostEventEvent.create(result.event);
   }
 
@@ -23,9 +23,20 @@ export default class DiscoursePostEventApi extends Service {
       this.eventsPromise.abort();
     }
     this.eventsPromise = this.#getRequest("/events", data);
-    const result = await this.eventsPromise;
+    const response = await this.eventsPromise;
     this.eventsPromise = null;
-    return result.events.map((e) => DiscoursePostEventEvent.create(e));
+
+    return (response.events || []).flatMap((eventData) => {
+      const occurrences = eventData.occurrences || [];
+
+      return occurrences.map((occurrence) => {
+        return DiscoursePostEventEvent.create({
+          ...eventData,
+          starts_at: occurrence.starts_at,
+          ends_at: occurrence.ends_at,
+        });
+      });
+    });
   }
 
   async listEventInvitees(event, data = {}) {

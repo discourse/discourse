@@ -537,14 +537,11 @@ class Group < ActiveRecord::Base
     localized_name = I18n.t("groups.default_names.#{name}", locale: SiteSetting.default_locale)
     default_name = I18n.t("groups.default_names.#{name}")
 
-    group.name =
-      if can_use_name?(localized_name, group)
-        localized_name
-      elsif can_use_name?(default_name, group)
-        default_name
-      else
-        name.to_s
-      end
+    if can_use_name?(localized_name, group)
+      group.name = localized_name
+    elsif can_use_name?(default_name, group)
+      group.name = default_name
+    end
 
     # the everyone group is special, it can include non-users so there is no
     # way to have the membership in a table

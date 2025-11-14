@@ -150,7 +150,7 @@ cs:
             label: Spouštěč
         automation:
           name:
-            label: Jméno
+            label: Název
           trigger:
             label: Spouštěč
           version:

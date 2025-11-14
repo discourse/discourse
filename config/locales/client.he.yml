@@ -353,7 +353,7 @@ he:
       header:
         logged_in_members: "ברוך שובך, %{preferred_display_name}!"
         anonymous_members: "ברוך בואך אל %{site_name}!"
-      search: "חיפוש"
+      search_placeholder: "חיפוש"
     impersonation:
       notice: "בחירת להתחקות אחר %{username}"
       stop: "הפסקת התחזות"
@@ -803,10 +803,6 @@ he:
         claimed_by_you: "דרשת את הפריט הזה ועכשיו יתאפשר לך לסקור אותו."
         claimed_by_other: "הפריט הזה זמין לסריקה רק על ידי <b>%{username}</b>."
         automatically_claimed_by: "הפריט הזה נבדק כרגע על ידי <b>%{username}</b>."
-      claim:
-        title: "דרישת נושא זה"
-      unclaim:
-        help: "הסרת דרישה זו"
       awaiting_approval: "בהמתנה לאישור"
       delete: "מחיקה"
       settings:
@@ -886,7 +882,7 @@ he:
         two: "שתי תגובות"
         many: "%{count} תגובות"
         other: "%{count} תגובות"
-      edit: "עריכה"
+      edit: "עריכת פוסט"
       save: "שמירה"
       cancel: "ביטול"
       new_topic: "אישור הפריט הזה ייצור נושא חדש"
@@ -908,7 +904,6 @@ he:
           created_at: "מועד יצירה"
           created_at_asc: "מועד יצירה (הפוך)"
         priority:
-          title: "עדיפות מזערית"
           any: "(כלשהו)"
           low: "נמוכה"
           medium: "בינונית"
@@ -973,6 +968,7 @@ he:
           title: "פוסט"
           noun: "פוסט"
       flagged_as: "מסומן בתור"
+      user_label: "משתמש"
       assigned_to: "הוקצה לטובת"
       moderator_actions: "פעולות פיקוח"
       timeline_and_notes: "ציר זמן והערות"
@@ -995,13 +991,14 @@ he:
         chars_remaining: "נותרו %{count} תווים"
         delete_note: "מחיקת ההערה הזאת"
         delete: "מחיקה"
-      new_topic_label: "נושא חדש"
+      topic_label: "נושא"
       queued_user: "משתמש בתור"
       posted_in: "פורסם ב־"
       flagged_user: "משתמש מסומן"
       review_user: "משתמש"
       need_help: "אפשר להציע עזרה?"
       copy_link: "העתקת קישור"
+      copy_link_feedback: "הקישור הועתק"
       view_source: "הצגת המקור"
       insights:
         title: "תובנות"
@@ -1011,9 +1008,6 @@ he:
           two: "סומן על ידי %{count} משתמש/ים ייחודיים/ות"
           many: "סומן על ידי %{count} משתמש/ים ייחודיים/ות"
           other: "סומן על ידי %{count} משתמש/ים ייחודיים/ות"
-        similar_posts: "פוסטים דומים מהעבר"
-        flagged_in_timeframe: "%{count} סומנו בעבר"
-        user_activity: "פעילות המשתמש"
         activities:
           new_account: "חשבון חדש"
           trust_level: "רמת אמון: %{trustLevelName}"
@@ -2980,7 +2974,7 @@ he:
         title: "תרגום פוסט"
         select: "בחירת תרגום"
         save: "שמירת תרגום"
-        original_content: "תוכן פוסט מקורי"
+        translation: "תרגום"
         placeholder: "נא למלא כאן תרגום לפוסט…"
       group_mentioned_limit:
         one: "<b>זהירות!</b> ציינת את <a href='%{group_link}'>%{group}</a>, אך בקבוצה זו יש יותר חברים מההגבלה שהוגדרה על ידי הנהלת המערכת של עד משתמש %{count}. אף אחד לא יקבל הודעה."
@@ -3156,14 +3150,15 @@ he:
         create_topic:
           label: "נושא חדש"
           desc: יצירת נושא חדש
+        create_personal_message:
+          label: "הודעה חדשה"
+          desc: "צור הודעה פרטית חדשה"
         shared_draft:
           label: "טיוטה משותפת"
           desc: "יצירת טיוטה לנושא שרק משתמשים מורשים יוכלו לראות"
         toggle_topic_bump:
           label: "החלפת מצב הקפצת נושא"
           desc: "הגב מבלי לשנות את תאריך התגובה האחרונה"
-        toggle_unlisted:
-          desc: נושאים מוסתרים נגישים לחברים רק באמצעות קישור ישיר
       reload: "ריענון"
       ignore: "התעלמות"
       image_alt_text:
@@ -5055,7 +5050,6 @@ he:
         go_to_unread_post: "%{shortcut} מעבר לפוסט הראשון שלא נקרא"
       application:
         title: "אפליקציה"
-        create: "%{shortcut} יצירת נושא חדש"
         notifications: "%{shortcut} פתיחת התראות"
         hamburger_menu: "%{shortcut} פתיחת תפריט ניווט"
         user_profile_menu: "%{shortcut} פתיחת תפריט משתמש"
@@ -5782,6 +5776,7 @@ he:
   admin_js:
     type_to_filter: "יש להקליד לסינון…"
     settings: "הגדרות"
+    reset_filter: "איפוס"
     admin:
       title: "ניהול Discourse"
       moderator: "מפקח"
@@ -5814,6 +5809,39 @@ he:
           title: "תוספים"
         advanced:
           title: "מתקדם"
+      upcoming_changes:
+        name: "שם"
+        plugin: "תוסף"
+        metadata: "נתוני על"
+        enabled: "פעיל"
+        show_image: "הצגת תמונה"
+        groups_updated: "הקבוצות עודכנו!"
+        save_groups: "שמירת קבוצות"
+        select_groups: "בחירת קבוצות…"
+        no_changes: "אין שינויים צפויים כרגע."
+        preview: "תצוגה מקדימה"
+        statuses:
+          stable: "יציב"
+          permanent: "קבוע"
+        impact_roles:
+          admins: "מנהלים ראשיים"
+          moderators: "מפקחים"
+          staff: "סגל"
+          all_members: "כל החברים"
+          developers: "מפתחים"
+        filter:
+          search_placeholder: "סינון לפי שם, תיאור או תוסף…"
+          no_results: "אין שינויים עתידיים שתואמים את המסנן שלך"
+          all: "הכול"
+          enabled_all: "מופעל או מושבת"
+          enabled: "פעיל"
+          disabled: "כבוי"
+          impact_type_all: "כל סוגי ההשפעה"
+          impact_type_feature: "יכולת"
+          impact_type_other: "אחר"
+          status_all: "כל המצבים"
+          status_stable: "יציב"
+          status_permanent: "קבוע"
       config:
         about:
           title: "על האתר שלך"
@@ -5844,6 +5872,8 @@ he:
           title: "תרגום"
           header_description: "הגדרת שפת הממשק של הקהילה שלך ואפשרויות התאמה מקומיות אחרות עבור החברים"
           keywords: "מקום|שפה|אזור זמן|unicode|rtl"
+        upcoming_changes:
+          title: "שינויים צפויים"
         login:
           title: "כניסה ואימות"
           header_description: "הגדרה איך משתמשים נכנסים ועוברים אימות, סודות ומפתחות, ספקי OAuth2 ועוד"
@@ -8117,8 +8147,7 @@ he:
             cancel: "ביטול"
         merging_user: "המשתמש ממוזג…"
         merge_failed: "אירעה שגיאה במיזוג המשתמשים."
-        delete_forbidden_because_staff: "אי אפשר למחוק מנהלים."
-        delete_posts_forbidden_because_staff: "לא ניתן להסיר את כל הפוסטים של מנהלי מערכת ומפקחים."
+        delete_forbidden_because_admin: "אי אפשר למחוק מנהלים."
         delete_forbidden:
           one: "לא ניתן למחוק משתמשים אם יש להם הודעות. יש למחוק את כל הפוסטים לפני ניסיון מחיקה של משתמש. (פוסטים ישנים יותר מיום %{count} לא ניתן למחוק.)"
           two: "לא ניתן למחוק משתמשים אם יש להם פוסטים. יש למחוק את כל הפוסטים לפני ניסיון מחיקה של משתמש. (פוסטים ישנים יותר מיומיים - %{count} לא ניתן למחוק.)"

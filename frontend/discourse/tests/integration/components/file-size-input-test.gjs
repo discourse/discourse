@@ -1,8 +1,8 @@
 import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import FileSizeInput from "discourse/admin/components/file-size-input";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import FileSizeInput from "admin/components/file-size-input";
 
 module("Integration | Component | file-size-input", function (hooks) {
   setupRenderingTest(hooks);

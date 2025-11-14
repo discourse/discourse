@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { action } from "@ember/object";
-import SimpleList from "admin/components/simple-list";
+import SimpleList from "discourse/admin/components/simple-list";
 
 export default class SiteSettingSimpleList extends Component {
   inputDelimiter = "|";

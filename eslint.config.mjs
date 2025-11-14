@@ -8,6 +8,7 @@ export default [
       "qunit/no-loose-assertions": "error",
       "ember/no-classic-components": "error",
       "discourse/no-route-template": "error",
+      "discourse/moved-packages-import-paths": "error",
     },
   },
   {

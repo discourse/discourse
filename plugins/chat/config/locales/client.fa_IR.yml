@@ -266,6 +266,7 @@ fa_IR:
           topic: "موضوعات"
       reviewable:
         type: "پیام گفتگو"
+        message_in_channel: "کانال"
       composer:
         italic_text: "متن تاکید شده"
         bold_text: "نوشته‌ی ضخیم "

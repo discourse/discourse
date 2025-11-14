@@ -82,6 +82,8 @@ nb_NO:
         types:
           category: "Kategori"
           topic: "Emne"
+      reviewable:
+        message_in_channel: "Kanal"
       composer:
         italic_text: "kursiv tekst"
         bold_text: "sterk tekst"

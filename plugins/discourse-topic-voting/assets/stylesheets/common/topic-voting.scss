@@ -93,3 +93,19 @@
     right: 80px;
   }
 }
+
+.topic-voting-menu__title {
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  background: var(--tertiary-low);
+  color: var(--tertiary);
+  padding: 0.65rem 1rem;
+  font-weight: bold;
+}
+
+.topic-voting-menu__title.--locked {
+  background: var(--secondary);
+  color: var(--primary-medium);
+  font-weight: normal;
+}

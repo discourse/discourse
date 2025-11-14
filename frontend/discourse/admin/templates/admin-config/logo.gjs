@@ -1,7 +1,7 @@
+import AdminLogoForm from "discourse/admin/components/admin-logo-form";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DPageHeader from "discourse/components/d-page-header";
 import { i18n } from "discourse-i18n";
-import AdminLogoForm from "admin/components/admin-logo-form";
 
 export default <template>
   <div class="admin-config-page">

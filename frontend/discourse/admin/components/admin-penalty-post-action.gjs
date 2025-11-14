@@ -4,8 +4,8 @@ import { action } from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import discourseComputed, { afterRender } from "discourse/lib/decorators";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 
 const ACTIONS = ["delete", "delete_replies", "edit", "none"];
 

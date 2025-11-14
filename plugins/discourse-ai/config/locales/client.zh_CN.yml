@@ -174,7 +174,6 @@ zh_CN:
               label: "PM 发送者"
               description: "发送 PM 的用户（默认为系统）"
             notify_author_pm_message:
-              label: "PM 消息"
               description: "可选发送给作者的自定义消息"
             include_personal_messages:
               label: "包括个人消息"

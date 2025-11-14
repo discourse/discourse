@@ -436,6 +436,7 @@ nl:
           topic: "Topic"
       reviewable:
         type: "Chatbericht"
+        message_in_channel: "Kanaal"
       reactions:
         only_you: "<span>Je hebt gereageerd met </span>:%{emoji}:"
         you_and_single_user: "<span>Jij en %{username} hebben gereageerd met </span>:%{emoji}:"

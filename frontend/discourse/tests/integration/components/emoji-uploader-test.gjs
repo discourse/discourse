@@ -1,10 +1,10 @@
 import { fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import EmojiUploader from "discourse/admin/components/emoji-uploader";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { createFile } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import EmojiUploader from "admin/components/emoji-uploader";
 
 let requestNumber;
 

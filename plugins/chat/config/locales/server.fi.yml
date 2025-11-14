@@ -188,7 +188,7 @@ fi:
         slug_contains_non_ascii_chars: "sisältää muita kuin ascii-merkkejä"
         is_already_in_use: "on jo käytössä"
     bookmarkable:
-      notification_title: "viesti kanavalla %{channel_name}"
+      notification_title_channel: "viesti kanavalla %{channel_name}"
     personal_chat: "henkilökohtainen chat"
     onebox:
       inline_to_message: "Viesti %{message_id}, lähettäjä: %{username} – #%{chat_channel}"

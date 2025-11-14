@@ -2,10 +2,10 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import ColorSchemeSelectBaseModal from "discourse/admin/components/modal/color-scheme-select-base";
+import { setDefaultColorScheme } from "discourse/admin/lib/color-scheme-manager";
 import { currentThemeId } from "discourse/lib/theme-selector";
 import { i18n } from "discourse-i18n";
-import ColorSchemeSelectBaseModal from "admin/components/modal/color-scheme-select-base";
-import { setDefaultColorScheme } from "admin/lib/color-scheme-manager";
 
 export default class AdminConfigColorPalettesIndexController extends Controller {
   @service router;

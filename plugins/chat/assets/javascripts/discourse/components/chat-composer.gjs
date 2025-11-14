@@ -17,15 +17,14 @@ import {
 } from "pretty-text/emoji";
 import { replacements, translations } from "pretty-text/emoji/data";
 import { Promise } from "rsvp";
-import { not, or } from "truth-helpers";
 import DTextarea from "discourse/components/d-textarea";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import renderEmojiAutocomplete from "discourse/lib/autocomplete/emoji";
-import userAutocomplete from "discourse/lib/autocomplete/user";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import { cloneJSON } from "discourse/lib/object";
@@ -44,6 +43,7 @@ import DAutocompleteModifier, {
   SKIP,
 } from "discourse/modifiers/d-autocomplete";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
+import { not, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import DButton from "discourse/plugins/chat/discourse/components/chat/composer/button";
 import ChatComposerDropdown from "discourse/plugins/chat/discourse/components/chat-composer-dropdown";
@@ -422,8 +422,21 @@ export default class ChatComposer extends Component {
   }
 
   @action
-  onSelectEmoji(emoji) {
-    this.composer.textarea.emojiSelected(emoji);
+  onSelectEmoji(emoji, context = {}) {
+    const textareaInteractor = this.composer.textarea;
+
+    if (context.emojiTermStart && context.emojiTermStart) {
+      const value = textareaInteractor.textarea.value;
+      const valueUpToCursor = `${value.substring(0, context.emojiTermStart)}:${emoji}: `;
+      const valueAfterCursor = value.substring(context.emojiTermEnd + 1);
+      textareaInteractor.value = `${valueUpToCursor}${valueAfterCursor}`;
+      textareaInteractor.textarea.setSelectionRange(
+        valueUpToCursor.length,
+        valueUpToCursor.length
+      );
+    } else {
+      textareaInteractor.emojiSelected(emoji);
+    }
 
     if (this.site.desktopView) {
       this.composer.focus();
@@ -453,8 +466,8 @@ export default class ChatComposer extends Component {
     }
 
     this.applyAutocomplete(textarea, {
-      template: userAutocomplete,
-      key: "@",
+      component: UserAutocompleteResults,
+      key: UserAutocompleteResults.TRIGGER_KEY,
       width: "100%",
       treatAsTextarea: true,
       fixedTextareaPosition: true,
@@ -543,6 +556,25 @@ export default class ChatComposer extends Component {
         if (v.code) {
           return `${v.code}:`;
         } else {
+          // Capture emoji term positioning before opening the emoji picker which resets the textarea state
+          const textareaInteractor = this.composer.textarea;
+          const currentValue = textareaInteractor.textarea.value;
+          const currentCaretPos = textareaInteractor.textarea.selectionStart;
+
+          let emojiContext = null;
+
+          if (currentValue && currentCaretPos !== undefined) {
+            const textBeforeCursor = currentValue.substring(0, currentCaretPos);
+            const incompleteMatch = textBeforeCursor.match(/(:[\w-]+)$/);
+
+            if (incompleteMatch) {
+              emojiContext = {
+                emojiTermStart: currentCaretPos - incompleteMatch[1].length,
+                emojiTermEnd: currentCaretPos - 1,
+              };
+            }
+          }
+
           const menuOptions = {
             identifier: "emoji-picker",
             groupIdentifier: "emoji-picker",
@@ -551,7 +583,7 @@ export default class ChatComposer extends Component {
             modalForMobile: true,
             data: {
               didSelectEmoji: (emoji) => {
-                this.onSelectEmoji(emoji);
+                this.onSelectEmoji(emoji, emojiContext);
               },
               term: v.term,
               context: "chat",

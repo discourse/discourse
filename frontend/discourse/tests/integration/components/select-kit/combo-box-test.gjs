@@ -1,9 +1,9 @@
 import { hash } from "@ember/helper";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import ComboBox from "select-kit/components/combo-box";
 
 const DEFAULT_CONTENT = [
   { id: 1, name: "foo" },

@@ -1,5 +1,4 @@
 import { tracked } from "@glimmer/tracking";
-import { A } from "@ember/array";
 import EmberObject, { computed, get, getProperties } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, equal, filterBy, gt, mapBy, or } from "@ember/object/computed";
@@ -10,6 +9,7 @@ import { service } from "@ember/service";
 import { camelize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
@@ -314,6 +314,7 @@ export default class User extends RestModel.extend(Evented) {
     return {
       type: "user",
       id: username,
+      /** @type User */
       user: this,
     };
   }
@@ -1362,8 +1363,8 @@ User.reopenClass({
         responses.set("count", responses.get("count") + stat.get("count"));
       });
 
-    const result = A();
-    result.pushObjects(stats.filter((stat) => !stat.isResponse));
+    const result = new TrackedArray();
+    result.push(...stats.filter((stat) => !stat.isResponse));
 
     let insertAt = 0;
     result.forEach((item, index) => {
@@ -1375,7 +1376,7 @@ User.reopenClass({
       }
     });
     if (responses.count > 0) {
-      result.insertAt(insertAt, responses);
+      result.splice(insertAt, 0, responses);
     }
     return result;
   },

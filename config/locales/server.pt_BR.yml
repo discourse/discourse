@@ -1263,8 +1263,6 @@ pt_BR:
       yaxis: "Dia"
       description: "Pedidos de API para chaves de API regulares e chaves de API do usuário."
     consolidated_page_views_browser_detection:
-      title: "Visualizações de página consolidadas com detecção no navegador (experimental)"
-      title_legacy: "Visualizações de página consolidadas com detecção no navegador (experimental)"
       xaxis:
         page_view_anon_browser: "Navegador anônimo"
         page_view_logged_in_browser: "Navegador de acesso"
@@ -2394,7 +2392,6 @@ pt_BR:
     force_lowercase_tags: "Obrigar todas as novas etiquetas a ficar totalmente em minúsculas."
     create_post_for_category_and_tag_changes: "Criar postagem de sussurro quando a categoria ou etiquetas do tópico for alterada. É preciso ativar as publicações de sussurros."
     automatically_clean_unused_tags: "Exclua automaticamente etiquetas que não estão sendo utilizadas em tópicos ou mensagens pessoais todos os dias."
-    watched_precedence_over_muted: "Quero receber notificações sobre tópicos em categorias ou etiquetas que estou acompanhando que também pertencem a alguém que eu silenciei"
     company_name: "O nome da sua empresa ou organização. Se ficar vazio, não serão fornecidos Termos de Serviço nem Aviso de Privacidade clichês."
     governing_law: "Especifique a jurisdição que rege os aspectos legais do site, inclusive os Termos de Serviço e a Política de Privacidade. Geralmente é o país onde a empresa que opera o site está registrada ou faz negócios"
     city_for_disputes: "Especifique a cidade que será usada como jurisdição para a resolução de disputas relacionadas ao uso deste fórum. Geralmente essa informação está inclusa nos documentos legais, como os Termos de Serviço do fórum."
@@ -2437,8 +2434,6 @@ pt_BR:
     default_navigation_menu_categories: "As categorias selecionadas serão exibidas abaixo da seção de Categorias do Menu de Navegação por padrão."
     default_navigation_menu_tags: "As etiquetas selecionadas serão exibidas na seção Etiquetas do Menu de Navegação por padrão."
     experimental_new_new_view_groups: 'Ative uma nova lista de tópicos que combina tópicos novos e não lidos e faz o link "Tudo", localizado na barra lateral, apontar para ela.'
-    floatkit_autocomplete_composer: "Ative o menu de preenchimento automático baseado no Floatkit no compositor. É uma melhoria de IU que substituirá o menu atual de preenchimento automático atual baseado em JQuery."
-    floatkit_autocomplete_chat_composer: "Ative o menu de preenchimento automático baseado no Floatkit no compositor do bate-papo. É uma melhoria de IU que substituirá o menu de preenchimento automático atual baseado em JQuery."
     experimental_form_templates: "Ative o recurso de modelo de formulário. Gerencie os modelos em <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
     show_preview_for_form_templates: "Ativar a pré-visualização para o recurso de modelos de formulário"
     lazy_load_categories_groups: "Carregue informações de forma ociosa apenas para os(as) usuários(as) destes grupos. Melhora o desempenho em sites com várias categorias."
@@ -2572,9 +2567,6 @@ pt_BR:
       activity_after: "Exibir tópicos com atividade mais recente depois de uma data (DD-MM-AAAA ou dias atrás)"
       created_before: "Exibir tópicos criados antes de uma data (DD-MM-AAAA ou dias atrás)"
       created_after: "Exibir tópicos criados após uma data (DD-MM-AAAA ou dias atrás)"
-      created_by: "Exibir tópicos criados por usuário(a) específico(a)"
-      created_by_user: "Exibir tópicos criado por nome do(a) usuário(a) (sem @)"
-      created_by_multiple: "Exibir tópicos criados por qualquer um(a) dos(as) usuários(as) especificados(as) (separação por vírgula)"
       latest_post_before: "Exibir tópicos com postagem mais recente antes de uma data (DD-MM-AAAA ou dias atrás)"
       latest_post_after: "Exibir tópicos com a postagem mais recente após a data (DD-MM-AAAA ou dias atrás)"
       likes_min: "Exibir tópicos com pelo menos esta quantidade de curtidas"

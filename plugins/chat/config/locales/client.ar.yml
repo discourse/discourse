@@ -496,6 +496,7 @@ ar:
           topic: "الموضوع"
       reviewable:
         type: "رسالة دردشة"
+        message_in_channel: "القناة"
       reactions:
         only_you: "<span>لقد تفاعلت بالرمز التعبيري </span>:%{emoji}:"
         you_and_single_user: "<span>لقد تفاعلت أنت و%{username} بالرمز التعبيري </span>:%{emoji}:"

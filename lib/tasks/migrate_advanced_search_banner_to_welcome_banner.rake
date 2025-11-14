@@ -1,14 +1,20 @@
 # frozen_string_literal: true
+# rubocop:disable Lint/OrAssignmentToConstant
 
-THEME_GIT_URL = "https://github.com/discourse/discourse-search-banner.git" unless defined?(
-  THEME_GIT_URL
-)
-REQUIRED_TRANSLATION_KEYS = %w[search_banner.headline search_banner.subhead] unless defined?(
-  REQUIRED_TRANSLATION_KEYS
-)
+THEME_GIT_URL ||= "https://github.com/discourse/discourse-search-banner.git"
+REQUIRED_TRANSLATION_KEYS ||= %w[search_banner.headline search_banner.subhead]
+
+desc "Run all Advanced Search Banner migration tasks"
+task "themes:advanced_search_banner:migrate_all" => %w[
+       themes:advanced_search_banner:1_migrate_settings_to_welcome_banner
+       themes:advanced_search_banner:2_migrate_translations_to_welcome_banner
+       themes:advanced_search_banner:3_exclude_and_disable
+     ]
 
 desc "Migrate settings from Advanced Search Banner to core welcome banner"
-task "themes:advanced_search_banner:migrate_settings_to_welcome_banner" => :environment do
+task "themes:advanced_search_banner:1_migrate_settings_to_welcome_banner" => :environment do
+  puts "\n1. Migrating settings..."
+  puts "------------------------"
   components = find_all_components([:theme_settings])
 
   if components.empty?
@@ -20,7 +26,9 @@ task "themes:advanced_search_banner:migrate_settings_to_welcome_banner" => :envi
 end
 
 desc "Migrate translations from Advanced Search Banner to core welcome banner"
-task "themes:advanced_search_banner:migrate_translations_to_welcome_banner" => :environment do
+task "themes:advanced_search_banner:2_migrate_translations_to_welcome_banner" => :environment do
+  puts "\n2. Migrating translations..."
+  puts "----------------------------"
   components = find_all_components([:theme_translation_overrides])
 
   if components.empty?
@@ -32,7 +40,9 @@ task "themes:advanced_search_banner:migrate_translations_to_welcome_banner" => :
 end
 
 desc "Exclude and disable Advanced Search Banner theme component"
-task "themes:advanced_search_banner:exclude_and_disable" => :environment do
+task "themes:advanced_search_banner:3_exclude_and_disable" => :environment do
+  puts "\n3. Excluding and disabling..."
+  puts "-----------------------------"
   components = find_all_components
 
   if components.empty?
@@ -278,30 +288,15 @@ end
 
 # Exclude and disable methods
 def process_theme_component(theme)
-  exclude_theme_component(theme)
   enable_welcome_banner(theme)
+  exclude_theme_component(theme)
   disable_theme_component(theme)
 
   puts "\n\e[1;34mTask completed successfully!\e[0m"
 end
 
-def exclude_theme_component(theme)
-  puts "\n  Executing exclude step..."
-  return if not_included_in_any_theme?(theme)
-
-  parent_relations = theme.parent_theme_relation.to_a
-  total_relations = parent_relations.size
-
-  puts "\n  Excluding #{theme_identifier(theme)} from..."
-  parent_relations.each do |relation|
-    puts "    - #{relation.parent_theme.name} (ID: #{relation.parent_theme_id})"
-    relation.destroy!
-  end
-  puts "  \e[1;32m✓ Excluded from #{total_relations} theme#{"s" if total_relations > 1}\e[0m"
-end
-
 def enable_welcome_banner(theme)
-  puts "\n  Executing enable core welcome banner step..."
+  puts "\n  Executing enable core welcome banner step... (1/3)"
   if !theme.enabled
     puts "  \e[33m#{theme_identifier(theme)} is disabled, thus no need to enable core welcome banner. Skipping\e[0m"
     return
@@ -310,7 +305,7 @@ def enable_welcome_banner(theme)
 
   return if not_included_in_any_theme?(theme)
 
-  puts "\n  Enabling \e[1mcore welcome banner\e[0m for..."
+  puts "  Enabling \e[1mcore welcome banner\e[0m for..."
   enabled_count = 0
 
   theme.parent_theme_relation.each do |relation|
@@ -318,8 +313,17 @@ def enable_welcome_banner(theme)
     site_setting =
       ThemeSiteSetting.find_by(theme_id: parent_theme.id, name: "enable_welcome_banner")
 
+    next if site_setting.nil?
+
     if site_setting.value == "f"
-      site_setting.update!(value: "t")
+      Themes::ThemeSiteSettingManager.call(
+        params: {
+          theme_id: parent_theme.id,
+          name: "enable_welcome_banner",
+          value: true,
+        },
+        guardian: Discourse.system_user.guardian,
+      )
       puts "    - #{parent_theme.name} (ID: #{parent_theme.id}) \e[32m- enabled\e[0m"
       enabled_count += 1
     else
@@ -330,14 +334,31 @@ def enable_welcome_banner(theme)
   puts "  \e[1;32m✓ Enabled for #{enabled_count} theme#{"s" unless enabled_count == 1}\e[0m"
 end
 
+def exclude_theme_component(theme)
+  puts "\n  Executing exclude step... (2/3)"
+  return if not_included_in_any_theme?(theme)
+
+  parent_relations = theme.parent_theme_relation.to_a
+  total_relations = parent_relations.size
+  parent_names = parent_relations.map { |r| "#{r.parent_theme.name} (ID: #{r.parent_theme_id})" }
+
+  puts "  Excluding #{theme_identifier(theme)} from:"
+  puts "    - #{parent_names.join("\n    - ")}"
+
+  theme.parent_theme_ids = []
+  theme.save!
+  puts "  \e[1;32m✓ Excluded from #{total_relations} theme#{"s" if total_relations > 1}\e[0m"
+end
+
 def disable_theme_component(theme)
-  puts "\n  Executing disable component step..."
+  puts "\n  Executing disable component step... (3/3)"
   if !theme.enabled
     puts "  \e[33m#{theme_identifier(theme)} was already disabled. Skipping\e[0m"
     return
   end
 
-  puts "\n  Disabling #{theme_identifier(theme)}..."
+  puts "  Disabling #{theme_identifier(theme)}..."
   theme.update!(enabled: false)
+  StaffActionLogger.new(Discourse.system_user).log_theme_component_disabled(theme)
   puts "  \e[1;32m✓ Disabled\e[0m"
 end

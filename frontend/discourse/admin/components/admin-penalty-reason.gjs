@@ -4,11 +4,11 @@ import { action } from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import { eq } from "truth-helpers";
 import TextField from "discourse/components/text-field";
 import discourseComputed from "discourse/lib/decorators";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 
 const CUSTOM_REASON_KEY = "custom";
 

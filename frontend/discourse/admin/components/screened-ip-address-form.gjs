@@ -5,12 +5,12 @@ import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { classNames, tagName } from "@ember-decorators/component";
+import ScreenedIpAddress from "discourse/admin/models/screened-ip-address";
 import DButton from "discourse/components/d-button";
 import TextField from "discourse/components/text-field";
 import discourseComputed from "discourse/lib/decorators";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
-import ScreenedIpAddress from "admin/models/screened-ip-address";
-import ComboBox from "select-kit/components/combo-box";
 
 /**
   A form to create an IP address that will be blocked or allowed.

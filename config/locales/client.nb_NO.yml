@@ -195,7 +195,7 @@ nb_NO:
     welcome_banner:
       header:
         anonymous_members: "Velkommen til %{site_name}!"
-      search: "Søk"
+      search_placeholder: "Søk"
     themes:
       default_description: "Forvalg"
       error_caused_by: "Forårsaket av '%{name}'. <a target='blank' href='%{path}'>Klikk her</a> for å oppdatere, rekonfigurere eller deaktivere."
@@ -248,7 +248,7 @@ nb_NO:
     joined: "Ble medlem"
     admin_title: "Admin"
     show_more: "vis mer"
-    show_help: "alternativer"
+    show_help: "Alternativer"
     links: "Lenker"
     links_lowercase:
       one: "link"
@@ -528,10 +528,6 @@ nb_NO:
         required: "Du må gjøre krav på varer før du kan se gjennom dem."
         claimed_by_you: "Du har gjort krav på dette elementet og kan se gjennom det."
         claimed_by_other: "Dette elementet kan bare bli vurdert av <b>%{username}</b>."
-      claim:
-        title: "Gjør krav på dette emne"
-      unclaim:
-        help: "fjern dette kravet"
       awaiting_approval: "Venter på godkjenning"
       delete: "Slett"
       settings:
@@ -594,7 +590,7 @@ nb_NO:
       replies:
         one: "%{count} svar"
         other: "%{count} svar"
-      edit: "Rediger"
+      edit: "Rediger innlegg"
       save: "Lagre"
       cancel: "Avbryt"
       new_topic: "Godkjenning av dette elementet vil opprette et nytt emne"
@@ -615,7 +611,6 @@ nb_NO:
           created_at: "Opprettet på"
           created_at_asc: "Opprettet i (bakover)"
         priority:
-          title: "Minimum prioritet"
           any: "(alt)"
           low: "Lav"
           medium: "Middels"
@@ -665,9 +660,12 @@ nb_NO:
         reviewable_post:
           title: "Innlegg"
           noun: "innlegg"
+      user_label: "Bruker"
       notes:
         delete: "Slett"
+      topic_label: "Emne"
       review_user: "Bruker"
+      copy_link_feedback: "Lenk kopiert"
       insights:
         activities:
           posts:
@@ -2415,7 +2413,6 @@ nb_NO:
       reply: "Svar"
       cancel: "Avbryt"
       create_topic: "Opprett emne"
-      create_pm: "Send melding"
       create_whisper: "Hvisk"
       create_shared_draft: "Opprett delt utkast"
       edit_shared_draft: "Rediger delt utkast"
@@ -2491,8 +2488,10 @@ nb_NO:
           label: Veksle hvisking
           desc: Hvisking er kun synlig for stab
         create_topic:
-          label: "Nytt emne"
           desc: Opprett et nytt emne
+        create_personal_message:
+          label: "Ny melding"
+          desc: "Opprett en ny personlig melding"
         shared_draft:
           label: "Delt utkast"
           desc: "Lag et emne som bare vil være synlig for tillatte brukere"
@@ -4046,7 +4045,6 @@ nb_NO:
         go_to_unread_post: "%{shortcut} Gå til første uleste innlegg"
       application:
         title: "Applikasjon"
-        create: "%{shortcut} Opprett nytt emne"
         notifications: "%{shortcut} Åpne varsler"
         user_profile_menu: "%{shortcut} Åpne brukermenyen"
         show_incoming_updated_topics: "%{shortcut} Vis oppdaterte emner"
@@ -4371,6 +4369,7 @@ nb_NO:
   admin_js:
     type_to_filter: "Skriv for å filtrere…"
     settings: "Instillinger"
+    reset_filter: "Tilbakestill"
     admin:
       title: "Discourse-admin"
       moderator: "Moderator"
@@ -4398,6 +4397,19 @@ nb_NO:
           title: "Sikkerhet"
         plugins:
           title: "Utvidelser"
+      upcoming_changes:
+        name: "Navn"
+        enabled: "Aktivert"
+        preview: "Forhåndsvis"
+        impact_roles:
+          admins: "Adminer"
+          moderators: "Moderatorer"
+          staff: "Stab"
+        filter:
+          all: "Alle"
+          enabled: "Aktivert"
+          disabled: "Deaktivert"
+          impact_type_other: "Annet"
       config:
         developer:
           title: "Utvikler"
@@ -5474,7 +5486,6 @@ nb_NO:
             cancel: "Avbryt"
           confirmation:
             cancel: "Avbryt"
-        delete_posts_forbidden_because_staff: "Kan ikke slette alle innlegg av administratorer og moderatorer."
         delete_forbidden:
           one: "Brukere kan ikke slettes om de har innlegg. Slett alle brukerens innlegg før bruker kan slettes. (Innlegg eldre enn %{count} dag kan ikke slettes.)"
           other: "Brukere kan ikke slettes om de har innlegg. Slett alle innlegg før du forsøker å slette en bruker. (Innlegg eldre enn %{count} dager kan ikke slettes.)"

@@ -34,6 +34,7 @@ class LlmModel < ActiveRecord::Base
     {
       aws_bedrock: {
         access_key_id: :text,
+        role_arn: :text,
         region: :text,
         disable_native_tools: :checkbox,
         disable_temperature: :checkbox,
@@ -188,15 +189,44 @@ class LlmModel < ActiveRecord::Base
     seeded? && llm_credit_allocation.present?
   end
 
+  def aws_bedrock_credentials
+    return nil unless provider == BEDROCK_PROVIDER_NAME
+
+    role_arn = lookup_custom_param("role_arn")
+    return nil if role_arn.blank?
+
+    # Invalidate cache if role_arn changed
+    if @cached_role_arn != role_arn
+      @cached_role_arn = role_arn
+      @aws_bedrock_credentials = nil
+    end
+
+    @aws_bedrock_credentials ||=
+      begin
+        require "aws-sdk-sts" unless defined?(Aws::STS)
+        region = lookup_custom_param("region")
+
+        Aws::AssumeRoleCredentials.new(
+          role_arn: role_arn,
+          role_session_name: "discourse-bedrock-#{Process.pid}",
+          client: Aws::STS::Client.new(region: region),
+        )
+      end
+  end
+
   private
 
   def required_provider_params
     return if provider != BEDROCK_PROVIDER_NAME
 
-    %w[access_key_id region].each do |field|
-      if lookup_custom_param(field).blank?
-        errors.add(:base, I18n.t("discourse_ai.llm_models.missing_provider_param", param: field))
-      end
+    # Region is always required
+    if lookup_custom_param("region").blank?
+      errors.add(:base, I18n.t("discourse_ai.llm_models.missing_provider_param", param: "region"))
+    end
+
+    # Either access_key_id or role_arn must be present
+    if lookup_custom_param("access_key_id").blank? && lookup_custom_param("role_arn").blank?
+      errors.add(:base, I18n.t("discourse_ai.llm_models.bedrock_missing_auth"))
     end
   end
 end

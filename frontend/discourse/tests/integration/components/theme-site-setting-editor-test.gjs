@@ -1,9 +1,9 @@
 import { render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import ThemeSiteSettingEditor from "discourse/admin/components/theme-site-setting-editor";
+import SiteSetting from "discourse/admin/models/site-setting";
+import Theme from "discourse/admin/models/theme";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import ThemeSiteSettingEditor from "admin/components/theme-site-setting-editor";
-import SiteSetting from "admin/models/site-setting";
-import Theme from "admin/models/theme";
 
 module("Integration | Component | ThemeSiteSettingEditor", function (hooks) {
   setupRenderingTest(hooks);

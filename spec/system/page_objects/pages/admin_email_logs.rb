@@ -56,6 +56,21 @@ module PageObjects
         end
       end
 
+      class BouncedEmailLogRow < EmailLogRow
+        def has_info_button?
+          element.has_css?(".email-details a")
+        end
+
+        def has_no_info_button?
+          element.has_no_css?(".email-details a")
+        end
+
+        def open_incoming_email
+          element.find(".email-details a").click
+          PageObjects::Modals::AdminIncomingEmailDetailsModal.new
+        end
+      end
+
       class SentEmailLogRow < EmailLogRow
         def has_reply_key?(reply_key)
           element.has_css?("td:nth-of-type(5) .reply-key", text: reply_key)
@@ -116,6 +131,8 @@ module PageObjects
           SkippedEmailLogRow
         when :sent
           SentEmailLogRow
+        when :bounced
+          BouncedEmailLogRow
         else
           EmailLogRow
         end

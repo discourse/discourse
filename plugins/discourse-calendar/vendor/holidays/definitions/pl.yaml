@@ -162,6 +162,13 @@ months:
     regions: [pl]
     mday: 24
     type: informal
+    year_ranges:
+      until: 2024
+  - name: Wigilia Bożego Narodzenia
+    regions: [pl]
+    mday: 24
+    year_ranges:
+      from: 2025
   - name: pierwszy dzień Bożego Narodzenia
     regions: [pl]
     mday: 25
@@ -318,9 +325,14 @@ tests:
     expect:
       name: "Mikołajki"
   - given:
-      date: '2011-12-24'
+      date: '2024-12-24'
       regions: ["pl"]
       options: ["informal"]
+    expect:
+      name: "Wigilia Bożego Narodzenia"
+  - given:
+      date: '2025-12-24'
+      regions: ["pl"]
     expect:
       name: "Wigilia Bożego Narodzenia"
   - given:

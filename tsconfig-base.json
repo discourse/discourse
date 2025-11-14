@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "plugins": [{
+      "name": "@glint/tsserver-plugin"
+    }],
+    "target": "es2021",
+    "module": "es2022",
+    "moduleResolution": "bundler",
+    "experimentalDecorators": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "noEmit": false,
+    "noEmitOnError": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationMap": true
+  }
+}

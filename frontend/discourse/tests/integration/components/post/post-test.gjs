@@ -2,11 +2,11 @@ import { getOwner } from "@ember/owner";
 import { click, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Post from "discourse/components/post";
+import DMenus from "discourse/float-kit/components/d-menus";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
-import DMenus from "float-kit/components/d-menus";
 
 function renderComponent(
   post,
@@ -808,5 +808,75 @@ module("Integration | Component | Post", function (hooks) {
     await renderComponent(this.post);
 
     assert.dom(".show-more-actions").doesNotExist();
+  });
+
+  test("a11y heading is rendered when post is cloaked", async function (assert) {
+    // TODO (glimmer-post-stream) remove the outer div when the post-stream widget is converted to a Glimmer component
+    await render(
+      <template>
+        <div class="topic-post glimmer-post-stream">
+          <Post @post={{this.post}} @cloaked={{true}} />
+        </div>
+        <DMenus />
+      </template>
+    );
+
+    assert
+      .dom("h2.sr-only")
+      .exists("accessibility heading exists when the post is cloaked");
+    assert
+      .dom("h2.sr-only")
+      .hasAttribute(
+        "id",
+        `post-heading-${this.post.post_number}`,
+        "heading has correct id based on post number"
+      );
+  });
+
+  test("article is properly labeled by a11y heading", async function (assert) {
+    await renderComponent(this.post);
+
+    const expectedAriaLabelledBy = `post-heading-${this.post.post_number}`;
+
+    assert
+      .dom("article.onscreen-post")
+      .hasAttribute(
+        "aria-labelledby",
+        expectedAriaLabelledBy,
+        "article is labeled by the accessibility heading"
+      );
+  });
+
+  test("a11y heading id is unique for different post numbers", async function (assert) {
+    const post1 = this.store.createRecord("post", {
+      id: 100,
+      post_number: 1,
+      topic: this.post.topic,
+      username: "user1",
+      created_at: new Date(),
+    });
+
+    const post2 = this.store.createRecord("post", {
+      id: 200,
+      post_number: 2,
+      topic: this.post.topic,
+      username: "user2",
+      created_at: new Date(),
+    });
+
+    // Render both posts
+    // TODO (glimmer-post-stream) remove the outer div when the post-stream widget is converted to a Glimmer component
+    await render(
+      <template>
+        <div class="topic-post glimmer-post-stream">
+          <Post @post={{post1}} />
+          <Post @post={{post2}} />
+        </div>
+        <DMenus />
+      </template>
+    );
+
+    assert.dom("#post-heading-1").exists("first post heading has correct id");
+    assert.dom("#post-heading-2").exists("second post heading has correct id");
   });
 });

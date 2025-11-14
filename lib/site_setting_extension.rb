@@ -272,7 +272,7 @@ module SiteSettingExtension
     raise err if Rails.env.test?
 
     Rails.logger.error("Error while generating client_settings_json_uncached: #{err.message}")
-    nil
+    raise
   end
 
   def theme_site_settings_json_uncached(theme_id)

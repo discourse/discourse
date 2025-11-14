@@ -58,15 +58,15 @@ describe "Wizard", type: :system do
       expect(page).to have_current_path("/latest")
     end
 
-    it "redirects to admin guide when bootstrap mode is enabled" do
+    it "redirects to homepage even when bootstrap mode is enabled" do
       topic = Fabricate(:topic_with_op, title: "Admin Getting Started Guide")
       SiteSetting.bootstrap_mode_enabled = true
       SiteSetting.admin_quick_start_topic_id = topic.id
 
       wizard_page.go_to_step("ready")
-      wizard_page.click_jump_in
 
-      expect(page).to have_current_path(topic.url)
+      wizard_page.click_jump_in
+      expect(page).to have_current_path("/latest")
     end
   end
 end
