@@ -283,6 +283,7 @@ export default class Item extends Component {
         (if @topic.bookmarked "bookmarked")
         (if @topic.pinned "pinned")
         (if @topic.closed "closed")
+        (if @bulkSelectEnabled "bulk-selecting")
         this.tagClassNames
         this.additionalClasses
       }}
