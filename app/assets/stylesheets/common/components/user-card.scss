@@ -194,25 +194,30 @@
         position: absolute;
         width: 80%;
         height: 80%;
-        right: 10%;
-        bottom: 10%;
-        font-size: 1.5rem;
+        border-radius: 50%;
+        right: 0%;
+        bottom: 0%;
+        font-size: 1.25rem;
         display: flex;
         justify-content: center;
         align-items: center;
         transition: opacity 0.2s;
-        transition-delay: 0.2s;
 
         .d-icon {
-          background-color: rgb(var(--secondary-rgb), 0.85);
+          position: inherit;
+          position: absolute;
+          bottom: 0%;
+          right: 0%;
+          background-color: rgb(var(--secondary-rgb), 1);
           border-radius: 50%;
-          padding: 0.75rem;
+          padding: 0.5rem;
           color: var(--primary);
+          box-shadow: var(--shadow-dropdown);
         }
-      }
 
-      &:hover .own-avatar-pencil {
-        opacity: 0.7;
+        &:hover {
+          opacity: 0.9;
+        }
       }
     }
 
