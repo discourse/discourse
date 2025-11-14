@@ -115,34 +115,40 @@ module DiscourseAi
             )
 
           if result.failure?
+            failing_step = nil
+            failing_step = "contract.default" if result[:"result.contract.default"]&.failure?
+            failing_step = "model.persona" if result[:"result.model.persona"]&.failure?
+            failing_step = "policy.has_image_generation_tool" if result[
+              :"result.policy.has_image_generation_tool"
+            ]&.failure?
+            failing_step = "model.llm_model" if result[:"result.model.llm_model"]&.failure?
+
             status =
-              case result.failing_step
+              case failing_step
               when "contract.default"
                 422
-              when :fetch_persona
+              when "model.persona"
                 404
-              when :has_image_generation_tool
+              when "policy.has_image_generation_tool"
                 422
-              when :fetch_llm_model, :generate_images, :parse_uploads, :serialize_thumbnails
+              when "model.llm_model"
                 500
               else
                 500
               end
 
             translation_key =
-              case result.failing_step
+              case failing_step
               when "contract.default"
                 "discourse_ai.ai_helper.errors.completion_request_failed"
-              when :fetch_persona
+              when "model.persona"
                 "discourse_ai.ai_helper.errors.no_illustrator_persona"
-              when :has_image_generation_tool
+              when "policy.has_image_generation_tool"
                 "discourse_ai.ai_helper.errors.no_image_generation_tool"
-              when :fetch_llm_model
+              when "model.llm_model"
                 "discourse_ai.ai_helper.errors.llm_model_not_configured"
-              when :generate_images, :parse_uploads, :serialize_thumbnails
-                "discourse_ai.ai_helper.errors.no_image_generated"
               else
-                "discourse_ai.ai_helper.errors.unknown_error"
+                "discourse_ai.ai_helper.errors.no_image_generated"
               end
 
             render_json_error(I18n.t(translation_key), status: status)

@@ -19,7 +19,12 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
     it "is able to stream suggestions to helper" do
       sign_in(user)
 
-      my_post = Fabricate(:post)
+      category = Fabricate(:category)
+      category.set_permissions(everyone: :full)
+      category.save!
+
+      topic = Fabricate(:topic, category: category)
+      my_post = Fabricate(:post, topic: topic)
 
       channel = nil
       messages =
@@ -209,7 +214,7 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"].first).to include(
-          "Post Illustrator persona not found",
+          "Post Illustrator persona is not configured",
         )
       end
 
@@ -237,7 +242,7 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
         let(:upload) do
           Fabricate(
             :upload,
-            sha1: Upload.generate_digest_from_short_url("upload://test123"),
+            sha1: Upload.sha1_from_short_url("upload://test123"),
             original_filename: "test.png",
           )
         end
@@ -248,10 +253,8 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
 
         before do
           image_tool
-          post_illustrator_persona.update!(
-            tools: [["custom-#{image_tool.id}", nil, true]],
-            force_tool_use: [["custom-#{image_tool.id}", nil, true]],
-          )
+          post_illustrator_persona.update_columns(system: false) # Allow editing for test
+          post_illustrator_persona.update!(tools: [["custom-#{image_tool.id}", nil, true]])
 
           allow_any_instance_of(DiscourseAi::Personas::Bot).to receive(
             :reply,
@@ -285,7 +288,7 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
                }
 
           expect(response.status).to eq(500)
-          expect(response.parsed_body["errors"].first).to include("No image was generated")
+          expect(response.parsed_body["errors"].first).to include("Failed to generate image")
         end
       end
 
