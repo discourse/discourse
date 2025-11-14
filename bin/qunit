@@ -11,7 +11,7 @@ class QunitRunner
   def initialize(args)
     @file_paths = []
     @filter = nil
-    @verbose = false
+    @verbose = ENV["ACTIONS_STEP_DEBUG"] == "true"
     @dry_run = false
 
     @ember_port = ENV["EMBER_PORT"]&.to_i || 4200
