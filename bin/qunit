@@ -6,6 +6,7 @@ require "json"
 require "fileutils"
 require "socket"
 require "uri"
+require_relative "../lib/chrome_installed_checker"
 
 class QunitRunner
   def initialize(args)
@@ -14,7 +15,6 @@ class QunitRunner
     @verbose = ENV["ACTIONS_STEP_DEBUG"] == "true"
     @dry_run = false
 
-    @ember_port = ENV["EMBER_PORT"]&.to_i || 4200
     @rails_port = ENV["UNICORN_PORT"]&.to_i || 3000
 
     @standalone_mode = false
@@ -69,10 +69,6 @@ class QunitRunner
         end
 
         opts.on("--dry-run", "Show what would run without executing") { @dry_run = true }
-
-        opts.on("--ember-port PORT", Integer, "Ember server port (default: 4200)") do |port|
-          @ember_port = port
-        end
 
         opts.on("--rails-port PORT", Integer, "Rails server port (default: 3000)") do |port|
           @rails_port = port
@@ -192,7 +188,7 @@ class QunitRunner
         next false unless File.directory?(plugin_path)
 
         # Check if plugin has tests
-        test_dirs = ["test/javascripts", "test"].map { |subdir| File.join(plugin_path, subdir) }
+        test_dirs = %w[test/javascripts test].map { |subdir| File.join(plugin_path, subdir) }
         test_dirs.any? do |test_dir|
           Dir.exist?(test_dir) && Dir.glob(File.join(test_dir, "**", "*-test.{js,gjs}")).any?
         end
@@ -295,7 +291,6 @@ class QunitRunner
     run_ember_exam(filter: @filter, load_plugins: is_plugin, query: query)
   end
 
-
   def run_all_tests_quick
     if @plugin_targets.any?
       puts "\nRunning tests for #{@plugin_targets.length} plugin(s) in parallel"
@@ -310,9 +305,7 @@ class QunitRunner
   def run_ember_exam(filter: nil, load_plugins:, file_path_filter: nil, query: nil)
     check_dev_environment!
 
-    puts "\nRunning tests against dev environment:"
-    puts "  Ember: localhost:#{@ember_port}"
-    puts "  Rails: localhost:#{@rails_port}"
+    puts "\nRunning tests against Rails on localhost:#{@rails_port}"
     if @plugin_targets.any?
       puts "  Plugins: #{@plugin_targets.join(", ")}"
     elsif file_path_filter
@@ -333,16 +326,37 @@ class QunitRunner
 
     env = {}
     env["LOAD_PLUGINS"] = "1" if load_plugins
+    env["REPORT_REQUESTS"] = "1" if @report_requests
     env["UNICORN_PORT"] = @rails_port.to_s
+    env["TESTEM_DEFAULT_BROWSER"] = ENV["TESTEM_DEFAULT_BROWSER"] || detect_browser
     env["PLUGIN_TARGETS"] = @plugin_targets.join(",") if @plugin_targets.any?
 
-    args = %w[pnpm ember exam]
-    args += ["--query", query] if query
-    args += ["--filter", filter] if filter
-    args += ["--file-path", file_path_filter] if file_path_filter
-    args += %w[--path dist]
+    parallel = present_string(@parallel) && !@plugin_targets.any?
+    reuse_build = ENV["QUNIT_REUSE_BUILD"] == "1" || !@standalone_mode
 
-    exec(env, *args, chdir: dir)
+    args = []
+
+    if @qunit_path
+      run_theme_build(unless_build_reused: reuse_build)
+      env["THEME_TEST_PAGES"] = build_theme_test_pages(query)
+      args += %w[pnpm testem ci -f testem.js]
+      args += ["--parallel", parallel.to_s] if parallel
+    else
+      args = %w[pnpm ember exam]
+      args += ["--query", query] if query && !query.empty?
+      args += ["--filter", filter] if filter
+      args += ["--file-path", file_path_filter] if file_path_filter
+      args += ["--load-balance", "--parallel", parallel.to_s] if parallel
+      args += %w[--path dist] if reuse_build
+      args << "--write-execution-file" if ENV["QUNIT_WRITE_EXECUTION_FILE"]
+    end
+
+    puts "Executing #{args.inspect} with env: #{env.inspect}" if @verbose
+
+    Dir.chdir(dir) do # rubocop:disable Discourse/NoChdir
+      system(env, *args)
+      exit $?.exitstatus
+    end
   end
 
   def convert_to_ember_relative_path(file_path)
@@ -386,23 +400,13 @@ class QunitRunner
   def check_dev_environment!
     require "net/http"
 
-    ember_ok = check_server(@ember_port, "Ember")
     rails_ok = check_server(@rails_port, "Rails")
 
-    unless ember_ok && rails_ok
+    unless rails_ok
       puts "\n? Dev environment not ready!\n"
-      puts "You need BOTH servers running:"
-      puts "  - Ember on :#{@ember_port}"
-      puts "  - Rails on :#{@rails_port}"
-      puts ""
-      puts "Start with: pnpm run dev"
-      puts ""
-      puts "Or start separately:"
-      puts "  Terminal 1: RAILS_ENV=development bin/rails server"
-      puts "  Terminal 2: cd frontend/discourse && pnpm ember serve"
-      puts ""
-      puts "Alternatively, use --standalone mode to spin up test servers automatically:"
-      puts "  bin/qunit --standalone #{@file_paths.first || @filter}"
+      puts "Expected Rails to be running on #{@rails_port}, but it is not responding."
+      puts
+      puts "Start with: bin/rails server, or use --standalone mode to spin up automatically"
       puts ""
       exit 1
     end
@@ -433,33 +437,26 @@ class QunitRunner
   end
 
   def run_standalone_mode
-    require_relative "../lib/chrome_installed_checker"
     puts "Running in standalone mode (spinning up test server)..." if @verbose
 
     ensure_pnpm_installed!
     install_node_dependencies!
 
-    detected_browser = detect_browser_for_standalone_mode
-
-    unicorn_port = next_available_port(60_098)
-    unicorn_env = build_unicorn_environment(unicorn_port)
+    @rails_port = next_available_port(60_098)
+    unicorn_env = build_unicorn_environment(@rails_port)
     unicorn_pid = nil
 
     begin
       unicorn_pid =
         Process.spawn(unicorn_env, File.join(rails_root, "bin", "unicorn"), pgroup: true)
-      wait_for_rails_server(unicorn_port)
-
-      success = execute_standalone_suite(unicorn_port, detected_browser)
+      wait_for_rails_server(@rails_port)
+      run_ember_exam(
+        query: build_standalone_query(include_filter: false, include_hidepassed: false),
+        load_plugins: should_load_plugins?,
+        file_path_filter: build_file_path_filter(@file_paths),
+      )
     ensure
       stop_unicorn(unicorn_pid, unicorn_env["UNICORN_PID_PATH"]) if unicorn_pid
-    end
-
-    if success
-      puts "\nTests Passed"
-    else
-      puts "\nTests Failed"
-      exit 1
     end
   end
 
@@ -472,7 +469,7 @@ class QunitRunner
     system("pnpm", "install", exception: true)
   end
 
-  def detect_browser_for_standalone_mode
+  def detect_browser
     ChromeInstalledChecker.run
   rescue ChromeInstalledChecker::ChromeError => err
     abort err.message
@@ -533,54 +530,6 @@ class QunitRunner
     puts "Rails server is warmed up"
   end
 
-
-  def execute_standalone_suite(unicorn_port, detected_browser)
-    ensure_file_paths_exist! if @file_paths.any?
-
-    file_path_filter = build_file_path_filter(@file_paths)
-    query = build_standalone_query
-    parallel = present_string(@parallel)
-    reuse_build = ENV["QUNIT_REUSE_BUILD"] == "1"
-
-    env = {
-      "UNICORN_PORT" => unicorn_port.to_s,
-      "TESTEM_DEFAULT_BROWSER" =>
-        (
-          if ENV["TESTEM_DEFAULT_BROWSER"].to_s.empty?
-            detected_browser
-          else
-            ENV["TESTEM_DEFAULT_BROWSER"]
-          end
-        ),
-    }
-
-    env["LOAD_PLUGINS"] = "1" if should_load_plugins?
-    env["REPORT_REQUESTS"] = "1" if @report_requests
-    env["PLUGIN_TARGETS"] = @plugin_targets.join(",") if @plugin_targets.any?
-
-    cmd = []
-
-    if @qunit_path
-      run_theme_build(unless_build_reused: reuse_build)
-      env["THEME_TEST_PAGES"] = build_theme_test_pages(query)
-      cmd += %w[pnpm testem ci -f testem.js]
-      cmd += ["--parallel", parallel.to_s] if parallel
-    else
-      cmd += %w[pnpm ember exam]
-      cmd += ["--query", query] if query && !query.empty?
-      cmd += ["--file-path", file_path_filter] if file_path_filter
-      cmd += ["--filter", @filter] if @filter
-      cmd += ["--load-balance", "--parallel", parallel.to_s] if parallel
-      cmd += %w[--path dist] if reuse_build
-      cmd << "--write-execution-file" if ENV["QUNIT_WRITE_EXECUTION_FILE"]
-    end
-
-    puts "Executing standalone-mode command: #{cmd.join(" ")}" if @verbose
-    system(env, *cmd, chdir: frontend_dir)
-
-    $?.success?
-  end
-
   def run_theme_build(unless_build_reused: false)
     return if unless_build_reused
 
@@ -616,7 +565,7 @@ class QunitRunner
     params["theme_name"] = @theme_name if @theme_name
     params["theme_url"] = @theme_url if @theme_url
     params["theme_id"] = @theme_id if @theme_id
-    params["target"] = resolved_target if resolved_target
+    params["target"] = resolved_target if resolved_target && !@plugin_targets.any?
     params["report_requests"] = "1" if @report_requests
 
     build_query_string(params)
@@ -781,9 +730,7 @@ class QunitRunner
     ensure_supported_target!(source: "TARGET env var") if env_target
 
     # Auto-enable plugin loading when targeting plugins
-    if @target && @target != "core" && !@load_plugins
-      @load_plugins = true
-    end
+    @load_plugins = true if @target && @target != "core" && !@load_plugins
   end
 
   def plugin_names_from_filter(filter)
