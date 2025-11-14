@@ -1,8 +1,10 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { isArray } from "@ember/array";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import Tree from "discourse/admin/components/schema-setting/editor/tree";
 import FieldInput from "discourse/admin/components/schema-setting/field";
 import DButton from "discourse/components/d-button";
@@ -24,7 +26,7 @@ export default class SchemaSettingNewEditor extends Component {
   @trackedArray history = [];
 
   inputFieldObserver = new Map();
-  data = cloneJSON(this.args.setting.value);
+  data = this.#trackNestedArrays(cloneJSON(this.args.setting.value));
   schema = this.args.schema;
 
   @action
@@ -191,7 +193,7 @@ export default class SchemaSettingNewEditor extends Component {
 
   @action
   addChildItem(propertyName, parentNodeIndex) {
-    this.activeData[parentNodeIndex][propertyName].pushObject({});
+    this.activeData[parentNodeIndex][propertyName].push({});
 
     this.onChildClick(
       this.activeData[parentNodeIndex][propertyName].length - 1,
@@ -202,7 +204,7 @@ export default class SchemaSettingNewEditor extends Component {
 
   @action
   addItem() {
-    this.activeData.pushObject({});
+    this.activeData.push({});
     this.activeIndex = this.activeData.length - 1;
   }
 
@@ -218,7 +220,7 @@ export default class SchemaSettingNewEditor extends Component {
       return;
     }
 
-    this.activeData.removeAt(this.activeIndex);
+    this.activeData.splice(this.activeIndex, 1);
 
     if (this.activeData.length > 0) {
       this.activeIndex = Math.max(this.activeIndex - 1, 0);
@@ -260,8 +262,8 @@ export default class SchemaSettingNewEditor extends Component {
     const toCallback = this.inputFieldObserver[toIndex];
 
     // Move the data
-    this.activeData.removeAt(fromIndex);
-    this.activeData.insertAt(toIndex, item);
+    this.activeData.splice(fromIndex, 1);
+    this.activeData.splice(toIndex, 0, item);
 
     // Swap the observer callbacks to match new positions
     this.inputFieldObserver[toIndex] = fromCallback;
@@ -304,6 +306,38 @@ export default class SchemaSettingNewEditor extends Component {
         didConfirm: () => resolve(true),
       });
     });
+  }
+
+  /**
+   * Recursively converts nested arrays to TrackedArrays for reactivity
+   *
+   * @param {*} input - The input value to convert
+   * @returns {TrackedArray|*} The converted value with TrackedArrays
+   *
+   * @private
+   */
+  #trackNestedArrays(input) {
+    // Return early if input is null/undefined/empty
+    if (!input) {
+      return input;
+    }
+
+    // If input is an array, convert it to a TrackedArray and recursively convert its items
+    if (isArray(input)) {
+      return new TrackedArray(
+        input.map((item) => this.#trackNestedArrays(item))
+      );
+    }
+
+    // If input is an object, recursively convert its values
+    if (typeof input === "object") {
+      Object.keys(input).forEach((key) => {
+        input[key] = this.#trackNestedArrays(input[key]);
+      });
+    }
+
+    // Return the input after converting any arrays to TrackedArrays
+    return input;
   }
 
   <template>
