@@ -149,7 +149,7 @@ module.exports = {
     Chromium: [
       // --no-sandbox is needed when running Chromium inside a container or when explicitly requested
       sandboxDisabled ? "--no-sandbox" : null,
-      "--headless=new",
+      process.env.QUNIT_HEADLESS === "0" ? null : "--headless=new",
       "--disable-dev-shm-usage",
       "--disable-software-rasterizer",
       "--disable-search-engine-choice-screen",
@@ -162,7 +162,7 @@ module.exports = {
     Chrome: [
       // --no-sandbox is needed when running Chrome inside a container or when explicitly requested
       sandboxDisabled ? "--no-sandbox" : null,
-      "--headless=new",
+      process.env.QUNIT_HEADLESS === "0" ? null : "--headless=new",
       "--disable-dev-shm-usage",
       "--disable-software-rasterizer",
       "--disable-search-engine-choice-screen",
