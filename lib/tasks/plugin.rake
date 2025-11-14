@@ -228,24 +228,9 @@ desc "run plugin qunit tests"
 task "plugin:qunit", :plugin do |t, args|
   args.with_defaults(plugin: "*")
 
-  rake = "#{Rails.root}/bin/rake"
-
-  cmd = "LOAD_PLUGINS=1 "
-
-  if args[:plugin] == "*"
-    plugin_names =
-      Dir.glob("plugins/*/test/**/*-test.{gjs,js}").map { |file| file.split("/")[1] }.uniq
-    puts "Running qunit tests for all plugins: #{plugin_names.join(", ")}"
-    cmd += "PLUGIN_TARGETS='#{plugin_names.join(",")}' "
-  else
-    puts "Running qunit tests for #{args[:plugin]}"
-    cmd += "TARGET='#{args[:plugin]}' "
-  end
-
-  cmd += "#{rake} qunit:test"
-
-  system cmd
-  exit $?.exitstatus
+  target = args[:plugin]
+  target = "plugins" if target == "*"
+  exec Rails.root.join("bin/qunit").to_s, "--standalone", "--target", target
 end
 
 desc "run all migrations of a plugin"
