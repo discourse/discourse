@@ -21,9 +21,6 @@ bg:
       voted_title: "Гласувано"
       voting_closed_title: "Затворена"
       voting_limit: "Лимит"
-      votes_left_button_title:
-        one: "Остава ви %{count} глас."
-        other: "Остават ви %{count} гласа."
       votes:
         one: "%{count} глас"
         other: "%{count} гласа"

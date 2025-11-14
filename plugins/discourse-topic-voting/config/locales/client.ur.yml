@@ -21,12 +21,6 @@ ur:
       voted_title: "ووٹ کیا"
       voting_closed_title: "بند"
       voting_limit: "حد"
-      votes_left:
-        one: "آپ کے پاس %{count} ووٹ باقی ہے، دیکھیں <a href='%{path}'>اپنے ووٹ</a>۔"
-        other: "آپ کے پاس %{count} ووٹ باقی ہیں، دیکھیں <a href='%{path}'>آپ کے ووٹ</a>۔"
-      votes_left_button_title:
-        one: "آپ کے پاس %{count} ووٹ باقی ہے۔"
-        other: "آپ کے پاس %{count} ووٹ باقی ہیں۔"
       votes:
         one: "%{count} ووٹ"
         other: "%{count} ووٹ"

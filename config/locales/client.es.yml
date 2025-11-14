@@ -852,7 +852,6 @@ es:
         note_added_by: "Nota del moderador creada por %{username} · %{relativeDate}"
         no_events: "No hay eventos que mostrar en la línea de tiempo"
       notes:
-        add_note_description: "Visible solo para moderadores. Usa esta nota para añadir contexto o tomar decisiones sobre la revisión."
         add_note_button: "Añadir nota"
         placeholder: "Escribe tu nota aquí..."
         chars_remaining: "Quedan %{count} caracteres..."
@@ -3261,7 +3260,6 @@ es:
         progress:
           one: "Progreso: <strong>%{count}</strong> tema"
           other: "Progreso: <strong>%{count}</strong> temas"
-        silent: "Realiza esta acción en silencio."
         performing: "Realizando operaciones en bloque, espera…"
         completed: "¡Operaciones en bloque completadas con éxito!"
       none:
@@ -7151,7 +7149,6 @@ es:
           success: "Éxito"
           exists: "Ya existe"
           upload: "Añadir desde archivo"
-          upload_successful: "Subida completada. Las palabras se han añadido."
           case_sensitivity_label: "Distingue entre mayúsculas y minúsculas"
           case_sensitivity_description: "Solo palabras con caracteres coincidentes"
           html_label: "HTML"

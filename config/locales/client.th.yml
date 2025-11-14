@@ -3122,7 +3122,6 @@ th:
           success: "สำเร็จ"
           exists: "มีอยู่แล้ว"
           upload: "เพิ่มจากไฟล์"
-          upload_successful: "อัปโหลดสำเร็จแล้ว เพิ่มคำเรียบร้อย"
           html_label: "HTML"
         test:
           no_matches: "ไม่พบผลลัพธ์ที่ตรงกัน"

@@ -1577,7 +1577,6 @@ zh_CN:
     allow_duplicate_topic_titles_category: "如果类别不同，允许有相同或重复标题的话题。必须禁用 allow_duplicate_topic_titles。"
     unique_posts_mins: "用户可以再次发布相同内容的帖子前需要等待的分钟数"
     educate_until_posts: "当用户开始输入他们的前几 (n) 个新帖子时，在编辑器中显示弹出式新用户教育面板。"
-    title: "此网站的名称。对包括匿名用户在内的所有访客可见。"
     site_description: "用一句话描述此网站。对包括匿名用户在内的所有访客可见。"
     short_site_description: "几个字的简短描述。对包括匿名用户在内的所有访客可见。"
     contact_email: "负责此网站的主要联系人的电子邮件地址，用于重要通知，也会显示在 <a href='%{base_path}/about' target='_blank'>/about</a> 上。对公共网站上的匿名用户可见。"
@@ -2354,7 +2353,6 @@ zh_CN:
     sitemap_page_size: "每个网站地图页面中包含的 URL 数量。最大 50.000"
     enable_user_status: "允许用户设置自定义状态消息（表情符号 + 描述）。"
     enable_user_tips: "启用向用户描述关键功能的新用户提示"
-    short_title: "短标题将用于用户的主屏幕、启动器或其他空间可能有限的地方。应被限制为 12 个字符。"
     dashboard_hidden_reports: "允许从信息中心隐藏指定报告。"
     dashboard_visible_tabs: "选择可见的信息中心标签页。"
     dashboard_general_tab_activity_metrics: "选择要在“常规”标签页上显示为活动指标的报告。"
@@ -3536,14 +3534,9 @@ zh_CN:
     user_automatically_silenced:
       title: "用户被自动禁言"
       subject_template: "新用户 %{username} 因社区举报被禁言"
-      text_body_template: |
-        这是一封自动发送的邮件。
-
-        由于多个用户举报了 %{username} 的帖子，新用户 [%{username}](%{user_url}) 已被自动禁言。
-
-        请[审核举报](%{base_url}/review)。如果 %{username} 被意外禁言，请点击[此用户的管理页面](%{user_url})上的取消禁言按钮。
-
-        此阈值可以通过 `silence_new_user` 网站设置更改。
+    user_automatically_silenced_with_reason:
+      title: "用户被自动禁言"
+      subject_template: "新用户 %{username} 因社区举报被禁言"
     spam_post_blocked:
       title: "垃圾信息帖子被屏蔽"
       subject_template: "新用户 %{username} 的帖子因重复链接被屏蔽"
@@ -5151,7 +5144,6 @@ zh_CN:
         title: "舍弃帖子"
         complete: "帖子已被舍弃。"
       revise_and_reject_post:
-        title: "修订帖子…"
         complete: "帖子被拒绝，等待修订。"
       ignore:
         title: "忽略"

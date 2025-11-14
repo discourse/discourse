@@ -982,7 +982,6 @@ ru:
         note_added_by: "Примечание модератора %{username} · %{relativeDate}"
         no_events: "Событий в хронологии нет"
       notes:
-        add_note_description: "Видно только модераторам. Используйте это примечание, чтобы добавить контекст или решения по проверке."
         add_note_button: "Добавить примечание"
         placeholder: "Напишите примечание тут..."
         chars_remaining: "Осталось символов: %{count} ..."
@@ -3628,7 +3627,6 @@ ru:
           few: "Выполнено: <strong>%{count}</strong> темы"
           many: "Выполнено: <strong>%{count}</strong> тем"
           other: "Выполнено: <strong>%{count}</strong> темы"
-        silent: "Выполнить это действие без уведомления."
         performing: "Выполняются массовые действия, подождите…"
         completed: "Массовые действия завершены!"
       none:
@@ -7734,7 +7732,6 @@ ru:
           success: "Слово добавлено"
           exists: "Уже существует"
           upload: "Добавить из файла"
-          upload_successful: "Загрузка выполнена. Слова добавлены."
           case_sensitivity_label: "С учётом регистра"
           case_sensitivity_description: "Только слова с соответствующим регистром символов"
           html_label: "HTML"

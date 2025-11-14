@@ -14,4 +14,3 @@ hr:
       show: "Napomene o korisniku (%{count})"
       delete_confirm: "Jeste li sigurni da želite izbrisati tu napomenu o korisniku?"
       show_post: "Prikaži objavu"
-      copy_reviewable_note: "Kopiraj napomenu u korisnički profil?"

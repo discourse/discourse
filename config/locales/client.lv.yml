@@ -3519,7 +3519,6 @@ lv:
         form:
           add: "Pievienot"
           success: "Veiksmīgi"
-          upload_successful: "Augšupielāde ir veiksmīga. Vārdi ir pievienoti."
           html_label: "HTML"
       form_templates:
         nav_title: "Veidnes"

@@ -40,8 +40,11 @@ he:
   discourse_post_voting:
     reviewables:
       actions:
+        comment_actions:
+          bundle_title: "מה לעשות עם ההערה?"
         no_action_comment:
           title: "אין פעולה"
+          description: "להשאיר את ההערה כפי שהיא."
         agree_and_keep_comment:
           title: "להשאיר את התגובה"
           description: "הבעת הסכמה עם הדגל והשארת התגובה ללא שינוי."

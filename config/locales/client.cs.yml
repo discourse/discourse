@@ -1007,7 +1007,6 @@ cs:
         note_added_by: "Poznámka moderátora od %{username} · %{relativeDate}"
         no_events: "Na časové ose nejsou k zobrazení žádné události"
       notes:
-        add_note_description: "Viditelné pouze pro moderátory. Tuto poznámku použijte k přidání kontextu nebo rozhodnutí o kontrole."
         add_note_button: "Přidat poznámku"
         placeholder: "Napište sem svoji poznámku..."
         chars_remaining: "Zbývá %{count} znaků"
@@ -3684,7 +3683,6 @@ cs:
           few: "Průběh: <strong>%{count}</strong> témata"
           many: "Průběh: <strong>%{count}</strong> témat"
           other: "Průběh: <strong>%{count}</strong> témat"
-        silent: "Provést tuto akci potichu."
         performing: "Provádíme hromadné operace, vyčkejte prosím…"
         completed: "Hromadné operace byly úspěšně dokončeny!"
       none:
@@ -7903,7 +7901,6 @@ cs:
           success: "Úspěch"
           exists: "Již existuje"
           upload: "Přidat ze souboru"
-          upload_successful: "Nahráno úspěšně. Slova byla přidána "
           case_sensitivity_label: "Rozlišuje malá a velká písmena"
           case_sensitivity_description: "Pouze slova se shodnými velkými a malými písmeny"
           html_label: "HTML"

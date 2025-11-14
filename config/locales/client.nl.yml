@@ -852,7 +852,6 @@ nl:
         note_added_by: "Moderatoropmerking door %{username} · %{relativeDate}"
         no_events: "Geen tijdlijngebeurtenissen om weer te geven"
       notes:
-        add_note_description: "Alleen zichtbaar voor moderators. Gebruik deze opmerking om context of beslissingen over de beoordeling toe te voegen."
         add_note_button: "Opmerking toevoegen"
         placeholder: "Schrijf je opmerking hier..."
         chars_remaining: "%{count} tekens resterend"
@@ -3262,7 +3261,6 @@ nl:
         progress:
           one: "Voortgang: <strong>%{count}</strong> topic"
           other: "Voortgang: <strong>%{count}</strong> topics"
-        silent: "Voer deze actie in stilte uit."
         performing: "Bulkbewerkingen worden uitgevoerd, even geduld…"
         completed: "Bulkbewerkingen voltooid!"
       none:
@@ -7134,7 +7132,6 @@ nl:
           success: "Succes"
           exists: "Bestaat al"
           upload: "Toevoegen vanuit bestand"
-          upload_successful: "Uploaden geslaagd. Woorden zijn toegevoegd."
           case_sensitivity_label: "Is hoofdlettergevoelig"
           case_sensitivity_description: "Alleen woorden met overeenkomend hoofdlettergebruik"
           html_label: "HTML"

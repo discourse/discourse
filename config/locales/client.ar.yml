@@ -1106,7 +1106,6 @@ ar:
         note_added_by: "ملاحظة المشرف من قِبل %{username} · %{relativeDate}"
         no_events: "لا توجد أحداث زمنية متاحة للعرض"
       notes:
-        add_note_description: "يظهر للمشرفين فقط. يمكنك استخدام هذه الملاحظة لتضمين سياق أو تحديد القرارات المتعلقة بالمراجعة."
         add_note_button: "أضف ملاحظة"
         placeholder: "اكتب ملاحظتك هنا..."
         chars_remaining: "متبقي %{count} من الحروف"
@@ -3954,7 +3953,6 @@ ar:
           few: "التقدُّم: <strong>%{count}</strong> موضوعات"
           many: "التقدُّم: <strong>%{count}</strong> موضوعًا"
           other: "التقدُّم: <strong>%{count}</strong> موضوع"
-        silent: "تنفيذ هذا الإجراء بصمت."
         performing: "جارٍ تنفيذ عمليات جماعية، يُرجى الانتظار..."
         completed: "تم تنفيذ العمليات المجمعة بنجاح!"
       none:
@@ -8284,7 +8282,6 @@ ar:
           success: "تم بنجاح"
           exists: "موجودة بالفعل"
           upload: "الإضافة من ملف"
-          upload_successful: "تم التحميل بنجاح. وتمت إضافة الكلمات."
           case_sensitivity_label: "حساس لحالة الأحرف"
           case_sensitivity_description: "الكلمات ذات حالة الأحرف المطابقة فقط"
           html_label: "HTML"

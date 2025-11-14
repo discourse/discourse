@@ -856,7 +856,6 @@ pt:
         note_added: "Nota do moderador"
         note_added_by: "Nota do moderador por %{username} · %{relativeDate}"
       notes:
-        add_note_description: "Visível apenas para os moderadores. Utilize esta nota para adicionar contexto ou decisões sobre a revisão."
         add_note_button: "Adicionar nota"
         placeholder: "Escreva aqui a sua nota..."
         chars_remaining: "Restam %{count} carateres"

@@ -3050,7 +3050,6 @@ fa_IR:
         progress:
           one: "پیشرفت: <strong>%{count}</strong> موضوع"
           other: "پیشرفت: <strong>%{count}</strong> موضوع"
-        silent: "این عمل را بی صدا انجام دهید."
         performing: "در حال انجام عملیات انبوه، لطفاً صبر کنید..."
         completed: "عملیات انبوه با موفقیت انجام شد!"
       none:
@@ -6472,7 +6471,6 @@ fa_IR:
           success: "موفقیت"
           exists: "از قبل وجود دارد"
           upload: "افزودن از فایل"
-          upload_successful: "بارگذاری با موفقیت انجام شد. واژه‌ها اضافه شدند."
           case_sensitivity_label: "به حروف بزرگ و کوچک حساس است"
           html_label: "HTML"
           words_or_phrases: "کلمات یا عبارات"

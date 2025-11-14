@@ -788,7 +788,6 @@ ja:
         note_added_by: "%{username} のモデレーターメモ · %{relativeDate}"
         no_events: "表示するタイムラインイベントはありません"
       notes:
-        add_note_description: "モデレーターのみに表示されます。このメモを使用して、レビューの背景情報や決定事項を追加してください。"
         add_note_button: "メモを追加"
         placeholder: "ここにメモを入力してください..."
         chars_remaining: "残り %{count} 文字"
@@ -3085,7 +3084,6 @@ ja:
           other: "<b>%{count}</b> 件のトピックからすべてのタグが削除されます。よろしいですか？"
         progress:
           other: "進捗状況: <strong>%{count}</strong> 件のトピック"
-        silent: "この操作をサイレントで実行します。"
         performing: "一括操作を実行中です。お待ちください…"
         completed: "一括操作が完了しました！"
       none:
@@ -6859,7 +6857,6 @@ ja:
           success: "成功"
           exists: "すでに存在します"
           upload: "ファイルから追加"
-          upload_successful: "アップロードが成功し、言葉が追加されました。"
           case_sensitivity_label: "大文字と小文字を区別"
           case_sensitivity_description: "大文字と小文字が一致する語のみ"
           html_label: "HTML"

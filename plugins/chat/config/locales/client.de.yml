@@ -128,7 +128,6 @@ de:
       email_frequency:
         description: "Wir schicken dir nur dann eine E-Mail, wenn wir dich in den letzten 15 Minuten nicht gesehen haben."
         never: "Niemals"
-        title: "E-Mail-Benachrichtigungen"
         when_away: "Nur bei Abwesenheit"
       header_indicator_preference:
         title: "Aktivitätsindikator in der Kopfzeile anzeigen"

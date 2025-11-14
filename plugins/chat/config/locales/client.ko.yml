@@ -69,7 +69,6 @@ ko:
         title: "채널을 찾을 수 없습니다."
       email_frequency:
         never: "알림 받지 않기"
-        title: "이메일 알림"
         when_away: "자리를 비울 때만"
       header_indicator_preference:
         title: "헤더에 활동 표시"

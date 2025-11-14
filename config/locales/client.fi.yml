@@ -852,7 +852,6 @@ fi:
         note_added_by: "%{username} lisäsi valvojan huomautuksen · %{relativeDate}"
         no_events: "Ei näytettäviä aikajanan tapahtumia"
       notes:
-        add_note_description: "Näkyy vain valvojille. Käytä tätä huomautusta lisätäksesi kontekstia tai päätöksiä käsittelystä."
         add_note_button: "Lisää huomautus"
         placeholder: "Kirjoita huomautuksesi tähän..."
         chars_remaining: "%{count} merkkiä jäljellä"
@@ -3262,7 +3261,6 @@ fi:
         progress:
           one: "Edetty: <strong>%{count}</strong> ketju"
           other: "Edetty: <strong>%{count}</strong> ketjua"
-        silent: "Suorita tämä toiminto hiljaisesti."
         performing: "Suoritetaan joukkotoimintoja, odota…"
         completed: "Joukkotoiminnot suoritettiin onnistuneesti!"
       none:
@@ -7149,7 +7147,6 @@ fi:
           success: "Onnistui"
           exists: "On jo olemassa"
           upload: "Lisää tiedostosta"
-          upload_successful: "Lataus onnistui. Sanoja lisättiin."
           case_sensitivity_label: "Huomioi kirjainkoon"
           case_sensitivity_description: "Vain sanat, joissa on vastaava kirjainkoko"
           html_label: "HTML"

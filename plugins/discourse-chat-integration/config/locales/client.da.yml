@@ -20,7 +20,7 @@ da:
       group_message_template: "Meddelelser til: @%{name}"
       choose_group: "(vælg en gruppe)"
       all_categories: "(alle kategorier)"
-      all_tags: "(alle mærker)"
+      all_tags: "(alle tags)"
       create_rule: "Opret Regel"
       create_channel: "Opret Kanal"
       delete_channel: "Slet"
@@ -39,7 +39,7 @@ da:
       rule_table:
         filter: "Filter"
         category: "Kategori"
-        tags: "Mærker"
+        tags: "Tags"
         edit_rule: "Rediger"
         delete_rule: "Slet"
       edit_channel_modal:
@@ -50,7 +50,7 @@ da:
         filter: Filter
         category: Kategori
         group: Gruppe
-        tags: Mærker
+        tags: Tags
       provider:
         telegram:
           param:

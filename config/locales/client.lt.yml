@@ -5113,7 +5113,6 @@ lt:
           success: "Sėkmingai"
           exists: "Jau egzistuoja"
           upload: "Pridėti iš failo"
-          upload_successful: "Įkėlimas sėkmingas. Žodžiai buvo pridėti."
           html_label: "HTML"
         test:
           button_label: "Bandymas"

@@ -3139,7 +3139,6 @@ sw:
           add: "Ongeza"
           success: "Mafanikio"
           exists: "Tayari ipo"
-          upload_successful: "Upakiaji Umemalizika. Maneno yameongezwa."
           html_label: "HTML"
         test:
           button_label: "Majaribio"

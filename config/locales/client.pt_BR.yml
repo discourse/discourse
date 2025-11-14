@@ -852,7 +852,6 @@ pt_BR:
         note_added_by: "Observação da moderação por %{username} - %{relativeDate}"
         no_events: "Não há eventos da linha do tempo para exibir"
       notes:
-        add_note_description: "Visível apenas para a moderarção. Use esta observação para adicionar contexto ou decisões sobre a revisão."
         add_note_button: "Adicionar observação"
         placeholder: "Escreva sua observação aqui..."
         chars_remaining: "%{count} caractere(s) restante(s)"
@@ -3262,7 +3261,6 @@ pt_BR:
         progress:
           one: "Progresso: <strong>%{count}</strong> tópico"
           other: "Progresso: <strong>%{count}</strong> tópicos"
-        silent: "Realize esta ação silenciosamente."
         performing: "Realizando operações em massa, aguarde…"
         completed: "Operações em massa concluídas!"
       none:
@@ -7133,7 +7131,6 @@ pt_BR:
           success: "Sucesso"
           exists: "Já existe"
           upload: "Adicionar do arquivo"
-          upload_successful: "Envio bem-sucedido. As palavras foram adicionadas."
           case_sensitivity_label: "É sensível a maiúsculas"
           case_sensitivity_description: "Apenas palavras com maiúsculas e minúsculas de caracteres correspondentes"
           html_label: "HTML"

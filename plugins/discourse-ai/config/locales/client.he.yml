@@ -786,6 +786,9 @@ he:
           credits: "הכותרת נוספה ע״י בינה מלאכותית"
           save_caption: "שמירה"
         no_content_error: "יש להוסיף קודם תוכן כדי לבצע עליו פעולות בינה מלאכותית"
+      errors:
+        credit_limit_dialog:
+          title: "הגעת לגבול האסימונים של הבינה המלאכותית"
       reviewables:
         model_used: "דגם בשימוש:"
         accuracy: "דיוק:"

@@ -645,6 +645,7 @@ pl_PL:
     llm_models:
       missing_provider_param: "%{param} nie może być pusty"
       bedrock_invalid_url: "Wypełnij wszystkie pola, aby korzystać z tego modelu."
+      bedrock_missing_auth: "AWS Bedrock wymaga skonfigurowania Access Key ID lub Role ARN"
     ai_staff_action_logger:
       updated: "zaktualizowane"
       set: "ustaw"

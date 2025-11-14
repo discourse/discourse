@@ -2887,7 +2887,6 @@ nb_NO:
         progress:
           one: "Fremgang: <strong>%{count}</strong> emne"
           other: "Fremgang: <strong>%{count}</strong> emner"
-        silent: "Utfør denne handlingen stille."
         performing: "Utfører masseoperasjoner, vennligst vent…"
         completed: "Masseoperasjoner fullført med suksess!"
       none:
@@ -5324,7 +5323,6 @@ nb_NO:
           add: "Legg til"
           success: "Suksess"
           exists: "Eksisterer fra før"
-          upload_successful: "Opplastet. Ord lagt til."
           html_label: "HTML"
         test:
           button_label: "Test"

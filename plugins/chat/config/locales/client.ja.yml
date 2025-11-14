@@ -124,7 +124,6 @@ ja:
       email_frequency:
         description: "15 分以上アクセスがない場合にのみメールで通知します。"
         never: "なし"
-        title: "メール通知"
         when_away: "退席中の時のみ"
       header_indicator_preference:
         title: "ヘッダーにアクティビティインジケーターを表示"

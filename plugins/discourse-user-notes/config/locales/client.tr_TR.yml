@@ -14,4 +14,3 @@ tr_TR:
       show: "Kullanıcı Notları (%{count})"
       delete_confirm: "Bu kullanıcı notunu silmek istediğinizden emin misiniz?"
       show_post: "Gönderiyi Göster"
-      copy_reviewable_note: "Not, kullanıcı profiline kopyalansın mı?"

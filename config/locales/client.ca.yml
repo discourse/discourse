@@ -4017,7 +4017,6 @@ ca:
           success: "Èxit"
           exists: "Ja existeix"
           upload: "Afegeix des de fitxer"
-          upload_successful: "Càrrega feta amb èxit. S'han afegit paraules."
           html_label: "HTML"
         test:
           button_label: "Test"

@@ -21,9 +21,6 @@ el:
       voted_title: "Ψήφισα"
       voting_closed_title: "Κλειστή"
       voting_limit: "Όριο"
-      votes_left_button_title:
-        one: "Έχετε %{count} ψήφο ακόμη."
-        other: "Έχετε %{count} ψήφους ακόμη."
       votes:
         one: "%{count} ψήφος"
         other: "%{count} ψήφοι"

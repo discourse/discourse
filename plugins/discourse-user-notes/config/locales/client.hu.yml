@@ -14,4 +14,3 @@ hu:
       show: "Felhasználói megjegyzések (%{count})"
       delete_confirm: "Biztosan törölni szeretné ezt a felhasználói megjegyzést?"
       show_post: "Bejegyzés mutatása"
-      copy_reviewable_note: "Megjegyzés másolása a felhasználói profilhoz?"

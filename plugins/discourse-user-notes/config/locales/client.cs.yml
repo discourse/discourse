@@ -14,4 +14,3 @@ cs:
       show: "Poznámky k uživatelům (%{count})"
       delete_confirm: "Opravdu chcete odstranit tuto poznámku k uživateli?"
       show_post: "Zobrazit příspěvek"
-      copy_reviewable_note: "Zkopírovat poznámku do uživatelského profilu?"

@@ -848,7 +848,6 @@ ro:
         note_added_by: "Notă moderator de la %{username} · %{relativeDate}"
         no_events: "Nu există evenimente cronologice de afișat"
       notes:
-        add_note_description: "Vizibil doar pentru moderatori. Folosește această notă pentru a adăuga context sau decizii cu privire la revizuire."
         add_note_button: "Adaugă notă"
         placeholder: "Scrie-ți nota aici..."
         chars_remaining: "%{count} caractere rămase"
@@ -3510,7 +3509,6 @@ ro:
         next_prev: "%{shortcut} Secțiunea următoare/anterioară"
       application:
         title: "Aplicație"
-        create: "%{shortcut} Creează un subiect nou sau un mesaj personal"
         notifications: "%{shortcut} Deschide notificări"
         hamburger_menu: "%{shortcut} Deschide meniul de navigare"
         user_profile_menu: "%{shortcut} Deschide meniu utilizator"

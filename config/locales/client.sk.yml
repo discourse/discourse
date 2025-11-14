@@ -880,7 +880,6 @@ sk:
         note_added_by: "Moderátorská poznámka od %{username} - %{relativeDate}"
         no_events: "Žiadne udalosti na časovej osi na zobrazenie"
       notes:
-        add_note_description: "Viditeľné len pre moderátorov. Túto poznámku použite na doplnenie kontextu alebo rozhodnutia o recenzii."
         add_note_button: "Pridať poznámku"
         placeholder: "Tu napíšte svoju poznámku..."
         chars_remaining: "%{count} zostávajúce znaky"
@@ -3503,7 +3502,6 @@ sk:
           few: "Pokrok: <strong>%{count}</strong> tém"
           many: "Pokrok: <strong>%{count}</strong> tém"
           other: "Pokrok: <strong>%{count}</strong> témy"
-        silent: "Vykonajte túto akciu potichu."
         performing: "Vykonávajú sa hromadné operácie, čakajte…"
         completed: "Hromadné operácie boli úspešne dokončené!"
       none:
@@ -7585,7 +7583,6 @@ sk:
           success: "Úspech"
           exists: "Už existuje"
           upload: "Pridať zo súboru"
-          upload_successful: "Úspešné odoslanie. Slová boli pridané."
           case_sensitivity_label: "Rozlišuje veľkosť písmen"
           case_sensitivity_description: "Iba slová so zhodnými znakmi"
           html_label: "HTML"

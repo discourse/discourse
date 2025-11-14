@@ -859,7 +859,6 @@ hu:
         note_added_by: "%{username} moderátor megjegyzése · %{relativeDate}"
         no_events: "Nincsenek megjeleníthető idővonal-események"
       notes:
-        add_note_description: "Csak a moderátorok láthatják. Ezzel a megjegyzéssel kontextust vagy döntéseket hozhatsz a véleményezéssel kapcsolatban."
         add_note_button: "Megjegyzés hozzáadása"
         placeholder: "Írd ide a jegyzetedet..."
         chars_remaining: "%{count} karakter maradt"
@@ -3283,7 +3282,6 @@ hu:
         progress:
           one: "Folyamat: <strong>%{count}</strong> téma"
           other: "Folyamat: <strong>%{count}</strong> téma"
-        silent: "A művelet csendes végrehajtása."
         performing: "Tömeges művelet végrehajtása, kis türelmet…"
         completed: "A tömeges műveletek sikeresen befejeződtek!"
       none:
@@ -7219,7 +7217,6 @@ hu:
           success: "Siker"
           exists: "Már létezik"
           upload: "Hozzáadás fájlból"
-          upload_successful: "A feltöltés sikeres, egy Word-öt hozzáadtunk."
           case_sensitivity_label: "Nagy- és kisbetű érzékeny"
           case_sensitivity_description: "Csak a megfelelő kis- és nagybetűkkel rendelkező szavak"
           html_label: "HTML"
