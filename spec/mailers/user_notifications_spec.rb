@@ -875,8 +875,8 @@ RSpec.describe UserNotifications do
       # from should include username if full user name is not provided
       expect(mail[:from].display_names).to eql(["john"])
 
-      # subject should include "[PM]"
-      expect(mail.subject).to include("[PM] ")
+      # subject should not include "[PM]"
+      expect(mail.subject).not_to include("[PM] ")
 
       # note that translation key differs from method name (ie. user_posted_pm)
       preview_text = I18n.t("user_notifications.user_posted_pm.preview")
@@ -923,7 +923,7 @@ RSpec.describe UserNotifications do
           notification_data_hash: notification.data_hash,
         )
 
-      expect(mail.subject).to include("[PM] ")
+      expect(mail.subject).not_to include("[PM] ")
     end
 
     it "includes a list of participants (except for the destination user), groups first with member lists" do
@@ -964,14 +964,14 @@ RSpec.describe UserNotifications do
 
       shared_examples "includes first group name" do
         it "includes first group name in subject" do
-          expect(mail.subject).to include("[my_group] ")
+          expect(mail.subject).to include("my_group: ")
         end
 
         context "when first group has full name" do
           it "includes full name in subject" do
             group.full_name = "My Group"
             group.save
-            expect(mail.subject).to include("[My Group] ")
+            expect(mail.subject).to include("My Group: ")
           end
         end
       end
@@ -992,7 +992,7 @@ RSpec.describe UserNotifications do
 
       context "with no groups in pm" do
         it "includes %{optional_pm} in subject" do
-          expect(mail.subject).to include("[PM] ")
+          expect(mail.subject).not_to include("[PM] ")
         end
       end
     end
