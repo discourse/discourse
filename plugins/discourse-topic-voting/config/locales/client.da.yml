@@ -30,6 +30,7 @@ da:
         one: "Stemmeafgivelse"
         other: "Stemmer"
       remove_vote: "Fjern stemme"
+      no_votes_title_self: "Du har endnu ikke stemt på noget emne."
     filters:
       votes:
         title: "Stemmer"

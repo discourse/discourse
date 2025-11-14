@@ -9,10 +9,10 @@ el:
     presence:
       replying:
         one: "απαντά"
-        other: "απαντά"
+        other: "απαντούν"
       editing:
         one: "επεξεργάζεται"
-        other: "επεξεργάζεται"
+        other: "επεξεργάζονται"
       replying_to_topic:
         one: "απαντά"
         other: "απαντούν"

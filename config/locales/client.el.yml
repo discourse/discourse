@@ -296,8 +296,11 @@ el:
       search: "Αναζήτηση"
     themes:
       default_description: "Προεπιλογή"
+      broken_theme_alert: "Ο ιστότοπός σας ενδέχεται να μην λειτουργεί επειδή ένα θέμα / στοιχείο έχει σφάλματα. Ελέγξτε την κονσόλα του προγράμματος περιήγησης για περισσότερες πληροφορίες."
       error_caused_by: "Προκλήθηκε από '%{name}'. <a target='blank' href='%{path}'>Πατήστε εδώ</a> για να το ενημερώσετε, να αλλάξετε τις ρυθμίσεις ή να το απενεργοποιήσετε."
       only_admins: "(αυτό το μήνυμα εμφανίζεται μόνο στους διαχειριστές του ιστότοπου)"
+    broken_decorator_alert: "Οι αναρτήσεις ενδέχεται να μην εμφανίζονται σωστά επειδή ένας από τους διακοσμητές περιεχομένου αναρτήσεων στον ιστότοπό σας παρουσίασε ένα σφάλμα."
+    broken_page_change_alert: "Ένας χειριστής onPageChange παρουσίασε ένα σφάλμα. Ελέγξτε τα εργαλεία προγραμματιστή προγράμματος περιήγησης για περισσότερες πληροφορίες."
     broken_plugin_alert: "Προκλήθηκε από το πρόσθετο '%{name}'"
     broken_transformer_alert: "Παρουσιάστηκε σφάλμα. Ο ιστότοπός σας ενδέχεται να μην λειτουργεί σωστά."
     critical_deprecation:
@@ -682,7 +685,7 @@ el:
         title: "Ρυθμίσεις"
         priorities:
           title: "Αναθεωρήσιμες προτεραιότητες"
-      moderation_history: "Ιστορικό εποπτείας"
+      moderation_history: "Ιστορικό συντονισμού"
       view_all: "Προβολή Όλων"
       grouped_by_topic: "Ομαδοποίηση ανά θέμα"
       none: "Δεν υπάρχουν στοιχεία για έλεγχο."
@@ -784,10 +787,18 @@ el:
           title: "Εγκρίθηκε "
         approved_flag:
           title: "Η αναφορά εγκρίθηκε"
+        approved_user:
+          title: "Εγκεκριμένος χρήστης"
+        approved_post:
+          title: "Εγκεκριμένη ανάρτηση"
         rejected:
           title: "Απορρίφθηκε"
         rejected_flag:
           title: "Η αναφορά απορρίφθηκε"
+        rejected_user:
+          title: "Απορριμμένος χρήστης"
+        rejected_post:
+          title: "Απορριμμένη ανάρτηση"
         ignored:
           title: "Η αναφορά αγνοήθηκε"
         deleted:
@@ -819,24 +830,30 @@ el:
           noun: "ανάρτηση"
       flagged_as: "Αναφορά ως"
       assigned_to: "Ανατέθηκε σε"
-      moderator_actions: "Ενέργειες επόπτη"
+      moderator_actions: "Ενέργειες συντονιστή"
       timeline_and_notes: "Χρονοδιάγραμμα & σημειώσεις"
       timeline:
         target_created: "Ανάρτηση δημιουργήθηκε"
         target_created_by: "Ανάρτηση δημιουργήθηκε από %{username} · %{relativeDate}"
         flagged: "Αναφέρθηκε"
         flagged_as_by: "Αναφέρθηκε ως %{flagReason} από %{username} · %{relativeDate}"
+        claimed: "Διεκδικήθηκε"
+        claimed_by: "Διεκδικήθηκε από %{username} · %{relativeDate}"
+        reviewed: "Αναθεωρήθηκε"
+        reviewed_by: "Αναθεωρήθηκε από %{username} · %{relativeDate}"
         view_conversation: "προβολή ΠΜ"
-        note_added: "Σημείωση επόπτη"
-        note_added_by: "Σημείωση επόπτη από %{username} · %{relativeDate}"
+        note_added: "Σημείωση συντονιστή"
+        note_added_by: "Σημείωση συντονιστή από %{username} · %{relativeDate}"
         no_events: "Δεν υπάρχουν συμβάντα χρονοδιαγράμματος για προβολή"
       notes:
+        add_note_description: "Ορατό μόνο στους συντονιστές. Χρησιμοποιήστε αυτήν τη σημείωση για να προσθέσετε περιεχόμενο ή αποφάσεις σχετικά με την αναθεώρηση."
         add_note_button: "Προσθήκη σημείωσης"
         placeholder: "Γράψτε τη σημείωση σας εδώ..."
         chars_remaining: "%{count} χαρακτήρες απομένουν"
         delete_note: "Διαγραφή αυτής της σημείωσης"
         delete: "Σβήσιμο"
       new_topic_label: "Νέο θέμα"
+      queued_user: "Χρήστης σε ουρά"
       posted_in: "Δημοσιεύτηκε σε"
       flagged_user: "Αναφερόμενος χρήστης"
       review_user: "Χρήστης"
@@ -844,6 +861,7 @@ el:
       copy_link: "Αντιγραφή συνδέσμου"
       view_source: "Προβολή πηγής"
       insights:
+        title: "Στοιχεία"
         flag_volume: "Όγκος αναφορών"
         flagged_by_users:
           one: "Αναφέρθηκε από %{count} μοναδικό χρήστη"
@@ -860,7 +878,7 @@ el:
         topic_has_solution: "Αυτό το θέμα έχει λύση"
         visibility: "Ορατότητα"
       help:
-        moderation_guide: "Οδηγός εποπτείας Discourse"
+        moderation_guide: "Οδηγός συντονισμού Discourse"
         spam_detection: "Ανίχνευση spam"
       approval:
         title: "Απαιτείται Έγκριση Ανάρτησης"
@@ -1392,6 +1410,7 @@ el:
       color_schemes:
         default_description: "Προεπιλογή θέματος"
         undo: "Επαναφορά"
+        regular: "Φωτεινή λειτουργία"
         dark: "Σκοτεινή λειτουργία"
         interface_mode: "Λειτουργία"
         interface_modes:
@@ -2576,6 +2595,9 @@ el:
         new_message_notification:
           one: "%{count} ειδοποίηση νέου μηνύματος"
           other: "%{count} ειδοποιήσεις νέων μηνυμάτων"
+        new_reviewable:
+          one: "%{count} νέο αναθεωρήσιμο"
+          other: "%{count} νέα αναθεωρήσιμα"
       paused: "Οι ειδοποιήσεις τέθηκαν σε παύση"
       title: "ειδοποιήσεις για αναφορές στο @name, απαντήσεις στις αναρτήσεις σου και στα θέματα σου, προσωπικά μηνύματα, κλπ."
       none: "Αυτή τη στιγμή δεν είναι δυνατόν να φορτωθούν οι ειδοποιήσεις."
@@ -2834,6 +2856,7 @@ el:
         post_number_with_topic_title: "ανάρτηση #%{post_number} - %{title}"
         new_post_in_topic: "νέα δημοσίευση στο %{title}"
         user_requires_approval: "%{username} χρειάζεται έγκριση"
+        default_item: "αναθεωρήσιμο στοιχείο #%{reviewable_id}"
     topics:
       new_messages_marker: "τελευταία επίσκεψη"
       bulk:
@@ -3715,6 +3738,7 @@ el:
       default_list_filter: "Προεπιλεγμένο φίλτρο λίστας:"
       allow_badges_label: "Να επιτρέπεται η απονομή παράσημων σε αυτή την κατηγορία"
       edit_permissions: "Επεξεργασία Δικαιωμάτων"
+      reviewable_by_group: "Εκτός από το προσωπικό, το περιεχόμενο αυτής της κατηγορίας μπορεί επίσης να αναθεωρηθεί από:"
       review_group_name: "όνομα ομάδας"
       require_topic_approval: "Απαιτήστε έγκριση συντονιστή για όλα τα νέα θέματα"
       require_reply_approval: "Απαιτήστε έγκριση συντονιστή για όλες τις νέες απαντήσεις"
@@ -4956,6 +4980,10 @@ el:
           user_destroyed: "Χρήστης διαγράφηκε"
           user_suspended: "Χρήστης έχει τεθεί σε αναστολή"
           user_unsuspended: "Χρήστης έχει βγει από αναστολή"
+        reviewable_event:
+          group_name: "Αναθεωρήσιμα Συμβάντα"
+          reviewable_created: "Το αναθεωρήσιμο στοιχείο είναι έτοιμο"
+          reviewable_updated: "Το αναθεωρήσιμο στοιχείο έχει ενημερωθεί"
         user_badge_event:
           group_name: "Συμβάντα παρασήμων"
           user_badge_granted: "Παράσημο χρήστη χορηγήθηκε"

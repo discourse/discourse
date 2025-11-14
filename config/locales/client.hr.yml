@@ -449,7 +449,7 @@ hr:
         last_day: "24 sata"
         last_7_days: "7 dana"
         last_30_days: "30 dana"
-      like_count: "Likeovi"
+      like_count: "Lajkovi"
       topic_count: "Teme"
       post_count: "Objave"
       user_count: "Učlanjenja"
@@ -489,9 +489,9 @@ hr:
           few: "%{formatted_number} prijava"
           other: "%{formatted_number} prijava"
         likes:
-          one: "%{formatted_number} like"
-          few: "%{formatted_number} likeova"
-          other: "%{formatted_number} likeova"
+          one: "%{formatted_number} lajk"
+          few: "%{formatted_number} lajka"
+          other: "%{formatted_number} lajkkova"
         visitors_MF: |
           { total_count, plural,
               one {{total_formatted_number} posjetitelj}
@@ -4176,7 +4176,7 @@ hr:
         lock_post_description: "Spriječiti autora da uređuje ovu objavu"
         unlock_post: "Otključaj objavu"
         unlock_post_description: "Dopusti autoru uređivanje objave"
-        delete_topic_disallowed_modal: "Nemate dozvolu za brisanje ove teme. Ako je stvarno želite obrisati, pošaljite prijavu moderatoru, zajedno s obrazloženjem."
+        delete_topic_disallowed_modal: "Nemate dozvolu za brisanje ove teme. Ako je stvarno želite obrisati, pošaljite prijavu moderatoru, uz obrazloženje."
         delete_topic_disallowed: "Nemate dozvolu za brisanje ove teme"
         delete_topic_confirm_modal:
           one: "Ova tema trenutno ima više od %{count} pregleda i možda je popularno odredište za pretraživanje. Jeste li sigurni da želite u potpunosti izbrisati ovu temu, umjesto da je uređujete kako biste je poboljšali?"
@@ -4628,9 +4628,9 @@ hr:
     activity: "Aktivnosti"
     likes: "Like-ova"
     likes_lowercase:
-      one: "likeovi"
-      few: "sviđanja"
-      other: "sviđanja"
+      one: "lajk"
+      few: "lajka"
+      other: "lajkova"
     users: "Korisnici"
     users_lowercase:
       one: "korisnik"
@@ -5796,10 +5796,26 @@ hr:
         dismiss_notice: "Skloni"
         new_features:
           title: "Što je novo?"
+          subtitle: "Neprestano objavljujemo nove značajke i poboljšanja. Ova stranica pokriva najvažnije, ali možete kliknuti na 'Saznajte više' da biste vidjeli opsežne bilješke o izdanju."
+          previous_announcements: "Prethodne najave novih značajki možete vidjeti na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Saznajte više..."
           experimental: "Eksperimentalno"
+          only_experiments: "Prikaži samo eksperimentalne značajke"
+          experiment_enabled: "Uspješno ste uključili eksperimentalnu značajku."
+          experiment_disabled: "Uspješno ste isključili eksperimentalnu značajku."
           feature_enabled: "Omogućili ste značajku."
           feature_disabled: "Onemogućili ste značajku."
+          toggled_too_fast: "Prebrzо ste promijenili postavku. Pričekajte nekoliko sekundi prije ponovnog pokušaja."
+          experiment_tooltip:
+            title_disabled: "Isprobajte ovu eksperimentalnu značajku"
+            title_enabled: "Isključite eksperimentalnu značajku"
+            content_disabled: "Isprobajte našu najnoviju značajku koja je u razvoju! Još je u eksperimentalnoj fazi, pa je možemo ukloniti u bilo kojem trenutku. Možete je isključiti bilo kada.<br/><br/>Promjena ove postavke omogućit će značajku za sve korisnike."
+            content_enabled: "Promjenom ove postavke onemogućit ćete značajku za sve korisnike."
+          feature_tooltip:
+            title_disabled: "Isprobajte ovu značajku"
+            title_enabled: "Isključite značajku"
+            content_disabled: "Isprobajte ovu novu značajku! Možete je isključiti bilo kada.<br/><br/>Promjena ove postavke omogućit će značajku za sve korisnike."
+            content_enabled: "Promjenom ove postavke onemogućit ćete značajku za sve korisnike."
         last_checked: "Zadnje provjereno"
         refresh_problems: "Osvježi"
         no_problems: "Nisu pronađeni problemi."
@@ -7241,8 +7257,8 @@ hr:
           flagged_by_users: "Korisnici koji su označili zastavicom"
           likes_given: "Like-ova dano"
           likes_received: "Like-ova primljeno"
-          likes_received_days: "Likeova primljeno: jedinstveni dani"
-          likes_received_users: "Likeova primljeno: jedinstveni korisnici"
+          likes_received_days: "Lajkovi kroz dane"
+          likes_received_users: "Broj korisnika koji su lajkali"
           suspended: "Suspendiran (zadnjih 6 mjeseci)"
           silenced: "Ušutkano (zadnjih 6 mjeseci)"
           qualifies: "Kvalificira se za razinu povjerenja 3."
