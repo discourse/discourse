@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, set, setProperties } from "@ember/object";
@@ -14,6 +15,7 @@ import { i18n } from "discourse-i18n";
 export default class EmojiValueList extends Component {
   @service menu;
 
+  @cached
   get collection() {
     return this.args.values
       .split("|")
