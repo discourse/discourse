@@ -68,10 +68,26 @@ function invoke(params) {
   }
 
   const image = upload.create("generated_image.png", base64Image);
+
+  if (!image || image.error) {
+    return {
+      error: `Failed to create upload: ${image ? image.error : "upload.create returned null"}`,
+    };
+  }
+
+  if (!image.short_url) {
+    return {
+      error: "Upload created but short_url is missing",
+    };
+  }
+
   const raw = `\n![${prompt}](${image.short_url})\n`;
+
   chain.setCustomRaw(raw);
 
-  return { result: "Image generated successfully" };
+  return {
+    result: "Image generated successfully",
+  };
 }
 
 function details() {

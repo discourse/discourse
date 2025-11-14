@@ -294,6 +294,11 @@ en:
         completion_request_failed: "Something went wrong while trying to provide suggestions. Please, try again."
         credit_limit_exceeded_user: "You've hit the AI credit limit for your plan. Responses will be unavailable until your limit resets %{reset_time}."
         credit_limit_exceeded_bot: "AI responses are currently unavailable due to credit limits. Please try again %{reset_time}."
+        no_illustrator_persona: "Post Illustrator persona is not configured. Please check your site settings."
+        no_image_generation_tool: "Post Illustrator persona must have an image generation tool attached. Please configure an image generation tool for this persona in the admin panel."
+        no_image_generated: "Failed to generate image. Please try again or check your tool configuration."
+        llm_model_not_configured: "No language model is configured for image generation. Please configure a default language model in your site settings."
+        unknown_error: "An unexpected error occurred while generating thumbnails. Please try again."
       prompts:
         translate: Translate to %{language}
         generate_titles: Suggest topic titles
@@ -303,10 +308,6 @@ en:
         explain: "Explain"
         illustrate_post: "Illustrate Post"
         replace_dates: "Smart dates"
-      painter:
-        attribution:
-          stable_diffusion_xl: "Image by Stable Diffusion XL"
-          dall_e_3: "Image by DALL-E 3"
       image_caption:
         attribution: "Captioned by AI"
 
@@ -401,7 +402,7 @@ en:
           description: "Default persona powering the Helper's generate Markdown table feature"
         post_illustrator:
           name: "Post illustrator"
-          description: "Generates StableDiffusion prompts to power the Helper's illustrate post feature"
+          description: "Generates images to illustrate posts using available image generation tools"
         proofreader:
           name: "Proofreader"
           description: "Default persona powering the Helper's proofread text feature"

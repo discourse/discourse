@@ -106,9 +106,49 @@ module DiscourseAi
 
       def suggest_thumbnails(input)
         hijack do
-          thumbnails = DiscourseAi::AiHelper::Painter.new.commission_thumbnails(input, current_user)
+          result =
+            DiscourseAi::AiHelper::GenerateThumbnails.call(
+              params: {
+                text: input,
+              },
+              guardian: guardian,
+            )
 
-          render json: { thumbnails: thumbnails }, status: :ok
+          if result.failure?
+            status =
+              case result.failing_step
+              when "contract.default"
+                422
+              when :fetch_persona
+                404
+              when :has_image_generation_tool
+                422
+              when :fetch_llm_model, :generate_images, :parse_uploads, :serialize_thumbnails
+                500
+              else
+                500
+              end
+
+            translation_key =
+              case result.failing_step
+              when "contract.default"
+                "discourse_ai.ai_helper.errors.completion_request_failed"
+              when :fetch_persona
+                "discourse_ai.ai_helper.errors.no_illustrator_persona"
+              when :has_image_generation_tool
+                "discourse_ai.ai_helper.errors.no_image_generation_tool"
+              when :fetch_llm_model
+                "discourse_ai.ai_helper.errors.llm_model_not_configured"
+              when :generate_images, :parse_uploads, :serialize_thumbnails
+                "discourse_ai.ai_helper.errors.no_image_generated"
+              else
+                "discourse_ai.ai_helper.errors.unknown_error"
+              end
+
+            render_json_error(I18n.t(translation_key), status: status)
+          else
+            render json: { thumbnails: result[:thumbnails] }, status: :ok
+          end
         end
       end
 

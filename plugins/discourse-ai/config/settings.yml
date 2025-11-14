@@ -138,7 +138,7 @@ discourse_ai:
   ai_helper_automatic_chat_thread_title_delay:
     default: 5
     area: "ai-features/ai_helper"
-  ai_helper_illustrate_post_model:
+  ai_helper_illustrate_post_model: # Deprecated. TODO(keegan): Remove 2025-12-01
     default: disabled
     type: enum
     choices:

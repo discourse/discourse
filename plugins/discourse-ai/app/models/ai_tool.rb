@@ -12,6 +12,7 @@ class AiTool < ActiveRecord::Base
   has_many :rag_document_fragments, dependent: :destroy, as: :target
   has_many :upload_references, as: :target, dependent: :destroy
   has_many :uploads, through: :upload_references
+  before_save :set_image_generation_tool_flag
   before_update :regenerate_rag_fragments
 
   ALPHANUMERIC_PATTERN = /\A[a-zA-Z0-9_]+\z/
@@ -60,12 +61,18 @@ class AiTool < ActiveRecord::Base
   end
 
   def image_generation_tool?
-    # Check if this is an image generation tool by looking for characteristic patterns
+    is_image_generation_tool
+  end
+
+  private
+
+  def set_image_generation_tool_flag
     has_prompt_parameter = parameters.is_a?(Array) && parameters.any? { |p| p["name"] == "prompt" }
     has_upload_create = script.include?("upload.create")
     has_chain_set_custom_raw = script.include?("chain.setCustomRaw")
 
-    has_prompt_parameter && has_upload_create && has_chain_set_custom_raw
+    self.is_image_generation_tool =
+      has_prompt_parameter && has_upload_create && has_chain_set_custom_raw
   end
 
   def validate_parameters_enum
