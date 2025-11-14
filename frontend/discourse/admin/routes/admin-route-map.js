@@ -369,6 +369,7 @@ export default function () {
         });
         this.route("logo");
         this.route("fonts");
+        this.route("welcomeBanner", { path: "/welcome-banner" });
         this.route("navigation", function () {
           this.route("settings", { path: "/" });
         });

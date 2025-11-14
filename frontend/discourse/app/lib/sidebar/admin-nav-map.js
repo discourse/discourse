@@ -302,6 +302,13 @@ export const ADMIN_NAV_MAP = [
         ],
       },
       {
+        name: "admin_welcome_banner",
+        route: "adminConfig.welcomeBanner",
+        label: "admin.config.welcome_banner.title",
+        description: "admin.config.welcome_banner.header_description",
+        icon: "sign-hanging",
+      },
+      {
         name: "admin_customize_site_texts",
         route: "adminSiteText",
         label: "admin.config.site_texts.title",

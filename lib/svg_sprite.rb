@@ -232,6 +232,7 @@ module SvgSprite
         shield-halved
         shuffle
         signal
+        sign-hanging
         sliders
         spinner
         square-check
