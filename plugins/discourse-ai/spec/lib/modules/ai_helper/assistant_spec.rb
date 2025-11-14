@@ -45,10 +45,7 @@ RSpec.describe DiscourseAi::AiHelper::Assistant do
   end
 
   describe("#available_prompts") do
-    before do
-      SiteSetting.ai_helper_illustrate_post_model = "disabled"
-      DiscourseAi::AiHelper::Assistant.clear_prompt_cache!
-    end
+    before { DiscourseAi::AiHelper::Assistant.clear_prompt_cache! }
 
     it "returns all available prompts" do
       prompts = assistant.available_prompts(user)
@@ -92,24 +89,138 @@ RSpec.describe DiscourseAi::AiHelper::Assistant do
       expect { assistant.available_prompts(user) }.not_to raise_error
     end
 
-    context "when illustrate post model is enabled" do
-      before do
-        SiteSetting.ai_helper_illustrate_post_model = "stable_diffusion_xl"
-        DiscourseAi::AiHelper::Assistant.clear_prompt_cache!
+    context "when PostIllustrator persona has an image generation tool" do
+      let(:image_tool) do
+        AiTool.create!(
+          name: "Test Image Generator",
+          tool_name: "test_image_generator",
+          description: "Generates test images",
+          summary: "Test image generation",
+          parameters: [{ name: "prompt", type: "string", required: true }],
+          script: <<~JS,
+            function invoke(params) {
+              const image = upload.create("test.png", "base64data");
+              chain.setCustomRaw(`![test](${image.short_url})`);
+              return { result: "success" };
+            }
+          JS
+          created_by_id: user.id,
+        )
       end
 
-      it "returns the illustrate_post prompt in the list of all prompts" do
-        prompts = assistant.available_prompts(user)
+      context "with system PostIllustrator persona (dynamic tool discovery)" do
+        before do
+          # Use the default system PostIllustrator persona
+          image_tool # Create the tool
+          DiscourseAi::AiHelper::Assistant.clear_prompt_cache!
+        end
 
-        expect(prompts.map { |p| p[:name] }).to contain_exactly(
-          "translate",
-          "generate_titles",
-          "proofread",
-          "markdown_table",
-          "explain",
-          "illustrate_post",
-          "replace_dates",
-        )
+        it "automatically discovers and uses the image generation tool" do
+          prompts = assistant.available_prompts(user)
+
+          expect(prompts.map { |p| p[:name] }).to contain_exactly(
+            "translate",
+            "generate_titles",
+            "proofread",
+            "markdown_table",
+            "explain",
+            "illustrate_post",
+            "replace_dates",
+          )
+        end
+
+        it "PostIllustrator persona has tools and forces their use" do
+          persona = AiPersona.find_by(id: SiteSetting.ai_helper_post_illustrator_persona)
+          persona_instance = persona.class_instance.new
+
+          expect(persona_instance.tools).not_to be_empty
+          expect(persona_instance.tools.first).to be_a(Class)
+          expect(persona_instance.tools.first.tool_id).to eq(image_tool.id)
+          expect(persona_instance.force_tool_use).to eq(persona_instance.tools)
+          expect(persona_instance.forced_tool_count).to eq(1)
+        end
+      end
+
+      context "with custom persona" do
+        let(:custom_persona) do
+          AiPersona.create!(
+            name: "Custom Post Illustrator",
+            description: "Test persona with image tool",
+            system_prompt: "You are an AI that generates images from text prompts.",
+            enabled: true,
+            system: false,
+            allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+            tools: [["custom-#{image_tool.id}", {}, true]],
+          )
+        end
+
+        before do
+          # Set the custom persona as the illustrator persona
+          SiteSetting.ai_helper_post_illustrator_persona = custom_persona.id
+          DiscourseAi::AiHelper::Assistant.clear_prompt_cache!
+        end
+
+        it "returns the illustrate_post prompt in the list of all prompts" do
+          prompts = assistant.available_prompts(user)
+
+          expect(prompts.map { |p| p[:name] }).to contain_exactly(
+            "translate",
+            "generate_titles",
+            "proofread",
+            "markdown_table",
+            "explain",
+            "illustrate_post",
+            "replace_dates",
+          )
+        end
+      end
+
+      context "when handling edge cases" do
+        before { DiscourseAi::AiHelper::Assistant.clear_prompt_cache! }
+
+        it "does not include illustrate_post when no image generation tools are enabled" do
+          # Disable all image generation tools
+          AiTool.where(is_image_generation_tool: true).update_all(enabled: false)
+          DiscourseAi::AiHelper::Assistant.clear_prompt_cache!
+
+          prompts = assistant.available_prompts(user)
+
+          expect(prompts.map { |p| p[:name] }).not_to include("illustrate_post")
+        end
+
+        it "handles tool discovery returning empty array" do
+          # Create a tool that looks like an image tool but isn't
+          AiTool.create!(
+            name: "Not An Image Tool",
+            tool_name: "not_image_tool",
+            description: "Not an image tool",
+            summary: "Test",
+            parameters: [{ name: "text", type: "string" }],
+            script: "function invoke() { return {}; }",
+            created_by_id: user.id,
+            enabled: true,
+            is_image_generation_tool: false,
+          )
+
+          DiscourseAi::AiHelper::Assistant.clear_prompt_cache!
+          prompts = assistant.available_prompts(user)
+
+          expect(prompts.map { |p| p[:name] }).not_to include("illustrate_post")
+        end
+
+        it "gracefully handles PostIllustrator.tools raising exception" do
+          # Stub the PostIllustrator class to raise an error
+          allow_any_instance_of(DiscourseAi::Personas::PostIllustrator).to receive(
+            :tools,
+          ).and_raise(StandardError.new("Tool discovery failed"))
+
+          DiscourseAi::AiHelper::Assistant.clear_prompt_cache!
+
+          # Should not raise error, just exclude illustrate_post
+          expect { assistant.available_prompts(user) }.not_to raise_error
+          prompts = assistant.available_prompts(user)
+          expect(prompts.map { |p| p[:name] }).not_to include("illustrate_post")
+        end
       end
     end
   end

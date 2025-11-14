@@ -19,7 +19,12 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
     it "is able to stream suggestions to helper" do
       sign_in(user)
 
-      my_post = Fabricate(:post)
+      category = Fabricate(:category)
+      category.set_permissions(everyone: :full)
+      category.save!
+
+      topic = Fabricate(:topic, category: category)
+      my_post = Fabricate(:post, topic: topic)
 
       channel = nil
       messages =
@@ -183,17 +188,107 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
         end
       end
 
-      it "prevents double render when mode is ILLUSTRATE_POST" do
-        DiscourseAi::Completions::Llm.with_prepared_responses([proofread_text]) do
-          expect {
-            post "/discourse-ai/ai-helper/suggest",
-                 params: {
-                   mode: DiscourseAi::AiHelper::Assistant::ILLUSTRATE_POST,
-                   text: text_to_proofread,
-                   force_default_locale: true,
-                 }
-          }.not_to raise_error
+      it "returns error when PostIllustrator persona has no image generation tool" do
+        post "/discourse-ai/ai-helper/suggest",
+             params: {
+               mode: DiscourseAi::AiHelper::Assistant::ILLUSTRATE_POST,
+               text: text_to_proofread,
+               force_default_locale: true,
+             }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"].first).to include(
+          "Post Illustrator persona must have an image generation tool",
+        )
+      end
+
+      it "returns error when PostIllustrator persona is not found" do
+        SiteSetting.ai_helper_post_illustrator_persona = 99_999
+
+        post "/discourse-ai/ai-helper/suggest",
+             params: {
+               mode: DiscourseAi::AiHelper::Assistant::ILLUSTRATE_POST,
+               text: text_to_proofread,
+               force_default_locale: true,
+             }
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"].first).to include(
+          "Post Illustrator persona is not configured",
+        )
+      end
+
+      context "when PostIllustrator persona has image generation tool" do
+        let(:image_tool) do
+          AiTool.create!(
+            name: "Test Image Generator",
+            tool_name: "test_image_generator",
+            description: "Generates test images",
+            summary: "Test image generation",
+            parameters: [{ name: "prompt", type: "string", required: true }],
+            script: <<~JS,
+              function invoke(params) {
+                const image = upload.create("test.png", "base64data");
+                chain.setCustomRaw(`![test](${image.short_url})`);
+                return { result: "success" };
+              }
+            JS
+            created_by_id: user.id,
+            enabled: true,
+            is_image_generation_tool: true,
+          )
+        end
+
+        let(:upload) do
+          Fabricate(
+            :upload,
+            sha1: Upload.sha1_from_short_url("upload://test123"),
+            original_filename: "test.png",
+          )
+        end
+
+        let(:post_illustrator_persona) do
+          AiPersona.find_by(id: SiteSetting.ai_helper_post_illustrator_persona)
+        end
+
+        before do
+          image_tool
+          post_illustrator_persona.update_columns(system: false) # Allow editing for test
+          post_illustrator_persona.update!(tools: [["custom-#{image_tool.id}", nil, true]])
+
+          allow_any_instance_of(DiscourseAi::Personas::Bot).to receive(
+            :reply,
+          ) do |_bot, _context, &block|
+            block.call("", "![test](#{upload.short_url})", :partial_invoke)
+          end
+        end
+
+        it "successfully generates thumbnails" do
+          post "/discourse-ai/ai-helper/suggest",
+               params: {
+                 mode: DiscourseAi::AiHelper::Assistant::ILLUSTRATE_POST,
+                 text: "A beautiful sunset",
+                 force_default_locale: true,
+               }
+
           expect(response.status).to eq(200)
+          expect(response.parsed_body["thumbnails"]).to be_present
+          expect(response.parsed_body["thumbnails"].length).to eq(1)
+          expect(response.parsed_body["thumbnails"].first["id"]).to eq(upload.id)
+        end
+
+        it "returns error when image generation fails" do
+          allow_any_instance_of(DiscourseAi::Personas::Bot).to receive(:reply).and_return(nil)
+
+          post "/discourse-ai/ai-helper/suggest",
+               params: {
+                 mode: DiscourseAi::AiHelper::Assistant::ILLUSTRATE_POST,
+                 text: "A beautiful sunset",
+                 force_default_locale: true,
+               }
+
+          expect(response.status).to eq(500)
+          expect(response.parsed_body["errors"].first).to include("Failed to generate image")
         end
       end
 

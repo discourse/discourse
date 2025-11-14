@@ -341,6 +341,18 @@ class AiPersona < ActiveRecord::Base
     end
   end
 
+  def has_image_generation_tool?
+    persona_klass = class_instance.new
+    persona_klass.tools.any? do |tool_klass|
+      if tool_klass.respond_to?(:custom?) && tool_klass.custom?
+        ai_tool = AiTool.find_by(id: tool_klass.tool_id)
+        ai_tool&.image_generation_tool?
+      else
+        false
+      end
+    end
+  end
+
   def features
     DiscourseAi::Configuration::Feature.find_features_using(persona_id: id)
   end
