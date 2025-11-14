@@ -1,0 +1,21 @@
+.block-top-tags {
+  &__layout {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    gap: var(--space-4);
+
+    a {
+      color: var(--d-sidebar-link-color);
+    }
+
+    .d-icon {
+      color: var(--d-sidebar-link-icon-color);
+    }
+  }
+}
