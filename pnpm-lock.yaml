@@ -232,9 +232,27 @@ importers:
 
   frontend/discourse:
     dependencies:
+      '@discourse/itsatrap':
+        specifier: ^2.0.10
+        version: 2.0.10
+      '@ember-compat/tracked-built-ins':
+        specifier: ^0.9.1
+        version: 0.9.1(patch_hash=s67qh4jsmpbr3llstdi3a5zeze)
+      '@ember/render-modifiers':
+        specifier: ^3.0.0
+        version: 3.0.0(@glint/template@1.7.2)(ember-source@6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5))
+      '@ember/string':
+        specifier: ^4.0.1
+        version: 4.0.1
+      '@ember/test-waiters':
+        specifier: 4.1.1
+        version: 4.1.1(@glint/template@1.7.2)
       '@faker-js/faker':
         specifier: ^10.1.0
         version: 10.1.0
+      '@floating-ui/dom':
+        specifier: ^1.7.4
+        version: 1.7.4
       '@fullcalendar/core':
         specifier: ^6.1.19
         version: 6.1.19
@@ -253,6 +271,9 @@ importers:
       '@fullcalendar/timegrid':
         specifier: ^6.1.19
         version: 6.1.19(@fullcalendar/core@6.1.19)
+      '@glimmer/component':
+        specifier: ^2.0.0
+        version: 2.0.0
       '@glimmer/syntax':
         specifier: 0.93.1
         version: 0.93.1
@@ -283,27 +304,69 @@ importers:
       '@messageformat/runtime':
         specifier: ^3.0.2
         version: 3.0.2
+      '@popperjs/core':
+        specifier: ^2.11.8
+        version: 2.11.8
+      '@uppy/aws-s3':
+        specifier: ^4.1.0
+        version: 4.1.0(@uppy/core@4.2.2)
+      '@uppy/core':
+        specifier: ^4.2.2
+        version: 4.2.2
+      '@uppy/drop-target':
+        specifier: 3.0.1
+        version: 3.0.1(@uppy/core@4.2.2)
+      '@uppy/utils':
+        specifier: ^6.0.3
+        version: 6.0.3
+      '@uppy/xhr-upload':
+        specifier: ^4.2.1
+        version: 4.2.1(@uppy/core@4.2.2)
+      a11y-dialog:
+        specifier: 8.1.4
+        version: 8.1.4
       ace-builds:
         specifier: ^1.43.4
         version: 1.43.4
+      autosize:
+        specifier: ^6.0.1
+        version: 6.0.1
       chart.js:
         specifier: 3.5.1
         version: 3.5.1
       chartjs-plugin-datalabels:
         specifier: 2.2.0
         version: 2.2.0(chart.js@3.5.1)
-      decorator-transforms:
-        specifier: ^2.3.0
-        version: 2.3.0(@babel/core@7.28.5)
+      deepmerge:
+        specifier: ^4.3.1
+        version: 4.3.1
       diff:
         specifier: ^8.0.2
         version: 8.0.2
+      discourse-i18n:
+        specifier: workspace:1.0.0
+        version: link:../discourse-i18n
+      discourse-markdown-it:
+        specifier: workspace:1.0.0
+        version: link:../discourse-markdown-it
       discourse-widget-hbs:
         specifier: workspace:1.0.0
         version: link:../discourse-widget-hbs
+      ember-async-data:
+        specifier: ^2.0.1
+        version: 2.0.1(@babel/core@7.28.5)(@glint/template@1.7.2)
+      ember-buffered-proxy:
+        specifier: ^2.1.1
+        version: 2.1.1(@babel/core@7.28.5)
       ember-curry-component:
         specifier: ^0.3.1
         version: 0.3.1(@babel/core@7.28.5)
+      ember-decorators:
+        specifier: ^6.1.1
+        version: 6.1.1
+      ember-modifier:
+        specifier: ^4.2.2
+        version: 4.2.2(@babel/core@7.28.5)
       ember-resolver:
         specifier: ^13.1.1
         version: 13.1.1
@@ -319,15 +382,33 @@ importers:
       highlight.js:
         specifier: 11.11.1
         version: 11.11.1
+      html-entities:
+        specifier: ^2.6.0
+        version: 2.6.0
       immer:
         specifier: ^10.2.0
         version: 10.2.0
+      jquery:
+        specifier: ^3.7.1
+        version: 3.7.1
+      js-yaml:
+        specifier: ^4.1.0
+        version: 4.1.0
       jspreadsheet-ce:
         specifier: ^4.15.0
         version: 4.15.0
+      jsuites:
+        specifier: ^5.13.3
+        version: 5.13.3
       magnific-popup:
         specifier: 1.1.0
         version: 1.1.0
+      make-plural:
+        specifier: ^7.4.0
+        version: 7.4.0
+      message-bus-client:
+        specifier: ^4.4.1
+        version: 4.4.1
       moment:
         specifier: 2.30.1
         version: 2.30.1
@@ -394,6 +475,12 @@ importers:
       rrule:
         specifier: ^2.8.1
         version: 2.8.1
+      virtual-dom:
+        specifier: ^2.1.1
+        version: 2.1.1(patch_hash=ng672yys7q7cl7vz44xn3y54uq)
+      xss:
+        specifier: ^1.0.15
+        version: 1.0.15
     devDependencies:
       '@babel/core':
         specifier: ^7.28.5
@@ -404,27 +491,12 @@ importers:
       '@colors/colors':
         specifier: ^1.6.0
         version: 1.6.0
-      '@discourse/itsatrap':
-        specifier: ^2.0.10
-        version: 2.0.10
-      '@ember-compat/tracked-built-ins':
-        specifier: ^0.9.1
-        version: 0.9.1(patch_hash=s67qh4jsmpbr3llstdi3a5zeze)
       '@ember/optional-features':
         specifier: ^2.2.0
         version: 2.2.0
-      '@ember/render-modifiers':
-        specifier: ^3.0.0
-        version: 3.0.0(@glint/template@1.7.2)(ember-source@6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5))
-      '@ember/string':
-        specifier: ^4.0.1
-        version: 4.0.1
       '@ember/test-helpers':
         specifier: ^5.4.0
         version: 5.4.0(@babel/core@7.28.5)(@glint/template@1.7.2)
-      '@ember/test-waiters':
-        specifier: 4.1.1
-        version: 4.1.1(@glint/template@1.7.2)
       '@embroider/compat':
         specifier: ^3.8.5
         version: 3.8.5(@embroider/core@3.5.5(@glint/template@1.7.2))(@glint/template@1.7.2)
@@ -440,15 +512,6 @@ importers:
       '@embroider/webpack':
         specifier: ^4.1.0
         version: 4.1.0(@embroider/core@3.5.5(@glint/template@1.7.2))(webpack@5.99.9(@swc/core@1.15.1)(esbuild@0.25.11))
-      '@floating-ui/dom':
-        specifier: ^1.7.4
-        version: 1.7.4
-      '@glimmer/component':
-        specifier: ^2.0.0
-        version: 2.0.0
-      '@popperjs/core':
-        specifier: ^2.11.8
-        version: 2.11.8
       '@swc/core':
         specifier: ^1.15.1
         version: 1.15.1
@@ -461,27 +524,6 @@ importers:
       '@types/rsvp':
         specifier: ^4.0.9
         version: 4.0.9
-      '@uppy/aws-s3':
-        specifier: ^4.1.0
-        version: 4.1.0(@uppy/core@4.2.2)
-      '@uppy/core':
-        specifier: ^4.2.2
-        version: 4.2.2
-      '@uppy/drop-target':
-        specifier: 3.0.1
-        version: 3.0.1(@uppy/core@4.2.2)
-      '@uppy/utils':
-        specifier: ^6.0.3
-        version: 6.0.3
-      '@uppy/xhr-upload':
-        specifier: ^4.2.1
-        version: 4.2.1(@uppy/core@4.2.2)
-      a11y-dialog:
-        specifier: 8.1.4
-        version: 8.1.4
-      autosize:
-        specifier: ^6.0.1
-        version: 6.0.1
       babel-import-util:
         specifier: ^3.0.1
         version: 3.0.1
@@ -497,30 +539,18 @@ importers:
       custom-proxy:
         specifier: workspace:1.0.0
         version: link:../custom-proxy
-      deepmerge:
-        specifier: ^4.3.1
-        version: 4.3.1
+      decorator-transforms:
+        specifier: ^2.3.0
+        version: 2.3.0(@babel/core@7.28.5)
       deprecation-silencer:
         specifier: workspace:1.0.0
         version: link:../deprecation-silencer
-      discourse-i18n:
-        specifier: workspace:1.0.0
-        version: link:../discourse-i18n
-      discourse-markdown-it:
-        specifier: workspace:1.0.0
-        version: link:../discourse-markdown-it
       discourse-plugins:
         specifier: workspace:1.0.0
         version: link:../discourse-plugins
-      ember-async-data:
-        specifier: ^2.0.1
-        version: 2.0.1(@babel/core@7.28.5)(@glint/template@1.7.2)
       ember-auto-import:
         specifier: ^2.11.2
         version: 2.11.2(@glint/template@1.7.2)(webpack@5.99.9(@swc/core@1.15.1)(esbuild@0.25.11))
-      ember-buffered-proxy:
-        specifier: ^2.1.1
-        version: 2.1.1(@babel/core@7.28.5)
       ember-cached-decorator-polyfill:
         specifier: ^1.0.2
         version: 1.0.2(@babel/core@7.28.5)(@glint/template@1.7.2)(ember-source@6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5))
@@ -551,18 +581,12 @@ importers:
       ember-cli-terser:
         specifier: ^4.0.2
         version: 4.0.2
-      ember-decorators:
-        specifier: ^6.1.1
-        version: 6.1.1
       ember-exam:
         specifier: ^10.0.0
         version: 10.0.0(@glint/template@1.7.2)(ember-qunit@9.0.4(@ember/test-helpers@5.4.0(@babel/core@7.28.5)(@glint/template@1.7.2))(@glint/template@1.7.2)(qunit@2.24.2))(ember-source@6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5))(qunit@2.24.2)(webpack@5.99.9(@swc/core@1.15.1)(esbuild@0.25.11))
       ember-load-initializers:
         specifier: ^3.0.1
         version: 3.0.1(ember-source@6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5))
-      ember-modifier:
-        specifier: ^4.2.2
-        version: 4.2.2(@babel/core@7.28.5)
       ember-qunit:
         specifier: ^9.0.4
         version: 9.0.4(@ember/test-helpers@5.4.0(@babel/core@7.28.5)(@glint/template@1.7.2))(@glint/template@1.7.2)(qunit@2.24.2)
@@ -572,30 +596,12 @@ importers:
       ember-test-selectors:
         specifier: ^7.1.0
         version: 7.1.0
-      html-entities:
-        specifier: ^2.6.0
-        version: 2.6.0
       imports-loader:
         specifier: ^5.0.0
         version: 5.0.0(webpack@5.99.9(@swc/core@1.15.1)(esbuild@0.25.11))
-      jquery:
-        specifier: ^3.7.1
-        version: 3.7.1
-      js-yaml:
-        specifier: ^4.1.0
-        version: 4.1.0
-      jsuites:
-        specifier: ^5.13.3
-        version: 5.13.3
       loader.js:
         specifier: ^4.7.0
         version: 4.7.0
-      make-plural:
-        specifier: ^7.4.0
-        version: 7.4.0
-      message-bus-client:
-        specifier: ^4.4.1
-        version: 4.4.1
       pretender:
         specifier: ^3.4.7
         version: 3.4.7
@@ -623,9 +629,6 @@ importers:
       util:
         specifier: ^0.12.5
         version: 0.12.5
-      virtual-dom:
-        specifier: ^2.1.1
-        version: 2.1.1(patch_hash=ng672yys7q7cl7vz44xn3y54uq)
       webpack:
         specifier: 5.99.9
         version: 5.99.9(@swc/core@1.15.1)(esbuild@0.25.11)
@@ -635,9 +638,6 @@ importers:
       webpack-stats-plugin:
         specifier: ^1.1.3
         version: 1.1.3
-      xss:
-        specifier: ^1.0.15
-        version: 1.0.15
 
   frontend/discourse-i18n:
     dependencies:
