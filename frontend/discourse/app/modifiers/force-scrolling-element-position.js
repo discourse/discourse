@@ -20,6 +20,11 @@ export default class forceScrollingElementPosition extends Modifier {
       return;
     }
 
+    const isIOS26minimum = "URLPattern" in globalThis;
+    if (this.capabilities.isIpadOS && !isIOS26minimum) {
+      return;
+    }
+
     // scrolling to 0 doesn't work on safari, you need to scroll to -1
     const offset = window.pageYOffset <= 0 ? -1 : window.pageYOffset;
 

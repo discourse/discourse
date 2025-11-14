@@ -8,11 +8,12 @@ import { lock, unlock } from "discourse/lib/body-scroll-lock";
 import ChatScrollableList from "../modifiers/chat/scrollable-list";
 
 export default class ChatMessagesScroller extends Component {
+  @service capabilities;
   @service site;
 
   @action
   lockBody(element) {
-    if (this.site.desktopView) {
+    if (this.site.desktopView || this.capabilities.isIpadOS) {
       return;
     }
 
@@ -21,7 +22,7 @@ export default class ChatMessagesScroller extends Component {
 
   @action
   unlockBody(element) {
-    if (this.site.desktopView) {
+    if (this.site.desktopView || this.capabilities.isIpadOS) {
       return;
     }
 
