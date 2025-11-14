@@ -83,6 +83,17 @@ describe TopicViewSerializer do
 
       expect(json[:post_stream][:posts][1][:reaction_users_count]).to eq(0)
     end
+
+    it "preserves existing topic_view preloads when loading reactions" do
+      topic_view = TopicView.new(topic.id, user_1)
+
+      queries =
+        track_sql_queries do
+          TopicViewSerializer.new(topic_view, scope: Guardian.new(user_2), root: false).as_json
+        end
+
+      expect(queries.select { |q| q.include?("incoming_email") }.size).to eq(0)
+    end
   end
 
   describe "only shadow like" do
