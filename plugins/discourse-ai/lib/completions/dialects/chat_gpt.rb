@@ -52,7 +52,33 @@ module DiscourseAi
           !!@disable_native_tools = llm_model.lookup_custom_param("disable_native_tools")
         end
 
+        def translate
+          result = super
+          result = hoist_reasoning(result) if responses_api?
+          result
+        end
+
         private
+
+        def hoist_reasoning(messages)
+          new_messages = []
+          messages.each do |msg|
+            if msg[:content].is_a?(Array)
+              reasoning = []
+              msg[:content].delete_if do |item|
+                if item.is_a?(Hash) && item[:type] == "reasoning"
+                  reasoning << item
+                  true
+                else
+                  false
+                end
+              end
+              reasoning.each { |reason| new_messages << reason } if reasoning.present?
+            end
+            new_messages << msg
+          end
+          new_messages
+        end
 
         def tools_dialect
           if disable_native_tools?
@@ -123,7 +149,7 @@ module DiscourseAi
           content_array = []
 
           if responses_api? && msg[:thinking_signature]
-            content_array << { type: "thinking_signature", signature: msg[:thinking_signature] }
+            content_array << { type: "thinking", message: msg }
           end
 
           user_message = { role: }
@@ -163,7 +189,14 @@ module DiscourseAi
         end
 
         def thinking_signature_node(hash)
-          { type: "reasoning", encrypted_content: hash[:signature] } if responses_api?
+          if responses_api?
+            message = hash[:message]
+            {
+              type: "reasoning",
+              encrypted_content: message[:thinking_signature],
+              summary: [type: :summary_text, text: message[:thinking].to_s],
+            }
+          end
         end
 
         def text_node(text, role)
