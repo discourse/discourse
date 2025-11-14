@@ -10,10 +10,12 @@ el:
     poll_maximum_options: "Μέγιστος αριθμός επιλογών σε μια ψηφοφορία."
     poll_edit_window_mins: "Αριθμός λεπτών μετά την δημιουργία ανάρτησης που οι ψηφοφορίες μπορούν να αλλαχθούν "
     poll_minimum_trust_level_to_create: "Ελάχιστο απαιτούμενο επίπεδο εμπιστοσύνης για την δημιουργία ψηφοφοριών."
+    poll_create_allowed_groups: "Οι ομάδες που επιτρέπεται να δημιουργούν ψηφοφορίες."
     poll_groupable_user_fields: "Ένα σύνολο ονομάτων πεδίων χρήστη που μπορούν να χρησιμοποιηθούν για την ομαδοποίηση και το φιλτράρισμα των αποτελεσμάτων δημοσκόπησης."
   poll:
     poll: "δημοσκόπηση"
     multiple_polls_with_same_name: "Υπάρχουν πολλές ψηφοφορίες με το ίδιο όνομα: <strong>%{name}</strong>. Χρησιμοποίησε την ιδιότητα '<code>name</code>' για να κάνεις τις ψηφοφορίες σου μοναδικά αναγνωρίσιμες."
+    default_poll_must_have_at_least_1_option: "Η ψηφοφορία πρέπει να έχει τουλάχιστον 1 επιλογή."
     default_poll_must_have_less_options:
       one: "Η Δημοσκόπηση πρέπει να έχει λιγότερη από %{count} επιλογή."
       other: "Η ψηφοφορία πρέπει να έχει λιγότερες από %{count} επιλογές."
@@ -22,6 +24,7 @@ el:
       other: "Η ψηφοφορία με όνομα <strong>%{name}</strong> πρέπει να έχει λιγότερες απο %{count} επιλογές. "
     default_poll_must_have_different_options: "Η ψηφοφορία πρέπει να έχει διαφορετικές επιλογές."
     named_poll_must_have_different_options: "Η ψηφοφορία <strong>%{name}</strong> πρέπει να έχει διαφορετικές επιλογές."
+    default_poll_must_not_have_any_empty_options: "Η ψηφοφορία δεν πρέπει να έχει κενές επιλογές."
     default_poll_with_multiple_choices_has_invalid_parameters: "Η ψηφοφορία με πολλαπλές επιλογές έχει μη έγκυρες παραμέτρους."
     named_poll_with_multiple_choices_has_invalid_parameters: "Η ψηφοφορία με όνομα <strong>%{name}</strong> και με πολλαπλές επιλογές έχει μη έγγυρες παραμέτρους"
     requires_at_least_1_valid_option: "Πρέπει να κάνεις τουλάχιστον 1 έγκυρη επιλογή."
@@ -29,8 +32,16 @@ el:
     post_is_deleted: "Δεν μπορείτε να ενεργήσετε σε διεγραμένη ανάρτηση."
     topic_must_be_open_to_vote: "Το νήμα πρέπει να είναι ανοιχτό για ψηφοφορίες."
     poll_must_be_open_to_vote: "Η ψηφοφορία πρέπει να έχει ξεκινήσει πρώτα."
+    one_vote_per_user: "Μόνο 1 ψήφος επιτρέπεται για αυτήν την ψηφοφορία."
+    max_vote_per_user:
+      one: Μόνο %{count} ψήφος επιτρέπεται για αυτήν την ψηφοφορία.
+      other: Επιτρέπονται έως και %{count} ψήφοι για αυτήν την ψηφοφορία.
     topic_must_be_open_to_toggle_status: "Για να μπορεί να αλλάξει η κατάσταση του νήματος, πρέπει να είναι ανοιχτό."
     only_staff_or_op_can_toggle_status: "Η κατάσταση της ψηφοφορίας μπορεί να αλλάξει μόνο από συντονιστές ή από τον δημιουργό του νήματος."
+    errors:
+      poll_not_found: "Η ψηφοφορία δεν βρέθηκε, παρακαλούμε επιβεβαιώστε τις παραμέτρους."
     insufficient_rights_to_create: "Δεν σας επιτρέπεται η δημιουργία ψηφοφοριών."
     email:
       link_to_poll: "Κάντε κλικ για να δείτε την ψηφοφορία."
+    user_field:
+      no_data: "Δεν υπάρχουν δεδομένα"

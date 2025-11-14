@@ -128,7 +128,12 @@ el:
               label: Ετικέτες
             restricted_categories:
               label: Κατηγορίες
+            restricted_archetype:
+              description: Προαιρετικά, να επιτρέπεται το έναυσμα μόνο σε θέματα ή προσωπικά μηνύματα
           created: Δημιουργήθηκε
+          topics: Όλα τα θέματα
+          personal_messages: Προσωπικά μηνύματα
+          public_topics: Δημόσια θέματα (εξαιρούνται όλες οι ασφαλείς κατηγορίες)
           with_images: Εικόνες
           with_links: Σύνδεσμοι
           with_code: Κωδικός
@@ -317,6 +322,8 @@ el:
             label: Έκδοση
           status:
             label: Κατάσταση
+          enabled:
+            label: "Ενεργοποίηση αυτοματισμού"
           disabled:
             label: Απενεργοποιημένο
           last_updated_at:

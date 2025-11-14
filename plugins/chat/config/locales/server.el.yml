@@ -15,7 +15,12 @@ el:
     errors:
       not_accepting_dms: "Λυπούμαστε, ο/η %{username} δεν δέχεται μηνύματα αυτή τη στιγμή."
     reviewables:
+      message_already_handled: "Ευχαριστούμε, αλλά έχουμε ήδη αναθεωρήσει αυτό το μήνυμα και έχουμε διαπιστώσει ότι δεν χρειάζεται να αναφερθεί ξανά."
       actions:
+        agree:
+          title: "Συμφωνώ..."
+        agree_and_keep_message:
+          title: "Διατήρηση μηνύματος"
         agree_and_suspend:
           title: "Αποβολή Χρήστη"
         agree_and_silence:
