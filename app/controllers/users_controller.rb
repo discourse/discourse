@@ -126,6 +126,7 @@ class UsersController < ApplicationController
     user_serializer = nil
     if !current_user&.staff? && !@user.active?
       user_serializer = InactiveUserSerializer.new(@user, scope: guardian, root: "user")
+      assign_topic_post_count(user_serializer) if for_card
     elsif !guardian.can_see_profile?(@user)
       user_serializer = HiddenProfileSerializer.new(@user, scope: guardian, root: "user")
       assign_topic_post_count(user_serializer) if for_card
