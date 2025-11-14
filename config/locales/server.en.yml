@@ -4433,7 +4433,7 @@ en:
 
     account_exists:
       title: "Account already exists"
-      subject_template: "%{email_prefix}: Account already exists"
+      subject_template: "Account already exists"
       text_body_template: |
         You just tried to create an account at %{site_name}, or tried to change the email of an account to %{email}. However, an account already exists for %{email}.
 
@@ -4445,7 +4445,7 @@ en:
 
     account_second_factor_disabled:
       title: "Two-Factor Authentication disabled"
-      subject_template: "%{email_prefix}: Two-Factor Authentication disabled"
+      subject_template: "Two-Factor Authentication disabled"
       text_body_template: |
         Two-factor authentication has been disabled on your account at %{site_name}. You can now log in with only your password; an additional authentication code is no longer required.
 
@@ -4465,7 +4465,7 @@ en:
       join_the_discussion: "Read More"
       popular_posts: "Popular Posts"
       more_new: "New for you"
-      subject_template: "%{email_prefix}: Summary"
+      subject_template: "Summary"
       unsubscribe: "This summary is sent from %{site_link} when we haven't seen you in a while. Change %{email_preferences_link}, or %{unsubscribe_link} to unsubscribe."
       your_email_settings: "your email settings"
       click_here: "click here"
@@ -4496,7 +4496,7 @@ en:
 
     forgot_password:
       title: "Forgot Password"
-      subject_template: "%{email_prefix}: Password reset"
+      subject_template: "Password reset"
       text_body_template: |
         Somebody asked to reset your password on [%{site_name}](%{base_url}).
 
@@ -4507,7 +4507,7 @@ en:
 
     email_login:
       title: "Log in via link"
-      subject_template: "%{email_prefix}: Log in via link"
+      subject_template: "Log in via link"
       text_body_template: |
         Here's your link to log in at [%{site_name}](%{base_url}).
 
@@ -4518,7 +4518,7 @@ en:
 
     set_password:
       title: "Set Password"
-      subject_template: "%{email_prefix}: Set password"
+      subject_template: "Set password"
       text_body_template: |
         Somebody asked to add a password to your account on [%{site_name}](%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
 
@@ -4529,7 +4529,7 @@ en:
 
     admin_login:
       title: "Admin Login"
-      subject_template: "%{email_prefix}: Login"
+      subject_template: "Login"
       text_body_template: |
         Somebody asked to log in to your account on [%{site_name}](%{base_url}).
 
@@ -4540,7 +4540,7 @@ en:
 
     account_created:
       title: "Account Created"
-      subject_template: "%{email_prefix}: Your new account"
+      subject_template: "Your new account"
       text_body_template: |
         A new account was created for you at %{site_name}
 
@@ -4549,7 +4549,7 @@ en:
 
     confirm_new_email:
       title: "Confirm New Email"
-      subject_template: "%{email_prefix}: Confirm your new email address"
+      subject_template: "Confirm your new email address"
       text_body_template: |
         Confirm your new email address for %{site_name} by clicking on the following link:
 
@@ -4559,7 +4559,7 @@ en:
 
     confirm_new_email_via_admin:
       title: "Confirm New Email"
-      subject_template: "%{email_prefix}: Confirm your new email address"
+      subject_template: "Confirm your new email address"
       text_body_template: |
         Confirm your new email address for %{site_name} by clicking on the following link:
 
@@ -4569,7 +4569,7 @@ en:
 
     confirm_old_email:
       title: "Confirm Old Email"
-      subject_template: "%{email_prefix}: Confirm your current email address"
+      subject_template: "Confirm your current email address"
       text_body_template: |
         Before we can change your email address, we need you to confirm that you control
         the current email account. After you complete this step, we will have you confirm
@@ -4581,7 +4581,7 @@ en:
 
     confirm_old_email_add:
       title: "Confirm Old Email (Add)"
-      subject_template: "%{email_prefix}: Confirm your current email address"
+      subject_template: "Confirm your current email address"
       text_body_template: |
         Before we can add a new email address, we need you to confirm that you control
         the current email account. After you complete this step, we will have you confirm
@@ -4593,7 +4593,7 @@ en:
 
     notify_old_email:
       title: "Notify Old Email"
-      subject_template: "%{email_prefix}: Your email address has been changed"
+      subject_template: "Your email address has been changed"
       text_body_template: |
         This is an automated message to let you know that your email address for
         %{site_name} has been changed. If this was done in error, please contact
@@ -4605,7 +4605,7 @@ en:
 
     notify_old_email_add:
       title: "Notify Old Email (Add)"
-      subject_template: "%{email_prefix}: A new email address has been added"
+      subject_template: "A new email address has been added"
       text_body_template: |
         This is an automated message to let you know that an email address for
         %{site_name} has been added. If this was done in error, please contact
@@ -4644,7 +4644,7 @@ en:
 
     signup:
       title: "Signup"
-      subject_template: "%{email_prefix}: Confirm your new account"
+      subject_template: "Confirm your new account"
       text_body_template: |
         Welcome to %{site_name}!
 
@@ -4655,7 +4655,7 @@ en:
 
     activation_reminder:
       title: "Activation Reminder"
-      subject_template: "%{email_prefix}: Reminder to confirm your account"
+      subject_template: "Reminder to confirm your account"
       text_body_template: |
         Welcome to %{site_name}!
 
