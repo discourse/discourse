@@ -198,7 +198,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        transition: opacity 0.2s;
+        transition: opacity 0.3s;
+        transition-delay: 0.15s;
 
         .d-icon {
           background-color: rgb(var(--secondary-rgb), 0.75);
