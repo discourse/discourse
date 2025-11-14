@@ -1,3 +1,15 @@
+diff --git a/lib/http-proxy/common.js b/lib/http-proxy/common.js
+index 6513e81d80d5250ea249ea833f819ece67897c7e..0555e80e25b8c4f4f21281e38c4c04069009dc0c 100644
+--- a/lib/http-proxy/common.js
++++ b/lib/http-proxy/common.js
+@@ -1,6 +1,6 @@
+ var common   = exports,
+     url      = require('url'),
+-    extend   = require('util')._extend,
++    extend   = Object.assign,
+     required = require('requires-port');
+ 
+ var upgradeHeader = /(^|,)\s*upgrade\s*($|,)/i,
 diff --git a/lib/http-proxy/index.js b/lib/http-proxy/index.js
 index 977a4b3622b9eaac27689f06347ea4c5173a96cd..739409c0dd0b93149fd174f4b085c3fbb522bf75 100644
 --- a/lib/http-proxy/index.js
