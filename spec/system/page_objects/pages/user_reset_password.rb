@@ -56,7 +56,7 @@ module PageObjects
       end
 
       def fill_in_backup_code(backup_code)
-        find("#second-factor .second-factor-token-input").fill_in(with: "iAmValidBackupCode")
+        find("#second-factor .backup-code-input").fill_in(with: "iAmValidBackupCode")
         self
       end
 

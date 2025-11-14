@@ -60,6 +60,7 @@
   display: flex;
   text-align: left;
   opacity: 1;
+  appearance: none;
   color: transparent;
   pointer-events: all;
   background: transparent;
@@ -72,6 +73,7 @@
   font-size: var(--root-height);
   font-family: monospace;
   font-variant-numeric: tabular-nums;
+  box-sizing: border-box;
 }
 
 @keyframes otp-cursor-blink {

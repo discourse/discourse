@@ -162,6 +162,7 @@ export default class DOTP extends Component {
           {{on "focus" this.onFocus}}
           {{on "blur" this.onBlur}}
           {{on "paste" this.onPaste}}
+          {{(if @autoFocus (modifier autoFocus))}}
           aria-label={{i18n "d_otp.screen_reader" count=this.slots}}
           {{(if this.autofocus (modifier autoFocus))}}
           ...attributes

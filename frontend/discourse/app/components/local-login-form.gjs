@@ -259,6 +259,7 @@ export default class LocalLoginForm extends Component {
             <SecondFactorInput
               {{on "keydown" this.loginOnEnter}}
               {{on "focusin" this.scrollInputIntoView}}
+              @autoFocus={{true}}
               @onChange={{fn (mut @secondFactorToken)}}
               @secondFactorMethod={{@secondFactorMethod}}
               value={{@secondFactorToken}}
