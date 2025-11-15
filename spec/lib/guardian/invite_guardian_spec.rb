@@ -54,7 +54,9 @@ RSpec.describe InviteGuardian do
 
     it "returns false if user trust level does not have sufficient trust level" do
       SiteSetting.invite_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
-      expect(Guardian.new(trust_level_1).can_invite_to_forum?).to be_falsey
+      expect(Guardian.new(trust_level_1).explain(&:can_invite_to_forum?)).to eq(
+        { "can_invite_to_forum?" => ["not_in_allowed_groups"] },
+      )
     end
 
     it "doesn't allow anonymous users to invite" do
