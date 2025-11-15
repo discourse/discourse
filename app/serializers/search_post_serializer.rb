@@ -20,7 +20,7 @@ class SearchPostSerializer < BasicPostSerializer
   end
 
   def blurb
-    options[:result].blurb(object)
+    options[:result].blurb(object, scope:)
   end
 
   def include_blurb?
