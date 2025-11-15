@@ -4,7 +4,12 @@ import { isBlank, isEmpty } from "@ember/utils";
 import ThemeSettings from "discourse/admin/models/theme-settings";
 import ThemeSiteSettings from "discourse/admin/models/theme-site-settings";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import {
+  addUniqueValueToArray,
+  removeValueFromArray,
+} from "discourse/lib/array-tools";
 import discourseComputed from "discourse/lib/decorators";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import RestModel from "discourse/models/rest";
 import { i18n } from "discourse-i18n";
 
@@ -33,6 +38,10 @@ class Theme extends RestModel {
 
     return json;
   }
+
+  @trackedArray childThemes;
+  @trackedArray parentThemes;
+  @trackedArray theme_fields;
 
   @or("default", "user_selectable") isActive;
   @gt("remote_theme.commits_behind", 0) isPendingUpdates;
@@ -220,7 +229,7 @@ class Theme extends RestModel {
         existing.value = value;
         existing.upload_id = upload_id;
       } else {
-        fields.pushObject(field);
+        fields.push(field);
       }
       return;
     }
@@ -229,7 +238,7 @@ class Theme extends RestModel {
     let key = this.getKey({ target, name });
     let existingField = themeFields[key];
     if (!existingField) {
-      this.theme_fields.pushObject(field);
+      this.theme_fields.push(field);
       themeFields[key] = field;
     } else {
       const changed =
@@ -258,8 +267,7 @@ class Theme extends RestModel {
   }
 
   removeChildTheme(theme) {
-    const childThemes = this.childThemes;
-    childThemes.removeObject(theme);
+    removeValueFromArray(this.childThemes, theme);
     return this.saveChanges("child_theme_ids");
   }
 
@@ -269,8 +277,10 @@ class Theme extends RestModel {
       childThemes = [];
       this.set("childThemes", childThemes);
     }
-    childThemes.removeObject(theme);
-    childThemes.pushObject(theme);
+
+    removeValueFromArray(childThemes, theme);
+    childThemes.push(theme);
+
     return this.saveChanges("child_theme_ids");
   }
 
@@ -280,7 +290,8 @@ class Theme extends RestModel {
       parentThemes = [];
       this.set("parentThemes", parentThemes);
     }
-    parentThemes.addObject(theme);
+
+    addUniqueValueToArray(parentThemes, theme);
   }
 
   checkForUpdates() {

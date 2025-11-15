@@ -5,6 +5,7 @@ import { alias, sort } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
@@ -261,7 +262,7 @@ export default class Site extends RestModel {
     if (!postActionTypes) {
       return [];
     }
-    return postActionTypes.filter((type) => type.is_flag);
+    return new TrackedArray(postActionTypes.filter((type) => type.is_flag));
   }
 
   collectUserFields(fields) {

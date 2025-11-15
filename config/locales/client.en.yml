@@ -8332,6 +8332,7 @@ en:
           experimental: "Experimental"
         secret_list:
           invalid_input: "Input fields cannot be empty or contain vertical bar character."
+          already_exists: "Entry for %{key} already exists."
         default_categories:
           modal_description:
             one: "Would you like to apply this change historically? This will change preferences for %{count} existing user."
