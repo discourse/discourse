@@ -11,7 +11,7 @@ export default class AdminPluginsShowDiscourseAiPersonasNew extends DiscourseRou
     record.set("rag_chunk_overlap_tokens", 10);
     record.set("rag_conversation_chunks", 10);
     record.set("allow_personal_messages", true);
-    record.set("tool_details", false);
+    record.set("show_thinking", false);
     return record;
   }
 

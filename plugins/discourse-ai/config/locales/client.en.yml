@@ -468,8 +468,8 @@ en:
           low: Low quality - cheapest (256x256)
           medium: Medium quality (512x512)
           high: High quality - slowest (1024x1024)
-        tool_details: Show tool details
-        tool_details_help: Will show end users details on which tools the language model has triggered.
+        show_thinking: Show thinking
+        show_thinking_help: Will show end users the internal thinking and tool calls of the language model.
         mentionable: Allow mentions
         mentionable_help: If enabled, users in allowed groups can mention this user in posts, the AI will respond as this persona.
         user: User

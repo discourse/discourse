@@ -330,7 +330,7 @@ module DiscourseAi
                 instruction_message: instruction_message,
               ),
             user: message.user,
-            skip_tool_details: true,
+            skip_show_thinking: true,
             cancel_manager: DiscourseAi::Completions::CancelManager.new,
           )
 
@@ -353,8 +353,8 @@ module DiscourseAi
 
         new_prompts =
           bot.reply(context) do |partial, placeholder, type|
-            # no support for tools or thinking by design
-            next if type == :thinking || type == :tool_details || type == :partial_tool
+            # no support for thinking by design
+            next if type == :thinking || type == :partial_tool
             streamer << partial
           end
 
@@ -486,27 +486,32 @@ module DiscourseAi
           )
         end
 
-        context.skip_tool_details ||= !bot.persona.class.tool_details
+        context.skip_show_thinking ||= !bot.persona.class.show_thinking
         post_streamer = PostStreamer.new(delay: Rails.env.test? ? 0 : 0.5) if stream_reply
         started_thinking = false
 
         new_custom_prompts =
           bot.reply(context) do |partial, placeholder, type|
-            if type == :thinking && !started_thinking
-              reply << "<details><summary>#{I18n.t("discourse_ai.ai_bot.thinking")}</summary>"
-              started_thinking = true
-            end
+            if !context.skip_show_thinking
+              is_response = (type == nil) || (type == :structured_output)
+              is_response &&= partial.present? if started_thinking
 
-            if type != :thinking && started_thinking
-              reply << "</details>\n\n"
-              started_thinking = false
+              if !is_response && !started_thinking
+                reply << "<details><summary>#{I18n.t("discourse_ai.ai_bot.thinking")}</summary>\n\n"
+                started_thinking = true
+              end
+
+              if is_response && started_thinking
+                reply << "</details>\n\n"
+                started_thinking = false
+              end
             end
 
             reply << partial
             raw = reply.dup
             raw << "\n\n" << placeholder if placeholder.present?
 
-            if blk && type != :tool_details && type != :partial_tool && type != :partial_invoke
+            if blk && type != :thinking && type != :partial_tool && type != :partial_invoke
               blk.call(partial)
             end
 

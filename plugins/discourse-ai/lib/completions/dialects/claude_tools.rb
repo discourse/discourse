@@ -22,20 +22,19 @@ module DiscourseAi
           call_details = JSON.parse(raw_message[:content], symbolize_names: true)
           result = []
 
-          if raw_message[:thinking] || raw_message[:redacted_thinking_signature]
-            if raw_message[:thinking]
+          anthropic = anthropic_reasoning(raw_message)
+
+          if anthropic.present?
+            if raw_message[:thinking] && anthropic[:signature]
               result << {
                 type: "thinking",
                 thinking: raw_message[:thinking],
-                signature: raw_message[:thinking_signature],
+                signature: anthropic[:signature],
               }
             end
 
-            if raw_message[:redacted_thinking_signature]
-              result << {
-                type: "redacted_thinking",
-                data: raw_message[:redacted_thinking_signature],
-              }
+            if anthropic[:redacted_signature]
+              result << { type: "redacted_thinking", data: anthropic[:redacted_signature] }
             end
           end
 
@@ -56,6 +55,12 @@ module DiscourseAi
         end
 
         private
+
+        def anthropic_reasoning(message)
+          info = message[:thinking_provider_info]
+          return if info.blank?
+          info[:anthropic] || info["anthropic"]
+        end
 
         attr_reader :raw_tools
       end

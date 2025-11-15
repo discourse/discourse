@@ -75,7 +75,7 @@ module DiscourseAi
         bot_ctx =
           DiscourseAi::Personas::BotContext.new(
             user: Discourse.system_user,
-            skip_tool_details: true,
+            skip_show_thinking: true,
             feature_name: "llm_triage",
             messages: [{ type: :user, content: input }],
           )

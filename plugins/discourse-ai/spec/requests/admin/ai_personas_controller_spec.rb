@@ -931,7 +931,7 @@ RSpec.describe DiscourseAi::Admin::AiPersonasController do
       # this simplifies function calls
       fake_endpoint.chunk_count = 1
 
-      ai_persona.update!(tools: ["Categories"])
+      ai_persona.update!(tools: ["Categories"], show_thinking: true)
 
       # lets also unstage the user and add the user to tl0
       # this will ensure there are no feedback loops

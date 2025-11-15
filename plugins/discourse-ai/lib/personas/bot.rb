@@ -54,6 +54,8 @@ module DiscourseAi
         unless context.is_a?(BotContext)
           raise ArgumentError, "context must be an instance of BotContext"
         end
+        update_blk ||= proc {}
+
         context.cancel_manager ||= DiscourseAi::Completions::CancelManager.new
         current_llm = llm
         prompt = persona.craft_prompt(context, llm: current_llm)
@@ -85,6 +87,7 @@ module DiscourseAi
           allow_partial_tool_calls = persona.allow_partial_tool_calls?
           existing_tools = Set.new
           current_thinking = []
+          started_thinking = false
 
           result =
             current_llm.generate(
@@ -144,15 +147,19 @@ module DiscourseAi
                   Rails.logger.warn("DiscourseAi: Tool not found: #{partial.name}")
                 else
                   if partial.is_a?(DiscourseAi::Completions::Thinking)
-                    if partial.partial? && partial.message.present?
+                    if partial.partial? && partial.message.present? && !context.skip_show_thinking
                       update_blk.call(partial.message, nil, :thinking)
+                      started_thinking = true
                     end
                     if !partial.partial?
                       # this will be dealt with later
                       raw_context << partial
                       current_thinking << partial
+                      if !started_thinking && partial.message.present?
+                        update_blk.call(partial.message, nil, :thinking)
+                      end
                     end
-                  elsif update_blk.present?
+                  else
                     if partial.is_a?(DiscourseAi::Completions::StructuredOutput)
                       update_blk.call(partial, nil, :structured_output)
                     else
@@ -192,23 +199,34 @@ module DiscourseAi
 
       def embed_thinking(raw_context)
         embedded_thinking = []
-        thinking_info = nil
+        thinking_bundle = nil
+
         raw_context.each do |context|
           if context.is_a?(DiscourseAi::Completions::Thinking)
-            thinking_info ||= {}
-            if context.redacted
-              thinking_info[:redacted_thinking_signature] = context.signature
-            else
-              thinking_info[:thinking] = context.message
-              thinking_info[:thinking_signature] = context.signature
-            end
-          else
-            if thinking_info
-              context = context.dup
-              context[4] = thinking_info
-            end
-            embedded_thinking << context
+            thinking_bundle ||= { message: nil, provider_info: {} }
+            thinking_bundle[:message] = context.message if context.message.present?
+            thinking_bundle[
+              :provider_info
+            ] = DiscourseAi::Completions::Thinking.merge_provider_info(
+              thinking_bundle[:provider_info],
+              context.provider_info,
+            )
+            next
           end
+
+          if thinking_bundle
+            context = context.dup
+            context[4] = {
+              "message" => thinking_bundle[:message],
+              "provider_info" =>
+                DiscourseAi::Completions::Thinking.deep_stringify_keys(
+                  thinking_bundle[:provider_info],
+                ),
+            }.compact
+            thinking_bundle = nil
+          end
+
+          embedded_thinking << context
         end
 
         embedded_thinking
@@ -234,14 +252,20 @@ module DiscourseAi
         }
 
         if current_thinking.present?
+          thinking_message = nil
+          provider_payload = {}
+
           current_thinking.each do |thinking|
-            if thinking.redacted
-              tool_call_message[:redacted_thinking_signature] = thinking.signature
-            else
-              tool_call_message[:thinking] = thinking.message
-              tool_call_message[:thinking_signature] = thinking.signature
-            end
+            thinking_message = thinking.message if thinking.message.present?
+            provider_payload =
+              DiscourseAi::Completions::Thinking.merge_provider_info(
+                provider_payload,
+                thinking.provider_info,
+              )
           end
+
+          tool_call_message[:thinking] = thinking_message if thinking_message
+          tool_call_message[:thinking_provider_info] = provider_payload if provider_payload.present?
         end
 
         tool_message = {
@@ -259,7 +283,7 @@ module DiscourseAi
       end
 
       def invoke_tool(tool, context, &update_blk)
-        show_placeholder = !context.skip_tool_details && !tool.class.allow_partial_tool_calls?
+        show_placeholder = !context.skip_show_thinking && !tool.class.allow_partial_tool_calls?
 
         update_blk.call("", build_placeholder(tool.summary, "")) if show_placeholder
 
@@ -276,7 +300,7 @@ module DiscourseAi
 
         if show_placeholder
           tool_details = build_placeholder(tool.summary, tool.details, custom_raw: tool.custom_raw)
-          update_blk.call(tool_details, nil, :tool_details)
+          update_blk.call(tool_details, nil, :thinking)
         elsif tool.custom_raw.present?
           update_blk.call(tool.custom_raw, nil, :custom_raw)
         end
@@ -293,21 +317,12 @@ module DiscourseAi
       end
 
       def build_placeholder(summary, details, custom_raw: nil)
-        placeholder = +(<<~HTML)
-        <details>
-          <summary>#{summary}</summary>
-          <p>#{details}</p>
-        </details>
-        HTML
+        # No nested details blocks - just output as plain text within thinking block
+        placeholder = +"**#{summary}**\n#{details}\n\n"
 
         if custom_raw
-          placeholder << "\n"
           placeholder << custom_raw
-        else
-          # we need this for cursor placeholder to work
-          # doing this in CSS is very hard
-          # if changing test with a custom tool such as search
-          placeholder << "<span></span>\n\n"
+          placeholder << "\n\n"
         end
 
         placeholder
