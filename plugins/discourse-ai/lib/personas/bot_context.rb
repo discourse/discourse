@@ -151,7 +151,7 @@ module DiscourseAi
           site_url: @site_url,
           site_title: @site_title,
           site_description: @site_description,
-          skip_tool_details: @skip_tool_details,
+          skip_show_thinking: @skip_show_thinking,
           feature_name: @feature_name,
           resource_url: @resource_url,
           inferred_concepts: @inferred_concepts,

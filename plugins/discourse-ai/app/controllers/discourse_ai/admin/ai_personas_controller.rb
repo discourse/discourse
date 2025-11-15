@@ -355,7 +355,7 @@ module DiscourseAi
           },
           allow_personal_messages: {
           },
-          tool_details: {
+          show_thinking: {
             type: :large_text,
           },
           forced_tool_count: {

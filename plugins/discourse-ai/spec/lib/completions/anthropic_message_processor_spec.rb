@@ -69,7 +69,7 @@ describe DiscourseAi::Completions::AnthropicMessageProcessor do
     # Verify the final complete thinking object
     expect(final_result).to be_a(DiscourseAi::Completions::Thinking)
     expect(final_result.message).to eq("First part of thinking and second part")
-    expect(final_result.signature).to eq("thinking-sig-123")
+    expect(final_result.provider_info[:anthropic][:signature]).to eq("thinking-sig-123")
     expect(final_result.partial?).to eq(false)
   end
 end

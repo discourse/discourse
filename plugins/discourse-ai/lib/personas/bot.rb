@@ -199,23 +199,34 @@ module DiscourseAi
 
       def embed_thinking(raw_context)
         embedded_thinking = []
-        thinking_info = nil
+        thinking_bundle = nil
+
         raw_context.each do |context|
           if context.is_a?(DiscourseAi::Completions::Thinking)
-            thinking_info ||= {}
-            if context.redacted
-              thinking_info[:redacted_thinking_signature] = context.signature
-            else
-              thinking_info[:thinking] = context.message
-              thinking_info[:thinking_signature] = context.signature
-            end
-          else
-            if thinking_info
-              context = context.dup
-              context[4] = thinking_info
-            end
-            embedded_thinking << context
+            thinking_bundle ||= { message: nil, provider_info: {} }
+            thinking_bundle[:message] = context.message if context.message.present?
+            thinking_bundle[
+              :provider_info
+            ] = DiscourseAi::Completions::Thinking.merge_provider_info(
+              thinking_bundle[:provider_info],
+              context.provider_info,
+            )
+            next
           end
+
+          if thinking_bundle
+            context = context.dup
+            context[4] = {
+              "message" => thinking_bundle[:message],
+              "provider_info" =>
+                DiscourseAi::Completions::Thinking.deep_stringify_keys(
+                  thinking_bundle[:provider_info],
+                ),
+            }.compact
+            thinking_bundle = nil
+          end
+
+          embedded_thinking << context
         end
 
         embedded_thinking
@@ -241,14 +252,20 @@ module DiscourseAi
         }
 
         if current_thinking.present?
+          thinking_message = nil
+          provider_payload = {}
+
           current_thinking.each do |thinking|
-            if thinking.redacted
-              tool_call_message[:redacted_thinking_signature] = thinking.signature
-            else
-              tool_call_message[:thinking] = thinking.message
-              tool_call_message[:thinking_signature] = thinking.signature
-            end
+            thinking_message = thinking.message if thinking.message.present?
+            provider_payload =
+              DiscourseAi::Completions::Thinking.merge_provider_info(
+                provider_payload,
+                thinking.provider_info,
+              )
           end
+
+          tool_call_message[:thinking] = thinking_message if thinking_message
+          tool_call_message[:thinking_provider_info] = provider_payload if provider_payload.present?
         end
 
         tool_message = {
