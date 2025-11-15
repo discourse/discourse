@@ -2151,5 +2151,67 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("aside.quote blockquote p", text: "Inside")
       expect(rich).to have_css("aside.quote + p", text: "Outside")
     end
+
+    it "converts quotes with mixed content into the correct HTML" do
+      cdp.allow_clipboard
+      open_composer
+
+      cdp.copy_paste(<<~QUOTE)
+      [quote="john, post:1, topic:1"]
+      This is a quote with a link: https://example.com
+
+      And also a list:
+
+      * Item 1
+      * Item 2
+      [/quote]
+      QUOTE
+
+      expect(rich).to have_css("aside.quote blockquote p", text: "This is a quote with a link: ")
+      expect(rich).to have_css(
+        "aside.quote blockquote p a[href='https://example.com']",
+        text: "https://example.com",
+      )
+      expect(rich).to have_css("aside.quote blockquote ul li", text: "Item 1")
+      expect(rich).to have_css("aside.quote blockquote ul li", text: "Item 2")
+    end
+
+    it "converts quotes with only a list into the correct HTML" do
+      cdp.allow_clipboard
+      open_composer
+
+      cdp.copy_paste(<<~QUOTE)
+      [quote="john, post:1, topic:1"]
+      * Item 1
+      * Item 2
+      [/quote]
+      QUOTE
+
+      expect(rich).to have_css("aside.quote blockquote ul li", text: "Item 1")
+      expect(rich).to have_css("aside.quote blockquote ul li", text: "Item 2")
+    end
+
+    it "converts quotes that start with a list into the correct HTML" do
+      cdp.allow_clipboard
+      open_composer
+
+      cdp.copy_paste(<<~QUOTE)
+      [quote="john, post:1, topic:1"]
+      * Item 1
+      * Item 2
+
+      This is some post-list text.
+
+      ```ruby
+      puts "and some code"
+      ```
+      [/quote]
+      QUOTE
+
+      expect(rich).to have_css("aside.quote blockquote ul li", text: "Item 1")
+      expect(rich).to have_css("aside.quote blockquote ul li", text: "Item 2")
+      expect(rich).to have_css("aside.quote blockquote p", text: "This is some post-list text.")
+      expect(rich).to have_css("aside.quote blockquote pre code", text: 'puts "and some code"')
+    end
   end
 end
