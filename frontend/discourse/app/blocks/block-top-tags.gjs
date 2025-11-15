@@ -11,7 +11,7 @@ export default class BlockTopTags extends Component {
 
   <template>
     <div class="block-top-tags__layout">
-      <h2 clas="block-top-tags__title">{{this.blockTitle}}</h2>
+      <h2 class="block-top-tags__title">{{this.blockTitle}}</h2>
       <ul class="block-top-tags__list">
         {{#each this.topTags as |tag|}}
           <li>
