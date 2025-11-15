@@ -135,7 +135,9 @@ acceptance("Review", function (needs) {
     assert.dom(`${topic} .discourse-tag:nth-of-type(1)`).hasText("hello");
     assert.dom(`${topic} .discourse-tag:nth-of-type(2)`).hasText("world");
 
-    assert.dom(`${topic} .post-body`).hasText("existing body");
+    assert
+      .dom(`${topic} .post-body`)
+      .hasText("existing body http://somegoodurl.com");
 
     await click(`${topic} .reviewable-action.edit`);
     await click(`${topic} .reviewable-action.save-edit`);
@@ -155,7 +157,10 @@ acceptance("Review", function (needs) {
 
     assert
       .dom(`${topic} .post-body`)
-      .hasText("existing body", "cancelling does not update the value");
+      .hasText(
+        "existing body http://somegoodurl.com",
+        "cancelling does not update the value"
+      );
 
     await click(`${topic} .reviewable-action.edit`);
     let category = selectKit(`${topic} .category-id .select-kit`);
@@ -213,5 +218,19 @@ acceptance("Review", function (needs) {
     await visit("/review"); // reload review
 
     assert.dom(".stale-help").doesNotExist();
+  });
+
+  test("Queued post does not paint oneboxes", async function (assert) {
+    const topic = '.reviewable-item[data-reviewable-id="4321"]';
+
+    await visit("/review");
+
+    assert
+      .dom(`${topic} .post-body`)
+      .includesText("existing body http://somegoodurl.com");
+
+    assert
+      .dom(`${topic} .post-body aside.onebox`)
+      .doesNotExist("onebox content is not painted in reviewable queued posts");
   });
 });
