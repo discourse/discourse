@@ -16,6 +16,12 @@ export default class DFloatBody extends Component {
     const firstScrollParent = getScrollParent(this.trigger);
 
     const handler = () => {
+      // This is where the close logic for the floating body is triggered.
+      // See: float-kit/lib/d-menu-instance.js (or d-menu-instance.ts) for the `close` method implementation.
+      // If you want to add a `closing` class for exit animation, consider calling a new instance method
+      // that sets a state for "closing", triggers the class, then closes after animation.
+
+      // Example: this.args.instance.beginCloseWithAnimation?.() or similar.
       this.args.instance.close();
     };
 
@@ -72,6 +78,7 @@ export default class DFloatBody extends Component {
           @mainClass
           (if this.options.animated "-animated")
           (if @instance.expanded "-expanded")
+          (if @instance.closing "-closing")
         }}
         data-identifier={{this.options.identifier}}
         data-content
