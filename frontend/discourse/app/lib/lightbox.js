@@ -244,11 +244,12 @@ export default async function lightbox(elem, siteSettings) {
       const { largeSrc, targetWidth, targetHeight } = item.dataset;
       const hasImageSrc = largeSrc || item.getAttribute("href");
       const missingDimensions = !targetWidth || !targetHeight;
-      const missingMetaData = !item
-        .querySelector(".meta")
-        ?.textContent.trim()
-        .split(/x|×/)
-        .every((v) => v && +v > 0);
+      const imgDimensions = item
+        .querySelector(".informations")
+        ?.textContent.split(" ")[0];
+      const missingMetaData = !imgDimensions
+        ?.split(/x|×/)
+        .every((d) => !!d.trim());
 
       return hasImageSrc && missingDimensions && missingMetaData;
     });
