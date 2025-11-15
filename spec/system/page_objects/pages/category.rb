@@ -15,8 +15,12 @@ module PageObjects
         self
       end
 
-      def visit_general(category)
-        page.visit("/c/#{category.slug}/edit/general")
+      def visit_general(category, subcategory = nil)
+        if subcategory
+          page.visit("/c/#{category.slug}/#{subcategory.slug}/edit/general")
+        else
+          page.visit("/c/#{category.slug}/edit/general")
+        end
         self
       end
 
