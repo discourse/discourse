@@ -272,6 +272,7 @@ class CategoriesController < ApplicationController
       .topic_create_allowed(guardian)
       .where(id: @category.id)
       .exists?
+    Category.preload_user_fields!(guardian, [@category])
     render_serialized(@category, CategorySerializer)
   end
 
