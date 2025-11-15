@@ -409,18 +409,19 @@ RSpec.describe DiscourseAi::AiBot::Playground do
           guardian: guardian,
         )
 
+        anthropic_info = { anthropic: { signature: "thinking-signature-123" } }
         thinking_partial =
           DiscourseAi::Completions::Thinking.new(
             message: "I should say hello",
-            signature: "thinking-signature-123",
             partial: true,
+            provider_info: anthropic_info,
           )
 
         thinking =
           DiscourseAi::Completions::Thinking.new(
             message: "I should say hello",
-            signature: "thinking-signature-123",
             partial: false,
+            provider_info: anthropic_info,
           )
         DiscourseAi::Completions::Llm.with_prepared_responses(
           [[thinking_partial, thinking, "wo", "rld"]],
@@ -880,19 +881,23 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     it "preserves thinking context between replies and correctly renders" do
       thinking_progress =
         DiscourseAi::Completions::Thinking.new(message: "I should say hello", partial: true)
+      anthropic_info = { anthropic: { signature: "thinking-signature-123" } }
       thinking =
         DiscourseAi::Completions::Thinking.new(
           message: "I should say hello",
-          signature: "thinking-signature-123",
           partial: false,
+          provider_info: anthropic_info,
         )
 
       thinking_redacted =
         DiscourseAi::Completions::Thinking.new(
           message: nil,
-          signature: "thinking-redacted-signature-123",
           partial: false,
-          redacted: true,
+          provider_info: {
+            anthropic: {
+              redacted_signature: "thinking-redacted-signature-123",
+            },
+          },
         )
 
       first_responses = [[thinking_progress, thinking, thinking_redacted, "Hello Sam"]]
@@ -924,8 +929,12 @@ RSpec.describe DiscourseAi::AiBot::Playground do
             type: :model,
             content: "Hello Sam",
             thinking: "I should say hello",
-            thinking_signature: "thinking-signature-123",
-            redacted_thinking_signature: "thinking-redacted-signature-123",
+            thinking_provider_info: {
+              anthropic: {
+                signature: "thinking-signature-123",
+                redacted_signature: "thinking-redacted-signature-123",
+              },
+            },
           },
           { type: :user, content: "Say Cat", id: user.username },
         ],

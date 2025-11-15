@@ -98,17 +98,25 @@ data: {"type":"response.reasoning_summary_part.added","sequence_number":3,"item_
 
     expect(partials.length).to eq(4)
     expect(partials[0]).to eq(
-      DiscourseAi::Completions::Thinking.new(message: "**Craft", signature: "", partial: true),
+      DiscourseAi::Completions::Thinking.new(message: "**Craft", partial: true),
     )
-    expect(partials[1]).to eq(
-      DiscourseAi::Completions::Thinking.new(message: "ing", signature: "", partial: true),
-    )
-    expect(partials[2]).to eq(
+    expect(partials[1]).to eq(DiscourseAi::Completions::Thinking.new(message: "ing", partial: true))
+    final_thinking =
       DiscourseAi::Completions::Thinking.new(
         message: "**Crafting",
-        signature: "ABC",
         partial: false,
-      ),
+        provider_info: {
+          open_ai_responses: {
+            reasoning_id: "rs_0e7bcfab8fc907240069152d106c1c8192b415643fda2103a5",
+            encrypted_content: "ABC",
+            next_message_id: "msg_0e7bcfab8fc907240069152d1173f48192a1f37340a24e4fba",
+          },
+        },
+      )
+    expect(partials[2]).to eq(final_thinking)
+    expect(partials[2].provider_info[:open_ai_responses]).to include(
+      reasoning_id: "rs_0e7bcfab8fc907240069152d106c1c8192b415643fda2103a5",
+      next_message_id: "msg_0e7bcfab8fc907240069152d1173f48192a1f37340a24e4fba",
     )
     expect(partials[3]).to eq("hello")
 
