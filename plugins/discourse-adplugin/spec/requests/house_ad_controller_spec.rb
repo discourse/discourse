@@ -33,15 +33,23 @@ describe AdPlugin::HouseAdsController do
               group_ids: [group.id],
             }
         expect(response.status).to eq(200)
-        expect(response.parsed_body["house_ad"].symbolize_keys).to eq(
-          id: ad.id,
-          name: ad.name,
-          html: ad.html,
-          visible_to_anons: false,
-          visible_to_logged_in_users: true,
-          category_ids: [category.id],
-          group_ids: [group.id],
-        )
+
+        house_ad_response = JSON.parse(response.body, symbolize_names: true)[:house_ad]
+        expect(house_ad_response[:id]).to eq(ad.id)
+        expect(house_ad_response[:name]).to eq(ad.name)
+        expect(house_ad_response[:html]).to eq(ad.html)
+        expect(house_ad_response[:visible_to_anons]).to eq(false)
+        expect(house_ad_response[:visible_to_logged_in_users]).to eq(true)
+
+        serialized_category =
+          BasicCategorySerializer.new(category, scope: Guardian.new(admin)).as_json
+        expect(house_ad_response[:categories].length).to eq(1)
+        expect(house_ad_response[:categories][0]).to eq(serialized_category[:basic_category])
+
+        serialized_group = BasicGroupSerializer.new(group, scope: Guardian.new(admin)).as_json
+
+        expect(house_ad_response[:groups].length).to eq(1)
+        expect(house_ad_response[:groups][0]).to eq(serialized_group[:basic_group])
 
         ad_copy = AdPlugin::HouseAd.find(ad.id)
         expect(ad_copy.name).to eq(ad.name)

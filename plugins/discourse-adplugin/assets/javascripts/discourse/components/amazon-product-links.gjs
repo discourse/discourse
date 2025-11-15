@@ -188,6 +188,16 @@ export default class AmazonProductLinks extends AdComponent {
     return this.isNthPost(parseInt(this.siteSettings.amazon_nth_post_code, 10));
   }
 
+  buildImpressionPayload() {
+    return {
+      ad_plugin_impression: {
+        ad_type: this.site.ad_types.amazon,
+        ad_plugin_house_ad_id: null,
+        placement: this.placement,
+      },
+    };
+  }
+
   <template>
     {{#if this.showAd}}
       {{#if this.site.mobileView}}

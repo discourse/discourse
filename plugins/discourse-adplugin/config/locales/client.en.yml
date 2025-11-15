@@ -12,6 +12,12 @@ en:
           amazon_plugin: "Amazon"
           carbonads_plugin: "Carbon Ads"
           adbutler_plugin: "AdButler"
+      dashboard:
+        reports:
+            filters:
+              ad_type: 
+                label: "Ad Type" 
+                
       adplugin:
         house_ads:
           title: "House Ads"

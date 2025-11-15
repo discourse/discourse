@@ -21,6 +21,7 @@ const adIndex = {
 @attributeBindings("colspanAttribute:colspan")
 export default class HouseAd extends AdComponent {
   adHtml = "";
+  currentAd = null;
 
   @discourseComputed
   colspanAttribute() {
@@ -93,8 +94,11 @@ export default class HouseAd extends AdComponent {
       }
       let ad = houseAds.creatives[filteredAds[adIndex[placement]]] || "";
       adIndex[placement] = (adIndex[placement] + 1) % filteredAds.length;
+      this.currentAd = ad || null;
       return ad.html;
     }
+
+    this.currentAd = null;
   }
 
   adsNamesForSlot(placement) {
@@ -115,6 +119,16 @@ export default class HouseAd extends AdComponent {
 
   refreshAd() {
     this.set("adHtml", this.chooseAdHtml());
+  }
+
+  buildImpressionPayload() {
+    return {
+      ad_plugin_impression: {
+        ad_type: this.site.ad_types.house,
+        ad_plugin_house_ad_id: this.currentAd?.id,
+        placement: this.placement,
+      },
+    };
   }
 
   didInsertElement() {
