@@ -51,6 +51,18 @@ For more information, check out [the Developer Documentation](https://meta.disco
 
 If you want to set up a Discourse forum for production use, see our [**Discourse Install Guide**](docs/INSTALL.md).
 
+### Deploy on AWS
+
+Deploy Discourse on Amazon Web Services with our comprehensive AWS deployment guide:
+
+- [**AWS Deployment Guide**](docs/AWS-DEPLOYMENT.md) - Complete guide for self-hosting on AWS
+- [**Terraform Configuration**](terraform/aws/) - Infrastructure as Code for automated AWS setup
+
+**Quick Start:**
+```bash
+./scripts/aws-quick-start.sh
+```
+
 If you're looking for official hosting, see [discourse.org/pricing](https://www.discourse.org/pricing/).
 
 ## Requirements

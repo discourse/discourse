@@ -1,0 +1,59 @@
+# AWS Configuration
+aws_region   = "us-east-1"
+project_name = "discourse"
+environment  = "production"
+
+# Deployment Mode
+# Options: "simple" or "production"
+# - simple: Single EC2 instance with Docker (PostgreSQL + Redis in containers)
+# - production: ASG + ALB + RDS + ElastiCache + S3
+deployment_mode = "simple"
+
+# Domain Configuration
+domain_name = "discourse.example.com"
+admin_email = "admin@example.com"
+
+# SSH Configuration
+ssh_key_name = "your-aws-key-pair-name"
+
+# Restrict SSH access to your IP (recommended for security)
+allowed_ssh_cidr = ["0.0.0.0/0"] # Change to your IP: ["x.x.x.x/32"]
+
+# Email Configuration (SMTP)
+# For Amazon SES:
+smtp_address  = "email-smtp.us-east-1.amazonaws.com"
+smtp_port     = 587
+smtp_username = "your-ses-smtp-username"
+smtp_password = "your-ses-smtp-password"
+
+# EC2 Configuration
+instance_type = "t3.small" # Options: t3.small (2GB), t3.medium (4GB), t3.large (8GB)
+
+# Database Configuration (for production mode)
+db_instance_class        = "db.t3.small"
+db_allocated_storage     = 20
+db_name                  = "discourse_production"
+db_username              = "discourse"
+db_password              = "" # Leave empty to auto-generate
+enable_multi_az          = false # Set to true for production HA
+db_backup_retention_days = 7
+
+# Redis Configuration (for production mode)
+redis_node_type    = "cache.t3.small"
+redis_num_replicas = 0 # Set to 1+ for production HA
+redis_engine_version = "7.0"
+
+# Auto Scaling (for production mode)
+asg_min_size         = 1
+asg_max_size         = 4
+asg_desired_capacity = 2
+
+# Route 53 (optional)
+create_route53_record = false
+route53_zone_id       = "" # Your Route 53 hosted zone ID
+
+# Monitoring
+sns_topic_arn = "" # SNS topic ARN for CloudWatch alarms
+
+# Storage
+enable_s3_versioning = true
