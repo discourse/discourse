@@ -587,6 +587,50 @@ RSpec.describe CategoriesController do
     end
   end
 
+  describe "#find_by_slug" do
+    fab!(:category) { Fabricate(:category, name: "Test Category") }
+
+    it "preloads user fields including has_children when category has subcategories" do
+      subcategory = Fabricate(:category, parent_category: category)
+      sign_in(admin)
+
+      get "/c/#{category.slug}/find_by_slug.json"
+
+      expect(response.status).to eq(200)
+      cat_json = response.parsed_body["category"]
+      expect(cat_json["has_children"]).to eq(true)
+      expect(cat_json["subcategory_count"]).to eq(1)
+    end
+
+    it "returns has_children false when category has no subcategories" do
+      sign_in(admin)
+
+      get "/c/#{category.slug}/find_by_slug.json"
+
+      expect(response.status).to eq(200)
+      cat_json = response.parsed_body["category"]
+      expect(cat_json["has_children"]).to eq(false)
+      expect(cat_json["subcategory_count"]).to eq(nil)
+    end
+
+    it "preloads user fields for restricted categories" do
+      category.set_permissions(admins: :full)
+      category.save!
+      subcategory = Fabricate(:category, parent_category: category)
+      subcategory.set_permissions(admins: :full)
+      subcategory.save!
+      sign_in(admin)
+
+      get "/c/#{category.slug}/find_by_slug.json"
+
+      expect(response.status).to eq(200)
+      cat_json = response.parsed_body["category"]
+      expect(cat_json["has_children"]).to eq(true)
+      expect(cat_json["subcategory_count"]).to eq(1)
+      expect(cat_json["notification_level"]).not_to be_nil
+    end
+  end
+
   describe "#destroy" do
     it "requires the user to be logged in" do
       delete "/categories/category.json"
@@ -833,6 +877,36 @@ RSpec.describe CategoriesController do
           expect(response.status).to eq(200)
           category.reload
           expect(category.category_required_tag_groups).to be_empty
+        end
+
+        it "preloads user fields including has_children" do
+          subcategory = Fabricate(:category, parent_category: category)
+
+          put "/categories/#{category.id}.json",
+              params: {
+                name: "updated name",
+                color: category.color,
+                text_color: category.text_color,
+              }
+
+          expect(response.status).to eq(200)
+          cat_json = response.parsed_body["category"]
+          expect(cat_json["has_children"]).to eq(true)
+          expect(cat_json["subcategory_count"]).to eq(1)
+        end
+
+        it "returns has_children false when category has no children" do
+          put "/categories/#{category.id}.json",
+              params: {
+                name: "updated name",
+                color: category.color,
+                text_color: category.text_color,
+              }
+
+          expect(response.status).to eq(200)
+          cat_json = response.parsed_body["category"]
+          expect(cat_json["has_children"]).to eq(false)
+          expect(cat_json["subcategory_count"]).to eq(nil)
         end
 
         it "does not update other fields" do
