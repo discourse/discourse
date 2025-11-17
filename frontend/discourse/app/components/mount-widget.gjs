@@ -1,12 +1,13 @@
 /* eslint-disable ember/no-classic-components */
-import ArrayProxy from "@ember/array/proxy";
 import Component from "@ember/component";
 import { cancel, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { camelize } from "@ember/string";
 import { diff, patch } from "virtual-dom";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import DirtyKeys from "discourse/lib/dirty-keys";
 import { getRegister } from "discourse/lib/get-owner";
+import LegacyArrayLikeObject from "discourse/lib/legacy-array-like-object";
 import { WidgetClickHook } from "discourse/widgets/hooks";
 import {
   queryRegistry,
@@ -98,7 +99,7 @@ export default class MountWidget extends Component {
 
     this._childEvents = [];
     this._connected = [];
-    this._childComponents = ArrayProxy.create({ content: [] });
+    this._childComponents = LegacyArrayLikeObject.create({ content: [] });
     this._dispatched = [];
     this.dirtyKeys = new DirtyKeys(name);
   }
@@ -247,7 +248,7 @@ export default class MountWidget extends Component {
       return;
     }
 
-    this._childComponents.pushObject(info);
+    this._childComponents.push(info);
   }
 
   unmountChildComponent(info) {
@@ -255,7 +256,7 @@ export default class MountWidget extends Component {
       return;
     }
 
-    this._childComponents.removeObject(info);
+    removeValueFromArray(this._childComponents, info);
   }
 
   didUpdateAttrs() {
@@ -269,7 +270,7 @@ export default class MountWidget extends Component {
 
   <template>
     {{#unless this.isDeactivated}}
-      {{#each this._childComponents as |info|}}
+      {{#each this._childComponents.content as |info|}}
         {{#in-element info.element insertBefore=null}}
           <info.component
             @data={{info.data}}
