@@ -8,6 +8,7 @@ import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import DButton from "discourse/components/d-button";
 import FilterInput from "discourse/components/filter-input";
+import closeOnEscape from "discourse/float-kit/modifiers/close-on-escape";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
@@ -151,6 +152,7 @@ export default class ChatChannelFilter extends Component {
         <div>
           <FilterInput
             {{autoFocus}}
+            {{closeOnEscape (fn @onToggleFilter false)}}
             @value={{this.currentChannelFilter}}
             placeholder={{i18n "chat.search.title"}}
             @filterAction={{this.loadSearchResults}}
