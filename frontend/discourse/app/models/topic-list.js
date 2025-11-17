@@ -7,6 +7,7 @@ import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import deprecated from "discourse/lib/deprecated";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
@@ -124,6 +125,8 @@ export default class TopicList extends RestModel {
   @service session;
 
   @tracked loadingBefore = false;
+  @trackedArray topics;
+
   @notEmpty("more_topics_url") canLoadMore;
 
   forEachNew(topics, callback) {
@@ -196,7 +199,7 @@ export default class TopicList extends RestModel {
 
           this.forEachNew(newTopics, (t) => {
             t.set("highlight", topicsAdded++ === 0);
-            this.topics.pushObject(t);
+            this.topics.push(t);
           });
 
           this.setProperties({
@@ -232,7 +235,7 @@ export default class TopicList extends RestModel {
       this.forEachNew(TopicList.topicsFrom(this.store, result), (t) => {
         // highlight the first of the new topics so we can get a visual feedback
         t.set("highlight", true);
-        this.topics.insertAt(i, t);
+        this.topics.splice(i, 0, t);
         i++;
       });
 
