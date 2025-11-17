@@ -270,7 +270,7 @@ module VideoConversion
     end
 
     def build_file_url(s3_store, destination_path)
-      "//#{s3_store.s3_bucket}.s3.dualstack.#{SiteSetting.s3_region}.amazonaws.com/#{destination_path}"
+      "//#{s3_store.s3_bucket}.s3.dualstack.#{SiteSetting.s3_region}.amazonaws.com#{destination_path}"
     end
 
     def get_output_path_for_record(final_path)
@@ -292,7 +292,8 @@ module VideoConversion
     end
 
     def build_multisite_path
-      File.join("uploads", RailsMultisite::ConnectionManagement.current_db, "/")
+      path = File.join("uploads", RailsMultisite::ConnectionManagement.current_db)
+      "#{path}/"
     end
 
     def build_temp_upload_for_path_generation(new_sha1)
