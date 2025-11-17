@@ -36,7 +36,7 @@ module DiscourseAi
           context =
             DiscourseAi::Personas::BotContext.new(
               user: user,
-              skip_tool_details: true,
+              skip_show_thinking: true,
               feature_name: "discover",
               messages: [{ type: :user, content: query }],
             )

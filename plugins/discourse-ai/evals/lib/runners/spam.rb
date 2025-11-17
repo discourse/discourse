@@ -25,7 +25,7 @@ module DiscourseAi
             DiscourseAi::Personas::BotContext
               .new(
                 user: user,
-                skip_tool_details: true,
+                skip_show_thinking: true,
                 feature_name: "evals/spam",
                 messages: [{ type: :user, content: content }],
               )

@@ -26,7 +26,12 @@ module DiscourseAi
 
       def to_s
         # we may want to also normalize the JSON here for the broken case
-        @raw_response
+        @raw_response.to_s
+      end
+
+      # require for any implicity string conversions
+      def to_str
+        to_s
       end
 
       attr_reader :last_chunk_buffer
@@ -39,6 +44,10 @@ module DiscourseAi
 
       def finish
         @done = true
+      end
+
+      def finished?
+        @done
       end
 
       def broken?

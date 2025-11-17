@@ -1014,7 +1014,7 @@ TEXT
 
       endpoint.perform_completion!(dialect, user)
 
-      expect(parsed_body[:reasoning]).to eq({ effort: "minimal" })
+      expect(parsed_body[:reasoning]).to include(effort: "minimal", summary: "auto")
       expect(parsed_body).not_to have_key(:reasoning_effort)
     end
 

@@ -39,7 +39,7 @@ module DiscourseAi
           context =
             DiscourseAi::Personas::BotContext.new(
               user: user,
-              skip_tool_details: true,
+              skip_show_thinking: true,
               feature_name: "semantic_search_hyde",
               messages: [{ type: :user, content: query }],
             )

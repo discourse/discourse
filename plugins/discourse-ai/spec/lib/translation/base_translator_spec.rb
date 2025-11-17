@@ -52,7 +52,7 @@ describe DiscourseAi::Translation::BaseTranslator do
 
       expect(DiscourseAi::Personas::BotContext).to have_received(:new).with(
         user: an_instance_of(User),
-        skip_tool_details: true,
+        skip_show_thinking: true,
         feature_name: "translation",
         messages: [{ type: :user, content: expected_content }],
         topic: topic,

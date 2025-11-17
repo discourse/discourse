@@ -330,7 +330,7 @@ module DiscourseAi
                 instruction_message: instruction_message,
               ),
             user: message.user,
-            skip_tool_details: true,
+            skip_show_thinking: true,
             cancel_manager: DiscourseAi::Completions::CancelManager.new,
           )
 
@@ -353,8 +353,8 @@ module DiscourseAi
 
         new_prompts =
           bot.reply(context) do |partial, placeholder, type|
-            # no support for tools or thinking by design
-            next if type == :thinking || type == :tool_details || type == :partial_tool
+            # no support for thinking by design
+            next if type == :thinking || type == :partial_tool
             streamer << partial
           end
 
@@ -486,18 +486,19 @@ module DiscourseAi
           )
         end
 
-        context.skip_tool_details ||= !bot.persona.class.tool_details
+        context.skip_show_thinking ||= !bot.persona.class.show_thinking
         post_streamer = PostStreamer.new(delay: Rails.env.test? ? 0 : 0.5) if stream_reply
         started_thinking = false
 
         new_custom_prompts =
           bot.reply(context) do |partial, placeholder, type|
-            if type == :thinking && !started_thinking
-              reply << "<details><summary>#{I18n.t("discourse_ai.ai_bot.thinking")}</summary>"
-              started_thinking = true
-            end
+            next if (partial.to_s == "" && placeholder.to_s != "" && context.skip_show_thinking)
+            next if type == :structured_output && !partial.finished?
 
-            if type != :thinking && started_thinking
+            if should_start_thinking?(partial:, context:, type:, started_thinking:, placeholder:)
+              reply << "<details><summary>#{I18n.t("discourse_ai.ai_bot.thinking")}</summary>\n\n"
+              started_thinking = true
+            elsif should_stop_thinking?(partial:, context:, type:, started_thinking:, placeholder:)
               reply << "</details>\n\n"
               started_thinking = false
             end
@@ -506,7 +507,7 @@ module DiscourseAi
             raw = reply.dup
             raw << "\n\n" << placeholder if placeholder.present?
 
-            if blk && type != :tool_details && type != :partial_tool && type != :partial_invoke
+            if blk && type != :thinking && type != :partial_tool && type != :partial_invoke
               blk.call(partial)
             end
 
@@ -595,6 +596,24 @@ module DiscourseAi
       end
 
       private
+
+      def should_stop_thinking?(partial:, context:, type:, started_thinking:, placeholder:)
+        return false if context.skip_show_thinking
+        return false if !started_thinking
+        return false if partial.blank? && placeholder.blank?
+        return true if type.nil? || type == :structured_output || type == :custom_raw
+
+        false
+      end
+
+      def should_start_thinking?(partial:, context:, type:, started_thinking:, placeholder:)
+        return false if context.skip_show_thinking
+        return false if started_thinking
+        return false if partial.blank? && placeholder.blank?
+        return false if type.nil? || type == :structured_output || type == :custom_raw
+
+        true
+      end
 
       def available_bot_users
         @available_bots ||=

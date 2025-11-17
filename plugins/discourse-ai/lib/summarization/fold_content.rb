@@ -147,7 +147,7 @@ module DiscourseAi
         context =
           DiscourseAi::Personas::BotContext.new(
             user: user,
-            skip_tool_details: true,
+            skip_show_thinking: true,
             feature_name: strategy.feature,
             resource_url: "#{Discourse.base_path}/t/-/#{strategy.target.id}",
             messages: strategy.as_llm_messages(content_in_window),

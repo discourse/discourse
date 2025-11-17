@@ -52,7 +52,33 @@ module DiscourseAi
           !!@disable_native_tools = llm_model.lookup_custom_param("disable_native_tools")
         end
 
+        def translate
+          result = super
+          result = hoist_reasoning(result) if responses_api?
+          result
+        end
+
         private
+
+        def hoist_reasoning(messages)
+          new_messages = []
+          messages.each do |msg|
+            if msg[:content].is_a?(Array)
+              reasoning = []
+              msg[:content].delete_if do |item|
+                if item.is_a?(Hash) && item[:type] == "reasoning"
+                  reasoning << item
+                  true
+                else
+                  false
+                end
+              end
+              reasoning.each { |reason| new_messages << reason } if reasoning.present?
+            end
+            new_messages << msg
+          end
+          new_messages
+        end
 
         def tools_dialect
           if disable_native_tools?
@@ -121,6 +147,11 @@ module DiscourseAi
 
         def message_for_role(role, msg)
           content_array = []
+          reasoning_data = open_ai_reasoning_data(msg)
+
+          if responses_api? && reasoning_data.present?
+            content_array << { type: "thinking", message: msg }
+          end
 
           user_message = { role: }
 
@@ -142,8 +173,13 @@ module DiscourseAi
               content: content_array.flatten,
               image_encoder: ->(details) { image_node(details) },
               text_encoder: ->(text) { text_node(text, role) },
+              other_encoder: ->(hash) { thinking_signature_node(hash) },
               allow_vision:,
             )
+
+          if responses_api? && role == "assistant" && reasoning_data&.dig(:next_message_id)
+            user_message[:id] = reasoning_data[:next_message_id]
+          end
 
           user_message[:content] = no_array_if_only_text(content_array)
           user_message
@@ -155,6 +191,27 @@ module DiscourseAi
           else
             content_array
           end
+        end
+
+        def thinking_signature_node(hash)
+          return unless responses_api?
+
+          message = hash[:message]
+          reasoning_data = open_ai_reasoning_data(message)
+          return if reasoning_data.blank?
+
+          {
+            type: "reasoning",
+            id: reasoning_data[:reasoning_id],
+            encrypted_content: reasoning_data[:encrypted_content],
+            summary: [type: :summary_text, text: message[:thinking].to_s],
+          }.compact
+        end
+
+        def open_ai_reasoning_data(message)
+          info = message[:thinking_provider_info]
+          return if info.blank?
+          info[:open_ai_responses] || info["open_ai_responses"]
         end
 
         def text_node(text, role)

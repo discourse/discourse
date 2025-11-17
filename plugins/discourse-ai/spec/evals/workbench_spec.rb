@@ -188,7 +188,7 @@ RSpec.describe DiscourseAi::Evals::Workbench do
         persona.examples = base.examples
         persona.temperature = base.respond_to?(:temperature) ? base.temperature : nil
         persona.top_p = base.respond_to?(:top_p) ? base.top_p : nil
-        persona.tool_details = true
+        persona.show_thinking = true
         persona.tools ||= []
         persona.save!(validate: false)
       end
