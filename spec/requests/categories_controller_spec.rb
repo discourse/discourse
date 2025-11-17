@@ -891,12 +891,7 @@ RSpec.describe CategoriesController do
         end
 
         it "returns has_children false when category has no children" do
-          put "/categories/#{category.id}.json",
-              params: {
-                name: "updated name",
-                color: category.color,
-                text_color: category.text_color,
-              }
+          put "/categories/#{category.id}.json", params: { default_list_filter: "all" }
 
           expect(response.status).to eq(200)
           cat_json = response.parsed_body["category"]
