@@ -25,6 +25,7 @@ Usage: evals/run [options]
     -f, --feature KEY                Filter evals by feature (module_name:feature_name)
     -j, --judge NAME                 LLM config used as a judge (defaults to gpt-4o when available)
         --persona-keys KEYS          Comma-separated list of persona keys (or repeat the flag) to run sequentially
+        --compare MODE               Run comparisons (MODE: personas or llms)
 ```
 
 To run evals you will need to configure API keys in your environment:
@@ -49,3 +50,22 @@ prompt replaces the default system prompt of whichever persona the eval runner w
 Pass multiple keys (including `default`) to rerun the same evals with different prompts without
 restarting the CLI. Add new files under that directory to compare alternate prompts without touching
 the database.
+
+When running persona comparisons (`--compare personas`) the CLI automatically prepends the built-in
+`default` persona so you can benchmark your YAML prompts against the stock behavior. Non-comparison
+runs still execute only the personas you list.
+
+#### Comparison matrix
+
+Use the `--compare` flag to ask the CLI to judge multiple runs together:
+
+- `--compare personas`: require a single `--models` value and at least one persona key (the
+  built-in `default` persona is implicitly added). Each eval is executed for every persona; the
+  judge LLM scores them side-by-side and announces the winner plus individual ratings.
+- `--compare llms`: require at least two `--models` and exactly one persona (default unless you pass
+  `--persona-keys custom_persona`). Every eval runs once and the judge compares the outputs from each
+  LLM. Logs include the persona key (or `default`) so you can correlate recordings.
+
+Both modes reuse the rubric declared under the eval’s `judge` block and stream the comparison summary
+to STDOUT. The structured log files continue to be written for each underlying run so you can drill
+into the raw outputs if the judge’s reasoning needs inspection.

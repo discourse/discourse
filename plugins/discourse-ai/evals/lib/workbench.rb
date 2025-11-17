@@ -36,7 +36,7 @@ module DiscourseAi
       #
       # @param eval_case [DiscourseAi::Evals::Eval] the scenario to run.
       # @param llms [Array<LlmModel>] LLMs selected by the CLI.
-      def run(eval_case:, llms:)
+      def run(eval_case:, llms:, &after_run)
         recorder = Recorder.with_cassette(eval_case, persona_key: persona_label, output: output)
 
         llms.each do |llm|
@@ -48,8 +48,18 @@ module DiscourseAi
             next
           end
 
-          results = execute_eval(eval_case, llm)
-          recorder.record_llm_results(llm_name, results, start_time)
+          execution = execute_eval(eval_case, llm)
+          recorder.record_llm_results(llm_name, execution[:classified], start_time)
+          if after_run
+            after_run.call(
+              eval_case: eval_case,
+              llm: llm,
+              llm_name: llm_name,
+              persona_label: persona_label,
+              raw_entries: execution[:raw_entries],
+              classified_entries: execution[:classified],
+            )
+          end
         rescue DiscourseAi::Evals::Eval::EvalError => e
           recorder.record_llm_results(
             llm_name,
@@ -83,7 +93,9 @@ module DiscourseAi
             raise ArgumentError, "Unsupported eval feature '#{feature}'"
           end
 
-        classify_results(eval_case, raw)
+        entries = normalize_entries(raw)
+
+        { raw: raw, raw_entries: entries, classified: classify_results(eval_case, entries) }
       end
 
       private
@@ -94,9 +106,11 @@ module DiscourseAi
         DiscourseAi::Evals::Runners::Base.find_runner(feature, persona_prompt)
       end
 
-      def classify_results(eval_case, result)
-        entries = result.is_a?(Array) ? result : [result]
+      def normalize_entries(raw)
+        raw.is_a?(Array) ? raw : [raw]
+      end
 
+      def classify_results(eval_case, entries)
         entries.map do |entry|
           raw_value = entry.is_a?(Hash) && entry.key?(:raw) ? entry[:raw] : entry
           metadata = entry.is_a?(Hash) ? entry[:metadata] : nil

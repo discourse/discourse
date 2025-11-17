@@ -49,7 +49,10 @@ RSpec.describe DiscourseAi::Evals::Workbench do
 
   describe "#run" do
     it "records results for each llm" do
-      allow(workbench).to receive(:execute_eval).and_return([{ result: :pass }]) # rubocop:disable RSpec/SubjectStub
+      # rubocop:disable RSpec/SubjectStub
+      allow(workbench).to receive(:execute_eval).and_return(
+        { raw: "output", raw_entries: ["output"], classified: [{ result: :pass }] },
+      )
 
       workbench.run(eval_case: eval_case, llms: [llm])
 
@@ -64,6 +67,24 @@ RSpec.describe DiscourseAi::Evals::Workbench do
         Time.now.utc,
       )
       expect(recorder).to have_received(:finish)
+    end
+
+    it "yields execution payloads to the provided block" do
+      execution_payload = {
+        raw: "output",
+        raw_entries: ["output"],
+        classified: [{ result: :pass }],
+      }
+      allow(workbench).to receive(:execute_eval).and_return(execution_payload) # rubocop:disable RSpec/SubjectStub
+
+      yielded = nil
+
+      workbench.run(eval_case: eval_case, llms: [llm]) { |payload| yielded = payload }
+
+      expect(yielded[:raw_entries]).to eq(["output"])
+      expect(yielded[:classified_entries]).to eq([{ result: :pass }])
+      expect(yielded[:llm_name]).to eq("gpt-4")
+      expect(yielded[:eval_case]).to eq(eval_case)
     end
 
     context "when the eval requires vision but the llm does not support it" do
@@ -144,7 +165,7 @@ RSpec.describe DiscourseAi::Evals::Workbench do
           workbench.execute_eval(eval_case, llm)
         end
 
-      expect(results.first[:result]).to eq(:pass)
+      expect(results[:classified].first[:result]).to eq(:pass)
     end
 
     it "flags spam posts via the spam inspection eval feature" do
@@ -167,7 +188,7 @@ RSpec.describe DiscourseAi::Evals::Workbench do
           workbench.execute_eval(eval_case, llm)
         end
 
-      expect(results.first[:result]).to eq(:pass)
+      expect(results[:classified].first[:result]).to eq(:pass)
     end
   end
 

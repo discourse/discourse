@@ -51,4 +51,32 @@ RSpec.describe DiscourseAi::Evals::Judge do
       response_format: DiscourseAi::Evals::Judge::RESPONSE_FORMAT,
     )
   end
+
+  describe "#compare" do
+    it "requests a structured comparison and returns parsed ratings" do
+      comparison_payload = {
+        "winner" => "default",
+        "winner_explanation" => "more accurate",
+        "ratings" => [
+          { "candidate" => "default", "rating" => 9, "explanation" => "complete" },
+          { "candidate" => "custom", "rating" => 6, "explanation" => "missed details" },
+        ],
+      }.to_json
+
+      allow(llm_proxy).to receive(:generate).and_return(comparison_payload)
+
+      result = judge.compare([{ label: "default", output: "A" }, { label: "custom", output: "B" }])
+
+      expect(llm_proxy).to have_received(:generate).with(
+        satisfy do |prompt|
+          prompt.messages.any? { |msg| msg[:content].include?("Candidate 2 (custom):") }
+        end,
+        user: Discourse.system_user,
+        temperature: 0,
+        response_format: DiscourseAi::Evals::Judge::COMPARISON_RESPONSE_FORMAT,
+      )
+      expect(result[:winner]).to eq("default")
+      expect(result[:ratings].map { |entry| entry[:candidate] }).to match_array(%w[default custom])
+    end
+  end
 end

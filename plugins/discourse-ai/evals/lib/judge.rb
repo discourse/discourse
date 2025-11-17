@@ -30,6 +30,48 @@ module DiscourseAi
         },
       }.freeze
 
+      COMPARISON_RESPONSE_FORMAT = {
+        type: "json_schema",
+        json_schema: {
+          name: "judgeComparisonVerdict",
+          schema: {
+            type: "object",
+            additionalProperties: false,
+            required: %w[winner winner_explanation ratings],
+            properties: {
+              winner: {
+                type: "string",
+              },
+              winner_explanation: {
+                type: "string",
+              },
+              ratings: {
+                type: "array",
+                minItems: 2,
+                items: {
+                  type: "object",
+                  additionalProperties: false,
+                  required: %w[candidate rating explanation],
+                  properties: {
+                    candidate: {
+                      type: "string",
+                    },
+                    rating: {
+                      type: "integer",
+                      minimum: 1,
+                      maximum: 10,
+                    },
+                    explanation: {
+                      type: "string",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      }.freeze
+
       def initialize(eval_case:, judge_llm:)
         judge_config = eval_case.judge || {}
         @eval_case = eval_case
@@ -64,6 +106,19 @@ module DiscourseAi
         end
       end
 
+      def compare(candidates)
+        prompt = build_comparison_prompt(candidates)
+        response =
+          judge_llm.to_llm.generate(
+            prompt,
+            user: Discourse.system_user,
+            temperature: 0,
+            response_format: COMPARISON_RESPONSE_FORMAT,
+          )
+
+        parse_comparison_response(response)
+      end
+
       private
 
       attr_reader :eval_case, :judge_llm, :criteria, :pass_rating
@@ -83,6 +138,32 @@ module DiscourseAi
         sections.concat(metadata)
 
         sections << prompt_suffix
+
+        DiscourseAi::Completions::Prompt.new(
+          "You are an expert judge evaluating LLM outputs.",
+          messages: [{ type: :user, content: sections.join("\n\n") }],
+        )
+      end
+
+      def build_comparison_prompt(candidates)
+        sections = []
+        rubric_text =
+          if criteria.present?
+            criteria.strip
+          else
+            "Score the output purely on accuracy, completeness, and adherence to the task instructions."
+          end
+
+        sections << "Grading rubric:\n#{rubric_text}"
+        sections.concat(formatted_args)
+
+        candidates.each_with_index do |candidate, index|
+          label = candidate[:label].to_s.strip
+          label = "candidate #{index + 1}" if label.empty?
+          sections << "Candidate #{index + 1} (#{label}):\n#{format_placeholder_value(candidate[:output])}"
+        end
+
+        sections << comparison_suffix
 
         DiscourseAi::Completions::Prompt.new(
           "You are an expert judge evaluating LLM outputs.",
@@ -133,6 +214,27 @@ module DiscourseAi
         SUFFIX
       end
 
+      def comparison_suffix
+        <<~SUFFIX
+
+          Compare every candidate using the rubric above. Respond with JSON that matches:
+
+          {
+            "winner": "<candidate label or tie>",
+            "winner_explanation": "<brief justification of the decision>",
+            "ratings": [
+              {
+                "candidate": "<candidate label>",
+                "rating": <integer between 1 and 10>,
+                "explanation": "<short reason describing strengths or issues>"
+              }
+            ]
+          }
+
+          If there is no clear winner, set "winner" to "tie" and explain why.
+        SUFFIX
+      end
+
       def parse_response(response)
         rating = explanation = nil
 
@@ -153,6 +255,42 @@ module DiscourseAi
         end
 
         { rating: rating.to_i, explanation: explanation.to_s.strip, raw: raw }
+      end
+
+      def parse_comparison_response(response)
+        raw_text = response.to_s
+
+        parsed =
+          begin
+            JSON.parse(raw_text)
+          rescue JSON::ParserError
+            {}
+          end
+
+        winner_label = parsed["winner"].to_s.strip
+        normalized_winner =
+          if winner_label.blank? || winner_label.casecmp("tie").zero?
+            nil
+          else
+            winner_label
+          end
+
+        ratings =
+          Array(parsed["ratings"]).map do |entry|
+            {
+              candidate: entry["candidate"].to_s,
+              rating: entry["rating"].to_i,
+              explanation: entry["explanation"].to_s.strip,
+            }
+          end
+
+        {
+          winner: normalized_winner,
+          winner_label: winner_label,
+          winner_explanation: parsed["winner_explanation"].to_s.strip,
+          ratings: ratings,
+          raw: raw_text,
+        }
       end
     end
   end

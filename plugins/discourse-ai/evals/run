@@ -10,81 +10,55 @@ require_relative "lib/features"
 require_relative "lib/recorder"
 require_relative "lib/workbench"
 require_relative "lib/persona_prompt_loader"
+require_relative "lib/comparison_runner"
 require_relative "lib/cli"
 
 features_registry =
   DiscourseAi::Evals::Features.new(modules: DiscourseAi::Configuration::Module.all)
-
-options = DiscourseAi::Evals::Cli.parse_options!(features_registry)
+cli = DiscourseAi::Evals::Cli.parse_options!(features_registry)
 
 llm_repository = DiscourseAi::Evals::LlmRepository.new
 
-if options.list_models
+if cli.list_models
   llm_repository.print
   exit 0
 end
 
-if options.list_features
+if cli.list_features
   features_registry.print
   exit 0
 end
 
-default_persona_key = DiscourseAi::Evals::PersonaPromptLoader::DEFAULT_PERSONA_KEY
+persona_loader = DiscourseAi::Evals::PersonaPromptLoader.new
 
-if options.list_personas
-  puts "#{default_persona_key}: built-in persona prompt"
-  DiscourseAi::Evals::PersonaPromptLoader.list.each do |key, description|
-    if description && !description.empty?
-      puts "#{key}: #{description}"
-    else
-      puts key
-    end
-  end
+if cli.list_personas
+  persona_loader.print
   exit 0
 end
 
 available_evals = DiscourseAi::Evals::Eval.available_cases
 
-if options.list
+if cli.list
   available_evals.each(&:print)
   exit 0
 end
 
-llms = llm_repository.choose(options.models)
+llms = llm_repository.choose(cli.models)
 
 if llms.empty?
-  puts "Error: Unknown models '#{options.models}'"
+  puts "Error: Unknown models '#{cli.models}'"
   exit 1
 end
 
-selected_evals = available_evals
-selected_evals =
-  selected_evals.select do |eval_case|
-    eval_case.feature == options.feature_key
-  end if options.feature_key.present?
-selected_evals =
-  selected_evals.select do |eval_case|
-    eval_case.id == options.eval_name
-  end if options.eval_name.present?
+selected_evals = cli.select_evals(available_evals)
 
-if selected_evals.empty?
-  if options.feature_key
-    puts "Error: No evaluations registered for feature '#{options.feature_key}'"
-  else
-    puts "Error: Unknown evaluation '#{options.eval_name}'"
-  end
-  exit 1
-end
-
-default_judge = "gpt-4o"
-judge_name = options.judge.presence || default_judge
 judge_llm = nil
 default_judge_error = nil
 
 begin
-  judge_llm = llm_repository.hydrate(judge_name)
+  judge_llm = llm_repository.hydrate(cli.judge_name)
 rescue StandardError => e
-  if options.judge.present?
+  if cli.judge_provided
     puts "Error: #{e.message}"
     exit 1
   else
@@ -93,34 +67,16 @@ rescue StandardError => e
   end
 end
 
-persona_keys = Array(options.persona_keys).map { |key| key.to_s.strip }.reject(&:empty?).uniq
-
 persona_variants =
-  if persona_keys.empty?
-    [{ key: default_persona_key, prompt: nil }]
-  else
-    persona_keys.map do |key|
-      trimmed_key = key.to_s.strip
+  persona_loader.variants_for(cli.persona_keys, comparison_mode: cli.comparison_mode)
 
-      if trimmed_key.downcase == default_persona_key
-        { key: default_persona_key, prompt: nil }
-      else
-        prompt = DiscourseAi::Evals::PersonaPromptLoader.new.find_prompt(trimmed_key)
+requires_judge =
+  cli.comparison_mode.present? || selected_evals.any? { |eval_case| eval_case.judge.present? }
 
-        if prompt.nil? || prompt.strip.empty?
-          puts "Error: Unknown persona key '#{trimmed_key}'. Run --list-personas to view options."
-          exit 1
-        end
-
-        { key: trimmed_key, prompt: prompt }
-      end
-    end
-  end
-
-if selected_evals.any? { |eval_case| eval_case.judge.present? } && judge_llm.nil?
+if requires_judge && judge_llm.nil?
   message = "Error: Selected evaluations require a judge."
   if default_judge_error
-    message += " Configure '#{default_judge}' or pass --judge with an LLM config name."
+    message += " Configure '#{cli.judge}' or pass --judge with an LLM config name."
     message += "\n\n"
     message += default_judge_error
   else
@@ -128,6 +84,20 @@ if selected_evals.any? { |eval_case| eval_case.judge.present? } && judge_llm.nil
   end
   puts message
   exit 1
+end
+
+if cli.comparison_mode
+  begin
+    DiscourseAi::Evals::ComparisonRunner.new(
+      mode: cli.comparison_mode,
+      judge_llm: judge_llm,
+      output: $stdout,
+    ).run(eval_cases: selected_evals, persona_variants: persona_variants, llms: llms)
+  rescue DiscourseAi::Evals::ComparisonRunner::ComparisonError => e
+    puts "Error: #{e.message}"
+    exit 1
+  end
+  exit 0
 end
 
 persona_variants.each do |variant|
@@ -151,7 +121,7 @@ persona_variants.each do |variant|
     )
 
   selected_evals.each do |eval_case|
-    if options.judge.present? && eval_case.judge.blank?
+    if cli.judge_provided && eval_case.judge.blank?
       puts "Notice: Eval '#{eval_case.id}' has no judge block. --judge is ignored for this eval."
     end
 

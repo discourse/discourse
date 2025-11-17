@@ -21,6 +21,40 @@ module DiscourseAi
         @entries ||= Dir.glob(PERSONA_GLOB).sort.map { |path| load_entry(path) }.compact
       end
 
+      def variants_for(keys, comparison_mode: nil)
+        keys_array = Array(keys)
+        variants = []
+
+        if keys_array.empty? || comparison_mode == :personas
+          variants << { key: DEFAULT_PERSONA_KEY, prompt: nil }
+        end
+
+        keys_array.each do |key|
+          next if key == DEFAULT_PERSONA_KEY
+
+          prompt = find_prompt(key)
+          if prompt.to_s.strip.empty?
+            puts "Error: Unknown persona key '#{key}'. Run --list-personas to view options."
+            exit 1
+          end
+
+          variants << { key: key, prompt: prompt }
+        end
+
+        variants
+      end
+
+      def print(output: $stdout)
+        output.puts("#{DEFAULT_PERSONA_KEY}: built-in persona prompt")
+        list.each do |key, description|
+          if description && !description.empty?
+            output.puts("#{key}: #{description}")
+          else
+            output.puts(key)
+          end
+        end
+      end
+
       def load_entry(path)
         yaml = YAML.load_file(path) || {}
 
