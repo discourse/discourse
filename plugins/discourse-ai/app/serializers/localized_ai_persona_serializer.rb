@@ -24,7 +24,7 @@ class LocalizedAiPersonaSerializer < ApplicationSerializer
              :rag_conversation_chunks,
              :rag_llm_model_id,
              :question_consolidator_llm_id,
-             :tool_details,
+             :show_thinking,
              :forced_tool_count,
              :allow_chat_channel_mentions,
              :allow_chat_direct_messages,
