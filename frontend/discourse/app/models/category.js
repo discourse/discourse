@@ -5,6 +5,10 @@ import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { compare } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
+import {
+  addUniqueValueToArray,
+  removeValueFromArray,
+} from "discourse/lib/array-tools";
 import discourseComputed from "discourse/lib/decorators";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
@@ -475,6 +479,7 @@ export default class Category extends RestModel {
   @tracked localizations = this.category_localizations;
   @tracked minimum_required_tags;
   @tracked styleType = this.style_type;
+  @trackedArray available_groups;
   @trackedArray required_tag_groups;
 
   permissions = null;
@@ -495,7 +500,7 @@ export default class Category extends RestModel {
       this.set(
         "permissions",
         this.group_permissions.map((elem) => {
-          this.available_groups.removeObject(elem.group_name);
+          removeValueFromArray(this.available_groups, elem.group_name);
           return elem;
         })
       );
@@ -848,8 +853,8 @@ export default class Category extends RestModel {
   }
 
   addPermission(permission) {
-    this.permissions.addObject(permission);
-    this.availableGroups.removeObject(permission.group_name);
+    addUniqueValueToArray(this.permissions, permission);
+    removeValueFromArray(this.availableGroups, permission.group_name);
   }
 
   removePermission(group_name) {
@@ -857,8 +862,8 @@ export default class Category extends RestModel {
       (p) => p.group_name === group_name
     );
     if (permission) {
-      this.permissions.removeObject(permission);
-      this.availableGroups.addObject(group_name);
+      removeValueFromArray(this.permissions, permission);
+      addUniqueValueToArray(this.availableGroups, group_name);
     }
   }
 
