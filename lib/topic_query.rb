@@ -7,6 +7,7 @@
 
 class TopicQuery
   include PrivateMessageLists
+  include Pagy::Method
 
   PG_MAX_INT = 2_147_483_647
   DEFAULT_PER_PAGE_COUNT = 30
@@ -100,6 +101,7 @@ class TopicQuery
           destination_category_id
           include_all_pms
           include_pms
+          request
         ]
   end
 
@@ -119,6 +121,7 @@ class TopicQuery
   self.results_filter_callbacks = []
 
   attr_accessor :options, :user, :guardian
+  attr_reader :request
 
   def self.add_custom_filter(key, &blk)
     @custom_filters ||= {}
@@ -146,6 +149,7 @@ class TopicQuery
     @options = options.dup
     @user = user
     @guardian = options[:guardian] || Guardian.new(@user)
+    @request = options[:request]
   end
 
   def joined_topic_user(list = nil)
@@ -569,6 +573,8 @@ class TopicQuery
 
     options = options.merge(@options)
 
+    pagy, topics = pagy(:offset, topics, limit: options[:per_page].presence || per_page_setting)
+
     apply_pinning = filter != :private_messages
     apply_pinning &&= %w[activity default].include?(options[:order] || "activity")
     apply_pinning &&= !options[:unordered] || options[:prioritize_pinned]
@@ -605,7 +611,8 @@ class TopicQuery
     end
 
     list = TopicList.new(filter, @user, topics, options.merge(@options))
-    list.per_page = options[:per_page]&.to_i || per_page_setting
+    list.per_page = pagy.limit
+    list.more_topics_url = pagy.urls_hash[:next]
 
     if filter == :filter && options[:include_filter_option_info]
       list.filter_option_info = TopicsFilter.option_info(@guardian)
@@ -891,17 +898,17 @@ class TopicQuery
       result = result.where("COALESCE(categories.topic_id, 0) <> topics.id")
     end
 
-    result = result.limit(options[:per_page]&.to_i) unless options[:limit] == false
+    # result = result.limit(options[:per_page]&.to_i) unless options[:limit] == false
     result = result.visible if options[:visible]
     result =
       result.where.not(topics: { id: options[:except_topic_ids] }).references(:topics) if options[
       :except_topic_ids
     ]
 
-    if options[:page]
-      offset = options[:page].to_i * options[:per_page]&.to_i
-      result = result.offset(offset) if offset > 0
-    end
+    # if options[:page]
+    #   offset = options[:page].to_i * options[:per_page]&.to_i
+    #   result = result.offset(offset) if offset > 0
+    # end
 
     if options[:topic_ids]
       result = result.where("topics.id in (?)", options[:topic_ids]).references(:topics)

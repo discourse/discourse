@@ -165,8 +165,6 @@ class ListController < ApplicationController
     ensure_can_see_profile!(target_user)
 
     list = generate_list_for("topics_by", target_user, list_opts)
-    list.more_topics_url = construct_url_with(:next, list_opts)
-    list.prev_topics_url = construct_url_with(:prev, list_opts)
     respond_with_list(list)
   end
 
@@ -456,7 +454,7 @@ class ListController < ApplicationController
   end
 
   def generate_list_for(action, target_user, opts)
-    TopicQuery.new(current_user, opts).public_send("list_#{action}", target_user)
+    TopicQuery.new(current_user, opts.merge(request:)).public_send("list_#{action}", target_user)
   end
 
   def construct_url_with(action, opts, url_prefix = nil)
