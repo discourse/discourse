@@ -3742,7 +3742,7 @@ en:
       deleted: "The topic has been deleted"
 
       slow_mode_update:
-        title: "Slow Mode"
+        title: "Slow mode"
         select: "Users may only post in this topic once every:"
         description: "To promote thoughtful discussion in fast moving or contentious discussions, users must wait before posting again in this topic."
         enable: "Enable"
@@ -4482,22 +4482,22 @@ en:
         add: "Add required tag group"
         placeholder: "select tag group…"
       topic_featured_link_allowed: "Allow featured links in this category"
-      delete: "Delete Category"
+      delete: "Delete category"
       create: "New Category"
       create_long: "Create a new category"
-      save: "Save Category"
-      slug: "Category Slug"
+      save: "Save category"
+      slug: "Category slug"
       slug_placeholder: "(Optional) dashed-words for url"
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
-      name: "Category Name"
+      name: "Category name"
       untitled: "Untitled Category"
       description: "Description"
-      logo: "Category Logo Image"
-      logo_dark: "Dark Mode Category Logo Image"
+      logo: "Category logo image"
+      logo_dark: "Dark mode category logo image"
       logo_description: "Recommended 1:1 aspect ratio with 200px minimum size. If left blank no image will be shown."
-      background_image: "Category Background Image"
-      background_image_dark: "Dark Category Background Image"
+      background_image: "Category background image"
+      background_image_dark: "Dark category background image"
       style: "Styles"
       background_color: "Color"
       foreground_color: "Text color"
@@ -4521,7 +4521,7 @@ en:
       delete_error: "There was an error deleting the category."
       list: "List Categories"
       no_description: "Please add a description for this category."
-      change_in_category_topic: "Edit Description"
+      change_in_category_topic: "Edit description"
       already_used: "This color has been used by another category"
       security: "Security"
       security_add_group: "Add a group"
@@ -4552,10 +4552,10 @@ en:
       all_topics_wiki: "Make new topics wikis by default"
       allow_unlimited_owner_edits_on_first_post: "Allow unlimited owner edits on first post"
       subcategory_list_style: "Subcategory List Style:"
-      sort_order: "Topic List Sort By:"
-      default_view: "Default Topic List:"
-      default_top_period: "Default Top Period:"
-      default_list_filter: "Default List Filter:"
+      sort_order: "Topic list sort by:"
+      default_view: "Default topic list:"
+      default_top_period: "Default top period:"
+      default_list_filter: "Default list filter:"
       allow_badges_label: "Allow badges to be awarded in this category"
       edit_permissions: "Edit Permissions"
       reviewable_by_group: "In addition to staff, content in this category can also be reviewed by:"
@@ -4567,8 +4567,8 @@ en:
       default_position: "Default Position"
       position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, enable the <a href='%{url}'>'fixed category positions'</a> setting."
       minimum_required_tags: "Minimum number of tags required in a topic:"
-      default_slow_mode: 'Enable "Slow Mode" for new topics in this category.'
-      parent: "Parent Category"
+      default_slow_mode: 'Enable "Slow mode" for new topics in this category.'
+      parent: "Parent category"
       num_auto_bump_daily: "Number of open topics to automatically bump daily:"
       auto_bump_cooldown_days: "Minimum days before bumping the same topic again:"
       navigate_to_first_post_after_read: "Navigate to first post after topics are read"
@@ -4590,18 +4590,18 @@ en:
           title: "Muted"
           description: "You will never be notified of anything about new topics in this category, and they will not appear in latest."
       search_priority:
-        label: "Search Priority"
+        label: "Search priority"
         options:
           normal: "Normal"
           ignore: "Ignore"
-          very_low: "Very Low"
+          very_low: "Very low"
           low: "Low"
           high: "High"
-          very_high: "Very High"
+          very_high: "Very high"
       sort_options:
         default: "default"
         likes: "Likes"
-        op_likes: "Original Post Likes"
+        op_likes: "Original post likes"
         views: "Views"
         posts: "Posts"
         activity: "Activity"
@@ -4621,8 +4621,8 @@ en:
         appearance: "Appearance"
         email: "Email"
       list_filters:
-        all: "all topics"
-        none: "no subcategories"
+        all: "All topics"
+        none: "No subcategories"
       colors_disabled: "You can’t select colors because you have a category style of none."
 
     anonymous_flagging:
@@ -4874,7 +4874,7 @@ en:
         title: "Top"
         help: "the most active topics in the last year, month, week or day"
         all:
-          title: "All Time"
+          title: "All time"
         yearly:
           title: "Yearly"
         quarterly:
@@ -4885,7 +4885,7 @@ en:
           title: "Weekly"
         daily:
           title: "Daily"
-        all_time: "All Time"
+        all_time: "All time"
         this_year: "Year"
         this_quarter: "Quarter"
         this_month: "Month"
@@ -7797,10 +7797,10 @@ en:
             second: "Option 2"
             third: "Option 3"
         edit_category:
-          toggle_freeform: "form template disabled"
-          toggle_form_template: "form template enabled"
+          toggle_freeform: "Form template disabled"
+          toggle_form_template: "Form template enabled"
           select_template: "Select form templates"
-          select_template_help: "Add/Edit Form Templates"
+          select_template_help: "Add/Edit form templates"
         errors:
           multiple_tags_not_allowed: 'You can''t select more tags from the "%{tag_name}". To avoid issues, use Form Template'
 

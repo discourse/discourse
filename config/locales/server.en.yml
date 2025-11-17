@@ -2313,7 +2313,7 @@ en:
     allow_all_users_to_flag_illegal_content: "Anonymous users will see information that they have to e-mail administrators to report illegal content. This setting takes precedence over 'flag post allowed groups'."
     email_address_to_report_illegal_content: "If left blank the default site admin email will be used."
     cooldown_hours_until_reflag: "How much time users will have to wait until they are able to reflag a post"
-    slow_mode_prevents_editing: "Does 'Slow Mode' prevent editing, after editing_grace_period?"
+    slow_mode_prevents_editing: "Does 'Slow mode' prevent editing, after editing_grace_period?"
 
     reply_by_email_enabled: "Activate the feature that permits users to respond to topics directly through email, instead of requiring them to log into the website. See <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>the guide on Meta</a> for more information."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
