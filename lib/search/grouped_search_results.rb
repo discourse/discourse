@@ -76,10 +76,10 @@ class Search
     SCRUB_HEADLINE_REGEXP =
       %r{<span(?: \w+="[^"]+")* class="#{Search::HIGHLIGHT_CSS_CLASS}"(?: \w+="[^"]+")*>([^<]*)</span>}
 
-    def blurb(post)
+    def blurb(post, scope: nil)
       opts = { term: @blurb_term, blurb_length: @blurb_length }
 
-      if SiteSetting.content_localization_enabled &&
+      if ContentLocalization.show_translated_post?(post, scope) &&
            (localization = post.get_localization(I18n.locale))
         opts[:cooked] = localization.cooked
         opts[:scrub] = true

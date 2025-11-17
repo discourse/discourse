@@ -75,7 +75,8 @@ class SearchController < ApplicationController
       result.find_user_data(guardian) if result
     end
 
-    serializer = serialize_data(result, GroupedSearchResultSerializer, result: result)
+    serializer =
+      serialize_data(result, GroupedSearchResultSerializer, result: result, scope: guardian)
 
     respond_to do |format|
       format.html { store_preloaded("search", MultiJson.dump(serializer)) }
