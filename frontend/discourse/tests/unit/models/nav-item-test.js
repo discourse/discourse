@@ -1,6 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { addUniqueValueToArray } from "discourse/lib/array-tools";
 import Category from "discourse/models/category";
 import NavItem from "discourse/models/nav-item";
 
@@ -14,7 +15,7 @@ module("Unit | Model | nav-item", function (hooks) {
       id: 123,
     });
     const site = getOwner(this).lookup("service:site");
-    site.categories.addObject(fooCategory);
+    addUniqueValueToArray(site.categories, fooCategory);
   });
 
   test("href", function (assert) {
