@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import { removeValuesFromArray } from "discourse/lib/array-tools";
 import deprecated from "discourse/lib/deprecated";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { trackedArray } from "discourse/lib/tracked-tools";
@@ -227,7 +228,8 @@ export default class TopicList extends RestModel {
       const result = await ajax({ url, data: this.params });
 
       // refresh dupes
-      this.topics.removeObjects(
+      removeValuesFromArray(
+        this.topics,
         this.topics.filter((topic) => topic_ids.includes(topic.id))
       );
 
