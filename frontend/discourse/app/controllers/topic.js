@@ -86,6 +86,7 @@ export default class TopicController extends Controller {
 
   @tracked multiSelect = false;
   @tracked hasScrolled = null;
+  @trackedArray bookmarks = [];
   @trackedArray selectedPostIds = [];
 
   queryParams = ["filter", "username_filters", "replies_to_post_number"];
