@@ -18,6 +18,7 @@ import { deepMerge } from "discourse/lib/object";
 import PreloadStore from "discourse/lib/preload-store";
 import { emojiUnescape } from "discourse/lib/text";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import ActionSummary from "discourse/models/action-summary";
 import Bookmark from "discourse/models/bookmark";
@@ -315,6 +316,7 @@ export default class Topic extends RestModel {
   @tracked posts_count;
   @tracked replies_to_post_number;
   @tracked suggested_topics;
+  @trackedArray pending_posts;
 
   message = null;
 

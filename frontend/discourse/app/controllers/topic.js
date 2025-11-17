@@ -23,7 +23,10 @@ import { MIN_POSTS_COUNT } from "discourse/components/topic-map/topic-map-summar
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { uniqueItemsFromArray } from "discourse/lib/array-tools";
+import {
+  removeValueFromArray,
+  uniqueItemsFromArray,
+} from "discourse/lib/array-tools";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
 import discourseComputed, { bind } from "discourse/lib/decorators";
@@ -368,7 +371,7 @@ export default class TopicController extends Controller {
       ),
     })
       .then((result) => {
-        result.post_ids.pushObject(post.get("id"));
+        result.post_ids.push(post.get("id"));
         this._updateSelectedPostIds(result.post_ids);
       })
       .finally(() => {
@@ -443,7 +446,7 @@ export default class TopicController extends Controller {
   deletePending(pending) {
     return ajax(`/review/${pending.id}`, { type: "DELETE" })
       .then(() => {
-        this.get("model.pending_posts").removeObject(pending);
+        removeValueFromArray(this.model.pending_posts, pending);
       })
       .catch(popupAjaxError);
   }
