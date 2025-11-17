@@ -91,19 +91,17 @@ export default class UserNotificationSchedule extends Component {
       })
     );
 
-    this.set("days", []);
-
-    DAYS.forEach((day, index) => {
-      this.days.pushObject(
-        Day.create({
-          id: index,
-          day,
-          model: this.model,
-          buildTimeOptions: this.buildTimeOptions,
-          startTimeOptions: this.startTimeOptions,
-        })
-      );
+    const days = DAYS.map((day, index) => {
+      Day.create({
+        id: index,
+        day,
+        model: this.model,
+        buildTimeOptions: this.buildTimeOptions,
+        startTimeOptions: this.startTimeOptions,
+      });
     });
+
+    this.set("days", days);
   }
 
   buildTimeOptions(startAt, opts = { includeNone: false, showMidnight: true }) {
