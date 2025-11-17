@@ -270,6 +270,9 @@ module DiscourseAi
                   # signal last partial output which will get parsed
                   # by best effort json parser
                   blk.call("")
+                else
+                  # got to signal the end of structured output
+                  blk.call(structured_output)
                 end
               end
               call_status = :success

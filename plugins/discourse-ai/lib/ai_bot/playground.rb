@@ -493,6 +493,7 @@ module DiscourseAi
         new_custom_prompts =
           bot.reply(context) do |partial, placeholder, type|
             next if (partial.to_s == "" && placeholder.to_s != "" && context.skip_show_thinking)
+            next if type == :structured_output && !partial.finished?
 
             if should_start_thinking?(partial:, context:, type:, started_thinking:, placeholder:)
               reply << "<details><summary>#{I18n.t("discourse_ai.ai_bot.thinking")}</summary>\n\n"

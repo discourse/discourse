@@ -136,6 +136,15 @@ module DiscourseAi
           payload[:input] = payload.delete(:messages)
           completion_tokens = payload.delete(:max_completion_tokens) || payload.delete(:max_tokens)
           payload[:max_output_tokens] = completion_tokens if completion_tokens
+          if payload[:response_format]
+            format = payload.delete(:response_format)
+            if format && format[:json_schema]
+              payload[:text] ||= {}
+              payload[:text][:format] = format[:json_schema]
+              payload[:text][:format][:type] ||= "json_schema"
+            end
+          end
+
           # not supported in responses api
           payload.delete(:stream_options)
         end

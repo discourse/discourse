@@ -61,6 +61,8 @@ module DiscourseAi::Completions
         rval = delta if !delta.empty?
       when "response.reasoning_summary_text.delta"
         rval = build_partial_reasoning_delta(json)
+      when "response.reasoning_summary_part.added"
+        rval = build_partial_reasoning_delta(json, prefix: "\n\n")
       when "response.output_item.added"
         item = json[:item]
         if item
@@ -201,12 +203,15 @@ module DiscourseAi::Completions
       @cached_tokens ||= cached_tokens
     end
 
-    def build_partial_reasoning_delta(json)
+    def build_partial_reasoning_delta(json, prefix: nil)
       return unless @output_thinking
 
       delta = json[:delta]
       context = @reasoning_contexts[json[:item_id]]
-      context[:summary] << delta.to_s if context
+      if context
+        delta = prefix + delta.to_s if prefix
+        context[:summary] << delta.to_s
+      end
 
       Thinking.new(message: delta, partial: true)
     end
