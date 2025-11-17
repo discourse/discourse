@@ -19,6 +19,10 @@ import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
+import {
+  addUniqueValueToArray,
+  removeValueFromArray,
+} from "discourse/lib/array-tools";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import {
   applyBehaviorTransformer,
@@ -116,7 +120,7 @@ export default class Item extends Component {
   @action
   onBulkSelectToggle(e) {
     if (e.target.checked) {
-      this.args.selected.addObject(this.args.topic);
+      addUniqueValueToArray(this.args.selected, this.args.topic);
 
       if (this.args.bulkSelectHelper.lastCheckedElementId && e.shiftKey) {
         const bulkSelects = [...document.querySelectorAll("input.bulk-select")];
@@ -135,7 +139,7 @@ export default class Item extends Component {
 
       this.args.bulkSelectHelper.lastCheckedElementId = e.target.id;
     } else {
-      this.args.selected.removeObject(this.args.topic);
+      removeValueFromArray(this.args.selected, this.args.topic);
       this.args.bulkSelectHelper.lastCheckedElementId = null;
     }
   }
