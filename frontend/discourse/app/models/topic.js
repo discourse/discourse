@@ -316,6 +316,7 @@ export default class Topic extends RestModel {
   @tracked posts_count;
   @tracked replies_to_post_number;
   @tracked suggested_topics;
+  @trackedArray bookmarks;
   @trackedArray pending_posts;
 
   message = null;

@@ -1546,7 +1546,7 @@ export default class TopicController extends Controller {
 
     const bookmark = this.model.bookmarks.find((b) => b.id === data.id);
     if (!bookmark) {
-      this.model.bookmarks.pushObject(Bookmark.create(data));
+      this.model.bookmarks.push(Bookmark.create(data));
     } else {
       bookmark.reminder_at = data.reminder_at;
       bookmark.name = data.name;
