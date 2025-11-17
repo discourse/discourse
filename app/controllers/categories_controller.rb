@@ -188,6 +188,8 @@ class CategoriesController < ApplicationController
       old_permissions = { "everyone" => 1 } if old_permissions.empty?
 
       if result = cat.update(category_params)
+        Category.preload_user_fields!(guardian, [cat])
+
         Scheduler::Defer.later "Log staff action change category settings" do
           @staff_action_logger.log_category_settings_change(
             @category,
@@ -272,6 +274,8 @@ class CategoriesController < ApplicationController
       .topic_create_allowed(guardian)
       .where(id: @category.id)
       .exists?
+    Category.preload_user_fields!(guardian, [@category])
+
     render_serialized(@category, CategorySerializer)
   end
 
