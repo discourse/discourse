@@ -28,7 +28,6 @@ const MORE_COLLECTION = "MORE_COLLECTION";
 @classNames("category-drop")
 @classNameBindings("noSubcategories:has-selection")
 @selectKitOptions({
-  filterable: true,
   none: "category.all",
   caretDownIcon: "caret-right",
   caretUpIcon: "caret-down",

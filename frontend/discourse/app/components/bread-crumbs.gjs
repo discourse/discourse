@@ -169,7 +169,6 @@ export default class BreadCrumbs extends Component {
               parentCategory=breadcrumb.parentCategory
               subCategory=breadcrumb.isSubcategory
               noSubcategories=breadcrumb.noSubcategories
-              autoFilterable=true
             }}
             class={{if
               breadcrumb.isSubcategory
