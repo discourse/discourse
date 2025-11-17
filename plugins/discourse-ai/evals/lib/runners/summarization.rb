@@ -37,7 +37,7 @@ module DiscourseAi
           context =
             DiscourseAi::Personas::BotContext.new(
               user: user,
-              skip_tool_details: true,
+              skip_show_thinking: true,
               feature_name: "evals/#{feature_name}",
               resource_url: "#{Discourse.base_path}/t/-/1",
               messages: strategy.as_llm_messages(content),

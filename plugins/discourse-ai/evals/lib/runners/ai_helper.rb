@@ -71,7 +71,7 @@ module DiscourseAi
           context =
             DiscourseAi::Personas::BotContext.new(
               user: user,
-              skip_tool_details: true,
+              skip_show_thinking: true,
               feature_name: "ai_helper:#{helper_mode}",
               messages: [{ type: :user, content: user_input }],
               format_dates: helper_mode == "smart_dates",
