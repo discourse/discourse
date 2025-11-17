@@ -165,11 +165,10 @@ export class Step {
 }
 
 export class Field {
-  static parse({ extra_description, show_in_sidebar, choices, ...payload }) {
+  static parse({ extra_description, choices, ...payload }) {
     return new Field({
       ...payload,
       extraDescription: extra_description,
-      showInSidebar: show_in_sidebar,
       choices: choices?.map((choice) => Choice.parse(choice)),
     });
   }
@@ -192,7 +191,6 @@ export class Field {
       "extraDescription",
       "icon",
       "disabled",
-      "showInSidebar",
       "choices",
     ]);
   }

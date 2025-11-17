@@ -77,8 +77,6 @@ class Wizard
               SeedData::Categories.with_default_locale.update(skip_changed: true)
               SeedData::Topics.with_default_locale.update(skip_changed: true)
             end
-
-            updater.refresh_required = true
           end
 
           updater.update_setting(:login_required, updater.fields[:login_required] == "private")

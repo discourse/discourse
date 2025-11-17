@@ -3,6 +3,20 @@
 $blob-bg: absolute-image-url("/branded-background.svg");
 $blob-mobile-bg: absolute-image-url("/branded-background-mobile.svg");
 
+@keyframes bump {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
 // horizon specific style
 .experimental-screen {
   .wizard & {
@@ -100,6 +114,16 @@ body.wizard {
 
   &__field {
     margin-bottom: 1em;
+  }
+
+  &__field.invalid input {
+    outline: 0;
+    border: 3px solid var(--danger);
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: bump 0.25s ease-in-out;
+      animation-iteration-count: 2;
+    }
   }
 
   &__field label {

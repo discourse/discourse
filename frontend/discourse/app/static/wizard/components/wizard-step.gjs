@@ -1,12 +1,16 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import concatClass from "discourse/helpers/concat-class";
 import emoji from "discourse/helpers/emoji";
+import getUrl from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 import WizardField from "./wizard-field";
 
 export default class WizardStepComponent extends Component {
+  @tracked hasError = false;
+
   get wizard() {
     return this.args.wizard;
   }
@@ -17,10 +21,6 @@ export default class WizardStepComponent extends Component {
 
   get id() {
     return this.step.id;
-  }
-
-  get includeSidebar() {
-    return !!this.step.fields.find((f) => f.showInSidebar);
   }
 
   get containerFontClasses() {
@@ -39,8 +39,18 @@ export default class WizardStepComponent extends Component {
 
   @action
   async jumpIn() {
-    await this.step.save();
-    this.args.goHome();
+    const valid = await this.step.validate();
+    if (!valid) {
+      this.hasError = true;
+      return;
+    }
+
+    const response = await this.step.save();
+    if (response && response.success) {
+      // We are not using Ember routing here because we always want to reload the app
+      // ensure language, site title are properly set.
+      document.location = getUrl("/");
+    }
   }
 
   <template>
