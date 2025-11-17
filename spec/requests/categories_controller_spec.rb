@@ -588,10 +588,10 @@ RSpec.describe CategoriesController do
   end
 
   describe "#find_by_slug" do
-    fab!(:category) { Fabricate(:category, name: "Test Category") }
+    fab!(:category) { Fabricate(:category, name: "Parent Category") }
 
     it "preloads user fields including has_children when category has subcategories" do
-      subcategory = Fabricate(:category, parent_category: category)
+      Fabricate(:category, parent_category: category)
       sign_in(admin)
 
       get "/c/#{category.slug}/find_by_slug.json"
@@ -616,9 +616,10 @@ RSpec.describe CategoriesController do
     it "preloads user fields for restricted categories" do
       category.set_permissions(admins: :full)
       category.save!
-      subcategory = Fabricate(:category, parent_category: category)
-      subcategory.set_permissions(admins: :full)
-      subcategory.save!
+      Fabricate(:category, parent_category: category).tap do |subcategory|
+        subcategory.set_permissions(admins: :full)
+        subcategory.save!
+      end
       sign_in(admin)
 
       get "/c/#{category.slug}/find_by_slug.json"
@@ -880,15 +881,9 @@ RSpec.describe CategoriesController do
         end
 
         it "preloads user fields including has_children" do
-          subcategory = Fabricate(:category, parent_category: category)
+          Fabricate(:category, parent_category: category)
 
-          put "/categories/#{category.id}.json",
-              params: {
-                name: "updated name",
-                color: category.color,
-                text_color: category.text_color,
-              }
-
+          put "/categories/#{category.id}.json", params: { default_list_filter: "none" }
           expect(response.status).to eq(200)
           cat_json = response.parsed_body["category"]
           expect(cat_json["has_children"]).to eq(true)
