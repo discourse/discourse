@@ -598,7 +598,7 @@ module DiscourseAi
         return false if context.skip_show_thinking
         return false if !started_thinking
         return false if partial.blank? && placeholder.blank?
-        return true if type.nil? || type == :structured_output
+        return true if type.nil? || type == :structured_output || type == :custom_raw
 
         false
       end
@@ -607,7 +607,7 @@ module DiscourseAi
         return false if context.skip_show_thinking
         return false if started_thinking
         return false if partial.blank? && placeholder.blank?
-        return false if type.nil? || type == :structured_output
+        return false if type.nil? || type == :structured_output || type == :custom_raw
 
         true
       end
