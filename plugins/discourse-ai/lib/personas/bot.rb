@@ -304,6 +304,9 @@ module DiscourseAi
           tool_details = build_placeholder(tool.summary, tool.details, custom_raw: tool.custom_raw)
           update_blk.call(tool_details, nil, :thinking)
         elsif tool.custom_raw.present?
+          # we also rendered a placeholder for custom raw. Place something generic there
+          tool_details = build_placeholder(tool.summary, tool.details, custom_raw: "")
+          update_blk.call(tool_details, nil, :thinking)
           update_blk.call(tool.custom_raw, nil, :custom_raw)
         end
 
