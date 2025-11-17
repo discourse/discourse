@@ -19,32 +19,95 @@ RSpec.describe DiscourseAi::Personas::Tools::GithubFileContent do
   before { enable_current_plugin }
 
   describe "#invoke" do
-    before do
-      stub_request(
-        :get,
-        "https://api.github.com/repos/discourse/discourse-ai/contents/lib/database/connection.rb?ref=8b382d6098fde879d28bbee68d3cbe0a193e4ffc",
-      ).to_return(
-        status: 200,
-        body: { content: Base64.encode64("content of connection.rb") }.to_json,
-      )
+    context "when fetching full files" do
+      before do
+        stub_request(
+          :get,
+          "https://api.github.com/repos/discourse/discourse-ai/contents/lib/database/connection.rb?ref=8b382d6098fde879d28bbee68d3cbe0a193e4ffc",
+        ).to_return(
+          status: 200,
+          body: { content: Base64.encode64("content of connection.rb") }.to_json,
+        )
 
-      stub_request(
-        :get,
-        "https://api.github.com/repos/discourse/discourse-ai/contents/lib/ai_bot/tools/github_pull_request_diff.rb?ref=8b382d6098fde879d28bbee68d3cbe0a193e4ffc",
-      ).to_return(
-        status: 200,
-        body: { content: Base64.encode64("content of github_pull_request_diff.rb") }.to_json,
-      )
+        stub_request(
+          :get,
+          "https://api.github.com/repos/discourse/discourse-ai/contents/lib/ai_bot/tools/github_pull_request_diff.rb?ref=8b382d6098fde879d28bbee68d3cbe0a193e4ffc",
+        ).to_return(
+          status: 200,
+          body: { content: Base64.encode64("content of github_pull_request_diff.rb") }.to_json,
+        )
+      end
+
+      it "retrieves the content of the specified GitHub files" do
+        result = tool.invoke
+        expected = {
+          file_contents:
+            "File Path: lib/database/connection.rb:\ncontent of connection.rb\nFile Path: lib/ai_bot/tools/github_pull_request_diff.rb:\ncontent of github_pull_request_diff.rb",
+        }
+
+        expect(result).to eq(expected)
+      end
     end
 
-    it "retrieves the content of the specified GitHub files" do
-      result = tool.invoke
-      expected = {
-        file_contents:
-          "File Path: lib/database/connection.rb:\ncontent of connection.rb\nFile Path: lib/ai_bot/tools/github_pull_request_diff.rb:\ncontent of github_pull_request_diff.rb",
-      }
+    context "when requesting specific line ranges" do
+      let(:range_tool) do
+        described_class.new(
+          { repo_name: "discourse/discourse-ai", file_paths: ["lib/sample.rb#L2-L3"] },
+          bot_user: nil,
+          llm: llm,
+        )
+      end
 
-      expect(result).to eq(expected)
+      before do
+        stub_request(
+          :get,
+          "https://api.github.com/repos/discourse/discourse-ai/contents/lib/sample.rb?ref=main",
+        ).to_return(
+          status: 200,
+          body: { content: Base64.encode64("line1\nline2\nline3\nline4\n") }.to_json,
+        )
+
+        stub_request(:get, "https://api.github.com/repos/discourse/discourse-ai").to_return(
+          status: 200,
+          body: { default_branch: "main" }.to_json,
+        )
+      end
+
+      it "returns only the requested lines with metadata" do
+        result = range_tool.invoke
+        expect(result[:file_contents]).to include("File Path: lib/sample.rb (lines 2-3):")
+        expect(result[:file_contents]).to include("line2\nline3")
+      end
+    end
+
+    context "when no branch is provided" do
+      let(:range_tool) do
+        described_class.new(
+          { repo_name: "discourse/discourse-ai", file_paths: ["lib/sample.rb#L2-L3"] },
+          bot_user: nil,
+          llm: llm,
+        )
+      end
+
+      before do
+        stub_request(:get, "https://api.github.com/repos/discourse/discourse-ai").to_return(
+          status: 200,
+          body: { default_branch: "testing" }.to_json,
+        )
+
+        stub_request(
+          :get,
+          "https://api.github.com/repos/discourse/discourse-ai/contents/lib/sample.rb?ref=testing",
+        ).to_return(
+          status: 200,
+          body: { content: Base64.encode64("line1\nline2\nline3\nline4\n") }.to_json,
+        )
+      end
+
+      it "uses the default branch" do
+        result = range_tool.invoke
+        expect(result[:file_contents]).to include("File Path: lib/sample.rb (lines 2-3):")
+      end
     end
   end
 
@@ -63,7 +126,8 @@ RSpec.describe DiscourseAi::Personas::Tools::GithubFileContent do
           },
           {
             name: "file_paths",
-            description: "The paths of the files to retrieve within the repository",
+            description:
+              "The file paths to retrieve. Append '#Lstart-Lend' (e.g., app/models/user.rb#L10-L25) to limit the returned lines",
             type: "array",
             item_type: "string",
             required: true,
