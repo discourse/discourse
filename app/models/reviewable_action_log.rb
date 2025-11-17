@@ -12,10 +12,7 @@ class ReviewableActionLog < ActiveRecord::Base
   belongs_to :reviewable
   belongs_to :performed_by, class_name: "User"
 
-  validates :reviewable_id, presence: true
-  validates :action_key, presence: true
-  validates :status, presence: true
-  validates :performed_by_id, presence: true
+  validates :action_key, :status, :performed_by_id, presence: true
 
   enum :status, Reviewable.statuses.dup, prefix: :status, scopes: false
 
