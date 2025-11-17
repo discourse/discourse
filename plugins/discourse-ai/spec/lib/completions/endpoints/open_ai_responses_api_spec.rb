@@ -41,7 +41,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenAi do
       data: {"type":"response.in_progress","sequence_number":1,"response":{"id":"resp_0e7bcfab8fc907240069152d0ff4cc819281594994abcec45f","object":"response","created_at":1762995472,"status":"in_progress","background":false,"error":null,"incomplete_details":null,"instructions":null,"max_output_tokens":128000,"max_tool_calls":null,"model":"gpt-5-mini-2025-08-07","output":[],"parallel_tool_calls":true,"previous_response_id":null,"prompt_cache_key":null,"prompt_cache_retention":null,"reasoning":{"effort":"low","summary":"detailed"},"safety_identifier":null,"service_tier":"auto","store":true,"temperature":1.0,"text":{"format":{"type":"text"},"verbosity":"medium"},"tool_choice":"auto","tools":[],"top_logprobs":0,"top_p":1.0,"truncation":"disabled","usage":null,"user":null,"metadata":{}}}
 
       event: response.output_item.added
-      data: {"type":"response.output_item.added","sequence_number":2,"output_index":0,"item":{"id":"rs_0e7bcfab8fc907240069152d106c1c8192b415643fda2103a5","type":"reasoning","encrypted_content":"ABC","summary":[]}}
+      data: {"type":"response.output_item.added","sequence_number":2,"output_index":0,"item":{"id":"rs_0391d4281ead19e40069142428f734819da32f5c13bd277a25","type":"reasoning","encrypted_content":"ABC","summary":[]}}
 
       event: response.reasoning_summary_part.added
 data: {"type":"response.reasoning_summary_part.added","sequence_number":3,"item_id":"rs_0391d4281ead19e40069142428f734819da32f5c13bd277a25","output_index":0,"summary_index":0,"part":{"type":"summary_text","text":""}}
@@ -53,7 +53,7 @@ data: {"type":"response.reasoning_summary_part.added","sequence_number":3,"item_
       data: {"type":"response.reasoning_summary_text.delta","sequence_number":5,"item_id":"rs_0391d4281ead19e40069142428f734819da32f5c13bd277a25","output_index":0,"summary_index":0,"delta":"ing","obfuscation":"pvmKQ7xIR"}
 
       event: response.output_item.done
-      data: {"type":"response.output_item.done","sequence_number":3,"output_index":0,"item":{"id":"rs_0e7bcfab8fc907240069152d106c1c8192b415643fda2103a5","type":"reasoning","encrypted_content": "ABC","summary":[{"type":"summary_text","text":"**Crafting"}]}}
+      data: {"type":"response.output_item.done","sequence_number":3,"output_index":0,"item":{"id":"rs_0391d4281ead19e40069142428f734819da32f5c13bd277a25","type":"reasoning","encrypted_content": "ABC","summary":[{"type":"summary_text","text":"**Crafting"}]}}
 
       event: response.output_item.added
       data: {"type":"response.output_item.added","sequence_number":4,"output_index":1,"item":{"id":"msg_0e7bcfab8fc907240069152d1173f48192a1f37340a24e4fba","type":"message","status":"in_progress","content":[],"role":"assistant"}}
@@ -97,9 +97,11 @@ data: {"type":"response.reasoning_summary_part.added","sequence_number":3,"item_
     expect(body[:reasoning][:summary]).to eq("auto")
 
     expect(partials.length).to eq(4)
+
     expect(partials[0]).to eq(
       DiscourseAi::Completions::Thinking.new(message: "**Craft", partial: true),
     )
+
     expect(partials[1]).to eq(DiscourseAi::Completions::Thinking.new(message: "ing", partial: true))
     final_thinking =
       DiscourseAi::Completions::Thinking.new(
@@ -107,7 +109,7 @@ data: {"type":"response.reasoning_summary_part.added","sequence_number":3,"item_
         partial: false,
         provider_info: {
           open_ai_responses: {
-            reasoning_id: "rs_0e7bcfab8fc907240069152d106c1c8192b415643fda2103a5",
+            reasoning_id: "rs_0391d4281ead19e40069142428f734819da32f5c13bd277a25",
             encrypted_content: "ABC",
             next_message_id: "msg_0e7bcfab8fc907240069152d1173f48192a1f37340a24e4fba",
           },
@@ -115,7 +117,7 @@ data: {"type":"response.reasoning_summary_part.added","sequence_number":3,"item_
       )
     expect(partials[2]).to eq(final_thinking)
     expect(partials[2].provider_info[:open_ai_responses]).to include(
-      reasoning_id: "rs_0e7bcfab8fc907240069152d106c1c8192b415643fda2103a5",
+      reasoning_id: "rs_0391d4281ead19e40069142428f734819da32f5c13bd277a25",
       next_message_id: "msg_0e7bcfab8fc907240069152d1173f48192a1f37340a24e4fba",
     )
     expect(partials[3]).to eq("hello")

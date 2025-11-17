@@ -17,6 +17,7 @@ module DiscourseAi::Completions
       @output_thinking = output_thinking
       @reasoning_contexts = {}
       @pending_reasonings = []
+      @has_first_summary_part = false
     end
 
     # @param json [Hash] full JSON response from responses.create / retrieve
@@ -59,10 +60,12 @@ module DiscourseAi::Completions
       when "response.output_text.delta"
         delta = json[:delta] || json["delta"]
         rval = delta if !delta.empty?
+      when "response.reasoning_summary_part.added"
+        rval = build_partial_reasoning_delta(json, prefix: "\n\n") if @has_first_summary_part
       when "response.reasoning_summary_text.delta"
         rval = build_partial_reasoning_delta(json)
-      when "response.reasoning_summary_part.added"
-        rval = build_partial_reasoning_delta(json, prefix: "\n\n")
+      when "response.reasoning_summary_part.done"
+        @has_first_summary_part = true
       when "response.output_item.added"
         item = json[:item]
         if item
