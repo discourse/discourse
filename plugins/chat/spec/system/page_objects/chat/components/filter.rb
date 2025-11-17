@@ -11,7 +11,7 @@ module PageObjects
         def available?
           filter = locator(".c-navbar__filter")
           filter.wait_for(state: "visible")
-          filter.visible
+          filter.visible?
         end
 
         def not_available?
