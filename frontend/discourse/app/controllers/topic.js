@@ -24,6 +24,7 @@ import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
+  addUniqueValueToArray,
   removeValueFromArray,
   uniqueItemsFromArray,
 } from "discourse/lib/array-tools";
@@ -1086,9 +1087,12 @@ export default class TopicController extends Controller {
   @action
   togglePostSelection(post) {
     const selected = this.selectedPostIds;
-    selected.includes(post.id)
-      ? selected.removeObject(post.id)
-      : selected.addObject(post.id);
+
+    if (selected.includes(post.id)) {
+      removeValueFromArray(selected, post.id);
+    } else {
+      addUniqueValueToArray(selected, post.id);
+    }
   }
 
   @action
