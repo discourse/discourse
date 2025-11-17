@@ -287,7 +287,7 @@ module DiscourseAi
       def invoke_tool(tool, context, &update_blk)
         show_placeholder = !context.skip_show_thinking && !tool.class.allow_partial_tool_calls?
 
-        update_blk.call("", build_placeholder(tool.summary, "")) if show_placeholder
+        update_blk.call("", build_placeholder(tool.summary, ""), :thinking) if show_placeholder
 
         result =
           tool.invoke do |progress, render_raw|
@@ -296,7 +296,7 @@ module DiscourseAi
               show_placeholder = false
             elsif show_placeholder
               placeholder = build_placeholder(tool.summary, progress)
-              update_blk.call("", placeholder)
+              update_blk.call("", placeholder, :thinking)
             end
           end
 
