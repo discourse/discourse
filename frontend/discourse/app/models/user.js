@@ -30,6 +30,7 @@ import { NotificationLevels } from "discourse/lib/notification-levels";
 import PreloadStore from "discourse/lib/preload-store";
 import singleton from "discourse/lib/singleton";
 import { emojiUnescape } from "discourse/lib/text";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import { userPath } from "discourse/lib/url";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
 import Badge from "discourse/models/badge";
@@ -218,6 +219,7 @@ export default class User extends RestModel.extend(Evented) {
   @tracked do_not_disturb_until;
   @tracked status;
   @tracked dismissed_banner_key;
+  @trackedArray sidebar_sections;
 
   @userOption("mailing_list_mode") mailing_list_mode;
   @userOption("external_links_in_new_tab") external_links_in_new_tab;
