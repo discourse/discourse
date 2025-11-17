@@ -70,12 +70,12 @@ const WrappedBlock = <template>
   <div
     class={{concatClass
       (concat @blockLayoutName "__block ")
-      (concat "block-" @block.component.blockName)
+      (concat "block-" @block.block.blockName)
       @block.customClass
     }}
   >
     {{#let
-      (curryComponent @block.component (or @block.params (hash)))
+      (curryComponent @block.block (or @block.args (hash)))
       as |BlockComponent|
     }}
       <BlockComponent />
