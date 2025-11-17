@@ -30,16 +30,20 @@ module VideoConversion
     protected
 
     def create_optimized_video_record(output_path, new_sha1, filesize, url, etag: nil)
+      options = {
+        filesize: filesize,
+        sha1: new_sha1,
+        url: url,
+        extension: "mp4",
+        adapter: adapter_name,
+      }
+      options[:etag] = etag if etag.present?
+
       OptimizedVideo.create_for(
         @upload,
         @upload.original_filename.sub(/\.[^.]+$/, "_converted.mp4"),
         @upload.user_id,
-        filesize: filesize,
-        sha1: new_sha1,
-        url: url,
-        etag: etag,
-        extension: "mp4",
-        adapter: adapter_name,
+        **options,
       )
     end
 
