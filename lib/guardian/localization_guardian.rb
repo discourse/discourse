@@ -31,4 +31,13 @@ module LocalizationGuardian
       topic_or_topic_id.is_a?(Topic) ? topic_or_topic_id : Topic.find_by(id: topic_or_topic_id)
     topic&.user_id == @user.id
   end
+
+  def can_localize_tag?(tag_or_tag_id)
+    return false if !SiteSetting.content_localization_enabled
+    return false if anonymous?
+    return false if !@user.in_any_groups?(SiteSetting.content_localization_allowed_groups_map)
+
+    tag = tag_or_tag_id.is_a?(Tag) ? tag_or_tag_id : Tag.find_by(id: tag_or_tag_id)
+    !hidden_tag_names.include?(tag.name)
+  end
 end
