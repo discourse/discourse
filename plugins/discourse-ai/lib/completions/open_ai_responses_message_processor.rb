@@ -131,8 +131,11 @@ module DiscourseAi::Completions
         encrypted_content: item[:encrypted_content],
       }.compact
 
+      summary_text = (item.dig(:summary) || []).map { |s| s[:text].to_s }.join("\n\n")
+
+      # worth considering if we return multiple Thinking objects for each summary part?
       Thinking.new(
-        message: item.dig(:summary, 0, :text).to_s,
+        message: summary_text,
         partial: false,
         provider_info: {
           PROVIDER_KEY => provider_payload,

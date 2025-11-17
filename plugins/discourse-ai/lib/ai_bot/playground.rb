@@ -492,19 +492,12 @@ module DiscourseAi
 
         new_custom_prompts =
           bot.reply(context) do |partial, placeholder, type|
-            if !context.skip_show_thinking
-              is_response = (type == nil) || (type == :structured_output)
-              is_response &&= partial.present? if started_thinking
-
-              if !is_response && !started_thinking
-                reply << "<details><summary>#{I18n.t("discourse_ai.ai_bot.thinking")}</summary>\n\n"
-                started_thinking = true
-              end
-
-              if is_response && started_thinking
-                reply << "</details>\n\n"
-                started_thinking = false
-              end
+            if should_start_thinking?(partial:, context:, type:, started_thinking:, placeholder:)
+              reply << "<details><summary>#{I18n.t("discourse_ai.ai_bot.thinking")}</summary>\n\n"
+              started_thinking = true
+            elsif should_stop_thinking?(partial:, context:, type:, started_thinking:, placeholder:)
+              reply << "</details>\n\n"
+              started_thinking = false
             end
 
             reply << partial
@@ -600,6 +593,24 @@ module DiscourseAi
       end
 
       private
+
+      def should_stop_thinking?(partial:, context:, type:, started_thinking:, placeholder:)
+        return false if context.skip_show_thinking
+        return false if !started_thinking
+        return false if partial.blank? && placeholder.blank?
+        return true if type.nil? || type == :structured_output
+
+        false
+      end
+
+      def should_start_thinking?(partial:, context:, type:, started_thinking:, placeholder:)
+        return false if context.skip_show_thinking
+        return false if started_thinking
+        return false if partial.blank? && placeholder.blank?
+        return false if type.nil? || type == :structured_output
+
+        true
+      end
 
       def available_bot_users
         @available_bots ||=

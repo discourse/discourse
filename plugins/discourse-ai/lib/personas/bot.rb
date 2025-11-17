@@ -87,7 +87,7 @@ module DiscourseAi
           allow_partial_tool_calls = persona.allow_partial_tool_calls?
           existing_tools = Set.new
           current_thinking = []
-          started_thinking = false
+          thinking_placeholder = nil
 
           result =
             current_llm.generate(
@@ -147,17 +147,19 @@ module DiscourseAi
                   Rails.logger.warn("DiscourseAi: Tool not found: #{partial.name}")
                 else
                   if partial.is_a?(DiscourseAi::Completions::Thinking)
-                    if partial.partial? && partial.message.present? && !context.skip_show_thinking
-                      update_blk.call(partial.message, nil, :thinking)
-                      started_thinking = true
+                    thinking = partial
+
+                    if thinking.partial? && thinking.message.present? && !context.skip_show_thinking
+                      thinking_placeholder ||= +""
+                      thinking_placeholder << thinking.message
+                      update_blk.call("", thinking_placeholder, :thinking)
                     end
-                    if !partial.partial?
-                      # this will be dealt with later
-                      raw_context << partial
-                      current_thinking << partial
-                      if !started_thinking && partial.message.present?
-                        update_blk.call(partial.message, nil, :thinking)
-                      end
+
+                    if !thinking.partial?
+                      raw_context << thinking
+                      current_thinking << thinking
+                      thinking_placeholder = nil
+                      update_blk.call(thinking.message, nil, :thinking) if thinking.message.present?
                     end
                   else
                     if partial.is_a?(DiscourseAi::Completions::StructuredOutput)
