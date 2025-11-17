@@ -3426,12 +3426,12 @@ class _PluginApi {
   renderBlocks(frame, blockConfig) {
     // TODO: Better validation
     const validateBlock = (block) => {
-      if (!block.component) {
+      if (!block.block) {
         throw new Error(`Block in layout ${name} is missing a component`);
       }
-      if (!isBlock(block.component)) {
+      if (!isBlock(block.block)) {
         throw new Error(
-          `Block component ${block.name} (${block.component}) in layout ${frame} is not a valid block`
+          `Block component ${block.name} (${block.block}) in layout ${frame} is not a valid block`
         );
       }
     };
