@@ -219,6 +219,7 @@ export default class User extends RestModel.extend(Evented) {
   @tracked do_not_disturb_until;
   @tracked status;
   @tracked dismissed_banner_key;
+  @trackedArray associated_accounts;
   @trackedArray ignored_usernames;
   @trackedArray sidebar_sections;
 

@@ -5,6 +5,7 @@ import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import UserStatusModal from "discourse/components/modal/user-status";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
@@ -251,7 +252,7 @@ export default class AccountController extends Controller {
       .revokeAssociatedAccount(account.name)
       .then((result) => {
         if (result.success) {
-          this.model.associated_accounts.removeObject(account);
+          removeValueFromArray(this.model.associated_accounts, account);
         } else {
           this.dialog.alert(result.message);
         }
