@@ -5526,24 +5526,16 @@ en:
   wizard:
     title: "Discourse Setup"
     step:
-      introduction:
-        title: "About your site"
-        description: "These will be shown on your login and any public pages. You can always change them later."
+      setup:
+        title: "Getting started"
+        description: "Let's get your community set up with the basics. You can always change these later."
 
         fields:
           title:
             label: "Community name"
-            placeholder: "Jane’s Hangout"
-          site_description:
-            label: "Describe your community in a sentence"
-            placeholder: "A place for Jane and her friends to discuss cool stuff"
+            placeholder: "Jane's Hangout"
           default_locale:
             label: "Language"
-
-      privacy:
-        title: "Member access"
-
-        fields:
           login_required:
             label: "Visibility"
             description: "Is your community public or private?"
@@ -5567,13 +5559,6 @@ en:
                 label: "No, new members can join immediately"
               "yes":
                 label: "Yes, new members must be approved by moderators"
-          chat_enabled:
-            placeholder: "Enable chat"
-            extra_description: "Engage with your members in real time"
-
-      ready:
-        title: "Your site is ready!"
-        description: "That's it! You've done the basics to setup your community. Now you can jump in and have a look around, write a welcome topic, and send invites!<br><br>Have fun!"
 
       styling:
         title: "Look and feel"
