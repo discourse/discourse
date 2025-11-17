@@ -409,11 +409,15 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
 
       it "returns false and logs error" do
         adapter.handle_completion(job_id, new_sha1)
-        expect(Discourse).to have_received(:warn_exception).with(
-          error,
-          message: "Error in video processing completion",
-          env: hash_including(upload_id: upload.id, job_id: job_id, temp_path: temp_path),
-        )
+        expect(Discourse).to have_received(:warn_exception) do |exception, options|
+          expect(exception).to eq(error)
+          expect(options[:message]).to eq("Error in video processing completion")
+          expect(options[:env][:upload_id]).to eq(upload.id)
+          expect(options[:env][:job_id]).to eq(job_id)
+          expect(options[:env][:temp_path]).to eq(temp_path)
+          expect(options[:env][:error_class]).to eq("StandardError")
+          expect(options[:env][:error_message]).to eq("Copy failed")
+        end
         expect(adapter.handle_completion(job_id, new_sha1)).to be false
       end
     end
