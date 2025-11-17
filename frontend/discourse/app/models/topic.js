@@ -7,6 +7,7 @@ import { Promise } from "rsvp";
 import { resolveShareUrl } from "discourse/helpers/share-url";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { removeValuesFromArray } from "discourse/lib/array-tools";
 import { fmt, propertyEqual } from "discourse/lib/computed";
 import { TOPIC_VISIBILITY_REASONS } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
@@ -816,7 +817,7 @@ export default class Topic extends RestModel {
     if (!json.view_hidden) {
       this.details.updateFromJson(json.details);
 
-      keys.removeObjects(["details", "post_stream"]);
+      removeValuesFromArray(keys, ["details", "post_stream"]);
 
       if (json.published_page) {
         this.set(
