@@ -3,9 +3,13 @@ import { action } from "@ember/object";
 import { observes } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import discourseComputed, { debounce } from "discourse/lib/decorators";
+import { trackedArray } from "discourse/lib/tracked-tools";
 
 export default class GroupIndexController extends Controller {
+  @trackedArray bulkSelection = null;
+
   queryParams = ["order", "asc", "filter"];
   order = null;
   asc = true;
@@ -14,7 +18,6 @@ export default class GroupIndexController extends Controller {
   loading = false;
   isBulk = false;
   showActions = false;
-  bulkSelection = null;
 
   get hasMembers() {
     return this.model.members?.length > 0;
@@ -235,9 +238,9 @@ export default class GroupIndexController extends Controller {
     this.set("bulkSelection", this.bulkSelection || []);
 
     if (e.target.checked) {
-      this.bulkSelection.pushObject(member);
+      this.bulkSelection.push(member);
     } else {
-      this.bulkSelection.removeObject(member);
+      removeValueFromArray(this.bulkSelection, member);
     }
   }
 
