@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
@@ -324,7 +325,7 @@ export default class Site extends RestModel {
     const categories = this.categories;
     const existingCategory = categories.find((c) => c.id === id);
     if (existingCategory) {
-      categories.removeObject(existingCategory);
+      removeValueFromArray(categories, existingCategory);
     }
   }
 
@@ -350,7 +351,7 @@ export default class Site extends RestModel {
     } else {
       // TODO insert in right order?
       newCategory = this.store.createRecord("category", newCategory);
-      categories.pushObject(newCategory);
+      categories.push(newCategory);
       return newCategory;
     }
   }
