@@ -239,25 +239,6 @@ class AiTool < ActiveRecord::Base
         category: "image_generation",
       },
       {
-        preset_id: "image_generation_adobe",
-        name: "Adobe Firefly",
-        provider: "Adobe",
-        model_name: "Firefly",
-        tool_name: "image_generation_adobe",
-        description: "Generate images using Adobe Firefly",
-        parameters: [
-          {
-            name: "prompt",
-            type: "string",
-            required: true,
-            description: "The text prompt for image generation",
-          },
-        ],
-        script: "#{preamble}\n#{load_script("presets/image_generation/adobe.js")}",
-        summary: "Generate images with Adobe Firefly",
-        category: "image_generation",
-      },
-      {
         preset_id: "image_generation_flux",
         name: "FLUX",
         provider: "Together.ai",

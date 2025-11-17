@@ -28,7 +28,6 @@ describe "AI Tool List Editor Dropdown", type: :system do
 
     expect(page).to have_css(".ai-tool-preset-item[data-option='image_generation_openai']")
     expect(page).to have_css(".ai-tool-preset-item[data-option='image_generation_gemini']")
-    expect(page).to have_css(".ai-tool-preset-item[data-option='image_generation_adobe']")
     expect(page).to have_css(".ai-tool-preset-item[data-option='image_generation_flux']")
     expect(page).to have_css(".btn[data-option='image_generation_custom']")
 

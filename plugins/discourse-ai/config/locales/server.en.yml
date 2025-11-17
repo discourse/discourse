@@ -281,8 +281,6 @@ en:
           name: "OpenAI"
         image_generation_gemini:
           name: "Nano Banana"
-        image_generation_adobe:
-          name: "Adobe Firefly"
         image_generation_flux:
           name: "FLUX"
         empty_tool:
