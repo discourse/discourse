@@ -68,7 +68,7 @@ class Demon::Sidekiq < ::Demon::Base
     @@last_sidekiq_rss_memory_check = Time.now.to_i
   end
 
-  DEFAULT_MAX_ALLOWED_SIDEKIQ_RSS_MEGABYTES = 500
+  DEFAULT_MAX_ALLOWED_SIDEKIQ_RSS_MEGABYTES = Rails.env.devlopment? ? 1000 : 500
 
   def self.max_allowed_sidekiq_rss_bytes
     [ENV["UNICORN_SIDEKIQ_MAX_RSS"].to_i, DEFAULT_MAX_ALLOWED_SIDEKIQ_RSS_MEGABYTES].max.megabytes
