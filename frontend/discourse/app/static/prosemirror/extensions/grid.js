@@ -32,11 +32,10 @@ class GridNodeView {
   @bind
   iconClickHandler() {
     const pos = this.getPos();
-    const tr = this.view.state.tr.replaceWith(
-      pos,
-      pos + this.node.nodeSize,
-      this.node.content
-    );
+    const currentNode = this.view.state.doc.nodeAt(pos);
+    const tr = this.view.state.tr;
+
+    tr.replaceWith(pos, pos + currentNode.nodeSize, currentNode.content);
     this.view.dispatch(tr);
   }
 
