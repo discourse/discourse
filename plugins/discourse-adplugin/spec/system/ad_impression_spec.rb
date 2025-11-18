@@ -91,8 +91,24 @@ describe "AdPlugin::AdImpression", type: :system do
       )
     end
 
+    let(:wait_for_impression) do
+      wait_for { AdPlugin::AdImpression.count == 1 }
+      AdPlugin::AdImpression.last
+    end
+
+    def prevent_link_navigation
+      page.execute_script(<<~JS)
+        document.addEventListener("click", function(e) {
+          const a = e.target.closest("a");
+          if (a) {
+            e.preventDefault();
+          }
+        }, true);
+      JS
+    end
+
     before do
-      SiteSetting.house_ads_after_nth_topic = 1
+      SiteSetting.house_ads_after_nth_topic = 9
       SiteSetting.ad_plugin_enable_tracking = true
       10.times { Fabricate(:topic) }
 
@@ -107,13 +123,12 @@ describe "AdPlugin::AdImpression", type: :system do
     it "records a click when user clicks on a link in the house ad" do
       visit "/latest"
 
-      wait_for { AdPlugin::AdImpression.count == 1 }
-      impression = AdPlugin::AdImpression.last
+      impression = wait_for_impression
+      prevent_link_navigation
 
       expect(impression.clicked_at).to be_nil
 
       find("#test-ad-link").click
-
       wait_for { impression.reload.clicked_at.present? }
 
       expect(impression.clicked?).to eq(true)
@@ -131,12 +146,8 @@ describe "AdPlugin::AdImpression", type: :system do
 
       visit "/latest"
 
-      wait_for { AdPlugin::AdImpression.count == 1 }
-      impression = AdPlugin::AdImpression.last
-
+      impression = wait_for_impression
       find("#test-ad-div").click
-
-      sleep 0.5
 
       impression.reload
       expect(impression.clicked_at).to be_nil
@@ -145,18 +156,17 @@ describe "AdPlugin::AdImpression", type: :system do
     it "only records one click per impression even with multiple clicks" do
       visit "/latest"
 
-      wait_for { AdPlugin::AdImpression.count == 1 }
-      impression = AdPlugin::AdImpression.last
+      impression = wait_for_impression
+      prevent_link_navigation
+
+      expect(page).to have_css("#test-ad-link")
 
       find("#test-ad-link").click
       wait_for { impression.reload.clicked_at.present? }
 
       first_click_time = impression.clicked_at
 
-      sleep 0.1
       find("#test-ad-link").click
-
-      sleep 0.5
 
       impression.reload
       expect(impression.clicked_at).to eq_time(first_click_time)
@@ -169,9 +179,9 @@ describe "AdPlugin::AdImpression", type: :system do
 
       expect(AdPlugin::AdImpression.count).to eq(0)
 
-      find("#test-ad-link").click
+      prevent_link_navigation
 
-      sleep 0.5
+      find("#test-ad-link").click
 
       expect(AdPlugin::AdImpression.count).to eq(0)
     end

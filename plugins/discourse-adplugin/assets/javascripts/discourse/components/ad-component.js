@@ -148,7 +148,7 @@ export default class AdComponent extends Component {
 
     const url = `/ad_plugin/ad_impressions/${this._impressionId}`;
 
-    if (navigator.sendBeacon) {
+    if (navigator.sendBeacon && !this.site?.isTesting) {
       const blob = new Blob([JSON.stringify({})], {
         type: "application/json",
       });

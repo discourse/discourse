@@ -21,10 +21,8 @@ module AdPlugin
     validate :house_ad_id_consistency
 
     def record_click!
-      puts "record click"
       return false if clicked?
 
-      puts "update click"
       update(clicked_at: Time.zone.now)
     end
 
