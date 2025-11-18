@@ -18,11 +18,13 @@ end
 #  action_key      :string           not null
 #  status          :integer          not null
 #  performed_by_id :integer          not null
+#  bundle          :string           not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #
 # Indexes
 #
+#  index_reviewable_action_logs_on_bundle           (bundle)
 #  index_reviewable_action_logs_on_performed_by_id  (performed_by_id)
 #  index_reviewable_action_logs_on_reviewable_id    (reviewable_id)
 #
