@@ -91,15 +91,15 @@ export default class UserNotificationSchedule extends Component {
       })
     );
 
-    const days = DAYS.map((day, index) => {
+    const days = DAYS.map((day, index) =>
       Day.create({
         id: index,
         day,
         model: this.model,
         buildTimeOptions: this.buildTimeOptions,
         startTimeOptions: this.startTimeOptions,
-      });
-    });
+      })
+    );
 
     this.set("days", days);
   }
