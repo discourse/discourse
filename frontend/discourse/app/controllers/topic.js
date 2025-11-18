@@ -1644,22 +1644,12 @@ export default class TopicController extends Controller {
       : undefined;
   }
 
-  @discourseComputed(
-    "selectedPostsCount",
-    "model.postStream.isMegaTopic",
-    "model.postStream.stream.length",
-    "model.posts_count"
-  )
-  selectedAllPosts(
-    selectedPostsCount,
-    isMegaTopic,
-    postsCount,
-    topicPostsCount
-  ) {
-    if (isMegaTopic) {
-      return selectedPostsCount >= topicPostsCount;
+  @dependentKeyCompat
+  get selectedAllPosts() {
+    if (this.model.postStream.isMegaTopic) {
+      return this.selectedPostsCount >= this.model.posts_count;
     } else {
-      return selectedPostsCount >= postsCount;
+      return this.selectedPostsCount >= this.model.postStream.stream.length;
     }
   }
 
