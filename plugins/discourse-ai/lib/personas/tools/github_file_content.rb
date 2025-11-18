@@ -58,7 +58,12 @@ module DiscourseAi
         end
 
         def invoke
-          owner, repo = repo_name.split("/")
+          owner, repo = repo_name.to_s.split("/")
+
+          if owner.blank? || repo.blank?
+            return { error: "Invalid repo_name format. Expected 'owner/repo'." }
+          end
+
           ref = branch || default_branch
           retrieved_entries = []
           missing_files = []
