@@ -18,6 +18,14 @@ RSpec.describe "Chat channel search - drawer", type: :system do
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
 
+  context "when navigating on chat channels" do
+    it "shows a button for chat search" do
+      drawer_page.visit_index
+
+      expect(page).to have_selector(".chat-channel-search-btn")
+    end
+  end
+
   context "when searching for messages" do
     it "shows search results and allows navigation" do
       message_1 =
