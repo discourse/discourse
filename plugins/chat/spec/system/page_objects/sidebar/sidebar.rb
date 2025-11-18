@@ -2,7 +2,7 @@
 
 module PageObjects
   module Pages
-    class Sidebar < PageObjects::Pages::Base
+    class ChatSidebar < PageObjects::Pages::Base
       PUBLIC_CHANNELS_SECTION_SELECTOR = ".sidebar-section[data-section-name='chat-channels']"
       DM_CHANNELS_SECTION_SELECTOR = ".sidebar-section[data-section-name='chat-dms']"
 
@@ -40,7 +40,13 @@ module PageObjects
         first_level_hover_menu =
           PageObjects::Components::DMenu.new(
             "#{channel_section_link_selector(channel)} .sidebar-section-hover-button",
-            "chat-channel-menu",
+            (
+              if channel.direct_message_channel?
+                "chat-direct-message-channel-menu"
+              else
+                "chat-channel-menu"
+              end
+            ),
           )
         first_level_hover_menu.expand
         first_level_hover_menu
@@ -49,6 +55,10 @@ module PageObjects
       def find_channel(channel)
         find(".sidebar-section-link.channel-#{channel.id}")
         self
+      end
+
+      def has_no_channel?(channel)
+        has_no_css?(".sidebar-row.channel-#{channel.id}")
       end
 
       def has_user_threads_section?

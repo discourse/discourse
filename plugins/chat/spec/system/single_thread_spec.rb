@@ -8,7 +8,7 @@ describe "Single thread in side panel", type: :system do
   let(:side_panel) { PageObjects::Pages::ChatSidePanel.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
   let(:chat_drawer_page) { PageObjects::Pages::ChatDrawer.new }
-  let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
+  let(:sidebar_page) { PageObjects::Pages::ChatSidebar.new }
 
   before do
     chat_system_bootstrap(current_user, [channel])

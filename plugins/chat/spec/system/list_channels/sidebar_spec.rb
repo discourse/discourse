@@ -6,6 +6,7 @@ RSpec.describe "List channels | sidebar", type: :system do
   let(:chat) { PageObjects::Pages::Chat.new }
   let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
   let(:chat_sidebar) { PageObjects::Components::Chat::Sidebar.new }
+  let(:chat_sidebar_page) { PageObjects::Pages::ChatSidebar.new }
 
   before do
     chat_system_bootstrap
@@ -186,11 +187,8 @@ RSpec.describe "List channels | sidebar", type: :system do
 
       it "removes it from the sidebar" do
         visit("/")
-
-        find(".sidebar-row.channel-#{dm_channel_1.id}").hover
-        find(".sidebar-row.channel-#{dm_channel_1.id} .sidebar-section-hover-button").click
-
-        expect(page).to have_no_selector(".sidebar-row.channel-#{dm_channel_1.id}")
+        chat_sidebar_page.remove_channel(dm_channel_1)
+        expect(chat_sidebar_page).to have_no_channel(dm_channel_1)
       end
     end
   end

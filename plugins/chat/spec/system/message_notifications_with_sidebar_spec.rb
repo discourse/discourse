@@ -6,7 +6,7 @@ RSpec.describe "Message notifications - with sidebar", type: :system do
   let!(:chat_page) { PageObjects::Pages::Chat.new }
   let!(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let!(:thread_page) { PageObjects::Pages::ChatThread.new }
-  let!(:sidebar) { PageObjects::Pages::Sidebar.new }
+  let!(:sidebar) { PageObjects::Pages::ChatSidebar.new }
 
   before do
     SiteSetting.navigation_menu = "sidebar"

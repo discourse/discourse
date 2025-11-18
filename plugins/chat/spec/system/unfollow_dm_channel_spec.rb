@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
-RSpec.describe "Unfollow dm channel", type: :system do
+RSpec.describe "Unfollow DM channel", type: :system do
   fab!(:current_user, :user)
   fab!(:other_user, :user)
   fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user, other_user]) }
 
   let!(:chat_page) { PageObjects::Pages::Chat.new }
   let!(:channel_page) { PageObjects::Pages::ChatChannel.new }
+  let(:chat_sidebar_page) { PageObjects::Pages::ChatSidebar.new }
 
   before do
     SiteSetting.navigation_menu = "sidebar"
@@ -17,10 +18,8 @@ RSpec.describe "Unfollow dm channel", type: :system do
   context "when receiving a message after unfollowing" do
     it "correctly shows the channel" do
       visit("/")
-      find(".channel-#{dm_channel_1.id}").hover
-      find(".channel-#{dm_channel_1.id} .sidebar-section-link-hover").click
-
-      expect(page).to have_no_css(".channel-#{dm_channel_1.id}")
+      chat_sidebar_page.remove_channel(dm_channel_1)
+      expect(chat_sidebar_page).to have_no_channel(dm_channel_1)
 
       using_session(:user_1) do
         text = "this is fine"

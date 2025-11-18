@@ -126,6 +126,8 @@ class ChatChannelSidebarMenuNotificationSubmenu extends Component {
 export default class ChatChannelSidebarLinkMenu extends Component {
   @service chatApi;
   @service menu;
+  @service router;
+  @service chatChannelsManager;
 
   get channel() {
     return this.args.data.channel;
@@ -136,13 +138,24 @@ export default class ChatChannelSidebarLinkMenu extends Component {
   }
 
   @action
-  leaveChannel() {
+  async leaveChannel() {
     try {
-      this.chatApi.leaveChannel(this.args.data.channel.id);
+      await this.chatApi.leaveChannel(this.args.data.channel.id);
     } catch (err) {
       popupAjaxError(err);
     }
     this.args.close();
+
+    this.chatChannelsManager.remove(this.args.data.channel);
+
+    if (
+      this.chatChannelsManager.publicMessageChannels.length ||
+      this.chatChannelsManager.directMessageChannels.length
+    ) {
+      return this.router.transitionTo("chat");
+    } else {
+      return this.router.transitionTo("chat.browse");
+    }
   }
 
   @action

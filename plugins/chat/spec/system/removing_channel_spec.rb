@@ -4,7 +4,7 @@ RSpec.describe "Removing channel", type: :system do
   fab!(:current_user, :user)
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
-  let(:chat_sidebar_page) { PageObjects::Pages::Sidebar.new }
+  let(:chat_sidebar_page) { PageObjects::Pages::ChatSidebar.new }
 
   before do
     chat_system_bootstrap
@@ -31,6 +31,7 @@ RSpec.describe "Removing channel", type: :system do
     end
 
     it "can remove the channel and redirect to another followed channel" do
+      current_user.upsert_custom_fields(::Chat::LAST_CHAT_CHANNEL_ID => channel_2.id)
       chat_page.visit_channel(channel_1)
       chat_sidebar_page.remove_channel(channel_1)
 

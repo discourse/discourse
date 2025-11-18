@@ -6,7 +6,7 @@ RSpec.describe "User threads", type: :system do
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
-  let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
+  let(:sidebar_page) { PageObjects::Pages::ChatSidebar.new }
   let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:user_threads_page) { PageObjects::Pages::UserThreads.new }
