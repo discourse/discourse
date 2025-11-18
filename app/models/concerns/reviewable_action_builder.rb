@@ -246,17 +246,13 @@ module ReviewableActionBuilder
   #
   # @return [Symbol] The calculated final status (:ignored, :rejected, :approved, or :pending)
   def calculate_final_status_from_logs
-    statuses = reviewable_action_logs.pluck(:status).uniq
+    statuses = reviewable_action_logs.distinct(:bundle).pluck(:status)
 
     return :pending if statuses.empty?
 
-    ignored_value = Reviewable.statuses["ignored"]
-    rejected_value = Reviewable.statuses["rejected"]
-    approved_value = Reviewable.statuses["approved"]
-
-    return :ignored if statuses.all? { |s| s == "ignored" || s == ignored_value }
-    return :rejected if statuses.all? { |s| s == "rejected" || s == rejected_value }
-    return :approved if statuses.any? { |s| s == "approved" || s == approved_value }
+    return :ignored if statuses.all? { |s| s == Reviewable.statuses["ignored"] }
+    return :rejected if statuses.all? { |s| s == Reviewable.statuses["rejected"] }
+    return :approved if statuses.any? { |s| s == Reviewable.statuses["approved"] }
 
     :pending
   end
@@ -271,7 +267,7 @@ module ReviewableActionBuilder
     actions = actions_for(guardian, args)
     # Extract bundle types from bundle IDs (e.g., "8311-post-actions" -> "post-actions")
     current_bundle_types = actions.bundles.map { |b| b.id.split("-", 2).last }
-    logged_bundle_types = reviewable_action_logs.pluck(:bundle).uniq.compact
+    logged_bundle_types = reviewable_action_logs.distinct(:bundle).pluck(:bundle).compact
 
     # Check if at least one action from each bundle type has been logged
     current_bundle_types.all? { |type| logged_bundle_types.include?(type) }
