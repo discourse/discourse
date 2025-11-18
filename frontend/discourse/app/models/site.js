@@ -88,7 +88,7 @@ export default class Site extends RestModel {
   @service currentUser;
   @service capabilities;
 
-  @trackedArray categories;
+  @trackedArray categories = [];
 
   @alias("is_readonly") isReadOnly;
 
@@ -101,7 +101,6 @@ export default class Site extends RestModel {
     super.init(...arguments);
 
     this.topicCountDesc = ["topic_count:desc"];
-    this.categories = this.categories || [];
   }
 
   @dependentKeyCompat
@@ -230,11 +229,9 @@ export default class Site extends RestModel {
     return enabled;
   }
 
-  @computed("categories.[]")
+  @dependentKeyCompat
   get categoriesById() {
-    const map = new Map();
-    this.categories.forEach((c) => map.set(c.id, c));
-    return map;
+    return new Map(this.categories.map((c) => [c.id, c]));
   }
 
   @computed("categories.@each.parent_category_id")
