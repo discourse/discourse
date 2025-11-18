@@ -4,7 +4,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
   attr_reader :excerpt
 
   CUSTOM_EXCERPT_REGEX = /<\s*(span|div)[^>]*class\s*=\s*['"]excerpt['"][^>]*>/
-  IMAGE_MODES = [%i[strip_images strip], %i[markdown_images markdown]].freeze
+  IMAGE_MODES = [%i[strip_images strip], %i[markdown_images markdown], %i[keep_images keep]].freeze
 
   def initialize(length, options = nil)
     @length = length
@@ -30,7 +30,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     IMAGE_MODES.each { |key, mode| return mode if options[key] }
   end
 
-  def self.get_excerpt(html, length, options)
+  def self.get_excerpt(html, length, options = {})
     return "" if html.blank?
 
     length = html.length if html.include?("excerpt") && CUSTOM_EXCERPT_REGEX === html
@@ -81,8 +81,9 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
         end
       end
 
-      unless @image_mode == :strip
-        # If include_images is set, include the image in markdown
+      return include_tag(name, attributes) if @image_mode == :keep
+
+      if @image_mode != :strip
         characters("!") if @image_mode == :markdown
 
         if attributes["alt"].present?
@@ -90,7 +91,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
         elsif attributes["title"].present?
           characters("[#{attributes["title"]}]")
         else
-          characters("[#{I18n.t "excerpt_image"}]")
+          characters("[#{I18n.t("excerpt_image")}]")
         end
 
         characters("(#{attributes["src"]})") if @image_mode == :markdown
