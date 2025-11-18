@@ -7,13 +7,16 @@ require_relative "structured_logger"
 module DiscourseAi
   module Evals
     class Recorder
-      def self.with_cassette(an_eval, output: $stdout)
+      def self.with_cassette(an_eval, persona_key: nil, output: $stdout)
         logs_dir = File.join(__dir__, "../log")
         FileUtils.mkdir_p(logs_dir)
 
         now = Time.now.strftime("%Y%m%d-%H%M%S")
-        structured_log_filename = "#{an_eval.id}-#{now}.json"
-        log_filename = "#{an_eval.id}-#{now}.log"
+        normalized_key = normalize_persona_key(persona_key)
+        persona_segment = sanitized_persona_key(normalized_key)
+        base_filename = [an_eval.id, persona_segment, now].compact.join("-")
+        structured_log_filename = "#{base_filename}.json"
+        log_filename = "#{base_filename}.log"
 
         log_path = File.expand_path(File.join(logs_dir, log_filename))
         structured_log_path = File.expand_path(File.join(logs_dir, structured_log_filename))
@@ -21,23 +24,33 @@ module DiscourseAi
         logger = Logger.new(File.open(log_path, "a"))
         structured_logger = StructuredLogger.new(structured_log_path)
 
-        new(an_eval, logger, log_path, structured_logger, output: output).tap do |recorder|
-          recorder.running
-        end
+        new(
+          an_eval,
+          logger,
+          log_path,
+          structured_logger,
+          persona_key: normalized_key,
+          output: output,
+        ).tap { |recorder| recorder.running }
       end
 
-      def initialize(an_eval, logger, log_path, structured_logger, output: $stdout)
+      def initialize(an_eval, logger, log_path, structured_logger, persona_key:, output: $stdout)
         @an_eval = an_eval
         @logger = logger
         @log_path = log_path
         @structured_logger = structured_logger
         @output = output
+        normalized = persona_key.to_s.strip
+        @persona_key = normalized.empty? ? "default" : normalized
       end
 
       def running
         attach_thread_loggers
-        logger.info("Starting evaluation '#{an_eval.id}'")
-        structured_logger.start_root(name: "Evaluating #{an_eval.id}", args: an_eval.to_json)
+        logger.info("Starting evaluation '#{an_eval.id}' (persona: #{persona_key})")
+        structured_logger.start_root(
+          name: "Evaluating #{an_eval.id} (persona: #{persona_key})",
+          args: an_eval.to_json.merge(persona_key: persona_key),
+        )
       end
 
       def record_llm_skip(llm_name, reason)
@@ -105,7 +118,21 @@ module DiscourseAi
 
       private
 
-      attr_reader :an_eval, :logger, :structured_logger, :output, :log_path
+      attr_reader :an_eval, :logger, :structured_logger, :output, :log_path, :persona_key
+
+      def self.normalize_persona_key(key)
+        stripped = key.to_s.strip
+        stripped = "default" if stripped.empty?
+        stripped
+      end
+
+      def self.sanitized_persona_key(key)
+        stripped = key.to_s.strip
+        stripped = "default" if stripped.empty?
+
+        slug = stripped.gsub(/[^a-zA-Z0-9]+/, "-").gsub(/-+/, "-").gsub(/^-|-$/, "")
+        slug.empty? ? "default" : slug.downcase
+      end
 
       def attach_thread_loggers
         @previous_thread_loggers = {

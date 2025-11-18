@@ -6,13 +6,21 @@ require_relative "../../evals/lib/eval"
 
 RSpec.describe DiscourseAi::Evals::Recorder do
   subject(:recorder) do
-    described_class.new(eval_case, logger, "/tmp/example.json", structured_logger, output: output)
+    described_class.new(
+      eval_case,
+      logger,
+      "/tmp/example.json",
+      structured_logger,
+      persona_key: persona_key,
+      output: output,
+    )
   end
 
   let(:eval_case) do
     instance_double("DiscourseAi::Evals::Eval", id: "example-eval", to_json: { foo: "bar" })
   end
   let(:logger) { instance_double(Logger, info: nil, error: nil) }
+  let(:persona_key) { "default" }
   let(:structured_logger) do
     instance_double(
       DiscourseAi::Evals::StructuredLogger,
@@ -39,12 +47,15 @@ RSpec.describe DiscourseAi::Evals::Recorder do
       recorder.running
 
       expect(structured_logger).to have_received(:start_root).with(
-        name: "Evaluating example-eval",
+        name: "Evaluating example-eval (persona: default)",
         args: {
           foo: "bar",
+          persona_key: "default",
         },
       )
-      expect(logger).to have_received(:info).with("Starting evaluation 'example-eval'")
+      expect(logger).to have_received(:info).with(
+        "Starting evaluation 'example-eval' (persona: default)",
+      )
     end
   end
 

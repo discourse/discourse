@@ -37,6 +37,16 @@ module DiscourseAi
         feature_keys.include?(key)
       end
 
+      def validate_feature!(feature_key)
+        return if feature_key.blank?
+        return if valid_feature_key?(feature_key)
+
+        STDERR.puts(
+          "Unknown feature '#{feature_key}'. Run with --list-features to view valid keys.",
+        )
+        exit 1
+      end
+
       private
 
       attr_reader :modules, :output
