@@ -241,6 +241,101 @@ module ReviewableActionBuilder
     create_result(:success, :rejected, [created_by_id], false)
   end
 
+  # Calculate the final reviewable status based on the action logs. This method
+  # assumes that all_bundles_actioned? has already returned true.
+  #
+  # @return [Symbol] The calculated final status (:ignored, :rejected, :approved, or :pending)
+  def calculate_final_status_from_logs
+    statuses = reviewable_action_logs.pluck(:status).uniq
+
+    return :pending if statuses.empty?
+
+    ignored_value = Reviewable.statuses["ignored"]
+    rejected_value = Reviewable.statuses["rejected"]
+    approved_value = Reviewable.statuses["approved"]
+
+    return :ignored if statuses.all? { |s| s == "ignored" || s == ignored_value }
+    return :rejected if statuses.all? { |s| s == "rejected" || s == rejected_value }
+    return :approved if statuses.any? { |s| s == "approved" || s == approved_value }
+
+    :pending
+  end
+
+  # Check if all action bundles have been addressed with at least one action.
+  #
+  # @param guardian [Guardian] The guardian to check permissions for.
+  # @param args [Hash] Additional arguments for building actions.
+  #
+  # @return [Boolean] True if all bundles have at least one logged action.
+  def all_bundles_actioned?(guardian, args = {})
+    actions = actions_for(guardian, args)
+    # Extract bundle types from bundle IDs (e.g., "8311-post-actions" -> "post-actions")
+    current_bundle_types = actions.bundles.map { |b| b.id.split("-", 2).last }
+    logged_bundle_types = reviewable_action_logs.pluck(:bundle).uniq.compact
+
+    # Check if at least one action from each bundle type has been logged
+    current_bundle_types.all? { |type| logged_bundle_types.include?(type) }
+  end
+
+  # Override the Reviewable#perform method to add action logging, and to handle deferred finalization
+  # when using the new reviewable UI refresh.
+  #
+  # @param performed_by [User] The user performing the action.
+  # @param action_id [Symbol] The action being performed.
+  # @param args [Hash] Additional arguments for the action.
+  #
+  # @return [Reviewable::PerformResult] The result of the action.
+  def perform(performed_by, action_id, args = nil)
+    args ||= {}
+    guardian = args[:guardian] || Guardian.new(performed_by)
+    use_deferred_transitions =
+      guardian.can_see_reviewable_ui_refresh? && !SiteSetting.reviewable_old_moderator_actions
+
+    # Find which bundle this action belongs to BEFORE executing
+    # (actions may change after execution, e.g., hide_post -> unhide_post)
+    actions = actions_for(guardian, args)
+    bundle_type = nil
+    actions.bundles.each do |bundle|
+      if bundle.actions.any? { |a| a.server_action.to_s == action_id.to_s }
+        # Extract bundle type from bundle ID (e.g., "8311-post-actions" -> "post-actions")
+        bundle_type = bundle.id.split("-", 2).last
+        break
+      end
+    end
+
+    # For old UI actions that aren't in the new separated bundles, use a default bundle
+    bundle_type ||= "legacy-actions"
+
+    # Execute the action but skip automatic finalization if using deferred transitions
+    args_for_super = args.dup
+    args_for_super[:skip_finalization] = true if use_deferred_transitions
+    result = super(performed_by, action_id, args_for_super)
+
+    if result.success? && result.transition_to
+      reviewable_action_logs.create!(
+        action_key: action_id.to_s,
+        status: result.transition_to,
+        performed_by: performed_by,
+        bundle: bundle_type,
+      )
+    end
+
+    if use_deferred_transitions
+      if all_bundles_actioned?(guardian, args)
+        finalize_perform_result(
+          result,
+          performed_by,
+          guardian,
+          transition_to_status: calculate_final_status_from_logs,
+        )
+      end
+    else
+      finalize_perform_result(result, performed_by, guardian) unless args[:skip_finalization]
+    end
+
+    result
+  end
+
   private
 
   # Returns the user associated with the reviewable, if applicable.
