@@ -128,7 +128,7 @@ en:
       email_frequency:
         description: "We'll only email you if we haven't seen you in the last 15 minutes."
         never: "Never"
-        title: "Email Notifications"
+        title: "Email me when I am sent a chat direct message or group chat"
         when_away: "Only when away"
       header_indicator_preference:
         title: "Show activity indicator in header"

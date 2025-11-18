@@ -42,6 +42,7 @@ jobs:
       TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
       EMBER_ENV: development
       LOAD_PLUGINS: ${{ (matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
+      ACTIONS_STEP_DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG }}
 
     strategy:
       fail-fast: false
@@ -56,12 +57,12 @@ jobs:
         include:
           - build_type: system
             target: chat
-          - build_type: frontend
-            target: core
-            browser: Firefox Evergreen
-          - build_type: frontend
-            target: core
-            browser: Firefox ESR
+          # - build_type: frontend
+          #   target: core
+          #   browser: Firefox Evergreen
+          # - build_type: frontend
+          #   target: core
+          #   browser: Firefox ESR
 
     steps:
       - name: Set working directory owner

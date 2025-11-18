@@ -117,6 +117,31 @@ describe "Viewing reviewable item", type: :system do
         refreshed_review_page.click_timeline_tab
         expect(page).to have_text("This is a review note.")
       end
+
+      it "shows confirmation dialog when navigating away with unsaved note, but not after clearing the note" do
+        dialog = PageObjects::Components::Dialog.new
+
+        refreshed_review_page.visit_reviewable(reviewable_flagged_post)
+        refreshed_review_page.click_timeline_tab
+
+        review_note_form.form.fill_in("content", with: "This is a draft note")
+
+        click_logo
+
+        expect(dialog).to be_open
+        expect(dialog).to have_content(I18n.t("js.form_kit.dirty_form"))
+
+        dialog.click_no
+
+        expect(page).to have_current_path("/review/#{reviewable_flagged_post.id}")
+
+        review_note_form.form.fill_in("content", with: "")
+
+        click_logo
+
+        expect(dialog).to be_closed
+        expect(page).to have_current_path("/")
+      end
     end
 
     describe "when the reviewable item is a queued post" do

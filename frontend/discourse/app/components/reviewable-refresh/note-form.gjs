@@ -2,12 +2,14 @@ import Component from "@glimmer/component";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import ExpandingTextArea from "discourse/components/expanding-text-area";
 import Form from "discourse/components/form";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -34,6 +36,11 @@ export default class ReviewableNoteForm extends Component {
   @action
   handleInput(setFn, event) {
     setFn(event.target.value);
+  }
+
+  @bind
+  onDirtyCheck() {
+    return !isEmpty(this.formApi.get("content"));
   }
 
   /**
@@ -83,6 +90,7 @@ export default class ReviewableNoteForm extends Component {
         @data={{hash content=""}}
         @onSubmit={{this.onSubmit}}
         @onRegisterApi={{this.registerApi}}
+        @onDirtyCheck={{this.onDirtyCheck}}
         class="reviewable-note-form__form"
         as |form|
       >

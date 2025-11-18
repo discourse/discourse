@@ -3556,7 +3556,7 @@ en:
         progress:
           one: "Progress: <strong>%{count}</strong> topic"
           other: "Progress: <strong>%{count}</strong> topics"
-        silent: "Perform this action silently."
+        notify: "Notify users of this change."
         performing: "Performing bulk operations, please wait…"
         completed: "Bulk operations completed successfully!"
 
@@ -7704,7 +7704,7 @@ en:
           success: "Success"
           exists: "Already exists"
           upload: "Add from file"
-          upload_successful: "Upload successful. Words have been added."
+          upload_successful: "Upload successful. The words will be processed shortly."
           case_sensitivity_label: "Is case-sensitive"
           case_sensitivity_description: "Only words with matching character casing"
           html_label: "HTML"

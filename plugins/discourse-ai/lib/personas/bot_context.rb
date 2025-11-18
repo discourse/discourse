@@ -9,7 +9,7 @@ module DiscourseAi
                     :private_message,
                     :custom_instructions,
                     :user,
-                    :skip_tool_details,
+                    :skip_show_thinking,
                     :participants,
                     :chosen_tools,
                     :message_id,
@@ -29,7 +29,7 @@ module DiscourseAi
         topic: nil,
         participants: nil,
         user: nil,
-        skip_tool_details: nil,
+        skip_show_thinking: nil,
         messages: [],
         custom_instructions: nil,
         site_url: nil,
@@ -48,7 +48,7 @@ module DiscourseAi
       )
         @participants = participants
         @user = user
-        @skip_tool_details = skip_tool_details
+        @skip_show_thinking = skip_show_thinking
         @messages = messages
         @custom_instructions = custom_instructions
         @format_dates = format_dates
@@ -151,7 +151,7 @@ module DiscourseAi
           site_url: @site_url,
           site_title: @site_title,
           site_description: @site_description,
-          skip_tool_details: @skip_tool_details,
+          skip_show_thinking: @skip_show_thinking,
           feature_name: @feature_name,
           resource_url: @resource_url,
           inferred_concepts: @inferred_concepts,

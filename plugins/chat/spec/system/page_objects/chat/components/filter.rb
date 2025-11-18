@@ -5,15 +5,19 @@ module PageObjects
     module Chat
       class Filter < PageObjects::Components::Base
         def filter_bar
-          @filter_bar ||= locator(".chat-channel__filter-bar")
+          locator(".chat-channel__filter-bar")
         end
 
         def available?
-          expect(locator(".c-navbar__filter")).to be_visible
+          filter = locator(".c-navbar__filter")
+          filter.wait_for(state: "visible")
+          filter.visible?
         end
 
         def not_available?
-          expect(locator(".c-navbar__filter")).to be_hidden
+          filter = locator(".c-navbar__filter")
+          filter.wait_for(state: "hidden")
+          filter.hidden?
         end
 
         def toggle
@@ -22,11 +26,13 @@ module PageObjects
         end
 
         def not_visible?
-          expect(filter_bar).to be_hidden
+          filter_bar.wait_for(state: "hidden")
+          filter_bar.hidden?
         end
 
         def visible?
-          expect(filter_bar).to be_visible
+          filter_bar.wait_for(state: "visible")
+          filter_bar.visible?
         end
 
         def fill_in(query)

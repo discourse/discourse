@@ -422,8 +422,21 @@ export default class ChatComposer extends Component {
   }
 
   @action
-  onSelectEmoji(emoji) {
-    this.composer.textarea.emojiSelected(emoji);
+  onSelectEmoji(emoji, context = {}) {
+    const textareaInteractor = this.composer.textarea;
+
+    if (context.emojiTermStart && context.emojiTermStart) {
+      const value = textareaInteractor.textarea.value;
+      const valueUpToCursor = `${value.substring(0, context.emojiTermStart)}:${emoji}: `;
+      const valueAfterCursor = value.substring(context.emojiTermEnd + 1);
+      textareaInteractor.value = `${valueUpToCursor}${valueAfterCursor}`;
+      textareaInteractor.textarea.setSelectionRange(
+        valueUpToCursor.length,
+        valueUpToCursor.length
+      );
+    } else {
+      textareaInteractor.emojiSelected(emoji);
+    }
 
     if (this.site.desktopView) {
       this.composer.focus();
@@ -543,6 +556,25 @@ export default class ChatComposer extends Component {
         if (v.code) {
           return `${v.code}:`;
         } else {
+          // Capture emoji term positioning before opening the emoji picker which resets the textarea state
+          const textareaInteractor = this.composer.textarea;
+          const currentValue = textareaInteractor.textarea.value;
+          const currentCaretPos = textareaInteractor.textarea.selectionStart;
+
+          let emojiContext = null;
+
+          if (currentValue && currentCaretPos !== undefined) {
+            const textBeforeCursor = currentValue.substring(0, currentCaretPos);
+            const incompleteMatch = textBeforeCursor.match(/(:[\w-]+)$/);
+
+            if (incompleteMatch) {
+              emojiContext = {
+                emojiTermStart: currentCaretPos - incompleteMatch[1].length,
+                emojiTermEnd: currentCaretPos - 1,
+              };
+            }
+          }
+
           const menuOptions = {
             identifier: "emoji-picker",
             groupIdentifier: "emoji-picker",
@@ -551,7 +583,7 @@ export default class ChatComposer extends Component {
             modalForMobile: true,
             data: {
               didSelectEmoji: (emoji) => {
-                this.onSelectEmoji(emoji);
+                this.onSelectEmoji(emoji, emojiContext);
               },
               term: v.term,
               context: "chat",

@@ -497,9 +497,10 @@
       $icon-color: var(--d-button-transparent-icon-color),
       $hover-text-color: var(--d-button-transparent-text-color--hover),
       $hover-bg-color: transparent,
-      $hover-icon-color: currentcolor
+      $hover-icon-color: currentcolor,
+      $border: 0,
+      $hover-border: 0
     );
-    border: 0;
 
     &:focus-visible {
       background: transparent;

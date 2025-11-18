@@ -483,8 +483,12 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
       id: "user1",
       content: "hello",
       thinking: "I am thinking",
-      thinking_signature: "signature",
-      redacted_thinking_signature: "redacted_signature",
+      thinking_provider_info: {
+        anthropic: {
+          signature: "signature",
+          redacted_signature: "redacted_signature",
+        },
+      },
     )
 
     result = llm.generate(prompt, user: Discourse.system_user)
@@ -555,11 +559,10 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
     # First item should be a Thinking object
     expect(result[0]).to be_a(DiscourseAi::Completions::Thinking)
     expect(result[0].message).to eq("This is my thinking process about prime numbers...")
-    expect(result[0].signature).to eq("abc123signature")
+    expect(result[0].provider_info[:anthropic][:signature]).to eq("abc123signature")
 
     expect(result[1]).to be_a(DiscourseAi::Completions::Thinking)
-    expect(result[1].signature).to eq("abd456signature")
-    expect(result[1].redacted).to eq(true)
+    expect(result[1].provider_info[:anthropic][:redacted_signature]).to eq("abd456signature")
 
     # Second item should be the text response
     expect(result[2]).to eq("Yes, there are infinitely many prime numbers where n mod 4 = 3.")
@@ -643,7 +646,16 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
     end
 
     expected_thinking = [
-      DiscourseAi::Completions::Thinking.new(message: "", signature: "", partial: true),
+      DiscourseAi::Completions::Thinking.new(
+        message: "",
+        partial: true,
+        provider_info: {
+          anthropic: {
+            signature: "",
+            redacted: false,
+          },
+        },
+      ),
       DiscourseAi::Completions::Thinking.new(
         message: "Let me solve this step by step:\n\n1. First break down 27 * 453",
         partial: true,
@@ -652,10 +664,24 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
       DiscourseAi::Completions::Thinking.new(
         message:
           "Let me solve this step by step:\n\n1. First break down 27 * 453\n2. 453 = 400 + 50 + 3",
-        signature: "EqQBCgIYAhIM1gbcDa9GJwZA2b3hGgxBdjrkzLoky3dl1pkiMOYds...",
         partial: false,
+        provider_info: {
+          anthropic: {
+            signature: "EqQBCgIYAhIM1gbcDa9GJwZA2b3hGgxBdjrkzLoky3dl1pkiMOYds...",
+            redacted: false,
+          },
+        },
       ),
-      DiscourseAi::Completions::Thinking.new(message: nil, signature: "AAA==", redacted: true),
+      DiscourseAi::Completions::Thinking.new(
+        message: nil,
+        partial: false,
+        provider_info: {
+          anthropic: {
+            redacted_signature: "AAA==",
+            redacted: true,
+          },
+        },
+      ),
     ]
 
     expect(thinking_chunks).to eq(expected_thinking)

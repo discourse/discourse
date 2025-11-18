@@ -337,6 +337,10 @@ module PageObjects
         within(post_by_number(post)) { yield }
       end
 
+      def has_filtered_notice_text?(text)
+        find(".posts-filtered-notice").has_text?(text, exact: false)
+      end
+
       private
 
       def within_topic_footer_buttons

@@ -514,16 +514,6 @@ export default class PersonaEditor extends Component {
           {{/if}}
 
           {{#if (gt data.tools.length 0)}}
-            <form.Field
-              @name="tool_details"
-              @title={{i18n "discourse_ai.ai_persona.tool_details"}}
-              @tooltip={{i18n "discourse_ai.ai_persona.tool_details_help"}}
-              @format="large"
-              as |field|
-            >
-              <field.Checkbox />
-            </form.Field>
-
             <AiPersonaToolOptions
               @form={{form}}
               @data={{data}}
@@ -531,6 +521,16 @@ export default class PersonaEditor extends Component {
               @allTools={{@personas.resultSetMeta.tools}}
             />
           {{/if}}
+
+          <form.Field
+            @name="show_thinking"
+            @title={{i18n "discourse_ai.ai_persona.show_thinking"}}
+            @tooltip={{i18n "discourse_ai.ai_persona.show_thinking_help"}}
+            @format="large"
+            as |field|
+          >
+            <field.Checkbox />
+          </form.Field>
         </form.Section>
 
         {{#if this.siteSettings.ai_embeddings_enabled}}

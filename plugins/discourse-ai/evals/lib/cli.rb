@@ -4,18 +4,18 @@ require_relative "features"
 
 class DiscourseAi::Evals::Cli
   class Options
-    attr_accessor :eval_name, :model, :list, :list_models, :list_features, :feature_key
+    attr_accessor :eval_name, :models, :list, :list_models, :list_features, :feature_key
 
     def initialize(
       eval_name: nil,
-      model: nil,
+      models: nil,
       list: false,
       list_models: false,
       list_features: false,
       feature_key: nil
     )
       @eval_name = eval_name
-      @model = model
+      @models = models
       @list = list
       @list_models = list_models
       @list_features = list_features
@@ -41,9 +41,9 @@ class DiscourseAi::Evals::Cli
 
         opts.on(
           "-m",
-          "--model NAME",
-          "Model to evaluate (will eval all models if not specified)",
-        ) { |model| options.model = model }
+          "--models NAME",
+          "Models to evaluate (will eval all valid models if not specified)",
+        ) { |models| options.models = models }
 
         opts.on("-l", "--list", "List evals") { |model| options.list = true }
 

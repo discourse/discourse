@@ -2,14 +2,12 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import getUrl from "discourse/lib/get-url";
-import DiscourseURL from "discourse/lib/url";
 import { defaultHomepage } from "discourse/lib/utilities";
 import WizardCanvas from "discourse/static/wizard/components/wizard-canvas";
 import WizardStep from "discourse/static/wizard/components/wizard-step";
 
 export default class extends Component {
   @service router;
-  @service siteSettings;
 
   <template>
     {{#if this.showCanvas}}
@@ -33,14 +31,8 @@ export default class extends Component {
     return this.step.id === "ready";
   }
 
-  #goHomeOrQuickStart() {
-    if (this.siteSettings.bootstrap_mode_enabled) {
-      DiscourseURL.routeTo(
-        `/t/${this.siteSettings.admin_quick_start_topic_id}`
-      );
-    } else {
-      this.router.transitionTo(`discovery.${defaultHomepage()}`);
-    }
+  #redirectToHome() {
+    this.router.transitionTo(`discovery.${defaultHomepage()}`);
   }
 
   @action
@@ -52,7 +44,7 @@ export default class extends Component {
     } else if (response?.success && next) {
       this.router.transitionTo("wizard.step", next);
     } else if (response?.success) {
-      this.#goHomeOrQuickStart();
+      this.#redirectToHome();
     }
   }
 
@@ -63,6 +55,6 @@ export default class extends Component {
 
   @action
   goHome() {
-    this.#goHomeOrQuickStart();
+    this.#redirectToHome();
   }
 }
