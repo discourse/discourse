@@ -15,6 +15,7 @@ export default class SecondFactorInput extends Component {
       <DOTP
         @onFill={{@onFill}}
         @onChange={{@onChange}}
+        @autoFocus={{@autoFocus}}
         class="second-factor-token-input"
         ...attributes
       />
