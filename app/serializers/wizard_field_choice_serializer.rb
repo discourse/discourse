@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class WizardFieldChoiceSerializer < ApplicationSerializer
-  attributes :id, :label, :extra_label, :description, :icon, :data
+  attributes :id, :label, :extra_label, :description, :data
 
   def id
     object.id
@@ -34,14 +34,6 @@ class WizardFieldChoiceSerializer < ApplicationSerializer
 
   def include_description?
     description.present?
-  end
-
-  def icon
-    object.icon
-  end
-
-  def include_icon?
-    object.icon.present?
   end
 
   def data

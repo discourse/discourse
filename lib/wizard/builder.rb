@@ -2,8 +2,6 @@
 
 class Wizard
   class Builder
-    WIZARD_FONTS = %w[lato inter montserrat open_sans poppins roboto]
-
     def initialize(user)
       @wizard = Wizard.new(user)
     end
