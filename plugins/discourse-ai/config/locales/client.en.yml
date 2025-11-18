@@ -298,6 +298,7 @@ en:
           custom_prompt: "Custom prompt"
           image_caption: "Caption images"
           translator: "Translator"
+          post_illustrator: "Post illustrator"
 
         translation:
           name: "Translation"

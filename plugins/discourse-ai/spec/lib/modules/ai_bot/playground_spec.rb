@@ -268,7 +268,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         ["I understood image"],
       ) do |_, _, inner_prompts, inner_options|
         options = inner_options
-        post = create_post(title: "some new topic I created", raw: body)
+        post = create_post(user: admin, title: "some new topic I created", raw: body)
 
         prompts = inner_prompts
       end
@@ -611,6 +611,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       DiscourseAi::Completions::Llm.with_prepared_responses(["Yes I can"]) do
         post =
           create_post(
+            user: admin,
             title: "My public topic",
             raw: "Hey @#{persona.user.username}, can you help me?",
             post_type: Post.types[:whisper],
@@ -634,6 +635,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       DiscourseAi::Completions::Llm.with_prepared_responses(["Yes I can"]) do
         post =
           create_post(
+            user: admin,
             title: "My public topic",
             raw: "Hey @#{persona.user.username}, can you help me?",
           )
