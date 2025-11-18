@@ -52,8 +52,12 @@ export default class adminPluginsHouseAdsShow extends Controller {
       data.visible_to_logged_in_users =
         this.buffered.visible_to_logged_in_users;
       data.visible_to_anons = this.buffered.visible_to_anons;
-      data.category_ids = this.buffered.categories.map((c) => c.id);
-      data.group_ids = this.buffered.groups.map((g) => g.id);
+      data.category_ids = this.buffered.categories
+        ? this.buffered.categories.map((c) => c.id)
+        : [];
+      data.group_ids = this.buffered.groups
+        ? this.buffered.groups.map((g) => g.id)
+        : [];
       try {
         const ajaxData = await ajax(
           newRecord
