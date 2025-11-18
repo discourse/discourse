@@ -248,7 +248,7 @@ export default class MountWidget extends Component {
       return;
     }
 
-    this._childComponents.push(info);
+    this._childComponents.content.push(info);
   }
 
   unmountChildComponent(info) {
@@ -256,7 +256,7 @@ export default class MountWidget extends Component {
       return;
     }
 
-    removeValueFromArray(this._childComponents, info);
+    removeValueFromArray(this._childComponents.content, info);
   }
 
   didUpdateAttrs() {
