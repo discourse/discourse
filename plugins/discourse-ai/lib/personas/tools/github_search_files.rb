@@ -54,6 +54,8 @@ module DiscourseAi
           { repo: repo, keywords: keywords.join(", "), branch: @branch_name }
         end
 
+        MAX_FILE_SEARCH_RESULTS = 25
+
         def invoke
           # Fetch the default branch if no branch is specified
           branch_name = branch || fetch_default_branch(repo)
@@ -89,8 +91,14 @@ module DiscourseAi
                     keywords.any? { |keyword| item["path"].include?(keyword) }
                 end
                 .map { |item| item["path"] }
+                .take(MAX_FILE_SEARCH_RESULTS)
 
-            { matching_files: matching_files, branch: branch_name }
+            result = { matching_files: matching_files, branch: branch_name }
+            if matching_files.length == MAX_FILE_SEARCH_RESULTS
+              result[
+                :note
+              ] = "Result limit reached (#{MAX_FILE_SEARCH_RESULTS} files). There may be more matching files."
+            end
           else
             { error: "Failed to perform file search. Status code: #{response_code}" }
           end

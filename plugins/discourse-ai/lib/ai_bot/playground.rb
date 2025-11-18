@@ -561,7 +561,8 @@ module DiscourseAi
       rescue => e
         if reply_post
           details = e.message.to_s
-          reply = "#{reply}\n\n#{I18n.t("discourse_ai.ai_bot.reply_error", details: details)}"
+          reply =
+            "#{reply}#{started_thinking ? "\n\n</details>" : ""}\n\n#{I18n.t("discourse_ai.ai_bot.reply_error", details: details)}"
           reply_post.revise(
             bot.bot_user,
             { raw: reply },
