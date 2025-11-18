@@ -99,6 +99,7 @@ module DiscourseAi
                 :note
               ] = "Result limit reached (#{MAX_FILE_SEARCH_RESULTS} files). There may be more matching files."
             end
+            result
           else
             { error: "Failed to perform file search. Status code: #{response_code}" }
           end
