@@ -109,6 +109,21 @@ RSpec.describe DiscourseAi::Personas::Tools::GithubFileContent do
         expect(result[:file_contents]).to include("File Path: lib/sample.rb (lines 2-3):")
       end
     end
+
+    context "when repo_name is invalid" do
+      let(:invalid_tool) do
+        described_class.new(
+          { repo_name: "invalid-repo-name", file_paths: ["lib/sample.rb"] },
+          bot_user: nil,
+          llm: llm,
+        )
+      end
+
+      it "returns an error for invalid repo_name format" do
+        result = invalid_tool.invoke
+        expect(result[:error]).to eq("Invalid repo_name format. Expected 'owner/repo'.")
+      end
+    end
   end
 
   describe ".signature" do
