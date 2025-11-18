@@ -46,6 +46,8 @@ class Reviewable < ActiveRecord::Base
 
   validates :reject_reason, length: { maximum: 2000 }
 
+  attr_accessor :skip_pending_notification
+
   before_save :set_type_source
 
   after_create { log_history(:created, created_by) }
@@ -53,7 +55,9 @@ class Reviewable < ActiveRecord::Base
   after_commit(on: :create) { DiscourseEvent.trigger(:reviewable_created, self) }
 
   after_commit(on: %i[create update]) do
-    Jobs.enqueue(:notify_reviewable, reviewable_id: self.id) if pending?
+    if pending? && !skip_pending_notification
+      Jobs.enqueue(:notify_reviewable, reviewable_id: self.id)
+    end
   end
 
   # Can be used if several actions are equivalent

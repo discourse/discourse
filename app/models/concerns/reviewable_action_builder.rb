@@ -306,21 +306,25 @@ module ReviewableActionBuilder
     # For old UI actions that aren't in the new separated bundles, use a default bundle
     bundle_type ||= "legacy-actions"
 
-    # Execute the action but skip automatic finalization if using deferred transitions
+    # Always skip automatic finalization - we'll handle it ourselves
     args_for_super = args.dup
-    args_for_super[:skip_finalization] = true if use_deferred_transitions
-    result = super(performed_by, action_id, args_for_super)
+    args_for_super[:skip_finalization] = true
 
-    if result.success? && result.transition_to
-      reviewable_action_logs.create!(
-        action_key: action_id.to_s,
-        status: result.transition_to,
-        performed_by: performed_by,
-        bundle: bundle_type,
-      )
-    end
+    # Skip the pending notification as well, we'll handle it during finalization
+    self.skip_pending_notification = true
+    result = super(performed_by, action_id, args_for_super)
+    self.skip_pending_notification = false
 
     if use_deferred_transitions
+      if result.success? && result.transition_to
+        reviewable_action_logs.create!(
+          action_key: action_id.to_s,
+          status: result.transition_to,
+          performed_by: performed_by,
+          bundle: bundle_type,
+        )
+      end
+
       if all_bundles_actioned?(guardian, args)
         finalize_perform_result(
           result,
@@ -330,7 +334,19 @@ module ReviewableActionBuilder
         )
       end
     else
-      finalize_perform_result(result, performed_by, guardian) unless args[:skip_finalization]
+      unless args[:skip_finalization]
+        Reviewable.transaction do
+          if result.success? && result.transition_to
+            reviewable_action_logs.create!(
+              action_key: action_id.to_s,
+              status: result.transition_to,
+              performed_by: performed_by,
+              bundle: bundle_type,
+            )
+          end
+          finalize_perform_result(result, performed_by, guardian)
+        end
+      end
     end
 
     result
