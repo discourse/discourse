@@ -2,16 +2,16 @@
 
 Fabricator(:llm_credit_allocation) do
   llm_model
-  monthly_credits 1_000_000
-  monthly_usage { {} }
+  daily_credits 33_334
+  daily_usage { {} }
   soft_limit_percentage 80
 
-  transient :monthly_used
+  transient :daily_used
 
   after_build do |allocation, transients|
-    if transients[:monthly_used]
-      month_key = Time.current.strftime("%Y-%m")
-      allocation.monthly_usage = { month_key => transients[:monthly_used] }
+    if transients[:daily_used]
+      day_key = Time.current.utc.strftime("%Y-%m-%d")
+      allocation.daily_usage = { day_key => transients[:daily_used] }
     end
   end
 end

@@ -18,8 +18,8 @@ RSpec.describe ProblemCheck::AiCreditSoftLimit do
       Fabricate(
         :llm_credit_allocation,
         llm_model: llm_model,
-        monthly_credits: 1000,
-        monthly_used: 700,
+        daily_credits: 1000,
+        daily_used: 700,
         soft_limit_percentage: 80,
       )
 
@@ -30,8 +30,8 @@ RSpec.describe ProblemCheck::AiCreditSoftLimit do
       Fabricate(
         :llm_credit_allocation,
         llm_model: llm_model,
-        monthly_credits: 1000,
-        monthly_used: 850,
+        daily_credits: 1000,
+        daily_used: 850,
         soft_limit_percentage: 80,
       )
 
@@ -42,31 +42,31 @@ RSpec.describe ProblemCheck::AiCreditSoftLimit do
       Fabricate(
         :llm_credit_allocation,
         llm_model: llm_model,
-        monthly_credits: 1000,
-        monthly_used: 1000,
+        daily_credits: 1000,
+        daily_used: 1000,
         soft_limit_percentage: 80,
       )
 
       expect(check).to be_chill_about_it
     end
 
-    it "does not report problem when previous month exceeded limit but current month is new" do
-      freeze_time(Time.zone.parse("2025-10-15 14:30:00"))
+    it "does not report problem when previous day exceeded limit but current day is new" do
+      freeze_time(Time.zone.parse("2025-10-15 14:30:00 UTC"))
       allocation =
         Fabricate(
           :llm_credit_allocation,
           llm_model: llm_model,
-          monthly_credits: 1000,
-          monthly_used: 850,
+          daily_credits: 1000,
+          daily_used: 850,
           soft_limit_percentage: 80,
         )
 
-      freeze_time(Time.zone.parse("2025-11-05 10:00:00"))
+      freeze_time(Time.zone.parse("2025-10-16 10:00:00 UTC"))
 
       expect(check).to be_chill_about_it
 
       allocation.reload
-      expect(allocation.monthly_used).to eq(0)
+      expect(allocation.daily_used).to eq(0)
     end
 
     it "skips non-seeded models" do
@@ -74,8 +74,8 @@ RSpec.describe ProblemCheck::AiCreditSoftLimit do
       Fabricate(
         :llm_credit_allocation,
         llm_model: non_seeded,
-        monthly_credits: 1000,
-        monthly_used: 850,
+        daily_credits: 1000,
+        daily_used: 850,
         soft_limit_percentage: 80,
       )
 
@@ -87,8 +87,8 @@ RSpec.describe ProblemCheck::AiCreditSoftLimit do
       Fabricate(
         :llm_credit_allocation,
         llm_model: llm_model,
-        monthly_credits: 1000,
-        monthly_used: 850,
+        daily_credits: 1000,
+        daily_used: 850,
         soft_limit_percentage: 80,
       )
 

@@ -174,7 +174,7 @@ module DiscourseAi
 
         allocation = params[:ai_llm][:llm_credit_allocation]
         {
-          monthly_credits: allocation[:monthly_credits].to_i,
+          daily_credits: allocation[:daily_credits].to_i,
           soft_limit_percentage: allocation[:soft_limit_percentage].to_i,
         }
       end
