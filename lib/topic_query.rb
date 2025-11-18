@@ -25,7 +25,7 @@ class TopicQuery
         true_or_false = lambda { |x| x == true || x == false || x == "true" || x == "false" }
 
         {
-          page: zero_up_to_max_page,
+          page: string,
           per_page: one_up_to_one_hundred,
           before: zero_up_to_max_int,
           bumped_before: zero_up_to_max_int,
@@ -548,20 +548,11 @@ class TopicQuery
       pinned_clause << " AND (topics.pinned_at > tu.cleared_pinned_at OR tu.cleared_pinned_at IS NULL)"
     end
 
-    unpinned_topics = topics.where("NOT ( #{pinned_clause} )")
-    pinned_topics = topics.dup.offset(nil).where(pinned_clause).reorder(pinned_at: :desc)
-
-    per_page = options[:per_page]&.to_i || per_page_setting
-    limit = per_page unless options[:limit] == false
-    page = options[:page].to_i
-
-    if page == 0
-      (pinned_topics + unpinned_topics)[0...limit] if limit
-    else
-      offset = (page * per_page) - pinned_topics.length
-      offset = 0 if offset <= 0
-      unpinned_topics.offset(offset).to_a
-    end
+    # Use SQL ordering to prioritize pinned topics while keeping the relation
+    topics.reorder(<<~SQL)
+      CASE WHEN (#{pinned_clause}) THEN 0 ELSE 1 END,
+      CASE WHEN (#{pinned_clause}) THEN topics.pinned_at ELSE topics.bumped_at END DESC
+    SQL
   end
 
   def create_list(filter, options = {}, topics = nil)
@@ -573,13 +564,21 @@ class TopicQuery
 
     options = options.merge(@options)
 
-    pagy, topics = pagy(:offset, topics, limit: options[:per_page].presence || per_page_setting)
-
     apply_pinning = filter != :private_messages
     apply_pinning &&= %w[activity default].include?(options[:order] || "activity")
     apply_pinning &&= !options[:unordered] || options[:prioritize_pinned]
 
     topics = prioritize_pinned_topics(topics, options) if apply_pinning
+
+    pagy, topics =
+      pagy(
+        :keyset,
+        topics,
+        limit: options[:per_page].presence || per_page_setting,
+        keyset: {
+          bumped_at: :desc,
+        },
+      )
 
     topics = topics.to_a
 
@@ -613,6 +612,7 @@ class TopicQuery
     list = TopicList.new(filter, @user, topics, options.merge(@options))
     list.per_page = pagy.limit
     list.more_topics_url = pagy.urls_hash[:next]
+    list.prev_topics_url = pagy.urls_hash[:previous]
 
     if filter == :filter && options[:include_filter_option_info]
       list.filter_option_info = TopicsFilter.option_info(@guardian)
@@ -797,7 +797,7 @@ class TopicQuery
       )
     end
 
-    result.order("topics.#{sort_column} #{sort_dir}")
+    result.order(sort_column => sort_dir)
   end
 
   def get_category_id(category_id_or_slug)

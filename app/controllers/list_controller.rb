@@ -64,7 +64,7 @@ class ListController < ApplicationController
         list_opts[:no_definitions] = true
       end
 
-      list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
+      list = TopicQuery.new(user, list_opts.merge(request:)).public_send("list_#{filter}")
 
       if guardian.can_create_shared_draft? && @category.present?
         if @category.id == SiteSetting.shared_drafts_category.to_i
@@ -78,6 +78,7 @@ class ListController < ApplicationController
               user,
               category: SiteSetting.shared_drafts_category,
               destination_category_id: list_opts[:category],
+              request:,
             ).list_latest
 
           if shared_drafts.present? && shared_drafts.topics.present?
@@ -85,9 +86,6 @@ class ListController < ApplicationController
           end
         end
       end
-
-      list.more_topics_url = construct_url_with(:next, list_opts)
-      list.prev_topics_url = construct_url_with(:prev, list_opts)
 
       if Discourse.anonymous_filters.include?(filter)
         @description = SiteSetting.site_description
