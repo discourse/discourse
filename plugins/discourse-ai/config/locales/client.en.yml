@@ -659,7 +659,7 @@ en:
           max_usages_required: "Must be set if max tokens is not set"
         credit_allocation:
           credits_remaining: "%{remaining} of %{total} credits remaining (%{percentage}%)"
-          soft_limit_warning: "This model has %{percentage}% of AI credits remaining this month"
+          soft_limit_warning: "This model has %{percentage}% of AI credits remaining today"
           hard_limit_warning: "You have run out of AI credits for this model. AI features using this model will be unavailable until %{reset_date}"
           next_reset: "Credits reset on %{time}"
         usage:
