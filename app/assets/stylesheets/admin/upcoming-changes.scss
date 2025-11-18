@@ -14,16 +14,11 @@
 
 .upcoming-change {
   &__name-header {
-    width: 45%;
-  }
-
-  &__groups-header {
-    width: 35%;
+    width: 65%;
   }
 
   &__enabled-header {
-    width: 10%;
-    text-align: center;
+    width: 35%;
   }
 
   &__opt-in-groups-label {
@@ -93,13 +88,16 @@
   }
 
   &__toggle-cell {
-    &.d-table__cell.--detail {
-      vertical-align: top;
-    }
+    display: flex;
+    flex-direction: column;
 
-    .d-toggle-switch {
-      padding-top: var(--space-1);
-      justify-content: center;
+    .upcoming-change__group-selection-wrapper {
+      margin-top: 0.5rem;
+      display: flex;
+
+      .group-selector-wrapper {
+        width: 80%;
+      }
     }
   }
 
