@@ -13,7 +13,7 @@ describe "Wizard", type: :system do
     wizard_page.fill_field("text", "title", "My Test Site")
     wizard_page.select_dropdown_option("default-locale", "en")
     wizard_page.click_jump_in
-    expect(page).to have_current_path("/latest")
+    expect(page).to have_current_path("/")
   end
 
   describe "Setup step" do
@@ -39,12 +39,12 @@ describe "Wizard", type: :system do
       expect(SiteSetting.must_approve_users).to eq(true)
     end
 
-    it "redirects to latest when completed" do
+    it "redirects to homepage when completed" do
       wizard_page.go_to_step("setup")
       wizard_page.fill_field("text", "title", "My Test Site")
       wizard_page.click_jump_in
 
-      expect(page).to have_current_path("/latest")
+      expect(page).to have_current_path("/")
     end
 
     it "redirects to homepage even when bootstrap mode is enabled" do
@@ -55,7 +55,7 @@ describe "Wizard", type: :system do
       wizard_page.go_to_step("setup")
       wizard_page.fill_field("text", "title", "My Test Site")
       wizard_page.click_jump_in
-      expect(page).to have_current_path("/latest")
+      expect(page).to have_current_path("/")
     end
 
     it "prevents submission when title is empty" do
