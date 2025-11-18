@@ -240,4 +240,40 @@ describe AdPlugin::AdImpression do
       expect(impression).to be_persisted
     end
   end
+
+  describe "#record_click!" do
+    fab!(:impression, :house_ad_impression)
+
+    it "records the click timestamp" do
+      freeze_time
+
+      expect(impression.clicked_at).to be_nil
+      expect(impression.record_click!).to eq(true)
+
+      impression.reload
+      expect(impression.clicked_at).to be_within(1.second).of(Time.zone.now)
+    end
+
+    it "prevents duplicate clicks" do
+      impression.record_click!
+      original_time = impression.clicked_at
+
+      expect(impression.record_click!).to eq(false)
+      impression.reload
+      expect(impression.clicked_at).to eq_time(original_time)
+    end
+  end
+
+  describe "#clicked?" do
+    fab!(:impression, :house_ad_impression)
+
+    it "returns false when not clicked" do
+      expect(impression.clicked?).to eq(false)
+    end
+
+    it "returns true when clicked" do
+      impression.record_click!
+      expect(impression.clicked?).to eq(true)
+    end
+  end
 end

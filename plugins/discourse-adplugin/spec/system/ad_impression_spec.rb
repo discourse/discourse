@@ -81,4 +81,99 @@ describe "AdPlugin::AdImpression", type: :system do
       expect(AdPlugin::AdImpression.count).to eq(0)
     end
   end
+
+  describe "house ad click tracking" do
+    fab!(:house_ad) do
+      Fabricate(
+        :house_ad,
+        html:
+          '<a href="https://example.com/product" id="test-ad-link">Click here for great deals!</a>',
+      )
+    end
+
+    before do
+      SiteSetting.house_ads_after_nth_topic = 1
+      SiteSetting.ad_plugin_enable_tracking = true
+      10.times { Fabricate(:topic) }
+
+      PluginStoreRow.create!(
+        plugin_name: "discourse-adplugin",
+        key: "ad-setting:topic_list_between",
+        type_name: "JSON",
+        value: house_ad.name,
+      )
+    end
+
+    it "records a click when user clicks on a link in the house ad" do
+      visit "/latest"
+
+      wait_for { AdPlugin::AdImpression.count == 1 }
+      impression = AdPlugin::AdImpression.last
+
+      expect(impression.clicked_at).to be_nil
+
+      find("#test-ad-link").click
+
+      wait_for { impression.reload.clicked_at.present? }
+
+      expect(impression.clicked?).to eq(true)
+      expect(impression.clicked_at).to be_within(5.seconds).of(Time.zone.now)
+    end
+
+    it "does not track clicks on non-link elements in house ads" do
+      house_ad_with_text =
+        Fabricate(:house_ad, html: '<div id="test-ad-div">Just text, no link</div>')
+
+      PluginStoreRow.find_by(
+        plugin_name: "discourse-adplugin",
+        key: "ad-setting:topic_list_between",
+      ).update!(value: house_ad_with_text.name)
+
+      visit "/latest"
+
+      wait_for { AdPlugin::AdImpression.count == 1 }
+      impression = AdPlugin::AdImpression.last
+
+      find("#test-ad-div").click
+
+      sleep 0.5
+
+      impression.reload
+      expect(impression.clicked_at).to be_nil
+    end
+
+    it "only records one click per impression even with multiple clicks" do
+      visit "/latest"
+
+      wait_for { AdPlugin::AdImpression.count == 1 }
+      impression = AdPlugin::AdImpression.last
+
+      find("#test-ad-link").click
+      wait_for { impression.reload.clicked_at.present? }
+
+      first_click_time = impression.clicked_at
+
+      sleep 0.1
+      find("#test-ad-link").click
+
+      sleep 0.5
+
+      impression.reload
+      expect(impression.clicked_at).to eq_time(first_click_time)
+    end
+
+    it "does not track clicks when ad_plugin_enable_tracking is false" do
+      SiteSetting.ad_plugin_enable_tracking = false
+
+      visit "/latest"
+
+      expect(AdPlugin::AdImpression.count).to eq(0)
+
+      find("#test-ad-link").click
+
+      sleep 0.5
+
+      expect(AdPlugin::AdImpression.count).to eq(0)
+    end
+  end
 end

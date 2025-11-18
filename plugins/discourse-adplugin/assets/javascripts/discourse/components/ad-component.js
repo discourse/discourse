@@ -18,22 +18,26 @@ export default class AdComponent extends Component {
     "router.currentRoute.parent.attributes.category_id"
   )
   currentCategoryId;
-
   @or(
     "router.currentRoute.attributes.category.slug",
     "router.currentRoute.parent.attributes.category.slug"
   )
   currentCategorySlug;
-
   // Server needs to compute this in case hidden tags are being used.
   @alias("router.currentRoute.parent.attributes.tags_disable_ads")
   topicTagsDisableAds;
-
   @or(
     "router.currentRoute.attributes.category.read_restricted",
     "router.currentRoute.parent.attributes.category.read_restricted"
   )
   isRestrictedCategory;
+
+  _impressionId = null;
+  _clickTracked = false;
+
+  _handleAdClick = () => {
+    this.trackClick();
+  };
 
   @discourseComputed(
     "router.currentRoute.attributes.__type",
@@ -105,6 +109,15 @@ export default class AdComponent extends Component {
     }
 
     this.startVisibilityTracking();
+    this.startClickTracking();
+  }
+
+  startClickTracking() {
+    if (!this.siteSettings.ad_plugin_enable_tracking) {
+      return;
+    }
+
+    this.element.addEventListener("click", this._handleAdClick);
   }
 
   async trackImpression() {
@@ -114,13 +127,40 @@ export default class AdComponent extends Component {
     }
 
     try {
-      await ajax("/ad_plugin/ad_impressions", {
+      const response = await ajax("/ad_plugin/ad_impressions", {
         type: "POST",
         data: JSON.stringify(payload),
         contentType: "application/json; charset=utf-8",
       });
+
+      this._impressionId = response.id;
     } catch (e) {
       throwAjaxError(e);
+    }
+  }
+
+  trackClick() {
+    if (!this._impressionId || this._clickTracked) {
+      return;
+    }
+
+    this._clickTracked = true;
+
+    const url = `/ad_plugin/ad_impressions/${this._impressionId}`;
+
+    if (navigator.sendBeacon) {
+      const blob = new Blob([JSON.stringify({})], {
+        type: "application/json",
+      });
+      navigator.sendBeacon(url, blob);
+    } else {
+      ajax(url, {
+        type: "PATCH",
+        contentType: "application/json; charset=utf-8",
+      }).catch((e) => {
+        // eslint-disable-next-line no-console
+        console.error("Failed to track ad click:", e);
+      });
     }
   }
 
@@ -146,6 +186,9 @@ export default class AdComponent extends Component {
     super.willDestroyElement?.(...arguments);
     if (this._observer) {
       this._observer.disconnect();
+    }
+    if (this.element) {
+      this.element.removeEventListener("click", this._handleAdClick);
     }
   }
 }

@@ -20,6 +20,18 @@ module AdPlugin
 
     validate :house_ad_id_consistency
 
+    def record_click!
+      puts "record click"
+      return false if clicked?
+
+      puts "update click"
+      update(clicked_at: Time.zone.now)
+    end
+
+    def clicked?
+      clicked_at.present?
+    end
+
     private
 
     def house_ad_id_consistency
@@ -43,12 +55,14 @@ end
 #  updated_at            :datetime         not null
 #  ad_plugin_house_ad_id :bigint
 #  user_id               :integer
+#  clicked_at            :datetime
 #
 # Indexes
 #
 #  index_ad_plugin_impressions_on_ad_plugin_house_ad_id  (ad_plugin_house_ad_id)
 #  index_ad_plugin_impressions_on_ad_type                (ad_type)
 #  index_ad_plugin_impressions_on_ad_type_and_placement  (ad_type,placement)
+#  index_ad_plugin_impressions_on_clicked_at             (clicked_at)
 #  index_ad_plugin_impressions_on_created_at             (created_at)
 #  index_ad_plugin_impressions_on_user_id                (user_id)
 #

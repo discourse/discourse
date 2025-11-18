@@ -197,4 +197,61 @@ describe AdPlugin::AdImpressionsController do
       end
     end
   end
+
+  describe "#update" do
+    fab!(:impression) { Fabricate(:house_ad_impression, user: user, house_ad: house_ad) }
+
+    it "records a click on an impression" do
+      freeze_time
+
+      patch "/ad_plugin/ad_impressions/#{impression.id}.json"
+
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+      expect(json["success"]).to eq(true)
+      expect(json["clicked_at"]).to be_present
+
+      impression.reload
+      expect(impression.clicked_at).to be_within(1.second).of(Time.zone.now)
+      expect(impression.clicked?).to eq(true)
+    end
+
+    it "prevents recording duplicate clicks" do
+      impression.record_click!
+
+      patch "/ad_plugin/ad_impressions/#{impression.id}.json"
+
+      expect(response.status).to eq(422)
+      json = response.parsed_body
+      expect(json["success"]).to eq(false)
+      expect(json["error"]).to eq("Click already recorded")
+    end
+
+    it "works for external ad impressions" do
+      external_impression = Fabricate(:external_ad_impression)
+
+      freeze_time
+
+      patch "/ad_plugin/ad_impressions/#{external_impression.id}.json"
+
+      expect(response.status).to eq(200)
+
+      external_impression.reload
+      expect(external_impression.clicked_at).to be_within(1.second).of(Time.zone.now)
+    end
+
+    it "also accepts POST requests for sendBeacon compatibility" do
+      freeze_time
+
+      post "/ad_plugin/ad_impressions/#{impression.id}.json"
+
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+      expect(json["success"]).to eq(true)
+      expect(json["clicked_at"]).to be_present
+
+      impression.reload
+      expect(impression.clicked_at).to be_within(1.second).of(Time.zone.now)
+    end
+  end
 end

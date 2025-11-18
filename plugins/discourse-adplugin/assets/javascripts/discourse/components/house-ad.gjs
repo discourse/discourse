@@ -23,6 +23,14 @@ export default class HouseAd extends AdComponent {
   adHtml = "";
   currentAd = null;
 
+  _handleAdClick = (event) => {
+    // For house ads, only track clicks on <a> tags
+    const link = event.target.closest("a");
+    if (link && link.href) {
+      this.trackClick();
+    }
+  };
+
   @discourseComputed
   colspanAttribute() {
     return this.tagName === "td" ? "5" : null;

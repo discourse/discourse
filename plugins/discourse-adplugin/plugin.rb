@@ -41,6 +41,8 @@ after_initialize do
   Discourse::Application.routes.append do
     get "/ads.txt" => "adstxt#index"
 
+    post "/ad_plugin/ad_impressions/:id" => "ad_plugin/ad_impressions#update"
+    patch "/ad_plugin/ad_impressions/:id" => "ad_plugin/ad_impressions#update"
     post "/ad_plugin/ad_impressions" => "ad_plugin/ad_impressions#create"
 
     mount AdPlugin::Engine, at: "/admin/plugins/pluginad", constraints: AdminConstraint.new
