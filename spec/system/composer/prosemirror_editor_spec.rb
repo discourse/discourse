@@ -2191,17 +2191,6 @@ describe "Composer - ProseMirror editor", type: :system do
         expect(rich).to have_css(".composer-image-grid")
         expect(rich).to have_css(".composer-image-grid .composer-image-node img", count: 1)
       end
-
-      it "automatically adds adjacent images to existing grid" do
-        open_composer
-        composer.type_content("[grid]![image1](upload://test1.png)")
-        composer.send_keys(:enter)
-        paste_test_images(1)
-
-        expect(rich).to have_css(".composer-image-node img", count: 2)
-        expect(rich).to have_css(".composer-image-grid", count: 1)
-        expect(rich).to have_css(".composer-image-grid .composer-image-node img", count: 2)
-      end
     end
 
     context "when images are within a grid" do

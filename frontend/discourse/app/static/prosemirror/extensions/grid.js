@@ -101,12 +101,10 @@ const extension = {
   },
 
   inputRules: () => ({
-    match: /\[grid]$/,
+    match: /^\[grid]$/,
     handler: (state, match, start, end) => {
       const grid = state.schema.nodes.grid.createAndFill();
-      if (grid) {
-        return state.tr.replaceWith(start, end, grid);
-      }
+      return state.tr.replaceWith(start - 1, end, grid);
     },
   }),
 
@@ -133,22 +131,29 @@ const extension = {
         });
 
         gridNodes.reverse().forEach(({ node, pos }) => {
-          const changes = [];
+          // If grid is completely empty, remove it
+          if (node.childCount === 0) {
+            tr.delete(pos, pos + node.nodeSize);
+            modified = true;
+            return;
+          }
 
-          // Calculate actual positions within the grid
+          const changes = [];
           let currentPos = pos + 1; // Start inside the grid node
 
           node.content.forEach((child) => {
             if (child.type.name === "paragraph") {
               if (child.content.size === 0) {
-                // Empty paragraph - mark for removal
-                changes.push({
-                  type: "remove",
-                  from: currentPos,
-                  to: currentPos + child.nodeSize,
-                });
+                // Only remove empty paragraph if grid has other content
+                if (node.childCount > 1) {
+                  changes.push({
+                    type: "remove",
+                    from: currentPos,
+                    to: currentPos + child.nodeSize,
+                  });
+                }
               } else {
-                // Check for multiple images in this paragraph
+                // Split paragraphs with multiple images
                 const images = [];
                 child.content.forEach((grandchild) => {
                   if (grandchild.type.name === "image") {
@@ -157,7 +162,6 @@ const extension = {
                 });
 
                 if (images.length > 1) {
-                  // Split paragraph with multiple images
                   changes.push({
                     type: "split",
                     from: currentPos,
@@ -170,13 +174,11 @@ const extension = {
             currentPos += child.nodeSize;
           });
 
-          // Apply changes in reverse order (from end to beginning)
           changes.reverse().forEach((change) => {
             if (change.type === "remove") {
               tr.delete(change.from, change.to);
               modified = true;
             } else if (change.type === "split") {
-              // Create separate paragraphs for each image
               const paragraphs = change.images.map((img) => {
                 return newState.schema.nodes.paragraph.create({}, [img]);
               });
