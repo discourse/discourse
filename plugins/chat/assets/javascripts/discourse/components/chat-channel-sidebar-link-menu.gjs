@@ -125,9 +125,11 @@ class ChatChannelSidebarMenuNotificationSubmenu extends Component {
 
 export default class ChatChannelSidebarLinkMenu extends Component {
   @service chatApi;
+  @service chat;
   @service menu;
   @service router;
   @service chatChannelsManager;
+  @service currentUser;
 
   get channel() {
     return this.args.data.channel;
@@ -140,7 +142,12 @@ export default class ChatChannelSidebarLinkMenu extends Component {
   @action
   async leaveChannel() {
     try {
-      await this.chatApi.leaveChannel(this.args.data.channel.id);
+      if (this.args.data.channel.chatable.group) {
+        await this.chatApi.leaveChannel(this.args.data.channel.id);
+      } else {
+        await this.chat.unfollowChannel(this.args.data.channel);
+      }
+      this.currentUser.custom_fields.last_chat_channel_id = null;
     } catch (err) {
       popupAjaxError(err);
     }
@@ -148,11 +155,16 @@ export default class ChatChannelSidebarLinkMenu extends Component {
 
     this.chatChannelsManager.remove(this.args.data.channel);
 
-    if (
-      this.chatChannelsManager.publicMessageChannels.length ||
-      this.chatChannelsManager.directMessageChannels.length
-    ) {
-      return this.router.transitionTo("chat");
+    if (this.chatChannelsManager.publicMessageChannels.length) {
+      return this.router.transitionTo(
+        "chat.channel",
+        ...this.chatChannelsManager.publicMessageChannels[0].routeModels
+      );
+    } else if (this.chatChannelsManager.directMessageChannels.length) {
+      return this.router.transitionTo(
+        "chat.channel",
+        ...this.chatChannelsManager.directMessageChannels[0].routeModels
+      );
     } else {
       return this.router.transitionTo("chat.browse");
     }
