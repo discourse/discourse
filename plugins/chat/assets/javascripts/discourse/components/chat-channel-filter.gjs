@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel } from "@ember/runloop";
@@ -152,7 +151,7 @@ export default class ChatChannelFilter extends Component {
         <div>
           <FilterInput
             {{autoFocus}}
-            {{closeOnEscape (fn @onToggleFilter false)}}
+            {{closeOnEscape @onToggleFilter}}
             @value={{this.currentChannelFilter}}
             placeholder={{i18n "chat.search.title"}}
             @filterAction={{this.loadSearchResults}}
@@ -186,7 +185,7 @@ export default class ChatChannelFilter extends Component {
           {{/if}}
 
           <DButton
-            @action={{fn @onToggleFilter false}}
+            @action={{@onToggleFilter}}
             class="btn-small btn-flat"
             @label="done"
           />
