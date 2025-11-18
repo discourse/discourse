@@ -34,8 +34,8 @@ module PageObjects
         find(@context + ":not(.is-expanded)")
       end
 
-      def is_expanded?
-        has_css?(context + ".is-expanded")
+      def expanded?
+        component.has_css?(".select-kit-body", visible: :visible)
       end
 
       def is_collapsed?
