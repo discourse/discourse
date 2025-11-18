@@ -177,6 +177,11 @@
 
     &.bulk-selecting {
       @include user-select(none);
+      cursor: pointer;
+    }
+
+    &.selected {
+      background: var(--primary-low);
     }
   }
 
