@@ -57,5 +57,23 @@ describe "Wizard", type: :system do
       wizard_page.click_jump_in
       expect(page).to have_current_path("/latest")
     end
+
+    it "prevents submission when title is empty" do
+      wizard_page.go_to_step("setup")
+      wizard_page.fill_field("text", "title", "")
+      wizard_page.click_jump_in
+
+      expect(wizard_page).to be_on_step("setup")
+      expect(page).to have_css(".wizard-container__field.text-title.invalid")
+    end
+
+    it "prevents submission when title is 'Discourse'" do
+      wizard_page.go_to_step("setup")
+      wizard_page.fill_field("text", "title", "Discourse")
+      wizard_page.click_jump_in
+
+      expect(wizard_page).to be_on_step("setup")
+      expect(page).to have_css(".wizard-container__field.text-title.invalid")
+    end
   end
 end
