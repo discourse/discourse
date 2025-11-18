@@ -4,6 +4,7 @@ import { computed, get } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { compare } from "@ember/utils";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
 import {
   addUniqueValueToArray,
@@ -480,9 +481,8 @@ export default class Category extends RestModel {
   @tracked minimum_required_tags;
   @tracked styleType = this.style_type;
   @trackedArray available_groups;
+  @trackedArray permissions;
   @trackedArray required_tag_groups;
-
-  permissions = null;
 
   init() {
     super.init(...arguments);
@@ -494,17 +494,17 @@ export default class Category extends RestModel {
       return;
     }
 
-    this.set("availableGroups", this.available_groups);
-
     if (this.group_permissions) {
-      this.set(
-        "permissions",
-        this.group_permissions.map((elem) => {
-          removeValueFromArray(this.available_groups, elem.group_name);
-          return elem;
-        })
-      );
+      this.permissions = this.group_permissions.map((elem) => {
+        removeValueFromArray(this.available_groups, elem.group_name);
+        return new TrackedObject(elem);
+      });
     }
+  }
+
+  @dependentKeyCompat
+  get availableGroups() {
+    return this.available_groups;
   }
 
   get descriptionText() {
@@ -853,24 +853,25 @@ export default class Category extends RestModel {
   }
 
   addPermission(permission) {
-    addUniqueValueToArray(this.permissions, permission);
-    removeValueFromArray(this.availableGroups, permission.group_name);
+    addUniqueValueToArray(this.permissions, new TrackedObject(permission));
+    removeValueFromArray(this.available_groups, permission.group_name);
   }
 
   removePermission(group_name) {
     const permission = this.permissions.find(
       (p) => p.group_name === group_name
     );
+
     if (permission) {
       removeValueFromArray(this.permissions, permission);
-      addUniqueValueToArray(this.availableGroups, group_name);
+      addUniqueValueToArray(this.available_groups, group_name);
     }
   }
 
   updatePermission(group_name, type) {
     this.permissions.forEach((p, i) => {
       if (p.group_name === group_name) {
-        this.set(`permissions.${i}.permission_type`, type);
+        this.permissions[i].permission_type = type;
       }
     });
   }
