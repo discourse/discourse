@@ -95,6 +95,9 @@ export default defineConfig(({ mode, command }) => {
     preview: {
       port: 4200,
       strictPort: true,
+      proxy: {
+        "^/(?!@vite/)": customProxy,
+      },
     },
     build: {
       manifest: true,

@@ -300,9 +300,6 @@ importers:
       '@messageformat/runtime':
         specifier: ^3.0.2
         version: 3.0.2
-      '@vitejs/plugin-basic-ssl':
-        specifier: ^1.2.0
-        version: 1.2.0(vite@7.2.2(@types/node@24.10.0)(sass@1.94.0)(terser@5.44.1))
       ace-builds:
         specifier: ^1.43.4
         version: 1.43.4
@@ -529,6 +526,9 @@ importers:
       '@uppy/xhr-upload':
         specifier: ^4.2.3
         version: 4.4.2(@uppy/core@4.5.3)
+      '@vitejs/plugin-basic-ssl':
+        specifier: ^2.1.0
+        version: 2.1.0(vite@7.2.2(@types/node@24.10.0)(sass@1.94.0)(terser@5.44.1))
       a11y-dialog:
         specifier: 8.1.4
         version: 8.1.4
@@ -2871,11 +2871,11 @@ packages:
     peerDependencies:
       '@uppy/core': ^4.5.2
 
-  '@vitejs/plugin-basic-ssl@1.2.0':
-    resolution: {integrity: sha512-mkQnxTkcldAzIsomk1UuLfAu9n+kpQ3JbHcpCp7d2Oo6ITtji8pHS3QToOWjhPFvNQSnhlkAjmGbhv2QvwO/7Q==}
-    engines: {node: '>=14.21.3'}
+  '@vitejs/plugin-basic-ssl@2.1.0':
+    resolution: {integrity: sha512-dOxxrhgyDIEUADhb/8OlV9JIqYLgos03YorAueTIeOUskLJSEsfwCByjbu98ctXitUN3znXKp0bYD/WHSudCeA==}
+    engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     peerDependencies:
-      vite: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
+      vite: ^6.0.0 || ^7.0.0
 
   '@vitest/expect@4.0.8':
     resolution: {integrity: sha512-Rv0eabdP/xjAHQGr8cjBm+NnLHNoL268lMDK85w2aAGLFoVKLd8QGnVon5lLtkXQCoYaNL0wg04EGnyKkkKhPA==}
@@ -11738,7 +11738,7 @@ snapshots:
       '@uppy/core': 4.5.3
       '@uppy/utils': 6.2.2
 
-  '@vitejs/plugin-basic-ssl@1.2.0(vite@7.2.2(@types/node@24.10.0)(sass@1.94.0)(terser@5.44.1))':
+  '@vitejs/plugin-basic-ssl@2.1.0(vite@7.2.2(@types/node@24.10.0)(sass@1.94.0)(terser@5.44.1))':
     dependencies:
       vite: 7.2.2(@types/node@24.10.0)(sass@1.94.0)(terser@5.44.1)
 
