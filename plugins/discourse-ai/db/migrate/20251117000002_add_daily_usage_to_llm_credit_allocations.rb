@@ -12,17 +12,20 @@ class AddDailyUsageToLlmCreditAllocations < ActiveRecord::Migration[8.0]
     # This preserves historical totals while transitioning to daily tracking
     execute <<~SQL
       UPDATE llm_credit_allocations
-      SET daily_usage = (
-        SELECT jsonb_object_agg(
-          CASE
-            WHEN (month_date || '-01')::date >= date_trunc('month', CURRENT_TIMESTAMP)::date
-            THEN to_char(CURRENT_DATE, 'YYYY-MM-DD')
-            ELSE to_char((month_date || '-01')::date + interval '1 month' - interval '1 day', 'YYYY-MM-DD')
-          END,
-          month_usage::integer
-        )
-        FROM jsonb_each_text(monthly_usage) AS t(month_date, month_usage)
-        WHERE month_usage::integer > 0
+      SET daily_usage = COALESCE(
+        (
+          SELECT jsonb_object_agg(
+            CASE
+              WHEN (month_date || '-01')::date >= date_trunc('month', CURRENT_TIMESTAMP)::date
+              THEN to_char(CURRENT_DATE, 'YYYY-MM-DD')
+              ELSE to_char((month_date || '-01')::date + interval '1 month' - interval '1 day', 'YYYY-MM-DD')
+            END,
+            month_usage::integer
+          )
+          FROM jsonb_each_text(monthly_usage) AS t(month_date, month_usage)
+          WHERE month_usage::integer > 0
+        ),
+        '{}'::jsonb
       )
       WHERE monthly_usage IS NOT NULL
         AND monthly_usage != '{}'::jsonb
