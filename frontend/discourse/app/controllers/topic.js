@@ -97,7 +97,6 @@ export default class TopicController extends Controller {
   @or("model.errorHtml", "model.errorMessage") hasError;
   @not("hasError") noErrorYet;
   @alias("site.categoriesList") categories;
-  @alias("selectedPostIds.length") selectedPostsCount;
   @alias("selectedAllPosts") canDeselectAll;
   @or("model.postStream.loadedAllPosts", "model.postStream.loadingLastPost")
   loadedAllPosts;
@@ -141,6 +140,11 @@ export default class TopicController extends Controller {
     return BufferedProxy.create({
       content: this.model,
     });
+  }
+
+  @dependentKeyCompat
+  get selectedPostsCount() {
+    return this.selectedPostIds.length;
   }
 
   get titleIsVisibleOnHeader() {
