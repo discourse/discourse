@@ -36,7 +36,13 @@ export default class ComposerVideoThumbnailUppy {
     }
 
     const video = document.createElement("video");
-    video.src = URL.createObjectURL(videoFile.data);
+    const objectUrl = URL.createObjectURL(videoFile.data);
+    video.src = objectUrl;
+
+    // Clean up object URL when done
+    const cleanup = () => {
+      URL.revokeObjectURL(objectUrl);
+    };
 
     // These attributes are needed for thumbnail generation on mobile.
     // This video tag is not visible, so this is all happening in the background.
@@ -58,6 +64,7 @@ export default class ComposerVideoThumbnailUppy {
     const stalledEventsTimer = setTimeout(() => {
       // in some cases, no video events are hit (for example, when browser disables autoplay)
       // we need to give up in those cases, otherwise the upload will hang
+      cleanup();
       return callback();
     }, 3000);
 
@@ -71,6 +78,7 @@ export default class ComposerVideoThumbnailUppy {
       setTimeout(() => {
         // If dimensions can't be read, abort.
         if (video.videoWidth === 0) {
+          cleanup();
           return callback();
         }
 
@@ -98,43 +106,68 @@ export default class ComposerVideoThumbnailUppy {
 
         if (!isEmpty) {
           // upload video thumbnail
-          canvas.toBlob((blob) => {
-            this._uppyUpload = new UppyUpload(getOwner(this), {
-              id: "video-thumbnail",
-              type: "thumbnail",
-              additionalParams: {
-                videoSha1,
-              },
-              uploadDone() {
-                callback();
-              },
-            });
-            this._uppyUpload.setup();
+          try {
+            canvas.toBlob((blob) => {
+              if (!blob) {
+                // toBlob can return null if blob creation fails
+                warn("Failed to create thumbnail blob", {
+                  id: "discourse.upload.video-thumbnail-blob-error",
+                });
+                cleanup();
+                return callback();
+              }
 
-            this._uppyUpload.uppyWrapper.uppyInstance.on(
-              "upload-error",
-              (file, error, response) => {
-                let message = i18n("wizard.upload_error");
-                if (response.body.errors) {
-                  message = response.body.errors.join("\n");
-                }
+              try {
+                this._uppyUpload = new UppyUpload(getOwner(this), {
+                  id: "video-thumbnail",
+                  type: "thumbnail",
+                  additionalParams: {
+                    videoSha1,
+                  },
+                  uploadDone() {
+                    cleanup();
+                    callback();
+                  },
+                });
+                this._uppyUpload.setup();
 
-                // eslint-disable-next-line no-console
-                console.error(message);
+                this._uppyUpload.uppyWrapper.uppyInstance.on(
+                  "upload-error",
+                  (file, error, response) => {
+                    let message = i18n("wizard.upload_error");
+                    if (response?.body?.errors) {
+                      message = response.body.errors.join("\n");
+                    }
+
+                    // eslint-disable-next-line no-console
+                    console.warn(
+                      "Video thumbnail upload failed, continuing without thumbnail:",
+                      message
+                    );
+                    cleanup();
+                    callback();
+                  }
+                );
+
+                blob.name = `${videoSha1}.png`;
+                this._uppyUpload.addFiles(blob);
+              } catch (err) {
+                warn(`error setting up video thumbnail upload: ${err}`, {
+                  id: "discourse.upload.video-thumbnail-setup-error",
+                });
+                cleanup();
                 callback();
               }
-            );
-
-            try {
-              blob.name = `${videoSha1}.png`;
-              this._uppyUpload.addFiles(blob);
-            } catch (err) {
-              warn(`error adding files to uppy: ${err}`, {
-                id: "discourse.upload.uppy-add-files-error",
-              });
-            }
-          });
+            });
+          } catch (err) {
+            warn(`error creating video thumbnail blob: ${err}`, {
+              id: "discourse.upload.video-thumbnail-to-blob-error",
+            });
+            cleanup();
+            callback();
+          }
         } else {
+          cleanup();
           callback();
         }
       }, 100);
@@ -145,6 +178,7 @@ export default class ComposerVideoThumbnailUppy {
       console.warn(
         "Video could not be loaded or decoded for thumbnail generation"
       );
+      cleanup();
       callback();
     };
   }
