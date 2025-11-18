@@ -1,6 +1,10 @@
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class DiscourseAiToolsNewRoute extends DiscourseRoute {
+  queryParams = {
+    presetId: { refreshModel: false },
+  };
+
   beforeModel(transition) {
     this.preset = transition.to.queryParams.presetId || "empty_tool";
   }
