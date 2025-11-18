@@ -3,6 +3,15 @@
 RSpec.describe DiscourseAi::Completions::Scripted::HttpClient do
   fab!(:user)
   fab!(:open_ai_model, :llm_model)
+  fab!(:open_ai_responses_model) do
+    Fabricate(
+      :llm_model,
+      url: "https://api.openai.com/v1/responses",
+      provider_params: {
+        enable_responses_api: true,
+      },
+    )
+  end
   fab!(:gemini_model, :gemini_model)
   fab!(:anthropic_model, :anthropic_model)
   fab!(:bedrock_claude_model, :bedrock_model)
@@ -42,6 +51,11 @@ RSpec.describe DiscourseAi::Completions::Scripted::HttpClient do
     it "selects the Gemini style for Google providers" do
       client = described_class.for(llm_model: gemini_model, responses: ["hi"])
       expect(client.strategy).to be_a(DiscourseAi::Completions::Scripted::GeminiApiStyle)
+    end
+
+    it "selects the OpenAI Responses style when responses API is enabled" do
+      client = described_class.for(llm_model: open_ai_responses_model, responses: ["hi"])
+      expect(client.strategy).to be_a(DiscourseAi::Completions::Scripted::OpenAiResponsesApiStyle)
     end
 
     it "selects the Anthropic style for Anthropic providers" do
@@ -132,6 +146,58 @@ RSpec.describe DiscourseAi::Completions::Scripted::HttpClient do
       yielded = []
       response.read_body { |chunk| yielded << chunk }
       expect(yielded).to eq(raw_chunks)
+    end
+  end
+
+  describe DiscourseAi::Completions::Scripted::OpenAiResponsesApiStyle do
+    let(:uri) { URI(open_ai_responses_model.url) }
+    let(:payload) do
+      {
+        model: open_ai_responses_model.name,
+        input: [{ role: "user", content: [{ type: "input_text", text: "Hello?" }] }],
+      }
+    end
+
+    def style_for(responses)
+      DiscourseAi::Completions::Scripted::OpenAiResponsesApiStyle.new(
+        Array.wrap(responses),
+        open_ai_responses_model,
+      )
+    end
+
+    it "produces a Responses API payload for message responses" do
+      response = style_for(["scripted message"]).request(build_request(uri, payload.to_json))
+
+      body = JSON.parse(response.body)
+      output = body["output"].first
+
+      expect(body["object"]).to eq("response")
+      expect(output["type"]).to eq("message")
+      expect(output.dig("content", 0, "text")).to eq("scripted message")
+    end
+
+    it "streams message responses as Responses API events" do
+      streaming_payload = payload.merge(stream: true)
+      response = style_for(["Stream me"]).request(build_request(uri, streaming_payload.to_json))
+
+      chunks = []
+      response.read_body { |chunk| chunks << chunk }
+
+      expect(chunks.first).to include("response.created")
+      expect(chunks.grep(/response.output_text.delta/)).not_to be_empty
+      expect(chunks.last).to include("response.completed")
+    end
+
+    it "streams tool call payloads including argument deltas" do
+      streaming_payload = payload.merge(stream: true)
+      tool_responses = [{ tool_calls: [{ name: "lookup_weather", arguments: { city: "Paris" } }] }]
+      response = style_for(tool_responses).request(build_request(uri, streaming_payload.to_json))
+
+      chunks = []
+      response.read_body { |chunk| chunks << chunk }
+
+      expect(chunks.grep(/response.function_call_arguments.delta/)).not_to be_empty
+      expect(chunks.last).to include("response.completed")
     end
   end
 

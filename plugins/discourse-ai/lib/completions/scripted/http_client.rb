@@ -11,6 +11,7 @@ module DiscourseAi
             DiscourseAi::Completions::Scripted::AnthropicApiStyle,
             DiscourseAi::Completions::Scripted::GeminiApiStyle,
             DiscourseAi::Completions::Scripted::VllmApiStyle,
+            DiscourseAi::Completions::Scripted::OpenAiResponsesApiStyle,
             DiscourseAi::Completions::Scripted::OpenAiApiStyle,
           ]
 
