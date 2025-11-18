@@ -78,16 +78,28 @@ describe "Composer image optimization for uploads using media-optimization-worke
       visit "/new-topic"
       expect(composer).to be_opened
 
-      file = file_from_fixtures("large_and_unoptimized_notransparent.png", "images")
-      attach_file("file-uploader", [file.path], make_visible: true)
+      file = file_from_fixtures("large_and_unoptimized.png", "images")
+      converted_file_path = file.path.gsub("unoptimized", "notransparent")
+
+      # We do a conversion here to simulate a PNG with no transparency,
+      # the fixture has transparency, and PNGs with transparency are not optimized.
+      Discourse::Utils.execute_command(
+        *["convert", file.path, "-background", "white", "-alpha", "remove", converted_file_path],
+        timeout: 3,
+      )
+
+      attach_file("file-uploader", [converted_file_path], make_visible: true)
 
       expect(composer).to have_no_in_progress_uploads
       expect(composer.preview).to have_css(".image-wrapper", count: 1)
 
-      upload = Upload.find_by(original_filename: File.basename(file.path).gsub("png", "jpg"))
+      upload =
+        Upload.find_by(original_filename: File.basename(converted_file_path).gsub("png", "jpg"))
 
-      # Original large_and_unoptimized_notransparent.png is 465_321 bytes
-      expect(upload.filesize).to eq(285_850)
+      # Original large_and_unoptimized PNG with no transparency is 312_889 bytes
+      expect(upload.filesize).to eq(285_809)
+    ensure
+      FileUtils.rm(converted_file_path)
     end
 
     it "does not optimize a png with transparent pixels in the composer" do
