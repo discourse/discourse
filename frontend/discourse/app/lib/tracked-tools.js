@@ -180,15 +180,16 @@ export class DeferredTrackedSet {
 }
 
 /**
- * Converts a value to TrackedArray if needed and validates the type
+ * Converts a value to TrackedArray if needed and validates the type.
  *
- * @param {*} value - Value to convert
- * @returns {TrackedArray|null} Converted value
- * @throws {Error} If value is not an array, TrackedArray, or null
+ * @param {TrackedArray|Array|null|undefined} value - Value to convert
+ * @returns {TrackedArray|null|undefined} - Returns the value converted to TrackedArray if needed,
+ *                                         or null/undefined if those values were passed
+ * @throws {Error} If value is not an array, TrackedArray, null or undefined
  */
 function ensureTrackedArray(value) {
-  if (value === null) {
-    return null;
+  if (typeof value === "undefined" || value === null) {
+    return value;
   }
 
   if (value instanceof TrackedArray) {
@@ -199,7 +200,9 @@ function ensureTrackedArray(value) {
     return new TrackedArray(value);
   }
 
-  throw new Error(`Expected an array or TrackedArray, got ${typeof value}`);
+  throw new Error(
+    `Expected an array, TrackedArray, null, or undefined, got ${typeof value}. Value received: ${value}`
+  );
 }
 
 /**
