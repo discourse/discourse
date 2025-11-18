@@ -31,12 +31,15 @@ module PageObjects
         menu.option(".chat-channel-sidebar-link-menu__leave-channel").click
       end
 
+      def channel_section_link_selector(channel)
+        ".sidebar-section-link.channel-#{channel.id}"
+      end
+
       def open_channel_hover_menu(channel)
-        selector = ".sidebar-section-link.channel-#{channel.id}"
-        find(selector).hover
+        find(channel_section_link_selector(channel)).hover
         first_level_hover_menu =
           PageObjects::Components::DMenu.new(
-            selector + " .sidebar-section-hover-button",
+            "#{channel_section_link_selector(channel)} .sidebar-section-hover-button",
             "chat-channel-menu",
           )
         first_level_hover_menu.expand

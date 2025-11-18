@@ -570,6 +570,7 @@ export default {
                         channel,
                         chatService: this.chatService,
                         currentUser: this.currentUser,
+                        menuService: this.menuService,
                       })
                   );
                 } else {
