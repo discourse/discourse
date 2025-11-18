@@ -5886,21 +5886,20 @@ en:
 
         welcome_banner:
           title: "Welcome banner"
-          header_description: "Configure the banner with search bar displayed to visitors on your site."
+          header_description: "Configure the banner containing a search bar displayed to visitors on your site."
           saved: "Welcome banner settings saved successfully."
           form:
             enabled_themes:
               label: "Enabled on themes..."
-              description: "Select which themes should display the welcome banner. Only enabled themes are shown."
+              description: "Select which themes should display the banner. Only active themes are shown."
             background_image:
               label: "Background image"
               description: "This image will be displayed behind the banner text."
             text_color:
               label: "Text color"
-              description: "Choose the color for the text displayed on the welcome banner."
             page_visibility:
               label: "Page visibility"
-              description: "Choose where the welcome banner should be displayed."
+              description: "Choose where the banner should be displayed."
               options:
                 top_menu_pages: "Top menu pages"
                 homepage: "Homepage only"
@@ -5908,24 +5907,21 @@ en:
                 all_pages: "All pages"
             location:
               label: "Location"
-              description: "Choose where the welcome banner should appear on the page."
+              description: "Choose where the banner should appear on the page."
               options:
                 above_topic_content: "Above topic content"
                 below_site_header: "Below site header"
             text_section:
               title: "Customizable text"
-              variables: "You can use these variables in your text: <code>%{username}</code>, <code>%{site_name}</code>"
+              variables: "You can use these variables in your text: <code>&percnt;{preferred_display_name}</code>, <code>&percnt;{site_name}</code>"
             header_new_members:
               label: "Header for new members"
-              description: "Welcome message shown to newly registered users."
               placeholder: "Welcome to %{site_name}, %{username}!"
             header_logged_in:
               label: "Header for logged-in members"
-              description: "Welcome message shown to established logged-in users."
               placeholder: "Welcome back, %{username}!"
             header_anonymous:
               label: "Header for anonymous visitors"
-              description: "Welcome message shown to users who are not logged in."
               placeholder: "Welcome to %{site_name}!"
             subheader_logged_in:
               label: "Subheader for logged-in members"

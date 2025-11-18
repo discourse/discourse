@@ -13,13 +13,7 @@ class Admin::Config::WelcomeBannerController < Admin::AdminController
     themes_data =
       themes.map do |theme|
         setting = theme.theme_site_settings.find { |s| s.name == "enable_welcome_banner" }
-        value =
-          if setting
-            # Boolean values are stored as "t" or "f" in the database
-            setting.value == "t" || setting.value == "true" || setting.value == true
-          else
-            false
-          end
+        value = setting&.setting_rb_value || false
 
         { id: theme.id, name: theme.name, enable_welcome_banner: value }
       end

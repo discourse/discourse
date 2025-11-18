@@ -348,9 +348,6 @@ export default class AdminWelcomeBannerForm extends Component {
         <form.Field
           @name="welcomeBannerTextColor"
           @title={{i18n "admin.config.welcome_banner.form.text_color.label"}}
-          @description={{i18n
-            "admin.config.welcome_banner.form.text_color.description"
-          }}
           @format="large"
           as |field|
         >
@@ -374,7 +371,7 @@ export default class AdminWelcomeBannerForm extends Component {
           }}
           as |field|
         >
-          <field.Select as |select|>
+          <field.Select @includeNone={{false}} as |select|>
             <select.Option @value="top_menu_pages">{{i18n
                 "admin.config.welcome_banner.form.page_visibility.options.top_menu_pages"
               }}</select.Option>
@@ -398,7 +395,7 @@ export default class AdminWelcomeBannerForm extends Component {
           }}
           as |field|
         >
-          <field.Select as |select|>
+          <field.Select @includeNone={{false}} as |select|>
             <select.Option @value="above_topic_content">{{i18n
                 "admin.config.welcome_banner.form.location.options.above_topic_content"
               }}</select.Option>
@@ -411,7 +408,11 @@ export default class AdminWelcomeBannerForm extends Component {
         <form.Section
           @title={{i18n "admin.config.welcome_banner.form.text_section.title"}}
           @subtitle={{htmlSafe
-            (i18n "admin.config.welcome_banner.form.text_section.variables")
+            (i18n
+              "admin.config.welcome_banner.form.text_section.variables"
+              username="%{username}"
+              site_name="%{site_name}"
+            )
           }}
         >
 
@@ -419,9 +420,6 @@ export default class AdminWelcomeBannerForm extends Component {
             @name="headerNewMembers"
             @title={{i18n
               "admin.config.welcome_banner.form.header_new_members.label"
-            }}
-            @description={{i18n
-              "admin.config.welcome_banner.form.header_new_members.description"
             }}
             @format="large"
             @validation="required"
@@ -439,9 +437,6 @@ export default class AdminWelcomeBannerForm extends Component {
             @title={{i18n
               "admin.config.welcome_banner.form.header_logged_in.label"
             }}
-            @description={{i18n
-              "admin.config.welcome_banner.form.header_logged_in.description"
-            }}
             @format="large"
             @validation="required"
             as |field|
@@ -457,9 +452,6 @@ export default class AdminWelcomeBannerForm extends Component {
             @name="headerAnonymousMembers"
             @title={{i18n
               "admin.config.welcome_banner.form.header_anonymous.label"
-            }}
-            @description={{i18n
-              "admin.config.welcome_banner.form.header_anonymous.description"
             }}
             @format="large"
             @validation="required"
