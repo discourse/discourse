@@ -463,17 +463,13 @@ export default class Topic extends RestModel {
   @dependentKeyCompat
   @cached
   get relatedMessages() {
-    return this.get("related_messages")?.map((st) =>
-      this.store.createRecord("topic", st)
-    );
+    return this.get("related_messages")?.map((data) => Topic.create(data));
   }
 
   @dependentKeyCompat
   @cached
   get suggestedTopics() {
-    return this.get("suggested_topics")?.map((st) =>
-      this.store.createRecord("topic", st)
-    );
+    return this.get("suggested_topics")?.map((data) => Topic.create(data));
   }
 
   @discourseComputed("posts_count")
