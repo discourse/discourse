@@ -379,7 +379,7 @@ after_initialize do
   end
 
   add_to_class(:topic_query, :group_topics_assigned_results) do |group|
-    list = default_results(include_all_pms: true)
+    list = default_results(include_pms: true)
 
     assignee_condition = "(a.assigned_to_id = :group_id AND a.assigned_to_type = 'Group')"
     if @options[:filter] != :direct
