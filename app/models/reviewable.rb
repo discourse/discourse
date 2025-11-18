@@ -357,14 +357,33 @@ class Reviewable < ActiveRecord::Base
     validate_action!(guardian, action_id, perform_method, args)
 
     result = nil
-    update_count = false
     Reviewable.transaction do
       increment_version!(args[:version])
       result = public_send(perform_method, performed_by, args)
 
       raise ActiveRecord::Rollback unless result.success?
+    end
 
-      update_count = transition_to(result.transition_to, performed_by) if result.transition_to
+    # Allow concerns to intercept and defer finalization
+    finalize_perform_result(result, performed_by, guardian) unless args[:skip_finalization]
+
+    result
+  end
+
+  # Completes the perform operation by transitioning status and notifying.
+  # Can be called independently to finalize a deferred action.
+  #
+  # @param result [Reviewable::PerformResult] The result from the perform method
+  # @param performed_by [User] The user performing the action
+  # @param guardian [Guardian] The guardian for permission checks
+  # @param transition_to_status [Symbol] Optional status override for transition
+  #
+  # @return [void]
+  def finalize_perform_result(result, performed_by, guardian, transition_to_status: nil)
+    update_count = false
+    Reviewable.transaction do
+      status_to_use = transition_to_status || result.transition_to
+      update_count = transition_to(status_to_use, performed_by) if status_to_use
       update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
 
       recalculate_score if result.recalculate_score
@@ -381,8 +400,6 @@ class Reviewable < ActiveRecord::Base
     end
 
     notify_users(result, guardian)
-
-    result
   end
 
   # Override this in specific reviewable type to include scores for
