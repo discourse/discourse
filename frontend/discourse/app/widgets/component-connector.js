@@ -1,75 +1,39 @@
-import { getOwner } from "@ember/owner";
-import { scheduleOnce } from "@ember/runloop";
+/**
+ * IMPORTANT: The widget rendering system has been decommissioned.
+ *
+ * This file is maintained only to prevent breaking imports in existing third-party customizations.
+ * New code should not use this component or the widget system.
+ */
 
+import { warnWidgetsDecommissioned } from "./widget";
+
+/**
+ * This class is kept only for backward compatibility.
+ *
+ * @deprecated This class is part of the decommissioned widget system and should not be used anymore.
+ */
 export default class ComponentConnector {
-  constructor(
-    widget,
-    componentName,
-    opts,
-    trackedProperties,
-    { applyStyle = true } = {}
-  ) {
-    this.widget = widget;
-    this.opts = opts;
-    this.componentName = componentName;
-    this.trackedProperties = trackedProperties || [];
-    this.applyStyle = applyStyle;
-    this._component = null;
+  constructor() {
+    warnWidgetsDecommissioned();
   }
 
-  init() {
-    const elem = document.createElement("div");
-    if (this.applyStyle) {
-      elem.style.display = "inline-flex";
-    }
-    elem.className = "widget-component-connector";
-    this.elem = elem;
-    scheduleOnce("afterRender", this, this.connectComponent);
+  /**
+   * @deprecated the widget rendering system was decommissioned
+   */
+  init() {}
 
-    return this.elem;
-  }
+  /**
+   * @deprecated the widget rendering system was decommissioned
+   */
+  destroy() {}
 
-  destroy() {
-    this._component?.destroy();
-  }
+  /**
+   * @deprecated the widget rendering system was decommissioned
+   */
+  update() {}
 
-  update(prev) {
-    // mutated external properties might not correctly update the underlying component
-    // in this case we can define trackedProperties, if different from previous
-    // state we will re-init the whole component, be careful when using this
-    // to not track a property which would be updated too often (on scroll for example)
-    let shouldInit = false;
-    this.trackedProperties.forEach((prop) => {
-      if (prev.opts[prop] !== this.opts[prop]) {
-        shouldInit = true;
-      }
-    });
-
-    if (shouldInit) {
-      return this.init();
-    }
-
-    return null;
-  }
-
-  connectComponent() {
-    const { elem, opts, widget, componentName } = this;
-
-    const mounted = widget._findView();
-    const component = getOwner(mounted)
-      .factoryFor(`component:${componentName}`)
-      .create(opts);
-
-    // component connector is not triggering didReceiveAttrs
-    // we force it for selectKit components
-    if (component.selectKit) {
-      component.didReceiveAttrs();
-    }
-
-    mounted._connected.push(component);
-    component.renderer.appendTo(component, elem);
-    this._component = component;
-  }
+  /**
+   * @deprecated the widget rendering system was decommissioned
+   */
+  connectComponent() {}
 }
-
-ComponentConnector.prototype.type = "Widget";
