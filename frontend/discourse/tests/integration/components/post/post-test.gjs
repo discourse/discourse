@@ -23,24 +23,21 @@ function renderComponent(
     unhidePost,
   } = {}
 ) {
-  // TODO (glimmer-post-stream) remove the outer div when the post-stream widget is converted to a Glimmer component
   return render(
     <template>
-      <div class="topic-post glimmer-post-stream">
-        <Post
-          @post={{post}}
-          @prevPost={{prevPost}}
-          @changePostOwner={{changePostOwner}}
-          @editPost={{editPost}}
-          @expandHidden={{expandHidden}}
-          @permanentlyDeletePost={{permanentlyDeletePost}}
-          @rebakePost={{rebakePost}}
-          @showHistory={{showHistory}}
-          @showRawEmail={{showRawEmail}}
-          @togglePostType={{togglePostType}}
-          @unhidePost={{unhidePost}}
-        />
-      </div>
+      <Post
+        @post={{post}}
+        @prevPost={{prevPost}}
+        @changePostOwner={{changePostOwner}}
+        @editPost={{editPost}}
+        @expandHidden={{expandHidden}}
+        @permanentlyDeletePost={{permanentlyDeletePost}}
+        @rebakePost={{rebakePost}}
+        @showHistory={{showHistory}}
+        @showRawEmail={{showRawEmail}}
+        @togglePostType={{togglePostType}}
+        @unhidePost={{unhidePost}}
+      />
       <DMenus />
     </template>
   );
@@ -50,7 +47,6 @@ module("Integration | Component | Post", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.siteSettings.glimmer_post_stream_mode = "enabled";
     this.siteSettings.post_menu_hidden_items = "";
 
     this.store = getOwner(this).lookup("service:store");

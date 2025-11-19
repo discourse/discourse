@@ -24,7 +24,6 @@ export default {
 
     const taskActions = getOwner(this).lookup("service:task-actions");
     const modal = getOwner(this).lookup("service:modal");
-    const firstPostId = this.topic.postStream.firstPostId;
 
     switch (id) {
       case "unassign": {
@@ -32,8 +31,6 @@ export default {
         this.topic.assigned_to_group = null;
 
         await taskActions.unassign(this.topic.id);
-        // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-        this.appEvents.trigger("post-stream:refresh", { id: firstPostId });
         break;
       }
       case "reassign-self": {
@@ -41,8 +38,6 @@ export default {
         this.topic.assigned_to_group = null;
 
         await taskActions.reassignUserToTopic(this.currentUser, this.topic);
-        // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-        this.appEvents.trigger("post-stream:refresh", { id: firstPostId });
         break;
       }
       case "reassign": {
@@ -50,9 +45,6 @@ export default {
           model: {
             topic: this.topic,
           },
-          onSuccess: () =>
-            // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-            this.appEvents.trigger("post-stream:refresh", { id: firstPostId }),
         });
         break;
       }
@@ -66,8 +58,6 @@ export default {
           // force the components tracking `topic.indirectly_assigned_to` to update
           // eslint-disable-next-line no-self-assign
           this.topic.indirectly_assigned_to = this.topic.indirectly_assigned_to;
-          // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-          this.appEvents.trigger("post-stream:refresh", { id: firstPostId });
         }
       }
     }

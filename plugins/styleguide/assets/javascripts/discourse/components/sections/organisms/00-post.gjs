@@ -1,14 +1,10 @@
-import MountWidget from "discourse/components/mount-widget";
+import Post from "discourse/components/post";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
-const Post = <template>
+const PostOrganism = <template>
   <StyleguideExample @title="post">
-    <MountWidget
-      @widget="post"
-      @model={{@dummy.postModel}}
-      @args={{@dummy.transformedPost}}
-    />
+    <Post @post={{@dummy.postModel}} />
   </StyleguideExample>
 </template>;
 
-export default Post;
+export default PostOrganism;

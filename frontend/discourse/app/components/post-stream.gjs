@@ -24,6 +24,32 @@ import PostVisitedLine from "./post/visited-line";
 
 const DAY_MS = 1000 * 60 * 60 * 24;
 
+const cleanupCallbacks = [];
+
+/**
+ * Registers a callback function to be executed during the post stream cleanup process.
+ *
+ * @param {Function} callback - The callback function to be added to the cleanup process.
+ *                              This function will be called during cleanup.
+ *
+ * @return {void} This function does not return a value.
+ */
+export function registerPostStreamCleanupCallback(callback) {
+  cleanupCallbacks.push(callback);
+}
+
+/**
+ * Resets the post-stream cleanup callbacks by clearing all entries in the `cleanupCallbacks` array.
+ * This ensures that any previously registered cleanup callbacks are removed.
+ *
+ * @return {void} This function does not return a value.
+ *
+ * USE ONLY FOR TESTING PURPOSES.
+ */
+export function resetPostStreamCleanupCallbacks() {
+  cleanupCallbacks.length = 0;
+}
+
 export default class PostStream extends Component {
   @service appEvents;
   @service capabilities;
@@ -51,6 +77,15 @@ export default class PostStream extends Component {
     this.#setupEventListeners(false);
     // clear pending references in the observer
     this.viewportTracker.destroy();
+    // execute plugin cleanup callbacks
+    cleanupCallbacks.forEach((callback) => {
+      try {
+        callback();
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(e);
+      }
+    });
   }
 
   get gapsBefore() {

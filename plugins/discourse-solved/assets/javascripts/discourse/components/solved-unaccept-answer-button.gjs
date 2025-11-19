@@ -25,13 +25,7 @@ export default class SolvedUnacceptAnswerButton extends Component {
     this.saving = true;
     try {
       await unacceptPost(post);
-
       this.appEvents.trigger("discourse-solved:solution-toggled", post);
-
-      // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-      post.get("topic.postStream.posts").forEach((p) => {
-        this.appEvents.trigger("post-stream:refresh", { id: p.id });
-      });
     } catch (e) {
       popupAjaxError(e);
     } finally {

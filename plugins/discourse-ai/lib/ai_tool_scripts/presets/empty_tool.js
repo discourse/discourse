@@ -1,4 +1,5 @@
-/* eslint-disable no-undef, no-unused-vars */
+/* eslint-disable no-unused-vars */
+
 function invoke(params) {
   // logic here
   return params;
