@@ -113,8 +113,14 @@ class LlmCreditAllocation < ActiveRecord::Base
     allocation.credits_available?
   end
 
-  def self.check_credits!(llm_model)
+  def self.check_credits!(llm_model, feature_name = nil)
     return unless llm_model&.credit_system_enabled?
+
+    # If feature has 0 credit cost, skip the check entirely
+    if feature_name.present?
+      cost_per_token = LlmFeatureCreditCost.credit_cost_for(llm_model, feature_name)
+      return if cost_per_token.zero?
+    end
 
     allocation = llm_model.llm_credit_allocation
     allocation.check_credits!

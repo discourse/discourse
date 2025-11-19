@@ -390,4 +390,84 @@ RSpec.describe LlmCreditAllocation do
       expect(allocation.relative_reset_time).to eq("")
     end
   end
+
+  describe ".check_credits!" do
+    fab!(:llm_model) { Fabricate(:llm_model, id: -1) }
+
+    it "raises error when hard limit reached and no feature_name provided" do
+      Fabricate(:llm_credit_allocation, llm_model: llm_model, daily_credits: 1000, daily_used: 1000)
+
+      expect { LlmCreditAllocation.check_credits!(llm_model) }.to raise_error(
+        LlmCreditAllocation::CreditLimitExceeded,
+      )
+    end
+
+    it "does not raise error when credits available" do
+      Fabricate(:llm_credit_allocation, llm_model: llm_model, daily_credits: 1000, daily_used: 500)
+
+      expect { LlmCreditAllocation.check_credits!(llm_model) }.not_to raise_error
+    end
+
+    it "bypasses credit check for features with 0 credit cost" do
+      Fabricate(:llm_credit_allocation, llm_model: llm_model, daily_credits: 1000, daily_used: 1000)
+      Fabricate(
+        :llm_feature_credit_cost,
+        llm_model: llm_model,
+        feature_name: "spam_detection",
+        credits_per_token: 0.0,
+      )
+
+      expect { LlmCreditAllocation.check_credits!(llm_model, "spam_detection") }.not_to raise_error
+    end
+
+    it "raises error for features with non-zero credit cost when limit reached" do
+      Fabricate(:llm_credit_allocation, llm_model: llm_model, daily_credits: 1000, daily_used: 1000)
+      Fabricate(
+        :llm_feature_credit_cost,
+        llm_model: llm_model,
+        feature_name: "assistant",
+        credits_per_token: 1.0,
+      )
+
+      expect { LlmCreditAllocation.check_credits!(llm_model, "assistant") }.to raise_error(
+        LlmCreditAllocation::CreditLimitExceeded,
+      )
+    end
+
+    it "uses default credit cost when feature not found" do
+      Fabricate(:llm_credit_allocation, llm_model: llm_model, daily_credits: 1000, daily_used: 1000)
+      Fabricate(
+        :llm_feature_credit_cost,
+        llm_model: llm_model,
+        feature_name: "default",
+        credits_per_token: 1.0,
+      )
+
+      expect { LlmCreditAllocation.check_credits!(llm_model, "unknown_feature") }.to raise_error(
+        LlmCreditAllocation::CreditLimitExceeded,
+      )
+    end
+
+    it "bypasses check when default credit cost is 0" do
+      Fabricate(:llm_credit_allocation, llm_model: llm_model, daily_credits: 1000, daily_used: 1000)
+      Fabricate(
+        :llm_feature_credit_cost,
+        llm_model: llm_model,
+        feature_name: "default",
+        credits_per_token: 0.0,
+      )
+
+      expect { LlmCreditAllocation.check_credits!(llm_model, "unknown_feature") }.not_to raise_error
+    end
+
+    it "returns early when model has no credit system" do
+      regular_model = Fabricate(:llm_model)
+
+      expect { LlmCreditAllocation.check_credits!(regular_model) }.not_to raise_error
+    end
+
+    it "returns early when model is nil" do
+      expect { LlmCreditAllocation.check_credits!(nil) }.not_to raise_error
+    end
+  end
 end
