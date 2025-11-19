@@ -1,7 +1,6 @@
-@use "lib/viewport";
-
 // Policy in post styles
 .cooked .policy {
+  container-type: inline-size;
   position: relative;
   border: 1px solid var(--primary-low);
 
@@ -17,10 +16,6 @@
     display: flex;
     justify-content: space-between;
     gap: 1rem;
-
-    @include viewport.until(md) {
-      flex-direction: column;
-    }
   }
 
   .toggle {
@@ -96,17 +91,8 @@
     gap: 0.5rem;
     flex-wrap: wrap;
 
-    @include viewport.until(lg) {
-      width: 100%;
-    }
-
     .btn {
       white-space: nowrap;
-
-      @include viewport.until(lg) {
-        width: 100%;
-        white-space: inherit;
-      }
     }
   }
 
@@ -142,6 +128,24 @@
     .policy-setting-value {
       flex: 4;
       margin-bottom: 0;
+    }
+  }
+
+  @container (max-width: 400px) {
+    .policy-footer {
+      flex-direction: column;
+    }
+
+    .user-lists {
+      width: 100%;
+    }
+
+    .policy-actions {
+      width: 100%;
+
+      .btn {
+        width: 100%;
+      }
     }
   }
 }
