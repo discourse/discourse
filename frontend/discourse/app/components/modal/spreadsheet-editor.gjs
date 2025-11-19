@@ -11,7 +11,6 @@ import TextField from "discourse/components/text-field";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import {
   arrayToTable,
   findTableRegex,
@@ -21,6 +20,7 @@ import { i18n } from "discourse-i18n";
 
 export default class SpreadsheetEditor extends Component {
   @service dialog;
+  @service keyboardShortcuts;
 
   @tracked showEditReason = false;
   @tracked loading = true;
@@ -32,12 +32,12 @@ export default class SpreadsheetEditor extends Component {
   constructor() {
     super(...arguments);
     this.loadJspreadsheet();
-    KeyboardShortcuts.pause();
+    this.keyboardShortcuts.pause();
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
-    KeyboardShortcuts.unpause();
+    this.keyboardShortcuts.unpause();
   }
 
   get modalAttributes() {
