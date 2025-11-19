@@ -5916,10 +5916,10 @@ en:
               variables: "You can use these variables in your text: <code>&percnt;{preferred_display_name}</code>, <code>&percnt;{site_name}</code>"
             header_new_members:
               label: "Header for new members"
-              placeholder: "Welcome to %{site_name}, %{username}!"
+              placeholder: "Welcome to %{site_name}, %{preferred_display_name}!"
             header_logged_in:
               label: "Header for logged-in members"
-              placeholder: "Welcome back, %{username}!"
+              placeholder: "Welcome back, %{preferred_display_name}!"
             header_anonymous:
               label: "Header for anonymous visitors"
               placeholder: "Welcome to %{site_name}!"

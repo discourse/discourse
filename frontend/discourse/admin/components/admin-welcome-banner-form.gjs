@@ -408,11 +408,7 @@ export default class AdminWelcomeBannerForm extends Component {
         <form.Section
           @title={{i18n "admin.config.welcome_banner.form.text_section.title"}}
           @subtitle={{htmlSafe
-            (i18n
-              "admin.config.welcome_banner.form.text_section.variables"
-              username="%{username}"
-              site_name="%{site_name}"
-            )
+            (i18n "admin.config.welcome_banner.form.text_section.variables")
           }}
         >
 
@@ -475,7 +471,7 @@ export default class AdminWelcomeBannerForm extends Component {
             @format="large"
             as |field|
           >
-            <field.Input />
+            <field.Textarea />
           </form.Field>
 
           <form.Field
@@ -489,7 +485,7 @@ export default class AdminWelcomeBannerForm extends Component {
             @format="large"
             as |field|
           >
-            <field.Input />
+            <field.Textarea />
           </form.Field>
 
           <form.Field
