@@ -20,6 +20,7 @@ export default class FormTemplateFieldUpload extends Component {
   uppyUpload = new UppyUpload(getOwner(this), {
     id: this.args.id,
     type: "composer",
+    useMultipartUploadsIfAvailable: true,
     uploadDone: this.uploadDone,
   });
 

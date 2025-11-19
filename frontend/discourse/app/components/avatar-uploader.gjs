@@ -15,6 +15,7 @@ export default class AvatarUploader extends Component {
   uppyUpload = new UppyUpload(getOwner(this), {
     id: "avatar-uploader",
     type: "avatar",
+    useMultipartUploadsIfAvailable: true,
     validateUploadedFilesOptions: {
       imagesOnly: true,
     },
