@@ -121,6 +121,7 @@ export default class ComposerVideoThumbnailUppy {
                 this._uppyUpload = new UppyUpload(getOwner(this), {
                   id: "video-thumbnail",
                   type: "thumbnail",
+                  useMultipartUploadsIfAvailable: true,
                   additionalParams: {
                     videoSha1,
                   },
