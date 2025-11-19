@@ -153,7 +153,6 @@ export default class DModal extends Component {
 
     this.modalContainer.style.transform = `translateY(${swipeEvent.deltaY}px)`;
     this.closeModal(CLOSE_INITIATED_BY_SWIPE_DOWN);
-    this.closeModal(CLOSE_INITIATED_BY_SWIPE_DOWN, swipeEvent);
   }
 
   @action
@@ -173,12 +172,10 @@ export default class DModal extends Component {
     }
 
     return this.closeModal(CLOSE_INITIATED_BY_CLICK_OUTSIDE);
-    return this.closeModal(CLOSE_INITIATED_BY_CLICK_OUTSIDE, e);
   }
 
   @action
   async closeModal(initiatedBy) {
-  async closeModal(initiatedBy, event) {
     if (!this.args.closeModal) {
       return;
     }
@@ -220,7 +217,6 @@ export default class DModal extends Component {
     if (event.key === "Escape" && this.dismissable) {
       event.stopPropagation();
       this.closeModal(CLOSE_INITIATED_BY_ESC);
-      this.closeModal(CLOSE_INITIATED_BY_ESC, event);
     }
 
     if (event.key === "Enter" && this.shouldTriggerClickOnEnter(event)) {
