@@ -78,7 +78,7 @@ module DiscourseAi
           &blk
         )
           LlmQuota.check_quotas!(@llm_model, user)
-          LlmCreditAllocation.check_credits!(@llm_model)
+          LlmCreditAllocation.check_credits!(@llm_model, feature_name)
 
           start_time = Time.now
 
