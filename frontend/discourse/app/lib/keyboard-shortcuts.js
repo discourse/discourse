@@ -1,5 +1,6 @@
 import { getOwner, setOwner } from "@ember/owner";
 import { run, throttle } from "@ember/runloop";
+import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
 import { ajax } from "discourse/lib/ajax";
 import domUtils from "discourse/lib/dom-utils";
 import { INPUT_DELAY } from "discourse/lib/environment";
@@ -157,6 +158,7 @@ export default {
     this.appEvents = owner.lookup("service:app-events");
     this.composer = owner.lookup("service:composer");
     this.currentUser = owner.lookup("service:current-user");
+    this.modal = owner.lookup("service:modal");
     this.router = owner.lookup("service:router");
     this.searchService = owner.lookup("service:search");
     this.siteSettings = owner.lookup("service:site-settings");
@@ -551,10 +553,7 @@ export default {
 
   showHelpModal(event) {
     event.preventDefault();
-
-    getOwner(this)
-      .lookup("controller:application")
-      .send("showKeyboardShortcutsHelp");
+    this.modal.show(KeyboardShortcutsHelp);
   },
 
   setTrackingToMuted() {
