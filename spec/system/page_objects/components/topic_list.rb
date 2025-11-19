@@ -62,6 +62,10 @@ module PageObjects
         find("#{topic_list_item_class(topic)} input#bulk-select-#{topic.id}").click
       end
 
+      def click_topic_title(topic)
+        find("#{topic_list_item_class(topic)} .raw-topic-link").click
+      end
+
       def visit_topic_with_title(title)
         find("#{TOPIC_LIST_BODY_SELECTOR} a", text: title).click
       end
