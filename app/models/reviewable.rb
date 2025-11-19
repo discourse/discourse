@@ -46,8 +46,6 @@ class Reviewable < ActiveRecord::Base
 
   validates :reject_reason, length: { maximum: 2000 }
 
-  attr_accessor :skip_pending_notification
-
   before_save :set_type_source
 
   after_create { log_history(:created, created_by) }
@@ -55,9 +53,7 @@ class Reviewable < ActiveRecord::Base
   after_commit(on: :create) { DiscourseEvent.trigger(:reviewable_created, self) }
 
   after_commit(on: %i[create update]) do
-    if pending? && !skip_pending_notification
-      Jobs.enqueue(:notify_reviewable, reviewable_id: self.id)
-    end
+    Jobs.enqueue(:notify_reviewable, reviewable_id: self.id) if pending?
   end
 
   # Can be used if several actions are equivalent
@@ -360,6 +356,10 @@ class Reviewable < ActiveRecord::Base
 
     validate_action!(guardian, action_id, perform_method, args)
 
+    # Bundle needs to be determined before the action is performed, as bundles
+    # are dynamic based on the state of the reviewable.
+    action_bundle_id = get_action_bundle_id(guardian, action_id, args)
+
     result = nil
     Reviewable.transaction do
       increment_version!(args[:version])
@@ -368,8 +368,30 @@ class Reviewable < ActiveRecord::Base
       raise ActiveRecord::Rollback unless result.success?
     end
 
-    # Allow concerns to intercept and defer finalization
-    finalize_perform_result(result, performed_by, guardian) unless args[:skip_finalization]
+    if result.transition_to
+      reviewable_action_logs.create!(
+        action_key: action_id.to_s,
+        status: result.transition_to,
+        performed_by: performed_by,
+        bundle: action_bundle_id,
+      )
+    end
+
+    if guardian.can_see_reviewable_ui_refresh? && !SiteSetting.reviewable_old_moderator_actions
+      Review::CalculateFinalStatusFromLogs.call(
+        params: {
+          reviewable_id: id,
+          guardian: guardian,
+          args: args,
+        },
+      ) do
+        on_success do |status:|
+          finalize_perform_result(result, performed_by, guardian, transition_to_status: status)
+        end
+      end
+    else
+      finalize_perform_result(result, performed_by, guardian)
+    end
 
     result
   end
@@ -856,6 +878,26 @@ class Reviewable < ActiveRecord::Base
     if action_aliases.none? { |a| actions.has?(a) } || !respond_to?(perform_method)
       raise InvalidAction.new(action_id, self.class)
     end
+  end
+
+  def get_action_bundle_id(guardian, action_id, args)
+    action_aliases = [
+      action_id,
+      aliases.to_a.select { |k, v| v == action_id }.map(&:first),
+    ].flatten.map(&:to_s)
+
+    actions = actions_for(guardian, args)
+    bundle_id = nil
+    actions.bundles.each do |bundle|
+      if bundle.actions.any? { |a| action_aliases.include?(a.server_action.to_s) }
+        # Extract bundle type from bundle ID (e.g., "8311-post-actions" -> "post-actions")
+        bundle_id = bundle.id.split("-", 2).last
+        break
+      end
+    end
+
+    # For old UI actions that aren't in the new separated bundles, use a default bundle
+    bundle_id ||= "legacy-actions"
   end
 
   def update_flag_stats(status:, user_ids:)
