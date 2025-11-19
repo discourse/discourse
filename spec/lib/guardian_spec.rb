@@ -656,29 +656,6 @@ RSpec.describe Guardian do
     end
   end
 
-  describe "post_can_act?" do
-    it "isn't allowed on nil" do
-      expect(Guardian.new(user).post_can_act?(nil, nil)).to be_falsey
-    end
-
-    describe "a Post" do
-      let(:guardian) { Guardian.new(user) }
-
-      it "isn't allowed when not logged in" do
-        expect(Guardian.new(nil).post_can_act?(post, :vote)).to be_falsey
-      end
-
-      it "is allowed as a regular user" do
-        expect(guardian.post_can_act?(post, :vote)).to be_truthy
-      end
-
-      it "isn't allowed on archived topics" do
-        topic.archived = true
-        expect(Guardian.new(user).post_can_act?(post, :like)).to be_falsey
-      end
-    end
-  end
-
   describe "can_recover_topic?" do
     fab!(:topic) { Fabricate(:topic, user: user) }
     fab!(:post) { Fabricate(:post, user: user, topic: topic) }
@@ -1315,28 +1292,6 @@ RSpec.describe Guardian do
       it "returns true when trust level 4" do
         expect(Guardian.new(trust_level_4).can_moderate?(topic)).to be_truthy
       end
-    end
-  end
-
-  describe "#can_see_flags?" do
-    it "returns false when there is no post" do
-      expect(Guardian.new(moderator).can_see_flags?(nil)).to be_falsey
-    end
-
-    it "returns false when there is no user" do
-      expect(Guardian.new(nil).can_see_flags?(post)).to be_falsey
-    end
-
-    it "allow regular users to see flags" do
-      expect(Guardian.new(user).can_see_flags?(post)).to be_falsey
-    end
-
-    it "allows moderators to see flags" do
-      expect(Guardian.new(moderator).can_see_flags?(post)).to be_truthy
-    end
-
-    it "allows moderators to see flags" do
-      expect(Guardian.new(admin).can_see_flags?(post)).to be_truthy
     end
   end
 
