@@ -4,5 +4,5 @@ export {
   warnWidgetsDecommissioned as addPostSmallActionIcon,
   warnWidgetsDecommissioned as addPostSmallActionClassesCallback,
   warnWidgetsDecommissioned as resetPostSmallActionClassesCallbacks,
-  warnWidgetsDecommissioned as default,
+  DummyWidget as default,
 } from "./widget";
