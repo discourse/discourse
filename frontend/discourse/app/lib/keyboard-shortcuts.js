@@ -1,6 +1,5 @@
 import { getOwner, setOwner } from "@ember/owner";
 import { run, throttle } from "@ember/runloop";
-import { service } from "@ember/service";
 import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
 import { ajax } from "discourse/lib/ajax";
 import domUtils from "discourse/lib/dom-utils";
@@ -142,13 +141,22 @@ function preventKeyboardEvent(event) {
   event.stopPropagation();
 }
 
+/* Not ideal, but the keyboard-shortcuts-lib changes owner without being re-constructed */
+function uncachedService(_, key) {
+  return {
+    get() {
+      return getOwner(this).lookup(`service:${key}`);
+    },
+  };
+}
+
 class KeyboardShortcutLib {
-  @service appEvents;
-  @service composer;
-  @service currentUser;
-  @service router;
-  @service siteSettings;
-  @service modal;
+  @uncachedService appEvents;
+  @uncachedService composer;
+  @uncachedService currentUser;
+  @uncachedService router;
+  @uncachedService siteSettings;
+  @uncachedService modal;
 
   init(keyTrapper, owner) {
     setOwner(this, owner);
