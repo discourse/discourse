@@ -380,6 +380,8 @@ class PostActionCreator
             .where("category_moderation_groups.category_id": @post.topic.category.id)
             .pluck(:name),
         )
+
+        create_args[:target_group_names].uniq!
       end
     end
 
