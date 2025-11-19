@@ -417,7 +417,7 @@ uk:
     joined: "Приєднався(-лась)"
     admin_title: "Адміністратор"
     show_more: "показати більше"
-    show_help: "параметри"
+    show_help: "Параметри"
     links: "Посилання"
     links_lowercase:
       one: "посилання"
@@ -892,7 +892,7 @@ uk:
         few: "%{count} відповіді"
         many: "%{count} відповідей"
         other: "%{count} відповідей"
-      edit: "Редагувати"
+      edit: "Редагувати допис"
       save: "Зберегти"
       cancel: "Скасувати"
       new_topic: "Схвалення цього елемента створить нову тему"
@@ -914,7 +914,6 @@ uk:
           created_at: "Створено"
           created_at_asc: "Створено (зворотний порядок)"
         priority:
-          title: "Мінімальний пріоритет"
           any: "(будь-який)"
           low: "Низький"
           medium: "Середній"
@@ -1006,7 +1005,7 @@ uk:
         chars_remaining: "Залишилося %{count} символів"
         delete_note: "Видалити цю примітку"
         delete: "Видалити"
-      new_topic_label: "Нова тема"
+      topic_label: "Тема"
       queued_user: "Користувач у черзі"
       posted_in: "Опубліковано в"
       flagged_user: "Позначений користувач"
@@ -1024,9 +1023,6 @@ uk:
           few: "Позначено %{count} унікальними користувачами"
           many: "Позначено %{count} унікальними користувачами"
           other: "Позначено %{count} унікальними користувачами"
-        similar_posts: "Схожі попередні публікації"
-        flagged_in_timeframe: "%{count} позначено раніше"
-        user_activity: "Активність користувача"
         activities:
           new_account: "новий обліковий запис"
           trust_level: "рівень довіри: %{trustLevelName}"
@@ -2998,7 +2994,6 @@ uk:
         title: "Переклад матеріалу"
         select: "Виберіть переклад"
         save: "Зберегти переклад"
-        original_content: "Оригінальний текст публікації"
         translation_preview: "Попередній перегляд перекладу"
         original: "Оригінал"
         translation: "Переклад"
@@ -3189,7 +3184,6 @@ uk:
           desc: "Відповісти без зміни дати останньої відповіді"
         toggle_unlisted:
           label: Перемикання між приватністю
-          desc: Непублічні теми доступні лише учасникам за прямим посиланням
       reload: "Перезавантажити"
       ignore: "Ігнорувати"
       image_alt_text:
@@ -5087,7 +5081,6 @@ uk:
         go_to_unread_post: "%{shortcut} Перейти до першого непрочитаного допису"
       application:
         title: "Застосунок"
-        create: "%{shortcut} Створити нову тему"
         notifications: "%{shortcut} Відкрити сповіщення"
         hamburger_menu: "%{shortcut} Відкрити меню навігації"
         user_profile_menu: "%{shortcut} Відкрити меню профілю"

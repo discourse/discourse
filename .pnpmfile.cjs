@@ -47,7 +47,7 @@ const pluginName =
 
 if (
   pluginName &&
-  fs.existsSync(`${discourseRoot}/plugins/${pluginName}/package.json`) &&
+  fs.existsSync(`${discourseRoot}/plugins/${pluginName}/pnpm-lock.yaml`) &&
   !process.argv.includes("--ignore-workspace")
 ) {
   console.log(

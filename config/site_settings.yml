@@ -1740,10 +1740,11 @@ content_localization:
       - all
     default: none
     client: true
+    area: "localization"
     validator: "LanguageSwitcherSettingValidator"
   content_localization_crawler_param:
     default: false
-    hidden: true
+    area: "localization"
 
 email:
   email_time_window_mins:
@@ -2343,12 +2344,15 @@ files:
     client: true
   composer_media_optimization_image_bytes_optimization_threshold:
     default: 524288
+    hidden: true
     client: true
   composer_media_optimization_image_resize_dimensions_threshold:
     default: 1920
+    hidden: true
     client: true
   composer_media_optimization_image_resize_width_target:
     default: 1920
+    hidden: true
     client: true
   composer_media_optimization_image_resize_pre_multiply:
     default: false
@@ -4278,3 +4282,12 @@ experimental:
     default: false
     hidden: true
     client: true
+  fake_upcoming_change:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "alpha"
+      impact: "other,all_members"
+      learn_more_url: "https://meta.discourse.org"
+

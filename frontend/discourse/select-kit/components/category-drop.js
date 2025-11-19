@@ -9,15 +9,15 @@ import DiscourseURL, {
   getEditCategoryUrl,
 } from "discourse/lib/url";
 import Category from "discourse/models/category";
-import { i18n } from "discourse-i18n";
-import CategoryDropMoreCollection from "select-kit/components/category-drop-more-collection";
-import CategoryRow from "select-kit/components/category-row";
-import ComboBoxComponent from "select-kit/components/combo-box";
+import CategoryDropMoreCollection from "discourse/select-kit/components/category-drop-more-collection";
+import CategoryRow from "discourse/select-kit/components/category-row";
+import ComboBoxComponent from "discourse/select-kit/components/combo-box";
 import {
   MAIN_COLLECTION,
   pluginApiIdentifiers,
   selectKitOptions,
-} from "select-kit/components/select-kit";
+} from "discourse/select-kit/components/select-kit";
+import { i18n } from "discourse-i18n";
 import CategoryDropHeader from "./category-drop/category-drop-header";
 
 export const NO_CATEGORIES_ID = "no-categories";
@@ -28,7 +28,6 @@ const MORE_COLLECTION = "MORE_COLLECTION";
 @classNames("category-drop")
 @classNameBindings("noSubcategories:has-selection")
 @selectKitOptions({
-  filterable: true,
   none: "category.all",
   caretDownIcon: "caret-right",
   caretUpIcon: "caret-down",
@@ -43,14 +42,12 @@ const MORE_COLLECTION = "MORE_COLLECTION";
   headerComponent: CategoryDropHeader,
   parentCategory: false,
   allowUncategorized: "allowUncategorized",
-  shouldDisplayIcon: "shouldDisplayIcon",
 })
 @pluginApiIdentifiers(["category-drop"])
 export default class CategoryDrop extends ComboBoxComponent {
   @readOnly("category.id") value;
   @readOnly("categoriesWithShortcuts") content;
   @readOnly("selectKit.options.parentCategory.displayName") parentCategoryName;
-  @readOnly("selectKit.options.shouldDisplayIcon") shouldDisplayIcon;
   @setting("allow_uncategorized_topics") allowUncategorized;
 
   noCategoriesLabel = i18n("categories.no_subcategories");

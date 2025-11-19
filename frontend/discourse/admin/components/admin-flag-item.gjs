@@ -5,16 +5,16 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { not } from "truth-helpers";
+import { SYSTEM_FLAG_IDS } from "discourse/admin/lib/constants";
 import DButton from "discourse/components/d-button";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import DMenu from "discourse/float-kit/components/d-menu";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import { SYSTEM_FLAG_IDS } from "admin/lib/constants";
-import DMenu from "float-kit/components/d-menu";
 
 export default class AdminFlagItem extends Component {
   @service dialog;

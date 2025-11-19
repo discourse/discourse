@@ -53,7 +53,9 @@ class PlDefinitionTests < Test::Unit::TestCase  # :nodoc:
 
     assert_equal "Mikołajki", (Holidays.on(Date.civil(2011, 12, 6), [:pl], [:informal])[0] || {})[:name]
 
-    assert_equal "Wigilia Bożego Narodzenia", (Holidays.on(Date.civil(2011, 12, 24), [:pl], [:informal])[0] || {})[:name]
+    assert_equal "Wigilia Bożego Narodzenia", (Holidays.on(Date.civil(2024, 12, 24), [:pl], [:informal])[0] || {})[:name]
+
+    assert_equal "Wigilia Bożego Narodzenia", (Holidays.on(Date.civil(2025, 12, 24), [:pl])[0] || {})[:name]
 
     assert_equal "Sylwester", (Holidays.on(Date.civil(2011, 12, 31), [:pl], [:informal])[0] || {})[:name]
 

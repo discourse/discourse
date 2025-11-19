@@ -212,7 +212,7 @@ lv:
     joined: "Pievienojās"
     admin_title: "Administrators"
     show_more: "parādīt vairāk"
-    show_help: "iespējas"
+    show_help: "Opcijas"
     links: "Saites"
     links_lowercase:
       zero: "saite"
@@ -397,7 +397,6 @@ lv:
       topic: "Tēma:"
       filtered_topic: "Jūs esat filtrējis līdz pārskatāmam saturam vienā tēmā."
       filtered_user: "Lietotājs"
-      filtered_reviewed_by: "Pārskatīja"
       show_all_topics: "rādīt visas tēmas"
       deleted_post: "(ieraksts dzēsts)"
       deleted_user: "(lietotājs dzēsts)"
@@ -427,7 +426,7 @@ lv:
         zero: "%{count} atbildes"
         one: "%{count} atbilde"
         other: "%{count} atbildes"
-      edit: "Labot"
+      edit: "Rediģēt ierakstu"
       save: "Saglabāt"
       cancel: "Atcelt"
       new_topic: "Apstiprinot šo vienumu, tiks izveidota jauna tēma"
@@ -448,7 +447,6 @@ lv:
           created_at: "Izveidots"
           created_at_asc: "Izveidots (reversā)"
         priority:
-          title: "Minimālā prioritāte"
           any: "(jebkurš)"
           low: "Zems"
           medium: "Vidējs"
@@ -494,6 +492,7 @@ lv:
       user_label: "Lietotājs"
       notes:
         delete: "Dzēst"
+      topic_label: "Tēmas"
       review_user: "Lietotājs"
       insights:
         activities:
@@ -2640,7 +2639,6 @@ lv:
         next_prev: "%{shortcut} Nākamā/iepriekšējā sadaļa"
       application:
         title: "Lietotne"
-        create: "%{shortcut} Izveidot jaunu tēmu"
         notifications: "%{shortcut} Atvērt paziņojumus"
         user_profile_menu: "%{shortcut} Atvērt lietotaja menu"
         show_incoming_updated_topics: "%{shortcut} Parādīt tēmas ar izmaiņām"

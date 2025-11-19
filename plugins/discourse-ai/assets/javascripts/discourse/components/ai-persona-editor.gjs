@@ -6,7 +6,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { LinkTo } from "@ember/routing";
 import { later } from "@ember/runloop";
 import { service } from "@ember/service";
-import { gt, or } from "truth-helpers";
+import AdminUser from "discourse/admin/models/admin-user";
 import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
 import Avatar from "discourse/helpers/bound-avatar-template";
@@ -17,9 +17,9 @@ import {
 } from "discourse/lib/array-tools";
 import getURL from "discourse/lib/get-url";
 import Group from "discourse/models/group";
+import GroupChooser from "discourse/select-kit/components/group-chooser";
+import { gt, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import AdminUser from "admin/models/admin-user";
-import GroupChooser from "select-kit/components/group-chooser";
 import AiPersonaResponseFormatEditor from "../components/modal/ai-persona-response-format-editor";
 import AiLlmSelector from "./ai-llm-selector";
 import AiPersonaCollapsableExample from "./ai-persona-example";
@@ -514,16 +514,6 @@ export default class PersonaEditor extends Component {
           {{/if}}
 
           {{#if (gt data.tools.length 0)}}
-            <form.Field
-              @name="tool_details"
-              @title={{i18n "discourse_ai.ai_persona.tool_details"}}
-              @tooltip={{i18n "discourse_ai.ai_persona.tool_details_help"}}
-              @format="large"
-              as |field|
-            >
-              <field.Checkbox />
-            </form.Field>
-
             <AiPersonaToolOptions
               @form={{form}}
               @data={{data}}
@@ -531,6 +521,16 @@ export default class PersonaEditor extends Component {
               @allTools={{@personas.resultSetMeta.tools}}
             />
           {{/if}}
+
+          <form.Field
+            @name="show_thinking"
+            @title={{i18n "discourse_ai.ai_persona.show_thinking"}}
+            @tooltip={{i18n "discourse_ai.ai_persona.show_thinking_help"}}
+            @format="large"
+            as |field|
+          >
+            <field.Checkbox />
+          </form.Field>
         </form.Section>
 
         {{#if this.siteSettings.ai_embeddings_enabled}}

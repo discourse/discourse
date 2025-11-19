@@ -370,7 +370,7 @@ be:
     joined: "Далучыўся(-лася)"
     admin_title: "Адміністратар"
     show_more: "паказаць больш"
-    show_help: "параметры"
+    show_help: "Налады"
     links: "Спасылкі"
     links_lowercase:
       one: "спасылка"
@@ -659,7 +659,6 @@ be:
         reviewable_count: "Колькасць"
         deleted: "[Тэма выдалена]"
         details: "падрабязнасці"
-      edit: "Рэдагаваць"
       save: "Захаваць"
       cancel: "Скасаваць"
       filters:
@@ -708,6 +707,7 @@ be:
       user_label: "Карыстальнік"
       notes:
         delete: "выдаляць"
+      topic_label: "Тэма"
       review_user: "карыстальнік"
       insights:
         activities:
@@ -1807,7 +1807,6 @@ be:
         open: "<B> o <"
       application:
         title: "дадатак"
-        create: "<B> c <"
         notifications: "%{shortcut}Адкрытыя абвесткі "
         log_out: "%{shortcut}Выйсці"
       actions:

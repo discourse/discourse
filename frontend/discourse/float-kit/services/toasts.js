@@ -3,8 +3,8 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import Service from "@ember/service";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
-import DDefaultToast from "float-kit/components/d-default-toast";
-import DToastInstance from "float-kit/lib/d-toast-instance";
+import DDefaultToast from "discourse/float-kit/components/d-default-toast";
+import DToastInstance from "discourse/float-kit/lib/d-toast-instance";
 
 export default class Toasts extends Service {
   @tracked activeToasts = new TrackedArray();

@@ -1,7 +1,7 @@
+import AdminConfigAreasUpcomingChanges from "discourse/admin/components/admin-config-areas/upcoming-changes";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DPageHeader from "discourse/components/d-page-header";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreasUpcomingChanges from "admin/components/admin-config-areas/upcoming-changes";
 
 export default <template>
   <DPageHeader

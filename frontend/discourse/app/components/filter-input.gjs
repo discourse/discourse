@@ -3,11 +3,11 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { modifier } from "ember-modifier";
-import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import noop from "discourse/helpers/noop";
+import { and } from "discourse/truth-helpers";
 
 export default class FilterInput extends Component {
   @tracked isFocused = false;

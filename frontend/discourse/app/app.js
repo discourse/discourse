@@ -277,7 +277,7 @@ function resolveDiscourseInitializer(moduleName, themeId) {
 
 let printedDebugInfo = false;
 function printDebugInfo() {
-  if (printedDebugInfo) {
+  if (printedDebugInfo || isTesting()) {
     return;
   }
 
@@ -300,7 +300,3 @@ function printDebugInfo() {
 }
 
 export default Discourse;
-
-/**
- * @typedef {import('ember-source/types')} EmberTypes
- */

@@ -68,7 +68,10 @@ class Demon::Sidekiq < ::Demon::Base
     @@last_sidekiq_rss_memory_check = Time.now.to_i
   end
 
-  DEFAULT_MAX_ALLOWED_SIDEKIQ_RSS_MEGABYTES = 500
+  # Given Discourse AI a steady state during streaming is closer
+  # to 700MB given tokenization overhead. Set the default a bit higher
+  # so only outliers get restarted.
+  DEFAULT_MAX_ALLOWED_SIDEKIQ_RSS_MEGABYTES = 1000
 
   def self.max_allowed_sidekiq_rss_bytes
     [ENV["UNICORN_SIDEKIQ_MAX_RSS"].to_i, DEFAULT_MAX_ALLOWED_SIDEKIQ_RSS_MEGABYTES].max.megabytes

@@ -3,13 +3,13 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
+import AdminSiteSettingsFilterControls from "discourse/admin/components/admin-site-settings-filter-controls";
+import SiteSetting from "discourse/admin/components/site-setting";
+import SiteSettingFilter from "discourse/admin/lib/site-setting-filter";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import discourseDebounce from "discourse/lib/debounce";
 import { i18n } from "discourse-i18n";
-import AdminSiteSettingsFilterControls from "admin/components/admin-site-settings-filter-controls";
-import SiteSetting from "admin/components/site-setting";
-import SiteSettingFilter from "admin/lib/site-setting-filter";
 
 export default class AdminFilteredSiteSettings extends Component {
   @tracked visibleSettings;

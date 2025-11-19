@@ -98,17 +98,12 @@ module DiscourseAi
           HTML
 
           self.custom_raw = <<~HTML
-            <details>
-              <summary>Thinking...</summary>
+            ### Instructions
+            ````
+            #{instructions}
+            ````
 
-              ### Instructions
-              ````
-              #{instructions}
-              ````
-
-              #{source}
-
-            </details>
+            #{source}
           HTML
         end
 

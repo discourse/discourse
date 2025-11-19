@@ -7,11 +7,11 @@ import {
   triggerKeyEvent,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import DDefaultToast from "discourse/float-kit/components/d-default-toast";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
+import DTooltipInstance from "discourse/float-kit/lib/d-tooltip-instance";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import DDefaultToast from "float-kit/components/d-default-toast";
-import DTooltip from "float-kit/components/d-tooltip";
-import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
 
 module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
   setupRenderingTest(hooks);

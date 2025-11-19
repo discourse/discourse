@@ -1362,8 +1362,8 @@ en:
       yaxis: "Day"
       description: "API requests for regular API keys and user API keys."
     consolidated_page_views_browser_detection:
-      title: "Consolidated Pageviews with Browser Detection (Experimental)"
-      title_legacy: "Consolidated Pageviews with Browser Detection (Experimental)"
+      title: "Consolidated Pageviews with Browser Detection (Recommended)"
+      title_legacy: "Consolidated Pageviews with Browser Detection (Recommended)"
       xaxis:
         page_view_anon_browser: "Anonymous Browser"
         page_view_logged_in_browser: "Logged In Browser"
@@ -1759,7 +1759,7 @@ en:
     allow_duplicate_topic_titles_category: "Allow topics with identical, duplicate titles if the category is different. allow_duplicate_topic_titles must be disabled."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
     educate_until_posts: "When the user starts typing their first (n) new posts, show the pop-up new user education panel in the composer."
-    title: "The name of this site. Visible to all visitors including anonymous users."
+    title: "The name of this site. Visible to all visitors including anonymous users. Note that changing this title may send a prompt to users of the PWA asking them to either update or uninstall the app."
     site_description: "Describe this site in one sentence. Visible to all visitors including anonymous users."
     short_site_description: "Short description in a few words. Visible to all visitors including anonymous users."
     contact_email: "Email address of key contact responsible for this site. Used for critical notifications, and also displayed on <a href='%{base_path}/about' target='_blank'>/about</a>. Visible to anonymous users on public sites."
@@ -2313,7 +2313,7 @@ en:
     allow_all_users_to_flag_illegal_content: "Anonymous users will see information that they have to e-mail administrators to report illegal content. This setting takes precedence over 'flag post allowed groups'."
     email_address_to_report_illegal_content: "If left blank the default site admin email will be used."
     cooldown_hours_until_reflag: "How much time users will have to wait until they are able to reflag a post"
-    slow_mode_prevents_editing: "Does 'Slow Mode' prevent editing, after editing_grace_period?"
+    slow_mode_prevents_editing: "Does 'Slow mode' prevent editing, after 'editing grace period'?"
 
     reply_by_email_enabled: "Activate the feature that permits users to respond to topics directly through email, instead of requiring them to log into the website. See <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>the guide on Meta</a> for more information."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
@@ -2711,7 +2711,7 @@ en:
     enable_user_status: "Allow users to set custom status message (emoji + description)."
     enable_user_tips: "Enable new user tips that describe key features to users"
 
-    short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. It should be limited to 12 characters."
+    short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. It should be limited to 12 characters. Note that changing this title may send a prompt to users of the PWA asking them to either update or uninstall the app."
 
     dashboard_hidden_reports: "Allow to hide the specified reports from the dashboard."
     dashboard_visible_tabs: "Choose which dashboard tabs are visible."
@@ -2747,9 +2747,6 @@ en:
     glimmer_post_stream_mode: "Control whether the new 'glimmer' post stream implementation is used. 'auto' will enable automatically once all your themes and plugins are ready."
     glimmer_post_stream_mode_auto_groups: "Enable the new 'glimmer' post stream implementation in 'auto' mode for the specified user groups."
     deactivate_widgets_rendering: "Disable the legacy widgets rendering engine. This will disable all widgets that have not been updated to Glimmer components, it will also force the Glimmer Post Stream to be enabled unconditionally regardless of the value of the `glimmer_post_stream_mode` setting."
-    floatkit_autocomplete_composer: "Enable the Floatkit-based autocomplete menu in composer. This is an UI enhancement that will replace the current JQuery-based autocomplete menu."
-    floatkit_autocomplete_input_fields: "Enable the Floatkit-based autocomplete menu for input fields in full page search and group selector fields. This is a UI enhancement that will replace the current jQuery-based autocomplete menu."
-    floatkit_autocomplete_chat_composer: "Enable the Floatkit-based autocomplete menu in chat composer. This is a UI enhancement that will replace the current jQuery-based autocomplete menu."
     experimental_form_templates: "Enable the form templates feature. Manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
     show_preview_for_form_templates: "Enable the preview for form templates feature"
     lazy_load_categories_groups: "Lazy load category information only for users of these groups. This improves performance on sites with many categories."
@@ -2774,8 +2771,9 @@ en:
     content_localization_supported_locales: "List of supported locales that user content can be translated to. Requires 'content localization enabled'."
     content_localization_allowed_groups: "Groups allowed to update localized content. Requires 'content localization enabled'."
     content_localization_language_switcher: "Show a language switcher in the header, allowing visitors to switch between translated versions of Discourse and user-contributed content. Uses languages defined in 'content localization supported locales'"
+    content_localization_crawler_param: "Serve localized content to web crawlers when 'content localization enabled' and 'set locale from param' is enabled. The list of supported locales is defined in 'content localization supported locales'."
     enable_upcoming_changes: "Enable upcoming changes"
-
+    fake_upcoming_change: "This is a fake upcoming change for testing purposes. No need to translate this string."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -3381,11 +3379,13 @@ en:
     illegal: "Your post was flagged as  **illegal**: the community thinks it might be breaking the law."
     spam: "Your post was flagged as **spam**: the community feels it is an advertisement, something that is overly promotional in nature instead of being useful or relevant to the topic as expected."
     notify_moderators: "Your post was flagged **for moderator attention**: the community feels something about the post requires manual intervention by a staff member."
+    needs_approval: "Your post was flagged **for approval**: it has been automatically queued for review by a staff member to ensure it meets [our community guidelines](%{base_path}/guidelines)."
     responder:
       off_topic: "The post was flagged as **off-topic**: the community feels it is not a good fit for the topic, as currently defined by the title and the first post."
       inappropriate: "The post was flagged as **inappropriate**: the community feels it is offensive, abusive, to be hateful conduct or a violation of [our community guidelines](%{base_path}/guidelines)."
       spam: "The post was flagged as **spam**: the community feels it is an advertisement, something that is overly promotional in nature instead of being useful or relevant to the topic as expected."
       notify_moderators: "The post was flagged **for moderator attention**: the community feels something about the post requires manual intervention by a staff member."
+      needs_approval: "The post was flagged **for approval**: it has been automatically queued for review by a staff member to ensure it meets [our community guidelines](%{base_path}/guidelines)."
 
   flags_dispositions:
     agreed: "Thanks for letting us know. We agree there is an issue and we're looking into it."
@@ -4043,7 +4043,20 @@ en:
       text_body_template: |
         This is an automated message.
 
-        The new user [%{username}](%{user_url}) was automatically silenced because multiple users flagged %{username}'s post(s).
+        The new user [%{username}](%{user_url}) was automatically silenced.
+
+        Please [review the flags](%{base_url}/review). If %{username} was incorrectly silenced from posting, click the unsilence button on [the admin page for this user](%{user_url}).
+
+        This threshold can be changed via the `silence_new_user` site settings.
+    user_automatically_silenced_with_reason:
+      title: "User Automatically Silenced"
+      subject_template: "New user %{username} silenced by community flags"
+      text_body_template: |
+        This is an automated message.
+
+        The new user [%{username}](%{user_url}) was automatically silenced.
+
+        Reason - %{reason}
 
         Please [review the flags](%{base_url}/review). If %{username} was incorrectly silenced from posting, click the unsilence button on [the admin page for this user](%{user_url}).
 
@@ -5813,7 +5826,7 @@ en:
         title: "Discard Post"
         complete: "Post discarded."
       revise_and_reject_post:
-        title: "Revise Post..."
+        title: "Request Revision..."
         complete: "Post rejected pending revision."
       ignore:
         title: "Ignore"

@@ -1,5 +1,5 @@
 import { hash } from "@ember/helper";
-import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
+import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 
 const UserIdInput = <template>
   <@field.Custom id={{@field.id}}>

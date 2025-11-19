@@ -1,6 +1,15 @@
 # frozen_string_literal: true
 
 RSpec.describe Onebox::Engine::YoutubeOnebox do
+  let(:oembed_standard_response) do
+    {
+      title: "96neko - orange",
+      author_name: "96neko",
+      type: "video",
+      thumbnail_url: "https://i.ytimg.com/vi/21Lk4YiASMo/hqdefault.jpg",
+    }.to_json
+  end
+
   before do
     stub_request(
       :get,
@@ -54,6 +63,64 @@ RSpec.describe Onebox::Engine::YoutubeOnebox do
       status: 200,
       body: onebox_response("youtube-shorts"),
     )
+
+    stub_request(:get, "https://www.youtube.com/watch?v=KCyIfcevExE").to_return(
+      status: 200,
+      body: onebox_response("youtube"),
+    )
+
+    stub_request(:get, "https://youtube.com/shorts/VvoFuaLAslw").to_return(
+      status: 200,
+      body: onebox_response("youtube-shorts"),
+    )
+
+    # Stub oEmbed API calls for video URLs
+    stub_request(
+      :get,
+      %r{https://www\.youtube\.com/oembed\?url=https://www\.youtube\.com/watch},
+    ).to_return(status: 200, body: oembed_standard_response)
+    # Make oEmbed fail for KCyIfcevExE to test fallback to embed page parsing
+    # Must come after the general stub to override it
+    stub_request(
+      :get,
+      "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=KCyIfcevExE",
+    ).to_return(status: 404)
+    stub_request(:get, %r{https://www\.youtube\.com/oembed\?url=https://youtu\.be}).to_return(
+      status: 200,
+      body: oembed_standard_response,
+    )
+    stub_request(
+      :get,
+      %r{https://www\.youtube\.com/oembed\?url=http://www\.youtube\.com/watch},
+    ).to_return(status: 200, body: oembed_standard_response)
+    stub_request(
+      :get,
+      %r{https://www\.youtube\.com/oembed\?url=https://www\.youtube\.com/live},
+    ).to_return(status: 200, body: oembed_standard_response)
+    stub_request(
+      :get,
+      %r{https://www\.youtube\.com/oembed\?url=https://youtube\.com/shorts},
+    ).to_return(
+      status: 200,
+      body: {
+        title: "POMBO",
+        thumbnail_url: "https://i.ytimg.com/vi/VvoFuaLAslw/hqdefault.jpg",
+      }.to_json,
+    )
+
+    # Channels, playlists, etc. don't support oEmbed - return 404
+    stub_request(
+      :get,
+      %r{https://www\.youtube\.com/oembed\?url=https://www\.youtube\.com/channel},
+    ).to_return(status: 404)
+    stub_request(
+      :get,
+      %r{https://www\.youtube\.com/oembed\?url=http://www\.youtube\.com/user},
+    ).to_return(status: 404)
+    stub_request(
+      :get,
+      %r{https://www\.youtube\.com/oembed\?url=https://www\.youtube\.com/playlist},
+    ).to_return(status: 404)
   end
 
   it "adds wmode=opaque" do
@@ -206,5 +273,66 @@ RSpec.describe Onebox::Engine::YoutubeOnebox do
 
   it "generates a thumbnail for videos" do
     expect(Onebox.preview("https://www.youtube.com/watch?v=21Lk4YiASMo").to_s).to match("<img")
+  end
+
+  describe "oEmbed support" do
+    let(:video_url) { "https://www.youtube.com/watch?v=wC10VWDTzmU" }
+    let(:oembed_url) { "https://www.youtube.com/oembed?url=#{video_url}" }
+    let(:oembed_response) do
+      {
+        title: "Bob Dylan - Gotta Serve Somebody (Official Audio)",
+        author_name: "BobDylanVEVO",
+        author_url: "https://www.youtube.com/@BobDylanVEVO",
+        type: "video",
+        height: 113,
+        width: 200,
+        version: "1.0",
+        provider_name: "YouTube",
+        provider_url: "https://www.youtube.com/",
+        thumbnail_height: 360,
+        thumbnail_width: 480,
+        thumbnail_url: "https://i.ytimg.com/vi/wC10VWDTzmU/hqdefault.jpg",
+        html:
+          '<iframe width="200" height="113" src="https://www.youtube.com/embed/wC10VWDTzmU?feature=oembed"></iframe>',
+      }.to_json
+    end
+
+    before do
+      stub_request(:get, oembed_url).to_return(status: 200, body: oembed_response)
+      stub_request(:get, video_url).to_return(status: 200, body: onebox_response("youtube"))
+    end
+
+    it "uses oEmbed API for metadata" do
+      onebox = Onebox::Engine::YoutubeOnebox.new(video_url)
+      result = onebox.send(:parse_embed_response)
+
+      expect(result).to be_present
+      expect(result[:title]).to eq("Bob Dylan - Gotta Serve Somebody (Official Audio)")
+      expect(result[:image]).to eq("https://i.ytimg.com/vi/wC10VWDTzmU/hqdefault.jpg")
+    end
+
+    it "includes oEmbed data in placeholder_html" do
+      placeholder = Onebox.preview(video_url).placeholder_html
+
+      expect(placeholder).to include("Bob Dylan - Gotta Serve Somebody (Official Audio)")
+      expect(placeholder).to include("https://i.ytimg.com/vi/wC10VWDTzmU/hqdefault.jpg")
+      expect(placeholder).to match(/<img/)
+    end
+
+    it "falls back to OpenGraph when oEmbed fails" do
+      stub_request(:get, oembed_url).to_return(status: 404)
+      stub_request(:get, "https://www.youtube.com/embed/wC10VWDTzmU").to_return(
+        status: 200,
+        body: onebox_response("youtube-embed"),
+      )
+
+      onebox = Onebox::Engine::YoutubeOnebox.new(video_url)
+      result = onebox.send(:parse_embed_response)
+
+      # Should fall back but won't get data from the broken embed page
+      # The fallback to get_opengraph happens in placeholder_html
+      placeholder = onebox.placeholder_html
+      expect(placeholder).to match(/<img/)
+    end
   end
 end

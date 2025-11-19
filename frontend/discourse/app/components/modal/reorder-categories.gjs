@@ -5,13 +5,13 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { compare } from "@ember/utils";
-import { eq, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import categoryBadge from "discourse/helpers/category-badge";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { eq, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 class Entry {

@@ -9,7 +9,7 @@ import {
   enableBodyScroll,
   locks,
 } from "discourse/lib/body-scroll-lock";
-import { resolveComponent } from "select-kit/components/select-kit";
+import { resolveComponent } from "discourse/select-kit/components/select-kit";
 
 @tagName("")
 export default class SelectKitCollection extends Component {

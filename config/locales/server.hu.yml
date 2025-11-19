@@ -1263,8 +1263,6 @@ hu:
       yaxis: "Nap"
       description: "API-kérelmek a normál API-kulcsokhoz és a felhasználói API-kulcsokhoz."
     consolidated_page_views_browser_detection:
-      title: "Összevont oldalmegtekintések böngészőészleléssel (kísérleti)"
-      title_legacy: "Összevont oldalmegtekintések böngészőészleléssel (kísérleti)"
       xaxis:
         page_view_anon_browser: "Névtelen böngésző"
         page_view_logged_in_browser: "Bejelentkezve a böngészőben"
@@ -2453,15 +2451,11 @@ hu:
     welcome_banner_image: "Állítson be egy képet, amely az üdvözlő banner hátterében jelenik meg."
     welcome_banner_location: "Meghatározza, hogy az oldalon hol jelenjen meg az üdvözlő banner."
     welcome_banner_page_visibility: "Meghatározza, hogy mely oldalakon jelenjen meg az üdvözlő banner."
-    welcome_banner_text_color: "Ha a „Üdvözlő bannerkép” beállítás konfigurálva van, ezzel a beállítással módosíthatja a banner szövegének színét, hogy az olvasható maradjon. Ha üresen hagyja, vagy ha nincs feltöltve kép, a színpaletta „elsődleges” színe lesz használatban."
     splash_screen: "Ideiglenes betöltési képernyőt jelenít meg, amíg az oldal eszközei betöltődnek."
     navigation_menu: "Adja meg, hogy az oldalsáv vagy a fejléc legördülő menüje legyen az oldal fő navigációs menüje. Az oldalsáv ajánlott."
     default_navigation_menu_categories: "A kiválasztott kategóriák alapértelmezetten megjelennek a Navigációs Menü Kategóriák szekciójában."
     default_navigation_menu_tags: "A kiválasztott címkék alapértelmezetten megjelennek a Navigációs Menü Címkék szekciójában."
     experimental_new_new_view_groups: 'Engedélyezzen egy új témalistát, amely egyesíti az olvasatlan és új témákat, és az oldalsávon lévő "Minden" hivatkozást jelölje be.'
-    floatkit_autocomplete_composer: "Engedélyezze a Floatkit-alapú automatikus kiegészítés menüt a szerkesztőben. Ez egy felhasználói felület fejlesztése, amely felváltja a jelenlegi JQuery-alapú automatikus kiegészítés menüt."
-    floatkit_autocomplete_input_fields: "Engedélyezze a Floatkit-alapú automatikus kiegészítés menüt a teljes oldalas keresés és a csoportválasztó mezők beviteli mezőihez. Ez egy felhasználói felület fejlesztése, amely felváltja a jelenlegi jQuery-alapú automatikus kiegészítés menüt."
-    floatkit_autocomplete_chat_composer: "Engedélyezd a Floatkit-alapú automatikus kiegészítés menüt a chat szerkesztőben. Ez egy felhasználói felület fejlesztése, amely felváltja a jelenlegi jQuery-alapú automatikus kiegészítés menüt."
     experimental_form_templates: "Engedélyezze az űrlapsablonok funkciót. A sablonokat a következő helyen kezelheti: <a href='%{base_path}/admin/customize/form-templates'>Testreszabás / Sablonok</a>."
     show_preview_for_form_templates: "Az űrlapsablonok előnézetének engedélyezése"
     lazy_load_categories_groups: "Lusta betöltés alkalmazása a kategória információkra a kiválasztott csoportok felhasználói számára. Ez javítja a teljesítményt olyan webhelyeken, ahol sok kategória van."

@@ -6,9 +6,9 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
-import { gt } from "truth-helpers";
 import CreateTopicButton from "discourse/components/create-topic-button";
 import bodyClass from "discourse/helpers/body-class";
+import { gt } from "discourse/truth-helpers";
 
 export default class SidebarNewTopicButton extends Component {
   @service composer;
@@ -25,7 +25,7 @@ export default class SidebarNewTopicButton extends Component {
   get shouldRender() {
     return (
       this.currentUser &&
-      !this.router.currentRouteName.includes("admin") &&
+      !this.router.currentURL.startsWith("/admin") &&
       this.application.sidebarEnabled
     );
   }

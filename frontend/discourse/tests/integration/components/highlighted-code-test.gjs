@@ -1,8 +1,8 @@
 import { tracked } from "@glimmer/tracking";
 import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import HighlightedCode from "discourse/admin/components/highlighted-code";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import HighlightedCode from "admin/components/highlighted-code";
 
 module("Integration | Component | highlighted-code", function (hooks) {
   setupRenderingTest(hooks);

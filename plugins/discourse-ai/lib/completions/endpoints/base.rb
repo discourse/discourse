@@ -113,7 +113,7 @@ module DiscourseAi
             wrapped = [result] if !result.is_a?(Array)
             wrapped.each do |partial|
               blk.call(partial)
-              break cancel_manager&.cancelled?
+              break if cancel_manager&.cancelled?
             end
             return result
           end
@@ -270,6 +270,9 @@ module DiscourseAi
                   # signal last partial output which will get parsed
                   # by best effort json parser
                   blk.call("")
+                else
+                  # got to signal the end of structured output
+                  blk.call(structured_output)
                 end
               end
               call_status = :success
@@ -325,8 +328,11 @@ module DiscourseAi
 
                 # gemini puts passwords in query params
                 # we don't want to log that
-                structured_logger.log(
-                  "llm_call",
+                llm_call_step = structured_logger.add_child_step(name: "Performing LLM call")
+
+                structured_logger.append_entry(
+                  step: llm_call_step,
+                  name: "llm_call",
                   args: {
                     class: self.class.name,
                     completion_url: request.uri.to_s.split("?")[0],
@@ -337,8 +343,8 @@ module DiscourseAi
                     duration: log.duration_msecs,
                     stream: @streaming_mode,
                   },
-                  start_time: start_time.utc,
-                  end_time: Time.now.utc,
+                  started_at: start_time.utc,
+                  ended_at: Time.now.utc,
                 )
               end
             end

@@ -5,7 +5,7 @@ export default class AdminGroupsRoute extends DiscourseRoute {
   queryParams = {
     order: { refreshModel: true, replace: true },
     asc: { refreshModel: true, replace: true },
-    filter: { refreshModel: true },
+    filter: {},
     type: { refreshModel: true, replace: true },
     username: { refreshModel: true },
   };

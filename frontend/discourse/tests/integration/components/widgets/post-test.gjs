@@ -3,9 +3,9 @@ import { getOwner } from "@ember/owner";
 import { click, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import MountWidget from "discourse/components/mount-widget";
+import DMenus from "discourse/float-kit/components/d-menus";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
-import DMenus from "float-kit/components/d-menus";
 
 // TODO (glimmer-post-stream) remove this test when removing the widget post stream code
 module("Integration | Component | Widget | post", function (hooks) {

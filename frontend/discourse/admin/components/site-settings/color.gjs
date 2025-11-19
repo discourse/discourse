@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import ColorInput from "admin/components/color-input";
+import ColorInput from "discourse/admin/components/color-input";
 
 const SETTINGS_WITH_FALLBACK_COLORS = ["welcome_banner_text_color"];
 

@@ -18,6 +18,14 @@ RSpec.describe "Chat channel search - drawer", type: :system do
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
 
+  context "when navigating on chat channels" do
+    it "shows a button for chat search" do
+      drawer_page.visit_index
+
+      expect(page).to have_selector(".chat-channel-search-btn")
+    end
+  end
+
   context "when searching for messages" do
     it "shows search results and allows navigation" do
       message_1 =
@@ -63,6 +71,15 @@ RSpec.describe "Chat channel search - drawer", type: :system do
 
       expect(channel_page.filter).to be_visible
       expect(channel_page.filter).to have_no_state
+    end
+
+    it "closes the filter on Escape" do
+      drawer_page.visit_channel(channel_1)
+      channel_page.filter.toggle
+      expect(channel_page.filter).to be_visible
+
+      page.send_keys(:escape)
+      expect(channel_page.filter).to be_not_visible
     end
   end
 

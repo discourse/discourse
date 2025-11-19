@@ -39,6 +39,10 @@ module PageObjects
         ::Topic.find(current_topic_id)
       end
 
+      def topic_title
+        find("#topic-title .fancy-title")
+      end
+
       def has_topic_title?(text)
         has_css?("h1 .fancy-title", text: text)
       end
@@ -96,6 +100,10 @@ module PageObjects
         post_by_number(post).find(".show-more-actions").click
       end
 
+      def click_post_author_avatar(post)
+        within_post(post) { find(".main-avatar[data-user-card='#{post.user.username}']").click }
+      end
+
       def click_post_action_button(post, button)
         find_post_action_button(post, button).click
       end
@@ -122,9 +130,10 @@ module PageObjects
       def has_who_liked_on_post?(post, count: nil)
         if count
           return(
-            within_post(post) do
-              has_css?(".who-liked.--expanded a.trigger-user-card", count: count)
-            end
+            has_css?(
+              ".liked-users-list__container .liked-users-list__item a.trigger-user-card",
+              count: count,
+            )
           )
         end
 
@@ -326,6 +335,10 @@ module PageObjects
 
       def within_post(post)
         within(post_by_number(post)) { yield }
+      end
+
+      def has_filtered_notice_text?(text)
+        find(".posts-filtered-notice").has_text?(text, exact: false)
       end
 
       private

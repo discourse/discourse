@@ -4,16 +4,16 @@ import { array, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { not } from "truth-helpers";
 import ColorPalettePreview from "discourse/components/color-palette-preview";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import DButtonTooltip from "discourse/float-kit/components/d-button-tooltip";
+import DMenu from "discourse/float-kit/components/d-menu";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
+import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import DButtonTooltip from "float-kit/components/d-button-tooltip";
-import DMenu from "float-kit/components/d-menu";
-import DTooltip from "float-kit/components/d-tooltip";
 
 export default class ColorPaletteListItem extends Component {
   @service router;
@@ -172,7 +172,7 @@ export default class ColorPaletteListItem extends Component {
                 @route="adminConfig.colorPalettes.show"
                 @routeModels={{array @scheme.id}}
                 @label="admin.customize.colors.edit"
-                class="btn-secondary"
+                class="btn-default"
                 @disabled={{not this.canEdit}}
               />
             </:button>

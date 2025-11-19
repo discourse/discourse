@@ -536,7 +536,7 @@ ko:
           other: "사용자 %{count}명"
       replies:
         other: "댓글 %{count}개"
-      edit: "편집"
+      edit: "포스트 편집"
       save: "저장"
       cancel: "취소"
       new_topic: "이 항목을 승인하면 새 주제가 만들어집니다."
@@ -558,7 +558,6 @@ ko:
           created_at: "작성일"
           created_at_asc: "작성일(역순)"
         priority:
-          title: "최소 우선순위"
           any: "(모두)"
           low: "낮음"
           medium: "중간"
@@ -607,6 +606,7 @@ ko:
       user_label: "사용자"
       notes:
         delete: "삭제하기"
+      topic_label: "글"
       review_user: "사용자"
       copy_link: "링크 복사"
       insights:
@@ -3362,7 +3362,6 @@ ko:
         go_to_unread_post: "%{shortcut} 읽지 않은 첫 번째 게시물로 이동"
       application:
         title: "애플리케이션"
-        create: "%{shortcut} 새 주제 생성"
         notifications: "%{shortcut} 알림 열기"
         user_profile_menu: "%{shortcut} 사용자 메뉴 열기"
         show_incoming_updated_topics: "%{shortcut} 업데이트된 주제 보기"

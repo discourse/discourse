@@ -3,18 +3,18 @@ import { computed } from "@ember/object";
 import { next } from "@ember/runloop";
 import { isPresent } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
-import { and, not } from "truth-helpers";
 import componentForCollection from "discourse/helpers/component-for-collection";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { makeArray } from "discourse/lib/helpers";
-import { i18n } from "discourse-i18n";
 import SelectKitComponent, {
   pluginApiIdentifiers,
   resolveComponent,
   selectKitOptions,
-} from "select-kit/components/select-kit";
-import SelectKitBody from "select-kit/components/select-kit/select-kit-body";
-import { isNumeric } from "select-kit/lib/input-utils";
+} from "discourse/select-kit/components/select-kit";
+import SelectKitBody from "discourse/select-kit/components/select-kit/select-kit-body";
+import { isNumeric } from "discourse/select-kit/lib/input-utils";
+import { and, not } from "discourse/truth-helpers";
+import { i18n } from "discourse-i18n";
 import MultiSelectFilter from "./multi-select/multi-select-filter";
 import MultiSelectHeader from "./multi-select/multi-select-header";
 
@@ -93,9 +93,7 @@ export default class MultiSelect extends SelectKitComponent {
 
   select(value, item) {
     if (this.selectKit.hasSelection && this.selectKit.options.maximum === 1) {
-      this.selectKit.deselectByValue(
-        this.getValue(this.selectedContent.firstObject)
-      );
+      this.selectKit.deselectByValue(this.getValue(this.selectedContent[0]));
       next(() => {
         this.selectKit.select(value, item);
       });
@@ -193,7 +191,7 @@ export default class MultiSelect extends SelectKitComponent {
           const lastSelected = selected[selected.length - 1];
           if (lastSelected) {
             if (lastSelected === document.activeElement) {
-              this.deselect(this.selectedContent.lastObject);
+              this.deselect(this.selectedContent.at(-1));
             } else {
               lastSelected.focus();
             }

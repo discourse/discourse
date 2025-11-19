@@ -6,6 +6,8 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
+import { bbcodeAttributeEncode } from "discourse/lib/bbcode-attributes";
+import { generateIcsData } from "discourse/lib/download-calendar";
 import discourseLater from "discourse/lib/later";
 import { applyLocalDates } from "discourse/lib/local-dates";
 import { cook } from "discourse/lib/text";
@@ -99,6 +101,36 @@ export default class DiscoursePostEventDates extends Component {
     return date.hour() || date.minute();
   }
 
+  generateIcsForEvent() {
+    const event = this.args.event;
+    if (!event || !this.startsAt) {
+      return null;
+    }
+
+    const title = event.name || event.post?.topic?.title || "Event";
+    const startsAt = this.startsAt.toISOString();
+    const endsAt = this.endsAt
+      ? this.endsAt.toISOString()
+      : moment(this.startsAt).add(1, "hours").toISOString();
+
+    const dates = [{ startsAt, endsAt, timezone: this.timezone }];
+    const options = {};
+
+    if (event.rrule) {
+      options.rrule = event.rrule;
+    }
+
+    if (event.location) {
+      options.location = event.location;
+    }
+
+    if (event.description) {
+      options.details = event.description;
+    }
+
+    return generateIcsData(title, dates, options);
+  }
+
   buildDateBBCode({ date, format, range }) {
     const bbcode = {
       date: date.format("YYYY-MM-DD"),
@@ -114,6 +146,11 @@ export default class DiscoursePostEventDates extends Component {
 
     if (range) {
       bbcode.range = range;
+    }
+
+    const icsData = this.generateIcsForEvent();
+    if (icsData) {
+      bbcode.ics = bbcodeAttributeEncode(icsData);
     }
 
     const content = Object.entries(bbcode)

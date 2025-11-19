@@ -12,6 +12,7 @@ $LOAD_PATH.unshift(libdir) if $LOAD_PATH.exclude?(libdir)
 
 require_relative "lib/calendar_settings_validator"
 require_relative "lib/calendar_first_day_of_week"
+require_relative "lib/calendar_upcoming_events_default_view"
 
 enabled_site_setting :calendar_enabled
 

@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import AdminConfigAreaCard from "admin/components/admin-config-area-card";
-import AdminConfigAreasAboutContactInformation from "admin/components/admin-config-area-cards/about/contact-information";
-import AdminConfigAreasAboutExtraGroups from "admin/components/admin-config-area-cards/about/extra-groups";
-import AdminConfigAreasAboutGeneralSettings from "admin/components/admin-config-area-cards/about/general-settings";
-import AdminConfigAreasAboutYourOrganization from "admin/components/admin-config-area-cards/about/your-organization";
+import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
+import AdminConfigAreasAboutContactInformation from "discourse/admin/components/admin-config-area-cards/about/contact-information";
+import AdminConfigAreasAboutExtraGroups from "discourse/admin/components/admin-config-area-cards/about/extra-groups";
+import AdminConfigAreasAboutGeneralSettings from "discourse/admin/components/admin-config-area-cards/about/general-settings";
+import AdminConfigAreasAboutYourOrganization from "discourse/admin/components/admin-config-area-cards/about/your-organization";
 
 export default class AdminConfigAreasAbout extends Component {
   @tracked saving = false;

@@ -1,8 +1,8 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { eq } from "truth-helpers";
 import FKLabel from "discourse/form-kit/components/fk/label";
 import uniqueId from "discourse/helpers/unique-id";
+import { eq } from "discourse/truth-helpers";
 
 const FKControlConditionalContentOption = <template>
   {{#let (uniqueId) as |uuid|}}

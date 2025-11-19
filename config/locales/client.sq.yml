@@ -249,7 +249,7 @@ sq:
     joined: "Anëtarësuar"
     admin_title: "Admin"
     show_more: "trego më shumë"
-    show_help: "ndihmë dhe kërko me Google"
+    show_help: "Opsione"
     links: "Lidhjet"
     links_lowercase:
       one: "lidhje"
@@ -609,7 +609,6 @@ sq:
       replies:
         one: "%{count} përgjigje"
         other: "%{count} përgjigje"
-      edit: "Redakto"
       save: "Ruaj"
       cancel: "Anulo"
       new_topic: "Miratimi i këtij artikulli do të krijojë një temë të re"
@@ -631,7 +630,6 @@ sq:
           created_at: "Krijuar më"
           created_at_asc: "Krijuar më (e kundërt)"
         priority:
-          title: "Prioriteti minimal"
           any: "(çdo)"
           low: "I ulët"
           medium: "Mesatar"
@@ -698,6 +696,7 @@ sq:
       user_label: "User"
       notes:
         delete: "Fshij"
+      topic_label: "Topic"
       review_user: "User"
       copy_link: "Kopjoni lidhjen"
       copy_link_feedback: "Lidhja u kopjua"
@@ -3766,7 +3765,6 @@ sq:
         next_prev: "%{shortcut} Seksioni i ardhshëm/mëparshëm"
       application:
         title: "Aplikimi"
-        create: "%{shortcut} Hap një temë të re"
         notifications: "%{shortcut} Hap njoftimet"
         user_profile_menu: "%{shortcut} Hap menunë e përdoruesit"
         show_incoming_updated_topics: "%{shortcut} Shiko temat e përditësuara"

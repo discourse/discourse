@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { array } from "@ember/helper";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
+import UpcomingChangeItem from "discourse/admin/components/admin-config-areas/upcoming-change-item";
+import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
-import UpcomingChangeItem from "admin/components/admin-config-areas/upcoming-change-item";
-import AdminFilterControls from "admin/components/admin-filter-controls";
 
 export default class AdminConfigAreasUpcomingChanges extends Component {
   get upcomingChanges() {

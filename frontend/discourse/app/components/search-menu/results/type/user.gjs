@@ -1,6 +1,6 @@
-import { and } from "truth-helpers";
 import avatar from "discourse/helpers/avatar";
 import formatUsername from "discourse/helpers/format-username";
+import { and } from "discourse/truth-helpers";
 
 const User = <template>
   {{avatar

@@ -79,6 +79,10 @@ class PostActionTypeView
     flag_enum(all_flags.filter { |flag| flag[:score_type] })
   end
 
+  def flag_and_score_types
+    flag_types.merge(score_types)
+  end
+
   # flags resulting in mod notifications
   def notify_flag_type_ids
     notify_flag_types.values

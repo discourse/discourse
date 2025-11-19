@@ -80,16 +80,15 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
     top: 0;
     right: 2px;
 
-    @include chat-unread-indicator;
+    @include chat-unread-indicator {
+      width: 14px;
+      height: 14px;
+    }
 
     &.-urgent {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: auto;
-      height: 1em;
-      min-width: 0.6em;
-      padding: 0.21em 0.42em;
       top: -1px;
       right: 0;
     }
@@ -189,7 +188,7 @@ body.has-full-page-chat {
 
   .c-navbar-container {
     position: sticky;
-    top: var(--main-outlet-offset);
+    top: 0;
     z-index: 1;
   }
 

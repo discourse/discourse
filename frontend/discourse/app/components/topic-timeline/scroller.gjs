@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
-import { and, not } from "truth-helpers";
 import {
   SCROLLER_HEIGHT,
   timelineDate,
 } from "discourse/components/topic-timeline/container";
 import draggable from "discourse/modifiers/draggable";
+import { and, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import BackButton from "./back-button";
 

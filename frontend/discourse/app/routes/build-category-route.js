@@ -170,6 +170,7 @@ class AbstractCategoryRoute extends DiscourseRoute {
 }
 
 // A helper function to create a category route with parameters
+/** @returns {any} */
 export default function buildCategoryRoute(routeConfig) {
   return class extends AbstractCategoryRoute {
     routeConfig = routeConfig;

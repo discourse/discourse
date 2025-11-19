@@ -2,12 +2,12 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { eq } from "truth-helpers";
 import InterfaceColorSelector from "discourse/components/interface-color-selector";
 import LanguageSwitcher from "discourse/components/language-switcher";
 import { ALL_PAGES_EXCLUDED_ROUTES } from "discourse/components/welcome-banner";
 import DAG from "discourse/lib/dag";
 import getURL from "discourse/lib/get-url";
+import { eq } from "discourse/truth-helpers";
 import Dropdown from "./dropdown";
 import UserDropdown from "./user-dropdown";
 

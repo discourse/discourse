@@ -1,16 +1,16 @@
 import { htmlSafe } from "@ember/template";
-import { and, or } from "truth-helpers";
 import AvatarFlair from "discourse/components/avatar-flair";
 import DButton from "discourse/components/d-button";
 import GroupInfo from "discourse/components/group-info";
 import GroupMembershipButton from "discourse/components/group-membership-button";
 import GroupNavigation from "discourse/components/group-navigation";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
+import { and, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import DTooltip from "float-kit/components/d-tooltip";
 
 export default <template>
   <span>

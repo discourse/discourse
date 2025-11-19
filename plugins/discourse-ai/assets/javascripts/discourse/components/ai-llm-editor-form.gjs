@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { later } from "@ember/runloop";
 import { service } from "@ember/service";
-import { eq, gt } from "truth-helpers";
+import AdminUser from "discourse/admin/models/admin-user";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import Form from "discourse/components/form";
 import Avatar from "discourse/helpers/bound-avatar-template";
@@ -15,8 +15,8 @@ import {
   addUniqueValueToArray,
   removeValueFromArray,
 } from "discourse/lib/array-tools";
+import { eq, gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import AdminUser from "admin/models/admin-user";
 import DurationSelector from "./ai-quota-duration-selector";
 import AiLlmQuotaModal from "./modal/ai-llm-quota-modal";
 
@@ -53,10 +53,14 @@ export default class AiLlmEditorForm extends Component {
         display_name: modelInfo.display_name,
         name: modelInfo.name,
         provider: info.provider,
-        provider_params: this.computeProviderParams(info.provider),
+        provider_params: this.computeProviderParams(
+          info.provider,
+          modelInfo.provider_params ?? {}
+        ),
         input_cost: modelInfo.input_cost,
         output_cost: modelInfo.output_cost,
         cached_input_cost: modelInfo.cached_input_cost,
+        vision_enabled: modelInfo.vision_enabled || false,
       };
     }
 
@@ -351,7 +355,6 @@ export default class AiLlmEditorForm extends Component {
       <form.Field
         @name="api_key"
         @title={{i18n "discourse_ai.llms.api_key"}}
-        @validation="required"
         @format="large"
         as |field|
       >

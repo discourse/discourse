@@ -1,7 +1,7 @@
 import { classNames } from "@ember-decorators/component";
 import discourseTag from "discourse/helpers/discourse-tag";
 import discourseComputed from "discourse/lib/decorators";
-import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
+import SelectKitRowComponent from "discourse/select-kit/components/select-kit/select-kit-row";
 
 @classNames("tag-row")
 export default class TagRow extends SelectKitRowComponent {

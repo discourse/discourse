@@ -40,6 +40,7 @@ globalThis.optimize = async function (
   fileName,
   width,
   height,
+  originalFileSize,
   settings
 ) {
   // This variable assignemnt is re-written by webpack at build time.
@@ -70,14 +71,16 @@ globalThis.optimize = async function (
   };
 
   const initialSize = imageData.byteLength;
-  logIfDebug(`Worker received imageData: ${initialSize}`);
+  logIfDebug(
+    `Received imageData ${initialSize} bytes (raw uncompressed pixels) from original file size of ${originalFileSize} bytes (compressed) for ${fileName}`
+  );
 
   let maybeResized;
 
   // resize
   if (width > settings.resize_threshold) {
     try {
-      const target_dimensions = resizeWithAspect(
+      const targetDimensions = resizeWithAspect(
         width,
         height,
         settings.resize_target
@@ -88,8 +91,8 @@ globalThis.optimize = async function (
         height
       );
       const resizeResult = await resize(wrappedImageData, {
-        width: target_dimensions.width,
-        height: target_dimensions.height,
+        width: targetDimensions.width,
+        height: targetDimensions.height,
         method: "lanczos3",
         premultiply: settings.resize_pre_multiply,
         linearRGB: settings.resize_linear_rgb,
@@ -98,28 +101,36 @@ globalThis.optimize = async function (
         throw "Image corrupted during resize. Falling back to the original for encode";
       }
       maybeResized = resizeResult.data;
-      width = target_dimensions.width;
-      height = target_dimensions.height;
-      logIfDebug(`Worker post resizing file: ${maybeResized.byteLength}`);
+      width = targetDimensions.width;
+      height = targetDimensions.height;
+      logIfDebug(
+        `Post-resizing size for ${fileName} is ${maybeResized.byteLength} bytes (raw uncompressed pixels at ${width}x${height})`
+      );
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(`Resize failed`, error);
+      console.error("Resize failed", error);
       maybeResized = imageData;
     }
   } else {
-    logIfDebug(`Skipped resize: ${width} < ${settings.resize_threshold}`);
+    logIfDebug(`Skipped resize, ${width} < ${settings.resize_threshold}`);
     maybeResized = imageData;
   }
 
   // mozJPEG re-encode
   const result = await encode(
-    new ImageData(maybeResized, width, height),
+    new ImageData(new Uint8ClampedArray(maybeResized), width, height),
     mozJpegDefaultOptions
   );
 
   const finalSize = result.byteLength;
-  logIfDebug(`Worker post reencode file: ${finalSize}`);
-  logIfDebug(`Reduction: ${(initialSize / finalSize).toFixed(1)}x speedup`);
+  logIfDebug(
+    `Post-reencode size for ${fileName} is ${finalSize} bytes (compressed JPEG), original was ${originalFileSize} bytes`
+  );
+  const compressionFromOriginal = (originalFileSize / finalSize).toFixed(1);
+  const compressionFromRaw = (initialSize / finalSize).toFixed(1);
+  logIfDebug(
+    `Compressed ${compressionFromOriginal}x vs original file, ${compressionFromRaw}x vs raw pixels for ${fileName}`
+  );
 
   if (finalSize < 20000) {
     throw "Final size suspiciously small, discarding optimizations";

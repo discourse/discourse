@@ -266,7 +266,32 @@ export default class ProsemirrorEditor extends Component {
 
   @bind
   convertFromMarkdown(markdown) {
-    return this.parser.convert(this.schema, markdown);
+    try {
+      return this.parser.convert(this.schema, markdown);
+    } catch (e) {
+      if (e instanceof UnsupportedTokenError) {
+        this.dialog.alert({
+          message: i18n("composer.unsupported_token"),
+          didConfirm: this.args.toggleRichEditor,
+          didCancel: this.args.toggleRichEditor,
+        });
+
+        return this.schema.nodes.paragraph.create(
+          null,
+          markdown
+            // our html_block avoids double newlines
+            // because markdown-it closes the html block parsing at double newlines
+            .split("\n\n")
+            .filter(Boolean)
+            .map((line) =>
+              // this creates a dependency on having a html_block in the schema
+              this.schema.nodes.html_block.create(null, this.schema.text(line))
+            )
+        );
+      }
+
+      throw e;
+    }
   }
 
   @bind
@@ -279,7 +304,7 @@ export default class ProsemirrorEditor extends Component {
     }
 
     try {
-      const doc = this.convertFromMarkdown(value);
+      const doc = this.parser.convert(this.schema, value);
 
       const tr = this.view.state.tr;
       tr.replaceWith(0, this.view.state.doc.content.size, doc.content).setMeta(
