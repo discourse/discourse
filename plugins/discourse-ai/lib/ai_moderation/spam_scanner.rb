@@ -152,7 +152,7 @@ module DiscourseAi
 
         ctx =
           build_bot_context(
-            feature_name: "spam_detection",
+            feature_name: "spam_detection_test",
             messages: [target_msg],
             custom_instructions: custom_insts,
           )
