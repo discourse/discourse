@@ -141,7 +141,11 @@ function preventKeyboardEvent(event) {
   event.stopPropagation();
 }
 
-/* Not ideal, but the keyboard-shortcuts-lib changes owner without being re-constructed */
+/*
+  Like the `@service` decorator, but without any caching.
+  Not ideal, but the keyboard-shortcuts-lib changes owner without being re-constructed,
+  so using the `@service` decorator would lead to stale service references.
+*/
 function uncachedService(_, key) {
   return {
     get() {
