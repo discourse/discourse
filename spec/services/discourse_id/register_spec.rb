@@ -215,8 +215,8 @@ RSpec.describe DiscourseId::Register do
 
           context "when site has no logo URLs" do
             before do
-              SiteSetting.logo = nil
-              SiteSetting.logo_small = nil
+              SiteSetting.logo = ""
+              SiteSetting.logo_small = ""
 
               stub_request(:post, "#{discourse_id_url}/register").with(
                 body: {
@@ -239,7 +239,7 @@ RSpec.describe DiscourseId::Register do
 
           context "when site has no description" do
             before do
-              SiteSetting.site_description = nil
+              SiteSetting.site_description = ""
 
               stub_request(:post, "#{discourse_id_url}/register").with(
                 body: {

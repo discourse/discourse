@@ -1422,10 +1422,10 @@ RSpec.describe SiteSettingExtension do
       expect(SiteSetting.digest_suppress_tags_map).to eq(%w[blah blah2])
     end
 
-    it "handles null values for settings" do
-      SiteSetting.ga_universal_auto_link_domains = nil
-      SiteSetting.pm_tags_allowed_for_groups = nil
-      SiteSetting.exclude_rel_nofollow_domains = nil
+    it "handles blank values for settings" do
+      SiteSetting.ga_universal_auto_link_domains = ""
+      SiteSetting.pm_tags_allowed_for_groups = ""
+      SiteSetting.exclude_rel_nofollow_domains = ""
 
       expect(SiteSetting.ga_universal_auto_link_domains_map).to eq([])
       expect(SiteSetting.pm_tags_allowed_for_groups_map).to eq([])
