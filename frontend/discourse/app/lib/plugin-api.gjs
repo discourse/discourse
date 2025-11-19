@@ -56,7 +56,7 @@ import classPrepend, {
 } from "discourse/lib/class-prepend";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
-import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
+import deprecated from "discourse/lib/deprecated";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { isTesting } from "discourse/lib/environment";
@@ -67,11 +67,7 @@ import {
   registerHighlightJSLanguage,
   registerHighlightJSPlugin,
 } from "discourse/lib/highlight-syntax";
-import {
-  iconNode,
-  registerIconRenderer,
-  replaceIcon,
-} from "discourse/lib/icon-library";
+import { registerIconRenderer, replaceIcon } from "discourse/lib/icon-library";
 import KeyboardShortcuts, {
   disableDefaultKeyboardShortcuts,
 } from "discourse/lib/keyboard-shortcuts";
@@ -130,54 +126,8 @@ import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "discourse/select-kit/components/user-chooser";
 import { modifySelectKit } from "discourse/select-kit/lib/plugin-api";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
-import {
-  addPostTransformCallback,
-  preventCloak,
-} from "discourse/widgets/post-stream";
-import {
-  changeSetting,
-  createWidget,
-  decorateWidget,
-  POST_STREAM_DEPRECATION_OPTIONS,
-  queryRegistry,
-  reopenWidget,
-  warnWidgetsDeprecation,
-} from "discourse/widgets/widget";
+import { warnWidgetsDecommissioned } from "discourse/widgets/widget";
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
-
-const DEPRECATED_POST_STREAM_WIDGETS = [
-  "actions-summary",
-  "avatar-flair",
-  "embedded-post",
-  "expand-hidden",
-  "expand-post-button",
-  "filter-jump-to-post",
-  "filter-show-all",
-  "post-article",
-  "post-article",
-  "post-avatar-user-info",
-  "post-avatar",
-  "post-body",
-  "post-contents",
-  "post-date",
-  "post-edits-indicator",
-  "post-email-indicator",
-  "post-gap",
-  "post-group-request",
-  "post-links",
-  "post-locked-indicator",
-  "post-meta-data",
-  "post-notice",
-  "post-placeholder",
-  "post-stream",
-  "post",
-  "poster-name",
-  "poster-name-title",
-  "posts-filtered-notice",
-  "reply-to-tab",
-  "select-post",
-  "topic-post-visited-line",
-];
 
 const blockedModifications = ["component:topic-list"];
 
@@ -691,133 +641,20 @@ class _PluginApi {
         return makeArray(value).concat(definitions).filter(Boolean);
       }
     );
-
-    // TODO (glimmer-post-stream): remove the fallback when removing the legacy post stream code
-    withSilencedDeprecations(POST_STREAM_DEPRECATION_OPTIONS.id, () => {
-      const decoratorFor = (view) => (dec) => {
-        const currentView = this.container.lookup("service:site").mobileView
-          ? "mobile"
-          : "desktop";
-
-        if (view !== currentView) {
-          return;
-        }
-
-        const attrs = dec.attrs;
-        let results = cb(attrs.userCustomFields || {}, attrs);
-
-        if (results) {
-          if (!Array.isArray(results)) {
-            results = [results];
-          }
-
-          return results.map((result) => {
-            let iconBody;
-
-            if (result.icon) {
-              iconBody = iconNode(result.icon);
-            } else if (result.emoji) {
-              iconBody = result.emoji.split("|").map((name) => {
-                let widgetAttrs = { name };
-                if (result.emojiTitle) {
-                  widgetAttrs.title = true;
-                }
-                return dec.attach("emoji", widgetAttrs);
-              });
-            }
-
-            if (result.text) {
-              iconBody = [iconBody, result.text];
-            }
-
-            if (result.url) {
-              iconBody = dec.h(
-                "a",
-                { attributes: { href: result.url } },
-                iconBody
-              );
-            }
-
-            return dec.h(
-              "span.poster-icon",
-              {
-                className: result.className,
-                attributes: { title: result.title },
-              },
-              iconBody
-            );
-          });
-        }
-      };
-
-      decorateWidget(`poster-name:before`, decoratorFor("mobile"));
-      decorateWidget(`poster-name:after`, decoratorFor("desktop"));
-    });
   }
 
   /**
-   * The main interface for extending widgets with additional HTML.
-   *
-   * The `name` you pass it should be the name of the widget and a type
-   * for the decorator. All widgets support `before` and `after` types.
-   *
-   * Example:
-   *
-   * ```
-   * api.decorateWidget('post:after', () => {
-   *   return "I am displayed after every post!";
-   * });
-   * ```
-   *
-   * Your decorator will be called with an instance of a `DecoratorHelper`
-   * object, which provides methods you can use to build more interesting
-   * formatting.
-   *
-   * ```
-   * api.decorateWidget('post:after', helper => {
-   *   return helper.h('p.fancy', `I'm an HTML paragraph on post with id ${helper.attrs.id}`);
-   * });
-   *
-   * (View the source for `DecoratorHelper` for more helper methods you
-   * can use in your plugin decorators.)
-   *
-   **/
-  decorateWidget(name, fn) {
-    const widgetName = name.split(":")[0];
-    this.#deprecatedWidgetOverride(widgetName, "decorateWidget");
-
-    decorateWidget(name, fn);
+   * @deprecated the widget rendering system was decommissioned
+   */
+  decorateWidget() {
+    warnWidgetsDecommissioned();
   }
 
   /**
-   * Adds a new action to a widget that already exists. You can use this to
-   * add additional functionality from your plugin.
-   *
-   * Example:
-   *
-   * ```
-   * api.attachWidgetAction('post', 'annoyMe', () => {
-   *  alert('ANNOYED!');
-   * });
-   * ```
-   **/
-  attachWidgetAction(widget, actionName, fn) {
-    const widgetClass =
-      queryRegistry(widget) ||
-      this.container.factoryFor(`widget:${widget}`)?.class;
-
-    if (!widgetClass) {
-      // eslint-disable-next-line no-console
-      console.error(
-        consolePrefix(),
-        `attachWidgetAction: Could not find widget ${widget} in registry`
-      );
-      return;
-    }
-
-    this.#deprecatedWidgetOverride(widget, "attachWidgetAction");
-
-    widgetClass.prototype[actionName] = fn;
+   * @deprecated the widget rendering system was decommissioned
+   */
+  attachWidgetAction() {
+    warnWidgetsDecommissioned();
   }
 
   /**
@@ -839,12 +676,12 @@ class _PluginApi {
    *
    **/
   includePostAttributes(...attributes) {
-    // TODO (glimmer-post-stream): we can keep this function as an alias to addTrackedPostProperties but it is useful to
-    //   deprecate it for now to get warnings for code that is incompatible with the Glimmer Post Stream because if an
-    //   extension is using it, then it is very likely that there is other code that is incompatible
     deprecated(
       "`api.includePostAttributes` has been deprecated. Use `api.addTrackedPostProperties` instead.",
-      POST_STREAM_DEPRECATION_OPTIONS
+      {
+        since: "v3.5.0.beta1-dev",
+        url: "https://meta.discourse.org/t/372063/1",
+      }
     );
 
     this.addTrackedPostProperties(...attributes);
@@ -1123,17 +960,10 @@ class _PluginApi {
   }
 
   /**
-   * Changes a setting associated with a widget. For example, if
-   * you wanted small avatars in the post stream:
-   *
-   * ```javascript
-   * api.changeWidgetSetting('post-avatar', 'size', 'small');
-   * ```
-   *
-   **/
-  changeWidgetSetting(widgetName, settingName, newValue) {
-    this.#deprecatedWidgetOverride(widgetName, "changeWidgetSetting");
-    changeSetting(widgetName, settingName, newValue);
+   * @deprecated the widget rendering system was decommissioned
+   */
+  changeWidgetSetting() {
+    warnWidgetsDecommissioned();
   }
 
   /**
@@ -1154,29 +984,21 @@ class _PluginApi {
    * ```
    **/
   preventCloak(postId, prevent = true) {
-    // TODO (glimmer-post-stream) remove the call to the widget version of preventCloak below
-    preventCloak(postId); // widgets
     preventCloaking(postId, prevent); // glimmer-post-stream
   }
 
   /**
-   * Exposes the widget creating ability to plugins. Plugins can
-   * register their own widgets and attach them with decorators.
-   * See `createWidget` in `discourse/widgets/widget` for more info.
-   **/
-  createWidget(name, args) {
-    return createWidget(name, args);
+   * @deprecated the widget rendering system was decommissioned
+   */
+  createWidget() {
+    warnWidgetsDecommissioned();
   }
 
   /**
-   * Exposes the widget update ability to plugins. Updates the widget
-   * registry for the given widget name to include the properties on args
-   * See `reopenWidget` in `discourse/widgets/widget` from more info.
-   **/
-
-  reopenWidget(name, args) {
-    this.#deprecatedWidgetOverride(name, "reopenWidget");
-    return reopenWidget(name, args);
+   * @deprecated the widget rendering system was decommissioned
+   */
+  reopenWidget() {
+    warnWidgetsDecommissioned();
   }
 
   addFlagProperty() {
@@ -1557,13 +1379,8 @@ class _PluginApi {
    *  if (t.post_number === 7) { t.cooked = ""; }
    * })
    */
-  addPostTransformCallback(callback) {
-    deprecated(
-      "`api.addPostTransformCallback` has been deprecated.",
-      POST_STREAM_DEPRECATION_OPTIONS
-    );
-
-    addPostTransformCallback(callback);
+  addPostTransformCallback() {
+    warnWidgetsDecommissioned();
   }
 
   /**
@@ -3409,32 +3226,6 @@ class _PluginApi {
     //     DEPRECATION_OPTIONS
     //   );
     // }
-  }
-
-  #deprecatedWidgetOverride(widgetName, override) {
-    // insert here the code to handle widget deprecations, e.g. for the header widgets we used:
-    // if (DEPRECATED_HEADER_WIDGETS.includes(widgetName)) {
-    //   this.container.lookup("service:header").anyWidgetHeaderOverrides = true;
-    //   deprecated(
-    //     `The ${widgetName} widget has been deprecated and ${override} is no longer a supported override.`,
-    //     {
-    //       since: "v3.3.0.beta1-dev",
-    //       id: "discourse.header-widget-overrides",
-    //       url: "https://meta.discourse.org/t/316549",
-    //     }
-    //   );
-    // }
-
-    if (DEPRECATED_POST_STREAM_WIDGETS.includes(widgetName)) {
-      deprecated(
-        `The \`${widgetName}\` widget has been deprecated and \`api.${override}\` is no longer a supported override.`,
-        POST_STREAM_DEPRECATION_OPTIONS
-      );
-    } else {
-      warnWidgetsDeprecation(
-        `Using \`api.${override}\` is deprecated and will soon stop working. Affected widget: ${widgetName}.`
-      );
-    }
   }
 }
 
