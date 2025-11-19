@@ -81,17 +81,17 @@ export default class AccountController extends Controller {
     );
   }
 
-  @discourseComputed("model.associated_accounts")
-  associatedAccountsLoaded(associatedAccounts) {
-    return typeof associatedAccounts !== "undefined";
+  get associatedAccountsLoaded() {
+    return typeof this.model.associated_accounts !== "undefined";
   }
 
-  @discourseComputed("model.associated_accounts.[]")
-  authProviders(accounts) {
+  get authProviders() {
     return findAll()
       .map((method) => ({
         method,
-        account: accounts.find(({ name }) => name === method.name),
+        account: this.model.associated_accounts.find(
+          ({ name }) => name === method.name
+        ),
       }))
       .filter((value) => value.account || value.method.can_connect);
   }
