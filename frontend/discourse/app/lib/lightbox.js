@@ -246,10 +246,9 @@ export default async function lightbox(elem, siteSettings) {
       const missingDimensions = !targetWidth || !targetHeight;
       const imgDimensions = item
         .querySelector(".informations")
-        ?.textContent.split(" ")[0];
-      const missingMetaData = !imgDimensions
-        ?.split(/x|×/)
-        .every((d) => !!d.trim());
+        ?.textContent.trim()
+        .split(" ")[0];
+      const missingMetaData = !imgDimensions?.split(/x|×/).every((d) => !!d);
 
       return hasImageSrc && missingDimensions && missingMetaData;
     });
