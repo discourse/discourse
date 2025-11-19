@@ -551,8 +551,8 @@ class Reviewable < ActiveRecord::Base
       result = result.joins(<<~SQL)
         INNER JOIN reviewable_claimed_topics rct_filter
         ON rct_filter.topic_id = reviewables.topic_id
-        AND rct_filter.user_id = #{claimed_by_id}
       SQL
+      result = result.where("rct_filter.user_id = ?", claimed_by_id)
     end
 
     min_score = min_score_for_priority(priority)
