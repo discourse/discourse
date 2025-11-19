@@ -45,11 +45,6 @@ import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifica
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { restoreBaseUri } from "discourse/lib/get-url";
 import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
-import {
-  clearDisabledDefaultKeyboardBindings,
-  clearExtraKeyboardShortcutHelp,
-  PLATFORM_KEY_MODIFIER,
-} from "discourse/lib/keyboard-shortcuts";
 import { reset as resetLinkLookup } from "discourse/lib/link-lookup";
 import { resetMentions } from "discourse/lib/link-mentions";
 import { forceMobile, resetMobile } from "discourse/lib/mobile";
@@ -95,6 +90,11 @@ import User from "discourse/models/user";
 import { clearResolverOptions } from "discourse/resolver";
 import { _clearSnapshots } from "discourse/select-kit/components/composer-actions";
 import { enableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
+import {
+  clearDisabledDefaultKeyboardBindings,
+  clearExtraKeyboardShortcutHelp,
+  PLATFORM_KEY_MODIFIER,
+} from "discourse/services/keyboard-shortcuts";
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 import {

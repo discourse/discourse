@@ -1,7 +1,6 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
-import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import DiscourseURL from "discourse/lib/url";
 
 module("Unit | Utility | keyboard-shortcuts", function (hooks) {
@@ -17,21 +16,24 @@ module("Unit | Utility | keyboard-shortcuts", function (hooks) {
       called = true;
     });
 
-    KeyboardShortcuts.goBack();
+    const keyboardShortcuts = this.owner.lookup("service:keyboard-shortcuts");
+    keyboardShortcuts.goBack();
     assert.true(called, "history.back is called");
   });
 
   test("nextSection calls _changeSection with 1", function (assert) {
-    let spy = sinon.spy(KeyboardShortcuts, "_changeSection");
+    const keyboardShortcuts = this.owner.lookup("service:keyboard-shortcuts");
+    let spy = sinon.spy(keyboardShortcuts, "_changeSection");
 
-    KeyboardShortcuts.nextSection();
+    keyboardShortcuts.nextSection();
     assert.true(spy.calledWith(1), "_changeSection is called with 1");
   });
 
   test("prevSection calls _changeSection with -1", function (assert) {
-    let spy = sinon.spy(KeyboardShortcuts, "_changeSection");
+    const keyboardShortcuts = this.owner.lookup("service:keyboard-shortcuts");
+    let spy = sinon.spy(keyboardShortcuts, "_changeSection");
 
-    KeyboardShortcuts.prevSection();
+    keyboardShortcuts.prevSection();
     assert.true(spy.calledWith(-1), "_changeSection is called with -1");
   });
 });

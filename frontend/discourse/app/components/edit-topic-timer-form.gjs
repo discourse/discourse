@@ -19,7 +19,6 @@ import RelativeTimePicker from "discourse/components/relative-time-picker";
 import TimeShortcutPicker from "discourse/components/time-shortcut-picker";
 import TopicTimerInfo from "discourse/components/topic-timer-info";
 import icon from "discourse/helpers/d-icon";
-import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import {
   TIME_SHORTCUT_TYPES,
   timeShortcuts,
@@ -30,13 +29,14 @@ import { i18n } from "discourse-i18n";
 
 export default class EditTopicTimerForm extends Component {
   @service currentUser;
+  @service keyboardShortcuts;
 
   @tracked timerType;
 
   constructor() {
     super(...arguments);
 
-    KeyboardShortcuts.pause();
+    this.keyboardShortcuts.pause();
     this._itsatrap = new ItsATrap();
   }
 
@@ -44,7 +44,7 @@ export default class EditTopicTimerForm extends Component {
     super.willDestroy(...arguments);
 
     this._itsatrap.destroy();
-    KeyboardShortcuts.unpause();
+    this.keyboardShortcuts.unpause();
   }
 
   get showTimeOnly() {

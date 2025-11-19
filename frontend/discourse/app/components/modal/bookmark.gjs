@@ -19,7 +19,6 @@ import basePath from "discourse/helpers/base-path";
 import icon from "discourse/helpers/d-icon";
 import { extractError } from "discourse/lib/ajax-error";
 import { formattedReminderTime } from "discourse/lib/bookmark";
-import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import discourseLater from "discourse/lib/later";
 import { sanitize } from "discourse/lib/text";
 import {
@@ -42,6 +41,7 @@ export default class BookmarkModal extends Component {
   @service capabilities;
   @service bookmarkApi;
   @service site;
+  @service keyboardShortcuts;
 
   @tracked postDetectedLocalDate = null;
   @tracked postDetectedLocalTime = null;
@@ -70,7 +70,7 @@ export default class BookmarkModal extends Component {
     super.willDestroy(...arguments);
     this._itsatrap?.destroy();
     this._itsatrap = null;
-    KeyboardShortcuts.unpause();
+    this.keyboardShortcuts.unpause();
   }
 
   get bookmark() {
@@ -304,7 +304,7 @@ export default class BookmarkModal extends Component {
   }
 
   #bindKeyboardShortcuts() {
-    KeyboardShortcuts.pause();
+    this.keyboardShortcuts.pause();
 
     Object.keys(BOOKMARK_BINDINGS).forEach((shortcut) => {
       this._itsatrap.bind(shortcut, () => {

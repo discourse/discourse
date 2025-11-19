@@ -33,7 +33,6 @@ import deprecated from "discourse/lib/deprecated";
 import { isTesting } from "discourse/lib/environment";
 import { getRegister } from "discourse/lib/get-owner";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
-import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import loadRichEditor from "discourse/lib/load-rich-editor";
 import { rovingButtonBar } from "discourse/lib/roving-button-bar";
@@ -48,6 +47,7 @@ import {
   EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP,
   SKIP,
 } from "discourse/modifiers/d-autocomplete";
+import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
 import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 

@@ -12,13 +12,13 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
-import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import LinkLookup from "discourse/lib/link-lookup";
 import { cloneJSON } from "discourse/lib/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { translateModKey } from "discourse/lib/utilities";
 import Composer, { CREATE_TOPIC } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
+import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
 import TopicFixtures from "discourse/tests/fixtures/topic";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
