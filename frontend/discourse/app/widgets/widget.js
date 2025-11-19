@@ -23,6 +23,16 @@ function warnWidgetsDecommissioned() {
   );
 }
 
+class DummyWidget {
+  constructor() {
+    warnWidgetsDecommissioned();
+  }
+}
+
+function dummyCreateWidgetFrom() {
+  return DummyWidget;
+}
+
 export {
   warnWidgetsDecommissioned,
   warnWidgetsDecommissioned as warnWidgetsDeprecation,
@@ -33,13 +43,9 @@ export {
   warnWidgetsDecommissioned as applyDecorators,
   warnWidgetsDecommissioned as resetDecorators,
   warnWidgetsDecommissioned as changeSetting,
-  warnWidgetsDecommissioned as createWidgetFrom,
-  warnWidgetsDecommissioned as createWidget,
+  dummyCreateWidgetFrom as createWidgetFrom,
+  dummyCreateWidgetFrom as createWidget,
   warnWidgetsDecommissioned as reopenWidget,
+  DummyWidget,
+  DummyWidget as default,
 };
-
-export default class Widget {
-  constructor() {
-    warnWidgetsDecommissioned();
-  }
-}
