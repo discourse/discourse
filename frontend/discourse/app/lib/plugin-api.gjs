@@ -134,7 +134,6 @@ import {
   addPostTransformCallback,
   preventCloak,
 } from "discourse/widgets/post-stream";
-import { disableNameSuppression } from "discourse/widgets/poster-name";
 import {
   changeSetting,
   createWidget,
@@ -1083,7 +1082,6 @@ class _PluginApi {
    * This allows you to override core behavior
    **/
   disableNameSuppressionOnPosts() {
-    disableNameSuppression();
     this.registerValueTransformer(
       "post-meta-data-poster-name-suppress-similar-name",
       () => true
