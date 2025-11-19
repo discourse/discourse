@@ -122,17 +122,18 @@ export default class EditCategoryTabsController extends Controller {
     this.model
       .save()
       .then((result) => {
+        const updatedModel = this.site.updateCategory(result.category);
+        updatedModel.setupGroupsAndPermissions();
+
         if (!this.model.id) {
-          const updatedModel = this.site.updateCategory(result.category);
-          updatedModel.setupGroupsAndPermissions();
           this.router.transitionTo(
             "editCategory",
             Category.slugFor(updatedModel)
           );
         }
-        // force a reload of the category list to track changes to style type
+        // ensure breadcrumbs contain the updated category model
         this.breadcrumbCategories = this.site.categoriesList.map((c) =>
-          c.id === this.model.id ? this.model : c
+          c.id === this.model.id ? updatedModel : c
         );
       })
       .catch((error) => {

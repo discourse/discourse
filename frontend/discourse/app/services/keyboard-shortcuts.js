@@ -1,5 +1,8 @@
-import { getOwner, setOwner } from "@ember/owner";
+import { getOwner } from "@ember/owner";
 import { run, throttle } from "@ember/runloop";
+import Service, { service } from "@ember/service";
+import ItsATrap from "@discourse/itsatrap";
+import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
 import { ajax } from "discourse/lib/ajax";
 import domUtils from "discourse/lib/dom-utils";
 import { INPUT_DELAY } from "discourse/lib/environment";
@@ -140,27 +143,19 @@ function preventKeyboardEvent(event) {
   event.stopPropagation();
 }
 
-export default {
-  init(keyTrapper, owner) {
-    setOwner(this, owner);
+export default class KeyboardShortcutLib extends Service {
+  @service appEvents;
+  @service composer;
+  @service currentUser;
+  @service router;
+  @service siteSettings;
+  @service modal;
 
-    // Sometimes the keyboard shortcut initializer is not torn down. This makes sure
-    // we clear any previous test state.
-    if (this.keyTrapper) {
-      this.keyTrapper.destroy();
-      this.keyTrapper = null;
-    }
+  constructor() {
+    super(...arguments);
 
-    this.keyTrapper = new keyTrapper();
+    this.keyTrapper = new ItsATrap();
     this._stopCallback();
-
-    this.appEvents = owner.lookup("service:app-events");
-    this.composer = owner.lookup("service:composer");
-    this.currentUser = owner.lookup("service:current-user");
-    this.router = owner.lookup("service:router");
-    this.searchService = owner.lookup("service:search");
-    this.siteSettings = owner.lookup("service:site-settings");
-    this.site = owner.lookup("service:site");
 
     // Disable the shortcut if private messages are disabled
     if (!this.currentUser?.can_send_private_messages) {
@@ -170,26 +165,29 @@ export default {
     if (disabledBindings.length) {
       disabledBindings.forEach((binding) => delete DEFAULT_BINDINGS[binding]);
     }
-  },
 
-  bindEvents() {
-    Object.keys(DEFAULT_BINDINGS).forEach((key) => {
-      this.bindKey(key);
-    });
-  },
+    this.bindEvents();
+  }
 
-  teardown() {
+  willDestroy() {
+    super.willDestroy(...arguments);
     const prototype = Object.getPrototypeOf(this.keyTrapper);
     prototype.stopCallback = this.oldStopCallback;
     this.oldStopCallback = null;
 
     this.keyTrapper?.destroy();
     this.keyTrapper = null;
-  },
+  }
+
+  bindEvents() {
+    Object.keys(DEFAULT_BINDINGS).forEach((key) => {
+      this.bindKey(key);
+    });
+  }
 
   isTornDown() {
     return this.keyTrapper == null;
-  },
+  }
 
   bindKey(key, binding = null) {
     if (this.isTornDown()) {
@@ -218,7 +216,7 @@ export default {
     } else if (binding.click) {
       this._bindToClick(binding.click, key);
     }
-  },
+  }
 
   // for cases when you want to disable global keyboard shortcuts
   // so that you can override them (e.g. inside a modal)
@@ -232,7 +230,7 @@ export default {
       return;
     }
     combinations.forEach((combo) => this.keyTrapper.unbind(combo));
-  },
+  }
 
   // restore global shortcuts that you have paused
   unpause(combinations) {
@@ -246,7 +244,7 @@ export default {
     }
 
     combinations.forEach((combo) => this.bindKey(combo));
-  },
+  }
 
   /**
    * addShortcut(shortcut, callback, opts)
@@ -279,7 +277,7 @@ export default {
     if (opts.help) {
       addExtraKeyboardShortcutHelp(opts.help);
     }
-  },
+  }
 
   /**
    * unbind(combinations)
@@ -293,7 +291,7 @@ export default {
    */
   unbind(combinations) {
     Object.keys(combinations).forEach((combo) => this.keyTrapper.unbind(combo));
-  },
+  }
 
   toggleBookmark(event) {
     const selectedPost = this._getSelectedPost();
@@ -311,7 +309,7 @@ export default {
     }
 
     this._bookmarkCurrentTopic(event);
-  },
+  }
 
   toggleBookmarkTopic(event) {
     const selectedTopicListItem = this._getSelectedTopicListItem();
@@ -322,7 +320,7 @@ export default {
     }
 
     this._bookmarkCurrentTopic(event);
-  },
+  }
 
   _bookmarkCurrentTopic(event) {
     const topic = this.currentTopic();
@@ -330,11 +328,11 @@ export default {
       preventKeyboardEvent(event);
       getOwner(this).lookup("controller:topic").send("toggleBookmark");
     }
-  },
+  }
 
   logout() {
     getOwner(this).lookup("route:application").send("logout");
-  },
+  }
 
   quoteReply() {
     if (this.isPostTextSelected) {
@@ -350,7 +348,7 @@ export default {
     );
 
     return false;
-  },
+  }
 
   editPost() {
     if (this.siteSettings.enable_fast_edit && this.isPostTextSelected) {
@@ -361,7 +359,7 @@ export default {
     }
 
     return false;
-  },
+  }
 
   goToNextTopic() {
     nextTopicUrl().then((url) => {
@@ -369,7 +367,7 @@ export default {
         DiscourseURL.routeTo(url);
       }
     });
-  },
+  }
 
   goToPreviousTopic() {
     previousTopicUrl().then((url) => {
@@ -377,7 +375,7 @@ export default {
         DiscourseURL.routeTo(url);
       }
     });
-  },
+  }
 
   goToFirstSuggestedTopic() {
     const el = document.querySelector("#suggested-topics a.raw-topic-link");
@@ -397,58 +395,58 @@ export default {
         }
       });
     }
-  },
+  }
 
   goToFirstPost() {
     this._jumpTo("jumpTop");
-  },
+  }
 
   goToLastPost() {
     this._jumpTo("jumpBottom");
-  },
+  }
 
   goToUnreadPost() {
     this._jumpTo("jumpUnread");
-  },
+  }
 
   _jumpTo(direction) {
     if (document.querySelector(".container.posts")) {
       getOwner(this).lookup("controller:topic").send(direction);
     }
-  },
+  }
 
   replyToTopic() {
     this._replyToPost();
 
     return false;
-  },
+  }
 
   selectDown() {
     this._moveSelection({ direction: 1, scrollWithinPosts: true });
-  },
+  }
 
   selectUp() {
     this._moveSelection({ direction: -1, scrollWithinPosts: true });
-  },
+  }
 
   bulkSelectItem() {
     const elem = document.querySelector(
       ".selected input.bulk-select, .selected .select-post"
     );
     elem?.click();
-  },
+  }
 
   goBack() {
     history.back();
-  },
+  }
 
   nextSection() {
     this._changeSection(1);
-  },
+  }
 
   prevSection() {
     this._changeSection(-1);
-  },
+  }
 
   printTopic(event) {
     run(() => {
@@ -457,7 +455,7 @@ export default {
         getOwner(this).lookup("controller:topic").print();
       }
     });
-  },
+  }
 
   createTopic(event) {
     if (!(this.currentUser && this.currentUser.can_create_topic)) {
@@ -504,7 +502,7 @@ export default {
       action: Composer.CREATE_TOPIC,
       draftKey: Composer.NEW_TOPIC_KEY,
     });
-  },
+  }
 
   focusComposer(event) {
     if (event) {
@@ -512,22 +510,22 @@ export default {
       event.stopPropagation();
     }
     this.composer.focusComposer(event);
-  },
+  }
 
   fullscreenComposer() {
     if (this.composer.get("model")) {
       this.composer.toggleFullscreen();
     }
-  },
+  }
 
   pinUnpinTopic() {
     getOwner(this).lookup("controller:topic").togglePinnedState();
-  },
+  }
 
   goToPost(event) {
     preventKeyboardEvent(event);
     this.appEvents.trigger("topic:keyboard-trigger", { type: "jump" });
-  },
+  }
 
   toggleSearch(event) {
     this.appEvents.trigger("header:keyboard-trigger", {
@@ -536,42 +534,39 @@ export default {
     });
 
     return false;
-  },
+  }
 
   toggleHamburgerMenu(event) {
     this.appEvents.trigger("header:keyboard-trigger", {
       type: "hamburger",
       event,
     });
-  },
+  }
 
   showCurrentUser(event) {
     this.appEvents.trigger("header:keyboard-trigger", { type: "user", event });
-  },
+  }
 
   showHelpModal(event) {
     event.preventDefault();
-
-    getOwner(this)
-      .lookup("controller:application")
-      .send("showKeyboardShortcutsHelp");
-  },
+    this.modal.show(KeyboardShortcutsHelp);
+  }
 
   setTrackingToMuted() {
     throttle(this, "_setTracking", 0, INPUT_DELAY, true);
-  },
+  }
 
   setTrackingToRegular() {
     throttle(this, "_setTracking", 1, INPUT_DELAY, true);
-  },
+  }
 
   setTrackingToTracking() {
     throttle(this, "_setTracking", 2, INPUT_DELAY, true);
-  },
+  }
 
   setTrackingToWatching() {
     throttle(this, "_setTracking", 3, INPUT_DELAY, true);
-  },
+  }
 
   _setTracking(levelId) {
     const topic = this.currentTopic();
@@ -581,7 +576,7 @@ export default {
     }
 
     topic.details.updateNotifications(levelId);
-  },
+  }
 
   sendToTopicListItemView(action, elem) {
     elem = elem || document.querySelector("tr.selected.topic-list-item");
@@ -592,7 +587,7 @@ export default {
         view.send(action);
       }
     }
-  },
+  }
 
   currentTopic() {
     const topicController = getOwner(this).lookup("controller:topic");
@@ -602,12 +597,12 @@ export default {
         return topic;
       }
     }
-  },
+  }
 
   get isPostTextSelected() {
     const topicController = getOwner(this).lookup("controller:topic");
     return !!topicController.quoteState.postId;
-  },
+  }
 
   sendToSelectedPost(action, elem) {
     // TODO: We should keep track of the post without a CSS class
@@ -642,15 +637,15 @@ export default {
     }
 
     return false;
-  },
+  }
 
   _bindToSelectedPost(action, binding) {
     this.keyTrapper.bind(binding, () => this.sendToSelectedPost(action));
-  },
+  }
 
   _bindToPath(path, key) {
     this.keyTrapper.bind(key, () => DiscourseURL.routeTo(path));
-  },
+  }
 
   _bindToClick(selector, binding) {
     binding = binding.split(",");
@@ -671,21 +666,21 @@ export default {
 
       selection?.click();
     });
-  },
+  }
 
   _globalBindToFunction(func, binding) {
     let funcToBind = typeof func === "function" ? func : this[func];
     if (typeof funcToBind === "function") {
       this.keyTrapper.bindGlobal(binding, funcToBind.bind(this));
     }
-  },
+  }
 
   _bindToFunction(func, binding) {
     let funcToBind = typeof func === "function" ? func : this[func];
     if (typeof funcToBind === "function") {
       this.keyTrapper.bind(binding, funcToBind.bind(this));
     }
-  },
+  }
 
   _moveSelection({ direction, scrollWithinPosts }) {
     // Pressing a move key (J/K) very quick (i.e. keeping J or K pressed) will
@@ -841,14 +836,14 @@ export default {
 
     const scrollRatio = direction > 0 ? 0.2 : 0.7;
     this._scrollTo(articleTopPosition - window.innerHeight * scrollRatio);
-  },
+  }
 
   _scrollTo(scrollTop) {
     window.scrollTo({
       top: scrollTop,
       behavior: "smooth",
     });
-  },
+  }
 
   categoriesTopicsList() {
     switch (this.siteSettings.desktop_category_page_style) {
@@ -866,7 +861,7 @@ export default {
       default:
         return [];
     }
-  },
+  }
 
   _findArticles() {
     let categoriesTopicsList;
@@ -881,7 +876,7 @@ export default {
     } else if ((categoriesTopicsList = this.categoriesTopicsList())) {
       return categoriesTopicsList;
     }
-  },
+  }
 
   _changeSection(direction) {
     if (document.querySelector(".post-stream")) {
@@ -897,7 +892,7 @@ export default {
         sections[index].querySelector("a, button")?.click();
       }
     }
-  },
+  }
 
   _stopCallback() {
     const prototype = Object.getPrototypeOf(this.keyTrapper);
@@ -917,27 +912,27 @@ export default {
 
       return oldCallback.call(this, e, element, combo, sequence);
     };
-  },
+  }
 
   _replyToPost() {
     getOwner(this).lookup("controller:topic").send("replyToPost");
-  },
+  }
 
   _getSelectedPost() {
     return document.querySelector(".topic-post.selected article[data-post-id]");
-  },
+  }
 
   _getSelectedTopicListItem() {
     return document.querySelector("tr.selected.topic-list-item");
-  },
+  }
 
   deferTopic() {
     getOwner(this).lookup("controller:topic").send("deferTopic");
-  },
+  }
 
   toggleAdminActions() {
     document.querySelector(".toggle-admin-menu")?.click();
-  },
+  }
 
   toggleBulkSelect() {
     const bulkSelect = document.querySelector("button.bulk-select");
@@ -947,21 +942,21 @@ export default {
     } else {
       getOwner(this).lookup("controller:topic").send("toggleMultiSelect");
     }
-  },
+  }
 
   toggleArchivePM() {
     getOwner(this).lookup("controller:topic").send("toggleArchiveMessage");
-  },
+  }
 
   webviewKeyboardBack() {
     if (capabilities.isAppWebview) {
       window.history.back();
     }
-  },
+  }
 
   webviewKeyboardForward() {
     if (capabilities.isAppWebview) {
       window.history.forward();
     }
-  },
-};
+  }
+}

@@ -69,7 +69,7 @@ module DiscourseAi
           context =
             DiscourseAi::Personas::BotContext.new(
               user: system_user,
-              skip_tool_details: true,
+              skip_show_thinking: true,
               feature_name: "translation/#{operation}",
               messages: [{ type: :user, content: content }],
             )
@@ -84,7 +84,7 @@ module DiscourseAi
           context =
             DiscourseAi::Personas::BotContext.new(
               user: system_user,
-              skip_tool_details: true,
+              skip_show_thinking: true,
               feature_name: "translation/#{operation}",
               messages: [{ type: :user, content: payload }],
             )

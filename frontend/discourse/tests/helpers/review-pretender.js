@@ -35,7 +35,7 @@ export default function (helpers) {
           created_at: "2019-01-14T19:49:53.571Z",
           target_created_by_id: 1,
           payload: {
-            raw: "existing body",
+            raw: "existing body\n\nhttp://somegoodurl.com",
             tags: ["hello", "world"],
           },
           version: 1,

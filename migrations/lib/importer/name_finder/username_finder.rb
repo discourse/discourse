@@ -10,8 +10,8 @@ module Migrations::Importer
     private
 
     def load_from_shared_data(shared_data)
-      @used_usernames_lower = shared_data&.load(:usernames) || Set.new
-      @used_group_names_lower = shared_data&.load(:group_names) || Set.new
+      @used_usernames_lower = shared_data[:existing_usernames_lower]
+      @used_group_names_lower = shared_data[:existing_group_names_lower]
       build_reserved_username_cache
     end
 

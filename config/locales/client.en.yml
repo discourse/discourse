@@ -3742,7 +3742,7 @@ en:
       deleted: "The topic has been deleted"
 
       slow_mode_update:
-        title: "Slow Mode"
+        title: "Slow mode"
         select: "Users may only post in this topic once every:"
         description: "To promote thoughtful discussion in fast moving or contentious discussions, users must wait before posting again in this topic."
         enable: "Enable"
@@ -4480,24 +4480,24 @@ en:
         description: "Require new topics to have tags from tag groups:"
         delete: "Delete"
         add: "Add required tag group"
-        placeholder: "select tag group…"
+        placeholder: "Select tag group…"
       topic_featured_link_allowed: "Allow featured links in this category"
-      delete: "Delete Category"
-      create: "New Category"
+      delete: "Delete category"
+      create: "New category"
       create_long: "Create a new category"
-      save: "Save Category"
-      slug: "Category Slug"
+      save: "Save category"
+      slug: "Category slug"
       slug_placeholder: "(Optional) dashed-words for url"
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
-      name: "Category Name"
-      untitled: "Untitled Category"
+      name: "Category name"
+      untitled: "Untitled category"
       description: "Description"
-      logo: "Category Logo Image"
-      logo_dark: "Dark Mode Category Logo Image"
+      logo: "Category logo image"
+      logo_dark: "Dark mode category logo image"
       logo_description: "Recommended 1:1 aspect ratio with 200px minimum size. If left blank no image will be shown."
-      background_image: "Category Background Image"
-      background_image_dark: "Dark Category Background Image"
+      background_image: "Category background image"
+      background_image_dark: "Dark category background image"
       style: "Styles"
       background_color: "Color"
       foreground_color: "Text color"
@@ -4519,9 +4519,9 @@ en:
       color_placeholder: "Any web color"
       delete_confirm: "Are you sure you want to delete this category?"
       delete_error: "There was an error deleting the category."
-      list: "List Categories"
+      list: "List categories"
       no_description: "Please add a description for this category."
-      change_in_category_topic: "Edit Description"
+      change_in_category_topic: "Edit description"
       already_used: "This color has been used by another category"
       security: "Security"
       security_add_group: "Add a group"
@@ -4552,23 +4552,23 @@ en:
       all_topics_wiki: "Make new topics wikis by default"
       allow_unlimited_owner_edits_on_first_post: "Allow unlimited owner edits on first post"
       subcategory_list_style: "Subcategory List Style:"
-      sort_order: "Topic List Sort By:"
-      default_view: "Default Topic List:"
-      default_top_period: "Default Top Period:"
-      default_list_filter: "Default List Filter:"
+      sort_order: "Topic list sort by:"
+      default_view: "Default topic list:"
+      default_top_period: "Default top period:"
+      default_list_filter: "Default list filter:"
       allow_badges_label: "Allow badges to be awarded in this category"
-      edit_permissions: "Edit Permissions"
+      edit_permissions: "Edit permissions"
       reviewable_by_group: "In addition to staff, content in this category can also be reviewed by:"
       review_group_name: "group name"
       require_topic_approval: "Require moderator approval of all new topics"
       require_reply_approval: "Require moderator approval of all new replies"
       this_year: "this year"
       position: "Position on the categories page:"
-      default_position: "Default Position"
+      default_position: "Default position"
       position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, enable the <a href='%{url}'>'fixed category positions'</a> setting."
       minimum_required_tags: "Minimum number of tags required in a topic:"
-      default_slow_mode: 'Enable "Slow Mode" for new topics in this category.'
-      parent: "Parent Category"
+      default_slow_mode: 'Enable "Slow mode" for new topics in this category.'
+      parent: "Parent category"
       num_auto_bump_daily: "Number of open topics to automatically bump daily:"
       auto_bump_cooldown_days: "Minimum days before bumping the same topic again:"
       navigate_to_first_post_after_read: "Navigate to first post after topics are read"
@@ -4590,18 +4590,18 @@ en:
           title: "Muted"
           description: "You will never be notified of anything about new topics in this category, and they will not appear in latest."
       search_priority:
-        label: "Search Priority"
+        label: "Search priority"
         options:
           normal: "Normal"
           ignore: "Ignore"
-          very_low: "Very Low"
+          very_low: "Very low"
           low: "Low"
           high: "High"
-          very_high: "Very High"
+          very_high: "Very high"
       sort_options:
         default: "default"
         likes: "Likes"
-        op_likes: "Original Post Likes"
+        op_likes: "Original post likes"
         views: "Views"
         posts: "Posts"
         activity: "Activity"
@@ -4621,8 +4621,8 @@ en:
         appearance: "Appearance"
         email: "Email"
       list_filters:
-        all: "all topics"
-        none: "no subcategories"
+        all: "All topics"
+        none: "No subcategories"
       colors_disabled: "You can’t select colors because you have a category style of none."
 
     anonymous_flagging:
@@ -4874,7 +4874,7 @@ en:
         title: "Top"
         help: "the most active topics in the last year, month, week or day"
         all:
-          title: "All Time"
+          title: "All time"
         yearly:
           title: "Yearly"
         quarterly:
@@ -4885,7 +4885,7 @@ en:
           title: "Weekly"
         daily:
           title: "Daily"
-        all_time: "All Time"
+        all_time: "All time"
         this_year: "Year"
         this_quarter: "Quarter"
         this_month: "Month"
@@ -5176,18 +5176,18 @@ en:
 
       groups:
         back_btn: "Back to all tags"
-        title: "Tag Groups"
+        title: "Tag groups"
         about_heading: "Select a tag group or create a new one"
         about_heading_empty: "Create a new tag group to get started"
         about_description: "Tag groups help you manage permissions for many tags in one place."
-        new: "New Group"
-        new_title: "Create New Group"
-        edit_title: "Edit Tag Group"
+        new: "New group"
+        new_title: "Create new group"
+        edit_title: "Edit tag group"
         tags_label: "Tags in this group"
         parent_tag_label: "Parent tag"
         parent_tag_description: "Tags from this group can only be used if the parent tag is present."
         one_per_topic_label: "Limit one tag per topic from this group"
-        new_name: "New Tag Group"
+        new_name: "New tag group"
         name_placeholder: "Name"
         save: "Save"
         delete: "Delete"
@@ -5883,6 +5883,58 @@ en:
               other: "You’ve updated the default text size. Would you like to apply this change to %{count} existing users?"
             modal_yes: "Yes"
             modal_no: "No, only apply going forward"
+
+        welcome_banner:
+          title: "Welcome banner"
+          header_description: "Configure the banner containing a search bar displayed to visitors on your site."
+          saved: "Welcome banner settings saved successfully."
+          form:
+            enabled_themes:
+              label: "Enabled on themes..."
+              description: "Select which themes should display the banner. Only active themes are shown."
+            background_image:
+              label: "Background image"
+              description: "This image will be displayed behind the banner text."
+            text_color:
+              label: "Text color"
+            page_visibility:
+              label: "Page visibility"
+              description: "Choose where the banner should be displayed."
+              options:
+                top_menu_pages: "Top menu pages"
+                homepage: "Homepage only"
+                discovery: "Discovery pages"
+                all_pages: "All pages"
+            location:
+              label: "Location"
+              description: "Choose where the banner should appear on the page."
+              options:
+                above_topic_content: "Above topic content"
+                below_site_header: "Below site header"
+            text_section:
+              title: "Customizable text"
+              variables: "You can use these variables in your text: <code>&percnt;{preferred_display_name}</code>, <code>&percnt;{site_name}</code>"
+            header_new_members:
+              label: "Header for new members"
+              placeholder: "Welcome to %{site_name}, %{preferred_display_name}!"
+            header_logged_in:
+              label: "Header for logged-in members"
+              placeholder: "Welcome back, %{preferred_display_name}!"
+            header_anonymous:
+              label: "Header for anonymous visitors"
+              placeholder: "Welcome to %{site_name}!"
+            subheader_logged_in:
+              label: "Subheader for logged-in members"
+              description: "Secondary text shown below the header for logged-in users."
+              placeholder: "Check out what's new in the community"
+            subheader_anonymous:
+              label: "Subheader for anonymous visitors"
+              description: "Secondary text shown below the header for anonymous visitors."
+              placeholder: "Join our community to participate in discussions"
+            search_placeholder:
+              label: "Search placeholder"
+              description: "Placeholder text for the search box in the welcome banner."
+              placeholder: "Search topics..."
 
         navigation:
           title: "Navigation"
@@ -7797,10 +7849,10 @@ en:
             second: "Option 2"
             third: "Option 3"
         edit_category:
-          toggle_freeform: "form template disabled"
-          toggle_form_template: "form template enabled"
+          toggle_freeform: "Form template disabled"
+          toggle_form_template: "Form template enabled"
           select_template: "Select form templates"
-          select_template_help: "Add/Edit Form Templates"
+          select_template_help: "Add/Edit form templates"
         errors:
           multiple_tags_not_allowed: 'You can''t select more tags from the "%{tag_name}". To avoid issues, use Form Template'
 

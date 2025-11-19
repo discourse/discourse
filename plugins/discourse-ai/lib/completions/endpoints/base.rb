@@ -78,7 +78,7 @@ module DiscourseAi
           &blk
         )
           LlmQuota.check_quotas!(@llm_model, user)
-          LlmCreditAllocation.check_credits!(@llm_model)
+          LlmCreditAllocation.check_credits!(@llm_model, feature_name)
 
           start_time = Time.now
 
@@ -113,7 +113,7 @@ module DiscourseAi
             wrapped = [result] if !result.is_a?(Array)
             wrapped.each do |partial|
               blk.call(partial)
-              break cancel_manager&.cancelled?
+              break if cancel_manager&.cancelled?
             end
             return result
           end
@@ -270,6 +270,9 @@ module DiscourseAi
                   # signal last partial output which will get parsed
                   # by best effort json parser
                   blk.call("")
+                else
+                  # got to signal the end of structured output
+                  blk.call(structured_output)
                 end
               end
               call_status = :success

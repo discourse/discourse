@@ -27,12 +27,12 @@ module DiscourseAi
           feature_name&.start_with?("ai_helper:")
         end
 
-        def initialize(helper_mode)
-          @helper_mode = helper_mode
+        def initialize(feature_name, persona_prompt_override = nil)
           @persona_class =
-            PERSONA_MAP.fetch(helper_mode) do
-              raise ArgumentError, "Unsupported AI Helper mode '#{helper_mode}'"
+            PERSONA_MAP.fetch(feature_name) do
+              raise ArgumentError, "Unsupported AI Helper mode '#{feature_name}'"
             end
+          super(feature_name, persona_prompt_override)
         end
 
         def run(eval_case, llm)
@@ -49,12 +49,12 @@ module DiscourseAi
             )
 
           formatted = format_response(response)
-          wrap_result(formatted, { helper_mode: helper_mode })
+          wrap_result(formatted, { feature_name: feature_name })
         end
 
         private
 
-        attr_reader :helper_mode, :persona_class
+        attr_reader :feature_name, :persona_class
 
         def build_user(locale)
           return Discourse.system_user if locale.blank?
@@ -71,10 +71,10 @@ module DiscourseAi
           context =
             DiscourseAi::Personas::BotContext.new(
               user: user,
-              skip_tool_details: true,
-              feature_name: "ai_helper:#{helper_mode}",
+              skip_show_thinking: true,
+              feature_name: "ai_helper:#{feature_name}",
               messages: [{ type: :user, content: user_input }],
-              format_dates: helper_mode == "smart_dates",
+              format_dates: feature_name == "smart_dates",
               custom_instructions: custom_locale_instructions(user, force_default_locale),
             )
           context = attach_user_context(context, user, force_default_locale: force_default_locale)
@@ -83,7 +83,7 @@ module DiscourseAi
         end
 
         def build_user_input(input, custom_prompt)
-          if helper_mode == "custom_prompt" && custom_prompt.present?
+          if feature_name == "custom_prompt" && custom_prompt.present?
             return "<input>#{custom_prompt}:\n#{input}</input>"
           end
 

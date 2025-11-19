@@ -10,9 +10,6 @@ module DiscourseAi
           feature_name&.start_with?("search:discoveries")
         end
 
-        def initialize(_operation)
-        end
-
         def run(eval_case, llm)
           args = normalize_args(eval_case.args)
           case_defs = Array(args.delete(:cases)).presence
@@ -36,7 +33,7 @@ module DiscourseAi
           context =
             DiscourseAi::Personas::BotContext.new(
               user: user,
-              skip_tool_details: true,
+              skip_show_thinking: true,
               feature_name: "discover",
               messages: [{ type: :user, content: query }],
             )

@@ -14,6 +14,7 @@ module DiscourseAutomation
     GROUP_CATEGORY_NOTIFICATION_DEFAULT = "group_category_notification_default"
     PIN_TOPIC = "pin_topic"
     POST = "post"
+    REMOVE_UPLOAD_MARKUP_FROM_DELETED_POSTS = "remove_upload_markup_from_deleted_posts"
     SEND_PMS = "send_pms"
     SUSPEND_USER_BY_EMAIL = "suspend_user_by_email"
     TOPIC = "topic"

@@ -1114,6 +1114,7 @@ RSpec.describe Search do
             raw: "Contenu français sur les éléphants",
             cooked: "<p>Contenu français sur les éléphants</p>",
           )
+          post.update(locale: "en")
         end
 
         it "uses different localization for different locales" do

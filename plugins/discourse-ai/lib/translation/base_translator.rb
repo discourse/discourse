@@ -40,7 +40,7 @@ module DiscourseAi
         context =
           DiscourseAi::Personas::BotContext.new(
             user: translation_user,
-            skip_tool_details: true,
+            skip_show_thinking: true,
             feature_name: "translation",
             messages: [{ type: :user, content: formatted_content(text) }],
             topic: @topic,

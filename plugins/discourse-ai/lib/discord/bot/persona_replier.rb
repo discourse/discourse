@@ -23,7 +23,7 @@ module DiscourseAi
         reply = +""
         full_reply =
           @bot.reply(
-            { conversation_context: [{ type: :user, content: @query }], skip_tool_details: true },
+            { conversation_context: [{ type: :user, content: @query }], skip_show_thinking: true },
           ) do |partial, _something|
             reply << partial
             next if reply.blank?

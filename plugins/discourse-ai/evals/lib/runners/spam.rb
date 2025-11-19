@@ -10,10 +10,6 @@ module DiscourseAi
           full_feature_name&.start_with?("spam:")
         end
 
-        def initialize(feature_name)
-          @feature_name = feature_name
-        end
-
         def run(eval_case, llm)
           args = eval_case.args
           persona = resolve_persona(persona_class: DiscourseAi::Personas::SpamDetector)
@@ -25,7 +21,7 @@ module DiscourseAi
             DiscourseAi::Personas::BotContext
               .new(
                 user: user,
-                skip_tool_details: true,
+                skip_show_thinking: true,
                 feature_name: "evals/spam",
                 messages: [{ type: :user, content: content }],
               )
@@ -39,8 +35,6 @@ module DiscourseAi
         end
 
         private
-
-        attr_reader :feature_name
 
         def capture_verdict(persona, user, llm, context)
           bot = DiscourseAi::Personas::Bot.as(user, persona: persona, model: llm)
