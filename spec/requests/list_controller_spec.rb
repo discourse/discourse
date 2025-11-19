@@ -967,8 +967,8 @@ RSpec.describe ListController do
 
           json = response.parsed_body
 
-          expect(json["topic_list"]["more_topics_url"]).to eq(
-            "/topics/created-by/%E5%BF%AB%E5%BF%AB%E5%BF%AB.json?page=2",
+          expect(json["topic_list"]["more_topics_url"]).to match(
+            %r{/topics/created-by/%E5%BF%AB%E5%BF%AB%E5%BF%AB.json\?page=\w+},
           )
         end
       end

@@ -149,7 +149,7 @@ class TopicQuery
     @options = options.dup
     @user = user
     @guardian = options[:guardian] || Guardian.new(@user)
-    @request = options[:request]
+    @request = options[:request] || Current.request
   end
 
   def joined_topic_user(list = nil)

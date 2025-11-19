@@ -64,7 +64,7 @@ class ListController < ApplicationController
         list_opts[:no_definitions] = true
       end
 
-      list = TopicQuery.new(user, list_opts.merge(request:)).public_send("list_#{filter}")
+      list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
 
       if guardian.can_create_shared_draft? && @category.present?
         if @category.id == SiteSetting.shared_drafts_category.to_i
@@ -78,7 +78,6 @@ class ListController < ApplicationController
               user,
               category: SiteSetting.shared_drafts_category,
               destination_category_id: list_opts[:category],
-              request:,
             ).list_latest
 
           if shared_drafts.present? && shared_drafts.topics.present?
@@ -136,8 +135,6 @@ class ListController < ApplicationController
 
     user = list_target_user
     list = TopicQuery.new(user, topic_query_opts).list_filter
-    list.more_topics_url = construct_url_with(:next, topic_query_opts)
-    list.prev_topics_url = construct_url_with(:prev, topic_query_opts)
 
     respond_with_list(list)
   end
@@ -330,8 +327,6 @@ class ListController < ApplicationController
       user = list_target_user
       list = TopicQuery.new(user, top_options).list_top_for(period)
       list.for_period = period
-      list.more_topics_url = construct_url_with(:next, top_options)
-      list.prev_topics_url = construct_url_with(:prev, top_options)
       @rss = "top"
       @params = { period: period }
       @rss_description = "top_#{period}"
@@ -452,7 +447,7 @@ class ListController < ApplicationController
   end
 
   def generate_list_for(action, target_user, opts)
-    TopicQuery.new(current_user, opts.merge(request:)).public_send("list_#{action}", target_user)
+    TopicQuery.new(current_user, opts).public_send("list_#{action}", target_user)
   end
 
   def construct_url_with(action, opts, url_prefix = nil)
