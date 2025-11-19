@@ -130,7 +130,6 @@ import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "discourse/select-kit/components/user-chooser";
 import { modifySelectKit } from "discourse/select-kit/lib/plugin-api";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
-import { addDecorator } from "discourse/widgets/post-cooked";
 import {
   addPostTransformCallback,
   preventCloak,
@@ -603,8 +602,6 @@ class _PluginApi {
     opts = opts || {};
 
     callback = wrapWithErrorHandler(callback, "broken_decorator_alert");
-
-    addDecorator(callback);
 
     this.onAppEvent("decorate-post-cooked-element", callback);
     if (!opts.onlyStream) {
