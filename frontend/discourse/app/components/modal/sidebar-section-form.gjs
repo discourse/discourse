@@ -6,7 +6,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import SectionFormLink from "discourse/components/sidebar/section-form-link";
@@ -19,13 +18,14 @@ import { removeValueFromArray } from "discourse/lib/array-tools";
 import { SIDEBAR_SECTION, SIDEBAR_URL } from "discourse/lib/constants";
 import { afterRender, bind } from "discourse/lib/decorators";
 import { sanitize } from "discourse/lib/text";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import { and, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 class Section {
   @tracked title;
-  @tracked links;
-  @tracked secondaryLinks;
+  @trackedArray links;
+  @trackedArray secondaryLinks;
 
   constructor({
     title,
@@ -242,26 +242,26 @@ export default class SidebarSectionForm extends Component {
             acc.push(this.initLink(link));
           }
           return acc;
-        }, new TrackedArray()),
+        }, []),
         secondaryLinks: section.links.reduce((acc, link) => {
           if (link.segment === "secondary") {
             this.nextObjectId++;
             acc.push(this.initLink(link));
           }
           return acc;
-        }, new TrackedArray()),
+        }, []),
         id: section.id,
         hideTitleInput: this.model.hideSectionHeader,
       });
     } else {
       return new Section({
-        links: new TrackedArray([
+        links: [
           new SectionLink({
             router: this.router,
             objectId: this.nextObjectId,
             segment: "primary",
           }),
-        ]),
+        ],
       });
     }
   }
