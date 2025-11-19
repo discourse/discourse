@@ -241,38 +241,6 @@ module ReviewableActionBuilder
     create_result(:success, :rejected, [created_by_id], false)
   end
 
-  # Calculate the final reviewable status based on the action logs. This method
-  # assumes that all_bundles_actioned? has already returned true.
-  #
-  # @return [Symbol] The calculated final status (:ignored, :rejected, :approved, or :pending)
-  def calculate_final_status_from_logs
-    statuses = reviewable_action_logs.distinct(:bundle).pluck(:status)
-
-    return :pending if statuses.empty?
-
-    return :ignored if statuses.all? { |s| s == Reviewable.statuses["ignored"] }
-    return :rejected if statuses.all? { |s| s == Reviewable.statuses["rejected"] }
-    return :approved if statuses.any? { |s| s == Reviewable.statuses["approved"] }
-
-    :pending
-  end
-
-  # Check if all action bundles have been addressed with at least one action.
-  #
-  # @param guardian [Guardian] The guardian to check permissions for.
-  # @param args [Hash] Additional arguments for building actions.
-  #
-  # @return [Boolean] True if all bundles have at least one logged action.
-  def all_bundles_actioned?(guardian, args = {})
-    actions = actions_for(guardian, args)
-    # Extract bundle types from bundle IDs (e.g., "8311-post-actions" -> "post-actions")
-    current_bundle_types = actions.bundles.map { |b| b.id.split("-", 2).last }
-    logged_bundle_types = reviewable_action_logs.distinct(:bundle).pluck(:bundle).compact
-
-    # Check if at least one action from each bundle type has been logged
-    current_bundle_types.all? { |type| logged_bundle_types.include?(type) }
-  end
-
   # Override the Reviewable#perform method to add action logging, and to handle deferred finalization
   # when using the new reviewable UI refresh.
   #
@@ -284,8 +252,6 @@ module ReviewableActionBuilder
   def perform(performed_by, action_id, args = nil)
     args ||= {}
     guardian = args[:guardian] || Guardian.new(performed_by)
-    use_deferred_transitions =
-      guardian.can_see_reviewable_ui_refresh? && !SiteSetting.reviewable_old_moderator_actions
 
     # Find which bundle this action belongs to BEFORE executing
     # (actions may change after execution, e.g., hide_post -> unhide_post)
@@ -311,38 +277,29 @@ module ReviewableActionBuilder
     result = super(performed_by, action_id, args_for_super)
     self.skip_pending_notification = false
 
-    if use_deferred_transitions
-      if result.success? && result.transition_to
-        reviewable_action_logs.create!(
-          action_key: action_id.to_s,
-          status: result.transition_to,
-          performed_by: performed_by,
-          bundle: bundle_type,
-        )
-      end
+    if result.success? && result.transition_to
+      reviewable_action_logs.create!(
+        action_key: action_id.to_s,
+        status: result.transition_to,
+        performed_by: performed_by,
+        bundle: bundle_type,
+      )
+    end
 
-      if all_bundles_actioned?(guardian, args)
-        finalize_perform_result(
-          result,
-          performed_by,
-          guardian,
-          transition_to_status: calculate_final_status_from_logs,
-        )
-      end
-    else
-      unless args[:skip_finalization]
-        Reviewable.transaction do
-          if result.success? && result.transition_to
-            reviewable_action_logs.create!(
-              action_key: action_id.to_s,
-              status: result.transition_to,
-              performed_by: performed_by,
-              bundle: bundle_type,
-            )
-          end
-          finalize_perform_result(result, performed_by, guardian)
+    if guardian.can_see_reviewable_ui_refresh? && !SiteSetting.reviewable_old_moderator_actions
+      Review::CalculateFinalStatusFromLogs.call(
+        params: {
+          reviewable_id: id,
+          guardian: guardian,
+          args: args,
+        },
+      ) do
+        on_success do |status:|
+          finalize_perform_result(result, performed_by, guardian, transition_to_status: status)
         end
       end
+    else
+      finalize_perform_result(result, performed_by, guardian)
     end
 
     result
