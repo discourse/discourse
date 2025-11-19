@@ -371,16 +371,18 @@ class PostActionCreator
       return if handler_values.any? { |value| value == false }
     else
       create_args[:subtype] = TopicSubtype.notify_moderators
-      create_args[:target_group_names] = [Group[:moderators].name]
+      group_names = Set[Group[:moderators].name]
 
       if SiteSetting.enable_category_group_moderation? && @post.topic&.category
-        create_args[:target_group_names].push(
-          *Group
+        group_names.merge(
+          Group
             .joins(:category_moderation_groups)
             .where("category_moderation_groups.category_id": @post.topic.category.id)
             .pluck(:name),
         )
       end
+
+      create_args[:target_group_names] = group_names.to_a
     end
 
     PostCreator.new(@created_by, create_args)
