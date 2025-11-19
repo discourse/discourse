@@ -72,9 +72,6 @@ import {
   registerIconRenderer,
   replaceIcon,
 } from "discourse/lib/icon-library";
-import KeyboardShortcuts, {
-  disableDefaultKeyboardShortcuts,
-} from "discourse/lib/keyboard-shortcuts";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
 import { addGTMPageChangedCallback } from "discourse/lib/page-tracker";
@@ -130,6 +127,7 @@ import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "discourse/select-kit/components/user-chooser";
 import { modifySelectKit } from "discourse/select-kit/lib/plugin-api";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
+import { disableDefaultKeyboardShortcuts } from "discourse/services/keyboard-shortcuts";
 import { addPostClassesCallback } from "discourse/widgets/post";
 import { addDecorator } from "discourse/widgets/post-cooked";
 import {
@@ -623,14 +621,18 @@ class _PluginApi {
    * See KeyboardShortcuts.addShortcut documentation.
    **/
   addKeyboardShortcut(shortcut, callback, opts = {}) {
-    KeyboardShortcuts.addShortcut(shortcut, callback, opts);
+    this.container
+      .lookup("service:keyboard-shortcuts")
+      .addShortcut(shortcut, callback, opts);
   }
 
   /**
    * See KeyboardShortcuts.unbind documentation.
    **/
   removeKeyboardShortcut(shortcut, callback) {
-    KeyboardShortcuts.unbind({ [shortcut]: callback });
+    this.container
+      .lookup("service:keyboard-shortcuts")
+      .unbind({ [shortcut]: callback });
   }
 
   /**

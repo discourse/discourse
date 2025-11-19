@@ -9,8 +9,8 @@ import DMenu from "discourse/float-kit/components/d-menu";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { iconHTML } from "discourse/lib/icon-library";
-import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { translateModKey } from "discourse/lib/utilities";
+import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
 import { i18n } from "discourse-i18n";
 
 export default class ToolbarPopupmenuOptions extends Component {
