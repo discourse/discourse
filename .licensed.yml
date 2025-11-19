@@ -72,6 +72,7 @@ reviewed:
     - net-smtp # Ruby (bundled gem)
     - nio4r # MIT + BSD
     - omniauth # MIT
+    - pagy # MIT
     - pg # Ruby
     - pitchfork # Ruby or GPLv2/GPLv3
     - r2 # Apache-2.0 (Twitter)
