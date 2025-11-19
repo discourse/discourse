@@ -6,9 +6,7 @@ import { hbs } from "ember-cli-htmlbars";
 import curryComponent from "ember-curry-component";
 import { module, test } from "qunit";
 import DecoratedHtml from "discourse/components/decorated-html";
-import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { POST_STREAM_DEPRECATION_OPTIONS } from "discourse/widgets/widget";
 
 module("Integration | Component | <DecoratedHtml />", function (hooks) {
   setupRenderingTest(hooks);
@@ -92,14 +90,12 @@ module("Integration | Component | <DecoratedHtml />", function (hooks) {
     const decorateWithStringTarget = (element, helper) => {
       element.innerHTML += "<div id='appended'>Appended</div>";
 
-      withSilencedDeprecations(POST_STREAM_DEPRECATION_OPTIONS.id, () => {
-        helper.renderGlimmer(
-          "div",
-          <template>
-            <div id="render-glimmer">Hello from Glimmer Component</div>
-          </template>
-        );
-      });
+      helper.renderGlimmer(
+        "div",
+        <template>
+          <div id="render-glimmer">Hello from Glimmer Component</div>
+        </template>
+      );
     };
 
     await render(
@@ -132,12 +128,10 @@ module("Integration | Component | <DecoratedHtml />", function (hooks) {
     const decorateWithHbsTemplate = (element, helper) => {
       element.innerHTML += "<div id='appended'>Appended</div>";
 
-      withSilencedDeprecations(POST_STREAM_DEPRECATION_OPTIONS.id, () => {
-        helper.renderGlimmer(
-          element,
-          hbs("<div id='render-glimmer'>Hello from Glimmer Component</div>")
-        );
-      });
+      helper.renderGlimmer(
+        element,
+        hbs("<div id='render-glimmer'>Hello from Glimmer Component</div>")
+      );
     };
 
     await render(
