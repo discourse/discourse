@@ -36,7 +36,6 @@ export default class DModal extends Component {
   @service site;
 
   @tracked wrapperElement;
-  @tracked animating = false;
 
   registerModalContainer = modifierFn((el) => {
     this.modalContainer = el;
@@ -74,13 +73,6 @@ export default class DModal extends Component {
     );
 
     this.wrapperElement = el;
-    this.animating = true;
-
-    this.modalContainer.classList.add("is-entering");
-    await this.#waitForAnimationEnd(this.modalContainer);
-    this.modalContainer.classList.remove("is-entering");
-
-    this.animating = false;
   }
 
   @action
@@ -127,10 +119,6 @@ export default class DModal extends Component {
 
   @action
   async handleSwipe(swipeEvent) {
-    if (this.animating) {
-      return;
-    }
-
     if (swipeEvent.deltaY >= 0) {
       return await this.#animateWrapperPosition(swipeEvent.deltaY);
     }
@@ -138,12 +126,6 @@ export default class DModal extends Component {
 
   @action
   async handleSwipeEnded(swipeEvent) {
-    if (this.animating) {
-      // if the modal is animating we don't want to risk resetting the position
-      // as the user releases the swipe at the same time
-      return;
-    }
-
     if (
       swipeEvent.goingUp() ||
       swipeEvent.velocityY < SWIPE_VELOCITY_THRESHOLD
@@ -176,28 +158,7 @@ export default class DModal extends Component {
 
   @action
   async closeModal(initiatedBy) {
-    if (!this.args.closeModal) {
-      return;
-    }
-
-    try {
-      this.animating = true;
-
-      if (this.site.desktopView) {
-        await this.#animatePopOff();
-      } else {
-        const backdrop = this.wrapperElement.nextElementSibling;
-        this.modalContainer.classList.add("is-exiting");
-        if (backdrop) {
-          backdrop.classList.add("is-exiting");
-        }
-
-        await this.#waitForAnimationEnd(this.modalContainer);
-      }
-    } finally {
-      this.animating = false;
-      this.args.closeModal({ initiatedBy });
-    }
+    this.args.closeModal?.({ initiatedBy });
   }
 
   @action
@@ -266,49 +227,6 @@ export default class DModal extends Component {
     );
   }
 
-  #waitForAnimationEnd(el) {
-    return new Promise((resolve) => {
-      const style = window.getComputedStyle(el);
-      const duration = parseFloat(style.animationDuration) * 1000 || 0;
-      const delay = parseFloat(style.animationDelay) * 1000 || 0;
-      const totalTime = duration + delay;
-
-      const timeoutId = setTimeout(
-        () => {
-          el.removeEventListener("animationend", handleAnimationEnd);
-          resolve();
-        },
-        Math.max(totalTime + 50, 50)
-      );
-
-      const handleAnimationEnd = () => {
-        clearTimeout(timeoutId);
-        el.removeEventListener("animationend", handleAnimationEnd);
-        resolve();
-      };
-
-      el.addEventListener("animationend", handleAnimationEnd);
-    });
-  }
-
-  async #animatePopOff() {
-    const backdrop = this.wrapperElement.nextElementSibling;
-
-    if (!backdrop) {
-      return;
-    }
-
-    this.modalContainer.classList.add("is-exiting");
-    backdrop.classList.add("is-exiting");
-
-    await waitForPromise(
-      Promise.all([
-        this.#waitForAnimationEnd(this.modalContainer),
-        this.#waitForAnimationEnd(backdrop),
-      ])
-    );
-  }
-
   <template>
     {{! template-lint-disable no-invalid-interactive }}
 
@@ -321,12 +239,7 @@ export default class DModal extends Component {
         {{htmlClass "modal-open"}}
       {{/unless}}
       <this.dynamicElement
-        class={{concatClass
-          "modal"
-          "d-modal"
-          (if @inline "-inline")
-          (if this.animating "is-animating")
-        }}
+        class={{concatClass "modal" "d-modal" (if @inline "-inline")}}
         data-keyboard="false"
         aria-modal="true"
         role="dialog"
