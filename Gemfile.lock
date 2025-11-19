@@ -575,7 +575,7 @@ GEM
       rubocop-rails (>= 2.30.3)
       rubocop-rspec (>= 3.0.1)
       rubocop-rspec_rails (>= 2.31.0)
-    rubocop-factory_bot (2.27.1)
+    rubocop-factory_bot (2.28.0)
       lint_roller (~> 1.1)
       rubocop (~> 1.72, >= 1.72.1)
     rubocop-rails (2.33.4)
@@ -651,14 +651,14 @@ GEM
     snaky_hash (2.0.3)
       hashie (>= 0.1.0, < 6)
       version_gem (>= 1.1.8, < 3)
-    sqlite3 (2.7.4-aarch64-linux-gnu)
-    sqlite3 (2.7.4-aarch64-linux-musl)
-    sqlite3 (2.7.4-arm-linux-gnu)
-    sqlite3 (2.7.4-arm-linux-musl)
-    sqlite3 (2.7.4-arm64-darwin)
-    sqlite3 (2.7.4-x86_64-darwin)
-    sqlite3 (2.7.4-x86_64-linux-gnu)
-    sqlite3 (2.7.4-x86_64-linux-musl)
+    sqlite3 (2.8.0-aarch64-linux-gnu)
+    sqlite3 (2.8.0-aarch64-linux-musl)
+    sqlite3 (2.8.0-arm-linux-gnu)
+    sqlite3 (2.8.0-arm-linux-musl)
+    sqlite3 (2.8.0-arm64-darwin)
+    sqlite3 (2.8.0-x86_64-darwin)
+    sqlite3 (2.8.0-x86_64-linux-gnu)
+    sqlite3 (2.8.0-x86_64-linux-musl)
     sshkey (3.0.0)
     stackprof (0.2.27)
     stringio (3.1.8)
@@ -1166,7 +1166,7 @@ CHECKSUMS
   rubocop-ast (1.48.0) sha256=22df9bbf3f7a6eccde0fad54e68547ae1e2a704bf8719e7c83813a99c05d2e76
   rubocop-capybara (2.22.1) sha256=ced88caef23efea53f46e098ff352f8fc1068c649606ca75cb74650970f51c0c
   rubocop-discourse (3.13.3) sha256=637395e37ac45f0c5ba4376d7648b5f1e3a8406697c38befb66a9729738a059f
-  rubocop-factory_bot (2.27.1) sha256=9d744b5916778c1848e5fe6777cc69855bd96548853554ec239ba9961b8573fe
+  rubocop-factory_bot (2.28.0) sha256=4b17fc02124444173317e131759d195b0d762844a71a29fe8139c1105d92f0cb
   rubocop-rails (2.33.4) sha256=34ec8f6637706dc224483d949ccc88b3e41596a81a11a1ec0c7d74ecbea356b5
   rubocop-rspec (3.8.0) sha256=28440dccb3f223a9938ca1f946bd3438275b8c6c156dab909e2cb8bc424cab33
   rubocop-rspec_rails (2.32.0) sha256=4a0d641c72f6ebb957534f539d9d0a62c47abd8ce0d0aeee1ef4701e892a9100
@@ -1198,14 +1198,14 @@ CHECKSUMS
   simplecov_json_formatter (0.1.4) sha256=529418fbe8de1713ac2b2d612aa3daa56d316975d307244399fa4838c601b428
   simpleidn (0.2.3) sha256=08ce96f03fa1605286be22651ba0fc9c0b2d6272c9b27a260bc88be05b0d2c29
   snaky_hash (2.0.3) sha256=25a3d299566e8153fb02fa23fd9a9358845950f7a523ddbbe1fa1e0d79a6d456
-  sqlite3 (2.7.4-aarch64-linux-gnu) sha256=071da898ef968c83f62b26ed644a4e7f3544034fb2518f99f88a354d9ab6381c
-  sqlite3 (2.7.4-aarch64-linux-musl) sha256=a9484bef1ee9c3a55ed370baa5147823f844aebfe0df9350f2e9b5518aeee516
-  sqlite3 (2.7.4-arm-linux-gnu) sha256=b7b35c9802533b1b313cb1bb8e36b5c37277b6019ccf6314740fc7d4503a13d6
-  sqlite3 (2.7.4-arm-linux-musl) sha256=4809860528e429e24aad52b781ee56bc8e7e0d1a28b76cd6a24f5eded8e2d774
-  sqlite3 (2.7.4-arm64-darwin) sha256=d5b09cd4e9542aa05f0db0eb7dd868102cc23072ae378e0453e59e0efaed89b8
-  sqlite3 (2.7.4-x86_64-darwin) sha256=a51bcab41d09311ff7ac6bd4ea5cbdeee99f2e44f22c1b8472b541e9243c1d52
-  sqlite3 (2.7.4-x86_64-linux-gnu) sha256=0755b458f5501e89c0d5a0003afc4fdd6fd059eb1fb1424221532917096da4be
-  sqlite3 (2.7.4-x86_64-linux-musl) sha256=494b4ce35524f3bf8ef6741737d0c197086ed8ac4804220fa71d653b39d82a54
+  sqlite3 (2.8.0-aarch64-linux-gnu) sha256=3e8b5ed47fed37518eeea54ea9a96542dff0d82ea247490d3bdc6a02d4402503
+  sqlite3 (2.8.0-aarch64-linux-musl) sha256=9db4dfdc5c1582ab2b3d6f98017d39d3c597a50710a0438f4e2ebfba4989ab30
+  sqlite3 (2.8.0-arm-linux-gnu) sha256=f604b44e5d4ca6b6632cad659b4bd4ebe55c38987ad411427993b42c70fd3dec
+  sqlite3 (2.8.0-arm-linux-musl) sha256=80c4de4163fca155434a540c42fffba43bf71974f8c7645ad87d94fe1e8c15b0
+  sqlite3 (2.8.0-arm64-darwin) sha256=841b4e37f7cb993d9bcb3dc58c8827b5df1e29d2030231155eba0ab89766efaf
+  sqlite3 (2.8.0-x86_64-darwin) sha256=ae26021cbfc7c9c819e2bad50789ab7732dc29c7c00c043ee4b6073a10b1baa2
+  sqlite3 (2.8.0-x86_64-linux-gnu) sha256=b754409b06e447712198d59e37da0dab6fce326115657db034a94b77f67802a3
+  sqlite3 (2.8.0-x86_64-linux-musl) sha256=9ea480326f09abfeb2001cf8d08077feaac2253baaf5ac06aa530377f4a87ddc
   sshkey (3.0.0) sha256=655ba351d6e01a48dfe59d65530af8975c777b8cc57a061770de3228ff2d11cd
   stackprof (0.2.27) sha256=aff6d28656c852e74cf632cc2046f849033dc1dedffe7cb8c030d61b5745e80c
   stringio (3.1.8) sha256=99c43c3a9302843cca223fd985bfc503dd50a4b1723d3e4a9eb1d9c37d99e4ec

@@ -5884,6 +5884,58 @@ en:
             modal_yes: "Yes"
             modal_no: "No, only apply going forward"
 
+        welcome_banner:
+          title: "Welcome banner"
+          header_description: "Configure the banner containing a search bar displayed to visitors on your site."
+          saved: "Welcome banner settings saved successfully."
+          form:
+            enabled_themes:
+              label: "Enabled on themes..."
+              description: "Select which themes should display the banner. Only active themes are shown."
+            background_image:
+              label: "Background image"
+              description: "This image will be displayed behind the banner text."
+            text_color:
+              label: "Text color"
+            page_visibility:
+              label: "Page visibility"
+              description: "Choose where the banner should be displayed."
+              options:
+                top_menu_pages: "Top menu pages"
+                homepage: "Homepage only"
+                discovery: "Discovery pages"
+                all_pages: "All pages"
+            location:
+              label: "Location"
+              description: "Choose where the banner should appear on the page."
+              options:
+                above_topic_content: "Above topic content"
+                below_site_header: "Below site header"
+            text_section:
+              title: "Customizable text"
+              variables: "You can use these variables in your text: <code>&percnt;{preferred_display_name}</code>, <code>&percnt;{site_name}</code>"
+            header_new_members:
+              label: "Header for new members"
+              placeholder: "Welcome to %{site_name}, %{preferred_display_name}!"
+            header_logged_in:
+              label: "Header for logged-in members"
+              placeholder: "Welcome back, %{preferred_display_name}!"
+            header_anonymous:
+              label: "Header for anonymous visitors"
+              placeholder: "Welcome to %{site_name}!"
+            subheader_logged_in:
+              label: "Subheader for logged-in members"
+              description: "Secondary text shown below the header for logged-in users."
+              placeholder: "Check out what's new in the community"
+            subheader_anonymous:
+              label: "Subheader for anonymous visitors"
+              description: "Secondary text shown below the header for anonymous visitors."
+              placeholder: "Join our community to participate in discussions"
+            search_placeholder:
+              label: "Search placeholder"
+              description: "Placeholder text for the search box in the welcome banner."
+              placeholder: "Search topics..."
+
         navigation:
           title: "Navigation"
           header_description: "Configure the navigation links and menu items for your site. This includes the location and behavior of the primary navigation menu, the quick links at the top of the homepage, as well as the admin sidebar"
