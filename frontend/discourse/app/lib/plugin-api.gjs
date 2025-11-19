@@ -133,10 +133,6 @@ import { addComposerSaveErrorCallback } from "discourse/services/composer";
 import { addPostClassesCallback } from "discourse/widgets/post";
 import { addDecorator } from "discourse/widgets/post-cooked";
 import {
-  addPostSmallActionClassesCallback,
-  addPostSmallActionIcon,
-} from "discourse/widgets/post-small-action";
-import {
   addPostTransformCallback,
   preventCloak,
 } from "discourse/widgets/post-stream";
@@ -1412,9 +1408,6 @@ class _PluginApi {
       "post-small-action-icon",
       ({ value, context: { code } }) => (key === code ? icon : value)
     );
-
-    // TODO (glimmer-post-stream): remove the fallback when removing the legacy post stream code
-    addPostSmallActionIcon(key, icon);
   }
 
   /**
@@ -1448,9 +1441,6 @@ class _PluginApi {
         ...makeArray(callback(post)),
       ]
     );
-
-    // TODO (glimmer-post-stream): remove the fallback when removing the legacy post stream code
-    addPostSmallActionClassesCallback(callback);
   }
 
   /**
