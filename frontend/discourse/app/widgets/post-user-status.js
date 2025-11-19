@@ -1,20 +1,8 @@
-import { hbs } from "ember-cli-htmlbars";
-import RenderGlimmer from "discourse/widgets/render-glimmer";
-import { createWidget } from "discourse/widgets/widget";
+/**
+ * IMPORTANT: The widget rendering system has been decommissioned.
+ *
+ * This file is maintained only to prevent breaking imports in existing third-party customizations.
+ * New code should not use this component or the widget system.
+ */
 
-createWidget("post-user-status", {
-  tagName: "span.user-status-message-wrap",
-
-  html(attrs) {
-    return [
-      new RenderGlimmer(
-        this,
-        "span",
-        hbs`<UserStatusMessage @status={{@data.attrs}} />`,
-        {
-          attrs,
-        }
-      ),
-    ];
-  },
-});
+export { DummyWidget as default } from "./widget";
