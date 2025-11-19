@@ -16,7 +16,7 @@ export default class DMenuInstance extends FloatKitInstance {
    * @property {boolean} expanded - Tracks the state of menu expansion, initially set to false.
    */
   @tracked expanded = false;
-
+  @tracked closing = false;
   /**
    * Specifies whether the trigger for opening/closing the menu is detached from the menu itself.
    * This is the case when a menu is trigger programmatically instead of through the <DMenu /> component.
@@ -62,11 +62,22 @@ export default class DMenuInstance extends FloatKitInstance {
     return this.expanded;
   }
 
+  /**
+   * Closes the menu with an optional animation delay.
+   * Adds a .25s delay to allow close animation to complete before actually closing.
+   * @action
+   * @param {Object} options - Options for closing. Defaults to { focusTrigger: true }
+   */
   @action
   async close(options = { focusTrigger: true }) {
     if (getOwner(this).isDestroying) {
       return;
     }
+
+    this.closing = true; // set closing state for animation
+
+    // Wait for .25s (250ms), the duration of the animation, before proceeding
+    await new Promise((resolve) => setTimeout(resolve, 250));
 
     await super.close(...arguments);
 
@@ -81,6 +92,7 @@ export default class DMenuInstance extends FloatKitInstance {
     }
 
     await this.options.onClose?.(this);
+    this.closing = false;
   }
 
   @action
