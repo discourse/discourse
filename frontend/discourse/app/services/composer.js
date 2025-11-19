@@ -1193,24 +1193,15 @@ export default class ComposerService extends Service {
 
           return this.destroyDraft().then(() => {
             this.close();
-            // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-            this.appEvents.trigger("post-stream:refresh");
             return result;
           });
         }
 
         if (this.get("model.editingPost")) {
           this.appEvents.trigger("composer:edited-post");
-          // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-          this.appEvents.trigger("post-stream:refresh", {
-            id: parseInt(result.responseJson.id, 10),
-          });
           if (result.responseJson.post.post_number === 1) {
             this.appEvents.trigger("header:update-topic", composer.topic);
           }
-        } else {
-          // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-          this.appEvents.trigger("post-stream:refresh");
         }
 
         if (result.responseJson.action === "create_post") {
