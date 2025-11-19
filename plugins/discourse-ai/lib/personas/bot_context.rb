@@ -88,6 +88,7 @@ module DiscourseAi
 
       # these are strings that can be safely interpolated into templates
       TEMPLATE_PARAMS = %w[
+        date
         time
         site_url
         site_title
@@ -106,6 +107,10 @@ module DiscourseAi
 
       def time
         @time ||= Time.zone.now
+      end
+
+      def date
+        @date ||= time.strftime("%B %d, %Y")
       end
 
       def site_url

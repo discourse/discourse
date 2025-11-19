@@ -53,10 +53,14 @@ export default class AiLlmEditorForm extends Component {
         display_name: modelInfo.display_name,
         name: modelInfo.name,
         provider: info.provider,
-        provider_params: this.computeProviderParams(info.provider),
+        provider_params: this.computeProviderParams(
+          info.provider,
+          modelInfo.provider_params ?? {}
+        ),
         input_cost: modelInfo.input_cost,
         output_cost: modelInfo.output_cost,
         cached_input_cost: modelInfo.cached_input_cost,
+        vision_enabled: modelInfo.vision_enabled || false,
       };
     }
 

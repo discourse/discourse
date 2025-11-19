@@ -19,7 +19,6 @@ module DiscourseAi
 
       class << self
         def presets
-          # Sam: I am not sure if it makes sense to translate model names at all
           @presets ||=
             begin
               [
@@ -27,28 +26,22 @@ module DiscourseAi
                   id: "anthropic",
                   models: [
                     {
-                      name: "claude-3-7-sonnet-latest",
+                      name: "claude-sonnet-4-5",
                       tokens: 200_000,
-                      display_name: "Claude 3.7 Sonnet",
+                      display_name: "Claude 4.5 Sonnet",
                       input_cost: 3,
                       cached_input_cost: 0.30,
                       output_cost: 15,
+                      vision_enabled: true,
                     },
                     {
-                      name: "claude-sonnet-4-0",
+                      name: "claude-haiku-4-5",
                       tokens: 200_000,
-                      display_name: "Claude 4 Sonnet",
-                      input_cost: 3,
-                      cached_input_cost: 0.30,
-                      output_cost: 15,
-                    },
-                    {
-                      name: "claude-3-5-haiku-latest",
-                      tokens: 200_000,
-                      display_name: "Claude 3.5 Haiku",
-                      input_cost: 0.80,
-                      cached_input_cost: 0.08,
-                      output_cost: 4,
+                      display_name: "Claude 4.5 Haiku",
+                      input_cost: 1,
+                      cached_input_cost: 0.1,
+                      output_cost: 5,
+                      vision_enabled: true,
                     },
                     {
                       name: "claude-opus-4-1",
@@ -57,6 +50,7 @@ module DiscourseAi
                       input_cost: 15,
                       cached_input_cost: 1.50,
                       output_cost: 75,
+                      vision_enabled: true,
                     },
                   ],
                   tokenizer: DiscourseAi::Tokenizer::AnthropicTokenizer,
@@ -67,13 +61,26 @@ module DiscourseAi
                   id: "google",
                   models: [
                     {
+                      name: "gemini-3-pro",
+                      tokens: 800_000,
+                      endpoint:
+                        "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-preview",
+                      display_name: "Gemini 3 Pro",
+                      input_cost: 2,
+                      output_cost: 12,
+                      cached_input_cost: 0.2,
+                      vision_enabled: true,
+                    },
+                    {
                       name: "gemini-2.5-pro",
                       tokens: 800_000,
                       endpoint:
                         "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro",
                       display_name: "Gemini 2.5 Pro",
                       input_cost: 1.25,
-                      oputput_cost: 10.0,
+                      output_cost: 10.0,
+                      cached_input_cost: 0.125,
+                      vision_enabled: true,
                     },
                     {
                       name: "gemini-2.5-flash",
@@ -83,24 +90,17 @@ module DiscourseAi
                       display_name: "Gemini 2.5 Flash",
                       input_cost: 0.30,
                       output_cost: 2.50,
+                      vision_enabled: true,
                     },
                     {
-                      name: "gemini-2.0-flash",
+                      name: "gemini-2.5-flash-lite",
                       tokens: 800_000,
                       endpoint:
-                        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash",
-                      display_name: "Gemini 2.0 Flash",
-                      input_cost: 0.10,
-                      output_cost: 0.40,
-                    },
-                    {
-                      name: "gemini-2.0-flash-lite",
-                      tokens: 800_000,
-                      endpoint:
-                        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite",
-                      display_name: "Gemini 2.0 Flash Lite",
-                      input_cost: 0.075,
-                      output_cost: 0.30,
+                        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite",
+                      display_name: "Gemini 2.5 Flash Lite",
+                      input_cost: 0.1,
+                      output_cost: 0.4,
+                      vision_enabled: true,
                     },
                     {
                       name: "gemini-2.5-flash-image-preview",
@@ -108,6 +108,7 @@ module DiscourseAi
                       endpoint:
                         "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview",
                       display_name: "Gemini 2.5 Flash Image",
+                      vision_enabled: true,
                     },
                   ],
                   tokenizer: DiscourseAi::Tokenizer::GeminiTokenizer,
@@ -117,29 +118,18 @@ module DiscourseAi
                   id: "open_ai",
                   models: [
                     {
-                      name: "o4-mini",
-                      tokens: 200_000,
-                      display_name: "o4 Mini",
-                      input_cost: 1.10,
-                      cached_input_cost: 0.275,
-                      output_cost: 4.40,
-                    },
-                    {
-                      name: "o3",
-                      tokens: 200_000,
-                      display_name: "o3",
-                      input_cost: 2,
-                      cached_input_cost: 0.5,
-                      output_cost: 8,
-                    },
-                    {
-                      name: "gpt-5",
+                      name: "gpt-5.1",
                       tokens: 400_000,
-                      display_name: "GPT-5",
+                      display_name: "GPT-5.1",
                       input_cost: 1.25,
                       cached_input_cost: 0.125,
                       output_cost: 10,
                       max_output_tokens: 128_000,
+                      endpoint: "https://api.openai.com/v1/responses",
+                      vision_enabled: true,
+                      provider_params: {
+                        enable_responses_api: true,
+                      },
                     },
                     {
                       name: "gpt-5-mini",
@@ -149,6 +139,10 @@ module DiscourseAi
                       cached_input_cost: 0.025,
                       output_cost: 2.0,
                       max_output_tokens: 128_000,
+                      endpoint: "https://api.openai.com/v1/responses",
+                      provider_params: {
+                        enable_responses_api: true,
+                      },
                     },
                     {
                       name: "gpt-5-nano",
@@ -158,6 +152,10 @@ module DiscourseAi
                       cached_input_cost: 0.005,
                       output_cost: 0.40,
                       max_output_tokens: 128_000,
+                      endpoint: "https://api.openai.com/v1/responses",
+                      provider_params: {
+                        enable_responses_api: true,
+                      },
                     },
                   ],
                   tokenizer: DiscourseAi::Tokenizer::OpenAiTokenizer,
@@ -208,11 +206,12 @@ module DiscourseAi
                   id: "open_router",
                   models: [
                     {
-                      name: "x-ai/grok-3-beta",
+                      name: "x-ai/grok-4",
                       tokens: 131_072,
-                      display_name: "xAI Grok 3 Beta",
+                      display_name: "xAI Grok 4",
                       input_cost: 3,
                       output_cost: 15,
+                      vision_enabled: true,
                     },
                     {
                       name: "deepseek/deepseek-r1-0528:free",

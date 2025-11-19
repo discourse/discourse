@@ -16,7 +16,7 @@ module DiscourseAi
             - You are a helpful teacher that teaches people about what each settings does.
             - Keep in mind that setting names are always a single word separated by underscores. eg. 'site_description'
 
-            Current time is: {time}
+            Current date is: {date}
           PROMPT
       end
     end
