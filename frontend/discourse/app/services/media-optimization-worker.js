@@ -52,7 +52,7 @@ export default class MediaOptimizationWorkerService extends Service {
         .composer_media_optimization_image_bytes_optimization_threshold
     ) {
       this.logIfDebug(
-        `The file ${file.name} was less than the image optimization bytes threshold (${this.siteSettings.composer_media_optimization_image_bytes_optimization_threshold} bytes), skipping.`,
+        `The file ${file.name} was less than the image optimization bytes threshold (${this.siteSettings.composer_media_optimization_image_bytes_optimization_threshold} bytes), skipping`,
         file
       );
       return Promise.resolve();
@@ -82,6 +82,7 @@ export default class MediaOptimizationWorkerService extends Service {
           fileName: file.name,
           width: imageData.width,
           height: imageData.height,
+          originalFileSize: file.size,
           settings: {
             resize_threshold:
               this.siteSettings
@@ -126,7 +127,7 @@ export default class MediaOptimizationWorkerService extends Service {
     this.installPromise = new Promise((resolve, reject) => {
       this.afterInstalled = resolve;
       this.failedInstall = reject;
-      this.logIfDebug("Installing worker.");
+      this.logIfDebug("Installing worker");
       this.startWorker();
       this.registerMessageHandler();
       this.worker.postMessage({
@@ -141,7 +142,7 @@ export default class MediaOptimizationWorkerService extends Service {
       // we reject the install promise and clean up.
       setTimeout(() => {
         if (!this.workerInstalled) {
-          this.failInstall("Worker install timed out.");
+          this.failInstall("Worker install timed out!");
         }
       }, WORKER_INSTALL_TIMEOUT_MS);
 
@@ -182,7 +183,7 @@ export default class MediaOptimizationWorkerService extends Service {
     this.worker.onmessage = (workerMessage) => {
       switch (workerMessage.data.type) {
         case "file":
-          let optimizedFile = new File(
+          const optimizedFile = new File(
             [workerMessage.data.file],
             workerMessage.data.fileName,
             {
@@ -190,7 +191,7 @@ export default class MediaOptimizationWorkerService extends Service {
             }
           );
           this.logIfDebug(
-            `Finished optimization of ${optimizedFile.name} new size: ${optimizedFile.size}.`
+            `Finished optimization of ${optimizedFile.name}, new size is ${optimizedFile.size} bytes`
           );
 
           this.promiseResolvers[workerMessage.data.fileId](optimizedFile);
@@ -198,14 +199,14 @@ export default class MediaOptimizationWorkerService extends Service {
           this.workerDoneCount++;
           this.workerPendingCount--;
           if (this.workerDoneCount > 4 && this.workerPendingCount === 0) {
-            this.logIfDebug("Terminating worker to release memory in WASM.");
+            this.logIfDebug("Terminating worker to release memory in WASM");
             this.stopWorker();
           }
 
           break;
         case "error":
           this.logIfDebug(
-            `Handling error message from image optimization for ${workerMessage.data.fileName}.`
+            `Handling error message from image optimization for ${workerMessage.data.fileName}`
           );
 
           if (this.stopWorkerOnError) {
@@ -216,7 +217,7 @@ export default class MediaOptimizationWorkerService extends Service {
           this.workerPendingCount--;
           break;
         case "installed":
-          this.logIfDebug("Worker installed.");
+          this.logIfDebug("Worker installed");
           this.workerInstalled = true;
           this.afterInstalled();
           this.cleanupInstallPromises();
@@ -228,7 +229,7 @@ export default class MediaOptimizationWorkerService extends Service {
           );
           break;
         default:
-          this.logIfDebug(`Sorry, we are out of ${workerMessage}.`);
+          this.logIfDebug(`Sorry, we are out of ${workerMessage}`);
       }
     };
   }
