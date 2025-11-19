@@ -1,19 +1,8 @@
-import hbs from "discourse/widgets/hbs-compiler";
-import { createWidget } from "discourse/widgets/widget";
+/**
+ * IMPORTANT: The widget rendering system has been decommissioned.
+ *
+ * This file is maintained only to prevent breaking imports in existing third-party customizations.
+ * New code should not use this component or the widget system.
+ */
 
-// glimmer-post-stream: has glimmer version
-export default createWidget("post-placeholder", {
-  tagName: "article.placeholder",
-  template: hbs`
-    <div class='row'>
-      <div class='topic-avatar'>
-        <div class='placeholder-avatar placeholder-animation'></div>
-      </div>
-      <div class='topic-body'>
-        <div class='placeholder-text placeholder-animation'></div>
-        <div class='placeholder-text placeholder-animation'></div>
-        <div class='placeholder-text placeholder-animation'></div>
-      </div>
-    </div>
-  `,
-});
+export { DummyWidget as default } from "./widget";
