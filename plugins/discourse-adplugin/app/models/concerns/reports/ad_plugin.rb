@@ -176,5 +176,196 @@ module Reports::AdPlugin
           }
         end
     end
+
+    def report_ad_plugin_click_through_rate(report)
+      report.icon = "rectangle-ad"
+      report.modes = [:table]
+
+      report.labels = [
+        { type: :text, property: :ad_name, title: "Ad Name" },
+        { type: :text, property: :ad_type, title: "Ad Type" },
+        { type: :text, property: :placement, title: "Placement" },
+        { type: :number, property: :impressions, title: "Impressions" },
+        { type: :number, property: :clicks, title: "Clicks" },
+        { type: :percent, property: :ctr, title: "CTR" },
+      ]
+
+      start_date = report.start_date
+      end_date = report.end_date
+      limit = report.limit || 50
+
+      sql = <<~SQL
+        WITH agg AS (
+          SELECT
+            ai.ad_plugin_house_ad_id,
+            ai.ad_type,
+            ai.placement,
+            COUNT(*) AS impressions,
+            SUM(CASE WHEN ai.clicked_at IS NOT NULL THEN 1 ELSE 0 END) AS clicks
+          FROM ad_plugin_impressions ai
+          WHERE ai.created_at BETWEEN :start_date AND :end_date
+          GROUP BY ai.ad_plugin_house_ad_id, ai.ad_type, ai.placement
+        )
+        SELECT
+          COALESCE(
+            ha.name,
+            CASE agg.ad_type
+              WHEN 1 THEN 'Google AdSense'
+              WHEN 2 THEN 'Google DFP'
+              WHEN 3 THEN 'Amazon Product Links'
+              WHEN 4 THEN 'Carbon Ads'
+              WHEN 5 THEN 'AdButler'
+            END
+          ) AS ad_name,
+          CASE agg.ad_type
+            WHEN 0 THEN 'House Ad'
+            WHEN 1 THEN 'AdSense'
+            WHEN 2 THEN 'DFP'
+            WHEN 3 THEN 'Amazon'
+            WHEN 4 THEN 'Carbon'
+            WHEN 5 THEN 'AdButler'
+          END AS ad_type,
+          agg.placement,
+          agg.impressions,
+          agg.clicks,
+          ROUND(
+            agg.clicks::numeric / NULLIF(agg.impressions, 0) * 100,
+            2
+          ) AS ctr
+        FROM agg
+        LEFT JOIN ad_plugin_house_ads ha ON agg.ad_plugin_house_ad_id = ha.id
+        ORDER BY agg.impressions DESC
+        LIMIT :limit
+      SQL
+
+      results = DB.query(sql, start_date: start_date, end_date: end_date, limit: limit)
+
+      report.data =
+        results.map do |row|
+          {
+            ad_name: row.ad_name || "Unknown",
+            ad_type: row.ad_type,
+            placement: row.placement,
+            impressions: row.impressions,
+            clicks: row.clicks,
+            ctr: row.ctr.round(2),
+          }
+        end
+    end
+
+    def report_ad_plugin_click_through_rate_by_placement(report)
+      report.icon = "rectangle-ad"
+      report.modes = [:table]
+
+      report.labels = [
+        { type: :text, property: :placement, title: "Placement" },
+        { type: :number, property: :impressions, title: "Impressions" },
+        { type: :number, property: :clicks, title: "Clicks" },
+        { type: :percent, property: :ctr, title: "CTR" },
+      ]
+
+      start_date = report.start_date
+      end_date = report.end_date
+
+      sql = <<~SQL
+        SELECT
+          ai.placement,
+          COUNT(*) as impressions,
+          SUM(CASE WHEN ai.clicked_at IS NOT NULL THEN 1 ELSE 0 END) as clicks,
+          ROUND(
+            SUM(CASE WHEN ai.clicked_at IS NOT NULL THEN 1 ELSE 0 END)::numeric /
+            NULLIF(COUNT(*), 0) * 100,
+            2
+          ) as ctr
+        FROM ad_plugin_impressions ai
+        WHERE ai.created_at BETWEEN :start_date AND :end_date
+        GROUP BY ai.placement
+        ORDER BY impressions DESC
+      SQL
+
+      results = DB.query(sql, start_date: start_date, end_date: end_date)
+
+      report.data =
+        results.map do |row|
+          {
+            placement: row.placement,
+            impressions: row.impressions,
+            clicks: row.clicks,
+            ctr: row.ctr || 0,
+          }
+        end
+    end
+
+    def report_ad_plugin_click_through_rate_by_ad_type(report)
+      report.icon = "rectangle-ad"
+      report.modes = [:table]
+
+      report.labels = [
+        { type: :text, property: :ad_name, title: "Ad Name" },
+        { type: :text, property: :ad_type, title: "Ad Type" },
+        { type: :number, property: :impressions, title: "Impressions" },
+        { type: :number, property: :clicks, title: "Clicks" },
+        { type: :percent, property: :ctr, title: "CTR" },
+      ]
+
+      start_date = report.start_date
+      end_date = report.end_date
+      limit = report.limit || 50
+
+      sql = <<~SQL
+        WITH agg AS (
+          SELECT
+            ai.ad_plugin_house_ad_id,
+            ai.ad_type,
+            COUNT(*) AS impressions,
+            SUM(CASE WHEN ai.clicked_at IS NOT NULL THEN 1 ELSE 0 END) AS clicks
+          FROM ad_plugin_impressions ai
+          WHERE ai.created_at BETWEEN :start_date AND :end_date
+          GROUP BY ai.ad_plugin_house_ad_id, ai.ad_type
+        )
+        SELECT
+          COALESCE(
+            ha.name,
+            CASE agg.ad_type
+              WHEN 1 THEN 'Google AdSense'
+              WHEN 2 THEN 'Google DFP'
+              WHEN 3 THEN 'Amazon Product Links'
+              WHEN 4 THEN 'Carbon Ads'
+              WHEN 5 THEN 'AdButler'
+            END
+          ) AS ad_name,
+          CASE agg.ad_type
+            WHEN 0 THEN 'House Ad'
+            WHEN 1 THEN 'AdSense'
+            WHEN 2 THEN 'DFP'
+            WHEN 3 THEN 'Amazon'
+            WHEN 4 THEN 'Carbon'
+            WHEN 5 THEN 'AdButler'
+          END AS ad_type,
+          agg.impressions,
+          agg.clicks,
+          ROUND(
+            agg.clicks::numeric / NULLIF(agg.impressions, 0) * 100,
+            2
+          ) AS ctr
+        FROM agg
+        LEFT JOIN ad_plugin_house_ads ha ON agg.ad_plugin_house_ad_id = ha.id
+        ORDER BY agg.impressions DESC
+        LIMIT :limit
+      SQL
+
+      results = DB.query(sql, start_date: start_date, end_date: end_date, limit: limit)
+
+      report.data =
+        results.map do |row|
+          {
+            ad_name: row.ad_name || "Unknown",
+            ad_type: row.ad_type,
+            impressions: row.impressions,
+            clicks: row.clicks,
+            ctr: row.ctr || 0,
+          }
+        end
+    end
   end
 end
