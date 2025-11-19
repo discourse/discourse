@@ -375,6 +375,11 @@ export default class ProsemirrorTextManipulation {
 
     // Find all placeholder image nodes in the document that match our consecutive images
     this.view.state.doc.descendants((node, pos) => {
+      // Skip traversing grids
+      if (node.type === this.schema.nodes.grid) {
+        return false;
+      }
+
       if (
         node.type === this.schema.nodes.image &&
         node.attrs.placeholder &&

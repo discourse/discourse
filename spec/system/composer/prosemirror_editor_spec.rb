@@ -2248,5 +2248,26 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css(".composer-image-grid")
       expect(rich).to have_css(".composer-image-grid .composer-image-node img", count: 3)
     end
+
+    it "does not create nested grids when uploading images inside an existing grid" do
+      open_composer
+
+      composer.type_content("[grid]![image1](upload://test1.png)![image2](upload://test2.png)")
+
+      expect(rich).to have_css(".composer-image-grid")
+      expect(rich).to have_css(".composer-image-grid .composer-image-node img", count: 2)
+
+      file_path_1 = file_from_fixtures("logo.png", "images").path
+      file_path_2 = file_from_fixtures("logo.jpg", "images").path
+      file_path_3 = file_from_fixtures("downsized.png", "images").path
+
+      attach_file("file-uploader", [file_path_1, file_path_2, file_path_3], make_visible: true)
+
+      expect(composer).to have_no_in_progress_uploads
+
+      expect(rich).to have_css(".composer-image-grid", count: 1)
+      expect(rich).to have_css(".composer-image-grid .composer-image-node img", count: 5)
+      expect(rich).to have_no_css(".composer-image-grid .composer-image-grid")
+    end
   end
 end
