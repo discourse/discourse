@@ -443,6 +443,8 @@ Discourse::Application.routes.draw do
         get "group-permissions" => "site_settings#index"
         get "/logo" => "logo#index"
         get "/fonts" => "fonts#index"
+        get "/welcome-banner/themes-with-setting" => "welcome_banner#themes_with_setting"
+        get "/welcome-banner" => "welcome_banner#index"
         put "/logo" => "logo#update"
         put "/fonts" => "fonts#update"
         get "colors/:id" => "color_palettes#show"
