@@ -180,13 +180,6 @@ export default class DModal extends Component {
       return;
     }
 
-    if (this.args.shouldClose) {
-      const shouldClose = await this.args.shouldClose({ initiatedBy }, event);
-      if (shouldClose === false) {
-        return;
-      }
-    }
-
     try {
       this.animating = true;
 
