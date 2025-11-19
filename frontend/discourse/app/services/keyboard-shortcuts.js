@@ -154,13 +154,6 @@ export default class KeyboardShortcutLib extends Service {
   constructor() {
     super(...arguments);
 
-    // Sometimes the keyboard shortcut initializer is not torn down. This makes sure
-    // we clear any previous test state.
-    if (this.keyTrapper) {
-      this.keyTrapper.destroy();
-      this.keyTrapper = null;
-    }
-
     this.keyTrapper = new ItsATrap();
     this._stopCallback();
 
