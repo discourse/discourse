@@ -204,7 +204,7 @@ export default class DModal extends Component {
     } finally {
       this.animating = false;
       this.args.closeModal({ initiatedBy });
-      this.args.closeModal({ initiatedBy }, event);
+      this.args.closeModal({ initiatedBy });
     }
   }
 
