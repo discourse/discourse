@@ -152,8 +152,6 @@ import {
 } from "discourse/widgets/widget";
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 
-const DEPRECATED_POST_STREAM_CLASSES = ["component:scrolling-post-stream"];
-
 const DEPRECATED_POST_STREAM_WIDGETS = [
   "actions-summary",
   "avatar-flair",
@@ -3419,13 +3417,17 @@ class _PluginApi {
     _addCategoryPropertyForSave(property);
   }
 
+  // eslint-disable-next-line no-unused-vars
   #deprecateModifyClass(className) {
-    if (DEPRECATED_POST_STREAM_CLASSES.includes(className)) {
-      deprecated(
-        `Using api.modifyClass for \`${className}\` has been deprecated and is no longer a supported override.`,
-        POST_STREAM_DEPRECATION_OPTIONS
-      );
-    }
+    // display notification messages for deprecated classes
+    // e.g:
+    //
+    // if (DEPRECATED_CLASSES.includes(className)) {
+    //   deprecated(
+    //     `Using api.modifyClass for \`${className}\` has been deprecated and is no longer a supported override.`,
+    //     DEPRECATION_OPTIONS
+    //   );
+    // }
   }
 
   #deprecatedWidgetOverride(widgetName, override) {
