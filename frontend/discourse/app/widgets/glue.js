@@ -1,67 +1,37 @@
-import { cancel, scheduleOnce } from "@ember/runloop";
-import { diff, patch } from "virtual-dom";
-import DirtyKeys from "discourse/lib/dirty-keys";
-import { isTesting } from "discourse/lib/environment";
-import { queryRegistry, traverseCustomWidgets } from "discourse/widgets/widget";
+/**
+ * IMPORTANT: The widget rendering system has been decommissioned.
+ *
+ * This file is maintained only to prevent breaking imports in existing third-party customizations.
+ * New code should not use this component or the widget system.
+ */
+import { warnWidgetsDecommissioned } from "./widget";
 
-export default class WidgetGlue {
-  constructor(name, register, attrs) {
-    this._tree = null;
-    this._rootNode = null;
-    this.register = register;
-    this.attrs = attrs;
-    this._timeout = null;
-    this.dirtyKeys = new DirtyKeys(name);
-
-    this._widgetClass =
-      queryRegistry(name) || this.register.lookupFactory(`widget:${name}`);
-    if (!this._widgetClass) {
-      // eslint-disable-next-line no-console
-      console.error(`Error: Could not find widget: ${name}`);
-    }
+/**
+ * This class is kept only for backward compatibility.
+ *
+ * @deprecated This class is part of the decommissioned widget system and should not be used anymore.
+ */ export default class WidgetGlue {
+  constructor() {
+    warnWidgetsDecommissioned();
   }
 
-  appendTo(elem) {
-    this._rootNode = elem;
-    this.queueRerender();
-  }
+  /**
+   * @deprecated the widget rendering system was decommissioned
+   */
+  appendTo() {}
 
-  queueRerender() {
-    this._timeout = scheduleOnce("render", this, this.rerenderWidget);
-  }
+  /**
+   * @deprecated the widget rendering system was decommissioned
+   */
+  queueRerender() {}
 
-  rerenderWidget() {
-    cancel(this._timeout);
+  /**
+   * @deprecated the widget rendering system was decommissioned
+   */
+  rerenderWidget() {}
 
-    // in test mode return early if store cannot be found
-    if (isTesting()) {
-      try {
-        this.register.lookup("service:store");
-      } catch {
-        return;
-      }
-    }
-
-    const newTree = new this._widgetClass(this.attrs, this.register, {
-      dirtyKeys: this.dirtyKeys,
-    });
-    const patches = diff(this._tree || this._rootNode, newTree);
-
-    traverseCustomWidgets(this._tree, (w) => w.willRerenderWidget());
-
-    newTree._rerenderable = this;
-    this._rootNode = patch(this._rootNode, patches);
-    this._tree = newTree;
-
-    traverseCustomWidgets(newTree, (w) => w.didRenderWidget());
-  }
-
-  cleanUp() {
-    traverseCustomWidgets(this._tree, (w) => w.destroy());
-
-    cancel(this._timeout);
-
-    this._rootNode = patch(this._rootNode, diff(this._tree, null));
-    this._tree = null;
-  }
+  /**
+   * @deprecated the widget rendering system was decommissioned
+   */
+  cleanUp() {}
 }
