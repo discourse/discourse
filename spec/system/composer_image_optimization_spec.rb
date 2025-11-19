@@ -3,10 +3,8 @@
 describe "Composer image optimization for uploads using media-optimization-worker" do
   fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
 
-  let(:modal) { PageObjects::Modals::Base.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:topic) { PageObjects::Pages::Topic.new }
-  let(:cdp) { PageObjects::CDP.new }
 
   before do
     sign_in(current_user)
