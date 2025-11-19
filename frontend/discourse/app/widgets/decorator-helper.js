@@ -12,7 +12,7 @@ import { warnWidgetsDecommissioned } from "discourse/widgets/widget";
  *
  * @deprecated This class is part of the decommissioned widget system and should not be used anymore.
  */
-class DecoratorHelper {
+export default class DecoratorHelper {
   constructor() {
     warnWidgetsDecommissioned();
   }
@@ -52,5 +52,3 @@ class DecoratorHelper {
    */
   renderGlimmer() {}
 }
-
-export default DecoratorHelper;
