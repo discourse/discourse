@@ -77,15 +77,15 @@ export default class SpreadsheetEditor extends Component {
   }
 
   @action
-  interceptCloseModal() {
+  async interceptCloseModal() {
     if (this._hasChanges()) {
-      this.dialog.yesNoConfirm({
+      return await this.dialog.yesNoConfirm({
         message: i18n("table_builder.modal.confirm_close"),
-        didConfirm: () => this.args.closeModal(),
+        didConfirm: () => true,
       });
-    } else {
-      this.args.closeModal();
     }
+
+    return true;
   }
 
   @action
@@ -349,7 +349,8 @@ export default class SpreadsheetEditor extends Component {
   <template>
     <DModal
       @title={{i18n this.modalAttributes.title}}
-      @closeModal={{this.interceptCloseModal}}
+      @closeModal={{@closeModal}}
+      @shouldClose={{this.interceptCloseModal}}
       class="insert-table-modal"
     >
       <:body>
@@ -372,7 +373,7 @@ export default class SpreadsheetEditor extends Component {
               class="btn-insert-table"
             />
 
-            <DModalCancel @close={{this.interceptCloseModal}} />
+            <DModalCancel />
           </div>
 
           <div class="secondary-actions">
