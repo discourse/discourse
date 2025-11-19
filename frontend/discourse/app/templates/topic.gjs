@@ -443,7 +443,6 @@ export default <template>
               {{#unless @controller.model.postStream.loadingFilter}}
                 <PostStream
                   @postStream={{@controller.model.postStream}}
-                  @posts={{@controller.postsToRender}}
                   @canCreatePost={{@controller.model.details.can_create_post}}
                   @multiSelect={{@controller.multiSelect}}
                   @selectedPostsCount={{@controller.selectedPostsCount}}
