@@ -390,6 +390,16 @@ module SiteSettingExtension
           default = default_uploads[default.to_i]
         end
 
+        # For objects type, parse JSON and convert upload IDs to URLs
+        if type_hash[:type].to_s == "objects" && type_hash[:schema]
+          # Parse the JSON value if it's a string
+          parsed_value = value.is_a?(String) ? JSON.parse(value) : value
+
+          if parsed_value.is_a?(Array)
+            value = hydrate_uploads_in_objects(parsed_value, type_hash[:schema])
+          end
+        end
+
         opts = {
           setting: s,
           humanized_name: humanized_names(s),
@@ -400,9 +410,17 @@ module SiteSettingExtension
         }
 
         if !basic_attributes
+          # For objects type, serialize as JSON
+          serialized_value =
+            if type_hash[:type].to_s == "objects"
+              value.to_json
+            else
+              value.to_s
+            end
+
           opts.merge!(
             default: default,
-            value: value.to_s,
+            value: serialized_value,
             preview: previews[s],
             secret: secret_settings.include?(s),
             placeholder: placeholder(s),
@@ -1124,5 +1142,29 @@ module SiteSettingExtension
 
   def logger
     Rails.logger
+  end
+
+  private
+
+  def hydrate_uploads_in_objects(objects, schema)
+    objects.map { |obj| hydrate_uploads_in_object(obj, schema[:properties]) }
+  end
+
+  def hydrate_uploads_in_object(object, properties)
+    properties.each do |prop_key, prop_value|
+      next unless prop_value[:type] == "upload" || prop_value[:type] == "objects"
+
+      key = object.key?(prop_key) ? prop_key : prop_key.to_s
+      value = object[key]
+
+      if prop_value[:type] == "upload" && value.is_a?(Integer)
+        upload = Upload.find_by(id: value)
+        object[key] = upload.url if upload
+      elsif prop_value[:type] == "objects" && value.is_a?(Array) && prop_value[:schema]
+        object[key] = hydrate_uploads_in_objects(value, prop_value[:schema])
+      end
+    end
+
+    object
   end
 end
