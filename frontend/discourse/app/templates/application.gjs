@@ -54,9 +54,6 @@ export default <template>
         @canSignUp={{@controller.canSignUp}}
         @showCreateAccount={{routeAction "showCreateAccount"}}
         @showLogin={{routeAction "showLogin"}}
-        @showKeyboard={{routeAction "showKeyboardShortcutsHelp"}}
-        @toggleMobileView={{routeAction "toggleMobileView"}}
-        @logout={{routeAction "logout"}}
         @sidebarEnabled={{@controller.sidebarEnabled}}
         @showSidebar={{@controller.showSidebar}}
         @toggleSidebar={{@controller.toggleSidebar}}
