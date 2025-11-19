@@ -683,7 +683,7 @@ en:
           google-gemini-3-pro: "Google's most intelligent model"
           google-gemini-2-5-pro: "Large multimodal model capable of a wide range of tasks"
           google-gemini-2-5-flash: "Lightweight, fast, and cost-efficient with multimodal reasoning"
-          google-gemini-2-5-flash-lite: "Google's smallest and most cost-effictive model"
+          google-gemini-2-5-flash-lite: "Google's smallest and most cost-effective model"
           google-gemini-2-5-flash-image-preview: "Latest image generation model with vision capabilities"
           open_ai-gpt-5-1: "OpenAI's flagship model. It is well suited for problem solving across domains"
           open_ai-gpt-5-mini: "Provides a balance between intelligence, speed, and cost that makes it an attractive model for many use cases."
