@@ -362,7 +362,6 @@ class Reviewable < ActiveRecord::Base
 
     result = nil
     update_count = false
-    finalized = false
     Reviewable.transaction do
       increment_version!(args[:version])
       result = public_send(perform_method, performed_by, args)
@@ -383,7 +382,6 @@ class Reviewable < ActiveRecord::Base
         update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
 
         recalculate_score if result.recalculate_score
-        finalized = true
       else
         Review::CalculateFinalStatusFromLogs.call(
           params: {
@@ -398,7 +396,6 @@ class Reviewable < ActiveRecord::Base
               update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
 
               recalculate_score if result.recalculate_score
-              finalized = true
             end
           end
         end
@@ -407,7 +404,7 @@ class Reviewable < ActiveRecord::Base
 
     result.after_commit.call if result && result.after_commit
 
-    if finalized
+    unless status == :pending
       if update_count || result.remove_reviewable_ids.present?
         Jobs.enqueue(
           :notify_reviewable,
