@@ -135,12 +135,21 @@ export default class AiSummaryModal extends Component {
     this.loading = true;
     this.summarizedOn = null;
 
-    return ajax(url).then((data) => {
-      if (data?.ai_topic_summary?.summarized_text) {
-        data.done = true;
-        this._updateSummary(data);
-      }
-    });
+    return ajax(url)
+      .then((data) => {
+        if (data?.ai_topic_summary?.summarized_text) {
+          data.done = true;
+          this._updateSummary(data);
+        }
+      })
+      .catch((error) => {
+        this.loading = false;
+        if (isAiCreditLimitError(error)) {
+          popupAiCreditLimitError(error);
+        } else {
+          throw error;
+        }
+      });
   }
 
   @bind
