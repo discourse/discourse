@@ -18,7 +18,7 @@ end
 #  action_key      :string           not null
 #  status          :integer          not null
 #  performed_by_id :integer          not null
-#  bundle          :string           not null
+#  bundle          :string           default("legacy-actions"), not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #
