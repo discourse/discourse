@@ -102,6 +102,10 @@ en:
         title: Gift exchange
         description: Allows to anonymously pair users of a group to send each other a gift.
         doc: Gift exchange requires an existing group with at least 3 users. At the chosen date each users of the group will be paired with one gifter and one giftee.
+      remove_upload_markup_from_deleted_posts:
+        title: Remove upload markup in deleted posts
+        description: Acts as system user and adds a revision to deleted posts where the upload markup is removed. In conjunction with the 'clean up uploads' job, this results in the permanent deletion of uploads in deleted posts. Use with caution!
+        edit_reason: Automation removed upload markup from deleted post
       send_pms:
         title: Send pms
         description: Allows to send PMs (possibly delayed).

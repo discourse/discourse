@@ -28,6 +28,7 @@ module ::DiscourseAutomation
 
   AUTO_RESPONDER_TRIGGERED_IDS = "auto_responder_triggered_ids_json"
   USER_GROUP_MEMBERSHIP_THROUGH_BADGE_BULK_MODIFY_START_COUNT = 1000
+  REMOVE_UPLOAD_MARKUP_FROM_DELETED_POSTS_BATCH_SIZE = 1000
 
   def self.set_active_automation(id)
     Thread.current[:active_automation_id] = id
@@ -55,6 +56,7 @@ after_initialize do
     lib/discourse_automation/scripts/group_category_notification_default
     lib/discourse_automation/scripts/pin_topic
     lib/discourse_automation/scripts/post
+    lib/discourse_automation/scripts/remove_upload_markup_from_deleted_posts
     lib/discourse_automation/scripts/topic
     lib/discourse_automation/scripts/send_pms
     lib/discourse_automation/scripts/suspend_user_by_email

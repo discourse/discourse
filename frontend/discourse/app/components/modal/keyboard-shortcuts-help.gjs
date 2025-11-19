@@ -6,8 +6,8 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DModal from "discourse/components/d-modal";
 import FilterInput from "discourse/components/filter-input";
-import { extraKeyboardShortcutsHelp } from "discourse/lib/keyboard-shortcuts";
 import { translateModKey } from "discourse/lib/utilities";
+import { extraKeyboardShortcutsHelp } from "discourse/services/keyboard-shortcuts";
 import { i18n } from "discourse-i18n";
 
 const KEY = "keyboard_shortcuts_help";

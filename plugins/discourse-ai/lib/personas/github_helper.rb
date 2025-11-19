@@ -24,7 +24,7 @@ module DiscourseAi
           - Files: [file.rb](https://github.com/owner/repo/blob/branch/file.rb#L10-L25)
           - PRs/Issues: [#123](https://github.com/owner/repo/pull/123)
 
-          The date now is: {time}, much has changed since you were trained.
+          The date now is: {date}, much has changed since you were trained.
         PROMPT
       end
     end

@@ -1,6 +1,6 @@
-import { hash } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import borderColor from "discourse/helpers/border-color";
+import { htmlSafe } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import replaceEmoji from "discourse/helpers/replace-emoji";
@@ -16,7 +16,9 @@ const ChatChannelCard = <template>
         (if @channel.isClosed "--closed")
         (if @channel.isArchived "--archived")
       }}
-      style={{borderColor @channel.chatable.color}}
+      style={{htmlSafe
+        (concat "--chat-channel-card-border: #" @channel.chatable.color)
+      }}
       data-channel-id={{@channel.id}}
     >
       <div class="chat-channel-card__header">

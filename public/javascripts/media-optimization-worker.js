@@ -9,6 +9,7 @@ onmessage = async function (e) {
           e.data.fileName,
           e.data.width,
           e.data.height,
+          e.data.originalFileSize,
           e.data.settings
         );
         postMessage(

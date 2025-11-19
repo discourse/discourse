@@ -11,6 +11,7 @@ require_relative "runners/discoveries"
 require_relative "runners/inference"
 require_relative "runners/spam"
 require_relative "runners/summarization"
+require_relative "judge"
 
 module DiscourseAi
   module Evals
@@ -22,8 +23,12 @@ module DiscourseAi
     # keeps higher-level scripts (`evals/run`) simple while centralizing
     # instrumentation and error handling.
     class Workbench
-      def initialize(output: $stdout)
+      def initialize(output: $stdout, judge_llm: nil, persona_prompt: nil, persona_label: "default")
         @output = output
+        @judge_llm = judge_llm
+        @persona_prompt = persona_prompt
+        label = persona_label.to_s.strip
+        @persona_label = label.empty? ? "default" : label
       end
 
       # Iterate through the provided LLM adapters and execute the eval case for
@@ -31,8 +36,8 @@ module DiscourseAi
       #
       # @param eval_case [DiscourseAi::Evals::Eval] the scenario to run.
       # @param llms [Array<LlmModel>] LLMs selected by the CLI.
-      def run(eval_case:, llms:)
-        recorder = Recorder.with_cassette(eval_case, output: output)
+      def run(eval_case:, llms:, &after_run)
+        recorder = Recorder.with_cassette(eval_case, persona_key: persona_label, output: output)
 
         llms.each do |llm|
           llm_name = llm.display_name || llm.name
@@ -43,8 +48,18 @@ module DiscourseAi
             next
           end
 
-          results = execute_eval(eval_case, llm)
-          recorder.record_llm_results(llm_name, results, start_time)
+          execution = execute_eval(eval_case, llm)
+          recorder.record_llm_results(llm_name, execution[:classified], start_time)
+          if after_run
+            after_run.call(
+              eval_case: eval_case,
+              llm: llm,
+              llm_name: llm_name,
+              persona_label: persona_label,
+              raw_entries: execution[:raw_entries],
+              classified_entries: execution[:classified],
+            )
+          end
         rescue DiscourseAi::Evals::Eval::EvalError => e
           recorder.record_llm_results(
             llm_name,
@@ -78,20 +93,24 @@ module DiscourseAi
             raise ArgumentError, "Unsupported eval feature '#{feature}'"
           end
 
-        classify_results(eval_case, raw)
+        entries = normalize_entries(raw)
+
+        { raw: raw, raw_entries: entries, classified: classify_results(eval_case, entries) }
       end
 
       private
 
-      attr_reader :output
+      attr_reader :output, :judge_llm, :persona_prompt, :persona_label
 
       def find_runner(feature)
-        DiscourseAi::Evals::Runners::Base.find_runner(feature)
+        DiscourseAi::Evals::Runners::Base.find_runner(feature, persona_prompt)
       end
 
-      def classify_results(eval_case, result)
-        entries = result.is_a?(Array) ? result : [result]
+      def normalize_entries(raw)
+        raw.is_a?(Array) ? raw : [raw]
+      end
 
+      def classify_results(eval_case, entries)
         entries.map do |entry|
           raw_value = entry.is_a?(Hash) && entry.key?(:raw) ? entry[:raw] : entry
           metadata = entry.is_a?(Hash) ? entry[:metadata] : nil
@@ -146,56 +165,14 @@ module DiscourseAi
       end
 
       def judge_result(eval_case, result)
-        prompt = eval_case.judge[:prompt].dup
-
-        if result.is_a?(String)
-          prompt.sub!("{{output}}", result)
-          eval_case.args.each do |key, value|
-            prompt.sub!("{{#{key}}}", format_placeholder_value(value))
-          end
-        else
-          prompt.sub!("{{output}}", result[:result])
-          result.each { |key, value| prompt.sub!("{{#{key}}}", value.to_s) }
+        if judge_llm.nil?
+          raise DiscourseAi::Evals::Eval::EvalError.new(
+                  "Evaluation '#{eval_case.id}' requires the --judge option to specify an LLM.",
+                  { eval_id: eval_case.id },
+                )
         end
 
-        prompt += <<~SUFFIX
-
-          Reply with a rating from 1 to 10, where 10 is perfect and 1 is terrible.
-
-          example output:
-
-          [RATING]10[/RATING] perfect output
-
-          example output:
-
-          [RATING]5[/RATING]
-
-          the following failed to preserve... etc...
-        SUFFIX
-
-        judge_llm = DiscourseAi::Evals::LlmRepository.new.hydrate(eval_case.judge[:llm])
-
-        DiscourseAi::Completions::Prompt.new(
-          "You are an expert judge tasked at testing LLM outputs.",
-          messages: [{ type: :user, content: prompt }],
-        )
-
-        judge_result =
-          judge_llm.to_llm.generate(prompt, user: Discourse.system_user, temperature: 0)
-
-        rating_match = judge_result.match(%r{\[RATING\](\d+)\[/RATING\]})
-        rating = rating_match ? rating_match[1].to_i : 0
-
-        if rating >= eval_case.judge[:pass_rating]
-          { result: :pass }
-        else
-          {
-            result: :fail,
-            message:
-              "LLM Rating below threshold, it was #{rating}, expecting #{eval_case.judge[:pass_rating]}",
-            context: judge_result,
-          }
-        end
+        DiscourseAi::Evals::Judge.new(eval_case: eval_case, judge_llm: judge_llm).evaluate(result)
       end
 
       # Extract text from an image upload by delegating to the ImageToText helper.
@@ -320,15 +297,6 @@ module DiscourseAi
         end
       rescue StandardError
         false
-      end
-
-      def format_placeholder_value(value)
-        case value
-        when Array
-          value.join("\n\n")
-        else
-          value.to_s
-        end
       end
     end
   end
