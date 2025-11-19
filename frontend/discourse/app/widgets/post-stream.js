@@ -1,5 +1,3 @@
-export let havePostStreamWidgetExtensions = null;
-
 /**
  * IMPORTANT: The widget rendering system has been decommissioned.
  *
