@@ -377,10 +377,42 @@ export default class TopicController extends Controller {
   }
 
   @action
-  editTopic(event) {
+  async editTopic(event) {
     event?.preventDefault();
-    if (this.get("model.details.can_edit")) {
+
+    const titleLocalized = this.model.fancy_title_localized;
+
+    if (!titleLocalized && this.get("model.details.can_edit")) {
       this.set("editingTopic", true);
+    }
+
+    if (titleLocalized) {
+      const topic = this.model;
+      const topicLocale = topic.locale;
+      const language = this.languageNameLookup.getLanguageName(topicLocale);
+      const firstPost = await topic.firstPost();
+      return this.dialog.alert({
+        message: i18n("topic.localizations.title_edit_warning.message", {
+          language,
+        }),
+        buttons: [
+          {
+            label: i18n(
+              "topic.localizations.title_edit_warning.action_original"
+            ),
+            class: "btn-primary",
+            action: () => this._openComposerForEdit(topic, firstPost),
+          },
+          {
+            label: i18n(
+              "topic.localizations.title_edit_warning.action_translation"
+            ),
+            class: "btn-default",
+            action: () =>
+              this._openComposerForEditTranslation(topic, firstPost),
+          },
+        ],
+      });
     }
   }
 

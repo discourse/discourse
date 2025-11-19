@@ -200,6 +200,54 @@ describe "Content Localization" do
         expect(page).to have_no_css("#fast-edit-input")
         expect(edit_localized_post_dialog).to be_open
       end
+
+      context "for topic titles" do
+        fab!(:untranslated_topic) { Fabricate(:post).topic }
+
+        it "opens the composer in appropriate contexts" do
+          puts "untranslated topic title and fancy_title: #{untranslated_topic.title}, #{untranslated_topic.fancy_title}"
+          puts "translated topic title and fancy_title: #{topic.title}, #{topic.fancy_title}"
+          puts "translated topic localization title and fancy_title: #{topic.localizations.first.title}, #{topic.localizations.first.fancy_title}"
+
+          sign_in(japanese_user)
+          topic_page.visit_topic(untranslated_topic)
+          topic_page.click_topic_edit_title
+          expect(topic_page).not_to have_topic_title_editor
+          expect(edit_localized_post_dialog).to be_closed
+
+          topic_page.visit_topic(topic)
+          topic_page.click_topic_edit_title
+          expect(topic_page).not_to have_topic_title_editor
+          expect(edit_localized_post_dialog).to be_closed
+
+          sign_in(admin)
+
+          topic_page.visit_topic(untranslated_topic)
+          # can edit topic title via title container
+          topic_page.click_topic_edit_title
+          expect(topic_page).to have_topic_title_editor
+
+          # make the admin view the japanese translation
+          admin.update(locale: "ja")
+
+          topic_page.visit_topic(topic)
+          # does not see regular title editor
+          topic_page.click_topic_edit_title
+          expect(topic_page).not_to have_topic_title_editor
+          # asked to use composer to edit original title
+          expect(edit_localized_post_dialog).to be_open
+          edit_localized_post_dialog.click_yes
+          expect(composer).to have_title("Life strategies from The Art of War")
+
+          composer.close
+
+          # use composer to edit localized title
+          topic_page.click_topic_edit_title
+          expect(edit_localized_post_dialog).to be_open
+          edit_localized_post_dialog.click_no
+          expect(composer).to have_title("孫子兵法からの人生戦略") ## this is incorrectly using fancy_title
+        end
+      end
     end
 
     context "for post edit histories" do
