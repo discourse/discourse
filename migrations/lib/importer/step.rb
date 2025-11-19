@@ -52,6 +52,15 @@ module Migrations::Importer
         end
       end
 
+      def requires_shared_data(*names)
+        @required_shared_data ||= []
+        @required_shared_data += names
+      end
+
+      def required_shared_data
+        @required_shared_data || []
+      end
+
       def requires_mapping(name, sql)
         @required_mappings ||= {}
         @required_mappings[name] = sql
@@ -93,14 +102,17 @@ module Migrations::Importer
     end
 
     def load_required_data
+      required_shared_data = self.class.required_shared_data
       required_mappings = self.class.required_mappings
       required_sets = self.class.required_sets
-      return if required_mappings.blank? && required_sets.blank?
+      return if required_shared_data.empty? && required_mappings.blank? && required_sets.blank?
 
       print "    #{I18n.t("importer.loading_required_data")} "
 
       runtime =
         ::Migrations::DateHelper.track_time do
+          required_shared_data.each { |name| instance_variable_set("@#{name}", @shared_data[name]) }
+
           required_mappings.each do |name, sql|
             instance_variable_set("@#{name}", @shared_data.load_mapping(sql))
           end

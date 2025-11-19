@@ -14,13 +14,13 @@
     "@babel/preset-env": "^7.28.5",
     "@babel/standalone": "^7.28.5",
     "@csstools/postcss-light-dark-function": "^2.0.11",
-    "@rollup/browser": "^4.53.2",
+    "@rollup/browser": "^4.53.3",
     "@rollup/plugin-babel": "^6.1.0",
     "abort-controller": "^3.0.0",
     "autoprefixer": "^10.4.22",
     "babel-plugin-ember-template-compilation": "^3.0.1",
     "content-tag": "^4.0.0",
-    "core-js": "^3.46.0",
+    "core-js": "^3.47.0",
     "decorator-transforms": "^2.3.0",
     "discourse": "workspace:0.0.0",
     "discourse-plugins": "workspace:1.0.0",
@@ -47,6 +47,6 @@
     "pnpm": "^9"
   },
   "devDependencies": {
-    "vitest": "^4.0.8"
+    "vitest": "^4.0.10"
   }
 }
