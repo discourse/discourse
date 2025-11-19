@@ -17,7 +17,7 @@ const ChatChannelCard = <template>
         (if @channel.isArchived "--archived")
       }}
       style={{htmlSafe
-        (concat "--chat-channel-card__border: #" @channel.chatable.color)
+        (concat "--chat-channel-card-border: #" @channel.chatable.color)
       }}
       data-channel-id={{@channel.id}}
     >
