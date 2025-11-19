@@ -82,7 +82,6 @@ export default class Site extends RestModel {
   }
 
   @service siteSettings;
-  @service currentUser;
   @service capabilities;
 
   @trackedArray categories;

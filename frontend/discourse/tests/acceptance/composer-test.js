@@ -494,8 +494,8 @@ acceptance(`Composer`, function (needs) {
 
     await click(".d-modal__footer .discard-draft-modal__cancel-btn");
     assert
-          .dom(".discard-draft-modal.modal")
-          .doesNotExist("hides modal on Cancel button click");
+      .dom(".discard-draft-modal.modal")
+      .doesNotExist("hides modal on Cancel button click");
     assert
       .dom(".d-editor-input")
       .hasValue(
@@ -517,12 +517,11 @@ acceptance(`Composer`, function (needs) {
       .dom(".discard-draft-modal.modal")
       .exists("pops up the discard drafts modal");
 
-    await triggerKeyEvent(
-      ".discard-draft-modal ",
-      "keydown",
-      "Escape");
+    await triggerKeyEvent(".discard-draft-modal ", "keydown", "Escape");
 
-    assert.dom(".discard-draft-modal.modal").doesNotExist("hides modalon Esc key stroke");
+    assert
+      .dom(".discard-draft-modal.modal")
+      .doesNotExist("hides modalon Esc key stroke");
 
     await fillIn(
       ".d-editor-input",
@@ -803,49 +802,46 @@ acceptance(`Composer`, function (needs) {
   });
 
   module(
-        "Composer can switch between new topic and new PM in different contexts",
-        function () {
-          test("within post/topic context", async function (assert) {
-            await visit("/t/this-is-a-test-topic/54081");
-            await click(".topic-post[data-post-number='1'] button.reply");
-            await selectKit(".composer-actions").expand();
-            assert.notStrictEqual(
-              selectKit(".composer-actions")
-                .rowByValue("create_private_message")
-                .exists(),
-              "New message option is not present when in reply mode"
-            );
+    "Composer can switch between new topic and new PM in different contexts",
+    function () {
+      test("within post/topic context", async function (assert) {
+        await visit("/t/this-is-a-test-topic/54081");
+        await click(".topic-post[data-post-number='1'] button.reply");
+        await selectKit(".composer-actions").expand();
+        assert.notStrictEqual(
+          selectKit(".composer-actions")
+            .rowByValue("create_private_message")
+            .exists(),
+          "New message option is not present when in reply mode"
+        );
 
-            await click("#reply-control .discard-button");
-            await visit("/");
-            await click("#create-topic");
-            await selectKit(".composer-actions").expand();
-            assert.true(
-              selectKit(".composer-actions")
-                .rowByValue("reply_to_topic")
-                .exists(),
-              "composer topic context is preserved when reopened"
-            );
+        await click("#reply-control .discard-button");
+        await visit("/");
+        await click("#create-topic");
+        await selectKit(".composer-actions").expand();
+        assert.true(
+          selectKit(".composer-actions").rowByValue("reply_to_topic").exists(),
+          "composer topic context is preserved when reopened"
+        );
 
-            await selectKit(".composer-actions").selectRowByValue(
-              "create_private_message"
-            );
-            assert.dom(".action-title").hasText(i18n("topic.private_message"));
-            assert
-              .dom(".save-or-cancel button")
-              .hasText(i18n("composer.create_pm"));
+        await selectKit(".composer-actions").selectRowByValue(
+          "create_private_message"
+        );
+        assert.dom(".action-title").hasText(i18n("topic.private_message"));
+        assert
+          .dom(".save-or-cancel button")
+          .hasText(i18n("composer.create_pm"));
 
-            await selectKit(".composer-actions").expand();
-            await selectKit(".composer-actions").selectRowByValue(
-              "create_topic"
-            );
-            assert.dom(".action-title").hasText(i18n("topic.create_long"));
-            assert
-              .dom(".save-or-cancel button")
-              .hasText(i18n("composer.create_topic"));
-          });
-        }
-      );test("Composer can toggle between reply and createTopic", async function (assert) {
+        await selectKit(".composer-actions").expand();
+        await selectKit(".composer-actions").selectRowByValue("create_topic");
+        assert.dom(".action-title").hasText(i18n("topic.create_long"));
+        assert
+          .dom(".save-or-cancel button")
+          .hasText(i18n("composer.create_topic"));
+      });
+    }
+  );
+  test("Composer can toggle between reply and createTopic", async function (assert) {
     await visit("/t/this-is-a-test-topic/54081");
     await click(".topic-post[data-post-number='1'] button.reply");
 
@@ -917,10 +913,9 @@ acceptance(`Composer`, function (needs) {
     assert
       .dom(".discard-draft-modal.modal")
       .exists("pops up a confirmation dialog");
-    assert.dom(".d-modal__footer .discard-draft-modal__cancel-btn")
-      .hasText(
-        i18n("cancel_value
-        "), "has Cancel button");
+    assert
+      .dom(".d-modal__footer .discard-draft-modal__cancel-btn")
+      .hasText(i18n("cancel_value"), "has Cancel button");
 
     await click(".d-modal__footer .discard-draft-modal__discard-btn");
     assert
@@ -945,15 +940,11 @@ acceptance(`Composer`, function (needs) {
       .exists("pops up a confirmation dialog");
     assert
       .dom(".d-modal__footer .discard-draft-modal__discard-btn")
-      .hasText(
-        i18n("post.cancel_composer.discard
-        "), "has Discard button");
+      .hasText(i18n("post.cancel_composer.discard"), "has Discard button");
 
     assert
       .dom(".d-modal__footer .discard-draft-modal__cancel-btn")
-      .hasText(
-        i18n("cancel_value
-        "), "has Cancel button");
+      .hasText(i18n("cancel_value"), "has Cancel button");
   });
 
   test("Does not check for existing draft", async function (assert) {
@@ -1122,11 +1113,11 @@ acceptance(`Composer`, function (needs) {
     await fillIn(".d-editor-input", "Something");
     await click("button.create");
     assert.dom(".d-editor-textarea-wrapper .popup-tip.bad").hasText(
-          i18n("composer.error.post_length.other", {
-            count: this.siteSettings.min_first_post_length,
-          }),
-          "shows error"
-        );
+      i18n("composer.error.post_length.other", {
+        count: this.siteSettings.min_first_post_length,
+      }),
+      "shows error"
+    );
   });
 
   test("Saves drafts that only contain quotes", async function (assert) {
@@ -1148,11 +1139,7 @@ acceptance(`Composer`, function (needs) {
     await click(".discard-button");
     assert.dom(".discard-draft-modal").exists();
 
-    await triggerKeyEvent(
-      ".discard-draft-modal ",
-      "keydown",
-      "Escape"
-    );
+    await triggerKeyEvent(".discard-draft-modal ", "keydown", "Escape");
 
     assert.dom(".discard-draft-modal").doesNotExist();
 

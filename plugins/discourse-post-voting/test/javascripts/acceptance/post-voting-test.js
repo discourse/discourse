@@ -228,10 +228,10 @@ acceptance(`Discourse Post Voting - anon user`, function (needs) {
       );
 
     assert
-          .dom("#post_2 .post-voting-comment-action")
-          .doesNotExist("does not display comment action to anon users");
+      .dom("#post_2 .post-voting-comment-action")
+      .doesNotExist("does not display comment action to anon users");
 
-        await click(".post-voting-comments-menu-show-more-link");
+    await click(".post-voting-comments-menu-show-more-link");
 
     assert
       .dom("#post_2 .post-voting-comment")
@@ -490,42 +490,35 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
   });
 
   test("regular user can't edit other people's comments", async function (assert) {
-        updateCurrentUser({ id: 9876, admin: false, moderator: false }); // hasn't commented
+    updateCurrentUser({ id: 9876, admin: false, moderator: false }); // hasn't commented
 
-        await visit("/t/280");
+    await visit("/t/280");
 
-        assert
-          .dom("#post_2 .post-voting-comment-actions")
-          .doesNotExist(
-            "does not display edit link on other people's comments"
-          );
-      });
+    assert
+      .dom("#post_2 .post-voting-comment-actions")
+      .doesNotExist("does not display edit link on other people's comments");
+  });
 
-      test("moderator can edit other people's comments", async function (assert) {
-        updateCurrentUser({ id: 9876, admin: false, moderator: true }); // hasn't commented
+  test("moderator can edit other people's comments", async function (assert) {
+    updateCurrentUser({ id: 9876, admin: false, moderator: true }); // hasn't commented
 
-        await visit("/t/280");
+    await visit("/t/280");
 
-        assert
-          .dom("#post_2 .post-voting-comment-actions")
-          .exists(
-            { count: 5 },
-            "displays edit link on other people's comments"
-          );
-      });
+    assert
+      .dom("#post_2 .post-voting-comment-actions")
+      .exists({ count: 5 }, "displays edit link on other people's comments");
+  });
 
-      test("admin can edit other people's comments", async function (assert) {
-        updateCurrentUser({ id: 9876, admin: true, moderator: false }); // hasn't commented
+  test("admin can edit other people's comments", async function (assert) {
+    updateCurrentUser({ id: 9876, admin: true, moderator: false }); // hasn't commented
 
-        await visit("/t/280");
+    await visit("/t/280");
 
-        assert
-          .dom("#post_2 .post-voting-comment-actions")
-          .exists(
-            { count: 5 },
-            "displays edit link on other people's comments"
-          );
-      });test("editing a comment", async function (assert) {
+    assert
+      .dom("#post_2 .post-voting-comment-actions")
+      .exists({ count: 5 }, "displays edit link on other people's comments");
+  });
+  test("editing a comment", async function (assert) {
     updateCurrentUser({ id: 12345 }); // userId of comments in fixtures
 
     await visit("/t/280");

@@ -31,7 +31,6 @@ export default class History extends Component {
   @service site;
   @service currentUser;
   @service siteSettings;
-  @service appEvents;
 
   @tracked loading;
   @tracked postRevision;

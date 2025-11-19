@@ -19,9 +19,7 @@ describe "PM user removal", type: :system do
 
     topic_page.visit_topic(pm)
 
-
     find(".user[data-id='#{other_user.id}'] .remove-invited").click
-
 
     expect(page).to have_selector(
       ".small-action-contents",
@@ -30,36 +28,38 @@ describe "PM user removal", type: :system do
   end
 
   it "removes yourself from the PM list" do
-        pm =
-          create_post(
-            user: current_user,
-            target_usernames: [other_user.username],
-            archetype: Archetype.private_message,
-          ).topic
-        topic_page.visit_topic(pm)
-        find(".user[data-id='#{current_user.id}'] .remove-invited").click
-        dialog.click_yes
-
-        expect(page).to have_current_path("/u/#{current_user.username}/messages")
-      endit "removes a group from the PM list" do
-    group =
-      Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap do |g|
-        g.add(other_user)
-      end
-
     pm =
       create_post(
         user: current_user,
-        target_group_names: [group.name],
+        target_usernames: [other_user.username],
         archetype: Archetype.private_message,
       ).topic
-
     topic_page.visit_topic(pm)
+    find(".user[data-id='#{current_user.id}'] .remove-invited").click
+    dialog.click_yes
 
+    expect(page).to have_current_path("/u/#{current_user.username}/messages")
+    endit "removes a group from the PM list" do
+      group =
+        Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap do |g|
+          g.add(other_user)
+        end
 
-    find(".group[data-id='#{group.id}'] .remove-invited").click
+      pm =
+        create_post(
+          user: current_user,
+          target_group_names: [group.name],
+          archetype: Archetype.private_message,
+        ).topic
 
+      topic_page.visit_topic(pm)
 
-    expect(page).to have_selector(".small-action-contents", text: "Removed @#{group.name} just now")
+      find(".group[data-id='#{group.id}'] .remove-invited").click
+
+      expect(page).to have_selector(
+        ".small-action-contents",
+        text: "Removed @#{group.name} just now",
+      )
+    end
   end
 end

@@ -552,7 +552,7 @@ export default class TopicController extends Controller {
 
   @action
   async bottomVisibleChanged(event) {
-    const { post, refresh } = event;
+    const { post } = event;
 
     const postStream = this.get("model.postStream");
     const lastLoadedPost = postStream.posts.at(-1);

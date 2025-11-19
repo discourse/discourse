@@ -217,10 +217,10 @@ acceptance(`Composer Actions`, function (needs) {
     );
     assert.strictEqual(composerActions.rowByIndex(3).value(), "shared_draft");
     assert.strictEqual(
-          composerActions.rowByIndex(4).value(),
-          "create_private_message"
-        );
-        assert.strictEqual(composerActions.rows().length, 5);
+      composerActions.rowByIndex(4).value(),
+      "create_private_message"
+    );
+    assert.strictEqual(composerActions.rows().length, 5);
   });
 
   test("interactions - private message", async function (assert) {

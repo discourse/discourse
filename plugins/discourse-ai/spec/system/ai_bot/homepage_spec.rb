@@ -126,15 +126,15 @@ RSpec.describe "AI Bot - Homepage", type: :system do
       topic_page.visit_topic(pm)
       page.find("article[data-post-id='#{post_with_link.id}'] .cooked a[href='#{post_url}']").click
 
-
-        expect(topic_page.current_topic).to eq(regular_topic)
-        expect(page).to have_css("article[data-post-id='#{regular_post.id}']")
-      end
+      expect(topic_page.current_topic).to eq(regular_topic)
+      expect(page).to have_css("article[data-post-id='#{regular_post.id}']")
     end
-
+  end
 
   context "when `ai_bot_enable_dedicated_ux` is enabled" do
-    before { SiteSetting.ai_bot_add_to_header = true }it "allows uploading files to a new conversation" do
+    before { SiteSetting.ai_bot_add_to_header = true }
+
+    it "allows uploading files to a new conversation" do
       ai_pm_homepage.visit
       expect(ai_pm_homepage).to have_homepage
 
@@ -406,9 +406,9 @@ RSpec.describe "AI Bot - Homepage", type: :system do
 
     context "with hamburger menu" do
       before do
-            SiteSetting.navigation_menu = "header dropdown"
-            SiteSetting.ai_bot_add_to_header = true
-          end
+        SiteSetting.navigation_menu = "header dropdown"
+        SiteSetting.ai_bot_add_to_header = true
+      end
 
       it "keeps robot icon in the header and doesn't display sidebar back link" do
         visit "/"
@@ -428,8 +428,6 @@ RSpec.describe "AI Bot - Homepage", type: :system do
       end
     end
   end
-
-
 
   context "with header dropdown on mobile", mobile: true do
     before { SiteSetting.navigation_menu = "header dropdown" }

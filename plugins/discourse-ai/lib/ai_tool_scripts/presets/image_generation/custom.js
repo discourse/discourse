@@ -1,4 +1,4 @@
-/* eslint-disable no-undef, no-unused-vars */
+/* eslint-disable no-unused-vars */
 function invoke(params) {
   // Configure your custom image generation API here
   const apiKey = "YOUR_API_KEY";

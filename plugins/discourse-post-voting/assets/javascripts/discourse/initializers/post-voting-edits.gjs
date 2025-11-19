@@ -2,8 +2,6 @@ import Component from "@glimmer/component";
 import routeAction from "discourse/helpers/route-action";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { trackedArray } from "discourse/lib/tracked-tools";
-import { registerWidgetShim } from "discourse/widgets/render-glimmer";
-import { i18n } from "discourse-i18n";
 import PostVotingAnswerButton from "../components/post-voting-answer-button";
 import PostVotingAnswerHeader, {
   ORDER_BY_ACTIVITY_FILTER,
