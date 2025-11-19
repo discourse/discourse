@@ -135,12 +135,9 @@ acceptance(`Post inline mentions`, function (needs) {
     });
     await visit(`/t/lorem-ipsum-dolor-sit-amet/${topicId}`);
 
-    // TODO (glimmer-post-stream-mode) remove the `if` surrounding the assertion when removing the legacy code
-    if (this.siteSettings.glimmer_post_stream_mode === "enabled") {
-      assert
-        .dom(".topic-post .cooked .mention .user-status-message-wrapper")
-        .exists("the wrapper is present in the DOM");
-    }
+    assert
+      .dom(".topic-post .cooked .mention .user-status-message-wrapper")
+      .exists("the wrapper is present in the DOM");
     assert
       .dom(".topic-post .cooked .mention .user-status-message")
       .exists("initial user status is shown");
@@ -149,12 +146,9 @@ acceptance(`Post inline mentions`, function (needs) {
       [mentionedUserId]: null,
     });
 
-    // TODO (glimmer-post-stream-mode) remove the `if` surrounding the assertion when removing the legacy code
-    if (this.siteSettings.glimmer_post_stream_mode === "enabled") {
-      assert
-        .dom(".topic-post .cooked .mention .user-status-message-wrapper")
-        .doesNotExist("the wrapper was removed from the DOM");
-    }
+    assert
+      .dom(".topic-post .cooked .mention .user-status-message-wrapper")
+      .doesNotExist("the wrapper was removed from the DOM");
     assert
       .dom(".topic-post .cooked .mention .user-status-message")
       .doesNotExist("updated user has disappeared");
