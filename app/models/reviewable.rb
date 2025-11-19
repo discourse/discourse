@@ -361,71 +361,66 @@ class Reviewable < ActiveRecord::Base
     action_bundle_id = get_action_bundle_id(guardian, action_id, args)
 
     result = nil
+    update_count = false
+    finalized = false
     Reviewable.transaction do
       increment_version!(args[:version])
       result = public_send(perform_method, performed_by, args)
 
       raise ActiveRecord::Rollback unless result.success?
-    end
 
-    if result.transition_to
-      reviewable_action_logs.create!(
-        action_key: action_id.to_s,
-        status: result.transition_to,
-        performed_by: performed_by,
-        bundle: action_bundle_id,
-      )
-    end
+      if result.transition_to
+        reviewable_action_logs.create!(
+          action_key: action_id.to_s,
+          status: result.transition_to,
+          performed_by: performed_by,
+          bundle: action_bundle_id,
+        )
+      end
 
-    if guardian.can_see_reviewable_ui_refresh? && !SiteSetting.reviewable_old_moderator_actions
-      Review::CalculateFinalStatusFromLogs.call(
-        params: {
-          reviewable_id: id,
-          guardian: guardian,
-          args: args,
-        },
-      ) do
-        on_success do |status:|
-          finalize_perform_result(result, performed_by, guardian, transition_to_status: status)
+      if !guardian.can_see_reviewable_ui_refresh? || SiteSetting.reviewable_old_moderator_actions
+        update_count = transition_to(result.transition_to, performed_by) if result.transition_to
+        update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
+
+        recalculate_score if result.recalculate_score
+        finalized = true
+      else
+        Review::CalculateFinalStatusFromLogs.call(
+          params: {
+            reviewable_id: id,
+            guardian: guardian,
+            args: args,
+          },
+        ) do
+          on_success do |status:|
+            unless status == :pending
+              update_count = transition_to(status, performed_by)
+              update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
+
+              recalculate_score if result.recalculate_score
+              finalized = true
+            end
+          end
         end
       end
-    else
-      finalize_perform_result(result, performed_by, guardian)
+    end
+
+    result.after_commit.call if result && result.after_commit
+
+    if finalized
+      if update_count || result.remove_reviewable_ids.present?
+        Jobs.enqueue(
+          :notify_reviewable,
+          reviewable_id: self.id,
+          performing_username: performed_by.username,
+          updated_reviewable_ids: result.remove_reviewable_ids,
+        )
+      end
+
+      notify_users(result, guardian)
     end
 
     result
-  end
-
-  # Completes the perform operation by transitioning status and notifying.
-  # Can be called independently to finalize a deferred action.
-  #
-  # @param result [Reviewable::PerformResult] The result from the perform method
-  # @param performed_by [User] The user performing the action
-  # @param guardian [Guardian] The guardian for permission checks
-  # @param transition_to_status [Symbol] Optional status override for transition
-  #
-  # @return [void]
-  def finalize_perform_result(result, performed_by, guardian, transition_to_status: nil)
-    update_count = false
-    Reviewable.transaction do
-      status_to_use = transition_to_status || result.transition_to
-      update_count = transition_to(status_to_use, performed_by) if status_to_use
-      update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
-
-      recalculate_score if result.recalculate_score
-    end
-    result.after_commit.call if result && result.after_commit
-
-    if update_count || result.remove_reviewable_ids.present?
-      Jobs.enqueue(
-        :notify_reviewable,
-        reviewable_id: self.id,
-        performing_username: performed_by.username,
-        updated_reviewable_ids: result.remove_reviewable_ids,
-      )
-    end
-
-    notify_users(result, guardian)
   end
 
   # Override this in specific reviewable type to include scores for
