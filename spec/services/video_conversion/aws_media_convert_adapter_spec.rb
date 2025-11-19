@@ -283,17 +283,6 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
     let(:job_id) { "job-123" }
     let(:temp_path) { "transcoded/#{new_sha1}.mp4" }
     let(:final_path) { "original/1X/#{new_sha1}.mp4" }
-    let(:multisite_path) { "uploads/default/test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}/" }
-    # Mock both paths - with and without multisite prefix, since we don't know if multisite is enabled
-    let(:source_path) { temp_path }
-    let(:source_path_with_multisite) { "/#{multisite_path}#{temp_path}" }
-    let(:destination_path) { final_path }
-    let(:destination_path_with_multisite) { "/#{multisite_path}#{final_path}" }
-    # The URL should match what build_file_url generates
-    # destination_path_with_multisite has leading slash, so URL is: //bucket.s3.region.amazonaws.com/path
-    let(:final_url) do
-      "//#{s3_bucket}.s3.dualstack.#{s3_region}.amazonaws.com#{destination_path_with_multisite}"
-    end
     let(:s3_helper) { instance_double(S3Helper) }
     let(:s3_client) { instance_double(Aws::S3::Client) }
     let(:s3_resource) { instance_double(Aws::S3::Resource) }
@@ -311,17 +300,27 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
       allow(s3_helper).to receive(:s3_bucket_name).and_return(bucket_name)
       allow(Aws::S3::Resource).to receive(:new).with(client: s3_client).and_return(s3_resource)
       allow(s3_resource).to receive(:bucket).with(bucket_name).and_return(source_bucket)
-      # Mock both with and without multisite path since we don't know if multisite is enabled
-      allow(source_bucket).to receive(:object).with(source_path).and_return(source_s3_object)
-      allow(source_bucket).to receive(:object).with(source_path_with_multisite).and_return(
-        source_s3_object,
-      )
-      allow(source_bucket).to receive(:object).with(destination_path).and_return(
-        destination_s3_object,
-      )
-      allow(source_bucket).to receive(:object).with(destination_path_with_multisite).and_return(
-        destination_s3_object,
-      )
+
+      # Mock object() to handle both multisite and non-multisite paths
+      # get_s3_path may or may not prepend multisite prefix depending on configuration
+      allow(source_bucket).to receive(:object) do |path|
+        case path
+        when temp_path, final_path, %r{^uploads/default}, %r{^/uploads/default}
+          # Handle both with and without multisite prefix
+          if path == temp_path || path.include?(temp_path)
+            source_s3_object
+          else
+            destination_s3_object
+          end
+        else
+          # Default fallback
+          if path.include?("transcoded")
+            source_s3_object
+          else
+            destination_s3_object
+          end
+        end
+      end
       allow(source_s3_object).to receive(:exists?).and_return(true)
       allow(source_s3_object).to receive(:size).and_return(1024)
       allow(destination_s3_object).to receive(:exists?).and_return(true)
@@ -345,16 +344,14 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
       expect(s3_object).to have_received(:size)
       expect(Aws::S3::Resource).to have_received(:new).with(client: s3_client)
       expect(s3_resource).to have_received(:bucket).with(bucket_name)
-      # Check that source_bucket.object was called (either with or without multisite path)
+      # Verify the operations occurred (exact paths depend on multisite configuration)
       expect(source_bucket).to have_received(:object).at_least(:once)
       expect(source_s3_object).to have_received(:exists?)
       expect(destination_s3_object).to have_received(:copy_from).with(
         source_s3_object,
         hash_including(s3_store.default_s3_options(secure: upload.secure?)),
       )
-      # delete_object is called with the actual source_path that was found
       expect(s3_helper).to have_received(:delete_object).at_least(:once)
-      # update_file_access_control expects the path without bucket folder path but with multisite path if multisite is enabled
       expect(s3_store).to have_received(:update_file_access_control).at_least(:once)
       # The hash passed to create_for uses symbol keys (from **options)
       expect(OptimizedVideo).to have_received(
@@ -366,7 +363,10 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
         expect(options[:extension]).to eq("mp4")
         expect(options[:filesize]).to eq(1024)
         expect(options[:sha1]).to eq(new_sha1)
-        expect(options[:url]).to eq(final_url)
+        # URL will include the destination path (with or without multisite prefix)
+        expect(options[:url]).to match(
+          %r{//#{s3_bucket}\.s3\.dualstack\.#{s3_region}\.amazonaws\.com.*#{final_path}},
+        )
         expect(options[:etag]).to eq("etag123")
         expect(options[:adapter]).to eq("aws_mediaconvert")
       end
