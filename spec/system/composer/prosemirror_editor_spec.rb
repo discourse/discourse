@@ -2216,24 +2216,10 @@ describe "Composer - ProseMirror editor", type: :system do
   end
 
   describe "image grid functionality" do
-    def paste_test_images(count = 2)
-      count.times do |i|
-        cdp.allow_clipboard
-        cdp.copy_test_image
-        cdp.paste
-
-        # Wait for upload to complete
-        expect(rich).to have_css(".composer-image-node img", count: i + 1)
-        expect(rich).to have_no_css(".composer-image-node img[data-placeholder='true']")
-      end
-    end
-
     context "when images are outside a grid" do
       it "shows 'Add to Grid' button for images outside grids" do
         open_composer
-        paste_test_images(1)
-
-        rich.find(".composer-image-node img").click
+        composer.type_content("![image1](upload://test1.png)")
 
         expect(page).to have_css("[data-identifier='composer-image-toolbar']")
         expect(page).to have_css(".composer-image-toolbar__add-to-grid")
@@ -2242,10 +2228,9 @@ describe "Composer - ProseMirror editor", type: :system do
 
       it "creates single-image grid" do
         open_composer
-        paste_test_images(1)
+        composer.type_content("![image1](upload://test1.png)")
 
         expect(rich).to have_css(".composer-image-node img", count: 1)
-        rich.find(".composer-image-node img").click
 
         expect(page).to have_css(".composer-image-toolbar__add-to-grid")
         find(".composer-image-toolbar__add-to-grid").click
