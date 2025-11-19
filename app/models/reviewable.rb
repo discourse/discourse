@@ -472,6 +472,7 @@ class Reviewable < ActiveRecord::Base
     priority: nil,
     username: nil,
     reviewed_by: nil,
+    claimed_by: nil,
     sort_order: nil,
     from_date: nil,
     to_date: nil,
@@ -540,6 +541,17 @@ class Reviewable < ActiveRecord::Base
           WHERE reviewable_history_type = #{ReviewableHistory.types[:transitioned]} AND
           status <> #{statuses[:pending]} AND created_by_id = #{reviewed_by_id}
         ) AS rh ON rh.reviewable_id = reviewables.id
+      SQL
+    end
+
+    if claimed_by
+      claimed_by_id = User.find_by_username(claimed_by)&.id
+      return none if claimed_by_id.nil?
+
+      result = result.joins(<<~SQL)
+        INNER JOIN reviewable_claimed_topics rct_filter
+        ON rct_filter.topic_id = reviewables.topic_id
+        AND rct_filter.user_id = #{claimed_by_id}
       SQL
     end
 

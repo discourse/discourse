@@ -16,6 +16,7 @@ class UserSearch
     @last_seen_users = opts[:last_seen_users] || false
     @limit = opts[:limit] || 20
     @groups = opts[:groups]
+    @can_review = opts[:can_review] || false
 
     @topic = Topic.find(@topic_id) if @topic_id
     @category = Category.find(@category_id) if @category_id
@@ -34,6 +35,22 @@ class UserSearch
 
     if @groups
       users = users.joins(:group_users).where("group_users.group_id IN (?)", @groups.map(&:id))
+    end
+
+    if @can_review
+      if SiteSetting.enable_category_group_moderation?
+        category_moderator_group_ids = CategoryModerationGroup.distinct.pluck(:group_id)
+        users =
+          users
+            .left_joins(:group_users)
+            .where(
+              "users.admin OR users.moderator OR group_users.group_id IN (?)",
+              category_moderator_group_ids,
+            )
+            .distinct
+      else
+        users = users.merge(User.staff)
+      end
     end
 
     # Only show users who have access to private topic
