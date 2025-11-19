@@ -390,6 +390,18 @@ describe "Topic bulk select", type: :system do
     end
   end
 
+  context "when clicking on the row" do
+    it "selects it" do
+      sign_in(admin)
+      visit("/latest")
+
+      topic_list_header.click_bulk_select_button
+      topic_list.click_topic_title(topics.last)
+
+      expect(topic_list).to have_checkbox_selected_on_row(1)
+    end
+  end
+
   context "when changing topic notification levels" do
     it "allows changing notification levels for selected topics" do
       sign_in(admin)
