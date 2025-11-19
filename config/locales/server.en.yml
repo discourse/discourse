@@ -2837,7 +2837,7 @@ en:
         other: "The list must contain exactly %{count} values."
       markdown_linkify_tlds: "You cannot include a value of '*'."
       google_oauth2_hd_groups: "You must configure all 'google oauth2 hd' settings before enabling this setting."
-      discourse_id_credentials: "You must configure Discourse ID credentials ('discourse_id_client_id' and 'discourse_id_client_secret') before enabling this setting."
+      discourse_id_registration: "Failed to automatically register with Discourse ID. This could be due to network connectivity issues, firewall restrictions, or the Discourse ID service being unreachable. Please check server logs for more details or contact support. Common issues: site not accessible from internet, reverse proxy misconfiguration, or /.well-known/discourse-id-challenge endpoint not reachable."
       linkedin_oidc_credentials: "You must configure LinkedIn OIDC credentials ('linkedin_oidc_client_id' and 'linkedin_oidc_client_secret') before enabling this setting."
       search_tokenize_chinese_enabled: "You must disable 'search_tokenize_chinese' before enabling this setting."
       search_tokenize_japanese_enabled: "You must disable 'search_tokenize_japanese' before enabling this setting."
