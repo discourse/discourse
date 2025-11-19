@@ -635,7 +635,7 @@ RSpec.describe PostGuardian do
     end
 
     it "returns false if the edit_all_post_groups is empty" do
-      SiteSetting.edit_all_post_groups = nil
+      SiteSetting.edit_all_post_groups = ""
 
       expect(Guardian.new(user).is_in_edit_post_groups?).to eq(false)
     end
