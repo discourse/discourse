@@ -16,6 +16,7 @@ class TestPersona < DiscourseAi::Personas::Persona
       {site_description}
       {participants}
       {time}
+      {date}
       {resource_url}
       {inferred_concepts}
     PROMPT
