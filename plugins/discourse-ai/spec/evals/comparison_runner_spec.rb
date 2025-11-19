@@ -160,4 +160,59 @@ RSpec.describe DiscourseAi::Evals::ComparisonRunner do
       expect(output.string).to include("persona: default")
     end
   end
+
+  describe "expected-output comparison without a judge" do
+    let(:mode) { :llms }
+    let(:judge_llm) { nil }
+    let(:llm_one) { Fabricate(:fake_model, display_name: "LLM One") }
+    let(:llm_two) { Fabricate(:fake_model, display_name: "LLM Two") }
+    let(:persona_variants) { [{ key: "default", prompt: nil }] }
+    let(:workbench) { instance_double(DiscourseAi::Evals::Workbench) }
+    let(:eval_case) { OpenStruct.new(id: "spam_eval", judge: nil, args: nil) }
+
+    before do
+      allow(DiscourseAi::Evals::Workbench).to receive(:new).and_return(workbench)
+      call_sequence = [
+        {
+          eval_case: eval_case,
+          llm: llm_one,
+          llm_name: "LLM One",
+          persona_label: "default",
+          raw_entries: ["Output One"],
+          classified_entries: [
+            { result: :pass },
+            { result: :fail, expected_output: "true", actual_output: "false" },
+          ],
+        },
+        {
+          eval_case: eval_case,
+          llm: llm_two,
+          llm_name: "LLM Two",
+          persona_label: "default",
+          raw_entries: ["Output Two"],
+          classified_entries: [{ result: :pass }, { result: :pass }],
+        },
+      ]
+      allow(workbench).to receive(:run) do |**kwargs, &block|
+        expect(kwargs[:llms]).to match_array([llm_one, llm_two])
+        expect(kwargs[:eval_case]).to eq(eval_case)
+        call_sequence.each { |payload| block.call(payload) }
+      end
+    end
+
+    it "picks the candidate with more passes and prints counts" do
+      runner.run(
+        eval_cases: [eval_case],
+        persona_variants: persona_variants,
+        llms: [llm_one, llm_two],
+      )
+
+      expect(output.string).to include("Winner: LLM Two")
+      expect(output.string).to include("LLM One 🔴 -- LLM Two 🟢")
+      expect(output.string).to include("LLM One expected: \"true\", actual: \"false\"")
+      expect(output.string).to include("=== Comparison (LLMs, persona: default) ===")
+      expect(output.string).to include("- LLM One: 3/4 passed")
+      expect(output.string).to include("- LLM Two: 4/4 passed")
+    end
+  end
 end

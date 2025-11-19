@@ -50,28 +50,37 @@ if llms.empty?
   exit 1
 end
 
-selected_evals = cli.select_evals(available_evals)
+selected_evals =
+  if cli.dataset_path.present?
+    DiscourseAi::Evals::Eval.from_dataset_csv(path: cli.dataset_path, feature: cli.feature_key)
+  else
+    cli.select_evals(available_evals)
+  end
 
 judge_llm = nil
 default_judge_error = nil
 
-begin
-  judge_llm = llm_repository.hydrate(cli.judge_name)
-rescue StandardError => e
-  if cli.judge_provided
-    puts "Error: #{e.message}"
-    exit 1
-  else
-    judge_llm = nil
-    default_judge_error = e.message
+requires_judge = selected_evals.any? { |eval_case| eval_case.judge.present? }
+
+judge_name = cli.judge_name.presence
+judge_name = DiscourseAi::Evals::Cli::DEFAULT_JUDGE if requires_judge && judge_name.blank?
+
+if judge_name.present?
+  begin
+    judge_llm = llm_repository.hydrate(judge_name)
+  rescue StandardError => e
+    if cli.judge_provided?
+      puts "Error: #{e.message}"
+      exit 1
+    else
+      judge_llm = nil
+      default_judge_error = e.message
+    end
   end
 end
 
 persona_variants =
   persona_loader.variants_for(cli.persona_keys, comparison_mode: cli.comparison_mode)
-
-requires_judge =
-  cli.comparison_mode.present? || selected_evals.any? { |eval_case| eval_case.judge.present? }
 
 if requires_judge && judge_llm.nil?
   message = "Error: Selected evaluations require a judge."
@@ -103,7 +112,7 @@ end
 persona_variants.each do |variant|
   if variant[:key]
     label =
-      if variant[:key] == default_persona_key
+      if variant[:key] == DiscourseAi::Evals::PersonaPromptLoader::DEFAULT_PERSONA_KEY
         "default (built-in)"
       else
         variant[:key]
@@ -121,7 +130,7 @@ persona_variants.each do |variant|
     )
 
   selected_evals.each do |eval_case|
-    if cli.judge_provided && eval_case.judge.blank?
+    if cli.judge_provided? && eval_case.judge.blank?
       puts "Notice: Eval '#{eval_case.id}' has no judge block. --judge is ignored for this eval."
     end
 

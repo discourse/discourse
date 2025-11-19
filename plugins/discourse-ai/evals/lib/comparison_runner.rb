@@ -43,6 +43,8 @@ module DiscourseAi
         llm = llms.first
         workbenches = persona_variants.map { |variant| [variant, build_workbench(variant)] }
 
+        aggregate_scores = Hash.new { |hash, key| hash[key] = { passes: 0, total: 0 } }
+
         eval_cases.each do |eval_case|
           candidates = []
 
@@ -54,14 +56,22 @@ module DiscourseAi
               next
             end
 
-            candidates << {
+            candidate_result = {
               label: variant[:key],
               output: normalize_candidate_output(eval_case, payload[:raw_entries], variant[:key]),
+              classified_entries: Array(payload[:classified_entries]),
             }
+            candidates << candidate_result
+            aggregate_scores[variant[:key]][:passes] += candidate_result[
+              :classified_entries
+            ].count { |entry| entry[:result] == :pass }
+            aggregate_scores[variant[:key]][:total] += candidate_result[:classified_entries].length
           end
 
           announce_results(eval_case, candidates, :personas)
         end
+
+        announce_aggregate_results(aggregate_scores, :personas)
       end
 
       def run_llm_comparison(eval_cases, persona_variants, llms)
@@ -73,19 +83,31 @@ module DiscourseAi
         persona_variant = persona_variants.first
         workbench = build_workbench(persona_variant)
 
+        aggregate_scores = Hash.new { |hash, key| hash[key] = { passes: 0, total: 0 } }
+
         eval_cases.each do |eval_case|
           candidates = []
 
           workbench.run(eval_case: eval_case, llms: llms) do |payload|
-            candidates << {
+            candidate_result = {
               label: payload[:llm_name],
               output:
                 normalize_candidate_output(eval_case, payload[:raw_entries], payload[:llm_name]),
+              classified_entries: Array(payload[:classified_entries]),
             }
+            candidates << candidate_result
+            aggregate_scores[payload[:llm_name]][:passes] += candidate_result[
+              :classified_entries
+            ].count { |entry| entry[:result] == :pass }
+            aggregate_scores[payload[:llm_name]][:total] += candidate_result[
+              :classified_entries
+            ].length
           end
 
           announce_results(eval_case, candidates, :llms, persona_variant[:key])
         end
+
+        announce_aggregate_results(aggregate_scores, :llms, persona_variant[:key])
       end
 
       def announce_results(eval_case, candidates, mode_label, persona_key = nil)
@@ -94,7 +116,15 @@ module DiscourseAi
           return
         end
 
-        result = judge_for(eval_case).compare(candidates)
+        if judge_llm.present? || eval_case.judge.present?
+          announce_judged_results(eval_case, candidates, mode_label, persona_key)
+        else
+          announce_expected_results(eval_case, candidates, mode_label, persona_key)
+        end
+      end
+
+      def announce_judged_results(eval_case, candidates, mode_label, persona_key)
+        result = judge_for(eval_case).compare(candidates.map { |c| c.slice(:label, :output) })
 
         header = +"=== Comparison (#{mode_label_string(mode_label)}"
         header << ", persona: #{persona_key}" if persona_key && mode_label == :llms
@@ -113,6 +143,48 @@ module DiscourseAi
 
         result[:ratings].each do |rating|
           output.puts "  - #{rating[:candidate]}: #{rating[:rating]}/10 — #{rating[:explanation]}"
+        end
+      end
+
+      def announce_expected_results(eval_case, candidates, mode_label, persona_key)
+        header = +"=== Comparison (#{mode_label_string(mode_label)}"
+        header << ", persona: #{persona_key}" if persona_key && mode_label == :llms
+        header << ") #{eval_case.id} ==="
+        output.puts
+        output.puts header
+
+        scored = expected_scores(candidates)
+        winner = pick_winner(scored)
+
+        if winner == :tie
+          output.puts "Result: tie"
+        else
+          output.puts "Winner: #{winner}"
+        end
+
+        line = candidate_statuses(candidates).join(" -- ")
+        output.puts "  #{line}" if line.present?
+
+        scored.each do |entry|
+          next if entry[:failures].empty?
+
+          entry[:failures].each do |failure|
+            output.puts "      #{entry[:label]} expected: #{failure[:expected].inspect}, actual: #{failure[:actual].inspect}"
+          end
+        end
+      end
+
+      def announce_aggregate_results(aggregate_scores, mode_label, persona_key = nil)
+        return if aggregate_scores.empty?
+
+        output.puts
+        header = "=== Comparison (#{mode_label_string(mode_label)}"
+        header << ", persona: #{persona_key}" if persona_key && mode_label == :llms
+        header << ") ==="
+        output.puts header
+
+        aggregate_scores.each do |label, stats|
+          output.puts "  - #{label}: #{stats[:passes]}/#{stats[:total]} passed"
         end
       end
 
@@ -162,6 +234,52 @@ module DiscourseAi
 
       def judge_for(eval_case)
         DiscourseAi::Evals::Judge.new(eval_case: eval_case, judge_llm: judge_llm)
+      end
+
+      def expected_scores(candidates)
+        candidates.map do |candidate|
+          entries = Array(candidate[:classified_entries])
+          passes = entries.count { |entry| entry[:result] == :pass }
+          failures =
+            entries
+              .reject { |entry| entry[:result] == :pass }
+              .map do |failure|
+                {
+                  expected: failure[:expected_output] || failure[:expected_output_regex],
+                  actual: failure[:actual_output] || failure[:result],
+                }
+              end
+
+          { label: candidate[:label], passes: passes, total: entries.length, failures: failures }
+        end
+      end
+
+      def pick_winner(scored)
+        return :tie if scored.empty?
+
+        best = scored.max_by { |entry| entry[:passes] }
+        top_passes = best[:passes]
+        tied = scored.count { |entry| entry[:passes] == top_passes }
+
+        tied > 1 ? :tie : best[:label]
+      end
+
+      def candidate_statuses(candidates)
+        candidates
+          .map do |candidate|
+            entries = Array(candidate[:classified_entries])
+            next if entries.empty?
+
+            status =
+              if entries.all? { |entry| entry[:result] == :pass }
+                "🟢"
+              else
+                "🔴"
+              end
+
+            "#{candidate[:label]} #{status}"
+          end
+          .compact
       end
 
       def normalize_mode(mode)

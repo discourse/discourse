@@ -16,7 +16,8 @@ class DiscourseAi::Evals::Cli
                 :list_personas,
                 :feature_key,
                 :judge_name,
-                :comparison_mode
+                :comparison_mode,
+                :dataset_path
 
   def self.parse_options!(features_registry)
     cli = new
@@ -63,6 +64,10 @@ class DiscourseAi::Evals::Cli
         opts.on("--compare MODE", "Comparison mode (personas or llms)") do |mode|
           cli.comparison_mode = mode
         end
+
+        opts.on("--dataset PATH", "Path to a CSV dataset file (requires --feature)") do |path|
+          cli.dataset_path = path
+        end
       end
 
     show_help = ARGV.empty?
@@ -98,7 +103,10 @@ class DiscourseAi::Evals::Cli
       end
     end
 
-    cli.judge_name ||= DEFAULT_JUDGE
+    if cli.dataset_path.present? && cli.feature_key.blank?
+      STDERR.puts("--dataset requires a --feature flag identifying the eval feature to run.")
+      exit 1
+    end
 
     cli
   end

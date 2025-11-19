@@ -63,9 +63,9 @@ module DiscourseAi
           bot.reply(context) do |partial, _, type|
             if type == :structured_output
               chunk = partial.read_buffered_property(key)
-              append_structured_chunk(accumulator, schema_type, chunk)
+              accumulator = append_structured_chunk(accumulator, schema_type, chunk)
             elsif type.blank?
-              append_structured_chunk(accumulator, schema_type, partial)
+              accumulator = append_structured_chunk(accumulator, schema_type, partial)
             end
           end
 
@@ -73,13 +73,15 @@ module DiscourseAi
         end
 
         def append_structured_chunk(accumulator, schema_type, chunk)
-          return if chunk.nil? || (chunk.respond_to?(:empty?) && chunk.empty?)
+          return accumulator if chunk.nil? || (chunk.respond_to?(:empty?) && chunk.empty?)
 
           case schema_type
           when "array"
             Array(chunk).each { |item| accumulator << item if accumulator.exclude?(item) }
-          else
+          when "string"
             accumulator << chunk.to_s
+          else
+            chunk
           end
         end
 
