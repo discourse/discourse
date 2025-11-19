@@ -130,7 +130,6 @@ import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "discourse/select-kit/components/user-chooser";
 import { modifySelectKit } from "discourse/select-kit/lib/plugin-api";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
-import { addPostClassesCallback } from "discourse/widgets/post";
 import { addDecorator } from "discourse/widgets/post-cooked";
 import {
   addPostTransformCallback,
@@ -1508,9 +1507,6 @@ class _PluginApi {
         ...makeArray(callback(post)),
       ]
     );
-
-    // TODO (glimmer-post-stream): remove the fallback when removing the legacy post stream code
-    addPostClassesCallback(callback);
   }
 
   /**

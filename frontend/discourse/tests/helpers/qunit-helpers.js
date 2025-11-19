@@ -100,7 +100,6 @@ import {
   currentSettings,
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
-import { resetPostClassesCallback } from "discourse/widgets/post";
 import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/post-cooked";
 import { resetDecorators } from "discourse/widgets/widget";
 import I18n from "discourse-i18n";
@@ -267,7 +266,6 @@ export function testCleanup(container, app) {
   clearRegisteredTabs();
   clearAddedTrackedPostProperties();
   resetGroupPostSmallActionCodes();
-  resetPostClassesCallback();
   enableClearA11yAnnouncementsInTests();
 }
 
