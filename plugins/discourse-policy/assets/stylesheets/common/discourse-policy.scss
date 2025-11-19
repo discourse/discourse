@@ -136,16 +136,10 @@
       flex-direction: column;
     }
 
-    .user-lists {
+    .user-lists,
+    .policy-actions,
+    .policy-actions .btn {
       width: 100%;
-    }
-
-    .policy-actions {
-      width: 100%;
-
-      .btn {
-        width: 100%;
-      }
     }
   }
 }
