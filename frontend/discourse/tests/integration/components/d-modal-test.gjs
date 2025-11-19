@@ -106,45 +106,6 @@ module("Integration | Component | d-modal", function (hooks) {
     assert.dom(".d-modal .alert").hasText("Some message");
   });
 
-  test("shouldClose", async function (assert) {
-    class TestState {
-      shouldCloseModal = false;
-      closeModalCalled = false;
-
-      @action
-      closeModal() {
-        this.closeModalCalled = true;
-      }
-
-      @action
-      shouldClose() {
-        return this.shouldCloseModal;
-      }
-    }
-
-    const testState = new TestState();
-
-    await render(
-      <template>
-        <DModal
-          @inline={{true}}
-          @closeModal={{testState.closeModal}}
-          @shouldClose={{testState.shouldClose}}
-        />
-      </template>
-    );
-
-    await click(".d-modal .modal-close");
-
-    assert.false(testState.closeModalCalled);
-
-    testState.shouldCloseModal = true;
-
-    await click(".d-modal .modal-close");
-
-    assert.true(testState.closeModalCalled);
-  });
-
   test("flash type", async function (assert) {
     await render(
       <template>
