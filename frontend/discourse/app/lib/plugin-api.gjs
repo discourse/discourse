@@ -533,21 +533,47 @@ class _PluginApi {
   }
 
   /**
-   * Used for decorating the `cooked` content of a post after it is rendered
+   * Used for decorating the `cooked` content of a post after it is rendered.
    *
-   * `callback` will be called when it is time to decorate with an DOM node.
+   * @param {Function} callback - Function called to decorate a DOM node.
+   *                              For stream-only decorators, this callback can return
+   *                             a cleanup function that will be executed when decorated content is rerendered/removed.
+   *                             The callback receives two parameters:
    *
-   * Use `options.onlyStream` if you only want to decorate posts within a topic,
-   * and not in other places like the user stream.
+   *                             1. element: HTMLElement to be decorated
+   *                             2. decoratorHelper: Object containing helper methods for the decorator
    *
-   * For example, to add a yellow background to all posts you could do this:
+   * @param {Object} [opts] - Optional configuration object
+   * @param {boolean} [opts.onlyStream=false] - If true, only decorate posts within a post stream.
    *
-   * ```
+   * @example
+   * // Add a yellow background to the decorated element
    * api.decorateCookedElement(
-   *   elem => { elem.style.backgroundColor = 'yellow' }
+   *   elem => {
+   *     elem.style.backgroundColor = 'yellow';
+   *     // Optionally return a cleanup function
+   *     return () => elem.style.backgroundColor = '';
+   *   }
    * );
-   * ```
-   **/
+   *
+   * @example
+   * // Only decorate posts in the post-stream
+   * api.decorateCookedElement(
+   *   elem => { elem.classList.add('topic-post'); },
+   *   { onlyStream: true }
+   * );
+   *
+   * @example
+   * // Using the decorator helper
+   * api.decorateCookedElement(
+   *   (elem, helper) => {
+   *     const post = helper.model; // Get associated post model
+   *     if (post.firstPost) {
+   *       elem.classList.add('first-post');
+   *     }
+   *   }
+   * );
+   */
   decorateCookedElement(callback, opts) {
     opts = opts || {};
 
