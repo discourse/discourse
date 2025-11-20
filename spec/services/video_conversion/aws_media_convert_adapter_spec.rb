@@ -296,38 +296,54 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
     before do
       allow(s3_store).to receive(:s3_helper).and_return(s3_helper)
       allow(s3_store).to receive(:default_s3_options).and_return({})
-      allow(s3_helper).to receive(:s3_client).and_return(s3_client)
-      allow(s3_helper).to receive(:s3_bucket_name).and_return(bucket_name)
-      allow(Aws::S3::Resource).to receive(:new).with(client: s3_client).and_return(s3_resource)
-      allow(s3_resource).to receive(:bucket).with(bucket_name).and_return(source_bucket)
+      allow(s3_store).to receive(:absolute_base_url).and_return(
+        "//#{s3_bucket}.s3.dualstack.#{s3_region}.amazonaws.com",
+      )
 
-      # Mock object() to handle both multisite and non-multisite paths
-      # get_s3_path may or may not prepend multisite prefix depending on configuration
-      allow(source_bucket).to receive(:object) do |path|
-        case path
-        when temp_path, final_path, %r{^uploads/default}, %r{^/uploads/default}
-          # Handle both with and without multisite prefix
-          if path == temp_path || path.include?(temp_path)
-            source_s3_object
-          else
-            destination_s3_object
-          end
-        else
-          # Default fallback
-          if path.include?("transcoded")
-            source_s3_object
-          else
-            destination_s3_object
-          end
-        end
-      end
+      # Mock s3_helper.object for find_temp_file
+      allow(s3_helper).to receive(:object).with(temp_path).and_return(source_s3_object)
       allow(source_s3_object).to receive(:exists?).and_return(true)
       allow(source_s3_object).to receive(:size).and_return(1024)
+
+      # Mock s3_helper.copy - it returns [destination_path, etag]
+      # The destination path will have multisite prefix if in multisite mode
+      # Use a flexible matcher since the exact path format depends on multisite configuration
+      allow(s3_helper).to receive(:copy) do |source, dest, options: {}|
+        if source == temp_path && dest.include?(final_path)
+          # Return the destination path as-is (it may have multisite prefix)
+          [dest, "etag123"]
+        else
+          raise "Unexpected copy call: source=#{source}, dest=#{dest}"
+        end
+      end
+
+      # Mock s3_helper.object for destination verification (flexible path matching)
+      allow(s3_helper).to receive(:object) do |path|
+        if path == temp_path
+          source_s3_object
+        elsif path.include?(final_path)
+          destination_s3_object
+        else
+          source_s3_object
+        end
+      end
       allow(destination_s3_object).to receive(:exists?).and_return(true)
-      allow(copy_response).to receive(:respond_to?).with(:copy_object_result).and_return(true)
-      allow(copy_response).to receive(:copy_object_result).and_return(copy_result)
-      allow(destination_s3_object).to receive(:copy_from).and_return(copy_response)
-      allow(s3_helper).to receive(:delete_object)
+
+      # Mock s3_helper.remove for remove_temp_file
+      allow(s3_helper).to receive(:remove).with(temp_path, false)
+    end
+
+    # Helper to get S3 path with multisite prefix if in multisite mode (matching get_s3_path logic)
+    def get_s3_path_for_test(path)
+      if Rails.configuration.multisite
+        multisite_prefix = File.join("uploads", RailsMultisite::ConnectionManagement.current_db)
+        multisite_prefix = "#{multisite_prefix}/"
+        # Prevent double-prepending if path already includes the multisite prefix
+        return path if path.start_with?(multisite_prefix)
+        File.join(multisite_prefix, path)
+      else
+        path
+      end
     end
 
     it "copies file from subdirectory to final location, deletes temp file, and creates optimized video record" do
@@ -339,19 +355,17 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
       result = adapter.handle_completion(job_id, new_sha1)
 
       expect(result).to be true
-      expect(s3_store).to have_received(:object_from_path).with(temp_path)
-      expect(s3_object).to have_received(:exists?)
-      expect(s3_object).to have_received(:size)
-      expect(Aws::S3::Resource).to have_received(:new).with(client: s3_client)
-      expect(s3_resource).to have_received(:bucket).with(bucket_name)
-      # Verify the operations occurred (exact paths depend on multisite configuration)
-      expect(source_bucket).to have_received(:object).at_least(:once)
+      # Verify s3_helper operations
+      expect(s3_helper).to have_received(:object).with(temp_path)
       expect(source_s3_object).to have_received(:exists?)
-      expect(destination_s3_object).to have_received(:copy_from).with(
-        source_s3_object,
-        hash_including(s3_store.default_s3_options(secure: upload.secure?)),
-      )
-      expect(s3_helper).to have_received(:delete_object).at_least(:once)
+      expect(source_s3_object).to have_received(:size)
+      expect(s3_helper).to have_received(:copy) do |source, dest, options: {}|
+        expect(source).to eq(temp_path)
+        expect(dest).to include(final_path)
+      end
+      expect(s3_helper).to have_received(:object).at_least(:once)
+      expect(destination_s3_object).to have_received(:exists?)
+      expect(s3_helper).to have_received(:remove).with(temp_path, false)
       expect(s3_store).to have_received(:update_file_access_control).at_least(:once)
       # The hash passed to create_for uses symbol keys (from **options)
       expect(OptimizedVideo).to have_received(
@@ -375,7 +389,10 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
     end
 
     context "when S3 object doesn't exist" do
-      before { allow(s3_object).to receive(:exists?).and_return(false) }
+      before do
+        allow(s3_helper).to receive(:object).with(temp_path).and_return(source_s3_object)
+        allow(source_s3_object).to receive(:exists?).and_return(false)
+      end
 
       it "returns false" do
         expect(adapter.handle_completion(job_id, new_sha1)).to be false
@@ -402,8 +419,12 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
       let(:error) { StandardError.new("Copy failed") }
 
       before do
-        allow(s3_object).to receive(:exists?).and_return(true)
-        allow(destination_s3_object).to receive(:copy_from).and_raise(error)
+        allow(s3_helper).to receive(:object).with(temp_path).and_return(source_s3_object)
+        allow(source_s3_object).to receive(:exists?).and_return(true)
+        allow(source_s3_object).to receive(:size).and_return(1024)
+        allow(s3_helper).to receive(:copy) do |source, dest, options: {}|
+          raise error if source == temp_path && dest.include?(final_path)
+        end
         allow(Discourse.store).to receive(:get_path_for_upload).and_return(final_path)
       end
 
@@ -426,9 +447,22 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
       let(:delete_error) { StandardError.new("Delete failed") }
 
       before do
-        allow(s3_object).to receive(:exists?).and_return(true)
-        allow(destination_s3_object).to receive(:copy_from).and_return(copy_response)
-        allow(s3_helper).to receive(:delete_object).and_raise(delete_error)
+        allow(s3_helper).to receive(:object) do |path|
+          if path == temp_path
+            source_s3_object
+          elsif path.include?(final_path)
+            destination_s3_object
+          else
+            source_s3_object
+          end
+        end
+        allow(source_s3_object).to receive(:exists?).and_return(true)
+        allow(source_s3_object).to receive(:size).and_return(1024)
+        allow(s3_helper).to receive(:copy) do |source, dest, options: {}|
+          [dest, "etag123"] if source == temp_path && dest.include?(final_path)
+        end
+        allow(destination_s3_object).to receive(:exists?).and_return(true)
+        allow(s3_helper).to receive(:remove).with(temp_path, false).and_raise(delete_error)
         allow(OptimizedVideo).to receive(:create_for).and_return(true)
         allow(s3_store).to receive(:update_file_access_control)
         allow(Discourse.store).to receive(:get_path_for_upload).and_return(final_path)
@@ -445,9 +479,22 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
 
     context "when optimized video creation fails" do
       before do
-        allow(s3_object).to receive(:exists?).and_return(true)
-        allow(s3_object).to receive(:size).and_return(1024)
-        allow(destination_s3_object).to receive(:copy_from).and_return(copy_response)
+        allow(s3_helper).to receive(:object) do |path|
+          if path == temp_path
+            source_s3_object
+          elsif path.include?(final_path)
+            destination_s3_object
+          else
+            source_s3_object
+          end
+        end
+        allow(source_s3_object).to receive(:exists?).and_return(true)
+        allow(source_s3_object).to receive(:size).and_return(1024)
+        allow(s3_helper).to receive(:copy) do |source, dest, options: {}|
+          [dest, "etag123"] if source == temp_path && dest.include?(final_path)
+        end
+        allow(destination_s3_object).to receive(:exists?).and_return(true)
+        allow(s3_helper).to receive(:remove).with(temp_path, false)
         allow(OptimizedVideo).to receive(:create_for).and_return(false)
         allow(s3_store).to receive(:update_file_access_control)
         allow(Discourse.store).to receive(:get_path_for_upload).and_return(final_path)
@@ -464,9 +511,22 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
       let(:error) { StandardError.new("Test error") }
 
       before do
-        allow(s3_object).to receive(:exists?).and_return(true)
-        allow(s3_object).to receive(:size).and_return(1024)
-        allow(destination_s3_object).to receive(:copy_from).and_return(copy_response)
+        allow(s3_helper).to receive(:object) do |path|
+          if path == temp_path
+            source_s3_object
+          elsif path.include?(final_path)
+            destination_s3_object
+          else
+            source_s3_object
+          end
+        end
+        allow(source_s3_object).to receive(:exists?).and_return(true)
+        allow(source_s3_object).to receive(:size).and_return(1024)
+        allow(s3_helper).to receive(:copy) do |source, dest, options: {}|
+          [dest, "etag123"] if source == temp_path && dest.include?(final_path)
+        end
+        allow(destination_s3_object).to receive(:exists?).and_return(true)
+        allow(s3_helper).to receive(:remove).with(temp_path, false)
         allow(OptimizedVideo).to receive(:create_for).and_raise(error)
         allow(s3_store).to receive(:update_file_access_control)
         allow(Discourse.store).to receive(:get_path_for_upload).and_return(final_path)

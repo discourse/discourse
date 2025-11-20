@@ -115,17 +115,17 @@ module VideoConversion
       s3_store = FileStore::S3Store.new
       temp_path = File.join(SiteSetting.mediaconvert_output_subdirectory, "#{new_sha1}.mp4")
 
-      filesize = find_temp_file(s3_store, temp_path)
-      return false unless filesize
+      temp_object = find_temp_file(s3_store, temp_path)
+      return false if !temp_object
 
       begin
+        filesize = temp_object.size
         final_path = get_final_upload_path(new_sha1)
-        etag, destination_path = copy_file_to_final_location(s3_store, temp_path, final_path)
-        return false unless etag
+        destination_path, etag = copy_file_to_final_location(s3_store, temp_path, final_path)
+        return false if !destination_path
 
-        source_path = get_s3_path(temp_path)
         update_file_acl(s3_store, final_path, destination_path)
-        remove_temp_file(s3_store, source_path)
+        remove_temp_file(s3_store, temp_path)
 
         url = build_file_url(s3_store, destination_path)
         output_path = get_output_path_for_record(final_path)
@@ -162,15 +162,15 @@ module VideoConversion
     end
 
     def find_temp_file(s3_store, temp_path)
-      temp_object = s3_store.object_from_path(temp_path)
-      unless temp_object&.exists?
+      temp_object = s3_store.s3_helper.object(temp_path)
+      if !temp_object.exists?
         Rails.logger.error(
           "MediaConvert temp file not found at #{temp_path} for upload #{@upload.id}",
         )
         return nil
       end
 
-      temp_object.size
+      temp_object
     end
 
     def get_final_upload_path(new_sha1)
@@ -180,72 +180,39 @@ module VideoConversion
 
     def copy_file_to_final_location(s3_store, temp_path, final_path)
       s3_helper = s3_store.s3_helper
-      bucket_name = s3_helper.s3_bucket_name
-      s3_resource = Aws::S3::Resource.new(client: s3_helper.s3_client)
-      source_bucket = s3_resource.bucket(bucket_name)
-
-      source_path = get_s3_path(temp_path)
-      source_object = source_bucket.object(source_path)
-      unless source_object.exists?
-        Rails.logger.error(
-          "MediaConvert temp file not found at #{source_path} for upload #{@upload.id}, bucket=#{bucket_name}",
-        )
-        return nil, nil
-      end
 
       destination_path = get_s3_path(final_path)
-      destination_object = source_bucket.object(destination_path)
 
       copy_options = s3_store.default_s3_options(secure: @upload.secure?)
-      if source_object.size > S3Helper::FIFTEEN_MEGABYTES
-        copy_options[:multipart_copy] = true
-        copy_options[:content_length] = source_object.size
-      end
 
       begin
-        response = destination_object.copy_from(source_object, copy_options)
+        destination_path, etag = s3_helper.copy(temp_path, destination_path, options: copy_options)
 
-        etag =
-          if response.respond_to?(:copy_object_result)
-            response.copy_object_result.etag
-          else
-            response.data.etag
-          end
-        etag = etag.gsub('"', "")
-
-        unless destination_object.exists?
+        destination_object = s3_helper.object(destination_path)
+        if !destination_object.exists?
           Rails.logger.error(
             "MediaConvert copy completed but destination file not found at #{destination_path} for upload #{@upload.id}",
           )
-          return nil, nil
+          [nil, nil]
         end
 
-        [etag, destination_path]
+        [destination_path, etag]
       rescue Aws::S3::Errors::NotFound => e
         Rails.logger.error(
-          "MediaConvert copy failed - source or destination not found: #{e.message} (source: #{source_path}, destination: #{destination_path}) for upload #{@upload.id}",
+          "MediaConvert copy failed - source or destination not found: #{e.message} (source: #{temp_path}, destination: #{destination_path}) for upload #{@upload.id}",
         )
         [nil, nil]
       rescue => e
         Rails.logger.error(
-          "MediaConvert copy failed: #{e.class.name} - #{e.message} (source: #{source_path}, destination: #{destination_path}) for upload #{@upload.id}",
+          "MediaConvert copy failed: #{e.class.name} - #{e.message} (source: #{temp_path}, destination: #{destination_path}) for upload #{@upload.id}",
         )
         raise
       end
     end
 
     def update_file_acl(s3_store, final_path, destination_path)
-      # For update_file_access_control, we need the path that matches where the file actually is
-      # The file is at destination_path in S3, but update_file_access_control expects a path
-      # that will be processed by s3_helper.object(path), which calls get_path_for_s3_upload(path)
-      # So we need to pass the path WITHOUT bucket folder path (it will be added by s3_helper)
-      # But WITH multisite path if in multisite mode (since that's where the file actually is)
-      final_path_for_acl =
-        if Rails.configuration.multisite
-          File.join(build_multisite_path, final_path)
-        else
-          final_path
-        end
+      # get_s3_path adds multisite prefix if needed; s3_helper will add bucket folder path
+      final_path_for_acl = get_s3_path(final_path)
 
       begin
         s3_store.update_file_access_control(final_path_for_acl, @upload.secure?)
@@ -257,35 +224,37 @@ module VideoConversion
       end
     end
 
-    def remove_temp_file(s3_store, source_path)
+    def remove_temp_file(s3_store, temp_path)
       s3_helper = s3_store.s3_helper
       begin
-        s3_helper.delete_object(source_path)
+        s3_helper.remove(temp_path, false)
       rescue => e
         # Log but don't fail if deletion fails - file will be cleaned up later
-        Rails.logger.warn(
-          "Failed to delete temporary MediaConvert file #{source_path}: #{e.message}",
-        )
+        Rails.logger.warn("Failed to delete temporary MediaConvert file #{temp_path}: #{e.message}")
       end
     end
 
     def build_file_url(s3_store, destination_path)
-      "//#{s3_store.s3_bucket}.s3.dualstack.#{SiteSetting.s3_region}.amazonaws.com#{destination_path}"
+      # Ensure path has leading slash for URL
+      path_with_slash =
+        destination_path.start_with?("/") ? destination_path : "/#{destination_path}"
+      # Use s3_store.absolute_base_url which handles dualstack, region, and custom endpoints
+      "#{s3_store.absolute_base_url}#{path_with_slash}"
     end
 
     def get_output_path_for_record(final_path)
-      final_path_for_acl =
-        if Rails.configuration.multisite
-          File.join(build_multisite_path, final_path)
-        else
-          final_path
-        end
-      final_path_for_acl.sub(/\.mp4$/, "")
+      # Remove .mp4 extension for the record path
+      get_s3_path(final_path).sub(/\.mp4$/, "")
     end
 
     def get_s3_path(path)
+      return path if path.blank?
+
       if Rails.configuration.multisite
-        File.join(build_multisite_path, path)
+        multisite_prefix = build_multisite_path
+        # Prevent double-prepending if path already includes the multisite prefix
+        return path if path.start_with?(multisite_prefix)
+        File.join(multisite_prefix, path)
       else
         path
       end
