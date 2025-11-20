@@ -221,7 +221,7 @@ module DiscourseAi
           end
 
           FinalDestination::HTTP.start(uri.hostname, uri.port, use_ssl: uri.port != 80) do |http|
-            http.request(request) { |response| yield response }
+            http.request(request) { |response| yield response, uri }
           end
         end
 
