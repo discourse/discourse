@@ -14,7 +14,6 @@ import scrollIntoView from "discourse/modifiers/scroll-into-view";
 
 /**
  * @typedef {import("discourse/lib/types/d-autocomplete").UserEmailGroupResult} UserEmailGroupResult
- * @typedef {import("discourse/lib/types/d-autocomplete").AutocompleteResultsSignature<UserEmailGroupResult>} ResultsSignature
  */
 
 /**
@@ -24,7 +23,7 @@ import scrollIntoView from "discourse/modifiers/scroll-into-view";
  * dropdown, and is designed to be used with DAutocomplete's `component` API.
  *
  * @component UserAutocompleteResults
- * @implements {Component<ResultsSignature>}
+ * @implements {Component<import("discourse/lib/types/d-autocomplete").AutocompleteResultsSignature<UserEmailGroupResult>>}
  */
 export default class UserAutocompleteResults extends Component {
   static TRIGGER_KEY = "@";

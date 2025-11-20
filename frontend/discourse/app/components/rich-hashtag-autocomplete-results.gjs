@@ -13,7 +13,6 @@ import { eq } from "discourse/truth-helpers";
 
 /**
  * @typedef {import("discourse/lib/types/d-autocomplete").RichHashtagAutocompleteResult} RichHashtagAutocompleteResult
- * @typedef {import("discourse/lib/types/d-autocomplete").AutocompleteResultsSignature<RichHashtagAutocompleteResult>} ResultsSignature
  */
 
 /**
@@ -24,7 +23,7 @@ import { eq } from "discourse/truth-helpers";
  * Designed to be used with DAutocomplete's `component` API.
  *
  * @component RichHashtagAutocompleteResults
- * @implements {Component<ResultsSignature>}
+ * @implements {Component<import("discourse/lib/types/d-autocomplete").AutocompleteResultsSignature<RichHashtagAutocompleteResult>>}
  */
 export default class RichHashtagAutocompleteResults extends Component {
   static TRIGGER_KEY = "#";

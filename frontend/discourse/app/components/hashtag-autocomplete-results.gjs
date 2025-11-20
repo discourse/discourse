@@ -14,7 +14,6 @@ import { eq } from "discourse/truth-helpers";
 
 /**
  * @typedef {import("discourse/lib/types/d-autocomplete").HashtagAutocompleteResult} HashtagAutocompleteResult
- * @typedef {import("discourse/lib/types/d-autocomplete").AutocompleteResultsSignature<HashtagAutocompleteResult>} ResultsSignature
  */
 
 /**
@@ -24,7 +23,7 @@ import { eq } from "discourse/truth-helpers";
  * dropdown, and is designed to be used with DAutocomplete's `component` API.
  *
  * @component HashtagAutocompleteResults
- * @implements {Component<ResultsSignature>}
+ * @implements {Component<import("discourse/lib/types/d-autocomplete").AutocompleteResultsSignature<HashtagAutocompleteResult>>}
  */
 export default class HashtagAutocompleteResults extends Component {
   static TRIGGER_KEY = "#";

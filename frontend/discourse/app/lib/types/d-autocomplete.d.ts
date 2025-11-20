@@ -80,7 +80,7 @@ export interface RichHashtagAutocompleteResult extends BaseAutocompleteResult {
  * Generic type signature for autocomplete results component
  * @template T - The type of result items in the autocomplete
  */
-export interface AutocompleteResultsSignature<T = unknown> {
+export interface AutocompleteResultsSignature<T> {
   Args: {
     /** Array of autocomplete results */
     results: Array<T>;
