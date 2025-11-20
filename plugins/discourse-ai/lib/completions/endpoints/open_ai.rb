@@ -167,7 +167,7 @@ module DiscourseAi
         def final_log_update(log)
           log.request_tokens = processor.prompt_tokens if processor.prompt_tokens
           log.response_tokens = processor.completion_tokens if processor.completion_tokens
-          log.cached_tokens = processor.cached_tokens if processor.cached_tokens
+          log.cache_read_tokens = processor.cache_read_tokens if processor.cache_read_tokens
         end
 
         def decode(response_raw)

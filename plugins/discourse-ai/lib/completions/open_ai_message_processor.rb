@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 module DiscourseAi::Completions
   class OpenAiMessageProcessor
-    attr_reader :prompt_tokens, :completion_tokens, :cached_tokens
+    attr_reader :prompt_tokens, :completion_tokens, :cache_read_tokens
 
     def initialize(partial_tool_calls: false)
       @tool = nil
       @tool_arguments = +""
       @prompt_tokens = nil
       @completion_tokens = nil
-      @cached_tokens = nil
+      @cache_read_tokens = nil
       @partial_tool_calls = partial_tool_calls
     end
 
@@ -122,9 +122,14 @@ module DiscourseAi::Completions
     end
 
     def update_usage(json)
-      @prompt_tokens ||= json.dig(:usage, :prompt_tokens)
-      @completion_tokens ||= json.dig(:usage, :completion_tokens)
-      @cached_tokens ||= json.dig(:usage, :prompt_tokens_details, :cached_tokens)
+      usage = json.dig(:usage)
+      return if !usage
+
+      cached_tokens = usage.dig(:prompt_tokens_details, :cached_tokens).to_i
+
+      @prompt_tokens ||= usage[:prompt_tokens] - cached_tokens
+      @completion_tokens ||= usage[:completion_tokens]
+      @cache_read_tokens ||= cached_tokens
     end
   end
 end

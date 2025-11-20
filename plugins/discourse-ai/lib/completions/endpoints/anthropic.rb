@@ -4,6 +4,7 @@ module DiscourseAi
   module Completions
     module Endpoints
       class Anthropic < Base
+        include AnthropicPromptCache
         def self.can_contact?(model_provider)
           model_provider == "anthropic"
         end
@@ -98,24 +99,34 @@ module DiscourseAi
             default_options(dialect).merge(model_params.except(:response_format)).merge(
               messages: prompt.messages,
             )
-          payload[:system] = prompt.system_prompt if prompt.system_prompt.present?
-          payload[:stream] = true if @streaming_mode
 
-          prefilled_message = +""
-
+          # Handle tools first
           if prompt.has_tools?
             payload[:tools] = prompt.tools
             if dialect.tool_choice.present?
               if dialect.tool_choice == :none
                 payload[:tool_choice] = { type: "none" }
-
-                # prefill prompt to nudge LLM to generate a response that is useful.
-                # without this LLM (even 3.7) can get confused and start text preambles for a tool calls.
-                prefilled_message << dialect.no_more_tool_calls_text
               else
                 payload[:tool_choice] = { type: "tool", name: prompt.tool_choice }
               end
             end
+          end
+
+          # Apply prompt caching if enabled
+          apply_anthropic_cache_control!(payload, prompt) if should_apply_prompt_caching?(prompt)
+
+          # Set system prompt if not already set by caching
+          payload[:system] = prompt.system_prompt if prompt.system_prompt.present? &&
+            !payload[:system]
+          payload[:stream] = true if @streaming_mode
+
+          prefilled_message = +""
+
+          # Handle tool choice prefilling
+          if dialect.tool_choice == :none && prompt.has_tools?
+            # prefill prompt to nudge LLM to generate a response that is useful.
+            # without this LLM (even 3.7) can get confused and start text preambles for a tool calls.
+            prefilled_message << dialect.no_more_tool_calls_text
           end
 
           # Prefill prompt to force JSON output.
@@ -138,6 +149,9 @@ module DiscourseAi
             "x-api-key" => llm_model.api_key,
             "content-type" => "application/json",
           }
+
+          # Add caching headers if configured
+          headers.merge!(anthropic_cache_headers)
 
           Net::HTTP::Post.new(model_uri, headers).tap { |r| r.body = payload }
         end
@@ -173,6 +187,10 @@ module DiscourseAi
         def final_log_update(log)
           log.request_tokens = processor.input_tokens if processor.input_tokens
           log.response_tokens = processor.output_tokens if processor.output_tokens
+          log.cache_read_tokens =
+            processor.cache_read_input_tokens if processor.cache_read_input_tokens
+          log.cache_write_tokens =
+            processor.cache_creation_input_tokens if processor.cache_creation_input_tokens
         end
       end
     end

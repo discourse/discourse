@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class AiApiAuditLog < ActiveRecord::Base
+  self.ignored_columns = %w[cached_tokens] # TODO: Remove when 20251118000500_drop_cached_tokens_from_ai_api_audit_logs has been promoted to pre-deploy
   belongs_to :post
   belongs_to :topic
   belongs_to :user
@@ -45,11 +46,13 @@ end
 #  feature_name         :string(255)
 #  language_model       :string(255)
 #  feature_context      :jsonb
-#  cached_tokens        :integer
+#  cache_read_tokens    :integer
+#  cache_write_tokens   :integer
 #  duration_msecs       :integer
 #
 # Indexes
 #
 #  index_ai_api_audit_logs_on_created_at_and_feature_name    (created_at,feature_name)
 #  index_ai_api_audit_logs_on_created_at_and_language_model  (created_at,language_model)
+#  index_ai_api_audit_logs_on_created_at_and_user_id         (created_at,user_id)
 #

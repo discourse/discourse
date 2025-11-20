@@ -17,6 +17,7 @@ class LlmModel < ActiveRecord::Base
   validates :max_prompt_tokens, numericality: { greater_than: 0 }
   validates :input_cost,
             :cached_input_cost,
+            :cache_write_cost,
             :output_cost,
             :max_output_tokens,
             numericality: {
@@ -41,6 +42,11 @@ class LlmModel < ActiveRecord::Base
         disable_top_p: :checkbox,
         enable_reasoning: :checkbox,
         reasoning_tokens: :number,
+        prompt_caching: {
+          type: :enum,
+          values: %w[never tool_results always],
+          default: "never",
+        },
       },
       anthropic: {
         disable_native_tools: :checkbox,
@@ -48,6 +54,11 @@ class LlmModel < ActiveRecord::Base
         disable_top_p: :checkbox,
         enable_reasoning: :checkbox,
         reasoning_tokens: :number,
+        prompt_caching: {
+          type: :enum,
+          values: %w[never tool_results always],
+          default: "never",
+        },
       },
       open_ai: {
         organization: :text,
@@ -251,6 +262,7 @@ end
 #  vision_enabled    :boolean          default(FALSE), not null
 #  input_cost        :float
 #  cached_input_cost :float
+#  cache_write_cost  :float
 #  output_cost       :float
 #  max_output_tokens :integer
 #
