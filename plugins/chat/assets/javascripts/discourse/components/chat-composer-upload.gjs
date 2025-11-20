@@ -22,7 +22,7 @@ export default class ChatComposerUpload extends Component {
       <div
         class={{concatClass
           "chat-composer-upload"
-          (if this.isImage "chat-composer-upload--image")
+          (if (isImage this.fileName) "chat-composer-upload--image")
           (unless @isDone "chat-composer-upload--in-progress")
         }}
       >
@@ -43,7 +43,7 @@ export default class ChatComposerUpload extends Component {
         </div>
 
         <span class="data">
-          {{#unless this.isImage}}
+          {{#unless (isImage this.fileName)}}
             <div class="top-data">
               <span class="file-name">{{this.fileName}}</span>
             </div>
@@ -51,7 +51,7 @@ export default class ChatComposerUpload extends Component {
 
           <div class="bottom-data">
             {{#if @isDone}}
-              {{#unless this.isImage}}
+              {{#unless (isImage this.fileName)}}
                 <span class="extension-pill">{{@upload.extension}}</span>
               {{/unless}}
             {{else}}
