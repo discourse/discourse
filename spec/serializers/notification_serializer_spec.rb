@@ -33,4 +33,29 @@ RSpec.describe NotificationSerializer do
       expect(json[:notification][:external_id]).to eq("12345")
     end
   end
+
+  describe "localizations" do
+    fab!(:topic) { Fabricate(:topic, locale: "ja") }
+    fab!(:user)
+
+    before { I18n.locale = "ja" }
+
+    it "returns the locale if there is a topic" do
+      SiteSetting.content_localization_enabled = true
+
+      notification = Fabricate(:notification, user:, topic:)
+      serializer = NotificationSerializer.new(notification)
+      json = serializer.as_json
+      expect(json[:notification][:locale]).to eq("ja")
+    end
+
+    it "skips locale if there is no topic" do
+      SiteSetting.content_localization_enabled = true
+
+      notification = Fabricate(:notification, user:)
+      serializer = NotificationSerializer.new(notification)
+      json = serializer.as_json
+      expect(json[:notification][:locale]).to eq(nil)
+    end
+  end
 end
