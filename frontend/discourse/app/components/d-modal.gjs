@@ -38,23 +38,17 @@ export default class DModal extends Component {
     this.modalContainer = el;
   });
 
-  @action
-  cleanupModalBody(el) {
-    if (this.site.desktopView) {
-      return;
-    }
-
-    unlock(el);
-  }
-
-  @action
-  setupModalBody(el) {
+  setupModalBody = modifierFn((el) => {
     if (this.site.desktopView) {
       return;
     }
 
     lock(el);
-  }
+
+    return () => {
+      unlock(el);
+    };
+  });
 
   @action
   async setupModal(el) {
@@ -415,8 +409,7 @@ export default class DModal extends Component {
           <div
             class={{concatClass "d-modal__body" @bodyClass}}
             tabindex="-1"
-            {{didInsert this.setupModalBody}}
-            {{willDestroy this.cleanupModalBody}}
+            {{this.setupModalBody}}
           >
             {{#if (has-block "body")}}
               {{yield to="body"}}
