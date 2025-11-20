@@ -8,6 +8,7 @@ import concatClass from "discourse/helpers/concat-class";
 import { bind } from "discourse/lib/decorators";
 import TextareaTextManipulation from "discourse/lib/textarea-text-manipulation";
 import forceScrollingElementPosition from "discourse/modifiers/force-scrolling-element-position";
+import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 
 export default class TextareaEditor extends Component {
   @service currentUser;
@@ -121,8 +122,8 @@ export default class TextareaEditor extends Component {
       }}
       @id={{@id}}
       {{forceScrollingElementPosition}}
+      {{preventScrollOnFocus}}
       {{this.registerTextarea}}
-      ...attributes
     />
   </template>
 }
