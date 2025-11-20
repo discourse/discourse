@@ -232,14 +232,7 @@ export default <template>
                 <TopicStatus @topic={{@controller.model}} />
                 <a
                   href={{@controller.model.url}}
-                  {{on
-                    "click"
-                    (if
-                      @controller.model.details.can_edit
-                      @controller.editTopic
-                      @controller.jumpTop
-                    )
-                  }}
+                  {{on "click" @controller.handleTitleClick}}
                   class="fancy-title"
                 >
                   {{htmlSafe @controller.model.fancyTitle}}

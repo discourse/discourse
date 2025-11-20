@@ -33,9 +33,14 @@ describe "Content Localization" do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:composer) { PageObjects::Components::Composer.new }
+  let(:translation_composer) { PageObjects::Components::TranslationComposer.new }
   let(:post_1_obj) { PageObjects::Components::Post.new(1) }
   let(:post_3_obj) { PageObjects::Components::Post.new(3) }
   let(:post_4_obj) { PageObjects::Components::Post.new(4) }
+
+  fab!(:topic_ja_localization) do
+    Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "孫子兵法からの人生戦略")
+  end
 
   def scroll_to_post(post_number)
     5.times do
@@ -45,7 +50,6 @@ describe "Content Localization" do
   end
 
   before do
-    Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "孫子兵法からの人生戦略")
     Fabricate(:topic_localization, topic:, locale: "es", fancy_title: "Estrategias de vida de ...")
 
     Fabricate(:post_localization, post: post_1, locale: "ja", cooked: "傑作は単なる軍事戦略についてではありません")
@@ -199,6 +203,55 @@ describe "Content Localization" do
         topic_page.click_fast_edit_button
         expect(page).to have_no_css("#fast-edit-input")
         expect(edit_localized_post_dialog).to be_open
+      end
+
+      context "for topic titles" do
+        fab!(:untranslated_topic) { Fabricate(:post).topic }
+
+        it "shows title editor in composer when user can edit localizations" do
+          sign_in(japanese_user)
+
+          topic_page.visit_topic(untranslated_topic)
+          # not privileged therefore cannot edit topic title via title container
+          topic_page.click_topic_edit_title
+          expect(topic_page).to have_no_topic_title_editor
+
+          topic_page.visit_topic(topic)
+          # does not see regular title editor
+          # sent directly to translation composer to edit translation
+          topic_page.click_topic_edit_title
+          expect(topic_page).to have_no_topic_title_editor
+          expect(translation_composer).to have_translation_title(topic_ja_localization.title)
+        end
+
+        it "opens a dialog for choosing which title to edit for admins" do
+          admin.update(locale: "ja") # force the admin to view the jap localizations
+
+          sign_in(admin)
+
+          topic_page.visit_topic(untranslated_topic)
+          topic_page.click_topic_edit_title
+          expect(topic_page).to have_topic_title_editor
+
+          topic_page.visit_topic(topic)
+          expect(topic_page).to have_topic_title(topic_ja_localization.fancy_title)
+          topic_page.click_topic_edit_title
+          # does not see regular title editor
+          expect(topic_page).to have_no_topic_title_editor
+          # asked to use composer to edit original title
+          expect(edit_localized_post_dialog).to be_open
+
+          edit_localized_post_dialog.click_yes
+          expect(composer).to have_title(topic.title)
+
+          composer.close
+
+          # use translation composer to edit localized title
+          topic_page.click_topic_edit_title
+          expect(edit_localized_post_dialog).to be_open
+          edit_localized_post_dialog.click_no
+          expect(translation_composer).to have_translation_title(topic_ja_localization.title)
+        end
       end
     end
 
