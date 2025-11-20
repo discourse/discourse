@@ -226,6 +226,10 @@ export default {
               }
 
               get suffixValue() {
+                if (this.channel.currentUserMembership.pinned) {
+                  return "thumbtack";
+                }
+
                 return this.channel.tracking.unreadCount > 0 ||
                   // We want to do this so we don't show a blue dot if the user is inside
                   // the channel and a new unread thread comes in.
@@ -236,6 +240,10 @@ export default {
               }
 
               get suffixCSSClass() {
+                if (this.channel.currentUserMembership.pinned) {
+                  return "pinned";
+                }
+
                 return this.channel.tracking.mentionCount > 0 ||
                   this.channel.tracking.watchedThreadsUnreadCount > 0
                   ? "urgent"
@@ -267,7 +275,7 @@ export default {
               }
 
               get sectionLinks() {
-                return this.chatChannelsManager.publicMessageChannels.map(
+                return this.chatChannelsManager.publicMessageChannelsByActivity.map(
                   (channel) =>
                     new SidebarChatChannelsSectionLink({
                       channel,
@@ -471,6 +479,10 @@ export default {
               }
 
               get suffixValue() {
+                if (this.channel.currentUserMembership.pinned) {
+                  return "thumbtack";
+                }
+
                 return this.channel.tracking.unreadCount > 0 ||
                   this.channel.unreadThreadsCountSinceLastViewed > 0
                   ? "circle"
@@ -478,6 +490,10 @@ export default {
               }
 
               get suffixCSSClass() {
+                if (this.channel.currentUserMembership.pinned) {
+                  return "pinned";
+                }
+
                 return this.channel.tracking.unreadCount > 0 ||
                   this.channel.tracking.mentionCount > 0 ||
                   this.channel.tracking.watchedThreadsUnreadCount > 0

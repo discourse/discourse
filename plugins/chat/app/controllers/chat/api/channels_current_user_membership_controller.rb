@@ -1,11 +1,23 @@
 # frozen_string_literal: true
 
 class Chat::Api::ChannelsCurrentUserMembershipController < Chat::Api::ChannelsController
+  MEMBERSHIP_EDITABLE_PARAMS = %i[pinned]
+
   def create
     guardian.ensure_can_join_chat_channel!(channel_from_params)
 
     render_serialized(
       channel_from_params.add(current_user),
+      Chat::UserChannelMembershipSerializer,
+      root: "membership",
+    )
+  end
+
+  def update
+    membership_params = params.require(:membership).permit(MEMBERSHIP_EDITABLE_PARAMS)
+    membership_from_params.update!(membership_params.to_h)
+    render_serialized(
+      membership_from_params,
       Chat::UserChannelMembershipSerializer,
       root: "membership",
     )

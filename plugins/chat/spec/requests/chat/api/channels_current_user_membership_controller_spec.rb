@@ -102,6 +102,74 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
     end
   end
 
+  describe "#update" do
+    let!(:membership) do
+      Chat::UserChatChannelMembership.create!(
+        chat_channel_id: channel_1.id,
+        user_id: current_user.id,
+        following: true,
+      )
+    end
+
+    context "when pinning a channel" do
+      it "updates the pinned status" do
+        expect {
+          put "/chat/api/channels/#{channel_1.id}/memberships/me",
+              params: {
+                membership: {
+                  pinned: true,
+                },
+              }
+        }.to change { membership.reload.pinned }.from(false).to(true)
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["membership"]["pinned"]).to eq(true)
+        expect(response.parsed_body["membership"]["chat_channel_id"]).to eq(channel_1.id)
+      end
+    end
+
+    context "when unpinning a channel" do
+      before { membership.update!(pinned: true) }
+
+      it "updates the pinned status" do
+        expect {
+          put "/chat/api/channels/#{channel_1.id}/memberships/me",
+              params: {
+                membership: {
+                  pinned: false,
+                },
+              }
+        }.to change { membership.reload.pinned }.from(true).to(false)
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["membership"]["pinned"]).to eq(false)
+      end
+    end
+
+    context "when the user is not a member" do
+      before { membership.destroy! }
+
+      it "returns a 404" do
+        put "/chat/api/channels/#{channel_1.id}/memberships/me",
+            params: {
+              membership: {
+                pinned: true,
+              },
+            }
+
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when channel is not found" do
+      it "returns a 404" do
+        put "/chat/api/channels/-999/memberships/me", params: { membership: { pinned: true } }
+
+        expect(response.status).to eq(404)
+      end
+    end
+  end
+
   describe "#destroy" do
     describe "success" do
       it "works" do
