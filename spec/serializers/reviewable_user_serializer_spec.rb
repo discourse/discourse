@@ -55,4 +55,21 @@ RSpec.describe ReviewableUserSerializer do
     expect(json[:payload]["scrubbed_at"]).to be_present
     expect(json[:topic_url]).to be_blank
   end
+
+  describe "target_user" do
+    it "returns nil when there is no target" do
+      reviewable = ReviewableUser.new
+      json = ReviewableUserSerializer.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
+      expect(json[:target_user]).to be_nil
+    end
+
+    it "returns FlaggedUserSerializer when user can see reviewable UI refresh" do
+      allow_any_instance_of(Guardian).to receive(:can_see_reviewable_ui_refresh?).and_return(true)
+
+      json = ReviewableUserSerializer.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
+      expect(json[:target_user]).to be_present
+      expect(json[:target_user][:id]).to eq(user.id)
+      expect(json[:target_user][:username]).to eq(user.username)
+    end
+  end
 end
