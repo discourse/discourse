@@ -75,6 +75,24 @@
     overflow: hidden;
   }
 
+  &__name-container {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    overflow: hidden;
+  }
+
+  &__pinned-icon {
+    display: flex;
+    align-items: center;
+    color: var(--primary-low-mid);
+    flex-shrink: 0;
+
+    .d-icon {
+      font-size: var(--font-down-2);
+    }
+  }
+
   .chat-channel {
     &__user-info,
     &__channel-info {
