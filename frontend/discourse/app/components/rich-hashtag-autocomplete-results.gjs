@@ -12,7 +12,8 @@ import scrollIntoView from "discourse/modifiers/scroll-into-view";
 import { eq } from "discourse/truth-helpers";
 
 /**
- * @typedef {import("discourse/lib/types/d-autocomplete").AutocompleteResultsSignature} AutocompleteResultsSignature
+ * @typedef {import("discourse/lib/types/d-autocomplete").RichHashtagAutocompleteResult} RichHashtagAutocompleteResult
+ * @typedef {import("discourse/lib/types/d-autocomplete").AutocompleteResultsSignature<RichHashtagAutocompleteResult>} ResultsSignature
  */
 
 /**
@@ -23,7 +24,7 @@ import { eq } from "discourse/truth-helpers";
  * Designed to be used with DAutocomplete's `component` API.
  *
  * @component RichHashtagAutocompleteResults
- * @implements {Component<AutocompleteResultsSignature>}
+ * @implements {Component<ResultsSignature>}
  */
 export default class RichHashtagAutocompleteResults extends Component {
   static TRIGGER_KEY = "#";
