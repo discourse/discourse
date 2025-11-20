@@ -548,11 +548,11 @@ class TopicQuery
       pinned_clause << " AND (topics.pinned_at > tu.cleared_pinned_at OR tu.cleared_pinned_at IS NULL)"
     end
 
-    # Use SQL ordering to prioritize pinned topics while keeping the relation
-    topics.reorder(<<~SQL)
-      CASE WHEN (#{pinned_clause}) THEN 0 ELSE 1 END,
-      CASE WHEN (#{pinned_clause}) THEN topics.pinned_at ELSE topics.bumped_at END DESC
-    SQL
+    # Add virtual columns for keyset pagination compatibility
+    topics.select(
+      "CASE WHEN (#{pinned_clause}) THEN 0 ELSE 1 END AS pin_priority",
+      "CASE WHEN (#{pinned_clause}) THEN topics.pinned_at ELSE topics.bumped_at END AS sort_date",
+    ).reorder(pin_priority: :asc, sort_date: :desc)
   end
 
   def create_list(filter, options = {}, topics = nil)
@@ -570,15 +570,27 @@ class TopicQuery
 
     topics = prioritize_pinned_topics(topics, options) if apply_pinning
 
-    pagy, topics =
-      pagy(
-        :keyset,
-        topics,
-        limit: options[:per_page].presence || per_page_setting,
-        keyset: {
-          bumped_at: :desc,
-        },
-      )
+    # ugly hack for now
+    if topics.is_a?(ActiveRecord::Relation)
+      topics = Topic.select("*").from(topics, :topics) # Need a subquery to reference virtual columns properly
+
+      keyset_config =
+        if apply_pinning
+          { pin_priority: :asc, sort_date: :desc }
+        else
+          { bumped_at: :desc }
+        end
+
+      pagy, topics =
+        pagy(
+          :keyset,
+          topics,
+          limit: options[:per_page].presence || per_page_setting,
+          keyset: keyset_config,
+        )
+    else
+      pagy, topics = pagy(:offset, topics, limit: options[:per_page].presence || per_page_setting)
+    end
 
     topics = topics.to_a
 
