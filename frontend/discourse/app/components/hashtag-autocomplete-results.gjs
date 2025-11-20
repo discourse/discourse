@@ -23,7 +23,7 @@ import { eq } from "discourse/truth-helpers";
  * dropdown, and is designed to be used with DAutocomplete's `component` API.
  *
  * @component HashtagAutocompleteResults
- * @extends {Component<AutocompleteResultsSignature>}
+ * @implements {Component<AutocompleteResultsSignature>}
  */
 export default class HashtagAutocompleteResults extends Component {
   static TRIGGER_KEY = "#";

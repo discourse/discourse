@@ -23,7 +23,7 @@ import { eq } from "discourse/truth-helpers";
  * Designed to be used with DAutocomplete's `component` API.
  *
  * @component RichHashtagAutocompleteResults
- * @extends {Component<AutocompleteResultsSignature>}
+ * @implements {Component<AutocompleteResultsSignature>}
  */
 export default class RichHashtagAutocompleteResults extends Component {
   static TRIGGER_KEY = "#";

@@ -23,7 +23,7 @@ import scrollIntoView from "discourse/modifiers/scroll-into-view";
  * dropdown, and is designed to be used with DAutocomplete's `component` API.
  *
  * @component UserAutocompleteResults
- * @extends {Component<AutocompleteResultsSignature>}
+ * @implements {Component<AutocompleteResultsSignature>}
  */
 export default class UserAutocompleteResults extends Component {
   static TRIGGER_KEY = "@";
