@@ -1,9 +1,8 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
-import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
+import { modifier as modifierFn } from "ember-modifier";
 import { lock, unlock } from "discourse/lib/body-scroll-lock";
 import ChatScrollableList from "../modifiers/chat/scrollable-list";
 
@@ -11,30 +10,24 @@ export default class ChatMessagesScroller extends Component {
   @service capabilities;
   @service site;
 
-  @action
-  lockBody(element) {
+  setupLock = modifierFn((element) => {
     if (this.site.desktopView || this.capabilities.isIpadOS) {
       return;
     }
 
+    // scroller is using flex-direction: column-reverse
     lock(element, { reverseColumn: true });
-  }
 
-  @action
-  unlockBody(element) {
-    if (this.site.desktopView || this.capabilities.isIpadOS) {
-      return;
-    }
-
-    unlock(element);
-  }
+    return () => {
+      unlock(element);
+    };
+  });
 
   <template>
     <div
       class="chat-messages-scroller popper-viewport"
       {{didInsert @onRegisterScroller}}
-      {{didInsert this.lockBody}}
-      {{willDestroy this.unlockBody}}
+      {{this.setupLock}}
       {{ChatScrollableList
         (hash onScroll=@onScroll onScrollEnd=@onScrollEnd reverse=true)
       }}
