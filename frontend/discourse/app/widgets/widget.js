@@ -1,4 +1,5 @@
 import deprecated from "discourse/lib/deprecated";
+import { consolePrefix } from "discourse/lib/source-identifier";
 
 export const WIDGET_DEPRECATION_OPTIONS = {
   since: "v3.5.0.beta8-dev",
@@ -25,7 +26,11 @@ function warnWidgetsDecommissioned() {
 
 class DummyWidget {
   constructor() {
-    warnWidgetsDecommissioned();
+    // skip if the constructor is run in core code
+    // some fake widgets are still instantiated to prevent breaking imports
+    if (consolePrefix()) {
+      warnWidgetsDecommissioned();
+    }
   }
 }
 
