@@ -8,12 +8,13 @@ import ChatSearch from "discourse/plugins/chat/discourse/components/chat-search"
 export default class ChatDrawerRoutesSearch extends Component {
   @service chat;
   @service chatStateManager;
+  @service chatHistory;
   @service chatSearchQuery;
 
   <template>
     <div class="c-drawer-routes --search">
       <Navbar @onClick={{this.chat.toggleDrawer}} as |navbar|>
-        <navbar.BackButton />
+        <navbar.BackButton @route={{this.chatHistory.previousRoute.name}} />
         <navbar.Title @title={{i18n "chat.search.title"}} />
         <navbar.Actions as |action|>
           <action.ToggleDrawerButton />
