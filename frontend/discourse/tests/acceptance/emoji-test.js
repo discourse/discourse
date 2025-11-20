@@ -80,6 +80,18 @@ acceptance("Emoji", function (needs) {
       );
   });
 
+  test("emoji autocomplete should not trigger after whitespace", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .btn.create");
+
+    await simulateKeys(".d-editor-input", ":id ");
+    assert
+      .dom(".autocomplete.ac-emoji")
+      .doesNotExist(
+        "emoji autocomplete should close after whitespace is added to the term"
+      );
+  });
+
   needs.settings({ emoji_autocomplete_min_chars: 2 });
 
   test("siteSetting:emoji_autocomplete_min_chars", async function (assert) {
