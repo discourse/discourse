@@ -240,3 +240,33 @@ acceptance("User Card - Restricted reason HTML", function (needs) {
       );
   });
 });
+
+acceptance("User Card - Edit Profile Button", function (needs) {
+  needs.user();
+
+  test("shows edit profile button when viewing own card", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-map__users-trigger");
+    await click('a[data-user-card="eviltrout"]');
+
+    assert.dom(".user-card .own-avatar-pencil").exists();
+    assert
+      .dom(".user-card .user-card-avatar > a")
+      .hasProperty(
+        "href",
+        /\/u\/eviltrout\/preferences\/account$/,
+        "links to account preferences"
+      );
+  });
+
+  test("does not show edit profile button when viewing another user's card", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-map__users-trigger");
+    await click('a[data-user-card="charlie"]');
+
+    assert.dom(".user-card .own-avatar-pencil").doesNotExist();
+    assert
+      .dom(".user-card .user-card-avatar > a")
+      .hasProperty("href", /\/u\/charlie$/, "links to profile");
+  });
+});
