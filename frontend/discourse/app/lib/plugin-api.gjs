@@ -11,12 +11,17 @@ import {
 } from "discourse/components/composer-editor";
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addToolbarCallback } from "discourse/components/d-editor";
+import {
+  NON_STREAM_HTML_DECORATOR,
+  registerHtmlDecorator,
+} from "discourse/components/decorated-html";
 import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { headerButtonsDAG } from "discourse/components/header";
 import { headerIconsDAG } from "discourse/components/header/icons";
 import { registeredTabs } from "discourse/components/more-topics";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
+import { STREAM_HTML_DECORATOR } from "discourse/components/post/cooked-html";
 import { addGroupPostSmallActionCode } from "discourse/components/post/small-action";
 import {
   addPluginReviewableParam,
@@ -548,7 +553,13 @@ class _PluginApi {
 
     callback = wrapWithErrorHandler(callback, "broken_decorator_alert");
 
-    this.onAppEvent("decorate-post-cooked-element", callback);
+    registerHtmlDecorator(
+      callback,
+      opts.onlyStream ? STREAM_HTML_DECORATOR : NON_STREAM_HTML_DECORATOR
+    );
+
+    // for backwards compatibility with plugins/themes decorating cooked elements
+    // using the app events
     if (!opts.onlyStream) {
       this.onAppEvent("decorate-non-stream-cooked-element", callback);
     }

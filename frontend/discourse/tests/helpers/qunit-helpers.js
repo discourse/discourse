@@ -21,6 +21,7 @@ import {
   cleanUpComposerUploadPreProcessor,
 } from "discourse/components/composer-editor";
 import { clearToolbarCallbacks } from "discourse/components/d-editor";
+import { resetHtmlDecorators } from "discourse/components/decorated-html";
 import { clearExtraHeaderButtons as clearExtraGlimmerHeaderButtons } from "discourse/components/header";
 import { clearExtraHeaderIcons as clearExtraGlimmerHeaderIcons } from "discourse/components/header/icons";
 import { clearRegisteredTabs } from "discourse/components/more-topics";
@@ -265,6 +266,7 @@ export function testCleanup(container, app) {
   clearAddedTrackedPostProperties();
   resetGroupPostSmallActionCodes();
   enableClearA11yAnnouncementsInTests();
+  resetHtmlDecorators();
 }
 
 function cleanupCssGeneratorTags() {

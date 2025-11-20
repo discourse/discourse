@@ -13,14 +13,16 @@ export const POST_STREAM_DEPRECATION_OPTIONS = {
   url: "https://meta.discourse.org/t/372063/1",
 };
 
+export const WIDGET_DECOMMISSION_OPTIONS = {
+  since: "v3.6.0.beta3-latest",
+  id: "discourse.widgets-decommissioned",
+  url: "https://meta.discourse.org/t/375332/1",
+};
+
 function warnWidgetsDecommissioned() {
   deprecated(
     `"The widget rendering system has been decommissioned and all related components and APIs are no-longer operational.`,
-    {
-      since: "v3.6.0.beta3-latest",
-      id: "discourse.widgets-decommissioned",
-      url: "https://meta.discourse.org/t/375332/1",
-    }
+    WIDGET_DECOMMISSION_OPTIONS
   );
 }
 
