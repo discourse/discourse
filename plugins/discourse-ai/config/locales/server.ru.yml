@@ -250,8 +250,10 @@ ru:
           name: "Обменный курс"
         stock_quote:
           name: "Котировка акций (AlphaVantage)"
-        image_generation:
-          name: "Генератор изображений Flux (Together.ai)"
+        image_generation_custom:
+          name: "Другое"
+        image_generation_openai:
+          name: "OpenAI"
         empty_tool:
           name: "Начать с нуля..."
       name:
@@ -268,10 +270,6 @@ ru:
         explain: "Объяснить"
         illustrate_post: "Проиллюстрировать публикацию"
         replace_dates: "Умные даты"
-      painter:
-        attribution:
-          stable_diffusion_xl: "Изображение от Stable Diffusion XL"
-          dall_e_3: "Изображение от DALL-E 3"
       image_caption:
         attribution: "Подпись к изображению от AI"
     share_ai:
@@ -364,7 +362,6 @@ ru:
           description: "Персона по умолчанию для функции Помощника «Сгенерировать таблицу в формате Markdown»"
         post_illustrator:
           name: "AI-иллюстратор публикаций"
-          description: "Создает запросы для StableDiffusion, обеспечивающие работу функции Помощника «Проиллюстрировать публикацию»"
         proofreader:
           name: "Корректор"
           description: "Персона по умолчанию для функции Помощника «Вычитать текст»"

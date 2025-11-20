@@ -10,7 +10,6 @@ ar:
       sort_options:
         votes: "الأصوات"
     topic_voting:
-      title: "التصويت على الموضوع"
       reached_limit: "لم يعُد بإمكانك التصويت الآن، يُرجى إزالة صوت حالي!"
       list_votes: "قائمة بأصواتك"
       votes_nav_help: "الموضوعات الأكثر تصويتًا"
@@ -21,20 +20,6 @@ ar:
       voted_title: "تم التصويت"
       voting_closed_title: "مغلق"
       voting_limit: "الحد"
-      votes_left:
-        zero: "متبقٍ لديك %{count} من الأصوات، ويمكنك الاطلاع على <a href='%{path}'>أصواتك</a>."
-        one: "متبقٍ لديك صوت واحد %{count}، ويمكنك الاطلاع على <a href='%{path}'>أصواتك</a>."
-        two: "متبقٍ لديك صوتان %{count}، ويمكنك الاطلاع على <a href='%{path}'>أصواتك</a>."
-        few: "متبقٍ لديك %{count} أصوات، ويمكنك الاطلاع على <a href='%{path}'>أصواتك</a>."
-        many: "متبقٍ لديك %{count} صوتًا، ويمكنك الاطلاع على <a href='%{path}'>أصواتك</a>."
-        other: "متبقٍ لديك %{count} صوت، ويمكنك الاطلاع على <a href='%{path}'>أصواتك</a>."
-      votes_left_button_title:
-        zero: "لديك %{count} من الأصوات متبقية."
-        one: "لديك صوت واحد (%{count}) متبقٍ."
-        two: "لديك صوتان (%{count}) متبقيان."
-        few: "لديك %{count} أصوات متبقية."
-        many: "لديك %{count} صوتًا متبقيًا."
-        other: "لديك %{count} صوت متبقٍ."
       votes:
         zero: "%{count} من الأصوات"
         one: "صوت واحد %{count}"

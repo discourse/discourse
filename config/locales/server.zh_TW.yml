@@ -1439,7 +1439,6 @@ zh_TW:
     suppress_overlapping_tags_in_list: "如果標籤匹配了主題標題中的詞，不顯示該標籤"
     force_lowercase_tags: "強制所有新標籤完全小寫"
     shared_drafts_category: "通過為討論話題的草稿以指定一個類別，來啟用「共用草稿」功能。此類別中的話題將從工作人員使用者的主題清單中取消。"
-    short_title: "短標題將用於使用者的主螢幕、啟動器或其他可能空白鍵有限的地方，它應限制為12個字。"
     dashboard_general_tab_activity_metrics: "選擇在一般頁面中要顯示為活躍指標的報告"
     errors:
       invalid_email: "無效的電子郵件地址"
@@ -2044,6 +2043,9 @@ zh_TW:
 
         要查看更多指引，請參考我們的[社群準則](%{base_url}/guidelines)。
     user_automatically_silenced:
+      title: "使用者自動被禁言"
+      subject_template: "新使用者%{username}由於社群投訴而被禁言"
+    user_automatically_silenced_with_reason:
       title: "使用者自動被禁言"
       subject_template: "新使用者%{username}由於社群投訴而被禁言"
     spam_post_blocked:

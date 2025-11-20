@@ -232,8 +232,10 @@ nl:
           name: "Wisselkoers"
         stock_quote:
           name: "Aandelenkoers (AlphaVantage)"
-        image_generation:
-          name: "Flux-afbeeldingsgenerator (Together.ai)"
+        image_generation_custom:
+          name: "Aangepast"
+        image_generation_openai:
+          name: "OpenAI"
         empty_tool:
           name: "Vanaf blanco beginnen..."
       name:
@@ -250,10 +252,6 @@ nl:
         explain: "Uitleggen"
         illustrate_post: "Bericht illustreren"
         replace_dates: "Slimme datums"
-      painter:
-        attribution:
-          stable_diffusion_xl: "Afbeelding door Stable Diffusion XL"
-          dall_e_3: "Afbeelding door DALL-E 3"
       image_caption:
         attribution: "Bijschrift door AI"
     share_ai:
@@ -346,7 +344,6 @@ nl:
           description: "Standaardpersona die de Markdown-tabelfunctie van de Helper ondersteunt"
         post_illustrator:
           name: "Berichtillustrator"
-          description: "Genereert StableDiffusion-prompts om de berichtillustratiefunctie van de Helper te activeren"
         proofreader:
           name: "Proeflezer"
           description: "Standaardpersona die de proefleesfunctie van de Helper ondersteunt"

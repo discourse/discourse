@@ -1007,7 +1007,6 @@ cs:
         note_added_by: "Poznámka moderátora od %{username} · %{relativeDate}"
         no_events: "Na časové ose nejsou k zobrazení žádné události"
       notes:
-        add_note_description: "Viditelné pouze pro moderátory. Tuto poznámku použijte k přidání kontextu nebo rozhodnutí o kontrole."
         add_note_button: "Přidat poznámku"
         placeholder: "Napište sem svoji poznámku..."
         chars_remaining: "Zbývá %{count} znaků"
@@ -3684,7 +3683,6 @@ cs:
           few: "Průběh: <strong>%{count}</strong> témata"
           many: "Průběh: <strong>%{count}</strong> témat"
           other: "Průběh: <strong>%{count}</strong> témat"
-        silent: "Provést tuto akci potichu."
         performing: "Provádíme hromadné operace, vyčkejte prosím…"
         completed: "Hromadné operace byly úspěšně dokončeny!"
       none:
@@ -3876,7 +3874,6 @@ cs:
       jump_reply_button: "Přejít na příspěvek"
       deleted: "Téma bylo smazáno"
       slow_mode_update:
-        title: "Pomalý režim"
         select: "Uživatelé mohou do tohoto tématu přispívat pouze jednou za:"
         description: "Aby uživatelé podpořili promyšlenou diskuzi v rychle se vyvíjejících nebo sporných diskusích, musí počkat, než do tohoto tématu znovu přidají příspěvek."
         enable: "Zapnout"
@@ -4631,24 +4628,14 @@ cs:
         description: "Požadovat, aby nová témata obsahovala štítky z těchto skupin:"
         delete: "Smazat"
         add: "Přidat požadovanou skupinu štítků"
-        placeholder: "vybrat skupinu štítků…"
+        placeholder: "Vybrat skupinu štítků…"
       topic_featured_link_allowed: "Povolit zobrazené odkazy v této kategorii"
-      delete: "Smazat kategorii"
-      create: "Nová kategorie"
       create_long: "Vytvořit novou kategorii"
-      save: "Uložit kategorii"
-      slug: "Odkaz kategorie"
       slug_placeholder: "(Nepovinné) slova s pomlčkou pro URL"
       creation_error: Během vytváření nové kategorie nastala chyba.
       save_error: Během ukládání kategorie nastala chyba.
-      name: "Název kategorie"
-      untitled: "Kategorie bez názvu"
       description: "Popis"
-      logo: "Logo kategorie"
-      logo_dark: "Obrázek loga kategorie (tmavý režim)"
       logo_description: "Doporučený poměr stran 1:1 s minimální velikostí 200 pixelů. Pokud ponecháte prázdné, nezobrazí se žádný obrázek."
-      background_image: "Obrázek na pozadí této kategorie"
-      background_image_dark: "Obrázek pozadí kategorie (tmavý)"
       style: "Styly"
       background_color: "Barva"
       foreground_color: "Barva textu"
@@ -4670,9 +4657,8 @@ cs:
       color_placeholder: "Jakákoliv webová barva"
       delete_confirm: "Opravdu chcete odstranit tuto kategorii?"
       delete_error: "Nastala chyba při odstraňování kategorie."
-      list: "Seznam kategorií"
       no_description: "Doplňte prosím popis této kategorie."
-      change_in_category_topic: "navštivte téma kategorie pro editaci jejího popisu"
+      change_in_category_topic: "Úprava popisu"
       already_used: "Tato barva je již použita jinou kategorií"
       security: "Zabezpečení"
       security_add_group: "Přidat skupinu"
@@ -4703,23 +4689,15 @@ cs:
       all_topics_wiki: "Automaticky zakládat nová témata jako wiki"
       allow_unlimited_owner_edits_on_first_post: "Povolit neomezené úpravy vlastníka při prvním příspěvku"
       subcategory_list_style: "Styl seznamu podkategorií:"
-      sort_order: "Seznam témat seřazený podle:"
-      default_view: "Výchozí seznam témat:"
-      default_top_period: "Výchozí období pro Nejlepší"
-      default_list_filter: "Výchozí filtr seznamu:"
       allow_badges_label: "Povolit udělování odznaků v této kategorii"
-      edit_permissions: "Upravit oprávnění"
       reviewable_by_group: "Kromě členů redakce může být obsah v této kategorii rovněž revidován:"
       review_group_name: "název skupiny"
       require_topic_approval: "Požadovat schválení moderátorů pro všechna nová témata"
       require_reply_approval: "Požadovat schválení moderátorů pro všechny nové odpovědi"
       this_year: "letos"
       position: "Pozice na stránce kategorií:"
-      default_position: "Výchozí umístění"
       position_disabled: "Kategorie se zobrazí v pořadí podle aktivity. Chcete-li ovlivnit pořadí kategorií v seznamech, povolte nastavení <a href='%{url}'>\"pevné pozice kategorií\"</a> ."
       minimum_required_tags: "Nejmenší počet požadovaných štítků pro téma:"
-      default_slow_mode: 'Povolit "Pomalý režim" pro nová témata v této kategorii.'
-      parent: "Nadřazená kategorie"
       num_auto_bump_daily: "Počet otevřených témat, která mají být denně automaticky pošťouchnuta:"
       auto_bump_cooldown_days: "Minimální počet dní před opětovným \"pošťouchnutím\" stejného tématu:"
       navigate_to_first_post_after_read: "Přesunout na první příspěvek, jakmile jsou přečtena témata"
@@ -4741,18 +4719,14 @@ cs:
           title: "Ztišený"
           description: "Na nová témata v této kategorii nebudete nikdy upozorněni a nebudou se zobrazovat v nejnovějších."
       search_priority:
-        label: "Priorita vyhledávání"
         options:
           normal: "Normální"
           ignore: "ignorovat"
-          very_low: "Velmi nízká"
           low: "Nízká"
           high: "Vysoká"
-          very_high: "Velmi vysoká"
       sort_options:
         default: "výchozí"
         likes: "Líbí se"
-        op_likes: "Původní \"Líbí se\" u příspěvků"
         views: "Zobrazení"
         posts: "Příspěvky"
         activity: "Aktivita"
@@ -4772,8 +4746,7 @@ cs:
         appearance: "Vzhled"
         email: "Email"
       list_filters:
-        all: "všechna témata"
-        none: "žádné podkategorie"
+        all: "Všechna témata"
       colors_disabled: "Nemůžete vybrat barvy, protože máte nastaven styl kategorie žádný."
     anonymous_flagging:
       title: "Nahlásit protizákonný obsah"
@@ -5364,18 +5337,13 @@ cs:
           description: "Nebudete upozorněni na žádná nová témata s tímto štítkem a nebudou se objevovat na vaší záložce s nepřečtenými."
       groups:
         back_btn: "Zpět na všechny štítky"
-        title: "Skupiny štítků"
         about_heading: "Vyberte skupinu štítků nebo vytvořte novou"
         about_heading_empty: "Chcete-li začít, vytvořte novou skupinu štítků"
         about_description: "Skupiny štítků vám pomáhají spravovat oprávnění pro mnoho štítků na jednom místě."
-        new: "Nová skupina"
-        new_title: "Nová skupina"
-        edit_title: "Upravit skupinu štítků"
         tags_label: "Štítky v této skupině"
         parent_tag_label: "Nadřazený štítek"
         parent_tag_description: "Štítky z této skupiny lze použít pouze v případě, že je přítomen nadřazený štítek."
         one_per_topic_label: "Omezit na jeden štítek k tématu z této skupiny"
-        new_name: "Nová skupina štítků"
         name_placeholder: "Název"
         save: "Uložit"
         delete: "Smazat"
@@ -6059,6 +6027,23 @@ cs:
               other: "Aktualizovali jste výchozí velikost textu. Chcete tuto změnu použít pro %{count} stávajících uživatelů?"
             modal_yes: "Ano"
             modal_no: "Ne, aplikovat pouze do budoucna"
+        welcome_banner:
+          form:
+            text_color:
+              label: "Barva textu"
+            page_visibility:
+              options:
+                top_menu_pages: "Hlavní stránky nabídky"
+                all_pages: "Všechny stránky"
+            location:
+              label: "Poloha"
+              options:
+                above_topic_content: "Nad obsahem tématu"
+                below_site_header: "Pod záhlavím webu"
+            header_logged_in:
+              placeholder: "Vítejte zpět, %{preferred_display_name}!"
+            header_anonymous:
+              placeholder: "Vítejte v %{site_name}!"
         navigation:
           title: "Navigace"
           header_description: "Nastavte odkazy na navigaci a položky nabídky pro váš web. To zahrnuje umístění a chování primárního navigačního menu, rychlé odkazy v horní části domovské stránky, stejně jako správcovský postranní panel"
@@ -7903,7 +7888,6 @@ cs:
           success: "Úspěch"
           exists: "Již existuje"
           upload: "Přidat ze souboru"
-          upload_successful: "Nahráno úspěšně. Slova byla přidána "
           case_sensitivity_label: "Rozlišuje malá a velká písmena"
           case_sensitivity_description: "Pouze slova se shodnými velkými a malými písmeny"
           html_label: "HTML"
@@ -7995,10 +7979,7 @@ cs:
             second: "Možnost 2"
             third: "Možnost 3"
         edit_category:
-          toggle_freeform: "šablona formuláře zakázána"
-          toggle_form_template: "šablona formuláře povolena"
           select_template: "Vyberte šablony formulářů"
-          select_template_help: "Přidat/upravit šablony formulářů"
         errors:
           multiple_tags_not_allowed: 'Nemůžete vybrat více štítků z "%{tag_name}". Chcete-li se vyhnout problémům, použijte šablonu formuláře'
       impersonate:

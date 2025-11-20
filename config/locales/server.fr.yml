@@ -1650,7 +1650,6 @@ fr:
     allow_duplicate_topic_titles_category: "Permettre l'existence de plusieurs sujets au titre identique s'ils appartiennent à des catégories différentes. Le paramètre « allow_duplicate_topic_titles » doit être désactivé."
     unique_posts_mins: "Combien de temps avant qu'un utilisateur puisse publier le même contenu à nouveau"
     educate_until_posts: "Lors de la rédaction des (n) premiers nouveaux sujets de l'utilisateur, afficher le panneau d'aide à la saisie."
-    title: "Le nom de ce site. Visible par tous les visiteurs, y compris les utilisateurs anonymes."
     site_description: "Décrivez ce site en une phrase. Visible par tous les visiteurs, y compris les utilisateurs anonymes."
     short_site_description: "Brève description en quelques mots. Visible par tous les visiteurs, y compris les utilisateurs anonymes."
     contact_email: "Adresse e-mail de la personne responsable de ce site. Elle est utilisée pour les notifications critiques et également affichée sur la page <a href='%{base_path}/about' target='_blank'>/about</a> pour les questions urgentes. Visible par les utilisateurs anonymes sur les sites publics."
@@ -2109,7 +2108,6 @@ fr:
     allow_all_users_to_flag_illegal_content: "Les utilisateurs anonymes verront une information indiquant qu'ils doivent envoyer un e-mail aux administrateurs pour signaler un contenu illégal. Ce paramètre prévaut sur « groupes autorisés à signaler une publication »."
     email_address_to_report_illegal_content: "Si ce champ est laissé vide, l'adresse e-mail par défaut de l'administrateur du site sera utilisée."
     cooldown_hours_until_reflag: "Combien de temps les utilisateurs doivent attendre avant de pouvoir signaler à nouveau un message"
-    slow_mode_prevents_editing: "Le « mode lent » empêche-t-il l'édition après editing_grace_period ?"
     reply_by_email_enabled: "Activez la fonctionnalité qui permet aux utilisateurs de répondre à des sujets directement par e-mail, au lieu de les obliger à se connecter au site Web. Consultez le guide <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>sur Meta</a> pour obtenir plus d'informations."
     reply_by_email_address: "Modèle pour la réponse par e-mail entrant, exemple : %%{reply_key}@reply.example.com ou replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Liste des modèles alternatifs pour les adresses des e-mails entrants de la réponse par e-mail. Exemple : %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -2414,7 +2412,6 @@ fr:
     sitemap_page_size: "Nombre d'URL à inclure dans chaque page de sitemap. Maximum 50 000"
     enable_user_status: "Autorisez les utilisateurs à définir un message d'état personnalisé (émoji + description)."
     enable_user_tips: "Activer les nouveaux conseils d'utilisation qui décrivent les fonctionnalités clés aux utilisateurs"
-    short_title: "Le titre court sera utilisé sur l'écran d'accueil de l'utilisateur, le lanceur d'applications ou d'autres endroits où la place disponible est limitée. Il devrait être limité à 12 caractères."
     dashboard_hidden_reports: "Permettre de masquer les rapports du tableau de bord."
     dashboard_visible_tabs: "Choisissez les onglets visibles sur le tableau de bord."
     dashboard_general_tab_activity_metrics: "Sélectionnez les rapports à afficher comme indicateurs d'activité dans l'onglet général."
@@ -3619,14 +3616,9 @@ fr:
     user_automatically_silenced:
       title: "Utilisateur automatiquement mis en sourdine"
       subject_template: "Nouvel utilisateur %{username} mis en sourdine suite à des signalements de la communauté"
-      text_body_template: |
-        Ce message vous est envoyé de manière automatisée.
-
-        Le nouvel utilisateur [%{username}](%{user_url}) a été automatiquement mis en sourdine, car plusieurs utilisateurs ont signalé des messages publiés par %{username}.
-
-        Nous vous invitons à [examiner ces signalements](%{base_url}/review). Si %{username} a été mis(e) en sourdine de façon injustifiée, utilisez le bouton d'annulation de la mise en sourdine situé sur la [page d'administration de cet utilisateur](%{user_url}).
-
-        Le seuil de signalements déclenchant l'envoi de ce message peut être modifié avec le paramètre « silence_new_user ».
+    user_automatically_silenced_with_reason:
+      title: "Utilisateur automatiquement mis en sourdine"
+      subject_template: "Nouvel utilisateur %{username} mis en sourdine suite à des signalements de la communauté"
     spam_post_blocked:
       title: "Publication de contenu indésirable bloquée"
       subject_template: "Les messages du nouvel utilisateur %{username} sont bloqués pour des liens répétés"
@@ -5252,7 +5244,6 @@ fr:
         title: "Supprimer le message"
         complete: "Publication rejetée."
       revise_and_reject_post:
-        title: "Réviser le message..."
         complete: "Publication rejetée en attente de révision."
       ignore:
         title: "Ignorer"

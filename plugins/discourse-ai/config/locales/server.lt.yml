@@ -13,6 +13,10 @@ lt:
     emotion_neutral:
       title: "\U0001F610 Neutrali"
   discourse_ai:
+    tools:
+      presets:
+        image_generation_custom:
+          name: "Išskirtinės"
     ai_helper:
       prompts:
         proofread: Korektūruotas tekstas

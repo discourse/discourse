@@ -232,8 +232,10 @@ fr:
           name: "Taux de change"
         stock_quote:
           name: "Cotation boursière (AlphaVantage)"
-        image_generation:
-          name: "Générateur d'images de flux (Together.ai)"
+        image_generation_custom:
+          name: "Personnalisé"
+        image_generation_openai:
+          name: "OpenAI"
         empty_tool:
           name: "Repartir de zéro..."
       name:
@@ -250,10 +252,6 @@ fr:
         explain: "Expliquer"
         illustrate_post: "Illustrer la publication"
         replace_dates: "Dates intelligentes"
-      painter:
-        attribution:
-          stable_diffusion_xl: "Image de Stable Diffusion XL"
-          dall_e_3: "Image de DALL-E 3"
       image_caption:
         attribution: "Légende par l'IA"
     share_ai:
@@ -346,7 +344,6 @@ fr:
           description: "Personnage par défaut qui alimente la fonction de génération de tableau Markdown de l'assistant"
         post_illustrator:
           name: "Illustrateur de publications"
-          description: "Génère des invites StableDiffusion pour alimenter la fonction d'illustration des publications de l'assistant"
         proofreader:
           name: "Relecteur"
           description: "Personnage par défaut qui alimente la fonction de relecture de texte de l'assistant"

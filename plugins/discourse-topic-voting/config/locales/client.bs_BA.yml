@@ -20,10 +20,6 @@ bs_BA:
       voted_title: "Glasano"
       voting_closed_title: "Zatvoreno"
       voting_limit: "Limit"
-      votes_left_button_title:
-        one: "Ostao vam je %{count} glas."
-        few: "Ostalo vam je %{count} glasa."
-        other: "Ostalo vam je %{count} glasova."
       votes:
         one: "%{count} glas"
         few: "%{count} glasova"

@@ -11,6 +11,10 @@ hy:
     emotion_neutral:
       title: "\U0001F610 Նեյտրալ"
   discourse_ai:
+    tools:
+      presets:
+        image_generation_custom:
+          name: "Մասնավոր"
     ai_bot:
       tool_summary:
         search: "Որոնում"

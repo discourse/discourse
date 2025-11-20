@@ -232,8 +232,10 @@ pt_BR:
           name: "Taxa de troca"
         stock_quote:
           name: "Cotação de ação (AlphaVantage)"
-        image_generation:
-          name: "Gerador de imagem de fluxo (Together.ai)"
+        image_generation_custom:
+          name: "Personalizados(as)"
+        image_generation_openai:
+          name: "OpenAI"
         empty_tool:
           name: "Começar do zero..."
       name:
@@ -250,10 +252,6 @@ pt_BR:
         explain: "Explicar"
         illustrate_post: "Ilustrar postagem"
         replace_dates: "Datas inteligentes"
-      painter:
-        attribution:
-          stable_diffusion_xl: "Imagem criada por Stable Diffusion XL"
-          dall_e_3: "Imagem criada por DALL-E 3"
       image_caption:
         attribution: "Legendado por IA"
     share_ai:
@@ -346,7 +344,6 @@ pt_BR:
           description: "A persona padrão que alimenta o recurso de geração de tabelas do Markdown do Ajudante"
         post_illustrator:
           name: "Ilustrador de postagens"
-          description: "Gera prompts de StableDiffusion para alimentar o recurso de ilustração de postagens do Ajudante"
         proofreader:
           name: "Revisor"
           description: "A persona padrão que alimenta o recurso de revisão de texto do Ajudante"

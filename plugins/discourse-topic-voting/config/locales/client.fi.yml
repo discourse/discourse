@@ -10,7 +10,6 @@ fi:
       sort_options:
         votes: "Äänet"
     topic_voting:
-      title: "Ketjun äänestys"
       reached_limit: "Sinulla ei ole enempää ääniä, poista antamasi ääni!"
       list_votes: "Kaikki antamasi äänet"
       votes_nav_help: "ketjut, joilla on eniten ääniä"
@@ -21,12 +20,6 @@ fi:
       voted_title: "Äänestetty"
       voting_closed_title: "Suljettu"
       voting_limit: "Raja"
-      votes_left:
-        one: "Sinulla on %{count} ääni jäljellä, katso <a href='%{path}'>äänesi</a>."
-        other: "Sinulla on %{count} ääntä jäljellä, katso <a href='%{path}'>äänesi</a>."
-      votes_left_button_title:
-        one: "Sinulla on %{count} ääni jäljellä."
-        other: "Sinulla on %{count} ääntä jäljellä."
       votes:
         one: "%{count} ääni"
         other: "%{count} ääntä"

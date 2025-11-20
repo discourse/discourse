@@ -10,7 +10,6 @@ ur:
       sort_options:
         votes: "ووٹ"
     topic_voting:
-      title: "موضوع ووٹنگ"
       reached_limit: "آپ کے ووٹ ختم ہو چکے ہیں، کسی موجودہ ووٹ کو ہٹا ئیں!"
       list_votes: "اپنے ووٹوں کی فہرست"
       votes_nav_help: "سب سے زیادہ ووٹوں والے ٹاپک"
@@ -21,12 +20,6 @@ ur:
       voted_title: "ووٹ کیا"
       voting_closed_title: "بند"
       voting_limit: "حد"
-      votes_left:
-        one: "آپ کے پاس %{count} ووٹ باقی ہے، دیکھیں <a href='%{path}'>اپنے ووٹ</a>۔"
-        other: "آپ کے پاس %{count} ووٹ باقی ہیں، دیکھیں <a href='%{path}'>آپ کے ووٹ</a>۔"
-      votes_left_button_title:
-        one: "آپ کے پاس %{count} ووٹ باقی ہے۔"
-        other: "آپ کے پاس %{count} ووٹ باقی ہیں۔"
       votes:
         one: "%{count} ووٹ"
         other: "%{count} ووٹ"

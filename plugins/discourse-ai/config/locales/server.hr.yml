@@ -9,6 +9,10 @@ hr:
     overall_sentiment:
       yaxis: "Datum"
   discourse_ai:
+    tools:
+      presets:
+        image_generation_custom:
+          name: "Posebna"
     spam_detection:
       logging_subject: "Otkrivanje neželjene pošte"
     ai_bot:

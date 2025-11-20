@@ -281,6 +281,12 @@ el:
       forwarded: "Προωθήθηκε το παραπάνω email"
     topic_admin_menu: "ρυθμίσεις θέματος"
     skip_to_main_content: "Μετάβαση στο κύριο περιεχόμενο"
+    skip_links_label: "Προσπέρασμα συνδέσμων πλοήγησης"
+    skip_to_post: "Μετάβαση στην ανάρτηση %{post_number}"
+    skip_to_where_you_left_off: "Μετάβαση στο σημείο που σταματήσατε (ανάρτηση %{post_number})"
+    skip_to_where_you_left_off_last: "Μετάβαση στο σημείο που σταματήσατε (τελευταία απάντηση, ανάρτηση %{post_number})"
+    skip_to_last_reply: "Μετάβαση στην τελευταία απάντηση"
+    skip_to_top: "Μετάβαση στην κορυφή"
     skip_user_nav: "Μετάβαση στο περιεχόμενο του προφίλ"
     emails_are_disabled: "Όλα τα εξερχόμενα emails έχουν απενεργοποιηθεί καθολικά από κάποιον διαχειριστή. Δε θα σταλεί καμία ειδοποίηση email."
     emails_are_disabled_non_staff: "Τα εξερχόμενα email έχουν απενεργοποιηθεί για χρήστες εκτός του προσωπικού."
@@ -291,13 +297,17 @@ el:
     back_button: "Πίσω"
     welcome_banner:
       header:
+        new_members: "Καλώς ήρθες, %{preferred_display_name}!"
         logged_in_members: "Καλώς ήρθες πίσω, %{preferred_display_name}!"
         anonymous_members: "Καλώς ήλθατε στην %{site_name}!"
       search_placeholder: "Αναζήτηση"
     themes:
       default_description: "Προεπιλογή"
+      broken_theme_alert: "Ο ιστότοπός σας ενδέχεται να μην λειτουργεί επειδή ένα θέμα / στοιχείο έχει σφάλματα. Ελέγξτε την κονσόλα του προγράμματος περιήγησης για περισσότερες πληροφορίες."
       error_caused_by: "Προκλήθηκε από '%{name}'. <a target='blank' href='%{path}'>Πατήστε εδώ</a> για να το ενημερώσετε, να αλλάξετε τις ρυθμίσεις ή να το απενεργοποιήσετε."
       only_admins: "(αυτό το μήνυμα εμφανίζεται μόνο στους διαχειριστές του ιστότοπου)"
+    broken_decorator_alert: "Οι αναρτήσεις ενδέχεται να μην εμφανίζονται σωστά επειδή ένας από τους διακοσμητές περιεχομένου αναρτήσεων στον ιστότοπό σας παρουσίασε ένα σφάλμα."
+    broken_page_change_alert: "Ένας χειριστής onPageChange παρουσίασε ένα σφάλμα. Ελέγξτε τα εργαλεία προγραμματιστή προγράμματος περιήγησης για περισσότερες πληροφορίες."
     broken_plugin_alert: "Προκλήθηκε από το πρόσθετο '%{name}'"
     broken_transformer_alert: "Παρουσιάστηκε σφάλμα. Ο ιστότοπός σας ενδέχεται να μην λειτουργεί σωστά."
     critical_deprecation:
@@ -677,6 +687,10 @@ el:
         claimed_by_you: "Έχετε διεκδικήσει αυτό το στοιχείο και μπορείτε να το ελέγξετε."
         claimed_by_other: "Αυτό το στοιχείο μπορεί να αναθεωρηθεί μόνο από τον/την <b>%{username}</b>."
         automatically_claimed_by: "Αυτό το στοιχείο αναθεωρείται αυτήν τη στιγμή από <b>%{username}</b>."
+      claim:
+        title: "Διεκδικήστε αυτό το θέμα"
+      unclaim:
+        help: "Αφαίρεση αυτής της διεκδίκησης"
       awaiting_approval: "Αναμονή έγκρισης"
       delete: "Σβήσιμο"
       settings:
@@ -685,7 +699,7 @@ el:
         title: "Ρυθμίσεις"
         priorities:
           title: "Αναθεωρήσιμες προτεραιότητες"
-      moderation_history: "Ιστορικό εποπτείας"
+      moderation_history: "Ιστορικό συντονισμού"
       view_all: "Προβολή Όλων"
       grouped_by_topic: "Ομαδοποίηση ανά θέμα"
       none: "Δεν υπάρχουν στοιχεία για έλεγχο."
@@ -764,6 +778,7 @@ el:
           created_at: "Δημιουργήθηκε στις"
           created_at_asc: "Δημιουργήθηκε στις (αντίστροφα)"
         priority:
+          title: "Ελάχιστη προτεραιότητα"
           any: "(οποιοδήποτε)"
           low: "Χαμηλή"
           medium: "Μεσαία"
@@ -786,10 +801,18 @@ el:
           title: "Εγκρίθηκε "
         approved_flag:
           title: "Η αναφορά εγκρίθηκε"
+        approved_user:
+          title: "Εγκεκριμένος χρήστης"
+        approved_post:
+          title: "Εγκεκριμένη ανάρτηση"
         rejected:
           title: "Απορρίφθηκε"
         rejected_flag:
           title: "Η αναφορά απορρίφθηκε"
+        rejected_user:
+          title: "Απορριμμένος χρήστης"
+        rejected_post:
+          title: "Απορριμμένη ανάρτηση"
         ignored:
           title: "Η αναφορά αγνοήθηκε"
         deleted:
@@ -821,18 +844,25 @@ el:
           noun: "ανάρτηση"
       flagged_as: "Αναφορά ως"
       post_flagged_as: "Η ανάρτηση αναφέρθηκε ως"
+      chat_flagged_as: "Η συνομιλία αναφέρθηκε ως"
+      queued_post_label: "Ανάρτηση σε ουρά"
+      queued_topic_label: "Θέμα σε ουρά"
       user_label: "Χρήστης"
       assigned_to: "Ανατέθηκε σε"
-      moderator_actions: "Ενέργειες επόπτη"
+      moderator_actions: "Ενέργειες συντονιστή"
       timeline_and_notes: "Χρονοδιάγραμμα & σημειώσεις"
       timeline:
         target_created: "Ανάρτηση δημιουργήθηκε"
         target_created_by: "Ανάρτηση δημιουργήθηκε από %{username} · %{relativeDate}"
         flagged: "Αναφέρθηκε"
         flagged_as_by: "Αναφέρθηκε ως %{flagReason} από %{username} · %{relativeDate}"
+        claimed: "Διεκδικήθηκε"
+        claimed_by: "Διεκδικήθηκε από %{username} · %{relativeDate}"
+        reviewed: "Αναθεωρήθηκε"
+        reviewed_by: "Αναθεωρήθηκε από %{username} · %{relativeDate}"
         view_conversation: "προβολή ΠΜ"
-        note_added: "Σημείωση επόπτη"
-        note_added_by: "Σημείωση επόπτη από %{username} · %{relativeDate}"
+        note_added: "Σημείωση συντονιστή"
+        note_added_by: "Σημείωση συντονιστή από %{username} · %{relativeDate}"
         no_events: "Δεν υπάρχουν συμβάντα χρονοδιαγράμματος για προβολή"
       notes:
         add_note_button: "Προσθήκη σημείωσης"
@@ -841,18 +871,26 @@ el:
         delete_note: "Διαγραφή αυτής της σημείωσης"
         delete: "Σβήσιμο"
       topic_label: "Θέμα"
+      queued_user: "Χρήστης σε ουρά"
       posted_in: "Δημοσιεύτηκε σε"
       flagged_user: "Αναφερόμενος χρήστης"
       review_user: "Χρήστης"
       need_help: "Χρειάζεστε βοήθεια;"
       copy_link: "Αντιγραφή συνδέσμου"
+      copy_permalink_title: "αντιγραφή συνδέσμου προς αυτό το αναθεωρήσιμο στοιχείο στο πρόχειρο"
       copy_link_feedback: "Ο σύνδεσμος αντιγράφηκε"
       view_source: "Προβολή πηγής"
       insights:
+        title: "Στοιχεία"
         flag_volume: "Όγκος αναφορών"
         flagged_by_users:
           one: "Αναφέρθηκε από %{count} μοναδικό χρήστη"
           other: "Αναφέρθηκε από %{count} μοναδικούς χρήστες"
+        similar_posts: "Προηγούμενες παραβάσεις"
+        flagged_in_timeframe:
+          one: "%{count} επιβεβαιωμένη αναφορά"
+          other: "%{count} επιβεβαιωμένες αναφορές"
+        user_activity: "Πληροφορίες χρήστη"
         activities:
           new_account: "νέος λογαριασμός"
           trust_level: "επίπεδο εμπιστοσύνης: %{trustLevelName}"
@@ -863,7 +901,7 @@ el:
         topic_has_solution: "Αυτό το θέμα έχει λύση"
         visibility: "Ορατότητα"
       help:
-        moderation_guide: "Οδηγός εποπτείας Discourse"
+        moderation_guide: "Οδηγός συντονισμού Discourse"
         spam_detection: "Ανίχνευση spam"
       approval:
         title: "Απαιτείται Έγκριση Ανάρτησης"
@@ -1395,6 +1433,7 @@ el:
       color_schemes:
         default_description: "Προεπιλογή θέματος"
         undo: "Επαναφορά"
+        regular: "Φωτεινή λειτουργία"
         dark: "Σκοτεινή λειτουργία"
         interface_mode: "Λειτουργία"
         interface_modes:
@@ -2587,6 +2626,9 @@ el:
         new_message_notification:
           one: "%{count} ειδοποίηση νέου μηνύματος"
           other: "%{count} ειδοποιήσεις νέων μηνυμάτων"
+        new_reviewable:
+          one: "%{count} νέο αναθεωρήσιμο"
+          other: "%{count} νέα αναθεωρήσιμα"
       paused: "Οι ειδοποιήσεις τέθηκαν σε παύση"
       title: "ειδοποιήσεις για αναφορές στο @name, απαντήσεις στις αναρτήσεις σου και στα θέματα σου, προσωπικά μηνύματα, κλπ."
       none: "Αυτή τη στιγμή δεν είναι δυνατόν να φορτωθούν οι ειδοποιήσεις."
@@ -2845,6 +2887,7 @@ el:
         post_number_with_topic_title: "ανάρτηση #%{post_number} - %{title}"
         new_post_in_topic: "νέα δημοσίευση στο %{title}"
         user_requires_approval: "%{username} χρειάζεται έγκριση"
+        default_item: "αναθεωρήσιμο στοιχείο #%{reviewable_id}"
     topics:
       new_messages_marker: "τελευταία επίσκεψη"
       bulk:
@@ -3058,7 +3101,6 @@ el:
       jump_reply_button: "Μετάβαση στην ανάρτηση"
       deleted: "Το θέμα έχει διαγραφεί"
       slow_mode_update:
-        title: "Αργή Λειτουργία"
         select: "Οι χρήστες μπορούν να δημοσιεύσουν σε αυτό το θέμα μόνο μία φορά κάθε:"
         description: "Για να προωθηθεί η στοχαστική συζήτηση σε γρήγορα κινούμενες ή αμφιλεγόμενες συζητήσεις, οι χρήστες πρέπει να περιμένουν πριν δημοσιεύσουν ξανά σε αυτό το θέμα."
         enable: "Ενεργοποίηση"
@@ -3683,18 +3725,11 @@ el:
         delete: "Σβήσιμο"
         add: "Προσθήκη απαιτούμενης ομάδας ετικετών"
       topic_featured_link_allowed: "Επίτρεψε προτεινόμενους συνδέσμους σε αυτή την κατηγορία"
-      delete: "Διαγραφή Κατηγορίας"
-      create: "Νέα Κατηγορία"
       create_long: "Δημιουργία νέας κατηγορίας"
-      save: "Αποθήκευση Κατηγορίας"
-      slug: "Φιλικό Όνομα Κατηγορίας"
       slug_placeholder: "(Προαιρετικά) λέξεις ενωμένες με παύλα για το URL"
       creation_error: Παρουσιάστηκε κάποιο σφάλμα κατά την δημιουργία της κατηγορίας
       save_error: Παρουσιάστηκε κάποιο σφάλμα κατά την αποθήκευση της κατηγορίας.
-      name: "Όνομα Κατηγορίας"
       description: "Περιγραφή"
-      logo: "Εικονίδιο Κατηγορίας"
-      background_image: "Εικόνα Φόντου Κατηγορίας"
       background_color: "Χρώμα"
       color_validations:
         cant_be_empty: "δεν μπορεί να είναι άδειο"
@@ -3708,9 +3743,7 @@ el:
       color_placeholder: "Οποιοδήποτε χρώμα"
       delete_confirm: "Είσαι σίγουρος ότι θέλεις να διαγράψεις αυτή την κατηγορία;"
       delete_error: "Παρουσιάστηκε κάποιο σφάλμα κατά τη διαγραφή της κατηγορίας."
-      list: "Λίστα Κατηγοριών"
       no_description: "Παρακαλώ πρόσθεσε μια περιγραφή στην κατηγορία"
-      change_in_category_topic: "Επεξεργασία Περιγραφής"
       already_used: "Αυτό το χρώμα έχει χρησιμοποιηθεί σε άλλη κατηγορία"
       security: "Ασφάλεια"
       security_add_group: "Προσθήκη ομάδας"
@@ -3734,20 +3767,14 @@ el:
       subcategory_num_featured_topics: "Αριθμός προτεινόμενων νημάτων στην σελίδα της γονικής κατηγορίας:"
       all_topics_wiki: "Κάντε τα νέα θέματα wikis από προεπιλογή"
       subcategory_list_style: "Μορφή Λίστας Υποκατηγορίων:"
-      sort_order: "Ταξινόμηση Λίστας Θεμάτων:"
-      default_view: "Προκαθορισμένη Λίστα Νημάτων:"
-      default_top_period: "Προκαθορισμένη Περίοδος Κορυφαίων:"
-      default_list_filter: "Προεπιλεγμένο φίλτρο λίστας:"
       allow_badges_label: "Να επιτρέπεται η απονομή παράσημων σε αυτή την κατηγορία"
-      edit_permissions: "Επεξεργασία Δικαιωμάτων"
+      reviewable_by_group: "Εκτός από το προσωπικό, το περιεχόμενο αυτής της κατηγορίας μπορεί επίσης να αναθεωρηθεί από:"
       review_group_name: "όνομα ομάδας"
       require_topic_approval: "Απαιτήστε έγκριση συντονιστή για όλα τα νέα θέματα"
       require_reply_approval: "Απαιτήστε έγκριση συντονιστή για όλες τις νέες απαντήσεις"
       this_year: "φέτος"
       position: "Θέση στη σελίδα κατηγοριών:"
-      default_position: "Προκαθορισμένη Θέση"
       minimum_required_tags: "Ελάχιστος αριθμός ετικετών που απαιτούνται σε ένα θέμα:"
-      parent: "Μητρική Κατηγορία"
       num_auto_bump_daily: "Αριθμός ανοιχτών θεμάτων για αυτόματη ώθηση καθημερινά:"
       navigate_to_first_post_after_read: "Μεταβείτε στην πρώτη ανάρτηση μετά την ανάγνωση των θεμάτων"
       notifications:
@@ -3764,18 +3791,14 @@ el:
         muted:
           title: "Σε σιγή"
       search_priority:
-        label: "Προτεραιότητα αναζήτησης"
         options:
           normal: "Φυσιολογικό"
           ignore: "Αγνόηση"
-          very_low: "Πολύ χαμηλή"
           low: "Χαμηλή"
           high: "Υψηλή"
-          very_high: "Πολύ υψηλή"
       sort_options:
         default: "προεπιλογή"
         likes: "Αρέσει"
-        op_likes: "\"Μου αρέσει\" Αρχικής Ανάρτησης"
         views: "Προβολές"
         posts: "Αναρτήσεις"
         activity: "Δραστηριότητα"
@@ -3795,8 +3818,7 @@ el:
         appearance: "Εμφάνιση"
         email: "Διεύθυνση Email"
       list_filters:
-        all: "όλα τα θέματα"
-        none: "χωρίς υποκατηγορίες"
+        all: "Όλα τα θέματα"
     anonymous_flagging:
       title: "Αναφορά παράνομου περιεχομένου"
       description: "Για να αναφέρετε παράνομο περιεχόμενο, παρακαλούμε επικοινωνήστε στο <a href='mailto:%{email}?subject=Illegal content: %{topic_title}&body=This post %{url} contains illegal content.'>%{email}</a>"
@@ -3984,7 +4006,7 @@ el:
         title: "Κορυφαία"
         help: "τα πιο ενεργά θέματα τον τελευταίο χρόνο, μήνα, εβδομάδα ή μέρα"
         all:
-          title: "Από πάντα"
+          title: "Συνολικά"
         yearly:
           title: "Ετήσια"
         quarterly:
@@ -3995,7 +4017,7 @@ el:
           title: "Εβδομαδιαία"
         daily:
           title: "Ημερήσια"
-        all_time: "Από πάντα"
+        all_time: "Συνολικά"
         this_year: "Χρόνος"
         this_quarter: "Τέταρτο"
         this_month: "Μήνας"
@@ -4262,16 +4284,11 @@ el:
           description: "Δε θα ειδοποιηθείτε για τίποτα σχετικά με νέα θέματα με αυτήν την ετικέτα και δε θα εμφανίζονται στην καρτέλα αδιάβαστων σας."
       groups:
         back_btn: "Επιστροφή σε όλες τις ετικέτες"
-        title: "Ομάδες Ετικετών"
         about_heading: "Επιλέξτε μια ομάδα ετικετών ή δημιουργήστε μια νέα"
         about_heading_empty: "Δημιουργήστε μια νέα ομάδα ετικετών για να ξεκινήσετε"
-        new: "Νέα Ομάδα"
-        new_title: "Δημιουργία Νέας Ομάδας"
-        edit_title: "Επεξεργασία Ομάδας Ετικετών"
         tags_label: "Ετικέτες σε αυτή την ομάδα"
         parent_tag_label: "Μητρική ετικέτα"
         one_per_topic_label: "Περιορισμός μιας ετικέτας ανά θέμα από αυτή την ομάδα"
-        new_name: "Νέα Ομάδα Ετικετών"
         name_placeholder: "Όνομα"
         save: "Αποθήκευση"
         delete: "Διαγραφή"
@@ -4633,6 +4650,21 @@ el:
         fonts:
           backfill_modal:
             modal_yes: "Ναι"
+        welcome_banner:
+          form:
+            page_visibility:
+              options:
+                top_menu_pages: "Σελίδες μενού κορυφής"
+                all_pages: "Όλες οι σελίδες"
+            location:
+              label: "Τοποθεσία"
+              options:
+                above_topic_content: "Πάνω από το περιεχόμενο του θέματος"
+                below_site_header: "Κάτω από την κεφαλίδα του ιστότοπου"
+            header_logged_in:
+              placeholder: "Καλώς ήρθες πίσω, %{preferred_display_name}!"
+            header_anonymous:
+              placeholder: "Καλώς ήλθατε στην %{site_name}!"
         navigation:
           title: "Πλοήγηση"
         notifications:
@@ -5001,6 +5033,10 @@ el:
           user_destroyed: "Χρήστης διαγράφηκε"
           user_suspended: "Χρήστης έχει τεθεί σε αναστολή"
           user_unsuspended: "Χρήστης έχει βγει από αναστολή"
+        reviewable_event:
+          group_name: "Αναθεωρήσιμα Συμβάντα"
+          reviewable_created: "Το αναθεωρήσιμο στοιχείο είναι έτοιμο"
+          reviewable_updated: "Το αναθεωρήσιμο στοιχείο έχει ενημερωθεί"
         user_badge_event:
           group_name: "Συμβάντα παρασήμων"
           user_badge_granted: "Παράσημο χρήστη χορηγήθηκε"
@@ -5736,7 +5772,6 @@ el:
           success: "Επιτυχία"
           exists: "Υπάρχει ήδη"
           upload: "Προσθήκη από αρχείο"
-          upload_successful: "Επιτυχημένη μεταφόρτωση. Οι λέξεις προστέθηκαν."
           html_label: "HTML"
         test:
           button_label: "Δοκιμή"

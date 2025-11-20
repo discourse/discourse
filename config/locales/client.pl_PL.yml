@@ -1003,7 +1003,7 @@ pl_PL:
         note_added_by: "Uwaga moderatora %{username} - %{relativeDate}"
         no_events: "Brak zdarzeń na osi czasu do wyświetlenia"
       notes:
-        add_note_description: "Widoczne tylko dla moderatorów. Użyj tej uwagi, aby dodać kontekst lub decyzje dotyczące przeglądu."
+        add_note_description: "Dodaj uwagę, aby zapewnić kontekst innym moderatorom."
         add_note_button: "Dodaj uwagę"
         placeholder: "Tutaj napisz swoją uwagę..."
         chars_remaining: "Pozostałe znaki: %{count}"
@@ -3675,7 +3675,7 @@ pl_PL:
           few: "Postęp: <strong>%{count}</strong> tematy"
           many: "Postęp: <strong>%{count}</strong> tematów"
           other: "Postęp: <strong>%{count}</strong> tematów"
-        silent: "Wykonaj tę akcję po cichu."
+        notify: "Powiadom użytkowników o tej zmianie."
         performing: "Wykonywanie operacji zbiorczych, proszę czekać…"
         completed: "Operacje masowe zakończone pomyślnie!"
       none:
@@ -4622,7 +4622,7 @@ pl_PL:
         description: "Wymagaj, aby nowe tematy miały tagi z grup tagów:"
         delete: "Usuń"
         add: "Dodaj wymaganą grupę tagów"
-        placeholder: "wybierz grupę tagów…"
+        placeholder: "Wybierz grupę tagów…"
       topic_featured_link_allowed: "Zezwól na wybrane linki w tej kategorii"
       delete: "Usuń kategorię"
       create: "Nowa kategoria"
@@ -4661,7 +4661,7 @@ pl_PL:
       color_placeholder: "Dowolny kolor sieciowy"
       delete_confirm: "Czy na pewno chcesz usunąć tę kategorię?"
       delete_error: "Podczas próby usunięcia tej kategorii wystąpił błąd."
-      list: "Pokaż kategorie"
+      list: "Wymień kategorie"
       no_description: "Proszę dodaj opis do tej kategorii."
       change_in_category_topic: "Edytuj opis"
       already_used: "Ten kolor jest używany przez inną kategorię"
@@ -4694,7 +4694,7 @@ pl_PL:
       all_topics_wiki: "Twórz nowe tematy domyślnie jako wiki"
       allow_unlimited_owner_edits_on_first_post: "Zezwalaj na nieograniczone edycje właściciela pierwszego postu"
       subcategory_list_style: "Styl listy podkategorii:"
-      sort_order: "Sortuj listę wątków po:"
+      sort_order: "Sortuj listę tematów według:"
       default_view: "Domyślna lista wątków:"
       default_top_period: "Domyślny okres wyświetlania najlepszych postów:"
       default_list_filter: "Domyślny filtr listy:"
@@ -4710,7 +4710,7 @@ pl_PL:
       position_disabled: "Kategorie będą wyświetlane w kolejności aktywności. Aby kontrolować kolejność kategorii na listach, włącz ustawienie <a href='%{url}'>'fixed category positions'</a>."
       minimum_required_tags: "Minimalna liczba tagów wymaganych w temacie:"
       default_slow_mode: 'Włącz „Tryb powolny” dla nowych tematów w tej kategorii.'
-      parent: "Kategoria rodzica"
+      parent: "Kategoria nadrzędna"
       num_auto_bump_daily: "Liczba otwartych tematów do automatycznego podbicia każdego dnia"
       auto_bump_cooldown_days: "Minimalna liczba dni przed ponownym podbiciem tego samego tematu:"
       navigate_to_first_post_after_read: "Przejdź do pierwszego postu po przeczytaniu tematów"
@@ -4763,8 +4763,8 @@ pl_PL:
         appearance: "Wygląd"
         email: "E-mail"
       list_filters:
-        all: "wszystkie tematy"
-        none: "brak podkategorii"
+        all: "Wszystkie tematy"
+        none: "Brak podkategorii"
       colors_disabled: "Nie możesz wybrać kolorów, ponieważ nie masz stylu kategorii."
     anonymous_flagging:
       title: "Zgłoś nielegalną treść"
@@ -5344,11 +5344,11 @@ pl_PL:
           description: "Nie będziesz powiadamiany o niczym dotyczącym nowych tematów z tym tagiem i nie pojawią się na liście aktualnych."
       groups:
         back_btn: "Powrót do wszystkich tagów"
-        title: "Tagi grup"
+        title: "Grupa tagów:"
         about_heading: "Wybierz grupę tagów lub utwórz nową"
         about_heading_empty: "Aby rozpocząć, utwórz nową grupę tagów"
         about_description: "Grupy tagów pomagają zarządzać uprawnieniami dla wielu tagów w jednym miejscu."
-        new: "Nowa Grupa"
+        new: "Nowa grupa"
         new_title: "Utwórz nową grupę"
         edit_title: "Edytuj grupę tagów"
         tags_label: "Tagi w tej grupie"
@@ -6039,6 +6039,57 @@ pl_PL:
               other: "Zaktualizowano domyślny rozmiar tekstu. Czy chcesz zastosować tę zmianę do %{count} istniejących użytkowników?"
             modal_yes: "Tak"
             modal_no: "Nie, aplikuj tylko w przyszłości"
+        welcome_banner:
+          title: "Baner powitalny"
+          header_description: "Skonfiguruj baner zawierający pasek wyszukiwania wyświetlany osobom odwiedzającym Twoją witrynę."
+          saved: "Ustawienia banera powitalnego zostały pomyślnie zapisane."
+          form:
+            enabled_themes:
+              label: "Włączone w motywach..."
+              description: "Wybierz motywy, które mają wyświetlać baner. Wyświetlane są tylko aktywne motywy."
+            background_image:
+              label: "Obraz tła"
+              description: "Ten obraz będzie wyświetlany za tekstem baneru."
+            text_color:
+              label: "Kolor tekstu"
+            page_visibility:
+              label: "Widoczność strony"
+              description: "Wybierz miejsce, w którym baner ma być wyświetlany."
+              options:
+                top_menu_pages: "Strony menu głównego"
+                homepage: "Tylko strona główna"
+                discovery: "Strony odkrywania"
+                all_pages: "Wszystkie strony"
+            location:
+              label: "Lokalizacja"
+              description: "Wybierz miejsce na stronie, w którym baner ma się pojawić."
+              options:
+                above_topic_content: "Powyżej treści tematu"
+                below_site_header: "Poniżej nagłówka witryny"
+            text_section:
+              title: "Tekst do dostosowania"
+              variables: "Możesz używać tych zmiennych w swoim tekście: <code>&percnt;{preferred_display_name}</code>, <code>&percnt;{site_name}</code>"
+            header_new_members:
+              label: "Nagłówek dla nowych członków"
+              placeholder: "Witaj w %{site_name}, %{preferred_display_name}!"
+            header_logged_in:
+              label: "Nagłówek dla zalogowanych członków"
+              placeholder: "Witaj z powrotem, %{preferred_display_name}!"
+            header_anonymous:
+              label: "Nagłówek dla anonimowych gości"
+              placeholder: "Witaj na %{site_name}!"
+            subheader_logged_in:
+              label: "Podtytuł dla zalogowanych członków"
+              description: "Tekst pomocniczy wyświetlany pod nagłówkiem dla zalogowanych użytkowników."
+              placeholder: "Sprawdź, co nowego w społeczności"
+            subheader_anonymous:
+              label: "Podtytuł dla anonimowych gości"
+              description: "Tekst pomocniczy wyświetlany pod nagłówkiem dla anonimowych użytkowników."
+              placeholder: "Dołącz do naszej społeczności, aby uczestniczyć w dyskusjach"
+            search_placeholder:
+              label: "Miejsce zastępcze wyszukiwania"
+              description: "Tekst zastępczy pola wyszukiwania w banerze powitalnym."
+              placeholder: "Szukaj tematów..."
         navigation:
           title: "Nawigacja"
           header_description: "Skonfiguruj łącza nawigacyjne i elementy menu dla swojej witryny. Obejmuje to lokalizację i zachowanie głównego menu nawigacyjnego, szybkich linków u góry strony głównej, a także paska bocznego administratora"
@@ -7883,7 +7934,7 @@ pl_PL:
           success: "Sukces"
           exists: "Już istnieje"
           upload: "Dodaj z pliku"
-          upload_successful: "Przesyłanie zakończone sukcesem. Słowa zostały dodane."
+          upload_successful: "Przesłanie zakończone powodzeniem. Słowa zostaną wkrótce przetworzone."
           case_sensitivity_label: "Rozróżniana jest wielkość liter"
           case_sensitivity_description: "Tylko słowa z dopasowaną wielkością liter"
           html_label: "HTML"
@@ -7975,8 +8026,8 @@ pl_PL:
             second: "Opcja 2"
             third: "Opcja 3"
         edit_category:
-          toggle_freeform: "szablon formularza wyłączony"
-          toggle_form_template: "szablon formularza włączony"
+          toggle_freeform: "Szablon formularza wyłączony"
+          toggle_form_template: "Szablon formularza włączony"
           select_template: "Wybierz szablony formularzy"
           select_template_help: "Dodaj/edytuj szablony formularzy"
         errors:

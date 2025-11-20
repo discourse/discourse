@@ -11,6 +11,10 @@ ug:
     emotion_neutral:
       title: "\U0001F610 بىتەرەپ"
   discourse_ai:
+    tools:
+      presets:
+        image_generation_custom:
+          name: "ئىختىيارى"
     spam_detection:
       logging_subject: "ئەخلەت ئۇچۇر بايقاش"
     ai_bot:

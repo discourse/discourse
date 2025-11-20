@@ -11,6 +11,10 @@ da:
     emotion_neutral:
       title: "\U0001F610 Neutral"
   discourse_ai:
+    tools:
+      presets:
+        image_generation_custom:
+          name: "Tilpasset"
     ai_bot:
       tool_summary:
         search: "Søg"

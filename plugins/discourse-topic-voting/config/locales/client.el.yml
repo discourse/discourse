@@ -10,7 +10,6 @@ el:
       sort_options:
         votes: "Ψήφοι"
     topic_voting:
-      title: "Ψηφοφορία Θέματος"
       reached_limit: "Έχετε χρησιμοποιήσει όλες τις ψήφους σας, αφαιρέστε μια υπάρχουσα ψήφο!"
       list_votes: "Λίστα των ψήφων σας"
       votes_nav_help: "θέματα με τις περισσότερες ψήφους"
@@ -21,9 +20,6 @@ el:
       voted_title: "Ψήφισα"
       voting_closed_title: "Κλειστή"
       voting_limit: "Όριο"
-      votes_left_button_title:
-        one: "Έχετε %{count} ψήφο ακόμη."
-        other: "Έχετε %{count} ψήφους ακόμη."
       votes:
         one: "%{count} ψήφος"
         other: "%{count} ψήφοι"

@@ -1295,7 +1295,6 @@ vi:
     heading_font: "Phông chữ để sử dụng cho các tiêu đề trên trang web. Chủ đề có thể ghi đè thông qua thuộc tính tùy chỉnh CSS `--heading-font-family`."
     enable_sitemap: "Tạo sơ đồ trang web cho trang web của bạn và đưa nó vào tệp robots.txt."
     sitemap_page_size: "Số lượng URL để bao gồm trong mỗi trang sơ đồ trang web. Tối đa 50.000"
-    short_title: "Tiêu đề ngắn sẽ được sử dụng trên màn hình chính, trình khởi chạy của người dùng hoặc những nơi khác mà không gian có thể bị hạn chế. Nó nên được giới hạn trong 12 ký tự."
     dashboard_hidden_reports: "Cho phép ẩn các báo cáo đã chỉ định khỏi bảng điều khiển."
     dashboard_visible_tabs: "Chọn tab bảng điều khiển nào được hiển thị."
     dashboard_general_tab_activity_metrics: "Chọn các báo cáo sẽ được hiển thị dưới dạng chỉ số hoạt động trên tab chung."

@@ -232,8 +232,10 @@ tr_TR:
           name: "Döviz kuru"
         stock_quote:
           name: "Hisse senedi fiyat teklifi (AlphaVantage)"
-        image_generation:
-          name: "Flux görüntü oluşturucu (Together.ai)"
+        image_generation_custom:
+          name: "Özel"
+        image_generation_openai:
+          name: "OpenAI"
         empty_tool:
           name: "Boştan başla..."
       name:
@@ -250,10 +252,6 @@ tr_TR:
         explain: "Açıkla"
         illustrate_post: "Gönderiyi çiz"
         replace_dates: "Akıllı tarihler"
-      painter:
-        attribution:
-          stable_diffusion_xl: "Stable Diffusion XL'den görüntü"
-          dall_e_3: "DALL-E 3'den görüntü"
       image_caption:
         attribution: "Alt yazı YZ tarafından hazırlandı"
     share_ai:
@@ -346,7 +344,6 @@ tr_TR:
           description: "Yardımcının Markdown tablosu oluşturma özelliğini destekleyen varsayılan kişilik"
         post_illustrator:
           name: "Gönderi illüstratörü"
-          description: "Yardımcının resimli gönderi özelliğini desteklemek için StableDiffusion istemleri üretir"
         proofreader:
           name: "Düzeltmen"
           description: "Yardımcının metni düzeltme özelliğini destekleyen varsayılan kişilik"

@@ -9,6 +9,10 @@ vi:
     overall_sentiment:
       yaxis: "Ngày"
   discourse_ai:
+    tools:
+      presets:
+        image_generation_custom:
+          name: "Tùy biến"
     spam_detection:
       logging_subject: "Phát hiện rác rưởi"
     ai_bot:

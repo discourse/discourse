@@ -10,7 +10,6 @@ zh_CN:
       sort_options:
         votes: "投票"
     topic_voting:
-      title: "话题投票"
       reached_limit: "您无法再投票了，请移除现有投票！"
       list_votes: "列出您的投票"
       votes_nav_help: "得票最多的话题"
@@ -21,10 +20,6 @@ zh_CN:
       voted_title: "已投票"
       voting_closed_title: "已关闭"
       voting_limit: "限制"
-      votes_left:
-        other: "您还有 %{count} 次投票机会，查看<a href='%{path}'>您的投票</a>。"
-      votes_left_button_title:
-        other: "您还有 %{count} 次投票机会。"
       votes:
         other: "%{count} 票"
       anonymous_button:

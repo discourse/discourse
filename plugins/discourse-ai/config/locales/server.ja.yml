@@ -231,8 +231,10 @@ ja:
           name: "為替レート"
         stock_quote:
           name: "株価 (AlphaVantage)"
-        image_generation:
-          name: "Flux 画像ジェネレーター (Together.ai)"
+        image_generation_custom:
+          name: "カスタム"
+        image_generation_openai:
+          name: "OpenAI"
         empty_tool:
           name: "空白から始める..."
       name:
@@ -249,10 +251,6 @@ ja:
         explain: "説明"
         illustrate_post: "イラスト投稿"
         replace_dates: "スマート日付"
-      painter:
-        attribution:
-          stable_diffusion_xl: "Stable Diffusion XL による画像"
-          dall_e_3: "DALL-E 3 による画像"
       image_caption:
         attribution: "AI によるキャプション"
     share_ai:
@@ -345,7 +343,6 @@ ja:
           description: "ヘルパーの Markdown テーブルの生成機能を強化するデフォルトのペルソナ"
         post_illustrator:
           name: "イラスト投稿ツール"
-          description: "ヘルパーのイラスト投稿機能を強化する StableDiffusion プロンプトを生成しあｍす"
         proofreader:
           name: "校正ツール"
           description: "ヘルパーのテキストの校正機能を強化するデフォルトのペルソナ"

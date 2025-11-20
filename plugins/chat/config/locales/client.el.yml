@@ -186,6 +186,7 @@ el:
           category: "Κατηγορία"
           topic: "Θέμα"
       reviewable:
+        type: "Μήνυμα συνομιλίας"
         message_in_channel: "Κανάλι"
       composer:
         italic_text: "κείμενο σε έμφαση"
@@ -285,3 +286,10 @@ el:
           fields:
             message:
               label: Μήνυμα
+    review:
+      types:
+        chat_reviewable_message:
+          title: "Αναφερόμενο Μήνυμα Συνομιλίας"
+        reviewable_chat_message:
+          title: "Αναφερόμενο μήνυμα συνομιλίας"
+          noun: "μήνυμα συνομιλίας"

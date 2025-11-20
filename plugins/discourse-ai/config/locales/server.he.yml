@@ -111,6 +111,8 @@ he:
     ai_bot_allowed_groups: "כאשר לבוט של GPT יש גישה להודעות הפרטיות, הוא יגיב לחברים בקבוצות האלה."
     ai_bot_debugging_allowed_groups: "לאפשר לקבוצות האלו לצפות בכפתור ניפוי שיאות שמציג את בקשת ותגובה הבינה המלאכותית באופן גולמי"
     ai_bot_public_sharing_allowed_groups: "לאפשר לקבוצות האלה לשתף הודעות אישיות של בינה למאכותית עם הציבור באמצעות קישור ייחודי גלוי לציבור. הערה: אם האתר שלך דורש כניסה, גם שיתופים ידרשו כניסה."
+    ai_bot_add_to_header: "הצגת כפתור בכותרת כדי לפתוח הודעה פרטית עם בוט בינה מלאכותית"
+    ai_bot_add_to_community_section: "הצגת קישור בסרגל הצד כדי לפתוח הודעה פרטית עם בוט בינה מלאכותית"
     ai_bot_github_access_token: "אסימון גישה ל־GitHub לשימוש עם כלי הבינה המלאכותית של GitHub (נחוץ לתמיכה בחיפוש)"
     ai_discover_enabled: "הפעלת יכולת חיפוש גילוי"
     ai_discover_persona: "דמות לשימוש ליכולת חיפוש גילוי"
@@ -127,7 +129,10 @@ he:
     ai_discord_allowed_guilds: "גילדות (שרתי) Discord בהן מותר לבוט לחפש"
     ai_translation_enabled: "הפעלת יכולת תרגום עם בינה מלאכותית"
     ai_translation_model: "המודל לשימוש לתרגום. המודל הזה חייב לתמוך בתרגום. הדמויות יכולות לדרוס את ההגדרה הזאת."
+    ai_translation_backfill_limit_to_public_content: "כשהאפשרות פעילה, רק תוכן בקטגוריות ציבוריות יתורגם. כשהאפשרות מושבתת, התוכן בהודעות קבוצתיות פרטיות וקטגוריות פרטיות יישלח גם הוא לתרגום."
     ai_translation_max_post_length: "מספר התווים המרבי בפוסט לתרגום. פוסטים ארוכים מהערך הזה לא יתורגמו."
+    ai_translation_backfill_max_age_days: "הגיל המרבי של פוסט ונושא לתרגום. פוסטים ונושאים שהם ותיקים יותר ממשך הזמן הזה לא יתורגמו. 0 משבית מילוי לאחור אבל לא משבית תרגום של פוסטים חדשים."
+    ai_translation_backfill_hourly_rate: "מספר הפוסטים והנושאים לתרגום לשעה במהלך פעולות מילוי לאחור. יש להגדיר ל־0 כדי להשבית מילוי לאחור של תרגומים אוטומטית לתוכן קיים."
   reviewables:
     reasons:
       flagged_by_toxicity: תוסף הבינה המלאכותית סימן את זה לאחר סיווג כרעיל.
@@ -243,8 +248,10 @@ he:
           name: "שער חליפין"
         stock_quote:
           name: "מחיר המניה (AlphaVantage)"
-        image_generation:
-          name: "מחולל תמונות Flux‏ (Together.ai)"
+        image_generation_custom:
+          name: "מותאם"
+        image_generation_openai:
+          name: "OpenAI"
         empty_tool:
           name: "התחלה מאפס…"
       name:
@@ -252,6 +259,7 @@ he:
     ai_helper:
       errors:
         completion_request_failed: "משהו השתבש במהלך הניסיון לספק הצעות. נא לנסות שוב."
+        credit_limit_exceeded_bot: "תגובות בינה מלאכותית אינן זמינות כרגע עקב מגבלות אסימונים. נא לנסות שוב %{reset_time}."
       prompts:
         translate: תרגום ל%{language}
         generate_titles: הצעת כותרות לנושא
@@ -261,10 +269,6 @@ he:
         explain: "הסבר"
         illustrate_post: "איור פוסט"
         replace_dates: "תאריכים חכמים"
-      painter:
-        attribution:
-          stable_diffusion_xl: "תמונה מאת Stable Diffusion XL"
-          dall_e_3: "תמונה מאת DALL-E 3"
       image_caption:
         attribution: "הכותרת נוספה ע״י בינה מלאכותית"
     share_ai:
@@ -355,7 +359,6 @@ he:
           description: "דמות ברירת מחדל שעליה פועלת יכולת יצירת הטבלאות ב־Markdown של המסייע"
         post_illustrator:
           name: "איור פוסטים"
-          description: "מייצר הנחיות ל־StableDiffusion כדי לתפעל את יכולת איור הפוסטים של המסייע"
         proofreader:
           name: "הגהה"
           description: "דמות ברירת מחדל שעליה פועלת יכולת הגהת הטקסט של המסייע"

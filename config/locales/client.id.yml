@@ -1963,9 +1963,7 @@ id:
         remove: "Hapus"
       required_tag_group:
         delete: "Hapus"
-      name: "Nama Kategori"
       description: "Deskripsi"
-      background_image_dark: "Gambar Latar Belakang Kategori Gelap"
       color_validations:
         cant_be_empty: "tidak boleh kosong"
       permissions:
@@ -2002,7 +2000,7 @@ id:
         general: "Umum"
         email: "Email"
       list_filters:
-        all: "semua topik"
+        all: "Semua topik"
     flagging:
       take_action_options:
         suspend:
@@ -2091,8 +2089,8 @@ id:
         help: "topik terakhir di kategori %{categoryName}"
       top:
         all:
-          title: "Sepanjang Waktu"
-        all_time: "Sepanjang Waktu"
+          title: "Sepanjang Masa"
+        all_time: "Sepanjang Masa"
     custom_homepage:
       admin_message: 'Salah satu tema Anda telah mengaktifkan pengubah "custom_homepage" tetapi tidak menampilkan apa pun di konektor [custom-homepage]. (Pesan ini hanya ditampilkan kepada administrator situs.)'
     preloader_text: "Memuat"
@@ -2338,6 +2336,12 @@ id:
         fonts:
           backfill_modal:
             modal_yes: "Ya"
+        welcome_banner:
+          form:
+            location:
+              label: "Lokasi"
+            header_anonymous:
+              placeholder: "Selamat datang ke %{site_name}!"
         navigation:
           title: "Navigasi"
         notifications:

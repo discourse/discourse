@@ -18,7 +18,6 @@ ur:
         title: "سانچے (ایک متن علاقہ کے اندر)"
         insert_template: "%{shortcut} سانچہ ڈالیں"
     templates:
-      filter_hint: "عنوان کے لحاظ سے فلٹر۔۔۔"
       insert_template: "سانچہ ڈالیں"
       close_templates: "سانچے منتخب کرنے کو بند کریں۔"
       copy: "سانچہ کاپی"

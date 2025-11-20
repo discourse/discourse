@@ -136,7 +136,7 @@ pl_PL:
       email_frequency:
         description: "Wyślemy Ci wiadomość e-mail tylko wtedy, gdy nie widzieliśmy Cię w ciągu ostatnich 15 minut."
         never: "Nigdy"
-        title: "Powiadomienia e-mail"
+        title: "Wyślij mi wiadomość e-mail, gdy otrzymam bezpośrednią wiadomość na czacie lub czacie grupowym."
         when_away: "Tylko gdy jesteś daleko"
       header_indicator_preference:
         title: "Pokaż wskaźnik aktywności w nagłówku"

@@ -11,6 +11,10 @@ ca:
     emotion_neutral:
       title: "\U0001F610 Neutre"
   discourse_ai:
+    tools:
+      presets:
+        image_generation_custom:
+          name: "Personalitzat"
     ai_bot:
       tool_summary:
         search: "Cerca"

@@ -1653,7 +1653,6 @@ hu:
     allow_duplicate_topic_titles_category: "Engedélyezi az azonos, duplikált címekkel rendelkező témákat, ha a kategória eltérő. allow_duplicate_topic_titles letiltva kell lennie."
     unique_posts_mins: "Hány percnek kell eltelnie, mielőtt egy felhasználó újra ugyanazzal a tartalommal tehet közzé bejegyzést"
     educate_until_posts: "Amikor a felhasználó elkezdi gépelni az első (n) új bejegyzését, mutassa meg az új felhasználói oktatópanel felugró ablakot a szerkesztőben."
-    title: "Az oldal neve. Minden látogató számára látható, beleértve a névtelen felhasználókat is."
     site_description: "Jellemezze az oldalt egy mondatban. Minden látogató számára látható, beleértve a névtelen felhasználókat is."
     short_site_description: "Rövid leírás néhány szóban. Minden látogató számára látható, beleértve a névtelen felhasználókat is."
     contact_email: "Az oldalért felelős fő kapcsolattartó e-mail címe. Kritikus értesítésekhez használatos, és a <a href='%{base_path}/about' target='_blank'>/about</a> oldalon is megjelenik. Névtelen felhasználók számára látható a nyilvános webhelyeken."
@@ -2123,7 +2122,6 @@ hu:
     allow_all_users_to_flag_illegal_content: "A névtelen felhasználók látni fogják az illegális tartalom adminisztrátorok felé való jelzéséhez szükséges információkat. Ez a beállítás elsőbbséget élvez az „bejegyzéseket megjelölhető csoportokkal” szemben."
     email_address_to_report_illegal_content: "Ha üresen hagyja, az alapértelmezett webhelyadminisztrátori e-mail-cím kerül felhasználásra."
     cooldown_hours_until_reflag: "Mennyi időt kell várniuk a felhasználóknak, amíg újra megjelölhetnek egy bejegyzést."
-    slow_mode_prevents_editing: "A „Lassú mód” megakadályozza a szerkesztést az editing_grace_period után?"
     reply_by_email_enabled: "Aktiválja azt a funkciót, amely lehetővé teszi a felhasználók számára, hogy közvetlenül e-mailben válaszoljanak a témákra, ahelyett, hogy be kellene jelentkezniük a webhelyre. További információért lásd <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>a Meta</a> útmutatóját."
     reply_by_email_address: "Válaszsablon e-mail bejövő e-mail címre, például: %%{reply_key}@reply.example.com vagy válaszok+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Alternatív sablonok listája a bejövő e-mail-címekre történő válaszadáshoz. Példa: %%{reply_key}@reply.example.com|válaszok+%%{reply_key}@example.com"
@@ -2430,7 +2428,6 @@ hu:
     sitemap_page_size: "Az egyes oldaltérkép oldalakba belefoglalandó URL-ek száma. Maximum 50.000"
     enable_user_status: "A felhasználók egyéni állapotüzenetet állíthatnak be (emoji + leírás)."
     enable_user_tips: "Új felhasználói tippek engedélyezése, amelyek ismertetik a legfontosabb funkciókat a felhasználók számára."
-    short_title: "A rövid cím a felhasználó kezdőképernyőjén, az indítóképernyőn vagy más olyan helyeken kerül felhasználásra, ahol a hely korlátozott lehet. 12 karakterre kell korlátozni."
     dashboard_hidden_reports: "Engedélyezze a megadott jelentések elrejtését a vezérlőpulton."
     dashboard_visible_tabs: "Válassza ki, hogy a vezérlőpult mely lapjai legyenek láthatóak."
     dashboard_general_tab_activity_metrics: "Válassza ki azokat a jelentéseket, amelyek aktivitási mutatóként jelenjenek meg az általános fülön."
@@ -3584,14 +3581,9 @@ hu:
     user_automatically_silenced:
       title: "A felhasználó automatikusan elnémítva"
       subject_template: "Az új felhasználó %{username} közösségi megjelölések által elnémítva"
-      text_body_template: |
-        Ez egy automatikus üzenet.
-
-        Az új felhasználó [%{username}](%{user_url}) automatikusan elnémult, mert több felhasználó megjelölte a %{username} bejegyzését(bejegyzéseit).
-
-        Kérjük, [tekintse át a jelöléseket](%{base_url}/review). Ha a %{username} tévesen lett elhallgattatva a bejegyzésektől, kattintson az elhallgatás megszüntetése gombra [a felhasználó adminisztrációs oldalán](%{user_url}).
-
-        Ez a küszöbérték a `silence_new_user` oldal beállításain keresztül módosítható.
+    user_automatically_silenced_with_reason:
+      title: "A felhasználó automatikusan elnémítva"
+      subject_template: "Az új felhasználó %{username} közösségi megjelölések által elnémítva"
     spam_post_blocked:
       title: "Spam bejegyzés blokkolva"
       subject_template: "Új felhasználó %{username} bejegyzései blokkolva az ismétlődő linkek miatt"
@@ -5234,7 +5226,6 @@ hu:
         title: "Bejegyzés elvetése"
         complete: "Bejegyzés elvetve."
       revise_and_reject_post:
-        title: "Bejegyzés felülvizsgálata..."
         complete: "A bejegyzés elutasítva, felülvizsgálatra vár."
       ignore:
         title: "Letiltás"

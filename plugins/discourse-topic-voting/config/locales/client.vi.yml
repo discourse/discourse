@@ -20,8 +20,6 @@ vi:
       voted_title: "Đã bình ch"
       voting_closed_title: "Đã "
       voting_limit: "Giới h"
-      votes_left_button_title:
-        other: "Bạn còn %{count} phiếu bầu"
       votes:
         other: "%{count} phiếu bầu"
       anonymous_button:

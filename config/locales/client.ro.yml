@@ -848,7 +848,6 @@ ro:
         note_added_by: "Notă moderator de la %{username} · %{relativeDate}"
         no_events: "Nu există evenimente cronologice de afișat"
       notes:
-        add_note_description: "Vizibil doar pentru moderatori. Folosește această notă pentru a adăuga context sau decizii cu privire la revizuire."
         add_note_button: "Adaugă notă"
         placeholder: "Scrie-ți nota aici..."
         chars_remaining: "%{count} caractere rămase"
@@ -2670,7 +2669,6 @@ ro:
       jump_reply_button: "Sari la articol"
       deleted: "Subiectul a fost șters"
       slow_mode_update:
-        title: "Modul lent"
         select: "Utilizatorii pot posta în acest subiect doar o dată la fiecare:"
         description: "Pentru a promova discuții aprofundate în mișcare rapidă sau controversate, utilizatorii trebuie să aștepte înainte de a posta din nou pe acest subiect."
         enable: "Activează"
@@ -3167,19 +3165,11 @@ ro:
       required_tag_group:
         delete: "Șterge"
       topic_featured_link_allowed: "Permite link-uri promovate în această categorie."
-      delete: "Șterge categorie"
-      create: "Categorie nouă"
       create_long: "Creează o categorie nouă"
-      save: "Salvare categorie"
-      slug: "Categorii propuse"
       slug_placeholder: "(Opțional) cuvinte-punctate pentru url"
       creation_error: A apărut o eroare în timpul creării categoriei.
       save_error: A apărut o eroare in timpul salvării categoriei.
-      name: "Numele categoriei"
-      untitled: "Categorie fără titlu"
       description: "Descriere"
-      logo: " Logo pentru categorie"
-      background_image: "Imaginea de fundal a categoriei"
       style: "Stiluri"
       background_color: "Culoare"
       foreground_color: "Culoare text"
@@ -3199,9 +3189,7 @@ ro:
       color_placeholder: "Orice culoare web"
       delete_confirm: "Sigur dorești să ștergi această categorie?"
       delete_error: "A apărut o eroare la ștergerea acestei categorii."
-      list: "Afișare categoriile"
       no_description: "Adaugă o descriere acestei categorii."
-      change_in_category_topic: "Editează descrierea"
       already_used: "Această culoare este folosită la o altă categorie"
       security: "Securitate"
       permissions:
@@ -3213,15 +3201,10 @@ ro:
       images: "Imagini"
       email_in: "Adresa email de primire preferențială:"
       email_in_allow_strangers: "Acceptă emailuri de la utilizatori anonimi fără cont"
-      sort_order: "Sortează lista de subiecte după:"
-      default_view: "Listă implicită de subiecte:"
       allow_badges_label: "Permite acordarea de ecusoane în această categorie"
-      edit_permissions: "Editează permisiuni"
       review_group_name: "numele grupului"
       require_topic_approval: "Cere obligatoriu aprobarea moderatorilor pentru toate discuțiile noi"
       this_year: "anul acesta"
-      default_position: "Poziție inițială"
-      parent: "Categorie părinte"
       num_auto_bump_daily: "Numărul de discuții active care pot primi bump zilnic"
       navigate_to_first_post_after_read: "Navighează la prima postare după ce le citești pe celelalte"
       notifications:
@@ -3245,7 +3228,6 @@ ro:
       sort_options:
         default: "implicit"
         likes: "Aprecieri"
-        op_likes: "Aprecieri la postarea originală"
         views: "Vizualizări"
         posts: "Postări"
         activity: "Activitate"
@@ -3261,8 +3243,6 @@ ro:
         general: "General"
         appearance: "Aspect"
         email: "E-mail"
-      list_filters:
-        none: "nicio subcategorie"
     flagging:
       title: "Îți mulțumim că ne menții comunitatea civilă!"
       action: "Semnalează articol"
@@ -3453,7 +3433,7 @@ ro:
         title: "Top"
         help: "o selecție a celor mai bune subiecte din ultimul an, ultima lună sau zi"
         all:
-          title: "Dintotdeauna"
+          title: "Tot timpul"
         yearly:
           title: "Anual"
         quarterly:
@@ -3464,7 +3444,7 @@ ro:
           title: "Săptămânal"
         daily:
           title: "Zilnic"
-        all_time: "Dintotdeauna"
+        all_time: "Tot timpul"
         this_year: "An"
         this_quarter: "Trimestru"
         this_month: "Lună"
@@ -3510,7 +3490,6 @@ ro:
         next_prev: "%{shortcut} Secțiunea următoare/anterioară"
       application:
         title: "Aplicație"
-        create: "%{shortcut} Creează un subiect nou sau un mesaj personal"
         notifications: "%{shortcut} Deschide notificări"
         hamburger_menu: "%{shortcut} Deschide meniul de navigare"
         user_profile_menu: "%{shortcut} Deschide meniu utilizator"
@@ -3644,12 +3623,9 @@ ro:
           title: "Silențios"
           description: "Nu vei fi notificat în legătură cu discuții noi care au această etichetă și ele nu vor fi afișate în tab-ul cu discuții necitite."
       groups:
-        title: "Grupuri de etichete"
-        new: "Grup nou"
         tags_label: "Etichete din acest grup"
         parent_tag_label: "Etichetă părinte"
         one_per_topic_label: "Limitare la o singură etichetă pe subiect din acest grup"
-        new_name: "Grup nou de etichete"
         name_placeholder: "Nume"
         save: "Salvează"
         delete: "Șterge"
@@ -4010,6 +3986,23 @@ ro:
               other: "Ai actualizat dimensiunea implicită a textului. Vrei să aplici această modificare la %{count} de utilizatori existenți?"
             modal_yes: "Da"
             modal_no: "Nu, aplică doar în continuare"
+        welcome_banner:
+          form:
+            text_color:
+              label: "Culoare text"
+            page_visibility:
+              options:
+                top_menu_pages: "Pagini de meniul de sus"
+                all_pages: "Toate paginile"
+            location:
+              label: "Locație"
+              options:
+                above_topic_content: "Deasupra conținutului subiectului"
+                below_site_header: "Sub antetul site-ului"
+            header_logged_in:
+              placeholder: "Bine ai revenit, %{preferred_display_name}!"
+            header_anonymous:
+              placeholder: "Bine ai venit pe %{site_name}!"
         navigation:
           title: "Navigare"
           header_description: "Configurează legăturile de navigare și elementele de meniu pentru site-ul tău. Aceasta include locația și comportamentul meniului principal de navigare, legăturile rapide din partea de sus a paginii de pornire, precum și bara laterală de administrare."

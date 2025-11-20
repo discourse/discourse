@@ -10,7 +10,6 @@ nl:
       sort_options:
         votes: "Stemmen"
     topic_voting:
-      title: "Stemmen over topics"
       reached_limit: "Je hebt geen stemmen meer, verwijder een bestaande stem!"
       list_votes: "Je stemmen weergeven"
       votes_nav_help: "topics met de meeste stemmen"
@@ -21,12 +20,6 @@ nl:
       voted_title: "Gestemd"
       voting_closed_title: "Gesloten"
       voting_limit: "Limiet"
-      votes_left:
-        one: "Je hebt nog %{count} stem, bekijk <a href='%{path}'>je stemmen</a>."
-        other: "Je hebt nog %{count} stemmen, bekijk <a href='%{path}'>je stemmen</a>."
-      votes_left_button_title:
-        one: "Je hebt nog %{count} stem."
-        other: "Je hebt nog %{count} stemmen."
       votes:
         one: "%{count} stem"
         other: "%{count} stemmen"

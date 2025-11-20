@@ -236,8 +236,10 @@ ar:
           name: "سعر الصرف"
         stock_quote:
           name: "أسعار الأسهم (AlphaVantage)"
-        image_generation:
-          name: "مولِّد صور Flux (Together.ai)"
+        image_generation_custom:
+          name: "مخصَّصة"
+        image_generation_openai:
+          name: "OpenAI"
         empty_tool:
           name: "ابدأ من لا شيء..."
       name:
@@ -254,10 +256,6 @@ ar:
         explain: "الشرح"
         illustrate_post: "توضيح المنشور"
         replace_dates: "التواريخ الذكية"
-      painter:
-        attribution:
-          stable_diffusion_xl: "الصورة بواسطة Stable Diffusion XL"
-          dall_e_3: "الصورة بواسطة DALL-E 3"
       image_caption:
         attribution: "تم إنشاء التسمية التوضيحية بالذكاء الاصطناعي"
     share_ai:
@@ -350,7 +348,6 @@ ar:
           description: "الشخصية الافتراضية المسؤولة عن ميزة المساعد في إنشاء جداول Markdown"
         post_illustrator:
           name: "مُوضِّح المنشورات"
-          description: "يولّد مطالبات StableDiffusion لتشغيل ميزة المساعد في توضيح المنشورات"
         proofreader:
           name: "مدقق لغوي"
           description: "الشخصية الافتراضية المسؤولة عن ميزة المساعد في تدقيق النصوص"

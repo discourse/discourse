@@ -18,7 +18,6 @@ fi:
         title: "Mallit (tekstialueella)"
         insert_template: "%{shortcut} Lisää malli"
     templates:
-      filter_hint: "Suodata nimen mukaan..."
       insert_template: "Lisää malli"
       close_templates: "Sulje mallien valitsin"
       copy: "Kopioi malli"

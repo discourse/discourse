@@ -18,7 +18,6 @@ es:
         title: "Plantillas (dentro de un área de texto)"
         insert_template: "%{shortcut} Insertar plantilla"
     templates:
-      filter_hint: "Filtrar por título..."
       insert_template: "Insertar plantilla"
       close_templates: "Cerrar el selector de plantillas"
       copy: "Copiar plantilla"

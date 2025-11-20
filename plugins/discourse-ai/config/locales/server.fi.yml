@@ -232,8 +232,10 @@ fi:
           name: "Vaihtokurssi"
         stock_quote:
           name: "Osakekurssi (AlphaVantage)"
-        image_generation:
-          name: "Flux-kuvageneraattori (Together.ai)"
+        image_generation_custom:
+          name: "Mukautettu"
+        image_generation_openai:
+          name: "OpenAI"
         empty_tool:
           name: "Aloita tyhjästä..."
       name:
@@ -250,10 +252,6 @@ fi:
         explain: "Selitä"
         illustrate_post: "Havainnollista viestiä"
         replace_dates: "Älykkäät päivämäärät"
-      painter:
-        attribution:
-          stable_diffusion_xl: "Kuvan tarjoaa Stable Diffusion XL"
-          dall_e_3: "Kuvan tarjoaa DALL-E 3"
       image_caption:
         attribution: "Tekoälyn laatima kuvateksti"
     share_ai:
@@ -346,7 +344,6 @@ fi:
           description: "Oletuspersoona, jota käytetään Apurin markdown-taulukkogeneraattoriominaisuuteen"
         post_illustrator:
           name: "Viestin havainnollistaja"
-          description: "Luo StableDiffusion-kehotteita Apurin viestien havainnollistamisominaisuudelle"
         proofreader:
           name: "Oikolukija"
           description: "Oletuspersoona, jota käytetään Apurin tekstin oikolukuominaisuuteen"

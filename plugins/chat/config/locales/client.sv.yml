@@ -120,7 +120,6 @@ sv:
       email_frequency:
         description: "Vi skickar bara e-post till dig om vi inte har sett dig under de senaste 15 minuterna."
         never: "Aldrig"
-        title: "E-postaviseringar"
         when_away: "Endast när du är borta"
       header_indicator_preference:
         title: "Visa aktivitetsindikator i sidhuvudet"

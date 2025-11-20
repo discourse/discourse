@@ -232,8 +232,10 @@ it:
           name: "Tasso di cambio"
         stock_quote:
           name: "Quotazione azionaria (AlphaVantage)"
-        image_generation:
-          name: "Generatore di immagini di flusso (Together.ai)"
+        image_generation_custom:
+          name: "Personalizzato"
+        image_generation_openai:
+          name: "OpenAI"
         empty_tool:
           name: "Inizia da zero..."
       name:
@@ -250,10 +252,6 @@ it:
         explain: "Spiega"
         illustrate_post: "Illustra messaggio"
         replace_dates: "Date smart"
-      painter:
-        attribution:
-          stable_diffusion_xl: "Immagine di Stable Diffusion XL"
-          dall_e_3: "Immagine di DALL-E 3"
       image_caption:
         attribution: "Didascalia da IA"
     share_ai:
@@ -346,7 +344,6 @@ it:
           description: "Personaggio predefinito, gestisce la funzionalità di tabelle in markdown dell'assistente"
         post_illustrator:
           name: "Assistente messaggi illustrati"
-          description: "Genera prompt di StableDiffusion per destire la funzionalità di illustrazione messaggi dell'assistente"
         proofreader:
           name: "Assistente correzione di bozze"
           description: "Personaggio predefinito, gestisce la funzionalità di correzione ortografica dell'assistente"

@@ -6,6 +6,10 @@
 
 sr:
   discourse_ai:
+    tools:
+      presets:
+        image_generation_custom:
+          name: "Posebna"
     ai_bot:
       tool_summary:
         search: "Pretraži"
