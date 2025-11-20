@@ -289,6 +289,21 @@
     }
   }
 
+  .reviewable-ip-lookup {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    white-space: nowrap;
+
+    .d-button-label {
+      @include ellipsis;
+    }
+
+    button {
+      justify-content: left;
+    }
+  }
+
   &__assigned {
     display: flex;
     align-items: center;

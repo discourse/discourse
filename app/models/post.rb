@@ -12,11 +12,6 @@ class Post < ActiveRecord::Base
   include Localizable
   include HasPostUploadReferences
 
-  self.ignored_columns = [
-    "avg_time", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
-    "image_url", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
-  ]
-
   cattr_accessor :plugin_permitted_create_params, :plugin_permitted_update_params
   self.plugin_permitted_create_params = {}
   self.plugin_permitted_update_params = {}

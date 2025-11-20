@@ -3,8 +3,6 @@ class UserStat < ActiveRecord::Base
   belongs_to :user
   after_save :trigger_badges
 
-  self.ignored_columns = ["topic_reply_count"] # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
-
   def self.ensure_consistency!(last_seen = 1.hour.ago)
     reset_bounce_scores
     update_distinct_badge_count
