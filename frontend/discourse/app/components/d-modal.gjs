@@ -13,10 +13,7 @@ import FlashMessage from "discourse/components/flash-message";
 import concatClass from "discourse/helpers/concat-class";
 import element from "discourse/helpers/element";
 import htmlClass from "discourse/helpers/html-class";
-import {
-  disableBodyScroll,
-  enableBodyScroll,
-} from "discourse/lib/body-scroll-lock";
+import { lock, unlock } from "discourse/lib/body-scroll-lock";
 import { getMaxAnimationTimeMs } from "discourse/lib/swipe-events";
 import swipe from "discourse/modifiers/swipe";
 import trapTab from "discourse/modifiers/trap-tab";
@@ -31,7 +28,6 @@ export const CLOSE_INITIATED_BY_SWIPE_DOWN = "initiatedBySwipeDown";
 const SWIPE_VELOCITY_THRESHOLD = 0.4;
 
 export default class DModal extends Component {
-  @service capabilities;
   @service modal;
   @service site;
 
@@ -42,29 +38,23 @@ export default class DModal extends Component {
     this.modalContainer = el;
   });
 
-  setupModalBody = modifierFn((el) => {
+  @action
+  cleanupModalBody(el) {
     if (this.site.desktopView) {
       return;
     }
 
-    let offset, interval;
-    if (this.capabilities.isIOS) {
-      offset = window.pageYOffset;
-      interval = setInterval(() => {
-        window.scrollTo(0, offset);
-      }, 50);
+    unlock(el);
+  }
+
+  @action
+  setupModalBody(el) {
+    if (this.site.desktopView) {
+      return;
     }
 
-    disableBodyScroll(el);
-
-    return () => {
-      if (this.capabilities.isIOS) {
-        clearInterval(interval);
-      }
-
-      enableBodyScroll(el);
-    };
-  });
+    lock(el);
+  }
 
   @action
   async setupModal(el) {
@@ -424,8 +414,9 @@ export default class DModal extends Component {
 
           <div
             class={{concatClass "d-modal__body" @bodyClass}}
-            {{this.setupModalBody}}
             tabindex="-1"
+            {{didInsert this.setupModalBody}}
+            {{willDestroy this.cleanupModalBody}}
           >
             {{#if (has-block "body")}}
               {{yield to="body"}}

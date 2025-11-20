@@ -42,6 +42,7 @@ import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
 import DAutocompleteModifier, {
   SKIP,
 } from "discourse/modifiers/d-autocomplete";
+import forceScrollingElementPosition from "discourse/modifiers/force-scrolling-element-position";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import { not, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -59,6 +60,7 @@ const CHAT_PRESENCE_KEEP_ALIVE = 5 * 1000; // 5 seconds
 export default class ChatComposer extends Component {
   @service site;
   @service siteSettings;
+  @service capabilities;
   @service store;
   @service chat;
   @service chatComposerWarningsTracker;
@@ -592,7 +594,7 @@ export default class ChatComposer extends Component {
 
           // Close the keyboard before showing the emoji picker
           // it avoids a whole range of bugs on iOS
-          await waitForClosedKeyboard(this);
+          await waitForClosedKeyboard(this.site, this.capabilities);
 
           const virtualElement = virtualElementFromTextRange();
           this.menuInstance = await this.menu.show(virtualElement, menuOptions);
@@ -756,6 +758,8 @@ export default class ChatComposer extends Component {
               {{on "click" this.composer.focus}}
             >
               <DTextarea
+                {{preventScrollOnFocus}}
+                {{forceScrollingElementPosition}}
                 id={{this.composerId}}
                 value={{readonly this.draft.message}}
                 type="text"
@@ -768,7 +772,6 @@ export default class ChatComposer extends Component {
                 {{didInsert this.setupTextareaInteractor}}
                 {{on "input" this.onInput}}
                 {{on "keydown" this.onKeyDown}}
-                {{preventScrollOnFocus}}
                 {{on "focusin" this.onTextareaFocusIn}}
                 {{on "focusout" this.onTextareaFocusOut}}
                 {{didInsert this.setupAutocomplete}}

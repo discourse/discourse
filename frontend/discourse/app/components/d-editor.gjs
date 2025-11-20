@@ -47,6 +47,7 @@ import {
   EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP,
   SKIP,
 } from "discourse/modifiers/d-autocomplete";
+import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
 import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -103,7 +104,7 @@ export default class DEditor extends Component {
 
   setupToolbar() {
     this.toolbar = new Toolbar(
-      this.getProperties("siteSettings", "showLink", "capabilities")
+      this.getProperties("siteSettings", "showLink", "capabilities", "site")
     );
     this.toolbar.context = this;
 
@@ -840,6 +841,7 @@ export default class DEditor extends Component {
             @id={{this.textAreaId}}
             @replaceToolbar={{this.replaceToolbar}}
             @toggleRichEditor={{this.toggleRichEditor}}
+            {{preventScrollOnFocus}}
           />
           <PopupInputTip @validation={{this.validation}} />
           <PluginOutlet
