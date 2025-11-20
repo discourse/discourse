@@ -226,12 +226,8 @@ export default class ChatRouteChannelInfoSettings extends Component {
   @action
   async onTogglePinned() {
     const newValue = !this.args.channel.currentUserMembership.pinned;
-
-    if (this.args.channel.currentUserMembership.pinned === newValue) {
-      return;
-    }
-
     const previousValue = this.args.channel.currentUserMembership.pinned;
+
     this.args.channel.currentUserMembership.pinned = newValue;
 
     try {
