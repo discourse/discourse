@@ -10,12 +10,20 @@ module PageObjects
         @context = context
       end
 
+      def hidden?
+        find("#{@context}").has_no_css?(".group-selector")
+      end
+
       def has_selected_groups?(*group_names)
         selected_groups =
           find("#{@context} .group-selector")
             .all(".d-multi-select-trigger__selected-item")
             .map { |item| item[:innerText] }
         expect(selected_groups & group_names).to match_array(group_names)
+      end
+
+      def has_no_selected_groups?
+        find("#{@context} .group-selector").has_no_css?(".d-multi-select-trigger__selected-item")
       end
 
       def open
@@ -27,7 +35,6 @@ module PageObjects
         self.open
         find(".dropdown-menu__item.d-multi-select__search-container").fill_in(with: group_name)
         find(".dropdown-menu__item.d-multi-select__result[title='#{group_name}']").click
-        find(@context).find(".upcoming-change__save-groups").click
       end
 
       def remove_group(group_name)
@@ -35,7 +42,6 @@ module PageObjects
           .find(".group-selector .d-multi-select-trigger__selected-item", text: group_name)
           .find(".d-multi-select-trigger__remove-selection-icon")
           .click
-        find(@context).find(".upcoming-change__save-groups").click
       end
     end
   end

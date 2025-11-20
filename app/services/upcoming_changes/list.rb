@@ -62,7 +62,7 @@ class UpcomingChanges::List
       elsif setting[:groups].blank?
         "everyone"
       else
-        if group_ids_for_setting & [Group::AUTO_GROUPS[:staff]] == [Group::AUTO_GROUPS[:staff]]
+        if group_ids_for_setting == [Group::AUTO_GROUPS[:staff]]
           "staff"
         else
           "groups"
