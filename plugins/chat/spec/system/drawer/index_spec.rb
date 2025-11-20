@@ -10,6 +10,12 @@ RSpec.describe "Drawer - index", type: :system do
     sign_in(current_user)
   end
 
+  it "shows a button for chat search" do
+    drawer_page.visit_index
+
+    expect(page).to have_selector(".chat-channel-search-btn")
+  end
+
   it "can leave a direct message" do
     channel = Fabricate(:direct_message_channel, users: [current_user])
     row = PageObjects::Components::Chat::ChannelRow.new(channel.id)

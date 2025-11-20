@@ -38,6 +38,16 @@ module PageObjects
         open_channel(channel)
       end
 
+      def visit_direct_messages
+        visit_index
+        click_direct_messages
+      end
+
+      def visit_user_threads
+        visit_index
+        click_user_threads
+      end
+
       def visit_browse
         visit_index
         open_browse
