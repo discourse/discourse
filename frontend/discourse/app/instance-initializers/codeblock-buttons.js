@@ -13,10 +13,6 @@ export default {
           return;
         }
 
-        if (!siteSettings.show_copy_button_on_codeblocks) {
-          return;
-        }
-
         const post = helper.getModel();
         const cb = new CodeblockButtons({
           site,
@@ -33,9 +29,11 @@ export default {
         return cb.cleanup;
       }
 
-      api.decorateCookedElement(_attachCommands, {
-        onlyStream: true,
-      });
+      if (siteSettings.show_copy_button_on_codeblocks) {
+        api.decorateCookedElement(_attachCommands, {
+          onlyStream: true,
+        });
+      }
     });
   },
 };
