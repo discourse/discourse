@@ -3,6 +3,8 @@
 module DiscourseAi
   module Summarization
     class ChatSummaryController < ::Chat::ApiController
+      include AiCreditLimitHandler
+
       requires_plugin DiscourseAi::PLUGIN_NAME
       requires_plugin ::Chat::PLUGIN_NAME
 
@@ -23,16 +25,20 @@ module DiscourseAi
         RateLimiter.new(current_user, "channel_summary", 6, 5.minutes).performed!
 
         hijack do
-          strategy = DiscourseAi::Summarization::Strategies::ChatMessages.new(channel, since)
+          begin
+            strategy = DiscourseAi::Summarization::Strategies::ChatMessages.new(channel, since)
 
-          summarized_text =
-            if strategy.targets_data.empty?
-              I18n.t("discourse_ai.summarization.chat.no_targets")
-            else
-              summarizer.summarize(current_user)&.summarized_text
-            end
+            summarized_text =
+              if strategy.targets_data.empty?
+                I18n.t("discourse_ai.summarization.chat.no_targets")
+              else
+                summarizer.summarize(current_user)&.summarized_text
+              end
 
-          render json: { summary: summarized_text }
+            render json: { summary: summarized_text }
+          rescue LlmCreditAllocation::CreditLimitExceeded => e
+            render_credit_limit_error(e)
+          end
         end
       end
     end
