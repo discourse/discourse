@@ -70,7 +70,7 @@ RSpec.describe Admin::Config::UpcomingChangesController do
             change["setting"] == "enable_upload_debug_mode"
           end
 
-        expect(mock_setting["groups"]).to eq(%w[trust_level_0 trust_level_1])
+        expect(mock_setting["groups"]).to eq("trust_level_0,trust_level_1")
       end
     end
   end

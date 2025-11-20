@@ -79,7 +79,7 @@ RSpec.describe UpcomingChanges::List do
         results = result.upcoming_changes
         mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
 
-        expect(mock_setting[:groups]).to eq(%w[trust_level_0 trust_level_1])
+        expect(mock_setting[:groups]).to eq("trust_level_0,trust_level_1")
       end
 
       describe "enabled_for logic" do
