@@ -9,6 +9,7 @@ import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import DSelect from "discourse/components/d-select";
 import GroupSelector from "discourse/components/group-selector";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
@@ -18,7 +19,7 @@ import { bind } from "discourse/lib/decorators";
 import discourseLater from "discourse/lib/later";
 import lightbox from "discourse/lib/lightbox";
 import Group from "discourse/models/group";
-import { and, eq, gt, notEq } from "discourse/truth-helpers";
+import { and, eq, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class UpcomingChangeItem extends Component {
@@ -88,17 +89,43 @@ export default class UpcomingChangeItem extends Component {
     const silenceToast =
       this.bufferedEnabledFor === "groups" || opts.silenceToast;
 
+    // If all groups have been removed switch to "no one" on save
+    const isGroupsMode = this.bufferedEnabledFor === "groups";
+    let groupNames;
+    let newEnabledFor = this.bufferedEnabledFor;
+    let toggleValue;
+
+    if (!this.args.change.groups && isGroupsMode) {
+      this.groupsChanged("");
+      groupNames = [];
+      newEnabledFor = "no_one";
+      toggleValue = false;
+    } else {
+      groupNames = this.args.change.groups
+        ? this.args.change.groups.split(",")
+        : [];
+      if (isGroupsMode) {
+        toggleValue = true;
+      }
+    }
+
     try {
       await ajax("/admin/config/upcoming-changes/groups", {
         type: "PUT",
         data: {
           setting: this.args.change.setting,
-          group_names: this.args.change.groups.split(","),
+          group_names: groupNames,
         },
       });
-      this.bufferedGroups = this.args.change.groups;
 
-      // We do this because in the case where the  admin  is selecting
+      this.bufferedGroups = groupNames.join(",");
+
+      if (newEnabledFor !== this.bufferedEnabledFor) {
+        this.bufferedEnabledFor = newEnabledFor;
+        this.args.change.upcoming_change.enabled_for = newEnabledFor;
+      }
+
+      // We do this because in the case where the admin is selecting
       // "staff", "everyone", or "no one", we don't want to show
       // a toast for saving groups, we only want to show the enabled/disabled
       // toast, groups in this case are "behind the scenes".
@@ -114,8 +141,9 @@ export default class UpcomingChangeItem extends Component {
       // If we are saving groups when the admin has selected "Specific groups",
       // it means we also need to enable the change, since we do not automatically
       // do this when the dropdown option changes to "groups" (groups need to be selected first).
-      if (this.bufferedEnabledFor === "groups") {
-        await this.toggleChange(true, "groups");
+      if (toggleValue !== undefined) {
+        this.args.change.value = toggleValue;
+        await this.toggleChange(toggleValue, newEnabledFor);
       }
     } catch (err) {
       popupAjaxError(err);
@@ -124,16 +152,14 @@ export default class UpcomingChangeItem extends Component {
 
   @action
   async toggleChange(enabled, enabledFor) {
-    // No need to do anything if the change is already in the desired state.
-    if (this.args.change.value === enabled) {
-      await ajax("/admin/config/upcoming-changes/toggle", {
-        type: "PUT",
-        data: {
-          enabled,
-          setting_name: this.args.change.setting,
-        },
-      });
-    }
+    await ajax("/admin/config/upcoming-changes/toggle", {
+      type: "PUT",
+      data: {
+        enabled,
+        setting_name: this.args.change.setting,
+      },
+    });
+    this.args.change.value = enabled;
 
     let enabledForLabel;
     if (enabledFor === "no_one") {
@@ -194,24 +220,24 @@ export default class UpcomingChangeItem extends Component {
     }
 
     this.savingEnabledFor = true;
-    this.args.change.upcoming_change.enabled_for = newValue;
-
-    if (newValue === "staff") {
-      this.groupsChanged(AUTO_GROUPS.staff.name);
-      await this.saveGroups({ silenceToast: true });
-    } else if (newValue === "everyone" || newValue === "no_one") {
-      this.groupsChanged("");
-      await this.saveGroups({ silenceToast: true });
-    }
-
     const isEnabled = newValue !== "no_one";
-    this.args.change.value = isEnabled;
 
     try {
+      this.args.change.upcoming_change.enabled_for = newValue;
+      this.args.change.value = isEnabled;
       await this.toggleChange(isEnabled, newValue);
+
+      if (newValue === "staff") {
+        this.groupsChanged(AUTO_GROUPS.staff.name);
+        await this.saveGroups({ silenceToast: true });
+      } else if (newValue === "everyone" || newValue === "no_one") {
+        this.groupsChanged("");
+        await this.saveGroups({ silenceToast: true });
+      }
     } catch (error) {
       this.args.change.value = !isEnabled;
       this.bufferedEnabledFor = oldValue;
+      this.args.change.upcoming_change.enabled_for = oldValue;
       popupAjaxError(error);
     } finally {
       // We prevent rapid changes because on the server-side
@@ -364,20 +390,44 @@ export default class UpcomingChangeItem extends Component {
               />
             {{/if}}
 
-            {{#if
-              (and
-                (gt @change.groups.length 0)
-                (notEq @change.groups this.bufferedGroups)
-              )
-            }}
-              <DButton
-                class="upcoming-change__save-groups btn-primary"
-                @icon="check"
-                @size="small"
-                @title="admin.upcoming_changes.save_groups"
-                {{on "click" this.saveGroups}}
-              />
-            {{/if}}
+            {{#let (not @change.groups) as |noGroups|}}
+              {{#let (eq @change.groups this.bufferedGroups) as |noChanges|}}
+                {{#let
+                  (if
+                    noGroups (and noChanges (not this.bufferedGroups)) noChanges
+                  )
+                  as |isDisabled|
+                }}
+                  {{#if isDisabled}}
+                    <DTooltip
+                      @content={{if
+                        noGroups
+                        (i18n "admin.upcoming_changes.add_groups_to_enable")
+                        (i18n "admin.upcoming_changes.no_changes_to_save")
+                      }}
+                    >
+                      <:trigger>
+                        <DButton
+                          class="upcoming-change__save-groups btn-primary"
+                          @icon="check"
+                          @size="small"
+                          @disabled={{true}}
+                          {{on "click" this.saveGroups}}
+                        />
+                      </:trigger>
+                    </DTooltip>
+                  {{else}}
+                    <DButton
+                      class="upcoming-change__save-groups btn-primary"
+                      @icon="check"
+                      @size="small"
+                      @title="admin.upcoming_changes.save_groups"
+                      {{on "click" this.saveGroups}}
+                    />
+                  {{/if}}
+                {{/let}}
+              {{/let}}
+            {{/let}}
           </div>
         {{/if}}
 
