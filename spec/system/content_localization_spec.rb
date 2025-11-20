@@ -242,9 +242,10 @@ describe "Content Localization" do
           expect(edit_localized_post_dialog).to be_open
 
           edit_localized_post_dialog.click_yes
-          expect(composer).to have_title(topic.title)
+          expect(composer).to have_input_title(topic.title)
 
           composer.close
+          expect(composer).to be_closed
 
           # use translation composer to edit localized title
           topic_page.click_topic_edit_title
