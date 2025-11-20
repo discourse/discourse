@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { ajax } from "discourse/lib/ajax";
 import { shortDateNoYear } from "discourse/lib/formatter";
 import { cook } from "discourse/lib/text";
+import { isAiCreditLimitError, popupAiCreditLimitError } from "./ai-errors";
 
 export default class AiTopicSummary {
   @tracked text = "";
@@ -62,11 +63,20 @@ export default class AiTopicSummary {
 
     this.loading = true;
 
-    return ajax(fetchURL).then((data) => {
-      if (!currentUser) {
-        data.done = true;
-        this.processUpdate(data);
-      }
-    });
+    return ajax(fetchURL)
+      .then((data) => {
+        if (!currentUser) {
+          data.done = true;
+          this.processUpdate(data);
+        }
+      })
+      .catch((error) => {
+        this.loading = false;
+        if (isAiCreditLimitError(error)) {
+          popupAiCreditLimitError(error);
+        } else {
+          throw error;
+        }
+      });
   }
 }
