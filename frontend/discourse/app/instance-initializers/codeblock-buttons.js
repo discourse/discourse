@@ -2,19 +2,12 @@ import { schedule } from "@ember/runloop";
 import CodeblockButtons from "discourse/lib/codeblock-buttons";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
-let _codeblockButtons = [];
-
 export default {
   initialize(owner) {
     const site = owner.lookup("service:site");
     const siteSettings = owner.lookup("service:site-settings");
 
     withPluginApi((api) => {
-      function _cleanUp() {
-        _codeblockButtons.forEach((cb) => cb.cleanup());
-        _codeblockButtons.length = 0;
-      }
-
       function _attachCommands(postElement, helper) {
         if (!helper) {
           return;
@@ -32,7 +25,7 @@ export default {
         });
         cb.attachToPost(post, postElement);
 
-        _codeblockButtons.push(cb);
+        return cb.cleanup;
       }
 
       api.decorateCookedElement(
@@ -47,8 +40,6 @@ export default {
           onlyStream: true,
         }
       );
-
-      api.cleanupStream(_cleanUp);
     });
   },
 };
