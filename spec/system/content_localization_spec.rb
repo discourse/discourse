@@ -334,6 +334,42 @@ describe "Content Localization" do
         expect(post_21_obj.post).to have_content("日本語コンテンツ 21")
       end
     end
+
+    context "for html title" do
+      fab!(:shady_topic) do
+        topic =
+          Fabricate(
+            :topic,
+            title: "topic with — <script>alert('xss')</script> …",
+            locale: "en",
+            user: site_local_user,
+          )
+        Fabricate(:post, topic:, locale: "en")
+        topic
+      end
+
+      fab!(:shady_topic_ja_localization) do
+        Fabricate(:topic_localization, topic: shady_topic, locale: "ja")
+      end
+
+      it "shows localized fancy_title in HTML title when user locale differs" do
+        sign_in(japanese_user)
+
+        topic_page.visit_topic(shady_topic)
+        expect(page).to have_title(shady_topic_ja_localization.fancy_title)
+
+        page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+        expect(page).to have_title(shady_topic.title)
+
+        page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+        expect(page).to have_title(shady_topic_ja_localization.fancy_title)
+
+        SiteSetting.content_localization_enabled = false
+        page.refresh
+
+        expect(page).to have_title(shady_topic.title)
+      end
+    end
   end
 
   context "for site settings" do
