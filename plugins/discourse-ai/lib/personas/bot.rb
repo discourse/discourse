@@ -252,6 +252,7 @@ module DiscourseAi
           content: { arguments: tool.parameters }.to_json,
           name: tool.name,
         }
+        tool_call_message[:provider_data] = tool.provider_data if tool.provider_data.present?
 
         if current_thinking.present?
           thinking_message = nil
@@ -276,11 +277,19 @@ module DiscourseAi
           content: invocation_result_json,
           name: tool.name,
         }
+        tool_message[:provider_data] = tool.provider_data if tool.provider_data.present?
 
         prompt.push(**tool_call_message)
         prompt.push(**tool_message)
 
-        raw_context << [tool_call_message[:content], tool_call_id, "tool_call", tool.name]
+        raw_context << [
+          tool_call_message[:content],
+          tool_call_id,
+          "tool_call",
+          tool.name,
+          nil,
+          tool.provider_data.presence,
+        ]
         raw_context << [invocation_result_json, tool_call_id, "tool", tool.name]
       end
 

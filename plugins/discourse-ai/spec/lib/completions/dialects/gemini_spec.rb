@@ -122,6 +122,87 @@ RSpec.describe DiscourseAi::Completions::Dialects::Gemini do
       )
     end
 
+    it "includes thoughtSignature for tool calls when provider data is present" do
+      prompt = context.prompt
+      prompt.push(type: :user, id: "user1", content: "call a tool")
+      prompt.push(
+        type: :tool_call,
+        id: "tool_id",
+        name: "get_weather",
+        content: { arguments: { location: "Sydney" } }.to_json,
+        provider_data: {
+          thought_signature: "sig-123",
+        },
+      )
+      prompt.push(type: :tool, id: "tool_id", name: "get_weather", content: { ok: true }.to_json)
+
+      translated = context.dialect(prompt).translate
+
+      tool_call_parts =
+        translated[:messages].find { |message| message[:role] == "model" }.fetch(:parts).first
+
+      expect(tool_call_parts[:thoughtSignature]).to eq("sig-123")
+    end
+
+    it "merges multiple tool calls from the same batch into a single model message" do
+      prompt = context.prompt
+      prompt.push(type: :user, id: "user1", content: "do two things")
+      prompt.push(
+        type: :tool_call,
+        id: "tool_id_1",
+        name: "get_weather",
+        content: { arguments: { city: "Paris" } }.to_json,
+        provider_data: {
+          batch_id: "batch-1",
+          thought_signature: "sig-A",
+        },
+      )
+      prompt.push(
+        type: :tool,
+        id: "tool_id_1",
+        name: "get_weather",
+        content: { temp: "15C" }.to_json,
+        provider_data: {
+          batch_id: "batch-1",
+        },
+      )
+      prompt.push(
+        type: :tool_call,
+        id: "tool_id_2",
+        name: "get_weather",
+        content: { arguments: { city: "London" } }.to_json,
+        provider_data: {
+          batch_id: "batch-1",
+        },
+      )
+      prompt.push(
+        type: :tool,
+        id: "tool_id_2",
+        name: "get_weather",
+        content: { temp: "12C" }.to_json,
+        provider_data: {
+          batch_id: "batch-1",
+        },
+      )
+
+      translated = context.dialect(prompt).translate
+
+      model_message = translated[:messages].find { |m| m[:role] == "model" }
+      function_message = translated[:messages].find { |m| m[:role] == "function" }
+
+      expect(model_message[:parts].length).to eq(2)
+      expect(model_message[:parts].first[:thoughtSignature]).to eq("sig-A")
+      expect(model_message[:parts].second[:thoughtSignature]).to be_nil
+
+      expect(function_message[:parts].length).to eq(2)
+      expect(function_message[:parts].first.dig(:functionResponse, :response, :content)).to eq(
+        { temp: "15C" }.to_json,
+      )
+      expect(function_message[:parts].second.dig(:functionResponse, :response, :content)).to eq(
+        { temp: "12C" }.to_json,
+      )
+    end
+
     it "trims content if it's getting too long" do
       # testing truncation on 800k tokens is slow use model with less
       model.max_prompt_tokens = 16_384

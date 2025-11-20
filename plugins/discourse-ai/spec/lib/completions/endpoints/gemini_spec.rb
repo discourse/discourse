@@ -309,16 +309,79 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
 
     response = llm.generate(prompt, user: user)
 
-    tool =
-      DiscourseAi::Completions::ToolCall.new(
-        id: "tool_0",
-        name: "echo",
-        parameters: {
-          text: "<S>ydney",
-        },
-      )
+    expect(response).to be_a(DiscourseAi::Completions::ToolCall)
+    expect(response.parameters[:text]).to eq("<S>ydney")
+    expect(response.provider_data[:batch_id]).to match(/\A[0-9a-f]{16}\z/)
+  end
 
-    expect(response).to eq(tool)
+  it "returns tool calls with thought signatures in provider data" do
+    prompt = DiscourseAi::Completions::Prompt.new("Hello", tools: [echo_tool])
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    response_json = {
+      "functionCall" => {
+        name: "echo",
+        args: {
+          text: "Sydney",
+        },
+      },
+      "thoughtSignature" => "abc123",
+    }
+    response = gemini_mock.response(response_json, tool_call: true).to_json
+
+    stub_request(:post, url).to_return(status: 200, body: response)
+
+    result = llm.generate(prompt, user: user)
+
+    expect(result).to be_a(DiscourseAi::Completions::ToolCall)
+    expect(result.provider_data[:thought_signature]).to eq("abc123")
+  end
+
+  it "returns batch-aware tool calls when multiple are emitted in one message" do
+    prompt = DiscourseAi::Completions::Prompt.new("Hello", tools: [echo_tool])
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    batch_response = {
+      candidates: [
+        {
+          content: {
+            parts: [
+              {
+                functionCall: {
+                  name: "get_weather",
+                  args: {
+                    city: "Paris",
+                  },
+                },
+                thoughtSignature: "Signature_A",
+              },
+              { functionCall: { name: "get_weather", args: { city: "London" } } },
+            ],
+            role: "model",
+          },
+          finishReason: "STOP",
+          index: 0,
+        },
+      ],
+    }
+
+    stub_request(:post, url).to_return(status: 200, body: batch_response.to_json)
+
+    results = llm.generate(prompt, user: user)
+
+    expect(results).to be_an(Array)
+    expect(results.size).to eq(2)
+
+    batch_ids = results.map { |r| r.provider_data[:batch_id] }.uniq
+    expect(batch_ids.length).to eq(1)
+    expect(batch_ids.first).to match(/\A[0-9a-f]{16}\z/)
+
+    expect(results.first.provider_data[:thought_signature]).to eq("Signature_A")
+    expect(results.second.provider_data[:thought_signature]).to be_nil
   end
 
   it "Supports Vision API" do
@@ -429,8 +492,12 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
         parameters: {
           text: "sam<>wh!s",
         },
+        provider_data: {
+          batch_id: output.first.provider_data[:batch_id],
+        },
       )
 
+    expect(output.first.provider_data[:batch_id]).to match(/\A[0-9a-f]{16}\z/)
     expect(output).to eq([tool_call])
 
     log = AiApiAuditLog.order(:id).last

@@ -1,7 +1,8 @@
 .ai-usage {
   --chart-response-color: rgb(75, 192, 192, 0.8);
   --chart-request-color: rgb(153, 102, 255, 0.8);
-  --chart-cached-color: rgb(153, 102, 255, 0.4);
+  --chart-cache-read-color: rgb(255, 159, 64, 0.5);
+  --chart-cache-write-color: rgb(255, 159, 64, 0.9);
   padding: 1em;
 
   &__filters-dates {

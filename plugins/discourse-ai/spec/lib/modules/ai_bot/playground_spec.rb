@@ -207,6 +207,8 @@ RSpec.describe DiscourseAi::AiBot::Playground do
           "666",
           "tool_call",
           "search",
+          nil,
+          nil,
         ],
         ["\"Custom tool result: Can you use the custom tool\"", "666", "tool", "search"],
         ["custom tool did stuff (maybe)", "claude-2"],

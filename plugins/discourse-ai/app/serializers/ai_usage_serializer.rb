@@ -4,9 +4,18 @@ class AiUsageSerializer < ApplicationSerializer
   attributes :data, :features, :models, :users, :summary, :period
 
   def data
-    object.tokens_by_period.as_json(
-      only: %i[period total_tokens total_cached_tokens total_request_tokens total_response_tokens],
-    )
+    object.tokens_by_period.map do |row|
+      row.as_json(
+        only: %i[
+          period
+          total_tokens
+          total_cache_read_tokens
+          total_cache_write_tokens
+          total_request_tokens
+          total_response_tokens
+        ],
+      )
+    end
   end
 
   def period
@@ -14,35 +23,43 @@ class AiUsageSerializer < ApplicationSerializer
   end
 
   def features
-    object.feature_breakdown.as_json(
-      only: %i[
-        feature_name
-        usage_count
-        total_tokens
-        total_cached_tokens
-        total_request_tokens
-        total_response_tokens
-        input_spending
-        output_spending
-        cached_input_spending
-      ],
-    )
+    object.feature_breakdown.map do |row|
+      row.as_json(
+        only: %i[
+          feature_name
+          usage_count
+          total_tokens
+          total_cache_read_tokens
+          total_cache_write_tokens
+          total_request_tokens
+          total_response_tokens
+          input_spending
+          output_spending
+          cache_read_spending
+          cache_write_spending
+        ],
+      )
+    end
   end
 
   def models
-    object.model_breakdown.as_json(
-      only: %i[
-        llm
-        usage_count
-        total_tokens
-        total_cached_tokens
-        total_request_tokens
-        total_response_tokens
-        input_spending
-        output_spending
-        cached_input_spending
-      ],
-    )
+    object.model_breakdown.map do |row|
+      row.as_json(
+        only: %i[
+          llm
+          usage_count
+          total_tokens
+          total_cache_read_tokens
+          total_cache_write_tokens
+          total_request_tokens
+          total_response_tokens
+          input_spending
+          output_spending
+          cache_read_spending
+          cache_write_spending
+        ],
+      )
+    end
   end
 
   def users
@@ -52,12 +69,14 @@ class AiUsageSerializer < ApplicationSerializer
         username: user.username,
         usage_count: user.usage_count,
         total_tokens: user.total_tokens,
-        total_cached_tokens: user.total_cached_tokens,
+        total_cache_read_tokens: user.total_cache_read_tokens,
+        total_cache_write_tokens: user.total_cache_write_tokens,
         total_request_tokens: user.total_request_tokens,
         total_response_tokens: user.total_response_tokens,
         input_spending: user.input_spending,
         output_spending: user.output_spending,
-        cached_input_spending: user.cached_input_spending,
+        cache_read_spending: user.cache_read_spending,
+        cache_write_spending: user.cache_write_spending,
       }
     end
   end
@@ -65,7 +84,8 @@ class AiUsageSerializer < ApplicationSerializer
   def summary
     {
       total_tokens: object.total_tokens,
-      total_cached_tokens: object.total_cached_tokens,
+      total_cache_read_tokens: object.total_cache_read_tokens,
+      total_cache_write_tokens: object.total_cache_write_tokens,
       total_request_tokens: object.total_request_tokens,
       total_response_tokens: object.total_response_tokens,
       total_requests: object.total_requests,

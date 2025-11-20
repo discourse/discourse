@@ -327,6 +327,9 @@ module DiscourseAi
 
         if tool_instance
           tool_instance.parameters = arguments
+          tool_instance.provider_data = tool_call.provider_data if tool_instance.respond_to?(
+            :provider_data=,
+          )
           tool_instance
         else
           tool_klass.new(
@@ -336,6 +339,7 @@ module DiscourseAi
             bot_user: bot_user,
             llm: llm,
             context: context,
+            provider_data: tool_call.provider_data,
           )
         end
       end

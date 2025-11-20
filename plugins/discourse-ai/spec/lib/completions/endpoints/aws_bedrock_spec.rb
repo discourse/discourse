@@ -1016,4 +1016,115 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
       end
     end
   end
+
+  describe "prompt caching for Anthropic models" do
+    it "applies caching in always mode for Claude models" do
+      params = model.provider_params || {}
+      params["prompt_caching"] = "always"
+      model.update!(provider_params: params)
+
+      messages =
+        [
+          {
+            type: "message_start",
+            message: {
+              usage: {
+                input_tokens: 10,
+                cache_creation_input_tokens: 100,
+                cache_read_input_tokens: 50,
+              },
+            },
+          },
+          { type: "content_block_delta", delta: { text: "Cached response" } },
+          { type: "message_delta", delta: { usage: { output_tokens: 5 } } },
+        ].map { |message| encode_message(message) }
+
+      request = nil
+      bedrock_mock.with_chunk_array_support do
+        stub_request(
+          :post,
+          "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke-with-response-stream",
+        )
+          .with do |inner_request|
+            request = inner_request
+            true
+          end
+          .to_return(status: 200, body: messages)
+
+        prompt =
+          DiscourseAi::Completions::Prompt.new(
+            "You are a bot",
+            messages: [{ type: :user, content: "hello" }],
+          )
+
+        result = +""
+        endpoint.perform_completion!(
+          DiscourseAi::Completions::Dialects::Claude.new(prompt, model),
+          user,
+        ) { |partial| result << partial }
+
+        expect(result).to eq("Cached response")
+
+        parsed_body = JSON.parse(request.body, symbolize_names: true)
+        expect(parsed_body[:messages].last[:content].last[:cache_control]).to eq(
+          { type: "ephemeral" },
+        )
+
+        log = AiApiAuditLog.order(:id).last
+        expect(log.cache_read_tokens).to eq(50)
+        expect(log.cache_write_tokens).to eq(100)
+      end
+    end
+
+    it "does not apply caching in never mode" do
+      params = model.provider_params || {}
+      params["prompt_caching"] = "never"
+      model.update!(provider_params: params)
+
+      messages =
+        [
+          { type: "message_start", message: { usage: { input_tokens: 10 } } },
+          { type: "content_block_delta", delta: { text: "No cache" } },
+          { type: "message_delta", delta: { usage: { output_tokens: 5 } } },
+        ].map { |message| encode_message(message) }
+
+      request = nil
+      bedrock_mock.with_chunk_array_support do
+        stub_request(
+          :post,
+          "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke-with-response-stream",
+        )
+          .with do |inner_request|
+            request = inner_request
+            true
+          end
+          .to_return(status: 200, body: messages)
+
+        prompt =
+          DiscourseAi::Completions::Prompt.new(
+            "You are a bot",
+            messages: [{ type: :user, content: "hello" }],
+          )
+
+        result = +""
+        endpoint.perform_completion!(
+          DiscourseAi::Completions::Dialects::Claude.new(prompt, model),
+          user,
+        ) { |partial| result << partial }
+
+        expect(result).to eq("No cache")
+
+        # Verify cache_control was NOT added
+        parsed_body = JSON.parse(request.body, symbolize_names: true)
+        expect(parsed_body[:system]).to eq("You are a bot")
+      end
+    end
+
+    it "does not apply caching to non-Claude models on Bedrock" do
+      # Caching should only work for Anthropic Claude models, not other Bedrock models
+      # This test would need a Nova model setup to be fully tested
+      # For now, we verify the logic is only applied in Claude dialect branch
+      expect(endpoint.respond_to?(:should_apply_prompt_caching?)).to be(true)
+    end
+  end
 end

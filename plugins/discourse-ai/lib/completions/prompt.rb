@@ -87,6 +87,7 @@ module DiscourseAi
               content: { arguments: message.parameters }.to_json,
               id: message.id,
               name: message.name,
+              provider_data: message.provider_data,
             )
           elsif message.is_a?(String)
             push(type: :model, content: message)
@@ -103,12 +104,24 @@ module DiscourseAi
         end
       end
 
-      def push(type:, content:, id: nil, name: nil, thinking: nil, thinking_provider_info: nil)
+      def push(
+        type:,
+        content:,
+        id: nil,
+        name: nil,
+        thinking: nil,
+        thinking_provider_info: nil,
+        provider_data: nil
+      )
         return if type == :system
         new_message = { type: type, content: content }
         new_message[:name] = name.to_s if name
         new_message[:id] = id.to_s if id
         new_message[:thinking] = thinking if thinking
+        if provider_data
+          raise ArgumentError, "provider_data must be a hash" unless provider_data.is_a?(Hash)
+          new_message[:provider_data] = provider_data.deep_symbolize_keys
+        end
         if thinking_provider_info
           new_message[:thinking_provider_info] = Thinking.normalize_provider_info(
             thinking_provider_info,
@@ -189,6 +202,7 @@ module DiscourseAi
           thinking_provider_info
           thinking_signature
           redacted_thinking_signature
+          provider_data
         ]
         if (invalid_keys = message.keys - valid_keys).any?
           raise ArgumentError, "message contains invalid keys: #{invalid_keys}"

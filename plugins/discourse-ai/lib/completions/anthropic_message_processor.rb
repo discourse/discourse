@@ -46,7 +46,12 @@ class DiscourseAi::Completions::AnthropicMessageProcessor
     end
   end
 
-  attr_reader :tool_calls, :input_tokens, :output_tokens, :output_thinking
+  attr_reader :tool_calls,
+              :input_tokens,
+              :output_tokens,
+              :cache_creation_input_tokens,
+              :cache_read_input_tokens,
+              :output_thinking
 
   def initialize(streaming_mode:, partial_tool_calls: false, output_thinking: false)
     @streaming_mode = streaming_mode
@@ -132,7 +137,10 @@ class DiscourseAi::Completions::AnthropicMessageProcessor
         @current_tool_call = nil
       end
     elsif parsed[:type] == "message_start"
-      @input_tokens = parsed.dig(:message, :usage, :input_tokens)
+      usage = parsed.dig(:message, :usage)
+      @input_tokens = usage[:input_tokens]
+      @cache_creation_input_tokens = usage[:cache_creation_input_tokens]
+      @cache_read_input_tokens = usage[:cache_read_input_tokens]
     elsif parsed[:type] == "message_delta"
       @output_tokens =
         parsed.dig(:usage, :output_tokens) || parsed.dig(:delta, :usage, :output_tokens)
@@ -191,8 +199,11 @@ class DiscourseAi::Completions::AnthropicMessageProcessor
           .compact
     end
 
-    @input_tokens = parsed.dig(:usage, :input_tokens)
-    @output_tokens = parsed.dig(:usage, :output_tokens)
+    usage = parsed.dig(:usage)
+    @input_tokens = usage[:input_tokens] if usage
+    @output_tokens = usage[:output_tokens] if usage
+    @cache_creation_input_tokens = usage[:cache_creation_input_tokens] if usage
+    @cache_read_input_tokens = usage[:cache_read_input_tokens] if usage
 
     result
   end

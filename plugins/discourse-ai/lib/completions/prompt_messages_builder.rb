@@ -140,6 +140,8 @@ module DiscourseAi
 
                 thinking = message[4]
                 custom_context[:thinking] = thinking if thinking
+                provider_data = message[5]
+                custom_context[:provider_data] = provider_data if provider_data.is_a?(Hash)
                 custom_context[:created_at] = created_at
 
                 builder.push(**custom_context)
@@ -209,16 +211,29 @@ module DiscourseAi
         end
       end
 
-      def push(type:, content:, name: nil, upload_ids: nil, id: nil, thinking: nil, created_at: nil)
+      def push(
+        type:,
+        content:,
+        name: nil,
+        upload_ids: nil,
+        id: nil,
+        thinking: nil,
+        created_at: nil,
+        provider_data: nil
+      )
         if !%i[user model tool tool_call system].include?(type)
           raise ArgumentError, "type must be either :user, :model, :tool, :tool_call or :system"
         end
         raise ArgumentError, "upload_ids must be an array" if upload_ids && !upload_ids.is_a?(Array)
+        if provider_data && !provider_data.is_a?(Hash)
+          raise ArgumentError, "provider_data must be a hash"
+        end
 
         content = [content, *upload_ids.map { |upload_id| { upload_id: upload_id } }] if upload_ids
         message = { type: type, content: content }
         message[:name] = name.to_s if name
         message[:id] = id.to_s if id
+        message[:provider_data] = provider_data.deep_symbolize_keys if provider_data.present?
         if thinking
           if thinking["message"] || thinking["provider_info"]
             message[:thinking] = thinking["message"] if thinking["message"]

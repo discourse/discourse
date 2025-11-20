@@ -33,7 +33,11 @@ module DiscourseAi
       def run_test(val)
         DiscourseAi::Completions::Llm
           .proxy(val)
-          .generate("How much is 1 + 1?", user: nil, feature_name: "llm_validator")
+          .generate(
+            "How much is 1 + 1?",
+            user: @opts[:user] || Discourse.system_user,
+            feature_name: "llm_validator",
+          )
           .present?
       end
 

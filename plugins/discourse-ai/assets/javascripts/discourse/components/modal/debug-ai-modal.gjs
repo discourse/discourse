@@ -152,6 +152,18 @@ export default class DebugAiModal extends Component {
             {{i18n "discourse_ai.ai_bot.debug_ai_modal.response_tokens"}}
             {{this.info.response_tokens}}
           </span>
+          {{#if this.info.cache_read_tokens}}
+            <span class="ai-debug-modal__tokens__count">
+              {{i18n "discourse_ai.ai_bot.debug_ai_modal.cache_read_tokens"}}
+              {{this.info.cache_read_tokens}}
+            </span>
+          {{/if}}
+          {{#if this.info.cache_write_tokens}}
+            <span class="ai-debug-modal__tokens__count">
+              {{i18n "discourse_ai.ai_bot.debug_ai_modal.cache_write_tokens"}}
+              {{this.info.cache_write_tokens}}
+            </span>
+          {{/if}}
         </div>
         <div class="debug-ai-modal__preview">
           {{this.htmlContext}}

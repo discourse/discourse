@@ -127,7 +127,7 @@ data: {"type":"response.reasoning_summary_part.added","sequence_number":3,"item_
     expect(log).to be_present
     expect(log.request_tokens).to eq(26)
     expect(log.response_tokens).to eq(7)
-    expect(log.cached_tokens).to eq(0)
+    expect(log.cache_read_tokens).to eq(0)
   end
 
   it "can perform simple streaming completion" do
@@ -185,7 +185,7 @@ data: {"type":"response.reasoning_summary_part.added","sequence_number":3,"item_
     expect(log).to be_present
     expect(log.request_tokens).to eq(30)
     expect(log.response_tokens).to eq(9)
-    expect(log.cached_tokens).to eq(5)
+    expect(log.cache_read_tokens).to eq(5)
   end
 
   it "can properly stream tool calls" do
