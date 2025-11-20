@@ -2490,6 +2490,7 @@ sr:
         muted:
           title: "Utišano"
       groups:
+        new: "Nova Grupa"
         name_placeholder: "Ime foruma"
         save: "Sačuvaj"
         delete: "Obriši"

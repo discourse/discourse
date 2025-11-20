@@ -2630,6 +2630,7 @@ he:
     content_localization_enabled: "הצגת תוכן מתורגם/מקומי למשתמשים לפי הדפדפן או העדפות שפת המשתמש. תוכן שכזה יכול לכלול קטגוריות, תגיות, פוסטים ונושאים. השפות הנתמכות מוגדרות תחת ‚content localization supported locales’ (שפות נתמכות לתרגום תוכן)."
     content_localization_supported_locales: "רשימת שפות שאפשר לתרגם אליהן את תוכן המשתמשים. דורש את הפעלת ‚content localization enabled’ (תרגום תוכן פעיל)."
     content_localization_allowed_groups: "קבוצות שמורשות לעדכן תוכן שתורגם לשפה המקומית. נדרשת הפעלת ‚content localization enabled’ (תרגום תוכן פעיל)."
+    content_localization_anon_language_switcher: "הפעלת בורר שפה שמאפשר למבקרי האתר שלא נכנסו למערכת להחליף בין הגרסה המתורגמת של Discourse לבין תוכן שנתרם על ידי המשתמשים. כתלות ברשימת השפות שהוגדרה תחת ‚שפות שנתמכות לתרגום תוכן’"
     errors:
       invalid_css_color: "צבע שגוי. נא למלא את שם הצבע או ערך הקסדצימלי."
       invalid_email: "כתובת דוא״ל שגויה."

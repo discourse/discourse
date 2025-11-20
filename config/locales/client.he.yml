@@ -972,6 +972,7 @@ he:
         target_created_by: "הפוסט נוצר על ידי %{username} · %{relativeDate}"
         flagged: "מסומן"
         flagged_as_by: "מסומן בתור %{flagReason} על ידי %{username} · %{relativeDate}"
+        claimed: "נדרש"
         claimed_by: "נדרש על ידי %{username} · %{relativeDate}"
         reviewed: "נבדק"
         reviewed_by: "נבדק על ידי %{username} · %{relativeDate}"

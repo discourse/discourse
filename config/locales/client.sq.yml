@@ -3587,6 +3587,8 @@ sq:
       settings_sections:
         general: "Karakteristika të përgjithshme"
         email: "Email"
+      list_filters:
+        none: "asnjë nënkategori"
     flagging:
       action: "Sinjalizo postimin"
       take_action_options:
