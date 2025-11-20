@@ -11,10 +11,11 @@ module Migrations::Database::IntermediateDB
         original_id,
         created_at,
         description,
+        locale,
         name
       )
       VALUES (
-        ?, ?, ?, ?
+        ?, ?, ?, ?, ?
       )
     SQL
     private_constant :SQL
@@ -24,15 +25,17 @@ module Migrations::Database::IntermediateDB
     # @param original_id   [Integer, String]
     # @param created_at    [Time, nil]
     # @param description   [String, nil]
+    # @param locale        [String, nil]
     # @param name          [String]
     #
     # @return [void]
-    def self.create(original_id:, created_at: nil, description: nil, name:)
+    def self.create(original_id:, created_at: nil, description: nil, locale: nil, name:)
       ::Migrations::Database::IntermediateDB.insert(
         SQL,
         original_id,
         ::Migrations::Database.format_datetime(created_at),
         description,
+        locale,
         name,
       )
     end

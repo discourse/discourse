@@ -5,6 +5,7 @@ module Migrations::Importer::Steps::Base
     include ::HasSanitizableFields
 
     MAX_DESCRIPTION_LENGTH = 1000
+    SUPPORTED_LOCALES = LocaleSiteSetting.supported_locales.to_set.freeze
     RESERVED_TAGS = Tag::RESERVED_TAGS.to_set.freeze
 
     class << self
@@ -13,7 +14,7 @@ module Migrations::Importer::Steps::Base
 
         klass.requires_mapping :existing_tag_by_name, "SELECT LOWER(name), id FROM tags"
         klass.table_name :tags
-        klass.column_names %i[id name description target_tag_id created_at updated_at]
+        klass.column_names %i[id name description target_tag_id locale created_at updated_at]
         klass.store_mapped_ids true
       end
     end
@@ -49,6 +50,12 @@ module Migrations::Importer::Steps::Base
         puts "    Tag '#{cleaned_name}' is reserved"
 
         return nil
+      end
+
+      if row[:locale] && SUPPORTED_LOCALES.exclude?(row[:locale])
+        puts "    Tag '#{cleaned_name}' has unsupported locale '#{row[:locale]}'"
+
+        row[:locale] = nil
       end
 
       row[:name] = cleaned_name
