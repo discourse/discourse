@@ -240,6 +240,35 @@ export default async function lightbox(elem, siteSettings) {
       return data;
     });
 
+    const itemsToPreload = items.filter((item) => {
+      const { largeSrc, targetWidth, targetHeight } = item.dataset;
+      const hasImageSrc = largeSrc || item.getAttribute("href");
+      const missingDimensions = !targetWidth || !targetHeight;
+      const imgDimensions = item
+        .querySelector(".informations")
+        ?.textContent.trim()
+        .split(" ")[0];
+      const missingMetaData = !imgDimensions?.split(/x|×/).every((d) => !!d);
+
+      return hasImageSrc && missingDimensions && missingMetaData;
+    });
+
+    await Promise.all(
+      itemsToPreload.map(
+        (item) =>
+          new Promise((resolve) => {
+            const img = new Image();
+            img.src =
+              item.getAttribute("data-large-src") || item.getAttribute("href");
+            img.onload = () => {
+              item.setAttribute("data-target-width", img.naturalWidth);
+              item.setAttribute("data-target-height", img.naturalHeight);
+              resolve();
+            };
+            img.onerror = resolve;
+          })
+      )
+    );
     function tapAction(pt, event) {
       const pswp = lightboxEl.pswp;
       if (event.target.classList.contains("pswp__img")) {
