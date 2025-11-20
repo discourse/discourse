@@ -62,8 +62,8 @@ module PageObjects
         self
       end
 
-      def has_title?(text)
-        find(".title-input input#reply-title", text:)
+      def has_title?(value)
+        expect(find(".title-input input#reply-title")).to eq(value)
       end
 
       def fill_content(content)
