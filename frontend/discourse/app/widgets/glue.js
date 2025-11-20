@@ -4,7 +4,7 @@
  * This file is maintained only to prevent breaking imports in existing third-party customizations.
  * New code should not use this component or the widget system.
  */
-import { warnWidgetsDecommissioned } from "./widget";
+import { warnWidgetsDecommissioned } from "discourse/widgets/widget";
 
 /**
  * This class is kept only for backward compatibility.

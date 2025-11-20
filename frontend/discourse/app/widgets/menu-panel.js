@@ -5,4 +5,4 @@
  * New code should not use this component or the widget system.
  */
 
-export { DummyWidget as default } from "./widget";
+export { DummyWidget as default } from "discourse/widgets/widget";

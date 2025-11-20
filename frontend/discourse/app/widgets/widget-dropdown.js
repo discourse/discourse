@@ -153,4 +153,4 @@ export const WidgetDropdownClass = {
   _onTrigger() {},
 };
 
-export { DummyWidget as default } from "./widget";
+export { DummyWidget as default } from "discourse/widgets/widget";

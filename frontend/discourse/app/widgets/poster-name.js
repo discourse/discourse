@@ -8,4 +8,4 @@
 export {
   warnWidgetsDecommissioned as disableNameSuppression,
   DummyWidget as default,
-} from "./widget";
+} from "discourse/widgets/widget";

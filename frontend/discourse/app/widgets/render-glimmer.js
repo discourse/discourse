@@ -48,4 +48,4 @@ export default class RenderGlimmer {
   get parentMountWidgetComponent() {}
 }
 
-export { createWidgetFrom as registerWidgetShim } from "./widget";
+export { createWidgetFrom as registerWidgetShim } from "discourse/widgets/widget";

@@ -13,4 +13,4 @@ export {
   warnWidgetsDecommissioned as cloak,
   warnWidgetsDecommissioned as uncloak,
   DummyWidget as default,
-} from "./widget";
+} from "discourse/widgets/widget";

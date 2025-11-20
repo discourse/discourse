@@ -8,4 +8,4 @@
 export {
   warnWidgetsDecommissioned as replaceEmoji,
   DummyWidget as default,
-} from "./widget";
+} from "discourse/widgets/widget";

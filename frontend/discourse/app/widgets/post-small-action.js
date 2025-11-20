@@ -12,4 +12,4 @@ export {
   warnWidgetsDecommissioned as addPostSmallActionClassesCallback,
   warnWidgetsDecommissioned as resetPostSmallActionClassesCallbacks,
   DummyWidget as default,
-} from "./widget";
+} from "discourse/widgets/widget";

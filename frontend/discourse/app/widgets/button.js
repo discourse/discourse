@@ -37,4 +37,4 @@ export const ButtonClass = {
   click() {},
 };
 
-export { DummyWidget as default } from "./widget";
+export { DummyWidget as default } from "discourse/widgets/widget";

@@ -5,4 +5,4 @@
  * New code should not use this component or the widget system.
  */
 
-export { warnWidgetsDecommissioned as default } from "./widget";
+export { warnWidgetsDecommissioned as default } from "discourse/widgets/widget";

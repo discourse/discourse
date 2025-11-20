@@ -11,4 +11,4 @@ export {
   warnWidgetsDecommissioned as addPostClassesCallback,
   warnWidgetsDecommissioned as resetPostClassesCallback,
   DummyWidget as default,
-} from "./widget";
+} from "discourse/widgets/widget";
