@@ -8,6 +8,7 @@ RSpec.describe "Shortcuts | drawer", type: :system do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
+  let(:lightbox) { PageObjects::Components::PhotoSwipe.new }
 
   before do
     chat_system_bootstrap(user_1, [channel_1, channel_2])
@@ -54,6 +55,29 @@ RSpec.describe "Shortcuts | drawer", type: :system do
 
           page.send_keys(:escape)
 
+          expect(chat_page).to have_drawer
+        end
+      end
+
+      context "when lightbox is open" do
+        fab!(:upload)
+        fab!(:message) do
+          Fabricate(:chat_message, chat_channel: channel_1, upload_ids: [upload.id])
+        end
+
+        before { SiteSetting.experimental_lightbox = true }
+
+        it "does not close the drawer" do
+          expect(chat_page).to have_drawer
+
+          drawer_page.open_channel(channel_1)
+          find(".chat-img-upload").click
+
+          expect(lightbox).to be_visible
+
+          page.send_keys(:escape)
+
+          expect(lightbox).to be_hidden
           expect(chat_page).to have_drawer
         end
       end

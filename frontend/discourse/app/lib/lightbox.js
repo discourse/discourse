@@ -55,19 +55,36 @@ export default async function lightbox(elem, siteSettings) {
       errorMsg: i18n("lightbox.error"),
       showHideAnimationType: isTestEnv ? "none" : "zoom",
       counter: false,
+      escKey: false,
       tapAction,
       paddingFn,
       pswpModule: async () => await import("photoswipe"),
       appendToEl: isTesting() && document.getElementById("ember-testing"),
     });
 
+    const keyDownHandler = function (event) {
+      if (event.key !== "Escape") {
+        return;
+      }
+
+      event.stopPropagation();
+      event.preventDefault();
+
+      lightboxEl.pswp.close();
+    };
+
     lightboxEl.on("afterInit", () => {
       const el = lightboxEl.pswp.currSlide.data.element;
       el.querySelector(".meta")?.classList.add("open");
+
+      lightboxEl.pswp.element.addEventListener("keydown", (event) =>
+        keyDownHandler(event)
+      );
     });
 
     lightboxEl.on("close", function () {
       lightboxEl.pswp.element.classList.add("pswp--behind-header");
+      lightboxEl.pswp.element.removeEventListener("keydown", keyDownHandler);
     });
 
     lightboxEl.on("destroy", () => {
