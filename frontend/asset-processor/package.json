@@ -48,6 +48,6 @@
     "pnpm": "^9"
   },
   "devDependencies": {
-    "vitest": "^4.0.10"
+    "vitest": "^4.0.12"
   }
 }
