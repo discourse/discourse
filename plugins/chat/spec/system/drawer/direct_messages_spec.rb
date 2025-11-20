@@ -12,7 +12,12 @@ RSpec.describe "Drawer - direct messages", type: :system do
 
   it "shows a button for chat search" do
     drawer_page.visit_direct_messages
+    drawer_page.open_chat_search
 
-    expect(page).to have_selector(".chat-channel-search-btn")
+    expect(drawer_page).to have_open_chat_search
+
+    drawer_page.back
+
+    expect(drawer_page).to have_open_direct_messages
   end
 end

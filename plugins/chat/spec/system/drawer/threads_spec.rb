@@ -15,7 +15,12 @@ RSpec.describe "Drawer - threads", type: :system do
 
   it "shows a button for chat search" do
     drawer_page.visit_user_threads
+    drawer_page.open_chat_search
 
-    expect(page).to have_selector(".chat-channel-search-btn")
+    expect(drawer_page).to have_open_chat_search
+
+    drawer_page.back
+
+    expect(drawer_page).to have_open_user_threads
   end
 end

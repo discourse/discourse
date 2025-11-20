@@ -53,6 +53,10 @@ module PageObjects
         open_browse
       end
 
+      def open_chat_search
+        find(".chat-channel-search-btn").click
+      end
+
       def open_channel(channel)
         channels_index.open_channel(channel)
         has_no_css?(".chat-skeleton")
@@ -150,6 +154,11 @@ module PageObjects
       def has_open_direct_messages?
         has_css?("html.has-drawer-chat")
         has_css?("#{VISIBLE_DRAWER} .direct-message-channels")
+      end
+
+      def has_open_chat_search?
+        has_css?("html.has-drawer-chat")
+        has_css?("#{VISIBLE_DRAWER} .c-search")
       end
 
       def has_open_user_threads?
