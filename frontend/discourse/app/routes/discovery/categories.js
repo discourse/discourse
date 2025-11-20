@@ -2,6 +2,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { hash } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import { removeValuesFromArray } from "discourse/lib/array-tools";
 import { MAX_UNOPTIMIZED_CATEGORIES } from "discourse/lib/constants";
 import PreloadStore from "discourse/lib/preload-store";
 import { defaultHomepage } from "discourse/lib/utilities";
@@ -70,31 +71,31 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
   _loadBefore(store) {
     const session = this.session;
 
-    return function (topic_ids, storeInSession) {
+    return async function (topic_ids, storeInSession) {
       // refresh dupes
-      this.topics.removeObjects(
+      removeValuesFromArray(
+        this.topics, // this is a CategoryList instance
         this.topics.filter((topic) => topic_ids.includes(topic.id))
       );
 
       const url = `/latest.json?topic_ids=${topic_ids.join(",")}`;
 
-      return ajax({ url, data: this.params }).then((result) => {
-        const topicIds = new Set();
-        this.topics.forEach((topic) => topicIds.add(topic.id));
+      const result = await ajax({ url, data: this.params });
+      const topicIds = new Set();
+      this.topics.forEach((topic) => topicIds.add(topic.id));
 
-        let i = 0;
-        TopicList.topicsFrom(store, result).forEach((topic) => {
-          if (!topicIds.has(topic.id)) {
-            topic.set("highlight", true);
-            this.topics.insertAt(i, topic);
-            i++;
-          }
-        });
-
-        if (storeInSession) {
-          session.set("topicList", this);
+      let i = 0;
+      TopicList.topicsFrom(store, result).forEach((topic) => {
+        if (!topicIds.has(topic.id)) {
+          topic.set("highlight", true);
+          this.topics.splice(i, 0, topic);
+          i++;
         }
       });
+
+      if (storeInSession) {
+        session.set("topicList", this);
+      }
     };
   }
 

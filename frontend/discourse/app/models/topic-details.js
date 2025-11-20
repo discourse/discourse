@@ -2,6 +2,8 @@ import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+import { removeValueFromArray } from "discourse/lib/array-tools";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import RestModel from "discourse/models/rest";
 
 /**
@@ -19,6 +21,8 @@ export default class TopicDetails extends RestModel {
   @tracked can_split_merge_topic;
   @tracked created_by;
   @tracked notification_level;
+  @trackedArray allowed_groups;
+  @trackedArray allowed_users;
 
   loaded = false;
 
@@ -54,27 +58,33 @@ export default class TopicDetails extends RestModel {
     });
   }
 
-  removeAllowedGroup(group) {
+  async removeAllowedGroup(group) {
     const groups = this.allowed_groups;
     const name = group.name;
 
-    return ajax("/t/" + this.get("topic.id") + "/remove-allowed-group", {
+    await ajax(`/t/${this.get("topic.id")}/remove-allowed-group`, {
       type: "PUT",
       data: { name },
-    }).then(() => {
-      groups.removeObject(groups.find((item) => item.name === name));
     });
+
+    removeValueFromArray(
+      groups,
+      groups.find((item) => item.name === name)
+    );
   }
 
-  removeAllowedUser(user) {
+  async removeAllowedUser(user) {
     const users = this.allowed_users;
     const username = user.get("username");
 
-    return ajax("/t/" + this.get("topic.id") + "/remove-allowed-user", {
+    await ajax(`/t/${this.get("topic.id")}/remove-allowed-user`, {
       type: "PUT",
       data: { username },
-    }).then(() => {
-      users.removeObject(users.find((item) => item.username === username));
     });
+
+    removeValueFromArray(
+      users,
+      users.find((item) => item.username === username)
+    );
   }
 }

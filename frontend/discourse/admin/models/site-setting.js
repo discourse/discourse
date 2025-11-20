@@ -27,7 +27,7 @@ export default class SiteSetting extends EmberObject {
       if (!categories[s.category]) {
         categories[s.category] = [];
       }
-      categories[s.category].pushObject(SiteSetting.create(s));
+      categories[s.category].push(SiteSetting.create(s));
     });
     return Object.keys(categories).map(function (n) {
       return {

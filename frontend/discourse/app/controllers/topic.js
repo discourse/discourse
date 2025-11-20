@@ -23,7 +23,11 @@ import { MIN_POSTS_COUNT } from "discourse/components/topic-map/topic-map-summar
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { uniqueItemsFromArray } from "discourse/lib/array-tools";
+import {
+  addUniqueValueToArray,
+  removeValueFromArray,
+  uniqueItemsFromArray,
+} from "discourse/lib/array-tools";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
 import discourseComputed, { bind } from "discourse/lib/decorators";
@@ -82,6 +86,7 @@ export default class TopicController extends Controller {
 
   @tracked multiSelect = false;
   @tracked hasScrolled = null;
+  @trackedArray bookmarks = [];
   @trackedArray selectedPostIds = [];
 
   queryParams = ["filter", "username_filters", "replies_to_post_number"];
@@ -92,7 +97,6 @@ export default class TopicController extends Controller {
   @or("model.errorHtml", "model.errorMessage") hasError;
   @not("hasError") noErrorYet;
   @alias("site.categoriesList") categories;
-  @alias("selectedPostIds.length") selectedPostsCount;
   @alias("selectedAllPosts") canDeselectAll;
   @or("model.postStream.loadedAllPosts", "model.postStream.loadingLastPost")
   loadedAllPosts;
@@ -136,6 +140,11 @@ export default class TopicController extends Controller {
     return BufferedProxy.create({
       content: this.model,
     });
+  }
+
+  @dependentKeyCompat
+  get selectedPostsCount() {
+    return this.selectedPostIds.length;
   }
 
   get titleIsVisibleOnHeader() {
@@ -368,7 +377,7 @@ export default class TopicController extends Controller {
       ),
     })
       .then((result) => {
-        result.post_ids.pushObject(post.get("id"));
+        result.post_ids.push(post.get("id"));
         this._updateSelectedPostIds(result.post_ids);
       })
       .finally(() => {
@@ -498,7 +507,7 @@ export default class TopicController extends Controller {
   deletePending(pending) {
     return ajax(`/review/${pending.id}`, { type: "DELETE" })
       .then(() => {
-        this.get("model.pending_posts").removeObject(pending);
+        removeValueFromArray(this.model.pending_posts, pending);
       })
       .catch(popupAjaxError);
   }
@@ -1138,9 +1147,12 @@ export default class TopicController extends Controller {
   @action
   togglePostSelection(post) {
     const selected = this.selectedPostIds;
-    selected.includes(post.id)
-      ? selected.removeObject(post.id)
-      : selected.addObject(post.id);
+
+    if (selected.includes(post.id)) {
+      removeValueFromArray(selected, post.id);
+    } else {
+      addUniqueValueToArray(selected, post.id);
+    }
   }
 
   @action
@@ -1593,7 +1605,7 @@ export default class TopicController extends Controller {
 
     const bookmark = this.model.bookmarks.find((b) => b.id === data.id);
     if (!bookmark) {
-      this.model.bookmarks.pushObject(Bookmark.create(data));
+      this.model.bookmarks.push(Bookmark.create(data));
     } else {
       bookmark.reminder_at = data.reminder_at;
       bookmark.name = data.name;
@@ -1687,22 +1699,12 @@ export default class TopicController extends Controller {
       : undefined;
   }
 
-  @discourseComputed(
-    "selectedPostsCount",
-    "model.postStream.isMegaTopic",
-    "model.postStream.stream.length",
-    "model.posts_count"
-  )
-  selectedAllPosts(
-    selectedPostsCount,
-    isMegaTopic,
-    postsCount,
-    topicPostsCount
-  ) {
-    if (isMegaTopic) {
-      return selectedPostsCount >= topicPostsCount;
+  @dependentKeyCompat
+  get selectedAllPosts() {
+    if (this.model.postStream.isMegaTopic) {
+      return this.selectedPostsCount >= this.model.posts_count;
     } else {
-      return selectedPostsCount >= postsCount;
+      return this.selectedPostsCount >= this.model.postStream.stream.length;
     }
   }
 

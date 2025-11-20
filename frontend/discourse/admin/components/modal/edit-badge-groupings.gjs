@@ -1,32 +1,22 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { A } from "@ember/array";
 import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import { ajax } from "discourse/lib/ajax";
+import { removeValueFromArray } from "discourse/lib/array-tools";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
 
 export default class EditBadgeGroupings extends Component {
   @service dialog;
   @service store;
 
-  @tracked workingCopy = new TrackedArray();
-
-  constructor() {
-    super(...arguments);
-    let copy = A();
-    if (this.args.model.badgeGroupings) {
-      this.args.model.badgeGroupings.forEach((o) =>
-        copy.pushObject(this.store.createRecord("badge-grouping", o))
-      );
-    }
-    this.workingCopy = copy;
-  }
+  @trackedArray workingCopy = this.args.model.badgeGroupings.map((o) =>
+    this.store.createRecord("badge-grouping", o)
+  );
 
   @action
   up(item) {
@@ -40,7 +30,7 @@ export default class EditBadgeGroupings extends Component {
 
   @action
   delete(item) {
-    this.workingCopy.removeObject(item);
+    removeValueFromArray(this.workingCopy, item);
   }
 
   @action
@@ -49,7 +39,7 @@ export default class EditBadgeGroupings extends Component {
       editing: true,
       name: i18n("admin.badges.badge_grouping"),
     });
-    this.workingCopy.pushObject(obj);
+    this.workingCopy.push(obj);
   }
 
   @action
@@ -63,7 +53,7 @@ export default class EditBadgeGroupings extends Component {
       });
       this.workingCopy.clear();
       data.badge_groupings.forEach((badgeGroup) => {
-        this.workingCopy.pushObject(
+        this.workingCopy.push(
           this.store.createRecord("badge-grouping", {
             ...badgeGroup,
             editing: false,
@@ -82,8 +72,8 @@ export default class EditBadgeGroupings extends Component {
     if (index + delta < 0 || index + delta >= this.workingCopy.length) {
       return;
     }
-    this.workingCopy.removeAt(index);
-    this.workingCopy.insertAt(index + delta, item);
+    this.workingCopy.splice(index, 1); // remove the item from the old position
+    this.workingCopy.splice(index + delta, 0, item); // insert it in the new position
   }
 
   <template>

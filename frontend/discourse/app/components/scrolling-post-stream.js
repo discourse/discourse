@@ -167,7 +167,7 @@ export default class ScrollingPostStream extends MountWidget {
     const posts = this.posts;
     const refresh = (cb) => this.queueRerender(cb);
     if (onscreen.length) {
-      const first = posts.objectAt(onscreen[0]);
+      const first = posts[onscreen[0]];
       if (this._topVisible !== first) {
         this._topVisible = first;
         const elemId = postsNodes.item(onscreen[0]).id;
@@ -216,13 +216,13 @@ export default class ScrollingPostStream extends MountWidget {
         });
       }
 
-      const last = posts.objectAt(onscreen[onscreen.length - 1]);
+      const last = posts[onscreen[onscreen.length - 1]];
       if (this._bottomVisible !== last) {
         this._bottomVisible = last;
         this.bottomVisibleChanged({ post: last, refresh });
       }
 
-      const currentPostObj = posts.objectAt(currentPost);
+      const currentPostObj = posts[currentPost];
       const changedPost = this._currentPostObj !== currentPostObj;
       if (changedPost) {
         this._currentPostObj = currentPostObj;
@@ -249,7 +249,7 @@ export default class ScrollingPostStream extends MountWidget {
 
     const newPrev = new Set();
     nearby.forEach((idx) => {
-      const post = posts.objectAt(idx);
+      const post = posts[idx];
 
       this._previouslyNearby.delete(post.post_number);
 

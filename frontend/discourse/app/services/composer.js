@@ -1185,9 +1185,9 @@ export default class ComposerService extends Service {
         if (result.responseJson.action === "enqueued") {
           this.postWasEnqueued(result.responseJson);
           if (result.responseJson.pending_post) {
-            let pendingPosts = this.get("topicController.model.pending_posts");
+            let pendingPosts = this.topicController.model.pending_posts;
             if (pendingPosts) {
-              pendingPosts.pushObject(result.responseJson.pending_post);
+              pendingPosts.push(result.responseJson.pending_post);
             }
           }
 

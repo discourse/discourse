@@ -12,6 +12,7 @@ import {
   grantableBadges,
   isBadgeGrantable,
 } from "discourse/lib/grant-badge-utils";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
 import ComboBox from "discourse/select-kit/components/combo-box";
@@ -24,8 +25,8 @@ export default class GrantBadgeModal extends Component {
   @tracked flash = null;
   @tracked flashType = null;
   @tracked allBadges = [];
-  @tracked userBadges = [];
   @tracked availableBadges = [];
+  @trackedArray userBadges = [];
 
   get noAvailableBadges() {
     !this.availableBadges.length;
@@ -71,7 +72,7 @@ export default class GrantBadgeModal extends Component {
         username,
         getURL(this.post.url)
       );
-      this.userBadges.pushObject(newBadge);
+      this.userBadges.push(newBadge);
       this.#updateAvailableBadges();
       this.selectedBadgeId = null;
       this.flash = i18n("badges.successfully_granted", {

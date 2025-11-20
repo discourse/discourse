@@ -7,6 +7,7 @@ import { observes } from "@ember-decorators/object";
 import CreateInvite from "discourse/components/modal/create-invite";
 import CreateInviteBulk from "discourse/components/modal/create-invite-bulk";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import discourseComputed, { debounce } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import Invite from "discourse/models/invite";
@@ -83,7 +84,7 @@ export default class UserInvitedShowController extends Controller {
   async destroyInvite(invite) {
     try {
       await invite.destroy();
-      this.model.invites.removeObject(invite);
+      removeValueFromArray(this.model.invites, invite);
     } catch (error) {
       popupAjaxError(error);
     }

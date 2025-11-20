@@ -4,6 +4,7 @@ import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import { forceMobile } from "discourse/lib/mobile";
 import { Placeholder } from "discourse/models/post-stream";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -109,7 +110,7 @@ module("Unit | Controller | topic", function (hooks) {
       "multi selection mode is disabled by default"
     );
 
-    controller.selectedPostIds.pushObject(1);
+    controller.selectedPostIds.push(1);
     assert.strictEqual(controller.selectedPostIds.length, 1);
 
     controller.send("toggleMultiSelect");
@@ -125,7 +126,7 @@ module("Unit | Controller | topic", function (hooks) {
       "toggling 'multiSelect' clears 'selectedPostIds'"
     );
 
-    controller.selectedPostIds.pushObject(2);
+    controller.selectedPostIds.push(2);
     assert.strictEqual(controller.selectedPostIds.length, 1);
 
     controller.send("toggleMultiSelect");
@@ -170,10 +171,10 @@ module("Unit | Controller | topic", function (hooks) {
     controller.set("selectedPostIds", [1, 2]);
     assert.false(controller.selectedAllPosts, "not all posts are selected");
 
-    controller.selectedPostIds.pushObject(3);
+    controller.selectedPostIds.push(3);
     assert.true(controller.selectedAllPosts, "all posts are selected");
 
-    controller.selectedPostIds.pushObject(42);
+    controller.selectedPostIds.push(42);
     assert.true(
       controller.selectedAllPosts,
       "all posts (including filtered posts) are selected"
@@ -207,21 +208,21 @@ module("Unit | Controller | topic", function (hooks) {
       "no username when no selected posts"
     );
 
-    controller.selectedPostIds.pushObject(1);
+    controller.selectedPostIds.push(1);
     assert.strictEqual(
       controller.selectedPostsUsername,
       "gary",
       "username of the selected posts"
     );
 
-    controller.selectedPostIds.pushObject(2);
+    controller.selectedPostIds.push(2);
     assert.strictEqual(
       controller.selectedPostsUsername,
       "gary",
       "username of all the selected posts when same user"
     );
 
-    controller.selectedPostIds.pushObject(3);
+    controller.selectedPostIds.push(3);
     assert.strictEqual(
       controller.selectedPostsUsername,
       undefined,
@@ -279,7 +280,7 @@ module("Unit | Controller | topic", function (hooks) {
       "false when no posts are selected"
     );
 
-    controller.selectedPostIds.pushObject(1);
+    controller.selectedPostIds.push(1);
     assert.false(
       controller.canDeleteSelected,
       "false when can't delete one of the selected posts"
@@ -291,7 +292,7 @@ module("Unit | Controller | topic", function (hooks) {
       "true when all selected posts can be deleted"
     );
 
-    controller.selectedPostIds.pushObject(1);
+    controller.selectedPostIds.push(1);
     assert.false(
       controller.canDeleteSelected,
       "false when all posts are selected and user is staff"
@@ -323,7 +324,7 @@ module("Unit | Controller | topic", function (hooks) {
       "can't merge topic when no posts are selected"
     );
 
-    controller.selectedPostIds.pushObject(1);
+    controller.selectedPostIds.push(1);
 
     assert.false(
       controller.canMergeTopic,
@@ -334,15 +335,15 @@ module("Unit | Controller | topic", function (hooks) {
 
     assert.true(controller.canMergeTopic, "can merge topic");
 
-    controller.selectedPostIds.removeObject(1);
-    controller.selectedPostIds.pushObject(2);
+    removeValueFromArray(controller.selectedPostIds, 1);
+    controller.selectedPostIds.push(2);
 
     assert.true(
       controller.canMergeTopic,
       "can merge topic when 1st post is not a regular post"
     );
 
-    controller.selectedPostIds.pushObject(3);
+    controller.selectedPostIds.push(3);
 
     assert.true(
       controller.canMergeTopic,
@@ -366,7 +367,7 @@ module("Unit | Controller | topic", function (hooks) {
 
     assert.false(controller.canChangeOwner, "false when no posts are selected");
 
-    controller.selectedPostIds.pushObject(1);
+    controller.selectedPostIds.push(1);
     assert.false(controller.canChangeOwner, "false when not admin");
 
     currentUser.set("admin", true);
@@ -375,7 +376,7 @@ module("Unit | Controller | topic", function (hooks) {
       "true when admin and one post is selected"
     );
 
-    controller.selectedPostIds.pushObject(2);
+    controller.selectedPostIds.push(2);
     assert.false(
       controller.canChangeOwner,
       "false when admin but more than 1 user"
@@ -401,7 +402,7 @@ module("Unit | Controller | topic", function (hooks) {
 
     assert.false(controller.canChangeOwner, "false when no posts are selected");
 
-    controller.selectedPostIds.pushObject(1);
+    controller.selectedPostIds.push(1);
     assert.false(controller.canChangeOwner, "false when not moderator");
 
     currentUser.set("moderator", true);
@@ -410,7 +411,7 @@ module("Unit | Controller | topic", function (hooks) {
       "true when moderator and one post is selected"
     );
 
-    controller.selectedPostIds.pushObject(2);
+    controller.selectedPostIds.push(2);
     assert.false(
       controller.canChangeOwner,
       "false when moderator but more than 1 user"
@@ -433,13 +434,13 @@ module("Unit | Controller | topic", function (hooks) {
 
     assert.false(controller.canMergePosts, "false when no posts are selected");
 
-    controller.selectedPostIds.pushObject(1);
+    controller.selectedPostIds.push(1);
     assert.false(
       controller.canMergePosts,
       "false when only one post is selected"
     );
 
-    controller.selectedPostIds.pushObject(2);
+    controller.selectedPostIds.push(2);
     assert.false(
       controller.canMergePosts,
       "false when selected posts are from different users"

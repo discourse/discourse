@@ -365,7 +365,7 @@ export default class InvitePanel extends Component {
         .then((result) => {
           model.setProperties({ saving: false, finished: true });
           if (this.isPM && result && result.user) {
-            this.get("inviteModel.details.allowed_users").pushObject(
+            this.get("inviteModel.details.allowed_users").push(
               EmberObject.create(result.user)
             );
             // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
