@@ -8,10 +8,9 @@ import ChatScrollableList from "../modifiers/chat/scrollable-list";
 
 export default class ChatMessagesScroller extends Component {
   @service capabilities;
-  @service site;
 
   setupLock = modifierFn((element) => {
-    if (this.site.desktopView || this.capabilities.isIpadOS) {
+    if (!this.capabilities.isIOS || this.capabilities.isIpadOS) {
       return;
     }
 

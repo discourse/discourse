@@ -53,6 +53,7 @@ const tonableEmojiUrl = (emoji, scale) => {
 
 export default class EmojiPicker extends Component {
   @service emojiStore;
+  @service capabilities;
   @service site;
 
   @tracked isFiltering = false;
@@ -69,7 +70,7 @@ export default class EmojiPicker extends Component {
   scrollableNode;
 
   setupSectionsNavScroll = modifierFn((element) => {
-    if (this.site.desktopView) {
+    if (!this.capabilities.isIOS || this.capabilities.isIpadOS) {
       return;
     }
 
@@ -82,7 +83,8 @@ export default class EmojiPicker extends Component {
 
   scrollListener = modifierFn((element) => {
     this.scrollableNode = element;
-    if (this.site.mobileView) {
+
+    if (this.capabilities.isIOS && !this.capabilities.isIpadOS) {
       lock(element);
     }
 
@@ -92,7 +94,7 @@ export default class EmojiPicker extends Component {
       this.scrollableNode = null;
       element.removeEventListener("scroll", this._handleScroll);
 
-      if (this.site.mobileView) {
+      if (this.capabilities.isIOS && !this.capabilities.isIpadOS) {
         unlock(element);
       }
     };
