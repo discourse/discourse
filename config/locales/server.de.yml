@@ -1653,7 +1653,6 @@ de:
     allow_duplicate_topic_titles_category: "Themen mit identischen, doppelten Titeln zulassen, wenn die Kategorie unterschiedlich ist. allow_duplicate_topic_titles muss deaktiviert sein."
     unique_posts_mins: "Minuten, nach denen ein Benutzer denselben Inhalt noch einmal schreiben kann."
     educate_until_posts: "Zeige das Hilfe-Panel im Editor, wenn ein Benutzer einen seiner ersten (n) Beiträge zu schreiben beginnt."
-    title: "Der Name dieser Website. Sichtbar für alle Besucher, einschließlich anonymer Benutzer."
     site_description: "Beschreibe diese Website in einem Satz. Sichtbar für alle Besucher, auch für anonyme Benutzer."
     short_site_description: "Kurze Beschreibung in ein paar Worten. Sichtbar für alle Besucher, auch für anonyme Benutzer."
     contact_email: "E-Mail-Adresse einer verantwortlichen Person für diese Website. Wird verwendet für kritische Benachrichtigungen und unter <a href='%{base_path}/about' target='_blank'>/about</a> angezeigt. Sichtbar für anonyme Benutzer auf öffentlichen Websites."
@@ -2117,7 +2116,6 @@ de:
     allow_all_users_to_flag_illegal_content: "Anonyme Benutzer sehen die Information, dass sie den Administratoren eine E-Mail schicken müssen, um illegale Inhalte zu melden. Diese Einstellung hat Vorrang vor „flag post allowed groups“."
     email_address_to_report_illegal_content: "Wenn dieses Feld leer gelassen wird, wird die Standard-E-Mail-Adresse des Website-Administrators verwendet."
     cooldown_hours_until_reflag: "Wie lange Benutzer warten müssen, bevor sie einen Beitrag erneut melden können"
-    slow_mode_prevents_editing: "Verhindert der langsame Modus die Bearbeitung nach editing_grace_period?"
     reply_by_email_enabled: "Aktiviere die Funktion, die es Benutzern ermöglicht, direkt per E-Mail auf Themen zu antworten, anstatt sich auf der Website anmelden zu müssen. Weitere Informationen findest du im <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>Leitfaden auf Meta</a> ."
     reply_by_email_address: "Vorlage für Antwort per E-Mail (eingehende E-Mail-Adresse), zum Beispiel: %%{reply_key}@reply.example.com oder replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Liste der alternativen Vorlagen für die Beantwortung per E-Mail (eingehende E-Mail-Adressen). Beispiel: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -2423,7 +2421,6 @@ de:
     sitemap_page_size: "Anzahl der URLs, die auf jeder Sitemap-Seite enthalten sein sollen. Max 50.000"
     enable_user_status: "Benutzern erlauben, eine eigene Statusmeldung (Emoji + Beschreibung) einzustellen."
     enable_user_tips: "Tipps für neue Benutzer aktivieren, die diesen die wichtigsten Funktionen näherbringen"
-    short_title: "Der Kurztitel wird beim Benutzer auf dem Startbildschirm, im Startmenü oder an anderen Stellen mit begrenztem Platz verwendet. Er sollte auf 12 Zeichen begrenzt sein."
     dashboard_hidden_reports: "Erlaube das Ausblenden der angegebenen Berichte im Dashboard."
     dashboard_visible_tabs: "Wähle aus, welche Dashboard-Registerkarten sichtbar sind."
     dashboard_general_tab_activity_metrics: "Wähle Berichte aus, die als Aktivitätsmetrik in der Registerkarte „Allgemein“ angezeigt werden."
@@ -3630,14 +3627,9 @@ de:
     user_automatically_silenced:
       title: "Benutzer automatisch stummgeschaltet"
       subject_template: "Neuer Benutzer %{username} wurde wegen Community-Meldungen stummgeschaltet"
-      text_body_template: |
-        Dies ist eine automatische Nachricht.
-
-        Der neue Benutzer [%{username}](%{user_url}) wurde automatisch stummgeschaltet, weil mehrere Benutzer Beiträge von %{username} gemeldet haben.
-
-        Bitte [überprüfe die Meldungen](%{base_url}/review). Wenn %{username} fälschlich stummgeschaltet wurde, so klicke die „Stummschaltung aufheben“-Schaltfläche auf der [Administrationsseite dieses Benutzers](%{user_url}).
-
-        Der Schwellenwert kann über die Einstellung `silence_new_user` geändert werden.
+    user_automatically_silenced_with_reason:
+      title: "Benutzer automatisch stummgeschaltet"
+      subject_template: "Neuer Benutzer %{username} wurde wegen Community-Meldungen stummgeschaltet"
     spam_post_blocked:
       title: "Spam-Beitrag blockiert"
       subject_template: "Beiträge des neuen Benutzers %{username} wegen mehrfacher Verlinkung blockiert"
@@ -5263,7 +5255,6 @@ de:
         title: "Beitrag verwerfen"
         complete: "Beitrag verworfen."
       revise_and_reject_post:
-        title: "Beitrag überarbeiten …"
         complete: "Beitrag wurde bis zur Überarbeitung abgelehnt."
       ignore:
         title: "Ignorieren"

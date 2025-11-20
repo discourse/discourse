@@ -128,7 +128,6 @@ es:
       email_frequency:
         description: "Solo te enviaremos un correo electrónico si no te hemos visto en los últimos 15 minutos."
         never: "Nunca"
-        title: "Notificaciones por correo electrónico"
         when_away: "Solo cuando estés ausente"
       header_indicator_preference:
         title: "Mostrar indicador de actividad en el encabezado"

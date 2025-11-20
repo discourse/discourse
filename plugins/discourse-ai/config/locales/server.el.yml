@@ -9,6 +9,10 @@ el:
     overall_sentiment:
       yaxis: "Ημερομηνία"
   discourse_ai:
+    tools:
+      presets:
+        image_generation_custom:
+          name: "Προσαρμοσμένο"
     spam_detection:
       flag_reason: "Αναφέρθηκε ως ανεπιθύμητο από <a href='%{url}'>Discourse AI</a>"
     ai_bot:

@@ -1644,7 +1644,6 @@ it:
     allow_duplicate_topic_titles_category: "Permetti argomenti con titoli identici e duplicati se la categoria è diversa. L'impostazione allow_duplicate_topic_titles deve essere disabilitata."
     unique_posts_mins: "Quanti minuti prima che un utente possa creare un altro messaggio con lo stesso contenuto"
     educate_until_posts: "Per i primi (n) messaggi di un utente, mostra la finestra a discesa con il pannello di istruzioni per nuovi utenti."
-    title: "Nome di questo sito. Visibile a tutti i visitatori inclusi gli utenti anonimi."
     site_description: "Descrivi questo sito con una frase. Visibile a tutti i visitatori inclusi gli utenti anonimi."
     short_site_description: "Breve descrizione in poche parole. Visibile a tutti i visitatori inclusi gli utenti anonimi."
     contact_email: "Indirizzo email di contatto del principale responsabile di questo sito. Utilizzato per notifiche cruciali, nonché visualizzato sul modulo <a href='%{base_path}/about' target='_blank'>/about</a>. Visibile agli utenti anonimi sui siti pubblici."
@@ -2103,7 +2102,6 @@ it:
     allow_all_users_to_flag_illegal_content: "Gli utenti anonimi vedranno le informazioni che dovranno inviare via e-mail agli amministratori per segnalare contenuti illegali. Questa impostazione ha la precedenza su \"Segnala gruppi autorizzati per i messaggi\"."
     email_address_to_report_illegal_content: "Se il campo viene lasciato vuoto, verrà utilizzato l'indirizzo email predefinito dell'amministratore del sito."
     cooldown_hours_until_reflag: "Quanto tempo gli utenti dovranno aspettare prima di poter segnalare nuovamente un messaggio"
-    slow_mode_prevents_editing: "Stabilisce se la \"Modalità lenta\" impedisce la modifica, dopo il periodo indicato da editing_grace_period."
     reply_by_email_enabled: "Attiva la funzionalità che consente all'utente di rispondere agli argomenti direttamente via email, invece di doversi prima autenticare sul sito web. Per ulteriori informazioni, consulta <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>la guida su Meta</a>."
     reply_by_email_address: "Modello per generare l'indirizzo di risposta alle email in arrivo, per esempio: %%{reply_key}@risposta.esempio.com o risposte+%%{reply_key}@esempio.com"
     alternative_reply_by_email_addresses: "Elenco dei modelli alternativi per generare gli indirizzi di risposta alle email in arrivo. Esempio: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -2408,7 +2406,6 @@ it:
     sitemap_page_size: "Numero di URL da includere in ciascuna pagina della mappa del sito. Massimo 50.000"
     enable_user_status: "Consenti agli utenti di impostare un messaggio di stato personalizzato (emoji + descrizione)."
     enable_user_tips: "Abilita i nuovi suggerimenti per utenti che descrivono le funzionalità chiave per gli utenti"
-    short_title: "Il titolo breve verrà utilizzato nella schermata iniziale dell'utente, nel programma di avvio o in altri contesti in cui lo spazio potrebbe essere limitato. Dovrebbe essere limitato a 12 caratteri."
     dashboard_hidden_reports: "Consenti di nascondere i report specificati dal dashboard."
     dashboard_visible_tabs: "Scegli quali schede del dashboard sono visibili."
     dashboard_general_tab_activity_metrics: "Scegli i report da visualizzare come metriche di attività nella scheda generale."
@@ -3506,14 +3503,9 @@ it:
     user_automatically_silenced:
       title: "Utente Silenziato Automaticamente"
       subject_template: "Nuovo utente %{username} silenziato dalle segnalazioni della comunità"
-      text_body_template: |
-        Questo è un messaggio automatico.
-
-        Il nuovo utente [%{username}](%{user_url}) è stato automaticamente silenziato perché più utenti hanno segnalato i messaggi di %{username}.
-
-        [Controlla le segnalazioni](%{base_url}/review). Se %{username} è stato silenziato per errore, clicca sul tasto di sblocco nella [pagina di amministrazione di questo utente](%{user_url}).
-
-        Questa soglia può essere modificata tramite l'impostazione del sito `silence_new_user`.
+    user_automatically_silenced_with_reason:
+      title: "Utente Silenziato Automaticamente"
+      subject_template: "Nuovo utente %{username} silenziato dalle segnalazioni della comunità"
     spam_post_blocked:
       title: "Messaggio di Spam bloccato"
       subject_template: "I messaggi del nuovo utente %{username} sono stati bloccati a causa dell'invio ripetuto di link"
@@ -4843,7 +4835,6 @@ it:
         title: "Annulla messaggio"
         complete: "Messaggio scartato."
       revise_and_reject_post:
-        title: "Revisiona il messaggio..."
         complete: "Messaggio rifiutato in attesa di revisione."
       ignore:
         title: "Ignora"

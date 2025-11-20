@@ -11,6 +11,10 @@ te:
     emotion_neutral:
       title: "\U0001F610 తటస్థ"
   discourse_ai:
+    tools:
+      presets:
+        image_generation_custom:
+          name: "అనురూప"
     ai_bot:
       tool_summary:
         search: "శోధించండి"
