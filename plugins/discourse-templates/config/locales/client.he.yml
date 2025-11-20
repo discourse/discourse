@@ -18,7 +18,7 @@ he:
         title: "תבניות (בתוך אזור טקסט)"
         insert_template: "%{shortcut} הוספת תבנית"
     templates:
-      filter_hint: "סנן לפי כותרת…"
+      filter_hint: "סינון לפי מילת מפתח…"
       insert_template: "הוספת תבנית"
       close_templates: "סגירת בורר התבניות"
       copy: "העתקת תבנית"

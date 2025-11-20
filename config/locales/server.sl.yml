@@ -1237,6 +1237,9 @@ sl:
     user_automatically_silenced:
       title: "Uporabnik samodejno utišan"
       subject_template: "Nov uporabnik %{username} je utišan zaradi prijav skupnosti"
+    user_automatically_silenced_with_reason:
+      title: "Uporabnik samodejno utišan"
+      subject_template: "Nov uporabnik %{username} je utišan zaradi prijav skupnosti"
     spam_post_blocked:
       title: "Neželen prispevek blokiran"
       subject_template: "Prispevek novega uporabnika %{username} je blokiran zaradi ponovljenih povezav"

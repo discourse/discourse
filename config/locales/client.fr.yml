@@ -852,7 +852,6 @@ fr:
         note_added_by: "Note du modérateur par %{username} · %{relativeDate}"
         no_events: "Aucun événement de la chronologie à afficher"
       notes:
-        add_note_description: "Visible uniquement par les modérateurs. Utilisez cette note pour ajouter du contexte ou des décisions concernant l'avis."
         add_note_button: "Ajouter une note"
         placeholder: "Écrivez votre note ici..."
         chars_remaining: "%{count} caractères restants"
@@ -3262,7 +3261,6 @@ fr:
         progress:
           one: "Progression : <strong>%{count}</strong> sujet"
           other: "Progression : <strong>%{count}</strong> sujets"
-        silent: "Effectue cette action sans notification."
         performing: "Effectue des opérations groupées, merci de patienter…"
         completed: "Les opérations groupées sont terminées !"
       none:
@@ -3432,7 +3430,6 @@ fr:
       jump_reply_button: "Accéder à la publication"
       deleted: "Ce sujet a été supprimé"
       slow_mode_update:
-        title: "Mode ralenti"
         select: "Les utilisateurs ne peuvent publier dans ce sujet qu'une fois tous les :"
         description: "Afin de favoriser les échanges réfléchis dans les discussions rapides ou controversées, les utilisateurs doivent attendre avant de publier à nouveau dans ce sujet."
         enable: "Activer"
@@ -4100,24 +4097,14 @@ fr:
         description: "Exiger que les nouveaux sujets aient des étiquettes d'un groupe d'étiquettes :"
         delete: "Supprimer"
         add: "Ajouter le groupe d'étiquettes requis"
-        placeholder: "sélectionner un groupe d'étiquettes…"
+        placeholder: "Sélectionner un groupe d'étiquettes…"
       topic_featured_link_allowed: "Autoriser les liens à la une dans cette catégorie"
-      delete: "Supprimer la catégorie"
-      create: "Nouvelle catégorie"
       create_long: "Créer une nouvelle catégorie"
-      save: "Enregistrer la catégorie"
-      slug: "Identifiant de la catégorie"
       slug_placeholder: "(Facultatif) mots séparés par des tirets pour l'URL"
       creation_error: Une erreur s'est produite lors de la création de la catégorie.
       save_error: Une erreur s'est produite lors de l'enregistrement de la catégorie.
-      name: "Nom de la catégorie"
-      untitled: "Catégorie sans titre"
       description: "Description"
-      logo: "Logo de la catégorie"
-      logo_dark: "Image du logo de la catégorie en mode sombre"
       logo_description: "Format d'image recommandé de 1:1 avec une taille minimale de 200 px. Si ce champ est laissé vide, aucune image ne sera affichée."
-      background_image: "Image de fond de la catégorie"
-      background_image_dark: "Image d'arrière-plan de la catégorie sombre"
       style: "Styles"
       background_color: "Couleur"
       foreground_color: "Couleur du texte"
@@ -4137,7 +4124,7 @@ fr:
       color_placeholder: "N'importe quelle couleur"
       delete_confirm: "Voulez-vous vraiment supprimer cette catégorie ?"
       delete_error: "Une erreur s'est produite lors de la suppression de la catégorie."
-      list: "Lister les catégories"
+      list: "Répertorier les catégories"
       no_description: "Veuillez ajouter une description pour cette catégorie."
       change_in_category_topic: "Modifier la description"
       already_used: "Cette couleur est déjà utilisée par une autre catégorie"
@@ -4170,23 +4157,15 @@ fr:
       all_topics_wiki: "Faire des nouveaux sujets des wikis par défaut"
       allow_unlimited_owner_edits_on_first_post: "Autoriser la modification illimitée du premier message par son propriétaire"
       subcategory_list_style: "Style des listes de sous-catégories :"
-      sort_order: "Trier la liste de sujets par :"
-      default_view: "Liste de sujets par défaut :"
-      default_top_period: "Période des meilleurs sujets par défaut :"
-      default_list_filter: "Filtre de liste par défaut :"
       allow_badges_label: "Autoriser les badges à être accordés dans cette catégorie"
-      edit_permissions: "Modifier les permissions"
       reviewable_by_group: "En plus des responsables, le contenu de cette catégorie peut également être examiné par :"
       review_group_name: "nom du groupe"
       require_topic_approval: "Nécessiter l'approbation pour chaque nouveau sujet"
       require_reply_approval: "Nécessiter l'approbation pour chaque nouvelle réponse"
       this_year: "cette année"
       position: "Position sur la page des catégories :"
-      default_position: "Position par défaut"
       position_disabled: "Les catégories seront affichées par ordre d'activité. Pour contrôler l'ordre des catégories dans les listes, activez le paramètre <a href='%{url}'>« positions de catégorie fixes »</a> ."
       minimum_required_tags: "Nombre minimal d'étiquettes requises dans un sujet :"
-      default_slow_mode: 'Activer le mode ralenti pour tous les nouveaux sujets dans cette catégorie'
-      parent: "Catégorie parente"
       num_auto_bump_daily: "Nombre de sujets ouverts à remonter dans la liste automatiquement et quotidiennement :"
       auto_bump_cooldown_days: "Nombre minimum de jours avant de revenir sur le même sujet :"
       navigate_to_first_post_after_read: "Naviguer vers le premier message après avoir lu un sujet"
@@ -4208,18 +4187,14 @@ fr:
           title: "En sourdine"
           description: "Vous ne recevrez aucune notification concernant les nouveaux sujets dans cette catégorie et ces sujets n'apparaîtront pas sur la page des sujets récents."
       search_priority:
-        label: "Priorité dans les résultats de recherche"
         options:
           normal: "Normale"
           ignore: "Ignorer"
-          very_low: "Très faible"
           low: "Faible"
           high: "Élevée"
-          very_high: "Très élevée"
       sort_options:
         default: "par défaut"
         likes: "« J'aime »"
-        op_likes: "Nombre de « J'aime » du message original"
         views: "Vues"
         posts: "Messages"
         activity: "Activité"
@@ -4239,8 +4214,7 @@ fr:
         appearance: "Apparence"
         email: "E-mail"
       list_filters:
-        all: "tous les sujets"
-        none: "aucune sous-catégorie"
+        all: "Tous les sujets"
       colors_disabled: "Vous ne pouvez pas sélectionner de couleurs, car vous n'avez pas choisi de style de catégorie."
     anonymous_flagging:
       title: "Signaler un contenu illégal"
@@ -4755,18 +4729,13 @@ fr:
           description: "Vous ne recevrez aucune notification concernant les nouveaux sujets ayant cette étiquette et ces sujets n'apparaîtront pas sur votre page des sujets non lus."
       groups:
         back_btn: "Retour à toutes les étiquettes"
-        title: "Groupes d'étiquettes"
         about_heading: "Sélectionnez un groupe d'étiquettes ou créez-en un nouveau"
         about_heading_empty: "Pour commencer, créez un nouveau groupe d'étiquettes"
         about_description: "Les groupes d'étiquettes permettent de gérer les permissions d'accès de plusieurs étiquettes de façon centralisée."
-        new: "Nouveau groupe"
-        new_title: "Créer un nouveau groupe"
-        edit_title: "Modifier un groupe"
         tags_label: "Étiquettes appartenant à ce groupe"
         parent_tag_label: "Étiquette-mère"
         parent_tag_description: "Les étiquettes de ce groupe ne pourront être attribuées que si leur étiquette-mère est également attribuée."
         one_per_topic_label: "Limiter à une étiquette de ce groupe par sujet"
-        new_name: "Nouveau groupe d'étiquettes"
         name_placeholder: "Nom"
         save: "Enregistrer"
         delete: "Supprimer"
@@ -5377,6 +5346,23 @@ fr:
               other: "Vous avez mis à jour la taille du texte par défaut. Souhaitez-vous appliquer cette modification à %{count} utilisateurs existants ?"
             modal_yes: "Oui"
             modal_no: "Non, appliquer à partir de maintenant"
+        welcome_banner:
+          form:
+            text_color:
+              label: "Couleur du texte"
+            page_visibility:
+              options:
+                top_menu_pages: "Pages du menu principal"
+                all_pages: "Toutes les pages"
+            location:
+              label: "Emplacement"
+              options:
+                above_topic_content: "Au-dessus du contenu du sujet"
+                below_site_header: "Sous l'en-tête du site"
+            header_logged_in:
+              placeholder: "Bienvenue, %{preferred_display_name} !"
+            header_anonymous:
+              placeholder: "Bienvenue sur %{site_name} !"
         navigation:
           title: "Navigation"
           header_description: "Configurez les liens de navigation et les éléments de menu de votre site. Cela inclut l'emplacement et le comportement du menu de navigation principal, les liens rapides en haut de la page d'accueil, ainsi que la barre latérale d'administration"
@@ -7134,7 +7120,6 @@ fr:
           success: "Succès"
           exists: "Existe déjà"
           upload: "Ajouter à partir d'un fichier"
-          upload_successful: "Envoi effectué avec succès. Les mots et expressions à surveiller ont été ajoutés."
           case_sensitivity_label: "Est sensible à la casse"
           case_sensitivity_description: "Seulement les mots dont la casse des caractères correspond"
           html_label: "HTML"
@@ -7226,10 +7211,7 @@ fr:
             second: "Option 2"
             third: "Option 3"
         edit_category:
-          toggle_freeform: "modèle de formulaire désactivé"
-          toggle_form_template: "modèle de formulaire activé"
           select_template: "Sélectionner des modèles de formulaire"
-          select_template_help: "Ajouter/modifier des modèles de formulaire"
         errors:
           multiple_tags_not_allowed: 'Vous ne pouvez pas sélectionner plus d''étiquettes depuis « %{tag_name} ». Pour éviter tout problème, utilisez le modèle de formulaire.'
       impersonate:
