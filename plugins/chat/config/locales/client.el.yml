@@ -182,6 +182,8 @@ el:
         types:
           category: "Κατηγορία"
           topic: "Θέμα"
+      reviewable:
+        type: "Μήνυμα συνομιλίας"
       composer:
         italic_text: "κείμενο σε έμφαση"
         bold_text: "έντονη γραφή"
@@ -275,3 +277,10 @@ el:
           fields:
             message:
               label: Μήνυμα
+    review:
+      types:
+        chat_reviewable_message:
+          title: "Αναφερόμενο Μήνυμα Συνομιλίας"
+        reviewable_chat_message:
+          title: "Αναφερόμενο μήνυμα συνομιλίας"
+          noun: "μήνυμα συνομιλίας"

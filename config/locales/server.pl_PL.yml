@@ -2273,7 +2273,7 @@ pl_PL:
     allow_all_users_to_flag_illegal_content: "Anonimowi użytkownicy zobaczą informację, że muszą wysłać e-mail do administratorów, aby zgłosić nielegalną zawartość. To ustawienie ma pierwszeństwo przed ustawieniem 'flag post allowed groups'."
     email_address_to_report_illegal_content: "Jeżeli pozostawisz to pole puste, zostanie użyty domyślny adres e-mail administratora witryny."
     cooldown_hours_until_reflag: "Ile czasu użytkownicy będą musieli poczekać, aż będą mogli zmienić etykietę wpisu"
-    slow_mode_prevents_editing: "Czy 'Tryb zwolniony' uniemożliwia edycję, po editing_grace_period?"
+    slow_mode_prevents_editing: "Czy „Tryb powolny” uniemożliwia edycję po editing_grace_period?"
     reply_by_email_enabled: "Aktywuj funkcję, która pozwala użytkownikom odpowiadać na tematy bezpośrednio za pośrednictwem poczty elektronicznej, zamiast wymagać od nich logowania się na stronie internetowej. Więcej informacji znajdziesz w <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>przewodniku po Meta</a> ."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Lista alternatywnych szablonów do odpowiedzi przez adres email. Przykład: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"

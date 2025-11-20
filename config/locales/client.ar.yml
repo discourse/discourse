@@ -410,6 +410,9 @@ ar:
         logged_in_members: "مرحبًا بعودتك يا %{preferred_display_name}!"
         anonymous_members: "مرحبًا بك في %{site_name}!"
       search: "البحث"
+    impersonation:
+      notice: "أنت تنتحل شخصية %{username}"
+      stop: "توقف عن انتحال الشخصية"
     themes:
       default_description: "افتراضي"
       broken_theme_alert: "قد لا يعمل موقعك بسبب وجود أخطاء في أحد السمات/المكوِّنات. راجع وحدة تحكم المتصفح للحصول على مزيد من المعلومات."
@@ -1005,7 +1008,7 @@ ar:
         other: "%{count} رد"
       edit: "تعديل"
       save: "حفظ"
-      cancel: "إلغاء"
+      cancel: "ألغِ"
       new_topic: "ستؤدي الموافقة على هذا العنصر إلى إنشاء موضوع جديد"
       filters:
         all_categories: "(كل الفئات)"
@@ -7638,6 +7641,7 @@ ar:
           convert_theme_alert_generic: "هل تريد بالتأكيد تحويل هذه السمة إلى مكوِّن؟"
           convert_theme_tooltip: "تحويل هذه السمة إلى مكوِّن"
           inactive_themes: "السمات غير النشطة:"
+          set_default_theme: "عيّن مبدئي"
           default_theme: "السمة الافتراضية"
           set_default_success: "السمة الافتراضية مُعيَّنة على %{theme}"
           setting_was_saved: "حُفظت إعدادات السمة"
@@ -7844,6 +7848,7 @@ ar:
           dark: "داكن"
           title: "الألوان"
           edit: "تعديل"
+          view: "اعرض"
           set_default_light: "تعيينها كلوحة ألوان فاتحة للسمة الافتراضية (%{theme})"
           set_default_dark: "تعيينها كلوحة ألوان داكنة للسمة الافتراضية (%{theme})"
           saved_refreshing: "تم الحفظ! جاري تحديث الألوان..."
@@ -7855,7 +7860,10 @@ ar:
             from_theme: "من السمة"
             no_results: "لم يتم العثور على لوحات الألوان"
           default_light_badge:
+            text: "فاتح المبدئي"
             reset: "إعادة تعيين عوامل التصفية"
+          default_dark_badge:
+            text: "داكن المبدئي"
           system_palette: "هذه لوحة ألوان مدمجة ضمن النظام، ولا يمكن تعديلها أو حذفها."
           back_to_colors: "الرجوع إلى قائمة لوحات الألوان"
           long_title: "لوحات الألوان"
