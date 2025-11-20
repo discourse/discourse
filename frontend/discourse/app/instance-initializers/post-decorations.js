@@ -223,21 +223,6 @@ export default {
         });
       }
 
-      function cleanupPopupBtns() {
-        const editTableBtn = document.querySelector(
-          ".open-popup-link.btn-edit-table"
-        );
-        const expandTableBtn = document.querySelector(
-          ".open-popup-link.btn-expand-table"
-        );
-
-        expandTableBtn?.removeEventListener(
-          "click",
-          generateFullScreenTableModal
-        );
-        editTableBtn?.removeEventListener("click", generateSpreadsheetModal);
-      }
-
       api.decorateCookedElement(
         (element, helper) => {
           schedule("afterRender", () => {
@@ -250,8 +235,6 @@ export default {
           id: "table-wrapper",
         }
       );
-
-      api.cleanupStream(cleanupPopupBtns);
     });
   },
 };
