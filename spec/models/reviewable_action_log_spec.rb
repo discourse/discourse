@@ -12,6 +12,7 @@ RSpec.describe ReviewableActionLog, type: :model do
           action_key: "agree_and_keep",
           status: :approved,
           performed_by: moderator,
+          bundle: "legacy-actions",
         )
 
       expect(reviewable.reviewable_action_logs).to include(log)
@@ -25,6 +26,7 @@ RSpec.describe ReviewableActionLog, type: :model do
           action_key: "agree_and_keep",
           status: :approved,
           performed_by: moderator,
+          bundle: "legacy-actions",
         )
       log2 =
         ReviewableActionLog.create!(
@@ -32,6 +34,7 @@ RSpec.describe ReviewableActionLog, type: :model do
           action_key: "suspend_user",
           status: :rejected,
           performed_by: moderator,
+          bundle: "user-actions",
         )
 
       expect(reviewable.reviewable_action_logs.to_a).to eq([log1, log2])
@@ -44,6 +47,7 @@ RSpec.describe ReviewableActionLog, type: :model do
           action_key: "agree_and_keep",
           status: :approved,
           performed_by: moderator,
+          bundle: "legacy-actions",
         )
 
       reviewable.destroy!
