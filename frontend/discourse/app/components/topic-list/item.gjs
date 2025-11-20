@@ -117,16 +117,19 @@ export default class Item extends Component {
   onBulkSelectToggle(e) {
     e.stopImmediatePropagation();
 
+    const topicNode = e.target.closest(".topic-list-item");
+
     if (e.target.checked) {
-      this.selectTopic(e.target.closest(".topic-list-item"), e.shiftKey);
+      this.selectTopic(topicNode, e.shiftKey);
     } else {
-      this.unselectTopic();
+      this.unselectTopic(topicNode);
     }
   }
 
-  unselectTopic() {
+  unselectTopic(topicNode) {
     this.args.selected.removeObject(this.args.topic);
     this.args.bulkSelectHelper.lastCheckedElementId = null;
+    topicNode.classList.remove("bulk-selected");
   }
 
   selectTopic(topicNode, shiftKey) {
@@ -149,6 +152,7 @@ export default class Item extends Component {
     }
 
     this.args.bulkSelectHelper.lastCheckedElementId = topicNode.dataset.topicId;
+    topicNode.classList.add("bulk-selected");
   }
 
   @action
@@ -156,14 +160,12 @@ export default class Item extends Component {
     if (this.args.bulkSelectEnabled) {
       event.preventDefault();
 
-      const checked = this.args.selected.includes(this.args.topic);
-      if (checked) {
-        this.unselectTopic();
+      const topicNode = event.target.closest(".topic-list-item");
+      const selected = this.args.selected.includes(this.args.topic);
+      if (selected) {
+        this.unselectTopic(topicNode);
       } else {
-        this.selectTopic(
-          event.target.closest(".topic-list-item"),
-          event.shiftKey
-        );
+        this.selectTopic(topicNode, event.shiftKey);
       }
 
       return;
@@ -284,7 +286,6 @@ export default class Item extends Component {
         (if @topic.pinned "pinned")
         (if @topic.closed "closed")
         (if @bulkSelectEnabled "bulk-selecting")
-        (if this.isSelected "selected")
         this.tagClassNames
         this.additionalClasses
       }}
