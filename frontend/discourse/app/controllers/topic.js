@@ -386,15 +386,15 @@ export default class TopicController extends Controller {
   async editTopic(event) {
     event?.preventDefault();
     const canEditTitle = this.get("model.details.can_edit");
-    const canLocalize = this.currentUser.can_localize_content;
+    const canLocalize = this.currentUser?.can_localize_content;
 
     if (!canEditTitle && !canLocalize) {
       return;
     }
 
-    const titleLocalized = this.model.fancy_title_localized;
+    const titleLocalized = this.model?.fancy_title_localized;
     if (!titleLocalized && canEditTitle) {
-      this.set("editingTopic", true);
+      return this.set("editingTopic", true);
     }
 
     if (this.composer.isOpen) {
