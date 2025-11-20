@@ -16,7 +16,6 @@ import { addGlobalNotice } from "discourse/components/global-notice";
 import { headerButtonsDAG } from "discourse/components/header";
 import { headerIconsDAG } from "discourse/components/header/icons";
 import { registeredTabs } from "discourse/components/more-topics";
-import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
 import { addGroupPostSmallActionCode } from "discourse/components/post/small-action";
 import {
@@ -98,7 +97,6 @@ import {
 } from "discourse/lib/sidebar/user/categories-section/category-section-link";
 import { registerCustomTagSectionLinkPrefixIcon } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
 import { consolePrefix } from "discourse/lib/source-identifier";
-import { includeAttributes } from "discourse/lib/transform-post";
 import {
   _addTransformerName,
   _registerTransformer,
@@ -665,10 +663,6 @@ class _PluginApi {
    * This function is now an alias to `api.addTrackedPostProperties`.
    * Use that function instead.
    *
-   * Add more attributes to the Post's `attrs` object passed through to widgets.
-   * You'll need to do this if you've added attributes to the serializer for a
-   * Post and want to use them when you're rendering.
-   *
    * Example:
    *
    * ```
@@ -694,17 +688,13 @@ class _PluginApi {
    *
    * This method is used to mark properties as tracked for post updates.
    *
-   * It will also add the properties to the list of Post's attributes passed to
-   * widgets.
-   *
-   * You'll need to do this if you've added properties to a Post and want to use
-   * them when you're rendering.
+   * You'll need to do this if you've added properties to a Post and need them to be
+   * automatically updated in the UI when there are changes in the model.
    *
    * @param {...string} names - The names of the properties to be tracked.
    */
   addTrackedPostProperties(...names) {
     names.forEach((name) => _addTrackedPostProperty(name));
-    includeAttributes(...names); // compatibility with widget's attributes
   }
 
   /**
@@ -856,13 +846,10 @@ class _PluginApi {
   }
 
   /**
-   * A hook that is called when the post stream is removed from the DOM.
-   * This advanced hook should be used if you end up wiring up any
-   * events that need to be torn down when the user leaves the topic
-   * page.
-   **/
-  cleanupStream(fn) {
-    addWidgetCleanCallback("post-stream", fn);
+   * @deprecated the widget rendering system was decommissioned
+   */
+  cleanupStream() {
+    warnWidgetsDecommissioned();
   }
 
   /**
@@ -1011,21 +998,8 @@ class _PluginApi {
   }
 
   /**
-   * Adds a panel to the header
-   *
-   * takes a widget name, a value to toggle on, and a function which returns the attrs for the widget
-   * Example:
-   * ```javascript
-   * api.addHeaderPanel('widget-name', 'widgetVisible', function(attrs, state) {
-   *   return { name: attrs.name, description: state.description };
-   * });
-   * ```
-   * 'toggle' is an attribute on the state of the header widget,
-   *
-   * 'transformAttrs' is a function which is passed the current attrs and state of the widget,
-   * and returns a hash of values to pass to attach
-   *
-   **/
+   * @deprecated Use `api.headerIcons` instead.
+   */
   addHeaderPanel() {
     // eslint-disable-next-line no-console
     console.error(
@@ -1368,18 +1342,7 @@ class _PluginApi {
   }
 
   /**
-   *
-   * Adds a callback to be executed on the "transformed" post that is passed to the post
-   * widget.
-   *
-   * This allows you to apply transformations on the actual post that is about to be rendered.
-   *
-   * Example:
-   *
-   * addPostTransformCallback((t)=>{
-   *  // post number 7 is overrated, don't show it ever
-   *  if (t.post_number === 7) { t.cooked = ""; }
-   * })
+   * @deprecated the widget rendering system was decommissioned
    */
   addPostTransformCallback() {
     warnWidgetsDecommissioned();
@@ -1978,15 +1941,8 @@ class _PluginApi {
   }
 
   /**
-   * Adds a widget to the header-icon ul. The widget must already be created. You can create new widgets
-   * in a theme or plugin via an initializer prior to calling this function.
-   *
-   * ```
-   * api.addToHeaderIcons(
-   *  createWidget("some-widget")
-   * ```
-   *
-   **/
+   * @deprecated Use `api.headerIcons` instead
+   */
   // eslint-disable-next-line no-unused-vars
   addToHeaderIcons(icon) {
     // eslint-disable-next-line no-console
@@ -2262,7 +2218,7 @@ class _PluginApi {
   }
 
   /**
-   * Add a function to be called when there is a keyDown even on the search-menu widget.
+   * Add a function to be called when there is a keyDown even on the search-menu.
    * This function runs before the default logic, and if one callback returns a falsey value
    * the logic chain will stop, to prevent the core behavior from occurring.
    *
@@ -2337,31 +2293,10 @@ class _PluginApi {
   }
 
   /**
-   * Calls a method on a mounted widget whenever an app event happens.
-   *
-   * For example, if you have a widget with a `key` of `cool-widget` that lives inside the
-   * `site-header` component, and you wanted it to respond to `thing:happened`, you could do this:
-   *
-   * ```
-   * api.dispatchWidgetAppEvent('site-header', 'cool-widget', 'thing:happened');
-   * ```
-   *
-   * In this case, the `cool-widget` must have a method called `thingHappened`. The event name
-   * is converted to camelCase and used as the method name for you.
+   * @deprecated the widget rendering system was decommissioned
    */
-  dispatchWidgetAppEvent(mountedComponent, widgetKey, appEvent) {
-    this.modifyClass(
-      `component:${mountedComponent}`,
-      {
-        pluginId: `${mountedComponent}/${widgetKey}/${appEvent}`,
-
-        didInsertElement() {
-          this._super();
-          this.dispatch(appEvent, widgetKey);
-        },
-      },
-      { ignoreMissing: true }
-    );
+  dispatchWidgetAppEvent() {
+    warnWidgetsDecommissioned();
   }
 
   /**
