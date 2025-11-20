@@ -87,28 +87,45 @@ after_initialize do
           end
         end
 
-      likes =
-        post.post_actions.reject do |post_action|
-          # Get rid of any PostAction records that match up to a ReactionUser
-          # that is NOT main_reaction_id and is NOT excluded, otherwise we double
-          # up on the count/reaction shown in the UI.
-          next true if reaction_users_counting_as_like.include?(post_action.user_id)
+      likes_query =
+        post.post_actions.where(post_action_type_id: PostActionType::LIKE_POST_ACTION_ID)
 
-          # Also get rid of any PostAction records that match up to a ReactionUser
-          # that is now the main_reaction_id and has historical data.
-          post
-            .post_actions_with_reaction_users
-            &.dig(post_action.id)
-            &.reaction_user
-            &.reaction
-            &.reaction_value == DiscourseReactions::Reaction.main_reaction_id
-        end
+      # Get rid of any PostAction records that match up to a ReactionUser
+      # that is NOT main_reaction_id and is NOT excluded, otherwise we double
+      # up on the count/reaction shown in the UI.
+      if reaction_users_counting_as_like.any?
+        likes_query = likes_query.where.not(user_id: reaction_users_counting_as_like.to_a)
+      end
+
+      # Also get rid of any PostAction records that match up to a ReactionUser
+      # that is now the main_reaction_id and has historical data.
+      # This subquery checks if there's a matching ReactionUser with main_reaction_id.
+      likes_query =
+        likes_query.where(
+          <<~SQL,
+            post_actions.id NOT IN (
+              SELECT post_actions.id
+              FROM post_actions
+              INNER JOIN discourse_reactions_reaction_users
+                ON discourse_reactions_reaction_users.post_id = post_actions.post_id
+                AND discourse_reactions_reaction_users.user_id = post_actions.user_id
+              INNER JOIN discourse_reactions_reactions
+                ON discourse_reactions_reactions.id = discourse_reactions_reaction_users.reaction_id
+              WHERE post_actions.post_id = :post_id
+                AND post_actions.post_action_type_id = :like_type
+                AND discourse_reactions_reactions.reaction_value = :main_reaction
+            )
+          SQL
+          post_id: post.id,
+          like_type: PostActionType::LIKE_POST_ACTION_ID,
+          main_reaction: DiscourseReactions::Reaction.main_reaction_id,
+        )
+
+      likes = likes_query.count
 
       # Likes will only be blank if there are only reactions where the reaction is in
       # discourse_reactions_excluded_from_like. All other reactions will have a `PostAction` record.
-      if likes.blank?
-        return(reactions.sort_by { |reaction| [-reaction[:count].to_i, reaction[:id]] })
-      end
+      return reactions.sort_by { |reaction| [-reaction[:count].to_i, reaction[:id]] } if likes.zero?
 
       # Reactions using main_reaction_id only have a `PostAction` record,
       # not any `ReactionUser` records, as long as the main_reaction_id was never
@@ -119,7 +136,7 @@ after_initialize do
       reactions << {
         id: DiscourseReactions::Reaction.main_reaction_id,
         type: :emoji,
-        count: likes.size + reaction_likes.sum { |r| r[:count] },
+        count: likes + reaction_likes.sum { |r| r[:count] },
       }
 
       reactions.sort_by { |reaction| [-reaction[:count].to_i, reaction[:id]] }
