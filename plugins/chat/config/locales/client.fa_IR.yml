@@ -127,7 +127,6 @@ fa_IR:
       email_frequency:
         description: "فقط در صورتی که در ۱۵ دقیقه گذشته شما را ندیده باشیم به شما ایمیل ارسال می کنیم."
         never: "هرگز"
-        title: "آگاه‌سازی‌های ایمیل"
         when_away: "فقط وقتی نیستم"
       header_indicator_preference:
         title: "نمایش نشانگر فعالیت در سربرگ"

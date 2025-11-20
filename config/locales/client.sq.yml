@@ -2963,7 +2963,6 @@ sq:
         progress:
           one: "Progresi: <strong>%{count}</strong> temë"
           other: "Progresi: <strong>%{count}</strong> tema"
-        silent: "Kryeni këtë veprim në heshtje."
         performing: "Duke kryer operacione me shumicë, ju lutemi prisni…"
         completed: "Operacionet me shumicë përfunduan me sukses!"
       none:
@@ -3091,7 +3090,6 @@ sq:
       jump_reply_button: "Shko te postimi"
       deleted: "Tema është fshirë"
       slow_mode_update:
-        title: "Modaliteti i ngadaltë"
         select: "Përdoruesit mund të postojnë në këtë temë vetëm një herë në çdo:"
         description: "Për të promovuar diskutim të menduar në diskutime me lëvizje të shpejtë ose të diskutueshme, përdoruesit duhet të presin para se të postojnë përsëri në këtë temë."
         enable: "Aktivizo"
@@ -3504,18 +3502,11 @@ sq:
       tag_groups_placeholder: "(Opsionale) lista e grupeve të etiketave"
       required_tag_group:
         delete: "Fshij"
-      delete: "Fshini kategorinë"
-      create: "Krijo kategorinë e re"
       create_long: "Krijo një kategori të re"
-      save: "Ruaj kategorinë"
-      slug: "Slug i kategorisë"
       slug_placeholder: "(Optional) dashed-words for url"
       creation_error: Pati një gabim gjatë krijimit të kategorisë
       save_error: Pati një gabim gjatë ruajtjes së kategorisë
-      name: "Emri i kategorisë"
       description: "Përshkrimi"
-      logo: "Logo e kategorisë"
-      background_image: "Imazhi i sfondit për kategorinë"
       background_color: "Ngjyra"
       color_validations:
         cant_be_empty: "nuk mund të lihet bosh"
@@ -3529,9 +3520,7 @@ sq:
       color_placeholder: "Çdo ngjyrë web"
       delete_confirm: "Jeni i sigurtë që dëshironi ta fshini këtë kategori?"
       delete_error: "Pati një gabim gjatë fshirjes së kategorisë."
-      list: "Shfaq kategoritë"
       no_description: "Shto një përshkrim për këtë kategori."
-      change_in_category_topic: "Redakto përshkrimin"
       already_used: "Kjo ngjyrë është përdorur nga një kategori tjetër"
       security: "Siguria"
       permissions:
@@ -3543,11 +3532,8 @@ sq:
       email_in: "Custom incoming email address:"
       email_in_allow_strangers: "Prano emaila nga anëtarë anonimë pa llogari në faqe"
       allow_badges_label: "Lejo të jepen stemat në këtë kategori"
-      edit_permissions: "Ndryshoni autorizimet"
       review_group_name: "emri i grupit"
       this_year: "këtë vit"
-      default_position: "Default Position"
-      parent: "Kategoria prind"
       notifications:
         watching:
           title: "Në vëzhgim"
@@ -3718,7 +3704,7 @@ sq:
         title: "Popullore"
         help: "temat më aktive të vitit, muajit, javës apo ditës së shkuar"
         all:
-          title: "Gjithë Kohës"
+          title: "Gjithë koha"
         yearly:
           title: "Vjetore"
         quarterly:
@@ -3729,7 +3715,7 @@ sq:
           title: "Javore"
         daily:
           title: "Ditore"
-        all_time: "Gjithë kohës"
+        all_time: "Gjithë koha"
         this_year: "Këtë vit"
         this_quarter: "Këtë tremujor"
         this_month: "Këtë muaj"
@@ -3848,12 +3834,9 @@ sq:
         muted:
           title: "Të heshtur"
       groups:
-        title: "Grupe etiketash"
-        new: "Grup i ri"
         tags_label: "Etiketat në këtë grup"
         parent_tag_label: "Etiketa prind"
         one_per_topic_label: "Vetëm 1 etiketë për temë nga ky grup"
-        new_name: "Grup i ri etiketash"
         name_placeholder: "Emri"
         save: "Ruaj"
         delete: "Fshije"
@@ -4024,6 +4007,12 @@ sq:
         fonts:
           backfill_modal:
             modal_yes: "Po"
+        welcome_banner:
+          form:
+            location:
+              label: "Vendndodhja"
+            header_anonymous:
+              placeholder: "Mirë se vini tek %{site_name}!"
         navigation:
           title: "Shfletimi"
         notifications:

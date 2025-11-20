@@ -1800,7 +1800,6 @@ he:
     allow_duplicate_topic_titles_category: "לאפשר נושאים עם כותרות זהות, כפולות אם הם לא באותה הקטגוריה. ההגדרה allow_duplicate_topic_titles (לאפשר כותרות נושאים כפולות) חייבת להיות מושבתת."
     unique_posts_mins: "כמה דקות לפני שמשתמש יכול לפרסם את אותו תוכן שוב"
     educate_until_posts: "כאשר המשתמש/ת מתחילים להקיש את (n) הפוסטים הראשונים שלהם, הציגו פאנל הנחיה למשתמש באזור חיבור הפוסטים."
-    title: "שם האתר הזה. גלוי לכלל המבקרים כולל משתמשים אלמוניים."
     site_description: "תיאור האתר הזה במשפט אחד. גלוי לכלל המבקרים כולל משתמשים אלמוניים."
     short_site_description: "תיאור קצר במספר מילים. גלוי לכלל המבקרים כולל משתמשים אלמוניים."
     contact_email: "כתובת דוא״ל של איש קשר מוביל שאחראי על האתר הזה. משמש להתראות קריטיות, וגם יוצג ב־<a href='%{base_path}/about' target='_blank'>‎/about</a>. חשוף בפני משתמשים אלמוניים באתרים ציבוריים."
@@ -2270,7 +2269,6 @@ he:
     allow_all_users_to_flag_illegal_content: "משתמשים אלמוניים יראו מידע שיהיה עליהם לשלוח בדוא״ל להנהלה כדי לדווח על תוכן לא חוקי. ההגדרה הזאת קודמת ל־‚flag post allowed groups’ (קבוצות מורשות לסימון פוסטים)."
     email_address_to_report_illegal_content: "אם השדה יישאר ריק ייעשה שימוש בכתובת דוא״ל ברירת המחדל של הניהול."
     cooldown_hours_until_reflag: "כמה זמן יהיה על משתמשים לחכות לפני שיוכלו לסמן פוסט כספאם פעם נוספת"
-    slow_mode_prevents_editing: "האם ‚מצב אטי’ מונע עריכה לאחר editing_grace_period (תקופת חסד לעריכה)?"
     reply_by_email_enabled: "הפעלת היכולת שמאפשרת למשתמשים להגיב לנושאים ישירות דרך דוא״ל במקום לדרוש מהם להיכנס לאתר. מומלץ לעיין ב<a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>מדריך ב־Meta</a> למידע נוסף."
     reply_by_email_address: "תבנית כתובות דוא״ל למענה דרך דוא״ל, למשל: ‎%%{reply_key}@reply.example.com או ‎replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "רשימה של כמה תבניות לתגובות בדוא״ל באמצעות כתובות דוא״ל נכנסות. למשל: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -2579,7 +2577,6 @@ he:
     sitemap_page_size: "מספר הכתובות שיתווספו בכל עמוד של מפת אתר. 50,000 לכל היותר"
     enable_user_status: "לאפשר למשתמשים להגדיר הודעת מצב מותאמת אישית (אמוג׳י + תיאור)."
     enable_user_tips: "לאפשר עצות למשתמשים חדשים שמתארים יכולות מפתח למשתמשים"
-    short_title: "בכותרת הקצרה ייעשה שימוש במסך הבית של המשתמש, במשגר או במקומות אחרים שבהם המקום מוגבל. אורכה לא יעלה על 12 תווים."
     dashboard_hidden_reports: "לאפשר להסתיר את הדוחות המסוימים בלוח הבקרה."
     dashboard_visible_tabs: "נא לבחור אילו לשוניות תופענה בלוח הבקרה."
     dashboard_general_tab_activity_metrics: "נא לבחור דיווחים שיופיעו בתור מדדי פעילות בלשונית הכללית."
@@ -2628,6 +2625,8 @@ he:
     content_localization_supported_locales: "רשימת שפות שאפשר לתרגם אליהן את תוכן המשתמשים. דורש את הפעלת ‚content localization enabled’ (תרגום תוכן פעיל)."
     content_localization_allowed_groups: "קבוצות שמורשות לעדכן תוכן שתורגם לשפה המקומית. נדרשת הפעלת ‚content localization enabled’ (תרגום תוכן פעיל)."
     content_localization_language_switcher: "הצגת בורר שפות בכותרת, הוא יאפשר למבקרים להחליף בין הגרסאות המתורגמות של Discourse ותוכן שנתרם על ידי המשתמשים. משתמש בשפה שהוגדרה ב‚שפות שנתמכות לתרגום תוכן’ (content localization supported locales)."
+    enable_upcoming_changes: "הפעלת שינויים עתידיים"
+    fake_upcoming_change: "זה שינוי עתידי מזויף למטרות בדיקה. לא צריך לתרגם את המחרוזת הזאת."
     errors:
       invalid_css_color: "צבע שגוי. נא למלא את שם הצבע או ערך הקסדצימלי."
       invalid_email: "כתובת דוא״ל שגויה."
@@ -3847,14 +3846,9 @@ he:
     user_automatically_silenced:
       title: "משתמש הושתק אוטומטית"
       subject_template: "המשתמש החדש %{username} הושתק עקב סימוני דגל מצד הקהילה"
-      text_body_template: |
-        זו הודעה אוטומטית.
-
-        המשתמש החדש [%{username}](%{user_url}) הושתק אוטומטית כיוון שמספר משתמשים סימנו את הפוסט/ים של %{username} בדגל.
-
-        נא [לסקור את הסימונים](%{base_url}/review). אם ההשתקה של %{username} אינה מוצדקת, יש ללחוץ על כפתור ביטול ההשתקה ב[עמוד הניהול עבור המשתמש הזה](%{user_url}).
-
-        ניתן לשנות את הסף הזה בעזרת שינוי `silence_new_user` (השתקת משתמשים חדשים) בהגדרות האתר.
+    user_automatically_silenced_with_reason:
+      title: "משתמש הושתק אוטומטית"
+      subject_template: "המשתמש החדש %{username} הושתק עקב סימוני דגל מצד הקהילה"
     spam_post_blocked:
       title: "פוסט ספאם נחסם"
       subject_template: "עקב קישורים חוזרים ונשנים המשתמש החדש %{username} נחסם"
@@ -5490,7 +5484,7 @@ he:
         title: "השלכת פוסט"
         complete: "הפוסט הושלך."
       revise_and_reject_post:
-        title: "עריכת שינויים בפוסט…"
+        title: "בקשת סקירה…"
         complete: "מהדורה ממתינה נדחתה בפוסט."
       ignore:
         title: "התעלמות"

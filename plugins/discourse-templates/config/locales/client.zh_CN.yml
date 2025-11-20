@@ -18,7 +18,6 @@ zh_CN:
         title: "模板（文本区域内）"
         insert_template: "%{shortcut} 插入模板"
     templates:
-      filter_hint: "按标题筛选…"
       insert_template: "插入模板"
       close_templates: "关闭模板选择器"
       copy: "复制模板"

@@ -856,7 +856,6 @@ pt:
         note_added: "Nota do moderador"
         note_added_by: "Nota do moderador por %{username} · %{relativeDate}"
       notes:
-        add_note_description: "Visível apenas para os moderadores. Utilize esta nota para adicionar contexto ou decisões sobre a revisão."
         add_note_button: "Adicionar nota"
         placeholder: "Escreva aqui a sua nota..."
         chars_remaining: "Restam %{count} carateres"
@@ -3231,7 +3230,6 @@ pt:
       jump_reply_button: "Ir para publicação"
       deleted: "Este tópico foi eliminado"
       slow_mode_update:
-        title: "Modo lento"
         select: "Os usuários só podem postar neste tópico uma vez a cada:"
         description: "Para promover um debate ponderado em debates rápidos ou controversos, os usuários devem esperar antes de postar de novo neste tópico."
         enable: "Ativar "
@@ -3834,18 +3832,11 @@ pt:
       required_tag_group:
         delete: "Eliminar"
       topic_featured_link_allowed: "Permitir hiperligações em destaque nesta categoria"
-      delete: "Eliminar Categoria"
-      create: "Nova Categoria"
       create_long: "Criar uma nova categoria"
-      save: "Guardar Categoria"
-      slug: "Título da Categoria"
       slug_placeholder: "(Opcional) palavras com travessão no URL"
       creation_error: Ocorreu um erro durante a criação da categoria.
       save_error: Ocorreu um erro ao guardar a categoria.
-      name: "Nome da Categoria"
       description: "Descrição"
-      logo: "Logótipo da Categoria"
-      background_image: "Imagem de Fundo da Categoria"
       background_color: "Cor"
       color_validations:
         cant_be_empty: "não pode estar vazio"
@@ -3862,9 +3853,7 @@ pt:
       color_placeholder: "Qualquer cor da internet"
       delete_confirm: "Tem a certeza que deseja eliminar esta categoria?"
       delete_error: "Ocorreu um erro ao eliminar a categoria."
-      list: "Lista de Categorias"
       no_description: "Por favor adicione uma descrição para esta categoria."
-      change_in_category_topic: "Editar Descrição"
       already_used: "Esta cor já foi usada para outra categoria"
       security: "Segurança"
       security_add_group: "Adicionar um grupo"
@@ -3893,14 +3882,9 @@ pt:
       all_topics_wiki: "Tornar novos tópicos wikis por padrão"
       allow_unlimited_owner_edits_on_first_post: "Permitir edições ilimitadas do proprietário na primeira postagem"
       subcategory_list_style: "Estilo da Lista de Subcategorias:"
-      sort_order: "Lista de Tópicos Ordenada Por:"
-      default_view: "Lista de Tópicos Padrão:"
       allow_badges_label: "Permitir a atribuição de crachás nesta categoria"
-      edit_permissions: "Editar Permissões"
       review_group_name: "nome do grupo"
       this_year: "este ano"
-      default_position: "Posição Padrão"
-      parent: "Categoria Principal"
       notifications:
         title: "alterar o nível de notificação desta categoria"
         watching:
@@ -3915,18 +3899,14 @@ pt:
         muted:
           title: "Silenciado"
       search_priority:
-        label: "Prioridade da Pesquisa"
         options:
           normal: "Normal"
           ignore: "Ignorar"
-          very_low: "Muito Baixa"
           low: "Baixa"
           high: "Elevado"
-          very_high: "Muito Alta"
       sort_options:
         default: "predefinida"
         likes: "Gostos"
-        op_likes: "Gostos à Publicação Original"
         views: "Vistas"
         posts: "Publicações"
         activity: "Actividade"
@@ -3945,9 +3925,6 @@ pt:
         moderation: "Moderação"
         appearance: "Aparência"
         email: "E-mail"
-      list_filters:
-        all: "todos os tópicos"
-        none: "sem subcategorias"
     flagging:
       action: "Denunciar Publicação"
       take_action_options:
@@ -4107,7 +4084,7 @@ pt:
         title: "Os Melhores"
         help: "os tópicos mais ativos no último ano, mês, semana ou dia"
         all:
-          title: "Em Qualquer Altura"
+          title: "Desde sempre"
         yearly:
           title: "Anual"
         quarterly:
@@ -4118,7 +4095,7 @@ pt:
           title: "Semanal"
         daily:
           title: "Diário"
-        all_time: "Em Qualquer Altura"
+        all_time: "Desde sempre"
         this_year: "Ano"
         this_quarter: "Trimestre"
         this_month: "Mês"
@@ -4322,17 +4299,12 @@ pt:
         muted:
           title: "Silenciado"
       groups:
-        title: "Grupos de Etiquetas"
         about_heading: "Selecione um grupo de etiquetas ou crie um novo"
         about_heading_empty: "Crie um novo grupo de etiquetas para começar"
         about_description: "Os grupos de etiquetas ajudam a gerir permissões para muitas etiquetas de uma só vez."
-        new: "Novo Grupo"
-        new_title: "Criar Novo Grupo"
-        edit_title: "Editar Grupo de Etiquetas"
         tags_label: "Etiquetas neste grupo"
         parent_tag_label: "Tag superior"
         one_per_topic_label: "Limitar a uma etiqueta por tópico deste grupo"
-        new_name: "Novo Grupo de Etiquetas"
         name_placeholder: "Nome"
         save: "Guardar"
         delete: "Apagar"
@@ -4583,6 +4555,21 @@ pt:
         fonts:
           backfill_modal:
             modal_yes: "Sim"
+        welcome_banner:
+          form:
+            page_visibility:
+              options:
+                top_menu_pages: "Páginas do menu superior"
+                all_pages: "Todas as páginas"
+            location:
+              label: "Localização"
+              options:
+                above_topic_content: "Por cima do conteúdo do tópico"
+                below_site_header: "Por debaixo do cabeçalho do site"
+            header_logged_in:
+              placeholder: "Seja bem-vindo, %{preferred_display_name}!"
+            header_anonymous:
+              placeholder: "Bem-vindo a %{site_name}!"
         navigation:
           title: "Navegação"
         notifications:

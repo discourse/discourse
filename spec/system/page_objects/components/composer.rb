@@ -62,6 +62,10 @@ module PageObjects
         self
       end
 
+      def has_title?(text)
+        find(".title-input input#reply-title", text:)
+      end
+
       def fill_content(content)
         find("#{@composer_id} .d-editor .d-editor-input").fill_in(with: content)
         self

@@ -250,8 +250,10 @@ de:
           name: "Wechselkurs"
         stock_quote:
           name: "Aktienkurs (AlphaVantage)"
-        image_generation:
-          name: "Flux-Bildgenerator (Together.ai)"
+        image_generation_custom:
+          name: "Benutzerdefiniert"
+        image_generation_openai:
+          name: "OpenAI"
         empty_tool:
           name: "Von vorne beginnen …"
       name:
@@ -268,10 +270,6 @@ de:
         explain: "Erklären"
         illustrate_post: "Beitrag illustrieren"
         replace_dates: "Intelligente Termine"
-      painter:
-        attribution:
-          stable_diffusion_xl: "Bild von Stable Diffusion XL"
-          dall_e_3: "Bild von DALL-E 3"
       image_caption:
         attribution: "Beschriftet durch KI"
     share_ai:
@@ -364,7 +362,6 @@ de:
           description: "Standard-Persona für die „Generiere Markdown-Tabelle“-Funktion des Helfers"
         post_illustrator:
           name: "Beitragsillustrator"
-          description: "Generiert StableDiffusion-Eingabeaufforderungen, für die Funktion „Beitrag illustrieren“ des Helfers"
         proofreader:
           name: "Korrekturleser"
           description: "Standard-Persona für die „Korrekturlesen“-Funktion des Helfers"

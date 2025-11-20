@@ -1638,13 +1638,9 @@ be:
         remove: "выдаліць"
       required_tag_group:
         delete: "Выдаліць"
-      delete: "выдаліць катэгорыю"
-      create: "Новая катэгорыя"
       create_long: "стварыць катэгорыю"
-      save: "захаваць катэгорыю"
       creation_error: Пры стварэнні катэгорыі адбылася памылка.
       save_error: У выпадку захавання катэгорыі адбылася памылка.
-      name: "Назва катэгорыі"
       description: "апісанне"
       background_color: "колер"
       color_validations:
@@ -1659,8 +1655,6 @@ be:
       color_placeholder: "Любы вэб-колер"
       delete_confirm: "Вы ўпэўненыя, што жадаеце выдаліць гэтую катэгорыю?"
       delete_error: "Пры выдаленні катэгорыі адбылася памылка."
-      list: "Спіс катэгорыяў"
-      change_in_category_topic: "рэдагаваць апісанне"
       already_used: "Гэты колер ўжо выкарыстоўваецца іншы катэгорыяй"
       security: "Бяспека"
       permissions:
@@ -1671,11 +1665,8 @@ be:
       images: "Выява"
       email_in: "Custom incoming email address:"
       allow_badges_label: "Дазволіць ўзнагароджваць значкамі ў гэтай катэгорыі"
-      edit_permissions: "рэдагаваць дазволу"
       review_group_name: "назва групы"
       this_year: "гэтага года"
-      default_position: "Default Position"
-      parent: "бацькоўская катэгорыя"
       notifications:
         watching:
           title: "сачыць"
@@ -1773,7 +1764,7 @@ be:
       top:
         title: "Топ тэмаў"
         all:
-          title: "Top..."
+          title: "За ўвесь час"
         yearly:
           title: "штогод"
         quarterly:
@@ -1784,7 +1775,7 @@ be:
           title: "штотыдзень"
         daily:
           title: "штодня"
-        all_time: "ўвесь час"
+        all_time: "За ўвесь час"
         this_year: "год"
         this_quarter: "квартал"
         this_month: "месяц"
@@ -1854,7 +1845,6 @@ be:
         muted:
           title: "ігнараваць"
       groups:
-        new: "Новая група"
         name_placeholder: "Імя"
         save: "Захаваць"
         delete: "выдаліць"
@@ -2026,6 +2016,14 @@ be:
         fonts:
           backfill_modal:
             modal_yes: "ды"
+        welcome_banner:
+          form:
+            location:
+              label: "Месцазнаходжанне"
+            header_logged_in:
+              placeholder: "З вяртаннем, %{preferred_display_name}!"
+            header_anonymous:
+              placeholder: "Вітае на %{site_name}!"
         navigation:
           title: "рух"
         notifications:

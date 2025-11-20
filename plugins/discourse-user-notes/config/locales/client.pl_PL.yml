@@ -14,4 +14,4 @@ pl_PL:
       show: "Uwagi o użytkowniku (%{count})"
       delete_confirm: "Czy na pewno chcesz usunąć tę uwagę o użytkowniku?"
       show_post: "Pokaż post"
-      copy_reviewable_note: "Skopiować uwagę do profilu użytkownika?"
+      copy_reviewable_note: "Skopiować uwagę do profilu %{username}?"

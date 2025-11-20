@@ -20,10 +20,6 @@ ro:
       voted_title: "Evaluat"
       voting_closed_title: "Închis"
       voting_limit: "Limită"
-      votes_left_button_title:
-        one: "Mai ai %{count} vot."
-        few: "Mai ai %{count} voturi."
-        other: "Mai ai %{count} voturi."
       votes:
         one: "%{count} vot"
         few: "%{count} voturi"

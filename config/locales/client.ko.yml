@@ -2467,7 +2467,6 @@ ko:
       suggest_create_topic: <a href>새 대화를 시작</a>할 준비가 되었나요?
       deleted: "글이 삭제되었습니다."
       slow_mode_update:
-        title: "느린 모드"
         select: "사용자는 이 주제에서 다음을 기준으로 한 번만 게시할 수 있습니다."
         description: "빠르게 진행되거나 논쟁이 되는 토론에서 신중한 대화를 유도하기 위해 사용자는 이 주제에 추가로 글을 게시하려면 기다려야 합니다."
         enable: "활성화"
@@ -3015,18 +3014,11 @@ ko:
         delete: "삭제"
         add: "필수 태그 그룹 추가"
       topic_featured_link_allowed: "이 카테고리에 추천 링크 허용"
-      delete: "카테고리 삭제"
-      create: "새 카테고리"
       create_long: "새 카테고리 생성"
-      save: "카테고리 저장"
-      slug: "카테고리 슬러그"
       slug_placeholder: "(Optional) dashed-words for url"
       creation_error: 카테고리 생성 중에 오류가 발생했습니다.
       save_error: 카테고리 저장 중에 오류가 발생했습니다.
-      name: "카테고리 이름"
       description: "설명"
-      logo: "카테고리 로고 이미지"
-      background_image: "카테고리 백그라운드 이미지"
       background_color: "색상"
       color_validations:
         cant_be_empty: "필수 작성"
@@ -3040,9 +3032,8 @@ ko:
       color_placeholder: "모든 웹 색상"
       delete_confirm: "이 카테고리를 삭제할까요?"
       delete_error: "카테고리를 삭제하는 중에 오류가 발생했습니다."
-      list: "카테고리 목록"
       no_description: "이 카테고리에 대한 설명을 추가하세요."
-      change_in_category_topic: "설명 편집"
+      change_in_category_topic: "설명 수정"
       already_used: "이 색은 다른 카테고리에서 사용 중입니다"
       security: "보안"
       security_add_group: "그룹 추가"
@@ -3072,21 +3063,13 @@ ko:
       all_topics_wiki: "기본적으로 새 주제 위키 만들기"
       allow_unlimited_owner_edits_on_first_post: "첫 게시물에 대해 소유자의 무제한 편집 허용"
       subcategory_list_style: "서브카테고리 목록 스타일:"
-      sort_order: "주제 목록 정렬 기준:"
-      default_view: "디폴트 주제 목록:"
-      default_top_period: "디폴트 상위 기간:"
-      default_list_filter: "디폴트 목록 필터:"
       allow_badges_label: "이 카테고리에서 배지 획득 허용"
-      edit_permissions: "권한 수정"
       review_group_name: "그룹명"
       require_topic_approval: "모든 새 주제에 대해 운영자 승인 필요"
       require_reply_approval: "모든 새 댓글에 대해 운영자 승인 필요"
       this_year: "올해"
       position: "카테고리 페이지에서의 위치:"
-      default_position: "디폴트 위치"
       minimum_required_tags: "주제에 필요한 최소 태그 수:"
-      default_slow_mode: '이 카테고리의 새 주제에 ''느린 모드''를 활성화합니다.'
-      parent: "상위 카테고리"
       num_auto_bump_daily: "열린 주제 중 매일 자동으로 끌어 올릴 주제 수:"
       navigate_to_first_post_after_read: "주제를 읽은 후 첫 게시물로 이동"
       notifications:
@@ -3107,18 +3090,14 @@ ko:
           title: "뮤트"
           description: "이 카테고리의 새 주제에 대한 어떠한 알림도 받지 않으며 최신 항목에 표시되지 않습니다."
       search_priority:
-        label: "검색 우선순위"
         options:
           normal: "일반"
           ignore: "무시"
-          very_low: "매우 낮은"
           low: "낮은"
           high: "높음"
-          very_high: "매우 높음"
       sort_options:
         default: "디폴트"
         likes: "좋아요"
-        op_likes: "원본 게시물 좋아요"
         views: "조회수"
         posts: "게시글 수"
         activity: "활동"
@@ -3138,8 +3117,7 @@ ko:
         appearance: "외관"
         email: "이메일"
       list_filters:
-        all: "모든 주제"
-        none: "서브카테고리 없음"
+        all: "모든 글"
       colors_disabled: "카테고리 스타일이 없음이므로 색상을 선택할 수 없습니다."
     flagging:
       action: "게시물 신고"
@@ -3299,7 +3277,7 @@ ko:
         title: "인기글"
         help: "지난 1년, 1개월, 1주일 또는 1일 동안 가장 활발했던 주제"
         all:
-          title: "전체 기간"
+          title: "전체"
         yearly:
           title: "매년"
         quarterly:
@@ -3310,7 +3288,7 @@ ko:
           title: "매주"
         daily:
           title: "일"
-        all_time: "전체 기간"
+        all_time: "전체"
         this_year: "년"
         this_quarter: "분기"
         this_month: "월"
@@ -3525,18 +3503,13 @@ ko:
           description: "이 태그가 있는 새 주제에 대한 어떠한 알림도 받지 않으며 읽지 않음 탭에 표시되지 않습니다."
       groups:
         back_btn: "모든 태그로 돌아가기"
-        title: "태그 그룹"
         about_heading: "태그 그룹을 선택하거나 새로 만듭니다."
         about_heading_empty: "시작하려면 새 태그 그룹을 만드세요."
         about_description: "태그 그룹을 사용하면 한 곳에서 여러 태그에 대한 권한을 관리할 수 있습니다."
-        new: "새 그룹"
-        new_title: "새 그룹 생성"
-        edit_title: "태그 그룹 편집"
         tags_label: "이 그룹의 태그"
         parent_tag_label: "상위 태그"
         parent_tag_description: "이 그룹의 태그는 상위 태그가 있는 경우에만 사용할 수 있습니다."
         one_per_topic_label: "이 그룹에서 주제당 태그 하나로 제한"
-        new_name: "새 태그 그룹"
         name_placeholder: "이름"
         save: "저장"
         delete: "삭제"
@@ -3797,6 +3770,14 @@ ko:
               title: "제목 글꼴"
           backfill_modal:
             modal_yes: "예"
+        welcome_banner:
+          form:
+            location:
+              label: "위치"
+            header_logged_in:
+              placeholder: "어서오세요, %{preferred_display_name}님!"
+            header_anonymous:
+              placeholder: "%{site_name}에 오신 것을 환영합니다!"
         navigation:
           title: "내비게이션"
         notifications:
@@ -4839,7 +4820,6 @@ ko:
           success: "성공"
           exists: "이미 존재함"
           upload: "파일에서 추가"
-          upload_successful: "업로드되었습니다. 단어가 추가되었습니다."
           case_sensitivity_label: "대소문자를 구분합니다"
           case_sensitivity_description: "대/소문자가 일치하는 단어만"
           html_label: "HTML"

@@ -350,10 +350,65 @@ export default class TopicController extends Controller {
   }
 
   @action
-  editTopic(event) {
+  async handleTitleClick(event) {
+    this.editTopic?.(event);
+    this.jumpTop?.(event);
+  }
+
+  @action
+  async editTopic(event) {
     event?.preventDefault();
-    if (this.get("model.details.can_edit")) {
-      this.set("editingTopic", true);
+    const canEditTitle = this.get("model.details.can_edit");
+    const canLocalize = this.currentUser?.can_localize_content;
+
+    if (!canEditTitle && !canLocalize) {
+      return;
+    }
+
+    const titleLocalized = this.model?.fancy_title_localized;
+    if (!titleLocalized && canEditTitle) {
+      return this.set("editingTopic", true);
+    }
+
+    if (this.composer.isOpen) {
+      return;
+    }
+
+    if (canEditTitle && !canLocalize) {
+      return this._openComposerForEdit(topic, firstPost);
+    }
+
+    const topic = this.model;
+    const firstPost = await topic.firstPost();
+    if (titleLocalized && !canEditTitle) {
+      return this._openComposerForEditTranslation(topic, firstPost);
+    }
+
+    if (titleLocalized) {
+      const topicLocale = topic.locale;
+      const language = this.languageNameLookup.getLanguageName(topicLocale);
+      return this.dialog.alert({
+        message: i18n("topic.localizations.title_edit_warning.message", {
+          language,
+        }),
+        buttons: [
+          {
+            label: i18n(
+              "topic.localizations.title_edit_warning.action_original"
+            ),
+            class: "btn-primary",
+            action: () => this._openComposerForEdit(topic, firstPost),
+          },
+          {
+            label: i18n(
+              "topic.localizations.title_edit_warning.action_translation"
+            ),
+            class: "btn-default",
+            action: () =>
+              this._openComposerForEditTranslation(topic, firstPost),
+          },
+        ],
+      });
     }
   }
 

@@ -1530,7 +1530,6 @@ ca:
     remove_muted_tags_from_latest: "No mostris temes etiquetats sols amb etiquetes silenciades en la llista de temes més recents."
     force_lowercase_tags: "Obliga que totes les etiquetes noves siguin completament en minúscula."
     shared_drafts_category: "Activa la funció 'Esborranys compartits' designant una categoria per als esborranys de tema. Els temes d'aquesta categoria seran suprimits de les llistes de temes per als usuaris de l'equip responsable."
-    short_title: "El títol curt s'utilitzarà en la pantalla d'inici de l'usuari, en el llançador o en altres llocs on l'espai sigui limitat. Hauria de limitar-se a 12 caràcters."
     dashboard_general_tab_activity_metrics: "Trieu reports que es mostraran com a mètriques d'activitat en la pestanya general."
     errors:
       invalid_email: "Adreça de correu no vàlida."
@@ -2032,6 +2031,9 @@ ca:
       subject_template: "Compte temporalment en espera"
       text_body_template: "Bon dia, \n\nAixò és un missatge automàtic de %{site_name} per a fer-vos saber que el vostre compte s'ha retingut temporalment com a mesura de precaució. \n\nContinueu navegant, però no podreu respondre ni crear temes fins que un [membre de l'equip responsable](%{base_url}/about) revisi les vostres publicacions més recents. Disculpeu les molèsties. \n\nPer a obtenir més informació, consulteu les nostres [directrius comunitàries](%{base_url}/guidelines).\n"
     user_automatically_silenced:
+      title: "Usuari silenciat automàticament"
+      subject_template: "El nou usuari %{username} ha estat silenciat per banderes de la comunitat"
+    user_automatically_silenced_with_reason:
       title: "Usuari silenciat automàticament"
       subject_template: "El nou usuari %{username} ha estat silenciat per banderes de la comunitat"
     spam_post_blocked:

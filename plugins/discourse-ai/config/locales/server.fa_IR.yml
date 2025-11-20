@@ -11,6 +11,10 @@ fa_IR:
     overall_sentiment:
       yaxis: "تاریخ"
   discourse_ai:
+    tools:
+      presets:
+        image_generation_custom:
+          name: "سفارشی"
     share_ai:
       onebox_title: "گفتگوی هوش‌مصنوعی با %{llm_name}"
       formatted_excerpt: "گفتگوی هوش‌مصنوعی با %{llm_name}:\n %{excerpt}"

@@ -38,9 +38,23 @@ module PageObjects
         open_channel(channel)
       end
 
+      def visit_direct_messages
+        visit_index
+        click_direct_messages
+      end
+
+      def visit_user_threads
+        visit_index
+        click_user_threads
+      end
+
       def visit_browse
         visit_index
         open_browse
+      end
+
+      def open_chat_search
+        find(".chat-channel-search-btn").click
       end
 
       def open_channel(channel)
@@ -140,6 +154,11 @@ module PageObjects
       def has_open_direct_messages?
         has_css?("html.has-drawer-chat")
         has_css?("#{VISIBLE_DRAWER} .direct-message-channels")
+      end
+
+      def has_open_chat_search?
+        has_css?("html.has-drawer-chat")
+        has_css?("#{VISIBLE_DRAWER} .c-search")
       end
 
       def has_open_user_threads?

@@ -72,6 +72,10 @@ module PageObjects
         find(".reviewable-action.save-edit").click
       end
 
+      def click_ip_lookup_button
+        find(".reviewable-ip-lookup button").click
+      end
+
       private
 
       def reviewable_by_id(id)

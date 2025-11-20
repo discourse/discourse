@@ -253,6 +253,7 @@ pt_BR:
           custom_prompt: "Prompt personalizado"
           image_caption: "Legendas em imagens"
           translator: "Tradutor"
+          post_illustrator: "Ilustrador de postagens"
         translation:
           name: "Tradução"
           description: "Traduz o conteúdo para os idiomas compatíveis"
@@ -391,8 +392,6 @@ pt_BR:
           low: Baixa qualidade - menor custo (256x256)
           medium: Qualidade média (512x512)
           high: Alta qualidade - mais lento (1024x1024)
-        tool_details: Exibir detalhes da ferramenta
-        tool_details_help: Serão exibidos aos(às) usuários(as) finais as ferramentas nas quais o modelo de linguagem foi acionado.
         mentionable: Permitir menções
         mentionable_help: Ative para que os(as) usuários(as) nos grupos permitidos possam mencionar este(a) usuário(a) nas postagens. A IA responderá como esta persona.
         user: Usuário(a)
@@ -585,21 +584,17 @@ pt_BR:
         model_description:
           none: "Configurações gerais que funcionam com a maioria dos modelos de linguagens"
           anthropic-claude-opus-4-1: "Modelo mais inteligente da Anthropic"
-          anthropic-claude-sonnet-4-0: "Equilíbrio ideal entre custo e velocidade"
-          anthropic-claude-3-7-sonnet-latest: "Equilíbrio ideal entre custo e velocidade (geração anterior)"
-          anthropic-claude-3-5-haiku-latest: "Rápido e econômico"
+          anthropic-claude-sonnet-4-5: "Equilíbrio ideal entre custo e velocidade"
+          anthropic-claude-haiku-4-5: "Rápido e econômico"
           google-gemini-2-5-pro: "Modelo multimodal grande capaz de executar uma ampla variedade de tarefas"
-          google-gemini-2-0-flash: "Modelo leve, rápido e econômico com raciocínio multimodal (geração anterior)"
           google-gemini-2-5-flash: "Modelo leve, rápido e econômico com raciocínio multimodal"
-          google-gemini-2-0-flash-lite: "Modelo de baixa latência e econômico"
-          open_ai-o4-mini: "Modelo de raciocínio econômico avançado"
           open_ai-gpt-5-mini: "Proporciona equilíbrio entre inteligência, velocidade e custo, tornando-se um modelo atraente para muitos casos de uso."
           open_ai-gpt-5-nano: "O modelo do GPT-5 mais rápido e econômico."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Modelo multi-idioma leve e eficiente"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "Modelo multifinalidade poderoso"
           mistral-mistral-large-latest: "Modelo mais poderoso da Mistral"
           mistral-pixtral-large-latest: "Modelo mais poderoso com capacidade de visão da Mistral"
-          open_router-x-ai-grok-3-beta: "O modelo mais recente da xAI"
+          open_router-x-ai-grok-4: "O modelo mais recente da xAI"
           open_router-deepseek-deepseek-r1-0528-free: "Modelo de raciocínio mais recente do DeepSeek"
           open_router-meta-llama-3-3-70b-instruct: "Modelo mulilíngue de alta capacidade"
         preseeded_model_description: "Modelo de código aberto pré-configurado que utiliza %{model}"

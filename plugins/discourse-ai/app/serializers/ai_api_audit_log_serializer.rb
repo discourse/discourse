@@ -6,6 +6,8 @@ class AiApiAuditLogSerializer < ApplicationSerializer
              :user_id,
              :request_tokens,
              :response_tokens,
+             :cache_read_tokens,
+             :cache_write_tokens,
              :raw_request_payload,
              :raw_response_payload,
              :topic_id,
