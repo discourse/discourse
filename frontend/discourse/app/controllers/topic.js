@@ -401,6 +401,10 @@ export default class TopicController extends Controller {
       return;
     }
 
+    if (canEditTitle && !canLocalize) {
+      return this._openComposerForEdit(topic, firstPost);
+    }
+
     const topic = this.model;
     const firstPost = await topic.firstPost();
     if (titleLocalized && !canEditTitle) {
