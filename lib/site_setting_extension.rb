@@ -1152,17 +1152,13 @@ module SiteSettingExtension
 
   def hydrate_uploads_in_object(object, properties)
     properties.each do |prop_key, prop_value|
-      next unless prop_value[:type] == "upload" || prop_value[:type] == "objects"
+      next unless prop_value[:type] == "upload"
 
       key = object.key?(prop_key) ? prop_key : prop_key.to_s
       value = object[key]
 
-      if prop_value[:type] == "upload" && value.is_a?(Integer)
-        upload = Upload.find_by(id: value)
-        object[key] = upload.url if upload
-      elsif prop_value[:type] == "objects" && value.is_a?(Array) && prop_value[:schema]
-        object[key] = hydrate_uploads_in_objects(value, prop_value[:schema])
-      end
+      upload = Upload.find_by(id: value)
+      object[key] = upload.url if upload
     end
 
     object
