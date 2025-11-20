@@ -120,6 +120,10 @@ unless defined?(SETTINGS_MAPPING)
         "below-site-header" => "below_site_header",
       },
     },
+    "background_image" => {
+      site_setting: "welcome_banner_image",
+      value_mapping: nil,
+    },
     "background_image_light" => {
       site_setting: "welcome_banner_image",
       value_mapping: nil,
@@ -151,11 +155,16 @@ def migrate_theme_settings_to_site_settings(theme_settings, errors)
 
   theme_settings.each do |ts|
     mapping = SETTINGS_MAPPING[ts.name]
-    next unless mapping
+    old_text = "\e[0;31m#{ts.name}: #{ts.value}\e[0m"
+
+    unless mapping
+      puts "    - #{old_text}\e[33m: is not supported by core welcome banner. Skipping\e[0m"
+      next
+    end
 
     site_setting_name = mapping[:site_setting]
     if ts.value.blank?
-      puts "    - skipping '#{ts.name}' as it has no value"
+      puts "    - '#{ts.name}' has no value. Skipping"
       next
     end
 
@@ -173,7 +182,6 @@ def migrate_theme_settings_to_site_settings(theme_settings, errors)
         "Migrated from the deprecated Advanced Search Banner",
       )
 
-      old_text = "\e[0;31m#{ts.name}: #{ts.value}\e[0m"
       arrow = "\e[0m=>\e[0m"
       new_text = "\e[0;32m#{site_setting_name}: #{new_value}\e[0m"
 
