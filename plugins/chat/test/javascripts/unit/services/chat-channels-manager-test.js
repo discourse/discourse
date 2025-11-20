@@ -16,13 +16,23 @@ module(
 
     module("#sortChannelsByActivity with pinned channels", function () {
       test("prioritizes pinned channels over unpinned", function (assert) {
-        const channelA = this.fabricators.channel({ slug: "channel-a" });
-        const channelB = this.fabricators.channel({ slug: "channel-b" });
+        const channelA = this.fabricators.channel({
+          chatable: this.fabricators.coreFabricators.category({
+            slug: "channel-a",
+          }),
+        });
+        const channelB = this.fabricators.channel({
+          chatable: this.fabricators.coreFabricators.category({
+            slug: "channel-b",
+          }),
+        });
 
         channelA.currentUserMembership = UserChatChannelMembership.create({
+          following: true,
           pinned: true,
         });
         channelB.currentUserMembership = UserChatChannelMembership.create({
+          following: true,
           pinned: false,
         });
 
@@ -44,17 +54,32 @@ module(
       });
 
       test("sorts pinned channels alphabetically by slug", function (assert) {
-        const channelC = this.fabricators.channel({ slug: "channel-c" });
-        const channelA = this.fabricators.channel({ slug: "channel-a" });
-        const channelB = this.fabricators.channel({ slug: "channel-b" });
+        const channelC = this.fabricators.channel({
+          chatable: this.fabricators.coreFabricators.category({
+            slug: "channel-c",
+          }),
+        });
+        const channelA = this.fabricators.channel({
+          chatable: this.fabricators.coreFabricators.category({
+            slug: "channel-a",
+          }),
+        });
+        const channelB = this.fabricators.channel({
+          chatable: this.fabricators.coreFabricators.category({
+            slug: "channel-b",
+          }),
+        });
 
         channelC.currentUserMembership = UserChatChannelMembership.create({
+          following: true,
           pinned: true,
         });
         channelA.currentUserMembership = UserChatChannelMembership.create({
+          following: true,
           pinned: true,
         });
         channelB.currentUserMembership = UserChatChannelMembership.create({
+          following: true,
           pinned: true,
         });
 
@@ -83,17 +108,23 @@ module(
 
       test("keeps unpinned channels sorted by activity after pinned ones", function (assert) {
         const pinnedChannel = this.fabricators.channel({
-          slug: "pinned-channel",
+          chatable: this.fabricators.coreFabricators.category({
+            slug: "pinned-channel",
+          }),
         });
         const unpinnedChannel = this.fabricators.channel({
-          slug: "unpinned-channel",
+          chatable: this.fabricators.coreFabricators.category({
+            slug: "unpinned-channel",
+          }),
         });
 
         pinnedChannel.currentUserMembership = UserChatChannelMembership.create({
+          following: true,
           pinned: true,
         });
         unpinnedChannel.currentUserMembership =
           UserChatChannelMembership.create({
+            following: true,
             pinned: false,
           });
 
@@ -127,9 +158,11 @@ module(
         });
 
         dmA.currentUserMembership = UserChatChannelMembership.create({
+          following: true,
           pinned: true,
         });
         dmB.currentUserMembership = UserChatChannelMembership.create({
+          following: true,
           pinned: false,
         });
 
@@ -165,12 +198,15 @@ module(
         });
 
         dmCharlie.currentUserMembership = UserChatChannelMembership.create({
+          following: true,
           pinned: true,
         });
         dmAlice.currentUserMembership = UserChatChannelMembership.create({
+          following: true,
           pinned: true,
         });
         dmBob.currentUserMembership = UserChatChannelMembership.create({
+          following: true,
           pinned: true,
         });
 
@@ -204,9 +240,11 @@ module(
         });
 
         pinnedDM.currentUserMembership = UserChatChannelMembership.create({
+          following: true,
           pinned: true,
         });
         unpinnedDM.currentUserMembership = UserChatChannelMembership.create({
+          following: true,
           pinned: false,
         });
 

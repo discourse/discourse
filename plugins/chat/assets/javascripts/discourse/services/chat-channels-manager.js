@@ -162,12 +162,22 @@ export default class ChatChannelsManager extends Service {
 
   @cached
   get publicMessageChannels() {
-    return this.channels
-      .filter(
-        (channel) =>
-          channel.isCategoryChannel && channel.currentUserMembership.following
-      )
-      .sort((a, b) => a?.slug?.localeCompare?.(b?.slug));
+    const channels = this.channels.filter(
+      (channel) =>
+        channel.isCategoryChannel && channel.currentUserMembership.following
+    );
+
+    return channels.sort((a, b) => {
+      const pinnedResult = this.#comparePinnedChannels(a, b, "slug");
+      if (pinnedResult !== null) {
+        return pinnedResult;
+      }
+
+      // Both unpinned, sort alphabetically by slug
+      const aSlug = a.slug || "";
+      const bSlug = b.slug || "";
+      return aSlug.localeCompare(bSlug);
+    });
   }
 
   get publicMessageChannelsWithActivity() {
@@ -175,7 +185,14 @@ export default class ChatChannelsManager extends Service {
   }
 
   get publicMessageChannelsByActivity() {
-    return this.#sortChannelsByActivity([...this.publicMessageChannels]);
+    const channels = [...this.publicMessageChannels];
+    const pinned = channels.filter((c) => c.currentUserMembership?.pinned);
+    const unpinned = channels.filter((c) => !c.currentUserMembership?.pinned);
+
+    // Sort unpinned by activity
+    const sortedUnpinned = this.#sortChannelsByActivity(unpinned);
+
+    return [...pinned, ...sortedUnpinned];
   }
 
   @cached
@@ -249,7 +266,9 @@ export default class ChatChannelsManager extends Service {
 
     // if both channels are pinned, sort by the specified property
     if (aPinned && bPinned) {
-      return a[property]?.localeCompare?.(b[property]);
+      const aValue = a[property] || "";
+      const bValue = b[property] || "";
+      return aValue.localeCompare(bValue);
     }
 
     // prioritize pinned channels over non-pinned

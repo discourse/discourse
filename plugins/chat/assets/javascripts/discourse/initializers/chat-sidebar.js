@@ -275,7 +275,7 @@ export default {
               }
 
               get sectionLinks() {
-                return this.chatChannelsManager.publicMessageChannelsByActivity.map(
+                return this.chatChannelsManager.publicMessageChannels.map(
                   (channel) =>
                     new SidebarChatChannelsSectionLink({
                       channel,

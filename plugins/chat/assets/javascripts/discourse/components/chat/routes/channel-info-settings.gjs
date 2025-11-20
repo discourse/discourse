@@ -231,6 +231,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
       return;
     }
 
+    const previousValue = this.args.channel.currentUserMembership.pinned;
     this.args.channel.currentUserMembership.pinned = newValue;
 
     try {
@@ -240,7 +241,8 @@ export default class ChatRouteChannelInfoSettings extends Component {
       );
       this.toasts.success({ data: { message: i18n("saved") } });
     } catch (error) {
-      this.args.channel.currentUserMembership.pinned = !newValue;
+      // Revert to exact previous value on error
+      this.args.channel.currentUserMembership.pinned = previousValue;
       popupAjaxError(error);
     }
   }
