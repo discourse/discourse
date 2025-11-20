@@ -241,7 +241,6 @@ export default class ChatRouteChannelInfoSettings extends Component {
       );
       this.toasts.success({ data: { message: i18n("saved") } });
     } catch (error) {
-      // Revert to exact previous value on error
       this.args.channel.currentUserMembership.pinned = previousValue;
       popupAjaxError(error);
     }
