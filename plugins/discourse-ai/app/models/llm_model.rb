@@ -247,22 +247,22 @@ end
 # Table name: llm_models
 #
 #  id                :bigint           not null, primary key
+#  api_key           :string
+#  cache_write_cost  :float            default(0.0)
+#  cached_input_cost :float
 #  display_name      :string
-#  name              :string           not null
-#  provider          :string           not null
-#  tokenizer         :string           not null
+#  enabled_chat_bot  :boolean          default(FALSE), not null
+#  input_cost        :float
+#  max_output_tokens :integer
 #  max_prompt_tokens :integer          not null
+#  name              :string           not null
+#  output_cost       :float
+#  provider          :string           not null
+#  provider_params   :jsonb
+#  tokenizer         :string           not null
+#  url               :string
+#  vision_enabled    :boolean          default(FALSE), not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
-#  url               :string
-#  api_key           :string
 #  user_id           :integer
-#  enabled_chat_bot  :boolean          default(FALSE), not null
-#  provider_params   :jsonb
-#  vision_enabled    :boolean          default(FALSE), not null
-#  input_cost        :float
-#  cached_input_cost :float
-#  cache_write_cost  :float
-#  output_cost       :float
-#  max_output_tokens :integer
 #
