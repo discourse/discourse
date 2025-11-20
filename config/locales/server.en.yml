@@ -2142,6 +2142,7 @@ en:
     video_conversion_enabled: "Enable video conversion for uploaded video files. This allows videos to be converted to web-compatible formats."
     video_conversion_service: "The video conversion service to use for processing uploaded videos."
     mediaconvert_role_arn: "AWS IAM role ARN for MediaConvert service. Required when using AWS MediaConvert for video conversion."
+    mediaconvert_output_subdirectory: "Subdirectory in S3 bucket where MediaConvert will temporarily write converted videos before they are moved to the final upload location."
 
     min_ratio_to_crop: "Ratio used to crop tall images. Enter the result of width / height."
 
@@ -2848,6 +2849,7 @@ en:
       content_localization_locale_limit: "The number of supported locales cannot exceed %{max}."
       content_localization_language_switcher_requirements: "The language switcher requires the 'set locale from cookie' and 'allow user locale' site settings to be enabled, and 'content localization supported locales' to have at least one language."
       mediaconvert_role_arn_required: "AWS IAM role ARN is required when using AWS MediaConvert for video conversion."
+      mediaconvert_output_subdirectory_required: "MediaConvert output subdirectory is required."
       s3_credentials_required_for_video_conversion: "S3 credentials are required for video conversion. Please configure S3 access keys or enable IAM profile."
 
     keywords:

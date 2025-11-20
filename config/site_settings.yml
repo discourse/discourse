@@ -2391,6 +2391,9 @@ files:
   mediaconvert_endpoint:
     default: ""
     hidden: true
+  mediaconvert_output_subdirectory:
+    default: "transcoded"
+    validator: "MediaconvertOutputSubdirectoryValidator"
 
 trust:
   default_trust_level:

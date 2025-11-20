@@ -45,6 +45,7 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
     allow(SiteSetting).to receive(:mediaconvert_endpoint).and_return(
       "https://mediaconvert.endpoint",
     )
+    allow(SiteSetting).to receive(:mediaconvert_output_subdirectory).and_return("transcoded")
     allow(SiteSetting.Upload).to receive(:s3_upload_bucket).and_return(s3_bucket)
     allow(SiteSetting).to receive(:s3_region).and_return(s3_region)
     allow(SiteSetting).to receive(:s3_access_key_id).and_return("test-key")
@@ -98,7 +99,18 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
 
       it "creates a MediaConvert job and enqueues status check" do
         input_path = "s3://#{s3_bucket}/uploads/default/original/test.mp4"
-        expected_settings = described_class.build_conversion_settings(input_path, output_path)
+        # MediaConvert automatically adds .mp4 extension, so we pass filename without extension
+        temp_output_filename = new_sha1
+        expected_settings =
+          described_class.build_conversion_settings(input_path, temp_output_filename)
+        # Verify the destination includes the subdirectory with simple filename (no .mp4)
+        # MediaConvert will add .mp4 automatically
+        destination =
+          expected_settings[:output_groups][0][:output_group_settings][:file_group_settings][
+            :destination
+          ]
+        expected_destination_path = File.join("transcoded", temp_output_filename)
+        expect(destination).to eq("s3://#{s3_bucket}/#{expected_destination_path}")
 
         expected_job_params = {
           role: SiteSetting.mediaconvert_role_arn,
@@ -107,7 +119,6 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
           user_metadata: {
             "upload_id" => upload.id.to_s,
             "new_sha1" => new_sha1,
-            "output_path" => output_path,
           },
         }
 
@@ -119,7 +130,6 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
           adapter_type: "aws_mediaconvert",
           job_id: job_id,
           new_sha1: new_sha1,
-          output_path: output_path,
           original_filename: upload.original_filename,
           upload_id: upload.id,
           user_id: upload.user_id,
@@ -271,61 +281,229 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
 
   describe "#handle_completion" do
     let(:job_id) { "job-123" }
-    let(:output_path) { "optimized/videos/test-sha1" }
-    let(:expected_url) do
-      "//#{s3_bucket}.s3.dualstack.#{s3_region}.amazonaws.com/#{output_path}.mp4"
+    let(:temp_path) { "transcoded/#{new_sha1}.mp4" }
+    let(:final_path) { "original/1X/#{new_sha1}.mp4" }
+    let(:s3_helper) { instance_double(S3Helper) }
+    let(:s3_client) { instance_double(Aws::S3::Client) }
+    let(:s3_resource) { instance_double(Aws::S3::Resource) }
+    let(:bucket_name) { s3_bucket }
+    let(:source_bucket) { instance_double(Aws::S3::Bucket) }
+    let(:source_s3_object) { instance_double(Aws::S3::Object) }
+    let(:destination_s3_object) { instance_double(Aws::S3::Object) }
+    let(:copy_response) { instance_double(Aws::S3::Types::CopyObjectOutput) }
+    let(:copy_result) { instance_double(Aws::S3::Types::CopyObjectResult, etag: '"etag123"') }
+
+    before do
+      allow(s3_store).to receive(:s3_helper).and_return(s3_helper)
+      allow(s3_store).to receive(:default_s3_options).and_return({})
+      allow(s3_store).to receive(:absolute_base_url).and_return(
+        "//#{s3_bucket}.s3.dualstack.#{s3_region}.amazonaws.com",
+      )
+
+      # Mock s3_helper.object for find_temp_file
+      allow(s3_helper).to receive(:object).with(temp_path).and_return(source_s3_object)
+      allow(source_s3_object).to receive(:exists?).and_return(true)
+      allow(source_s3_object).to receive(:size).and_return(1024)
+
+      # Mock s3_helper.copy - it returns [destination_path, etag]
+      # The destination path will have multisite prefix if in multisite mode
+      # Use a flexible matcher since the exact path format depends on multisite configuration
+      allow(s3_helper).to receive(:copy) do |source, dest, options: {}|
+        if source == temp_path && dest.include?(final_path)
+          # Return the destination path as-is (it may have multisite prefix)
+          [dest, "etag123"]
+        else
+          raise "Unexpected copy call: source=#{source}, dest=#{dest}"
+        end
+      end
+
+      # Mock s3_helper.object for destination verification (flexible path matching)
+      allow(s3_helper).to receive(:object) do |path|
+        if path == temp_path
+          source_s3_object
+        elsif path.include?(final_path)
+          destination_s3_object
+        else
+          source_s3_object
+        end
+      end
+      allow(destination_s3_object).to receive(:exists?).and_return(true)
+
+      # Mock s3_helper.remove for remove_temp_file
+      allow(s3_helper).to receive(:remove).with(temp_path, false)
     end
 
-    it "creates optimized video record and rebakes posts" do
+    # Helper to get S3 path with multisite prefix if in multisite mode (matching get_s3_path logic)
+    def get_s3_path_for_test(path)
+      if Rails.configuration.multisite
+        multisite_prefix = File.join("uploads", RailsMultisite::ConnectionManagement.current_db)
+        multisite_prefix = "#{multisite_prefix}/"
+        # Prevent double-prepending if path already includes the multisite prefix
+        return path if path.start_with?(multisite_prefix)
+        File.join(multisite_prefix, path)
+      else
+        path
+      end
+    end
+
+    it "copies file from subdirectory to final location, deletes temp file, and creates optimized video record" do
       optimized_video_instance = instance_double(OptimizedVideo)
       allow(OptimizedVideo).to receive(:create_for).and_return(optimized_video_instance)
       allow(s3_store).to receive(:update_file_access_control)
+      allow(Discourse.store).to receive(:get_path_for_upload).and_return(final_path)
 
-      result = adapter.handle_completion(job_id, output_path, new_sha1)
+      result = adapter.handle_completion(job_id, new_sha1)
 
       expect(result).to be true
-      expect(s3_object).to have_received(:exists?)
-      expect(s3_object).to have_received(:size)
-      expect(s3_store).to have_received(:update_file_access_control).with(
-        "#{output_path}.mp4",
-        upload.secure?,
-      )
-      expect(OptimizedVideo).to have_received(:create_for).with(
-        upload,
-        "video_converted.mp4",
-        upload.user_id,
-        {
-          extension: "mp4",
-          filesize: 1024,
-          sha1: new_sha1,
-          url: expected_url,
-          adapter: "aws_mediaconvert",
-        },
-      )
+      # Verify s3_helper operations
+      expect(s3_helper).to have_received(:object).with(temp_path)
+      expect(source_s3_object).to have_received(:exists?)
+      expect(source_s3_object).to have_received(:size)
+      expect(s3_helper).to have_received(:copy) do |source, dest, options: {}|
+        expect(source).to eq(temp_path)
+        expect(dest).to include(final_path)
+      end
+      expect(s3_helper).to have_received(:object).at_least(:once)
+      expect(destination_s3_object).to have_received(:exists?)
+      expect(s3_helper).to have_received(:remove).with(temp_path, false)
+      expect(s3_store).to have_received(:update_file_access_control).at_least(:once)
+      # The hash passed to create_for uses symbol keys (from **options)
+      expect(OptimizedVideo).to have_received(
+        :create_for,
+      ) do |upload_arg, filename, user_id, options|
+        expect(upload_arg).to eq(upload)
+        expect(filename).to eq("video_converted.mp4")
+        expect(user_id).to eq(upload.user_id)
+        expect(options[:extension]).to eq("mp4")
+        expect(options[:filesize]).to eq(1024)
+        expect(options[:sha1]).to eq(new_sha1)
+        # URL will include the destination path (with or without multisite prefix)
+        expect(options[:url]).to match(
+          %r{//#{s3_bucket}\.s3\.dualstack\.#{s3_region}\.amazonaws\.com.*#{final_path}},
+        )
+        expect(options[:etag]).to eq("etag123")
+        expect(options[:adapter]).to eq("aws_mediaconvert")
+      end
       expect(post).to have_received(:rebake!)
       expect(Rails.logger).to have_received(:info).with(/Rebaking post #{post.id}/)
     end
 
     context "when S3 object doesn't exist" do
-      before { allow(s3_object).to receive(:exists?).and_return(false) }
+      before do
+        allow(s3_helper).to receive(:object).with(temp_path).and_return(source_s3_object)
+        allow(source_s3_object).to receive(:exists?).and_return(false)
+      end
 
       it "returns false" do
-        expect(adapter.handle_completion(job_id, output_path, new_sha1)).to be false
+        expect(adapter.handle_completion(job_id, new_sha1)).to be false
+      end
+    end
+
+    context "when source object doesn't exist for copy" do
+      before do
+        allow(s3_object).to receive(:exists?).and_return(true)
+        allow(source_s3_object).to receive(:exists?).and_return(false)
+        allow(Discourse.store).to receive(:get_path_for_upload).and_return(final_path)
+      end
+
+      it "returns false and logs error" do
+        result = adapter.handle_completion(job_id, new_sha1)
+        expect(Rails.logger).to have_received(:error).with(
+          /MediaConvert temp file not found at #{temp_path}/,
+        )
+        expect(result).to be false
+      end
+    end
+
+    context "when copy fails" do
+      let(:error) { StandardError.new("Copy failed") }
+
+      before do
+        allow(s3_helper).to receive(:object).with(temp_path).and_return(source_s3_object)
+        allow(source_s3_object).to receive(:exists?).and_return(true)
+        allow(source_s3_object).to receive(:size).and_return(1024)
+        allow(s3_helper).to receive(:copy) do |source, dest, options: {}|
+          raise error if source == temp_path && dest.include?(final_path)
+        end
+        allow(Discourse.store).to receive(:get_path_for_upload).and_return(final_path)
+      end
+
+      it "returns false and logs error" do
+        adapter.handle_completion(job_id, new_sha1)
+        expect(Discourse).to have_received(:warn_exception) do |exception, options|
+          expect(exception).to eq(error)
+          expect(options[:message]).to eq("Error in video processing completion")
+          expect(options[:env][:upload_id]).to eq(upload.id)
+          expect(options[:env][:job_id]).to eq(job_id)
+          expect(options[:env][:temp_path]).to eq(temp_path)
+          expect(options[:env][:error_class]).to eq("StandardError")
+          expect(options[:env][:error_message]).to eq("Copy failed")
+        end
+        expect(adapter.handle_completion(job_id, new_sha1)).to be false
+      end
+    end
+
+    context "when delete fails" do
+      let(:delete_error) { StandardError.new("Delete failed") }
+
+      before do
+        allow(s3_helper).to receive(:object) do |path|
+          if path == temp_path
+            source_s3_object
+          elsif path.include?(final_path)
+            destination_s3_object
+          else
+            source_s3_object
+          end
+        end
+        allow(source_s3_object).to receive(:exists?).and_return(true)
+        allow(source_s3_object).to receive(:size).and_return(1024)
+        allow(s3_helper).to receive(:copy) do |source, dest, options: {}|
+          [dest, "etag123"] if source == temp_path && dest.include?(final_path)
+        end
+        allow(destination_s3_object).to receive(:exists?).and_return(true)
+        allow(s3_helper).to receive(:remove).with(temp_path, false).and_raise(delete_error)
+        allow(OptimizedVideo).to receive(:create_for).and_return(true)
+        allow(s3_store).to receive(:update_file_access_control)
+        allow(Discourse.store).to receive(:get_path_for_upload).and_return(final_path)
+      end
+
+      it "logs warning but continues" do
+        result = adapter.handle_completion(job_id, new_sha1)
+        expect(Rails.logger).to have_received(:warn).with(
+          /Failed to delete temporary MediaConvert file/,
+        )
+        expect(result).to be true
       end
     end
 
     context "when optimized video creation fails" do
       before do
-        allow(s3_object).to receive(:exists?).and_return(true)
-        allow(s3_object).to receive(:size).and_return(1024)
+        allow(s3_helper).to receive(:object) do |path|
+          if path == temp_path
+            source_s3_object
+          elsif path.include?(final_path)
+            destination_s3_object
+          else
+            source_s3_object
+          end
+        end
+        allow(source_s3_object).to receive(:exists?).and_return(true)
+        allow(source_s3_object).to receive(:size).and_return(1024)
+        allow(s3_helper).to receive(:copy) do |source, dest, options: {}|
+          [dest, "etag123"] if source == temp_path && dest.include?(final_path)
+        end
+        allow(destination_s3_object).to receive(:exists?).and_return(true)
+        allow(s3_helper).to receive(:remove).with(temp_path, false)
         allow(OptimizedVideo).to receive(:create_for).and_return(false)
         allow(s3_store).to receive(:update_file_access_control)
+        allow(Discourse.store).to receive(:get_path_for_upload).and_return(final_path)
       end
 
       it "returns false and logs error" do
-        adapter.handle_completion(job_id, output_path, new_sha1)
+        adapter.handle_completion(job_id, new_sha1)
         expect(Rails.logger).to have_received(:error).with(/Failed to create OptimizedVideo record/)
-        expect(adapter.handle_completion(job_id, output_path, new_sha1)).to be false
+        expect(adapter.handle_completion(job_id, new_sha1)).to be false
       end
     end
 
@@ -333,41 +511,39 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
       let(:error) { StandardError.new("Test error") }
 
       before do
-        allow(s3_object).to receive(:exists?).and_return(true)
-        allow(s3_object).to receive(:size).and_return(1024)
+        allow(s3_helper).to receive(:object) do |path|
+          if path == temp_path
+            source_s3_object
+          elsif path.include?(final_path)
+            destination_s3_object
+          else
+            source_s3_object
+          end
+        end
+        allow(source_s3_object).to receive(:exists?).and_return(true)
+        allow(source_s3_object).to receive(:size).and_return(1024)
+        allow(s3_helper).to receive(:copy) do |source, dest, options: {}|
+          [dest, "etag123"] if source == temp_path && dest.include?(final_path)
+        end
+        allow(destination_s3_object).to receive(:exists?).and_return(true)
+        allow(s3_helper).to receive(:remove).with(temp_path, false)
         allow(OptimizedVideo).to receive(:create_for).and_raise(error)
         allow(s3_store).to receive(:update_file_access_control)
+        allow(Discourse.store).to receive(:get_path_for_upload).and_return(final_path)
       end
 
       it "returns false and logs error" do
-        adapter.handle_completion(job_id, output_path, new_sha1)
-        expect(Discourse).to have_received(:warn_exception).with(
-          error,
-          message: "Error in video processing completion",
-          env: {
-            upload_id: upload.id,
-            job_id: job_id,
-          },
-        )
-        expect(adapter.handle_completion(job_id, output_path, new_sha1)).to be false
-      end
-    end
-
-    context "when ACL update is disabled" do
-      before do
-        allow(SiteSetting).to receive(:s3_use_acls).and_return(false)
-        allow(s3_object).to receive(:exists?).and_return(true)
-        allow(OptimizedVideo).to receive(:create_for).and_return(true)
-        allow(s3_store).to receive(:update_file_access_control)
-      end
-
-      it "still calls update_file_access_control but it handles the disabled ACL setting internally" do
-        adapter.handle_completion(job_id, output_path, new_sha1)
-        expect(s3_store).to have_received(:update_file_access_control).with(
-          "#{output_path}.mp4",
-          upload.secure?,
-        )
-        expect(adapter.handle_completion(job_id, output_path, new_sha1)).to be true
+        adapter.handle_completion(job_id, new_sha1)
+        expect(Discourse).to have_received(:warn_exception) do |exception, options|
+          expect(exception).to eq(error)
+          expect(options[:message]).to eq("Error in video processing completion")
+          expect(options[:env][:upload_id]).to eq(upload.id)
+          expect(options[:env][:job_id]).to eq(job_id)
+          expect(options[:env][:temp_path]).to eq(temp_path)
+          expect(options[:env][:error_class]).to eq("StandardError")
+          expect(options[:env][:error_message]).to eq("Test error")
+        end
+        expect(adapter.handle_completion(job_id, new_sha1)).to be false
       end
     end
   end
