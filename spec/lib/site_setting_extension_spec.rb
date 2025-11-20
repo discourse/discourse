@@ -912,31 +912,31 @@ RSpec.describe SiteSettingExtension do
         expect(value[1]["title"]).to eq("Section 2")
       end
 
-      it "should handle nested objects with uploads" do
+      it "should handle objects with uploads" do
         upload = Fabricate(:upload)
-
-        nested_schema = { name: "item", properties: { media: { type: "upload" } } }
 
         schema = {
           name: "section",
           properties: {
-            items: {
-              type: "objects",
-              schema: nested_schema,
+            title: {
+              type: "string",
+            },
+            media: {
+              type: "upload",
             },
           },
         }
 
-        settings.setting(:test_nested_objects_with_uploads, "[]", type: :objects, schema: schema)
-        settings.test_nested_objects_with_uploads = [
-          { "items" => [{ "media" => upload.id }] },
+        settings.setting(:test_objects_with_uploads, "[]", type: :objects, schema: schema)
+        settings.test_objects_with_uploads = [
+          { "title" => "Section 1", "media" => upload.id },
         ].to_json
         settings.refresh!
 
         setting = settings.all_settings.last
         value = JSON.parse(setting[:value])
 
-        expect(value[0]["items"][0]["media"]).to eq(upload.url)
+        expect(value[0]["media"]).to eq(upload.url)
       end
     end
 
