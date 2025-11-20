@@ -101,7 +101,6 @@ import {
   currentSettings,
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
-import { resetDecorators } from "discourse/widgets/widget";
 import I18n from "discourse-i18n";
 import { setupDSelectAssertions } from "./d-select-assertions";
 import { setupFormKitAssertions } from "./form-kit-assertions";
@@ -206,7 +205,6 @@ export function testCleanup(container, app) {
   clearOutletCache();
   clearHTMLCache();
   clearRewrites();
-  resetDecorators();
   resetPluginOutletDecorators();
   resetUsernameDecorators();
   resetOneboxCache();
