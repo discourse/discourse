@@ -17,6 +17,8 @@ en:
             filters:
               ad_type: 
                 label: "Ad Type" 
+              house_ad_name:
+                label: "HouseAd Name"
                 
       adplugin:
         house_ads:

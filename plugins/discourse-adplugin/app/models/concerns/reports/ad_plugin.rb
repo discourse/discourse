@@ -74,6 +74,20 @@ module Reports::AdPlugin
         { type: :number, property: :unique_users, title: "Unique Users" },
       ]
 
+      house_ad_name_filter = report.filters.dig(:house_ad_name)
+
+      house_ad_choices =
+        ::AdPlugin::HouseAd.order(:name).pluck(:name).map { |name| { id: name, name: name } }
+      house_ad_choices.unshift({ id: "any", name: "All House Ads" })
+
+      report.add_filter(
+        "house_ad_name",
+        type: "list",
+        default: house_ad_name_filter || "any",
+        choices: house_ad_choices,
+        allow_any: false,
+        auto_insert_none_item: false,
+      )
       start_date = report.start_date
       end_date = report.end_date
       limit = report.limit || 50
@@ -83,18 +97,24 @@ module Reports::AdPlugin
           ha.name as ad_name,
           ai.placement,
           COUNT(*) as impressions,
-          COUNT(DISTINCT ai.user_id) FILTER (WHERE ai.user_id IS NOT NULL) as unique_users
+          COUNT(DISTINCT ai.user_id) as unique_users
         FROM ad_plugin_impressions ai
         INNER JOIN ad_plugin_house_ads ha ON ai.ad_plugin_house_ad_id = ha.id
         WHERE ai.created_at >= :start_date
           AND ai.created_at <= :end_date
           AND ai.ad_type = 0
+          AND ai.user_id IS NOT NULL
+          #{house_ad_name_filter && house_ad_name_filter != "any" ? "AND ha.name = :house_ad_name" : ""}
         GROUP BY ha.id, ha.name, ai.placement
         ORDER BY impressions DESC
         LIMIT :limit
       SQL
 
-      results = DB.query(sql, start_date: start_date, end_date: end_date, limit: limit)
+      query_params = { start_date: start_date, end_date: end_date, limit: limit }
+      query_params[:house_ad_name] = house_ad_name_filter if house_ad_name_filter &&
+        house_ad_name_filter != "any"
+
+      results = DB.query(sql, query_params)
 
       report.data =
         results.map do |row|
@@ -125,6 +145,8 @@ module Reports::AdPlugin
       ]
 
       # Add ad_type filter
+      ad_type_filter = report.filters.dig(:ad_type)
+
       ad_type_choices =
         ::AdPlugin::AdType.types.map { |key, value| { id: value.to_s, name: key.to_s.titleize } }
       ad_type_choices.unshift({ id: "any", name: "All Ad Types" })
@@ -132,13 +154,11 @@ module Reports::AdPlugin
       report.add_filter(
         "ad_type",
         type: "list",
-        default: report.filters.dig(:ad_type) || "any",
+        default: ad_type_filter || "any",
         choices: ad_type_choices,
         allow_any: false,
         auto_insert_none_item: false,
       )
-
-      ad_type_filter = report.filters.dig(:ad_type)
       start_date = report.start_date
       end_date = report.end_date
       limit = report.limit || 50
@@ -154,7 +174,7 @@ module Reports::AdPlugin
         INNER JOIN users u ON u.id = ai.user_id
         WHERE ai.created_at >= :start_date
           AND ai.created_at <= :end_date
-          #{ad_type_filter != "any" ? "AND ai.ad_type = :ad_type" : ""}
+          #{ad_type_filter && ad_type_filter != "any" ? "AND ai.ad_type = :ad_type" : ""}
         GROUP BY u.id, u.username, u.uploaded_avatar_id
         ORDER BY impressions DESC
         LIMIT :limit
@@ -162,7 +182,7 @@ module Reports::AdPlugin
 
       # Build query params
       query_params = { start_date: start_date, end_date: end_date, limit: limit }
-      query_params[:ad_type] = ad_type_filter.to_i if ad_type_filter != "any"
+      query_params[:ad_type] = ad_type_filter.to_i if ad_type_filter && ad_type_filter != "any"
 
       results = DB.query(sql, query_params)
 

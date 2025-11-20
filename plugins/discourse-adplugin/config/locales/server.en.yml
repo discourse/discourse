@@ -9,9 +9,6 @@ en:
     ad_plugin_impressions_by_user:
       title: Ad Plugin Impressions by User
       description: "Ad impressions grouped by user"
-      filters:
-        ad_type:
-          label: "Ad Type"
     ad_plugin_click_through_rate:
       title: Adplugin conversion performance
       description: "Ad performance report by ad and placement"
