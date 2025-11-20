@@ -4112,7 +4112,7 @@ en:
       deleted_by_author_simple: "(topic deleted by author)"
       localizations:
         title_edit_warning:
-          message: "This is a translated topic title.<br><br> Do you want to edit the original title in %{language} or edit this specific translation?"
+          message: "This is a translated topic title.<br><br>Do you want to edit the original title in %{language} or edit this specific translation?"
           action_original: "Edit original topic title"
           action_translation: "Edit translated topic title"
 
@@ -4234,7 +4234,7 @@ en:
         post_language_selector:
           none: "None"
         edit_warning:
-          message: "This is a translated post.<br><br> Do you want to edit the original post in %{language} or edit this specific translation?"
+          message: "This is a translated post.<br><br>Do you want to edit the original post in %{language} or edit this specific translation?"
           action_original: "Edit original post"
           action_translation: "Edit this translation"
 
