@@ -1269,9 +1269,6 @@ export default class ComposerService extends Service {
       staged = composer.get("stagedPost");
     }
 
-    // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-    this.appEvents.trigger("post-stream:posted", staged);
-
     this.messageBus.pause();
     promise.finally(() => this.messageBus.resume());
 
