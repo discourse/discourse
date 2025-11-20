@@ -1033,7 +1033,7 @@ en:
         loading_convo: "Loading conversation"
         collapse: "Collapse"
         timed_out: "Discobot couldn't find any discoveries. Something went wrong."
-        user_setting: "Enable search discoveries"
+        user_setting: "Enable AI search discoveries"
         tooltip:
           header: "AI powered search"
           content: "Natural language search powered by %{model}"
