@@ -149,10 +149,3 @@ Discourse::Application.routes.draw do
               controller: "discourse_ai/admin/ai_features"
   end
 end
-
-Discourse::Application.routes.append do
-  get "u/:username/preferences/ai" => "users#preferences",
-      :constraints => {
-        username: RouteFormat.username,
-      }
-end
