@@ -377,20 +377,39 @@ export default class TopicController extends Controller {
   }
 
   @action
+  async handleTitleClick(event) {
+    this.editTopic?.(event);
+    this.jumpTop?.(event);
+  }
+
+  @action
   async editTopic(event) {
     event?.preventDefault();
+    const canEditTitle = this.get("model.details.can_edit");
+    const canLocalize = this.currentUser.can_localize_content;
+
+    if (!canEditTitle && !canLocalize) {
+      return;
+    }
 
     const titleLocalized = this.model.fancy_title_localized;
-
-    if (!titleLocalized && this.get("model.details.can_edit")) {
+    if (!titleLocalized && canEditTitle) {
       this.set("editingTopic", true);
     }
 
+    if (this.composer.isOpen) {
+      return;
+    }
+
+    const topic = this.model;
+    const firstPost = await topic.firstPost();
+    if (titleLocalized && !canEditTitle) {
+      return this._openComposerForEditTranslation(topic, firstPost);
+    }
+
     if (titleLocalized) {
-      const topic = this.model;
       const topicLocale = topic.locale;
       const language = this.languageNameLookup.getLanguageName(topicLocale);
-      const firstPost = await topic.firstPost();
       return this.dialog.alert({
         message: i18n("topic.localizations.title_edit_warning.message", {
           language,

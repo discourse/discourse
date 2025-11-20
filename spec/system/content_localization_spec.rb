@@ -33,9 +33,14 @@ describe "Content Localization" do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:composer) { PageObjects::Components::Composer.new }
+  let(:translation_composer) { PageObjects::Components::TranslationComposer.new }
   let(:post_1_obj) { PageObjects::Components::Post.new(1) }
   let(:post_3_obj) { PageObjects::Components::Post.new(3) }
   let(:post_4_obj) { PageObjects::Components::Post.new(4) }
+
+  fab!(:topic_ja_localization) do
+    Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "孫子兵法からの人生戦略")
+  end
 
   def scroll_to_post(post_number)
     5.times do
@@ -45,7 +50,6 @@ describe "Content Localization" do
   end
 
   before do
-    Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "孫子兵法からの人生戦略")
     Fabricate(:topic_localization, topic:, locale: "es", fancy_title: "Estrategias de vida de ...")
 
     Fabricate(:post_localization, post: post_1, locale: "ja", cooked: "傑作は単なる軍事戦略についてではありません")
@@ -204,48 +208,49 @@ describe "Content Localization" do
       context "for topic titles" do
         fab!(:untranslated_topic) { Fabricate(:post).topic }
 
-        it "opens the composer in appropriate contexts" do
-          puts "untranslated topic title and fancy_title: #{untranslated_topic.title}, #{untranslated_topic.fancy_title}"
-          puts "translated topic title and fancy_title: #{topic.title}, #{topic.fancy_title}"
-          puts "translated topic localization title and fancy_title: #{topic.localizations.first.title}, #{topic.localizations.first.fancy_title}"
-
+        it "shows title editor in composer when user can edit localizations" do
           sign_in(japanese_user)
+
           topic_page.visit_topic(untranslated_topic)
+          # not privileged therefore cannot edit topic title via title container
           topic_page.click_topic_edit_title
-          expect(topic_page).not_to have_topic_title_editor
-          expect(edit_localized_post_dialog).to be_closed
+          expect(topic_page).to have_no_topic_title_editor
 
           topic_page.visit_topic(topic)
+          # does not see regular title editor
+          # sent directly to translation composer to edit translation
           topic_page.click_topic_edit_title
-          expect(topic_page).not_to have_topic_title_editor
-          expect(edit_localized_post_dialog).to be_closed
+          expect(topic_page).to have_no_topic_title_editor
+          expect(translation_composer).to have_translation_title(topic_ja_localization.title)
+        end
+
+        it "opens a dialog for choosing which title to edit for admins" do
+          admin.update(locale: "ja") # force the admin to view the jap localizations
 
           sign_in(admin)
 
           topic_page.visit_topic(untranslated_topic)
-          # can edit topic title via title container
           topic_page.click_topic_edit_title
           expect(topic_page).to have_topic_title_editor
 
-          # make the admin view the japanese translation
-          admin.update(locale: "ja")
-
           topic_page.visit_topic(topic)
-          # does not see regular title editor
+          expect(topic_page).to have_topic_title(topic_ja_localization.fancy_title)
           topic_page.click_topic_edit_title
-          expect(topic_page).not_to have_topic_title_editor
+          # does not see regular title editor
+          expect(topic_page).to have_no_topic_title_editor
           # asked to use composer to edit original title
           expect(edit_localized_post_dialog).to be_open
+
           edit_localized_post_dialog.click_yes
-          expect(composer).to have_title("Life strategies from The Art of War")
+          expect(composer).to have_title(topic.title)
 
           composer.close
 
-          # use composer to edit localized title
+          # use translation composer to edit localized title
           topic_page.click_topic_edit_title
           expect(edit_localized_post_dialog).to be_open
           edit_localized_post_dialog.click_no
-          expect(composer).to have_title("孫子兵法からの人生戦略") ## this is incorrectly using fancy_title
+          expect(translation_composer).to have_translation_title(topic_ja_localization.title)
         end
       end
     end
