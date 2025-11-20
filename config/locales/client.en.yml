@@ -7750,6 +7750,7 @@ en:
         clear_all: Clear all
         clear_all_confirm: "Are you sure you want to clear all watched words for the %{action} action?"
         invalid_regex: 'The watched word "%{word}" is an invalid regular expression.'
+        invalid_regex_multiple: "Invalid Regular Expressions:"
         regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">Watched words are regular expressions</a> and they do not automatically include word boundaries. If you want the regular expression to match whole words, include <code>\b</code> at the start and end of your regular expression.'
         actions:
           block: "Block"
