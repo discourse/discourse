@@ -21,6 +21,7 @@ import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
 import ReviewableFlagReason from "discourse/components/reviewable-refresh/flag-reason";
 import ReviewableHelpResources from "discourse/components/reviewable-refresh/help-resources";
 import ReviewableInsights from "discourse/components/reviewable-refresh/insights";
+import IpLookup from "discourse/components/reviewable-refresh/ip-lookup";
 import ReviewableTimeline from "discourse/components/reviewable-refresh/timeline";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
@@ -881,6 +882,7 @@ export default class ReviewableItem extends Component {
               />
             </div>
           {{/if}}
+          <IpLookup @reviewable={{this.reviewable}} />
 
           {{#if @showHelp}}
             <ReviewableHelpResources />

@@ -142,6 +142,13 @@ describe "Viewing reviewable item", type: :system do
         expect(dialog).to be_closed
         expect(page).to have_current_path("/")
       end
+
+      it "allows to lookup IP" do
+        SiteSetting.reviewable_old_moderator_actions = true
+        refreshed_review_page.visit_reviewable(reviewable_flagged_post)
+        refreshed_review_page.click_ip_lookup_button
+        expect(page).to have_content(I18n.t("js.ip_lookup.hostname"))
+      end
     end
 
     describe "when the reviewable item is a queued post" do
