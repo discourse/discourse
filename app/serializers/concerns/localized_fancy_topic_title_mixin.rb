@@ -28,7 +28,7 @@ module LocalizedFancyTopicTitleMixin
   end
 
   def include_locale?
-    SiteSetting.content_localization_enabled
+    SiteSetting.content_localization_enabled && _topic.present?
   end
 
   private
