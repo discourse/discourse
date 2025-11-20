@@ -23,23 +23,19 @@ export default {
           showFullscreen: true,
           showCopy: true,
         });
-        cb.attachToPost(post, postElement);
+
+        // must be done after render so we can check the scroll width
+        // of the code blocks
+        schedule("afterRender", () => {
+          cb.attachToPost(post, postElement);
+        });
 
         return cb.cleanup;
       }
 
-      api.decorateCookedElement(
-        (postElement, helper) => {
-          // must be done after render so we can check the scroll width
-          // of the code blocks
-          schedule("afterRender", () => {
-            _attachCommands(postElement, helper);
-          });
-        },
-        {
-          onlyStream: true,
-        }
-      );
+      api.decorateCookedElement(_attachCommands, {
+        onlyStream: true,
+      });
     });
   },
 };
