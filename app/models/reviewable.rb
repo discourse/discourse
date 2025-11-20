@@ -882,8 +882,7 @@ class Reviewable < ActiveRecord::Base
     bundle_id = nil
     actions.bundles.each do |bundle|
       if bundle.actions.any? { |a| action_aliases.include?(a.server_action.to_s) }
-        # Extract bundle type from bundle ID (e.g., "8311-post-actions" -> "post-actions")
-        bundle_id = bundle.id.split("-", 2).last
+        bundle_id = bundle.bundle_id
         break
       end
     end
