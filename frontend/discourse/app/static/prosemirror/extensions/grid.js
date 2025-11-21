@@ -108,11 +108,8 @@ const extension = {
     },
   }),
 
-  plugins({ pmState: { Plugin, PluginKey } }) {
-    const gridCleanupPlugin = new PluginKey("grid-cleanup");
-
+  plugins({ pmState: { Plugin } }) {
     return new Plugin({
-      key: gridCleanupPlugin,
       appendTransaction(transactions, oldState, newState) {
         // Only process if the document actually changed
         if (!transactions.some((tr) => tr.docChanged)) {
