@@ -14,13 +14,26 @@ class Chat::Api::ChannelsCurrentUserMembershipController < Chat::Api::ChannelsCo
   end
 
   def update
-    membership_params = params.require(:membership).permit(MEMBERSHIP_EDITABLE_PARAMS)
-    membership_from_params.update!(membership_params.to_h)
-    render_serialized(
-      membership_from_params,
-      Chat::UserChannelMembershipSerializer,
-      root: "membership",
-    )
+    Chat::UpdateUserChannelMembership.call(
+      params:
+        params
+          .require(:membership)
+          .permit(MEMBERSHIP_EDITABLE_PARAMS)
+          .to_h
+          .merge(channel_id: params[:channel_id]),
+      guardian: guardian,
+    ) do
+      on_success do |membership:|
+        render_serialized(membership, Chat::UserChannelMembershipSerializer, root: "membership")
+      end
+      on_model_not_found(:channel) { raise Discourse::NotFound }
+      on_model_not_found(:membership) { raise Discourse::NotFound }
+      on_failed_policy(:can_access_channel) { raise Discourse::InvalidAccess }
+      on_failed_contract do |contract|
+        render(json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request)
+      end
+      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+    end
   end
 
   def destroy
