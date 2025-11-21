@@ -135,11 +135,10 @@ export default class PostCookedHtml extends Component {
       }
     });
 
-    const cleanUpFns = applyHtmlDecorators(
-      element,
-      helper,
-      this.isStreamElement ? STREAM_HTML_DECORATOR : NON_STREAM_HTML_DECORATOR
-    );
+    const cleanUpFns = [
+      ...applyHtmlDecorators(element, helper, NON_STREAM_HTML_DECORATOR),
+      ...applyHtmlDecorators(element, helper, STREAM_HTML_DECORATOR),
+    ];
 
     this.#pendingDecoratorCleanup.push(...cleanUpFns);
   }
