@@ -4913,6 +4913,7 @@ en:
       download: "Download"
       open: "Original image"
       image_info: "Image information"
+      quote: "Quote image"
       previous: "Previous (Left arrow key)"
       next: "Next (Right arrow key)"
       counter: "%curr% of %total%"

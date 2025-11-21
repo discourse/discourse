@@ -1,3 +1,5 @@
+import { buildImageMarkdown } from "discourse/lib/markdown-image-builder";
+
 const MSO_LIST_CLASSES = [
   "MsoListParagraphCxSpFirst",
   "MsoListParagraphCxSpMiddle",
@@ -426,19 +428,20 @@ export class Tag {
             return "[image]";
           }
 
-          let alt = attr.alt || pAttr.alt || "";
+          const alt = attr.alt || pAttr.alt;
           const width = attr.width || pAttr.width;
           const height = attr.height || pAttr.height;
           const title = attr.title;
+          const escapeTablePipe = this.element.parentNames.includes("table");
 
-          if (width && height) {
-            const pipe = this.element.parentNames.includes("table")
-              ? "\\|"
-              : "|";
-            alt = `${alt}${pipe}${width}x${height}`;
-          }
-
-          return `![${alt}](${src}${title ? ` "${title}"` : ""})`;
+          return buildImageMarkdown({
+            src,
+            alt,
+            width,
+            height,
+            title,
+            escapeTablePipe,
+          });
         }
 
         return "";
