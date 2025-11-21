@@ -3712,7 +3712,6 @@ zh_CN:
         post_language_selector:
           none: "无"
         edit_warning:
-          message: "这是一篇翻译的帖子。<br><br>您是要编辑%{language}原帖还是编辑此特定翻译？"
           action_original: "编辑原帖"
           action_translation: "编辑此翻译"
       errors:

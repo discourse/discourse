@@ -622,7 +622,6 @@ pt_BR:
           vision_enabled: "Ative para a IA tentar entender as imagens. Depende do modelo usado na visão compatível. É compatível com os modelos mais recentes do Anthropic, Google e OpenAI."
           enabled_chat_bot: "Ative para os(as) usuários(as) poderem selecionar este modelo ao criar PM com bot de IA"
           cost_input: "O custo de entrada a cada 1 milhão de tokens para este modelo"
-          cost_cached_input: "O custo de entrada em cache a cada 1 milhão de tokens para este modelo"
           cost_output: "O custo de saída a cada 1 milhão de tokens para este modelo"
           cost_measure: "$/1 milhão de tokens"
         providers:
@@ -895,7 +894,6 @@ pt_BR:
         loading_convo: "Carregando conversa"
         collapse: "Recolher"
         timed_out: "O discobot não conseguiu encontrar mais nenhuma descoberta. Algo deu errado."
-        user_setting: "Ativar descobertas de pesquisa"
         tooltip:
           header: "Pesquisa alimentada por IA"
           content: "Pequisa em linguagem natural desenvolvida pelo %{model}"

@@ -678,7 +678,6 @@ de:
           vision_enabled: "Wenn diese Funktion aktiviert ist, versucht die KI, Bilder zu verstehen. Dafür wird ein Modell benötigt, das Sehen unterstützt. Verfügbar in den neuesten Modellen von Anthropic, Google und OpenAI."
           enabled_chat_bot: "Wenn diese Option aktiviert ist, können Benutzer dieses Modell auswählen, wenn sie PN mit dem KI-Bot erstellen"
           cost_input: "Die Kosten für die Eingabe pro 1 Million Token für dieses Modell"
-          cost_cached_input: "Die Kosten für die Eingabe von Zwischengespeichertem pro 1 Million Token für dieses Modell"
           cost_output: "Die Kosten für die Ausgabe pro 1 Million Token für dieses Modell"
           cost_measure: "$/1M Token"
         providers:
@@ -960,7 +959,6 @@ de:
         loading_convo: "Unterhaltung wird geladen"
         collapse: "Zuklappen"
         timed_out: "Discobot konnte keine Entdeckungen finden. Irgendetwas ist schief gelaufen."
-        user_setting: "Suchentdeckungen aktivieren"
         tooltip:
           header: "KI-gestützte Suche"
           content: "Natürliche Sprachsuche unterstützt von %{model}"

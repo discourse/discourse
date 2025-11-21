@@ -622,7 +622,6 @@ fi:
           vision_enabled: "Jos tämä on käytössä, tekoäly yrittää ymmärtää kuvia. Tämä riippuu siitä, tukeeko käytettävä malli näköä. Anthropicin, Googlen ja OpenAI:n uusimmat mallit tukevat näköä."
           enabled_chat_bot: "Jos tämä on käytössä, käyttäjät voivat valita tämän mallin luodessaan yksityisviestejä tekoälybotin kanssa"
           cost_input: "Tämän mallin syöttökustannukset miljoonaa sanetta kohden"
-          cost_cached_input: "Tämän mallin välimuistisyöttökustannukset miljoonaa sanetta kohden"
           cost_output: "Tämän mallin tuotoskustannukset miljoonaa sanetta kohden"
           cost_measure: "$/1 milj. sanetta"
         providers:
@@ -895,7 +894,6 @@ fi:
         loading_convo: "Ladataan keskustelua"
         collapse: "Supista"
         timed_out: "Discobot ei löytänyt löytöjä. Jokin meni vikaan."
-        user_setting: "Ota hakulöydöt käyttöön"
         tooltip:
           header: "Tekoälyhaku"
           content: "Luonnollisen kielen haun tarjoaa %{model}"

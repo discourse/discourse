@@ -630,7 +630,6 @@ sk:
           vision_enabled: "Ak je táto funkcia zapnutá, AI sa pokúsi porozumieť obrázkom. Závisí to od použitého modelu podporujúceho videnie. Podporované najnovšími modelmi od spoločností Anthropic, Google a OpenAI."
           enabled_chat_bot: "Ak je táto možnosť povolená, používatelia môžu vybrať tento model pri vytváraní PM s botom AI"
           cost_input: "Vstupné náklady na 1 milión tokenov pre tento model"
-          cost_cached_input: "Cena uloženého vstupu na 1 milión tokenov pre tento model"
           cost_output: "Výstupné náklady na 1 milión tokenov pre tento model"
           cost_measure: "Tokeny $/1 milión"
         providers:
@@ -908,7 +907,6 @@ sk:
         loading_convo: "Načítanie konverzácie"
         collapse: "Zbaliť"
         timed_out: "Discobot nenašiel žiadne objavy. Niečo sa pokazilo."
-        user_setting: "Povolenie vyhľadávania objavov"
         tooltip:
           header: "Vyhľadávanie na báze umelej inteligencie"
           content: "Vyhľadávanie v prirodzenom jazyku pomocou %{model}"
