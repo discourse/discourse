@@ -2,9 +2,14 @@
 
 module PageObjects
   module Pages
-    class AdminObjectsThemeSettingEditor < PageObjects::Pages::Base
-      def visit(theme, setting_name)
+    class AdminObjectsSettingEditor < PageObjects::Pages::Base
+      def visit_theme(theme, setting_name)
         page.visit "/admin/customize/themes/#{theme.id}/schema/#{setting_name}"
+        self
+      end
+
+      def visit_setting(setting_name)
+        page.visit "/admin/schema/#{setting_name}"
         self
       end
 
@@ -35,6 +40,11 @@ module PageObjects
 
       def fill_in_field(field_name, value)
         input_field(field_name).fill_in(with: value)
+        self
+      end
+
+      def add_object_in_root
+        find(".schema-setting-editor__tree-add-button.--root").click
         self
       end
 
