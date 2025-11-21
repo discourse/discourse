@@ -213,7 +213,9 @@
           align-items: center;
           justify-content: center;
           box-sizing: border-box;
+          padding-block: 0;
           border-radius: 0;
+          align-self: stretch;
         }
       }
     }
