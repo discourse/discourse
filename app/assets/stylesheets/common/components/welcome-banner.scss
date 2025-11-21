@@ -160,7 +160,7 @@
   font-weight: bold;
   margin-bottom: var(--space-2);
   margin-inline: auto;
-  max-width: 600px;
+  max-width: 70ch;
   text-align: center;
 
   @include viewport.until(md) {
