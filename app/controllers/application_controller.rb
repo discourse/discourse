@@ -33,6 +33,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  before_action :set_current_request
   around_action :ensure_dont_cache_page
   before_action :check_readonly_mode
   before_action :handle_theme
@@ -1084,5 +1085,9 @@ class ApplicationController < ActionController::Base
         cookies[:locale] = cookie_args.merge(value: locale_param)
       end
     end
+  end
+
+  def set_current_request
+    Current.request = request
   end
 end
