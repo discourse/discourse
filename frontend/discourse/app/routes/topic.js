@@ -55,9 +55,21 @@ export default class TopicRoute extends DiscourseRoute {
         return model.get("errorTitle");
       }
 
-      const result = model.get("unicode_title") || model.get("title"),
-        cat = model.get("category");
+      let result;
 
+      const titleLocalized = model.get("fancy_title_localized");
+      if (titleLocalized) {
+        const fancyTitle = model.get("fancy_title");
+        // doing this helps with decoding entities
+        // e.g., &ldquo; -> ", &mdash; -> —
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = fancyTitle;
+        result = tempDiv.textContent || tempDiv.innerText || fancyTitle;
+      } else {
+        result = model.get("unicode_title") || model.get("title");
+      }
+
+      const cat = model.get("category");
       // Only display uncategorized in the title tag if it was renamed
       if (
         this.siteSettings.topic_page_title_includes_category &&
