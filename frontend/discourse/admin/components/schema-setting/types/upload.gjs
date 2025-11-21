@@ -5,23 +5,23 @@ import { action } from "@ember/object";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
 
 export default class SchemaSettingTypeUpload extends Component {
-  @tracked localValue = this.args.value;
+  @tracked uploadUrl = this.args.value;
 
   @action
   uploadDone(upload) {
-    this.localValue = upload.url;
+    this.uploadUrl = upload.url;
     this.args.onChange(upload.url);
   }
 
   @action
   uploadDeleted() {
-    this.localValue = null;
+    this.uploadUrl = null;
     this.args.onChange(null);
   }
 
   <template>
     <UppyImageUploader
-      @imageUrl={{this.localValue}}
+      @imageUrl={{this.uploadUrl}}
       @onUploadDone={{this.uploadDone}}
       @onUploadDeleted={{this.uploadDeleted}}
       @additionalParams={{hash for_site_setting=true}}

@@ -390,14 +390,11 @@ module SiteSettingExtension
           default = default_uploads[default.to_i]
         end
 
-        # For objects type, parse JSON and convert upload IDs to URLs
+        # For uploads nested in objects type, hydrate upload IDs to URLs
         if type_hash[:type].to_s == "objects" && type_hash[:schema]
-          # Parse the JSON value if it's a string
-          parsed_value = value.is_a?(String) ? JSON.parse(value) : value
+          parsed_value = JSON.parse(value)
 
-          if parsed_value.is_a?(Array)
-            value = hydrate_uploads_in_objects(parsed_value, type_hash[:schema])
-          end
+          value = hydrate_uploads_in_objects(parsed_value, type_hash[:schema])
         end
 
         opts = {
@@ -1154,10 +1151,10 @@ module SiteSettingExtension
     properties.each do |prop_key, prop_value|
       next unless prop_value[:type] == "upload"
 
-      key = object.key?(prop_key) ? prop_key : prop_key.to_s
-      value = object[key]
+      key = prop_key.to_s
+      upload_id = object[key]
 
-      upload = Upload.find_by(id: value)
+      upload = Upload.find_by(id: upload_id)
       object[key] = upload.url if upload
     end
 
