@@ -92,8 +92,7 @@ body.wizard {
 
   &__step {
     margin-top: 1em;
-    max-width: 50%;
-    min-width: 35%;
+    max-width: 700px;
     width: 100%;
 
     @include viewport.until(lg) {
