@@ -26,7 +26,7 @@ import { lock, unlock } from "discourse/lib/body-scroll-lock";
 import { getExtensions } from "discourse/lib/composer/rich-editor-extensions";
 import { bind } from "discourse/lib/decorators";
 import forceScrollingElementPosition from "discourse/modifiers/force-scrolling-element-position";
-import { positionOffScreen } from "discourse/modifiers/prevent-scroll-on-focus";
+import { focusOffScreen } from "discourse/modifiers/prevent-scroll-on-focus";
 import { i18n } from "discourse-i18n";
 import { authorizesOneOrMoreExtensions } from "../../../lib/uploads";
 import { buildCommands, buildCustomState } from "../core/commands";
@@ -218,7 +218,7 @@ export default class ProsemirrorEditor extends Component {
 
           if (this.capabilities.isIOS) {
             // prevents ios to attempt to scroll
-            positionOffScreen(view.dom);
+            focusOffScreen(view.dom);
           }
 
           this.args.focusIn?.();

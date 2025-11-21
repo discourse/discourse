@@ -1,11 +1,15 @@
 import { registerDestructor } from "@ember/destroyable";
+import { service } from "@ember/service";
 import Modifier from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
+import { focusOffScreen } from "discourse/modifiers/prevent-scroll-on-focus";
 
 const FOCUSABLE_ELEMENTS =
   "details:not(.is-disabled) summary, [autofocus], a, input, select, textarea, summary";
 
 export default class TrapTabModifier extends Modifier {
+  @service capabilities;
+
   element = null;
 
   constructor(owner, args) {
@@ -31,15 +35,22 @@ export default class TrapTabModifier extends Modifier {
       // if there's not autofocus, or the activeElement, is not the autofocusable element
       // attempt to focus the first of the focusable elements or just the modal-body
       // to make it possible to scroll with arrow down/up
-      (
+      const target =
         autofocusedElement ||
         this.element.querySelector(
           FOCUSABLE_ELEMENTS + ", button:not(.modal-close)"
         ) ||
-        this.element.querySelector(".d-modal__body")
-      )?.focus({
-        preventScroll: this.preventScroll,
-      });
+        this.element.querySelector(".d-modal__body");
+
+      if (target) {
+        target.focus({
+          preventScroll: this.preventScroll,
+        });
+
+        if (this.capabilities.isIOS) {
+          focusOffScreen(target);
+        }
+      }
     }
   }
 
