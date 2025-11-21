@@ -243,6 +243,8 @@ module SvgSprite
         sun
         table
         table-cells
+        table-cells-minus
+        table-cells-plus
         table-columns
         tag
         tags

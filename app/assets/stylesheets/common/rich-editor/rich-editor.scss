@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .ProseMirror-container {
   margin: 0;
   overscroll-behavior: contain;
@@ -152,7 +154,13 @@
   }
 
   .html-block {
-    border: 1px dashed var(--primary-low-mid);
+    border: 2px dashed var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
+
+    &.ProseMirror-selectednode {
+      outline-offset: -2px;
+      border-radius: calc(var(--d-border-radius) + 2px);
+    }
 
     &::after {
       position: absolute;
@@ -160,8 +168,56 @@
       top: 0;
       content: "HTML";
       font-size: var(--font-down-2-rem);
-      color: var(--primary-low-mid);
+      color: var(--primary-medium);
       z-index: 1;
+      background: var(--secondary-very-high);
+      padding: 0 var(--space-1);
+      border-bottom-left-radius: var(--d-border-radius);
+      border-top-right-radius: var(--d-border-radius);
+    }
+  }
+
+  .composer-image-grid {
+    position: relative;
+    border: 2px dashed var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
+    padding: var(--space-half) var(--space-2) var(--space-2) var(--space-2);
+    margin-block: var(--space-4);
+
+    &__title {
+      display: flex;
+      align-items: center;
+      justify-content: end;
+      font-size: var(--font-down-1-rem);
+      color: var(--primary-medium);
+
+      svg {
+        font-size: var(--font-up-1-rem);
+        padding-inline: var(--space-2);
+
+        &:hover {
+          color: var(--primary);
+          cursor: pointer;
+        }
+      }
+    }
+
+    img:not(.ProseMirror-separator) {
+      @include viewport.until(md) {
+        width: 150px !important;
+        height: 150px !important;
+      }
+
+      @include viewport.from(md) {
+        width: 200px !important;
+        height: 200px !important;
+      }
+      object-fit: cover;
+    }
+
+    &.ProseMirror-selectednode {
+      outline-offset: -2px;
+      border-radius: calc(var(--d-border-radius) + 2px);
     }
   }
 
@@ -418,7 +474,8 @@ li.ProseMirror-selectednode::after {
   right: -2px;
   top: -2px;
   bottom: -2px;
-  border: 2px solid #8cf;
+  border: 2px solid var(--tertiary-high);
+  border-radius: var(--d-border-radius);
   pointer-events: none;
 }
 
