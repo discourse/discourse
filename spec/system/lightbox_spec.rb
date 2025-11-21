@@ -10,6 +10,7 @@ describe "Lightbox | Photoswipe", type: :system do
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:lightbox) { PageObjects::Components::PhotoSwipe.new }
+  let(:composer) { PageObjects::Components::Composer.new }
   let(:cpp) { CookedPostProcessor.new(post, disable_dominant_color: true) }
 
   before do
@@ -41,6 +42,31 @@ describe "Lightbox | Photoswipe", type: :system do
       expect(lightbox).to have_download_button
       expect(lightbox).to have_original_image_button
       expect(lightbox).to have_image_info_button
+    end
+
+    it "quotes the image into the composer" do
+      topic_page.visit_topic(topic)
+
+      lightbox_link = find("#post_1 a.lightbox")
+      lightbox_image = lightbox_link.find("img", visible: :all)
+      expected_width = lightbox_link["data-target-width"].presence || lightbox_image["width"]
+      expected_height = lightbox_link["data-target-height"].presence || lightbox_image["height"]
+      expected_src =
+        lightbox_image["data-orig-src"].presence ||
+          page.evaluate_script("arguments[0].getAttribute('href')", lightbox_link)
+
+      lightbox_link.click
+
+      expect(lightbox).to have_quote_button
+
+      lightbox.quote_button.click
+
+      expect(composer).to be_opened
+      editor_value = composer.composer_input.value
+      expect(editor_value).to include(
+        "![first image|#{expected_width}x#{expected_height}](#{expected_src})",
+      )
+      expect(editor_value).to include("post:1")
     end
 
     it "does not show image info button when no image details are available" do
