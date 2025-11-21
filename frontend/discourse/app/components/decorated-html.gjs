@@ -207,6 +207,16 @@ class DecorateHtmlHelper {
     this.#context = context;
   }
 
+  /**
+   * Renders a Glimmer component into a specified target HTML element with provided data.
+   * Handles deprecation warnings if invalid parameters are passed.
+   *
+   * @param {Element} targetElement The HTML element where the Glimmer component should be rendered. Must be a valid DOM element.
+   * @param {Object} component The Glimmer component object to render. Should not have a name of "factory" to avoid deprecation warnings.
+   * @param {Object} data The data to be passed to the Glimmer component for rendering.
+   * @param {Object} [opts={}] Additional options for rendering. Supports an `append` boolean property that defaults to `true` to determine if the content should be appended to the target element.
+   * @return {void}
+   */
   renderGlimmer(targetElement, component, data, opts = {}) {
     if (!(targetElement instanceof Element)) {
       deprecated(
