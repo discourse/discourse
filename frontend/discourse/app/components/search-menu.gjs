@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
+import { waitForPromise } from "@ember/test-waiters";
 import { Promise } from "rsvp";
 import DButton from "discourse/components/d-button";
 import MenuPanel from "discourse/components/menu-panel";
@@ -22,7 +23,6 @@ import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
-import discourseLater from "discourse/lib/later";
 import {
   isValidSearchTerm,
   searchForTerm,
@@ -30,6 +30,7 @@ import {
 } from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
 import userSearch from "discourse/lib/user-search";
+import { prefersReducedMotion } from "discourse/lib/utilities";
 import { CANCELLED_STATUS } from "discourse/modifiers/d-autocomplete";
 
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
@@ -50,8 +51,8 @@ export default class SearchMenu extends Component {
   @tracked suggestionKeyword = false;
   @tracked suggestionResults = [];
   @tracked invalidTerm = false;
-  @tracked isClosing = false;
   @tracked menuPanelOpen = false;
+  @tracked searchMenuWrapper = null;
 
   searchInputId = this.args.searchInputId ?? "search-term";
   searchInputPlaceholder = this.args.searchInputPlaceholder || "search.title";
@@ -78,13 +79,18 @@ export default class SearchMenu extends Component {
   }
 
   @bind
-  onDocumentPress(event) {
+  setupWrapper(el) {
+    this.searchMenuWrapper = el;
+  }
+
+  @bind
+  async onDocumentPress(event) {
     if (!this.menuPanelOpen) {
       return;
     }
 
     if (!event.target.closest(".search-menu-container.menu-panel-results")) {
-      this.close();
+      await this.close();
     }
   }
 
@@ -97,10 +103,6 @@ export default class SearchMenu extends Component {
 
     if (this.loading) {
       classes.push("loading");
-    }
-
-    if (this.isClosing) {
-      classes.push("-closing");
     }
 
     return classes.join(" ");
@@ -146,23 +148,70 @@ export default class SearchMenu extends Component {
     }
   }
 
+  async #animateMenu() {
+    this.searchMenuWrapper.classList.add("-closing");
+
+    await waitForPromise(
+      Promise.all([this.#waitForAnimationEnd(this.searchMenuWrapper)])
+    );
+
+    this.searchMenuWrapper.classList.remove("-closing");
+  }
+
+  #waitForAnimationEnd(el) {
+    return new Promise((resolve) => {
+      const style = window.getComputedStyle(el);
+      const duration = parseFloat(style.animationDuration) * 1000 || 0;
+      const delay = parseFloat(style.animationDelay) * 1000 || 0;
+      const totalTime = duration + delay;
+
+      const timeoutId = setTimeout(
+        () => {
+          el.removeEventListener("animationend", handleAnimationEnd);
+          resolve();
+        },
+        Math.max(totalTime + 50, 50)
+      );
+
+      const handleAnimationEnd = () => {
+        clearTimeout(timeoutId);
+        el.removeEventListener("animationend", handleAnimationEnd);
+        resolve();
+      };
+
+      el.addEventListener("animationend", handleAnimationEnd);
+    });
+  }
+
   @action
-  close() {
+  async close() {
     if (this.args?.onClose) {
-      discourseLater(() => {
-        this.isClosing = false;
-        return this.args.onClose();
-      }, 250);
+      if (!prefersReducedMotion()) {
+        try {
+          await this.#animateMenu();
+        } finally {
+          this.args.onClose();
+          this.menuPanelOpen = false;
+        }
+      } else {
+        this.args.onClose();
+        this.menuPanelOpen = false;
+      }
+    } else {
+      if (!prefersReducedMotion()) {
+        try {
+          await this.#animateMenu();
+        } finally {
+          this.menuPanelOpen = false;
+        }
+      } else {
+        this.menuPanelOpen = false;
+      }
     }
 
     // We want to blur the search input when in stand-alone mode
     // so that when we focus on the search input again, the menu panel pops up
     document.getElementById(this.searchInputId)?.blur();
-    this.isClosing = true;
-    discourseLater(() => {
-      this.isClosing = false;
-      this.menuPanelOpen = false;
-    }, 250);
   }
 
   @action
@@ -416,6 +465,7 @@ export default class SearchMenu extends Component {
     <div
       class={{this.classNames}}
       {{didInsert this.setupEventListeners}}
+      {{didInsert this.setupWrapper}}
       {{! template-lint-disable no-invalid-interactive }}
       {{on "keydown" this.onKeydown}}
     >
