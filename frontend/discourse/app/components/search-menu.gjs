@@ -150,19 +150,13 @@ export default class SearchMenu extends Component {
   @action
   async close() {
     if (this.args?.onClose) {
-      try {
-        await animateClosing(this.searchMenuWrapper);
-      } finally {
-        this.args.onClose();
-        this.menuPanelOpen = false;
-      }
+      await animateClosing(this.searchMenuWrapper);
+      this.args.onClose();
     } else {
-      try {
-        await animateClosing(this.searchMenuWrapper);
-      } finally {
-        this.menuPanelOpen = false;
-      }
+      await animateClosing(this.searchMenuWrapper);
     }
+
+    this.menuPanelOpen = false;
 
     // We want to blur the search input when in stand-alone mode
     // so that when we focus on the search input again, the menu panel pops up

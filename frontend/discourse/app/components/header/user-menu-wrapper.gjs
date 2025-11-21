@@ -45,13 +45,10 @@ export default class UserMenuWrapper extends Component {
         easing: "ease-in",
       });
     } else {
-      try {
-        if (this.site.desktopView) {
-          await animateClosing(this.userMenuWrapper);
-        }
-      } finally {
-        this.args.toggleUserMenu();
+      if (this.site.desktopView) {
+        await animateClosing(this.userMenuWrapper);
       }
+      this.args.toggleUserMenu();
     }
   }
 
