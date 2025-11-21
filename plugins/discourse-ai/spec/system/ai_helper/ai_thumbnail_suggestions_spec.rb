@@ -2,9 +2,15 @@
 
 RSpec.describe "AI Thumbnail Suggestions", type: :system do
   fab!(:user) { Fabricate(:admin, refresh_auto_groups: true) }
-  fab!(:upload_1) { Fabricate(:upload, original_filename: "image1.png", width: 512, height: 512) }
-  fab!(:upload_2) { Fabricate(:upload, original_filename: "image2.png", width: 512, height: 512) }
-  fab!(:upload_3) { Fabricate(:upload, original_filename: "image3.png", width: 512, height: 512) }
+  fab!(:upload_1) do
+    Fabricate(:image_upload, original_filename: "image1.png", width: 512, height: 512)
+  end
+  fab!(:upload_2) do
+    Fabricate(:image_upload, original_filename: "image2.png", width: 512, height: 512)
+  end
+  fab!(:upload_3) do
+    Fabricate(:image_upload, original_filename: "image3.png", width: 512, height: 512)
+  end
 
   fab!(:post_illustrator_persona) do
     AiPersona.create!(
