@@ -30,7 +30,6 @@ import {
 } from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
 import userSearch from "discourse/lib/user-search";
-import { prefersReducedMotion } from "discourse/lib/utilities";
 import { CANCELLED_STATUS } from "discourse/modifiers/d-autocomplete";
 
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
@@ -151,25 +150,16 @@ export default class SearchMenu extends Component {
   @action
   async close() {
     if (this.args?.onClose) {
-      if (!prefersReducedMotion()) {
-        try {
-          await animateClosing(this.searchMenuWrapper);
-        } finally {
-          this.args.onClose();
-          this.menuPanelOpen = false;
-        }
-      } else {
+      try {
+        await animateClosing(this.searchMenuWrapper);
+      } finally {
         this.args.onClose();
         this.menuPanelOpen = false;
       }
     } else {
-      if (!prefersReducedMotion()) {
-        try {
-          await animateClosing(this.searchMenuWrapper);
-        } finally {
-          this.menuPanelOpen = false;
-        }
-      } else {
+      try {
+        await animateClosing(this.searchMenuWrapper);
+      } finally {
         this.menuPanelOpen = false;
       }
     }

@@ -1,4 +1,5 @@
 import { waitForPromise } from "@ember/test-waiters";
+import { prefersReducedMotion } from "discourse/lib/utilities";
 
 export async function waitForAnimationEnd(element) {
   return await new Promise((resolve) => {
@@ -27,6 +28,9 @@ export async function waitForAnimationEnd(element) {
 }
 
 export async function animateClosing(element) {
+  if (!element || prefersReducedMotion()) {
+    return;
+  }
   element.classList.add("-closing");
 
   await waitForPromise(Promise.all([waitForAnimationEnd(element)]));
@@ -35,6 +39,9 @@ export async function animateClosing(element) {
 }
 
 export async function animateOpening(element) {
+  if (!element || prefersReducedMotion()) {
+    return;
+  }
   element.classList.add("-opening");
 
   await waitForPromise(Promise.all([waitForAnimationEnd(element)]));
