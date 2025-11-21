@@ -1,6 +1,7 @@
 // @ts-check
 import { getOwner, setOwner } from "@ember/owner";
 import { next } from "@ember/runloop";
+import { isEmpty } from "@ember/utils";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { lift, setBlockType, toggleMark, wrapIn } from "prosemirror-commands";
 import { Slice } from "prosemirror-model";
@@ -359,6 +360,91 @@ export default class ProsemirrorTextManipulation {
 
   toggleDirection() {
     this.view.dom.dir = this.view.dom.dir === "rtl" ? "ltr" : "rtl";
+  }
+
+  /**
+   * Wraps consecutive upload placeholders in grid tags.
+   * @param {string[]} consecutiveImages - Array of consecutive image filenames to wrap
+   */
+  autoGridImages(consecutiveImages) {
+    if (isEmpty(consecutiveImages)) {
+      return;
+    }
+
+    const imagesToWrapGrid = new Set(consecutiveImages);
+    const placeholderNodes = [];
+
+    // Find all placeholder image nodes in the document that match our consecutive images
+    this.view.state.doc.descendants((node, pos) => {
+      // Skip traversing grids
+      if (node.type === this.schema.nodes.grid) {
+        return false;
+      }
+
+      if (
+        node.type === this.schema.nodes.image &&
+        node.attrs.placeholder &&
+        node.attrs.alt
+      ) {
+        // Extract filename from the alt text (which contains the upload placeholder text)
+        const uploadingText = i18n("uploading_filename", {
+          filename: "%placeholder%",
+        });
+        const uploadingTextMatch = uploadingText.match(
+          /^.*(?=: %placeholder%\s?…)/
+        );
+
+        if (uploadingTextMatch && uploadingTextMatch[0]) {
+          const pattern = new RegExp(
+            uploadingTextMatch[0].trim() + "\\s?: ([^…]+)"
+          );
+          const match = node.attrs.alt.match(pattern);
+
+          if (match && match[1] && imagesToWrapGrid.has(match[1])) {
+            placeholderNodes.push({ node, pos, filename: match[1] });
+          }
+        }
+      }
+    });
+
+    // Check if we found all consecutive images and they are adjacent
+    if (placeholderNodes.length === consecutiveImages.length) {
+      // Sort by position to ensure correct order
+      placeholderNodes.sort((a, b) => a.pos - b.pos);
+
+      // Check if nodes are consecutive (adjacent)
+      let areConsecutive = true;
+      for (let i = 1; i < placeholderNodes.length; i++) {
+        const prevNode = placeholderNodes[i - 1];
+        const currNode = placeholderNodes[i];
+        const expectedNextPos = prevNode.pos + prevNode.node.nodeSize;
+
+        // Allow some flexibility for whitespace between nodes
+        if (currNode.pos > expectedNextPos + 2) {
+          areConsecutive = false;
+          break;
+        }
+      }
+
+      if (areConsecutive) {
+        const firstNode = placeholderNodes[0];
+        const lastNode = placeholderNodes[placeholderNodes.length - 1];
+        const startPos = firstNode.pos;
+        const endPos = lastNode.pos + lastNode.node.nodeSize;
+
+        // Replace the placeholder content with the actual placeholder nodes inside a grid
+        const tr = this.view.state.tr;
+        const content = tr.doc.slice(startPos, endPos).content;
+
+        // Create grid node and put the content inside it
+        const gridNode = this.schema.nodes.grid.createAndFill(null, content);
+
+        if (gridNode) {
+          tr.replaceWith(startPos, endPos, gridNode);
+          this.view.dispatch(tr);
+        }
+      }
+    }
   }
 
   /**
