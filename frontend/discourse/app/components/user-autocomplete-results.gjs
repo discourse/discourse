@@ -49,13 +49,13 @@ export default class UserAutocompleteResults extends Component {
 
   @action
   handleInsert() {
-    this.args.onRender(this.args.results);
+    this.args.onRender?.(this.args.results);
   }
 
   @action
   handleUpdate() {
     this.isInitialRender = false;
-    this.args.onRender(this.args.results);
+    this.args.onRender?.(this.args.results);
   }
 
   @action
