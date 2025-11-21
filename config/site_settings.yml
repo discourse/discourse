@@ -1745,6 +1745,9 @@ content_localization:
   content_localization_crawler_param:
     default: false
     area: "localization"
+  content_localization_use_default_locale_when_unsupported:
+    default: true
+    area: "localization"
 
 email:
   email_time_window_mins:

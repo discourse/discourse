@@ -29,7 +29,11 @@ describe "Content Localization" do
     )
   end
   fab!(:post_3) { Fabricate(:post, topic:, locale: "ja", raw: "将とは、智・信・仁・勇・厳なり。") }
+  fab!(:topic_ja_localization) do
+    Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "孫子兵法からの人生戦略")
+  end
 
+  # page objects
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:composer) { PageObjects::Components::Composer.new }
@@ -37,10 +41,6 @@ describe "Content Localization" do
   let(:post_1_obj) { PageObjects::Components::Post.new(1) }
   let(:post_3_obj) { PageObjects::Components::Post.new(3) }
   let(:post_4_obj) { PageObjects::Components::Post.new(4) }
-
-  fab!(:topic_ja_localization) do
-    Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "孫子兵法からの人生戦略")
-  end
 
   def scroll_to_post(post_number)
     5.times do
@@ -369,6 +369,82 @@ describe "Content Localization" do
         page.refresh
 
         expect(page).to have_title(shady_topic.title)
+      end
+    end
+
+    context "for a Greek user in an English forum with Japanese users" do
+      fab!(:greek_user) { Fabricate(:user, locale: "el") }
+
+      fab!(:jap_post) { Fabricate(:post, locale: "ja", cooked: "皆さんは「ジョジョの奇妙な冒険」をご存知ですか？") }
+      fab!(:jap_topic) do
+        jap_post.topic.tap { |t| t.update(locale: "ja", fancy_title: "ジョジョの奇妙な冒険") }
+      end
+      fab!(:en_loc_jap_post) do
+        Fabricate(
+          :post_localization,
+          locale: "en",
+          post: jap_post,
+          cooked: "Do you know “JoJo’s Bizarre Adventure”?",
+        )
+      end
+      fab!(:en_loc_jap_topic) do
+        Fabricate(
+          :topic_localization,
+          locale: "en",
+          topic: jap_topic,
+          fancy_title: "JoJo's Bizarre Adventure",
+        )
+      end
+
+      before do
+        SiteSetting.default_locale = "en" # explicit
+        SiteSetting.content_localization_use_default_locale_when_unsupported = true
+      end
+
+      context "for a topic / post with no locale" do
+        it "shows content as-is" do
+          jap_post.update(locale: nil)
+          jap_topic.update(locale: nil)
+
+          sign_in(greek_user)
+
+          topic_page.visit_topic(jap_topic)
+          expect(topic_page).to have_topic_title(jap_topic.fancy_title)
+          expect(post_1_obj).to have_cooked_content(jap_post.cooked)
+
+          SiteSetting.content_localization_enabled = false
+
+          page.refresh
+          expect(topic_page).to have_topic_title(jap_topic.fancy_title)
+          expect(post_1_obj).to have_cooked_content(jap_post.cooked)
+        end
+      end
+
+      context "for a topic / post written in Site default language (en)" do
+        it "shows Site default language (en) translation to Greek user" do
+          sign_in(greek_user)
+
+          topic_page.visit_topic(jap_topic)
+          expect(topic_page).to have_topic_title(en_loc_jap_topic.fancy_title)
+          expect(post_1_obj).to have_cooked_content(en_loc_jap_post.cooked)
+
+          SiteSetting.content_localization_use_default_locale_when_unsupported = false
+
+          page.refresh
+          expect(topic_page).to have_topic_title(jap_topic.fancy_title)
+          expect(post_1_obj).to have_cooked_content(jap_post.cooked)
+        end
+      end
+
+      it "shows content as-is when no localization exists" do
+        en_loc_jap_topic.destroy
+        en_loc_jap_post.destroy
+
+        sign_in(greek_user)
+
+        topic_page.visit_topic(jap_topic)
+        expect(topic_page).to have_topic_title(jap_topic.fancy_title)
+        expect(post_1_obj).to have_cooked_content(jap_post.cooked)
       end
     end
   end

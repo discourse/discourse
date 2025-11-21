@@ -28,8 +28,12 @@ module PageObjects
         find("#embedded-posts__bottom--#{@post_number} .load-more-replies").click
       end
 
+      def cooked_content
+        post.find(".contents > .cooked")
+      end
+
       def has_cooked_content?(value)
-        post.find(".contents > .cooked").has_content?(value)
+        cooked_content.has_content?(value)
       end
 
       def has_replies?(count: nil)
