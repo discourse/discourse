@@ -594,7 +594,7 @@ export default class DiscourseReactionsActions extends Component {
     if (!this.data?.id) {
       return null;
     }
-    return `discourse-reactions-actions-${this.data.id}-${
+    return `discourse-reactions-actions${this.args.type || ""}-${this.data.id}-${
       this.args.position || "right"
     }`;
   }
@@ -669,11 +669,12 @@ export default class DiscourseReactionsActions extends Component {
         return;
       }
       const id = this.data.id;
+      const type = this.args.type || "";
       const trigger = document.querySelector(
-        `#discourse-reactions-actions-${id}-${position} ${selectors[0]}`
+        `#discourse-reactions-actions${type}-${id}-${position} ${selectors[0]}`
       );
       const popper = document.querySelector(
-        `#discourse-reactions-actions-${id}-${position} ${selectors[1]}`
+        `#discourse-reactions-actions${type}-${id}-${position} ${selectors[1]}`
       );
 
       _popperPicker?.destroy();

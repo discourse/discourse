@@ -84,7 +84,7 @@ export default class LatestTopicListItem extends Component {
         <div class="bottom-row">
           <PluginOutlet
             @name="latest-topic-list-item-main-link-bottom-row"
-            @outletArgs={{lazyHash topic=@topic}}
+            @outletArgs={{lazyHash topic=@topic type=@type}}
           >
             {{categoryLink @topic.category~}}
             {{~discourseTags @topic mode="list"}}
