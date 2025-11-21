@@ -544,7 +544,7 @@ export default class ChatComposer extends Component {
       fixedTextareaPosition: true,
       onKeyUp: (text, cp) => {
         const matches =
-          /(?:^|[\s.\?,@\/#!%&*;:\[\]{}=\-_()+])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/gi.exec(
+          /(?:^|[\s.\?,@\/#!%&*;:\[\]{}=\-_()+])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?)$/gi.exec(
             text.substring(0, cp)
           );
 

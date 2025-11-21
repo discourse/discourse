@@ -328,7 +328,7 @@ export default class DEditor extends Component {
 
       onKeyUp: (text, cp) => {
         const matches = new RegExp(
-          `(?:^|${EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP.source})(:(?!:).?[\\w-]*:?(?!:)(?:t\\d?)?:?) ?$`,
+          `(?:^|${EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP.source})(:(?!:).?[\\w-]*:?(?!:)(?:t\\d?)?:?)$`,
           "gi"
         ).exec(text.substring(0, cp));
 
