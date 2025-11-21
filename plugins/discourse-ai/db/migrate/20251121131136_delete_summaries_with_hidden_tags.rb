@@ -2,13 +2,20 @@
 
 class DeleteSummariesWithHiddenTags < ActiveRecord::Migration[7.1]
   def up
-    # Get all hidden tag names (tags that are restricted to specific groups)
+    # Get all hidden tag names (tags that are restricted and NOT visible to everyone)
+    # Group::AUTO_GROUPS[:everyone] is 0
     hidden_tag_names_sql = <<~SQL
       SELECT DISTINCT tags.name
       FROM tags
       INNER JOIN tag_group_memberships ON tags.id = tag_group_memberships.tag_id
       INNER JOIN tag_groups ON tag_group_memberships.tag_group_id = tag_groups.id
       INNER JOIN tag_group_permissions ON tag_groups.id = tag_group_permissions.tag_group_id
+      WHERE tags.id NOT IN (
+        SELECT tgm.tag_id
+        FROM tag_group_memberships tgm
+        INNER JOIN tag_group_permissions tgp ON tgm.tag_group_id = tgp.tag_group_id
+        WHERE tgp.group_id = 0
+      )
     SQL
 
     hidden_tag_names = DB.query_single(hidden_tag_names_sql)
