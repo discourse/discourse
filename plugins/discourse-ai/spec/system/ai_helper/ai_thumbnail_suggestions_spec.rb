@@ -55,37 +55,6 @@ RSpec.describe "AI Thumbnail Suggestions", type: :system do
   let(:thumbnail_modal) { PageObjects::Modals::ThumbnailSuggestionsModal.new }
   let(:toasts) { PageObjects::Components::Toasts.new }
 
-  let(:thumbnail_response) do
-    {
-      thumbnails: [
-        {
-          id: upload_1.id,
-          url: upload_1.url,
-          short_url: upload_1.short_url,
-          original_filename: upload_1.original_filename,
-          width: upload_1.width,
-          height: upload_1.height,
-        },
-        {
-          id: upload_2.id,
-          url: upload_2.url,
-          short_url: upload_2.short_url,
-          original_filename: upload_2.original_filename,
-          width: upload_2.width,
-          height: upload_2.height,
-        },
-        {
-          id: upload_3.id,
-          url: upload_3.url,
-          short_url: upload_3.short_url,
-          original_filename: upload_3.original_filename,
-          width: upload_3.width,
-          height: upload_3.height,
-        },
-      ],
-    }
-  end
-
   def trigger_composer_helper(content)
     visit("/latest")
     page.find("#create-topic").click
@@ -93,21 +62,19 @@ RSpec.describe "AI Thumbnail Suggestions", type: :system do
     composer.click_toolbar_button("ai-helper-trigger")
   end
 
-  def stub_thumbnail_request(response = thumbnail_response)
-    stub_request(:post, "http://localhost:3000/discourse-ai/ai-helper/suggest").with(
-      body: hash_including({ mode: "illustrate_post" }),
-    ).to_return(
-      status: 200,
-      body: response.to_json,
-      headers: {
-        "Content-Type" => "application/json",
-      },
-    )
+  def mock_thumbnail_generation
+    allow_any_instance_of(DiscourseAi::Personas::Bot).to receive(:reply) do |_bot, _context, &block|
+      custom_raw =
+        "![#{upload_1.original_filename}](#{upload_1.short_url})\n" +
+          "![#{upload_2.original_filename}](#{upload_2.short_url})\n" +
+          "![#{upload_3.original_filename}](#{upload_3.short_url})"
+      block.call("", custom_raw, :partial_invoke)
+    end
   end
 
   context "when using illustrate post feature" do
     it "opens thumbnail modal when illustrate_post is selected" do
-      stub_thumbnail_request
+      mock_thumbnail_generation
 
       trigger_composer_helper(input)
       ai_helper_menu.select_helper_model("illustrate_post")
@@ -118,7 +85,7 @@ RSpec.describe "AI Thumbnail Suggestions", type: :system do
     end
 
     it "can select and save thumbnails" do
-      stub_thumbnail_request
+      mock_thumbnail_generation
 
       trigger_composer_helper(input)
       ai_helper_menu.select_helper_model("illustrate_post")
@@ -137,7 +104,7 @@ RSpec.describe "AI Thumbnail Suggestions", type: :system do
     end
 
     it "save button is disabled with no selection" do
-      stub_thumbnail_request
+      mock_thumbnail_generation
 
       trigger_composer_helper(input)
       ai_helper_menu.select_helper_model("illustrate_post")
@@ -151,7 +118,7 @@ RSpec.describe "AI Thumbnail Suggestions", type: :system do
     end
 
     it "try again button regenerates thumbnails and clears selection" do
-      stub_thumbnail_request
+      mock_thumbnail_generation
 
       trigger_composer_helper(input)
       ai_helper_menu.select_helper_model("illustrate_post")
@@ -163,7 +130,7 @@ RSpec.describe "AI Thumbnail Suggestions", type: :system do
       thumbnail_modal.select_thumbnail(0)
       thumbnail_modal.select_thumbnail(1)
 
-      stub_thumbnail_request
+      mock_thumbnail_generation
 
       thumbnail_modal.click_try_again
 
@@ -175,7 +142,7 @@ RSpec.describe "AI Thumbnail Suggestions", type: :system do
     end
 
     it "try again button is disabled while loading" do
-      stub_thumbnail_request
+      mock_thumbnail_generation
 
       trigger_composer_helper(input)
       ai_helper_menu.select_helper_model("illustrate_post")
@@ -188,17 +155,15 @@ RSpec.describe "AI Thumbnail Suggestions", type: :system do
     end
 
     it "handles credit limit errors" do
-      error_response = { errors: ["AI credit limit reached"], error_type: "credit_limit" }
+      llm_model = LlmModel.find_by(id: SiteSetting.ai_default_llm_model)
+      allocation = Fabricate(:llm_credit_allocation, llm_model: llm_model)
+      exception =
+        LlmCreditAllocation::CreditLimitExceeded.new(
+          "AI credit limit reached",
+          allocation: allocation,
+        )
 
-      stub_request(:post, "http://localhost:3000/discourse-ai/ai-helper/suggest").with(
-        body: hash_including({ mode: "illustrate_post" }),
-      ).to_return(
-        status: 429,
-        body: error_response.to_json,
-        headers: {
-          "Content-Type" => "application/json",
-        },
-      )
+      allow(LlmCreditAllocation).to receive(:check_credits!).and_raise(exception)
 
       trigger_composer_helper(input)
       ai_helper_menu.select_helper_model("illustrate_post")
