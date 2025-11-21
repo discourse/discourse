@@ -307,6 +307,11 @@ en:
           post_raw_translator: "Post raw translator"
           topic_title_translator: "Topic title translator"
           short_text_translator: "Short text translator"
+          schedule_untranslated: "Translate Topic"
+          schedule_topic_success:
+            one: "Scheduled translation for %{count} untranslated post."
+            other: "Scheduled translation for %{count} untranslated posts."
+          schedule_topic_error: "Failed to schedule translations. Please try again."
 
         spam:
           name: "Spam"
