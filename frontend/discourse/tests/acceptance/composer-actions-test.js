@@ -385,7 +385,7 @@ function stubDraftResponse() {
 
 acceptance(`Composer Actions With New Topic Draft`, function (needs) {
   needs.user({ whisperer: true });
-  needs.settings({});
+
   needs.site({
     can_tag_topics: true,
   });
