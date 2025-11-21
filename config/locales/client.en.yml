@@ -773,6 +773,10 @@ en:
       grouped_by_topic: "Grouped by Topic"
       none: "There are no items to review."
       view_pending: "view pending"
+      confirm_actions: "Confirm"
+      no_actions_selected: "Please select at least one action"
+      action_performed: "Action performed successfully"
+      actions_performed: "Actions performed successfully"
       topic_has_pending:
         one: "This topic has <b>%{count}</b> post pending approval"
         other: "This topic has <b>%{count}</b> posts pending approval"

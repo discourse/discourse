@@ -23,7 +23,7 @@
 
   &__primary-content {
     position: relative;
-    flex: 0 1 75%;
+    flex: 0 1 70%;
     min-width: 0;
 
     @include viewport.from(sm) {
@@ -67,7 +67,7 @@
   }
 
   &__aside {
-    flex: 0 1 25%;
+    flex: 0 1 30%;
     min-width: 0;
     position: sticky;
     top: var(--header-offset);
@@ -94,6 +94,11 @@
     .dropdown-select-box.reviewable-action-dropdown {
       white-space: wrap;
       text-wrap: pretty;
+    }
+
+    .reviewable-actions-form form {
+      flex-direction: row;
+      align-items: end;
     }
 
     &-title {
