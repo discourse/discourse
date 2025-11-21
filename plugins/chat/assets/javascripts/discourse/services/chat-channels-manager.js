@@ -162,22 +162,13 @@ export default class ChatChannelsManager extends Service {
 
   @cached
   get publicMessageChannels() {
-    const channels = this.channels.filter(
-      (channel) =>
-        channel.isCategoryChannel && channel.currentUserMembership.following
+    return this.#sortChannelsByProperty(
+      this.channels.filter(
+        (channel) =>
+          channel.isCategoryChannel && channel.currentUserMembership.following
+      ),
+      "slug"
     );
-
-    return channels.sort((a, b) => {
-      const pinnedResult = this.#comparePinnedChannels(a, b, "slug");
-      if (pinnedResult !== null) {
-        return pinnedResult;
-      }
-
-      // Both unpinned, sort alphabetically by slug
-      const aSlug = a.slug || "";
-      const bSlug = b.slug || "";
-      return aSlug.localeCompare(bSlug);
-    });
   }
 
   get publicMessageChannelsWithActivity() {
@@ -185,14 +176,7 @@ export default class ChatChannelsManager extends Service {
   }
 
   get publicMessageChannelsByActivity() {
-    const channels = [...this.publicMessageChannels];
-    const pinned = channels.filter((c) => c.currentUserMembership?.pinned);
-    const unpinned = channels.filter((c) => !c.currentUserMembership?.pinned);
-
-    // Sort unpinned by activity
-    const sortedUnpinned = this.#sortChannelsByActivity(unpinned);
-
-    return [...pinned, ...sortedUnpinned];
+    return this.#sortChannelsByActivity(this.publicMessageChannels);
   }
 
   @cached
@@ -320,6 +304,18 @@ export default class ChatChannelsManager extends Service {
       }
 
       return a.slug?.localeCompare?.(b.slug);
+    });
+  }
+
+  #sortChannelsByProperty(channels, property) {
+    return channels.sort((a, b) => {
+      const pinnedResult = this.#comparePinnedChannels(a, b, property);
+      if (pinnedResult !== null) {
+        return pinnedResult;
+      }
+
+      // Both unpinned, sort by property
+      return (a[property] || "").localeCompare(b[property] || "");
     });
   }
 
