@@ -51,10 +51,10 @@ export default class UserMenuWrapper extends Component {
             await this.#animateMenu();
           }
         } finally {
-          this.localToggleUserMenu();
+          this.args.toggleUserMenu();
         }
       } else {
-        this.localToggleUserMenu();
+        this.args.toggleUserMenu();
       }
     }
   }
@@ -95,10 +95,6 @@ export default class UserMenuWrapper extends Component {
 
       el.addEventListener("animationend", handleAnimationEnd);
     });
-  }
-
-  async localToggleUserMenu() {
-    this.args.toggleUserMenu();
   }
 
   <template>
