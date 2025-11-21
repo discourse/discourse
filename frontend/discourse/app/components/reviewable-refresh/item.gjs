@@ -18,6 +18,7 @@ import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and
 import ReviewableBundledAction from "discourse/components/reviewable-bundled-action";
 import ReviewableClaimedTopic from "discourse/components/reviewable-claimed-topic";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
+import ReviewableActionsForm from "discourse/components/reviewable-refresh/actions-form";
 import ReviewableFlagReason from "discourse/components/reviewable-refresh/flag-reason";
 import ReviewableHelpResources from "discourse/components/reviewable-refresh/help-resources";
 import ReviewableInsights from "discourse/components/reviewable-refresh/insights";
@@ -360,7 +361,10 @@ export default class ReviewableItem extends Component {
 
   @bind
   _updateStatus(data) {
-    if (data.remove_reviewable_ids.includes(this.reviewable.id)) {
+    if (
+      data.remove_reviewable_ids &&
+      data.remove_reviewable_ids.includes(this.reviewable.id)
+    ) {
       delete data.remove_reviewable_ids;
       this._performResult(data, {}, this.reviewable);
     }
@@ -695,6 +699,12 @@ export default class ReviewableItem extends Component {
     }
   }
 
+  @action
+  handleActionsPerformed(result) {
+    this._performResult(result, null, this.reviewable);
+    this.#unclaimAutomaticReviewable();
+  }
+
   <template>
     <div class="review-container">
 
@@ -842,21 +852,31 @@ export default class ReviewableItem extends Component {
                     class="btn-danger reviewable-action cancel-edit"
                   />
                 {{else}}
-                  {{#each this.reviewable.bundled_actions as |bundle|}}
-                    <ReviewableBundledAction
-                      @bundle={{bundle}}
-                      @performAction={{this.perform}}
-                      @reviewableUpdating={{this.disabled}}
-                    />
-                  {{/each}}
+                  {{#if this.siteSettings.reviewable_old_moderator_actions}}
+                    {{#each this.reviewable.bundled_actions as |bundle|}}
+                      <ReviewableBundledAction
+                        @bundle={{bundle}}
+                        @performAction={{this.perform}}
+                        @reviewableUpdating={{this.disabled}}
+                      />
+                    {{/each}}
 
-                  {{#if this.reviewable.can_edit}}
-                    <DButton
-                      @disabled={{this.disabled}}
-                      @action={{this.edit}}
-                      @label="review.edit"
-                      class="reviewable-action btn-default edit"
-                    />
+                    {{#if this.reviewable.can_edit}}
+                      <DButton
+                        @disabled={{this.disabled}}
+                        @action={{this.edit}}
+                        @label="review.edit"
+                        class="reviewable-action btn-default edit"
+                      />
+                    {{/if}}
+                  {{else}}
+                    {{#each this.reviewable.bundled_actions as |bundle|}}
+                      <ReviewableActionsForm
+                        @bundle={{bundle}}
+                        @performAction={{this.perform}}
+                        @updating={{this.updating}}
+                      />
+                    {{/each}}
                   {{/if}}
                 {{/if}}
               </div>
