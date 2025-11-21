@@ -1,15 +1,9 @@
-import { getOwner } from "@ember/owner";
-
-export async function waitForClosedKeyboard(context) {
+export async function waitForClosedKeyboard(siteService, capabilitiesService) {
   if (!window.visualViewport) {
     return;
   }
 
-  const owner = getOwner(context);
-  const site = owner.lookup("service:site");
-  const capabilities = owner.lookup("service:capabilities");
-
-  if (!capabilities.isIpadOS && site.desktopView) {
+  if (!capabilitiesService.isIpadOS && siteService.desktopView) {
     return;
   }
 
@@ -48,7 +42,7 @@ export async function waitForClosedKeyboard(context) {
       console.warn("Expected virtual keyboard to be closed but it wasn't.");
       return;
     }
-  } else if (capabilities.isFirefox && capabilities.isAndroid) {
+  } else if (capabilitiesService.isFirefox && capabilitiesService.isAndroid) {
     const KEYBOARD_DETECT_THRESHOLD = 150;
     if (
       Math.abs(

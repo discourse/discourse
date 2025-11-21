@@ -3,7 +3,7 @@
   // -1px is for the bottom border of the chat navbar
   $base-height: calc(
     var(--composer-vh, 1vh) * 100 - var(--main-outlet-offset, 0px) - 1px -
-      $inset
+      $inset - var(--composer-height, 0px)
   );
   height: calc($base-height);
 

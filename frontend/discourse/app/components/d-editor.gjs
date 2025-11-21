@@ -103,7 +103,7 @@ export default class DEditor extends Component {
 
   setupToolbar() {
     this.toolbar = new Toolbar(
-      this.getProperties("siteSettings", "showLink", "capabilities")
+      this.getProperties("siteSettings", "showLink", "capabilities", "site")
     );
     this.toolbar.context = this;
 

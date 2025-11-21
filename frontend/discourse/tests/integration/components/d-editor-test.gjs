@@ -1400,6 +1400,7 @@ third line`
     const customToolbar = new ToolbarBase({
       siteSettings: this.siteSettings,
       capabilities: this.capabilities,
+      site: this.site,
       showLink: true,
     });
     customToolbar.addButton({
