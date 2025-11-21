@@ -626,7 +626,6 @@ es:
           vision_enabled: "Si está activada, la IA intentará comprender las imágenes. Depende del modelo utilizado que soporte la visión. Compatible con los últimos modelos de Anthropic, Google y OpenAI."
           enabled_chat_bot: "Si se activa, los usuarios pueden seleccionar este modelo al crear MP con el bot de IA"
           cost_input: "El coste de entrada por cada millón de tokens para este modelo"
-          cost_cached_input: "El coste de entrada en caché por cada millón de tokens para este modelo"
           cost_output: "El coste de salida por cada millón de tokens para este modelo"
           cost_measure: "$/1M tokens"
         providers:
@@ -899,7 +898,6 @@ es:
         loading_convo: "Cargando conversación"
         collapse: "Contraer"
         timed_out: "Discobot no ha podido encontrar nada. Algo salió mal."
-        user_setting: "Activa los descubrimientos de búsqueda"
         tooltip:
           header: "Búsqueda impulsada por IA"
           content: "Búsqueda de lenguaje natural impulsad por %{model}"

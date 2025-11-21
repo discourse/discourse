@@ -622,7 +622,6 @@ tr_TR:
           vision_enabled: "Etkinleştirilirse YZ görüntüleri anlamaya çalışır. Görmeyi destekleyen kullanılan modele bağlıdır. Anthropic, Google ve OpenAI'ın en son modelleri tarafından desteklenir."
           enabled_chat_bot: "Etkinleştirilirse kullanıcılar YZ botu ile kişisel mesajlar oluştururken bu modeli seçebilir"
           cost_input: "Bu model için 1 milyon token başına girdi maliyeti"
-          cost_cached_input: "Bu model için 1 milyon token başına ön belleğe alınmış girdi maliyeti"
           cost_output: "Bu model için 1 milyon token başına çıktı maliyeti"
           cost_measure: "$/1 milyon token"
         providers:
@@ -895,7 +894,6 @@ tr_TR:
         loading_convo: "Konuşma yükleniyor"
         collapse: "Daralt"
         timed_out: "Discobot herhangi bir keşif bulamadı. Bir şeyler ters gitti."
-        user_setting: "Arama keşiflerini etkinleştirin"
         tooltip:
           header: "YZ destekli arama"
           content: "%{model} tarafından desteklenen doğal dil araması"

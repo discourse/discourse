@@ -4301,7 +4301,6 @@ ru:
         post_language_selector:
           none: "Нет"
         edit_warning:
-          message: "Это переведенная публикация.<br><br> Хотите изменить исходную публикацию (язык — %{language}) или отредактировать этот конкретный перевод?"
           action_original: "Изменить исходную публикацию"
           action_translation: "Редактировать этот перевод"
       errors:

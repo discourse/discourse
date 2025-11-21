@@ -3947,7 +3947,6 @@ ug:
         post_language_selector:
           none: "يوق"
         edit_warning:
-          message: "بۇ تەرجىمە قىلىنغان يازما. <br><br>سىز %{language} دىكى ئەسلى يازمىنى تەھرىرلەمسىز ياكى بۇ تەرجىمىنى تەھرىرلەمسىز؟"
           action_original: "ئەسلى يازمىنى تەھرىرلە"
           action_translation: "بۇ تەرجىمىنى تەھرىرلە"
       errors:

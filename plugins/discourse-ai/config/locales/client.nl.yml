@@ -622,7 +622,6 @@ nl:
           vision_enabled: "Indien ingeschakeld, zal de AI proberen afbeeldingen te begrijpen. Dit is afhankelijk van het gebruikte model ter ondersteuning van zicht. Ondersteund door de nieuwste modellen van Anthropic, Google en OpenAI."
           enabled_chat_bot: "Indien ingeschakeld, kunnen gebruikers dit model selecteren bij het maken van PB's met de AI-bot."
           cost_input: "De invoerkosten per 1 miljoen tokens voor dit model"
-          cost_cached_input: "De kosten voor gecachte invoer per 1 miljoen tokens voor dit model"
           cost_output: "De uitvoerkosten per 1 miljoen tokens voor dit model"
           cost_measure: "$/miljoen tokens"
         providers:
@@ -895,7 +894,6 @@ nl:
         loading_convo: "Conversatie laden"
         collapse: "Samenvouwen"
         timed_out: "Discobot kon geen ontdekkingen vinden. Er is iets misgegaan."
-        user_setting: "Zoekontdekkingen inschakelen"
         tooltip:
           header: "AI-gestuurd zoeken"
           content: "Zoeken in natuurlijke taal, aangestuurd door %{model}"

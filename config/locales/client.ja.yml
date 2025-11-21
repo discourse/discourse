@@ -3652,7 +3652,6 @@ ja:
         post_language_selector:
           none: "なし"
         edit_warning:
-          message: "これは翻訳された投稿です。<br><br>元の%{language}の投稿を編集しますか？またはこの翻訳を編集しますか？"
           action_original: "元の投稿を編集する"
           action_translation: "この翻訳を編集する"
       errors:

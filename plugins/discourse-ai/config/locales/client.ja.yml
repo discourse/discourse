@@ -616,7 +616,6 @@ ja:
           vision_enabled: "有効にすると、AI は画像を理解しようとします。ビジョンのサポートに使用されているモデルに応じます。Anthropic、Google、および OpenAI の最新モデルでサポートされています。"
           enabled_chat_bot: "有効にすると、ユーザーは AI ボットを使って PM を作成するときに、このモデルを選択できます"
           cost_input: "このモデルの 100 万トークン当たりの入力コスト"
-          cost_cached_input: "このモデルの 100 万トークン当たりのキャッシュ入力コスト"
           cost_output: "このモデルの 100 万トークン当たりの出力コスト"
           cost_measure: "$/100 万トークン"
         providers:
@@ -886,7 +885,6 @@ ja:
         loading_convo: "会話を読み込み中"
         collapse: "折りたたむ"
         timed_out: "Discobot は発見を見つけられませんでした。問題が発生しました。"
-        user_setting: "発見の検索を有効にする"
         tooltip:
           header: "AI 搭載の検索"
           content: "%{model} による自然言語検索"

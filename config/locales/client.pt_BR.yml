@@ -3864,7 +3864,6 @@ pt_BR:
         post_language_selector:
           none: "Nenhum"
         edit_warning:
-          message: "Esta é uma postagem traduzida.<br><br> Você quer editar a postagem original em %{language} ou editar essa tradução específica?"
           action_original: "Editar a postagem original"
           action_translation: "Editar esta tradução"
       errors:
