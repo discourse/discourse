@@ -13,8 +13,6 @@ module("Integration | Component | Post | PostMetaData", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.siteSettings.glimmer_post_stream_mode = "enabled";
-
     this.store = getOwner(this).lookup("service:store");
     const topic = this.store.createRecord("topic", { id: 1 });
     const post = this.store.createRecord("post", {

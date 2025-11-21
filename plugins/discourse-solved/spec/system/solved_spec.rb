@@ -24,36 +24,30 @@ describe "Solved", type: :system do
     SiteSetting.display_name_on_posts = true
   end
 
-  %w[enabled disabled].each do |value|
-    context "when glimmer_post_stream_mode=#{value}" do
-      before { SiteSetting.glimmer_post_stream_mode = value }
+  it "accepts post as solution and shows in OP" do
+    sign_in(accepter)
+    visit_solver_post
 
-      it "accepts post as solution and shows in OP" do
-        sign_in(accepter)
-        visit_solver_post
+    verify_solution_unaccepted_state
+    accept_solution
+    verify_solution_accepted_state
+    verify_solution_quote_content
+    verify_solver_and_accepter_info
+    expand_solution_quote
+  end
 
-        verify_solution_unaccepted_state
-        accept_solution
-        verify_solution_accepted_state
-        verify_solution_quote_content
-        verify_solver_and_accepter_info
-        expand_solution_quote
-      end
+  it "accepts and unaccepts post as solution" do
+    sign_in(accepter)
+    visit_solver_post
 
-      it "accepts and unaccepts post as solution" do
-        sign_in(accepter)
-        visit_solver_post
+    verify_solution_unaccepted_state
+    accept_solution
+    verify_solution_accepted_state
+    verify_solution_info_present
 
-        verify_solution_unaccepted_state
-        accept_solution
-        verify_solution_accepted_state
-        verify_solution_info_present
-
-        unaccept_solution
-        verify_solution_unaccepted_state
-        verify_solution_info_absent
-      end
-    end
+    unaccept_solution
+    verify_solution_unaccepted_state
+    verify_solution_info_absent
   end
 
   it "shows the solved post in user activity at /my/activity/solved" do

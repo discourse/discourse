@@ -5,7 +5,9 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
-import DecoratedHtml from "discourse/components/decorated-html";
+import DecoratedHtml, {
+  applyHtmlDecorators,
+} from "discourse/components/decorated-html";
 import InterpolatedTranslation from "discourse/components/interpolated-translation";
 import ReviewableFlagReason from "discourse/components/reviewable-refresh/flag-reason";
 import ReviewableNoteForm from "discourse/components/reviewable-refresh/note-form";
@@ -27,7 +29,6 @@ import { i18n } from "discourse-i18n";
  * @component ReviewableTimeline
  */
 export default class ReviewableTimeline extends Component {
-  @service appEvents;
   @service currentUser;
   @service store;
 
@@ -219,11 +220,7 @@ export default class ReviewableTimeline extends Component {
 
   @bind
   decorate(element, helper) {
-    this.appEvents.trigger(
-      "decorate-non-stream-cooked-element",
-      element,
-      helper
-    );
+    applyHtmlDecorators(element, helper);
   }
 
   <template>

@@ -16,7 +16,6 @@ import { userPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 import PostA11yHeading from "./a11y-heading";
 
-// TODO (glimmer-post-stream) remove the export after removing the legacy widget code
 export const GROUP_ACTION_CODES = ["invited_group", "removed_group"];
 export const customGroupActionCodes = [];
 

@@ -1,37 +1,8 @@
-import { createWidget } from "discourse/widgets/widget";
-import { i18n } from "discourse-i18n";
+/**
+ * IMPORTANT: The widget rendering system has been decommissioned.
+ *
+ * This file is maintained only to prevent breaking imports in existing third-party customizations.
+ * New code should not use this component or the widget system.
+ */
 
-export default createWidget("post-gap", {
-  tagName: "div.gap",
-  buildKey: (attrs) => `post-gap-${attrs.pos}-${attrs.postId}`,
-
-  defaultState() {
-    return { loading: false };
-  },
-
-  html(attrs, state) {
-    return state.loading
-      ? i18n("loading")
-      : i18n("post.gap", { count: attrs.gap.length });
-  },
-
-  click() {
-    const { attrs, state } = this;
-
-    if (state.loading) {
-      return;
-    }
-    state.loading = true;
-
-    const args = { gap: attrs.gap, post: this.model };
-    return this.sendWidgetAction(
-      attrs.pos === "before" ? "fillGapBefore" : "fillGapAfter",
-      args
-    ).then(() => {
-      state.loading = false;
-      this.appEvents.trigger("post-stream:gap-expanded", {
-        post_id: this.model.id,
-      });
-    });
-  },
-});
+export { DummyWidget as default } from "discourse/widgets/widget";

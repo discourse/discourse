@@ -1,7 +1,8 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import DecoratedHtml from "discourse/components/decorated-html";
+import DecoratedHtml, {
+  applyHtmlDecorators,
+} from "discourse/components/decorated-html";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ReviewablePostEdits from "discourse/components/reviewable-post-edits";
 import ReviewableCreatedBy from "discourse/components/reviewable-refresh/created-by";
@@ -12,8 +13,6 @@ import highlightHTML from "discourse/lib/highlight-html";
 import { i18n } from "discourse-i18n";
 
 export default class ReviewablePost extends Component {
-  @service appEvents;
-
   get metaLabel() {
     return this.args.metaLabel || i18n("review.posted_in");
   }
@@ -46,11 +45,7 @@ export default class ReviewablePost extends Component {
       }
     }
 
-    this.appEvents.trigger(
-      "decorate-non-stream-cooked-element",
-      element,
-      helper
-    );
+    applyHtmlDecorators(element, helper);
   }
 
   <template>
