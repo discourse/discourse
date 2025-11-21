@@ -25,6 +25,7 @@ class S3CorsRulesets
       Content-Type
       X-Amz-Acl
       X-Amz-Meta-Sha1-Checksum
+      X-Amz-Tagging
     ],
     expose_headers: ["ETag"],
     allowed_methods: %w[GET HEAD PUT],
