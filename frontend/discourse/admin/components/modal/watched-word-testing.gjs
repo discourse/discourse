@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { Textarea } from "@ember/component";
 import DModal from "discourse/components/d-modal";
 import { or } from "discourse/truth-helpers";
@@ -20,70 +20,135 @@ export default class WatchedWordTesting extends Component {
     return this.args.model.watchedWord.nameKey === "link";
   }
 
-  get matches() {
-    if (
-      !this.value ||
-      this.args.model.watchedWord.compiledRegularExpression.length === 0
-    ) {
-      return [];
+  cleanErrorMessage(message) {
+    const parts = message.split(": ");
+    return parts[parts.length - 1];
+  }
+
+  @cached
+  get matchesAndErrors() {
+    const errors = [];
+
+    if (!this.value) {
+      return { matches: [], errors: [] };
     }
 
     if (this.isReplace || this.isLink) {
       const matches = [];
       this.args.model.watchedWord.words.forEach((word) => {
-        const regexp = new RegExp(
-          word.regexp,
-          word.case_sensitive ? "gu" : "gui"
-        );
-        let match;
+        try {
+          const regexp = new RegExp(
+            word.regexp,
+            word.case_sensitive ? "gu" : "gui"
+          );
+          let match;
 
-        while ((match = regexp.exec(this.value)) !== null) {
-          matches.push({
-            match: match[1],
-            replacement: word.replacement,
+          while ((match = regexp.exec(this.value)) !== null) {
+            matches.push({
+              match: match[1],
+              replacement: word.replacement,
+            });
+          }
+        } catch (e) {
+          errors.push({
+            word: word.word,
+            error: this.cleanErrorMessage(e.message),
           });
         }
       });
-      return matches;
+      return { matches, errors };
     }
 
     if (this.isTag) {
       const matches = new Map();
       this.args.model.watchedWord.words.forEach((word) => {
-        const regexp = new RegExp(
-          word.regexp,
-          word.case_sensitive ? "gu" : "gui"
-        );
-        let match;
+        try {
+          const regexp = new RegExp(
+            word.regexp,
+            word.case_sensitive ? "gu" : "gui"
+          );
+          let match;
 
-        while ((match = regexp.exec(this.value)) !== null) {
-          if (!matches.has(match[1])) {
-            matches.set(match[1], new Set());
+          while ((match = regexp.exec(this.value)) !== null) {
+            if (!matches.has(match[1])) {
+              matches.set(match[1], new Set());
+            }
+
+            const tags = matches.get(match[1]);
+            word.replacement.split(",").forEach((tag) => tags.add(tag));
           }
-
-          const tags = matches.get(match[1]);
-          word.replacement.split(",").forEach((tag) => tags.add(tag));
+        } catch (e) {
+          errors.push({
+            word: word.word,
+            error: this.cleanErrorMessage(e.message),
+          });
         }
       });
 
-      return Array.from(matches, ([match, tagsSet]) => ({
-        match,
-        tags: Array.from(tagsSet),
-      }));
+      return {
+        matches: Array.from(matches, ([match, tagsSet]) => ({
+          match,
+          tags: Array.from(tagsSet),
+        })),
+        errors,
+      };
     }
 
     let matches = [];
-    this.args.model.watchedWord.compiledRegularExpression.forEach((entry) => {
-      const [regexp, options] = Object.entries(entry)[0];
-      const wordRegexp = new RegExp(
-        regexp,
-        options.case_sensitive ? "gu" : "gui"
-      );
+    let hasCompiledExpressionError = false;
 
-      matches.push(...(this.value.match(wordRegexp) || []));
+    this.args.model.watchedWord.compiledRegularExpression.forEach((entry) => {
+      try {
+        const [regexp, options] = Object.entries(entry)[0];
+        const wordRegexp = new RegExp(
+          regexp,
+          options.case_sensitive ? "gu" : "gui"
+        );
+
+        matches.push(...(this.value.match(wordRegexp) || []));
+      } catch {
+        hasCompiledExpressionError = true;
+      }
     });
 
-    return matches;
+    if (hasCompiledExpressionError) {
+      matches = [];
+      this.args.model.watchedWord.words.forEach((word) => {
+        try {
+          const regexp = new RegExp(
+            word.regexp,
+            word.case_sensitive ? "gu" : "gui"
+          );
+          let match;
+
+          while ((match = regexp.exec(this.value)) !== null) {
+            matches.push(match[1] || match[0]);
+          }
+        } catch (e) {
+          const cleanError = this.cleanErrorMessage(e.message);
+          if (
+            !errors.some(
+              (err) => err.word === word.word && err.error === cleanError
+            )
+          ) {
+            errors.push({
+              word: word.word,
+              error: cleanError,
+            });
+          }
+        }
+      });
+    }
+
+    return { matches, errors };
+  }
+
+  get matches() {
+    return this.matchesAndErrors.matches;
+  }
+
+  get regexErrors() {
+    return this.matchesAndErrors.errors;
   }
 
   <template>
