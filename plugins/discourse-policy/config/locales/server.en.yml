@@ -2,6 +2,7 @@ en:
   site_settings:
     policy_enabled: "Allow policies?"
     policy_restrict_to_staff_posts: "Policies may only appear on staff posts"
+    create_policy_allowed_groups: "Group membership required for adding policies to posts"
     policy_easy_revoke: "Show the accept and revoke buttons at the same time"
   discourse_policy:
     errors:

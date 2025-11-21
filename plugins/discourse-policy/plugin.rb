@@ -54,7 +54,7 @@ after_initialize do
   on(:post_process_cooked) do |doc, post|
     has_group = false
 
-    if !SiteSetting.policy_restrict_to_staff_posts || post&.user&.staff?
+    if post&.user&.in_any_groups?(SiteSetting.create_policy_allowed_groups_map)
       if policy = doc.search(".policy")&.first
         post_policy = post.post_policy || post.build_post_policy
 
