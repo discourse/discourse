@@ -135,5 +135,5 @@ after_worker_timeout do |server, worker, timeout_info|
   #{timeout_info.thread.backtrace&.join("\n")}
   MSG
 
-  Rails.logger.warn(message)
+  Rails.logger.error(message)
 end
