@@ -242,9 +242,10 @@ describe "Content Localization" do
           expect(edit_localized_post_dialog).to be_open
 
           edit_localized_post_dialog.click_yes
-          expect(composer).to have_title(topic.title)
+          expect(composer).to have_input_title(topic.title)
 
           composer.close
+          expect(composer).to be_closed
 
           # use translation composer to edit localized title
           topic_page.click_topic_edit_title
@@ -332,6 +333,42 @@ describe "Content Localization" do
         page.refresh
         scroll_to_post(21)
         expect(post_21_obj.post).to have_content("日本語コンテンツ 21")
+      end
+    end
+
+    context "for html title" do
+      fab!(:shady_topic) do
+        topic =
+          Fabricate(
+            :topic,
+            title: "topic with — <script>alert('xss')</script> …",
+            locale: "en",
+            user: site_local_user,
+          )
+        Fabricate(:post, topic:, locale: "en")
+        topic
+      end
+
+      fab!(:shady_topic_ja_localization) do
+        Fabricate(:topic_localization, topic: shady_topic, locale: "ja")
+      end
+
+      it "shows localized fancy_title in HTML title when user locale differs" do
+        sign_in(japanese_user)
+
+        topic_page.visit_topic(shady_topic)
+        expect(page).to have_title(shady_topic_ja_localization.fancy_title)
+
+        page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+        expect(page).to have_title(shady_topic.title)
+
+        page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+        expect(page).to have_title(shady_topic_ja_localization.fancy_title)
+
+        SiteSetting.content_localization_enabled = false
+        page.refresh
+
+        expect(page).to have_title(shady_topic.title)
       end
     end
   end
