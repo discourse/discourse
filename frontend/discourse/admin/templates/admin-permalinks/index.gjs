@@ -11,21 +11,21 @@ import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  <ConditionalLoadingSpinner @condition={{@controller.loading}}>
-    {{#if @controller.hasPermalinks}}
-      <div class="d-admin-filter">
-        <div class="admin-filter__input-container permalink-search">
-          <TextField
-            @value={{@controller.filter}}
-            @placeholderKey="admin.permalink.form.filter"
-            @autocorrect="off"
-            @autocapitalize="off"
-            class="admin-filter__input"
-          />
-        </div>
+  {{#if @controller.hasPermalinks}}
+    <div class="d-admin-filter">
+      <div class="admin-filter__input-container permalink-search">
+        <TextField
+          @value={{@controller.filter}}
+          @placeholderKey="admin.permalink.form.filter"
+          @autocorrect="off"
+          @autocapitalize="off"
+          class="admin-filter__input"
+        />
       </div>
-    {{/if}}
+    </div>
+  {{/if}}
 
+  <ConditionalLoadingSpinner @condition={{@controller.loading}}>
     <div class="permalink-results">
       {{#if @controller.model.length}}
         <table class="d-table permalinks">

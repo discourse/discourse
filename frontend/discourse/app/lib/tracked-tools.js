@@ -1,4 +1,6 @@
 import { tracked } from "@glimmer/tracking";
+import { meta as metaFor } from "@ember/-internals/meta";
+import { TrackedDescriptor } from "@ember/-internals/metal";
 import { next } from "@ember/runloop";
 import { TrackedArray, TrackedSet } from "@ember-compat/tracked-built-ins";
 
@@ -227,16 +229,29 @@ export function trackedArray(target, key, desc) {
     ...desc,
     enumerable: true,
     configurable: true,
+    isTracked: true,
   });
+
+  function trackedArraySetter(value) {
+    set.call(this, ensureTrackedArray(value));
+  }
+
+  // When using EmberObject.create(...), Ember accesses the tracked properties directly
+  // through internal references, bypassing the getter/setter defined in this decorator.
+  // To work around this, we are using Ember lower level APIs to override the stored references.
+  // https://github.com/emberjs/ember.js/blob/d4f7c5c4075bc5b04736e0e965468bdbe6da135c/packages/%40ember/-internals/metal/lib/tracked.ts#L185
+  metaFor(target).writeDescriptors(
+    key,
+    new TrackedDescriptor(get, trackedArraySetter)
+  );
 
   return {
     get() {
       return get.call(this);
     },
-    set(value) {
-      set.call(this, ensureTrackedArray(value));
-    },
+    set: trackedArraySetter,
     enumerable: true,
     configurable: true,
+    isTracked: true,
   };
 }
