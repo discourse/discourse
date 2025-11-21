@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import { waitForPromise } from "@ember/test-waiters";
 import { MENU } from "discourse/float-kit/lib/constants";
 import FloatKitInstance from "discourse/float-kit/lib/float-kit-instance";
 
@@ -16,7 +17,6 @@ export default class DMenuInstance extends FloatKitInstance {
    * @property {boolean} expanded - Tracks the state of menu expansion, initially set to false.
    */
   @tracked expanded = false;
-  @tracked closing = false;
   /**
    * Specifies whether the trigger for opening/closing the menu is detached from the menu itself.
    * This is the case when a menu is trigger programmatically instead of through the <DMenu /> component.
@@ -66,22 +66,44 @@ export default class DMenuInstance extends FloatKitInstance {
     return this.content;
   }
 
-  /**
-   * Closes the menu with an optional animation delay.
-   * Adds a .25s delay to allow close animation to complete before actually closing.
-   * @action
-   * @param {Object} options - Options for closing. Defaults to { focusTrigger: true }
-   */
+  #waitForAnimationEnd(el) {
+    return new Promise((resolve) => {
+      const style = window.getComputedStyle(el);
+      const duration = parseFloat(style.animationDuration) * 1000 || 0;
+      const delay = parseFloat(style.animationDelay) * 1000 || 0;
+      const totalTime = duration + delay;
+
+      const timeoutId = setTimeout(
+        () => {
+          el.removeEventListener("animationend", handleAnimationEnd);
+          resolve();
+        },
+        Math.max(totalTime + 50, 50)
+      );
+
+      const handleAnimationEnd = () => {
+        clearTimeout(timeoutId);
+        el.removeEventListener("animationend", handleAnimationEnd);
+        resolve();
+      };
+
+      el.addEventListener("animationend", handleAnimationEnd);
+    });
+  }
+
+  async #animateClosing(el) {
+    el.classList.add("-closing");
+
+    await waitForPromise(Promise.all([this.#waitForAnimationEnd(el)]));
+  }
+
   @action
   async close(options = { focusTrigger: true }) {
     if (getOwner(this).isDestroying) {
       return;
     }
 
-    this.closing = true; // set closing state for animation
-
-    // Wait for .25s (250ms), the duration of the animation, before proceeding
-    await new Promise((resolve) => setTimeout(resolve, 250));
+    await this.#animateClosing(this.content);
 
     await super.close(...arguments);
 
@@ -96,7 +118,6 @@ export default class DMenuInstance extends FloatKitInstance {
     }
 
     await this.options.onClose?.(this);
-    this.closing = false;
   }
 
   @action
