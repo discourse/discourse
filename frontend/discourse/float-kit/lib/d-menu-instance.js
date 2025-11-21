@@ -3,9 +3,9 @@ import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { waitForPromise } from "@ember/test-waiters";
 import { MENU } from "discourse/float-kit/lib/constants";
 import FloatKitInstance from "discourse/float-kit/lib/float-kit-instance";
+import { animateClosing } from "discourse/lib/animation-utils";
 
 export default class DMenuInstance extends FloatKitInstance {
   @service menu;
@@ -66,44 +66,13 @@ export default class DMenuInstance extends FloatKitInstance {
     return this.content;
   }
 
-  #waitForAnimationEnd(el) {
-    return new Promise((resolve) => {
-      const style = window.getComputedStyle(el);
-      const duration = parseFloat(style.animationDuration) * 1000 || 0;
-      const delay = parseFloat(style.animationDelay) * 1000 || 0;
-      const totalTime = duration + delay;
-
-      const timeoutId = setTimeout(
-        () => {
-          el.removeEventListener("animationend", handleAnimationEnd);
-          resolve();
-        },
-        Math.max(totalTime + 50, 50)
-      );
-
-      const handleAnimationEnd = () => {
-        clearTimeout(timeoutId);
-        el.removeEventListener("animationend", handleAnimationEnd);
-        resolve();
-      };
-
-      el.addEventListener("animationend", handleAnimationEnd);
-    });
-  }
-
-  async #animateClosing(el) {
-    el.classList.add("-closing");
-
-    await waitForPromise(Promise.all([this.#waitForAnimationEnd(el)]));
-  }
-
   @action
   async close(options = { focusTrigger: true }) {
     if (getOwner(this).isDestroying) {
       return;
     }
 
-    await this.#animateClosing(this.content);
+    await animateClosing(this.content);
 
     await super.close(...arguments);
 

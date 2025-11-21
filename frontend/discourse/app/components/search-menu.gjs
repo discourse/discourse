@@ -6,7 +6,6 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
-import { waitForPromise } from "@ember/test-waiters";
 import { Promise } from "rsvp";
 import DButton from "discourse/components/d-button";
 import MenuPanel from "discourse/components/menu-panel";
@@ -19,6 +18,7 @@ import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { animateClosing } from "discourse/lib/animation-utils";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
@@ -148,47 +148,12 @@ export default class SearchMenu extends Component {
     }
   }
 
-  async #animateMenu() {
-    this.searchMenuWrapper.classList.add("-closing");
-
-    await waitForPromise(
-      Promise.all([this.#waitForAnimationEnd(this.searchMenuWrapper)])
-    );
-
-    this.searchMenuWrapper.classList.remove("-closing");
-  }
-
-  #waitForAnimationEnd(el) {
-    return new Promise((resolve) => {
-      const style = window.getComputedStyle(el);
-      const duration = parseFloat(style.animationDuration) * 1000 || 0;
-      const delay = parseFloat(style.animationDelay) * 1000 || 0;
-      const totalTime = duration + delay;
-
-      const timeoutId = setTimeout(
-        () => {
-          el.removeEventListener("animationend", handleAnimationEnd);
-          resolve();
-        },
-        Math.max(totalTime + 50, 50)
-      );
-
-      const handleAnimationEnd = () => {
-        clearTimeout(timeoutId);
-        el.removeEventListener("animationend", handleAnimationEnd);
-        resolve();
-      };
-
-      el.addEventListener("animationend", handleAnimationEnd);
-    });
-  }
-
   @action
   async close() {
     if (this.args?.onClose) {
       if (!prefersReducedMotion()) {
         try {
-          await this.#animateMenu();
+          await animateClosing(this.searchMenuWrapper);
         } finally {
           this.args.onClose();
           this.menuPanelOpen = false;
@@ -200,7 +165,7 @@ export default class SearchMenu extends Component {
     } else {
       if (!prefersReducedMotion()) {
         try {
-          await this.#animateMenu();
+          await animateClosing(this.searchMenuWrapper);
         } finally {
           this.menuPanelOpen = false;
         }
@@ -465,7 +430,6 @@ export default class SearchMenu extends Component {
     <div
       class={{this.classNames}}
       {{didInsert this.setupEventListeners}}
-      {{didInsert this.setupWrapper}}
       {{! template-lint-disable no-invalid-interactive }}
       {{on "keydown" this.onKeydown}}
     >
@@ -547,7 +511,10 @@ export default class SearchMenu extends Component {
           @clearSearch={{this.clearSearch}}
         />
       {{else if this.displayMenuPanelResults}}
-        <MenuPanel class="search-menu-panel drop-down">
+        <MenuPanel
+          class="search-menu-panel drop-down"
+          {{didInsert this.setupWrapper}}
+        >
           <Results
             @searchInputId={{this.searchInputId}}
             @loading={{this.loading}}
