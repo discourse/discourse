@@ -668,8 +668,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         upload = Fabricate(:upload)
         schema = { name: "section", properties: { upload_property: { type: "upload" } } }
 
-        object = { upload_property: upload.url }
-        validator = described_class.new(schema: schema, object: object)
+        validator = described_class.new(schema: schema, object: { upload_property: upload.url })
         errors = validator.validate
 
         expect(errors).to eq({})
