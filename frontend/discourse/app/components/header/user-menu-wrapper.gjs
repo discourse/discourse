@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
+import { waitForAnimationEnd } from "discourse/lib/animation-utils";
 import { isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
 import { isDocumentRTL } from "discourse/lib/text-direction";
@@ -48,7 +49,7 @@ export default class UserMenuWrapper extends Component {
       if (!prefersReducedMotion()) {
         try {
           if (this.site.desktopView) {
-            await this.#animateMenu();
+            await this.#animateMenu(this.userMenuWrapper);
           }
         } finally {
           this.args.toggleUserMenu();
@@ -64,39 +65,12 @@ export default class UserMenuWrapper extends Component {
     this.userMenuWrapper = el.querySelector(".menu-panel.drop-down");
   }
 
-  async #animateMenu() {
-    this.userMenuWrapper.classList.add("-closing");
+  async #animateMenu(el) {
+    el.classList.add("-closing");
 
-    await waitForPromise(
-      Promise.all([this.#waitForAnimationEnd(this.userMenuWrapper)])
-    );
+    await waitForPromise(Promise.all([waitForAnimationEnd(el)]));
 
-    this.userMenuWrapper.classList.remove("-closing");
-  }
-
-  #waitForAnimationEnd(el) {
-    return new Promise((resolve) => {
-      const style = window.getComputedStyle(el);
-      const duration = parseFloat(style.animationDuration) * 1000 || 0;
-      const delay = parseFloat(style.animationDelay) * 1000 || 0;
-      const totalTime = duration + delay;
-
-      const timeoutId = setTimeout(
-        () => {
-          el.removeEventListener("animationend", handleAnimationEnd);
-          resolve();
-        },
-        Math.max(totalTime + 50, 50)
-      );
-
-      const handleAnimationEnd = () => {
-        clearTimeout(timeoutId);
-        el.removeEventListener("animationend", handleAnimationEnd);
-        resolve();
-      };
-
-      el.addEventListener("animationend", handleAnimationEnd);
-    });
+    el.classList.remove("-closing");
   }
 
   <template>
