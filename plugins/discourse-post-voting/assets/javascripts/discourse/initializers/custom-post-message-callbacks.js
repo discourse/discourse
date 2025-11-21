@@ -55,10 +55,6 @@ export default {
             }
 
             post.set("comments_count", message.comments_count);
-
-            topicController.appEvents.trigger("post-stream:refresh", {
-              id: post.id,
-            });
           }
         }
       );
@@ -108,10 +104,6 @@ export default {
             }
 
             post.setProperties(props);
-
-            topicController.appEvents.trigger("post-stream:refresh", {
-              id: post.id,
-            });
           }
         }
       );
