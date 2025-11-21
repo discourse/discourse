@@ -121,7 +121,7 @@ RSpec.describe "Chat | composer | channel", type: :system do
     end
   end
 
-  describe "emoji autocomplete with picker" do
+  describe "emoji autocomplete" do
     let(:emoji_picker) { PageObjects::Components::EmojiPicker.new }
 
     it "preserves message draft when selecting emoji from picker via 'more...'" do
@@ -147,6 +147,14 @@ RSpec.describe "Chat | composer | channel", type: :system do
 
       expect(actual_value).to match(/Hello :\w+: $/),
       "Expected format 'Hello :emoji_name: ' but got: '#{actual_value}'"
+    end
+
+    it "does not show emoji autocomplete menu after whitespace" do
+      chat_page.visit_channel(channel_1)
+
+      channel_page.composer.input.send_keys(":id ")
+
+      expect(page).to have_no_css(".autocomplete.ac-emoji")
     end
   end
 end
