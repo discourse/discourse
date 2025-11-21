@@ -11,7 +11,7 @@ RSpec.describe "Visit channel", type: :system do
   fab!(:inaccessible_dm_channel_1, :direct_message_channel)
 
   let(:chat) { PageObjects::Pages::Chat.new }
-  let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
+  let(:sidebar_page) { PageObjects::Pages::ChatSidebar.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
 
