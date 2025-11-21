@@ -7,6 +7,7 @@ import { cancel, later, run, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { createPopper } from "@popperjs/core";
 import curryComponent from "ember-curry-component";
+import { modifier } from "ember-modifier";
 import $ from "jquery";
 import { Promise } from "rsvp";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -122,6 +123,12 @@ export default class DiscourseReactionsActions extends Component {
   @tracked reactionsPickerExpanded = false;
   @tracked statePanelExpanded = false;
   @tracked clickOutsideDisabled = false;
+
+  containerElement = null;
+
+  registerContainerElement = modifier((element) => {
+    this.containerElement = element;
+  });
 
   get data() {
     return this.args.post;
@@ -291,10 +298,8 @@ export default class DiscourseReactionsActions extends Component {
         navigator.vibrate(VIBRATE_DURATION);
       }
 
-      const pickedReaction = document.querySelector(
-        `[data-post-id="${
-          params.postId
-        }"] .discourse-reactions-picker .pickable-reaction.${CSS.escape(
+      const pickedReaction = this.containerElement?.querySelector(
+        `.discourse-reactions-picker .pickable-reaction.${CSS.escape(
           params.reaction
         )} .emoji`
       );
@@ -313,9 +318,7 @@ export default class DiscourseReactionsActions extends Component {
         } else {
           scaleReactionAnimation(pickedReaction, scales[0], scales[1], () => {
             scaleReactionAnimation(pickedReaction, scales[1], scales[0], () => {
-              const postContainer = document.querySelector(
-                `[data-post-id="${params.postId}"]`
-              );
+              const postContainer = this.containerElement;
 
               if (
                 this.data.current_user_reaction &&
@@ -524,16 +527,16 @@ export default class DiscourseReactionsActions extends Component {
       this.data.reactions.length === 1 &&
       this.data.reactions[0].id === mainReactionName
     ) {
-      selector = `[data-post-id="${this.data.id}"] .discourse-reactions-double-button .discourse-reactions-reaction-button .d-icon`;
+      selector = `.discourse-reactions-double-button .discourse-reactions-reaction-button .d-icon`;
     } else {
       if (!attrs.reaction || attrs.reaction === mainReactionName) {
-        selector = `[data-post-id="${this.data.id}"] .discourse-reactions-reaction-button .d-icon`;
+        selector = `.discourse-reactions-reaction-button .d-icon`;
       } else {
-        selector = `[data-post-id="${this.data.id}"] .discourse-reactions-reaction-button .reaction-button .btn-toggle-reaction-emoji`;
+        selector = `.discourse-reactions-reaction-button .reaction-button .btn-toggle-reaction-emoji`;
       }
     }
 
-    const mainReaction = document.querySelector(selector);
+    const mainReaction = this.containerElement?.querySelector(selector);
 
     const scales = [1.0, 1.5];
     return new Promise((resolve) => {
@@ -664,17 +667,12 @@ export default class DiscourseReactionsActions extends Component {
 
   _setupPopper(selectors) {
     schedule("afterRender", () => {
-      const position = this.args.position || "right";
-      if (!this.data?.id) {
+      if (!this.containerElement) {
         return;
       }
-      const id = this.data.id;
-      const trigger = document.querySelector(
-        `#discourse-reactions-actions-${id}-${position} ${selectors[0]}`
-      );
-      const popper = document.querySelector(
-        `#discourse-reactions-actions-${id}-${position} ${selectors[1]}`
-      );
+
+      const trigger = this.containerElement.querySelector(selectors[0]);
+      const popper = this.containerElement.querySelector(selectors[1]);
 
       _popperPicker?.destroy();
       _popperPicker = this._applyPopper(trigger, popper);
@@ -760,6 +758,7 @@ export default class DiscourseReactionsActions extends Component {
       {{on "touchmove" this.touchMove}}
       {{on "touchend" this.touchEnd}}
       {{closeOnClickOutside this.clickOutside}}
+      {{this.registerContainerElement}}
     >
       {{#let
         (hash
