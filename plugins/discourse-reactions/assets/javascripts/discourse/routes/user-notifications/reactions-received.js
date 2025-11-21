@@ -21,11 +21,14 @@ export default class UserNotificationsReactionsReceived extends DiscourseRoute {
       }
     );
 
-    return new TrackedArray(list);
+    return new TrackedArray(
+      list.map((reaction) => CustomReaction.flattenForPostList(reaction))
+    );
   }
 
   setupController(controller, model) {
-    let loadedAll = model.length < 20;
+    const loadedAll = model.length < 20;
+
     this.controllerFor("user-activity.reactions").setProperties({
       model,
       canLoadMore: !loadedAll,
@@ -34,6 +37,7 @@ export default class UserNotificationsReactionsReceived extends DiscourseRoute {
       actingUsername: controller.acting_username,
       includeLikes: controller.include_likes,
     });
+
     this.controllerFor("application").set("showFooter", loadedAll);
   }
 }
