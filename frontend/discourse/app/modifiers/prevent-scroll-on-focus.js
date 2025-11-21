@@ -3,7 +3,7 @@ import { service } from "@ember/service";
 import Modifier from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
 
-export function positionOffScreen(target) {
+export function focusOffScreen(target) {
   target.style.transform = "translateY(-99999px)";
   target.focus({ preventScroll: true });
   window.requestAnimationFrame(() => {
@@ -65,7 +65,7 @@ export default class PreventScrollOnFocus extends Modifier {
       return;
     }
 
-    positionOffScreen(event.target);
+    focusOffScreen(event.target);
   }
 
   cleanup() {

@@ -12,8 +12,8 @@ export async function waitForClosedKeyboard(siteService, capabilitiesService) {
   }
 
   let timeout;
-  let viewportListener;
   const initialWindowHeight = window.innerHeight;
+  let observer;
 
   await Promise.race([
     new Promise((resolve) => {
@@ -24,17 +24,22 @@ export async function waitForClosedKeyboard(siteService, capabilitiesService) {
         resolve();
       }, 1000);
     }),
-    new Promise((resolve) =>
-      window.visualViewport.addEventListener(
-        "resize",
-        (viewportListener = resolve),
-        { once: true, passive: true }
-      )
-    ),
+    new Promise((resolve) => {
+      observer = new MutationObserver(() => {
+        if (!document.documentElement.classList.contains("keyboard-visible")) {
+          resolve();
+        }
+      });
+
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["class"],
+      });
+    }),
   ]);
 
   clearTimeout(timeout);
-  window.visualViewport.removeEventListener("resize", viewportListener);
+  observer?.disconnect();
 
   if ("virtualKeyboard" in navigator) {
     if (navigator.virtualKeyboard.boundingRect.height > 0) {
