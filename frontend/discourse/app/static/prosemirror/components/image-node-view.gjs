@@ -17,6 +17,9 @@ const SCALE_STEP = 25;
 
 const MENU_PADDING = 8;
 
+const GRID_ADD_DIRECTION_END = -1;
+const GRID_ADD_DIRECTION_START = 1;
+
 class ImageToolbar extends ToolbarBase {
   constructor(opts = {}) {
     super(opts);
@@ -359,7 +362,7 @@ export default class ImageNodeView extends Component {
     );
     let insertPos;
 
-    if (direction === -1) {
+    if (direction === GRID_ADD_DIRECTION_END) {
       // Insert at the end of the grid
       insertPos = gridPos + gridNode.nodeSize - 2;
       tr.insert(insertPos, paragraphWithImage);
@@ -471,26 +474,26 @@ export default class ImageNodeView extends Component {
     const blockParent = $pos.node(blockDepth - 1);
     const blockIndex = $pos.index(blockDepth - 1);
 
-    // Check left sibling
+    // Check if left sibling is a grid
     if (blockIndex > 0) {
       const leftNode = blockParent.child(blockIndex - 1);
       if (leftNode.type.name === "grid") {
         return {
           node: leftNode,
           pos: blockPos - leftNode.nodeSize,
-          direction: -1,
+          direction: GRID_ADD_DIRECTION_END,
         };
       }
     }
 
-    // Check right sibling
+    // Check if right sibling is a grid
     if (blockIndex < blockParent.childCount - 1) {
       const rightNode = blockParent.child(blockIndex + 1);
       if (rightNode.type.name === "grid") {
         return {
           node: rightNode,
           pos: blockPos + blockNode.nodeSize,
-          direction: 1,
+          direction: GRID_ADD_DIRECTION_START,
         };
       }
     }
