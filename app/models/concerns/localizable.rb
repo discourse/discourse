@@ -25,7 +25,7 @@ module Localizable
       return match
     end
 
-    if (SiteSetting.content_localization_use_default_locale_when_unsupported)
+    if SiteSetting.content_localization_use_default_locale_when_unsupported
       default_locale = SiteSetting.default_locale.to_s.sub("-", "_")
       localizations.find { |l| LocaleNormalizer.is_same?(l.locale, default_locale) }
     end
