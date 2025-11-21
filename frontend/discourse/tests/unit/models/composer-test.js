@@ -354,14 +354,11 @@ module("Unit | Model | composer", function (hooks) {
       });
     };
 
-    assert.strictEqual(
-      newComposer().originalText,
-      quote,
-      "originalText is the quote"
-    );
-    assert.false(
+    assert.strictEqual(newComposer().originalText, "", "originalText is empty");
+    assert.strictEqual(newComposer().reply, quote, "reply is the quote");
+    assert.true(
       newComposer().replyDirty,
-      "replyDirty is initially false with a quote"
+      "replyDirty is initially true with a quote"
     );
   });
 
