@@ -1,6 +1,10 @@
 import { Fragment, Slice } from "prosemirror-model";
 import { NodeSelection, Plugin } from "prosemirror-state";
 
+// A 1px transparent image to use as drag image
+// This prevents the default drag image from appearing, the image gets in the way and make it harder
+// to see where it'll land.
+// In the future a better solution will be to use the image but less opaque and smaller.
 const EMPTY_DRAG_IMG = new Image();
 EMPTY_DRAG_IMG.src =
   "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
