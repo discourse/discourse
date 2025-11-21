@@ -30,10 +30,6 @@ export default {
                 cooked: message.comment_cooked,
               };
               post.comments.splice(indexToUpdate, 1, updatedComment);
-
-              topicController.appEvents.trigger("post-stream:refresh", {
-                id: post.id,
-              });
             }
           }
         }
@@ -87,10 +83,6 @@ export default {
             ) {
               post.comments.push(message.comment);
             }
-
-            topicController.appEvents.trigger("post-stream:refresh", {
-              id: post.id,
-            });
           }
         }
       );
