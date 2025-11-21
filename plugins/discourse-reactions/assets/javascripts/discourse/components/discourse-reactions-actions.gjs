@@ -3,11 +3,11 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel, later, run, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { createPopper } from "@popperjs/core";
 import curryComponent from "ember-curry-component";
-import { modifier } from "ember-modifier";
 import $ from "jquery";
 import { Promise } from "rsvp";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -125,10 +125,6 @@ export default class DiscourseReactionsActions extends Component {
   @tracked clickOutsideDisabled = false;
 
   containerElement = null;
-
-  registerContainerElement = modifier((element) => {
-    this.containerElement = element;
-  });
 
   get data() {
     return this.args.post;
@@ -750,6 +746,11 @@ export default class DiscourseReactionsActions extends Component {
     );
   }
 
+  @action
+  registerContainerElement(element) {
+    this.containerElement = element;
+  }
+
   <template>
     <div
       id={{this.elementId}}
@@ -758,7 +759,7 @@ export default class DiscourseReactionsActions extends Component {
       {{on "touchmove" this.touchMove}}
       {{on "touchend" this.touchEnd}}
       {{closeOnClickOutside this.clickOutside}}
-      {{this.registerContainerElement}}
+      {{didInsert this.registerContainerElement}}
     >
       {{#let
         (hash
