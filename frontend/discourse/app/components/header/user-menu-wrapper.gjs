@@ -65,7 +65,7 @@ export default class UserMenuWrapper extends Component {
   }
 
   async #animateMenu() {
-    this.userMenuWrapper.classList.add("is-exiting");
+    this.userMenuWrapper.classList.add("-closing");
 
     await waitForPromise(
       Promise.all([this.#waitForAnimationEnd(this.userMenuWrapper)])
