@@ -4,8 +4,7 @@ import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { waitForPromise } from "@ember/test-waiters";
-import { waitForAnimationEnd } from "discourse/lib/animation-utils";
+import { animateClosing } from "discourse/lib/animation-utils";
 import { isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
 import { isDocumentRTL } from "discourse/lib/text-direction";
@@ -49,7 +48,7 @@ export default class UserMenuWrapper extends Component {
       if (!prefersReducedMotion()) {
         try {
           if (this.site.desktopView) {
-            await this.#animateMenu(this.userMenuWrapper);
+            await animateClosing(this.userMenuWrapper);
           }
         } finally {
           this.args.toggleUserMenu();
@@ -63,14 +62,6 @@ export default class UserMenuWrapper extends Component {
   @action
   async setupWrapper(el) {
     this.userMenuWrapper = el.querySelector(".menu-panel.drop-down");
-  }
-
-  async #animateMenu(el) {
-    el.classList.add("-closing");
-
-    await waitForPromise(Promise.all([waitForAnimationEnd(el)]));
-
-    el.classList.remove("-closing");
   }
 
   <template>
