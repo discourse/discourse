@@ -3,6 +3,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import autoFocus from "discourse/modifiers/auto-focus";
@@ -27,6 +28,8 @@ const DEFAULT_SLOTS = 6;
 
 /** @extends {Component<DOTPSignature>} */
 export default class DOTP extends Component {
+  @service capabilities;
+
   @tracked isFocused = false;
   @tracked isAllSelected = false;
 
@@ -37,7 +40,7 @@ export default class DOTP extends Component {
   }
 
   get autoFocus() {
-    return this.args.autoFocus ?? true;
+    return (this.args.autoFocus ?? true) && !this.capabilities.isIOS;
   }
 
   get isFilled() {
