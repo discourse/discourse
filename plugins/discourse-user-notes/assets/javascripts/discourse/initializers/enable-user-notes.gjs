@@ -88,7 +88,6 @@ function customizePost(api, container) {
  * @param {Object} container - Container instance
  */
 function customizePostMenu(api, container) {
-  const appEvents = container.lookup("service:app-events");
   const store = container.lookup("service:store");
 
   api.addPostAdminMenuButton((attrs) => {
@@ -101,9 +100,6 @@ function customizePostMenu(api, container) {
           attrs.user_id,
           (count) => {
             updatePostUserNotesCount(post, count);
-            appEvents.trigger("post-stream:refresh", {
-              id: post.id,
-            });
           },
           { postId: attrs.id }
         );
