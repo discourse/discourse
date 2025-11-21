@@ -24,21 +24,19 @@ export default class Wizard {
   }
 
   get totalSteps() {
-    // We used to use this.steps.length() here, but we don't want to
-    // include optional steps after "Ready" here.
-    return 2;
+    return this.steps.length;
   }
 
   get title() {
-    return this.findStep("forum-tile")?.valueFor("title");
+    return this.findStep("setup")?.valueFor("title");
   }
 
   get logoUrl() {
-    return this.findStep("logos")?.valueFor("logo");
+    return this.findStep("setup")?.valueFor("logo");
   }
 
   get currentColors() {
-    const step = this.findStep("styling");
+    const step = this.findStep("setup");
 
     if (!step) {
       return this.currentColorScheme;
@@ -60,7 +58,7 @@ export default class Wizard {
   }
 
   getFont(type) {
-    return this.findStep("styling")?.findField(`${type}_font`)?.chosen;
+    return this.findStep("setup")?.findField(`${type}_font`)?.chosen;
   }
 
   findStep(id) {
@@ -167,11 +165,10 @@ export class Step {
 }
 
 export class Field {
-  static parse({ extra_description, show_in_sidebar, choices, ...payload }) {
+  static parse({ extra_description, choices, ...payload }) {
     return new Field({
       ...payload,
       extraDescription: extra_description,
-      showInSidebar: show_in_sidebar,
       choices: choices?.map((choice) => Choice.parse(choice)),
     });
   }
@@ -194,7 +191,6 @@ export class Field {
       "extraDescription",
       "icon",
       "disabled",
-      "showInSidebar",
       "choices",
     ]);
   }
