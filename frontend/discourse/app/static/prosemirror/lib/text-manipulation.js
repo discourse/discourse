@@ -367,7 +367,7 @@ export default class ProsemirrorTextManipulation {
    * @param {string[]} consecutiveImages - Array of consecutive image filenames to wrap
    */
   autoGridImages(consecutiveImages) {
-    if (!isEmpty(consecutiveImages)) {
+    if (isEmpty(consecutiveImages)) {
       return;
     }
 
