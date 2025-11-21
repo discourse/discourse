@@ -180,6 +180,8 @@
         .user-link,
         .group-link {
           @include ellipsis;
+          display: inline-flex;
+          align-items: baseline;
           color: var(--primary-high);
 
           &:hover {
@@ -189,13 +191,16 @@
 
         .avatar,
         .d-icon-users {
-          margin-left: 0.25em;
-          margin-right: 0.25em;
+          margin: 0.25em;
         }
 
         .username,
         .group-name {
           margin-right: 0.25em;
+
+          &:last-child {
+            padding-right: 0.65em;
+          }
         }
 
         &:last-child {
