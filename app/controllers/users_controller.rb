@@ -1259,6 +1259,7 @@ class UsersController < ApplicationController
       params[:include_staged_users],
     )
     options[:last_seen_users] = !!ActiveModel::Type::Boolean.new.cast(params[:last_seen_users])
+    options[:can_review] = !!ActiveModel::Type::Boolean.new.cast(params[:can_review])
 
     if limit = fetch_limit_from_params(default: nil, max: SEARCH_USERS_LIMIT)
       options[:limit] = limit

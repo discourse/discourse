@@ -30,9 +30,9 @@ export default class AssignedToFilter extends Component {
 
   <template>
     <div class="reviewable-filter discourse-assign-assign-to-filter">
-      <label class="filter-label">{{i18n
-          "discourse_assign.assigned_to"
-        }}</label>
+      <label class="filter-label">
+        {{i18n "review.assigned_to"}}
+      </label>
 
       <EmailGroupUserChooser
         @value={{this.outletArgs.additionalFilters.assigned_to}}
