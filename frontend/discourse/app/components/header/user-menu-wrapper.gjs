@@ -70,6 +70,8 @@ export default class UserMenuWrapper extends Component {
     await waitForPromise(
       Promise.all([this.#waitForAnimationEnd(this.userMenuWrapper)])
     );
+
+    this.userMenuWrapper.classList.remove("-closing");
   }
 
   #waitForAnimationEnd(el) {
