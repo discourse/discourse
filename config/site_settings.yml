@@ -420,6 +420,9 @@ basic:
     min: 0
     max: 6
     area: "badges"
+  enable_badge_grant_logging:
+    default: false
+    hidden: true
   whispers_allowed_groups:
     type: group_list
     list_type: compact

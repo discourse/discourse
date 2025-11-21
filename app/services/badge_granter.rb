@@ -78,9 +78,10 @@ class BadgeGranter
 
     raise ArgumentError.new("count can't be less than 1") if count < 1
 
-    UserBadge.transaction do
-      DB.exec(
-        <<~SQL * count,
+    value =
+      UserBadge.transaction do
+        DB.exec(
+          <<~SQL * count,
         INSERT INTO user_badges
         (granted_at, created_at, granted_by_id, user_id, badge_id, seq)
         VALUES
@@ -97,21 +98,30 @@ class BadgeGranter
           ), 0)
         );
       SQL
-        now: Time.zone.now,
-        system: Discourse.system_user.id,
-        user_id: user.id,
-        badge_id: badge.id,
-      )
-      notification = send_notification(user.id, user.username, user.effective_locale, badge)
+          now: Time.zone.now,
+          system: Discourse.system_user.id,
+          user_id: user.id,
+          badge_id: badge.id,
+        )
+        notification = send_notification(user.id, user.username, user.effective_locale, badge)
 
-      DB.exec(<<~SQL, notification_id: notification.id, user_id: user.id, badge_id: badge.id)
+        DB.exec(<<~SQL, notification_id: notification.id, user_id: user.id, badge_id: badge.id)
         UPDATE user_badges
         SET notification_id = :notification_id
         WHERE notification_id IS NULL AND user_id = :user_id AND badge_id = :badge_id
       SQL
 
-      UserBadge.update_featured_ranks!([user.id])
+        UserBadge.update_featured_ranks!([user.id])
+      end
+
+    if SiteSetting.enable_badge_grant_logging
+      trace = caller.select { |line| line.include?("discourse") }.first(10).join("\n\t")
+      Rails.logger.warn(
+        "BadgeGranter.mass_grant: Granted badge '#{badge.name}' to user '#{user.username}' (ID: #{user.id}) by '#{Discourse.system_user.username}'\n#{trace}",
+      )
     end
+
+    value
   end
 
   def grant
@@ -157,6 +167,12 @@ class BadgeGranter
         end
         is_favorite = @user.user_badges.where(badge: @badge, is_favorite: true).exists?
         user_badge.update!(is_favorite: true) if is_favorite
+      end
+      if SiteSetting.enable_badge_grant_logging
+        trace = caller.select { |line| line.include?("discourse") }.first(10).join("\n\t")
+        Rails.logger.warn(
+          "BadgeGranter.grant: Granted badge '#{@badge.name}' to user '#{@user.username}' (ID: #{@user.id}) by '#{@granted_by.username}' (ID: #{@granted_by.id})\n#{trace}",
+        )
       end
     end
 
@@ -492,7 +508,12 @@ class BadgeGranter
 
       notification = send_notification(row.user_id, row.username, row.locale, badge)
       UserBadge.trigger_user_badge_granted_event(badge.id, row.user_id)
-
+      if SiteSetting.enable_badge_grant_logging
+        trace = caller.select { |line| line.include?("discourse") }.first(10).join("\n\t")
+        Rails.logger.warn(
+          "BadgeGrant.backfill: Granted badge '#{badge.name}' to user '#{row.username}' (ID: #{row.id}) by 'system'\n#{trace}",
+        )
+      end
       DB.exec(
         "UPDATE user_badges SET notification_id = :notification_id WHERE id = :id",
         notification_id: notification.id,
