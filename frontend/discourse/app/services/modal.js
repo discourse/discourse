@@ -2,7 +2,6 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import Service, { service } from "@ember/service";
 import { CLOSE_INITIATED_BY_MODAL_SHOW } from "discourse/components/d-modal";
-import { clearAllBodyScrollLocks } from "discourse/lib/body-scroll-lock";
 import deprecated from "discourse/lib/deprecated";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
@@ -20,6 +19,8 @@ const LEGACY_OPTS = new Set([
 @disableImplicitInjections
 export default class ModalService extends Service {
   @service dialog;
+  @service site;
+  @service capabilities;
 
   @tracked activeModal;
   @tracked opts = {};
@@ -62,7 +63,7 @@ export default class ModalService extends Service {
 
     this.close({ initiatedBy: CLOSE_INITIATED_BY_MODAL_SHOW });
 
-    await waitForClosedKeyboard(this);
+    await waitForClosedKeyboard(this.site, this.capabilities);
 
     let resolveShowPromise;
     const promise = new Promise((resolve) => {
@@ -88,7 +89,6 @@ export default class ModalService extends Service {
   }
 
   close(data) {
-    clearAllBodyScrollLocks();
     this.activeModal?.resolveShowPromise?.(data);
     this.activeModal = null;
     this.opts = {};
