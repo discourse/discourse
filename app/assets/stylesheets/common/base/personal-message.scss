@@ -180,6 +180,8 @@
         .user-link,
         .group-link {
           @include ellipsis;
+          display: flex;
+          align-items: center;
           color: var(--primary-high);
 
           &:hover {
@@ -189,16 +191,19 @@
 
         .avatar,
         .d-icon-users {
-          margin: 0.25em;
+          margin-left: 0.25em;
+          margin-right: 0.25em;
         }
 
         .username,
         .group-name {
           margin-right: 0.25em;
+          padding-block: 0.25em;
+        }
 
-          &:last-child {
-            padding-right: 0.65em;
-          }
+        .username:last-child,
+        .group-link:last-child {
+          margin-right: 0.65em;
         }
 
         &:last-child {
@@ -211,9 +216,7 @@
           align-items: center;
           justify-content: center;
           box-sizing: border-box;
-          padding-block: 0;
           border-radius: 0;
-          align-self: stretch;
         }
       }
     }
