@@ -343,7 +343,7 @@ pl_PL:
           name: "Deduplikator koncepcyjny"
           description: "Bot AI specjalizujący się w deduplikacji koncepcji"
         custom_prompt:
-          name: "Niestandardowy prompt"
+          name: "Niestandardowy monit"
           description: "Domyślna osobowość obsługująca funkcję niestandardowego monitu pomocnika"
         smart_dates:
           name: "Inteligentne daty"
@@ -353,7 +353,7 @@ pl_PL:
           description: "Domyślna persona obsługująca funkcję generowania tabeli Markdown pomocnika"
         post_illustrator:
           name: "Ilustrator postów"
-          description: "Generuje monity StableDiffusion, które zasilają funkcję ilustrowania postów pomocnika"
+          description: "Generuje monity StableDiffusion, które zasilają funkcję ilustrowania wpisów pomocnika"
         proofreader:
           name: "Korektor"
           description: "Domyślna osobowość obsługująca funkcję korekty tekstu pomocnika"
