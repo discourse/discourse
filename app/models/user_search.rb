@@ -41,13 +41,10 @@ class UserSearch
       if SiteSetting.enable_category_group_moderation?
         category_moderator_group_ids = CategoryModerationGroup.distinct.pluck(:group_id)
         users =
-          users
-            .left_joins(:group_users)
-            .where(
-              "users.admin OR users.moderator OR group_users.group_id IN (?)",
-              category_moderator_group_ids,
-            )
-            .distinct
+          users.left_joins(:group_users).where(
+            "users.admin OR users.moderator OR group_users.group_id IN (?)",
+            category_moderator_group_ids,
+          )
       else
         users = users.merge(User.staff)
       end

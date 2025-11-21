@@ -49,7 +49,7 @@ export default <template>
       />
 
       {{#unless (eq @controller.siteSettings.reviewable_claiming "disabled")}}
-        <div class="reviewable-filter topic-filter">
+        <div class="reviewable-filter topic-filter claimed-by">
           <label class="filter-label">
             {{i18n "review.filtered_claimed_by"}}
           </label>
