@@ -7,6 +7,7 @@ module Chat
                :notification_level,
                :chat_channel_id,
                :last_read_message_id,
-               :last_viewed_at
+               :last_viewed_at,
+               :pinned
   end
 end

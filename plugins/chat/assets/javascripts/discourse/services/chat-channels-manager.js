@@ -162,12 +162,13 @@ export default class ChatChannelsManager extends Service {
 
   @cached
   get publicMessageChannels() {
-    return this.channels
-      .filter(
+    return this.#sortChannelsByProperty(
+      this.channels.filter(
         (channel) =>
           channel.isCategoryChannel && channel.currentUserMembership.following
-      )
-      .sort((a, b) => a?.slug?.localeCompare?.(b?.slug));
+      ),
+      "slug"
+    );
   }
 
   get publicMessageChannelsWithActivity() {
@@ -243,8 +244,32 @@ export default class ChatChannelsManager extends Service {
     return this._cached[id];
   }
 
+  #comparePinnedChannels(a, b, property) {
+    const aPinned = a.currentUserMembership?.pinned;
+    const bPinned = b.currentUserMembership?.pinned;
+
+    // if both channels are pinned, sort by the specified property
+    if (aPinned && bPinned) {
+      const aValue = a[property] || "";
+      const bValue = b[property] || "";
+      return aValue.localeCompare(bValue);
+    }
+
+    // prioritize pinned channels over non-pinned
+    if (aPinned || bPinned) {
+      return aPinned ? -1 : 1;
+    }
+
+    return null; // no pinned sorting needed
+  }
+
   #sortChannelsByActivity(channels) {
     return channels.sort((a, b) => {
+      const pinnedResult = this.#comparePinnedChannels(a, b, "slug");
+      if (pinnedResult !== null) {
+        return pinnedResult;
+      }
+
       const stats = {
         a: {
           urgent:
@@ -282,8 +307,25 @@ export default class ChatChannelsManager extends Service {
     });
   }
 
+  #sortChannelsByProperty(channels, property) {
+    return channels.sort((a, b) => {
+      const pinnedResult = this.#comparePinnedChannels(a, b, property);
+      if (pinnedResult !== null) {
+        return pinnedResult;
+      }
+
+      // Both unpinned, sort by property
+      return (a[property] || "").localeCompare(b[property] || "");
+    });
+  }
+
   #sortDirectMessageChannels(channels) {
     return channels.sort((a, b) => {
+      const pinnedResult = this.#comparePinnedChannels(a, b, "title");
+      if (pinnedResult !== null) {
+        return pinnedResult;
+      }
+
       if (!a.lastMessage.id) {
         return 1;
       }
