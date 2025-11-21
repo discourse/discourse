@@ -282,7 +282,9 @@ export default class SchemaSettingNewEditor extends Component {
     this.args.setting
       .updateSetting(this.args.id, this.data)
       .then((result) => {
-        this.args.setting.set("value", result[this.args.setting.setting]);
+        if (result) {
+          this.args.setting.set("value", result[this.args.setting.setting]);
+        }
         this.router.transitionTo(this.args.routeToRedirect, this.args.id);
       })
       .catch((e) => {

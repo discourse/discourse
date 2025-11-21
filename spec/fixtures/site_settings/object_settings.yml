@@ -1,0 +1,21 @@
+category:
+  objects_setting:
+    type: objects
+    default: []
+    schema:
+      name: section
+      properties:
+        name:
+          type: string
+          required: true
+        links:
+          type: objects
+          schema:
+            name: link
+            properties:
+              name:
+                type: string
+                validations:
+                  max_length: 20
+              url:
+                type: string
