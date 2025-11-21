@@ -56,7 +56,7 @@
         min-width: 0;
 
         &.is-closing .search-menu-panel {
-          @include d-animation(dissolve, 250ms, ease);
+          @include d-animation(dissolve-up, 250ms, ease);
         }
       }
     }
