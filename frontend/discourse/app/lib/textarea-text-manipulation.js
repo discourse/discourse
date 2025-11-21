@@ -908,7 +908,7 @@ export default class TextareaTextManipulation {
    * @param {string[]} consecutiveImages - Array of consecutive image filenames to wrap
    */
   autoGridImages(consecutiveImages) {
-    if (!consecutiveImages || consecutiveImages.length === 0) {
+    if (isEmpty(consecutiveImages)) {
       return;
     }
 

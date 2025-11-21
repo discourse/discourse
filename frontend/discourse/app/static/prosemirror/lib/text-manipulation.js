@@ -1,6 +1,7 @@
 // @ts-check
 import { getOwner, setOwner } from "@ember/owner";
 import { next } from "@ember/runloop";
+import { isEmpty } from "@ember/utils";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { lift, setBlockType, toggleMark, wrapIn } from "prosemirror-commands";
 import { Slice } from "prosemirror-model";
@@ -366,7 +367,7 @@ export default class ProsemirrorTextManipulation {
    * @param {string[]} consecutiveImages - Array of consecutive image filenames to wrap
    */
   autoGridImages(consecutiveImages) {
-    if (!consecutiveImages || consecutiveImages.length === 0) {
+    if (!isEmpty(consecutiveImages)) {
       return;
     }
 
