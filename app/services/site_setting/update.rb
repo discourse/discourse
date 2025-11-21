@@ -50,15 +50,6 @@ class SiteSetting::Update
               raw_value.blank? ? "" : Upload.get_from_urls(raw_value.split("|")).to_a
             when :upload
               Upload.get_from_url(raw_value) || ""
-            when :bool
-              case raw_value
-              when "true"
-                true
-              when "false"
-                false
-              else
-                raw_value
-              end
             else
               raw_value
             end
@@ -74,9 +65,11 @@ class SiteSetting::Update
   policy :settings_are_visible, class_name: SiteSetting::Policy::SettingsAreVisible
   policy :settings_are_configurable, class_name: SiteSetting::Policy::SettingsAreConfigurable
 
-  transaction do
-    step :save
-    step :backfill
+  try do
+    transaction do
+      step :save
+      step :backfill
+    end
   end
 
   private

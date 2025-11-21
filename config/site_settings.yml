@@ -176,16 +176,22 @@ basic:
     client: true
     validator: "AllowUserLocaleEnabledValidator"
     area: "localization"
+    depends_on:
+      - "allow_user_locale"
   set_locale_from_cookie:
     default: false
     client: true
     validator: "AllowUserLocaleEnabledValidator"
     area: "localization"
+    depends_on:
+      - "allow_user_locale"
   set_locale_from_param:
     default: false
     client: true
     validator: "AllowUserLocaleEnabledValidator"
     area: "localization"
+    depends_on:
+      - "allow_user_locale"
   support_mixed_text_direction:
     client: true
     default: false
