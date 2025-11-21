@@ -38,9 +38,7 @@ class DeleteSummariesWithHiddenTags < ActiveRecord::Migration[7.1]
       SQL
 
     if deleted_count > 0
-      Rails.logger.warn(
-        "Deleted #{deleted_count} AI summaries that may contain hidden tags (security fix)",
-      )
+      Rails.logger.warn("Deleted #{deleted_count} AI summaries that may contain hidden tags.")
     end
   end
 
