@@ -388,6 +388,10 @@ module PageObjects
         find("#{@composer_id} .composer-toggle-switch")
       end
 
+      def image_grid
+        Components::ComposerImageGrid.new(rich_editor)
+      end
+
       private
 
       def emoji_preview_selector(emoji)

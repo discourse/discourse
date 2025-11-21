@@ -2221,22 +2221,16 @@ describe "Composer - ProseMirror editor", type: :system do
         open_composer
         composer.type_content("![image1](upload://test1.png)")
 
-        expect(page).to have_css("[data-identifier='composer-image-toolbar']")
-        expect(page).to have_css(".composer-image-toolbar__add-to-grid")
-        expect(page).to have_no_css(".composer-image-toolbar__move-outside-grid")
+        expect(composer.image_grid).to have_add_to_grid_toolbar
       end
 
       it "creates single-image grid" do
         open_composer
         composer.type_content("![image1](upload://test1.png)")
 
-        expect(rich).to have_css(".composer-image-node img", count: 1)
-
-        expect(page).to have_css(".composer-image-toolbar__add-to-grid")
-        find(".composer-image-toolbar__add-to-grid").click
-
-        expect(rich).to have_css(".composer-image-grid")
-        expect(rich).to have_css(".composer-image-grid .composer-image-node img", count: 1)
+        expect(composer.image_grid).to have_images(1)
+        composer.image_grid.add_image_to_grid
+        expect(composer.image_grid).to have_grid_images(1)
       end
     end
 
@@ -2245,34 +2239,29 @@ describe "Composer - ProseMirror editor", type: :system do
         open_composer
         composer.type_content("[grid]![image1](upload://test1.png)![image2](upload://test2.png)")
 
-        rich.all(".composer-image-grid .composer-image-node img").first.click
-
-        expect(page).to have_css("[data-identifier='composer-image-toolbar']")
-        expect(page).to have_css(".composer-image-toolbar__move-outside-grid")
-        expect(page).to have_no_css(".composer-image-toolbar__add-to-grid")
+        composer.image_grid.select_first_grid_image
+        expect(composer.image_grid).to have_move_outside_grid_toolbar
       end
 
       it "moves image outside grid" do
         open_composer
         composer.type_content("[grid]![image1](upload://test1.png)![image2](upload://test2.png)")
 
-        # Click on the first image inside the grid to select it
-        rich.all(".composer-image-grid .composer-image-node img").first.click
-        find(".composer-image-toolbar__move-outside-grid").click
+        composer.image_grid.select_first_grid_image
+        composer.image_grid.move_image_outside_grid
 
-        expect(rich).to have_css(".composer-image-grid .composer-image-node img", count: 1)
-        expect(rich).to have_css(".composer-image-node img", count: 2) # One in grid, one standalone
+        expect(composer.image_grid).to have_grid_images(1)
+        expect(composer.image_grid).to have_images(2) # One in grid, one standalone
       end
 
       it "moves last image outside grid" do
         open_composer
         composer.type_content("[grid]![image1](upload://test1.png)")
 
-        rich.find(".composer-image-grid .composer-image-node img").click
-        find(".composer-image-toolbar__move-outside-grid").click
+        composer.image_grid.move_image_outside_grid
 
-        expect(rich).to have_css(".composer-image-node img", count: 1)
-        expect(rich).to have_no_css(".composer-image-grid .composer-image-node img")
+        expect(composer.image_grid).to have_images(1)
+        expect(composer.image_grid).to have_no_grid_images
       end
     end
   end
@@ -2292,8 +2281,7 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(composer).to have_no_in_progress_uploads
 
       # Should automatically create a grid with 3 images
-      expect(rich).to have_css(".composer-image-grid")
-      expect(rich).to have_css(".composer-image-grid .composer-image-node img", count: 3)
+      expect(composer.image_grid).to have_grid_images(3)
     end
 
     it "does not create nested grids when uploading images inside an existing grid" do
@@ -2301,8 +2289,7 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.type_content("[grid]![image1](upload://test1.png)![image2](upload://test2.png)")
 
-      expect(rich).to have_css(".composer-image-grid")
-      expect(rich).to have_css(".composer-image-grid .composer-image-node img", count: 2)
+      expect(composer.image_grid).to have_grid_images(2)
 
       file_path_1 = file_from_fixtures("logo.png", "images").path
       file_path_2 = file_from_fixtures("logo.jpg", "images").path
@@ -2312,9 +2299,7 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(composer).to have_no_in_progress_uploads
 
-      expect(rich).to have_css(".composer-image-grid", count: 1)
-      expect(rich).to have_css(".composer-image-grid .composer-image-node img", count: 5)
-      expect(rich).to have_no_css(".composer-image-grid .composer-image-grid")
+      expect(composer.image_grid).to have_single_grid_with_images(5)
     end
   end
 end
