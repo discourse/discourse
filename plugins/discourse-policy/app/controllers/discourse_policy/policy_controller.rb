@@ -98,7 +98,7 @@ class DiscoursePolicy::PolicyController < ::ApplicationController
 
     return render_json_error(I18n.t("discourse_policy.errors.group_not_found")) if @group_ids.blank?
 
-    if SiteSetting.policy_restrict_to_staff_posts && !@post.user&.staff?
+    if !@post.user&.in_any_groups?(SiteSetting.create_policy_allowed_groups_map)
       return render_json_error(I18n.t("discourse_policy.errors.staff_only"))
     end
 

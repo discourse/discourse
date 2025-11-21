@@ -21,7 +21,7 @@ function initializePolicyBuilder(api, container) {
         });
       },
       condition: () =>
-        !siteSettings.policy_restrict_to_staff_posts || currentUser.staff,
+        currentUser.isInAnyGroups(siteSettings.create_policy_allowed_groups),
     });
   }
 }
