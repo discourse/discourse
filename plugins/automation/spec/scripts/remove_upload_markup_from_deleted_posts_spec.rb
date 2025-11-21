@@ -50,6 +50,18 @@ describe "RemoveUploadMarkupFromDeletedPosts" do
       expect(post.raw).to eq(raw)
     end
 
+    it "works even if the topic is deleted" do
+      topic.deleted_at = 1.month.ago
+      topic.save!
+
+      expect {
+        automation.trigger!
+        deleted_post.reload
+      }.to change { deleted_post.raw }.from(raw).to(
+        "Hey it is a regular post with a link to [Discourse](https://www.discourse.org) and a",
+      )
+    end
+
     it "does not remove uploads from non-deleted posts" do
       expect {
         automation.trigger!
