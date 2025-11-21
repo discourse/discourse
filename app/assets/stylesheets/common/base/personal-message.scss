@@ -180,8 +180,6 @@
         .user-link,
         .group-link {
           @include ellipsis;
-          display: inline-flex;
-          align-items: baseline;
           color: var(--primary-high);
 
           &:hover {
