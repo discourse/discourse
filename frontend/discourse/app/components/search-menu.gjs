@@ -100,7 +100,7 @@ export default class SearchMenu extends Component {
     }
 
     if (this.isClosing) {
-      classes.push("is-closing");
+      classes.push("-closing");
     }
 
     return classes.join(" ");

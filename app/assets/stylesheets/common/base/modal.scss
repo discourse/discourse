@@ -73,7 +73,7 @@ html:not(.keyboard-visible).mobile-device {
         @include d-animation(modal-enter-mobile, 250ms, ease);
       }
 
-      &.is-exiting {
+      &.-closing {
         @include d-animation(modal-exit-mobile, 250ms, ease);
       }
     }
@@ -99,7 +99,7 @@ html:not(.keyboard-visible).mobile-device {
         );
       }
 
-      &.is-exiting {
+      &.-closing {
         @include d-animation(
           modal-exit-desktop,
           250ms,
@@ -240,7 +240,7 @@ html:not(.keyboard-visible).mobile-device {
       animation-duration: 0s;
     }
 
-    &.is-exiting {
+    &.-closing {
       @include d-animation(
         backdrop-fade-out,
         250ms,

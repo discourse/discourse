@@ -55,7 +55,7 @@
         width: 100%;
         min-width: 0;
 
-        &.is-closing .search-menu-panel {
+        &.-closing .search-menu-panel {
           @include d-animation(dissolve-up, 250ms, ease);
         }
       }

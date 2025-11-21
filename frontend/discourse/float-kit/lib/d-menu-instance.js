@@ -62,6 +62,10 @@ export default class DMenuInstance extends FloatKitInstance {
     return this.expanded;
   }
 
+  get menuElement() {
+    return this.content;
+  }
+
   /**
    * Closes the menu with an optional animation delay.
    * Adds a .25s delay to allow close animation to complete before actually closing.

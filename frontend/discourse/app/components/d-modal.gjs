@@ -175,9 +175,9 @@ export default class DModal extends Component {
         await this.#animatePopOff();
       } else {
         const backdrop = this.wrapperElement.nextElementSibling;
-        this.modalContainer.classList.add("is-exiting");
+        this.modalContainer.classList.add("-closing");
         if (backdrop) {
-          backdrop.classList.add("is-exiting");
+          backdrop.classList.add("-closing");
         }
 
         await this.#waitForAnimationEnd(this.modalContainer);
@@ -292,8 +292,8 @@ export default class DModal extends Component {
       return;
     }
 
-    this.modalContainer.classList.add("is-exiting");
-    backdrop.classList.add("is-exiting");
+    this.modalContainer.classList.add("-closing");
+    backdrop.classList.add("-closing");
 
     await waitForPromise(
       Promise.all([
