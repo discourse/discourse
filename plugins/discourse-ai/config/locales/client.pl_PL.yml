@@ -699,9 +699,9 @@ pl_PL:
           discard: "Odrzuć"
           changes: "Sugerowane zmiany"
           custom_prompt:
-            title: "Niestandardowy prompt"
+            title: "Niestandardowy monit"
             placeholder: "Wprowadź niestandardowy monit..."
-            submit: "Wyślij prompt"
+            submit: "Wyślij monit"
           translate_prompt: "Przetłumacz na %{language}"
         post_options_menu:
           trigger: "Zapytaj AI"
