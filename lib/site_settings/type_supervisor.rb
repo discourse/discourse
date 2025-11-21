@@ -22,6 +22,7 @@ class SiteSettings::TypeSupervisor
     json_schema
     schema
     requires_confirmation
+    depends_on
   ].freeze
   VALIDATOR_OPTS = %i[min max regex hidden regex_error json_schema schema].freeze
 
@@ -98,7 +99,10 @@ class SiteSettings::TypeSupervisor
     @textareas = {}
     @json_schemas = {}
     @schemas = {}
+    @dependencies = SiteSettings::DependencyGraph.new
   end
+
+  attr_reader :dependencies
 
   def load_setting(name_arg, opts = {})
     name = name_arg.to_sym
@@ -144,6 +148,8 @@ class SiteSettings::TypeSupervisor
       validator_opts[:name] = name
       @validators[name] = { class: validator_type, opts: validator_opts }
     end
+
+    @dependencies[name] = opts[:depends_on] || []
   end
 
   def to_rb_value(name, value, override_type = nil)
