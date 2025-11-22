@@ -46,7 +46,8 @@ class S3Helper
 
   def self.build_from_config(use_db_s3_config: false, for_backup: false, s3_client: nil)
     setting_klass = use_db_s3_config ? SiteSetting : GlobalSetting
-    options = S3Helper.s3_options(setting_klass)
+    profile = setting_klass.respond_to?(:s3_profile) ? setting_klass.s3_profile : nil
+    options = S3Helper.s3_options(setting_klass, profile: profile)
     options[:client] = s3_client if s3_client.present?
     options[:use_accelerate_endpoint] = !for_backup &&
       SiteSetting.Upload.enable_s3_transfer_acceleration
@@ -268,14 +269,18 @@ class S3Helper
     s3_bucket.object(get_path_for_s3_upload(path))
   end
 
-  def self.s3_options(obj)
+  def self.s3_options(obj, profile: nil)
     opts = { region: obj.s3_region }
 
     opts[:endpoint] = SiteSetting.s3_endpoint if SiteSetting.s3_endpoint.present?
     opts[:http_continue_timeout] = SiteSetting.s3_http_continue_timeout
     opts[:use_dualstack_endpoint] = SiteSetting.Upload.use_dualstack_endpoint
 
-    unless obj.s3_use_iam_profile
+    # Use profile if provided
+    if profile.present?
+      opts[:profile] = profile
+      # Only add keys if they exist, otherwise let AWS SDK auto-discover
+    elsif obj.s3_access_key_id.present? && obj.s3_secret_access_key.present?
       opts[:access_key_id] = obj.s3_access_key_id
       opts[:secret_access_key] = obj.s3_secret_access_key
     end
@@ -457,9 +462,12 @@ class S3Helper
   end
 
   def check_missing_site_options
-    unless SiteSetting.s3_use_iam_profile
-      raise SettingMissing.new("access_key_id") if SiteSetting.s3_access_key_id.blank?
-      raise SettingMissing.new("secret_access_key") if SiteSetting.s3_secret_access_key.blank?
+    # Only validate if both credentials are provided together
+    if SiteSetting.s3_access_key_id.present? || SiteSetting.s3_secret_access_key.present?
+      if SiteSetting.s3_access_key_id.blank? || SiteSetting.s3_secret_access_key.blank?
+        raise Discourse::SiteSettingMissing.new("access_key_id, secret_access_key")
+      end
     end
+    # If neither provided, AWS SDK will auto-discover credentials
   end
 end
