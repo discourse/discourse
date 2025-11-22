@@ -55,7 +55,7 @@ module("Integration | Component | bookmark-icon", function (hooks) {
   test("no bookmark", async function (assert) {
     await render(<template><BookmarkIcon /></template>);
 
-    assert.dom(".d-icon-bookmark.bookmark-icon").exists();
+    assert.dom(".d-icon-far-bookmark.bookmark-icon").exists();
     assert
       .dom(".svg-icon-title")
       .hasAttribute("title", i18n("bookmarks.create"));

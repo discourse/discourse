@@ -130,6 +130,7 @@ module SvgSprite
         fab-windows
         far-bell
         far-bell-slash
+        far-bookmark
         far-calendar-plus
         far-chart-bar
         far-circle
