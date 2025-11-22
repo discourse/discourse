@@ -5,6 +5,7 @@ class AiApiAuditLog < ActiveRecord::Base
   belongs_to :post
   belongs_to :topic
   belongs_to :user
+  belongs_to :llm_model, foreign_key: :llm_id, optional: true
 
   module Provider
     OpenAI = 1

@@ -19,9 +19,10 @@ RSpec.describe DiscourseAi::Completions::Report do
   describe "#total_spending" do
     it "calculates spending with separate cache read and write costs" do
       # Create logs with different cache patterns
-      AiApiAuditLog.create!(
+      AiApiRequestStat.create!(
         provider_id: AiApiAuditLog::Provider::Anthropic,
         user_id: user.id,
+        llm_id: claude_model.id,
         language_model: "claude-3-opus",
         request_tokens: 1000,
         response_tokens: 500,
@@ -46,9 +47,10 @@ RSpec.describe DiscourseAi::Completions::Report do
     end
 
     it "handles logs without cache tokens" do
-      AiApiAuditLog.create!(
+      AiApiRequestStat.create!(
         provider_id: AiApiAuditLog::Provider::Anthropic,
         user_id: user.id,
+        llm_id: claude_model.id,
         language_model: "claude-3-opus",
         request_tokens: 1000,
         response_tokens: 500,
@@ -66,9 +68,10 @@ RSpec.describe DiscourseAi::Completions::Report do
 
   describe "#model_breakdown" do
     it "includes separate cache read and write token counts" do
-      AiApiAuditLog.create!(
+      AiApiRequestStat.create!(
         provider_id: AiApiAuditLog::Provider::Anthropic,
         user_id: user.id,
+        llm_id: claude_model.id,
         language_model: "claude-3-opus",
         request_tokens: 1000,
         response_tokens: 500,
@@ -91,9 +94,10 @@ RSpec.describe DiscourseAi::Completions::Report do
 
   describe "#user_breakdown" do
     it "includes cache spending for users" do
-      AiApiAuditLog.create!(
+      AiApiRequestStat.create!(
         provider_id: AiApiAuditLog::Provider::Anthropic,
         user_id: user.id,
+        llm_id: claude_model.id,
         language_model: "claude-3-opus",
         request_tokens: 1000,
         response_tokens: 500,
@@ -114,9 +118,10 @@ RSpec.describe DiscourseAi::Completions::Report do
 
   describe "#feature_breakdown" do
     it "includes cache spending for features" do
-      AiApiAuditLog.create!(
+      AiApiRequestStat.create!(
         provider_id: AiApiAuditLog::Provider::Anthropic,
         user_id: user.id,
+        llm_id: claude_model.id,
         language_model: "claude-3-opus",
         feature_name: "ai_bot",
         request_tokens: 1000,
@@ -138,9 +143,10 @@ RSpec.describe DiscourseAi::Completions::Report do
 
   describe "#tokens_by_period" do
     it "includes cache token counts in period breakdowns" do
-      AiApiAuditLog.create!(
+      AiApiRequestStat.create!(
         provider_id: AiApiAuditLog::Provider::Anthropic,
         user_id: user.id,
+        llm_id: claude_model.id,
         language_model: "claude-3-opus",
         request_tokens: 1000,
         response_tokens: 500,
