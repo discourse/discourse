@@ -46,6 +46,54 @@ RSpec.describe Admin::EmailController do
     end
   end
 
+  describe "#smtp_should_reject" do
+    before { sign_in(admin) }
+
+    it "does not reject with no params" do
+      get "/admin/email/smtp_should_reject.json"
+      expect(response.status).to eq(200)
+      result = response.parsed_body
+
+      expect(result["reject"]).to be false
+    end
+
+    it "does not reject with blank to/from" do
+      get "/admin/email/smtp_should_reject.json", params: { from: "", to: "" }
+      expect(response.status).to eq(200)
+      result = response.parsed_body
+
+      expect(result["reject"]).to be false
+    end
+
+    it "does not reject with blank to" do
+      get "/admin/email/smtp_should_reject.json", params: { from: "bilbo@shire.net", to: "" }
+      expect(response.status).to eq(200)
+      result = response.parsed_body
+
+      expect(result["reject"]).to be false
+    end
+
+    it "does not reject with blank from" do
+      get "/admin/email/smtp_should_reject.json", params: { from: "", to: "frodo@shire.net" }
+      expect(response.status).to eq(200)
+      result = response.parsed_body
+
+      expect(result["reject"]).to be false
+    end
+
+    it "does not reject with to/from specified" do
+      get "/admin/email/smtp_should_reject.json",
+          params: {
+            from: "bilbo@shire.net",
+            to: "frodo@shire.net",
+          }
+      expect(response.status).to eq(200)
+      result = response.parsed_body
+
+      expect(result["reject"]).to be false
+    end
+  end
+
   describe "#test" do
     context "when logged in as an admin" do
       before { sign_in(admin) }
