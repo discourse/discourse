@@ -40,12 +40,13 @@ RSpec.describe UpcomingChanges::List do
           humanized_name: "Enable upload debug mode",
           description: "",
           value: SiteSetting.enable_upload_debug_mode,
-          upcoming_change: {
-            impact: "other,developers",
-            impact_role: "developers",
-            impact_type: "other",
-            status: :pre_alpha,
-          },
+        )
+
+        expect(mock_setting[:upcoming_change]).to include(
+          impact: "other,developers",
+          impact_role: "developers",
+          impact_type: "other",
+          status: :pre_alpha,
         )
       end
 
@@ -78,7 +79,56 @@ RSpec.describe UpcomingChanges::List do
         results = result.upcoming_changes
         mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
 
-        expect(mock_setting[:groups]).to eq(%w[trust_level_0 trust_level_1])
+        expect(mock_setting[:groups]).to eq("trust_level_0,trust_level_1")
+      end
+
+      describe "enabled_for logic" do
+        it "sets enabled_for to 'no_one' when setting value is false" do
+          SiteSetting.enable_upload_debug_mode = false
+          results = result.upcoming_changes
+          mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
+
+          expect(mock_setting[:upcoming_change][:enabled_for]).to eq("no_one")
+        end
+
+        it "sets enabled_for to 'everyone' when setting value is true and groups are empty" do
+          SiteSetting.enable_upload_debug_mode = true
+          SiteSettingGroup.create!(name: "enable_upload_debug_mode", group_ids: "")
+          SiteSetting.refresh_site_setting_group_ids!
+          SiteSetting.notify_changed!
+
+          results = result.upcoming_changes
+          mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
+
+          expect(mock_setting[:upcoming_change][:enabled_for]).to eq("everyone")
+        end
+
+        it "sets enabled_for to 'staff' when setting value is true and group is only staff" do
+          SiteSetting.enable_upload_debug_mode = true
+          SiteSettingGroup.create!(
+            name: "enable_upload_debug_mode",
+            group_ids: Group::AUTO_GROUPS[:staff].to_s,
+          )
+          SiteSetting.refresh_site_setting_group_ids!
+          SiteSetting.notify_changed!
+
+          results = result.upcoming_changes
+          mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
+
+          expect(mock_setting[:upcoming_change][:enabled_for]).to eq("staff")
+        end
+
+        it "sets enabled_for to 'groups' when setting value is true and has specific groups" do
+          SiteSetting.enable_upload_debug_mode = true
+          SiteSettingGroup.create!(name: "enable_upload_debug_mode", group_ids: "10|11")
+          SiteSetting.refresh_site_setting_group_ids!
+          SiteSetting.notify_changed!
+
+          results = result.upcoming_changes
+          mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
+
+          expect(mock_setting[:upcoming_change][:enabled_for]).to eq("groups")
+        end
       end
     end
   end

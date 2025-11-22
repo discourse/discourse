@@ -5,7 +5,9 @@ class UpcomingChanges::Toggle
 
   params do
     attribute :setting_name, :string
+    attribute :enabled, :boolean
     validates :setting_name, presence: true
+    validates :enabled, inclusion: [true, false]
   end
 
   policy :current_user_is_admin
@@ -29,11 +31,11 @@ class UpcomingChanges::Toggle
     # before we update that UI.
     if SiteSetting.enable_upcoming_changes
       previous_value = SiteSetting.public_send(params.setting_name)
-      SiteSetting.send("#{params.setting_name}=", !previous_value)
+      SiteSetting.send("#{params.setting_name}=", params.enabled)
       StaffActionLogger.new(guardian.user).log_upcoming_change_toggle(
         params.setting_name,
         previous_value,
-        !previous_value,
+        params.enabled,
         { context: I18n.t("staff_action_logs.upcoming_changes.log_manually_toggled") },
       )
     else
