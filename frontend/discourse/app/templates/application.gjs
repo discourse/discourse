@@ -1,7 +1,7 @@
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import A11yLiveRegions from "discourse/components/a11y/live-regions";
 import A11ySkipLinks from "discourse/components/a11y/skip-links";
-import BlockLayout from "discourse/components/block-frame";
+import BlockOutlet from "discourse/components/block-outlet";
 import CardContainer from "discourse/components/card-container";
 import ComposerContainer from "discourse/components/composer-container";
 import CustomHtml from "discourse/components/custom-html";
@@ -84,7 +84,7 @@ export default <template>
       }}
     />
 
-    <BlockLayout @name="hero-blocks" />
+    <BlockOutlet @name="hero-blocks" />
 
     <div id="main-outlet-wrapper" class="wrap" role="main">
       {{#if @controller.sidebarEnabled}}
@@ -100,7 +100,7 @@ export default <template>
 
       <div id="main-outlet">
         <PluginOutlet @name="above-main-container" @connectorTagName="div" />
-        <BlockLayout @name="main-outlet-blocks" />
+        <BlockOutlet @name="main-outlet-blocks" />
 
         {{#if
           (eq
