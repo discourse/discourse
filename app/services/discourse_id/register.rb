@@ -33,25 +33,37 @@ class DiscourseId::Register
     begin
       response = Net::HTTP.start(uri.hostname, uri.port, use_ssl:) { |http| http.request(request) }
     rescue StandardError => e
-      return fail!(error: "Challenge request failed: #{e.message}")
+      error = "Challenge request to '#{uri}' failed: #{e.message}."
+      log_error("request_challenge", error)
+      return fail!(error:)
     end
 
     if response.code.to_i != 200
-      return fail!(error: "Failed to request challenge: #{response.code}\nError: #{response.body}")
+      error = "Failed to request challenge: #{response.code}\nError: #{response.body}"
+      log_error("request_challenge", error)
+      return fail!(error:)
     end
 
     begin
       json = JSON.parse(response.body)
     rescue JSON::ParserError => e
-      return fail!(error: "Challenge response invalid JSON: #{e.message}")
+      error = "Challenge response invalid JSON: #{e.message}"
+      log_error("request_challenge", error)
+      return fail!(error:)
     end
 
     if json["domain"] != Discourse.current_hostname
-      return fail!(error: "Domain mismatch in challenge response")
+      error =
+        "Domain mismatch in challenge response (expected: #{Discourse.current_hostname}, got: #{json["domain"]})"
+      log_error("request_challenge", error)
+      return fail!(error:)
     end
 
     if Discourse.base_path.present? && json["path"] != Discourse.base_path
-      return fail!(error: "Path mismatch in challenge response")
+      error =
+        "Path mismatch in challenge response (expected: #{Discourse.base_path}, got: #{json["path"]})"
+      log_error("request_challenge", error)
+      return fail!(error:)
     end
 
     context[:token] = json["token"]
@@ -79,17 +91,23 @@ class DiscourseId::Register
     begin
       response = Net::HTTP.start(uri.hostname, uri.port, use_ssl:) { |http| http.request(request) }
     rescue StandardError => e
-      return fail!(error: "Registration request failed: #{e.message}")
+      error = "Registration request to '#{uri}' failed: #{e.message}."
+      log_error("register_with_challenge", error)
+      return fail!(error:)
     end
 
     if response.code.to_i != 200
-      return fail!(error: "Registration failed: #{response.code}\nError: #{response.body}")
+      error = "Registration failed: #{response.code}\nError: #{response.body}"
+      log_error("register_with_challenge", error)
+      return fail!(error:)
     end
 
     begin
       context[:data] = JSON.parse(response.body)
     rescue JSON::ParserError => e
-      fail!(error: "Registration response invalid JSON: #{e.message}")
+      error = "Registration response invalid JSON: #{e.message}"
+      log_error("register_with_challenge", error)
+      fail!(error:)
     end
   end
 
@@ -100,5 +118,9 @@ class DiscourseId::Register
 
   def discourse_id_url
     @url ||= SiteSetting.discourse_id_provider_url.presence || "https://id.discourse.com"
+  end
+
+  def log_error(step, message)
+    Rails.logger.error("Discourse ID registration failed at step '#{step}'. Error: #{message}")
   end
 end
