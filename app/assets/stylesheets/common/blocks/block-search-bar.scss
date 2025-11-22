@@ -1,0 +1,23 @@
+.block-search-bar {
+  &__wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  &__search-icon {
+    position: absolute;
+    z-index: 1;
+    inset-inline-start: 0.75em;
+    color: var(--primary-medium);
+  }
+
+  &__search-menu {
+    flex-grow: 1;
+
+    .search-input {
+      padding-block: 0;
+      padding-inline-start: 1.5em;
+    }
+  }
+}
