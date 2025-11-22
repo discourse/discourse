@@ -1042,13 +1042,9 @@ html.composer-open:not(.has-full-page-chat) {
   #reply-control {
     &.fullscreen {
       // important needed because of inline styles when height is changed manually with grippie
-      height: 100vh !important;
+      height: calc(var(--composer-vh, 1vh) * 100) !important;
       max-height: 100%; // prevents devices from miscalculating using vh
       z-index: z("header") + 1;
-
-      @supports (--custom: property) {
-        height: calc(var(--composer-vh, 1vh) * 100) !important;
-      }
 
       .grippie {
         display: none;
