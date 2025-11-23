@@ -460,63 +460,44 @@ describe "Content Localization" do
       SiteSetting.content_localization_enabled = true
       SiteSetting.content_localization_allowed_groups = "#{Group::AUTO_GROUPS[:admins]}"
       SiteSetting.content_localization_supported_locales = "en|ja"
+      SiteSetting.post_menu = "addTranslation"
+    end
+
+    it "only shows globe icon on author's own posts" do
+      SiteSetting.content_localization_allow_author_localization = false
+
+      sign_in(author)
+      topic_page.visit_topic(topic)
+
+      expect(topic_page).to have_no_post_action_button(post_1, :add_translation)
+      expect(topic_page).to have_no_post_action_button(author_post, :add_translation)
+
       SiteSetting.content_localization_allow_author_localization = true
-    end
-
-    it "shows globe icon on author's own posts" do
-      sign_in(author)
-      topic_page.visit_topic(topic)
-
-      expect(topic_page.has_post_action_button?(author_post, :add_translation)).to eq(true)
-    end
-
-    it "does not show globe icon on other users' posts" do
-      sign_in(author)
-      topic_page.visit_topic(topic)
-
-      expect(topic_page.has_post_action_button?(post_1, :add_translation)).to eq(false)
-    end
-
-    it "allows author to create translation on their own post" do
-      sign_in(author)
-      topic_page.visit_topic(topic)
-
+      page.refresh
+      expect(topic_page).to have_post_action_button(author_post, :add_translation)
       topic_page.click_post_action_button(author_post, :add_translation)
+      find(".post-action-menu__add-translation").click
       expect(translation_composer).to be_opened
 
-      translation_composer.select_locale("日本語")
+      translation_composer.select_locale("Japanese (日本語)")
       translation_composer.fill_content("著者のオリジナル投稿")
       translation_composer.create
 
-      localization = PostLocalization.find_by(post_id: author_post.id, locale: "ja")
-      expect(localization).to be_present
-      expect(localization.localizer_user_id).to eq(author.id)
+      sign_in(japanese_user)
+      topic_page.visit_topic(topic)
+      expect(topic_page).to have_post_content(
+        post_number: author_post.post_number,
+        content: "著者のオリジナル投稿",
+      )
     end
 
     it "shows globe icon for admins on all posts" do
       sign_in(admin)
       topic_page.visit_topic(topic)
 
-      expect(topic_page.has_post_action_button?(post_1, :add_translation)).to eq(true)
-      expect(topic_page.has_post_action_button?(author_post, :add_translation)).to eq(true)
-    end
-
-    context "when author localization is disabled" do
-      before { SiteSetting.content_localization_allow_author_localization = false }
-
-      it "does not show globe icon for authors" do
-        sign_in(author)
-        topic_page.visit_topic(topic)
-
-        expect(topic_page.has_post_action_button?(author_post, :add_translation)).to eq(false)
-      end
-
-      it "still shows globe icon for admins" do
-        sign_in(admin)
-        topic_page.visit_topic(topic)
-
-        expect(topic_page.has_post_action_button?(post_1, :add_translation)).to eq(true)
-      end
+      expect(topic_page).to have_post_action_button(post_1, :add_translation)
+      expect(topic_page).to have_post_action_button(post_2, :add_translation)
+      expect(topic_page).to have_post_action_button(author_post, :add_translation)
     end
   end
 

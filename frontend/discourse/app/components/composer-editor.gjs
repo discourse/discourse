@@ -993,7 +993,7 @@ export default class ComposerEditor extends Component {
 
   get showTranslationEditor() {
     const post = this.get("composer.model.post");
-    if (!post.can_localize_post) {
+    if (!post?.can_localize_post) {
       return false;
     }
 
