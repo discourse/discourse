@@ -449,6 +449,77 @@ describe "Content Localization" do
     end
   end
 
+  context "with author localization" do
+    fab!(:author) { Fabricate(:user, locale: "en") }
+    fab!(:author_post) do
+      Fabricate(:post, topic:, user: author, locale: "en", raw: "Author's original post")
+    end
+
+    before do
+      SiteSetting.allow_user_locale = true
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_allowed_groups = "#{Group::AUTO_GROUPS[:admins]}"
+      SiteSetting.content_localization_supported_locales = "en|ja"
+      SiteSetting.content_localization_allow_author_localization = true
+    end
+
+    it "shows globe icon on author's own posts" do
+      sign_in(author)
+      topic_page.visit_topic(topic)
+
+      expect(topic_page.has_post_action_button?(author_post, :add_translation)).to eq(true)
+    end
+
+    it "does not show globe icon on other users' posts" do
+      sign_in(author)
+      topic_page.visit_topic(topic)
+
+      expect(topic_page.has_post_action_button?(post_1, :add_translation)).to eq(false)
+    end
+
+    it "allows author to create translation on their own post" do
+      sign_in(author)
+      topic_page.visit_topic(topic)
+
+      topic_page.click_post_action_button(author_post, :add_translation)
+      expect(translation_composer).to be_opened
+
+      translation_composer.select_locale("日本語")
+      translation_composer.fill_content("著者のオリジナル投稿")
+      translation_composer.create
+
+      localization = PostLocalization.find_by(post_id: author_post.id, locale: "ja")
+      expect(localization).to be_present
+      expect(localization.localizer_user_id).to eq(author.id)
+    end
+
+    it "shows globe icon for admins on all posts" do
+      sign_in(admin)
+      topic_page.visit_topic(topic)
+
+      expect(topic_page.has_post_action_button?(post_1, :add_translation)).to eq(true)
+      expect(topic_page.has_post_action_button?(author_post, :add_translation)).to eq(true)
+    end
+
+    context "when author localization is disabled" do
+      before { SiteSetting.content_localization_allow_author_localization = false }
+
+      it "does not show globe icon for authors" do
+        sign_in(author)
+        topic_page.visit_topic(topic)
+
+        expect(topic_page.has_post_action_button?(author_post, :add_translation)).to eq(false)
+      end
+
+      it "still shows globe icon for admins" do
+        sign_in(admin)
+        topic_page.visit_topic(topic)
+
+        expect(topic_page.has_post_action_button?(post_1, :add_translation)).to eq(true)
+      end
+    end
+  end
+
   context "for site settings" do
     let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
     let(:banner) { PageObjects::Components::AdminChangesBanner.new }

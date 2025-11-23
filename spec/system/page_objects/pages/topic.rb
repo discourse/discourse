@@ -361,6 +361,8 @@ module PageObjects
 
       def selector_for_post_action_button(button)
         case button
+        when :add_translation
+          ".post-controls .update-translations-menu"
         when :admin
           ".post-controls .post-action-menu__admin"
         when :bookmark

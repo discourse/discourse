@@ -835,4 +835,69 @@ RSpec.describe PostSerializer do
     s = serialized_post(u)
     s.as_json
   end
+
+  describe "#can_localize_post" do
+    fab!(:author, :user)
+    fab!(:author_post) { Fabricate(:post, user: author) }
+    fab!(:admin)
+    fab!(:group)
+
+    before do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_allowed_groups = group.id.to_s
+    end
+
+    it "is included when user can localize content" do
+      group.add(admin)
+      json = PostSerializer.new(author_post, scope: Guardian.new(admin), root: false).as_json
+      expect(json[:can_localize_post]).to eq(true)
+    end
+
+    it "is included when author localization is enabled and user is post author" do
+      SiteSetting.content_localization_allow_author_localization = true
+      json = PostSerializer.new(author_post, scope: Guardian.new(author), root: false).as_json
+      expect(json[:can_localize_post]).to eq(true)
+
+      SiteSetting.content_localization_allow_author_localization = false
+      json = PostSerializer.new(author_post, scope: Guardian.new(author), root: false).as_json
+      expect(json[:can_localize_post]).to eq(nil)
+    end
+
+    it "is not included when user cannot localize post" do
+      other_user = Fabricate(:user)
+      json = PostSerializer.new(author_post, scope: Guardian.new(other_user), root: false).as_json
+      expect(json.key?(:can_localize_post)).to eq(false)
+    end
+  end
+
+  describe "post_localizations_count" do
+    fab!(:author, :user)
+    fab!(:author_post) { Fabricate(:post, user: author) }
+    fab!(:group)
+
+    before do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_allowed_groups = group.id.to_s
+      Fabricate(:post_localization, post: author_post, locale: "ja")
+    end
+
+    it "is included for users in allowed groups" do
+      user = Fabricate(:user)
+      group.add(user)
+      json = PostSerializer.new(author_post, scope: Guardian.new(user), root: false).as_json
+      expect(json[:post_localizations_count]).to eq(1)
+    end
+
+    it "is included for post authors when author localization is enabled" do
+      SiteSetting.content_localization_allow_author_localization = true
+      json = PostSerializer.new(author_post, scope: Guardian.new(author), root: false).as_json
+      expect(json[:post_localizations_count]).to eq(1)
+    end
+
+    it "is not included for users who cannot localize" do
+      other_user = Fabricate(:user)
+      json = PostSerializer.new(author_post, scope: Guardian.new(other_user), root: false).as_json
+      expect(json.key?(:post_localizations_count)).to eq(false)
+    end
+  end
 end

@@ -12,16 +12,13 @@ module Jobs
 
         post = post_localization.post
         return if post.blank? || post.topic.blank?
-        original_cooked = post_localization.cooked
 
         processor = LocalizedCookedPostProcessor.new(post_localization, post, {})
         processor.post_process
         cooked = processor.html
 
-        if cooked != original_cooked && cooked.present?
-          post_localization.update_column(:cooked, cooked)
-          MessageBus.publish("/topic/#{post.topic_id}", type: :localized, id: post.id)
-        end
+        post_localization.update_column(:cooked, cooked)
+        MessageBus.publish("/topic/#{post.topic_id}", type: :localized, id: post.id)
       end
     end
   end

@@ -1719,6 +1719,10 @@ content_localization:
     client: true
     default: "1|2" # admin, moderator
     area: "localization"
+  content_localization_allow_author_localization:
+    default: true
+    client: true
+    area: "localization"
   content_localization_supported_locales:
     default: ""
     type: list
