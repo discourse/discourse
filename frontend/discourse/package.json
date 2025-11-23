@@ -99,7 +99,7 @@
     "@floating-ui/dom": "^1.7.4",
     "@glimmer/component": "^2.0.0",
     "@popperjs/core": "^2.11.8",
-    "@swc/core": "^1.15.2",
+    "@swc/core": "^1.15.3",
     "@types/jquery": "^3.5.33",
     "@types/qunit": "^2.19.13",
     "@types/rsvp": "^4.0.9",
