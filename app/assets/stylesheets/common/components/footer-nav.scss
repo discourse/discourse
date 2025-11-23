@@ -43,6 +43,7 @@ html.footer-nav-visible {
 
   &.visible {
     bottom: 0;
+    padding-bottom: max(5px, env(safe-area-inset-bottom));
   }
 
   .footer-nav-widget {
@@ -64,17 +65,9 @@ html.footer-nav-visible {
   }
 }
 
-@supports (padding: max(0px)) {
-  .footer-nav.visible {
-    padding-bottom: max(5px, env(safe-area-inset-bottom));
-  }
-}
-
-@supports (backdrop-filter: blur(10px)) {
-  html:not(.footer-nav-ipad) .footer-nav {
-    background-color: rgb(var(--header_background-rgb), 0.7);
-    backdrop-filter: blur(20px);
-  }
+html:not(.footer-nav-ipad) .footer-nav {
+  background-color: rgb(var(--header_background-rgb), 0.7);
+  backdrop-filter: blur(20px);
 }
 
 html.footer-nav-ipad {
