@@ -19,4 +19,16 @@ module LocalizationGuardian
     post = post_or_post_id.is_a?(Post) ? post_or_post_id : Post.find_by(id: post_or_post_id)
     post&.user_id == @user.id
   end
+
+  def can_localize_topic?(topic_or_topic_id)
+    return false if !SiteSetting.content_localization_enabled
+    return false if anonymous?
+
+    return true if @user.in_any_groups?(SiteSetting.content_localization_allowed_groups_map)
+    return false if !SiteSetting.content_localization_allow_author_localization
+
+    topic =
+      topic_or_topic_id.is_a?(Topic) ? topic_or_topic_id : Topic.find_by(id: topic_or_topic_id)
+    topic&.user_id == @user.id
+  end
 end

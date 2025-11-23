@@ -6,6 +6,8 @@ describe LocalizationGuardian do
   fab!(:moderator)
   fab!(:post) { Fabricate(:post, user: user) }
   fab!(:other_user_post, :post)
+  fab!(:topic) { Fabricate(:topic, user: user) }
+  fab!(:other_user_topic, :topic)
 
   before { SiteSetting.content_localization_enabled = true }
 
@@ -81,6 +83,65 @@ describe LocalizationGuardian do
       it "returns true for users in allowed groups" do
         expect(Guardian.new(admin).can_localize_post?(post)).to eq(true)
         expect(Guardian.new(admin).can_localize_post?(post.id)).to eq(true)
+      end
+    end
+  end
+
+  describe "#can_localize_topic?" do
+    it "returns false when content localization is disabled" do
+      SiteSetting.content_localization_enabled = false
+      expect(Guardian.new(user).can_localize_topic?(topic)).to eq(false)
+    end
+
+    context "when user is in allowed groups" do
+      before { SiteSetting.content_localization_allowed_groups = "#{Group::AUTO_GROUPS[:admins]}" }
+
+      it "returns true for any topic" do
+        expect(Guardian.new(admin).can_localize_topic?(topic)).to eq(true)
+        expect(Guardian.new(admin).can_localize_topic?(topic.id)).to eq(true)
+        expect(Guardian.new(admin).can_localize_topic?(other_user_topic)).to eq(true)
+        expect(Guardian.new(admin).can_localize_topic?(other_user_topic.id)).to eq(true)
+      end
+    end
+
+    context "when author localization is enabled" do
+      before do
+        SiteSetting.content_localization_allowed_groups = "#{Group::AUTO_GROUPS[:admins]}"
+        SiteSetting.content_localization_allow_author_localization = true
+      end
+
+      it "returns true when user is the topic author" do
+        expect(Guardian.new(user).can_localize_topic?(topic)).to eq(true)
+        expect(Guardian.new(user).can_localize_topic?(topic.id)).to eq(true)
+      end
+
+      it "returns false when user is not the topic author" do
+        expect(Guardian.new(user).can_localize_topic?(other_user_topic)).to eq(false)
+        expect(Guardian.new(user).can_localize_topic?(other_user_topic.id)).to eq(false)
+      end
+
+      it "returns true for users in allowed groups regardless of authorship" do
+        expect(Guardian.new(admin).can_localize_topic?(topic)).to eq(true)
+        expect(Guardian.new(admin).can_localize_topic?(topic.id)).to eq(true)
+        expect(Guardian.new(admin).can_localize_topic?(other_user_topic)).to eq(true)
+        expect(Guardian.new(admin).can_localize_topic?(other_user_topic.id)).to eq(true)
+      end
+    end
+
+    context "when author localization is disabled" do
+      before do
+        SiteSetting.content_localization_allowed_groups = "#{Group::AUTO_GROUPS[:admins]}"
+        SiteSetting.content_localization_allow_author_localization = false
+      end
+
+      it "returns false for topic authors not in allowed groups" do
+        expect(Guardian.new(user).can_localize_topic?(topic)).to eq(false)
+        expect(Guardian.new(user).can_localize_topic?(topic.id)).to eq(false)
+      end
+
+      it "returns true for users in allowed groups" do
+        expect(Guardian.new(admin).can_localize_topic?(topic)).to eq(true)
+        expect(Guardian.new(admin).can_localize_topic?(topic.id)).to eq(true)
       end
     end
   end
