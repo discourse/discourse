@@ -267,10 +267,8 @@ ug:
       view_more:
         one: "باشقا %{count} ئۇچۇرنى كۆرسەت"
         other: "باشقا %{count} ئۇچۇرنى كۆرسەت"
-      your_chat_settings: "سۆھبەت ئېلخەت چاستوتا مايىللىقى"
   unsubscribe:
     chat_summary:
-      select_title: "سۆھبەت خۇلاسە ئېلخەت چاستوتا تەڭشىكى:"
       never: ھەرگىز
       when_away: ئايرىلغاندىلا
   category:

@@ -3904,7 +3904,6 @@ ur:
         post_language_selector:
           none: "کوئی نہیں"
         edit_warning:
-          message: "یہ ایک ترجمہ شدہ پوسٹ ہے۔<br><br> کیا آپ اصل پوسٹ کو %{language} میں ترمیم چاہتے ہیں یا اس مخصوص ترجمہ میں ترمیم چاہتے ہیں؟"
           action_original: "اصل پوسٹ کی ترمیم"
           action_translation: "اس ترجمہ کی ترمیم"
       errors:
