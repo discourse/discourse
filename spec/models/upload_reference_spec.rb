@@ -124,6 +124,32 @@ RSpec.describe UploadReference do
 
       expect { provider.destroy("selectable_avatars") }.to change { UploadReference.count }.by(-2)
     end
+
+    it "creates upload references for objects with upload fields" do
+      objects_value =
+        JSON.generate(
+          [
+            { "name" => "object1", "upload_id" => upload.id },
+            { "name" => "object2", "upload_id" => upload2.id },
+          ],
+        )
+
+      expect {
+        provider.save(
+          "test_objects_with_uploads",
+          objects_value,
+          SiteSettings::TypeSupervisor.types[:objects],
+        )
+      }.to change { UploadReference.count }.by(2)
+
+      upload_references =
+        UploadReference.all.where(target: SiteSetting.find_by(name: "test_objects_with_uploads"))
+      expect(upload_references.pluck(:upload_id)).to contain_exactly(upload.id, upload2.id)
+
+      expect { provider.destroy("test_objects_with_uploads") }.to change {
+        UploadReference.count
+      }.by(-2)
+    end
   end
 
   describe "theme field uploads" do

@@ -92,6 +92,9 @@ class SiteSetting < ActiveRecord::Base
       elsif self.data_type == SiteSettings::TypeSupervisor.types[:uploaded_image_list]
         upload_ids = self.value.split("|").compact.uniq
         UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
+      elsif self.data_type == SiteSettings::TypeSupervisor.types[:objects]
+        upload_ids = extract_upload_ids_from_objects_value
+        UploadReference.ensure_exist!(upload_ids: upload_ids, target: self) if upload_ids.any?
       end
     end
   end
@@ -378,6 +381,34 @@ class SiteSetting < ActiveRecord::Base
     @blocked_attachment_content_types_regex = nil
     @blocked_attachment_filenames_regex = nil
     @allowed_unicode_username_regex = nil
+  end
+
+  private
+
+  def extract_upload_ids_from_objects_value
+    upload_ids = []
+    return upload_ids if self.value.blank?
+
+    type_hash = SiteSetting.type_supervisor.type_hash(self.name)
+    return upload_ids unless type_hash[:schema]&.dig(:properties)
+
+    begin
+      parsed_value = JSON.parse(self.value)
+      parsed_value = [parsed_value] unless parsed_value.is_a?(Array)
+
+      parsed_value.each do |obj|
+        type_hash[:schema][:properties].each do |prop_key, prop_value|
+          next unless prop_value[:type] == "upload"
+
+          key = prop_key.to_s
+          upload_id = obj[key]
+          upload_ids << upload_id if upload_id.present?
+        end
+      end
+    rescue JSON::ParserError
+    end
+
+    upload_ids.compact.uniq
   end
 end
 
