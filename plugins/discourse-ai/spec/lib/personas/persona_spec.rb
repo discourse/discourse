@@ -156,20 +156,36 @@ RSpec.describe DiscourseAi::Personas::Persona do
   end
 
   it "can correctly parse arrays in tools" do
-    SiteSetting.ai_openai_api_key = "123"
+    # Create a custom image generation tool to test array parameter parsing
+    tool =
+      AiTool.create!(
+        name: "test_image_tool",
+        description: "Test tool",
+        parameters: [{ name: "prompt", type: "string" }],
+        script: "function invoke(params) { return {}; }",
+        enabled: true,
+        is_image_generation_tool: true,
+      )
 
     tool_call =
       DiscourseAi::Completions::ToolCall.new(
-        name: "dall_e",
-        id: "call_JtYQMful5QKqw97XFsHzPweB",
+        name: "create_image",
+        id: "call_test",
         parameters: {
           prompts: ["cat oil painting", "big car"],
         },
       )
 
     tool_instance =
-      DiscourseAi::Personas::DallE3.new.find_tool(tool_call, bot_user: nil, llm: nil, context: nil)
+      DiscourseAi::Personas::Designer.new.find_tool(
+        tool_call,
+        bot_user: nil,
+        llm: nil,
+        context: nil,
+      )
     expect(tool_instance.parameters[:prompts]).to eq(["cat oil painting", "big car"])
+  ensure
+    tool&.destroy
   end
 
   describe "custom personas" do

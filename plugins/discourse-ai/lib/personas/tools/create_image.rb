@@ -34,46 +34,82 @@ module DiscourseAi
         end
 
         def invoke
-          # max 4 prompts
-          max_prompts = prompts.take(4)
-          progress = prompts.first
+          # Find available custom image generation tools
+          custom_tools = self.class.available_custom_image_tools
 
-          yield(progress)
-
-          results = nil
-
-          begin
-            results =
-              DiscourseAi::Inference::OpenAiImageGenerator.create_uploads!(
-                max_prompts,
-                model: "gpt-image-1",
-                user_id: bot_user.id,
-                cancel_manager: context.cancel_manager,
-              )
-          rescue => e
-            @error = e
-            return { prompts: max_prompts, error: e.message }
+          if custom_tools.empty?
+            @error = true
+            return(
+              {
+                prompts: prompts,
+                error:
+                  "No image generation tools configured. Please configure an image generation tool via the admin UI to use this feature.",
+              }
+            )
           end
 
-          if results.blank?
+          # Use the first available custom image tool
+          tool_class = custom_tools.first
+
+          # Generate images for each prompt (up to 4)
+          max_prompts = prompts.take(4)
+          progress = prompts.first
+          yield(progress)
+
+          uploads = []
+          errors = []
+
+          max_prompts.each do |prompt|
+            begin
+              # Create tool instance with parameters
+              tool_params = { prompt: prompt }
+
+              tool_instance =
+                tool_class.new(tool_params, bot_user: bot_user, llm: llm, context: context)
+
+              # Invoke the tool
+              tool_instance.invoke { |_progress| }
+
+              # Extract the custom_raw which contains the generated image markdown
+              if tool_instance.custom_raw.present?
+                # Parse the upload short_url from the markdown
+                upload_match = tool_instance.custom_raw.match(%r{!\[.*?\]\((upload://[^)]+)\)})
+                if upload_match
+                  short_url = upload_match[1]
+                  sha1 = Upload.sha1_from_short_url(short_url)
+                  upload = Upload.find_by(sha1: sha1) if sha1
+                  uploads << { prompt: prompt, upload: upload, url: short_url } if upload
+                end
+              end
+            rescue => e
+              Rails.logger.warn("Failed to generate image for prompt #{prompt}: #{e}")
+              errors << e.message
+            end
+          end
+
+          if uploads.empty?
             @error = true
-            return { prompts: max_prompts, error: "Something went wrong, could not generate image" }
+            return(
+              {
+                prompts: max_prompts,
+                error:
+                  "Failed to generate images. #{errors.first || "Please check your image generation tool configuration."}",
+              }
+            )
           end
 
           self.custom_raw = <<~RAW
 
             [grid]
             #{
-            results
+            uploads
               .map { |item| "![#{item[:prompt].gsub(/\|\'\"/, "")}](#{item[:upload].short_url})" }
               .join(" ")
           }
             [/grid]
           RAW
 
-          {
-            prompts: results.map { |item| { prompt: item[:prompt], url: item[:upload].short_url } },
-          }
+          { prompts: uploads.map { |item| { prompt: item[:prompt], url: item[:url] } } }
         end
 
         protected

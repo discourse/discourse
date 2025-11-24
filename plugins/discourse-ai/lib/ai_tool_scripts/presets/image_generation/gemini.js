@@ -3,7 +3,19 @@ const apiKey = "YOUR_GOOGLE_API_KEY";
 
 function invoke(params) {
   const prompt = params.prompt;
+  const imageUrls = params.image_urls || [];
 
+  // Determine mode: edit if image_urls provided, otherwise generate
+  const isEditMode = imageUrls.length > 0;
+
+  if (isEditMode) {
+    return performEdit(prompt, imageUrls);
+  } else {
+    return performGeneration(prompt);
+  }
+}
+
+function performGeneration(prompt) {
   const body = {
     contents: [
       {
@@ -26,6 +38,59 @@ function invoke(params) {
     }
   );
 
+  return processResponse(result, prompt);
+}
+
+function performEdit(prompt, imageUrls) {
+  // Gemini supports multimodal input - include images in the parts array
+  // Limit to first 10 images
+  const imagesToEdit = imageUrls.slice(0, 10);
+  const parts = [];
+
+  // Add each image as inline data
+  for (const imageUrl of imagesToEdit) {
+    const base64Data = upload.getBase64(imageUrl);
+    if (!base64Data) {
+      return { error: `Failed to fetch image data for: ${imageUrl}` };
+    }
+
+    parts.push({
+      inlineData: {
+        mimeType: "image/png",
+        data: base64Data,
+      },
+    });
+  }
+
+  // Add the text prompt after the images
+  parts.push({ text: prompt });
+
+  const body = {
+    contents: [
+      {
+        parts,
+      },
+    ],
+    generationConfig: {
+      responseModalities: ["Image"],
+    },
+  };
+
+  const result = http.post(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent`,
+    {
+      headers: {
+        "x-goog-api-key": `${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    }
+  );
+
+  return processResponse(result, prompt);
+}
+
+function processResponse(result, prompt) {
   const responseData = JSON.parse(result.body);
 
   // Check for API errors
@@ -91,5 +156,5 @@ function invoke(params) {
 }
 
 function details() {
-  return "Generates images using Gemini 2.5 Flash Image (Nano Banana).";
+  return "Generates and edits images using Gemini 2.5 Flash Image (Nano Banana). Supports generation mode (when no image_urls provided) and edit mode (when image_urls array is provided).";
 }

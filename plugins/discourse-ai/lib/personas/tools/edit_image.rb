@@ -7,7 +7,7 @@ module DiscourseAi
         def self.signature
           {
             name: name,
-            description: "Renders images from supplied descriptions",
+            description: "Edits images based on supplied descriptions and context images",
             parameters: [
               {
                 name: "prompt",
@@ -49,32 +49,59 @@ module DiscourseAi
 
           return { prompt: prompt, error: "No valid images provided" } if image_urls.blank?
 
+          # Validate that the image URLs exist
           sha1s = image_urls.map { |url| Upload.sha1_from_short_url(url) }.compact
-          uploads = Upload.where(sha1: sha1s).order(created_at: :asc).limit(10).to_a
+          if sha1s.empty?
+            @error = true
+            return { prompt: prompt, error: "No valid image URLs provided" }
+          end
 
-          return { prompt: prompt, error: "No valid images provided" } if uploads.blank?
+          # Find available custom image generation tools
+          custom_tools = self.class.available_custom_image_tools
+
+          if custom_tools.empty?
+            @error = true
+            return(
+              {
+                prompt: prompt,
+                error:
+                  "No image generation tools configured. Please configure an image generation tool via the admin UI to use this feature.",
+              }
+            )
+          end
+
+          # Use the first available custom image tool
+          # Pass image_urls to trigger edit mode in the tool
+          tool_class = custom_tools.first
 
           begin
-            result =
-              DiscourseAi::Inference::OpenAiImageGenerator.create_edited_upload!(
-                uploads,
-                prompt,
-                user_id: bot_user.id,
-                cancel_manager: context.cancel_manager,
-              )
+            tool_params = { prompt: prompt, image_urls: image_urls }
+
+            tool_instance =
+              tool_class.new(tool_params, bot_user: bot_user, llm: llm, context: context)
+
+            # Invoke the tool
+            tool_instance.invoke { |_progress| }
+
+            # Extract the custom_raw which contains the edited image markdown
+            if tool_instance.custom_raw.present?
+              # Parse the upload short_url from the markdown
+              upload_match = tool_instance.custom_raw.match(%r{!\[.*?\]\((upload://[^)]+)\)})
+              if upload_match
+                short_url = upload_match[1]
+                self.custom_raw = tool_instance.custom_raw
+                return { prompt: prompt, url: short_url }
+              end
+            end
+
+            # If we get here, the tool didn't return a valid result
+            @error = true
+            { prompt: prompt, error: "Failed to edit image" }
           rescue => e
             @error = e
-            return { prompt: prompt, error: e.message }
+            Rails.logger.warn("Failed to edit image: #{e}")
+            { prompt: prompt, error: e.message }
           end
-
-          if result.blank?
-            @error = true
-            return { prompt: prompt, error: "Something went wrong, could not generate image" }
-          end
-
-          self.custom_raw = "![#{result[:prompt].gsub(/\|\'\"/, "")}](#{result[:upload].short_url})"
-
-          { prompt: result[:prompt], url: result[:upload].short_url }
         end
 
         protected

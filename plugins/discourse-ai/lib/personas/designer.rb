@@ -4,11 +4,21 @@ module DiscourseAi
   module Personas
     class Designer < Persona
       def tools
-        [Tools::CreateImage, Tools::EditImage]
+        # Only include image tools if custom image generation tools are configured
+        if Tools::Tool.available_custom_image_tools.present?
+          [Tools::CreateImage, Tools::EditImage]
+        else
+          []
+        end
       end
 
       def required_tools
-        [Tools::CreateImage, Tools::EditImage]
+        # Image tools are only required if custom image tools are available
+        if Tools::Tool.available_custom_image_tools.present?
+          [Tools::CreateImage, Tools::EditImage]
+        else
+          []
+        end
       end
 
       def system_prompt
