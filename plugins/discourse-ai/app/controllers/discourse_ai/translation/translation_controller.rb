@@ -44,7 +44,7 @@ module DiscourseAi
           )
         end
 
-        guardian.ensure_can_see!(topic)
+        guardian.ensure_can_edit!(topic)
 
         untranslated_posts = find_untranslated_posts(topic)
 
