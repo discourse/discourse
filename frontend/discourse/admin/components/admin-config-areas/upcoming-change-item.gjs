@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
@@ -19,7 +20,7 @@ import { bind } from "discourse/lib/decorators";
 import discourseLater from "discourse/lib/later";
 import lightbox from "discourse/lib/lightbox";
 import Group from "discourse/models/group";
-import { and, eq, not } from "discourse/truth-helpers";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class UpcomingChangeItem extends Component {
@@ -29,10 +30,16 @@ export default class UpcomingChangeItem extends Component {
   @tracked bufferedGroups = this.args.change.groups;
   @tracked bufferedEnabledFor = this.args.change.upcoming_change.enabled_for;
   @tracked savingEnabledFor = false;
+  @tracked bufferedGroupsDirty = false;
 
   registeredMenu = null;
 
   applyLightbox = modifier((element) => lightbox(element, this.siteSettings));
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    cancel(this._savingEnabledForTimeout);
+  }
 
   impactRoleIcon(impactRole) {
     switch (impactRole) {
@@ -88,21 +95,21 @@ export default class UpcomingChangeItem extends Component {
   async saveGroups(opts = {}) {
     const silenceToast =
       this.bufferedEnabledFor === "groups" || opts.silenceToast;
+    let newEnabledFor = this.bufferedEnabledFor;
 
     // If all groups have been removed switch to "no one" on save
-    const isGroupsMode = this.bufferedEnabledFor === "groups";
+    const isGroupsMode = newEnabledFor === "groups";
     let groupNames;
-    let newEnabledFor = this.bufferedEnabledFor;
     let toggleValue;
 
-    if (!this.args.change.groups && isGroupsMode) {
+    if (!this.bufferedGroups.length && isGroupsMode) {
       this.groupsChanged("");
       groupNames = [];
       newEnabledFor = "no_one";
       toggleValue = false;
     } else {
-      groupNames = this.args.change.groups
-        ? this.args.change.groups.split(",")
+      groupNames = this.bufferedGroups.length
+        ? this.bufferedGroups.split(",")
         : [];
       if (isGroupsMode) {
         toggleValue = true;
@@ -119,10 +126,10 @@ export default class UpcomingChangeItem extends Component {
       });
 
       this.bufferedGroups = groupNames.join(",");
+      this.bufferedGroupsDirty = false;
 
       if (newEnabledFor !== this.bufferedEnabledFor) {
         this.bufferedEnabledFor = newEnabledFor;
-        this.args.change.upcoming_change.enabled_for = newEnabledFor;
       }
 
       // We do this because in the case where the admin is selecting
@@ -142,7 +149,6 @@ export default class UpcomingChangeItem extends Component {
       // it means we also need to enable the change, since we do not automatically
       // do this when the dropdown option changes to "groups" (groups need to be selected first).
       if (toggleValue !== undefined) {
-        this.args.change.value = toggleValue;
         await this.toggleChange(toggleValue, newEnabledFor);
       }
     } catch (err) {
@@ -159,7 +165,6 @@ export default class UpcomingChangeItem extends Component {
         setting_name: this.args.change.setting,
       },
     });
-    this.args.change.value = enabled;
 
     let enabledForLabel;
     if (enabledFor === "no_one") {
@@ -175,7 +180,7 @@ export default class UpcomingChangeItem extends Component {
         "admin.upcoming_changes.enabled_for_options.staff"
       );
     } else if (enabledFor === "groups") {
-      const groupNames = this.args.change.groups.split(",");
+      const groupNames = this.bufferedGroups.split(",");
       enabledForLabel = i18n(
         "admin.upcoming_changes.enabled_for_options.specific_groups_with_group_names",
         {
@@ -188,7 +193,7 @@ export default class UpcomingChangeItem extends Component {
     this.toasts.success({
       duration: "short",
       data: {
-        message: this.args.change.value
+        message: enabled
           ? i18n("admin.upcoming_changes.change_enabled_for_success", {
               enabledFor: enabledForLabel.toLowerCase(),
             })
@@ -204,7 +209,8 @@ export default class UpcomingChangeItem extends Component {
 
   @action
   groupsChanged(newGroups) {
-    this.args.change.groups = newGroups;
+    this.bufferedGroupsDirty = true;
+    this.bufferedGroups = newGroups;
   }
 
   @action
@@ -223,8 +229,6 @@ export default class UpcomingChangeItem extends Component {
     const isEnabled = newValue !== "no_one";
 
     try {
-      this.args.change.upcoming_change.enabled_for = newValue;
-      this.args.change.value = isEnabled;
       await this.toggleChange(isEnabled, newValue);
 
       if (newValue === "staff") {
@@ -235,16 +239,14 @@ export default class UpcomingChangeItem extends Component {
         await this.saveGroups({ silenceToast: true });
       }
     } catch (error) {
-      this.args.change.value = !isEnabled;
       this.bufferedEnabledFor = oldValue;
-      this.args.change.upcoming_change.enabled_for = oldValue;
       popupAjaxError(error);
     } finally {
       // We prevent rapid changes because on the server-side
       // we may have on(:setting_name) events for the site
       // setting changing, and we want to make sure we don't
       // cause rapid unnecessary work.
-      discourseLater(() => {
+      this._savingEnabledForTimeout = discourseLater(() => {
         this.savingEnabledFor = false;
       }, 2000);
     }
@@ -384,53 +386,41 @@ export default class UpcomingChangeItem extends Component {
             {{else}}
               <GroupSelector
                 @groupFinder={{this.groupFinder}}
-                @groupNames={{@change.groups}}
+                @groupNames={{this.bufferedGroups}}
                 @onChange={{this.groupsChanged}}
                 @placeholderKey="admin.upcoming_changes.select_groups"
               />
             {{/if}}
 
-            {{#let (not @change.groups) as |noGroups|}}
-              {{#let (eq @change.groups this.bufferedGroups) as |noChanges|}}
-                {{#let
-                  (if
-                    noGroups (and noChanges (not this.bufferedGroups)) noChanges
-                  )
-                  as |isDisabled|
+            {{#if this.bufferedGroupsDirty}}
+              <DButton
+                class="upcoming-change__save-groups btn-primary"
+                @icon="check"
+                @size="small"
+                @title="admin.upcoming_changes.save_groups"
+                {{on "click" this.saveGroups}}
+              />
+            {{else}}
+              <DTooltip
+                @content={{if
+                  this.bufferedGroups
+                  (i18n "admin.upcoming_changes.no_changes_to_save")
+                  (i18n "admin.upcoming_changes.add_groups_to_enable")
                 }}
-                  {{#if isDisabled}}
-                    <DTooltip
-                      @content={{if
-                        noGroups
-                        (i18n "admin.upcoming_changes.add_groups_to_enable")
-                        (i18n "admin.upcoming_changes.no_changes_to_save")
-                      }}
-                    >
-                      <:trigger>
-                        <DButton
-                          class="upcoming-change__save-groups btn-primary"
-                          @icon="check"
-                          @size="small"
-                          @disabled={{true}}
-                          {{on "click" this.saveGroups}}
-                        />
-                      </:trigger>
-                    </DTooltip>
-                  {{else}}
-                    <DButton
-                      class="upcoming-change__save-groups btn-primary"
-                      @icon="check"
-                      @size="small"
-                      @title="admin.upcoming_changes.save_groups"
-                      {{on "click" this.saveGroups}}
-                    />
-                  {{/if}}
-                {{/let}}
-              {{/let}}
-            {{/let}}
+              >
+                <:trigger>
+                  <DButton
+                    class="upcoming-change__save-groups btn-primary"
+                    @icon="check"
+                    @size="small"
+                    @disabled={{true}}
+                    {{on "click" this.saveGroups}}
+                  />
+                </:trigger>
+              </DTooltip>
+            {{/if}}
           </div>
         {{/if}}
-
       </td>
     </tr>
   </template>
