@@ -227,6 +227,7 @@ function handleReviewableNoteCreation(api) {
             user_note: {
               user_id: reviewable.target_created_by.id,
               raw: data.content.trim(),
+              reviewable_id: reviewable.id,
             },
           },
         });

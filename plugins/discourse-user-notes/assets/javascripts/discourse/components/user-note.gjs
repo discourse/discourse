@@ -1,4 +1,5 @@
 import { fn } from "@ember/helper";
+import { LinkTo } from "@ember/routing";
 import CookText from "discourse/components/cook-text";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -23,15 +24,22 @@ const UserNote = <template>
         <div class="note-info">
           <span class="username">{{@note.created_by.username}}</span>
           <span class="post-date">{{ageWithTooltip @note.created_at}}</span>
+          {{#if @note.reviewable_id}}
+            <LinkTo
+              @route="review.show"
+              @model={{@note.reviewable_id}}
+              class="btn btn-small btn-default show-reviewable"
+            >
+              {{i18n "user_notes.show_reviewable"}}
+            </LinkTo>
+          {{/if}}
           {{#if @note.can_delete}}
-            <span class="controls">
-              <DButton
-                @action={{fn @removeNote @note}}
-                @icon="far-trash-can"
-                @title="user_notes.remove"
-                class="btn-small btn-danger"
-              />
-            </span>
+            <DButton
+              @action={{fn @removeNote @note}}
+              @icon="far-trash-can"
+              @title="user_notes.remove"
+              class="btn-small btn-danger"
+            />
           {{/if}}
         </div>
 
