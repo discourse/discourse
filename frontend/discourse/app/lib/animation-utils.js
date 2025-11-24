@@ -2,7 +2,7 @@ import { waitForPromise } from "@ember/test-waiters";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 
 export async function waitForAnimationEnd(element) {
-  return await new Promise((resolve) => {
+  return new Promise((resolve) => {
     const style = window.getComputedStyle(element);
     const duration = parseFloat(style.animationDuration) * 1000 || 0;
     const delay = parseFloat(style.animationDelay) * 1000 || 0;
@@ -33,7 +33,7 @@ export async function animateClosing(element) {
   }
   element.classList.add("-closing");
 
-  await waitForPromise(Promise.all([waitForAnimationEnd(element)]));
+  await waitForPromise(waitForAnimationEnd(element));
 
   element.classList.remove("-closing");
 }
@@ -44,7 +44,7 @@ export async function animateOpening(element) {
   }
   element.classList.add("-opening");
 
-  await waitForPromise(Promise.all([waitForAnimationEnd(element)]));
+  await waitForPromise(waitForAnimationEnd(element));
 
   element.classList.remove("-opening");
 }
