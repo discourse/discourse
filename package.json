@@ -11,7 +11,7 @@
     "@glint/ember-tsc": "^1.0.7",
     "@glint/tsserver-plugin": "^2.0.7",
     "@rdil/parallel-prettier": "^3.0.0",
-    "@swc/core": "^1.15.2",
+    "@swc/core": "^1.15.3",
     "chrome-launcher": "^1.2.1",
     "chrome-remote-interface": "^0.33.3",
     "concurrently": "^9.2.1",
