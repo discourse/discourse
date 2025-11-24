@@ -1,3 +1,5 @@
+// @ts-check
+
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
@@ -11,16 +13,17 @@ import { formatUsername } from "discourse/lib/utilities";
 import scrollIntoView from "discourse/modifiers/scroll-into-view";
 
 /**
+ * @typedef {import("discourse/lib/types/d-autocomplete").UserEmailGroupResult} UserEmailGroupResult
+ */
+
+/**
  * Component for rendering user autocomplete results for the DAutocomplete modifier.
  *
  * This component handles rendering of users, emails, and groups in the autocomplete
  * dropdown, and is designed to be used with DAutocomplete's `component` API.
  *
  * @component UserAutocompleteResults
- * @param {Array} results - Array of autocomplete results (users, emails, groups)
- * @param {number} selectedIndex - Currently selected index in the results list
- * @param {Function} onSelect - Callback function triggered when a result is selected
- * @param {Function} onRender - Optional callback function triggered after component renders
+ * @implements {Component<import("discourse/lib/types/d-autocomplete").AutocompleteResultsSignature<UserEmailGroupResult>>}
  */
 export default class UserAutocompleteResults extends Component {
   static TRIGGER_KEY = "@";
