@@ -6611,6 +6611,7 @@ en:
           user_destroyed: "User is deleted"
           user_suspended: "User is suspended"
           user_unsuspended: "User is unsuspended"
+          user_anonymized: "User is anonymized"
         reviewable_event:
           group_name: "Reviewable Events"
           reviewable_created: "Reviewable item is ready"
