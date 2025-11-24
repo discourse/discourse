@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 # rubocop:disable Lint/OrAssignmentToConstant
 
-THEME_GIT_URL ||= "https://github.com/discourse/discourse-search-banner.git"
+THEME_GIT_URL ||= "https://github.com/discourse/discourse-search-banner"
 REQUIRED_TRANSLATION_KEYS ||= %w[search_banner.headline search_banner.subhead]
 
 desc "Run all Advanced Search Banner migration tasks"
@@ -86,7 +86,11 @@ def find_components_in_db(db, additional_includes)
   puts "  Searching for Advanced Search Banner components..."
 
   includes = [{ parent_theme_relation: :parent_theme }] + Array(additional_includes)
-  themes = RemoteTheme.where(remote_url: THEME_GIT_URL).includes(theme: includes).map(&:theme)
+  themes =
+    RemoteTheme
+      .where(remote_url: [THEME_GIT_URL, "#{THEME_GIT_URL}.git"])
+      .includes(theme: includes)
+      .map(&:theme)
 
   themes.each { |theme| puts "  \e[1;34mFound: #{theme_identifier(theme)}" }
   themes
