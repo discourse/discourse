@@ -130,6 +130,8 @@ This step will run coercions and validations defined in the provided block. If t
 
 This step is a bit special, as it will wrap any other steps defined in its block inside a SQL transaction.
 
+Any step that fails inside the transaction block will cause a rollback of the transaction.
+
 ### `try`
 
 This step will catch exceptions raised by the steps defined in its block. Specific exception classes can be provided if you don’t want to automatically catch all exceptions.
@@ -375,7 +377,7 @@ The step will fail if the policy returns a falsy value. Its result object can be
 
 ### `transaction(&block)`
 
-This step is a bit special as its only purpose is to wrap other steps inside a SQL transaction. It cannot fail by itself.
+This step is a bit special as its only purpose is to wrap other steps inside a SQL transaction. It cannot fail by itself but if a step fails inside the transaction block, the transaction will rollback.
 
 ### `try(*exceptions, &block)`
 
