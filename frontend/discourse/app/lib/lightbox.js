@@ -18,7 +18,11 @@ export async function loadMagnificPopup() {
   await waitForPromise(import("magnific-popup"));
 }
 
-export default async function lightbox(elem, siteSettings) {
+export default async function lightbox(
+  elem,
+  siteSettings,
+  relatedModel = null
+) {
   if (!elem) {
     return;
   }
@@ -214,13 +218,17 @@ export default async function lightbox(elem, siteSettings) {
         },
         onInit: (el, pswp) => {
           pswp.on("change", () => {
-            const slideElement = pswp.currSlide?.data?.element;
-            el.style.display = canQuoteImage(slideElement) ? "" : "none";
+            const slideData = pswp.currSlide?.data;
+            const slideElement = slideData?.element;
+            el.style.display = canQuoteImage(slideElement, slideData)
+              ? ""
+              : "none";
           });
         },
         onClick: () => {
-          const slideElement = lightboxEl.pswp.currSlide?.data?.element;
-          quoteImage(slideElement).then((didQuote) => {
+          const slideData = lightboxEl.pswp.currSlide?.data;
+          const slideElement = slideData?.element;
+          quoteImage(slideElement, slideData).then((didQuote) => {
             if (didQuote) {
               lightboxEl.pswp.close();
             }
@@ -268,6 +276,7 @@ export default async function lightbox(elem, siteSettings) {
       }
 
       const imgInfo = el.querySelector(".informations")?.textContent || "";
+      const imgEl = el.tagName === "IMG" ? el : el.querySelector("img");
 
       if (!width || !height) {
         const dimensions = imgInfo.trim().split(" ")[0];
@@ -278,10 +287,20 @@ export default async function lightbox(elem, siteSettings) {
       data.thumbCropped = true;
 
       data.src = data.src || el.getAttribute("data-large-src");
-      data.title = el.title || el.alt;
+      data.origSrc = imgEl.getAttribute("data-orig-src");
+      data.title = el.title || imgEl.alt || imgEl.title;
+      data.base62SHA1 = imgEl.getAttribute("data-base62-sha1");
       data.details = imgInfo;
       data.w = data.width = width;
       data.h = data.height = height;
+      data.targetWidth =
+        el.getAttribute("data-target-width") || imgEl.getAttribute("width");
+      data.targetHeight =
+        el.getAttribute("data-target-height") || imgEl.getAttribute("height");
+
+      if (relatedModel?.constructor?.name === "Post") {
+        data.post = relatedModel;
+      }
 
       return data;
     });
