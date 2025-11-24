@@ -50,11 +50,10 @@ module DiscourseAi
 
         if untranslated_posts.empty?
           return(
-            render json:
-                     failed_json.merge(
-                       error: I18n.t("discourse_ai.translation.errors.all_posts_translated"),
-                     ),
-                   status: :unprocessable_entity
+            render_json_error(
+              I18n.t("discourse_ai.translation.errors.all_posts_translated"),
+              status: :unprocessable_entity,
+            )
           )
         end
 
@@ -89,8 +88,9 @@ module DiscourseAi
 
         # Find posts that:
         # 1. Have a detected locale
-        # 2. Post's locale doesn't match any supported locale (need translation)
-        # 3. Don't have any localizations in supported locales yet (avoid retranslation)
+        # 2. Need translation to other supported locales (excluding their own locale)
+        # 3. Don't have PostLocalization records for those target locales yet
+        # 4. Are not deleted and have content
         topic
           .posts
           .where("user_id > 0")
@@ -98,12 +98,15 @@ module DiscourseAi
           .where(deleted_at: nil)
           .where.not(locale: nil)
           .where(
-            "split_part(posts.locale, '_', 1) NOT IN (?) AND NOT EXISTS (
-              SELECT 1 FROM post_localizations pl
-              WHERE pl.post_id = posts.id
-              AND split_part(pl.locale, '_', 1) IN (?)
+            "EXISTS (
+              SELECT 1 FROM unnest(ARRAY[?]) AS target_locale
+              WHERE split_part(posts.locale, '_', 1) != target_locale
+              AND NOT EXISTS (
+                SELECT 1 FROM post_localizations pl
+                WHERE pl.post_id = posts.id
+                AND split_part(pl.locale, '_', 1) = target_locale
+              )
             )",
-            base_locales,
             base_locales,
           )
       end
