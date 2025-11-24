@@ -4025,7 +4025,7 @@ zh_CN:
       description: "要举报非法内容，请联系 <a href='mailto:%{email}?subject=Illegal content: %{topic_title}&body=This post %{url} contains illegal content.'>%{email}</a>"
     flagging:
       title: "感谢您维护社区的文明！"
-      review_process_description: "版主已收到所有举报，将尽快进行审核。"
+      review_process_description: "版主收到举报后将尽快进行审核。"
       action: "举报帖子"
       take_action: "采取行动…"
       take_action_options:
