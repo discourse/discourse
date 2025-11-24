@@ -15,54 +15,41 @@ desc "Migrate settings from Advanced Search Banner to core welcome banner"
 task "themes:advanced_search_banner:1_migrate_settings_to_welcome_banner" => :environment do
   puts "\n1. Migrating settings..."
   puts "------------------------"
-  components = find_all_components([:theme_settings])
+  components = find_component_in_all_dbs(includes: [:theme_settings])
 
-  if components.empty?
-    puts "\n\e[33m✗ No Advanced Search Banner theme components found\e[0m"
-    next
-  end
-
-  components.each { |entry| process_theme_component_settings(entry[:theme]) }
+  components.each { |c| process_theme_component_settings(c) } if components.any?
 end
 
 desc "Migrate translations from Advanced Search Banner to core welcome banner"
 task "themes:advanced_search_banner:2_migrate_translations_to_welcome_banner" => :environment do
   puts "\n2. Migrating translations..."
   puts "----------------------------"
-  components = find_all_components([:theme_translation_overrides])
+  components = find_component_in_all_dbs(includes: [:theme_translation_overrides])
 
-  if components.empty?
-    puts "\n\e[33m✗ No Advanced Search Banner theme components found\e[0m"
-    next
-  end
-
-  components.each { |entry| process_theme_component_translations(entry[:theme]) }
+  components.each { |c| process_theme_component_translations(c) } if components.any?
 end
 
 desc "Exclude and disable Advanced Search Banner theme component"
 task "themes:advanced_search_banner:3_exclude_and_disable" => :environment do
   puts "\n3. Excluding and disabling..."
   puts "-----------------------------"
-  components = find_all_components
+  components = find_component_in_all_dbs
 
-  if components.empty?
-    puts "\n\e[33m✗ No Advanced Search Banner theme components found\e[0m"
-    next
-  end
-
-  components.each { |entry| process_theme_component(entry[:theme]) }
+  components.each { |c| process_theme_component(c) } if components.any?
 end
 
 # Common helper methods
-def find_all_components(includes = [])
+def find_component_in_all_dbs(includes: [])
   if ENV["RAILS_DB"].present?
     db = validate_and_get_db(ENV["RAILS_DB"])
     RailsMultisite::ConnectionManagement.establish_connection(db: db)
-    wrap_themes_with_db(find_components_in_db(db, includes), db)
+    component = find_component_in_db(db, includes)
+    component ? [component] : []
   else
     components = []
     RailsMultisite::ConnectionManagement.each_connection do |db|
-      components.concat(wrap_themes_with_db(find_components_in_db(db, includes), db))
+      component = find_component_in_db(db, includes)
+      components << component if component
     end
     components
   end
@@ -77,13 +64,9 @@ def validate_and_get_db(db)
   default_db
 end
 
-def wrap_themes_with_db(themes, db)
-  themes.map { |theme| { db: db, theme: theme } }
-end
-
-def find_components_in_db(db, additional_includes)
+def find_component_in_db(db, additional_includes)
   puts "Accessing database: \e[1;104m[#{db}]\e[0m"
-  puts "  Searching for Advanced Search Banner components..."
+  puts "  Searching for Advanced Search Banner theme component..."
 
   includes = [{ parent_theme_relation: :parent_theme }] + Array(additional_includes)
   themes =
@@ -92,8 +75,18 @@ def find_components_in_db(db, additional_includes)
       .includes(theme: includes)
       .map(&:theme)
 
-  themes.each { |theme| puts "  \e[1;34mFound: #{theme_identifier(theme)}" }
-  themes
+  if themes.length > 1
+    puts "  \e[33mMultiple (#{themes.length}) Advanced Search Banner theme components found:\e[0m"
+    themes.each { |theme| puts "    - #{theme_identifier(theme)}" }
+    puts "  \e[33mMake sure a single instance is installed before running migrations.\e[0m"
+    return nil
+  elsif themes.length == 1
+    puts "  \e[1;34m✓ Found: #{theme_identifier(themes.first)}\e[0m"
+  else
+    puts "  \e[33m✗ Not found.\e[0m"
+  end
+
+  themes.first
 end
 
 def theme_identifier(theme)
