@@ -664,6 +664,7 @@ en:
     translation:
       errors:
         disabled: "The AI translation feature is not fully configured."
+        all_posts_translated: "All posts in this topic are already translated."
 
     llm_credit_allocation:
       limit_exceeded: "You have reached your AI credit limit. Please try again in %{reset_time}."

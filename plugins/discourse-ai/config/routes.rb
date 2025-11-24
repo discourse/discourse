@@ -67,6 +67,7 @@ DiscourseAi::Engine.routes.draw do
 
   scope module: :translation, path: "/translate", defaults: { format: :json } do
     post "/posts/:post_id" => "translation#translate"
+    post "/topics/:topic_id" => "translation#schedule_topic"
   end
 end
 
