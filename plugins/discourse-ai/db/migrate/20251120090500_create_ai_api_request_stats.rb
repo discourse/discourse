@@ -25,5 +25,6 @@ class CreateAiApiRequestStats < ActiveRecord::Migration[8.0]
     add_index :ai_api_request_stats, %i[created_at feature_name]
     add_index :ai_api_request_stats, %i[created_at language_model]
     add_index :ai_api_request_stats, %i[created_at user_id]
+    add_index :ai_api_request_stats, %i[bucket_date rolled_up], where: "rolled_up = false"
   end
 end

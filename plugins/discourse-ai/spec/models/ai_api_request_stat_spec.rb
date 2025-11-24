@@ -36,7 +36,7 @@ describe AiApiRequestStat do
     it "rolls up stats older than cutoff into daily aggregates" do
       # Old data - to be rolled up (Day 1)
       day1 = 3.days.ago.beginning_of_day
-      stat1 =
+      _stat1 =
         AiApiRequestStat.create!(
           bucket_date: day1 + 1.hour,
           created_at: day1 + 1.hour,
@@ -47,7 +47,7 @@ describe AiApiRequestStat do
           request_tokens: 10,
           response_tokens: 10,
         )
-      stat2 =
+      _stat2 =
         AiApiRequestStat.create!(
           bucket_date: day1 + 2.hours,
           created_at: day1 + 2.hours,
@@ -61,7 +61,7 @@ describe AiApiRequestStat do
 
       # Old data - Day 2
       day2 = 2.days.ago.beginning_of_day
-      stat3 =
+      _stat3 =
         AiApiRequestStat.create!(
           bucket_date: day2 + 1.hour,
           created_at: day2 + 1.hour,
@@ -75,7 +75,7 @@ describe AiApiRequestStat do
 
       # Recent data - should not be rolled up
       recent_time = 1.hour.ago
-      stat4 =
+      _stat4 =
         AiApiRequestStat.create!(
           bucket_date: recent_time,
           created_at: recent_time,

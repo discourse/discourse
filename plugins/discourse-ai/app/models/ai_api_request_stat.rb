@@ -43,49 +43,57 @@ class AiApiRequestStat < ActiveRecord::Base
         start_time = date.beginning_of_day
         end_time = date.end_of_day
 
-        aggregates =
-          where(rolled_up: false, bucket_date: start_time..end_time).group(
-            :user_id,
-            :feature_name,
-            :language_model,
-            :provider_id,
-            :llm_id,
-          ).select(
-            :user_id,
-            :feature_name,
-            :language_model,
-            :provider_id,
-            :llm_id,
-            "SUM(request_tokens) AS request_tokens",
-            "SUM(response_tokens) AS response_tokens",
-            "SUM(cache_read_tokens) AS cache_read_tokens",
-            "SUM(cache_write_tokens) AS cache_write_tokens",
-            "SUM(usage_count) AS usage_count",
-          )
-
-        rows =
-          aggregates.map do |row|
-            {
-              bucket_date: start_time,
-              user_id: row.user_id,
-              feature_name: row.feature_name,
-              language_model: row.language_model,
-              provider_id: row.provider_id,
-              llm_id: row.llm_id,
-              request_tokens: row.request_tokens.to_i,
-              response_tokens: row.response_tokens.to_i,
-              cache_read_tokens: row.cache_read_tokens.to_i,
-              cache_write_tokens: row.cache_write_tokens.to_i,
-              usage_count: row.usage_count.to_i,
-              rolled_up: true,
-              created_at: start_time,
-              updated_at: Time.zone.now,
-            }
-          end
-
         transaction do
-          where(bucket_date: start_time..end_time, rolled_up: false).delete_all
-          insert_all(rows) if rows.present?
+          DB.exec(<<~SQL, start_time: start_time, end_time: end_time, now: Time.zone.now)
+            INSERT INTO ai_api_request_stats (
+              bucket_date,
+              user_id,
+              provider_id,
+              llm_id,
+              language_model,
+              feature_name,
+              request_tokens,
+              response_tokens,
+              cache_read_tokens,
+              cache_write_tokens,
+              usage_count,
+              rolled_up,
+              created_at,
+              updated_at
+            )
+            SELECT
+              :start_time,
+              user_id,
+              provider_id,
+              llm_id,
+              language_model,
+              feature_name,
+              SUM(request_tokens),
+              SUM(response_tokens),
+              SUM(cache_read_tokens),
+              SUM(cache_write_tokens),
+              SUM(usage_count),
+              true,
+              :now,
+              :now
+            FROM ai_api_request_stats
+            WHERE bucket_date >= :start_time
+              AND bucket_date <= :end_time
+              AND rolled_up = false
+            GROUP BY
+              user_id,
+              provider_id,
+              llm_id,
+              language_model,
+              feature_name
+          SQL
+
+          DB.exec(<<~SQL, start_time: start_time, end_time: end_time)
+            DELETE FROM ai_api_request_stats
+            WHERE bucket_date >= :start_time
+              AND bucket_date <= :end_time
+              AND rolled_up = false
+          SQL
         end
       end
     end
@@ -123,6 +131,7 @@ end
 #  index_ai_api_request_stats_on_bucket_date_and_feature_name    (bucket_date,feature_name)
 #  index_ai_api_request_stats_on_bucket_date_and_language_model  (bucket_date,language_model)
 #  index_ai_api_request_stats_on_bucket_date_and_llm_id          (bucket_date,llm_id)
+#  index_ai_api_request_stats_on_bucket_date_and_rolled_up       (bucket_date,rolled_up) WHERE (rolled_up = false)
 #  index_ai_api_request_stats_on_bucket_date_and_user_id         (bucket_date,user_id)
 #  index_ai_api_request_stats_on_created_at_and_feature_name     (created_at,feature_name)
 #  index_ai_api_request_stats_on_created_at_and_language_model   (created_at,language_model)
