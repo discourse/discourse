@@ -97,6 +97,9 @@
                         },
                         "nullable": {
                           "type": "boolean"
+                        },
+                        "rename_to": {
+                          "type": "string"
                         }
                       },
                       "additionalProperties": false,
@@ -118,12 +121,18 @@
                           "required": [
                             "nullable"
                           ]
+                        },
+                        {
+                          "required": [
+                            "rename_to"
+                          ]
                         }
                       ],
                       "not": {
                         "required": [
                           "datatype",
-                          "enum"
+                          "enum",
+                          "rename_to"
                         ]
                       }
                     }

@@ -104,6 +104,15 @@ schema:
         add:
           - name: "original_raw"
             datatype: text
+        modify:
+          - name: "reply_to_post_number"
+            rename_to: "reply_to_post_id"
+          - name: "hidden_reason_id"
+            enum: post_hidden_reason
+          - name: "post_type"
+            enum: post_type
+          - name: "post_number"
+            nullable: true
         exclude:
           - "cooked"
           - "reply_count"
@@ -116,6 +125,7 @@ schema:
           - "notify_moderators_count"
           - "spam_count"
           - "illegal_count"
+          - "image_upload_id"
           - "inappropriate_count"
           - "last_version_at"
           - "percent_rank"
@@ -605,6 +615,10 @@ schema:
         - append
     site_setting_datatype:
       source: "::SiteSettings::TypeSupervisor.types"
+    post_hidden_reason:
+      source: "::Post.hidden_reasons"
+    post_type:
+      source: "::Post.types"
 
 plugins:
   - "automation"
