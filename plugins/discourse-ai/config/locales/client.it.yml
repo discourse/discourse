@@ -622,7 +622,6 @@ it:
           vision_enabled: "Se l'opzione è abilitata, l'intelligenza artificiale tenterà di comprendere le immagini. Dipende dal modello utilizzato per supportare la visione. Supportato dagli ultimi modelli di Anthropic, Google e OpenAI."
           enabled_chat_bot: "Se abilitato, gli utenti possono selezionare questo modello quando creano messaggi privati con il bot IA"
           cost_input: "Il costo di input di 1 milione di token per questo modello"
-          cost_cached_input: "Il costo di input di 1 milione di token in cache per questo modello"
           cost_output: "Il costo di output di 1 milione di token per questo modello"
           cost_measure: "$/milione token"
         providers:
@@ -895,7 +894,6 @@ it:
         loading_convo: "Caricamento conversazione"
         collapse: "Comprimi"
         timed_out: "Il discobot non ha trovato scoperte. Si è verificato un errore."
-        user_setting: "Abilita le scoperte nella ricerca"
         tooltip:
           header: "Ricerca con IA"
           content: "Ricerca in linguaggio naturale basata su %{model}"

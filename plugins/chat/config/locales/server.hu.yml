@@ -268,10 +268,8 @@ hu:
       view_more:
         one: "%{count} további üzenet megtekintése"
         other: "%{count} további üzenet megtekintése"
-      your_chat_settings: "csevegési e-mail gyakoriságának beállítása"
   unsubscribe:
     chat_summary:
-      select_title: "A csevegési összefoglaló e-mailek gyakoriságának beállítása:"
       never: Soha
       when_away: Csak ha távol van
   category:

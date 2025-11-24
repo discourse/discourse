@@ -622,7 +622,6 @@ fr:
           vision_enabled: "Si cette option est activée, l'IA tentera de comprendre les images. Cela dépend du modèle utilisé prenant en charge la vision. Pris en charge par les derniers modèles d'Anthropic, Google et OpenAI."
           enabled_chat_bot: "Si cette option est activée, les utilisateurs peuvent sélectionner ce modèle lors de la création de MP avec le robot IA"
           cost_input: "Le coût d'entrée par million de jetons pour ce modèle"
-          cost_cached_input: "Le coût d'entrée mis en cache par million de jetons pour ce modèle"
           cost_output: "Le coût de sortie par million de jetons pour ce modèle"
           cost_measure: "$/million de jetons"
         providers:
@@ -895,7 +894,6 @@ fr:
         loading_convo: "Chargement de la conversation"
         collapse: "Réduire"
         timed_out: "Discobot n'a trouvé aucune découverte. Un problème est survenu."
-        user_setting: "Activer les découvertes de recherche"
         tooltip:
           header: "Recherche alimentée par l'IA"
           content: "Recherche en langage naturel propulsée par %{model}"

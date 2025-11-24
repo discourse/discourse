@@ -267,10 +267,8 @@ it:
       view_more:
         one: "Visualizza %{count} altro messaggio"
         other: "Visualizza altri %{count} messaggi"
-      your_chat_settings: "preferenza di frequenza e-mail della chat"
   unsubscribe:
     chat_summary:
-      select_title: "Imposta la frequenza delle e-mail di riepilogo della chat su:"
       never: Mai
       when_away: Solo quando non sono collegato
   category:

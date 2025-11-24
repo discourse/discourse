@@ -10,6 +10,7 @@ cs:
       sort_options:
         votes: "Hlasy"
     topic_voting:
+      title: "Hlasování o tématu"
       reached_limit: "Došly vám hlasy. Odeberte jiný hlas."
       list_votes: "Seznam vašich hlasů"
       votes_nav_help: "témata s nejvíce hlasy"
@@ -20,6 +21,9 @@ cs:
       voted_title: "Hlasováno"
       voting_closed_title: "Zavřené"
       voting_limit: "limit"
+      see_votes: "Zbývá vám %{count}/%{max} hlasů"
+      locked: "Uzamčeno"
+      locked_description: "Pro hlasování zvyšte svoji úroveň důvěry"
       votes:
         one: "%{count} hlas"
         few: "%{count} hlasy"

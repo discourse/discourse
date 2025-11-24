@@ -3209,6 +3209,9 @@ pl_PL:
         zoom_out: "Zmniejsz rozmiar obrazu"
         zoom_in: "Zwiększ rozmiar obrazu"
         remove: "Usuń obraz"
+        add_to_grid: "Dodaj do siatki"
+        move_outside_grid: "Przenieś poza siatkę"
+      grid_label: "Będzie to wyświetlane jako siatka"
       image_scale_button: "Skaluj obraz do %{percent}%"
       delete_image_button: Usuń obraz
       toggle_image_grid: Przełącz siatkę obrazu
@@ -4235,6 +4238,11 @@ pl_PL:
           many: "Wybrano <b>%{count}</b> wpisów."
           other: "Wybrano <b>%{count}</b> wpisów."
       deleted_by_author_simple: "(temat usunięty przez autora)"
+      localizations:
+        title_edit_warning:
+          message: "To jest przetłumaczony wpis.<br><br>Czy chcesz edytować oryginalny wpis w języku %{language} czy edytować to konkretne tłumaczenie?"
+          action_original: "Edytuj oryginalny tytuł tematu"
+          action_translation: "Edytuj przetłumaczony tytuł tematu"
     post_list:
       title: "Aktualne wpisy"
       empty: "Brak wpisów"
@@ -4367,7 +4375,7 @@ pl_PL:
         post_language_selector:
           none: "Brak"
         edit_warning:
-          message: "To jest przetłumaczony post.<br><br> Chcesz edytować oryginalny post w języku %{language} czy edytować to konkretne tłumaczenie?"
+          message: "To jest przetłumaczony wpis.<br><br>Czy chcesz edytować oryginalny wpis w języku %{language} czy edytować to konkretne tłumaczenie?"
           action_original: "Edytuj oryginalny wpis"
           action_translation: "Edytuj to tłumaczenie"
       errors:

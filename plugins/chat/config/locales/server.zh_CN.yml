@@ -254,10 +254,8 @@ zh_CN:
         other: "查看 %{count} 条消息"
       view_more:
         other: "查看其他 %{count} 条消息"
-      your_chat_settings: "聊天电子邮件频率偏好设置"
   unsubscribe:
     chat_summary:
-      select_title: "将聊天总结电子邮件频率设置为："
       never: 永不
       when_away: 仅在离开时
   category:

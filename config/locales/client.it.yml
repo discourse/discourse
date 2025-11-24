@@ -3861,7 +3861,6 @@ it:
         post_language_selector:
           none: "Nessuna"
         edit_warning:
-          message: "Questo è un messaggio tradotto.<br><br> Vuoi modificare il messaggio originale in %{language} o modificare questa traduzione specifica?"
           action_original: "Modifica il messaggio originale"
           action_translation: "Modifica questa traduzione"
       errors:

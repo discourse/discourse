@@ -643,7 +643,6 @@ zh_CN:
           vision_enabled: "如果启用，AI 将尝试理解图片，这取决于使用的模型是否支持视觉。Anthropic、Google 和 OpenAI 的最新模型支持该功能。"
           enabled_chat_bot: "如果启用，用户可以在使用 AI 机器人创建私信时选择此模型"
           cost_input: "此模型每 100 万个词元的输入成本"
-          cost_cached_input: "此模型每 100 万个词元的缓存输入成本"
           cost_output: "此模型每 100 万个词元的输出成本"
           cost_measure: "$/100 万个词元"
         providers:
@@ -920,7 +919,6 @@ zh_CN:
         loading_convo: "正在加载对话"
         collapse: "收起"
         timed_out: "Discobot 找不到任何发现。出错了。"
-        user_setting: "启用搜索发现"
         tooltip:
           header: "AI 支持的搜索"
           content: "自然语言搜索由 %{model} 提供支持"

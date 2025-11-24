@@ -3864,7 +3864,6 @@ fi:
         post_language_selector:
           none: "Ei valittu"
         edit_warning:
-          message: "Tämä on käännetty viesti.<br><br> Haluatko muokata alkuperäistä viestiä kielellä %{language} vai muokata tätä tiettyä käännöstä?"
           action_original: "Muokkaa alkuperäistä viestiä"
           action_translation: "Muokkaa tätä käännöstä"
       errors:

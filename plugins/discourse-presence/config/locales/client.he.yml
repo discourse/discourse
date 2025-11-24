@@ -17,6 +17,11 @@ he:
         two: "מתבצעות עריכות"
         many: "מתבצעות עריכות"
         other: "מתבצעות עריכות"
+      translating:
+        one: "תרגום"
+        two: "תרגום"
+        many: "תרגום"
+        other: "תרגום"
       replying_to_topic:
         one: "תגובה מוקלדת"
         two: "תגובות מוקלדות"

@@ -230,10 +230,8 @@ sv:
       view_more:
         one: "Visa %{count} mer meddelande"
         other: "Visa %{count} fler meddelanden"
-      your_chat_settings: "preferens för frekvens av chattmeddelanden"
   unsubscribe:
     chat_summary:
-      select_title: "Ställ in e-postfrekvensen för chattsammanfattningar till:"
       never: Aldrig
       when_away: Endast när du är borta
   category:

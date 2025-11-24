@@ -268,10 +268,8 @@ nl:
       view_more:
         one: "Nog %{count} bericht weergeven"
         other: "Nog %{count} berichten weergeven"
-      your_chat_settings: "voorkeur voor chat-e-mailfrequentie"
   unsubscribe:
     chat_summary:
-      select_title: "Stel de frequentie van e-mails met chatsamenvattingen in op:"
       never: Nooit
       when_away: Alleen wanneer afwezig
   category:

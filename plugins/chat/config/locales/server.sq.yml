@@ -237,10 +237,8 @@ sq:
       view_messages:
         one: "Shiko mesazhin"
         other: "Shiko mesazhet %{count}"
-      your_chat_settings: "Preferenca e frekuencës së email-it të kanalit"
   unsubscribe:
     chat_summary:
-      select_title: "Cakto frekuencën e emaileve përmbledhëse të kanalit të bisedës në:"
       never: Asnjëherë
   category:
     cannot_delete:

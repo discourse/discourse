@@ -4223,6 +4223,11 @@ he:
           many: "בחרת <b>%{count}</b> פוסטים."
           other: "בחרת <b>%{count}</b> פוסטים."
       deleted_by_author_simple: "(הנושא נמחק על ידי הכותב)"
+      localizations:
+        title_edit_warning:
+          message: "זאת כותרת נושא מתורגמת.<br><br> האם לערוך את הכותרת המקורית ב%{language} או לערוך את התרגום המסוים הזה?"
+          action_original: "עריכת כותרת הנושא המקורית"
+          action_translation: "עריכת כותרת הנושא המתורגמת"
     post_list:
       title: "פוסטים אחרונים"
       empty: "אין פוסטים"
