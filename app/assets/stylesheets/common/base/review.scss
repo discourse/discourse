@@ -97,8 +97,26 @@
     }
 
     .reviewable-actions-form form {
-      flex-direction: row;
-      align-items: end;
+      display: grid;
+      gap: 0 var(--space-2);
+      grid-template-areas: "label label" "field button";
+      grid-template-columns: 1fr auto;
+
+      .form-kit__container {
+        display: contents;
+      }
+
+      label {
+        grid-area: label;
+      }
+
+      .form-kit__container-content {
+        grid-area: field;
+      }
+
+      .form-kit__button {
+        grid-area: button;
+      }
     }
 
     &-title {
