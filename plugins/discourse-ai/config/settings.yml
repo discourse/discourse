@@ -583,3 +583,14 @@ discourse_ai:
   ai_artifact_max_keys_per_user_per_artifact:
     default: 100
     hidden: true
+
+  ai_usage_rollup_after_days:
+    default: 7
+    min: 0
+    client: false
+    hidden: true
+
+  ai_audit_logs_purge_after_days:
+    default: 180
+    min: 0
+    client: false

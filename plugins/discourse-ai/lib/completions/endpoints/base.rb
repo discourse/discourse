@@ -286,6 +286,7 @@ module DiscourseAi
                 log.updated_at = Time.now
                 log.duration_msecs = (Time.now - start_time) * 1000
                 log.save!
+                AiApiRequestStat.record_from_audit_log(log, llm_model: @llm_model)
                 LlmQuota.log_usage(@llm_model, user, log.request_tokens, log.response_tokens)
                 LlmCreditAllocation.deduct_credits!(
                   @llm_model,
@@ -449,6 +450,7 @@ module DiscourseAi
             topic_id: dialect.prompt.topic_id,
             post_id: dialect.prompt.post_id,
             feature_name: feature_name,
+            llm_id: llm_model&.id,
             language_model: llm_model.name,
             feature_context: feature_context.present? ? feature_context.as_json : nil,
           )

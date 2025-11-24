@@ -5,6 +5,7 @@ class AiApiAuditLog < ActiveRecord::Base
   belongs_to :post
   belongs_to :topic
   belongs_to :user
+  belongs_to :llm_model, foreign_key: :llm_id, optional: true
 
   module Provider
     OpenAI = 1
@@ -45,6 +46,7 @@ end
 #  response_tokens      :integer
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
+#  llm_id               :bigint
 #  post_id              :integer
 #  provider_id          :integer          not null
 #  topic_id             :integer
@@ -55,5 +57,6 @@ end
 #  index_ai_api_audit_logs_on_created_at_and_feature_name    (created_at,feature_name)
 #  index_ai_api_audit_logs_on_created_at_and_language_model  (created_at,language_model)
 #  index_ai_api_audit_logs_on_created_at_and_user_id         (created_at,user_id)
+#  index_ai_api_audit_logs_on_llm_id                         (llm_id)
 #  index_ai_api_audit_logs_on_topic_id                       (topic_id)
 #

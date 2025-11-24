@@ -13,7 +13,7 @@ RSpec.describe DiscourseAi::Admin::AiUsageController do
 
     describe "#show" do
       fab!(:log1) do
-        AiApiAuditLog.create!(
+        AiApiRequestStat.create!(
           provider_id: 1,
           feature_name: "summarize",
           language_model: "gpt-4",
@@ -24,7 +24,7 @@ RSpec.describe DiscourseAi::Admin::AiUsageController do
       end
 
       fab!(:log2) do
-        AiApiAuditLog.create!(
+        AiApiRequestStat.create!(
           provider_id: 1,
           feature_name: "translate",
           language_model: "gpt-3.5",
@@ -35,10 +35,11 @@ RSpec.describe DiscourseAi::Admin::AiUsageController do
       end
 
       fab!(:log3) do
-        AiApiAuditLog.create!(
+        AiApiRequestStat.create!(
           provider_id: 1,
           feature_name: "ai_helper",
           language_model: llm_model.name,
+          llm_id: llm_model.id,
           request_tokens: 300,
           response_tokens: 150,
           cache_read_tokens: 50,
@@ -112,10 +113,11 @@ RSpec.describe DiscourseAi::Admin::AiUsageController do
 
       it "includes cache_read_tokens and cache_write_tokens in response" do
         log_with_cache =
-          AiApiAuditLog.create!(
+          AiApiRequestStat.create!(
             provider_id: 1,
             feature_name: "ai_bot",
             language_model: llm_model.name,
+            llm_id: llm_model.id,
             request_tokens: 500,
             response_tokens: 250,
             cache_read_tokens: 100,
@@ -134,7 +136,7 @@ RSpec.describe DiscourseAi::Admin::AiUsageController do
         expect(ai_bot_feature["total_cache_read_tokens"]).to eq(100)
         expect(ai_bot_feature["total_cache_write_tokens"]).to eq(200)
 
-        model_data = json["models"].find { |m| m["llm"] == llm_model.name }
+        model_data = json["models"].find { |m| m["llm"] == llm_model.display_name }
         expect(model_data["total_cache_read_tokens"]).to eq(150)
         expect(model_data["total_cache_write_tokens"]).to eq(200)
 
@@ -166,7 +168,7 @@ RSpec.describe DiscourseAi::Admin::AiUsageController do
         freeze_time Time.parse("2021-02-01 00:00:00")
         # Create data points across different hours
         [23.hours.ago, 22.hours.ago, 21.hours.ago, 20.hours.ago].each do |time|
-          AiApiAuditLog.create!(
+          AiApiRequestStat.create!(
             provider_id: 1,
             feature_name: "summarize",
             language_model: "gpt-4",
@@ -203,7 +205,7 @@ RSpec.describe DiscourseAi::Admin::AiUsageController do
       let(:singapore_tz) { "Asia/Singapore" }
 
       let!(:log_sg1) do
-        AiApiAuditLog.create!(
+        AiApiRequestStat.create!(
           provider_id: 1,
           feature_name: "summarize",
           language_model: "gpt-4",
@@ -214,7 +216,7 @@ RSpec.describe DiscourseAi::Admin::AiUsageController do
       end
 
       let!(:log_sg2) do
-        AiApiAuditLog.create!(
+        AiApiRequestStat.create!(
           provider_id: 1,
           feature_name: "summarize",
           language_model: "gpt-4",
