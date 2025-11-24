@@ -16,6 +16,82 @@ RSpec.describe DiscourseAi::Completions::Report do
     )
   end
 
+  describe "llm_model join" do
+    it "does not produce duplicate rows when multiple llm_models share the same name" do
+      Fabricate(
+        :llm_model,
+        name: "claude-3-opus",
+        provider: "anthropic",
+        input_cost: 20.0,
+        output_cost: 100.0,
+      )
+
+      AiApiRequestStat.create!(
+        provider_id: AiApiAuditLog::Provider::Anthropic,
+        user_id: user.id,
+        llm_id: claude_model.id,
+        language_model: "claude-3-opus",
+        request_tokens: 1000,
+        response_tokens: 500,
+        created_at: 1.day.ago,
+      )
+
+      report = described_class.new(start_date: 2.days.ago, end_date: Time.current)
+
+      expect(report.total_requests).to eq(1)
+      expect(report.model_breakdown.to_a.size).to eq(1)
+      expect(report.user_breakdown.to_a.size).to eq(1)
+      expect(report.feature_breakdown.to_a.size).to eq(1)
+    end
+
+    it "joins only on llm_id, ignoring language_model name" do
+      other_model =
+        Fabricate(
+          :llm_model,
+          name: "claude-3-opus",
+          provider: "anthropic",
+          input_cost: 999.0,
+          output_cost: 999.0,
+        )
+
+      AiApiRequestStat.create!(
+        provider_id: AiApiAuditLog::Provider::Anthropic,
+        user_id: user.id,
+        llm_id: claude_model.id,
+        language_model: "claude-3-opus",
+        request_tokens: 1000,
+        response_tokens: 500,
+        created_at: 1.day.ago,
+      )
+
+      report = described_class.new(start_date: 2.days.ago, end_date: Time.current)
+
+      costs = report.model_costs.to_a
+      expect(costs.size).to eq(1)
+      expect(costs.first.input_cost).to eq(claude_model.input_cost)
+      expect(costs.first.output_cost).to eq(claude_model.output_cost)
+    end
+
+    it "returns nil costs for stats without llm_id" do
+      AiApiRequestStat.create!(
+        provider_id: AiApiAuditLog::Provider::Anthropic,
+        user_id: user.id,
+        llm_id: nil,
+        language_model: "legacy-model",
+        request_tokens: 1000,
+        response_tokens: 500,
+        created_at: 1.day.ago,
+      )
+
+      report = described_class.new(start_date: 2.days.ago, end_date: Time.current)
+
+      costs = report.model_costs.to_a
+      expect(costs.size).to eq(1)
+      expect(costs.first.input_cost).to be_nil
+      expect(costs.first.output_cost).to be_nil
+    end
+  end
+
   describe "#total_spending" do
     it "calculates spending with separate cache read and write costs" do
       # Create logs with different cache patterns
