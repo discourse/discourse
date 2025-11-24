@@ -51,7 +51,6 @@ module Chat
 
     def update_membership(membership:, params:)
       membership.update!(pinned: params.pinned)
-      context[:membership] = membership
     end
   end
 end

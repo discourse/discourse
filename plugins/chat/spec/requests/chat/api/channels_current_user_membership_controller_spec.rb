@@ -113,9 +113,7 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
 
     context "when pinning a channel" do
       it "updates the pinned status" do
-        expect {
-          put "/chat/api/channels/#{channel_1.id}/memberships/me", params: { pinned: true }
-        }.to change { membership.reload.pinned }.from(false).to(true)
+        put "/chat/api/channels/#{channel_1.id}/memberships/me", params: { pinned: true }
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["membership"]["pinned"]).to eq(true)

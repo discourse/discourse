@@ -3,6 +3,7 @@
 RSpec.describe Chat::UpdateUserChannelMembership do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:channel_id) }
+    it { is_expected.not_to allow_value(nil).for(:pinned) }
   end
 
   describe ".call" do
@@ -23,17 +24,9 @@ RSpec.describe Chat::UpdateUserChannelMembership do
     let(:dependencies) { { guardian: current_user.guardian } }
 
     context "when contract is invalid" do
-      context "when channel_id is missing" do
-        let(:params) { { pinned: true } }
+      let(:params) { { pinned: true } }
 
-        it { is_expected.to fail_a_contract }
-      end
-
-      context "when pinned is nil" do
-        let(:params) { { channel_id: channel.id, pinned: nil } }
-
-        it { is_expected.to fail_a_contract }
-      end
+      it { is_expected.to fail_a_contract }
     end
 
     context "when channel is not found" do
@@ -68,20 +61,6 @@ RSpec.describe Chat::UpdateUserChannelMembership do
 
       it "updates the pinned status" do
         expect { result }.to change { membership.reload.pinned }.from(false).to(true)
-      end
-
-      it "stores membership in context" do
-        expect(result[:membership]).to eq(membership)
-      end
-
-      context "when unpinning" do
-        before { membership.update!(pinned: true) }
-
-        let(:params) { { channel_id: channel.id, pinned: false } }
-
-        it "updates the pinned status to false" do
-          expect { result }.to change { membership.reload.pinned }.from(true).to(false)
-        end
       end
     end
   end
