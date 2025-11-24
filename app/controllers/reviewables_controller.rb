@@ -40,6 +40,7 @@ class ReviewablesController < ApplicationController
       priority
       username
       reviewed_by
+      claimed_by
       from_date
       to_date
       type
