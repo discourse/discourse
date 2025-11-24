@@ -27,24 +27,24 @@ export async function waitForAnimationEnd(element) {
   });
 }
 
-export async function animateClosing(element) {
+export async function animateClosing(element, className = "-closing") {
   if (!element || prefersReducedMotion()) {
     return;
   }
-  element.classList.add("-closing");
+  element.classList.add(className);
 
   await waitForPromise(waitForAnimationEnd(element));
 
-  element.classList.remove("-closing");
+  element.classList.remove(className);
 }
 
-export async function animateOpening(element) {
+export async function animateOpening(element, className = "-opening") {
   if (!element || prefersReducedMotion()) {
     return;
   }
-  element.classList.add("-opening");
+  element.classList.add(className);
 
   await waitForPromise(waitForAnimationEnd(element));
 
-  element.classList.remove("-opening");
+  element.classList.remove(className);
 }
