@@ -89,7 +89,7 @@ module("Unit | Lib | lightbox | quote image", function (hooks) {
     this.draftGetStub.restore();
   });
 
-  function buildLightboxElement(overrides = {}) {
+  function buildLightbox(context, overrides = {}) {
     const topicPost = document.createElement("div");
     topicPost.classList.add("topic-post");
     topicPost.dataset.postNumber = overrides.postNumber || "2";
@@ -100,17 +100,23 @@ module("Unit | Lib | lightbox | quote image", function (hooks) {
     topicPost.appendChild(article);
 
     const link = document.createElement("a");
+    const targetWidth = overrides.targetWidth || "640";
+    const targetHeight = overrides.targetHeight || "480";
+    const href = overrides.href || "/uploads/example.png";
+    const origSrc =
+      overrides.origSrc !== undefined
+        ? overrides.origSrc
+        : "upload://secure.png";
+
     link.classList.add("lightbox");
-    link.dataset.targetWidth = overrides.targetWidth || "640";
-    link.dataset.targetHeight = overrides.targetHeight || "480";
-    link.setAttribute("href", overrides.href || "/uploads/example.png");
+    link.dataset.targetWidth = targetWidth;
+    link.dataset.targetHeight = targetHeight;
+    link.setAttribute("href", href);
     article.appendChild(link);
 
     const img = document.createElement("img");
     if (overrides.origSrc !== undefined) {
-      if (overrides.origSrc) {
-        img.setAttribute("data-orig-src", overrides.origSrc);
-      }
+      img.setAttribute("data-orig-src", overrides.origSrc);
     } else {
       img.setAttribute("data-orig-src", "upload://secure.png");
     }
@@ -124,7 +130,18 @@ module("Unit | Lib | lightbox | quote image", function (hooks) {
 
     document.body.appendChild(topicPost);
 
-    return link;
+    const slideData = {
+      element: link,
+      src: href,
+      origSrc,
+      title: overrides.alt || "diagram",
+      targetWidth,
+      targetHeight,
+      base62SHA1: overrides.base62SHA1,
+      post: overrides.post || context.post,
+    };
+
+    return { element: link, slideData };
   }
 
   test("returns false when the element is outside a post", async function (assert) {
@@ -132,7 +149,7 @@ module("Unit | Lib | lightbox | quote image", function (hooks) {
     element.classList.add("lightbox");
     element.appendChild(document.createElement("img"));
 
-    const result = await quoteImage(element);
+    const result = await quoteImage(element, {});
 
     assert.false(result, "quoteImage short-circuits without post context");
     assert.strictEqual(
@@ -149,20 +166,20 @@ module("Unit | Lib | lightbox | quote image", function (hooks) {
 
   test("canQuoteImage only returns true when context and metadata exist", function (assert) {
     const invalid = document.createElement("a");
-    assert.false(canQuoteImage(invalid));
+    assert.false(canQuoteImage(invalid, {}));
 
-    const element = buildLightboxElement();
-    assert.true(canQuoteImage(element));
+    const { element, slideData } = buildLightbox(this);
+    assert.true(canQuoteImage(element, slideData));
   });
 
   test("builds markdown using data-orig-src and dimensions when composer is closed", async function (assert) {
-    const element = buildLightboxElement({
+    const { element, slideData } = buildLightbox(this, {
       origSrc: "upload://original.png",
       targetWidth: "800",
       targetHeight: "600",
     });
 
-    const result = await quoteImage(element);
+    const result = await quoteImage(element, slideData);
 
     assert.true(result, "quoteImage succeeds");
     assert.strictEqual(this.composer.openCalls.length, 1);
@@ -176,9 +193,9 @@ module("Unit | Lib | lightbox | quote image", function (hooks) {
 
   test("inserts into an open composer via app events", async function (assert) {
     this.composer.model.viewOpen = true;
-    const element = buildLightboxElement();
+    const { element, slideData } = buildLightbox(this);
 
-    const result = await quoteImage(element);
+    const result = await quoteImage(element, slideData);
 
     assert.true(result);
     assert.strictEqual(this.composer.openCalls.length, 0);
@@ -190,9 +207,9 @@ module("Unit | Lib | lightbox | quote image", function (hooks) {
   });
 
   test("falls back to the rendered href when no data-orig-src exists", async function (assert) {
-    const element = buildLightboxElement({ origSrc: "" });
+    const { element, slideData } = buildLightbox(this, { origSrc: "" });
 
-    const result = await quoteImage(element);
+    const result = await quoteImage(element, slideData);
 
     assert.true(result);
     const quote = this.composer.openCalls[0].quote;
@@ -203,13 +220,13 @@ module("Unit | Lib | lightbox | quote image", function (hooks) {
   });
 
   test("uses short upload:// URL when data-base62-sha1 is present", async function (assert) {
-    const element = buildLightboxElement({
+    const { element, slideData } = buildLightbox(this, {
       base62SHA1: "a4bcwvmLAy8cGHKPUrK4G3AUbt9",
       href: "//localhost:4200/uploads/default/original/1X/468eb8aa1f0126f1ce7e7ea7a2f64f25da0b58db.png",
       origSrc: "",
     });
 
-    const result = await quoteImage(element);
+    const result = await quoteImage(element, slideData);
 
     assert.true(result);
     const quote = this.composer.openCalls[0].quote;
@@ -234,9 +251,9 @@ module("Unit | Lib | lightbox | quote image", function (hooks) {
       openIfDraftCalled = true;
     };
 
-    const element = buildLightboxElement();
+    const { element, slideData } = buildLightbox(this);
 
-    const result = await quoteImage(element);
+    const result = await quoteImage(element, slideData);
 
     assert.true(result);
     assert.strictEqual(
@@ -262,9 +279,9 @@ module("Unit | Lib | lightbox | quote image", function (hooks) {
       draft_sequence: 10,
     });
 
-    const element = buildLightboxElement();
+    const { element, slideData } = buildLightbox(this);
 
-    const result = await quoteImage(element);
+    const result = await quoteImage(element, slideData);
 
     assert.true(result);
     assert.strictEqual(this.composer.openCalls.length, 1);
