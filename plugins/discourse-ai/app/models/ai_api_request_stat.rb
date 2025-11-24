@@ -97,3 +97,34 @@ class AiApiRequestStat < ActiveRecord::Base
     self.bucket_date ||= created_at || Time.zone.now
   end
 end
+
+# == Schema Information
+#
+# Table name: ai_api_request_stats
+#
+#  id                 :bigint           not null, primary key
+#  bucket_date        :datetime         not null
+#  cache_read_tokens  :integer          default(0), not null
+#  cache_write_tokens :integer          default(0), not null
+#  feature_name       :string(255)
+#  language_model     :string(255)
+#  request_tokens     :integer          default(0), not null
+#  response_tokens    :integer          default(0), not null
+#  rolled_up          :boolean          default(FALSE), not null
+#  usage_count        :integer          default(1), not null
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  llm_id             :integer
+#  provider_id        :integer          not null
+#  user_id            :integer
+#
+# Indexes
+#
+#  index_ai_api_request_stats_on_bucket_date_and_feature_name    (bucket_date,feature_name)
+#  index_ai_api_request_stats_on_bucket_date_and_language_model  (bucket_date,language_model)
+#  index_ai_api_request_stats_on_bucket_date_and_llm_id          (bucket_date,llm_id)
+#  index_ai_api_request_stats_on_bucket_date_and_user_id         (bucket_date,user_id)
+#  index_ai_api_request_stats_on_created_at_and_feature_name     (created_at,feature_name)
+#  index_ai_api_request_stats_on_created_at_and_language_model   (created_at,language_model)
+#  index_ai_api_request_stats_on_created_at_and_user_id          (created_at,user_id)
+#
