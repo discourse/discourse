@@ -62,10 +62,6 @@ export default class DMenuInstance extends FloatKitInstance {
     return this.expanded;
   }
 
-  get menuElement() {
-    return this.content;
-  }
-
   @action
   async close(options = { focusTrigger: true }) {
     if (getOwner(this).isDestroying) {
