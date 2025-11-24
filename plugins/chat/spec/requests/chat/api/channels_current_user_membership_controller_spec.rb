@@ -114,12 +114,7 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
     context "when pinning a channel" do
       it "updates the pinned status" do
         expect {
-          put "/chat/api/channels/#{channel_1.id}/memberships/me",
-              params: {
-                membership: {
-                  pinned: true,
-                },
-              }
+          put "/chat/api/channels/#{channel_1.id}/memberships/me", params: { pinned: true }
         }.to change { membership.reload.pinned }.from(false).to(true)
 
         expect(response.status).to eq(200)
@@ -133,12 +128,7 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
 
       it "updates the pinned status" do
         expect {
-          put "/chat/api/channels/#{channel_1.id}/memberships/me",
-              params: {
-                membership: {
-                  pinned: false,
-                },
-              }
+          put "/chat/api/channels/#{channel_1.id}/memberships/me", params: { pinned: false }
         }.to change { membership.reload.pinned }.from(true).to(false)
 
         expect(response.status).to eq(200)
@@ -150,12 +140,7 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
       before { membership.destroy! }
 
       it "returns a 404" do
-        put "/chat/api/channels/#{channel_1.id}/memberships/me",
-            params: {
-              membership: {
-                pinned: true,
-              },
-            }
+        put "/chat/api/channels/#{channel_1.id}/memberships/me", params: { pinned: true }
 
         expect(response.status).to eq(404)
       end
@@ -163,7 +148,7 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
 
     context "when channel is not found" do
       it "returns a 404" do
-        put "/chat/api/channels/-999/memberships/me", params: { membership: { pinned: true } }
+        put "/chat/api/channels/-999/memberships/me", params: { pinned: true }
 
         expect(response.status).to eq(404)
       end

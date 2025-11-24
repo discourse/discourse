@@ -351,9 +351,7 @@ export default class ChatApi extends Service {
    * @returns {Promise}
    */
   updateCurrentUserChannelMembership(channelId, data = {}) {
-    return this.#putRequest(`/channels/${channelId}/memberships/me`, {
-      membership: data,
-    });
+    return this.#putRequest(`/channels/${channelId}/memberships/me`, data);
   }
 
   /**
