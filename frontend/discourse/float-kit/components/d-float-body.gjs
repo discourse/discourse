@@ -78,7 +78,6 @@ export default class DFloatBody extends Component {
           @mainClass
           (if this.options.animated "-animated")
           (if @instance.expanded "-expanded")
-          (if @instance.closing "-closing")
         }}
         data-identifier={{this.options.identifier}}
         data-content
