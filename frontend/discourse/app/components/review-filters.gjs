@@ -6,6 +6,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -46,6 +47,24 @@ export default <template>
           additionalFilters=@controller.additionalFilters
         }}
       />
+
+      {{#unless (eq @controller.siteSettings.reviewable_claiming "disabled")}}
+        <div class="reviewable-filter topic-filter claimed-by">
+          <label class="filter-label">
+            {{i18n "review.filtered_claimed_by"}}
+          </label>
+          <EmailGroupUserChooser
+            @value={{@controller.filterClaimedBy}}
+            @onChange={{@controller.updateFilterClaimedBy}}
+            @options={{hash
+              maximum=1
+              excludeCurrentUser=false
+              fullWidthWrap=true
+              customSearchOptions=(hash canReview=true)
+            }}
+          />
+        </div>
+      {{/unless}}
 
       <div class="reviewable-filter">
         <label class="filter-label">

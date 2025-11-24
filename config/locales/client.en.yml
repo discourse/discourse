@@ -779,8 +779,9 @@ en:
       title: "Review"
       topic: "Topic:"
       filtered_topic: "You have filtered to reviewable content in a single topic."
-      filtered_user: "User"
+      filtered_user: "Flagged user"
       filtered_reviewed_by: "Reviewed by"
+      filtered_claimed_by: "Flag claimed by"
       show_all_topics: "show all topics"
       deleted_post: "(post deleted)"
       deleted_user: "(user deleted)"
@@ -861,6 +862,9 @@ en:
           medium: "Medium"
           high: "High"
 
+        active_filters: "Active filters:"
+        clear_filter: "Remove %{filter}"
+
       conversation:
         view_full: "view full conversation"
       scores:
@@ -929,7 +933,7 @@ en:
       queued_post_label: "Queued post"
       queued_topic_label: "Queued topic"
       user_label: "User"
-      assigned_to: "Assigned to"
+      assigned_to: "Post assigned to"
       moderator_actions: "Moderator actions"
       timeline_and_notes: "Timeline & notes"
       timeline:
