@@ -903,6 +903,91 @@ export default class TextareaTextManipulation {
     }
   }
 
+  /**
+   * Wraps consecutive upload placeholders in grid tags.
+   * @param {string[]} consecutiveImages - Array of consecutive image filenames to wrap
+   */
+  autoGridImages(consecutiveImages) {
+    if (isEmpty(consecutiveImages)) {
+      return;
+    }
+
+    const reply = this.value;
+    const imagesToWrapGrid = new Set(consecutiveImages);
+
+    const uploadingText = i18n("uploading_filename", {
+      filename: "%placeholder%",
+    });
+    const uploadingTextMatch = uploadingText.match(
+      /^.*(?=: %placeholder%\s?…)/
+    );
+
+    if (!uploadingTextMatch || !uploadingTextMatch[0]) {
+      return;
+    }
+
+    const uploadingImagePattern = new RegExp(
+      "\\[" +
+        uploadingTextMatch[0].trim() +
+        "\\s?: ([^\\]]+?)\\.\\w+\\s?…\\]\\(\\)",
+      "g"
+    );
+
+    const matches = reply.match(uploadingImagePattern) || [];
+    const foundImages = [];
+
+    const existingGridPattern = /\[grid\]([\s\S]*?)\[\/grid\]/g;
+    const gridMatches = reply.match(existingGridPattern);
+
+    matches.forEach((imagePlaceholder) => {
+      imagePlaceholder = imagePlaceholder.trim();
+
+      const filenamePattern = new RegExp(
+        "\\[" +
+          uploadingTextMatch[0].trim() +
+          "\\s?: ([^\\]]+?)\\s?\\…\\]\\(\\)"
+      );
+
+      const filenameMatch = imagePlaceholder.match(filenamePattern);
+
+      if (filenameMatch && filenameMatch[1]) {
+        const filename = filenameMatch[1];
+
+        const isWithinGrid = gridMatches?.some((gridContent) =>
+          gridContent.includes(imagePlaceholder)
+        );
+
+        if (!isWithinGrid && imagesToWrapGrid.has(filename)) {
+          foundImages.push(imagePlaceholder);
+          imagesToWrapGrid.delete(filename);
+
+          // Check if we've found all the images
+          if (imagesToWrapGrid.size === 0) {
+            return;
+          }
+        }
+      }
+    });
+
+    // Check if all consecutive images have been found
+    if (foundImages.length === consecutiveImages.length) {
+      const firstImageMarkdown = foundImages[0];
+      const lastImageMarkdown = foundImages[foundImages.length - 1];
+
+      const startIndex = reply.indexOf(firstImageMarkdown);
+      const endIndex =
+        reply.indexOf(lastImageMarkdown) + lastImageMarkdown.length;
+
+      if (startIndex !== -1 && endIndex !== -1) {
+        this.textarea.focus();
+        this.selectText(startIndex, endIndex - startIndex);
+        this.applySurroundSelection("[grid]", "[/grid]", "grid_surround", {
+          useBlockMode: true,
+        });
+      }
+    }
+  }
+
   autocomplete(options) {
     return DAutocompleteModifier.setupAutocomplete(
       getOwner(this),

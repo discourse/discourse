@@ -14,4 +14,3 @@ zh_CN:
       show: "用户备注 (%{count})"
       delete_confirm: "确定要删除该用户备注吗？"
       show_post: "显示帖子"
-      copy_reviewable_note: "是否将备注复制到用户个人资料？"

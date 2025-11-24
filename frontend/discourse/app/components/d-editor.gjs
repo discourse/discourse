@@ -103,7 +103,7 @@ export default class DEditor extends Component {
 
   setupToolbar() {
     this.toolbar = new Toolbar(
-      this.getProperties("siteSettings", "showLink", "capabilities")
+      this.getProperties("siteSettings", "showLink", "capabilities", "site")
     );
     this.toolbar.context = this;
 
@@ -328,7 +328,7 @@ export default class DEditor extends Component {
 
       onKeyUp: (text, cp) => {
         const matches = new RegExp(
-          `(?:^|${EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP.source})(:(?!:).?[\\w-]*:?(?!:)(?:t\\d?)?:?) ?$`,
+          `(?:^|${EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP.source})(:(?!:).?[\\w-]*:?(?!:)(?:t\\d?)?:?)$`,
           "gi"
         ).exec(text.substring(0, cp));
 

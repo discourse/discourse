@@ -228,9 +228,7 @@ module DiscourseAi
           DiscourseAi::AiBot::Playground.schedule_chat_reply(chat_message, channel, user, context)
         end
 
-        if plugin.respond_to?(:register_editable_topic_custom_field)
-          plugin.register_editable_topic_custom_field(:ai_persona_id)
-        end
+        plugin.register_editable_topic_custom_field(:ai_persona_id)
 
         plugin.add_api_key_scope(
           :discourse_ai,

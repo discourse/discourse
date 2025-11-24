@@ -124,7 +124,6 @@ zh_CN:
       email_frequency:
         description: "只有在过去 15 分钟内没有见到您，我们才会给您发送电子邮件。"
         never: "永不"
-        title: "电子邮件通知"
         when_away: "仅在离开时"
       header_indicator_preference:
         title: "在标题中显示活动指示器"

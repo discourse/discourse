@@ -1745,6 +1745,9 @@ content_localization:
   content_localization_crawler_param:
     default: false
     area: "localization"
+  content_localization_use_default_locale_when_unsupported:
+    default: true
+    area: "localization"
 
 email:
   email_time_window_mins:
@@ -2391,6 +2394,9 @@ files:
   mediaconvert_endpoint:
     default: ""
     hidden: true
+  mediaconvert_output_subdirectory:
+    default: "transcoded"
+    validator: "MediaconvertOutputSubdirectoryValidator"
 
 trust:
   default_trust_level:

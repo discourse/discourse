@@ -136,7 +136,6 @@ cs:
       email_frequency:
         description: "E-mail vám zašleme pouze v případě, že jsme vás v posledních 15 minutách neviděli."
         never: "Nikdy"
-        title: "E-mailová upozornění"
         when_away: "Jen v nepřítomnosti"
       header_indicator_preference:
         title: "Zobrazit indikátor aktivity v záhlaví"

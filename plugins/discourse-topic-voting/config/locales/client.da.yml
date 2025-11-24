@@ -20,9 +20,6 @@ da:
       voted_title: "Stemte"
       voting_closed_title: "Lukket"
       voting_limit: "Begrænset"
-      votes_left_button_title:
-        one: "Du har %{count} stemme tilbage."
-        other: "Du har %{count} stemmer tilbage."
       votes:
         one: "%{count} stemme"
         other: "%{count} stemmer"
@@ -30,6 +27,7 @@ da:
         one: "Stemmeafgivelse"
         other: "Stemmer"
       remove_vote: "Fjern stemme"
+      no_votes_title_self: "Du har endnu ikke stemt på noget emne."
     filters:
       votes:
         title: "Stemmer"

@@ -9,7 +9,9 @@ export default class UserActivityReactions extends DiscourseRoute {
       this.modelFor("user").username
     );
 
-    return new TrackedArray(list);
+    return new TrackedArray(
+      list.map((reaction) => CustomReaction.flattenForPostList(reaction))
+    );
   }
 
   setupController(controller, model) {

@@ -3,12 +3,7 @@
 class Category < ActiveRecord::Base
   RESERVED_SLUGS = ["none"]
 
-  self.ignored_columns = [
-    :suppress_from_latest, # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
-    :required_tag_group_id, # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
-    :min_tags_from_required_group, # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
-    :reviewable_by_group_id,
-  ]
+  self.ignored_columns = [:reviewable_by_group_id]
 
   include Searchable
   include Positionable

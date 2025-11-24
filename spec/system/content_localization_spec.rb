@@ -29,10 +29,15 @@ describe "Content Localization" do
     )
   end
   fab!(:post_3) { Fabricate(:post, topic:, locale: "ja", raw: "将とは、智・信・仁・勇・厳なり。") }
+  fab!(:topic_ja_localization) do
+    Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "孫子兵法からの人生戦略")
+  end
 
+  # page objects
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:composer) { PageObjects::Components::Composer.new }
+  let(:translation_composer) { PageObjects::Components::TranslationComposer.new }
   let(:post_1_obj) { PageObjects::Components::Post.new(1) }
   let(:post_3_obj) { PageObjects::Components::Post.new(3) }
   let(:post_4_obj) { PageObjects::Components::Post.new(4) }
@@ -45,7 +50,6 @@ describe "Content Localization" do
   end
 
   before do
-    Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "孫子兵法からの人生戦略")
     Fabricate(:topic_localization, topic:, locale: "es", fancy_title: "Estrategias de vida de ...")
 
     Fabricate(:post_localization, post: post_1, locale: "ja", cooked: "傑作は単なる軍事戦略についてではありません")
@@ -200,6 +204,56 @@ describe "Content Localization" do
         expect(page).to have_no_css("#fast-edit-input")
         expect(edit_localized_post_dialog).to be_open
       end
+
+      context "for topic titles" do
+        fab!(:untranslated_topic) { Fabricate(:post).topic }
+
+        it "shows title editor in composer when user can edit localizations" do
+          sign_in(japanese_user)
+
+          topic_page.visit_topic(untranslated_topic)
+          # not privileged therefore cannot edit topic title via title container
+          topic_page.click_topic_edit_title
+          expect(topic_page).to have_no_topic_title_editor
+
+          topic_page.visit_topic(topic)
+          # does not see regular title editor
+          # sent directly to translation composer to edit translation
+          topic_page.click_topic_edit_title
+          expect(topic_page).to have_no_topic_title_editor
+          expect(translation_composer).to have_translation_title(topic_ja_localization.title)
+        end
+
+        it "opens a dialog for choosing which title to edit for admins" do
+          admin.update(locale: "ja") # force the admin to view the jap localizations
+
+          sign_in(admin)
+
+          topic_page.visit_topic(untranslated_topic)
+          topic_page.click_topic_edit_title
+          expect(topic_page).to have_topic_title_editor
+
+          topic_page.visit_topic(topic)
+          expect(topic_page).to have_topic_title(topic_ja_localization.fancy_title)
+          topic_page.click_topic_edit_title
+          # does not see regular title editor
+          expect(topic_page).to have_no_topic_title_editor
+          # asked to use composer to edit original title
+          expect(edit_localized_post_dialog).to be_open
+
+          edit_localized_post_dialog.click_yes
+          expect(composer).to have_input_title(topic.title)
+
+          composer.close
+          expect(composer).to be_closed
+
+          # use translation composer to edit localized title
+          topic_page.click_topic_edit_title
+          expect(edit_localized_post_dialog).to be_open
+          edit_localized_post_dialog.click_no
+          expect(translation_composer).to have_translation_title(topic_ja_localization.title)
+        end
+      end
     end
 
     context "for post edit histories" do
@@ -279,6 +333,118 @@ describe "Content Localization" do
         page.refresh
         scroll_to_post(21)
         expect(post_21_obj.post).to have_content("日本語コンテンツ 21")
+      end
+    end
+
+    context "for html title" do
+      fab!(:shady_topic) do
+        topic =
+          Fabricate(
+            :topic,
+            title: "topic with — <script>alert('xss')</script> …",
+            locale: "en",
+            user: site_local_user,
+          )
+        Fabricate(:post, topic:, locale: "en")
+        topic
+      end
+
+      fab!(:shady_topic_ja_localization) do
+        Fabricate(:topic_localization, topic: shady_topic, locale: "ja")
+      end
+
+      it "shows localized fancy_title in HTML title when user locale differs" do
+        sign_in(japanese_user)
+
+        topic_page.visit_topic(shady_topic)
+        expect(page).to have_title(shady_topic_ja_localization.fancy_title)
+
+        page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+        expect(page).to have_title(shady_topic.title)
+
+        page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+        expect(page).to have_title(shady_topic_ja_localization.fancy_title)
+
+        SiteSetting.content_localization_enabled = false
+        page.refresh
+
+        expect(page).to have_title(shady_topic.title)
+      end
+    end
+
+    context "for a Greek user in an English forum with Japanese users" do
+      fab!(:greek_user) { Fabricate(:user, locale: "el") }
+
+      fab!(:jap_post) { Fabricate(:post, locale: "ja", cooked: "皆さんは「ジョジョの奇妙な冒険」をご存知ですか？") }
+      fab!(:jap_topic) do
+        jap_post.topic.tap { |t| t.update(locale: "ja", fancy_title: "ジョジョの奇妙な冒険") }
+      end
+      fab!(:en_loc_jap_post) do
+        Fabricate(
+          :post_localization,
+          locale: "en",
+          post: jap_post,
+          cooked: "Do you know “JoJo’s Bizarre Adventure”?",
+        )
+      end
+      fab!(:en_loc_jap_topic) do
+        Fabricate(
+          :topic_localization,
+          locale: "en",
+          topic: jap_topic,
+          fancy_title: "JoJo's Bizarre Adventure",
+        )
+      end
+
+      before do
+        SiteSetting.default_locale = "en" # explicit
+        SiteSetting.content_localization_use_default_locale_when_unsupported = true
+      end
+
+      context "for a topic / post with no locale" do
+        it "shows content as-is" do
+          jap_post.update(locale: nil)
+          jap_topic.update(locale: nil)
+
+          sign_in(greek_user)
+
+          topic_page.visit_topic(jap_topic)
+          expect(topic_page).to have_topic_title(jap_topic.fancy_title)
+          expect(post_1_obj).to have_cooked_content(jap_post.cooked)
+
+          SiteSetting.content_localization_enabled = false
+
+          page.refresh
+          expect(topic_page).to have_topic_title(jap_topic.fancy_title)
+          expect(post_1_obj).to have_cooked_content(jap_post.cooked)
+        end
+      end
+
+      context "for a topic / post written in Site default language (en)" do
+        it "shows Site default language (en) translation to Greek user" do
+          sign_in(greek_user)
+
+          topic_page.visit_topic(jap_topic)
+          expect(topic_page).to have_topic_title(en_loc_jap_topic.fancy_title)
+          expect(post_1_obj).to have_cooked_content(en_loc_jap_post.cooked)
+
+          SiteSetting.content_localization_use_default_locale_when_unsupported = false
+
+          page.refresh
+          expect(topic_page).to have_topic_title(jap_topic.fancy_title)
+          expect(post_1_obj).to have_cooked_content(jap_post.cooked)
+        end
+      end
+
+      it "shows content as-is when no localization exists" do
+        en_loc_jap_topic.destroy
+        en_loc_jap_post.destroy
+
+        sign_in(greek_user)
+
+        topic_page.visit_topic(jap_topic)
+        expect(topic_page).to have_topic_title(jap_topic.fancy_title)
+        expect(post_1_obj).to have_cooked_content(jap_post.cooked)
       end
     end
   end

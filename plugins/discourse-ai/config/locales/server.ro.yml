@@ -34,6 +34,10 @@ ro:
     overall_sentiment:
       yaxis: "Dată"
   discourse_ai:
+    tools:
+      presets:
+        image_generation_custom:
+          name: "Personalizat"
     spam_detection:
       logging_subject: "Detectare spam"
     ai_bot:

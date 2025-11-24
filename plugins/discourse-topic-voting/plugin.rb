@@ -47,38 +47,36 @@ after_initialize do
     scope.user ? object.topic.user_voted?(scope.user) : false
   end
 
-  if TopicQuery.respond_to?(:results_filter_callbacks)
-    TopicQuery.results_filter_callbacks << ->(_type, result, user, options) do
-      return result unless SiteSetting.topic_voting_enabled
+  TopicQuery.results_filter_callbacks << ->(_type, result, user, options) do
+    return result unless SiteSetting.topic_voting_enabled
 
-      result = result.preload(:topic_vote_count)
+    result = result.preload(:topic_vote_count)
 
-      if user
-        result =
-          result.select(
-            "topics.*, COALESCE((SELECT 1 FROM topic_voting_votes WHERE user_id = #{user.id} AND topic_id = topics.id), 0) AS current_user_voted",
-          )
+    if user
+      result =
+        result.select(
+          "topics.*, COALESCE((SELECT 1 FROM topic_voting_votes WHERE user_id = #{user.id} AND topic_id = topics.id), 0) AS current_user_voted",
+        )
 
-        if options[:state] == "my_votes"
-          result =
-            result.joins(
-              "INNER JOIN topic_voting_votes ON topic_voting_votes.topic_id = topics.id AND topic_voting_votes.user_id = #{user.id}",
-            )
-        end
-      end
-
-      if options[:order] == "votes"
-        sort_dir = (options[:ascending] == "true") ? "ASC" : "DESC"
+      if options[:state] == "my_votes"
         result =
           result.joins(
-            "LEFT JOIN topic_voting_topic_vote_count ON topic_voting_topic_vote_count.topic_id = topics.id",
-          ).reorder(
-            "COALESCE(topic_voting_topic_vote_count.votes_count,'0')::integer #{sort_dir}, topics.bumped_at DESC",
+            "INNER JOIN topic_voting_votes ON topic_voting_votes.topic_id = topics.id AND topic_voting_votes.user_id = #{user.id}",
           )
       end
-
-      result
     end
+
+    if options[:order] == "votes"
+      sort_dir = (options[:ascending] == "true") ? "ASC" : "DESC"
+      result =
+        result.joins(
+          "LEFT JOIN topic_voting_topic_vote_count ON topic_voting_topic_vote_count.topic_id = topics.id",
+        ).reorder(
+          "COALESCE(topic_voting_topic_vote_count.votes_count,'0')::integer #{sort_dir}, topics.bumped_at DESC",
+        )
+    end
+
+    result
   end
 
   register_category_custom_field_type("enable_topic_voting", :boolean)
