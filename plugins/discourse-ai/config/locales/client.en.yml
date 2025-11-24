@@ -826,6 +826,7 @@ en:
           title: "Suggested thumbnails"
           select: "Select"
           selected: "Selected"
+          try_again: "Try Again"
         image_caption:
           button_label: "Caption with AI"
           generating: "Generating caption..."
