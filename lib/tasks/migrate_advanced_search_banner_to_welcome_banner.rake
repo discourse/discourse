@@ -6,7 +6,6 @@ REQUIRED_TRANSLATION_KEYS ||= %w[search_banner.headline search_banner.subhead]
 
 desc "Run all Advanced Search Banner migration tasks"
 task "themes:advanced_search_banner:migrate_all" => :environment do
-  # Search once with all necessary includes
   components = find_component_in_all_dbs(includes: %i[theme_settings theme_translation_overrides])
 
   if components.any?
@@ -190,7 +189,7 @@ def migrate_theme_settings_to_site_settings(theme_settings, errors)
 
     site_setting_name = mapping[:site_setting]
     if ts.value.blank?
-      puts "    - \e[0;31m#{ts.name}\e[0m\e[33m: has no value. Skipping"
+      puts "    - \e[0;31m#{ts.name}\e[0m\e[33m: has no value. Skipping\e[0m"
       next
     end
 
