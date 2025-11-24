@@ -62,6 +62,9 @@ class Admin::EmailController < Admin::AdminController
     end
   end
 
+  # TODO (martin) Remove this in 3.7.0, this endpoint has been broken for years
+  # and was used only in the public mail-receiver's fast rejection code,
+  # which is removed in https://github.com/discourse/mail-receiver/pull/33
   def smtp_should_reject
     params.require(:from)
     params.require(:to)
