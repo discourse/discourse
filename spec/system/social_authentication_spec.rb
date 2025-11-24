@@ -446,7 +446,7 @@ shared_examples "social authentication scenarios" do
 
         signup_page.open
 
-        # Manually set the destination_url, as if it were set by a plugin like discourse-login
+        # Manually set the destination_url, as if it were set by a plugin
         page.driver.with_playwright_page do |pw_page|
           pw_page.context.add_cookies(
             [{ url: pw_page.url, name: :destination_url, value: category.url }],
