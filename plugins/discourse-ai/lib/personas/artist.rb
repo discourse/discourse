@@ -9,8 +9,8 @@ module DiscourseAi
       end
 
       def required_tools
-        # Tools::Image is only required if custom image tools are available
-        Tools::Tool.available_custom_image_tools.present? ? [Tools::Image] : []
+        # Always require Tools::Image - availability is checked by Persona.all()
+        [Tools::Image]
       end
 
       def system_prompt
