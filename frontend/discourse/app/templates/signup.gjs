@@ -304,15 +304,13 @@ export default <template>
             />
           </form>
 
-          {{#if @controller.site.desktopView}}
-            <SignupPageCta
-              @formSubmitted={{@controller.formSubmitted}}
-              @hasAuthOptions={{@controller.hasAuthOptions}}
-              @createAccount={{@controller.createAccount}}
-              @submitDisabled={{@controller.submitDisabled}}
-              @disclaimerHtml={{@controller.disclaimerHtml}}
-            />
-          {{/if}}
+          <SignupPageCta
+            @formSubmitted={{@controller.formSubmitted}}
+            @hasAuthOptions={{@controller.hasAuthOptions}}
+            @createAccount={{@controller.createAccount}}
+            @submitDisabled={{@controller.submitDisabled}}
+            @disclaimerHtml={{@controller.disclaimerHtml}}
+          />
         {{/if}}
 
         {{#if @controller.skipConfirmation}}
@@ -332,16 +330,6 @@ export default <template>
             @context="create-account"
           />
         </div>
-      {{/if}}
-
-      {{#if (and @controller.showCreateForm @controller.site.mobileView)}}
-        <SignupPageCta
-          @formSubmitted={{@controller.formSubmitted}}
-          @hasAuthOptions={{@controller.hasAuthOptions}}
-          @createAccount={{@controller.createAccount}}
-          @submitDisabled={{@controller.submitDisabled}}
-          @disclaimerHtml={{@controller.disclaimerHtml}}
-        />
       {{/if}}
     </div>
   </div>
