@@ -13,6 +13,7 @@ import FlashMessage from "discourse/components/flash-message";
 import concatClass from "discourse/helpers/concat-class";
 import element from "discourse/helpers/element";
 import htmlClass from "discourse/helpers/html-class";
+import { animateClosing, animateOpening } from "discourse/lib/animation-utils";
 import { lock, unlock } from "discourse/lib/body-scroll-lock";
 import { getMaxAnimationTimeMs } from "discourse/lib/swipe-events";
 import swipe from "discourse/modifiers/swipe";
@@ -61,9 +62,7 @@ export default class DModal extends Component {
     this.wrapperElement = el;
     this.animating = true;
 
-    this.modalContainer.classList.add("is-entering");
-    await this.#waitForAnimationEnd(this.modalContainer);
-    this.modalContainer.classList.remove("is-entering");
+    await animateOpening(this.modalContainer, "is-entering");
 
     this.animating = false;
   }
@@ -170,18 +169,16 @@ export default class DModal extends Component {
 
     try {
       this.animating = true;
+      const backdrop = this.wrapperElement.nextElementSibling;
 
-      if (this.site.desktopView) {
-        await this.#animatePopOff();
-      } else {
-        const backdrop = this.wrapperElement.nextElementSibling;
-        this.modalContainer.classList.add("-closing");
-        if (backdrop) {
-          backdrop.classList.add("-closing");
-        }
-
-        await this.#waitForAnimationEnd(this.modalContainer);
+      if (!backdrop) {
+        return;
       }
+
+      await Promise.all([
+        animateClosing(this.modalContainer),
+        animateClosing(backdrop),
+      ]);
     } finally {
       this.animating = false;
       this.args.closeModal({ initiatedBy });
@@ -257,49 +254,6 @@ export default class DModal extends Component {
           duration: getMaxAnimationTimeMs(),
         }
       ).finished
-    );
-  }
-
-  #waitForAnimationEnd(el) {
-    return new Promise((resolve) => {
-      const style = window.getComputedStyle(el);
-      const duration = parseFloat(style.animationDuration) * 1000 || 0;
-      const delay = parseFloat(style.animationDelay) * 1000 || 0;
-      const totalTime = duration + delay;
-
-      const timeoutId = setTimeout(
-        () => {
-          el.removeEventListener("animationend", handleAnimationEnd);
-          resolve();
-        },
-        Math.max(totalTime + 50, 50)
-      );
-
-      const handleAnimationEnd = () => {
-        clearTimeout(timeoutId);
-        el.removeEventListener("animationend", handleAnimationEnd);
-        resolve();
-      };
-
-      el.addEventListener("animationend", handleAnimationEnd);
-    });
-  }
-
-  async #animatePopOff() {
-    const backdrop = this.wrapperElement.nextElementSibling;
-
-    if (!backdrop) {
-      return;
-    }
-
-    this.modalContainer.classList.add("-closing");
-    backdrop.classList.add("-closing");
-
-    await waitForPromise(
-      Promise.all([
-        this.#waitForAnimationEnd(this.modalContainer),
-        this.#waitForAnimationEnd(backdrop),
-      ])
     );
   }
 
