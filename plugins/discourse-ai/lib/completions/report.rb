@@ -4,6 +4,7 @@ module DiscourseAi
     class Report
       UNKNOWN_FEATURE = "unknown"
       USER_LIMIT = 50
+      LLM_MODEL_JOIN = "LEFT JOIN llm_models ON llm_models.id = ai_api_request_stats.llm_id"
 
       attr_reader :start_date, :end_date, :base_query, :timezone
 
@@ -78,11 +79,7 @@ module DiscourseAi
       def model_costs
         @model_costs ||=
           base_query
-            .joins(<<~SQL)
-                LEFT JOIN llm_models
-                  ON llm_models.id = ai_api_request_stats.llm_id
-                  OR llm_models.name = ai_api_request_stats.language_model
-              SQL
+            .joins(LLM_MODEL_JOIN)
             .group(
               "llm_models.name, llm_models.input_cost, llm_models.output_cost, llm_models.cached_input_cost, llm_models.cache_write_cost",
             )
@@ -127,11 +124,7 @@ module DiscourseAi
       def user_breakdown
         stats =
           base_query
-            .joins(<<~SQL)
-                LEFT JOIN llm_models
-                  ON llm_models.id = ai_api_request_stats.llm_id
-                  OR llm_models.name = ai_api_request_stats.language_model
-              SQL
+            .joins(LLM_MODEL_JOIN)
             .group(:user_id)
             .order("usage_count DESC")
             .limit(USER_LIMIT)
@@ -145,11 +138,7 @@ module DiscourseAi
 
       def feature_breakdown
         base_query
-          .joins(<<~SQL)
-              LEFT JOIN llm_models
-                ON llm_models.id = ai_api_request_stats.llm_id
-                OR llm_models.name = ai_api_request_stats.language_model
-            SQL
+          .joins(LLM_MODEL_JOIN)
           .group(:feature_name)
           .order("usage_count DESC")
           .select(
@@ -161,11 +150,7 @@ module DiscourseAi
 
       def model_breakdown
         base_query
-          .joins(<<~SQL)
-              LEFT JOIN llm_models
-                ON llm_models.id = ai_api_request_stats.llm_id
-                OR llm_models.name = ai_api_request_stats.language_model
-            SQL
+          .joins(LLM_MODEL_JOIN)
           .group(
             "COALESCE(llm_models.id::text, ai_api_request_stats.language_model)",
             "COALESCE(llm_models.display_name, ai_api_request_stats.language_model)",
