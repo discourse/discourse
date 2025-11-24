@@ -27,7 +27,7 @@ module Chat
       return if @count.zero?
 
       @user_tz = UserOption.user_tzinfo(user.id)
-      @preferences_path = "#{Discourse.base_url}/my/preferences/chat"
+      @preferences_path = "#{Discourse.base_url}/my/preferences/emails"
 
       build_summary_for(user)
 
