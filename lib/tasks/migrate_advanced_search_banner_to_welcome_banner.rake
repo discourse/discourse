@@ -9,17 +9,14 @@ task "themes:advanced_search_banner:migrate_all" => :environment do
   components = find_component_in_all_dbs(includes: %i[theme_settings theme_translation_overrides])
 
   if components.any?
-    # 1. Migrate settings
     puts "\n1. Migrating settings..."
     puts "------------------------"
     components.each { |c| process_theme_component_settings(c) }
 
-    # 2. Migrate translations
     puts "\n2. Migrating translations..."
     puts "----------------------------"
     components.each { |c| process_theme_component_translations(c) }
 
-    # 3. Exclude and disable
     puts "\n3. Excluding and disabling..."
     puts "-----------------------------"
     components.each { |c| process_theme_component(c) }
@@ -33,7 +30,7 @@ task "themes:advanced_search_banner:1_migrate_settings_to_welcome_banner" => :en
   if components.any?
     puts "\n1. Migrating settings..."
     puts "------------------------"
-    components.each { |c| process_theme_component_settings(c) } if components.any?
+    components.each { |c| process_theme_component_settings(c) }
   end
 end
 
@@ -44,7 +41,7 @@ task "themes:advanced_search_banner:2_migrate_translations_to_welcome_banner" =>
   if components.any?
     puts "\n2. Migrating translations..."
     puts "----------------------------"
-    components.each { |c| process_theme_component_translations(c) } if components.any?
+    components.each { |c| process_theme_component_translations(c) }
   end
 end
 
@@ -55,7 +52,7 @@ task "themes:advanced_search_banner:3_exclude_and_disable" => :environment do
   if components.any?
     puts "\n3. Excluding and disabling..."
     puts "-----------------------------"
-    components.each { |c| process_theme_component(c) } if components.any?
+    components.each { |c| process_theme_component(c) }
   end
 end
 
@@ -121,7 +118,7 @@ def not_included_in_any_theme?(theme)
   true
 end
 
-# Settings migration methods
+# 1. Settings migration
 unless defined?(SETTINGS_MAPPING)
   SETTINGS_MAPPING = {
     "show_on" => {
@@ -221,7 +218,7 @@ def migrate_theme_settings_to_site_settings(theme_settings, errors)
   migrated_count
 end
 
-# Translations migration methods
+# 2. Translations migration
 def process_theme_component_translations(theme)
   return if not_included_in_any_theme?(theme)
 
@@ -319,7 +316,7 @@ def map_translation_keys(translation_key)
   translations_mapping[translation_key] || []
 end
 
-# Exclude and disable methods
+# 3. Exclude and disable
 def process_theme_component(theme)
   enable_welcome_banner(theme)
   exclude_theme_component(theme)
