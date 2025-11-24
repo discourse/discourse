@@ -3863,7 +3863,6 @@ es:
         post_language_selector:
           none: "Ninguno"
         edit_warning:
-          message: "Esta es una publicación traducida.<br><br> ¿Quieres editar la publicación original en %{language} o editar esta traducción específica?"
           action_original: "Editar publicación original"
           action_translation: "Editar esta traducción"
       errors:

@@ -4167,7 +4167,6 @@ sk:
         post_language_selector:
           none: "Žiadny"
         edit_warning:
-          message: "Toto je preložený príspevok.<br><br> Chcete upraviť pôvodný príspevok na stránke %{language} alebo upraviť tento konkrétny preklad?"
           action_original: "Upraviť pôvodný príspevok"
           action_translation: "Upraviť tento preklad"
       errors:

@@ -2144,6 +2144,7 @@ pl_PL:
     video_conversion_enabled: "Włącz konwersję wideo dla przesłanych plików wideo. Umożliwia to konwersję filmów do formatów kompatybilnych z internetem."
     video_conversion_service: "Usługa konwersji wideo służąca do przetwarzania przesłanych filmów."
     mediaconvert_role_arn: "Rola AWS IAM – ARN dla usługi MediaConvert. Wymagane w przypadku korzystania z AWS MediaConvert do konwersji wideo."
+    mediaconvert_output_subdirectory: "Podkatalog w kontenerze S3, w którym MediaConvert tymczasowo zapisze przekonwertowane filmy przed ich przeniesieniem do ostatecznej lokalizacji przesyłania."
     min_ratio_to_crop: "Współczynnik stosowany do przycinania wysokich zdjęć. Wpisz wynik szerokości / wysokości."
     simultaneous_uploads: "Maksymalna liczba plików, które można przeciągnąć i upuścić w kompozytorze"
     default_invitee_trust_level: "Domyślny poziom zaufania (0-4) dla zaproszonych użytkowników."
@@ -2649,6 +2650,7 @@ pl_PL:
     content_localization_allowed_groups: "Grupy mogą aktualizować zlokalizowaną zawartość. Wymaga „włączonej lokalizacji zawartości”."
     content_localization_language_switcher: "Pokaż przełącznik języka w nagłówku, umożliwiający użytkownikom przełączanie się między przetłumaczonymi wersjami Discourse a treściami dodanymi przez użytkowników. Używa języków zdefiniowanych w sekcji „Lokalizacje obsługiwane przez lokalizację treści”."
     content_localization_crawler_param: "Wyświetlaj zlokalizowaną treść robotom indeksującym sieć, gdy włączona jest opcja „lokalizacja treści” i „ustaw ustawienia regionalne z parametrów”. Lista obsługiwanych ustawień regionalnych jest zdefiniowana w sekcji „Obsługiwane ustawienia regionalne lokalizacji treści”."
+    content_localization_use_default_locale_when_unsupported: "Wyświetlaj zlokalizowaną treść w domyślnych ustawieniach regionalnych witryny użytkownikom, których preferowany język nie znajduje się na liście „ustawień regionalnych obsługiwanych przez lokalizację treści”."
     enable_upcoming_changes: "Włącz nadchodzące zmiany"
     fake_upcoming_change: "Jest to fałszywa nadchodząca zmiana do celów testowych. Nie musisz tłumaczyć tego ciągu znaków."
     errors:
@@ -2730,6 +2732,7 @@ pl_PL:
       content_localization_locale_limit: "Liczba obsługiwanych ustawień regionalnych nie może przekroczyć %{max}."
       content_localization_language_switcher_requirements: "Przełącznik języka wymaga, aby ustawienia witryny „ustaw ustawienia regionalne na podstawie pliku cookie” i „zezwalaj na ustawienia regionalne użytkownika” były włączone, a opcja „ustawienia regionalne obsługiwane przez lokalizację treści” wymagała ustawienia co najmniej jednego języka."
       mediaconvert_role_arn_required: "Rola AWS IAM ARN jest wymagana w przypadku korzystania z AWS MediaConvert do konwersji wideo."
+      mediaconvert_output_subdirectory_required: "Podkatalog wyjściowy MediaConvert jest wymagany."
       s3_credentials_required_for_video_conversion: "Do konwersji wideo wymagane są dane uwierzytelniające S3. Skonfiguruj klucze dostępu S3 lub włącz profil IAM."
     keywords:
       clean_up_inactive_users_after_days: "dezaktywowany|nieaktywny|nieaktywowany"

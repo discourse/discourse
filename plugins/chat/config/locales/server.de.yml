@@ -269,10 +269,8 @@ de:
       view_more:
         one: "%{count} weitere Nachricht anzeigen"
         other: "%{count} weitere Nachrichten anzeigen"
-      your_chat_settings: "Chat-E-Mail-Häufigkeitspräferenz"
   unsubscribe:
     chat_summary:
-      select_title: "Häufigkeit von Chat-Zusammenfassungs-E-Mails festlegen auf:"
       never: Niemals
       when_away: Nur bei Abwesenheit
   category:

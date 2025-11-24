@@ -4373,7 +4373,6 @@ cs:
         post_language_selector:
           none: "Žádná"
         edit_warning:
-          message: "Toto je přeložený příspěvek.<br><br> Chcete upravit původní příspěvek v jazyce %{language} nebo upravit tento konkrétní překlad?"
           action_original: "Upravit původní příspěvek"
           action_translation: "Upravit tento překlad"
       errors:
