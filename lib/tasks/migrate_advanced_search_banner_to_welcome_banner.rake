@@ -172,18 +172,25 @@ end
 def migrate_theme_settings_to_site_settings(theme_settings, errors)
   migrated_count = 0
 
+  names = theme_settings.map(&:name).to_set
+
   theme_settings.each do |ts|
     mapping = SETTINGS_MAPPING[ts.name]
-    old_text = "\e[0;31m#{ts.name}: #{ts.value}\e[0m"
+    old_setting = "\e[0;31m#{ts.name}: #{ts.value}\e[0m"
 
     unless mapping
-      puts "    - #{old_text}\e[33m: is not supported by core welcome banner. Skipping\e[0m"
+      puts "    - #{old_setting}\e[33m: is not supported by core welcome banner. Skipping\e[0m"
+      next
+    end
+
+    if ts.name == "background_image" && names.include?("background_image_light")
+      puts "    - #{old_setting}\e[33m: using 'background_image_light' instead. Skipping\e[0m"
       next
     end
 
     site_setting_name = mapping[:site_setting]
     if ts.value.blank?
-      puts "    - '#{ts.name}' has no value. Skipping"
+      puts "    - \e[0;31m#{ts.name}\e[0m\e[33m: has no value. Skipping"
       next
     end
 
@@ -202,9 +209,9 @@ def migrate_theme_settings_to_site_settings(theme_settings, errors)
       )
 
       arrow = "\e[0m=>\e[0m"
-      new_text = "\e[0;32m#{site_setting_name}: #{new_value}\e[0m"
+      new_setting = "\e[0;32m#{site_setting_name}: #{new_value}\e[0m"
 
-      puts "    - #{old_text} #{arrow} #{new_text}"
+      puts "    - #{old_setting} #{arrow} #{new_setting}"
       migrated_count += 1
     rescue StandardError => e
       errors << e
