@@ -1,12 +1,12 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 require "optparse"
-require "shellwords"
 require "json"
 require "fileutils"
 require "socket"
 require "uri"
 require "net/http"
+require "open3"
 require_relative "../lib/chrome_installed_checker"
 
 class QunitRunner
@@ -23,8 +23,10 @@ class QunitRunner
     @theme_name = ENV["THEME_NAME"]
     @theme_url = ENV["THEME_URL"]
     @theme_id = ENV["THEME_ID"]
+    @skip_theme_sync = false
+    @theme_directory = nil
     @qunit_path = nil
-    @rails_env = ENV["QUNIT_RAILS_ENV"] || "test"
+    @rails_env = ENV["QUNIT_RAILS_ENV"]
     @plugin_targets = []
 
     @headless = true
@@ -91,7 +93,7 @@ class QunitRunner
         opts.on("--theme-name NAME", "Theme name for theme tests (env: THEME_NAME)") do |name|
           @theme_name = name
         end
-        opts.on("--theme-url URL", "Theme URL for theme tests (env: THEME_URL)") do
+        opts.on("--theme-url URL", "Theme URL for theme tests (env: THEME_URL)") do |url|
           @theme_url = url
         end
         opts.on("--theme-id ID", "Theme ID for theme tests (env: THEME_ID)") { |id| @theme_id = id }
@@ -99,9 +101,14 @@ class QunitRunner
           @qunit_path = path
         end
 
-        opts.on("--rails-env ENV", "Rails environment (default: test) (env: RAILS_ENV)") do |env|
-          @rails_env = env
+        opts.on("--skip-theme-sync", "Skip syncing a detected theme repository") do
+          @skip_theme_sync = true
         end
+
+        opts.on(
+          "--rails-env ENV",
+          "Rails environment (default: test for standalone, dev otherwise) (env: QUNIT_RAILS_ENV)",
+        ) { |env| @rails_env = env }
 
         opts.on("--report-requests", "Report HTTP requests during tests") do
           @report_requests = true
@@ -119,17 +126,21 @@ class QunitRunner
         end
 
         opts.separator <<~NOTES
-          \nExamples:
+            \nExamples:
             bin/qunit frontend/discourse/tests/unit/models/user-test.js
             bin/qunit --standalone --target plugins  # Run all plugin tests
             bin/qunit --standalone --target chat     # Run single plugin tests
             bin/qunit --standalone plugins/chat/test/javascripts/unit/lib/chat-audio-test.js
             bin/qunit --standalone --filter "Acceptance: Emoji"
+            bin/qunit /path/to/theme/test             # Automatically sync and run a theme's tests
         NOTES
       end
 
     begin
       parser.parse!(args)
+      if @rails_env.nil?
+        @standalone_mode ? @rails_env = "test" : @rails_env = "development"
+      end
     rescue OptionParser::InvalidOption => e
       warn "Error: #{e.message}"
       puts ""
@@ -198,6 +209,7 @@ class QunitRunner
 
   def run_tests
     ensure_file_paths_exist!
+    detect_theme_from_paths!
 
     if @file_paths && @verbose
       puts "Files to test: #{@file_paths.length}"
@@ -210,6 +222,156 @@ class QunitRunner
     file_path_filter = build_file_path_filter(@file_paths)
 
     run_ember_exam(file_path_filter: file_path_filter, filter: @filter)
+  end
+
+  def detect_theme_from_paths!
+    return if @qunit_path
+
+    theme_root = find_theme_root(@file_paths)
+    return unless theme_root
+
+    @theme_directory = theme_root
+    about = read_theme_about_json(theme_root)
+
+    @qunit_path = "/theme-qunit"
+    @theme_name ||= about["name"]
+
+    if @theme_name.to_s.empty?
+      warn "about.json found at #{theme_root}, but no theme name could be read"
+      exit 1
+    end
+
+    @theme_url ||= about["about_url"] || about["url"]
+
+    if @skip_theme_sync || @dry_run
+      reason = @dry_run ? "dry-run" : "--skip-theme-sync"
+      puts "Detected theme repository at #{theme_root} (skipping sync: #{reason})"
+    else
+      puts "Detected theme repository at #{theme_root}. Syncing into #{@rails_env}..."
+      @theme_id ||= sync_theme!(theme_root, @theme_name)
+    end
+
+    @theme_id ||= lookup_theme_id(@theme_name) if @theme_name
+
+    ENV["THEME_IDS"] ||= @theme_id.to_s if @theme_id
+  end
+
+  def find_theme_root(paths)
+    paths.each do |path|
+      candidate =
+        git_root(path) || File.expand_path(File.directory?(path) ? path : File.dirname(path))
+      next unless candidate
+
+      root = locate_about_json(candidate)
+      return root if root
+    end
+
+    nil
+  end
+
+  def git_root(path)
+    dir = File.directory?(path) ? path : File.dirname(path)
+    stdout, status = Open3.capture2("git", "-C", dir, "rev-parse", "--show-toplevel")
+    return nil unless status.success?
+
+    root = stdout.strip
+    root unless root.empty?
+  rescue StandardError
+    nil
+  end
+
+  def locate_about_json(start_dir)
+    current = File.expand_path(start_dir)
+
+    loop do
+      about_path = File.join(current, "about.json")
+      return current if File.exist?(about_path)
+
+      parent = File.dirname(current)
+      break if parent == current
+      current = parent
+    end
+
+    nil
+  end
+
+  def read_theme_about_json(theme_root)
+    about_path = File.join(theme_root, "about.json")
+    return {} unless File.exist?(about_path)
+
+    JSON.parse(File.read(about_path))
+  rescue JSON::ParserError
+    puts "Warning: Invalid about.json in #{theme_root}"
+    {}
+  end
+
+  def sync_theme!(theme_root, theme_name)
+    env = { "RAILS_ENV" => @rails_env }
+    code = <<~RUBY
+      theme_path, theme_name = ARGV
+      if theme_name.nil? || theme_name.empty?
+        abort "Theme name missing from about.json"
+      end
+
+      existing = Theme.find_by(name: theme_name)
+      theme = RemoteTheme.import_theme_from_directory(theme_path, theme_id: existing&.id)
+      puts theme.id
+    RUBY
+
+    puts <<~MESSAGE if @verbose || @dry_run
+        Syncing theme with:
+        Theme path: #{theme_root}
+        Theme name: #{theme_name}
+
+        ENV: #{JSON.pretty_generate(env)}
+        Code:
+        #{code}
+    MESSAGE
+
+    stdout, stderr, status =
+      Open3.capture3(
+        env,
+        File.join(rails_root, "bin", "rails"),
+        "runner",
+        "--",
+        code,
+        theme_root,
+        theme_name,
+        chdir: rails_root,
+      )
+
+    unless status.success?
+      warn "Error syncing theme: #{stderr.empty? ? stdout : stderr}"
+      exit status.exitstatus
+    end
+
+    theme_id = stdout.split("\n").last.to_s.strip
+    theme_id if theme_id.match?(/\A\d+\z/)
+  end
+
+  def lookup_theme_id(theme_name)
+    return nil unless theme_name
+
+    env = { "RAILS_ENV" => @rails_env }
+    code = <<~RUBY
+      name = ARGV.first
+      puts Theme.find_by(name: name)&.id
+    RUBY
+
+    stdout, _stderr, status =
+      Open3.capture3(
+        env,
+        File.join(rails_root, "bin", "rails"),
+        "runner",
+        "--",
+        code,
+        theme_name,
+        chdir: rails_root,
+      )
+    return nil unless status.success?
+
+    id = stdout.split("\n").last.to_s.strip
+    id if id.match?(/\A\d+\z/)
   end
 
   def run_ember_exam(filter: nil, file_path_filter: nil)
