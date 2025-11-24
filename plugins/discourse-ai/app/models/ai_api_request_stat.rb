@@ -122,9 +122,9 @@ end
 #  usage_count        :integer          default(1), not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
-#  llm_id             :integer
+#  llm_id             :bigint
 #  provider_id        :integer          not null
-#  user_id            :integer
+#  user_id            :bigint
 #
 # Indexes
 #

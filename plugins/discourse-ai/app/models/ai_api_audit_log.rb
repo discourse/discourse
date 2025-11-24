@@ -46,7 +46,7 @@ end
 #  response_tokens      :integer
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
-#  llm_id               :integer
+#  llm_id               :bigint
 #  post_id              :integer
 #  provider_id          :integer          not null
 #  topic_id             :integer

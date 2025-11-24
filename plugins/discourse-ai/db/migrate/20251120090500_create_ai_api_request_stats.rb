@@ -4,9 +4,9 @@ class CreateAiApiRequestStats < ActiveRecord::Migration[8.0]
   def change
     create_table :ai_api_request_stats do |t|
       t.datetime :bucket_date, null: false
-      t.integer :user_id
+      t.bigint :user_id
       t.integer :provider_id, null: false
-      t.integer :llm_id
+      t.bigint :llm_id
       t.string :language_model, limit: 255
       t.string :feature_name, limit: 255
       t.integer :request_tokens, default: 0, null: false
