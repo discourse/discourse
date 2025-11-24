@@ -28,7 +28,7 @@ class Topic < ActiveRecord::Base
   attr_accessor :allowed_user_ids, :allowed_group_ids, :tags_changed, :includes_destination_category
 
   # Virtual attributes used for keyset pagination
-  attribute :pin_priority, :integer
+  attribute :sort_priority, :integer
   attribute :sort_date, :datetime
 
   def self.max_fancy_title_length

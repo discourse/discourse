@@ -550,9 +550,9 @@ class TopicQuery
 
     # Add virtual columns for keyset pagination compatibility
     topics.select(
-      "CASE WHEN (#{pinned_clause}) THEN 0 ELSE 1 END AS pin_priority",
+      "CASE WHEN (#{pinned_clause}) THEN 0 ELSE 1 END AS sort_priority",
       "CASE WHEN (#{pinned_clause}) THEN topics.pinned_at ELSE topics.bumped_at END AS sort_date",
-    ).reorder(pin_priority: :asc, sort_date: :desc)
+    ).reorder(sort_priority: :asc, sort_date: :desc)
   end
 
   def create_list(filter, options = {}, topics = nil)
@@ -576,7 +576,7 @@ class TopicQuery
 
       keyset_config =
         if apply_pinning
-          { pin_priority: :asc, sort_date: :desc }
+          { sort_priority: :asc, sort_date: :desc }
         else
           { bumped_at: :desc }
         end
@@ -661,10 +661,13 @@ class TopicQuery
 
   def unread_results(options = {})
     result =
-      TopicQuery.unread_filter(
-        default_results(options.reverse_merge(unordered: true)),
-        whisperer: @user&.whisperer?,
-      ).order("CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END")
+      TopicQuery
+        .unread_filter(
+          default_results(options.reverse_merge(unordered: true)),
+          whisperer: @user&.whisperer?,
+        )
+        .select("CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END AS sort_priority")
+        .order(:sort_priority)
 
     result = apply_max_age_limit(result, options)
 
@@ -1279,7 +1282,7 @@ class TopicQuery
       )
 
     query = query.includes(:tags) if SiteSetting.tagging_enabled
-    query.order("topics.bumped_at DESC")
+    query.order(bumped_at: :desc)
   end
 
   def random_suggested(topic, count, excluded_topic_ids = [])
@@ -1322,7 +1325,7 @@ class TopicQuery
         )
     end
 
-    result.order("topics.bumped_at DESC")
+    result.order(bumped_at: :desc)
   end
 
   private
