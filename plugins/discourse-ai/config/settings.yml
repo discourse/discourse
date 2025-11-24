@@ -77,6 +77,30 @@ discourse_ai:
     default: false
     hidden: true
 
+  # Deprecated image generation settings - TODO(keegan): Remove 2026-02-01
+  ai_openai_image_generation_url:
+    default: ""
+    hidden: true
+  ai_openai_image_edit_url:
+    default: ""
+    hidden: true
+  ai_stability_api_key:
+    default: ""
+    secret: true
+    hidden: true
+  ai_stability_api_url:
+    default: ""
+    hidden: true
+  ai_stability_engine:
+    default: ""
+    hidden: true
+  ai_helper_illustrate_post_model:
+    default: ""
+    type: enum
+    allow_any: false
+    enum: "DiscourseAi::Configuration::LlmEnumerator"
+    hidden: true
+
   ai_helper_enabled:
     default: false
     client: true

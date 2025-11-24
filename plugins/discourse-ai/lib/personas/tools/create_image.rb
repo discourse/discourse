@@ -79,10 +79,27 @@ module DiscourseAi
                   sha1 = Upload.sha1_from_short_url(short_url)
                   upload = Upload.find_by(sha1: sha1) if sha1
                   uploads << { prompt: prompt, upload: upload, url: short_url } if upload
+                else
+                  # Tool returned custom_raw but not in expected format
+                  Rails.logger.error(
+                    "CreateImage: Tool #{tool_class.name} returned custom_raw in unexpected format. " \
+                      "Expected markdown with upload:// URL. " \
+                      "custom_raw preview: #{tool_instance.custom_raw.truncate(200)}",
+                  )
+                  errors << "Tool returned invalid image format"
                 end
+              else
+                # Tool returned no output
+                Rails.logger.warn(
+                  "CreateImage: Tool #{tool_class.name} returned no custom_raw output for prompt: #{prompt.truncate(50)}",
+                )
+                errors << "Tool returned no output"
               end
             rescue => e
-              Rails.logger.warn("Failed to generate image for prompt #{prompt}: #{e}")
+              Rails.logger.error(
+                "CreateImage: Failed to generate image for prompt '#{prompt.truncate(50)}'. " \
+                  "Tool: #{tool_class.name}, Error: #{e.class.name} - #{e.message}",
+              )
               errors << e.message
             end
           end

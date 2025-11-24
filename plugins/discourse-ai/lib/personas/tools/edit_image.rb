@@ -47,13 +47,37 @@ module DiscourseAi
         def invoke
           yield(prompt)
 
-          return { prompt: prompt, error: "No valid images provided" } if image_urls.blank?
+          if image_urls.blank?
+            @error = true
+            return { prompt: prompt, error: "No valid images provided" }
+          end
 
           # Validate that the image URLs exist
           sha1s = image_urls.map { |url| Upload.sha1_from_short_url(url) }.compact
           if sha1s.empty?
             @error = true
             return { prompt: prompt, error: "No valid image URLs provided" }
+          end
+
+          # Check permissions - use context.user (the human) not bot_user
+          guardian = Guardian.new(context.user)
+          uploads = Upload.where(sha1: sha1s)
+
+          uploads.each do |upload|
+            # Check if upload has access control
+            if upload.access_control_post_id.present?
+              post = Post.find_by(id: upload.access_control_post_id)
+              if post && !guardian.can_see?(post)
+                @error = true
+                return(
+                  {
+                    prompt: prompt,
+                    error:
+                      "Access denied: You don't have permission to edit one or more of the provided images",
+                  }
+                )
+              end
+            end
           end
 
           # Find available custom image generation tools
@@ -90,16 +114,33 @@ module DiscourseAi
               if upload_match
                 short_url = upload_match[1]
                 self.custom_raw = tool_instance.custom_raw
-                return { prompt: prompt, url: short_url }
+                { prompt: prompt, url: short_url }
+              else
+                # Tool returned custom_raw but not in expected format
+                Rails.logger.error(
+                  "EditImage: Tool #{tool_class.name} returned custom_raw in unexpected format. " \
+                    "Expected markdown with upload:// URL. " \
+                    "custom_raw preview: #{tool_instance.custom_raw.truncate(200)}",
+                )
+                @error = true
+                { prompt: prompt, error: "Tool returned invalid image format" }
               end
+            else
+              # Tool returned no output
+              Rails.logger.warn(
+                "EditImage: Tool #{tool_class.name} returned no custom_raw output. " \
+                  "Prompt: #{prompt.truncate(50)}, Image URLs: #{image_urls.length} provided",
+              )
+              @error = true
+              { prompt: prompt, error: "Tool returned no output" }
             end
-
-            # If we get here, the tool didn't return a valid result
-            @error = true
-            { prompt: prompt, error: "Failed to edit image" }
           rescue => e
-            @error = e
-            Rails.logger.warn("Failed to edit image: #{e}")
+            @error = true
+            Rails.logger.error(
+              "EditImage: Failed to edit image. " \
+                "Tool: #{tool_class.name}, Error: #{e.class.name} - #{e.message}. " \
+                "Prompt: #{prompt.truncate(50)}, Image URLs: #{image_urls.join(", ")}",
+            )
             { prompt: prompt, error: e.message }
           end
         end
