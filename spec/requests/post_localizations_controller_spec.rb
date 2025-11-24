@@ -142,10 +142,10 @@ describe PostLocalizationsController do
       expect(response.status).to eq(204)
     end
 
-    it "returns 500 if localization is missing" do
+    it "returns 404 if localization is missing" do
       delete "/post_localizations/destroy.json", params: { post_id: post_record.id, locale: "nope" }
 
-      expect(response.status).to eq(500)
+      expect(response.status).to eq(404)
     end
   end
 

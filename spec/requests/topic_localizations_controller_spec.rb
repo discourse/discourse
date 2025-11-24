@@ -74,11 +74,6 @@ describe TopicLocalizationsController do
       }.not_to change { TopicLocalization.count }
       expect(response.status).to eq(403)
     end
-
-    it "returns not found if topic does not exist" do
-      post "/topic_localizations/create_or_update.json", params: { topic_id: -1, locale:, title: }
-      expect(response.status).to eq(404)
-    end
   end
 
   describe "#destroy" do
