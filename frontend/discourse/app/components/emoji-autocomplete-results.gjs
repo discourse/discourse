@@ -8,6 +8,19 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import scrollIntoView from "discourse/modifiers/scroll-into-view";
 import { eq } from "discourse/truth-helpers";
 
+/**
+ * @typedef {import("discourse/lib/types/d-autocomplete").EmojiAutocompleteResult} EmojiAutocompleteResult
+ */
+
+/**
+ * Component for rendering emoji autocomplete results for the DAutocomplete modifier.
+ *
+ * This component handles rendering of emojis in the autocomplete
+ * dropdown, and is designed to be used with DAutocomplete's `component` API.
+ *
+ * @component EmojiAutocompleteResults
+ * @implements {Component<import("discourse/lib/types/d-autocomplete").AutocompleteResultsSignature<EmojiAutocompleteResult>>}
+ */
 export default class EmojiAutocompleteResults extends Component {
   static TRIGGER_KEY = ":";
 
