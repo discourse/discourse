@@ -74,7 +74,7 @@ class AiApiRequestStat < ActiveRecord::Base
               SUM(cache_write_tokens),
               SUM(usage_count),
               true,
-              :now,
+              :start_time,
               :now
             FROM ai_api_request_stats
             WHERE bucket_date >= :start_time

@@ -49,7 +49,6 @@ RSpec.describe Jobs::RollupAiApiRequestStats do
     expect(rolled_up.created_at).to eq_time(old_time.beginning_of_day)
 
     expect(AiApiRequestStat.where(rolled_up: false, bucket_date: old_time.to_date).count).to eq(0)
-
-    expect(AiApiRequestStat.where(rolled_up: false, bucket_date: newer_time.to_date).count).to eq(1)
+    expect(AiApiRequestStat.where(rolled_up: false, bucket_date: newer_time).count).to eq(1)
   end
 end
