@@ -3,6 +3,7 @@
   border: 1px solid var(--content-border-color);
   border-radius: var(--d-border-radius);
   background-color: var(--secondary);
+  min-width: 0;
 
   &__label-optional {
     color: var(--primary-medium);

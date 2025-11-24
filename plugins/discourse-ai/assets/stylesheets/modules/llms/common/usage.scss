@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .ai-usage {
   --chart-response-color: rgb(75, 192, 192, 0.8);
   --chart-request-color: rgb(153, 102, 255, 0.8);
@@ -90,7 +92,7 @@
     gap: 2em;
     margin-top: 2em;
 
-    @media (width <= 768px) {
+    @include viewport.until(lg) {
       grid-template-columns: none;
       display: flex;
       flex-direction: column;
@@ -146,11 +148,25 @@
     }
   }
 
+  &__users-cell {
+    .user-info {
+      margin-bottom: 0;
+
+      a {
+        display: flex;
+        gap: var(--space-2);
+        width: 100%;
+      }
+    }
+  }
+
   &__features-cell,
   &__users-cell,
   &__models-cell {
     padding: 0.5em;
     border-bottom: 1px solid var(--primary-low);
+    overflow-wrap: anywhere;
+    width: 100%;
   }
 
   &__credit-allocations {
