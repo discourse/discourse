@@ -124,7 +124,7 @@ module VideoConversion
         destination_path, etag = copy_file_to_final_location(s3_store, temp_path, final_path)
         return false if !destination_path
 
-        update_file_acl(s3_store, final_path, destination_path)
+        update_file_acl(s3_store, destination_path)
         remove_temp_file(s3_store, temp_path)
 
         url = build_file_url(s3_store, destination_path)
@@ -210,15 +210,12 @@ module VideoConversion
       end
     end
 
-    def update_file_acl(s3_store, final_path, destination_path)
-      # get_s3_path adds multisite prefix if needed; s3_helper will add bucket folder path
-      final_path_for_acl = get_s3_path(final_path)
-
+    def update_file_acl(s3_store, destination_path)
       begin
-        s3_store.update_file_access_control(final_path_for_acl, @upload.secure?)
+        s3_store.update_file_access_control(destination_path, @upload.secure?)
       rescue Aws::S3::Errors::NotFound => e
         Rails.logger.error(
-          "MediaConvert file not found when updating access control at #{final_path_for_acl} (full path: #{destination_path}) for upload #{@upload.id}: #{e.message}",
+          "MediaConvert file not found when updating access control at #{destination_path} for upload #{@upload.id}: #{e.message}",
         )
         raise
       end
