@@ -16,7 +16,7 @@ describe "Viewing reviewable post voting comment", type: :system do
     sign_in(admin)
   end
 
-  it "Allows to delete and restore comment" do
+  it "Allows deleting the comment" do
     refreshed_review_page.visit_reviewable(reviewable)
 
     expect(page).to have_text(comment.raw)
@@ -42,7 +42,7 @@ describe "Viewing reviewable post voting comment", type: :system do
     expect(refreshed_review_page).to have_reviewable_with_rejected_status(reviewable)
   end
 
-  it "Allows to ignore the reviewable" do
+  it "Allows ignoring the reviewable" do
     refreshed_review_page.visit_reviewable(reviewable)
 
     refreshed_review_page.select_bundled_action(reviewable, "post_voting_comment-no_action_comment")
@@ -50,7 +50,7 @@ describe "Viewing reviewable post voting comment", type: :system do
     expect(refreshed_review_page).to have_reviewable_with_rejected_status(reviewable)
   end
 
-  it "Allows to keep comment" do
+  it "Allows keeping the comment" do
     refreshed_review_page.visit_reviewable(reviewable)
 
     refreshed_review_page.select_bundled_action(
