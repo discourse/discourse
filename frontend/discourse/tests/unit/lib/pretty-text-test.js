@@ -663,7 +663,7 @@ eviltrout</p>
   test("Heading", function (assert) {
     assert.cooked(
       "**Bold**\n----------",
-      '<h2><a name="bold-1" class="anchor" href="#bold-1"></a><strong>Bold</strong></h2>',
+      '<h2><a name="bold-1" class="anchor" href="#bold-1" aria-label="Heading link"></a><strong>Bold</strong></h2>',
       "will bold the heading"
     );
   });
@@ -671,9 +671,9 @@ eviltrout</p>
   test("Heading anchors are valid", function (assert) {
     assert.cooked(
       "# One\n\n# 1\n\n# $$",
-      '<h1><a name="one-1" class="anchor" href="#one-1"></a>One</h1>\n' +
-        '<h1><a name="h-1-2" class="anchor" href="#h-1-2"></a>1</h1>\n' +
-        '<h1><a name="h-3" class="anchor" href="#h-3"></a>$$</h1>',
+      '<h1><a name="one-1" class="anchor" href="#one-1" aria-label="Heading link"></a>One</h1>\n' +
+        '<h1><a name="h-1-2" class="anchor" href="#h-1-2" aria-label="Heading link"></a>1</h1>\n' +
+        '<h1><a name="h-3" class="anchor" href="#h-3" aria-label="Heading link"></a>$$</h1>',
       "will bold the heading"
     );
   });
@@ -682,8 +682,8 @@ eviltrout</p>
     assert.cookedOptions(
       "# 1\n\n# one",
       { postId: 1234 },
-      '<h1><a name="p-1234-h-1-1" class="anchor" href="#p-1234-h-1-1"></a>1</h1>\n' +
-        '<h1><a name="p-1234-one-2" class="anchor" href="#p-1234-one-2"></a>one</h1>'
+      '<h1><a name="p-1234-h-1-1" class="anchor" href="#p-1234-h-1-1" aria-label="Heading link"></a>1</h1>\n' +
+        '<h1><a name="p-1234-one-2" class="anchor" href="#p-1234-one-2" aria-label="Heading link"></a>one</h1>'
     );
   });
 
@@ -925,7 +925,7 @@ eviltrout</p>
 
     assert.cooked(
       "## a\nb\n```\nc\n```",
-      '<h2><a name="a-1" class="anchor" href="#a-1"></a>a</h2>\n<p>b</p>\n<pre><code class="lang-auto">c\n</code></pre>',
+      '<h2><a name="a-1" class="anchor" href="#a-1" aria-label="Heading link"></a>a</h2>\n<p>b</p>\n<pre><code class="lang-auto">c\n</code></pre>',
       "handles headings with code blocks after them"
     );
   });
