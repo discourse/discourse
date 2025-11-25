@@ -149,6 +149,18 @@ describe "Viewing reviewable item", type: :system do
         refreshed_review_page.click_ip_lookup_button
         expect(page).to have_content(I18n.t("js.ip_lookup.hostname"))
       end
+
+      it "shows claimed and unclaimed events in the timeline" do
+        SiteSetting.reviewable_claiming = "required"
+
+        refreshed_review_page.visit_reviewable(reviewable_flagged_post)
+
+        refreshed_review_page.click_claim_reviewable
+        expect(refreshed_review_page).to have_claimed_history_item(admin)
+
+        refreshed_review_page.click_unclaim_reviewable
+        expect(refreshed_review_page).to have_unclaimed_history_item(admin)
+      end
     end
 
     describe "when the reviewable item is a queued post" do

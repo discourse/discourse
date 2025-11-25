@@ -942,6 +942,7 @@ en:
         flagged_as_by: "Flagged as %{flagReason} by %{username} · %{relativeDate}"
         claimed: "Claimed"
         claimed_by: "Claimed by %{username} · %{relativeDate}"
+        unclaimed_by: "Unclaimed by %{username} · %{relativeDate}"
         reviewed: "Reviewed"
         reviewed_by: "Reviewed by %{username} · %{relativeDate}"
         view_conversation: "view PM"

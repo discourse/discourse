@@ -347,14 +347,33 @@ export default class ReviewableItem extends Component {
 
   @bind
   _updateClaimedBy(data) {
-    const user = data.user ? this.store.createRecord("user", data.user) : null;
+    if (data.topic_id !== this.reviewable.topic.id) {
+      return;
+    }
 
-    if (data.topic_id === this.reviewable.topic.id) {
-      if (user) {
-        this.reviewable.set("claimed_by", { user, automatic: data.automatic });
-      } else {
-        this.reviewable.set("claimed_by", null);
-      }
+    const now = new Date().toISOString();
+
+    const user = this.store.createRecord("user", data.user);
+    if (data.claimed) {
+      this.reviewable.set("claimed_by", { user, automatic: data.automatic });
+      this.reviewable.set("reviewable_histories", [
+        ...this.reviewable.reviewable_histories,
+        {
+          reviewable_history_type: 3,
+          created_at: now,
+          created_by: user,
+        },
+      ]);
+    } else {
+      this.reviewable.set("claimed_by", null);
+      this.reviewable.set("reviewable_histories", [
+        ...this.reviewable.reviewable_histories,
+        {
+          reviewable_history_type: 4,
+          created_at: now,
+          created_by: user,
+        },
+      ]);
     }
   }
 
@@ -809,7 +828,10 @@ export default class ReviewableItem extends Component {
             {{#if (eq this.activeTab "insights")}}
               <ReviewableInsights @reviewable={{this.reviewable}} />
             {{else if (eq this.activeTab "timeline")}}
-              <ReviewableTimeline @reviewable={{this.reviewable}} />
+              <ReviewableTimeline
+                @reviewable={{this.reviewable}}
+                @historyEvents={{this.reviewable.reviewable_histories}}
+              />
             {{/if}}
           </div>
         </div>

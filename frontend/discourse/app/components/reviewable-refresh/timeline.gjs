@@ -178,6 +178,26 @@ export default class ReviewableTimeline extends Component {
       });
     });
 
+    this.args.historyEvents?.forEach((history) => {
+      if (history.reviewable_history_type === 3) {
+        events.push({
+          type: "claimed",
+          date: history.created_at,
+          user: history.created_by,
+          icon: "user-plus",
+          titleKey: "review.timeline.claimed_by",
+        });
+      } else if (history.reviewable_history_type === 4) {
+        events.push({
+          type: "unclaimed",
+          date: history.created_at,
+          user: history.created_by,
+          icon: "user-xmark",
+          titleKey: "review.timeline.unclaimed_by",
+        });
+      }
+    });
+
     return events.sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
   }
 
