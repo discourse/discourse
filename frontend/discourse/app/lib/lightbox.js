@@ -21,7 +21,7 @@ export async function loadMagnificPopup() {
 export default async function lightbox(
   elem,
   siteSettings,
-  relatedModel = null
+  additionalData = {}
 ) {
   if (!elem) {
     return;
@@ -298,9 +298,10 @@ export default async function lightbox(
       data.targetHeight =
         el.getAttribute("data-target-height") || imgEl.getAttribute("height");
 
-      if (relatedModel?.constructor?.name === "Post") {
-        data.post = relatedModel;
-      }
+      // So we can attach things like a Post model from the caller.
+      Object.keys(additionalData).forEach((key) => {
+        data[key] = additionalData[key];
+      });
 
       return data;
     });
