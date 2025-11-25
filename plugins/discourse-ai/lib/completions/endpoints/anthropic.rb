@@ -154,7 +154,6 @@ module DiscourseAi
             "content-type" => "application/json",
           }
 
-          # Build combined beta headers
           headers.merge!(combined_anthropic_beta_headers)
 
           Net::HTTP::Post.new(model_uri, headers).tap { |r| r.body = payload }
@@ -163,11 +162,9 @@ module DiscourseAi
         def combined_anthropic_beta_headers
           beta_features = []
 
-          # Add caching beta feature if configured
           caching_mode = llm_model.lookup_custom_param("prompt_caching") || "never"
           beta_features << "prompt-caching-2024-07-31" if caching_mode != "never"
 
-          # Add effort beta feature if configured
           effort = llm_model.lookup_custom_param("effort")
           beta_features << "effort-2025-11-24" if %w[low medium high].include?(effort)
 

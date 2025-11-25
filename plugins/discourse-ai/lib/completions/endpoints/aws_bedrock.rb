@@ -50,6 +50,12 @@ module DiscourseAi
                 result[:anthropic_beta] = ["effort-2025-11-24"]
               end
 
+              caching_mode = llm_model.lookup_custom_param("prompt_caching") || "never"
+              if caching_mode != "never"
+                result[:anthropic_beta] ||= []
+                result[:anthropic_beta] << "prompt-caching-2024-07-31"
+              end
+
               result
             else
               {}
