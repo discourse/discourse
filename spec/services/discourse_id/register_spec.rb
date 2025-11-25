@@ -46,6 +46,14 @@ RSpec.describe DiscourseId::Register do
         end
 
         it { is_expected.to fail_a_step(:request_challenge) }
+
+        it "logs detailed error with context" do
+          allow(Rails.logger).to receive(:error)
+          result
+          expect(Rails.logger).to have_received(:error).with(
+            /Discourse ID registration failed.*request_challenge.*Network error/m,
+          )
+        end
       end
 
       context "when challenge request returns non-200 status" do
@@ -57,6 +65,14 @@ RSpec.describe DiscourseId::Register do
         end
 
         it { is_expected.to fail_a_step(:request_challenge) }
+
+        it "logs error with status code and response body" do
+          allow(Rails.logger).to receive(:error)
+          result
+          expect(Rails.logger).to have_received(:error).with(
+            /Discourse ID registration failed.*request_challenge.*400.*Bad Request/m,
+          )
+        end
       end
 
       context "when challenge response is invalid JSON" do
@@ -79,6 +95,14 @@ RSpec.describe DiscourseId::Register do
         end
 
         it { is_expected.to fail_a_step(:request_challenge) }
+
+        it "logs error with expected and actual domains" do
+          allow(Rails.logger).to receive(:error)
+          result
+          expect(Rails.logger).to have_received(:error).with(
+            /Discourse ID registration failed.*request_challenge.*Domain mismatch.*expected.*#{Discourse.current_hostname}.*got.*wrong-domain\.com/m,
+          )
+        end
       end
 
       context "when challenge response has path mismatch" do
@@ -118,6 +142,14 @@ RSpec.describe DiscourseId::Register do
           end
 
           it { is_expected.to fail_a_step(:register_with_challenge) }
+
+          it "logs detailed error with context" do
+            allow(Rails.logger).to receive(:error)
+            result
+            expect(Rails.logger).to have_received(:error).with(
+              /Discourse ID registration failed.*register_with_challenge.*Connection timeout/m,
+            )
+          end
         end
 
         context "when registration returns non-200 status" do

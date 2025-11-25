@@ -49,14 +49,14 @@ RSpec.describe EnableDiscourseIdValidator do
           expect(validator.error_message).to eq("an error")
         end
 
-        it "shows a default error message when something went _very_ wrong" do
+        it "shows a helpful error message when something went _very_ wrong" do
           failed_context = Service::Base::Context.new
           failed_context.fail
           allow(DiscourseId::Register).to receive(:call).and_return(failed_context)
 
           expect(validator.valid_value?("t")).to eq(false)
           expect(validator.error_message).to eq(
-            I18n.t("site_settings.errors.discourse_id_credentials"),
+            I18n.t("site_settings.errors.discourse_id_registration"),
           )
         end
       end
@@ -89,14 +89,14 @@ RSpec.describe EnableDiscourseIdValidator do
           expect(validator.error_message).to eq("another error")
         end
 
-        it "shows a default error message when something went _very_ wrong" do
+        it "shows a helpful error message when something went _very_ wrong" do
           failed_context = Service::Base::Context.new
           failed_context.fail(error: nil)
           allow(DiscourseId::Register).to receive(:call).and_return(failed_context)
 
           expect(validator.valid_value?("t")).to eq(false)
           expect(validator.error_message).to eq(
-            I18n.t("site_settings.errors.discourse_id_credentials"),
+            I18n.t("site_settings.errors.discourse_id_registration"),
           )
         end
       end
