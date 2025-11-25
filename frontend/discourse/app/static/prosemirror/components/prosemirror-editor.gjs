@@ -22,7 +22,6 @@ import { EditorState } from "prosemirror-state";
 import * as ProsemirrorTransform from "prosemirror-transform";
 import * as ProsemirrorView from "prosemirror-view";
 import { EditorView } from "prosemirror-view";
-import { lock, unlock } from "discourse/lib/body-scroll-lock";
 import { getExtensions } from "discourse/lib/composer/rich-editor-extensions";
 import { bind } from "discourse/lib/decorators";
 import forceScrollingElementPosition from "discourse/modifiers/force-scrolling-element-position";
@@ -212,10 +211,6 @@ export default class ProsemirrorEditor extends Component {
       },
       handleDOMEvents: {
         focus: (view) => {
-          if (this.capabilities.isIOS && !this.capabilities.isIpadOS) {
-            lock(view.dom);
-          }
-
           if (this.capabilities.isIOS) {
             // prevents ios to attempt to scroll
             focusOffScreen(view.dom);
@@ -224,11 +219,7 @@ export default class ProsemirrorEditor extends Component {
           this.args.focusIn?.();
           return false;
         },
-        blur: (view) => {
-          if (this.capabilities.isIOS && !this.capabilities.isIpadOS) {
-            unlock(view.dom);
-          }
-
+        blur: () => {
           next(() => this.args.focusOut?.());
           return false;
         },
