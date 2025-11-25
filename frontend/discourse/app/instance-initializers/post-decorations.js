@@ -1,12 +1,11 @@
 import { schedule } from "@ember/runloop";
-import { create } from "virtual-dom";
 import FullscreenTableModal from "discourse/components/modal/fullscreen-table";
 import SpreadsheetEditor from "discourse/components/modal/spreadsheet-editor";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Columns from "discourse/lib/columns";
 import highlightSyntax from "discourse/lib/highlight-syntax";
-import { iconHTML, iconNode } from "discourse/lib/icon-library";
+import { iconElement, iconHTML } from "discourse/lib/icon-library";
 import { nativeLazyLoading } from "discourse/lib/lazy-load-images";
 import lightbox from "discourse/lib/lightbox";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -119,9 +118,9 @@ export default {
         }
 
         if (props.icon) {
-          const icon = create(
-            iconNode(props.icon.name, { class: props.icon?.class })
-          );
+          const icon = iconElement(props.icon.name, {
+            class: props.icon?.class,
+          });
           openPopupBtn.prepend(icon);
         }
 

@@ -5,4 +5,10 @@
  * New code should not use this component or the widget system.
  */
 
-export { warnWidgetsDecommissioned as default } from "discourse/widgets/widget";
+/**
+ * This is a shim used to prevent breaking imports from "virtual-dom"
+ */
+export {
+  warnWidgetsDecommissioned as create,
+  warnWidgetsDecommissioned as h,
+} from "discourse/widgets/widget";

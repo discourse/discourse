@@ -2,20 +2,18 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import {
   convertIconClass,
+  iconElement,
   iconHTML,
-  iconNode,
 } from "discourse/lib/icon-library";
 
 module("Unit | Utility | icon-library", function (hooks) {
   setupTest(hooks);
 
-  test("return icon markup", function (assert) {
-    assert.true(iconHTML("bars").includes('use href="#bars"'));
-
-    const nodeIcon = iconNode("bars");
-    assert.strictEqual(nodeIcon.tagName, "svg");
+  test("creates icon element", function (assert) {
+    const icon = iconElement("bars");
+    assert.strictEqual(icon.tagName, "svg");
     assert.strictEqual(
-      nodeIcon.properties.attributes.class,
+      icon.className.baseVal,
       "fa d-icon d-icon-bars svg-icon svg-node"
     );
   });

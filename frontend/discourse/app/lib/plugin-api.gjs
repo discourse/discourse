@@ -1,5 +1,4 @@
 import $ from "jquery";
-import { h } from "virtual-dom";
 import { addAboutPageActivity } from "discourse/components/about-page";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
 import { addCardClickListenerSelector } from "discourse/components/card-contents-base";
@@ -185,7 +184,7 @@ function wrapWithErrorHandler(func, messageKey) {
 class _PluginApi {
   constructor(container) {
     this.container = container;
-    this.h = h;
+    this.h = warnWidgetsDecommissioned;
   }
 
   /**
@@ -489,16 +488,17 @@ class _PluginApi {
    *   },
    *
    *   // for the places in code that render virtual dom elements
-   *   node() {
-   *     return h("svg", {
-   *          attributes: { class: "fa d-icon d-icon-far-face-smile", "aria-hidden": true },
-   *          namespace: "http://www.w3.org/2000/svg"
-   *        },[
-   *          h("use", {
-   *          "href": attributeHook("http://www.w3.org/1999/xlink", `#far-face-smile`),
-   *          namespace: "http://www.w3.org/2000/svg"
-   *        })]
-   *     );
+   *   element() {
+   *     const svgElement = document.createElementNS(SVG_NAMESPACE, "svg");
+   *     svgElement.setAttribute("class", "fa d-icon d-icon-far-face-smile");
+   *     svgElement.setAttribute("aria-hidden", true);
+   *
+   *     const useElement = document.createElementNS(SVG_NAMESPACE, "use");
+   *     useElement.setAttribute("href", `#far-face-smile`);
+   *
+   *     svgElement.appendChild(useElement);
+   *
+   *     return svgElement;
    *   }
    * });
    **/
