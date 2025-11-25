@@ -70,6 +70,7 @@ en:
         edit: "Edit"
         add: "Add"
         star_channel: "Star channel"
+        unstar_channel: "Unstar channel"
         close_channel: "Close channel"
         open_channel: "Open channel"
         archive_channel: "Archive channel"
