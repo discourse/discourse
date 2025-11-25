@@ -6,67 +6,47 @@ RSpec.describe Wizard::StepUpdater do
   fab!(:user, :admin)
   let(:wizard) { Wizard::Builder.new(user).build }
 
-  describe "introduction" do
-    it "updates the introduction step" do
-      locale = SiteSettings::DefaultsProvider::DEFAULT_LOCALE
+  describe "setup" do
+    it "updates the setup step with all fields" do
       updater =
         wizard.create_updater(
-          "introduction",
+          "setup",
           title: "new forum title",
-          site_description: "neat place",
-          default_locale: locale,
-        )
-      updater.update
-
-      expect(updater.success?).to eq(true)
-      expect(SiteSetting.title).to eq("new forum title")
-      expect(SiteSetting.site_description).to eq("neat place")
-      expect(updater.refresh_required?).to eq(false)
-      expect(wizard.completed_steps?("introduction")).to eq(true)
-    end
-
-    it "updates the locale and requires refresh when it does change" do
-      updater = wizard.create_updater("introduction", default_locale: "ru")
-      updater.update
-      expect(SiteSetting.default_locale).to eq("ru")
-      expect(updater.refresh_required?).to eq(true)
-      expect(wizard.completed_steps?("introduction")).to eq(true)
-    end
-
-    it "won't allow updates to the default value, when required" do
-      updater =
-        wizard.create_updater(
-          "introduction",
-          title: SiteSetting.title,
-          site_description: "neat place",
-        )
-      updater.update
-
-      expect(updater.success?).to eq(false)
-    end
-  end
-
-  describe "privacy" do
-    it "updates to open correctly" do
-      updater =
-        wizard.create_updater(
-          "privacy",
+          default_locale: "ru",
           login_required: "public",
           invite_only: "sign_up",
           must_approve_users: "no",
         )
       updater.update
+
       expect(updater.success?).to eq(true)
+      expect(SiteSetting.title).to eq("new forum title")
       expect(SiteSetting.login_required?).to eq(false)
       expect(SiteSetting.invite_only?).to eq(false)
       expect(SiteSetting.must_approve_users?).to eq(false)
-      expect(wizard.completed_steps?("privacy")).to eq(true)
+      expect(SiteSetting.default_locale).to eq("ru")
+      expect(wizard.completed_steps?("setup")).to eq(true)
     end
 
-    it "updates to private correctly" do
+    it "won't allow updates to the default value when required" do
       updater =
         wizard.create_updater(
-          "privacy",
+          "setup",
+          title: SiteSetting.title,
+          login_required: "public",
+          invite_only: "sign_up",
+          must_approve_users: "no",
+        )
+      updater.update
+
+      expect(updater.success?).to eq(false)
+    end
+
+    it "updates privacy settings to private correctly" do
+      updater =
+        wizard.create_updater(
+          "setup",
+          title: "new forum title",
           login_required: "private",
           invite_only: "invite_only",
           must_approve_users: "yes",
@@ -76,7 +56,7 @@ RSpec.describe Wizard::StepUpdater do
       expect(SiteSetting.login_required?).to eq(true)
       expect(SiteSetting.invite_only?).to eq(true)
       expect(SiteSetting.must_approve_users?).to eq(true)
-      expect(wizard.completed_steps?("privacy")).to eq(true)
+      expect(wizard.completed_steps?("setup")).to eq(true)
     end
   end
 end
