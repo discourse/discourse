@@ -50,7 +50,10 @@ export default class EmptyTopicFilter extends Component {
   }
 
   get ctaRoute() {
-    if (this.currentUser.new_new_view_enabled && this.args.newListSubset) {
+    if (
+      this.currentUser.new_new_view_enabled &&
+      this.ctaLabelWithAction.action
+    ) {
       return;
     }
 
