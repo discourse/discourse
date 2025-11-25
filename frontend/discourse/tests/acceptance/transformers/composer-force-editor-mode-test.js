@@ -1,6 +1,8 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { CREATE_TOPIC } from "discourse/models/composer";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("composer-force-editor-mode transformer", function (needs) {
@@ -15,8 +17,8 @@ acceptance("composer-force-editor-mode transformer", function (needs) {
       api.registerValueTransformer(
         "composer-force-editor-mode",
         ({ context }) => {
-          if (context.model?.action === "createTopic") {
-            return "markdown";
+          if (context.model?.action === CREATE_TOPIC) {
+            return USER_OPTION_COMPOSITION_MODES.markdown;
           }
           return null;
         }
