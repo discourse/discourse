@@ -282,7 +282,9 @@ en:
         image_generation_gemini:
           name: "Nano Banana"
         image_generation_flux:
-          name: "FLUX"
+          name: "FLUX 1.1 Pro"
+        image_generation_flux2:
+          name: "FLUX 2 Pro"
         empty_tool:
           name: "Start from blank..."
       name:
