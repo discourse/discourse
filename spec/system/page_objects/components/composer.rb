@@ -62,8 +62,10 @@ module PageObjects
         self
       end
 
-      def has_title?(text)
-        find(".title-input input#reply-title", text:)
+      def has_input_title?(value)
+        puts "reply title value"
+        puts find("#{@composer_id} input#reply-title").value
+        expect(find("#{@composer_id} input#reply-title").value).to eq(value)
       end
 
       def fill_content(content)
@@ -390,6 +392,10 @@ module PageObjects
 
       def editor_toggle_switch
         find("#{@composer_id} .composer-toggle-switch")
+      end
+
+      def image_grid
+        Components::ComposerImageGrid.new(rich_editor)
       end
 
       private

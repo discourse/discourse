@@ -3924,7 +3924,6 @@ de:
         post_language_selector:
           none: "Keine"
         edit_warning:
-          message: "Dies ist ein übersetzter Beitrag.<br><br> Willst du den Originalbeitrag auf %{language} bearbeiten oder diese spezielle Übersetzung bearbeiten?"
           action_original: "Originalbeitrag bearbeiten"
           action_translation: "Diese Übersetzung bearbeiten"
       errors:

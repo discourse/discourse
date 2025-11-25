@@ -44,21 +44,20 @@ class AiUsageSerializer < ApplicationSerializer
 
   def models
     object.model_breakdown.map do |row|
-      row.as_json(
-        only: %i[
-          llm
-          usage_count
-          total_tokens
-          total_cache_read_tokens
-          total_cache_write_tokens
-          total_request_tokens
-          total_response_tokens
-          input_spending
-          output_spending
-          cache_read_spending
-          cache_write_spending
-        ],
-      )
+      {
+        id: row.llm_id,
+        llm: row.llm_label,
+        usage_count: row.usage_count,
+        total_tokens: row.total_tokens,
+        total_cache_read_tokens: row.total_cache_read_tokens,
+        total_cache_write_tokens: row.total_cache_write_tokens,
+        total_request_tokens: row.total_request_tokens,
+        total_response_tokens: row.total_response_tokens,
+        input_spending: row.input_spending,
+        output_spending: row.output_spending,
+        cache_read_spending: row.cache_read_spending,
+        cache_write_spending: row.cache_write_spending,
+      }
     end
   end
 

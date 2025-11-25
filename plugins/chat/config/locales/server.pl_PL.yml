@@ -319,10 +319,10 @@ pl_PL:
         few: "Zobacz %{count} wiadomości"
         many: "Zobacz %{count} wiadomości"
         other: "Zobacz %{count} wiadomości"
-      your_chat_settings: "preferencje częstotliwości wysyłania e-maili o czacie"
+      your_chat_settings: "preferencje wiadomości e-mail czatu"
   unsubscribe:
     chat_summary:
-      select_title: "Ustaw częstotliwość e-maili z podsumowaniem czatu na:"
+      select_title: "Ustaw wiadomości e-mail z podsumowaniem czatu na:"
       never: Nigdy
       when_away: Tylko gdy jesteś daleko
   category:

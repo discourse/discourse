@@ -3291,6 +3291,7 @@ zh_CN:
       jump_reply_button: "跳到帖子"
       deleted: "该话题已被删除"
       slow_mode_update:
+        title: "慢速模式"
         select: "用户在此话题中的发帖间隔："
         description: "为了在快节奏或有争议的讨论中促进深思熟虑的讨论，用户必须等待一段时间才能在此话题中再次发帖。"
         enable: "启用"
@@ -3712,7 +3713,6 @@ zh_CN:
         post_language_selector:
           none: "无"
         edit_warning:
-          message: "这是一篇翻译的帖子。<br><br>您是要编辑%{language}原帖还是编辑此特定翻译？"
           action_original: "编辑原帖"
           action_translation: "编辑此翻译"
       errors:
@@ -3939,12 +3939,22 @@ zh_CN:
         add: "添加所需标签组"
         placeholder: "选择标签群组…"
       topic_featured_link_allowed: "在此类别中允许精选链接"
+      delete: "删除类别"
+      create: "新建类别"
       create_long: "创建新类别"
+      save: "保存类别"
+      slug: "类别缩略名"
       slug_placeholder: "（可选）用于 URL 以“-”分隔的字词"
       creation_error: 创建类别时出错。
       save_error: 保存类别时出错。
+      name: "类别名称"
+      untitled: "无标题类别"
       description: "描述"
+      logo: "类别徽标图片"
+      logo_dark: "深色模式类别徽标图片"
       logo_description: "建议宽高比为 1:1，最小尺寸为 200px。如果留空，将不会显示图片。"
+      background_image: "类别背景图片"
+      background_image_dark: "深色类别背景图片"
       style: "样式"
       background_color: "颜色"
       foreground_color: "文本颜色"
@@ -3999,6 +4009,10 @@ zh_CN:
       all_topics_wiki: "默认将新话题设为 Wiki"
       allow_unlimited_owner_edits_on_first_post: "允许所有者不受限制地编辑第一个帖子"
       subcategory_list_style: "子类别列表样式："
+      sort_order: "话题列表排序依据："
+      default_view: "默认话题列表："
+      default_top_period: "默认热门时长："
+      default_list_filter: "默认列表筛选器："
       allow_badges_label: "允许在此类别中授予徽章"
       reviewable_by_group: "除管理人员外，此类别中的内容还可以由以下群组审核："
       review_group_name: "群组名称"
@@ -4008,6 +4022,7 @@ zh_CN:
       position: "类别页面上的位置："
       position_disabled: "类别将按活动顺序显示。要控制列表中类别的顺序，请启用<a href='%{url}'>固定类别位置</a>设置。"
       minimum_required_tags: "话题中所需的最少标签数："
+      default_slow_mode: '为此类别中的新话题启用“慢速模式”。'
       num_auto_bump_daily: "每天自动顶贴的开放话题的数量："
       auto_bump_cooldown_days: "再次顶帖同一话题之前的最短天数。"
       navigate_to_first_post_after_read: "阅读话题后导航到第一个帖子"
@@ -4029,14 +4044,18 @@ zh_CN:
           title: "已设为免打扰"
           description: "您不会收到有关此类别中新话题的任何通知，它们也不会出现在最新话题页面上。"
       search_priority:
+        label: "搜索优先级"
         options:
           normal: "常规"
           ignore: "忽略"
+          very_low: "非常低"
           low: "低"
           high: "高"
+          very_high: "非常高"
       sort_options:
         default: "默认"
         likes: "赞"
+        op_likes: "原始帖子的赞"
         views: "浏览量"
         posts: "帖子"
         activity: "活动"
@@ -4057,13 +4076,14 @@ zh_CN:
         email: "电子邮件"
       list_filters:
         all: "所有话题"
+        none: "无子类别"
       colors_disabled: "您无法选择颜色，因为您的“category style”为“none”。"
     anonymous_flagging:
       title: "举报非法内容"
       description: "要举报非法内容，请联系 <a href='mailto:%{email}?subject=Illegal content: %{topic_title}&body=This post %{url} contains illegal content.'>%{email}</a>"
     flagging:
       title: "感谢您维护社区的文明！"
-      review_process_description: "版主已收到所有举报，将尽快进行审核。"
+      review_process_description: "版主收到举报后将尽快进行审核。"
       action: "举报帖子"
       take_action: "采取行动…"
       take_action_options:
@@ -4548,13 +4568,18 @@ zh_CN:
           description: "您不会收到有关带有此标签的新话题的任何通知，它们也不会出现在您的未读标签页上。"
       groups:
         back_btn: "返回到所有标签"
+        title: "标签组"
         about_heading: "选择一个标签组或创建一个新的标签组"
         about_heading_empty: "创建一个新的标签组以开始"
         about_description: "标签组可帮助您在一个地方管理多个标签的权限。"
+        new: "新标签组"
+        new_title: "创建标签组"
+        edit_title: "编辑标签组"
         tags_label: "此组中的标签"
         parent_tag_label: "上级标签"
         parent_tag_description: "只有存在上级标签时，才能使用来自此组的标签。"
         one_per_topic_label: "此组中每个话题限制一个标签"
+        new_name: "新标签组"
         name_placeholder: "名称"
         save: "保存"
         delete: "删除"
@@ -5200,7 +5225,10 @@ zh_CN:
             modal_yes: "是"
             modal_no: "否，只适用于未来"
         welcome_banner:
+          title: "欢迎横幅"
           form:
+            background_image:
+              label: "背景图片"
             text_color:
               label: "文本颜色"
             page_visibility:

@@ -4087,7 +4087,6 @@ hr:
         post_language_selector:
           none: "Ništa"
         edit_warning:
-          message: "Ovo je prevedena objava.<br><br> Želite li urediti izvornu objavu u %{language} ili urediti ovaj specifični prijevod?"
           action_original: "Uredite originalnu objavu"
           action_translation: "Uredite ovaj prijevod"
       errors:

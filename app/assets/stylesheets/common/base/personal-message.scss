@@ -180,6 +180,8 @@
         .user-link,
         .group-link {
           @include ellipsis;
+          display: flex;
+          align-items: center;
           color: var(--primary-high);
 
           &:hover {
@@ -196,6 +198,12 @@
         .username,
         .group-name {
           margin-right: 0.25em;
+          padding-block: 0.25em;
+        }
+
+        .username:last-child,
+        .group-link:last-child {
+          margin-right: 0.65em;
         }
 
         &:last-child {

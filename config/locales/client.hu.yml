@@ -3892,7 +3892,6 @@ hu:
         post_language_selector:
           none: "Egyik sem"
         edit_warning:
-          message: "Ez egy lefordított bejegyzés.<br><br> Az eredeti hozzászólást szeretnéd szerkeszteni a %{language} oldalon, vagy ezt a konkrét fordítást?"
           action_original: "Eredeti bejegyzés szerkesztése"
           action_translation: "A fordítás szerkesztése"
       errors:

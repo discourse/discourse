@@ -4715,7 +4715,6 @@ ar:
         post_language_selector:
           none: "لا يوجد"
         edit_warning:
-          message: "هذا منشور مترجم.<br><br> هل تريد تعديل المنشور الأصلي باللغة %{language} أم تعديل هذه الترجمة فقط؟"
           action_original: "تعديل المنشور الأصلي"
           action_translation: "تعديل هذه الترجمة"
       errors:

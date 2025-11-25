@@ -3864,7 +3864,6 @@ nl:
         post_language_selector:
           none: "Geen"
         edit_warning:
-          message: "Dit is een vertaald bericht.<br><br> Wil je het originele bericht in het %{language} of deze specifieke vertaling bewerken?"
           action_original: "Origineel bericht bewerken"
           action_translation: "Deze vertaling bewerken"
       errors:

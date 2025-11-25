@@ -779,8 +779,9 @@ en:
       title: "Review"
       topic: "Topic:"
       filtered_topic: "You have filtered to reviewable content in a single topic."
-      filtered_user: "User"
+      filtered_user: "Flagged user"
       filtered_reviewed_by: "Reviewed by"
+      filtered_claimed_by: "Flag claimed by"
       show_all_topics: "show all topics"
       deleted_post: "(post deleted)"
       deleted_user: "(user deleted)"
@@ -861,6 +862,9 @@ en:
           medium: "Medium"
           high: "High"
 
+        active_filters: "Active filters:"
+        clear_filter: "Remove %{filter}"
+
       conversation:
         view_full: "view full conversation"
       scores:
@@ -929,7 +933,7 @@ en:
       queued_post_label: "Queued post"
       queued_topic_label: "Queued topic"
       user_label: "User"
-      assigned_to: "Assigned to"
+      assigned_to: "Post assigned to"
       moderator_actions: "Moderator actions"
       timeline_and_notes: "Timeline & notes"
       timeline:
@@ -3140,6 +3144,10 @@ en:
         zoom_out: "Decrease image size"
         zoom_in: "Increase image size"
         remove: "Remove image"
+        add_to_grid: "Add to grid"
+        move_outside_grid: "Move outside grid"
+
+      grid_label: "This will be displayed as a grid"
 
       image_scale_button: "Scale image to %{percent}%"
       delete_image_button: Delete Image
@@ -4913,6 +4921,7 @@ en:
       download: "Download"
       open: "Original image"
       image_info: "Image information"
+      quote: "Quote image"
       previous: "Previous (Left arrow key)"
       next: "Next (Right arrow key)"
       counter: "%curr% of %total%"
@@ -5716,20 +5725,31 @@ en:
         plugin: "Plugin"
         metadata: "Metadata"
         enabled: "Enabled"
+        enabled_for: "Enabled for..."
         show_image: "Show image"
         edit_groups: "Edit opt-in groups"
         groups_updated: "Groups updated!"
         save_groups: "Save groups"
+        add_groups_to_enable: "Add groups to enable this feature"
+        no_changes_to_save: "No changes to save"
         select_groups: "Select groups…"
         opt_in_groups: "Opt-in groups"
         opt_in_groups_instructions: "Opt-in groups can be used to let a certain group of users to test a change before it is released to everyone. Note that these groups will be irrelevant once a change progresses to the Stable status."
-        toggled_too_fast: "You have toggled this change too quickly. Please wait a few seconds before trying again."
-        change_enabled: "You have opted-in to this change"
+        enabled_for_throttle: "You have modified who this change is enabled for too quickly. Please wait a few seconds before trying again."
+        change_enabled_for_success: "You have enabled this change for %{enabledFor}"
         change_disabled: "You have opted-out of this change"
         permanent_notice: "This change is now permanent and it will soon be removed. You are no longer able to opt-out."
         permanent_no_group_selection: "N/A, permanent changes apply to all groups."
         no_changes: "There are no upcoming changes at this time."
         preview: "Preview"
+        enabled_for_options:
+          no_one: "No one"
+          everyone: "Everyone"
+          staff: "Staff only"
+          specific_groups: "Specific group(s)"
+          specific_groups_with_group_names:
+            one: "the group %{groupNames}"
+            other: "the groups %{groupNames}"
         statuses:
           pre_alpha: "Pre-Alpha"
           alpha: "Alpha"

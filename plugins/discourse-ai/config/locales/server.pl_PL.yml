@@ -378,7 +378,7 @@ pl_PL:
           name: "Deduplikator koncepcyjny"
           description: "Bot AI specjalizujący się w deduplikacji koncepcji"
         custom_prompt:
-          name: "Niestandardowy prompt"
+          name: "Niestandardowy monit"
           description: "Domyślna osobowość obsługująca funkcję niestandardowego monitu pomocnika"
         smart_dates:
           name: "Inteligentne daty"

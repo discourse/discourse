@@ -18,13 +18,13 @@ import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DEditorPreview from "discourse/components/d-editor-preview";
+import EmojiAutocompleteResults from "discourse/components/emoji-autocomplete-results";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PopupInputTip from "discourse/components/popup-input-tip";
 import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import concatClass from "discourse/helpers/concat-class";
-import renderEmojiAutocomplete from "discourse/lib/autocomplete/emoji";
 import Toolbar from "discourse/lib/composer/toolbar";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import discourseDebounce from "discourse/lib/debounce";
@@ -103,7 +103,7 @@ export default class DEditor extends Component {
 
   setupToolbar() {
     this.toolbar = new Toolbar(
-      this.getProperties("siteSettings", "showLink", "capabilities")
+      this.getProperties("siteSettings", "showLink", "capabilities", "site")
     );
     this.toolbar.context = this;
 
@@ -316,8 +316,8 @@ export default class DEditor extends Component {
     }
 
     this.textManipulation.autocomplete({
-      template: renderEmojiAutocomplete,
-      key: ":",
+      component: EmojiAutocompleteResults,
+      key: EmojiAutocompleteResults.TRIGGER_KEY,
       afterComplete: () => {
         schedule(
           "afterRender",
@@ -328,7 +328,7 @@ export default class DEditor extends Component {
 
       onKeyUp: (text, cp) => {
         const matches = new RegExp(
-          `(?:^|${EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP.source})(:(?!:).?[\\w-]*:?(?!:)(?:t\\d?)?:?) ?$`,
+          `(?:^|${EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP.source})(:(?!:).?[\\w-]*:?(?!:)(?:t\\d?)?:?)$`,
           "gi"
         ).exec(text.substring(0, cp));
 

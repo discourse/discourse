@@ -23,6 +23,7 @@ export const AUTO_DELETE_PREFERENCES = {
 };
 
 export const NO_REMINDER_ICON = "bookmark";
+export const NOT_BOOKMARKED = "far-bookmark";
 export const WITH_REMINDER_ICON = "discourse-bookmark-clock";
 
 export default class Bookmark extends RestModel {

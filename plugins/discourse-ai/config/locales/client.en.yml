@@ -307,6 +307,11 @@ en:
           post_raw_translator: "Post raw translator"
           topic_title_translator: "Topic title translator"
           short_text_translator: "Short text translator"
+          schedule_untranslated: "Schedule translations"
+          schedule_topic_success:
+            one: "Scheduled translation for %{count} untranslated post."
+            other: "Scheduled translation for %{count} untranslated posts."
+          schedule_topic_error: "Failed to schedule translations. Please try again."
 
         spam:
           name: "Spam"
@@ -821,6 +826,7 @@ en:
           title: "Suggested thumbnails"
           select: "Select"
           selected: "Selected"
+          try_again: "Try Again"
         image_caption:
           button_label: "Caption with AI"
           generating: "Generating caption..."

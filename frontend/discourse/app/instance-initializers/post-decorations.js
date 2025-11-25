@@ -27,8 +27,8 @@ export default {
         return highlightSyntax(elem, siteSettings, session);
       });
 
-      api.decorateCookedElement((elem) => {
-        return lightbox(elem, siteSettings);
+      api.decorateCookedElement((elem, helper) => {
+        return lightbox(elem, siteSettings, helper.model);
       });
 
       api.decorateCookedElement((elem) => {
