@@ -29,6 +29,28 @@ RSpec.describe "Webhook event handlers" do
     end
   end
 
+  describe "user events" do
+    fab!(:user_webhook) do
+      wh = Fabricate(:web_hook)
+      wh.web_hook_event_types = [WebHookEventType.find_by(name: "user_anonymized")]
+      wh.save!
+      wh
+    end
+
+    it "enqueues user_anonymized webhook event" do
+      target_user = Fabricate(:user)
+
+      expect { UserAnonymizer.make_anonymous(target_user, user) }.to change {
+        Jobs::EmitWebHookEvent.jobs.size
+      }.by(1)
+
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+      expect(job_args["id"]).to eq(target_user.id)
+      expect(job_args["event_name"]).to eq("user_anonymized")
+      expect(job_args["event_type"]).to eq("user")
+    end
+  end
+
   describe "reviewable events" do
     fab!(:reviewable_webhook) do
       wh = Fabricate(:web_hook, categories: [post.topic.category])
