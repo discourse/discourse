@@ -1,4 +1,5 @@
 import { waitForPromise } from "@ember/test-waiters";
+import { isTesting } from "discourse/lib/environment";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 
 export async function waitForAnimationEnd(element) {
@@ -28,7 +29,7 @@ export async function waitForAnimationEnd(element) {
 }
 
 export async function animateClosing(element, className = "-closing") {
-  if (!element || prefersReducedMotion()) {
+  if (!element || prefersReducedMotion() || isTesting()) {
     return;
   }
   element.classList.add(className);
@@ -39,7 +40,7 @@ export async function animateClosing(element, className = "-closing") {
 }
 
 export async function animateOpening(element, className = "-opening") {
-  if (!element || prefersReducedMotion()) {
+  if (!element || prefersReducedMotion() || isTesting()) {
     return;
   }
   element.classList.add(className);
