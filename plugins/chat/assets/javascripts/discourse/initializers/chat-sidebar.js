@@ -156,11 +156,12 @@ export default {
         api.addSidebarSection(
           (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
             const SidebarChatChannelsSectionLink = class extends BaseCustomSidebarSectionLink {
-              constructor({ channel, chatService }) {
+              constructor({ channel, chatService, siteSettings }) {
                 super(...arguments);
                 this.channel = channel;
                 this.chatService = chatService;
                 this.chatStateManager = chatStateManager;
+                this.siteSettings = siteSettings;
               }
 
               get name() {
@@ -245,17 +246,30 @@ export default {
               }
 
               get suffixValue() {
-                return this.channel.currentUserMembership.starred ? "star" : "";
+                if (
+                  this.siteSettings.star_chat_channels &&
+                  this.channel.currentUserMembership.starred
+                ) {
+                  return "star";
+                }
+                return "";
               }
 
               get suffixCSSClass() {
-                return "starred";
+                if (
+                  this.siteSettings.star_chat_channels &&
+                  this.channel.currentUserMembership.starred
+                ) {
+                  return "starred";
+                }
+                return "";
               }
             };
 
             const SidebarChatChannelsSection = class extends BaseCustomSidebarSection {
               @service currentUser;
               @service chatStateManager;
+              @service siteSettings;
 
               @tracked
               currentUserCanJoinPublicChannels =
@@ -282,6 +296,7 @@ export default {
                     new SidebarChatChannelsSectionLink({
                       channel,
                       chatService: this.chatService,
+                      siteSettings: this.siteSettings,
                     })
                 );
               }
@@ -350,10 +365,11 @@ export default {
               hoverValue = "xmark";
               hoverTitle = i18n("chat.direct_messages.close");
 
-              constructor({ channel, chatService, currentUser }) {
+              constructor({ channel, chatService, currentUser, siteSettings }) {
                 super(...arguments);
                 this.channel = channel;
                 this.chatService = chatService;
+                this.siteSettings = siteSettings;
                 this.currentUser = currentUser;
                 this.chatStateManager = chatStateManager;
 
@@ -489,11 +505,23 @@ export default {
               }
 
               get suffixValue() {
-                return this.channel.currentUserMembership.starred ? "star" : "";
+                if (
+                  this.siteSettings.star_chat_channels &&
+                  this.channel.currentUserMembership.starred
+                ) {
+                  return "star";
+                }
+                return "";
               }
 
               get suffixCSSClass() {
-                return "starred";
+                if (
+                  this.siteSettings.star_chat_channels &&
+                  this.channel.currentUserMembership.starred
+                ) {
+                  return "starred";
+                }
+                return "";
               }
 
               get hoverAction() {
@@ -511,6 +539,7 @@ export default {
               @service router;
               @service currentUser;
               @service chatStateManager;
+              @service siteSettings;
 
               constructor() {
                 super(...arguments);
@@ -543,6 +572,7 @@ export default {
                         channel,
                         chatService: this.chatService,
                         currentUser: this.currentUser,
+                        siteSettings: this.siteSettings,
                       })
                   );
                 } else {

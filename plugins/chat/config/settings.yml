@@ -151,3 +151,10 @@ chat:
   allow_chat_in_anonymous_mode:
     default: false
     validator: "Chat::AllowChatInAnonymousModeValidator"
+  star_chat_channels:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "pre-alpha"
+      impact: "feature,all_members"

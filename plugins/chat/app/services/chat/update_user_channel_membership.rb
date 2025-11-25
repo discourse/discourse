@@ -33,6 +33,7 @@ module Chat
     model :channel
     model :membership
     policy :can_access_channel
+    policy :can_use_starred_channels
     transaction { step :update_membership }
 
     private
@@ -47,6 +48,11 @@ module Chat
 
     def can_access_channel(guardian:, membership:)
       guardian.can_preview_chat_channel?(membership.chat_channel)
+    end
+
+    def can_use_starred_channels(guardian:, params:)
+      return true if params.starred.blank?
+      guardian.user.upcoming_change_enabled?(:star_chat_channels)
     end
 
     def update_membership(membership:, params:)

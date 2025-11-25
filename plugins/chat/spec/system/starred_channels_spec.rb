@@ -10,6 +10,7 @@ RSpec.describe "Starred channels", type: :system do
   before do
     chat_system_bootstrap
     SiteSetting.navigation_menu = "sidebar"
+    SiteSetting.star_chat_channels = true
     sign_in(current_user)
   end
 

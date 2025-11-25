@@ -10,13 +10,14 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { gt } from "discourse/truth-helpers";
+import { and, gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ToggleChannelMembershipButton from "./toggle-channel-membership-button";
 
 export default class ChatChannelCard extends Component {
   @service chatApi;
   @service toasts;
+  @service siteSettings;
 
   get isStarred() {
     return this.args.channel?.currentUserMembership?.starred;
@@ -91,7 +92,12 @@ export default class ChatChannelCard extends Component {
               >{{icon "d-muted"}}</span>
             {{/if}}
           </LinkTo>
-          {{#if @channel.currentUserMembership}}
+          {{#if
+            (and
+              @channel.currentUserMembership
+              this.siteSettings.star_chat_channels
+            )
+          }}
             <DButton
               {{on "click" this.toggleStarred}}
               @icon={{this.starIcon}}

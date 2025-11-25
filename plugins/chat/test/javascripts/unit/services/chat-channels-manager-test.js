@@ -12,6 +12,8 @@ module(
     hooks.beforeEach(function () {
       this.subject = getOwner(this).lookup("service:chat-channels-manager");
       this.fabricators = new ChatFabricators(getOwner(this));
+      this.siteSettings = getOwner(this).lookup("service:site-settings");
+      this.siteSettings.star_chat_channels = true;
     });
 
     module("#sortChannelsByActivity with starred channels", function () {

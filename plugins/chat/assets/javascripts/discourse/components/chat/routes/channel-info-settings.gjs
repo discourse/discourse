@@ -413,15 +413,17 @@ export default class ChatRouteChannelInfoSettings extends Component {
 
           {{#if @channel.isOpen}}
             <form.section @title={{this.settingsSectionTitle}} as |section|>
-              <section.row @label={{this.starChannelLabel}}>
-                <:action>
-                  <DToggleSwitch
-                    @state={{@channel.currentUserMembership.starred}}
-                    class="c-channel-settings__star-switch"
-                    {{on "click" this.onToggleStarred}}
-                  />
-                </:action>
-              </section.row>
+              {{#if this.siteSettings.star_chat_channels}}
+                <section.row @label={{this.starChannelLabel}}>
+                  <:action>
+                    <DToggleSwitch
+                      @state={{@channel.currentUserMembership.starred}}
+                      class="c-channel-settings__star-switch"
+                      {{on "click" this.onToggleStarred}}
+                    />
+                  </:action>
+                </section.row>
+              {{/if}}
 
               <section.row @label={{this.muteSectionLabel}}>
                 <:action>

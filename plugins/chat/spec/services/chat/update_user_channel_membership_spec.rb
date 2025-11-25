@@ -23,6 +23,8 @@ RSpec.describe Chat::UpdateUserChannelMembership do
     let(:params) { { channel_id: channel.id, starred: true } }
     let(:dependencies) { { guardian: current_user.guardian } }
 
+    before { SiteSetting.star_chat_channels = true }
+
     context "when contract is invalid" do
       let(:params) { { starred: true } }
 

@@ -245,6 +245,10 @@ export default class ChatChannelsManager extends Service {
   }
 
   #compareStarredChannels(a, b, property) {
+    if (!this.siteSettings.star_chat_channels) {
+      return null;
+    }
+
     const aStarred = a.currentUserMembership?.starred;
     const bStarred = b.currentUserMembership?.starred;
 

@@ -7,6 +7,7 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
   before do
     SiteSetting.chat_enabled = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.star_chat_channels = true
     sign_in(current_user)
   end
 
