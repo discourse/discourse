@@ -14,6 +14,10 @@ pt:
     overall_sentiment:
       yaxis: "Data"
   discourse_ai:
+    tools:
+      presets:
+        image_generation_custom:
+          name: "Personalizar"
     ai_bot:
       tool_summary:
         search: "Pesquisar"

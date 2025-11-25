@@ -86,6 +86,7 @@
 
   .main {
     flex: 1;
+    min-width: 0; // allow chart.js to shrink below intrinsic width
   }
 
   .main .report-alert {

@@ -22,13 +22,27 @@ RSpec.describe BasicPostSerializer do
         expect(json[:cooked]).to eq(post.cooked)
       end
 
-      it "returns the localized cooked" do
-        SiteSetting.content_localization_enabled = true
-        Fabricate(:post_localization, post: post, cooked: "X", locale: "ja")
-        I18n.locale = "ja"
-        post.update!(locale: "en")
+      describe "localizations" do
+        it "returns the localized cooked" do
+          SiteSetting.content_localization_enabled = true
+          Fabricate(:post_localization, post: post, cooked: "X", locale: "ja")
+          I18n.locale = "ja"
+          post.update!(locale: "en")
 
-        expect(json[:cooked]).to eq("X")
+          expect(json[:cooked]).to eq("X")
+        end
+
+        it "returns the site default locale cooked when no exact match found and `content_localization_use_default_locale_when_unsupported` is true" do
+          SiteSetting.content_localization_enabled = true
+          SiteSetting.content_localization_use_default_locale_when_unsupported = true
+          SiteSetting.default_locale = "el"
+
+          Fabricate(:post_localization, post:, cooked: "site default cooked", locale: "el")
+          I18n.locale = "ja"
+          post.update!(locale: "en")
+
+          expect(json[:cooked]).to eq("site default cooked")
+        end
       end
     end
   end

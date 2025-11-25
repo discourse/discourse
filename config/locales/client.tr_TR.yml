@@ -852,7 +852,6 @@ tr_TR:
         note_added_by: "%{username} tarafından moderatör notu · %{relativeDate}"
         no_events: "Gösterilecek zaman çizelgesi etkinliği yok"
       notes:
-        add_note_description: "Yalnızca moderatörler tarafından görülebilir. Bu notu incelemeyle ilgili bağlam veya kararlar eklemek için kullanın."
         add_note_button: "Not ekle"
         placeholder: "Notunuzu buraya yazın..."
         chars_remaining: "%{count} karakter kaldı"
@@ -3262,7 +3261,6 @@ tr_TR:
         progress:
           one: "İlerleme: <strong>%{count}</strong> konu"
           other: "İlerleme: <strong>%{count}</strong> konu"
-        silent: "Bu eylemi sessizce gerçekleştirin."
         performing: "Toplu işlemler gerçekleştiriliyor, lütfen bekleyin…"
         completed: "Toplu işlemler başarıyla tamamlandı!"
       none:
@@ -3432,7 +3430,6 @@ tr_TR:
       jump_reply_button: "Gönderiye atla"
       deleted: "Konu silindi"
       slow_mode_update:
-        title: "Yavaş Mod"
         select: "Kullanıcılar bu konuda yalnızca şu sıklıkta gönderi yapabilir:"
         description: "Hızlı hareket eden veya ateşli tartışmalarda, düşünceli tartışmayı teşvik etmek için kullanıcıların bu konuda tekrar gönderi yapmadan önce beklemesi gerekir."
         enable: "Etkinleştir"
@@ -3867,7 +3864,6 @@ tr_TR:
         post_language_selector:
           none: "Yok"
         edit_warning:
-          message: "Bu, çevrilmiş bir gönderi.<br><br> %{language} dilindeki orijinal gönderiyi mi yoksa bu belirli çeviriyi mi düzenlemek istiyorsunuz?"
           action_original: "Orijinal gönderiyi düzenle"
           action_translation: "Bu çeviriyi düzenle"
       errors:
@@ -4100,24 +4096,14 @@ tr_TR:
         description: "Yeni konuların etiket gruplarından etiketlere sahip olmasını gerektirin:"
         delete: "Sil"
         add: "Gerekli etiket grubu ekleyin"
-        placeholder: "etiket grubu seç…"
+        placeholder: "Etiket grubu seç…"
       topic_featured_link_allowed: "Bu kategoride öne çıkan bağlantılara izin ver"
-      delete: "Kategoriyi Sil"
-      create: "Yeni Kategori"
       create_long: "Yeni bir kategori oluştur"
-      save: "Kategoriyi Kaydet"
-      slug: "Kategori Kısa Adı"
       slug_placeholder: "(İsteğe bağlı) url için çizgiyle ayrılmış kelimeler"
       creation_error: Kategori oluşturulurken bir hata oluştu.
       save_error: Kategori kaydedilirken bir hata oluştu.
-      name: "Kategori Adı"
-      untitled: "Başlıksız Kategori"
       description: "Açıklama"
-      logo: "Kategori Logo Görüntüsü"
-      logo_dark: "Koyu Mod Kategorisi Logo Görüntüsü"
       logo_description: "Önerilen 1:1 en boy oranı ve minimum 200 piksel boyut. Boş bırakılırsa hiçbir görüntü gösterilmez."
-      background_image: "Kategori Arka Plan Görüntüsü"
-      background_image_dark: "Koyu Kategori Arka Plan Resmi"
       style: "Stiller"
       background_color: "Renk"
       foreground_color: "Metin rengi"
@@ -4137,9 +4123,9 @@ tr_TR:
       color_placeholder: "Herhangi bir web rengi"
       delete_confirm: "Bu kategoriyi silmek istediğinizden emin misiniz?"
       delete_error: "Kategori silinirken bir hata oluştu."
-      list: "Kategorileri Listele"
+      list: "Kategorileri listele"
       no_description: "Lütfen bu kategori için bir açıklama ekleyin."
-      change_in_category_topic: "Açıklamayı Düzenle"
+      change_in_category_topic: "Açıklamayı düzenle"
       already_used: "Bu renk başka bir kategori tarafından kullanılmış."
       security: "Güvenlik"
       security_add_group: "Grup ekle"
@@ -4170,23 +4156,15 @@ tr_TR:
       all_topics_wiki: "Varsayılan olarak yeni konu wiki yapın"
       allow_unlimited_owner_edits_on_first_post: "İlk gönderide sınırsız sahibi düzenlemelerine izin ver"
       subcategory_list_style: "Alt Kategori Listesi Stili:"
-      sort_order: "Konu Listesi Sıralama Ölçütü:"
-      default_view: "Varsayılan Konu Listesi:"
-      default_top_period: "Varsayılan En İyi Dönem:"
-      default_list_filter: "Varsayılan Liste Filtresi:"
       allow_badges_label: "Bu kategoride rozet verilmesine izin verin"
-      edit_permissions: "İzinleri Düzenle"
       reviewable_by_group: "Personele ek olarak, bu kategorideki içerik şu kişiler tarafından da incelenebilir:"
       review_group_name: "grup adı"
       require_topic_approval: "Tüm yeni konular için moderatör onayı gerektir"
       require_reply_approval: "Tüm yeni yanıtlar için moderatör onayı gerektir"
       this_year: "bu yıl"
       position: "Kategoriler sayfasındaki pozisyon:"
-      default_position: "Varsayılan Pozisyon"
       position_disabled: "Kategoriler aktivite sırasına göre görüntülenir. Listelerdeki kategorilerin sırasını kontrol etmek için <a href='%{url}'>\"sabit kategori pozisyonları\"</a> ayarını etkinleştirin."
       minimum_required_tags: "Bir konuda gerekli minimum etiket sayısı:"
-      default_slow_mode: 'Bu kategorideki yeni konular için "Yavaş Modu" etkinleştirin.'
-      parent: "Ana Kategori"
       num_auto_bump_daily: "Günlük olarak otomatik olarak üste çıkacak açık konu sayısı:"
       auto_bump_cooldown_days: "Aynı konuyu tekrar açmadan önce geçmesi gereken gün sayısı:"
       navigate_to_first_post_after_read: "Konular okunduktan sonra ilk gönderiye gidin"
@@ -4208,18 +4186,14 @@ tr_TR:
           title: "Sessize alındı"
           description: "Bu kategorideki yeni konular hakkında hiçbir zaman bildirim almayacaksınız ve en son bölümünde görünmeyecekler."
       search_priority:
-        label: "Arama Önceliği"
         options:
           normal: "Normal"
           ignore: "Yok say"
-          very_low: "Çok düşük"
           low: "Düşük"
           high: "Yüksek"
-          very_high: "Çok Yüksek"
       sort_options:
         default: "varsayılan"
         likes: "Beğeniler"
-        op_likes: "Orijinal Gönderi Beğenileri"
         views: "Görüntülemeler"
         posts: "Gönderiler"
         activity: "Aktivite"
@@ -4239,8 +4213,7 @@ tr_TR:
         appearance: "Görünüm"
         email: "E-posta"
       list_filters:
-        all: "tüm konular"
-        none: "alt kategori yok"
+        all: "Tüm konular"
       colors_disabled: "Category style olarak none belirlenmiş olduğundan renk seçemezsiniz."
     anonymous_flagging:
       title: "Yasa dışı içeriği bildirin"
@@ -4472,7 +4445,7 @@ tr_TR:
         title: "Popüler"
         help: "geçtiğimiz yıl, ay, hafta veya günün en aktif başlıkları"
         all:
-          title: "Tüm Zamanlar"
+          title: "Tüm zamanlar"
         yearly:
           title: "Yıllık"
         quarterly:
@@ -4483,7 +4456,7 @@ tr_TR:
           title: "Haftalık"
         daily:
           title: "Günlük"
-        all_time: "Tüm Zamanlar"
+        all_time: "Tüm zamanlar"
         this_year: "Yıl"
         this_quarter: "Üç ay"
         this_month: "Ay"
@@ -4755,18 +4728,13 @@ tr_TR:
           description: "Bu etikete sahip yeni konular hakkında bildirim almayacaksınız ve okunmamış sekmenizde görünmeyecekler."
       groups:
         back_btn: "Tüm etiketlere dön"
-        title: "Etiket Grupları"
         about_heading: "Bir etiket grubu seçin veya yeni bir tane oluşturun"
         about_heading_empty: "Başlamak için yeni bir etiket grubu oluşturun"
         about_description: "Etiket grupları, birçok etiket için izinleri tek bir yerden yönetmenize yardımcı olur."
-        new: "Yeni Grup"
-        new_title: "Yeni Grup Oluştur"
-        edit_title: "Etiket Grubunu Düzenle"
         tags_label: "Bu gruptaki etiketler"
         parent_tag_label: "Üst etiket"
         parent_tag_description: "Bu gruptaki etiketler yalnızca üst etiket mevcutsa kullanılabilir."
         one_per_topic_label: "Bu gruptan konu başına bir etiketle sınırlandırın"
-        new_name: "Yeni Etiket Grubu"
         name_placeholder: "Ad"
         save: "Kaydet"
         delete: "Sil"
@@ -5377,6 +5345,23 @@ tr_TR:
               other: "Varsayılan metin boyutunu güncellediniz. Bu değişikliği %{count} mevcut kullanıcıya uygulamak ister misiniz?"
             modal_yes: "Evet"
             modal_no: "Hayır, sadece ileriye dönük olarak uygula"
+        welcome_banner:
+          form:
+            text_color:
+              label: "Metin rengi"
+            page_visibility:
+              options:
+                top_menu_pages: "Üst menü sayfaları"
+                all_pages: "Tüm sayfalar"
+            location:
+              label: "Konum"
+              options:
+                above_topic_content: "Yukarıdaki konu içeriği"
+                below_site_header: "Aşağıdaki site başlığı"
+            header_logged_in:
+              placeholder: "Tekrar hoş geldiniz %{preferred_display_name}!"
+            header_anonymous:
+              placeholder: "%{site_name}'a hoş geldiniz!"
         navigation:
           title: "Gezinme"
           header_description: "Siteniz için gezinme bağlantılarını ve menü ögelerini yapılandırın. Bu, birincil gezinme menüsünün konumunu ve davranışını, ana sayfanın üst kısmındaki hızlı bağlantıları ve yönetici kenar çubuğunu içerir"
@@ -7134,7 +7119,6 @@ tr_TR:
           success: "Başarılı"
           exists: "Zaten mevcut"
           upload: "Dosyadan ekle"
-          upload_successful: "Yükleme başarılı. Kelimeler eklendi."
           case_sensitivity_label: "büyük/küçük harfe duyarlı"
           case_sensitivity_description: "Sadece eşleşen karakter muhafazası olan kelimeler"
           html_label: "HTML"
@@ -7226,10 +7210,7 @@ tr_TR:
             second: "Seçenek 2"
             third: "Seçenek 3"
         edit_category:
-          toggle_freeform: "form şablonu devre dışı"
-          toggle_form_template: "form şablonu etkin"
           select_template: "Form şablonları seçin"
-          select_template_help: "Form Şablonları Ekle/Düzenle"
         errors:
           multiple_tags_not_allowed: '"%{tag_name}" etiketinden daha fazla etiket seçemezsiniz. Sorunları önlemek için Form Şablonu kullanın'
       impersonate:

@@ -2181,17 +2181,10 @@ sr:
       tag_groups_placeholder: "(Opciono) lista dozvoljenih tagova"
       required_tag_group:
         delete: "Obriši"
-      delete: "Obriši Kategoriju"
-      create: "Nova Kategorija"
-      save: "Sačuvaj Kategoriju"
-      slug: "Kod Kategorije"
       slug_placeholder: "(Opciono) spojene-reči za url"
       creation_error: Dogodila se greška pri otvaranju kategorije.
       save_error: Dogodila se greška pri čuvanju kategorije.
-      name: "Ime Kategorije"
       description: "Opis"
-      logo: "Logo Kategorije "
-      background_image: "Pozadinska Slika Kategorije"
       background_color: "Boja"
       styles:
         icon: "Ikona"
@@ -2203,9 +2196,7 @@ sr:
       color_placeholder: "bilo koja boja"
       delete_confirm: "Jeste li sigurni da želite izbrisati ovu kategoriju?"
       delete_error: "Dogodila se greška pri brisanju kategorije."
-      list: "Lista Kategorija"
       no_description: "Molimo dodajte opis ovoj kategoriji."
-      change_in_category_topic: "Izmena Opisa"
       already_used: "Ova boja se koristi u drugoj kategoriji."
       security: "Sigurnost"
       permissions:
@@ -2216,11 +2207,8 @@ sr:
       email_in: "Prilagođena adresa dolaznog e-maila."
       email_in_allow_strangers: "Prihvati emailove anonimnih korisnika bez naloga"
       allow_badges_label: "Dozvoli dodjeljivanje značaka u ovoj kategoriji."
-      edit_permissions: "Izmeni dozvole"
       review_group_name: "ime grupe"
       this_year: "ove godine"
-      default_position: "Zadana pozicija"
-      parent: "Nadkategorija"
       notifications:
         watching:
           title: "Posmatrano"
@@ -2375,7 +2363,7 @@ sr:
         title: "Top"
         help: "najaktivnije teme u poslednjih godinu, mesec, nedelju ili dan"
         all:
-          title: "Top svih vremena"
+          title: "Svih vremena"
         yearly:
           title: "Top godišnje"
         quarterly:
@@ -2658,6 +2646,12 @@ sr:
         fonts:
           backfill_modal:
             modal_yes: "Da"
+        welcome_banner:
+          form:
+            location:
+              label: "Lokacija"
+            header_anonymous:
+              placeholder: "Dobrodošli na %{site_name}!"
         navigation:
           title: "Navigacija"
         notifications:

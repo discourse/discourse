@@ -9,6 +9,10 @@ sl:
     overall_sentiment:
       yaxis: "Datum"
   discourse_ai:
+    tools:
+      presets:
+        image_generation_custom:
+          name: "Po meri"
     ai_bot:
       tool_summary:
         search: "Išči"

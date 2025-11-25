@@ -56,6 +56,8 @@ if Rails.env.production?
     # we handle this cleanly in the message bus middleware
     # no point logging to logster
     /RateLimiter::LimitExceeded.*/m,
+    # Pitchfork workers call Process.exit when timeouting
+    /SystemExit/,
   ]
   Logster.config.env_expandable_keys.push(:hostname, :problem_db)
 end

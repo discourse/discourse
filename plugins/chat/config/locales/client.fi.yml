@@ -128,7 +128,6 @@ fi:
       email_frequency:
         description: "Lähetämme sinulle sähköpostia vain, jos emme ole nähneet sinua viimeisen 15 minuutin aikana."
         never: "Ei koskaan"
-        title: "Sähköposti-ilmoitukset"
         when_away: "Vain poissa ollessa"
       header_indicator_preference:
         title: "Näytä aktiivisuusilmaisin yläpalkissa"

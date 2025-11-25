@@ -40,7 +40,7 @@ module DiscourseAi
 
         @parser.start_array do
           next if @broken
-          next unless @current_key
+          next if !@current_key
 
           @tracking_array = true
           @current_value = []

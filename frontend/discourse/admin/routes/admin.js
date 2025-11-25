@@ -1,15 +1,14 @@
 import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import AdminSearchModal from "discourse/admin/components/modal/admin-search";
-import KeyboardShortcuts, {
-  PLATFORM_KEY_MODIFIER,
-} from "discourse/lib/keyboard-shortcuts";
 import DiscourseRoute from "discourse/routes/discourse";
+import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
 import { i18n } from "discourse-i18n";
 
 export default class AdminRoute extends DiscourseRoute {
   @service adminSidebarStateManager;
   @service modal;
+  @service keyboardShortcuts;
 
   @tracked initialSidebarState;
 
@@ -18,7 +17,7 @@ export default class AdminRoute extends DiscourseRoute {
   }
 
   activate() {
-    KeyboardShortcuts.addShortcut(
+    this.keyboardShortcuts.addShortcut(
       `${PLATFORM_KEY_MODIFIER}+/`,
       (event) => this.showAdminSearchModal(event),
       {
@@ -38,7 +37,7 @@ export default class AdminRoute extends DiscourseRoute {
   deactivate(transition) {
     this.controllerFor("application").set("showTop", true);
 
-    KeyboardShortcuts.unbind({
+    this.keyboardShortcuts.unbind({
       [`${PLATFORM_KEY_MODIFIER}+/`]: this.showAdminSearchModal,
     });
 

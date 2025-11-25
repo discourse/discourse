@@ -138,7 +138,7 @@ discourse_ai:
   ai_helper_automatic_chat_thread_title_delay:
     default: 5
     area: "ai-features/ai_helper"
-  ai_helper_illustrate_post_model:
+  ai_helper_illustrate_post_model: # Deprecated. TODO(keegan): Remove 2025-12-01
     default: disabled
     type: enum
     choices:
@@ -146,6 +146,7 @@ discourse_ai:
       - dall_e_3
       - disabled
     area: "ai-features/ai_helper"
+    hidden: true
   ai_helper_enabled_features:
     client: true
     default: "suggestions|context_menu"
@@ -582,3 +583,14 @@ discourse_ai:
   ai_artifact_max_keys_per_user_per_artifact:
     default: 100
     hidden: true
+
+  ai_usage_rollup_after_days:
+    default: 7
+    min: 0
+    client: false
+    hidden: true
+
+  ai_audit_logs_purge_after_days:
+    default: 180
+    min: 0
+    client: false

@@ -36,9 +36,9 @@ module DiscourseAi
           .map do |prompt|
             next if !user.in_any_groups?(prompt[:allowed_group_ids])
 
-            if prompt[:name] == ILLUSTRATE_POST &&
-                 SiteSetting.ai_helper_illustrate_post_model == "disabled"
-              next
+            if prompt[:name] == ILLUSTRATE_POST
+              persona = AiPersona.find_by(id: SiteSetting.ai_helper_post_illustrator_persona)
+              next if persona.blank? || !persona_has_image_generation_tool?(persona)
             end
 
             # We cannot cache this. It depends on the user's effective_locale.
@@ -288,6 +288,15 @@ module DiscourseAi
       end
 
       private
+
+      def persona_has_image_generation_tool?(persona)
+        persona&.has_image_generation_tool?
+      rescue StandardError => e
+        Rails.logger.warn(
+          "Failed to check image generation tool for persona #{persona&.id}: #{e.message}",
+        )
+        false
+      end
 
       def build_bot(helper_mode, user)
         persona_id = personas_prompt_map(include_image_caption: true).invert[helper_mode]

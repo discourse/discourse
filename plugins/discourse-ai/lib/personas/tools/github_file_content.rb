@@ -50,15 +50,21 @@ module DiscourseAi
         end
 
         def description_args
-          {
-            repo_name: repo_name,
-            file_paths: file_paths.join(", "),
-            branch: branch || default_branch,
-          }
+          paths = ""
+          paths = file_paths.join(", ") if file_paths.is_a?(Array)
+          { repo_name: repo_name, file_paths: paths, branch: branch || default_branch }
         end
 
         def invoke
-          owner, repo = repo_name.split("/")
+          owner, repo = repo_name.to_s.split("/")
+
+          if owner.blank? || repo.blank?
+            return { error: "Invalid repo_name format. Expected 'owner/repo'." }
+          end
+
+          return { error: "file_paths cannot be empty." } if file_paths.blank?
+          return { error: "file_paths must be an array." } if !file_paths.is_a?(Array)
+
           ref = branch || default_branch
           retrieved_entries = []
           missing_files = []

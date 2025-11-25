@@ -109,11 +109,6 @@
     max-width: 100%;
     height: auto;
     display: inline-block; // Ensure dimensions are maintained even after load error
-
-    @supports not (aspect-ratio: 1) {
-      // (see javascripts/discourse/app/initializers/image-aspect-ratio.js)
-      height: var(--calculated-height);
-    }
   }
 
   svg {

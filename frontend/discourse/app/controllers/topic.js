@@ -377,10 +377,66 @@ export default class TopicController extends Controller {
   }
 
   @action
-  editTopic(event) {
+  async handleTitleClick(event) {
+    this.editTopic?.(event);
+    this.jumpTop?.(event);
+  }
+
+  @action
+  async editTopic(event) {
     event?.preventDefault();
-    if (this.get("model.details.can_edit")) {
-      this.set("editingTopic", true);
+    const canEditTitle = this.get("model.details.can_edit");
+    const canLocalize = this.get("model.can_localize_topic");
+
+    if (!canEditTitle && !canLocalize) {
+      return;
+    }
+
+    const titleLocalized = this.model?.fancy_title_localized;
+    if (!titleLocalized && canEditTitle) {
+      return this.set("editingTopic", true);
+    }
+
+    if (this.composer.isOpen) {
+      return;
+    }
+
+    const topic = this.model;
+    const firstPost = await topic.firstPost();
+
+    if (canEditTitle && !canLocalize) {
+      return this._openComposerForEdit(topic, firstPost);
+    }
+
+    if (titleLocalized && !canEditTitle) {
+      return this._openComposerForEditTranslation(topic, firstPost);
+    }
+
+    if (titleLocalized) {
+      const topicLocale = topic.locale;
+      const language = this.languageNameLookup.getLanguageName(topicLocale);
+      return this.dialog.alert({
+        message: i18n("topic.localizations.title_edit_warning.message", {
+          language,
+        }),
+        buttons: [
+          {
+            label: i18n(
+              "topic.localizations.title_edit_warning.action_original"
+            ),
+            class: "btn-primary",
+            action: () => this._openComposerForEdit(topic, firstPost),
+          },
+          {
+            label: i18n(
+              "topic.localizations.title_edit_warning.action_translation"
+            ),
+            class: "btn-default",
+            action: () =>
+              this._openComposerForEditTranslation(topic, firstPost),
+          },
+        ],
+      });
     }
   }
 
@@ -466,7 +522,7 @@ export default class TopicController extends Controller {
       ? Promise.resolve(loadedPost)
       : this.get("model.postStream").loadPost(postId);
 
-    return promise.then((post) => {
+    return promise.then(async (post) => {
       const composer = this.composer;
       const viewOpen = composer.get("model.viewOpen");
 
@@ -495,7 +551,6 @@ export default class TopicController extends Controller {
       }
 
       const quotedText = buildQuote(post, buffer, opts);
-      composerOpts.quote = quotedText;
 
       if (composer.get("model.viewOpen")) {
         this.appEvents.trigger("composer:insert-block", quotedText);
@@ -504,6 +559,16 @@ export default class TopicController extends Controller {
         model.set("reply", model.get("reply") + "\n" + quotedText);
         composer.openIfDraft();
       } else {
+        const draftData = await Draft.get(composerOpts.draftKey);
+
+        if (draftData.draft) {
+          const data = JSON.parse(draftData.draft);
+          composerOpts.draftSequence = draftData.draft_sequence;
+          composerOpts.reply = data.reply + "\n" + quotedText;
+        } else {
+          composerOpts.quote = quotedText;
+        }
+
         composer.open(composerOpts);
       }
     });
@@ -739,24 +804,25 @@ export default class TopicController extends Controller {
         draftSequence: topic.get("draft_sequence"),
       };
 
-      if (quotedText) {
-        opts.quote = quotedText;
-      }
-
       if (post && post.get("post_number") !== 1) {
         opts.post = post;
       } else {
         opts.topic = topic;
       }
 
-      if (!opts.quote) {
-        const draftData = await Draft.get(opts.draftKey);
+      const draftData = await Draft.get(opts.draftKey);
 
-        if (draftData.draft) {
-          const data = JSON.parse(draftData.draft);
+      if (draftData.draft) {
+        const data = JSON.parse(draftData.draft);
+        opts.draftSequence = draftData.draft_sequence;
+
+        if (quotedText) {
+          opts.reply = data.reply + "\n" + quotedText;
+        } else {
           opts.reply = data.reply;
-          opts.draftSequence = draftData.draft_sequence;
         }
+      } else if (quotedText) {
+        opts.quote = quotedText;
       }
 
       composerController.open(opts);

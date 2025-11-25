@@ -832,15 +832,21 @@ html.composer-open:not(.has-full-page-chat) {
 // Safari in iOS/iPad does not handle well a bottom:0 fixed-positioned element,
 // especially while the software keyboard is visible, so we top-anchor it here
 // and shift it using transform
-.ios-device {
+.ipados-device {
   #reply-control {
     // the two properties below are equivalent to bottom: 0
     top: calc(var(--composer-vh, 1vh) * 100);
     transform: translateY(-100%);
     bottom: unset;
   }
+}
 
+.ios-device {
   &.footer-nav-visible {
+    #reply-control {
+      bottom: calc(var(--footer-nav-height, 0px) + env(safe-area-inset-bottom));
+    }
+
     #reply-control.draft,
     #reply-control.saving {
       margin-top: calc(
@@ -1036,13 +1042,9 @@ html.composer-open:not(.has-full-page-chat) {
   #reply-control {
     &.fullscreen {
       // important needed because of inline styles when height is changed manually with grippie
-      height: 100vh !important;
+      height: calc(var(--composer-vh, 1vh) * 100) !important;
       max-height: 100%; // prevents devices from miscalculating using vh
       z-index: z("header") + 1;
-
-      @supports (--custom: property) {
-        height: calc(var(--composer-vh, 1vh) * 100) !important;
-      }
 
       .grippie {
         display: none;

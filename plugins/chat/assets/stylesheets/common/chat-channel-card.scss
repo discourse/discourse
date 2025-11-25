@@ -1,4 +1,5 @@
 .chat-channel-card {
+  --chat-channel-card-border: transparent;
   display: grid;
   grid-template-areas:
     "title cta"
@@ -13,6 +14,7 @@
   min-height: 0;
   min-width: 0;
   border-left: 5px solid transparent;
+  border-color: var(--chat-channel-card-border);
 
   &.--closed,
   &.--archived {

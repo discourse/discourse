@@ -20,7 +20,7 @@ module DiscourseAi
           The title of your site: {site_title}
           The description is: {site_description}
           The participants in this conversation are: {participants}
-          The date now is: {time}, much has changed since you were trained.
+          The date now is: {date}, much has changed since you were trained.
           Topic URLs are formatted as: /t/-/TOPIC_ID
           Post URLs are formatted as: /t/-/TOPIC_ID/POST_NUMBER
 

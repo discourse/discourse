@@ -1577,7 +1577,6 @@ zh_CN:
     allow_duplicate_topic_titles_category: "如果类别不同，允许有相同或重复标题的话题。必须禁用 allow_duplicate_topic_titles。"
     unique_posts_mins: "用户可以再次发布相同内容的帖子前需要等待的分钟数"
     educate_until_posts: "当用户开始输入他们的前几 (n) 个新帖子时，在编辑器中显示弹出式新用户教育面板。"
-    title: "此网站的名称。对包括匿名用户在内的所有访客可见。"
     site_description: "用一句话描述此网站。对包括匿名用户在内的所有访客可见。"
     short_site_description: "几个字的简短描述。对包括匿名用户在内的所有访客可见。"
     contact_email: "负责此网站的主要联系人的电子邮件地址，用于重要通知，也会显示在 <a href='%{base_path}/about' target='_blank'>/about</a> 上。对公共网站上的匿名用户可见。"
@@ -2048,7 +2047,6 @@ zh_CN:
     allow_all_users_to_flag_illegal_content: "匿名用户将看到需要通过电子邮件向管理员举报非法内容的信息。此设置优先于“允许举报帖子的群组”。"
     email_address_to_report_illegal_content: "如果留空，将使用默认的网站管理员电子邮件地址。"
     cooldown_hours_until_reflag: "用户需要等待多长时间才能重新举报帖子"
-    slow_mode_prevents_editing: "在 editing_grace_period 之后，“慢速模式”会阻止编辑吗？"
     reply_by_email_enabled: "激活允许用户直接通过电子邮件回复话题的功能，无需他们登录网站。有关详情，请参阅 <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>Meta 上的指南</a> 。"
     reply_by_email_address: "通过传入电子邮件地址回复的模板。示例：%%{reply_key}@reply.example.com 或 replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "通过传入电子邮件地址回复的备用模板列表。示例：%%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -2251,6 +2249,7 @@ zh_CN:
     disable_watched_word_checking_in_user_fields: "在用户字段中禁用关注词检查"
     watched_words_regular_expressions: "允许使用正则表达式筛选字词。如果启用，它会根据字词的大小写将敏感词分组。然后，它将所有选定字词编译成一个单一的正则表达式，并为常规关注词添加字词边界。因此，这种基于正则表达式的筛选方法通过支持更复杂的字词模式，对内容审核增加了额外一层控制。该设置还允许轻松地使用选择的替换文本替换原始文本。"
     enable_fast_edit: "在帖子选择菜单中添加一个按钮以内联编辑小部分内容。"
+    old_post_notice_days: "新用户和回访用户发布通知后隐藏的天数。官方发布的通知将始终可见。"
     new_user_notice_tl: "查看新用户帖子通知所需的最低信任级别。"
     returning_user_notice_tl: "查看回访用户帖子通知所需的最低信任级别。"
     returning_users_days: "在用户被视为回访之前应经过的天数。"
@@ -2354,7 +2353,6 @@ zh_CN:
     sitemap_page_size: "每个网站地图页面中包含的 URL 数量。最大 50.000"
     enable_user_status: "允许用户设置自定义状态消息（表情符号 + 描述）。"
     enable_user_tips: "启用向用户描述关键功能的新用户提示"
-    short_title: "短标题将用于用户的主屏幕、启动器或其他空间可能有限的地方。应被限制为 12 个字符。"
     dashboard_hidden_reports: "允许从信息中心隐藏指定报告。"
     dashboard_visible_tabs: "选择可见的信息中心标签页。"
     dashboard_general_tab_activity_metrics: "选择要在“常规”标签页上显示为活动指标的报告。"
@@ -3536,14 +3534,9 @@ zh_CN:
     user_automatically_silenced:
       title: "用户被自动禁言"
       subject_template: "新用户 %{username} 因社区举报被禁言"
-      text_body_template: |
-        这是一封自动发送的邮件。
-
-        由于多个用户举报了 %{username} 的帖子，新用户 [%{username}](%{user_url}) 已被自动禁言。
-
-        请[审核举报](%{base_url}/review)。如果 %{username} 被意外禁言，请点击[此用户的管理页面](%{user_url})上的取消禁言按钮。
-
-        此阈值可以通过 `silence_new_user` 网站设置更改。
+    user_automatically_silenced_with_reason:
+      title: "用户被自动禁言"
+      subject_template: "新用户 %{username} 因社区举报被禁言"
     spam_post_blocked:
       title: "垃圾信息帖子被屏蔽"
       subject_template: "新用户 %{username} 的帖子因重复链接被屏蔽"
@@ -5151,7 +5144,6 @@ zh_CN:
         title: "舍弃帖子"
         complete: "帖子已被舍弃。"
       revise_and_reject_post:
-        title: "修订帖子…"
         complete: "帖子被拒绝，等待修订。"
       ignore:
         title: "忽略"

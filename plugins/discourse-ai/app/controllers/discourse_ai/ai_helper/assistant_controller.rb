@@ -106,9 +106,55 @@ module DiscourseAi
 
       def suggest_thumbnails(input)
         hijack do
-          thumbnails = DiscourseAi::AiHelper::Painter.new.commission_thumbnails(input, current_user)
+          result =
+            DiscourseAi::AiHelper::GenerateThumbnails.call(
+              params: {
+                text: input,
+              },
+              guardian: guardian,
+            )
 
-          render json: { thumbnails: thumbnails }, status: :ok
+          if result.failure?
+            failing_step = nil
+            failing_step = "contract.default" if result[:"result.contract.default"]&.failure?
+            failing_step = "model.persona" if result[:"result.model.persona"]&.failure?
+            failing_step = "policy.has_image_generation_tool" if result[
+              :"result.policy.has_image_generation_tool"
+            ]&.failure?
+            failing_step = "model.llm_model" if result[:"result.model.llm_model"]&.failure?
+
+            status =
+              case failing_step
+              when "contract.default"
+                422
+              when "model.persona"
+                404
+              when "policy.has_image_generation_tool"
+                422
+              when "model.llm_model"
+                500
+              else
+                500
+              end
+
+            translation_key =
+              case failing_step
+              when "contract.default"
+                "discourse_ai.ai_helper.errors.completion_request_failed"
+              when "model.persona"
+                "discourse_ai.ai_helper.errors.no_illustrator_persona"
+              when "policy.has_image_generation_tool"
+                "discourse_ai.ai_helper.errors.no_image_generation_tool"
+              when "model.llm_model"
+                "discourse_ai.ai_helper.errors.llm_model_not_configured"
+              else
+                "discourse_ai.ai_helper.errors.no_image_generated"
+              end
+
+            render_json_error(I18n.t(translation_key), status: status)
+          else
+            render json: { thumbnails: result[:thumbnails] }, status: :ok
+          end
         end
       end
 

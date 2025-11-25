@@ -53,10 +53,15 @@ export default class AiLlmEditorForm extends Component {
         display_name: modelInfo.display_name,
         name: modelInfo.name,
         provider: info.provider,
-        provider_params: this.computeProviderParams(info.provider),
+        provider_params: this.computeProviderParams(
+          info.provider,
+          modelInfo.provider_params ?? {}
+        ),
         input_cost: modelInfo.input_cost,
         output_cost: modelInfo.output_cost,
         cached_input_cost: modelInfo.cached_input_cost,
+        vision_enabled: modelInfo.vision_enabled || false,
+        cache_write_cost: modelInfo.cache_write_cost,
       };
     }
 
@@ -76,6 +81,7 @@ export default class AiLlmEditorForm extends Component {
       input_cost: model.input_cost,
       output_cost: model.output_cost,
       cached_input_cost: model.cached_input_cost,
+      cache_write_cost: model.cache_write_cost,
       provider_params: this.computeProviderParams(
         model.provider,
         model.provider_params
@@ -429,6 +435,16 @@ export default class AiLlmEditorForm extends Component {
           @name="cached_input_cost"
           @title={{i18n "discourse_ai.llms.cost_cached_input"}}
           @tooltip={{i18n "discourse_ai.llms.hints.cost_cached_input"}}
+          @helpText={{i18n "discourse_ai.llms.hints.cost_measure"}}
+          as |field|
+        >
+          <field.Input @type="number" step="any" min="0" lang="en" />
+        </inputGroup.Field>
+
+        <inputGroup.Field
+          @name="cache_write_cost"
+          @title={{i18n "discourse_ai.llms.cost_cache_write"}}
+          @tooltip={{i18n "discourse_ai.llms.hints.cost_cache_write"}}
           @helpText={{i18n "discourse_ai.llms.hints.cost_measure"}}
           as |field|
         >

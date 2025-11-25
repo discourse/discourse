@@ -253,6 +253,7 @@ it:
           custom_prompt: "Comando personalizzato"
           image_caption: "Didascalia immagini"
           translator: "Assistente traduzione"
+          post_illustrator: "Assistente messaggi illustrati"
         translation:
           name: "Traduzione"
           description: "Traduce i contenuti nelle lingue supportate"
@@ -391,8 +392,6 @@ it:
           low: 'Bassa qualità: più veloce (256x256)'
           medium: Qualità media (512x512)
           high: 'Alta qualità: più lenta (1024x1024)'
-        tool_details: Mostra i dettagli dello strumento
-        tool_details_help: Mostrerà agli utenti finali i dettagli su quali strumenti ha attivato il modello linguistico.
         mentionable: Consenti menzioni
         mentionable_help: Se l'opzione è abilitata, gli utenti nei gruppi consentiti possono menzionare questo utente nei post, l'IA risponderà come questa persona.
         user: Utente
@@ -585,21 +584,17 @@ it:
         model_description:
           none: "Impostazioni generali che vanno bene per la maggior parte dei modelli linguistici"
           anthropic-claude-opus-4-1: "Il modello più intelligente di Anthropic"
-          anthropic-claude-sonnet-4-0: "Equilibrio ottimale tra velocità e costi"
-          anthropic-claude-3-7-sonnet-latest: "Equilibrio ottimale tra velocità e costi (generazione precedente)"
-          anthropic-claude-3-5-haiku-latest: "Veloce e conveniente"
+          anthropic-claude-sonnet-4-5: "Equilibrio ottimale tra velocità e costi"
+          anthropic-claude-haiku-4-5: "Veloce e conveniente"
           google-gemini-2-5-pro: "Modello multimodale di grandi dimensioni in grado di svolgere un'ampia gamma di attività"
-          google-gemini-2-0-flash: "Leggero, veloce ed economicamente efficiente con ragionamento multimodale (generazione precedente)"
           google-gemini-2-5-flash: "Leggero, veloce ed economico con ragionamento multimodale"
-          google-gemini-2-0-flash-lite: "Modello economico e a bassa latenza"
-          open_ai-o4-mini: "Modello di ragionamento economicamente efficiente avanzato"
           open_ai-gpt-5-mini: "Grazie all'equilibrio tra intelligenza, velocità e costo, è un modello che si presta a numerosi casi d'uso."
           open_ai-gpt-5-nano: "Il modello GPT-5 più veloce ed economicamente efficiente."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Modello multilingue leggero ed efficiente"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "Potente modello multifunzionale"
           mistral-mistral-large-latest: "Il modello Mistral più potente"
           mistral-pixtral-large-latest: "Il modello Mistral con capacità di visione più potente"
-          open_router-x-ai-grok-3-beta: "L'ultimo modello di xAI"
+          open_router-x-ai-grok-4: "L'ultimo modello di xAI"
           open_router-deepseek-deepseek-r1-0528-free: "L'ultimo modello di ragionamento di DeepSeek"
           open_router-meta-llama-3-3-70b-instruct: "Modello multilingue di eccellenti capacità"
         preseeded_model_description: "Modello open source preconfigurato che utilizza %{model}"
@@ -627,7 +622,6 @@ it:
           vision_enabled: "Se l'opzione è abilitata, l'intelligenza artificiale tenterà di comprendere le immagini. Dipende dal modello utilizzato per supportare la visione. Supportato dagli ultimi modelli di Anthropic, Google e OpenAI."
           enabled_chat_bot: "Se abilitato, gli utenti possono selezionare questo modello quando creano messaggi privati con il bot IA"
           cost_input: "Il costo di input di 1 milione di token per questo modello"
-          cost_cached_input: "Il costo di input di 1 milione di token in cache per questo modello"
           cost_output: "Il costo di output di 1 milione di token per questo modello"
           cost_measure: "$/milione token"
         providers:
@@ -900,7 +894,6 @@ it:
         loading_convo: "Caricamento conversazione"
         collapse: "Comprimi"
         timed_out: "Il discobot non ha trovato scoperte. Si è verificato un errore."
-        user_setting: "Abilita le scoperte nella ricerca"
         tooltip:
           header: "Ricerca con IA"
           content: "Ricerca in linguaggio naturale basata su %{model}"

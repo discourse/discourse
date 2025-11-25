@@ -253,6 +253,7 @@ fi:
           custom_prompt: "Mukautettu kehote"
           image_caption: "Lisää kuvateksti"
           translator: "Kääntäjä"
+          post_illustrator: "Viestin havainnollistaja"
         translation:
           name: "Käännös"
           description: "Kääntää sisällön tuetuille kielille"
@@ -391,8 +392,6 @@ fi:
           low: Heikko laatu – halvin (256x256)
           medium: Keskilaatuinen (512x512)
           high: Korkea laatu – hitain (1024x1024)
-        tool_details: Näytä työkalun tiedot
-        tool_details_help: Näyttää loppukäyttäjille tiedot siitä, mitkä työkalut kielimalli on laukaissut.
         mentionable: Salli maininnat
         mentionable_help: Jos tämä on käytössä, sallittujen ryhmien käyttäjät voivat mainita tämän käyttäjän viesteissä, tekoäly vastaa tänä persoonana.
         user: Käyttäjä
@@ -585,21 +584,17 @@ fi:
         model_description:
           none: "Yleiset asetukset, jotka toimivat useimmissa kielimalleissa"
           anthropic-claude-opus-4-1: "Anthropicin älykkäin malli"
-          anthropic-claude-sonnet-4-0: "Optimaalinen tasapaino nopeuden ja kustannusten välillä"
-          anthropic-claude-3-7-sonnet-latest: "Optimaalinen tasapaino nopeuden ja kustannusten välillä (edellinen sukupolvi)"
-          anthropic-claude-3-5-haiku-latest: "Nopea ja kustannustehokas"
+          anthropic-claude-sonnet-4-5: "Optimaalinen tasapaino nopeuden ja kustannusten välillä"
+          anthropic-claude-haiku-4-5: "Nopea ja kustannustehokas"
           google-gemini-2-5-pro: "Suuri multimodaalinen malli, joka pystyy suorittamaan monenlaisia tehtäviä"
-          google-gemini-2-0-flash: "Kevyt, nopea ja kustannustehokas multimodaalisella päättelyllä (edellinen sukupolvi)"
           google-gemini-2-5-flash: "Kevyt, nopea ja kustannustehokas multimodaalisella päättelyllä"
-          google-gemini-2-0-flash-lite: "Kustannustehokas ja matalan latenssin malli"
-          open_ai-o4-mini: "Kehittynyt kustannustehokas päättelymalli"
           open_ai-gpt-5-mini: "Tarjoaa tasapainon älykkyyden, nopeuden ja kustannusten välillä, mikä tekee siitä houkuttelevan mallin moniin käyttötarkoituksiin."
           open_ai-gpt-5-nano: "Nopein ja kustannustehokkain GPT-5-malli."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Tehokas kevyt monikielinen malli"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "Tehokas monikäyttöinen malli"
           mistral-mistral-large-latest: "Mistralin tehokkain malli"
           mistral-pixtral-large-latest: "Mistralin tehokkain näkökykyinen malli"
-          open_router-x-ai-grok-3-beta: "xAI:n uusin malli"
+          open_router-x-ai-grok-4: "xAI:n uusin malli"
           open_router-deepseek-deepseek-r1-0528-free: "DeepSeekin uusin päättelymalli"
           open_router-meta-llama-3-3-70b-instruct: "Erittäin kyvykäs monikielinen malli"
         preseeded_model_description: "Ennalta määritetty avoimen lähdekoodin malli, joka käyttää mallia %{model}"
@@ -627,7 +622,6 @@ fi:
           vision_enabled: "Jos tämä on käytössä, tekoäly yrittää ymmärtää kuvia. Tämä riippuu siitä, tukeeko käytettävä malli näköä. Anthropicin, Googlen ja OpenAI:n uusimmat mallit tukevat näköä."
           enabled_chat_bot: "Jos tämä on käytössä, käyttäjät voivat valita tämän mallin luodessaan yksityisviestejä tekoälybotin kanssa"
           cost_input: "Tämän mallin syöttökustannukset miljoonaa sanetta kohden"
-          cost_cached_input: "Tämän mallin välimuistisyöttökustannukset miljoonaa sanetta kohden"
           cost_output: "Tämän mallin tuotoskustannukset miljoonaa sanetta kohden"
           cost_measure: "$/1 milj. sanetta"
         providers:
@@ -900,7 +894,6 @@ fi:
         loading_convo: "Ladataan keskustelua"
         collapse: "Supista"
         timed_out: "Discobot ei löytänyt löytöjä. Jokin meni vikaan."
-        user_setting: "Ota hakulöydöt käyttöön"
         tooltip:
           header: "Tekoälyhaku"
           content: "Luonnollisen kielen haun tarjoaa %{model}"
