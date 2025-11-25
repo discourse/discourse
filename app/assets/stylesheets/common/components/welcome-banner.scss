@@ -56,7 +56,7 @@
         min-width: 0;
 
         &.-closing {
-          @include d-animation(dissolve-up, 250ms, ease);
+          @include d-animation(dissolve-up, 125ms, ease);
         }
       }
     }
