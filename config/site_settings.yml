@@ -4217,6 +4217,9 @@ experimental:
     hidden: true
     client: true
     area: "experimental"
+    upcoming_change:
+      status: "pre_alpha"
+      impact: "other,all_members"
   experimental_hashtag_search_result_limit:
     default: 20
     client: true

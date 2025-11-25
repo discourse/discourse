@@ -9,7 +9,8 @@ RSpec.describe UpcomingChanges::Toggle do
     subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:admin)
-    let(:params) { { setting_name: } }
+    let(:params) { { setting_name:, enabled: } }
+    let(:enabled) { true }
     let(:setting_name) { :experimental_form_templates }
     let(:dependencies) { { guardian: } }
     let(:guardian) { admin.guardian }
@@ -36,6 +37,8 @@ RSpec.describe UpcomingChanges::Toggle do
       it { is_expected.to run_successfully }
 
       context "when the setting is enabled" do
+        let(:enabled) { false }
+
         before { SiteSetting.experimental_form_templates = true }
 
         it "disables the specified setting" do
@@ -44,6 +47,8 @@ RSpec.describe UpcomingChanges::Toggle do
       end
 
       context "when the setting is disabled" do
+        let(:enabled) { true }
+
         before { SiteSetting.experimental_form_templates = false }
 
         it "enables the specified setting" do

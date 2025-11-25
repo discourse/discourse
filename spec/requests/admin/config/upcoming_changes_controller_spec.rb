@@ -54,6 +54,7 @@ RSpec.describe Admin::Config::UpcomingChangesController do
             "impact_role" => "developers",
             "impact_type" => "other",
             "status" => "pre_alpha",
+            "enabled_for" => "no_one",
           },
         )
       end
@@ -69,7 +70,7 @@ RSpec.describe Admin::Config::UpcomingChangesController do
             change["setting"] == "enable_upload_debug_mode"
           end
 
-        expect(mock_setting["groups"]).to eq(%w[trust_level_0 trust_level_1])
+        expect(mock_setting["groups"]).to eq("trust_level_0,trust_level_1")
       end
     end
   end
@@ -192,7 +193,7 @@ RSpec.describe Admin::Config::UpcomingChangesController do
       before { sign_in(user) }
 
       it "returns 404" do
-        put "/admin/config/upcoming-changes/toggle.json", params: { setting_name: }
+        put "/admin/config/upcoming-changes/toggle.json", params: { setting_name:, enabled: true }
         expect(response.status).to eq(404)
       end
     end
@@ -201,7 +202,7 @@ RSpec.describe Admin::Config::UpcomingChangesController do
       before { sign_in(admin) }
 
       it "returns 200 on success" do
-        put "/admin/config/upcoming-changes/toggle.json", params: { setting_name: }
+        put "/admin/config/upcoming-changes/toggle.json", params: { setting_name:, enabled: true }
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["success"]).to eq("OK")
@@ -211,7 +212,7 @@ RSpec.describe Admin::Config::UpcomingChangesController do
         SiteSetting.experimental_form_templates = false
 
         expect {
-          put "/admin/config/upcoming-changes/toggle.json", params: { setting_name: }
+          put "/admin/config/upcoming-changes/toggle.json", params: { setting_name:, enabled: true }
         }.to change { SiteSetting.experimental_form_templates }.from(false).to(true)
       end
 
@@ -219,13 +220,17 @@ RSpec.describe Admin::Config::UpcomingChangesController do
         SiteSetting.experimental_form_templates = true
 
         expect {
-          put "/admin/config/upcoming-changes/toggle.json", params: { setting_name: }
+          put "/admin/config/upcoming-changes/toggle.json",
+              params: {
+                setting_name:,
+                enabled: false,
+              }
         }.to change { SiteSetting.experimental_form_templates }.from(true).to(false)
       end
 
       it "logs the change in staff action logs" do
         expect {
-          put "/admin/config/upcoming-changes/toggle.json", params: { setting_name: }
+          put "/admin/config/upcoming-changes/toggle.json", params: { setting_name:, enabled: true }
         }.to change {
           UserHistory.where(
             action: UserHistory.actions[:change_site_setting],
@@ -241,13 +246,14 @@ RSpec.describe Admin::Config::UpcomingChangesController do
         expect(response.parsed_body["errors"]).to be_present
       end
 
-      it "returns 403 when setting_name is invalid" do
+      it "returns 404 when setting_name is invalid" do
         put "/admin/config/upcoming-changes/toggle.json",
             params: {
               setting_name: "nonexistent_setting",
+              enabled: true,
             }
 
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(404)
       end
     end
   end
