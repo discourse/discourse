@@ -60,6 +60,7 @@ export default class UserLink extends Component {
       data-user-card={{this.username}}
       aria-hidden={{this.ariaHidden}}
       aria-label={{this.ariaLabel}}
+      tabindex={{if this.ariaHidden "-1" "0"}}
     >
       {{yield}}
     </a>
