@@ -5723,7 +5723,7 @@ en:
       log_promoted: >
         This upcoming change was automatically enabled because it reached the '%{change_status}' status, which meets or exceeds the defined promotion status of '%{promotion_status_threshold}' on your site.
 
-        See the <a href="%{base_url}/admin/config/upcoming-changes">upcoming changes page</a> for more detail.
+        See the <a href="%{base_path}/admin/config/upcoming-changes">upcoming changes page</a> for more detail.
 
   reviewables:
     already_handled: "Thanks, but we've already reviewed that post and determined it does not need to be flagged again."

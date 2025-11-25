@@ -577,6 +577,9 @@ basic:
       - stable
       - never
     hidden: true
+  upcoming_change_verbose_logging:
+    default: false
+    hidden: true
 
 login:
   login_required:
