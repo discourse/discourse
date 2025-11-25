@@ -43,7 +43,12 @@ module ReleaseUtils
   def self.make_pr(base:, branch:)
     return if test_mode?
 
-    args = ["--title", `git log -1 --pretty=%s`.strip, "--body", `git log -1 --pretty=%b`.strip]
+    args = [
+      "--title",
+      git("log", "-1", branch, "--pretty=%s").strip,
+      "--body",
+      git("log", "-1", branch, "--pretty=%b").strip,
+    ]
 
     success =
       system("gh", "pr", "create", "--base", base, "--head", branch, *args) ||
