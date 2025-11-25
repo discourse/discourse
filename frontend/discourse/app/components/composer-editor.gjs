@@ -992,10 +992,8 @@ export default class ComposerEditor extends Component {
   }
 
   get showTranslationEditor() {
-    if (
-      !this.siteSettings.content_localization_enabled ||
-      !this.currentUser.can_localize_content
-    ) {
+    const post = this.get("composer.model.post");
+    if (!post?.can_localize_post) {
       return false;
     }
 

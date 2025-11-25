@@ -69,9 +69,7 @@ module DiscourseAi
       private
 
       def check_permissions
-        if !current_user&.in_any_groups?(SiteSetting.content_localization_allowed_groups_map)
-          raise Discourse::InvalidAccess
-        end
+        guardian.ensure_can_localize_content!
       end
 
       def rate_limit!

@@ -17,6 +17,7 @@ module(
         id: 1,
         topic_id: 1,
         post_localizations_count: 0,
+        can_localize_post: true,
       });
 
       this.post = post;
@@ -25,7 +26,6 @@ module(
       // positive case for menu to always show
       this.siteSettings.content_localization_enabled = true;
       this.currentUser.admin = true;
-      this.currentUser.can_localize_content = true;
 
       pretender.get("/posts/1.json", () => {
         return [200, {}, { raw: "Test post content" }];
@@ -43,24 +43,14 @@ module(
         .exists("Menu button rendered when user can localize");
     });
 
-    test("does not render when user cannot localize", async function (assert) {
-      this.currentUser.can_localize_content = false;
+    test("does not render when post cannot be localized", async function (assert) {
+      this.post.can_localize_post = false;
 
       await render(<template><AddTranslation @post={{this.post}} /></template>);
 
       assert
         .dom(".update-translations-menu")
         .doesNotExist("No menu when user cannot localize");
-    });
-
-    test("does not render when localization is disabled", async function (assert) {
-      this.siteSettings.content_localization_enabled = false;
-
-      await render(<template><AddTranslation @post={{this.post}} /></template>);
-
-      assert
-        .dom(".update-translations-menu")
-        .doesNotExist("No menu when localization disabled");
     });
 
     test("shows both view and add buttons when localizations exist", async function (assert) {
