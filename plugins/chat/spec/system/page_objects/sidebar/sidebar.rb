@@ -31,6 +31,11 @@ module PageObjects
         menu.option(".chat-channel-sidebar-link-menu__leave-channel").click
       end
 
+      def open_channel_settings(channel)
+        menu = open_channel_hover_menu(channel)
+        menu.option(".chat-channel-sidebar-link-menu__channel-settings").click
+      end
+
       def channel_section_link_selector(channel)
         ".sidebar-section-link.channel-#{channel.id}"
       end
@@ -105,6 +110,30 @@ module PageObjects
 
       def has_no_active_channel?(channel)
         has_no_css?(".sidebar-section-link.channel-#{channel.id}.active")
+      end
+
+      def open_notification_settings(channel)
+        menu = open_channel_hover_menu(channel)
+        notification_button =
+          menu.option(".chat-channel-sidebar-link-menu__open-notification-settings")
+        notification_button.click
+
+        PageObjects::Components::DMenu.new(
+          notification_button,
+          "chat-channel-menu-notification-submenu",
+        )
+      end
+
+      # Requires open_notification_settings to be called first
+      def set_notification_level(level)
+        find(".chat-channel-sidebar-link-menu__notification-level-#{level}").click
+        self
+      end
+
+      # Requires open_notification_settings to be called first
+      def toggle_mute_channel
+        find(".chat-channel-sidebar-link-menu__mute-channel").click
+        self
       end
     end
   end

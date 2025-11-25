@@ -208,7 +208,7 @@ export default class ChatChannelSidebarLinkMenu extends Component {
         <DButton
           {{on "click" this.closeAfterNav}}
           @route="chat.channel.info.settings"
-          @routeModels={{this.channel}}
+          @routeModels={{this.channel.routeModels}}
           @icon="gear"
           @label="chat.channel_settings.title"
           @title="chat.channel_settings.title"
