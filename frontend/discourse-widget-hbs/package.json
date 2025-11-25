@@ -4,7 +4,6 @@
   "description": "Support for Discourse's inline `hbs` compiler for widgets",
   "author": "Discourse",
   "license": "GPL-2.0-only",
-  
   "scripts": {
     "build": "ember build",
     "lint:hbs": "ember-template-lint .",
@@ -13,6 +12,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.28.5",
+    "discourse": "workspace:*",
     "ember-auto-import": "^2.11.2",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0"

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.28.5",
+    "discourse": "workspace:*",
     "discourse-i18n": "workspace:1.0.0",
     "ember-auto-import": "^2.11.2",
     "ember-cli-babel": "^8.2.0",

@@ -18,6 +18,8 @@ import mkcert from "vite-plugin-mkcert";
 import customProxy from "../custom-proxy";
 import customInvokableResolver from "./lib/custom-invokable-resolver";
 import discourseTestSiteSettings from "./lib/site-settings-plugin";
+import { readPackageUpSync } from "read-package-up";
+import { dirname } from "node:path";
 
 const extensions = [
   ".gjs",
@@ -45,7 +47,15 @@ export default defineConfig(({ mode, command }) => {
     },
     plugins: [
       // Standard Ember stuff
-      ember(),
+      ember({
+        rolldownSharedPlugins: [
+          // "rollup-hbs-plugin",
+          // "embroider-template-tag",
+          // "embroider-resolver",
+          // "babel",
+        ],
+      }),
+
       classicEmberSupport(),
       // hbs(),
       // scripts(),
@@ -59,6 +69,13 @@ export default defineConfig(({ mode, command }) => {
       babel({
         babelHelpers: "runtime",
         extensions,
+        filter(id) {
+          const x = !!readPackageUpSync({
+            cwd: dirname(id),
+          }).packageJson["ember-addon"];
+          // console.log(x, id);
+          return x;
+        },
       }),
 
       // Discourse-specific
@@ -66,6 +83,26 @@ export default defineConfig(({ mode, command }) => {
       // mkcert(),
       visualizer({ emitFile: true }),
     ],
+    optimizeDeps: {
+      rollupOptions: {
+        plugins: [
+          hbs(),
+          templateTag(),
+          resolver(),
+          babel({
+            babelHelpers: "runtime",
+            extensions,
+            filter(id) {
+              const x = !!readPackageUpSync({
+                cwd: dirname(id),
+              }).packageJson["ember-addon"];
+              console.log(x, id);
+              return x;
+            },
+          }),
+        ],
+      },
+    },
     // optimizeDeps: {
     //   ...optimizeDeps(),
     //   include: ["virtual-dom"],
