@@ -15,32 +15,6 @@ class ComposerStub extends Service {
   }
 }
 
-class StoreStub extends Service {
-  constructor() {
-    super(...arguments);
-    this.posts = new Map();
-    this.topics = new Map();
-  }
-
-  peekRecord(type, id) {
-    const key = id?.toString();
-
-    if (type === "post") {
-      return this.posts.get(key);
-    }
-
-    if (type === "topic") {
-      return this.topics.get(key);
-    }
-
-    return null;
-  }
-
-  async find(type, id) {
-    return this.peekRecord(type, id);
-  }
-}
-
 class AppEventsStub extends Service {
   events = [];
 
@@ -54,16 +28,13 @@ module("Unit | Lib | lightbox | quote image", function (hooks) {
 
   hooks.beforeEach(function () {
     this.owner.unregister("service:composer");
-    this.owner.unregister("service:store");
     this.owner.unregister("service:app-events");
 
     this.owner.register("service:composer", ComposerStub);
-    this.owner.register("service:store", StoreStub);
     this.owner.register("service:app-events", AppEventsStub);
     this.owner.register("controller:topic", class extends Controller {});
 
     this.composer = this.owner.lookup("service:composer");
-    this.store = this.owner.lookup("service:store");
     this.appEvents = this.owner.lookup("service:app-events");
     this.topicController = this.owner.lookup("controller:topic");
 
@@ -77,9 +48,6 @@ module("Unit | Lib | lightbox | quote image", function (hooks) {
       topicId: this.topic.id,
       topic: this.topic,
     };
-
-    this.store.posts.set(this.post.id.toString(), this.post);
-    this.store.topics.set(this.topic.id.toString(), this.topic);
 
     this.draftGetStub = sinon.stub(Draft, "get").resolves({});
   });

@@ -58,11 +58,8 @@ export default async function quoteImage(slideElement, slideData) {
       return false;
     }
 
-    const store = owner.lookup("service:store");
     const composer = owner.lookup("service:composer");
-    const appEvents = owner.lookup("service:app-events");
-
-    if (!store || !composer) {
+    if (!composer) {
       return false;
     }
 
@@ -74,6 +71,7 @@ export default async function quoteImage(slideElement, slideData) {
     }
 
     if (composer.model?.viewOpen) {
+      const appEvents = owner.lookup("service:app-events");
       appEvents?.trigger("composer:insert-block", quote);
       return true;
     }
