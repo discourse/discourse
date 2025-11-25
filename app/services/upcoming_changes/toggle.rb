@@ -39,11 +39,7 @@ class UpcomingChanges::Toggle
         { context: I18n.t("staff_action_logs.upcoming_changes.log_manually_toggled") },
       )
     else
-      SiteSetting.set_and_log(
-        params.setting_name,
-        !SiteSetting.public_send(params.setting_name),
-        guardian.user,
-      )
+      SiteSetting.set_and_log(params.setting_name, params.enabled, guardian.user)
     end
   end
 end

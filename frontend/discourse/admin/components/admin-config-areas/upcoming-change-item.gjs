@@ -233,11 +233,11 @@ export default class UpcomingChangeItem extends Component {
 
       if (newValue === "staff") {
         this.groupsChanged(AUTO_GROUPS.staff.name);
-        await this.saveGroups({ silenceToast: true });
       } else if (newValue === "everyone" || newValue === "no_one") {
         this.groupsChanged("");
-        await this.saveGroups({ silenceToast: true });
       }
+
+      await this.saveGroups({ silenceToast: true });
     } catch (error) {
       this.bufferedEnabledFor = oldValue;
       popupAjaxError(error);
