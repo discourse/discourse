@@ -178,8 +178,7 @@ export default class GlimmerHeader extends Component {
     if (!this.search.visible) {
       this.search.highlightTerm = "";
       this.search.inTopicContext = false;
-      // what is this for?
-      // document.getElementById(SEARCH_BUTTON_ID)?.focus();
+      document.getElementById(SEARCH_BUTTON_ID)?.focus();
     }
   }
 
