@@ -64,7 +64,7 @@ RSpec.describe Theme do
   end
 
   it "can automatically disable for mismatching version" do
-    theme.create_remote_theme!(remote_url: "", minimum_discourse_version: "99.99.99")
+    theme.create_remote_theme!(remote_url: "", minimum_discourse_version: "9999.99.99")
     theme.save!
 
     expect(Theme.transform_ids(theme.id)).to eq([])
