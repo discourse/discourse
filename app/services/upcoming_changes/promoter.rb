@@ -36,11 +36,13 @@ class UpcomingChanges::Promoter
     !SiteSetting.public_send(params.setting)
   end
 
-  def process_upcoming_change(params:)
+  def process_upcoming_change(params:, guardian:)
     UpcomingChanges::Toggle.call(
       params: {
         setting_name: params.setting,
+        enabled: true,
       },
+      guardian:,
       options: {
         log_change: false,
       },
