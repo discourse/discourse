@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { cancel, schedule, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
+import { isNone, isPresent } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
 import { observes, on as onEvent } from "@ember-decorators/object";
 import curryComponent from "ember-curry-component";
@@ -115,8 +116,7 @@ export default class DEditor extends Component {
   }
 
   async setupEditorMode() {
-    // note: we are using != and not !== cause we need to catch undefined as well
-    if (this.forceEditorMode != null) {
+    if (isPresent(this.forceEditorMode)) {
       if (this.forceEditorMode === USER_OPTION_COMPOSITION_MODES.rich) {
         this.editorComponent = await loadRichEditor();
       } else {
@@ -164,7 +164,7 @@ export default class DEditor extends Component {
 
   @discourseComputed("siteSettings.rich_editor", "forceEditorMode")
   showEditorModeToggle() {
-    return this.siteSettings.rich_editor && this.forceEditorMode == null;
+    return this.siteSettings.rich_editor && isNone(this.forceEditorMode);
   }
 
   _readyNow() {
@@ -241,7 +241,7 @@ export default class DEditor extends Component {
     // itsatrap expects the return value to be false to prevent default
     keymap["tab"] = () => !this.textManipulation.indentSelection("right");
     keymap["shift+tab"] = () => !this.textManipulation.indentSelection("left");
-    if (this.siteSettings.rich_editor && this.forceEditorMode == null) {
+    if (this.siteSettings.rich_editor && isNone(this.forceEditorMode)) {
       keymap["ctrl+m"] = () => this.toggleRichEditor();
     }
 
@@ -634,8 +634,7 @@ export default class DEditor extends Component {
 
   @action
   async toggleRichEditor() {
-    // Can't toggle if only rich/markdown is allowed.
-    if (this.forceEditorMode != null) {
+    if (isPresent(this.forceEditorMode)) {
       return;
     }
 
