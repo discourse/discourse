@@ -41,6 +41,6 @@ end
 # Indexes
 #
 #  index_user_chat_channel_memberships_on_user_id_and_starred  (user_id,starred)
-#  user_chat_channel_memberships_index                        (user_id,chat_channel_id,notification_level,following)
-#  user_chat_channel_unique_memberships                       (user_id,chat_channel_id) UNIQUE
+#  user_chat_channel_memberships_index                         (user_id,chat_channel_id,notification_level,following)
+#  user_chat_channel_unique_memberships                        (user_id,chat_channel_id) UNIQUE
 #
