@@ -20,8 +20,6 @@ describe "Post translations", type: :system do
     SiteSetting.default_locale = "en"
     SiteSetting.content_localization_supported_locales = "fr|es|pt_BR"
     SiteSetting.content_localization_enabled = true
-    SiteSetting.post_menu =
-      "read|like|copyLink|flag|edit|bookmark|delete|admin|reply|addTranslation"
     sign_in(admin)
   end
 
