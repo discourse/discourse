@@ -1,7 +1,7 @@
 // Updated to MathJax v3
 // by Mark McClure, June 2025
 // https://github.com/mcmcclur
-// 
+//
 // Original plugin by Sam Saffron et al.
 
 import { next } from "@ember/runloop";
@@ -28,16 +28,13 @@ function initMathJax(opts) {
     chtml: { scale: 1.1 },
     loader: {
       paths: { mathjax: MathJaxBASE },
-      load: [
-        'core', 'input/tex', 'input/mml',
-        'output/chtml', 'ui/menu'
-      ]
+      load: ["core", "input/tex", "input/mml", "output/chtml", "ui/menu"],
     },
     options: {
       menuOptions: {
-        settings: {}
-      }
-    }
+        settings: {},
+      },
+    },
   };
 
   // Handle user options
@@ -49,7 +46,7 @@ function initMathJax(opts) {
     window.MathJax.options.menuOptions.settings.assistiveMml = true;
   }
   if (opts.enable_asciimath) {
-    window.MathJax.loader.load.push('input/asciimath');
+    window.MathJax.loader.load.push("input/asciimath");
   }
 
   initializedMathJax = true;
@@ -57,15 +54,12 @@ function initMathJax(opts) {
 
 function ensureMathJax(opts) {
   initMathJax(opts);
-  return loadScript(
-    "/plugins/discourse-math/mathjax/es5/startup.js"
-  );
+  return loadScript("/plugins/discourse-math/mathjax/es5/startup.js");
 }
 
-
-// This function corresponds to the "mathjax" function 
-// in the original Discourse Math plugin.
-// I've changed the name of the first argument from 
+// This function roll together the mathjax and decorate
+// functions in the original Discourse Math plugin.
+// I've changed the name of the first argument from
 // "elem" to "post", since it's applied to posts,
 // not to individual elements.
 function apply_mathjax(post, opts) {
@@ -73,53 +67,56 @@ function apply_mathjax(post, opts) {
     return;
   }
 
-  ensureMathJax(opts)
-    .then(function () {
-      MathJax.startup.promise
-        // Process LaTeX .math
-        .then(function () {
-          const mathNodes = document.querySelectorAll("div.math, span.math");
-          const promises = [];
+  ensureMathJax(opts).then(function () {
+    MathJax.startup.promise
+      // Process LaTeX .math
+      .then(function () {
+        const mathNodes = document.querySelectorAll("div.math, span.math");
+        const promises = [];
 
-          mathNodes.forEach(function (node) {
-            const tex = node.textContent.trim();
-            const display = node.tagName.toLowerCase() === "div";
-            const p = MathJax.tex2chtmlPromise(tex, { display }).then(function (chtml) {
+        mathNodes.forEach(function (node) {
+          const tex = node.textContent.trim();
+          const display = node.tagName.toLowerCase() === "div";
+          const p = MathJax.tex2chtmlPromise(tex, { display }).then(
+            function (chtml) {
               node.replaceWith(chtml);
-            });
-            promises.push(p);
-          });
-          return Promise.all(promises);
-        })
-
-        // Process AsciiMath .asciimath
-        // During development, it seemed essential to separate this
-        // from the LaTeX processing above.
-        .then(function () {
-          const mathNodes = document.querySelectorAll("span.asciimath");
-          const promises = [];
-
-          mathNodes.forEach(function (node) {
-            if (node?.parentElement?.offsetParent !== null) {
-              const ascii = node.textContent.trim();
-              const p = MathJax.asciimath2chtmlPromise(ascii).then(function (chtml) {
-                node.replaceWith(chtml);
-              });
-              promises.push(p);
             }
-          });
-          return Promise.all(promises);
-        })
+          );
+          promises.push(p);
+        });
+        return Promise.all(promises);
+      })
 
-        // Ensure that the typesetting is updated
-        // If the plugin seems too slow at some point,
-        // it might be reasonable to perform this step 
-        // every 10 or 20 mathNodes, rather just once.
-        .then(function () {
-          MathJax.startup.document.clear();
-          MathJax.startup.document.updateDocument();
-        })
-    });
+      // Process AsciiMath .asciimath
+      // During development, it seemed essential to separate this
+      // from the LaTeX processing above.
+      .then(function () {
+        const mathNodes = document.querySelectorAll("span.asciimath");
+        const promises = [];
+
+        mathNodes.forEach(function (node) {
+          if (node?.parentElement?.offsetParent !== null) {
+            const ascii = node.textContent.trim();
+            const p = MathJax.asciimath2chtmlPromise(ascii).then(
+              function (chtml) {
+                node.replaceWith(chtml);
+              }
+            );
+            promises.push(p);
+          }
+        });
+        return Promise.all(promises);
+      })
+
+      // Ensure that the typesetting is updated
+      // If the plugin seems too slow at some point,
+      // it might be reasonable to perform this step
+      // every 10 or 20 mathNodes, rather just once.
+      .then(function () {
+        MathJax.startup.document.clear();
+        MathJax.startup.document.updateDocument();
+      });
+  });
 }
 
 function initializeMath(api, discourseMathOptions) {
