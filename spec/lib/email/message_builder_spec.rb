@@ -540,7 +540,15 @@ RSpec.describe Email::MessageBuilder do
     it "has the body rendered from a template" do
       I18n
         .expects(:t)
-        .with("mystery.text_body_template", templated_builder.template_args)
+        .with(
+          "mystery.text_body_template",
+          templated_builder.template_args.merge(
+            optional_re: "",
+            optional_pm: "",
+            optional_cat: "",
+            optional_tags: "",
+          ),
+        )
         .returns(rendered_template)
       expect(templated_builder.body).to eq(rendered_template)
     end
