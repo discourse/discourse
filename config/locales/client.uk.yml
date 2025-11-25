@@ -4240,6 +4240,11 @@ uk:
           many: "Ви виділили <b>%{count}</b> дописів."
           other: "Ви виділили <b>%{count}</b> дописів."
       deleted_by_author_simple: "(тема, видалена автором)"
+      localizations:
+        title_edit_warning:
+          message: "Це перекладена назва теми.<br><br>Ви хочете редагувати оригінальну назву в %{language} чи редагувати цей конкретний переклад?"
+          action_original: "Редагувати оригінальну назву теми"
+          action_translation: "Редагувати перекладену назву теми"
     post_list:
       title: "Останні дописи"
       empty: "Немає повідомлень"
@@ -6047,22 +6052,56 @@ uk:
             modal_yes: "Так"
             modal_no: "Ні, застосовувати лише надалі"
         welcome_banner:
+          title: "Вітальний банер"
+          header_description: "Налаштуйте банер із рядком пошуку, який відображається відвідувачам вашого сайту."
+          saved: "Налаштування вітального банера успішно збережено."
           form:
+            enabled_themes:
+              label: "Увімкнено для тем..."
+              description: "Виберіть, у яких темах має відображатися банер. Відображаються лише активні теми."
+            background_image:
+              label: "Фонове зображення"
+              description: "Це зображення буде відображатися за текстом банера."
             text_color:
               label: "Колір тексту"
             page_visibility:
+              label: "Видимість сторінки"
+              description: "Виберіть, де має відображатися банер."
               options:
                 top_menu_pages: "Верхнє меню сторінок"
+                homepage: "Тільки головна сторінка"
+                discovery: "Сторінки пошуку"
                 all_pages: "Усі сторінки"
             location:
               label: "Місцеположення"
+              description: "Виберіть, де на сторінці має з’являтися банер."
               options:
                 above_topic_content: "Над вмістом теми"
                 below_site_header: "Нижче заголовка сайту"
+            text_section:
+              title: "Текст, який налаштовується"
+              variables: "Ви можете використовувати ці змінні у своєму тексті: <code>&percnt;{preferred_display_name}</code>, <code>&percnt;{site_name}</code>"
+            header_new_members:
+              label: "Заголовок для нових учасників"
+              placeholder: "Ласкаво просимо на %{site_name}, %{preferred_display_name}!"
             header_logged_in:
+              label: "Заголовок для зареєстрованих учасників"
               placeholder: "З поверненням, %{preferred_display_name}!"
             header_anonymous:
+              label: "Заголовок для анонімних відвідувачів"
               placeholder: "Ласкаво просимо до сайту %{site_name}!"
+            subheader_logged_in:
+              label: "Підзаголовок для зареєстрованих учасників"
+              description: "Додатковий текст, показаний під заголовком для зареєстрованих користувачів."
+              placeholder: "Дізнайтеся, що нового в спільноті"
+            subheader_anonymous:
+              label: "Підзаголовок для анонімних відвідувачів"
+              description: "Додатковий текст, показаний під заголовком для анонімних відвідувачів."
+              placeholder: "Приєднуйтесь до нашої спільноти для участі в дискусіях"
+            search_placeholder:
+              label: "Заповнювач пошуку"
+              description: "Текст-заповнювач для поля пошуку у вітальному банері."
+              placeholder: "Пошук тем..."
         navigation:
           title: "Навігація"
           header_description: "Налаштуйте навігаційні посилання та пункти меню для свого сайту. Це включає розташування та поведінку основного навігаційного меню, швидких посилань у верхній частині домашньої сторінки, а також бічної панелі адміністратора"

@@ -4,6 +4,7 @@ module DiscourseAi
     class Report
       UNKNOWN_FEATURE = "unknown"
       USER_LIMIT = 50
+      LLM_MODEL_JOIN = "LEFT JOIN llm_models ON llm_models.id = ai_api_request_stats.llm_id"
 
       attr_reader :start_date, :end_date, :base_query, :timezone
 
@@ -15,7 +16,7 @@ module DiscourseAi
         @end_date = end_date.end_of_day
         Time.zone = nil # Reset to default timezone
 
-        @base_query = AiApiAuditLog.where(created_at: @start_date..@end_date)
+        @base_query = AiApiRequestStat.between(@start_date, @end_date)
       end
 
       def total_tokens
@@ -72,13 +73,13 @@ module DiscourseAi
       end
 
       def stats
-        @stats ||= base_query.select("COUNT(*) as total_requests", *token_total_columns)[0]
+        @stats ||= base_query.select("SUM(usage_count) as total_requests", *token_total_columns)[0]
       end
 
       def model_costs
         @model_costs ||=
           base_query
-            .joins("LEFT JOIN llm_models ON llm_models.name = language_model")
+            .joins(LLM_MODEL_JOIN)
             .group(
               "llm_models.name, llm_models.input_cost, llm_models.output_cost, llm_models.cached_input_cost, llm_models.cache_write_cost",
             )
@@ -123,11 +124,11 @@ module DiscourseAi
       def user_breakdown
         stats =
           base_query
-            .joins("LEFT JOIN llm_models ON llm_models.name = language_model")
+            .joins(LLM_MODEL_JOIN)
             .group(:user_id)
             .order("usage_count DESC")
             .limit(USER_LIMIT)
-            .select(:user_id, "COUNT(*) as usage_count", *token_count_and_total_columns)
+            .select(:user_id, "SUM(usage_count) as usage_count", *token_count_and_total_columns)
 
         User
           .joins("JOIN (#{stats.to_sql}) as stats ON stats.user_id = users.id")
@@ -137,21 +138,22 @@ module DiscourseAi
 
       def feature_breakdown
         base_query
-          .joins("LEFT JOIN llm_models ON llm_models.name = language_model")
+          .joins(LLM_MODEL_JOIN)
           .group(:feature_name)
           .order("usage_count DESC")
           .select(
             "case when coalesce(feature_name, '') = '' then '#{UNKNOWN_FEATURE}' else feature_name end as feature_name",
-            "COUNT(*) as usage_count",
+            "SUM(usage_count) as usage_count",
             *token_count_and_total_columns,
           )
       end
 
       def model_breakdown
         base_query
-          .joins("LEFT JOIN llm_models ON llm_models.name = language_model")
+          .joins(LLM_MODEL_JOIN)
           .group(
-            :language_model,
+            "COALESCE(llm_models.id::text, ai_api_request_stats.language_model)",
+            "COALESCE(llm_models.display_name, ai_api_request_stats.language_model)",
             "llm_models.input_cost",
             "llm_models.output_cost",
             "llm_models.cached_input_cost",
@@ -159,8 +161,9 @@ module DiscourseAi
           )
           .order("usage_count DESC")
           .select(
-            "language_model as llm",
-            "COUNT(*) as usage_count",
+            "COALESCE(llm_models.display_name, ai_api_request_stats.language_model) as llm_label",
+            "COALESCE(llm_models.id::text, ai_api_request_stats.language_model) as llm_id",
+            "SUM(usage_count) as usage_count",
             *token_count_and_total_columns,
           )
       end
@@ -186,8 +189,22 @@ module DiscourseAi
         self
       end
 
-      def filter_by_model(model_name)
-        @base_query = base_query.where(language_model: model_name)
+      def filter_by_model(model_identifier)
+        if model_identifier.to_s.match?(/^\d+$/)
+          model = LlmModel.find_by(id: model_identifier)
+          if model
+            @base_query =
+              base_query.where(
+                "llm_id = ? OR (llm_id IS NULL AND language_model = ?)",
+                model.id,
+                model.name,
+              )
+          else
+            @base_query = base_query.where(llm_id: model_identifier)
+          end
+        else
+          @base_query = base_query.where(language_model: model_identifier)
+        end
         self
       end
 

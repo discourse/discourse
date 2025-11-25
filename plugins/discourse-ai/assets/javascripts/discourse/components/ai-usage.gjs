@@ -304,7 +304,7 @@ export default class AiUsage extends Component {
     this._cachedModels =
       this._cachedModels ||
       (this.data?.models || []).map((m) => ({
-        id: m.llm,
+        id: m.id,
         name: m.llm,
       }));
 

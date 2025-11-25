@@ -247,10 +247,8 @@ ja:
         other: "%{count} 件のメッセージを表示"
       view_more:
         other: "さらに %{count} 件のメッセージを表示"
-      your_chat_settings: "チャットのメール送信頻度設定"
   unsubscribe:
     chat_summary:
-      select_title: "チャット要約メールの頻度を設定:"
       never: なし
       when_away: 退席中の時のみ
   category:

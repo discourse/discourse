@@ -285,6 +285,7 @@ fr:
       forwarded: "A transmis l'e-mail ci-dessus"
     topic_admin_menu: "actions du sujet"
     skip_to_main_content: "Passer au contenu principal"
+    skip_links_label: "Ignorer les liens de navigation"
     skip_user_nav: "Passer au contenu du profil"
     emails_are_disabled: "L'e-mail sortant a été désactivé par un administrateur. Aucune notification par e-mail ne sera envoyée."
     emails_are_disabled_non_staff: "L'envoi d'e-mail est désactivé pour les utilisateurs ne faisant pas partie des responsables."
@@ -560,6 +561,9 @@ fr:
       resume: "Reprendre"
       remove: "Supprimer"
       remove_confirmation: "Voulez-vous vraiment supprimer ce brouillon ?"
+      bulk_delete_message:
+        one: "Voulez-vous vraiment supprimer ce brouillon ?"
+        other: "Voulez-vous vraiment supprimer ces %{count} brouillons ?"
       new_topic: "Nouveau brouillon de sujet"
       new_private_message: "Nouveau brouillon de message direct"
       edit_topic: "Modifier le brouillon du sujet"
@@ -872,6 +876,9 @@ fr:
         flagged_by_users:
           one: "Signalé par %{count} utilisateur unique"
           other: "Signalé par %{count} utilisateurs uniques"
+        flagged_in_timeframe:
+          one: "%{count} marquage confirmé"
+          other: "%{count} marquages confirmés"
         activities:
           new_account: "nouveau compte"
           trust_level: "niveau de confiance : %{trustLevelName}"
@@ -2266,6 +2273,10 @@ fr:
       no_results: "Aucun résultat"
       search: "Recherche…"
       label: "Sélectionnez les options"
+    d_otp:
+      screen_reader:
+        one: Entrez un chiffre
+        other: Entrez %{count} chiffre
     form_kit:
       reset: Réinitialiser
       optional: facultatif
@@ -3424,6 +3435,7 @@ fr:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Parcourez toutes les catégories</a>, <a href='%{basePath}/latest'>consultez les derniers sujets</a> ou consultez les principaux sujets :"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Parcourez toutes les étiquettes</a> ou <a href='%{basePath}/latest'>consultez les derniers sujets</a>."
       browse_latest_topics: "Parcourir les sujets les plus récents"
+      browse_new_topics: "Parcourir les nouveaux sujets"
       suggest_create_topic: Prêt à <a href>démarrer une nouvelle conversation ?</a>
       jump_reply: "Accéder à l'emplacement d'origine du message"
       jump_reply_aria: "Accéder au message de @%{username} à son emplacement d'origine"
@@ -3767,14 +3779,24 @@ fr:
           one: vous avez sélectionné <b>%{count}</b> message.
           other: "Vous avez sélectionné <b>%{count}</b> messages."
       deleted_by_author_simple: "(sujet supprimé par son auteur)"
+      localizations:
+        title_edit_warning:
+          message: "Ceci est un titre de sujet traduit.<br><br>Voulez-vous modifier le titre original en %{language} ou modifier cette traduction spécifique ?"
+          action_original: "Modifier le titre original du sujet"
+          action_translation: "Modifier le titre du sujet traduit"
     post_list:
       title: "Dernières publications"
       empty: "Il n'y a aucune publication"
       aria_post_number: "%{title} - publication #%{postNumber}"
       bulk:
+        selected:
+          one: "%{count} publication sélectionnée"
+          other: "%{count} publications sélectionnées"
+        select_all: "Tout sélectionner"
         clear_all: "Tout effacer"
         actions: "Actions groupées"
     post:
+      accessible_heading: "publications de %{username} %{date}"
       confirm_delete: "Voulez-vous vraiment supprimer ce message ?"
       quote_reply: "Citer"
       quote_reply_shortcut: "Citer (ou appuyer sur q)"
@@ -3798,6 +3820,8 @@ fr:
       deleted_by_author_simple: "(message supprimé par son auteur)"
       collapse: "réduire"
       load_more_replies: "charger plus de réponses"
+      load_more_posts_above: "Charger plus de messages ci-dessus"
+      load_more_posts_below: "Charger plus de messages ci-dessous"
       sr_collapse_replies: "Masquer les réponses"
       sr_load_more_replies: "Charger plus de réponses intégrées"
       sr_date: "Date de publication"
@@ -3864,7 +3888,6 @@ fr:
         post_language_selector:
           none: "Aucune"
         edit_warning:
-          message: "Il s'agit d'une publication traduite.<br><br>Voulez-vous modifier la publication originale en %{language} ou modifier cette traduction spécifique ?"
           action_original: "Modifier la publication originale"
           action_translation: "Modifier cette traduction"
       errors:

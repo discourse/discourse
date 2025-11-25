@@ -2998,7 +2998,6 @@ ro:
         post_language_selector:
           none: "Nimic"
         edit_warning:
-          message: "Aceasta este o postare tradusă.<br><br> Vrei să editezi postarea originală în %{language} sau să editezi specific această traducere?"
           action_original: "Editează postarea originală"
           action_translation: "Editează această traducere"
       errors:
