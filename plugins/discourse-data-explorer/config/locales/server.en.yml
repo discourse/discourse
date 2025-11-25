@@ -1,6 +1,7 @@
 en:
   site_settings:
     data_explorer_enabled: "Enable the Data Explorer at /admin/plugins/explorer"
+    data_explorer_bulk_actions_enabled: "Enable bulk actions on Data Explorer query results via automation"
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:
@@ -10,7 +11,21 @@ en:
       recurring_data_explorer_result_topic:
         title: Schedule a post in a topic with Data Explorer results
         description: Get scheduled reports posted to a specific topic
+      data_explorer_bulk_topic_actions:
+        title: Bulk topic actions from Data Explorer query
+        description: Perform bulk actions on topics from query results (requires topic_id column)
+      data_explorer_bulk_user_actions:
+        title: Bulk user actions from Data Explorer query
+        description: Perform bulk actions on users from query results (requires user_id column)
   data_explorer:
+    bulk_actions:
+      topic:
+        add_tags: "Add tags to topics"
+        remove_tags: "Remove tags from topics"
+        close_topic: "Close topics"
+      user:
+        add_to_group: "Add users to group"
+        remove_from_group: "Remove users from group"
     report_generator:
       private_message:
         title: "Scheduled report for %{query_name}"

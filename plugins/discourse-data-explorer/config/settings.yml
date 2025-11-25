@@ -6,3 +6,6 @@ plugins:
     default: 1000
     hidden: true
     max: 10000
+  data_explorer_bulk_actions_enabled:
+    default: false
+    client: true

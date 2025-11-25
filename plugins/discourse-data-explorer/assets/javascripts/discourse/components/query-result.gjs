@@ -7,6 +7,7 @@ import { capitalize } from "@ember/string";
 import DButton from "discourse/components/d-button";
 import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse/lib/get-url";
+import DiscourseURL from "discourse/lib/url";
 import Badge from "discourse/models/badge";
 import Category from "discourse/models/category";
 import I18n, { i18n } from "discourse-i18n";
@@ -41,7 +42,7 @@ const VIEW_COMPONENTS = {
 };
 
 export default class QueryResult extends Component {
-  @service site;
+  @service siteSettings;
 
   @tracked chartDisplayed = false;
 
@@ -167,6 +168,21 @@ export default class QueryResult extends Component {
     );
   }
 
+  get canShowBulkActions() {
+    return (
+      this.siteSettings.data_explorer_bulk_actions_enabled &&
+      this.siteSettings.discourse_automation_enabled
+    );
+  }
+
+  get hasTopicIdColumn() {
+    return this.columns?.includes("topic_id");
+  }
+
+  get hasUserIdColumn() {
+    return this.columns?.includes("user_id");
+  }
+
   get chartLabels() {
     const labelSelectors = {
       user: (user) => user.username,
@@ -250,6 +266,54 @@ export default class QueryResult extends Component {
     this.chartDisplayed = false;
   }
 
+  @action
+  async createTopicAutomation() {
+    await this._createAutomation("data_explorer_bulk_topic_actions");
+  }
+
+  @action
+  async createUserAutomation() {
+    await this._createAutomation("data_explorer_bulk_user_actions");
+  }
+
+  async _createAutomation(scriptName) {
+    try {
+      const result = await ajax("/admin/plugins/automation/automations", {
+        type: "POST",
+        data: {
+          automation: {
+            script: scriptName,
+            trigger: "point_in_time",
+          },
+        },
+      });
+
+      // Update with just the name - let fields be created automatically
+      await ajax(
+        `/admin/plugins/automation/automations/${result.automation.id}`,
+        {
+          type: "PUT",
+          data: {
+            automation: {
+              name: `${this.args.query.name} - Bulk Actions`,
+              script: scriptName,
+              trigger: "point_in_time",
+              enabled: false,
+            },
+          },
+        }
+      );
+
+      // Navigate to edit page with query params to pre-fill via frontend
+      DiscourseURL.routeTo(
+        `/admin/plugins/automation/automation/${result.automation.id}?query_id=${this.args.query.id}`
+      );
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error("Failed to create automation:", e);
+    }
+  }
+
   _download_url() {
     return this.args.group
       ? `/g/${this.args.group.name}/reports/`
@@ -330,6 +394,21 @@ export default class QueryResult extends Component {
                 @action={{this.showChart}}
                 @icon="chart-bar"
                 @label="explorer.show_graph"
+              />
+            {{/if}}
+          {{/if}}
+
+          {{#if this.canShowBulkActions}}
+            {{#if this.hasTopicIdColumn}}
+              <DButton
+                @action={{this.createTopicAutomation}}
+                @label="explorer.create_topic_automation"
+              />
+            {{/if}}
+            {{#if this.hasUserIdColumn}}
+              <DButton
+                @action={{this.createUserAutomation}}
+                @label="explorer.create_user_automation"
               />
             {{/if}}
           {{/if}}

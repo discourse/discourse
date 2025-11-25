@@ -68,6 +68,8 @@ en:
       download_csv: "CSV"
       show_table: "Table"
       show_graph: "Graph"
+      create_topic_automation: "Automate Topic Actions"
+      create_user_automation: "Automate User Actions"
       others_dirty: "A query has unsaved changes that will be lost if you navigate away."
       run_time: "Query completed in %{value} ms."
       result_count:
@@ -132,3 +134,30 @@ en:
               label: Skip posting if there are no results
             attach_csv:
               label: Attach the CSV file to the post
+        data_explorer_bulk_topic_actions:
+          action:
+            add_tags: "Add tags to topics"
+            remove_tags: "Remove tags from topics"
+            close_topic: "Close topics"
+          fields:
+            query_id:
+              label: Data Explorer Query
+            query_params:
+              label: Data Explorer Query parameters
+            action:
+              label: Action to perform
+            tags:
+              label: Tags (for add/remove tags actions)
+        data_explorer_bulk_user_actions:
+          action:
+            add_to_group: "Add users to group"
+            remove_from_group: "Remove users from group"
+          fields:
+            query_id:
+              label: Data Explorer Query
+            query_params:
+              label: Data Explorer Query parameters
+            action:
+              label: Action to perform
+            target_group:
+              label: Target group

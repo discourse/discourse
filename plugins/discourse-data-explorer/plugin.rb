@@ -78,6 +78,9 @@ after_initialize do
 
   reloadable_patch do
     if defined?(DiscourseAutomation)
+      require_relative "discourse_automation/bulk_topic_actions"
+      require_relative "discourse_automation/bulk_user_actions"
+
       add_automation_scriptable("recurring_data_explorer_result_pm") do
         queries =
           DiscourseDataExplorer::Query
