@@ -200,6 +200,13 @@ export default class CategoryDrop extends ComboBoxComponent {
           : result.categories;
 
       this.selectKit.totalCount = result.categoriesCount;
+      // manually set autoFilterable since content is updated asynchronously
+      this.selectKit.options.set(
+        "autoFilterable",
+        result.categoriesCount +
+          this.currentUser.sidebar_category_ids?.length >=
+          10
+      );
 
       return this.shortcuts.concat(categories);
     }
