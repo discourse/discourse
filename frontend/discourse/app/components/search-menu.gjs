@@ -139,9 +139,9 @@ export default class SearchMenu extends Component {
   }
 
   @action
-  onKeydown(event) {
+  async onKeydown(event) {
     if (event.key === "Escape") {
-      this.close();
+      await this.close();
       event.preventDefault();
       event.stopPropagation();
     }
