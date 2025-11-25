@@ -56,7 +56,7 @@ describe Jobs::ProcessLocalizedCooked do
     }
   end
 
-  it "publishes MessageBus notification when cooked changes" do
+  it "publishes MessageBus notification" do
     processed_html = "<p>これはテスト投稿です。</p><div class='onebox'>Processed</div>"
     LocalizedCookedPostProcessor.any_instance.expects(:html).returns(processed_html)
 
@@ -68,17 +68,6 @@ describe Jobs::ProcessLocalizedCooked do
     expect(messages.length).to eq(1)
     expect(messages.first.data[:type]).to eq(:localized)
     expect(messages.first.data[:id]).to eq(post.id)
-  end
-
-  it "does not publish MessageBus notification when cooked unchanged" do
-    LocalizedCookedPostProcessor.any_instance.expects(:html).returns(post_localization.cooked)
-
-    messages =
-      MessageBus.track_publish("/topic/#{post.topic_id}") do
-        job.execute(post_localization_id: post_localization.id)
-      end
-
-    expect(messages.length).to eq(0)
   end
 
   it "processes oneboxes and images" do

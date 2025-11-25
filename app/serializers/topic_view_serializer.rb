@@ -79,6 +79,7 @@ class TopicViewSerializer < ApplicationSerializer
     :is_shared_draft,
     :slow_mode_enabled_until,
     :has_localized_content,
+    :can_localize_topic,
   )
 
   has_one :details, serializer: TopicViewDetailsSerializer, root: false, embed: :objects
@@ -328,5 +329,13 @@ class TopicViewSerializer < ApplicationSerializer
 
   def include_has_localized_content?
     SiteSetting.content_localization_enabled
+  end
+
+  def can_localize_topic
+    true
+  end
+
+  def include_can_localize_topic?
+    SiteSetting.content_localization_enabled && scope.can_localize_topic?(object.topic)
   end
 end

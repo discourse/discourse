@@ -16,8 +16,6 @@ import { i18n } from "discourse-i18n";
 
 export default class PostTranslationsModal extends Component {
   @service composer;
-  @service currentUser;
-  @service siteSettings;
   @service dialog;
 
   @tracked postLocalizations = null;
@@ -43,13 +41,13 @@ export default class PostTranslationsModal extends Component {
     }
   }
 
+  get canLocalizePost() {
+    return this.args.model.post.can_localize_post;
+  }
+
   @action
   async editLocalization(locale) {
-    if (
-      !this.currentUser ||
-      !this.siteSettings.content_localization_enabled ||
-      !this.currentUser.can_localize_content
-    ) {
+    if (!this.canLocalizePost) {
       return;
     }
 
@@ -80,6 +78,10 @@ export default class PostTranslationsModal extends Component {
 
   @action
   async deleteLocalization(locale) {
+    if (!this.canLocalizePost) {
+      return;
+    }
+
     try {
       await PostLocalization.destroy(this.args.model.post.id, locale);
 
@@ -129,20 +131,24 @@ export default class PostTranslationsModal extends Component {
                     class="post-translations-modal__locale"
                   >{{localization.locale}}</td>
                   <td class="post-translations-modal__edit-action">
-                    <DButton
-                      class="btn-primary btn-transparent"
-                      @icon="pencil"
-                      @label="post.localizations.table.edit"
-                      @action={{fn this.editLocalization localization}}
-                    />
+                    {{#if this.canLocalizePost}}
+                      <DButton
+                        class="btn-primary btn-transparent"
+                        @icon="pencil"
+                        @label="post.localizations.table.edit"
+                        @action={{fn this.editLocalization localization}}
+                      />
+                    {{/if}}
                   </td>
                   <td class="post-translations-modal__delete-action">
-                    <DButton
-                      class="btn-danger btn-transparent"
-                      @icon="trash-can"
-                      @label="post.localizations.table.delete"
-                      @action={{fn this.delete localization.locale}}
-                    />
+                    {{#if this.canLocalizePost}}
+                      <DButton
+                        class="btn-danger btn-transparent"
+                        @icon="trash-can"
+                        @label="post.localizations.table.delete"
+                        @action={{fn this.delete localization.locale}}
+                      />
+                    {{/if}}
                   </td>
                 </tr>
               {{/each}}

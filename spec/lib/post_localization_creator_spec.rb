@@ -37,4 +37,29 @@ describe PostLocalizationCreator do
       Discourse::NotFound,
     )
   end
+
+  context "with author localization" do
+    fab!(:author, :user)
+    fab!(:author_post) { Fabricate(:post, user: author) }
+    fab!(:other_post, :post)
+
+    before { SiteSetting.content_localization_allow_author_localization = true }
+
+    it "allows post author to create localization for their own post" do
+      localization = described_class.create(post_id: author_post.id, locale:, raw:, user: author)
+
+      expect(localization).to have_attributes(
+        post_id: author_post.id,
+        locale:,
+        raw:,
+        localizer_user_id: author.id,
+      )
+    end
+
+    it "raises permission error if user is not the post author" do
+      expect {
+        described_class.create(post_id: other_post.id, locale:, raw:, user: author)
+      }.to raise_error(Discourse::InvalidAccess)
+    end
+  end
 end

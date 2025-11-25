@@ -13,6 +13,7 @@ describe DiscourseAi::Translation::TranslationController do
     SiteSetting.ai_translation_enabled = true
     SiteSetting.content_localization_supported_locales = "en"
     SiteSetting.content_localization_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}|#{group.id}"
+    SiteSetting.content_localization_enabled = true
   end
 
   describe "#translate" do
