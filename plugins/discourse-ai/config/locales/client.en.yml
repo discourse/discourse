@@ -687,7 +687,7 @@ en:
 
         model_description:
           none: "General settings that work for most language models"
-          anthropic-claude-opus-4-1: "Anthropic's most intelligent model"
+          anthropic-claude-opus-4-5: "Anthropic's most intelligent model"
           anthropic-claude-sonnet-4-5: "Optimal balance of speed and cost"
           anthropic-claude-haiku-4-5: "Fast and cost-effective"
           google-gemini-3-pro: "Google's most intelligent model"
@@ -781,6 +781,7 @@ en:
           prompt_caching_never: "Never - Do not use prompt caching"
           prompt_caching_tool_results: "Tool Results - Cache when tool results are present (recommended)"
           prompt_caching_always: "Always - Always use prompt caching"
+          effort: "Effort level (Claude Opus 4.5 only)"
 
       related_topics:
         title: "Related topics"

@@ -43,6 +43,13 @@ module DiscourseAi
               end
               result[:max_tokens] = max_tokens
 
+              # effort parameter for Claude Opus 4.5
+              effort = llm_model.lookup_custom_param("effort")
+              if %w[low medium high].include?(effort)
+                result[:output_config] = { effort: effort }
+                result[:anthropic_beta] = ["effort-2025-11-24"]
+              end
+
               result
             else
               {}

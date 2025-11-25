@@ -62,6 +62,10 @@ module DiscourseAi
           options[:stop_sequences] = ["</function_calls>"] if !dialect.native_tool_support? &&
             dialect.prompt.has_tools?
 
+          # effort parameter for Claude Opus 4.5
+          effort = llm_model.lookup_custom_param("effort")
+          options[:output_config] = { effort: effort } if %w[low medium high].include?(effort)
+
           options
         end
 
@@ -150,10 +154,26 @@ module DiscourseAi
             "content-type" => "application/json",
           }
 
-          # Add caching headers if configured
-          headers.merge!(anthropic_cache_headers)
+          # Build combined beta headers
+          headers.merge!(combined_anthropic_beta_headers)
 
           Net::HTTP::Post.new(model_uri, headers).tap { |r| r.body = payload }
+        end
+
+        def combined_anthropic_beta_headers
+          beta_features = []
+
+          # Add caching beta feature if configured
+          caching_mode = llm_model.lookup_custom_param("prompt_caching") || "never"
+          beta_features << "prompt-caching-2024-07-31" if caching_mode != "never"
+
+          # Add effort beta feature if configured
+          effort = llm_model.lookup_custom_param("effort")
+          beta_features << "effort-2025-11-24" if %w[low medium high].include?(effort)
+
+          return {} if beta_features.empty?
+
+          { "anthropic-beta" => beta_features.join(",") }
         end
 
         def decode_chunk(partial_data)
