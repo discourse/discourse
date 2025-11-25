@@ -349,13 +349,28 @@ export default class ChatComposer extends Component {
     }
   }
 
+  forceScrollPosition() {
+    if (!this.capabilities.isIOS || this.capabilities.isIpadOS) {
+      return;
+    }
+
+    // attempts to reposition body
+    if (window.pageYOffset <= 100) {
+      // on iOS scrolling to 0 doesn’t work correctly
+      // scrolling to -1 is more consistent
+      window.scrollTo(0, -1);
+    }
+  }
+
   @action
   onTextareaFocusOut() {
+    this.forceScrollPosition();
     this.isFocused = false;
   }
 
   @action
   onTextareaFocusIn() {
+    this.forceScrollPosition();
     this.isFocused = true;
   }
 
