@@ -5,6 +5,7 @@ import DButton from "discourse/components/d-button";
 import DEditor from "discourse/components/d-editor";
 import SaveControls from "discourse/components/save-controls";
 import icon from "discourse/helpers/d-icon";
+import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -45,7 +46,7 @@ export default <template>
     {{else}}
       <DEditor
         @value={{@controller.buffered.body}}
-        @forceEditorMode="markdown"
+        @forceEditorMode={{USER_OPTION_COMPOSITION_MODES.markdown}}
         class="email-template__body"
       />
     {{/if}}

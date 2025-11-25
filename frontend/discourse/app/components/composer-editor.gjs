@@ -1037,6 +1037,13 @@ export default class ComposerEditor extends Component {
     return formTemplateIds?.length > 0 && !replyingToTopic && !editingPost;
   }
 
+  @discourseComputed("composer.model")
+  forceEditorMode() {
+    return applyValueTransformer("composer-force-editor-mode", null, {
+      model: this.composer.model,
+    });
+  }
+
   @action
   showUploadModal() {
     document.getElementById(this.fileUploadElementId).click();
@@ -1097,6 +1104,7 @@ export default class ComposerEditor extends Component {
         @validation={{this.validation}}
         @loading={{this.composer.loading}}
         @forcePreview={{this.forcePreview}}
+        @forceEditorMode={{this.forceEditorMode}}
         @showLink={{this.showLink}}
         @composerEvents={{true}}
         @onPopupMenuAction={{this.composer.onPopupMenuAction}}
