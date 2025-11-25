@@ -75,7 +75,7 @@ export default class SidebarCustomSection extends Component {
           @suffixCSSClass={{link.suffixCSSClass}}
           @suffixType={{link.suffixType}}
           @suffixValue={{link.suffixValue}}
-          @title={{link.title}}
+          @title={{or link.title link.text}}
           @exactUrlMatch={{this.exactUrlMatch}}
         />
       {{/each}}
