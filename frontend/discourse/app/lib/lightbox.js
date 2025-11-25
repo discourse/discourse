@@ -5,6 +5,7 @@ import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { helperContext } from "discourse/lib/helpers";
 import { renderIcon } from "discourse/lib/icon-library";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
+import quoteImage, { canQuoteImage } from "discourse/lib/lightbox/quote-image";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import {
   escapeExpression,
@@ -17,7 +18,11 @@ export async function loadMagnificPopup() {
   await waitForPromise(import("magnific-popup"));
 }
 
-export default async function lightbox(elem, siteSettings) {
+export default async function lightbox(
+  elem,
+  siteSettings,
+  relatedModel = null
+) {
   if (!elem) {
     return;
   }
@@ -200,6 +205,38 @@ export default async function lightbox(elem, siteSettings) {
       });
 
       lightboxEl.pswp.ui.registerElement({
+        name: "quote-image",
+        order: 10,
+        isButton: true,
+        title: i18n("lightbox.quote"),
+        html: {
+          isCustomSVG: true,
+          inner:
+            '<path id="pswp__icn-quote" d="M0 216C0 149.7 53.7 96 120 96l8 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-8 0c-30.9 0-56 25.1-56 56l0 8 64 0c35.3 0 64 28.7 64 64l0 64c0 35.3-28.7 64-64 64l-64 0c-35.3 0-64-28.7-64-64l0-32 0-32 0-72zm256 0c0-66.3 53.7-120 120-120l8 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-8 0c-30.9 0-56 25.1-56 56l0 8 64 0c35.3 0 64 28.7 64 64l0 64c0 35.3-28.7 64-64 64l-64 0c-35.3 0-64-28.7-64-64l0-32 0-32 0-72z"/>',
+          outlineID: "pswp__icn-quote",
+          size: 512,
+        },
+        onInit: (el, pswp) => {
+          pswp.on("change", () => {
+            const slideData = pswp.currSlide?.data;
+            const slideElement = slideData?.element;
+            el.style.display = canQuoteImage(slideElement, slideData)
+              ? ""
+              : "none";
+          });
+        },
+        onClick: () => {
+          const slideData = lightboxEl.pswp.currSlide?.data;
+          const slideElement = slideData?.element;
+          quoteImage(slideElement, slideData).then((didQuote) => {
+            if (didQuote) {
+              lightboxEl.pswp.close();
+            }
+          });
+        },
+      });
+
+      lightboxEl.pswp.ui.registerElement({
         name: "custom-counter",
         order: 6,
         isButton: false,
@@ -239,6 +276,7 @@ export default async function lightbox(elem, siteSettings) {
       }
 
       const imgInfo = el.querySelector(".informations")?.textContent || "";
+      const imgEl = el.tagName === "IMG" ? el : el.querySelector("img");
 
       if (!width || !height) {
         const dimensions = imgInfo.trim().split(" ")[0];
@@ -249,10 +287,20 @@ export default async function lightbox(elem, siteSettings) {
       data.thumbCropped = true;
 
       data.src = data.src || el.getAttribute("data-large-src");
-      data.title = el.title || el.alt;
+      data.origSrc = imgEl.getAttribute("data-orig-src");
+      data.title = el.title || imgEl.alt || imgEl.title;
+      data.base62SHA1 = imgEl.getAttribute("data-base62-sha1");
       data.details = imgInfo;
       data.w = data.width = width;
       data.h = data.height = height;
+      data.targetWidth =
+        el.getAttribute("data-target-width") || imgEl.getAttribute("width");
+      data.targetHeight =
+        el.getAttribute("data-target-height") || imgEl.getAttribute("height");
+
+      if (relatedModel?.constructor?.name === "Post") {
+        data.post = relatedModel;
+      }
 
       return data;
     });
