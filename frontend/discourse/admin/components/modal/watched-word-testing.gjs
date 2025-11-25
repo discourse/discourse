@@ -27,7 +27,14 @@ export default class WatchedWordTesting extends Component {
 
   @cached
   get matchesAndErrors() {
-    const errors = [];
+    const errors = {};
+
+    const addError = (word, message) => {
+      errors[word] ??= this.cleanErrorMessage(message);
+    };
+
+    const errorsToArray = () =>
+      Object.entries(errors).map(([word, error]) => ({ word, error }));
 
     if (!this.value) {
       return { matches: [], errors: [] };
@@ -50,13 +57,10 @@ export default class WatchedWordTesting extends Component {
             });
           }
         } catch (e) {
-          errors.push({
-            word: word.word,
-            error: this.cleanErrorMessage(e.message),
-          });
+          addError(word.word, e.message);
         }
       });
-      return { matches, errors };
+      return { matches, errors: errorsToArray() };
     }
 
     if (this.isTag) {
@@ -78,10 +82,7 @@ export default class WatchedWordTesting extends Component {
             word.replacement.split(",").forEach((tag) => tags.add(tag));
           }
         } catch (e) {
-          errors.push({
-            word: word.word,
-            error: this.cleanErrorMessage(e.message),
-          });
+          addError(word.word, e.message);
         }
       });
 
@@ -90,7 +91,7 @@ export default class WatchedWordTesting extends Component {
           match,
           tags: Array.from(tagsSet),
         })),
-        errors,
+        errors: errorsToArray(),
       };
     }
 
@@ -125,22 +126,12 @@ export default class WatchedWordTesting extends Component {
             matches.push(match[1] || match[0]);
           }
         } catch (e) {
-          const cleanError = this.cleanErrorMessage(e.message);
-          if (
-            !errors.some(
-              (err) => err.word === word.word && err.error === cleanError
-            )
-          ) {
-            errors.push({
-              word: word.word,
-              error: cleanError,
-            });
-          }
+          addError(word.word, e.message);
         }
       });
     }
 
-    return { matches, errors };
+    return { matches, errors: errorsToArray() };
   }
 
   get matches() {

@@ -1,4 +1,4 @@
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import { or } from "@ember/object/computed";
@@ -34,6 +34,7 @@ export default class AdminWatchedWordsActionController extends Controller {
     );
   }
 
+  @cached
   get regexpErrors() {
     const errors = [];
     const seen = new Set();
