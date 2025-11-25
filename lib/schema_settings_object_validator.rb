@@ -120,24 +120,25 @@ class SchemaSettingsObjectValidator
 
     return true if value.nil?
 
-    # Convert upload URLs to IDs like core does
-    if type == "upload" && value.is_a?(String)
-      upload = Upload.get_from_url(value)
-      if upload
-        @object[property_name] = upload.id
-        value = upload.id
-      else
-        add_error(property_name, :not_valid_upload_value)
-        return false
-      end
-    end
-
     is_value_valid =
       case type
       when "string"
         value.is_a?(String)
-      when "integer", "topic", "post", "upload"
+      when "integer", "topic", "post"
         value.is_a?(Integer)
+      when "upload"
+        # Convert upload URLs to IDs like core does
+        if value.is_a?(String)
+          upload = Upload.get_from_url(value)
+          if upload
+            @object[property_name] = upload.id
+            true
+          else
+            false
+          end
+        else
+          value.is_a?(Integer)
+        end
       when "float"
         value.is_a?(Float) || value.is_a?(Integer)
       when "boolean"

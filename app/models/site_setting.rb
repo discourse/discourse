@@ -386,29 +386,26 @@ class SiteSetting < ActiveRecord::Base
   private
 
   def extract_upload_ids_from_objects_value
-    upload_ids = []
-    return upload_ids if self.value.blank?
+    return [] if self.value.blank?
 
     type_hash = SiteSetting.type_supervisor.type_hash(self.name)
-    return upload_ids unless type_hash[:schema]&.dig(:properties)
+    return [] unless type_hash[:schema]&.dig(:properties)
 
     begin
       parsed_value = JSON.parse(self.value)
       parsed_value = [parsed_value] unless parsed_value.is_a?(Array)
+      upload_ids = Set.new
 
       parsed_value.each do |obj|
-        type_hash[:schema][:properties].each do |prop_key, prop_value|
-          next unless prop_value[:type] == "upload"
+        validator = SchemaSettingsObjectValidator.new(schema: type_hash[:schema], object: obj)
 
-          key = prop_key.to_s
-          upload_id = obj[key]
-          upload_ids << upload_id if upload_id.present?
-        end
+        upload_ids.merge(validator.property_values_of_type("upload"))
       end
-    rescue JSON::ParserError
-    end
 
-    upload_ids.compact.uniq
+      upload_ids.to_a
+    rescue JSON::ParserError
+      []
+    end
   end
 end
 

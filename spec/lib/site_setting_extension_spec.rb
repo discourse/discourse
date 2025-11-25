@@ -912,8 +912,10 @@ RSpec.describe SiteSettingExtension do
         expect(value[1]["title"]).to eq("Section 2")
       end
 
-      it "should handle objects with uploads" do
-        upload = Fabricate(:upload)
+      it "should batch uploads query" do
+        upload1 = Fabricate(:upload)
+        upload2 = Fabricate(:upload)
+        upload3 = Fabricate(:upload)
 
         schema = {
           name: "section",
@@ -921,7 +923,7 @@ RSpec.describe SiteSettingExtension do
             title: {
               type: "string",
             },
-            media: {
+            image: {
               type: "upload",
             },
           },
@@ -929,14 +931,20 @@ RSpec.describe SiteSettingExtension do
 
         settings.setting(:test_objects_with_uploads, "[]", type: :objects, schema: schema)
         settings.test_objects_with_uploads = [
-          { "title" => "Section 1", "media" => upload.id },
+          { "title" => "Section 1", "image" => upload1.id },
+          { "title" => "Section 2", "image" => upload2.id },
+          { "title" => "Section 3", "image" => upload3.id },
         ].to_json
         settings.refresh!
 
-        setting = settings.all_settings.last
-        value = JSON.parse(setting[:value])
+        queries =
+          track_sql_queries do
+            setting = settings.all_settings.last
+            JSON.parse(setting[:value])
+          end
 
-        expect(value[0]["media"]).to eq(upload.url)
+        upload_queries = queries.select { |q| q.include?("SELECT") && q.include?("uploads") }
+        expect(upload_queries.length).to eq(1)
       end
     end
 

@@ -1144,18 +1144,35 @@ module SiteSettingExtension
   private
 
   def hydrate_uploads_in_objects(objects, schema)
-    objects.map { |obj| hydrate_uploads_in_object(obj, schema[:properties]) }
+    return objects if objects.blank?
+
+    all_upload_ids = Set.new
+    objects.each do |object|
+      validator = SchemaSettingsObjectValidator.new(schema: schema, object: object)
+      all_upload_ids.merge(validator.property_values_of_type("upload"))
+    end
+
+    uploads_by_id = Upload.where(id: all_upload_ids.to_a).index_by(&:id)
+
+    objects.map { |obj| hydrate_uploads_in_object(obj, schema[:properties], uploads_by_id) }
   end
 
-  def hydrate_uploads_in_object(object, properties)
+  def hydrate_uploads_in_object(object, properties, uploads_by_id)
     properties.each do |prop_key, prop_value|
-      next unless prop_value[:type] == "upload"
-
-      key = prop_key.to_s
-      upload_id = object[key]
-
-      upload = Upload.find_by(id: upload_id)
-      object[key] = upload.url if upload
+      case prop_value[:type]
+      when "upload"
+        key = prop_key.to_s
+        upload_id = object[key]
+        upload = uploads_by_id[upload_id]
+        object[key] = upload.url if upload
+      when "objects"
+        nested_objects = object[prop_key.to_s]
+        if nested_objects.is_a?(Array)
+          nested_objects.each do |nested_obj|
+            hydrate_uploads_in_object(nested_obj, prop_value[:schema][:properties], uploads_by_id)
+          end
+        end
+      end
     end
 
     object
