@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
@@ -11,7 +10,6 @@ import DAG from "discourse/lib/dag";
 import scrollLock from "discourse/lib/scroll-lock";
 import { scrollTop } from "discourse/lib/scroll-top";
 import DiscourseURL from "discourse/lib/url";
-import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
 import { and, eq, not, or } from "discourse/truth-helpers";
 import AuthButtons from "./header/auth-buttons";
 import Contents from "./header/contents";
@@ -180,7 +178,8 @@ export default class GlimmerHeader extends Component {
     if (!this.search.visible) {
       this.search.highlightTerm = "";
       this.search.inTopicContext = false;
-      document.getElementById(SEARCH_BUTTON_ID)?.focus();
+      // what is this for?
+      // document.getElementById(SEARCH_BUTTON_ID)?.focus();
     }
   }
 
@@ -288,13 +287,6 @@ export default class GlimmerHeader extends Component {
           {{#if this.search.visible}}
             <SearchMenuWrapper
               {{this.handleFocus}}
-              {{closeOnClickOutside
-                this.toggleSearchMenu
-                (hash
-                  targetSelector=".search-menu-panel"
-                  secondaryTargetSelector=".search-dropdown"
-                )
-              }}
               @closeSearchMenu={{this.toggleSearchMenu}}
               @searchInputId="icon-search-input"
             />
