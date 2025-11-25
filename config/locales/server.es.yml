@@ -1263,8 +1263,6 @@ es:
       yaxis: "Día"
       description: "Solicitudes de API para claves de API normales y claves de API de usuario."
     consolidated_page_views_browser_detection:
-      title: "Páginas vistas consolidadas con detección de navegador (Experimental)"
-      title_legacy: "Páginas vistas consolidadas con detección de navegador (Experimental)"
       xaxis:
         page_view_anon_browser: "Navegador anónimo"
         page_view_logged_in_browser: "Navegador conectado"
@@ -1652,7 +1650,6 @@ es:
     allow_duplicate_topic_titles_category: "Permitir temas con títulos iguales si la categoría es distinta. Hay que desactivar el ajuste allow_duplicate_topic_titles."
     unique_posts_mins: "Cantidad de minutos que deben pasar antes de que un usuario pueda publicar el mismo contenido de nuevo"
     educate_until_posts: "Cuando el usuario comienza a escribir sus primeras (n) publicaciones, mostrar el panel emergente de consejos para usuarios nuevos en el editor."
-    title: "El nombre de este sitio. Visible para todos los visitantes, incluidos los usuarios anónimos."
     site_description: "Describe este sitio en una frase. Visible para todos los visitantes, incluidos los usuarios anónimos."
     short_site_description: "Breve descripción en pocas palabras. Visible para todos los visitantes, incluidos los usuarios anónimos."
     contact_email: "Dirección de correo electrónico del contacto clave responsable de este sitio. Se utiliza para notificaciones críticas, y también se muestra en <a href='%{base_path}/about' target='_blank'>/about</a>. Visible para usuarios anónimos en sitios públicos."
@@ -2111,7 +2108,6 @@ es:
     allow_all_users_to_flag_illegal_content: "Los usuarios anónimos verán información que les indica que deben enviar un correo electrónico a los administradores para denunciar contenido ilegal. Este ajuste tiene prioridad sobre «grupos que pueden denunciar publicaciones»."
     email_address_to_report_illegal_content: "Si se deja en blanco, se utilizará el correo electrónico de administrador del sitio predeterminado."
     cooldown_hours_until_reflag: "Cantidad de tiempo que los usuarios deberán esperar antes de poder denunciar de nuevo una publicación."
-    slow_mode_prevents_editing: "¿El «Modo lento» evita la edición después de edit_grace_period?"
     reply_by_email_enabled: "Activa la función que permite a los usuarios responder a los temas directamente a través del correo electrónico, en lugar de tener que iniciar sesión en el sitio web. Consulta <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>la guía sobre Meta</a> para obtener más información."
     reply_by_email_address: "Plantilla para la dirección de correo electrónico que aparecerá al recibir correos con la función de respuesta por correo electrónico: %%{reply_key}@respuesta.ejemplo.com o respuestas+%%{reply_key}@ejemplo.com"
     alternative_reply_by_email_addresses: "Lista de plantillas alternativa para las direcciones de respuesta por correo electrónico. Ejemplo: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -2416,7 +2412,6 @@ es:
     sitemap_page_size: "Número de URLs que incluir en cada página del sitemap. Máximo de 50.000"
     enable_user_status: "Permitir a los usuarios establecer un mensaje de estado personalizado (emoji + descripción)."
     enable_user_tips: "Activar nuevos consejos de usuario que describan las funciones clave a los usuarios"
-    short_title: "El título corto se utilizará en la pantalla de inicio del usuario, el iniciador u otros lugares donde el espacio puede ser limitado. Debe limitarse a 12 caracteres."
     dashboard_hidden_reports: "Permitir ocultar los informes especificados del panel de control."
     dashboard_visible_tabs: "Elige qué pestañas del panel de control se mostrarán."
     dashboard_general_tab_activity_metrics: "Selecciona las denuncias que se muestran como medidas de actividad en la pestaña general."
@@ -2442,9 +2437,6 @@ es:
     default_navigation_menu_categories: "Las categorías seleccionadas se mostrarán por defecto en la sección Categorías del Menú de navegación."
     default_navigation_menu_tags: "Las etiquetas seleccionadas se mostrarán por defecto en la sección Etiquetas del Menú de navegación."
     experimental_new_new_view_groups: 'Activa una nueva lista de temas que combine los no leídos y los nuevos y haz que el enlace «Todo» de la barra lateral enlace a ella.'
-    floatkit_autocomplete_composer: "Activa el menú de autocompletar basado en Floatkit en el compositor. Esta mejora de la interfaz de usuario reemplazará el menú de autocompletar basado en JQuery actual."
-    floatkit_autocomplete_input_fields: "Activa el menú de autocompletar basado en Floatkit para los campos de entrada en los campos de búsqueda en pantalla completa y selector de grupos. Esta mejora de la interfaz de usuario reemplazará el menú de autocompletar basado en jQuery actual."
-    floatkit_autocomplete_chat_composer: "Activa el menú de autocompletar basado en Floatkit en el compositor. Esta mejora de interfaz de usuario reemplazará el menú de autocompletar basado en jQuery actual."
     experimental_form_templates: "Activa la característica de plantillas de formulario. Gestiona las plantillas en <a href='%{base_path}/admin/customize/form-templates'>Personalizar / Plantillas</a>."
     show_preview_for_form_templates: "Activa la vista previa de las plantillas de formulario"
     lazy_load_categories_groups: "Carga lenta de la información de categoría solo para los usuarios de estos grupos. Esto mejora el rendimiento en sitios con muchas categorías."
@@ -3623,14 +3615,9 @@ es:
     user_automatically_silenced:
       title: "Usuario silenciado automáticamente"
       subject_template: "Usuario nuevo %{username} silenciado por denuncias de la comunidad"
-      text_body_template: |
-        Este es un mensaje automático.
-
-        El nuevo usuario [%{username}](%{user_url}) ha sido silenciado automáticamente porque varios usuarios han denunciado las publicaciones de %{username}.
-
-        Por favor, [revisa las marcas](%{base_url}/review). Si %{username} ha sido silenciado incorrectamente, haz clic en el botón de cancelar silencio en [la página de administración de este usuario](%{user_url}).
-
-        Este umbral puede cambiarse a través de la configuración del sitio `silence_new_user`.
+    user_automatically_silenced_with_reason:
+      title: "Usuario silenciado automáticamente"
+      subject_template: "Usuario nuevo %{username} silenciado por denuncias de la comunidad"
     spam_post_blocked:
       title: "Publicación con spam bloqueada"
       subject_template: "Publicaciones del usuario nuevo %{username} bloqueadas debido a la repetición de enlaces."
@@ -5247,7 +5234,6 @@ es:
         title: "Descartar publicación"
         complete: "Publicación descartada."
       revise_and_reject_post:
-        title: "Revisar publicación..."
         complete: "Publicación rechazada pendiente de revisión."
       ignore:
         title: "Ignorar"

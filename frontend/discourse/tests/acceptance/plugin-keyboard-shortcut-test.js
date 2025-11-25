@@ -1,7 +1,7 @@
+import { getOwner } from "@ember/owner";
 import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
-import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -27,7 +27,10 @@ acceptance("Plugin Keyboard Shortcuts - Logged In", function (needs) {
 
 acceptance("Plugin Keyboard Shortcuts - Anonymous", function () {
   test("a plugin can add a keyboard shortcut with an option", async function (assert) {
-    let spy = sinon.spy(KeyboardShortcuts, "_bindToPath");
+    let spy = sinon.spy(
+      getOwner(this).lookup("service:keyboard-shortcuts"),
+      "_bindToPath"
+    );
     withPluginApi((api) => {
       api.addKeyboardShortcut("]", () => {}, {
         anonymous: true,

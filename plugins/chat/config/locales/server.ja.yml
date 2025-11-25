@@ -177,7 +177,7 @@ ja:
         slug_contains_non_ascii_chars: "に非 ASCII 文字が含まれます"
         is_already_in_use: "はすでに使用されています"
     bookmarkable:
-      notification_title: "%{channel_name} のメッセージ"
+      notification_title_channel: "%{channel_name} のメッセージ"
     personal_chat: "パーソナルチャット"
     onebox:
       inline_to_message: "%{username} によるメッセージ #%{message_id} - #%{chat_channel}"
@@ -247,10 +247,8 @@ ja:
         other: "%{count} 件のメッセージを表示"
       view_more:
         other: "さらに %{count} 件のメッセージを表示"
-      your_chat_settings: "チャットのメール送信頻度設定"
   unsubscribe:
     chat_summary:
-      select_title: "チャット要約メールの頻度を設定:"
       never: なし
       when_away: 退席中の時のみ
   category:

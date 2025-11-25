@@ -73,6 +73,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
       system_messages.user_added_to_group_as_member
       system_messages.user_added_to_group_as_owner
       system_messages.user_automatically_silenced
+      system_messages.user_automatically_silenced_with_reason
       system_messages.welcome_invite
       system_messages.welcome_staff
       system_messages.welcome_tl1_user

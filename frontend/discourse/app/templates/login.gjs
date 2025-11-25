@@ -1,6 +1,5 @@
 import { hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
-import { and } from "truth-helpers";
 import FlashMessage from "discourse/components/flash-message";
 import LocalLoginForm from "discourse/components/local-login-form";
 import LoginButtons from "discourse/components/login-buttons";
@@ -12,6 +11,7 @@ import concatClass from "discourse/helpers/concat-class";
 import hideApplicationHeaderButtons from "discourse/helpers/hide-application-header-buttons";
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -96,6 +96,7 @@ export default <template>
                 @loginPasswordChanged={{@controller.loginPasswordChanged}}
                 @secondFactorMethod={{@controller.secondFactorMethod}}
                 @secondFactorToken={{@controller.secondFactorToken}}
+                @secondFactorTokenChanged={{@controller.secondFactorTokenChanged}}
                 @backupEnabled={{@controller.backupEnabled}}
                 @totpEnabled={{@controller.totpEnabled}}
                 @securityKeyAllowedCredentialIds={{@controller.securityKeyAllowedCredentialIds}}

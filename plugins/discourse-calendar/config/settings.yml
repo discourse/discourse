@@ -126,3 +126,8 @@ discourse_calendar:
     enum: "CalendarFirstDayOfWeek"
     default: monday
     client: true
+  calendar_upcoming_events_default_view:
+    type: enum
+    enum: "CalendarUpcomingEventsDefaultView"
+    default: month
+    client: true

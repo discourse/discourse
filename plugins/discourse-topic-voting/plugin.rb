@@ -11,6 +11,8 @@ register_asset "stylesheets/common/topic-voting.scss"
 register_asset "stylesheets/desktop/topic-voting.scss", :desktop
 register_asset "stylesheets/mobile/topic-voting.scss", :mobile
 
+register_svg_icon "check-to-slot"
+
 enabled_site_setting :topic_voting_enabled
 
 Discourse.top_menu_items.push(:votes)
@@ -45,38 +47,36 @@ after_initialize do
     scope.user ? object.topic.user_voted?(scope.user) : false
   end
 
-  if TopicQuery.respond_to?(:results_filter_callbacks)
-    TopicQuery.results_filter_callbacks << ->(_type, result, user, options) do
-      return result unless SiteSetting.topic_voting_enabled
+  TopicQuery.results_filter_callbacks << ->(_type, result, user, options) do
+    return result unless SiteSetting.topic_voting_enabled
 
-      result = result.includes(:topic_vote_count)
+    result = result.preload(:topic_vote_count)
 
-      if user
-        result =
-          result.select(
-            "topics.*, COALESCE((SELECT 1 FROM topic_voting_votes WHERE user_id = #{user.id} AND topic_id = topics.id), 0) AS current_user_voted",
-          )
+    if user
+      result =
+        result.select(
+          "topics.*, COALESCE((SELECT 1 FROM topic_voting_votes WHERE user_id = #{user.id} AND topic_id = topics.id), 0) AS current_user_voted",
+        )
 
-        if options[:state] == "my_votes"
-          result =
-            result.joins(
-              "INNER JOIN topic_voting_votes ON topic_voting_votes.topic_id = topics.id AND topic_voting_votes.user_id = #{user.id}",
-            )
-        end
-      end
-
-      if options[:order] == "votes"
-        sort_dir = (options[:ascending] == "true") ? "ASC" : "DESC"
+      if options[:state] == "my_votes"
         result =
           result.joins(
-            "LEFT JOIN topic_voting_topic_vote_count ON topic_voting_topic_vote_count.topic_id = topics.id",
-          ).reorder(
-            "COALESCE(topic_voting_topic_vote_count.votes_count,'0')::integer #{sort_dir}, topics.bumped_at DESC",
+            "INNER JOIN topic_voting_votes ON topic_voting_votes.topic_id = topics.id AND topic_voting_votes.user_id = #{user.id}",
           )
       end
-
-      result
     end
+
+    if options[:order] == "votes"
+      sort_dir = (options[:ascending] == "true") ? "ASC" : "DESC"
+      result =
+        result.joins(
+          "LEFT JOIN topic_voting_topic_vote_count ON topic_voting_topic_vote_count.topic_id = topics.id",
+        ).reorder(
+          "COALESCE(topic_voting_topic_vote_count.votes_count,'0')::integer #{sort_dir}, topics.bumped_at DESC",
+        )
+    end
+
+    result
   end
 
   register_category_custom_field_type("enable_topic_voting", :boolean)
@@ -120,6 +120,7 @@ after_initialize do
   add_to_serializer(:current_user, :votes_exceeded) { object.reached_voting_limit? }
   add_to_serializer(:current_user, :votes_count) { object.vote_count }
   add_to_serializer(:current_user, :votes_left) { [object.vote_limit - object.vote_count, 0].max }
+  add_to_serializer(:current_user, :vote_limit) { object.vote_limit }
 
   filter_order_votes = ->(scope, order_direction, _guardian) do
     scope.joins(:topic_vote_count).order(

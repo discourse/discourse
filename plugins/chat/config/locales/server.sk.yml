@@ -209,7 +209,7 @@ sk:
         slug_contains_non_ascii_chars: "obsahuje znaky, ktoré nie sú ascii"
         is_already_in_use: "je už v prevádzke"
     bookmarkable:
-      notification_title: "správa v %{channel_name}"
+      notification_title_channel: "správa v %{channel_name}"
     personal_chat: "osobný chat"
     onebox:
       inline_to_message: "Správa #%{message_id} od %{username} – #%{chat_channel}"
@@ -309,10 +309,8 @@ sk:
         few: "Zobraziť %{count} ďalšie správy"
         many: "Zobraziť %{count} ďalších správ"
         other: "Zobraziť %{count} ďalších správ"
-      your_chat_settings: "preferencia frekvencie e-mailových správ v chate"
   unsubscribe:
     chat_summary:
-      select_title: "Nastavenie frekvencie e-mailov so súhrnom chatu na:"
       never: Nikdy
       when_away: Len keď je preč
   category:

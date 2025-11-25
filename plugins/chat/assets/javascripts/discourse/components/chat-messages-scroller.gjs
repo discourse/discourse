@@ -6,6 +6,7 @@ const ChatMessagesScroller = <template>
   <div
     class="chat-messages-scroller"
     {{didInsert @onRegisterScroller}}
+    {{this.setupLock}}
     {{ChatScrollableList
       (hash onScroll=@onScroll onScrollEnd=@onScrollEnd reverse=true)
     }}

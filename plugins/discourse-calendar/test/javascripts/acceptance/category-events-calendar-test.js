@@ -38,6 +38,28 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
             },
             name: "Awesome Event",
             rrule: `DTSTART:${moment().format("YYYYMMDDTHHmmss")}Z\nRRULE:FREQ=DAILY;INTERVAL=1;UNTIL=${moment().add(2, "days").format("YYYYMMDD")}`,
+            occurrences: [
+              {
+                starts_at: moment()
+                  .tz("Asia/Calcutta")
+                  .add(1, "days")
+                  .format("YYYY-MM-DDT15:14:00.000Z"),
+                ends_at: moment()
+                  .tz("Asia/Calcutta")
+                  .add(1, "days")
+                  .format("YYYY-MM-DDT16:14:00.000Z"),
+              },
+              {
+                starts_at: moment()
+                  .tz("Asia/Calcutta")
+                  .add(2, "days")
+                  .format("YYYY-MM-DDT15:14:00.000Z"),
+                ends_at: moment()
+                  .tz("Asia/Calcutta")
+                  .add(2, "days")
+                  .format("YYYY-MM-DDT16:14:00.000Z"),
+              },
+            ],
           },
           {
             id: 67502,
@@ -60,6 +82,18 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
               },
             },
             name: "Awesome Event 2",
+            occurrences: [
+              {
+                starts_at: moment()
+                  .tz("Asia/Calcutta")
+                  .add(2, "days")
+                  .format("YYYY-MM-DDT15:14:00.000Z"),
+                ends_at: moment()
+                  .tz("Asia/Calcutta")
+                  .add(2, "days")
+                  .format("YYYY-MM-DDT16:14:00.000Z"),
+              },
+            ],
           },
           {
             id: 67502,
@@ -82,6 +116,18 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
               },
             },
             name: "Awesome Event 3<script>alert('my awesome event');</script>",
+            occurrences: [
+              {
+                starts_at: moment()
+                  .tz("Asia/Calcutta")
+                  .add(2, "days")
+                  .format("YYYY-MM-DDT15:14:00.000Z"),
+                ends_at: moment()
+                  .tz("Asia/Calcutta")
+                  .add(2, "days")
+                  .format("YYYY-MM-DDT16:14:00.000Z"),
+              },
+            ],
           },
         ],
       });

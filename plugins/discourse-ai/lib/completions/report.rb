@@ -4,6 +4,7 @@ module DiscourseAi
     class Report
       UNKNOWN_FEATURE = "unknown"
       USER_LIMIT = 50
+      LLM_MODEL_JOIN = "LEFT JOIN llm_models ON llm_models.id = ai_api_request_stats.llm_id"
 
       attr_reader :start_date, :end_date, :base_query, :timezone
 
@@ -15,15 +16,19 @@ module DiscourseAi
         @end_date = end_date.end_of_day
         Time.zone = nil # Reset to default timezone
 
-        @base_query = AiApiAuditLog.where(created_at: @start_date..@end_date)
+        @base_query = AiApiRequestStat.between(@start_date, @end_date)
       end
 
       def total_tokens
         stats.total_tokens || 0
       end
 
-      def total_cached_tokens
-        stats.total_cached_tokens || 0
+      def total_cache_read_tokens
+        stats.total_cache_read_tokens || 0
+      end
+
+      def total_cache_write_tokens
+        stats.total_cache_write_tokens || 0
       end
 
       def total_request_tokens
@@ -39,7 +44,9 @@ module DiscourseAi
       end
 
       def total_spending
-        total = total_input_spending + total_output_spending + total_cached_input_spending
+        total =
+          total_input_spending + total_output_spending + total_cache_read_spending +
+            total_cache_write_spending
         total.round(2)
       end
 
@@ -53,40 +60,36 @@ module DiscourseAi
         end
       end
 
-      def total_cached_input_spending
+      def total_cache_read_spending
         model_costs.sum do |row|
-          row.cached_input_cost.to_f * row.total_cached_tokens.to_i / 1_000_000.0
+          row.cached_input_cost.to_f * row.total_cache_read_tokens.to_i / 1_000_000.0
+        end
+      end
+
+      def total_cache_write_spending
+        model_costs.sum do |row|
+          row.cache_write_cost.to_f * row.total_cache_write_tokens.to_i / 1_000_000.0
         end
       end
 
       def stats
-        @stats ||=
-          base_query.select(
-            "COUNT(*) as total_requests",
-            "SUM(COALESCE(request_tokens + response_tokens, 0)) as total_tokens",
-            "SUM(COALESCE(cached_tokens,0)) as total_cached_tokens",
-            "SUM(COALESCE(request_tokens,0)) as total_request_tokens",
-            "SUM(COALESCE(response_tokens,0)) as total_response_tokens",
-          )[
-            0
-          ]
+        @stats ||= base_query.select("SUM(usage_count) as total_requests", *token_total_columns)[0]
       end
 
       def model_costs
         @model_costs ||=
           base_query
-            .joins("LEFT JOIN llm_models ON llm_models.name = language_model")
+            .joins(LLM_MODEL_JOIN)
             .group(
-              "llm_models.name, llm_models.input_cost, llm_models.output_cost, llm_models.cached_input_cost",
+              "llm_models.name, llm_models.input_cost, llm_models.output_cost, llm_models.cached_input_cost, llm_models.cache_write_cost",
             )
             .select(
               "llm_models.name",
               "llm_models.input_cost",
               "llm_models.output_cost",
               "llm_models.cached_input_cost",
-              "SUM(COALESCE(request_tokens, 0)) as total_request_tokens",
-              "SUM(COALESCE(response_tokens, 0)) as total_response_tokens",
-              "SUM(COALESCE(cached_tokens, 0)) as total_cached_tokens",
+              "llm_models.cache_write_cost",
+              *token_total_columns,
             )
       end
 
@@ -109,13 +112,7 @@ module DiscourseAi
           base_query
             .group("DATE_TRUNC('#{period}', created_at)")
             .order("DATE_TRUNC('#{period}', created_at)")
-            .select(
-              "DATE_TRUNC('#{period}', created_at) as period",
-              "SUM(COALESCE(request_tokens + response_tokens, 0)) as total_tokens",
-              "SUM(COALESCE(cached_tokens,0)) as total_cached_tokens",
-              "SUM(COALESCE(request_tokens,0)) as total_request_tokens",
-              "SUM(COALESCE(response_tokens,0)) as total_response_tokens",
-            )
+            .select("DATE_TRUNC('#{period}', created_at) as period", *token_total_columns)
 
         # Convert periods to user's timezone
         results.map do |row|
@@ -125,64 +122,49 @@ module DiscourseAi
       end
 
       def user_breakdown
-        base_query
-          .joins(:user)
-          .joins("LEFT JOIN llm_models ON llm_models.name = language_model")
-          .group(:user_id, "users.username", "users.uploaded_avatar_id")
-          .order("usage_count DESC")
-          .limit(USER_LIMIT)
-          .select(
-            "users.username",
-            "users.uploaded_avatar_id",
-            "COUNT(*) as usage_count",
-            "SUM(COALESCE(request_tokens + response_tokens, 0)) as total_tokens",
-            "SUM(COALESCE(cached_tokens,0)) as total_cached_tokens",
-            "SUM(COALESCE(request_tokens,0)) as total_request_tokens",
-            "SUM(COALESCE(response_tokens,0)) as total_response_tokens",
-            "SUM(COALESCE(request_tokens, 0) * COALESCE(llm_models.input_cost, 0)) / 1000000.0 as input_spending",
-            "SUM(COALESCE(response_tokens, 0) * COALESCE(llm_models.output_cost, 0)) / 1000000.0 as output_spending",
-            "SUM(COALESCE(cached_tokens, 0) * COALESCE(llm_models.cached_input_cost, 0)) / 1000000.0 as cached_input_spending",
-          )
+        stats =
+          base_query
+            .joins(LLM_MODEL_JOIN)
+            .group(:user_id)
+            .order("usage_count DESC")
+            .limit(USER_LIMIT)
+            .select(:user_id, "SUM(usage_count) as usage_count", *token_count_and_total_columns)
+
+        User
+          .joins("JOIN (#{stats.to_sql}) as stats ON stats.user_id = users.id")
+          .select("users.*", "stats.*")
+          .order("stats.usage_count DESC")
       end
 
       def feature_breakdown
         base_query
-          .joins("LEFT JOIN llm_models ON llm_models.name = language_model")
+          .joins(LLM_MODEL_JOIN)
           .group(:feature_name)
           .order("usage_count DESC")
           .select(
             "case when coalesce(feature_name, '') = '' then '#{UNKNOWN_FEATURE}' else feature_name end as feature_name",
-            "COUNT(*) as usage_count",
-            "SUM(COALESCE(request_tokens + response_tokens, 0)) as total_tokens",
-            "SUM(COALESCE(cached_tokens,0)) as total_cached_tokens",
-            "SUM(COALESCE(request_tokens,0)) as total_request_tokens",
-            "SUM(COALESCE(response_tokens,0)) as total_response_tokens",
-            "SUM(COALESCE(request_tokens, 0) * COALESCE(llm_models.input_cost, 0))  / 1000000.0 as input_spending",
-            "SUM(COALESCE(response_tokens, 0) * COALESCE(llm_models.output_cost, 0)) / 1000000.0 as output_spending",
-            "SUM(COALESCE(cached_tokens, 0) * COALESCE(llm_models.cached_input_cost, 0)) / 1000000.0 as cached_input_spending",
+            "SUM(usage_count) as usage_count",
+            *token_count_and_total_columns,
           )
       end
 
       def model_breakdown
         base_query
-          .joins("LEFT JOIN llm_models ON llm_models.name = language_model")
+          .joins(LLM_MODEL_JOIN)
           .group(
-            :language_model,
+            "COALESCE(llm_models.id::text, ai_api_request_stats.language_model)",
+            "COALESCE(llm_models.display_name, ai_api_request_stats.language_model)",
             "llm_models.input_cost",
             "llm_models.output_cost",
             "llm_models.cached_input_cost",
+            "llm_models.cache_write_cost",
           )
           .order("usage_count DESC")
           .select(
-            "language_model as llm",
-            "COUNT(*) as usage_count",
-            "SUM(COALESCE(request_tokens + response_tokens, 0)) as total_tokens",
-            "SUM(COALESCE(cached_tokens,0)) as total_cached_tokens",
-            "SUM(COALESCE(request_tokens,0)) as total_request_tokens",
-            "SUM(COALESCE(response_tokens,0)) as total_response_tokens",
-            "SUM(COALESCE(request_tokens, 0)) * COALESCE(llm_models.input_cost, 0) / 1000000.0 as input_spending",
-            "SUM(COALESCE(response_tokens, 0)) * COALESCE(llm_models.output_cost, 0) / 1000000.0 as output_spending",
-            "SUM(COALESCE(cached_tokens, 0)) * COALESCE(llm_models.cached_input_cost, 0) / 1000000.0 as cached_input_spending",
+            "COALESCE(llm_models.display_name, ai_api_request_stats.language_model) as llm_label",
+            "COALESCE(llm_models.id::text, ai_api_request_stats.language_model) as llm_id",
+            "SUM(usage_count) as usage_count",
+            *token_count_and_total_columns,
           )
       end
 
@@ -207,9 +189,43 @@ module DiscourseAi
         self
       end
 
-      def filter_by_model(model_name)
-        @base_query = base_query.where(language_model: model_name)
+      def filter_by_model(model_identifier)
+        if model_identifier.to_s.match?(/^\d+$/)
+          model = LlmModel.find_by(id: model_identifier)
+          if model
+            @base_query =
+              base_query.where(
+                "llm_id = ? OR (llm_id IS NULL AND language_model = ?)",
+                model.id,
+                model.name,
+              )
+          else
+            @base_query = base_query.where(llm_id: model_identifier)
+          end
+        else
+          @base_query = base_query.where(language_model: model_identifier)
+        end
         self
+      end
+
+      def token_total_columns
+        [
+          "SUM(COALESCE(request_tokens, 0) + COALESCE(response_tokens, 0) + COALESCE(cache_read_tokens, 0) + COALESCE(cache_write_tokens, 0)) as total_tokens",
+          "SUM(COALESCE(cache_read_tokens, 0)) as total_cache_read_tokens",
+          "SUM(COALESCE(cache_write_tokens,0)) as total_cache_write_tokens",
+          "SUM(COALESCE(request_tokens,0)) as total_request_tokens",
+          "SUM(COALESCE(response_tokens,0)) as total_response_tokens",
+        ]
+      end
+
+      def token_count_and_total_columns
+        [
+          *token_total_columns,
+          "SUM(COALESCE(request_tokens, 0) * COALESCE(llm_models.input_cost, 0))  / 1000000.0 as input_spending",
+          "SUM(COALESCE(response_tokens, 0) * COALESCE(llm_models.output_cost, 0)) / 1000000.0 as output_spending",
+          "SUM(COALESCE(cache_read_tokens, 0) * COALESCE(llm_models.cached_input_cost, 0)) / 1000000.0 as cache_read_spending",
+          "SUM(COALESCE(cache_write_tokens, 0) * COALESCE(llm_models.cache_write_cost, 0)) / 1000000.0 as cache_write_spending",
+        ]
       end
     end
   end

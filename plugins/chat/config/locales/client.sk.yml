@@ -136,7 +136,6 @@ sk:
       email_frequency:
         description: "E-mail vám pošleme iba vtedy, ak sme vás nevideli posledných 15 minút."
         never: "Nikdy"
-        title: "E-mailové upozornenia"
         when_away: "Len keď je preč"
       header_indicator_preference:
         title: "Zobrazenie indikátora aktivity v záhlaví"
@@ -485,6 +484,7 @@ sk:
           topic: "Témy"
       reviewable:
         type: "Chatová správa"
+        message_in_channel: "Kanál"
       reactions:
         only_you: "<span>Reagovali ste na </span>:%{emoji}:"
         you_and_single_user: "<span>Vy a %{username} ste reagovali pomocou </span>:%{emoji}:"

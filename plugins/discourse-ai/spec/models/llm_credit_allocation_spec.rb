@@ -6,26 +6,26 @@ RSpec.describe LlmCreditAllocation do
 
   describe "validations" do
     it "requires llm_model_id" do
-      allocation = LlmCreditAllocation.new(monthly_credits: 1000)
+      allocation = LlmCreditAllocation.new(daily_credits: 1000)
       expect(allocation).not_to be_valid
       expect(allocation.errors[:llm_model_id]).to be_present
     end
 
     it "requires unique llm_model_id" do
       Fabricate(:llm_credit_allocation, llm_model: llm_model)
-      allocation = LlmCreditAllocation.new(llm_model: llm_model, monthly_credits: 1000)
+      allocation = LlmCreditAllocation.new(llm_model: llm_model, daily_credits: 1000)
       expect(allocation).not_to be_valid
       expect(allocation.errors[:llm_model_id]).to be_present
     end
 
-    it "requires monthly_credits to be positive" do
-      allocation = LlmCreditAllocation.new(llm_model: llm_model, monthly_credits: 0)
+    it "requires daily_credits to be positive" do
+      allocation = LlmCreditAllocation.new(llm_model: llm_model, daily_credits: 0)
       expect(allocation).not_to be_valid
-      expect(allocation.errors[:monthly_credits]).to be_present
+      expect(allocation.errors[:daily_credits]).to be_present
     end
 
     it "requires soft_limit_percentage between 0 and 100" do
-      allocation = LlmCreditAllocation.new(llm_model: llm_model, monthly_credits: 1000)
+      allocation = LlmCreditAllocation.new(llm_model: llm_model, daily_credits: 1000)
       allocation.soft_limit_percentage = 101
       expect(allocation).not_to be_valid
 
@@ -36,69 +36,62 @@ RSpec.describe LlmCreditAllocation do
       expect(allocation).to be_valid
     end
 
-    it "sets last_reset_at on create" do
-      allocation = Fabricate.build(:llm_credit_allocation, llm_model: llm_model)
-      allocation.last_reset_at = nil
-      allocation.save!
-      expect(allocation.last_reset_at).to be_present
-    end
-
-    it "sets last_reset_at to beginning of month on create" do
-      freeze_time(Time.zone.parse("2025-10-15 14:30:00"))
+    it "initializes with empty daily_usage on create" do
       allocation = Fabricate(:llm_credit_allocation, llm_model: llm_model)
-      expect(allocation.last_reset_at).to eq_time(Time.zone.parse("2025-10-01 00:00:00"))
+      expect(allocation.daily_usage).to eq({})
+      expect(allocation.daily_used).to eq(0)
     end
   end
 
   describe "#credits_remaining" do
     it "returns remaining credits" do
-      allocation = Fabricate(:llm_credit_allocation, monthly_credits: 1000, monthly_used: 300)
+      allocation = Fabricate(:llm_credit_allocation, daily_credits: 1000, daily_used: 300)
       expect(allocation.credits_remaining).to eq(700)
     end
 
     it "returns 0 when credits are exhausted" do
-      allocation = Fabricate(:llm_credit_allocation, monthly_credits: 1000, monthly_used: 1200)
+      allocation = Fabricate(:llm_credit_allocation, daily_credits: 1000, daily_used: 1200)
       expect(allocation.credits_remaining).to eq(0)
     end
   end
 
   describe "#percentage_used" do
     it "calculates percentage correctly" do
-      allocation = Fabricate(:llm_credit_allocation, monthly_credits: 1000, monthly_used: 250)
+      allocation = Fabricate(:llm_credit_allocation, daily_credits: 1000, daily_used: 250)
       expect(allocation.percentage_used).to eq(25.0)
     end
 
     it "caps at 100%" do
-      allocation = Fabricate(:llm_credit_allocation, monthly_credits: 1000, monthly_used: 1500)
+      allocation = Fabricate(:llm_credit_allocation, daily_credits: 1000, daily_used: 1500)
       expect(allocation.percentage_used).to eq(100.0)
     end
 
-    it "returns 0 when monthly_credits is 0" do
-      allocation = Fabricate(:llm_credit_allocation, monthly_credits: 1000, monthly_used: 0)
-      allocation.monthly_credits = 0
+    it "returns 0 when daily_credits is 0" do
+      allocation = Fabricate(:llm_credit_allocation, daily_credits: 1000, daily_used: 0)
+      allocation.daily_credits = 0
       expect(allocation.percentage_used).to eq(0)
     end
   end
 
   describe "#percentage_remaining" do
     it "calculates percentage correctly" do
-      allocation = Fabricate(:llm_credit_allocation, monthly_credits: 1000, monthly_used: 250)
+      allocation = Fabricate(:llm_credit_allocation, daily_credits: 1000, daily_used: 250)
       expect(allocation.percentage_remaining).to eq(75.0)
     end
 
     it "floors at 0%" do
-      allocation = Fabricate(:llm_credit_allocation, monthly_credits: 1000, monthly_used: 1500)
+      allocation = Fabricate(:llm_credit_allocation, daily_credits: 1000, daily_used: 1500)
       expect(allocation.percentage_remaining).to eq(0.0)
     end
 
-    it "returns 100.0 when monthly_credits is 0" do
-      allocation = Fabricate(:llm_credit_allocation, monthly_credits: 1000, monthly_used: 0)
-      allocation.monthly_credits = 0
+    it "returns 100.0 when daily_credits is 0" do
+      allocation = Fabricate(:llm_credit_allocation, daily_credits: 1000, daily_used: 0)
+      allocation.daily_credits = 0
       expect(allocation.percentage_remaining).to eq(100.0)
     end
 
     it "returns 100.0 when no credits used" do
-      allocation = Fabricate(:llm_credit_allocation, monthly_credits: 1000, monthly_used: 0)
+      allocation = Fabricate(:llm_credit_allocation, daily_credits: 1000, daily_used: 0)
       expect(allocation.percentage_remaining).to eq(100.0)
     end
   end
@@ -108,8 +101,8 @@ RSpec.describe LlmCreditAllocation do
       allocation =
         Fabricate(
           :llm_credit_allocation,
-          monthly_credits: 1000,
-          monthly_used: 800,
+          daily_credits: 1000,
+          daily_used: 800,
           soft_limit_percentage: 80,
         )
       expect(allocation.soft_limit_remaining_reached?).to be true
@@ -119,8 +112,8 @@ RSpec.describe LlmCreditAllocation do
       allocation =
         Fabricate(
           :llm_credit_allocation,
-          monthly_credits: 1000,
-          monthly_used: 900,
+          daily_credits: 1000,
+          daily_used: 900,
           soft_limit_percentage: 80,
         )
       expect(allocation.soft_limit_remaining_reached?).to be true
@@ -130,8 +123,8 @@ RSpec.describe LlmCreditAllocation do
       allocation =
         Fabricate(
           :llm_credit_allocation,
-          monthly_credits: 1000,
-          monthly_used: 700,
+          daily_credits: 1000,
+          daily_used: 700,
           soft_limit_percentage: 80,
         )
       expect(allocation.soft_limit_remaining_reached?).to be false
@@ -140,34 +133,34 @@ RSpec.describe LlmCreditAllocation do
 
   describe "#hard_limit_remaining_reached?" do
     it "returns true when credits_remaining is 0" do
-      allocation = Fabricate(:llm_credit_allocation, monthly_credits: 1000, monthly_used: 1000)
+      allocation = Fabricate(:llm_credit_allocation, daily_credits: 1000, daily_used: 1000)
       expect(allocation.hard_limit_remaining_reached?).to be true
     end
 
     it "returns true when credits_remaining is negative" do
-      allocation = Fabricate(:llm_credit_allocation, monthly_credits: 1000, monthly_used: 1200)
+      allocation = Fabricate(:llm_credit_allocation, daily_credits: 1000, daily_used: 1200)
       expect(allocation.hard_limit_remaining_reached?).to be true
     end
 
     it "returns false when credits_remaining is positive" do
-      allocation = Fabricate(:llm_credit_allocation, monthly_credits: 1000, monthly_used: 999)
+      allocation = Fabricate(:llm_credit_allocation, daily_credits: 1000, daily_used: 999)
       expect(allocation.hard_limit_remaining_reached?).to be false
     end
   end
 
   describe "#credits_available?" do
     it "returns true when credits are available" do
-      allocation = Fabricate(:llm_credit_allocation, monthly_credits: 1000, monthly_used: 500)
+      allocation = Fabricate(:llm_credit_allocation, daily_credits: 1000, daily_used: 500)
       expect(allocation.credits_available?).to be true
     end
 
     it "returns false when hard limit is reached" do
-      allocation = Fabricate(:llm_credit_allocation, monthly_credits: 1000, monthly_used: 1000)
+      allocation = Fabricate(:llm_credit_allocation, daily_credits: 1000, daily_used: 1000)
       expect(allocation.credits_available?).to be false
     end
 
     it "returns false when hard limit is exceeded" do
-      allocation = Fabricate(:llm_credit_allocation, monthly_credits: 1000, monthly_used: 1100)
+      allocation = Fabricate(:llm_credit_allocation, daily_credits: 1000, daily_used: 1100)
       expect(allocation.credits_available?).to be false
     end
   end
@@ -177,8 +170,8 @@ RSpec.describe LlmCreditAllocation do
       allocation =
         Fabricate(
           :llm_credit_allocation,
-          monthly_credits: 1000,
-          monthly_used: 800,
+          daily_credits: 1000,
+          daily_used: 800,
           soft_limit_percentage: 80,
         )
       expect(allocation.soft_limit_reached?).to be true
@@ -188,8 +181,8 @@ RSpec.describe LlmCreditAllocation do
       allocation =
         Fabricate(
           :llm_credit_allocation,
-          monthly_credits: 1000,
-          monthly_used: 900,
+          daily_credits: 1000,
+          daily_used: 900,
           soft_limit_percentage: 80,
         )
       expect(allocation.soft_limit_reached?).to be true
@@ -199,8 +192,8 @@ RSpec.describe LlmCreditAllocation do
       allocation =
         Fabricate(
           :llm_credit_allocation,
-          monthly_credits: 1000,
-          monthly_used: 700,
+          daily_credits: 1000,
+          daily_used: 700,
           soft_limit_percentage: 80,
         )
       expect(allocation.soft_limit_reached?).to be false
@@ -208,136 +201,107 @@ RSpec.describe LlmCreditAllocation do
   end
 
   describe "#hard_limit_reached?" do
-    it "returns true when monthly_used equals monthly_credits" do
-      allocation = Fabricate(:llm_credit_allocation, monthly_credits: 1000, monthly_used: 1000)
+    it "returns true when daily_used equals daily_credits" do
+      allocation = Fabricate(:llm_credit_allocation, daily_credits: 1000, daily_used: 1000)
       expect(allocation.hard_limit_reached?).to be true
     end
 
-    it "returns true when monthly_used exceeds monthly_credits" do
-      allocation = Fabricate(:llm_credit_allocation, monthly_credits: 1000, monthly_used: 1200)
+    it "returns true when daily_used exceeds daily_credits" do
+      allocation = Fabricate(:llm_credit_allocation, daily_credits: 1000, daily_used: 1200)
       expect(allocation.hard_limit_reached?).to be true
     end
 
     it "returns false when below limit" do
-      allocation = Fabricate(:llm_credit_allocation, monthly_credits: 1000, monthly_used: 999)
+      allocation = Fabricate(:llm_credit_allocation, daily_credits: 1000, daily_used: 999)
       expect(allocation.hard_limit_reached?).to be false
     end
   end
 
   describe "#next_reset_at" do
-    it "returns beginning of next month after last_reset_at" do
-      freeze_time
-      allocation = Fabricate(:llm_credit_allocation, last_reset_at: Time.current)
-      expect(allocation.next_reset_at).to eq_time((1.month.from_now).beginning_of_month)
+    it "returns tomorrow at UTC midnight" do
+      freeze_time(Time.zone.parse("2025-10-15 14:30:00 UTC"))
+      allocation = Fabricate(:llm_credit_allocation)
+      expect(allocation.next_reset_at).to eq_time(Time.zone.parse("2025-10-16 00:00:00 UTC"))
     end
 
-    it "returns first of next month when created mid-month" do
-      freeze_time(Time.zone.parse("2025-10-15 14:30:00"))
+    it "returns tomorrow at UTC midnight when near end of day" do
+      freeze_time(Time.zone.parse("2025-10-15 23:59:00 UTC"))
       allocation = Fabricate(:llm_credit_allocation)
-      expect(allocation.last_reset_at).to eq_time(Time.zone.parse("2025-10-01 00:00:00"))
-      expect(allocation.next_reset_at).to eq_time(Time.zone.parse("2025-11-01 00:00:00"))
+      expect(allocation.next_reset_at).to eq_time(Time.zone.parse("2025-10-16 00:00:00 UTC"))
     end
 
-    it "returns first of next month when created on first of month" do
-      freeze_time(Time.zone.parse("2025-11-01 00:00:00"))
+    it "returns tomorrow at UTC midnight when at start of day" do
+      freeze_time(Time.zone.parse("2025-10-15 00:00:00 UTC"))
       allocation = Fabricate(:llm_credit_allocation)
-      expect(allocation.last_reset_at).to eq_time(Time.zone.parse("2025-11-01 00:00:00"))
-      expect(allocation.next_reset_at).to eq_time(Time.zone.parse("2025-12-01 00:00:00"))
+      expect(allocation.next_reset_at).to eq_time(Time.zone.parse("2025-10-16 00:00:00 UTC"))
     end
   end
 
-  describe "#should_reset?" do
-    it "returns true when time has passed next_reset_at" do
-      allocation = Fabricate(:llm_credit_allocation, last_reset_at: 2.months.ago)
-      expect(allocation.should_reset?).to be true
+  describe "day transitions" do
+    it "automatically resets usage to 0 when day changes" do
+      freeze_time(Time.zone.parse("2025-10-15 14:30:00 UTC"))
+      allocation = Fabricate(:llm_credit_allocation, daily_credits: 1000, daily_used: 800)
+      expect(allocation.daily_used).to eq(800)
+
+      freeze_time(Time.zone.parse("2025-10-16 10:00:00 UTC"))
+      allocation.reload
+      expect(allocation.daily_used).to eq(0)
     end
 
-    it "returns false when before next_reset_at" do
-      allocation = Fabricate(:llm_credit_allocation, last_reset_at: 1.day.ago)
-      expect(allocation.should_reset?).to be false
+    it "preserves previous day's data" do
+      freeze_time(Time.zone.parse("2025-10-15 14:30:00 UTC"))
+      allocation = Fabricate(:llm_credit_allocation, daily_credits: 1000, daily_used: 800)
+
+      freeze_time(Time.zone.parse("2025-10-16 10:00:00 UTC"))
+      allocation.deduct_credits!(200)
+      allocation.reload
+
+      expect(allocation.daily_used).to eq(200)
+      expect(allocation.daily_usage["2025-10-15"]).to eq(800)
     end
-  end
 
-  describe "#reset_if_needed!" do
-    it "resets credits when time has passed" do
-      allocation =
-        Fabricate(
-          :llm_credit_allocation,
-          monthly_credits: 1000,
-          monthly_used: 800,
-          last_reset_at: 2.months.ago,
-        )
+    it "cleans up old days beyond 90 days" do
+      allocation = Fabricate(:llm_credit_allocation)
 
-      freeze_time do
-        allocation.reset_if_needed!
-
-        allocation.reload
-        expect(allocation.monthly_used).to eq(0)
-        expect(allocation.last_reset_at).to eq_time(Time.current.beginning_of_month)
+      100.times do |i|
+        day_key = (i + 1).days.ago.beginning_of_day.utc.strftime("%Y-%m-%d")
+        allocation.daily_usage[day_key] = 100 * (i + 1)
       end
-    end
+      allocation.save!
 
-    it "does not reset when time has not passed" do
-      original_time = 1.day.ago
-      allocation =
-        Fabricate(
-          :llm_credit_allocation,
-          monthly_credits: 1000,
-          monthly_used: 800,
-          last_reset_at: original_time,
-        )
-
-      allocation.reset_if_needed!
-
+      allocation.deduct_credits!(100)
       allocation.reload
-      expect(allocation.monthly_used).to eq(800)
-      expect(allocation.last_reset_at).to be_within(1.second).of(original_time)
-    end
 
-    it "resets to beginning of current month when triggered mid-month" do
-      freeze_time(Time.zone.parse("2025-10-15 14:30:00"))
-      allocation =
-        Fabricate(
-          :llm_credit_allocation,
-          monthly_credits: 1000,
-          monthly_used: 800,
-          last_reset_at: Time.zone.parse("2025-09-01 00:00:00"),
-        )
-
-      allocation.reset_if_needed!
-
-      allocation.reload
-      expect(allocation.monthly_used).to eq(0)
-      expect(allocation.last_reset_at).to eq_time(Time.zone.parse("2025-10-01 00:00:00"))
+      expect(allocation.daily_usage.keys.size).to be <= 91
     end
   end
 
   describe "#deduct_credits!" do
-    it "increments monthly_used" do
-      allocation = Fabricate(:llm_credit_allocation, monthly_used: 100)
+    it "increments daily_used" do
+      allocation = Fabricate(:llm_credit_allocation, daily_used: 100)
 
       allocation.deduct_credits!(50)
 
       allocation.reload
-      expect(allocation.monthly_used).to eq(150)
+      expect(allocation.daily_used).to eq(150)
     end
   end
 
   describe "#check_credits!" do
     it "raises error when hard limit reached" do
-      allocation = Fabricate(:llm_credit_allocation, monthly_credits: 1000, monthly_used: 1000)
+      allocation = Fabricate(:llm_credit_allocation, daily_credits: 1000, daily_used: 1000)
 
       expect { allocation.check_credits! }.to raise_error(LlmCreditAllocation::CreditLimitExceeded)
     end
 
     it "does not raise error when below limit" do
-      allocation = Fabricate(:llm_credit_allocation, monthly_credits: 1000, monthly_used: 500)
+      allocation = Fabricate(:llm_credit_allocation, daily_credits: 1000, daily_used: 500)
 
       expect { allocation.check_credits! }.not_to raise_error
     end
 
     it "attaches allocation to raised exception" do
-      allocation = Fabricate(:llm_credit_allocation, monthly_credits: 1000, monthly_used: 1000)
+      allocation = Fabricate(:llm_credit_allocation, daily_credits: 1000, daily_used: 1000)
 
       begin
         allocation.check_credits!
@@ -365,53 +329,41 @@ RSpec.describe LlmCreditAllocation do
     end
 
     it "returns true when credits are available" do
-      Fabricate(
-        :llm_credit_allocation,
-        llm_model: llm_model,
-        monthly_credits: 1000,
-        monthly_used: 500,
-      )
+      Fabricate(:llm_credit_allocation, llm_model: llm_model, daily_credits: 1000, daily_used: 500)
       expect(LlmCreditAllocation.credits_available?(llm_model)).to be true
     end
 
     it "returns false when hard limit reached" do
-      Fabricate(
-        :llm_credit_allocation,
-        llm_model: llm_model,
-        monthly_credits: 1000,
-        monthly_used: 1000,
-      )
+      Fabricate(:llm_credit_allocation, llm_model: llm_model, daily_credits: 1000, daily_used: 1000)
       expect(LlmCreditAllocation.credits_available?(llm_model)).to be false
     end
 
-    it "resets and returns true when reset is needed" do
+    it "returns true when previous month hit limit but current month is new" do
+      freeze_time(Time.zone.parse("2025-10-15 14:30:00"))
       allocation =
         Fabricate(
           :llm_credit_allocation,
           llm_model: llm_model,
-          monthly_credits: 1000,
-          monthly_used: 1000,
-          last_reset_at: 2.months.ago,
+          daily_credits: 1000,
+          daily_used: 1000,
         )
 
-      freeze_time do
-        result = LlmCreditAllocation.credits_available?(llm_model)
+      freeze_time(Time.zone.parse("2025-11-05 10:00:00"))
+      result = LlmCreditAllocation.credits_available?(llm_model)
 
-        allocation.reload
-        expect(result).to be true
-        expect(allocation.monthly_used).to eq(0)
-      end
+      allocation.reload
+      expect(result).to be true
+      expect(allocation.daily_used).to eq(0)
     end
   end
 
   describe "#formatted_reset_time" do
     it "returns formatted reset time" do
-      freeze_time do
-        allocation = Fabricate(:llm_credit_allocation, last_reset_at: Time.current)
-        formatted = allocation.formatted_reset_time
+      freeze_time(Time.zone.parse("2025-10-15 14:30:00"))
+      allocation = Fabricate(:llm_credit_allocation)
+      formatted = allocation.formatted_reset_time
 
-        expect(formatted).to match(/\d{1,2}:\d{2}[ap]m on \w+ \d{1,2}, \d{4}/)
-      end
+      expect(formatted).to match(/\d{1,2}:\d{2}[ap]m on \w+ \d{1,2}, \d{4}/)
     end
 
     it "returns empty string when next_reset_at is nil" do
@@ -424,12 +376,11 @@ RSpec.describe LlmCreditAllocation do
 
   describe "#relative_reset_time" do
     it "returns relative time until reset" do
-      freeze_time do
-        allocation = Fabricate(:llm_credit_allocation, last_reset_at: Time.current)
-        relative = allocation.relative_reset_time
+      freeze_time(Time.zone.parse("2025-10-15 14:30:00"))
+      allocation = Fabricate(:llm_credit_allocation)
+      relative = allocation.relative_reset_time
 
-        expect(relative).to match(/in .+/)
-      end
+      expect(relative).to match(/in .+/)
     end
 
     it "returns empty string when next_reset_at is nil" do
@@ -437,6 +388,86 @@ RSpec.describe LlmCreditAllocation do
       allocation.stubs(:next_reset_at).returns(nil)
 
       expect(allocation.relative_reset_time).to eq("")
+    end
+  end
+
+  describe ".check_credits!" do
+    fab!(:llm_model) { Fabricate(:llm_model, id: -1) }
+
+    it "raises error when hard limit reached and no feature_name provided" do
+      Fabricate(:llm_credit_allocation, llm_model: llm_model, daily_credits: 1000, daily_used: 1000)
+
+      expect { LlmCreditAllocation.check_credits!(llm_model) }.to raise_error(
+        LlmCreditAllocation::CreditLimitExceeded,
+      )
+    end
+
+    it "does not raise error when credits available" do
+      Fabricate(:llm_credit_allocation, llm_model: llm_model, daily_credits: 1000, daily_used: 500)
+
+      expect { LlmCreditAllocation.check_credits!(llm_model) }.not_to raise_error
+    end
+
+    it "bypasses credit check for features with 0 credit cost" do
+      Fabricate(:llm_credit_allocation, llm_model: llm_model, daily_credits: 1000, daily_used: 1000)
+      Fabricate(
+        :llm_feature_credit_cost,
+        llm_model: llm_model,
+        feature_name: "spam_detection",
+        credits_per_token: 0.0,
+      )
+
+      expect { LlmCreditAllocation.check_credits!(llm_model, "spam_detection") }.not_to raise_error
+    end
+
+    it "raises error for features with non-zero credit cost when limit reached" do
+      Fabricate(:llm_credit_allocation, llm_model: llm_model, daily_credits: 1000, daily_used: 1000)
+      Fabricate(
+        :llm_feature_credit_cost,
+        llm_model: llm_model,
+        feature_name: "assistant",
+        credits_per_token: 1.0,
+      )
+
+      expect { LlmCreditAllocation.check_credits!(llm_model, "assistant") }.to raise_error(
+        LlmCreditAllocation::CreditLimitExceeded,
+      )
+    end
+
+    it "uses default credit cost when feature not found" do
+      Fabricate(:llm_credit_allocation, llm_model: llm_model, daily_credits: 1000, daily_used: 1000)
+      Fabricate(
+        :llm_feature_credit_cost,
+        llm_model: llm_model,
+        feature_name: "default",
+        credits_per_token: 1.0,
+      )
+
+      expect { LlmCreditAllocation.check_credits!(llm_model, "unknown_feature") }.to raise_error(
+        LlmCreditAllocation::CreditLimitExceeded,
+      )
+    end
+
+    it "bypasses check when default credit cost is 0" do
+      Fabricate(:llm_credit_allocation, llm_model: llm_model, daily_credits: 1000, daily_used: 1000)
+      Fabricate(
+        :llm_feature_credit_cost,
+        llm_model: llm_model,
+        feature_name: "default",
+        credits_per_token: 0.0,
+      )
+
+      expect { LlmCreditAllocation.check_credits!(llm_model, "unknown_feature") }.not_to raise_error
+    end
+
+    it "returns early when model has no credit system" do
+      regular_model = Fabricate(:llm_model)
+
+      expect { LlmCreditAllocation.check_credits!(regular_model) }.not_to raise_error
+    end
+
+    it "returns early when model is nil" do
+      expect { LlmCreditAllocation.check_credits!(nil) }.not_to raise_error
     end
   end
 end

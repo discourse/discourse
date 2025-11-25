@@ -1,10 +1,10 @@
 import { hash } from "@ember/helper";
 import { fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { paste } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
 import pretender, { response } from "../../../helpers/create-pretender";
 
 module(

@@ -136,9 +136,7 @@ export default class CategoryCalendar extends Component {
       return {
         title: formatEventName(event, this.currentUser?.user_option?.timezone),
         start: startsAt,
-        rrule: event.rrule,
         end: endsAt || startsAt,
-        duration: event.duration,
         allDay: !isNotFullDayEvent(moment(startsAt), moment(endsAt)),
         url: getURL(`/t/-/${post.topic.id}/${post.post_number}`),
         backgroundColor,

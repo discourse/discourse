@@ -120,7 +120,6 @@ sv:
       email_frequency:
         description: "Vi skickar bara e-post till dig om vi inte har sett dig under de senaste 15 minuterna."
         never: "Aldrig"
-        title: "E-postaviseringar"
         when_away: "Endast när du är borta"
       header_indicator_preference:
         title: "Visa aktivitetsindikator i sidhuvudet"
@@ -411,6 +410,7 @@ sv:
           topic: "Ämne"
       reviewable:
         type: "Chatt meddelande"
+        message_in_channel: "Kanal"
       reactions:
         only_you: "<span>Du reagerade med </span>:%{emoji}:"
         you_and_single_user: "<span>Du och %{username} reagerade med </span>:%{emoji}:"

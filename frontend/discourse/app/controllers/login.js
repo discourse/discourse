@@ -179,6 +179,11 @@ export default class LoginPageController extends Controller {
   }
 
   @action
+  secondFactorTokenChanged(token) {
+    this.secondFactorToken = token;
+  }
+
+  @action
   showNotActivated(props) {
     this.modal.show(NotActivatedModal, { model: props });
   }

@@ -896,6 +896,28 @@ TEXT
           end
         end
 
+        it "uses proper token accounting with cached tokens" do
+          response = <<~TEXT.strip
+            data: {"id":"chatcmpl-cached","object":"chat.completion.chunk","created":1715644203,"model":"gpt-4o-2024-05-13","choices":[],"usage":{"prompt_tokens":25,"completion_tokens":10,"total_tokens":35,"prompt_tokens_details":{"cached_tokens":5}}}|
+            data: [DONE]
+          TEXT
+
+          chunks = response.split("|")
+          open_ai_mock.with_chunk_array_support do
+            open_ai_mock.stub_raw(chunks)
+
+            dialect = compliance.dialect(prompt: compliance.generic_prompt)
+            endpoint.perform_completion!(dialect, user) { |partial| }
+
+            log = AiApiAuditLog.order("id desc").first
+
+            # request_tokens should be prompt_tokens (25) - cached_tokens (5) = 20
+            expect(log.request_tokens).to eq(20)
+            expect(log.cache_read_tokens).to eq(5)
+            expect(log.response_tokens).to eq(10)
+          end
+        end
+
         it "properly handles multiple params in partial tool calls" do
           # this is not working and it is driving me nuts so I will use a sledghammer
           # text = plugin_file_from_fixtures("openai_artifact_call.txt", "bot")
@@ -932,7 +954,7 @@ TEXT
           end
 
           audit_log = AiApiAuditLog.order("id desc").first
-          expect(audit_log.cached_tokens).to eq(33)
+          expect(audit_log.cache_read_tokens).to eq(33)
         end
 
         it "properly handles spaces in tools payload and partial tool calls" do
@@ -1014,7 +1036,7 @@ TEXT
 
       endpoint.perform_completion!(dialect, user)
 
-      expect(parsed_body[:reasoning]).to eq({ effort: "minimal" })
+      expect(parsed_body[:reasoning]).to include(effort: "minimal", summary: "auto")
       expect(parsed_body).not_to have_key(:reasoning_effort)
     end
 

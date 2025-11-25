@@ -15,9 +15,23 @@ el:
     errors:
       not_accepting_dms: "Λυπούμαστε, ο/η %{username} δεν δέχεται μηνύματα αυτή τη στιγμή."
     reviewables:
+      message_already_handled: "Ευχαριστούμε, αλλά έχουμε ήδη αναθεωρήσει αυτό το μήνυμα και έχουμε διαπιστώσει ότι δεν χρειάζεται να αναφερθεί ξανά."
       actions:
+        message_actions:
+          bundle_title: "Τι θέλετε να κάνετε με το μήνυμα;"
         no_action_message:
           title: "Καμία ενέργεια"
+          description: "Αφήστε το μήνυμα ως έχει."
+        delete_message:
+          title: "Διαγραφή μηνύματος"
+          description: "Μόνιμη διαγραφή του μηνύματος."
+        restore_message:
+          title: "Επαναφορά μηνύματος"
+          description: "Επαναφορά του μηνύματος ώστε οι χρήστες να μπορούν να το δουν."
+        agree:
+          title: "Συμφωνώ..."
+        agree_and_keep_message:
+          title: "Διατήρηση μηνύματος"
         agree_and_suspend:
           title: "Αποβολή Χρήστη"
         agree_and_silence:
@@ -41,7 +55,7 @@ el:
         slug_contains_non_ascii_chars: "περιέχει χαρακτήρες που δεν είναι ascii"
         is_already_in_use: "είναι ήδη σε χρήση"
     bookmarkable:
-      notification_title: "μήνυμα στο %{channel_name}"
+      notification_title_channel: "μήνυμα στο %{channel_name}"
     personal_chat: "προσωπική συνομιλία"
     onebox:
       inline_to_channel: "Συνομιλία #%{chat_channel}"

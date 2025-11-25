@@ -1,7 +1,7 @@
 import { hash } from "@ember/helper";
+import Editor from "discourse/admin/components/schema-setting/editor";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import Editor from "admin/components/schema-setting/editor";
 
 export default <template>
   <div class="customize-show-schema__header row">

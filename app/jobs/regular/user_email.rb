@@ -8,6 +8,7 @@ module Jobs
     sidekiq_options queue: "low"
 
     sidekiq_retry_in do |count, exception|
+      next if exception.wrapped.nil?
       # retry in an hour when SMTP server is busy
       # or use default sidekiq retry formula. returning
       # nil/0 will trigger the default sidekiq

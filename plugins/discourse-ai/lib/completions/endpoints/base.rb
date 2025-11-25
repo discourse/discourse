@@ -78,7 +78,7 @@ module DiscourseAi
           &blk
         )
           LlmQuota.check_quotas!(@llm_model, user)
-          LlmCreditAllocation.check_credits!(@llm_model)
+          LlmCreditAllocation.check_credits!(@llm_model, feature_name)
 
           start_time = Time.now
 
@@ -113,7 +113,7 @@ module DiscourseAi
             wrapped = [result] if !result.is_a?(Array)
             wrapped.each do |partial|
               blk.call(partial)
-              break cancel_manager&.cancelled?
+              break if cancel_manager&.cancelled?
             end
             return result
           end
@@ -270,6 +270,9 @@ module DiscourseAi
                   # signal last partial output which will get parsed
                   # by best effort json parser
                   blk.call("")
+                else
+                  # got to signal the end of structured output
+                  blk.call(structured_output)
                 end
               end
               call_status = :success
@@ -283,6 +286,7 @@ module DiscourseAi
                 log.updated_at = Time.now
                 log.duration_msecs = (Time.now - start_time) * 1000
                 log.save!
+                AiApiRequestStat.record_from_audit_log(log, llm_model: @llm_model)
                 LlmQuota.log_usage(@llm_model, user, log.request_tokens, log.response_tokens)
                 LlmCreditAllocation.deduct_credits!(
                   @llm_model,
@@ -325,8 +329,11 @@ module DiscourseAi
 
                 # gemini puts passwords in query params
                 # we don't want to log that
-                structured_logger.log(
-                  "llm_call",
+                llm_call_step = structured_logger.add_child_step(name: "Performing LLM call")
+
+                structured_logger.append_entry(
+                  step: llm_call_step,
+                  name: "llm_call",
                   args: {
                     class: self.class.name,
                     completion_url: request.uri.to_s.split("?")[0],
@@ -337,8 +344,8 @@ module DiscourseAi
                     duration: log.duration_msecs,
                     stream: @streaming_mode,
                   },
-                  start_time: start_time.utc,
-                  end_time: Time.now.utc,
+                  started_at: start_time.utc,
+                  ended_at: Time.now.utc,
                 )
               end
             end
@@ -443,6 +450,7 @@ module DiscourseAi
             topic_id: dialect.prompt.topic_id,
             post_id: dialect.prompt.post_id,
             feature_name: feature_name,
+            llm_id: llm_model&.id,
             language_model: llm_model.name,
             feature_context: feature_context.present? ? feature_context.as_json : nil,
           )

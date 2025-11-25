@@ -29,12 +29,13 @@ module(
         .exists("renders the flag count element");
       assert
         .dom(".review-item__flag-count")
-        .containsText("3", "displays the count value");
+        .containsText("x3", "displays the count value formatted as xN");
     });
 
     test("does not render count when invalid", async function (assert) {
       const countScenarios = [
         { count: 0, title: "Zero count", description: "count is 0" },
+        { count: 1, title: "Single count", description: "count is 1" },
         {
           count: undefined,
           title: "Undefined count",
@@ -76,7 +77,7 @@ module(
 
       for (const { type, expectedClass } of flagTypes) {
         const typeDescription = type || "undefined";
-        const score = { type, title: "Test content", count: 1 };
+        const score = { type, title: "Test content", count: 2 };
 
         await render(
           <template><ReviewableFlagReason @score={{score}} /></template>
@@ -98,7 +99,7 @@ module(
     });
 
     test("renders title even when empty string", async function (assert) {
-      const score = { type: "spam", title: "", count: 1 };
+      const score = { type: "spam", title: "", count: 2 };
 
       await render(
         <template><ReviewableFlagReason @score={{score}} /></template>
@@ -109,7 +110,7 @@ module(
         .exists("renders the flag reason container");
       assert
         .dom(".review-item__flag-reason")
-        .hasText("1", "only shows the count when title is empty");
+        .hasText("x2", "shows the count when title is empty");
     });
   }
 );

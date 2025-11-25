@@ -8,10 +8,6 @@ class Group < ActiveRecord::Base
   MAX_EMAIL_DOMAIN_LENGTH = 253
   RESERVED_NAMES = %w[by-id]
 
-  # TODO: Remove flair_url when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
-  # TODO: Remove smtp_ssl when db/post_migrate/20240717053710_drop_groups_smtp_ssl has been promoted to pre-deploy
-  self.ignored_columns = %w[flair_url smtp_ssl]
-
   include HasCustomFields
   include AnonCacheInvalidator
   include HasDestroyedWebHook
@@ -537,14 +533,11 @@ class Group < ActiveRecord::Base
     localized_name = I18n.t("groups.default_names.#{name}", locale: SiteSetting.default_locale)
     default_name = I18n.t("groups.default_names.#{name}")
 
-    group.name =
-      if can_use_name?(localized_name, group)
-        localized_name
-      elsif can_use_name?(default_name, group)
-        default_name
-      else
-        name.to_s
-      end
+    if can_use_name?(localized_name, group)
+      group.name = localized_name
+    elsif can_use_name?(default_name, group)
+      group.name = default_name
+    end
 
     # the everyone group is special, it can include non-users so there is no
     # way to have the membership in a table

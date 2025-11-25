@@ -1,6 +1,6 @@
+import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
+import ApiKeyItem from "discourse/admin/components/api-key-item";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
-import ApiKeyItem from "admin/components/api-key-item";
 
 const ApiKeysList = <template>
   <div class="container admin-api_keys">

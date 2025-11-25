@@ -5,7 +5,19 @@ class ProblemCheck::UpcomingChangeStableOptedOut < ProblemCheck
 
   def call
     return no_problem if !SiteSetting.enable_upcoming_changes
-    status_errors
+
+    # If the site setting is enabled, then the change is opted in, either
+    # manually or automatically, so we skip it.
+    return no_problem if SiteSetting.send(target)
+
+    # Don't care about any changes that are not yet stable, admins can opt
+    # in and out of these without worry.
+    return no_problem if UpcomingChanges.not_yet_stable?(target)
+
+    # At this point, we have an upcoming change that is stable or permanent,
+    # and the site is opted out of it. Admins need to know that the change
+    # will either become permanent or be removed soon.
+    problem(target)
   end
 
   private
@@ -16,24 +28,5 @@ class ProblemCheck::UpcomingChangeStableOptedOut < ProblemCheck
 
   def targets
     SiteSetting.upcoming_change_site_settings
-  end
-
-  def status_errors
-    targets
-      .map do |upcoming_change|
-        # If the site setting is enabled, then the change is opted in, either
-        # manually or automatically, so we skip it.
-        next if SiteSetting.send(upcoming_change)
-
-        # Don't care about any changes that are not yet stable, admins can opt
-        # in and out of these without worry.
-        next if UpcomingChanges.not_yet_stable?(upcoming_change)
-
-        # At this point, we have an upcoming change that is stable or permanent,
-        # and the site is opted out of it. Admins need to know that the change
-        # will either become permanent or be removed soon.
-        problem(upcoming_change)
-      end
-      .compact
   end
 end

@@ -9,13 +9,19 @@ import TextField from "discourse/components/text-field";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import {
+  ALL_TAGS_ID,
+  NO_TAG_ID,
+} from "discourse/select-kit/components/tag-drop";
 import { i18n } from "discourse-i18n";
-import { ALL_TAGS_ID, NO_TAG_ID } from "select-kit/components/tag-drop";
 import Item from "./item";
 import TagDrop from "./tag-drop";
 
+const PREV_TEMPLATE_TAG_ID = "template-selected-tag";
+
 export default class DTemplatesFilterableList extends Component {
   @service siteSettings;
+  @service keyValueStore;
 
   @tracked loading = true;
   @tracked listFilter = "";
@@ -52,9 +58,11 @@ export default class DTemplatesFilterableList extends Component {
           return template.tags.includes(this.selectedTag);
         })
         .sort((a, b) => {
-          /* Sort replies by relevance and title. */
+          /* Sort replies by relevance, usage, and title. */
           if (a.score !== b.score) {
             return a.score > b.score ? -1 : 1; /* descending */
+          } else if (a.usages !== b.usages) {
+            return a.usages > b.usages ? -1 : 1; /* descending */
           } else if (a.title !== b.title) {
             return a.title < b.title ? -1 : 1; /* ascending */
           }
@@ -85,6 +93,17 @@ export default class DTemplatesFilterableList extends Component {
             return availableTags;
           }, {})
         );
+
+        const prevSelectedTag = this.keyValueStore.get(PREV_TEMPLATE_TAG_ID);
+        if (
+          prevSelectedTag &&
+          (prevSelectedTag === NO_TAG_ID ||
+            this.availableTags.find((t) => t.id === prevSelectedTag))
+        ) {
+          this.selectedTag = prevSelectedTag;
+        } else {
+          this.keyValueStore.remove(PREV_TEMPLATE_TAG_ID);
+        }
       }
     } catch (e) {
       this.loading = false;
@@ -101,6 +120,11 @@ export default class DTemplatesFilterableList extends Component {
   @action
   changeSelectedTag(tagId) {
     this.selectedTag = tagId;
+    if (tagId === ALL_TAGS_ID) {
+      this.keyValueStore.remove(PREV_TEMPLATE_TAG_ID);
+      return;
+    }
+    this.keyValueStore.set({ key: PREV_TEMPLATE_TAG_ID, value: tagId });
   }
 
   @action

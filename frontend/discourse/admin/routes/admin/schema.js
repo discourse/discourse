@@ -1,6 +1,6 @@
 import Route from "@ember/routing/route";
 import { service } from "@ember/service";
-import SiteSetting from "admin/models/site-setting";
+import SiteSetting from "discourse/admin/models/site-setting";
 
 export default class AdminSchemaRoute extends Route {
   @service routeHistory;
@@ -26,7 +26,8 @@ export default class AdminSchemaRoute extends Route {
     return {
       setting,
       settingName: params.setting_name,
-      goBackUrl: this.routeHistory.lastURL,
+      goBackUrl:
+        this.routeHistory.lastURL || "/admin/site_settings/category/required",
     };
   }
 }

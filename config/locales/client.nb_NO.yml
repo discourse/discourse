@@ -248,7 +248,7 @@ nb_NO:
     joined: "Ble medlem"
     admin_title: "Admin"
     show_more: "vis mer"
-    show_help: "alternativer"
+    show_help: "Alternativer"
     links: "Lenker"
     links_lowercase:
       one: "link"
@@ -528,10 +528,6 @@ nb_NO:
         required: "Du må gjøre krav på varer før du kan se gjennom dem."
         claimed_by_you: "Du har gjort krav på dette elementet og kan se gjennom det."
         claimed_by_other: "Dette elementet kan bare bli vurdert av <b>%{username}</b>."
-      claim:
-        title: "Gjør krav på dette emne"
-      unclaim:
-        help: "fjern dette kravet"
       awaiting_approval: "Venter på godkjenning"
       delete: "Slett"
       settings:
@@ -594,7 +590,7 @@ nb_NO:
       replies:
         one: "%{count} svar"
         other: "%{count} svar"
-      edit: "Rediger"
+      edit: "Rediger innlegg"
       save: "Lagre"
       cancel: "Avbryt"
       new_topic: "Godkjenning av dette elementet vil opprette et nytt emne"
@@ -615,7 +611,6 @@ nb_NO:
           created_at: "Opprettet på"
           created_at_asc: "Opprettet i (bakover)"
         priority:
-          title: "Minimum prioritet"
           any: "(alt)"
           low: "Lav"
           medium: "Middels"
@@ -665,9 +660,12 @@ nb_NO:
         reviewable_post:
           title: "Innlegg"
           noun: "innlegg"
+      user_label: "Bruker"
       notes:
         delete: "Slett"
+      topic_label: "Emne"
       review_user: "Bruker"
+      copy_link_feedback: "Lenk kopiert"
       insights:
         activities:
           posts:
@@ -2415,7 +2413,6 @@ nb_NO:
       reply: "Svar"
       cancel: "Avbryt"
       create_topic: "Opprett emne"
-      create_pm: "Send melding"
       create_whisper: "Hvisk"
       create_shared_draft: "Opprett delt utkast"
       edit_shared_draft: "Rediger delt utkast"
@@ -2491,8 +2488,10 @@ nb_NO:
           label: Veksle hvisking
           desc: Hvisking er kun synlig for stab
         create_topic:
-          label: "Nytt emne"
           desc: Opprett et nytt emne
+        create_personal_message:
+          label: "Ny melding"
+          desc: "Opprett en ny personlig melding"
         shared_draft:
           label: "Delt utkast"
           desc: "Lag et emne som bare vil være synlig for tillatte brukere"
@@ -2888,7 +2887,6 @@ nb_NO:
         progress:
           one: "Fremgang: <strong>%{count}</strong> emne"
           other: "Fremgang: <strong>%{count}</strong> emner"
-        silent: "Utfør denne handlingen stille."
         performing: "Utfører masseoperasjoner, vennligst vent…"
         completed: "Masseoperasjoner fullført med suksess!"
       none:
@@ -3049,7 +3047,6 @@ nb_NO:
       jump_reply_button: "Gå til innlegg"
       deleted: "Emnet ble slettet"
       slow_mode_update:
-        title: "Langsom Modus"
         select: "Brukere kan bare legge inn innlegg i dette emnet én gang hver:"
         description: "For å fremme gjennomtenkte diskusjoner i rask bevegelse eller kontroversiell diskusjon, må brukerne vente før de posterer igjen på dette emnet."
         enable: "Aktiver"
@@ -3665,22 +3662,13 @@ nb_NO:
         description: "Krev at nye emner må ha stikkord fra stikkordgrupper:"
         delete: "Slett"
         add: "Legg til påkrevd stikkordgruppe"
-        placeholder: "velg stikkordgruppe…"
+        placeholder: "Velg stikkordgruppe…"
       topic_featured_link_allowed: "Tillat fremhevede lenker i denne kategorien"
-      delete: "Slett kategori"
-      create: "Ny kategori"
       create_long: "Opprett en ny kategori"
-      save: "Lagre kategori"
-      slug: "Kategorinavn i URL"
       slug_placeholder: "(Valgfritt) sammensatte ord for bruk i URL"
       creation_error: Det oppstod en feil ved lagring av denne kategorien.
       save_error: Det oppstod en feil ved lagrinen av denne kategorien.
-      name: "Kategorinavn"
       description: "Beskrivelse"
-      logo: "Kategori logobilde"
-      logo_dark: "Kategori logobilde i mørkmodus"
-      background_image: "Kategori bakgrunnsbilde"
-      background_image_dark: "Mørk kategori bakgrunnsbilde"
       background_color: "Farge"
       color_validations:
         cant_be_empty: "kan ikke være tom"
@@ -3694,9 +3682,7 @@ nb_NO:
       color_placeholder: "Vilkårlig nettfarge"
       delete_confirm: "Er du sikker på at du vil slette denne kategorien?"
       delete_error: "Det oppstod en feil ved å slette denne kategorien."
-      list: "List opp kategorier"
       no_description: "Legg til en beskrivelse for denne kategorien."
-      change_in_category_topic: "Rediger beskrivelse"
       already_used: "Denne fargen er i bruk av en annen kategori"
       security: "Sikkerhet"
       security_add_group: "Legg til gruppe"
@@ -3727,23 +3713,15 @@ nb_NO:
       all_topics_wiki: "Gjør nye emner til wikier som standard"
       allow_unlimited_owner_edits_on_first_post: "Tillat ubegrenset antall eiere i første innlegg"
       subcategory_list_style: "Listestil for underkategorier:"
-      sort_order: "Emneliste sorteres etter:"
-      default_view: "Forvalgt emneliste:"
-      default_top_period: "Forvalgt topp-periode:"
-      default_list_filter: "Standard listefilter:"
       allow_badges_label: "Tillat merker å bli tildelt i denne kategorien"
-      edit_permissions: "Rediger tillatelser"
       reviewable_by_group: "I tillegg til staben kan innhold i denne kategorien også gjennomgås av andre:"
       review_group_name: "gruppenavn"
       require_topic_approval: "Krev godkjennelse fra en moderator for alle nye emner"
       require_reply_approval: "Krev godkjennelse fra en moderator for alle nye svar"
       this_year: "dette året"
       position: "Posisjon på kategorisiden:"
-      default_position: "Forvalgt posisjon"
       position_disabled: "Kategoriene vises i aktivitetsrekkefølge. Hvis du vil kontrollere rekkefølgen på kategoriene i lister, aktiverer du innstillingen <a href='%{url}'>'faste kategoriposisjoner'</a>."
       minimum_required_tags: "Minste antall stikkord som kreves for et emne:"
-      default_slow_mode: 'Aktiver "Sakte modus" for nye emner i denne kategorien.'
-      parent: "Foreldrekategori"
       num_auto_bump_daily: "Antall åpne emner som automatisk flyttes øverst per dag:"
       auto_bump_cooldown_days: "Minimum dager før samme emnet blir flyttet øverst i emneliste igjen:"
       navigate_to_first_post_after_read: "Naviger til første innlegg etter at emner er lest"
@@ -3765,18 +3743,14 @@ nb_NO:
           title: "Ignorert"
           description: "Du vil aldri bli varslet om noen nye emner i denne kategorien, og de vil ikke vises sistnevnte."
       search_priority:
-        label: "Søk prioritet"
         options:
           normal: "Normal"
           ignore: "Ignorer"
-          very_low: "Svært lav"
           low: "Lav"
           high: "Høy"
-          very_high: "Svært høy"
       sort_options:
         default: "forvalg"
         likes: "Likes"
-        op_likes: "Likes gitt orginalinnlegget"
         views: "Visninger"
         posts: "Innlegg"
         activity: "Aktivitet"
@@ -3795,9 +3769,6 @@ nb_NO:
         moderation: "Moderering"
         appearance: "Utseende"
         email: "E-post"
-      list_filters:
-        all: "alle emner"
-        none: "ingen underkategorier"
       colors_disabled: "Du kan ikke velge farger fordi du har en kategori stil fra ingen."
     flagging:
       title: "Takk for at du holder fellesskapet vårt sivilisert!"
@@ -3984,7 +3955,7 @@ nb_NO:
         title: "Aktive"
         help: "de mest aktive emnene det siste året, den siste måneden, uken eller dagen "
         all:
-          title: "Totalt"
+          title: "Hele tiden"
         yearly:
           title: "Årlig"
         quarterly:
@@ -3995,7 +3966,7 @@ nb_NO:
           title: "Ukentlig"
         daily:
           title: "Daglig"
-        all_time: "Totalt"
+        all_time: "Hele tiden"
         this_year: "Det siste året"
         this_quarter: "Det siste kvartalet"
         this_month: "Den siste måneden"
@@ -4046,7 +4017,6 @@ nb_NO:
         go_to_unread_post: "%{shortcut} Gå til første uleste innlegg"
       application:
         title: "Applikasjon"
-        create: "%{shortcut} Opprett nytt emne"
         notifications: "%{shortcut} Åpne varsler"
         user_profile_menu: "%{shortcut} Åpne brukermenyen"
         show_incoming_updated_topics: "%{shortcut} Vis oppdaterte emner"
@@ -4203,18 +4173,13 @@ nb_NO:
           title: "Ignorert"
           description: "Du vil ikke bli varslet om noe vedrørende nye emner med dette stikkordet, og de vil ikke vises i ulest-listen din."
       groups:
-        title: "Stikkordgrupper"
         about_heading: "Velg en stikkordgruppe eller opprett en ny"
         about_heading_empty: "Opprett en ny stikkord-gruppe for å komme i gang"
         about_description: "Med stikkord-grupper hjelper deg å endre tillatelser for mange stikkord på ett sted."
-        new: "Ny gruppe"
-        new_title: "Opprett ny gruppe"
-        edit_title: "Rediger Etikett-gruppe"
         tags_label: "Stikkord i denne gruppen"
         parent_tag_label: "Overordnet stikkord"
         parent_tag_description: "Merker fra denne gruppen kan kun brukes dersom overordnet tag er til stede."
         one_per_topic_label: "Begrens til ett stikkord fra denne gruppen per emne "
-        new_name: "Ny stikkordgruppe"
         name_placeholder: "Navn"
         save: "Lagre"
         delete: "Slett"
@@ -4434,6 +4399,12 @@ nb_NO:
         fonts:
           backfill_modal:
             modal_yes: "Ja"
+        welcome_banner:
+          form:
+            location:
+              label: "Sted"
+            header_anonymous:
+              placeholder: "Velkommen til %{site_name}!"
         navigation:
           title: "Navigasjon"
         notifications:
@@ -5326,7 +5297,6 @@ nb_NO:
           add: "Legg til"
           success: "Suksess"
           exists: "Eksisterer fra før"
-          upload_successful: "Opplastet. Ord lagt til."
           html_label: "HTML"
         test:
           button_label: "Test"
@@ -5488,7 +5458,6 @@ nb_NO:
             cancel: "Avbryt"
           confirmation:
             cancel: "Avbryt"
-        delete_posts_forbidden_because_staff: "Kan ikke slette alle innlegg av administratorer og moderatorer."
         delete_forbidden:
           one: "Brukere kan ikke slettes om de har innlegg. Slett alle brukerens innlegg før bruker kan slettes. (Innlegg eldre enn %{count} dag kan ikke slettes.)"
           other: "Brukere kan ikke slettes om de har innlegg. Slett alle innlegg før du forsøker å slette en bruker. (Innlegg eldre enn %{count} dager kan ikke slettes.)"

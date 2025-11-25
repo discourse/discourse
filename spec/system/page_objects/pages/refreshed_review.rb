@@ -38,6 +38,10 @@ module PageObjects
         within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--approved") }
       end
 
+      def has_reviewable_with_ignored_status?(reviewable)
+        within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--ignored") }
+      end
+
       def has_reviewable_with_scrubbed_by?(reviewable, scrubbed_by)
         within(reviewable_by_id(reviewable.id)) do
           page.has_css?(".reviewable-user-details.scrubbed-by .value", text: scrubbed_by)
@@ -54,6 +58,22 @@ module PageObjects
         within(reviewable_by_id(reviewable.id)) do
           page.has_css?(".reviewable-user-details.scrubbed-at .value", text: scrubbed_at)
         end
+      end
+
+      def click_edit_post_button
+        find(".reviewable-action.edit").click
+      end
+
+      def fill_post_content(content)
+        find(".d-editor-input").fill_in(with: content)
+      end
+
+      def save_post_edit
+        find(".reviewable-action.save-edit").click
+      end
+
+      def click_ip_lookup_button
+        find(".reviewable-ip-lookup button").click
       end
 
       private

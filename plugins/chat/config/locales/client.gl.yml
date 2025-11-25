@@ -77,6 +77,8 @@ gl:
         types:
           category: "Categoría"
           topic: "Tema"
+      reviewable:
+        message_in_channel: "Canle"
       composer:
         italic_text: "texto recalcado"
         bold_text: "texto groso"

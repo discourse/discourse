@@ -10,7 +10,6 @@ bg:
       sort_options:
         votes: "Гласове"
     topic_voting:
-      title: "Гласуване по тема"
       reached_limit: "Нямате достатъчно гласове, премахнете съществуващ глас!"
       list_votes: "Показване на вашите гласове"
       votes_nav_help: "теми с най-много гласове"
@@ -21,9 +20,6 @@ bg:
       voted_title: "Гласувано"
       voting_closed_title: "Затворена"
       voting_limit: "Лимит"
-      votes_left_button_title:
-        one: "Остава ви %{count} глас."
-        other: "Остават ви %{count} гласа."
       votes:
         one: "%{count} глас"
         other: "%{count} гласа"

@@ -250,6 +250,7 @@ ja:
           custom_prompt: "カスタムプロンプト"
           image_caption: "画像のキャプション設定"
           translator: "翻訳ツール"
+          post_illustrator: "イラスト投稿ツール"
         translation:
           name: "翻訳"
           description: "コンテンツをサポートされている言語で翻訳します"
@@ -387,8 +388,6 @@ ja:
           low: 低品質 - 最も安い (256x256)
           medium: 中品質 (512x512)
           high: 高品質 - 最も遅い (1024x1024)
-        tool_details: ツールの詳細を表示
-        tool_details_help: 言語モデルがトリガーしたツールの詳細をエンドユーザーに表示します。
         mentionable: メンションを許可
         mentionable_help: 有効にすると、許可されているグループのユーザーは投稿内でこのユーザーをメンションでき、AI はこのペルソナとして返答します。
         user: ユーザー
@@ -579,21 +578,17 @@ ja:
         model_description:
           none: "ほとんどの言語モデルで機能する一般的な設定"
           anthropic-claude-opus-4-1: "Anthropic の最もインテリジェントなモデル"
-          anthropic-claude-sonnet-4-0: "速度とコストの最適なバランス"
-          anthropic-claude-3-7-sonnet-latest: "速度とコストの最適なバランス (前世代)"
-          anthropic-claude-3-5-haiku-latest: "高速でコスト効率に優れています"
+          anthropic-claude-sonnet-4-5: "速度とコストの最適なバランス"
+          anthropic-claude-haiku-4-5: "高速でコスト効率に優れています"
           google-gemini-2-5-pro: "広範なタスクに対応できる大規模マルチモーダルモデル"
-          google-gemini-2-0-flash: "マルチモーダル推論による軽量・高速で、コスト効率に優れています (前世代)"
           google-gemini-2-5-flash: "マルチモーダル推論による軽量・高速で、コスト効率に優れています"
-          google-gemini-2-0-flash-lite: "コスト効率の良い低レイテンシーモデル"
-          open_ai-o4-mini: "コスト効率の良い高度な推論モデル"
           open_ai-gpt-5-mini: "インテリジェンス、速度、コストのバランスが取れており、多くのユースケースに魅力的なモデル。"
           open_ai-gpt-5-nano: "最速かつ最もコスト効率の良い GPT-5 モデル。"
           samba_nova-Meta-Llama-3-1-8B-Instruct: "効率的な軽量多言語モデル"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "強力な多目的モデル"
           mistral-mistral-large-latest: "Mistral の最も強力なモデル"
           mistral-pixtral-large-latest: "Mistral の最も強力なビジョン対応モデル"
-          open_router-x-ai-grok-3-beta: "xAI の最新モデル"
+          open_router-x-ai-grok-4: "xAI の最新モデル"
           open_router-deepseek-deepseek-r1-0528-free: "DeepSeek の最新の推論モデル"
           open_router-meta-llama-3-3-70b-instruct: "高機能多言語モデル"
         preseeded_model_description: "%{model} を利用する事前構成済みのオープンソースモデル"
@@ -621,7 +616,6 @@ ja:
           vision_enabled: "有効にすると、AI は画像を理解しようとします。ビジョンのサポートに使用されているモデルに応じます。Anthropic、Google、および OpenAI の最新モデルでサポートされています。"
           enabled_chat_bot: "有効にすると、ユーザーは AI ボットを使って PM を作成するときに、このモデルを選択できます"
           cost_input: "このモデルの 100 万トークン当たりの入力コスト"
-          cost_cached_input: "このモデルの 100 万トークン当たりのキャッシュ入力コスト"
           cost_output: "このモデルの 100 万トークン当たりの出力コスト"
           cost_measure: "$/100 万トークン"
         providers:
@@ -891,7 +885,6 @@ ja:
         loading_convo: "会話を読み込み中"
         collapse: "折りたたむ"
         timed_out: "Discobot は発見を見つけられませんでした。問題が発生しました。"
-        user_setting: "発見の検索を有効にする"
         tooltip:
           header: "AI 搭載の検索"
           content: "%{model} による自然言語検索"

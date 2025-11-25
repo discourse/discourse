@@ -210,7 +210,7 @@ ru:
         slug_contains_non_ascii_chars: "содержит символы не в ascii-кодировке"
         is_already_in_use: "уже используется"
     bookmarkable:
-      notification_title: "Сообщение в канале %{channel_name}"
+      notification_title_channel: "Сообщение в канале %{channel_name}"
     personal_chat: "личный чат"
     onebox:
       inline_to_message: "Сообщение №%{message_id} от пользователя %{username} — №%{chat_channel}"
@@ -310,10 +310,8 @@ ru:
         few: "Посмотреть ещё %{count} сообщения"
         many: "Посмотреть ещё %{count} сообщений"
         other: "Посмотреть ещё %{count} сообщений"
-      your_chat_settings: "Настройка частоты рассылки дайджеста чата"
   unsubscribe:
     chat_summary:
-      select_title: "Частота писем со сводками чата:"
       never: Никогда
       when_away: Если вы находитесь офлайн
   category:

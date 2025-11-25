@@ -128,7 +128,6 @@ ug:
       email_frequency:
         description: "ئەگەر بىز ئاخىرقى 15 مىنۇتتا سىزنى كۆرەلمىسەك سىزگە ئېلخەت يوللىيالايمىز."
         never: "ھەرگىز"
-        title: "ئېلخەت ئۇقتۇرۇشى"
         when_away: "ئايرىلغاندىلا"
       header_indicator_preference:
         title: "ماۋزۇدا پائالىيەت كۆرسەتكۈچىنى كۆرسەت"
@@ -435,6 +434,7 @@ ug:
           topic: "تېما"
       reviewable:
         type: "سۆھبەت ئۇچۇرى"
+        message_in_channel: "قانال"
       reactions:
         only_you: "<span>سىز </span>:%{emoji}بىلەن ئىنكاس قايتۇردىڭىز:"
         you_and_single_user: "<span>سىز ۋە %{username} </span>:%{emoji}بىلەن ئىنكاس قايتۇردى:"

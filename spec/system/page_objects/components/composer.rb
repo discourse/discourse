@@ -62,6 +62,12 @@ module PageObjects
         self
       end
 
+      def has_input_title?(value)
+        puts "reply title value"
+        puts find("#{@composer_id} input#reply-title").value
+        expect(find("#{@composer_id} input#reply-title").value).to eq(value)
+      end
+
       def fill_content(content)
         find("#{@composer_id} .d-editor .d-editor-input").fill_in(with: content)
         self
@@ -104,6 +110,10 @@ module PageObjects
         composer_popup.has_content?(content)
       end
 
+      def has_no_action?(action)
+        !actions.include?(action)
+      end
+
       def select_action(action)
         find(action(action)).click
         self
@@ -119,6 +129,10 @@ module PageObjects
 
       def action(action_title)
         ".composer-action-title .select-kit-collection li[title='#{action_title}']"
+      end
+
+      def actions
+        all(".composer-action-title .select-kit-collection li").map { |el| el[:title] }
       end
 
       def button_label
@@ -378,6 +392,10 @@ module PageObjects
 
       def editor_toggle_switch
         find("#{@composer_id} .composer-toggle-switch")
+      end
+
+      def image_grid
+        Components::ComposerImageGrid.new(rich_editor)
       end
 
       private

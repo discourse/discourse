@@ -1,9 +1,9 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
+import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
+import AdminSectionLandingItem from "discourse/admin/components/admin-section-landing-item";
 import BackButton from "discourse/components/back-button";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaCard from "admin/components/admin-config-area-card";
-import AdminSectionLandingItem from "admin/components/admin-section-landing-item";
 
 export default <template>
   <div class="admin-detail discourse-automation-new discourse-automation-form">

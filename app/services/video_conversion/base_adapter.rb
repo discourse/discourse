@@ -23,22 +23,27 @@ module VideoConversion
 
     # Handles the completion of a successful conversion
     # This is called by the job system when status is :complete
-    def handle_completion(job_id, output_path, new_sha1)
+    def handle_completion(job_id, new_sha1)
       raise NotImplementedError, "#{self.class} must implement #handle_completion"
     end
 
     protected
 
-    def create_optimized_video_record(output_path, new_sha1, filesize, url)
-      OptimizedVideo.create_for(
-        @upload,
-        @upload.original_filename.sub(/\.[^.]+$/, "_converted.mp4"),
-        @upload.user_id,
+    def create_optimized_video_record(output_path, new_sha1, filesize, url, etag: nil)
+      options = {
         filesize: filesize,
         sha1: new_sha1,
         url: url,
         extension: "mp4",
         adapter: adapter_name,
+      }
+      options[:etag] = etag if etag.present?
+
+      OptimizedVideo.create_for(
+        @upload,
+        @upload.original_filename.sub(/\.[^.]+$/, "_converted.mp4"),
+        @upload.user_id,
+        **options,
       )
     end
 

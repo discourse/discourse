@@ -109,11 +109,6 @@
     max-width: 100%;
     height: auto;
     display: inline-block; // Ensure dimensions are maintained even after load error
-
-    @supports not (aspect-ratio: 1) {
-      // (see javascripts/discourse/app/initializers/image-aspect-ratio.js)
-      height: var(--calculated-height);
-    }
   }
 
   svg {
@@ -337,6 +332,15 @@ nav.post-controls {
     text-align: right;
     margin-left: auto;
 
+    .post-action-menu__double-button {
+      .discourse-no-touch & {
+        &:not(.has-liked):hover {
+          --d-post-control-background--hover: var(--love-low);
+          --d-button-flat-icon-color--hover: var(--love);
+        }
+      }
+    }
+
     // Some buttons can be doubled up, like likes or flags
     .double-button {
       display: inline-flex;
@@ -370,27 +374,10 @@ nav.post-controls {
           border-radius: var(--d-post-control-border-radius);
         }
 
-        &.like {
-          // Like button with 0 likes
-          &:hover {
-            .d-icon {
-              color: var(--love);
-            }
-          }
-        }
-
         &.has-like {
           // Like button after I've liked
           .d-icon {
             color: var(--love);
-          }
-
-          .discourse-no-touch & {
-            &:hover {
-              .d-icon {
-                color: var(--primary-medium);
-              }
-            }
           }
         }
 
@@ -398,6 +385,10 @@ nav.post-controls {
           // Like count button
           &:not(.my-likes) {
             padding-right: 0;
+          }
+
+          &.my-likes {
+            flex-direction: row-reverse;
           }
 
           + .toggle-like {
@@ -1730,5 +1721,61 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
     transition:
       visibility 1s,
       opacity ease-out 1s;
+  }
+}
+
+.liked-users-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+
+  &__list {
+    margin: 0;
+    list-style: none;
+    display: flex;
+    justify-content: end;
+    gap: var(--space-1);
+
+    // avatar width + gap * (max amount of users per row + 1)
+    max-width: calc((var(--liked-users-list-avatar-size) + var(--space-1)) * 9);
+    flex-wrap: wrap;
+  }
+
+  &__item,
+  &__item .avatar {
+    width: var(--liked-users-list-avatar-size);
+    height: var(--liked-users-list-avatar-size);
+  }
+
+  &__container {
+    --liked-users-list-avatar-size: 22px;
+    padding: var(--space-2);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+
+  &__count {
+    display: flex;
+    gap: var(--space-2);
+    color: var(--primary-medium);
+    font-weight: 300;
+    align-items: center;
+  }
+
+  &__count-icon {
+    color: var(--love);
+  }
+
+  &__more {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  &__more-button.btn-flat.btn {
+    padding: 0;
+    width: var(--liked-users-list-avatar-size);
+    border-radius: var(--d-button-border-radius);
+    height: var(--liked-users-list-avatar-size);
   }
 }

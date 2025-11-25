@@ -1,12 +1,12 @@
 import { Input } from "@ember/component";
 import { array, concat, fn, get, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { eq } from "truth-helpers";
 import EmojiPicker from "discourse/components/emoji-picker";
 import SaveControls from "discourse/components/save-controls";
 import withEventValue from "discourse/helpers/with-event-value";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 
 export default <template>
   <label class="control-label">{{i18n "chat.title_capitalized"}}</label>
@@ -113,27 +113,6 @@ export default <template>
       @id="user_chat_sounds"
       @onChange={{@controller.onChangeChatSound}}
     />
-  </div>
-
-  <div
-    class="control-group chat-setting controls-dropdown"
-    data-setting-name="user_chat_email_frequency"
-  >
-    <label for="user_chat_email_frequency">
-      {{i18n "chat.email_frequency.title"}}
-    </label>
-    <ComboBox
-      @valueProperty="value"
-      @content={{@controller.emailFrequencyOptions}}
-      @value={{@controller.model.user_option.chat_email_frequency}}
-      @id="user_chat_email_frequency"
-      @onChange={{fn (mut @controller.model.user_option.chat_email_frequency)}}
-    />
-    {{#if (eq @controller.model.user_option.chat_email_frequency "when_away")}}
-      <div class="control-instructions">
-        {{i18n "chat.email_frequency.description"}}
-      </div>
-    {{/if}}
   </div>
 
   <div

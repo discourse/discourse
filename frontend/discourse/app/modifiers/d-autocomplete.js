@@ -5,13 +5,21 @@ import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import Modifier from "ember-modifier";
 import DAutocompleteResults from "discourse/components/d-autocomplete-results";
+import { VISIBILITY_OPTIMIZERS } from "discourse/float-kit/lib/constants";
 import { extractError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
-import { VISIBILITY_OPTIMIZERS } from "float-kit/lib/constants";
 
 export const SKIP = "skip";
 export const CANCELLED_STATUS = "__CANCELLED";
+
+/**
+ * Regex for characters that can precede an emoji autocomplete trigger.
+ * This matches the same characters allowed in emoji autocomplete's onKeyUp regex.
+ * Used to ensure consistency between trigger detection and completion position calculation.
+ */
+export const EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP =
+  /[\s.?,@/#!%&*;:\[\]{}=\-_()+]/;
 
 /**
  * Class-based modifier for adding autocomplete functionality to input elements
@@ -21,6 +29,7 @@ export const CANCELLED_STATUS = "__CANCELLED";
  * @param {string} key - Trigger character (e.g., "@", "#", ":")
  * @param {Function} dataSource - Async function to fetch results: (term) => Promise<Array>
  * @param {Function} template - Template function that receives {options: results} and returns HTML
+ * @param {Component} component - Component for rendering results (takes precedence over template if provided)
  * @param {Function} [transformComplete] - Transform completion before insertion
  * @param {Function} [afterComplete] - Callback after completion
  * @param {boolean} [debounced=false] - Enable debounced search
@@ -438,7 +447,6 @@ export default class DAutocompleteModifier extends Modifier {
           getResults: () => this.results,
           getSelectedIndex: () => this.selectedIndex,
           onSelect: (result, index, event) => this.selectResult(result, event),
-          template: this.options.template,
           onRender: this.options.onRender,
         },
         modalForMobile: false,
@@ -447,6 +455,13 @@ export default class DAutocompleteModifier extends Modifier {
           this.options.onClose?.();
         },
       };
+
+      // Pass component or template through data
+      if (this.options.component) {
+        menuOptions.data.component = this.options.component;
+      } else {
+        menuOptions.data.template = this.options.template;
+      }
 
       // Add offset if specified
       if (this.options.offset !== undefined) {
@@ -599,10 +614,20 @@ export default class DAutocompleteModifier extends Modifier {
         prev = this.getValue()[caretPos - 1];
         const shouldTrigger = await this.shouldTrigger({ backSpace });
 
-        if (
-          shouldTrigger &&
-          (prev === undefined || this.ALLOWED_LETTERS_REGEXP.test(prev))
-        ) {
+        // For emoji autocomplete (key === ':'), use a more permissive check that includes
+        // common punctuation like comma, period, etc. that can appear before emoji
+        let isAllowed;
+        if (this.options.key === ":") {
+          // Match the same characters allowed in emoji autocomplete's onKeyUp regex
+          isAllowed =
+            prev === undefined ||
+            EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP.test(prev);
+        } else {
+          isAllowed =
+            prev === undefined || this.ALLOWED_LETTERS_REGEXP.test(prev);
+        }
+
+        if (shouldTrigger && isAllowed) {
           start = caretPos;
           term = this.getValue().substring(caretPos + 1, initialCaretPos);
           end = caretPos + term.length;

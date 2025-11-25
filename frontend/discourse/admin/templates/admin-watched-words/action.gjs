@@ -1,11 +1,11 @@
 import { Input } from "@ember/component";
 import { htmlSafe } from "@ember/template";
+import AdminWatchedWord from "discourse/admin/components/admin-watched-word";
+import WatchedWordForm from "discourse/admin/components/watched-word-form";
+import WatchedWordUploader from "discourse/admin/components/watched-word-uploader";
 import DButton from "discourse/components/d-button";
 import basePath from "discourse/helpers/base-path";
 import { i18n } from "discourse-i18n";
-import AdminWatchedWord from "admin/components/admin-watched-word";
-import WatchedWordForm from "admin/components/watched-word-form";
-import WatchedWordUploader from "admin/components/watched-word-uploader";
 
 export default <template>
   {{#if @controller.regexpError}}
@@ -54,10 +54,10 @@ export default <template>
   <WatchedWordForm
     @actionKey={{@controller.actionNameKey}}
     @action={{@controller.recordAdded}}
-    @filteredContent={{@controller.currentAction.words}}
+    @filteredContent={{@controller.currentActionFiltered.words}}
   />
 
-  {{#if @controller.currentAction.words}}
+  {{#if @controller.currentActionFiltered.words}}
     <label class="show-words-checkbox">
       <Input
         @type="checkbox"
@@ -66,14 +66,14 @@ export default <template>
       />
       {{i18n
         "admin.watched_words.show_words"
-        count=@controller.currentAction.words.length
+        count=@controller.currentActionFiltered.words.length
       }}
     </label>
   {{/if}}
 
   {{#if @controller.showWordsList}}
     <div class="watched-words-list watched-words-{{@controller.actionNameKey}}">
-      {{#each @controller.currentAction.words as |word|}}
+      {{#each @controller.currentActionFiltered.words as |word|}}
         <div class="watched-word-box">
           <AdminWatchedWord
             @actionKey={{@controller.actionNameKey}}

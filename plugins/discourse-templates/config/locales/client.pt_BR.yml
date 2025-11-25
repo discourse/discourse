@@ -18,7 +18,6 @@ pt_BR:
         title: "Modelos (dentro de uma área de texto)"
         insert_template: "%{shortcut} Inserir modelo"
     templates:
-      filter_hint: "Filtrar pelo título..."
       insert_template: "Inserir modelo"
       close_templates: "Fechar o seletor de modelos"
       copy: "Copiar modelo"

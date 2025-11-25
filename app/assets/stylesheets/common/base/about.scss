@@ -122,7 +122,7 @@
 .about-page-users-list {
   display: grid;
   gap: 1em;
-  grid-template-columns: repeat(auto-fit, minmax(14em, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(14em, 1fr));
 
   &__expand-button {
     width: 100%;

@@ -4,8 +4,8 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
+import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import { i18n } from "discourse-i18n";
-import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
 
 @classNames("assigned-to-filter")
 export default class AssignedToFilter extends Component {
@@ -30,9 +30,9 @@ export default class AssignedToFilter extends Component {
 
   <template>
     <div class="reviewable-filter discourse-assign-assign-to-filter">
-      <label class="filter-label">{{i18n
-          "discourse_assign.assigned_to"
-        }}</label>
+      <label class="filter-label">
+        {{i18n "review.assigned_to"}}
+      </label>
 
       <EmailGroupUserChooser
         @value={{this.outletArgs.additionalFilters.assigned_to}}

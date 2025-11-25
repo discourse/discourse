@@ -19,9 +19,10 @@ describe "Post translations", type: :system do
   before do
     SiteSetting.default_locale = "en"
     SiteSetting.content_localization_supported_locales = "fr|es|pt_BR"
-    SiteSetting.content_localization_enabled = true
     SiteSetting.post_menu =
       "read|like|copyLink|flag|edit|bookmark|delete|admin|reply|addTranslation"
+    SiteSetting.post_menu_hidden_items = "flag|bookmark|edit|addTranslation|delete|admin"
+    SiteSetting.content_localization_enabled = true
     sign_in(admin)
   end
 
@@ -30,7 +31,9 @@ describe "Post translations", type: :system do
       post.update!(locale: "en")
 
       topic_page.visit_topic(topic)
-      find("#post_1 .post-action-menu-edit-translations-trigger").click
+
+      topic_page.click_post_action_button(post, :show_more)
+      topic_page.click_post_action_button(post, :add_translation)
       find(".update-translations-menu__add .post-action-menu__add-translation").click
       translation_selector.expand
       expect(all(".translation-selector-dropdown .select-kit-collection li").count).to eq(3)
@@ -42,7 +45,8 @@ describe "Post translations", type: :system do
 
     it "allows a user to translate a post" do
       topic_page.visit_topic(topic)
-      find("#post_1 .post-action-menu-edit-translations-trigger").click
+      topic_page.click_post_action_button(post, :show_more)
+      topic_page.click_post_action_button(post, :add_translation)
       find(".update-translations-menu__add .post-action-menu__add-translation").click
       expect(composer).to be_opened
       translation_selector.expand
@@ -68,7 +72,8 @@ describe "Post translations", type: :system do
 
     it "allows a user to add a new translation" do
       topic_page.visit_topic(topic)
-      find("#post_1 .post-action-menu-edit-translations-trigger").click
+      topic_page.click_post_action_button(post, :show_more)
+      topic_page.click_post_action_button(post, :add_translation)
       find(".update-translations-menu__add .post-action-menu__add-translation").click
       expect(composer).to be_opened
       translation_selector.expand
@@ -87,7 +92,8 @@ describe "Post translations", type: :system do
 
     it "allows a user to see locales translated" do
       topic_page.visit_topic(topic)
-      find("#post_#{post.post_number} .post-action-menu-edit-translations-trigger").click
+      topic_page.click_post_action_button(post, :show_more)
+      topic_page.click_post_action_button(post, :add_translation)
       view_translation_button = find(".post-action-menu__view-translation")
       expect(view_translation_button).to be_visible
       expect(view_translation_button).to have_text(
@@ -101,7 +107,8 @@ describe "Post translations", type: :system do
 
     it "allows a user to edit a translation" do
       topic_page.visit_topic(topic)
-      find("#post_#{post.post_number} .post-action-menu-edit-translations-trigger").click
+      topic_page.click_post_action_button(post, :show_more)
+      topic_page.click_post_action_button(post, :add_translation)
       find(".post-action-menu__view-translation").click
       find(".post-translations-modal__edit-action .btn").click
       expect(composer).to be_opened
@@ -122,13 +129,57 @@ describe "Post translations", type: :system do
       topic_page.visit_topic(topic)
       expect(PostLocalization.exists?(post_id: post.id, locale: "fr")).to be true
 
-      find("#post_#{post.post_number} .post-action-menu-edit-translations-trigger").click
+      topic_page.click_post_action_button(post, :show_more)
+      topic_page.click_post_action_button(post, :add_translation)
+      find(".update-translations-menu__add .post-action-menu__add-translation").click
       find(".post-action-menu__view-translation").click
       find(".post-translations-modal__delete-action .btn").click
       expect(confirmation_dialog).to be_open
       confirmation_dialog.click_yes
 
       expect(PostLocalization.exists?(post_id: post.id, locale: "fr")).to be false
+    end
+
+    it "prompts to discard changes when abandoning modified translation" do
+      discard_modal = PageObjects::Modals::DiscardDraft.new
+
+      topic_page.visit_topic(topic)
+      topic_page.click_post_action_button(post, :show_more)
+      topic_page.click_post_action_button(post, :add_translation)
+      find(".update-translations-menu__add .post-action-menu__add-translation").click
+      expect(composer).to be_opened
+
+      translation_selector.expand
+      translation_selector.select_row_by_value("fr")
+
+      composer.fill_content("Salut le monde")
+      composer.minimize
+      expect(composer).to be_minimized
+
+      find("#post_#{post.post_number} .post-action-menu__reply").click
+
+      expect(discard_modal).to be_open
+    end
+
+    it "auto-closes when abandoning unchanged translation" do
+      discard_modal = PageObjects::Modals::DiscardDraft.new
+
+      topic_page.visit_topic(topic)
+      topic_page.click_post_action_button(post, :show_more)
+      topic_page.click_post_action_button(post, :add_translation)
+      find(".update-translations-menu__add .post-action-menu__add-translation").click
+      expect(composer).to be_opened
+
+      translation_selector.expand
+      translation_selector.select_row_by_value("fr")
+
+      composer.minimize
+      expect(composer).to be_minimized
+
+      find("#post_#{post.post_number} .post-action-menu__reply").click
+
+      expect(discard_modal).to be_closed
+      expect(composer).to be_opened
     end
   end
 
@@ -163,6 +214,95 @@ describe "Post translations", type: :system do
       visit("/latest")
       page.find("#create-topic").click
       expect(page.has_no_css?("#{POST_LANGUAGE_SWITCHER_SELECTOR} .d-button-label")).to be true
+    end
+  end
+
+  context "when viewing raw markdown in translation editor" do
+    fab!(:markdown_post) do
+      Fabricate(
+        :post,
+        topic: topic,
+        raw: "# Heading\n\n**Bold** text with [link](https://example.com) and *italic*",
+      )
+    end
+    let(:translation_preview) { PageObjects::Components::DEditorOriginalTranslationPreview.new }
+
+    it "shows raw markdown toggle only on Original tab" do
+      topic_page.visit_topic(topic)
+      topic_page.click_post_action_button(post, :show_more)
+      topic_page.click_post_action_button(post, :add_translation)
+      find(".update-translations-menu__add .post-action-menu__add-translation").click
+
+      expect(composer).to be_opened
+      expect(translation_preview).to have_raw_toggle
+      expect(translation_preview.original_tab_active?).to be true
+
+      translation_preview.click_translation_tab
+      expect(translation_preview.translation_tab_active?).to be true
+      expect(translation_preview).to have_no_raw_toggle
+    end
+
+    it "displays rendered HTML by default" do
+      topic_page.visit_topic(topic)
+      topic_page.click_post_action_button(post, :show_more)
+      topic_page.click_post_action_button(post, :add_translation)
+      find(".update-translations-menu__add .post-action-menu__add-translation").click
+
+      expect(composer).to be_opened
+      expect(translation_preview.original_tab_active?).to be true
+      expect(translation_preview).to have_rendered_content
+      expect(translation_preview).to have_no_raw_markdown_content
+    end
+
+    it "displays raw markdown when toggle is enabled" do
+      topic_page.visit_topic(topic)
+      topic_page.click_post_action_button(markdown_post.post_number, :show_more)
+      topic_page.click_post_action_button(markdown_post.post_number, :add_translation)
+      find(".update-translations-menu__add .post-action-menu__add-translation").click
+
+      expect(composer).to be_opened
+      translation_preview.raw_toggle.toggle
+
+      expect(translation_preview).to have_raw_markdown_content
+      raw_content = translation_preview.raw_markdown_content
+      expect(raw_content).to include("# Heading")
+      expect(raw_content).to include("**Bold**")
+      expect(raw_content).to include("[link](https://example.com)")
+      expect(raw_content).to include("*italic*")
+    end
+
+    it "resets raw markdown view when switching tabs" do
+      topic_page.visit_topic(topic)
+      topic_page.click_post_action_button(post, :show_more)
+      topic_page.click_post_action_button(post, :add_translation)
+      find(".update-translations-menu__add .post-action-menu__add-translation").click
+
+      expect(composer).to be_opened
+      translation_preview.raw_toggle.toggle
+      expect(translation_preview).to have_raw_markdown_content
+
+      translation_preview.click_translation_tab
+      expect(translation_preview).to have_no_raw_toggle
+
+      translation_preview.click_original_tab
+      expect(translation_preview).to have_raw_toggle
+      expect(translation_preview.raw_toggle).to be_unchecked
+      expect(translation_preview).to have_rendered_content
+    end
+
+    it "maintains raw markdown state while on Original tab" do
+      topic_page.visit_topic(topic)
+      topic_page.click_post_action_button(post, :show_more)
+      topic_page.click_post_action_button(post, :add_translation)
+      find(".update-translations-menu__add .post-action-menu__add-translation").click
+
+      expect(composer).to be_opened
+      translation_preview.raw_toggle.toggle
+      expect(translation_preview).to have_raw_markdown_content
+
+      translation_preview.raw_toggle.toggle
+      expect(translation_preview).to have_no_raw_markdown_content
+      expect(translation_preview).to have_rendered_content
     end
   end
 end

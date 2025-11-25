@@ -249,7 +249,7 @@ sq:
     joined: "Anëtarësuar"
     admin_title: "Admin"
     show_more: "trego më shumë"
-    show_help: "ndihmë dhe kërko me Google"
+    show_help: "Opsione"
     links: "Lidhjet"
     links_lowercase:
       one: "lidhje"
@@ -548,10 +548,6 @@ sq:
         required: "Ju duhet të përvetësoni artikuj para se t'i rishikoni ato."
         claimed_by_you: "Ju e keni përvetësuar këtë artikull dhe mund ta rishikoni atë."
         claimed_by_other: "Ky artikull mund të shqyrtohet vetëm nga <b>%{username}</b>."
-      claim:
-        title: "përvetësoni këtë temë"
-      unclaim:
-        help: "hiqni këtë përvetësim"
       awaiting_approval: "Në pritje të miratimit"
       delete: "Fshij"
       settings:
@@ -613,7 +609,6 @@ sq:
       replies:
         one: "%{count} përgjigje"
         other: "%{count} përgjigje"
-      edit: "Redakto"
       save: "Ruaj"
       cancel: "Anulo"
       new_topic: "Miratimi i këtij artikulli do të krijojë një temë të re"
@@ -635,7 +630,6 @@ sq:
           created_at: "Krijuar më"
           created_at_asc: "Krijuar më (e kundërt)"
         priority:
-          title: "Prioriteti minimal"
           any: "(çdo)"
           low: "I ulët"
           medium: "Mesatar"
@@ -699,10 +693,13 @@ sq:
         reviewable_post:
           title: "Postim"
           noun: "postim"
+      user_label: "User"
       notes:
         delete: "Fshij"
+      topic_label: "Topic"
       review_user: "User"
       copy_link: "Kopjoni lidhjen"
+      copy_link_feedback: "Lidhja u kopjua"
       insights:
         activities:
           posts:
@@ -2492,7 +2489,6 @@ sq:
       reply: "Përgjigju"
       cancel: "Anulo"
       create_topic: "Krijo temën"
-      create_pm: "Dërgo Mesazh"
       create_whisper: "Pëshpëritje"
       create_shared_draft: "Krijo draft të përbashkët"
       edit_shared_draft: "Redakto draftin e përbashkët"
@@ -2567,7 +2563,6 @@ sq:
           label: Ndërroni pëshpëritjen
           desc: Pashërritjet janë të dukshme vetëm për anëtarët e stafit
         create_topic:
-          label: "Temë e re"
           desc: Krijoni një temë të re
         shared_draft:
           label: "Drafti i përbashkët"
@@ -2968,7 +2963,6 @@ sq:
         progress:
           one: "Progresi: <strong>%{count}</strong> temë"
           other: "Progresi: <strong>%{count}</strong> tema"
-        silent: "Kryeni këtë veprim në heshtje."
         performing: "Duke kryer operacione me shumicë, ju lutemi prisni…"
         completed: "Operacionet me shumicë përfunduan me sukses!"
       none:
@@ -3038,7 +3032,7 @@ sq:
         one: "%{count} postim në temë"
         other: "%{count} postime në temë"
       create: "Temë e re"
-      create_long: "Hap një temë të re"
+      create_long: "Krijoni një temë të re"
       open_draft: "Draft i hapur"
       private_message: "Fillo një mesazh"
       archive_message:
@@ -3096,7 +3090,6 @@ sq:
       jump_reply_button: "Shko te postimi"
       deleted: "Tema është fshirë"
       slow_mode_update:
-        title: "Modaliteti i ngadaltë"
         select: "Përdoruesit mund të postojnë në këtë temë vetëm një herë në çdo:"
         description: "Për të promovuar diskutim të menduar në diskutime me lëvizje të shpejtë ose të diskutueshme, përdoruesit duhet të presin para se të postojnë përsëri në këtë temë."
         enable: "Aktivizo"
@@ -3509,18 +3502,11 @@ sq:
       tag_groups_placeholder: "(Opsionale) lista e grupeve të etiketave"
       required_tag_group:
         delete: "Fshij"
-      delete: "Fshini kategorinë"
-      create: "Krijo kategorinë e re"
       create_long: "Krijo një kategori të re"
-      save: "Ruaj kategorinë"
-      slug: "Slug i kategorisë"
       slug_placeholder: "(Optional) dashed-words for url"
       creation_error: Pati një gabim gjatë krijimit të kategorisë
       save_error: Pati një gabim gjatë ruajtjes së kategorisë
-      name: "Emri i kategorisë"
       description: "Përshkrimi"
-      logo: "Logo e kategorisë"
-      background_image: "Imazhi i sfondit për kategorinë"
       background_color: "Ngjyra"
       color_validations:
         cant_be_empty: "nuk mund të lihet bosh"
@@ -3534,9 +3520,7 @@ sq:
       color_placeholder: "Çdo ngjyrë web"
       delete_confirm: "Jeni i sigurtë që dëshironi ta fshini këtë kategori?"
       delete_error: "Pati një gabim gjatë fshirjes së kategorisë."
-      list: "Shfaq kategoritë"
       no_description: "Shto një përshkrim për këtë kategori."
-      change_in_category_topic: "Redakto përshkrimin"
       already_used: "Kjo ngjyrë është përdorur nga një kategori tjetër"
       security: "Siguria"
       permissions:
@@ -3548,11 +3532,8 @@ sq:
       email_in: "Custom incoming email address:"
       email_in_allow_strangers: "Prano emaila nga anëtarë anonimë pa llogari në faqe"
       allow_badges_label: "Lejo të jepen stemat në këtë kategori"
-      edit_permissions: "Ndryshoni autorizimet"
       review_group_name: "emri i grupit"
       this_year: "këtë vit"
-      default_position: "Default Position"
-      parent: "Kategoria prind"
       notifications:
         watching:
           title: "Në vëzhgim"
@@ -3723,7 +3704,7 @@ sq:
         title: "Popullore"
         help: "temat më aktive të vitit, muajit, javës apo ditës së shkuar"
         all:
-          title: "Gjithë Kohës"
+          title: "Gjithë koha"
         yearly:
           title: "Vjetore"
         quarterly:
@@ -3734,7 +3715,7 @@ sq:
           title: "Javore"
         daily:
           title: "Ditore"
-        all_time: "Gjithë kohës"
+        all_time: "Gjithë koha"
         this_year: "Këtë vit"
         this_quarter: "Këtë tremujor"
         this_month: "Këtë muaj"
@@ -3770,7 +3751,6 @@ sq:
         next_prev: "%{shortcut} Seksioni i ardhshëm/mëparshëm"
       application:
         title: "Aplikimi"
-        create: "%{shortcut} Hap një temë të re"
         notifications: "%{shortcut} Hap njoftimet"
         user_profile_menu: "%{shortcut} Hap menunë e përdoruesit"
         show_incoming_updated_topics: "%{shortcut} Shiko temat e përditësuara"
@@ -3854,12 +3834,9 @@ sq:
         muted:
           title: "Të heshtur"
       groups:
-        title: "Grupe etiketash"
-        new: "Grup i ri"
         tags_label: "Etiketat në këtë grup"
         parent_tag_label: "Etiketa prind"
         one_per_topic_label: "Vetëm 1 etiketë për temë nga ky grup"
-        new_name: "Grup i ri etiketash"
         name_placeholder: "Emri"
         save: "Ruaj"
         delete: "Fshije"
@@ -4030,6 +4007,12 @@ sq:
         fonts:
           backfill_modal:
             modal_yes: "Po"
+        welcome_banner:
+          form:
+            location:
+              label: "Vendndodhja"
+            header_anonymous:
+              placeholder: "Mirë se vini tek %{site_name}!"
         navigation:
           title: "Shfletimi"
         notifications:
@@ -4720,7 +4703,6 @@ sq:
             cancel: "Anulo"
           confirmation:
             cancel: "Anulo"
-        delete_posts_forbidden_because_staff: "Can't delete all posts of admins and moderators."
         deleted: "Anëtari u fshi."
         delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."
         send_activation_email: "Dërgo Emailin e Aktivizimit"

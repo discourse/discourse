@@ -222,7 +222,7 @@ bs_BA:
     joined: "Pridružio se"
     admin_title: "Admin"
     show_more: "prikaži još"
-    show_help: "opcije"
+    show_help: "Opcije"
     links: "Linkovi"
     links_lowercase:
       one: "link"
@@ -411,10 +411,6 @@ bs_BA:
         required: "VI morate tvrditi stavari prije ih morate cijeniti"
         claimed_by_you: "Vi ste tvrdili ovu stvar i sad ju možete pregledati "
         claimed_by_other: "Ovu stavku može revidirati samo korisnik<b>%{username}</b>"
-      claim:
-        title: "tvrdite ovu temu?"
-      unclaim:
-        help: "maknite ovu tvrdnju?"
       awaiting_approval: "čekanje odobrenje"
       delete: "Delete"
       settings:
@@ -436,7 +432,6 @@ bs_BA:
       topic: "Tema:"
       filtered_topic: "Filtrirali ste sadržaj koji se može pregledati u jednoj temi."
       filtered_user: "User"
-      filtered_reviewed_by: "Pregledao je"
       show_all_topics: "(pokaži sve teme)"
       deleted_post: "(post izbrisan)"
       deleted_user: "(korisnik izbrisan)"
@@ -480,7 +475,7 @@ bs_BA:
         one: "%{count} reply"
         few: "%{count} replies"
         other: "%{count}odgovora "
-      edit: "Izmijeni"
+      edit: "Izmjeni objavu"
       save: "Sačuvaj"
       cancel: "Odustani"
       new_topic: "Odobravanje ove stvari će napraviti novu temu"
@@ -501,7 +496,6 @@ bs_BA:
           created_at: "Napravjeno kod"
           created_at_asc: "Napravijeno kod (preokrenuti)"
         priority:
-          title: "Minimalni prioritet"
           any: "(bilo koji)"
           low: "Nisko"
           medium: "Srednije"
@@ -544,8 +538,10 @@ bs_BA:
         reviewable_post:
           title: "Objava"
           noun: "objava"
+      user_label: "User"
       notes:
         delete: "Delete"
+      topic_label: "Topic"
       review_user: "User"
       insights:
         activities:
@@ -1756,8 +1752,9 @@ bs_BA:
         toggle_whisper:
           label: Uključi Šapat
           desc: Šapati su vidljivi samo administratorima
-        create_topic:
-          label: "Nova tema"
+        create_personal_message:
+          label: "Nova poruka"
+          desc: "Kreiraj novu personalnu poruku"
         shared_draft:
           label: "Dijeljena skica"
         toggle_topic_bump:
@@ -2012,7 +2009,6 @@ bs_BA:
         few: "%{count} objave u temi"
         other: "%{count} objava u temi"
       create: "Nova tema"
-      create_long: "Otvori novu temu"
       open_draft: "Otvori skicu"
       private_message: "Piši poruku"
       archive_message:
@@ -2525,18 +2521,11 @@ bs_BA:
       required_tag_group:
         delete: "Delete"
       topic_featured_link_allowed: "Omogućite istaknute veze u ovoj kategoriji"
-      delete: "Delete Category"
-      create: "Nova kategorija"
       create_long: "Napravite novu kategoriju"
-      save: "Save Category"
-      slug: "Kategorija Slug"
       slug_placeholder: "(Opcionalno) isprekidane riječi za url"
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
-      name: "Category Name"
       description: "Description"
-      logo: "Category Logo Image"
-      background_image: "Category Background Image"
       background_color: "Color"
       styles:
         icon: "Icon"
@@ -2548,9 +2537,7 @@ bs_BA:
       color_placeholder: "Any web color"
       delete_confirm: "Are you sure you want to delete this category?"
       delete_error: "There was an error deleting the category."
-      list: "List Categories"
       no_description: "Please add a description for this category."
-      change_in_category_topic: "Edit Description"
       already_used: "This color has been used by another category"
       security: "Security"
       permissions:
@@ -2567,19 +2554,13 @@ bs_BA:
       subcategory_num_featured_topics: "Broj istaknutih tema na stranici roditeljske kategorije:"
       all_topics_wiki: "Neka nove teme budu wikiji kao zadano"
       subcategory_list_style: "Stil podkategorije:"
-      sort_order: "Lista tema Sortiraj po:"
-      default_view: "Podrazumevana lista tema:"
-      default_top_period: "Obićni Top Period:"
       allow_badges_label: "Allow badges to be awarded in this category"
-      edit_permissions: "Edit Permissions"
       review_group_name: "group name"
       require_topic_approval: "Potrebno je odobrenje moderatora za sve nove teme"
       require_reply_approval: "Potrebno je odobrenje moderatora za sve nove odgovore"
       this_year: "this year"
       position: "Pozicija na stranici kategorije:"
-      default_position: "Default Position"
       minimum_required_tags: "Minimalni broj oznaka potrebnih za temu:"
-      parent: "Parent Category"
       num_auto_bump_daily: "Broj otvorenih tema koje se svakodnevno automatski izbijaju:"
       navigate_to_first_post_after_read: "Idite na prvi post nakon što se teme pročitaju"
       notifications:
@@ -2596,18 +2577,14 @@ bs_BA:
         muted:
           title: "Utišano"
       search_priority:
-        label: "Prioritet pretraživanja"
         options:
           normal: "Normalno"
           ignore: "Zanemari"
-          very_low: "Jako nisko"
           low: "Nisko"
           high: "Visoko"
-          very_high: "Jako Visoko"
       sort_options:
         default: "obićno"
         likes: "Sviđanja"
-        op_likes: "Likovi Orginalnog Posta"
         views: "Pogledano"
         posts: "Objava"
         activity: "Aktivnosti"
@@ -2793,8 +2770,6 @@ bs_BA:
       top:
         title: "Top teme"
         help: "najaktivnije teme u zadnjih godinu, mjesec, sedmicu i dan"
-        all:
-          title: "Oduvijek"
         yearly:
           title: "Godišnje"
         quarterly:
@@ -2805,7 +2780,6 @@ bs_BA:
           title: "Sedmično"
         daily:
           title: "Dnevno"
-        all_time: "Oduvijek"
         this_year: "Godina"
         this_quarter: "Kvartal"
         this_month: "Mjesec"
@@ -2853,7 +2827,6 @@ bs_BA:
         go_to_unread_post: "%{shortcut} Idi na prvu nepročitanu poruku"
       application:
         title: "Aplikacija"
-        create: "%{shortcut} Otvori novu temu"
         notifications: "%{shortcut} Otvori notifikacije"
         user_profile_menu: "%{shortcut} Otvori meni korisnika"
         show_incoming_updated_topics: "%{shortcut} Pročitaj promjenje teme"
@@ -3017,12 +2990,9 @@ bs_BA:
           title: "Utišan"
           description: "Nećete bit obavješteni bilo čime o ovoj temi sa ovom oznakom, i neće se pojavljivati na tabularu nepročitanih tema."
       groups:
-        title: "Označite grupe"
-        new: "Nova grupa "
         tags_label: "Oznake u ovoj grupi"
         parent_tag_label: "Roditeljska oznaka"
         one_per_topic_label: "Ograničite jednu oznaku po temi iz ove grupe"
-        new_name: "Nova Grupa Oznaka"
         name_placeholder: "Ime"
         save: "Sačuvaj"
         delete: "Delete"
@@ -3218,6 +3188,12 @@ bs_BA:
         fonts:
           backfill_modal:
             modal_yes: "Da"
+        welcome_banner:
+          form:
+            location:
+              label: "Lokacija"
+            header_anonymous:
+              placeholder: "Dobrodošli na %{site_name}!"
         navigation:
           title: "Navigacija"
         notifications:
@@ -4107,7 +4083,6 @@ bs_BA:
           success: "Uspjeh"
           exists: "Već postoji"
           upload: "Dodaj iz datoteke"
-          upload_successful: "Otpremanje je uspješno. Riječi su dodane."
           html_label: "HTML"
         test:
           no_matches: "Nije pronađen traženi pojam"
@@ -4262,7 +4237,6 @@ bs_BA:
             cancel: "Odustani"
           confirmation:
             cancel: "Odustani"
-        delete_posts_forbidden_because_staff: "Ne možete obrisati sve postove administratora i moderatora."
         delete_forbidden:
           one: "Korisnici se ne mogu izbrisati ako imaju postove. Izbrišite sve postove prije nego pokušate izbrisati korisnika. (Postovi stariji od %{count} dana stari ne mogu se izbrisati.)"
           few: "Korisnici se ne mogu izbrisati ako imaju postove. Izbrišite sve postove prije nego pokušate izbrisati korisnika. (Poruke starije od %{count} dana ne mogu se izbrisati.)"

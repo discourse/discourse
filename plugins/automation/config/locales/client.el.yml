@@ -128,7 +128,12 @@ el:
               label: Ετικέτες
             restricted_categories:
               label: Κατηγορίες
+            restricted_archetype:
+              description: Προαιρετικά, να επιτρέπεται το έναυσμα μόνο σε θέματα ή προσωπικά μηνύματα
           created: Δημιουργήθηκε
+          topics: Όλα τα θέματα
+          personal_messages: Προσωπικά μηνύματα
+          public_topics: Δημόσια θέματα (εξαιρούνται όλες οι ασφαλείς κατηγορίες)
           with_images: Εικόνες
           with_links: Σύνδεσμοι
           with_code: Κωδικός
@@ -239,15 +244,15 @@ el:
         user_group_membership_through_badge:
           fields:
             badge_name:
-              label: Όνομα σήματος
+              label: Όνομα Παρασήμου
             group:
               label: Ομάδα
             remove_members_without_badge:
-              label: Αφαίρεση υπαρχόντων μελών χωρίς σήμα
+              label: Αφαίρεση υπαρχόντων μελών χωρίς παράσημο
               description: Προαιρετικό, αφαίρεση υπαρχόντων μελών ομάδας χωρίς το καθορισμένο σήμα
             badge:
               label: Παράσημο
-              description: Επιλογή σήματος
+              description: Επιλογή παρασήμου
         suspend_user_by_email:
           fields:
             suspend_until:
@@ -317,6 +322,8 @@ el:
             label: Έκδοση
           status:
             label: Κατάσταση
+          enabled:
+            label: "Ενεργοποίηση αυτοματισμού"
           disabled:
             label: Απενεργοποιημένο
           last_updated_at:

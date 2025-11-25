@@ -2,13 +2,13 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import { eq, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 import iconOrImage from "discourse/helpers/icon-or-image";
 import lazyHash from "discourse/helpers/lazy-hash";
 import number from "discourse/helpers/number";
 import { emojiUnescape, sanitize } from "discourse/lib/text";
+import { eq, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import PluginOutlet from "./plugin-outlet";
 
@@ -44,6 +44,21 @@ export default class BadgeCard extends Component {
     return ![1, 2, 3, 4].includes(badge.id);
   }
 
+  get ariaDescribedBy() {
+    const { badge } = this.args;
+    const ids = [`badge-summary-${badge.slug}`];
+
+    if (this.displayCount) {
+      ids.push(`badge-granted-${badge.slug}`);
+    }
+
+    if (badge.has_badge) {
+      ids.push(`badge-awarded-${badge.slug}`);
+    }
+
+    return ids.join(" ");
+  }
+
   <template>
     <div
       class="badge-card --badge-{{this.size}}"
@@ -69,7 +84,7 @@ export default class BadgeCard extends Component {
                 <a
                   href={{this.url}}
                   class="badge-link"
-                  aria-describedby="badge-summary-{{@badge.slug}} badge-granted-{{@badge.slug}} badge-awarded-{{@badge.slug}}"
+                  aria-describedby={{this.ariaDescribedBy}}
                 >
                   {{@badge.name}}
                 </a>

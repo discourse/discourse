@@ -174,8 +174,6 @@ sv:
       errors:
         slug_contains_non_ascii_chars: "innehåller icke-ascii-tecken"
         is_already_in_use: "används redan"
-    bookmarkable:
-      notification_title: "meddelande i %{channel_name}"
     personal_chat: "personlig chatt"
     onebox:
       inline_to_message: "Meddelande #%{message_id} av %{username} – #%{chat_channel}"
@@ -232,10 +230,8 @@ sv:
       view_more:
         one: "Visa %{count} mer meddelande"
         other: "Visa %{count} fler meddelanden"
-      your_chat_settings: "preferens för frekvens av chattmeddelanden"
   unsubscribe:
     chat_summary:
-      select_title: "Ställ in e-postfrekvensen för chattsammanfattningar till:"
       never: Aldrig
       when_away: Endast när du är borta
   category:

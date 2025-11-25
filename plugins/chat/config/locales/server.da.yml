@@ -48,8 +48,6 @@ da:
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "indeholder ikke-ascii- tegn"
-    bookmarkable:
-      notification_title: "besked i %{channel_name}"
     personal_chat: "personlig chat"
     onebox:
       thread_title_connector: "i"

@@ -16,11 +16,11 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import SearchAdvancedCategoryChooser from "discourse/select-kit/components/search-advanced-category-chooser";
+import TagChooser from "discourse/select-kit/components/tag-chooser";
+import UserChooser from "discourse/select-kit/components/user-chooser";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
-import SearchAdvancedCategoryChooser from "select-kit/components/search-advanced-category-chooser";
-import TagChooser from "select-kit/components/tag-chooser";
-import UserChooser from "select-kit/components/user-chooser";
 
 const REGEXP_BLOCKS = /(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/g;
 

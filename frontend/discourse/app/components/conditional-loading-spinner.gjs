@@ -1,6 +1,6 @@
-import { eq } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { eq } from "discourse/truth-helpers";
 import PluginOutlet from "./plugin-outlet";
 
 const ConditionalLoadingSpinner = <template>

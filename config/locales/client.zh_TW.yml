@@ -621,10 +621,6 @@ zh_TW:
         claimed_by_you: "您已聲明此項目，並可以查看。"
         claimed_by_other: "此項目只能給<b>%{username}</b>來審核。"
         automatically_claimed_by: "這個項目目前由 <b>%{username}</b> 審核。"
-      claim:
-        title: "聲稱這個話題"
-      unclaim:
-        help: "刪除此聲明"
       awaiting_approval: "等待審核"
       delete: "刪除"
       settings:
@@ -644,7 +640,7 @@ zh_TW:
       topic: "話題："
       filtered_topic: "您已篩選到單個主題中的可審閱內容。"
       filtered_user: "使用者"
-      filtered_reviewed_by: "審核由"
+      filtered_reviewed_by: "評論者"
       show_all_topics: "顯示所有話題"
       deleted_post: "（貼文已被刪除）"
       deleted_user: "（使用者已被刪除）"
@@ -680,7 +676,7 @@ zh_TW:
           other: "%{count} 使用者"
       replies:
         other: "%{count}個回應"
-      edit: "編輯"
+      edit: "編輯貼文"
       save: "儲存"
       cancel: "取消"
       new_topic: "核准此項目將會建立一個新主題"
@@ -702,7 +698,6 @@ zh_TW:
           created_at: "建立於"
           created_at_asc: "建立於 (反向)"
         priority:
-          title: "最小優先權"
           any: "(任何)"
           low: "低"
           medium: "中間的"
@@ -766,8 +761,10 @@ zh_TW:
         reviewable_post:
           title: "貼文"
           noun: "貼文"
+      user_label: "使用者"
       notes:
         delete: "刪除"
+      topic_label: "話題"
       review_user: "使用者"
       copy_link: "複製連結"
       insights:
@@ -2494,7 +2491,7 @@ zh_TW:
       reply: "回覆"
       cancel: "取消"
       create_topic: "開啟話題"
-      create_pm: "送出"
+      create_pm: "傳送訊息"
       create_whisper: "悄悄話"
       create_shared_draft: "建立共享草稿"
       edit_shared_draft: "編輯共享草稿"
@@ -2571,8 +2568,10 @@ zh_TW:
           label: 切換為悄悄話
           desc: 悄悄話只有管理員能見
         create_topic:
-          label: "新增話題"
           desc: 開啟新話題
+        create_personal_message:
+          label: "新增訊息"
+          desc: "寫一則私訊"
         shared_draft:
           label: "共享草稿"
           desc: "建立僅允許使用者可見的話題草稿"
@@ -2945,7 +2944,6 @@ zh_TW:
           other: "所有標記將從 <b>%{count}</b> 個話題中移除。確定嗎？"
         progress:
           other: "進度： <strong>%{count}</strong> 個主題"
-        silent: "默認執行此動作。"
         performing: "正在執行批量作業，請稍候…"
         completed: "批量作業順利完成！"
       none:
@@ -3097,7 +3095,6 @@ zh_TW:
       jump_reply_button: "跳至貼文"
       deleted: "此話題已被刪除"
       slow_mode_update:
-        title: "慢速模式"
         select: "使用者在本主題的發文頻率限制："
         description: "為了在快節奏或有爭議的討論中促進深思熟慮的討論，使用者必須等待一段時間才能在此話題中再次發帖。"
         enable: "啟用"
@@ -3709,21 +3706,12 @@ zh_TW:
         add: "新增所需標記組"
         placeholder: "選擇標記群組…"
       topic_featured_link_allowed: "允許在該分類中發布精選的連結標題"
-      delete: "刪除分類"
-      create: "新分類"
       create_long: "建立新的分類"
-      save: "儲存分類"
-      slug: "分類目錄"
       slug_placeholder: "(選填) 在 url 加上虛線"
       creation_error: 建立分類時發生錯誤。
       save_error: 儲存分類時發生錯誤。
-      name: "分類名稱"
       description: "描述"
-      logo: "分類圖示"
-      logo_dark: "黑暗模式類別標誌圖片"
       logo_description: "建議長寬比為 1:1，最小尺寸為 200px。如果留空，將不會顯示圖片。"
-      background_image: "分類背景圖片"
-      background_image_dark: "深色類別背景圖片"
       background_color: "顏色"
       color_validations:
         cant_be_empty: "不能空白"
@@ -3739,7 +3727,6 @@ zh_TW:
       color_placeholder: "任何網頁顏色"
       delete_confirm: "你確定要刪除此分類嗎?"
       delete_error: "刪除此分類時發生錯誤。"
-      list: "列出分類"
       no_description: "請為此分類新增描述。"
       change_in_category_topic: "編輯描述"
       already_used: "此顏色已經用於其它分類"
@@ -3772,23 +3759,15 @@ zh_TW:
       all_topics_wiki: "新的話題預設為共筆。"
       allow_unlimited_owner_edits_on_first_post: "允許所有者不受限制地編輯第一個貼文"
       subcategory_list_style: "子分類列表風格："
-      sort_order: "話題列表排序條件："
-      default_view: "預設話題列表："
-      default_top_period: "預設熱門時段"
-      default_list_filter: "預設清單過濾器："
       allow_badges_label: "允許授予本分類的徽章"
-      edit_permissions: "編輯權限"
       reviewable_by_group: "除管理人員外，此類別中的內容還可以由以下群組審核："
       review_group_name: "群組名稱"
       require_topic_approval: "所有新話題皆需要通過管理員審核"
       require_reply_approval: "所有新回覆皆需要通過管理員審核"
       this_year: "今年"
       position: "在分類頁面上的位置："
-      default_position: "預設的位置"
       position_disabled: "類別將按活動順序顯示。若要控制清單中類別的順序，請啟用 <a href='%{url}'>「固定類別位置」</a> 設定。"
       minimum_required_tags: "話題標籤的最低要求數量："
-      default_slow_mode: '對此類別中的新主題啟用“慢速模式”。'
-      parent: "父分類"
       num_auto_bump_daily: "每日自動上浮的主題數："
       auto_bump_cooldown_days: "再次提出相同主題的最少天數："
       navigate_to_first_post_after_read: "所有話題已讀後，跳轉至最新貼文"
@@ -3810,18 +3789,14 @@ zh_TW:
           title: "靜音"
           description: "您將永遠不會收到任何有關此類別中新主題的通知，而且這些主題也不會出現在最新主題中。"
       search_priority:
-        label: "優先搜尋"
         options:
           normal: "一般"
           ignore: "忽略"
-          very_low: "非常低"
           low: "低"
           high: "高"
-          very_high: "非常高"
       sort_options:
         default: "預設"
         likes: "讚"
-        op_likes: "原始貼文讚"
         views: "瀏覽"
         posts: "貼文"
         activity: "活動"
@@ -3842,7 +3817,6 @@ zh_TW:
         email: "電子信箱"
       list_filters:
         all: "所有話題"
-        none: "無子類別"
       colors_disabled: "您無法選擇顏色，因為您的「category style」為「none」。"
     anonymous_flagging:
       title: "檢舉非法內容"
@@ -4057,7 +4031,7 @@ zh_TW:
         title: "精選"
         help: "在本年、月、週或日最熱門的話題"
         all:
-          title: "所有時間"
+          title: "一直以來"
         yearly:
           title: "年"
         quarterly:
@@ -4068,7 +4042,7 @@ zh_TW:
           title: "周"
         daily:
           title: "日"
-        all_time: "所有時間"
+        all_time: "一直以來"
         this_year: "年"
         this_quarter: "季度"
         this_month: "月"
@@ -4124,7 +4098,6 @@ zh_TW:
         go_to_unread_post: "%{shortcut} 前往第一篇未讀貼文"
       application:
         title: "應用"
-        create: "%{shortcut} 開啟新話題"
         notifications: "%{shortcut} 開啟通知"
         hamburger_menu: "%{shortcut} 開啟導覽功能表"
         user_profile_menu: "%{shortcut} 打開使用者菜單"
@@ -4309,18 +4282,13 @@ zh_TW:
           description: "你將不會收到這些分類中的新討論話題通知，它們也不會出現在你的未讀欄內。"
       groups:
         back_btn: "返回所有標籤"
-        title: "標記群組"
         about_heading: "選取一個標籤群組或建立一個新標籤群組"
         about_heading_empty: "建立新的標籤群組以開始"
         about_description: "標記組可協助您集中管理多個標籤的權限。"
-        new: "新標籤組"
-        new_title: "建立新群組"
-        edit_title: "編輯標籤組"
         tags_label: "此群組中的標籤"
         parent_tag_label: "上級標籤："
         parent_tag_description: "只有當上級標籤存在時，才能使用此群組的標籤。"
         one_per_topic_label: "只可給話題設置一個該組內的標籤"
-        new_name: "新標籤組名"
         name_placeholder: "名稱"
         save: "保存"
         delete: "刪除"
@@ -4567,6 +4535,7 @@ zh_TW:
           light: "輕亮"
           dark: "黑暗"
           auto: "自動"
+          aria_label: "色彩模式，當前爲 %{mode}"
     welcome_topic_banner:
       title: "建立您的歡迎主題"
       description: "您的歡迎主題是新成員首先會閱讀的內容。將其視為你的“電梯遊說”或“使命宣言”。讓每個人都知道這個社區是為誰而建的、他們可以在這裡找到什麼以及你希望他們首先做什麼。"
@@ -4821,6 +4790,14 @@ zh_TW:
         fonts:
           backfill_modal:
             modal_yes: "是"
+        welcome_banner:
+          form:
+            location:
+              label: "位置"
+            header_logged_in:
+              placeholder: "%{preferred_display_name} 歡迎回來！"
+            header_anonymous:
+              placeholder: "歡迎來到 %{site_name}！"
         navigation:
           title: "導覽"
           header_description: "設定網站的導覽連結和功能表項目。這包括主導航功能表的位置和行為、首頁頂部的快速鏈接以及管理側邊欄"
@@ -6371,7 +6348,6 @@ zh_TW:
           success: "成功"
           exists: "已存在"
           upload: "從檔案新增"
-          upload_successful: "上傳成功，文字已被添加。"
           case_sensitivity_label: "是否區分大小寫"
           case_sensitivity_description: "僅限字符大小寫匹配的字詞"
           html_label: "HTML"
@@ -6462,10 +6438,7 @@ zh_TW:
             second: "選項 2"
             third: "選項 3"
         edit_category:
-          toggle_freeform: "表單範本已停用"
-          toggle_form_template: "已啟用表單範本"
           select_template: "選擇表單範本"
-          select_template_help: "新增/編輯表格範本"
       impersonate:
         title: "檢視角度"
         help: "使用此工具以使用者的檢視角度進行除錯。完成後將需登出。"
@@ -6692,7 +6665,6 @@ zh_TW:
             cancel: "取消"
         merging_user: "合併使用者…"
         merge_failed: "合併用戶時發生錯誤。"
-        delete_posts_forbidden_because_staff: "無法刪除管理員和版主的所有貼文。"
         delete_forbidden:
           other: "不能刪除擁有貼文的使用者。請先刪除所有貼文後才能刪除該使用者。( 發表超過 %{count} 天的貼文不能刪除 )"
         cant_delete_all_posts:

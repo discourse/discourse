@@ -12,16 +12,17 @@ class LlmCreditAllocation < ActiveRecord::Base
     end
   end
 
+  DAILY_USAGE_RETENTION_DAYS = 90
+
   belongs_to :llm_model
 
+  # TODO: Remove once both column-dropping migrations have been promoted to pre-deploy:
+  #   - 20251105174003 (drops monthly_used, last_reset_at)
+  #   - 20251117000003 (drops monthly_credits, monthly_usage)
+  self.ignored_columns = %w[monthly_used last_reset_at monthly_credits monthly_usage]
+
   validates :llm_model_id, presence: true, uniqueness: true
-  validates :monthly_credits, presence: true, numericality: { only_integer: true, greater_than: 0 }
-  validates :monthly_used,
-            presence: true,
-            numericality: {
-              only_integer: true,
-              greater_than_or_equal_to: 0,
-            }
+  validates :daily_credits, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :soft_limit_percentage,
             presence: true,
             numericality: {
@@ -29,22 +30,32 @@ class LlmCreditAllocation < ActiveRecord::Base
               greater_than_or_equal_to: 0,
               less_than_or_equal_to: 100,
             }
-  validates :last_reset_at, presence: true
 
-  before_validation :set_last_reset_at, on: :create
+  def current_day_key
+    Time.current.utc.strftime("%Y-%m-%d")
+  end
+
+  def daily_used
+    daily_usage[current_day_key].to_i
+  end
+
+  def daily_used=(value)
+    day_key = current_day_key
+    self.daily_usage = (daily_usage || {}).merge(day_key => value.to_i)
+  end
 
   def credits_remaining
-    [0, monthly_credits - monthly_used].max
+    [0, daily_credits - daily_used].max
   end
 
   def percentage_used
-    return 0 if monthly_credits.zero?
-    [(monthly_used.to_f / monthly_credits * 100).round(2), 100].min
+    return 0 if daily_credits.zero?
+    [(daily_used.to_f / daily_credits * 100).round(2), 100].min
   end
 
   def percentage_remaining
-    return 100.0 if monthly_credits.zero?
-    [(credits_remaining.to_f / monthly_credits * 100).round(2), 0].max
+    return 100.0 if daily_credits.zero?
+    [(credits_remaining.to_f / daily_credits * 100).round(2), 0].max
   end
 
   def soft_limit_reached?
@@ -56,7 +67,7 @@ class LlmCreditAllocation < ActiveRecord::Base
   end
 
   def hard_limit_reached?
-    monthly_used >= monthly_credits
+    daily_used >= daily_credits
   end
 
   def hard_limit_remaining_reached?
@@ -64,28 +75,15 @@ class LlmCreditAllocation < ActiveRecord::Base
   end
 
   def next_reset_at
-    return nil if last_reset_at.nil?
-    (last_reset_at + 1.month).beginning_of_month
-  end
-
-  def reset_if_needed!
-    with_lock do
-      reload
-      return unless should_reset?
-
-      now = Time.current.beginning_of_month
-      update!(monthly_used: 0, last_reset_at: now)
-    end
-  end
-
-  def should_reset?
-    return false if last_reset_at.nil?
-    Time.current >= next_reset_at
+    Time.current.utc.tomorrow.beginning_of_day
   end
 
   def deduct_credits!(credits)
     with_lock do
-      self.monthly_used += credits
+      reload
+      day_key = current_day_key
+      self.daily_usage = daily_usage.merge(day_key => daily_used + credits)
+      cleanup_old_days!
       save!
     end
   end
@@ -112,15 +110,19 @@ class LlmCreditAllocation < ActiveRecord::Base
     allocation = llm_model.llm_credit_allocation
     return true unless allocation
 
-    allocation.reset_if_needed!
     allocation.credits_available?
   end
 
-  def self.check_credits!(llm_model)
+  def self.check_credits!(llm_model, feature_name = nil)
     return unless llm_model&.credit_system_enabled?
 
+    # If feature has 0 credit cost, skip the check entirely
+    if feature_name.present?
+      cost_per_token = LlmFeatureCreditCost.credit_cost_for(llm_model, feature_name)
+      return if cost_per_token.zero?
+    end
+
     allocation = llm_model.llm_credit_allocation
-    allocation.reset_if_needed!
     allocation.check_credits!
   end
 
@@ -144,8 +146,9 @@ class LlmCreditAllocation < ActiveRecord::Base
 
   private
 
-  def set_last_reset_at
-    self.last_reset_at ||= Time.current.beginning_of_month
+  def cleanup_old_days!
+    cutoff = DAILY_USAGE_RETENTION_DAYS.days.ago.beginning_of_day.utc.strftime("%Y-%m-%d")
+    self.daily_usage = daily_usage.select { |k, _| k >= cutoff }
   end
 
   def format_reset_time
@@ -159,9 +162,8 @@ end
 # Table name: llm_credit_allocations
 #
 #  id                    :bigint           not null, primary key
-#  last_reset_at         :datetime         not null
-#  monthly_credits       :bigint           not null
-#  monthly_used          :bigint           default(0), not null
+#  daily_credits         :bigint           default(0), not null
+#  daily_usage           :jsonb            not null
 #  soft_limit_percentage :integer          default(80), not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null

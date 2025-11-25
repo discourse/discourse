@@ -87,7 +87,7 @@ el:
         only_mentions: "Μόνο Επισημάνσεις"
         never: "Ποτέ"
       enable: "Ενεργοποίηση συνομιλίας"
-      flag: "Επισήμανση"
+      flag: "Αναφορά"
       emoji: "Εισαγωγή emoji"
       in_reply_to: "Ως απάντηση σε"
       heading: "Συνομιλία"
@@ -144,6 +144,7 @@ el:
       uploaded_files:
         one: "%{count} αρχείο"
         other: "%{count} αρχεία"
+      you_flagged: "Ανέφερες αυτό το μήνυμα"
       channel_status:
         closed: "Κλειστό"
         open: "Ξεκίνημα"
@@ -184,6 +185,9 @@ el:
         types:
           category: "Κατηγορία"
           topic: "Θέμα"
+      reviewable:
+        type: "Μήνυμα συνομιλίας"
+        message_in_channel: "Κανάλι"
       composer:
         italic_text: "κείμενο σε έμφαση"
         bold_text: "έντονη γραφή"
@@ -212,16 +216,27 @@ el:
           latest: "Πρόσφατα"
       incoming_webhooks:
         back: "Πίσω"
+        channel_placeholder: "Επιλέξτε ένα κανάλι"
         channel: "Κανάλι"
+        current_emoji: "Τρέχον Emoji"
         description: "Περιγραφή"
-        delete: "Σβήσιμο"
+        delete: "Διαγραφή"
         emoji: "Emoji"
         name: "Όνομα"
+        name_placeholder: "όνομα..."
+        new: "Νέο εισερχόμενο webhook"
+        no_emoji: "Δεν επιλέχθηκε Emoji"
+        post_to: "Δημοσίευση σε"
+        reset_emoji: "Επαναφορά Emoji"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
+        select_emoji: "Επιλογή Emoji"
         system: "σύστημα"
+        title: "Εισερχόμενα webhooks"
         url: "URL"
         username: "Όνομα Χρήστη"
+        saved: "Οι αλλαγές στο webhook αποθηκεύτηκαν"
+        created: "Το webhook δημιουργήθηκε"
       selection:
         cancel: "Ακύρωση"
         copy: "Αντιγραφή"
@@ -235,6 +250,8 @@ el:
         short:
           one: "%{count} ημ"
           other: "%{count} ημ"
+      flagging:
+        action: "Αναφορά μηνύματος"
       emoji_picker:
         objects: "Αντικείμενα"
         activities: "Δραστηριότητες"
@@ -269,3 +286,10 @@ el:
           fields:
             message:
               label: Μήνυμα
+    review:
+      types:
+        chat_reviewable_message:
+          title: "Αναφερόμενο Μήνυμα Συνομιλίας"
+        reviewable_chat_message:
+          title: "Αναφερόμενο μήνυμα συνομιλίας"
+          noun: "μήνυμα συνομιλίας"

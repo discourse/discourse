@@ -6,8 +6,12 @@ import DModal from "discourse/components/d-modal";
 import DModalCancel from "discourse/components/d-modal-cancel";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
+import {
+  isAiCreditLimitError,
+  popupAiCreditLimitError,
+} from "../../lib/ai-errors";
 
 export default class ChatModalChannelSummary extends Component {
   @tracked sinceHours = null;
@@ -48,7 +52,13 @@ export default class ChatModalChannelSummary extends Component {
         this.availableSummaries[this.sinceHours] = data.summary;
         this.summary = this.availableSummaries[this.sinceHours];
       })
-      .catch(popupAjaxError)
+      .catch((error) => {
+        if (isAiCreditLimitError(error)) {
+          popupAiCreditLimitError(error);
+        } else {
+          popupAjaxError(error);
+        }
+      })
       .finally(() => (this.loading = false));
   }
 

@@ -6,6 +6,7 @@ module DiscourseAi
   module Completions
     module Endpoints
       class AwsBedrock < Base
+        include AnthropicPromptCache
         attr_reader :dialect
 
         def self.can_contact?(model_provider)
@@ -41,6 +42,19 @@ module DiscourseAi
                 result[:thinking] = { type: "enabled", budget_tokens: reasoning_tokens }
               end
               result[:max_tokens] = max_tokens
+
+              # effort parameter for Claude Opus 4.5
+              effort = llm_model.lookup_custom_param("effort")
+              if %w[low medium high].include?(effort)
+                result[:output_config] = { effort: effort }
+                result[:anthropic_beta] = ["effort-2025-11-24"]
+              end
+
+              caching_mode = llm_model.lookup_custom_param("prompt_caching") || "never"
+              if caching_mode != "never"
+                result[:anthropic_beta] ||= []
+                result[:anthropic_beta] << "prompt-caching-2024-07-31"
+              end
 
               result
             else
@@ -129,10 +143,7 @@ module DiscourseAi
                 messages: prompt.messages,
               )
 
-            payload[:system] = prompt.system_prompt if prompt.system_prompt.present?
-
-            prefilled_message = +""
-
+            # Handle tools first
             if prompt.has_tools?
               payload[:tools] = prompt.tools
               if dialect.tool_choice.present?
@@ -140,13 +151,25 @@ module DiscourseAi
                   # not supported on bedrock as of 2025-03-24
                   # retest in 6 months
                   # payload[:tool_choice] = { type: "none" }
-
-                  # prefill prompt to nudge LLM to generate a response that is useful, instead of trying to call a tool
-                  prefilled_message << dialect.no_more_tool_calls_text
                 else
                   payload[:tool_choice] = { type: "tool", name: prompt.tool_choice }
                 end
               end
+            end
+
+            # Apply prompt caching if enabled (only for Anthropic models)
+            apply_anthropic_cache_control!(payload, prompt) if should_apply_prompt_caching?(prompt)
+
+            # Set system prompt if not already set by caching
+            payload[:system] = prompt.system_prompt if prompt.system_prompt.present? &&
+              !payload[:system]
+
+            prefilled_message = +""
+
+            # Handle tool choice prefilling
+            if dialect.tool_choice == :none && prompt.has_tools?
+              # prefill prompt to nudge LLM to generate a response that is useful, instead of trying to call a tool
+              prefilled_message << dialect.no_more_tool_calls_text
             end
 
             # Prefill prompt to force JSON output.
@@ -169,14 +192,28 @@ module DiscourseAi
 
         def prepare_request(payload)
           headers = { "content-type" => "application/json", "Accept" => "*/*" }
+          region = llm_model.lookup_custom_param("region")
 
           signer =
-            Aws::Sigv4::Signer.new(
-              access_key_id: llm_model.lookup_custom_param("access_key_id"),
-              region: llm_model.lookup_custom_param("region"),
-              secret_access_key: llm_model.api_key,
-              service: "bedrock",
-            )
+            if (credentials = llm_model.aws_bedrock_credentials)
+              # Use cached AWS role-based credentials with automatic refresh
+              creds = credentials.credentials
+              Aws::Sigv4::Signer.new(
+                access_key_id: creds.access_key_id,
+                secret_access_key: creds.secret_access_key,
+                session_token: creds.session_token,
+                region: region,
+                service: "bedrock",
+              )
+            else
+              # Use static access key credentials
+              Aws::Sigv4::Signer.new(
+                access_key_id: llm_model.lookup_custom_param("access_key_id"),
+                region: region,
+                secret_access_key: llm_model.api_key,
+                service: "bedrock",
+              )
+            end
 
           Net::HTTP::Post
             .new(model_uri)
@@ -249,6 +286,14 @@ module DiscourseAi
           log.request_tokens = processor.input_tokens if processor.input_tokens
           log.response_tokens = processor.output_tokens if processor.output_tokens
           log.raw_response_payload = @raw_response if @raw_response
+
+          # Handle cache tokens for Anthropic models
+          if dialect.is_a?(DiscourseAi::Completions::Dialects::Claude)
+            log.cache_read_tokens =
+              processor.cache_read_input_tokens if processor.cache_read_input_tokens
+            log.cache_write_tokens =
+              processor.cache_creation_input_tokens if processor.cache_creation_input_tokens
+          end
         end
 
         def processor

@@ -12,6 +12,7 @@ describe "Viewing reviewable item", type: :system do
   describe "when user is part of the groups list of the `reviewable_ui_refresh` site setting" do
     before do
       SiteSetting.reviewable_ui_refresh = group.name
+      SiteSetting.reviewable_old_moderator_actions = false
       group.add(admin)
       sign_in(admin)
     end
@@ -115,6 +116,55 @@ describe "Viewing reviewable item", type: :system do
         refreshed_review_page.click_insights_tab
         refreshed_review_page.click_timeline_tab
         expect(page).to have_text("This is a review note.")
+      end
+
+      it "shows confirmation dialog when navigating away with unsaved note, but not after clearing the note" do
+        dialog = PageObjects::Components::Dialog.new
+
+        refreshed_review_page.visit_reviewable(reviewable_flagged_post)
+        refreshed_review_page.click_timeline_tab
+
+        review_note_form.form.fill_in("content", with: "This is a draft note")
+
+        click_logo
+
+        expect(dialog).to be_open
+        expect(dialog).to have_content(I18n.t("js.form_kit.dirty_form"))
+
+        dialog.click_no
+
+        expect(page).to have_current_path("/review/#{reviewable_flagged_post.id}")
+
+        review_note_form.form.fill_in("content", with: "")
+
+        click_logo
+
+        expect(dialog).to be_closed
+        expect(page).to have_current_path("/")
+      end
+
+      it "allows to lookup IP" do
+        SiteSetting.reviewable_old_moderator_actions = true
+        refreshed_review_page.visit_reviewable(reviewable_flagged_post)
+        refreshed_review_page.click_ip_lookup_button
+        expect(page).to have_content(I18n.t("js.ip_lookup.hostname"))
+      end
+    end
+
+    describe "when the reviewable item is a queued post" do
+      fab!(:reviewable_queued_post)
+
+      it "allows to edit post when old moderator actions are enabled" do
+        SiteSetting.reviewable_old_moderator_actions = true
+        refreshed_review_page.visit_reviewable(reviewable_queued_post)
+
+        expect(page).to have_text("hello world post contents.")
+        refreshed_review_page.click_edit_post_button
+        refreshed_review_page.fill_post_content("Hello world from system spec!")
+        refreshed_review_page.save_post_edit
+
+        expect(page).to have_text("Hello world from system spec!")
+        expect(page).not_to have_text("hello world post contents.")
       end
     end
 

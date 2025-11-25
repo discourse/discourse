@@ -7,16 +7,39 @@ import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 
 export default class CustomReaction extends RestModel {
-  static toggle(post, reactionId) {
+  static toggle(post, reactionId, appEvents) {
     return ajax(
       `/discourse-reactions/posts/${post.id}/custom-reactions/${reactionId}/toggle.json`,
       { type: "PUT" }
     ).then((result) => {
-      post.appEvents.trigger("discourse-reactions:reaction-toggled", {
+      appEvents.trigger("discourse-reactions:reaction-toggled", {
         post: result,
         reaction: result.current_user_reaction,
       });
     });
+  }
+
+  static flattenForPostList(reaction) {
+    return {
+      // Original reaction data
+      ...reaction,
+      // Flatten post fields to top level for PostListItem
+      id: reaction.post.id,
+      user_id: reaction.post.user_id,
+      username: reaction.post.username,
+      name: reaction.post.name,
+      avatar_template: reaction.post.avatar_template,
+      user_title: reaction.post.user_title,
+      primary_group_name: reaction.post.primary_group_name,
+      excerpt: reaction.post.excerpt,
+      expandedExcerpt: reaction.post.expandedExcerpt,
+      topic_id: reaction.post.topic_id,
+      post_type: reaction.post.post_type,
+      url: reaction.post.url,
+      title: reaction.topic.title,
+      category: reaction.category,
+      created_at: reaction.created_at,
+    };
   }
 
   static findReactions(url, username, opts) {

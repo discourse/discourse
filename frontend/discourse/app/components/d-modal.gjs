@@ -7,20 +7,17 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
 import { modifier as modifierFn } from "ember-modifier";
-import { and, not, or } from "truth-helpers";
 import ConditionalInElement from "discourse/components/conditional-in-element";
 import DButton from "discourse/components/d-button";
 import FlashMessage from "discourse/components/flash-message";
 import concatClass from "discourse/helpers/concat-class";
 import element from "discourse/helpers/element";
 import htmlClass from "discourse/helpers/html-class";
-import {
-  disableBodyScroll,
-  enableBodyScroll,
-} from "discourse/lib/body-scroll-lock";
+import { lock, unlock } from "discourse/lib/body-scroll-lock";
 import { getMaxAnimationTimeMs } from "discourse/lib/swipe-events";
 import swipe from "discourse/modifiers/swipe";
 import trapTab from "discourse/modifiers/trap-tab";
+import { and, not, or } from "discourse/truth-helpers";
 
 export const CLOSE_INITIATED_BY_BUTTON = "initiatedByCloseButton";
 export const CLOSE_INITIATED_BY_ESC = "initiatedByESC";
@@ -46,10 +43,10 @@ export default class DModal extends Component {
       return;
     }
 
-    disableBodyScroll(el);
+    lock(el);
 
     return () => {
-      enableBodyScroll(el);
+      unlock(el);
     };
   });
 
@@ -60,24 +57,14 @@ export default class DModal extends Component {
       this.handleDocumentKeydown
     );
 
-    if (this.site.mobileView) {
-      this.animating = true;
-
-      await waitForPromise(
-        el.animate(
-          [{ transform: "translateY(100%)" }, { transform: "translateY(0)" }],
-          {
-            duration: getMaxAnimationTimeMs(),
-            easing: "ease",
-            fill: "forwards",
-          }
-        ).finished
-      );
-
-      this.animating = false;
-    }
-
     this.wrapperElement = el;
+    this.animating = true;
+
+    this.modalContainer.classList.add("is-entering");
+    await this.#waitForAnimationEnd(this.modalContainer);
+    this.modalContainer.classList.remove("is-entering");
+
+    this.animating = false;
   }
 
   @action
@@ -177,26 +164,24 @@ export default class DModal extends Component {
       return;
     }
 
-    if (this.site.mobileView) {
+    try {
       this.animating = true;
 
-      this.#animateBackdropOpacity(window.innerHeight);
-
-      await this.#animateWrapperPosition(this.modalContainer.clientHeight);
-
-      this.animating = false;
-    }
-
-    if (this.site.desktopView) {
-      try {
-        this.animating = true;
+      if (this.site.desktopView) {
         await this.#animatePopOff();
-      } finally {
-        this.animating = false;
-      }
-    }
+      } else {
+        const backdrop = this.wrapperElement.nextElementSibling;
+        this.modalContainer.classList.add("is-exiting");
+        if (backdrop) {
+          backdrop.classList.add("is-exiting");
+        }
 
-    this.args.closeModal({ initiatedBy });
+        await this.#waitForAnimationEnd(this.modalContainer);
+      }
+    } finally {
+      this.animating = false;
+      this.args.closeModal({ initiatedBy });
+    }
   }
 
   @action
@@ -265,6 +250,31 @@ export default class DModal extends Component {
     );
   }
 
+  #waitForAnimationEnd(el) {
+    return new Promise((resolve) => {
+      const style = window.getComputedStyle(el);
+      const duration = parseFloat(style.animationDuration) * 1000 || 0;
+      const delay = parseFloat(style.animationDelay) * 1000 || 0;
+      const totalTime = duration + delay;
+
+      const timeoutId = setTimeout(
+        () => {
+          el.removeEventListener("animationend", handleAnimationEnd);
+          resolve();
+        },
+        Math.max(totalTime + 50, 50)
+      );
+
+      const handleAnimationEnd = () => {
+        clearTimeout(timeoutId);
+        el.removeEventListener("animationend", handleAnimationEnd);
+        resolve();
+      };
+
+      el.addEventListener("animationend", handleAnimationEnd);
+    });
+  }
+
   async #animatePopOff() {
     const backdrop = this.wrapperElement.nextElementSibling;
 
@@ -272,24 +282,13 @@ export default class DModal extends Component {
       return;
     }
 
+    this.modalContainer.classList.add("is-exiting");
+    backdrop.classList.add("is-exiting");
+
     await waitForPromise(
       Promise.all([
-        this.modalContainer.animate(
-          [
-            { transform: "scale(1)", opacity: 1, offset: 0 },
-            { transform: "scale(0)", opacity: 0, offset: 1 },
-          ],
-          {
-            fill: "forwards",
-            duration: getMaxAnimationTimeMs(300),
-            easing: "cubic-bezier(0.4, 0, 0.2, 1)",
-          }
-        ).finished,
-        backdrop.animate([{ opacity: 0.6 }, { opacity: 0 }], {
-          fill: "forwards",
-          duration: getMaxAnimationTimeMs(300),
-          easing: "cubic-bezier(0.4, 0, 0.2, 1)",
-        }).finished,
+        this.#waitForAnimationEnd(this.modalContainer),
+        this.#waitForAnimationEnd(backdrop),
       ])
     );
   }
@@ -409,8 +408,8 @@ export default class DModal extends Component {
 
           <div
             class={{concatClass "d-modal__body" @bodyClass}}
-            {{this.setupModalBody}}
             tabindex="-1"
+            {{this.setupModalBody}}
           >
             {{#if (has-block "body")}}
               {{yield to="body"}}

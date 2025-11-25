@@ -1413,8 +1413,6 @@ sk:
       yaxis: "Deň"
       description: "Požiadavky API na bežné kľúče API a používateľské kľúče API."
     consolidated_page_views_browser_detection:
-      title: "Konsolidované zobrazenia stránok s detekciou prehliadača (experimentálne)"
-      title_legacy: "Konsolidované zobrazenia stránok s detekciou prehliadača (experimentálne)"
       xaxis:
         page_view_anon_browser: "Anonymný prehliadač"
         page_view_logged_in_browser: "Prihlásený prehliadač"
@@ -1797,7 +1795,6 @@ sk:
     allow_duplicate_topic_titles_category: "Ak je kategória iná, povoľte témy s identickými, duplicitnými názvami. allow_duplicate_topic_titles musia byť zakázané."
     unique_posts_mins: "Koľko minút musí byť medzi dvomi rovnakými príspevkami od jedného používateľa."
     educate_until_posts: "Ked používateľ začne písať svojich prvých (n) príspevkov, zobraz sprievodcu vzdelávania pre nového užívateľa. "
-    title: "Názov tejto stránky. Viditeľné pre všetkých návštevníkov vrátane anonymných používateľov."
     site_description: "Opíšte túto stránku jednou vetou. Viditeľné pre všetkých návštevníkov vrátane anonymných používateľov."
     short_site_description: "Stručný opis v niekoľkých slovách. Viditeľné pre všetkých návštevníkov vrátane anonymných používateľov."
     contact_email: "E-mailová adresa kľúčového kontaktu zodpovedného za túto stránku. Používa sa na kritické oznámenia a zobrazuje sa aj na <a href='%{base_path}/about' target='_blank'>/about</a>. Viditeľná pre anonymných používateľov na verejných stránkach."
@@ -2254,7 +2251,6 @@ sk:
     allow_all_users_to_flag_illegal_content: "Anonymní používatelia uvidia informácie, že majú správcom poslať e-mail a nahlásiť nezákonný obsah. Toto nastavenie má prednosť pred nastavením \"označovať povolené skupiny príspevkov\"."
     email_address_to_report_illegal_content: "Ak zostane prázdne, použije sa predvolený e-mail správcu stránky."
     cooldown_hours_until_reflag: "Koľko času budú musieť používatelia čakať, kým budú môcť zmeniť označenie príspevku"
-    slow_mode_prevents_editing: "Zabraňuje \"pomalý režim\" úpravám po uplynutí obdobia editácie_grace_period?"
     reply_by_email_enabled: "Aktivujte funkciu, ktorá umožňuje používateľom reagovať na témy priamo prostredníctvom e-mailu namiesto toho, aby sa museli prihlásiť na webovú stránku. Viac informácií nájdete v <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>príručke o Meta</a>."
     reply_by_email_address: "Šablóna pre príchodziu emailovú adresu emailových odpovedí. Napríklad : %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Zoznam alternatívnych šablón pre odpoveď e-mailom na prichádzajúce e-mailové adresy. Príklad: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -2557,7 +2553,6 @@ sk:
     sitemap_page_size: "Počet adries URL, ktoré sa majú zahrnúť do každej stránky mapy lokality. Maximálne 50 000"
     enable_user_status: "Umožniť používateľom nastaviť vlastnú správu o stave (emoji + popis)."
     enable_user_tips: "Povolenie nových tipov pre používateľov, ktoré popisujú kľúčové funkcie pre používateľov"
-    short_title: "Krátky názov sa použije na domovskej obrazovke používateľa, v spúšťacom programe alebo na iných miestach, kde môže byť obmedzený priestor. Mal by byť obmedzený na 12 znakov."
     dashboard_hidden_reports: "Povoliť skrytie zadaných správ z hlavného panela."
     dashboard_visible_tabs: "Vyberte, ktoré karty hlavného panela budú viditeľné."
     dashboard_general_tab_activity_metrics: "Na karte Všeobecné vyberte správy, ktoré sa majú zobrazovať ako metriky aktivity."
@@ -3822,14 +3817,9 @@ sk:
     user_automatically_silenced:
       title: "Používateľ automaticky stíšený"
       subject_template: "Nový používateľ %{username} umlčaný označeniami komunity"
-      text_body_template: |
-        Toto je automatická správa.
-
-        Nový používateľ [%{username}](%{user_url}) bol automaticky umlčaný, pretože viacerí používatelia označili príspevok(príspevky) používateľa %{username}.
-
-        Prosím, [prezri si označenia](%{base_url}/review). Ak bol %{username} nesprávne umlčaný, klikni na tlačidlo pre zrušenie umlčania na [administrátorskej stránke pre tohto používateľa](%{user_url}).
-
-        Tento prah môže byť zmenený prostredníctvom nastavení stránky `silence_new_user`.
+    user_automatically_silenced_with_reason:
+      title: "Používateľ automaticky stíšený"
+      subject_template: "Nový používateľ %{username} umlčaný označeniami komunity"
     spam_post_blocked:
       title: "Zablokovaný spamový príspevok"
       subject_template: "Nový uživateľ %{username} je zablokovaný kôli opakovaným odkazom"
@@ -5479,7 +5469,6 @@ sk:
         title: "Zahodiť príspevok"
         complete: "Príspevok vyradený."
       revise_and_reject_post:
-        title: "Revidovať príspevok..."
         complete: "Príspevok bol zamietnutý a čaká na revíziu."
       ignore:
         title: "Ignorovať"

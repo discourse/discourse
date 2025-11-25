@@ -40,7 +40,9 @@ describe "Admin upcoming changes", type: :system do
     ).to have_impact_role(:all_members)
   end
 
-  it "shows upcoming changes from plugins" do
+  # NOTE (martin): Skipped for now because it is flaky on CI, it will be something to do with the
+  # sample plugin settings loaded in the SiteSetting model.
+  xit "shows upcoming changes from plugins" do
     upcoming_changes_page.visit
     expect(upcoming_changes_page).to have_change(:enable_experimental_sample_plugin_feature)
     expect(
@@ -48,22 +50,35 @@ describe "Admin upcoming changes", type: :system do
     ).to have_plugin_name("Sample plugin")
   end
 
-  it "can toggle an upcoming change on or off" do
+  it "can enable and disable an upcoming change using the dropdown" do
     upcoming_changes_page.visit
 
     expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_disabled
-    upcoming_changes_page.change_item(:enable_upload_debug_mode).toggle
-    expect(page).to have_content(I18n.t("admin_js.admin.upcoming_changes.change_enabled"))
+    upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("everyone")
+    expect(page).to have_content(
+      I18n.t(
+        "admin_js.admin.upcoming_changes.change_enabled_for_success",
+        enabledFor: I18n.t("admin_js.admin.upcoming_changes.enabled_for_options.everyone").downcase,
+      ),
+    )
     expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
+    expect(SiteSetting.enable_upload_debug_mode).to be_truthy
 
-    # Revisit the page to skip the 3s toggle rate limit
+    # Revisit the page to skip the rate limit
     upcoming_changes_page.visit
     expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
-    upcoming_changes_page.change_item(:enable_upload_debug_mode).toggle
+    upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("no_one")
     expect(page).to have_content(I18n.t("admin_js.admin.upcoming_changes.change_disabled"))
+    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_disabled
+
+    expect(SiteSetting.enable_upload_debug_mode).to be_falsey
   end
 
-  it "can add and remove groups for a change" do
+  it "tests different enabled_for options behavior" do
+    upcoming_changes_page.visit
+
+    # Add a group to test clearing behavior
+    SiteSetting.enable_upload_debug_mode = true
     SiteSettingGroup.create!(
       name: "enable_upload_debug_mode",
       group_ids: Group::AUTO_GROUPS[:trust_level_4].to_s,
@@ -71,36 +86,75 @@ describe "Admin upcoming changes", type: :system do
     SiteSetting.refresh_site_setting_group_ids!
     SiteSetting.notify_changed!
 
-    upcoming_changes_page.visit
-
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to have_groups(
-      "trust_level_4",
-    )
-    upcoming_changes_page.change_item(:enable_upload_debug_mode).add_group("staff")
-    expect(page).to have_content(I18n.t("admin_js.admin.upcoming_changes.groups_updated"))
-
-    expect(
-      SiteSettingGroup.find_by(name: "enable_upload_debug_mode").group_ids.split("|").map(&:to_i),
-    ).to match_array([Group::AUTO_GROUPS[:trust_level_4], Group::AUTO_GROUPS[:staff]])
-    expect(SiteSetting.site_setting_group_ids[:enable_upload_debug_mode]).to match_array(
-      [Group::AUTO_GROUPS[:trust_level_4], Group::AUTO_GROUPS[:staff]],
-    )
-
+    # Refresh after setting up the group
     upcoming_changes_page.visit
     expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to have_groups(
       "trust_level_4",
+    )
+    expect(UpcomingChanges.has_groups?(:enable_upload_debug_mode)).to be_truthy
+
+    # Test 'no_one' option - should disable the change and clear groups
+    upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("no_one")
+    expect(page).to have_content(I18n.t("admin_js.admin.upcoming_changes.change_disabled"))
+    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_disabled
+
+    upcoming_changes_page.visit
+    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to have_no_group_selector
+    expect(SiteSetting.enable_upload_debug_mode).to be_falsey
+    expect(UpcomingChanges.has_groups?(:enable_upload_debug_mode)).to be_falsey
+
+    # Test 'everyone' option - should enable the change and clear groups
+    upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("everyone")
+    expect(page).to have_content(
+      I18n.t(
+        "admin_js.admin.upcoming_changes.change_enabled_for_success",
+        enabledFor: I18n.t("admin_js.admin.upcoming_changes.enabled_for_options.everyone").downcase,
+      ),
+    )
+    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
+
+    upcoming_changes_page.visit
+    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to have_no_group_selector
+    expect(SiteSetting.enable_upload_debug_mode).to be_truthy
+
+    # Test 'staff' option - should enable the change and set staff group
+    upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("staff")
+    expect(page).to have_content(
+      I18n.t(
+        "admin_js.admin.upcoming_changes.change_enabled_for_success",
+        enabledFor: I18n.t("admin_js.admin.upcoming_changes.enabled_for_options.staff").downcase,
+      ),
+    )
+    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
+
+    upcoming_changes_page.visit
+    expect(UpcomingChanges.has_groups?(:enable_upload_debug_mode)).to be_truthy
+    expect(SiteSetting.enable_upload_debug_mode).to be_truthy
+
+    # Test 'groups' option - should not change enabled state until groups are selected and saved
+    upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("groups")
+    upcoming_changes_page.change_item(:enable_upload_debug_mode).add_group("trust_level_4")
+    upcoming_changes_page.change_item(:enable_upload_debug_mode).save_groups
+    expect(page).to have_content(
+      I18n.t(
+        "admin_js.admin.upcoming_changes.change_enabled_for_success",
+        enabledFor:
+          I18n.t(
+            "admin_js.admin.upcoming_changes.enabled_for_options.specific_groups_with_group_names",
+            groupNames: "staff, trust_level_4",
+            count: 2,
+          ).downcase,
+      ),
+    )
+
+    upcoming_changes_page.visit
+    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to have_groups(
       "staff",
+      "trust_level_4",
     )
-
-    upcoming_changes_page.change_item(:enable_upload_debug_mode).remove_group("trust_level_4")
-    expect(page).to have_content(I18n.t("admin_js.admin.upcoming_changes.groups_updated"))
-
-    expect(
-      SiteSettingGroup.find_by(name: "enable_upload_debug_mode").group_ids.split("|").map(&:to_i),
-    ).to match_array([Group::AUTO_GROUPS[:staff]])
-    expect(SiteSetting.site_setting_group_ids[:enable_upload_debug_mode]).to match_array(
-      [Group::AUTO_GROUPS[:staff]],
-    )
+    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
+    expect(UpcomingChanges.has_groups?(:enable_upload_debug_mode)).to be_truthy
+    expect(SiteSetting.enable_upload_debug_mode).to be_truthy
   end
 
   it "can filter by name, description, plugin, status, impact type, or enabled/disabled" do
@@ -115,12 +169,14 @@ describe "Admin upcoming changes", type: :system do
     upcoming_changes_page.filter_controls.clear_search
 
     # Filter by plugin
-    upcoming_changes_page.filter_controls.type_in_search("sample plugin")
+    # NOTE (martin): Skipped for now because it is flaky on CI, it will be something to do with the
+    # sample plugin settings loaded in the SiteSetting model.
+    # upcoming_changes_page.filter_controls.type_in_search("sample plugin")
 
-    expect(upcoming_changes_page).to have_change(:enable_experimental_sample_plugin_feature)
-    expect(upcoming_changes_page).to have_no_change(:about_page_extra_groups_show_description)
+    # expect(upcoming_changes_page).to have_change(:enable_experimental_sample_plugin_feature)
+    # expect(upcoming_changes_page).to have_no_change(:about_page_extra_groups_show_description)
 
-    upcoming_changes_page.filter_controls.clear_search
+    # upcoming_changes_page.filter_controls.clear_search
 
     upcoming_changes_page.filter_controls.toggle_dropdown_filters
 

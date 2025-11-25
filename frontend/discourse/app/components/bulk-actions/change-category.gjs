@@ -3,8 +3,8 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
+import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import { i18n } from "discourse-i18n";
-import CategoryChooser from "select-kit/components/category-chooser";
 
 export default class ChangeCategory extends Component {
   categoryId = 0;

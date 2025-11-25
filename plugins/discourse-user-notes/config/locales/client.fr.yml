@@ -14,4 +14,3 @@ fr:
       show: "Notes d'utilisateur (%{count})"
       delete_confirm: "Voulez-vous vraiment supprimer cette note d'utilisateur ?"
       show_post: "Afficher le message"
-      copy_reviewable_note: "Copier la note dans le profil de l'utilisateur ?"

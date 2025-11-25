@@ -1,13 +1,13 @@
 import Component from "@glimmer/component";
 import { array } from "@ember/helper";
 import { service } from "@ember/service";
+import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
+import AdminSectionLandingItem from "discourse/admin/components/admin-section-landing-item";
+import AdminSectionLandingWrapper from "discourse/admin/components/admin-section-landing-wrapper";
 import AsyncContent from "discourse/components/async-content";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-import AdminFilterControls from "admin/components/admin-filter-controls";
-import AdminSectionLandingItem from "admin/components/admin-section-landing-item";
-import AdminSectionLandingWrapper from "admin/components/admin-section-landing-wrapper";
 
 export default class AdminReports extends Component {
   @service siteSettings;

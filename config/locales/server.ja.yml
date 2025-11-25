@@ -1188,8 +1188,6 @@ ja:
       yaxis: "日"
       description: "通常の API キーとユーザー API キーの API リクエスト。"
     consolidated_page_views_browser_detection:
-      title: "ブラウザ検出による統合ページビュー (実験的)"
-      title_legacy: "ブラウザ検出による統合ページビュー (実験的)"
       xaxis:
         page_view_anon_browser: "匿名ブラウザ"
         page_view_logged_in_browser: "ログイン中のブラウザ"
@@ -1576,7 +1574,6 @@ ja:
     allow_duplicate_topic_titles_category: "カテゴリが異なる場合、同一の重複したタイトルを持つトピックを許可する。allow_duplicate_topic_titles は無効にする必要があります。"
     unique_posts_mins: "同じコンテンツを投稿できるまでの時間 (分)"
     educate_until_posts: "最初の (n) 件の新規投稿を入力し始めたときに、新規ユーザーチュートリアルのパネルをポップアップ表示します。"
-    title: "このサイトの名前。匿名ユーザーを含むすべての訪問者に表示されます。"
     site_description: "このサイトを一文で説明してください。匿名ユーザーを含むすべての訪問者に表示されます。"
     short_site_description: "短い言葉で簡単に説明してください。匿名ユーザーを含むすべての訪問者に表示されます。"
     contact_email: "このサイトの責任者の主要連絡先のメールアドレス。重要な通知に使用され、<a href='%{base_path}/about' target='_blank'>サイト情報</a>にも表示されます。公開サイトの匿名ユーザーにも表示されます。"
@@ -2035,7 +2032,6 @@ ja:
     allow_all_users_to_flag_illegal_content: "匿名ユーザーには、違法コンテンツを管理者にメールで報告する必要があるという情報が表示されます。この設定は 'flag post allowed groups' より優先されます。"
     email_address_to_report_illegal_content: "空白のままにすると、デフォルトのサイト管理者のメールアドレスが使用されます。"
     cooldown_hours_until_reflag: "ユーザーが投稿をもう一度通報できるまでの時間"
-    slow_mode_prevents_editing: "editing_grace_period の後、'低速モード' で編集を防止するかどうか"
     reply_by_email_enabled: "ユーザーがウェブサイトにログインせずに、直接メールでトピックに返信できるようにする機能を有効にします。詳細については、<a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>Meta のガイド</a>をご覧ください。"
     reply_by_email_address: "メールによる返信の受信メールアドレスのテンプレート。例: %%{reply_key}@reply.example.com または replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "メールによる返信の受信メールアドレスの代替テンプレートのリスト。例: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -2340,7 +2336,6 @@ ja:
     sitemap_page_size: "各サイトマップページに含める URL の数。最大 50,000"
     enable_user_status: "ユーザーがカスタムステータスメッセージ (絵文字 + 説明) を設定できるようにする。"
     enable_user_tips: "重要な機能をユーザーに説明する新しいユーザーヒントを有効にする"
-    short_title: "短いタイトルはユーザーのホーム画面、ランチャー、またはスペースが限られている場所に使用されます。12 文字に制限する必要があります。"
     dashboard_hidden_reports: "ダッシュボードから指定されたレポートを非表示にすることを許可する。"
     dashboard_visible_tabs: "表示するダッシュボードのタブを選択します。"
     dashboard_general_tab_activity_metrics: "アクティビティメトリクスとして一般タブに表示されるレポートを選択します。"
@@ -2366,8 +2361,6 @@ ja:
     default_navigation_menu_categories: "選択されたカテゴリは、デフォルトでナビゲーションメニューのカテゴリセクションに表示されます。"
     default_navigation_menu_tags: "選択されたタグは、デフォルトでナビゲーションメニューのタグセクションに表示されます。"
     experimental_new_new_view_groups: '未読のトピックと新規トピックを合わせた新しいトピックリストを有効にし、サイドバーの「すべて」リンクをそのリストにリンクする。'
-    floatkit_autocomplete_composer: "作成ツールで Floatkit ベースの自動補完メニューを有効にする。これは、現在の jQuery ベースの自動補完メニューに置き換わる UI 拡張機能です。"
-    floatkit_autocomplete_chat_composer: "チャット作成ツールで Floatkit ベースの自動補完メニューを有効にする。これは、現在の jQuery ベースの自動補完メニューに置き換わる UI 拡張機能です。"
     experimental_form_templates: "フォームのテンプレート機能を有効にします。テンプレートは <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a> で管理できます。"
     show_preview_for_form_templates: "フォームテンプレート機能のプレビューを有効にする"
     lazy_load_categories_groups: "これらのグループのユーザーに対してのみ、カテゴリ情報を遅延読み込みする。これにより、カテゴリ数の多いサイトのパフォーマンスが改善されます。"
@@ -3511,14 +3504,9 @@ ja:
     user_automatically_silenced:
       title: "ユーザーは自動的に投稿禁止にされました"
       subject_template: "新規ユーザー %{username} はコミュニティー通報により投稿禁止になりました"
-      text_body_template: |
-        これは自動メッセージです。
-
-        新規ユーザー [%{username}](%{user_url}) は、複数のユーザーが %{username} の投稿を通報したため、自動的に投稿禁止になりました。
-
-        [通報をレビュー](%{base_url}/review)してください。%{username} が誤って投稿禁止になっている場合は、[このユーザーの管理者ページ](%{user_url})で投稿禁止を解除ボタンをクリックしてください。
-
-        このしきい値は、`silence_new_user` サイト設定で変更できます。
+    user_automatically_silenced_with_reason:
+      title: "ユーザーは自動的に投稿禁止にされました"
+      subject_template: "新規ユーザー %{username} はコミュニティー通報により投稿禁止になりました"
     spam_post_blocked:
       title: "迷惑投稿はブロックされました"
       subject_template: "同一リンクの連続投稿により、新規ユーザー %{username} の投稿をブロック"
@@ -5112,7 +5100,6 @@ ja:
         title: "投稿を破棄"
         complete: "投稿を破棄しました。"
       revise_and_reject_post:
-        title: "投稿を修正..."
         complete: "投稿を修正待ちで拒否しました。"
       ignore:
         title: "無視"

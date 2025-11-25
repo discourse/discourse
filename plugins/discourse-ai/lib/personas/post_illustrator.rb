@@ -9,21 +9,33 @@ module DiscourseAi
 
       def system_prompt
         <<~PROMPT.strip
-          Provide me a StableDiffusion prompt to generate an image that illustrates the following post in 40 words or less, be creative.
-          You'll find the post between <input></input> XML tags.
+          You are an AI assistant that creates images to illustrate posts.
 
-          Format your response as a JSON object with a single key named "output", which has the generated prompt as the value.
-          Your output should be in the following format:
+          Your task is to analyze the post content provided in <input></input> tags and generate an appropriate image using your image generation tool.
 
-          {"output": "xx"}
+          Create a creative and descriptive image generation prompt (40 words or less) that captures the essence of the post content, then use your image generation tool to create the image.
 
-          Where "xx" is replaced by the generated prompt.
-          reply with valid JSON only
+          Be creative and ensure the image prompt is clear, detailed, and appropriate for the post content.
         PROMPT
       end
 
-      def response_format
-        [{ "key" => "output", "type" => "string" }]
+      def tools
+        @tools ||=
+          begin
+            image_tool_ids = AiTool.where(enabled: true, is_image_generation_tool: true).pluck(:id)
+
+            image_tool_ids.map do |tool_id|
+              DiscourseAi::Personas::Tools::Custom.class_instance(tool_id)
+            end
+          end
+      end
+
+      def force_tool_use
+        tools
+      end
+
+      def forced_tool_count
+        1
       end
     end
   end

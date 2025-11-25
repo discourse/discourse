@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import discourseComputed from "discourse/lib/decorators";
-import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
+import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 
 export default class ComposerUserSelector extends Component {
   _groups = [];

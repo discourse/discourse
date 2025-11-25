@@ -64,17 +64,19 @@ export function registerCustomPostMessageCallback(type, callback) {
 }
 
 export default class TopicController extends Controller {
+  @service appEvents;
   @service composer;
+  @service currentUser;
   @service dialog;
   @service documentTitle;
-  @service screenTrack;
-  @service modal;
-  @service currentUser;
-  @service router;
-  @service siteSettings;
-  @service site;
-  @service appEvents;
+
+  @service header; // used in the template
   @service languageNameLookup;
+  @service modal;
+  @service router;
+  @service screenTrack;
+  @service site;
+  @service siteSettings;
 
   @tracked model;
 
@@ -134,6 +136,10 @@ export default class TopicController extends Controller {
     return BufferedProxy.create({
       content: this.model,
     });
+  }
+
+  get titleIsVisibleOnHeader() {
+    return !this.header.mainTopicTitleVisible;
   }
 
   updateQueryParams() {
@@ -371,10 +377,66 @@ export default class TopicController extends Controller {
   }
 
   @action
-  editTopic(event) {
+  async handleTitleClick(event) {
+    this.editTopic?.(event);
+    this.jumpTop?.(event);
+  }
+
+  @action
+  async editTopic(event) {
     event?.preventDefault();
-    if (this.get("model.details.can_edit")) {
-      this.set("editingTopic", true);
+    const canEditTitle = this.get("model.details.can_edit");
+    const canLocalize = this.get("model.can_localize_topic");
+
+    if (!canEditTitle && !canLocalize) {
+      return;
+    }
+
+    const titleLocalized = this.model?.fancy_title_localized;
+    if (!titleLocalized && canEditTitle) {
+      return this.set("editingTopic", true);
+    }
+
+    if (this.composer.isOpen) {
+      return;
+    }
+
+    const topic = this.model;
+    const firstPost = await topic.firstPost();
+
+    if (canEditTitle && !canLocalize) {
+      return this._openComposerForEdit(topic, firstPost);
+    }
+
+    if (titleLocalized && !canEditTitle) {
+      return this._openComposerForEditTranslation(topic, firstPost);
+    }
+
+    if (titleLocalized) {
+      const topicLocale = topic.locale;
+      const language = this.languageNameLookup.getLanguageName(topicLocale);
+      return this.dialog.alert({
+        message: i18n("topic.localizations.title_edit_warning.message", {
+          language,
+        }),
+        buttons: [
+          {
+            label: i18n(
+              "topic.localizations.title_edit_warning.action_original"
+            ),
+            class: "btn-primary",
+            action: () => this._openComposerForEdit(topic, firstPost),
+          },
+          {
+            label: i18n(
+              "topic.localizations.title_edit_warning.action_translation"
+            ),
+            class: "btn-default",
+            action: () =>
+              this._openComposerForEditTranslation(topic, firstPost),
+          },
+        ],
+      });
     }
   }
 
@@ -460,7 +522,7 @@ export default class TopicController extends Controller {
       ? Promise.resolve(loadedPost)
       : this.get("model.postStream").loadPost(postId);
 
-    return promise.then((post) => {
+    return promise.then(async (post) => {
       const composer = this.composer;
       const viewOpen = composer.get("model.viewOpen");
 
@@ -489,7 +551,6 @@ export default class TopicController extends Controller {
       }
 
       const quotedText = buildQuote(post, buffer, opts);
-      composerOpts.quote = quotedText;
 
       if (composer.get("model.viewOpen")) {
         this.appEvents.trigger("composer:insert-block", quotedText);
@@ -498,6 +559,16 @@ export default class TopicController extends Controller {
         model.set("reply", model.get("reply") + "\n" + quotedText);
         composer.openIfDraft();
       } else {
+        const draftData = await Draft.get(composerOpts.draftKey);
+
+        if (draftData.draft) {
+          const data = JSON.parse(draftData.draft);
+          composerOpts.draftSequence = draftData.draft_sequence;
+          composerOpts.reply = data.reply + "\n" + quotedText;
+        } else {
+          composerOpts.quote = quotedText;
+        }
+
         composer.open(composerOpts);
       }
     });
@@ -547,7 +618,7 @@ export default class TopicController extends Controller {
 
   // Called when the topmost visible post on the page changes.
   @action
-  topVisibleChanged(event) {
+  async topVisibleChanged(event) {
     const { post, refresh } = event;
     if (!post) {
       return;
@@ -561,13 +632,13 @@ export default class TopicController extends Controller {
     }
 
     if (firstLoadedPost && firstLoadedPost === post) {
-      postStream.prependMore().then(() => refresh?.());
+      await postStream.prependMore();
+      refresh?.();
     }
   }
 
-  // Called the bottommost visible post on the page changes.
   @action
-  bottomVisibleChanged(event) {
+  async bottomVisibleChanged(event) {
     const { post, refresh } = event;
 
     const postStream = this.get("model.postStream");
@@ -578,9 +649,7 @@ export default class TopicController extends Controller {
       lastLoadedPost === post &&
       postStream.get("canAppendMore")
     ) {
-      // TODO (glimmer-post-stream) the Glimmer Post stream doesn't pass a refresh function
-      postStream.appendMore().then(() => refresh?.());
-      // show loading stuff
+      await postStream.appendMore();
       // TODO (glimmer-post-stream) the Glimmer Post stream doesn't pass a refresh function
       refresh?.();
     }
@@ -735,24 +804,25 @@ export default class TopicController extends Controller {
         draftSequence: topic.get("draft_sequence"),
       };
 
-      if (quotedText) {
-        opts.quote = quotedText;
-      }
-
       if (post && post.get("post_number") !== 1) {
         opts.post = post;
       } else {
         opts.topic = topic;
       }
 
-      if (!opts.quote) {
-        const draftData = await Draft.get(opts.draftKey);
+      const draftData = await Draft.get(opts.draftKey);
 
-        if (draftData.draft) {
-          const data = JSON.parse(draftData.draft);
+      if (draftData.draft) {
+        const data = JSON.parse(draftData.draft);
+        opts.draftSequence = draftData.draft_sequence;
+
+        if (quotedText) {
+          opts.reply = data.reply + "\n" + quotedText;
+        } else {
           opts.reply = data.reply;
-          opts.draftSequence = draftData.draft_sequence;
         }
+      } else if (quotedText) {
+        opts.quote = quotedText;
       }
 
       composerController.open(opts);
@@ -970,7 +1040,11 @@ export default class TopicController extends Controller {
       warningsDisabled: true,
       hijackPreview: {
         component: DEditorOriginalTranslationPreview,
-        model: { postLocale: post.locale, rawPost: raw },
+        model: {
+          postLocale: post.locale,
+          rawPost: raw,
+          translationText: () => this.composer.model?.reply,
+        },
       },
       post,
       selectedTranslationLocale: this.currentUser?.effective_locale,

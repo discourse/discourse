@@ -1,9 +1,9 @@
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
-import { and, not } from "truth-helpers";
-import FieldInputDescription from "admin/components/schema-setting/field-input-description";
-import SchemaSettingTypeModels from "admin/components/schema-setting/types/models";
-import CategorySelector from "select-kit/components/category-selector";
+import FieldInputDescription from "discourse/admin/components/schema-setting/field-input-description";
+import SchemaSettingTypeModels from "discourse/admin/components/schema-setting/types/models";
+import CategorySelector from "discourse/select-kit/components/category-selector";
+import { and, not } from "discourse/truth-helpers";
 
 export default class SchemaSettingTypeCategories extends SchemaSettingTypeModels {
   @tracked

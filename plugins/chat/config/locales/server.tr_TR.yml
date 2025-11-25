@@ -188,7 +188,7 @@ tr_TR:
         slug_contains_non_ascii_chars: "ascii olmayan karakterler içeriyor"
         is_already_in_use: "zaten kullanımda"
     bookmarkable:
-      notification_title: "%{channel_name} adlı kanaldaki mesaj"
+      notification_title_channel: "%{channel_name} adlı kanaldaki mesaj"
     personal_chat: "kişisel sohbet"
     onebox:
       inline_to_message: "%{username} adlı kullanıcının #%{message_id} mesajı - #%{chat_channel}"
@@ -268,10 +268,8 @@ tr_TR:
       view_more:
         one: "%{count} mesaj daha görüntüle"
         other: "%{count} mesaj daha görüntüle"
-      your_chat_settings: "sohbet e-postası sıklığı tercihi"
   unsubscribe:
     chat_summary:
-      select_title: "Özet sohbet e-posta sıklığını şu şekilde ayarla:"
       never: Asla
       when_away: Sadece uzaktayken
   category:

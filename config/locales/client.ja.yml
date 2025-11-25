@@ -621,10 +621,6 @@ ja:
         claimed_by_you: "この項目を自分に割り当てたため、レビューできます。"
         claimed_by_other: "この項目は <b>%{username}</b> のみがレビューできます。"
         automatically_claimed_by: "この項目は現在、<b>%{username}</b> がレビューしています。"
-      claim:
-        title: "トピックを自分に割り当てる"
-      unclaim:
-        help: "この割り当てを削除する"
       awaiting_approval: "承認待ち"
       delete: "削除"
       settings:
@@ -688,7 +684,7 @@ ja:
           other: "ユーザー: %{count} 人"
       replies:
         other: "返信: %{count} 件"
-      edit: "編集"
+      edit: "投稿を編集"
       save: "保存"
       cancel: "キャンセル"
       new_topic: "この項目を承認すると新しいトピックが作成されます"
@@ -710,7 +706,6 @@ ja:
           created_at: "作成日"
           created_at_asc: "作成日 (昇順)"
         priority:
-          title: "最低優先度"
           any: "(すべて)"
           low: "低"
           medium: "普通"
@@ -775,6 +770,7 @@ ja:
           title: "投稿"
           noun: "投稿"
       flagged_as: "通報:"
+      user_label: "ユーザー"
       assigned_to: "割り当て先"
       moderator_actions: "モデレーターのアクション"
       timeline_and_notes: "タイムラインとメモ"
@@ -792,13 +788,12 @@ ja:
         note_added_by: "%{username} のモデレーターメモ · %{relativeDate}"
         no_events: "表示するタイムラインイベントはありません"
       notes:
-        add_note_description: "モデレーターのみに表示されます。このメモを使用して、レビューの背景情報や決定事項を追加してください。"
         add_note_button: "メモを追加"
         placeholder: "ここにメモを入力してください..."
         chars_remaining: "残り %{count} 文字"
         delete_note: "このメモを削除する"
         delete: "削除"
-      new_topic_label: "新規トピック"
+      topic_label: "トピック"
       queued_user: "キューのユーザー"
       posted_in: "投稿先:"
       flagged_user: "通報されたユーザー"
@@ -811,9 +806,6 @@ ja:
         flag_volume: "通報回数"
         flagged_by_users:
           other: "%{count} 人のユニークユーザーによる通報"
-        similar_posts: "過去の同様の投稿"
-        flagged_in_timeframe: "過去に %{count} 回通報"
-        user_activity: "ユーザーアクティビティ"
         activities:
           new_account: "新規アカウント"
           trust_level: "信頼レベル: %{trustLevelName}"
@@ -2567,7 +2559,7 @@ ja:
         title: "投稿の翻訳"
         select: "翻訳を選択"
         save: "翻訳を保存"
-        original_content: "元の投稿のコンテンツ"
+        translation: "翻訳"
         placeholder: "ここに投稿の翻訳を入力します..."
       group_mentioned_limit:
         other: "<b>警告！</b> <a href='%{group_link}'>%{group}</a> をメンションしましたが、このグループのメンバー数は、管理者がメンション数制限として設定した %{count} 人を超えています。そのため誰にも通知されません。"
@@ -2609,7 +2601,7 @@ ja:
       reply: "返信"
       cancel: "キャンセル"
       create_topic: "トピックを作成"
-      create_pm: "メッセージを送信"
+      create_pm: "メッセージを送信する"
       create_whisper: "ささやき"
       create_shared_draft: "共有の下書きを作成"
       edit_shared_draft: "共有の下書きを編集"
@@ -2706,6 +2698,9 @@ ja:
         create_topic:
           label: "新規トピック"
           desc: 新しいトピックを作成します
+        create_personal_message:
+          label: "新規メッセージ"
+          desc: "新しい個人メッセージを作成する"
         shared_draft:
           label: "共有の下書き"
           desc: "許可されたユーザーにのみ表示されるトピックの下書きを作成します"
@@ -2714,7 +2709,6 @@ ja:
           desc: "最新の返信日を変更せずに返信します"
         toggle_unlisted:
           label: 非表示の切り替え
-          desc: 非表示のトピックは、メンバーがダイレクトリンクでのみアクセスできます
       reload: "再読み込み"
       ignore: "無視する"
       image_alt_text:
@@ -3090,7 +3084,6 @@ ja:
           other: "<b>%{count}</b> 件のトピックからすべてのタグが削除されます。よろしいですか？"
         progress:
           other: "進捗状況: <strong>%{count}</strong> 件のトピック"
-        silent: "この操作をサイレントで実行します。"
         performing: "一括操作を実行中です。お待ちください…"
         completed: "一括操作が完了しました！"
       none:
@@ -3164,7 +3157,7 @@ ja:
       filter_to:
         other: "トピックの %{count} 件の投稿"
       create: "新規トピック"
-      create_long: "新しいトピックの作成"
+      create_long: "新しいトピックを作成します"
       open_draft: "下書きを開く"
       private_message: "メッセージを書く"
       archive_message:
@@ -3250,7 +3243,6 @@ ja:
       jump_reply_button: "投稿にジャンプ"
       deleted: "トピックは削除されました"
       slow_mode_update:
-        title: "低速モード"
         select: "ユーザーはこのトピックに次の頻度でのみ投稿できます。"
         description: "流れの速いディスカッションや論争になりがちなディスカッションで建設的な対話を奨励するため、このトピックへの投稿はしばらく待ってから行う必要があります。"
         enable: "有効化"
@@ -3660,7 +3652,6 @@ ja:
         post_language_selector:
           none: "なし"
         edit_warning:
-          message: "これは翻訳された投稿です。<br><br>元の%{language}の投稿を編集しますか？またはこの翻訳を編集しますか？"
           action_original: "元の投稿を編集する"
           action_translation: "この翻訳を編集する"
       errors:
@@ -3885,22 +3876,12 @@ ja:
         add: "必須タググループを追加する"
         placeholder: "タググループを選択…"
       topic_featured_link_allowed: "このカテゴリに注目のリンクを許可する"
-      delete: "カテゴリを削除"
-      create: "新規カテゴリ"
       create_long: "新しいカテゴリを作成する"
-      save: "カテゴリを保存"
-      slug: "カテゴリのスラッグ"
       slug_placeholder: "(オプション) URL 用のダッシュ区切りの語"
       creation_error: カテゴリを作成中にエラーが発生しました。
       save_error: カテゴリを保存中にエラーが発生しました。
-      name: "カテゴリ名"
-      untitled: "無題のカテゴリ"
       description: "説明"
-      logo: "カテゴリのロゴの画像"
-      logo_dark: "ダークモードのカテゴリロゴの画像"
       logo_description: "推奨アスペクト比は 1:1、最小サイズは 200px です。空白のままにすると、画像は表示されません。"
-      background_image: "カテゴリの背景画像"
-      background_image_dark: "ダークのカテゴリ背景画像"
       style: "スタイル"
       background_color: "色"
       foreground_color: "テキストの色"
@@ -3922,7 +3903,7 @@ ja:
       delete_error: "カテゴリを削除中にエラーが発生しました。"
       list: "カテゴリをリスト表示"
       no_description: "このカテゴリの説明を追加してください。"
-      change_in_category_topic: "説明を編集"
+      change_in_category_topic: "説明を編集する"
       already_used: "この色は他のカテゴリで使用されています。"
       security: "セキュリティ"
       security_add_group: "グループの追加"
@@ -3953,23 +3934,15 @@ ja:
       all_topics_wiki: "デフォルトで新しいトピックをウィキにする"
       allow_unlimited_owner_edits_on_first_post: "最初の投稿へのオーナーによる無制限の編集を許可する"
       subcategory_list_style: "サブカテゴリのリストのスタイル:"
-      sort_order: "トピックリストの並べ替え順:"
-      default_view: "デフォルトのトピックリスト:"
-      default_top_period: "デフォルトのトップの期間:"
-      default_list_filter: "デフォルトのリストのフィルタ:"
       allow_badges_label: "このカテゴリでバッジの付与を許可する"
-      edit_permissions: "権限を編集"
       reviewable_by_group: "このカテゴリのコンテンツはスタッフのほか、次のユーザーもレビューできます:"
       review_group_name: "グループ名"
       require_topic_approval: "すべての新しいトピックにモデレーターの承認を必要とする"
       require_reply_approval: "すべての新しい返信にモデレーターの承認を必要とする"
       this_year: "今年"
       position: "カテゴリページの位置:"
-      default_position: "デフォルトの位置"
       position_disabled: "カテゴリはアクティビティの順に表示されます。リスト内のカテゴリの順を制御するには、<a href='%{url}'>'カテゴリの位置の固定'</a> 設定を有効にしてください。"
       minimum_required_tags: "トピックに必要なタグの最小数:"
-      default_slow_mode: 'このカテゴリの新しいトピックに「低速モード」を有効にします。'
-      parent: "親カテゴリ"
       num_auto_bump_daily: "毎日自動的にバンプするオープントピックの数:"
       auto_bump_cooldown_days: "同じトピックをもう一度バンプするまでの最低日数:"
       navigate_to_first_post_after_read: "トピックが読まれた後最初の投稿に移動する"
@@ -3991,18 +3964,14 @@ ja:
           title: "ミュート"
           description: "このカテゴリの新しいトピックについて何も通知されません。また最新にも表示されません。"
       search_priority:
-        label: "検索の優先度"
         options:
           normal: "通常"
           ignore: "無視"
-          very_low: "非常に低い"
           low: "低"
           high: "高"
-          very_high: "非常に高い"
       sort_options:
         default: "デフォルト"
         likes: "いいね！"
-        op_likes: "元の投稿の「いいね！」"
         views: "表示"
         posts: "投稿"
         activity: "アクティビティ"
@@ -4023,7 +3992,6 @@ ja:
         email: "メール"
       list_filters:
         all: "すべてのトピック"
-        none: "サブカテゴリなし"
       colors_disabled: "category style が none であるため色を選択できません。"
     anonymous_flagging:
       title: "違法コンテンツの報告"
@@ -4309,7 +4277,6 @@ ja:
         go_to_unread_post: "%{shortcut} 最初の未読の投稿に移動"
       application:
         title: "アプリケーション"
-        create: "%{shortcut} 新しいトピックを作成"
         notifications: "%{shortcut} 通知を開く"
         hamburger_menu: "%{shortcut} ナビゲーションメニューを開く"
         user_profile_menu: "%{shortcut} ユーザーメニューを開く"
@@ -4509,18 +4476,13 @@ ja:
           description: "このタグのついた新しいトピックについては何も通知されず、未読タブにも表示されません。"
       groups:
         back_btn: "すべてのタグに戻る"
-        title: "タグのグループ"
         about_heading: "タググループの選択または新しいタググループの作成"
         about_heading_empty: "まず新しいタググループを作成します"
         about_description: "タググループでは、1 か所で複数のタグの権限を管理できます。"
-        new: "新しいグループ"
-        new_title: "グループの新規作成"
-        edit_title: "タググループの編集"
         tags_label: "このグループのタグ"
         parent_tag_label: "親タグ"
         parent_tag_description: "親タグがある場合、このグループのタグのみを使用できます。"
         one_per_topic_label: "トピック当たりこのグループから 1 つのタグに制限する"
-        new_name: "新しいタグのグループ"
         name_placeholder: "名前"
         save: "保存"
         delete: "削除"
@@ -5118,6 +5080,23 @@ ja:
               other: "デフォルトのテキストサイズを更新しました。この変更を %{count} 人の既存のユーザーに適用しますか？"
             modal_yes: "はい"
             modal_no: "いいえ。今後適用する"
+        welcome_banner:
+          form:
+            text_color:
+              label: "テキストの色"
+            page_visibility:
+              options:
+                top_menu_pages: "トップメニューページ"
+                all_pages: "すべてのページ"
+            location:
+              label: "場所"
+              options:
+                above_topic_content: "トピックコンテンツの上"
+                below_site_header: "サイトヘッダーの下"
+            header_logged_in:
+              placeholder: "%{preferred_display_name}、おかえりなさい！"
+            header_anonymous:
+              placeholder: "%{site_name} へようこそ！"
         navigation:
           title: "ナビゲーション"
           header_description: "サイトのナビゲーションリンクとメニュー項目を構成します。これには、メインのナビゲーションメニュー、ホームページ上部のクイックリンク、および管理者サイドバーの場所と動作が含まれます。"
@@ -6865,7 +6844,6 @@ ja:
           success: "成功"
           exists: "すでに存在します"
           upload: "ファイルから追加"
-          upload_successful: "アップロードが成功し、言葉が追加されました。"
           case_sensitivity_label: "大文字と小文字を区別"
           case_sensitivity_description: "大文字と小文字が一致する語のみ"
           html_label: "HTML"
@@ -6957,10 +6935,7 @@ ja:
             second: "オプション 2"
             third: "オプション 3"
         edit_category:
-          toggle_freeform: "フォームテンプレートが無効になっています"
-          toggle_form_template: "フォームテンプレートが有効になっています"
           select_template: "フォームテンプレートを選択する"
-          select_template_help: "フォームテンプレートの追加/編集"
         errors:
           multiple_tags_not_allowed: '「%{tag_name}」からこれ以上のタグを選択できません。問題を回避するには、フォームテンプレートを使用してください'
       impersonate:
@@ -7190,7 +7165,6 @@ ja:
             cancel: "キャンセル"
         merging_user: "ユーザーをマージ中…"
         merge_failed: "ユーザーをマージ中にエラーが発生しました。"
-        delete_posts_forbidden_because_staff: "管理者とモデレーターのすべての投稿を削除できません。"
         delete_forbidden:
           other: "投稿が存在するユーザーを削除できません。ユーザーを削除する前にすべての投稿を削除してください。(%{count} 日以上経過した投稿は削除できません)"
         cant_delete_all_posts:

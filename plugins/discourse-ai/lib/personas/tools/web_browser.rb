@@ -33,12 +33,16 @@ module DiscourseAi
         end
 
         def invoke
-          send_http_request(url, follow_redirects: true) do |response|
+          send_http_request(url, follow_redirects: true) do |response, resolved_uri|
             if response.code == "200"
               html = read_response_body(response)
               text = extract_main_content(html)
               text = truncate(text, max_length: 50_000, percent_length: 0.3, llm: llm)
-              return { url: response.uri.to_s, text: text.strip }
+              final_url =
+                resolved_uri&.to_s ||
+                  (response.respond_to?(:uri) && response.uri ? response.uri.to_s : nil)
+
+              return { url: final_url || url, text: text.strip }
             else
               return { url: url, error: "Failed to retrieve the web page: #{response.code}" }
             end

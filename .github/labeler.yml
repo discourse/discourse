@@ -175,3 +175,9 @@ i18n:
           - config/locales/*en.yml
           - plugins/**/config/locales/*en.yml
           - "**/*i18n*"
+
+rte:
+  - changed-files:
+      - any-glob-to-any-file:
+          - frontend/discourse/app/static/prosemirror/**/*
+          - spec/system/composer/prosemirror_editor_spec.rb

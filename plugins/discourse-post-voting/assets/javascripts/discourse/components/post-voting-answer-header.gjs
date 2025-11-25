@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
+import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export const ORDER_BY_ACTIVITY_FILTER = "activity";

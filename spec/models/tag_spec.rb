@@ -407,4 +407,35 @@ RSpec.describe Tag do
       )
     end
   end
+
+  describe "localizations" do
+    fab!(:tag)
+
+    it "can have many localizations" do
+      localization1 = Fabricate(:tag_localization, tag:, locale: "ja")
+      localization2 = Fabricate(:tag_localization, tag:, locale: "es")
+
+      expect(tag.localizations).to contain_exactly(localization1, localization2)
+    end
+
+    describe ".get_localization" do
+      it "returns localization for exact locale match" do
+        localization = Fabricate(:tag_localization, tag:, locale: "ja", name: "テスト")
+
+        expect(tag.get_localization("ja")).to eq(localization)
+      end
+
+      it "returns localization for regionless locale fallback" do
+        localization = Fabricate(:tag_localization, tag:, locale: "en")
+
+        expect(tag.get_localization("en_US")).to eq(localization)
+      end
+
+      it "returns nil when no localization exists" do
+        Fabricate(:tag_localization, tag:, locale: "el")
+
+        expect(tag.get_localization("es")).to be_nil
+      end
+    end
+  end
 end

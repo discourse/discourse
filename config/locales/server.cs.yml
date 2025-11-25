@@ -1157,7 +1157,7 @@ cs:
       email_title: 'Příspěvek v „%{title}“ vyžaduje pozornost redakce'
       email_body: "%{link}\\n\\n%{message}\n"
     notify_user:
-      title: "Poslat @%{username} zprávu"
+      title: "Poslat zprávu na @%{username}"
       description: "Chci si s touto osobou o jejich příspěvku promluvit přímo a osobně."
       short_description: "Chci si s touto osobou o jejich příspěvku promluvit přímo a osobně."
       email_title: 'Váš příspěvek v „%{title}“'
@@ -1413,8 +1413,6 @@ cs:
       yaxis: "Den"
       description: "Požadavky API na běžné klíče API a uživatelské klíče API."
     consolidated_page_views_browser_detection:
-      title: "Konsolidované počty zobrazení stránek s detekcí prohlížeče (experimentální)"
-      title_legacy: "Konsolidované počty zobrazení stránek s detekcí prohlížeče (experimentální)"
       xaxis:
         page_view_anon_browser: "Anonymní prohlížeč"
         page_view_logged_in_browser: "Přihlášený prohlížeč"
@@ -1807,7 +1805,6 @@ cs:
     allow_duplicate_topic_titles_category: "Povolit témata se shodnými, duplicitními názvy, pokud se kategorie liší. Parametr allow_duplicate_topic_titles musí být zakázán."
     unique_posts_mins: "Kolik minut musí uplynout, než může uživatel zaslat příspěvek se stejným obsahem"
     educate_until_posts: "Když uživatel začne psát svých prvních (n) nových příspěvků, zobrazit v editoru vyskakovací panel pro vzdělávání nových uživatelů."
-    title: "Název tohoto webu. Viditelný pro všechny návštěvníky včetně anonymních uživatelů."
     site_description: "Popište tento web jednou větou. Viditelné pro všechny návštěvníky včetně anonymních uživatelů."
     short_site_description: "Stručný popis v několika slovech. Viditelný pro všechny návštěvníky včetně anonymních uživatelů."
     contact_email: "E-mailová adresa klíčové kontaktní osoby odpovědné za tento web. Používá se pro kritická oznámení a zobrazuje se také na <a href='%{base_path}/about' target='_blank'>/about</a>. Viditelná pro anonymní uživatele na veřejných stránkách."
@@ -2265,6 +2262,7 @@ cs:
     auto_silence_fast_typers_on_first_post: "Automatické ztišení uživatelů, kteří nesplňují práh rychlého psaní `fast typing threshold`"
     auto_silence_fast_typers_max_trust_level: "Maximální úroveň důvěry pro automatické ztišení rychle píšících"
     auto_silence_first_post_regex: "Regex nerozlišující velká a malá písmena, který po zadání způsobí, že první příspěvek uživatele bude umlčen a odeslán do fronty na schválení. Příklad: raging|a[bc]a , způsobí, že všechny příspěvky obsahující raging nebo aba nebo aca budou umlčeny jako první. Platí pouze pro první příspěvek. ZRUŠENO: Místo toho použijte Umlčet sledovaná slova."
+    reviewable_claiming: "Musí být obsah k revizi nárokován, než na něj bude možné reagovat?"
     reply_by_email_address: "Šablona emailé adresy pro odpověď emailem, např. %%{reply_key}@reply.myforum.com"
     forwarded_emails_behaviour: "Jak zacházet s přeposlaným e-mailem na Discourse. <a href='https://meta.discourse.org/t/-/62977' target='_blank'>Další informace</a>"
     email_total_attachment_size_limit_kb: "Maximální celková velikost souborů připojených k odchozím e-mailům. Nastavením na 0 zakážete odesílání příloh."
@@ -3387,14 +3385,9 @@ cs:
     user_automatically_silenced:
       title: "Uživatel automaticky ztišen"
       subject_template: "Nový uživatel %{username} byl ztišen nahlášeními komunity"
-      text_body_template: |
-        Toto je automatická zpráva.
-
-        Nový uživatel [%{username}](%{user_url}) byl automaticky ztišen, protože více uživatelů nahlásilo jeho příspěvky.
-
-        Prosím [proveďte revizi](%{base_url}/review). Pokud byl %{username} nesprávně ztišen od zveřejňování příspěvků, klikněte na tlačítko Zrušit ztišení na [administrátorské stránce tohoto uživatele](%{user_url}).
-
-        Tuto prahovou hodnotu lze změnit pomocí nastavení `silence_new_user`.
+    user_automatically_silenced_with_reason:
+      title: "Uživatel automaticky ztišen"
+      subject_template: "Nový uživatel %{username} byl ztišen nahlášeními komunity"
     spam_post_blocked:
       text_body_template: |
         Toto je automatická zpráva.
@@ -4614,6 +4607,8 @@ cs:
       low: "Nízká"
       medium: "Střední"
       high: "Vysoká"
+    must_claim: "Než budete jednat, musíte si položky nejdříve nárokovat."
+    user_claimed: "Tuto položku si nárokoval jiný uživatel."
     reasons:
       auto_silence_regex: "Nový uživatel, jehož první příspěvek odpovídá nastavení %{link} ."
       staged: "Nová témata a příspěvky pro předběžně založené uživatele musí schválit členové redakce. Viz %{link}."
@@ -4661,8 +4656,6 @@ cs:
         complete: "Nahlášení ignorováno."
       discard_post:
         title: "Zahodit příspěvek"
-      revise_and_reject_post:
-        title: "Revize příspěvku..."
       ignore:
         title: "ignorovat"
         complete: "Nahlášení ignorováno."

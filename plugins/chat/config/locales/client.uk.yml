@@ -136,7 +136,7 @@ uk:
       email_frequency:
         description: "Ми надішлемо вам листа, якщо не бачили вас протягом останніх 15 хвилин."
         never: "Ніколи"
-        title: "Сповіщення електронною поштою"
+        title: "Напишіть мені, коли мені надішлють пряме повідомлення в чаті або груповий чат"
         when_away: "Тільки коли офлайн"
       header_indicator_preference:
         title: "Показувати індикатор активності в заголовку"
@@ -502,6 +502,7 @@ uk:
           topic: "Тема"
       reviewable:
         type: "Повідомлення чату"
+        message_in_channel: "Канал"
       reactions:
         only_you: "<span>Ви відреагували </span>:%{emoji}:"
         you_and_single_user: "<span>Ви та %{username} відреагували </span>:%{emoji}:"

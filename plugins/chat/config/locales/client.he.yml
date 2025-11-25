@@ -136,7 +136,7 @@ he:
       email_frequency:
         description: "נשלח לך דוא״ל אם לא ראינו אותך ב־15 הדקות האחרונות."
         never: "לעולם לא"
-        title: "הודעות בדוא״ל"
+        title: "לשלוח לי הודעה בדוא״ל כשנשלחת אליי הודעה ישירה בצ׳אט או בצ׳אט הקבוצתי"
         when_away: "רק כשלא במערכת"
       header_indicator_preference:
         title: "הצגת מחוון פעילות בכותרת"
@@ -468,6 +468,7 @@ he:
           topic: "נושא"
       reviewable:
         type: "הודעת צ׳אט"
+        message_in_channel: "ערוץ"
       reactions:
         only_you: "<span>הגבת עם </span>:%{emoji}:"
         you_and_single_user: "<span>הגבת יחד עם %{username} את האמוג׳י </span>:%{emoji}:"

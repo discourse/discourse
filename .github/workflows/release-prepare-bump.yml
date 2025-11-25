@@ -1,0 +1,39 @@
+name: Release - prepare bump on release branch
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "The release branch to prepare the next version for, e.g. `release/2015.11`"
+        required: true
+        type: string
+  push:
+    branches:
+      - release/*
+    paths-ignore: # a version bump on a release branch should not trigger another version bump PR
+      - 'lib/version.rb'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  build:
+    name: run
+    runs-on: ubuntu-latest
+    container: discourse/discourse_test:slim
+    timeout-minutes: 10
+
+    env:
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          filter: tree:0
+          fetch-depth: 0
+
+      - uses: ./.github/actions/setup-release-environment
+
+      - name: Create a PR for the next version bump
+        run: bin/rake "release:prepare_next_version_branch[${{ inputs.branch || github.ref_name }}]"

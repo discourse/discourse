@@ -1774,7 +1774,6 @@ ko:
     push_notifications_icon: "알림 코너에 표시되는 배지 아이콘입니다. 투명도가 있는 96×96 단색 PNG를 사용하는 것이 좋습니다."
     base_font: "사이트에서 대부분의 텍스트에 사용할 기본 글꼴입니다. 테마는 `--font-family` CSS 사용자 지정 프로퍼티를 통해 오버라이드할 수 있습니다."
     heading_font: "사이트 헤딩에 사용할 폰트입니다. 테마는 `--heading-font-family` CSS 사용자 지정 프로퍼티를 통해 재정의할 수 있습니다."
-    short_title: "짧은 제목은 사용자의 홈 화면, 런처 또는 공간이 제한될 수 있는 기타 위치에 사용되며, 12자로 제한됩니다."
     dashboard_hidden_reports: "대시보드에서 지정된 리포트를 숨기도록 허용합니다."
     dashboard_visible_tabs: "표시할 대시보드 탭을 선택합니다."
     dashboard_general_tab_activity_metrics: "일반 탭에서 활동 메트릭으로 표시할 리포트를 선택합니다."
@@ -2606,6 +2605,9 @@ ko:
     user_automatically_silenced:
       title: "사용자가 자동 차단됨"
       subject_template: "커뮤니티 신고로 신규 유저 %{username} 님이 차단됨"
+    user_automatically_silenced_with_reason:
+      title: "사용자가 자동으로 쓰기 금지됨"
+      subject_template: "신고로 인해 새 사용자 %{username}이 쓰기 금지됨"
     spam_post_blocked:
       title: "스팸 게시글 차단됨"
       subject_template: "신규 사용자 %{username} 님의 게시물이 연속된 링크로 인해 차단됨"
