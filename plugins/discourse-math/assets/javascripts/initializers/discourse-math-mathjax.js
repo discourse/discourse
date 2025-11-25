@@ -1,8 +1,17 @@
-import { later, next } from "@ember/runloop";
-import { getURLWithCDN } from "discourse/lib/get-url";
+// Updated to MathJax v3
+// by Mark McClure, June 2025
+// https://github.com/mcmcclur
+// 
+// Original plugin by Sam Saffron et al.
+
+import { next } from "@ember/runloop";
+import getURLWithCDN from "discourse/lib/get-url";
 import loadScript from "discourse/lib/load-script";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+/* global MathJax */
+
+const MathJaxBASE = getURLWithCDN("/plugins/discourse-math/mathjax/es5");
 let initializedMathJax = false;
 
 function initMathJax(opts) {
@@ -10,110 +19,114 @@ function initMathJax(opts) {
     return;
   }
 
-  const extensions = ["toMathML.js", "Safe.js"];
-
-  if (opts.enable_accessibility) {
-    extensions.push("[a11y]/accessibility-menu.js");
-  }
-
-  let settings = {
-    jax: ["input/TeX", "input/AsciiMath", "input/MathML", "output/CommonHTML"],
-    TeX: { extensions: ["AMSmath.js", "AMSsymbols.js", "autoload-all.js"] },
-    extensions,
-    showProcessingMessages: false,
-    messageStyle: "none",
-    root: getURLWithCDN("/plugins/discourse-math/mathjax"),
+  // Configure MathJax
+  // The intention of the loader block is to emulate the behavior of
+  // MathJax.tex_mml_chtml.js. Using that file directly caused issues
+  // with loading AsciiMath later.
+  window.MathJax = {
+    startup: { typeset: false },
+    chtml: { scale: 1.1 },
+    loader: {
+      paths: { mathjax: MathJaxBASE },
+      load: [
+        'core', 'input/tex', 'input/mml',
+        'output/chtml', 'ui/menu'
+      ]
+    },
+    options: {
+      menuOptions: {
+        settings: {}
+      }
+    }
   };
 
-  if (opts.zoom_on_hover) {
-    settings.menuSettings = { zoom: "Hover" };
-    settings.MathEvents = { hover: 750 };
+  // Handle user options
+  if (opts.zoom_on_click) {
+    window.MathJax.options.menuOptions.settings.zoom = "Click";
+    window.MathJax.options.menuOptions.settings.zscale = "175%";
   }
-  window.MathJax = settings;
+  if (opts.enable_accessibility) {
+    window.MathJax.options.menuOptions.settings.assistiveMml = true;
+  }
+  if (opts.enable_asciimath) {
+    window.MathJax.loader.load.push('input/asciimath');
+  }
+
   initializedMathJax = true;
 }
 
 function ensureMathJax(opts) {
   initMathJax(opts);
-  return loadScript("/plugins/discourse-math/mathjax/MathJax.2.7.5.js");
-}
-
-function decorate(elem, isPreview) {
-  if (elem.dataset.appliedMathjax) {
-    return;
-  }
-
-  elem.dataset.appliedMathjax = true;
-
-  let tag, classList, type;
-
-  if (elem.classList.contains("math")) {
-    tag = elem.tagName === "DIV" ? "div" : "span";
-    const display = tag === "div" ? "; mode=display" : "";
-    const displayClass = tag === "div" ? "block-math" : "inline-math";
-    type = `math/tex${display}`;
-    classList = `math-container ${displayClass} mathjax-math`;
-  } else if (elem.classList.contains("asciimath")) {
-    tag = "span";
-    classList = "math-container inline-math ascii-math";
-    type = "math/asciimath";
-  }
-
-  const mathScript = document.createElement("script");
-  mathScript.type = type;
-  mathScript.innerText = elem.textContent;
-
-  const mathWrapper = document.createElement(tag);
-  mathWrapper.classList.add(classList.split(" "));
-  mathWrapper.style.display = "none";
-
-  mathWrapper.appendChild(mathScript);
-
-  elem.after(mathWrapper);
-
-  later(
-    this,
-    () => {
-      window.MathJax.Hub.Queue(() => {
-        // don't bother processing previews removed from DOM
-        if (elem?.parentElement?.offsetParent !== null) {
-          window.MathJax.Hub.Typeset(mathScript, () => {
-            elem.style.display = "none";
-            mathWrapper.style.display = null;
-          });
-        }
-      });
-    },
-    isPreview ? 200 : 0
+  return loadScript(
+    "/plugins/discourse-math/mathjax/es5/startup.js"
   );
 }
 
-function mathjax(elem, opts) {
-  if (!elem) {
+
+// This function corresponds to the "mathjax" function 
+// in the original Discourse Math plugin.
+// I've changed the name of the first argument from 
+// "elem" to "post", since it's applied to posts,
+// not to individual elements.
+function apply_mathjax(post, opts) {
+  if (!post) {
     return;
   }
 
-  let mathElems;
-  if (opts.enable_asciimath) {
-    mathElems = elem.querySelectorAll(".math, .asciimath");
-  } else {
-    mathElems = elem.querySelectorAll(".math");
-  }
+  ensureMathJax(opts)
+    .then(function () {
+      MathJax.startup.promise
+        // Process LaTeX .math
+        .then(function () {
+          const mathNodes = document.querySelectorAll("div.math, span.math");
+          const promises = [];
 
-  if (mathElems.length > 0) {
-    const isPreview = elem.classList.contains("d-editor-preview");
+          mathNodes.forEach(function (node) {
+            const tex = node.textContent.trim();
+            const display = node.tagName.toLowerCase() === "div";
+            const p = MathJax.tex2chtmlPromise(tex, { display }).then(function (chtml) {
+              node.replaceWith(chtml);
+            });
+            promises.push(p);
+          });
+          return Promise.all(promises);
+        })
 
-    ensureMathJax(opts).then(() => {
-      mathElems.forEach((mathElem) => decorate(mathElem, isPreview));
+        // Process AsciiMath .asciimath
+        // During development, it seemed essential to separate this
+        // from the LaTeX processing above.
+        .then(function () {
+          const mathNodes = document.querySelectorAll("span.asciimath");
+          const promises = [];
+
+          mathNodes.forEach(function (node) {
+            if (node?.parentElement?.offsetParent !== null) {
+              const ascii = node.textContent.trim();
+              const p = MathJax.asciimath2chtmlPromise(ascii).then(function (chtml) {
+                node.replaceWith(chtml);
+              });
+              promises.push(p);
+            }
+          });
+          return Promise.all(promises);
+        })
+
+        // Ensure that the typesetting is updated
+        // If the plugin seems too slow at some point,
+        // it might be reasonable to perform this step 
+        // every 10 or 20 mathNodes, rather just once.
+        .then(function () {
+          MathJax.startup.document.clear();
+          MathJax.startup.document.updateDocument();
+        })
     });
-  }
 }
 
 function initializeMath(api, discourseMathOptions) {
   api.decorateCookedElement(
     (element) => {
       next(() => {
-        mathjax(element, discourseMathOptions);
+        apply_mathjax(element, discourseMathOptions);
       });
     },
     { id: "mathjax" }
@@ -122,7 +135,7 @@ function initializeMath(api, discourseMathOptions) {
   if (api.decorateChatMessage) {
     api.decorateChatMessage(
       (element) => {
-        mathjax(element, discourseMathOptions);
+        apply_mathjax(element, discourseMathOptions);
       },
       {
         id: "mathjax-chat",
@@ -136,7 +149,7 @@ export default {
   initialize(container) {
     const siteSettings = container.lookup("service:site-settings");
     let discourse_math_opts = {
-      zoom_on_hover: siteSettings.discourse_math_zoom_on_hover,
+      zoom_on_click: siteSettings.discourse_math_zoom_on_click,
       enable_accessibility: siteSettings.discourse_math_enable_accessibility,
       enable_asciimath: siteSettings.discourse_math_enable_asciimath,
     };
