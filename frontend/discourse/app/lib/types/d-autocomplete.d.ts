@@ -77,6 +77,19 @@ export interface RichHashtagAutocompleteResult extends BaseAutocompleteResult {
 }
 
 /**
+ * Emoji autocomplete result type
+ * Represents an emoji with either image source or text label
+ */
+export interface EmojiAutocompleteResult extends BaseAutocompleteResult {
+  /** Image URL for the emoji (if available) */
+  src?: string;
+  /** Emoji shortcode (e.g., "smile") */
+  code?: string;
+  /** Text label for special emoji options */
+  label?: string;
+}
+
+/**
  * Generic type signature for autocomplete results component
  * @template T - The type of result items in the autocomplete
  */
