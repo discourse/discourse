@@ -90,12 +90,12 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
 
   if name == :content_localization_enabled && new_value == true
     %i[post_menu post_menu_hidden_items].each do |setting_name|
-      current_items = SiteSetting.public_send(setting_name).split("|")
+      current_items = SiteSetting.get(setting_name).split("|")
       if current_items.exclude?("addTranslation")
         edit_index = current_items.index("edit")
         insert_position = edit_index ? edit_index + 1 : 0
         current_items.insert(insert_position, "addTranslation")
-        SiteSetting.public_send("#{setting_name}=", current_items.join("|"))
+        SiteSetting.set(setting_name, current_items.join("|"))
       end
     end
   end
