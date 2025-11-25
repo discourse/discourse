@@ -925,7 +925,7 @@ eviltrout</p>
 
     assert.cooked(
       "## a\nb\n```\nc\n```",
-      '<h2><a name="a-1" class="anchor" href="#a-1"></a>a</h2>\n<p>b</p>\n<pre><code class="lang-auto">c\n</code></pre>',
+      '<h2><a name="a-1" class="anchor" href="#a-1" aria-label="Heading link"></a>a</h2>\n<p>b</p>\n<pre><code class="lang-auto">c\n</code></pre>',
       "handles headings with code blocks after them"
     );
   });
