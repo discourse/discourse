@@ -18,6 +18,6 @@ RSpec.describe "Discourse Math - post", type: :system do
 
     find("#post_1 details").click
 
-    expect(page).to have_selector("#MJXc-Node-6", text: "2")
+    expect(page).to have_selector("mjx-container", text: "2")
   end
 end
