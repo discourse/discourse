@@ -8,7 +8,6 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { computePosition, flip, hide, offset } from "@floating-ui/dom";
-import { and } from "truth-helpers";
 import BookmarkIcon from "discourse/components/bookmark-icon";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
