@@ -238,6 +238,7 @@ export default {
                   mentionCount: this.channel.tracking.mentionCount,
                   watchedThreadsUnreadCount:
                     this.channel.tracking.watchedThreadsUnreadCount,
+                  isDirectMessageChannel: false,
                 };
               }
 
@@ -407,6 +408,7 @@ export default {
                   mentionCount: this.channel.tracking.mentionCount,
                   watchedThreadsUnreadCount:
                     this.channel.tracking.watchedThreadsUnreadCount,
+                  isDirectMessageChannel: true,
                 };
               }
 

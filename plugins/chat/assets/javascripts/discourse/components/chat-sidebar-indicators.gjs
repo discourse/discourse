@@ -11,10 +11,16 @@ export default class ChatSidebarIndicators extends Component {
   }
 
   get urgencyClass() {
-    if (
+    const hasUrgent =
       this.args.status?.mentionCount > 0 ||
-      this.args.status?.watchedThreadsUnreadCount > 0
-    ) {
+      this.args.status?.watchedThreadsUnreadCount > 0;
+
+    // For DMs, treat all unreads as urgent
+    const hasUnreadDM =
+      this.args.status?.isDirectMessageChannel &&
+      this.args.status?.unreadCount > 0;
+
+    if (hasUrgent || hasUnreadDM) {
       return "urgent";
     }
     return "unread";

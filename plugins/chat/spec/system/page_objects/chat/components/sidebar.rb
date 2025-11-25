@@ -18,13 +18,17 @@ module PageObjects
 
           if args[:unread]
             predicate &&
-              component.has_css?("#{channel_selector} .sidebar-section-link-suffix.icon.unread")
+              component.has_css?(
+                "#{channel_selector} .sidebar-section-link-content-badge.icon.unread",
+              )
           elsif args[:mention]
             predicate &&
-              component.has_css?("#{channel_selector} .sidebar-section-link-suffix.icon.urgent")
+              component.has_css?(
+                "#{channel_selector} .sidebar-section-link-content-badge.icon.urgent",
+              )
           else
             predicate &&
-              component.has_no_css?("#{channel_selector} .sidebar-section-link-suffix.icon")
+              component.has_no_css?("#{channel_selector} .sidebar-section-link-content-badge.icon")
           end
         end
 
