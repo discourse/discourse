@@ -8,8 +8,18 @@ import basePath from "discourse/helpers/base-path";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  {{#if @controller.regexpError}}
-    <div class="alert alert-error">{{@controller.regexpError}}</div>
+  {{#if @controller.regexpErrors.length}}
+    <div class="alert alert-error">
+      <strong>{{i18n "admin.watched_words.invalid_regex_multiple"}}</strong>
+      <ul class="watched-word-regex-errors">
+        {{#each @controller.regexpErrors as |error|}}
+          <li>
+            <strong>{{error.word}}</strong>:
+            {{error.error}}
+          </li>
+        {{/each}}
+      </ul>
+    </div>
   {{/if}}
 
   <div class="watched-word-controls">

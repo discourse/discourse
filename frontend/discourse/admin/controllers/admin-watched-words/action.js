@@ -1,4 +1,4 @@
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import { or } from "@ember/object/computed";
@@ -34,14 +34,35 @@ export default class AdminWatchedWordsActionController extends Controller {
     );
   }
 
-  get regexpError() {
-    for (const { regexp, word } of this.currentAction.words) {
+  @cached
+  get regexpErrors() {
+    const errors = [];
+    const seen = new Set();
+
+    if (!this.currentAction?.words) {
+      return errors;
+    }
+
+    for (const { regexp, word, id } of this.currentAction.words) {
+      if (!regexp) {
+        continue;
+      }
+
       try {
-        RegExp(regexp);
-      } catch {
-        return i18n("admin.watched_words.invalid_regex", { word });
+        // eslint-disable-next-line no-new
+        new RegExp(regexp, "u");
+      } catch (e) {
+        const key = `${id}:${word}:${e.message}`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          const parts = e.message.split(": ");
+          const cleanError = parts[parts.length - 1];
+          errors.push({ word, error: cleanError });
+        }
       }
     }
+
+    return errors;
   }
 
   get actionDescription() {
