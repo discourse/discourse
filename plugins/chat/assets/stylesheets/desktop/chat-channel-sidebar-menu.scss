@@ -1,8 +1,11 @@
-.chat-channel-sidebar-link-menu {
-  &__leave-channel {
+.fk-d-menu[data-identifier="chat-channel-menu"],
+.fk-d-menu[data-identifier="chat-channel-menu-notification-submenu"],
+.fk-d-menu[data-identifier="chat-direct-message-channel-menu"] {
+  .dropdown-menu__item {
     &:hover {
-      border: 0;
-      box-shadow: none !important;
+      button {
+        background: var(--d-sidebar-highlight-background);
+      }
     }
   }
 }
