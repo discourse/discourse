@@ -15,7 +15,7 @@ RSpec.describe "Managing LLM configurations", type: :system do
   it "correctly sets defaults" do
     visit "/admin/plugins/discourse-ai/ai-llms"
 
-    find("[data-llm-id='anthropic-claude-opus-4-1'] button").click()
+    find("[data-llm-id='anthropic-claude-opus-4-5'] button").click()
     form.field("api_key").fill_in("abcd")
     form.field("enabled_chat_bot").toggle
     form.submit
@@ -27,9 +27,9 @@ RSpec.describe "Managing LLM configurations", type: :system do
     expect(llm.api_key).to eq("abcd")
 
     preset = DiscourseAi::Completions::Llm.presets.find { |p| p[:id] == "anthropic" }
-    model_preset = preset[:models].find { |m| m[:name] == "claude-opus-4-1" }
+    model_preset = preset[:models].find { |m| m[:name] == "claude-opus-4-5" }
 
-    expect(llm.name).to eq("claude-opus-4-1")
+    expect(llm.name).to eq("claude-opus-4-5")
     expect(llm.url).to eq(preset[:endpoint])
     expect(llm.tokenizer).to eq(preset[:tokenizer].to_s)
     expect(llm.max_prompt_tokens.to_i).to eq(model_preset[:tokens])

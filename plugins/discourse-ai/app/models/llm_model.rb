@@ -47,6 +47,11 @@ class LlmModel < ActiveRecord::Base
           values: %w[never tool_results always],
           default: "never",
         },
+        effort: {
+          type: :enum,
+          values: %w[default low medium high],
+          default: "default",
+        },
       },
       anthropic: {
         disable_native_tools: :checkbox,
@@ -58,6 +63,11 @@ class LlmModel < ActiveRecord::Base
           type: :enum,
           values: %w[never tool_results always],
           default: "never",
+        },
+        effort: {
+          type: :enum,
+          values: %w[default low medium high],
+          default: "default",
         },
       },
       open_ai: {

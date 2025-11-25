@@ -1127,4 +1127,80 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
       expect(endpoint.respond_to?(:should_apply_prompt_caching?)).to be(true)
     end
   end
+
+  describe "effort parameter" do
+    it "includes effort in output_config and anthropic_beta when set to low, medium, or high" do
+      model.update!(
+        provider_params: {
+          access_key_id: "123",
+          region: "us-east-1",
+          effort: "medium",
+        },
+      )
+
+      proxy = DiscourseAi::Completions::Llm.proxy(model)
+      request = nil
+
+      content = {
+        content: [text: "test response"],
+        usage: {
+          input_tokens: 10,
+          output_tokens: 5,
+        },
+      }.to_json
+
+      stub_request(
+        :post,
+        "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke",
+      )
+        .with do |inner_request|
+          request = inner_request
+          true
+        end
+        .to_return(status: 200, body: content)
+
+      proxy.generate("test prompt", user: user)
+
+      request_body = JSON.parse(request.body)
+      expect(request_body.dig("output_config", "effort")).to eq("medium")
+      expect(request_body["anthropic_beta"]).to eq(["effort-2025-11-24"])
+    end
+
+    it "omits effort and anthropic_beta when set to default" do
+      model.update!(
+        provider_params: {
+          access_key_id: "123",
+          region: "us-east-1",
+          effort: "default",
+        },
+      )
+
+      proxy = DiscourseAi::Completions::Llm.proxy(model)
+      request = nil
+
+      content = {
+        content: [text: "test response"],
+        usage: {
+          input_tokens: 10,
+          output_tokens: 5,
+        },
+      }.to_json
+
+      stub_request(
+        :post,
+        "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke",
+      )
+        .with do |inner_request|
+          request = inner_request
+          true
+        end
+        .to_return(status: 200, body: content)
+
+      proxy.generate("test prompt", user: user)
+
+      request_body = JSON.parse(request.body)
+      expect(request_body).not_to have_key("output_config")
+      expect(request_body).not_to have_key("anthropic_beta")
+    end
+  end
 end
