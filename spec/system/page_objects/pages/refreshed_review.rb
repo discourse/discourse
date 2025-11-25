@@ -3,8 +3,6 @@
 module PageObjects
   module Pages
     class RefreshedReview < PageObjects::Pages::Base
-      REVIEWABLE_ACTION_DROPDOWN = ".reviewable-action-dropdown"
-
       def visit_reviewable(reviewable)
         page.visit("/review/#{reviewable.id}")
         self
@@ -18,15 +16,14 @@ module PageObjects
         find(".action-list li.insights").click
       end
 
-      def select_bundled_action(reviewable, value)
+      def select_bundled_action(reviewable, action)
         within(reviewable_by_id(reviewable.id)) do
-          reviewable_action_dropdown.select_row_by_value(value)
-        end
-      end
+          formBundleId = find("option[value='#{action}']").ancestor("form")["data-bundle-id"]
+          selectName = find("option[value='#{action}']").ancestor("select")["name"]
 
-      def select_action(reviewable, value)
-        within(reviewable_by_id(reviewable.id)) do
-          find(".reviewable-action.#{value.dasherize}").click
+          form = PageObjects::Components::FormKit.new("form[data-bundle-id='#{formBundleId}']")
+          form.field(selectName).select("#{action}")
+          form.submit
         end
       end
 
@@ -80,11 +77,6 @@ module PageObjects
 
       def reviewable_by_id(id)
         find(".review-item[data-reviewable-id=\"#{id}\"]")
-      end
-
-      def reviewable_action_dropdown
-        @reviewable_action_dropdown ||=
-          PageObjects::Components::SelectKit.new(REVIEWABLE_ACTION_DROPDOWN)
       end
     end
   end

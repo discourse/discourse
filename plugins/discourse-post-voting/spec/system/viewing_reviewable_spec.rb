@@ -16,18 +16,20 @@ describe "Viewing reviewable post voting comment", type: :system do
     sign_in(admin)
   end
 
-  xit "Allows to delete and restore comment" do
+  it "Allows to delete and restore comment" do
     refreshed_review_page.visit_reviewable(reviewable)
 
     expect(page).to have_text(comment.raw)
 
     refreshed_review_page.select_bundled_action(reviewable, "post_voting_comment-agree_and_delete")
+    refreshed_review_page.select_bundled_action(reviewable, "post_voting_comment-no_action_user")
     expect(refreshed_review_page).to have_reviewable_with_approved_status(reviewable)
 
     refreshed_review_page.visit_reviewable(reviewable)
     expect(page).not_to have_text(comment.raw)
 
     refreshed_review_page.select_bundled_action(reviewable, "post_voting_comment-agree_and_restore")
+    refreshed_review_page.select_bundled_action(reviewable, "post_voting_comment-no_action_user")
     expect(refreshed_review_page).to have_reviewable_with_approved_status(reviewable)
     expect(page).to have_text(comment.raw)
 
@@ -36,23 +38,26 @@ describe "Viewing reviewable post voting comment", type: :system do
       reviewable,
       "post_voting_comment-disagree_and_restore",
     )
+    refreshed_review_page.select_bundled_action(reviewable, "post_voting_comment-no_action_user")
     expect(refreshed_review_page).to have_reviewable_with_rejected_status(reviewable)
   end
 
-  xit "Allows to ignore the reviewable" do
+  it "Allows to ignore the reviewable" do
     refreshed_review_page.visit_reviewable(reviewable)
 
     refreshed_review_page.select_bundled_action(reviewable, "post_voting_comment-no_action_comment")
+    refreshed_review_page.select_bundled_action(reviewable, "post_voting_comment-no_action_user")
     expect(refreshed_review_page).to have_reviewable_with_rejected_status(reviewable)
   end
 
-  xit "Allows to keep comment" do
+  it "Allows to keep comment" do
     refreshed_review_page.visit_reviewable(reviewable)
 
     refreshed_review_page.select_bundled_action(
       reviewable,
       "post_voting_comment-agree_and_keep_comment",
     )
+    refreshed_review_page.select_bundled_action(reviewable, "post_voting_comment-no_action_user")
     expect(refreshed_review_page).to have_reviewable_with_approved_status(reviewable)
   end
 end

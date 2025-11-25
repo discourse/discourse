@@ -49,7 +49,12 @@ export default class ReviewableActionsForm extends Component {
 
   <template>
     <div class="reviewable-actions-form">
-      <Form @data={{this.formData}} @onSubmit={{this.performActions}} as |form|>
+      <Form
+        data-bundle-id={{@bundle.id}}
+        @data={{this.formData}}
+        @onSubmit={{this.performActions}}
+        as |form|
+      >
         <form.Field
           @name={{this.formatBundleName @bundle.id}}
           @title={{@bundle.label}}
