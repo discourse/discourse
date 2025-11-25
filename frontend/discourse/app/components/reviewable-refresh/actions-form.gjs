@@ -18,8 +18,14 @@ export default class ReviewableActionsForm extends Component {
   get formData() {
     const data = {};
 
+    const selectedIndex = this.args.bundle.selected_action
+      ? this.args.bundle.actions.findIndex(
+          (a) => a.server_action === this.args.bundle.selected_action
+        )
+      : 0;
+
     data[this.formatBundleName(this.args.bundle.id)] =
-      this.args.bundle.actions[0].id;
+      this.args.bundle.actions[selectedIndex > -1 ? selectedIndex : 0].id;
 
     return data;
   }
