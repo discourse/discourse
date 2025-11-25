@@ -129,3 +129,6 @@ frontend/discourse-types/declarations
 /plugins/discourse-ai/evals/cases
 /plugins/discourse-ai/evals/log
 /plugins/discourse-ai/config/eval-llms.local.yml
+
+# Claude customization
+/.claude
