@@ -89,12 +89,14 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
   Theme.expire_site_cache! if name == :default_theme_id
 
   if name == :content_localization_enabled && new_value == true
-    current_menu = SiteSetting.post_menu.split("|")
-    if current_menu.exclude?("addTranslation")
-      edit_index = current_menu.index("edit")
-      insert_position = edit_index ? edit_index + 1 : 0
-      current_menu.insert(insert_position, "addTranslation")
-      SiteSetting.post_menu = current_menu.join("|")
+    %i[post_menu post_menu_hidden_items].each do |setting_name|
+      current_items = SiteSetting.public_send(setting_name).split("|")
+      if current_items.exclude?("addTranslation")
+        edit_index = current_items.index("edit")
+        insert_position = edit_index ? edit_index + 1 : 0
+        current_items.insert(insert_position, "addTranslation")
+        SiteSetting.public_send("#{setting_name}=", current_items.join("|"))
+      end
     end
   end
 end
