@@ -8,5 +8,6 @@ class RebakePostsWithHeadingAnchors < ActiveRecord::Migration[8.0]
   end
 
   def down
+    raise ActiveRecord::IrreversibleMigration
   end
 end
