@@ -1,14 +1,14 @@
 import Component from "@glimmer/component";
-import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import InterfaceColorSelector from "discourse/components/interface-color-selector";
 import LanguageSwitcher from "discourse/components/language-switcher";
 import { ALL_PAGES_EXCLUDED_ROUTES } from "discourse/components/welcome-banner";
+import DMenu from "discourse/float-kit/components/d-menu";
 import DAG from "discourse/lib/dag";
-import getURL from "discourse/lib/get-url";
 import { eq } from "discourse/truth-helpers";
 import Dropdown from "./dropdown";
+import HeaderSearch from "./header-search";
 import UserDropdown from "./user-dropdown";
 
 let headerIcons;
@@ -106,7 +106,7 @@ export default class Icons extends Component {
       {{#each (headerIcons.resolve) as |entry|}}
         {{#if (eq entry.key "search")}}
           {{#if this.showSearchButton}}
-            <Dropdown
+            {{!-- <Dropdown
               @title="search.title"
               @icon="magnifying-glass"
               @iconId={{@searchButtonId}}
@@ -115,7 +115,19 @@ export default class Icons extends Component {
               @active={{this.search.visible}}
               @href={{getURL "/search"}}
               class="search-dropdown"
-            />
+            /> --}}
+            <DMenu
+              ...attributes
+              @identifier="search-menu"
+              @title="search.title"
+              @icon="magnifying-glass"
+              @iconId={{@searchButtonId}}
+              class="search-dropdown"
+            >
+              <:content>
+                <HeaderSearch />
+              </:content>
+            </DMenu>
           {{/if}}
         {{else if (eq entry.key "hamburger")}}
           {{#if this.showHamburger}}
