@@ -13,6 +13,7 @@ module PageObjects
       DOWNLOAD_BTN = ".pswp__button--download-image"
       ORIGINAL_IMAGE_BTN = ".pswp__button--original-image"
       IMAGE_INFO_BTN = ".pswp__button--image-info"
+      QUOTE_BTN = ".pswp__button--quote-image"
       COUNTER = ".pswp__custom-counter"
       CAPTION = ".pswp__caption"
       CAPTION_TITLE = ".pswp__caption-title"
@@ -42,6 +43,10 @@ module PageObjects
 
       def image_info_button
         component.find(IMAGE_INFO_BTN)
+      end
+
+      def quote_button
+        component.find(QUOTE_BTN)
       end
 
       def close_button
@@ -114,6 +119,14 @@ module PageObjects
 
       def has_no_image_info_button?
         component.has_no_css?(IMAGE_INFO_BTN)
+      end
+
+      def has_quote_button?
+        component.has_css?(QUOTE_BTN)
+      end
+
+      def has_no_quote_button?
+        component.has_no_css?(QUOTE_BTN)
       end
 
       def has_ui_visible?

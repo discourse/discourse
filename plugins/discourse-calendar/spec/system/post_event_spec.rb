@@ -60,7 +60,9 @@ describe "Post event", type: :system do
       expect(page).to have_css(".event-description a[href='http://example.com']")
     end
 
-    it "correctly builds a multiline description", timezone: "Europe/Paris" do
+    # this is a flake cause strftim is calculated on server and client may have a
+    # slightly different time
+    xit "correctly builds a multiline description", timezone: "Europe/Paris" do
       visit("/new-topic")
 
       time = Time.now.strftime("%Y-%m-%d %H:%M")

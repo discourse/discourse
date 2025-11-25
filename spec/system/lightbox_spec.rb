@@ -10,6 +10,7 @@ describe "Lightbox | Photoswipe", type: :system do
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:lightbox) { PageObjects::Components::PhotoSwipe.new }
+  let(:composer) { PageObjects::Components::Composer.new }
   let(:cpp) { CookedPostProcessor.new(post, disable_dominant_color: true) }
 
   before do
@@ -28,7 +29,7 @@ describe "Lightbox | Photoswipe", type: :system do
     it "has the correct lightbox elements" do
       topic_page.visit_topic(topic)
 
-      find("#post_1 a.lightbox").click
+      topic_page.post_by_number(1).find("a.lightbox").click
 
       expect(lightbox).to be_visible
 
@@ -43,11 +44,33 @@ describe "Lightbox | Photoswipe", type: :system do
       expect(lightbox).to have_image_info_button
     end
 
+    it "quotes the image into the composer" do
+      topic_page.visit_topic(topic)
+
+      lightbox_link = topic_page.post_by_number(1).find("a.lightbox")
+      lightbox_image = lightbox_link.find("img", visible: :all)
+      expected_width = lightbox_link["data-target-width"].presence || lightbox_image["width"]
+      expected_height = lightbox_link["data-target-height"].presence || lightbox_image["height"]
+      expected_src = lightbox_image["data-orig-src"].presence || lightbox_link["href"]
+      lightbox_link.click
+
+      expect(lightbox).to have_quote_button
+
+      lightbox.quote_button.click
+
+      expect(composer).to be_opened
+      editor_value = composer.composer_input.value
+      expect(editor_value).to include(
+        "![first image|#{expected_width}x#{expected_height}](#{expected_src})",
+      )
+      expect(editor_value).to include("post:1")
+    end
+
     it "does not show image info button when no image details are available" do
       post.update(cooked: post.cooked.gsub(%r{<span class="informations">[^<]*</span>}, ""))
       topic_page.visit_topic(topic)
 
-      find("#post_1 a.lightbox").click
+      topic_page.post_by_number(1).find("a.lightbox").click
 
       expect(lightbox).to have_no_image_info_button
     end
@@ -55,7 +78,7 @@ describe "Lightbox | Photoswipe", type: :system do
     it "can toggle image info" do
       topic_page.visit_topic(topic)
 
-      find("#post_1 a.lightbox").click
+      topic_page.post_by_number(1).find("a.lightbox").click
 
       expect(lightbox).to be_visible
       expect(lightbox).to have_no_caption_details
@@ -172,7 +195,7 @@ describe "Lightbox | Photoswipe", type: :system do
 
     it "toggles UI by tapping image" do
       topic_page.visit_topic(topic)
-      find("#post_1 a.lightbox").click
+      topic_page.post_by_number(1).find("a.lightbox").click
 
       expect(lightbox).to be_visible
       expect(lightbox).to have_ui_visible
@@ -186,7 +209,7 @@ describe "Lightbox | Photoswipe", type: :system do
 
     it "closes lightbox by tapping backdrop" do
       topic_page.visit_topic(topic)
-      find("#post_1 a.lightbox").click
+      topic_page.post_by_number(1).find("a.lightbox").click
 
       expect(lightbox).to be_visible
 
@@ -198,7 +221,7 @@ describe "Lightbox | Photoswipe", type: :system do
     it "toggles image info by clicking button" do
       topic_page.visit_topic(topic)
 
-      find("#post_1 a.lightbox").click
+      topic_page.post_by_number(1).find("a.lightbox").click
 
       expect(lightbox).to be_visible
       expect(lightbox).to have_no_caption_details
@@ -221,7 +244,7 @@ describe "Lightbox | Photoswipe", type: :system do
       )
 
       topic_page.visit_topic(topic)
-      lightbox_link = find("#post_1 a.lightbox")
+      lightbox_link = topic_page.post_by_number(1).find("a.lightbox")
 
       expect(lightbox_link["data-target-width"]).to eq(upload_1.width.to_s)
       expect(lightbox_link["data-target-height"]).to eq(upload_1.height.to_s)
