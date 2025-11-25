@@ -3,7 +3,6 @@ import { get } from "@ember/object";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
-import UserStatusMessage from "discourse/components/user-status-message";
 import { decorateUsername } from "discourse/helpers/decorate-username-selector";
 import { avatarUrl } from "discourse/lib/avatar-utils";
 import { bind } from "discourse/lib/decorators";
@@ -12,6 +11,7 @@ import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
+import ChatSidebarIndicators from "discourse/plugins/chat/discourse/components/chat-sidebar-indicators";
 import {
   CHAT_PANEL,
   initSidebarState,
@@ -221,33 +221,35 @@ export default {
                 return this.channel.chatable.read_restricted ? "lock" : "";
               }
 
+              get contentComponent() {
+                return ChatSidebarIndicators;
+              }
+
+              get contentComponentArgs() {
+                return {
+                  unreadCount: this.channel.tracking.unreadCount,
+                  // We want to do this so we don't show a blue dot if the user is inside
+                  // the channel and a new unread thread comes in.
+                  unreadThreadsCount:
+                    this.chatService.activeChannel?.id !== this.channel.id
+                      ? this.channel.unreadThreadsCountSinceLastViewed
+                      : 0,
+                  mentionCount: this.channel.tracking.mentionCount,
+                  watchedThreadsUnreadCount:
+                    this.channel.tracking.watchedThreadsUnreadCount,
+                };
+              }
+
               get suffixType() {
                 return "icon";
               }
 
               get suffixValue() {
-                if (this.channel.currentUserMembership.pinned) {
-                  return "thumbtack";
-                }
-
-                return this.channel.tracking.unreadCount > 0 ||
-                  // We want to do this so we don't show a blue dot if the user is inside
-                  // the channel and a new unread thread comes in.
-                  (this.chatService.activeChannel?.id !== this.channel.id &&
-                    this.channel.unreadThreadsCountSinceLastViewed > 0)
-                  ? "circle"
-                  : "";
+                return this.channel.currentUserMembership.starred ? "star" : "";
               }
 
               get suffixCSSClass() {
-                if (this.channel.currentUserMembership.pinned) {
-                  return "pinned";
-                }
-
-                return this.channel.tracking.mentionCount > 0 ||
-                  this.channel.tracking.watchedThreadsUnreadCount > 0
-                  ? "urgent"
-                  : "unread";
+                return "starred";
               }
             };
 
@@ -374,14 +376,22 @@ export default {
                 return this.channel.chatable.users.length === 1;
               }
 
-              get contentComponentArgs() {
-                return this.channel.chatable.users[0].get("status");
+              get contentComponent() {
+                return ChatSidebarIndicators;
               }
 
-              get contentComponent() {
-                if (this.oneOnOneMessage) {
-                  return UserStatusMessage;
-                }
+              get contentComponentArgs() {
+                return {
+                  userStatus: this.oneOnOneMessage
+                    ? this.channel.chatable.users[0].get("status")
+                    : null,
+                  unreadCount: this.channel.tracking.unreadCount,
+                  unreadThreadsCount:
+                    this.channel.unreadThreadsCountSinceLastViewed,
+                  mentionCount: this.channel.tracking.mentionCount,
+                  watchedThreadsUnreadCount:
+                    this.channel.tracking.watchedThreadsUnreadCount,
+                };
               }
 
               get name() {
@@ -479,26 +489,11 @@ export default {
               }
 
               get suffixValue() {
-                if (this.channel.currentUserMembership.pinned) {
-                  return "thumbtack";
-                }
-
-                return this.channel.tracking.unreadCount > 0 ||
-                  this.channel.unreadThreadsCountSinceLastViewed > 0
-                  ? "circle"
-                  : "";
+                return this.channel.currentUserMembership.starred ? "star" : "";
               }
 
               get suffixCSSClass() {
-                if (this.channel.currentUserMembership.pinned) {
-                  return "pinned";
-                }
-
-                return this.channel.tracking.unreadCount > 0 ||
-                  this.channel.tracking.mentionCount > 0 ||
-                  this.channel.tracking.watchedThreadsUnreadCount > 0
-                  ? "urgent"
-                  : "unread";
+                return "starred";
               }
 
               get hoverAction() {

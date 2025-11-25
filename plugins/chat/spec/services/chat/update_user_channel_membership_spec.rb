@@ -3,7 +3,7 @@
 RSpec.describe Chat::UpdateUserChannelMembership do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:channel_id) }
-    it { is_expected.not_to allow_value(nil).for(:pinned) }
+    it { is_expected.not_to allow_value(nil).for(:starred) }
   end
 
   describe ".call" do
@@ -16,21 +16,21 @@ RSpec.describe Chat::UpdateUserChannelMembership do
         :user_chat_channel_membership,
         user: current_user,
         chat_channel: channel,
-        pinned: false,
+        starred: false,
       )
     end
 
-    let(:params) { { channel_id: channel.id, pinned: true } }
+    let(:params) { { channel_id: channel.id, starred: true } }
     let(:dependencies) { { guardian: current_user.guardian } }
 
     context "when contract is invalid" do
-      let(:params) { { pinned: true } }
+      let(:params) { { starred: true } }
 
       it { is_expected.to fail_a_contract }
     end
 
     context "when channel is not found" do
-      let(:params) { { channel_id: -999, pinned: true } }
+      let(:params) { { channel_id: -999, starred: true } }
 
       it { is_expected.to fail_to_find_a_model(:channel) }
     end
@@ -48,10 +48,10 @@ RSpec.describe Chat::UpdateUserChannelMembership do
           :user_chat_channel_membership,
           user: current_user,
           chat_channel: private_channel,
-          pinned: false,
+          starred: false,
         )
       end
-      let(:params) { { channel_id: private_channel.id, pinned: true } }
+      let(:params) { { channel_id: private_channel.id, starred: true } }
 
       it { is_expected.to fail_a_policy(:can_access_channel) }
     end
@@ -59,8 +59,8 @@ RSpec.describe Chat::UpdateUserChannelMembership do
     context "when everything is ok" do
       it { is_expected.to run_successfully }
 
-      it "updates the pinned status" do
-        expect { result }.to change { membership.reload.pinned }.from(false).to(true)
+      it "updates the starred status" do
+        expect { result }.to change { membership.reload.starred }.from(false).to(true)
       end
     end
   end

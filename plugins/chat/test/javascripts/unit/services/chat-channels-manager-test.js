@@ -14,8 +14,8 @@ module(
       this.fabricators = new ChatFabricators(getOwner(this));
     });
 
-    module("#sortChannelsByActivity with pinned channels", function () {
-      test("prioritizes pinned channels over unpinned", function (assert) {
+    module("#sortChannelsByActivity with starred channels", function () {
+      test("prioritizes starred channels over unstarred", function (assert) {
         const channelA = this.fabricators.channel({
           chatable: this.fabricators.coreFabricators.category({
             slug: "channel-a",
@@ -29,11 +29,11 @@ module(
 
         channelA.currentUserMembership = UserChatChannelMembership.create({
           following: true,
-          pinned: true,
+          starred: true,
         });
         channelB.currentUserMembership = UserChatChannelMembership.create({
           following: true,
-          pinned: false,
+          starred: false,
         });
 
         this.subject.store(channelA);
@@ -44,16 +44,16 @@ module(
         assert.strictEqual(
           result[0].id,
           channelA.id,
-          "pinned channel comes first"
+          "starred channel comes first"
         );
         assert.strictEqual(
           result[1].id,
           channelB.id,
-          "unpinned channel comes second"
+          "unstarred channel comes second"
         );
       });
 
-      test("sorts pinned channels alphabetically by slug", function (assert) {
+      test("sorts starred channels alphabetically by slug", function (assert) {
         const channelC = this.fabricators.channel({
           chatable: this.fabricators.coreFabricators.category({
             slug: "channel-c",
@@ -72,15 +72,15 @@ module(
 
         channelC.currentUserMembership = UserChatChannelMembership.create({
           following: true,
-          pinned: true,
+          starred: true,
         });
         channelA.currentUserMembership = UserChatChannelMembership.create({
           following: true,
-          pinned: true,
+          starred: true,
         });
         channelB.currentUserMembership = UserChatChannelMembership.create({
           following: true,
-          pinned: true,
+          starred: true,
         });
 
         this.subject.store(channelC);
@@ -92,62 +92,64 @@ module(
         assert.strictEqual(
           result[0].slug,
           "channel-a",
-          "first pinned channel is A"
+          "first starred channel is A"
         );
         assert.strictEqual(
           result[1].slug,
           "channel-b",
-          "second pinned channel is B"
+          "second starred channel is B"
         );
         assert.strictEqual(
           result[2].slug,
           "channel-c",
-          "third pinned channel is C"
+          "third starred channel is C"
         );
       });
 
-      test("keeps unpinned channels sorted by activity after pinned ones", function (assert) {
-        const pinnedChannel = this.fabricators.channel({
+      test("keeps unstarred channels sorted by activity after starred ones", function (assert) {
+        const starredChannel = this.fabricators.channel({
           chatable: this.fabricators.coreFabricators.category({
-            slug: "pinned-channel",
+            slug: "starred-channel",
           }),
         });
-        const unpinnedChannel = this.fabricators.channel({
+        const unstarredChannel = this.fabricators.channel({
           chatable: this.fabricators.coreFabricators.category({
-            slug: "unpinned-channel",
+            slug: "unstarred-channel",
           }),
         });
 
-        pinnedChannel.currentUserMembership = UserChatChannelMembership.create({
-          following: true,
-          pinned: true,
-        });
-        unpinnedChannel.currentUserMembership =
+        starredChannel.currentUserMembership = UserChatChannelMembership.create(
+          {
+            following: true,
+            starred: true,
+          }
+        );
+        unstarredChannel.currentUserMembership =
           UserChatChannelMembership.create({
             following: true,
-            pinned: false,
+            starred: false,
           });
 
-        this.subject.store(unpinnedChannel);
-        this.subject.store(pinnedChannel);
+        this.subject.store(unstarredChannel);
+        this.subject.store(starredChannel);
 
         const result = this.subject.publicMessageChannels;
 
         assert.strictEqual(
           result[0].id,
-          pinnedChannel.id,
-          "pinned channel is first"
+          starredChannel.id,
+          "starred channel is first"
         );
         assert.strictEqual(
           result[1].id,
-          unpinnedChannel.id,
-          "unpinned channel is after pinned"
+          unstarredChannel.id,
+          "unstarred channel is after starred"
         );
       });
     });
 
-    module("#sortDirectMessageChannels with pinned channels", function () {
-      test("prioritizes pinned DM channels over unpinned", function (assert) {
+    module("#sortDirectMessageChannels with starred channels", function () {
+      test("prioritizes starred DM channels over unstarred", function (assert) {
         const dmA = this.fabricators.channel({
           chatable: this.fabricators.directMessage(),
           title: "Alice",
@@ -159,11 +161,11 @@ module(
 
         dmA.currentUserMembership = UserChatChannelMembership.create({
           following: true,
-          pinned: true,
+          starred: true,
         });
         dmB.currentUserMembership = UserChatChannelMembership.create({
           following: true,
-          pinned: false,
+          starred: false,
         });
 
         this.subject.store(dmA);
@@ -174,16 +176,16 @@ module(
         assert.strictEqual(
           result[0].id,
           dmA.id,
-          "pinned DM channel comes first"
+          "starred DM channel comes first"
         );
         assert.strictEqual(
           result[1].id,
           dmB.id,
-          "unpinned DM channel comes second"
+          "unstarred DM channel comes second"
         );
       });
 
-      test("sorts pinned DM channels alphabetically by title", function (assert) {
+      test("sorts starred DM channels alphabetically by title", function (assert) {
         const dmCharlie = this.fabricators.channel({
           chatable: this.fabricators.directMessage(),
           title: "Charlie",
@@ -199,15 +201,15 @@ module(
 
         dmCharlie.currentUserMembership = UserChatChannelMembership.create({
           following: true,
-          pinned: true,
+          starred: true,
         });
         dmAlice.currentUserMembership = UserChatChannelMembership.create({
           following: true,
-          pinned: true,
+          starred: true,
         });
         dmBob.currentUserMembership = UserChatChannelMembership.create({
           following: true,
-          pinned: true,
+          starred: true,
         });
 
         this.subject.store(dmCharlie);
@@ -219,49 +221,49 @@ module(
         assert.strictEqual(
           result[0].title,
           "Alice",
-          "first pinned DM is Alice"
+          "first starred DM is Alice"
         );
-        assert.strictEqual(result[1].title, "Bob", "second pinned DM is Bob");
+        assert.strictEqual(result[1].title, "Bob", "second starred DM is Bob");
         assert.strictEqual(
           result[2].title,
           "Charlie",
-          "third pinned DM is Charlie"
+          "third starred DM is Charlie"
         );
       });
 
-      test("keeps unpinned DM channels sorted by activity after pinned ones", function (assert) {
-        const pinnedDM = this.fabricators.channel({
+      test("keeps unstarred DM channels sorted by activity after starred ones", function (assert) {
+        const starredDM = this.fabricators.channel({
           chatable: this.fabricators.directMessage(),
-          title: "Pinned User",
+          title: "Starred User",
         });
-        const unpinnedDM = this.fabricators.channel({
+        const unstarredDM = this.fabricators.channel({
           chatable: this.fabricators.directMessage(),
-          title: "Unpinned User",
+          title: "Unstarred User",
         });
 
-        pinnedDM.currentUserMembership = UserChatChannelMembership.create({
+        starredDM.currentUserMembership = UserChatChannelMembership.create({
           following: true,
-          pinned: true,
+          starred: true,
         });
-        unpinnedDM.currentUserMembership = UserChatChannelMembership.create({
+        unstarredDM.currentUserMembership = UserChatChannelMembership.create({
           following: true,
-          pinned: false,
+          starred: false,
         });
 
-        this.subject.store(unpinnedDM);
-        this.subject.store(pinnedDM);
+        this.subject.store(unstarredDM);
+        this.subject.store(starredDM);
 
         const result = this.subject.directMessageChannels;
 
         assert.strictEqual(
           result[0].id,
-          pinnedDM.id,
-          "pinned DM channel is first"
+          starredDM.id,
+          "starred DM channel is first"
         );
         assert.strictEqual(
           result[1].id,
-          unpinnedDM.id,
-          "unpinned DM channel is after pinned"
+          unstarredDM.id,
+          "unstarred DM channel is after starred"
         );
       });
     });

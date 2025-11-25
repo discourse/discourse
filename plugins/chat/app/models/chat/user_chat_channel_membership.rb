@@ -30,7 +30,7 @@ end
 #  last_viewed_at                      :datetime         not null
 #  muted                               :boolean          default(FALSE), not null
 #  notification_level                  :integer          default("mention"), not null
-#  pinned                              :boolean          default(FALSE), not null
+#  starred                             :boolean          default(FALSE), not null
 #  created_at                          :datetime         not null
 #  updated_at                          :datetime         not null
 #  chat_channel_id                     :bigint           not null
@@ -40,7 +40,7 @@ end
 #
 # Indexes
 #
-#  index_user_chat_channel_memberships_on_user_id_and_pinned  (user_id,pinned)
+#  index_user_chat_channel_memberships_on_user_id_and_starred  (user_id,starred)
 #  user_chat_channel_memberships_index                        (user_id,chat_channel_id,notification_level,following)
 #  user_chat_channel_unique_memberships                       (user_id,chat_channel_id) UNIQUE
 #

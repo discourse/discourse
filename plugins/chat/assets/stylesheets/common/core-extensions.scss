@@ -26,6 +26,25 @@
   flex-direction: row;
 }
 
-.sidebar-section-link-suffix.icon.pinned {
+.sidebar-section-link-suffix.icon.starred {
   color: var(--primary-low-mid);
+  font-size: var(--font-down-2);
+}
+
+.sidebar-section-link-content-badge.icon {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.5em;
+
+  svg {
+    font-size: var(--font-down-2);
+  }
+
+  &.urgent svg {
+    color: var(--success);
+  }
+
+  &.unread svg {
+    color: var(--d-sidebar-suffix-color);
+  }
 }

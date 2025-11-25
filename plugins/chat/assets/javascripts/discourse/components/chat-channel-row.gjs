@@ -198,9 +198,9 @@ export default class ChatChannelRow extends Component {
         <div class="chat-channel-row__info">
           <div class="chat-channel-row__name-container">
             <ChannelName @channel={{@channel}} @unreadIndicator={{true}} />
-            {{#if @channel.currentUserMembership.pinned}}
-              <span class="chat-channel-row__pinned-icon">
-                {{icon "thumbtack"}}
+            {{#if @channel.currentUserMembership.starred}}
+              <span class="chat-channel-row__starred-icon">
+                {{icon "star"}}
               </span>
             {{/if}}
           </div>

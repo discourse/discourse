@@ -244,30 +244,30 @@ export default class ChatChannelsManager extends Service {
     return this._cached[id];
   }
 
-  #comparePinnedChannels(a, b, property) {
-    const aPinned = a.currentUserMembership?.pinned;
-    const bPinned = b.currentUserMembership?.pinned;
+  #compareStarredChannels(a, b, property) {
+    const aStarred = a.currentUserMembership?.starred;
+    const bStarred = b.currentUserMembership?.starred;
 
-    // if both channels are pinned, sort by the specified property
-    if (aPinned && bPinned) {
+    // if both channels are starred, sort by the specified property
+    if (aStarred && bStarred) {
       const aValue = a[property] || "";
       const bValue = b[property] || "";
       return aValue.localeCompare(bValue);
     }
 
-    // prioritize pinned channels over non-pinned
-    if (aPinned || bPinned) {
-      return aPinned ? -1 : 1;
+    // prioritize starred channels over non-starred
+    if (aStarred || bStarred) {
+      return aStarred ? -1 : 1;
     }
 
-    return null; // no pinned sorting needed
+    return null; // no starred sorting needed
   }
 
   #sortChannelsByActivity(channels) {
     return channels.sort((a, b) => {
-      const pinnedResult = this.#comparePinnedChannels(a, b, "slug");
-      if (pinnedResult !== null) {
-        return pinnedResult;
+      const starredResult = this.#compareStarredChannels(a, b, "slug");
+      if (starredResult !== null) {
+        return starredResult;
       }
 
       const stats = {
@@ -309,21 +309,21 @@ export default class ChatChannelsManager extends Service {
 
   #sortChannelsByProperty(channels, property) {
     return channels.sort((a, b) => {
-      const pinnedResult = this.#comparePinnedChannels(a, b, property);
-      if (pinnedResult !== null) {
-        return pinnedResult;
+      const starredResult = this.#compareStarredChannels(a, b, property);
+      if (starredResult !== null) {
+        return starredResult;
       }
 
-      // Both unpinned, sort by property
+      // Both unstarred, sort by property
       return (a[property] || "").localeCompare(b[property] || "");
     });
   }
 
   #sortDirectMessageChannels(channels) {
     return channels.sort((a, b) => {
-      const pinnedResult = this.#comparePinnedChannels(a, b, "title");
-      if (pinnedResult !== null) {
-        return pinnedResult;
+      const starredResult = this.#compareStarredChannels(a, b, "title");
+      if (starredResult !== null) {
+        return starredResult;
       }
 
       if (!a.lastMessage.id) {

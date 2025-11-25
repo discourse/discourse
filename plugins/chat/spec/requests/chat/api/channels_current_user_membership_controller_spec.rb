@@ -111,26 +111,26 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
       )
     end
 
-    context "when pinning a channel" do
-      it "updates the pinned status" do
-        put "/chat/api/channels/#{channel_1.id}/memberships/me", params: { pinned: true }
+    context "when starring a channel" do
+      it "updates the starred status" do
+        put "/chat/api/channels/#{channel_1.id}/memberships/me", params: { starred: true }
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["membership"]["pinned"]).to eq(true)
+        expect(response.parsed_body["membership"]["starred"]).to eq(true)
         expect(response.parsed_body["membership"]["chat_channel_id"]).to eq(channel_1.id)
       end
     end
 
-    context "when unpinning a channel" do
-      before { membership.update!(pinned: true) }
+    context "when unstarring a channel" do
+      before { membership.update!(starred: true) }
 
-      it "updates the pinned status" do
+      it "updates the starred status" do
         expect {
-          put "/chat/api/channels/#{channel_1.id}/memberships/me", params: { pinned: false }
-        }.to change { membership.reload.pinned }.from(true).to(false)
+          put "/chat/api/channels/#{channel_1.id}/memberships/me", params: { starred: false }
+        }.to change { membership.reload.starred }.from(true).to(false)
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["membership"]["pinned"]).to eq(false)
+        expect(response.parsed_body["membership"]["starred"]).to eq(false)
       end
     end
 
@@ -138,7 +138,7 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
       before { membership.destroy! }
 
       it "returns a 404" do
-        put "/chat/api/channels/#{channel_1.id}/memberships/me", params: { pinned: true }
+        put "/chat/api/channels/#{channel_1.id}/memberships/me", params: { starred: true }
 
         expect(response.status).to eq(404)
       end
@@ -146,7 +146,7 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
 
     context "when channel is not found" do
       it "returns a 404" do
-        put "/chat/api/channels/-999/memberships/me", params: { pinned: true }
+        put "/chat/api/channels/-999/memberships/me", params: { starred: true }
 
         expect(response.status).to eq(404)
       end

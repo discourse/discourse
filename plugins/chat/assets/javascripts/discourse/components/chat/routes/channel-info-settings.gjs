@@ -56,7 +56,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
     "chat.settings.channel_threading_description"
   );
   muteSectionLabel = i18n("chat.settings.mute");
-  pinChannelLabel = i18n("chat.channel_settings.pin_channel");
+  starChannelLabel = i18n("chat.channel_settings.star_channel");
   channelWideMentionsLabel = i18n("chat.settings.channel_wide_mentions_label");
   autoJoinLabel = i18n("chat.settings.auto_join_users_label");
   notificationsLevelLabel = i18n("chat.settings.notification_level");
@@ -224,20 +224,20 @@ export default class ChatRouteChannelInfoSettings extends Component {
   }
 
   @action
-  async onTogglePinned() {
-    const newValue = !this.args.channel.currentUserMembership.pinned;
-    const previousValue = this.args.channel.currentUserMembership.pinned;
+  async onToggleStarred() {
+    const newValue = !this.args.channel.currentUserMembership.starred;
+    const previousValue = this.args.channel.currentUserMembership.starred;
 
-    this.args.channel.currentUserMembership.pinned = newValue;
+    this.args.channel.currentUserMembership.starred = newValue;
 
     try {
       await this.chatApi.updateCurrentUserChannelMembership(
         this.args.channel.id,
-        { pinned: newValue }
+        { starred: newValue }
       );
       this.toasts.success({ data: { message: i18n("saved") } });
     } catch (error) {
-      this.args.channel.currentUserMembership.pinned = previousValue;
+      this.args.channel.currentUserMembership.starred = previousValue;
       popupAjaxError(error);
     }
   }
@@ -413,12 +413,12 @@ export default class ChatRouteChannelInfoSettings extends Component {
 
           {{#if @channel.isOpen}}
             <form.section @title={{this.settingsSectionTitle}} as |section|>
-              <section.row @label={{this.pinChannelLabel}}>
+              <section.row @label={{this.starChannelLabel}}>
                 <:action>
                   <DToggleSwitch
-                    @state={{@channel.currentUserMembership.pinned}}
-                    class="c-channel-settings__pin-switch"
-                    {{on "click" this.onTogglePinned}}
+                    @state={{@channel.currentUserMembership.starred}}
+                    class="c-channel-settings__star-switch"
+                    {{on "click" this.onToggleStarred}}
                   />
                 </:action>
               </section.row>

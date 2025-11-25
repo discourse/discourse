@@ -69,7 +69,7 @@ en:
         title: "Channel settings"
         edit: "Edit"
         add: "Add"
-        pin_channel: "Pin channel"
+        star_channel: "Star channel"
         close_channel: "Close channel"
         open_channel: "Open channel"
         archive_channel: "Archive channel"

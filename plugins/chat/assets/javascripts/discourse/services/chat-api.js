@@ -347,7 +347,7 @@ export default class ChatApi extends Service {
    * Update membership settings of current user for a channel.
    * @param {number} channelId - The ID of the channel.
    * @param {object} data - The settings to modify.
-   * @param {boolean} [data.pinned] - Pins the channel.
+   * @param {boolean} [data.starred] - Stars the channel.
    * @returns {Promise}
    */
   updateCurrentUserChannelMembership(channelId, data = {}) {

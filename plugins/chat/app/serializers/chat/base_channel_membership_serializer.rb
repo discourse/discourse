@@ -8,6 +8,6 @@ module Chat
                :chat_channel_id,
                :last_read_message_id,
                :last_viewed_at,
-               :pinned
+               :starred
   end
 end

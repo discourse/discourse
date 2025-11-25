@@ -2,14 +2,14 @@
 
 module Chat
   # Service responsible for updating a user's channel membership settings.
-  # Currently supports updating the pinned status of a channel.
+  # Currently supports updating the starred status of a channel.
   #
   # @example
   #  ::Chat::UpdateUserChannelMembership.call(
   #    guardian: guardian,
   #    params: {
   #      channel_id: 1,
-  #      pinned: true
+  #      starred: true
   #    }
   #  )
   #
@@ -20,14 +20,14 @@ module Chat
     #   @param guardian [Guardian]
     #   @param params [Hash]
     #   @option params [Integer] :channel_id
-    #   @option params [Boolean] :pinned
+    #   @option params [Boolean] :starred
 
     params do
       attribute :channel_id, :integer
-      attribute :pinned, :boolean
+      attribute :starred, :boolean
 
       validates :channel_id, presence: true
-      validates :pinned, inclusion: { in: [true, false] }
+      validates :starred, inclusion: { in: [true, false] }
     end
 
     model :channel
@@ -50,7 +50,7 @@ module Chat
     end
 
     def update_membership(membership:, params:)
-      membership.update!(pinned: params.pinned)
+      membership.update!(starred: params.starred)
     end
   end
 end
