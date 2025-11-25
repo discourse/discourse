@@ -43,6 +43,19 @@ module DiscourseAi
               end
               result[:max_tokens] = max_tokens
 
+              # effort parameter for Claude Opus 4.5
+              effort = llm_model.lookup_custom_param("effort")
+              if %w[low medium high].include?(effort)
+                result[:output_config] = { effort: effort }
+                result[:anthropic_beta] = ["effort-2025-11-24"]
+              end
+
+              caching_mode = llm_model.lookup_custom_param("prompt_caching") || "never"
+              if caching_mode != "never"
+                result[:anthropic_beta] ||= []
+                result[:anthropic_beta] << "prompt-caching-2024-07-31"
+              end
+
               result
             else
               {}
