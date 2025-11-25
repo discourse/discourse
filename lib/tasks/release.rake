@@ -73,6 +73,8 @@ namespace :release do
     check_ref = args[:check_ref]
 
     new_branch_name = nil
+    new_version = nil
+    previous_version = nil
 
     ReleaseUtils.with_clean_worktree("main") do
       ReleaseUtils.git("checkout", check_ref.to_s)
@@ -80,27 +82,27 @@ namespace :release do
 
       ReleaseUtils.git("checkout", "#{check_ref}^1")
       previous_version = ReleaseUtils.parse_current_version
-
-      next "version has not changed" if new_version == previous_version
-
-      raise "Unexpected previous version" if !previous_version.ends_with? "-latest"
-      raise "Unexpected new version" if !new_version.ends_with? "-latest"
-      if Gem::Version.new(new_version) < Gem::Version.new(previous_version)
-        raise "New version is smaller than old version"
-      end
-
-      parts = previous_version.split(".")
-      new_branch_name = "release/#{parts[0]}.#{parts[1]}"
-
-      ReleaseUtils.git("branch", new_branch_name)
-      puts "Created new branch #{new_branch_name}"
-
-      File.write(
-        ENV["GITHUB_OUTPUT"] || "/dev/null",
-        "new_branch_name=#{new_branch_name}\n",
-        mode: "a",
-      )
     end
+
+    next "version has not changed" if new_version == previous_version
+
+    raise "Unexpected previous version" if !previous_version.ends_with? "-latest"
+    raise "Unexpected new version" if !new_version.ends_with? "-latest"
+    if Gem::Version.new(new_version) < Gem::Version.new(previous_version)
+      raise "New version is smaller than old version"
+    end
+
+    parts = previous_version.split(".")
+    new_branch_name = "release/#{parts[0]}.#{parts[1]}"
+
+    ReleaseUtils.git("branch", new_branch_name, "#{check_ref}^1")
+    puts "Created new branch #{new_branch_name}"
+
+    File.write(
+      ENV["GITHUB_OUTPUT"] || "/dev/null",
+      "new_branch_name=#{new_branch_name}\n",
+      mode: "a",
+    )
 
     if ReleaseUtils.dry_run?
       puts "[DRY RUN] Skipping pushing branch #{new_branch_name} to origin"
