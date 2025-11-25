@@ -14,7 +14,7 @@
     "muted": { "type": "boolean" },
     "notification_level": { "type": "string" },
     "following": { "type": "boolean" },
-    "pinned": { "type": "boolean" },
+    "starred": { "type": "boolean" },
     "user": {
       "type": ["object", "null"],
       "required": ["id", "name", "avatar_template", "username"],
