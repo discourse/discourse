@@ -24,11 +24,13 @@ class Reviewable < ActiveRecord::Base
     class Bundle < Item
       attr_accessor :icon, :label, :actions
 
-      def initialize(id, icon: nil, label: nil)
+      def initialize(id, icon: nil, label: nil, default_action: nil, reviewable: nil)
         super(id)
         @icon = icon
         @label = label
         @actions = []
+        @default_action = default_action
+        @reviewable = reviewable
       end
 
       def empty?
@@ -37,6 +39,20 @@ class Reviewable < ActiveRecord::Base
 
       def bundle_id
         id.split("-", 2).last
+      end
+
+      # @return [String, nil] The action_key from the most recent action log for this bundle
+      def selected_action
+        return @default_action unless @reviewable
+
+        action_log =
+          @reviewable
+            .reviewable_action_logs
+            .where(bundle: bundle_id)
+            .reorder(created_at: :desc)
+            .first
+
+        action_log&.action_key || @default_action
       end
     end
 
@@ -61,8 +77,8 @@ class Reviewable < ActiveRecord::Base
       end
     end
 
-    def add_bundle(id, icon: nil, label: nil)
-      bundle = Bundle.new(id, icon: icon, label: label)
+    def add_bundle(id, icon: nil, label: nil, default_action: nil)
+      bundle = Bundle.new(id, icon:, label:, default_action:, reviewable:)
       @bundles << bundle
       bundle
     end
