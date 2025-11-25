@@ -31,6 +31,7 @@ class ReviewableSerializer < ApplicationSerializer
   has_many :reviewable_scores, serializer: ReviewableScoreSerializer
   has_many :bundled_actions, serializer: ReviewableBundledActionSerializer
   has_many :reviewable_notes, serializer: ReviewableNoteSerializer
+  has_many :reviewable_histories, serializer: ReviewableHistorySerializer
   has_one :claimed_by, serializer: ReviewableClaimedTopicSerializer
 
   # Used to keep track of our payload attributes
