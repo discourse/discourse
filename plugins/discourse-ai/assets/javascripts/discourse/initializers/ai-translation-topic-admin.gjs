@@ -70,7 +70,7 @@ export default apiInitializer((api) => {
       },
       icon: "language",
       className: "schedule-topic-translations-button",
-      label: "discourse_ai.ai_features.translation.schedule_untranslated",
+      label: "discourse_ai.features.translation.schedule_untranslated",
     };
   });
 });
