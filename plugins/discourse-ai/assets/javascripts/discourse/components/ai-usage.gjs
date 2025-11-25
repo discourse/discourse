@@ -20,7 +20,7 @@ import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import { number } from "discourse/lib/formatter";
 import ComboBox from "discourse/select-kit/components/combo-box";
-import { eq, gt, lt } from "discourse/truth-helpers";
+import { eq, gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import AiCreditBar from "./ai-credit-bar";
 
@@ -125,6 +125,13 @@ export default class AiUsage extends Component {
   @bind
   takeUsers(start, end) {
     return this.data.users.slice(start, end);
+  }
+
+  get userSplitPoint() {
+    if (!this.data?.users) {
+      return 0;
+    }
+    return Math.ceil(this.data.users.length / 2);
   }
 
   normalizeTimeSeriesData(data) {
@@ -614,58 +621,12 @@ export default class AiUsage extends Component {
                 {{/unless}}
 
                 {{#if this.data.users.length}}
-                  <table
+                  <div
                     class={{concatClass
-                      "ai-usage__users-table"
-                      (if (lt this.data.users.length 25) "-double-width")
+                      "ai-usage__users-table-wrapper"
+                      (if (gt this.data.users.length 24) "-multi-column")
                     }}
                   >
-                    <thead>
-                      <tr>
-                        <th class="ai-usage__users-username">{{i18n
-                            "discourse_ai.usage.username"
-                          }}</th>
-                        <th>{{i18n "discourse_ai.usage.usage_count"}}</th>
-                        <th>{{i18n "discourse_ai.usage.total_tokens"}}</th>
-                        <th>{{i18n "discourse_ai.usage.total_spending"}}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {{#each (this.takeUsers 0 24) as |user|}}
-                        <tr class="ai-usage__users-row">
-                          <td class="ai-usage__users-cell">
-                            <div class="user-info">
-                              <LinkTo
-                                @route="user"
-                                @model={{user.username}}
-                                class="username"
-                              >
-                                {{avatar user imageSize="tiny"}}
-                                {{user.username}}
-                              </LinkTo>
-                            </div></td>
-                          <td
-                            class="ai-usage__users-cell"
-                            title={{user.usage_count}}
-                          >{{number user.usage_count}}</td>
-                          <td
-                            class="ai-usage__users-cell"
-                            title={{user.total_tokens}}
-                          >{{number user.total_tokens}}</td>
-                          <td>
-                            {{this.totalSpending
-                              user.input_spending
-                              user.cache_read_spending
-                              user.cache_write_spending
-                              user.output_spending
-                            }}
-                          </td>
-                        </tr>
-                      {{/each}}
-                    </tbody>
-                  </table>
-
-                  {{#if (gt this.data.users.length 25)}}
                     <table class="ai-usage__users-table">
                       <thead>
                         <tr>
@@ -678,7 +639,10 @@ export default class AiUsage extends Component {
                         </tr>
                       </thead>
                       <tbody>
-                        {{#each (this.takeUsers 25 49) as |user|}}
+                        {{#each
+                          (this.takeUsers 0 this.userSplitPoint)
+                          as |user|
+                        }}
                           <tr class="ai-usage__users-row">
                             <td class="ai-usage__users-cell">
                               <div class="user-info">
@@ -711,7 +675,60 @@ export default class AiUsage extends Component {
                         {{/each}}
                       </tbody>
                     </table>
-                  {{/if}}
+
+                    {{#if (gt this.data.users.length 24)}}
+                      <table class="ai-usage__users-table">
+                        <thead>
+                          <tr>
+                            <th class="ai-usage__users-username">{{i18n
+                                "discourse_ai.usage.username"
+                              }}</th>
+                            <th>{{i18n "discourse_ai.usage.usage_count"}}</th>
+                            <th>{{i18n "discourse_ai.usage.total_tokens"}}</th>
+                            <th>{{i18n
+                                "discourse_ai.usage.total_spending"
+                              }}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {{#each
+                            (this.takeUsers this.userSplitPoint 50)
+                            as |user|
+                          }}
+                            <tr class="ai-usage__users-row">
+                              <td class="ai-usage__users-cell">
+                                <div class="user-info">
+                                  <LinkTo
+                                    @route="user"
+                                    @model={{user.username}}
+                                    class="username"
+                                  >
+                                    {{avatar user imageSize="tiny"}}
+                                    {{user.username}}
+                                  </LinkTo>
+                                </div></td>
+                              <td
+                                class="ai-usage__users-cell"
+                                title={{user.usage_count}}
+                              >{{number user.usage_count}}</td>
+                              <td
+                                class="ai-usage__users-cell"
+                                title={{user.total_tokens}}
+                              >{{number user.total_tokens}}</td>
+                              <td>
+                                {{this.totalSpending
+                                  user.input_spending
+                                  user.cache_read_spending
+                                  user.cache_write_spending
+                                  user.output_spending
+                                }}
+                              </td>
+                            </tr>
+                          {{/each}}
+                        </tbody>
+                      </table>
+                    {{/if}}
+                  </div>
                 {{/if}}
               </:content>
             </AdminConfigAreaCard>
