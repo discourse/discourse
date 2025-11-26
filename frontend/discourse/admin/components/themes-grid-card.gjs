@@ -307,7 +307,7 @@ export default class ThemeCard extends Component {
                         @label="admin.customize.delete"
                         @icon="trash-can"
                         @disabled={{this.destroyDisabled}}
-                        class="theme-card__button btn-transparent --dangerdelete"
+                        class="theme-card__button btn-transparent --danger delete"
                       />
                     </dropdown.item>
                   </DropdownMenu>
