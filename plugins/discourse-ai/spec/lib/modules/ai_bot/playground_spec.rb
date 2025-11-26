@@ -1056,69 +1056,6 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       expect(custom_prompt.last.first).to eq(response2)
       expect(custom_prompt.last.last).to eq(bot_user.username)
     end
-
-    context "with Dall E bot" do
-      before { SiteSetting.ai_openai_api_key = "123" }
-
-      let(:persona) do
-        AiPersona.find(
-          DiscourseAi::Personas::Persona.system_personas[DiscourseAi::Personas::DallE3],
-        )
-      end
-
-      let(:bot) { DiscourseAi::Personas::Bot.as(bot_user, persona: persona.class_instance.new) }
-      let(:data) do
-        image =
-          "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
-
-        [{ b64_json: image, revised_prompt: "a pink cow 1" }]
-      end
-
-      let(:response) do
-        DiscourseAi::Completions::ToolCall.new(
-          name: "dall_e",
-          id: "dall_e",
-          parameters: {
-            prompts: ["a pink cow"],
-          },
-        )
-      end
-
-      it "properly returns an image when skipping thinking" do
-        persona.update!(show_thinking: false)
-
-        WebMock.stub_request(:post, SiteSetting.ai_openai_image_generation_url).to_return(
-          status: 200,
-          body: { data: data }.to_json,
-        )
-
-        DiscourseAi::Completions::Llm.with_prepared_responses([response]) do
-          playground.reply_to(third_post)
-        end
-
-        last_post = third_post.topic.reload.posts.order(:post_number).last
-
-        expect(last_post.raw).to include("a pink cow")
-      end
-
-      it "does not include placeholders in conversation context (simulate DALL-E)" do
-        WebMock.stub_request(:post, SiteSetting.ai_openai_image_generation_url).to_return(
-          status: 200,
-          body: { data: data }.to_json,
-        )
-
-        DiscourseAi::Completions::Llm.with_prepared_responses([response]) do
-          playground.reply_to(third_post)
-        end
-
-        last_post = third_post.topic.reload.posts.order(:post_number).last
-        custom_prompt = PostCustomPrompt.where(post_id: last_post.id).first.custom_prompt
-
-        # DALL E has custom_raw, we do not want to inject this into the prompt stream
-        expect(custom_prompt.length).to eq(2)
-        expect(custom_prompt.to_s).not_to include("<details>")
-      end
-    end
   end
 
   describe "#canceling a completions" do
