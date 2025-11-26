@@ -38,4 +38,38 @@ RSpec.describe "Categories Page" do
       expect(subcategory_selector).to have_selected_name(subcategory.name)
     end
   end
+
+  describe "dropdown filter" do
+    it "is shown for users in lazy_load_categories_groups" do
+      SiteSetting.lazy_load_categories_groups = "admins"
+      sign_in(admin)
+      category_page.visit_general(category)
+      category_selector =
+        PageObjects::Components::SelectKit.new(".category-breadcrumb__category-selector")
+
+      expect(category_selector).to have_filter
+    end
+
+    it "is not shown if categories are up to 10" do
+      sign_in(admin)
+      category_page.visit_general(category)
+      category_selector =
+        PageObjects::Components::SelectKit.new(".category-breadcrumb__category-selector")
+
+      expect(category_selector).to have_no_filter
+    end
+
+    context "when categories are 10 or more" do
+      fab!(:categories) { Fabricate.times(8, :category) }
+
+      it "is shown" do
+        sign_in(admin)
+        category_page.visit_general(category)
+        category_selector =
+          PageObjects::Components::SelectKit.new(".category-breadcrumb__category-selector")
+
+        expect(category_selector).to have_filter
+      end
+    end
+  end
 end
