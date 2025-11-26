@@ -979,7 +979,7 @@ export default class SelectKit extends Component {
       this.cleanupFloatingUi?.();
       this.cleanupFloatingUi = autoUpdate(
         this.getHeader(),
-        document.querySelector(`#${this.selectKit.uniqueID}-body`),
+        this._mainElement(),
         () => this.updateFloatingUiPosition()
       );
     } else {
@@ -1007,9 +1007,7 @@ export default class SelectKit extends Component {
 
   updateFloatingUiPosition() {
     const referenceElement = this.getHeader();
-    const floatingElement = document.querySelector(
-      `#${this.selectKit.uniqueID}-body`
-    );
+    const floatingElement = this._mainElement();
 
     const strategy = this._computePlacementStrategy();
     floatingElement.style.position = strategy;
