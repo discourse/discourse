@@ -45,6 +45,13 @@ module DiscourseAi
 
           def inject_prompt(prompt:, context:, persona:)
           end
+
+          def available_custom_image_tools
+            image_tool_ids = AiTool.where(enabled: true, is_image_generation_tool: true).pluck(:id)
+            image_tool_ids.map do |tool_id|
+              DiscourseAi::Personas::Tools::Custom.class_instance(tool_id)
+            end
+          end
         end
 
         # llm being public makes it a bit easier to test

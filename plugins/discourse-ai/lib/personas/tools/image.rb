@@ -62,81 +62,80 @@ module DiscourseAi
         end
 
         def invoke
-          # max 4 prompts
-          selected_prompts = prompts.take(4)
-          seeds = seeds.take(4) if seeds
+          # Find available custom image generation tools
+          custom_tools = self.class.available_custom_image_tools
 
-          progress = prompts.first
-          yield(progress)
-
-          results = nil
-
-          # this ensures multisite safety since background threads
-          # generate the images
-          api_key = SiteSetting.ai_stability_api_key
-          engine = SiteSetting.ai_stability_engine
-          api_url = SiteSetting.ai_stability_api_url
-
-          threads = []
-          selected_prompts.each_with_index do |prompt, index|
-            seed = seeds ? seeds[index] : nil
-            threads << Thread.new(seed, prompt) do |inner_seed, inner_prompt|
-              attempts = 0
-              begin
-                DiscourseAi::Inference::StabilityGenerator.perform!(
-                  inner_prompt,
-                  engine: engine,
-                  api_key: api_key,
-                  api_url: api_url,
-                  image_count: 1,
-                  seed: inner_seed,
-                  aspect_ratio: aspect_ratio,
-                )
-              rescue => e
-                attempts += 1
-                retry if attempts < 3
-                Rails.logger.warn("Failed to generate image for prompt #{prompt}: #{e}")
-                nil
-              end
-            end
-          end
-
-          break if threads.all? { |t| t.join(2) } while true
-
-          results = threads.map(&:value).compact
-
-          if !results.present?
+          if custom_tools.empty?
             @chain_next_response = true
             return(
               {
                 prompts: prompts,
                 error:
-                  "Something went wrong inform user you could not generate image, check Discourse logs, give up don't try anymore",
+                  "No image generation tools configured. Please configure an image generation tool via the admin UI to use this feature.",
                 give_up: true,
               }
             )
           end
 
-          uploads = []
+          # Use the first available custom image tool
+          tool_class = custom_tools.first
 
-          results.each_with_index do |result, index|
-            result[:artifacts].each do |image|
-              Tempfile.create("v1_txt2img_#{index}.png") do |file|
-                file.binmode
-                file.write(Base64.decode64(image[:base64]))
-                file.rewind
-                uploads << {
-                  prompt: prompts[index],
-                  upload:
-                    UploadCreator.new(
-                      file,
-                      "image.png",
-                      for_private_message: context.private_message,
-                    ).create_for(bot_user.id),
-                  seed: image[:seed],
-                }
+          # Map aspect ratio to size parameter if provided
+          size = aspect_ratio_to_size(aspect_ratio)
+
+          # Generate images for each prompt (up to 4)
+          selected_prompts = prompts.take(4)
+          progress = prompts.first
+          yield(progress)
+
+          uploads = []
+          errors = []
+
+          selected_prompts.each_with_index do |prompt, index|
+            begin
+              # Create tool instance with parameters
+              tool_params = { prompt: prompt }
+              tool_params[:size] = size if size
+
+              tool_instance =
+                tool_class.new(tool_params, bot_user: bot_user, llm: llm, context: context)
+
+              # Invoke the tool
+              tool_instance.invoke { |_progress| }
+
+              # Extract the custom_raw which contains the generated image markdown
+              if tool_instance.custom_raw.present?
+                # Parse the upload short_url from the markdown
+                upload_match = tool_instance.custom_raw.match(%r{!\[.*?\]\((upload://[^)]+)\)})
+                if upload_match
+                  short_url = upload_match[1]
+                  sha1 = Upload.sha1_from_short_url(short_url)
+                  upload = Upload.find_by(sha1: sha1) if sha1
+                  if upload
+                    uploads << {
+                      prompt: prompt,
+                      upload: upload,
+                      seed: nil, # Custom tools don't provide seeds
+                    }
+                  end
+                end
               end
+            rescue => e
+              Rails.logger.warn("Failed to generate image for prompt #{prompt}: #{e}")
+              errors << e.message
             end
+          end
+
+          if uploads.empty?
+            @chain_next_response = true
+            return(
+              {
+                prompts: prompts,
+                error:
+                  "Failed to generate images. #{errors.first || "Please check your image generation tool configuration."}",
+                give_up: true,
+              }
+            )
           end
 
           @custom_raw = <<~RAW
@@ -160,6 +159,37 @@ module DiscourseAi
 
         def description_args
           { prompt: prompts.first }
+        end
+
+        private
+
+        def aspect_ratio_to_size(aspect_ratio)
+          return nil unless aspect_ratio
+
+          # Map common aspect ratios to size strings
+          # Different providers may handle these differently
+          case aspect_ratio
+          when "16:9"
+            "1792x1024"
+          when "1:1"
+            "1024x1024"
+          when "21:9"
+            "2048x768"
+          when "2:3"
+            "896x1152"
+          when "3:2"
+            "1152x896"
+          when "4:5"
+            "832x1216"
+          when "5:4"
+            "1216x832"
+          when "9:16"
+            "1024x1792"
+          when "9:21"
+            "768x2048"
+          else
+            nil
+          end
         end
       end
     end

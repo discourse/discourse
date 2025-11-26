@@ -82,6 +82,21 @@
  *    Returns: { id: number, url: string, short_url: string } - Details of the created upload record.
  *
  *    upload.getUrl(shortUrl): Given a short URL, eg upload://12345, returns the full CDN friendly URL of the upload.
+ *
+ *    upload.getBase64(uploadIdOrShortUrl, maxPixels): Fetches the base64-encoded content of an existing upload.
+ *    Parameters:
+ *      uploadIdOrShortUrl (number | string): Either an upload ID (number) or short URL (string, eg "upload://abc123").
+ *      maxPixels (number, optional): Maximum pixel count for automatic resizing (default: 10,000,000).
+ *    Returns: string (base64-encoded image data) or null if upload not found.
+ *    Use case: Image editing tools can fetch existing uploads to send to external APIs.
+ *
+ *    Note for Image Editing:
+ *    To implement image editing in a tool:
+ *    1. Accept an `image_urls` parameter (array of short URLs like ["upload://abc123"]).
+ *    2. Use upload.getBase64() to fetch the base64 data for each image.
+ *    3. Send the base64 data to your image editing API (e.g., OpenAI's /v1/images/edits endpoint).
+ *    4. Create a new upload with the edited image using upload.create().
+ *    5. Use chain.setCustomRaw() to display the edited image.
  * 5. chain
  *    Controls the execution flow.
  *
