@@ -119,6 +119,12 @@
       @include viewport.until(md) {
         grid-template-columns: 1fr;
       }
+
+      .has-sidebar-page & {
+        @include viewport.until(lg) {
+          grid-template-columns: 1fr;
+        }
+      }
     }
 
     &:not(.-multi-column) {
