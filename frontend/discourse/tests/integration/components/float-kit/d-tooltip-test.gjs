@@ -1,8 +1,10 @@
 import { hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import {
   click,
   render,
+  settled,
   triggerEvent,
   triggerKeyEvent,
 } from "@ember/test-helpers";
@@ -352,5 +354,36 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
     await leave();
 
     assert.dom(".fk-d-tooltip__content").doesNotExist();
+  });
+
+  test("@portalOutletElement", async function (assert) {
+    this.set("portalOutletElement", null);
+    this.setPortalOutletElement = (element) => {
+      this.set("portalOutletElement", element);
+    };
+
+    await render(
+      <template>
+        <div
+          id="custom-tooltip-portal"
+          {{didInsert this.setPortalOutletElement}}
+        ></div>
+        {{#if this.portalOutletElement}}
+          <DTooltip
+            @inline={{false}}
+            @label="label"
+            @content="content"
+            @portalOutletElement={{this.portalOutletElement}}
+          />
+        {{/if}}
+      </template>
+    );
+
+    await settled();
+    await click(".fk-d-tooltip__trigger");
+
+    assert
+      .dom("#custom-tooltip-portal .fk-d-tooltip__content")
+      .exists("tooltip renders in custom portal outlet");
   });
 });
