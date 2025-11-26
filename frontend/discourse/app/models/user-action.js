@@ -1,8 +1,9 @@
 import { equal, or } from "@ember/object/computed";
 import { service } from "@ember/service";
 import discourseComputed from "discourse/lib/decorators";
+import { emojiUnescape } from "discourse/lib/text";
 import { userPath } from "discourse/lib/url";
-import { postUrl } from "discourse/lib/utilities";
+import { escapeExpression, postUrl } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
 import UserActionGroup from "discourse/models/user-action-group";
 import Category from "./category";
@@ -166,6 +167,11 @@ export default class UserAction extends RestModel {
   @discourseComputed()
   replyUrl() {
     return postUrl(this.slug, this.topic_id, this.reply_to_post_number);
+  }
+
+  @discourseComputed("title")
+  titleHtml(title) {
+    return title && emojiUnescape(escapeExpression(title));
   }
 
   addChild(action) {

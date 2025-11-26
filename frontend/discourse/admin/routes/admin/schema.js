@@ -26,7 +26,8 @@ export default class AdminSchemaRoute extends Route {
     return {
       setting,
       settingName: params.setting_name,
-      goBackUrl: this.routeHistory.lastURL,
+      goBackUrl:
+        this.routeHistory.lastURL || "/admin/site_settings/category/required",
     };
   }
 }

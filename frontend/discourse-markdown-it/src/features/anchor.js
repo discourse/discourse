@@ -1,7 +1,11 @@
+import { i18n } from "discourse-i18n";
+
 export function setup(helper) {
   if (helper.getOptions().previewing) {
     return;
   }
+
+  helper.allowList(["a[aria-label]"]);
 
   helper.registerPlugin((md) => {
     md.core.ruler.push("anchor", (state) => {
@@ -54,6 +58,7 @@ export function setup(helper) {
         linkOpen.attrSet("name", slug);
         linkOpen.attrSet("class", "anchor");
         linkOpen.attrSet("href", "#" + slug);
+        linkOpen.attrSet("aria-label", i18n("post.heading_anchor"));
 
         state.tokens[idx + 1].children.unshift(linkClose);
         state.tokens[idx + 1].children.unshift(linkOpen);

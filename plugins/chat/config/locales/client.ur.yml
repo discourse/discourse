@@ -128,7 +128,6 @@ ur:
       email_frequency:
         description: "ہم صرف آپ کو ای میل کریں گے اگر ہم نے آپ کو پچھلے 15 منٹ میں نہیں دیکھا۔"
         never: "کبھی نہیں"
-        title: "ای میل اطلاعات"
         when_away: "صرف دور ہونے پر"
       header_indicator_preference:
         title: "ہیڈر میں سرگرمی کا اشارہ دکھائیں"

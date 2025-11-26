@@ -39,40 +39,54 @@ module PageObjects
         find_item(@setting_name).find(".upcoming-change__plugin").has_text?(plugin_name)
       end
 
-      def toggle
-        PageObjects::Components::DToggleSwitch.new(
-          "#{change_item_selector(@setting_name)} .upcoming-change__toggle",
-        ).toggle
+      def select_enabled_for(option)
+        enabled_for_dropdown.select(option)
+      end
+
+      def save_groups
+        find_item(@setting_name).find(".upcoming-change__save-groups").click
       end
 
       def enabled?
-        PageObjects::Components::DToggleSwitch.new(
-          "#{change_item_selector(@setting_name)} .upcoming-change__toggle",
-        ).checked?
+        enabled_for != "no_one"
       end
 
       def disabled?
-        PageObjects::Components::DToggleSwitch.new(
-          "#{change_item_selector(@setting_name)} .upcoming-change__toggle",
-        ).unchecked?
+        enabled_for == "no_one"
       end
 
-      def has_groups?(*group_names)
-        PageObjects::Components::GroupSelector.new(
-          change_item_selector(@setting_name),
-        ).has_selected_groups?(*group_names)
+      def enabled_for
+        enabled_for_dropdown.value
       end
 
-      def add_group(group_name)
-        PageObjects::Components::GroupSelector.new(change_item_selector(@setting_name)).add_group(
-          group_name,
+      def enabled_for_dropdown
+        PageObjects::Components::DSelect.new(
+          "#{change_item_selector(@setting_name)} .upcoming-change__enabled-for",
         )
       end
 
+      def group_selector
+        PageObjects::Components::GroupSelector.new(change_item_selector(@setting_name))
+      end
+
+      def has_no_group_selector?
+        expect(group_selector).to be_hidden
+      end
+
+      def has_groups?(*group_names)
+        group_selector.has_selected_groups?(*group_names)
+      end
+
+      def has_no_groups?
+        group_selector.has_no_selected_groups?
+      end
+
+      def add_group(group_name)
+        group_selector.add_group(group_name)
+      end
+
       def remove_group(group_name)
-        PageObjects::Components::GroupSelector.new(
-          change_item_selector(@setting_name),
-        ).remove_group(group_name)
+        group_selector.remove_group(group_name)
       end
     end
   end

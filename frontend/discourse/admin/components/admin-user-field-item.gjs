@@ -126,7 +126,7 @@ export default class AdminUserFieldItem extends Component {
                   <DButton
                     @label="admin.config_areas.user_fields.delete"
                     @icon="trash-can"
-                    class="btn-transparent btn-danger admin-user_field-item__delete"
+                    class="btn-transparent --danger admin-user_field-item__delete"
                     @action={{this.destroy}}
                   />
                 </dropdown.item>

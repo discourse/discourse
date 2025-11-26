@@ -320,7 +320,6 @@ en:
       message: "We've updated this site, <span>please refresh</span> to keep things working smoothly."
       dismiss: "Dismiss"
 
-    bootstrap_mode: "Getting started"
     back_button: "Back"
 
     welcome_banner:
@@ -779,8 +778,9 @@ en:
       title: "Review"
       topic: "Topic:"
       filtered_topic: "You have filtered to reviewable content in a single topic."
-      filtered_user: "User"
+      filtered_user: "Flagged user"
       filtered_reviewed_by: "Reviewed by"
+      filtered_claimed_by: "Flag claimed by"
       show_all_topics: "show all topics"
       deleted_post: "(post deleted)"
       deleted_user: "(user deleted)"
@@ -861,6 +861,9 @@ en:
           medium: "Medium"
           high: "High"
 
+        active_filters: "Active filters:"
+        clear_filter: "Remove %{filter}"
+
       conversation:
         view_full: "view full conversation"
       scores:
@@ -929,7 +932,7 @@ en:
       queued_post_label: "Queued post"
       queued_topic_label: "Queued topic"
       user_label: "User"
-      assigned_to: "Assigned to"
+      assigned_to: "Post assigned to"
       moderator_actions: "Moderator actions"
       timeline_and_notes: "Timeline & notes"
       timeline:
@@ -3140,6 +3143,10 @@ en:
         zoom_out: "Decrease image size"
         zoom_in: "Increase image size"
         remove: "Remove image"
+        add_to_grid: "Add to grid"
+        move_outside_grid: "Move outside grid"
+
+      grid_label: "This will be displayed as a grid"
 
       image_scale_button: "Scale image to %{percent}%"
       delete_image_button: Delete Image
@@ -4110,6 +4117,11 @@ en:
           one: You have selected <b>%{count}</b> post.
           other: "You have selected <b>%{count}</b> posts."
       deleted_by_author_simple: "(topic deleted by author)"
+      localizations:
+        title_edit_warning:
+          message: "This is a translated topic title.<br><br>Do you want to edit the original title in %{language} or edit this specific translation?"
+          action_original: "Edit original topic title"
+          action_translation: "Edit translated topic title"
 
     post_list:
       title: "Latest posts"
@@ -4125,6 +4137,7 @@ en:
 
     post:
       accessible_heading: "post by %{username} %{date}"
+      heading_anchor: "Heading link"
       confirm_delete: "Are you sure you want to delete this post?"
       quote_reply: "Quote"
       quote_reply_shortcut: "Quote (or press q)"
@@ -4229,7 +4242,7 @@ en:
         post_language_selector:
           none: "None"
         edit_warning:
-          message: "This is a translated post.<br><br> Do you want to edit the original post in %{language} or edit this specific translation?"
+          message: "This is a translated post.<br><br>Do you want to edit the original post in %{language} or edit this specific translation?"
           action_original: "Edit original post"
           action_translation: "Edit this translation"
 
@@ -4908,6 +4921,7 @@ en:
       download: "Download"
       open: "Original image"
       image_info: "Image information"
+      quote: "Quote image"
       previous: "Previous (Left arrow key)"
       next: "Next (Right arrow key)"
       counter: "%curr% of %total%"
@@ -5711,20 +5725,31 @@ en:
         plugin: "Plugin"
         metadata: "Metadata"
         enabled: "Enabled"
+        enabled_for: "Enabled for..."
         show_image: "Show image"
         edit_groups: "Edit opt-in groups"
         groups_updated: "Groups updated!"
         save_groups: "Save groups"
+        add_groups_to_enable: "Add groups to enable this feature"
+        no_changes_to_save: "No changes to save"
         select_groups: "Select groups…"
         opt_in_groups: "Opt-in groups"
         opt_in_groups_instructions: "Opt-in groups can be used to let a certain group of users to test a change before it is released to everyone. Note that these groups will be irrelevant once a change progresses to the Stable status."
-        toggled_too_fast: "You have toggled this change too quickly. Please wait a few seconds before trying again."
-        change_enabled: "You have opted-in to this change"
+        enabled_for_throttle: "You have modified who this change is enabled for too quickly. Please wait a few seconds before trying again."
+        change_enabled_for_success: "You have enabled this change for %{enabledFor}"
         change_disabled: "You have opted-out of this change"
         permanent_notice: "This change is now permanent and it will soon be removed. You are no longer able to opt-out."
         permanent_no_group_selection: "N/A, permanent changes apply to all groups."
         no_changes: "There are no upcoming changes at this time."
         preview: "Preview"
+        enabled_for_options:
+          no_one: "No one"
+          everyone: "Everyone"
+          staff: "Staff only"
+          specific_groups: "Specific group(s)"
+          specific_groups_with_group_names:
+            one: "the group %{groupNames}"
+            other: "the groups %{groupNames}"
         statuses:
           pre_alpha: "Pre-Alpha"
           alpha: "Alpha"
@@ -6598,6 +6623,7 @@ en:
           user_destroyed: "User is deleted"
           user_suspended: "User is suspended"
           user_unsuspended: "User is unsuspended"
+          user_anonymized: "User is anonymized"
         reviewable_event:
           group_name: "Reviewable Events"
           reviewable_created: "Reviewable item is ready"
@@ -7724,6 +7750,7 @@ en:
         clear_all: Clear all
         clear_all_confirm: "Are you sure you want to clear all watched words for the %{action} action?"
         invalid_regex: 'The watched word "%{word}" is an invalid regular expression.'
+        invalid_regex_multiple: "Invalid Regular Expressions:"
         regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">Watched words are regular expressions</a> and they do not automatically include word boundaries. If you want the regular expression to match whole words, include <code>\b</code> at the start and end of your regular expression.'
         actions:
           block: "Block"
@@ -8638,83 +8665,4 @@ en:
 
   wizard_js:
     wizard:
-      jump_in: "Jump in!"
-      finish: "Exit setup"
-      back: "Back"
-      next: "Next"
-      configure_more: "Configure more…"
-      step-text: "Step"
-      step: "%{current} of %{total}"
-      upload: "Upload file"
-      uploading: "Uploading…"
-      upload_error: "Sorry, there was an error uploading that file. Please try again."
-
-      staff_count:
-        one: "Your community has %{count} staff (you)."
-        other: "Your community has %{count} staff, including you."
-
-      invites:
-        add_user: "add"
-        none_added: "You haven’t invited any staff. Are you sure you want to continue?"
-        roles:
-          admin: "Admin"
-          moderator: "Moderator"
-          regular: "Regular User"
-
-      homepage_choices:
-        custom:
-          label: "Custom"
-          description: "Display a %{type}-focused homepage with users landing on %{landingPage}"
-        style_type:
-          categories: "category"
-          topics: "topic"
-
-      top_menu_items:
-        new: "New"
-        unread: "Unread"
-        top: "Top"
-        latest: "Latest"
-        hot: "Hot"
-        categories: "Categories"
-        unseen: "Unseen"
-        read: "Read"
-        bookmarks: "Bookmarks"
-
-      previews:
-        topic_title: "What books are you reading?"
-        share_button: "Share"
-        reply_button: "Reply"
-        topic_preview: "Topic preview"
-        homepage_preview: "Homepage preview"
-
-      homepage_preview:
-        nav_buttons:
-          all_categories: "all categories"
-        topic_titles:
-          what_books: "What books are you reading?"
-          what_movies: "What movies have you seen recently?"
-          random_fact: "Random fact of the day"
-          tv_show: "Recommend a TV show"
-          what_hobbies: "What are your hobbies?"
-          what_music: "What are you listening to right now?"
-          funniest_thing: "Funniest thing you've seen today"
-          share_art: "Share your art!"
-        topic_ops:
-          what_books: |
-            We all love to read, let's use this topic to share our
-            current or recent reads. I'm a fantasy fan and I've been
-            re-reading The Lord of the Rings for the 100th time.
-            What about you?
-        category_descriptions:
-          icebreakers: "Get to know your fellow community members with fun questions."
-          news: "Discuss the latest news and events."
-          site_feedback: "Share your thoughts on the community and suggest improvements."
-        category_names:
-          icebreakers: "Icebreakers"
-          news: "News"
-          site_feedback: "Site Feedback"
-        table_headers:
-          topic: "Topic"
-          replies: "Replies"
-          views: "Views"
-          activity: "Activity"
+      jump_in: "Let's go!"

@@ -1,5 +1,4 @@
 import { tracked } from "@glimmer/tracking";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import { ajax } from "discourse/lib/ajax";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { url } from "discourse/lib/computed";
@@ -112,7 +111,6 @@ export default class UserStream extends RestModel {
         });
 
         result.user_actions?.forEach((action) => {
-          action.titleHtml = replaceEmoji(action.title);
           copy.push(UserAction.create(action));
         });
 

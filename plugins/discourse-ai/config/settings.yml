@@ -34,31 +34,12 @@ discourse_ai:
     default: 60
     hidden: true
 
-  ai_openai_image_generation_url: "https://api.openai.com/v1/images/generations"
-  ai_openai_image_edit_url: "https://api.openai.com/v1/images/edits"
   ai_openai_embeddings_url:
     hidden: true
     default: "https://api.openai.com/v1/embeddings"
   ai_openai_organization:
     default: ""
     hidden: true
-  ai_openai_api_key:
-    default: ""
-    secret: true
-  ai_stability_api_key:
-    default: ""
-    secret: true
-  ai_stability_api_url:
-    default: "https://api.stability.ai"
-  ai_stability_engine:
-    default: "stable-diffusion-xl-1024-v1-0"
-    type: enum
-    choices:
-      - "sd3"
-      - "sd3-turbo"
-      - "stable-diffusion-xl-1024-v1-0"
-      - "stable-diffusion-768-v2-1"
-      - "stable-diffusion-v1-5"
   ai_hugging_face_tei_endpoint:
     hidden: true
     default: ""
@@ -94,6 +75,30 @@ discourse_ai:
     hidden: true
   ai_strict_token_counting:
     default: false
+    hidden: true
+
+  # Deprecated image generation settings - TODO(keegan): Remove 2026-02-01
+  ai_openai_image_generation_url:
+    default: ""
+    hidden: true
+  ai_openai_image_edit_url:
+    default: ""
+    hidden: true
+  ai_stability_api_key:
+    default: ""
+    secret: true
+    hidden: true
+  ai_stability_api_url:
+    default: ""
+    hidden: true
+  ai_stability_engine:
+    default: ""
+    hidden: true
+  ai_helper_illustrate_post_model:
+    default: ""
+    type: enum
+    allow_any: false
+    enum: "DiscourseAi::Configuration::LlmEnumerator"
     hidden: true
 
   ai_helper_enabled:
@@ -138,15 +143,6 @@ discourse_ai:
   ai_helper_automatic_chat_thread_title_delay:
     default: 5
     area: "ai-features/ai_helper"
-  ai_helper_illustrate_post_model: # Deprecated. TODO(keegan): Remove 2025-12-01
-    default: disabled
-    type: enum
-    choices:
-      - stable_diffusion_xl
-      - dall_e_3
-      - disabled
-    area: "ai-features/ai_helper"
-    hidden: true
   ai_helper_enabled_features:
     client: true
     default: "suggestions|context_menu"
@@ -583,3 +579,14 @@ discourse_ai:
   ai_artifact_max_keys_per_user_per_artifact:
     default: 100
     hidden: true
+
+  ai_usage_rollup_after_days:
+    default: 7
+    min: 0
+    client: false
+    hidden: true
+
+  ai_audit_logs_purge_after_days:
+    default: 180
+    min: 0
+    client: false

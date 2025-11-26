@@ -14,4 +14,3 @@ nl:
       show: "Gebruikersnotities (%{count})"
       delete_confirm: "Weet je zeker dat je die gebruikersnotitie wilt verwijderen?"
       show_post: "Bericht weergeven"
-      copy_reviewable_note: "Opmerking kopiëren naar gebruikersprofiel?"

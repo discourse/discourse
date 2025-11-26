@@ -18,7 +18,7 @@ module PageObjects
       end
 
       def visible?
-        has_css?(@context)
+        has_css?(@context, visible: true)
       end
 
       def hidden?
@@ -35,7 +35,7 @@ module PageObjects
       end
 
       def expanded?
-        component.has_css?(".select-kit-body", visible: :visible)
+        component.has_css?(".select-kit-body", visible: true)
       end
 
       def is_collapsed?
@@ -90,6 +90,14 @@ module PageObjects
       def collapse
         expanded_component.find(".select-kit-header").click
         collapsed_component
+      end
+
+      def has_filter?
+        expanded_component.has_css?(".select-kit-filter .filter-input", visible: true)
+      end
+
+      def has_no_filter?
+        expanded_component.has_no_css?(".select-kit-filter .filter-input")
       end
 
       def search(value = nil)

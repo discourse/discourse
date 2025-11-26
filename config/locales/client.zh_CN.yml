@@ -636,6 +636,10 @@ zh_CN:
         claimed_by_you: "您已认领此条目，可以进行审核。"
         claimed_by_other: "此条目仅可以由 <b>%{username}</b> 审核。"
         automatically_claimed_by: "此条目目前正在由 <b>%{username}</b>审核。"
+      claim:
+        title: "认领该话题"
+      unclaim:
+        help: "移除认领"
       awaiting_approval: "需要审批"
       delete: "删除"
       settings:
@@ -787,6 +791,7 @@ zh_CN:
           noun: "帖子"
       flagged_as: "被标记为"
       post_flagged_as: "帖子被标记为"
+      chat_flagged_as: "对话被标记为"
       queued_post_label: "队列中的帖子"
       queued_topic_label: "已加入队列的话题"
       user_label: "用户"
@@ -807,7 +812,7 @@ zh_CN:
         note_added_by: "%{username} 的版主注释 · %{relativeDate}"
         no_events: "没有可显示的时间线事件"
       notes:
-        add_note_description: "仅对版主可见。使用此注释来添加有关审核的背景信息或决定。"
+        add_note_description: "添加一个注释以向其他版主提供背景信息。"
         add_note_button: "添加注释"
         placeholder: "在这里写下您的注释…"
         chars_remaining: "剩余 %{count} 个字符"
@@ -820,6 +825,7 @@ zh_CN:
       review_user: "用户"
       need_help: "需要帮助？"
       copy_link: "复制链接"
+      copy_permalink_title: "将此可评论项目的链接复制到剪贴板"
       copy_link_feedback: "链接已复制"
       view_source: "查看来源"
       insights:
@@ -1286,6 +1292,8 @@ zh_CN:
       new_private_message: "新消息"
       private_message: "私信"
       private_messages: "消息"
+      upcoming_changes:
+        title: "即将发布的更新"
       user_notifications:
         filters:
           filter_by: "筛选依据"
@@ -2696,6 +2704,7 @@ zh_CN:
       exit_fullscreen_prompt: "按 <kbd>ESC</kbd> 退出全屏"
       show_toolbar: "显示编辑器工具栏"
       hide_toolbar: "隐藏编辑器工具栏"
+      peek_mode_toggle: "切换预览模式"
       modal_ok: "确定"
       cant_send_pm: "抱歉，您无法向 %{username} 发送消息。"
       create_message_error: "抱歉，创建该消息时出错。请重试。"
@@ -3120,7 +3129,7 @@ zh_CN:
           other: "所有标签将从 <b>%{count}</b> 个话题中移除。确定吗？"
         progress:
           other: "进度：<strong>%{count}</strong> 个话题"
-        silent: "静默执行此操作。"
+        notify: "将此更新通知用户"
         performing: "正在执行批量操作，请稍候…"
         completed: "批量操作成功完成！"
       none:
@@ -3704,7 +3713,6 @@ zh_CN:
         post_language_selector:
           none: "无"
         edit_warning:
-          message: "这是一篇翻译的帖子。<br><br>您是要编辑%{language}原帖还是编辑此特定翻译？"
           action_original: "编辑原帖"
           action_translation: "编辑此翻译"
       errors:
@@ -4006,18 +4014,15 @@ zh_CN:
       default_top_period: "默认热门时长："
       default_list_filter: "默认列表筛选器："
       allow_badges_label: "允许在此类别中授予徽章"
-      edit_permissions: "编辑权限"
       reviewable_by_group: "除管理人员外，此类别中的内容还可以由以下群组审核："
       review_group_name: "群组名称"
       require_topic_approval: "所有新话题都需要版主审批"
       require_reply_approval: "所有新回复都需要版主审批"
       this_year: "今年"
       position: "类别页面上的位置："
-      default_position: "默认位置"
       position_disabled: "类别将按活动顺序显示。要控制列表中类别的顺序，请启用<a href='%{url}'>固定类别位置</a>设置。"
       minimum_required_tags: "话题中所需的最少标签数："
       default_slow_mode: '为此类别中的新话题启用“慢速模式”。'
-      parent: "父类别"
       num_auto_bump_daily: "每天自动顶贴的开放话题的数量："
       auto_bump_cooldown_days: "再次顶帖同一话题之前的最短天数。"
       navigate_to_first_post_after_read: "阅读话题后导航到第一个帖子"
@@ -4078,7 +4083,7 @@ zh_CN:
       description: "要举报非法内容，请联系 <a href='mailto:%{email}?subject=Illegal content: %{topic_title}&body=This post %{url} contains illegal content.'>%{email}</a>"
     flagging:
       title: "感谢您维护社区的文明！"
-      review_process_description: "版主已收到所有举报，将尽快进行审核。"
+      review_process_description: "版主收到举报后将尽快进行审核。"
       action: "举报帖子"
       take_action: "采取行动…"
       take_action_options:
@@ -4361,6 +4366,7 @@ zh_CN:
         go_to_unread_post: "%{shortcut} 转到第一个未读帖子"
       application:
         title: "应用程序"
+        create: "%{shortcut} 创建新话题或私信"
         notifications: "%{shortcut} 打开通知"
         hamburger_menu: "%{shortcut} 打开导航菜单"
         user_profile_menu: "%{shortcut} 打开用户菜单"
@@ -4567,7 +4573,7 @@ zh_CN:
         about_heading_empty: "创建一个新的标签组以开始"
         about_description: "标签组可帮助您在一个地方管理多个标签的权限。"
         new: "新标签组"
-        new_title: "创建新组"
+        new_title: "创建标签组"
         edit_title: "编辑标签组"
         tags_label: "此组中的标签"
         parent_tag_label: "上级标签"
@@ -5010,6 +5016,7 @@ zh_CN:
     type_to_filter: "输入以筛选…"
     settings: "设置"
     reset_filter: "重置"
+    toggle_filters: "切换下拉筛选器"
     admin:
       title: "Discourse 管理员"
       moderator: "版主"
@@ -5121,6 +5128,7 @@ zh_CN:
           keywords: "语言区域|语言|时区|unicode|ltr"
         upcoming_changes:
           title: "即将推出的更改"
+          header_description: "即将到来的 Discourse 更新列表，可能会影响您的站点，以及您可以选择加入的实验性功能。您可以按影响程度、更改类型和状态进行筛选。\n\n选择加入组可用于让特定用户组在更新发布给所有人之前进行测试，不过一旦更新进入稳定状态，这些组就不再相关。"
         login:
           title: "登录与身份验证"
           header_description: "配置用户登录和验证方式、机密和密钥、OAuth2 提供商等。"
@@ -5216,6 +5224,26 @@ zh_CN:
               other: "您已经更新了默认文本大小。是否要将此更改应用于 %{count} 位现有用户？"
             modal_yes: "是"
             modal_no: "否，只适用于未来"
+        welcome_banner:
+          title: "欢迎横幅"
+          form:
+            background_image:
+              label: "背景图片"
+            text_color:
+              label: "文本颜色"
+            page_visibility:
+              options:
+                top_menu_pages: "顶部菜单页面"
+                all_pages: "所有页面"
+            location:
+              label: "地点"
+              options:
+                above_topic_content: "话题内容上方"
+                below_site_header: "站点标题下方"
+            header_logged_in:
+              placeholder: "欢迎回来，%{preferred_display_name}！"
+            header_anonymous:
+              placeholder: "欢迎来到 %{site_name}！"
         navigation:
           title: "导航"
           header_description: "配置网站的导航链接与菜单项。这包括主导航菜单、首页顶部快速链接以及管理边栏的位置和行为"
@@ -6898,6 +6926,8 @@ zh_CN:
             delete_associated_accounts: "删除关联帐户"
             change_theme_site_setting: "更改主题站点设置"
             stop_impersonating: "停止模拟"
+            upcoming_change_toggled: "切换即将到来的更新"
+            change_site_setting_groups: "更改站点设置组"
         screened_emails:
           title: "已屏蔽的电子邮件地址"
           description: "当有人尝试创建新帐户时，将检查以下电子邮件地址并禁止注册，或执行某些其他操作。"
@@ -6983,7 +7013,7 @@ zh_CN:
           success: "成功"
           exists: "已存在"
           upload: "从文件添加"
-          upload_successful: "上传成功。关注词已添加。"
+          upload_successful: "上传成功。词汇将很快被处理。"
           case_sensitivity_label: "是否区分大小写"
           case_sensitivity_description: "仅限字符大小写匹配的单词"
           html_label: "HTML"
@@ -7075,10 +7105,7 @@ zh_CN:
             second: "选项 2"
             third: "选项 3"
         edit_category:
-          toggle_freeform: "表单模板已禁用"
-          toggle_form_template: "表单模板已启用"
           select_template: "选择表单模板"
-          select_template_help: "添加/编辑表单模板"
         errors:
           multiple_tags_not_allowed: '您不能从“%{tag_name}”中选择更多标签。为避免出现问题，请使用表单模板'
       impersonate:
@@ -7310,6 +7337,7 @@ zh_CN:
         merging_user: "正在合并用户…"
         merge_failed: "合并用户时出错。"
         delete_forbidden_because_admin: "管理员不能被删除。"
+        delete_posts_forbidden_because_admin: "无法删除管理员的所有帖子。"
         delete_forbidden:
           other: "如果用户有帖子，则无法删除用户。在尝试删除用户之前请删除所有帖子。（无法删除超过 %{count} 天的帖子。）"
         cant_delete_all_posts:
@@ -7384,7 +7412,7 @@ zh_CN:
           flagged_by_users: "发起举报的用户"
           likes_given: "点赞"
           likes_received: "获赞"
-          likes_received_days: "获赞：单日最高数量"
+          likes_received_days: "获赞：被点赞的天数"
           likes_received_users: "获赞：点赞用户数量"
           suspended: "被封禁（过去 6 个月）"
           silenced: "被禁言（过去 6 个月）"
@@ -7729,6 +7757,7 @@ zh_CN:
         category: "发布到类别"
         tags: "话题标签"
         post_author: "帖子作者"
+        post_author_description: "为本主机所有嵌入主题设置的作者，覆盖博客页面元标签。留空则从页面的 <meta name='discourse-username'> 或 <meta name='author'> 标签读取作者信息。"
         post_author_with_default: "帖子作者（默认为 %{author}）"
         add_host: "添加主机"
         posts_and_topics: "帖子和话题配置"

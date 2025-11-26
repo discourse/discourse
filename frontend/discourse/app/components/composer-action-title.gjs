@@ -75,7 +75,6 @@ export default class ComposerActionTitle extends Component {
     if (
       this.currentUser &&
       this.siteSettings.content_localization_enabled &&
-      this.currentUser.can_localize_content &&
       allowedActions.includes(this.model.action)
     ) {
       return true;

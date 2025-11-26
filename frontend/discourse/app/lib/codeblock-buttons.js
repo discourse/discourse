@@ -73,6 +73,7 @@ export default class CodeblockButtons {
     this._addClickEvent(element);
   }
 
+  @bind
   cleanup() {
     Object.values(this._codeblockButtonClickHandlers || {}).forEach((handler) =>
       handler.removeEventListener("click", this._handleClick)

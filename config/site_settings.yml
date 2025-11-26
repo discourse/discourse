@@ -567,6 +567,16 @@ basic:
     enum: "InterfaceColorSelectorSetting"
     default: "disabled"
     area: "interface"
+  promote_upcoming_changes_on_status:
+    default: "stable"
+    type: enum
+    choices:
+      - pre_alpha
+      - alpha
+      - beta
+      - stable
+      - never
+    hidden: true
 
 login:
   login_required:
@@ -1719,6 +1729,10 @@ content_localization:
     client: true
     default: "1|2" # admin, moderator
     area: "localization"
+  content_localization_allow_author_localization:
+    default: true
+    client: true
+    area: "localization"
   content_localization_supported_locales:
     default: ""
     type: list
@@ -1744,6 +1758,9 @@ content_localization:
     validator: "LanguageSwitcherSettingValidator"
   content_localization_crawler_param:
     default: false
+    area: "localization"
+  content_localization_use_default_locale_when_unsupported:
+    default: true
     area: "localization"
 
 email:
@@ -2391,6 +2408,9 @@ files:
   mediaconvert_endpoint:
     default: ""
     hidden: true
+  mediaconvert_output_subdirectory:
+    default: "transcoded"
+    validator: "MediaconvertOutputSubdirectoryValidator"
 
 trust:
   default_trust_level:
@@ -4234,27 +4254,6 @@ experimental:
     allow_any: false
     refresh: true
     area: "group_permissions|navigation|experimental"
-  glimmer_post_stream_mode_auto_groups:
-    client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
-    area: "experimental"
-  glimmer_post_stream_mode:
-    client: true
-    type: enum
-    choices:
-      - disabled
-      - auto
-      - enabled
-    default: "enabled"
-    area: "experimental"
-  deactivate_widgets_rendering:
-    client: true
-    default: true
-    area: "experimental"
   enable_rich_text_paste:
     client: true
     default: true
@@ -4290,4 +4289,3 @@ experimental:
       status: "alpha"
       impact: "other,all_members"
       learn_more_url: "https://meta.discourse.org"
-

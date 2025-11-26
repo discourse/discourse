@@ -17,6 +17,7 @@ class LlmModel < ActiveRecord::Base
   validates :max_prompt_tokens, numericality: { greater_than: 0 }
   validates :input_cost,
             :cached_input_cost,
+            :cache_write_cost,
             :output_cost,
             :max_output_tokens,
             numericality: {
@@ -41,6 +42,16 @@ class LlmModel < ActiveRecord::Base
         disable_top_p: :checkbox,
         enable_reasoning: :checkbox,
         reasoning_tokens: :number,
+        prompt_caching: {
+          type: :enum,
+          values: %w[never tool_results always],
+          default: "never",
+        },
+        effort: {
+          type: :enum,
+          values: %w[default low medium high],
+          default: "default",
+        },
       },
       anthropic: {
         disable_native_tools: :checkbox,
@@ -48,6 +59,16 @@ class LlmModel < ActiveRecord::Base
         disable_top_p: :checkbox,
         enable_reasoning: :checkbox,
         reasoning_tokens: :number,
+        prompt_caching: {
+          type: :enum,
+          values: %w[never tool_results always],
+          default: "never",
+        },
+        effort: {
+          type: :enum,
+          values: %w[default low medium high],
+          default: "default",
+        },
       },
       open_ai: {
         organization: :text,
@@ -236,21 +257,22 @@ end
 # Table name: llm_models
 #
 #  id                :bigint           not null, primary key
+#  api_key           :string
+#  cache_write_cost  :float            default(0.0)
+#  cached_input_cost :float
 #  display_name      :string
-#  name              :string           not null
-#  provider          :string           not null
-#  tokenizer         :string           not null
+#  enabled_chat_bot  :boolean          default(FALSE), not null
+#  input_cost        :float
+#  max_output_tokens :integer
 #  max_prompt_tokens :integer          not null
+#  name              :string           not null
+#  output_cost       :float
+#  provider          :string           not null
+#  provider_params   :jsonb
+#  tokenizer         :string           not null
+#  url               :string
+#  vision_enabled    :boolean          default(FALSE), not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
-#  url               :string
-#  api_key           :string
 #  user_id           :integer
-#  enabled_chat_bot  :boolean          default(FALSE), not null
-#  provider_params   :jsonb
-#  vision_enabled    :boolean          default(FALSE), not null
-#  input_cost        :float
-#  cached_input_cost :float
-#  output_cost       :float
-#  max_output_tokens :integer
 #

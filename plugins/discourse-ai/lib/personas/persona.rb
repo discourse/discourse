@@ -44,7 +44,6 @@ module DiscourseAi
             SettingsExplorer => -4,
             Researcher => -5,
             Creative => -6,
-            DallE3 => -7,
             DiscourseHelper => -8,
             GithubHelper => -9,
             WebArtifactCreator => -10,
@@ -136,10 +135,10 @@ module DiscourseAi
           tools << Tools::GithubSearchCode if SiteSetting.ai_bot_github_access_token.present?
 
           tools << Tools::ListTags if SiteSetting.tagging_enabled
-          tools << Tools::Image if SiteSetting.ai_stability_api_key.present?
 
-          if SiteSetting.ai_openai_api_key.present?
-            tools << Tools::DallE
+          # Image generation tools - use custom UI-configured tools
+          if Tools::Tool.available_custom_image_tools.present?
+            tools << Tools::Image
             tools << Tools::CreateImage
             tools << Tools::EditImage
           end
@@ -327,6 +326,9 @@ module DiscourseAi
 
         if tool_instance
           tool_instance.parameters = arguments
+          tool_instance.provider_data = tool_call.provider_data if tool_instance.respond_to?(
+            :provider_data=,
+          )
           tool_instance
         else
           tool_klass.new(
@@ -336,6 +338,7 @@ module DiscourseAi
             bot_user: bot_user,
             llm: llm,
             context: context,
+            provider_data: tool_call.provider_data,
           )
         end
       end

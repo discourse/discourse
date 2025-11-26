@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { cancel, schedule, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
+import { isNone, isPresent } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
 import { observes, on as onEvent } from "@ember-decorators/object";
 import curryComponent from "ember-curry-component";
@@ -18,13 +19,13 @@ import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DEditorPreview from "discourse/components/d-editor-preview";
+import EmojiAutocompleteResults from "discourse/components/emoji-autocomplete-results";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PopupInputTip from "discourse/components/popup-input-tip";
 import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import concatClass from "discourse/helpers/concat-class";
-import renderEmojiAutocomplete from "discourse/lib/autocomplete/emoji";
 import Toolbar from "discourse/lib/composer/toolbar";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import discourseDebounce from "discourse/lib/debounce";
@@ -103,7 +104,7 @@ export default class DEditor extends Component {
 
   setupToolbar() {
     this.toolbar = new Toolbar(
-      this.getProperties("siteSettings", "showLink", "capabilities")
+      this.getProperties("siteSettings", "showLink", "capabilities", "site")
     );
     this.toolbar.context = this;
 
@@ -115,7 +116,7 @@ export default class DEditor extends Component {
   }
 
   async setupEditorMode() {
-    if (this.forceEditorMode) {
+    if (isPresent(this.forceEditorMode)) {
       if (this.forceEditorMode === USER_OPTION_COMPOSITION_MODES.rich) {
         this.editorComponent = await loadRichEditor();
       } else {
@@ -163,7 +164,7 @@ export default class DEditor extends Component {
 
   @discourseComputed("siteSettings.rich_editor", "forceEditorMode")
   showEditorModeToggle() {
-    return this.siteSettings.rich_editor && !this.forceEditorMode;
+    return this.siteSettings.rich_editor && isNone(this.forceEditorMode);
   }
 
   _readyNow() {
@@ -240,7 +241,7 @@ export default class DEditor extends Component {
     // itsatrap expects the return value to be false to prevent default
     keymap["tab"] = () => !this.textManipulation.indentSelection("right");
     keymap["shift+tab"] = () => !this.textManipulation.indentSelection("left");
-    if (this.siteSettings.rich_editor && !this.forceEditorMode) {
+    if (this.siteSettings.rich_editor && isNone(this.forceEditorMode)) {
       keymap["ctrl+m"] = () => this.toggleRichEditor();
     }
 
@@ -316,8 +317,8 @@ export default class DEditor extends Component {
     }
 
     this.textManipulation.autocomplete({
-      template: renderEmojiAutocomplete,
-      key: ":",
+      component: EmojiAutocompleteResults,
+      key: EmojiAutocompleteResults.TRIGGER_KEY,
       afterComplete: () => {
         schedule(
           "afterRender",
@@ -328,7 +329,7 @@ export default class DEditor extends Component {
 
       onKeyUp: (text, cp) => {
         const matches = new RegExp(
-          `(?:^|${EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP.source})(:(?!:).?[\\w-]*:?(?!:)(?:t\\d?)?:?) ?$`,
+          `(?:^|${EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP.source})(:(?!:).?[\\w-]*:?(?!:)(?:t\\d?)?:?)$`,
           "gi"
         ).exec(text.substring(0, cp));
 
@@ -633,8 +634,7 @@ export default class DEditor extends Component {
 
   @action
   async toggleRichEditor() {
-    // Can't toggle if only rich/markdown is allowed.
-    if (this.forceEditorMode) {
+    if (isPresent(this.forceEditorMode)) {
       return;
     }
 

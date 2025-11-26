@@ -8,10 +8,6 @@ class Group < ActiveRecord::Base
   MAX_EMAIL_DOMAIN_LENGTH = 253
   RESERVED_NAMES = %w[by-id]
 
-  # TODO: Remove flair_url when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
-  # TODO: Remove smtp_ssl when db/post_migrate/20240717053710_drop_groups_smtp_ssl has been promoted to pre-deploy
-  self.ignored_columns = %w[flair_url smtp_ssl]
-
   include HasCustomFields
   include AnonCacheInvalidator
   include HasDestroyedWebHook

@@ -1765,7 +1765,6 @@ et:
       unread_indicator: "Ükski liige pole veel selle teema viimast postitust lugenud."
       deleted: "See teema on kustutatud"
       slow_mode_update:
-        title: "Aeglane režiim"
         select: "Kasutajad saavad sellesse teemasse postitada ainult sagedusega:"
         description: "Väga aktiivsete või vaidlusaluste arutelude läbimõeldud arutelu edendamiseks peavad kasutajad enne siia teemasse uuesti postitamist ootama."
         enable: "Võimalda"
@@ -2197,18 +2196,11 @@ et:
       required_tag_group:
         delete: "Kustuta"
       topic_featured_link_allowed: "Luba selles kategoorias esiletõstetud linke "
-      delete: "Kustuta kategooria"
-      create: "Uus kategooria"
       create_long: "Loo uus kategooria"
-      save: "Salvesta kategooria"
-      slug: "Kategooria toorik"
       slug_placeholder: "(Valikulised) sidekriipsuga-sõnad url-i jaoks"
       creation_error: Kategooria loomisel tekkis viga.
       save_error: Kategooria salvestamisel tekkis viga.
-      name: "Kategooria nimi"
       description: "Kirjeldus"
-      logo: "Kategooria logo"
-      background_image: "Kategooria taustapilt"
       background_color: "Värv"
       color_validations:
         cant_be_empty: "ei tohi olla tühi"
@@ -2222,9 +2214,7 @@ et:
       color_placeholder: "Mis tahes veebivärv"
       delete_confirm: "Kas oled kindel, et soovid selle kategooria kustutada?"
       delete_error: "Kategooria kustutamisel tekkis viga."
-      list: "Loetle kategooriad"
       no_description: "Palun lisa sellele kategooriale kirjeldus."
-      change_in_category_topic: "Muuda kirjeldust"
       already_used: "Teine kategooria juba kasutab seda värvi"
       security: "Turve"
       permissions:
@@ -2248,20 +2238,13 @@ et:
       subcategory_num_featured_topics: "Esile tõstetud teemade arv ülemkategooria lehel:"
       all_topics_wiki: "Tee uued teemad vaikimisi vikideks"
       subcategory_list_style: "Alamkategooriate loendi stiil:"
-      sort_order: "Teemade nimekirja järjestamine:"
-      default_view: "Vaikimisi teemade nimekiri:"
-      default_top_period: "Vaikimisi teemade ajaperiood:"
-      default_list_filter: "Vaikimisi teemade filter:"
       allow_badges_label: "Luba selles kategoorias autasustamist märgistega"
-      edit_permissions: "Muuda kasutusõigusi"
       review_group_name: "rühma nimi"
       require_topic_approval: "Nõua moderaatori heakskiitu kõikidele uutele teemadele"
       require_reply_approval: "Nõua moderaatori heakskiitu kõikidele uutele vastustele"
       this_year: "sel aastal"
       position: "Asukoht kategooriate lehel:"
-      default_position: "Vaikepositsioon"
       minimum_required_tags: "Minimaalne nõutud siltide arv teemas:"
-      parent: "Emakategooria"
       num_auto_bump_daily: "Avatud teemade arv, mida iga päev automaatselt tõsta:"
       navigate_to_first_post_after_read: "Ava pärast teemade läbi lugemist esimene sõnum"
       notifications:
@@ -2284,7 +2267,6 @@ et:
       sort_options:
         default: "vaikimisi"
         likes: "Meeldimisi"
-        op_likes: "Algse postituse meeldimisi"
         views: "Vaatamisi"
         posts: "Postitused"
         activity: "Tegevused"
@@ -2450,7 +2432,7 @@ et:
         title: "Juhtivad"
         help: "aktiivseimad teemad viimase aasta, kuu, nädala või päeva sees"
         all:
-          title: "Alates algusest"
+          title: "Kogu aeg"
         yearly:
           title: "Iga-aastaselt"
         quarterly:
@@ -2461,7 +2443,7 @@ et:
           title: "Iganädalaselt"
         daily:
           title: "Igapäevaselt"
-        all_time: "Alates algusest"
+        all_time: "Kogu aeg"
         this_year: "Aasta"
         this_quarter: "Kvartal"
         this_month: "Kuu"
@@ -2582,12 +2564,9 @@ et:
         muted:
           title: "Vaigistatud"
       groups:
-        title: "Sildirühmad"
-        new: "Uus rühm"
         tags_label: "Sildid selles rühmas"
         parent_tag_label: "Ülemsilt"
         one_per_topic_label: "Vaid üks selle rühma silt teema kohta"
-        new_name: "Uus sildirühm"
         name_placeholder: "Nimi"
         save: "Salvesta"
         delete: "Kustuta"
@@ -2776,6 +2755,12 @@ et:
         fonts:
           backfill_modal:
             modal_yes: "Jah"
+        welcome_banner:
+          form:
+            location:
+              label: "Asukoht"
+            header_anonymous:
+              placeholder: "Tere tulemast saidile %{site_name}!"
         navigation:
           title: "Navigatsioon"
         notifications:

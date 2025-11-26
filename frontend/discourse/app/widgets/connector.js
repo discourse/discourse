@@ -1,37 +1,29 @@
-import { getOwner } from "@ember/owner";
-import { next } from "@ember/runloop";
+/**
+ * IMPORTANT: The widget rendering system has been decommissioned.
+ *
+ * This file is maintained only to prevent breaking imports in existing third-party customizations.
+ * New code should not use this component or the widget system.
+ */
 
+import { warnWidgetsDecommissioned } from "discourse/widgets/widget";
+
+/**
+ * This class is kept only for backward compatibility.
+ *
+ * @deprecated This class is part of the decommissioned widget system and should not be used anymore.
+ */
 export default class Connector {
-  constructor(widget, opts) {
-    this.widget = widget;
-    this.opts = opts;
+  constructor() {
+    warnWidgetsDecommissioned();
   }
 
-  init() {
-    const elem = document.createElement("div");
-    elem.classList.add("widget-connector");
+  /**
+   * @deprecated the widget rendering system was decommissioned
+   */
+  init() {}
 
-    const { opts, widget } = this;
-    next(() => {
-      const mounted = widget._findView();
-
-      if (opts.component) {
-        const component = getOwner(mounted)
-          .factoryFor("component:connector-container")
-          .create({
-            layoutName: `components/${opts.component}`,
-            model: widget.findAncestorModel(),
-          });
-
-        mounted._connected.push(component);
-        component.renderer.appendTo(component, elem);
-      }
-    });
-
-    return elem;
-  }
-
+  /**
+   * @deprecated the widget rendering system was decommissioned
+   */
   update() {}
 }
-
-Connector.prototype.type = "Widget";

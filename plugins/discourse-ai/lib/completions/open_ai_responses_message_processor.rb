@@ -3,14 +3,14 @@ module DiscourseAi::Completions
   class OpenAiResponsesMessageProcessor
     PROVIDER_KEY = :open_ai_responses
 
-    attr_reader :prompt_tokens, :completion_tokens, :cached_tokens
+    attr_reader :prompt_tokens, :completion_tokens, :cache_read_tokens
 
     def initialize(partial_tool_calls: false, output_thinking: false)
       @tool = nil # currently streaming ToolCall
       @tool_arguments = +""
       @prompt_tokens = nil
       @completion_tokens = nil
-      @cached_tokens = nil
+      @cache_read_tokens = nil
       @partial_tool_calls = partial_tool_calls
       @streaming_parser = nil # JsonStreamingTracker, if used
       @has_new_data = false
@@ -203,7 +203,7 @@ module DiscourseAi::Completions
 
       @prompt_tokens ||= usage[:input_tokens] - cached_tokens
       @completion_tokens ||= usage[:output_tokens]
-      @cached_tokens ||= cached_tokens
+      @cache_read_tokens ||= cached_tokens
     end
 
     def build_partial_reasoning_delta(json, prefix: nil)

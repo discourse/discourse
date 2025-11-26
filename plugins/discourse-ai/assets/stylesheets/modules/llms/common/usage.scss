@@ -1,7 +1,10 @@
+@use "lib/viewport";
+
 .ai-usage {
   --chart-response-color: rgb(75, 192, 192, 0.8);
   --chart-request-color: rgb(153, 102, 255, 0.8);
-  --chart-cached-color: rgb(153, 102, 255, 0.4);
+  --chart-cache-read-color: rgb(255, 159, 64, 0.5);
+  --chart-cache-write-color: rgb(255, 159, 64, 0.9);
   padding: 1em;
 
   &__filters-dates {
@@ -89,7 +92,7 @@
     gap: 2em;
     margin-top: 2em;
 
-    @media (width <= 768px) {
+    @include viewport.until(lg) {
       grid-template-columns: none;
       display: flex;
       flex-direction: column;
@@ -98,28 +101,35 @@
 
   &__users {
     grid-column: span 2;
+  }
 
-    .admin-config-area-card__content {
-      display: flex;
+  &__users-table-wrapper {
+    &.-multi-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2em;
+      align-items: start;
 
       .ai-usage__users-table {
-        &:first-child {
-          margin-right: 2em;
-
-          &.-double-width {
-            margin-right: 0;
-          }
-        }
-
-        &.-double-width {
-          .ai-usage__users-username {
-            width: auto;
-          }
-        }
-
         .ai-usage__users-username {
           width: 50px;
         }
+      }
+
+      @include viewport.until(md) {
+        grid-template-columns: 1fr;
+      }
+
+      .has-sidebar-page & {
+        @include viewport.until(lg) {
+          grid-template-columns: 1fr;
+        }
+      }
+    }
+
+    &:not(.-multi-column) {
+      .ai-usage__users-table .ai-usage__users-username {
+        width: auto;
       }
     }
   }
@@ -145,11 +155,25 @@
     }
   }
 
+  &__users-cell {
+    .user-info {
+      margin-bottom: 0;
+
+      a {
+        display: flex;
+        gap: var(--space-2);
+        width: 100%;
+      }
+    }
+  }
+
   &__features-cell,
   &__users-cell,
   &__models-cell {
     padding: 0.5em;
     border-bottom: 1px solid var(--primary-low);
+    overflow-wrap: anywhere;
+    width: 100%;
   }
 
   &__credit-allocations {

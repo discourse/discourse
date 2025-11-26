@@ -130,6 +130,7 @@ module SvgSprite
         fab-windows
         far-bell
         far-bell-slash
+        far-bookmark
         far-calendar-plus
         far-chart-bar
         far-circle
@@ -243,6 +244,8 @@ module SvgSprite
         sun
         table
         table-cells
+        table-cells-minus
+        table-cells-plus
         table-columns
         tag
         tags

@@ -196,6 +196,7 @@ CREATE TABLE tags
     original_id NUMERIC  NOT NULL PRIMARY KEY,
     created_at  DATETIME,
     description TEXT,
+    locale      TEXT,
     name        TEXT     NOT NULL
 );
 

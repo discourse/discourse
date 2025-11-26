@@ -74,11 +74,6 @@ describe TopicLocalizationsController do
       }.not_to change { TopicLocalization.count }
       expect(response.status).to eq(403)
     end
-
-    it "returns not found if topic does not exist" do
-      post "/topic_localizations/create_or_update.json", params: { topic_id: -1, locale:, title: }
-      expect(response.status).to eq(404)
-    end
   end
 
   describe "#destroy" do
@@ -104,6 +99,119 @@ describe TopicLocalizationsController do
         delete "/topic_localizations/destroy.json", params: { topic_id: -1, locale: "ja" }
       }.not_to change { TopicLocalization.count }
       expect(response.status).to eq(404)
+    end
+  end
+
+  context "with author localization" do
+    fab!(:author, :user)
+    fab!(:author_topic) { Fabricate(:topic, user: author) }
+    fab!(:other_user, :user)
+
+    before { group.remove(author) }
+
+    describe "#create_or_update for topic authors" do
+      it "allows topic author to create localization on their own topic" do
+        sign_in(author)
+
+        SiteSetting.content_localization_allow_author_localization = false
+        expect {
+          post "/topic_localizations/create_or_update.json",
+               params: {
+                 topic_id: author_topic.id,
+                 locale:,
+                 title:,
+               }
+        }.not_to change { TopicLocalization.count }
+
+        SiteSetting.content_localization_allow_author_localization = true
+        expect {
+          post "/topic_localizations/create_or_update.json",
+               params: {
+                 topic_id: author_topic.id,
+                 locale:,
+                 title:,
+               }
+        }.to change { TopicLocalization.count }.by(1)
+        expect(response.status).to eq(201)
+        localization = TopicLocalization.last
+        expect(localization.localizer_user_id).to eq(author.id)
+      end
+
+      it "denies topic author from creating localization on others' topics" do
+        SiteSetting.content_localization_allow_author_localization = true
+        sign_in(author)
+
+        expect {
+          post "/topic_localizations/create_or_update.json",
+               params: {
+                 topic_id: topic.id,
+                 locale:,
+                 title:,
+               }
+        }.not_to change { TopicLocalization.count }
+        expect(response.status).to eq(403)
+      end
+    end
+
+    describe "#create_or_update updates for topic authors" do
+      it "allows topic author to update localization on their own topic" do
+        Fabricate(:topic_localization, topic: author_topic, locale:, title: "Old title")
+        SiteSetting.content_localization_allow_author_localization = true
+        sign_in(author)
+
+        expect {
+          post "/topic_localizations/create_or_update.json",
+               params: {
+                 topic_id: author_topic.id,
+                 locale:,
+                 title:,
+               }
+        }.not_to change { TopicLocalization.count }
+        expect(response.status).to eq(200)
+        localization = TopicLocalization.find_by(topic: author_topic, locale:)
+        expect(localization.title).to eq(title)
+        expect(localization.localizer_user_id).to eq(author.id)
+      end
+
+      it "denies topic author from updating localization on others' topics" do
+        Fabricate(:topic_localization, topic: topic, locale:, title: "Old title")
+        SiteSetting.content_localization_allow_author_localization = true
+        sign_in(author)
+
+        expect {
+          post "/topic_localizations/create_or_update.json",
+               params: {
+                 topic_id: topic.id,
+                 locale:,
+                 title:,
+               }
+        }.not_to change { TopicLocalization.count }
+        expect(response.status).to eq(403)
+      end
+    end
+
+    describe "#destroy for topic authors" do
+      it "allows topic author to destroy localization on their own topic" do
+        Fabricate(:topic_localization, topic: author_topic, locale:, title: "Title")
+        SiteSetting.content_localization_allow_author_localization = true
+        sign_in(author)
+
+        expect {
+          delete "/topic_localizations/destroy.json", params: { topic_id: author_topic.id, locale: }
+        }.to change { TopicLocalization.count }.by(-1)
+        expect(response.status).to eq(204)
+      end
+
+      it "denies topic author from destroying localization on others' topics" do
+        Fabricate(:topic_localization, topic: topic, locale:, title: "Title")
+        SiteSetting.content_localization_allow_author_localization = true
+        sign_in(author)
+
+        expect {
+          delete "/topic_localizations/destroy.json", params: { topic_id: topic.id, locale: }
+        }.not_to change { TopicLocalization.count }
+        expect(response.status).to eq(403)
+      end
     end
   end
 end

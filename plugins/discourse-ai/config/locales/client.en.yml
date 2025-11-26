@@ -307,6 +307,11 @@ en:
           post_raw_translator: "Post raw translator"
           topic_title_translator: "Topic title translator"
           short_text_translator: "Short text translator"
+          schedule_untranslated: "Schedule translations"
+          schedule_topic_success:
+            one: "Scheduled translation for %{count} untranslated post."
+            other: "Scheduled translation for %{count} untranslated posts."
+          schedule_topic_error: "Failed to schedule translations. Please try again."
 
         spam:
           name: "Spam"
@@ -422,6 +427,8 @@ en:
         request_tokens: "Request tokens"
         response_tokens: "Response tokens"
         net_request_tokens: "Net request tokens"
+        cache_read_tokens: "Cache read tokens"
+        cache_write_tokens: "Cache write tokens"
         cached_tokens: "Cached tokens"
         cached_request_tokens: "Cached request tokens"
         total_spending: "Estimated cost"
@@ -434,6 +441,8 @@ en:
           total_tokens: "All the tokens used when prompting an LLM"
           request_tokens: "Tokens used when the LLM tries to understand what you are saying"
           response_tokens: "Tokens used when the LLM responds to your prompt"
+          cache_read_tokens: "Previously processed request tokens that the LLM reuses from cache to optimize performance and cost"
+          cache_write_tokens: "Request tokens that were written to cache for potential future reuse"
           cached_tokens: "Previously processed request tokens that the LLM reuses to optimize performance and cost"
           total_spending: "Cumulative cost of all tokens used by the LLMs based on specified cost metrics added to LLM configuration settings"
         periods:
@@ -628,6 +637,7 @@ en:
         ai_bot_user: "AI bot User"
         cost_input: "Input cost"
         cost_cached_input: "Cached input cost"
+        cost_cache_write: "Cache write cost"
         cost_output: "Output cost"
 
         save: "Save"
@@ -677,7 +687,7 @@ en:
 
         model_description:
           none: "General settings that work for most language models"
-          anthropic-claude-opus-4-1: "Anthropic's most intelligent model"
+          anthropic-claude-opus-4-5: "Anthropic's most intelligent model"
           anthropic-claude-sonnet-4-5: "Optimal balance of speed and cost"
           anthropic-claude-haiku-4-5: "Fast and cost-effective"
           google-gemini-3-pro: "Google's most intelligent model"
@@ -727,7 +737,8 @@ en:
           vision_enabled: "If enabled, the AI will attempt to understand images. It depends on the model being used supporting vision. Supported by latest models from Anthropic, Google, and OpenAI."
           enabled_chat_bot: "If enabled, users can select this model when creating PMs with the AI bot"
           cost_input: "The input cost per 1M tokens for this model"
-          cost_cached_input: "The cached input cost per 1M tokens for this model"
+          cost_cached_input: "The cached input cost per 1M tokens for this model (when reading from prompt cache)"
+          cost_cache_write: "The cache write cost per 1M tokens for this model (when writing to prompt cache)"
           cost_output: "The output cost per 1M tokens for this model"
           cost_measure: "$/1M tokens"
         providers:
@@ -766,6 +777,11 @@ en:
           disable_temperature: "Disable temperature (some thinking models don't support temperature)"
           disable_top_p: "Disable top P (some thinking models don't support top P)"
           enable_responses_api: "Enable responses API (required on certain OpenAI models)"
+          prompt_caching: "Prompt caching mode"
+          prompt_caching_never: "Never - Do not use prompt caching"
+          prompt_caching_tool_results: "Tool Results - Cache when tool results are present (recommended)"
+          prompt_caching_always: "Always - Always use prompt caching"
+          effort: "Effort level (Claude Opus 4.5 only)"
 
       related_topics:
         title: "Related topics"
@@ -811,6 +827,7 @@ en:
           title: "Suggested thumbnails"
           select: "Select"
           selected: "Selected"
+          try_again: "Try Again"
         image_caption:
           button_label: "Caption with AI"
           generating: "Generating caption..."
@@ -921,6 +938,8 @@ en:
           copy_response: "Copy response"
           request_tokens: "Request tokens:"
           response_tokens: "Response tokens:"
+          cache_read_tokens: "Cache read tokens:"
+          cache_write_tokens: "Cache write tokens:"
           request: "Request"
           response: "Response"
           next_log: "Next"
@@ -1033,7 +1052,7 @@ en:
         loading_convo: "Loading conversation"
         collapse: "Collapse"
         timed_out: "Discobot couldn't find any discoveries. Something went wrong."
-        user_setting: "Enable search discoveries"
+        user_setting: "Enable AI search discoveries"
         tooltip:
           header: "AI powered search"
           content: "Natural language search powered by %{model}"

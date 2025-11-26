@@ -24,6 +24,8 @@ import * as ProsemirrorView from "prosemirror-view";
 import { EditorView } from "prosemirror-view";
 import { getExtensions } from "discourse/lib/composer/rich-editor-extensions";
 import { bind } from "discourse/lib/decorators";
+import forceScrollingElementPosition from "discourse/modifiers/force-scrolling-element-position";
+import { focusOffScreen } from "discourse/modifiers/prevent-scroll-on-focus";
 import { i18n } from "discourse-i18n";
 import { authorizesOneOrMoreExtensions } from "../../../lib/uploads";
 import { buildCommands, buildCustomState } from "../core/commands";
@@ -175,7 +177,7 @@ export default class ProsemirrorEditor extends Component {
         )
       ),
       keymap(baseKeymap),
-      dropCursor({ color: "var(--primary)" }),
+      dropCursor({ color: "var(--tertiary-high)", width: 4 }),
       gapCursor(),
       history(),
       ...extractPlugins(this.extensions, params, this.handleAsyncPlugin),
@@ -208,7 +210,12 @@ export default class ProsemirrorEditor extends Component {
         this.textManipulation.updateState();
       },
       handleDOMEvents: {
-        focus: () => {
+        focus: (view) => {
+          if (this.capabilities.isIOS) {
+            // prevents ios to attempt to scroll
+            focusOffScreen(view.dom);
+          }
+
           this.args.focusIn?.();
           return false;
         },
@@ -353,6 +360,7 @@ export default class ProsemirrorEditor extends Component {
       {{didUpdate this.convertFromValue @value}}
       {{didUpdate this.updateContext "placeholder" @placeholder}}
       {{willDestroy this.teardown}}
+      {{forceScrollingElementPosition}}
     ></div>
     {{#each this.glimmerNodeViews key="dom" as |nodeView|}}
       {{#in-element nodeView.dom insertBefore=null}}

@@ -11,6 +11,10 @@ et:
     emotion_neutral:
       title: "\U0001F610 Neutraalne"
   discourse_ai:
+    tools:
+      presets:
+        image_generation_custom:
+          name: "Individuaalne"
     ai_bot:
       tool_summary:
         search: "Otsi"

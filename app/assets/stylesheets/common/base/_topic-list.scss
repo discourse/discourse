@@ -48,23 +48,17 @@
 }
 
 .category-logo.aspect-image {
+  --max-height: 150px;
   width: auto;
-  max-height: 150px;
-}
+  max-height: var(--max-height);
+  max-width: 100%;
+  height: auto;
 
-@supports (--custom: property) {
-  .category-logo.aspect-image {
-    --max-height: 150px;
-    max-height: var(--max-height);
+  img {
+    width: calc(var(--max-height) * var(--aspect-ratio));
     max-width: 100%;
-    height: auto;
-
-    img {
-      width: calc(var(--max-height) * var(--aspect-ratio));
-      max-width: 100%;
-      height: inherit;
-      max-height: var(--max-height);
-    }
+    height: inherit;
+    max-height: var(--max-height);
   }
 }
 
@@ -180,7 +174,7 @@
       cursor: pointer;
     }
 
-    &.selected {
+    &.bulk-selected {
       background: var(--tertiary-low);
     }
   }
