@@ -6,7 +6,6 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
-import closeOnEscape from "discourse/float-kit/modifiers/close-on-escape";
 import { animateClosing } from "discourse/lib/animation-utils";
 import { isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
@@ -117,7 +116,6 @@ export default class HamburgerDropdownWrapper extends Component {
           secondaryTargetSelector=".hamburger-dropdown"
         )
       }}
-      {{closeOnEscape this.toggleNavigation}}
       {{didInsert this.setupWrapper}}
       ...attributes
     >
