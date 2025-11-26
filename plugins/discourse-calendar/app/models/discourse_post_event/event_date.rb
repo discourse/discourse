@@ -6,11 +6,7 @@ module DiscoursePostEvent
     belongs_to :event
 
     scope :pending,
-          -> do
-            where(finished_at: nil).joins(:event).where(
-              "discourse_post_event_events.deleted_at is NULL",
-            )
-          end
+          -> { where(finished_at: nil).joins(:event).merge(DiscoursePostEvent::Event.visible.open) }
     scope :expired, -> { where("ends_at IS NOT NULL AND ends_at < ?", Time.now) }
     scope :not_expired, -> { where("ends_at IS NULL OR ends_at > ?", Time.now) }
 
