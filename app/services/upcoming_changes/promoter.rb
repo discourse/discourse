@@ -29,6 +29,12 @@ class UpcomingChanges::Promoter
   end
 
   def setting_not_modified(params:)
+    # For permanent changes, we always force promotion no matter what
+    # the admin has previously done.
+    if UpcomingChanges.change_status_value(params.setting) == UpcomingChanges.statuses[:permanent]
+      return true
+    end
+
     !SiteSetting.exists?(name: params.setting)
   end
 

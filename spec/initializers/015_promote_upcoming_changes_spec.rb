@@ -23,14 +23,20 @@ describe "Promote upcoming changes initializer" do
           enable_upload_debug_mode: {
             impact: "other,developers",
             status: :stable,
-            impact_type: "feature",
-            impact_role: "admins",
+            impact_type: "other",
+            impact_role: "developers",
           },
           enable_user_tips: {
             impact: "feature,all_members",
             status: :beta,
             impact_type: "feature",
-            impact_role: "admins",
+            impact_role: "all_members",
+          },
+          show_user_menu_avatars: {
+            impact: "feature,all_members",
+            status: :permanent,
+            impact_type: "feature",
+            impact_role: "all_members",
           },
         },
       )
@@ -57,7 +63,7 @@ describe "Promote upcoming changes initializer" do
         SiteSetting.enable_upload_debug_mode = true
         DB.exec(
           "INSERT INTO site_settings (name, value, data_type, created_at, updated_at)
-          VALUES ('enable_upload_debug_mode', 'true', 5, NOW(), NOW())",
+          VALUES ('enable_upload_debug_mode', 'false', 5, NOW(), NOW())",
         )
       end
 
@@ -69,6 +75,25 @@ describe "Promote upcoming changes initializer" do
           expect(logger.warnings.join("\n")).to include(
             "'enable_upload_debug_mode' has already been modified by an admin, skipping promotion.",
           )
+        end
+      end
+
+      context "when the upcoming change has reached the permanent state" do
+        before do
+          DB.exec(
+            "INSERT INTO site_settings (name, value, data_type, created_at, updated_at)
+          VALUES ('show_user_menu_avatars', 'false', 5, NOW(), NOW())",
+          )
+        end
+
+        it "does enable the upcoming change and logs output" do
+          track_log_messages do |logger|
+            UpcomingChanges::AutoPromotionInitializer.call
+            expect(logger.infos.join("\n")).to include(
+              /Successfully promoted 'show_user_menu_avatars' to enabled/,
+            )
+          end
+          expect(SiteSetting.show_user_menu_avatars).to be(true)
         end
       end
     end
