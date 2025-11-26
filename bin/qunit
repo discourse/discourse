@@ -417,7 +417,7 @@ class QunitRunner
 
   def build_unicorn_environment(unicorn_port)
     pid_path = File.join(rails_root, "tmp/pids", "unicorn_test_#{unicorn_port}.pid")
-    {
+    env = {
       "RAILS_ENV" => @rails_env || "test",
       "SKIP_ENFORCE_HOSTNAME" => "1",
       "UNICORN_PID_PATH" => pid_path,
@@ -428,8 +428,11 @@ class QunitRunner
       "LOGSTASH_UNICORN_URI" => nil,
       "UNICORN_WORKERS" => "1",
       "UNICORN_TIMEOUT" => "90",
-      "LOAD_PLUGINS" => should_load_plugins? ? "1" : "0",
     }
+
+    env["LOAD_PLUGINS"] = "1" if should_load_plugins?
+
+    env
   end
 
   def wait_for_rails_server(port)
