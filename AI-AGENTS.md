@@ -48,10 +48,25 @@ Discourse is large with long history. Understand context before changes.
 bin/rspec [spec/path/file_spec.rb[:123]]
 LOAD_PLUGINS=1 bin/rspec  # Plugin tests
 
-# JavaScript tests - bin/qunit
-bin/qunit --help # detailed help
-bin/qunit path/to/test-file.js  # Run all tests in file
-bin/qunit path/to/tests/directory # Run all tests in directory
+# JavaScript tests
+bin/rake qunit:test # RUN all non plugin tests
+LOAD_PLUGINS=1 TARGET=all FILTER='fill filter here' bin/rake qunit:test # RUN specific tests based on filter
+
+Exmaple filters JavaScript tests:
+
+  emoji-test.js
+    ...
+    acceptance("Emoji" ..
+      test("cooked correctly")
+    ...
+  Filter string is: "Acceptance: Emoji: cooked correctly"
+
+  user-test.js
+    ...
+    module("Unit | Model | user" ..
+      test("staff")
+    ...
+  Filter string is: "Unit | Model | user: staff"
 
 # Linting
 bin/lint path/to/file path/to/another/file
