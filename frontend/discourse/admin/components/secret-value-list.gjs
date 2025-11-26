@@ -1,112 +1,130 @@
-/* eslint-disable ember/no-classic-components */
-import Component, { Input } from "@ember/component";
+import Component from "@glimmer/component";
+import { cached, tracked } from "@glimmer/tracking";
+import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";
 import { isEmpty } from "@ember/utils";
-import { classNameBindings } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import TextField from "discourse/components/text-field";
+import { addUniqueValueToArray } from "discourse/lib/array-tools";
 import { i18n } from "discourse-i18n";
 
-@classNameBindings(":value-list", ":secret-value-list")
+const INPUT_DELIMITER = "\n";
+
 export default class SecretValueList extends Component {
-  inputDelimiter = null;
-  collection = null;
-  values = null;
+  @tracked newKey;
+  @tracked newSecret;
 
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
-
-    this.set(
-      "collection",
-      this._splitValues(this.values, this.inputDelimiter || "\n")
-    );
+  @cached
+  get collection() {
+    return this.#splitValues(this.args.values, INPUT_DELIMITER);
   }
 
   @action
   changeKey(index, event) {
     const newValue = event.target.value;
 
-    if (this._checkInvalidInput(newValue)) {
+    if (this.#checkInvalidInput(newValue)) {
       return;
     }
 
-    this._replaceValue(index, newValue, "key");
+    this.#replaceValue(index, newValue, "key");
   }
 
   @action
   changeSecret(index, event) {
     const newValue = event.target.value;
 
-    if (this._checkInvalidInput(newValue)) {
+    if (this.#checkInvalidInput(newValue)) {
       return;
     }
 
-    this._replaceValue(index, newValue, "secret");
+    this.#replaceValue(index, newValue, "secret");
   }
 
   @action
   addValue() {
-    if (this._checkInvalidInput([this.newKey, this.newSecret])) {
+    if (this.#checkInvalidInput([this.newKey, this.newSecret])) {
       return;
     }
-    this._addValue(this.newKey, this.newSecret);
-    this.setProperties({ newKey: "", newSecret: "" });
+    this.#addValue(this.newKey, this.newSecret);
+
+    this.newKey = "";
+    this.newSecret = "";
   }
 
   @action
   removeValue(value) {
-    this._removeValue(value);
+    this.#removeValue(value);
   }
 
-  _checkInvalidInput(inputs) {
-    for (let input of inputs) {
+  #checkInvalidInput(inputs) {
+    for (const input of inputs) {
       if (isEmpty(input) || input.includes("|")) {
-        this.setValidationMessage(
+        this.args.setValidationMessage(
           i18n("admin.site_settings.secret_list.invalid_input")
         );
         return true;
       }
     }
-    this.setValidationMessage(null);
+
+    if (this.collection.some((item) => item.key.trim() === inputs[0].trim())) {
+      this.args.setValidationMessage(
+        i18n("admin.site_settings.secret_list.already_exists", {
+          key: inputs[0],
+        })
+      );
+      return true;
+    }
+
+    this.args.setValidationMessage(null);
   }
 
-  _addValue(value, secret) {
-    this.collection.addObject({ key: value, secret });
-    this._saveValues();
+  #addValue(value, secret) {
+    const updatedCollection = addUniqueValueToArray(
+      [...this.collection],
+      {
+        key: value,
+        secret,
+      },
+      (item) => item.key
+    );
+    this.#saveValues(updatedCollection);
   }
 
-  _removeValue(value) {
-    const collection = this.collection;
-    collection.removeObject(value);
-    this._saveValues();
+  #removeValue(value) {
+    const updatedCollection = [...this.collection].filter(
+      (item) => !(item.key === value.key && item.secret === value.secret)
+    );
+    this.#saveValues(updatedCollection);
   }
 
-  _replaceValue(index, newValue, keyName) {
-    let item = this.collection[index];
+  #replaceValue(index, newValue, keyName) {
+    const updatedCollection = [...this.collection];
+
+    const item = updatedCollection[index];
     set(item, keyName, newValue);
 
-    this._saveValues();
+    this.#saveValues(updatedCollection);
   }
 
-  _saveValues() {
-    this.set(
-      "values",
-      this.collection
+  #saveValues(updatedCollection) {
+    this.args.changeValueCallback(
+      updatedCollection
         .map(function (elem) {
           return `${elem.key}|${elem.secret}`;
         })
-        .join("\n")
+        .join(INPUT_DELIMITER)
     );
   }
 
-  _splitValues(values, delimiter) {
+  #splitValues(values, delimiter) {
     if (values && values.length) {
       const keys = ["key", "secret"];
-      let res = [];
+      const res = [];
       values.split(delimiter).forEach(function (str) {
-        let object = {};
+        const object = {};
         str.split("|").forEach(function (a, i) {
           object[keys[i]] = a;
         });
@@ -120,48 +138,50 @@ export default class SecretValueList extends Component {
   }
 
   <template>
-    {{#if this.collection}}
-      <div class="values">
-        {{#each this.collection as |value index|}}
-          <div class="value" data-index={{index}}>
-            <DButton
-              @action={{fn this.removeValue value}}
-              @icon="xmark"
-              class="btn-default remove-value-btn btn-small"
-            />
-            <Input
-              @value={{value.key}}
-              class="value-input"
-              {{on "focusout" (fn this.changeKey index)}}
-            />
-            <Input
-              @value={{value.secret}}
-              class="value-input"
-              @type={{if this.isSecret "password" "text"}}
-              {{on "focusout" (fn this.changeSecret index)}}
-            />
-          </div>
-        {{/each}}
-      </div>
-    {{/if}}
+    <div class="value-list secret-value-list">
+      {{#if this.collection}}
+        <div class="values">
+          {{#each this.collection as |value index|}}
+            <div class="value" data-index={{index}}>
+              <DButton
+                @action={{fn this.removeValue value}}
+                @icon="xmark"
+                class="btn-default remove-value-btn btn-small"
+              />
+              <Input
+                @value={{value.key}}
+                class="value-input"
+                {{on "focusout" (fn this.changeKey index)}}
+              />
+              <Input
+                @value={{value.secret}}
+                class="value-input"
+                @type={{if @isSecret "password" "text"}}
+                {{on "focusout" (fn this.changeSecret index)}}
+              />
+            </div>
+          {{/each}}
+        </div>
+      {{/if}}
 
-    <div class="value">
-      <TextField
-        @value={{this.newKey}}
-        @placeholder={{this.setting.placeholder.key}}
-        class="new-value-input key"
-      />
-      <Input
-        @type="password"
-        @value={{this.newSecret}}
-        class="new-value-input secret"
-        placeholder={{this.setting.placeholder.value}}
-      />
-      <DButton
-        @action={{this.addValue}}
-        @icon="plus"
-        class="add-value-btn btn-small"
-      />
+      <div class="value">
+        <TextField
+          @value={{this.newKey}}
+          @placeholder={{this.setting.placeholder.key}}
+          class="new-value-input key"
+        />
+        <Input
+          @type={{if @isSecret "password" "text"}}
+          @value={{this.newSecret}}
+          class="new-value-input secret"
+          placeholder={{this.setting.placeholder.value}}
+        />
+        <DButton
+          @action={{this.addValue}}
+          @icon="plus"
+          class="add-value-btn btn-small"
+        />
+      </div>
     </div>
   </template>
 }

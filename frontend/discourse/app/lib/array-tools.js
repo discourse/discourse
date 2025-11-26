@@ -6,10 +6,24 @@ import { TrackedArray } from "@ember-compat/tracked-built-ins";
  *
  * @param {Array} target - The array to check and add the value to.
  * @param {*} value - The value to add to the array if it doesn't already exist.
+ * @param {Function} [selector] - Optional function used to transform each value for uniqueness comparison.
+ * If undefined, strict equality comparison will be used.
  * @return {Array} The updated array containing the value if it was not already present.
+ * @example
+ * // Using simple value comparison
+ * addUniqueValueToArray([1, 2], 3) // returns [1, 2, 3]
+ * addUniqueValueToArray([1, 2], 2) // returns [1, 2]
+ *
+ * // Using selector function
+ * const arr = [{id: 1}, {id: 2}];
+ * addUniqueValueToArray(arr, {id: 3}, (item) => item.id) // adds object with id 3
  */
-export function addUniqueValueToArray(target, value) {
-  if (!target.includes(value)) {
+export function addUniqueValueToArray(target, value, selector) {
+  const uniqByValue = selector && selector(value);
+  const exists = selector
+    ? target.some((item) => selector(item) === uniqByValue)
+    : target.includes(value);
+  if (!exists) {
     target.push(value);
   }
 
@@ -20,11 +34,14 @@ export function addUniqueValueToArray(target, value) {
  * Adds multiple values to the specified array only if they do not already exist in the array.
  * This function iterates through the provided values and ensures each value is checked and added individually.
  *
- * @param {Array} target The array to which values will be added if they do not already exist.
- * @param {Array} values The array of values to check and add to the target array if they are not present.
+ * @param {Array} target - The array to which values will be added if they do not already exist.
+ * @param {Array} values - The array of values to check and add to the target array if they are not present.
+ * @param {Function} [selector] - Optional function used to transform each value for uniqueness comparison.
+ * If undefined, strict equality comparison will be used.
+ * @throws {TypeError} When target or values parameters are not arrays.
  * @return {void} This function does not return a value; it directly modifies the input array.
  */
-export function addUniqueValuesToArray(target, values) {
+export function addUniqueValuesToArray(target, values, selector) {
   if (!Array.isArray(target)) {
     throw new TypeError("addUniqueValuesToArray: 'target' must be an array");
   }
@@ -33,7 +50,7 @@ export function addUniqueValuesToArray(target, values) {
   }
 
   for (const value of values) {
-    addUniqueValueToArray(target, value);
+    addUniqueValueToArray(target, value, selector);
   }
 }
 

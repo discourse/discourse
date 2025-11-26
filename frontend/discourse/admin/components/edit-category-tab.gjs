@@ -6,6 +6,7 @@ import { empty } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
 import { underscore } from "@ember/string";
 import { classNameBindings, tagName } from "@ember-decorators/component";
+import { addUniqueValueToArray } from "discourse/lib/array-tools";
 import { propertyEqual } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
@@ -43,7 +44,7 @@ export default class EditCategoryTab extends Component {
   }
 
   _addToCollection() {
-    this.panels.addObject(this.tabClassName);
+    addUniqueValueToArray(this.panels, this.tabClassName);
   }
 
   @discourseComputed("params.slug", "params.parentSlug")
