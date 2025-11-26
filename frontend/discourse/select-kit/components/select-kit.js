@@ -36,6 +36,7 @@ import SelectedName from "./selected-name";
 
 export const MAIN_COLLECTION = "MAIN_COLLECTION";
 export const ERRORS_COLLECTION = "ERRORS_COLLECTION";
+export const FILTER_VISIBILITY_THRESHOLD = 10;
 
 function isDocumentRTL() {
   return document.documentElement.classList.contains("rtl");
@@ -400,7 +401,7 @@ export default class SelectKit extends Component {
     return (
       this.selectKit.filter &&
       this.options.autoFilterable &&
-      this.content.length > 15
+      this.content.length >= FILTER_VISIBILITY_THRESHOLD
     );
   }
 

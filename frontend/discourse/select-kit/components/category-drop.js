@@ -13,6 +13,7 @@ import CategoryDropMoreCollection from "discourse/select-kit/components/category
 import CategoryRow from "discourse/select-kit/components/category-row";
 import ComboBoxComponent from "discourse/select-kit/components/combo-box";
 import {
+  FILTER_VISIBILITY_THRESHOLD,
   MAIN_COLLECTION,
   pluginApiIdentifiers,
   selectKitOptions,
@@ -90,7 +91,10 @@ export default class CategoryDrop extends ComboBoxComponent {
 
   @computed("content.length", "site.lazy_load_categories")
   get autoFilterable() {
-    return this.site.lazy_load_categories || this.content.length >= 10;
+    return (
+      this.site.lazy_load_categories ||
+      this.content.length >= FILTER_VISIBILITY_THRESHOLD
+    );
   }
 
   @computed("value", "selectKit.options.{subCategory,noSubcategories}")

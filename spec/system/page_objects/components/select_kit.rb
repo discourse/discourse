@@ -18,7 +18,7 @@ module PageObjects
       end
 
       def visible?
-        has_css?(@context)
+        has_css?(@context, visible: true)
       end
 
       def hidden?
@@ -35,7 +35,7 @@ module PageObjects
       end
 
       def expanded?
-        component.has_css?(".select-kit-body", visible: :visible)
+        component.has_css?(".select-kit-body", visible: true)
       end
 
       def is_collapsed?

@@ -63,16 +63,12 @@ module PageObjects
         has_css?(
           ".welcome-banner.--with-bg-img .custom-search-banner-wrap.welcome-banner__wrap",
           style: "background-image:url(#{url});",
-          visible: :visible,
+          visible: true,
         )
       end
 
       def has_custom_text_color?(color)
-        has_css?(
-          ".welcome-banner .welcome-banner__title",
-          style: "color:#{color};",
-          visible: :visible,
-        )
+        has_css?(".welcome-banner .welcome-banner__title", style: "color:#{color};", visible: true)
       end
 
       def has_no_custom_text_color?(color)
@@ -80,11 +76,11 @@ module PageObjects
       end
 
       def above_topic_content?
-        has_css?("#main-outlet > .--location-above-topic-content", visible: :visible)
+        has_css?("#main-outlet > .--location-above-topic-content", visible: true)
       end
 
       def below_site_header?
-        has_css?(".discourse-root > .--location-below-site-header", visible: :visible)
+        has_css?(".discourse-root > .--location-below-site-header", visible: true)
       end
     end
   end
