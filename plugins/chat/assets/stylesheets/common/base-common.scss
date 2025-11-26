@@ -15,6 +15,10 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
   padding-bottom: 0.2rem;
 }
 
+html.ios-device body {
+  overflow: hidden;
+}
+
 .uppy-is-drag-over .chat-composer .drop-a-file {
   display: flex;
   position: absolute;
