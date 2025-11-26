@@ -4,7 +4,9 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { createHelperContext, helperContext } from "discourse/lib/helpers";
-import quoteImage, { canQuoteImage } from "discourse/lib/lightbox/quote-image";
+import quoteImage, {
+  canBuildImageQuote,
+} from "discourse/lib/lightbox/quote-image";
 import Draft from "discourse/models/draft";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 
@@ -144,28 +146,12 @@ module("Unit | Lib | lightbox | quote image", function (hooks) {
     );
   });
 
-  test("canQuoteImage only returns true when context and metadata exist", function (assert) {
+  test("canBuildImageQuote only returns true when context and metadata exist", function (assert) {
     const invalid = document.createElement("a");
-    assert.false(canQuoteImage(invalid, {}));
+    assert.false(canBuildImageQuote(invalid, {}));
 
     const { element, slideData } = buildLightbox(this);
-    assert.true(canQuoteImage(element, slideData));
-  });
-
-  test("canQuoteImage returns false for anonymous users", function (assert) {
-    const originalContext = helperContext();
-
-    createHelperContext({ ...originalContext, currentUser: null });
-
-    try {
-      const { element, slideData } = buildLightbox(this);
-      assert.false(
-        canQuoteImage(element, slideData),
-        "canQuoteImage returns false when user is not logged in"
-      );
-    } finally {
-      createHelperContext(originalContext);
-    }
+    assert.true(canBuildImageQuote(element, slideData));
   });
 
   test("builds markdown using data-orig-src and dimensions when composer is closed", async function (assert) {

@@ -42,10 +42,14 @@ function buildImageMarkdown(slideElement, slideData) {
   });
 }
 
-export function canQuoteImage(slideElement, slideData) {
-  if (!helperContext()?.currentUser) {
-    return false;
-  }
+/**
+ * Checks if the slide element and data can be used to build a quote.
+ *
+ * @param {Element} slideElement
+ * @param {object} slideData
+ * @returns {boolean}
+ */
+export function canBuildImageQuote(slideElement, slideData) {
   return buildImageMarkdown(slideElement, slideData) !== null;
 }
 

@@ -5,13 +5,14 @@ import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { helperContext } from "discourse/lib/helpers";
 import { renderIcon } from "discourse/lib/icon-library";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
-import quoteImage, { canQuoteImage } from "discourse/lib/lightbox/quote-image";
+import quoteImage, {
+  canBuildImageQuote,
+} from "discourse/lib/lightbox/quote-image";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import {
   escapeExpression,
   postRNWebviewMessage,
 } from "discourse/lib/utilities";
-import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
 export async function loadMagnificPopup() {
@@ -27,10 +28,12 @@ export default async function lightbox(
     return;
   }
 
+  const currentUser = helperContext()?.currentUser;
   const caps = helperContext().capabilities;
   const imageClickNavigation = caps.touch;
   const canDownload =
-    !siteSettings.prevent_anons_from_downloading_files || User.current();
+    !siteSettings.prevent_anons_from_downloading_files || !!currentUser;
+  const canQuoteImage = !!currentUser;
 
   if (siteSettings.experimental_lightbox) {
     const { default: PhotoSwipeLightbox } = await import("photoswipe/lightbox");
@@ -204,37 +207,39 @@ export default async function lightbox(
         },
       });
 
-      lightboxEl.pswp.ui.registerElement({
-        name: "quote-image",
-        order: 10,
-        isButton: true,
-        title: i18n("lightbox.quote"),
-        html: {
-          isCustomSVG: true,
-          inner:
-            '<path id="pswp__icn-quote" d="M0 216C0 149.7 53.7 96 120 96l8 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-8 0c-30.9 0-56 25.1-56 56l0 8 64 0c35.3 0 64 28.7 64 64l0 64c0 35.3-28.7 64-64 64l-64 0c-35.3 0-64-28.7-64-64l0-32 0-32 0-72zm256 0c0-66.3 53.7-120 120-120l8 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-8 0c-30.9 0-56 25.1-56 56l0 8 64 0c35.3 0 64 28.7 64 64l0 64c0 35.3-28.7 64-64 64l-64 0c-35.3 0-64-28.7-64-64l0-32 0-32 0-72z"/>',
-          outlineID: "pswp__icn-quote",
-          size: 512,
-        },
-        onInit: (el, pswp) => {
-          pswp.on("change", () => {
-            const slideData = pswp.currSlide?.data;
+      if (canQuoteImage) {
+        lightboxEl.pswp.ui.registerElement({
+          name: "quote-image",
+          order: 10,
+          isButton: true,
+          title: i18n("lightbox.quote"),
+          html: {
+            isCustomSVG: true,
+            inner:
+              '<path id="pswp__icn-quote" d="M0 216C0 149.7 53.7 96 120 96l8 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-8 0c-30.9 0-56 25.1-56 56l0 8 64 0c35.3 0 64 28.7 64 64l0 64c0 35.3-28.7 64-64 64l-64 0c-35.3 0-64-28.7-64-64l0-32 0-32 0-72zm256 0c0-66.3 53.7-120 120-120l8 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-8 0c-30.9 0-56 25.1-56 56l0 8 64 0c35.3 0 64 28.7 64 64l0 64c0 35.3-28.7 64-64 64l-64 0c-35.3 0-64-28.7-64-64l0-32 0-32 0-72z"/>',
+            outlineID: "pswp__icn-quote",
+            size: 512,
+          },
+          onInit: (el, pswp) => {
+            pswp.on("change", () => {
+              const slideData = pswp.currSlide?.data;
+              const slideElement = slideData?.element;
+              el.style.display = canBuildImageQuote(slideElement, slideData)
+                ? ""
+                : "none";
+            });
+          },
+          onClick: () => {
+            const slideData = lightboxEl.pswp.currSlide?.data;
             const slideElement = slideData?.element;
-            el.style.display = canQuoteImage(slideElement, slideData)
-              ? ""
-              : "none";
-          });
-        },
-        onClick: () => {
-          const slideData = lightboxEl.pswp.currSlide?.data;
-          const slideElement = slideData?.element;
-          quoteImage(slideElement, slideData).then((didQuote) => {
-            if (didQuote) {
-              lightboxEl.pswp.close();
-            }
-          });
-        },
-      });
+            quoteImage(slideElement, slideData).then((didQuote) => {
+              if (didQuote) {
+                lightboxEl.pswp.close();
+              }
+            });
+          },
+        });
+      }
 
       lightboxEl.pswp.ui.registerElement({
         name: "custom-counter",
