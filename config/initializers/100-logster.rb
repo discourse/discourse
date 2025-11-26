@@ -7,6 +7,11 @@ if GlobalSetting.skip_redis?
   return
 end
 
+if (Rails.env.local?) && ENV["FORCE_RAILS_LOGS_STDOUT"] == "1"
+  Rails.logger = Logger.new(STDOUT)
+  return
+end
+
 if Rails.env.development? && !Sidekiq.server? && ENV["RAILS_LOGS_STDOUT"] == "1"
   Rails.application.config.after_initialize do
     console = ActiveSupport::Logger.new(STDOUT)
