@@ -135,9 +135,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
 
       upload = Upload.find(upload_id)
 
-      expect(reply_post.raw).to match(
-        /\A\*\*searching for things\*\*\s+!\[image\]\(#{Regexp.escape(upload.short_url)}\)\s*\z/,
-      )
+      expect(reply_post.raw).to eq("![image](#{upload.short_url})")
     end
 
     it "can force usage of a tool" do
