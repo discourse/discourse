@@ -88,6 +88,7 @@ export default class ChatChannel {
     this.membershipsCount = args.memberships_count;
     this.slug = args.slug;
     this.title = args.title;
+    this.emoji = args.emoji;
     this.unicodeTitle = args.unicode_title;
     this.status = args.status;
     this.description = args.description;
