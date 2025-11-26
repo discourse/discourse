@@ -19,7 +19,7 @@ acceptance("User invites", function (needs) {
     await click(
       "table.user-invite-list tbody tr:nth-child(1) .d-icon-ellipsis-vertical"
     );
-    assert.dom(".btn-danger").exists();
+    assert.dom(".--danger").exists();
 
     assert
       .dom(
