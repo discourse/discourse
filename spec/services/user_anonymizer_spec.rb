@@ -247,6 +247,42 @@ RSpec.describe UserAnonymizer do
       expect(user.user_api_keys).to be_empty
     end
 
+    it "removes user auth tokens" do
+      UserAuthToken.generate!(user_id: user.id)
+
+      expect { make_anonymous }.to change { UserAuthToken.count }.by(-1)
+      expect(user.reload.user_auth_tokens).to be_empty
+    end
+
+    it "removes second factor credentials" do
+      Fabricate(:user_second_factor_totp, user: user)
+
+      expect { make_anonymous }.to change { UserSecondFactor.count }.by(-1)
+      expect(user.reload.user_second_factors).to be_empty
+    end
+
+    it "removes security keys" do
+      Fabricate(:user_security_key_with_random_credential, user: user)
+
+      expect { make_anonymous }.to change { UserSecurityKey.count }.by(-1)
+      expect(UserSecurityKey.where(user_id: user.id).count).to eq(0)
+    end
+
+    it "removes push subscriptions" do
+      Fabricate(:push_subscription, user: user)
+
+      expect { make_anonymous }.to change { PushSubscription.count }.by(-1)
+      expect(user.reload.push_subscriptions).to be_empty
+    end
+
+    it "removes post reply keys" do
+      post = Fabricate(:post)
+      PostReplyKey.create!(user_id: user.id, post_id: post.id)
+
+      expect { make_anonymous }.to change { PostReplyKey.count }.by(-1)
+      expect(PostReplyKey.where(user_id: user.id).count).to eq(0)
+    end
+
     context "when executing jobs" do
       before { Jobs.run_immediately! }
 
@@ -385,6 +421,8 @@ RSpec.describe UserAnonymizer do
       delete_history = StaffActionLogger.new(admin).log_user_deletion(user)
       user_history = StaffActionLogger.new(user).log_backup_create
 
+      ip_address_history = UserIpAddressHistory.create!(user_id: user.id, ip_address: old_ip)
+
       UserAnonymizer.make_anonymous(user, admin, anonymize_ip: anon_ip)
       expect(user.registration_ip_address).to eq(anon_ip)
       expect(link.reload.ip_address).to eq(anon_ip)
@@ -396,6 +434,7 @@ RSpec.describe UserAnonymizer do
       expect(delete_history.reload.ip_address).to eq(anon_ip)
       expect(user_history.reload.ip_address).to eq(anon_ip)
       expect(user_profile_view.reload.ip_address).to eq(anon_ip)
+      expect(UserIpAddressHistory.exists?(id: ip_address_history.id)).to eq(false)
     end
   end
 
