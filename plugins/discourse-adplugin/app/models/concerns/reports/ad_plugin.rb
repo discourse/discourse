@@ -80,6 +80,16 @@ module Reports::AdPlugin
         ::AdPlugin::HouseAd.order(:name).pluck(:name).map { |name| { id: name, name: name } }
       house_ad_choices.unshift({ id: "any", name: "All House Ads" })
 
+      placement_filter = report.filters.dig(:ad_placement)
+
+      placement_choices =
+        AdPlugin::HouseAdSetting::DEFAULTS.keys.map do |name|
+          name = name.to_s.split("_").join("-")
+          { id: name, name: name }
+        end
+
+      placement_choices.unshift({ id: "any", name: "All" })
+
       report.add_filter(
         "house_ad_name",
         type: "list",
@@ -88,9 +98,46 @@ module Reports::AdPlugin
         allow_any: false,
         auto_insert_none_item: false,
       )
+
+      report.add_filter(
+        "ad_placement",
+        type: "list",
+        default: placement_filter || "any",
+        choices: placement_choices,
+        allow_any: false,
+        auto_insert_none_item: false,
+      )
+
+      user_type_filter = report.filters.dig(:user_type)
+
+      user_type_choices = [
+        { id: "all", name: "All Users" },
+        { id: "logged_in", name: "Logged In Users" },
+        { id: "anonymous", name: "Anonymous Users" },
+      ]
+
+      report.add_filter(
+        "user_type",
+        type: "list",
+        default: user_type_filter || "all",
+        choices: user_type_choices,
+        allow_any: false,
+        auto_insert_none_item: false,
+      )
+
       start_date = report.start_date
       end_date = report.end_date
       limit = report.limit || 50
+
+      user_type_condition =
+        case user_type_filter
+        when "logged_in"
+          "AND ai.user_id IS NOT NULL"
+        when "anonymous"
+          "AND ai.user_id IS NULL"
+        else
+          "" # "all" - no filter
+        end
 
       sql = <<~SQL
         SELECT
@@ -103,16 +150,21 @@ module Reports::AdPlugin
         WHERE ai.created_at >= :start_date
           AND ai.created_at <= :end_date
           AND ai.ad_type = 0
-          AND ai.user_id IS NOT NULL
+          #{user_type_condition}
           #{house_ad_name_filter && house_ad_name_filter != "any" ? "AND ha.name = :house_ad_name" : ""}
+          #{placement_filter && placement_filter != "any" ? "AND ai.placement = :ad_placement" : ""}
         GROUP BY ha.id, ha.name, ai.placement
         ORDER BY impressions DESC
         LIMIT :limit
       SQL
 
       query_params = { start_date: start_date, end_date: end_date, limit: limit }
+
       query_params[:house_ad_name] = house_ad_name_filter if house_ad_name_filter &&
         house_ad_name_filter != "any"
+
+      query_params[:ad_placement] = placement_filter if placement_filter &&
+        placement_filter != "any"
 
       results = DB.query(sql, query_params)
 

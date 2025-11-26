@@ -12,6 +12,7 @@ import {
 
 export default class AdComponent extends Component {
   @service router;
+  @service session;
 
   @or(
     "router.currentRoute.attributes.category.id",
@@ -149,10 +150,9 @@ export default class AdComponent extends Component {
     const url = `/ad_plugin/ad_impressions/${this._impressionId}`;
 
     if (navigator.sendBeacon && !this.site?.isTesting) {
-      const blob = new Blob([JSON.stringify({})], {
-        type: "application/json",
-      });
-      navigator.sendBeacon(url, blob);
+      const formData = new FormData();
+      formData.append("authenticity_token", this.session.csrfToken);
+      navigator.sendBeacon(url, formData);
     } else {
       ajax(url, {
         type: "PATCH",

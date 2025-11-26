@@ -3,7 +3,7 @@ module AdPlugin
   class AdImpressionsController < ::ApplicationController
     requires_plugin PLUGIN_NAME
 
-    skip_before_action :check_xhr, :preload_json, :verify_authenticity_token, only: [:update]
+    skip_before_action :check_xhr, :preload_json, only: [:update]
 
     def create
       impression =

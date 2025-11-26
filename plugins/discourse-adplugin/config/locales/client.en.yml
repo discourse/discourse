@@ -19,6 +19,10 @@ en:
                 label: "Ad Type" 
               house_ad_name:
                 label: "HouseAd Name"
+              ad_placement:
+                label: "Ad Placement"
+              user_type: 
+                label: "User Type"
                 
       adplugin:
         house_ads:
