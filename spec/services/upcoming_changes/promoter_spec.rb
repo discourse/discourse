@@ -32,16 +32,44 @@ RSpec.describe UpcomingChanges::Promoter do
       let(:promotion_status_threshold) { :beta }
 
       before do
-        SiteSetting.enable_upload_debug_mode = true
+        SiteSetting.enable_upload_debug_mode = false
         DB.exec(
           "INSERT INTO site_settings (name, value, data_type, created_at, updated_at)
-          VALUES ('enable_upload_debug_mode', 'true', 5, NOW(), NOW())",
+          VALUES ('enable_upload_debug_mode', 'false', 5, NOW(), NOW())",
         )
       end
 
+      after { DB.exec("DELETE FROM site_settings WHERE name = 'enable_upload_debug_mode'") }
+
       it { is_expected.to fail_a_policy(:setting_not_modified) }
 
-      after { DB.exec("DELETE FROM site_settings WHERE name = 'enable_upload_debug_mode'") }
+      context "when the current_change_status is permanent" do
+        let(:current_change_status) { :permanent }
+
+        it "enables the upcoming change setting" do
+          expect(SiteSetting.enable_upload_debug_mode).to be_falsey
+          result
+          expect(SiteSetting.enable_upload_debug_mode).to be_truthy
+        end
+
+        it "logs the change context in the staff action log" do
+          expect { result }.to change {
+            UserHistory.where(
+              action: UserHistory.actions[:upcoming_change_toggled],
+              subject: "enable_upload_debug_mode",
+            ).count
+          }.by(1)
+
+          expect(UserHistory.last.context).to eq(
+            I18n.t(
+              "staff_action_logs.upcoming_changes.log_promoted",
+              change_status: UpcomingChanges.change_status(:enable_upload_debug_mode),
+              promotion_status_threshold: promotion_status_threshold,
+              base_path: Discourse.base_path,
+            ),
+          )
+        end
+      end
     end
 
     context "when the upcoming change is already enabled" do
@@ -63,7 +91,7 @@ RSpec.describe UpcomingChanges::Promoter do
         expect(SiteSetting.enable_upload_debug_mode).to be_truthy
       end
 
-      it "logs the change details in the staff action log" do
+      it "logs the change context in the staff action log" do
         expect { result }.to change {
           UserHistory.where(
             action: UserHistory.actions[:upcoming_change_toggled],
@@ -71,7 +99,7 @@ RSpec.describe UpcomingChanges::Promoter do
           ).count
         }.by(1)
 
-        expect(UserHistory.last.details).to eq(
+        expect(UserHistory.last.context).to eq(
           I18n.t(
             "staff_action_logs.upcoming_changes.log_promoted",
             change_status: UpcomingChanges.change_status(:enable_upload_debug_mode),

@@ -54,7 +54,7 @@ class UpcomingChanges::Promoter
       },
     )
 
-    details =
+    context =
       I18n.t(
         "staff_action_logs.upcoming_changes.log_promoted",
         change_status: UpcomingChanges.change_status(params.setting),
@@ -66,7 +66,7 @@ class UpcomingChanges::Promoter
       params.setting,
       false,
       true,
-      { details: },
+      { context: },
     )
   end
 end

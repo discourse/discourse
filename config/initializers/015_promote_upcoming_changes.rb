@@ -21,6 +21,13 @@ class UpcomingChanges::AutoPromotionInitializer
         Rails.logger.info("#{log_prefix(site)} Starting promotion check for upcoming changes.")
       end
 
+      if SiteSetting.upcoming_change_site_settings.empty?
+        if SiteSetting.upcoming_change_verbose_logging
+          Rails.logger.info("#{log_prefix(site)} No upcoming changes present.")
+        end
+        next
+      end
+
       SiteSetting.upcoming_change_site_settings.each do |setting_name|
         UpcomingChanges::Promoter.call(
           params: {
