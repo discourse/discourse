@@ -2,7 +2,12 @@
    lock scroll of an element using overflow:hidden
    preserve gutter with scroll detection
 */
-function lockScroll(element = document.scrollingElement) {
+function lockScroll(element) {
+  element ??= document.scrollingElement;
+  if (!element) {
+    return;
+  }
+
   let scrollGap = 0;
 
   //Add scroll gap if using default scrolling element
@@ -15,7 +20,12 @@ function lockScroll(element = document.scrollingElement) {
   element.classList.add("scroll-lock");
 }
 
-function unlockScroll(element = document.scrollingElement) {
+function unlockScroll(element) {
+  element ??= document.scrollingElement;
+  if (!element) {
+    return;
+  }
+
   element.classList.remove("scroll-lock");
   element.style.setProperty("--scroll-gap", null);
 }
