@@ -42,6 +42,7 @@ const MORE_COLLECTION = "MORE_COLLECTION";
   headerComponent: CategoryDropHeader,
   parentCategory: false,
   allowUncategorized: "allowUncategorized",
+  autoFilterable: "autoFilterable",
 })
 @pluginApiIdentifiers(["category-drop"])
 export default class CategoryDrop extends ComboBoxComponent {
@@ -85,6 +86,11 @@ export default class CategoryDrop extends ComboBoxComponent {
   @computed
   get hideParentCategory() {
     return this.options.subCategory || false;
+  }
+
+  @computed("content.length", "site.lazy_load_categories")
+  get autoFilterable() {
+    return this.site.lazy_load_categories || this.content.length >= 10;
   }
 
   @computed("value", "selectKit.options.{subCategory,noSubcategories}")
@@ -200,13 +206,6 @@ export default class CategoryDrop extends ComboBoxComponent {
           : result.categories;
 
       this.selectKit.totalCount = result.categoriesCount;
-      // manually set autoFilterable since content is updated asynchronously
-      this.selectKit.options.set(
-        "autoFilterable",
-        result.categoriesCount +
-          this.currentUser.sidebar_category_ids?.length >=
-          10
-      );
 
       return this.shortcuts.concat(categories);
     }
