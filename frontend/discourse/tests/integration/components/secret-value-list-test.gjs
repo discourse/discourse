@@ -9,12 +9,14 @@ module("Integration | Component | secret-value-list", function (hooks) {
 
   test("adding a value", async function (assert) {
     this.set("setValidationMessage", () => {});
+    this.set("changeValueCallback", (values) => this.set("values", values));
 
     await render(
       <template>
         <SecretValueList
           @values={{this.values}}
           @setValidationMessage={{this.setValidationMessage}}
+          @changeValueCallback={{this.changeValueCallback}}
         />
       </template>
     );
@@ -62,12 +64,14 @@ module("Integration | Component | secret-value-list", function (hooks) {
       this.set("message", message);
     };
     this.set("setValidationMessage", setValidationMessage);
+    this.set("changeValueCallback", (values) => this.set("values", values));
 
     await render(
       <template>
         <SecretValueList
           @values={{this.values}}
           @setValidationMessage={{this.setValidationMessage}}
+          @changeValueCallback={{this.changeValueCallback}}
         />
       </template>
     );
@@ -95,12 +99,14 @@ module("Integration | Component | secret-value-list", function (hooks) {
 
   test("changing a value", async function (assert) {
     this.set("setValidationMessage", () => {});
+    this.set("changeValueCallback", (values) => this.set("values", values));
 
     await render(
       <template>
         <SecretValueList
           @values={{this.values}}
           @setValidationMessage={{this.setValidationMessage}}
+          @changeValueCallback={{this.changeValueCallback}}
         />
       </template>
     );
@@ -135,12 +141,14 @@ module("Integration | Component | secret-value-list", function (hooks) {
 
   test("removing a value", async function (assert) {
     this.set("setValidationMessage", () => {});
+    this.set("changeValueCallback", (values) => this.set("values", values));
 
     await render(
       <template>
         <SecretValueList
           @values={{this.values}}
           @setValidationMessage={{this.setValidationMessage}}
+          @changeValueCallback={{this.changeValueCallback}}
         />
       </template>
     );

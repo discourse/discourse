@@ -74,6 +74,49 @@ module("Unit | Lib | array-tools", function () {
         "new distinct value appended"
       );
     });
+
+    test("adds object with selector based on property value", function (assert) {
+      const arr = [{ id: 1, name: "Alice" }];
+      addUniqueValueToArray(arr, { id: 2, name: "Bob" }, (item) => item.id);
+
+      assert.strictEqual(arr.length, 2, "object with different id added");
+      assert.deepEqual(
+        arr.map((o) => o.name),
+        ["Alice", "Bob"],
+        "both objects present"
+      );
+    });
+
+    test("does not add object with selector when value already exists", function (assert) {
+      const arr = [
+        { id: 1, name: "Alice" },
+        { id: 2, name: "Bob" },
+      ];
+      addUniqueValueToArray(arr, { id: 1, name: "Alice2" }, (item) => item.id);
+
+      assert.strictEqual(arr.length, 2, "duplicate id not added");
+      assert.deepEqual(
+        arr.map((o) => o.name),
+        ["Alice", "Bob"],
+        "original objects unchanged"
+      );
+    });
+
+    test("selector compares the transformed value", function (assert) {
+      const arr = [{ value: "apple" }, { value: "banana" }];
+      addUniqueValueToArray(arr, { value: "APPLE" }, (item) =>
+        item.value.toLowerCase()
+      );
+
+      assert.strictEqual(arr.length, 2, "case-insensitive duplicate not added");
+
+      addUniqueValueToArray(arr, { value: "CHERRY" }, (item) =>
+        item.value.toLowerCase()
+      );
+
+      assert.strictEqual(arr.length, 3, "unique value added");
+      assert.strictEqual(arr[2].value, "CHERRY", "new value appended");
+    });
   });
 
   module("addUniqueValuesToArray()", function () {
@@ -145,6 +188,74 @@ module("Unit | Lib | array-tools", function () {
 
       addUniqueValuesToArray(arr, [1, 2]);
       assert.deepEqual(arr, [1, 2], "second call no-ops");
+    });
+
+    test("adds multiple objects with selector based on property value", function (assert) {
+      const arr = [{ id: 1, name: "Alice" }];
+      addUniqueValuesToArray(
+        arr,
+        [
+          { id: 2, name: "Bob" },
+          { id: 3, name: "Charlie" },
+          { id: 4, name: "David" },
+        ],
+        (item) => item.id
+      );
+
+      assert.strictEqual(arr.length, 4, "three new objects added");
+      assert.deepEqual(
+        arr.map((o) => o.name),
+        ["Alice", "Bob", "Charlie", "David"],
+        "all unique objects present"
+      );
+    });
+
+    test("does not add objects with selector when values already exist", function (assert) {
+      const arr = [
+        { id: 1, name: "Alice" },
+        { id: 2, name: "Bob" },
+      ];
+      addUniqueValuesToArray(
+        arr,
+        [
+          { id: 1, name: "Alice2" },
+          { id: 3, name: "Charlie" },
+          { id: 2, name: "Bob2" },
+        ],
+        (item) => item.id
+      );
+
+      assert.strictEqual(arr.length, 3, "only unique id added");
+      assert.deepEqual(
+        arr.map((o) => o.name),
+        ["Alice", "Bob", "Charlie"],
+        "duplicate ids not added, new id added"
+      );
+    });
+
+    test("selector compares transformed values across multiple additions", function (assert) {
+      const arr = [{ value: "apple" }];
+      addUniqueValuesToArray(
+        arr,
+        [
+          { value: "APPLE" },
+          { value: "banana" },
+          { value: "BANANA" },
+          { value: "cherry" },
+        ],
+        (item) => item.value.toLowerCase()
+      );
+
+      assert.strictEqual(
+        arr.length,
+        3,
+        "only case-insensitive unique values added"
+      );
+      assert.deepEqual(
+        arr.map((o) => o.value),
+        ["apple", "banana", "cherry"],
+        "first occurrence of each unique value kept"
+      );
     });
   });
 

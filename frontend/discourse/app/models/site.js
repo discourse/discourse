@@ -5,6 +5,8 @@ import { alias, sort } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
@@ -84,7 +86,7 @@ export default class Site extends RestModel {
   @service siteSettings;
   @service capabilities;
 
-  @trackedArray categories;
+  @trackedArray categories = [];
 
   @alias("is_readonly") isReadOnly;
 
@@ -96,7 +98,6 @@ export default class Site extends RestModel {
     super.init(...arguments);
 
     this.topicCountDesc = ["topic_count:desc"];
-    this.categories = this.categories || [];
   }
 
   @dependentKeyCompat
@@ -160,11 +161,9 @@ export default class Site extends RestModel {
     return this.mobileView;
   }
 
-  @computed("categories.[]")
+  @dependentKeyCompat
   get categoriesById() {
-    const map = new Map();
-    this.categories.forEach((c) => map.set(c.id, c));
-    return map;
+    return new Map(this.categories.map((c) => [c.id, c]));
   }
 
   @computed("categories.@each.parent_category_id")
@@ -193,7 +192,7 @@ export default class Site extends RestModel {
     if (!postActionTypes) {
       return [];
     }
-    return postActionTypes.filter((type) => type.is_flag);
+    return new TrackedArray(postActionTypes.filter((type) => type.is_flag));
   }
 
   collectUserFields(fields) {
@@ -255,7 +254,7 @@ export default class Site extends RestModel {
     const categories = this.categories;
     const existingCategory = categories.find((c) => c.id === id);
     if (existingCategory) {
-      categories.removeObject(existingCategory);
+      removeValueFromArray(categories, existingCategory);
     }
   }
 
@@ -281,7 +280,7 @@ export default class Site extends RestModel {
     } else {
       // TODO insert in right order?
       newCategory = this.store.createRecord("category", newCategory);
-      categories.pushObject(newCategory);
+      categories.push(newCategory);
       return newCategory;
     }
   }
