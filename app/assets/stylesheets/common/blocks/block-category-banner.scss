@@ -1,0 +1,33 @@
+.block-category-banner {
+  &__layout {
+    display: grid;
+    grid-template-areas:
+      "logo title"
+      "logo description";
+    grid-template-columns: minmax(auto, 0);
+    gap: var(--block-layout-gap);
+  }
+
+  &__logo {
+    grid-area: logo;
+  }
+
+  &__title {
+    grid-area: title;
+    margin: 0;
+  }
+
+  &__description {
+    grid-area: description;
+
+    p:not(:has(+ p)) {
+      margin: 0;
+    }
+  }
+}
+
+.category-heading {
+  .block-category-banner & {
+    display: none;
+  }
+}

@@ -1,0 +1,7 @@
+.block-site-stats {
+  &__list {
+    display: flex;
+    list-style: none;
+    gap: var(--space-2);
+  }
+}
