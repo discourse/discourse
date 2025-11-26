@@ -952,6 +952,8 @@ export default class SelectKit extends Component {
       return;
     }
 
+    this.cleanupFloatingUi?.();
+
     this.selectKit.mainElement().open = false;
 
     this.clearErrors();
