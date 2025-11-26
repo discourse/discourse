@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
+import IpLookup from "discourse/components/reviewable-refresh/ip-lookup";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -22,13 +23,16 @@ export default class ReviewableInsights extends Component {
     const user = this.args.reviewable.target_created_by;
 
     // Flag volume insight
-    insights.push({
-      icon: "triangle-exclamation",
-      label: i18n("review.insights.flag_volume"),
-      description: i18n("review.insights.flagged_by_users", {
-        count: reviewable?.reviewable_scores?.length || 0,
-      }),
-    });
+    const flagCount = reviewable?.reviewable_scores?.length || 0;
+    if (flagCount > 1) {
+      insights.push({
+        icon: "triangle-exclamation",
+        label: i18n("review.insights.flag_volume"),
+        description: i18n("review.insights.flagged_by_users", {
+          count: flagCount,
+        }),
+      });
+    }
 
     // Similar posts insight
     if (user?.flags_agreed) {
@@ -100,6 +104,7 @@ export default class ReviewableInsights extends Component {
           </div>
         </div>
       {{/each}}
+      <IpLookup @reviewable={{@reviewable}} />
     </div>
   </template>
 }

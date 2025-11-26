@@ -552,10 +552,6 @@ $mobile-breakpoint: 700px;
           list-style: none;
         }
 
-        td {
-          padding: 0.25em 0.25em 0.25em 0;
-        }
-
         td.user {
           white-space: nowrap;
 
@@ -565,6 +561,31 @@ $mobile-breakpoint: 700px;
           }
         }
       }
+    }
+  }
+}
+
+.ip-lookup-table {
+  td {
+    padding: var(--space-1);
+  }
+
+  td,
+  th {
+    &:not(:first-child) {
+      text-align: center;
+    }
+  }
+
+  .user a {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+
+    span {
+      max-width: min(10em, 20vw);
+
+      @include ellipsis;
     }
   }
 }

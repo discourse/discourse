@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "discourse_ip_info"
+
 describe "Viewing reviewable item", type: :system do
   fab!(:admin)
   fab!(:group)
@@ -143,11 +145,80 @@ describe "Viewing reviewable item", type: :system do
         expect(page).to have_current_path("/")
       end
 
-      it "allows to lookup IP" do
-        SiteSetting.reviewable_old_moderator_actions = true
+      it "shows IP lookup information when insights tab is viewed" do
+        user = reviewable_flagged_post.target_created_by
+        user.update!(ip_address: "81.2.69.142")
+
+        DiscourseIpInfo.open_db(File.join(Rails.root, "spec", "fixtures", "mmdb"))
+        Resolv::DNS
+          .any_instance
+          .stubs(:getname)
+          .with("81.2.69.142")
+          .returns("ip-81-2-69-142.example.com")
+
         refreshed_review_page.visit_reviewable(reviewable_flagged_post)
-        refreshed_review_page.click_ip_lookup_button
-        expect(page).to have_content(I18n.t("js.ip_lookup.hostname"))
+        refreshed_review_page.click_insights_tab
+
+        expect(refreshed_review_page).to have_ip_lookup_info
+      end
+
+      it "displays IP location, hostname, and organization when available" do
+        user = reviewable_flagged_post.target_created_by
+        user.update!(ip_address: "81.2.69.142")
+
+        DiscourseIpInfo.open_db(File.join(Rails.root, "spec", "fixtures", "mmdb"))
+        Resolv::DNS
+          .any_instance
+          .stubs(:getname)
+          .with("81.2.69.142")
+          .returns("ip-81-2-69-142.example.com")
+
+        refreshed_review_page.visit_reviewable(reviewable_flagged_post)
+        refreshed_review_page.click_insights_tab
+
+        expect(refreshed_review_page).to have_ip_location("London, England, United Kingdom")
+        expect(refreshed_review_page).to have_ip_hostname("ip-81-2-69-142.example.com")
+      end
+
+      it "shows other accounts link when there are multiple accounts with same IP" do
+        user = reviewable_flagged_post.target_created_by
+        user.update!(ip_address: "81.2.69.142")
+
+        other_user_1 = Fabricate(:user, ip_address: "81.2.69.142")
+        other_user_2 = Fabricate(:user, ip_address: "81.2.69.142")
+
+        DiscourseIpInfo.open_db(File.join(Rails.root, "spec", "fixtures", "mmdb"))
+        Resolv::DNS
+          .any_instance
+          .stubs(:getname)
+          .with("81.2.69.142")
+          .returns("ip-81-2-69-142.example.com")
+
+        refreshed_review_page.visit_reviewable(reviewable_flagged_post)
+        refreshed_review_page.click_insights_tab
+
+        expect(refreshed_review_page).to have_other_accounts_link(count: 2)
+      end
+
+      it "opens modal with account list when clicking other accounts link" do
+        user = reviewable_flagged_post.target_created_by
+        user.update!(ip_address: "81.2.69.142")
+
+        other_user = Fabricate(:user, username: "suspicious_user", ip_address: "81.2.69.142")
+
+        DiscourseIpInfo.open_db(File.join(Rails.root, "spec", "fixtures", "mmdb"))
+        Resolv::DNS
+          .any_instance
+          .stubs(:getname)
+          .with("81.2.69.142")
+          .returns("ip-81-2-69-142.example.com")
+
+        refreshed_review_page.visit_reviewable(reviewable_flagged_post)
+        refreshed_review_page.click_insights_tab
+        refreshed_review_page.click_other_accounts_link
+
+        expect(refreshed_review_page).to have_ip_lookup_modal
+        expect(refreshed_review_page).to have_account_in_modal(other_user.username)
       end
     end
 
