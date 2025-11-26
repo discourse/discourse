@@ -56,7 +56,7 @@ export default class SimpleList extends Component {
   }
 
   @action
-  removeAt(index) {
+  removeItem(index) {
     this.collection.splice(index, 1);
     this.args.onChange?.(this.collection);
   }
@@ -85,7 +85,7 @@ export default class SimpleList extends Component {
           {{#each this.collection as |value index|}}
             <div data-index={{index}} class="value">
               <DButton
-                @action={{fn this.removeAt index}}
+                @action={{fn this.removeItem index}}
                 @icon="xmark"
                 class="btn-default remove-value-btn btn-small"
               />

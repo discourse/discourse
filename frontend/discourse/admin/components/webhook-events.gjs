@@ -16,6 +16,7 @@ import LoadMore from "discourse/components/load-more";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -25,10 +26,10 @@ export default class WebhookEvents extends Component {
   @service store;
   @service dialog;
 
-  @tracked pingEnabled = true;
   @tracked events = [];
-  @tracked incomingEventIds = [];
+  @tracked pingEnabled = true;
   @tracked redeliverEnabled = true;
+  @trackedArray incomingEventIds = [];
 
   @readOnly("incomingEventIds.length") incomingCount;
   @gt("incomingCount", 0) hasIncoming;
@@ -126,7 +127,7 @@ export default class WebhookEvents extends Component {
     }
 
     if (!this.incomingEventIds.includes(data.web_hook_event_id)) {
-      this.incomingEventIds.pushObject(data.web_hook_event_id);
+      this.incomingEventIds.push(data.web_hook_event_id);
     }
   }
 

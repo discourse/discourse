@@ -70,14 +70,12 @@ export default class AdminUserIndexController extends Controller {
       .join(", ");
   }
 
-  @discourseComputed("model.associated_accounts")
-  associatedAccountsLoaded(associatedAccounts) {
-    return typeof associatedAccounts !== "undefined";
+  get associatedAccountsLoaded() {
+    return typeof this.model.associated_accounts !== "undefined";
   }
 
-  @discourseComputed("model.associated_accounts")
-  associatedAccounts(associatedAccounts) {
-    return associatedAccounts
+  get associatedAccounts() {
+    return this.model.associated_accounts
       ?.map((provider) => `${provider.name} (${provider.description})`)
       ?.join(", ");
   }

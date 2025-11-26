@@ -329,7 +329,7 @@ export default class UppyComposerUpload {
           // The inProgressUploads is meant to be used to display these uploads
           // in a UI, and Ember will only update the array in the UI if pushObject
           // is used to notify it.
-          this.#inProgressUploads.pushObject(
+          this.#inProgressUploads.push(
             EmberObject.create({
               fileName: file.name,
               id: file.id,
