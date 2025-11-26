@@ -163,4 +163,20 @@ RSpec.describe GlobalSetting::FileProvider do
 
     f.unlink
   end
+
+  it "can coerce negative integers" do
+    f = Tempfile.new("foo")
+    f.write("negative_int = -1\n")
+    f.write("positive_int = 100\n")
+    f.write("zero = 0\n")
+    f.close
+
+    provider = GlobalSetting::FileProvider.from(f.path)
+
+    expect(provider.lookup(:negative_int, "")).to eq(-1)
+    expect(provider.lookup(:positive_int, "")).to eq(100)
+    expect(provider.lookup(:zero, "")).to eq(0)
+
+    f.unlink
+  end
 end
