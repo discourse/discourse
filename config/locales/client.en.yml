@@ -320,7 +320,6 @@ en:
       message: "We've updated this site, <span>please refresh</span> to keep things working smoothly."
       dismiss: "Dismiss"
 
-    bootstrap_mode: "Getting started"
     back_button: "Back"
 
     welcome_banner:
