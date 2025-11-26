@@ -290,6 +290,7 @@ schema:
       exclude:
         - "admin_notices"
         - "ai_api_audit_logs"
+        - "ai_api_request_stats"
         - "ai_artifact_key_values"
         - "ai_artifact_versions"
         - "ai_artifacts"
