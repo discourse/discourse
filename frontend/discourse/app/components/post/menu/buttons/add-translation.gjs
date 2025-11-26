@@ -16,17 +16,11 @@ import { i18n } from "discourse-i18n";
 export default class PostMenuAddTranslationButton extends Component {
   @service composer;
   @service modal;
-  @service currentUser;
-  @service siteSettings;
 
   @tracked showComposer = false;
 
   get showTranslationButton() {
-    return (
-      this.currentUser &&
-      this.siteSettings.content_localization_enabled &&
-      this.currentUser.can_localize_content
-    );
+    return this.args.post.can_localize_post;
   }
 
   get addTranslationsLabel() {
@@ -52,11 +46,7 @@ export default class PostMenuAddTranslationButton extends Component {
 
   @action
   async addTranslation() {
-    if (
-      !this.currentUser ||
-      !this.siteSettings.content_localization_enabled ||
-      !this.currentUser.can_localize_content
-    ) {
+    if (!this.args.post.can_localize_post) {
       return;
     }
 

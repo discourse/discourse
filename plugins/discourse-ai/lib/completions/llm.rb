@@ -26,6 +26,16 @@ module DiscourseAi
                   id: "anthropic",
                   models: [
                     {
+                      name: "claude-opus-4-5",
+                      tokens: 200_000,
+                      display_name: "Claude 4.5 Sonnet",
+                      input_cost: 5,
+                      cached_input_cost: 0.50,
+                      cache_write_cost: 10,
+                      output_cost: 15,
+                      vision_enabled: true,
+                    },
+                    {
                       name: "claude-sonnet-4-5",
                       tokens: 200_000,
                       display_name: "Claude 4.5 Sonnet",
@@ -43,16 +53,6 @@ module DiscourseAi
                       output_cost: 5,
                       cached_input_cost: 0.1,
                       cache_write_cost: 1.25,
-                      vision_enabled: true,
-                    },
-                    {
-                      name: "claude-opus-4-1",
-                      tokens: 200_000,
-                      display_name: "Claude 4.1 Opus",
-                      input_cost: 15,
-                      cached_input_cost: 1.50,
-                      cache_write_cost: 18.75,
-                      output_cost: 75,
                       vision_enabled: true,
                     },
                   ],

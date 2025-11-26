@@ -6,7 +6,7 @@ describe PostLocalizationDestroyer do
   fab!(:group)
   fab!(:localization) { Fabricate(:post_localization, post:, locale: "ja") }
 
-  let(:locale) { "ja" }
+  fab!(:locale) { "ja" }
 
   before do
     SiteSetting.content_localization_enabled = true
@@ -36,5 +36,26 @@ describe PostLocalizationDestroyer do
     expect(messages.length).to eq(1)
     expect(messages.first.data[:type]).to eq(:revised)
     expect(messages.first.data[:id]).to eq(post.id)
+  end
+
+  context "with author localization" do
+    fab!(:author, :user)
+    fab!(:author_post) { Fabricate(:post, user: author) }
+    fab!(:other_post, :post)
+    fab!(:post_localization) { Fabricate(:post_localization, post: author_post, locale:) }
+
+    before { SiteSetting.content_localization_allow_author_localization = true }
+
+    it "allows post author to create localization for their own post" do
+      localization = described_class.destroy(post_id: author_post.id, locale:, acting_user: author)
+
+      expect(localization).to be_nil
+    end
+
+    it "raises permission error if user is not the post author" do
+      expect {
+        described_class.destroy(post_id: other_post.id, locale:, acting_user: author)
+      }.to raise_error(Discourse::InvalidAccess)
+    end
   end
 end

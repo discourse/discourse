@@ -4138,6 +4138,7 @@ en:
 
     post:
       accessible_heading: "post by %{username} %{date}"
+      heading_anchor: "Heading link"
       confirm_delete: "Are you sure you want to delete this post?"
       quote_reply: "Quote"
       quote_reply_shortcut: "Quote (or press q)"
@@ -4921,6 +4922,7 @@ en:
       download: "Download"
       open: "Original image"
       image_info: "Image information"
+      quote: "Quote image"
       previous: "Previous (Left arrow key)"
       next: "Next (Right arrow key)"
       counter: "%curr% of %total%"
@@ -6622,6 +6624,7 @@ en:
           user_destroyed: "User is deleted"
           user_suspended: "User is suspended"
           user_unsuspended: "User is unsuspended"
+          user_anonymized: "User is anonymized"
         reviewable_event:
           group_name: "Reviewable Events"
           reviewable_created: "Reviewable item is ready"
@@ -7748,6 +7751,7 @@ en:
         clear_all: Clear all
         clear_all_confirm: "Are you sure you want to clear all watched words for the %{action} action?"
         invalid_regex: 'The watched word "%{word}" is an invalid regular expression.'
+        invalid_regex_multiple: "Invalid Regular Expressions:"
         regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">Watched words are regular expressions</a> and they do not automatically include word boundaries. If you want the regular expression to match whole words, include <code>\b</code> at the start and end of your regular expression.'
         actions:
           block: "Block"
@@ -8661,83 +8665,4 @@ en:
 
   wizard_js:
     wizard:
-      jump_in: "Jump in!"
-      finish: "Exit setup"
-      back: "Back"
-      next: "Next"
-      configure_more: "Configure more…"
-      step-text: "Step"
-      step: "%{current} of %{total}"
-      upload: "Upload file"
-      uploading: "Uploading…"
-      upload_error: "Sorry, there was an error uploading that file. Please try again."
-
-      staff_count:
-        one: "Your community has %{count} staff (you)."
-        other: "Your community has %{count} staff, including you."
-
-      invites:
-        add_user: "add"
-        none_added: "You haven’t invited any staff. Are you sure you want to continue?"
-        roles:
-          admin: "Admin"
-          moderator: "Moderator"
-          regular: "Regular User"
-
-      homepage_choices:
-        custom:
-          label: "Custom"
-          description: "Display a %{type}-focused homepage with users landing on %{landingPage}"
-        style_type:
-          categories: "category"
-          topics: "topic"
-
-      top_menu_items:
-        new: "New"
-        unread: "Unread"
-        top: "Top"
-        latest: "Latest"
-        hot: "Hot"
-        categories: "Categories"
-        unseen: "Unseen"
-        read: "Read"
-        bookmarks: "Bookmarks"
-
-      previews:
-        topic_title: "What books are you reading?"
-        share_button: "Share"
-        reply_button: "Reply"
-        topic_preview: "Topic preview"
-        homepage_preview: "Homepage preview"
-
-      homepage_preview:
-        nav_buttons:
-          all_categories: "all categories"
-        topic_titles:
-          what_books: "What books are you reading?"
-          what_movies: "What movies have you seen recently?"
-          random_fact: "Random fact of the day"
-          tv_show: "Recommend a TV show"
-          what_hobbies: "What are your hobbies?"
-          what_music: "What are you listening to right now?"
-          funniest_thing: "Funniest thing you've seen today"
-          share_art: "Share your art!"
-        topic_ops:
-          what_books: |
-            We all love to read, let's use this topic to share our
-            current or recent reads. I'm a fantasy fan and I've been
-            re-reading The Lord of the Rings for the 100th time.
-            What about you?
-        category_descriptions:
-          icebreakers: "Get to know your fellow community members with fun questions."
-          news: "Discuss the latest news and events."
-          site_feedback: "Share your thoughts on the community and suggest improvements."
-        category_names:
-          icebreakers: "Icebreakers"
-          news: "News"
-          site_feedback: "Site Feedback"
-        table_headers:
-          topic: "Topic"
-          replies: "Replies"
-          views: "Views"
-          activity: "Activity"
+      jump_in: "Let's go!"

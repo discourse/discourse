@@ -386,7 +386,7 @@ export default class TopicController extends Controller {
   async editTopic(event) {
     event?.preventDefault();
     const canEditTitle = this.get("model.details.can_edit");
-    const canLocalize = this.currentUser?.can_localize_content;
+    const canLocalize = this.get("model.can_localize_topic");
 
     if (!canEditTitle && !canLocalize) {
       return;
@@ -401,12 +401,13 @@ export default class TopicController extends Controller {
       return;
     }
 
+    const topic = this.model;
+    const firstPost = await topic.firstPost();
+
     if (canEditTitle && !canLocalize) {
       return this._openComposerForEdit(topic, firstPost);
     }
 
-    const topic = this.model;
-    const firstPost = await topic.firstPost();
     if (titleLocalized && !canEditTitle) {
       return this._openComposerForEditTranslation(topic, firstPost);
     }
@@ -521,7 +522,7 @@ export default class TopicController extends Controller {
       ? Promise.resolve(loadedPost)
       : this.get("model.postStream").loadPost(postId);
 
-    return promise.then((post) => {
+    return promise.then(async (post) => {
       const composer = this.composer;
       const viewOpen = composer.get("model.viewOpen");
 
@@ -550,7 +551,6 @@ export default class TopicController extends Controller {
       }
 
       const quotedText = buildQuote(post, buffer, opts);
-      composerOpts.quote = quotedText;
 
       if (composer.get("model.viewOpen")) {
         this.appEvents.trigger("composer:insert-block", quotedText);
@@ -559,6 +559,16 @@ export default class TopicController extends Controller {
         model.set("reply", model.get("reply") + "\n" + quotedText);
         composer.openIfDraft();
       } else {
+        const draftData = await Draft.get(composerOpts.draftKey);
+
+        if (draftData.draft) {
+          const data = JSON.parse(draftData.draft);
+          composerOpts.draftSequence = draftData.draft_sequence;
+          composerOpts.reply = data.reply + "\n" + quotedText;
+        } else {
+          composerOpts.quote = quotedText;
+        }
+
         composer.open(composerOpts);
       }
     });
@@ -794,24 +804,25 @@ export default class TopicController extends Controller {
         draftSequence: topic.get("draft_sequence"),
       };
 
-      if (quotedText) {
-        opts.quote = quotedText;
-      }
-
       if (post && post.get("post_number") !== 1) {
         opts.post = post;
       } else {
         opts.topic = topic;
       }
 
-      if (!opts.quote) {
-        const draftData = await Draft.get(opts.draftKey);
+      const draftData = await Draft.get(opts.draftKey);
 
-        if (draftData.draft) {
-          const data = JSON.parse(draftData.draft);
+      if (draftData.draft) {
+        const data = JSON.parse(draftData.draft);
+        opts.draftSequence = draftData.draft_sequence;
+
+        if (quotedText) {
+          opts.reply = data.reply + "\n" + quotedText;
+        } else {
           opts.reply = data.reply;
-          opts.draftSequence = draftData.draft_sequence;
         }
+      } else if (quotedText) {
+        opts.quote = quotedText;
       }
 
       composerController.open(opts);

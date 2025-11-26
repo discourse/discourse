@@ -449,6 +449,58 @@ describe "Content Localization" do
     end
   end
 
+  context "with author localization" do
+    fab!(:author) { Fabricate(:user, locale: "en") }
+    fab!(:author_post) do
+      Fabricate(:post, topic:, user: author, locale: "en", raw: "Author's original post")
+    end
+
+    before do
+      SiteSetting.allow_user_locale = true
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_allowed_groups = "#{Group::AUTO_GROUPS[:admins]}"
+      SiteSetting.content_localization_supported_locales = "en|ja"
+      SiteSetting.post_menu = "addTranslation"
+    end
+
+    it "only shows globe icon on author's own posts" do
+      SiteSetting.content_localization_allow_author_localization = false
+
+      sign_in(author)
+      topic_page.visit_topic(topic)
+
+      expect(topic_page).to have_no_post_action_button(post_1, :add_translation)
+      expect(topic_page).to have_no_post_action_button(author_post, :add_translation)
+
+      SiteSetting.content_localization_allow_author_localization = true
+      page.refresh
+      expect(topic_page).to have_post_action_button(author_post, :add_translation)
+      topic_page.click_post_action_button(author_post, :add_translation)
+      find(".post-action-menu__add-translation").click
+      expect(translation_composer).to be_opened
+
+      translation_composer.select_locale("Japanese (日本語)")
+      translation_composer.fill_content("著者のオリジナル投稿")
+      translation_composer.create
+
+      sign_in(japanese_user)
+      topic_page.visit_topic(topic)
+      expect(topic_page).to have_post_content(
+        post_number: author_post.post_number,
+        content: "著者のオリジナル投稿",
+      )
+    end
+
+    it "shows globe icon for admins on all posts" do
+      sign_in(admin)
+      topic_page.visit_topic(topic)
+
+      expect(topic_page).to have_post_action_button(post_1, :add_translation)
+      expect(topic_page).to have_post_action_button(post_2, :add_translation)
+      expect(topic_page).to have_post_action_button(author_post, :add_translation)
+    end
+  end
+
   context "for site settings" do
     let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
     let(:banner) { PageObjects::Components::AdminChangesBanner.new }

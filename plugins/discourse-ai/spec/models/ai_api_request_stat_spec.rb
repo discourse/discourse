@@ -74,7 +74,7 @@ describe AiApiRequestStat do
         )
 
       # Recent data - should not be rolled up
-      recent_time = 1.hour.ago
+      recent_time = Time.zone.now
       _stat4 =
         AiApiRequestStat.create!(
           bucket_date: recent_time,

@@ -438,6 +438,36 @@ shared_examples "social authentication scenarios" do
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
 
+      it "removes destination_url cookie if present after setting up redirect" do
+        mock_facebook_auth
+        visit("/")
+
+        category = Fabricate(:category)
+
+        signup_page.open
+
+        # Manually set the destination_url, as if it were set by a plugin
+        page.driver.with_playwright_page do |pw_page|
+          pw_page.context.add_cookies(
+            [{ url: pw_page.url, name: :destination_url, value: category.url }],
+          )
+
+          cookie_found =
+            pw_page.context.cookies.any? { |cookie| cookie["name"] == "destination_url" }
+          expect(cookie_found).not_to be_falsey
+        end
+
+        signup_page.click_social_button("facebook")
+        expect(page).to have_current_path(category.url)
+
+        # Ensure the destination_url cookie was removed after being used
+        page.driver.with_playwright_page do |pw_page|
+          cookie_found =
+            pw_page.context.cookies.any? { |cookie| cookie["name"] == "destination_url" }
+          expect(cookie_found).to be_falsey
+        end
+      end
+
       context "with a suspended user" do
         before do
           user.suspended_till = 2.years.from_now

@@ -92,6 +92,14 @@ module PageObjects
         collapsed_component
       end
 
+      def has_filter?
+        expanded_component.has_css?(".select-kit-filter .filter-input", visible: true)
+      end
+
+      def has_no_filter?
+        expanded_component.has_no_css?(".select-kit-filter .filter-input")
+      end
+
       def search(value = nil)
         expanded_component.find(".select-kit-filter .filter-input").fill_in(with: value)
       end

@@ -307,6 +307,13 @@ table.screened-ip-addresses {
 }
 
 // Watched words
+.watched-word-regex-errors {
+  max-height: 200px;
+  overflow-y: auto;
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
 .watched-word-box {
   display: inline-block;
   width: 250px;
