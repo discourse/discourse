@@ -1489,6 +1489,34 @@ RSpec.describe TopicsController do
         }.from([1, 1]).to([0, 0])
       end
     end
+
+    context "for private messages" do
+      fab!(:pm_post, :private_message_post)
+      fab!(:pm_topic) { pm_post.topic }
+      fab!(:pm_user) { pm_topic.user }
+
+      before do
+        sign_in(pm_user)
+        TopicUser.create!(
+          topic: pm_topic,
+          user: pm_user,
+          last_read_post_number: 1,
+          notification_level: TopicUser.notification_levels[:watching],
+        )
+        PostTiming.create!(topic: pm_topic, user: pm_user, post_number: 1, msecs: 1000)
+      end
+
+      it "publishes a message to update the client-side tracking state" do
+        messages =
+          MessageBus.track_publish(PrivateMessageTopicTrackingState.user_channel(pm_user.id)) do
+            delete "/t/#{pm_topic.id}/timings.json"
+          end
+
+        expect(messages.size).to eq(1)
+        expect(messages.first.data["message_type"]).to eq("read")
+        expect(messages.first.data["topic_id"]).to eq(pm_topic.id)
+      end
+    end
   end
 
   describe "#mute/unmute" do

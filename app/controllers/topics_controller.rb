@@ -341,6 +341,19 @@ class TopicsController < ApplicationController
 
     last_notification.update!(read: false) if last_notification
 
+    topic = Topic.find_by(id: topic_id)
+
+    if topic&.private_message?
+      topic_user = TopicUser.find_by(user: current_user, topic:)
+
+      PrivateMessageTopicTrackingState.publish_read(
+        topic_id,
+        topic_user&.last_read_post_number,
+        current_user,
+        topic_user&.notification_level,
+      )
+    end
+
     render body: nil
   end
 
