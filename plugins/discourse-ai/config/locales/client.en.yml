@@ -646,7 +646,6 @@ en:
         back: "Back"
         confirm_delete: Are you sure you want to delete this model?
         delete: Delete
-        seeded_warning: "This model is pre-configured on your site and cannot be edited."
         quotas:
           title: "Usage quotas"
           add_title: "Create new quota"
