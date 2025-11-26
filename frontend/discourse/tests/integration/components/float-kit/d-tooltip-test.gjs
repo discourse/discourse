@@ -4,7 +4,6 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import {
   click,
   render,
-  settled,
   triggerEvent,
   triggerKeyEvent,
 } from "@ember/test-helpers";
@@ -379,7 +378,6 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
       </template>
     );
 
-    await settled();
     await click(".fk-d-tooltip__trigger");
 
     assert
