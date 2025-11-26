@@ -54,7 +54,8 @@ export default class DModal extends Component {
   async setupModal(el) {
     document.documentElement.addEventListener(
       "keydown",
-      this.handleDocumentKeydown
+      this.handleDocumentKeydown,
+      { capture: true }
     );
 
     this.wrapperElement = el;
@@ -71,7 +72,8 @@ export default class DModal extends Component {
   cleanupModal() {
     document.documentElement.removeEventListener(
       "keydown",
-      this.handleDocumentKeydown
+      this.handleDocumentKeydown,
+      { capture: true }
     );
   }
 
@@ -188,6 +190,12 @@ export default class DModal extends Component {
   handleDocumentKeydown(event) {
     if (this.args.hidden) {
       return;
+    }
+
+    // Prevent keyboard events from leaking to elements behind the modal
+    if (!this.wrapperElement.contains(document.activeElement)) {
+      event.stopPropagation();
+      event.preventDefault();
     }
 
     if (event.key === "Escape" && this.dismissable) {
