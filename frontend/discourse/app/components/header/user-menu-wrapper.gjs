@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import closeOnEscape from "discourse/float-kit/modifiers/close-on-escape";
 import { isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
 import { isDocumentRTL } from "discourse/lib/text-direction";
@@ -54,6 +55,7 @@ export default class UserMenuWrapper extends Component {
     <div
       class="user-menu-dropdown-wrapper"
       {{didInsert this.setupWrapper}}
+      {{closeOnEscape (fn @toggleUserMenu false)}}
       {{closeOnClickOutside
         this.clickOutside
         (hash
