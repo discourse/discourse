@@ -1509,12 +1509,6 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
-  '@babel/plugin-transform-runtime@7.26.10':
-    resolution: {integrity: sha512-NWaL2qG6HRpONTnj4JvDU6th4jYeZOJgu3QhmFTCihib0ermtOJqktA5BduGm3suhhVe9EMP9c9+mfJ/I9slqw==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-
   '@babel/plugin-transform-runtime@7.28.5':
     resolution: {integrity: sha512-20NUVgOrinudkIBzQ2bNxP08YpKprUkRTiRSd2/Z5GOdPImJGkoN4Z7IQe1T5AdyKI1i5L6RBmluqdSzvaq9/w==}
     engines: {node: '>=6.9.0'}
@@ -3376,11 +3370,6 @@ packages:
 
   babel-plugin-polyfill-corejs2@0.4.14:
     resolution: {integrity: sha512-Co2Y9wX854ts6U8gAAPXfn0GmAyctHuK8n0Yhfjd6t30g7yvKjspvvOo9yG+z52PZRgFErt7Ka2pYnXCjLKEpg==}
-    peerDependencies:
-      '@babel/core': ^7.4.0 || ^8.0.0-0 <8.0.0
-
-  babel-plugin-polyfill-corejs3@0.11.1:
-    resolution: {integrity: sha512-yGCqvBT4rwMczo28xkH/noxJ6MZ4nJfkVYdoDaC/utLtWrXxv27HVrzAeSbqR8SxDsp46n0YF47EbHoixy6rXQ==}
     peerDependencies:
       '@babel/core': ^7.4.0 || ^8.0.0-0 <8.0.0
 
@@ -6361,10 +6350,6 @@ packages:
 
   livereload-js@3.4.1:
     resolution: {integrity: sha512-5MP0uUeVCec89ZbNOT/i97Mc+q3SxXmiUGhRFOTmhrGPn//uWVQdCvcLJDy64MSBR5MidFdOR7B9viumoavy6g==}
-
-  loader-runner@4.3.0:
-    resolution: {integrity: sha512-3R/1M+yS3j5ou80Me59j7F9IMs4PXs3VqRrm0TU3AbKPxlmpoY1TNscJV/oGJXo8qCatFGTfDbY6W6ipGOYXfg==}
-    engines: {node: '>=6.11.5'}
 
   loader-runner@4.3.1:
     resolution: {integrity: sha512-IWqP2SCPhyVFTBtRcgMHdzlf9ul25NwaFx4wCEH/KjAXuuHY4yNjvPXsBokp8jCB936PyWRaPKUNh8NvylLp2Q==}
@@ -9827,18 +9812,6 @@ snapshots:
       '@babel/core': 7.28.5(supports-color@8.1.1)
       '@babel/helper-plugin-utils': 7.27.1
 
-  '@babel/plugin-transform-runtime@7.26.10(@babel/core@7.28.5)':
-    dependencies:
-      '@babel/core': 7.28.5(supports-color@8.1.1)
-      '@babel/helper-module-imports': 7.27.1(supports-color@8.1.1)
-      '@babel/helper-plugin-utils': 7.27.1
-      babel-plugin-polyfill-corejs2: 0.4.14(@babel/core@7.28.5)(supports-color@8.1.1)
-      babel-plugin-polyfill-corejs3: 0.11.1(@babel/core@7.28.5)
-      babel-plugin-polyfill-regenerator: 0.6.5(@babel/core@7.28.5)(supports-color@8.1.1)
-      semver: 6.3.1
-    transitivePeerDependencies:
-      - supports-color
-
   '@babel/plugin-transform-runtime@7.28.5(@babel/core@7.28.5)':
     dependencies:
       '@babel/core': 7.28.5(supports-color@8.1.1)
@@ -12146,14 +12119,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  babel-plugin-polyfill-corejs3@0.11.1(@babel/core@7.28.5):
-    dependencies:
-      '@babel/core': 7.28.5(supports-color@8.1.1)
-      '@babel/helper-define-polyfill-provider': 0.6.5(@babel/core@7.28.5)(supports-color@8.1.1)
-      core-js-compat: 3.46.0
-    transitivePeerDependencies:
-      - supports-color
-
   babel-plugin-polyfill-corejs3@0.13.0(@babel/core@7.28.5)(supports-color@8.1.1):
     dependencies:
       '@babel/core': 7.28.5(supports-color@8.1.1)
@@ -13466,7 +13431,7 @@ snapshots:
       '@babel/plugin-proposal-private-methods': 7.18.6(@babel/core@7.28.5)
       '@babel/plugin-proposal-private-property-in-object': 7.21.11(@babel/core@7.28.5)
       '@babel/plugin-transform-modules-amd': 7.27.1(@babel/core@7.28.5)(supports-color@8.1.1)
-      '@babel/plugin-transform-runtime': 7.26.10(@babel/core@7.28.5)
+      '@babel/plugin-transform-runtime': 7.28.5(@babel/core@7.28.5)
       '@babel/plugin-transform-typescript': 7.28.0(@babel/core@7.28.5)
       '@babel/polyfill': 7.12.1
       '@babel/preset-env': 7.28.5(@babel/core@7.28.5)(supports-color@8.1.1)
@@ -13502,7 +13467,7 @@ snapshots:
       '@babel/plugin-proposal-private-property-in-object': 7.21.11(@babel/core@7.28.5)
       '@babel/plugin-transform-class-static-block': 7.28.3(@babel/core@7.28.5)(supports-color@8.1.1)
       '@babel/plugin-transform-modules-amd': 7.27.1(@babel/core@7.28.5)(supports-color@8.1.1)
-      '@babel/plugin-transform-runtime': 7.26.10(@babel/core@7.28.5)
+      '@babel/plugin-transform-runtime': 7.28.5(@babel/core@7.28.5)
       '@babel/plugin-transform-typescript': 7.28.0(@babel/core@7.28.5)
       '@babel/preset-env': 7.28.5(@babel/core@7.28.5)(supports-color@8.1.1)
       '@babel/runtime': 7.12.18
@@ -16105,8 +16070,6 @@ snapshots:
       - encoding
 
   livereload-js@3.4.1: {}
-
-  loader-runner@4.3.0: {}
 
   loader-runner@4.3.1: {}
 
@@ -19153,7 +19116,7 @@ snapshots:
       glob-to-regexp: 0.4.1
       graceful-fs: 4.2.11
       json-parse-even-better-errors: 2.3.1
-      loader-runner: 4.3.0
+      loader-runner: 4.3.1
       mime-types: 2.1.35
       neo-async: 2.6.2
       schema-utils: 4.3.3
