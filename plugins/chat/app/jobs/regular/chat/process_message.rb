@@ -35,7 +35,15 @@ module Jobs
             ::Chat::Notifier.new(chat_message, chat_message.created_at).notify_new
           end
 
-          ::Chat::Publisher.publish_processed!(chat_message)
+          # Reload message with associations to ensure we have fresh data (e.g., optimized videos)
+          # This is important when video conversion completes and adds optimized_video associations
+          # Use the original message as fallback if reload fails (e.g., message was deleted)
+          message_to_publish =
+            ::Chat::Message.includes(uploads: { optimized_videos: :optimized_upload }).find_by(
+              id: chat_message.id,
+            ) || chat_message
+
+          ::Chat::Publisher.publish_processed!(message_to_publish)
         end
       end
     end

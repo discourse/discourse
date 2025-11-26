@@ -22,6 +22,16 @@ class UploadSerializer < ApplicationSerializer
           embed: :object,
           if: -> { SiteSetting.create_thumbnails && object.has_thumbnail? }
 
+  has_one :optimized_video,
+          serializer: OptimizedVideoSerializer,
+          root: false,
+          embed: :object,
+          if: -> { SiteSetting.video_conversion_enabled && object.optimized_video.present? }
+
+  def optimized_video
+    object.optimized_videos.first
+  end
+
   def url
     if object.for_site_setting
       object.url
