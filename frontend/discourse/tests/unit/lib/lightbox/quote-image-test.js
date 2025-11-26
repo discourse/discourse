@@ -3,8 +3,10 @@ import Service from "@ember/service";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import { createHelperContext, helperContext } from "discourse/lib/helpers";
 import quoteImage, { canQuoteImage } from "discourse/lib/lightbox/quote-image";
 import Draft from "discourse/models/draft";
+import { logIn } from "discourse/tests/helpers/qunit-helpers";
 
 class ComposerStub extends Service {
   model = { viewOpen: false };
@@ -27,6 +29,15 @@ module("Unit | Lib | lightbox | quote image", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
+    this.originalHelperContext = helperContext();
+
+    logIn(this.owner);
+
+    createHelperContext({
+      ...(this.originalHelperContext || {}),
+      currentUser: this.owner.lookup("service:current-user"),
+    });
+
     this.owner.unregister("service:composer");
     this.owner.unregister("service:app-events");
 
@@ -55,6 +66,7 @@ module("Unit | Lib | lightbox | quote image", function (hooks) {
   hooks.afterEach(function () {
     document.querySelectorAll(".topic-post").forEach((el) => el.remove());
     this.draftGetStub.restore();
+    createHelperContext(this.originalHelperContext);
   });
 
   function buildLightbox(context, overrides = {}) {
@@ -140,6 +152,22 @@ module("Unit | Lib | lightbox | quote image", function (hooks) {
     assert.true(canQuoteImage(element, slideData));
   });
 
+  test("canQuoteImage returns false for anonymous users", function (assert) {
+    const originalContext = helperContext();
+
+    createHelperContext({ ...originalContext, currentUser: null });
+
+    try {
+      const { element, slideData } = buildLightbox(this);
+      assert.false(
+        canQuoteImage(element, slideData),
+        "canQuoteImage returns false when user is not logged in"
+      );
+    } finally {
+      createHelperContext(originalContext);
+    }
+  });
+
   test("builds markdown using data-orig-src and dimensions when composer is closed", async function (assert) {
     const { element, slideData } = buildLightbox(this, {
       origSrc: "upload://original.png",
@@ -187,7 +215,7 @@ module("Unit | Lib | lightbox | quote image", function (hooks) {
     );
   });
 
-  test("uses short upload:// URL when data-base62-sha1 is present", async function (assert) {
+  test("uses short upload:// URL with extension when data-base62-sha1 is present", async function (assert) {
     const { element, slideData } = buildLightbox(this, {
       base62SHA1: "a4bcwvmLAy8cGHKPUrK4G3AUbt9",
       href: "//localhost:4200/uploads/default/original/1X/468eb8aa1f0126f1ce7e7ea7a2f64f25da0b58db.png",
@@ -200,9 +228,9 @@ module("Unit | Lib | lightbox | quote image", function (hooks) {
     const quote = this.composer.openCalls[0].quote;
     assert.true(
       quote.includes(
-        "![diagram|640x480](upload://a4bcwvmLAy8cGHKPUrK4G3AUbt9)"
+        "![diagram|640x480](upload://a4bcwvmLAy8cGHKPUrK4G3AUbt9.png)"
       ),
-      "uses short upload:// URL format with base62-sha1"
+      "uses short upload:// URL format with base62-sha1 and extension"
     );
   });
 
