@@ -216,7 +216,7 @@ export default class ScrollingPostStream extends MountWidget {
         });
       }
 
-      const last = posts[onscreen[onscreen.length - 1]];
+      const last = posts[onscreen.at(-1)];
       if (this._bottomVisible !== last) {
         this._bottomVisible = last;
         this.bottomVisibleChanged({ post: last, refresh });
