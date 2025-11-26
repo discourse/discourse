@@ -361,6 +361,23 @@ RSpec.describe UserMerger do
       expect(PostAction.where(user_id: source_user.id).count).to eq(0)
     end
 
+    it "does not migrate source user's flag when target user has a different flag type on same post" do
+      PostActionCreator.create(source_user, p1, :off_topic)
+      PostActionCreator.create(target_user, p1, :spam)
+      PostActionCreator.create(source_user, p2, :inappropriate)
+
+      merge_users!
+
+      expect(PostAction.where(user_id: target_user.id, post_id: p1.id).count).to eq(1)
+      expect(
+        PostAction.where(user_id: target_user.id, post_id: p1.id).pluck(:post_action_type_id),
+      ).to contain_exactly(PostActionType.types[:spam])
+      expect(PostAction.where(user_id: target_user.id, post_id: p2.id).count).to eq(1)
+      expect(
+        PostAction.where(user_id: target_user.id, post_id: p2.id).pluck(:post_action_type_id),
+      ).to contain_exactly(PostActionType.types[:inappropriate])
+    end
+
     it "updates post actions" do
       action1 = PostActionCreator.create(source_user, p1, :off_topic).post_action
       action1.update_attribute(:deleted_by_id, source_user.id)
