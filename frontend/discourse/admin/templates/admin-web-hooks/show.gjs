@@ -1,14 +1,20 @@
-import { LinkTo } from "@ember/routing";
 import WebhookEvents from "discourse/admin/components/webhook-events";
+import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
+import DPageHeader from "discourse/components/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  <LinkTo @route="adminWebHooks" class="go-back">
-    {{icon "arrow-left"}}
-    {{i18n "admin.web_hooks.back"}}
-  </LinkTo>
+  <DPageHeader @hideTabs={{true}}>
+    <:breadcrumbs>
+      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem
+        @path="/admin/api/web_hooks"
+        @label={{i18n "admin.config.webhooks.title"}}
+      />
+      <DBreadcrumbsItem @label={{i18n "admin.config.webhooks.status"}} />
+    </:breadcrumbs>
+  </DPageHeader>
 
   <div class="admin-webhooks__summary">
     <h1>

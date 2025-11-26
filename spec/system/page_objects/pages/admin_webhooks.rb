@@ -36,8 +36,16 @@ module PageObjects
         click_save
       end
 
-      def click_back
-        page.find(back_button_selector).click
+      def has_page_title?(title)
+        page.has_css?(".d-page-header__title", text: title)
+      end
+
+      def click_breadcrumb
+        page.find(
+          ".d-breadcrumbs__item a",
+          text: I18n.t("admin_js.admin.config.webhooks.title"),
+        ).click
+        self
       end
 
       def click_save
@@ -83,10 +91,6 @@ module PageObjects
 
       def save_button_selector
         ".save"
-      end
-
-      def back_button_selector
-        ".go-back"
       end
     end
   end

@@ -24,7 +24,7 @@ describe "Admin Webhooks Page", type: :system do
 
     expect(webhooks_page).to have_webhook_details("https://www.example.com/2")
 
-    webhooks_page.click_back
+    webhooks_page.click_breadcrumb
 
     expect(webhooks_page).to have_webhook_listed("https://www.example.com/2")
   end
