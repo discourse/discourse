@@ -99,7 +99,7 @@ export default class EmbeddableHost extends Component {
                     @action={{this.delete}}
                     @label="admin.embedding.delete"
                     @icon="trash-can"
-                    class="btn-transparent btn-danger admin-embeddable-host-item__delete"
+                    class="btn-transparent --danger admin-embeddable-host-item__delete"
                   />
                 </dropdown.item>
               </DropdownMenu>
