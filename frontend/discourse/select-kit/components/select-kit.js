@@ -1012,6 +1012,9 @@ export default class SelectKit extends Component {
     const strategy = this._computePlacementStrategy();
     floatingElement.style.position = strategy;
 
+    let width;
+    let minWidth;
+
     const middleware = [
       {
         name: "minWidth",
@@ -1021,8 +1024,8 @@ export default class SelectKit extends Component {
           }
 
           return size({
-            apply({ rects, elements }) {
-              elements.floating.style.minWidth = `${Math.max(rects.reference.width, 220)}px`;
+            apply({ rects }) {
+              minWidth = `${Math.max(Math.round(rects.reference.width), 220)}px`;
             },
           }).fn(state);
         },
@@ -1087,7 +1090,7 @@ export default class SelectKit extends Component {
         name: "applySmallScreenMaxWidth",
         fn: (state) => {
           if (window.innerWidth <= 450) {
-            floatingElement.style.width = `${window.innerWidth - 20}px`;
+            width = `${window.innerWidth - 20}px`;
           }
 
           return state;
@@ -1102,6 +1105,8 @@ export default class SelectKit extends Component {
       middleware,
     }).then(({ x, y, middlewareData }) => {
       const style = {
+        width,
+        minWidth,
         top: "0",
         left: "0",
         transform: `translate(${roundByDPR(x)}px,${roundByDPR(y)}px)`,
