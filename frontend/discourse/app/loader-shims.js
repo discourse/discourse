@@ -124,5 +124,5 @@ loaderShim("truth-helpers/helpers/not", () =>
 loaderShim("truth-helpers/helpers/or", () =>
   importSync("truth-helpers/helpers/or")
 );
-loaderShim("virtual-dom", () => importSync("virtual-dom"));
+loaderShim("virtual-dom", () => importSync("discourse/widgets/virtual-dom"));
 loaderShim("xss", () => importSync("xss"));

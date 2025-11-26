@@ -349,9 +349,6 @@ export default class InvitePanel extends Component {
         .then(() => {
           model.setProperties({ saving: false, finished: true });
           this.inviteModel.reload().then(() => {
-            // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-            this.appEvents.trigger("post-stream:refresh");
-
             this.toasts.success({
               data: { message: this.successMessage(this.invitee) },
             });
@@ -368,9 +365,6 @@ export default class InvitePanel extends Component {
             this.get("inviteModel.details.allowed_users").pushObject(
               EmberObject.create(result.user)
             );
-            // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-            this.appEvents.trigger("post-stream:refresh", { force: true });
-
             this.toasts.success({
               data: { message: this.successMessage(result) },
             });

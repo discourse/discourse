@@ -4,10 +4,9 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { waitForPromise } from "@ember/test-waiters";
-import { create } from "virtual-dom";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
-import { iconNode } from "discourse/lib/icon-library";
+import { iconElement } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
 
 export default class JsonSchemaEditorModal extends Component {
@@ -116,6 +115,6 @@ class DiscourseJsonSchemaEditorIconlib {
     if (!this.mapping[key]) {
       return;
     }
-    return create(iconNode(this.mapping[key]));
+    return iconElement(this.mapping[key]);
   }
 }

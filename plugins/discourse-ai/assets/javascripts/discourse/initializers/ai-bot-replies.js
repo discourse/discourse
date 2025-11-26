@@ -1,17 +1,10 @@
-import { hbs } from "ember-cli-htmlbars";
-import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { registerWidgetShim } from "discourse/widgets/render-glimmer";
 import AiBotHeaderIcon from "../components/ai-bot-header-icon";
 import AiPersonaFlair from "../components/post/ai-persona-flair";
 import AiCancelStreamingButton from "../components/post-menu/ai-cancel-streaming-button";
 import AiDebugButton from "../components/post-menu/ai-debug-button";
 import AiShareButton from "../components/post-menu/ai-share-button";
-import {
-  getBotType,
-  isGPTBot,
-  showShareConversationModal,
-} from "../lib/ai-bot-helper";
+import { isGPTBot, showShareConversationModal } from "../lib/ai-bot-helper";
 import { streamPostText } from "../lib/ai-streamer/progress-handlers";
 
 let allowDebug = false;
@@ -55,34 +48,6 @@ function initializeAIBotReplies(api) {
 
 function initializePersonaDecorator(api) {
   api.renderAfterWrapperOutlet("post-meta-data-poster-name", AiPersonaFlair);
-
-  withSilencedDeprecations("discourse.post-stream-widget-overrides", () =>
-    initializeWidgetPersonaDecorator(api)
-  );
-}
-
-function initializeWidgetPersonaDecorator(api) {
-  api.decorateWidget(`poster-name:after`, (dec) => {
-    const botType = getBotType(dec.attrs.user);
-    // we have 2 ways of decorating
-    // 1. if a bot is a LLM we decorate with persona name
-    // 2. if bot is a persona we decorate with LLM name
-    if (botType === "llm") {
-      return dec.widget.attach("persona-flair", {
-        personaName: dec.model?.topic?.ai_persona_name,
-      });
-    } else if (botType === "persona") {
-      return dec.widget.attach("persona-flair", {
-        personaName: dec.model?.llm_name,
-      });
-    }
-  });
-
-  registerWidgetShim(
-    "persona-flair",
-    "span.persona-flair",
-    hbs`{{@data.personaName}}`
-  );
 }
 
 function initializePauseButton(api) {

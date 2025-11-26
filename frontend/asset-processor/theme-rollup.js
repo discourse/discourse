@@ -7,7 +7,6 @@ import colocatedBabelPlugin from "ember-cli-htmlbars/lib/colocated-babel-plugin"
 import EmberThisFallback from "ember-this-fallback";
 import { memfs } from "memfs";
 import transformActionSyntax from "discourse-plugins/transform-action-syntax";
-import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
 import { browsers } from "../discourse/config/targets";
 import babelTransformModuleRenames from "../discourse/lib/babel-transform-module-renames";
 import AddThemeGlobals from "./add-theme-globals";
@@ -61,7 +60,6 @@ globalThis.rollup = function (modules, opts) {
           babelTransformModuleRenames,
           AddThemeGlobals,
           colocatedBabelPlugin,
-          WidgetHbsCompiler,
           [
             HTMLBarsInlinePrecompile,
             {

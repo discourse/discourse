@@ -1,12 +1,11 @@
 import { schedule } from "@ember/runloop";
-import { create } from "virtual-dom";
 import FullscreenTableModal from "discourse/components/modal/fullscreen-table";
 import SpreadsheetEditor from "discourse/components/modal/spreadsheet-editor";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Columns from "discourse/lib/columns";
 import highlightSyntax from "discourse/lib/highlight-syntax";
-import { iconHTML, iconNode } from "discourse/lib/icon-library";
+import { iconElement, iconHTML } from "discourse/lib/icon-library";
 import { nativeLazyLoading } from "discourse/lib/lazy-load-images";
 import lightbox from "discourse/lib/lightbox";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -119,9 +118,9 @@ export default {
         }
 
         if (props.icon) {
-          const icon = create(
-            iconNode(props.icon.name, { class: props.icon?.class })
-          );
+          const icon = iconElement(props.icon.name, {
+            class: props.icon?.class,
+          });
           openPopupBtn.prepend(icon);
         }
 
@@ -187,8 +186,7 @@ export default {
           table.parentNode.setAttribute("data-table-index", index);
           table.parentNode.classList.add("fullscreen-table-wrapper");
 
-          // TODO (glimmer-post-stream) in the Glimmer post stream we can check for post.can_edit instead
-          if (post.canEdit) {
+          if (post.can_edit) {
             table.parentNode.classList.add("--editable");
             buttonWrapper.append(tableEditorBtn);
             tableEditorBtn.addEventListener(
@@ -224,21 +222,6 @@ export default {
         });
       }
 
-      function cleanupPopupBtns() {
-        const editTableBtn = document.querySelector(
-          ".open-popup-link.btn-edit-table"
-        );
-        const expandTableBtn = document.querySelector(
-          ".open-popup-link.btn-expand-table"
-        );
-
-        expandTableBtn?.removeEventListener(
-          "click",
-          generateFullScreenTableModal
-        );
-        editTableBtn?.removeEventListener("click", generateSpreadsheetModal);
-      }
-
       api.decorateCookedElement(
         (element, helper) => {
           schedule("afterRender", () => {
@@ -251,8 +234,6 @@ export default {
           id: "table-wrapper",
         }
       );
-
-      api.cleanupStream(cleanupPopupBtns);
     });
   },
 };

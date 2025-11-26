@@ -1,4 +1,3 @@
-import { h } from "virtual-dom";
 import { renderIcon } from "discourse/lib/icon-library";
 import User from "discourse/models/user";
 
@@ -52,18 +51,5 @@ export default function renderTopicFeaturedLink(topic) {
     }</a>`;
   } else {
     return "";
-  }
-}
-// deprecated per components/header/topic/featured-link.gjs
-export function topicFeaturedLinkNode(topic) {
-  const meta = extractLinkMeta(topic);
-  if (meta) {
-    return h(
-      "a.topic-featured-link",
-      {
-        attributes: { href: meta.href, rel: meta.rel, target: meta.target },
-      },
-      [renderIcon("node", "up-right-from-square"), meta.domain]
-    );
   }
 }

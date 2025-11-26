@@ -1,26 +1,39 @@
-import $ from "jquery";
+/**
+ * IMPORTANT: The widget rendering system has been decommissioned.
+ *
+ * This file is maintained only to prevent breaking imports in existing third-party customizations.
+ * New code should not use this component or the widget system.
+ */
 
+import { warnWidgetsDecommissioned } from "discourse/widgets/widget";
+
+/**
+ * This class is kept only for backward compatibility.
+ *
+ * @deprecated This class is part of the decommissioned widget system and should not be used anymore.
+ */
 export default class RawHtml {
-  constructor(attrs) {
-    this.html = attrs.html;
+  constructor() {
+    warnWidgetsDecommissioned();
   }
 
-  init() {
-    const $html = $(this.html);
-    this.decorate($html);
-    return $html[0];
-  }
+  /**
+   * @deprecated the widget rendering system was decommissioned
+   */
+  init() {}
 
+  /**
+   * @deprecated the widget rendering system was decommissioned
+   */
   decorate() {}
 
-  update(prev) {
-    if (prev.html === this.html) {
-      return;
-    }
-    return this.init();
-  }
+  /**
+   * @deprecated the widget rendering system was decommissioned
+   */
+  update() {}
 
+  /**
+   * @deprecated the widget rendering system was decommissioned
+   */
   destroy() {}
 }
-
-RawHtml.prototype.type = "Widget";
