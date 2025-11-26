@@ -59,7 +59,7 @@ export default class ChatModalThreadSettings extends Component {
           @disabled={{this.buttonDisabled}}
           @action={{this.saveThread}}
           @label="chat.save"
-          class="btn-transparent btn-primary"
+          class="btn-transparent --primary"
         />
       </:headerPrimaryAction>
       <:body>

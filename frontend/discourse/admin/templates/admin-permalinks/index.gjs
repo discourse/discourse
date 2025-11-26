@@ -102,7 +102,7 @@ export default <template>
                             <DButton
                               @action={{fn @controller.destroyRecord pl}}
                               @icon="trash-can"
-                              class="btn-transparent btn-danger admin-permalink-item__delete"
+                              class="btn-transparent --danger admin-permalink-item__delete"
                               @label="admin.config_areas.permalinks.delete"
                             />
                           </dropdown.item>

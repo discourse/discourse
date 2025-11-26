@@ -31,7 +31,7 @@ export default class AiSearchDiscoveriesTooltip extends Component {
 
             <div class="ai-search-discoveries-tooltip__actions">
               <DButton
-                class="btn-transparent btn-primary"
+                class="btn-transparent --primary"
                 @label="discourse_ai.discobot_discoveries.tooltip.actions.info"
                 @href="https://meta.discourse.org/t/conversational-ai-search-coming-to-discourse-ai/355939"
               />
