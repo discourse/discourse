@@ -47,17 +47,6 @@ describe "Wizard", type: :system do
       expect(page).to have_current_path("/")
     end
 
-    it "redirects to homepage even when bootstrap mode is enabled" do
-      topic = Fabricate(:topic_with_op, title: "Admin Getting Started Guide")
-      SiteSetting.bootstrap_mode_enabled = true
-      SiteSetting.admin_quick_start_topic_id = topic.id
-
-      wizard_page.go_to_step("setup")
-      wizard_page.fill_field("text", "title", "My Test Site")
-      wizard_page.click_jump_in
-      expect(page).to have_current_path("/")
-    end
-
     it "prevents submission when title is empty" do
       wizard_page.go_to_step("setup")
       wizard_page.fill_field("text", "title", "")

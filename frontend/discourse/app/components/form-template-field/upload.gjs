@@ -7,15 +7,16 @@ import { htmlSafe } from "@ember/template";
 import PickFilesButton from "discourse/components/pick-files-button";
 import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 
 export default class FormTemplateFieldUpload extends Component {
   @tracked uploadValue;
-  @tracked uploadedFiles = [];
   @tracked fileInputSelector = `#${this.fileUploadElementId}`;
   @tracked
   fileUploadElementId = `${dasherize(this.args.id.toString())}-uploader`;
+  @trackedArray uploadedFiles = [];
 
   uppyUpload = new UppyUpload(getOwner(this), {
     id: this.args.id,
@@ -62,7 +63,7 @@ export default class FormTemplateFieldUpload extends Component {
       this.uploadValue = "";
     }
 
-    this.uploadedFiles.pushObject(upload);
+    this.uploadedFiles.push(upload);
 
     const uploadMarkdown = this.buildMarkdown(upload);
     if (this.uploadValue && this.uppyUpload.allowMultipleFiles) {

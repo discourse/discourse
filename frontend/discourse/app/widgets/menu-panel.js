@@ -1,19 +1,8 @@
-import hbs from "discourse/widgets/hbs-compiler";
-import { createWidget } from "discourse/widgets/widget";
+/**
+ * IMPORTANT: The widget rendering system has been decommissioned.
+ *
+ * This file is maintained only to prevent breaking imports in existing third-party customizations.
+ * New code should not use this component or the widget system.
+ */
 
-createWidget("menu-panel", {
-  tagName: "div.menu-panel",
-  template: hbs`
-    <div class='panel-body'>
-      <div class='panel-body-contents'>
-        {{yield}}
-      </div>
-    </div>
-  `,
-
-  buildAttributes(attrs) {
-    if (attrs.maxWidth) {
-      return { "data-max-width": attrs.maxWidth };
-    }
-  },
-});
+export { DummyWidget as default } from "discourse/widgets/widget";

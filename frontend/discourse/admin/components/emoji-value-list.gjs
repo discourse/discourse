@@ -1,30 +1,23 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, set, setProperties } from "@ember/object";
-import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import { classNameBindings } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import EmojiPicker from "discourse/components/emoji-picker";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
-import discourseComputed from "discourse/lib/decorators";
+import { addUniqueValueToArray } from "discourse/lib/array-tools";
 import { emojiUrlFor } from "discourse/lib/text";
 import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
-@classNameBindings(":value-list", ":emoji-list")
 export default class EmojiValueList extends Component {
   @service menu;
 
-  values = null;
-
-  @discourseComputed("values")
-  collection(values) {
-    values = values || "";
-
-    return values
+  @cached
+  get collection() {
+    return this.args.values
       .split("|")
       .filter(Boolean)
       .map((value) => {
@@ -39,19 +32,19 @@ export default class EmojiValueList extends Component {
 
   @action
   emojiSelected(code) {
-    if (!this._validateInput(code)) {
+    if (!this.#validateInput(code)) {
       return;
     }
 
-    const item = this.collection.find((emoji) => emoji.isEditing);
+    const newCollection = [...this.collection];
+    const item = newCollection.find((emoji) => emoji.isEditing);
+
     if (item) {
       setProperties(item, {
         value: code,
         emojiUrl: emojiUrlFor(code),
         isEditing: false,
       });
-
-      this._saveValues();
     } else {
       const newCollectionValue = {
         value: code,
@@ -59,164 +52,151 @@ export default class EmojiValueList extends Component {
         isEditable: true,
         isEditing: false,
       };
-      this.collection.addObject(newCollectionValue);
-      this._saveValues();
+
+      addUniqueValueToArray(newCollection, newCollectionValue);
     }
+
+    this.#saveValues(newCollection);
   }
 
-  @discourseComputed("collection")
-  showUpDownButtons(collection) {
-    return collection.length - 1 ? true : false;
-  }
-
-  _splitValues(values) {
-    if (values && values.length) {
-      const emojiList = [];
-      const emojis = values.split("|").filter(Boolean);
-      emojis.forEach((emojiName) => {
-        const emoji = {
-          isEditable: true,
-          isEditing: false,
-        };
-        emoji.value = emojiName;
-        emoji.emojiUrl = emojiUrlFor(emojiName);
-
-        emojiList.push(emoji);
-      });
-
-      return emojiList;
-    } else {
-      return [];
-    }
+  get showUpDownButtons() {
+    return this.collection.length > 1;
   }
 
   @action
   editValue(index, event) {
-    schedule("afterRender", () => {
-      if (parseInt(index, 10) >= 0) {
-        const item = this.collection[index];
-        if (item.isEditable) {
-          set(item, "isEditing", true);
-        }
+    if (parseInt(index, 10) >= 0) {
+      const item = this.collection[index];
+      if (item.isEditable) {
+        set(item, "isEditing", true);
       }
+    }
 
-      this.menu.show(event.target, {
-        identifier: "emoji-picker",
-        groupIdentifier: "emoji-picker",
-        component: EmojiPickerDetached,
-        modalForMobile: true,
-        data: {
-          context: "chat",
-          didSelectEmoji: (emoji) => {
-            this._replaceValue(index, emoji);
-          },
+    this.menu.show(event.target, {
+      identifier: "emoji-picker",
+      groupIdentifier: "emoji-picker",
+      component: EmojiPickerDetached,
+      modalForMobile: true,
+      data: {
+        context: "chat",
+        didSelectEmoji: (emoji) => {
+          this.#replaceValue(index, emoji);
         },
-      });
+      },
     });
   }
 
   @action
-  removeValue(value) {
-    this._removeValue(value);
+  removeValue(item) {
+    const newCollection = [...this.collection].filter(
+      (emoji) => emoji.value !== item.value
+    );
+    this.#saveValues(newCollection);
   }
 
   @action
   shift(operation, index) {
+    const updateCollection = [...this.collection];
+
     let futureIndex = index + operation;
 
-    if (futureIndex > this.collection.length - 1) {
+    if (futureIndex > updateCollection.length - 1) {
       futureIndex = 0;
     } else if (futureIndex < 0) {
-      futureIndex = this.collection.length - 1;
+      futureIndex = updateCollection.length - 1;
     }
 
-    const shiftedEmoji = this.collection[index];
-    this.collection.removeAt(index);
-    this.collection.insertAt(futureIndex, shiftedEmoji);
+    const shiftedEmoji = updateCollection[index];
+    updateCollection.splice(index, 1);
+    updateCollection.splice(futureIndex, 0, shiftedEmoji);
 
-    this._saveValues();
+    this.#saveValues(updateCollection);
   }
 
-  _validateInput(input) {
+  #validateInput(input) {
     if (!emojiUrlFor(input)) {
-      this.setValidationMessage(
+      this.args.setValidationMessage(
         i18n("admin.site_settings.emoji_list.invalid_input")
       );
       return false;
     }
 
-    this.setValidationMessage(null);
+    this.args.setValidationMessage(null);
     return true;
   }
 
-  _removeValue(value) {
-    this.collection.removeObject(value);
-    this._saveValues();
-  }
+  #replaceValue(index, newValue) {
+    const updateCollection = [...this.collection];
 
-  _replaceValue(index, newValue) {
-    const item = this.collection[index];
+    const item = updateCollection[index];
     if (item.value === newValue) {
       return;
     }
     set(item, "value", newValue);
-    this._saveValues();
+
+    this.#saveValues(updateCollection);
   }
 
-  _saveValues() {
-    this.set("values", this.collection.map((item) => item.value).join("|"));
+  #saveValues(updateCollection) {
+    this.args.changeValueCallback(
+      updateCollection.map((item) => item.value).join("|")
+    );
   }
 
   <template>
-    {{#if this.collection}}
-      <ul class="values emoji-value-list">
-        {{#each this.collection as |data index|}}
-          <li class="value" data-index={{index}}>
-            <DButton
-              @action={{fn this.removeValue data}}
-              @icon="xmark"
-              @disabled={{not data.isEditable}}
-              class="btn-default remove-value-btn btn-small"
-            />
-
-            <div
-              class="value-input emoji-details
-                {{if data.isEditable 'can-edit'}}
-                {{if data.isEditing 'd-editor-textarea-wrapper'}}"
-              {{on "click" (fn this.editValue index)}}
-              role="button"
-            >
-              <img
-                height="15px"
-                width="15px"
-                src={{data.emojiUrl}}
-                class="emoji-list-emoji"
-              />
-              <span class="emoji-name">{{data.value}}</span>
-            </div>
-
-            {{#if this.showUpDownButtons}}
+    <div class="value-list emoji-list">
+      {{#if this.collection}}
+        <ul class="values emoji-value-list">
+          {{#each this.collection key="value" as |data index|}}
+            <li class="value" data-index={{index}}>
               <DButton
-                @action={{fn this.shift -1 index}}
-                @icon="arrow-up"
-                class="btn-default shift-up-value-btn btn-small"
+                @action={{fn this.removeValue data}}
+                @icon="xmark"
+                @disabled={{not data.isEditable}}
+                class="btn-default remove-value-btn btn-small"
               />
-              <DButton
-                @action={{fn this.shift 1 index}}
-                @icon="arrow-down"
-                class="btn-default shift-down-value-btn btn-small"
-              />
-            {{/if}}
-          </li>
-        {{/each}}
-      </ul>
-    {{/if}}
 
-    <div class="value">
-      <EmojiPicker
-        @label={{i18n "admin.site_settings.emoji_list.add_emoji_button.label"}}
-        @didSelectEmoji={{this.emojiSelected}}
-      />
+              <div
+                class="value-input emoji-details
+                  {{if data.isEditable 'can-edit'}}
+                  {{if data.isEditing 'd-editor-textarea-wrapper'}}"
+                {{on "click" (fn this.editValue index)}}
+                role="button"
+              >
+                <img
+                  height="15px"
+                  width="15px"
+                  src={{data.emojiUrl}}
+                  class="emoji-list-emoji"
+                />
+                <span class="emoji-name">{{data.value}}</span>
+              </div>
+
+              {{#if this.showUpDownButtons}}
+                <DButton
+                  @action={{fn this.shift -1 index}}
+                  @icon="arrow-up"
+                  class="btn-default shift-up-value-btn btn-small"
+                />
+                <DButton
+                  @action={{fn this.shift 1 index}}
+                  @icon="arrow-down"
+                  class="btn-default shift-down-value-btn btn-small"
+                />
+              {{/if}}
+            </li>
+          {{/each}}
+        </ul>
+      {{/if}}
+
+      <div class="value">
+        <EmojiPicker
+          @label={{i18n
+            "admin.site_settings.emoji_list.add_emoji_button.label"
+          }}
+          @didSelectEmoji={{this.emojiSelected}}
+        />
+      </div>
     </div>
   </template>
 }
