@@ -17,6 +17,11 @@ describe "Admin Color Palette Config Area Page", type: :system do
     Stylesheet::Manager.cache.clear
   end
 
+  it "shows correct breadcrumbs" do
+    config_area.visit(color_scheme.id)
+    expect(config_area).to have_breadcrumbs(color_scheme.name)
+  end
+
   it "allows editing the palette name" do
     config_area.visit(color_scheme.id)
 

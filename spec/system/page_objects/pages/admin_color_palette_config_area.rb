@@ -72,6 +72,16 @@ module PageObjects
       def has_no_unsaved_changes_indicator?
         has_no_text?(I18n.t("admin_js.admin.config_areas.color_palettes.unsaved_changes"))
       end
+
+      def has_breadcrumbs?(palette_name)
+        expect(all(".d-breadcrumbs__item").map(&:text)).to eq(
+          [
+            I18n.t("js.admin_title"),
+            I18n.t("admin_js.admin.config.color_palettes.title"),
+            palette_name,
+          ],
+        )
+      end
     end
   end
 end

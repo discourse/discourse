@@ -1,6 +1,7 @@
-import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";
+import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DButton from "discourse/components/d-button";
+import DPageHeader from "discourse/components/d-page-header";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TextField from "discourse/components/text-field";
 import UserLink from "discourse/components/user-link";
@@ -11,25 +12,31 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  <div class="show-current-style admin-customize-themes-show">
-    <div class="back-to-themes-and-components">
-      <LinkTo
-        @route={{if
+  <DPageHeader @hideTabs={{true}}>
+    <:breadcrumbs>
+      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem
+        @path={{if
           @controller.model.component
-          "adminConfig.customize.components"
-          "adminConfig.customize.themes"
+          "/admin/config/customize/components"
+          "/admin/config/customize/themes"
         }}
-      >
-        {{icon "angle-left"}}
-        {{i18n
+        @label={{i18n
           (if
             @controller.model.component
-            "admin.config_areas.themes_and_components.components.back"
-            "admin.config_areas.themes_and_components.themes.back"
+            "admin.config_areas.themes_and_components.components.title"
+            "admin.config_areas.themes_and_components.themes.title"
           )
         }}
-      </LinkTo>
-    </div>
+      />
+      <DBreadcrumbsItem
+        @path={{@controller.router.currentURL}}
+        @label={{@controller.model.name}}
+      />
+    </:breadcrumbs>
+  </DPageHeader>
+
+  <div class="show-current-style admin-customize-themes-show">
 
     <span>
       <PluginOutlet

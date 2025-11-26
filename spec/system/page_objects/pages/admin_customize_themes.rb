@@ -139,21 +139,23 @@ module PageObjects
         has_no_css?(".themes-list-header")
       end
 
-      def has_back_button_to_themes_page?
-        has_css?(
-          '.back-to-themes-and-components a[href="/admin/config/customize/themes"]',
-          text: I18n.t("admin_js.admin.config_areas.themes_and_components.themes.back"),
+      def has_breadcrumbs_for_theme?(theme_name)
+        expect(all(".d-breadcrumbs__item").map(&:text)).to eq(
+          [
+            I18n.t("js.admin_title"),
+            I18n.t("admin_js.admin.config_areas.themes_and_components.themes.title"),
+            theme_name,
+          ],
         )
       end
 
-      def click_back_to_themes
-        find(".back-to-themes-and-components a").click
-      end
-
-      def has_back_button_to_components_page?
-        has_css?(
-          '.back-to-themes-and-components a[href="/admin/config/customize/components"]',
-          text: I18n.t("admin_js.admin.config_areas.themes_and_components.components.back"),
+      def has_breadcrumbs_for_component?(component_name)
+        expect(all(".d-breadcrumbs__item").map(&:text)).to eq(
+          [
+            I18n.t("js.admin_title"),
+            I18n.t("admin_js.admin.config_areas.themes_and_components.components.title"),
+            component_name,
+          ],
         )
       end
 
