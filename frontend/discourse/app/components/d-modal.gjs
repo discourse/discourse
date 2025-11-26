@@ -103,6 +103,7 @@ export default class DModal extends Component {
     // skip when in a form or a textarea element
     if (
       event.target.closest("form") ||
+      document.activeElement?.closest("form") ||
       document.activeElement?.nodeName === "TEXTAREA"
     ) {
       return false;
