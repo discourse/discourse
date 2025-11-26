@@ -124,21 +124,14 @@ export default class ReviewableItem extends Component {
 
   @discourseComputed(
     "reviewable.type",
-    "reviewable.last_performing_username",
     "siteSettings.blur_tl0_flagged_posts_media",
     "reviewable.target_created_by_trust_level",
     "reviewable.deleted_at"
   )
-  customClasses(
-    type,
-    lastPerformingUsername,
-    blurEnabled,
-    trustLevel,
-    deletedAt
-  ) {
+  customClasses(type, blurEnabled, trustLevel, deletedAt) {
     let classes = dasherize(type);
 
-    if (lastPerformingUsername) {
+    if (this.updatedElsewhere) {
       classes = `${classes} reviewable-stale`;
     }
 
