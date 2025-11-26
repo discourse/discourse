@@ -1,17 +1,12 @@
 import { getOwner } from "@ember/owner";
 import { helperContext } from "discourse/lib/helpers";
-import { buildImageMarkdown as buildImageMarkdownShared } from "discourse/lib/markdown-image-builder";
+import {
+  buildImageMarkdown as buildImageMarkdownShared,
+  extensionFromUrl,
+} from "discourse/lib/markdown-image-builder";
 import { buildQuote } from "discourse/lib/quote";
 import Composer from "discourse/models/composer";
 import Draft from "discourse/models/draft";
-
-function getExtensionFromUrl(url) {
-  if (!url) {
-    return null;
-  }
-  const match = url.match(/\.([a-zA-Z0-9]+)(?:\?|$)/);
-  return match ? match[1] : null;
-}
 
 function buildImageMarkdown(slideElement, slideData) {
   const img = slideElement?.querySelector("img");
@@ -24,7 +19,7 @@ function buildImageMarkdown(slideElement, slideData) {
 
   // Check for base62 SHA1 to use short upload:// URL format (same as to-markdown.js)
   if (slideData.base62SHA1) {
-    const extension = getExtensionFromUrl(slideData.src);
+    const extension = extensionFromUrl(slideData.src);
     src = `upload://${slideData.base62SHA1}`;
     if (extension) {
       src += `.${extension}`;

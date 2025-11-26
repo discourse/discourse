@@ -1,4 +1,7 @@
-import { buildImageMarkdown } from "discourse/lib/markdown-image-builder";
+import {
+  buildImageMarkdown,
+  extensionFromUrl,
+} from "discourse/lib/markdown-image-builder";
 
 const MSO_LIST_CLASSES = [
   "MsoListParagraphCxSpFirst",
@@ -9,15 +12,6 @@ const MSO_LIST_CLASSES = [
 let tagDecorateCallbacks = [];
 let blockDecorateCallbacks = [];
 let textDecorateCallbacks = [];
-
-function extensionFromUrl(url) {
-  if (!url) {
-    return null;
-  }
-
-  const match = url.match(/\.([a-zA-Z0-9]+)(?:\?|$)/);
-  return match ? match[1] : null;
-}
 
 /**
  * Allows to add support for custom inline markdown/bbcode prefixes
