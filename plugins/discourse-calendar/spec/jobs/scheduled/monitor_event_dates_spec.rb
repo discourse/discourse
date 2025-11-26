@@ -71,6 +71,12 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
       past_event.update!(deleted_at: Time.now)
       expect_not_enqueued_with(job: :discourse_post_event_send_reminder) { job.execute({}) }
     end
+
+    it "does not enqueue reminder jobs when event is closed" do
+      freeze_time(7.days.after - 59.minutes)
+      past_event.update!(closed: true)
+      expect_not_enqueued_with(job: :discourse_post_event_send_reminder) { job.execute({}) }
+    end
   end
 
   describe "#trigger_events" do
@@ -163,6 +169,22 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         event_name: :discourse_post_event_event_ended,
         params: [past_event_no_end_time],
       )
+    end
+
+    it "does not process closed events" do
+      past_event.update!(recurrence: "every_week", closed: true)
+      initial_event_date = past_event.event_dates.first
+
+      freeze_time 8.days.after
+
+      job.execute({})
+
+      past_event.reload
+      initial_event_date.reload
+      # Closed events are not processed, so the event_date remains unchanged
+      expect(initial_event_date.finished_at).to be_nil
+      # And no new dates are created
+      expect(past_event.event_dates.count).to eq(1)
     end
   end
 

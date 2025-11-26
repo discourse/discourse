@@ -258,6 +258,7 @@ zh_CN:
           custom_prompt: "自定义提示"
           image_caption: "标题图片"
           translator: "翻译器"
+          post_illustrator: "帖子插图创建器"
         translation:
           name: "翻译"
           description: "将内容翻译成支持的语言"
@@ -410,8 +411,6 @@ zh_CN:
           low: 低品质 - 最便宜 (256x256)
           medium: 中等品质 (512x512)
           high: 高品质 - 最慢 (1024x1024)
-        tool_details: 显示工具详细信息
-        tool_details_help: 将向最终用户显示语言模型触发了哪些工具的详细信息。
         mentionable: 允许提及
         mentionable_help: 如果启用，允许的群组中的用户可以在帖子中提及此用户，AI 将以此角色的身份进行回复。
         user: 用户
@@ -602,21 +601,20 @@ zh_CN:
         model_description:
           none: "适用于大多数语言模型的常规设置"
           anthropic-claude-opus-4-1: "Anthropic 最聪明的模型"
-          anthropic-claude-sonnet-4-0: "速度与成本的最佳平衡"
-          anthropic-claude-3-7-sonnet-latest: "速度与成本的最佳平衡（上一代）"
-          anthropic-claude-3-5-haiku-latest: "快速、经济高效"
+          anthropic-claude-sonnet-4-5: "速度与成本的最佳平衡"
+          anthropic-claude-haiku-4-5: "快速、经济高效"
+          google-gemini-3-pro: "谷歌最智能的模型"
           google-gemini-2-5-pro: "能够执行多种任务的大型多模态模型"
-          google-gemini-2-0-flash: "轻量、快速、经济高效，具有多模态推理能力（上一代）"
           google-gemini-2-5-flash: "轻量、快速、经济高效，具有多模态推理能力"
-          google-gemini-2-0-flash-lite: "经济高效、低延迟的模型"
-          open_ai-o4-mini: "先进、经济高效的推理模型"
+          google-gemini-2-5-flash-lite: "谷歌最小、性价比最高的机型"
+          open_ai-gpt-5-1: "OpenAI 的旗舰模型。它非常适合跨领域解决问题"
           open_ai-gpt-5-mini: "在智能、速度和成本之间实现平衡，使其成为适合许多用例的极具吸引力的模型。"
           open_ai-gpt-5-nano: "最快、最具成本效益的 GPT-5 模型。"
           samba_nova-Meta-Llama-3-1-8B-Instruct: "高效的轻量级多语言模型"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "强大的多用途模型"
           mistral-mistral-large-latest: "Mistral 最强大的模型"
           mistral-pixtral-large-latest: "Mistral 最强大的视觉模型"
-          open_router-x-ai-grok-3-beta: "xAI 的最新模型"
+          open_router-x-ai-grok-4: "xAI 的最新模型"
           open_router-deepseek-deepseek-r1-0528-free: "DeepSeek 的最新推理模型"
           open_router-meta-llama-3-3-70b-instruct: "功能强大的多语言模式"
         preseeded_model_description: "利用 %{model} 的预配置开源模型"
@@ -645,7 +643,6 @@ zh_CN:
           vision_enabled: "如果启用，AI 将尝试理解图片，这取决于使用的模型是否支持视觉。Anthropic、Google 和 OpenAI 的最新模型支持该功能。"
           enabled_chat_bot: "如果启用，用户可以在使用 AI 机器人创建私信时选择此模型"
           cost_input: "此模型每 100 万个词元的输入成本"
-          cost_cached_input: "此模型每 100 万个词元的缓存输入成本"
           cost_output: "此模型每 100 万个词元的输出成本"
           cost_measure: "$/100 万个词元"
         providers:
@@ -922,7 +919,6 @@ zh_CN:
         loading_convo: "正在加载对话"
         collapse: "收起"
         timed_out: "Discobot 找不到任何发现。出错了。"
-        user_setting: "启用搜索发现"
         tooltip:
           header: "AI 支持的搜索"
           content: "自然语言搜索由 %{model} 提供支持"

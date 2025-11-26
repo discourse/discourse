@@ -150,6 +150,8 @@ en:
     ai_translation_backfill_max_age_days: "The maximum age of a post and topic to be translated. Posts and topics older than this will not be translated. 0 disables backfilling, but will not disable translation of new posts."
     ai_translation_backfill_hourly_rate: "The number of posts and topics to translate per hour during backfill operations. Set to 0 to disable automatic backfilling of translations for existing content."
     ai_translation_max_tokens_multiplier: "Multiplier to determine the maximum number of tokens to use for translation. By default, we set the max tokens to approximately two to five times the number of characters in the post. This multiplier can be adjusted to allow for thinking or reasoning models which will use more tokens."
+    ai_usage_rollup_after_days: "Number of days to keep per-request AI usage stats before rolling them into daily aggregates. Set to 0 to disable rollups."
+    ai_audit_logs_purge_after_days: "Delete AI API audit logs older than this many days. Defaults to about 6 months. Set to 0 to keep indefinitely."
 
   reviewables:
     reasons:
@@ -282,7 +284,9 @@ en:
         image_generation_gemini:
           name: "Nano Banana"
         image_generation_flux:
-          name: "FLUX"
+          name: "FLUX 1.1 Pro"
+        image_generation_flux2:
+          name: "FLUX 2 Pro"
         empty_tool:
           name: "Start from blank..."
       name:
@@ -664,6 +668,7 @@ en:
     translation:
       errors:
         disabled: "The AI translation feature is not fully configured."
+        all_posts_translated: "All posts in this topic are already translated."
 
     llm_credit_allocation:
       limit_exceeded: "You have reached your AI credit limit. Please try again in %{reset_time}."

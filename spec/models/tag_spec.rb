@@ -432,7 +432,7 @@ RSpec.describe Tag do
       end
 
       it "returns nil when no localization exists" do
-        Fabricate(:tag_localization, tag:, locale: "en")
+        Fabricate(:tag_localization, tag:, locale: "el")
 
         expect(tag.get_localization("es")).to be_nil
       end

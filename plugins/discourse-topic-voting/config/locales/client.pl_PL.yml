@@ -21,16 +21,9 @@ pl_PL:
       voted_title: "Głosów"
       voting_closed_title: "Zamknięte"
       voting_limit: "Limit"
-      votes_left:
-        one: "Masz %{count} pozostały głos, zobacz <a href='%{path}'>Twoich głosów</a>."
-        few: "Masz %{count} pozostałe głosy, zobacz <a href='%{path}'>Twoich głosów</a>."
-        many: "Masz %{count} pozostałych głosów, zobacz <a href='%{path}'>Twoich głosów</a>."
-        other: "Masz %{count} pozostałych głosów, zobacz <a href='%{path}'>Twoich głosów</a>."
-      votes_left_button_title:
-        one: "Pozostał Ci %{count} głos."
-        few: "Pozostały Ci %{count} głosy."
-        many: "Pozostało Ci %{count} głosów."
-        other: "Zostało Ci %{count} głosów."
+      see_votes: "Masz jeszcze głosów: %{count}/%{max}"
+      locked: "Zablokowano"
+      locked_description: "Zwiększ poziom zaufania do głosowania"
       votes:
         one: "%{count} głos"
         few: "%{count} głosy"

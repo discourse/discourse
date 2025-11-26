@@ -27,24 +27,6 @@ RSpec.describe "tasks/migrate_advanced_search_banner_to_welcome_banner" do
     end
   end
 
-  describe "#wrap_themes_with_db" do
-    it "wraps themes with database information" do
-      theme1 = Fabricate(:theme)
-      theme2 = Fabricate(:theme)
-      db = "default"
-
-      result = wrap_themes_with_db([theme1, theme2], db)
-
-      expect(result).to eq([{ db: db, theme: theme1 }, { db: db, theme: theme2 }])
-    end
-
-    it "returns empty array when no themes provided" do
-      result = wrap_themes_with_db([], "default")
-
-      expect(result).to eq([])
-    end
-  end
-
   describe "#theme_identifier" do
     it "returns formatted theme identifier" do
       theme = Fabricate(:theme, name: "Test Theme")

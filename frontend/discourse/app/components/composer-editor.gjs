@@ -292,7 +292,7 @@ export default class ComposerEditor extends Component {
   @bind
   setupEditor(textManipulation) {
     this.textManipulation = textManipulation;
-    this.uppyComposerUpload.placeholderHandler = textManipulation.placeholder;
+    this.uppyComposerUpload.textManipulation = textManipulation;
 
     const input = this.element.querySelector(".d-editor-input");
 
@@ -992,10 +992,8 @@ export default class ComposerEditor extends Component {
   }
 
   get showTranslationEditor() {
-    if (
-      !this.siteSettings.content_localization_enabled ||
-      !this.currentUser.can_localize_content
-    ) {
+    const post = this.get("composer.model.post");
+    if (!post?.can_localize_post) {
       return false;
     }
 
@@ -1037,6 +1035,13 @@ export default class ComposerEditor extends Component {
   )
   showFormTemplateForm(formTemplateIds, replyingToTopic, editingPost) {
     return formTemplateIds?.length > 0 && !replyingToTopic && !editingPost;
+  }
+
+  @discourseComputed("composer.model")
+  forceEditorMode() {
+    return applyValueTransformer("composer-force-editor-mode", null, {
+      model: this.composer.model,
+    });
   }
 
   @action
@@ -1099,6 +1104,7 @@ export default class ComposerEditor extends Component {
         @validation={{this.validation}}
         @loading={{this.composer.loading}}
         @forcePreview={{this.forcePreview}}
+        @forceEditorMode={{this.forceEditorMode}}
         @showLink={{this.showLink}}
         @composerEvents={{true}}
         @onPopupMenuAction={{this.composer.onPopupMenuAction}}

@@ -3,6 +3,12 @@
   align-items: center;
   justify-content: flex-start;
   gap: 0.25rem;
+
+  .chat-thread & {
+    &:has(.chat-message-info__original-message) {
+      flex-wrap: wrap;
+    }
+  }
 }
 
 .chat-message-info__username {

@@ -316,10 +316,8 @@ he:
         two: "הצגת %{count} הודעות נוספות"
         many: "הצגת %{count} הודעות נוספות"
         other: "הצגת %{count} הודעות נוספות"
-      your_chat_settings: "העדפת תדירות דוא״ל צ׳אט"
   unsubscribe:
     chat_summary:
-      select_title: "הגדרת תדירות הודעות סיכום בדוא״ל ל־:"
       never: לעולם לא
       when_away: רק כשלא במערכת
   category:

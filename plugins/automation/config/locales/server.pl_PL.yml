@@ -108,6 +108,10 @@ pl_PL:
         title: Wymiana prezentów
         description: Umożliwia anonimowe parowanie użytkowników grupy w celu wysyłania sobie prezentów.
         doc: Wymiana prezentów wymaga istniejącej grupy z co najmniej 3 użytkownikami. W wybranym terminie każdy użytkownik grupy zostanie sparowany z jednym obdarowującym i jednym obdarowywanym.
+      remove_upload_markup_from_deleted_posts:
+        title: Usuń znaczniki przesyłania w usuniętych wpisach
+        description: Działa jako użytkownik systemu i dodaje rewizję do usuniętych wpisów, usuwając znaczniki przesyłania. W połączeniu z zadaniem „oczyszczania przesłanych wpisów” powoduje to trwałe usunięcie przesłanych wpisów. Zachowaj ostrożność!
+        edit_reason: Automatyzacja usunęła znaczniki przesyłania z usuniętego wpisu
       send_pms:
         title: Wyślij prywatną wiadomość
         description: Umożliwia wysyłanie wiadomości prywatnych (możliwe opóźnienie).

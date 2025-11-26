@@ -4,10 +4,12 @@ module DiscourseAi
   module Personas
     class Artist < Persona
       def tools
-        [Tools::Image]
+        # Only include Tools::Image if custom image generation tools are configured
+        Tools::Tool.available_custom_image_tools.present? ? [Tools::Image] : []
       end
 
       def required_tools
+        # Always require Tools::Image - availability is checked by Persona.all()
         [Tools::Image]
       end
 
@@ -15,7 +17,7 @@ module DiscourseAi
         <<~PROMPT
             You are artistbot and you are here to help people generate images.
 
-            You generate images using stable diffusion.
+            You generate images using configured image generation tools.
 
             - A good prompt needs to be detailed and specific.
             - You can specify subject, medium (e.g. oil on canvas), artist (person who drew it or photographed it)
@@ -28,7 +30,6 @@ module DiscourseAi
 
             - When generating images, usually opt to generate 4 images unless the user specifies otherwise.
             - Be creative with your prompts, offer diverse options
-            - You can use the seeds to regenerate the same image and amend the prompt keeping general style
           PROMPT
       end
     end

@@ -215,3 +215,207 @@ acceptance("Admin - Watched Words - Bad regular expressions", function (needs) {
     assert.dom(".admin-watched-words .alert-error").exists({ count: 1 });
   });
 });
+
+acceptance(
+  "Admin - Watched Words - Mixed valid and invalid regex",
+  function (needs) {
+    needs.user();
+    needs.pretender((server, helper) => {
+      server.get("/admin/customize/watched_words.json", () => {
+        return helper.response({
+          actions: ["block", "censor", "require_approval", "flag", "replace"],
+          words: [
+            {
+              id: 1,
+              word: "Hi",
+              regexp: "(\\W|^)(Hi)(?=\\W|$)",
+              replacement: "hello",
+              action: "replace",
+            },
+            {
+              id: 2,
+              word: "test[[",
+              regexp: "(test[[)",
+              replacement: "broken",
+              action: "replace",
+            },
+            {
+              id: 3,
+              word: "bye",
+              regexp: "(\\W|^)(bye)(?=\\W|$)",
+              replacement: "goodbye",
+              action: "replace",
+            },
+          ],
+          compiled_regular_expressions: {
+            block: [],
+            censor: [],
+            require_approval: [],
+            flag: [],
+            replace: [],
+          },
+        });
+      });
+    });
+
+    test("test modal works with replace action when invalid regex present", async function (assert) {
+      await visit("/admin/customize/watched_words/action/replace");
+      await click(".watched-word-test");
+      await fillIn(".d-modal__body textarea", "Hi there, bye!");
+
+      assert
+        .dom(".d-modal__body ul li")
+        .exists(
+          { count: 2 },
+          "Should find matches for both valid words 'Hi' and 'bye'"
+        );
+    });
+  }
+);
+
+acceptance(
+  "Admin - Watched Words - Block action with invalid compiled expression",
+  function (needs) {
+    needs.user();
+    needs.pretender((server, helper) => {
+      server.get("/admin/customize/watched_words.json", () => {
+        return helper.response({
+          actions: ["block", "censor", "require_approval", "flag", "replace"],
+          words: [
+            {
+              id: 1,
+              word: "foo",
+              regexp: "(\\W|^)(foo)(?=\\W|$)",
+              action: "block",
+            },
+            {
+              id: 2,
+              word: "test[[",
+              regexp: "(test[[)",
+              action: "block",
+            },
+            {
+              id: 3,
+              word: "bar",
+              regexp: "(\\W|^)(bar)(?=\\W|$)",
+              action: "block",
+            },
+          ],
+          compiled_regular_expressions: {
+            // Simulate a broken compiled expression that includes valid and invalid regexes
+            block: [
+              {
+                "(\\W|^)(foo|test[[|bar)(?=\\W|$)": { case_sensitive: false },
+              },
+            ],
+            censor: [],
+            require_approval: [],
+            flag: [],
+            replace: [],
+          },
+        });
+      });
+    });
+
+    test("shows error for invalid regex on main page", async function (assert) {
+      await visit("/admin/customize/watched_words/action/block");
+
+      assert.dom(".admin-watched-words .alert-error").exists({ count: 1 });
+      assert
+        .dom(".admin-watched-words .alert-error")
+        .containsText("test[[", "Shows the invalid word in error message");
+      assert
+        .dom(".admin-watched-words .alert-error")
+        .containsText(
+          "Unterminated character class",
+          "Shows the error description"
+        );
+    });
+
+    test("test modal falls back to individual words when compiled expression fails", async function (assert) {
+      await visit("/admin/customize/watched_words/action/block");
+      await click(".watched-word-test");
+      await fillIn(".d-modal__body textarea", "this foo and bar text");
+
+      assert
+        .dom(".d-modal__body")
+        .doesNotContainText(
+          "No matches found",
+          "Should find matches via individual word fallback"
+        );
+
+      assert
+        .dom(".d-modal__body")
+        .containsText("Found matches:", "Should show matches");
+
+      assert
+        .dom(".d-modal__body ul li")
+        .exists({ count: 2 }, "Should find both foo and bar");
+    });
+  }
+);
+
+acceptance("Admin - Watched Words - Unicode flag validation", function (needs) {
+  needs.user();
+  needs.pretender((server, helper) => {
+    server.get("/admin/customize/watched_words.json", () => {
+      return helper.response({
+        actions: ["block", "censor", "require_approval", "flag", "replace"],
+        words: [
+          {
+            id: 1,
+            word: "pattern1",
+            regexp: "(pattern[[nested]])",
+            action: "block",
+          },
+          {
+            id: 2,
+            word: "pattern2",
+            regexp: "(test{incomplete)",
+            action: "block",
+          },
+        ],
+        compiled_regular_expressions: {
+          block: [],
+          censor: [],
+          require_approval: [],
+          flag: [],
+          replace: [],
+        },
+      });
+    });
+  });
+
+  test("detects invalid patterns with unicode flag validation", async function (assert) {
+    await visit("/admin/customize/watched_words/action/block");
+
+    assert
+      .dom(".admin-watched-words .alert-error ul li")
+      .exists(
+        { count: 2 },
+        "Shows errors for both patterns with unicode validation"
+      );
+
+    assert
+      .dom(".admin-watched-words .alert-error")
+      .containsText("pattern1", "Shows first invalid pattern");
+
+    assert
+      .dom(".admin-watched-words .alert-error")
+      .containsText("pattern2", "Shows second invalid pattern");
+
+    assert
+      .dom(".admin-watched-words .alert-error")
+      .containsText(
+        "Lone quantifier brackets",
+        "Shows error for nested brackets"
+      );
+
+    assert
+      .dom(".admin-watched-words .alert-error")
+      .containsText(
+        "Incomplete quantifier",
+        "Shows error for incomplete quantifier"
+      );
+  });
+});

@@ -14,4 +14,3 @@ fi:
       show: "Käyttäjähuomiot (%{count})"
       delete_confirm: "Oletko varma, että haluat poistaa kyseisen käyttäjähuomion?"
       show_post: "Näytä viesti"
-      copy_reviewable_note: "Kopioidaanko huomautus käyttäjäprofiiliin?"

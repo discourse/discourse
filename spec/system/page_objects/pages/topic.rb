@@ -47,6 +47,14 @@ module PageObjects
         has_css?("h1 .fancy-title", text: text)
       end
 
+      def has_topic_title_editor?
+        has_css?("#topic-title input#edit-title")
+      end
+
+      def has_no_topic_title_editor?
+        has_no_css?("#topic-title input#edit-title")
+      end
+
       def has_post_content?(post_number:, content:)
         find(post_by_number_selector(post_number)).has_content?(content)
       end
@@ -184,6 +192,10 @@ module PageObjects
 
       def click_topic_bookmark_button
         within_topic_footer_buttons { find(".bookmark-menu-trigger").click }
+      end
+
+      def click_topic_edit_title
+        find("#topic-title .fancy-title").click
       end
 
       def has_topic_bookmarked?(topic)
@@ -349,6 +361,8 @@ module PageObjects
 
       def selector_for_post_action_button(button)
         case button
+        when :add_translation
+          ".post-controls .post-action-menu-edit-translations-trigger"
         when :admin
           ".post-controls .post-action-menu__admin"
         when :bookmark

@@ -13,6 +13,7 @@ import { i18n } from "discourse-i18n";
 export default class ReviewIndexController extends Controller {
   @service currentUser;
   @service dialog;
+  @service siteSettings;
   @service toasts;
 
   queryParams = [
@@ -23,6 +24,7 @@ export default class ReviewIndexController extends Controller {
     "topic_id",
     "username",
     "reviewed_by",
+    "claimed_by",
     "from_date",
     "to_date",
     "sort_order",
@@ -40,6 +42,7 @@ export default class ReviewIndexController extends Controller {
   filtersExpanded = false;
   username = "";
   reviewed_by = "";
+  claimed_by = "";
   flagged_by = "";
   from_date = null;
   to_date = null;
@@ -204,6 +207,7 @@ export default class ReviewIndexController extends Controller {
       category_id: this.filterCategoryId,
       username: this.filterUsername,
       reviewed_by: this.filterReviewedBy,
+      claimed_by: this.filterClaimedBy,
       flagged_by: this.filterFlaggedBy,
       score_type: this.filterScoreType,
       from_date: isPresent(this.filterFromDate)
@@ -232,6 +236,11 @@ export default class ReviewIndexController extends Controller {
   @action
   updateFilterReviewedBy(selected) {
     this.set("filterReviewedBy", selected.firstObject);
+  }
+
+  @action
+  updateFilterClaimedBy(selected) {
+    this.set("filterClaimedBy", selected.firstObject);
   }
 
   @action

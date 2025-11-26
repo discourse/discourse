@@ -9,6 +9,7 @@ import { i18n } from "discourse-i18n";
 export default class AdminConfigAreasUpcomingChanges extends Component {
   get upcomingChanges() {
     return this.args.upcomingChanges.map((change) => {
+      change.upcoming_change = new TrackedObject(change.upcoming_change);
       return new TrackedObject(change);
     });
   }
@@ -109,11 +110,8 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
                 class="d-table__header-cell upcoming-change__name-header"
               >{{i18n "admin.upcoming_changes.name"}}</th>
               <th
-                class="d-table__header-cell upcoming-change__groups-header"
-              >{{i18n "admin.upcoming_changes.opt_in_groups"}}</th>
-              <th
                 class="d-table__header-cell upcoming-change__enabled-header"
-              >{{i18n "admin.plugins.enabled"}}</th>
+              >{{i18n "admin.upcoming_changes.enabled_for"}}</th>
             </tr>
           </thead>
           <tbody class="d-table__body">

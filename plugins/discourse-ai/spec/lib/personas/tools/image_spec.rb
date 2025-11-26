@@ -14,6 +14,52 @@ RSpec.describe DiscourseAi::Personas::Tools::Image do
   end
 
   fab!(:gpt_35_turbo) { Fabricate(:llm_model, name: "gpt-3.5-turbo") }
+  fab!(:admin)
+
+  fab!(:test_upload1) do
+    Fabricate(
+      :upload,
+      sha1: Upload.sha1_from_short_url("upload://test123"),
+      original_filename: "test_image1.png",
+    )
+  end
+
+  fab!(:test_upload2) do
+    Fabricate(
+      :upload,
+      sha1: Upload.sha1_from_short_url("upload://test456"),
+      original_filename: "test_image2.png",
+    )
+  end
+
+  fab!(:image_tool) do
+    AiTool.create!(
+      name: "test_image_generator",
+      tool_name: "test_image_generator",
+      description: "Test image generation tool",
+      summary: "Generates test images",
+      parameters: [
+        { name: "prompt", type: "string", required: true },
+        { name: "seeds", type: "array", item_type: "integer", required: false },
+      ],
+      script: <<~JS,
+        function invoke(params) {
+          // Create images for each seed
+          const seeds = params.seeds || [99];
+          const imageUrls = ["upload://test123", "upload://test456"];
+
+          upload.create("test_image1.png", "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==");
+          upload.create("test_image2.png", "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==");
+
+          chain.setCustomRaw(`![${params.prompt}](${imageUrls[0]}) ![${params.prompt}](${imageUrls[1]})`);
+          return { seed: 99 };
+        }
+      JS
+      created_by_id: admin.id,
+      enabled: true,
+      is_image_generation_tool: true,
+    )
+  end
 
   before do
     enable_current_plugin
@@ -27,31 +73,13 @@ RSpec.describe DiscourseAi::Personas::Tools::Image do
 
   describe "#process" do
     it "can generate correct info" do
-      _post = Fabricate(:post)
-
-      SiteSetting.ai_stability_api_url = "https://api.stability.dev"
-      SiteSetting.ai_stability_api_key = "abc"
-
-      image =
-        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
-
-      artifacts = [{ base64: image, seed: 99 }]
-
-      WebMock
-        .stub_request(
-          :post,
-          "https://api.stability.dev/v1/generation/#{SiteSetting.ai_stability_engine}/text-to-image",
-        )
-        .with do |request|
-          json = JSON.parse(request.body, symbolize_names: true)
-          expect(prompts).to include(json[:text_prompts][0][:text])
-          true
-        end
-        .to_return(status: 200, body: { artifacts: artifacts }.to_json)
-
       info = tool.invoke(&progress_blk).to_json
 
-      expect(JSON.parse(info)).to eq("prompts" => ["a pink cow", "a red cow"], "seeds" => [99, 99])
+      # Custom tools don't provide seeds, so they will be nil
+      expect(JSON.parse(info)).to eq(
+        "prompts" => ["a pink cow", "a red cow"],
+        "seeds" => [nil, nil],
+      )
       expect(tool.custom_raw).to include("upload://")
       expect(tool.custom_raw).to include("[grid]")
       expect(tool.custom_raw).to include("a pink cow")

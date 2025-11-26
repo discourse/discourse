@@ -64,7 +64,8 @@ export default class UserInfo extends Component {
           <a
             href={{this.userPath}}
             data-user-card={{@user.username}}
-            role="heading"
+            role={{if @headingLevel "heading"}}
+            aria-level={{@headingLevel}}
           >
             <span class={{if this.nameFirst "name" "username"}}>
               {{if this.nameFirst @user.name (formatUsername @user.username)}}

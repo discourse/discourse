@@ -136,6 +136,25 @@ RSpec.describe DiscourseAi::Summarization::Strategies::TopicSummary do
 
         expect(content).to include("Tags: tag1, tag2")
       end
+
+      context "with hidden tags" do
+        fab!(:hidden_tag) { Fabricate(:tag, name: "hidden") }
+
+        before do
+          Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+          topic.tags = [tag1, hidden_tag, tag2]
+        end
+
+        it "excludes hidden tags from summaries (summaries are cached and shared)" do
+          # Summaries are cached and shared across all users, so hidden tags should never appear
+          # regardless of who generates them
+          messages = topic_summary.as_llm_messages(contents)
+          content = messages.first[:content]
+
+          expect(content).to include("Tags: tag1, tag2")
+          expect(content).not_to include("hidden")
+        end
+      end
     end
 
     context "when topic has no category or tags" do
