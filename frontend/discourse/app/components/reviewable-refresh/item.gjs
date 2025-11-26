@@ -346,6 +346,14 @@ export default class ReviewableItem extends Component {
     return "review.flagged_as";
   }
 
+  @discourseComputed("reviewable.last_performing_username")
+  updatedElsewhere(lastPerformingUsername) {
+    return (
+      lastPerformingUsername &&
+      lastPerformingUsername !== this.currentUser.username
+    );
+  }
+
   @bind
   _updateClaimedBy(data) {
     const user = data.user ? this.store.createRecord("user", data.user) : null;
@@ -826,7 +834,7 @@ export default class ReviewableItem extends Component {
 
         <div class="review-item__aside">
 
-          {{#unless this.reviewable.last_performing_username}}
+          {{#unless this.updatedElsewhere}}
             {{#if this.canPerform}}
               <div class="review-item__moderator-actions">
                 <h3 class="review-item__aside-title">
