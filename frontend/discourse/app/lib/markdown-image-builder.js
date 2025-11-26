@@ -13,6 +13,22 @@ export function sanitizeAlt(text, options = {}) {
   return trimmed.replace(/\|/g, "&#124;").replace(/([\\\[\]])/g, "\\$1");
 }
 
+/**
+ * Extracts the extension (without dot) from a URL or path.
+ * Returns null when no extension is present.
+ *
+ * @param {string} url
+ * @returns {string|null}
+ */
+export function extensionFromUrl(url) {
+  if (!url) {
+    return null;
+  }
+
+  const match = url.match(/\.([a-zA-Z0-9]+)(?:\?|$)/);
+  return match ? match[1] : null;
+}
+
 export function buildImageMarkdown(imageData) {
   const {
     src,
