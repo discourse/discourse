@@ -63,13 +63,20 @@ module DiscourseAi
           @current_batch_token = nil
 
           tools = dialect.tools if @native_tool_support
+          messages = prompt[:messages]
+          if prompt[:system_instruction].present?
+            last_user_message = messages.reverse.find { |m| m[:role] == "user" }
+            if last_user_message&.dig(:parts)&.first&.dig(:text)
+              last_user_message[:parts].first[:text] = "#{prompt[:system_instruction].strip}\n\n#{last_user_message[:parts].first[:text]}"
+            end
+          end
 
-          payload = default_options.merge(contents: prompt[:messages])
+          payload = default_options.merge(contents: messages)
 
           payload[:systemInstruction] = {
             role: "system",
             parts: [{ text: prompt[:system_instruction].to_s }],
-          } if prompt[:system_instruction].present?
+          } if prompt[:system_instruction].present? && !llm_model.lookup_custom_param("disable_system_instruction")
           if tools.present?
             payload[:tools] = tools
 
