@@ -188,7 +188,7 @@ hu:
         slug_contains_non_ascii_chars: "nem ASCII karaktereket tartalmaz"
         is_already_in_use: "már használatban van"
     bookmarkable:
-      notification_title: "Üzenet a(z) %{channel_name} csatornában."
+      notification_title_channel: "Üzenet a(z) %{channel_name} csatornában."
     personal_chat: "személyes csevegés"
     onebox:
       inline_to_message: "Üzenet #%{message_id}, %{username} által – #%{chat_channel}"
@@ -268,10 +268,8 @@ hu:
       view_more:
         one: "%{count} további üzenet megtekintése"
         other: "%{count} további üzenet megtekintése"
-      your_chat_settings: "csevegési e-mail gyakoriságának beállítása"
   unsubscribe:
     chat_summary:
-      select_title: "A csevegési összefoglaló e-mailek gyakoriságának beállítása:"
       never: Soha
       when_away: Csak ha távol van
   category:

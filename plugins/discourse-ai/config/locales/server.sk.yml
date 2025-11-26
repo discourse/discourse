@@ -232,8 +232,10 @@ sk:
           name: "Výmenný kurz"
         stock_quote:
           name: "Cena akcií (AlphaVantage)"
-        image_generation:
-          name: "Generátor obrázkov Flux (Together.ai)"
+        image_generation_custom:
+          name: "Vlastné"
+        image_generation_openai:
+          name: "OpenAI"
         empty_tool:
           name: "Začnite od prázdneho..."
       name:
@@ -250,10 +252,6 @@ sk:
         explain: "Vysvetlite"
         illustrate_post: "Ilustrovať príspevok"
         replace_dates: "Inteligentné dátumy"
-      painter:
-        attribution:
-          stable_diffusion_xl: "Obrázok od Stable Diffusion XL"
-          dall_e_3: "Obrázok od DALL-E 3"
       image_caption:
         attribution: "S titulkami od AI"
     share_ai:
@@ -346,7 +344,6 @@ sk:
           description: "Predvolená persona, ktorá poháňa funkciu generovania tabuliek Markdown v Helperovi"
         post_illustrator:
           name: "Ilustrátor príspevkov"
-          description: "Generuje výzvy StableDiffusion na podporu funkcie ilustrácie príspevkov Helpera"
         proofreader:
           name: "Korektor"
           description: "Predvolená persona, ktorá obsluhuje funkciu korektúry textu pomocníka"

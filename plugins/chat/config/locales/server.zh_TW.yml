@@ -43,7 +43,7 @@ zh_TW:
       errors:
         is_already_in_use: "已被使用"
     bookmarkable:
-      notification_title: "%{channel_name} 中的訊息"
+      notification_title_channel: "%{channel_name} 中的訊息"
     onebox:
       thread_title_connector: "在"
       x_members:

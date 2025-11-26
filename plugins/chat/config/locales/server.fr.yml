@@ -188,7 +188,7 @@ fr:
         slug_contains_non_ascii_chars: "contient des caractères non ASCII"
         is_already_in_use: "est déjà utilisé"
     bookmarkable:
-      notification_title: "message dans %{channel_name}"
+      notification_title_channel: "message dans %{channel_name}"
     personal_chat: "discussion privée"
     onebox:
       inline_to_message: "Message #%{message_id} par %{username} - #%{chat_channel}"
@@ -268,10 +268,8 @@ fr:
       view_more:
         one: "Voir %{count} message supplémentaire"
         other: "Voir %{count} messages supplémentaires"
-      your_chat_settings: "préférence de fréquence des e-mails de discussion"
   unsubscribe:
     chat_summary:
-      select_title: "Définissez la fréquence des e-mails de résumé de discussion sur :"
       never: Jamais
       when_away: Seulement en cas d'absence
   category:

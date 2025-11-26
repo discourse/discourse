@@ -1259,7 +1259,6 @@ id:
       <b>PERINGATAN</b>: Mengubah trust level akan mencegah pengguna dengan tingkat kepercayaan yang lebih rendah untuk masuk melalui Discourse Hub
     enable_max_tags_per_email_subject: "Gunakan max_tags_per_email_subject saat membuat subjek email"
     max_tags_per_email_subject: "Tag maksimum yang dapat dimasukkan ke dalam subjek email"
-    watched_precedence_over_muted: "Beri tahu saya tentang topik dalam kategori atau tag yang saya ikuti yang juga termasuk dalam kategori yang telah saya nonaktifkan"
     enable_user_tips: "Aktifkan kiat pengguna baru yang menjelaskan fitur utama kepada pengguna"
     navigation_menu: "Tentukan bilah sisi atau menu tarik-turun tajuk sebagai menu navigasi utama untuk situs Anda. Bilah sisi direkomendasikan."
     default_navigation_menu_categories: "Kategori yang dipilih akan ditampilkan di bawah bagian Kategori pada Menu Navigasi secara bawaan."
@@ -1338,15 +1337,6 @@ id:
       subject_template: "Selamat datang ke %{site_name}!"
     tl2_promotion_message:
       subject_template: "Selamat atas promosi tingkat kepercayaan Anda!"
-    user_automatically_silenced:
-      text_body_template: |
-        Ini adalah pesan otomatis.
-
-        Pengguna baru [%{username}](%{user_url}) secara otomatis disenyapkan karena beberapa pengguna menandai kiriman (post) %{username}.
-
-        Harap [tinjau penanda](%{base_url}/review). Jika %{username} salah disenyapkan dari proses post, klik tombol nonaktifkan di [halaman admin untuk pengguna ini](%{user_url}).
-
-        Ambang batas ini dapat diubah melalui pengaturan situs `silence_new_user`.
     spam_post_blocked:
       subject_template: "Pengguna baru %{username} disuspensi atas penulisan tautan yang berulang-ulang kali"
     pending_users_reminder:

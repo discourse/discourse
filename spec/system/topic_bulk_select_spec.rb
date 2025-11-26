@@ -209,6 +209,7 @@ describe "Topic bulk select", type: :system do
         topic_list.click_topic_checkbox(topics.third)
         topic_list_header.click_bulk_select_topics_dropdown
         topic_list_header.click_bulk_button("close-topics")
+        topic_bulk_actions_modal.click_notify
         topic_bulk_actions_modal.click_bulk_topics_confirm
         expect(topic_list).to have_closed_status(topics.third)
       end
@@ -234,7 +235,6 @@ describe "Topic bulk select", type: :system do
         topic_list.click_topic_checkbox(topics.first)
         topic_list_header.click_bulk_select_topics_dropdown
         topic_list_header.click_bulk_button("close-topics")
-        topic_bulk_actions_modal.click_silent # Check Silent
         topic_bulk_actions_modal.click_bulk_topics_confirm
         expect(topic_list).to have_closed_status(topics.first)
       end
@@ -387,6 +387,18 @@ describe "Topic bulk select", type: :system do
         visit("/u/#{admin.username}/messages")
         open_bulk_actions_modal([private_message_1], "archive-messages")
       end
+    end
+  end
+
+  context "when clicking on the row" do
+    it "selects it" do
+      sign_in(admin)
+      visit("/latest")
+
+      topic_list_header.click_bulk_select_button
+      topic_list.click_topic_title(topics.last)
+
+      expect(topic_list).to have_checkbox_selected_on_row(1)
     end
   end
 

@@ -121,6 +121,12 @@ module DiscourseAi
               DiscourseAi::Configuration::Module::AI_HELPER_ID,
               DiscourseAi::Configuration::Module::AI_HELPER,
             ),
+            new(
+              "post_illustrator",
+              "ai_helper_post_illustrator_persona",
+              DiscourseAi::Configuration::Module::AI_HELPER_ID,
+              DiscourseAi::Configuration::Module::AI_HELPER,
+            ),
           ]
         end
 

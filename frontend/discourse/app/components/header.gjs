@@ -1,15 +1,17 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
-import { and, eq, not, or } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import DAG from "discourse/lib/dag";
 import scrollLock from "discourse/lib/scroll-lock";
 import { scrollTop } from "discourse/lib/scroll-top";
 import DiscourseURL from "discourse/lib/url";
+import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
+import { and, eq, not, or } from "discourse/truth-helpers";
 import AuthButtons from "./header/auth-buttons";
 import Contents from "./header/contents";
 import HamburgerDropdownWrapper from "./header/hamburger-dropdown-wrapper";
@@ -145,7 +147,18 @@ export default class GlimmerHeader extends Component {
   }
 
   @action
-  toggleSearchMenu() {
+  toggleSearchMenu(_, value) {
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
+    if (
+      (value === true && this.search.visible) ||
+      (value === false && !this.search.visible)
+    ) {
+      return;
+    }
+
     if (this.site.mobileView) {
       const context = this.search.searchContext;
       let params = "";
@@ -162,7 +175,7 @@ export default class GlimmerHeader extends Component {
       }
     }
 
-    this.search.visible = !this.search.visible;
+    this.search.visible = value ?? !this.search.visible;
     if (!this.search.visible) {
       this.search.highlightTerm = "";
       this.search.inTopicContext = false;
@@ -259,8 +272,15 @@ export default class GlimmerHeader extends Component {
 
           {{#if this.search.visible}}
             <SearchMenuWrapper
-              @closeSearchMenu={{this.toggleSearchMenu}}
               {{this.handleFocus}}
+              {{closeOnClickOutside
+                this.toggleSearchMenu
+                (hash
+                  targetSelector=".search-menu-panel"
+                  secondaryTargetSelector=".search-dropdown"
+                )
+              }}
+              @closeSearchMenu={{this.toggleSearchMenu}}
               @searchInputId="icon-search-input"
             />
           {{else if this.header.hamburgerVisible}}

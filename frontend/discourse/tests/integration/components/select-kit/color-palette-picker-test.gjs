@@ -1,10 +1,10 @@
 import { hash } from "@ember/helper";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import ColorPalettePicker from "discourse/select-kit/components/color-palette-picker";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
-import ColorPalettePicker from "select-kit/components/color-palette-picker";
 
 const DEFAULT_CONTENT = [
   {

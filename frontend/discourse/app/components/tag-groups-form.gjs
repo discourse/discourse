@@ -13,9 +13,9 @@ import RadioButton from "discourse/components/radio-button";
 import TextField from "discourse/components/text-field";
 import discourseComputed from "discourse/lib/decorators";
 import PermissionType from "discourse/models/permission-type";
+import GroupChooser from "discourse/select-kit/components/group-chooser";
+import TagChooser from "discourse/select-kit/components/tag-chooser";
 import { i18n } from "discourse-i18n";
-import GroupChooser from "select-kit/components/group-chooser";
-import TagChooser from "select-kit/components/tag-chooser";
 
 @tagName("")
 export default class TagGroupsForm extends Component {

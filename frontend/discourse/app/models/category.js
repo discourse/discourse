@@ -578,7 +578,12 @@ export default class Category extends RestModel {
 
   @discourseComputed("id")
   searchContext(id) {
-    return { type: "category", id, category: this };
+    return {
+      type: "category",
+      id,
+      /** @type Category */
+      category: this,
+    };
   }
 
   @discourseComputed("parentCategory.ancestors")

@@ -2,12 +2,11 @@
 
 class LlmCreditAllocationSerializer < ApplicationSerializer
   attributes :id,
-             :monthly_credits,
-             :monthly_used,
+             :daily_credits,
+             :daily_used,
              :credits_remaining,
              :percentage_used,
              :percentage_remaining,
-             :last_reset_at,
              :next_reset_at,
              :soft_limit_percentage,
              :soft_limit_reached,

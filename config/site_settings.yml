@@ -567,6 +567,16 @@ basic:
     enum: "InterfaceColorSelectorSetting"
     default: "disabled"
     area: "interface"
+  promote_upcoming_changes_on_status:
+    default: "stable"
+    type: enum
+    choices:
+      - pre_alpha
+      - alpha
+      - beta
+      - stable
+      - never
+    hidden: true
 
 login:
   login_required:
@@ -1072,7 +1082,7 @@ users:
     max: 36500
     area: "users"
   clean_up_inactive_users_after_days:
-    default: 730
+    default: 0
     min: 0
     max: 36500
     area: "users"
@@ -1719,6 +1729,10 @@ content_localization:
     client: true
     default: "1|2" # admin, moderator
     area: "localization"
+  content_localization_allow_author_localization:
+    default: true
+    client: true
+    area: "localization"
   content_localization_supported_locales:
     default: ""
     type: list
@@ -1740,10 +1754,14 @@ content_localization:
       - all
     default: none
     client: true
+    area: "localization"
     validator: "LanguageSwitcherSettingValidator"
   content_localization_crawler_param:
     default: false
-    hidden: true
+    area: "localization"
+  content_localization_use_default_locale_when_unsupported:
+    default: true
+    area: "localization"
 
 email:
   email_time_window_mins:
@@ -2343,12 +2361,15 @@ files:
     client: true
   composer_media_optimization_image_bytes_optimization_threshold:
     default: 524288
+    hidden: true
     client: true
   composer_media_optimization_image_resize_dimensions_threshold:
     default: 1920
+    hidden: true
     client: true
   composer_media_optimization_image_resize_width_target:
     default: 1920
+    hidden: true
     client: true
   composer_media_optimization_image_resize_pre_multiply:
     default: false
@@ -2387,6 +2408,9 @@ files:
   mediaconvert_endpoint:
     default: ""
     hidden: true
+  mediaconvert_output_subdirectory:
+    default: "transcoded"
+    validator: "MediaconvertOutputSubdirectoryValidator"
 
 trust:
   default_trust_level:
@@ -4264,12 +4288,25 @@ experimental:
     type: group_list
     list_type: compact
     area: "group_permissions|experimental"
+    hidden: true
   reviewable_ui_refresh:
     client: true
     type: group_list
     default: ""
     area: "experimental"
+  reviewable_old_moderator_actions:
+    default: true
+    hidden: true
+    client: true
   enable_upcoming_changes:
     default: false
     hidden: true
     client: true
+  fake_upcoming_change:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "alpha"
+      impact: "other,all_members"
+      learn_more_url: "https://meta.discourse.org"

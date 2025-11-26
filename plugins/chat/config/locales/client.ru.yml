@@ -136,7 +136,6 @@ ru:
       email_frequency:
         description: "Мы отправим вам письмо только в том случае, если вы не были онлайн последние 15 минут."
         never: "Никогда"
-        title: "Настройка почтовых уведомлений"
         when_away: "Если вы находитесь офлайн"
       header_indicator_preference:
         title: "Показать индикатор активности в заголовке"
@@ -498,6 +497,7 @@ ru:
           topic: "Тема"
       reviewable:
         type: "Сообщение чата"
+        message_in_channel: "Канал"
       reactions:
         only_you: "<span>Вы отреагировали с эмодзи</span>:%{emoji}:"
         you_and_single_user: "<span>Вы и %{username} отреагировали с эмодзи </span>:%{emoji}:"

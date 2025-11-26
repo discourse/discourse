@@ -174,7 +174,7 @@ he:
               label: "מוען או מוענת ההודעה הפרטית"
               description: "המשתמש שישלח את ההודעה הפרטית (ברירת מחדל היא המערכת)"
             notify_author_pm_message:
-              label: "הודעה פרטית"
+              label: "תוכן הודעה פרטית"
               description: "הודעה מותאמת אישית לשליחה לכותב/ת"
             include_personal_messages:
               label: "כולל הודעות פרטיות"
@@ -194,7 +194,7 @@ he:
           fields:
             tagger_persona:
               label: "דמות בינה מלאכותית"
-              description: "דמות הבינה המלאכותית לשימוש לניתוח ותיוג פוסטים"
+              description: "דמות הבינה המלאכותית לשימוש לניתוח ותיוג נושאים"
             tag_mode:
               label: "מצב בחירת תגיות"
               description: "בחירה איך הבינה המלאכותית בוחר תגיות"
@@ -251,6 +251,7 @@ he:
           other: "(עוד %{count})"
         collapse_list: "(להציג פחות)"
         bot:
+          bot: "בוט שיחה"
           name: "בוט"
           description: "צ׳אט בוט שיכול לענות על שאלות ולסייע למשתמשים בהודעות אישיות, בפורום ובצ׳אט"
         nav:
@@ -295,6 +296,7 @@ he:
           custom_prompt: "בקשה מותאמת אישית"
           image_caption: "הוספת כותרות לתמונות"
           translator: "תרגום"
+          post_illustrator: "איור פוסטים"
         translation:
           name: "תרגום"
           description: "תרגום תוכן לשפות נתמכות"
@@ -459,8 +461,6 @@ he:
           low: איכות נמוכה - הזול ביותר (256×256)
           medium: איכות בינונית (512×512)
           high: איכות גבוהה - האיטית ביותר (1024×1024)
-        tool_details: הצגת פרטי כלי
-        tool_details_help: יופיעו פרטי משתמשי קצה בנוגע לאילו כלים מודל השפה הוזנק.
         mentionable: לאפשר אזכורים
         mentionable_help: אם האפשרות פעולה, משתמשים בקבוצות המורדות יכולים לאזכר את המשתמש הזה בפוסטים, הבינה המלאכותית תגיב בתור הדמות הזאת.
         user: משתמש
@@ -652,23 +652,20 @@ he:
         model_description:
           none: "הגדרות כלליות שעובדות עבור רוב המודלים של השפות"
           anthropic-claude-opus-4-1: "המודל החכם ביותר של Anthropic"
-          anthropic-claude-sonnet-4-0: "איזון מיטבי בין מהירות לעלות"
-          anthropic-claude-3-7-sonnet-latest: "איזון מיטבי בין מהירות לעלות (הדור הקודם)"
-          anthropic-claude-3-5-haiku-latest: "מהיר וחסכוני"
+          anthropic-claude-sonnet-4-5: "איזון מיטבי בין מהירות לעלות"
+          anthropic-claude-haiku-4-5: "מהיר וחסכוני"
+          google-gemini-3-pro: "המודל החכם ביותר של Google"
           google-gemini-2-5-pro: "מודל גדול רב־נדבכים שבנוי למגוון רחב של משימות"
-          google-gemini-2-0-flash: "קליל, מהיר וחסכוני עם עיבוד מרובה נדבכים (מהדור הקודם)"
           google-gemini-2-5-flash: "קליל, מהיר וחסכוני עם עיבוד מרובה נדבכים"
-          google-gemini-2-0-flash-lite: "מודל חסכוני ומהיר"
-          open_ai-o3: "מודל ההיגיון החזק ביותר מבית OpenAI"
-          open_ai-o4-mini: "מודל הגיון מתקדם וחסכוני"
-          open_ai-gpt-5: "מודל הדגל של OpenAI. הוא מתאים היטב לפתרון בעיות בתחומים שונים"
+          google-gemini-2-5-flash-lite: "המודל הקטן והחסכוני ביותר של Google"
+          open_ai-gpt-5-1: "מודל הדגל של OpenAI. מותאם לפתרון בעיות בתחומים שונים"
           open_ai-gpt-5-mini: "מספק איזון בין בינה, מהירות ועלות, מה שהופך אותו למודל שמעורר משיכה עבור מקרי שימוש רבים."
           open_ai-gpt-5-nano: "מודל GPT-5 החסכוני והמהיר ביותר."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "דגם רב־לשוני, קליל ויעיל"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "מודל רב־תכליתי חזק"
           mistral-mistral-large-latest: "המודל החזק ביותר של Mistral"
           mistral-pixtral-large-latest: "המודל החזק ביותר של Mistral שבנוי לעיבוד חזותי"
-          open_router-x-ai-grok-3-beta: "המודל האחרון של xAI"
+          open_router-x-ai-grok-4: "המודל האחרון של xAI"
           open_router-deepseek-deepseek-r1-0528-free: "מודל ההנמקה העדכני ביותר של DeepSeek"
           open_router-meta-llama-3-3-70b-instruct: "מודל רב־לשוני עם יכולות גבוהות"
         preseeded_model_description: "מודל קוד פתוח שהוגדר מראש ומשתמש ב־%{model}"
@@ -697,7 +694,6 @@ he:
           vision_enabled: "אם האפשרות פעילה, הבינה מלאכותית תנסה להבין תמונות. כתלות בתמיכה של המודל בעיבוד תמונות. נתמך על ידי המודלים העדכניים ביותר מבית Anthropic,‏ Google ו־OpenAI."
           enabled_chat_bot: "אם האפשרות פעילה, משתמשים יכולים לבחור את המודל הזה בעת יצירת הודעות פרטיות עם בוט הבינה המלאכותית"
           cost_input: "עלות הקלט לכל מיליון אסימונים למודל זה"
-          cost_cached_input: "עלות הקלט המאוחסן לכל מיליון אסימונים למודל זה"
           cost_output: "עלות הפלט לכל מיליון אסימונים למודל זה"
           cost_measure: "$/מיליון אסימונים"
         providers:
@@ -785,6 +781,9 @@ he:
           credits: "הכותרת נוספה ע״י בינה מלאכותית"
           save_caption: "שמירה"
         no_content_error: "יש להוסיף קודם תוכן כדי לבצע עליו פעולות בינה מלאכותית"
+      errors:
+        credit_limit_dialog:
+          title: "הגעת לגבול האסימונים של הבינה המלאכותית"
       reviewables:
         model_used: "דגם בשימוש:"
         accuracy: "דיוק:"
@@ -981,7 +980,6 @@ he:
         loading_convo: "הדיון נטען"
         collapse: "צמצום"
         timed_out: "Discobot לא הצליח למצוא תגליות. משהו השתבש."
-        user_setting: "הפעלת תגליות חיפוש"
         tooltip:
           header: "חיפוש מופעל בינה מלאכותית"
           content: "חיפוש בשפה טבעית מופעל על גבי %{model}"

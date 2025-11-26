@@ -14,4 +14,3 @@ ja:
       show: "ユーザーメモ（%{count}）"
       delete_confirm: "このユーザーメモを削除してもよろしいですか？"
       show_post: "投稿を表示"
-      copy_reviewable_note: "メモをユーザープロファイルにコピーしますか？"

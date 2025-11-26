@@ -1263,8 +1263,6 @@ nl:
       yaxis: "Dag"
       description: "API-verzoeken voor reguliere API-sleutels en gebruikers-API-sleutels."
     consolidated_page_views_browser_detection:
-      title: "Geconsolideerde paginaweergaven met browserdetectie (experimenteel)"
-      title_legacy: "Geconsolideerde paginaweergaven met browserdetectie (experimenteel)"
       xaxis:
         page_view_anon_browser: "Anonieme browser"
         page_view_logged_in_browser: "Aangemelde browser"
@@ -1646,7 +1644,6 @@ nl:
     allow_duplicate_topic_titles_category: "Topics met identieke, dubbele titels toestaan als de categorie anders is. allow_duplicate_topic_titles moet uitgeschakeld zijn."
     unique_posts_mins: "Hoeveel minuten iemand moet wachten voordat deze een bericht met dezelfde inhoud mag plaatsen"
     educate_until_posts: "De pop-up voor nieuwe gebruikers weergeven als een gebruiker begint met het typen van de eerste (n) nieuwe berichten in de berichteditor."
-    title: "De naam van deze site. Zichtbaar voor alle bezoekers, inclusief anonieme gebruikers."
     site_description: "Beschrijf deze site in één zin. Zichtbaar voor alle bezoekers, inclusief anonieme gebruikers."
     short_site_description: "Korte beschrijving in een paar woorden. Zichtbaar voor alle bezoekers, inclusief anonieme gebruikers."
     contact_email: "E-mailadres van de belangrijkste contactpersoon die verantwoordelijk is voor deze website. Wordt gebruikt voor kritieke meldingen en wordt weergegeven op de <a href='%{base_path}/about' target='_blank'>/over</a>-pagina. Zichtbaar voor anonieme gebruiker op openbare sites."
@@ -2105,7 +2102,6 @@ nl:
     allow_all_users_to_flag_illegal_content: "Anonieme gebruikers zien informatie dat ze een e-mail moeten sturen naar de beheerders om illegale content te melden. Deze instelling heeft voorrang op 'flag post allowed groups'."
     email_address_to_report_illegal_content: "Als dit leeg wordt gelaten, wordt het e-mailadres van de standaard sitebeheerder gebruikt."
     cooldown_hours_until_reflag: "De tijd dat gebruikers moeten wachten voordat ze een bericht opnieuw kunnen markeren"
-    slow_mode_prevents_editing: "Verhindert de 'Langzame modus' bewerking na editing_grace_period?"
     reply_by_email_enabled: "Activeert de functie waarmee gebruikers rechtstreeks via e-mail kunnen reageren op topics, in plaats van dat ze zich moeten aanmelden op de website. Zie de <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>gids over Meta</a> voor meer informatie."
     reply_by_email_address: "Sjabloon voor adres voor inkomende e-mail bij antwoorden per e-mail, bijvoorbeeld: %%{reply_key}@reply.example.com of replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Lijst van alternatieve sjablonen voor adressen voor inkomende e-mail bij antwoorden per e-mail. Voorbeeld: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -2394,7 +2390,6 @@ nl:
     force_lowercase_tags: "Gebruik van kleine letters voor alle nieuwe tags afdwingen."
     create_post_for_category_and_tag_changes: "Maak een fluisterbericht wanneer de categorie of tags van een topic veranderen. Dit vereist dat fluisterberichten ingeschakeld zijn."
     automatically_clean_unused_tags: "Verwijder dagelijks automatisch tags die niet worden gebruikt in topics of persoonlijke berichten."
-    watched_precedence_over_muted: "Houd me op de hoogte van topic in categorieën of tags die ik in observeer en die ook horen bij een topic dat ik heb gedempt"
     company_name: "Naam van je bedrijf of organisatie. Als je dit veld leeg laat, worden er geen standaard Gebruiksvoorwaarden of Privacyverklaring verstrekt."
     governing_law: "Geef het rechtsgebied op dat de juridische aspecten van de site beheerst, inclusief de Gebruiksvoorwaarden en het Privacybeleid. Dit is meestal het land of de staat waar het bedrijf dat de site beheert is geregistreerd of zaken doet."
     city_for_disputes: "Geef de plaats op die wordt gebruikt als rechtsgebied voor het oplossen van geschillen met betrekking tot het gebruik van dit forum. Deze informatie wordt meestal opgenomen in juridische documenten zoals de Gebruiksvoorwaarden van het forum."
@@ -2411,7 +2406,6 @@ nl:
     sitemap_page_size: "Aantal URL's om op te nemen in elke sitemappagina. Maximaal 50.000"
     enable_user_status: "Sta gebruikers toe om een aangepast statusbericht in te stellen (emoji + beschrijving)."
     enable_user_tips: "Schakel nieuwe gebruikerstips in die belangrijke functies beschrijven voor gebruikers"
-    short_title: "De korte titel wordt gebruikt op het startscherm van de gebruiker, de starter, of andere plaatsen waar ruimte beperkt kan zijn. Beperk de naam tot 12 tekens."
     dashboard_hidden_reports: "Toestaan dat de opgegeven rapporten worden verborgen op het dashboard."
     dashboard_visible_tabs: "Kiezen welke dashboardtabbladen zichtbaar zijn."
     dashboard_general_tab_activity_metrics: "Kies rapporten die als activiteitsgegevens op het algemene tabblad worden weergegeven."
@@ -2437,8 +2431,6 @@ nl:
     default_navigation_menu_categories: "De geselecteerde categorieën worden standaard weergegeven in de sectie Categorieën van het navigatiemenu."
     default_navigation_menu_tags: "De geselecteerde tags worden standaard weergegeven in de sectie Tags van het navigatiemenu."
     experimental_new_new_view_groups: 'Schakel een nieuwe topicslijst in die ongelezen en nieuwe topics combineert en laat de link "Alles" in de zijbalk ernaartoe verwijzen.'
-    floatkit_autocomplete_composer: "Activeer het op Floatkit gebaseerde menu voor automatische aanvulling in de editor. Dit is een verbetering van de gebruikersinterface die het huidige op jQuery gebaseerde menu voor automatische aanvulling zal vervangen."
-    floatkit_autocomplete_chat_composer: "Activeer het op Floatkit gebaseerde menu voor automatische aanvulling in de chateditor. Dit is een verbetering van de gebruikersinterface die het huidige op jQuery gebaseerde menu voor automatische aanvulling zal vervangen."
     experimental_form_templates: "Schakel de functie Formuliersjablonen in. Beheer de sjablonen via <a href='%{base_path}/admin/customize/form-templates'>Aanpassen / Sjablonen</a>."
     show_preview_for_form_templates: "Schakel het voorbeeld voor formuliersjablonenfunctie in"
     lazy_load_categories_groups: "Laad categorie-informatie op luie wijze, alleen voor gebruikers van deze groepen. Dit verbetert de prestaties op sites met veel categorieën."
@@ -2572,9 +2564,6 @@ nl:
       activity_after: "Geef topics weer met de laatste activiteit na een datum (JJJJ-MM-DD of aantal dagen geleden)"
       created_before: "Toon topics gemaakt vóór een datum (JJJJ-MM-DD of aantal dagen geleden)"
       created_after: "Toon topics gemaakt na een datum (JJJJ-MM-DD of aantal dagen geleden)"
-      created_by: "Geef topics weer die door een specifieke gebruiker zijn gemaakt"
-      created_by_user: "Geef topics weer die zijn gemaakt door een gebruikersnaam (zonder @)"
-      created_by_multiple: "Geef topics weer die zijn gemaakt door een van de opgegeven gebruikers (door komma's gescheiden)"
       latest_post_before: "zijn gemaakt met laatste bericht vóór een datum (JJJJ-MM-DD of aantal dagen geleden)"
       latest_post_after: "Geef topics weer met laatste bericht na een datum (JJJJ-MM-DD of aantal dagen geleden)"
       likes_min: "Geef topics weer met minimaal dit aantal likes"
@@ -3616,14 +3605,9 @@ nl:
     user_automatically_silenced:
       title: "Gebruiker automatisch gedempt"
       subject_template: "Nieuwe gebruiker %{username} gedempt wegens markeringen door community"
-      text_body_template: |
-        Dit is een automatisch bericht.
-
-        De nieuwe gebruiker [%{username}](%{user_url}) is automatisch gedempt, omdat meerdere gebruikers een of meer berichten van %{username} hebben gemarkeerd.
-
-        [Beoordeel de markeringen](%{base_url}/review). Als %{username} ten onrechte is gedempt, klik dan op de knop voor opheffen van het dempen op [de beheerpagina van deze gebruiker](%{user_url}).
-
-        Deze drempel kan worden gewijzigd via de 'silence_new_user'-website-instellingen.
+    user_automatically_silenced_with_reason:
+      title: "Gebruiker automatisch gedempt"
+      subject_template: "Nieuwe gebruiker %{username} gedempt wegens markeringen door community"
     spam_post_blocked:
       title: "Spambericht geblokkeerd"
       subject_template: "Berichten van nieuwe gebruiker %{username} geblokkeerd vanwege herhaalde links"
@@ -5247,7 +5231,6 @@ nl:
         title: "Bericht weggooien"
         complete: "Bericht verworpen."
       revise_and_reject_post:
-        title: "Bericht herzien…"
         complete: "Bericht afgewezen in afwachting van herziening."
       ignore:
         title: "Negeren"

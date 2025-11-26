@@ -128,7 +128,6 @@ pt_BR:
       email_frequency:
         description: "Só enviaremos um e-mail mediante ausência nos últimos 15 minutos."
         never: "Nunca"
-        title: "Notificações por e-mail"
         when_away: "Só quando estiver ausente"
       header_indicator_preference:
         title: "Mostrar indicador de atividade no cabeçalho"
@@ -436,6 +435,7 @@ pt_BR:
           topic: "Tópico"
       reviewable:
         type: "Mensagem de chat"
+        message_in_channel: "Canal"
       reactions:
         only_you: "<span>Você reagiu com </span>:%{emoji}:"
         you_and_single_user: "<span>Você e %{username} reagiram com </span>:%{emoji}:"

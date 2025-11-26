@@ -1,6 +1,7 @@
 import UserTopicListRoute from "discourse/routes/user-topic-list";
 import { i18n } from "discourse-i18n";
 
+/** @returns {any} */
 export default (type) => {
   return class BuildGroupMessagesRoute extends UserTopicListRoute {
     titleToken() {

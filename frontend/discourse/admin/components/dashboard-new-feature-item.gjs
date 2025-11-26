@@ -4,14 +4,14 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { and, not } from "truth-helpers";
 import CookText from "discourse/components/cook-text";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { and, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import DTooltip from "float-kit/components/d-tooltip";
 
 export default class DiscourseNewFeatureItem extends Component {
   @service toasts;

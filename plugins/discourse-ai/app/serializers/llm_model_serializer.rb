@@ -21,6 +21,7 @@ class LlmModelSerializer < ApplicationSerializer
              :input_cost,
              :output_cost,
              :cached_input_cost,
+             :cache_write_cost,
              :used_by
 
   has_one :user, serializer: BasicUserSerializer, embed: :object
@@ -60,6 +61,6 @@ class LlmModelSerializer < ApplicationSerializer
   end
 
   def include_credit_allocation?
-    object.seeded?
+    object.credit_system_enabled?
   end
 end

@@ -243,7 +243,7 @@ fa_IR:
       header:
         logged_in_members: "خوش آمدید، %{preferred_display_name}!"
         anonymous_members: "به %{site_name} خوش آمدید!"
-      search: "جستجو"
+      search_placeholder: "جستجو"
     themes:
       default_description: "پیش‌فرض"
       error_caused_by: "ناشی از '%{name}'. برای به روز رسانی، پیکربندی مجدد یا غیر فعال کردن، <a target='blank' href='%{path}'>کلیک کنید</a>."
@@ -296,7 +296,7 @@ fa_IR:
     joined: "ملحق شده"
     admin_title: "مدیر"
     show_more: "بیش‌تر نشان بده"
-    show_help: "گزینه‌ها"
+    show_help: "تنظیمات"
     links: "پیوندها"
     links_lowercase:
       one: "پیوندها"
@@ -609,10 +609,6 @@ fa_IR:
         claimed_by_you: "می‌توانید این مورد را درخواست کنید و آن را بازنگری کنید."
         claimed_by_other: "این مورد فقط توسط کاربر<b>%{username} </b>قابل بازنگری است."
         automatically_claimed_by: "این مورد توسط <b>%{username}</b> در حال بازنگری است."
-      claim:
-        title: "درخواست این مبحث"
-      unclaim:
-        help: "حذف درخواست"
       awaiting_approval: "منتظر تایید"
       delete: "حذف"
       settings:
@@ -675,7 +671,7 @@ fa_IR:
       replies:
         one: "%{count}پاسخ"
         other: "%{count}پاسخ"
-      edit: "ویرایش"
+      edit: "ویرایش نوشته"
       save: "ذخیره"
       cancel: "لغو کردن"
       new_topic: "تایید این مورد یک مبحث جدید ایجاد خواهد کرد."
@@ -697,7 +693,6 @@ fa_IR:
           created_at: "ساخته شده"
           created_at_asc: "ساخته شده (برعکس)"
         priority:
-          title: "کمترین اولویت"
           any: "(هر چی)"
           low: "کم"
           medium: "متوسط"
@@ -761,10 +756,13 @@ fa_IR:
         reviewable_post:
           title: "نوشته"
           noun: "نوشته"
+      user_label: "کاربر"
       notes:
         delete: "حذف"
+      topic_label: "موضوع"
       review_user: "کاربر"
       copy_link: "رونوشت پیوند"
+      copy_link_feedback: "لینک کپی شد"
       insights:
         activities:
           posts:
@@ -2573,7 +2571,6 @@ fa_IR:
       reply: "پاسخ"
       cancel: "لغو کردن"
       create_topic: "ایجاد موضوع"
-      create_pm: "ارسال پیام"
       create_whisper: "زمزمه"
       create_shared_draft: "ایجاد پیش‌نویس مشترک"
       edit_shared_draft: "ویرایش درفت مشترک"
@@ -2649,8 +2646,10 @@ fa_IR:
           label: فعالسازی زمزمه
           desc: زمزمه ها فقط توسط کارکنان قابل مشاهده است
         create_topic:
-          label: "موضوع جدید"
           desc: یک موضوع جدید ایجاد کنید
+        create_personal_message:
+          label: "پیام جدید"
+          desc: "یک پیام شخصی جدید بساز"
         shared_draft:
           label: "درفت اشتراکی"
           desc: "موضوعی را پیش‌نویس کنید که فقط برای کاربران مجاز قابل مشاهده باشد"
@@ -3051,7 +3050,6 @@ fa_IR:
         progress:
           one: "پیشرفت: <strong>%{count}</strong> موضوع"
           other: "پیشرفت: <strong>%{count}</strong> موضوع"
-        silent: "این عمل را بی صدا انجام دهید."
         performing: "در حال انجام عملیات انبوه، لطفاً صبر کنید..."
         completed: "عملیات انبوه با موفقیت انجام شد!"
       none:
@@ -3121,7 +3119,7 @@ fa_IR:
         one: "%{count} نوشته در این موضوع وجود دارد"
         other: "%{count} نوشته در این موضوع وجود دارد"
       create: "موضوع جدید"
-      create_long: "ساخت یک موضوع جدید"
+      create_long: "یک موضوع جدید ایجاد کنید"
       open_draft: "بازکردن پیشنویس"
       private_message: "شروع یک پیام"
       archive_message:
@@ -3212,7 +3210,6 @@ fa_IR:
       jump_reply_button: "پرش به پست"
       deleted: "موضوع پاک شده است"
       slow_mode_update:
-        title: "حالت آهسته"
         select: "ارسال‌های مجاز، تنها یک پست است در هر:"
         description: "برای ترویج بحث متفکرانه در بحث‌های پر کش‌مکش یا بحث‌های جنجالی، کاربران باید قبل از ارسال مجدد در این موضوع، منتظر بمانند."
         enable: "فعال کردن"
@@ -3866,15 +3863,12 @@ fa_IR:
       create: "دسته‌بندی جدید"
       create_long: "ایجاد یک دسته‌بندی جدید"
       save: "ذخیره دسته‌بندی"
-      slug: "نام یکتا‌ی دسته‌بندی"
       slug_placeholder: "(اختیاری) کلمه با - جدا شده برای پیوند"
       creation_error: خطایی در ساخت این دسته بروز کرد.
       save_error: خطایی در ذخیره‌ی این دسته‌بندی روی داد.
       name: "نام دسته‌بندی"
+      untitled: "دسته‌بندی بدون‌عنوان"
       description: "توضیحات"
-      logo: "تصویر لوگو برای دسته‌بندی"
-      logo_dark: "حالت تیره دسته‌بندی تصویر لوگو"
-      background_image: "تصویر پس‌زمینه برای دسته‌بندی"
       background_color: "رنگ"
       color_validations:
         cant_be_empty: "نمی‌تواند خالی باشد"
@@ -3890,7 +3884,7 @@ fa_IR:
       color_placeholder: "هر رنگ وب"
       delete_confirm: "آیا مطمئنید که می‌خواهید این دسته‌بندی را پاک کنید؟"
       delete_error: "هنگام حذف دسته بندی خطایی رخ داد."
-      list: "فهرست دسته‌‌بندی‌ها"
+      list: "فهرست دسته‌بندی‌ها"
       no_description: "لطفا برای این دسته بندی توضیحاتی اضافه نمایید."
       change_in_category_topic: "ویرایش توضیحات"
       already_used: "این رنگ توسط یک دسته بندی دیگر گزیده شده است"
@@ -3923,23 +3917,15 @@ fa_IR:
       all_topics_wiki: "موضوعات جدید را به صورت پیش فرض ویکی کنید"
       allow_unlimited_owner_edits_on_first_post: "اجازه ویرایش و اصلاحات نامحدود مالک روی اولین پست"
       subcategory_list_style: "سبک فهرست دسته‌بندی‌های فرزند"
-      sort_order: "فهرست موضوعات مرتب شود با:"
-      default_view: "لیست موضوعات پیشفرض:"
-      default_top_period: "دوره زمانی پیشفرض برترین‌ها:"
-      default_list_filter: "فیلتر لیست پیش فرض:"
       allow_badges_label: "امکان اهدای نشان در این دسته‌بندی را بده"
-      edit_permissions: "ویرایش دسترسی‌ها"
       reviewable_by_group: "علاوه بر کارکنان، محتوای این دسته توسط کاربران زیر نیز می تواند بررسی شود:"
       review_group_name: "نام گروه"
       require_topic_approval: "نیازمند تاییدیه ناظر برای تمامی تاپیک‌های جدید"
       require_reply_approval: "نیازمند تاییدیه ناظر برای تمامی پاسخ‌های جدید"
       this_year: "امسال"
       position: "موقعیت در صفحه دسته‌بندی:"
-      default_position: "موقعیت پیش‌فرض"
       position_disabled: "دسته ها به ترتیب فعالیت نمایش داده می شوند. برای کنترل ترتیب دسته‌ها در فهرست‌ها، گزینه <a href='%{url}'>'fixed category positions'</a> را فعال کنید."
       minimum_required_tags: "حداقل تعداد برچسب‌های مورد نیاز در یک تاپیک:"
-      default_slow_mode: '"حالت آهسته" را برای موضوعات جدید در این دسته فعال کنید.'
-      parent: "دسته‌بندی مادر"
       auto_bump_cooldown_days: "حداقل روزها قبل از بالا آوردن دوباره یک موضوع واحد"
       navigate_to_first_post_after_read: "پس از خواندن موضوعات به اولین پست بروید"
       notifications:
@@ -3960,18 +3946,14 @@ fa_IR:
           title: "خاموش"
           description: "شما درباره هیچ اتفاقی در این دسته بندی آگاهسازی دریافت نمیکنید و آن ها در دسته بندی ها و یا صفحه تازه ها نمایش داده نخواهند شد."
       search_priority:
-        label: "اولویت جستجو"
         options:
           normal: "معمولی"
           ignore: "چشم پوشی"
-          very_low: "بسیار پایین"
           low: "کم"
           high: "بالا"
-          very_high: "بسیار بالا"
       sort_options:
         default: "پیش‌فرض"
         likes: "پسند‌ها"
-        op_likes: "پسند‌های نوشته اصلی"
         views: "بازدید"
         posts: "نوشته‌ها"
         activity: "فعالیت"
@@ -3992,7 +3974,6 @@ fa_IR:
         email: "ایمیل"
       list_filters:
         all: "همه موضوعات"
-        none: "بدون زیر دسته"
       colors_disabled: "شما نمی توانید رنگ ها را انتخاب کنید زیرا سبک دسته‌بندی را انتخاب نکرده‌اید."
     anonymous_flagging:
       title: "گزارش محتوای ناقض قانون"
@@ -4224,7 +4205,7 @@ fa_IR:
         title: "برترین‌ها"
         help: "بیشترین موضوعات فعال در سال گذشته، ماه ، هفته یا روز"
         all:
-          title: "تمام وقت"
+          title: "همیشه"
         yearly:
           title: "سالیانه "
         quarterly:
@@ -4235,7 +4216,7 @@ fa_IR:
           title: "هفتگی"
         daily:
           title: "روزانه"
-        all_time: "تمام وقت"
+        all_time: "همیشه"
         this_year: "سال"
         this_quarter: "چهار‌ماه"
         this_month: "ماه"
@@ -4291,7 +4272,6 @@ fa_IR:
         go_to_unread_post: "برو به اولین پست خوانده‌نشده %{shortcut}"
       application:
         title: "برنامه"
-        create: "ایجاد موضوع جدید"
         notifications: "%{shortcut} باز کردن آگاه‌سازی‌ها"
         hamburger_menu: "%{shortcut} باز کردن منوی ناوبری"
         user_profile_menu: "%{shortcut} نمایش منو کاربری"
@@ -4488,18 +4468,13 @@ fa_IR:
           description: "در مورد موضوعات جدیدِ با این برچسب به شما اطلاع داده نمی‌شود و در برگه خوانده نشده شما نیز ظاهر نمی‌شوند."
       groups:
         back_btn: "بازگشت به همه برچسب‌ها"
-        title: "برچسب گروه‌ها"
         about_heading: "یک گروه برچسب انتخاب کنید یا یک گروه جدید ایجاد کنید"
         about_heading_empty: "برای شروع یک گروه برچسب جدید ایجاد کنید"
         about_description: "گروه‌های برچسب به شما کمک می‌کنند مجوزهای بسیاری از برچسب‌ها را یکجا مدیریت کنید."
-        new: "گروه جدید"
-        new_title: "ایجاد گروه جدید"
-        edit_title: "ویرایش گروه برچسب"
         tags_label: "برچسب‌های گروه"
         parent_tag_label: "برچسب مادر"
         parent_tag_description: "برچسب‌های این گروه فقط در صورت وجود برچسب والد قابل استفاده هستند."
         one_per_topic_label: "محدودیت یک برچسب به ازای هر موضوع در این گروه"
-        new_name: "گروه برچسب جدید"
         name_placeholder: "نام"
         save: "ذخیره"
         delete: "حذف"
@@ -4869,6 +4844,7 @@ fa_IR:
   admin_js:
     type_to_filter: "برای فیلتر کردن تایپ کنید..."
     settings: "تنظیمات"
+    reset_filter: "بازنشانی"
     admin:
       title: "مدیر ارشد دیسکورس"
       moderator: "ناظر"
@@ -4900,6 +4876,20 @@ fa_IR:
           title: "افزونه‌ها"
         advanced:
           title: "پیشرفته"
+      upcoming_changes:
+        name: "نام"
+        enabled: "فعال شده"
+        select_groups: "انتخاب گروه‌ها"
+        preview: "پیش‌نمایش"
+        impact_roles:
+          admins: "مدیران ارشد"
+          moderators: "ناظران"
+          staff: "همکاران"
+        filter:
+          all: "همه"
+          enabled: "فعال شده"
+          disabled: "غیرفعال"
+          impact_type_other: "دیگر"
       config:
         about:
           title: "درباره سایت شما"
@@ -4939,6 +4929,14 @@ fa_IR:
         fonts:
           backfill_modal:
             modal_yes: "بله"
+        welcome_banner:
+          form:
+            location:
+              label: "موقعیت"
+            header_logged_in:
+              placeholder: "خوش آمدید، %{preferred_display_name}!"
+            header_anonymous:
+              placeholder: "به %{site_name} خوش آمدید!"
         navigation:
           title: "ناوبری"
           header_description: "پیوندهای ناوبری و آیتم‌های منو را برای سایت خود پیکربندی کنید. این شامل مکان و رفتار منوی پیمایش اصلی، پیوندهای سریع در بالای صفحه اصلی، و همچنین نوار کناری مدیریت است."
@@ -6459,7 +6457,6 @@ fa_IR:
           success: "موفقیت"
           exists: "از قبل وجود دارد"
           upload: "افزودن از فایل"
-          upload_successful: "بارگذاری با موفقیت انجام شد. واژه‌ها اضافه شدند."
           case_sensitivity_label: "به حروف بزرگ و کوچک حساس است"
           html_label: "HTML"
           words_or_phrases: "کلمات یا عبارات"
@@ -6546,10 +6543,7 @@ fa_IR:
             second: "گزینه ۲"
             third: "گزینه ۳"
         edit_category:
-          toggle_freeform: "قالب فرم غیرفعال شد"
-          toggle_form_template: "قالب فرم فعال شد"
           select_template: "انتخاب بین قالب‌های فرم"
-          select_template_help: "افزودن/ویرایش قالب‌های فرم"
       impersonate:
         title: "جعل هویت کردن"
         help: "با استفاده از ابزار جعل هویت کردن یک حساب کاربری را برای اشکال زدایی انتخاب نمایید، شما باید بعد از اتمام کار یک بار خارج شوید."
@@ -6752,7 +6746,6 @@ fa_IR:
             cancel: "لغو کردن"
         merging_user: "درحال ادغام کاربر…"
         merge_failed: "هنگام ادغام کاربران خطایی روی داد."
-        delete_posts_forbidden_because_staff: "نمی توان همه‌ی نوشته‌های مدیران و ناظران را حذف کرد"
         delete_forbidden:
           one: "کاربرانی را که دارای موضوع هستند نمی‌توانید پاک کنید. پیش از تلاش برای پاک کردن کاربر، ابتدا همه‌ی موضوعاتش را پاک کنید. (موضوعات که بیش از %{count} روز پیش فرستاده شده باشند، نمی‌توانند پاک شوند.)"
           other: "کاربرانی را که دارای موضوع هستند نمی‌توانید پاک کنید. پیش از تلاش برای پاک کردن کاربر، ابتدا همه‌ی موضوعاتش را پاک کنید. (موضوعات که بیش از %{count} روز پیش فرستاده شده باشند، نمی‌توانند پاک شوند.)"

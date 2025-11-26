@@ -128,7 +128,6 @@ hu:
       email_frequency:
         description: "Csak akkor küldünk e-mailt, ha az elmúlt 15 percben nem láttuk."
         never: "Soha"
-        title: "E-mail-értesítések"
         when_away: "Csak ha távol van"
       header_indicator_preference:
         title: "Aktivitásjelző megjelenítése a fejlécben"
@@ -383,6 +382,7 @@ hu:
           topic: "Téma"
       reviewable:
         type: "Csevegőüzenet"
+        message_in_channel: "Csatorna"
       reactions:
         only_you: "<span>A következővel reagált </span>:%{emoji}:"
         you_and_single_user: "<span>Ön és %{username} a következővel reagált: </span>:%{emoji}:"

@@ -72,9 +72,6 @@ import {
   registerIconRenderer,
   replaceIcon,
 } from "discourse/lib/icon-library";
-import KeyboardShortcuts, {
-  disableDefaultKeyboardShortcuts,
-} from "discourse/lib/keyboard-shortcuts";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
 import { addGTMPageChangedCallback } from "discourse/lib/page-tracker";
@@ -127,7 +124,10 @@ import {
 } from "discourse/models/user";
 import { preventCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
+import { CUSTOM_USER_SEARCH_OPTIONS } from "discourse/select-kit/components/user-chooser";
+import { modifySelectKit } from "discourse/select-kit/lib/plugin-api";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
+import { disableDefaultKeyboardShortcuts } from "discourse/services/keyboard-shortcuts";
 import { addPostClassesCallback } from "discourse/widgets/post";
 import { addDecorator } from "discourse/widgets/post-cooked";
 import {
@@ -149,8 +149,6 @@ import {
   warnWidgetsDeprecation,
 } from "discourse/widgets/widget";
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
-import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
-import { modifySelectKit } from "select-kit/lib/plugin-api";
 
 const DEPRECATED_POST_STREAM_CLASSES = ["component:scrolling-post-stream"];
 
@@ -238,9 +236,9 @@ function wrapWithErrorHandler(func, messageKey) {
 }
 
 /**
- * @typedef {PluginApi} PluginApi
+ * @typedef {_PluginApi} PluginApi
  */
-class PluginApi {
+class _PluginApi {
   constructor(container) {
     this.container = container;
     this.h = h;
@@ -623,14 +621,18 @@ class PluginApi {
    * See KeyboardShortcuts.addShortcut documentation.
    **/
   addKeyboardShortcut(shortcut, callback, opts = {}) {
-    KeyboardShortcuts.addShortcut(shortcut, callback, opts);
+    this.container
+      .lookup("service:keyboard-shortcuts")
+      .addShortcut(shortcut, callback, opts);
   }
 
   /**
    * See KeyboardShortcuts.unbind documentation.
    **/
   removeKeyboardShortcut(shortcut, callback) {
-    KeyboardShortcuts.unbind({ [shortcut]: callback });
+    this.container
+      .lookup("service:keyboard-shortcuts")
+      .unbind({ [shortcut]: callback });
   }
 
   /**
@@ -3460,7 +3462,7 @@ function getPluginApi() {
   let pluginApi = owner.lookup("plugin-api:main");
 
   if (!pluginApi) {
-    pluginApi = new PluginApi(owner);
+    pluginApi = new _PluginApi(owner);
     owner.registry.register("plugin-api:main", pluginApi, {
       instantiate: false,
     });
@@ -3475,7 +3477,7 @@ function getPluginApi() {
 /**
  * Executes the provided callback function with the `PluginApi` object.
  *
- * @param {(api: PluginApi, opts: object) => any} apiCodeCallback - The callback function to execute
+ * @param {(api: _PluginApi, opts: object) => any} apiCodeCallback - The callback function to execute
  * @param {object} [opts] - Optional additional options to pass to the callback function.
  * @returns {any} The result of the `callback` function, if executed
  */

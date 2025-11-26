@@ -72,6 +72,32 @@ after_initialize do
       config.allowed_group_ids.uniq!
 
       config
+    elsif post_id = channel_name[%r{/discourse-presence/translate/(\d+)}, 1]
+      post = Post.find(post_id)
+      topic = Topic.find(post.topic_id)
+
+      config = PresenceChannel::Config.new
+      config.allowed_group_ids = staff_groups
+      config.allowed_user_ids = []
+
+      if SiteSetting.content_localization_enabled
+        config.allowed_group_ids += SiteSetting.content_localization_allowed_groups_map
+      end
+
+      if topic.private_message?
+        config.allowed_user_ids += topic.allowed_users.pluck(:id)
+        config.allowed_group_ids += topic.allowed_groups.pluck(:group_id)
+      elsif secure_group_ids = topic.secure_group_ids
+        config.allowed_group_ids += secure_group_ids
+      end
+
+      if SiteSetting.content_localization_allow_author_localization
+        config.allowed_user_ids += [post.user_id]
+      end
+
+      config.allowed_group_ids.uniq!
+
+      config
     end
   rescue ActiveRecord::RecordNotFound
     nil

@@ -1,3 +1,4 @@
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import DiscourseRoute from "discourse/routes/discourse";
 import CustomReaction from "../../models/discourse-reactions-custom-reaction";
 
@@ -10,8 +11,8 @@ export default class UserNotificationsReactionsReceived extends DiscourseRoute {
     include_likes: { refreshModel: true },
   };
 
-  model(params) {
-    return CustomReaction.findReactions(
+  async model(params) {
+    const list = await CustomReaction.findReactions(
       "reactions-received",
       this.modelFor("user").get("username"),
       {
@@ -19,10 +20,15 @@ export default class UserNotificationsReactionsReceived extends DiscourseRoute {
         includeLikes: params.include_likes,
       }
     );
+
+    return new TrackedArray(
+      list.map((reaction) => CustomReaction.flattenForPostList(reaction))
+    );
   }
 
   setupController(controller, model) {
-    let loadedAll = model.length < 20;
+    const loadedAll = model.length < 20;
+
     this.controllerFor("user-activity.reactions").setProperties({
       model,
       canLoadMore: !loadedAll,
@@ -31,6 +37,7 @@ export default class UserNotificationsReactionsReceived extends DiscourseRoute {
       actingUsername: controller.acting_username,
       includeLikes: controller.include_likes,
     });
+
     this.controllerFor("application").set("showFooter", loadedAll);
   }
 }

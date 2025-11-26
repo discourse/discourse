@@ -297,7 +297,7 @@ pt_BR:
       header:
         logged_in_members: "Boas-vindas novamente, %{preferred_display_name}!"
         anonymous_members: "Boas-vindas ao %{site_name}!"
-      search: "Pesquisar"
+      search_placeholder: "Pesquisar"
     themes:
       default_description: "Padrão"
       broken_theme_alert: "Seu site pode não funcionar por causa de um tema/componente com erro. Verifique o console do seu navegador para obter mais informações."
@@ -357,7 +357,7 @@ pt_BR:
     joined: "Ingressou"
     admin_title: "Administração"
     show_more: "exibir mais"
-    show_help: "opções"
+    show_help: "Opções"
     links: "Links"
     links_lowercase:
       one: "link"
@@ -678,10 +678,6 @@ pt_BR:
         claimed_by_you: "Você reivindicou este item e pode revisá-lo."
         claimed_by_other: "Este item só pode ser revisado por <b>%{username}</b>."
         automatically_claimed_by: "Este item está sendo revisado por <b>%{username}</b>."
-      claim:
-        title: "reivindicar este tópico"
-      unclaim:
-        help: "remover esta reivindicação"
       awaiting_approval: "Aguardando aprovação"
       delete: "Excluir"
       settings:
@@ -752,7 +748,7 @@ pt_BR:
       replies:
         one: "%{count} resposta"
         other: "%{count} respostas"
-      edit: "Editar"
+      edit: "Editar postagem"
       save: "Salvar"
       cancel: "Cancelar"
       new_topic: "A aprovação deste item criará um novo tópico"
@@ -774,7 +770,6 @@ pt_BR:
           created_at: "Criado em"
           created_at_asc: "Criado em (reverso)"
         priority:
-          title: "Prioridade mínima"
           any: "(qualquer um)"
           low: "Baixa"
           medium: "Média"
@@ -839,6 +834,7 @@ pt_BR:
           title: "Postagem"
           noun: "postagem"
       flagged_as: "Sinalizado como"
+      user_label: "Usuário(a)"
       assigned_to: "Atribuído(a) a"
       moderator_actions: "Ações da moderação"
       timeline_and_notes: "Cronograma e observações"
@@ -856,19 +852,19 @@ pt_BR:
         note_added_by: "Observação da moderação por %{username} - %{relativeDate}"
         no_events: "Não há eventos da linha do tempo para exibir"
       notes:
-        add_note_description: "Visível apenas para a moderarção. Use esta observação para adicionar contexto ou decisões sobre a revisão."
         add_note_button: "Adicionar observação"
         placeholder: "Escreva sua observação aqui..."
         chars_remaining: "%{count} caractere(s) restante(s)"
         delete_note: "Excluir esta observação"
         delete: "Excluir"
-      new_topic_label: "Novo tópico"
+      topic_label: "Tópico"
       queued_user: "Usuário(a) na fila"
       posted_in: "Postagem em"
       flagged_user: "Usuário(a) sinalizado(a)"
       review_user: "Usuário(a)"
       need_help: "Precisa de ajuda?"
       copy_link: "Copiar link"
+      copy_link_feedback: "Link copiado"
       view_source: "Visualizar origem"
       insights:
         title: "Percepções"
@@ -876,9 +872,6 @@ pt_BR:
         flagged_by_users:
           one: "Marcado por %{count} usuário(a)"
           other: "Marcado por %{count} usuários(as)"
-        similar_posts: "Postagens anteriores semelhantes"
-        flagged_in_timeframe: "%{count} sinalizado(s) anteriormente"
-        user_activity: "Atividade do(a) usuário(a)"
         activities:
           new_account: "nova conta"
           trust_level: "nível de confiança: %{trustLevelName}"
@@ -2701,7 +2694,7 @@ pt_BR:
         title: "Traduzindo postagem"
         select: "Selecione a tradução"
         save: "Salvar tradução"
-        original_content: "Conteúdo original da postagem"
+        translation: "Tradução"
         placeholder: "Digite a tradução da postagem aqui..."
       group_mentioned_limit:
         one: "<b>Aviso!</b> Você menciou <a href='%{group_link}'>%{group}</a>, mas este grupo tem mais membros do que o limite de menções configurado pelo(a) administrador(a) de %{count} usuário(a). Ninguém será notificado(a)."
@@ -2752,7 +2745,7 @@ pt_BR:
       reply: "Responder"
       cancel: "Cancelar"
       create_topic: "Criar tópico"
-      create_pm: "Enviar Mensagem"
+      create_pm: "Enviar mensagem"
       create_whisper: "Sussuro"
       create_shared_draft: "Criar rascunho compartilhado"
       edit_shared_draft: "Editar rascunho compartilhado"
@@ -2849,6 +2842,9 @@ pt_BR:
         create_topic:
           label: "Novo tópico"
           desc: Criar um novo tópico
+        create_personal_message:
+          label: "Nova mensagem"
+          desc: "Criar uma nova mensagem pessoal"
         shared_draft:
           label: "Rascunho compartilhado"
           desc: "Fazer rascunho do tópico visívei apenas para usuários(as) com permissão"
@@ -2857,7 +2853,6 @@ pt_BR:
           desc: "Responder sem alterar a data da última resposta"
         toggle_unlisted:
           label: Ativar como não listado
-          desc: Tópicos não listados acessíveis aos membros somente por meio de link direto
       reload: "Recarregar"
       ignore: "Ignorar"
       image_alt_text:
@@ -3266,7 +3261,6 @@ pt_BR:
         progress:
           one: "Progresso: <strong>%{count}</strong> tópico"
           other: "Progresso: <strong>%{count}</strong> tópicos"
-        silent: "Realize esta ação silenciosamente."
         performing: "Realizando operações em massa, aguarde…"
         completed: "Operações em massa concluídas!"
       none:
@@ -3436,7 +3430,6 @@ pt_BR:
       jump_reply_button: "Ir para postagem"
       deleted: "Este tópico foi excluído"
       slow_mode_update:
-        title: "Modo lento"
         select: "Os(as) usuários(as) podem postar neste tópico apenas a cada:"
         description: "Para promover um diálogo saudável em discussões dinâmicas e acirradas, os(as) usuários(as) devem aguardar antes de postar neste tópico outra vez."
         enable: "Ativar"
@@ -3871,7 +3864,6 @@ pt_BR:
         post_language_selector:
           none: "Nenhum"
         edit_warning:
-          message: "Esta é uma postagem traduzida.<br><br> Você quer editar a postagem original em %{language} ou editar essa tradução específica?"
           action_original: "Editar a postagem original"
           action_translation: "Editar esta tradução"
       errors:
@@ -4104,24 +4096,14 @@ pt_BR:
         description: "Exigir que novos tópicos tenham etiquetas de grupos de etiquetas:"
         delete: "Excluir"
         add: "Adicionar grupo de tags necessário"
-        placeholder: "selecionar grupo de etiquetas…"
+        placeholder: "Selecionar grupo de etiquetas…"
       topic_featured_link_allowed: "Permitir links em destaque nesta categoria"
-      delete: "Excluir categoria"
-      create: "Nova categoria"
       create_long: "Criar uma nova categoria"
-      save: "Salvar categoria"
-      slug: "Slug da categoria"
       slug_placeholder: "(Opcional) palavras hifenizadas para url"
       creation_error: Houve um erro durante a criação da categoria.
       save_error: Houve um erro ao salvar a categoria.
-      name: "Nome da categoria"
-      untitled: "Categoria sem título"
       description: "Descrição"
-      logo: "Imagem do logotipo da categoria"
-      logo_dark: "Imagem do logotipo da categoria Modo Escuro"
       logo_description: "Proporção de tela recomendada 1:1 com tamanho mínimo de 200px. Se deixada em branco, nenhuma imagem será exibida."
-      background_image: "Imagem de fundo da categoria"
-      background_image_dark: "Imagem escura de fundo da categoria"
       style: "Estilos"
       background_color: "Cor"
       foreground_color: "Cor do texto"
@@ -4141,7 +4123,7 @@ pt_BR:
       color_placeholder: "Qualquer cor da web"
       delete_confirm: "Tem certeza que quer excluir esta categoria?"
       delete_error: "Houve um erro ao excluir a categoria."
-      list: "Categorias da lista"
+      list: "Listar categorias"
       no_description: "Adicione uma descrição para esta categoria."
       change_in_category_topic: "Editar descrição"
       already_used: "Esta cor já foi usada para outra categoria"
@@ -4174,23 +4156,15 @@ pt_BR:
       all_topics_wiki: "Criar novos tópicos wikis por padrão"
       allow_unlimited_owner_edits_on_first_post: "Permitir edições ilimitadas na primeira postagem"
       subcategory_list_style: "Estilo da lista de subcategorias"
-      sort_order: "Classificar lista de tópicos por:"
-      default_view: "Lista de tópicos padrão:"
-      default_top_period: "Período superior padrão:"
-      default_list_filter: "Filtro de lista padrão:"
       allow_badges_label: "Permitir a concessão de emblemas nesta categoria"
-      edit_permissions: "Editar permissões"
       reviewable_by_group: "Além da equipe, o conteúdo desta categoria também pode ser revisado por:"
       review_group_name: "nome do grupo"
       require_topic_approval: "Requer aprovação dos moderadores(as) de todos os novos tópicos"
       require_reply_approval: "Requer aprovação dos moderadores(as) de todas as novas respostas"
       this_year: "este ano"
       position: "Posição na página de categorias:"
-      default_position: "Posição padrão"
       position_disabled: "As categorias serão exibidas em ordem de atividade. Para controlar a ordem das categorias nas listas, ative a configuração de <a href='%{url}'>\"posições de categorias fixas\"</a>"
       minimum_required_tags: "Número mínimo de etiquetas exigidas em um tópico:"
-      default_slow_mode: 'Ative o "Modo lento" para obter novos tópicos nesta categoria.'
-      parent: "Categoria principal"
       num_auto_bump_daily: "Número de tópicos em aberto para promover automaticamente:"
       auto_bump_cooldown_days: "Mínimo de dias antes de subir o mesmo tópico novamente:"
       navigate_to_first_post_after_read: "Navegue até a primeira postagem depois que os tópicos forem lidos"
@@ -4212,18 +4186,14 @@ pt_BR:
           title: "Silenciados(as)"
           description: "Você nunca será notificado(a) sobre novos tópicos nesta categoria e eles não aparecerão nos mais recentes."
       search_priority:
-        label: "Prioridade de pesquisa"
         options:
           normal: "Normal"
           ignore: "Ignorar"
-          very_low: "Muito baixa"
           low: "Baixa"
           high: "Alta"
-          very_high: "Muito alta"
       sort_options:
         default: "padrão"
         likes: "Curtidas"
-        op_likes: "Curtidas da postagem original"
         views: "Visualizações"
         posts: "Postagens"
         activity: "Atividade"
@@ -4243,8 +4213,7 @@ pt_BR:
         appearance: "Aparência"
         email: "E-mail"
       list_filters:
-        all: "todos os tópicos"
-        none: "nenhuma subcategoria"
+        all: "Todos os tópicos"
       colors_disabled: "Não é possível selecionar cores porque você tem um, ou não tem nenhum, estilo de categoria."
     anonymous_flagging:
       title: "Denunciar conteúdo ilegal"
@@ -4546,7 +4515,6 @@ pt_BR:
         go_to_unread_post: "%{shortcut} Ir para a primeira postagem não lida"
       application:
         title: "Solicitação"
-        create: "%{shortcut} Criar um tópico novo"
         notifications: "%{shortcut} Abrir notificações"
         hamburger_menu: "%{shortcut} Abrir menu de navegação"
         user_profile_menu: "%{shortcut} Abrir menu do usuário"
@@ -4760,18 +4728,13 @@ pt_BR:
           description: "Você não receberá nenhuma notificação sobre novos tópicos com esta etiqueta, e eles não serão exibidos na aba de não lidos."
       groups:
         back_btn: "Voltar para todas as etiquetas"
-        title: "Grupos de etiquetas"
         about_heading: "Selecione um grupo de etiquetas ou crie uma nova"
         about_heading_empty: "Crie um novo grupo de etiquetas para começar"
         about_description: "Grupos de etiquetas ajudam a gerenciar permissões de várias etiquetas em um lugar."
-        new: "Novo grupo"
-        new_title: "Criar novo grupo"
-        edit_title: "Editar grupo de etiquetas"
         tags_label: "Etiquetas neste grupo"
         parent_tag_label: "Etiqueta pai"
         parent_tag_description: "As etiquetas deste grupo podem ser usadas apenas se a etiqueta pai estiver presente."
         one_per_topic_label: "Limite de uma etiqueta por tópico deste grupo"
-        new_name: "Novo grupo de etiquetas"
         name_placeholder: "Nome"
         save: "Salvar"
         delete: "Excluir"
@@ -5212,6 +5175,7 @@ pt_BR:
   admin_js:
     type_to_filter: "Digite para filtrar..."
     settings: "Configurações"
+    reset_filter: "Redefinir"
     admin:
       title: "Administrador(a) do Discourse"
       moderator: "Moderador(a)"
@@ -5244,6 +5208,20 @@ pt_BR:
           title: "Plugins"
         advanced:
           title: "Avançado"
+      upcoming_changes:
+        name: "Nome"
+        enabled: "Ativados(as)"
+        select_groups: "Selecionar grupos…"
+        preview: "Pré-visualizar"
+        impact_roles:
+          moderators: "Moderadores(as)"
+          staff: "Equipe"
+        filter:
+          all: "Todos(as)"
+          enabled: "Ativados(as)"
+          disabled: "Desativados(as)"
+          impact_type_feature: "Recurso"
+          impact_type_other: "Outras"
       config:
         about:
           title: "Sobre seu site"
@@ -5366,6 +5344,23 @@ pt_BR:
               other: "Você atualizou o tamanho do texto padrão. Gostaria de aplicar essa alteração a %{count} usuários(as) existentes?"
             modal_yes: "Sim"
             modal_no: "Não, apenas aplicar daqui para frente"
+        welcome_banner:
+          form:
+            text_color:
+              label: "Cor do texto"
+            page_visibility:
+              options:
+                top_menu_pages: "Páginas do menu superior"
+                all_pages: "Todas as páginas"
+            location:
+              label: "Local"
+              options:
+                above_topic_content: "Conteúdo acima do tópico"
+                below_site_header: "Abaixo do cabeçalho do site"
+            header_logged_in:
+              placeholder: "Boas-vindas novamente, %{preferred_display_name}!"
+            header_anonymous:
+              placeholder: "Boas-vindas ao %{site_name}!"
         navigation:
           title: "Navegação"
           header_description: "Configure itens de menu e links de navegação para seu site, inclusive a localização e comportamento do menu de navegação principal, links rápidos no topo da página inicial e a barra lateral da administração"
@@ -7123,7 +7118,6 @@ pt_BR:
           success: "Sucesso"
           exists: "Já existe"
           upload: "Adicionar do arquivo"
-          upload_successful: "Envio bem-sucedido. As palavras foram adicionadas."
           case_sensitivity_label: "É sensível a maiúsculas"
           case_sensitivity_description: "Apenas palavras com maiúsculas e minúsculas de caracteres correspondentes"
           html_label: "HTML"
@@ -7215,10 +7209,7 @@ pt_BR:
             second: "Opção 2"
             third: "Opção 3"
         edit_category:
-          toggle_freeform: "modelo de formulário desativado"
-          toggle_form_template: "modelo de formulário ativado"
           select_template: "Selecione modelos de formulário"
-          select_template_help: "Adicionar/Editar Modelos de Formulário"
         errors:
           multiple_tags_not_allowed: 'Não é possível selecionar mais etiquetas em "%{tag_name}". Para evitar problemas, use o modelo de formulários'
       impersonate:
@@ -7453,7 +7444,6 @@ pt_BR:
             cancel: "Cancelar"
         merging_user: "Mesclando usuário(a)…"
         merge_failed: "Ocorreu um erro ao mesclar os(as) usuários(as)."
-        delete_posts_forbidden_because_staff: "Não é possível excluir todas as postagens de administradores(as) e moderadores(as)."
         delete_forbidden:
           one: "Usuários(as) não podem ser excluídos(as) se tiverem postagens. Exclua todas as postagens antes de tentar excluir um(a) usuário(a). (Mensagens com mais de %{count} dia não podem ser excluídas.)"
           other: "Usuários(as) não podem ser excluídos(as) se tiverem postagens. Exclua todas as postagens antes de tentar excluir um(a) usuário(a). (Mensagens com mais de %{count} dias não podem ser excluídas.)"

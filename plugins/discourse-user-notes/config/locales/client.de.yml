@@ -14,4 +14,3 @@ de:
       show: "Benutzer-Notizen (%{count})"
       delete_confirm: "Bist du sicher, dass du diese Benutzer-Notiz löschen möchtest?"
       show_post: "Beitrag anzeigen"
-      copy_reviewable_note: "Notiz ins Benutzerprofil kopieren?"

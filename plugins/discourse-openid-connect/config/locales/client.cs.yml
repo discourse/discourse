@@ -5,3 +5,18 @@
 # https://translate.discourse.org/
 
 cs:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_openid_connect: "Discourse OpenID Connect"
+      config:
+        login:
+          sub_pages:
+            oidc: "OIDC"
+  js:
+    login:
+      oidc:
+        name: "OpenID Connect"
+        title: "Přihlásit se přes OpenID Connect"
+        message: "Ověřování pomocí OpenID Connect"

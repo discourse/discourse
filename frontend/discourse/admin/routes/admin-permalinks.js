@@ -1,6 +1,6 @@
+import Permalink from "discourse/admin/models/permalink";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
-import Permalink from "admin/models/permalink";
 
 export default class AdminPermalinksRoute extends DiscourseRoute {
   titleToken() {

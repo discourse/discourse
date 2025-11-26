@@ -1,11 +1,16 @@
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import DiscourseRoute from "discourse/routes/discourse";
 import CustomReaction from "../../models/discourse-reactions-custom-reaction";
 
 export default class UserActivityReactions extends DiscourseRoute {
-  model() {
-    return CustomReaction.findReactions(
+  async model() {
+    const list = await CustomReaction.findReactions(
       "reactions",
-      this.modelFor("user").get("username")
+      this.modelFor("user").username
+    );
+
+    return new TrackedArray(
+      list.map((reaction) => CustomReaction.flattenForPostList(reaction))
     );
   }
 
@@ -15,7 +20,7 @@ export default class UserActivityReactions extends DiscourseRoute {
       model,
       canLoadMore: !loadedAll,
       reactionsUrl: "reactions",
-      username: this.modelFor("user").get("username"),
+      username: this.modelFor("user").username,
     });
   }
 }

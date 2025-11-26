@@ -16,11 +16,6 @@ class Topic < ActiveRecord::Base
 
   EXTERNAL_ID_MAX_LENGTH = 50
 
-  self.ignored_columns = [
-    "avg_time", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
-    "image_url", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
-  ]
-
   def_delegator :featured_users, :user_ids, :featured_user_ids
   def_delegator :featured_users, :choose, :feature_topic_users
 
@@ -2195,6 +2190,14 @@ class Topic < ActiveRecord::Base
       unless topic_allowed_users.exists?(user_id: target_user.id)
         topic_allowed_users.create!(user_id: target_user.id)
       end
+
+      # Set the invited user to watch the PM so they receive notifications for new messages
+      # even if they haven’t opened the PM yet.
+      TopicUser.change(
+        target_user,
+        self,
+        notification_level: TopicUser.notification_levels[:watching],
+      )
 
       user_in_allowed_group = (user.group_ids & topic_allowed_groups.map(&:group_id)).present?
       add_small_action(invited_by, "invited_user", target_user.username) if !user_in_allowed_group

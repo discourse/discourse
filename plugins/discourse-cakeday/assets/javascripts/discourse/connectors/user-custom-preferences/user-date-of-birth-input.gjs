@@ -2,8 +2,8 @@
 import Component from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { classNames, tagName } from "@ember-decorators/component";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 
 @tagName("div")
 @classNames("user-custom-preferences-outlet", "user-date-of-birth-input")

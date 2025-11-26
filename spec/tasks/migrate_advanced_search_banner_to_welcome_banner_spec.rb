@@ -3,7 +3,7 @@
 RSpec.describe "tasks/migrate_advanced_search_banner_to_welcome_banner" do
   before do
     Rake::Task.clear
-    load Rails.root.join("lib/tasks/migrate_advanced_search_banner_to_welcome_banner.rake")
+    Discourse::Application.load_tasks
   end
 
   describe "#validate_and_get_db" do
@@ -24,24 +24,6 @@ RSpec.describe "tasks/migrate_advanced_search_banner_to_welcome_banner" do
       result = validate_and_get_db(db)
 
       expect(result).to eq(default_db)
-    end
-  end
-
-  describe "#wrap_themes_with_db" do
-    it "wraps themes with database information" do
-      theme1 = Fabricate(:theme)
-      theme2 = Fabricate(:theme)
-      db = "default"
-
-      result = wrap_themes_with_db([theme1, theme2], db)
-
-      expect(result).to eq([{ db: db, theme: theme1 }, { db: db, theme: theme2 }])
-    end
-
-    it "returns empty array when no themes provided" do
-      result = wrap_themes_with_db([], "default")
-
-      expect(result).to eq([])
     end
   end
 

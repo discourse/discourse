@@ -29,16 +29,27 @@ describe "Content Localization" do
     )
   end
   fab!(:post_3) { Fabricate(:post, topic:, locale: "ja", raw: "将とは、智・信・仁・勇・厳なり。") }
+  fab!(:topic_ja_localization) do
+    Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "孫子兵法からの人生戦略")
+  end
 
+  # page objects
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:composer) { PageObjects::Components::Composer.new }
+  let(:translation_composer) { PageObjects::Components::TranslationComposer.new }
   let(:post_1_obj) { PageObjects::Components::Post.new(1) }
   let(:post_3_obj) { PageObjects::Components::Post.new(3) }
   let(:post_4_obj) { PageObjects::Components::Post.new(4) }
 
+  def scroll_to_post(post_number)
+    5.times do
+      break if page.has_css?("#post_#{post_number} .cooked", visible: :all, wait: 0)
+      page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+    end
+  end
+
   before do
-    Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "孫子兵法からの人生戦略")
     Fabricate(:topic_localization, topic:, locale: "es", fancy_title: "Estrategias de vida de ...")
 
     Fabricate(:post_localization, post: post_1, locale: "ja", cooked: "傑作は単なる軍事戦略についてではありません")
@@ -126,6 +137,37 @@ describe "Content Localization" do
       expect(post_3_obj.post).to have_content("A general is one who ..")
     end
 
+    context "with tl parameter" do
+      before do
+        SiteSetting.set_locale_from_param = true
+        SiteSetting.set_locale_from_cookie = true
+      end
+
+      fab!(:topic2) do
+        topic = Fabricate(:topic, title: "The Life of Oda Nobunaga", locale: "en", user: admin)
+        Fabricate(:post, topic:, locale: "en", raw: "Oda Nobunaga was a powerful daimyo ...")
+        topic
+      end
+      fab!(:topic_localization2) do
+        Fabricate(:topic_localization, topic: topic2, locale: "ja", fancy_title: "織田信長の生涯")
+      end
+
+      it "persists locale for anonymous users across page views" do
+        visit("/t/#{topic.id}?tl=ja")
+        expect(topic_page.topic_title).to have_content("孫子兵法からの人生戦略")
+
+        visit("/t/#{topic2.id}")
+        expect(topic_page.topic_title).to have_content("織田信長の生涯")
+      end
+
+      it "ignores tl parameter for logged-in users" do
+        sign_in(site_local_user)
+        visit("/t/#{topic.id}?tl=ja")
+
+        expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
+      end
+    end
+
     context "when editing" do
       let(:edit_localized_post_dialog) { PageObjects::Components::Dialog.new }
       let(:fast_editor) { PageObjects::Components::FastEditor.new }
@@ -162,6 +204,56 @@ describe "Content Localization" do
         expect(page).to have_no_css("#fast-edit-input")
         expect(edit_localized_post_dialog).to be_open
       end
+
+      context "for topic titles" do
+        fab!(:untranslated_topic) { Fabricate(:post).topic }
+
+        it "shows title editor in composer when user can edit localizations" do
+          sign_in(japanese_user)
+
+          topic_page.visit_topic(untranslated_topic)
+          # not privileged therefore cannot edit topic title via title container
+          topic_page.click_topic_edit_title
+          expect(topic_page).to have_no_topic_title_editor
+
+          topic_page.visit_topic(topic)
+          # does not see regular title editor
+          # sent directly to translation composer to edit translation
+          topic_page.click_topic_edit_title
+          expect(topic_page).to have_no_topic_title_editor
+          expect(translation_composer).to have_translation_title(topic_ja_localization.title)
+        end
+
+        it "opens a dialog for choosing which title to edit for admins" do
+          admin.update(locale: "ja") # force the admin to view the jap localizations
+
+          sign_in(admin)
+
+          topic_page.visit_topic(untranslated_topic)
+          topic_page.click_topic_edit_title
+          expect(topic_page).to have_topic_title_editor
+
+          topic_page.visit_topic(topic)
+          expect(topic_page).to have_topic_title(topic_ja_localization.fancy_title)
+          topic_page.click_topic_edit_title
+          # does not see regular title editor
+          expect(topic_page).to have_no_topic_title_editor
+          # asked to use composer to edit original title
+          expect(edit_localized_post_dialog).to be_open
+
+          edit_localized_post_dialog.click_yes
+          expect(composer).to have_input_title(topic.title)
+
+          composer.close
+          expect(composer).to be_closed
+
+          # use translation composer to edit localized title
+          topic_page.click_topic_edit_title
+          expect(edit_localized_post_dialog).to be_open
+          edit_localized_post_dialog.click_no
+          expect(translation_composer).to have_translation_title(topic_ja_localization.title)
+        end
+      end
     end
 
     context "for post edit histories" do
@@ -191,6 +283,221 @@ describe "Content Localization" do
         )
         expect(post_history_modal.previous_locale).to have_content("English (US)")
       end
+    end
+
+    context "when loading 20+ posts in stream" do
+      before do
+        highest = topic.highest_post_number
+        22.times do |i|
+          post_number = i + highest + 1
+          post =
+            Fabricate(
+              :post,
+              topic: topic,
+              locale: "ja",
+              raw: "Japanese content for post #{post_number}",
+              cooked: "<p>日本語コンテンツ #{post_number}</p>",
+            )
+
+          Fabricate(
+            :post_localization,
+            post:,
+            locale: "en",
+            cooked: "<p>English translation #{post_number}</p>",
+          )
+        end
+      end
+
+      let(:post_21_obj) { PageObjects::Components::Post.new(21) }
+
+      it "respects the show_original toggle for posts loaded dynamically when scrolling (20+ posts)" do
+        sign_in(site_local_user)
+        visit("/")
+
+        topic_page.visit_topic(topic)
+
+        expect(post_3_obj.post).to have_content("A general is one who ..")
+        expect(topic_page).to have_post_content(post_number: 3, content: "A general is one who ..")
+
+        scroll_to_post(21)
+
+        expect(page).to have_css("#post_21")
+        expect(topic_page).to have_post_content(post_number: 21, content: "English translation 21")
+
+        # toggle should show correct state of post content
+        page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+        scroll_to_post(21)
+        expect(post_21_obj.post).to have_content("日本語コンテンツ 21")
+
+        # refresh should show correct state of post content
+        page.refresh
+        scroll_to_post(21)
+        expect(post_21_obj.post).to have_content("日本語コンテンツ 21")
+      end
+    end
+
+    context "for html title" do
+      fab!(:shady_topic) do
+        topic =
+          Fabricate(
+            :topic,
+            title: "topic with — <script>alert('xss')</script> …",
+            locale: "en",
+            user: site_local_user,
+          )
+        Fabricate(:post, topic:, locale: "en")
+        topic
+      end
+
+      fab!(:shady_topic_ja_localization) do
+        Fabricate(:topic_localization, topic: shady_topic, locale: "ja")
+      end
+
+      it "shows localized fancy_title in HTML title when user locale differs" do
+        sign_in(japanese_user)
+
+        topic_page.visit_topic(shady_topic)
+        expect(page).to have_title(shady_topic_ja_localization.fancy_title)
+
+        page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+        expect(page).to have_title(shady_topic.title)
+
+        page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+        expect(page).to have_title(shady_topic_ja_localization.fancy_title)
+
+        SiteSetting.content_localization_enabled = false
+        page.refresh
+
+        expect(page).to have_title(shady_topic.title)
+      end
+    end
+
+    context "for a Greek user in an English forum with Japanese users" do
+      fab!(:greek_user) { Fabricate(:user, locale: "el") }
+
+      fab!(:jap_post) { Fabricate(:post, locale: "ja", cooked: "皆さんは「ジョジョの奇妙な冒険」をご存知ですか？") }
+      fab!(:jap_topic) do
+        jap_post.topic.tap { |t| t.update(locale: "ja", fancy_title: "ジョジョの奇妙な冒険") }
+      end
+      fab!(:en_loc_jap_post) do
+        Fabricate(
+          :post_localization,
+          locale: "en",
+          post: jap_post,
+          cooked: "Do you know “JoJo’s Bizarre Adventure”?",
+        )
+      end
+      fab!(:en_loc_jap_topic) do
+        Fabricate(
+          :topic_localization,
+          locale: "en",
+          topic: jap_topic,
+          fancy_title: "JoJo's Bizarre Adventure",
+        )
+      end
+
+      before do
+        SiteSetting.default_locale = "en" # explicit
+        SiteSetting.content_localization_use_default_locale_when_unsupported = true
+      end
+
+      context "for a topic / post with no locale" do
+        it "shows content as-is" do
+          jap_post.update(locale: nil)
+          jap_topic.update(locale: nil)
+
+          sign_in(greek_user)
+
+          topic_page.visit_topic(jap_topic)
+          expect(topic_page).to have_topic_title(jap_topic.fancy_title)
+          expect(post_1_obj).to have_cooked_content(jap_post.cooked)
+
+          SiteSetting.content_localization_enabled = false
+
+          page.refresh
+          expect(topic_page).to have_topic_title(jap_topic.fancy_title)
+          expect(post_1_obj).to have_cooked_content(jap_post.cooked)
+        end
+      end
+
+      context "for a topic / post written in Site default language (en)" do
+        it "shows Site default language (en) translation to Greek user" do
+          sign_in(greek_user)
+
+          topic_page.visit_topic(jap_topic)
+          expect(topic_page).to have_topic_title(en_loc_jap_topic.fancy_title)
+          expect(post_1_obj).to have_cooked_content(en_loc_jap_post.cooked)
+
+          SiteSetting.content_localization_use_default_locale_when_unsupported = false
+
+          page.refresh
+          expect(topic_page).to have_topic_title(jap_topic.fancy_title)
+          expect(post_1_obj).to have_cooked_content(jap_post.cooked)
+        end
+      end
+
+      it "shows content as-is when no localization exists" do
+        en_loc_jap_topic.destroy
+        en_loc_jap_post.destroy
+
+        sign_in(greek_user)
+
+        topic_page.visit_topic(jap_topic)
+        expect(topic_page).to have_topic_title(jap_topic.fancy_title)
+        expect(post_1_obj).to have_cooked_content(jap_post.cooked)
+      end
+    end
+  end
+
+  context "with author localization" do
+    fab!(:author) { Fabricate(:user, locale: "en") }
+    fab!(:author_post) do
+      Fabricate(:post, topic:, user: author, locale: "en", raw: "Author's original post")
+    end
+
+    before do
+      SiteSetting.allow_user_locale = true
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_allowed_groups = "#{Group::AUTO_GROUPS[:admins]}"
+      SiteSetting.content_localization_supported_locales = "en|ja"
+      SiteSetting.post_menu = "addTranslation"
+    end
+
+    it "only shows globe icon on author's own posts" do
+      SiteSetting.content_localization_allow_author_localization = false
+
+      sign_in(author)
+      topic_page.visit_topic(topic)
+
+      expect(topic_page).to have_no_post_action_button(post_1, :add_translation)
+      expect(topic_page).to have_no_post_action_button(author_post, :add_translation)
+
+      SiteSetting.content_localization_allow_author_localization = true
+      page.refresh
+      expect(topic_page).to have_post_action_button(author_post, :add_translation)
+      topic_page.click_post_action_button(author_post, :add_translation)
+      find(".post-action-menu__add-translation").click
+      expect(translation_composer).to be_opened
+
+      translation_composer.select_locale("Japanese (日本語)")
+      translation_composer.fill_content("著者のオリジナル投稿")
+      translation_composer.create
+
+      sign_in(japanese_user)
+      topic_page.visit_topic(topic)
+      expect(topic_page).to have_post_content(
+        post_number: author_post.post_number,
+        content: "著者のオリジナル投稿",
+      )
+    end
+
+    it "shows globe icon for admins on all posts" do
+      sign_in(admin)
+      topic_page.visit_topic(topic)
+
+      expect(topic_page).to have_post_action_button(post_1, :add_translation)
+      expect(topic_page).to have_post_action_button(post_2, :add_translation)
+      expect(topic_page).to have_post_action_button(author_post, :add_translation)
     end
   end
 

@@ -1,12 +1,12 @@
 import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
+import { ADMIN_SEARCH_RESULT_TYPES } from "discourse/admin/lib/constants";
 import { adminRouteValid } from "discourse/lib/admin-utilities";
 import { ajax } from "discourse/lib/ajax";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import getURL from "discourse/lib/get-url";
 import PreloadStore from "discourse/lib/preload-store";
 import I18n, { i18n } from "discourse-i18n";
-import { ADMIN_SEARCH_RESULT_TYPES } from "admin/lib/constants";
 
 const SEPARATOR = ">";
 const MIN_FILTER_LENGTH = 2;

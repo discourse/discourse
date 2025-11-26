@@ -17,6 +17,7 @@ class LlmModel < ActiveRecord::Base
   validates :max_prompt_tokens, numericality: { greater_than: 0 }
   validates :input_cost,
             :cached_input_cost,
+            :cache_write_cost,
             :output_cost,
             :max_output_tokens,
             numericality: {
@@ -34,12 +35,23 @@ class LlmModel < ActiveRecord::Base
     {
       aws_bedrock: {
         access_key_id: :text,
+        role_arn: :text,
         region: :text,
         disable_native_tools: :checkbox,
         disable_temperature: :checkbox,
         disable_top_p: :checkbox,
         enable_reasoning: :checkbox,
         reasoning_tokens: :number,
+        prompt_caching: {
+          type: :enum,
+          values: %w[never tool_results always],
+          default: "never",
+        },
+        effort: {
+          type: :enum,
+          values: %w[default low medium high],
+          default: "default",
+        },
       },
       anthropic: {
         disable_native_tools: :checkbox,
@@ -47,6 +59,16 @@ class LlmModel < ActiveRecord::Base
         disable_top_p: :checkbox,
         enable_reasoning: :checkbox,
         reasoning_tokens: :number,
+        prompt_caching: {
+          type: :enum,
+          values: %w[never tool_results always],
+          default: "never",
+        },
+        effort: {
+          type: :enum,
+          values: %w[default low medium high],
+          default: "default",
+        },
       },
       open_ai: {
         organization: :text,
@@ -188,15 +210,44 @@ class LlmModel < ActiveRecord::Base
     seeded? && llm_credit_allocation.present?
   end
 
+  def aws_bedrock_credentials
+    return nil unless provider == BEDROCK_PROVIDER_NAME
+
+    role_arn = lookup_custom_param("role_arn")
+    return nil if role_arn.blank?
+
+    # Invalidate cache if role_arn changed
+    if @cached_role_arn != role_arn
+      @cached_role_arn = role_arn
+      @aws_bedrock_credentials = nil
+    end
+
+    @aws_bedrock_credentials ||=
+      begin
+        require "aws-sdk-sts" unless defined?(Aws::STS)
+        region = lookup_custom_param("region")
+
+        Aws::AssumeRoleCredentials.new(
+          role_arn: role_arn,
+          role_session_name: "discourse-bedrock-#{Process.pid}",
+          client: Aws::STS::Client.new(region: region),
+        )
+      end
+  end
+
   private
 
   def required_provider_params
     return if provider != BEDROCK_PROVIDER_NAME
 
-    %w[access_key_id region].each do |field|
-      if lookup_custom_param(field).blank?
-        errors.add(:base, I18n.t("discourse_ai.llm_models.missing_provider_param", param: field))
-      end
+    # Region is always required
+    if lookup_custom_param("region").blank?
+      errors.add(:base, I18n.t("discourse_ai.llm_models.missing_provider_param", param: "region"))
+    end
+
+    # Either access_key_id or role_arn must be present
+    if lookup_custom_param("access_key_id").blank? && lookup_custom_param("role_arn").blank?
+      errors.add(:base, I18n.t("discourse_ai.llm_models.bedrock_missing_auth"))
     end
   end
 end
@@ -206,21 +257,22 @@ end
 # Table name: llm_models
 #
 #  id                :bigint           not null, primary key
+#  api_key           :string
+#  cache_write_cost  :float            default(0.0)
+#  cached_input_cost :float
 #  display_name      :string
-#  name              :string           not null
-#  provider          :string           not null
-#  tokenizer         :string           not null
+#  enabled_chat_bot  :boolean          default(FALSE), not null
+#  input_cost        :float
+#  max_output_tokens :integer
 #  max_prompt_tokens :integer          not null
+#  name              :string           not null
+#  output_cost       :float
+#  provider          :string           not null
+#  provider_params   :jsonb
+#  tokenizer         :string           not null
+#  url               :string
+#  vision_enabled    :boolean          default(FALSE), not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
-#  url               :string
-#  api_key           :string
 #  user_id           :integer
-#  enabled_chat_bot  :boolean          default(FALSE), not null
-#  provider_params   :jsonb
-#  vision_enabled    :boolean          default(FALSE), not null
-#  input_cost        :float
-#  cached_input_cost :float
-#  output_cost       :float
-#  max_output_tokens :integer
 #

@@ -128,7 +128,6 @@ ur:
       email_frequency:
         description: "ہم صرف آپ کو ای میل کریں گے اگر ہم نے آپ کو پچھلے 15 منٹ میں نہیں دیکھا۔"
         never: "کبھی نہیں"
-        title: "ای میل اطلاعات"
         when_away: "صرف دور ہونے پر"
       header_indicator_preference:
         title: "ہیڈر میں سرگرمی کا اشارہ دکھائیں"
@@ -292,6 +291,7 @@ ur:
           topic: "موضوع"
       reviewable:
         type: "گپ شپ کا پیغام"
+        message_in_channel: "چَینل"
       composer:
         italic_text: "زور دیا گیا ٹَیکسٹ"
         bold_text: "گہرا ٹَیکسٹ"

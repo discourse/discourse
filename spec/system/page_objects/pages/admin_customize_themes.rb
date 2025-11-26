@@ -202,9 +202,9 @@ module PageObjects
         self
       end
 
-      def click_edit_objects_theme_setting_button(setting_name)
+      def click_edit_objects_setting_button(setting_name)
         find(".theme-setting[data-setting=\"#{setting_name}\"] .setting-value-edit-button").click
-        PageObjects::Pages::AdminObjectsThemeSettingEditor.new
+        PageObjects::Pages::AdminObjectsSettingEditor.new
       end
 
       def click_theme_settings_editor_button

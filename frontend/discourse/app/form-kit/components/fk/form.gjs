@@ -8,6 +8,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import curryComponent from "ember-curry-component";
 import DButton from "discourse/components/d-button";
+import { getScrollParent } from "discourse/float-kit/lib/get-scroll-parent";
 import FKAlert from "discourse/form-kit/components/fk/alert";
 import FKCheckboxGroup from "discourse/form-kit/components/fk/checkbox-group";
 import FKCollection from "discourse/form-kit/components/fk/collection";
@@ -25,7 +26,6 @@ import { VALIDATION_TYPES } from "discourse/form-kit/lib/constants";
 import FKFormData from "discourse/form-kit/lib/fk-form-data";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import { i18n } from "discourse-i18n";
-import { getScrollParent } from "float-kit/lib/get-scroll-parent";
 
 class FKForm extends Component {
   @service dialog;

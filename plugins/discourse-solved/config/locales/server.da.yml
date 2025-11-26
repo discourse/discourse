@@ -9,3 +9,21 @@ da:
     accepted_solutions:
       xaxis: "Dag"
       yaxis: "Total"
+  solved:
+    no_solutions:
+      self: "Du har endnu ingen accepterede løsninger."
+      others: "Ingen accepterede løsninger."
+  badges:
+    solved_1:
+      name: "Løst!"
+      description: "Få et svar markeret som en løsning"
+      long_description: "Dette emblem gives for at have markeret et svar som en løsning på et emne. :white_check_mark: Godt arbejde :+1:"
+    solved_2:
+      description: "Har 10 svar markeret som løsninger"
+      long_description: "Dette emblem gives for at have 10 af dine svar markeret som løsninger på emner. :white_check_mark: Du er et sandt aktiv for de andre medlemmer af fællesskabet."
+    solved_3:
+      description: "Har 50 svar markeret som løsninger"
+      long_description: "Denne emblem gives, når 50 af dine svar er markeret som løsninger på emner. :white_check_mark: Du kan virkelig dine ting. :clap:"
+    solved_4:
+      description: "Har 150 svar markeret som løsninger"
+      long_description: "Dette emblem gives for at have 150 af dine svar markeret som løsninger på emner. :white_check_mark: Fremragende arbejde. :slightly_smiling_face: Du er officielt en løsningsinstitution. :brain:"

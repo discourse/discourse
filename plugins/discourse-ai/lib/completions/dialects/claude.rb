@@ -88,20 +88,19 @@ module DiscourseAi
         def model_msg(msg)
           content_array = []
 
-          if msg[:thinking] || msg[:redacted_thinking_signature]
-            if msg[:thinking]
+          anthropic = anthropic_reasoning(msg)
+
+          if anthropic.present?
+            if msg[:thinking] && anthropic[:signature]
               content_array << {
                 type: "thinking",
                 thinking: msg[:thinking],
-                signature: msg[:thinking_signature],
+                signature: anthropic[:signature],
               }
             end
 
-            if msg[:redacted_thinking_signature]
-              content_array << {
-                type: "redacted_thinking",
-                data: msg[:redacted_thinking_signature],
-              }
+            if anthropic[:redacted_signature]
+              content_array << { type: "redacted_thinking", data: anthropic[:redacted_signature] }
             end
           end
 
@@ -116,6 +115,12 @@ module DiscourseAi
             )
 
           { role: "assistant", content: no_array_if_only_text(content_array) }
+        end
+
+        def anthropic_reasoning(message)
+          info = message[:thinking_provider_info]
+          return if info.blank?
+          info[:anthropic] || info["anthropic"]
         end
 
         def system_msg(msg)

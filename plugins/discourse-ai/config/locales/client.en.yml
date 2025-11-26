@@ -172,7 +172,7 @@ en:
               label: "PM sender"
               description: "User who will send the PM (defaults to system)"
             notify_author_pm_message:
-              label: "PM message"
+              label: "PM content"
               description: "Optional custom message to send to the author"
             include_personal_messages:
               label: "Include personal messages"
@@ -193,7 +193,7 @@ en:
           fields:
             tagger_persona:
               label: "AI Persona"
-              description: "The AI persona to use for analyzing and tagging posts"
+              description: "The AI persona to use for analyzing and tagging topics"
             tag_mode:
               label: "Tag Selection Mode"
               description: "Choose how the AI selects tags"
@@ -298,6 +298,7 @@ en:
           custom_prompt: "Custom prompt"
           image_caption: "Caption images"
           translator: "Translator"
+          post_illustrator: "Post illustrator"
 
         translation:
           name: "Translation"
@@ -306,6 +307,11 @@ en:
           post_raw_translator: "Post raw translator"
           topic_title_translator: "Topic title translator"
           short_text_translator: "Short text translator"
+          schedule_untranslated: "Schedule translations"
+          schedule_topic_success:
+            one: "Scheduled translation for %{count} untranslated post."
+            other: "Scheduled translation for %{count} untranslated posts."
+          schedule_topic_error: "Failed to schedule translations. Please try again."
 
         spam:
           name: "Spam"
@@ -421,6 +427,8 @@ en:
         request_tokens: "Request tokens"
         response_tokens: "Response tokens"
         net_request_tokens: "Net request tokens"
+        cache_read_tokens: "Cache read tokens"
+        cache_write_tokens: "Cache write tokens"
         cached_tokens: "Cached tokens"
         cached_request_tokens: "Cached request tokens"
         total_spending: "Estimated cost"
@@ -433,6 +441,8 @@ en:
           total_tokens: "All the tokens used when prompting an LLM"
           request_tokens: "Tokens used when the LLM tries to understand what you are saying"
           response_tokens: "Tokens used when the LLM responds to your prompt"
+          cache_read_tokens: "Previously processed request tokens that the LLM reuses from cache to optimize performance and cost"
+          cache_write_tokens: "Request tokens that were written to cache for potential future reuse"
           cached_tokens: "Previously processed request tokens that the LLM reuses to optimize performance and cost"
           total_spending: "Cumulative cost of all tokens used by the LLMs based on specified cost metrics added to LLM configuration settings"
         periods:
@@ -468,8 +478,8 @@ en:
           low: Low quality - cheapest (256x256)
           medium: Medium quality (512x512)
           high: High quality - slowest (1024x1024)
-        tool_details: Show tool details
-        tool_details_help: Will show end users details on which tools the language model has triggered.
+        show_thinking: Show thinking
+        show_thinking_help: Will show end users the internal thinking and tool calls of the language model.
         mentionable: Allow mentions
         mentionable_help: If enabled, users in allowed groups can mention this user in posts, the AI will respond as this persona.
         user: User
@@ -627,6 +637,7 @@ en:
         ai_bot_user: "AI bot User"
         cost_input: "Input cost"
         cost_cached_input: "Cached input cost"
+        cost_cache_write: "Cache write cost"
         cost_output: "Output cost"
 
         save: "Save"
@@ -658,7 +669,7 @@ en:
           max_usages_required: "Must be set if max tokens is not set"
         credit_allocation:
           credits_remaining: "%{remaining} of %{total} credits remaining (%{percentage}%)"
-          soft_limit_warning: "This model has %{percentage}% of AI credits remaining this month"
+          soft_limit_warning: "This model has %{percentage}% of AI credits remaining today"
           hard_limit_warning: "You have run out of AI credits for this model. AI features using this model will be unavailable until %{reset_date}"
           next_reset: "Credits reset on %{time}"
         usage:
@@ -676,25 +687,22 @@ en:
 
         model_description:
           none: "General settings that work for most language models"
-          anthropic-claude-opus-4-1: "Anthropic's most intelligent model"
-          anthropic-claude-sonnet-4-0: "Optimal balance of speed and cost"
-          anthropic-claude-3-7-sonnet-latest: "Optimal balance of speed and cost (previous generation)"
-          anthropic-claude-3-5-haiku-latest: "Fast and cost-effective"
+          anthropic-claude-opus-4-5: "Anthropic's most intelligent model"
+          anthropic-claude-sonnet-4-5: "Optimal balance of speed and cost"
+          anthropic-claude-haiku-4-5: "Fast and cost-effective"
+          google-gemini-3-pro: "Google's most intelligent model"
           google-gemini-2-5-pro: "Large multimodal model capable of a wide range of tasks"
-          google-gemini-2-0-flash: "Lightweight, fast, and cost-efficient with multimodal reasoning (previous generation)"
           google-gemini-2-5-flash: "Lightweight, fast, and cost-efficient with multimodal reasoning"
-          google-gemini-2-0-flash-lite: "Cost efficient and low latency model"
+          google-gemini-2-5-flash-lite: "Google's smallest and most cost-effective model"
           google-gemini-2-5-flash-image-preview: "Latest image generation model with vision capabilities"
-          open_ai-o3: "OpenAI's most capable reasoning model"
-          open_ai-o4-mini: "Advanced Cost-efficient reasoning model"
-          open_ai-gpt-5: "OpenAI's flagship model. It is well suited for problem solving across domains"
+          open_ai-gpt-5-1: "OpenAI's flagship model. It is well suited for problem solving across domains"
           open_ai-gpt-5-mini: "Provides a balance between intelligence, speed, and cost that makes it an attractive model for many use cases."
           open_ai-gpt-5-nano: "Fastest, most cost-effective GPT-5 model."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Efficient lightweight multilingual model"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "Powerful multipurpose model"
           mistral-mistral-large-latest: "Mistral's most powerful model"
           mistral-pixtral-large-latest: "Mistral's most powerful vision capable model"
-          open_router-x-ai-grok-3-beta: "xAI's latest model"
+          open_router-x-ai-grok-4: "xAI's latest model"
           open_router-deepseek-deepseek-r1-0528-free: "DeepSeek's latest reasoning model"
           open_router-meta-llama-3-3-70b-instruct: "Highly capable multilingual model"
           groq-openai-gpt-oss-120b: "State of the art open-weight model by OpenAI"
@@ -729,7 +737,8 @@ en:
           vision_enabled: "If enabled, the AI will attempt to understand images. It depends on the model being used supporting vision. Supported by latest models from Anthropic, Google, and OpenAI."
           enabled_chat_bot: "If enabled, users can select this model when creating PMs with the AI bot"
           cost_input: "The input cost per 1M tokens for this model"
-          cost_cached_input: "The cached input cost per 1M tokens for this model"
+          cost_cached_input: "The cached input cost per 1M tokens for this model (when reading from prompt cache)"
+          cost_cache_write: "The cache write cost per 1M tokens for this model (when writing to prompt cache)"
           cost_output: "The output cost per 1M tokens for this model"
           cost_measure: "$/1M tokens"
         providers:
@@ -751,6 +760,7 @@ en:
 
         provider_fields:
           access_key_id: "AWS Bedrock access key ID"
+          role_arn: "AWS Bedrock Role ARN"
           region: "AWS Bedrock region"
           organization: "Optional OpenAI organization ID"
           disable_system_prompt: "Disable system message in prompts"
@@ -767,6 +777,11 @@ en:
           disable_temperature: "Disable temperature (some thinking models don't support temperature)"
           disable_top_p: "Disable top P (some thinking models don't support top P)"
           enable_responses_api: "Enable responses API (required on certain OpenAI models)"
+          prompt_caching: "Prompt caching mode"
+          prompt_caching_never: "Never - Do not use prompt caching"
+          prompt_caching_tool_results: "Tool Results - Cache when tool results are present (recommended)"
+          prompt_caching_always: "Always - Always use prompt caching"
+          effort: "Effort level (Claude Opus 4.5 only)"
 
       related_topics:
         title: "Related topics"
@@ -812,6 +827,7 @@ en:
           title: "Suggested thumbnails"
           select: "Select"
           selected: "Selected"
+          try_again: "Try Again"
         image_caption:
           button_label: "Caption with AI"
           generating: "Generating caption..."
@@ -922,6 +938,8 @@ en:
           copy_response: "Copy response"
           request_tokens: "Request tokens:"
           response_tokens: "Response tokens:"
+          cache_read_tokens: "Cache read tokens:"
+          cache_write_tokens: "Cache write tokens:"
           request: "Request"
           response: "Response"
           next_log: "Next"
@@ -1034,7 +1052,7 @@ en:
         loading_convo: "Loading conversation"
         collapse: "Collapse"
         timed_out: "Discobot couldn't find any discoveries. Something went wrong."
-        user_setting: "Enable search discoveries"
+        user_setting: "Enable AI search discoveries"
         tooltip:
           header: "AI powered search"
           content: "Natural language search powered by %{model}"

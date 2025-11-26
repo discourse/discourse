@@ -18,7 +18,6 @@ nl:
         title: "Sjablonen (binnen een tekstgebied)"
         insert_template: "%{shortcut} Sjabloon invoegen"
     templates:
-      filter_hint: "Filteren op titel..."
       insert_template: "Sjabloon invoegen"
       close_templates: "Sluit de sjabloonkiezer"
       copy: "Sjabloon kopiëren"

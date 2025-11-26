@@ -884,9 +884,17 @@ module DiscourseAi
                       for_private_message: @context.private_message,
                     ).create_for(@bot_user.id)
 
-                  { id: upload.id, short_url: upload.short_url, url: upload.url }
+                  if upload&.persisted?
+                    { "id" => upload.id, "short_url" => upload.short_url, "url" => upload.url }
+                  else
+                    error_msg =
+                      upload&.errors&.full_messages&.join(", ") || "Upload creation failed"
+                    { "error" => error_msg }
+                  end
                 end
               end
+            rescue => e
+              { "error" => e.message }
             end
           end,
         )

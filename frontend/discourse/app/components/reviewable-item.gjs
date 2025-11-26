@@ -662,7 +662,6 @@ export default class ReviewableItem extends Component {
               {{#if this.reviewable.can_edit}}
                 <DButton
                   @disabled={{this.disabled}}
-                  @icon="pencil"
                   @action={{this.edit}}
                   @label="review.edit"
                   class="reviewable-action btn-default edit"

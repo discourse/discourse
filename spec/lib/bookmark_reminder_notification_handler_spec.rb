@@ -58,6 +58,15 @@ RSpec.describe BookmarkReminderNotificationHandler do
         )
       end
 
+      it "does not call clear_reminder! after deleting the bookmark" do
+        allow(bookmark).to receive(:clear_reminder!)
+
+        send_notification
+
+        expect(Bookmark.find_by(id: bookmark.id)).to be_nil
+        expect(bookmark).not_to have_received(:clear_reminder!)
+      end
+
       context "if there are still other bookmarks in the topic" do
         before do
           Fabricate(
@@ -85,6 +94,15 @@ RSpec.describe BookmarkReminderNotificationHandler do
       it "resets reminder_at after the reminder gets sent" do
         send_notification
         expect(Bookmark.find_by(id: bookmark.id).reminder_at).to eq(nil)
+      end
+
+      it "calls clear_reminder! and keeps the bookmark" do
+        allow(bookmark).to receive(:clear_reminder!).and_call_original
+
+        send_notification
+
+        expect(Bookmark.find_by(id: bookmark.id)).not_to be_nil
+        expect(bookmark).to have_received(:clear_reminder!)
       end
     end
 

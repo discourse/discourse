@@ -1,14 +1,14 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import SingleSelect from "discourse/select-kit/components/single-select";
+import { clearCallbacks } from "discourse/select-kit/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit, {
   DEFAULT_CONTENT,
   setDefaultState,
 } from "discourse/tests/helpers/select-kit-helper";
-import ComboBox from "select-kit/components/combo-box";
-import SingleSelect from "select-kit/components/single-select";
-import { clearCallbacks } from "select-kit/lib/plugin-api";
 
 module("Integration | Component | select-kit/api", function (hooks) {
   setupRenderingTest(hooks);

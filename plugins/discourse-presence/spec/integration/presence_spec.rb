@@ -208,5 +208,76 @@ RSpec.describe "discourse-presence" do
         *private_message.allowed_users.pluck(:id),
       )
     end
+
+    describe "content_localization_enabled" do
+      before { SiteSetting.content_localization_allow_author_localization = false }
+
+      it "handles permissions for translate channel on public topics" do
+        post = Fabricate(:post, topic: public_topic, user: user)
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.content_localization_allowed_groups = group.id
+
+        c = PresenceChannel.new("/discourse-presence/translate/#{post.id}")
+        expect(c.config.public).to eq(false)
+        expect(c.config.allowed_group_ids).to contain_exactly(
+          Group::AUTO_GROUPS[:admins],
+          Group::AUTO_GROUPS[:moderators],
+          group.id,
+        )
+        expect(c.config.allowed_user_ids).to eq([])
+      end
+
+      it "handles permissions for translate channel on secure category topics" do
+        post = Fabricate(:post, topic: private_topic, user: user)
+        SiteSetting.content_localization_enabled = true
+
+        c = PresenceChannel.new("/discourse-presence/translate/#{post.id}")
+        expect(c.config.public).to eq(false)
+        expect(c.config.allowed_group_ids).to contain_exactly(
+          Group::AUTO_GROUPS[:admins],
+          Group::AUTO_GROUPS[:moderators],
+          group.id,
+        )
+        expect(c.config.allowed_user_ids).to eq([])
+      end
+
+      it "handles permissions for translate channel on private messages" do
+        post = Fabricate(:post, topic: private_message, user: user)
+        SiteSetting.content_localization_enabled = true
+
+        c = PresenceChannel.new("/discourse-presence/translate/#{post.id}")
+        expect(c.config.public).to eq(false)
+        expect(c.config.allowed_group_ids).to contain_exactly(
+          Group::AUTO_GROUPS[:admins],
+          Group::AUTO_GROUPS[:moderators],
+          group.id,
+        )
+        expect(c.config.allowed_user_ids).to contain_exactly(
+          *private_message.topic_allowed_users.pluck(:user_id),
+        )
+      end
+
+      it "allows only staff for translate channel when content localization is disabled" do
+        post = Fabricate(:post, topic: public_topic, user: user)
+        SiteSetting.content_localization_enabled = false
+
+        c = PresenceChannel.new("/discourse-presence/translate/#{post.id}")
+        expect(c.config.public).to eq(false)
+        expect(c.config.allowed_group_ids).to contain_exactly(
+          Group::AUTO_GROUPS[:admins],
+          Group::AUTO_GROUPS[:moderators],
+        )
+        expect(c.config.allowed_user_ids).to eq([])
+      end
+
+      it "adds post author to allowed_user_ids for translate channel" do
+        post = Fabricate(:post, topic: public_topic, user: user)
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.content_localization_allow_author_localization = true
+
+        c = PresenceChannel.new("/discourse-presence/translate/#{post.id}")
+        expect(c.config.allowed_user_ids).to contain_exactly(user.id)
+      end
+    end
   end
 end

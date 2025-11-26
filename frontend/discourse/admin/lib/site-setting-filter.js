@@ -1,6 +1,6 @@
+import SiteSettingMatcher from "discourse/admin/lib/site-setting-matcher";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-import SiteSettingMatcher from "admin/lib/site-setting-matcher";
 
 export default class SiteSettingFilter {
   constructor(siteSettings) {
@@ -105,8 +105,8 @@ export default class SiteSettingFilter {
       );
 
       if (siteSettings.length > 0) {
-        matches.pushObjects(siteSettings);
-        matchesGroupedByCategory.pushObject({
+        matches.push(...siteSettings);
+        matchesGroupedByCategory.push({
           nameKey: settingsCategory.nameKey,
           name: i18n(
             "admin.site_settings.categories." + settingsCategory.nameKey
@@ -118,7 +118,7 @@ export default class SiteSettingFilter {
     });
 
     if (opts.includeAllCategory) {
-      all.siteSettings.pushObjects(matches.slice(0, opts.maxResults));
+      all.siteSettings.push(...matches.slice(0, opts.maxResults));
       all.siteSettings = this.sortSettings(all.siteSettings);
 
       all.hasMore = matches.length > opts.maxResults;

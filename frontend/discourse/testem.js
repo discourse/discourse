@@ -144,12 +144,15 @@ module.exports = {
   launch_in_ci: [process.env.TESTEM_DEFAULT_BROWSER || "Chrome"],
   tap_failed_tests_only: false,
   parallel: parseInt(process.env.QUNIT_PARALLEL || 1, 10),
+  socket_server_options: {
+    maxHttpBufferSize: 1e8, // 100MB
+  },
   browser_start_timeout: 120,
   browser_args: {
     Chromium: [
       // --no-sandbox is needed when running Chromium inside a container or when explicitly requested
       sandboxDisabled ? "--no-sandbox" : null,
-      "--headless=new",
+      process.env.QUNIT_HEADLESS === "0" ? null : "--headless=new",
       "--disable-dev-shm-usage",
       "--disable-software-rasterizer",
       "--disable-search-engine-choice-screen",
@@ -162,7 +165,7 @@ module.exports = {
     Chrome: [
       // --no-sandbox is needed when running Chrome inside a container or when explicitly requested
       sandboxDisabled ? "--no-sandbox" : null,
-      "--headless=new",
+      process.env.QUNIT_HEADLESS === "0" ? null : "--headless=new",
       "--disable-dev-shm-usage",
       "--disable-software-rasterizer",
       "--disable-search-engine-choice-screen",
@@ -188,7 +191,7 @@ fetch(`${target}/about.json`).catch(() => {
   // eslint-disable-next-line no-console
   console.error(
     colors.red(
-      `Error connecting to Rails server on ${target}. Is it running? Use 'bin/rake qunit:test' or 'plugin:qunit' to start automatically.`
+      `Error connecting to Rails server on ${target}. Is it running? Use 'bin/qunit --standalone' or 'plugin:qunit' to start automatically.`
     )
   );
 });

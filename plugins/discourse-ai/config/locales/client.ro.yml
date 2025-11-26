@@ -45,7 +45,6 @@ ro:
               label: "Expeditor PM"
               description: "Utilizatorul care va trimite PM (implicit la sistem)"
             notify_author_pm_message:
-              label: "Mesaj PM"
               description: "Mesaj personalizat opțional pentru a trimite autorului"
         llm_tagger:
           fields:
@@ -183,11 +182,9 @@ ro:
           ai_spam: "Spam"
         model_description:
           anthropic-claude-opus-4-1: "Cel mai inteligent model de la Anthropic"
-          google-gemini-2-0-flash: "Ușoare, rapide și rentabile cu raționament multi-modal (generația precedentă)"
           google-gemini-2-5-flash: "Ușoare, rapide și rentabile cu raționament multi-modal"
           google-gemini-2-5-flash-image-preview: "Cel mai recent model de generare a imaginilor cu capacități vizuale"
-          open_ai-o3: "Cel mai capabil model de raționament al OpenAI"
-          open_ai-gpt-5: "Modelul emblematic al OpenAI. Este foarte potrivit pentru rezolvarea problemelor în diverse domenii."
+          open_ai-gpt-5-1: "Modelul emblematic al OpenAI. Este foarte potrivit pentru rezolvarea problemelor în diverse domenii."
           open_ai-gpt-5-mini: "Asigură un echilibru între inteligență, viteză și costuri care îl transformă într-un model atractiv pentru multe cazuri de utilizare."
           open_ai-gpt-5-nano: "Cel mai rapid și mai rentabil model GPT-5."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Model multilingv ușor și eficient"

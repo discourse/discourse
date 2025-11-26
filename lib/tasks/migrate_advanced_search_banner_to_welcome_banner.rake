@@ -1,58 +1,73 @@
 # frozen_string_literal: true
+# rubocop:disable Lint/OrAssignmentToConstant
 
-THEME_GIT_URL = "https://github.com/discourse/discourse-search-banner.git" unless defined?(
-  THEME_GIT_URL
-)
-REQUIRED_TRANSLATION_KEYS = %w[search_banner.headline search_banner.subhead] unless defined?(
-  REQUIRED_TRANSLATION_KEYS
-)
+THEME_GIT_URL ||= "https://github.com/discourse/discourse-search-banner"
+REQUIRED_TRANSLATION_KEYS ||= %w[search_banner.headline search_banner.subhead]
+
+desc "Run all Advanced Search Banner migration tasks"
+task "themes:advanced_search_banner:migrate_all" => :environment do
+  components = find_component_in_all_dbs(includes: %i[theme_settings theme_translation_overrides])
+
+  if components.any?
+    puts "\n1. Migrating settings..."
+    puts "------------------------"
+    components.each { |c| process_theme_component_settings(c) }
+
+    puts "\n2. Migrating translations..."
+    puts "----------------------------"
+    components.each { |c| process_theme_component_translations(c) }
+
+    puts "\n3. Excluding and disabling..."
+    puts "-----------------------------"
+    components.each { |c| process_theme_component(c) }
+  end
+end
 
 desc "Migrate settings from Advanced Search Banner to core welcome banner"
-task "themes:advanced_search_banner:migrate_settings_to_welcome_banner" => :environment do
-  components = find_all_components([:theme_settings])
+task "themes:advanced_search_banner:1_migrate_settings_to_welcome_banner" => :environment do
+  components = find_component_in_all_dbs(includes: [:theme_settings])
 
-  if components.empty?
-    puts "\n\e[33m✗ No Advanced Search Banner theme components found\e[0m"
-    next
+  if components.any?
+    puts "\n1. Migrating settings..."
+    puts "------------------------"
+    components.each { |c| process_theme_component_settings(c) }
   end
-
-  components.each { |entry| process_theme_component_settings(entry[:theme]) }
 end
 
 desc "Migrate translations from Advanced Search Banner to core welcome banner"
-task "themes:advanced_search_banner:migrate_translations_to_welcome_banner" => :environment do
-  components = find_all_components([:theme_translation_overrides])
+task "themes:advanced_search_banner:2_migrate_translations_to_welcome_banner" => :environment do
+  components = find_component_in_all_dbs(includes: [:theme_translation_overrides])
 
-  if components.empty?
-    puts "\n\e[33m✗ No Advanced Search Banner theme components found\e[0m"
-    next
+  if components.any?
+    puts "\n2. Migrating translations..."
+    puts "----------------------------"
+    components.each { |c| process_theme_component_translations(c) }
   end
-
-  components.each { |entry| process_theme_component_translations(entry[:theme]) }
 end
 
 desc "Exclude and disable Advanced Search Banner theme component"
-task "themes:advanced_search_banner:exclude_and_disable" => :environment do
-  components = find_all_components
+task "themes:advanced_search_banner:3_exclude_and_disable" => :environment do
+  components = find_component_in_all_dbs
 
-  if components.empty?
-    puts "\n\e[33m✗ No Advanced Search Banner theme components found\e[0m"
-    next
+  if components.any?
+    puts "\n3. Excluding and disabling..."
+    puts "-----------------------------"
+    components.each { |c| process_theme_component(c) }
   end
-
-  components.each { |entry| process_theme_component(entry[:theme]) }
 end
 
 # Common helper methods
-def find_all_components(includes = [])
+def find_component_in_all_dbs(includes: [])
   if ENV["RAILS_DB"].present?
     db = validate_and_get_db(ENV["RAILS_DB"])
     RailsMultisite::ConnectionManagement.establish_connection(db: db)
-    wrap_themes_with_db(find_components_in_db(db, includes), db)
+    component = find_component_in_db(db, includes)
+    component ? [component] : []
   else
     components = []
     RailsMultisite::ConnectionManagement.each_connection do |db|
-      components.concat(wrap_themes_with_db(find_components_in_db(db, includes), db))
+      component = find_component_in_db(db, includes)
+      components << component if component
     end
     components
   end
@@ -67,19 +82,29 @@ def validate_and_get_db(db)
   default_db
 end
 
-def wrap_themes_with_db(themes, db)
-  themes.map { |theme| { db: db, theme: theme } }
-end
-
-def find_components_in_db(db, additional_includes)
+def find_component_in_db(db, additional_includes)
   puts "Accessing database: \e[1;104m[#{db}]\e[0m"
-  puts "  Searching for Advanced Search Banner components..."
+  puts "  Searching for Advanced Search Banner theme component..."
 
   includes = [{ parent_theme_relation: :parent_theme }] + Array(additional_includes)
-  themes = RemoteTheme.where(remote_url: THEME_GIT_URL).includes(theme: includes).map(&:theme)
+  themes =
+    RemoteTheme
+      .where(remote_url: [THEME_GIT_URL, "#{THEME_GIT_URL}.git"])
+      .includes(theme: includes)
+      .map(&:theme)
 
-  themes.each { |theme| puts "  \e[1;34mFound: #{theme_identifier(theme)}" }
-  themes
+  if themes.length > 1
+    puts "  \e[33mMultiple (#{themes.length}) Advanced Search Banner theme components found:\e[0m"
+    themes.each { |theme| puts "    - #{theme_identifier(theme)}" }
+    puts "  \e[33mMake sure a single instance is installed before running migrations.\e[0m"
+    return nil
+  elsif themes.length == 1
+    puts "  \e[1;34m✓ Found: #{theme_identifier(themes.first)}\e[0m"
+  else
+    puts "  \e[33m✗ Not found.\e[0m"
+  end
+
+  themes.first
 end
 
 def theme_identifier(theme)
@@ -93,7 +118,7 @@ def not_included_in_any_theme?(theme)
   true
 end
 
-# Settings migration methods
+# 1. Settings migration
 unless defined?(SETTINGS_MAPPING)
   SETTINGS_MAPPING = {
     "show_on" => {
@@ -109,6 +134,10 @@ unless defined?(SETTINGS_MAPPING)
         "above-main-container" => "above_topic_content",
         "below-site-header" => "below_site_header",
       },
+    },
+    "background_image" => {
+      site_setting: "welcome_banner_image",
+      value_mapping: nil,
     },
     "background_image_light" => {
       site_setting: "welcome_banner_image",
@@ -139,13 +168,25 @@ end
 def migrate_theme_settings_to_site_settings(theme_settings, errors)
   migrated_count = 0
 
+  names = theme_settings.map(&:name).to_set
+
   theme_settings.each do |ts|
     mapping = SETTINGS_MAPPING[ts.name]
-    next unless mapping
+    old_setting = "\e[0;31m#{ts.name}: #{ts.value}\e[0m"
+
+    unless mapping
+      puts "    - #{old_setting}\e[33m: is not supported by core welcome banner. Skipping\e[0m"
+      next
+    end
+
+    if ts.name == "background_image" && names.include?("background_image_light")
+      puts "    - #{old_setting}\e[33m: using 'background_image_light' instead. Skipping\e[0m"
+      next
+    end
 
     site_setting_name = mapping[:site_setting]
     if ts.value.blank?
-      puts "    - skipping '#{ts.name}' as it has no value"
+      puts "    - \e[0;31m#{ts.name}\e[0m\e[33m: has no value. Skipping\e[0m"
       next
     end
 
@@ -163,11 +204,10 @@ def migrate_theme_settings_to_site_settings(theme_settings, errors)
         "Migrated from the deprecated Advanced Search Banner",
       )
 
-      old_text = "\e[0;31m#{ts.name}: #{ts.value}\e[0m"
       arrow = "\e[0m=>\e[0m"
-      new_text = "\e[0;32m#{site_setting_name}: #{new_value}\e[0m"
+      new_setting = "\e[0;32m#{site_setting_name}: #{new_value}\e[0m"
 
-      puts "    - #{old_text} #{arrow} #{new_text}"
+      puts "    - #{old_setting} #{arrow} #{new_setting}"
       migrated_count += 1
     rescue StandardError => e
       errors << e
@@ -178,7 +218,7 @@ def migrate_theme_settings_to_site_settings(theme_settings, errors)
   migrated_count
 end
 
-# Translations migration methods
+# 2. Translations migration
 def process_theme_component_translations(theme)
   return if not_included_in_any_theme?(theme)
 
@@ -276,7 +316,7 @@ def map_translation_keys(translation_key)
   translations_mapping[translation_key] || []
 end
 
-# Exclude and disable methods
+# 3. Exclude and disable
 def process_theme_component(theme)
   enable_welcome_banner(theme)
   exclude_theme_component(theme)
@@ -349,5 +389,6 @@ def disable_theme_component(theme)
 
   puts "  Disabling #{theme_identifier(theme)}..."
   theme.update!(enabled: false)
+  StaffActionLogger.new(Discourse.system_user).log_theme_component_disabled(theme)
   puts "  \e[1;32m✓ Disabled\e[0m"
 end

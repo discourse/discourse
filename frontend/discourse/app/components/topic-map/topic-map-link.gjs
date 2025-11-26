@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import { and } from "truth-helpers";
 import replaceEmoji from "discourse/helpers/replace-emoji";
+import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 const TRUNCATE_LENGTH_LIMIT = 85;

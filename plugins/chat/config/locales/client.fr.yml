@@ -128,7 +128,6 @@ fr:
       email_frequency:
         description: "Nous ne vous enverrons un e-mail que si nous ne vous avons pas vu au cours des 15 dernières minutes."
         never: "Jamais"
-        title: "Notifications par e-mail"
         when_away: "Seulement en cas d'absence"
       header_indicator_preference:
         title: "Afficher l'indicateur d'activité dans l'en-tête"
@@ -436,6 +435,7 @@ fr:
           topic: "Sujet"
       reviewable:
         type: "Message de discussion"
+        message_in_channel: "Canal"
       reactions:
         only_you: "<span>Vous avez réagi avec </span>:%{emoji}:"
         you_and_single_user: "<span>Vous et %{username} avez réagi avec </span>:%{emoji}:"

@@ -10,7 +10,6 @@ zh_TW:
       sort_options:
         votes: "票數"
     topic_voting:
-      title: "主題投票"
       reached_limit: "您已退出投票，移除現有的投票！"
       list_votes: "列出您的投票"
       votes_nav_help: "最多票數的主題"
@@ -21,8 +20,6 @@ zh_TW:
       voted_title: "已投票"
       voting_closed_title: "已關閉"
       voting_limit: "限制"
-      votes_left_button_title:
-        other: "您還有 %{count} 票可投。"
       votes:
         other: "%{count} 票"
       anonymous_button:

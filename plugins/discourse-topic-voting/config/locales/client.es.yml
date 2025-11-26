@@ -10,7 +10,6 @@ es:
       sort_options:
         votes: "Votos"
     topic_voting:
-      title: "Votación de temas"
       reached_limit: "Se te acabaron los votos, ¡elimina un voto existente!"
       list_votes: "Lista de tus votos"
       votes_nav_help: "temas con más votos"
@@ -21,12 +20,6 @@ es:
       voted_title: "Votado"
       voting_closed_title: "Cerrado"
       voting_limit: "Límite"
-      votes_left:
-        one: "Te queda %{count} voto, consulta <a href='%{path}'>tus votos</a>."
-        other: "Te quedan %{count} votos, consulta <a href='%{path}'>tus votos</a>."
-      votes_left_button_title:
-        one: "Te queda %{count} voto."
-        other: "Te quedan %{count} votos."
       votes:
         one: "%{count} voto"
         other: "%{count} votos"

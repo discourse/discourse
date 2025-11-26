@@ -75,6 +75,8 @@ sw:
         types:
           category: "Kikundi"
           topic: "Mada"
+      reviewable:
+        message_in_channel: "Chaneli"
       composer:
         italic_text: "Maneno yaliyo tiliwa mkazo"
         bold_text: "Maneno yaliyokolezwa"

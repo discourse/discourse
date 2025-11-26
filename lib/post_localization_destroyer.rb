@@ -2,14 +2,14 @@
 
 class PostLocalizationDestroyer
   def self.destroy(post_id:, locale:, acting_user:)
-    Guardian.new(acting_user).ensure_can_localize_content!
+    Guardian.new(acting_user).ensure_can_localize_post!(post_id)
 
-    localization = PostLocalization.find_by(post_id: post_id, locale: locale)
+    localization = PostLocalization.find_by(post_id:, locale:)
     raise Discourse::NotFound unless localization
-    post = localization.post
 
     localization.destroy!
 
-    post.publish_change_to_clients! :revised
+    post = localization.post
+    post.publish_change_to_clients! :revised if post
   end
 end

@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import discourseComputed from "discourse/lib/decorators";
-import TagChooser from "select-kit/components/tag-chooser";
+import TagChooser from "discourse/select-kit/components/tag-chooser";
 
 export default class TagList extends Component {
   @discourseComputed("value")

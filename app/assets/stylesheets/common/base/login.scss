@@ -43,13 +43,6 @@ body.invite-page {
     flex-direction: column;
     width: 400px;
 
-    input {
-      padding: 0.75em 0.77em;
-      min-width: 250px;
-      margin-bottom: 0.25em;
-      width: 100%;
-    }
-
     .input {
       position: relative;
       margin-bottom: 1em;
@@ -137,4 +130,11 @@ body.invite-page {
       }
     }
   }
+}
+
+.totp-token {
+  flex-direction: column;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
 }

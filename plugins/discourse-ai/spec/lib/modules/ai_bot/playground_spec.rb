@@ -118,7 +118,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       JS
 
       tool_name = "custom-#{custom_tool.id}"
-      ai_persona.update!(tools: [[tool_name, nil, true]], tool_details: false)
+      ai_persona.update!(tools: [[tool_name, nil, true]], show_thinking: false)
 
       reply_post = nil
       prompts = nil
@@ -172,6 +172,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     end
 
     it "uses custom tool in conversation" do
+      ai_persona.update!(show_thinking: true)
       persona_klass = AiPersona.all_personas.find { |p| p.name == ai_persona.name }
       bot = DiscourseAi::Personas::Bot.as(bot_user, persona: persona_klass.new)
       playground = described_class.new(bot)
@@ -186,11 +187,12 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       end
 
       expected = <<~TXT.strip
-        <details>
-          <summary>searching for things</summary>
-          <p>did stuff</p>
+        <details><summary>#{I18n.t("discourse_ai.ai_bot.thinking")}</summary>
+
+        **searching for things**
+        did stuff
+
         </details>
-        <span></span>
 
         custom tool did stuff (maybe)
       TXT
@@ -203,6 +205,8 @@ RSpec.describe DiscourseAi::AiBot::Playground do
           "666",
           "tool_call",
           "search",
+          nil,
+          nil,
         ],
         ["\"Custom tool result: Can you use the custom tool\"", "666", "tool", "search"],
         ["custom tool did stuff (maybe)", "claude-2"],
@@ -264,7 +268,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         ["I understood image"],
       ) do |_, _, inner_prompts, inner_options|
         options = inner_options
-        post = create_post(title: "some new topic I created", raw: body)
+        post = create_post(user: admin, title: "some new topic I created", raw: body)
 
         prompts = inner_prompts
       end
@@ -408,18 +412,19 @@ RSpec.describe DiscourseAi::AiBot::Playground do
           guardian: guardian,
         )
 
+        anthropic_info = { anthropic: { signature: "thinking-signature-123" } }
         thinking_partial =
           DiscourseAi::Completions::Thinking.new(
             message: "I should say hello",
-            signature: "thinking-signature-123",
             partial: true,
+            provider_info: anthropic_info,
           )
 
         thinking =
           DiscourseAi::Completions::Thinking.new(
             message: "I should say hello",
-            signature: "thinking-signature-123",
             partial: false,
+            provider_info: anthropic_info,
           )
         DiscourseAi::Completions::Llm.with_prepared_responses(
           [[thinking_partial, thinking, "wo", "rld"]],
@@ -606,6 +611,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       DiscourseAi::Completions::Llm.with_prepared_responses(["Yes I can"]) do
         post =
           create_post(
+            user: admin,
             title: "My public topic",
             raw: "Hey @#{persona.user.username}, can you help me?",
             post_type: Post.types[:whisper],
@@ -629,6 +635,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       DiscourseAi::Completions::Llm.with_prepared_responses(["Yes I can"]) do
         post =
           create_post(
+            user: admin,
             title: "My public topic",
             raw: "Hey @#{persona.user.username}, can you help me?",
           )
@@ -879,19 +886,23 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     it "preserves thinking context between replies and correctly renders" do
       thinking_progress =
         DiscourseAi::Completions::Thinking.new(message: "I should say hello", partial: true)
+      anthropic_info = { anthropic: { signature: "thinking-signature-123" } }
       thinking =
         DiscourseAi::Completions::Thinking.new(
           message: "I should say hello",
-          signature: "thinking-signature-123",
           partial: false,
+          provider_info: anthropic_info,
         )
 
       thinking_redacted =
         DiscourseAi::Completions::Thinking.new(
           message: nil,
-          signature: "thinking-redacted-signature-123",
           partial: false,
-          redacted: true,
+          provider_info: {
+            anthropic: {
+              redacted_signature: "thinking-redacted-signature-123",
+            },
+          },
         )
 
       first_responses = [[thinking_progress, thinking, thinking_redacted, "Hello Sam"]]
@@ -923,8 +934,12 @@ RSpec.describe DiscourseAi::AiBot::Playground do
             type: :model,
             content: "Hello Sam",
             thinking: "I should say hello",
-            thinking_signature: "thinking-signature-123",
-            redacted_thinking_signature: "thinking-redacted-signature-123",
+            thinking_provider_info: {
+              anthropic: {
+                signature: "thinking-signature-123",
+                redacted_signature: "thinking-redacted-signature-123",
+              },
+            },
           },
           { type: :user, content: "Say Cat", id: user.username },
         ],
@@ -992,8 +1007,8 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       expect(last_post.raw).to include("I found stuff")
     end
 
-    it "supports disabling tool details" do
-      persona = Fabricate(:ai_persona, tool_details: false, tools: ["Search"])
+    it "supports disabling thinking" do
+      persona = Fabricate(:ai_persona, show_thinking: false, tools: ["Search"])
       bot = DiscourseAi::Personas::Bot.as(bot_user, persona: persona.class_instance.new)
       playground = described_class.new(bot)
 
@@ -1069,8 +1084,8 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         )
       end
 
-      it "properly returns an image when skipping tool details" do
-        persona.update!(tool_details: false)
+      it "properly returns an image when skipping thinking" do
+        persona.update!(show_thinking: false)
 
         WebMock.stub_request(:post, SiteSetting.ai_openai_image_generation_url).to_return(
           status: 200,

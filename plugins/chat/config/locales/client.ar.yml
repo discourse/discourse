@@ -144,7 +144,6 @@ ar:
       email_frequency:
         description: "سنراسلك عبر البريد الإلكتروني فقط إذا لم نرك في آخر 15 دقيقة."
         never: "أبدًا"
-        title: "إشعارات البريد الإلكتروني"
         when_away: "عندما أكون غائبًا فقط"
       header_indicator_preference:
         title: "إظهار مؤشر النشاط في الرأس"
@@ -496,6 +495,7 @@ ar:
           topic: "الموضوع"
       reviewable:
         type: "رسالة دردشة"
+        message_in_channel: "القناة"
       reactions:
         only_you: "<span>لقد تفاعلت بالرمز التعبيري </span>:%{emoji}:"
         you_and_single_user: "<span>لقد تفاعلت أنت و%{username} بالرمز التعبيري </span>:%{emoji}:"

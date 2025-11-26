@@ -12,7 +12,7 @@ en:
         title: "Templates (within a textarea)"
         insert_template: "%{shortcut} Insert template"
     templates:
-      filter_hint: "Filter by title..."
+      filter_hint: "Filter by keyword..."
       insert_template: "Insert template"
       close_templates: "Close the templates selector"
       copy: "Copy template"

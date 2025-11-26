@@ -174,7 +174,6 @@ de:
               label: "PN-Absender"
               description: "Benutzer, der die PN sendet (Standard: System)"
             notify_author_pm_message:
-              label: "PN-Nachrichtentext"
               description: "Optionale benutzerdefinierte Nachricht die an den Autor gesendet werden soll"
             include_personal_messages:
               label: "Persönliche Nachrichten einbeziehen"
@@ -195,7 +194,6 @@ de:
           fields:
             tagger_persona:
               label: "KI-Persona"
-              description: "Die KI-Persona, die Beiträge analysiert und Schlagwörter hinzufügt"
             tag_mode:
               label: "Schlagwort-Auswahlmodus"
               description: "Wähle, wie die KI Schlagwörter auswählt"
@@ -291,6 +289,7 @@ de:
           custom_prompt: "Benutzerdefinierte Eingabeaufforderung"
           image_caption: "Bildbeschriftungen"
           translator: "Übersetzer"
+          post_illustrator: "Beitragsillustrator"
         translation:
           name: "Übersetzen"
           description: "Übersetzt Inhalte in unterstützte Sprachen"
@@ -444,8 +443,6 @@ de:
           low: Niedrige Qualität – am günstigsten (256 x 256)
           medium: Mittlere Qualität (512 x 512)
           high: Hohe Qualität – am langsamsten (1024 x 1024)
-        tool_details: Tool-Details anzeigen
-        tool_details_help: Zeigt den Endnutzern Details darüber, welche Tools das Sprachmodell ausgelöst hat.
         mentionable: Erwähnungen zulassen
         mentionable_help: Wenn diese Funktion aktiviert ist, können Nutzer in erlaubten Gruppen diesen Nutzer in Beiträgen erwähnen und die KI wird als diese Persona antworten.
         user: Benutzer
@@ -638,24 +635,19 @@ de:
         model_description:
           none: "Allgemeine Einstellungen, die für die meisten Sprachmodelle funktionieren"
           anthropic-claude-opus-4-1: "Das intelligenteste Modell von Anthropic"
-          anthropic-claude-sonnet-4-0: "Optimales Gleichgewicht zwischen Geschwindigkeit und Kosten"
-          anthropic-claude-3-7-sonnet-latest: "Optimales Gleichgewicht zwischen Geschwindigkeit und Kosten (vorherige Generation)"
-          anthropic-claude-3-5-haiku-latest: "Schnell und kosteneffizient"
+          anthropic-claude-sonnet-4-5: "Optimales Gleichgewicht zwischen Geschwindigkeit und Kosten"
+          anthropic-claude-haiku-4-5: "Schnell und kosteneffizient"
           google-gemini-2-5-pro: "Großes multimodales Modell, das eine Vielzahl von Aufgaben bewältigen kann"
-          google-gemini-2-0-flash: "Leicht, schnell und kosteneffizient mit multimodaler Argumentation (vorherige Generation)"
           google-gemini-2-5-flash: "Leicht, schnell und kosteneffizient mit multimodaler Argumentation"
-          google-gemini-2-0-flash-lite: "Kosteneffizientes Modell mit niedriger Latenz"
           google-gemini-2-5-flash-image-preview: "Neuestes Bilderzeugungsmodell mit Bildverarbeitungsfunktionen"
-          open_ai-o3: "OpenAIs leistungsstärkstes Argumentationsmodell"
-          open_ai-o4-mini: "Erweitertes kosteneffizientes Argumentationsmodell"
-          open_ai-gpt-5: "Das Vorzeigemodell von OpenAI. Es ist gut geeignet für Problemlösungen in verschiedenen Bereichen"
+          open_ai-gpt-5-1: "Das Vorzeigemodell von OpenAI. Es ist gut geeignet für Problemlösungen in verschiedenen Bereichen"
           open_ai-gpt-5-mini: "Bietet ein ausgewogenes Verhältnis zwischen Intelligenz, Geschwindigkeit und Kosten, was es zu einem attraktiven Modell für viele Anwendungsfälle macht."
           open_ai-gpt-5-nano: "Das schnellste und kostengünstigste GPT-5-Modell."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Effizientes leichtgewichtiges mehrsprachiges Modell"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "Leistungsstarkes Mehrzweckmodell"
           mistral-mistral-large-latest: "Das leistungsstärkste Modell von Mistral"
           mistral-pixtral-large-latest: "Das leistungsstärkste Modell von Mistral mit Sichtfunktion"
-          open_router-x-ai-grok-3-beta: "Das neueste Modell von xAI"
+          open_router-x-ai-grok-4: "Das neueste Modell von xAI"
           open_router-deepseek-deepseek-r1-0528-free: "DeepSeeks neuestes Argumentationsmodell"
           open_router-meta-llama-3-3-70b-instruct: "Leistungsstarkes mehrsprachiges Modell"
           groq-openai-gpt-oss-120b: "Hochmodernes Open-Weight-Modell von OpenAI"
@@ -686,7 +678,6 @@ de:
           vision_enabled: "Wenn diese Funktion aktiviert ist, versucht die KI, Bilder zu verstehen. Dafür wird ein Modell benötigt, das Sehen unterstützt. Verfügbar in den neuesten Modellen von Anthropic, Google und OpenAI."
           enabled_chat_bot: "Wenn diese Option aktiviert ist, können Benutzer dieses Modell auswählen, wenn sie PN mit dem KI-Bot erstellen"
           cost_input: "Die Kosten für die Eingabe pro 1 Million Token für dieses Modell"
-          cost_cached_input: "Die Kosten für die Eingabe von Zwischengespeichertem pro 1 Million Token für dieses Modell"
           cost_output: "Die Kosten für die Ausgabe pro 1 Million Token für dieses Modell"
           cost_measure: "$/1M Token"
         providers:
@@ -968,7 +959,6 @@ de:
         loading_convo: "Unterhaltung wird geladen"
         collapse: "Zuklappen"
         timed_out: "Discobot konnte keine Entdeckungen finden. Irgendetwas ist schief gelaufen."
-        user_setting: "Suchentdeckungen aktivieren"
         tooltip:
           header: "KI-gestützte Suche"
           content: "Natürliche Sprachsuche unterstützt von %{model}"

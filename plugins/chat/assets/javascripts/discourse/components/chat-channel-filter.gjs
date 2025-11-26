@@ -1,19 +1,19 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
-import { gt } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import FilterInput from "discourse/components/filter-input";
+import closeOnEscape from "discourse/float-kit/modifiers/close-on-escape";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import autoFocus from "discourse/modifiers/auto-focus";
+import { gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class ChatChannelFilter extends Component {
@@ -151,6 +151,7 @@ export default class ChatChannelFilter extends Component {
         <div>
           <FilterInput
             {{autoFocus}}
+            {{closeOnEscape @onToggleFilter}}
             @value={{this.currentChannelFilter}}
             placeholder={{i18n "chat.search.title"}}
             @filterAction={{this.loadSearchResults}}
@@ -184,7 +185,7 @@ export default class ChatChannelFilter extends Component {
           {{/if}}
 
           <DButton
-            @action={{fn @onToggleFilter false}}
+            @action={{@onToggleFilter}}
             class="btn-small btn-flat"
             @label="done"
           />

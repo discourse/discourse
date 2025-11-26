@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
+import hexToRGBA from "discourse/admin/lib/hex-to-rgba";
+import Report from "discourse/admin/models/report";
 import { number } from "discourse/lib/formatter";
 import { makeArray } from "discourse/lib/helpers";
-import hexToRGBA from "admin/lib/hex-to-rgba";
-import Report from "admin/models/report";
 import Chart from "./chart";
 
 export default class AdminReportStackedLineChart extends Component {

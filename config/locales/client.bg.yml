@@ -193,7 +193,7 @@ bg:
     welcome_banner:
       header:
         anonymous_members: "Добре дошли в %{site_name}!"
-      search: "Търсене"
+      search_placeholder: "Търсене"
     themes:
       default_description: "По подразбиране"
       error_caused_by: "Причинено от '%{name}'. <a target='blank' href='%{path}'>Щракнете тук</a> за да актуализирате, преконфигурирате или деактивирате."
@@ -243,7 +243,7 @@ bg:
     joined: "Присъединен"
     admin_title: "Админ"
     show_more: "покажи повече"
-    show_help: "опции"
+    show_help: "Опции"
     links: "Връзки"
     links_lowercase:
       one: "Линк"
@@ -455,10 +455,6 @@ bg:
         required: "Трябва да заявите артикули, преди да можете да ги прегледате."
         claimed_by_you: "Заявихте този артикул и можете да го прегледате."
         claimed_by_other: "Този артикул може да бъде прегледан само от <b>%{username}</b>."
-      claim:
-        title: "заявете тази тема"
-      unclaim:
-        help: "премахнете на тази заявка"
       awaiting_approval: "Очаква одобрение"
       delete: "Изтрий"
       settings:
@@ -479,7 +475,7 @@ bg:
       topic: "Тема:"
       filtered_topic: "Филтрирахте съдържание, което може да бъде прегледано, в една тема."
       filtered_user: "Потребител"
-      filtered_reviewed_by: "Прегледано от"
+      filtered_reviewed_by: "Прегледан от"
       show_all_topics: "покажи всички теми"
       deleted_post: "(публикацията е изтрита)"
       deleted_user: "(потребителят е изтрит)"
@@ -521,7 +517,7 @@ bg:
       replies:
         one: "%{count} отговор"
         other: "%{count} отговора"
-      edit: "Редактирай"
+      edit: "Редактиране на публикацията"
       save: "Запази"
       cancel: "Отмени"
       new_topic: "Одобряването на този елемент ще създаде нова тема"
@@ -542,7 +538,6 @@ bg:
           created_at: "Създадено на"
           created_at_asc: "Създадено на (по обратен ред)"
         priority:
-          title: "Минимален приоритет"
           any: "(всяко)"
           low: "Ниска"
           medium: "Среден"
@@ -604,8 +599,10 @@ bg:
         reviewable_post:
           title: "Публикация"
           noun: "публикация"
+      user_label: "Потребител"
       notes:
         delete: "Изтрий"
+      topic_label: "Тема"
       review_user: "Потребител"
       insights:
         activities:
@@ -2165,8 +2162,9 @@ bg:
         toggle_whisper:
           label: Превключете шепот
           desc: Шепотът се вижда само от служителите
-        create_topic:
-          label: "Нова тема"
+        create_personal_message:
+          label: "Ново съобщение"
+          desc: "Създайте ново лично съобщение"
       ignore: "Игнорирай"
     notifications:
       title: "уведомления за @name споменавания, отговори на вашите публикации и теми, лични съобщения, и т.н."
@@ -2429,7 +2427,6 @@ bg:
         name: "Изтрий"
     topic:
       create: "Нова тема"
-      create_long: "Създайте нова тема"
       open_draft: "Довърши ревизия"
       private_message: "Започни съобщение"
       archive_message:
@@ -2471,7 +2468,6 @@ bg:
       jump_reply_aria: "Отидете до публикацията на @%{username} в първоначалното й местоположение"
       deleted: "Темата беше изтрита"
       slow_mode_update:
-        title: "Бавен режим"
         select: "Потребителите могат да публикуват в тази тема само веднъж на всеки:"
         description: "За да насърчават обмислена дискусия в бързо движещи се или спорни дискусии, потребителите трябва да изчакат, преди да публикуват отново в тази тема."
         enable: "Позволи"
@@ -2936,18 +2932,11 @@ bg:
       required_tag_group:
         delete: "Изтрий"
       topic_featured_link_allowed: "Разрешаване на включени връзки в тази категория"
-      delete: "Изтрий категорията"
-      create: "Нова категория"
       create_long: "Създай нова категория"
-      save: "Запази категорията"
-      slug: "Описателно име за URL "
       slug_placeholder: "(Опционално) пунктирани думи за url "
       creation_error: Възникна грешка при създаването на категория.
       save_error: Възникна грешка при запазването на категорията.
-      name: "Име на категорията"
       description: "Описание"
-      logo: "Изображение за категория "
-      background_image: "Изображение за фон на категорията "
       background_color: "Цвят"
       color_validations:
         cant_be_empty: "не може да бъде празно"
@@ -2961,9 +2950,7 @@ bg:
       color_placeholder: "Някакъв уеб цвят "
       delete_confirm: "Сигурни ли сте, че искате да изтриете тази категория? "
       delete_error: "Възникна грешка по време на изтриването на категорията. "
-      list: "Списък Категории "
       no_description: "Моля, добавете описание за тази категория. "
-      change_in_category_topic: "Редактирай Описанието "
       already_used: "Този цвят вече е използван за друга категория. "
       security: "Сигурност"
       permissions:
@@ -2982,14 +2969,10 @@ bg:
       subcategory_num_featured_topics: "Брой на включените теми на страницата на родителската категория:"
       all_topics_wiki: "Направете новите теми wiki по подразбиране"
       subcategory_list_style: "Стил на списъка с подкатегориите:"
-      sort_order: "Сортиране на списъка с теми по:"
       allow_badges_label: "Разрешете използването на значки в тази категория. "
-      edit_permissions: "Редакция на достъпа"
       review_group_name: "име на групата"
       this_year: "тази година "
-      default_position: "Позиция по подразбиране "
       minimum_required_tags: "Минимален брой етикети на тема"
-      parent: "Главна категория"
       auto_bump_cooldown_days: "Минимум дни преди да попаднете повторно на същата тема:"
       notifications:
         watching:
@@ -3170,8 +3153,6 @@ bg:
       top:
         title: "Топ"
         help: "Най-активни теми в последната година, месец, седмица или ден"
-        all:
-          title: "От началото"
         yearly:
           title: "Годишно"
         quarterly:
@@ -3182,7 +3163,6 @@ bg:
           title: "Седмично"
         daily:
           title: "Дневно"
-        all_time: "От началото"
         this_year: "Година"
         this_quarter: "Тримесечие"
         this_month: "Месец"
@@ -3219,7 +3199,6 @@ bg:
         next_prev: "%{shortcut} Следваща/Предишна секция "
       application:
         title: "Приложение"
-        create: "%{shortcut} Създайте нова тема"
         notifications: "%{shortcut} Отворяне на известията"
         user_profile_menu: "%{shortcut} Отваряне на потребителското меню"
         show_incoming_updated_topics: "%{shortcut} Показване на обновените теми"
@@ -3304,7 +3283,6 @@ bg:
           title: "Заглушен"
           description: "Няма да бъдете уведомявани относно нови теми с този етикет и те няма да се появяват в 'непрочетени'. "
       groups:
-        title: "Групи етикети"
         tags_label: "Етикети в тази група"
         name_placeholder: "Име"
         save: "Запази"
@@ -3447,6 +3425,7 @@ bg:
         categories: "Всички категории"
   admin_js:
     settings: "Настройки"
+    reset_filter: "Нулиране"
     admin:
       title: "Discourse Админ"
       moderator: "Модератор"
@@ -3465,6 +3444,19 @@ bg:
           title: "Сигурност"
         plugins:
           title: "Приставки"
+      upcoming_changes:
+        name: "Име"
+        enabled: "Да е включен"
+        preview: "Преглед"
+        impact_roles:
+          admins: "Админи"
+          moderators: "Модератори"
+          staff: "Персонал"
+        filter:
+          all: "Всички"
+          enabled: "Да е включен"
+          disabled: "Деактивирани"
+          impact_type_other: "Други"
       config:
         developer:
           title: "Разработчик"
@@ -3485,6 +3477,12 @@ bg:
         fonts:
           backfill_modal:
             modal_yes: "Да"
+        welcome_banner:
+          form:
+            location:
+              label: "Локация"
+            header_anonymous:
+              placeholder: "Добре дошли в %{site_name}!"
         navigation:
           title: "Навигация"
         notifications:
@@ -4143,10 +4141,7 @@ bg:
             second: "Опция 2"
             third: "Опция 3"
         edit_category:
-          toggle_freeform: "шаблонът на формуляра е деактивиран"
-          toggle_form_template: "шаблон на формуляр е активиран"
           select_template: "Изберете шаблони за формуляри"
-          select_template_help: "Добавяне/редактиране на шаблони на формуляри"
       impersonate:
         title: "Представи"
         help: "Използвайте този инструмент, за да предоставите потребителски профили за отстраняване на грешките. Трябва да излезете когато приключите."
@@ -4242,7 +4237,6 @@ bg:
             cancel: "Отмени"
           confirmation:
             cancel: "Отмени"
-        delete_posts_forbidden_because_staff: "Не могат да бъдат изтрити всички постове на администратори и модератори."
         delete_forbidden:
           one: "Не може да изтривате потребители които имат публикации. Първо изтрийте всички публикации на този потребител и опитайте отново. (Публикации по стари от %{count} ден не може да бъдат изтривани)"
           other: "Не може да изтривате потребители, които имат публикации. Първо изтрийте всички публикации на този потребител и опитайте отново. (Публикации по стари от %{count} дни не могат да бъдат изтрити.) "

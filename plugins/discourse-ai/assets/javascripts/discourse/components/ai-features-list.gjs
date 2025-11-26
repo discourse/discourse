@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { and, eq, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import { and, eq, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import AiFeatureCard from "./ai-feature-card";
 

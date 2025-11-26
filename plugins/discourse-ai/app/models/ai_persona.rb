@@ -3,6 +3,8 @@
 class AiPersona < ActiveRecord::Base
   # TODO remove this line 01-10-2025
   self.ignored_columns = %i[default_llm question_consolidator_llm]
+  # TODO remove tool_details from ignored_columns 01-02-2026
+  self.ignored_columns += %i[tool_details]
 
   # places a hard limit, so per site we cache a maximum of 500 classes
   MAX_PERSONAS_PER_SITE = 500
@@ -206,7 +208,7 @@ class AiPersona < ActiveRecord::Base
       name
       description
       allowed_group_ids
-      tool_details
+      show_thinking
       enabled
     ]
 
@@ -341,6 +343,18 @@ class AiPersona < ActiveRecord::Base
     end
   end
 
+  def has_image_generation_tool?
+    persona_klass = class_instance.new
+    persona_klass.tools.any? do |tool_klass|
+      if tool_klass.respond_to?(:custom?) && tool_klass.custom?
+        ai_tool = AiTool.find_by(id: tool_klass.tool_id)
+        ai_tool&.image_generation_tool?
+      else
+        false
+      end
+    end
+  end
+
   def features
     DiscourseAi::Configuration::Feature.find_features_using(persona_id: id)
   end
@@ -426,7 +440,7 @@ end
 #  rag_chunk_tokens             :integer          default(374), not null
 #  rag_chunk_overlap_tokens     :integer          default(10), not null
 #  rag_conversation_chunks      :integer          default(10), not null
-#  tool_details                 :boolean          default(TRUE), not null
+#  show_thinking                :boolean          default(TRUE), not null
 #  tools                        :json             not null
 #  forced_tool_count            :integer          default(-1), not null
 #  allow_chat_channel_mentions  :boolean          default(FALSE), not null

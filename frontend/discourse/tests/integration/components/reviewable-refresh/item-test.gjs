@@ -5,13 +5,6 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | reviewable-refresh | item", function (hooks) {
   setupRenderingTest(hooks);
-  hooks.beforeEach(function () {
-    this.siteSettings.moderation_guide_url =
-      "https://example.com/moderation_guide";
-    this.siteSettings.flag_priorities_url =
-      "https://example.com/flag_priorities";
-    this.siteSettings.spam_detection_url = "https://example.com/spam_detection";
-  });
 
   const reviewable = {
     topic: {
@@ -44,17 +37,17 @@ module("Integration | Component | reviewable-refresh | item", function (hooks) {
     assert.dom(".review-item__resources").exists("renders the help content");
     assert
       .dom(
-        `a.review-resources__link[href="https://example.com/moderation_guide"]`
+        `a.review-resources__link[href="https://meta.discourse.org/t/-/63116"]`
       )
       .exists();
     assert
       .dom(
-        `a.review-resources__link[href="https://example.com/flag_priorities"]`
+        `a.review-resources__link[href="https://meta.discourse.org/t/-/123464"]`
       )
       .exists();
     assert
       .dom(
-        `a.review-resources__link[href="https://example.com/spam_detection"]`
+        `a.review-resources__link[href="https://meta.discourse.org/t/-/343541"]`
       )
       .exists();
   });

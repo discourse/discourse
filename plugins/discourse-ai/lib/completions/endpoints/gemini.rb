@@ -60,6 +60,7 @@ module DiscourseAi
 
         def prepare_payload(prompt, model_params, dialect)
           @native_tool_support = dialect.native_tool_support?
+          @current_batch_token = nil
 
           tools = dialect.tools if @native_tool_support
 
@@ -127,7 +128,14 @@ module DiscourseAi
           if response_h
             @has_function_call ||= response_h.dig(:functionCall).present?
             if @has_function_call
-              response_h.dig(:functionCall)
+              function_call = response_h.dig(:functionCall)
+              provider_data = provider_data_from_part(response_h)
+              ToolCall.new(
+                id: "tool_0",
+                name: function_call[:name],
+                parameters: function_call[:args],
+                provider_data: provider_data,
+              )
             elsif response_h[:text]
               response_h.dig(:text)
             elsif response_h[:inlineData]
@@ -179,27 +187,30 @@ module DiscourseAi
           json = JSON.parse(chunk, symbolize_names: true)
 
           idx = -1
-          json
-            .dig(:candidates, 0, :content, :parts)
-            .map do |part|
-              if part[:functionCall]
-                idx += 1
-                ToolCall.new(
-                  id: "tool_#{idx}",
-                  name: part[:functionCall][:name],
-                  parameters: part[:functionCall][:args],
-                )
-              elsif part[:inlineData]
-                inline_data_to_upload_markdown(part[:inlineData])
+          parts = json.dig(:candidates, 0, :content, :parts)
+          batch_token = current_batch_token_for(parts)
+
+          parts&.map do |part|
+            if part[:functionCall]
+              idx += 1
+              provider_data = provider_data_from_part(part, batch_token:)
+              ToolCall.new(
+                id: "tool_#{idx}",
+                name: part[:functionCall][:name],
+                parameters: part[:functionCall][:args],
+                provider_data: provider_data,
+              )
+            elsif part[:inlineData]
+              inline_data_to_upload_markdown(part[:inlineData])
+            else
+              part = part[:text]
+              if part != ""
+                part
               else
-                part = part[:text]
-                if part != ""
-                  part
-                else
-                  nil
-                end
+                nil
               end
             end
+          end
         end
 
         def decode_chunk(chunk)
@@ -209,6 +220,7 @@ module DiscourseAi
             .map do |parsed|
               update_usage(parsed)
               parts = parsed.dig(:candidates, 0, :content, :parts)
+              batch_token = current_batch_token_for(parts)
               parts&.map do |part|
                 if part[:text]
                   part = part[:text]
@@ -219,10 +231,12 @@ module DiscourseAi
                   end
                 elsif part[:functionCall]
                   @tool_index += 1
+                  provider_data = provider_data_from_part(part, batch_token:)
                   ToolCall.new(
                     id: "tool_#{@tool_index}",
                     name: part[:functionCall][:name],
                     parameters: part[:functionCall][:args],
+                    provider_data: provider_data,
                   )
                 elsif part[:inlineData]
                   inline_data_to_upload_markdown(part[:inlineData])
@@ -252,6 +266,28 @@ module DiscourseAi
 
         def streaming_decoder
           @decoder ||= GeminiStreamingDecoder.new
+        end
+
+        def provider_data_from_part(part, batch_token: nil)
+          thought_signature = part[:thoughtSignature] || part[:thought_signature]
+          provider_data = {}
+          provider_data[:thought_signature] = thought_signature if thought_signature
+          provider_data[:batch_id] = batch_token if batch_token
+          provider_data
+        end
+
+        def contains_function_call?(parts)
+          parts&.any? { |p| p[:functionCall].present? }
+        end
+
+        def current_batch_token_for(parts)
+          if contains_function_call?(parts)
+            @current_batch_token ||= SecureRandom.hex(8)
+          else
+            @current_batch_token = nil
+          end
+
+          @current_batch_token
         end
 
         def extract_prompt_for_tokenizer(prompt)

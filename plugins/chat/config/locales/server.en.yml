@@ -193,7 +193,8 @@ en:
         is_already_in_use: "is already in use"
 
     bookmarkable:
-      notification_title: "message in %{channel_name}"
+      notification_title_channel: "message in %{channel_name}"
+      notification_title_direct_message: "message with %{channel_name}"
 
     personal_chat: "personal chat"
 
@@ -282,11 +283,11 @@ en:
       view_more:
         one: "View %{count} more message"
         other: "View %{count} more messages"
-      your_chat_settings: "chat email frequency preference"
+      your_chat_settings: "chat email preference"
 
   unsubscribe:
     chat_summary:
-      select_title: "Set chat summary emails frequency to:"
+      select_title: "Set chat summary emails to:"
       never: Never
       when_away: Only when away
 

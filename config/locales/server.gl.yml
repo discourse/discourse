@@ -1729,7 +1729,6 @@ gl:
     push_notifications_icon: "A icona da insignia aparece na esquina da notificación. Recoméndase un PNG monocromático de 96x96 con transparencia."
     base_font: "Tipo de letra base para empregar na maioría dos textos do sitio. Os temas poden sobrescribilo a través da propiedade personalizada CSS «--font-family»."
     heading_font: "Tipo de letra para usar nos títulos do sitio. Os temas poden sobrescribilo a través da propiedade personalizada CSS «--heading-font-family»."
-    short_title: "O título curto utilizarase na páxina de inicio do usuario, no iniciador ou naqueles sitios onde o espazo é limitado. Debe limitarse a 12 caracteres."
     dashboard_hidden_reports: "Permitir agochar os informes específicos do panel de control."
     dashboard_visible_tabs: "Escolla que lapelas do panel son visíbeis."
     dashboard_general_tab_activity_metrics: "Escolla os informes que se amosarán como métricas de actividade na lapela xeral."
@@ -2534,6 +2533,9 @@ gl:
 
         Para máis información, visite as [directrices da nosa comunidade](%{base_url}/guidelines).
     user_automatically_silenced:
+      title: "Usuario silenciado automaticamente"
+      subject_template: "Usuario novo %{username} silenciado polas denuncias da comunidade"
+    user_automatically_silenced_with_reason:
       title: "Usuario silenciado automaticamente"
       subject_template: "Usuario novo %{username} silenciado polas denuncias da comunidade"
     spam_post_blocked:

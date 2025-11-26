@@ -1,0 +1,49 @@
+name: Release - create tags & branches
+
+on:
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: "The commit SHA to prepare the release for"
+        required: false
+        type: string
+  push:
+    branches:
+      - main
+      - release/*
+    paths:
+      - "lib/version.rb"
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+jobs:
+  build:
+    name: run
+    runs-on: ubuntu-latest
+    container: discourse/discourse_test:slim
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          filter: tree:0
+          fetch-depth: 0
+          
+      - uses: ./.github/actions/setup-release-environment
+
+      - name: Maybe cut branch
+        id: maybe-cut-branch
+        if: github.ref == 'refs/heads/main'
+        run: bin/rake release:maybe_cut_branch[${{ inputs.sha || github.sha }}]
+
+      - name: Maybe trigger prepare next version
+        if: steps.maybe-cut-branch.outputs.new_branch_name
+        run: gh workflow run release-prepare-bump.yml -f branch="${{ steps.maybe-cut-branch.outputs.new_branch_name }}"
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Maybe tag release
+        run: bin/rake release:maybe_tag_release[${{ inputs.sha || github.sha }}]

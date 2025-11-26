@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { and, or } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { MODIFIER_REGEXP } from "discourse/components/search-menu";
 import AssistantItem from "discourse/components/search-menu/results/assistant-item";
 import RandomQuickTip from "discourse/components/search-menu/results/random-quick-tip";
 import RecentSearches from "discourse/components/search-menu/results/recent-searches";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { and, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import Assistant from "./assistant";
 

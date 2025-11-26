@@ -128,7 +128,6 @@ fi:
       email_frequency:
         description: "Lähetämme sinulle sähköpostia vain, jos emme ole nähneet sinua viimeisen 15 minuutin aikana."
         never: "Ei koskaan"
-        title: "Sähköposti-ilmoitukset"
         when_away: "Vain poissa ollessa"
       header_indicator_preference:
         title: "Näytä aktiivisuusilmaisin yläpalkissa"
@@ -383,6 +382,7 @@ fi:
           topic: "Ketju"
       reviewable:
         type: "Chat-viesti"
+        message_in_channel: "Kanava"
       reactions:
         only_you: "<span>Reagoit emojilla</span>:%{emoji}:"
         you_and_single_user: "<span>Sinä ja %{username} reagoitte emojilla </span>:%{emoji}:"

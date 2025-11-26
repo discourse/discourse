@@ -1,5 +1,6 @@
 import { cancel } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
+import RichHashtagAutocompleteResults from "discourse/components/rich-hashtag-autocomplete-results";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY, isTesting } from "discourse/lib/environment";
@@ -51,8 +52,8 @@ export function hashtagAutocompleteOptions(
   autocompleteOptions
 ) {
   return {
-    template: renderHashtagAutocomplete,
-    key: "#",
+    component: RichHashtagAutocompleteResults,
+    key: RichHashtagAutocompleteResults.TRIGGER_KEY,
     scrollElementSelector: ".hashtag-autocomplete__fadeout",
     autoSelectFirstSuggestion: true,
     transformComplete: (obj) => obj.ref,
@@ -141,7 +142,7 @@ function _searchRequest(term, contextualHashtagConfiguration, resultFunc) {
         }
 
         const hashtagType = getHashtagTypeClassesNew()[result.type];
-        result.icon = hashtagType.generateIconHTML(opts);
+        result.iconHtml = hashtagType.generateIconHTML(opts);
       });
       resultFunc(response.results || CANCELLED_STATUS);
     })
@@ -149,36 +150,6 @@ function _searchRequest(term, contextualHashtagConfiguration, resultFunc) {
       currentSearch = null;
     });
   return currentSearch;
-}
-
-function renderOption(option) {
-  const metaText = option.secondary_text
-    ? `<span class="hashtag-autocomplete__meta-text">(${escapeExpression(option.secondary_text)})</span>`
-    : "";
-
-  return `
-    <li class="hashtag-autocomplete__option">
-      <a class="hashtag-autocomplete__link" title="${escapeExpression(option.description)}" href>
-        ${option.icon}
-        <span class="hashtag-autocomplete__text">
-          ${option.text}
-          ${metaText}
-        </span>
-      </a>
-    </li>
-  `;
-}
-
-export default function renderHashtagAutocomplete({ options }) {
-  return `
-    <div class="autocomplete hashtag-autocomplete">
-      <div class="hashtag-autocomplete__fadeout">
-        <ul>
-          ${options.map(renderOption).join("")}
-        </ul>
-      </div>
-    </div>
-  `;
 }
 
 export function getHashtagAutocompleteCache() {

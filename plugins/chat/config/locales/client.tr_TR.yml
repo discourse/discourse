@@ -128,7 +128,6 @@ tr_TR:
       email_frequency:
         description: "Yalnızca sizi son 15 dakika içinde görmediğimiz takdirde size e-posta göndeririz."
         never: "Asla"
-        title: "E-posta Bildirimleri"
         when_away: "Sadece uzaktayken"
       header_indicator_preference:
         title: "Etkinlik göstergesini başlıkta gösterin"
@@ -436,6 +435,7 @@ tr_TR:
           topic: "Konu"
       reviewable:
         type: "Sohbet mesajı"
+        message_in_channel: "Kanal"
       reactions:
         only_you: "<span>Şu şekilde tepki verdiniz: </span>:%{emoji}:"
         you_and_single_user: "<span>Siz ve %{username} şu şekilde tepki verdiniz: </span>:%{emoji}:"

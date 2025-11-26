@@ -343,7 +343,7 @@ da:
           Vær opmærksom på, at du kun har %{deletion_after} time(r) til at annullere et indlæg.
       category_hashtag:
         reply: |-
-          Fremragende! Husk, at dette fungerer for både kategorier _og_ mærker, hvis mærker er aktiveret.
+          Fremragende! Husk, at dette fungerer for både categories _and_ tags, hvis tags er aktiveret.
       change_topic_notification_level:
         not_found: |-
           Det ser ud til, at du stadig Overvåger :eyes: dette emne! Hvis du har problemer med at finde det, er knappen til meddelelsesniveau placeret i bunden af emnet.

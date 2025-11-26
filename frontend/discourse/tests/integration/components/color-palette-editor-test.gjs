@@ -1,8 +1,8 @@
 import { find, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import ColorPaletteEditor from "discourse/admin/components/color-palette-editor";
+import ColorSchemeColor from "discourse/admin/models/color-scheme-color";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import ColorPaletteEditor from "admin/components/color-palette-editor";
-import ColorSchemeColor from "admin/models/color-scheme-color";
 
 function editor() {
   return {

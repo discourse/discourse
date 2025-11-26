@@ -285,6 +285,11 @@ ur:
       forwarded: "مندرجہ بالا ای میل کو آگے بھیجیں"
     topic_admin_menu: "موضوع کے ایکشنز"
     skip_to_main_content: "مرکزی مواد پر جائیں"
+    skip_links_label: "نیویگیشن لنکس چھوڑیں"
+    skip_to_post: "پوسٹ پر جائیں %{post_number}"
+    skip_to_where_you_left_off_last: "جہاں چھوڑا تھا آپ وہیں جاؤ (آخری جواب، پوسٹ %{post_number})"
+    skip_to_last_reply: "آخری جواب پر جائیں۔"
+    skip_to_top: "اوپر جائیں"
     skip_user_nav: "سکپ کریں پروفائل کے مواد کیلیے"
     emails_are_disabled: "ای میل کو منتظم کی طرف سے غیر فعال کر دیا گیا ہے. کسی بھی قسم کی ای میل نہیں بھیجی جائیں گی۔"
     emails_are_disabled_non_staff: "جانے والی ای میل اراکین جوعملہ میں نہیں، کے لیے غیر فعال کر دی گئی ہیں"
@@ -295,9 +300,10 @@ ur:
     back_button: "واپس"
     welcome_banner:
       header:
+        new_members: "خوش آمدید، %{preferred_display_name}!"
         logged_in_members: "دوبارہ خوش آمدید، %{preferred_display_name}!"
         anonymous_members: "%{site_name} پر خوش آمدید!"
-      search: "تلاش کریں"
+      search_placeholder: "تلاش کریں"
     impersonation:
       notice: "آپ %{username} کی نقالی کر رہے ہیں"
       stop: "نقالی کرنا بند کریں"
@@ -565,6 +571,9 @@ ur:
       remove_confirmation: "کیا آپ واقعی یہ مسودہ حذف کرنا چاہتے ہیں؟"
       bulk_delete: "منتخب کردہ کو حذف کر دیں"
       bulk_delete_confirmation: "مسودہ حذف کریں"
+      bulk_delete_message:
+        one: "کیا آپ واقعی یہ مسودہ حذف کرنا چاہتے ہیں؟"
+        other: "کیا آپ واقعی ان %{count} مسودات کو حذف کرنا چاہتے ہیں؟"
       new_topic: "نئے موضوع کا مسودہ"
       new_private_message: "نیے ذاتی پیغام کا مسودہ"
       edit_topic: "موضوع کے مسودے میں ترمیم کریں"
@@ -685,7 +694,7 @@ ur:
         claimed_by_other: "اِس چیز کا صرف <b>%{username}</b> جائزہ لے سکتا ہے۔"
         automatically_claimed_by: "اس شے کا فی الحال <b>%{username}</b> جائزہ لے رہے ہیں۔"
       claim:
-        title: "اس موضوع پر حق جتائیں"
+        title: "اِس ٹاپک کو کََلیم کریں"
       unclaim:
         help: "اس کََلیم کو ہٹائیں"
       awaiting_approval: "منظوری کا منتظر"
@@ -708,7 +717,7 @@ ur:
       topic: "موضوع:"
       filtered_topic: "آپ نے ایک موضوع میں قابل تجدید مواد کو فِلٹر کر دیا ہے۔"
       filtered_user: "رکن"
-      filtered_reviewed_by: "کی طرف سے جائزہ کردہ"
+      filtered_reviewed_by: "نے جائزہ لیا"
       show_all_topics: "تمام موضوعات دکھائیں"
       deleted_post: "(دھاگہ مٹا دیا)"
       deleted_user: "(رکن مٹادیا گیا)"
@@ -758,7 +767,7 @@ ur:
       replies:
         one: "%{count} جواب"
         other: "%{count} جوابات"
-      edit: "ترمیم"
+      edit: "پوسٹ میں ترمیم کریں"
       save: "محفوظ کریں"
       cancel: "منسوخ"
       new_topic: "اِس شے کی منظوری سے ایک نیا موضوع بن جائے گا"
@@ -780,7 +789,7 @@ ur:
           created_at: "کو بنایا گیا"
           created_at_asc: "کو بنایا گیا (ریوَرس)"
         priority:
-          title: "کم از کم ترجیح"
+          title: "کم سے کم ترجیح"
           any: "(کوئی بھی)"
           low: "کم"
           medium: "درمیانی"
@@ -845,6 +854,7 @@ ur:
           title: "دھاگہ"
           noun: "پوسٹ"
       flagged_as: "کے طور پرفلَیگ"
+      user_label: "رکن"
       assigned_to: "کو تفویض کیا گیا"
       moderator_actions: "ناظم کی کاروائیاں"
       timeline_and_notes: "ٹائم لائن اور نوٹس"
@@ -862,19 +872,19 @@ ur:
         note_added_by: "نگران کا نوٹ بذریعہ %{username} · %{relativeDate}"
         no_events: "ظاہر کرنے کے لیے کوئی ٹائم لائن ایونٹس نہیں"
       notes:
-        add_note_description: "صرف منتظمین کے لیے مرئی۔ جائزہ کے بارے میں سیاق و سباق یا فیصلے شامل کرنے کے لیے اس نوٹ کا استعمال کریں۔"
         add_note_button: "نوٹ کا اضافہ"
         placeholder: "اپنا نوٹ یہاں لکھیں۔۔۔"
         chars_remaining: "%{count} حروف باقی ہیں"
         delete_note: "اس نوٹ کو حذف کریں"
         delete: "مٹائیں"
-      new_topic_label: "نیا موضوع"
+      topic_label: "ٹاپک"
       queued_user: "قطار میں رکن"
       posted_in: "میں پوسٹ کیا گیا"
       flagged_user: "نشان۔زدہ صارف"
       review_user: "صارف"
       need_help: "مدد۔ضرورت؟"
       copy_link: "رابطہ کاپی کریں"
+      copy_link_feedback: "رابطہ کاپی ہو گیا"
       view_source: "ماخذ دیکھیں"
       insights:
         title: "تجزیے"
@@ -882,9 +892,6 @@ ur:
         flagged_by_users:
           one: "%{count} منفرد رکن کے ذریعے نشان دہی"
           other: "%{count} منفرد اراکین کے ذریعے نشان دہی"
-        similar_posts: "اسی طرح کے ماضی ک دھاگے"
-        flagged_in_timeframe: "%{count} پہلےکی نشان دہی"
-        user_activity: "صارف سرگرمی"
         activities:
           new_account: "نیا اکاؤنٹ"
           trust_level: "فعالیت کا درجہ: %{trustLevelName}"
@@ -2716,7 +2723,6 @@ ur:
         title: "ترجمہ پوسٹ"
         select: "ترجمہ کا انتخاب"
         save: "ترجمہ محفوظ"
-        original_content: "اصل پوسٹ کا مواد"
         placeholder: "پوسٹ کا ترجمہ یہاں درج کریں۔۔۔"
       group_mentioned_limit:
         one: "<b>انتباہ!</b> آپ نے <a href='%{group_link}'>%{group}</a>کا تذکرہ کیا، تاہم اس گروپ میں منتظمین کی تشکیل کردہ ذکر کی حد %{count} رکن سے زیادہ ہے۔ کسی کو اطلاع نہیں دی جائے گی۔"
@@ -2874,6 +2880,9 @@ ur:
         create_topic:
           label: "نیا موضوع"
           desc: ایک نیا موضوع بنائیں
+        create_personal_message:
+          label: "نیا پیغام"
+          desc: "نیا ذاتی پیغام بنائیں"
         shared_draft:
           label: "مشترکہ مسودہ"
           desc: "ایسے موضوع کا مسودہ تیار کریں جو صرف اجازت شدہ اراکین کو نظر آئے"
@@ -2882,7 +2891,6 @@ ur:
           desc: "تازہ ترین جواب کی تاریخ تبدیل کیے بغیر جواب دیں"
         toggle_unlisted:
           label: غیر مندرج ٹوگل
-          desc: غیر فہرست شدہ موضوعات صرف براہ راست لنک کے ذریعے ارکان کے لیے قابل رسائی ہیں
       reload: "دوبارہ لوڈ"
       ignore: "نظر انداز کریں"
       image_alt_text:
@@ -3292,7 +3300,6 @@ ur:
         progress:
           one: "پیش رفت: <strong>%{count}</strong> موضوع"
           other: "پیش رفت: <strong>%{count}</strong> موضوعات"
-        silent: "یہ عمل کو خاموشی سے انجام۔"
         performing: "حجم آپریشنز ہو رہے ہیں، براہ کرم انتظار کریں۔۔۔"
         completed: "حجمی اختیارات کامیابی سے مکمل ہو گئے!"
       none:
@@ -3367,7 +3374,7 @@ ur:
         one: "موضوع میں %{count} پوسٹ"
         other: "ٹاپک میں %{count} پوسٹس"
       create: "نیا موضوع"
-      create_long: "نیا موضوع بنائیں"
+      create_long: "ایک نیا موضوع بنائیں"
       open_draft: "مسودہ کھولیں"
       private_message: "ایک پیغام شروع کریں"
       archive_message:
@@ -3462,7 +3469,6 @@ ur:
       jump_reply_button: "دھاگہ پر جائیں"
       deleted: "موضوع مٹادیا گیا ہے"
       slow_mode_update:
-        title: "سست موڈ"
         select: "اراکین اس موضوع میں پوسٹ کر سکتے ہیں اس عرصہ میں صرف ایک بار :"
         description: "تیزی سے چلنے والی یا متنازعہ بحثوں میں سوچ بچار کو فروغ دینے کے لیے، اراکین کو اس موضوع پر دوبارہ پوسٹ کرنے سے پہلے انتظار کرنا چاہیے۔"
         enable: "فعال کریں"
@@ -3898,7 +3904,6 @@ ur:
         post_language_selector:
           none: "کوئی نہیں"
         edit_warning:
-          message: "یہ ایک ترجمہ شدہ پوسٹ ہے۔<br><br> کیا آپ اصل پوسٹ کو %{language} میں ترمیم چاہتے ہیں یا اس مخصوص ترجمہ میں ترمیم چاہتے ہیں؟"
           action_original: "اصل پوسٹ کی ترمیم"
           action_translation: "اس ترجمہ کی ترمیم"
       errors:
@@ -4133,22 +4138,12 @@ ur:
         add: "مطلوبہ دہجی گروپ شامل کریں"
         placeholder: "دہجی گروپ کا انتخاب"
       topic_featured_link_allowed: "اس زمرہ میں نمایاں رابطوں کو اجازت دیں"
-      delete: "زمرہ حذف کریں"
-      create: "نیا زمرہ"
       create_long: "نیا زمرہ بنائیں"
-      save: "زمرہ محفوظ کریں"
-      slug: "زمرہ سلَگ"
       slug_placeholder: "(اختیاری) URL کے لئے ڈیش دار الفاظ"
       creation_error: زمرہ بنانے کے دوران ایک خرابی کا سامنا کرنا پڑا۔
       save_error: زمرہ محفوظ کرنے میں ایک خرابی کا سامنا کرنا پڑا۔
-      name: "زمرہ کا نام"
-      untitled: "بلا عنوان زمرہ"
       description: "تفصیل"
-      logo: "زمرہ کے لوگو تصویر"
-      logo_dark: "ڈارک موڈ زمرہ کے لوگو کی تصویر"
       logo_description: "200px کم از کم سائز کے ساتھ تجویز کردہ 1:1 پہلو کا تناسب۔ اگر خالی چھوڑ دیا جائے تو کوئی تصویر نہیں دکھائی جائے گی۔"
-      background_image: "زمرہ کے پسِ منظر کی تصویر"
-      background_image_dark: "گہرے رنگ میں زمرے کے پس منظر کی تصویر"
       style: "طرزیں"
       background_color: "رنگ"
       foreground_color: "متن کا رنگ"
@@ -4168,9 +4163,7 @@ ur:
       color_placeholder: "کوئی بھی ویب رنگ"
       delete_confirm: "کیا آپ واقعی اِس زمرہ کو مٹانا چاہتے ہیں؟"
       delete_error: "اِس زمرہ کو مٹانے میں ایک خرابی کا سامنا کرنا پڑا۔"
-      list: "زمرہ جات کی فہرست دکھائیں"
       no_description: "براہ مہربانی اس زمرہ کی تفصیل شامل کریں۔"
-      change_in_category_topic: "تفصیل میں ترمیم کریں"
       already_used: "یہ رنگ دوسرے زمرہ کیلیے استعمال ہو چکا ہے۔"
       security: "سیکورٹی"
       security_add_group: "ایک گروپ شامل کریں"
@@ -4201,23 +4194,15 @@ ur:
       all_topics_wiki: "نئے موضوعات کو پہلے ہی سے وِیکی بنائیں"
       allow_unlimited_owner_edits_on_first_post: "پہلے دھاگہ پر مالک کو لامحدود ترامیم کی اجازت دیں"
       subcategory_list_style: "ذیلی زمرہ جات فہرست کا سٹائل:"
-      sort_order: "پہلے سے طے شدہ ترتیب:"
-      default_view: "پہلے سے طے موضوعات کی فہرست:"
-      default_top_period: "پہلے سے طے شدہ ٹاپ کی مدت:"
-      default_list_filter: "ڈیفالٹ فہرست فلٹر:"
       allow_badges_label: "اس زُمرہ میں تمغات دینے کی اجازت دیں"
-      edit_permissions: "ترمیم کرنے کی اجازتیں"
       reviewable_by_group: "عملے کے علاوہ، اس زمرے کے مواد کا جائزہ بھی لیا جا سکتا ہے:"
       review_group_name: "گروپ نام"
       require_topic_approval: "تمام نئے موضوعات کیلئے نگرانوں کی منظوری لازمی کریں"
       require_reply_approval: "تمام نئے جوابات کیلئے نگرانوں کی منظوری لازمی کریں"
       this_year: "اِس سال"
       position: "زمرہ جات کے صفحے پر پوزیشن:"
-      default_position: "پہلے سے طے شدہ پوزیشن"
       position_disabled: "زمرہ جات کو سرگرمی کی ترتیب میں دکھایا جائے گا۔ فہرستوں میں زمرہ جات کی ترتیب کو کنٹرول کرنے کے لیے، <a href='%{url}'>'نسب شدہ زمرہ ترتیب'</a> سیٹنگ کو فعال کریں۔"
       minimum_required_tags: "ایک موضوع میں ضروری ٹیگز کی کم از کم تعداد:"
-      default_slow_mode: 'اس زمرے میں نئے موضوعات کے لیے "سلو موڈ" کو فعال کریں۔'
-      parent: "بالائی زمرہ"
       num_auto_bump_daily: "روزانہ خود کار طریقے سے بَمپ کرنے کیلئے کھلے موضوعات کی تعداد:"
       auto_bump_cooldown_days: "اسی موضوع کو دوبارہ آگے کرنے سے پہلے کم از کم دن:"
       navigate_to_first_post_after_read: "موضوعات پڑھنے کے بعد پہلے دھاگہ پر جائیں"
@@ -4239,18 +4224,14 @@ ur:
           title: "خاموش کِیا ہوا"
           description: "آپ کو اس زمرے میں نئے موضوعات کے بارے میں کبھی بھی مطلع نہیں کیا جائے گا، اور وہ تازہ ترین میں ظاہر نہیں ہوں گے۔"
       search_priority:
-        label: "سرچ ترجیحات"
         options:
           normal: "عمومی"
           ignore: "نظر انداز کریں"
-          very_low: "بہت کم"
           low: "کم"
           high: "زیادہ"
-          very_high: "بہت زیادہ"
       sort_options:
         default: "پہلے سے طے شدہ"
         likes: "پسندیدگیاں"
-        op_likes: "اصل دھاگے کی پسندیدگیاں"
         views: "مشاهدات"
         posts: "دھاگے"
         activity: "سرگرمی"
@@ -4271,7 +4252,6 @@ ur:
         email: "اِی میل"
       list_filters:
         all: "تمام موضوعات"
-        none: "کوئی ذیلی زمرہ جات نہیں"
       colors_disabled: "آپ رنگوں کا انتخاب نہیں کر سکتے کیونکہ آپ کے پاس کوئی بھی انداز نہیں ہے۔"
     anonymous_flagging:
       title: "غیر قانونی مواد کی اطلاع دیں"
@@ -4503,7 +4483,7 @@ ur:
         title: "سب سے اوپر"
         help: "گزشتہ سال، ماہ، ہفتہ یا دن میں سب سے سرگرم ترین موضوع"
         all:
-          title: "تمام اوقات"
+          title: "ہر وقت"
         yearly:
           title: "سالانہ"
         quarterly:
@@ -4514,7 +4494,7 @@ ur:
           title: "ہفتہ وار"
         daily:
           title: "روزانہ"
-        all_time: "تمام اوقات"
+        all_time: "ہر وقت"
         this_year: "سال"
         this_quarter: "سہ ماہ"
         this_month: "ماہ"
@@ -4573,7 +4553,6 @@ ur:
         go_to_unread_post: "%{shortcut} پہلی غیر پڑھی پوسٹ پر جائیں"
       application:
         title: "ایپلیکیشن"
-        create: "%{shortcut} نیا ٹاپک بنائیں"
         notifications: "%{shortcut} اطلاعات کھولیں"
         hamburger_menu: "%{shortcut} نیویگیشن مینو کھولیں"
         user_profile_menu: "%{shortcut} صارف مینو کھولیں"
@@ -4789,18 +4768,13 @@ ur:
           description: "آپ کو اِس ٹیگ کے ساتھ موجود نئے ٹاپکس کی کسی بھی چیز کے بارے میں مطلع نہیں کیا جائے گا، اور یہ تازہ ترین میں بھی نظر نہیں آئیں گے۔"
       groups:
         back_btn: "تمام دہجیوں پر واپس جائیں"
-        title: "ٹیگ گروپس"
         about_heading: "ایک ٹیگ گروپ منتخب کریں یا ایک نیا بنائیں"
         about_heading_empty: "شروع کرنے کے لیے ایک نیا ٹیگ گروپ بنائیں"
         about_description: "ٹیگ گروپس آپ کو ایک جگہ پر بہت سے ٹیگز کی اجازتوں کا انتظام کرنے میں مدد کرتے ہیں۔"
-        new: "نیا گروپ"
-        new_title: "نیا گروپ بنائیں"
-        edit_title: "ٹیگ گروپ میں ترمیم کریں"
         tags_label: "اِس گروپ میں ٹیگز"
         parent_tag_label: "بالائی ٹیگ"
         parent_tag_description: "اس گروپ کے ٹیگز صرف اس صورت میں استعمال کیے جاسکتے ہیں جب پیرنٹ ٹیگ موجود ہو۔"
         one_per_topic_label: "اِس گروپ سے ایک ٹیگ فی ٹاپک محدود کریں"
-        new_name: "نیا ٹیگ گروپ"
         name_placeholder: "نام"
         save: "محفوظ کریں"
         delete: "حذف کریں"
@@ -5244,6 +5218,7 @@ ur:
   admin_js:
     type_to_filter: "کو فلٹر کرنے کے لیے ٹائپ کریں…"
     settings: "ترتیبات"
+    reset_filter: "رِی سَیٹ"
     admin:
       title: "ڈِسکورس منتظم"
       moderator: "نگران"
@@ -5276,6 +5251,20 @@ ur:
           title: "اضافی سہولتیں"
         advanced:
           title: "اعلی درجے کی"
+      upcoming_changes:
+        name: "نام"
+        enabled: "فعال شدہ"
+        select_groups: "گروپس کا انتخاب"
+        preview: "جھلک دیکھیں"
+        impact_roles:
+          admins: "منتظمین"
+          moderators: "نگران"
+          staff: "عملہ"
+        filter:
+          all: "تمام"
+          enabled: "فعال شدہ"
+          disabled: "غیر فعال"
+          impact_type_other: "دیگر"
       config:
         about:
           title: "آپ کی سائٹ کے بارے میں"
@@ -5398,6 +5387,23 @@ ur:
               other: "آپ نے ڈیفالٹ ٹیکسٹ سائز کو اپ ڈیٹ کر دیا ہے۔ کیا آپ اس تبدیلی کو %{count} موجودہ اراکین پر لاگو کرنا چاہیں گے؟"
             modal_yes: "جی ہاں"
             modal_no: "نہیں، صرف آگے بڑھ پر لاگو ہو گا"
+        welcome_banner:
+          form:
+            text_color:
+              label: "متن کا رنگ"
+            page_visibility:
+              options:
+                top_menu_pages: "سر فہرست مینو صفحات"
+                all_pages: "تمام صفحات"
+            location:
+              label: "محل وقوع"
+              options:
+                above_topic_content: "اوپر موضوع کا مواد"
+                below_site_header: "سائٹ ہیڈر کے نیچے"
+            header_logged_in:
+              placeholder: "دوبارہ خوش آمدید، %{preferred_display_name}!"
+            header_anonymous:
+              placeholder: "%{site_name} پر خوش آمدید!"
         navigation:
           title: "نیویگیشن"
           header_description: "اپنی سائٹ کے لیے نیویگیشن روابط اور مینو آئٹمز کو ترتیب دیں۔ اس میں بنیادی نیویگیشن مینو کا مقام اور برتاؤ، ہوم پیج کے اوپری حصے میں موجود فوری روابط کے ساتھ ساتھ منتظم سائڈبار بھی شامل ہے۔"
@@ -6975,7 +6981,6 @@ ur:
           success: "کامیابی"
           exists: "پہلے سے موجود"
           upload: "فائل میں سے شامل کریں"
-          upload_successful: "اَپ لوڈ کامیاب ہوا۔ الفاظ شامل کردیے گئے ہیں۔"
           html_label: "HTML"
         test:
           button_label: "ٹیسٹ"
@@ -7204,7 +7209,6 @@ ur:
             transfer_and_delete: "منتقلی اور حذف کریں @%{username}"
             cancel: "منسوخ"
         merge_failed: "اراکین کو ضم کرتے وقت ایک خامی تھی۔"
-        delete_posts_forbidden_because_staff: "منتظم اور نگرانوں کے تمام دھاگے حذف نہیں کیے جا سکتے۔"
         delete_forbidden:
           one: "اگر اراکین کے دھاگے ہیں تو انہیں حذف کرنا ممکن نہیں۔ کسی رکن کو مٹانے سے پہلے تمام دھاگے حذف کریں۔ ( %{count} دن سے زیادہ پرانے دھاگوں کو حذف نہیں کیا جا سکتا۔)"
           other: "اگر اراکین کے دھاگے ہیں تو انہیں حذف کرنا ممکن نہیں۔ کسی رکن کو مٹانے سے پہلے تمام دھاگے حذف کریں۔ ( %{count} دن سے زیادہ پرانے دھاگوں کو حذف نہیں کیا جا سکتا۔)"

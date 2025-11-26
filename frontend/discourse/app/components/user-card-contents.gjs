@@ -91,6 +91,19 @@ export default class UserCardContents extends CardContentsBase {
     return this.user.name !== this.user.username;
   }
 
+  @computed("user.id", "currentUser.id")
+  get isOwnCard() {
+    return this.currentUser && this.user.id === this.currentUser.id;
+  }
+
+  @computed("user.username_lower", "isOwnCard")
+  get avatarUrl() {
+    if (this.isOwnCard) {
+      return `/u/${this.user.username_lower}/preferences/account`;
+    }
+    return this.user.path;
+  }
+
   @computed("model.id", "currentUser.id")
   get canCheckEmails() {
     return new CanCheckEmailsHelper(
@@ -148,9 +161,9 @@ export default class UserCardContents extends CardContentsBase {
     return username ? `user-card-${username}` : "";
   }
 
-  @discourseComputed("username", "topicPostCount")
-  filterPostsLabel(username, count) {
-    return i18n("topic.filter_to", { username, count });
+  @discourseComputed("topicPostCount")
+  filterPostsLabel(count) {
+    return i18n("topic.filter_to", { count });
   }
 
   @discourseComputed("user.user_fields.@each.value")
@@ -382,11 +395,17 @@ export default class UserCardContents extends CardContentsBase {
                     }}</span>
                 {{else}}
                   <a
-                    {{on "click" this.handleShowUser}}
-                    href={{this.user.path}}
+                    href={{this.avatarUrl}}
                     class="card-huge-avatar"
                     tabindex="-1"
-                  >{{boundAvatar this.user "huge"}}</a>
+                  >
+                    {{#if this.isOwnCard}}
+                      <span class="own-avatar-pencil">
+                        {{icon "pencil"}}
+                      </span>
+                    {{/if}}
+                    {{boundAvatar this.user "huge"}}
+                  </a>
                 {{/if}}
 
                 <UserAvatarFlair @user={{this.user}} />
@@ -534,7 +553,11 @@ export default class UserCardContents extends CardContentsBase {
             <PluginOutlet
               @name="user-card-additional-controls"
               @connectorTagName="div"
-              @outletArgs={{lazyHash user=this.user close=this.close}}
+              @outletArgs={{lazyHash
+                user=this.user
+                close=this.close
+                post=this.post
+              }}
             />
           </div>
 
