@@ -10,6 +10,15 @@ let tagDecorateCallbacks = [];
 let blockDecorateCallbacks = [];
 let textDecorateCallbacks = [];
 
+function extensionFromUrl(url) {
+  if (!url) {
+    return null;
+  }
+
+  const match = url.match(/\.([a-zA-Z0-9]+)(?:\?|$)/);
+  return match ? match[1] : null;
+}
+
 /**
  * Allows to add support for custom inline markdown/bbcode prefixes
  * to convert nodes back to bbcode.
@@ -365,6 +374,14 @@ export class Tag {
 
           if (base62SHA1) {
             href = `upload://${base62SHA1}`;
+            const extension =
+              extensionFromUrl(img.attributes.src) ||
+              extensionFromUrl(attr.href) ||
+              extensionFromUrl(attr["data-download-href"]);
+
+            if (extension) {
+              href += `.${extension}`;
+            }
           }
 
           const width = img.attributes.width;
@@ -413,6 +430,13 @@ export class Tag {
         const base62SHA1 = attr["data-base62-sha1"];
         if (base62SHA1) {
           src = `upload://${base62SHA1}`;
+          const extension =
+            extensionFromUrl(attr.src || pAttr.src) ||
+            extensionFromUrl(attr["data-orig-src"]);
+
+          if (extension) {
+            src += `.${extension}`;
+          }
         }
 
         if (cssClass?.includes("emoji")) {
