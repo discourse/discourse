@@ -48,7 +48,7 @@ const ChatChannelCard = <template>
           <ToggleChannelMembershipButton
             @channel={{@channel}}
             @options={{hash
-              leaveClass="btn-transparent btn-danger chat-channel-card__leave-btn"
+              leaveClass="btn-transparent --danger chat-channel-card__leave-btn"
               labelType="short"
             }}
           />

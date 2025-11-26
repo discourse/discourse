@@ -133,7 +133,7 @@ export default class PostTranslationsModal extends Component {
                   <td class="post-translations-modal__edit-action">
                     {{#if this.canLocalizePost}}
                       <DButton
-                        class="btn-primary btn-transparent"
+                        class="btn-transparent --primary"
                         @icon="pencil"
                         @label="post.localizations.table.edit"
                         @action={{fn this.editLocalization localization}}
@@ -143,7 +143,7 @@ export default class PostTranslationsModal extends Component {
                   <td class="post-translations-modal__delete-action">
                     {{#if this.canLocalizePost}}
                       <DButton
-                        class="btn-danger btn-transparent"
+                        class="btn-transparent --danger"
                         @icon="trash-can"
                         @label="post.localizations.table.delete"
                         @action={{fn this.delete localization.locale}}

@@ -258,7 +258,7 @@ export default class ColorPaletteListItem extends Component {
                         }}
                         @icon="trash-can"
                         @label="admin.customize.delete"
-                        class="btn-transparent btn-danger"
+                        class="btn-transparent --danger"
                       />
                     </dropdown.item>
                   {{/if}}

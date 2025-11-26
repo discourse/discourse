@@ -204,7 +204,7 @@ export default class AdminFlagItem extends Component {
                     <DButton
                       @label="admin.config_areas.flags.delete"
                       @icon="trash-can"
-                      class="btn-transparent btn-danger admin-flag-item__delete"
+                      class="btn-transparent --danger admin-flag-item__delete"
                       @action={{this.delete}}
                       @disabled={{not this.canDelete}}
                       @title={{this.deleteTitle}}

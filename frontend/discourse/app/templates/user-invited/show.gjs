@@ -310,7 +310,7 @@ export default <template>
                                       invite
                                     }}
                                     @icon="trash-can"
-                                    class="btn-transparent btn-danger"
+                                    class="btn-transparent --danger"
                                     @label={{if
                                       invite.destroyed
                                       "user.invited.removed"

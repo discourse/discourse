@@ -276,7 +276,7 @@ export default class ReviewableTimeline extends Component {
                         @icon="trash-can"
                         @title="review.notes.delete_note"
                         @action={{fn this.deleteNote event.noteId}}
-                        class="btn-transparent btn-danger timeline-event__delete-note btn-transparent"
+                        class="btn-transparent --danger timeline-event__delete-note btn-transparent"
                       />
                     </div>
                   {{/if}}

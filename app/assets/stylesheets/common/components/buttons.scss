@@ -512,15 +512,22 @@
     }
   }
 
-  &.btn-primary {
+  /* The full classname is the dld way of combining transparent buttons with colours – no longer use like this 
+  Use the --modifiers approach instead
+  */
+
+  &.btn-primary,
+  &.--primary {
     @include btn-colors("primary");
   }
 
-  &.btn-danger {
+  &.btn-danger,
+  &.--danger {
     @include btn-colors("danger");
   }
 
-  &.btn-success {
+  &.btn-success,
+  &.--success {
     @include btn-colors("success");
   }
 }
