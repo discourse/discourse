@@ -26,6 +26,7 @@ export default class ChatChannelRow extends Component {
   @service capabilities;
   @service chat;
   @service site;
+  @service siteSettings;
 
   @tracked isAtThreshold = false;
   @tracked shouldRemoveChannel = false;
