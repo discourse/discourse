@@ -20,6 +20,12 @@ export default class extends Component {
           @path="/admin/config/login-and-authentication"
           @label={{i18n "admin.config.login.title"}}
         />
+        {{#if @controller.currentTabLabel}}
+          <DBreadcrumbsItem
+            @path={{@controller.router.currentURL}}
+            @label={{@controller.currentTabLabel}}
+          />
+        {{/if}}
       </:breadcrumbs>
       <:tabs>
         <NavItem

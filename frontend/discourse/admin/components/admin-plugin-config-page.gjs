@@ -9,6 +9,7 @@ import AdminPluginConfigArea from "./admin-plugin-config-area";
 
 export default class AdminPluginConfigPage extends Component {
   @service adminPluginNavManager;
+  @service router;
 
   get actionsOutletName() {
     return `admin-plugin-config-page-actions-${this.args.plugin.dasherizedName}`;
@@ -24,6 +25,23 @@ export default class AdminPluginConfigPage extends Component {
     } else {
       return navLink.text;
     }
+  }
+
+  get currentNavLink() {
+    const currentRouteName = this.router.currentRouteName;
+    return this.adminPluginNavManager.currentConfigNav.links.find(
+      (link) => link.route === currentRouteName
+    );
+  }
+
+  get currentNavLinkText() {
+    if (!this.currentNavLink) {
+      return null;
+    }
+    if (this.currentNavLink.route === "adminPlugins.show.settings") {
+      return null;
+    }
+    return this.linkText(this.currentNavLink);
   }
 
   <template>
@@ -44,6 +62,13 @@ export default class AdminPluginConfigPage extends Component {
             @path="/admin/plugins/{{@plugin.name}}"
             @label={{@plugin.nameTitleized}}
           />
+          {{#if this.currentNavLinkText}}
+            <DBreadcrumbsItem
+              @path={{this.currentNavLink}}
+              @label={{this.currentNavLinkText}}
+            />
+          {{/if}}
+
         </:breadcrumbs>
         <:tabs>
           {{#each

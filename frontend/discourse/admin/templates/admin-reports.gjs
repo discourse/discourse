@@ -16,6 +16,12 @@ export default <template>
         @path="/admin/reports"
         @label={{i18n "admin.config.reports.title"}}
       />
+      {{#if @controller.currentReportTitle}}
+        <DBreadcrumbsItem
+          @path="/admin/reports/{{@controller.currentReportType}}"
+          @label={{@controller.currentReportTitle}}
+        />
+      {{/if}}
     </:breadcrumbs>
     <:tabs>
       <NavItem
