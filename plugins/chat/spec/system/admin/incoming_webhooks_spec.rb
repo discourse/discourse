@@ -20,8 +20,6 @@ describe "Admin Chat Incoming Webhooks", type: :system do
 
     admin_incoming_webhooks_page.click_new
 
-    expect(d_page_header).to be_hidden
-
     admin_incoming_webhooks_page.form.field("name").fill_in("Test webhook")
     admin_incoming_webhooks_page.form.field("description").fill_in("Some test content")
     admin_incoming_webhooks_page.form.field("username").fill_in("system")

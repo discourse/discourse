@@ -32,8 +32,6 @@ describe "Admin User Fields", type: :system do
     user_fields_page.visit
     user_fields_page.click_add_field
 
-    expect(page_header).to be_hidden
-
     form = page.find(".user-field")
     editable_label = I18n.t("admin_js.admin.user_fields.editable.title")
 
@@ -49,8 +47,6 @@ describe "Admin User Fields", type: :system do
   it "makes sure fields are available on signup when they have to" do
     user_fields_page.visit
     user_fields_page.click_add_field
-
-    expect(page_header).to be_hidden
 
     form = page.find(".user-field")
     show_on_signup_label = I18n.t("admin_js.admin.user_fields.show_on_signup.title")
@@ -98,8 +94,6 @@ describe "Admin User Fields", type: :system do
       form = page.find(".user-field")
 
       form.find(".user-field-name").fill_in(with: "Favourite Transformer")
-
-      expect(page_header).to be_hidden
 
       form.find(".btn-primary").click
 

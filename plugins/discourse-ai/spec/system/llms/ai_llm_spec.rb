@@ -47,8 +47,6 @@ RSpec.describe "Managing LLM configurations", type: :system do
 
     find("[data-llm-id='none'] button").click()
 
-    expect(page_header).to be_hidden
-
     form.field("display_name").fill_in("Self-hosted LLM")
     form.field("name").fill_in("llava-hf/llava-v1.6-mistral-7b-hf")
     form.field("url").fill_in("srv://self-hostest.test")

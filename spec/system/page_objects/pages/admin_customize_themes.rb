@@ -159,6 +159,14 @@ module PageObjects
         )
       end
 
+      def click_breadcrumb
+        page.find(
+          ".d-breadcrumbs__item a",
+          text: I18n.t("admin_js.admin.config.themes.title"),
+        ).click
+        self
+      end
+
       def click_add_all_themes_button
         find(".relative-theme-selector .setting-label .btn-link").click
         find(".setting-controls .ok").click

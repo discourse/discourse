@@ -242,6 +242,7 @@ en:
         no_persona: "Not set"
         no_groups: "None"
         edit: "Edit"
+        subheading: "Feature: %{module_name}"
         expand_list:
           one: "(%{count} more)"
           other: "(%{count} more)"
@@ -459,9 +460,10 @@ en:
           replies:
             one: "Apply to first reply only"
             other: "Apply to first %{count} replies"
-        back: "Back"
         name: "Name"
         edit: "Edit"
+        edit_persona: "Edit persona"
+        new_persona: "Create new persona"
         export: "Export"
         import: "Import"
         import_error_conflict: "Conflict detected importing %{name}, would you like to update the existing persona?"
@@ -643,7 +645,7 @@ en:
         save: "Save"
         edit: "Edit"
         saved: "LLM model saved"
-        back: "Back"
+        edit_llm: "Edit LLM"
         confirm_delete: Are you sure you want to delete this model?
         delete: Delete
         seeded_warning: "This model is pre-configured on your site and cannot be edited."

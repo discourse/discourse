@@ -7,7 +7,7 @@ import { LinkTo } from "@ember/routing";
 import { later } from "@ember/runloop";
 import { service } from "@ember/service";
 import AdminUser from "discourse/admin/models/admin-user";
-import BackButton from "discourse/components/back-button";
+import DPageSubheader from "discourse/components/d-page-subheader";
 import Form from "discourse/components/form";
 import Avatar from "discourse/helpers/bound-avatar-template";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -74,6 +74,12 @@ export default class PersonaEditor extends Component {
       { name: l("medium"), id: 262144 },
       { name: l("high"), id: 1048576 },
     ];
+  }
+
+  get headingTitle() {
+    return this.args.model.isNew
+      ? i18n("discourse_ai.ai_persona.new_persona")
+      : i18n("discourse_ai.ai_persona.edit_persona");
   }
 
   get forcedToolStrategies() {
@@ -302,10 +308,8 @@ export default class PersonaEditor extends Component {
   }
 
   <template>
-    <BackButton
-      @route="adminPlugins.show.discourse-ai-personas"
-      @label="discourse_ai.ai_persona.back"
-    />
+    <DPageSubheader @titleLabel={{this.headingTitle}} />
+
     <div class="ai-persona-editor" {{didInsert this.updateAllGroups @model.id}}>
       <Form @onSubmit={{this.save}} @data={{this.formData}} as |form data|>
         <form.Field
