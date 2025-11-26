@@ -5,10 +5,10 @@
  * New code should not use this component or the widget system.
  */
 
+/**
+ * This is a shim used to prevent breaking imports from "virtual-dom"
+ */
 export {
-  warnWidgetsDecommissioned as avatarImg,
-  warnWidgetsDecommissioned as avatarFor,
-  warnWidgetsDecommissioned as addPostClassesCallback,
-  warnWidgetsDecommissioned as resetPostClassesCallback,
-  DummyWidget as default,
+  warnWidgetsDecommissioned as create,
+  warnWidgetsDecommissioned as h,
 } from "discourse/widgets/widget";

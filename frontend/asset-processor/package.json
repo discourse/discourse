@@ -24,7 +24,6 @@
     "decorator-transforms": "^2.3.0",
     "discourse": "workspace:0.0.0",
     "discourse-plugins": "workspace:1.0.0",
-    "discourse-widget-hbs": "workspace:1.0.0",
     "ember-cli-htmlbars": "^6.3.0",
     "ember-source": "~6.6.0",
     "ember-this-fallback": "^0.4.0",
