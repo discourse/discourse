@@ -2216,9 +2216,6 @@ files:
     min: 1800
     max: 31556952
     hidden: true
-  s3_cache_control:
-    default: "max-age=31556952, public, immutable"
-    hidden: true
   s3_secret_access_key:
     default: ""
     secret: true
