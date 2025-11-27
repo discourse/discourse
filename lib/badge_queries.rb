@@ -199,18 +199,15 @@ module BadgeQueries
   end
 
   def self.sharing_badge(count)
+    # Not that DISTINCT(i.ip_address, i.current_user_id) works because there is an underlying assumption that
+    # `IncomingLink#ip_address` is not set when `IncomingLink#current_user_id` is set.
     <<~SQL
-      SELECT views.user_id, i2.post_id, current_timestamp granted_at
-      FROM
-      (
-        SELECT i.user_id, MIN(i.id) i_id
-        FROM incoming_links i
-        JOIN badge_posts p on p.id = i.post_id
-        JOIN users u on u.id = i.user_id
-        GROUP BY i.user_id,i.post_id
-        HAVING COUNT(*) >= #{count}
-      ) as views
-      JOIN incoming_links i2 ON i2.id = views.i_id
+      SELECT i.user_id, i.post_id, CURRENT_TIMESTAMP granted_at
+      FROM incoming_links i
+      JOIN badge_posts p on p.id = i.post_id
+      JOIN users u on u.id = i.user_id
+      GROUP BY i.user_id,i.post_id
+      HAVING COUNT(DISTINCT(i.ip_address, i.current_user_id)) >= #{count}
     SQL
   end
 
