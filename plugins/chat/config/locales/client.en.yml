@@ -453,6 +453,9 @@ en:
         types:
           category: "Category"
           topic: "Topic"
+        emoji:
+          label: "Channel emoji (optional)"
+          reset: "Reset emoji"
 
       reviewable:
         type: "Chat message"

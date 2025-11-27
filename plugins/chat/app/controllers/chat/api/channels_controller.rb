@@ -49,6 +49,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
         :description,
         :auto_join_users,
         :threading_enabled,
+        :emoji,
       )
 
     # NOTE: We don't allow creating channels for anything but category chatable types
