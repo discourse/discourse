@@ -490,7 +490,7 @@ button {
     text-align: left;
     line-height: var(--line-height-medium);
     color: $caption-title-color;
-    word-wrap: break-word;
+    overflow-wrap: break-word;
     padding-right: 36px; // leave some space for counter at right side
     max-width: 100%;
 

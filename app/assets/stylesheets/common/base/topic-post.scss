@@ -98,7 +98,7 @@
 // global styles for the cooked HTML content in posts (and preview)
 .cooked,
 .d-editor-preview {
-  word-wrap: break-word;
+  overflow-wrap: break-word;
   line-height: 1.5;
 
   video {
@@ -189,7 +189,7 @@
   }
 
   a {
-    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   mark {

@@ -80,7 +80,7 @@
   width: 100%;
   margin: 0;
   min-height: auto;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
   appearance: none;
   border-radius: 0;
 }
@@ -552,7 +552,7 @@
     font-family: var(--d-font-family--monospace);
     font-size: var(--font-down-1);
     white-space: pre-wrap;
-    word-wrap: break-word;
+    overflow-wrap: break-word;
     overflow-x: auto;
   }
 }
