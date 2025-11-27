@@ -30,7 +30,7 @@ const UserNote = <template>
               @model={{@note.reviewable_id}}
               class="btn btn-small btn-default show-reviewable"
             >
-              {{i18n "user_notes.show_reviewable"}}
+              {{i18n "user_notes.show_flag"}}
             </LinkTo>
           {{/if}}
           {{#if @note.can_delete}}
