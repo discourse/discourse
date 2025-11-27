@@ -35,7 +35,7 @@ RSpec.describe "Reviewable User Notes", type: :system do
     expect(user_notes_modal).to have_content("This user needs attention")
 
     expect(user_notes_modal).to have_link(
-      I18n.t("js.user_notes.show_reviewable"),
+      I18n.t("js.user_notes.show_flag"),
       href: "/review/#{reviewable_flagged_post.id}",
     )
   end
@@ -54,7 +54,7 @@ RSpec.describe "Reviewable User Notes", type: :system do
     expect(user_notes_modal).to have_content("Regular note without reviewable")
 
     expect(user_notes_modal).not_to have_link(
-      I18n.t("js.user_notes.show_reviewable"),
+      I18n.t("js.user_notes.show_flag"),
       href: "/review/#{reviewable_flagged_post.id}",
     )
   end
