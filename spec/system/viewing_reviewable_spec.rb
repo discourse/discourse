@@ -156,9 +156,11 @@ describe "Viewing reviewable item", type: :system do
         refreshed_review_page.visit_reviewable(reviewable_flagged_post)
 
         refreshed_review_page.click_claim_reviewable
+        page.refresh
         expect(refreshed_review_page).to have_claimed_history_item(admin)
 
         refreshed_review_page.click_unclaim_reviewable
+        page.refresh
         expect(refreshed_review_page).to have_unclaimed_history_item(admin)
       end
     end

@@ -1,10 +1,6 @@
 import $ from "jquery";
 import { handleLogoff } from "discourse/lib/ajax";
-import {
-  isProduction,
-  isRailsTesting,
-  isTesting,
-} from "discourse/lib/environment";
+import { isProduction, isTesting } from "discourse/lib/environment";
 // Initialize the message bus to receive messages.
 import getURL from "discourse/lib/get-url";
 import userPresent, { onPresenceChange } from "discourse/lib/user-presence";
@@ -92,28 +88,24 @@ export default {
       return;
     }
 
-    if (isRailsTesting()) {
-      messageBus.start();
-    } else {
-      // jQuery ready is called on "interactive" we want "complete"
-      // Possibly change to document.addEventListener('readystatechange',...
-      // but would only stop a handful of interval, message bus being delayed by
-      // 500ms on load is fine. stuff that needs to catch up correctly should
-      // pass in a position
-      const interval = setInterval(() => {
-        if (document.readyState === "complete") {
-          if (
-            router.currentRouteName === "topic.fromParams" ||
-            router.currentRouteName === "topic.fromParamsNear"
-          ) {
-            _deferredViewTopicId = router.currentRoute.parent.params.id;
-          }
-
-          clearInterval(interval);
-          messageBus.start();
+    // jQuery ready is called on "interactive" we want "complete"
+    // Possibly change to document.addEventListener('readystatechange',...
+    // but would only stop a handful of interval, message bus being delayed by
+    // 500ms on load is fine. stuff that needs to catch up correctly should
+    // pass in a position
+    const interval = setInterval(() => {
+      if (document.readyState === "complete") {
+        if (
+          router.currentRouteName === "topic.fromParams" ||
+          router.currentRouteName === "topic.fromParamsNear"
+        ) {
+          _deferredViewTopicId = router.currentRoute.parent.params.id;
         }
-      }, 500);
-    }
+
+        clearInterval(interval);
+        messageBus.start();
+      }
+    }, 500);
 
     messageBus.callbackInterval = siteSettings.anon_polling_interval;
     messageBus.backgroundCallbackInterval =

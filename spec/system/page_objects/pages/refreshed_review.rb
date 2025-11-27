@@ -85,17 +85,13 @@ module PageObjects
       end
 
       def has_claimed_history_item?(user)
-        try_until_success(reason: "relies on MessageBus updates") do
-          expect(page).to have_css(".timeline-event__icon .d-icon-user-plus")
-          expect(page).to have_text("Claimed by")
-        end
+        expect(page).to have_css(".timeline-event__icon .d-icon-user-plus")
+        expect(page).to have_text("Claimed by")
       end
 
       def has_unclaimed_history_item?(user)
-        try_until_success(reason: "relies on MessageBus updates") do
-          expect(page).to have_css(".timeline-event__icon .d-icon-user-xmark")
-          expect(page).to have_text("Unclaimed by")
-        end
+        expect(page).to have_css(".timeline-event__icon .d-icon-user-xmark")
+        expect(page).to have_text("Unclaimed by")
       end
 
       private
