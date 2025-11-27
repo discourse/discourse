@@ -879,6 +879,75 @@ RSpec.describe SiteSettingExtension do
       end
     end
 
+    describe "objects settings with uploads" do
+      it "should hydrate upload IDs to URLs" do
+        upload1 = Fabricate(:upload)
+        upload2 = Fabricate(:upload)
+
+        schema = {
+          name: "section",
+          properties: {
+            title: {
+              type: "string",
+            },
+            image: {
+              type: "upload",
+            },
+          },
+        }
+
+        settings.setting(:test_objects_with_uploads, "[]", type: :objects, schema: schema)
+        settings.test_objects_with_uploads = [
+          { "title" => "Section 1", "image" => upload1.id },
+          { "title" => "Section 2", "image" => upload2.id },
+        ].to_json
+        settings.refresh!
+
+        setting = settings.all_settings.last
+        value = JSON.parse(setting[:value])
+
+        expect(value[0]["image"]).to eq(upload1.url)
+        expect(value[1]["image"]).to eq(upload2.url)
+        expect(value[0]["title"]).to eq("Section 1")
+        expect(value[1]["title"]).to eq("Section 2")
+      end
+
+      it "should batch uploads query" do
+        upload1 = Fabricate(:upload)
+        upload2 = Fabricate(:upload)
+        upload3 = Fabricate(:upload)
+
+        schema = {
+          name: "section",
+          properties: {
+            title: {
+              type: "string",
+            },
+            image: {
+              type: "upload",
+            },
+          },
+        }
+
+        settings.setting(:test_objects_with_uploads, "[]", type: :objects, schema: schema)
+        settings.test_objects_with_uploads = [
+          { "title" => "Section 1", "image" => upload1.id },
+          { "title" => "Section 2", "image" => upload2.id },
+          { "title" => "Section 3", "image" => upload3.id },
+        ].to_json
+        settings.refresh!
+
+        queries =
+          track_sql_queries do
+            setting = settings.all_settings.last
+            JSON.parse(setting[:value])
+          end
+
+        upload_queries = queries.select { |q| q.include?("SELECT") && q.include?("uploads") }
+        expect(upload_queries.length).to eq(1)
+      end
+    end
+
     context "with the filter_allowed_hidden argument" do
       it "includes the specified hidden settings only if include_hidden is true" do
         result =

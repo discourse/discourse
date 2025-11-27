@@ -25,6 +25,10 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import topicLink from "discourse/helpers/topic-link";
 import { ajax } from "discourse/lib/ajax";
+import {
+  addUniqueValueToArray,
+  removeValueFromArray,
+} from "discourse/lib/array-tools";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import {
   openLinkInNewTab,
@@ -153,14 +157,14 @@ export default class BookmarkList extends Component {
   }
 
   _removeBookmarkFromList(bookmark) {
-    this.content.removeObject(bookmark);
+    removeValueFromArray(this.content, bookmark);
   }
 
   _toggleSelection(target, bookmark, isSelectingRange) {
     const selected = this.selected;
 
     if (target.checked) {
-      selected.addObject(bookmark);
+      addUniqueValueToArray(selected, bookmark);
 
       if (isSelectingRange) {
         const bulkSelects = Array.from(
@@ -180,7 +184,7 @@ export default class BookmarkList extends Component {
       }
       this.set("lastChecked", target);
     } else {
-      selected.removeObject(bookmark);
+      removeValueFromArray(selected, bookmark);
       this.set("lastChecked", null);
     }
   }

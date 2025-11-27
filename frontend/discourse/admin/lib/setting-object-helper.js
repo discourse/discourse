@@ -1,5 +1,6 @@
 import { dependentKeyCompat } from "@ember/object/compat";
 import { isPresent } from "@ember/utils";
+import { addUniqueValueToArray } from "discourse/lib/array-tools";
 import { deepEqual } from "discourse/lib/object";
 import { i18n } from "discourse-i18n";
 
@@ -55,9 +56,9 @@ export default class SettingObjectHelper {
 
     (originalValidValues || []).forEach((v) => {
       if (v.name && v.name.length > 0 && translateNames) {
-        values.addObject({ name: i18n(v.name), value: v.value });
+        addUniqueValueToArray(values, { name: i18n(v.name), value: v.value });
       } else {
-        values.addObject(v);
+        addUniqueValueToArray(values, v);
       }
     });
     return values;

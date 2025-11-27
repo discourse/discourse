@@ -101,28 +101,35 @@
 
   &__users {
     grid-column: span 2;
+  }
 
-    .admin-config-area-card__content {
-      display: flex;
+  &__users-table-wrapper {
+    &.-multi-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2em;
+      align-items: start;
 
       .ai-usage__users-table {
-        &:first-child {
-          margin-right: 2em;
-
-          &.-double-width {
-            margin-right: 0;
-          }
-        }
-
-        &.-double-width {
-          .ai-usage__users-username {
-            width: auto;
-          }
-        }
-
         .ai-usage__users-username {
           width: 50px;
         }
+      }
+
+      @include viewport.until(md) {
+        grid-template-columns: 1fr;
+      }
+
+      .has-sidebar-page & {
+        @include viewport.until(lg) {
+          grid-template-columns: 1fr;
+        }
+      }
+    }
+
+    &:not(.-multi-column) {
+      .ai-usage__users-table .ai-usage__users-username {
+        width: auto;
       }
     }
   }

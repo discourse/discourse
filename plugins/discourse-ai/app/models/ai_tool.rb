@@ -240,9 +240,9 @@ class AiTool < ActiveRecord::Base
       },
       {
         preset_id: "image_generation_flux",
-        name: "FLUX",
+        name: "FLUX 1.1 Pro",
         provider: "Together.ai",
-        model_name: "FLUX 1.1",
+        model_name: "FLUX 1.1 Pro",
         tool_name: "image_generation",
         description:
           "Generate images using the FLUX 1.1 Pro model from Black Forest Labs via Together.ai",
@@ -260,8 +260,34 @@ class AiTool < ActiveRecord::Base
             description: "Optional seed for random number generation",
           },
         ],
-        script: "#{preamble}\n#{load_script("presets/image_generation/flux.js")}",
+        script: "#{preamble}\n#{load_script("presets/image_generation/flux_together.js")}",
         summary: "Generate images with FLUX 1.1 Pro",
+        category: "image_generation",
+      },
+      {
+        preset_id: "image_generation_flux2",
+        name: "FLUX 2 Pro",
+        provider: "Black Forest Labs",
+        model_name: "FLUX 2 Pro",
+        tool_name: "image_generation_flux2",
+        description:
+          "Generate and edit images using FLUX 2 Pro directly via Black Forest Labs API. Supports multi-image editing.",
+        parameters: [
+          {
+            name: "prompt",
+            type: "string",
+            required: true,
+            description: "The text prompt for image generation or editing",
+          },
+          {
+            name: "seed",
+            type: "number",
+            required: false,
+            description: "Optional seed for reproducible results",
+          },
+        ],
+        script: "#{preamble}\n#{load_script("presets/image_generation/flux_2_bfl.js")}",
+        summary: "Generate and edit images with FLUX 2 Pro",
         category: "image_generation",
       },
     ]

@@ -1,11 +1,13 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
-import { or } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { observes } from "@ember-decorators/object";
 import Permalink from "discourse/admin/models/permalink";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
@@ -13,21 +15,17 @@ export default class AdminPermalinksIndexController extends Controller {
   @service dialog;
   @service toasts;
 
-  loading = false;
-  filter = null;
+  @tracked loading = false;
+  @tracked filter = null;
+  @trackedArray model;
 
-  @or("model.length", "filter") showSearch;
-
-  _debouncedShow() {
-    Permalink.findAll(this.filter).then((result) => {
-      this.set("model", result);
-      this.set("loading", false);
-    });
+  get showSearch() {
+    return !!(this.model.length || this.filter);
   }
 
   @observes("filter")
   show() {
-    discourseDebounce(this, this._debouncedShow, INPUT_DELAY);
+    discourseDebounce(this, this.#debouncedShow, INPUT_DELAY);
   }
 
   @action
@@ -49,11 +47,21 @@ export default class AdminPermalinksIndexController extends Controller {
       didConfirm: async () => {
         try {
           await this.store.destroyRecord("permalink", permalink);
-          this.model.removeObject(permalink);
+          removeValueFromArray(this.model, permalink);
         } catch {
           this.dialog.alert(i18n("generic_error"));
         }
       },
     });
+  }
+
+  async #debouncedShow() {
+    this.loading = true;
+
+    try {
+      this.model = await Permalink.findAll(this.filter);
+    } finally {
+      this.loading = false;
+    }
   }
 }

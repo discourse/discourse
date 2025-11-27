@@ -15,6 +15,7 @@ import $ from "jquery";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import DEditor from "discourse/components/d-editor";
 import DEditorPreview from "discourse/components/d-editor-preview";
+import { applyHtmlDecorators } from "discourse/components/decorated-html";
 import Wrapper from "discourse/components/form-template-field/wrapper";
 import PickFilesButton from "discourse/components/pick-files-button";
 import PostTranslationEditor from "discourse/components/post-translation-editor";
@@ -609,11 +610,7 @@ export default class ComposerEditor extends Component {
   }
 
   _decorateCookedElement(preview, helper) {
-    this.appEvents.trigger(
-      "decorate-non-stream-cooked-element",
-      preview,
-      helper
-    );
+    applyHtmlDecorators(preview, helper);
   }
 
   @debounce(DEBOUNCE_JIT_MS)

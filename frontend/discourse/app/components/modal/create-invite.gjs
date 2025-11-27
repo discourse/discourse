@@ -132,7 +132,7 @@ export default class CreateInvite extends Component {
       await this.invite.save(data);
       const invites = this.model?.invites;
       if (invites && !invites.some((i) => i.id === this.invite.id)) {
-        invites.unshiftObject(this.invite);
+        invites.unshift(this.invite);
       }
 
       if (!this.simpleMode) {

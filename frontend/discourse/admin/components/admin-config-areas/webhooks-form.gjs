@@ -11,6 +11,7 @@ import GroupSelector from "discourse/components/group-selector";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import CategorySelector from "discourse/select-kit/components/category-selector";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import { eq } from "discourse/truth-helpers";
@@ -25,11 +26,11 @@ export default class AdminConfigAreasWebhookForm extends Component {
 
   @tracked loadingExtras = true;
 
-  @tracked webhookEventTypes = [];
   @tracked defaultEventTypes = {};
   @tracked groupedEventTypes = {};
   @tracked contentTypes = [];
   @tracked deliveryStatuses = [];
+  @trackedArray webhookEventTypes = [];
 
   constructor() {
     super(...arguments);

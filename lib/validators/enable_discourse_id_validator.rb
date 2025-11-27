@@ -20,7 +20,7 @@ class EnableDiscourseIdValidator
     if @result&.error.present?
       @result.error
     elsif credentials_missing?
-      I18n.t("site_settings.errors.discourse_id_credentials")
+      I18n.t("site_settings.errors.discourse_id_registration")
     end
   end
 

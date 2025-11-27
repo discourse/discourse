@@ -97,6 +97,30 @@ describe DiscourseAi::Automation::LlmPersonaTriage do
     expect(last_post.post_type).to eq(Post.types[:regular]) # Not a whisper
   end
 
+  it "hides thinking output when the persona is configured to do so" do
+    post = Fabricate(:post, raw: "This is a test post that needs triage")
+
+    thinking =
+      DiscourseAi::Completions::Thinking.new(
+        message: "Internal chain-of-thought that should stay hidden",
+        partial: false,
+      )
+
+    DiscourseAi::Completions::Llm.with_prepared_responses(
+      [[thinking, "Here is the public reply"]],
+    ) do
+      automation.running_in_background!
+      automation.trigger!({ "post" => post })
+    end
+
+    topic = post.topic.reload
+    last_post = topic.posts.order(:post_number).last
+
+    expect(topic.posts.count).to eq(2)
+    expect(last_post.raw).to eq("Here is the public reply")
+    expect(last_post.raw).not_to include("Internal chain-of-thought")
+  end
+
   it "can respond with a whisper when configured to do so" do
     add_automation_field("whisper", true, type: "boolean")
     post = Fabricate(:post, raw: "This is another test post for triage")
