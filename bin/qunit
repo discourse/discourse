@@ -142,9 +142,6 @@ class QunitRunner
 
     begin
       parser.parse!(args)
-      if @rails_env.nil?
-        @standalone_mode ? @rails_env = "test" : @rails_env = "development"
-      end
     rescue OptionParser::InvalidOption => e
       warn "Error: #{e.message}"
       puts ""
@@ -158,6 +155,13 @@ class QunitRunner
 
     detect_plugin_targets!
     expand_directory_paths!
+
+    # Detect theme early so we can set the correct rails_env before starting the server
+    detect_theme_from_paths_early!
+
+    if @rails_env.nil?
+      @standalone_mode ? @rails_env = "test" : @rails_env = "development"
+    end
   end
 
   def detect_plugin_targets!
@@ -228,13 +232,23 @@ class QunitRunner
     run_ember_exam(file_path_filter: file_path_filter, filter: @filter)
   end
 
-  def detect_theme_from_paths!
+  def detect_theme_from_paths_early!
     return if @qunit_path
 
     theme_root = find_theme_root(@file_paths)
     return unless theme_root
 
     enforce_development_for_themes!
+    @theme_detected_early = true
+  end
+
+  def detect_theme_from_paths!
+    return if @qunit_path
+
+    theme_root = find_theme_root(@file_paths)
+    return unless theme_root
+
+    enforce_development_for_themes! unless @theme_detected_early
 
     @theme_directory = theme_root
     about = read_theme_about_json(theme_root)
