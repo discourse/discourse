@@ -92,9 +92,8 @@ export default class GroupManageSaveButton extends Component {
   }
 
   <template>
-    {{#if this.shouldRenderWarningFlair}}
-      <GroupFlairVisibilityWarning @model={{this.model}} />
-    {{/if}}
+    <GroupFlairVisibilityWarning @model={{this.model}} />
+
     <div class="control-group buttons group-manage-save-button">
       <DButton
         @action={{this.save}}
