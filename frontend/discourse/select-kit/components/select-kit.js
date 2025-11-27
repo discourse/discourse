@@ -1054,7 +1054,10 @@ export default class SelectKit extends Component {
               ) || 0;
           }
 
-          return flip({ padding: { top, bottom } }).fn(state);
+          return flip({
+            padding: { top, bottom },
+            fallbackStrategy: "initialPlacement",
+          }).fn(state);
         },
       },
       {
