@@ -837,10 +837,10 @@ en:
       errors:
         credit_limit_dialog:
           title: "AI credit limit reached"
-          message_user: "You've hit the AI credit limit for your plan. Responses will be unavailable until your limit resets at %{reset_time}. Please contact your site administrator for more information."
-          message_without_time_user: "You've hit the AI credit limit for your plan. Responses will be unavailable until your limit resets. Please contact your site administrator for more information."
-          message_admin: "You've hit the AI credit limit for your plan. Responses will be unavailable until your limit resets at %{reset_time}."
-          message_without_time_admin: "You've hit the AI credit limit for your plan. Responses will be unavailable until your limit resets."
+          message_user: "You have reached  the AI credit limit for your plan. Responses will be unavailable until your limit resets at %{reset_time}. Please contact your site administrator for more information."
+          message_without_time_user: "You have reached the AI credit limit for your plan. Responses will be unavailable until your limit resets. Please contact your site administrator for more information."
+          message_admin: "You have reached the AI credit limit for your plan. Responses will be unavailable until your limit resets at %{reset_time}."
+          message_without_time_admin: "You have reached the AI credit limit for your plan. Responses will be unavailable until your limit resets."
 
       reviewables:
         model_used: "Model used:"
