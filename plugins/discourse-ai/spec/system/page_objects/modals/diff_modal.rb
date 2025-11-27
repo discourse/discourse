@@ -27,6 +27,10 @@ module PageObjects
         has_css?(".inline-diff ins", text: new_value) &&
           has_css?(".inline-diff del", text: old_value)
       end
+
+      def has_confirm_button_focused?
+        page.has_css?(".d-modal__footer button.confirm:focus", wait: 5)
+      end
     end
   end
 end

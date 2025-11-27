@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -187,6 +188,13 @@ export default class ModalDiffModal extends Component {
     this.args.closeModal();
   }
 
+  @action
+  focusConfirmBtn(element) {
+    if (!this.primaryBtnDisabled) {
+      element.focus();
+    }
+  }
+
   #resetState() {
     this.suggestion = "";
     this.finalResult = "";
@@ -242,6 +250,7 @@ export default class ModalDiffModal extends Component {
           @disabled={{this.primaryBtnDisabled}}
           @action={{this.triggerConfirmChanges}}
           @translatedLabel={{this.primaryBtnLabel}}
+          {{didUpdate this.focusConfirmBtn this.isStreaming}}
         >
           {{#if this.loading}}
             <AiIndicatorWave @loading={{this.loading}} />
