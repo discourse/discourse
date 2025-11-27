@@ -291,16 +291,16 @@ export default async function lightbox(
       data.thumbCropped = true;
 
       data.src = data.src || el.getAttribute("data-large-src");
-      data.origSrc = imgEl.getAttribute("data-orig-src");
-      data.title = el.title || imgEl.alt || imgEl.title;
-      data.base62SHA1 = imgEl.getAttribute("data-base62-sha1");
+      data.origSrc = imgEl?.getAttribute("data-orig-src");
+      data.title = el.title || imgEl?.alt || imgEl?.title;
+      data.base62SHA1 = imgEl?.getAttribute("data-base62-sha1");
       data.details = imgInfo;
       data.w = data.width = width;
       data.h = data.height = height;
       data.targetWidth =
-        el.getAttribute("data-target-width") || imgEl.getAttribute("width");
+        el.getAttribute("data-target-width") || imgEl?.getAttribute("width");
       data.targetHeight =
-        el.getAttribute("data-target-height") || imgEl.getAttribute("height");
+        el.getAttribute("data-target-height") || imgEl?.getAttribute("height");
 
       // So we can attach things like a Post model from the caller.
       Object.keys(additionalData).forEach((key) => {
