@@ -9,9 +9,6 @@ module Middleware
 
     def call(env)
       status, headers, body = @app.call(env)
-
-      headers[@header] ||= headers["X-Sendfile"]
-
       [status, headers, body]
     end
   end
