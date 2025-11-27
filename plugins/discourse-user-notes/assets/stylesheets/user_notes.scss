@@ -33,8 +33,18 @@
     }
   }
 
-  .controls {
-    float: right;
+  .note-info {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .post-date {
+    flex-grow: 1;
+    margin-left: 0.5em;
+  }
+
+  .show-reviewable {
+    margin-right: 0.5em;
   }
 }
 

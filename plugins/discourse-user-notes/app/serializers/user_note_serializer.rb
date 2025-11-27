@@ -11,6 +11,7 @@ class ::UserNoteSerializer < ApplicationSerializer
     :post_id,
     :post_url,
     :post_title,
+    :reviewable_id,
   )
 
   def id
@@ -56,5 +57,9 @@ class ::UserNoteSerializer < ApplicationSerializer
 
   def topic_id
     object[:topic_id]
+  end
+
+  def reviewable_id
+    object[:reviewable_id]
   end
 end

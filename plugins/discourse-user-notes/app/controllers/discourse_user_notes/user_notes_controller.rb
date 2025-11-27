@@ -21,6 +21,9 @@ module DiscourseUserNotes
       if post_id = params[:user_note][:post_id]
         extras[:post_id] = post_id
       end
+      if reviewable_id = params[:user_note][:reviewable_id]
+        extras[:reviewable_id] = reviewable_id
+      end
 
       user_note =
         DiscourseUserNotes.add_note(user, params[:user_note][:raw], current_user.id, extras)
