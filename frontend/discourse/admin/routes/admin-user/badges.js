@@ -1,3 +1,4 @@
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
 import DiscourseRoute from "discourse/routes/discourse";
@@ -8,20 +9,22 @@ export default class AdminUserBadgesRoute extends DiscourseRoute {
     return UserBadge.findByUsername(username);
   }
 
-  setupController(controller) {
-    super.setupController(...arguments);
+  async setupController(controller, model) {
+    super.setupController(controller, new TrackedArray(model));
 
     // Find all badges.
-    controller.set("loading", true);
-    Badge.findAll().then(function (badges) {
+    controller.loading = true;
+    try {
+      const badges = await Badge.findAll();
       controller.setProperties({ badges, expandedBadges: [] });
       if (badges.length > 0) {
-        let grantableBadges = controller.get("availableBadges");
+        let grantableBadges = controller.availableBadges;
         if (grantableBadges.length > 0) {
-          controller.set("selectedBadgeId", grantableBadges[0].get("id"));
+          controller.selectedBadgeId = grantableBadges[0].get("id");
         }
       }
-      controller.set("loading", false);
-    });
+    } finally {
+      controller.loading = false;
+    }
   }
 }

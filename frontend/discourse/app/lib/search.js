@@ -274,10 +274,10 @@ export function updateRecentSearches(currentUser, term) {
   if (recentSearches.includes(term)) {
     recentSearches = recentSearches.filter((item) => item !== term);
   } else if (recentSearches.length === MAX_RECENT_SEARCHES) {
-    recentSearches.popObject();
+    recentSearches.pop();
   }
 
-  recentSearches.unshiftObject(term);
+  recentSearches.unshift(term);
   currentUser.set("recent_searches", recentSearches);
 }
 

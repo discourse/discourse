@@ -8,7 +8,6 @@ import icon from "discourse/helpers/d-icon";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { i18n } from "discourse-i18n";
 
-// TODO (glimmer-post-stream) needs tests
 export default class PostNoticeCustom extends Component {
   @tracked createdByAnchorElement;
 

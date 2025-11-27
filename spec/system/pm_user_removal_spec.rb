@@ -9,64 +9,55 @@ describe "PM user removal", type: :system do
 
   before { sign_in(current_user) }
 
-  %w[enabled disabled].each do |setting|
-    context "when the setting is #{setting}" do
-      before { SiteSetting.glimmer_post_stream_mode = setting }
+  it "removes a user from the PM list" do
+    pm =
+      create_post(
+        user: current_user,
+        target_usernames: [other_user.username],
+        archetype: Archetype.private_message,
+      ).topic
 
-      it "removes a user from the PM list" do
-        pm =
-          create_post(
-            user: current_user,
-            target_usernames: [other_user.username],
-            archetype: Archetype.private_message,
-          ).topic
+    topic_page.visit_topic(pm)
 
-        topic_page.visit_topic(pm)
+    find(".user[data-id='#{other_user.id}'] .remove-invited").click
 
-        find(".user[data-id='#{other_user.id}'] .remove-invited").click
+    expect(page).to have_selector(
+      ".small-action-contents",
+      text: "Removed @#{other_user.username} just now",
+    )
+  end
 
-        expect(page).to have_selector(
-          ".small-action-contents",
-          text: "Removed @#{other_user.username} just now",
-        )
+  it "removes yourself from the PM list" do
+    pm =
+      create_post(
+        user: current_user,
+        target_usernames: [other_user.username],
+        archetype: Archetype.private_message,
+      ).topic
+    topic_page.visit_topic(pm)
+    find(".user[data-id='#{current_user.id}'] .remove-invited").click
+    dialog.click_yes
+
+    expect(page).to have_current_path("/u/#{current_user.username}/messages")
+  end
+
+  it "removes a group from the PM list" do
+    group =
+      Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap do |g|
+        g.add(other_user)
       end
 
-      it "removes yourself from the PM list" do
-        pm =
-          create_post(
-            user: current_user,
-            target_usernames: [other_user.username],
-            archetype: Archetype.private_message,
-          ).topic
-        topic_page.visit_topic(pm)
-        find(".user[data-id='#{current_user.id}'] .remove-invited").click
-        dialog.click_yes
+    pm =
+      create_post(
+        user: current_user,
+        target_group_names: [group.name],
+        archetype: Archetype.private_message,
+      ).topic
 
-        expect(page).to have_current_path("/u/#{current_user.username}/messages")
-      end
+    topic_page.visit_topic(pm)
 
-      it "removes a group from the PM list" do
-        group =
-          Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap do |g|
-            g.add(other_user)
-          end
+    find(".group[data-id='#{group.id}'] .remove-invited").click
 
-        pm =
-          create_post(
-            user: current_user,
-            target_group_names: [group.name],
-            archetype: Archetype.private_message,
-          ).topic
-
-        topic_page.visit_topic(pm)
-
-        find(".group[data-id='#{group.id}'] .remove-invited").click
-
-        expect(page).to have_selector(
-          ".small-action-contents",
-          text: "Removed @#{group.name} just now",
-        )
-      end
-    end
+    expect(page).to have_selector(".small-action-contents", text: "Removed @#{group.name} just now")
   end
 end

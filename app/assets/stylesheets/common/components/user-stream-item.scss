@@ -35,9 +35,11 @@
     .user-stream-item__details {
       flex-grow: 1;
       min-width: 0;
+      margin-right: var(--space-2);
 
       .badge-category__wrapper {
         width: auto;
+        max-width: 100%;
       }
     }
 
@@ -46,13 +48,16 @@
       display: flex;
       align-items: center;
       justify-content: flex-start;
-      gap: 0.5em;
+      flex-wrap: wrap;
+      gap: 0 0.5em;
+
+      .category {
+        overflow: hidden;
+      }
 
       span + span {
         &::before {
           content: "•";
-          margin-right: 0.25em;
-          vertical-align: middle;
           color: var(--primary-medium);
         }
       }

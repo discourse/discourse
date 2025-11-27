@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ColorSchemeSelectBaseModal from "discourse/admin/components/modal/color-scheme-select-base";
 import { setDefaultColorScheme } from "discourse/admin/lib/color-scheme-manager";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import { currentThemeId } from "discourse/lib/theme-selector";
 import { i18n } from "discourse-i18n";
 
@@ -190,7 +191,7 @@ export default class AdminConfigColorPalettesIndexController extends Controller 
       newColorScheme.colors.forEach((color) => {
         color.default_hex = color.originals.hex;
       });
-      this.model.pushObject(newColorScheme);
+      this.model.push(newColorScheme);
       newColorScheme.set("savingStatus", null);
 
       this.router.replaceWith("adminConfig.colorPalettes.show", newColorScheme);
@@ -276,15 +277,14 @@ export default class AdminConfigColorPalettesIndexController extends Controller 
     return new Promise((resolve, reject) => {
       this.dialog.deleteConfirm({
         title: i18n("admin.customize.colors.delete_confirm"),
-        didConfirm: () => {
-          return scheme
-            .destroy()
-            .then(() => {
-              this.model.removeObject(scheme);
-
-              resolve();
-            })
-            .catch(reject);
+        didConfirm: async () => {
+          try {
+            await scheme.destroy();
+            removeValueFromArray(this.model, scheme);
+            resolve();
+          } catch (error) {
+            reject(error);
+          }
         },
         didCancel: () => {
           reject(new Error("Deletion cancelled"));

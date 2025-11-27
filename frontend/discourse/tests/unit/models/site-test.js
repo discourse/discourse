@@ -1,6 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { removeValuesFromArray } from "discourse/lib/array-tools";
 import Site from "discourse/models/site";
 
 module("Unit | Model | site", function (hooks) {
@@ -42,8 +43,10 @@ module("Unit | Model | site", function (hooks) {
     );
 
     // remove invalid category and child
-    site.categories.removeObject(site.categories[2]);
-    site.categories.removeObject(site.categories[0]);
+    removeValuesFromArray(site.categories, [
+      site.categories[2],
+      site.categories[0],
+    ]);
 
     assert.strictEqual(
       site.categoriesByCount.length,
