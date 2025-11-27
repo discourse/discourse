@@ -520,6 +520,8 @@ module ApplicationHelper
     @all_connectors = Dir.glob("plugins/*/app/views/connectors/**/*.html.erb")
   end
 
+  PLUGIN_OUTLET_TEMPLATE_CACHE = Concurrent::Map.new
+
   def server_plugin_outlet(name, locals: {})
     return "" if !GlobalSetting.load_plugins?
 
@@ -527,9 +529,29 @@ module ApplicationHelper
     erbs = ApplicationHelper.all_connectors.select { |c| c =~ matcher }
     return "" if erbs.blank?
 
-    result = +""
-    erbs.each { |erb| result << render(inline: File.read(erb), locals: locals) }
-    result.html_safe
+    erbs
+      .map do |erb|
+        cache_key = [erb, locals.keys.sort]
+
+        template =
+          PLUGIN_OUTLET_TEMPLATE_CACHE.compute_if_absent(cache_key) do
+            source = File.read(erb)
+            handler = ActionView::Template.handler_for_extension("erb")
+
+            ActionView::Template.new(
+              source,
+              "discourse_plugin_outlet__#{name}",
+              handler,
+              locals: locals.keys,
+              format: :html,
+              virtual_path: erb,
+            )
+          end
+
+        render template: template, locals: locals
+      end
+      .join
+      .html_safe
   end
 
   def topic_featured_link_domain(link)
