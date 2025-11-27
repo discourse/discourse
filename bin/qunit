@@ -27,6 +27,7 @@ class QunitRunner
     @theme_directory = nil
     @qunit_path = nil
     @rails_env = ENV["QUNIT_RAILS_ENV"]
+    @rails_env_explicit = !@rails_env.nil?
     @plugin_targets = []
 
     @headless = true
@@ -107,8 +108,11 @@ class QunitRunner
 
         opts.on(
           "--rails-env ENV",
-          "Rails environment (default: test for standalone, dev otherwise) (env: QUNIT_RAILS_ENV)",
-        ) { |env| @rails_env = env }
+          "Rails environment (default: development for themes, test for standalone, development otherwise)",
+        ) do |env|
+          @rails_env = env
+          @rails_env_explicit = true
+        end
 
         opts.on("--report-requests", "Report HTTP requests during tests") do
           @report_requests = true
@@ -230,6 +234,8 @@ class QunitRunner
     theme_root = find_theme_root(@file_paths)
     return unless theme_root
 
+    enforce_development_for_themes!
+
     @theme_directory = theme_root
     about = read_theme_about_json(theme_root)
 
@@ -254,6 +260,13 @@ class QunitRunner
     @theme_id ||= lookup_theme_id(@theme_name) if @theme_name
 
     ENV["THEME_IDS"] ||= @theme_id.to_s if @theme_id
+  end
+
+  def enforce_development_for_themes!
+    if @rails_env_explicit && @rails_env != "development"
+      abort "Error: Theme tests require RAILS_ENV=development, but #{@rails_env} was specified"
+    end
+    @rails_env = "development"
   end
 
   def find_theme_root(paths)
@@ -306,17 +319,7 @@ class QunitRunner
   end
 
   def sync_theme!(theme_root, theme_name)
-    env = { "RAILS_ENV" => @rails_env }
-    code = <<~RUBY
-      theme_path, theme_name = ARGV
-      if theme_name.nil? || theme_name.empty?
-        abort "Theme name missing from about.json"
-      end
-
-      existing = Theme.find_by(name: theme_name)
-      theme = RemoteTheme.import_theme_from_directory(theme_path, theme_id: existing&.id)
-      puts theme.id
-    RUBY
+    env = { "RAILS_ENV" => @rails_env, "THEME_PATH" => theme_root, "THEME_NAME" => theme_name }
 
     puts <<~MESSAGE if @verbose || @dry_run
         Syncing theme with:
@@ -324,19 +327,13 @@ class QunitRunner
         Theme name: #{theme_name}
 
         ENV: #{JSON.pretty_generate(env)}
-        Code:
-        #{code}
     MESSAGE
 
     stdout, stderr, status =
       Open3.capture3(
         env,
-        File.join(rails_root, "bin", "rails"),
-        "runner",
-        "--",
-        code,
-        theme_root,
-        theme_name,
+        File.join(rails_root, "bin", "rake"),
+        "themes:install_from_directory",
         chdir: rails_root,
       )
 
