@@ -328,7 +328,7 @@
     }
 
     .setting-label {
-      word-wrap: break-word;
+      overflow-wrap: break-word;
 
       @include viewport.from(md) {
         width: 25%;
@@ -706,7 +706,7 @@
     }
 
     tr td {
-      word-wrap: break-word;
+      overflow-wrap: break-word;
       max-width: 25vw;
       align-self: start;
     }

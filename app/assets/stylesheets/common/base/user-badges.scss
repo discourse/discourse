@@ -283,7 +283,7 @@
 .badge-group-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(18em, 1fr));
-  grid-gap: 1em;
+  gap: 1em;
   width: 100%;
   margin-bottom: 1.5em;
 

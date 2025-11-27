@@ -8,8 +8,8 @@ div.edit-category {
   display: grid;
   grid-template-columns: 1fr 5fr;
   grid-template-rows: auto auto auto;
-  grid-row-gap: 1em;
-  grid-column-gap: 1.5em;
+  row-gap: 1em;
+  column-gap: 1.5em;
   grid-template-areas: "header header" "sidebar content" "sidebar warning" "sidebar footer";
 
   @include viewport.until(sm) {

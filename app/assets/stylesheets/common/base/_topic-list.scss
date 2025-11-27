@@ -299,7 +299,7 @@
     font-size: var(--font-down-1);
     margin-top: var(--space-1);
     color: var(--excerpt-color);
-    word-wrap: break-word;
+    overflow-wrap: break-word;
     line-height: var(--line-height-large);
     padding-right: var(--space-1);
   }

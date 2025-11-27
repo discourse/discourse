@@ -102,7 +102,7 @@
   }
 
   pre code {
-    word-wrap: anywhere; // prevent long strings from breaking modal width
+    overflow-wrap: anywhere; // prevent long strings from breaking modal width
     min-width: 0;
     overflow: auto;
     flex: 0 1 auto;
@@ -145,7 +145,7 @@
     border-spacing: 0;
 
     td {
-      word-wrap: anywhere;
+      overflow-wrap: anywhere;
       white-space: pre-wrap;
       flex: 0 1 50%;
     }
@@ -175,7 +175,7 @@
   }
 
   #revisions {
-    word-wrap: break-word;
+    overflow-wrap: break-word;
 
     table {
       margin-top: 10px;

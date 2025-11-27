@@ -96,7 +96,7 @@
 
       .username {
         color: var(--primary-high-or-secondary-low);
-        word-wrap: break-word;
+        overflow-wrap: break-word;
         font-weight: bold;
       }
 

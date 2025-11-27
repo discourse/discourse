@@ -216,7 +216,7 @@
         line-height: var(--line-height-medium);
         overflow: hidden;
         margin-bottom: 0.25em;
-        word-wrap: break-word;
+        overflow-wrap: break-word;
       }
 
       &::before {

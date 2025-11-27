@@ -126,7 +126,7 @@ html.ios-device.has-full-page-chat body {
 }
 
 .chat-messages-container {
-  word-wrap: break-word;
+  overflow-wrap: break-word;
   white-space: normal;
   position: relative;
 

@@ -136,7 +136,7 @@ html.discourse-reactions-no-select {
     z-index: 1;
     border-radius: 8px;
     display: grid;
-    grid-gap: 0.25em;
+    gap: 0.25em;
 
     @for $i from 1 through 8 {
       &.col-#{$i} {
@@ -240,8 +240,8 @@ html.discourse-reactions-no-select {
 
   .list {
     display: grid;
-    grid-column-gap: 0.25em;
-    grid-row-gap: 0.25em;
+    column-gap: 0.25em;
+    row-gap: 0.25em;
     padding-top: 0.25em;
     grid-template-rows: 22.5px;
   }
