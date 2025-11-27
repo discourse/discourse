@@ -60,15 +60,17 @@ module VideoConversion
       chat_message_ids =
         UploadReference.where(upload_id: @upload.id, target_type: "ChatMessage").pluck(:target_id)
 
-      Chat::Message
-        .where(id: chat_message_ids)
-        .includes(uploads: { optimized_videos: :optimized_upload })
-        .find_each do |chat_message|
-          Rails.logger.info(
-            "Rebaking chat message #{chat_message.id} to use optimized video (upload_id: #{@upload.id}, optimized_upload_id: #{optimized_video.optimized_upload.id})",
-          )
-          chat_message.rebake!
-        end
+      if chat_message_ids.any? && defined?(Chat::Message)
+        Chat::Message
+          .where(id: chat_message_ids)
+          .includes(uploads: { optimized_videos: :optimized_upload })
+          .find_each do |chat_message|
+            Rails.logger.info(
+              "Rebaking chat message #{chat_message.id} to use optimized video (upload_id: #{@upload.id}, optimized_upload_id: #{optimized_video.optimized_upload.id})",
+            )
+            chat_message.rebake!
+          end
+      end
     end
 
     private
