@@ -425,7 +425,7 @@ RSpec.describe UserDestroyer do
 
       it "removes the reviewable claimed topic" do
         UserDestroyer.new(admin).destroy(user)
-        expect(ReviewableClaimedTopic.where(user_id: user.id).count).to eq(0)
+        expect(ReviewableClaimedTopic.exists?(user_id: user.id)).to be false
       end
     end
 
