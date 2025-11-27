@@ -90,8 +90,14 @@ module FileStore
       # cache file locally when needed
       cache_file(file, File.basename(path)) if opts[:cache_locally]
 
+      cache_control = "max-age=31556952, public, immutable"
+      if SiteSetting.s3_stale_while_revalidate > 0
+        cache_control =
+          "#{cache_control}, stale-while-revalidate=#{SiteSetting.s3_stale_while_revalidate}"
+      end
+
       options = {
-        cache_control: SiteSetting.s3_cache_control,
+        cache_control: cache_control,
         content_type:
           opts[:content_type].presence || MiniMime.lookup_by_filename(filename)&.content_type,
       }.merge(default_s3_options(secure: opts[:private]))

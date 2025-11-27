@@ -2211,6 +2211,11 @@ files:
   s3_access_key_id:
     default: ""
     secret: true
+  s3_stale_while_revalidate:
+    default: 0 # disabled
+    min: 1800
+    max: 31556952
+    hidden: true
   s3_cache_control:
     default: "max-age=31556952, public, immutable"
     hidden: true
