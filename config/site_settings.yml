@@ -2211,9 +2211,14 @@ files:
   s3_access_key_id:
     default: ""
     secret: true
+  s3_max_age:
+    default: 31556952
+    min: 60
+    max: 31556952
+    hidden: true
   s3_stale_while_revalidate:
     default: 31556952
-    min: 1800
+    min: 60
     max: 31556952
     hidden: true
   s3_secret_access_key:
