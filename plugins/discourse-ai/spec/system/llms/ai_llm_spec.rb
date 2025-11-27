@@ -192,10 +192,5 @@ RSpec.describe "Managing LLM configurations", type: :system do
         text: desc,
       )
     end
-
-    it "seeded LLM has a disabled edit button" do
-      visit "/admin/plugins/discourse-ai/ai-llms"
-      expect(page).to have_css("[data-llm-id='cdck-hosted'] .ai-llm-list__edit-disabled-tooltip")
-    end
   end
 end

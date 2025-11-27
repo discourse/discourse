@@ -7,7 +7,6 @@ import AdminSectionLandingWrapper from "discourse/admin/components/admin-section
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
-import DTooltip from "discourse/float-kit/components/d-tooltip";
 import icon from "discourse/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 import AiCreditBar from "./ai-credit-bar";
@@ -229,26 +228,12 @@ export default class AiLlmsListEditor extends Component {
                       }}
                     </td>
                     <td class="d-admin-row__controls">
-                      {{#if (isPreseeded llm)}}
-                        <DTooltip class="ai-llm-list__edit-disabled-tooltip">
-                          <:trigger>
-                            <DButton
-                              class="btn btn-default btn-small disabled"
-                              @label="discourse_ai.llms.edit"
-                            />
-                          </:trigger>
-                          <:content>
-                            {{i18n "discourse_ai.llms.seeded_warning"}}
-                          </:content>
-                        </DTooltip>
-                      {{else}}
-                        <DButton
-                          class="btn btn-default btn-small ai-llm-list__delete-button"
-                          @label="discourse_ai.llms.edit"
-                          @route="adminPlugins.show.discourse-ai-llms.edit"
-                          @routeModels={{llm.id}}
-                        />
-                      {{/if}}
+                      <DButton
+                        class="btn btn-default btn-small ai-llm-list__edit-button"
+                        @label="discourse_ai.llms.edit"
+                        @route="adminPlugins.show.discourse-ai-llms.edit"
+                        @routeModels={{llm.id}}
+                      />
                     </td>
                   </tr>
                 {{/each}}
