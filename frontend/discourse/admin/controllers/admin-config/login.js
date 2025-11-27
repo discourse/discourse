@@ -8,7 +8,6 @@ export default class AdminConfigLoginController extends Controller {
   get currentTabLabel() {
     const routeName = this.router.currentRouteName;
 
-
     if (routeName === "adminConfig.login.authenticators") {
       return i18n("admin.config.login.sub_pages.authenticators.title");
     }
