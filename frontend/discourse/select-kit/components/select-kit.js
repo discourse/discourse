@@ -1008,7 +1008,7 @@ export default class SelectKit extends Component {
 
   updateFloatingUiPosition() {
     const referenceElement = this.getHeader();
-    const floatingElement = this._mainElement();
+    const floatingElement = this._bodyElement();
 
     const strategy = this._computePlacementStrategy();
     floatingElement.style.position = strategy;
