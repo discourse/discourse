@@ -91,7 +91,7 @@ module FileStore
       cache_file(file, File.basename(path)) if opts[:cache_locally]
 
       options = {
-        cache_control: "max-age=31556952, public, immutable",
+        cache_control: SiteSetting.s3_cache_control,
         content_type:
           opts[:content_type].presence || MiniMime.lookup_by_filename(filename)&.content_type,
       }.merge(default_s3_options(secure: opts[:private]))

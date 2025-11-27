@@ -2211,6 +2211,9 @@ files:
   s3_access_key_id:
     default: ""
     secret: true
+  s3_cache_control:
+    default: "max-age=31556952, public, immutable"
+    hidden: true
   s3_secret_access_key:
     default: ""
     secret: true
