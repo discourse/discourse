@@ -181,7 +181,7 @@ $use-visuallyhidden: false !default; // Hide content from browsers, but make it 
   // From HTML5 Boilerplate https://github.com/h5bp/html5-boilerplate/blob/v4.2.0/doc/css.md#visuallyhidden
   .mfp-hide {
     border: 0 !important;
-    clip: rect(0 0 0 0) !important;
+    clip-path: rect(0 0 0 0) !important;
     height: 1px !important;
     margin: -1px !important;
     overflow: hidden !important;
