@@ -6,6 +6,7 @@ module Jobs
 
     def execute(args)
       grace_period = [SiteSetting.clean_orphan_uploads_grace_period_hours, 1].max
+      destroyed_upload_urls = []
 
       # Always remove invalid upload records regardless of clean_up_uploads setting.
       Upload
@@ -15,7 +16,12 @@ module Jobs
         )
         .where("created_at < ?", grace_period.hour.ago)
         .where(url: "")
-        .find_each(&:destroy!)
+        .find_each do |upload|
+          destroyed_upload_urls << upload.url
+          upload.destroy!
+        end
+
+      purge_in_store(destroyed_upload_urls)
 
       return unless SiteSetting.clean_up_uploads?
 
@@ -49,9 +55,11 @@ module Jobs
 
       result.find_each do |upload|
         next if Upload.in_use_callbacks&.any? { |callback| callback.call(upload) }
+        destroyed_upload_urls << upload.url
         upload.sha1.present? ? upload.destroy : upload.delete
       end
 
+      purge_in_store(destroyed_upload_urls)
       ExternalUploadStub.cleanup!
 
       self.last_cleanup = Time.zone.now.to_i
@@ -68,6 +76,13 @@ module Jobs
 
     def reset_last_cleanup!
       Discourse.redis.del(last_cleanup_key)
+    end
+
+    def purge_in_store(urls)
+      return if urls.empty?
+      return if !Discourse.store.external? # removing uploads locally already removes them from local store
+
+      urls.each { |url| Discourse.store.s3_helper.remove(url) }
     end
 
     protected
