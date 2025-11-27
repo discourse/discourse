@@ -977,7 +977,7 @@ en:
           other: "%{count} confirmed flags"
         user_activity: "User info"
         activities:
-          new_account: "new account"
+          joined_on: "joined: %{joinDate}"
           trust_level: "trust level: %{trustLevelName}"
           posts:
             one: "%{count} post"
