@@ -2781,6 +2781,7 @@ en:
       invalid_username: "There's no user with that username."
       valid_username: "There's a user with that username."
       invalid_group: "There's no group with that name."
+      invalid_topic: "There's no topic with that ID."
       invalid_integer_min_max: "Value must be between %{min} and %{max}."
       invalid_integer_min: "Value must be %{min} or greater."
       invalid_integer_max: "Value cannot be higher than %{max}."
