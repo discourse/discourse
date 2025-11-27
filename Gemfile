@@ -118,6 +118,7 @@ gem "net-pop", require: false
 gem "digest", require: false
 
 gem "goldiloader"
+gem "pagy", "~> 43.0"
 
 group :test do
   gem "capybara", require: false

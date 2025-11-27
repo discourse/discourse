@@ -7,6 +7,7 @@
 
 class TopicQuery
   include PrivateMessageLists
+  include Pagy::Method
 
   PG_MAX_INT = 2_147_483_647
   DEFAULT_PER_PAGE_COUNT = 30
@@ -24,7 +25,7 @@ class TopicQuery
         true_or_false = lambda { |x| x == true || x == false || x == "true" || x == "false" }
 
         {
-          page: zero_up_to_max_page,
+          page: string,
           per_page: one_up_to_one_hundred,
           before: zero_up_to_max_int,
           bumped_before: zero_up_to_max_int,
@@ -100,6 +101,7 @@ class TopicQuery
           destination_category_id
           include_all_pms
           include_pms
+          request
         ]
   end
 
@@ -119,6 +121,7 @@ class TopicQuery
   self.results_filter_callbacks = []
 
   attr_accessor :options, :user, :guardian
+  attr_reader :request
 
   def self.add_custom_filter(key, &blk)
     @custom_filters ||= {}
@@ -146,6 +149,7 @@ class TopicQuery
     @options = options.dup
     @user = user
     @guardian = options[:guardian] || Guardian.new(@user)
+    @request = options[:request] || Current.request
   end
 
   def joined_topic_user(list = nil)
@@ -544,20 +548,11 @@ class TopicQuery
       pinned_clause << " AND (topics.pinned_at > tu.cleared_pinned_at OR tu.cleared_pinned_at IS NULL)"
     end
 
-    unpinned_topics = topics.where("NOT ( #{pinned_clause} )")
-    pinned_topics = topics.dup.offset(nil).where(pinned_clause).reorder(pinned_at: :desc)
-
-    per_page = options[:per_page]&.to_i || per_page_setting
-    limit = per_page unless options[:limit] == false
-    page = options[:page].to_i
-
-    if page == 0
-      (pinned_topics + unpinned_topics)[0...limit] if limit
-    else
-      offset = (page * per_page) - pinned_topics.length
-      offset = 0 if offset <= 0
-      unpinned_topics.offset(offset).to_a
-    end
+    # Add virtual columns for keyset pagination compatibility
+    topics.select(
+      "CASE WHEN (#{pinned_clause}) THEN 0 ELSE 1 END AS sort_priority",
+      "CASE WHEN (#{pinned_clause}) THEN topics.pinned_at ELSE topics.bumped_at END AS sort_date",
+    ).reorder(sort_priority: :asc, sort_date: :desc)
   end
 
   def create_list(filter, options = {}, topics = nil)
@@ -574,6 +569,28 @@ class TopicQuery
     apply_pinning &&= !options[:unordered] || options[:prioritize_pinned]
 
     topics = prioritize_pinned_topics(topics, options) if apply_pinning
+
+    # ugly hack for now
+    if topics.is_a?(ActiveRecord::Relation)
+      topics = Topic.select("*").from(topics, :topics) # Need a subquery to reference virtual columns properly
+
+      keyset_config =
+        if apply_pinning
+          { sort_priority: :asc, sort_date: :desc }
+        else
+          { bumped_at: :desc }
+        end
+
+      pagy, topics =
+        pagy(
+          :keyset,
+          topics,
+          limit: options[:per_page].presence || per_page_setting,
+          keyset: keyset_config,
+        )
+    else
+      pagy, topics = pagy(:offset, topics, limit: options[:per_page].presence || per_page_setting)
+    end
 
     topics = topics.to_a
 
@@ -605,7 +622,9 @@ class TopicQuery
     end
 
     list = TopicList.new(filter, @user, topics, options.merge(@options))
-    list.per_page = options[:per_page]&.to_i || per_page_setting
+    list.per_page = pagy.limit
+    list.more_topics_url = pagy.urls_hash[:next]
+    list.prev_topics_url = pagy.urls_hash[:previous]
 
     if filter == :filter && options[:include_filter_option_info]
       list.filter_option_info = TopicsFilter.option_info(@guardian)
@@ -642,10 +661,13 @@ class TopicQuery
 
   def unread_results(options = {})
     result =
-      TopicQuery.unread_filter(
-        default_results(options.reverse_merge(unordered: true)),
-        whisperer: @user&.whisperer?,
-      ).order("CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END")
+      TopicQuery
+        .unread_filter(
+          default_results(options.reverse_merge(unordered: true)),
+          whisperer: @user&.whisperer?,
+        )
+        .select("CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END AS sort_priority")
+        .order(:sort_priority)
 
     result = apply_max_age_limit(result, options)
 
@@ -790,7 +812,7 @@ class TopicQuery
       )
     end
 
-    result.order("topics.#{sort_column} #{sort_dir}")
+    result.order(sort_column => sort_dir)
   end
 
   def get_category_id(category_id_or_slug)
@@ -891,17 +913,17 @@ class TopicQuery
       result = result.where("COALESCE(categories.topic_id, 0) <> topics.id")
     end
 
-    result = result.limit(options[:per_page]&.to_i) unless options[:limit] == false
+    # result = result.limit(options[:per_page]&.to_i) unless options[:limit] == false
     result = result.visible if options[:visible]
     result =
       result.where.not(topics: { id: options[:except_topic_ids] }).references(:topics) if options[
       :except_topic_ids
     ]
 
-    if options[:page]
-      offset = options[:page].to_i * options[:per_page]&.to_i
-      result = result.offset(offset) if offset > 0
-    end
+    # if options[:page]
+    #   offset = options[:page].to_i * options[:per_page]&.to_i
+    #   result = result.offset(offset) if offset > 0
+    # end
 
     if options[:topic_ids]
       result = result.where("topics.id in (?)", options[:topic_ids]).references(:topics)
@@ -1260,7 +1282,7 @@ class TopicQuery
       )
 
     query = query.includes(:tags) if SiteSetting.tagging_enabled
-    query.order("topics.bumped_at DESC")
+    query.order(bumped_at: :desc)
   end
 
   def random_suggested(topic, count, excluded_topic_ids = [])
@@ -1303,7 +1325,7 @@ class TopicQuery
         )
     end
 
-    result.order("topics.bumped_at DESC")
+    result.order(bumped_at: :desc)
   end
 
   private
