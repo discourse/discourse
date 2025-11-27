@@ -419,6 +419,16 @@ RSpec.describe UserDestroyer do
       end
     end
 
+    describe "Destroying a user with a reviewable claimed topic" do
+      let!(:topic) { Fabricate(:topic) }
+      let!(:claimed_topic) { Fabricate(:reviewable_claimed_topic, user: user, topic: topic) }
+
+      it "removes the reviewable claimed topic" do
+        UserDestroyer.new(admin).destroy(user)
+        expect(ReviewableClaimedTopic.where(user_id: user.id).count).to eq(0)
+      end
+    end
+
     context "when user liked things" do
       before do
         @topic = Fabricate(:topic, user: Fabricate(:user))
