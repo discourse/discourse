@@ -20,6 +20,23 @@ class CreateHouseAdsTables < ActiveRecord::Migration[7.0]
       t.bigint :category_id, null: false
     end
 
+    add_foreign_key :ad_plugin_house_ads_groups,
+                    :ad_plugin_house_ads,
+                    column: :ad_plugin_house_ad_id,
+                    on_delete: :cascade
+
+    add_foreign_key :ad_plugin_house_ads_groups, :groups, column: :group_id, on_delete: :cascade
+
+    add_foreign_key :ad_plugin_house_ads_categories,
+                    :ad_plugin_house_ads,
+                    column: :ad_plugin_house_ad_id,
+                    on_delete: :cascade
+
+    add_foreign_key :ad_plugin_house_ads_categories,
+                    :categories,
+                    column: :category_id,
+                    on_delete: :cascade
+
     add_index :ad_plugin_house_ads, :name, unique: true
     add_index :ad_plugin_house_ads, :visible_to_logged_in_users
     add_index :ad_plugin_house_ads, :visible_to_anons
