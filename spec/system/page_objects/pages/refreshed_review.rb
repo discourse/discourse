@@ -94,6 +94,10 @@ module PageObjects
         expect(page).to have_text("Unclaimed by")
       end
 
+      def has_history_items?(count:)
+        expect(page).to have_css(".timeline-event", count: count)
+      end
+
       private
 
       def reviewable_by_id(id)
