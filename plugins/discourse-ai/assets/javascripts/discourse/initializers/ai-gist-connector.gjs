@@ -105,6 +105,10 @@ export default apiInitializer((api) => {
         return true;
       }
 
+      if (routeName?.startsWith("topic.")) {
+        return true;
+      }
+
       return false;
     }
 
