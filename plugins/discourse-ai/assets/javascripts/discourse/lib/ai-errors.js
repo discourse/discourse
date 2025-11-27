@@ -1,3 +1,4 @@
+import { htmlSafe } from "@ember/template";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { i18n } from "discourse-i18n";
 
@@ -32,27 +33,6 @@ export function isAiCreditLimitError(errorOrPayload) {
 }
 
 /**
- * Format credit limit message with reset time.
- *
- * @param {Object} details - Details object containing reset time info
- * @returns {string} - Formatted message
- */
-function formatCreditLimitMessage(details) {
-  const resetTime =
-    details?.reset_time_absolute ||
-    details?.reset_time_relative ||
-    details?.reset_time;
-
-  if (resetTime && resetTime.length > 0) {
-    return i18n("discourse_ai.errors.credit_limit_dialog.message", {
-      reset_time: resetTime,
-    });
-  }
-
-  return i18n("discourse_ai.errors.credit_limit_dialog.message_without_time");
-}
-
-/**
  * Show credit limit dialog to user.
  * Similar to popupAjaxError but specialized for AI credit limits.
  *
@@ -60,12 +40,35 @@ function formatCreditLimitMessage(details) {
  */
 export function popupAiCreditLimitError(errorOrPayload) {
   const dialog = getOwnerWithFallback(this).lookup("service:dialog");
+  const currentUser = getOwnerWithFallback(this).lookup("service:current-user");
 
   const details =
     errorOrPayload.jqXHR?.responseJSON?.details || errorOrPayload.details || {};
 
+  const resetTime =
+    details?.reset_time_absolute ||
+    details?.reset_time_relative ||
+    details?.reset_time;
+
+  // Choose message key based on user role
+  const userType = currentUser?.admin ? "admin" : "user";
+  let message;
+
+  if (resetTime && resetTime.length > 0) {
+    message = i18n(
+      `discourse_ai.errors.credit_limit_dialog.message_${userType}`,
+      {
+        reset_time: resetTime,
+      }
+    );
+  } else {
+    message = i18n(
+      `discourse_ai.errors.credit_limit_dialog.message_without_time_${userType}`
+    );
+  }
+
   dialog.alert({
     title: i18n("discourse_ai.errors.credit_limit_dialog.title"),
-    message: formatCreditLimitMessage(details),
+    message: htmlSafe(message),
   });
 }
