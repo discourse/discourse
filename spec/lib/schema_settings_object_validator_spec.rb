@@ -1,6 +1,67 @@
 # frozen_string_literal: true
 
 RSpec.describe SchemaSettingsObjectValidator do
+  describe ".property_values_of_type" do
+    it "returns an empty array when objects array is empty" do
+      schema = { name: "section", properties: { upload: { type: "upload" } } }
+
+      result = described_class.property_values_of_type(schema:, objects: [], type: "upload")
+
+      expect(result).to eq([])
+    end
+
+    it "returns the correct array of property values of the specified type" do
+      schema = {
+        name: "section",
+        properties: {
+          header_image: {
+            type: "upload",
+          },
+          links: {
+            type: "objects",
+            schema: {
+              name: "link",
+              properties: {
+                icon: {
+                  type: "upload",
+                },
+                category: {
+                  type: "categories",
+                },
+                related_topic: {
+                  type: "topic",
+                },
+              },
+            },
+          },
+        },
+      }
+
+      objects = [
+        {
+          header_image: 10,
+          links: [
+            { icon: 20, category: [100, 101], related_topic: 200 },
+            { icon: nil, category: [102], related_topic: nil },
+          ],
+        },
+        { header_image: nil, links: [{ icon: 30 }] },
+      ]
+
+      expect(
+        described_class.property_values_of_type(schema:, objects:, type: "upload"),
+      ).to match_array([10, 20, 30])
+
+      expect(
+        described_class.property_values_of_type(schema:, objects:, type: "categories"),
+      ).to match_array([100, 101, 102])
+
+      expect(
+        described_class.property_values_of_type(schema:, objects:, type: "topic"),
+      ).to match_array([200])
+    end
+  end
+
   describe ".validate_objects" do
     it "should return the right array of humanized error messages for objects that are invalid" do
       schema = {

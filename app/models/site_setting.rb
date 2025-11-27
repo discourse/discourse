@@ -92,8 +92,14 @@ class SiteSetting < ActiveRecord::Base
       elsif self.data_type == SiteSettings::TypeSupervisor.types[:uploaded_image_list]
         upload_ids = self.value.split("|").compact.uniq
         UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
-      elsif self.data_type == SiteSettings::TypeSupervisor.types[:objects]
-        upload_ids = extract_upload_ids_from_objects_value
+      elsif self.data_type == SiteSettings::TypeSupervisor.types[:objects] && self.value.present?
+        upload_ids =
+          SchemaSettingsObjectValidator.property_values_of_type(
+            schema: SiteSetting.type_supervisor.type_hash(self.name.to_sym)[:schema],
+            objects: JSON.parse(self.value),
+            type: "upload",
+          )
+
         UploadReference.ensure_exist!(upload_ids: upload_ids, target: self) if upload_ids.any?
       end
     end
@@ -381,31 +387,6 @@ class SiteSetting < ActiveRecord::Base
     @blocked_attachment_content_types_regex = nil
     @blocked_attachment_filenames_regex = nil
     @allowed_unicode_username_regex = nil
-  end
-
-  private
-
-  def extract_upload_ids_from_objects_value
-    return [] if self.value.blank?
-
-    type_hash = SiteSetting.type_supervisor.type_hash(self.name)
-    return [] unless type_hash[:schema]&.dig(:properties)
-
-    begin
-      parsed_value = JSON.parse(self.value)
-      parsed_value = [parsed_value] unless parsed_value.is_a?(Array)
-      upload_ids = Set.new
-
-      parsed_value.each do |obj|
-        validator = SchemaSettingsObjectValidator.new(schema: type_hash[:schema], object: obj)
-
-        upload_ids.merge(validator.property_values_of_type("upload"))
-      end
-
-      upload_ids.to_a
-    rescue JSON::ParserError
-      []
-    end
   end
 end
 

@@ -393,7 +393,6 @@ module SiteSettingExtension
         # For uploads nested in objects type, hydrate upload IDs to URLs
         if type_hash[:type].to_s == "objects" && type_hash[:schema]
           parsed_value = JSON.parse(value)
-
           value = hydrate_uploads_in_objects(parsed_value, type_hash[:schema])
         end
 
@@ -1146,14 +1145,14 @@ module SiteSettingExtension
   def hydrate_uploads_in_objects(objects, schema)
     return objects if objects.blank?
 
-    all_upload_ids = Set.new
-    objects.each do |object|
-      validator = SchemaSettingsObjectValidator.new(schema: schema, object: object)
-      all_upload_ids.merge(validator.property_values_of_type("upload"))
-    end
+    upload_ids =
+      SchemaSettingsObjectValidator.property_values_of_type(
+        schema: schema,
+        objects: objects,
+        type: "upload",
+      )
 
-    uploads_by_id = Upload.where(id: all_upload_ids.to_a).index_by(&:id)
-
+    uploads_by_id = Upload.where(id: upload_ids).index_by(&:id)
     objects.map { |obj| hydrate_uploads_in_object(obj, schema[:properties], uploads_by_id) }
   end
 

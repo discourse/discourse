@@ -19,13 +19,18 @@ class ThemeSetting < ActiveRecord::Base
   after_save :clear_settings_cache
 
   after_save do
-    if saved_change_to_value?
-      if self.data_type == ThemeSetting.types[:upload]
-        UploadReference.ensure_exist!(upload_ids: [self.value], target: self)
-      elsif self.data_type == ThemeSetting.types[:objects]
-        upload_ids = extract_upload_ids_from_objects_value
-        UploadReference.ensure_exist!(upload_ids: upload_ids, target: self) if upload_ids.any?
-      end
+    if self.data_type == ThemeSetting.types[:upload] && saved_change_to_value?
+      UploadReference.ensure_exist!(upload_ids: [self.value], target: self)
+    elsif self.data_type == ThemeSetting.types[:objects] && saved_change_to_json_value? &&
+          self.json_value.present?
+      upload_ids =
+        SchemaSettingsObjectValidator.property_values_of_type(
+          schema: theme.settings[self.name.to_sym].schema,
+          objects: self.json_value,
+          type: "upload",
+        )
+
+      UploadReference.ensure_exist!(upload_ids: upload_ids, target: self) if upload_ids.any?
     end
 
     if theme.theme_modifier_set.refresh_theme_setting_modifiers(
@@ -59,28 +64,6 @@ class ThemeSetting < ActiveRecord::Base
   end
 
   private
-
-  def extract_upload_ids_from_objects_value
-    return [] if self.value.blank?
-
-    schema = theme.settings[self.name.to_sym]&.schema
-    return [] unless schema&.dig(:properties)
-
-    begin
-      parsed_value = JSON.parse(self.value)
-      parsed_value = [parsed_value] unless parsed_value.is_a?(Array)
-      upload_ids = Set.new
-
-      parsed_value.each do |obj|
-        validator = SchemaSettingsObjectValidator.new(schema: schema, object: obj)
-        upload_ids.merge(validator.property_values_of_type("upload"))
-      end
-
-      upload_ids.to_a
-    rescue JSON::ParserError
-      []
-    end
-  end
 
   def json_value_size
     if json_value.to_json.size > MAXIMUM_JSON_VALUE_SIZE_BYTES
