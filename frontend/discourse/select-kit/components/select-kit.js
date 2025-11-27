@@ -468,8 +468,6 @@ export default class SelectKit extends Component {
     if (!this.errorsCollection.includes(error)) {
       this.errorsCollection.push(error);
     }
-
-    this._safeAfterRender(() => this.updateFloatingUiPosition());
   }
 
   clearErrors() {
@@ -503,8 +501,6 @@ export default class SelectKit extends Component {
   }
 
   _onInput(event) {
-    this.updateFloatingUiPosition();
-
     if (this._searchPromise) {
       cancel(this._searchPromise);
     }
@@ -572,7 +568,6 @@ export default class SelectKit extends Component {
         if (this.selectKit.options.focusAfterOnChange) {
           this._safeAfterRender(() => {
             this._focusFilter();
-            this.updateFloatingUiPosition();
           });
         }
       }
@@ -730,7 +725,6 @@ export default class SelectKit extends Component {
       "selectKit.isLoading": true,
       "selectKit.enterDisabled": true,
     });
-    this._safeAfterRender(() => this.updateFloatingUiPosition());
 
     let content = [];
 
@@ -796,7 +790,6 @@ export default class SelectKit extends Component {
 
         this._safeAfterRender(() => {
           if (this.selectKit.isExpanded) {
-            this.updateFloatingUiPosition();
             this._focusFilter();
           }
         });
@@ -1002,7 +995,6 @@ export default class SelectKit extends Component {
     this._safeAfterRender(() => {
       this._focusFilter();
       this._scrollToCurrent();
-      this.updateFloatingUiPosition();
     });
   }
 
