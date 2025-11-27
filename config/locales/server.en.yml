@@ -2745,9 +2745,6 @@ en:
     default_navigation_menu_categories: "Selected categories will be displayed under Navigation Menu's Categories section by default."
     default_navigation_menu_tags: "Selected tags will be displayed under Navigation Menu's Tags section by default."
     experimental_new_new_view_groups: 'Enable a new topics list that combines unread and new topics and make the "Everything" link in the sidebar link to it.'
-    glimmer_post_stream_mode: "Control whether the new 'glimmer' post stream implementation is used. 'auto' will enable automatically once all your themes and plugins are ready."
-    glimmer_post_stream_mode_auto_groups: "Enable the new 'glimmer' post stream implementation in 'auto' mode for the specified user groups."
-    deactivate_widgets_rendering: "Disable the legacy widgets rendering engine. This will disable all widgets that have not been updated to Glimmer components, it will also force the Glimmer Post Stream to be enabled unconditionally regardless of the value of the `glimmer_post_stream_mode` setting."
     experimental_form_templates: "Enable the form templates feature. Manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
     show_preview_for_form_templates: "Enable the preview for form templates feature"
     lazy_load_categories_groups: "Lazy load category information only for users of these groups. This improves performance on sites with many categories."
@@ -5297,17 +5294,17 @@ en:
       name: Nice Share
       description: Shared a post with 25 unique visitors
       long_description: |
-        This badge is granted for sharing a link that was clicked by 25 outside visitors. Thanks for spreading the word about our discussions, and this community.
+        This badge is granted for sharing a link that was clicked by 25 unique outside visitors. Thanks for spreading the word about our discussions, and this community.
     good_share:
       name: Good Share
       description: Shared a post with 300 unique visitors
       long_description: |
-        This badge is granted for sharing a link that was clicked by 300 outside visitors. Good work! You’ve shown off a great discussion to a bunch of new people and helped this community grow.
+        This badge is granted for sharing a link that was clicked by 300 unique outside visitors. Good work! You’ve shown off a great discussion to a bunch of new people and helped this community grow.
     great_share:
       name: Great Share
       description: Shared a post with 1000 unique visitors
       long_description: |
-        This badge is granted for sharing a link that was clicked by 1000 outside visitors. Wow! You’ve promoted an interesting discussion to a huge new audience, and helped us grow our community in a big way!
+        This badge is granted for sharing a link that was clicked by 1000 unique outside visitors. Wow! You’ve promoted an interesting discussion to a huge new audience, and helped us grow our community in a big way!
     first_like:
       name: First Like
       description: Liked a post
@@ -5606,6 +5603,8 @@ en:
     json_too_long: "Values not logged because they exceed the column length limits"
     not_found: "not found"
     unknown: "unknown"
+    site_setting:
+      update_existing_users: "update existing users? %{value}"
     user_merged: "%{username} was merged into this account"
     user_delete_self: "Deleted by self from %{url}"
     webhook_deactivation_reason: "Your webhook has been automatically deactivated. We received multiple '%{status}' HTTP status failure responses."

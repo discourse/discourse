@@ -219,7 +219,7 @@
       max-width: calc(
         100% - 8em - 1em
       ); // subtracting width of name and margin-right
-      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
   }
 }

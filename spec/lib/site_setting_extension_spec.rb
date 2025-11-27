@@ -883,6 +883,7 @@ RSpec.describe SiteSettingExtension do
       it "should hydrate upload IDs to URLs" do
         upload1 = Fabricate(:upload)
         upload2 = Fabricate(:upload)
+        upload3 = Fabricate(:upload)
 
         schema = {
           name: "section",
@@ -893,12 +894,27 @@ RSpec.describe SiteSettingExtension do
             image: {
               type: "upload",
             },
+            links: {
+              type: "objects",
+              schema: {
+                name: "link",
+                properties: {
+                  link_image: {
+                    type: "upload",
+                  },
+                },
+              },
+            },
           },
         }
 
         settings.setting(:test_objects_with_uploads, "[]", type: :objects, schema: schema)
         settings.test_objects_with_uploads = [
-          { "title" => "Section 1", "image" => upload1.id },
+          {
+            "title" => "Section 1",
+            "image" => upload1.id,
+            "links" => [{ "link_image" => upload3.id }],
+          },
           { "title" => "Section 2", "image" => upload2.id },
         ].to_json
         settings.refresh!
@@ -910,6 +926,7 @@ RSpec.describe SiteSettingExtension do
         expect(value[1]["image"]).to eq(upload2.url)
         expect(value[0]["title"]).to eq("Section 1")
         expect(value[1]["title"]).to eq("Section 2")
+        expect(value[0]["links"][0]["link_image"]).to eq(upload3.url)
       end
 
       it "should batch uploads query" do

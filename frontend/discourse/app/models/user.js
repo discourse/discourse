@@ -12,7 +12,11 @@ import { isEmpty } from "@ember/utils";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
-import { uniqueItemsFromArray } from "discourse/lib/array-tools";
+import {
+  addUniqueValueToArray,
+  removeValueFromArray,
+  uniqueItemsFromArray,
+} from "discourse/lib/array-tools";
 import { url } from "discourse/lib/computed";
 import {
   INTERFACE_COLOR_MODES,
@@ -30,6 +34,7 @@ import { NotificationLevels } from "discourse/lib/notification-levels";
 import PreloadStore from "discourse/lib/preload-store";
 import singleton from "discourse/lib/singleton";
 import { emojiUnescape } from "discourse/lib/text";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import { userPath } from "discourse/lib/url";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
 import Badge from "discourse/models/badge";
@@ -218,6 +223,12 @@ export default class User extends RestModel.extend(Evented) {
   @tracked do_not_disturb_until;
   @tracked status;
   @tracked dismissed_banner_key;
+  @trackedArray associated_accounts;
+  @trackedArray ignored_usernames;
+  @trackedArray ignored_users;
+  @trackedArray secondary_emails;
+  @trackedArray sidebar_sections;
+  @trackedArray unconfirmed_emails;
 
   @userOption("mailing_list_mode") mailing_list_mode;
   @userOption("external_links_in_new_tab") external_links_in_new_tab;
@@ -494,7 +505,7 @@ export default class User extends RestModel.extend(Evented) {
         this.set("unconfirmed_emails", []);
       }
 
-      this.unconfirmed_emails.pushObject(email);
+      this.unconfirmed_emails.push(email);
     });
   }
 
@@ -507,7 +518,7 @@ export default class User extends RestModel.extend(Evented) {
         this.set("unconfirmed_emails", []);
       }
 
-      this.unconfirmed_emails.pushObject(email);
+      this.unconfirmed_emails.push(email);
     });
   }
 
@@ -586,23 +597,24 @@ export default class User extends RestModel.extend(Evented) {
       type: "PUT",
       data: { email },
     }).then(() => {
-      this.secondary_emails.removeObject(email);
-      this.secondary_emails.pushObject(this.email);
+      removeValueFromArray(this.secondary_emails, email);
+      this.secondary_emails.push(this.email);
       this.set("email", email);
     });
   }
 
-  destroyEmail(email) {
-    return ajax(userPath(`${this.username}/preferences/email.json`), {
+  async destroyEmail(email) {
+    await ajax(userPath(`${this.username}/preferences/email.json`), {
       type: "DELETE",
       data: { email },
-    }).then(() => {
-      if (this.unconfirmed_emails.includes(email)) {
-        this.unconfirmed_emails.removeObject(email);
-      } else {
-        this.secondary_emails.removeObject(email);
-      }
     });
+
+    removeValueFromArray(
+      this.unconfirmed_emails.includes(email)
+        ? this.unconfirmed_emails
+        : this.secondary_emails,
+      email
+    );
   }
 
   changePassword() {
@@ -749,8 +761,8 @@ export default class User extends RestModel.extend(Evented) {
 
     ua.title = emojiUnescape(escapeExpression(ua.title));
     const action = UserAction.collapseStream([UserAction.create(ua)]);
-    this.stream.set("itemsLoaded", this.stream.get("itemsLoaded") + 1);
-    this.stream.get("content").insertAt(0, action[0]);
+    this.stream.itemsLoaded += 1;
+    this.stream.content.unshift(action[0]);
   }
 
   inAllStream(ua) {
@@ -1065,9 +1077,9 @@ export default class User extends RestModel.extend(Evented) {
         actingUser.ignored_users = [];
       }
       if (level === "normal" || level === "mute") {
-        actingUser.ignored_users.removeObject(this.username);
+        removeValueFromArray(actingUser.ignored_users, this.username);
       } else if (level === "ignore") {
-        actingUser.ignored_users.addObject(this.username);
+        addUniqueValueToArray(actingUser.ignored_users, this.username);
       }
     });
   }

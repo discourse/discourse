@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import { underscore } from "@ember/string";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
@@ -29,11 +30,11 @@ export default class EditCategoryTabsController extends Controller {
   @service router;
 
   @tracked breadcrumbCategories = this.site.get("categoriesList");
+  @trackedArray panels = [];
 
   selectedTab = "general";
   saving = false;
   deleting = false;
-  panels = [];
   showTooltip = false;
   createdCategory = false;
   expandedMenu = false;

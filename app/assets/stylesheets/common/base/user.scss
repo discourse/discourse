@@ -8,7 +8,7 @@
   display: grid;
   grid-template-columns: 1fr 5fr;
   grid-template-rows: auto auto 1fr auto;
-  grid-gap: 0 0.8em;
+  gap: 0 0.8em;
 
   .user-primary-navigation {
     grid-column-start: 1;
@@ -718,7 +718,7 @@
 .topics-section,
 .links-section {
   li {
-    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 }
 

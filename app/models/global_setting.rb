@@ -294,7 +294,7 @@ class GlobalSetting
   class BaseProvider
     def self.coerce(setting)
       return setting == "true" if setting == "true" || setting == "false"
-      return $1.to_i if setting.to_s.strip =~ /\A([0-9]+)\z/
+      return $1.to_i if setting.to_s.strip =~ /\A(-?[0-9]+)\z/
       setting
     end
 

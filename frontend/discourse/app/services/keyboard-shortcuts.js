@@ -628,11 +628,7 @@ export default class KeyboardShortcutLib extends Service {
           actionMethod = topicRoute.actions[action];
         }
 
-        const result = actionMethod.call(topicController, post);
-        if (result && result.then) {
-          // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-          this.appEvents.trigger("post-stream:refresh", { id: selectedPostId });
-        }
+        actionMethod.call(topicController, post);
       }
     }
 

@@ -671,7 +671,8 @@ en:
         all_posts_translated: "All posts in this topic are already translated."
 
     llm_credit_allocation:
-      limit_exceeded: "You have reached your AI credit limit. Please try again in %{reset_time}."
+      limit_exceeded_user: "You have reached your AI credit limit. Please try again in %{reset_time}. Please contact your site administrator for more information."
+      limit_exceeded_admin: "You have reached your AI credit limit. Please try again in %{reset_time}."
 
     errors:
       quota_exceeded: "You have exceeded the quota for this model. Please try again in %{relative_time}."

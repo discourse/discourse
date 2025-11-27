@@ -1,6 +1,7 @@
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import { observes } from "@ember-decorators/object";
+import { addUniqueValueToArray } from "discourse/lib/array-tools";
 import discourseComputed from "discourse/lib/decorators";
 
 export default class GroupManageLogsController extends Controller {
@@ -59,7 +60,7 @@ export default class GroupManageLogsController extends Controller {
       .findLogs(this.offset + 1, this.filterParams)
       .then((results) => {
         results.logs.forEach((result) =>
-          this.get("model.logs").addObject(result)
+          addUniqueValueToArray(this.get("model.logs"), result)
         );
         this.incrementProperty("offset");
         this.set("model.all_loaded", results.all_loaded);

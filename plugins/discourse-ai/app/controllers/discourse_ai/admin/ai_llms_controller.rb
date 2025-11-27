@@ -84,7 +84,10 @@ module DiscourseAi
         handle_feature_credit_costs_update(llm_model)
 
         if llm_model.seeded?
-          return render_json_error(I18n.t("discourse_ai.llm.cannot_edit_builtin"), status: 403)
+          # For seeded models, only allow quota/credit updates (already handled above)
+          # Return success with updated model, don't allow other param changes
+          log_llm_model_update(llm_model, initial_attributes, initial_quotas)
+          return render json: LlmModelSerializer.new(llm_model)
         end
 
         if llm_model.update(ai_llm_params(updating: llm_model))
@@ -140,6 +143,15 @@ module DiscourseAi
 
       def test
         RateLimiter.new(current_user, "llm_test_#{current_user.id}", 3, 1.minute).performed!
+
+        # For seeded models, test the existing model directly since provider/url/api_key are hidden
+        if params.dig(:ai_llm, :id).present?
+          existing_model = LlmModel.find_by(id: params[:ai_llm][:id])
+          if existing_model&.seeded?
+            DiscourseAi::Configuration::LlmValidator.new.run_test(existing_model)
+            return render json: { success: true }
+          end
+        end
 
         # We don't care about the display_name attr for testing.
         llm_model = LlmModel.new(ai_llm_params.merge(display_name: "LLM test"))
