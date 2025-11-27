@@ -91,7 +91,7 @@ module FileStore
       cache_file(file, File.basename(path)) if opts[:cache_locally]
 
       cache_control = "max-age=31556952, public, immutable"
-      if SiteSetting.s3_stale_while_revalidate > 0
+      if SiteSetting.s3_stale_while_revalidate < 31_556_952
         cache_control =
           "#{cache_control}, stale-while-revalidate=#{SiteSetting.s3_stale_while_revalidate}"
       end

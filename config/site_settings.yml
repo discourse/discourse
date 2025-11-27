@@ -2212,7 +2212,7 @@ files:
     default: ""
     secret: true
   s3_stale_while_revalidate:
-    default: 0 # disabled
+    default: 31556952
     min: 1800
     max: 31556952
     hidden: true
