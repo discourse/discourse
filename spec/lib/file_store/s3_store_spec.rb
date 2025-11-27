@@ -54,6 +54,36 @@ RSpec.describe FileStore::S3Store do
         expect(upload.etag).to eq(etag)
       end
 
+      it "adds `stale-while-revalidate` response directive when `s3_stale_while_revalidate` site setting is set" do
+        SiteSetting.s3_stale_while_revalidate = 3600
+
+        s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+
+        s3_bucket
+          .expects(:object)
+          .with(regexp_matches(%r{original/\d+X.*/#{upload.sha1}\.png}))
+          .returns(s3_object)
+
+        s3_object
+          .expects(:put)
+          .with(
+            {
+              acl: FileStore::S3Store::CANNED_ACL_PUBLIC_READ,
+              cache_control: "max-age=31556952, public, immutable, stale-while-revalidate=3600",
+              content_type: "image/png",
+              content_disposition: "inline; filename=\"logo.png\"; filename*=UTF-8''logo.png",
+              body: uploaded_file,
+            },
+          )
+          .returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
+
+        expect(store.store_upload(uploaded_file, upload)).to match(
+          %r{//s3-upload-bucket\.s3\.dualstack\.us-west-1\.amazonaws\.com/original/\d+X.*/#{upload.sha1}\.png},
+        )
+
+        expect(upload.etag).to eq(etag)
+      end
+
       describe "when s3_upload_bucket includes folders path" do
         before do
           s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
