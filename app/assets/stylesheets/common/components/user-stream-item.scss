@@ -174,7 +174,7 @@
   .excerpt {
     margin: 1em 0 0 0;
     font-size: var(--font-0);
-    word-wrap: break-word;
+    overflow-wrap: break-word;
     color: var(--primary);
 
     &:empty {

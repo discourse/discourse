@@ -81,7 +81,7 @@
   grid-template-areas:
     "creator title title title status"
     ". category activity activity .";
-  grid-gap: var(--space-3);
+  gap: var(--space-3);
   border-radius: var(--d-border-radius);
   cursor: pointer;
 

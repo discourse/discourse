@@ -227,7 +227,7 @@
 .styleguide-icons {
   display: grid;
   grid-template-columns: 150px 150px 150px 150px 150px;
-  grid-gap: 10px;
+  gap: 10px;
 
   .styleguide-icon {
     background-color: var(--primary-low);
@@ -244,7 +244,7 @@
 
     span {
       font-size: var(--font-down-1);
-      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
   }
 }

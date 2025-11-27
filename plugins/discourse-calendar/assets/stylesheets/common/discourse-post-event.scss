@@ -369,7 +369,7 @@ $show-interested: inherit;
   .event-invitees-avatars-container {
     display: grid;
     grid-template-columns: 3em 1fr;
-    grid-column-gap: 1em;
+    column-gap: 1em;
     align-items: center;
     height: min-content;
 
@@ -404,7 +404,7 @@ $show-interested: inherit;
   .event__section.no-rsvp {
     display: grid;
     grid-template-columns: 3em 1fr;
-    grid-column-gap: 1em;
+    column-gap: 1em;
     align-items: center;
   }
 

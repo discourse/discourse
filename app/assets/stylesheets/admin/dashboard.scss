@@ -166,8 +166,8 @@
   .charts {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
-    grid-column-gap: 1em;
-    grid-row-gap: 1em;
+    column-gap: 1em;
+    row-gap: 1em;
 
     .admin-report {
       grid-column: span 4;
@@ -543,8 +543,8 @@
   .main-section {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
-    grid-column-gap: 1em;
-    grid-row-gap: 1em;
+    column-gap: 1em;
+    row-gap: 1em;
 
     > * {
       grid-column: span 12;
@@ -554,8 +554,8 @@
     .admin-dashboard-moderation-bottom-outlet {
       display: grid;
       grid-template-columns: repeat(12, 1fr);
-      grid-column-gap: 1em;
-      grid-row-gap: 1em;
+      column-gap: 1em;
+      row-gap: 1em;
     }
   }
 
@@ -568,8 +568,8 @@
   .admin-dashboard-moderation-top {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
-    grid-column-gap: 1em;
-    grid-row-gap: 1em;
+    column-gap: 1em;
+    row-gap: 1em;
   }
 }
 
