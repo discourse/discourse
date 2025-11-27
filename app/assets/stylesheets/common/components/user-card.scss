@@ -193,30 +193,33 @@
         opacity: 0;
         position: absolute;
         width: 80%;
-        height: 80%;
-        border-radius: 50%;
+        height: 85%;
         right: 0%;
         bottom: 0%;
-        font-size: 1.25rem;
         display: flex;
         justify-content: center;
         align-items: center;
         transition: opacity 0.2s;
+        z-index: 1;
 
-        .d-icon {
-          position: inherit;
+        &--icon {
           position: absolute;
-          bottom: 0%;
-          right: 0%;
+          bottom: -4px;
+          right: -6px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
           background-color: rgb(var(--secondary-rgb), 1);
           border-radius: 50%;
-          padding: 0.5rem;
+          padding: 0.75rem;
+          font-size: 1.25rem;
           color: var(--primary);
           box-shadow: var(--shadow-dropdown);
+          box-sizing: border-box;
         }
 
         &:hover {
-          opacity: 0.9;
+          opacity: 1;
         }
       }
     }
