@@ -167,6 +167,7 @@ module Discourse
     require "middleware/csp_script_nonce_injector"
     config.middleware.insert_after(ActionDispatch::Flash, Middleware::CspScriptNonceInjector)
 
+    require "middleware/sendfile"
     config.middleware.use Middleware::Sendfile, "X-Accel-Redirect"
 
     require "middleware/discourse_public_exceptions"
