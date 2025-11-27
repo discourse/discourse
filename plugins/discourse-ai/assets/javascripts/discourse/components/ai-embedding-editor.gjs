@@ -6,9 +6,8 @@ import { later } from "@ember/runloop";
 import { service } from "@ember/service";
 import AdminSectionLandingItem from "discourse/admin/components/admin-section-landing-item";
 import AdminSectionLandingWrapper from "discourse/admin/components/admin-section-landing-wrapper";
-import BackButton from "discourse/components/back-button";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
+import DPageSubheader from "discourse/components/d-page-subheader";
 import Form from "discourse/components/form";
 import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -298,12 +297,10 @@ export default class AiEmbeddingEditor extends Component {
 
   <template>
     {{#if this.showPresets}}
-      <BackButton
-        @route="adminPlugins.show.discourse-ai-embeddings"
-        @label="discourse_ai.embeddings.back"
-      />
       <div class="control-group">
-        <h2>{{i18n "discourse_ai.embeddings.presets"}}</h2>
+        <DPageSubheader
+          @titleLabel={{i18n "discourse_ai.embeddings.presets"}}
+        />
         <AdminSectionLandingWrapper>
           {{#each this.presets as |preset|}}
             <AdminSectionLandingItem
@@ -327,26 +324,22 @@ export default class AiEmbeddingEditor extends Component {
         </AdminSectionLandingWrapper>
       </div>
     {{else}}
+      {{#if @model.isNew}}
+        <DPageSubheader
+          @titleLabel={{i18n "discourse_ai.embeddings.new_embedding"}}
+        />
+      {{else}}
+        <DPageSubheader
+          @titleLabel={{i18n "discourse_ai.embeddings.edit_embedding"}}
+        />
+      {{/if}}
+
       <Form
         @onSubmit={{this.save}}
         @data={{this.formData}}
         class="form-horizontal ai-embedding-editor {{if this.seeded 'seeded'}}"
         as |form data|
       >
-        {{#if @model.isNew}}
-          <DButton
-            @action={{this.resetForm}}
-            @label="back_button"
-            @icon="chevron-left"
-            class="btn-flat back-button"
-          />
-        {{else}}
-          <BackButton
-            @route="adminPlugins.show.discourse-ai-embeddings"
-            @label="discourse_ai.embeddings.back"
-          />
-        {{/if}}
-
         <form.Field
           @name="display_name"
           @title={{i18n "discourse_ai.embeddings.display_name"}}

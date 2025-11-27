@@ -613,6 +613,8 @@ en:
         enum_value: "Enum value"
         add_enum_value: "Add enum value"
         edit: "Edit"
+        edit_tool: "Edit tool"
+        new_tool: "New tool"
         test: "Run test"
         delete: "Delete"
         saved: "Tool saved"
@@ -860,6 +862,8 @@ en:
         presets: "Select a preset..."
         configure_manually: "Configure manually"
         edit: "Edit"
+        edit_embedding: "Edit embedding"
+        new_embedding: "New embedding"
         seeded_warning: "This is pre-configured on your site and cannot be edited."
         tests:
           title: "Run test"
