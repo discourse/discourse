@@ -16,15 +16,21 @@ class SiteSetting::Update
     attribute :settings
 
     before_validation do
+      dependent_order = SiteSetting.type_supervisor.dependencies.order
+
       self.settings =
-        self.settings.to_a.map do |setting|
-          Setting.new(
-            setting[:setting_name].to_sym,
-            setting[:value].to_s.strip,
-            !!setting[:backfill],
-            nil,
-          )
-        end
+        self
+          .settings
+          .to_a
+          .map do |setting|
+            Setting.new(
+              setting[:setting_name].to_sym,
+              setting[:value].to_s.strip,
+              !!setting[:backfill],
+              nil,
+            )
+          end
+          .sort_by { |s| dependent_order.index(s.name) }
     end
 
     validates :settings, presence: true
@@ -58,11 +64,12 @@ class SiteSetting::Update
          class_name: SiteSetting::Policy::SettingsAreUnshadowedGlobally
   policy :settings_are_visible, class_name: SiteSetting::Policy::SettingsAreVisible
   policy :settings_are_configurable, class_name: SiteSetting::Policy::SettingsAreConfigurable
-  policy :values_are_valid, class_name: SiteSetting::Policy::ValuesAreValid
 
-  transaction do
-    step :save
-    step :backfill
+  try do
+    transaction do
+      step :save
+      step :backfill
+    end
   end
 
   private

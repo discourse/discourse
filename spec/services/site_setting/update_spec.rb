@@ -122,10 +122,23 @@ RSpec.describe SiteSetting::Update do
         ]
       end
 
-      it { is_expected.to fail_a_policy(:values_are_valid) }
-
       it "does not update valid setting" do
-        expect { result }.not_to change { SiteSetting.title }
+        expect { result }.to not_change { SiteSetting.where(name: "title").pick(:value) }
+      end
+    end
+
+    context "when updating dependent settings" do
+      let(:settings) do
+        [
+          # The first setting depends on the second one, which will fail
+          # unless we re-order them before updating.
+          { setting_name: "set_locale_from_param", value: true },
+          { setting_name: "allow_user_locale", value: true },
+        ]
+      end
+
+      it "updates the settings in order of dependency" do
+        is_expected.to run_successfully
       end
     end
 
