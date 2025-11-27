@@ -80,11 +80,19 @@ class SiteSetting::Update
 
   def save(params:, options:, guardian:)
     params.settings.each do |setting|
+      detailed_message =
+        if default_user_preference?(setting)
+          value =
+            setting.backfill ? I18n.t("csv_export.boolean_yes") : I18n.t("csv_export.boolean_no")
+          I18n.t("staff_action_logs.site_setting.update_existing_users", value:)
+        end
+
       setting.change =
         SiteSetting.set_and_log(
           options.overridden_setting_names[setting.name] || setting.name,
           setting.value,
           guardian.user,
+          detailed_message,
         )
     end
   end
