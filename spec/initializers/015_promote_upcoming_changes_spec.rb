@@ -111,6 +111,27 @@ describe "Promote upcoming changes initializer" do
       end
     end
 
+    context "when the UpcomingChanges::Toggle service has an unexpected failure" do
+      it "does not enable the upcoming change and logs output" do
+        failing_toggle =
+          Class.new(UpcomingChanges::Toggle) do
+            def run!
+              context.fail(error: "Simulated failure")
+              raise Service::Base::Failure.new(context)
+            end
+          end
+
+        stub_const(UpcomingChanges, "Toggle", failing_toggle) do
+          track_log_messages do |logger|
+            UpcomingChanges::AutoPromotionInitializer.call
+            expect(logger.errors.join("\n")).to include(
+              "Failed to promote 'enable_upload_debug_mode' via toggle_upcoming_change, an unexpected error occurred.",
+            )
+          end
+        end
+      end
+    end
+
     context "when everything is ok" do
       it "enables the upcoming change and logs output" do
         track_log_messages do |logger|

@@ -14,18 +14,14 @@ class UpcomingChanges::Toggle
     validates :enabled, inclusion: [true, false]
   end
 
-  policy :current_user_is_admin
-  policy :setting_is_available
+  policy :current_user_is_admin, class_name: User::Policy::IsAdmin
+  policy :setting_is_available, class_name: SiteSetting::Policy::SettingIsAvailable
   transaction { step :toggle }
 
   private
 
   def current_user_is_admin(guardian:)
     guardian.is_admin?
-  end
-
-  def setting_is_available(params:)
-    SiteSetting.respond_to?(params.setting_name)
   end
 
   def toggle(params:, guardian:, options:)

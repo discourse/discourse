@@ -8,7 +8,7 @@ RSpec.describe UpcomingChanges::Promoter do
     let(:current_change_status) { :beta }
     let(:dependencies) { { guardian: } }
     let(:guardian) { admin.guardian }
-    let(:params) { { setting: :enable_upload_debug_mode, promotion_status_threshold: } }
+    let(:params) { { setting_name: :enable_upload_debug_mode, promotion_status_threshold: } }
 
     before do
       mock_upcoming_change_metadata(
