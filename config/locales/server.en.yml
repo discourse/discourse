@@ -2306,6 +2306,7 @@ en:
     auto_silence_fast_typers_on_first_post: "Automatically silence users that do not meet `fast typing threshold`"
     auto_silence_fast_typers_max_trust_level: "Maximum trust level to auto silence fast typers"
     auto_silence_first_post_regex: "Case insensitive regex that if passed will cause first post by user to be silenced and sent to approval queue. Example: raging|a[bc]a , will cause all posts containing raging or aba or aca to be silenced on first. Only applies to first post. DEPRECATED: Use Silence Watched Words instead."
+    moderator_guide_topic_id: "The topic that outlines how you moderate your community. Link will be visible on the review queue for moderators and admins."
     reviewable_claiming: "Does reviewable content need to be claimed before it can be acted upon?"
     reviewable_default_topics: "Show reviewable content grouped by topic by default"
     reviewable_default_visibility: "Don't show reviewable items unless they meet this priority"

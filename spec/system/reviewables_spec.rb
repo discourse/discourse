@@ -331,4 +331,37 @@ describe "Reviewables", type: :system do
       expect(review_page).to have_no_information_about_unknown_reviewables_visible
     end
   end
+
+  describe "custom community moderator guide topic" do
+    fab!(:group)
+    fab!(:topic) { Fabricate(:topic, title: "Moderator guide") }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+    fab!(:reviewable, :reviewable_queued_post)
+
+    before do
+      SiteSetting.reviewable_old_moderator_actions = false
+      SiteSetting.reviewable_ui_refresh = group.name
+      group.add(admin)
+    end
+
+    it "displays the custom guide topic link when configured" do
+      SiteSetting.moderator_guide_topic_id = topic.id
+
+      review_page.visit_reviewable(reviewable)
+      expect(review_page).to have_css(
+        "a.review-resources__link",
+        text: I18n.t("js.review.help.community_moderation_guide"),
+      )
+    end
+
+    it "does not display anything when no custom guide topic configured" do
+      SiteSetting.moderator_guide_topic_id = ""
+
+      review_page.visit_reviewable(reviewable)
+      expect(review_page).to have_no_css(
+        "a.review-resources__link",
+        text: I18n.t("js.review.help.community_moderation_guide"),
+      )
+    end
+  end
 end

@@ -987,6 +987,7 @@ en:
         visibility: "Visibility"
         topic_unlisted: "This topic is unlisted. Only accessible via direct link — not public."
       help:
+        community_moderation_guide: "This community's moderation guide"
         moderation_guide: "Discourse moderation guide"
         flag_priorities: "Managing user reputation and flag priorities"
         spam_detection: "Spam detection"

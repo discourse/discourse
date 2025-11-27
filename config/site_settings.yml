@@ -3578,6 +3578,11 @@ uncategorized:
     validator: "DefaultComposerCategoryValidator"
     area: "posts_and_topics"
 
+  moderator_guide_topic_id:
+    type: "topic"
+    default: ""
+    client: true
+
   notify_about_reviewable_item_after:
     type: float
     default: 48
