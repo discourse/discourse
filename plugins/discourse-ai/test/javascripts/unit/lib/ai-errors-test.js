@@ -98,8 +98,10 @@ module("Unit | Utility | ai-errors", function (hooks) {
 
       assert.true(alertStub.calledOnce, "Dialog should be shown");
       const callArgs = alertStub.firstCall.args[0];
+      // Convert htmlSafe string to regular string for testing
+      const messageStr = callArgs.message.toString();
       assert.true(
-        callArgs.message.includes("5:40pm on Dec 25, 2024"),
+        messageStr.includes("5:40pm on Dec 25, 2024"),
         "Message should include reset time"
       );
       assert.strictEqual(
@@ -124,12 +126,14 @@ module("Unit | Utility | ai-errors", function (hooks) {
 
       assert.true(alertStub.calledOnce, "Dialog should be shown");
       const callArgs = alertStub.firstCall.args[0];
+      // Convert htmlSafe string to regular string for testing
+      const messageStr = callArgs.message.toString();
       assert.false(
-        callArgs.message.includes("at"),
-        "Message should not include 'at' for time"
+        /\bat\b\s+\d/.test(messageStr),
+        "Message should not include time formatted as 'at [time]'"
       );
       assert.true(
-        callArgs.message.includes("until your limit resets"),
+        messageStr.includes("until your limit resets"),
         "Message should mention reset"
       );
 
@@ -151,8 +155,10 @@ module("Unit | Utility | ai-errors", function (hooks) {
 
       assert.true(alertStub.calledOnce, "Dialog should be shown");
       const callArgs = alertStub.firstCall.args[0];
+      // Convert htmlSafe string to regular string for testing
+      const messageStr = callArgs.message.toString();
       assert.true(
-        callArgs.message.includes("in 2 hours"),
+        messageStr.includes("in 2 hours"),
         "Message should include relative time"
       );
 

@@ -93,15 +93,7 @@ class LlmCreditAllocation < ActiveRecord::Base
   end
 
   def check_credits!
-    if hard_limit_reached?
-      raise CreditLimitExceeded.new(
-              I18n.t(
-                "discourse_ai.llm_credit_allocation.limit_exceeded",
-                reset_time: format_reset_time,
-              ),
-              allocation: self,
-            )
-    end
+    raise CreditLimitExceeded.new("Credit limit exceeded", allocation: self) if hard_limit_reached?
   end
 
   def self.credits_available?(llm_model)
