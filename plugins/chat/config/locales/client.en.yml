@@ -384,6 +384,7 @@ en:
         name: Channel name
         slug: Channel slug (optional)
         emoji: Channel emoji (optional)
+        reset_emoji: Reset emoji
 
       channel_edit_description_modal:
         title: Edit description

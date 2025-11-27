@@ -260,6 +260,19 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
       expect(channel_emoji).to eq("wink")
     end
 
+    it "can clear the emoji to restore the default chat icon" do
+      channel_1.update!(emoji: "smile")
+      chat_page.visit_channel_settings(channel_1)
+
+      expect(page.find(".chat-channel-title .emoji")["title"]).to eq("smile")
+
+      edit_modal = channel_settings_page.open_edit_modal
+      edit_modal.reset_emoji
+
+      expect(page).to have_no_selector(".chat-channel-title .emoji")
+      expect(page).to have_selector(".chat-channel-title .d-icon-d-chat")
+    end
+
     it "shows settings page" do
       chat_page.visit_channel_settings(channel_1)
 

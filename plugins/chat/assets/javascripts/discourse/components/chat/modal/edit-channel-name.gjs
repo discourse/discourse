@@ -175,7 +175,7 @@ export default class ChatModalEditChannelName extends Component {
           />
 
           <DButton
-            @label="chat.incoming_webhooks.reset_emoji"
+            @label="chat.channel_edit_name_slug_modal.reset_emoji"
             @action={{this.resetEmoji}}
             @disabled={{not this.editedEmoji}}
             class="btn-flat edit-channel-clear-emoji"

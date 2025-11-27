@@ -10,6 +10,7 @@ module PageObjects
       SLUG_INPUT_SELECTOR = ".chat-channel-edit-name-slug-modal__slug-input"
       NAME_INPUT_SELECTOR = ".chat-channel-edit-name-slug-modal__name-input"
       EMOJI_INPUT_SELECTOR = ".edit-channel-control .btn-emoji"
+      CLEAR_EMOJI_BTN = ".edit-channel-clear-emoji"
 
       def fill_in_slug(slug)
         within(EDIT_MODAL_SELECTOR) { find(SLUG_INPUT_SELECTOR).fill_in(with: slug) }
@@ -55,6 +56,12 @@ module PageObjects
 
       def select_and_save_emoji(value)
         select_emoji(value)
+        save_changes
+        self
+      end
+
+      def reset_emoji
+        within(EDIT_MODAL_SELECTOR) { find(CLEAR_EMOJI_BTN).click }
         save_changes
         self
       end
