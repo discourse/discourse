@@ -5,8 +5,10 @@ on:
     branches:
       - main
       - stable
+      - release/*
     tags:
       - beta
+      - v*
 
 concurrency:
   group: publish-assets-${{ format('{0}-{1}', github.run_number, github.job) }}
