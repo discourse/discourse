@@ -248,6 +248,18 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
       expect(page).to have_current_path("/chat/c/test-channel/#{channel_1.id}")
     end
 
+    it "can edit emoji" do
+      chat_page.visit_channel_settings(channel_1)
+
+      edit_modal = channel_settings_page.open_edit_modal
+
+      edit_modal.select_and_save_emoji("wink")
+
+      channel_emoji = page.find(".chat-channel-title .emoji")["title"]
+
+      expect(channel_emoji).to eq("wink")
+    end
+
     it "shows settings page" do
       chat_page.visit_channel_settings(channel_1)
 
