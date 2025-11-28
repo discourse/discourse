@@ -134,13 +134,15 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
       if (this.isDM) {
         if (this.channel.iconUploadUrl) {
           return "image";
+        } else if (this.channel.emoji) {
+          return "emoji";
         } else if (this.channel.chatable.group) {
           return "text";
         } else {
           return "image";
         }
       } else {
-        return "icon";
+        return this.channel.emoji ? "emoji" : "icon";
       }
     }
 
@@ -148,6 +150,8 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
       if (this.isDM) {
         if (this.channel.iconUploadUrl) {
           return this.channel.iconUploadUrl;
+        } else if (this.channel.emoji) {
+          return this.channel.emoji;
         } else if (this.channel.chatable.group) {
           return this.channel.membershipsCount;
         } else {
@@ -157,7 +161,7 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
           );
         }
       } else {
-        return "d-chat";
+        return this.channel.emoji ?? "d-chat";
       }
     }
 
