@@ -112,6 +112,32 @@ RSpec.describe Review::CalculateFinalStatusFromLogs do
         expect(result.status).to eq(:rejected)
       end
     end
+
+    it "uses the latest action when multiple actions exist for the same bundle" do
+      reviewable.reviewable_action_logs.create!(
+        action_key: "hide_post",
+        status: :approved,
+        performed_by: moderator,
+        bundle: "post-actions",
+      )
+      reviewable.reviewable_action_logs.create!(
+        action_key: "no_action_post",
+        status: :ignored,
+        performed_by: moderator,
+        bundle: "post-actions",
+      )
+      reviewable.reviewable_action_logs.create!(
+        action_key: "no_action_user",
+        status: :ignored,
+        performed_by: moderator,
+        bundle: "user-actions",
+      )
+
+      result = described_class.call(params: { reviewable_id: reviewable.id, guardian: guardian })
+      expect(result).to be_a_success
+      expect(result.status).to eq(:ignored)
+    end
+
     it "succeeds for reviewable with single bundle" do
       reviewable_user.reviewable_action_logs.create!(
         action_key: "approve_user",

@@ -41,20 +41,25 @@ module Review
     end
 
     def fetch_reviewable_action_logs(reviewable:)
-      reviewable.reviewable_action_logs.reorder(nil)
+      reviewable
+        .reviewable_action_logs
+        .reorder(bundle: :asc, created_at: :desc)
+        .select(
+          "DISTINCT ON (reviewable_action_logs.bundle) reviewable_action_logs.bundle, reviewable_action_logs.status",
+        )
     end
 
     def all_bundles_actioned(reviewable:, reviewable_action_logs:, params:)
       actions = reviewable.actions_for(params.guardian, params.args)
 
       current_bundle_types = actions.bundles.map { |b| b.id.split("-", 2).last }
-      logged_bundle_types = reviewable_action_logs.select(:bundle).distinct.pluck(:bundle).compact
+      logged_bundle_types = reviewable_action_logs.uniq.pluck(:bundle)
 
       current_bundle_types.all? { |type| logged_bundle_types.include?(type) }
     end
 
     def calculate_status(reviewable:, reviewable_action_logs:)
-      statuses = reviewable_action_logs.select(:status).distinct.pluck(:status).map(&:to_sym)
+      statuses = reviewable_action_logs.uniq.pluck(:status).map(&:to_sym)
 
       return context[:status] = :pending if statuses.empty?
 
