@@ -345,7 +345,7 @@ describe "Reviewables", type: :system do
     end
 
     it "displays the custom guide topic link when configured" do
-      SiteSetting.moderator_guide_topic_id = topic.id
+      SiteSetting.moderator_guide_topic = topic.id
 
       review_page.visit_reviewable(reviewable)
       expect(review_page).to have_css(
@@ -355,7 +355,7 @@ describe "Reviewables", type: :system do
     end
 
     it "does not display anything when no custom guide topic configured" do
-      SiteSetting.moderator_guide_topic_id = ""
+      SiteSetting.moderator_guide_topic = ""
 
       review_page.visit_reviewable(reviewable)
       expect(review_page).to have_no_css(

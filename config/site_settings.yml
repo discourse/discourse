@@ -3578,7 +3578,7 @@ uncategorized:
     validator: "DefaultComposerCategoryValidator"
     area: "posts_and_topics"
 
-  moderator_guide_topic_id:
+  moderator_guide_topic:
     type: "topic"
     default: ""
     client: true

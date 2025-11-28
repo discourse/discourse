@@ -26,14 +26,11 @@ describe "Admin Site Setting Topic Selector Component", type: :system do
 
     banner.click_save
 
-    expect(settings_page).to have_overridden_topic_setting(
-      "moderator_guide_topic_id",
-      value: topic.id,
-    )
+    expect(settings_page).to have_overridden_topic_setting("moderator_guide_topic", value: topic.id)
   end
 
   it "can load a topics title when loading the component" do
-    SiteSetting.moderator_guide_topic_id = topic.id
+    SiteSetting.moderator_guide_topic = topic.id
 
     settings_page.visit
     settings_page.type_in_search("moderator guide topic")

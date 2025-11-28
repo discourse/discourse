@@ -9,8 +9,8 @@ export default class HelpResources extends Component {
   @service siteSettings;
 
   get moderatorGuideUrl() {
-    if (isPresent(this.siteSettings.moderator_guide_topic_id)) {
-      return getURL("/t/") + this.siteSettings.moderator_guide_topic_id;
+    if (isPresent(this.siteSettings.moderator_guide_topic)) {
+      return getURL("/t/") + this.siteSettings.moderator_guide_topic;
     }
   }
 
