@@ -193,14 +193,9 @@ export default class DModal extends Component {
       return;
     }
 
-    const formField = ["INPUT", "TEXTAREA", "SELECT"].includes(
-      event.target.tagName
-    );
-
     // Prevent keyboard events from leaking to elements behind the modal
-    if (!formField && !this.wrapperElement.contains(document.activeElement)) {
+    if (!this.wrapperElement.contains(document.activeElement)) {
       event.stopPropagation();
-      event.preventDefault();
     }
 
     if (event.key === "Escape" && this.dismissable) {
