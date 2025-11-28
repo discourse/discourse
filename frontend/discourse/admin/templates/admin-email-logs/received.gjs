@@ -42,9 +42,13 @@ export default <template>
         <td>{{emailLog.from_address}}</td>
         <td>{{emailLog.to_addresses}}</td>
         <td>
-          <a href={{emailLog.post_url}}>
+          {{#if emailLog.post_url}}
+            <a href={{emailLog.post_url}}>
+              {{emailLog.subject}}
+            </a>
+          {{else}}
             {{emailLog.subject}}
-          </a>
+          {{/if}}
         </td>
       </tr>
     </:default>
