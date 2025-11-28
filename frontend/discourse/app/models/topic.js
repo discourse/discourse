@@ -7,6 +7,7 @@ import { Promise } from "rsvp";
 import { resolveShareUrl } from "discourse/helpers/share-url";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { removeValuesFromArray } from "discourse/lib/array-tools";
 import { fmt, propertyEqual } from "discourse/lib/computed";
 import { TOPIC_VISIBILITY_REASONS } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
@@ -18,6 +19,7 @@ import { deepMerge } from "discourse/lib/object";
 import PreloadStore from "discourse/lib/preload-store";
 import { emojiUnescape } from "discourse/lib/text";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import ActionSummary from "discourse/models/action-summary";
 import Bookmark from "discourse/models/bookmark";
@@ -315,6 +317,8 @@ export default class Topic extends RestModel {
   @tracked posts_count;
   @tracked replies_to_post_number;
   @tracked suggested_topics;
+  @trackedArray bookmarks;
+  @trackedArray pending_posts;
 
   message = null;
 
@@ -459,17 +463,13 @@ export default class Topic extends RestModel {
   @dependentKeyCompat
   @cached
   get relatedMessages() {
-    return this.get("related_messages")?.map((st) =>
-      this.store.createRecord("topic", st)
-    );
+    return this.get("related_messages")?.map((data) => Topic.create(data));
   }
 
   @dependentKeyCompat
   @cached
   get suggestedTopics() {
-    return this.get("suggested_topics")?.map((st) =>
-      this.store.createRecord("topic", st)
-    );
+    return this.get("suggested_topics")?.map((data) => Topic.create(data));
   }
 
   @discourseComputed("posts_count")
@@ -813,7 +813,7 @@ export default class Topic extends RestModel {
     if (!json.view_hidden) {
       this.details.updateFromJson(json.details);
 
-      keys.removeObjects(["details", "post_stream"]);
+      removeValuesFromArray(keys, ["details", "post_stream"]);
 
       if (json.published_page) {
         this.set(

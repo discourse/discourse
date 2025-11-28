@@ -98,7 +98,7 @@
 // global styles for the cooked HTML content in posts (and preview)
 .cooked,
 .d-editor-preview {
-  word-wrap: break-word;
+  overflow-wrap: break-word;
   line-height: 1.5;
 
   video {
@@ -189,7 +189,7 @@
   }
 
   a {
-    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   mark {
@@ -527,7 +527,6 @@ nav.post-controls {
       }
     }
 
-    .widget-button, // TODO (glimmer-post-stream): Remove this when glimmer-post-stream is enabled
     .btn {
       &:hover {
         color: currentcolor;
@@ -983,7 +982,6 @@ aside.quote {
   }
 
   &.edits {
-    .widget-button, // TODO (glimmer-post-stream): Remove this when glimmer-post-stream is enabled
     .btn {
       display: flex;
       align-items: center;

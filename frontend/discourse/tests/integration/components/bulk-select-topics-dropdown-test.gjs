@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import BulkSelectTopicsDropdown from "discourse/components/bulk-select-topics-dropdown";
+import { addUniqueValueToArray } from "discourse/lib/array-tools";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import { TOPIC_VISIBILITY_REASONS } from "discourse/lib/constants";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -36,7 +37,7 @@ function createBulkSelectHelper(testThis, opts = {}) {
 
   const bulkSelectHelper = new BulkSelectHelper(testThis);
   topics.forEach((t) => {
-    bulkSelectHelper.selected.addObject(t);
+    addUniqueValueToArray(bulkSelectHelper.selected, t);
   });
   return bulkSelectHelper;
 }

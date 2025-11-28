@@ -3,7 +3,11 @@ import EmberObject, { action } from "@ember/object";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { uniqueItemsFromArray } from "discourse/lib/array-tools";
+import {
+  removeValueFromArray,
+  uniqueItemsFromArray,
+} from "discourse/lib/array-tools";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
 
 const ALL_FILTER = "all";
@@ -12,10 +16,9 @@ const DEFAULT_GROUP = "default";
 export default class AdminEmojis extends Service {
   @service dialog;
 
-  @tracked emojis = [];
-
   @tracked filter = ALL_FILTER;
   @tracked sorting = ["group", "name"];
+  @trackedArray emojis = [];
 
   constructor() {
     super(...arguments);
@@ -69,7 +72,7 @@ export default class AdminEmojis extends Service {
       await ajax("/admin/config/emoji/" + emoji.get("name"), {
         type: "DELETE",
       });
-      this.emojis.removeObject(emoji);
+      removeValueFromArray(this.emojis, emoji);
     } catch (err) {
       popupAjaxError(err);
     }

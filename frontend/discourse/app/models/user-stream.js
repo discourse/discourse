@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { ajax } from "discourse/lib/ajax";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import { url } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import { trackedArray } from "discourse/lib/tracked-tools";
@@ -76,7 +77,7 @@ export default class UserStream extends RestModel {
       ["likes", "stars", "edits", "bookmarks"].forEach((group) => {
         const items = ua.get(`childGroups.${group}.items`);
         if (items) {
-          items.removeObject(userAction);
+          removeValueFromArray(items, userAction);
         }
       });
     });

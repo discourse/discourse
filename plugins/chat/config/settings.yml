@@ -151,3 +151,5 @@ chat:
   allow_chat_in_anonymous_mode:
     default: false
     validator: "Chat::AllowChatInAnonymousModeValidator"
+    depends_on:
+      - "allow_anonymous_mode"

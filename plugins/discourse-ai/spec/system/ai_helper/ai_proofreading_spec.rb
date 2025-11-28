@@ -60,6 +60,30 @@ RSpec.describe "AI Composer Proofreading Features", type: :system do
       end
     end
 
+    it "focuses the confirm button when streaming completes" do
+      visit "/new-topic"
+      composer.fill_content("hello worrld")
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["hello world"]) do
+        composer.composer_input.send_keys(keyboard_shortcut)
+        expect(diff_modal).to have_diff("worrld", "world")
+        expect(diff_modal).to have_confirm_button_focused
+      end
+    end
+
+    xit "confirms changes when pressing Enter" do
+      visit "/new-topic"
+      composer.fill_content("hello worrld")
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["hello world"]) do
+        composer.composer_input.send_keys(keyboard_shortcut)
+        expect(diff_modal).to have_diff("worrld", "world")
+        expect(diff_modal).to have_confirm_button_focused
+        page.send_keys(:enter)
+        expect(composer).to have_value("hello world")
+      end
+    end
+
     context "when using rich text editor" do
       before { SiteSetting.rich_editor = true }
 

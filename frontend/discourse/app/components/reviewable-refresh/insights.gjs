@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
 import IpLookup from "discourse/components/reviewable-refresh/ip-lookup";
+import { shortDate } from "discourse/lib/formatter";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -49,9 +50,6 @@ export default class ReviewableInsights extends Component {
     const activities = [];
 
     if (user) {
-      if (Date.now() - Date.parse(user.created_at) < 7 * 24 * 60 * 60 * 1000) {
-        activities.push(i18n("review.insights.activities.new_account"));
-      }
       if (user.trustLevel) {
         activities.push(
           i18n("review.insights.activities.trust_level", {
@@ -59,6 +57,11 @@ export default class ReviewableInsights extends Component {
           })
         );
       }
+      activities.push(
+        i18n("review.insights.activities.joined_on", {
+          joinDate: shortDate(user.created_at),
+        })
+      );
     }
 
     const postCount = user?.post_count || 0;

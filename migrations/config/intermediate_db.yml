@@ -52,6 +52,13 @@ schema:
         exclude:
           - "created_at"
           - "id"
+    category_moderation_groups:
+      primary_key_column_names: [ "category_id", "group_id" ]
+      columns:
+        exclude:
+          - "created_at"
+          - "updated_at"
+          - "id"
     group_users:
       primary_key_column_names: [ "group_id", "user_id" ]
       columns:
@@ -283,6 +290,7 @@ schema:
       exclude:
         - "admin_notices"
         - "ai_api_audit_logs"
+        - "ai_api_request_stats"
         - "ai_artifact_key_values"
         - "ai_artifact_versions"
         - "ai_artifacts"
@@ -313,7 +321,6 @@ schema:
         - "category_form_templates"
         - "category_groups"
         - "category_localizations"
-        - "category_moderation_groups"
         - "category_required_tag_groups"
         - "category_search_data"
         - "category_settings"

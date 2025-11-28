@@ -285,7 +285,7 @@ $mobile-breakpoint: 700px;
       font-size: var(--font-0);
 
       @include viewport.until(sm) {
-        word-wrap: break-word;
+        overflow-wrap: break-word;
       }
     }
 
@@ -304,7 +304,7 @@ $mobile-breakpoint: 700px;
       color: var(--primary-medium);
 
       @include viewport.until(sm) {
-        word-wrap: break-word;
+        overflow-wrap: break-word;
         max-width: 80vw;
         margin-right: 3em;
       }
@@ -344,7 +344,7 @@ $mobile-breakpoint: 700px;
 
     @include viewport.until(sm) {
       .title {
-        word-wrap: break-word;
+        overflow-wrap: break-word;
       }
     }
 

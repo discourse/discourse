@@ -16,6 +16,16 @@ class SchemaSettingsObjectValidator
       error_messages
     end
 
+    def property_values_of_type(schema:, objects:, type:)
+      values = Set.new
+
+      objects.each do |object|
+        values.merge(self.new(schema: schema, object: object).property_values_of_type(type))
+      end
+
+      values.to_a
+    end
+
     private
 
     def humanize_error_messages(errors, index:, error_messages:)
