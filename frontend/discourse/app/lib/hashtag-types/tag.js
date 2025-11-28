@@ -16,7 +16,7 @@ export default class TagHashtagType extends HashtagTypeBase {
 
   generateIconHTML(hashtag) {
     return iconHTML(hashtag.icon, {
-      class: `hashtag-color--${this.type}-${hashtag.id}`,
+      class: `hashtag-color--${this.type}-${hashtag.name}`,
     });
   }
 }

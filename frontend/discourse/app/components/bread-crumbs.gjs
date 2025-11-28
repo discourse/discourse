@@ -140,7 +140,7 @@ export default class BreadCrumbs extends Component {
       @name="bread-crumbs-left"
       @connectorTagName="li"
       @outletArgs={{lazyHash
-        tagId=this.tag.id
+        tagId=this.tag.name
         additionalTags=this.additionalTags
         noSubcategories=this.noSubcategories
         showTagsSection=this.showTagsSection
@@ -162,7 +162,7 @@ export default class BreadCrumbs extends Component {
           <CategoryDrop
             @category={{breadcrumb.category}}
             @categories={{breadcrumb.options}}
-            @tagId={{this.tag.id}}
+            @tagId={{this.tag.name}}
             @editingCategory={{this.editingCategory}}
             @editingCategoryTab={{this.editingCategoryTab}}
             @options={{hash
@@ -185,7 +185,7 @@ export default class BreadCrumbs extends Component {
         <li>
           <TagsIntersectionChooser
             @currentCategory={{this.category}}
-            @mainTag={{this.tag.id}}
+            @mainTag={{this.tag.name}}
             @additionalTags={{this.additionalTags}}
             @options={{hash categoryId=this.category.id}}
           />
@@ -195,7 +195,7 @@ export default class BreadCrumbs extends Component {
           <TagDrop
             @currentCategory={{this.category}}
             @noSubcategories={{this.noSubcategories}}
-            @tagId={{this.tag.id}}
+            @tagId={{this.tag.name}}
           />
         </li>
       {{/if}}
@@ -205,7 +205,7 @@ export default class BreadCrumbs extends Component {
       @name="bread-crumbs-right"
       @connectorTagName="li"
       @outletArgs={{lazyHash
-        tagId=this.tag.id
+        tagId=this.tag.name
         additionalTags=this.additionalTags
         noSubcategories=this.noSubcategories
         showTagsSection=this.showTagsSection

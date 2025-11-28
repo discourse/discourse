@@ -59,7 +59,7 @@ export default class TagList extends Component {
     {{#each this.sortedTags as |tag|}}
       <div class="tag-box">
         {{discourseTag
-          tag.id
+          tag.name
           description=tag.description
           isPrivateMessage=this.isPrivateMessage
           pmOnly=tag.pmOnly
