@@ -246,6 +246,9 @@ describe "Lightbox | Photoswipe", type: :system do
       topic_page.visit_topic(topic)
       lightbox_link = topic_page.post_by_number(1).find("a.lightbox")
 
+      lightbox_link.click
+      expect(lightbox).to be_visible
+
       expect(lightbox_link["data-target-width"]).to eq(upload_1.width.to_s)
       expect(lightbox_link["data-target-height"]).to eq(upload_1.height.to_s)
     end
