@@ -77,6 +77,12 @@ module DiscourseAi
           include_condition: -> { scope.can_see_gists? },
         ) { object.ai_gist_summary&.summarized_text }
 
+        plugin.add_to_serializer(
+          :suggested_topic,
+          :ai_topic_gist,
+          include_condition: -> { scope.can_see_gists? },
+        ) { object.ai_gist_summary&.summarized_text }
+
         # As this event can be triggered quite often, let's be overly cautious enqueueing
         # jobs if the feature is disabled.
         plugin.on(:post_created) do |post|
