@@ -60,6 +60,11 @@ export default class ReviewableIpLookup extends Component {
 
   @action
   async loadIpData() {
+    if (!this.target) {
+      this.loading = false;
+      return;
+    }
+
     try {
       const userInfo = await AdminUser.find(this.target);
       this.ipAddress = userInfo.ip_address;
@@ -163,9 +168,7 @@ export default class ReviewableIpLookup extends Component {
                     href="https://maps.google.com/maps?q={{this.location.latitude}},{{this.location.longitude}}"
                     rel="noopener noreferrer"
                     target="_blank"
-                  >
-                    {{this.location.location}}
-                  </a>
+                  >{{this.location.location}}</a>
                 {{else}}
                   {{i18n "ip_lookup.location_not_found"}}
                 {{/if}}
