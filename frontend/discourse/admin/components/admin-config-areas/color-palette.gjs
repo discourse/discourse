@@ -6,7 +6,9 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import ColorPaletteEditor from "discourse/admin/components/color-palette-editor";
+import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DButton from "discourse/components/d-button";
+import DPageHeader from "discourse/components/d-page-header";
 import Form from "discourse/components/form";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
@@ -258,13 +260,21 @@ export default class AdminConfigAreasColorPalette extends Component {
   }
 
   <template>
+    <DPageHeader @hideTabs={{true}}>
+      <:breadcrumbs>
+        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem
+          @path="/admin/config/colors"
+          @label={{i18n "admin.config.color_palettes.title"}}
+        />
+        <DBreadcrumbsItem
+          @path={{this.router.currentURL}}
+          @label={{@colorPalette.name}}
+        />
+      </:breadcrumbs>
+    </DPageHeader>
+
     <div class="admin-config-area__primary-content">
-      <div class="admin-config-color-palettes__back">
-        <LinkTo @route="adminConfig.colorPalettes">
-          {{icon "angle-left"}}
-          {{i18n "admin.customize.colors.back_to_colors"}}
-        </LinkTo>
-      </div>
       <Form
         data-palette-id={{@colorPalette.id}}
         @data={{this.data}}

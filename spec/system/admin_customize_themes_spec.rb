@@ -14,6 +14,11 @@ describe "Admin Customize Themes", type: :system do
   before { sign_in(admin) }
 
   describe "when visiting the page to customize a single theme" do
+    it "shows correct breadcrumbs" do
+      theme_page.visit(theme)
+      expect(theme_page).to have_breadcrumbs_for_theme(theme.name)
+    end
+
     it "should allow admin to update the light color scheme of the theme" do
       theme_page.visit(theme)
 
@@ -267,9 +272,9 @@ describe "Admin Customize Themes", type: :system do
   context "when visting a component's page" do
     fab!(:component) { Fabricate(:theme, component: true, name: "Cool component 493") }
 
-    it "has a link to the components page" do
+    it "shows correct breadcrumbs" do
       visit("/admin/customize/themes/#{component.id}")
-      expect(theme_page).to have_back_button_to_components_page
+      expect(theme_page).to have_breadcrumbs_for_component(component.name)
     end
 
     it "allows to add component to all themes" do

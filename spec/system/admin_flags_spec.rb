@@ -59,7 +59,6 @@ describe "Admin Flags Page", type: :system do
 
     # create flag
     admin_flags_page.click_add_flag
-    expect(d_page_header).to be_hidden
 
     expect(admin_flag_form_page).to have_text(
       I18n.t("admin_js.admin.config_areas.flags.form.create_warning"),
@@ -89,8 +88,6 @@ describe "Admin Flags Page", type: :system do
 
     # update flag
     admin_flags_page.visit.click_edit_flag("custom_flag1")
-
-    expect(d_page_header).to be_hidden
 
     expect(admin_flag_form_page).to have_text(
       I18n.t("admin_js.admin.config_areas.flags.form.edit_warning"),

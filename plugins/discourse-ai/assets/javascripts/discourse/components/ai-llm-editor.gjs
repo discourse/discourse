@@ -1,11 +1,9 @@
-import BackButton from "discourse/components/back-button";
+import DPageSubheader from "discourse/components/d-page-subheader";
+import { i18n } from "discourse-i18n";
 import AiLlmEditorForm from "./ai-llm-editor-form";
 
 const AiLlmEditor = <template>
-  <BackButton
-    @route="adminPlugins.show.discourse-ai-llms"
-    @label="discourse_ai.llms.back"
-  />
+  <DPageSubheader @titleLabel={{i18n "discourse_ai.llms.edit_llm"}} />
   <AiLlmEditorForm
     @model={{@model}}
     @llmTemplate={{@llmTemplate}}

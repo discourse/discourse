@@ -4,7 +4,6 @@ import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import WebhookEventChooser from "discourse/admin/components/webhook-event-chooser";
-import BackButton from "discourse/components/back-button";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import Form from "discourse/components/form";
 import GroupSelector from "discourse/components/group-selector";
@@ -108,8 +107,6 @@ export default class AdminConfigAreasWebhookForm extends Component {
   }
 
   <template>
-    <BackButton @route="adminWebHooks.index" @label="admin.web_hooks.back" />
-
     <div class="admin-config-area user-field">
       <div class="admin-config-area__primary-content">
         <div class="admin-config-area-card">
