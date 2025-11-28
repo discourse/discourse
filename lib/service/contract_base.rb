@@ -8,8 +8,26 @@ class Service::ContractBase
 
   delegate :slice, :merge, to: :to_hash
 
+  class << self
+    def attribute(name, cast_type = nil, **options, &block)
+      return super(name, cast_type, **options) unless block_given?
+
+      nested_contract_class = Class.new(Service::ContractBase)
+
+      # Assign a constant name to the nested class so ActiveModel can generate error messages
+      # This is important because ActiveModel::Errors needs model_name to work properly
+      const_name = "#{name.to_s.camelize}Contract"
+      const_set(const_name, nested_contract_class)
+
+      nested_contract_class.class_eval(&block)
+
+      super(name, Service::NestedContractType.new(contract_class: nested_contract_class), **options)
+    end
+  end
+
   def initialize(*args, options: nil, **kwargs)
     @__options__ = options
+    kwargs.slice!(*self.class.attribute_names.map(&:to_sym))
     super(*args, **kwargs)
   end
 
@@ -27,35 +45,6 @@ class Service::ContractBase
     @attributes.values_before_type_cast
   end
 
-  # Override ActiveModel::Attributes.attribute to support nested contracts via block syntax
-  def self.attribute(name, cast_type = nil, **options, &block)
-    if block_given?
-      # When a block is provided, create a nested contract class
-      nested_contract_class = Class.new(Service::ContractBase)
-
-      # Assign a constant name to the nested class so ActiveModel can generate error messages
-      # This is important because ActiveModel::Errors needs model_name to work properly
-      const_name = "#{name.to_s.camelize}Contract"
-      const_set(const_name, nested_contract_class) unless const_defined?(const_name)
-
-      nested_contract_class.class_eval(&block)
-
-      # Store the nested contract class for introspection
-      @nested_contract_classes ||= {}
-      @nested_contract_classes[name.to_sym] = nested_contract_class
-
-      # Register the attribute with our custom nested type
-      super(name, Service::NestedContractType.new(contract_class: nested_contract_class), **options)
-    else
-      super(name, cast_type, **options)
-    end
-  end
-
-  def self.nested_contract_classes
-    @nested_contract_classes ||= {}
-  end
-
-  # Override valid? to validate nested contracts
   def valid?(context = nil)
     super && nested_attributes_valid?
   end
@@ -63,21 +52,12 @@ class Service::ContractBase
   private
 
   def nested_attributes_valid?
-    self.class.nested_contract_classes.all? do |attr_name, _contract_class|
-      nested_value = public_send(attr_name)
-      next true if nested_value.nil?
-
-      if nested_value.respond_to?(:valid?)
-        is_valid = nested_value.valid?
-        unless is_valid
-          # Add a base error indicating the nested attribute is invalid
-          # We avoid copying individual error messages to prevent issues with anonymous classes
-          errors.add(attr_name, :invalid)
-        end
-        is_valid
-      else
-        true
+    @attributes
+      .each_value
+      .select { _1.type.is_a?(Service::NestedContractType) }
+      .all? do |contract|
+        errors.add(contract.name, :invalid) if contract.value.invalid?
+        contract.value.valid?
       end
-    end
   end
 end

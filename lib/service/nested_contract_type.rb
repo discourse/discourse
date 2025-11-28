@@ -18,20 +18,10 @@ module Service
       @contract_class = contract_class
     end
 
-    def serializable?(_)
-      false
-    end
-
     def cast_value(value)
-      return nil if value.nil?
-      return value if value.is_a?(contract_class)
-
-      # Convert hash-like values to contract instances
       case value
       when Hash
         contract_class.new(**value.symbolize_keys)
-      when ActionController::Parameters
-        contract_class.new(**value.to_unsafe_h.symbolize_keys)
       else
         value
       end
