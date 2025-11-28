@@ -143,6 +143,7 @@ te:
         thumbnail_suggestions:
           select: "ఎంచుకోండి"
           selected: "ఎంపిక చేయబడినవి"
+          try_again: "మళ్ళీ ప్రయత్నించండి"
         image_caption:
           save_caption: "సేవ్ చేయండి"
       embeddings:

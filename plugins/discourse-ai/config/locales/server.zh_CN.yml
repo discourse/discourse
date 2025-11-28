@@ -128,6 +128,8 @@ zh_CN:
     ai_translation_backfill_limit_to_public_content: "启用时，仅翻译公共类别中的内容。禁用时，群组 PM 和不公开类别中的内容也将发送以进行翻译。"
     ai_translation_max_post_length: "帖子翻译的最大字符数。超过此长度的帖子将不会被翻译。"
     ai_translation_backfill_max_age_days: "待翻译帖子和话题的最长期限。超过此期限的帖子和话题将不进行翻译。0 表示禁用回填，但不会禁用新帖子的翻译。"
+    ai_usage_rollup_after_days: "每次请求的 AI 使用数据在被汇总为每日统计之前要保留的天数。设为 0 表示不进行汇总。"
+    ai_audit_logs_purge_after_days: "删除超过指定天数的 AI API 审计日志。默认值约为 6 个月。设置为 0 则无限期保留。"
   reviewables:
     reasons:
       flagged_by_toxicity: AI 插件将其分类为有毒后对其进行了标记。
@@ -597,6 +599,7 @@ zh_CN:
     translation:
       errors:
         disabled: "人工智能翻译功能未完全配置。"
+        all_posts_translated: "此话题中的所有帖子均已翻译。"
     errors:
       quota_exceeded: "您已超出此模型的配额。请在 %{relative_time}后再试。"
       quota_required: "必须为此模型指定最大词元数或使用次数"

@@ -129,6 +129,8 @@ be:
           close: "зачыніць"
           copy: "капіяваць"
           cancel: "Адмяніць"
+        thumbnail_suggestions:
+          try_again: "Паспрабаваць яшчэ раз"
         image_caption:
           save_caption: "Захаваць"
       embeddings:

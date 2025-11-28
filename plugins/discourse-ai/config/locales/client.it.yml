@@ -548,7 +548,6 @@ it:
         back: "Indietro"
         confirm_delete: Vuoi davvero eliminare questo modello?
         delete: Elimina
-        seeded_warning: "Questo modello è preconfigurato sul tuo sito e non può essere modificato."
         quotas:
           title: "Quote di utilizzo"
           add_title: "Crea nuova quota"
@@ -583,7 +582,7 @@ it:
           other: "Questo modello è attualmente utilizzato dai seguenti elementi: %{settings}. Se configurato in modo errato, le funzionalità non funzioneranno come previsto. "
         model_description:
           none: "Impostazioni generali che vanno bene per la maggior parte dei modelli linguistici"
-          anthropic-claude-opus-4-1: "Il modello più intelligente di Anthropic"
+          anthropic-claude-opus-4-5: "Il modello più intelligente di Anthropic"
           anthropic-claude-sonnet-4-5: "Equilibrio ottimale tra velocità e costi"
           anthropic-claude-haiku-4-5: "Veloce e conveniente"
           google-gemini-2-5-pro: "Modello multimodale di grandi dimensioni in grado di svolgere un'ampia gamma di attività"
@@ -701,6 +700,7 @@ it:
           title: "Miniature suggerite"
           select: "Seleziona"
           selected: "Selezionato"
+          try_again: "Riprova"
         image_caption:
           button_label: "Didascalia con IA"
           generating: "Generazione didascalia in corso..."

@@ -139,6 +139,8 @@ et:
           copy: "Kopeeri"
           copied: "Kopeeritud!"
           cancel: "Loobu"
+        thumbnail_suggestions:
+          try_again: "Proovi uuesti"
         image_caption:
           save_caption: "Salvesta"
       embeddings:

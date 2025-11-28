@@ -548,7 +548,6 @@ tr_TR:
         back: "Geri"
         confirm_delete: Bu modeli silmek istediğinizden emin misiniz?
         delete: Sil
-        seeded_warning: "Bu model sitenizde önceden yapılandırılmış ve düzenlenemez."
         quotas:
           title: "Kullanım kotaları"
           add_title: "Yeni kota oluşturun"
@@ -583,7 +582,7 @@ tr_TR:
           other: "Bu model şu anda şunlar tarafından kullanılıyor: %{settings}. Yanlış yapılandırılırsa özellikler beklendiği gibi çalışmaz. "
         model_description:
           none: "Çoğu dil modeli için çalışan genel ayarlar"
-          anthropic-claude-opus-4-1: "Antropic'in en akıllı modeli"
+          anthropic-claude-opus-4-5: "Antropic'in en akıllı modeli"
           anthropic-claude-sonnet-4-5: "Hız ve maliyetin optimum dengesi"
           anthropic-claude-haiku-4-5: "Hızlı ve uygun maliyetli"
           google-gemini-2-5-pro: "Çok çeşitli görevleri yerine getirebilen büyük çok modlu model"
@@ -701,6 +700,7 @@ tr_TR:
           title: "Önerilen küçük resimler"
           select: "Seç"
           selected: "Seçili"
+          try_again: "Tekrar Dene"
         image_caption:
           button_label: "YZ ile alt yazı"
           generating: "Alt yazı oluşturuluyor..."

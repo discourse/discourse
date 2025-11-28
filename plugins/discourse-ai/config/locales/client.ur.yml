@@ -193,6 +193,8 @@ ur:
           copy: "کاپی"
           copied: "کاپی کر لیا!"
           cancel: "منسوخ"
+        thumbnail_suggestions:
+          try_again: "دوبارہ کوشش کریں"
         image_caption:
           save_caption: "محفوظ کریں"
       embeddings:

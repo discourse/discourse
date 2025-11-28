@@ -122,6 +122,8 @@ th:
           copy: "คัดลอก"
           copied: "คัดลอกแล้ว!"
           cancel: "ยกเลิก"
+        thumbnail_suggestions:
+          try_again: "ลองอีกครั้ง"
         image_caption:
           save_caption: "บันทึก"
       embeddings:

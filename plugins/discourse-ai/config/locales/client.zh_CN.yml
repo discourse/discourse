@@ -266,6 +266,10 @@ zh_CN:
           post_raw_translator: "帖子原始翻译器"
           topic_title_translator: "话题标题翻译器"
           short_text_translator: "短文本翻译器"
+          schedule_untranslated: "定时翻译"
+          schedule_topic_success:
+            other: "已定时翻译 %{count} 未翻译的帖子。"
+          schedule_topic_error: "定时翻译失败。请重试。"
         spam:
           name: "垃圾信息"
           description: "使用所选 LLM 识别潜在垃圾信息，并进行标记，使其进入审核队列，以便站点版主可以进行检查"
@@ -566,7 +570,6 @@ zh_CN:
         back: "返回"
         confirm_delete: 确定要删除此模型吗？
         delete: 删除
-        seeded_warning: "此模型已在您的站点上预先配置，无法编辑。"
         quotas:
           title: "使用配额"
           add_title: "创建新配额"
@@ -600,7 +603,7 @@ zh_CN:
           other: "此模型目前的使用者为 %{settings}。如果配置错误，功能将无法按预期运行。"
         model_description:
           none: "适用于大多数语言模型的常规设置"
-          anthropic-claude-opus-4-1: "Anthropic 最聪明的模型"
+          anthropic-claude-opus-4-5: "Anthropic 最聪明的模型"
           anthropic-claude-sonnet-4-5: "速度与成本的最佳平衡"
           anthropic-claude-haiku-4-5: "快速、经济高效"
           google-gemini-3-pro: "谷歌最智能的模型"
@@ -679,6 +682,7 @@ zh_CN:
           disable_temperature: "禁用温度（某些思考模型不支持温度）"
           disable_top_p: "禁用 Top P（某些思考模型不支持 Top P）"
           enable_responses_api: "启用回答 API（某些 OpenAI 模型需要）"
+          effort: "推理强度（仅适用于 Claude Opus 4.5）"
       related_topics:
         title: "相关话题"
         pill: "相关"
@@ -722,6 +726,7 @@ zh_CN:
           title: "建议的缩略图"
           select: "选择"
           selected: "已选择"
+          try_again: "重试"
         image_caption:
           button_label: "使用 AI 生成标题"
           generating: "正在生成标题…"

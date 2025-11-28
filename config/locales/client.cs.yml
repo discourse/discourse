@@ -353,7 +353,6 @@ cs:
     software_update_prompt:
       message: "Aktualizovali jsme tyto stránky. Aby vše fungovalo hladce, <span>obnovte je, prosím.</span>"
       dismiss: "Označit jako přečtené"
-    bootstrap_mode: "Začínáme"
     back_button: "Zpět"
     welcome_banner:
       header:
@@ -835,7 +834,7 @@ cs:
       title: "Revize"
       topic: "Téma:"
       filtered_topic: "Vyfiltrovali jste obsah k revizi v jednom tématu."
-      filtered_user: "Uživatel"
+      filtered_user: "Nahlášený uživatel"
       filtered_reviewed_by: "Zkontroloval"
       show_all_topics: "zobrazit všechna témata"
       deleted_post: "(příspěvek smazán)"
@@ -990,7 +989,6 @@ cs:
       queued_post_label: "Příspěvek ve frontě"
       queued_topic_label: "Téma ve frontě"
       user_label: "Uživatel"
-      assigned_to: "Přiřazeno"
       moderator_actions: "Akce moderátora"
       timeline_and_notes: "Časová osa a poznámky"
       timeline:
@@ -1038,7 +1036,6 @@ cs:
           other: "%{count} potvrzených příznaků"
         user_activity: "Informace o uživateli"
         activities:
-          new_account: "nový účet"
           trust_level: "úroveň důvěry: %{trustLevelName}"
           posts:
             one: "%{count} příspěvek"
@@ -5860,13 +5857,14 @@ cs:
         select_groups: "Vyberte skupiny…"
         opt_in_groups: "Opt-in skupiny"
         opt_in_groups_instructions: "Opt-in skupiny lze použít k tomu, aby určitá skupina uživatelů mohla testovat změnu předtím, než bude zveřejněna pro všechny. Vemte na vědomí, že tyto skupiny budou irelevantní, jakmile změna přejde do stavu Stabilní."
-        toggled_too_fast: "Tuto změnu jste provedli příliš rychle. Před dalším pokusem prosím počkejte několik sekund."
-        change_enabled: "Přihlásili jste se k této změně"
         change_disabled: "Odhlásili jste se z této změny"
         permanent_notice: "Tato změna je nyní trvalá a brzy bude odstraněna. Odhlášení již není možné."
         permanent_no_group_selection: "Není k dispozici, trvalé změny platí pro všechny skupiny."
         no_changes: "V tuto chvíli se neplánují žádné změny."
         preview: "Náhled"
+        enabled_for_options:
+          everyone: "Všichni"
+          staff: "Pouze redakce"
         statuses:
           pre_alpha: "Pre-Alpha"
           alpha: "Alpha"
@@ -8767,81 +8765,3 @@ cs:
           categories: "Kategorie"
           topics: "Témata"
           replace: "Nahradit"
-  wizard_js:
-    wizard:
-      jump_in: "Už chci začít!"
-      finish: "Ukončit nastavení"
-      back: "Zpět"
-      next: "Další"
-      configure_more: "Nakonfigurovat více…"
-      step-text: "Krok"
-      step: "%{current} z %{total}"
-      upload: "Nahrát soubor"
-      uploading: "Nahrávání…"
-      upload_error: "Bohužel nastala chyba při nahrávání příspěvku. Prosím zkuste to znovu."
-      staff_count:
-        one: "Jste jediným členem v redakci vaší komunity."
-        few: "Vaše komunita má v redakci %{count} členy, včetně vás."
-        many: "Vaše komunita má v redakci %{count} členů, včetně vás."
-        other: "Vaše komunita má v redakci %{count} členů, včetně vás."
-      invites:
-        add_user: "přidat"
-        none_added: "Nepozvali jste nikoho z redakce. Určitě chcete pokračovat?"
-        roles:
-          admin: "Administrátor"
-          moderator: "Moderátor"
-          regular: "stálý člen"
-      homepage_choices:
-        custom:
-          label: "Přizpůsobené"
-          description: "Zobrazte domovskou stránku zaměřenou na %{type} a uživateli přicházejícími na %{landingPage}"
-        style_type:
-          categories: "kategorie"
-          topics: "témata"
-      top_menu_items:
-        new: "Nový"
-        unread: "Nepřečtené"
-        top: "Nejlepší"
-        latest: "Nejnovější"
-        hot: "Žhavé"
-        categories: "Kategorie"
-        unseen: "Neshlédnutá"
-        read: "Čas čtení"
-        bookmarks: "Záložky"
-      previews:
-        topic_title: "Jaké knihy čtete?"
-        share_button: "Sdílet"
-        reply_button: "Odpovědět"
-        topic_preview: "Náhled tématu"
-        homepage_preview: "Náhled domovské stránky"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "všechny kategorie"
-        topic_titles:
-          what_books: "Jaké knihy čtete?"
-          what_movies: "Jaké filmy jste v poslední době viděli?"
-          random_fact: "Náhodný fakt dne"
-          tv_show: "Doporučte seriál"
-          what_hobbies: "Jaké jsou vaše koníčky?"
-          what_music: "Co právě posloucháte?"
-          funniest_thing: "Nejvtipnější věc, kterou jste dnes viděli"
-          share_art: "Podělte se o své umění!"
-        topic_ops:
-          what_books: |
-            Všichni rádi čteme, využijme toto téma ke sdílení naší
-            aktuální nebo nedávné četby. Jsem fanoušek fantasy
-            a čtu Pána prstenů už asi po sté.
-            A co vy?
-        category_descriptions:
-          icebreakers: "Seznamte se s ostatními členy komunity pomocí zábavných otázek."
-          news: "Diskutujte o nejnovějších zprávách a událostech."
-          site_feedback: "Podělte se o své názory na komunitu a navrhněte vylepšení."
-        category_names:
-          icebreakers: "Icebreakery"
-          news: "Novinky"
-          site_feedback: "Poznámky k webu"
-        table_headers:
-          topic: "Témata"
-          replies: "Odpovědi"
-          views: "Zobrazení"
-          activity: "Aktivita"

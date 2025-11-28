@@ -2271,18 +2271,12 @@ te:
     nice_share:
       name: మంచి పంపకం
       description: ఒక టపాను 25మంది సభ్యులతో పంచుకున్నారు
-      long_description: |
-        25 మంది బయటి సందర్శకులు క్లిక్ చేసిన లింక్‌ను భాగస్వామ్యం చేసినందుకు ఈ బ్యాడ్జ్ మంజూరు చేయబడింది. మా చర్చలు మరియు ఈ సంఘం గురించి ప్రచారం చేసినందుకు ధన్యవాదాలు.
     good_share:
       name: చాలామంచి పంపకం
       description: ఒక టపాను 300మంది సభ్యులతో పంచుకున్నారు
-      long_description: |
-        300 మంది బయటి సందర్శకులు క్లిక్ చేసిన లింక్‌ను భాగస్వామ్యం చేసినందుకు ఈ బ్యాడ్జ్ మంజూరు చేయబడింది. మంచి పని! మీరు కొత్త వ్యక్తుల సమూహానికి గొప్ప చర్చను ప్రదర్శించారు మరియు ఈ కమ్యూనిటీ వృద్ధికి సహాయం చేసారు.
     great_share:
       name: బహుమంచి పంపకం
       description: ఒక టపాను 1000 మంది సభ్యులతో పంచుకున్నారు
-      long_description: |
-        1000 మంది బయటి సందర్శకులు క్లిక్ చేసిన లింక్‌ను భాగస్వామ్యం చేసినందుకు ఈ బ్యాడ్జ్ మంజూరు చేయబడింది. వావ్! మీరు భారీ కొత్త ప్రేక్షకులకు ఆసక్తికరమైన చర్చను ప్రచారం చేసారు మరియు మా కమ్యూనిటీని పెద్ద ఎత్తున అభివృద్ధి చేయడంలో మాకు సహాయం చేసారు!
     first_like:
       name: తొలి ఇష్టం
       description: టపాను ఇష్టపడ్డారు
@@ -2459,18 +2453,13 @@ te:
   wizard:
     title: "డిస్కర్స్ సెటప్"
     step:
-      introduction:
-        title: "మీ సైట్ గురించి"
+      setup:
+        title: "ప్రారంభించడం"
         fields:
           title:
             label: "సంఘం పేరు"
-            placeholder: "రమణ చర్చా కేంద్రం"
-          site_description:
-            label: "మీ సంఘాన్ని ఒక వాక్యంలో వివరించండి"
           default_locale:
             label: "భాష"
-      privacy:
-        fields:
           login_required:
             label: "దృశ్యమానత"
             choices:
@@ -2482,58 +2471,6 @@ te:
             choices:
               invite_only:
                 label: "ఆహ్వానం మాత్రమే"
-          chat_enabled:
-            placeholder: "చాట్‌ని ప్రారంభించండి"
-            extra_description: "మీ సభ్యులతో నిజ సమయంలో పాల్గొనండి"
-      ready:
-        title: "మీ సైట్ సిద్ధంగా ఉంది!"
-      styling:
-        title: "రూపం మరియు అనుభూతి"
-        fields:
-          body_font:
-            label: "బాడీ ఫాంట్"
-          heading_font:
-            label: "శీర్షిక ఫాంట్"
-          styling_preview:
-            label: "ప్రివ్యూ"
-          homepage_style:
-            label: "హోమ్‌పేజీ శైలి"
-            choices:
-              latest:
-                label: "తాజా"
-              hot:
-                label: "హాట్"
-      branding:
-        title: "సైట్ లోగో"
-        fields:
-          logo:
-            label: "ప్రాథమిక లోగో"
-          logo_small:
-            label: "స్క్వేర్ లోగో"
-      corporate:
-        title: "మీ సంస్థ"
-        fields:
-          company_name:
-            label: "కంపెనీ పేరు"
-            placeholder: "ఆక్మే సంస్థ"
-          governing_law:
-            label: "పాలక చట్టం"
-            placeholder: "కాలిఫోర్నియా చట్టం"
-          contact_url:
-            label: "వెబ్ పేజీ"
-            placeholder: "https://www.example.com/contact-us"
-          city_for_disputes:
-            label: "వివాదాలకు నగరం"
-            placeholder: "శాన్ ఫ్రాన్సిస్కో, కాలిఫోర్నియా"
-          site_contact:
-            label: "స్వయంచాలక సందేశాలు"
-          contact_email:
-            label: "పరిచయం పాయింట్"
-            placeholder: "example@user.com"
-      invites:
-        title: "సిబ్బందిని ఆహ్వానించండి"
-      finished:
-        title: "మీ డిస్కోర్స్ సిద్ధంగా ఉంది!"
   search_logs:
     graph_title: "శోధన గణన"
   onebox:

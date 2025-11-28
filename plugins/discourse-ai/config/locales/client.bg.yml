@@ -147,6 +147,8 @@ bg:
           copy: "Копирай"
           copied: "Копирано!"
           cancel: "Отмени"
+        thumbnail_suggestions:
+          try_again: "Опитайте отново"
         image_caption:
           save_caption: "Запази"
       embeddings:

@@ -8,7 +8,4 @@ ko:
   js:
     user_notes:
       title: "사용자 노트"
-      attach: "사용자 메모 추가"
-      remove: "사용자 메모 제거"
       delete_confirm: "해당 사용자 노트를 삭제 하시겠습니까?"
-      show_post: "게시물 표시"
