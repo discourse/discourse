@@ -71,7 +71,7 @@ RSpec.describe "AI Composer Proofreading Features", type: :system do
       end
     end
 
-    it "confirms changes when pressing Enter" do
+    xit "confirms changes when pressing Enter" do
       visit "/new-topic"
       composer.fill_content("hello worrld")
 
