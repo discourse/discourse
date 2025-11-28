@@ -295,7 +295,7 @@ export default async function lightbox(
         imgEl?.getAttribute("data-orig-src") ||
         el.getAttribute("data-orig-src") ||
         null;
-      data.title = el.title || imgEl.alt || imgEl.title;
+      data.title = el.title || imgEl?.alt || imgEl?.title || null;
       data.base62SHA1 =
         imgEl?.getAttribute("data-base62-sha1") ||
         el.getAttribute("data-base62-sha1") ||
