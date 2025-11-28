@@ -968,8 +968,9 @@ en:
       insights:
         title: "Insights"
         flag_volume: "Flag volume"
-        flagged_by_users: "Flagged by %{count} unique users"
-        similar_posts: "Past violations"
+        flagged_by_users:
+          one: "Flagged by %{count} unique user"
+          other: "Flagged by %{count} unique users"
         flagged_in_timeframe:
           one: "%{count} confirmed flag"
           other: "%{count} confirmed flags"

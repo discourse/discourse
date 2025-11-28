@@ -46,6 +46,10 @@ export default class ReviewableIpLookup extends Component {
     return Math.min(MAX_ACCOUNTS_TO_DELETE, this.totalOthersWithSameIP || 0);
   }
 
+  get canDeleteOtherAccounts() {
+    return this.totalOthersWithSameIP && !this.otherAccountsLoading;
+  }
+
   get queryData() {
     return {
       ip: this.ipAddress,
@@ -108,6 +112,7 @@ export default class ReviewableIpLookup extends Component {
             type: "DELETE",
             data: this.queryData,
           });
+          this.modal.close();
         } catch (err) {
           popupAjaxError(err);
         } finally {
@@ -127,6 +132,7 @@ export default class ReviewableIpLookup extends Component {
         totalOthersWithSameIP: this.totalOthersWithSameIP,
         otherAccountsLoading: this.otherAccountsLoading,
         otherAccountsToDelete: this.otherAccountsToDelete,
+        canDeleteOtherAccounts: this.canDeleteOtherAccounts,
         deleteOtherAccounts: this.deleteOtherAccounts,
       },
     });
@@ -211,7 +217,7 @@ const OtherAccountsModal = <template>
       {{/if}}
     </:body>
     <:footer>
-      {{#if @model.totalOthersWithSameIP}}
+      {{#if @model.canDeleteOtherAccounts}}
         <DButton
           @action={{@model.deleteOtherAccounts}}
           @icon="triangle-exclamation"
