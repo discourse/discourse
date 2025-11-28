@@ -78,6 +78,7 @@ module DiscourseAi
           case schema_type
           when "array"
             Array(chunk).each { |item| accumulator << item if accumulator.exclude?(item) }
+            accumulator
           when "string"
             accumulator << chunk.to_s
           else

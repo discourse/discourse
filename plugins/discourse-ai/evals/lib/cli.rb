@@ -142,4 +142,47 @@ class DiscourseAi::Evals::Cli
 
     evals
   end
+
+  def validate_comparison_requirements!(llms:, persona_variants:)
+    case comparison_mode
+    when :llms
+      if persona_variants.length != 1
+        STDERR.puts("LLM comparison runs against exactly one persona.")
+        exit 1
+      end
+    when :personas
+      if llms.length != 1
+        STDERR.puts("Persona comparison requires exactly one LLM.")
+        exit 1
+      end
+
+      if persona_variants.length < 2
+        STDERR.puts("Persona comparison needs at least two personas.")
+        exit 1
+      end
+    else
+      if persona_variants.length > 1
+        STDERR.puts(
+          "Non-comparison runs accept only one persona. Remove extra --persona-keys or use --compare personas.",
+        )
+        exit 1
+      end
+    end
+  end
+
+  def validate_judge_presence!(requires_judge:, judge_llm:, default_judge_error:)
+    return if !requires_judge || judge_llm
+
+    message = "Error: Selected evaluations require a judge."
+    if default_judge_error
+      message += " Configure '#{judge_name}' or pass --judge with an LLM config name."
+      message += "\n\n"
+      message += default_judge_error
+    else
+      message += " Pass --judge with an LLM config name."
+    end
+
+    puts message
+    exit 1
+  end
 end
