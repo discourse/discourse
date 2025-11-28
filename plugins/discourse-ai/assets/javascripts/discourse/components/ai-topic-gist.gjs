@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import bodyClass from "discourse/helpers/body-class";
 import { TABLE_AI_LAYOUT } from "../services/gists";
 
 export default class AiTopicGist extends Component {
@@ -32,6 +33,7 @@ export default class AiTopicGist extends Component {
 
   <template>
     {{#if this.shouldShow}}
+      {{bodyClass "topic-list-layout-table-ai"}}
       {{#if this.hasGist}}
         <a href={{@topic.lastUnreadUrl}} class="excerpt">
           <div class="excerpt__contents">{{this.gist}}</div>
