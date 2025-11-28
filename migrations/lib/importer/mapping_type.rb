@@ -12,5 +12,6 @@ module Migrations::Importer
     USER_FIELDS = 8
     TOPICS = 9
     UPLOADS = 10
+    POSTS = 11
   end
 end
