@@ -10,6 +10,25 @@ RSpec.describe DiscourseAi::Evals::Eval do
     end
   end
 
+  describe ".from_dataset_csv" do
+    let(:csv_path) { File.join(@cases_dir, "dataset.csv") }
+
+    before { File.write(csv_path, <<~CSV) }
+          content,expected_output
+          call this number for free money,true
+          hey there is a bug on version 3,false
+        CSV
+
+    it "builds evals for each row with expected outputs" do
+      evals = described_class.from_dataset_csv(path: csv_path, feature: "spam:inspect_posts")
+
+      expect(evals.length).to eq(2)
+      expect(evals.first.args[:input]).to include("free money")
+      expect(evals.first.expected_output).to eq("true")
+      expect(evals.last.expected_output).to eq("false")
+    end
+  end
+
   describe ".available_cases" do
     it "loads eval instances sorted by file path" do
       write_case("set-one", "second", "id" => "second", "feature" => "mod:second")

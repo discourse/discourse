@@ -116,7 +116,14 @@ module DiscourseAi
             response_format: COMPARISON_RESPONSE_FORMAT,
           )
 
-        parse_comparison_response(response)
+        parsed = parse_comparison_response(response)
+        mapped_winner = map_candidate_label(parsed[:winner] || parsed[:winner_label], candidates)
+
+        if mapped_winner.present? && !mapped_winner.casecmp("tie").zero?
+          parsed[:winner] = mapped_winner
+        end
+
+        parsed
       end
 
       private
@@ -291,6 +298,23 @@ module DiscourseAi
           ratings: ratings,
           raw: raw_text,
         }
+      end
+
+      def map_candidate_label(winner_label, candidates)
+        return winner_label if winner_label.blank?
+        return winner_label if winner_label.casecmp("tie").zero?
+
+        label_downcased = winner_label.to_s.strip.downcase
+
+        match = label_downcased.match(/candidate\s*(\d+)/i)
+        if match
+          index = match[1].to_i - 1
+          candidate_label = candidates[index]&.dig(:label)
+          return candidate_label if candidate_label.present?
+        end
+
+        candidate = candidates.find { |c| c[:label].to_s.strip.downcase == label_downcased }
+        candidate&.dig(:label) || winner_label
       end
     end
   end

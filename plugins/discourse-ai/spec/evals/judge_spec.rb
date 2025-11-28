@@ -55,7 +55,7 @@ RSpec.describe DiscourseAi::Evals::Judge do
   describe "#compare" do
     it "requests a structured comparison and returns parsed ratings" do
       comparison_payload = {
-        "winner" => "default",
+        "winner" => "Candidate 2",
         "winner_explanation" => "more accurate",
         "ratings" => [
           { "candidate" => "default", "rating" => 9, "explanation" => "complete" },
@@ -75,7 +75,7 @@ RSpec.describe DiscourseAi::Evals::Judge do
         temperature: 0,
         response_format: DiscourseAi::Evals::Judge::COMPARISON_RESPONSE_FORMAT,
       )
-      expect(result[:winner]).to eq("default")
+      expect(result[:winner]).to eq("custom")
       expect(result[:ratings].map { |entry| entry[:candidate] }).to match_array(%w[default custom])
     end
   end
