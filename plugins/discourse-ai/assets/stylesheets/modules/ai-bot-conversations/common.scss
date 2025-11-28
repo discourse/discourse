@@ -19,7 +19,6 @@ body.has-ai-conversations-sidebar {
     width: 100%;
 
     &__wrapper {
-      background: var(--secondary);
       margin: var(--space-6) var(--space-4) 0;
 
       .mobile-view & {
@@ -92,7 +91,6 @@ body.has-ai-conversations-sidebar {
   #topic-title {
     display: flex;
     justify-content: center;
-    width: 100%;
 
     .title-wrapper {
       width: 100%;
@@ -231,9 +229,10 @@ body.has-ai-conversations-sidebar {
       width: 100%;
       border: 1px solid var(--primary-low);
       border-radius: var(--d-input-border-radius);
+      background-color: var(--d-input-bg-color);
 
       &:has(textarea[disabled]) {
-        background: var(--primary-very-low);
+        background: var(--d-input-bg-color--disabled);
       }
 
       &.--disabled {

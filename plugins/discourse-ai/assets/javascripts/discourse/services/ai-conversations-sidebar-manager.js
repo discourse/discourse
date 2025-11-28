@@ -244,6 +244,7 @@ export default class AiConversationsSidebarManager extends Service {
       title: i18n("discourse_ai.ai_bot.conversations.today"),
       links: new TrackedArray(),
     };
+
     fresh.push(todaySection);
 
     this.topics.forEach((t) => {
