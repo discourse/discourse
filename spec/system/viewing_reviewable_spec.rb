@@ -146,10 +146,11 @@ describe "Viewing reviewable item", type: :system do
       end
 
       describe "IP lookup" do
-        fab!(:user) { Fabricate(:user, ip_address: "81.2.69.142") }
-        fab!(:reviewable_flagged_post) { Fabricate(:reviewable_flagged_post, created_by: user) }
+        fab!(:reviewable_flagged_post)
 
         before do
+          reviewable_flagged_post.target_created_by.update!(ip_address: "81.2.69.142")
+
           DiscourseIpInfo.open_db(File.join(Rails.root, "spec", "fixtures", "mmdb"))
           Resolv::DNS
             .any_instance
