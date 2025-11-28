@@ -2332,9 +2332,6 @@ el:
     nice_share:
       name: Καλή Κοινοποίηση
       description: Κοινοποίησε μια ανάρτηση με 25 μοναδικούς επισκέπτες
-      long_description: |2
-
-        Αυτό το παράσημο χορηγείται για την κοινοποίηση ενός συνδέσμου στον οποίον έκαναν κλικ 25 εξωτερικοί επισκέπτες. Ευχαριστούμε που διαδίδεις τις συητήσεις μας και αυτή την κοινότητα.
     good_share:
       name: Πολύ Καλή Κοινοποίηση
       description: Κοινοποίησε μια ανάρτηση με 300 μοναδικούς επισκέπτες
@@ -2502,13 +2499,8 @@ el:
   wizard:
     title: "Εγκατάσταση Discourse"
     step:
-      introduction:
-        fields:
-          title:
-            placeholder: "Το μέρος που συχνάζει η Jane"
-          site_description:
-            placeholder: "Ένα μέρος για την Jane και τις φίλες της να συζητήσουν ωραία θέματα"
-      privacy:
+      setup:
+        title: "Ξεκινώντας"
         fields:
           login_required:
             label: "Ορατότητα"
@@ -2517,27 +2509,6 @@ el:
                 label: "Δημόσια"
               private:
                 label: "Ιδιωτική"
-      styling:
-        fields:
-          styling_preview:
-            label: "Προεπισκόπηση"
-          homepage_style:
-            choices:
-              latest:
-                label: "Πρόσφατα"
-              hot:
-                label: "Δημοφιλή"
-      corporate:
-        fields:
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
-          site_contact:
-            description: "Όλα τα αυτοματοποιημένα συστημικά μηνύματα, όπως οι προειδοποιήσεις σημάνσεων και η ειδοποίηση ολοκλήρωσης των αντιγράφων ασφαλείας, θα στέλνονται από αυτόν τον χρήστη."
-      invites:
-        title: "Πρόσκληση Συνεργάτη"
-        description: "Έχεις σχεδόν τελειώσει! Ας προσκαλέσουμε μερικούς χρήστες να <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>συμμετάσχουν στις συζητήσεις</a> με ενδιαφέροντα νήματα και αναρτήσεις ώστε να ξεκινήσει να λειτουργεί η κοινότητα. "
-      finished:
-        title: "Το Discourse σου είναι έτοιμο!"
   onebox:
     github:
       closed: "κλειστό"

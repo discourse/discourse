@@ -142,6 +142,8 @@ pl_PL:
     ai_translation_backfill_max_age_days: "Maksymalny wiek posta i tematu do przetłumaczenia. Posty i tematy starsze niż ten wiek nie będą tłumaczone. Wartość 0 wyłącza uzupełnianie, ale nie wyłącza tłumaczenia nowych postów."
     ai_translation_backfill_hourly_rate: "Liczba wpisów i tematów do przetłumaczenia na godzinę podczas operacji uzupełniania. Ustaw na 0, aby wyłączyć automatyczne uzupełnianie tłumaczeń dla istniejących treści."
     ai_translation_max_tokens_multiplier: "Mnożnik określający maksymalną liczbę tokenów do wykorzystania w tłumaczeniu. Domyślnie maksymalna liczba tokenów jest równa około dwukrotności do pięciokrotności liczby znaków we wpisie. Ten mnożnik można dostosować, aby uwzględnić modele myślenia lub rozumowania, które będą wykorzystywać więcej tokenów."
+    ai_usage_rollup_after_days: "Liczba dni przechowywania statystyk użycia AI dla każdego żądania przed ich przekształceniem w dzienne agregaty. Ustaw na 0, aby wyłączyć agregacje."
+    ai_audit_logs_purge_after_days: "Usuń dzienniki audytu API AI starsze niż podana liczba dni. Domyślnie około 6 miesięcy. Ustaw na 0, aby zachować je na czas nieokreślony."
   reviewables:
     reasons:
       flagged_by_toxicity: Wtyczka AI oznaczyła to po sklasyfikowaniu jako toksyczne.
@@ -272,7 +274,9 @@ pl_PL:
         image_generation_gemini:
           name: "Nano Banan"
         image_generation_flux:
-          name: "FLUX"
+          name: "FLUX 1.1 Pro"
+        image_generation_flux2:
+          name: "FLUX 2 Pro"
         empty_tool:
           name: "Zacznij od zera..."
       name:
@@ -663,8 +667,10 @@ pl_PL:
     translation:
       errors:
         disabled: "Funkcja tłumaczenia AI nie jest w pełni skonfigurowana."
+        all_posts_translated: "Wszystkie wpisy tego tematu są już przetłumaczone."
     llm_credit_allocation:
-      limit_exceeded: "Osiągnąłeś limit kredytów AI. Spróbuj ponownie za %{reset_time}."
+      limit_exceeded_user: "Osiągnięto limit kredytu AI. Spróbuj ponownie za %{reset_time}. Aby uzyskać więcej informacji, skontaktuj się z administratorem witryny."
+      limit_exceeded_admin: "Osiągnięto limit kredytów AI. Spróbuj ponownie za %{reset_time}."
     errors:
       quota_exceeded: "Przekroczyłeś limit dla tego modelu. Spróbuj ponownie za %{relative_time}."
       quota_required: "Musisz określić maksymalną liczbę tokenów lub użyć dla tego modelu"

@@ -138,6 +138,8 @@ lv:
           copy: "Kopēt"
           copied: "Nokopēts!"
           cancel: "Atcelt"
+        thumbnail_suggestions:
+          try_again: "Mēģināt vēlreiz"
         image_caption:
           save_caption: "Saglabāt"
       embeddings:

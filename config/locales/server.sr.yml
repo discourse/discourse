@@ -522,20 +522,13 @@ sr:
       name: Čitač
   wizard:
     step:
-      introduction:
+      setup:
+        title: "Prvi koraci"
         fields:
-          title:
-            placeholder: "Milenino mesto za bleju"
-          site_description:
-            placeholder: "Mesto gde Milena i njene prijateljice ćaskaju o kul stvarima"
-      styling:
-        fields:
-          homepage_style:
+          login_required:
             choices:
-              latest:
-                label: "Poslednje"
-      finished:
-        title: "Vaš Discource je spreman!"
+              private:
+                label: "Privatna"
   staff_action_logs:
     unknown: "nepoznato"
   reviewables:

@@ -232,6 +232,7 @@ cs:
           title: "Navrhované miniatury"
           select: "Vybrat"
           selected: "Zaškrtnuté"
+          try_again: "Zkusit znovu"
         image_caption:
           button_label: "Popisek pomocí AI"
           generating: "Generování popisku..."

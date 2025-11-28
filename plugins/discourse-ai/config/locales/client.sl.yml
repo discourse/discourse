@@ -160,6 +160,8 @@ sl:
           copy: "Kopiraj"
           copied: "Kopirano!"
           cancel: "Prekliči"
+        thumbnail_suggestions:
+          try_again: "Poskusi ponovno"
         image_caption:
           save_caption: "Shrani"
       embeddings:

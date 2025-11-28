@@ -2511,7 +2511,6 @@ it:
         other: "L'elenco deve contenere esattamente %{count} valori."
       markdown_linkify_tlds: "Non è possibile includere il valore '*'."
       google_oauth2_hd_groups: "Prima di attivare questa impostazione, devi configurare le opzioni 'google oauth2 hd'."
-      discourse_id_credentials: "Prima di abilitare questa impostazione, è necessario configurare le credenziali Discourse ID ('discourse_id_client_id' e 'discourse_id_client_secret')."
       linkedin_oidc_credentials: "Per abilitare questa impostazione, configura prima le credenziali OIDC di LinkedIn (\"linkedin_oidc_client_id\" e \"linkedin_oidc_client_secret\")."
       search_tokenize_chinese_enabled: "Devi disattivare \"search_tokenize_chinese\" prima di attivare questa impostazione."
       search_tokenize_japanese_enabled: "Devi disattivare \"search_tokenize_japanese\" prima di attivare questa impostazione."
@@ -4328,18 +4327,12 @@ it:
     nice_share:
       name: Piacevole Condivisione
       description: Ha condiviso un messaggio con 25 visitatori diversi
-      long_description: |
-        Questo distintivo è assegnato per aver condiviso un collegamento che è stato cliccato da 25 visitatori esterni. Grazie per aver fatto conoscere le nostre discussioni e questa comunità.
     good_share:
       name: Buona Condivisione
       description: Ha condiviso un messaggio con 300 visitatori diversi
-      long_description: |
-        Questo distintivo è assegnato per aver condiviso un collegamento che è stato cliccato da 300 visitatori esterni. Ottimo lavoro! Hai mostrato una bella discussione a un bel mucchio di persone e aiutato la crescita della comunità.
     great_share:
       name: Grande Condivisione
       description: Ha condiviso un messaggio con 1000 visitatori diversi
-      long_description: |
-        Questo distintivo è assegnato per aver condiviso un collegamento che è stato cliccato da 1000 visitatori esterni. Hai promosso un'interessante discussione per un'audience enorme, e aiutato tantissimo la crescita di questa comunità.
     first_like:
       name: Primo "Mi piace"
       description: Ha messo "Mi piace" a un messaggio
@@ -4557,21 +4550,13 @@ it:
   wizard:
     title: "Configurazione Discourse"
     step:
-      introduction:
-        title: "Informazioni sul tuo sito"
-        description: "Queste informazioni verranno mostrate al tuo accesso e su qualsiasi pagina pubblica. Puoi sempre modificarle in seguito."
+      setup:
+        title: "Per iniziare"
         fields:
           title:
             label: "Nome community"
-            placeholder: "Il Ritrovo di Jane"
-          site_description:
-            label: "Descrivi la tua community in una frase"
-            placeholder: "Un posto per Jane e per i suoi amici dove discutere di cose forti"
           default_locale:
             label: "Lingua"
-      privacy:
-        title: "Accesso per i membri"
-        fields:
           login_required:
             label: "Visibilità"
             description: "La tua community è pubblica o privata?"
@@ -4595,82 +4580,6 @@ it:
                 label: "No, i nuovi membri possono iscriversi immediatamente"
               "yes":
                 label: "Sì, i nuovi membri devono essere approvati dai moderatori"
-          chat_enabled:
-            placeholder: "Abilita chat"
-            extra_description: "Coinvolgi i tuoi membri in tempo reale"
-      ready:
-        title: "Il tuo sito è pronto!"
-        description: "Ecco fatto! Hai messo le basi per configurare la tua community Ora puoi entrare e dare un'occhiata in giro, scrivere un argomento di benvenuto e inviare inviti!<br><br>Buon divertimento!"
-      styling:
-        title: "Aspetto e feeling"
-        fields:
-          color_scheme:
-            label: "Schema di colori"
-          body_font:
-            label: "Carattere del corpo"
-          site_font:
-            label: "Carattere"
-          heading_font:
-            label: "Carattere dell'intestazione"
-          styling_preview:
-            label: "Anteprima"
-          homepage_style:
-            label: "Stile homepage"
-            choices:
-              latest:
-                label: "Più recenti"
-                description: "Visualizza gli argomenti attivi più di recente in tutte le categorie, aiutando i membri a rimanere aggiornati sulle discussioni che li interessano"
-              hot:
-                label: "Novità"
-                description: "Evidenzia gli argomenti di tendenza combinando la popolarità recente e quella generale, mostrando di cosa stanno parlando i membri della tua community in questo momento"
-              categories_and_latest_topics:
-                label: "Categorie con argomenti recenti"
-                description: "Combina gli argomenti attivi di recente in tutte le categorie con un elenco di categorie, la loro descrizione e il totale degli argomenti"
-              categories_boxes:
-                label: "Riquadri di categorie"
-                description: "Visualizza le categorie e la loro descrizione in una griglia, ideale per i membri che desiderano visualizzare una panoramica delle sotto-community del tuo sito"
-      branding:
-        title: "Logo del sito"
-        fields:
-          logo:
-            label: "Logo primario"
-            description: "Dimensione consigliata: 600 x 200"
-          logo_small:
-            label: "Logo quadrato"
-            description: "Dimensioni consigliate: 512 x 512. Utilizzato anche come favicon e icona dell'app nella schermata iniziale su dispositivi mobili."
-      corporate:
-        title: "La tua organizzazione"
-        description: "Le seguenti informazioni verranno utilizzate nei Termini di servizio e nelle pagine Informazioni. Puoi saltarle se non esiste alcuna società."
-        fields:
-          company_name:
-            label: "Nome società"
-            placeholder: "Organizzazione Acme"
-          governing_law:
-            label: "Diritto applicabile"
-            placeholder: "Legge della California"
-          contact_url:
-            label: "Pagina web"
-            placeholder: "https://www.example.com/contact-us"
-          city_for_disputes:
-            label: "Sede per eventuali controversie"
-            placeholder: "San Francisco, California"
-          site_contact:
-            label: "Messaggi automatici"
-            description: "Tutti i messaggi personali automatici di Discourse, come avvisi di segnalazione e notifiche di completamento dei backup, saranno inviati da questo utente."
-          contact_email:
-            label: "Punto di contatto"
-            placeholder: "esempio@utente.com"
-            description: "Indirizzo email di contatto del principale responsabile di questo sito. Utilizzato per notifiche cruciali, nonché visualizzato sulla <a href='%{base_path}/about' target='_blank'>tua pagina informazioni</a> per questioni urgenti."
-      invites:
-        title: "Invita lo Staff"
-        description: "Hai quasi finito! Invita alcune persone a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>contribuire alle discussioni</a> con argomenti e risposte interessanti per avviare la tua comunità."
-        disabled: "Poiché gli accessi locali sono disabilitati, non è possibile inviare inviti a nessuno. Per favore, prosegui con il passo successivo."
-      finished:
-        title: "Il tuo Discourse è Pronto!"
-        description: |
-          <p>Se vuoi cambiare queste impostazioni, <b>riesegui questa procedura guidata in qualsiasi momento</b>, o visita <a href='%{base_path}/admin' target='_blank'>il pannello di amministrazione</a>; lo trovi accanto all'icona della chiave inglese nel menu del sito.</p>
-          <p>È facile personalizzare il tuo Discourse ancora di più utilizzando il nostro potente sistema di temi. Per esempio, consulta i <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">temi e componenti principali</a> su <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
-          <p>Divertiti e buona fortuna <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>nel costruire la tua nuova comunità!</a></p>
   search_logs:
     graph_title: "Conteggio Ricerche"
   onebox:

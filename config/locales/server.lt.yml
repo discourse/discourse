@@ -2342,18 +2342,12 @@ lt:
     nice_share:
       name: Gražus pasidalinimas
       description: Pasidalintas pranešimas su 25 unikaliais lankytojais
-      long_description: |
-        Šis ženklelis suteikiamas už bendrinimą nuorodoje, kurią spustelėjo 25 išorės lankytojai. Dėkojame, kad skleidėte žinią apie mūsų diskusijas ir šią bendruomenę.
     good_share:
       name: Geras pasidalinimas
       description: Pasidalintas pranešimas su 300 unikaliais lankytojais
-      long_description: |
-        Šis ženklelis suteikiamas už bendrinimą nuorodoje, kurią spustelėjo 300 išorės lankytojų. Geras darbas! Jūs parodėte puikią diskusiją būriui naujų žmonių ir padėjote šiai bendruomenei augti.
     great_share:
       name: Puikus pasidalinimas
       description: Pasidalintas pranešimas su 1000 unikalių lankytojų
-      long_description: |
-        Šis ženklelis suteikiamas už tai, kad bendrinate nuorodą, kurią spustelėjo 1000 išorinių lankytojų. Oho! Jūs pateikėte įdomią diskusiją didelei naujai auditorijai ir padėjote mums stipriai plėtoti mūsų bendruomenę!
     first_like:
       name: Pirmasis įvertinimas
       description: Mėgstate įrašą
@@ -2529,14 +2523,11 @@ lt:
   wizard:
     title: "Discourse sąranka"
     step:
-      introduction:
+      setup:
+        title: "Darbo pradžia"
         fields:
-          site_description:
-            placeholder: "Džeinei ir jos draugams skirta vieta aptarti įdomius dalykus"
           default_locale:
             label: "Kalba"
-      privacy:
-        fields:
           login_required:
             label: "Matomumas"
             choices:
@@ -2544,31 +2535,6 @@ lt:
                 label: "Vieša"
               private:
                 label: "Privatu"
-      styling:
-        fields:
-          heading_font:
-            label: "Antraštės šriftas"
-          styling_preview:
-            label: "Peržiūrėti"
-          homepage_style:
-            label: "Pagrindinio puslapio stilius"
-            choices:
-              latest:
-                label: "Naujausia"
-      corporate:
-        fields:
-          governing_law:
-            placeholder: "Kalifornijos įstatymas"
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
-          city_for_disputes:
-            placeholder: "San Franciskas, Kalifornija"
-      invites:
-        title: "Pakviesti valdytojus"
-        description: "Beveik baigėte! Pakvieskime kelis žmones padėti <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>papildyti jūsų diskusijas</a> įdomiomis temomis ir atsakymais, kad jūsų bendruomenė pradėtų veikti."
-        disabled: "Kadangi vietiniai prisijungimai yra išjungti, kvietimų niekam siųsti negalima. Pereikite prie kito veiksmo."
-      finished:
-        title: "Jūsų Discourse paruoštas!"
   search_logs:
     graph_title: "Ieškoti kontakto"
   onebox:

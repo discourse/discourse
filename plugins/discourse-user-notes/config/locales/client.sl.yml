@@ -8,8 +8,4 @@ sl:
   js:
     user_notes:
       title: "Opombe k uporabniku"
-      attach: "Dodaj opombo k uporabniku"
-      remove: "Odstrani opombo k uporabniku"
-      show: "Opomb k uporabniku (%{count})"
       delete_confirm: "Ali želite odstraniti opombo k uporabniku?"
-      show_post: "Prikaži prispevek"

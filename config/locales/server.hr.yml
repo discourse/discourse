@@ -2606,18 +2606,12 @@ hr:
     nice_share:
       name: Korisno dijeljenje
       description: Podijelio/la objavu s 25 jedinstvenih posjetitelja.
-      long_description: |
-        Ova značka se dodjeljuje za dijeljenje poveznice na koju je kliknulo 25 vanjskih posjetitelja. Hvala što širite vijest o našim raspravama i ovoj zajednici.
     good_share:
       name: Sjajno dijeljenje
       description: Podijelio/la objavu s 300 jedinstvenih posjetitelja
-      long_description: |
-        Ova značka se dodjeljuje za dijeljenje poveznice na koju je kliknulo 300 vanjskih posjetitelja. Dobar posao! Pokazali ste sjajnu raspravu mnogim novim ljudima i pomogli ovoj zajednici da raste.
     great_share:
       name: Odlična podjela
       description: Podijelio/la objavu s 1000 jedinstvenih posjetitelja
-      long_description: |
-        Ova značka se dodjeljuje za dijeljenje poveznice na koju je kliknulo 1000 vanjskih posjetitelja. Vau! Promovirali ste zanimljivu raspravu pred ogromnom novom publikom i pomogli nam da značajno proširimo našu zajednicu!
     first_like:
       name: Prvi lajk
       description: Lajkao/la objavu
@@ -2718,12 +2712,13 @@ hr:
       title: "Ponovno pošaljite e-poštu za aktivaciju"
   wizard:
     step:
-      introduction:
+      setup:
+        title: "Početak rada"
         fields:
+          title:
+            label: "Naziv zajednice"
           default_locale:
             label: "Jezik"
-      privacy:
-        fields:
           login_required:
             label: "Vidljivost"
             choices:
@@ -2731,20 +2726,6 @@ hr:
                 label: "Javnost"
               private:
                 label: "Privatno"
-          chat_enabled:
-            placeholder: "Omogući chat"
-      styling:
-        fields:
-          styling_preview:
-            label: "Pregled"
-          homepage_style:
-            choices:
-              latest:
-                label: "Posljednje"
-      corporate:
-        fields:
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
   onebox:
     github:
       closed: "zatvoreno"

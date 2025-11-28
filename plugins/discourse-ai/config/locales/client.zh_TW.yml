@@ -157,6 +157,7 @@ zh_TW:
         thumbnail_suggestions:
           select: "選擇"
           selected: "已選"
+          try_again: "請再試一次"
         image_caption:
           save_caption: "儲存"
       embeddings:

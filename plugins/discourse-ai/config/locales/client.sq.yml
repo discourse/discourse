@@ -147,6 +147,7 @@ sq:
           cancel: "Anulo"
         thumbnail_suggestions:
           select: "Zgjidhni"
+          try_again: "Provoni përsëri"
         image_caption:
           save_caption: "Ruani"
       embeddings:
