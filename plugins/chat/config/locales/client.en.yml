@@ -53,6 +53,7 @@ en:
       cancel: "Cancel"
       cancel_reply: "Cancel reply"
       chat_channels: "Channels"
+      starred_channels: "Starred channels"
       browse_all_channels: "Browse all channels"
       see_in: "See in"
       move_to_channel:

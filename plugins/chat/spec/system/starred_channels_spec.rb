@@ -16,11 +16,17 @@ RSpec.describe "Starred channels", type: :system do
 
   context "when starring a channel" do
     fab!(:channel_1) { Fabricate(:category_channel, name: "Channel A") }
+    fab!(:channel_2) { Fabricate(:category_channel, name: "Channel B") }
 
-    before { channel_1.add(current_user) }
+    before do
+      channel_1.add(current_user)
+      channel_2.add(current_user)
+    end
 
-    it "shows the starred channel at the top of the sidebar" do
+    it "shows the starred channel in the Starred Channels section" do
       visit("/")
+
+      expect(page).to have_no_css("#sidebar-section-content-chat-starred-channels")
 
       chat_page.visit_channel_settings(channel_1)
 
@@ -33,13 +39,18 @@ RSpec.describe "Starred channels", type: :system do
 
       visit("/")
 
+      expect(page).to have_css("#sidebar-section-content-chat-starred-channels")
+      expect(
+        page.find("#sidebar-section-content-chat-starred-channels li:nth-child(1)"),
+      ).to have_css(".channel-#{channel_1.id}")
+    end
+
+    it "removes the starred channel from the regular Channels section" do
+      visit("/")
+
       expect(page.find("#sidebar-section-content-chat-channels li:nth-child(1)")).to have_css(
         ".channel-#{channel_1.id}",
       )
-    end
-
-    it "shows a star icon next to the starred channel" do
-      visit("/")
 
       chat_page.visit_channel_settings(channel_1)
 
@@ -48,8 +59,14 @@ RSpec.describe "Starred channels", type: :system do
 
       visit("/")
 
-      expect(page.find(".sidebar-section-link.channel-#{channel_1.id}")).to have_css(
-        ".sidebar-section-link-suffix.icon.starred",
+      expect(page.find("#sidebar-section-content-chat-starred-channels")).to have_css(
+        ".channel-#{channel_1.id}",
+      )
+      expect(page.find("#sidebar-section-content-chat-channels")).to have_no_css(
+        ".channel-#{channel_1.id}",
+      )
+      expect(page.find("#sidebar-section-content-chat-channels")).to have_css(
+        ".channel-#{channel_2.id}",
       )
     end
   end
@@ -65,57 +82,40 @@ RSpec.describe "Starred channels", type: :system do
       channel_3.add(current_user)
     end
 
-    it "sorts starred channels alphabetically by slug" do
-      visit("/")
-
-      # Star channel 1 (C)
-      chat_page.visit_channel_settings(channel_1)
-      PageObjects::Components::DToggleSwitch.new(".c-channel-settings__star-switch").toggle
-      expect(toasts).to have_success(I18n.t("js.saved"))
-
-      # Star channel 3 (B)
-      chat_page.visit_channel_settings(channel_3)
-      PageObjects::Components::DToggleSwitch.new(".c-channel-settings__star-switch").toggle
-      expect(toasts).to have_success(I18n.t("js.saved"))
-
-      # Star channel 2 (A)
-      chat_page.visit_channel_settings(channel_2)
-      PageObjects::Components::DToggleSwitch.new(".c-channel-settings__star-switch").toggle
-      expect(toasts).to have_success(I18n.t("js.saved"))
+    it "sorts starred channels alphabetically by slug in the Starred Channels section" do
+      channel_1.membership_for(current_user).update!(starred: true)
+      channel_2.membership_for(current_user).update!(starred: true)
+      channel_3.membership_for(current_user).update!(starred: true)
 
       visit("/")
 
-      # Should be ordered: A, B, C (alphabetically by slug)
-      expect(page.find("#sidebar-section-content-chat-channels li:nth-child(1)")).to have_css(
-        ".channel-#{channel_2.id}",
-      )
-      expect(page.find("#sidebar-section-content-chat-channels li:nth-child(2)")).to have_css(
-        ".channel-#{channel_3.id}",
-      )
-      expect(page.find("#sidebar-section-content-chat-channels li:nth-child(3)")).to have_css(
-        ".channel-#{channel_1.id}",
-      )
+      expect(
+        page.find("#sidebar-section-content-chat-starred-channels li:nth-child(1)"),
+      ).to have_css(".channel-#{channel_2.id}")
+      expect(
+        page.find("#sidebar-section-content-chat-starred-channels li:nth-child(2)"),
+      ).to have_css(".channel-#{channel_3.id}")
+      expect(
+        page.find("#sidebar-section-content-chat-starred-channels li:nth-child(3)"),
+      ).to have_css(".channel-#{channel_1.id}")
     end
 
-    it "shows starred channels above unstarred channels" do
-      visit("/")
-
-      # Star only channel 1 (C)
-      chat_page.visit_channel_settings(channel_1)
-      PageObjects::Components::DToggleSwitch.new(".c-channel-settings__star-switch").toggle
-      expect(toasts).to have_success(I18n.t("js.saved"))
+    it "shows unstarred channels in the regular Channels section" do
+      channel_1.membership_for(current_user).update!(starred: true)
 
       visit("/")
 
-      # Channel 1 (C - starred) should be first, even though A and B come before it alphabetically
-      expect(page.find("#sidebar-section-content-chat-channels li:nth-child(1)")).to have_css(
+      expect(page.find("#sidebar-section-content-chat-starred-channels")).to have_css(
         ".channel-#{channel_1.id}",
       )
-      # Unstarred channels should still be alphabetical
-      expect(page.find("#sidebar-section-content-chat-channels li:nth-child(2)")).to have_css(
+
+      expect(page.find("#sidebar-section-content-chat-channels")).to have_no_css(
+        ".channel-#{channel_1.id}",
+      )
+      expect(page.find("#sidebar-section-content-chat-channels li:nth-child(1)")).to have_css(
         ".channel-#{channel_2.id}",
       )
-      expect(page.find("#sidebar-section-content-chat-channels li:nth-child(3)")).to have_css(
+      expect(page.find("#sidebar-section-content-chat-channels li:nth-child(2)")).to have_css(
         ".channel-#{channel_3.id}",
       )
     end
@@ -129,16 +129,16 @@ RSpec.describe "Starred channels", type: :system do
       channel_1.add(current_user)
       channel_2.add(current_user)
 
-      # Pre-star channel 1
-      membership = channel_1.membership_for(current_user)
-      membership.update!(starred: true)
+      channel_1.membership_for(current_user).update!(starred: true)
     end
 
-    it "removes the channel from the starred position" do
+    it "moves the channel from Starred Channels to regular Channels section" do
       visit("/")
 
-      # Verify channel 1 is starred and at the top
-      expect(page.find("#sidebar-section-content-chat-channels li:nth-child(1)")).to have_css(
+      expect(page.find("#sidebar-section-content-chat-starred-channels")).to have_css(
+        ".channel-#{channel_1.id}",
+      )
+      expect(page.find("#sidebar-section-content-chat-channels")).to have_no_css(
         ".channel-#{channel_1.id}",
       )
 
@@ -153,38 +153,14 @@ RSpec.describe "Starred channels", type: :system do
 
       visit("/")
 
-      # Now channels should be in alphabetical order
+      expect(page).to have_no_css("#sidebar-section-content-chat-starred-channels")
       expect(page.find("#sidebar-section-content-chat-channels li:nth-child(1)")).to have_css(
         ".channel-#{channel_1.id}",
-      )
-      expect(page.find("#sidebar-section-content-chat-channels li:nth-child(2)")).to have_css(
-        ".channel-#{channel_2.id}",
-      )
-    end
-
-    it "removes the star icon from the unstarred channel" do
-      visit("/")
-
-      # Verify star icon exists
-      expect(page.find(".sidebar-section-link.channel-#{channel_1.id}")).to have_css(
-        ".sidebar-section-link-suffix.icon.starred",
-      )
-
-      chat_page.visit_channel_settings(channel_1)
-
-      PageObjects::Components::DToggleSwitch.new(".c-channel-settings__star-switch").toggle
-      expect(toasts).to have_success(I18n.t("js.saved"))
-
-      visit("/")
-
-      # Verify star icon is gone
-      expect(page.find(".sidebar-section-link.channel-#{channel_1.id}")).to have_no_css(
-        ".sidebar-section-link-suffix.icon.starred",
       )
     end
   end
 
-  context "when starred channels with unread messages" do
+  context "when all channels are starred" do
     fab!(:channel_1) { Fabricate(:category_channel, name: "Channel A") }
     fab!(:channel_2) { Fabricate(:category_channel, name: "Channel B") }
 
@@ -192,23 +168,18 @@ RSpec.describe "Starred channels", type: :system do
       channel_1.add(current_user)
       channel_2.add(current_user)
 
-      # Star channel 2
-      membership = channel_2.membership_for(current_user)
-      membership.update!(starred: true)
+      channel_1.membership_for(current_user).update!(starred: true)
+      channel_2.membership_for(current_user).update!(starred: true)
     end
 
-    it "keeps starred channels at the top even with unread messages in unstarred channels" do
-      # Add unread message to unstarred channel
-      Fabricate(:chat_message, chat_channel: channel_1)
-
+    it "shows only the Starred Channels section" do
       visit("/")
 
-      # Starred channel 2 should still be first, even though channel 1 has unread
-      expect(page.find("#sidebar-section-content-chat-channels li:nth-child(1)")).to have_css(
-        ".channel-#{channel_2.id}",
-      )
-      expect(page.find("#sidebar-section-content-chat-channels li:nth-child(2)")).to have_css(
+      expect(page.find("#sidebar-section-content-chat-starred-channels")).to have_css(
         ".channel-#{channel_1.id}",
+      )
+      expect(page.find("#sidebar-section-content-chat-starred-channels")).to have_css(
+        ".channel-#{channel_2.id}",
       )
     end
   end
@@ -227,7 +198,7 @@ RSpec.describe "Starred channels", type: :system do
       user_3.update!(username: "bob")
     end
 
-    it "shows the starred DM channel at the top of the sidebar" do
+    it "shows the starred DM channel in the Starred Channels section" do
       visit("/")
 
       chat_page.visit_channel_settings(dm_channel_1)
@@ -241,71 +212,79 @@ RSpec.describe "Starred channels", type: :system do
 
       visit("/")
 
-      expect(page.find("#sidebar-section-content-chat-dms li:nth-child(1)")).to have_css(
+      expect(page.find("#sidebar-section-content-chat-starred-channels")).to have_css(
         ".channel-#{dm_channel_1.id}",
       )
     end
 
-    it "shows a star icon next to the starred DM channel" do
-      visit("/")
-
-      chat_page.visit_channel_settings(dm_channel_1)
-
-      PageObjects::Components::DToggleSwitch.new(".c-channel-settings__star-switch").toggle
-      expect(toasts).to have_success(I18n.t("js.saved"))
+    it "removes the starred DM from the regular Direct Messages section" do
+      dm_channel_1.membership_for(current_user).update!(starred: true)
 
       visit("/")
 
-      expect(page.find(".sidebar-section-link.channel-#{dm_channel_1.id}")).to have_css(
-        ".sidebar-section-link-suffix.icon.starred",
+      expect(page.find("#sidebar-section-content-chat-starred-channels")).to have_css(
+        ".channel-#{dm_channel_1.id}",
       )
-    end
-
-    it "sorts starred DM channels alphabetically by title" do
-      visit("/")
-
-      # Star dm_channel_1 (charlie)
-      chat_page.visit_channel_settings(dm_channel_1)
-      PageObjects::Components::DToggleSwitch.new(".c-channel-settings__star-switch").toggle
-      expect(toasts).to have_success(I18n.t("js.saved"))
-
-      # Star dm_channel_3 (bob)
-      chat_page.visit_channel_settings(dm_channel_3)
-      PageObjects::Components::DToggleSwitch.new(".c-channel-settings__star-switch").toggle
-      expect(toasts).to have_success(I18n.t("js.saved"))
-
-      # Star dm_channel_2 (alice)
-      chat_page.visit_channel_settings(dm_channel_2)
-      PageObjects::Components::DToggleSwitch.new(".c-channel-settings__star-switch").toggle
-      expect(toasts).to have_success(I18n.t("js.saved"))
-
-      visit("/")
-
-      # Should be ordered: alice, bob, charlie (alphabetically by title)
-      expect(page.find("#sidebar-section-content-chat-dms li:nth-child(1)")).to have_css(
-        ".channel-#{dm_channel_2.id}",
-      )
-      expect(page.find("#sidebar-section-content-chat-dms li:nth-child(2)")).to have_css(
-        ".channel-#{dm_channel_3.id}",
-      )
-      expect(page.find("#sidebar-section-content-chat-dms li:nth-child(3)")).to have_css(
+      expect(page.find("#sidebar-section-content-chat-dms")).to have_no_css(
         ".channel-#{dm_channel_1.id}",
       )
     end
 
-    it "shows starred DM channels above unstarred DM channels" do
-      visit("/")
-
-      # Star only dm_channel_1 (charlie)
-      chat_page.visit_channel_settings(dm_channel_1)
-      PageObjects::Components::DToggleSwitch.new(".c-channel-settings__star-switch").toggle
-      expect(toasts).to have_success(I18n.t("js.saved"))
+    it "sorts starred DM channels alphabetically by title in Starred Channels section" do
+      dm_channel_1.membership_for(current_user).update!(starred: true)
+      dm_channel_2.membership_for(current_user).update!(starred: true)
+      dm_channel_3.membership_for(current_user).update!(starred: true)
 
       visit("/")
 
-      # dm_channel_1 (charlie - starred) should be first, even though alice and bob come before it alphabetically
-      expect(page.find("#sidebar-section-content-chat-dms li:nth-child(1)")).to have_css(
-        ".channel-#{dm_channel_1.id}",
+      starred_section = page.find("#sidebar-section-content-chat-starred-channels")
+      expect(starred_section.find("li:nth-child(1)")).to have_css(".channel-#{dm_channel_2.id}")
+      expect(starred_section.find("li:nth-child(2)")).to have_css(".channel-#{dm_channel_3.id}")
+      expect(starred_section.find("li:nth-child(3)")).to have_css(".channel-#{dm_channel_1.id}")
+    end
+  end
+
+  context "when starring both public channels and DMs" do
+    fab!(:user_1, :user)
+    fab!(:channel_1) { Fabricate(:category_channel, name: "Channel B") }
+    fab!(:channel_2) { Fabricate(:category_channel, name: "Channel A") }
+    fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user, user_1]) }
+
+    before do
+      user_1.update!(username: "alice")
+      channel_1.add(current_user)
+      channel_2.add(current_user)
+
+      channel_1.membership_for(current_user).update!(starred: true)
+      channel_2.membership_for(current_user).update!(starred: true)
+      dm_channel_1.membership_for(current_user).update!(starred: true)
+    end
+
+    it "shows public channels first, then DMs in the Starred Channels section" do
+      visit("/")
+
+      starred_section = page.find("#sidebar-section-content-chat-starred-channels")
+      expect(starred_section.find("li:nth-child(1)")).to have_css(".channel-#{channel_2.id}")
+      expect(starred_section.find("li:nth-child(2)")).to have_css(".channel-#{channel_1.id}")
+      expect(starred_section.find("li:nth-child(3)")).to have_css(".channel-#{dm_channel_1.id}")
+    end
+  end
+
+  context "when the star_chat_channels setting is disabled" do
+    fab!(:channel_1) { Fabricate(:category_channel, name: "Channel A") }
+
+    before do
+      channel_1.add(current_user)
+      channel_1.membership_for(current_user).update!(starred: true)
+      SiteSetting.star_chat_channels = false
+    end
+
+    it "does not show the Starred Channels section" do
+      visit("/")
+
+      expect(page).to have_no_css("#sidebar-section-content-chat-starred-channels")
+      expect(page.find("#sidebar-section-content-chat-channels")).to have_css(
+        ".channel-#{channel_1.id}",
       )
     end
   end

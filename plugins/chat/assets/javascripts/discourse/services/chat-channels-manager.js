@@ -197,6 +197,76 @@ export default class ChatChannelsManager extends Service {
     return this.directMessageChannels.slice(0, DIRECT_MESSAGE_CHANNELS_LIMIT);
   }
 
+  get starredChannels() {
+    if (!this.siteSettings.star_chat_channels) {
+      return [];
+    }
+
+    const starredPublic = this.channels
+      .filter(
+        (channel) =>
+          channel.isCategoryChannel &&
+          channel.currentUserMembership?.following &&
+          channel.currentUserMembership?.starred
+      )
+      .sort((a, b) => (a.slug || "").localeCompare(b.slug || ""));
+
+    const starredDMs = this.channels
+      .filter(
+        (channel) =>
+          channel.isDirectMessageChannel &&
+          channel.currentUserMembership?.following &&
+          channel.currentUserMembership?.starred
+      )
+      .sort((a, b) => (a.title || "").localeCompare(b.title || ""));
+
+    return [...starredPublic, ...starredDMs];
+  }
+
+  get hasStarredChannels() {
+    return this.starredChannels.length > 0;
+  }
+
+  get unstarredPublicMessageChannels() {
+    if (!this.siteSettings.star_chat_channels) {
+      return this.publicMessageChannels;
+    }
+
+    return this.#sortChannelsByProperty(
+      this.channels.filter(
+        (channel) =>
+          channel.isCategoryChannel &&
+          channel.currentUserMembership?.following &&
+          !channel.currentUserMembership?.starred
+      ),
+      "slug"
+    );
+  }
+
+  get unstarredDirectMessageChannels() {
+    if (!this.siteSettings.star_chat_channels) {
+      return this.directMessageChannels;
+    }
+
+    return this.#sortDirectMessageChannels(
+      this.channels.filter((channel) => {
+        const membership = channel.currentUserMembership;
+        return (
+          channel.isDirectMessageChannel &&
+          membership?.following &&
+          !membership?.starred
+        );
+      })
+    );
+  }
+
+  get truncatedUnstarredDirectMessageChannels() {
+    return this.unstarredDirectMessageChannels.slice(
+      0,
+      DIRECT_MESSAGE_CHANNELS_LIMIT
+    );
+  }
+
   async #find(id) {
     try {
       const result = await this.chatApi.channel(id);
