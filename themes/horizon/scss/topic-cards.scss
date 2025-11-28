@@ -354,7 +354,6 @@
     border-radius: var(--d-border-radius);
     border: 1px solid var(--status-color);
     color: var(--status-color);
-    width: min-content;
 
     @include viewport.until(sm) {
       border-radius: var(--d-border-radius-small);
