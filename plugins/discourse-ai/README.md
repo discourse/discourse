@@ -26,6 +26,7 @@ Usage: evals/run [options]
     -j, --judge NAME                 LLM config used as a judge (defaults to gpt-4o when available)
         --persona-keys KEYS          Comma-separated list of persona keys (or repeat the flag) to run sequentially
         --compare MODE               Run comparisons (MODE: personas or llms)
+        --dataset PATH               Path to a CSV dataset file (requires --feature)
 ```
 
 To run evals you will need to configure API keys in your environment:
@@ -54,6 +55,17 @@ the database.
 When running persona comparisons (`--compare personas`) the CLI automatically prepends the built-in
 `default` persona so you can benchmark your YAML prompts against the stock behavior. Non-comparison
 runs still execute only the personas you list.
+
+#### Dataset-driven evals
+
+Supply `--dataset path/to/file.csv` along with `--feature module:feature_name` to generate eval cases
+from a CSV instead of YAML files. Each row must include `content` and `expected_output` columns; rows
+are converted into individual eval ids (prefixed with the dataset filename) that reuse the selected
+feature’s runner. Example:
+
+```
+./run --dataset evals/datasets/spam.csv --feature spam:inspect_posts --models gpt-4o-mini
+```
 
 #### Comparison matrix
 
