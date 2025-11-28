@@ -455,6 +455,7 @@ et:
         reviewable_post:
           title: "Postitus"
           noun: "postitus"
+      assigned_to: "Määratud kasutajale"
       notes:
         delete: "Kustuta"
       review_user: "Kasutaja"

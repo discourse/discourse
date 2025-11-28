@@ -272,6 +272,7 @@ he:
       invalid_error_type: "סוג השגיאה שסופק לא תקין"
       unexpected: "אירעה שגיאה בלתי צפויה"
       bot_user_update_failed: "עדכון משתמש בוט סריקת הזבל נכשל"
+      configuration_missing: "הגדרות זיהוי ספאם עם בינה מלאכותית חסרות. יש להוסיף הגדרות דרך ‚ניהול > תוספים > בינה מלאכותית ב־Dicsourse > ספאם’ לפני הפעלת האפשרות הזאת."
       logging_subject: "זיהוי זבל"
     ai_bot:
       reply_error: "נראה שהמערכת שלך נתקלה בקשיים לא צפויים בעת הניסיון להשיב, עמך הסליחה.\n\n[details='פרטי השגיאה']\n%{details}\n[/details]"
@@ -323,6 +324,7 @@ he:
           description: "דמות ברירת מחדל שעליה מופעלים תקצירי בינה מלאכותית"
         short_summarizer:
           name: "מסכם (מקוצר)"
+          description: "דמות ברירת מחדל שמסכמת עם פריטי רשימות נושאים עם בינה מלאכותית"
         concept_finder:
           name: "איתור מושגים"
           description: "בוט בינה מלאכותית שמתמחה בזיהוי מושגים וערכות עיצוב בתוכן"
@@ -547,6 +549,7 @@ he:
           other: "נמצאו %{count} תוצאות לחיפוש אחר ‚%{query}’"
       discoveries:
         continue_conversation:
+          title: "שיחת גילוי: חיפוש אחר %{query}"
           raw: "בחיפוש שלי אחר %{query}, הצגת לי את המידע הבא:\n\n%{context}\n\nאפשר להמשיך את השיחה."
     summarization:
       configuration_hint:

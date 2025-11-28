@@ -664,6 +664,7 @@ nb_NO:
         reviewable_post:
           title: "Innlegg"
           noun: "innlegg"
+      assigned_to: "Tildelt til"
       notes:
         delete: "Slett"
       review_user: "Bruker"

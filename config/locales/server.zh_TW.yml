@@ -2792,8 +2792,10 @@ zh_TW:
     title: "Discourse 安裝"
     step:
       introduction:
+        title: "關於您的網站"
         fields:
           title:
+            label: "社區名稱"
             placeholder: "小明的論壇"
           site_description:
             placeholder: "小明和他的朋友討論酷東西的論壇"
@@ -2831,12 +2833,16 @@ zh_TW:
             label: "主要標誌"
       corporate:
         fields:
+          company_name:
+            placeholder: "Acme 組織"
           governing_law:
+            label: "適用於法律"
             placeholder: "加州法律"
           contact_url:
             label: "網頁"
             placeholder: "https://www.example.com/contact-us"
           city_for_disputes:
+            label: "爭議城市"
             placeholder: "舊金山，加洲（California）"
           site_contact:
             description: "所有自動發送的消息將以該使用者的名義發送，比如投訴警告、備份完成通知。"

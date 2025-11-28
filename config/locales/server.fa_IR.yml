@@ -2808,6 +2808,7 @@ fa_IR:
       ready:
         title: "سایت شما آماده است!"
       styling:
+        title: "شکل و شمایل"
         fields:
           styling_preview:
             label: "پیش‌نمایش"
@@ -2830,6 +2831,9 @@ fa_IR:
         fields:
           company_name:
             label: "نام شرکت"
+            placeholder: "درباره سازمان"
+          governing_law:
+            label: "قانون حاکم"
           contact_url:
             label: "صفحه وب"
             placeholder: "https://www.example.com/contact-us"

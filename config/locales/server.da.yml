@@ -3135,6 +3135,7 @@ da:
     title: "Discourse Opsætning"
     step:
       introduction:
+        title: "Om dit websted"
         fields:
           title:
             placeholder: "Janes Sted"
@@ -3154,6 +3155,7 @@ da:
           chat_enabled:
             placeholder: "Aktiver chat"
       styling:
+        title: "Udseende og fornemmelse"
         fields:
           body_font:
             label: "Indholds skrifttype"
@@ -3172,12 +3174,17 @@ da:
           logo:
             label: "Primært logo"
       corporate:
+        title: "Din organisation"
         fields:
+          company_name:
+            placeholder: "Eksempel-firma"
           governing_law:
+            label: "Gældende lov"
             placeholder: "Californiens lov"
           contact_url:
             placeholder: "https://www.example.dk/kontakt-os"
           city_for_disputes:
+            label: "By for tvister"
             placeholder: "San Francisco, Californien"
       invites:
         title: "Inviter hjælpere"

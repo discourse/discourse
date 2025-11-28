@@ -607,6 +607,7 @@ ko:
         reviewable_post:
           title: "게시물"
           noun: "글"
+      assigned_to: "다음으로 할당"
       notes:
         delete: "삭제하기"
       review_user: "사용자"
@@ -5425,6 +5426,7 @@ ko:
         unread: "읽지 않음"
         top: "인기글"
         latest: "최신"
+        hot: "인기"
         categories: "카테고리"
         unseen: "읽지 않음"
         read: "읽음"

@@ -633,6 +633,7 @@ sv:
         reviewable_post:
           title: "Inlägg"
           noun: "inlägg"
+      assigned_to: "Tilldelat till"
       notes:
         delete: "Radera"
       review_user: "Användare"

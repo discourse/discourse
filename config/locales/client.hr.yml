@@ -7621,6 +7621,7 @@ hr:
         unread: "Nepročitano"
         top: "Najaktivnije"
         latest: "Posljednje"
+        hot: "Vruće"
         categories: "Kategorije"
         unseen: "Nepročitano"
         read: "Pročitajte"

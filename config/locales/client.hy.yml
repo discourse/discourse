@@ -695,6 +695,7 @@ hy:
         reviewable_post:
           title: "Գրառում"
           noun: "գրառում"
+      assigned_to: "Վերագրված է"
       notes:
         delete: "Ջնջել"
       review_user: "Օգտատեր"

@@ -379,10 +379,10 @@ ug:
             topic_id:
               label: تېما كىملىكى
             banner_until:
-              label: لوزۇنكا تېما دەپ تەڭشەيدىغان ۋاقىت
+              label: لەۋھە تېما دەپ تەڭشەيدىغان ۋاقىت
             user:
               label: ئىشلەتكۈچى
-              description: "لوزۇنكا قۇرغان ئىشلەتكۈچى (كۆڭۈلدىكى: سىستېما)"
+              description: "لەۋھە قۇرغان ئىشلەتكۈچى (كۆڭۈلدىكى: سىستېما)"
         flag_post_on_words:
           fields:
             words:
