@@ -22,7 +22,7 @@ module AdPlugin
       else
         render json: {
                  success: false,
-                 error: "Click already recorded",
+                 error: I18n.t("errors.already_clicked"),
                },
                status: :unprocessable_entity
       end

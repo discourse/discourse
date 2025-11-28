@@ -19,6 +19,10 @@ en:
       title: Adplugin performance by ad type
       description: "Ad performance report by ad type"
 
+
+  errors:
+    already_clicked: "Click already recorded"
+
   site_settings:
     discourse_adplugin_enabled: Enable the discourse-adplugin.
 

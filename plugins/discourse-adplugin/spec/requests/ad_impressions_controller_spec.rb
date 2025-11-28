@@ -224,7 +224,7 @@ describe AdPlugin::AdImpressionsController do
       expect(response.status).to eq(422)
       json = response.parsed_body
       expect(json["success"]).to eq(false)
-      expect(json["error"]).to eq("Click already recorded")
+      expect(json["error"]).to eq(I18n.t("errors.already_clicked"))
     end
 
     it "works for external ad impressions" do
