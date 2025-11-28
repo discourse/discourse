@@ -589,6 +589,7 @@ ca:
         reviewable_post:
           title: "Publicació"
           noun: "publicació"
+      assigned_to: "Assignat a"
       notes:
         delete: "Suprimeix"
       review_user: "Usuari"

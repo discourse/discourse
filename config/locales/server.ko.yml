@@ -3596,7 +3596,10 @@ ko:
             choices:
               latest:
                 label: "최신"
+              hot:
+                label: "인기"
       corporate:
+        title: "조직"
         fields:
           governing_law:
             placeholder: "캘리포니아 법"

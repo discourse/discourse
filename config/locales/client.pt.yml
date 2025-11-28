@@ -2309,6 +2309,30 @@ pt:
             one {# erro/hora}
           other {# erros/hora}
         }.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# erro/minuto}
+          other {# erros/minutos}
+        }</a> atingiu o limite da definição do site de {limit, plural,
+            one {# erro/minuto}
+          other {# erros/minutos}
+        }.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# erro/hora}
+          other {# erros/hora}
+        }</a> atingiu o limite da definição do site de { limit, plural,
+            one {# erro/hora}
+          other {# erros/hora}
+        }.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# erro/minuto}
+          other {# erros/minutos}
+        }</a> atingiu o limite da definição do site de {limit, plural,
+            one {# erro/minuto}
+          other {# erros/minutos}
+        }.
     learn_more: "Saber mais"
     learn_more_with_link: "<a href='%{url}' target='_blank'>Mais informações em…</a>"
     mute: Silenciar
@@ -2349,6 +2373,14 @@ pt:
         hide: "Ocultar resumo"
         generate: "Resumir"
         regenerate: "Regenerar"
+      description_time_MF: |
+        Há { replyCount, plural,
+            one { <b>#</b> resposta}
+          other {<b>#</b> resposta}
+        } com um tempo estimado de leitura de <b>{ readingTime, plural,
+            one {# minuto}
+          other {# minutos}
+        }</b>.
       enable: "Mostrar respostas principais"
       disable: "Mostrar Todas As Publicações"
       short_label: "Principais respostas"
@@ -2644,6 +2676,9 @@ pt:
       confirm_publish: "Tem a certeza que quer publicar este rascunho?"
       publishing: "Publicando Tópico…"
     composer:
+      autocomplete:
+        username_missing: "O resultado de autocompletar selecionado não tem o nome de utilizador."
+        name_missing: "O resultado de autocompletar selecionado não tem o nome."
       emoji: "Emoji :)"
       more_emoji: "mais…"
       options: "Opções"
@@ -3601,21 +3636,21 @@ pt:
       has_likes_title:
         one: "%{count} pessoa gostou desta mensagem"
         other: "%{count} pessoas gostaram desta mensagem"
-      has_likes_title_only_you: "você gostou desta mensagem"
+      has_likes_title_only_you: "você gostou desta publicação"
       has_likes_title_you:
         one: "você e %{count} outra pessoa gostaram desta publicação"
         other: "você e %{count} outras pessoas gostaram desta publicação"
       sr_post_like_count_button:
-        one: "%{count} pessoa gostou desta mensagem."
-        other: "%{count} pessoas gostaram desta mensagem."
+        one: "%{count} pessoa gostou desta publicação."
+        other: "%{count} pessoas gostaram desta publicação."
       filtered_replies_hint:
-        one: "Ver este post e a sua resposta"
-        other: "Ver este post e as suas %{count} respostas"
+        one: "Ver esta publicação e a sua resposta"
+        other: "Ver esta publicação e as suas %{count} respostas"
       filtered_replies_viewing:
-        one: "Visualizando %{count} resposta para"
-        other: "Visualizando %{count} respostas para"
-      in_reply_to: "Carregar post principal"
-      view_all_posts: "Ver todos os posts"
+        one: "A ver %{count} resposta para"
+        other: "A ver %{count} respostas para"
+      in_reply_to: "Carregar publicação original"
+      view_all_posts: "Ver todas as publicações"
       localizations:
         table:
           locale: "Idioma"
@@ -3636,48 +3671,48 @@ pt:
           action_original: "Editar publicação original"
           action_translation: "Editar esta tradução"
       errors:
-        create: "Desculpe, ocorreu um erro ao criar a sua mensagem. Por favor, tente novamente."
-        edit: "Desculpe, ocorreu um erro ao editar a sua mensagem. Por favor, tente novamente."
-        file_too_large: "Desculpe, esse ficheiro é demasiado grande (o tamanho máximo é %{max_size_kb}kb). Por que não enviar o seu grande ficheiro para um serviço de partilha na nuvem e, de seguida, colar o link?"
-        too_many_uploads: "Pedimos desculpa, só pode carregar um ficheiro de cada vez."
+        create: "Desculpe, ocorreu um erro ao criar a sua publicação. Por favor, tente novamente."
+        edit: "Desculpe, ocorreu um erro ao editar a sua publicação. Por favor, tente novamente."
+        file_too_large: "Desculpe, esse ficheiro é demasiado grande (o tamanho máximo é %{max_size_kb}kb). Por que não enviar o seu ficheiro grande para um serviço de partilha na nuvem, depois colar a hiperligação?"
+        too_many_uploads: "Desculpe, só pode enviar um ficheiro de cada vez."
         too_many_dragged_and_dropped_files:
           one: "Desculpe, só pode enviar %{count} ficheiro de cada vez."
           other: "Desculpe, só pode enviar %{count} ficheiros de cada vez."
-        upload_not_authorized: "Pedimos desculpa, o ficheiro que está a tentar carregar não está autorizado (extensões autorizadas: %{authorized_extensions})."
-        image_upload_not_allowed_for_new_user: "Pedimos desculpa, os novos utilizadores não podem carregar imagens."
-        attachment_upload_not_allowed_for_new_user: "Pedimos desculpa, os novos utilizadores não podem carregar anexos."
+        upload_not_authorized: "Desculpe, o ficheiro que está a tentar enviar não está autorizado (extensões autorizadas: %{authorized_extensions})."
+        image_upload_not_allowed_for_new_user: "Desculpe, os novos utilizadores não podem enviar imagens."
+        attachment_upload_not_allowed_for_new_user: "restaurar esta publicação"
         attachment_download_requires_login: "Desculpe, tem de estar autenticado para transferir os anexos."
       cancel_composer:
         confirm: "O que gostaria de fazer com a sua publicação?"
-        discard: "Descartar"
+        discard: "Rejeitar"
         save_draft: "Salvar rascunho para mais tarde"
         keep_editing: "Prosseguir a edição"
       via_email: "esta mensagem chegou por ''e-mail''"
-      via_auto_generated_email: "esta publicação chegou via um email gerado automaticamente"
+      via_auto_generated_email: "esta publicação chegou de um e-mail gerado automaticamente"
       whisper: "esta publicação é um susurro privado para os moderadores"
       wiki:
         about: "esta publicação é uma wiki"
-      few_likes_left: "Obrigado por partilhar o amor! Restam-lhe apenas um gostos para hoje."
+      few_likes_left: "Obrigado por partilhar o amor! Restam-lhe apenas uns gostos para hoje."
       controls:
         reply: "começar a compor uma resposta a este tópico"
         like_action: "Gostar"
-        like: "gostar desta mensagem"
-        has_liked: "gostou desta mensagem"
+        like: "gostar desta publicação"
+        has_liked: "você gostou desta publicação"
         read_indicator: "membros que leram esta publicação"
-        undo_like_action: "Retirar gosto"
-        undo_like: "desfazer gosto"
+        undo_like_action: "Anular gosto"
+        undo_like: "anular gosto"
         edit: "editar esta publicação"
         edit_action: "Editar"
-        edit_anonymous: "Pedimos desculpa, mas necessita de ter sessão iniciada para editar esta publicação."
-        flag_action: "Denunciar"
+        edit_anonymous: "Desculpe, mas precisa de estar autenticado para editar esta publicação."
+        flag_action: "Sinalizar"
         delete: "eliminar esta publicação"
-        undelete: "restaurar esta mensagem"
+        undelete: "restaurar esta publicação"
         share_action: "Partilhar"
-        share: "partilhar uma ligação a esta publicação"
-        copy_action: "Copiar link"
+        share: "partilhar uma hiperligação para esta publicação"
+        copy_action: "Copiar hiperligação"
         more: "Mais"
         delete_replies:
-          confirm: "Deseja também eliminar as respostas a esta publicação?"
+          confirm: "Também deseja eliminar as respostas a esta publicação?"
           direct_replies:
             one: "Sim, e %{count} resposta direta"
             other: "Sim, e %{count} respostas diretas"
@@ -3687,46 +3722,46 @@ pt:
           just_the_post: "Não, apenas esta mensagem"
         admin: "ações administrativas de publicação"
         admin_action: "Administração"
-        permanently_delete: "Excluir Permanentemente"
-        wiki: "Fazer Wiki"
+        permanently_delete: "Eliminar Permanentemente"
+        wiki: "Criar Wiki"
         unwiki: "Remover Wiki"
-        convert_to_moderator: "Adicionar Cor do Pessoal"
-        revert_to_regular: "Remover Cor do Pessoal"
+        convert_to_moderator: "Adicionar Cor do Funcionário"
+        revert_to_regular: "Remover Cor do Funcionário"
         rebake: "Reconstruir HTML"
         publish_page: "Publicação de Página"
         unhide: "Mostrar"
-        lock_post: "Bloquear Post"
+        lock_post: "Bloquear Publicação"
         lock_post_description: "impedir o autor de editar esta publicação"
-        unlock_post: "Desbloquear Post"
+        unlock_post: "Desbloquear Publicação"
         unlock_post_description: "permitir ao autor editar esta publicação"
-        delete_topic_disallowed_modal: "Você não tem permissão para excluir este tópico. Se deseja realmente que ele seja excluído, sinalize-o para o moderador, juntamente com uma explicação."
-        delete_topic_disallowed: "não tem permissão para excluir este tópico"
-        delete_topic_confirm_modal_yes: "Sim, exclua este tópico"
-        delete_topic_confirm_modal_no: "Não, mantenha este tópico"
-        delete_topic_error: "Ocorreu um erro ao excluir este tópico"
+        delete_topic_disallowed_modal: "Não tem permissão para eliminar este tópico. Se realmente deseja que este seja eliminado, sinalize-o para o moderador, com uma explicação."
+        delete_topic_disallowed: "não tem permissão para eliminar este tópico"
+        delete_topic_confirm_modal_yes: "Sim, eliminar este tópico"
+        delete_topic_confirm_modal_no: "Não, manter este tópico"
+        delete_topic_error: "Ocorreu um erro ao eliminar este tópico"
         delete_topic: "eliminar tópico"
-        remove_timer: "remover timer"
+        remove_timer: "remover temporizador"
         edit_timer: "editar temporizador"
       actions:
         people:
           like:
             one: "gostou disto"
-            other: "gostou disto"
+            other: "gostaram disto"
           read:
-            one: "leia isso"
-            other: "leia isso"
+            one: "leu isto"
+            other: "leram isto"
           like_capped:
-            one: "e %{count} outro curtiram isso"
-            other: "e %{count} outros curtiram isso"
+            one: "e %{count} outro gostou disto"
+            other: "e %{count} outros gostaram disto"
           read_capped:
-            one: "e %{count} outro leram isso"
-            other: "e %{count} outros leram isso"
+            one: "e %{count} outro leu isto"
+            other: "e %{count} outros leram isto"
         by_you:
-          off_topic: "Denunciou isto como fora de contexto"
-          spam: "Denunciou isto como spam"
-          inappropriate: "Denunciou isto como inapropriado"
-          notify_moderators: "Denunciou isto para moderação"
-          notify_user: "Enviou uma mensagem a este utilizador"
+          off_topic: "Sinalizou isto como fora de contexto"
+          spam: "Sinalizou isto como lixo eletrónico"
+          inappropriate: "Sinalizou isto como inapropriado"
+          notify_moderators: "Sinalizou isto para moderação"
+          notify_user: "Enviou uma mensagem para este utilizador"
       revisions:
         locale:
           no_locale_set: "Nenhum idioma definido"
@@ -3734,68 +3769,68 @@ pt:
         controls:
           first: "Primeira revisão"
           previous: "Revisão anterior"
-          next: "Próxima revisão"
+          next: "Revisão seguinte"
           last: "Última revisão"
-          hide: "Esconder revisão"
+          hide: "Ocultar revisão"
           show: "Mostrar revisão"
-          destroy: "Apagar revisões"
-          destroy_confirm: "Tem certeza de que deseja apagar todas as revisões deste post? Esta ação é permanente."
+          destroy: "Eliminar revisões"
+          destroy_confirm: "Tem certeza que deseja eliminar todas as revisões desta publicação? Esta ação é permanente."
           revert: "Reverter para a versão %{revision}"
           edit_wiki: "Editar Wiki"
-          edit_post: "Editar Mensagem"
+          edit_post: "Editar Publicação"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
         displays:
           inline:
-            title: "Mostrar o resultado renderizado com inserções e remoções em-linha."
+            title: "Mostrar o resultado renderizado com adições e remoções em linha."
             button: "HTML"
           side_by_side:
-            title: "Mostrar o resultado renderizado das diferenças lado-a-lado"
+            title: "Mostrar as diferenças do resultado renderizado lado a lado"
             button: "HTML"
           side_by_side_markdown:
-            title: "Mostrar em bruto a fonte das diferenças lado-a-lado"
-            button: "Em bruto"
+            title: "Mostrar as diferenças da fonte original lado a lado"
+            button: "Original"
       raw_email:
         displays:
           raw:
-            title: "Mostre o e-mail bruto"
-            button: "Em bruto"
+            title: "Mostrar o e-mail original"
+            button: "Original"
           text_part:
             title: "Mostra a parte do texto do e-mail"
             button: "Texto"
           html_part:
-            title: "Mostra a parte html do e-mail"
+            title: "Mostrar a parte html do e-mail"
             button: "HTML"
       bookmarks:
-        create: "Criar favorito"
-        create_for_topic: "Criar marcador para tópico"
-        edit: "Editar favorito"
-        edit_for_topic: "Editar marcador para tópico"
-        updated: "Atualização"
+        create: "Criar marcador"
+        create_for_topic: "Criar marcador para o tópico"
+        edit: "Editar marcador"
+        edit_for_topic: "Editar marcador para o tópico"
+        updated: "Atualizado"
         name: "Nome"
-        name_placeholder: "Para que serve este favorito?"
+        name_placeholder: "Para que serve este marcador?"
         name_input_label: "Nome do marcador"
-        set_reminder: "Me lembrar"
+        set_reminder: "Lembrar-me"
         options: "Opções"
         actions:
           delete_bookmark:
-            name: "Excluir favorito"
-            description: "Exclui o favorito do seu perfil e para todos os lembretes do favorito"
+            name: "Eliminar marcador"
+            description: "Eliminar marcador do seu perfil e parar todos os lembretes para o marcador"
           edit_bookmark:
-            name: "Editar favorito"
-            description: "Edite o nome do favorito ou altere a data e hora do lembrete"
+            name: "Editar marcador"
+            description: "Editar o nome do marcador ou alterar a data e hora do lembrete"
           clear_bookmark_reminder:
             name: "Limpar lembrete"
             description: "Limpar a data e hora do lembrete"
           pin_bookmark:
-            name: "Fixar favorito"
-            description: "Fixar o favorito. Isto o fará aparecer no topo da sua lista de favoritos."
+            name: "Afixar marcador"
+            description: "Afixar o marcador. Isto fará com que apareça no topo da sua lista de marcadores."
           unpin_bookmark:
-            name: "Desafixar favorito"
-            description: "Desafixar o favorito. Ele não aparecerá mais no topo da sua lista de favoritos."
+            name: "Desafixar marcador"
+            description: "Desafixar o marcador. Ele não aparecerá mais no topo da sua lista de marcadores."
       filtered_replies:
-        viewing_posts_by: "Visualizando %{post_count} posts por"
-        viewing_subset: "Algumas respostas estão recolhidas"
-        post_number: "%{username}, post #%{post_number}"
+        viewing_posts_by: "A visualizar %{post_count} publicações por"
+        viewing_subset: "Algumas respostas estão ocultadas"
+        post_number: "%{username}, publicação #%{post_number}"
         show_all: "Mostrar tudo"
     category:
       none: "(sem categoria)"
@@ -3839,7 +3874,9 @@ pt:
       description: "Descrição"
       logo: "Logótipo da Categoria"
       background_image: "Imagem de Fundo da Categoria"
+      style: "Estilos"
       background_color: "Cor"
+      foreground_color: "Cor do texto"
       styles:
         type: "Estilo"
         icon: "Ícone"
@@ -3865,7 +3902,7 @@ pt:
         reply: "Responder"
         create: "Criar"
         no_groups_selected: "Nenhum grupo recebeu acesso; essa categoria só ficará visível para a equipe."
-        everyone_has_access: 'Esta categoria é pública, todos podem ver, responder e criar posts. Para restringir as permissões, remova uma ou mais das permissões concedidas ao grupo "todos".'
+        everyone_has_access: 'Esta categoria é pública, todos podem ver, responder e criar publicações. Para restringir as permissões, remova uma ou mais das permissões concedidas ao grupo "todos".'
         toggle_reply: "Alternar permissão Responder"
         toggle_full: "Alternar permissão Criar"
         inherited: 'Esta permissão é herdada de "todos"'
@@ -3882,7 +3919,7 @@ pt:
       num_featured_topics: "Número de tópicos mostrados na página de categorias:"
       subcategory_num_featured_topics: "Número de tópicos em destaque na página da categoria superior:"
       all_topics_wiki: "Tornar novos tópicos wikis por padrão"
-      allow_unlimited_owner_edits_on_first_post: "Permitir edições ilimitadas do proprietário na primeira postagem"
+      allow_unlimited_owner_edits_on_first_post: "Permitir edições ilimitadas do proprietário na primeira publicação"
       subcategory_list_style: "Estilo da Lista de Subcategorias:"
       sort_order: "Lista de Tópicos Ordenada Por:"
       default_view: "Lista de Tópicos Padrão:"
@@ -3897,7 +3934,7 @@ pt:
         watching:
           title: "A vigiar"
         watching_first_post:
-          title: "A Vigiar a Primeira Mensagem"
+          title: "A Vigiar a Primeira Publicação"
         tracking:
           title: "A Seguir"
         regular:
@@ -3956,7 +3993,7 @@ pt:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(escondido)"
       submit_tooltip: "Submeter a denúncia privada"
-      cant: "Pedimos desculpa, não é possível colocar uma denúncia nesta publicação neste momento."
+      cant: "Desculpe, não pode sinalizar esta publicação de momento."
       notify_staff: "Notificar o pessoal privadamente"
       formatted_name:
         off_topic: "Está fora do contexto"
@@ -3987,7 +4024,7 @@ pt:
       read: ler
       minutes: mínimo
     post_links:
-      about: "expandir mais ligações para esta publicação"
+      about: "expandir mais hiperligações para esta publicação"
       title:
         one: "%{count} mais"
         other: "%{count} mais"
@@ -3997,11 +4034,11 @@ pt:
       bookmarked:
         help: "Adicionou este tópico aos marcadores"
       locked:
-        help: "Este tópico está fechado; já não são aceites novas respostas"
+        help: "Este tópico está encerrado; este já não aceita novas respostas"
       archived:
         help: "Este tópico está arquivado; está congelado e não pode ser alterado"
       locked_and_archived:
-        help: "Este tópico está fechado e arquivado; já não aceita novas respostas e não pode ser modificado"
+        help: "Este tópico está encerrado e arquivado; este já não aceita novas respostas e não pode ser alterado"
       unpinned:
         title: "Desafixado"
         help: "Este tópico foi desafixado por si; será mostrado na ordem habitual"
@@ -4063,7 +4100,7 @@ pt:
         title_with_count:
           one: "Não Lido (%{count})"
           other: "Não Lidos (%{count})"
-        help: "tópicos que está atualmente a vigiar ou a seguir com mensagens não lidas"
+        help: "tópicos que estão atualmente a vigiar ou a seguir com publicações não lidas"
         lower_title_with_count:
           one: "%{count} não lido"
           other: "%{count} não lidos"
@@ -4084,7 +4121,7 @@ pt:
         topics: "Tópicos"
         replies: "Respostas"
       posted:
-        help: "tópicos em que publicou"
+        help: "tópicos em que você publicou"
       bookmarks:
         title: "Marcadores"
         help: "tópicos que marcou"
@@ -4147,12 +4184,12 @@ pt:
         previous: "%{shortcut} Tópico Anterior"
       navigation:
         title: "Navegação"
-        jump: "%{shortcut} Ir para a mensagem #"
+        jump: "%{shortcut} Ir para a publicação #"
         back: "%{shortcut} Retroceder"
         up_down: "%{shortcut} Mover seleção &uarr; &darr;"
         open: "%{shortcut} Abrir tópico selecionado"
         next_prev: "%{shortcut} Secção seguinte/anterior"
-        go_to_unread_post: "%{shortcut} Ir para a primeira postagem não lida"
+        go_to_unread_post: "%{shortcut} Ir para a primeira publicação não lida"
       application:
         title: "Aplicação"
         create: "%{shortcut} Criar um novo tópico"
@@ -4190,7 +4227,7 @@ pt:
         reply_post: "%{shortcut} Responder à publicação"
         quote_post: "%{shortcut} Citar publicação"
         like: "%{shortcut} Gostar da publicação"
-        flag: "%{shortcut} Denunciar publicação"
+        flag: "%{shortcut} Sinalizar publicação"
         bookmark: "%{shortcut} Adicionar mensagem aos marcadores"
         edit: "%{shortcut} Editar publicação"
         delete: "%{shortcut} Eliminar publicação"
@@ -4303,10 +4340,10 @@ pt:
       notifications:
         watching:
           title: "A vigiar"
-          description: "Irá vigiar automaticamente todos os tópicos com esta etiqueta. Será notificado acerca de todas as novas mensagens e tópicos, e ser-lhe-á apresentado a contagem das mensagens novas e não lidas ao lado do tópico."
+          description: "Irá vigiar automaticamente todos os tópicos com esta etiqueta. Será notificado de todas as novas mensagens e tópicos, e ser-lhe-á apresentado a contagem das mensagens novas e não lidas ao lado do tópico."
         watching_first_post:
           title: "A Vigiar a Primeira Publicação"
-          description: "Você será notificado de novos tópicos nesta tag mas não de respostas aos tópicos."
+          description: "Será notificado de novos tópicos nesta etiqueta, mas não das respostas aos tópicos."
         tracking:
           title: "A Seguir"
         regular:
@@ -4849,8 +4886,8 @@ pt:
           allowed_urls: URLs Permitidos
           descriptions:
             topics:
-              read: Ler um tópico ou um post específico nele. RSS também é suportado.
-              write: Criar um novo tópico ou poste em um já existente.
+              read: Ler um tópico ou uma publicação específica nele. RSS também é suportado.
+              write: Criar um novo tópico ou publique num já existente.
               update: Atualize um tópico. Altere o título, a categoria, as etiquetas, o estado, o arquétipo, a hiperligação em destaque, etc.
             users:
               suspend: Suspender contas de utilizador.
@@ -5322,7 +5359,7 @@ pt:
         match_count: "Correspondência"
         ip_address: "IP"
         topic_id: "ID do Tópico"
-        post_id: "ID da Publicação"
+        post_id: "Id. da Publicação"
         category_id: "ID da Categoria"
         delete: "Eliminar"
         edit: "Editar"
@@ -5374,9 +5411,9 @@ pt:
             renamed_tag: "etiqueta renomeada"
             revoke_email: "revogar email"
             backup_download: "transferir cópia de segurança"
-            reviewed_post: "mensagem revista"
-            post_edit: "editar mensagem"
-            post_approved: "mensagem aprovada"
+            reviewed_post: "publicação revista"
+            post_edit: "editar publicação"
+            post_approved: "publicação aprovada"
             post_rejected: "publicação rejeitada"
             create_badge: "criar crachá"
             change_badge: "editar crachá"
@@ -5406,8 +5443,8 @@ pt:
             topic_opened: "topic opened"
             topic_archived: "topic archived"
             topic_unarchived: "topic unarchived"
-            post_staff_note_create: "add staff note"
-            post_staff_note_destroy: "destroy staff note"
+            post_staff_note_create: "adicionar nota de funcionário"
+            post_staff_note_destroy: "destruir nota de funcionário"
             delete_group: "delete group"
             watched_word_create: "add watched word"
             watched_word_destroy: "delete watched word"
@@ -5417,7 +5454,7 @@ pt:
             allow: "Permitir"
         screened_urls:
           title: "URLs Filtrados"
-          description: "Os URLs listados aqui foram utilizados nas mensagens dos utilizadores que foram identificados como ''spammers''."
+          description: "Os URLs listados aqui foram utilizados nas publicações dos utilizadores que foram identificados como ''spammers''."
           url: "URL"
           domain: "Domínio"
         screened_ips:
@@ -5543,7 +5580,7 @@ pt:
         suspended_by: "Suspendido por"
         silence_reason: "Motivo"
         silence_modal_title: "Silenciar Usuário"
-        penalty_post_edit: "Editar a mensagem"
+        penalty_post_edit: "Editar a publicação"
         silenced: "Silenciado?"
         moderator: "Moderador?"
         admin: "Administração?"
@@ -5566,7 +5603,7 @@ pt:
         like_count: Gostos Dados / Recebidos
         last_100_days: "nos últimos 100 dias"
         posts_read_count: Publicações lidas
-        post_count: Mensagens Criadas
+        post_count: Publicações Criadas
         topics_entered: Tópicos Visualizados
         flags_given_count: Denúncias Dadas
         flags_received_count: Denúncias Recebidas
@@ -5605,14 +5642,14 @@ pt:
         delete_forbidden_because_staff: "Administradores e moderadores não podem ser eliminados."
         delete_posts_forbidden_because_staff: "Não é possível eliminar todas as publicações dos administradores e moderadores."
         delete_forbidden:
-          one: "Utilizadores não podem ser eliminados se tiverem publicações. Apague todas as publicações antes de eliminar o utilizador. (Publicações com mais de %{count} dia de existência não podem ser eliminadas.)"
-          other: "Utilizadores não podem ser eliminados se tiverem publicações. Apague todas as publicações antes de eliminar o utilizador. (Publicações com mais de %{count} dias de existência não podem ser eliminadas.)"
+          one: "Os utilizadores não podem ser eliminados se tiverem publicações. Elimine todas as publicações antes de eliminar um utilizador. (Publicações com mais de %{count} dia não podem ser eliminadas.)"
+          other: "Os utilizadores não podem ser eliminados se tiverem publicações. Elimine todas as publicações antes de eliminar o utilizador. (Publicações com mais de %{count} dias não podem ser eliminadas.)"
         cant_delete_all_posts:
-          one: "Não é possível eliminar todas as publicações. Algumas publicações existem há mais de %{count} dia. (A configuração delete_user_max_post_age.)"
-          other: "Não é possível eliminar todas as publicações. Algumas publicações existem há mais de %{count} dias. (A configuração delete_user_max_post_age.)"
+          one: "Não é possível eliminar todas as publicações. Algumas publicações existem há mais de %{count} dia. (A definição delete_user_max_post_age.)"
+          other: "Não é possível eliminar todas as publicações. Algumas publicações existem há mais de %{count} dias. (A confdefinição delete_user_max_post_age.)"
         cant_delete_all_too_many_posts:
-          one: "Não é possível eliminar todas as mensagens porque o utilizador tem mais de %{count} mensagem. (delete_all_posts_max)"
-          other: "Não é possível eliminar todas as mensagens porque o utilizador tem mais de %{count} mensagens. (delete_all_posts_max)"
+          one: "Não é possível eliminar todas as publicações porque o utilizador tem mais de %{count} mensagem. (delete_all_posts_max)"
+          other: "Não é possível eliminar todas as publicações porque o utilizador tem mais de %{count} mensagens. (delete_all_posts_max)"
         deleted: "O utilizador foi eliminado."
         delete_failed: "Ocorreu um erro ao eliminar o utilizador. Certifique-se de que todas as suas mensagens foram eliminadas antes de tentar eliminar o utilizador."
         send_activation_email: "Enviar Email de Ativação"
@@ -5629,7 +5666,7 @@ pt:
           title: "Repor pontuação de redirecionamento a 0"
         deactivate_explanation: "Um utilizador desativado deve revalidar o seu email."
         suspended_explanation: "Um utilizador suspenso não pode iniciar sessão."
-        staged_explanation: "Um utilizador temporário pode apenas publicar por email em tópicos específicos."
+        staged_explanation: "Um utilizador temporário só pode publicar por e-mail em tópicos específicos."
         bounce_score_explanation:
           none: "Nenhum redirecionamento foi recebido recentemente desse email."
           some: "Alguns redirecionamentos foram recebidos recentemente desse email."
@@ -5647,7 +5684,7 @@ pt:
           username: "Nome de Utilizador"
           trust_level: "Nível de Confiança"
           read_time: "Tempo de leitura"
-          posts: "Mensagens"
+          posts: "Publicações"
         tl3_requirements:
           title: "Requisitos para o Nível de Confiança 3"
           table_title:
@@ -5659,9 +5696,9 @@ pt:
           topics_replied_to: "Tópicos com Respostas"
           topics_viewed: "Tópicos Visualizados"
           topics_viewed_all_time: "Tópicos Visualizados (desde sempre)"
-          posts_read: "Mensagens Lidas"
-          posts_read_all_time: "Publicações lidas (desde sempre)"
-          flagged_posts: "Publicações Denunciadas"
+          posts_read: "Publicações Lidas"
+          posts_read_all_time: "Publicações Lidas (desde sempre)"
+          flagged_posts: "Publicações Sinalizadas"
           flagged_by_users: "Utilizadores Que Denunciaram"
           likes_given: "Gostos Dados"
           likes_received: "Gostos Recebidos"
@@ -5812,7 +5849,7 @@ pt:
         select_an_icon: "Selecione um ícone"
         upload_an_image: "Enviar uma imagem"
         query: Query do Crachá (SQL)
-        target_posts: '"Query" direcionada a publicações'
+        target_posts: A consulta tem como alvo as publicações
         auto_revoke: Executar diariamente a "query" de revogação
         show_posts: Mostrar publicação que atribua o crachá na página de crachás
         trigger: Acionar
@@ -5830,7 +5867,7 @@ pt:
           error_help: "Consulte os seguintes links para obter ajuda com queries de crachás"
           bad_count_warning:
             header: "AVISO!"
-            text: "Faltam amostras de atribuição. Isto acontece quando a query do crachá devolve IDs de utilizador ou IDs de publicações que não existem. Isto pode causar resultados inesperados no futuro - por favor confirme a sua query."
+            text: "Existem amostras de atribuição em falta. Isto acontece quando a consulta de crachá devolve Ids de utilizador ou Ids de publicações que não existem. Isto pode causar resultados inesperados no futuro - por favor, confirme a sua consulta."
           no_grant_count: "Não há crachás por atribuir."
           grant_count:
             one: "<b>%{count}</b> distintivo a atribuir."

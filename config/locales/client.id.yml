@@ -2903,6 +2903,7 @@ id:
           topics: "Topik"
   wizard_js:
     wizard:
+      back: "Kembali"
       step-text: "Langkah"
       uploading: "Mengunggah…"
       invites:

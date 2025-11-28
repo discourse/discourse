@@ -2208,6 +2208,7 @@ ro:
     title: "Configurare Discourse"
     step:
       introduction:
+        title: "Despre site-ul tău"
         fields:
           title:
             placeholder: "Bârlogul Mariei"
@@ -2216,27 +2217,36 @@ ro:
       privacy:
         fields:
           login_required:
+            label: "Vizibilitate"
             choices:
               public:
                 label: "Public"
               private:
                 label: "Privat"
       styling:
+        title: "Aspect și senzație"
         fields:
           color_scheme:
             label: "Paletă de culori"
           site_font:
             label: "Font"
+          heading_font:
+            label: "Font titlu"
           styling_preview:
             label: "Previzualizează"
           homepage_style:
             choices:
               latest:
                 label: "Ultima"
+              hot:
+                label: "Cald"
       branding:
         title: "Logo site"
       corporate:
+        title: "Organizația ta"
         fields:
+          company_name:
+            placeholder: "Organizația Acme"
           contact_url:
             placeholder: "https://www.example.com/contact-us"
       invites:

@@ -765,6 +765,7 @@ zh_TW:
         reviewable_post:
           title: "貼文"
           noun: "貼文"
+      assigned_to: "已指派給"
       notes:
         delete: "刪除"
       review_user: "使用者"

@@ -3598,6 +3598,7 @@ ur:
     title: "ڈِسکورس سَیٹ اَپ"
     step:
       introduction:
+        title: "آپ کی سائٹ کے بارے میں"
         fields:
           title:
             label: "نام انجمن"
@@ -3642,6 +3643,8 @@ ur:
       styling:
         title: "ظاہری شکل"
         fields:
+          heading_font:
+            label: "سرخی والا فونٹ"
           styling_preview:
             label: "جھلک دیکھیں"
           homepage_style:
@@ -3657,10 +3660,12 @@ ur:
             label: "کمپنی کا نام"
             placeholder: "ایکمی تنظیم"
           governing_law:
+            label: "گورنمنٹ قانون"
             placeholder: "کَیلیفَورنیا کے قانون"
           contact_url:
             placeholder: "https://www.example.com/contact-us"
           city_for_disputes:
+            label: "تنازعات کے لئے شہر"
             placeholder: "سان فرانسِسکو، کَیلیفَورنیا"
           site_contact:
             description: "تمام خودکار ڈِسکورس ذاتی پیغامات اِس صارف کی طرف سے بھیجے جائیں گے جیسے کہ فلَیگ انتباہات اور بیک اَپ تکمیل نوٹس۔"

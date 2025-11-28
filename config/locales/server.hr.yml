@@ -2733,7 +2733,10 @@ hr:
   wizard:
     step:
       introduction:
+        title: "O vašoj web stranici"
         fields:
+          title:
+            label: "Naziv zajednice"
           default_locale:
             label: "Jezik"
       privacy:
@@ -2749,12 +2752,16 @@ hr:
             placeholder: "Omogući chat"
       styling:
         fields:
+          heading_font:
+            label: "Font zaglavlja"
           styling_preview:
             label: "Pregled"
           homepage_style:
             choices:
               latest:
                 label: "Posljednje"
+              hot:
+                label: "Vruće"
       corporate:
         fields:
           contact_url:

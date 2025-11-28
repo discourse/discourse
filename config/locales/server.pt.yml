@@ -2045,6 +2045,7 @@ pt:
     title: "Configuração do Discourse"
     step:
       introduction:
+        title: "Sobre o seu ''site''"
         fields:
           title:
             placeholder: "Reduto da Joana"

@@ -2058,7 +2058,7 @@ pl_PL:
     backup_frequency: "Określa interwał (w dniach), w którym tworzone są automatyczne kopie zapasowe witryny. Na przykład, jeśli ustawisz wartość na 7, nowa kopia zapasowa będzie generowana co tydzień. Ustaw wartość na 0, aby wyłączyć tę funkcję."
     s3_backup_bucket: "Zdalne wiadro do przechowywania kopii zapasowych. UWAGA: Upewnij się, że jest to wiadro prywatne."
     s3_endpoint: "Punkt końcowy można zmodyfikować, aby utworzyć kopię zapasową w usłudze zgodnej z S3, takiej jak DigitalOcean Spaces lub Minio. OSTRZEŻENIE: Pozostaw puste, jeśli używasz AWS S3."
-    s3_configure_tombstone_policy: "Włącz zasady automatycznego usuwania przy przesyłaniu nagrobków. WAŻNE: Jeśli ta opcja jest wyłączona, nie zostanie odzyskane żadne miejsce po usunięciu przesłanych plików."
+    s3_configure_tombstone_policy: "Włącz automatyczne usuwanie plików przesłanych do reliktu. WAŻNE: jeśli ta opcja jest wyłączona, po usunięciu przesłanych plików nie zostanie odzyskane żadne miejsce."
     s3_disable_cleanup: "Zapobiegaj usuwaniu starych kopii zapasowych z S3, gdy jest ich więcej niż dozwolone maksimum."
     s3_use_acls: "AWS zaleca nieużywanie list kontroli dostępu w kontenerach S3; należy odznaczyć tę opcję tylko wtedy, gdy zamierzasz skonfigurować zasady uprawnień w skonfigurowanych kontenerach `s3_upload_bucket` i `s3_backup_bucket`."
     enable_direct_s3_uploads: "Umożliwia bezpośrednie przesyłanie wielu części do Amazon S3, zobacz https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469, aby uzyskać więcej informacji."
@@ -2265,7 +2265,7 @@ pl_PL:
     auto_silence_fast_typers_on_first_post: "Automatycznie wyciszaj użytkowników, którzy nie spełniają `fast typing threshold`."
     auto_silence_fast_typers_max_trust_level: "Maksymalny poziom zaufania do automatycznego wyciszania szybkich maszyn do pisania"
     auto_silence_first_post_regex: "Wyrażenie regularne bez uwzględniania wielkości liter, które jeśli zostanie przekazane, spowoduje wyciszenie pierwszego posta użytkownika i wysłanie go do kolejki zatwierdzenia. Przykład: raging|a[bc]a , spowoduje, że wszystkie posty zawierające raging lub aba lub aca zostaną najpierw wyciszone. Dotyczy tylko pierwszego postu. PRZESTARZAŁE: Zamiast tego używaj Silence Watched Words."
-    reviewable_claiming: "Czy należy przejrzeć treść, którą można przeglądać, zanim będzie można z niej skorzystać?"
+    reviewable_claiming: "Czy treść podlegająca przeglądowi musi zostać przejęta przed podjęciem działań?"
     reviewable_default_topics: "Domyślnie wyświetlaj zawartość do przeglądania pogrupowaną według tematów"
     reviewable_default_visibility: "Nie pokazuj elementów, które można przeglądać, chyba że spełniają ten priorytet"
     reviewable_low_priority_threshold: "Filtr priorytetu ukrywa sprawdzalne elementy, które nie spełniają tego wyniku, chyba że zostanie użyty filtr „(dowolny)”."
@@ -4063,7 +4063,7 @@ pl_PL:
 
         %{respond_instructions}
     user_quoted:
-      title: "Użytkownik Zacytował"
+      title: "Użytkownik zacytował"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
