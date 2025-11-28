@@ -60,6 +60,14 @@ export default class Gists extends Service {
     return this.isPm ? this.pmPreference : this.preference;
   }
 
+  preferenceFor(isPmOverride) {
+    if (typeof isPmOverride === "boolean") {
+      return isPmOverride ? this.pmPreference : this.preference;
+    }
+
+    return this.currentPreference;
+  }
+
   setPreference(value, isPm = false) {
     if (isPm) {
       this.pmPreference = value;

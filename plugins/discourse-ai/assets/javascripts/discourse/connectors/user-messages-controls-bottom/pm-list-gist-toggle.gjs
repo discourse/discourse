@@ -11,7 +11,7 @@ export default class AiTopicGist extends Component {
 
   <template>
     {{#if this.shouldShow}}
-      <AiGistToggle />
+      <AiGistToggle @isPm={{true}} />
     {{/if}}
   </template>
 }
