@@ -21,7 +21,7 @@ class DeleteOldDefaultValues < ActiveRecord::Migration[8.0]
   end
 
   def delete_setting(name, time)
-    return if name.nil? || time.nil?
+    return if time.nil?
 
     DB.exec(<<~SQL, name:, time:)
       DELETE FROM site_settings
