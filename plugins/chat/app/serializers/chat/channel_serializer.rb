@@ -10,6 +10,7 @@ module Chat
                :chatable_type,
                :chatable_url,
                :description,
+               :emoji,
                :title,
                :unicode_title,
                :slug,
@@ -36,6 +37,10 @@ module Chat
 
     def icon_upload_url
       object.icon_upload&.url
+    end
+
+    def include_emoji?
+      object.emoji.present?
     end
 
     def include_description?

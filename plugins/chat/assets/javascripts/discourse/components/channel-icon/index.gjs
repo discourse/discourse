@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
+import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import replaceEmoji from "discourse/helpers/replace-emoji";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
 
 export default class ChatChannelIcon extends Component {
@@ -23,6 +25,16 @@ export default class ChatChannelIcon extends Component {
     return this.args.thread ?? false;
   }
 
+  get categoryChannelIcon() {
+    const { emoji } = this.args.channel;
+    return emoji ? replaceEmoji(`:${emoji}:`) : icon("d-chat");
+  }
+
+  get directChannelIcon() {
+    const { emoji, membershipsCount } = this.args.channel;
+    return emoji ? replaceEmoji(`:${emoji}:`) : membershipsCount;
+  }
+
   <template>
     {{#if @channel.isDirectMessageChannel}}
       <div class="chat-channel-icon">
@@ -31,8 +43,13 @@ export default class ChatChannelIcon extends Component {
             <img src={{@channel.iconUploadUrl}} />
           </span>
         {{else if this.groupDirectMessage}}
-          <span class="chat-channel-icon --users-count">
-            {{@channel.membershipsCount}}
+          <span
+            class={{concatClass
+              "chat-channel-icon"
+              (unless @channel.emoji "--users-count")
+            }}
+          >
+            {{this.directChannelIcon}}
           </span>
         {{else}}
           <div class="chat-channel-icon --avatar">
@@ -46,7 +63,7 @@ export default class ChatChannelIcon extends Component {
           class="chat-channel-icon --category-badge"
           style={{this.channelColorStyle}}
         >
-          {{icon "d-chat"}}
+          {{this.categoryChannelIcon}}
           {{#if @channel.chatable.read_restricted}}
             {{icon "lock" class="chat-channel-icon__restricted-category-icon"}}
           {{/if}}

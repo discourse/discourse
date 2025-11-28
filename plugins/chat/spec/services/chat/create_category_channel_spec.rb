@@ -121,6 +121,22 @@ RSpec.describe Chat::CreateCategoryChannel do
             end
           end
         end
+
+        describe "emoji" do
+          context "when selected" do
+            it "sets emoji" do
+              params[:emoji] = ":smile:"
+              expect(result.channel.emoji).to eq(":smile:")
+            end
+          end
+
+          context "when blank" do
+            it "sets emoji to nil" do
+              params[:emoji] = nil
+              expect(result.channel.emoji).to eq(nil)
+            end
+          end
+        end
       end
     end
   end

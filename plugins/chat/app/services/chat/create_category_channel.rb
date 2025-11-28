@@ -27,6 +27,7 @@ module Chat
     #   @option params [Boolean] :auto_join_users
     #   @option params [Integer] :category_id
     #   @option params [Boolean] :threading_enabled
+    #   @option params [String] :emoji
     #   @return [Service::Base::Context]
 
     policy :public_channels_enabled
@@ -40,6 +41,7 @@ module Chat
       attribute :auto_join_users, :boolean, default: false
       attribute :threading_enabled, :boolean, default: false
       attribute :icon_upload_id, :integer
+      attribute :emoji, :string
 
       before_validation do
         self.auto_join_users = auto_join_users.presence || false
@@ -88,6 +90,7 @@ module Chat
           :description,
           :auto_join_users,
           :threading_enabled,
+          :emoji,
         ),
       )
     end
