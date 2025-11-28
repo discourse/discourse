@@ -230,9 +230,10 @@ body.has-ai-conversations-sidebar {
       width: 100%;
       border: 1px solid var(--primary-low);
       border-radius: var(--d-input-border-radius);
+      background-color: var(--d-input-bg-color);
 
       &:has(textarea[disabled]) {
-        background: var(--primary-very-low);
+        background: var(--d-input-bg-color--disabled);
       }
 
       &.--disabled {
