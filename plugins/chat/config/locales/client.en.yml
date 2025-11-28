@@ -53,7 +53,16 @@ en:
       cancel: "Cancel"
       cancel_reply: "Cancel reply"
       chat_channels: "Channels"
+      starred: "Starred"
       starred_channels: "Starred channels"
+      starred_channels_empty: "You haven't starred any channels yet. Star channels to see them here for quick access."
+      manage_starred_channels:
+        title: "Manage starred channels"
+        filter_placeholder: "Filter channels..."
+        star: "Star this channel"
+        unstar: "Unstar this channel"
+        no_results: "No channels match your search"
+        no_channels: "You are not following any channels"
       browse_all_channels: "Browse all channels"
       see_in: "See in"
       move_to_channel:

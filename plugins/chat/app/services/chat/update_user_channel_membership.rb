@@ -50,8 +50,7 @@ module Chat
       guardian.can_preview_chat_channel?(membership.chat_channel)
     end
 
-    def can_use_starred_channels(guardian:, params:)
-      return true if params.starred.blank?
+    def can_use_starred_channels(guardian:)
       guardian.user.upcoming_change_enabled?(:star_chat_channels)
     end
 

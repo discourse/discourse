@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -37,6 +38,8 @@ export default class ChatRouteChannelInfoSettings extends Component {
   @service site;
   @service toasts;
   @service router;
+
+  @tracked isTogglingStarred = false;
 
   notificationLevels = NOTIFICATION_LEVELS;
 
@@ -225,10 +228,15 @@ export default class ChatRouteChannelInfoSettings extends Component {
 
   @action
   async onToggleStarred() {
+    if (!this.args.channel.currentUserMembership || this.isTogglingStarred) {
+      return;
+    }
+
     const newValue = !this.args.channel.currentUserMembership.starred;
     const previousValue = this.args.channel.currentUserMembership.starred;
 
     this.args.channel.currentUserMembership.starred = newValue;
+    this.isTogglingStarred = true;
 
     try {
       await this.chatApi.updateCurrentUserChannelMembership(
@@ -239,6 +247,8 @@ export default class ChatRouteChannelInfoSettings extends Component {
     } catch (error) {
       this.args.channel.currentUserMembership.starred = previousValue;
       popupAjaxError(error);
+    } finally {
+      this.isTogglingStarred = false;
     }
   }
 
@@ -418,6 +428,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
                   <:action>
                     <DToggleSwitch
                       @state={{@channel.currentUserMembership.starred}}
+                      @disabled={{this.isTogglingStarred}}
                       class="c-channel-settings__star-switch"
                       {{on "click" this.onToggleStarred}}
                     />

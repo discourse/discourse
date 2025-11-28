@@ -10,6 +10,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+import ChatModalManageStarredChannels from "discourse/plugins/chat/discourse/components/chat/modal/manage-starred-channels";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import ChatSidebarIndicators from "discourse/plugins/chat/discourse/components/chat-sidebar-indicators";
 import {
@@ -398,6 +399,7 @@ export default {
             const SidebarChatStarredChannelsSection = class extends BaseCustomSidebarSection {
               @service currentUser;
               @service chatStateManager;
+              @service modal;
               @service siteSettings;
 
               constructor() {
@@ -435,6 +437,22 @@ export default {
 
               get text() {
                 return i18n("chat.starred_channels");
+              }
+
+              get actions() {
+                return [
+                  {
+                    id: "manageStarredChannels",
+                    title: i18n("chat.manage_starred_channels.title"),
+                    action: () => {
+                      this.modal.show(ChatModalManageStarredChannels);
+                    },
+                  },
+                ];
+              }
+
+              get actionsIcon() {
+                return "pencil";
               }
 
               get links() {

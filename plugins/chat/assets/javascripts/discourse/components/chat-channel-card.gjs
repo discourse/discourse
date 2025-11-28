@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -18,6 +19,8 @@ export default class ChatChannelCard extends Component {
   @service chatApi;
   @service toasts;
   @service siteSettings;
+
+  @tracked isTogglingStarred = false;
 
   get isStarred() {
     return this.args.channel?.currentUserMembership?.starred;
@@ -39,7 +42,7 @@ export default class ChatChannelCard extends Component {
     event.stopPropagation();
 
     const channel = this.args.channel;
-    if (!channel?.currentUserMembership) {
+    if (!channel?.currentUserMembership || this.isTogglingStarred) {
       return;
     }
 
@@ -47,6 +50,7 @@ export default class ChatChannelCard extends Component {
     const previousValue = channel.currentUserMembership.starred;
 
     channel.currentUserMembership.starred = newValue;
+    this.isTogglingStarred = true;
 
     try {
       await this.chatApi.updateCurrentUserChannelMembership(channel.id, {
@@ -56,6 +60,8 @@ export default class ChatChannelCard extends Component {
     } catch (error) {
       channel.currentUserMembership.starred = previousValue;
       popupAjaxError(error);
+    } finally {
+      this.isTogglingStarred = false;
     }
   }
 
@@ -102,6 +108,7 @@ export default class ChatChannelCard extends Component {
               {{on "click" this.toggleStarred}}
               @icon={{this.starIcon}}
               @title={{this.starTitle}}
+              @disabled={{this.isTogglingStarred}}
               class={{concatClass
                 "btn-transparent"
                 "chat-channel-card__star-btn"
