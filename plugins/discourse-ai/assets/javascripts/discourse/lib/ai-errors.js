@@ -33,6 +33,29 @@ export function isAiCreditLimitError(errorOrPayload) {
 }
 
 /**
+ * Get localized credit limit message based on user role and reset time.
+ * Returns a raw string - wrap with htmlSafe() if needed for templates.
+ *
+ * @param {Object} options - Message options
+ * @param {string} [options.resetTime] - When credits will reset (human-readable)
+ * @param {boolean} [options.isAdmin] - Whether the current user is an admin
+ * @returns {string} - Localized credit limit message
+ */
+export function getAiCreditLimitMessage({ resetTime, isAdmin } = {}) {
+  const userType = isAdmin ? "admin" : "user";
+
+  if (resetTime && resetTime.length > 0) {
+    return i18n(`discourse_ai.errors.credit_limit_dialog.message_${userType}`, {
+      reset_time: resetTime,
+    });
+  }
+
+  return i18n(
+    `discourse_ai.errors.credit_limit_dialog.message_without_time_${userType}`
+  );
+}
+
+/**
  * Show credit limit dialog to user.
  * Similar to popupAjaxError but specialized for AI credit limits.
  *
@@ -50,22 +73,10 @@ export function popupAiCreditLimitError(errorOrPayload) {
     details?.reset_time_relative ||
     details?.reset_time;
 
-  // Choose message key based on user role
-  const userType = currentUser?.admin ? "admin" : "user";
-  let message;
-
-  if (resetTime && resetTime.length > 0) {
-    message = i18n(
-      `discourse_ai.errors.credit_limit_dialog.message_${userType}`,
-      {
-        reset_time: resetTime,
-      }
-    );
-  } else {
-    message = i18n(
-      `discourse_ai.errors.credit_limit_dialog.message_without_time_${userType}`
-    );
-  }
+  const message = getAiCreditLimitMessage({
+    resetTime,
+    isAdmin: currentUser?.admin,
+  });
 
   dialog.alert({
     title: i18n("discourse_ai.errors.credit_limit_dialog.title"),

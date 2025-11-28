@@ -236,6 +236,16 @@ body.has-ai-conversations-sidebar {
         background: var(--primary-very-low);
       }
 
+      &.--disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+
+        textarea,
+        .btn {
+          pointer-events: none;
+        }
+      }
+
       @include viewport.from(sm) {
         width: 80%;
         max-width: var(--input-max-width);
@@ -438,10 +448,10 @@ body.has-ai-conversations-sidebar {
 
   .topic-footer-main-buttons {
     button:not(
-        .create,
-        .share-ai-conversation-button,
-        .topic-admin-menu-trigger
-      ) {
+      .create,
+      .share-ai-conversation-button,
+      .topic-admin-menu-trigger
+    ) {
       display: none;
     }
   }
@@ -522,5 +532,12 @@ body.has-ai-conversations-sidebar {
         margin-right: 0.5em;
       }
     }
+  }
+}
+
+[data-identifier="ai-credit-limit-tooltip"] {
+  .fk-d-tooltip__inner-content {
+    // ensures errors with links displays correctly
+    display: block;
   }
 }

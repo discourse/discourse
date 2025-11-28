@@ -32,7 +32,7 @@ module DiscourseAi
 
       def self.enabled_user_ids_and_models_map
         DB.query_hash(<<~SQL)
-          SELECT users.username AS username, users.id AS id, llms.name AS model_name, llms.display_name AS display_name
+          SELECT users.username AS username, users.id AS id, llms.id AS llm_model_id, llms.name AS model_name, llms.display_name AS display_name
           FROM llm_models llms
           INNER JOIN users ON llms.user_id = users.id
           WHERE llms.enabled_chat_bot

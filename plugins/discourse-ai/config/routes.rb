@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 DiscourseAi::Engine.routes.draw do
+  scope path: "/credits", defaults: { format: :json } do
+    get "status" => "ai_credits#status"
+  end
+
   scope module: :ai_helper, path: "/ai-helper", defaults: { format: :json } do
     post "suggest" => "assistant#suggest"
     post "suggest_title" => "assistant#suggest_title"
