@@ -195,6 +195,20 @@ describe "Viewing reviewable item", type: :system do
           expect(refreshed_review_page).to have_account_in_modal(other_user.username)
         end
       end
+
+      it "shows claimed and unclaimed events in the timeline" do
+        SiteSetting.reviewable_claiming = "required"
+
+        refreshed_review_page.visit_reviewable(reviewable_flagged_post)
+
+        refreshed_review_page.click_claim_reviewable
+        page.refresh
+        expect(refreshed_review_page).to have_claimed_history_item(admin)
+
+        refreshed_review_page.click_unclaim_reviewable
+        page.refresh
+        expect(refreshed_review_page).to have_unclaimed_history_item(admin)
+      end
     end
 
     describe "when the reviewable item is a queued post" do
