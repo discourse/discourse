@@ -11,7 +11,7 @@ export function getNext(list, current = null) {
     );
 
     if (currentIndex < list.length - 1) {
-      return list.objectAt(currentIndex + 1);
+      return list[currentIndex + 1];
     } else {
       return list[0];
     }
@@ -33,11 +33,11 @@ export function getPrevious(list, current = null) {
     );
 
     if (currentIndex > 0) {
-      return list.objectAt(currentIndex - 1);
+      return list[currentIndex - 1];
     } else {
-      return list.objectAt(list.length - 1);
+      return list[list.length - 1];
     }
   } else {
-    return list.objectAt(list.length - 1);
+    return list[list.length - 1];
   }
 }

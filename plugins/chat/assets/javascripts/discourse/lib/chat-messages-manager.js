@@ -1,9 +1,10 @@
-import { cached, tracked } from "@glimmer/tracking";
+import { cached } from "@glimmer/tracking";
 import { setOwner } from "@ember/owner";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
+import { trackedArray } from "discourse/lib/tracked-tools";
 
 export default class ChatMessagesManager {
-  @tracked messages = [];
+  @trackedArray messages = [];
 
   constructor(owner) {
     setOwner(this, owner);

@@ -185,12 +185,12 @@ export default class ChatMessage {
 
   @cached
   get previousMessage() {
-    return this.manager?.messages?.objectAt?.(this.index - 1);
+    return this.manager?.messages?.[this.index - 1];
   }
 
   @cached
   get nextMessage() {
-    return this.manager?.messages?.objectAt?.(this.index + 1);
+    return this.manager?.messages?.[this.index + 1];
   }
 
   highlight() {
