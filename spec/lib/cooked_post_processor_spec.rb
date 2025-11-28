@@ -886,6 +886,30 @@ RSpec.describe CookedPostProcessor do
           reply.reload
           expect(reply.image_upload_id).to be_present
         end
+
+        context "when upload filename doesn't match SHA1" do
+          let(:upload_with_secure_url) do
+            Fabricate(
+              :upload,
+              sha1: "a" * 40,
+              url: "/uploads/default/original/3X/b/c/#{"d" * 40}.png",
+            )
+          end
+          let(:post_with_secure_upload) do
+            Fabricate(
+              :post,
+              user: user_with_auto_groups,
+              raw: "<img src='#{upload_with_secure_url.url}'>",
+            )
+          end
+          let(:cpp) { CookedPostProcessor.new(post_with_secure_upload) }
+
+          it "sets image_upload via URL fallback" do
+            expect { cpp.post_process }.to change {
+              post_with_secure_upload.reload.image_upload
+            }.to eq(upload_with_secure_url)
+          end
+        end
       end
     end
   end
