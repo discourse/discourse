@@ -262,6 +262,19 @@ class Category < ActiveRecord::Base
     end
   end
 
+  def self.set_permission!(guardian, category)
+    category.permission =
+      if guardian.is_admin? || Category.topic_create_allowed(guardian).exists?(id: category.id)
+        CategoryGroup.permission_types[:full]
+      elsif guardian.can_post_in_category?(category)
+        CategoryGroup.permission_types[:create_post]
+      elsif guardian.can_see_category?(category)
+        CategoryGroup.permission_types[:readonly]
+      end
+
+    category
+  end
+
   def self.ancestors_of(category_ids)
     ancestor_ids = []
 

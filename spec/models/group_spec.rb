@@ -1063,6 +1063,49 @@ RSpec.describe Group do
         expect(payload["user_id"]).to eq(user.id)
       end
     end
+
+    context "when publishing updates" do
+      fab!(:category)
+
+      before { group.update!(public_exit: true) }
+
+      it "should publish category removal when category is read-restricted to the group" do
+        category.set_permissions(group => :full)
+        category.save!
+        group.update!(categories: [category])
+
+        message = MessageBus.track_publish("/categories") { group.remove(user) }.first
+
+        expect(message.data[:deleted_categories]).to eq([category.id])
+        expect(message.data[:categories]).to be_blank
+        expect(message.user_ids).to eq([user.id])
+      end
+
+      it "should publish updated category permissions when category is readable by everyone" do
+        category.set_permissions(:everyone => :readonly, group => :full)
+        category.save!
+        group.update!(categories: [category])
+
+        message = MessageBus.track_publish("/categories") { group.remove(user) }.first
+
+        expect(message.data[:categories].count).to eq(1)
+        expect(message.data[:categories].first[:id]).to eq(category.id)
+        expect(message.data[:deleted_categories]).to be_blank
+        expect(message.user_ids).to eq([user.id])
+      end
+
+      describe "when group belongs to more than #{Group::PUBLISH_CATEGORIES_LIMIT} categories" do
+        it "should publish a message to refresh the user's client" do
+          group.categories += Fabricate.times(Group::PUBLISH_CATEGORIES_LIMIT + 1, :category)
+
+          message = MessageBus.track_publish { group.remove(user) }.first
+
+          expect(message.data).to eq("clobber")
+          expect(message.channel).to eq("/refresh_client")
+          expect(message.user_ids).to eq([user.id])
+        end
+      end
+    end
   end
 
   describe "#add" do
@@ -1133,7 +1176,7 @@ RSpec.describe Group do
 
       describe "when group belongs to more than #{Group::PUBLISH_CATEGORIES_LIMIT} categories" do
         it "should publish a message to refresh the user's client" do
-          (Group::PUBLISH_CATEGORIES_LIMIT + 1).times { group.categories << Fabricate(:category) }
+          group.categories += Fabricate.times(Group::PUBLISH_CATEGORIES_LIMIT + 1, :category)
 
           message = MessageBus.track_publish { group.add(user) }.first
 
