@@ -19,7 +19,7 @@ module Chat
     end
 
     def include_starred?
-      true
+      authenticated?
     end
   end
 end
