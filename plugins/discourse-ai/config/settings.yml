@@ -241,7 +241,7 @@ discourse_ai:
     default: true
     area: "ai-features/embeddings"
   ai_embeddings_semantic_related_age_penalty:
-    default: 0.3
+    default: 0.0
     type: float
     min: 0.0
     max: 2.0
