@@ -16,7 +16,17 @@ require_relative "app/lib/github_linkback_access_token_setting_validator"
 
 enabled_site_setting :enable_discourse_github_plugin
 
+register_asset "stylesheets/common/github-pr-status.scss"
+
 after_initialize do
+  require_relative "lib/github_pr_status"
+  require_relative "app/controllers/discourse_github/pull_requests_controller"
+
+  Discourse::Application.routes.append do
+    get "/discourse-github/:owner/:repo/pulls/:number/status" =>
+          "discourse_github/pull_requests#status"
+  end
+
   %w[
     ../app/models/github_commit.rb
     ../app/models/github_repo.rb

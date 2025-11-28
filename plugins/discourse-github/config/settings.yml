@@ -21,6 +21,9 @@ discourse_github:
     validator: "GithubBadgesRepoSettingValidator"
   github_permalinks_enabled:
     default: false
+  github_pr_status_enabled:
+    default: false
+    client: true
   github_permalinks_exclude:
     default: "README.md"
     type: list
