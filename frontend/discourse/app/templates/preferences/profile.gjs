@@ -1,31 +1,48 @@
 import Component from "@glimmer/component";
-import { Input } from "@ember/component";
-import { array, fn, hash } from "@ember/helper";
-import { action } from "@ember/object";
+import { array, concat, fn } from "@ember/helper";
+import { action, get } from "@ember/object";
 import { LinkTo } from "@ember/routing";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import DEditor from "discourse/components/d-editor";
 import Form from "discourse/components/form";
+import FeatureTopicOnProfileModal from "discourse/components/modal/feature-topic-on-profile";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import PreferenceCheckbox from "discourse/components/preference-checkbox";
-import SaveControls from "discourse/components/save-controls";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
 import UserField from "discourse/components/user-field";
 import lazyHash from "discourse/helpers/lazy-hash";
 import replaceEmoji from "discourse/helpers/replace-emoji";
-import ComboBox from "discourse/select-kit/components/combo-box";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import TimezoneInput from "discourse/select-kit/components/timezone-input";
 import { i18n } from "discourse-i18n";
 
-export default class Profile extends Component {
-  constructor() {
-    super(...arguments);
+const validationFor = (field) => {
+  if (!get(field, "required")) {
+    return null;
+  }
+  return get(field, "field_type") === "confirm" ? "accepted" : "required";
+};
+
+class MutableField extends Component {
+  get value() {
+    return this.args.value;
   }
 
-  @action
-  updateBio(field, event) {
-    field.set(event.target.value);
+  set value(val) {
+    this.args.set(val);
+  }
+
+  <template>{{yield this}}</template>
+}
+
+export default class Profile extends Component {
+  @service dialog;
+  @service modal;
+
+  constructor() {
+    super(...arguments);
   }
 
   @action
@@ -39,7 +56,75 @@ export default class Profile extends Component {
   }
 
   @action
+  profileBackgroundUploadDone(field, upload) {
+    field.set(upload.url);
+  }
+
+  @action
+  cardBackgroundUploadDone(field, upload) {
+    field.set(upload.url);
+  }
+
+  @action
+  setFeaturedTopic(field, v) {
+    field.set(v);
+  }
+
+  @action
+  async showFeaturedTopicModal(field) {
+    await this.modal.show(FeatureTopicOnProfileModal, {
+      model: {
+        user: this.args.controller.model,
+        setFeaturedTopic: (v) => this.setFeaturedTopic(field, v),
+      },
+    });
+    document.querySelector(".feature-topic-on-profile-btn")?.focus();
+  }
+
+  @action
+  clearFeaturedTopicFromProfile(field) {
+    this.dialog.yesNoConfirm({
+      message: i18n("user.feature_topic_on_profile.clear.warning"),
+      didConfirm: () => {
+        return ajax(
+          `/u/${this.args.controller.model.username}/clear-featured-topic`,
+          {
+            type: "PUT",
+          }
+        )
+          .then(() => {
+            field.set(null);
+          })
+          .catch(popupAjaxError);
+      },
+    });
+  }
+
+  get formData() {
+    const data = {
+      hide_profile: this.args.controller.model.user_option.hide_profile,
+      bio_raw: this.args.controller.model.bio_raw,
+      timezone: this.args.controller.model.user_option.timezone,
+      location: this.args.controller.model.location,
+      website: this.args.controller.model.website,
+      profile_background_upload_url:
+        this.args.controller.model.profile_background_upload_url,
+      card_background_upload_url:
+        this.args.controller.model.card_background_upload_url,
+      featured_topic: this.args.controller.model.featured_topic,
+      default_calendar: this.args.controller.model.user_option.default_calendar,
+    };
+
+    this.args.controller.userFields?.forEach((uf) => {
+      data[`user_field_${uf.field.id}`] = uf.value;
+    });
+
+    return data;
+  }
+
+  @action
   saveForm(data) {
+    // ... existing mapped fields ...
     if (data.hide_profile !== undefined) {
       this.args.controller.model.set(
         "user_option.hide_profile",
@@ -58,217 +143,223 @@ export default class Profile extends Component {
     if (data.website !== undefined) {
       this.args.controller.model.set("website", data.website);
     }
-    this.args.controller.save();
+    if (data.profile_background_upload_url !== undefined) {
+      this.args.controller.model.set(
+        "profile_background_upload_url",
+        data.profile_background_upload_url
+      );
+    }
+    if (data.card_background_upload_url !== undefined) {
+      this.args.controller.model.set(
+        "card_background_upload_url",
+        data.card_background_upload_url
+      );
+    }
+    if (data.featured_topic !== undefined) {
+      this.args.controller.model.set("featured_topic", data.featured_topic);
+    }
+    if (data.default_calendar !== undefined) {
+      this.args.controller.model.set(
+        "user_option.default_calendar",
+        data.default_calendar
+      );
+    }
+
+    // Update User Fields
+    const modelFields = this.args.controller.model.get("user_fields");
+    if (modelFields) {
+      this.args.controller.userFields?.forEach((uf) => {
+        const key = `user_field_${uf.field.id}`;
+        if (data[key] !== undefined) {
+          modelFields[uf.field.id.toString()] = data[key];
+        }
+      });
+    }
+
+    const controller = this.args.controller;
+    controller.set("saved", false);
+
+    return controller.model
+      .save(controller.saveAttrNames)
+      .then(({ user }) => {
+        controller.model.set("bio_cooked", user.bio_cooked);
+        if (controller.currentUser) {
+          controller.currentUser.set("needs_required_fields_check", false);
+        }
+        controller.set("saved", true);
+      })
+      .catch(popupAjaxError);
   }
 
   <template>
-    {{#if @controller.showEnforcedRequiredFieldsNotice}}
-      <div class="alert alert-error">{{i18n
-          "user.preferences.profile.enforced_required_fields"
-        }}</div>
-    {{/if}}
-
-    {{#unless @controller.showEnforcedRequiredFieldsNotice}}
+    <Form @data={{this.formData}} @onSubmit={{this.saveForm}} as |form|>
       {{#if @controller.siteSettings.allow_users_to_hide_profile}}
-        <div
-          class="control-group user-hide-profile"
-          data-setting-name="user-hide-profile"
+        <form.Field
+          @name="hide_profile"
+          @title={{i18n "user.hide_profile"}}
+          as |field|
         >
-          <PreferenceCheckbox
-            @labelKey="user.hide_profile"
-            @checked={{@controller.model.user_option.hide_profile}}
-            data-setting-name="user-hide-profile"
-            class="pref-hide-profile"
-          />
-        </div>
+          <field.Checkbox />
+        </form.Field>
       {{/if}}
+
+      {{#each @controller.userFields as |uf|}}
+        <form.Field
+          @name={{concat "user_field_" uf.field.id}}
+          @title={{uf.field.name}}
+          @description={{uf.field.description}}
+          @validation={{validationFor uf.field}}
+          as |field|
+        >
+          <field.Custom>
+            <MutableField
+              @value={{field.value}}
+              @set={{field.set}}
+              as |wrapper|
+            >
+              <UserField
+                @field={{uf.field}}
+                @value={{wrapper.value}}
+                @validation={{field.validation}}
+                @showLabel={{false}}
+              />
+            </MutableField>
+          </field.Custom>
+        </form.Field>
+      {{/each}}
 
       {{#if @controller.canChangeBio}}
-        <div class="control-group pref-bio" data-setting-name="user-bio">
-          <label class="control-label">{{i18n "user.bio"}}</label>
-          <div class="controls bio-composer input-xxlarge">
-            <DEditor @value={{@controller.model.bio_raw}} />
-          </div>
-        </div>
+        <form.Field @name="bio_raw" @title={{i18n "user.bio"}} as |field|>
+          <field.Custom>
+            <MutableField
+              @value={{field.value}}
+              @set={{field.set}}
+              as |wrapper|
+            >
+              <DEditor @value={{wrapper.value}} />
+            </MutableField>
+          </field.Custom>
+        </form.Field>
       {{/if}}
 
-      <div
-        class="control-group pref-timezone"
-        data-setting-name="user-timezone"
-      >
-        <label class="control-label">{{i18n "user.timezone"}}</label>
-        <TimezoneInput
-          @value={{@controller.model.user_option.timezone}}
-          @onChange={{fn (mut @controller.model.user_option.timezone)}}
-          class="input-xxlarge"
-        />
-        <DButton
-          @icon="globe"
-          @label="user.use_current_timezone"
-          @action={{@controller.useCurrentTimezone}}
-          class="btn-default"
-        />
-      </div>
+      <form.Field @name="timezone" @title={{i18n "user.timezone"}} as |field|>
+        <field.Custom>
+          <TimezoneInput
+            @value={{field.value}}
+            @onChange={{fn this.updateTimezone field}}
+            class="input-xxlarge"
+          />
+          <DButton
+            @icon="globe"
+            @label="user.use_current_timezone"
+            @action={{fn this.useCurrentTimezone field}}
+            class="btn-default"
+          />
+        </field.Custom>
+      </form.Field>
 
       {{#if @controller.model.can_change_location}}
-        <div
-          class="control-group pref-location"
-          data-setting-name="user-location"
-        >
-          <label class="control-label" for="edit-location">{{i18n
-              "user.location"
-            }}</label>
-          <div class="controls">
-            <Input
-              @type="text"
-              @value={{@controller.model.location}}
-              class="input-xxlarge"
-              id="edit-location"
-            />
-          </div>
-        </div>
+        <form.Field @name="location" @title={{i18n "user.location"}} as |field|>
+          <field.Input class="input-xxlarge" />
+        </form.Field>
       {{/if}}
 
       {{#if @controller.model.can_change_website}}
-        <div
-          class="control-group pref-website"
-          data-setting-name="user-website"
-        >
-          <label class="control-label" for="edit-website">{{i18n
-              "user.website"
-            }}</label>
-          <div class="controls">
-            <Input
-              @type="text"
-              @value={{@controller.model.website}}
-              class="input-xxlarge"
-              id="edit-website"
-            />
-          </div>
-        </div>
+        <form.Field @name="website" @title={{i18n "user.website"}} as |field|>
+          <field.Input class="input-xxlarge" />
+        </form.Field>
       {{/if}}
-    {{/unless}}
 
-    {{#each @controller.userFields as |uf|}}
-      <div class="control-group" data-setting-name="user-user-fields">
-        <UserField @field={{uf.field}} @value={{uf.value}} />
-      </div>
-    {{/each}}
-    <div class="clearfix"></div>
-
-    {{#unless @controller.showEnforcedRequiredFieldsNotice}}
       {{#if @controller.siteSettings.allow_profile_backgrounds}}
         {{#if @controller.canUploadProfileHeader}}
-          <div
-            class="control-group pref-profile-bg"
-            data-setting-name="user-profile-bg"
+          <form.Field
+            @name="profile_background_upload_url"
+            @title={{i18n "user.change_profile_background.title"}}
+            @description={{i18n "user.change_profile_background.instructions"}}
+            as |field|
           >
-            <label class="control-label">{{i18n
-                "user.change_profile_background.title"
-              }}</label>
-            <div class="controls">
+            <field.Custom>
               <UppyImageUploader
-                @imageUrl={{@controller.model.profile_background_upload_url}}
-                @onUploadDone={{@controller.profileBackgroundUploadDone}}
-                @onUploadDeleted={{fn
-                  (mut @controller.model.profile_background_upload_url)
-                  null
-                }}
+                @imageUrl={{field.value}}
+                @onUploadDone={{fn this.profileBackgroundUploadDone field}}
+                @onUploadDeleted={{fn field.set null}}
                 @type="profile_background"
-                @id="profile-background-uploader"
+                @id="profile-background-uploader-sandbox"
               />
-            </div>
-            <div class="instructions">
-              {{i18n "user.change_profile_background.instructions"}}
-            </div>
-          </div>
+            </field.Custom>
+          </form.Field>
         {{/if}}
+
         {{#if @controller.canUploadUserCardBackground}}
-          <div
-            class="control-group pref-profile-bg"
-            data-setting-name="user-card-bg"
+          <form.Field
+            @name="card_background_upload_url"
+            @title={{i18n "user.change_card_background.title"}}
+            @description={{i18n "user.change_card_background.instructions"}}
+            as |field|
           >
-            <label class="control-label">{{i18n
-                "user.change_card_background.title"
-              }}</label>
-            <div class="controls">
+            <field.Custom>
               <UppyImageUploader
-                @imageUrl={{@controller.model.card_background_upload_url}}
-                @onUploadDone={{@controller.cardBackgroundUploadDone}}
-                @onUploadDeleted={{fn
-                  (mut @controller.model.card_background_upload_url)
-                  null
-                }}
+                @imageUrl={{field.value}}
+                @onUploadDone={{fn this.cardBackgroundUploadDone field}}
+                @onUploadDeleted={{fn field.set null}}
                 @type="card_background"
-                @id="profile-card-background-uploader"
+                @id="profile-card-background-uploader-sandbox"
               />
-            </div>
-            <div class="instructions">
-              {{i18n "user.change_card_background.instructions"}}
-            </div>
-          </div>
+            </field.Custom>
+          </form.Field>
         {{/if}}
       {{/if}}
 
       {{#if @controller.siteSettings.allow_featured_topic_on_user_profiles}}
-        <div class="control-group" data-setting-name="user-featured-topic">
-          <label class="control-label">{{i18n "user.featured_topic"}}</label>
-          {{#if @controller.model.featured_topic}}
-            <label class="featured-topic-link">
-              <LinkTo
-                @route="topic"
-                @models={{array
-                  @controller.model.featured_topic.slug
-                  @controller.model.featured_topic.id
-                }}
-              >
-                {{replaceEmoji
-                  (htmlSafe @controller.model.featured_topic.fancy_title)
-                }}
-              </LinkTo>
-            </label>
-          {{/if}}
-
-          <div>
-            <DButton
-              @action={{@controller.showFeaturedTopicModal}}
-              @label="user.feature_topic_on_profile.open_search"
-              class="btn-default feature-topic-on-profile-btn"
-            />
-            {{#if @controller.model.featured_topic}}
-              <DButton
-                @action={{@controller.clearFeaturedTopicFromProfile}}
-                @label="user.feature_topic_on_profile.clear.title"
-                class="btn-danger clear-feature-topic-on-profile-btn"
-              />
+        <form.Field
+          @name="featured_topic"
+          @title={{i18n "user.featured_topic"}}
+          @description={{i18n "user.change_featured_topic.instructions"}}
+          as |field|
+        >
+          <field.Custom>
+            {{#if field.value}}
+              <label class="featured-topic-link">
+                <LinkTo
+                  @route="topic"
+                  @models={{array field.value.slug field.value.id}}
+                >
+                  {{replaceEmoji (htmlSafe field.value.fancy_title)}}
+                </LinkTo>
+              </label>
             {{/if}}
-          </div>
-          <div class="instructions">
-            {{i18n "user.change_featured_topic.instructions"}}
-          </div>
-        </div>
+
+            <div>
+              <DButton
+                @action={{fn this.showFeaturedTopicModal field}}
+                @label="user.feature_topic_on_profile.open_search"
+                class="btn-default feature-topic-on-profile-btn"
+              />
+              {{#if field.value}}
+                <DButton
+                  @action={{fn this.clearFeaturedTopicFromProfile field}}
+                  @label="user.feature_topic_on_profile.clear.title"
+                  class="btn-danger clear-feature-topic-on-profile-btn"
+                />
+              {{/if}}
+            </div>
+          </field.Custom>
+        </form.Field>
       {{/if}}
 
       {{#if @controller.canChangeDefaultCalendar}}
-        <div class="control-group" data-setting-name="user-default-calendar">
-          <label class="control-label">{{i18n
-              "download_calendar.default_calendar"
-            }}</label>
-          <div>
-            <ComboBox
-              @valueProperty="value"
-              @content={{@controller.calendarOptions}}
-              @value={{@controller.model.user_option.default_calendar}}
-              @id="user-default-calendar"
-              @onChange={{fn
-                (mut @controller.model.user_option.default_calendar)
-              }}
-            />
-          </div>
-          <div class="instructions">
-            {{i18n "download_calendar.default_calendar_instruction"}}
-          </div>
-        </div>
+        <form.Field
+          @name="default_calendar"
+          @title={{i18n "download_calendar.default_calendar"}}
+          @description={{i18n "download_calendar.default_calendar_instruction"}}
+          as |field|
+        >
+          <field.Select
+            @content={{@controller.calendarOptions}}
+            @optionValuePath="value"
+            @optionLabelPath="name"
+          />
+        </form.Field>
       {{/if}}
 
       <PluginOutlet
@@ -288,81 +379,8 @@ export default class Profile extends Component {
         @connectorTagName="div"
         @outletArgs={{lazyHash model=@controller.model}}
       />
-    {{/unless}}
 
-    <SaveControls
-      @model={{@controller.model}}
-      @action={{@controller.save}}
-      @saved={{@controller.saved}}
-    />
-
-    <div class="AI-Sandbox">
-      <Form
-        @data={{hash
-          hide_profile=@controller.model.user_option.hide_profile
-          bio_raw=@controller.model.bio_raw
-          timezone=@controller.model.user_option.timezone
-          location=@controller.model.location
-          website=@controller.model.website
-        }}
-        @onSubmit={{this.saveForm}}
-        as |form|
-      >
-        {{#if @controller.siteSettings.allow_users_to_hide_profile}}
-          <form.Field
-            @name="hide_profile"
-            @title={{i18n "user.hide_profile"}}
-            as |field|
-          >
-            <field.Checkbox />
-          </form.Field>
-        {{/if}}
-
-        {{#if @controller.canChangeBio}}
-          <form.Field @name="bio_raw" @title={{i18n "user.bio"}} as |field|>
-            <field.Custom>
-              <DEditor
-                @value={{field.value}}
-                @change={{fn this.updateBio field}}
-              />
-            </field.Custom>
-          </form.Field>
-        {{/if}}
-
-        <form.Field @name="timezone" @title={{i18n "user.timezone"}} as |field|>
-          <field.Custom>
-            <TimezoneInput
-              @value={{field.value}}
-              @onChange={{fn this.updateTimezone field}}
-              class="input-xxlarge"
-            />
-            <DButton
-              @icon="globe"
-              @label="user.use_current_timezone"
-              @action={{fn this.useCurrentTimezone field}}
-              class="btn-default"
-            />
-          </field.Custom>
-        </form.Field>
-
-        {{#if @controller.model.can_change_location}}
-          <form.Field
-            @name="location"
-            @title={{i18n "user.location"}}
-            as |field|
-          >
-            <field.Input class="input-xxlarge" />
-          </form.Field>
-        {{/if}}
-
-        {{#if @controller.model.can_change_website}}
-          <form.Field @name="website" @title={{i18n "user.website"}} as |field|>
-            <field.Input class="input-xxlarge" />
-          </form.Field>
-        {{/if}}
-
-        <form.Submit />
-      </Form>
-    </div>
+      <form.Submit />
+    </Form>
   </template>
 }
