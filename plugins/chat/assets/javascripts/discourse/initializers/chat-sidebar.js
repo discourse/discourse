@@ -522,11 +522,11 @@ export default {
               }
 
               get prefixType() {
-                return "icon";
+                return this.channel.emoji ? "emoji" : "icon";
               }
 
               get prefixValue() {
-                return "d-chat";
+                return this.channel.emoji ?? "d-chat";
               }
 
               get prefixColor() {
@@ -772,6 +772,8 @@ export default {
               get prefixType() {
                 if (this.channel.iconUploadUrl) {
                   return "image";
+                } else if (this.channel.emoji) {
+                  return "emoji";
                 } else if (this.channel.chatable.group) {
                   return "text";
                 } else {
@@ -782,6 +784,8 @@ export default {
               get prefixValue() {
                 if (this.channel.iconUploadUrl) {
                   return this.channel.iconUploadUrl;
+                } else if (this.channel.emoji) {
+                  return this.channel.emoji;
                 } else if (this.channel.chatable.group) {
                   return this.channel.membershipsCount;
                 } else {

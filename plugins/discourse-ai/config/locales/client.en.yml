@@ -370,6 +370,8 @@ en:
             title: "Translates this post to all supported languages"
             confirm: "This will update any existing translations on this post. Are you sure?"
             success: "Post has been sent for translation"
+        credit_limit_warning: "Translations are paused due to credit limits. They will resume when credits reset %{reset_time}."
+        credit_limit_warning_no_time: "Translations are paused due to credit limits. They will resume when credits reset."
 
       spam:
         short_title: "Spam"

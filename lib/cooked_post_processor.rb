@@ -144,14 +144,14 @@ class CookedPostProcessor
     upload = nil
     images = extract_images_for_post
 
-    @post.each_upload_url(fragments: images.css("[data-thumbnail]")) do |src, path, sha1|
-      upload = Upload.find_by(sha1: sha1)
+    @post.each_upload_url(fragments: images.css("[data-thumbnail]")) do |url, path, sha1|
+      upload = Upload.fetch_from(sha1:, url:)
       break if upload
     end
 
     if upload.nil? # No specified thumbnail. Use any image:
-      @post.each_upload_url(fragments: images.css(":not([data-thumbnail])")) do |src, path, sha1|
-        upload = Upload.find_by(sha1: sha1)
+      @post.each_upload_url(fragments: images.css(":not([data-thumbnail])")) do |url, path, sha1|
+        upload = Upload.fetch_from(sha1:, url:)
         break if upload
       end
     end

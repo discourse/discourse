@@ -395,6 +395,8 @@ en:
         slug_description: A channel slug is used in the URL instead of the channel name
         name: Channel name
         slug: Channel slug (optional)
+        emoji: Channel emoji (optional)
+        reset_emoji: Reset emoji
 
       channel_edit_description_modal:
         title: Edit description
@@ -463,6 +465,9 @@ en:
         types:
           category: "Category"
           topic: "Topic"
+        emoji:
+          label: "Channel emoji (optional)"
+          reset: "Reset emoji"
 
       reviewable:
         type: "Chat message"

@@ -196,7 +196,6 @@ export default class DModal extends Component {
     // Prevent keyboard events from leaking to elements behind the modal
     if (!this.wrapperElement.contains(document.activeElement)) {
       event.stopPropagation();
-      event.preventDefault();
     }
 
     if (event.key === "Escape" && this.dismissable) {
