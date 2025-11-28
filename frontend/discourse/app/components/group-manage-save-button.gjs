@@ -13,7 +13,6 @@ import { i18n } from "discourse-i18n";
 export default class GroupManageSaveButton extends Component {
   @service modal;
   @service groupAutomaticMembersDialog;
-  @service router;
 
   saving = null;
   disabled = false;
@@ -27,10 +26,6 @@ export default class GroupManageSaveButton extends Component {
   @action
   setUpdateExistingUsers(value) {
     this.updateExistingUsers = value;
-  }
-
-  get shouldRenderWarningFlair() {
-    return this.router.currentRouteName !== "group.manage.membership";
   }
 
   @action
