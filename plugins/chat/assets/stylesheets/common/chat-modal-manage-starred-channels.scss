@@ -1,0 +1,71 @@
+.chat-modal-manage-starred-channels {
+  .manage-starred-channels {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .manage-starred-channels__filter {
+    .filter-input {
+      width: 100%;
+    }
+  }
+
+  .manage-starred-channels__list {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .manage-starred-channels__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-1);
+    border-radius: var(--d-border-radius);
+
+    &:hover {
+      background-color: var(--d-hover);
+    }
+  }
+
+  .manage-starred-channels__channel-info {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    flex: 1;
+    min-width: 0;
+  }
+
+  .manage-starred-channels__channel-title {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .manage-starred-channels__star-button {
+    flex-shrink: 0;
+    color: var(--primary-medium);
+
+    &.--starred {
+      color: var(--tertiary);
+    }
+
+    &:hover {
+      color: var(--primary);
+    }
+
+    &.--starred:hover {
+      color: var(--tertiary-hover);
+    }
+  }
+
+  .manage-starred-channels__empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-4);
+    color: var(--primary-medium);
+    text-align: center;
+  }
+}

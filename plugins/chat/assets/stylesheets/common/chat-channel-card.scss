@@ -82,6 +82,19 @@
     }
   }
 
+  &__star-btn {
+    padding: var(--space-1);
+    color: var(--primary-medium);
+
+    &:hover {
+      color: var(--primary);
+    }
+
+    &.--starred {
+      color: var(--tertiary);
+    }
+  }
+
   &__cta {
     display: flex;
     align-items: center;
