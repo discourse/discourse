@@ -7,9 +7,15 @@ export default class AiTopicGist extends Component {
   @service gists;
 
   get shouldShow() {
-    return (
-      this.gists.currentPreference === TABLE_AI_LAYOUT && this.gists.showToggle
-    );
+    if (!this.prefersTableAiLayout) {
+      return false;
+    }
+
+    return this.gists.showToggle || this.hasGist;
+  }
+
+  get prefersTableAiLayout() {
+    return this.gists.currentPreference === TABLE_AI_LAYOUT;
   }
 
   get hasGist() {

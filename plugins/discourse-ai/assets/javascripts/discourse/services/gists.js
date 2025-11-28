@@ -24,7 +24,32 @@ export default class Gists extends Service {
 
   get topics() {
     // covers discovery, filter, and pm routes
-    return this.routerAttributes?.list?.topics ?? this.routerAttributes?.topics;
+    const listTopics = this.routerAttributes?.list?.topics;
+    if (listTopics) {
+      return listTopics;
+    }
+
+    const directTopics = this.routerAttributes?.topics;
+    if (directTopics) {
+      return directTopics;
+    }
+
+    const topic = this.routerAttributes?.topic;
+    if (!topic) {
+      return null;
+    }
+
+    const relatedTopics = topic.relatedTopics;
+    if (relatedTopics?.length) {
+      return relatedTopics;
+    }
+
+    const suggestedTopics = topic.suggestedTopics;
+    if (suggestedTopics?.length) {
+      return suggestedTopics;
+    }
+
+    return null;
   }
 
   get showToggle() {
