@@ -80,6 +80,10 @@ class Upload < ActiveRecord::Base
       )
   end
 
+  def self.fetch_from(sha1:, url:)
+    sha1.presence.try { |_| find_by(sha1:) } || get_from_url(url)
+  end
+
   def self.mark_invalid_s3_uploads_as_missing
     Upload.with_invalid_etag_verification_status.update_all(
       verification_status: Upload.verification_statuses[:s3_file_missing_confirmed],

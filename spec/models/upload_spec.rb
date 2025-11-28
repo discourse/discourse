@@ -18,6 +18,40 @@ RSpec.describe Upload do
 
   it { is_expected.to have_many(:badges).dependent(:nullify) }
 
+  describe ".fetch_from" do
+    subject(:record) { described_class.fetch_from(sha1:, url:) }
+
+    fab!(:upload)
+
+    let(:url) { upload.url }
+
+    context "when sha1 is present" do
+      context "when there is a matching upload for this SHA1" do
+        let(:sha1) { upload.sha1 }
+
+        it "returns the record" do
+          expect(record).to eq(upload)
+        end
+      end
+
+      context "when there is no matching upload for this SHA1" do
+        let(:sha1) { "non-existent" }
+
+        it "fetches the record using the provided URL" do
+          expect(record).to eq(upload)
+        end
+      end
+    end
+
+    context "when sha1 is blank" do
+      let(:sha1) { "" }
+
+      it "fetches the record using the provided URL" do
+        expect(record).to eq(upload)
+      end
+    end
+  end
+
   describe ".with_no_non_post_relations" do
     it "does not find non-post related uploads" do
       post_upload = Fabricate(:upload)
