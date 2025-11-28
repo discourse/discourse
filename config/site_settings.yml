@@ -593,6 +593,7 @@ login:
   must_approve_users:
     client: true
     default: false
+    area: "login"
   invite_only:
     refresh: true
     client: true
