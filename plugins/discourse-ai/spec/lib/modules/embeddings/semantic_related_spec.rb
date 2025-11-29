@@ -88,48 +88,91 @@ describe DiscourseAi::Embeddings::SemanticRelated do
     describe "age penalty functionality" do
       let(:newer_topic) { Fabricate(:topic, bumped_at: 1.day.ago) }
       let(:older_topic) { Fabricate(:topic, bumped_at: 30.days.ago) }
-
-      before do
-        SiteSetting.ai_embeddings_semantic_related_age_penalty = 1.5
-        SiteSetting.ai_embeddings_semantic_related_age_time_scale = 30 # Use 30 days for more dramatic effect in tests
-
-        # Create embeddings for test topics
-        embedding = Array.new(1024) { rand }
-        schema = DiscourseAi::Embeddings::Schema.for(Topic)
-
-        [target, newer_topic, older_topic].each do |topic|
-          schema.store(topic, embedding, "test_digest_#{topic.id}")
+      let(:embedding_builder) do
+        ->(*components) { Array.new(vector_def.dimensions) { |idx| components[idx] || 0.0 } }
+      end
+      let(:store_embeddings) do
+        lambda do |target_embedding:, newer_embedding:, older_embedding:|
+          schema = DiscourseAi::Embeddings::Schema.for(Topic)
+          schema.store(target, target_embedding, "test_digest_#{target.id}")
+          schema.store(newer_topic, newer_embedding, "test_digest_#{newer_topic.id}")
+          schema.store(older_topic, older_embedding, "test_digest_#{older_topic.id}")
+          described_class.clear_cache_for(target)
         end
-
-        described_class.clear_cache_for(target)
       end
 
-      it "prioritizes newer topics over older ones with same similarity" do
-        # Mock the similarity search to return consistent embeddings for all topics
-        allow_any_instance_of(DiscourseAi::Embeddings::Schema).to receive(
-          :symmetric_similarity_search,
-        ).and_call_original
+      it "penalizes older topics for cosine distance models" do
+        vector_def.update!(pg_function: "<=>")
+        SiteSetting.ai_embeddings_semantic_related_age_time_scale = 1
 
-        results = semantic_related.related_topic_ids_for(target)
+        target_embedding = embedding_builder.call(1.0, 0.0)
+        newer_embedding = embedding_builder.call(0.8, 0.2)
+        older_embedding = embedding_builder.call(0.98, 0.02)
+        store_embeddings.call(
+          target_embedding: target_embedding,
+          newer_embedding: newer_embedding,
+          older_embedding: older_embedding,
+        )
 
-        expect(results).to include(newer_topic.id)
-        expect(results).to include(older_topic.id)
+        SiteSetting.ai_embeddings_semantic_related_age_penalty = 0.0
+        described_class.clear_cache_for(target)
+        without_penalty = semantic_related.related_topic_ids_for(target)
+        expect(without_penalty).to include(older_topic.id, newer_topic.id)
+        expect(without_penalty.index(older_topic.id)).to be < without_penalty.index(newer_topic.id)
 
-        # Newer topic should appear before older topic due to age penalty
-        newer_index = results.index(newer_topic.id)
-        older_index = results.index(older_topic.id)
-        expect(newer_index).to be < older_index if newer_index && older_index
+        SiteSetting.ai_embeddings_semantic_related_age_penalty = 2.0
+        described_class.clear_cache_for(target)
+        with_penalty = semantic_related.related_topic_ids_for(target)
+        expect(with_penalty).to include(older_topic.id, newer_topic.id)
+        expect(with_penalty.index(newer_topic.id)).to be < with_penalty.index(older_topic.id)
+      end
+
+      it "penalizes older topics for negative inner product models" do
+        vector_def.update!(pg_function: "<#>")
+        SiteSetting.ai_embeddings_semantic_related_age_time_scale = 1
+
+        target_embedding = embedding_builder.call(1.0, 0.0)
+        newer_embedding = embedding_builder.call(0.92, 0.08)
+        older_embedding = embedding_builder.call(1.1, 0.0)
+        store_embeddings.call(
+          target_embedding: target_embedding,
+          newer_embedding: newer_embedding,
+          older_embedding: older_embedding,
+        )
+
+        SiteSetting.ai_embeddings_semantic_related_age_penalty = 0.0
+        described_class.clear_cache_for(target)
+        without_penalty = semantic_related.related_topic_ids_for(target)
+        expect(without_penalty).to include(older_topic.id, newer_topic.id)
+        expect(without_penalty.index(older_topic.id)).to be < without_penalty.index(newer_topic.id)
+
+        SiteSetting.ai_embeddings_semantic_related_age_penalty = 2.0
+        described_class.clear_cache_for(target)
+        with_penalty = semantic_related.related_topic_ids_for(target)
+        expect(with_penalty).to include(older_topic.id, newer_topic.id)
+        expect(with_penalty.index(newer_topic.id)).to be < with_penalty.index(older_topic.id)
       end
 
       it "uses no age penalty when setting is 0.0" do
         SiteSetting.ai_embeddings_semantic_related_age_penalty = 0.0
-        described_class.clear_cache_for(target)
+        uniform_embedding = embedding_builder.call(0.5, 0.5)
+        store_embeddings.call(
+          target_embedding: uniform_embedding.dup,
+          newer_embedding: uniform_embedding.dup,
+          older_embedding: uniform_embedding.dup,
+        )
 
-        # Should work the same as without age penalty
         expect { semantic_related.related_topic_ids_for(target) }.not_to raise_error
       end
 
       it "handles age penalty parameter correctly in schema" do
+        uniform_embedding = embedding_builder.call(0.25, 0.75)
+        store_embeddings.call(
+          target_embedding: uniform_embedding.dup,
+          newer_embedding: uniform_embedding.dup,
+          older_embedding: uniform_embedding.dup,
+        )
+
         schema = DiscourseAi::Embeddings::Schema.for(Topic)
 
         expect { schema.symmetric_similarity_search(target, age_penalty: 1.5) }.not_to raise_error
@@ -138,7 +181,13 @@ describe DiscourseAi::Embeddings::SemanticRelated do
       end
 
       it "respects different time scale settings" do
-        # Test with a different time scale that makes the penalty less aggressive
+        uniform_embedding = embedding_builder.call(0.6, 0.4)
+        store_embeddings.call(
+          target_embedding: uniform_embedding.dup,
+          newer_embedding: uniform_embedding.dup,
+          older_embedding: uniform_embedding.dup,
+        )
+
         SiteSetting.ai_embeddings_semantic_related_age_time_scale = 365 # 1 year time scale
         SiteSetting.ai_embeddings_semantic_related_age_penalty = 0.3 # Gentle penalty
         described_class.clear_cache_for(target)
