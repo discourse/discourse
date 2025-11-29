@@ -305,7 +305,7 @@ export default class ReviewableItem extends Component {
   @discourseComputed(
     "reviewable.type",
     "reviewable.created_from_flag",
-    "reviewable.topic_id"
+    "topicId"
   )
   reviewableTypeLabel(type, createdFromFlag, topicId) {
     // handle plugin types
