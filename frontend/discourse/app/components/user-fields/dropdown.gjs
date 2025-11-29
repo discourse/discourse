@@ -7,14 +7,16 @@ import UserFieldBase from "./base";
 
 export default class UserFieldDropdown extends UserFieldBase {
   <template>
-    <label
-      class="control-label alt-placeholder"
-      for={{concat "user-" this.elementId}}
-    >
-      {{this.field.name}}
-      {{~#unless this.field.required}}
-        {{i18n "user_fields.optional"}}{{/unless~}}
-    </label>
+    {{#if @showLabel}}
+      <label
+        class="control-label alt-placeholder"
+        for={{concat "user-" this.elementId}}
+      >
+        {{this.field.name}}
+        {{~#unless this.field.required}}
+          {{i18n "user_fields.optional"}}{{/unless~}}
+      </label>
+    {{/if}}
 
     <div class="controls">
       <ComboBox
