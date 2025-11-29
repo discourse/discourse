@@ -18,6 +18,7 @@ import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { animateClosing } from "discourse/lib/animation-utils";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
@@ -50,6 +51,7 @@ export default class SearchMenu extends Component {
   @tracked suggestionResults = [];
   @tracked invalidTerm = false;
   @tracked menuPanelOpen = false;
+  @tracked searchMenuWrapper = null;
 
   searchInputId = this.args.searchInputId ?? "search-term";
   searchInputPlaceholder = this.args.searchInputPlaceholder || "search.title";
@@ -76,13 +78,18 @@ export default class SearchMenu extends Component {
   }
 
   @bind
-  onDocumentPress(event) {
+  setupWrapper(el) {
+    this.searchMenuWrapper = el;
+  }
+
+  @bind
+  async onDocumentPress(event) {
     if (!this.menuPanelOpen) {
       return;
     }
 
     if (!event.target.closest(".search-menu-container.menu-panel-results")) {
-      this.close();
+      await this.close();
     }
   }
 
@@ -132,24 +139,27 @@ export default class SearchMenu extends Component {
   }
 
   @action
-  onKeydown(event) {
+  async onKeydown(event) {
     if (event.key === "Escape") {
-      this.close();
+      await this.close();
       event.preventDefault();
       event.stopPropagation();
     }
   }
 
   @action
-  close() {
+  async close() {
+    await animateClosing(this.searchMenuWrapper);
+
     if (this.args?.onClose) {
-      return this.args.onClose();
+      this.args.onClose();
     }
+
+    this.menuPanelOpen = false;
 
     // We want to blur the search input when in stand-alone mode
     // so that when we focus on the search input again, the menu panel pops up
     document.getElementById(this.searchInputId)?.blur();
-    this.menuPanelOpen = false;
   }
 
   @action
@@ -484,7 +494,10 @@ export default class SearchMenu extends Component {
           @clearSearch={{this.clearSearch}}
         />
       {{else if this.displayMenuPanelResults}}
-        <MenuPanel class="search-menu-panel">
+        <MenuPanel
+          class="search-menu-panel drop-down"
+          {{didInsert this.setupWrapper}}
+        >
           <Results
             @searchInputId={{this.searchInputId}}
             @loading={{this.loading}}

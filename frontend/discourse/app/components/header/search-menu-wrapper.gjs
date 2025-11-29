@@ -1,27 +1,44 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
+import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
+import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import MenuPanel from "discourse/components/menu-panel";
 import SearchMenu from "discourse/components/search-menu";
-import concatClass from "discourse/helpers/concat-class";
+import { animateClosing } from "discourse/lib/animation-utils";
+import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
 
 export default class SearchMenuWrapper extends Component {
-  @service site;
+  @tracked searchMenuWrapper;
 
-  get animationClass() {
-    return this.site.mobileView || this.site.narrowDesktopView
-      ? "slide-in"
-      : "drop-down";
+  @action
+  setupWrapper(el) {
+    this.searchMenuWrapper = el.querySelector(".search-menu-panel.drop-down");
+  }
+
+  @action
+  async closeSearchMenu() {
+    await animateClosing(this.searchMenuWrapper);
+    this.args.closeSearchMenu();
   }
 
   <template>
     <div
       class="search-menu glimmer-search-menu"
       aria-live="polite"
+      {{didInsert this.setupWrapper}}
+      {{closeOnClickOutside
+        this.closeSearchMenu
+        (hash
+          targetSelector=".search-menu-panel"
+          secondaryTargetSelector=".search-dropdown"
+        )
+      }}
       ...attributes
     >
-      <MenuPanel class={{concatClass this.animationClass "search-menu-panel"}}>
+      <MenuPanel class="search-menu-panel drop-down">
         <SearchMenu
-          @onClose={{@closeSearchMenu}}
+          @onClose={{this.closeSearchMenu}}
           @inlineResults={{true}}
           @autofocusInput={{true}}
           @location="header"
