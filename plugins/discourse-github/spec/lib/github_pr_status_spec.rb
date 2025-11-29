@@ -83,6 +83,25 @@ describe GithubPrStatus do
 
       expect(GithubPrStatus.fetch(owner, repo, pr_number)).to be_nil
     end
+
+    it "logs a warning when rate limited" do
+      reset_time = Time.now.to_i + 3600
+
+      stub_request(:get, pr_url).to_return(
+        status: 403,
+        body: "",
+        headers: {
+          "x-ratelimit-remaining" => "0",
+          "x-ratelimit-reset" => reset_time.to_s,
+        },
+      )
+
+      Rails.logger.expects(:warn).with(regexp_matches(/GitHub API rate limit exceeded/))
+
+      Rails.logger.expects(:error).with(regexp_matches(/GitHub PR status error/))
+
+      expect(GithubPrStatus.fetch(owner, repo, pr_number)).to be_nil
+    end
   end
 
   describe ".approved?" do

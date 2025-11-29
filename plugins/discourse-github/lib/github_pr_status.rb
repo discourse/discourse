@@ -26,6 +26,13 @@ class GithubPrStatus
     uri = URI.parse(url)
     response = uri.open({ read_timeout: 10 }.merge(github_auth_header(owner)))
     ::MultiJson.load(response.read)
+  rescue OpenURI::HTTPError => e
+    if e.io.status[0] == "403" && e.io.meta["x-ratelimit-remaining"] == "0"
+      reset_time = e.io.meta["x-ratelimit-reset"]&.to_i
+      reset_at = reset_time ? Time.at(reset_time).utc : "unknown"
+      Rails.logger.warn("GitHub API rate limit exceeded for #{url}. Resets at: #{reset_at}.")
+    end
+    raise
   end
 
   def self.approved?(reviews)
