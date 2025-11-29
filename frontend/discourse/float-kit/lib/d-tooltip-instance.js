@@ -27,6 +27,7 @@ export default class DTooltipInstance extends FloatKitInstance {
    * @property {Object} options - Options object that configures the tooltip behavior and display.
    */
   @tracked options;
+  @tracked portalOutletOverrideElement;
 
   @tracked _trigger;
 
@@ -35,6 +36,7 @@ export default class DTooltipInstance extends FloatKitInstance {
 
     setOwner(this, owner);
     this.options = { ...TOOLTIP.options, ...options };
+    this.portalOutletOverrideElement = options.portalOutletElement;
   }
 
   get trigger() {
@@ -48,7 +50,10 @@ export default class DTooltipInstance extends FloatKitInstance {
   }
 
   get portalOutletElement() {
-    return document.getElementById("d-tooltip-portals");
+    return (
+      this.portalOutletOverrideElement ||
+      document.getElementById("d-tooltip-portals")
+    );
   }
 
   @action
