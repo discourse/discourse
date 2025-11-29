@@ -24,8 +24,10 @@ class MethodProfiler
             start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
             #{method_name}__mp_unpatched(*args, **kwargs, &blk)
           ensure
-            data = (prof[:#{name}] ||= {duration: 0.0, calls: 0})
-            data[:duration] += Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
+            data = (prof[:#{name}] ||= {duration: 0.0, max_duration: 0.0, calls: 0})
+            current_duration = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
+            data[:duration] += current_duration
+            data[:max_duration] = current_duration if current_duration > data[:max_duration]
             data[:calls] += 1
             #{"@mp_recurse_protect_#{method_name} = false" if no_recurse}
           end
