@@ -2,15 +2,14 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { debounce, schedule } from "@ember/runloop";
+import { debounce } from "@ember/runloop";
 import { service } from "@ember/service";
-import { createPopper } from "@popperjs/core";
+import { computePosition, flip, offset } from "@floating-ui/dom";
 import emoji from "discourse/helpers/emoji";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 const DISPLAY_MAX_USERS = 19;
-let _popperReactionUserPanel;
 
 export default class DiscourseReactionsListEmoji extends Component {
   @service siteSettings;
@@ -23,43 +22,30 @@ export default class DiscourseReactionsListEmoji extends Component {
 
   @action
   pointerOver(event) {
-    if (event.pointerType !== "mouse") {
+    if (event.pointerType !== "mouse" || !this.args.reaction.count) {
       return;
     }
 
-    this._setupPopper(".user-list");
+    this.showTooltip();
 
     if (!this.args.users?.length && !this.loadingReactions) {
       debounce(this, this._loadReactionUsers, 3000, true);
     }
   }
 
-  _setupPopper(selector) {
-    schedule("afterRender", () => {
-      const elementId = CSS.escape(this.elementId);
-      const trigger = document.querySelector(`#${elementId}`);
-      const popperElement = document.querySelector(`#${elementId} ${selector}`);
+  showTooltip() {
+    const elementId = CSS.escape(this.elementId);
+    const referenceElement = document.getElementById(elementId);
+    const floatingElement = referenceElement.querySelector(".user-list");
 
-      if (popperElement) {
-        _popperReactionUserPanel && _popperReactionUserPanel.destroy();
-        _popperReactionUserPanel = createPopper(trigger, popperElement, {
-          placement: "bottom",
-          modifiers: [
-            {
-              name: "offset",
-              options: {
-                offset: [0, -5],
-              },
-            },
-            {
-              name: "preventOverflow",
-              options: {
-                padding: 5,
-              },
-            },
-          ],
-        });
-      }
+    computePosition(referenceElement, floatingElement, {
+      placement: "bottom",
+      middleware: [offset(-5), flip({ padding: 5 })],
+    }).then(({ x, y }) => {
+      Object.assign(floatingElement.style, {
+        left: `${x}px`,
+        top: `${y}px`,
+      });
     });
   }
 
