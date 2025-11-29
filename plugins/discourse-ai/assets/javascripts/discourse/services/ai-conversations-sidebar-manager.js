@@ -14,6 +14,7 @@ import AiBotSidebarEmptyState from "../components/ai-bot-sidebar-empty-state";
 export const AI_CONVERSATIONS_PANEL = "ai-conversations";
 const SCROLL_BUFFER = 100;
 const DEBOUNCE = 100;
+const TITLE_CHANNEL = `/discourse-ai/ai-bot/topic-titles`;
 
 export default class AiConversationsSidebarManager extends Service {
   @service appEvents;
@@ -71,6 +72,8 @@ export default class AiConversationsSidebarManager extends Service {
       this,
       this._attachScrollListener
     );
+
+    this._watchForTitleUpdates();
   }
 
   willDestroy() {
@@ -85,6 +88,8 @@ export default class AiConversationsSidebarManager extends Service {
       this,
       this._attachScrollListener
     );
+
+    this.messageBus.unsubscribe(TITLE_CHANNEL);
   }
 
   addEmptyStateClass() {
@@ -207,22 +212,11 @@ export default class AiConversationsSidebarManager extends Service {
   _handleNewBotPM(topic) {
     this.topics = [topic, ...this.topics];
     this._rebuildSections();
-    this._watchForTitleUpdate(topic.id);
   }
 
-  _watchForTitleUpdate(topicId) {
-    if (this._subscribedTopicIds?.has(topicId)) {
-      return;
-    }
-
-    this._subscribedTopicIds = this._subscribedTopicIds || new Set();
-    this._subscribedTopicIds.add(topicId);
-
-    const channel = `/discourse-ai/ai-bot/topic/${topicId}`;
-
-    this.messageBus.subscribe(channel, (payload) => {
-      this._applyTitleUpdate(topicId, payload.title);
-      this.messageBus.unsubscribe(channel);
+  _watchForTitleUpdates() {
+    this.messageBus.subscribe(TITLE_CHANNEL, (payload) => {
+      this._applyTitleUpdate(payload.topic_id, payload.title);
     });
   }
 
