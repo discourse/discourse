@@ -144,6 +144,37 @@ task "themes:audit" => :environment do
   components.each { |repo| puts repo }
 end
 
+# env THEME_PATH - path to a local theme directory
+# env THEME_NAME - theme name (used to find existing theme to update, or from about.json if not provided)
+# Outputs the theme id on success
+desc "Install a theme from a local directory"
+task "themes:install_from_directory" => :environment do
+  theme_path = ENV["THEME_PATH"]
+  theme_name = ENV["THEME_NAME"]
+
+  abort "THEME_PATH environment variable is required" if theme_path.blank?
+
+  unless File.directory?(theme_path)
+    abort "THEME_PATH does not exist or is not a directory: #{theme_path}"
+  end
+
+  if theme_name.blank?
+    about_path = File.join(theme_path, "about.json")
+    if File.exist?(about_path)
+      about = JSON.parse(File.read(about_path))
+      theme_name = about["name"]
+    end
+  end
+
+  if theme_name.blank?
+    abort "Theme name missing. Provide THEME_NAME or ensure about.json has a name field."
+  end
+
+  existing = Theme.find_by(name: theme_name)
+  theme = RemoteTheme.import_theme_from_directory(theme_path, theme_id: existing&.id)
+  puts theme.id
+end
+
 desc "Run QUnit tests of a theme/component"
 task "themes:qunit", :type, :value do |t, args|
   type = args[:type]
