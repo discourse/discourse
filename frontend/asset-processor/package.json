@@ -29,7 +29,7 @@
     "ember-this-fallback": "^0.4.0",
     "fastestsmallesttextencoderdecoder": "^1.0.22",
     "magic-string": "^0.30.21",
-    "memfs": "^4.39.0",
+    "memfs": "^4.51.1",
     "path-browserify": "^1.0.1",
     "polyfill-crypto.getrandomvalues": "^1.0.0",
     "postcss": "^8.5.6",
