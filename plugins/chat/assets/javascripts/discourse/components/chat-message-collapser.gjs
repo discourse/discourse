@@ -27,7 +27,9 @@ export default class ChatMessageCollapser extends Component {
   get uploadsHeader() {
     let name = "";
     if (this.args.uploads.length === 1) {
-      name = this.args.uploads[0].original_filename;
+      const upload = this.args.uploads[0];
+      name =
+        upload.optimized_video?.original_filename || upload.original_filename;
     } else {
       name = i18n("chat.uploaded_files", { count: this.args.uploads.length });
     }

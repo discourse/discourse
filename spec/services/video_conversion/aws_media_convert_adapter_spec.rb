@@ -62,14 +62,30 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
     allow(s3_object).to receive(:acl).and_return(acl_object)
     allow(acl_object).to receive(:put).with(acl: "public-read").and_return(true)
 
+    post_upload_ref_relation = instance_double(ActiveRecord::Relation, pluck: [post.id])
+    chat_upload_ref_relation = instance_double(ActiveRecord::Relation, pluck: [])
+
     allow(UploadReference).to receive(:where).with(
       upload_id: upload.id,
       target_type: "Post",
-    ).and_return(instance_double(ActiveRecord::Relation, pluck: [post.id]))
+    ).and_return(post_upload_ref_relation)
+
+    allow(UploadReference).to receive(:where).with(
+      upload_id: upload.id,
+      target_type: "ChatMessage",
+    ).and_return(chat_upload_ref_relation)
 
     allow(Post).to receive(:where).with(id: [post.id]).and_return(post_relation)
     allow(post_relation).to receive(:find_each).and_yield(post)
     allow(post).to receive(:rebake!)
+
+    # Stub Chat::Message queries for chat message video conversion support
+    chat_message_relation = instance_double(ActiveRecord::Relation)
+    if defined?(Chat::Message)
+      allow(Chat::Message).to receive(:where).with(id: []).and_return(chat_message_relation)
+      allow(chat_message_relation).to receive(:includes).and_return(chat_message_relation)
+      allow(chat_message_relation).to receive(:find_each)
+    end
     allow(Rails.logger).to receive(:error)
     allow(Rails.logger).to receive(:warn)
     allow(Rails.logger).to receive(:info)

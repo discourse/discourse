@@ -133,7 +133,7 @@ module VideoConversion
           create_optimized_video_record(output_path, new_sha1, filesize, url, etag: etag)
 
         if optimized_video
-          update_posts_with_optimized_video
+          update_posts_with_optimized_video(optimized_video)
           true
         else
           Rails.logger.error("Failed to create OptimizedVideo record for upload #{@upload.id}")
@@ -312,17 +312,6 @@ module VideoConversion
       end
 
       Aws::MediaConvert::Client.new(client_options)
-    end
-
-    def update_posts_with_optimized_video
-      post_ids = UploadReference.where(upload_id: @upload.id, target_type: "Post").pluck(:target_id)
-
-      Post
-        .where(id: post_ids)
-        .find_each do |post|
-          Rails.logger.info("Rebaking post #{post.id} to use optimized video")
-          post.rebake!
-        end
     end
 
     def s3_upload_bucket
