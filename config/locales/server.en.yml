@@ -2918,6 +2918,8 @@ en:
       status_unlisted: "Show unlisted (hidden) topics"
       status_deleted: "Show deleted topics (if you have permission)"
       status_public: "Show topics in public categories"
+      in_topics: "Restrict post-based filters to first posts only"
+      in_replies: "Restrict post-based filters to replies only"
       in_pinned: "Show pinned topics"
       in_bookmarked: "Show topics you've bookmarked"
       in_watching: "Show topics you're watching"

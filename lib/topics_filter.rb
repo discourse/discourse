@@ -8,6 +8,7 @@ class TopicsFilter
     @guardian = guardian || Guardian.new
     @scope = scope
     @topic_notification_levels = Set.new
+    @post_scope = nil
   end
 
   FILTER_ALIASES = {
@@ -21,6 +22,7 @@ class TopicsFilter
   def filter_from_query_string(query_string)
     return @scope if query_string.blank?
 
+    @post_scope = nil
     filters = {}
 
     query_string.scan(
@@ -110,7 +112,7 @@ class TopicsFilter
             SELECT topic_id
             FROM post_search_data
             JOIN posts ON posts.id = post_search_data.post_id
-            WHERE search_data @@ #{ts_query} AND NOT posts.hidden AND posts.deleted_at IS NULL #{whisper_condition("posts")}
+            WHERE search_data @@ #{ts_query} AND NOT posts.hidden AND posts.deleted_at IS NULL #{whisper_condition("posts")} #{post_scope_condition("posts")}
           )
         SQL
     end
@@ -255,6 +257,8 @@ class TopicsFilter
       { name: "status:unlisted", description: I18n.t("filter.description.status_unlisted") },
       { name: "status:deleted", description: I18n.t("filter.description.status_deleted") },
       { name: "status:public", description: I18n.t("filter.description.status_public") },
+      { name: "in:topics", description: I18n.t("filter.description.in_topics") },
+      { name: "in:replies", description: I18n.t("filter.description.in_replies") },
       { name: "order:", description: I18n.t("filter.description.order"), priority: 1 },
       { name: "order:activity", description: I18n.t("filter.description.order_activity") },
       { name: "order:activity-asc", description: I18n.t("filter.description.order_activity_asc") },
@@ -495,7 +499,7 @@ class TopicsFilter
             topics.id NOT IN (
               SELECT p1.topic_id
               FROM posts p1
-              WHERE p1.user_id IN (:user_ids) AND p1.deleted_at IS NULL #{whisper_condition("p1")}
+              WHERE p1.user_id IN (:user_ids) AND p1.deleted_at IS NULL #{whisper_condition("p1")} #{post_scope_condition("p1")}
               GROUP BY p1.topic_id
               HAVING COUNT(DISTINCT p1.user_id) = :user_count
             )
@@ -505,7 +509,7 @@ class TopicsFilter
             EXISTS (
               SELECT 1
               FROM posts p#{idx}
-              WHERE p#{idx}.topic_id = topics.id AND p#{idx}.user_id = #{uid} AND p#{idx}.deleted_at IS NULL #{whisper_condition("p#{idx}")}
+              WHERE p#{idx}.topic_id = topics.id AND p#{idx}.user_id = #{uid} AND p#{idx}.deleted_at IS NULL #{whisper_condition("p#{idx}")} #{post_scope_condition("p#{idx}")}
               LIMIT 1
             )
           SQL
@@ -519,6 +523,7 @@ class TopicsFilter
                 WHERE p.user_id IN (:user_ids)
                   AND p.deleted_at IS NULL
                   #{whisper_condition("p")}
+                  #{post_scope_condition("p")}
               )
             SQL
       end
@@ -559,7 +564,7 @@ class TopicsFilter
               SELECT 1
               FROM posts pg#{idx}
               JOIN group_users gu#{idx} ON gu#{idx}.user_id = pg#{idx}.user_id
-              WHERE pg#{idx}.topic_id = topics.id AND gu#{idx}.group_id = #{gid} #{whisper_condition("pg#{idx}")}
+              WHERE pg#{idx}.topic_id = topics.id AND gu#{idx}.group_id = #{gid} #{whisper_condition("pg#{idx}")} #{post_scope_condition("pg#{idx}")}
             )
           SQL
       else
@@ -570,6 +575,7 @@ class TopicsFilter
                 JOIN group_users gu ON gu.user_id = p.user_id
                 WHERE gu.group_id IN (:group_ids)
                   #{whisper_condition("p")}
+                  #{post_scope_condition("p")}
               )
             SQL
       end
@@ -732,10 +738,24 @@ class TopicsFilter
   end
 
   def filter_in(values:)
+    values = Array(values)
     values.uniq!
 
     # handle edge case of comma-separated values
     values.map! { |value| value.split(",") }.flatten!
+
+    values.delete_if do |value|
+      case value
+      when "topics"
+        @post_scope = :first_post
+        true
+      when "replies"
+        @post_scope = :replies
+        true
+      else
+        false
+      end
+    end
 
     if values.delete("pinned")
       @scope =
@@ -1061,6 +1081,17 @@ class TopicsFilter
     scope.joins(
       "INNER JOIN posts AS first_posts ON first_posts.topic_id = topics.id AND first_posts.post_number = 1",
     )
+  end
+
+  def post_scope_condition(table_alias)
+    case @post_scope
+    when :first_post
+      "AND #{table_alias}.post_number = 1"
+    when :replies
+      "AND #{table_alias}.post_number > 1"
+    else
+      ""
+    end
   end
 
   def whisper_condition(table_alias)
