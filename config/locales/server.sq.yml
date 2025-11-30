@@ -1389,6 +1389,16 @@ sq:
       title: "Dërgo përsëri emailin e aktivizimit"
   wizard:
     step:
+      privacy:
+        fields:
+          login_required:
+            choices:
+              public:
+                label: "Publike"
+              private:
+                label: "Private"
+          chat_enabled:
+            placeholder: "Aktivizo bisedën"
       styling:
         fields:
           styling_preview:
@@ -1397,6 +1407,11 @@ sq:
             choices:
               latest:
                 label: "Më të fundit"
+      corporate:
+        title: "Organizata juaj"
+        fields:
+          company_name:
+            label: "Emri i shoqërisë"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} ju përmendi në "%{topic}" - %{site_title}'

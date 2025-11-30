@@ -785,15 +785,15 @@ pl_PL:
         optional: "opcjonalnie"
       stale_help: "Wiadomość została już zweryfikowana przez <b>%{username}</b>."
       claim_help:
-        optional: "Możesz zgłosić roszczenie do tego elementu, aby uniemożliwić innym jego sprawdzenie."
+        optional: "Możesz przejąć tę pozycję, aby uniemożliwić innym jego sprawdzenie."
         required: "Musisz przejąć tę pozycję, zanim będziesz mógł/mogła je przejrzeć."
-        claimed_by_you: "Przejąłeś/łaś tę pozycję i możesz ją teraz przejrzeć."
-        claimed_by_other: "Ten przedmiot może być sprawdzony tylko przez <b>%{username}</b> ."
+        claimed_by_you: "Przejęto tę pozycję i możesz ją teraz przejrzeć."
+        claimed_by_other: "Tę pozycję może zrecenzować tylko <b>%{username}</b>."
         automatically_claimed_by: "Ta pozycja jest obecnie sprawdzana przez <b>%{username}</b>."
       claim:
-        title: "zgłoś ten temat"
+        title: "przejmij ten temat"
       unclaim:
-        help: "usuń to roszczenie"
+        help: "usuń to przejęcie"
       awaiting_approval: "Oczekuje na zatwierdzenie"
       delete: "Usuń"
       settings:
@@ -973,8 +973,8 @@ pl_PL:
         target_created_by: "Wpis utworzony przez %{username} · %{relativeDate}"
         flagged: "Oflagowany"
         flagged_as_by: "Oflagowany jako %{flagReason} przez %{username} · %{relativeDate}"
-        claimed: "Zgłoszony"
-        claimed_by: "Zgłoszony przez %{username} - %{relativeDate}"
+        claimed: "Przejęto"
+        claimed_by: "Przejęto przez %{username} - %{relativeDate}"
         reviewed: "Przejrzany"
         reviewed_by: "Przejrzany przez %{username} · %{relativeDate}"
         view_conversation: "zobacz PW"

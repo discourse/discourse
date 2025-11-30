@@ -346,6 +346,7 @@ sw:
         reviewable_post:
           title: "Ujumbe"
           noun: "ujumbe"
+      assigned_to: "Imekabidhiwa kwa"
       notes:
         delete: "Futa"
       review_user: "Mtumiaji"
