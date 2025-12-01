@@ -41,7 +41,6 @@ ja:
       assigned_topic_to: "トピックを <a href='%{path}'>%{username}</a> に割り当てました"
       assign_post_to: "#%{post_number} を %{username} に割り当てました"
       assign_post_to_multiple: "#%{post_number} を %{username}"
-      assigned_to_w_ellipsis: "割り当て先..."
       unassign:
         title: "割り当て解除"
         title_w_ellipsis: "割り当て解除..."

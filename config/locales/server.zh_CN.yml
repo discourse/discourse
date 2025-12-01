@@ -2458,7 +2458,7 @@ zh_CN:
         other: "该列表必须恰好包含 %{count} 个值。"
       markdown_linkify_tlds: "您不能包含 '*' 的值。"
       google_oauth2_hd_groups: "在启用此设置之前，您必须配置所有 'google oauth2 hd' 设置。"
-      discourse_id_credentials: "启用此设置前，必须先配置 Discourse ID 凭据 ('discourse_id_client_id' and 'discourse_id_client_secret')。"
+      discourse_id_registration: "使用 Discourse ID 自动注册失败。这可能是由于网络连接问题、防火墙限制或 Discourse ID 服务无法访问造成的。请查看服务器日志了解更多详情或联系技术支持。"
       linkedin_oidc_credentials: "启用此设置前，必须先配置 LinkedIn OIDC 凭据 ('linkedin_oidc_client_id' 和 'linkedin_oidc_client_secret')。"
       search_tokenize_chinese_enabled: "在启用此设置之前，您必须禁用 'search_tokenize_chinese'。"
       search_tokenize_japanese_enabled: "在启用此设置之前，您必须禁用 'search_tokenize_japanese'。"
@@ -4647,17 +4647,17 @@ zh_CN:
       name: 不错的分享
       description: 与 25 个唯一身份访客分享帖子
       long_description: |
-        当您分享的链接被 25 个外部访客点击时，将授予此徽章。感谢您传播有关我们的讨论和这个社区的信息。
+        当您分享的链接被 25 位独立外部访客点击时，将授予此徽章。感谢您宣传我们的讨论和社区。
     good_share:
       name: 很棒的分享
       description: 与 300 个唯一身份访客分享帖子
       long_description: |
-        当您分享的链接被 300 个外部访客点击时，将授予此徽章。干得漂亮！您向一群新人展示了一场精彩的讨论，并帮助这个社区成长。
+        当您分享的链接被 300 个独立外部访客点击时，将授予此徽章。干得漂亮！您向一群新人展示了一场精彩的讨论，并帮助这个社区成长。
     great_share:
       name: 精彩的分享
       description: 与 1000 个唯一身份访客分享帖子
       long_description: |
-        当您分享的链接被 1000 个外部访客点击时，将授予此徽章。哇！您将一个有趣的讨论介绍给大量新受众，并帮助社区前进了一大步！
+        当您分享的链接被 1000 个独立外部访客点击时，将授予此徽章。哇！您将一个有趣的讨论介绍给大量新受众，并帮助社区前进了一大步！
     first_like:
       name: 第一个赞
       description: 赞了一个帖子
@@ -4869,21 +4869,13 @@ zh_CN:
   wizard:
     title: "Discourse 设置"
     step:
-      introduction:
-        title: "关于您的网站"
-        description: "这些内容将显示在您的登录页面和所有公共页面上。您以后可以随时进行更改。"
+      setup:
+        title: "使用入门"
         fields:
           title:
             label: "社区名称"
-            placeholder: "朱桦的环聊"
-          site_description:
-            label: "用一句话描述您的社区"
-            placeholder: "朱桦和她的朋友讨论新奇事物的地方"
           default_locale:
             label: "语言"
-      privacy:
-        title: "成员访问权限"
-        fields:
           login_required:
             label: "公开范围"
             description: "您的社区是公开还是不公开？"
@@ -4907,82 +4899,6 @@ zh_CN:
                 label: "否，新成员可以立即加入"
               "yes":
                 label: "是，新成员必须经过版主批准"
-          chat_enabled:
-            placeholder: "启用聊天"
-            extra_description: "与您的成员实时互动"
-      ready:
-        title: "您的网站已准备就绪！"
-        description: "就是这样！您已经完成建立社区的基础工作。现在，您可以进去看一看，撰写一个欢迎话题，然后发送邀请！<br><br>玩得开心！"
-      styling:
-        title: "外观"
-        fields:
-          color_scheme:
-            label: "调色板"
-          body_font:
-            label: "正文字体"
-          site_font:
-            label: "字体"
-          heading_font:
-            label: "标题字体"
-          styling_preview:
-            label: "预览"
-          homepage_style:
-            label: "首页样式"
-            choices:
-              latest:
-                label: "最新"
-                description: "显示所有类别中最新的活跃话题，帮助成员及时了解他们关心的讨论的最新动态"
-              hot:
-                label: "热议"
-                description: "通过融合近期和整体人气来显示热门话题，展示社区成员当前正在讨论的内容"
-              categories_and_latest_topics:
-                label: "类别与最新话题"
-                description: "将所有类别中近期活跃的话题与类别列表、其描述和话题总数相结合"
-              categories_boxes:
-                label: "类别框"
-                description: "以网格形式显示类别及其描述，非常适合社区成员查看您的网站子社区的概览"
-      branding:
-        title: "网站徽标"
-        fields:
-          logo:
-            label: "主要徽标"
-            description: "推荐大小：600 x 200"
-          logo_small:
-            label: "方形徽标"
-            description: "推荐大小：512 x 512。也用作网站图标和移动主屏幕应用图标。"
-      corporate:
-        title: "您的组织"
-        description: "以下信息将用于您的“服务条款”和“关于”页面。如果没有公司，请尽管跳过。"
-        fields:
-          company_name:
-            label: "公司名称"
-            placeholder: "Acme 组织"
-          governing_law:
-            label: "适用法律"
-            placeholder: "加州法律"
-          contact_url:
-            label: "网页"
-            placeholder: "https://www.example.com/contact-us"
-          city_for_disputes:
-            label: "争议城市"
-            placeholder: "加利福尼亚州旧金山"
-          site_contact:
-            label: "自动消息"
-            description: "所有自动 Discourse 个人消息都将从此用户发送，例如举报警告和备份完成通知。"
-          contact_email:
-            label: "联系人"
-            placeholder: "example@user.com"
-            description: "负责此网站的主要联系人的电子邮件地址，用于重要通知，也会在<a href='%{base_path}/about' target='_blank'>您的“关于”页面</a>上列出以供紧急联系。"
-      invites:
-        title: "邀请管理人员"
-        description: "即将完成！让我们邀请一些人来使用有趣的话题和回复帮助<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>培育您的讨论</a>以启动您的社区。"
-        disabled: "由于本地登录被禁用，因此无法向任何人发送邀请。请继续下一步。"
-      finished:
-        title: "您的 Discourse 已就绪！"
-        description: |
-          <p>如果您想更改这些设置，请<b>随时重新运行此向导</b>，或访问<a href='%{base_path}/admin' target='_blank'>您的管理员部分</a>；在网站菜单中的扳手图标旁边找到相应设置。</p>
-          <p>使用我们强大的主题系统可以轻松定制您的 Discourse。例如，请查看 <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a> 上的<a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">热门主题和组件</a>。</p>
-          <p>玩得开心，并顺利<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>建立您的新社区</a>！</p>
   search_logs:
     graph_title: "搜索计数"
   onebox:
@@ -5022,6 +4938,8 @@ zh_CN:
     json_too_long: "值由于超出列长度限制而未记录"
     not_found: "找不到"
     unknown: "未知"
+    site_setting:
+      update_existing_users: "更新现有用户？ %{value}"
     user_merged: "%{username} 已被合并到此帐户"
     user_delete_self: "被自己从 %{url} 删除"
     webhook_deactivation_reason: "您的网络钩子已自动停用。我们收到了多个 '%{status}' HTTP 状态失败响应。"

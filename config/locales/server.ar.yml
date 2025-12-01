@@ -2834,7 +2834,6 @@ ar:
         other: "يجب أن تحتوي القائمة على %{count} قيمة بالضبط."
       markdown_linkify_tlds: "لا يمكنك تضمين قيمة '*'."
       google_oauth2_hd_groups: "يجب عليك تعيين جميع إعدادات 'google oauth2 hd' قبل تفعيل هذا الإعداد."
-      discourse_id_credentials: "يجب تكوين بيانات اعتماد Discourse ID (discourse_id_client_id و discourse_id_client_secret) قبل تفعيل هذا الإعداد."
       linkedin_oidc_credentials: "يتعيَّن عليك إعداد بيانات اعتماد LinkedIn OIDC ('linkedin_oidc_client_id' و'linkedin_oidc_client_secret') قبل تقعيل هذا الإعداد."
       search_tokenize_chinese_enabled: "يجب عليك إيقاف `email editable` قبل تفعيل هذا الإعداد."
       search_tokenize_japanese_enabled: "يجب عليك إيقاف 'search_tokenize_japanese' قبل تفعيل هذا الإعداد."
@@ -5134,18 +5133,12 @@ ar:
     nice_share:
       name: مشاركة لطيفة
       description: شارك منشورًا مع 25 زائرًا فريدًا
-      long_description: |
-        يتم منح هذه الشارة عند مشاركة رابط ينقر عليه 25 زائرًا خارجيًا. نشكرك على مشاركة المعلومات عن مناقشاتنا وهذا المجتمع.
     good_share:
       name: مشاركة جيدة
       description: نشرت منشورًا مع 300 زائر فريد
-      long_description: |
-        يتم منح هذه الشارة عند مشاركة رابط ينقر عليه 300 زائر خارجي. أحسنت! لقد عرضت مناقشة رائعة لمجموعة من الأشخاص الجُدد وساعدت هذا المنتدى على النمو.
     great_share:
       name: مشاركة رائعة
       description: نشرت منشورًا مع 1000 زائر فريد
-      long_description: |
-        يتم منح هذه الشارة عند مشاركة رابط ينقر عليه 1000 زائر خارجي. رائع! لقد روَّجت مناقشة ممتعة لجمهور ضخم وجديد وساعدت هذا المنتدى على النمو بشكلٍٍ كبير.
     first_like:
       name: أول مرة إعجاب
       description: سجَّلت إعجابك بمشاركة
@@ -5387,29 +5380,21 @@ ar:
   wizard:
     title: "إعداد Discourse"
     step:
-      introduction:
-        title: "نبذة عن موقعك"
-        description: "سيتم عرض هذه في صفحة تسجيل الدخول الخاصة بك وفي أي صفحات عامة. يمكنك دائمًا تغييرها لاحقًا."
+      setup:
+        title: "خطوات البدء"
         fields:
           title:
             label: "اسم المجتمع"
-            placeholder: "استراحة جين"
-          site_description:
-            label: "صِف مجتمعك في جملة واحدة"
-            placeholder: "مكان لجين وأصدقائها لمناقشة أشياء رائعة"
           default_locale:
             label: "اللغة"
-      privacy:
-        title: "وصول الأعضاء"
-        fields:
           login_required:
             label: "الرؤية"
             description: "هل مجتمعك عام أم خاص؟"
             choices:
               public:
-                label: "عامة"
+                label: "عام"
               private:
-                label: "خاصة"
+                label: "خاص"
           invite_only:
             label: "التسجيل"
             description: "كيف يمكن للأعضاء الانضمام إلى هذا المجتمع؟"
@@ -5425,82 +5410,6 @@ ar:
                 label: "لا، يمكن للأعضاء الجُدد الانضمام على الفور"
               "yes":
                 label: "نعم، يجب موافقة المشرفين على الأعضاء الجُدد"
-          chat_enabled:
-            placeholder: "تفعيل الدردشة"
-            extra_description: "تفاعل مع أعضائك في الوقت الفعلي"
-      ready:
-        title: "موقعك جاهز!"
-        description: "هذا كل شيء! لقد انتهيت من الخطوات الأساسية لإعداد مجتمعك. يمكنك البدء الآن وإلقاء نظرة، وكتابة موضوع ترحيبي، وإرسال الدعوات!<br><br>استمتع بوقتك!"
-      styling:
-        title: "الشكل والمظهر"
-        fields:
-          color_scheme:
-            label: "لوحة الألوان"
-          body_font:
-            label: "خط النص الأساسي"
-          site_font:
-            label: "الخط"
-          heading_font:
-            label: "خط العنوان"
-          styling_preview:
-            label: "معاينة"
-          homepage_style:
-            label: "نمط الصفحة الرئيسية"
-            choices:
-              latest:
-                label: "الحديثة"
-                description: "يعرض أحدث الموضوعات النشطة في جميع الفئات، ممّا يساعد الأعضاء على البقاء مُطَّلعين دائمًا على المناقشات التي يهتمون بها"
-              hot:
-                label: "ساخن"
-                description: "يُبرز الموضوعات الرائجة من خلال الجمع بين الموضوعات الرائجة مؤخرًا والرائجة بشكلٍ عام، ويستعرض ما يتحدث عنه الأعضاء في مجتمعك حاليًا"
-              categories_and_latest_topics:
-                label: "الفئات التي تتضمَّن آخر الموضوعات"
-                description: "يجمع الموضوعات النشطة مؤخرًا عبر جميع الفئات مع قائمة بالفئات ووصفها وإجمالي الموضوعات"
-              categories_boxes:
-                label: "مربعات الفئات"
-                description: "يعرض الفئات ووصفها في شبكة، وهو أمر مثالي ليتمكن الأعضاء من رؤية نظرة عامة على المجتمعات الفرعية لموقعك"
-      branding:
-        title: "شعار الموقع"
-        fields:
-          logo:
-            label: "الشعار الرئيسي"
-            description: "الحجم الموصى به: 600 × 200"
-          logo_small:
-            label: "شعار مربع"
-            description: "الحجم الموصى به: 512 × 512. يُستخدم أيضًا كرمزٍ مفضَّل (رمز الموقع في علامة التبويب) وفي أيقونة التطبيق على الشاشة الرئيسية للجوَّال."
-      corporate:
-        title: "مؤسستك"
-        description: "سيتم استخدام المعلومات التالية في صفحتَي \"شروط الخدمة\" و\"نبذة\". لا تتردد في التخطي إذا لم تكن هناك شركة."
-        fields:
-          company_name:
-            label: "اسم الشركة"
-            placeholder: "مؤسسة أكمي"
-          governing_law:
-            label: "القانون الحاكم"
-            placeholder: "قانون ولاية كاليفورنيا"
-          contact_url:
-            label: "صفحة ويب"
-            placeholder: "https://www.example.com/contact-us"
-          city_for_disputes:
-            label: "مدينة النزاعات"
-            placeholder: "سان فرانسيسكو، كاليفورنيا"
-          site_contact:
-            label: "رسائل آلية"
-            description: "سيتم إرسال جميع رسائل Discourse التلقائية الخاصة من هذا المستخدم، مثل التحذيرات بشأن البلاغات وإشعارات إكمال النسخ الاحتياطي."
-          contact_email:
-            label: "نقطة الاتصال"
-            placeholder: "example@user.com"
-            description: "عنوان البريد الإلكتروني لجهة الاتصال الرئيسية المسؤولة عن هذا الموقع. يتم استخدامه للإشعارات المهمة ويتم إدراجه أيضًا في صفحة <a href='%{base_path}/about' target='_blank'>نبذة عنك</a> للمسائل العاجلة."
-      invites:
-        title: "دعوة فريق العمل"
-        description: "أنت على وشك الانتهاء! لندعو بعض الأشخاص للمساعدة في <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>تغذية مناقشاتك</a> بموضوعات وردود شيقة لبدء مجتمعك."
-        disabled: "نظرًا لإيقاف عمليات تسجيل الدخول المحلية، لا يمكن إرسال الدعوات إلى أي شخص. يُرجى المتابعة إلى الخطوة التالية."
-      finished:
-        title: "تم إعداد Discourse!"
-        description: |
-          <p>إذا كنت ترغب في أي وقت في تغيير هذه الإعدادات، <b>فأعِد تشغيل هذا المعالج في أي وقت</b>، أو انتقل إلى <a href='%{base_path}/admin' target='_blank'>قسم المسؤول</a>؛ يمكنك العثور عليه بجوار أيقونة مفتاح الربط في قائمة الموقع.</p>
-          <p>من السهل تخصيص Discourse بشكلٍٍ أكبر باستخدام نظام السمات القوي لدينا. للحصول على أمثلة، راجع <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">أهم السمات والمكوِّنات</a> في <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
-          <p>استمتع، وحظًا سعيدًا في <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>بناء مجتمعك الجديد!</a></p>
   search_logs:
     graph_title: "عدد مرات البحث"
   onebox:

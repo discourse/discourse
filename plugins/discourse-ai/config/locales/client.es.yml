@@ -552,7 +552,6 @@ es:
         back: "Atrás"
         confirm_delete: '¿Seguro que quieres eliminar este modelo?'
         delete: Eliminar
-        seeded_warning: "Este modelo está preconfigurado en tu web y no se puede editar."
         quotas:
           title: "Cuotas de uso"
           add_title: "Crear nueva cuota"
@@ -587,7 +586,7 @@ es:
           other: "Este modelo lo utilizan actualmente las siguientes %{settings}. Si está mal configurado, las características no funcionarán como se espera."
         model_description:
           none: "Ajustes generales que funcionan para la mayoría de los modelos lingüísticos"
-          anthropic-claude-opus-4-1: "El modelo antrópico más inteligente"
+          anthropic-claude-opus-4-5: "El modelo antrópico más inteligente"
           anthropic-claude-sonnet-4-5: "Equilibrio óptimo entre velocidad y coste"
           anthropic-claude-haiku-4-5: "Rápido y rentable"
           google-gemini-2-5-pro: "Modelo multimodal de tamaño grande capaz de realizar una amplia gama de tareas"
@@ -705,6 +704,7 @@ es:
           title: "Miniaturas sugeridas"
           select: "Seleccionar"
           selected: "Seleccionado"
+          try_again: "Intentar de nuevo"
         image_caption:
           button_label: "Subtítulo con IA"
           generating: "Generando subtítulo..."

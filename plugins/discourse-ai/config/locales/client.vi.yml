@@ -149,6 +149,7 @@ vi:
           cancel: "Hủy"
         thumbnail_suggestions:
           select: "Chọn"
+          try_again: "Thử lại"
         image_caption:
           save_caption: "Lưu lại"
       embeddings:

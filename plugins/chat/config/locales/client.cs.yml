@@ -155,7 +155,7 @@ cs:
           description: "Nový řádek pomocí Enter"
       enable: "Povolit chat"
       flag: "Nahlášení"
-      emoji: "Vložit emoji"
+      emoji: "Vložit emotikon"
       flagged: "Tato zpráva byla označena ke kontrole"
       invalid_access: "Nemáte přístup k zobrazení tohoto kanálu chatu"
       invitation_notification: "<span>%{username}</span> <span>vás pozval/a, abyste se připojili ke kanálu chatu</span>"
@@ -279,7 +279,7 @@ cs:
         read_only: "Kanál je nastaven pouze pro čtení, nové zprávy momentálně nelze odeslat."
       placeholder_silenced: "V tuto chvíli nemůžete odesílat zprávy."
       remove_upload: "Odstranit soubor"
-      react: "Reagovat pomocí emoji"
+      react: "Reagovat pomocí emotikonu"
       reply: "Odpověď"
       edit: "Upravit"
       copy_link: "Kopírovat odkaz"
@@ -394,6 +394,8 @@ cs:
         slug_description: Zkratka kanálu se používá v URL adrese místo názvu kanálu
         name: Název kanálu
         slug: URL kanálu (volitelná)
+        emoji: Emotikon kanálu (volitelné)
+        reset_emoji: Obnovit emotikon
       channel_edit_description_modal:
         title: Úprava popisu
         input_placeholder: Přidejte popis
@@ -488,6 +490,9 @@ cs:
         types:
           category: "Kategorie"
           topic: "Témata"
+        emoji:
+          label: "Emotikon kanálu (volitelné)"
+          reset: "Obnovit emotikon"
       reviewable:
         type: "Zpráva chatu"
         message_in_channel: "Kanál"
@@ -597,7 +602,7 @@ cs:
         reset_emoji: "Resetovat emotikon"
         save: "Uložit"
         edit: "Upravit"
-        select_emoji: "Vybrat Emoji"
+        select_emoji: "Vybrat emotikon"
         system: "systémové soukromé zprávy"
         title: "Příchozí webhooky"
         header_description: "Příchozí webhooky mohou být použity externími systémy k odesílání zpráv do určeného chatovacího kanálu pod uživatelem bota"

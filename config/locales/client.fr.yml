@@ -292,7 +292,6 @@ fr:
     software_update_prompt:
       message: "Nous avons mis à jour ce site, <span>veuillez l'actualiser</span> pour que tout fonctionne correctement."
       dismiss: "Rejeter"
-    bootstrap_mode: "Pour commencer"
     back_button: "Retour"
     welcome_banner:
       header:
@@ -701,7 +700,7 @@ fr:
       title: "À examiner"
       topic: "Sujet :"
       filtered_topic: "Vous avez restreint le contenu à examiner à un seul sujet."
-      filtered_user: "Utilisateur"
+      filtered_user: "Utilisateur signalé"
       filtered_reviewed_by: "Examiné par"
       show_all_topics: "afficher tous les sujets"
       deleted_post: "(message supprimé)"
@@ -839,7 +838,6 @@ fr:
           noun: "message"
       flagged_as: "Signalé comme"
       user_label: "Utilisateur"
-      assigned_to: "Attribué à"
       moderator_actions: "Actions du modérateur"
       timeline_and_notes: "Chronologie et notes"
       timeline:
@@ -880,7 +878,6 @@ fr:
           one: "%{count} marquage confirmé"
           other: "%{count} marquages confirmés"
         activities:
-          new_account: "nouveau compte"
           trust_level: "niveau de confiance : %{trustLevelName}"
           posts:
             one: "%{count} publication"
@@ -888,7 +885,6 @@ fr:
         solution_marked: "Solution marquée"
         topic_has_solution: "Ce sujet a une solution"
         visibility: "Visibilité"
-        topic_unlisted: "Ce sujet n'est pas répertorié. Accessible uniquement via un lien direct et non public."
       help:
         moderation_guide: "Guide de modération de Discourse"
         flag_priorities: "Gestion de la réputation des utilisateurs et des priorités des signalements"
@@ -1311,7 +1307,6 @@ fr:
         one: "Catégories (%{count} autres)…"
         other: "Catégories (%{count} autres)…"
     ip_lookup:
-      title: Localisation de l'adresse IP
       hostname: Nom de l'hôte
       location: Localisation
       location_not_found: (inconnu)
@@ -5237,6 +5232,9 @@ fr:
         enabled: "Activé"
         select_groups: "Sélectionnez des groupes…"
         preview: "Aperçu"
+        enabled_for_options:
+          everyone: "Tout le monde"
+          staff: "Responsables seulement"
         impact_roles:
           admins: "Administrateurs "
           moderators: "Modérateurs"
@@ -7968,75 +7966,4 @@ fr:
           replace: "Remplacer"
   wizard_js:
     wizard:
-      jump_in: "Commençons maintenant !"
-      finish: "Quitter la configuration"
-      back: "Retour"
-      next: "Suivant"
-      configure_more: "Configurer plus…"
-      step-text: "Étape"
-      step: "%{current} sur %{total}"
-      upload: "Téléverser un fichier"
-      uploading: "Téléversement…"
-      upload_error: "Nous sommes désolés, une erreur est survenue lors de l'envoi de ce fichier. Veuillez réessayer."
-      staff_count:
-        one: "Votre communauté a %{count} responsable (vous)."
-        other: "Votre communauté a %{count} responsables, vous y compris."
-      invites:
-        add_user: "ajouter"
-        none_added: "Vous n'avez invité aucun responsable. Voulez-vous vraiment continuer ?"
-        roles:
-          admin: "Administrateur"
-          moderator: "Modérateur"
-          regular: "Utilisateur normal"
-      homepage_choices:
-        custom:
-          label: "Personnalisé"
-          description: "Afficher une page d'accueil axée sur %{type} avec les utilisateurs redirigés sur %{landingPage}"
-        style_type:
-          categories: "catégorie"
-          topics: "sujet"
-      top_menu_items:
-        new: "Nouveaux"
-        unread: "Non lus"
-        top: "Top"
-        latest: "Récents"
-        hot: "Populaires"
-        categories: "Catégories"
-        unseen: "Non lus"
-        read: "Lus"
-        bookmarks: "Signets"
-      previews:
-        topic_title: "Quels livres lisez-vous ?"
-        share_button: "Partager"
-        reply_button: "Répondre"
-        topic_preview: "Aperçu du sujet"
-        homepage_preview: "Aperçu de la page d'accueil"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "toutes les catégories"
-        topic_titles:
-          what_books: "Quels livres lisez-vous ?"
-          what_movies: "Quels films avez-vous vus récemment ?"
-          random_fact: "Fait aléatoire du jour"
-          tv_show: "Recommander une émission de télévision"
-          what_hobbies: "Quels sont vos loisirs ?"
-          what_music: "Qu'est-ce que vous écoutez en ce moment ?"
-          funniest_thing: "La chose la plus drôle que vous ayez vue aujourd'hui"
-          share_art: "Partagez votre art !"
-        topic_ops:
-          what_books: |
-            Nous aimons tous lire, profitons de ce sujet pour partager nos lectures actuelles ou récentes. Je suis fan de fantasy et je relis Le Seigneur des Anneaux pour la 100e fois.
-            Et vous ?
-        category_descriptions:
-          icebreakers: "Apprenez à connaître les autres membres de votre communauté grâce à des questions amusantes."
-          news: "Discutez des dernières actualités et événements."
-          site_feedback: "Partagez vos réflexions sur la communauté et suggérez des améliorations."
-        category_names:
-          icebreakers: "Brise-glaces"
-          news: "Actualités"
-          site_feedback: "Commentaires sur le site"
-        table_headers:
-          topic: "Sujet"
-          replies: "Réponses"
-          views: "Vues"
-          activity: "Activité"
+      jump_in: "Allons-y !"

@@ -205,7 +205,3 @@ en_GB:
       reseed:
         modal:
           categories: "Categories"
-  wizard_js:
-    wizard:
-      top_menu_items:
-        categories: "Categories"

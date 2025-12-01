@@ -190,7 +190,6 @@ hy:
     software_update_prompt:
       message: "Մենք թարմացրել ենք այս կայքը, <span>խնդրում ենք թարմացնել էջը</span>, որպեսզի ամեն ինչ սահուն աշխատի:"
       dismiss: "Չեղարկել"
-    bootstrap_mode: "Ինչպես սկսել"
     back_button: "Ետ"
     welcome_banner:
       header:
@@ -565,7 +564,6 @@ hy:
       title: "Վերանայում"
       topic: "Թեմա՝"
       filtered_topic: "Դուք ֆիլտրել եք դիտման համար՝ միայն մեկ թեմայի բովանդակությունը "
-      filtered_user: "Օգտատեր"
       filtered_reviewed_by: "Վերանայվել է"
       show_all_topics: "ցուցադրել բոլոր թեմաները"
       deleted_post: "(գրառումը ջնջված է)"
@@ -1113,7 +1111,6 @@ hy:
         one: "Կատեգորիաներ (ևս %{count})…"
         other: "Կատեգորիաներ (ևս %{count})…"
     ip_lookup:
-      title: IP Հասցեի Որոնում
       hostname: Հոսթի անունը
       location: Վայրը
       location_not_found: (անհայտ)
@@ -3829,6 +3826,8 @@ hy:
       upcoming_changes:
         name: "Անուն"
         preview: "Նախադիտում"
+        enabled_for_options:
+          everyone: "Բոլորը"
         impact_roles:
           moderators: "Մոդերատորներ"
           staff: "Անձնակազմ"
@@ -5298,50 +5297,3 @@ hy:
           categories: "Կատեգորիաներ"
           topics: "Թեմաներ"
           replace: "Փոխարինել"
-  wizard_js:
-    wizard:
-      back: "Ետ"
-      next: "Հաջորդը"
-      step-text: "Քայլը"
-      step: "%{current} %{total}-ից"
-      uploading: "Վերբեռնվում է…"
-      upload_error: "Ներողություն, այդ ֆայլը վերբեռնելիս տեղի է ունեցել սխալ: Խնդրում ենք կրկին փորձել:"
-      staff_count:
-        one: "Ձեր համայնքը ունի անձնակազմի %{count} անդամ՝ Դուք:"
-        other: "Ձեր համայնքն ունի անձնակազմի %{count} անդամ՝ Դուք ներառյալ:"
-      invites:
-        add_user: "ավելացնել"
-        none_added: "Դուք չեք հրավիրել անձնակազմի որևէ անդամ: Դուք համոզվա՞ծ եք, որ ցանկանում եք շարունակել:"
-        roles:
-          admin: "Ադմին"
-          moderator: "Մոդերատոր"
-          regular: "Սովորական Օգտատեր"
-      homepage_choices:
-        custom:
-          label: "Մասնավոր"
-        style_type:
-          categories: "կատեգորիա"
-          topics: "թեմա"
-      top_menu_items:
-        new: "Նոր"
-        unread: "Չկարդացած"
-        top: "Ամենահայտնի"
-        latest: "Վերջինը"
-        hot: "Թոփ"
-        categories: "Կատեգորիաներ"
-        unseen: "Չդիտված"
-        read: "Կարդացել է"
-        bookmarks: "Էջանշաններ"
-      previews:
-        share_button: "Կիսվել"
-        reply_button: "Պատասխանել"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "բոլոր կատեգորիաները"
-        category_names:
-          site_feedback: "Կայքի Արձագանքներ"
-        table_headers:
-          topic: "Թեմա"
-          replies: "Պատասխաններ"
-          views: "Դիտում"
-          activity: "Ակտիվության"

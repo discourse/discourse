@@ -30,7 +30,6 @@ ur:
       assigned: "تفویض کردہ"
       group_everyone: "ہر کوئی"
       assigned_to: "کو تفویض"
-      assigned_to_w_ellipsis: "کو تفویض..."
       unassign:
         title: "غیر اسائین کریں"
         title_w_ellipsis: "غیر تفویض کریں..."

@@ -291,7 +291,6 @@ pt_BR:
     software_update_prompt:
       message: "Este site foi atualizado, <span>atualize a página</span> para manter tudo funcionando."
       dismiss: "Descartar"
-    bootstrap_mode: "Primeiros passos"
     back_button: "Voltar"
     welcome_banner:
       header:
@@ -697,7 +696,7 @@ pt_BR:
       title: "Revisar"
       topic: "Tópico:"
       filtered_topic: "Você filtrou para conteúdo revisável em um único tópico."
-      filtered_user: "Usuário(a)"
+      filtered_user: "Usuário(a) sinalizado(a)"
       filtered_reviewed_by: "Revisado por"
       show_all_topics: "exibir todos os tópicos"
       deleted_post: "(postagem excluída)"
@@ -835,7 +834,6 @@ pt_BR:
           noun: "postagem"
       flagged_as: "Sinalizado como"
       user_label: "Usuário(a)"
-      assigned_to: "Atribuído(a) a"
       moderator_actions: "Ações da moderação"
       timeline_and_notes: "Cronograma e observações"
       timeline:
@@ -873,7 +871,6 @@ pt_BR:
           one: "Marcado por %{count} usuário(a)"
           other: "Marcado por %{count} usuários(as)"
         activities:
-          new_account: "nova conta"
           trust_level: "nível de confiança: %{trustLevelName}"
           posts:
             one: "%{count} postagem"
@@ -881,7 +878,6 @@ pt_BR:
         solution_marked: "Solução marcada"
         topic_has_solution: "Este tópico tem uma solução"
         visibility: "Visibilidade"
-        topic_unlisted: "Este tópico não está listado. Pode ser acessado apenas por meio do link direto, não público."
       help:
         moderation_guide: "Guia de moderação do Discourse"
         flag_priorities: "Gerenciar a reputação do(a) usuário(a) e sinalizar prioridades"
@@ -1304,7 +1300,6 @@ pt_BR:
         one: "Categorias (mais %{count})…"
         other: "Categorias (mais %{count})…"
     ip_lookup:
-      title: Pesquisa de endereço IP
       hostname: Nome do host
       location: Local
       location_not_found: (desconhecido)
@@ -5213,6 +5208,9 @@ pt_BR:
         enabled: "Ativados(as)"
         select_groups: "Selecionar grupos…"
         preview: "Pré-visualizar"
+        enabled_for_options:
+          everyone: "Todos(as)"
+          staff: "Somente equipe"
         impact_roles:
           moderators: "Moderadores(as)"
           staff: "Equipe"
@@ -7943,74 +7941,4 @@ pt_BR:
           replace: "Substituir"
   wizard_js:
     wizard:
-      jump_in: "Pular dentro!"
-      finish: "Sair da configuração"
-      back: "Voltar"
-      next: "Próximo"
-      configure_more: "Configurar mais…"
-      step-text: "Intervalo"
-      step: "%{current} de %{total}"
-      upload: "Carregar arquivo"
-      uploading: "Enviando…"
-      upload_error: "Desculpe, houve um erro ao enviar o arquivo. Tente novamente."
-      staff_count:
-        one: "Sua comunidade tem %{count} pessoa (você). "
-        other: "Sua comunidade tem %{count} pessoas, incluindo você."
-      invites:
-        add_user: "adicionar"
-        none_added: "Você ainda não convidou ninguém para a equipe. Tem certeza que deseja continuar?"
-        roles:
-          admin: "Administração"
-          moderator: "Moderador(a)"
-          regular: "Usuário regular"
-      homepage_choices:
-        custom:
-          label: "Personalizados(as)"
-          description: "Exibir uma página inicial focada em %{type} com usuários(as) acessando %{landingPage}"
-        style_type:
-          categories: "categoria"
-          topics: "tópico"
-      top_menu_items:
-        new: "Novo"
-        unread: "Não lidos(as)"
-        top: "Melhores"
-        latest: "Últimos"
-        hot: "Em alta"
-        categories: "Categorias"
-        unseen: "Não vistos"
-        read: "Lidos"
-        bookmarks: "Favoritos"
-      previews:
-        topic_title: "Quais livros você está lendo?"
-        share_button: "Compartilhar"
-        reply_button: "Responder"
-        topic_preview: "Pré-visualização do tópico"
-        homepage_preview: "Pré-visualização da página inicial"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "todas as categorias"
-        topic_titles:
-          what_books: "Quais livros você está lendo?"
-          what_movies: "Quais filmes você viu recentemente?"
-          random_fact: "Fato aleatório do dia"
-          tv_show: "Recomende um programa de TV"
-          what_hobbies: "Quais são seus passatempos"
-          what_music: "O que você está ouvindo agora?"
-          funniest_thing: "A coisa mais engraçada que você viu hoje"
-          share_art: "Compartilhe sua arte!"
-        topic_ops:
-          what_books: |
-            Todos nós amamos ler. Vamos usar este tópico para compartilhar nossas leituras atuais e recentes. Sou fã de fantasia e estou lendo o Senhor dos Anéis de novo, pela centésima vez. E você?
-        category_descriptions:
-          icebreakers: "Conheça os outros membros da comunidade com perguntas divertidas."
-          news: "Discuta as novidades e os eventos"
-          site_feedback: "Diga o que você achou da comunidade e sugira melhorias."
-        category_names:
-          icebreakers: "Quebra-gelos"
-          news: "Novidades"
-          site_feedback: "Feedback do site"
-        table_headers:
-          topic: "Tópico"
-          replies: "Respostas"
-          views: "Visualizações"
-          activity: "Atividade"
+      jump_in: "Vamos lá!"

@@ -293,7 +293,6 @@ sw:
         title: "Mpangilio"
       moderation_history: "Historia ya Usimamizi"
       topic: "Mada:"
-      filtered_user: "Mtumiaji"
       user:
         username: "Jina la mtumiaji"
         email: "Barua Pepe"
@@ -603,7 +602,6 @@ sw:
         week: "wiki"
         month: "mwezi"
     ip_lookup:
-      title: Utafutaji wa Anwani ya Mtandao
       hostname: Hostname
       location: Sehemu
       location_not_found: (haijulikani)
@@ -2403,6 +2401,8 @@ sw:
         name: "Jina"
         enabled: "Imeruhusiwa"
         preview: "Kihakiki"
+        enabled_for_options:
+          everyone: "Kila Mtu"
         impact_roles:
           admins: "Viongozi"
           moderators: "Wasimamizi"
@@ -3543,44 +3543,3 @@ sw:
         modal:
           categories: "Kategoria"
           topics: "Mada"
-  wizard_js:
-    wizard:
-      back: "Iliyopita"
-      next: "Ijayo"
-      step-text: "Hatua"
-      step: "%{current} chini ya %{total}"
-      upload_error: "Samahani, hitilafu imetokea wakati wa kupakia faili hilo. Tafadhali jaribu tena."
-      invites:
-        add_user: "ongeza"
-        none_added: "Haujakaribisha Msaidizi yoyote. Unauhakika ungependa kuendelea?"
-        roles:
-          admin: "Msimamizi"
-          moderator: "Msimamizi"
-          regular: "Mtumiaji wa Kawaida"
-      homepage_choices:
-        custom:
-          label: "Binafsi"
-        style_type:
-          categories: "kategoria"
-          topics: "mada"
-      top_menu_items:
-        new: "Mpya"
-        unread: "Haijasomwa"
-        top: "Juu"
-        latest: "Hivi Karibuni"
-        categories: "Kategoria"
-        read: "Soma"
-        bookmarks: "Mialamisho"
-      previews:
-        share_button: "Shirikisha"
-        reply_button: "Jibu"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "kategoria zote"
-        category_names:
-          site_feedback: "Majibu ya Mtandao"
-        table_headers:
-          topic: "Mada"
-          replies: "Majibu"
-          views: "Imeonwa"
-          activity: "Kitendo"

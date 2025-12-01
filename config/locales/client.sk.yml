@@ -248,7 +248,6 @@ sk:
     software_update_prompt:
       message: "Aktualizovali sme túto stránku, <span>prosím obnovte</span> , aby všetko fungovalo bez problémov."
       dismiss: "Zahodiť"
-    bootstrap_mode: "Začíname"
     back_button: "Späť"
     welcome_banner:
       header:
@@ -713,7 +712,7 @@ sk:
       title: "Preskúmanie"
       topic: "Téma:"
       filtered_topic: "Vyfiltrovali ste obsah, ktorý možno skontrolovať v jednej téme."
-      filtered_user: "Používateľ"
+      filtered_user: "Označený používateľ"
       filtered_reviewed_by: "Hodnotené"
       show_all_topics: "zobraziť všetky témy"
       deleted_post: "(príspevok zmazaný)"
@@ -863,7 +862,6 @@ sk:
           noun: "príspevok"
       flagged_as: "Označené ako"
       user_label: "Používateľ"
-      assigned_to: "Priradené k"
       moderator_actions: "Akcie moderátora"
       timeline_and_notes: "Časová os a poznámky"
       timeline:
@@ -903,7 +901,6 @@ sk:
           many: "Nahlásené %{count} unikátnymi používateľmi"
           other: "Nahlásené %{count} unikátnymi používateľmi"
         activities:
-          new_account: "nový účet"
           trust_level: "úroveň dôvery: %{trustLevelName}"
           posts:
             one: "%{count} príspevok"
@@ -913,7 +910,6 @@ sk:
         solution_marked: "Riešenie označené"
         topic_has_solution: "Táto téma má riešenie"
         visibility: "Viditeľnosť"
-        topic_unlisted: "Táto téma nie je uvedená v zozname. Prístupná len cez priame prepojenie - nie je verejná."
       help:
         moderation_guide: "Sprievodca moderovaním Discourse"
         flag_priorities: "Správa reputácie používateľa a priorít označovania"
@@ -1368,7 +1364,6 @@ sk:
         many: "Kategórie (%{count} ďalších)…"
         other: "Kategórie (%{count} ďalších)…"
     ip_lookup:
-      title: Vyhľadávanie podľa IP adresy
       hostname: Hostname
       location: Lokácia
       location_not_found: (neznáma)
@@ -5621,6 +5616,9 @@ sk:
         enabled: "Povolené"
         select_groups: "Vyberte skupiny…"
         preview: "Náhľad"
+        enabled_for_options:
+          everyone: "Každý"
+          staff: "Len pre zamestnancov"
         impact_roles:
           admins: "Administrátori"
           moderators: "Moderátori"
@@ -8430,81 +8428,3 @@ sk:
           categories: "Kategórie"
           topics: "Témy"
           replace: "Nahradiť"
-  wizard_js:
-    wizard:
-      jump_in: "Naskočte!"
-      finish: "Ukončenie nastavenia"
-      back: "Späť"
-      next: "Ďalej"
-      configure_more: "Konfigurácia ďalších…"
-      step-text: "Krok"
-      step: "%{current} z %{total}"
-      upload: "Nahrať súbor"
-      uploading: "Nahrávanie..."
-      upload_error: "Ľutujeme, pri nahrávaní súboru nastala chyba. Prosím, skúste znovu."
-      staff_count:
-        one: "Tvoja komunita má %{count} personál (teba)."
-        few: "Tvoja komunita má %{count} personál, vrátane teba."
-        many: "Tvoja komunita má %{count} personál, vrátane teba."
-        other: "Tvoja komunita má %{count} personál, vrátane teba."
-      invites:
-        add_user: "pridať"
-        none_added: "Neprizvali ste žiadnych členov. Určite chcete pokračovať?"
-        roles:
-          admin: "Administrátor"
-          moderator: "Moderátor"
-          regular: "Bežný používateľ"
-      homepage_choices:
-        custom:
-          label: "Vlastné"
-          description: "Zobrazenie domovskej stránky %{type}so zameraním na používateľov, ktorí pristávajú na stránke %{landingPage}."
-        style_type:
-          categories: "kategória"
-          topics: "témy"
-      top_menu_items:
-        new: "Nový"
-        unread: "Neprečítané"
-        top: "Najlepšie"
-        latest: "Najnovšie"
-        hot: "Horúce"
-        categories: "Kategórie"
-        unseen: "Nevidené"
-        read: "Prečítaná"
-        bookmarks: "Záložky"
-      previews:
-        topic_title: "Aké knihy čítate?"
-        share_button: "Zdieľať"
-        reply_button: "Odpoveď"
-        topic_preview: "Náhľad témy"
-        homepage_preview: "Náhľad na domovskú stránku"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "všetky kategórie"
-        topic_titles:
-          what_books: "Aké knihy čítate?"
-          what_movies: "Aké filmy ste v poslednej dobe videli?"
-          random_fact: "Náhodný fakt dňa"
-          tv_show: "Odporučiť televízny program"
-          what_hobbies: "Aké sú vaše koníčky?"
-          what_music: "Čo práve počúvate?"
-          funniest_thing: "Najvtipnejšia vec, ktorú ste dnes videli"
-          share_art: "Podeľte sa o svoje umenie!"
-        topic_ops:
-          what_books: |
-            Všetci radi čítame, využime túto tému a podeľme sa o svoje
-            aktuálne alebo nedávne čítanie. Som fanúšik fantasy a na
-            som si po stýkrát prečítala Pána prsteňov.
-            A čo vy?
-        category_descriptions:
-          icebreakers: "Zoznámte sa s ostatnými členmi komunity pomocou zábavných otázok."
-          news: "Diskutujte o najnovších správach a udalostiach."
-          site_feedback: "Podeľte sa o svoje názory na komunitu a navrhnite vylepšenia."
-        category_names:
-          icebreakers: "Nadviazanie rozhovoru"
-          news: "Novinky"
-          site_feedback: "Podnety pre tvorcov stránky"
-        table_headers:
-          topic: "Témy"
-          replies: "Odpovede"
-          views: "Zobrazenia"
-          activity: "Aktivity"

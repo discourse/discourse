@@ -41,7 +41,6 @@ fr:
       assigned_topic_to: "A attribué le message à <a href='%{path}'>%{username}</a>"
       assign_post_to: "A attribué %{post_number} à %{username}"
       assign_post_to_multiple: "#%{post_number} à %{username}"
-      assigned_to_w_ellipsis: "Attribué à…"
       unassign:
         title: "Annuler l'attribution"
         title_w_ellipsis: "Annuler l'attribution…"

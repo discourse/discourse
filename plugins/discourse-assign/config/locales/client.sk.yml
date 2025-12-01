@@ -41,7 +41,6 @@ sk:
       assigned_topic_to: "Priradená téma <a href='%{path}'>%{username}</a>"
       assign_post_to: "Priradené #%{post_number} k %{username}"
       assign_post_to_multiple: "#%{post_number} na %{username}"
-      assigned_to_w_ellipsis: "Priradené k..."
       unassign:
         title: "Nepriradené"
         title_w_ellipsis: "Nepriradené..."

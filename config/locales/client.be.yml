@@ -313,7 +313,6 @@ be:
     software_update_prompt:
       message: "Мы абнавілі гэты сайт, <span>абнавіце старонку</span> , каб усё працавала без праблем."
       dismiss: "Адхіліць"
-    bootstrap_mode: "Пачатак працы"
     back_button: "Назад"
     welcome_banner:
       header:
@@ -644,7 +643,6 @@ be:
       moderation_history: "Гісторыя мадэрацыі"
       title: "Разгляд"
       topic: "Тэма:"
-      filtered_user: "Карыстальнік"
       show_all_topics: "паказаць усе тэмы"
       user:
         username: "Імя карыстальніка"
@@ -888,7 +886,6 @@ be:
         week: "тыдзень"
         month: "месяц"
     ip_lookup:
-      title: Пошук IP-адраса
       hostname: Імя хоста
       location: Месцазнаходжанне
       location_not_found: (невядома)
@@ -1984,6 +1981,8 @@ be:
       upcoming_changes:
         name: "Імя"
         preview: "Папярэдні прагляд"
+        enabled_for_options:
+          everyone: "усе"
         impact_roles:
           admins: "адміністратары"
           moderators: "Мадэратары"
@@ -2848,39 +2847,3 @@ be:
         modal:
           categories: "Катэгорыі"
           topics: "тэмы"
-  wizard_js:
-    wizard:
-      back: "Назад"
-      next: "Далей"
-      upload_error: "Выбачайце, пры загрузцы гэтага файла адбылася памылка. Калі ласка, паспрабуйце яшчэ раз."
-      invites:
-        add_user: "дадаць"
-        roles:
-          admin: "Адміністратар"
-          moderator: "Мадэратар"
-          regular: "звычайны карыстальнік"
-      homepage_choices:
-        style_type:
-          categories: "катэгорыя"
-          topics: "тэма"
-      top_menu_items:
-        new: "Новыя"
-        unread: "Непрачытаныя"
-        top: "Топ тэмаў"
-        latest: "апошняя"
-        categories: "катэгорыі"
-        read: "прачытаныя"
-        bookmarks: "закладкі"
-      previews:
-        share_button: "Падзяліцца"
-        reply_button: "Адказаць"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "усе катэгорыі"
-        category_names:
-          site_feedback: "зваротная сувязь"
-        table_headers:
-          topic: "тэма"
-          replies: "Адказы"
-          views: "прагляды"
-          activity: "актыўнасць"

@@ -28,6 +28,7 @@ zh_CN:
       solution: "解决方案"
       solution_summary:
         other: "解决方案"
+      accepted_answer_solver_info: "由 %{user} 在 %{post} 中解决"
       accepted_answer_post_number: "帖子 %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:

@@ -164,7 +164,6 @@ ko:
     software_update_prompt:
       message: "사이트가 업데이트되었습니다. 원활한 작동을 위해 <span>새로고침해 주세요</span>."
       dismiss: "무시"
-    bootstrap_mode: "시작하기"
     back_button: "뒤로"
     welcome_banner:
       header:
@@ -499,7 +498,6 @@ ko:
       title: "검토"
       topic: "주제:"
       filtered_topic: "한 주제에서 검토 가능 콘텐츠로 필터링했습니다."
-      filtered_user: "사용자"
       filtered_reviewed_by: "검토자"
       show_all_topics: "모든 주제 보기"
       deleted_post: "(게시물 삭제됨)"
@@ -1001,7 +999,6 @@ ko:
       topic_stat_sentence_month:
         other: "지난달 %{count}개의 새 주제가 있습니다."
     ip_lookup:
-      title: IP 주소 조회
       hostname: 호스트 이름
       location: 위치
       location_not_found: (알 수 없음)
@@ -3731,6 +3728,9 @@ ko:
         name: "그룹명"
         enabled: "활성화"
         preview: "미리 보기"
+        enabled_for_options:
+          everyone: "모두"
+          staff: "직원 만"
         impact_roles:
           admins: "관리자"
           moderators: "관리자"
@@ -5379,51 +5379,3 @@ ko:
           categories: "카테고리"
           topics: "글"
           replace: "대체"
-  wizard_js:
-    wizard:
-      jump_in: "이동!"
-      finish: "종료"
-      back: "뒤로 가기"
-      next: "다음"
-      step-text: "단계"
-      step: "%{current} / %{total}"
-      upload_error: "파일을 업로드하는 중에 오류가 발생했습니다. 다시 시도하세요."
-      staff_count:
-        other: "커뮤니티에 나를 포함한 %{count}명의 운영진이 있습니다."
-      invites:
-        add_user: "추가"
-        none_added: "운영진에게 초대되지 않았습니다. 계속할까요?"
-        roles:
-          admin: "관리자"
-          moderator: "운영자"
-          regular: "정회원"
-      homepage_choices:
-        custom:
-          label: "사용자 정의"
-        style_type:
-          categories: "카테고리"
-          topics: "글"
-      top_menu_items:
-        new: "신규"
-        unread: "읽지 않음"
-        top: "인기글"
-        latest: "최신"
-        categories: "카테고리"
-        unseen: "읽지 않음"
-        read: "읽음"
-        bookmarks: "북마크"
-      previews:
-        share_button: "공유"
-        reply_button: "댓글 달기"
-        topic_preview: "주제 미리보기"
-        homepage_preview: "홈페이지 미리보기"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "모든 카테고리"
-        category_names:
-          site_feedback: "사이트 피드백"
-        table_headers:
-          topic: "글"
-          replies: "댓글"
-          views: "조회"
-          activity: "활동"

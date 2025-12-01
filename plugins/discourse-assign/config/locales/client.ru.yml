@@ -41,7 +41,6 @@ ru:
       assigned_topic_to: "Назначил(а) тему пользователю <a href='%{path}'>%{username}</a>"
       assign_post_to: "Назначил(а) ответственным %{username} в сообщение #%{post_number}"
       assign_post_to_multiple: "#%{post_number} для пользователя %{username}"
-      assigned_to_w_ellipsis: "Назначено..."
       unassign:
         title: "Снять ответственного"
         title_w_ellipsis: "Отменить назначение..."

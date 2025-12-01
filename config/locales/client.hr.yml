@@ -319,7 +319,6 @@ hr:
     software_update_prompt:
       message: "Ažurirali smo ovu stranicu, <span>molimo osvježite</span> kako bi sve nesmetano funkcioniralo."
       dismiss: "Odbaciti"
-    bootstrap_mode: "Početak rada"
     back_button: "Natrag"
     welcome_banner:
       header:
@@ -759,7 +758,7 @@ hr:
       title: "Osvrt"
       topic: "Tema:"
       filtered_topic: "Filtrirali ste sadržaj na koji se mogu dodati osvrti u jednoj temi."
-      filtered_user: "Korisnik"
+      filtered_user: "Označeni korisnik"
       filtered_reviewed_by: "Pregledao"
       show_all_topics: "prikaži sve teme"
       deleted_post: "(post izbrisan)"
@@ -903,7 +902,6 @@ hr:
           noun: "Objava"
       flagged_as: "Označeno kao"
       user_label: "Korisnik"
-      assigned_to: "Dodijeljeno"
       moderator_actions: "Radnje moderatora"
       timeline_and_notes: "Vremenska linija i bilješke"
       timeline:
@@ -942,7 +940,6 @@ hr:
           few: "Označila %{count} jedinstvena korisnika"
           other: "Označilo %{count} jedinstvenih korisnika"
         activities:
-          new_account: "novi račun"
           trust_level: "razina povjerenja: %{trustLevelName}"
           posts:
             one: "%{count} objava"
@@ -951,7 +948,6 @@ hr:
         solution_marked: "Rješenje označeno"
         topic_has_solution: "Ova tema ima rješenje"
         visibility: "Vidljivost"
-        topic_unlisted: "Ova tema nije na popisu. Dostupna je samo putem izravne poveznice — nije javna."
       help:
         moderation_guide: "Discourse vodič za moderiranje"
         flag_priorities: "Upravljanje reputacijom korisnika i prioritetima označavanja"
@@ -1389,7 +1385,6 @@ hr:
         few: "Kategorije (još %{count})…"
         other: "Kategorije (još %{count})…"
     ip_lookup:
-      title: Pretraga po IP adresi
       hostname: Ime računala
       location: Lokacija
       location_not_found: (nepoznato)
@@ -5489,6 +5484,9 @@ hr:
         enabled: "Omogućeno"
         select_groups: "Odaberite grupe"
         preview: "Pregled"
+        enabled_for_options:
+          everyone: "Svi"
+          staff: "Samo osoblje"
         impact_roles:
           admins: "Admini"
           moderators: "Moderatori"
@@ -5613,6 +5611,7 @@ hr:
             title: "Primijenite nove zadane postavke teksta?"
             modal_yes: "Da"
         welcome_banner:
+          header_description: "Konfigurirajte banner koji sadrži traku za pretraživanje koja se prikazuje posjetiteljima vaše stranice."
           form:
             text_color:
               label: "Boja teksta"
@@ -5694,6 +5693,7 @@ hr:
         watched_words:
           title: "Praćene riječi"
         color_palettes:
+          title: "Palete boja"
           header_description: "Ove palete kontroliraju boje koje se koriste u vašoj zajednici. Kada paletu učinite dostupnom korisnicima, članovi mogu odabrati svoje željene boje iz svojih preferencija."
         emoji:
           title: "Emoji"
@@ -6302,8 +6302,20 @@ hr:
           delete: "Pobriši"
           color_options:
             title: "Opcije boja"
+            toggle: "Korisnik može odabrati"
+            toggle_description: "Korisnici mogu odabrati paletu boja"
+            toggle_default_light_on_theme: "Paleta boja je zadana svijetla paleta na zadanoj temi (%{themeName})"
+            toggle_default_dark_on_theme: "Paleta boja je zadana tamna paleta na zadanoj temi (%{themeName})"
           colors:
             title: "Boje"
+          save_changes: "Zabilježi promjene"
+          unsaved_changes: "Imate nespremljene promjene"
+          copy_of: "Kopija %{name}"
+          copy_created: 'Stvorena je nova kopija "%{name}"'
+          illegal_character_in_color: "Boja mora sadržavati samo heksadecimalne znakove"
+          invalid_color_length: "Boja mora biti u formatu #rrggbb ili #rgb"
+          blocked_edit_for_system: "Paleta boja koja pripada sistemskoj temi ne može se uređivati."
+          delete_confirm: "Jeste li sigurni da želite izbrisati ovu paletu boja?"
       plugins:
         title: "Dodaci"
         name: "Naziv"
@@ -6602,8 +6614,10 @@ hr:
           edit: "Uredi"
           filters:
             all: "Sve"
+            no_results: "Nisu pronađene palete boja"
           default_light_badge:
             reset: "Poništi filtere"
+          back_to_colors: "Povratak na palete boja"
           long_title: "Palete boja"
           about: "Izmijenite boje koje koriste vaše teme. Za početak izradite novu paletu boja."
           copy_name_prefix: "Kopija"
@@ -7588,68 +7602,3 @@ hr:
           categories: "Kategorije"
           topics: "Teme"
           replace: "Zamijeni"
-  wizard_js:
-    wizard:
-      jump_in: "Uskoči!"
-      finish: "Završi postavljanje."
-      back: "Natrag"
-      next: "Sljedeći"
-      configure_more: "Konfiguriraj više…"
-      step-text: "Korak"
-      step: "%{current} od %{total}"
-      upload: "Učitaj datoteku"
-      uploading: "Prijenos…"
-      upload_error: "Žao nam je, dogodila se greška pri učitavanju te datoteke. Molimo pokušajte ponovo."
-      staff_count:
-        one: "Vaša zajednica ima %{count} djelatnika (vi)."
-        few: "Vaša zajednica ima %{count} djelatnika (vi)."
-        other: "Vaša zajednica ima %{count} djelatnika, uključujući vas."
-      invites:
-        add_user: "dodaj"
-        none_added: "Nisi pozvao nijedno osoblje. Jeste li sigurni da želite nastaviti?"
-        roles:
-          admin: "Administrator"
-          moderator: "Moderator"
-          regular: "Stalni član"
-      homepage_choices:
-        custom:
-          label: "Posebna"
-        style_type:
-          categories: "kategorija"
-          topics: "tema"
-      top_menu_items:
-        new: "Novo"
-        unread: "Nepročitano"
-        top: "Najaktivnije"
-        latest: "Posljednje"
-        categories: "Kategorije"
-        unseen: "Nepročitano"
-        read: "Pročitajte"
-        bookmarks: "Oznake"
-      previews:
-        share_button: "Dijeli"
-        reply_button: "Odgovori"
-        topic_preview: "Pregled teme"
-        homepage_preview: "Pretpregled početne stranice"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "sve kategorije"
-        topic_titles:
-          what_movies: "Koje ste filmove nedavno gledali?"
-          random_fact: "Činjenica dana"
-          tv_show: "Preporučite TV emisiju ili seriju"
-          what_hobbies: "Koji su vaši hobiji?"
-          what_music: "Što trenutno slušaš?"
-          funniest_thing: "Najsmješnija stvar koju ste danas vidjeli"
-          share_art: "Podijelite svoju umjetnost!"
-        category_descriptions:
-          news: "Razgovarajte o najnovijim vijestima i događajima."
-          site_feedback: "Podijelite svoja razmišljanja o zajednici i predložite poboljšanja."
-        category_names:
-          news: "Novosti"
-          site_feedback: "Povratne informacije o stranici"
-        table_headers:
-          topic: "Tema"
-          replies: "Odgovori"
-          views: "Pregledi"
-          activity: "Aktivnosti"

@@ -152,6 +152,7 @@ nb_NO:
           cancel: "Avbryt"
         thumbnail_suggestions:
           select: "Velg"
+          try_again: "Prøv igjen"
         image_caption:
           save_caption: "Lagre"
       embeddings:

@@ -5,9 +5,3 @@
 # https://translate.discourse.org/
 
 gl:
-  js:
-    user_notes:
-      title: "Notas de usuario"
-      attach: "Engadir nota de usuario"
-      remove: "Eliminar nota de usuario"
-      show: "Notas de usuario (%{count})"

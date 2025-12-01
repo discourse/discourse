@@ -41,7 +41,6 @@ tr_TR:
       assigned_topic_to: "Konu <a href='%{path}'>%{username}</a> adlı kullanıcıya atandı"
       assign_post_to: "#%{post_number}, %{username} adlı kullanıcıya atandı"
       assign_post_to_multiple: "%{username} adlı kullanıcıya #%{post_number}"
-      assigned_to_w_ellipsis: "Şuraya atandı..."
       unassign:
         title: "Atamayı kaldır"
         title_w_ellipsis: "Atamayı kaldır..."

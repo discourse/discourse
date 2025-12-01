@@ -1909,8 +1909,42 @@ hr:
     flags_agreed_and_post_deleted_for_responders:
       title: "Odgovor s prijavljene objave je uklonilo osoblje"
       subject_template: "Odgovor s prijavljene objave je uklonilo osoblje"
+      text_body_template: |
+        Pozdrav,
+
+        Ovo je automatska poruka od %{site_name} kojom vas obavještavamo da je [objava](%{base_url}%{url}) na koju ste odgovorili uklonjena.
+
+        %{flag_reason}
+
+        Ovu je objavu označila zajednica, a član osoblja odlučio ju je ukloniti.
+
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+
+        Na što ste odgovorili
+
+        ``` markdown
+        %{flagged_post_response_raw_content}
+        ```
+
+        Za više detalja o razlogu uklanjanja, pogledajte naše [smjernice zajednice](%{base_url}/smjernice).
+    usage_tips:
+      text_body_template: |
+        Za nekoliko brzih savjeta o početku rada kao novi korisnik, [pogledajte ovu objavu na blogu](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+
+        Kako ovdje sudjelujete, upoznavat ćemo vas i privremena ograničenja za nove korisnike bit će ukinuta. S vremenom ćete steći [razine povjerenja](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) koje uključuju posebne sposobnosti koje će nam pomoći u zajedničkom upravljanju našom zajednicom.
     welcome_user:
+      title: "Dobrodošli"
       subject_template: "Dobrodošli na %{site_name}"
+      text_body_template: |
+        Hvala što ste se pridružili %{site_name}i dobrodošli!
+
+        %{new_user_tips}
+
+        Vjerujemo u [civilizirano ponašanje u zajednici](%{base_url}/smjernice) u svakom trenutku.
+
+        Uživajte u svom boravku!
     welcome_staff:
       subject_template: "Čestitamo, dobili ste status %{role} !"
       text_body_template: |
@@ -1921,6 +1955,20 @@ hr:
         S velikom moći dolazi i velika odgovornost. Ako ste novi u moderiranju, pogledajte [Vodič za moderiranje](https://meta.discourse.org/t/discourse-moderation-guide/63116) ili se obratite osoblju foruma za pomoć.
     welcome_invite:
       subject_template: "Dobrodošli na %{site_name}"
+      text_body_template: |
+        Hvala što ste prihvatili pozivnicu za %{site_name} -- dobrodošli!
+
+        - Izradili smo ovaj novi račun **%{username}** za vas. Promijenite svoje ime ili lozinku posjetom [vašem korisničkom profilu][prefs].
+
+        - Kada se prijavite, molimo vas da **koristite istu adresu e-pošte iz izvorne pozivnice** - inače nećemo moći prepoznati da ste to vi!
+
+        %{new_user_tips}
+
+        Vjerujemo u [civilizirano ponašanje u zajednici](%{base_url}/smjernice) u svakom trenutku.
+
+        Uživajte u boravku!
+
+        [prefs]: %{user_preferences_url}
     email_reject_post_too_short:
       subject_template: "[%{email_prefix}] Problem s e-mail porukom -- Objava je prekratka"
       text_body_template: |
@@ -2428,6 +2476,9 @@ hr:
   upload:
     unauthorized: "Nažalost, datoteka koju pokušavate prenijeti nije dopuštena (dopuštene ekstenzije: %{authorized_extensions})."
     size_zero_failure: "Žao nam je, izgleda da je nešto pošlo po zlu, datoteka koju pokušavate prenijeti je 0 bajtova. Molim te pokušaj ponovno."
+  color_schemes:
+    errors:
+      cannot_edit_remote_copies: "Uređivanje udaljenih kopija palete boja nije dopušteno"
   csv_export:
     boolean_yes: "Da"
     boolean_no: "Ne"
@@ -2606,18 +2657,12 @@ hr:
     nice_share:
       name: Korisno dijeljenje
       description: Podijelio/la objavu s 25 jedinstvenih posjetitelja.
-      long_description: |
-        Ova značka se dodjeljuje za dijeljenje poveznice na koju je kliknulo 25 vanjskih posjetitelja. Hvala što širite vijest o našim raspravama i ovoj zajednici.
     good_share:
       name: Sjajno dijeljenje
       description: Podijelio/la objavu s 300 jedinstvenih posjetitelja
-      long_description: |
-        Ova značka se dodjeljuje za dijeljenje poveznice na koju je kliknulo 300 vanjskih posjetitelja. Dobar posao! Pokazali ste sjajnu raspravu mnogim novim ljudima i pomogli ovoj zajednici da raste.
     great_share:
       name: Odlična podjela
       description: Podijelio/la objavu s 1000 jedinstvenih posjetitelja
-      long_description: |
-        Ova značka se dodjeljuje za dijeljenje poveznice na koju je kliknulo 1000 vanjskih posjetitelja. Vau! Promovirali ste zanimljivu raspravu pred ogromnom novom publikom i pomogli nam da značajno proširimo našu zajednicu!
     first_like:
       name: Prvi lajk
       description: Lajkao/la objavu
@@ -2718,12 +2763,13 @@ hr:
       title: "Ponovno pošaljite e-poštu za aktivaciju"
   wizard:
     step:
-      introduction:
+      setup:
+        title: "Početak rada"
         fields:
+          title:
+            label: "Naziv zajednice"
           default_locale:
             label: "Jezik"
-      privacy:
-        fields:
           login_required:
             label: "Vidljivost"
             choices:
@@ -2731,20 +2777,6 @@ hr:
                 label: "Javnost"
               private:
                 label: "Privatno"
-          chat_enabled:
-            placeholder: "Omogući chat"
-      styling:
-        fields:
-          styling_preview:
-            label: "Pregled"
-          homepage_style:
-            choices:
-              latest:
-                label: "Posljednje"
-      corporate:
-        fields:
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
   onebox:
     github:
       closed: "zatvoreno"

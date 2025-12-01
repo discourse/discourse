@@ -394,6 +394,8 @@ pl_PL:
         slug_description: Slug kanału jest używany w adresie URL zamiast nazwy kanału
         name: Nazwa kanału
         slug: Slug kanału (opcjonalnie)
+        emoji: Emoji kanału (opcjonalnie)
+        reset_emoji: Zresetuj emoji
       channel_edit_description_modal:
         title: Edytuj opis
         input_placeholder: Dodaj opis
@@ -472,6 +474,9 @@ pl_PL:
         types:
           category: "Kategoria"
           topic: "Temat"
+        emoji:
+          label: "Emoji kanału (opcjonalnie)"
+          reset: "Zresetuj emoji"
       reviewable:
         type: "Wiadomość na czacie"
         message_in_channel: "Kanał"

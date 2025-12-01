@@ -319,7 +319,6 @@ ro:
     software_update_prompt:
       message: "Am actualizat acest site, <span>te rugăm să reîmprospătezi</span> pentru ca lucrurile să funcționeze fără probleme."
       dismiss: "Respinge"
-    bootstrap_mode: "Începe"
     back_button: "Înapoi"
     welcome_banner:
       header:
@@ -689,7 +688,7 @@ ro:
       title: "Revizuire"
       topic: "Subiect:"
       filtered_topic: "Ai filtrat până la conținutul care poate fi revizuit într-un singur subiect."
-      filtered_user: "Utilizator"
+      filtered_user: "Utilizator semnalat"
       filtered_reviewed_by: "Revizuit de"
       show_all_topics: "arată toate subiectele"
       deleted_post: "(articol șters)"
@@ -831,7 +830,6 @@ ro:
       queued_post_label: "Postare în coadă"
       queued_topic_label: "Subiect adăugat în coadă"
       user_label: "Utilizator"
-      assigned_to: "Atribuit la"
       moderator_actions: "Acțiuni moderator"
       timeline_and_notes: "Cronologie și note"
       timeline:
@@ -868,14 +866,12 @@ ro:
           one: "Semnalat de un utilizator unic"
           few: "Semnalat de %{count} utilizatori unici"
           other: "Semnalat de %{count} de utilizatori unici"
-        similar_posts: "Încălcări anterioare"
         flagged_in_timeframe:
           one: "o semnalizare confirmată"
           few: "%{count} semnalizări confirmate"
           other: "%{count} de semnalizări confirmate"
         user_activity: "Informații utilizator"
         activities:
-          new_account: "cont nou"
           trust_level: "nivel de încredere: %{trustLevelName}"
           posts:
             one: "o postare"
@@ -884,7 +880,6 @@ ro:
         solution_marked: "Soluție marcată"
         topic_has_solution: "Acest subiect are o soluție"
         visibility: "Vizibilitate"
-        topic_unlisted: "Acest subiect este nelistat. Accesibil doar prin legătură directă — nu este public."
       help:
         moderation_guide: "Ghid de moderare Discourse"
         flag_priorities: "Gestionarea reputației utilizatorului și a priorităților de semnalare"
@@ -1268,7 +1263,6 @@ ro:
         week: "săptămană"
         month: "lună"
     ip_lookup:
-      title: Căutare adresă IP
       hostname: Nume gazdă
       location: Locație
       location_not_found: (necunoscută)
@@ -3899,6 +3893,9 @@ ro:
         name: "Nume"
         enabled: "Activate"
         preview: "Previzualizează"
+        enabled_for_options:
+          everyone: "Toată lumea"
+          staff: "Doar pentru personal"
         impact_roles:
           admins: "Admini"
           moderators: "Moderatori"
@@ -5665,54 +5662,3 @@ ro:
         modal:
           categories: "Categorii"
           topics: "Discuții"
-  wizard_js:
-    wizard:
-      back: "Înapoi"
-      next: "Următorul"
-      step-text: "Pas"
-      step: "%{current} din %{total}"
-      upload_error: "Ne pare rău, a apărut o eroare la încărcarea fișierului. Te rugăm să încerci iar."
-      staff_count:
-        one: "Comunitatea ta are %{count} membru (tu)."
-        few: "Comunitatea ta are %{count} membri cu tot cu tine."
-        other: "Comunitatea ta are %{count} membri cu tot cu tine."
-      invites:
-        add_user: "adaugă"
-        none_added: "Nu ați invitat nici un membru al echipei. Ești sigur că vrei să continui?"
-        roles:
-          admin: "Administrator"
-          moderator: "Moderator"
-          regular: "Utilizator frecvent"
-      homepage_choices:
-        custom:
-          label: "Personalizat"
-        style_type:
-          categories: "categorie"
-          topics: "discuție"
-      top_menu_items:
-        new: "Nou"
-        unread: "Necitite"
-        top: "Top"
-        latest: "Ultimele"
-        categories: "Categorii"
-        unseen: "Nevăzute"
-        read: "Citite"
-        bookmarks: "Semne de carte"
-      previews:
-        share_button: "Distribuie"
-        reply_button: "Răspunde"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "Toate categoriile"
-        topic_titles:
-          what_hobbies: "Care sunt pasiunile tale?"
-          what_music: "Ce asculți chiar acum?"
-          funniest_thing: "Cel mai amuzant lucru pe care l-ai văzut astăzi"
-          share_art: "Împărtășește-ți arta!"
-        category_names:
-          site_feedback: "Feedback la site"
-        table_headers:
-          topic: "Discuție"
-          replies: "Răspunsuri"
-          views: "Afișări"
-          activity: "Activitate"
