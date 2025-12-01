@@ -104,7 +104,7 @@ module Chat
           .includes(chat_webhook_event: :incoming_chat_webhook)
           .includes(reactions: :user)
           .includes(:bookmarks)
-          .includes(:uploads)
+          .includes(uploads: { optimized_videos: :optimized_upload })
           .includes(chat_channel: :chatable)
           .includes(thread: %i[original_message last_message])
           .where(chat_channel_id: channel.id)
