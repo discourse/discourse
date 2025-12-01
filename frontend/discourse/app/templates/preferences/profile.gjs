@@ -192,43 +192,82 @@ export default class Profile extends Component {
 
   <template>
     <Form @data={{this.formData}} @onSubmit={{this.saveForm}} as |form|>
+      <form.Section @title={{i18n "user.user_profile_section.title"}}>
+        {{#if @controller.canChangeBio}}
+          <form.Field
+            @name="bio_raw"
+            @title={{i18n "user.bio"}}
+            @format="full"
+            as |field|
+          >
+            <field.Custom>
+              <MutableField
+                @value={{field.value}}
+                @set={{field.set}}
+                as |wrapper|
+              >
+                <DEditor
+                  @value={{wrapper.value}}
+                  @forceEditorMode={{USER_OPTION_COMPOSITION_MODES.rich}}
+                  @hidePreview={{true}}
+                />
+              </MutableField>
+            </field.Custom>
+          </form.Field>
+        {{/if}}
 
-      {{#if @controller.canChangeBio}}
-        <form.Field
-          @name="bio_raw"
-          @title={{i18n "user.bio"}}
-          @format="full"
-          as |field|
-        >
-          <field.Custom>
-            <MutableField
-              @value={{field.value}}
-              @set={{field.set}}
-              as |wrapper|
-            >
-              <DEditor
-                @value={{wrapper.value}}
-                @forceEditorMode={{USER_OPTION_COMPOSITION_MODES.rich}}
-                @hidePreview={{true}}
-              />
-            </MutableField>
-          </field.Custom>
-        </form.Field>
-      {{/if}}
+        {{#if @controller.siteSettings.allow_featured_topic_on_user_profiles}}
+          <form.Field
+            @format="large"
+            @name="featured_topic"
+            @title={{i18n "user.featured_topic"}}
+            @description={{i18n "user.change_featured_topic.instructions"}}
+            as |field|
+          >
+            <field.Custom>
+              {{#if field.value}}
+                <label class="featured-topic-link">
+                  <LinkTo
+                    @route="topic"
+                    @models={{array field.value.slug field.value.id}}
+                  >
+                    {{replaceEmoji (htmlSafe field.value.fancy_title)}}
+                  </LinkTo>
+                </label>
+              {{/if}}
 
-      {{#if @controller.siteSettings.allow_users_to_hide_profile}}
-        <form.Field
-          @format="large"
-          @name="hide_profile"
-          @title={{i18n "user.hide_profile"}}
-          as |field|
-        >
-          <field.Checkbox />
-        </form.Field>
-      {{/if}}
+              <div>
+                <DButton
+                  @action={{fn this.showFeaturedTopicModal field}}
+                  @label="user.feature_topic_on_profile.open_search"
+                  class="btn-default feature-topic-on-profile-btn"
+                />
+                {{#if field.value}}
+                  <DButton
+                    @action={{fn this.clearFeaturedTopicFromProfile field}}
+                    @label="user.feature_topic_on_profile.clear.title"
+                    class="btn-danger clear-feature-topic-on-profile-btn"
+                  />
+                {{/if}}
+              </div>
+            </field.Custom>
+          </form.Field>
+        {{/if}}
+
+        {{#if @controller.siteSettings.allow_users_to_hide_profile}}
+          <form.Field
+            @format="large"
+            @name="hide_profile"
+            @title={{i18n "user.hide_profile"}}
+            as |field|
+          >
+            <field.Checkbox />
+          </form.Field>
+        {{/if}}
+      </form.Section>
 
       {{#if @controller.userFields.length}}
-        <form.Section @title="Custom Fields">
+        <form.Section @title={{i18n "user.user_profile_section.custom_fields"}}>
           {{#each @controller.userFields as |uf|}}
             <form.Field
               @format="large"
@@ -258,7 +297,9 @@ export default class Profile extends Component {
         </form.Section>
       {{/if}}
 
-      <form.Section @title="Location and Website">
+      <form.Section
+        @title={{i18n "user.user_profile_section.location_and_website"}}
+      >
         <form.Field
           @format="large"
           @name="timezone"
@@ -302,7 +343,7 @@ export default class Profile extends Component {
         {{/if}}
       </form.Section>
 
-      <form.Section @title="User Card Images">
+      <form.Section @title={{i18n "user.user_profile_section.images"}}>
         {{#if @controller.siteSettings.allow_profile_backgrounds}}
           {{#if @controller.canUploadProfileHeader}}
             <form.Field
@@ -347,44 +388,6 @@ export default class Profile extends Component {
           {{/if}}
         {{/if}}
       </form.Section>
-
-      {{#if @controller.siteSettings.allow_featured_topic_on_user_profiles}}
-        <form.Field
-          @format="large"
-          @name="featured_topic"
-          @title={{i18n "user.featured_topic"}}
-          @description={{i18n "user.change_featured_topic.instructions"}}
-          as |field|
-        >
-          <field.Custom>
-            {{#if field.value}}
-              <label class="featured-topic-link">
-                <LinkTo
-                  @route="topic"
-                  @models={{array field.value.slug field.value.id}}
-                >
-                  {{replaceEmoji (htmlSafe field.value.fancy_title)}}
-                </LinkTo>
-              </label>
-            {{/if}}
-
-            <div>
-              <DButton
-                @action={{fn this.showFeaturedTopicModal field}}
-                @label="user.feature_topic_on_profile.open_search"
-                class="btn-default feature-topic-on-profile-btn"
-              />
-              {{#if field.value}}
-                <DButton
-                  @action={{fn this.clearFeaturedTopicFromProfile field}}
-                  @label="user.feature_topic_on_profile.clear.title"
-                  class="btn-danger clear-feature-topic-on-profile-btn"
-                />
-              {{/if}}
-            </div>
-          </field.Custom>
-        </form.Field>
-      {{/if}}
 
       {{#if @controller.canChangeDefaultCalendar}}
         <form.Field

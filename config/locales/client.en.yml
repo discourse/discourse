@@ -1968,6 +1968,12 @@ en:
         logo_small: "Site's small logo. Used by default."
         use_custom: "Or upload a custom avatar:"
 
+      user_profile_section:
+        title: "User Profile"
+        images: "User Images"
+        custom_fields: "Custom Fields"
+        location_and_website: "Location and Website"
+
       change_profile_background:
         title: "Profile Header"
         instructions: "Profile headers will be centered and have a default width of 1110px."
