@@ -1,10 +1,13 @@
 import Controller from "@ember/controller";
 import { action, set } from "@ember/object";
-import { alias } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import {
+  addUniqueValueToArray,
+  removeValueFromArray,
+} from "discourse/lib/array-tools";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import RssPollingFeedSettings from "../../../admin/models/rss-polling-feed-settings";
@@ -12,11 +15,13 @@ import RssPollingFeedSettings from "../../../admin/models/rss-polling-feed-setti
 export default class AdminPluginsRssPollingController extends Controller {
   @service dialog;
 
-  @alias("model") feedSettings;
-
   saving = false;
   valid = false;
   disabled = true;
+
+  get feedSettings() {
+    return this.model;
+  }
 
   @discourseComputed("valid", "saving")
   unsavable(valid, saving) {
@@ -28,7 +33,7 @@ export default class AdminPluginsRssPollingController extends Controller {
   validate() {
     let overallValidity = true;
 
-    this.get("feedSettings").forEach((feedSetting) => {
+    this.feedSettings.forEach((feedSetting) => {
       const localValidity =
         !isBlank(feedSetting.feed_url) && !isBlank(feedSetting.author_username);
       set(feedSetting, "valid", localValidity);
@@ -50,7 +55,7 @@ export default class AdminPluginsRssPollingController extends Controller {
       editing: true,
     };
 
-    this.get("feedSettings").addObject(newSetting);
+    addUniqueValueToArray(this.feedSettings, newSetting);
   }
 
   @action
@@ -60,7 +65,7 @@ export default class AdminPluginsRssPollingController extends Controller {
       didConfirm: async () => {
         try {
           await RssPollingFeedSettings.deleteFeed(setting);
-          this.get("feedSettings").removeObject(setting);
+          removeValueFromArray(this.feedSettings, setting);
         } catch (error) {
           popupAjaxError(error);
         } finally {
@@ -79,7 +84,7 @@ export default class AdminPluginsRssPollingController extends Controller {
   @action
   cancelEdit(setting) {
     if (!setting.id) {
-      this.get("feedSettings").removeObject(setting);
+      removeValueFromArray(this.feedSettings, setting);
     }
     set(setting, "disabled", true);
     set(setting, "editing", false);
@@ -102,6 +107,6 @@ export default class AdminPluginsRssPollingController extends Controller {
 
   @action
   updateAuthorUsername(setting, selected) {
-    set(setting, "author_username", selected.firstObject);
+    set(setting, "author_username", selected[0]);
   }
 }
