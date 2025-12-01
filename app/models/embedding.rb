@@ -22,7 +22,7 @@ class Embedding < OpenStruct
   end
 
   def save
-    Embedding.settings.each { |s| SiteSetting.set(s, public_send(s)) }
+    Embedding.settings.each { |s| SiteSetting.set(s, public_send(s) || "") }
     true
   rescue Discourse::InvalidParameters => p
     errors.add :base, p.to_s
