@@ -1,25 +1,7 @@
-const {
-  babelCompatSupport,
-  templateCompatSupport,
-} = require("@embroider/compat/babel");
-const { templateColocationPluginPath } = require("@embroider/core");
-let path = require("path");
-const transformModuleRenames = require("./lib/babel-transform-module-renames");
-
-// Enable template colocation in our other root namespaces (e.g. select-kit, etc.)
-const unrestrictedTemplateColocationPlugin = [
-  templateColocationPluginPath,
-  {
-    appRoot: path.join(process.cwd(), ".."),
-    templateExtensions: [".hbs", ".hbs.js"],
-    packageGuard: false,
-  },
-  "unrestricted-template-colocation",
-];
+const { babelCompatSupport } = require("@embroider/compat/babel");
 
 module.exports = {
   plugins: [
-    transformModuleRenames,
     [
       "babel-plugin-ember-template-compilation",
       {
@@ -49,7 +31,6 @@ module.exports = {
       },
     ],
     ...babelCompatSupport(),
-    unrestrictedTemplateColocationPlugin,
   ],
 
   generatorOpts: {

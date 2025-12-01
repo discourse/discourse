@@ -1,36 +1,13 @@
-import {
-  assets,
-  classicEmberSupport,
-  compatPrebuild,
-  contentFor,
-  ember,
-  hbs,
-  optimizeDeps,
-  resolver,
-  scripts,
-  templateTag,
-} from "@embroider/vite";
-import { babel } from "@rollup/plugin-babel";
+import { classicEmberSupport, ember } from "@embroider/vite";
 import basicSsl from "@vitejs/plugin-basic-ssl";
 import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig } from "vite";
 import mkcert from "vite-plugin-mkcert";
 import customProxy from "../custom-proxy";
-import customInvokableResolver from "./lib/custom-invokable-resolver";
 import discourseTestSiteSettings from "./lib/site-settings-plugin";
-import { readPackageUpSync } from "read-package-up";
-import { dirname } from "node:path";
+import maybeBabel from "./lib/vite-maybe-babel";
 
-const extensions = [
-  ".gjs",
-  ".mjs",
-  ".js",
-  ".mts",
-  ".gts",
-  ".ts",
-  ".hbs",
-  // ".json",
-];
+const extensions = [".gjs", ".mjs", ".js", ".mts", ".gts", ".ts", ".hbs"];
 
 export default defineConfig(({ mode, command }) => {
   return {
@@ -47,77 +24,21 @@ export default defineConfig(({ mode, command }) => {
     },
     plugins: [
       // Standard Ember stuff
-      ember({
-        rolldownSharedPlugins: [
-          // "rollup-hbs-plugin",
-          // "embroider-template-tag",
-          // "embroider-resolver",
-          // "babel",
-        ],
-      }),
+      ember(),
 
       classicEmberSupport(),
-      // hbs(),
-      // scripts(),
-      // compatPrebuild(),
-      // assets(),
-      // contentFor(),
 
       discourseTestSiteSettings(),
-      // customInvokableResolver(),
 
-      babel({
+      maybeBabel({
         babelHelpers: "runtime",
         extensions,
-        filter(id) {
-          const x = !!readPackageUpSync({
-            cwd: dirname(id),
-          }).packageJson["ember-addon"];
-          // console.log(x, id);
-          return x;
-        },
       }),
 
       // Discourse-specific
-      // viteProxy(),
       // mkcert(),
       visualizer({ emitFile: true }),
     ],
-    optimizeDeps: {
-      rollupOptions: {
-        plugins: [
-          hbs(),
-          templateTag(),
-          resolver(),
-          babel({
-            babelHelpers: "runtime",
-            extensions,
-            filter(id) {
-              const x = !!readPackageUpSync({
-                cwd: dirname(id),
-              }).packageJson["ember-addon"];
-              console.log(x, id);
-              return x;
-            },
-          }),
-        ],
-      },
-    },
-    // optimizeDeps: {
-    //   ...optimizeDeps(),
-    //   include: ["virtual-dom"],
-    // },
-    // optimizeDeps: {
-    //   include: ["virtual-dom"],
-    //   exclude: ["@embroider/macros"],
-    //   rollupOptions: {
-    //     plugins: [
-    //       resolver(),
-    //       templateTag(),
-    //       babel({ babelHelpers: "runtime", extensions }),
-    //     ],
-    //   },
-    // },
     server: {
       port: 4200,
       strictPort: true,
@@ -125,9 +46,10 @@ export default defineConfig(({ mode, command }) => {
       proxy: {
         "^/(?!@vite/)": customProxy,
       },
-      // https: {
-      //   maxSessionMemory: 1000,
-      // },
+
+      warmup: {
+        clientFiles: ["./app/**/*.js", "./app/**/*.gjs"],
+      },
     },
     preview: {
       port: 4200,

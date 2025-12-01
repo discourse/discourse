@@ -173,7 +173,8 @@
     "typescript": "^5.9.3",
     "util": "^0.12.5",
     "vite": "npm:rolldown-vite@latest",
-    "xss": "^1.0.15"
+    "xss": "^1.0.15",
+    "zimmerframe": "^1.1.4"
   },
   "engines": {
     "node": ">= 18",

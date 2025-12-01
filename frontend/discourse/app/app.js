@@ -91,7 +91,7 @@ export async function loadThemes() {
   await Promise.all(promises);
 }
 
-function defineModules(name, compatModules) {
+export function defineModules(name, compatModules) {
   for (let [key, mod] of Object.entries(compatModules)) {
     if (key.startsWith("./")) {
       key = key.slice(2);
