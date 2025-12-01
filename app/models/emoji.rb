@@ -6,6 +6,9 @@ class Emoji
 
   FITZPATRICK_SCALE = %w[1f3fb 1f3fc 1f3fd 1f3fe 1f3ff]
 
+  # matches emoji codes in text, e.g. :smile: or :wave:t2:
+  EMOJI_CODE_REGEXP = /:([\w\-+]+(?::t\d)?):/.freeze
+
   DEFAULT_GROUP = "default"
 
   include ActiveModel::SerializerSupport
@@ -56,29 +59,37 @@ class Emoji
     tonable_emojis_db
   end
 
+  def self.normalize_name(name)
+    match = name.match(/\A:?(.+?)(?::t([1-6]))?:?\z/)
+    [match[1], match[2]&.to_i]
+  end
+  private_class_method :normalize_name
+
   def self.custom?(name)
-    name = name.delete_prefix(":").delete_suffix(":")
+    name, _ = normalize_name(name)
     Emoji.custom.detect { |e| e.name == name }.present?
   end
 
   def self.exists?(name)
-    Emoji[name].present? || Emoji.aliases_values.include?(name)
+    Emoji[name].present?
   end
 
   def self.[](name)
-    name = name.delete_prefix(":").delete_suffix(":")
-    is_toned = name.match?(/\A.+:t[1-6]\z/)
-    normalized_name = name.gsub(/\A(.+):t[1-6]\z/, '\1')
+    name, tone = normalize_name(name)
+    is_toned = tone.present?
+    find_emoji(name, is_toned) || find_emoji(resolve_alias(name), is_toned)
+  end
 
+  def self.find_emoji(name, is_toned)
     found_emoji = nil
 
     [[global_emoji_cache, :standard], [site_emoji_cache, :custom]].each do |cache, list_key|
       found_emoji =
-        cache.defer_get_set(normalized_name) do
+        cache.defer_get_set(name) do
           [
             Emoji
               .public_send(list_key)
-              .detect { |e| e.name == normalized_name && (!is_toned || (is_toned && e.tonable)) },
+              .detect { |e| e.name == name && (!is_toned || (is_toned && e.tonable)) },
           ]
         end[
           0
@@ -89,6 +100,7 @@ class Emoji
 
     found_emoji
   end
+  private_class_method :find_emoji
 
   def self.create_from_db_item(emoji)
     name = emoji["name"]
@@ -105,7 +117,8 @@ class Emoji
   end
 
   def self.url_for(name)
-    name = name.delete_prefix(":").delete_suffix(":").gsub(/(.+):t([1-6])/, '\1/\2')
+    name, tone = normalize_name(name)
+    name = "#{name}/#{tone}" if tone
     if SiteSetting.external_emoji_url.blank?
       "#{Discourse.base_path}/images/emoji/#{SiteSetting.emoji_set}/#{name}.png?v=#{EMOJI_VERSION}"
     else
@@ -180,6 +193,17 @@ class Emoji
 
   def self.aliases_values
     @aliases_values ||= Set.new(Emoji.aliases_db.values.flatten)
+  end
+
+  def self.reverse_aliases
+    @reverse_aliases ||=
+      aliases_db.each_with_object({}) do |(original, alias_names), map|
+        alias_names.each { |alias_name| map[alias_name] = original }
+      end
+  end
+
+  def self.resolve_alias(name)
+    reverse_aliases[name] || name
   end
 
   def self.search_aliases_db_file
@@ -304,7 +328,7 @@ class Emoji
   end
 
   def self.gsub_emoji_to_unicode(str)
-    str.gsub(/:([\w\-+]*(?::t\d)?):/) { |name| Emoji.lookup_unicode($1) || name } if str
+    str.gsub(EMOJI_CODE_REGEXP) { |name| Emoji.lookup_unicode($1) || name } if str
   end
 
   def self.lookup_unicode(name)
@@ -348,7 +372,7 @@ class Emoji
     return if str.blank?
 
     str =
-      str.gsub(/:([\w\-+]*(?::t\d)?):/) do |name|
+      str.gsub(EMOJI_CODE_REGEXP) do |name|
         code = $1
 
         if code && Emoji.custom?(code)
