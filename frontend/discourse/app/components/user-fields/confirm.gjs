@@ -12,12 +12,14 @@ export default class UserFieldConfirm extends UserFieldBase {
   }
 
   <template>
-    {{#if this.field.name}}
-      <label class="control-label">
-        {{this.field.name}}
-        {{~#unless this.field.required}}
-          {{i18n "user_fields.optional"}}{{/unless~}}
-      </label>
+    {{#if @showLabel}}
+      {{#if this.field.name}}
+        <label class="control-label">
+          {{this.field.name}}
+          {{~#unless this.field.required}}
+            {{i18n "user_fields.optional"}}{{/unless~}}
+        </label>
+      {{/if}}
     {{/if}}
 
     <div class="controls">
