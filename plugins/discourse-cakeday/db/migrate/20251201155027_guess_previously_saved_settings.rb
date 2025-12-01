@@ -20,6 +20,7 @@ class GuessPreviouslySavedSettings < ActiveRecord::Migration[8.0]
     return if DB.query_single("SELECT 1 FROM site_settings WHERE name = :name", name:).first
 
     # if the site ran the old onceoff before the core merge - it had d-cakeday installed
+    core_merge_time = Time.parse("Fri, 3 Oct 2025 18:38:51 +0200")
     old_onceoff_timestamp =
       DB.query_single(
         "SELECT created_at FROM onceoff_logs WHERE job_name = :name",
