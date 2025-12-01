@@ -89,7 +89,7 @@ export default class AiEmbeddingEditor extends Component {
       };
     });
 
-    presets.unshiftObject({
+    presets.unshift({
       name: i18n("discourse_ai.embeddings.configure_manually"),
       id: "manual",
       provider: "fake",
