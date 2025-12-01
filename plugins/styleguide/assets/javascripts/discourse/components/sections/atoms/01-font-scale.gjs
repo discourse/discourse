@@ -8,8 +8,7 @@ const FontScale = <template>
       settings, by default these are:
       <pre>
       Smaller: 14px Normal: 15px
-      <span
-        >(default)</span>
+      <span>(default)</span>
       Larger: 17px Largest: 19px
     </pre>
     </p>
@@ -21,23 +20,15 @@ const FontScale = <template>
       above. The example below increases all text size options by 1px.
       <pre>
       html {
-      <span
-          class="hljs-attribute"
-        >font-size</span>: 16px;
+      <span class="hljs-attribute">font-size</span>: 16px;
       <span>// default font-size
         </span>
       &.text-size-smaller {
-      <span
-          class="hljs-attribute"
-        >font-size</span>: 15px; } &.text-size-larger
+      <span class="hljs-attribute">font-size</span>: 15px; } &.text-size-larger
       {
-      <span
-          class="hljs-attribute"
-        >font-size</span>: 18px; } &.text-size-largest
+      <span class="hljs-attribute">font-size</span>: 18px; } &.text-size-largest
       {
-      <span
-          class="hljs-attribute"
-        >font-size</span>: 20px; } }
+      <span class="hljs-attribute">font-size</span>: 20px; } }
     </pre>
     </p>
     <p>
@@ -50,17 +41,13 @@ const FontScale = <template>
       </p>
       <pre>
       .parent {
-      <span
-          class="hljs-attribute"
-        >font-size</span>: var(--font-up-3);
-      <span>// Increases the
-          relative font-size of this element and its children by 3 steps in the
-          scale</span>
+      <span class="hljs-attribute">font-size</span>: var(--font-up-3);
+      <span>// Increases the relative font-size of this element and its children
+          by 3 steps in the scale</span>
       .child {
-      <span>// If this is set to
-          var(--font-down-3) in Discourse's default CSS, the parent font-size
-          increase above would make this equivalent to var(--font-0)
-          (var(--font-down-3) + var(--font-up-3) = var(--font-0))</span>
+      <span>// If this is set to var(--font-down-3) in Discourse's default CSS,
+          the parent font-size increase above would make this equivalent to
+          var(--font-0) (var(--font-down-3) + var(--font-up-3) = var(--font-0))</span>
       } }
     </pre>
     </p>
