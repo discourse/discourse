@@ -207,13 +207,6 @@ RSpec.describe SiteSettings::TypeSupervisor do
       let(:true_val) { "t" }
       let(:false_val) { "f" }
 
-      it "returns nil value" do
-        expect(settings.type_supervisor.to_db_value(:type_null, nil)).to eq [
-             nil,
-             SiteSetting.types[:null],
-           ]
-      end
-
       it "gives a second chance to guess even told :null type" do
         expect(settings.type_supervisor.to_db_value(:type_null, 1)).to eq [
              1,
@@ -242,10 +235,6 @@ RSpec.describe SiteSettings::TypeSupervisor do
 
       it "writes `f` if given not `true` value" do
         expect(settings.type_supervisor.to_db_value(:type_true, "")).to eq [
-             false_val,
-             SiteSetting.types[:bool],
-           ]
-        expect(settings.type_supervisor.to_db_value(:type_true, nil)).to eq [
              false_val,
              SiteSetting.types[:bool],
            ]

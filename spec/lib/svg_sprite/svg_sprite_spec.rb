@@ -210,7 +210,7 @@ RSpec.describe SvgSprite do
     expect(all_icons).to include("compass-drafting")
     expect(all_icons).to include("fab-bandcamp")
 
-    SiteSetting.svg_icon_subset = nil
+    SiteSetting.svg_icon_subset = ""
     SvgSprite.expire_cache
     expect(SvgSprite.all_icons).not_to include("compass-drafting")
 

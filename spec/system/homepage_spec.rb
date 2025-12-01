@@ -12,7 +12,7 @@ describe "Homepage", type: :system do
     # A workaround to avoid the global notice from interfering with the tests
     # It is coming from the ensure_login_hint.rb initializer and it gets
     # evaluated before the tests run (and it wrongly counts 0 admins defined)
-    SiteSetting.global_notice = nil
+    SiteSetting.global_notice = ""
   end
 
   it "shows a list of topics by default" do

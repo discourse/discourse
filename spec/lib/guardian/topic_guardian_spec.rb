@@ -263,8 +263,8 @@ RSpec.describe TopicGuardian do
       expect(Guardian.new(tl3_user).is_in_edit_topic_groups?).to eq(false)
     end
 
-    it "returns false if the edit_all_topic_groups is empty" do
-      SiteSetting.edit_all_topic_groups = nil
+    it "returns false if the edit_all_topic_groups is blank" do
+      SiteSetting.edit_all_topic_groups = ""
 
       expect(Guardian.new(user).is_in_edit_topic_groups?).to eq(false)
     end

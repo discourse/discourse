@@ -35,7 +35,7 @@ describe "About page", type: :system do
   end
 
   it "doesn't render banner image when it's not set" do
-    SiteSetting.about_banner_image = nil
+    SiteSetting.about_banner_image = ""
 
     about_page.visit
     expect(about_page).to have_no_banner_image
@@ -385,7 +385,7 @@ describe "About page", type: :system do
     let(:order) { "alphabetically" }
 
     before do
-      SiteSetting.about_banner_image = nil
+      SiteSetting.about_banner_image = ""
       SiteSetting.about_page_extra_groups = extra_groups_setting
       SiteSetting.about_page_extra_groups_order = order
 

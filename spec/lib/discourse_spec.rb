@@ -272,7 +272,7 @@ RSpec.describe Discourse do
     end
 
     it "returns the system user otherwise" do
-      SiteSetting.site_contact_username = nil
+      SiteSetting.site_contact_username = ""
       expect(Discourse.site_contact_user.username).to eq("system")
     end
   end
