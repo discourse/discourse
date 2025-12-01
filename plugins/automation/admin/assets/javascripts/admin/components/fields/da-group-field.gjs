@@ -46,6 +46,6 @@ export default class GroupField extends BaseField {
 
   @action
   setGroupField(groupIds) {
-    this.mutValue(groupIds?.firstObject);
+    this.mutValue(groupIds?.[0]);
   }
 }
