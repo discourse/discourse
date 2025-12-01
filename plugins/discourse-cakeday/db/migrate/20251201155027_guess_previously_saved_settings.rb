@@ -27,7 +27,6 @@ class GuessPreviouslySavedSettings < ActiveRecord::Migration[8.0]
       ).first
     if old_onceoff_timestamp && old_onceoff_timestamp.before?(core_merge_time)
       create_setting(name, "t")
-      return
     end
   end
 
