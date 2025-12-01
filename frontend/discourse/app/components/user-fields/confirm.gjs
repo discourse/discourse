@@ -30,7 +30,9 @@ export default class UserFieldConfirm extends UserFieldBase {
           @type="checkbox"
         />
         <span>
-          {{htmlSafe this.field.description}}
+          {{#if @showDescription}}
+            {{htmlSafe this.field.description}}
+          {{/if}}
           {{#unless this.field.name}}{{#if this.field.required}}<span
                 class="required"
               >*</span>{{/if}}{{/unless}}

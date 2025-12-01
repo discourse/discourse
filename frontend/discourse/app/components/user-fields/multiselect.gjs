@@ -30,7 +30,9 @@ export default class UserFieldMultiselect extends UserFieldBase {
       {{#if this.validation.failed}}
         <InputTip @validation={{this.validation}} />
       {{else}}
-        <div class="instructions">{{htmlSafe this.field.description}}</div>
+        {{#if @showDescription}}
+          <div class="instructions">{{htmlSafe this.field.description}}</div>
+        {{/if}}
       {{/if}}
     </div>
   </template>

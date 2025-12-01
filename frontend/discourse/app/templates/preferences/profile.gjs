@@ -19,7 +19,7 @@ import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import TimezoneInput from "discourse/select-kit/components/timezone-input";
 import { i18n } from "discourse-i18n";
 
-const userFieldValidation = (field) => {
+const validationFor = (field) => {
   if (!get(field, "required")) {
     return null;
   }
@@ -209,7 +209,7 @@ export default class Profile extends Component {
           @name={{concat "user_field_" uf.field.id}}
           @title={{uf.field.name}}
           @description={{uf.field.description}}
-          @validation={{userFieldValidation uf.field}}
+          @validation={{validationFor uf.field}}
           as |field|
         >
           <field.Custom>
@@ -223,6 +223,7 @@ export default class Profile extends Component {
                 @value={{wrapper.value}}
                 @validation={{field.validation}}
                 @showLabel={{false}}
+                @showDescription={{false}}
               />
             </MutableField>
           </field.Custom>
