@@ -5,7 +5,7 @@ module DiscourseAi
     class PostLocalizer
       MAX_QUOTA_PER_DAY = 2
 
-      def self.localize(post, target_locale = I18n.locale)
+      def self.localize(post, target_locale = I18n.locale, llm_model: nil)
         if post.blank? || target_locale.blank? ||
              LocaleNormalizer.is_same?(post.locale, target_locale) || post.raw.blank?
           return
@@ -13,7 +13,8 @@ module DiscourseAi
         return if post.raw.length > SiteSetting.ai_translation_max_post_length
         target_locale = target_locale.to_s.sub("-", "_")
 
-        translated_raw = PostRawTranslator.new(text: post.raw, target_locale:, post:).translate
+        translated_raw =
+          PostRawTranslator.new(text: post.raw, target_locale:, post:, llm_model:).translate
 
         localization =
           PostLocalization.find_or_initialize_by(post_id: post.id, locale: target_locale)

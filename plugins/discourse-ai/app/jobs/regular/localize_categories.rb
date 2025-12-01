@@ -19,6 +19,12 @@ module Jobs
       raise Discourse::InvalidParameters.new(:limit) if limit.nil?
       return if limit <= 0
 
+      short_text_llm_model =
+        find_llm_model_for_persona(SiteSetting.ai_translation_short_text_translator_persona)
+      post_raw_llm_model =
+        find_llm_model_for_persona(SiteSetting.ai_translation_post_raw_translator_persona)
+      return if short_text_llm_model.blank? && post_raw_llm_model.blank?
+
       categories =
         DiscourseAi::Translation::CategoryCandidates
           .get
@@ -39,7 +45,12 @@ module Jobs
           next if LocaleNormalizer.is_same?(locale, category.locale)
 
           begin
-            DiscourseAi::Translation::CategoryLocalizer.localize(category, locale)
+            DiscourseAi::Translation::CategoryLocalizer.localize(
+              category,
+              locale,
+              short_text_llm_model:,
+              post_raw_llm_model:,
+            )
           rescue FinalDestination::SSRFDetector::LookupFailedError
             # do nothing, there are too many sporadic lookup failures
           rescue => e
@@ -55,6 +66,17 @@ module Jobs
           CategoryLocalization.find_by(category_id: category.id, locale: category.locale).destroy
         end
       end
+    end
+
+    private
+
+    def find_llm_model_for_persona(persona_id)
+      return nil if persona_id.blank?
+
+      persona_klass = AiPersona.find_by_id_from_cache(persona_id)
+      return nil if persona_klass.blank?
+
+      DiscourseAi::Translation::BaseTranslator.preferred_llm_model(persona_klass)
     end
   end
 end

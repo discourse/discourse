@@ -3,7 +3,7 @@
 module DiscourseAi
   module Summarization
     class << self
-      def topic_summary(topic)
+      def topic_summary(topic, llm_model: nil)
         return nil if !SiteSetting.ai_summarization_enabled
         if (
              ai_persona = AiPersona.find_by_id_from_cache(SiteSetting.ai_summarization_persona)
@@ -12,7 +12,7 @@ module DiscourseAi
         end
 
         persona_klass = ai_persona.class_instance
-        llm_model = find_summarization_model(persona_klass)
+        llm_model ||= find_summarization_model(persona_klass)
         return nil if llm_model.blank?
 
         DiscourseAi::Summarization::FoldContent.new(
@@ -21,7 +21,7 @@ module DiscourseAi
         )
       end
 
-      def topic_gist(topic)
+      def topic_gist(topic, llm_model: nil)
         return nil if !SiteSetting.ai_summarization_enabled
         if (
              ai_persona = AiPersona.find_by_id_from_cache(SiteSetting.ai_summary_gists_persona)
@@ -30,7 +30,7 @@ module DiscourseAi
         end
 
         persona_klass = ai_persona.class_instance
-        llm_model = find_summarization_model(persona_klass)
+        llm_model ||= find_summarization_model(persona_klass)
         return nil if llm_model.blank?
 
         DiscourseAi::Summarization::FoldContent.new(
@@ -39,7 +39,7 @@ module DiscourseAi
         )
       end
 
-      def chat_channel_summary(channel, time_window_in_hours)
+      def chat_channel_summary(channel, time_window_in_hours, llm_model: nil)
         return nil if !SiteSetting.ai_summarization_enabled
         if (
              ai_persona = AiPersona.find_by_id_from_cache(SiteSetting.ai_summarization_persona)
@@ -48,7 +48,7 @@ module DiscourseAi
         end
 
         persona_klass = ai_persona.class_instance
-        llm_model = find_summarization_model(persona_klass)
+        llm_model ||= find_summarization_model(persona_klass)
         return nil if llm_model.blank?
 
         DiscourseAi::Summarization::FoldContent.new(

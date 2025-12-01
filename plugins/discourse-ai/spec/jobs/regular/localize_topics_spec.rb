@@ -73,10 +73,16 @@ describe Jobs::LocalizeTopics do
     topic.update(locale: "es")
     DiscourseAi::Translation::TopicLocalizer
       .expects(:localize)
-      .with(topic, "en")
+      .with(topic, "en", has_entries(topic_title_llm_model: anything, post_raw_llm_model: anything))
       .raises(StandardError.new("API error"))
-    DiscourseAi::Translation::TopicLocalizer.expects(:localize).with(topic, "ja").once
-    DiscourseAi::Translation::TopicLocalizer.expects(:localize).with(topic, "de").once
+    DiscourseAi::Translation::TopicLocalizer
+      .expects(:localize)
+      .with(topic, "ja", has_entries(topic_title_llm_model: anything, post_raw_llm_model: anything))
+      .once
+    DiscourseAi::Translation::TopicLocalizer
+      .expects(:localize)
+      .with(topic, "de", has_entries(topic_title_llm_model: anything, post_raw_llm_model: anything))
+      .once
 
     expect { job.execute({ limit: 10 }) }.not_to raise_error
   end
@@ -107,9 +113,30 @@ describe Jobs::LocalizeTopics do
     it "scenario 2: returns topic with locale 'es' if localizations for en/ja/de do not exist" do
       topic = Fabricate(:topic, locale: "es")
 
-      DiscourseAi::Translation::TopicLocalizer.expects(:localize).with(topic, "en").once
-      DiscourseAi::Translation::TopicLocalizer.expects(:localize).with(topic, "ja").once
-      DiscourseAi::Translation::TopicLocalizer.expects(:localize).with(topic, "de").once
+      DiscourseAi::Translation::TopicLocalizer
+        .expects(:localize)
+        .with(
+          topic,
+          "en",
+          has_entries(topic_title_llm_model: anything, post_raw_llm_model: anything),
+        )
+        .once
+      DiscourseAi::Translation::TopicLocalizer
+        .expects(:localize)
+        .with(
+          topic,
+          "ja",
+          has_entries(topic_title_llm_model: anything, post_raw_llm_model: anything),
+        )
+        .once
+      DiscourseAi::Translation::TopicLocalizer
+        .expects(:localize)
+        .with(
+          topic,
+          "de",
+          has_entries(topic_title_llm_model: anything, post_raw_llm_model: anything),
+        )
+        .once
 
       job.execute({ limit: 10 })
     end
@@ -117,8 +144,22 @@ describe Jobs::LocalizeTopics do
     it "scenario 3: returns topic with locale 'en' if ja/de localization does not exist" do
       topic = Fabricate(:topic, locale: "en")
 
-      DiscourseAi::Translation::TopicLocalizer.expects(:localize).with(topic, "ja").once
-      DiscourseAi::Translation::TopicLocalizer.expects(:localize).with(topic, "de").once
+      DiscourseAi::Translation::TopicLocalizer
+        .expects(:localize)
+        .with(
+          topic,
+          "ja",
+          has_entries(topic_title_llm_model: anything, post_raw_llm_model: anything),
+        )
+        .once
+      DiscourseAi::Translation::TopicLocalizer
+        .expects(:localize)
+        .with(
+          topic,
+          "de",
+          has_entries(topic_title_llm_model: anything, post_raw_llm_model: anything),
+        )
+        .once
       DiscourseAi::Translation::TopicLocalizer.expects(:localize).with(topic, "en").never
 
       job.execute({ limit: 10 })
@@ -162,7 +203,14 @@ describe Jobs::LocalizeTopics do
       before { SiteSetting.ai_translation_backfill_limit_to_public_content = true }
 
       it "only processes topics from public categories" do
-        DiscourseAi::Translation::TopicLocalizer.expects(:localize).with(public_topic, "ja").once
+        DiscourseAi::Translation::TopicLocalizer
+          .expects(:localize)
+          .with(
+            public_topic,
+            "ja",
+            has_entries(topic_title_llm_model: anything, post_raw_llm_model: anything),
+          )
+          .once
 
         DiscourseAi::Translation::TopicLocalizer
           .expects(:localize)
@@ -187,11 +235,32 @@ describe Jobs::LocalizeTopics do
       before { SiteSetting.ai_translation_backfill_limit_to_public_content = false }
 
       it "processes public topics, private topics and group PMs but not personal PMs" do
-        DiscourseAi::Translation::TopicLocalizer.expects(:localize).with(public_topic, "ja").once
+        DiscourseAi::Translation::TopicLocalizer
+          .expects(:localize)
+          .with(
+            public_topic,
+            "ja",
+            has_entries(topic_title_llm_model: anything, post_raw_llm_model: anything),
+          )
+          .once
 
-        DiscourseAi::Translation::TopicLocalizer.expects(:localize).with(private_topic, "ja").once
+        DiscourseAi::Translation::TopicLocalizer
+          .expects(:localize)
+          .with(
+            private_topic,
+            "ja",
+            has_entries(topic_title_llm_model: anything, post_raw_llm_model: anything),
+          )
+          .once
 
-        DiscourseAi::Translation::TopicLocalizer.expects(:localize).with(group_pm_topic, "ja").once
+        DiscourseAi::Translation::TopicLocalizer
+          .expects(:localize)
+          .with(
+            group_pm_topic,
+            "ja",
+            has_entries(topic_title_llm_model: anything, post_raw_llm_model: anything),
+          )
+          .once
 
         DiscourseAi::Translation::TopicLocalizer
           .expects(:localize)
@@ -210,9 +279,30 @@ describe Jobs::LocalizeTopics do
     before { SiteSetting.ai_translation_backfill_max_age_days = 5 }
 
     it "only processes topics within the age limit" do
-      DiscourseAi::Translation::TopicLocalizer.expects(:localize).with(new_topic, "en").once
-      DiscourseAi::Translation::TopicLocalizer.expects(:localize).with(new_topic, "ja").once
-      DiscourseAi::Translation::TopicLocalizer.expects(:localize).with(new_topic, "de").once
+      DiscourseAi::Translation::TopicLocalizer
+        .expects(:localize)
+        .with(
+          new_topic,
+          "en",
+          has_entries(topic_title_llm_model: anything, post_raw_llm_model: anything),
+        )
+        .once
+      DiscourseAi::Translation::TopicLocalizer
+        .expects(:localize)
+        .with(
+          new_topic,
+          "ja",
+          has_entries(topic_title_llm_model: anything, post_raw_llm_model: anything),
+        )
+        .once
+      DiscourseAi::Translation::TopicLocalizer
+        .expects(:localize)
+        .with(
+          new_topic,
+          "de",
+          has_entries(topic_title_llm_model: anything, post_raw_llm_model: anything),
+        )
+        .once
 
       DiscourseAi::Translation::TopicLocalizer
         .expects(:localize)
@@ -225,13 +315,55 @@ describe Jobs::LocalizeTopics do
     it "processes all topics when setting is more than the post age" do
       SiteSetting.ai_translation_backfill_max_age_days = 100
 
-      DiscourseAi::Translation::TopicLocalizer.expects(:localize).with(new_topic, "en").once
-      DiscourseAi::Translation::TopicLocalizer.expects(:localize).with(new_topic, "ja").once
-      DiscourseAi::Translation::TopicLocalizer.expects(:localize).with(new_topic, "de").once
+      DiscourseAi::Translation::TopicLocalizer
+        .expects(:localize)
+        .with(
+          new_topic,
+          "en",
+          has_entries(topic_title_llm_model: anything, post_raw_llm_model: anything),
+        )
+        .once
+      DiscourseAi::Translation::TopicLocalizer
+        .expects(:localize)
+        .with(
+          new_topic,
+          "ja",
+          has_entries(topic_title_llm_model: anything, post_raw_llm_model: anything),
+        )
+        .once
+      DiscourseAi::Translation::TopicLocalizer
+        .expects(:localize)
+        .with(
+          new_topic,
+          "de",
+          has_entries(topic_title_llm_model: anything, post_raw_llm_model: anything),
+        )
+        .once
 
-      DiscourseAi::Translation::TopicLocalizer.expects(:localize).with(old_topic, "en").once
-      DiscourseAi::Translation::TopicLocalizer.expects(:localize).with(old_topic, "ja").once
-      DiscourseAi::Translation::TopicLocalizer.expects(:localize).with(old_topic, "de").once
+      DiscourseAi::Translation::TopicLocalizer
+        .expects(:localize)
+        .with(
+          old_topic,
+          "en",
+          has_entries(topic_title_llm_model: anything, post_raw_llm_model: anything),
+        )
+        .once
+      DiscourseAi::Translation::TopicLocalizer
+        .expects(:localize)
+        .with(
+          old_topic,
+          "ja",
+          has_entries(topic_title_llm_model: anything, post_raw_llm_model: anything),
+        )
+        .once
+      DiscourseAi::Translation::TopicLocalizer
+        .expects(:localize)
+        .with(
+          old_topic,
+          "de",
+          has_entries(topic_title_llm_model: anything, post_raw_llm_model: anything),
+        )
+        .once
 
       job.execute({ limit: 10 })
     end
