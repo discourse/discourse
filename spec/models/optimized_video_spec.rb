@@ -63,11 +63,16 @@ RSpec.describe OptimizedVideo do
           secure: true,
         )
 
+      secure_options =
+        options.merge(
+          sha1: "optimized-sha1-secure",
+          url: "//bucket.s3.region.amazonaws.com/original/1X/secure.mp4",
+        )
       optimized_video =
-        OptimizedVideo.create_for(secure_upload, "test.mp4", secure_upload.user_id, options)
+        OptimizedVideo.create_for(secure_upload, "test.mp4", secure_upload.user_id, secure_options)
       expect(optimized_video.optimized_upload.secure).to eq(true)
 
-      insecure_upload =
+      public_upload =
         Upload.create!(
           user: user,
           original_filename: "original2.mp4",
@@ -78,8 +83,13 @@ RSpec.describe OptimizedVideo do
           secure: false,
         )
 
+      public_options =
+        options.merge(
+          sha1: "optimized-sha1-public",
+          url: "//bucket.s3.region.amazonaws.com/original/1X/public.mp4",
+        )
       optimized_video2 =
-        OptimizedVideo.create_for(insecure_upload, "test2.mp4", insecure_upload.user_id, options)
+        OptimizedVideo.create_for(public_upload, "test2.mp4", public_upload.user_id, public_options)
       expect(optimized_video2.optimized_upload.secure).to eq(false)
     end
   end
