@@ -46,7 +46,7 @@ class MigrateHouseAdsFromPluginStore < ActiveRecord::Migration[7.0]
     ads_values =
       ads_data
         .map do |ad|
-          "(#{ad[:id]}, #{ActiveRecord::Base.connection.quote(ad[:name])}, #{ActiveRecord::Base.connection.quote(ad[:html])}, #{ad[:visible_to_logged_in_users]}, #{ad[:visible_to_anons]}, NOW(), NOW())"
+          "(#{ad[:id]}, #{ActiveRecord::Base.connection.quote(ad[:name])}, #{ActiveRecord::Base.connection.quote(ad[:html])}, #{ad[:visible_to_logged_in_users] ? ad[:visible_to_logged_in_users] : false}, #{ad[:visible_to_anons] ? ad[:visible_to_anons] : false}, NOW(), NOW())"
         end
         .join(",")
 
