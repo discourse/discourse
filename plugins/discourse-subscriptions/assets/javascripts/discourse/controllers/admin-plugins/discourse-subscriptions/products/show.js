@@ -2,9 +2,12 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { trackedArray } from "discourse/lib/tracked-tools";
 
 export default class AdminPluginsDiscourseSubscriptionsProductsShowController extends Controller {
   @service router;
+
+  @trackedArray plans;
 
   @action
   cancelProduct() {
