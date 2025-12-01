@@ -29,7 +29,7 @@ export default class Members extends Component {
       event.stopPropagation();
 
       if (!this.args.highlightedMember) {
-        this.args.onHighlightMember(this.args.members.lastObject);
+        this.args.onHighlightMember(this.args.members.at(-1));
       } else {
         this.args.onSelectMember(this.args.highlightedMember);
       }
