@@ -51,6 +51,7 @@ export default class UserStatusPicker extends Component {
           @btnClass="btn-emoji"
           @modalForMobile={{false}}
           @context="user-status"
+          @inline={{true}}
         />
 
         <input
