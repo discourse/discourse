@@ -19,6 +19,7 @@ const babelRequiredImports = new Set([
 export default function maybeBabel(config) {
   let totalFiles = 0;
   let skippedFiles = 0;
+  let decoratorsWithNoImports = 0;
 
   const original = babel(config);
   return {
@@ -55,6 +56,10 @@ export default function maybeBabel(config) {
 
       totalFiles += 1;
 
+      if (hasDecorators && !hasBabelRequiredImport) {
+        decoratorsWithNoImports += 1;
+      }
+
       if (hasDecorators || hasBabelRequiredImport) {
         return original.transform.call(this, code, id);
       } else {
@@ -64,7 +69,7 @@ export default function maybeBabel(config) {
     buildEnd() {
       // eslint-disable-next-line no-console
       console.log(
-        `[maybe-babel] Processed ${totalFiles - skippedFiles} of ${totalFiles} files.`
+        `[maybe-babel] Processed ${totalFiles - skippedFiles} of ${totalFiles} files. (${decoratorsWithNoImports} files had decorators but no required imports.)`
       );
     },
   };
