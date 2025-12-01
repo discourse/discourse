@@ -15,6 +15,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import TimezoneInput from "discourse/select-kit/components/timezone-input";
 import { i18n } from "discourse-i18n";
 
@@ -229,14 +230,23 @@ export default class Profile extends Component {
       {{/each}}
 
       {{#if @controller.canChangeBio}}
-        <form.Field @name="bio_raw" @title={{i18n "user.bio"}} as |field|>
+        <form.Field
+          @name="bio_raw"
+          @title={{i18n "user.bio"}}
+          @format="full"
+          as |field|
+        >
           <field.Custom>
             <MutableField
               @value={{field.value}}
               @set={{field.set}}
               as |wrapper|
             >
-              <DEditor @value={{wrapper.value}} />
+              <DEditor
+                @value={{wrapper.value}}
+                @forceEditorMode={{USER_OPTION_COMPOSITION_MODES.rich}}
+                @hidePreview={{true}}
+              />
             </MutableField>
           </field.Custom>
         </form.Field>
