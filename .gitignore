@@ -92,6 +92,7 @@
 
 # Front-end
 dist
+frontend/discourse/tmp/compat-prebuild
 node_modules
 yarn-error.log
 .pnpm-store
