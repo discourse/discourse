@@ -12,7 +12,7 @@ export default {
         const pageSearchController = api.container.lookup(
           "controller:full-page-search"
         );
-        pageSearchController.sortOrders.pushObject({
+        pageSearchController.sortOrders.push({
           name: i18n("search.most_votes"),
           id: 5,
           term: "order:votes",
