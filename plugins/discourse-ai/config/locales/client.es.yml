@@ -253,6 +253,7 @@ es:
           custom_prompt: "Instrucción personalizada"
           image_caption: "Añadir pie de foto"
           translator: "Traductor"
+          post_illustrator: "Ilustrador de publicaciones"
         translation:
           name: "Traducción"
           description: "Traduce el contenido a los idiomas compatibles"
@@ -395,8 +396,6 @@ es:
           low: 'Baja calidad: más barato (256x256)'
           medium: Calidad media (512x512)
           high: 'Alta calidad: más lento (1024x1024)'
-        tool_details: Mostrar detalles de la herramienta
-        tool_details_help: Mostrará a los usuarios finales detalles sobre qué herramientas ha activado el modelo de lenguaje.
         mentionable: Permitir menciones
         mentionable_help: Si está activada, los usuarios de los grupos permitidos pueden mencionar a este usuario en sus mensajes, y la IA responderá como esta persona.
         user: Usuario
@@ -553,7 +552,6 @@ es:
         back: "Atrás"
         confirm_delete: '¿Seguro que quieres eliminar este modelo?'
         delete: Eliminar
-        seeded_warning: "Este modelo está preconfigurado en tu web y no se puede editar."
         quotas:
           title: "Cuotas de uso"
           add_title: "Crear nueva cuota"
@@ -588,22 +586,18 @@ es:
           other: "Este modelo lo utilizan actualmente las siguientes %{settings}. Si está mal configurado, las características no funcionarán como se espera."
         model_description:
           none: "Ajustes generales que funcionan para la mayoría de los modelos lingüísticos"
-          anthropic-claude-opus-4-1: "El modelo antrópico más inteligente"
-          anthropic-claude-sonnet-4-0: "Equilibrio óptimo entre velocidad y coste"
-          anthropic-claude-3-7-sonnet-latest: "Equilibrio óptimo entre velocidad y coste (generación anterior)"
-          anthropic-claude-3-5-haiku-latest: "Rápido y rentable"
+          anthropic-claude-opus-4-5: "El modelo antrópico más inteligente"
+          anthropic-claude-sonnet-4-5: "Equilibrio óptimo entre velocidad y coste"
+          anthropic-claude-haiku-4-5: "Rápido y rentable"
           google-gemini-2-5-pro: "Modelo multimodal de tamaño grande capaz de realizar una amplia gama de tareas"
-          google-gemini-2-0-flash: "Ligero, rápido y rentable con razonamiento multimodal (generación anterior)"
           google-gemini-2-5-flash: "Ligero, rápido y rentable con razonamiento multimodal"
-          google-gemini-2-0-flash-lite: "Modelo rentable y de baja latencia"
-          open_ai-o4-mini: "Modelo de razonamiento rentable avanzado"
           open_ai-gpt-5-mini: "Proporciona un equilibrio entre inteligencia, velocidad y coste que lo convierte en un modelo atractivo para muchos casos de uso."
           open_ai-gpt-5-nano: "El modelo GPT-5 más rápido y rentable."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Modelo multilingüe, ligero y eficaz"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "Potente modelo polivalente"
           mistral-mistral-large-latest: "El modelo más potente de Mistral"
           mistral-pixtral-large-latest: "El modelo más potente de Mistral con capacidad de visión"
-          open_router-x-ai-grok-3-beta: "El último modelo de xAI"
+          open_router-x-ai-grok-4: "El último modelo de xAI"
           open_router-deepseek-deepseek-r1-0528-free: "El último modelo de razonamiento de DeepSeek"
           open_router-meta-llama-3-3-70b-instruct: "Modelo multilingüe de gran capacidad"
         preseeded_model_description: "Modelo de código abierto preconfigurado que utiliza %{model}"
@@ -631,7 +625,6 @@ es:
           vision_enabled: "Si está activada, la IA intentará comprender las imágenes. Depende del modelo utilizado que soporte la visión. Compatible con los últimos modelos de Anthropic, Google y OpenAI."
           enabled_chat_bot: "Si se activa, los usuarios pueden seleccionar este modelo al crear MP con el bot de IA"
           cost_input: "El coste de entrada por cada millón de tokens para este modelo"
-          cost_cached_input: "El coste de entrada en caché por cada millón de tokens para este modelo"
           cost_output: "El coste de salida por cada millón de tokens para este modelo"
           cost_measure: "$/1M tokens"
         providers:
@@ -711,6 +704,7 @@ es:
           title: "Miniaturas sugeridas"
           select: "Seleccionar"
           selected: "Seleccionado"
+          try_again: "Intentar de nuevo"
         image_caption:
           button_label: "Subtítulo con IA"
           generating: "Generando subtítulo..."
@@ -904,7 +898,6 @@ es:
         loading_convo: "Cargando conversación"
         collapse: "Contraer"
         timed_out: "Discobot no ha podido encontrar nada. Algo salió mal."
-        user_setting: "Activa los descubrimientos de búsqueda"
         tooltip:
           header: "Búsqueda impulsada por IA"
           content: "Búsqueda de lenguaje natural impulsad por %{model}"

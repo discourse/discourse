@@ -1,9 +1,9 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Category from "discourse/models/category";
+import CategorySelector from "discourse/select-kit/components/category-selector";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import CategorySelector from "select-kit/components/category-selector";
 
 module(
   "Integration | Component | select-kit/category-selector",

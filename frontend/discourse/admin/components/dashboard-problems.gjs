@@ -2,29 +2,32 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { compare } from "@ember/utils";
-import { eq } from "truth-helpers";
+import AdminNotice from "discourse/admin/components/admin-notice";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { removeValueFromArray } from "discourse/lib/array-tools";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import AdminNotice from "admin/components/admin-notice";
 
 export default class DashboardProblems extends Component {
   @action
   async dismissProblem(problem) {
     try {
       await ajax(`/admin/admin_notices/${problem.id}`, { type: "DELETE" });
-      this.args.problems.removeObject(problem);
+      removeValueFromArray(this.args.problems, problem);
     } catch (error) {
       popupAjaxError(error);
     }
   }
 
   get problems() {
-    return this.args.problems.sort((a, b) => compare(a?.priority, b?.priority));
+    return this.args.problems.toSorted((a, b) =>
+      compare(a?.priority, b?.priority)
+    );
   }
 
   <template>

@@ -1,31 +1,31 @@
 import { fn } from "@ember/helper";
+import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import TextField from "discourse/components/text-field";
+import DMenu from "discourse/float-kit/components/d-menu";
 import categoryLink from "discourse/helpers/category-link";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
-import DMenu from "float-kit/components/d-menu";
 
 export default <template>
-  <ConditionalLoadingSpinner @condition={{@controller.loading}}>
-    {{#if @controller.hasPermalinks}}
-      <div class="d-admin-filter">
-        <div class="admin-filter__input-container permalink-search">
-          <TextField
-            @value={{@controller.filter}}
-            @placeholderKey="admin.permalink.form.filter"
-            @autocorrect="off"
-            @autocapitalize="off"
-            class="admin-filter__input"
-          />
-        </div>
+  {{#if @controller.hasPermalinks}}
+    <div class="d-admin-filter">
+      <div class="admin-filter__input-container permalink-search">
+        <TextField
+          @value={{@controller.filter}}
+          @placeholderKey="admin.permalink.form.filter"
+          @autocorrect="off"
+          @autocapitalize="off"
+          class="admin-filter__input"
+        />
       </div>
-    {{/if}}
+    </div>
+  {{/if}}
 
+  <ConditionalLoadingSpinner @condition={{@controller.loading}}>
     <div class="permalink-results">
       {{#if @controller.model.length}}
         <table class="d-table permalinks">
@@ -102,7 +102,7 @@ export default <template>
                             <DButton
                               @action={{fn @controller.destroyRecord pl}}
                               @icon="trash-can"
-                              class="btn-transparent btn-danger admin-permalink-item__delete"
+                              class="btn-transparent --danger admin-permalink-item__delete"
                               @label="admin.config_areas.permalinks.delete"
                             />
                           </dropdown.item>

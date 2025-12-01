@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import discourseComputed from "discourse/lib/decorators";
-import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
+import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 
 export default class ComposerUserSelector extends Component {
   _groups = [];
@@ -25,19 +25,17 @@ export default class ComposerUserSelector extends Component {
   }
 
   _updateGroups(selected, newGroups) {
-    const groups = [];
+    const groups = new Set();
     this._groups.forEach((existing) => {
       if (selected.includes(existing)) {
-        groups.addObject(existing);
+        groups.add(existing);
       }
     });
     newGroups.forEach((newGroup) => {
-      if (!groups.includes(newGroup)) {
-        groups.addObject(newGroup);
-      }
+      groups.add(newGroup);
     });
     this.setProperties({
-      _groups: groups,
+      _groups: Array.from(groups),
       hasGroups: groups.length > 0,
     });
   }

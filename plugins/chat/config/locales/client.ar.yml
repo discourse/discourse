@@ -144,7 +144,6 @@ ar:
       email_frequency:
         description: "سنراسلك عبر البريد الإلكتروني فقط إذا لم نرك في آخر 15 دقيقة."
         never: "أبدًا"
-        title: "إشعارات البريد الإلكتروني"
         when_away: "عندما أكون غائبًا فقط"
       header_indicator_preference:
         title: "إظهار مؤشر النشاط في الرأس"

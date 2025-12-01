@@ -190,7 +190,6 @@ sv:
     software_update_prompt:
       message: "Vi har uppdaterat den här webbplatsen, <span>ladda om</span> för att få saker att fungera smidigt."
       dismiss: "Avfärda"
-    bootstrap_mode: "Komma igång"
     back_button: "Tillbaka"
     welcome_banner:
       header:
@@ -247,7 +246,7 @@ sv:
     joined: "Gick med"
     admin_title: "Admin"
     show_more: "visa mer"
-    show_help: "alternativ"
+    show_help: "Alternativ"
     links: "Länkar"
     links_lowercase:
       one: "länk"
@@ -502,7 +501,6 @@ sv:
       title: "Granska"
       topic: "Ämne:"
       filtered_topic: "Du har filtrerat för granskning av innehåll i ett enskilt ämne."
-      filtered_user: "Användare"
       filtered_reviewed_by: "Granskade av"
       show_all_topics: "visa alla ämnen"
       deleted_post: "(inlägg raderat)"
@@ -545,7 +543,7 @@ sv:
       replies:
         one: "%{count} svar"
         other: "%{count} svar"
-      edit: "Redigera"
+      edit: "Ändra inlägg"
       save: "Spara"
       cancel: "Avbryt"
       new_topic: "Godkännande av detta föremål skapar ett nytt ämne"
@@ -566,7 +564,6 @@ sv:
           created_at: "Skapad den"
           created_at_asc: "Skapad den (omvänt)"
         priority:
-          title: "Lägsta prioritet"
           any: "(valfritt)"
           low: "Låg"
           medium: "Medium"
@@ -633,6 +630,7 @@ sv:
       user_label: "Användare"
       notes:
         delete: "Radera"
+      topic_label: "Ämne"
       review_user: "Användare"
       copy_link_feedback: "Länken kopierad"
       insights:
@@ -1041,7 +1039,6 @@ sv:
         one: "Kategorier (%{count} till)…"
         other: "Kategorier (%{count} till)…"
     ip_lookup:
-      title: Kolla upp IP-adress
       hostname: Värdnamn
       location: Plats
       location_not_found: (okänd)
@@ -2699,7 +2696,6 @@ sv:
         progress:
           one: "Förlopp: <strong>%{count}</strong> ämne"
           other: "Förlopp: <strong>%{count}</strong> ämnen"
-        silent: "Utför denna åtgärd tyst."
       none:
         unread: "Du har inga olästa ämnen."
         unseen: "Du har inga osedda ämnen."
@@ -2838,7 +2834,6 @@ sv:
       jump_reply_aria: "Hoppa till @%{username}s inlägg på dess ursprungliga plats"
       deleted: "Ämnet har raderats"
       slow_mode_update:
-        title: "Långsamt läge"
         select: "Användare får bara publicera i detta ämne en gång varje:"
         description: "För att främja tankeväckande diskussioner i snabba eller omtvistade diskussioner måste användarna vänta innan de publicerar i det här ämnet igen."
         enable: "Aktivera"
@@ -3459,22 +3454,13 @@ sv:
         description: "Kräv att nya ämnen har taggar från tagg-grupper:"
         delete: "Radera"
         add: "Lägg till obligatorisk tagg-grupp"
-        placeholder: "välj tagg-grupp…"
+        placeholder: "Välj tagg-grupp…"
       topic_featured_link_allowed: "Tillåt utvalda länkar i denna kategori"
-      delete: "Radera kategori"
-      create: "Ny kategori"
       create_long: "Skapa en ny kategori"
-      save: "Spara kategori"
-      slug: "Kategori-etikett"
       slug_placeholder: "(Valfritt) streckade ord för url"
       creation_error: Det uppstod ett fel när kategorin skulle skapas.
       save_error: Ett fel inträffade då kategorin skulle sparas.
-      name: "Kategorinamn"
       description: "Beskrivning"
-      logo: "Kategori logotypbild"
-      logo_dark: "Kategorilogotypbild för mörkt läge"
-      background_image: "Kategori bakgrundsbild"
-      background_image_dark: "Bakgrundsbild för mörk kategori"
       background_color: "Färg"
       color_validations:
         cant_be_empty: "kan inte vara tomt"
@@ -3488,9 +3474,7 @@ sv:
       color_placeholder: "Någon webbfärg"
       delete_confirm: "Är du säker på att du vill radera den kategorin?"
       delete_error: "Ett fel inträffade vid borttagning av kategorin."
-      list: "Lista kategorier"
       no_description: "Lägg till en beskrivning för den här kategorin."
-      change_in_category_topic: "Redigera beskrivning"
       already_used: "Den här färgen används redan av en annan kategori"
       security: "Säkerhet"
       security_add_group: "Lägg till en grupp"
@@ -3521,23 +3505,15 @@ sv:
       all_topics_wiki: "Gör nya ämnen till wikis som standard"
       allow_unlimited_owner_edits_on_first_post: "Tillåt obegränsat antal ägarredigeringar av första inlägget"
       subcategory_list_style: "Liststil på underkategori:"
-      sort_order: "Sortera ämneslista enligt:"
-      default_view: "Förvald ämneslista"
-      default_top_period: "Standardtopperiod:"
-      default_list_filter: "Standardlistfilter:"
       allow_badges_label: "Tillåt utmärkelser i den här kategorin"
-      edit_permissions: "Redigera behörigheter"
       reviewable_by_group: "Förutom personal kan innehåll i denna kategori också granskas av:"
       review_group_name: "gruppnamn"
       require_topic_approval: "Kräv att en moderator godkänner alla nya ämnen"
       require_reply_approval: "Kräv att en moderator godkänner alla nya svar"
       this_year: "i år"
       position: "Position på kategorisidan:"
-      default_position: "Standardposition"
       position_disabled: "Kategorier kommer att visas i aktivitetsordning. För att styra ordningen på kategorier i listor, aktivera inställningen <a href='%{url}'>'fasta kategoripositioner'</a>."
       minimum_required_tags: "Minsta antalet taggar som krävs för ett ämne:"
-      default_slow_mode: 'Aktivera "Långsamt läge" för nya ämnen i denna kategori.'
-      parent: "Överordnad kategori"
       num_auto_bump_daily: "Antalet öppnade ämnen för att dagligen automatiskt knuffa ett ämne:"
       auto_bump_cooldown_days: "Minsta antal dagar innan samma ämne får knuffas:"
       navigate_to_first_post_after_read: "Navigera till första inlägget efter att ämnen är lästa"
@@ -3559,18 +3535,14 @@ sv:
           title: "Tystad"
           description: "Du kommer aldrig att aviseras om något som rör nya ämnen i den här kategorin och de kommer inte att dyka upp i senaste."
       search_priority:
-        label: "Sökprioritering"
         options:
           normal: "Normal"
           ignore: "Ignorera"
-          very_low: "Väldigt låg"
           low: "Låg"
           high: "Hög"
-          very_high: "Väldigt hög"
       sort_options:
         default: "Standard"
         likes: "Gillar"
-        op_likes: "Ursprungliga inläggets gillningar"
         views: "Visningar"
         posts: "Inlägg"
         activity: "Aktivitet"
@@ -3590,8 +3562,7 @@ sv:
         appearance: "Utseende"
         email: "E-post"
       list_filters:
-        all: "alla ämnen"
-        none: "inga underkategorier"
+        all: "Alla ämnen"
       colors_disabled: "Du kan inte välja färger eftersom du inte har någon kategoristil."
     flagging:
       action: "Flagga inlägg"
@@ -3782,7 +3753,7 @@ sv:
         title: "Topp"
         help: "de mest aktiva ämnena senaste året, månaden, veckan eller dagen"
         all:
-          title: "All tid"
+          title: "Alltid"
         yearly:
           title: "Årsvis"
         quarterly:
@@ -3793,7 +3764,7 @@ sv:
           title: "Veckovis"
         daily:
           title: "Dagligen"
-        all_time: "All tid"
+        all_time: "Alltid"
         this_year: "År"
         this_quarter: "Kvartal"
         this_month: "Månad"
@@ -3845,7 +3816,6 @@ sv:
         go_to_unread_post: "%{shortcut} Gå till det första olästa inlägget"
       application:
         title: "Applikation"
-        create: "%{shortcut} Skapa ett nytt ämne"
         notifications: "%{shortcut} Öppna aviseringar"
         user_profile_menu: "%{shortcut} Öppna användarmeny"
         show_incoming_updated_topics: "%{shortcut} Visa uppdaterade ämnen"
@@ -4035,18 +4005,13 @@ sv:
           description: "Du aviseras inte om nya ämnen med den här taggen, och de kommer inte att visas på din \"oläst\"-flik."
       groups:
         back_btn: "Tillbaka till alla taggar"
-        title: "Taggrupper"
         about_heading: "Välj en taggrupp eller skapa en ny"
         about_heading_empty: "Skapa en ny taggrupp för att komma igång"
         about_description: "Taggrupper hjälper dig att hantera behörigheter för många taggar på ett ställe."
-        new: "Ny grupp"
-        new_title: "Skapa ny grupp"
-        edit_title: "Redigera taggrupp"
         tags_label: "Taggar i den här gruppen"
         parent_tag_label: "Överordnad tagg"
         parent_tag_description: "Taggar från den här gruppen kan bara användas om den överordnade taggen finns."
         one_per_topic_label: "Sätt gränsen till en tagg per ämne för den här gruppen"
-        new_name: "Ny tagg-grupp"
         name_placeholder: "Namn"
         save: "Spara"
         delete: "Radera"
@@ -4419,6 +4384,9 @@ sv:
         enabled: "Aktiverad"
         select_groups: "Välj grupper…"
         preview: "Förhandsgranska"
+        enabled_for_options:
+          everyone: "Alla"
+          staff: "Endast personal"
         impact_roles:
           admins: "Administratörer"
           moderators: "Moderatorer"
@@ -4460,6 +4428,12 @@ sv:
               title: "Typsnitt för rubrik"
           backfill_modal:
             modal_yes: "Ja"
+        welcome_banner:
+          form:
+            location:
+              label: "Plats"
+            header_anonymous:
+              placeholder: "Välkommen till %{site_name}!"
         navigation:
           title: "Navigering"
         notifications:
@@ -5682,7 +5656,6 @@ sv:
           success: "Lyckades"
           exists: "Finns redan"
           upload: "Lägg till från fil"
-          upload_successful: "Uppladdning lyckades. Ord har lagts till."
           case_sensitivity_label: "Är skiftlägeskänsligt"
           case_sensitivity_description: "Endast ord med bokstäver i samma skiftläge"
           html_label: "HTML"
@@ -5771,10 +5744,7 @@ sv:
             second: "Alternativ 2"
             third: "Alternativ 3"
         edit_category:
-          toggle_freeform: "formulärmall inaktiverad"
-          toggle_form_template: "formulärmall aktiverad"
           select_template: "Välj formulärmallar"
-          select_template_help: "Lägg till/redigera formulärmallar"
       impersonate:
         title: "Imitera"
         help: "Använd det här verktyget för att imitera ett användarkonto för felsökningssyften. Du kommer behöva logga ut när du är klar."
@@ -6340,54 +6310,4 @@ sv:
           replace: "Ersätt"
   wizard_js:
     wizard:
-      jump_in: "Hoppa in!"
-      finish: "Avsluta konfigureringen"
-      back: "Tillbaka"
-      next: "Nästa"
-      configure_more: "Konfigurera fler…"
-      step-text: "Steg"
-      step: "%{current} av %{total}"
-      upload: "Ladda upp fil"
-      uploading: "Laddar upp…"
-      upload_error: "Tyvärr uppstod det ett fel under uppladdandet av den filen. Försök igen."
-      staff_count:
-        one: "Din gemenskap har %{count} arbetare (du)."
-        other: "Din gemenskap har %{count} arbetare, inklusive dig."
-      invites:
-        add_user: "lägg till"
-        none_added: "Du har inte bjudit in någon personal. Är du säker på att du vill fortsätta?"
-        roles:
-          admin: "Administratör"
-          moderator: "Moderator"
-          regular: "Regelbunden användare"
-      homepage_choices:
-        custom:
-          label: "Anpassad"
-        style_type:
-          categories: "kategori"
-          topics: "ämne"
-      top_menu_items:
-        new: "Nya"
-        unread: "Olästa"
-        top: "Topp"
-        latest: "Senaste"
-        hot: "Hett"
-        categories: "Kategorier"
-        unseen: "Osedda"
-        read: "Läs"
-        bookmarks: "Bokmärken"
-      previews:
-        share_button: "Dela"
-        reply_button: "Svara"
-        topic_preview: "Ämnesförhandsgranskning"
-        homepage_preview: "Förhandsgranskning av hemsida"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "alla kategorier"
-        category_names:
-          site_feedback: "Feedback om webbplatsen"
-        table_headers:
-          topic: "Ämne"
-          replies: "Svar"
-          views: "Visningar"
-          activity: "Aktivitet"
+      jump_in: "Nu kör vi!"

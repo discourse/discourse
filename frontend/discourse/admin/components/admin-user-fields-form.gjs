@@ -4,14 +4,14 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import { eq, or } from "truth-helpers";
+import ValueList from "discourse/admin/components/value-list";
+import UserField from "discourse/admin/models/user-field";
 import Form from "discourse/components/form";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { eq, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import ValueList from "admin/components/value-list";
-import UserField from "admin/models/user-field";
 
 export default class AdminUserFieldsForm extends Component {
   @service dialog;
@@ -25,6 +25,7 @@ export default class AdminUserFieldsForm extends Component {
   originalRequirement = this.args.userField.requirement;
   userField;
 
+  /** @returns {any} */
   get fieldTypes() {
     return UserField.fieldTypes();
   }
@@ -93,7 +94,7 @@ export default class AdminUserFieldsForm extends Component {
       this.originalRequirement = data.requirement;
 
       if (isNew) {
-        this.adminUserFields.userFields.pushObject(this.args.userField);
+        this.adminUserFields.userFields.push(this.args.userField);
       }
 
       this.router.transitionTo("adminUserFields.index");

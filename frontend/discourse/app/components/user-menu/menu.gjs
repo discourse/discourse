@@ -248,7 +248,7 @@ export default class UserMenu extends Component {
         if (reviewQueueTabIndex === -1) {
           tabs.push(tab);
         } else {
-          tabs.insertAt(reviewQueueTabIndex, tab);
+          tabs.splice(reviewQueueTabIndex, 0, tab);
           reviewQueueTabIndex++;
         }
       }

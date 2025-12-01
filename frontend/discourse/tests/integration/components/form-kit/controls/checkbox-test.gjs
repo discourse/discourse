@@ -78,5 +78,34 @@ module(
 
       assert.form().field("foo").hasTitle("Foo (optional)");
     });
+
+    test("required", async function (assert) {
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Field
+              @name="foo"
+              @title="Foo"
+              @validation="required"
+              as |field|
+            >
+              <field.Checkbox />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      assert.form().field("foo").hasTitle("Foo");
+      await formKit().submit();
+      assert.form().field("foo").hasError("Required");
+
+      await formKit().field("foo").toggle();
+      await formKit().submit();
+      assert.form().field("foo").hasNoErrors();
+
+      await formKit().field("foo").toggle();
+      await formKit().submit();
+      assert.form().field("foo").hasError("Required");
+    });
   }
 );

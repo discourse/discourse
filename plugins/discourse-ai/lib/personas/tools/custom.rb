@@ -76,9 +76,17 @@ module DiscourseAi
               end
             end
           result = runner.invoke(progress_callback: callback)
-          if runner.custom_raw
-            self.custom_raw = runner.custom_raw
+
+          # IMPORTANT: Get custom_raw ONCE - calling it multiple times clears it!
+          custom_raw_value = runner.custom_raw
+
+          # Trigger callback if custom_raw is present
+          if custom_raw_value.present?
+            self.custom_raw = custom_raw_value
             @chain_next_response = false
+
+            # Manually trigger the callback since setCustomRaw doesn't stream
+            blk&.call(custom_raw_value, true)
           end
           result
         end

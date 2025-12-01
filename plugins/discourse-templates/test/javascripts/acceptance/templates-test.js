@@ -7,8 +7,8 @@ import {
   visit,
 } from "@ember/test-helpers";
 import { test } from "qunit";
-import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { cloneJSON } from "discourse/lib/object";
+import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -161,6 +161,62 @@ acceptance("discourse-templates", function (needs) {
       "/t/lorem-ipsum-dolor-sit-amet/130",
       "navigates to the source"
     );
+  });
+
+  test("Has ordering by relevance, usage, and title", async function (assert) {
+    await visit("/");
+
+    await click("#create-topic");
+    await selectCategory();
+    await click(".toolbar-menu__options-trigger");
+    await click(`button[title="${i18n("templates.insert_template")}"]`);
+
+    await fillIn(".templates-filter-bar input.templates-filter", "ipsum");
+    const templateItems = document.querySelectorAll(
+      ".templates-list .template-item-title-text"
+    );
+    const titles = Array.from(templateItems).map((el) => el.textContent.trim());
+
+    assert.deepEqual(
+      titles,
+      [
+        "Cupcake Ipsum excerpt",
+        "Hipster ipsum excerpt",
+        "Liquor ipsum excerpt",
+        "Mussum Ipsum excerpt",
+        "Lorem ipsum dolor sit amet",
+      ],
+      "orders templates by relevance, usage, and title"
+    );
+  });
+
+  test("Remembers selected tag between openings", async function (assert) {
+    await visit("/");
+
+    await click("#create-topic");
+    await selectCategory();
+    await click(".toolbar-menu__options-trigger");
+    await click(`button[title="${i18n("templates.insert_template")}"]`);
+
+    const tagDropdown = selectKit(".templates-filter-bar .tag-drop");
+    await tagDropdown.expand();
+
+    await tagDropdown.fillInFilter(
+      "cupcake",
+      ".templates-filter-bar .tag-drop input"
+    );
+    await tagDropdown.selectRowByIndex(0);
+    assert.dom(".templates-list .template-item").exists({ count: 1 });
+
+    await click("#reply-control .toggle-save-and-close");
+
+    await click("#create-topic");
+    await selectCategory();
+    await click(".toolbar-menu__options-trigger");
+    await click(`button[title="${i18n("templates.insert_template")}"]`);
+    assert
+      .dom(".templates-list .template-item")
+      .exists({ count: 1 }, "preserves selected tag across composer sessions");
   });
 });
 

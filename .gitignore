@@ -25,11 +25,6 @@
 /public/uploads
 /public/images/emoji
 
-# Ignore the default SQLite database and db dumps
-*.sql
-*.sql.gz
-!/spec/fixtures/**/*.sql
-/db/*.sqlite3
 /db/schema_cache.yml
 
 # Plugins except for the bundled ones
@@ -122,7 +117,15 @@ openapi/*
 .direnv
 /app/assets/javascripts/discourse/tmp
 
+# Types
+frontend/discourse-types/declarations
+*.tsbuildinfo
+
 # discourse-ai evals
 /plugins/discourse-ai/evals/cases
 /plugins/discourse-ai/evals/log
 /plugins/discourse-ai/config/eval-llms.local.yml
+
+# AI customization
+/.claude
+/.cursor

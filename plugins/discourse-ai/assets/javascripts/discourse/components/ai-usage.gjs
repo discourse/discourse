@@ -6,7 +6,9 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { eq, gt, lt } from "truth-helpers";
+import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
+import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
+import Chart from "discourse/admin/components/chart";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
@@ -17,11 +19,9 @@ import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import { number } from "discourse/lib/formatter";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import { eq, gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaCard from "admin/components/admin-config-area-card";
-import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
-import Chart from "admin/components/chart";
-import ComboBox from "select-kit/components/combo-box";
 import AiCreditBar from "./ai-credit-bar";
 
 export default class AiUsage extends Component {
@@ -127,6 +127,13 @@ export default class AiUsage extends Component {
     return this.data.users.slice(start, end);
   }
 
+  get userSplitPoint() {
+    if (!this.data?.users) {
+      return 0;
+    }
+    return Math.ceil(this.data.users.length / 2);
+  }
+
   normalizeTimeSeriesData(data) {
     if (!data?.length) {
       return [];
@@ -164,7 +171,8 @@ export default class AiUsage extends Component {
         existingData || {
           period: currentMoment.format(),
           total_tokens: 0,
-          total_cached_tokens: 0,
+          total_cache_read_tokens: 0,
+          total_cache_write_tokens: 0,
           total_request_tokens: 0,
           total_response_tokens: 0,
         }
@@ -197,9 +205,14 @@ export default class AiUsage extends Component {
         tooltip: i18n("discourse_ai.usage.stat_tooltips.response_tokens"),
       },
       {
-        label: i18n("discourse_ai.usage.cached_tokens"),
-        value: this.data.summary.total_cached_tokens,
-        tooltip: i18n("discourse_ai.usage.stat_tooltips.cached_tokens"),
+        label: i18n("discourse_ai.usage.cache_read_tokens"),
+        value: this.data.summary.total_cache_read_tokens,
+        tooltip: i18n("discourse_ai.usage.stat_tooltips.cache_read_tokens"),
+      },
+      {
+        label: i18n("discourse_ai.usage.cache_write_tokens"),
+        value: this.data.summary.total_cache_write_tokens,
+        tooltip: i18n("discourse_ai.usage.stat_tooltips.cache_write_tokens"),
       },
       {
         label: i18n("discourse_ai.usage.total_spending"),
@@ -222,7 +235,12 @@ export default class AiUsage extends Component {
     const colors = {
       response: computedStyle.getPropertyValue("--chart-response-color").trim(),
       request: computedStyle.getPropertyValue("--chart-request-color").trim(),
-      cached: computedStyle.getPropertyValue("--chart-cached-color").trim(),
+      cacheRead: computedStyle
+        .getPropertyValue("--chart-cache-read-color")
+        .trim(),
+      cacheWrite: computedStyle
+        .getPropertyValue("--chart-cache-write-color")
+        .trim(),
     };
 
     return {
@@ -245,16 +263,19 @@ export default class AiUsage extends Component {
             backgroundColor: colors.response,
           },
           {
-            label: i18n("discourse_ai.usage.net_request_tokens"),
-            data: normalizedData.map(
-              (row) => row.total_request_tokens - row.total_cached_tokens
-            ),
+            label: i18n("discourse_ai.usage.request_tokens"),
+            data: normalizedData.map((row) => row.total_request_tokens),
             backgroundColor: colors.request,
           },
           {
-            label: i18n("discourse_ai.usage.cached_request_tokens"),
-            data: normalizedData.map((row) => row.total_cached_tokens),
-            backgroundColor: colors.cached,
+            label: i18n("discourse_ai.usage.cache_read_tokens"),
+            data: normalizedData.map((row) => row.total_cache_read_tokens),
+            backgroundColor: colors.cacheRead,
+          },
+          {
+            label: i18n("discourse_ai.usage.cache_write_tokens"),
+            data: normalizedData.map((row) => row.total_cache_write_tokens),
+            backgroundColor: colors.cacheWrite,
           },
         ],
       },
@@ -290,7 +311,7 @@ export default class AiUsage extends Component {
     this._cachedModels =
       this._cachedModels ||
       (this.data?.models || []).map((m) => ({
-        id: m.llm,
+        id: m.id,
         name: m.llm,
       }));
 
@@ -371,8 +392,17 @@ export default class AiUsage extends Component {
     return this._endDate || this.endDate;
   }
 
-  totalSpending(inputSpending, cachedSpending, outputSpending) {
-    const total = inputSpending + cachedSpending + outputSpending;
+  totalSpending(
+    inputSpending,
+    cacheReadSpending,
+    cacheWriteSpending,
+    outputSpending
+  ) {
+    const total =
+      (inputSpending || 0) +
+      (cacheReadSpending || 0) +
+      (cacheWriteSpending || 0) +
+      (outputSpending || 0);
     return `$${total.toFixed(2)}`;
   }
 
@@ -516,7 +546,8 @@ export default class AiUsage extends Component {
                           <td>
                             {{this.totalSpending
                               feature.input_spending
-                              feature.cached_input_spending
+                              feature.cache_read_spending
+                              feature.cache_write_spending
                               feature.output_spending
                             }}
                           </td>
@@ -565,7 +596,8 @@ export default class AiUsage extends Component {
                           <td>
                             {{this.totalSpending
                               model.input_spending
-                              model.cached_input_spending
+                              model.cache_read_spending
+                              model.cache_write_spending
                               model.output_spending
                             }}
                           </td>
@@ -589,57 +621,12 @@ export default class AiUsage extends Component {
                 {{/unless}}
 
                 {{#if this.data.users.length}}
-                  <table
+                  <div
                     class={{concatClass
-                      "ai-usage__users-table"
-                      (if (lt this.data.users.length 25) "-double-width")
+                      "ai-usage__users-table-wrapper"
+                      (if (gt this.data.users.length 24) "-multi-column")
                     }}
                   >
-                    <thead>
-                      <tr>
-                        <th class="ai-usage__users-username">{{i18n
-                            "discourse_ai.usage.username"
-                          }}</th>
-                        <th>{{i18n "discourse_ai.usage.usage_count"}}</th>
-                        <th>{{i18n "discourse_ai.usage.total_tokens"}}</th>
-                        <th>{{i18n "discourse_ai.usage.total_spending"}}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {{#each (this.takeUsers 0 24) as |user|}}
-                        <tr class="ai-usage__users-row">
-                          <td class="ai-usage__users-cell">
-                            <div class="user-info">
-                              <LinkTo
-                                @route="user"
-                                @model={{user.username}}
-                                class="username"
-                              >
-                                {{avatar user imageSize="tiny"}}
-                                {{user.username}}
-                              </LinkTo>
-                            </div></td>
-                          <td
-                            class="ai-usage__users-cell"
-                            title={{user.usage_count}}
-                          >{{number user.usage_count}}</td>
-                          <td
-                            class="ai-usage__users-cell"
-                            title={{user.total_tokens}}
-                          >{{number user.total_tokens}}</td>
-                          <td>
-                            {{this.totalSpending
-                              user.input_spending
-                              user.cached_input_spending
-                              user.output_spending
-                            }}
-                          </td>
-                        </tr>
-                      {{/each}}
-                    </tbody>
-                  </table>
-
-                  {{#if (gt this.data.users.length 25)}}
                     <table class="ai-usage__users-table">
                       <thead>
                         <tr>
@@ -648,10 +635,14 @@ export default class AiUsage extends Component {
                             }}</th>
                           <th>{{i18n "discourse_ai.usage.usage_count"}}</th>
                           <th>{{i18n "discourse_ai.usage.total_tokens"}}</th>
+                          <th>{{i18n "discourse_ai.usage.total_spending"}}</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {{#each (this.takeUsers 25 49) as |user|}}
+                        {{#each
+                          (this.takeUsers 0 this.userSplitPoint)
+                          as |user|
+                        }}
                           <tr class="ai-usage__users-row">
                             <td class="ai-usage__users-cell">
                               <div class="user-info">
@@ -672,11 +663,72 @@ export default class AiUsage extends Component {
                               class="ai-usage__users-cell"
                               title={{user.total_tokens}}
                             >{{number user.total_tokens}}</td>
+                            <td>
+                              {{this.totalSpending
+                                user.input_spending
+                                user.cache_read_spending
+                                user.cache_write_spending
+                                user.output_spending
+                              }}
+                            </td>
                           </tr>
                         {{/each}}
                       </tbody>
                     </table>
-                  {{/if}}
+
+                    {{#if (gt this.data.users.length 24)}}
+                      <table class="ai-usage__users-table">
+                        <thead>
+                          <tr>
+                            <th class="ai-usage__users-username">{{i18n
+                                "discourse_ai.usage.username"
+                              }}</th>
+                            <th>{{i18n "discourse_ai.usage.usage_count"}}</th>
+                            <th>{{i18n "discourse_ai.usage.total_tokens"}}</th>
+                            <th>{{i18n
+                                "discourse_ai.usage.total_spending"
+                              }}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {{#each
+                            (this.takeUsers this.userSplitPoint 50)
+                            as |user|
+                          }}
+                            <tr class="ai-usage__users-row">
+                              <td class="ai-usage__users-cell">
+                                <div class="user-info">
+                                  <LinkTo
+                                    @route="user"
+                                    @model={{user.username}}
+                                    class="username"
+                                  >
+                                    {{avatar user imageSize="tiny"}}
+                                    {{user.username}}
+                                  </LinkTo>
+                                </div></td>
+                              <td
+                                class="ai-usage__users-cell"
+                                title={{user.usage_count}}
+                              >{{number user.usage_count}}</td>
+                              <td
+                                class="ai-usage__users-cell"
+                                title={{user.total_tokens}}
+                              >{{number user.total_tokens}}</td>
+                              <td>
+                                {{this.totalSpending
+                                  user.input_spending
+                                  user.cache_read_spending
+                                  user.cache_write_spending
+                                  user.output_spending
+                                }}
+                              </td>
+                            </tr>
+                          {{/each}}
+                        </tbody>
+                      </table>
+                    {{/if}}
+                  </div>
                 {{/if}}
               </:content>
             </AdminConfigAreaCard>

@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import DTooltip from "float-kit/components/d-tooltip";
 
 export default class AiSearchDiscoveriesTooltip extends Component {
   @service discobotDiscoveries;
@@ -31,7 +31,7 @@ export default class AiSearchDiscoveriesTooltip extends Component {
 
             <div class="ai-search-discoveries-tooltip__actions">
               <DButton
-                class="btn-transparent btn-primary"
+                class="btn-transparent --primary"
                 @label="discourse_ai.discobot_discoveries.tooltip.actions.info"
                 @href="https://meta.discourse.org/t/conversational-ai-search-coming-to-discourse-ai/355939"
               />

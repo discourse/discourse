@@ -1,14 +1,21 @@
 import { tracked } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
 import { computed, get } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { compare } from "@ember/utils";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
+import {
+  addUniqueValueToArray,
+  removeValueFromArray,
+} from "discourse/lib/array-tools";
 import discourseComputed from "discourse/lib/decorators";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
 import { MultiCache } from "discourse/lib/multi-cache";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import PermissionType from "discourse/models/permission-type";
 import RestModel from "discourse/models/rest";
@@ -468,11 +475,14 @@ export default class Category extends RestModel {
   @service currentUser;
 
   @tracked color;
-  @tracked styleType = this.style_type;
   @tracked emoji;
   @tracked icon;
   @tracked localizations = this.category_localizations;
-  permissions = null;
+  @tracked minimum_required_tags;
+  @tracked styleType = this.style_type;
+  @trackedArray available_groups;
+  @trackedArray permissions;
+  @trackedArray required_tag_groups;
 
   init() {
     super.init(...arguments);
@@ -484,17 +494,17 @@ export default class Category extends RestModel {
       return;
     }
 
-    this.set("availableGroups", this.available_groups);
-
     if (this.group_permissions) {
-      this.set(
-        "permissions",
-        this.group_permissions.map((elem) => {
-          this.available_groups.removeObject(elem.group_name);
-          return elem;
-        })
-      );
+      this.permissions = this.group_permissions.map((elem) => {
+        removeValueFromArray(this.available_groups, elem.group_name);
+        return new TrackedObject(elem);
+      });
     }
+  }
+
+  @dependentKeyCompat
+  get availableGroups() {
+    return this.available_groups;
   }
 
   get descriptionText() {
@@ -553,8 +563,8 @@ export default class Category extends RestModel {
     });
   }
 
-  @discourseComputed("required_tag_groups", "minimum_required_tags")
-  minimumRequiredTags() {
+  @dependentKeyCompat
+  get minimumRequiredTags() {
     if (this.required_tag_groups?.length > 0) {
       // it should require the max between the bare minimum set in the category and the sum of the min_count of the
       // required_tag_groups
@@ -578,7 +588,12 @@ export default class Category extends RestModel {
 
   @discourseComputed("id")
   searchContext(id) {
-    return { type: "category", id, category: this };
+    return {
+      type: "category",
+      id,
+      /** @type Category */
+      category: this,
+    };
   }
 
   @discourseComputed("parentCategory.ancestors")
@@ -838,24 +853,25 @@ export default class Category extends RestModel {
   }
 
   addPermission(permission) {
-    this.permissions.addObject(permission);
-    this.availableGroups.removeObject(permission.group_name);
+    addUniqueValueToArray(this.permissions, new TrackedObject(permission));
+    removeValueFromArray(this.available_groups, permission.group_name);
   }
 
   removePermission(group_name) {
     const permission = this.permissions.find(
       (p) => p.group_name === group_name
     );
+
     if (permission) {
-      this.permissions.removeObject(permission);
-      this.availableGroups.addObject(group_name);
+      removeValueFromArray(this.permissions, permission);
+      addUniqueValueToArray(this.available_groups, group_name);
     }
   }
 
   updatePermission(group_name, type) {
     this.permissions.forEach((p, i) => {
       if (p.group_name === group_name) {
-        this.set(`permissions.${i}.permission_type`, type);
+        this.permissions[i].permission_type = type;
       }
     });
   }

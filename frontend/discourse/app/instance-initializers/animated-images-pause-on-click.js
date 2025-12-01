@@ -2,7 +2,7 @@ import { iconHTML } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 
-let _gifClickHandlers = {};
+const eventedImageElements = new WeakSet();
 
 function _pauseAnimation(img, opts = {}) {
   let canvas = document.createElement("canvas");
@@ -35,15 +35,6 @@ function animatedImgs() {
 export default {
   initialize() {
     withPluginApi((api) => {
-      function _cleanUp() {
-        Object.values(_gifClickHandlers || {}).forEach((handler) => {
-          handler.removeEventListener("click", _handleEvent);
-          handler.removeEventListener("load", _handleEvent);
-        });
-
-        _gifClickHandlers = {};
-      }
-
       function _handleEvent(event) {
         const img = event.target;
         if (img && !img.previousSibling) {
@@ -58,39 +49,35 @@ export default {
           return;
         }
 
-        let images = post.querySelectorAll("img.animated:not(.onebox-avatar)");
+        let imageElements = post.querySelectorAll(
+          "img.animated:not(.onebox-avatar)"
+        );
 
-        images.forEach((img) => {
+        imageElements.forEach((imageElement) => {
           // skip for edge case of multiple animated images in same block
-          if (img.parentNode.querySelectorAll("img").length > 1) {
+          if (imageElement.parentNode.querySelectorAll("img").length > 1) {
             return;
           }
 
-          if (_gifClickHandlers[img.src]) {
-            _gifClickHandlers[img.src].removeEventListener(
-              "click",
-              _handleEvent
-            );
-            _gifClickHandlers[img.src].removeEventListener(
-              "load",
-              _handleEvent
-            );
-            delete _gifClickHandlers[img.src];
+          if (eventedImageElements.has(imageElement)) {
+            imageElement.removeEventListener("click", _handleEvent);
+            imageElement.removeEventListener("load", _handleEvent);
+            eventedImageElements.delete(imageElement);
           }
 
-          _gifClickHandlers[img.src] = img;
-          img.addEventListener("click", _handleEvent, false);
+          eventedImageElements.add(imageElement);
+          imageElement.addEventListener("click", _handleEvent, false);
 
           if (prefersReducedMotion()) {
-            img.addEventListener("load", _handleEvent, false);
+            imageElement.addEventListener("load", _handleEvent, false);
           }
 
           const wrapper = document.createElement("div"),
             overlay = document.createElement("div");
 
-          img.parentNode.insertBefore(wrapper, img);
+          imageElement.parentNode.insertBefore(wrapper, imageElement);
           wrapper.classList.add("pausable-animated-image");
-          wrapper.appendChild(img);
+          wrapper.appendChild(imageElement);
 
           overlay.classList.add("animated-image-overlay");
           overlay.setAttribute("aria-hidden", "true");
@@ -103,8 +90,6 @@ export default {
       api.decorateCookedElement(_attachCommands, {
         onlyStream: true,
       });
-
-      api.cleanupStream(_cleanUp);
 
       // paused on load when prefers-reduced-motion is active, no need for blur/focus events
       if (!prefersReducedMotion()) {

@@ -89,6 +89,38 @@ RSpec.describe DiscourseAi::Completions::Llm do
       expect(log.feature_name).to eq("llm_triage")
       expect(log.feature_context).to eq({ "foo" => "bar" })
     end
+
+    it "records a usage stat row for reporting" do
+      body = {
+        model: "gpt-3.5-turbo-0301",
+        usage: {
+          prompt_tokens: 20,
+          completion_tokens: 10,
+          total_tokens: 30,
+        },
+        choices: [
+          { message: { role: "assistant", content: "stat-test" }, finish_reason: "stop", index: 0 },
+        ],
+      }.to_json
+
+      WebMock.stub_request(:post, "https://api.openai.com/v1/chat/completions").to_return(
+        status: 200,
+        body: body,
+      )
+
+      expect do
+        described_class.proxy(model).generate("Hello", user: user, feature_name: "llm_triage")
+      end.to change { AiApiRequestStat.count }.by(1)
+
+      log = AiApiAuditLog.order("id desc").first
+      stat = AiApiRequestStat.order("id desc").first
+
+      expect(stat.bucket_date).to eq(log.created_at)
+      expect(stat.language_model).to eq(log.language_model)
+      expect(stat.llm_id).to eq(model.id)
+      expect(stat.usage_count).to eq(1)
+      expect(stat.rolled_up).to be(false)
+    end
   end
 
   describe "#generate with fake model" do

@@ -14,13 +14,13 @@
     "@babel/core": "^7.28.5",
     "discourse": "workspace:*",
     "discourse-i18n": "workspace:1.0.0",
-    "ember-auto-import": "^2.11.2",
+    "ember-auto-import": "^2.12.0",
     "ember-cli-babel": "^8.2.0",
-    "ember-cli-htmlbars": "^6.3.0",
+    "ember-cli-htmlbars": "^7.0.0",
     "xss": "^1.0.15"
   },
   "devDependencies": {
-    "@ember/optional-features": "^2.2.0",
+    "@ember/optional-features": "^2.3.0",
     "@embroider/test-setup": "^4.0.0",
     "@glimmer/component": "^2.0.0",
     "@types/jquery": "^3.5.33",

@@ -11,6 +11,10 @@ sv:
     emotion_neutral:
       title: "\U0001F610 Neutralt"
   discourse_ai:
+    tools:
+      presets:
+        image_generation_custom:
+          name: "Anpassad"
     ai_bot:
       tool_summary:
         search: "Sök"

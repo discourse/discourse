@@ -1,7 +1,7 @@
 import { click, fillIn, render, select } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import AdminFilterControls from "admin/components/admin-filter-controls";
 
 const SAMPLE_DATA = [
   {

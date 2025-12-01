@@ -1,9 +1,9 @@
 import { getOwner } from "@ember/owner";
 import { render, rerender } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import WebhookStatus from "discourse/admin/components/webhook-status";
 import CoreFabricators from "discourse/lib/fabricators";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import WebhookStatus from "admin/components/webhook-status";
 
 module("Integration | Component | webhook-status", function (hooks) {
   setupRenderingTest(hooks);

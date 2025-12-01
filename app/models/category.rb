@@ -3,12 +3,7 @@
 class Category < ActiveRecord::Base
   RESERVED_SLUGS = ["none"]
 
-  self.ignored_columns = [
-    :suppress_from_latest, # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
-    :required_tag_group_id, # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
-    :min_tags_from_required_group, # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
-    :reviewable_by_group_id,
-  ]
+  self.ignored_columns = [:reviewable_by_group_id]
 
   include Searchable
   include Positionable
@@ -265,6 +260,19 @@ class Category < ActiveRecord::Base
 
       category.subcategory_count = subcategory_count[category[:id]] if category.has_children
     end
+  end
+
+  def self.set_permission!(guardian, category)
+    category.permission =
+      if guardian.is_admin? || Category.topic_create_allowed(guardian).exists?(id: category.id)
+        CategoryGroup.permission_types[:full]
+      elsif guardian.can_post_in_category?(category)
+        CategoryGroup.permission_types[:create_post]
+      elsif guardian.can_see_category?(category)
+        CategoryGroup.permission_types[:readonly]
+      end
+
+    category
   end
 
   def self.ancestors_of(category_ids)

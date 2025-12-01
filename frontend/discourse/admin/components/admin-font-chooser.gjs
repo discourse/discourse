@@ -3,11 +3,11 @@ import { tracked } from "@glimmer/tracking";
 import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { dasherize } from "@ember/string";
-import { eq } from "truth-helpers";
+import { MAIN_FONTS, MORE_FONTS } from "discourse/admin/lib/constants";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import { MAIN_FONTS, MORE_FONTS } from "admin/lib/constants";
 
 export default class AdminFontChooser extends Component {
   @tracked showMoreFonts = MORE_FONTS.map((font) => font.key).includes(

@@ -6,9 +6,9 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { and, not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import { actionDescriptionHtml } from "discourse/components/post-action-description";
 import TopicAdminMenu from "discourse/components/topic-admin-menu";
 import UserTip from "discourse/components/user-tip";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
@@ -20,9 +20,9 @@ import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { bind, debounce } from "discourse/lib/decorators";
 import domUtils from "discourse/lib/dom-utils";
 import { headerOffset } from "discourse/lib/offset-calculator";
-import { actionDescriptionHtml } from "discourse/widgets/post-small-action";
+import TopicNotificationsButton from "discourse/select-kit/components/topic-notifications-button";
+import { and, not, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import TopicNotificationsButton from "select-kit/components/topic-notifications-button";
 import BackButton from "./back-button";
 import Scroller from "./scroller";
 
@@ -92,8 +92,6 @@ export default class TopicTimelineScrollArea extends Component {
       this.appEvents.on("composer:resized", this.calculatePosition);
       this.appEvents.on("composer:closed", this.calculatePosition);
       this.appEvents.on("composer:preview-toggled", this.calculatePosition);
-      // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-      this.appEvents.on("post-stream:posted", this.calculatePosition);
     }
 
     this.intersectionObserver = new IntersectionObserver((entries) => {
@@ -133,8 +131,6 @@ export default class TopicTimelineScrollArea extends Component {
       this.appEvents.off("composer:closed", this.calculatePosition);
       this.appEvents.off("composer:preview-toggled", this.calculatePosition);
       this.appEvents.off("topic:current-post-scrolled", this.postScrolled);
-      // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-      this.appEvents.off("post-stream:posted", this.calculatePosition);
     }
   }
 

@@ -136,7 +136,7 @@ he:
       email_frequency:
         description: "נשלח לך דוא״ל אם לא ראינו אותך ב־15 הדקות האחרונות."
         never: "לעולם לא"
-        title: "הודעות בדוא״ל"
+        title: "לשלוח לי הודעה בדוא״ל כשנשלחת אליי הודעה ישירה בצ׳אט או בצ׳אט הקבוצתי"
         when_away: "רק כשלא במערכת"
       header_indicator_preference:
         title: "הצגת מחוון פעילות בכותרת"
@@ -392,6 +392,8 @@ he:
         slug_description: במזהה הייצוגי נעשה שימוש בכתובת במקום בשם הערוץ
         name: שם הערוץ
         slug: מזהה ייצוגי של הערוץ (רשות)
+        emoji: אמוג׳י של הערוץ (רשות)
+        reset_emoji: איפוס אמוג׳י
       channel_edit_description_modal:
         title: עריכת תיאור
         input_placeholder: הוספת תיאור
@@ -466,6 +468,9 @@ he:
         types:
           category: "קטגוריה"
           topic: "נושא"
+        emoji:
+          label: "אמוג׳י של הערוץ (רשות)"
+          reset: "איפוס אמוג׳י"
       reviewable:
         type: "הודעת צ׳אט"
         message_in_channel: "ערוץ"

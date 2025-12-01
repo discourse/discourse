@@ -1563,8 +1563,6 @@ ar:
       yaxis: "اليوم"
       description: "طلبات API لمفاتيح API العادية ومفاتيح API للمستخدم."
     consolidated_page_views_browser_detection:
-      title: "عدد مرات عرض الصفحة المجمَّعة مع اكتشاف المتصفح (تجريبي)"
-      title_legacy: "المشاهدات المجمَّعة للصفحة مع اكتشاف المتصفح (تجريبي)"
       xaxis:
         page_view_anon_browser: "متصفح مجهول"
         page_view_logged_in_browser: "متصفح مسجِّل الدخول"
@@ -1956,7 +1954,6 @@ ar:
     allow_duplicate_topic_titles_category: "اسمح بالموضوعات ذات العناوين المتطابقة والمتكررة إذا كانت الفئة مختلفة. يجب أن تكون القيمة allow_duplicate_topic_titles مضبوطة على False."
     unique_posts_mins: "عدد الدقائق قبل أن يتمكن العضو من إنشاء منشور يتضمَّن المحتوى نفسه مجددًا"
     educate_until_posts: "إظهار اللوحة التعليمية المنبثقة للمستخدمين الجدُد عندما يبدأ العضو في كتابة منشوراته الأولى (n)"
-    title: "اسم هذا الموقع. مرئي لجميع الزوار، بما في ذلك المستخدمون المجهولون."
     site_description: "صِف هذا الموقع بجملة واحدة. مرئي لجميع الزوار، بما في ذلك المستخدمون المجهولون."
     short_site_description: "وصف قصير من بضع كلمات. مرئي لجميع الزوار، بما في ذلك المستخدمون المجهولون."
     contact_email: "عنوان البريد الإلكتروني لجهة الاتصال الرئيسية المسؤولة عن هذا الموقع. يتم استخدامه للإشعارات المهمة ويتم عرضه أيضًا على صفحة <a href='%{base_path}/about' target='_blank'>/about</a>. مرئي للمستخدمين المجهولين على المواقع العامة."
@@ -2415,7 +2412,6 @@ ar:
     allow_all_users_to_flag_illegal_content: "سيشاهد المستخدمون المجهولون رسالة تفيد بضرورة إرسال بريد إلكتروني إلى المسؤولين للإبلاغ عن المحتوى غير القانوني. هذا الإعداد له الأولوية على خيار \"المجموعات المسموح لها بالإبلاغ عن المنشورات\"."
     email_address_to_report_illegal_content: "إذا تم ترك الحقل فارغًا، فسيتم استخدام البريد الإلكتروني الافتراضي لمسؤول الموقع."
     cooldown_hours_until_reflag: "الوقت الذي يجب على المستخدمين انتظاره قبل أن يتمكنوا من إعادة الإبلاغ عن منشور"
-    slow_mode_prevents_editing: "هل يمنع \"الوضع البطيء\" التعديل بعد edit_grace_period؟"
     reply_by_email_enabled: "تنشيط الميزة التي تسمح للمستخدمين بالرد على الموضوعات عبر البريد الإلكتروني مباشرةً، بدلًا من مطالبتهم بتسجيل الدخول إلى الموقع. راجع <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>الدليل على Meta</a> للمزيد من المعلومات."
     reply_by_email_address: "نموذج لعنوان البريد الإلكتروني الوارد عند الرد عبر البريد الإلكتروني، مثلًا: %%{reply_key}@reply.example.com أو replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "قائمة النماذج البديلة للرد عبر البريد الإلكتروني على عناوين البريد الإلكتروني الوارد. مثال: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -2720,7 +2716,6 @@ ar:
     sitemap_page_size: "عدد عناوين URL المراد تضمينها في كل صفحة من خريطة الموقع. الحد الأقصى: 50.000"
     enable_user_status: "السماح للمستخدمين بتحديد رسالة حالة مخصَّصة (رمز تعبيري + وصف)"
     enable_user_tips: "تفعيل نصائح المستخدم الجديدة التي توضِّح الميزات الرئيسية للمستخدمين"
-    short_title: "سيتم استخدام العنوان القصير على الشاشة الرئيسية للمستخدم، أو المشغِّل، أو الأماكن الأخرى التي قد تكون المساحة فيها محدودة. يجب أن يقتصر على 12 حرفًا."
     dashboard_hidden_reports: "السماح بإخفاء التقارير المحدَّدة من لوحة المعلومات"
     dashboard_visible_tabs: "اختيار علامات التبويب المرئية في لوحة المعلومات"
     dashboard_general_tab_activity_metrics: "اختيار التقارير التي سيتم عرضها كمقاييس للنشاط في علامة التبويب \"عام\""
@@ -2746,8 +2741,6 @@ ar:
     default_navigation_menu_categories: "سيتم عرض الفئات المحدَّدة ضمن قسم فئات قائمة التنقل بشكلٍٍ افتراضي."
     default_navigation_menu_tags: "سيتم عرض الفئات المحدَّدة ضمن قسم وسوم قائمة التنقل بشكلٍٍ افتراضي."
     experimental_new_new_view_groups: 'تفعيل قائمة موضوعات جديدة تجمع بين الموضوعات الجديدة وغير المقروءة، ووضع رابط "الكل" في رابط الشريط الجانبي إليها'
-    floatkit_autocomplete_composer: "تفعيل قائمة الإكمال التلقائي المعتمدة على Floatkit في أداة الإنشاء. هذا تحسين في واجهة المستخدم سيحل محل قائمة الإكمال التلقائي الحالية المعتمدة على JQuery."
-    floatkit_autocomplete_chat_composer: "تفعيل قائمة الإكمال التلقائي المعتمدة على Floatkit في أداة إنشاء الدردشة. هذا تحسين في واجهة المستخدم سيحل محل قائمة الإكمال التلقائي الحالية المعتمدة على JQuery."
     experimental_form_templates: "تفعيل ميزة قوالب النماذج. يمكنك إدارة القوالب في <a href='%{base_path}/admin/customize/form-templates'>التخصيص/القوالب</a>."
     show_preview_for_form_templates: "تفعيل ميزة معاينة قوالب النماذج"
     lazy_load_categories_groups: "التحميل البطيء لمعلومات الفئة لمستخدمي هذه المجموعات فقط. يؤدي هذا إلى تحسين الأداء على المواقع ذات الفئات المتعددة."
@@ -2841,7 +2834,6 @@ ar:
         other: "يجب أن تحتوي القائمة على %{count} قيمة بالضبط."
       markdown_linkify_tlds: "لا يمكنك تضمين قيمة '*'."
       google_oauth2_hd_groups: "يجب عليك تعيين جميع إعدادات 'google oauth2 hd' قبل تفعيل هذا الإعداد."
-      discourse_id_credentials: "يجب تكوين بيانات اعتماد Discourse ID (discourse_id_client_id و discourse_id_client_secret) قبل تفعيل هذا الإعداد."
       linkedin_oidc_credentials: "يتعيَّن عليك إعداد بيانات اعتماد LinkedIn OIDC ('linkedin_oidc_client_id' و'linkedin_oidc_client_secret') قبل تقعيل هذا الإعداد."
       search_tokenize_chinese_enabled: "يجب عليك إيقاف `email editable` قبل تفعيل هذا الإعداد."
       search_tokenize_japanese_enabled: "يجب عليك إيقاف 'search_tokenize_japanese' قبل تفعيل هذا الإعداد."
@@ -4018,14 +4010,9 @@ ar:
     user_automatically_silenced:
       title: "تم كتم المستخدم تلقائيًا"
       subject_template: "تم كتم المستخدم الجديد %{username} بسبب بلاغات المجتمع"
-      text_body_template: |
-        هذه رسالة تلقائية.
-
-        تم كتم المستخدم الجديد [%{username}](%{user_url}) تلقائيًا بسبب تلقي منشورات %{username} الكثير من البلاغات من المستخدمين.
-
-        يُرجى [مراجعة البلاغات](%{base_url}/review). إذا تم كتم %{username} بشكلٍٍ غير صحيح من النشر، فانقر على زر إلغاء الكتم على [صفحة المسؤول لهذا المستخدم](%{user_url}).
-
-        يمكن تغيير هذا الحد من خلال إعدادات الموقع `silence_new_user`.
+    user_automatically_silenced_with_reason:
+      title: "تم كتم المستخدم تلقائيًا"
+      subject_template: "تم كتم المستخدم الجديد %{username} بسبب بلاغات المجتمع"
     spam_post_blocked:
       title: "تم حظر المنشور غير المرغوب فيه"
       subject_template: "تم حظر منشورات المستخدم الجديد %{username} بسبب الروابط المتكررة"
@@ -5146,18 +5133,12 @@ ar:
     nice_share:
       name: مشاركة لطيفة
       description: شارك منشورًا مع 25 زائرًا فريدًا
-      long_description: |
-        يتم منح هذه الشارة عند مشاركة رابط ينقر عليه 25 زائرًا خارجيًا. نشكرك على مشاركة المعلومات عن مناقشاتنا وهذا المجتمع.
     good_share:
       name: مشاركة جيدة
       description: نشرت منشورًا مع 300 زائر فريد
-      long_description: |
-        يتم منح هذه الشارة عند مشاركة رابط ينقر عليه 300 زائر خارجي. أحسنت! لقد عرضت مناقشة رائعة لمجموعة من الأشخاص الجُدد وساعدت هذا المنتدى على النمو.
     great_share:
       name: مشاركة رائعة
       description: نشرت منشورًا مع 1000 زائر فريد
-      long_description: |
-        يتم منح هذه الشارة عند مشاركة رابط ينقر عليه 1000 زائر خارجي. رائع! لقد روَّجت مناقشة ممتعة لجمهور ضخم وجديد وساعدت هذا المنتدى على النمو بشكلٍٍ كبير.
     first_like:
       name: أول مرة إعجاب
       description: سجَّلت إعجابك بمشاركة
@@ -5399,29 +5380,21 @@ ar:
   wizard:
     title: "إعداد Discourse"
     step:
-      introduction:
-        title: "نبذة عن موقعك"
-        description: "سيتم عرض هذه في صفحة تسجيل الدخول الخاصة بك وفي أي صفحات عامة. يمكنك دائمًا تغييرها لاحقًا."
+      setup:
+        title: "خطوات البدء"
         fields:
           title:
             label: "اسم المجتمع"
-            placeholder: "استراحة جين"
-          site_description:
-            label: "صِف مجتمعك في جملة واحدة"
-            placeholder: "مكان لجين وأصدقائها لمناقشة أشياء رائعة"
           default_locale:
             label: "اللغة"
-      privacy:
-        title: "وصول الأعضاء"
-        fields:
           login_required:
             label: "الرؤية"
             description: "هل مجتمعك عام أم خاص؟"
             choices:
               public:
-                label: "عامة"
+                label: "عام"
               private:
-                label: "خاصة"
+                label: "خاص"
           invite_only:
             label: "التسجيل"
             description: "كيف يمكن للأعضاء الانضمام إلى هذا المجتمع؟"
@@ -5437,82 +5410,6 @@ ar:
                 label: "لا، يمكن للأعضاء الجُدد الانضمام على الفور"
               "yes":
                 label: "نعم، يجب موافقة المشرفين على الأعضاء الجُدد"
-          chat_enabled:
-            placeholder: "تفعيل الدردشة"
-            extra_description: "تفاعل مع أعضائك في الوقت الفعلي"
-      ready:
-        title: "موقعك جاهز!"
-        description: "هذا كل شيء! لقد انتهيت من الخطوات الأساسية لإعداد مجتمعك. يمكنك البدء الآن وإلقاء نظرة، وكتابة موضوع ترحيبي، وإرسال الدعوات!<br><br>استمتع بوقتك!"
-      styling:
-        title: "الشكل والمظهر"
-        fields:
-          color_scheme:
-            label: "لوحة الألوان"
-          body_font:
-            label: "خط النص الأساسي"
-          site_font:
-            label: "الخط"
-          heading_font:
-            label: "خط العنوان"
-          styling_preview:
-            label: "معاينة"
-          homepage_style:
-            label: "نمط الصفحة الرئيسية"
-            choices:
-              latest:
-                label: "الحديثة"
-                description: "يعرض أحدث الموضوعات النشطة في جميع الفئات، ممّا يساعد الأعضاء على البقاء مُطَّلعين دائمًا على المناقشات التي يهتمون بها"
-              hot:
-                label: "ساخن"
-                description: "يُبرز الموضوعات الرائجة من خلال الجمع بين الموضوعات الرائجة مؤخرًا والرائجة بشكلٍ عام، ويستعرض ما يتحدث عنه الأعضاء في مجتمعك حاليًا"
-              categories_and_latest_topics:
-                label: "الفئات التي تتضمَّن آخر الموضوعات"
-                description: "يجمع الموضوعات النشطة مؤخرًا عبر جميع الفئات مع قائمة بالفئات ووصفها وإجمالي الموضوعات"
-              categories_boxes:
-                label: "مربعات الفئات"
-                description: "يعرض الفئات ووصفها في شبكة، وهو أمر مثالي ليتمكن الأعضاء من رؤية نظرة عامة على المجتمعات الفرعية لموقعك"
-      branding:
-        title: "شعار الموقع"
-        fields:
-          logo:
-            label: "الشعار الرئيسي"
-            description: "الحجم الموصى به: 600 × 200"
-          logo_small:
-            label: "شعار مربع"
-            description: "الحجم الموصى به: 512 × 512. يُستخدم أيضًا كرمزٍ مفضَّل (رمز الموقع في علامة التبويب) وفي أيقونة التطبيق على الشاشة الرئيسية للجوَّال."
-      corporate:
-        title: "مؤسستك"
-        description: "سيتم استخدام المعلومات التالية في صفحتَي \"شروط الخدمة\" و\"نبذة\". لا تتردد في التخطي إذا لم تكن هناك شركة."
-        fields:
-          company_name:
-            label: "اسم الشركة"
-            placeholder: "مؤسسة أكمي"
-          governing_law:
-            label: "القانون الحاكم"
-            placeholder: "قانون ولاية كاليفورنيا"
-          contact_url:
-            label: "صفحة ويب"
-            placeholder: "https://www.example.com/contact-us"
-          city_for_disputes:
-            label: "مدينة النزاعات"
-            placeholder: "سان فرانسيسكو، كاليفورنيا"
-          site_contact:
-            label: "رسائل آلية"
-            description: "سيتم إرسال جميع رسائل Discourse التلقائية الخاصة من هذا المستخدم، مثل التحذيرات بشأن البلاغات وإشعارات إكمال النسخ الاحتياطي."
-          contact_email:
-            label: "نقطة الاتصال"
-            placeholder: "example@user.com"
-            description: "عنوان البريد الإلكتروني لجهة الاتصال الرئيسية المسؤولة عن هذا الموقع. يتم استخدامه للإشعارات المهمة ويتم إدراجه أيضًا في صفحة <a href='%{base_path}/about' target='_blank'>نبذة عنك</a> للمسائل العاجلة."
-      invites:
-        title: "دعوة فريق العمل"
-        description: "أنت على وشك الانتهاء! لندعو بعض الأشخاص للمساعدة في <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>تغذية مناقشاتك</a> بموضوعات وردود شيقة لبدء مجتمعك."
-        disabled: "نظرًا لإيقاف عمليات تسجيل الدخول المحلية، لا يمكن إرسال الدعوات إلى أي شخص. يُرجى المتابعة إلى الخطوة التالية."
-      finished:
-        title: "تم إعداد Discourse!"
-        description: |
-          <p>إذا كنت ترغب في أي وقت في تغيير هذه الإعدادات، <b>فأعِد تشغيل هذا المعالج في أي وقت</b>، أو انتقل إلى <a href='%{base_path}/admin' target='_blank'>قسم المسؤول</a>؛ يمكنك العثور عليه بجوار أيقونة مفتاح الربط في قائمة الموقع.</p>
-          <p>من السهل تخصيص Discourse بشكلٍٍ أكبر باستخدام نظام السمات القوي لدينا. للحصول على أمثلة، راجع <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">أهم السمات والمكوِّنات</a> في <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
-          <p>استمتع، وحظًا سعيدًا في <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>بناء مجتمعك الجديد!</a></p>
   search_logs:
     graph_title: "عدد مرات البحث"
   onebox:
@@ -5689,7 +5586,6 @@ ar:
         title: "تجاهل المنشور"
         complete: "تم تجاهل المنشور."
       revise_and_reject_post:
-        title: "مراجعة المنشور..."
         complete: "تم رفض المنشور في انتظار المراجعة."
       ignore:
         title: "تجاهل"

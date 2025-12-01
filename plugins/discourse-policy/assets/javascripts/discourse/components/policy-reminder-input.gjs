@@ -1,6 +1,6 @@
 import { hash } from "@ember/helper";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 
 const VALID_REMINDERS = [
   {

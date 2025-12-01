@@ -30,15 +30,15 @@ da:
             categories:
               label: "Kategorier"
             tags:
-              label: "Mærker"
+              label: "Tags"
             exclude_tags:
-              label: "Udeluk Mærker"
+              label: "Udeluk tags"
         llm_triage:
           fields:
             category:
               label: "Kategori"
             tags:
-              label: "Mærker"
+              label: "Tags"
             canned_reply:
               label: "Svar"
     discourse_ai:
@@ -172,6 +172,7 @@ da:
           cancel: "Annuller"
         thumbnail_suggestions:
           select: "Vælg"
+          try_again: "Prøv igen"
         image_caption:
           save_caption: "Gem"
       embeddings:

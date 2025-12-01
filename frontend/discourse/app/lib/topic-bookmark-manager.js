@@ -80,7 +80,7 @@ export default class TopicBookmarkManager {
       (b) => b.id === data.id
     );
     if (!bookmark) {
-      this.topicController.bookmarks.pushObject(Bookmark.create(data));
+      this.topicController.bookmarks.push(Bookmark.create(data));
     } else {
       bookmark.reminder_at = data.reminder_at;
       bookmark.name = data.name;

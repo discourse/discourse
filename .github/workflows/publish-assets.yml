@@ -5,8 +5,10 @@ on:
     branches:
       - main
       - stable
+      - release/*
     tags:
       - beta
+      - v*
 
 concurrency:
   group: publish-assets-${{ format('{0}-{1}', github.run_number, github.job) }}
@@ -35,7 +37,7 @@ jobs:
       - name: Set working directory owner
         run: chown root:root .
 
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 1
 

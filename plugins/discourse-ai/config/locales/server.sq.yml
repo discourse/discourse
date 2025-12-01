@@ -6,6 +6,10 @@
 
 sq:
   discourse_ai:
+    tools:
+      presets:
+        image_generation_custom:
+          name: "Grupet e krijuara"
     ai_bot:
       tool_summary:
         search: "Kërko"

@@ -1423,7 +1423,6 @@ sv:
     allow_duplicate_topic_titles_category: "Tillåt ämnen med identiska dubblettitlar om kategorin skiljer sig åt. allow_duplicate_topic_titles måste inaktiveras."
     unique_posts_mins: "Hur många minuter innan en användare kan göra ett inlägg med precis samma innehåll igen"
     educate_until_posts: "Visa hjälppanelen för nya användare tills användaren har gjort (n) nya inlägg."
-    title: "Namnet på denna webbplats. Synligt för alla besökare, även anonyma användare."
     site_description: "Beskriv denna webbplats med en mening. Synligt för alla besökare, även anonyma användare."
     short_site_description: "Kort beskrivning med några få ord. Synlig för alla besökare, även anonyma användare."
     contact_email: "E-postadress till nyckelkontakt som är ansvarig för denna webbplats. Används för kritiska aviseringar, och visas även på <a href='%{base_path}/about' target='_blank'>/about</a>. Synliga för anonyma användare på offentliga webbplatser."
@@ -1815,7 +1814,6 @@ sv:
     reviewable_low_priority_threshold: "Prioritetsfiltret döljer granskningsbara objekt som inte uppfyller den här poängen om inte filtret '(valfritt)' används."
     high_trust_flaggers_auto_hide_posts: "Ny användares inlägg döljs automatiskt efter att de har flaggats som skräppost av en användare med minst FN3"
     cooldown_hours_until_reflag: "Hur lång tid användare måste avvakta tills de kan flagga ett inlägg igen"
-    slow_mode_prevents_editing: "Förhindrar 'Långsamt läge' redigering, efter editing_grace_period?"
     reply_by_email_address: "Mall för inkommande e-postadress för svar via e-post, till exempel: %%{reply_key}@svar.exempel.se eller svar+%%{reply_key}@exempel.se"
     alternative_reply_by_email_addresses: "Lista på alternativa mallar för svar genom inkommen e-post. Exempelvis: %%{reply_key}@svar.exempel.se|replies+%% {reply_key}@exempel.se"
     incoming_email_prefer_html: "Använd HTML istället för text för inkommande e-post."
@@ -2058,7 +2056,6 @@ sv:
     enable_sitemap: "Skapa en webbplatskarta för din webbplats och inkludera den i filen robots.txt."
     sitemap_page_size: "Antal webbadresser som ska inkluderas på varje webbplatskartsida. Max 50.000"
     enable_user_tips: "Aktivera tips för nya användare som beskriver viktiga funktioner för användare"
-    short_title: "Den korta titeln kommer att användas på användarens startskärm, startapparat eller andra platser där utrymmet kan vara begränsat. Den bör begränsas till 12 tecken."
     dashboard_hidden_reports: "Tillåt att de specificerade rapporterna döljs från översiktspanelen."
     dashboard_visible_tabs: "Välj vilka flikar på översiktspanelen som ska vara synliga."
     dashboard_general_tab_activity_metrics: "Välj rapporter som ska visas som aktivitetsmätningar på fliken Allmänt."
@@ -2985,14 +2982,9 @@ sv:
     user_automatically_silenced:
       title: "Användare automatiskt tystad"
       subject_template: "Ny användare  %{username} tystad på grund av flaggningar från forumet"
-      text_body_template: |
-        Det här är ett automatiskt meddelande.
-
-        Den nya användaren [%{username}](%{user_url}) tystades automatiskt på grund av att ett flertal medlemmar flaggat användaren %{username}s inlägg.
-
-        [Granska inläggen](%{base_url}/review). Om %{username} har tystats på felaktig grund, ber vi dig klicka på otysta-knappen [på administrationssidan för den här användaren](%{user_url}).
-
-        Detta gränsvärde kan ändras genom webbplatsens inställning av `silence_new_user`.
+    user_automatically_silenced_with_reason:
+      title: "Användare automatiskt tystad"
+      subject_template: "Ny användare  %{username} tystad på grund av flaggningar från forumet"
     spam_post_blocked:
       title: "Skräppost är blockerat"
       subject_template: "Ny användare %{username} har fått meddelanden blockerade p.g.a. upprepade länkar"
@@ -3887,18 +3879,12 @@ sv:
     nice_share:
       name: Bra delning
       description: Delade ett inlägg med 25 unika besökare
-      long_description: |
-        Den här utmärkelsen beviljas för att du delade en länk som klickades på av 25 besökare. Tack för att du sprider ordet om våra diskussioner och det här forumet!
     good_share:
       name: Jättebra delning
       description: Delade ett inlägg med 300 unika besökare
-      long_description: |
-        Den här utmärkelsen beviljas för att du delade en länk som klickades på av 300 besökare. Bra jobbat! Du har visat upp en fantastisk diskussion för en mängd nya människor och hjälpt forumet att växa.
     great_share:
       name: Fantastisk delning
       description: Delade ett inlägg med 1000 unika besökare
-      long_description: |
-        Den här utmärkelsen beviljas för att du delade en länk som klickades på av 1000 besökare. Wow! Du har visat upp en intressant diskussion för en helt ny publik och hjälpt forumet växa enormt!
     first_like:
       name: Första gillning
       description: Gillade ett inlägg
@@ -4114,95 +4100,24 @@ sv:
   wizard:
     title: "Discourse-inställningar"
     step:
-      introduction:
-        title: "Om din webbplats"
-        description: "Dessa kommer att visas på din inloggningssida och eventuella offentliga sidor. Du kan alltid ändra dem senare."
+      setup:
+        title: "Komma igång"
         fields:
           title:
             label: "Forumets namn"
-            placeholder: "Här hänger Jane!"
-          site_description:
-            label: "Beskriv ditt forum i en mening"
-            placeholder: "Ett ställe där Jane och hennes vänner kan diskutera coola grejor"
           default_locale:
             label: "Språk"
-      privacy:
-        fields:
           login_required:
             label: "Synlighet"
             choices:
               public:
-                label: "Offentligt"
+                label: "Publikt"
               private:
                 label: "Privat"
           invite_only:
             choices:
               invite_only:
                 label: "Endast med inbjudan"
-          chat_enabled:
-            placeholder: "Aktivera chatt"
-            extra_description: "Engagera dina medlemmar i realtid"
-      ready:
-        title: "Din webbplats är klar!"
-        description: "Det var allt! Du har gjort det grundläggande för att konfigurera ditt forum. Nu kan du hoppa in och ta en titt, skriva ett välkomstämne och skicka inbjudningar!<br><br>Ha kul!"
-      styling:
-        title: "Utseende och känsla"
-        fields:
-          body_font:
-            label: "Typsnitt för brödtext"
-          heading_font:
-            label: "Typsnitt för rubrik"
-          styling_preview:
-            label: "Förhandsgranska"
-          homepage_style:
-            label: "Hemsidans stil"
-            choices:
-              latest:
-                label: "Senaste"
-              hot:
-                label: "Hett"
-      branding:
-        title: "Webbplatsens logotyp"
-        fields:
-          logo:
-            label: "Primär logotyp"
-            description: "Rekommenderad storlek: 600 x 200"
-          logo_small:
-            label: "Fyrkantig logotyp"
-            description: "Rekommenderad storlek: 512 x 512. Används även som favicon och appikon för mobil startskärm."
-      corporate:
-        title: "Din organisation"
-        description: "Följande information kommer att användas i dina användarvillkor och Om-sidor. Hoppa gärna över detta om det inte finns något företag."
-        fields:
-          company_name:
-            label: "Företagsnamn"
-            placeholder: "Acme Organization"
-          governing_law:
-            label: "Gällande lag"
-            placeholder: "Kalifornisk lag"
-          contact_url:
-            label: "Webbsida"
-            placeholder: "https://www.exempel.se/kontakta-oss"
-          city_for_disputes:
-            label: "Domstol vid tvister"
-            placeholder: "San Francisco, Kalifornien"
-          site_contact:
-            label: "Automatiska meddelanden"
-            description: "Alla automatiska personliga meddelanden från Discourse kommer att skickas från den här användaren, till exempel flaggvarningar eller meddelanden om säkerhetskopiering.\n "
-          contact_email:
-            label: "Kontaktpunkt"
-            placeholder: "exempel@användare.com"
-            description: "E-postadress till nyckelkontakt som är ansvarig för denna webbplats. Används för kritiska aviseringar, och visas även i listan på <a href='%{base_path}/about' target='_blank'>din Om-sida</a> för brådskande ärenden."
-      invites:
-        title: "Invitera personal"
-        description: "Du är nästan klar! Låt oss bjuda in lite folk som kan hjälpa till med att <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>fylla dina diskussioner</a> med intressanta ämnen och svar för att komma igång med ditt forum."
-        disabled: "Eftersom lokala inloggningar har inaktiverats är det inte möjligt att skicka inbjudningar till någon. Fortsätt till nästa steg."
-      finished:
-        title: "Din Discourse är redo!"
-        description: |
-          <p>Om du någonsin känner för att ändra dessa inställningar, <b>kör den här guiden igen när som helst</b>, eller besök <a href='%{base_path}/admin' target='_blank'>din admin sektion</a>; hitta den bredvid skiftnyckel-ikonen i webbplatsmenyn.</p>
-          <p>Det är lätt att anpassa Discourse ytterligare med hjälp av vårt kraftfulla temasystem. För exempel, kolla in <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">toppteman och komponenter</a> på <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
-          <p>Ha så kul och lycka till <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>med att bygga din nya gemenskap!</a></p>
   search_logs:
     graph_title: "Sökningar"
   onebox:
@@ -4334,8 +4249,6 @@ sv:
         complete: "Flaggning ignoreras."
       discard_post:
         title: "Kasta inlägg"
-      revise_and_reject_post:
-        title: "Revidera inlägg..."
       ignore:
         title: "Ignorera"
         complete: "Flaggning ignoreras."

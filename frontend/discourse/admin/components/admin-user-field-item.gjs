@@ -2,12 +2,12 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { USER_FIELD_FLAGS } from "discourse/admin/lib/constants";
+import UserField from "discourse/admin/models/user-field";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import DMenu from "discourse/float-kit/components/d-menu";
 import { i18n } from "discourse-i18n";
-import { USER_FIELD_FLAGS } from "admin/lib/constants";
-import UserField from "admin/models/user-field";
-import DMenu from "float-kit/components/d-menu";
 
 export default class AdminUserFieldItem extends Component {
   @service adminUserFields;
@@ -126,7 +126,7 @@ export default class AdminUserFieldItem extends Component {
                   <DButton
                     @label="admin.config_areas.user_fields.delete"
                     @icon="trash-can"
-                    class="btn-transparent btn-danger admin-user_field-item__delete"
+                    class="btn-transparent --danger admin-user_field-item__delete"
                     @action={{this.destroy}}
                   />
                 </dropdown.item>

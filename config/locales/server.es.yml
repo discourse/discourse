@@ -1263,8 +1263,6 @@ es:
       yaxis: "Día"
       description: "Solicitudes de API para claves de API normales y claves de API de usuario."
     consolidated_page_views_browser_detection:
-      title: "Páginas vistas consolidadas con detección de navegador (Experimental)"
-      title_legacy: "Páginas vistas consolidadas con detección de navegador (Experimental)"
       xaxis:
         page_view_anon_browser: "Navegador anónimo"
         page_view_logged_in_browser: "Navegador conectado"
@@ -1652,7 +1650,6 @@ es:
     allow_duplicate_topic_titles_category: "Permitir temas con títulos iguales si la categoría es distinta. Hay que desactivar el ajuste allow_duplicate_topic_titles."
     unique_posts_mins: "Cantidad de minutos que deben pasar antes de que un usuario pueda publicar el mismo contenido de nuevo"
     educate_until_posts: "Cuando el usuario comienza a escribir sus primeras (n) publicaciones, mostrar el panel emergente de consejos para usuarios nuevos en el editor."
-    title: "El nombre de este sitio. Visible para todos los visitantes, incluidos los usuarios anónimos."
     site_description: "Describe este sitio en una frase. Visible para todos los visitantes, incluidos los usuarios anónimos."
     short_site_description: "Breve descripción en pocas palabras. Visible para todos los visitantes, incluidos los usuarios anónimos."
     contact_email: "Dirección de correo electrónico del contacto clave responsable de este sitio. Se utiliza para notificaciones críticas, y también se muestra en <a href='%{base_path}/about' target='_blank'>/about</a>. Visible para usuarios anónimos en sitios públicos."
@@ -2111,7 +2108,6 @@ es:
     allow_all_users_to_flag_illegal_content: "Los usuarios anónimos verán información que les indica que deben enviar un correo electrónico a los administradores para denunciar contenido ilegal. Este ajuste tiene prioridad sobre «grupos que pueden denunciar publicaciones»."
     email_address_to_report_illegal_content: "Si se deja en blanco, se utilizará el correo electrónico de administrador del sitio predeterminado."
     cooldown_hours_until_reflag: "Cantidad de tiempo que los usuarios deberán esperar antes de poder denunciar de nuevo una publicación."
-    slow_mode_prevents_editing: "¿El «Modo lento» evita la edición después de edit_grace_period?"
     reply_by_email_enabled: "Activa la función que permite a los usuarios responder a los temas directamente a través del correo electrónico, en lugar de tener que iniciar sesión en el sitio web. Consulta <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>la guía sobre Meta</a> para obtener más información."
     reply_by_email_address: "Plantilla para la dirección de correo electrónico que aparecerá al recibir correos con la función de respuesta por correo electrónico: %%{reply_key}@respuesta.ejemplo.com o respuestas+%%{reply_key}@ejemplo.com"
     alternative_reply_by_email_addresses: "Lista de plantillas alternativa para las direcciones de respuesta por correo electrónico. Ejemplo: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -2416,7 +2412,6 @@ es:
     sitemap_page_size: "Número de URLs que incluir en cada página del sitemap. Máximo de 50.000"
     enable_user_status: "Permitir a los usuarios establecer un mensaje de estado personalizado (emoji + descripción)."
     enable_user_tips: "Activar nuevos consejos de usuario que describan las funciones clave a los usuarios"
-    short_title: "El título corto se utilizará en la pantalla de inicio del usuario, el iniciador u otros lugares donde el espacio puede ser limitado. Debe limitarse a 12 caracteres."
     dashboard_hidden_reports: "Permitir ocultar los informes especificados del panel de control."
     dashboard_visible_tabs: "Elige qué pestañas del panel de control se mostrarán."
     dashboard_general_tab_activity_metrics: "Selecciona las denuncias que se muestran como medidas de actividad en la pestaña general."
@@ -2442,9 +2437,6 @@ es:
     default_navigation_menu_categories: "Las categorías seleccionadas se mostrarán por defecto en la sección Categorías del Menú de navegación."
     default_navigation_menu_tags: "Las etiquetas seleccionadas se mostrarán por defecto en la sección Etiquetas del Menú de navegación."
     experimental_new_new_view_groups: 'Activa una nueva lista de temas que combine los no leídos y los nuevos y haz que el enlace «Todo» de la barra lateral enlace a ella.'
-    floatkit_autocomplete_composer: "Activa el menú de autocompletar basado en Floatkit en el compositor. Esta mejora de la interfaz de usuario reemplazará el menú de autocompletar basado en JQuery actual."
-    floatkit_autocomplete_input_fields: "Activa el menú de autocompletar basado en Floatkit para los campos de entrada en los campos de búsqueda en pantalla completa y selector de grupos. Esta mejora de la interfaz de usuario reemplazará el menú de autocompletar basado en jQuery actual."
-    floatkit_autocomplete_chat_composer: "Activa el menú de autocompletar basado en Floatkit en el compositor. Esta mejora de interfaz de usuario reemplazará el menú de autocompletar basado en jQuery actual."
     experimental_form_templates: "Activa la característica de plantillas de formulario. Gestiona las plantillas en <a href='%{base_path}/admin/customize/form-templates'>Personalizar / Plantillas</a>."
     show_preview_for_form_templates: "Activa la vista previa de las plantillas de formulario"
     lazy_load_categories_groups: "Carga lenta de la información de categoría solo para los usuarios de estos grupos. Esto mejora el rendimiento en sitios con muchas categorías."
@@ -2526,7 +2518,6 @@ es:
         other: "La lista debe contener exactamente %{count} valores."
       markdown_linkify_tlds: "No puedes incluir el valor «*»"
       google_oauth2_hd_groups: "Debes configurar todos los ajustes de «google oauth2 hd» antes de activar este ajuste."
-      discourse_id_credentials: "Debes configurar las credenciales de Discourse ID («discourse_id_client_id» y «discourse_id_client_secret») antes de activar este ajuste."
       linkedin_oidc_credentials: "Debes configurar las credenciales OIDC de LinkedIn («linkedin_oidc_client_id» y «linkedin_oidc_client_secret») antes de activar este ajuste."
       search_tokenize_chinese_enabled: "Debes desactivar el ajuste «search_tokenize_chinese» antes de activar este."
       search_tokenize_japanese_enabled: "Debes desactivar el ajuste «search_tokenize_japanese» antes de activar este."
@@ -3623,14 +3614,9 @@ es:
     user_automatically_silenced:
       title: "Usuario silenciado automáticamente"
       subject_template: "Usuario nuevo %{username} silenciado por denuncias de la comunidad"
-      text_body_template: |
-        Este es un mensaje automático.
-
-        El nuevo usuario [%{username}](%{user_url}) ha sido silenciado automáticamente porque varios usuarios han denunciado las publicaciones de %{username}.
-
-        Por favor, [revisa las marcas](%{base_url}/review). Si %{username} ha sido silenciado incorrectamente, haz clic en el botón de cancelar silencio en [la página de administración de este usuario](%{user_url}).
-
-        Este umbral puede cambiarse a través de la configuración del sitio `silence_new_user`.
+    user_automatically_silenced_with_reason:
+      title: "Usuario silenciado automáticamente"
+      subject_template: "Usuario nuevo %{username} silenciado por denuncias de la comunidad"
     spam_post_blocked:
       title: "Publicación con spam bloqueada"
       subject_template: "Publicaciones del usuario nuevo %{username} bloqueadas debido a la repetición de enlaces."
@@ -4740,18 +4726,12 @@ es:
     nice_share:
       name: Buena contribución
       description: Compartió una publicación con 25 visitantes únicos
-      long_description: |
-        Esta medalla se concede por compartir un enlace que fue visitado por 25 visitantes externos. Gracias por difundir las palabras sobre nuestras discusiones y esta comunidad.
     good_share:
       name: Muy buena contribución
       description: Compartió una publicación con 300 visitantes únicos
-      long_description: |
-        Esta medalla se concede cuando compartes un enlace y 300 visitantes externos hacen clic. ¡Buen trabajo! Has enseñado una conversación excelente a unas cuantas personas nuevas y has ayudado a crecer la comunidad.
     great_share:
       name: Excelente contribución
       description: Compartió una publicación con 1000 visitantes únicos
-      long_description: |
-        Esta medalla se concede cuando compartes un enlace y 1000 visitantes externos hacen clic en él. ¡Increíble! Has promocionado una conversación muy interesante a una gran audiencia y has ayudado a crecer la comunidad.
     first_like:
       name: Primer me gusta
       description: Le dio a me gusta a una publicación
@@ -4969,29 +4949,21 @@ es:
   wizard:
     title: "Instalación de Discourse"
     step:
-      introduction:
-        title: "Acerca de tu sitio"
-        description: "Se mostrarán en tu inicio de sesión y en cualquier página pública. Siempre puedes cambiarlos más adelante."
+      setup:
+        title: "Cómo empezar"
         fields:
           title:
             label: "Nombre de la comunidad"
-            placeholder: "Reunión de Juana"
-          site_description:
-            label: "Describe tu comunidad en una frase"
-            placeholder: "Un sitio para que Juana y sus amigos discutan cosas interesantes"
           default_locale:
             label: "Idioma"
-      privacy:
-        title: "Acceso de miembros"
-        fields:
           login_required:
             label: "Visibilidad"
             description: "¿Tu comunidad es pública o privada?"
             choices:
               public:
-                label: "Pública"
+                label: "Público"
               private:
-                label: "Privada"
+                label: "Privado"
           invite_only:
             label: "Registro"
             description: "¿Cómo pueden los miembros unirse a esta comunidad?"
@@ -5007,82 +4979,6 @@ es:
                 label: "No, los nuevos miembros pueden unirse inmediatamente"
               "yes":
                 label: "Sí, los nuevos miembros deben ser aprobados por los moderadores."
-          chat_enabled:
-            placeholder: "Activar chat"
-            extra_description: "Interactúa con tus miembros en tiempo real"
-      ready:
-        title: "¡Tu sitio está listo!"
-        description: "Ya está. Has hecho lo básico para configurar tu comunidad. Ahora puedes entrar y echar un vistazo, escribir un tema de bienvenida y enviar invitaciones.<br><br>¡Disfrútala!"
-      styling:
-        title: "Aspecto y estilo"
-        fields:
-          color_scheme:
-            label: "Paleta de colores"
-          body_font:
-            label: "Tipo de letra para textos"
-          site_font:
-            label: "Tipo de letra"
-          heading_font:
-            label: "Tipo de letra para encabezados"
-          styling_preview:
-            label: "Vista previa"
-          homepage_style:
-            label: "Estilo de la página de inicio"
-            choices:
-              latest:
-                label: "Recientes"
-                description: "Muestra los temas activos más recientes en todas las categorías, ayudando a los miembros a mantenerse al día de los debates que les interesan"
-              hot:
-                label: "Caliente"
-                description: "Muestra los temas de tendencia combinando la popularidad reciente y la general, mostrando de qué están hablando los miembros de tu comunidad en este momento"
-              categories_and_latest_topics:
-                label: "Categorías con los temas más recientes"
-                description: "Combina los temas activos recientemente en todas las categorías con una lista de categorías, su descripción y el total de temas"
-              categories_boxes:
-                label: "Cuadros de categorías"
-                description: "Muestra las categorías y su descripción en una cuadrícula, ideal para que los miembros vean una visión general de las subcomunidades de tu sitio"
-      branding:
-        title: "Logotipo del sitio"
-        fields:
-          logo:
-            label: "Logotipo principal"
-            description: "Tamaño recomendado: 600 x 200"
-          logo_small:
-            label: "Logotipo cuadrado"
-            description: "Tamaño recomendado: 512 x 512. También se utiliza como icono de la aplicación de pantalla de inicio móvil y favicon."
-      corporate:
-        title: "Tu organización"
-        description: "La siguiente información se utilizará en tus páginas Términos del servicio y Acerca de. Puedes omitirla si no existe ninguna empresa."
-        fields:
-          company_name:
-            label: "Nombre de la empresa"
-            placeholder: "Organización Acme"
-          governing_law:
-            label: "Ley que rige"
-            placeholder: "Ley de California"
-          contact_url:
-            label: "Página web"
-            placeholder: "https://ejemplo.com/contacto"
-          city_for_disputes:
-            label: "Ciudad para disputas"
-            placeholder: "San Francisco, California"
-          site_contact:
-            label: "Mensajes automatizados"
-            description: "Todos los mensajes personales automatizados de Discourse serán enviados desde este usuario, tales como denuncias de advertencia y notificaciones de copias de seguridad exitosas."
-          contact_email:
-            label: "Punto de contacto"
-            placeholder: "ejemplo@usuario.com"
-            description: "Dirección de correo electrónico del contacto clave responsable de este sitio. Se utiliza para notificaciones críticas y aparece en tu <a href='%{base_path}/about' target='_blank'>página «Acerca de»</a> para asuntos urgentes."
-      invites:
-        title: "Invitar personal"
-        description: "¡Ya casi estás listo! Vamos a invitar otras personas para que ayuden a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>iniciar discusiones</a> con temas interesantes y respuestas para que comience tu comunidad."
-        disabled: "Ya que los inicios de sesión locales están desactivados, no es posible enviar invitaciones a nadie. Ve al siguiente paso."
-      finished:
-        title: "¡Tu foro de Discourse está listo!"
-        description: |
-          <p>Si en algún momento quieres cambiar estos ajustes, <b>vuelve a lanzar este proceso en cualquier momento</b>, o visita <a href='%{base_path}/admin' target='_blank'>tu panel de administración</a>, que podrás encontrar enlazado al lado del icono de la llave inglesa en el menú.</p>
-          <p>Personalizar más todavía tu Discourse es fácil usando nuestro potente sistema de temas. Para ver ejemplos, mira los <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">temas y componentes más populares</a> en <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
-          <p>Pásalo bien, y ¡buena suerte <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>construyendo tu nueva comunidad!</a></p>
   search_logs:
     graph_title: "Análisis de búsquedas"
   onebox:
@@ -5247,7 +5143,6 @@ es:
         title: "Descartar publicación"
         complete: "Publicación descartada."
       revise_and_reject_post:
-        title: "Revisar publicación..."
         complete: "Publicación rechazada pendiente de revisión."
       ignore:
         title: "Ignorar"

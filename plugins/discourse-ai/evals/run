@@ -2,62 +2,96 @@
 # frozen_string_literal: true
 
 require_relative "lib/boot"
-require_relative "lib/llm"
+require_relative "lib/llm_repository"
 require_relative "lib/eval"
 require_relative "lib/prompts/prompt_evaluator"
 require_relative "lib/prompts/single_test_runner"
 require_relative "lib/features"
 require_relative "lib/recorder"
-require_relative "lib/playground"
+require_relative "lib/workbench"
+require_relative "lib/persona_prompt_loader"
 require_relative "lib/cli"
 
 features_registry =
   DiscourseAi::Evals::Features.new(modules: DiscourseAi::Configuration::Module.all)
-playground = DiscourseAi::Evals::Playground.new(output: $stdout)
+cli = DiscourseAi::Evals::Cli.parse_options!(features_registry)
 
-options = DiscourseAi::Evals::Cli.parse_options!(features_registry)
+llm_repository = DiscourseAi::Evals::LlmRepository.new
 
-if options.list_models
-  DiscourseAi::Evals::Llm.print
+if cli.list_models
+  llm_repository.print
   exit 0
 end
 
-if options.list_features
+if cli.list_features
   features_registry.print
+  exit 0
+end
+
+persona_loader = DiscourseAi::Evals::PersonaPromptLoader.new
+
+if cli.list_personas
+  persona_loader.print
   exit 0
 end
 
 available_evals = DiscourseAi::Evals::Eval.available_cases
 
-if options.list
+if cli.list
   available_evals.each(&:print)
   exit 0
 end
 
-llms = DiscourseAi::Evals::Llm.choose(options.model)
+llms = llm_repository.choose(cli.models)
 
 if llms.empty?
-  puts "Error: Unknown model '#{options.model}'"
+  puts "Error: Unknown models '#{cli.models}'"
   exit 1
 end
 
-selected_evals = available_evals
 selected_evals =
-  selected_evals.select do |eval_case|
-    eval_case.feature == options.feature_key
-  end if options.feature_key.present?
-selected_evals =
-  selected_evals.select do |eval_case|
-    eval_case.id == options.eval_name
-  end if options.eval_name.present?
-
-if selected_evals.empty?
-  if options.feature_key
-    puts "Error: No evaluations registered for feature '#{options.feature_key}'"
+  if cli.dataset_path.present?
+    DiscourseAi::Evals::Eval.from_dataset_csv(path: cli.dataset_path, feature: cli.feature_key)
   else
-    puts "Error: Unknown evaluation '#{options.eval_name}'"
+    cli.select_evals(available_evals)
   end
-  exit 1
+
+judge_llm = nil
+default_judge_error = nil
+
+requires_judge = selected_evals.any? { |eval_case| eval_case.judge.present? }
+
+judge_name = cli.judge_name.presence
+judge_name = DiscourseAi::Evals::Cli::DEFAULT_JUDGE if requires_judge && judge_name.blank?
+
+if judge_name.present?
+  begin
+    judge_llm = llm_repository.hydrate(judge_name)
+  rescue StandardError => e
+    if cli.judge_provided?
+      puts "Error: #{e.message}"
+      exit 1
+    else
+      judge_llm = nil
+      default_judge_error = e.message
+    end
+  end
 end
 
-selected_evals.each { |eval_case| playground.run(eval_case: eval_case, llms: llms) }
+persona_variants =
+  persona_loader.variants_for(cli.persona_keys, comparison_mode: cli.comparison_mode)
+
+cli.validate_comparison_requirements!(llms: llms, persona_variants: persona_variants)
+
+cli.validate_judge_presence!(
+  requires_judge: requires_judge,
+  judge_llm: judge_llm,
+  default_judge_error: default_judge_error,
+)
+
+DiscourseAi::Evals::Workbench.new(
+  output: $stdout,
+  judge_llm: judge_llm,
+  persona_variants: persona_variants,
+  comparison: cli.comparison_mode,
+).run_evals(eval_cases: selected_evals, llms: llms, persona_variants: persona_variants)

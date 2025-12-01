@@ -18,8 +18,8 @@ RSpec.describe SiteIconManager do
   end
 
   it "works correctly" do
-    SiteSetting.logo = nil
-    SiteSetting.logo_small = nil
+    SiteSetting.logo = ""
+    SiteSetting.logo_small = ""
 
     # Falls back to sketch for some icons
     expect(SiteIconManager.favicon.upload_id).to eq(SiteIconManager::SKETCH_LOGO_ID)
@@ -59,7 +59,7 @@ RSpec.describe SiteIconManager do
     end
 
     it "returns the upload URL for the logo site setting when the mobile_logo setting isn't set" do
-      SiteSetting.mobile_logo = nil
+      SiteSetting.mobile_logo = ""
       expect(SiteIconManager.mobile_logo_url).to eq(GlobalPath.full_cdn_url(logo_image.url))
     end
   end
@@ -77,7 +77,7 @@ RSpec.describe SiteIconManager do
     end
 
     it "returns the upload URL for the logo_dark site setting when the mobile_logo_dark setting isn't set" do
-      SiteSetting.mobile_logo_dark = nil
+      SiteSetting.mobile_logo_dark = ""
       expect(SiteIconManager.mobile_logo_dark_url).to eq(
         GlobalPath.full_cdn_url(logo_dark_image.url),
       )

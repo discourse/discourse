@@ -291,7 +291,6 @@ pt_BR:
     software_update_prompt:
       message: "Este site foi atualizado, <span>atualize a página</span> para manter tudo funcionando."
       dismiss: "Descartar"
-    bootstrap_mode: "Primeiros passos"
     back_button: "Voltar"
     welcome_banner:
       header:
@@ -357,7 +356,7 @@ pt_BR:
     joined: "Ingressou"
     admin_title: "Administração"
     show_more: "exibir mais"
-    show_help: "opções"
+    show_help: "Opções"
     links: "Links"
     links_lowercase:
       one: "link"
@@ -697,7 +696,7 @@ pt_BR:
       title: "Revisar"
       topic: "Tópico:"
       filtered_topic: "Você filtrou para conteúdo revisável em um único tópico."
-      filtered_user: "Usuário(a)"
+      filtered_user: "Usuário(a) sinalizado(a)"
       filtered_reviewed_by: "Revisado por"
       show_all_topics: "exibir todos os tópicos"
       deleted_post: "(postagem excluída)"
@@ -748,7 +747,7 @@ pt_BR:
       replies:
         one: "%{count} resposta"
         other: "%{count} respostas"
-      edit: "Editar"
+      edit: "Editar postagem"
       save: "Salvar"
       cancel: "Cancelar"
       new_topic: "A aprovação deste item criará um novo tópico"
@@ -770,7 +769,6 @@ pt_BR:
           created_at: "Criado em"
           created_at_asc: "Criado em (reverso)"
         priority:
-          title: "Prioridade mínima"
           any: "(qualquer um)"
           low: "Baixa"
           medium: "Média"
@@ -836,7 +834,6 @@ pt_BR:
           noun: "postagem"
       flagged_as: "Sinalizado como"
       user_label: "Usuário(a)"
-      assigned_to: "Atribuído(a) a"
       moderator_actions: "Ações da moderação"
       timeline_and_notes: "Cronograma e observações"
       timeline:
@@ -853,13 +850,12 @@ pt_BR:
         note_added_by: "Observação da moderação por %{username} - %{relativeDate}"
         no_events: "Não há eventos da linha do tempo para exibir"
       notes:
-        add_note_description: "Visível apenas para a moderarção. Use esta observação para adicionar contexto ou decisões sobre a revisão."
         add_note_button: "Adicionar observação"
         placeholder: "Escreva sua observação aqui..."
         chars_remaining: "%{count} caractere(s) restante(s)"
         delete_note: "Excluir esta observação"
         delete: "Excluir"
-      new_topic_label: "Novo tópico"
+      topic_label: "Tópico"
       queued_user: "Usuário(a) na fila"
       posted_in: "Postagem em"
       flagged_user: "Usuário(a) sinalizado(a)"
@@ -874,11 +870,7 @@ pt_BR:
         flagged_by_users:
           one: "Marcado por %{count} usuário(a)"
           other: "Marcado por %{count} usuários(as)"
-        similar_posts: "Postagens anteriores semelhantes"
-        flagged_in_timeframe: "%{count} sinalizado(s) anteriormente"
-        user_activity: "Atividade do(a) usuário(a)"
         activities:
-          new_account: "nova conta"
           trust_level: "nível de confiança: %{trustLevelName}"
           posts:
             one: "%{count} postagem"
@@ -886,7 +878,6 @@ pt_BR:
         solution_marked: "Solução marcada"
         topic_has_solution: "Este tópico tem uma solução"
         visibility: "Visibilidade"
-        topic_unlisted: "Este tópico não está listado. Pode ser acessado apenas por meio do link direto, não público."
       help:
         moderation_guide: "Guia de moderação do Discourse"
         flag_priorities: "Gerenciar a reputação do(a) usuário(a) e sinalizar prioridades"
@@ -1309,7 +1300,6 @@ pt_BR:
         one: "Categorias (mais %{count})…"
         other: "Categorias (mais %{count})…"
     ip_lookup:
-      title: Pesquisa de endereço IP
       hostname: Nome do host
       location: Local
       location_not_found: (desconhecido)
@@ -2699,7 +2689,6 @@ pt_BR:
         title: "Traduzindo postagem"
         select: "Selecione a tradução"
         save: "Salvar tradução"
-        original_content: "Conteúdo original da postagem"
         translation: "Tradução"
         placeholder: "Digite a tradução da postagem aqui..."
       group_mentioned_limit:
@@ -2859,7 +2848,6 @@ pt_BR:
           desc: "Responder sem alterar a data da última resposta"
         toggle_unlisted:
           label: Ativar como não listado
-          desc: Tópicos não listados acessíveis aos membros somente por meio de link direto
       reload: "Recarregar"
       ignore: "Ignorar"
       image_alt_text:
@@ -3268,7 +3256,6 @@ pt_BR:
         progress:
           one: "Progresso: <strong>%{count}</strong> tópico"
           other: "Progresso: <strong>%{count}</strong> tópicos"
-        silent: "Realize esta ação silenciosamente."
         performing: "Realizando operações em massa, aguarde…"
         completed: "Operações em massa concluídas!"
       none:
@@ -3438,7 +3425,6 @@ pt_BR:
       jump_reply_button: "Ir para postagem"
       deleted: "Este tópico foi excluído"
       slow_mode_update:
-        title: "Modo lento"
         select: "Os(as) usuários(as) podem postar neste tópico apenas a cada:"
         description: "Para promover um diálogo saudável em discussões dinâmicas e acirradas, os(as) usuários(as) devem aguardar antes de postar neste tópico outra vez."
         enable: "Ativar"
@@ -3873,7 +3859,6 @@ pt_BR:
         post_language_selector:
           none: "Nenhum"
         edit_warning:
-          message: "Esta é uma postagem traduzida.<br><br> Você quer editar a postagem original em %{language} ou editar essa tradução específica?"
           action_original: "Editar a postagem original"
           action_translation: "Editar esta tradução"
       errors:
@@ -4106,24 +4091,14 @@ pt_BR:
         description: "Exigir que novos tópicos tenham etiquetas de grupos de etiquetas:"
         delete: "Excluir"
         add: "Adicionar grupo de tags necessário"
-        placeholder: "selecionar grupo de etiquetas…"
+        placeholder: "Selecionar grupo de etiquetas…"
       topic_featured_link_allowed: "Permitir links em destaque nesta categoria"
-      delete: "Excluir categoria"
-      create: "Nova categoria"
       create_long: "Criar uma nova categoria"
-      save: "Salvar categoria"
-      slug: "Slug da categoria"
       slug_placeholder: "(Opcional) palavras hifenizadas para url"
       creation_error: Houve um erro durante a criação da categoria.
       save_error: Houve um erro ao salvar a categoria.
-      name: "Nome da categoria"
-      untitled: "Categoria sem título"
       description: "Descrição"
-      logo: "Imagem do logotipo da categoria"
-      logo_dark: "Imagem do logotipo da categoria Modo Escuro"
       logo_description: "Proporção de tela recomendada 1:1 com tamanho mínimo de 200px. Se deixada em branco, nenhuma imagem será exibida."
-      background_image: "Imagem de fundo da categoria"
-      background_image_dark: "Imagem escura de fundo da categoria"
       style: "Estilos"
       background_color: "Cor"
       foreground_color: "Cor do texto"
@@ -4143,7 +4118,7 @@ pt_BR:
       color_placeholder: "Qualquer cor da web"
       delete_confirm: "Tem certeza que quer excluir esta categoria?"
       delete_error: "Houve um erro ao excluir a categoria."
-      list: "Categorias da lista"
+      list: "Listar categorias"
       no_description: "Adicione uma descrição para esta categoria."
       change_in_category_topic: "Editar descrição"
       already_used: "Esta cor já foi usada para outra categoria"
@@ -4176,23 +4151,15 @@ pt_BR:
       all_topics_wiki: "Criar novos tópicos wikis por padrão"
       allow_unlimited_owner_edits_on_first_post: "Permitir edições ilimitadas na primeira postagem"
       subcategory_list_style: "Estilo da lista de subcategorias"
-      sort_order: "Classificar lista de tópicos por:"
-      default_view: "Lista de tópicos padrão:"
-      default_top_period: "Período superior padrão:"
-      default_list_filter: "Filtro de lista padrão:"
       allow_badges_label: "Permitir a concessão de emblemas nesta categoria"
-      edit_permissions: "Editar permissões"
       reviewable_by_group: "Além da equipe, o conteúdo desta categoria também pode ser revisado por:"
       review_group_name: "nome do grupo"
       require_topic_approval: "Requer aprovação dos moderadores(as) de todos os novos tópicos"
       require_reply_approval: "Requer aprovação dos moderadores(as) de todas as novas respostas"
       this_year: "este ano"
       position: "Posição na página de categorias:"
-      default_position: "Posição padrão"
       position_disabled: "As categorias serão exibidas em ordem de atividade. Para controlar a ordem das categorias nas listas, ative a configuração de <a href='%{url}'>\"posições de categorias fixas\"</a>"
       minimum_required_tags: "Número mínimo de etiquetas exigidas em um tópico:"
-      default_slow_mode: 'Ative o "Modo lento" para obter novos tópicos nesta categoria.'
-      parent: "Categoria principal"
       num_auto_bump_daily: "Número de tópicos em aberto para promover automaticamente:"
       auto_bump_cooldown_days: "Mínimo de dias antes de subir o mesmo tópico novamente:"
       navigate_to_first_post_after_read: "Navegue até a primeira postagem depois que os tópicos forem lidos"
@@ -4214,18 +4181,14 @@ pt_BR:
           title: "Silenciados(as)"
           description: "Você nunca será notificado(a) sobre novos tópicos nesta categoria e eles não aparecerão nos mais recentes."
       search_priority:
-        label: "Prioridade de pesquisa"
         options:
           normal: "Normal"
           ignore: "Ignorar"
-          very_low: "Muito baixa"
           low: "Baixa"
           high: "Alta"
-          very_high: "Muito alta"
       sort_options:
         default: "padrão"
         likes: "Curtidas"
-        op_likes: "Curtidas da postagem original"
         views: "Visualizações"
         posts: "Postagens"
         activity: "Atividade"
@@ -4245,8 +4208,7 @@ pt_BR:
         appearance: "Aparência"
         email: "E-mail"
       list_filters:
-        all: "todos os tópicos"
-        none: "nenhuma subcategoria"
+        all: "Todos os tópicos"
       colors_disabled: "Não é possível selecionar cores porque você tem um, ou não tem nenhum, estilo de categoria."
     anonymous_flagging:
       title: "Denunciar conteúdo ilegal"
@@ -4548,7 +4510,6 @@ pt_BR:
         go_to_unread_post: "%{shortcut} Ir para a primeira postagem não lida"
       application:
         title: "Solicitação"
-        create: "%{shortcut} Criar um tópico novo"
         notifications: "%{shortcut} Abrir notificações"
         hamburger_menu: "%{shortcut} Abrir menu de navegação"
         user_profile_menu: "%{shortcut} Abrir menu do usuário"
@@ -4762,18 +4723,13 @@ pt_BR:
           description: "Você não receberá nenhuma notificação sobre novos tópicos com esta etiqueta, e eles não serão exibidos na aba de não lidos."
       groups:
         back_btn: "Voltar para todas as etiquetas"
-        title: "Grupos de etiquetas"
         about_heading: "Selecione um grupo de etiquetas ou crie uma nova"
         about_heading_empty: "Crie um novo grupo de etiquetas para começar"
         about_description: "Grupos de etiquetas ajudam a gerenciar permissões de várias etiquetas em um lugar."
-        new: "Novo grupo"
-        new_title: "Criar novo grupo"
-        edit_title: "Editar grupo de etiquetas"
         tags_label: "Etiquetas neste grupo"
         parent_tag_label: "Etiqueta pai"
         parent_tag_description: "As etiquetas deste grupo podem ser usadas apenas se a etiqueta pai estiver presente."
         one_per_topic_label: "Limite de uma etiqueta por tópico deste grupo"
-        new_name: "Novo grupo de etiquetas"
         name_placeholder: "Nome"
         save: "Salvar"
         delete: "Excluir"
@@ -5252,6 +5208,9 @@ pt_BR:
         enabled: "Ativados(as)"
         select_groups: "Selecionar grupos…"
         preview: "Pré-visualizar"
+        enabled_for_options:
+          everyone: "Todos(as)"
+          staff: "Somente equipe"
         impact_roles:
           moderators: "Moderadores(as)"
           staff: "Equipe"
@@ -5383,6 +5342,23 @@ pt_BR:
               other: "Você atualizou o tamanho do texto padrão. Gostaria de aplicar essa alteração a %{count} usuários(as) existentes?"
             modal_yes: "Sim"
             modal_no: "Não, apenas aplicar daqui para frente"
+        welcome_banner:
+          form:
+            text_color:
+              label: "Cor do texto"
+            page_visibility:
+              options:
+                top_menu_pages: "Páginas do menu superior"
+                all_pages: "Todas as páginas"
+            location:
+              label: "Local"
+              options:
+                above_topic_content: "Conteúdo acima do tópico"
+                below_site_header: "Abaixo do cabeçalho do site"
+            header_logged_in:
+              placeholder: "Boas-vindas novamente, %{preferred_display_name}!"
+            header_anonymous:
+              placeholder: "Boas-vindas ao %{site_name}!"
         navigation:
           title: "Navegação"
           header_description: "Configure itens de menu e links de navegação para seu site, inclusive a localização e comportamento do menu de navegação principal, links rápidos no topo da página inicial e a barra lateral da administração"
@@ -7140,7 +7116,6 @@ pt_BR:
           success: "Sucesso"
           exists: "Já existe"
           upload: "Adicionar do arquivo"
-          upload_successful: "Envio bem-sucedido. As palavras foram adicionadas."
           case_sensitivity_label: "É sensível a maiúsculas"
           case_sensitivity_description: "Apenas palavras com maiúsculas e minúsculas de caracteres correspondentes"
           html_label: "HTML"
@@ -7232,10 +7207,7 @@ pt_BR:
             second: "Opção 2"
             third: "Opção 3"
         edit_category:
-          toggle_freeform: "modelo de formulário desativado"
-          toggle_form_template: "modelo de formulário ativado"
           select_template: "Selecione modelos de formulário"
-          select_template_help: "Adicionar/Editar Modelos de Formulário"
         errors:
           multiple_tags_not_allowed: 'Não é possível selecionar mais etiquetas em "%{tag_name}". Para evitar problemas, use o modelo de formulários'
       impersonate:
@@ -7969,74 +7941,4 @@ pt_BR:
           replace: "Substituir"
   wizard_js:
     wizard:
-      jump_in: "Pular dentro!"
-      finish: "Sair da configuração"
-      back: "Voltar"
-      next: "Próximo"
-      configure_more: "Configurar mais…"
-      step-text: "Intervalo"
-      step: "%{current} de %{total}"
-      upload: "Carregar arquivo"
-      uploading: "Enviando…"
-      upload_error: "Desculpe, houve um erro ao enviar o arquivo. Tente novamente."
-      staff_count:
-        one: "Sua comunidade tem %{count} pessoa (você). "
-        other: "Sua comunidade tem %{count} pessoas, incluindo você."
-      invites:
-        add_user: "adicionar"
-        none_added: "Você ainda não convidou ninguém para a equipe. Tem certeza que deseja continuar?"
-        roles:
-          admin: "Administração"
-          moderator: "Moderador(a)"
-          regular: "Usuário regular"
-      homepage_choices:
-        custom:
-          label: "Personalizados(as)"
-          description: "Exibir uma página inicial focada em %{type} com usuários(as) acessando %{landingPage}"
-        style_type:
-          categories: "categoria"
-          topics: "tópico"
-      top_menu_items:
-        new: "Novo"
-        unread: "Não lidos(as)"
-        top: "Melhores"
-        latest: "Últimos"
-        hot: "Em alta"
-        categories: "Categorias"
-        unseen: "Não vistos"
-        read: "Lidos"
-        bookmarks: "Favoritos"
-      previews:
-        topic_title: "Quais livros você está lendo?"
-        share_button: "Compartilhar"
-        reply_button: "Responder"
-        topic_preview: "Pré-visualização do tópico"
-        homepage_preview: "Pré-visualização da página inicial"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "todas as categorias"
-        topic_titles:
-          what_books: "Quais livros você está lendo?"
-          what_movies: "Quais filmes você viu recentemente?"
-          random_fact: "Fato aleatório do dia"
-          tv_show: "Recomende um programa de TV"
-          what_hobbies: "Quais são seus passatempos"
-          what_music: "O que você está ouvindo agora?"
-          funniest_thing: "A coisa mais engraçada que você viu hoje"
-          share_art: "Compartilhe sua arte!"
-        topic_ops:
-          what_books: |
-            Todos nós amamos ler. Vamos usar este tópico para compartilhar nossas leituras atuais e recentes. Sou fã de fantasia e estou lendo o Senhor dos Anéis de novo, pela centésima vez. E você?
-        category_descriptions:
-          icebreakers: "Conheça os outros membros da comunidade com perguntas divertidas."
-          news: "Discuta as novidades e os eventos"
-          site_feedback: "Diga o que você achou da comunidade e sugira melhorias."
-        category_names:
-          icebreakers: "Quebra-gelos"
-          news: "Novidades"
-          site_feedback: "Feedback do site"
-        table_headers:
-          topic: "Tópico"
-          replies: "Respostas"
-          views: "Visualizações"
-          activity: "Atividade"
+      jump_in: "Vamos lá!"

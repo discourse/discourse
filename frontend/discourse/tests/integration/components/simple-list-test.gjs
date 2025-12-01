@@ -8,8 +8,8 @@ import {
   triggerKeyEvent,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import SimpleList from "discourse/admin/components/simple-list";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import SimpleList from "admin/components/simple-list";
 
 module("Integration | Component | simple-list", function (hooks) {
   setupRenderingTest(hooks);

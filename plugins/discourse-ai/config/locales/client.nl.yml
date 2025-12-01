@@ -253,6 +253,7 @@ nl:
           custom_prompt: "Aangepaste prompt"
           image_caption: "Afbeeldingen bijschriften geven"
           translator: "Vertaler"
+          post_illustrator: "Berichtillustrator"
         translation:
           name: "Vertaling"
           description: "Vertaalt content in ondersteunde talen"
@@ -391,8 +392,6 @@ nl:
           low: Lage kwaliteit - goedkoopst (256x256)
           medium: Middelmatige kwaliteit (512x512)
           high: Hoge kwaliteit - langzaamst (1024x1024)
-        tool_details: Tooldetails weergeven
-        tool_details_help: Toont eindgebruikers informatie over welke tools het taalmodel heeft geactiveerd.
         mentionable: Vermeldingen toestaan
         mentionable_help: Indien ingeschakeld, kunnen gebruikers in toegestane groepen deze gebruiker vermelden in berichten. De AI reageert als deze persona.
         user: Gebruiker
@@ -549,7 +548,6 @@ nl:
         back: "Terug"
         confirm_delete: Weet je zeker dat je dit model wilt verwijderen?
         delete: Verwijderen
-        seeded_warning: "Dit model is vooraf geconfigureerd op je site en kan niet worden bewerkt."
         quotas:
           title: "Gebruiksquota's"
           add_title: "Nieuw quotum maken"
@@ -584,22 +582,18 @@ nl:
           other: "Dit model wordt momenteel gebruikt door de volgende: %{settings}. Als het onjuist is geconfigureerd, werken functies niet zoals verwacht. "
         model_description:
           none: "Algemene instellingen die werken voor de meeste taalmodellen"
-          anthropic-claude-opus-4-1: "Het intelligentste model van Antropic"
-          anthropic-claude-sonnet-4-0: "Optimale balans tussen snelheid en kosten"
-          anthropic-claude-3-7-sonnet-latest: "Optimale balans tussen snelheid en kosten (vorige generatie)"
-          anthropic-claude-3-5-haiku-latest: "Snel en kosteneffectief"
+          anthropic-claude-opus-4-5: "Het intelligentste model van Antropic"
+          anthropic-claude-sonnet-4-5: "Optimale balans tussen snelheid en kosten"
+          anthropic-claude-haiku-4-5: "Snel en kosteneffectief"
           google-gemini-2-5-pro: "Groot multimodaal model dat een groot aantal taken kan uitvoeren"
-          google-gemini-2-0-flash: "Lichtgewicht, snel en kostenefficiënt met multimodale redenering (vorige generatie)"
           google-gemini-2-5-flash: "Lichtgewicht, snel en kostenefficiënt met multimodale redenering"
-          google-gemini-2-0-flash-lite: "Kostenefficiënt model met lage latentie"
-          open_ai-o4-mini: "Geavanceerd kostenefficiënt redeneringsmodel"
           open_ai-gpt-5-mini: "Biedt een balans tussen intelligentie, snelheid en kosten, waardoor het een aantrekkelijk model is voor veel gebruikssituaties."
           open_ai-gpt-5-nano: "Snelste en meest kostenefficiënte GPT-5-model."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Efficiënt lichtgewicht meertalig model"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "Krachtig multifunctioneel model"
           mistral-mistral-large-latest: "Het krachtigste model van Mistral"
           mistral-pixtral-large-latest: "Het krachtigste model met zichtcapaciteit van Mistral"
-          open_router-x-ai-grok-3-beta: "Het nieuwste model van xAI"
+          open_router-x-ai-grok-4: "Het nieuwste model van xAI"
           open_router-deepseek-deepseek-r1-0528-free: "Het nieuwste redeneringsmodel van DeepSeek"
           open_router-meta-llama-3-3-70b-instruct: "Zeer capabel meertalig model"
         preseeded_model_description: "Voorgeconfigureerd open-source model met %{model}"
@@ -627,7 +621,6 @@ nl:
           vision_enabled: "Indien ingeschakeld, zal de AI proberen afbeeldingen te begrijpen. Dit is afhankelijk van het gebruikte model ter ondersteuning van zicht. Ondersteund door de nieuwste modellen van Anthropic, Google en OpenAI."
           enabled_chat_bot: "Indien ingeschakeld, kunnen gebruikers dit model selecteren bij het maken van PB's met de AI-bot."
           cost_input: "De invoerkosten per 1 miljoen tokens voor dit model"
-          cost_cached_input: "De kosten voor gecachte invoer per 1 miljoen tokens voor dit model"
           cost_output: "De uitvoerkosten per 1 miljoen tokens voor dit model"
           cost_measure: "$/miljoen tokens"
         providers:
@@ -707,6 +700,7 @@ nl:
           title: "Voorgestelde miniaturen"
           select: "Selecteren"
           selected: "Geselecteerd"
+          try_again: "Opnieuw proberen"
         image_caption:
           button_label: "Bijschrift met AI"
           generating: "Bijschrift genereren..."
@@ -900,7 +894,6 @@ nl:
         loading_convo: "Conversatie laden"
         collapse: "Samenvouwen"
         timed_out: "Discobot kon geen ontdekkingen vinden. Er is iets misgegaan."
-        user_setting: "Zoekontdekkingen inschakelen"
         tooltip:
           header: "AI-gestuurd zoeken"
           content: "Zoeken in natuurlijke taal, aangestuurd door %{model}"

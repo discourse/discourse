@@ -158,7 +158,6 @@ id:
     emails_are_disabled_non_staff: "Surel keluar telah dimatikan untuk pengguna yang bukan staf."
     software_update_prompt:
       dismiss: "Bubar"
-    bootstrap_mode: "Memulai"
     welcome_banner:
       header:
         anonymous_members: "Selamat datang ke %{site_name}!"
@@ -212,7 +211,7 @@ id:
     joined: "Bergabung"
     admin_title: "Admin"
     show_more: "tampilkan lebih banyak"
-    show_help: "pilihan"
+    show_help: "Opsi"
     links: "Tautan"
     links_lowercase:
       other: "tautan"
@@ -454,8 +453,7 @@ id:
       title: "Ulasan"
       topic: "Topik:"
       filtered_topic: "Anda telah menyaring ke konten yang dapat ditinjau dalam satu topik."
-      filtered_user: "Pengguna"
-      filtered_reviewed_by: "Diperiksa Oleh"
+      filtered_reviewed_by: "Diperiksa oleh"
       show_all_topics: "tampilkan semua topik"
       deleted_post: "(pos dihapus)"
       deleted_user: "(pengguna dihapus)"
@@ -490,7 +488,6 @@ id:
           other: "%{count} pengguna"
       replies:
         other: "%{count} balasan"
-      edit: "Ubah"
       save: "Simpan"
       cancel: "Batal"
       new_topic: "Menyetujui item ini akan membuat topik baru"
@@ -511,7 +508,6 @@ id:
           created_at: "Dibuat Pada"
           created_at_asc: "Dibuat Pada (terbalik)"
         priority:
-          title: "Prioritas Minimum"
           any: "(apa saja)"
           low: "Rendah"
           medium: "Sedang"
@@ -578,6 +574,7 @@ id:
       user_label: "Pengguna"
       notes:
         delete: "Hapus"
+      topic_label: "Topik"
       review_user: "Pengguna"
       insights:
         activities:
@@ -935,7 +932,6 @@ id:
       topic_stat_sentence_month:
         other: "%{count} topik baru dalam sebulan terakhir."
     ip_lookup:
-      title: Pencarian Alamat IP
       hostname: nama host
       location: Lokasi
       location_not_found: (tidak diketahui)
@@ -1964,9 +1960,7 @@ id:
         remove: "Hapus"
       required_tag_group:
         delete: "Hapus"
-      name: "Nama Kategori"
       description: "Deskripsi"
-      background_image_dark: "Gambar Latar Belakang Kategori Gelap"
       color_validations:
         cant_be_empty: "tidak boleh kosong"
       permissions:
@@ -2003,7 +1997,7 @@ id:
         general: "Umum"
         email: "Email"
       list_filters:
-        all: "semua topik"
+        all: "Semua topik"
     flagging:
       take_action_options:
         suspend:
@@ -2092,8 +2086,8 @@ id:
         help: "topik terakhir di kategori %{categoryName}"
       top:
         all:
-          title: "Sepanjang Waktu"
-        all_time: "Sepanjang Waktu"
+          title: "Sepanjang Masa"
+        all_time: "Sepanjang Masa"
     custom_homepage:
       admin_message: 'Salah satu tema Anda telah mengaktifkan pengubah "custom_homepage" tetapi tidak menampilkan apa pun di konektor [custom-homepage]. (Pesan ini hanya ditampilkan kepada administrator situs.)'
     preloader_text: "Memuat"
@@ -2106,7 +2100,6 @@ id:
         title: "Navigasi"
       application:
         title: "Aplikasi"
-        create: "%{shortcut} Buat topik baru"
         notifications: "%{shortcut} Buka notifikasi"
       actions:
         title: "Aksi"
@@ -2321,6 +2314,9 @@ id:
       upcoming_changes:
         name: "Nama"
         enabled: "Diaktifkan"
+        enabled_for_options:
+          everyone: "Semua orang"
+          staff: "Hanya staf"
         impact_roles:
           moderators: "Moderator"
           staff: "Staf"
@@ -2340,6 +2336,12 @@ id:
         fonts:
           backfill_modal:
             modal_yes: "Ya"
+        welcome_banner:
+          form:
+            location:
+              label: "Lokasi"
+            header_anonymous:
+              placeholder: "Selamat datang ke %{site_name}!"
         navigation:
           title: "Navigasi"
         notifications:
@@ -2919,33 +2921,4 @@ id:
           topics: "Topik"
   wizard_js:
     wizard:
-      step-text: "Langkah"
-      uploading: "Mengunggah…"
-      invites:
-        add_user: "menambahkan"
-        roles:
-          admin: "Admin"
-          moderator: "Moderator"
-      homepage_choices:
-        style_type:
-          categories: "kategori"
-          topics: "topik"
-      top_menu_items:
-        new: "New"
-        unread: "Belum dibaca"
-        latest: "Terbaru"
-        categories: "Kategori"
-        unseen: "Tak terlihat"
-        read: "Dibaca"
-        bookmarks: "Markah"
-      previews:
-        reply_button: "Balas"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "Semua kategori"
-        category_names:
-          site_feedback: "Umpan Balik Situs"
-        table_headers:
-          topic: "Topik"
-          replies: "balasan"
-          activity: "Activity"
+      jump_in: "Ayo berangkat!"

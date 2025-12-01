@@ -10,7 +10,7 @@
 
 .staff-actions {
   width: 100%;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
 
   @media screen and (width >= 550px) and (width <= 767px) {
     table.staff-logs tr {
@@ -36,7 +36,7 @@
         display: flex;
 
         a {
-          word-wrap: break-word;
+          overflow-wrap: break-word;
           min-width: 25px;
         }
       }
@@ -218,7 +218,7 @@
 table.screened-ip-addresses {
   td.ip_address {
     min-width: 150px;
-    word-wrap: break-word;
+    overflow-wrap: break-word;
 
     input {
       width: 80%;
@@ -272,7 +272,7 @@ table.screened-ip-addresses {
     td.domain {
       grid-column-start: 1;
       grid-column-end: 3;
-      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
   }
 }
@@ -280,7 +280,7 @@ table.screened-ip-addresses {
 // Screened emails
 .screened-emails {
   td.ip_address {
-    word-wrap: break-word;
+    overflow-wrap: break-word;
 
     @include viewport.from(md) {
       max-width: 20vw;
@@ -291,7 +291,7 @@ table.screened-ip-addresses {
     td.email {
       grid-column-start: 1;
       grid-column-end: 3;
-      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
 
     td.ip_address {
@@ -307,6 +307,13 @@ table.screened-ip-addresses {
 }
 
 // Watched words
+.watched-word-regex-errors {
+  max-height: 200px;
+  overflow-y: auto;
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
 .watched-word-box {
   display: inline-block;
   width: 250px;
@@ -419,7 +426,7 @@ table.screened-ip-addresses {
 table.search-logs-list {
   td.term {
     width: 60%;
-    word-wrap: break-word;
+    overflow-wrap: break-word;
 
     @media screen and (width <= 767px) {
       width: 100%;

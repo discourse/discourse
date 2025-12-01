@@ -1,17 +1,18 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import AdminFlagItem from "discourse/admin/components/admin-flag-item";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
-import AdminFlagItem from "admin/components/admin-flag-item";
 
 export default class AdminConfigAreasFlags extends Component {
   @service site;
 
-  @tracked flags = this.site.flagTypes;
+  @trackedArray flags = this.site.flagTypes;
 
   @bind
   isFirstFlag(flag) {
@@ -24,7 +25,7 @@ export default class AdminConfigAreasFlags extends Component {
   }
 
   @action
-  moveFlagCallback(flag, direction) {
+  async moveFlagCallback(flag, direction) {
     const fallbackFlags = [...this.flags];
 
     const flags = this.flags;
@@ -39,23 +40,27 @@ export default class AdminConfigAreasFlags extends Component {
 
     this.flags = flags;
 
-    return ajax(`/admin/config/flags/${flag.id}/reorder/${direction}`, {
-      type: "PUT",
-    }).catch((error) => {
+    try {
+      await ajax(`/admin/config/flags/${flag.id}/reorder/${direction}`, {
+        type: "PUT",
+      });
+    } catch (error) {
       this.flags = fallbackFlags;
       return popupAjaxError(error);
-    });
+    }
   }
 
   @action
-  deleteFlagCallback(flag) {
-    return ajax(`/admin/config/flags/${flag.id}`, {
-      type: "DELETE",
-    })
-      .then(() => {
-        this.flags.removeObject(flag);
-      })
-      .catch((error) => popupAjaxError(error));
+  async deleteFlagCallback(flag) {
+    try {
+      await ajax(`/admin/config/flags/${flag.id}`, {
+        type: "DELETE",
+      });
+
+      removeValueFromArray(this.flags, flag);
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   <template>

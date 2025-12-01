@@ -9,7 +9,7 @@ import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { classify, dasherize } from "@ember/string";
 import { tagName } from "@ember-decorators/component";
-import { eq } from "truth-helpers";
+import ScrubRejectedUserModal from "discourse/admin/components/modal/scrub-rejected-user";
 import DButton from "discourse/components/d-button";
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import ExplainReviewableModal from "discourse/components/modal/explain-reviewable";
@@ -38,8 +38,8 @@ import { clipboardCopy } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import Topic from "discourse/models/topic";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import ScrubRejectedUserModal from "admin/components/modal/scrub-rejected-user";
 
 let _components = {};
 
@@ -100,7 +100,7 @@ export default class ReviewableItem extends Component {
   @optionalService adminTools;
 
   @tracked disabled = false;
-  @tracked activeTab = "insights";
+  @tracked activeTab = "timeline";
 
   @alias("reviewable.claimed_by.automatic") autoClaimed;
 
@@ -284,15 +284,6 @@ export default class ReviewableItem extends Component {
     return updatedCategoryId || categoryId;
   }
 
-  @discourseComputed("reviewable.type", "reviewable.target_created_by")
-  showIpLookup(reviewableType) {
-    return (
-      reviewableType !== "ReviewableUser" &&
-      this.currentUser.staff &&
-      this.reviewable.target_created_by
-    );
-  }
-
   @discourseComputed("reviewable.reviewable_scores")
   scoreSummary(scores) {
     const scoreData = scores.reduce((acc, score) => {
@@ -346,14 +337,33 @@ export default class ReviewableItem extends Component {
 
   @bind
   _updateClaimedBy(data) {
-    const user = data.user ? this.store.createRecord("user", data.user) : null;
+    if (data.topic_id !== this.reviewable.topic.id) {
+      return;
+    }
 
-    if (data.topic_id === this.reviewable.topic.id) {
-      if (user) {
-        this.reviewable.set("claimed_by", { user, automatic: data.automatic });
-      } else {
-        this.reviewable.set("claimed_by", null);
-      }
+    const now = new Date().toISOString();
+
+    const user = this.store.createRecord("user", data.user);
+    if (data.claimed) {
+      this.reviewable.set("claimed_by", { user, automatic: data.automatic });
+      this.reviewable.set("reviewable_histories", [
+        ...this.reviewable.reviewable_histories,
+        {
+          reviewable_history_type: 3,
+          created_at: now,
+          created_by: user,
+        },
+      ]);
+    } else {
+      this.reviewable.set("claimed_by", null);
+      this.reviewable.set("reviewable_histories", [
+        ...this.reviewable.reviewable_histories,
+        {
+          reviewable_history_type: 4,
+          created_at: now,
+          created_by: user,
+        },
+      ]);
     }
   }
 
@@ -776,20 +786,6 @@ export default class ReviewableItem extends Component {
               >
                 <li
                   class={{concatClass
-                    "insights"
-                    (if (eq this.activeTab "insights") "active")
-                  }}
-                >
-                  <a
-                    href="#"
-                    class={{if (eq this.activeTab "insights") "active"}}
-                    {{on "click" (fn this.switchTab "insights")}}
-                  >
-                    {{i18n "review.insights.title"}}
-                  </a>
-                </li>
-                <li
-                  class={{concatClass
                     "timeline"
                     (if (eq this.activeTab "timeline") "active")
                   }}
@@ -802,13 +798,30 @@ export default class ReviewableItem extends Component {
                     {{i18n "review.timeline_and_notes"}}
                   </a>
                 </li>
+                <li
+                  class={{concatClass
+                    "insights"
+                    (if (eq this.activeTab "insights") "active")
+                  }}
+                >
+                  <a
+                    href="#"
+                    class={{if (eq this.activeTab "insights") "active"}}
+                    {{on "click" (fn this.switchTab "insights")}}
+                  >
+                    {{i18n "review.insights.title"}}
+                  </a>
+                </li>
               </HorizontalOverflowNav>
             </div>
 
             {{#if (eq this.activeTab "insights")}}
               <ReviewableInsights @reviewable={{this.reviewable}} />
             {{else if (eq this.activeTab "timeline")}}
-              <ReviewableTimeline @reviewable={{this.reviewable}} />
+              <ReviewableTimeline
+                @reviewable={{this.reviewable}}
+                @historyEvents={{this.reviewable.reviewable_histories}}
+              />
             {{/if}}
           </div>
         </div>
@@ -852,7 +865,6 @@ export default class ReviewableItem extends Component {
                   {{#if this.reviewable.can_edit}}
                     <DButton
                       @disabled={{this.disabled}}
-                      @icon="pencil"
                       @action={{this.edit}}
                       @label="review.edit"
                       class="reviewable-action btn-default edit"

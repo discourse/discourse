@@ -1,18 +1,14 @@
-import { hbs } from "ember-cli-htmlbars";
-import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { registerWidgetShim } from "discourse/widgets/render-glimmer";
 import AiBotHeaderIcon from "../components/ai-bot-header-icon";
 import AiPersonaFlair from "../components/post/ai-persona-flair";
 import AiCancelStreamingButton from "../components/post-menu/ai-cancel-streaming-button";
 import AiDebugButton from "../components/post-menu/ai-debug-button";
 import AiShareButton from "../components/post-menu/ai-share-button";
+import { isGPTBot, showShareConversationModal } from "../lib/ai-bot-helper";
 import {
-  getBotType,
-  isGPTBot,
-  showShareConversationModal,
-} from "../lib/ai-bot-helper";
-import { streamPostText } from "../lib/ai-streamer/progress-handlers";
+  cleanupStreamingData,
+  streamPostText,
+} from "../lib/ai-streamer/progress-handlers";
 
 let allowDebug = false;
 
@@ -37,16 +33,18 @@ function initializeAIBotReplies(api) {
         this.model.details.allowed_users &&
         this.model.details.allowed_users.filter(isGPTBot).length >= 1
       ) {
-        // we attempt to recover the last message in the bus
-        // so we subscribe at -2
+        // -3 is not obvious, but the implementation in message bus is -2 (last + new), -3 (last 2 + new)
         this.messageBus.subscribe(
           `discourse-ai/ai-bot/topic/${this.model.id}`,
           this.onAIBotStreamedReply.bind(this),
-          -2
+          -3
         );
       }
     },
     unsubscribe: function () {
+      // we may have infected post stream so lets clean it up
+      cleanupStreamingData(this.model.postStream);
+
       this.messageBus.unsubscribe("discourse-ai/ai-bot/topic/*");
       this._super();
     },
@@ -55,34 +53,6 @@ function initializeAIBotReplies(api) {
 
 function initializePersonaDecorator(api) {
   api.renderAfterWrapperOutlet("post-meta-data-poster-name", AiPersonaFlair);
-
-  withSilencedDeprecations("discourse.post-stream-widget-overrides", () =>
-    initializeWidgetPersonaDecorator(api)
-  );
-}
-
-function initializeWidgetPersonaDecorator(api) {
-  api.decorateWidget(`poster-name:after`, (dec) => {
-    const botType = getBotType(dec.attrs.user);
-    // we have 2 ways of decorating
-    // 1. if a bot is a LLM we decorate with persona name
-    // 2. if bot is a persona we decorate with LLM name
-    if (botType === "llm") {
-      return dec.widget.attach("persona-flair", {
-        personaName: dec.model?.topic?.ai_persona_name,
-      });
-    } else if (botType === "persona") {
-      return dec.widget.attach("persona-flair", {
-        personaName: dec.model?.llm_name,
-      });
-    }
-  });
-
-  registerWidgetShim(
-    "persona-flair",
-    "span.persona-flair",
-    hbs`{{@data.personaName}}`
-  );
 }
 
 function initializePauseButton(api) {

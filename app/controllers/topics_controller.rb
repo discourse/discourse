@@ -341,6 +341,19 @@ class TopicsController < ApplicationController
 
     last_notification.update!(read: false) if last_notification
 
+    topic = Topic.find_by(id: topic_id)
+
+    if topic&.private_message?
+      topic_user = TopicUser.find_by(user: current_user, topic:)
+
+      PrivateMessageTopicTrackingState.publish_read(
+        topic_id,
+        topic_user&.last_read_post_number,
+        current_user,
+        topic_user&.notification_level,
+      )
+    end
+
     render body: nil
   end
 
@@ -1375,7 +1388,9 @@ class TopicsController < ApplicationController
       format.html do
         @tags = SiteSetting.tagging_enabled ? @topic_view.topic.tags.visible(guardian) : []
 
-        helpers.localize_topic_view_content(@topic_view) if SiteSetting.content_localization_enabled
+        if SiteSetting.content_localization_enabled && use_crawler_layout?
+          helpers.localize_topic_view_content(@topic_view)
+        end
         @breadcrumbs = helpers.categories_breadcrumb(@topic_view.topic) || []
         @description_meta = (@topic_view.topic.excerpt.presence || @topic_view.summary)
         store_preloaded("topic_#{@topic_view.topic.id}", MultiJson.dump(topic_view_serializer))

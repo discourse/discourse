@@ -1,12 +1,9 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { schedule } from "@ember/runloop";
 import Service, { service } from "@ember/service";
-import { disableBodyScroll } from "discourse/lib/body-scroll-lock";
 
 export default class ChatThreadComposer extends Service {
   @service chat;
-  @service capabilities;
   @service appEvents;
   @service site;
 
@@ -26,12 +23,6 @@ export default class ChatThreadComposer extends Service {
   @action
   focus(options = {}) {
     this.textarea?.focus(options);
-
-    schedule("afterRender", () => {
-      if (this.capabilities.isIOS && !this.capabilities.isIpadOS) {
-        disableBodyScroll(this.scroller, { reverse: true });
-      }
-    });
   }
 
   @action

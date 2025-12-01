@@ -291,7 +291,6 @@ it:
     software_update_prompt:
       message: "Abbiamo aggiornato il sito. <span>Aggiorna la pagina</span> o potrebbe verificarsi un comportamento imprevisto."
       dismiss: "Ignora"
-    bootstrap_mode: "Per iniziare"
     back_button: "Indietro"
     welcome_banner:
       header:
@@ -357,7 +356,7 @@ it:
     joined: "Iscritto"
     admin_title: "Amministrazione"
     show_more: "mostra altro"
-    show_help: "opzioni"
+    show_help: "Opzioni"
     links: "Collegamenti"
     links_lowercase:
       one: "collegamento"
@@ -697,7 +696,7 @@ it:
       title: "Revisiona"
       topic: "Argomento:"
       filtered_topic: "Hai filtrato il contenuto revisionabile in un singolo Argomento"
-      filtered_user: "Utente"
+      filtered_user: "Utente contrassegnato"
       filtered_reviewed_by: "Rivisto da"
       show_all_topics: "mostra tutti gli argomenti"
       deleted_post: "(messaggio eliminato)"
@@ -748,7 +747,7 @@ it:
       replies:
         one: "%{count} risposta"
         other: "%{count} risposte"
-      edit: "Modifica"
+      edit: "Modifica Messaggio"
       save: "Salva"
       cancel: "Annulla"
       new_topic: "L'approvazione di questo elemento creerà un nuovo Argomento"
@@ -770,7 +769,6 @@ it:
           created_at: "Creato il"
           created_at_asc: "Creato il (inverso)"
         priority:
-          title: "Priorità Minima"
           any: "(qualsiasi)"
           low: "Bassa"
           medium: "Media"
@@ -836,7 +834,6 @@ it:
           noun: "messaggio"
       flagged_as: "Contrassegnato come"
       user_label: "Utente"
-      assigned_to: "Assegnato a"
       moderator_actions: "Azioni del moderatore"
       timeline_and_notes: "Cronologia e note"
       timeline:
@@ -853,13 +850,12 @@ it:
         note_added_by: "Note del moderatore di %{username} · %{relativeDate}"
         no_events: "Nessun evento nella cronologia da visualizzare"
       notes:
-        add_note_description: "Visibile solo ai moderatori. Utilizza queste note per aggiungere contesto o prendere decisioni sulla revisione."
         add_note_button: "Aggiungi note"
         placeholder: "Scrivi qui le tue note..."
         chars_remaining: "%{count} caratteri rimasti"
         delete_note: "Elimina questa nota"
         delete: "Elimina"
-      new_topic_label: "Nuovo argomento"
+      topic_label: "Argomento"
       queued_user: "Utente in coda"
       posted_in: "Pubblicato in"
       flagged_user: "Utente contrassegnato"
@@ -874,11 +870,7 @@ it:
         flagged_by_users:
           one: "Segnalato da %{count} utente unico"
           other: "Segnalato da %{count} utenti diversi"
-        similar_posts: "Messaggi simili passati"
-        flagged_in_timeframe: "%{count} segnalati in precedenza"
-        user_activity: "Attività dell'utente"
         activities:
-          new_account: "nuovo account"
           trust_level: "livello di attendibilità: %{trustLevelName}"
           posts:
             one: "%{count} messaggio"
@@ -886,7 +878,6 @@ it:
         solution_marked: "Soluzione contrassegnata"
         topic_has_solution: "Questo argomento ha una soluzione"
         visibility: "Visibilità"
-        topic_unlisted: "Questo argomento non è elencato. Accessibile solo tramite link diretto, non è pubblico."
       help:
         moderation_guide: "Guida alla moderazione di Discourse"
         flag_priorities: "Gestione della reputazione degli utenti e delle priorità delle segnalazioni"
@@ -1309,7 +1300,6 @@ it:
         one: "Categorie (%{count} altra)…"
         other: "Categorie (altre %{count})…"
     ip_lookup:
-      title: Ricerca Indirizzo IP
       hostname: Nome host
       location: Località
       location_not_found: (sconosciuto)
@@ -2696,7 +2686,6 @@ it:
         title: "Traduzione del messaggio"
         select: "Seleziona la traduzione"
         save: "Salva la traduzione"
-        original_content: "Contenuto del messaggio originale"
         translation: "Traduzione"
         placeholder: "Inserisci qui la traduzione del messaggio..."
       group_mentioned_limit:
@@ -2856,7 +2845,6 @@ it:
           desc: "Rispondi senza cambiare la data dell'ultima risposta"
         toggle_unlisted:
           label: Attiva/disattiva non in elenco
-          desc: Argomenti non in elenco accessibili ai membri solo tramite link diretto
       reload: "Ricarica"
       ignore: "Ignora"
       image_alt_text:
@@ -3265,7 +3253,6 @@ it:
         progress:
           one: "Avanzamento: <strong>%{count}</strong> argomento"
           other: "Avanzamento: <strong>%{count}</strong> argomenti"
-        silent: "Esegui questa azione in silenzio."
         performing: "Esecuzione di operazioni in blocco. Attendere…"
         completed: "Operazioni in blocco completate correttamente."
       none:
@@ -3435,7 +3422,6 @@ it:
       jump_reply_button: "Vai al messaggio"
       deleted: "L'argomento è stato eliminato"
       slow_mode_update:
-        title: "Modalità lenta"
         select: "Gli utenti possono pubblicare in questo argomento solo una volta ogni:"
         description: "Per promuovere discussioni ponderate in argomenti in rapida evoluzione o controversi, gli utenti devono attendere prima di pubblicare nuovamente in questo argomento."
         enable: "Attiva"
@@ -3870,7 +3856,6 @@ it:
         post_language_selector:
           none: "Nessuna"
         edit_warning:
-          message: "Questo è un messaggio tradotto.<br><br> Vuoi modificare il messaggio originale in %{language} o modificare questa traduzione specifica?"
           action_original: "Modifica il messaggio originale"
           action_translation: "Modifica questa traduzione"
       errors:
@@ -4103,24 +4088,14 @@ it:
         description: "Richiedi che i nuovi argomenti abbiano etichette dai seguenti gruppi:"
         delete: "Cancella"
         add: "Aggiungi il gruppo di etichette richiesto"
-        placeholder: "seleziona un gruppo di etichette…"
+        placeholder: "Seleziona un gruppo di etichette…"
       topic_featured_link_allowed: "Consenti collegamenti in primo piano in questa categoria"
-      delete: "Elimina Categoria"
-      create: "Crea Categoria"
       create_long: "Crea una nuova categoria"
-      save: "Salva Categoria"
-      slug: "Abbreviazione della categoria"
       slug_placeholder: "(Facoltativo) parole-sillabate per URL"
       creation_error: Si è verificato un errore nella creazione della categoria.
       save_error: Si è verificato un errore durante il salvataggio della categoria.
-      name: "Nome Categoria"
-      untitled: "Categoria senza titolo"
       description: "Descrizione"
-      logo: "Immagine Categoria"
-      logo_dark: "Immagine del logo della categoria Modalità scura"
       logo_description: "Proporzioni consigliate 1:1 con dimensione minima di 200px. Se lasciato vuoto, non verrà mostrata alcuna immagine."
-      background_image: "Immagine di sfondo della categoria"
-      background_image_dark: "Immagine di sfondo della categoria per il tema scuro"
       style: "Stili"
       background_color: "Colore"
       foreground_color: "Colore del testo"
@@ -4140,9 +4115,9 @@ it:
       color_placeholder: "Qualsiasi colore web"
       delete_confirm: "Vuoi cancellare questa categoria?"
       delete_error: "Si è verificato un errore durante la cancellazione della categoria."
-      list: "Elenca Categorie"
+      list: "Elenca le categorie"
       no_description: "Aggiungi una descrizione alla categoria."
-      change_in_category_topic: "Modifica Descrizione"
+      change_in_category_topic: "Modifica descrizione"
       already_used: "Questo colore è già stato usato in un'altra categoria."
       security: "Sicurezza"
       security_add_group: "Aggiungi un gruppo"
@@ -4173,23 +4148,15 @@ it:
       all_topics_wiki: "Rendi i nuovi argomenti automaticamente delle wiki"
       allow_unlimited_owner_edits_on_first_post: "Consenti al proprietario modifiche illimitate sul primo messaggio"
       subcategory_list_style: "Stile Lista Sottocategorie:"
-      sort_order: "Lista Argomenti Ordinata Per:"
-      default_view: "Lista Argomenti Predefinita:"
-      default_top_period: "Periodo Predefinito Argomenti Popolari:"
-      default_list_filter: "Filtro predefinito della lista:"
       allow_badges_label: "Permetti l'assegnazione di distintivi in questa categoria"
-      edit_permissions: "Modifica Permessi"
       reviewable_by_group: "Oltre che dal personale, i contenuti di questa categoria possono essere revisionati anche da:"
       review_group_name: "nome gruppo"
       require_topic_approval: "Richiedi l'approvazione di un moderatore per tutti i nuovi argomenti"
       require_reply_approval: "Richiedi l'approvazione di un moderatore per tutte le nuove risposte"
       this_year: "quest'anno"
       position: "Posizione nella pagina delle Categorie:"
-      default_position: "Posizione predefinita"
       position_disabled: "Le categorie verranno visualizzate in ordine di attività. Per controllare l'ordine delle categorie negli elenchi, abilita l'impostazione <a href='%{url}'>'posizioni di categoria fisse'</a>."
       minimum_required_tags: "Numero minimo di etichette richieste per argomento:"
-      default_slow_mode: 'Attiva la "modalità lenta" per i nuovi argomenti in questa categoria.'
-      parent: "Categoria Superiore"
       num_auto_bump_daily: "Numero di argomenti aperti da riproporre automaticamente ogni giorno:"
       auto_bump_cooldown_days: "Numero minimo di giorni prima di affrontare nuovamente lo stesso argomento:"
       navigate_to_first_post_after_read: "Vai al primo messaggio dopo che gli argomenti vengono letti"
@@ -4211,18 +4178,14 @@ it:
           title: "Silenziato"
           description: "Non riceverai notifiche circa i nuovi argomenti in questa categoria, inoltre essi non appariranno tra i \"Più recenti\"."
       search_priority:
-        label: "Priorità della ricerca"
         options:
           normal: "Normale"
           ignore: "Ignora"
-          very_low: "Molto Bassa"
           low: "Bassa"
           high: "Alta"
-          very_high: "Molto Alta"
       sort_options:
         default: "predefinito"
         likes: "Mi piace"
-        op_likes: "\"Mi Piace\" del Messaggio Originale"
         views: "Visualizzazioni"
         posts: "Messaggi"
         activity: "Attività"
@@ -4242,8 +4205,7 @@ it:
         appearance: "Aspetto"
         email: "Email"
       list_filters:
-        all: "tutti gli argomenti"
-        none: "nessuna sottocategoria"
+        all: "Tutti gli argomenti"
       colors_disabled: "Non puoi selezionare i colori perché lo stile della categoria è impostato su 'none'."
     anonymous_flagging:
       title: "Segnala contenuti illegali"
@@ -4475,7 +4437,7 @@ it:
         title: "Popolari"
         help: "gli argomenti più attivi nell'ultimo anno, mese, settimana o giorno"
         all:
-          title: "Tutti"
+          title: "Sempre"
         yearly:
           title: "Annuale"
         quarterly:
@@ -4486,7 +4448,7 @@ it:
           title: "Settimanale"
         daily:
           title: "Giornaliero"
-        all_time: "Tutti"
+        all_time: "Sempre"
         this_year: "Anno"
         this_quarter: "Trimestre"
         this_month: "Mese"
@@ -4545,7 +4507,6 @@ it:
         go_to_unread_post: "%{shortcut} Vai al primo messaggio non letto"
       application:
         title: "Applicazione"
-        create: "%{shortcut} Crea un nuovo argomento"
         notifications: "%{shortcut} Apri notifiche"
         hamburger_menu: "%{shortcut} Apri il menu di navigazione"
         user_profile_menu: "%{shortcut} Apri menu utente"
@@ -4759,18 +4720,13 @@ it:
           description: "Non riceverai alcuna notifica per nuovi Argomenti con questa Etichetta, e non compariranno nella pagina dei messaggi non letti."
       groups:
         back_btn: "Torna a tutte le etichette"
-        title: "Gruppi Etichette"
         about_heading: "Seleziona un gruppo di etichette o creane uno nuovo"
         about_heading_empty: "Crea un nuovo gruppo di etichette per iniziare"
         about_description: "I gruppi di etichette permettono di gestire i permessi per più etichette in un unico posto."
-        new: "Nuovo Gruppo"
-        new_title: "Crea nuovo gruppo"
-        edit_title: "Modifica gruppo di etichette"
         tags_label: "Etichette in questo gruppo"
         parent_tag_label: "Etichetta padre"
         parent_tag_description: "Le etichette di questo gruppo possono essere usate solo se è presente l'etichetta padre."
         one_per_topic_label: "Limita ad una sola etichetta per argomento in questo gruppo"
-        new_name: "Nuovo Gruppo Etichette"
         name_placeholder: "Nome"
         save: "Salva"
         delete: "Elimina"
@@ -5249,6 +5205,9 @@ it:
         enabled: "Abilitato"
         select_groups: "Seleziona gruppi…"
         preview: "Anteprima"
+        enabled_for_options:
+          everyone: "Chiunque"
+          staff: "Solo staff"
         impact_roles:
           admins: "Amministratori"
           moderators: "Moderatori"
@@ -5381,6 +5340,23 @@ it:
               other: "Hai aggiornato la dimensione predefinita del testo. Vuoi applicare questa modifica a %{count} utenti esistenti?"
             modal_yes: "Sì"
             modal_no: "No, applica solo da adesso in avanti"
+        welcome_banner:
+          form:
+            text_color:
+              label: "Colore del testo"
+            page_visibility:
+              options:
+                top_menu_pages: "Pagine del menu principale"
+                all_pages: "Tutte le pagine"
+            location:
+              label: "Località"
+              options:
+                above_topic_content: "Sopra il contenuto dell'argomento"
+                below_site_header: "Sotto l'intestazione del sito"
+            header_logged_in:
+              placeholder: "Rieccoti, %{preferred_display_name}!"
+            header_anonymous:
+              placeholder: "Ti diamo il benvenuto su %{site_name}!"
         navigation:
           title: "Navigazione"
           header_description: "Configura i link di navigazione e le voci di menu per il tuo sito. Ciò include la posizione e il comportamento del menu di navigazione principale, i link rapidi in cima alla home page, nonché la barra laterale di amministrazione"
@@ -7138,7 +7114,6 @@ it:
           success: "Riuscito"
           exists: "Già esistente"
           upload: "Aggiungi dal file"
-          upload_successful: "Caricamento andato a buon fine. Le parole sono state aggiunte."
           case_sensitivity_label: "distingue fra maiuscole e minuscole"
           case_sensitivity_description: "Solo parole con maiuscole e minuscole corrispondenti"
           html_label: "HTML"
@@ -7230,10 +7205,7 @@ it:
             second: "Opzione 2"
             third: "Opzione 3"
         edit_category:
-          toggle_freeform: "modello di modulo disabilitato"
-          toggle_form_template: "modello di modulo abilitato"
           select_template: "Seleziona i modelli di modulo"
-          select_template_help: "Aggiungi/modifica modelli di modulo"
         errors:
           multiple_tags_not_allowed: 'Non puoi selezionare altre etichette da "%{tag_name}". Per evitare problemi, usa il modello di modulo'
       impersonate:
@@ -7967,73 +7939,4 @@ it:
           replace: "Sostituisci"
   wizard_js:
     wizard:
-      jump_in: "Buttati!"
-      finish: "Esci dalla configurazione"
-      back: "Indietro"
-      next: "Avanti"
-      configure_more: "Configura altro…"
-      step-text: "Intervallo"
-      step: "%{current} di %{total}"
-      upload: "Carica file"
-      uploading: "Caricamento…"
-      upload_error: "Spiacenti, c'è stato un errore caricando il file. Per favore, prova di nuovo."
-      staff_count:
-        one: "La tua comunità ha %{count} membro dello staff (sei tu)."
-        other: "La tua comunità ha %{count} membri dello staff, te compreso."
-      invites:
-        add_user: "aggiungi"
-        none_added: "Non hai invitato nessuno a far parte dello staff. Vuoi proseguire lo stesso?"
-        roles:
-          admin: "Amministratore"
-          moderator: "Moderatore"
-          regular: "Utente Normale"
-      homepage_choices:
-        custom:
-          label: "Personalizzato"
-          description: "Visualizza una homepage focalizzata su %{type} con gli utenti che atterrano su %{landingPage}"
-        style_type:
-          categories: "categoria"
-          topics: "argomento"
-      top_menu_items:
-        new: "Nuovo"
-        unread: "Non letti"
-        top: "Popolari"
-        latest: "Più recenti"
-        hot: "Novità"
-        categories: "Categorie"
-        unseen: "Non visualizzati"
-        read: "Letti"
-        bookmarks: "Segnalibri"
-      previews:
-        topic_title: "Quali libri stai leggendo?"
-        share_button: "Condividi"
-        reply_button: "Rispondi"
-        topic_preview: "Anteprima argomento"
-        homepage_preview: "Anteprima della home page"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "tutte le categorie"
-        topic_titles:
-          what_books: "Quali libri stai leggendo?"
-          what_movies: "Quali film hai visto di recente?"
-          random_fact: "Un fatto a caso di oggi"
-          tv_show: "Consiglia una serie"
-          what_hobbies: "Quali sono i tuoi hobby?"
-          what_music: "Cosa stai ascoltando in questo momento?"
-          funniest_thing: "La cosa più divertente che hai visto oggi"
-          share_art: "Mostra la tua arte!"
-        topic_ops:
-          what_books: "A tutti noi piace leggere, usiamo questo argomento per\ncondividere le nostre letture attuali o recenti. A me piacciono i \nfantasy e ho riletto Il Signore degli Anelli per la centesima volta.\nE tu?\n"
-        category_descriptions:
-          icebreakers: "Impara a conoscere gli altri membri della tua community ponendo domande divertenti."
-          news: "Discuti le ultime notizie ed eventi."
-          site_feedback: "Condividi i tuoi pensieri sulla community e suggerisci miglioramenti."
-        category_names:
-          icebreakers: "Rompighiaccio"
-          news: "Notizie"
-          site_feedback: "Feedback sito"
-        table_headers:
-          topic: "Argomento"
-          replies: "Risposte"
-          views: "Visualizzazioni"
-          activity: "Attività"
+      jump_in: "Andiamo!"

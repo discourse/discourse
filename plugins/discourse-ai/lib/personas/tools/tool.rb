@@ -45,10 +45,17 @@ module DiscourseAi
 
           def inject_prompt(prompt:, context:, persona:)
           end
+
+          def available_custom_image_tools
+            image_tool_ids = AiTool.where(enabled: true, is_image_generation_tool: true).pluck(:id)
+            image_tool_ids.map do |tool_id|
+              DiscourseAi::Personas::Tools::Custom.class_instance(tool_id)
+            end
+          end
         end
 
         # llm being public makes it a bit easier to test
-        attr_accessor :custom_raw, :parameters, :llm
+        attr_accessor :custom_raw, :parameters, :llm, :provider_data
         attr_reader :tool_call_id, :persona_options, :bot_user, :context
 
         def initialize(
@@ -57,7 +64,8 @@ module DiscourseAi
           persona_options: {},
           bot_user:,
           llm:,
-          context: nil
+          context: nil,
+          provider_data: {}
         )
           @parameters = parameters
           @tool_call_id = tool_call_id
@@ -65,6 +73,7 @@ module DiscourseAi
           @bot_user = bot_user
           @llm = llm
           @context = context.nil? ? DiscourseAi::Personas::BotContext.new(messages: []) : context
+          @provider_data = provider_data.is_a?(Hash) ? provider_data.deep_symbolize_keys : {}
           if !@context.is_a?(DiscourseAi::Personas::BotContext)
             raise ArgumentError, "context must be a DiscourseAi::Personas::Context"
           end
@@ -219,7 +228,7 @@ module DiscourseAi
           end
 
           FinalDestination::HTTP.start(uri.hostname, uri.port, use_ssl: uri.port != 80) do |http|
-            http.request(request) { |response| yield response }
+            http.request(request) { |response| yield response, uri }
           end
         end
 

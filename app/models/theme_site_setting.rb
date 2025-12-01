@@ -10,6 +10,25 @@
 class ThemeSiteSetting < ActiveRecord::Base
   belongs_to :theme
 
+  has_many :upload_references, as: :target, dependent: :destroy
+
+  after_save do
+    if saved_change_to_value?
+      if self.data_type == SiteSettings::TypeSupervisor.types[:upload]
+        UploadReference.ensure_exist!(upload_ids: [self.value], target: self)
+      elsif self.data_type == SiteSettings::TypeSupervisor.types[:objects] && self.value.present?
+        upload_ids =
+          SchemaSettingsObjectValidator.property_values_of_type(
+            schema: SiteSetting.type_supervisor.type_hash(self.name.to_sym)[:schema],
+            objects: JSON.parse(self.value),
+            type: "upload",
+          )
+
+        UploadReference.ensure_exist!(upload_ids: upload_ids, target: self) if upload_ids.any?
+      end
+    end
+  end
+
   # Gets a list of themes that have theme site setting records
   # and the associated values for those settings, where the
   # value is different from the default site setting value.

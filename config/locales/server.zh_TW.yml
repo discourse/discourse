@@ -1439,7 +1439,6 @@ zh_TW:
     suppress_overlapping_tags_in_list: "如果標籤匹配了主題標題中的詞，不顯示該標籤"
     force_lowercase_tags: "強制所有新標籤完全小寫"
     shared_drafts_category: "通過為討論話題的草稿以指定一個類別，來啟用「共用草稿」功能。此類別中的話題將從工作人員使用者的主題清單中取消。"
-    short_title: "短標題將用於使用者的主螢幕、啟動器或其他可能空白鍵有限的地方，它應限制為12個字。"
     dashboard_general_tab_activity_metrics: "選擇在一般頁面中要顯示為活躍指標的報告"
     errors:
       invalid_email: "無效的電子郵件地址"
@@ -2046,6 +2045,9 @@ zh_TW:
     user_automatically_silenced:
       title: "使用者自動被禁言"
       subject_template: "新使用者%{username}由於社群投訴而被禁言"
+    user_automatically_silenced_with_reason:
+      title: "使用者自動被禁言"
+      subject_template: "新使用者%{username}由於社群投訴而被禁言"
     spam_post_blocked:
       title: "因垃圾貼文而被封鎖"
       subject_template: "新用戶 %{username} 由於重複貼連結，文章已被封鎖"
@@ -2593,18 +2595,12 @@ zh_TW:
     nice_share:
       name: 不錯的分享
       description: 分享了一個有 25 個獨立訪問者的貼文
-      long_description: |
-        該徽章授予給分享連結給 25 個其他訪客的你。感謝你廣而告之我們的討論，和對這個社群的幫助。
     good_share:
       name: 很棒的分享
       description: 分享了一個有 300 個獨立訪問者的貼文
-      long_description: |
-        該徽章授與給分享連結給 300 個其他訪客的你。幹得漂亮！你把一個有意思的論壇給了許多新的朋友，並且幫助社群前進了一步。
     great_share:
       name: 精彩的分享
       description: 分享了一個有 1000 個獨立訪問者的貼文
-      long_description: |
-        該徽章授與給分享連結給 1000 個其他訪客的你。哇！你把一個有意思的討論推廣給了廣大的讀者們，並且幫助社群前進了一大步！
     first_like:
       name: 首次按讚
       description: 已讚過了一個貼文
@@ -2782,16 +2778,13 @@ zh_TW:
   wizard:
     title: "Discourse 安裝"
     step:
-      introduction:
+      setup:
+        title: "快速開始"
         fields:
           title:
-            placeholder: "小明的論壇"
-          site_description:
-            placeholder: "小明和他的朋友討論酷東西的論壇"
+            label: "社區名稱"
           default_locale:
             label: "語言"
-      privacy:
-        fields:
           login_required:
             label: "能見度"
             choices:
@@ -2803,40 +2796,6 @@ zh_TW:
             choices:
               invite_only:
                 label: "僅限邀請"
-          chat_enabled:
-            placeholder: "啟用聊天"
-      styling:
-        fields:
-          styling_preview:
-            label: "預覽"
-          homepage_style:
-            choices:
-              latest:
-                label: "最新版本"
-              hot:
-                label: "熱門"
-      branding:
-        title: "網站標誌"
-        fields:
-          logo:
-            label: "主要標誌"
-      corporate:
-        fields:
-          governing_law:
-            placeholder: "加州法律"
-          contact_url:
-            label: "網頁"
-            placeholder: "https://www.example.com/contact-us"
-          city_for_disputes:
-            placeholder: "舊金山，加洲（California）"
-          site_contact:
-            description: "所有自動發送的消息將以該使用者的名義發送，比如投訴警告、備份完成通知。"
-      invites:
-        title: "邀請工作人員"
-        description: "您就快完成啦！讓我們邀請一些人來幫您<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>創建一些種子討論話題</a>，好讓您的社群朋友產生興趣並開始回覆。"
-        disabled: "由於禁用了本地登入（local logins），因此無法向任何人發送邀請，請繼續下一步。"
-      finished:
-        title: "你的 Discourse 已經準備就緒！"
   search_logs:
     graph_title: "搜尋計數"
   onebox:

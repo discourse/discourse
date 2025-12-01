@@ -1,7 +1,7 @@
+import EmailLogsList from "discourse/admin/components/email-logs-list";
+import IncomingEmail from "discourse/admin/models/incoming-email";
 import formatDate from "discourse/helpers/format-date";
 import routeAction from "discourse/helpers/route-action";
-import EmailLogsList from "admin/components/email-logs-list";
-import IncomingEmail from "admin/models/incoming-email";
 
 const RECEIVED_HEADERS = [
   { key: "admin.email.incoming_emails.from_address" },
@@ -42,9 +42,13 @@ export default <template>
         <td>{{emailLog.from_address}}</td>
         <td>{{emailLog.to_addresses}}</td>
         <td>
-          <a href={{emailLog.post_url}}>
+          {{#if emailLog.post_url}}
+            <a href={{emailLog.post_url}}>
+              {{emailLog.subject}}
+            </a>
+          {{else}}
             {{emailLog.subject}}
-          </a>
+          {{/if}}
         </td>
       </tr>
     </:default>

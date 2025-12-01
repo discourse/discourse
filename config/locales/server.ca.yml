@@ -1530,7 +1530,6 @@ ca:
     remove_muted_tags_from_latest: "No mostris temes etiquetats sols amb etiquetes silenciades en la llista de temes més recents."
     force_lowercase_tags: "Obliga que totes les etiquetes noves siguin completament en minúscula."
     shared_drafts_category: "Activa la funció 'Esborranys compartits' designant una categoria per als esborranys de tema. Els temes d'aquesta categoria seran suprimits de les llistes de temes per als usuaris de l'equip responsable."
-    short_title: "El títol curt s'utilitzarà en la pantalla d'inici de l'usuari, en el llançador o en altres llocs on l'espai sigui limitat. Hauria de limitar-se a 12 caràcters."
     dashboard_general_tab_activity_metrics: "Trieu reports que es mostraran com a mètriques d'activitat en la pestanya general."
     errors:
       invalid_email: "Adreça de correu no vàlida."
@@ -2032,6 +2031,9 @@ ca:
       subject_template: "Compte temporalment en espera"
       text_body_template: "Bon dia, \n\nAixò és un missatge automàtic de %{site_name} per a fer-vos saber que el vostre compte s'ha retingut temporalment com a mesura de precaució. \n\nContinueu navegant, però no podreu respondre ni crear temes fins que un [membre de l'equip responsable](%{base_url}/about) revisi les vostres publicacions més recents. Disculpeu les molèsties. \n\nPer a obtenir més informació, consulteu les nostres [directrius comunitàries](%{base_url}/guidelines).\n"
     user_automatically_silenced:
+      title: "Usuari silenciat automàticament"
+      subject_template: "El nou usuari %{username} ha estat silenciat per banderes de la comunitat"
+    user_automatically_silenced_with_reason:
       title: "Usuari silenciat automàticament"
       subject_template: "El nou usuari %{username} ha estat silenciat per banderes de la comunitat"
     spam_post_blocked:
@@ -2549,17 +2551,12 @@ ca:
     nice_share:
       name: Bonica compartició
       description: Ha compartit una publicació amb 25 visitants únics
-      long_description: "Aquesta insígnia es concedeix quan comparteixes un enllaç en el qual han fet clic 25 visitants. Gràcies per escampar la veu sobre les nostres discussions i sobre la comunitat. \n"
     good_share:
       name: Bona compartició
       description: Publicació compartida amb 300 visitants únics
-      long_description: |
-        Aquesta insígnia es concedeix per haver compartit un enllaç clicat per 300 visitants externs. Bona feina! Heu mostrat una gran discussió a un grup de persones noves i heu ajudat a fer créixer la comunitat.
     great_share:
       name: Gran compartició
       description: Publicació compartida amb 1.000 visites úniques
-      long_description: |
-        Aquesta insígnia es concedeix per haver compartit un enllaç en el qual han fet clic 1000 visitants externs. Molt bé! Heu promogut un debat interessant a un públic nou i enorme, i ens heu ajudat a fer créixer la comunitat en gran manera!
     first_like:
       name: Primer 'M'agrada'
       description: Ha fet 'M'agrada' a una publicació
@@ -2748,13 +2745,8 @@ ca:
   wizard:
     title: "Instal·lació de Discourse"
     step:
-      introduction:
-        fields:
-          title:
-            placeholder: "Cau de la Jane"
-          site_description:
-            placeholder: "Un lloc on la Jane i les seves amistats poden conversar sobre temes interessants"
-      privacy:
+      setup:
+        title: "Primers passos"
         fields:
           login_required:
             label: "Visibilitat"
@@ -2763,30 +2755,6 @@ ca:
                 label: "Públic"
               private:
                 label: "Privat"
-      styling:
-        fields:
-          styling_preview:
-            label: "Previsualitza"
-          homepage_style:
-            choices:
-              latest:
-                label: "Més recents"
-      corporate:
-        fields:
-          governing_law:
-            placeholder: "Jurisdicció de Califòrnia"
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
-          city_for_disputes:
-            placeholder: "San Francisco, Califòrnia"
-          site_contact:
-            description: "Tots els missatges personals automatitzats de Discourse s'enviaran des d'aquest usuari, com ara avisos de bandera i avisos de finalització de còpies de seguretat."
-      invites:
-        title: "Convida l'equip responsable"
-        description: "Esteu a punt d'acabar! Convidem unes quantes persones a ajudar a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>generar les discussions</a> amb temes i respostes interessants per a posar en marxa la comunitat."
-        disabled: "Atès que els inicis de sessió locals no estan habilitats, no és possible enviar invitacions a ningú. Procediu al pas següent."
-      finished:
-        title: "El vostre Discourse està a punt!"
   search_logs:
     graph_title: "Recompte de cerques"
   onebox:

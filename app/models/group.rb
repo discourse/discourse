@@ -8,10 +8,6 @@ class Group < ActiveRecord::Base
   MAX_EMAIL_DOMAIN_LENGTH = 253
   RESERVED_NAMES = %w[by-id]
 
-  # TODO: Remove flair_url when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
-  # TODO: Remove smtp_ssl when db/post_migrate/20240717053710_drop_groups_smtp_ssl has been promoted to pre-deploy
-  self.ignored_columns = %w[flair_url smtp_ssl]
-
   include HasCustomFields
   include AnonCacheInvalidator
   include HasDestroyedWebHook
@@ -812,38 +808,24 @@ class Group < ActiveRecord::Base
   PUBLISH_CATEGORIES_LIMIT = 10
 
   def add(user, notify: false, automatic: false)
-    return self if self.users.include?(user)
+    return false if user.nil?
+    return self if group_users.exists?(user_id: user.id)
 
     self.users.push(user)
-
-    if notify
-      Notification.create!(
-        notification_type: Notification.types[:membership_request_accepted],
-        user_id: user.id,
-        data: { group_id: id, group_name: name }.to_json,
-      )
-    end
-
-    if self.categories.count < PUBLISH_CATEGORIES_LIMIT
-      MessageBus.publish(
-        "/categories",
-        { categories: ActiveModel::ArraySerializer.new(self.categories).as_json },
-        user_ids: [user.id],
-      )
-    else
-      Discourse.request_refresh!(user_ids: [user.id])
-    end
-
+    send_membership_notification(user) if notify
+    publish_category_updates(user)
     trigger_user_added_event(user, automatic)
 
     self
   end
 
   def remove(user)
+    return false if user.nil?
     group_user = self.group_users.find_by(user: user)
     return false if group_user.blank?
 
     group_user.destroy
+    publish_category_updates(user)
     trigger_user_removed_event(user)
     enqueue_user_removed_from_group_webhook_events(group_user)
 
@@ -1280,6 +1262,34 @@ class Group < ActiveRecord::Base
   end
 
   private
+
+  def send_membership_notification(user)
+    Notification.create!(
+      notification_type: Notification.types[:membership_request_accepted],
+      user_id: user.id,
+      data: { group_id: id, group_name: name }.to_json,
+    )
+  end
+
+  def publish_category_updates(user)
+    if categories.count < PUBLISH_CATEGORIES_LIMIT
+      guardian = Guardian.new(user)
+      group_categories = categories.map { |c| Category.set_permission!(guardian, c) }
+      updated_categories = group_categories.select(&:permission)
+      removed_category_ids = group_categories.reject(&:permission).map(&:id)
+
+      MessageBus.publish(
+        "/categories",
+        {
+          categories: ActiveModel::ArraySerializer.new(updated_categories).as_json,
+          deleted_categories: removed_category_ids,
+        },
+        user_ids: [user.id],
+      )
+    else
+      Discourse.request_refresh!(user_ids: [user.id])
+    end
+  end
 
   def validate_grant_trust_level
     unless TrustLevel.valid?(self.grant_trust_level)

@@ -1413,8 +1413,6 @@ sk:
       yaxis: "Deň"
       description: "Požiadavky API na bežné kľúče API a používateľské kľúče API."
     consolidated_page_views_browser_detection:
-      title: "Konsolidované zobrazenia stránok s detekciou prehliadača (experimentálne)"
-      title_legacy: "Konsolidované zobrazenia stránok s detekciou prehliadača (experimentálne)"
       xaxis:
         page_view_anon_browser: "Anonymný prehliadač"
         page_view_logged_in_browser: "Prihlásený prehliadač"
@@ -1797,7 +1795,6 @@ sk:
     allow_duplicate_topic_titles_category: "Ak je kategória iná, povoľte témy s identickými, duplicitnými názvami. allow_duplicate_topic_titles musia byť zakázané."
     unique_posts_mins: "Koľko minút musí byť medzi dvomi rovnakými príspevkami od jedného používateľa."
     educate_until_posts: "Ked používateľ začne písať svojich prvých (n) príspevkov, zobraz sprievodcu vzdelávania pre nového užívateľa. "
-    title: "Názov tejto stránky. Viditeľné pre všetkých návštevníkov vrátane anonymných používateľov."
     site_description: "Opíšte túto stránku jednou vetou. Viditeľné pre všetkých návštevníkov vrátane anonymných používateľov."
     short_site_description: "Stručný opis v niekoľkých slovách. Viditeľné pre všetkých návštevníkov vrátane anonymných používateľov."
     contact_email: "E-mailová adresa kľúčového kontaktu zodpovedného za túto stránku. Používa sa na kritické oznámenia a zobrazuje sa aj na <a href='%{base_path}/about' target='_blank'>/about</a>. Viditeľná pre anonymných používateľov na verejných stránkach."
@@ -2254,7 +2251,6 @@ sk:
     allow_all_users_to_flag_illegal_content: "Anonymní používatelia uvidia informácie, že majú správcom poslať e-mail a nahlásiť nezákonný obsah. Toto nastavenie má prednosť pred nastavením \"označovať povolené skupiny príspevkov\"."
     email_address_to_report_illegal_content: "Ak zostane prázdne, použije sa predvolený e-mail správcu stránky."
     cooldown_hours_until_reflag: "Koľko času budú musieť používatelia čakať, kým budú môcť zmeniť označenie príspevku"
-    slow_mode_prevents_editing: "Zabraňuje \"pomalý režim\" úpravám po uplynutí obdobia editácie_grace_period?"
     reply_by_email_enabled: "Aktivujte funkciu, ktorá umožňuje používateľom reagovať na témy priamo prostredníctvom e-mailu namiesto toho, aby sa museli prihlásiť na webovú stránku. Viac informácií nájdete v <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>príručke o Meta</a>."
     reply_by_email_address: "Šablóna pre príchodziu emailovú adresu emailových odpovedí. Napríklad : %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Zoznam alternatívnych šablón pre odpoveď e-mailom na prichádzajúce e-mailové adresy. Príklad: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -2557,7 +2553,6 @@ sk:
     sitemap_page_size: "Počet adries URL, ktoré sa majú zahrnúť do každej stránky mapy lokality. Maximálne 50 000"
     enable_user_status: "Umožniť používateľom nastaviť vlastnú správu o stave (emoji + popis)."
     enable_user_tips: "Povolenie nových tipov pre používateľov, ktoré popisujú kľúčové funkcie pre používateľov"
-    short_title: "Krátky názov sa použije na domovskej obrazovke používateľa, v spúšťacom programe alebo na iných miestach, kde môže byť obmedzený priestor. Mal by byť obmedzený na 12 znakov."
     dashboard_hidden_reports: "Povoliť skrytie zadaných správ z hlavného panela."
     dashboard_visible_tabs: "Vyberte, ktoré karty hlavného panela budú viditeľné."
     dashboard_general_tab_activity_metrics: "Na karte Všeobecné vyberte správy, ktoré sa majú zobrazovať ako metriky aktivity."
@@ -2668,7 +2663,6 @@ sk:
         other: "Zoznam musí obsahovať presne %{count} hodnoty."
       markdown_linkify_tlds: "Nemôžete uviesť hodnotu \"*\"."
       google_oauth2_hd_groups: "Pred povolením tohto nastavenia musíte nakonfigurovať všetky nastavenia \"google oauth2 hd\"."
-      discourse_id_credentials: "Pred povolením tohto nastavenia musíte nakonfigurovať poverenia Discourse ID ('discourse_id_client_id' a 'discourse_id_client_secret')."
       linkedin_oidc_credentials: "Pred povolením tohto nastavenia musíte nakonfigurovať poverenia LinkedIn OIDC (\"linkedin_oidc_client_id\" a \"linkedin_oidc_client_secret\")."
       search_tokenize_chinese_enabled: "Pred povolením tohto nastavenia musíte vypnúť „search_tokenize_chinese“."
       search_tokenize_japanese_enabled: "Pred povolením tohto nastavenia musíte vypnúť „search_tokenize_japanese“."
@@ -3822,14 +3816,9 @@ sk:
     user_automatically_silenced:
       title: "Používateľ automaticky stíšený"
       subject_template: "Nový používateľ %{username} umlčaný označeniami komunity"
-      text_body_template: |
-        Toto je automatická správa.
-
-        Nový používateľ [%{username}](%{user_url}) bol automaticky umlčaný, pretože viacerí používatelia označili príspevok(príspevky) používateľa %{username}.
-
-        Prosím, [prezri si označenia](%{base_url}/review). Ak bol %{username} nesprávne umlčaný, klikni na tlačidlo pre zrušenie umlčania na [administrátorskej stránke pre tohto používateľa](%{user_url}).
-
-        Tento prah môže byť zmenený prostredníctvom nastavení stránky `silence_new_user`.
+    user_automatically_silenced_with_reason:
+      title: "Používateľ automaticky stíšený"
+      subject_template: "Nový používateľ %{username} umlčaný označeniami komunity"
     spam_post_blocked:
       title: "Zablokovaný spamový príspevok"
       subject_template: "Nový uživateľ %{username} je zablokovaný kôli opakovaným odkazom"
@@ -4955,18 +4944,12 @@ sk:
     nice_share:
       name: Pekné zdieľanie
       description: Zdieľaný príspevok s 25 jedinečnými návštevami
-      long_description: |
-        Tento odznak sa udeľuje za zdieľanie odkazu, na ktorý kliklo 25 externých návštevníkov. Ďakujeme za šírenie informácií o našich diskusiách a tejto komunite.
     good_share:
       name: Dobré zdieľanie
       description: Zdieľaný príspevok s 300 jedinečnými návštevami
-      long_description: |
-        Tento odznak sa udeľuje za zdieľanie odkazu, na ktorý kliklo 300 externých návštevníkov. Dobrá práca! Predviedli ste skvelú diskusiu množstvu nových ľudí a pomohli ste tejto komunite rásť.
     great_share:
       name: Výborné zdieľanie
       description: Zdieľaný príspevok s 1000 jedinečnými návštevami
-      long_description: |
-        Tento odznak sa udeľuje za zdieľanie odkazu, na ktorý kliklo 1 000 externých návštevníkov. Wow! Spropagovali ste zaujímavú diskusiu pre obrovské nové publikum a pomohli ste nám rozšíriť našu komunitu vo veľkom!
     first_like:
       name: Prvé "Páči sa mi"
       description: Príspevok, ktorý sa páčil
@@ -5195,21 +5178,13 @@ sk:
   wizard:
     title: "Nastavenie Discourse"
     step:
-      introduction:
-        title: "O vašej stránke"
-        description: "Tieto údaje sa zobrazia na vašom prihlásení a na všetkých verejných stránkach. Vždy ich môžete neskôr zmeniť."
+      setup:
+        title: "Začíname"
         fields:
           title:
             label: "Názov komunity"
-            placeholder: "Janin hangout"
-          site_description:
-            label: "Opíšte svoju komunitu jednou vetou"
-            placeholder: "Miesto pre Janu a jej priateľov, kde môžu diskutovať o skvelých veciach"
           default_locale:
             label: "Jazyk"
-      privacy:
-        title: "Členský prístup"
-        fields:
           login_required:
             label: "Viditeľnosť"
             description: "Je vaša komunita verejná alebo súkromná?"
@@ -5233,82 +5208,6 @@ sk:
                 label: "Nie, noví členovia sa môžu pripojiť okamžite"
               "yes":
                 label: "Áno, noví členovia musia byť schválení moderátormi"
-          chat_enabled:
-            placeholder: "Povoliť chat"
-            extra_description: "Spojte sa so svojimi členmi v reálnom čase"
-      ready:
-        title: "Vaša stránka je pripravená!"
-        description: "To je všetko! Urobili ste základy nastavenia vašej komunity. Teraz sa môžete vrhnúť do hry a porozhliadnuť sa po nej, napísať uvítaciu tému a posielať pozvánky!<br><br>Bavte sa!"
-      styling:
-        title: "Pozri a cíť"
-        fields:
-          color_scheme:
-            label: "Paleta farieb"
-          body_font:
-            label: "Písmo tela"
-          site_font:
-            label: "Písmo"
-          heading_font:
-            label: "Písmo nadpisu"
-          styling_preview:
-            label: "Ukážka"
-          homepage_style:
-            label: "Štýl úvodnej stránky"
-            choices:
-              latest:
-                label: "Najnovšie"
-                description: "Zobrazuje posledné aktívne témy vo všetkých kategóriách, čím pomáha členom zostať v obraze diskusií, ktoré ich zaujímajú."
-              hot:
-                label: "Horúce"
-                description: "Zobrazuje trendové témy zmiešaním nedávnej a celkovej popularity, ukazuje, o čom členovia vo vašej komunite práve hovoria."
-              categories_and_latest_topics:
-                label: "Kategórie s najnovšími témami"
-                description: "Kombinuje nedávno aktívne témy vo všetkých kategóriách so zoznamom kategórií, ich popisom a celkovým počtom tém."
-              categories_boxes:
-                label: "Kategória boxy"
-                description: "Zobrazuje kategórie a ich popis v mriežke, čo je ideálne pre členov, aby videli prehľad podkomunít na vašej stránke."
-      branding:
-        title: "Logo stránky"
-        fields:
-          logo:
-            label: "Primárne logo"
-            description: "Odporúčaná veľkosť: 600 x 200"
-          logo_small:
-            label: "Štvorcové logo"
-            description: "Odporúčaná veľkosť: 512 x 512. Používa sa aj ako favicon a ikona aplikácie na domovskej obrazovke mobilného telefónu."
-      corporate:
-        title: "Vaša organizácia"
-        description: "Nasledujúce informácie sa použijú vo vašich podmienkach používania a na stránkach o službe. Ak žiadna spoločnosť neexistuje, pokojne ju preskočte."
-        fields:
-          company_name:
-            label: "Názov spoločnosti"
-            placeholder: "Organizácia Acme"
-          governing_law:
-            label: "Platné právo"
-            placeholder: "Kalifornské právo"
-          contact_url:
-            label: "Webová stránka"
-            placeholder: "https://www.example.com/contact-us"
-          city_for_disputes:
-            label: "Mesto pre spory"
-            placeholder: "San Francisco, Kalifornia"
-          site_contact:
-            label: "Automatické správy"
-            description: "Z tohto používateľa sa budú odosielať všetky automatické osobné správy Discourse, napríklad upozornenia na príznaky a oznámenia o dokončení zálohovania."
-          contact_email:
-            label: "Kontaktný bod"
-            placeholder: "example@user.com"
-            description: "E-mailová adresa kľúčového kontaktu zodpovedného za túto stránku. Používa sa na kritické oznámenia a v prípade naliehavých záležitostí sa uvádza na vašej <a href='%{base_path}/about' target='_blank'>stránke o</a> vás."
-      invites:
-        title: "Pozvať personál"
-        description: "Už ste skoro hotoví! Pozvime niekoľko ľudí, aby pomohli <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>rozbehnúť vaše diskusie</a> s zaujímavými témami a odpoveďami, aby sme naštartovali vašu komunitu."
-        disabled: "Keďže miestne prihlásenia sú zakázané, nie je možné nikomu posielať pozvánky. Prejdite na ďalší krok."
-      finished:
-        title: "Váš Discourse je pripravený!"
-        description: |
-          <p>Ak budeš niekedy chcieť zmeniť tieto nastavenia, <b>spusti tento sprievodca znova kedykoľvek</b> alebo navštív <a href='%{base_path}/admin' target='_blank'>svoju administrátorskú sekciu</a>; nájdeš ju vedľa ikony kľúča v menu stránky.</p>
-          <p>Je ľahké ešte viac prispôsobiť svoj Discourse pomocou nášho výkonného systému tém. Pre príklady si pozri <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">top témy a komponenty</a> na <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
-          <p>Uži si to a veľa šťastia pri <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>budovaní svojej novej komunity!</a></p>
   search_logs:
     graph_title: "Počet vyhľadávaní"
   onebox:
@@ -5479,7 +5378,6 @@ sk:
         title: "Zahodiť príspevok"
         complete: "Príspevok vyradený."
       revise_and_reject_post:
-        title: "Revidovať príspevok..."
         complete: "Príspevok bol zamietnutý a čaká na revíziu."
       ignore:
         title: "Ignorovať"

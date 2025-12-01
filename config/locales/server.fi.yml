@@ -1263,8 +1263,6 @@ fi:
       yaxis: "Päivä"
       description: "API-pyynnöt tavallisille API-avaimille ja käyttäjän API-avaimille."
     consolidated_page_views_browser_detection:
-      title: "Yhdistetyt sivun katselut selaimen tunnistuksella (kokeellinen)"
-      title_legacy: "Yhdistetyt sivun katselut selaimen tunnistuksella (kokeellinen)"
       xaxis:
         page_view_anon_browser: "Anonyymi selain"
         page_view_logged_in_browser: "Kirjautunut selain"
@@ -1652,7 +1650,6 @@ fi:
     allow_duplicate_topic_titles_category: "Salli ketjut, joilla on identtiset otsikot, jos ketjut on eri alueella. Asetuksen allow_duplicate_topic_titles on oltava pois käytöstä."
     unique_posts_mins: "Kuinka monen minuutin kuluttua käyttäjä voi lähettää uudestaan samansisältöisen viestin"
     educate_until_posts: "Näytä uuden käyttäjän ohje, kun käyttäjä alkaa kirjoittamaan ensimmäistä (n) viestiään viestikenttään."
-    title: "Tämän sivuston nimi. Näkyy kaikille vierailijoille, mukaan lukien anonyymit käyttäjät."
     site_description: "Kuvaile tätä sivustoa yhdellä lauseella. Näkyy kaikille vierailijoille, mukaan lukien anonyymit käyttäjät."
     short_site_description: "Lyhyt muutaman sanan kuvaus. Näkyy kaikille vierailijoille, mukaan lukien anonyymit käyttäjät."
     contact_email: "Sivustosta vastaavan henkilön sähköpostiosoite. Siihen lähetetään kriittiset ilmoitukset, ja se näkyy myös <a href='%{base_path}/about' target='_blank'>/about</a>-sivulla. Näkyy anonyymeille käyttäjille julkisilla sivustoilla."
@@ -2111,7 +2108,6 @@ fi:
     allow_all_users_to_flag_illegal_content: "Anonyymit käyttäjät näkevät tiedot, jotka heidän on lähetettävä sähköpostitse ylläpitäjille ilmoittaakseen laittomasta sisällöstä. Tämä asetus on etusijalla asetukseen \"flag post allowed groups\" nähden."
     email_address_to_report_illegal_content: "Jos tämä jätetään tyhjäksi, käytetään oletusarvoista sivuston ylläpitäjän sähköpostiosoitetta."
     cooldown_hours_until_reflag: "Kuinka kauan käyttäjien on odotettava, kunnes he voivat liputtaa viestin uudelleen"
-    slow_mode_prevents_editing: "Estääkö hidas tila muokkauksen editing_grace_periodin jälkeen?"
     reply_by_email_enabled: "Aktivoi ominaisuus, joka antaa käyttäjien vastata ketjuihin suoraan sähköpostitse sen sijaan, että heidän täytyisi kirjautua verkkosivustolle. Katso lisätietoja <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>Metan oppaasta</a>."
     reply_by_email_address: "Saapuvien sähköpostivastausten sähköpostiosoitekaava, esimerkiksi: %%{reply_key}@reply.esimerkki.fi or replies+%%{reply_key}@esimerkki.fi"
     alternative_reply_by_email_addresses: "Lista vaihtoehtoisista saapuvien sähköpostivastausten sähköpostiosoitekaavoista, esimerkiksi: %%{reply_key}@reply.esimerkki.fi tai replies+%%{reply_key}@esimerkki.fi"
@@ -2415,7 +2411,6 @@ fi:
     sitemap_page_size: "Kuhunkin sivustokartan sivuun lisättävien URL-osoitteiden määrä. Enintään 50 000."
     enable_user_status: "Salli käyttäjien asettaa mukautettu tilaviesti (emoji + kuvaus)."
     enable_user_tips: "Käytä keskeisiä ominaisuuksia uusille käyttäjille kuvaavat vinkit"
-    short_title: "Lyhyttä nimeä käytetään käyttäjän aloitusnäytöllä, käynnistysruudussa ja muissa tilanteissa, joissa tilaa on rajallisesti. Sen tulisi olla enintään 12 merkin pituinen."
     dashboard_hidden_reports: "Salli tiettyjen raporttien piilottaminen hallintapaneelista."
     dashboard_visible_tabs: "Valitse mitkä hallintapaneelin välilehdet ovat näkyvillä."
     dashboard_general_tab_activity_metrics: "Valitse raportit, jotka näytetään aktiivisuusmittareina Yleistä-välilehdellä."
@@ -2441,8 +2436,6 @@ fi:
     default_navigation_menu_categories: "Valitut alueet näkyvät navigointivalikon Alueet-osiossa oletuksena."
     default_navigation_menu_tags: "Valitut tunnisteet näkyvät navigointivalikon Tunnisteet-osiossa oletuksena."
     experimental_new_new_view_groups: 'Ota käyttöön uusien ketjujen luettelo, joka yhdistää lukemattomat ja uudet ketjut, ja linkitä sivupalkin "Kaikki"-linkki siihen.'
-    floatkit_autocomplete_composer: "Ota käyttöön Floatkit-pohjainen automaattisen täydennyksen valikko kirjoitustilassa. Tämä on käyttöliittymän parannus, joka korvaa nykyisen jQuery-pohjaisen automaattisen täydennyksen valikon."
-    floatkit_autocomplete_chat_composer: "Ota käyttöön Floatkit-pohjainen automaattisen täydennyksen valikko chat-kirjoitustilassa. Tämä on käyttöliittymän parannus, joka korvaa nykyisen jQuery-pohjaisen automaattisen täydennyksen valikon."
     experimental_form_templates: "Ota lomakemalliominaisuus käyttöön.Voit hallinnoida malleja kohdassa <a href='%{base_path}/admin/customize/form-templates'>Mukauta / Mallit</a>."
     show_preview_for_form_templates: "Ota esikatselu käyttöön lomakkemalliominaisuudessa"
     lazy_load_categories_groups: "Käytä laiskaa latausta alueen tietoihin vain näiden ryhmien käyttäjille. Tämä parantaa suorituskykyä sivustoilla, joilla on useita alueita."
@@ -2524,7 +2517,6 @@ fi:
         other: "Luettelon täytyy sisältää täsmälleen %{count} arvoa."
       markdown_linkify_tlds: "Et voi lisätä arvoa \"*\"."
       google_oauth2_hd_groups: "Sinun täytyy määrittää kaikki \"google oauth2 hd\" -asetukset ennen kuin otat tämän asetuksen käyttöön."
-      discourse_id_credentials: "Sinun täytyy määrittää Discourse ID -tunnistetiedot (discourse_id_client_id ja discourse_id_client_secret) ennen tämän asetuksen käyttöönottoa."
       linkedin_oidc_credentials: "Sinun täytyy määrittää LinkedIn OIDC -tunnistetiedot (\"linkedin_oidc_client_id\" ja \"linkedin_oidc_client_secret\") ennen tämän asetuksen käyttöönottoa."
       search_tokenize_chinese_enabled: "\"search_tokenize_chinese\" on poistettava käytöstä ennen tämän asetuksen käyttöönottoa."
       search_tokenize_japanese_enabled: "\"search_tokenize_japanese\" on poistettava käytöstä ennen tämän asetuksen käyttöönottoa."
@@ -3618,14 +3610,9 @@ fi:
     user_automatically_silenced:
       title: "Käyttäjä hiljennettiin automaattisesti"
       subject_template: "Yhteisön merkinnät hiljensivät uuden käyttäjän %{username}"
-      text_body_template: |
-        Tämä on automaattinen viesti.
-
-        Uusi käyttäjä [%{username}](%{user_url}) hiljennettiin automaattisesti, koska useampi käyttäjä on liputtanut käyttäjän %{username} viestejä.
-
-        [Tarkasta liputukset](%{base_url}/review). Jos %{username} hiljennettiin ilman syytä, kumoa hiljennys klikkaamalla painiketta [käyttäjän ylläpitosivulla](%{user_url}).
-
-        Rajaa voi muuttaa sivustoasetuksella "silence_new_user".
+    user_automatically_silenced_with_reason:
+      title: "Käyttäjä hiljennettiin automaattisesti"
+      subject_template: "Yhteisön merkinnät hiljensivät uuden käyttäjän %{username}"
     spam_post_blocked:
       title: "Roskapostiviesti estettiin"
       subject_template: "Uuden käyttäjän %{username} viestit estettiin toistuvien linkkien vuoksi"
@@ -4645,18 +4632,12 @@ fi:
     nice_share:
       name: Hyvä jako
       description: Jakoi viestin, ja linkin kautta saapui 25 vierailijaa
-      long_description: |
-        Tämä kunniamerkki myönnetään, kun jaat linkin, jota klikkaa 25 ulkopuolista vierailijaa. Kiitos kun levität sanaa palstan keskusteluista ja yhteisöstä.
     good_share:
       name: Erinomainen jako
       description: Jakoi viestin, ja linkin kautta saapui 300 vierailijaa
-      long_description: |
-        Tämä kunniamerkki myönnetään, kun jaat linkin, jota klikkaa 300 ulkopuolista vierailijaa. Hyvää työtä! Olet esitellyt upean keskustelun joukolle uusia ihmisiä ja siten auttanut yhteisöä kasvamaan.
     great_share:
       name: Loistava jako
       description: Jakoi viestin, ja linkin kautta saapui 1 000 vierailijaa
-      long_description: |
-        Tämä kunniamerkki myönnetään, kun jaat linkin, jota klikkaa 1 000 ulkopuolista vierailijaa. Vau! Olet mainostanut kiinnostavaa keskustelua valtavalle joukolle uusia ihmisiä ja siten auttanut yhteisöä kasvamaan merkittävästi.
     first_like:
       name: Ensimmäinen tykkäys
       description: Tykkäsi viestistä
@@ -4874,21 +4855,13 @@ fi:
   wizard:
     title: "Discoursen asennus"
     step:
-      introduction:
-        title: "Tietoa sivustostasi"
-        description: "Nämä näkyvät kirjautumisessasi ja kaikilla julkisilla sivuilla. Voit aina muuttaa niitä myöhemmin."
+      setup:
+        title: "Aloittaminen"
         fields:
           title:
             label: "Yhteisön nimi"
-            placeholder: "Jennin mesta"
-          site_description:
-            label: "Kuvaile yhteisöä yhdellä lauseella"
-            placeholder: "Paikka, jossa Jenni ja hänen ystävänsä voivat keskustella kivoista jutuista"
           default_locale:
             label: "Kieli"
-      privacy:
-        title: "Jäsenten pääsy"
-        fields:
           login_required:
             label: "Näkyvyys"
             description: "Onko yhteisösi julkinen vai yksityinen?"
@@ -4912,82 +4885,6 @@ fi:
                 label: "En, uudet jäsenet voivat liittyä heti"
               "yes":
                 label: "Kyllä, valvojien täytyy hyväksyä uudet jäsenet"
-          chat_enabled:
-            placeholder: "Ota chat käyttöön"
-            extra_description: "Pidä yhteyttä jäseniisi reaaliajassa"
-      ready:
-        title: "Sivustosi on valmis!"
-        description: "Olet nyt tehnyt perusasioat yhteisösi määrittämiseksi. Nyt voit alkaa tutustumaan paikkoihin, kirjoittaa tervetuloketjun ja lähettää kutsuja!<br><br>Pidä hauskaa!"
-      styling:
-        title: "Ulkoasu ja tuntuma"
-        fields:
-          color_scheme:
-            label: "Väripaletti"
-          body_font:
-            label: "Leipätekstin fontti"
-          site_font:
-            label: "Fontti"
-          heading_font:
-            label: "Otsikon fontti"
-          styling_preview:
-            label: "Esikatselu"
-          homepage_style:
-            label: "Aloitussivun tyyli"
-            choices:
-              latest:
-                label: "Tuoreimmat"
-                description: "Näyttää viimeisimmät aktiiviset ketjut kaikissa luokissa, mikä auttaa jäseniä pysymään ajan tasalla heitä kiinnostavista keskusteluista"
-              hot:
-                label: "Suosittu"
-                description: "Tuo esiin trendikkäitä ketjuja yhdistämällä viimeaikaisen ja yleisen suosion, esittelee, mistä jäsenet puhuvat yhteisössäsi juuri nyt"
-              categories_and_latest_topics:
-                label: "Alueet ja tuoreimmat ketjut"
-                description: "Yhdistää hiljattain aktiiviset ketjut kaikista alueista sekä alueiden luettelon, niiden kuvauksen ja ketjujen kokonaismäärän"
-              categories_boxes:
-                label: "Alueruudut"
-                description: "Näyttää luokat ja niiden kuvauksen ruudukossa, mikä auttaa jäseniä näkemään yleiskatsauksen sivustosi alayhteisöistä"
-      branding:
-        title: "Sivuston logo"
-        fields:
-          logo:
-            label: "Ensisijainen logo"
-            description: "Suositeltu koko: 600 x 200"
-          logo_small:
-            label: "Neliölogo"
-            description: "Suositeltu koko: 512 x 512. Käytetään myös faviconina ja mobiilialoitusnäytön sovelluskuvakkeena."
-      corporate:
-        title: "Organisaatiosi"
-        description: "Seuraavia tietoja käytetään käyttöehdoissasi ja tietosivuillasi. Jos yritystä ei ole, voit ohittaa nämä."
-        fields:
-          company_name:
-            label: "Yrityksen nimi"
-            placeholder: "Esimerkkiorganisaatio"
-          governing_law:
-            label: "Sovellettava lainsäädäntö"
-            placeholder: "Kalifornian laki"
-          contact_url:
-            label: "Verkkosivu"
-            placeholder: "https://www.esimerkki.fi/ota-yhteytta"
-          city_for_disputes:
-            label: "Kaupunki, jonka oikeudessa riidat ratkotaan"
-            placeholder: "San Francisco, Kalifornia"
-          site_contact:
-            label: "Automaattiset viestit"
-            description: "Kaikki Discoursen automaattiset yksityisviestit lähetetään tältä käyttäjältä, kuten varoitukset merkinnöistä ja ilmoitukset valmistuneista varmuuskopioista."
-          contact_email:
-            label: "Yhteyshenkilö"
-            placeholder: "esimerkki@käyttäjä.com"
-            description: "Sivustosta vastaavan henkilön sähköpostiosoite. Siihen lähetetään kriittiset ilmoitukset, ja se näkyy myös <a href='%{base_path}/about' target='_blank'>tietosivullasi</a> kiireellisiä yhteydenottoja varten."
-      invites:
-        title: "Kutsu henkilökuntaa"
-        description: "Melkein valmista! Kutsu vielä joitakin ihmisiä <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>pohjustamaan keskusteluita</a> mielenkiintoisilla aiheilla ja vastauksilla, jotta yhteisösi pääsee alkuun."
-        disabled: "Koska paikalliset kirjautumiset ovat pois käytöstä, ei ole mahdollista kutsua ketään. Jatka seuraavaan vaiheeseen."
-      finished:
-        title: "Discourse-sivustosi on valmis!"
-        description: |
-          <p>Jos haluat muuttaa näitä asetuksia myöhemmin, <b>suorita tämä ohjattu toiminto uudelleen</b> tai vieraile <a href='%{base_path}/admin' target='_blank'>ylläpitopaneelissa</a>; löydät sen jakoavainkuvakkeen vierestä sivuston valikosta.</p>
-          <p>Discoursea on helppo mukauttaa entisestään sen tehokkaalla teemajärjestelmällä. <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>-sivustosta löydät esimerkkejä <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">suosituista teemoista ja komponenteista</a>.</p>
-          <p>Onnittelut, ja pidä hauskaa <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>rakentaessasi uutta yhteisöäsi!</a></p>
   search_logs:
     graph_title: "Hakujen määrä"
   onebox:
@@ -5152,7 +5049,6 @@ fi:
         title: "Hylkää viesti"
         complete: "Viesti hylätty."
       revise_and_reject_post:
-        title: "Korjaa julkaisua..."
         complete: "Viesti hylätty, tarkistusta odotetaan."
       ignore:
         title: "Sivuuta"

@@ -169,23 +169,29 @@ basic:
     area: "localization"
   allow_user_locale:
     client: true
-    default: false
+    default: true
     area: "localization"
   set_locale_from_accept_language_header:
     default: false
     client: true
     validator: "AllowUserLocaleEnabledValidator"
     area: "localization"
+    depends_on:
+      - "allow_user_locale"
   set_locale_from_cookie:
     default: false
     client: true
     validator: "AllowUserLocaleEnabledValidator"
     area: "localization"
+    depends_on:
+      - "allow_user_locale"
   set_locale_from_param:
     default: false
     client: true
     validator: "AllowUserLocaleEnabledValidator"
     area: "localization"
+    depends_on:
+      - "allow_user_locale"
   support_mixed_text_direction:
     client: true
     default: false
@@ -567,6 +573,16 @@ basic:
     enum: "InterfaceColorSelectorSetting"
     default: "disabled"
     area: "interface"
+  promote_upcoming_changes_on_status:
+    default: "stable"
+    type: enum
+    choices:
+      - pre_alpha
+      - alpha
+      - beta
+      - stable
+      - never
+    hidden: true
 
 login:
   login_required:
@@ -577,6 +593,7 @@ login:
   must_approve_users:
     client: true
     default: false
+    area: "login"
   invite_only:
     refresh: true
     client: true
@@ -1719,6 +1736,10 @@ content_localization:
     client: true
     default: "1|2" # admin, moderator
     area: "localization"
+  content_localization_allow_author_localization:
+    default: true
+    client: true
+    area: "localization"
   content_localization_supported_locales:
     default: ""
     type: list
@@ -1740,10 +1761,14 @@ content_localization:
       - all
     default: none
     client: true
+    area: "localization"
     validator: "LanguageSwitcherSettingValidator"
   content_localization_crawler_param:
     default: false
-    hidden: true
+    area: "localization"
+  content_localization_use_default_locale_when_unsupported:
+    default: true
+    area: "localization"
 
 email:
   email_time_window_mins:
@@ -2343,12 +2368,15 @@ files:
     client: true
   composer_media_optimization_image_bytes_optimization_threshold:
     default: 524288
+    hidden: true
     client: true
   composer_media_optimization_image_resize_dimensions_threshold:
     default: 1920
+    hidden: true
     client: true
   composer_media_optimization_image_resize_width_target:
     default: 1920
+    hidden: true
     client: true
   composer_media_optimization_image_resize_pre_multiply:
     default: false
@@ -2387,6 +2415,9 @@ files:
   mediaconvert_endpoint:
     default: ""
     hidden: true
+  mediaconvert_output_subdirectory:
+    default: "transcoded"
+    validator: "MediaconvertOutputSubdirectoryValidator"
 
 trust:
   default_trust_level:
@@ -3548,6 +3579,11 @@ uncategorized:
     validator: "DefaultComposerCategoryValidator"
     area: "posts_and_topics"
 
+  moderator_guide_topic:
+    type: "topic"
+    default: ""
+    client: true
+
   notify_about_reviewable_item_after:
     type: float
     default: 48
@@ -4230,27 +4266,6 @@ experimental:
     allow_any: false
     refresh: true
     area: "group_permissions|navigation|experimental"
-  glimmer_post_stream_mode_auto_groups:
-    client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
-    area: "experimental"
-  glimmer_post_stream_mode:
-    client: true
-    type: enum
-    choices:
-      - disabled
-      - auto
-      - enabled
-    default: "enabled"
-    area: "experimental"
-  deactivate_widgets_rendering:
-    client: true
-    default: true
-    area: "experimental"
   enable_rich_text_paste:
     client: true
     default: true
@@ -4278,3 +4293,11 @@ experimental:
     default: false
     hidden: true
     client: true
+  fake_upcoming_change:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "alpha"
+      impact: "other,all_members"
+      learn_more_url: "https://meta.discourse.org"

@@ -2151,5 +2151,155 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("aside.quote blockquote p", text: "Inside")
       expect(rich).to have_css("aside.quote + p", text: "Outside")
     end
+
+    it "converts quotes with mixed content into the correct HTML" do
+      cdp.allow_clipboard
+      open_composer
+
+      cdp.copy_paste(<<~QUOTE)
+      [quote="john, post:1, topic:1"]
+      This is a quote with a link: https://example.com
+
+      And also a list:
+
+      * Item 1
+      * Item 2
+      [/quote]
+      QUOTE
+
+      expect(rich).to have_css("aside.quote blockquote p", text: "This is a quote with a link: ")
+      expect(rich).to have_css(
+        "aside.quote blockquote p a[href='https://example.com']",
+        text: "https://example.com",
+      )
+      expect(rich).to have_css("aside.quote blockquote ul li", text: "Item 1")
+      expect(rich).to have_css("aside.quote blockquote ul li", text: "Item 2")
+    end
+
+    it "converts quotes with only a list into the correct HTML" do
+      cdp.allow_clipboard
+      open_composer
+
+      cdp.copy_paste(<<~QUOTE)
+      [quote="john, post:1, topic:1"]
+      * Item 1
+      * Item 2
+      [/quote]
+      QUOTE
+
+      expect(rich).to have_css("aside.quote blockquote ul li", text: "Item 1")
+      expect(rich).to have_css("aside.quote blockquote ul li", text: "Item 2")
+    end
+
+    it "converts quotes that start with a list into the correct HTML" do
+      cdp.allow_clipboard
+      open_composer
+
+      cdp.copy_paste(<<~QUOTE)
+      [quote="john, post:1, topic:1"]
+      * Item 1
+      * Item 2
+
+      This is some post-list text.
+
+      ```ruby
+      puts "and some code"
+      ```
+      [/quote]
+      QUOTE
+
+      expect(rich).to have_css("aside.quote blockquote ul li", text: "Item 1")
+      expect(rich).to have_css("aside.quote blockquote ul li", text: "Item 2")
+      expect(rich).to have_css("aside.quote blockquote p", text: "This is some post-list text.")
+      expect(rich).to have_css("aside.quote blockquote pre code", text: 'puts "and some code"')
+    end
+  end
+
+  describe "image grid functionality" do
+    context "when images are outside a grid" do
+      it "shows 'Add to Grid' button for images outside grids" do
+        open_composer
+        composer.type_content("![image1](upload://test1.png)")
+
+        expect(composer.image_grid).to have_add_to_grid_toolbar
+      end
+
+      it "creates single-image grid" do
+        open_composer
+        composer.type_content("![image1](upload://test1.png)")
+
+        expect(composer.image_grid).to have_images(1)
+        composer.image_grid.add_image_to_grid
+        expect(composer.image_grid).to have_grid_images(1)
+      end
+    end
+
+    context "when images are within a grid" do
+      it "shows 'Move outside grid' button for images inside grids" do
+        open_composer
+        composer.type_content("[grid]![image1](upload://test1.png)![image2](upload://test2.png)")
+
+        composer.image_grid.select_first_grid_image
+        expect(composer.image_grid).to have_move_outside_grid_toolbar
+      end
+
+      it "moves image outside grid" do
+        open_composer
+        composer.type_content("[grid]![image1](upload://test1.png)![image2](upload://test2.png)")
+
+        composer.image_grid.select_first_grid_image
+        composer.image_grid.move_image_outside_grid
+
+        expect(composer.image_grid).to have_grid_images(1)
+        expect(composer.image_grid).to have_images(2) # One in grid, one standalone
+      end
+
+      it "moves last image outside grid" do
+        open_composer
+        composer.type_content("[grid]![image1](upload://test1.png)")
+
+        composer.image_grid.move_image_outside_grid
+
+        expect(composer.image_grid).to have_images(1)
+        expect(composer.image_grid).to have_no_grid_images
+      end
+    end
+  end
+
+  describe "auto-grid functionality with experimental_auto_grid_images" do
+    before { SiteSetting.experimental_auto_grid_images = true }
+
+    it "automatically wraps 3+ uploaded images in a grid" do
+      open_composer
+
+      file_path_1 = file_from_fixtures("logo.png", "images").path
+      file_path_2 = file_from_fixtures("logo.jpg", "images").path
+      file_path_3 = file_from_fixtures("downsized.png", "images").path
+
+      attach_file("file-uploader", [file_path_1, file_path_2, file_path_3], make_visible: true)
+
+      expect(composer).to have_no_in_progress_uploads
+
+      # Should automatically create a grid with 3 images
+      expect(composer.image_grid).to have_grid_images(3)
+    end
+
+    it "does not create nested grids when uploading images inside an existing grid" do
+      open_composer
+
+      composer.type_content("[grid]![image1](upload://test1.png)![image2](upload://test2.png)")
+
+      expect(composer.image_grid).to have_grid_images(2)
+
+      file_path_1 = file_from_fixtures("logo.png", "images").path
+      file_path_2 = file_from_fixtures("logo.jpg", "images").path
+      file_path_3 = file_from_fixtures("downsized.png", "images").path
+
+      attach_file("file-uploader", [file_path_1, file_path_2, file_path_3], make_visible: true)
+
+      expect(composer).to have_no_in_progress_uploads
+
+      expect(composer.image_grid).to have_single_grid_with_images(5)
+    end
   end
 end

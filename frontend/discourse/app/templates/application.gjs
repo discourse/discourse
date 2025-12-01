@@ -1,6 +1,4 @@
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import DialogHolder from "dialog-holder/components/dialog-holder";
-import { eq } from "truth-helpers";
 import A11yLiveRegions from "discourse/components/a11y/live-regions";
 import A11ySkipLinks from "discourse/components/a11y/skip-links";
 import CardContainer from "discourse/components/card-container";
@@ -26,11 +24,13 @@ import SidebarWrapper from "discourse/components/sidebar-wrapper";
 import SoftwareUpdatePrompt from "discourse/components/software-update-prompt";
 import TopicEntrance from "discourse/components/topic-entrance";
 import WelcomeBanner from "discourse/components/welcome-banner";
+import DialogHolder from "discourse/dialog-holder/components/dialog-holder";
+import DMenus from "discourse/float-kit/components/d-menus";
+import DToasts from "discourse/float-kit/components/d-toasts";
+import DTooltips from "discourse/float-kit/components/d-tooltips";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
-import DMenus from "float-kit/components/d-menus";
-import DToasts from "float-kit/components/d-toasts";
-import DTooltips from "float-kit/components/d-tooltips";
+import { eq } from "discourse/truth-helpers";
 
 export default <template>
   <DStyles />
@@ -54,9 +54,6 @@ export default <template>
         @canSignUp={{@controller.canSignUp}}
         @showCreateAccount={{routeAction "showCreateAccount"}}
         @showLogin={{routeAction "showLogin"}}
-        @showKeyboard={{routeAction "showKeyboardShortcutsHelp"}}
-        @toggleMobileView={{routeAction "toggleMobileView"}}
-        @logout={{routeAction "logout"}}
         @sidebarEnabled={{@controller.sidebarEnabled}}
         @showSidebar={{@controller.showSidebar}}
         @toggleSidebar={{@controller.toggleSidebar}}

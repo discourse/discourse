@@ -1295,7 +1295,6 @@ vi:
     heading_font: "Phông chữ để sử dụng cho các tiêu đề trên trang web. Chủ đề có thể ghi đè thông qua thuộc tính tùy chỉnh CSS `--heading-font-family`."
     enable_sitemap: "Tạo sơ đồ trang web cho trang web của bạn và đưa nó vào tệp robots.txt."
     sitemap_page_size: "Số lượng URL để bao gồm trong mỗi trang sơ đồ trang web. Tối đa 50.000"
-    short_title: "Tiêu đề ngắn sẽ được sử dụng trên màn hình chính, trình khởi chạy của người dùng hoặc những nơi khác mà không gian có thể bị hạn chế. Nó nên được giới hạn trong 12 ký tự."
     dashboard_hidden_reports: "Cho phép ẩn các báo cáo đã chỉ định khỏi bảng điều khiển."
     dashboard_visible_tabs: "Chọn tab bảng điều khiển nào được hiển thị."
     dashboard_general_tab_activity_metrics: "Chọn các báo cáo sẽ được hiển thị dưới dạng chỉ số hoạt động trên tab chung."
@@ -1940,9 +1939,6 @@ vi:
     nice_share:
       name: Chia Sẻ Hay
       description: Chia sẻ một bài viết có 25 lượt truy cập
-      long_description: |2
-
-        Huy hiệu này được cấp khi liên kết chia sẻ của bạn nhận được 25 lượt truy cập. Cám ơn bạn đã giúp lan tỏa các cuộc thảo luận của cộng đồng.
     good_share:
       name: Chia Sẻ Tốt
       description: Chia sẻ một bài viết có 300 lượt truy cập
@@ -2066,12 +2062,11 @@ vi:
       title: "Gửi lại email kích hoạt"
   wizard:
     step:
-      introduction:
+      setup:
+        title: "Bắt đầu"
         fields:
           default_locale:
             label: "Ngôn ngữ"
-      privacy:
-        fields:
           login_required:
             label: "Khả năng hiển thị"
             choices:
@@ -2079,18 +2074,6 @@ vi:
                 label: "Công khai"
               private:
                 label: "Riêng tư"
-      styling:
-        fields:
-          styling_preview:
-            label: "Xem trước"
-          homepage_style:
-            choices:
-              latest:
-                label: "Mới nhất"
-      corporate:
-        fields:
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
   onebox:
     github:
       closed: "đã "

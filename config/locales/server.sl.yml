@@ -1237,6 +1237,9 @@ sl:
     user_automatically_silenced:
       title: "Uporabnik samodejno utišan"
       subject_template: "Nov uporabnik %{username} je utišan zaradi prijav skupnosti"
+    user_automatically_silenced_with_reason:
+      title: "Uporabnik samodejno utišan"
+      subject_template: "Nov uporabnik %{username} je utišan zaradi prijav skupnosti"
     spam_post_blocked:
       title: "Neželen prispevek blokiran"
       subject_template: "Prispevek novega uporabnika %{username} je blokiran zaradi ponovljenih povezav"
@@ -1734,18 +1737,12 @@ sl:
     nice_share:
       name: Zanimiva souporaba
       description: Delili ste povezavo na prispevek s 25 edinstvenimi obiskovalci
-      long_description: |
-        Ta značka vam je podeljena, ker ste delili povezavo na katero je kliknilo 25 zunanjih obiskovalcev. Hvala, ker delite dobro besedo o naših razpravah in naši skupnosti.
     good_share:
       name: Dobra souporaba
       description: Delili ste povezavo na prispevek s 300 edinstvenimi obiskovalci
-      long_description: |
-        Ta značka vam je podeljena, ker ste delili povezavo na katero je kliknilo 300 zunanjih obiskovalcev. Pokazali ste odličen pogovor veliko novim ljudem in ste tako omogočili, da naša skupnost raste.
     great_share:
       name: Odlična souporaba
       description: Delili ste povezavo na prispevek s 1000 edinstvenimi obiskovalci
-      long_description: |
-        Ta značka vam je podeljena, ker ste delili povezavo na katero je kliknilo 1000 zunanjih obiskovalcev. Delili ste zanimiv pogovor ogromno novim ljudem in ste tako zelo prispevali, da naša skupnost raste.
     first_like:
       name: Prvi všeček
       description: Všečkali prvi prispevek
@@ -1909,33 +1906,18 @@ sl:
   wizard:
     title: "Postavitev Discourse"
     step:
-      introduction:
+      setup:
+        title: "Začetki"
         fields:
-          title:
-            placeholder: "Mikijev klub"
-          site_description:
-            placeholder: "Prostor kjer Miki debatira s svojimi prijatelji o zanimivih zadevah "
           default_locale:
             label: "Jezik"
-      privacy:
-        fields:
           login_required:
             label: "Vidljivost"
             choices:
               public:
-                label: "Javno"
+                label: "Javni"
               private:
-                label: "Zasebno"
-      styling:
-        fields:
-          styling_preview:
-            label: "Predogled"
-          homepage_style:
-            choices:
-              latest:
-                label: "Najnovejše"
-      invites:
-        disabled: "Ker so prijave onemogočene, ni možno povabiti nikogar. Nadaljujte na naslednji korak."
+                label: "Zasebni"
   onebox:
     github:
       closed: "zaprto"

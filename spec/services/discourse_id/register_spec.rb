@@ -46,6 +46,14 @@ RSpec.describe DiscourseId::Register do
         end
 
         it { is_expected.to fail_a_step(:request_challenge) }
+
+        it "logs detailed error with context" do
+          allow(Rails.logger).to receive(:error)
+          result
+          expect(Rails.logger).to have_received(:error).with(
+            /Discourse ID registration failed.*request_challenge.*Network error/m,
+          )
+        end
       end
 
       context "when challenge request returns non-200 status" do
@@ -57,6 +65,14 @@ RSpec.describe DiscourseId::Register do
         end
 
         it { is_expected.to fail_a_step(:request_challenge) }
+
+        it "logs error with status code and response body" do
+          allow(Rails.logger).to receive(:error)
+          result
+          expect(Rails.logger).to have_received(:error).with(
+            /Discourse ID registration failed.*request_challenge.*400.*Bad Request/m,
+          )
+        end
       end
 
       context "when challenge response is invalid JSON" do
@@ -79,6 +95,14 @@ RSpec.describe DiscourseId::Register do
         end
 
         it { is_expected.to fail_a_step(:request_challenge) }
+
+        it "logs error with expected and actual domains" do
+          allow(Rails.logger).to receive(:error)
+          result
+          expect(Rails.logger).to have_received(:error).with(
+            /Discourse ID registration failed.*request_challenge.*Domain mismatch.*expected.*#{Discourse.current_hostname}.*got.*wrong-domain\.com/m,
+          )
+        end
       end
 
       context "when challenge response has path mismatch" do
@@ -118,6 +142,14 @@ RSpec.describe DiscourseId::Register do
           end
 
           it { is_expected.to fail_a_step(:register_with_challenge) }
+
+          it "logs detailed error with context" do
+            allow(Rails.logger).to receive(:error)
+            result
+            expect(Rails.logger).to have_received(:error).with(
+              /Discourse ID registration failed.*register_with_challenge.*Connection timeout/m,
+            )
+          end
         end
 
         context "when registration returns non-200 status" do
@@ -183,8 +215,8 @@ RSpec.describe DiscourseId::Register do
 
           context "when site has no logo URLs" do
             before do
-              SiteSetting.logo = nil
-              SiteSetting.logo_small = nil
+              SiteSetting.logo = ""
+              SiteSetting.logo_small = ""
 
               stub_request(:post, "#{discourse_id_url}/register").with(
                 body: {
@@ -207,7 +239,7 @@ RSpec.describe DiscourseId::Register do
 
           context "when site has no description" do
             before do
-              SiteSetting.site_description = nil
+              SiteSetting.site_description = ""
 
               stub_request(:post, "#{discourse_id_url}/register").with(
                 body: {
@@ -316,6 +348,72 @@ RSpec.describe DiscourseId::Register do
       end
 
       it { is_expected.to run_successfully }
+    end
+
+    context "when updating metadata with update: true" do
+      let(:params) { { update: true } }
+
+      before do
+        SiteSetting.discourse_id_client_id = client_id
+        SiteSetting.discourse_id_client_secret = client_secret
+      end
+
+      context "when challenge request succeeds" do
+        before do
+          stub_request(:post, "#{discourse_id_url}/challenge").to_return(
+            status: 200,
+            body: { domain: Discourse.current_hostname, token: challenge_token }.to_json,
+          )
+        end
+
+        context "when update request succeeds" do
+          let(:response_data) { { client_id: client_id, client_name: SiteSetting.title } }
+
+          before do
+            stub_request(:post, "#{discourse_id_url}/register").with(
+              body: {
+                client_name: SiteSetting.title,
+                redirect_uri: "#{Discourse.base_url}/auth/discourse_id/callback",
+                challenge_token: challenge_token,
+                logo_uri: SiteSetting.site_logo_url,
+                logo_small_uri: SiteSetting.site_logo_small_url,
+                description: SiteSetting.site_description,
+                update: true,
+                client_id: client_id,
+                client_secret: client_secret,
+              }.to_json,
+            ).to_return(status: 200, body: response_data.to_json)
+          end
+
+          it { is_expected.to run_successfully }
+
+          it "includes client credentials in the registration request" do
+            result
+            expect(WebMock).to have_requested(:post, "#{discourse_id_url}/register").with { |req|
+              body = JSON.parse(req.body)
+              body["update"] == true && body["client_id"] == client_id &&
+                body["client_secret"] == client_secret
+            }
+          end
+
+          it "does not change stored credentials" do
+            result
+            expect(SiteSetting.discourse_id_client_id).to eq(client_id)
+            expect(SiteSetting.discourse_id_client_secret).to eq(client_secret)
+          end
+        end
+
+        context "when update request fails" do
+          before do
+            stub_request(:post, "#{discourse_id_url}/register").to_return(
+              status: 400,
+              body: "Application not found",
+            )
+          end
+
+          it { is_expected.to fail_a_step(:register_with_challenge) }
+        end
+      end
     end
   end
 end

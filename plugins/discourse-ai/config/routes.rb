@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 DiscourseAi::Engine.routes.draw do
+  scope path: "/credits", defaults: { format: :json } do
+    get "status" => "ai_credits#status"
+  end
+
   scope module: :ai_helper, path: "/ai-helper", defaults: { format: :json } do
     post "suggest" => "assistant#suggest"
     post "suggest_title" => "assistant#suggest_title"
@@ -67,6 +71,7 @@ DiscourseAi::Engine.routes.draw do
 
   scope module: :translation, path: "/translate", defaults: { format: :json } do
     post "/posts/:post_id" => "translation#translate"
+    post "/topics/:topic_id" => "translation#schedule_topic"
   end
 end
 
@@ -148,11 +153,4 @@ Discourse::Application.routes.draw do
               path: "ai-features",
               controller: "discourse_ai/admin/ai_features"
   end
-end
-
-Discourse::Application.routes.append do
-  get "u/:username/preferences/ai" => "users#preferences",
-      :constraints => {
-        username: RouteFormat.username,
-      }
 end

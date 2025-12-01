@@ -2,10 +2,10 @@
   --scrollbarBg: transparent;
   --scrollbarThumbBg: var(--primary-low);
   --scrollbarWidth: 10px;
-  scrollbar-color: transparent var(--scrollbarBg);
   transition: scrollbar-color 0.25s ease-in-out;
-
   @content;
+  scrollbar-color: var(--scrollbarThumbBg) var(--scrollbarBg);
+  scrollbar-width: thin;
 
   // chrome, safari
   &::-webkit-scrollbar-thumb {
@@ -23,11 +23,6 @@
   }
 
   // firefox
-  & {
-    scrollbar-color: var(--scrollbarThumbBg) var(--scrollbarBg);
-    scrollbar-width: thin;
-  }
-
   &::-moz-scrollbar-thumb {
     background-color: var(--scrollbarThumbBg);
     border-radius: calc(var(--scrollbarWidth) / 2);

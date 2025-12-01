@@ -17,10 +17,10 @@ import computed, { debounce } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { applyLocalDates } from "discourse/lib/local-dates";
 import { cook } from "discourse/lib/text";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import MultiSelect from "discourse/select-kit/components/multi-select";
+import TimezoneInput from "discourse/select-kit/components/timezone-input";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
-import MultiSelect from "select-kit/components/multi-select";
-import TimezoneInput from "select-kit/components/timezone-input";
 import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
 
 export default class LocalDatesCreate extends Component {

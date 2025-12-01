@@ -10,14 +10,14 @@ import {
   shift,
   size,
 } from "@floating-ui/dom";
+import {
+  FLOAT_UI_PLACEMENTS,
+  VISIBILITY_OPTIMIZERS,
+} from "discourse/float-kit/lib/constants";
 import domFromString from "discourse/lib/dom-from-string";
 import { isTesting } from "discourse/lib/environment";
 import { iconHTML } from "discourse/lib/icon-library";
 import { headerOffset } from "discourse/lib/offset-calculator";
-import {
-  FLOAT_UI_PLACEMENTS,
-  VISIBILITY_OPTIMIZERS,
-} from "float-kit/lib/constants";
 
 const centerOffset = offset(({ rects }) => {
   return -rects.reference.height / 2 - rects.floating.height / 2;

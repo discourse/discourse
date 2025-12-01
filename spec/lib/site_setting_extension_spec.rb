@@ -879,6 +879,92 @@ RSpec.describe SiteSettingExtension do
       end
     end
 
+    describe "objects settings with uploads" do
+      it "should hydrate upload IDs to URLs" do
+        upload1 = Fabricate(:upload)
+        upload2 = Fabricate(:upload)
+        upload3 = Fabricate(:upload)
+
+        schema = {
+          name: "section",
+          properties: {
+            title: {
+              type: "string",
+            },
+            image: {
+              type: "upload",
+            },
+            links: {
+              type: "objects",
+              schema: {
+                name: "link",
+                properties: {
+                  link_image: {
+                    type: "upload",
+                  },
+                },
+              },
+            },
+          },
+        }
+
+        settings.setting(:test_objects_with_uploads, "[]", type: :objects, schema: schema)
+        settings.test_objects_with_uploads = [
+          {
+            "title" => "Section 1",
+            "image" => upload1.id,
+            "links" => [{ "link_image" => upload3.id }],
+          },
+          { "title" => "Section 2", "image" => upload2.id },
+        ].to_json
+        settings.refresh!
+
+        setting = settings.all_settings.last
+        value = JSON.parse(setting[:value])
+
+        expect(value[0]["image"]).to eq(upload1.url)
+        expect(value[1]["image"]).to eq(upload2.url)
+        expect(value[0]["title"]).to eq("Section 1")
+        expect(value[1]["title"]).to eq("Section 2")
+        expect(value[0]["links"][0]["link_image"]).to eq(upload3.url)
+      end
+
+      it "should batch uploads query" do
+        upload1 = Fabricate(:upload)
+        upload2 = Fabricate(:upload)
+        upload3 = Fabricate(:upload)
+
+        schema = {
+          name: "section",
+          properties: {
+            title: {
+              type: "string",
+            },
+            image: {
+              type: "upload",
+            },
+          },
+        }
+
+        settings.setting(:test_objects_with_uploads, "[]", type: :objects, schema: schema)
+        settings.test_objects_with_uploads = [
+          { "title" => "Section 1", "image" => upload1.id },
+          { "title" => "Section 2", "image" => upload2.id },
+          { "title" => "Section 3", "image" => upload3.id },
+        ].to_json
+        settings.refresh!
+
+        queries =
+          track_sql_queries do
+            setting = settings.all_settings.last
+            JSON.parse(setting[:value])
+          end
+
+        upload_queries = queries.select { |q| q.include?("SELECT") && q.include?("uploads") }
+        expect(upload_queries.length).to eq(1)
+      end
+    end
+
     context "with the filter_allowed_hidden argument" do
       it "includes the specified hidden settings only if include_hidden is true" do
         result =
@@ -1336,10 +1422,10 @@ RSpec.describe SiteSettingExtension do
       expect(SiteSetting.digest_suppress_tags_map).to eq(%w[blah blah2])
     end
 
-    it "handles null values for settings" do
-      SiteSetting.ga_universal_auto_link_domains = nil
-      SiteSetting.pm_tags_allowed_for_groups = nil
-      SiteSetting.exclude_rel_nofollow_domains = nil
+    it "handles blank values for settings" do
+      SiteSetting.ga_universal_auto_link_domains = ""
+      SiteSetting.pm_tags_allowed_for_groups = ""
+      SiteSetting.exclude_rel_nofollow_domains = ""
 
       expect(SiteSetting.ga_universal_auto_link_domains_map).to eq([])
       expect(SiteSetting.pm_tags_allowed_for_groups_map).to eq([])

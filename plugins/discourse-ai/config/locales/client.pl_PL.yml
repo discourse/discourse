@@ -300,6 +300,7 @@ pl_PL:
           custom_prompt: "Niestandardowy prompt"
           image_caption: "Obrazy z podpisami"
           translator: "Tłumacz"
+          post_illustrator: "Ilustrator postów"
         translation:
           name: "Tłumaczenie"
           description: "Tłumaczy treści na obsługiwane języki"
@@ -307,6 +308,13 @@ pl_PL:
           post_raw_translator: "Tłumacz surowy postu"
           topic_title_translator: "Tłumacz tytułu tematu"
           short_text_translator: "Tłumacz krótkich tekstów"
+          schedule_untranslated: "Zaplanuj tłumaczenie"
+          schedule_topic_success:
+            one: "Zaplanowane tłumaczenie %{count} nieprzetłumaczonego wpisu."
+            few: "Zaplanowane tłumaczenie %{count} nieprzetłumaczonych wpisów."
+            many: "Zaplanowane tłumaczenie %{count} nieprzetłumaczonych wpisów."
+            other: "Zaplanowane tłumaczenie %{count} nieprzetłumaczonych wpisów."
+          schedule_topic_error: "Nie udało się zaplanować tłumaczeń. Spróbuj ponownie."
         spam:
           name: "Spam"
           description: "Identyfikuje potencjalny spam przy użyciu wybranego LLM i oznacza go dla moderatorów witryny w celu sprawdzenia w kolejce przeglądania."
@@ -367,6 +375,8 @@ pl_PL:
             title: "Tłumaczy ten post na wszystkie obsługiwane języki"
             confirm: "Spowoduje to zaktualizowanie wszystkich istniejących tłumaczeń w tym poście. Czy na pewno chcesz to zrobić?"
             success: "Post został wysłany do przetłumaczenia"
+        credit_limit_warning: "Tłumaczenia zostały wstrzymane z powodu limitów kredytowych. Zostaną wznowione po zresetowaniu kredytów %{reset_time}."
+        credit_limit_warning_no_time: "Tłumaczenia zostały wstrzymane z powodu limitów kredytowych. Zostaną wznowione po zresetowaniu kredytów."
       spam:
         short_title: "Spam"
         title: "Skonfiguruj obsługę spamu"
@@ -422,6 +432,8 @@ pl_PL:
         request_tokens: "Tokeny żądania"
         response_tokens: "Tokeny odpowiedzi"
         net_request_tokens: "Tokeny żądania sieci"
+        cache_read_tokens: "Tokeny odczytu pamięci podręcznej"
+        cache_write_tokens: "Tokeny zapisu pamięci podręcznej"
         cached_tokens: "Tokeny buforowane"
         cached_request_tokens: "Buforowane tokeny żądań"
         total_spending: "Szacowany koszt"
@@ -434,6 +446,8 @@ pl_PL:
           total_tokens: "Wszystkie tokeny używane podczas monitowania LLM"
           request_tokens: "Tokeny używane, gdy LLM próbuje zrozumieć, co mówisz"
           response_tokens: "Tokeny używane, gdy LLM odpowiada na twój prompt"
+          cache_read_tokens: "Wcześniej przetworzone tokeny żądań, które LLM ponownie wykorzystuje z pamięci podręcznej w celu optymalizacji wydajności i kosztów"
+          cache_write_tokens: "Żądaj tokenów zapisanych w pamięci podręcznej w celu potencjalnego ponownego wykorzystania w przyszłości"
           cached_tokens: "Wcześniej przetworzone tokeny żądań, które LLM ponownie wykorzystuje w celu optymalizacji wydajności i kosztów."
           total_spending: "Łączny koszt wszystkich tokenów używanych przez LLM w oparciu o określone metryki kosztów dodane do ustawień konfiguracji LLM"
         periods:
@@ -470,8 +484,8 @@ pl_PL:
           low: Niska jakość - najtańsza (256x256)
           medium: Średnia jakość (512x512)
           high: Wysoka jakość - najwolniejsza (1024x1024)
-        tool_details: Pokaż szczegóły narzędzia
-        tool_details_help: Pokaże użytkownikom końcowym szczegółowe informacje na temat narzędzi uruchomionych przez model językowy.
+        show_thinking: Pokaż myślenie
+        show_thinking_help: Pokaże użytkownikom końcowym wewnętrzne myślenie i wywołania narzędzi modelu językowego.
         mentionable: Zezwalaj na wzmianki
         mentionable_help: Jeśli ta opcja jest włączona, użytkownicy z uprawnionych grup mogą wspominać o tym użytkowniku w postach, a sztuczna inteligencja będzie reagować jako ta persona.
         user: Użytkownik
@@ -623,6 +637,7 @@ pl_PL:
         ai_bot_user: "Użytkownik bota AI"
         cost_input: "Koszt wejściowy"
         cost_cached_input: "Koszt buforowanego wejścia"
+        cost_cache_write: "Koszt zapisu do pamięci podręcznej"
         cost_output: "Koszt wyjściowy"
         save: "Zapisz"
         edit: "Edytuj"
@@ -630,7 +645,6 @@ pl_PL:
         back: "Wstecz"
         confirm_delete: Czy na pewno chcesz usunąć ten model?
         delete: Usuń
-        seeded_warning: "Ten model jest wstępnie skonfigurowany w Twojej witrynie i nie można go edytować."
         quotas:
           title: "Limity wykorzystania"
           add_title: "Utwórz nowy limit"
@@ -653,7 +667,7 @@ pl_PL:
           max_usages_required: "Musi być ustawiony, jeśli nie ustawiono maksymalnej liczby tokenów"
         credit_allocation:
           credits_remaining: "Pozostało %{remaining} z %{total} kredytów (%{percentage}%)"
-          soft_limit_warning: "Ten model ma %{percentage}% kredytów AI pozostałych w tym miesiącu"
+          soft_limit_warning: "Ten model ma dziś %{percentage}% pozostałych kredytów AI"
           hard_limit_warning: "Wyczerpały się kredyty AI dla tego modelu. Funkcje SI wykorzystujące ten model będą niedostępne do %{reset_date}."
           next_reset: "Zresetowano kredyty na %{time}"
         usage:
@@ -672,25 +686,22 @@ pl_PL:
           other: "Ten model jest obecnie używany przez: %{settings}. W przypadku nieprawidłowej konfiguracji funkcje nie będą działać zgodnie z oczekiwaniami. "
         model_description:
           none: "Ogólne ustawienia, które działają dla większości modeli językowych"
-          anthropic-claude-opus-4-1: "Najbardziej inteligentny model Anthropic"
-          anthropic-claude-sonnet-4-0: "Optymalna równowaga między szybkością a kosztami"
-          anthropic-claude-3-7-sonnet-latest: "Optymalna równowaga między szybkością a kosztami (poprzednia generacja)"
-          anthropic-claude-3-5-haiku-latest: "Szybko i ekonomicznie"
+          anthropic-claude-opus-4-5: "Najbardziej inteligentny model Anthropic"
+          anthropic-claude-sonnet-4-5: "Optymalna równowaga między szybkością a kosztami"
+          anthropic-claude-haiku-4-5: "Szybki i opłacalny"
+          google-gemini-3-pro: "Najinteligentniejszy model Google"
           google-gemini-2-5-pro: "Duży model multimodalny zdolny do realizacji szerokiego zakresu zadań"
-          google-gemini-2-0-flash: "Lekki, szybki i ekonomiczny z multimodalnym rozumowaniem (poprzednia generacja)"
           google-gemini-2-5-flash: "Lekki, szybki i ekonomiczny z multimodalnym rozumowaniem"
-          google-gemini-2-0-flash-lite: "Model ekonomiczny i o niskim opóźnieniu"
+          google-gemini-2-5-flash-lite: "Najmniejszy i najbardziej opłacalny model Google"
           google-gemini-2-5-flash-image-preview: "Najnowszy model generowania obrazu z funkcjami wizyjnymi"
-          open_ai-o3: "Najbardziej zaawansowany model wnioskowania OpenAI"
-          open_ai-o4-mini: "Zaawansowany, efektywny kosztowo model rozumowania"
-          open_ai-gpt-5: "Flagowy model OpenAI. Doskonale nadaje się do rozwiązywania problemów w różnych domenach."
+          open_ai-gpt-5-1: "Flagowy model OpenAI. Doskonale nadaje się do rozwiązywania problemów w różnych domenach."
           open_ai-gpt-5-mini: "Zapewnia równowagę między inteligencją, szybkością i kosztami, co czyni go atrakcyjnym modelem do wielu zastosowań."
           open_ai-gpt-5-nano: "Najszybszy i najbardziej ekonomiczny model GPT-5."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Wydajny, lekki model wielojęzyczny"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "Wydajny model wielofunkcyjny"
           mistral-mistral-large-latest: "Najpotężniejszy model Mistral"
           mistral-pixtral-large-latest: "Najpotężniejszy model Mistral zdolny do widzenia"
-          open_router-x-ai-grok-3-beta: "Najnowszy model xAI"
+          open_router-x-ai-grok-4: "Najnowszy model xAI"
           open_router-deepseek-deepseek-r1-0528-free: "Najnowszy model wnioskowania DeepSeek"
           open_router-meta-llama-3-3-70b-instruct: "Wysoce wydajny model wielojęzyczny"
           groq-openai-gpt-oss-120b: "Najnowocześniejszy model open-weight opracowany przez OpenAI"
@@ -721,7 +732,8 @@ pl_PL:
           vision_enabled: "Po włączeniu tej opcji, sztuczna inteligencja będzie próbować interpretować obrazy. Zależy to od używanego modelu obsługującego widzenie. Obsługiwane są najnowsze modele firm Anthropic, Google i OpenAI."
           enabled_chat_bot: "Jeśli ta opcja jest włączona, użytkownicy mogą wybrać ten model podczas tworzenia wiadomości prywatnych za pomocą bota AI"
           cost_input: "Koszt wejściowy na 1 mln tokenów dla tego modelu"
-          cost_cached_input: "Koszt wejścia w pamięci podręcznej na 1 mln tokenów dla tego modelu"
+          cost_cached_input: "Koszt wejścia w pamięci podręcznej na 1 mln tokenów dla tego modelu (przy odczycie z pamięci podręcznej)"
+          cost_cache_write: "Koszt zapisu do pamięci podręcznej na 1 mln tokenów dla tego modelu (podczas zapisu do pamięci podręcznej)"
           cost_output: "Koszt wytworzenia 1 mln tokenów dla tego modelu"
           cost_measure: "Tokeny o wartości 1 mln USD"
         providers:
@@ -742,6 +754,7 @@ pl_PL:
           fake: "Niestandardowe"
         provider_fields:
           access_key_id: "Identyfikator klucza dostępu AWS Bedrock"
+          role_arn: "Role ARN AWS Bedrock"
           region: "Region AWS Bedrock"
           organization: "Opcjonalny identyfikator organizacji OpenAI"
           disable_system_prompt: "Wyłącz wiadomość systemową w promptach"
@@ -758,6 +771,11 @@ pl_PL:
           disable_temperature: "Wyłącz temperaturę (niektóre modele nie obsługują temperatury)"
           disable_top_p: "Wyłącz Top P (niektóre modele myślenia nie obsługują górnego P)"
           enable_responses_api: "Włącz API odpowiedzi (wymagane w niektórych modelach OpenAI)"
+          prompt_caching: "Tryb buforowania monitu"
+          prompt_caching_never: "Nigdy – nie używaj buforowania błyskawicznego"
+          prompt_caching_tool_results: "Wyniki narzędzi – pamięć podręczna, gdy dostępne są wyniki narzędzi (zalecane)"
+          prompt_caching_always: "Zawsze – zawsze używaj szybkiego buforowania"
+          effort: "Poziom wysiłku (tylko Claude Opus 4.5)"
       related_topics:
         title: "Powiązane tematy"
         pill: "Powiązane"
@@ -783,9 +801,9 @@ pl_PL:
           discard: "Odrzuć"
           changes: "Sugerowane zmiany"
           custom_prompt:
-            title: "Niestandardowy prompt"
+            title: "Niestandardowy monit"
             placeholder: "Wprowadź niestandardowy monit..."
-            submit: "Wyślij prompt"
+            submit: "Wyślij monit"
           translate_prompt: "Przetłumacz na %{language}"
         post_options_menu:
           trigger: "Zapytaj AI"
@@ -804,6 +822,7 @@ pl_PL:
           title: "Sugerowane miniatury"
           select: "Wybierz"
           selected: "Wybrany"
+          try_again: "Spróbuj ponownie"
         image_caption:
           button_label: "Napisy z AI"
           generating: "Generowanie napisów..."
@@ -813,8 +832,10 @@ pl_PL:
       errors:
         credit_limit_dialog:
           title: "Osiągnięto limit kredytów AI"
-          message: "Osiągnąłeś limit kredytów AI dla swojego planu. Odpowiedzi będą niedostępne do czasu zresetowania limitu na stronie %{reset_time}."
-          message_without_time: "Osiągnąłeś limit kredytów AI dla swojego planu. Odpowiedzi będą niedostępne do czasu zresetowania limitu."
+          message_user: "Osiągnięto limit kredytu AI dla swojego planu. Odpowiedzi będą niedostępne do momentu zresetowania limitu o wartości %{reset_time}. Aby uzyskać więcej informacji, skontaktuj się z administratorem witryny."
+          message_without_time_user: "Osiągnięto limit kredytu AI dla swojego planu. Odpowiedzi będą niedostępne do czasu zresetowania limitu. Aby uzyskać więcej informacji, skontaktuj się z administratorem witryny."
+          message_admin: "Osiągnięto limit kredytu AI dla swojego planu. Odpowiedzi będą niedostępne do momentu zresetowania limitu o godzinie %{reset_time}."
+          message_without_time_admin: "Osiągnięto limit kredytu AI dla swojego planu. Odpowiedzi będą niedostępne do czasu zresetowania limitu."
       reviewables:
         model_used: "Zastosowany model:"
         accuracy: "Dokładność:"
@@ -907,6 +928,8 @@ pl_PL:
           copy_response: "Odpowiedź kopiowania"
           request_tokens: "Tokeny żądania:"
           response_tokens: "Tokeny odpowiedzi:"
+          cache_read_tokens: "Tokeny odczytu pamięci podręcznej:"
+          cache_write_tokens: "Tokeny zapisu pamięci podręcznej:"
           request: "Żądanie"
           response: "Odpowiedź"
           next_log: "Następna"
@@ -1019,7 +1042,7 @@ pl_PL:
         loading_convo: "Ładowanie rozmowy"
         collapse: "Zwiń"
         timed_out: "Discobot nie znalazł żadnych odkryć. Coś poszło nie tak."
-        user_setting: "Włącz odkrycia wyszukiwania"
+        user_setting: "Włącz odkrycia wyszukiwania AI"
         tooltip:
           header: "Wyszukiwanie oparte na AI"
           content: "Wyszukiwanie w języku naturalnym obsługiwane przez %{model}"

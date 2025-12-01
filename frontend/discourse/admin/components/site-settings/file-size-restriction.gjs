@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import FileSizeInput from "admin/components/file-size-input";
+import FileSizeInput from "discourse/admin/components/file-size-input";
 
 export default class FileSizeRestriction extends Component {
   @action

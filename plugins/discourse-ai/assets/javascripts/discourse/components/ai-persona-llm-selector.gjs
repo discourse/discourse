@@ -3,8 +3,8 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import { i18n } from "discourse-i18n";
-import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 
 const PERSONA_SELECTOR_KEY = "ai_persona_selector_id";
 const LLM_SELECTOR_KEY = "ai_llm_selector_id";
@@ -97,6 +97,11 @@ export default class AiPersonaLlmSelector extends Component {
     this.llm = newValue;
     this.keyValueStore.setItem(LLM_SELECTOR_KEY, newValue);
 
+    // Pass the LLM model ID (not user ID) for credit checking
+    const bot = this.currentUser.ai_enabled_chat_bots.find(
+      (b) => b.id === newValue
+    );
+    this.args.setLlmId?.(bot?.llm_model_id);
     this.resetTargetRecipients();
   }
 

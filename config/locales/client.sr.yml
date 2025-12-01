@@ -218,7 +218,6 @@ sr:
     software_update_prompt:
       message: "Unapredili smo ovaj sajt, <span>molimo osvežite stranicu</span> da bi se učitala nova verzija."
       dismiss: "Одбаци"
-    bootstrap_mode: "Prvi koraci"
     back_button: "Nazad"
     welcome_banner:
       header:
@@ -276,7 +275,7 @@ sr:
     joined: "Pridružen"
     admin_title: "Admin"
     show_more: "prikaži više"
-    show_help: "opcije"
+    show_help: "Opcije"
     links: "Linkovi"
     links_lowercase:
       one: "link"
@@ -638,8 +637,7 @@ sr:
       title: "Pregled"
       topic: "Tema:"
       filtered_topic: "Prikazujete samo sadržaje unutar jedne teme koji zahtevaju pregled."
-      filtered_user: "Korisnik"
-      filtered_reviewed_by: "Pregledano od strane"
+      filtered_reviewed_by: "Pregledano od"
       show_all_topics: "prikaži sve teme"
       deleted_post: "(post izbrisan)"
       deleted_user: "(korisnik izbrisan)"
@@ -686,7 +684,6 @@ sr:
         one: "%{count} odgovor"
         few: "%{count} odgovora"
         other: "%{count} odgovora"
-      edit: "Izmeni"
       save: "Sačuvaj"
       cancel: "Odustani"
       new_topic: "Odobravanjem će se napraviti nova tema"
@@ -708,7 +705,6 @@ sr:
           created_at: "Napravljeno"
           created_at_asc: "Napravljeno (obrnuto)"
         priority:
-          title: "Minimalni prioritet"
           any: "(bilo koji)"
           low: "Manji"
           medium: "Srednje"
@@ -772,6 +768,7 @@ sr:
       user_label: "Korisnik"
       notes:
         delete: "Obriši"
+      topic_label: "Tema"
       review_user: "Korisnik"
       insights:
         activities:
@@ -1110,7 +1107,6 @@ sr:
         week: "nedelja"
         month: "mesec"
     ip_lookup:
-      title: Pretraga po IP adresi
       hostname: Ime računara
       location: Lokacija
       location_not_found: (nepoznato)
@@ -2182,17 +2178,10 @@ sr:
       tag_groups_placeholder: "(Opciono) lista dozvoljenih tagova"
       required_tag_group:
         delete: "Obriši"
-      delete: "Obriši Kategoriju"
-      create: "Nova Kategorija"
-      save: "Sačuvaj Kategoriju"
-      slug: "Kod Kategorije"
       slug_placeholder: "(Opciono) spojene-reči za url"
       creation_error: Dogodila se greška pri otvaranju kategorije.
       save_error: Dogodila se greška pri čuvanju kategorije.
-      name: "Ime Kategorije"
       description: "Opis"
-      logo: "Logo Kategorije "
-      background_image: "Pozadinska Slika Kategorije"
       background_color: "Boja"
       styles:
         icon: "Ikona"
@@ -2204,9 +2193,7 @@ sr:
       color_placeholder: "bilo koja boja"
       delete_confirm: "Jeste li sigurni da želite izbrisati ovu kategoriju?"
       delete_error: "Dogodila se greška pri brisanju kategorije."
-      list: "Lista Kategorija"
       no_description: "Molimo dodajte opis ovoj kategoriji."
-      change_in_category_topic: "Izmena Opisa"
       already_used: "Ova boja se koristi u drugoj kategoriji."
       security: "Sigurnost"
       permissions:
@@ -2217,11 +2204,8 @@ sr:
       email_in: "Prilagođena adresa dolaznog e-maila."
       email_in_allow_strangers: "Prihvati emailove anonimnih korisnika bez naloga"
       allow_badges_label: "Dozvoli dodjeljivanje značaka u ovoj kategoriji."
-      edit_permissions: "Izmeni dozvole"
       review_group_name: "ime grupe"
       this_year: "ove godine"
-      default_position: "Zadana pozicija"
-      parent: "Nadkategorija"
       notifications:
         watching:
           title: "Posmatrano"
@@ -2376,7 +2360,7 @@ sr:
         title: "Top"
         help: "najaktivnije teme u poslednjih godinu, mesec, nedelju ili dan"
         all:
-          title: "Top svih vremena"
+          title: "Svih vremena"
         yearly:
           title: "Top godišnje"
         quarterly:
@@ -2419,7 +2403,6 @@ sr:
         next_prev: "%{shortcut} Sledeći/predhodni deo"
       application:
         title: "Aplikacija"
-        create: "%{shortcut} Otvori novu temu"
         notifications: "%{shortcut} Otvori obaveštenja"
         user_profile_menu: "%{shortcut} Otvori korisnički meni"
         show_incoming_updated_topics: "%{shortcut} Pokaži ažurirane teme"
@@ -2632,6 +2615,9 @@ sr:
       upcoming_changes:
         name: "Ime foruma"
         enabled: "Omogućeno"
+        enabled_for_options:
+          everyone: "Svi"
+          staff: "Samo članovi osoblja"
         impact_roles:
           admins: "Admini"
           moderators: "Moderatori"
@@ -2660,6 +2646,12 @@ sr:
         fonts:
           backfill_modal:
             modal_yes: "Da"
+        welcome_banner:
+          form:
+            location:
+              label: "Lokacija"
+            header_anonymous:
+              placeholder: "Dobrodošli na %{site_name}!"
         navigation:
           title: "Navigacija"
         notifications:
@@ -3476,46 +3468,3 @@ sr:
         modal:
           categories: "Kategorije"
           topics: "Teme"
-  wizard_js:
-    wizard:
-      back: "Nazad"
-      next: "Dalje"
-      step-text: "Korak"
-      step: "%{current} od %{total}"
-      upload_error: "Žao nam je, dogodila se greška pri učitavanju te datoteke. Molimo pokušajte ponovo."
-      staff_count:
-        one: "Tvoja zajednica ima %{count} člana tima (tebe). "
-        few: "Vaša zajednica ima %{count} članova tima, uključujući i vas."
-        other: "Vaša zajednica ima %{count} članova tima, uključujući i vas."
-      invites:
-        add_user: "dodaj"
-        none_added: "Nikoga još niste pozvali za člana tima. Jesi li siguran da želiš da nastaviš dalje?"
-        roles:
-          admin: "Admin"
-          moderator: "Moderator"
-          regular: "Običan korisnik"
-      homepage_choices:
-        custom:
-          label: "Posebna"
-        style_type:
-          categories: "kategorija"
-          topics: "tema"
-      top_menu_items:
-        new: "Nova"
-        unread: "Nepročitano"
-        top: "Top"
-        latest: "Poslednje"
-        categories: "Kategorije"
-        read: "Pročitano"
-        bookmarks: "Markiraj"
-      previews:
-        share_button: "Podeli"
-        reply_button: "Odgovori"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "sve kategorije"
-        table_headers:
-          topic: "Tema"
-          replies: "Odgovori"
-          views: "Pregledi"
-          activity: "Aktivnosti"

@@ -11,8 +11,8 @@ import {
 } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
 import discourseComputed from "discourse/lib/decorators";
+import selectKitPropUtils from "discourse/select-kit/lib/select-kit-prop-utils";
 import { i18n } from "discourse-i18n";
-import selectKitPropUtils from "select-kit/lib/select-kit-prop-utils";
 
 @classNames("select-kit-filter")
 @classNameBindings("isExpanded:is-expanded")

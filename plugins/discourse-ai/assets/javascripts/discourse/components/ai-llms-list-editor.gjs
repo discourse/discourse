@@ -2,14 +2,14 @@ import Component from "@glimmer/component";
 import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import AdminSectionLandingItem from "discourse/admin/components/admin-section-landing-item";
+import AdminSectionLandingWrapper from "discourse/admin/components/admin-section-landing-wrapper";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import icon from "discourse/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
-import AdminSectionLandingItem from "admin/components/admin-section-landing-item";
-import AdminSectionLandingWrapper from "admin/components/admin-section-landing-wrapper";
-import DTooltip from "float-kit/components/d-tooltip";
 import AiCreditBar from "./ai-credit-bar";
 import AiDefaultLlmSelector from "./ai-default-llm-selector";
 import AiLlmEditor from "./ai-llm-editor";
@@ -199,10 +199,12 @@ export default class AiLlmsListEditor extends Component {
                           {{#if llm.llm_credit_allocation.hard_limit_reached}}
                             <div class="alert alert-danger ai-credit-warning">
                               {{icon "circle-info"}}
-                              {{i18n
-                                "discourse_ai.llms.credit_allocation.hard_limit_warning"
-                                reset_date=(this.formatResetDate
-                                  llm.llm_credit_allocation.next_reset_at
+                              {{htmlSafe
+                                (i18n
+                                  "discourse_ai.llms.credit_allocation.hard_limit_warning"
+                                  reset_date=(this.formatResetDate
+                                    llm.llm_credit_allocation.next_reset_at
+                                  )
                                 )
                               }}
                             </div>
@@ -211,9 +213,11 @@ export default class AiLlmsListEditor extends Component {
                           }}
                             <div class="alert alert-warning ai-credit-warning">
                               {{icon "circle-info"}}
-                              {{i18n
-                                "discourse_ai.llms.credit_allocation.soft_limit_warning"
-                                percentage=llm.llm_credit_allocation.percentage_remaining
+                              {{htmlSafe
+                                (i18n
+                                  "discourse_ai.llms.credit_allocation.soft_limit_warning"
+                                  percentage=llm.llm_credit_allocation.percentage_remaining
+                                )
                               }}
                             </div>
                           {{/if}}
@@ -229,26 +233,12 @@ export default class AiLlmsListEditor extends Component {
                       }}
                     </td>
                     <td class="d-admin-row__controls">
-                      {{#if (isPreseeded llm)}}
-                        <DTooltip class="ai-llm-list__edit-disabled-tooltip">
-                          <:trigger>
-                            <DButton
-                              class="btn btn-default btn-small disabled"
-                              @label="discourse_ai.llms.edit"
-                            />
-                          </:trigger>
-                          <:content>
-                            {{i18n "discourse_ai.llms.seeded_warning"}}
-                          </:content>
-                        </DTooltip>
-                      {{else}}
-                        <DButton
-                          class="btn btn-default btn-small ai-llm-list__delete-button"
-                          @label="discourse_ai.llms.edit"
-                          @route="adminPlugins.show.discourse-ai-llms.edit"
-                          @routeModels={{llm.id}}
-                        />
-                      {{/if}}
+                      <DButton
+                        class="btn btn-default btn-small ai-llm-list__edit-button"
+                        @label="discourse_ai.llms.edit"
+                        @route="adminPlugins.show.discourse-ai-llms.edit"
+                        @routeModels={{llm.id}}
+                      />
                     </td>
                   </tr>
                 {{/each}}

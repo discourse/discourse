@@ -205,7 +205,7 @@ et:
     joined: "Liitus"
     admin_title: "Admin"
     show_more: "kuva veel"
-    show_help: "suvandid"
+    show_help: "Suvandid"
     links: "Viited"
     links_lowercase:
       one: "viide"
@@ -383,7 +383,6 @@ et:
       view_pending: "vaata ootel"
       title: "Vaata üle"
       topic: "Teema:"
-      filtered_user: "Kasutaja"
       show_all_topics: "näita kõiki teemasid"
       deleted_post: "(postitus kustutatud)"
       deleted_user: "(kasutaja kustutatud)"
@@ -410,7 +409,7 @@ et:
       replies:
         one: "%{count} vastus"
         other: "%{count} vastust"
-      edit: "Muuda"
+      edit: "Muuda postitust"
       save: "Salvesta"
       cancel: "Tühista"
       filters:
@@ -459,6 +458,7 @@ et:
       user_label: "Kasutaja"
       notes:
         delete: "Kustuta"
+      topic_label: "Teema"
       review_user: "Kasutaja"
       insights:
         activities:
@@ -775,7 +775,6 @@ et:
         one: "Kategooriad (%{count} veel)…"
         other: "Kategooriad (%{count} veel)…"
     ip_lookup:
-      title: IP-aadressi otsing
       hostname: Hostinimi
       location: Asukoht
       location_not_found: (teadmata)
@@ -1764,7 +1763,6 @@ et:
       unread_indicator: "Ükski liige pole veel selle teema viimast postitust lugenud."
       deleted: "See teema on kustutatud"
       slow_mode_update:
-        title: "Aeglane režiim"
         select: "Kasutajad saavad sellesse teemasse postitada ainult sagedusega:"
         description: "Väga aktiivsete või vaidlusaluste arutelude läbimõeldud arutelu edendamiseks peavad kasutajad enne siia teemasse uuesti postitamist ootama."
         enable: "Võimalda"
@@ -2196,18 +2194,11 @@ et:
       required_tag_group:
         delete: "Kustuta"
       topic_featured_link_allowed: "Luba selles kategoorias esiletõstetud linke "
-      delete: "Kustuta kategooria"
-      create: "Uus kategooria"
       create_long: "Loo uus kategooria"
-      save: "Salvesta kategooria"
-      slug: "Kategooria toorik"
       slug_placeholder: "(Valikulised) sidekriipsuga-sõnad url-i jaoks"
       creation_error: Kategooria loomisel tekkis viga.
       save_error: Kategooria salvestamisel tekkis viga.
-      name: "Kategooria nimi"
       description: "Kirjeldus"
-      logo: "Kategooria logo"
-      background_image: "Kategooria taustapilt"
       background_color: "Värv"
       color_validations:
         cant_be_empty: "ei tohi olla tühi"
@@ -2221,9 +2212,7 @@ et:
       color_placeholder: "Mis tahes veebivärv"
       delete_confirm: "Kas oled kindel, et soovid selle kategooria kustutada?"
       delete_error: "Kategooria kustutamisel tekkis viga."
-      list: "Loetle kategooriad"
       no_description: "Palun lisa sellele kategooriale kirjeldus."
-      change_in_category_topic: "Muuda kirjeldust"
       already_used: "Teine kategooria juba kasutab seda värvi"
       security: "Turve"
       permissions:
@@ -2247,20 +2236,13 @@ et:
       subcategory_num_featured_topics: "Esile tõstetud teemade arv ülemkategooria lehel:"
       all_topics_wiki: "Tee uued teemad vaikimisi vikideks"
       subcategory_list_style: "Alamkategooriate loendi stiil:"
-      sort_order: "Teemade nimekirja järjestamine:"
-      default_view: "Vaikimisi teemade nimekiri:"
-      default_top_period: "Vaikimisi teemade ajaperiood:"
-      default_list_filter: "Vaikimisi teemade filter:"
       allow_badges_label: "Luba selles kategoorias autasustamist märgistega"
-      edit_permissions: "Muuda kasutusõigusi"
       review_group_name: "rühma nimi"
       require_topic_approval: "Nõua moderaatori heakskiitu kõikidele uutele teemadele"
       require_reply_approval: "Nõua moderaatori heakskiitu kõikidele uutele vastustele"
       this_year: "sel aastal"
       position: "Asukoht kategooriate lehel:"
-      default_position: "Vaikepositsioon"
       minimum_required_tags: "Minimaalne nõutud siltide arv teemas:"
-      parent: "Emakategooria"
       num_auto_bump_daily: "Avatud teemade arv, mida iga päev automaatselt tõsta:"
       navigate_to_first_post_after_read: "Ava pärast teemade läbi lugemist esimene sõnum"
       notifications:
@@ -2283,7 +2265,6 @@ et:
       sort_options:
         default: "vaikimisi"
         likes: "Meeldimisi"
-        op_likes: "Algse postituse meeldimisi"
         views: "Vaatamisi"
         posts: "Postitused"
         activity: "Tegevused"
@@ -2449,7 +2430,7 @@ et:
         title: "Juhtivad"
         help: "aktiivseimad teemad viimase aasta, kuu, nädala või päeva sees"
         all:
-          title: "Alates algusest"
+          title: "Kogu aeg"
         yearly:
           title: "Iga-aastaselt"
         quarterly:
@@ -2460,7 +2441,7 @@ et:
           title: "Iganädalaselt"
         daily:
           title: "Igapäevaselt"
-        all_time: "Alates algusest"
+        all_time: "Kogu aeg"
         this_year: "Aasta"
         this_quarter: "Kvartal"
         this_month: "Kuu"
@@ -2496,7 +2477,6 @@ et:
         next_prev: "%{shortcut} Järgmine/eelmine sektsioon"
       application:
         title: "Rakendus"
-        create: "%{shortcut} Loo uus teema"
         notifications: "%{shortcut} Ava teavitused"
         user_profile_menu: "%{shortcut} Ava kasutajamenüü"
         show_incoming_updated_topics: "%{shortcut} Näita uuendatud teemasid"
@@ -2582,12 +2562,9 @@ et:
         muted:
           title: "Vaigistatud"
       groups:
-        title: "Sildirühmad"
-        new: "Uus rühm"
         tags_label: "Sildid selles rühmas"
         parent_tag_label: "Ülemsilt"
         one_per_topic_label: "Vaid üks selle rühma silt teema kohta"
-        new_name: "Uus sildirühm"
         name_placeholder: "Nimi"
         save: "Salvesta"
         delete: "Kustuta"
@@ -2745,6 +2722,8 @@ et:
         name: "Nimi"
         enabled: "Sisse lülitatud"
         preview: "Eelvaade"
+        enabled_for_options:
+          everyone: "Kõik"
         impact_roles:
           admins: "Adminnid"
           moderators: "Moderaatorid"
@@ -2776,6 +2755,12 @@ et:
         fonts:
           backfill_modal:
             modal_yes: "Jah"
+        welcome_banner:
+          form:
+            location:
+              label: "Asukoht"
+            header_anonymous:
+              placeholder: "Tere tulemast saidile %{site_name}!"
         navigation:
           title: "Navigatsioon"
         notifications:
@@ -3901,45 +3886,3 @@ et:
         modal:
           categories: "Kategooriad"
           topics: "Teemasid"
-  wizard_js:
-    wizard:
-      back: "Tagasi"
-      next: "Järgmine"
-      step-text: "Samm"
-      step: "%{current} %{total}-st"
-      uploading: "Laadin üles..."
-      upload_error: "Vabandame, selle faili üleslaadimisel tekkis viga. Palun proovi uuesti."
-      invites:
-        add_user: "lisa"
-        none_added: "Sa ei ole kutsunud ühtegi tiimi liiget. Kas oled kindel, et soovid jätkata?"
-        roles:
-          admin: "Adminn"
-          moderator: "Moderaator"
-          regular: "Tavakasutaja"
-      homepage_choices:
-        custom:
-          label: "Individuaalne"
-        style_type:
-          categories: "kategooria"
-          topics: "teema"
-      top_menu_items:
-        new: "Uus"
-        unread: "Lugemata"
-        top: "Juhtivad"
-        latest: "Värskeimad"
-        categories: "Kategooriad"
-        read: "Loe"
-        bookmarks: "Järjehoidjad"
-      previews:
-        share_button: "Jaga"
-        reply_button: "Vasta"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "kõik kategooriad"
-        category_names:
-          site_feedback: "Saidi tagasiside."
-        table_headers:
-          topic: "Teema"
-          replies: "Vastused"
-          views: "Vaatamisi"
-          activity: "Aktiivsus"

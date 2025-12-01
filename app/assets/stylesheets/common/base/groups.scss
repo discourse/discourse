@@ -35,7 +35,7 @@
 
 .groups-boxes {
   display: grid;
-  grid-gap: 1em;
+  gap: 1em;
   grid-template-columns: repeat(auto-fit, minmax(16em, 1fr));
   margin: 1em 0;
   width: 100%;
@@ -109,7 +109,7 @@
 
       .group-description {
         color: var(--primary-high);
-        word-wrap: break-word;
+        overflow-wrap: break-word;
       }
     }
 

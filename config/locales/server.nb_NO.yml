@@ -1281,7 +1281,8 @@ nb_NO:
   wizard:
     title: "Discourse-oppsett"
     step:
-      privacy:
+      setup:
+        title: "Kom godt i gang"
         fields:
           login_required:
             label: "Synlighet"
@@ -1290,14 +1291,6 @@ nb_NO:
                 label: "Offentlig"
               private:
                 label: "Privat"
-      styling:
-        fields:
-          styling_preview:
-            label: "Forhåndsvis"
-          homepage_style:
-            choices:
-              latest:
-                label: "Siste"
   onebox:
     github:
       closed: "lukket"

@@ -4,11 +4,11 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
-import { gt, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import withEventValue from "discourse/helpers/with-event-value";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import { gt, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 
 // args: onChange, inputDelimiter, values, allowAny, choices
 export default class SimpleList extends Component {
@@ -56,7 +56,7 @@ export default class SimpleList extends Component {
   }
 
   @action
-  removeAt(index) {
+  removeItem(index) {
     this.collection.splice(index, 1);
     this.args.onChange?.(this.collection);
   }
@@ -85,7 +85,7 @@ export default class SimpleList extends Component {
           {{#each this.collection as |value index|}}
             <div data-index={{index}} class="value">
               <DButton
-                @action={{fn this.removeAt index}}
+                @action={{fn this.removeItem index}}
                 @icon="xmark"
                 class="btn-default remove-value-btn btn-small"
               />

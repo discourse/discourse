@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { or } from "truth-helpers";
 import CookText from "discourse/components/cook-text";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
@@ -13,6 +13,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
+import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import {
   isAiCreditLimitError,
@@ -187,6 +188,13 @@ export default class ModalDiffModal extends Component {
     this.args.closeModal();
   }
 
+  @action
+  focusConfirmBtn(element) {
+    if (!this.primaryBtnDisabled) {
+      element.focus();
+    }
+  }
+
   #resetState() {
     this.suggestion = "";
     this.finalResult = "";
@@ -242,6 +250,7 @@ export default class ModalDiffModal extends Component {
           @disabled={{this.primaryBtnDisabled}}
           @action={{this.triggerConfirmChanges}}
           @translatedLabel={{this.primaryBtnLabel}}
+          {{didUpdate this.focusConfirmBtn this.isStreaming}}
         >
           {{#if this.loading}}
             <AiIndicatorWave @loading={{this.loading}} />

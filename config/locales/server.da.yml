@@ -549,8 +549,8 @@ da:
       email_already_used_in_category: "'%{email}' bruges allerede af kategorien '%{category_name}'."
       description_incomplete: "Kategori beskrivelsesindlægget skal have mindst et afsnit."
       permission_conflict: "Enhver gruppe, der har tilladelse til at få adgang til en underkategori, skal også have adgang til den overordnede kategori. Følgende grupper har adgang til en af underkategorierne, men ingen adgang til overordnet kategori: %{group_names}."
-      disallowed_topic_tags: "Dette emne har mærker der ikke er tilladt af denne kategori: '%{tags}“"
-      disallowed_tags_generic: "Dette emne har ikke tilladte mærker."
+      disallowed_topic_tags: "Dette emne har tags, der ikke er tilladt i denne kategori: '%{tags}'"
+      disallowed_tags_generic: "Dette emne har ikke-tilladte tags."
       slug_contains_non_ascii_chars: "indeholder ikke-ascii- tegn"
       is_already_in_use: "er allerede i brug"
     cannot_delete:
@@ -1564,24 +1564,24 @@ da:
     default_categories_tracking: "Liste over kategorier der som standard følges."
     default_categories_muted: "Liste over kategorier der som standard har tavshed."
     default_categories_normal: "Liste over kategorier som ikke er tavse som standard. Nyttigt når `mute_all_categories_by_default` webstedsindstilling er aktiveret."
-    mute_all_categories_by_default: "Indstil standardunderretningsniveauet for alle kategorier til tavshed. Kræv, at brugerne tilmelder sig kategorier for at de skal vises på 'seneste' og 'kategorisider'. Hvis du ønsker at ændre standardindstillingerne for anonyme brugere, skal du indstille 'default_category_settings'."
-    default_tags_watching: "Liste over mærker, der er overvåget som standard."
-    default_tags_tracking: "Liste over mærker, der spores som standard."
-    default_tags_muted: "Liste over mærker, der er tavse som standard."
-    default_tags_watching_first_post: "Liste over mærker, hvor første indlæg i hvert nyt emne vil blive overvåget som standard."
+    mute_all_categories_by_default: "Indstil standardniveauet for notifikationer for alle kategorier til tavshed. Kræv, at brugerne tilmelder sig kategorier for at de skal vises på 'seneste' og 'kategorisider'. Hvis du ønsker at ændre standardindstillingerne for anonyme brugere, skal du indstille 'default_category_settings'."
+    default_tags_watching: "Liste over tags, der er overvåget som standard."
+    default_tags_tracking: "Liste over tags, der spores som standard."
+    default_tags_muted: "Liste over tags, der er tavse som standard."
+    default_tags_watching_first_post: "Liste over tags, hvor første indlæg i hvert nyt emne vil blive overvåget som standard."
     revoke_api_keys_unused_days: "Antal dage siden en API-nøgle sidst blev brugt, før den automatisk tilbagekaldes (0 for aldrig)"
     revoke_api_keys_maxlife_days: "Antal dage før en API-nøgle tilbagekaldes automatisk (0 for aldrig)"
     allow_user_api_key_scopes: "Liste over tilladte anvendelsesområder for bruger-API-nøgler"
     revoke_user_api_keys_unused_days: "Antal dage siden en bruger-API-nøgle sidst blev brugt, før den automatisk tilbagekaldes (0 for aldrig)"
     revoke_user_api_keys_maxlife_days: "Antal dage før en bruger-API-nøgle automatisk tilbagekaldes (0 for aldrig)"
-    max_tags_per_topic: "Det maksimale antal mærker, der kan anvendes i et emne."
-    max_tag_search_results: "Ved søger efter mærker, skal der maksimalt vises følgende antal resultater."
-    max_tags_in_filter_list: "Maksimalt antal mærker, der skal vises i filter-rullelisten. De mest brugte mærker vil blive vist."
-    tags_sort_alphabetically: "Vis mærker i alfabetisk rækkefølge. Standard er at vise i rækkefølge efter popularitet."
-    tags_listed_by_group: "Vis mærker efter mærkegruppe på <a href='%{base_path}/tags' target='_blank'>Siden Mærker</a>."
-    suppress_overlapping_tags_in_list: "Hvis mærkerne matcher nøjagtige ord i emnetitler, skal du ikke vise mærket"
-    remove_muted_tags_from_latest: "Vis ikke emner, der kun er mærket med tavse mærker på den seneste emneliste."
-    force_lowercase_tags: "Tving alle nye mærker til at kun benytte små bogstaver."
+    max_tags_per_topic: "Det maksimale antal tags, der kan anvendes i et emne."
+    max_tag_search_results: "Ved søgning efter tags, skal der maksimalt vises følgende antal resultater."
+    max_tags_in_filter_list: "Maksimalt antal tags, der skal vises i filter-rullelisten. De mest brugte tags vil blive vist."
+    tags_sort_alphabetically: "Vis tags i alfabetisk rækkefølge. Standard er at vise i rækkefølge efter popularitet."
+    tags_listed_by_group: "Vis tags efter tag-gruppe på <a href='%{base_path}/tags' target='_blank'>Tags-siden</a>."
+    suppress_overlapping_tags_in_list: "Hvis tags matcher nøjagtige ord i emnetitler, skal tagget ikke vises"
+    remove_muted_tags_from_latest: "Vis ikke emner, der kun er tagget med tavse tags på den seneste emneliste."
+    force_lowercase_tags: "Tving alle nye tags til at kun benytte små bogstaver."
     shared_drafts_category: "Aktiver funktionen Delte kladder ved at angive en kategori for emneudkast. Emner i denne kategori vil blive undertrykt fra emnelister for personalebrugere."
     shared_drafts_min_trust_level: "Tillad brugere at se og redigere Delte kladder."
     shared_drafts_allowed_groups: "Tillad brugere i disse grupper at se og redigere delte kladder."
@@ -2269,6 +2269,8 @@ da:
         Se venligst vores [Retningslinjer](%{base_url}/guidelines) for yderligere vejledning.
     user_automatically_silenced:
       subject_template: "Ny bruger %{username} er blevet gjort tavs af fællesskabsanmeldelse"
+    user_automatically_silenced_with_reason:
+      subject_template: "Ny bruger %{username} er blevet gjort tavs af fællesskabsanmeldelse"
     spam_post_blocked:
       title: "Spam-indlæg blokeret"
       subject_template: "Ny bruger %{username} indlæg blokeret på grund af gentagne links"
@@ -2751,6 +2753,7 @@ da:
   page_not_found:
     page_title: "Side ikke fundet"
     title: "Ups! Den side eksisterer ikke eller også er den privat."
+    recent_topics: "Seneste emner"
     see_more: "Flere"
     search_button: "Søg"
   upload:
@@ -2829,7 +2832,7 @@ da:
     Rediger det første indlæg i dette emne for at ændre indholdet af siden %{page_name}
   guidelines_topic:
     title: "OSS/Retningslinjer"
-    guidelines_title: "Retningslinier"
+    guidelines_title: "Retningslinjer"
   tos_topic:
     title: "Vilkår"
   privacy_topic:
@@ -2915,18 +2918,12 @@ da:
     nice_share:
       name: God deling
       description: Delt et emne med 25 unikke besøgende
-      long_description: |
-        Dette emblem tildeles for deling af et link, som 25 eksterne besøgende har klikket på. Tak for at sprede budskabet om vores diskussioner og dette fællesskab.
     good_share:
       name: God deling
       description: Delte et indlæg med 300 unikke besøgende
-      long_description: |
-        Dette emblem tildeles for til deling af et link, som 300 eksterne besøgende har klikket på. Godt arbejde! Du har vist en god diskussion for en flok nye mennesker og hjulpet dette fællesskab med at vokse.
     great_share:
       name: Fantastisk deling
       description: Delt et indlæg med 1000 unikke besøgende
-      long_description: |
-        Dette emblem tildeles for deling af et link, der blev klikket på af 1000 eksterne besøgende. Wow! Du har promoveret en interessant diskussion til et stort nyt publikum og hjulpet vores fællesskab med at vokse på en stor måde!
     first_like:
       name: Første like
       description: Synes om et indlæg
@@ -2968,7 +2965,7 @@ da:
       long_description: |
         Dette emblem tildeles første gang du citerer et indlæg i dit svar. Citering af relevante dele af tidligere indlæg i dit svar hjælper med at holde sammen på diskussioner og fastholder emnet. Den nemmeste måde at citere er at fremhæve et afsnit i et indlæg og derefter trykke på en vilkårlig svarsknap. Citér generøst!
     read_guidelines:
-      name: Læste retningslinierne
+      name: Læste retningslinjerne
       description: Læste <a href="%{base_uri}/guidelines">retningslinjerne for fællesskabet</a>
       long_description: |
         Dette emblem tildes for at <a href="%{base_uri}/guidelines">læse fællesskabsretningslinjerne</a>. At følge og dele disse enkle retningslinjer hjælper med at opbygge et sikkert, sjovt og bæredygtigt samfund for alle. Husk altid, at der er et andet menneske, meget lig dig selv, på den anden side af skærmen. Vær sød!
@@ -3089,12 +3086,12 @@ da:
     restricted_tag_remove_disallowed: 'Du kan ikke fjerne mærket "%{tag}".'
     minimum_required_tags:
       one: "Du skal vælge mindst %{count}-mærke."
-      other: "Du skal vælge mindst %{count}-mærker."
+      other: "Du skal vælge mindst %{count} tags."
     upload_row_too_long: "CSV-filen skal have ét mærke pr. linje. Eventuelt kan mærket efterfølges af et komma og derefter navnet på mærkegruppen."
     forbidden:
       invalid:
         one: "Det mærke, du valgte, kan ikke bruges"
-        other: "Ingen af de mærker, du har valgt, kan bruges"
+        other: "Ingen af de tags, du har valgt, kan bruges"
       in_this_category: '"%{tag_name}" kan ikke bruges i denne kategori'
       restricted_to:
         one: '"%{tag_name}" er begrænset til kategorien "%{category_names}"'
@@ -3122,16 +3119,11 @@ da:
   wizard:
     title: "Discourse Opsætning"
     step:
-      introduction:
+      setup:
+        title: "Sådan kommer du i gang"
         fields:
-          title:
-            placeholder: "Janes Sted"
-          site_description:
-            placeholder: "Et sted hvor Jane og hendes venner kan diskutere fede emner"
           default_locale:
             label: "Sprog"
-      privacy:
-        fields:
           login_required:
             label: "Synlighed"
             choices:
@@ -3139,37 +3131,6 @@ da:
                 label: "Offentlig"
               private:
                 label: "Privat"
-          chat_enabled:
-            placeholder: "Aktiver chat"
-      styling:
-        fields:
-          body_font:
-            label: "Indholds skrifttype"
-          heading_font:
-            label: "Overskrifts skrifttype"
-          styling_preview:
-            label: "Forhåndsvisning"
-          homepage_style:
-            choices:
-              latest:
-                label: "Seneste"
-      branding:
-        title: "Webstedets logo"
-        fields:
-          logo:
-            label: "Primært logo"
-      corporate:
-        fields:
-          governing_law:
-            placeholder: "Californiens lov"
-          contact_url:
-            placeholder: "https://www.example.dk/kontakt-os"
-          city_for_disputes:
-            placeholder: "San Francisco, Californien"
-      invites:
-        title: "Inviter hjælpere"
-      finished:
-        title: "Discourse er gjort klar til dig!"
   search_logs:
     graph_title: "Antal søgninger"
   onebox:

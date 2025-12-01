@@ -22,6 +22,7 @@ class SiteSettings::TypeSupervisor
     json_schema
     schema
     requires_confirmation
+    depends_on
   ].freeze
   VALIDATOR_OPTS = %i[min max regex hidden regex_error json_schema schema].freeze
 
@@ -62,6 +63,7 @@ class SiteSettings::TypeSupervisor
         file_size_restriction: 27,
         objects: 28,
         locale_enum: 29,
+        topic: 30,
       )
   end
 
@@ -98,7 +100,10 @@ class SiteSettings::TypeSupervisor
     @textareas = {}
     @json_schemas = {}
     @schemas = {}
+    @dependencies = SiteSettings::DependencyGraph.new
   end
+
+  attr_reader :dependencies
 
   def load_setting(name_arg, opts = {})
     name = name_arg.to_sym
@@ -144,6 +149,8 @@ class SiteSettings::TypeSupervisor
       validator_opts[:name] = name
       @validators[name] = { class: validator_type, opts: validator_opts }
     end
+
+    @dependencies[name] = opts[:depends_on] || []
   end
 
   def to_rb_value(name, value, override_type = nil)
@@ -282,6 +289,14 @@ class SiteSettings::TypeSupervisor
     name = name.to_sym
     type = @types[name] || self.class.parse_value_type(val)
 
+    if val.nil?
+      Discourse.deprecate(
+        "Site setting #{name} expects a #{self.class.types[type]} value. Implicit casts from `nil` are a source of bugs and will not be supported in future releases.",
+        drop_from: "3.7.0",
+        output_in_test: true,
+      )
+    end
+
     if type == self.class.types[:bool]
       val = (val == true || val == "t" || val == "true") ? "t" : "f"
     elsif type == self.class.types[:integer] && !val.is_a?(Integer)
@@ -338,6 +353,8 @@ class SiteSettings::TypeSupervisor
       StringSettingValidator
     when self.class.types[:host_list]
       HostListSettingValidator
+    when self.class.types[:topic]
+      TopicSettingValidator
     else
       nil
     end

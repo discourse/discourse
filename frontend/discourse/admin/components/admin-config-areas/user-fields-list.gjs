@@ -1,18 +1,19 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
+import AdminUserFieldItem from "discourse/admin/components/admin-user-field-item";
+import UserField from "discourse/admin/models/user-field";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
-import AdminUserFieldItem from "admin/components/admin-user-field-item";
-import UserField from "admin/models/user-field";
 
 export default class AdminConfigAreasUserFieldsList extends Component {
   @service dialog;
   @service toasts;
   @service adminUserFields;
 
+  /** @type {any} */
   fieldTypes = UserField.fieldTypes();
 
   get fields() {
@@ -27,7 +28,7 @@ export default class AdminConfigAreasUserFieldsList extends Component {
   moveUp(field) {
     const idx = this.sortedFields.indexOf(field);
     if (idx) {
-      const prev = this.sortedFields.objectAt(idx - 1);
+      const prev = this.sortedFields[idx - 1];
       const prevPos = prev.get("position");
 
       prev.update({ position: field.get("position") });
@@ -39,7 +40,7 @@ export default class AdminConfigAreasUserFieldsList extends Component {
   moveDown(field) {
     const idx = this.sortedFields.indexOf(field);
     if (idx > -1) {
-      const next = this.sortedFields.objectAt(idx + 1);
+      const next = this.sortedFields[idx + 1];
       const nextPos = next.get("position");
 
       next.update({ position: field.get("position") });

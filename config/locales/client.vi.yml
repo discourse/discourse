@@ -161,7 +161,6 @@ vi:
     software_update_prompt:
       message: "Chúng tôi đã cập nhật trang này, <span>vui lòng tải lại trang</span> để cho mọi thứ hoạt động ổn định."
       dismiss: "Hủy bỏ"
-    bootstrap_mode: "Bắt đầu"
     back_button: "Quay lại"
     welcome_banner:
       header:
@@ -218,7 +217,7 @@ vi:
     joined: "Đã tham gia"
     admin_title: "Quản trị"
     show_more: "hiện thêm"
-    show_help: "lựa chọn"
+    show_help: "Tùy chọn"
     links: "Liên kết"
     links_lowercase:
       other: "liên kết"
@@ -470,8 +469,6 @@ vi:
       title: "Review"
       topic: "Chủ đề:"
       filtered_topic: "Bạn đã lọc đến nội dung có thể xem lại trong một chủ đề."
-      filtered_user: "Người dùng"
-      filtered_reviewed_by: "Xét bởi"
       show_all_topics: "hiển thị toàn bộ chủ đề"
       deleted_post: "(bài viết đã bị xóa)"
       deleted_user: "(người dùng đã bị xóa)"
@@ -507,7 +504,7 @@ vi:
           other: "%{count} người dùng"
       replies:
         other: "%{count} trả lời"
-      edit: "Sửa"
+      edit: "Sửa bài đăng"
       save: "Lưu"
       cancel: "Hủy"
       new_topic: "Phê duyệt mục này sẽ tạo một chủ đề mới"
@@ -528,7 +525,6 @@ vi:
           created_at: "Được tạo tại"
           created_at_asc: "Tạo tại (đảo ngược)"
         priority:
-          title: "Ưu tiên tối thiểu"
           any: "(bất kỳ)"
           low: "Thấp"
           medium: "Trung bình"
@@ -576,13 +572,11 @@ vi:
         flagged: "Gắn cờ"
       notes:
         delete: "Xóa"
-      new_topic_label: "Chủ đề mới"
+      topic_label: "Chủ đề"
       review_user: "Người dùng"
       view_source: "Xem mã nguồn"
       insights:
-        user_activity: "Hoạt động của người dùng"
         activities:
-          new_account: "tài khoản mới"
           posts:
             other: "%{count} bài đăng"
         visibility: "Khả năng hiển thị"
@@ -975,7 +969,6 @@ vi:
       topic_stat_sentence_month:
         other: "%{count}chủ đề mới trong tháng qua."
     ip_lookup:
-      title: Tìm kiếm địa chỉ IP
       hostname: Hostname
       location: Vị trí
       location_not_found: (không biết)
@@ -2506,7 +2499,6 @@ vi:
       suggest_create_topic: Bạn đã sẵn sàng để <a href>đầu một cuộc trò chuyện mới chưa?</a>
       deleted: "Chủ đề này đã bị xóa"
       slow_mode_update:
-        title: "Chế độ chậm"
         select: "Người dùng chỉ có thể đăng trong chủ đề này một lần mỗi lần:"
         description: "Người dùng phải đợi trước khi đăng lại chủ đề này để người khác có thời gian trả lời"
         enable: "Kích hoạt"
@@ -3061,20 +3053,13 @@ vi:
         description: "Yêu cầu các chủ đề mới có thẻ từ các nhóm thẻ:"
         delete: "Xóa"
         add: "Thêm nhóm thẻ bắt buộc"
-        placeholder: "chọn nhóm thẻ…"
+        placeholder: "Chọn nhóm thẻ…"
       topic_featured_link_allowed: "Cho phép các liên kết nổi bật trong danh mục này"
-      delete: "Xóa chuyên mục"
-      create: "Chuyên mục mới"
       create_long: "Tạo Chủ đề mới"
-      save: "Lưu chuyên mục"
-      slug: "Đường dẫn chuyên mục"
       slug_placeholder: "(Tùy chọn) các từ sử dụng trong url"
       creation_error: Có lỗi xảy ra khi tạo chuyên mục
       save_error: Có lỗi xảy ra khi lưu chuyên mục
-      name: "Tên chuyên mục"
       description: "Mô tả"
-      logo: "Logo của chuyên mục"
-      background_image: "Ảnh nền của chuyên mục"
       background_color: "Màu sắc"
       color_validations:
         cant_be_empty: "không thể để trống"
@@ -3088,9 +3073,7 @@ vi:
       color_placeholder: "Bất cứ màu nào"
       delete_confirm: "Bạn có chắc sẽ xóa chuyên mục này chứ?"
       delete_error: "Có lỗi xảy ra khi xóa chuyên mục này"
-      list: "Danh sách chuyên mục"
       no_description: "Hãy thêm mô tả cho chuyên mục này"
-      change_in_category_topic: "Sửa mô tả"
       already_used: "Màu này đã được dùng bởi chuyên mục khác"
       security: "Bảo mật"
       security_add_group: "Thêm một nhóm"
@@ -3119,22 +3102,14 @@ vi:
       all_topics_wiki: "Đặt wiki chủ đề mới theo mặc định"
       allow_unlimited_owner_edits_on_first_post: "Cho phép chủ sở hữu chỉnh sửa không giới hạn trên bài đăng đầu tiên"
       subcategory_list_style: "Kiểu danh sách danh mục con:"
-      sort_order: "Danh sách chủ đề Sắp xếp theo:"
-      default_view: "Danh sách chủ đề mặc định:"
-      default_top_period: "Khoảng thời gian Top mặc định:"
-      default_list_filter: "Bộ lọc danh sách mặc định:"
       allow_badges_label: "Cho phép thưởng huy hiệu trong chuyên mục này"
-      edit_permissions: "Sửa quyền"
       reviewable_by_group: "Ngoài nhân viên, nội dung trong danh mục này cũng có thể được xem xét bởi:"
       review_group_name: "Nhóm tên"
       require_topic_approval: "Yêu cầu người kiểm duyệt phê duyệt tất cả các chủ đề mới"
       require_reply_approval: "Yêu cầu người kiểm duyệt phê duyệt tất cả các câu trả lời mới"
       this_year: "năm nay"
       position: "Vị trí trên trang danh mục:"
-      default_position: "vị trí mặc định"
       minimum_required_tags: "Số lượng thẻ tối thiểu được yêu cầu trong một chủ đề:"
-      default_slow_mode: 'Bật "Chế độ chậm" cho các chủ đề mới trong danh mục này.'
-      parent: "Danh mục cha"
       num_auto_bump_daily: "Số lượng chủ đề mở tự động tăng hàng ngày:"
       navigate_to_first_post_after_read: "Chuyển đến bài đăng đầu tiên sau khi chủ đề được đọc"
       notifications:
@@ -3155,18 +3130,14 @@ vi:
           title: "Im lặng"
           description: "Bạn sẽ không bao giờ được thông báo về bất cứ điều gì về các chủ đề mới trong danh mục này và chúng sẽ không xuất hiện trong mới nhất."
       search_priority:
-        label: "Ưu tiên tìm kiếm"
         options:
           normal: "Bình thường"
           ignore: "Bỏ qua"
-          very_low: "Rất thấp"
           low: "Thấp"
           high: "Cao"
-          very_high: "Rất cao"
       sort_options:
         default: "mặc định"
         likes: "Thích"
-        op_likes: "Lượt thích bài viết gốc"
         views: "Lượt xem"
         posts: "Bài viết"
         activity: "Hoạt động"
@@ -3186,8 +3157,7 @@ vi:
         appearance: "Ngoại hình"
         email: "Email"
       list_filters:
-        all: "tất cả các chủ đề"
-        none: "không có danh mục phụ"
+        all: "Tất cả các chủ đề"
       colors_disabled: "Bạn không thể chọn màu vì bạn không có kiểu danh mục nào."
     flagging:
       action: "Đánh dấu Bài viết"
@@ -3409,7 +3379,6 @@ vi:
         go_to_unread_post: "%{shortcut} Đi đến bài viết chưa đọc đầu tiên"
       application:
         title: "Ứng dụng"
-        create: "%{shortcut} Tạo mới chủ đề"
         notifications: "%{shortcut} Mở thông báo"
         user_profile_menu: "%{shortcut} Mở trình đơn thành viên"
         show_incoming_updated_topics: "%{shortcut} Show updated topics"
@@ -3579,18 +3548,13 @@ vi:
           description: "Bạn sẽ không được thông báo về bất cứ điều gì về các chủ đề mới với thẻ này và chúng sẽ không xuất hiện trên tab chưa đọc của bạn."
       groups:
         back_btn: "Quay lại tất cả các thẻ"
-        title: "Nhóm thẻ"
         about_heading: "Chọn một nhóm thẻ hoặc tạo một nhóm mới"
         about_heading_empty: "Tạo một nhóm thẻ mới để bắt đầu"
         about_description: "Nhóm thẻ giúp bạn quản lý quyền cho nhiều thẻ ở một nơi."
-        new: "Nhóm mới"
-        new_title: "Tạo nhóm mới"
-        edit_title: "Chỉnh sửa nhóm thẻ"
         tags_label: "Thẻ trong nhóm này"
         parent_tag_label: "Thẻ cha"
         parent_tag_description: "Các thẻ từ nhóm này chỉ có thể được sử dụng nếu có thẻ mẹ."
         one_per_topic_label: "Giới hạn một thẻ cho mỗi chủ đề từ nhóm này"
-        new_name: "Nhóm thẻ mới"
         name_placeholder: "Tên"
         save: "Lưu"
         delete: "Xoá"
@@ -3808,6 +3772,9 @@ vi:
         name: "Tên"
         select_groups: "Chọn nhóm…"
         preview: "Xem trước"
+        enabled_for_options:
+          everyone: "Mọi người"
+          staff: "Chỉ nhân viên"
         impact_roles:
           admins: "Quản trị"
           moderators: "Điều hành viên"
@@ -3838,6 +3805,14 @@ vi:
         fonts:
           backfill_modal:
             modal_yes: "Đồng ý"
+        welcome_banner:
+          form:
+            location:
+              label: "Vị trí"
+            header_logged_in:
+              placeholder: "Chào mừng %{preferred_display_name} đã trở lại đây!"
+            header_anonymous:
+              placeholder: "Chào mừng đến với %{site_name}!"
         navigation:
           title: "Điều hướng"
         notifications:
@@ -4896,7 +4871,6 @@ vi:
           success: "Thành công"
           exists: "Đã tồn tại"
           upload: "Thêm từ tệp"
-          upload_successful: "Tải lên thành công. Các từ đã được thêm vào."
           html_label: "HTML"
         test:
           no_matches: "Không tìm thấy"
@@ -5438,53 +5412,3 @@ vi:
           categories: "Thư mục"
           topics: "Chủ đề"
           replace: "Thay thế"
-  wizard_js:
-    wizard:
-      jump_in: "Nhay vào!"
-      finish: "Thoát thiết lập"
-      back: "Quay lại"
-      next: "Kế tiếp"
-      configure_more: "Cấu hình thêm…"
-      step-text: "Bước"
-      step: "%{current} trên %{total}"
-      uploading: "Đang tải lên…"
-      upload_error: "Xin lỗi, có lỗi xảy ra khi tải lên tập tin này. Vui lòng thử lại."
-      staff_count:
-        other: "Cộng đồng của bạn có %{count} nhân viên, bao gồm cả bạn."
-      invites:
-        add_user: "thêm vào"
-        none_added: "Bạn chưa mời bất kỳ nhân viên nào. Bạn có chắc chắn muốn tiếp tục không?"
-        roles:
-          admin: "Quản trị"
-          moderator: "Điều hành"
-          regular: "Người sử dụng thường xuyên"
-      homepage_choices:
-        custom:
-          label: "Tùy biến"
-        style_type:
-          categories: "danh mục"
-          topics: "chủ đề"
-      top_menu_items:
-        new: "Mới"
-        unread: "Chưa đọc"
-        top: "Top"
-        latest: "Mới nhất"
-        categories: "Danh mục"
-        unseen: "Không nhìn thấy"
-        read: "Đọc"
-        bookmarks: "Các đánh dấu"
-      previews:
-        share_button: "Chia sẻ"
-        reply_button: "Trả lời "
-        topic_preview: "Xem trước chủ đề"
-        homepage_preview: "Xem trước trang chủ"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "tất cả chuyên mục"
-        category_names:
-          site_feedback: "Phản hồi"
-        table_headers:
-          topic: "Chủ đề"
-          replies: "Trả lời"
-          views: "Lượt xem"
-          activity: "Hoạt động"

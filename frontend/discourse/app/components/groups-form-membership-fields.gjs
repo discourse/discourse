@@ -6,15 +6,14 @@ import { action, computed } from "@ember/object";
 import { not, or as computedOr, readOnly } from "@ember/object/computed";
 import ExpandingTextArea from "discourse/components/expanding-text-area";
 import GroupFlairInputs from "discourse/components/group-flair-inputs";
-import GroupFlairVisibilityWarning from "discourse/components/group-flair-visibility-warning";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import discourseComputed from "discourse/lib/decorators";
 import AssociatedGroup from "discourse/models/associated-group";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import ListSetting from "discourse/select-kit/components/list-setting";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
-import ListSetting from "select-kit/components/list-setting";
 
 export default class GroupsFormMembershipFields extends Component {
   tokenSeparator = "|";
@@ -256,7 +255,7 @@ export default class GroupsFormMembershipFields extends Component {
       <div class="control-group">
         <GroupFlairInputs @model={{this.model}} />
       </div>
-      <GroupFlairVisibilityWarning @model={{this.model}} />
+
     {{/if}}
   </template>
 }

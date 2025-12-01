@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { later } from "@ember/runloop";
 import { service } from "@ember/service";
-import { eq, gt } from "truth-helpers";
+import AdminUser from "discourse/admin/models/admin-user";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import Form from "discourse/components/form";
 import Avatar from "discourse/helpers/bound-avatar-template";
@@ -15,8 +15,8 @@ import {
   addUniqueValueToArray,
   removeValueFromArray,
 } from "discourse/lib/array-tools";
+import { eq, gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import AdminUser from "admin/models/admin-user";
 import DurationSelector from "./ai-quota-duration-selector";
 import AiLlmQuotaModal from "./modal/ai-llm-quota-modal";
 
@@ -53,10 +53,15 @@ export default class AiLlmEditorForm extends Component {
         display_name: modelInfo.display_name,
         name: modelInfo.name,
         provider: info.provider,
-        provider_params: this.computeProviderParams(info.provider),
+        provider_params: this.computeProviderParams(
+          info.provider,
+          modelInfo.provider_params ?? {}
+        ),
         input_cost: modelInfo.input_cost,
         output_cost: modelInfo.output_cost,
         cached_input_cost: modelInfo.cached_input_cost,
+        vision_enabled: modelInfo.vision_enabled || false,
+        cache_write_cost: modelInfo.cache_write_cost,
       };
     }
 
@@ -76,6 +81,7 @@ export default class AiLlmEditorForm extends Component {
       input_cost: model.input_cost,
       output_cost: model.output_cost,
       cached_input_cost: model.cached_input_cost,
+      cache_write_cost: model.cache_write_cost,
       provider_params: this.computeProviderParams(
         model.provider,
         model.provider_params
@@ -236,7 +242,11 @@ export default class AiLlmEditorForm extends Component {
     this.testRunning = true;
 
     try {
-      const configTestResult = await this.args.model.testConfig(data);
+      // For seeded models, include the id so backend can test the existing model
+      const testData = this.args.model.seeded
+        ? { ...data, id: this.args.model.id }
+        : data;
+      const configTestResult = await this.args.model.testConfig(testData);
       this.testResult = configTestResult.success;
 
       if (this.testResult) {
@@ -303,6 +313,7 @@ export default class AiLlmEditorForm extends Component {
         @validation="required|length:1,100"
         @format="large"
         @tooltip={{i18n "discourse_ai.llms.hints.display_name"}}
+        @disabled={{@model.seeded}}
         as |field|
       >
         <field.Input />
@@ -314,183 +325,197 @@ export default class AiLlmEditorForm extends Component {
         @tooltip={{i18n "discourse_ai.llms.hints.name"}}
         @validation="required"
         @format="large"
+        @disabled={{@model.seeded}}
         as |field|
       >
         <field.Input />
       </form.Field>
 
-      <form.Field
-        @name="provider"
-        @title={{i18n "discourse_ai.llms.provider"}}
-        @format="large"
-        @validation="required"
-        @onSet={{this.setProvider}}
-        as |field|
-      >
-        <field.Select as |select|>
-          {{#each this.selectedProviders as |provider|}}
-            <select.Option
-              @value={{provider.id}}
-            >{{provider.name}}</select.Option>
-          {{/each}}
-        </field.Select>
-      </form.Field>
-
-      {{#if (this.canEditURL data.provider)}}
+      {{#unless @model.seeded}}
         <form.Field
-          @name="url"
-          @title={{i18n "discourse_ai.llms.url"}}
+          @name="provider"
+          @title={{i18n "discourse_ai.llms.provider"}}
+          @format="large"
+          @validation="required"
+          @onSet={{this.setProvider}}
+          as |field|
+        >
+          <field.Select as |select|>
+            {{#each this.selectedProviders as |provider|}}
+              <select.Option
+                @value={{provider.id}}
+              >{{provider.name}}</select.Option>
+            {{/each}}
+          </field.Select>
+        </form.Field>
+
+        {{#if (this.canEditURL data.provider)}}
+          <form.Field
+            @name="url"
+            @title={{i18n "discourse_ai.llms.url"}}
+            @validation="required"
+            @format="large"
+            as |field|
+          >
+            <field.Input />
+          </form.Field>
+        {{/if}}
+
+        <form.Field
+          @name="api_key"
+          @title={{i18n "discourse_ai.llms.api_key"}}
+          @format="large"
+          as |field|
+        >
+          <field.Password autocomplete="off" data-1p-ignore />
+        </form.Field>
+
+        <form.Object @name="provider_params" as |object providerParamsData|>
+          {{#each (this.providerParamsKeys providerParamsData) as |name|}}
+            {{#let
+              (get (this.metaProviderParams data.provider) name)
+              as |params|
+            }}
+              <object.Field
+                @name={{name}}
+                @title={{i18n
+                  (concat "discourse_ai.llms.provider_fields." name)
+                }}
+                @format="large"
+                as |field|
+              >
+                {{#if (eq params.type "enum")}}
+                  <field.Select @includeNone={{false}} as |select|>
+                    {{#each params.values as |option|}}
+                      <select.Option
+                        @value={{option.id}}
+                      >{{option.name}}</select.Option>
+                    {{/each}}
+                  </field.Select>
+                {{else if (eq params.type "checkbox")}}
+                  <field.Checkbox />
+                {{else}}
+                  <field.Input @type={{params.type}} />
+                {{/if}}
+              </object.Field>
+            {{/let}}
+          {{/each}}
+        </form.Object>
+
+        <form.Field
+          @name="tokenizer"
+          @title={{i18n "discourse_ai.llms.tokenizer"}}
+          @format="large"
+          @validation="required"
+          as |field|
+        >
+          <field.Select as |select|>
+            {{#each this.tokenizers as |tokenizer|}}
+              <select.Option
+                @value={{tokenizer.id}}
+              >{{tokenizer.name}}</select.Option>
+            {{/each}}
+          </field.Select>
+        </form.Field>
+
+        <form.Field
+          @name="max_prompt_tokens"
+          @title={{i18n "discourse_ai.llms.max_prompt_tokens"}}
+          @tooltip={{i18n "discourse_ai.llms.hints.max_prompt_tokens"}}
           @validation="required"
           @format="large"
           as |field|
         >
-          <field.Input />
+          <field.Input @type="number" step="any" min="0" lang="en" />
         </form.Field>
-      {{/if}}
 
-      <form.Field
-        @name="api_key"
-        @title={{i18n "discourse_ai.llms.api_key"}}
-        @validation="required"
-        @format="large"
-        as |field|
-      >
-        <field.Password autocomplete="off" data-1p-ignore />
-      </form.Field>
-
-      <form.Object @name="provider_params" as |object providerParamsData|>
-        {{#each (this.providerParamsKeys providerParamsData) as |name|}}
-          {{#let
-            (get (this.metaProviderParams data.provider) name)
-            as |params|
-          }}
-            <object.Field
-              @name={{name}}
-              @title={{i18n (concat "discourse_ai.llms.provider_fields." name)}}
-              @format="large"
-              as |field|
-            >
-              {{#if (eq params.type "enum")}}
-                <field.Select @includeNone={{false}} as |select|>
-                  {{#each params.values as |option|}}
-                    <select.Option
-                      @value={{option.id}}
-                    >{{option.name}}</select.Option>
-                  {{/each}}
-                </field.Select>
-              {{else if (eq params.type "checkbox")}}
-                <field.Checkbox />
-              {{else}}
-                <field.Input @type={{params.type}} />
-              {{/if}}
-            </object.Field>
-          {{/let}}
-        {{/each}}
-      </form.Object>
-
-      <form.Field
-        @name="tokenizer"
-        @title={{i18n "discourse_ai.llms.tokenizer"}}
-        @format="large"
-        @validation="required"
-        as |field|
-      >
-        <field.Select as |select|>
-          {{#each this.tokenizers as |tokenizer|}}
-            <select.Option
-              @value={{tokenizer.id}}
-            >{{tokenizer.name}}</select.Option>
-          {{/each}}
-        </field.Select>
-      </form.Field>
-
-      <form.Field
-        @name="max_prompt_tokens"
-        @title={{i18n "discourse_ai.llms.max_prompt_tokens"}}
-        @tooltip={{i18n "discourse_ai.llms.hints.max_prompt_tokens"}}
-        @validation="required"
-        @format="large"
-        as |field|
-      >
-        <field.Input @type="number" step="any" min="0" lang="en" />
-      </form.Field>
-
-      <form.InputGroup as |inputGroup|>
-        <inputGroup.Field
-          @name="input_cost"
-          @title={{i18n "discourse_ai.llms.cost_input"}}
-          @tooltip={{i18n "discourse_ai.llms.hints.cost_input"}}
-          @helpText={{i18n "discourse_ai.llms.hints.cost_measure"}}
-          as |field|
-        >
-          <field.Input @type="number" step="any" min="0" lang="en" />
-        </inputGroup.Field>
-
-        <inputGroup.Field
-          @name="cached_input_cost"
-          @title={{i18n "discourse_ai.llms.cost_cached_input"}}
-          @tooltip={{i18n "discourse_ai.llms.hints.cost_cached_input"}}
-          @helpText={{i18n "discourse_ai.llms.hints.cost_measure"}}
-          as |field|
-        >
-          <field.Input @type="number" step="any" min="0" lang="en" />
-        </inputGroup.Field>
-
-        <inputGroup.Field
-          @name="output_cost"
-          @title={{i18n "discourse_ai.llms.cost_output"}}
-          @tooltip={{i18n "discourse_ai.llms.hints.cost_output"}}
-          @helpText={{i18n "discourse_ai.llms.hints.cost_measure"}}
-          as |field|
-        >
-          <field.Input @type="number" step="any" min="0" lang="en" />
-        </inputGroup.Field>
-      </form.InputGroup>
-
-      <form.Field
-        @name="max_output_tokens"
-        @title={{i18n "discourse_ai.llms.max_output_tokens"}}
-        @tooltip={{i18n "discourse_ai.llms.hints.max_output_tokens"}}
-        @format="large"
-        as |field|
-      >
-        <field.Input @type="number" step="any" min="0" lang="en" />
-      </form.Field>
-
-      <form.Field
-        @name="vision_enabled"
-        @title={{i18n "discourse_ai.llms.vision_enabled"}}
-        @tooltip={{i18n "discourse_ai.llms.hints.vision_enabled"}}
-        @format="large"
-        as |field|
-      >
-        <field.Checkbox />
-      </form.Field>
-
-      <form.Field
-        @name="enabled_chat_bot"
-        @title={{i18n "discourse_ai.llms.enabled_chat_bot"}}
-        @tooltip={{i18n "discourse_ai.llms.hints.enabled_chat_bot"}}
-        @format="large"
-        as |field|
-      >
-        <field.Checkbox />
-      </form.Field>
-
-      {{#if @model.user}}
-        <form.Container @title={{i18n "discourse_ai.llms.ai_bot_user"}}>
-          <a
-            class="avatar"
-            href={{@model.user.path}}
-            data-user-card={{@model.user.username}}
+        <form.InputGroup as |inputGroup|>
+          <inputGroup.Field
+            @name="input_cost"
+            @title={{i18n "discourse_ai.llms.cost_input"}}
+            @tooltip={{i18n "discourse_ai.llms.hints.cost_input"}}
+            @helpText={{i18n "discourse_ai.llms.hints.cost_measure"}}
+            as |field|
           >
-            {{Avatar @model.user.avatar_template "small"}}
-          </a>
-          <LinkTo @route="adminUser" @model={{this.adminUser}}>
-            {{@model.user.username}}
-          </LinkTo>
-        </form.Container>
-      {{/if}}
+            <field.Input @type="number" step="any" min="0" lang="en" />
+          </inputGroup.Field>
+
+          <inputGroup.Field
+            @name="cached_input_cost"
+            @title={{i18n "discourse_ai.llms.cost_cached_input"}}
+            @tooltip={{i18n "discourse_ai.llms.hints.cost_cached_input"}}
+            @helpText={{i18n "discourse_ai.llms.hints.cost_measure"}}
+            as |field|
+          >
+            <field.Input @type="number" step="any" min="0" lang="en" />
+          </inputGroup.Field>
+
+          <inputGroup.Field
+            @name="cache_write_cost"
+            @title={{i18n "discourse_ai.llms.cost_cache_write"}}
+            @tooltip={{i18n "discourse_ai.llms.hints.cost_cache_write"}}
+            @helpText={{i18n "discourse_ai.llms.hints.cost_measure"}}
+            as |field|
+          >
+            <field.Input @type="number" step="any" min="0" lang="en" />
+          </inputGroup.Field>
+
+          <inputGroup.Field
+            @name="output_cost"
+            @title={{i18n "discourse_ai.llms.cost_output"}}
+            @tooltip={{i18n "discourse_ai.llms.hints.cost_output"}}
+            @helpText={{i18n "discourse_ai.llms.hints.cost_measure"}}
+            as |field|
+          >
+            <field.Input @type="number" step="any" min="0" lang="en" />
+          </inputGroup.Field>
+        </form.InputGroup>
+
+        <form.Field
+          @name="max_output_tokens"
+          @title={{i18n "discourse_ai.llms.max_output_tokens"}}
+          @tooltip={{i18n "discourse_ai.llms.hints.max_output_tokens"}}
+          @format="large"
+          as |field|
+        >
+          <field.Input @type="number" step="any" min="0" lang="en" />
+        </form.Field>
+
+        <form.Field
+          @name="vision_enabled"
+          @title={{i18n "discourse_ai.llms.vision_enabled"}}
+          @tooltip={{i18n "discourse_ai.llms.hints.vision_enabled"}}
+          @format="large"
+          as |field|
+        >
+          <field.Checkbox />
+        </form.Field>
+
+        <form.Field
+          @name="enabled_chat_bot"
+          @title={{i18n "discourse_ai.llms.enabled_chat_bot"}}
+          @tooltip={{i18n "discourse_ai.llms.hints.enabled_chat_bot"}}
+          @format="large"
+          as |field|
+        >
+          <field.Checkbox />
+        </form.Field>
+
+        {{#if @model.user}}
+          <form.Container @title={{i18n "discourse_ai.llms.ai_bot_user"}}>
+            <a
+              class="avatar"
+              href={{@model.user.path}}
+              data-user-card={{@model.user.username}}
+            >
+              {{Avatar @model.user.avatar_template "small"}}
+            </a>
+            <LinkTo @route="adminUser" @model={{this.adminUser}}>
+              {{@model.user.username}}
+            </LinkTo>
+          </form.Container>
+        {{/if}}
+      {{/unless}}
 
       {{#if (gt data.llm_quotas.length 0)}}
         <form.Container @title={{i18n "discourse_ai.llms.quotas.title"}}>
@@ -612,11 +637,13 @@ export default class AiLlmEditorForm extends Component {
         {{/if}}
 
         {{#unless @model.isNew}}
-          <form.Button
-            @action={{this.delete}}
-            @label="discourse_ai.llms.delete"
-            class="btn-danger"
-          />
+          {{#unless @model.seeded}}
+            <form.Button
+              @action={{this.delete}}
+              @label="discourse_ai.llms.delete"
+              class="btn-danger"
+            />
+          {{/unless}}
         {{/unless}}
       </form.Actions>
 

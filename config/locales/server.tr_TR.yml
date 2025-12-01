@@ -1263,8 +1263,6 @@ tr_TR:
       yaxis: "Gün"
       description: "Normal API anahtarları ve kullanıcı API anahtarları için API istekleri."
     consolidated_page_views_browser_detection:
-      title: "Tarayıcı Algılama ile Konsolide Sayfa Görüntülemeleri (Deneysel)"
-      title_legacy: "Tarayıcı Algılama ile Konsolide Sayfa Görüntülemeleri (Deneysel)"
       xaxis:
         page_view_anon_browser: "Anonim Tarayıcı"
         page_view_logged_in_browser: "Giriş Yapılmış Tarayıcı"
@@ -1652,7 +1650,6 @@ tr_TR:
     allow_duplicate_topic_titles_category: "Kategori farklıysa aynı, yinelenen başlıklara sahip konulara izin verin. allow_duplicate_topic_titles devre dışı bırakılmalıdır."
     unique_posts_mins: "Bir kullanıcının aynı içeriğe sahip bir gönderiyi tekrar yapabilmesi için kaç dakika geçmesi gerektiği"
     educate_until_posts: "Kullanıcı ilk (n) yeni gönderisini yazmaya başladığında, oluşturucuda açılır yeni kullanıcı eğitim panelini gösterin."
-    title: "Bu sitenin adı. Anonim kullanıcılar dahil tüm ziyaretçiler tarafından görülebilir."
     site_description: "Bu siteyi bir cümleyle tanımlayın. Anonim kullanıcılar dahil tüm ziyaretçiler tarafından görülebilir."
     short_site_description: "Birkaç kelimelik kısa açıklama. Anonim kullanıcılar dahil tüm ziyaretçiler tarafından görülebilir."
     contact_email: "Bu siteden sorumlu kilit kişinin e-posta adresi. Kritik bildirimler için kullanılır ve ayrıca acil konular için <a href='%{base_path}/about' target='_blank'>/about</a> adresinde gösterilir. Herkese açık sitelerdeki anonim kullanıcılara görünür."
@@ -2111,7 +2108,6 @@ tr_TR:
     allow_all_users_to_flag_illegal_content: "Anonim kullanıcılar, yasa dışı içeriği bildirmek için yöneticilere e-posta göndermeleri gerektiğini belirten bilgileri görürler. Bu ayar, \"Gönderi yayınlamaya izin verilen grupları işaretle\" ayarından önceliklidir."
     email_address_to_report_illegal_content: "Boş bırakılırsa varsayılan site yöneticisi e-postası kullanılır."
     cooldown_hours_until_reflag: "Kullanıcıların bir gönderiye yeniden bayrak ekleyebilmeleri için ne kadar süre beklemeleri gerektiği"
-    slow_mode_prevents_editing: "\"Yavaş Mod\" editing_grace_period sonrasında düzenlemeyi engeller mi?"
     reply_by_email_enabled: "Kullanıcıların web sitesine giriş yapmalarını gerektirmek yerine konulara doğrudan e-posta yoluyla yanıt vermelerini sağlayan özelliği etkinleştirin. Daha fazla bilgi için <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>Meta kılavuzu</a> bölümüne bakın."
     reply_by_email_address: "E-posta ile yanıt için şablon gelen e-posta adresi, örneğin: %%{reply_key}@reply.example.com veya replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Gelen e-posta adreslerini e-posta ile yanıtlamak için alternatif şablonların listesi. Örnek: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -2416,7 +2412,6 @@ tr_TR:
     sitemap_page_size: "Her site haritası sayfasına eklenecek URL sayısı. Maksimum 50.000"
     enable_user_status: "Kullanıcıların özel durum mesajı (emoji + açıklama) ayarlamalarına izin verin."
     enable_user_tips: "Kullanıcılara temel özellikleri açıklayan yeni kullanıcı ipuçlarını etkinleştirin"
-    short_title: "Kısa başlık, kullanıcının ana ekranında, başlatıcısında veya alanın sınırlı olabileceği diğer yerlerde kullanılacak. Bu başlık 12 karakterle sınırlı olmalı."
     dashboard_hidden_reports: "Belirtilen raporların panodan gizlenmesine izin verin."
     dashboard_visible_tabs: "Hangi pano sekmelerinin görünür olacağını seçin."
     dashboard_general_tab_activity_metrics: "Genel sekmesinde aktivite metrikleri olarak görüntülenecek raporları seçin."
@@ -2442,8 +2437,6 @@ tr_TR:
     default_navigation_menu_categories: "Seçilen kategoriler, varsayılan olarak Navigasyon Menüsü'nün Kategoriler bölümünde gösterilir."
     default_navigation_menu_tags: "Seçilen etiketler, varsayılan olarak Navigasyon Menüsü'nün Etiketler bölümünde gösterilir."
     experimental_new_new_view_groups: 'Okunmamış ve yeni konuları birleştiren bir yeni konular listesi etkinleştirin ve kenar çubuğundaki "Her şey" bağlantısını buna bağlayın.'
-    floatkit_autocomplete_composer: "Bestecide Floatkit tabanlı otomatik tamamlama menüsünü etkinleştirin. Bu, mevcut JQuery tabanlı otomatik tamamlama menüsünün yerini alacak bir kullanıcı arayüzü geliştirmesidir."
-    floatkit_autocomplete_chat_composer: "Sohbet bestecisinde Floatkit tabanlı otomatik tamamlama menüsünü etkinleştirin. Bu, mevcut jQuery tabanlı otomatik tamamlama menüsünün yerini alacak bir kullanıcı arayüzü geliştirmesidir."
     experimental_form_templates: "Form şablonları özelliğini etkinleştirin. Şablonları <a href='%{base_path}/admin/customize/form-templates'>Özelleştir / Şablonlar</a> bölümünden yönetin."
     show_preview_for_form_templates: "Form şablonları özelliği için ön izlemeyi etkinleştirin"
     lazy_load_categories_groups: "Kategori bilgilerini yalnızca bu gruplardaki kullanıcılar için tembel olarak yükleyin. Bu, çok sayıda kategoriye sahip sitelerde performansı artırır."
@@ -2525,7 +2518,6 @@ tr_TR:
         other: "Liste tam olarak %{count} değer içermelidir."
       markdown_linkify_tlds: "\"*\" değerini dahil edemezsiniz."
       google_oauth2_hd_groups: "Bu ayarı etkinleştirmeden önce tüm \"google oauth2 hd\" ayarlarını yapılandırmanız gerekiyor."
-      discourse_id_credentials: "Bu ayarı etkinleştirmeden önce Discourse kimliği giriş bilgilerini (\"discourse_id_client_id\" ve \"discourse_id_client_secret\") yapılandırmanız gerekir."
       linkedin_oidc_credentials: "Bu ayarı etkinleştirmeden önce LinkedIn OIDC giriş bilgilerini ('linkedin_oidc_client_id' ve 'linkedin_oidc_client_secret') yapılandırmanız gerekiyor."
       search_tokenize_chinese_enabled: "Bu ayarı etkinleştirmeden önce \"search_tokenize_chinese\" özelliğini devre dışı bırakmalısınız."
       search_tokenize_japanese_enabled: "Bu ayarı etkinleştirmeden önce \"search_tokenize_japanese\" özelliğini devre dışı bırakmalısınız."
@@ -3607,14 +3599,9 @@ tr_TR:
     user_automatically_silenced:
       title: "Kullanıcı Otomatik Olarak Susturuldu"
       subject_template: "Yeni kullanıcı %{username} topluluk bayraklarıyla susturuldu"
-      text_body_template: |
-        Bu otomatik bir mesajdır.
-
-        Birden fazla kullanıcı %{username} adlı kullanıcının gönderilerine bayrak eklediğinden yeni kullanıcı [%{username}](%{user_url}) otomatik olarak sessize alındı.
-
-        Lütfen [bayrakları inceleyin](%{base_url}/review). %{username} adlı kullanıcının gönderileri yanlışlıkla susturulduysa [bu kullanıcının yönetici sayfasındaki](%{user_url}) susturmayı kaldır düğmesine tıklayın.
-
-        Bu eşik, `silence_new_user` site ayarları aracılığıyla değiştirilebilir.
+    user_automatically_silenced_with_reason:
+      title: "Kullanıcı Otomatik Olarak Susturuldu"
+      subject_template: "Yeni kullanıcı %{username} topluluk bayraklarıyla susturuldu"
     spam_post_blocked:
       title: "İstenmeyen Gönderi Engellendi"
       subject_template: "%{username} adlı yeni kullanıcının gönderileri tekrarlanan bağlantılar nedeniyle engellendi"
@@ -4701,18 +4688,12 @@ tr_TR:
     nice_share:
       name: Hoş Paylaşım
       description: 25 benzersiz ziyaretçili bir gönderi paylaştı
-      long_description: |
-        Bu rozet, dışarıdan 25 ziyaretçi tarafından tıklanan bir bağlantı paylaştığınız için verilir. Tartışmalarımız ve bu topluluğun tanınmasına yardımcı olduğunuz için teşekkür ederiz.
     good_share:
       name: İyi Paylaşım
       description: 300 benzersiz ziyaretçili bir gönderi paylaştı
-      long_description: |
-        Bu rozet, dışarıdan 300 ziyaretçi tarafından tıklanan bir bağlantıyı paylaştığınız için verilir. İyi iş çıkardınız! Harika bir tartışmayı bir grup yeni insana gösterdiniz ve bu topluluğun büyümesine yardımcı oldunuz.
     great_share:
       name: Harika Paylaşım
       description: 1000 benzersiz ziyaretçili bir gönderi paylaştı
-      long_description: |
-        Bu rozet, dışarıdan 1000 ziyaretçi tarafından tıklanan bir bağlantıyı paylaştığınız için verilir. Vay canına! İlginç bir tartışmayı büyük bir yeni kitleye tanıttınız ve topluluğumuzu büyütmemize yardımcı oldunuz!
     first_like:
       name: İlk Beğeni
       description: Bir gönderiyi beğendi
@@ -4930,27 +4911,19 @@ tr_TR:
   wizard:
     title: "Discourse Kurulumu"
     step:
-      introduction:
-        title: "Siteniz hakkında"
-        description: "Bunlar oturum açtığınızda ve herkese açık sayfalarda gösterilir. Bunları dilediğiniz zaman değiştirebilirsiniz."
+      setup:
+        title: "Başlarken"
         fields:
           title:
             label: "Topluluk adı"
-            placeholder: "Aytaç'ın Yeri"
-          site_description:
-            label: "Topluluğunuzu bir cümleyle tanımlayın"
-            placeholder: "Aytaç ve arkadaşlarının harika şeyleri tartışabilecekleri bir yer"
           default_locale:
             label: "Dil"
-      privacy:
-        title: "Üye erişimi"
-        fields:
           login_required:
             label: "Görünürlük"
             description: "Topluluğunuz herkese açık mı yoksa özel mi?"
             choices:
               public:
-                label: "Herkese Açık"
+                label: "Genel"
               private:
                 label: "Özel"
           invite_only:
@@ -4968,82 +4941,6 @@ tr_TR:
                 label: "Hayır, yeni üyeler hemen katılabilir"
               "yes":
                 label: "Evet, yeni üyelerin moderatörler tarafından onaylanması gerekiyor"
-          chat_enabled:
-            placeholder: "Sohbeti etkinleştir"
-            extra_description: "Üyelerinizle gerçek zamanlı olarak etkileşim kurun"
-      ready:
-        title: "Siteniz hazır!"
-        description: "İşte bu kadar! Topluluğunuzu kurmak için temel işlemleri bitirdiniz. Şimdi içeri girip etrafa bir göz atabilir, bir karşılama konusu yazabilir ve davet gönderebilirsiniz!<br><br>İyi eğlenceler!"
-      styling:
-        title: "Görünüm ve his"
-        fields:
-          color_scheme:
-            label: "Renk paleti"
-          body_font:
-            label: "Gövde yazı tipi"
-          site_font:
-            label: "Yazı tipi"
-          heading_font:
-            label: "Başlık yazı tipi"
-          styling_preview:
-            label: "Ön izleme"
-          homepage_style:
-            label: "Ana sayfa stili"
-            choices:
-              latest:
-                label: "En son"
-                description: "Tüm kategorilerdeki en son aktif konuları görüntüleyerek üyelerin önemsedikleri tartışmalardan haberdar olmalarına yardımcı olur"
-              hot:
-                label: "Popüler"
-                description: "Güncel ve genel popülerliği harmanlayarak trend konuları ortaya çıkarır, şu anda topluluğunuzda üyelerin ne hakkında konuştuğunu gösterir"
-              categories_and_latest_topics:
-                label: "En son konuların yer aldığı kategoriler"
-                description: "Tüm kategorilerdeki son aktif konuları, kategorilerin listesi, açıklamaları ve toplam konularla birleştirir"
-              categories_boxes:
-                label: "Kategori kutuları"
-                description: "Kategorileri ve açıklamalarını bir ızgarada gösterir; üyelerin sitenizin alt topluluklarına genel bir bakış görmeleri için idealdir"
-      branding:
-        title: "Site logosu"
-        fields:
-          logo:
-            label: "Birincil logo"
-            description: "Önerilen boyut: 600 x 200"
-          logo_small:
-            label: "Kare logo"
-            description: "Önerilen boyut: 512 x 512. Ayrıca favicon ve mobil ana ekran uygulama simgesi olarak da kullanılır."
-      corporate:
-        title: "Organizasyonunuz"
-        description: "Aşağıdaki bilgiler Hizmet Şartları ve Hakkında sayfalarınızda kullanılır. Şirket yoksa atlamaktan çekinmeyin."
-        fields:
-          company_name:
-            label: "Şirket adı"
-            placeholder: "Acme Organizasyonu"
-          governing_law:
-            label: "Geçerli kanun"
-            placeholder: "Kaliforniya yasaları"
-          contact_url:
-            label: "Web sayfası"
-            placeholder: "https://www.ornek.com/iletisim"
-          city_for_disputes:
-            label: "Anlaşmazlıklar için şehir"
-            placeholder: "San Francisco, Kaliforniya"
-          site_contact:
-            label: "Otomatik mesajlar"
-            description: "Bayrak uyarıları ve yedekleme tamamlama bildirimleri gibi tüm otomatik Discourse kişisel mesajları bu kullanıcıdan gönderilecek."
-          contact_email:
-            label: "İrtibat kişisi"
-            placeholder: "ornek@kullanici.com"
-            description: "Bu siteden sorumlu kilit kişinin e-posta adresi. Kritik bildirimler için kullanılır ve acil konular için <a href='%{base_path}/about' target='_blank'>hakkında sayfanızda</a> listelenir."
-      invites:
-        title: "Personel Davet Edin"
-        description: "Neredeyse bitti! Hadi topluluğunuzu başlatmak için <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>tartışmalarınızı</a> ilginç konu ve yanıtlarla tohumlamanıza yardımcı olacak birkaç kişi davet edelim."
-        disabled: "Yerel girişler devre dışı bırakıldığından, kimseye davet gönderilemiyor. Lütfen bir sonraki adıma geçin."
-      finished:
-        title: "Discourse'unuz Hazır!"
-        description: |
-          <p>Bu ayarları değiştirmek isterseniz <b>bu sihirbazı istediğiniz zaman yeniden çalıştırın </b>veya <a href='%{base_path}/admin' target='_blank'>yönetici bölümünüzü</a> ziyaret edin; site menüsündeki İngiliz anahtarı simgesinin yanında bulabilirsiniz.</p>
-          <p>Güçlü tema sistemimizi kullanarak Discourse'unuzu daha da özelleştirmek kolaydır. Örnekler için <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>adresindeki <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">en iyi tema ve bileşenlere</a> göz atın.</p>
-          <p>İyi eğlenceler ve <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'> yeni topluluğunuzu oluştururken</a></p> iyi şanslar!
   search_logs:
     graph_title: "Arama Sayısı"
   onebox:
@@ -5208,7 +5105,6 @@ tr_TR:
         title: "Gönderiyi sil"
         complete: "Gönderi silindi."
       revise_and_reject_post:
-        title: "Gönderiyi gözden geçir..."
         complete: "Gönderi reddedildi ve revizyon bekleniyor."
       ignore:
         title: "Yok say"

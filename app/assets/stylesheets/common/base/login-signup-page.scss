@@ -322,7 +322,7 @@ body.signup-page {
   .login-form,
   #login-form,
   .invite-form {
-    margin-block: 2em 1.2em;
+    margin-top: 2em;
     display: flex;
     flex-direction: column;
 
@@ -584,22 +584,6 @@ body.signup-page {
 
     .signup-progress-bar {
       font-size: var(--font-down-1);
-    }
-  }
-}
-
-// Login page
-.login-fullpage {
-  #second-factor {
-    input {
-      width: 100%;
-      padding: 0.75em 0.5em;
-      min-width: 250px;
-      box-shadow: none;
-    }
-
-    input:focus {
-      outline: none;
     }
   }
 }

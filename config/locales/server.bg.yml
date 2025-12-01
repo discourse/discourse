@@ -1115,15 +1115,6 @@ bg:
         %{post_error}
 
         Ако можете да отстраните проблема, моля опитайте отново.
-    user_automatically_silenced:
-      text_body_template: |
-        Това е автоматизирано съобщение.
-
-        Новият потребител [%{username}](%{user_url}) беше автоматично заглушен, защото множество потребители сигнализираха за публикациите на %{username}.
-
-        Моля [прегледайте сигналите](%{base_url}/преглед). Ако %{username} е бил неправилно заглушен за публикуване, щракнете върху бутона за деактивиране на [административната страница за този потребител] (%{user_url}).
-
-        Този праг може да бъде променен чрез настройките на сайта `silence_new_user`.
     spam_post_blocked:
       subject_template: "Публикациите на новия потребител %{username} са блокирани заради повторящите се линкове "
     pending_users_reminder:
@@ -1586,7 +1577,8 @@ bg:
     no_plugins: "Деактивирайте всички персонализации на приставки от страна на клиента"
   wizard:
     step:
-      privacy:
+      setup:
+        title: "Първи стъпки"
         fields:
           login_required:
             label: "Видимост"
@@ -1595,18 +1587,6 @@ bg:
                 label: "Публични"
               private:
                 label: "Затворени"
-      styling:
-        fields:
-          styling_preview:
-            label: "Преглед"
-          homepage_style:
-            choices:
-              latest:
-                label: "Последни"
-      invites:
-        title: "Поканете персонал"
-      finished:
-        title: "Вашият Discourse е готов!"
   search_logs:
     graph_title: "Брой търсения"
   onebox:

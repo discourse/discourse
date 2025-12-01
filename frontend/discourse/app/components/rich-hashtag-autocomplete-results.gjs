@@ -1,3 +1,5 @@
+// @ts-check
+
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
@@ -6,8 +8,12 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { htmlSafe } from "@ember/template";
-import { eq } from "truth-helpers";
 import scrollIntoView from "discourse/modifiers/scroll-into-view";
+import { eq } from "discourse/truth-helpers";
+
+/**
+ * @typedef {import("discourse/lib/types/d-autocomplete").RichHashtagAutocompleteResult} RichHashtagAutocompleteResult
+ */
 
 /**
  * Component for rendering rich hashtag autocomplete results for the DAutocomplete modifier.
@@ -17,10 +23,7 @@ import scrollIntoView from "discourse/modifiers/scroll-into-view";
  * Designed to be used with DAutocomplete's `component` API.
  *
  * @component RichHashtagAutocompleteResults
- * @param {Array} results - Array of rich hashtag results with type, icon, text, secondary_text, description
- * @param {number} selectedIndex - Currently selected index in the results list
- * @param {Function} onSelect - Callback function triggered when a result is selected
- * @param {Function} onRender - Optional callback function triggered after component renders
+ * @implements {Component<import("discourse/lib/types/d-autocomplete").AutocompleteResultsSignature<RichHashtagAutocompleteResult>>}
  */
 export default class RichHashtagAutocompleteResults extends Component {
   static TRIGGER_KEY = "#";

@@ -20,10 +20,10 @@ import {
   cleanUpComposerUploadPreProcessor,
 } from "discourse/components/composer-editor";
 import { clearToolbarCallbacks } from "discourse/components/d-editor";
+import { resetHtmlDecorators } from "discourse/components/decorated-html";
 import { clearExtraHeaderButtons as clearExtraGlimmerHeaderButtons } from "discourse/components/header";
 import { clearExtraHeaderIcons as clearExtraGlimmerHeaderIcons } from "discourse/components/header/icons";
 import { clearRegisteredTabs } from "discourse/components/more-topics";
-import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
 import { resetDecorators as resetPluginOutletDecorators } from "discourse/components/plugin-connector";
 import { resetGroupPostSmallActionCodes } from "discourse/components/post/small-action";
 import { resetItemSelectCallbacks } from "discourse/components/search-menu/results/assistant-item";
@@ -44,11 +44,6 @@ import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifica
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { restoreBaseUri } from "discourse/lib/get-url";
 import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
-import {
-  clearDisabledDefaultKeyboardBindings,
-  clearExtraKeyboardShortcutHelp,
-  PLATFORM_KEY_MODIFIER,
-} from "discourse/lib/keyboard-shortcuts";
 import { reset as resetLinkLookup } from "discourse/lib/link-lookup";
 import { resetMentions } from "discourse/lib/link-mentions";
 import { forceMobile, resetMobile } from "discourse/lib/mobile";
@@ -92,19 +87,20 @@ import { resetLastEditNotificationClick } from "discourse/models/post-stream";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import { clearResolverOptions } from "discourse/resolver";
+import { _clearSnapshots } from "discourse/select-kit/components/composer-actions";
 import { enableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
+import {
+  clearDisabledDefaultKeyboardBindings,
+  clearExtraKeyboardShortcutHelp,
+  PLATFORM_KEY_MODIFIER,
+} from "discourse/services/keyboard-shortcuts";
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 import {
   currentSettings,
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
-import { resetPostClassesCallback } from "discourse/widgets/post";
-import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/post-cooked";
-import { resetPostSmallActionClassesCallbacks } from "discourse/widgets/post-small-action";
-import { resetDecorators } from "discourse/widgets/widget";
 import I18n from "discourse-i18n";
-import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { setupDSelectAssertions } from "./d-select-assertions";
 import { setupFormKitAssertions } from "./form-kit-assertions";
 import { setupNotificationsTrackingAssertions } from "./notifications-tracking-assertions";
@@ -208,8 +204,6 @@ export function testCleanup(container, app) {
   clearOutletCache();
   clearHTMLCache();
   clearRewrites();
-  resetDecorators();
-  resetPostCookedDecorators();
   resetPluginOutletDecorators();
   resetUsernameDecorators();
   resetOneboxCache();
@@ -264,14 +258,12 @@ export function testCleanup(container, app) {
   resetTransformers();
   rollbackAllPrepends();
   clearAboutPageActivities();
-  resetWidgetCleanCallbacks();
   clearPluginHeaderActionComponents();
   clearRegisteredTabs();
   clearAddedTrackedPostProperties();
   resetGroupPostSmallActionCodes();
-  resetPostSmallActionClassesCallbacks();
-  resetPostClassesCallback();
   enableClearA11yAnnouncementsInTests();
+  resetHtmlDecorators();
 }
 
 function cleanupCssGeneratorTags() {

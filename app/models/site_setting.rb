@@ -92,6 +92,15 @@ class SiteSetting < ActiveRecord::Base
       elsif self.data_type == SiteSettings::TypeSupervisor.types[:uploaded_image_list]
         upload_ids = self.value.split("|").compact.uniq
         UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
+      elsif self.data_type == SiteSettings::TypeSupervisor.types[:objects] && self.value.present?
+        upload_ids =
+          SchemaSettingsObjectValidator.property_values_of_type(
+            schema: SiteSetting.type_supervisor.type_hash(self.name.to_sym)[:schema],
+            objects: JSON.parse(self.value),
+            type: "upload",
+          )
+
+        UploadReference.ensure_exist!(upload_ids: upload_ids, target: self) if upload_ids.any?
       end
     end
   end

@@ -1,20 +1,21 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { htmlSafe } from "@ember/template";
-import BooleanField from "admin/components/schema-setting/types/boolean";
-import CategoriesField from "admin/components/schema-setting/types/categories";
-import EnumField from "admin/components/schema-setting/types/enum";
-import FloatField from "admin/components/schema-setting/types/float";
-import GroupsField from "admin/components/schema-setting/types/groups";
-import IntegerField from "admin/components/schema-setting/types/integer";
-import StringField from "admin/components/schema-setting/types/string";
-import TagsField from "admin/components/schema-setting/types/tags";
+import BooleanField from "discourse/admin/components/schema-setting/types/boolean";
+import CategoriesField from "discourse/admin/components/schema-setting/types/categories";
+import EnumField from "discourse/admin/components/schema-setting/types/enum";
+import FloatField from "discourse/admin/components/schema-setting/types/float";
+import GroupsField from "discourse/admin/components/schema-setting/types/groups";
+import IntegerField from "discourse/admin/components/schema-setting/types/integer";
+import StringField from "discourse/admin/components/schema-setting/types/string";
+import TagsField from "discourse/admin/components/schema-setting/types/tags";
+import UploadField from "discourse/admin/components/schema-setting/types/upload";
 
 export default class SchemaSettingField extends Component {
   get component() {
     const type = this.args.spec.type;
 
-    switch (this.args.spec.type) {
+    switch (type) {
       case "string":
         return StringField;
       case "integer":
@@ -31,6 +32,8 @@ export default class SchemaSettingField extends Component {
         return TagsField;
       case "groups":
         return GroupsField;
+      case "upload":
+        return UploadField;
       default:
         throw new Error(`unknown type ${type}`);
     }

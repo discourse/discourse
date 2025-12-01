@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ListSetting from "select-kit/components/list-setting";
+import ListSetting from "discourse/select-kit/components/list-setting";
 
 export default class LocaleList extends Component {
   @service siteSettings;

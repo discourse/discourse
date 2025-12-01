@@ -1724,8 +1724,8 @@ RSpec.describe User do
       expect(Discourse.system_user.avatar_template).to eq(logo_small_url)
     end
 
-    it "uses the system user avatar if the logo is nil" do
-      SiteSetting.logo_small = nil
+    it "uses the system user avatar if the logo is blank" do
+      SiteSetting.logo_small = ""
       system_user = Discourse.system_user
       expected = User.avatar_template(system_user.username, system_user.uploaded_avatar_id)
 

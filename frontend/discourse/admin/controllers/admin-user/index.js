@@ -3,6 +3,7 @@ import { action, computed } from "@ember/object";
 import { and, notEmpty } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import AdminUser from "discourse/admin/models/admin-user";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
@@ -11,7 +12,6 @@ import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
-import AdminUser from "admin/models/admin-user";
 import DeletePostsConfirmationModal from "../../components/modal/delete-posts-confirmation";
 import DeleteUserPostsProgressModal from "../../components/modal/delete-user-posts-progress";
 import MergeUsersConfirmationModal from "../../components/modal/merge-users-confirmation";
@@ -70,14 +70,12 @@ export default class AdminUserIndexController extends Controller {
       .join(", ");
   }
 
-  @discourseComputed("model.associated_accounts")
-  associatedAccountsLoaded(associatedAccounts) {
-    return typeof associatedAccounts !== "undefined";
+  get associatedAccountsLoaded() {
+    return typeof this.model.associated_accounts !== "undefined";
   }
 
-  @discourseComputed("model.associated_accounts")
-  associatedAccounts(associatedAccounts) {
-    return associatedAccounts
+  get associatedAccounts() {
+    return this.model.associated_accounts
       ?.map((provider) => `${provider.name} (${provider.description})`)
       ?.join(", ");
   }

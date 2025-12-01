@@ -516,20 +516,38 @@ module ApplicationHelper
     CategoryBadge.html_for(category, opts).html_safe
   end
 
-  def self.all_connectors
-    @all_connectors = Dir.glob("plugins/*/app/views/connectors/**/*.html.erb")
+  SERVER_PLUGIN_OUTLET_PLUGINS_PREFIXES = [Rails.root.join("plugins/").to_s]
+  private_constant :SERVER_PLUGIN_OUTLET_PLUGINS_PREFIXES
+
+  if Rails.env.test?
+    SERVER_PLUGIN_OUTLET_PLUGINS_PREFIXES << Rails.root.join("spec/fixtures/plugins/").to_s
   end
+
+  SERVER_PLUGIN_OUTLET_CONNECTOR_TEMPLATES =
+    SERVER_PLUGIN_OUTLET_PLUGINS_PREFIXES.each_with_object({}) do |plugins_prefix, connectors|
+      Dir
+        .glob("#{plugins_prefix}*/app/views/connectors/**/*.html.erb")
+        .each do |template_path|
+          template_path =~ Regexp.new("/connectors/(.*)/.*\.html\.erb$")
+          outlet_name = Regexp.last_match(1)
+          connectors[outlet_name] ||= []
+          connectors[outlet_name] << template_path.sub(plugins_prefix, "").delete_suffix(
+            ".html.erb",
+          )
+        end
+    end
+  private_constant :SERVER_PLUGIN_OUTLET_CONNECTOR_TEMPLATES
 
   def server_plugin_outlet(name, locals: {})
     return "" if !GlobalSetting.load_plugins?
+    return "" if !SERVER_PLUGIN_OUTLET_CONNECTOR_TEMPLATES.key?(name)
 
-    matcher = Regexp.new("/connectors/#{name}/.*\.html\.erb$")
-    erbs = ApplicationHelper.all_connectors.select { |c| c =~ matcher }
-    return "" if erbs.blank?
+    lookup_context.append_view_paths(SERVER_PLUGIN_OUTLET_PLUGINS_PREFIXES)
 
-    result = +""
-    erbs.each { |erb| result << render(inline: File.read(erb), locals: locals) }
-    result.html_safe
+    SERVER_PLUGIN_OUTLET_CONNECTOR_TEMPLATES[name]
+      .map { |template| render template:, locals: }
+      .join
+      .html_safe
   end
 
   def topic_featured_link_domain(link)

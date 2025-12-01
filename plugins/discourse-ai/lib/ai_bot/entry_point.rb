@@ -2,10 +2,6 @@
 
 module DiscourseAi
   module AiBot
-    USER_AGENT = "Discourse AI Bot 1.0 (https://www.discourse.org)"
-    TOPIC_AI_BOT_PM_FIELD = "is_ai_bot_pm"
-    POST_AI_LLM_NAME_FIELD = "ai_llm_name"
-
     class EntryPoint
       Bot = Struct.new(:id, :name, :llm)
 
@@ -36,7 +32,7 @@ module DiscourseAi
 
       def self.enabled_user_ids_and_models_map
         DB.query_hash(<<~SQL)
-          SELECT users.username AS username, users.id AS id, llms.name AS model_name, llms.display_name AS display_name
+          SELECT users.username AS username, users.id AS id, llms.id AS llm_model_id, llms.name AS model_name, llms.display_name AS display_name
           FROM llm_models llms
           INNER JOIN users ON llms.user_id = users.id
           WHERE llms.enabled_chat_bot
@@ -232,9 +228,7 @@ module DiscourseAi
           DiscourseAi::AiBot::Playground.schedule_chat_reply(chat_message, channel, user, context)
         end
 
-        if plugin.respond_to?(:register_editable_topic_custom_field)
-          plugin.register_editable_topic_custom_field(:ai_persona_id)
-        end
+        plugin.register_editable_topic_custom_field(:ai_persona_id)
 
         plugin.add_api_key_scope(
           :discourse_ai,

@@ -1157,7 +1157,7 @@ cs:
       email_title: 'Příspěvek v „%{title}“ vyžaduje pozornost redakce'
       email_body: "%{link}\\n\\n%{message}\n"
     notify_user:
-      title: "Poslat @%{username} zprávu"
+      title: "Poslat zprávu na @%{username}"
       description: "Chci si s touto osobou o jejich příspěvku promluvit přímo a osobně."
       short_description: "Chci si s touto osobou o jejich příspěvku promluvit přímo a osobně."
       email_title: 'Váš příspěvek v „%{title}“'
@@ -1413,8 +1413,6 @@ cs:
       yaxis: "Den"
       description: "Požadavky API na běžné klíče API a uživatelské klíče API."
     consolidated_page_views_browser_detection:
-      title: "Konsolidované počty zobrazení stránek s detekcí prohlížeče (experimentální)"
-      title_legacy: "Konsolidované počty zobrazení stránek s detekcí prohlížeče (experimentální)"
       xaxis:
         page_view_anon_browser: "Anonymní prohlížeč"
         page_view_logged_in_browser: "Přihlášený prohlížeč"
@@ -1807,7 +1805,6 @@ cs:
     allow_duplicate_topic_titles_category: "Povolit témata se shodnými, duplicitními názvy, pokud se kategorie liší. Parametr allow_duplicate_topic_titles musí být zakázán."
     unique_posts_mins: "Kolik minut musí uplynout, než může uživatel zaslat příspěvek se stejným obsahem"
     educate_until_posts: "Když uživatel začne psát svých prvních (n) nových příspěvků, zobrazit v editoru vyskakovací panel pro vzdělávání nových uživatelů."
-    title: "Název tohoto webu. Viditelný pro všechny návštěvníky včetně anonymních uživatelů."
     site_description: "Popište tento web jednou větou. Viditelné pro všechny návštěvníky včetně anonymních uživatelů."
     short_site_description: "Stručný popis v několika slovech. Viditelný pro všechny návštěvníky včetně anonymních uživatelů."
     contact_email: "E-mailová adresa klíčové kontaktní osoby odpovědné za tento web. Používá se pro kritická oznámení a zobrazuje se také na <a href='%{base_path}/about' target='_blank'>/about</a>. Viditelná pro anonymní uživatele na veřejných stránkách."
@@ -2265,6 +2262,7 @@ cs:
     auto_silence_fast_typers_on_first_post: "Automatické ztišení uživatelů, kteří nesplňují práh rychlého psaní `fast typing threshold`"
     auto_silence_fast_typers_max_trust_level: "Maximální úroveň důvěry pro automatické ztišení rychle píšících"
     auto_silence_first_post_regex: "Regex nerozlišující velká a malá písmena, který po zadání způsobí, že první příspěvek uživatele bude umlčen a odeslán do fronty na schválení. Příklad: raging|a[bc]a , způsobí, že všechny příspěvky obsahující raging nebo aba nebo aca budou umlčeny jako první. Platí pouze pro první příspěvek. ZRUŠENO: Místo toho použijte Umlčet sledovaná slova."
+    reviewable_claiming: "Musí být obsah k revizi nárokován, než na něj bude možné reagovat?"
     reply_by_email_address: "Šablona emailé adresy pro odpověď emailem, např. %%{reply_key}@reply.myforum.com"
     forwarded_emails_behaviour: "Jak zacházet s přeposlaným e-mailem na Discourse. <a href='https://meta.discourse.org/t/-/62977' target='_blank'>Další informace</a>"
     email_total_attachment_size_limit_kb: "Maximální celková velikost souborů připojených k odchozím e-mailům. Nastavením na 0 zakážete odesílání příloh."
@@ -3387,14 +3385,9 @@ cs:
     user_automatically_silenced:
       title: "Uživatel automaticky ztišen"
       subject_template: "Nový uživatel %{username} byl ztišen nahlášeními komunity"
-      text_body_template: |
-        Toto je automatická zpráva.
-
-        Nový uživatel [%{username}](%{user_url}) byl automaticky ztišen, protože více uživatelů nahlásilo jeho příspěvky.
-
-        Prosím [proveďte revizi](%{base_url}/review). Pokud byl %{username} nesprávně ztišen od zveřejňování příspěvků, klikněte na tlačítko Zrušit ztišení na [administrátorské stránce tohoto uživatele](%{user_url}).
-
-        Tuto prahovou hodnotu lze změnit pomocí nastavení `silence_new_user`.
+    user_automatically_silenced_with_reason:
+      title: "Uživatel automaticky ztišen"
+      subject_template: "Nový uživatel %{username} byl ztišen nahlášeními komunity"
     spam_post_blocked:
       text_body_template: |
         Toto je automatická zpráva.
@@ -4222,18 +4215,12 @@ cs:
     nice_share:
       name: Zdařilé sdílení
       description: Sdílení příspěvku s 25 unikátními návštěvníky
-      long_description: |
-        Tento odznak se uděluje za sdílení odkazu, na který kliklo 25 externích návštěvníků. Děkujeme za šíření informací o našich diskusích a o této komunitě.
     good_share:
       name: Dobré sdílení
       description: Sdílení příspěvku s 300 unikátními návštěvníky
-      long_description: |
-        Tento odznak se uděluje za sdílení odkazu, na který kliklo 300 externích návštěvníků. Dobrá práce! Ukázali jste skvělou diskusi spoustě nových lidí a pomohli jste této komunitě růst.
     great_share:
       name: Výborné sdílení
       description: Sdílení příspěvku s 1000 unikátními návštěvníky
-      long_description: |
-        Tento odznak se uděluje za sdílení odkazu, na který kliklo 1000 externích návštěvníků. Wow! Propagovali jste zajímavou diskusi mezi obrovským množstvím nových čtenářů a pomohli jste nám tak výrazně rozšířit naši komunitu!
     first_like:
       name: První Líbí se
       description: Líbil se příspěvek
@@ -4462,29 +4449,21 @@ cs:
   wizard:
     title: "Nastavení Discourse"
     step:
-      introduction:
-        title: "O vašem webu"
-        description: "Toto se zobrazí na vaší přihlašovací stránce a dalších veřejných stránkách. Vždy je můžete později změnit."
+      setup:
+        title: "Začínáme"
         fields:
           title:
             label: "Název komunity"
-            placeholder: "Katčin klub"
-          site_description:
-            label: "Popište svou komunitu jednou větou"
-            placeholder: "Místo, kde Katka a její přátelé diskutují o nevšedních věcech."
           default_locale:
             label: "Jazyk"
-      privacy:
-        title: "Přístup pro členy"
-        fields:
           login_required:
             label: "Viditelnost"
             description: "Je vaše komunita veřejná nebo soukromá?"
             choices:
               public:
-                label: "Veřejné"
+                label: "Veřejná"
               private:
-                label: "Soukromé"
+                label: "Soukromá"
           invite_only:
             label: "Registrace"
             description: "Jak se mohou členové k této komunitě připojit?"
@@ -4500,82 +4479,6 @@ cs:
                 label: "Ne, noví členové se mohou připojit okamžitě"
               "yes":
                 label: "Ano, noví členové musí být schváleni moderátory"
-          chat_enabled:
-            placeholder: "Povolit konverzace (chat)"
-            extra_description: "Zapojte své členy v reálném čase"
-      ready:
-        title: "Váš web je připraven!"
-        description: "A je to! Provedli jste základní nastavení komunity. Nyní se na to můžete vrhnout a porozhlédnout se, napsat uvítací téma a posílat pozvánky!<br><br>Bavte se!"
-      styling:
-        title: "Vzhled"
-        fields:
-          color_scheme:
-            label: "Barevná paleta"
-          body_font:
-            label: "Písmo obsahu"
-          site_font:
-            label: "Písmo"
-          heading_font:
-            label: "Písmo nadpisů"
-          styling_preview:
-            label: "Náhled"
-          homepage_style:
-            label: "Styl domovské stránky"
-            choices:
-              latest:
-                label: "Nejnovější"
-                description: "Zobrazuje naposledy aktivní témata ve všech kategoriích, což pomáhá členům sledovat aktuální dění v diskusích, které je zajímají."
-              hot:
-                label: "Žhavé"
-                description: "Zobrazuje populární témata kombinováním nedávné a celkové popularity. Ukazuje, o čem členové ve vaší komunitě právě mluví."
-              categories_and_latest_topics:
-                label: "Kategorie s nejnovějšími tématy"
-                description: "Kombinuje poslední aktivní témata ve všech kategoriích se seznamem kategorií, jejich popisem a celkovým počtem témat."
-              categories_boxes:
-                label: "Boxy s kategoriemi"
-                description: "Zobrazuje kategorie a jejich popis v mřížce, což je ideální pro členy, aby viděli přehled dílčích komunit vašeho webu."
-      branding:
-        title: "Logo webu"
-        fields:
-          logo:
-            label: "Primární logo"
-            description: "Doporučený rozměr: 600 x 200"
-          logo_small:
-            label: "Čtvercové logo"
-            description: "Doporučená velikost: 512 x 512. Používá se také jako favicon a ikona aplikace na domovské obrazovce mobilu."
-      corporate:
-        title: "Vaše organizace"
-        description: "Následující informace budou použity ve vašich smluvních podmínkách a na stránkách O tomto webu. Neváhejte přeskočit, pokud žádná společnost neexistuje."
-        fields:
-          company_name:
-            label: "Název společnosti"
-            placeholder: "Acme, s. r. o."
-          governing_law:
-            label: "Rozhodné právo"
-            placeholder: "Občanský zákoník"
-          contact_url:
-            label: "Webová stránka"
-            placeholder: "https://www.example.com/contact-us"
-          city_for_disputes:
-            label: "Město pro řešení sporů"
-            placeholder: "Praha"
-          site_contact:
-            label: "Automatické zprávy"
-            description: "Všechny automatizované soukromé zprávy Discourse budou zasílány od tohoto uživatele, například upozornění na nahlášení a oznámení o dokončení zálohy."
-          contact_email:
-            label: "Kontaktní e-mail"
-            placeholder: "priklad@example.com"
-            description: "E-mailová adresa klíčového kontaktu odpovědného za tyto stránky. Používá se pro kritická oznámení a je uveden na vaší <a href='%{base_path}/about' target='_blank'>stránce O tomto webu</a> pro naléhavé záležitosti."
-      invites:
-        title: "Pozvi redaktory"
-        description: "Už jste skoro hotovi! Pozvěme několik lidí, aby pomohli <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>zasít vaše diskuse</a> zajímavými tématy a odpověďmi, aby se vaše komunita rozjela."
-        disabled: "Vzhledem k tomu, že lokální přihlášení je vypnuté, není možné poslat nikomu pozvánky. Přejděte prosím k dalšímu kroku."
-      finished:
-        title: "Váš Discourse je připraven!"
-        description: |
-          <p>Pokud budete mít někdy chuť tato nastavení změnit, <b>kdykoli znovu spusťte tohoto průvodce</b> nebo navštivte <a href='%{base_path}/admin' target='_blank'>sekci správce</a>; najdete ji vedle ikony klíče v nabídce webu.</p>
-          <p>Pomocí našeho výkonného systému pro tvorbu vizuálů si můžete Discourse snadno ještě více přizpůsobit. Příklady najdete na <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">nejlepších motivech a komponentách</a> na <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
-          <p>Bavte se a hodně štěstí <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>při budování vaší nové komunity!</a></p>
   onebox:
     discourse:
       user_joined_community: "Připojil/a se %{date}"
@@ -4603,8 +4506,13 @@ cs:
     unknown: "neznámá"
     api_key:
       revoked: Zrušeno
+    user_associated_posts_deleted: "Uživatel byl zcela odstraněn"
+    imap_email_deleted: "E-mail byl na serveru IMAP odstraněn"
+    imap_email_marked_as_spam: "E-mail byl na serveru IMAP přesunut do spamu."
+    auto_deleted_hidden_posts: "Automaticky smazané skryté příspěvky"
   reviewables:
     already_handled: "Děkujeme, ale tento příspěvek jsme již zkontrolovali a rozhodli jsme se, že jej není třeba znovu nahlašovat."
+    already_handled_and_user_not_exist: "Díky, ale někdo již revizi provedl a tento uživatel již neexistuje."
     priorities:
       low: "Nízká"
       medium: "Střední"
@@ -4614,26 +4522,67 @@ cs:
       low: "Nízká"
       medium: "Střední"
       high: "Vysoká"
+    must_claim: "Než budete jednat, musíte si položky nejdříve nárokovat."
+    user_claimed: "Tuto položku si nárokoval jiný uživatel."
+    missing_version: "Musíte zadat parametr verze."
+    conflict: "Došlo k konfliktu aktualizací, který vám v tom zabránil."
     reasons:
+      post_count: "Prvních několik příspěvků od každého uživatele musí schválit redakce. Viz %{link}."
+      trust_level: "Uživatelé s nízkou úrovní důvěry musí mít odpovědi schválené redakcí. Viz %{link}."
+      group: "Uživatelé, kteří nejsou v uvedených skupinách, musí mít odpovědi schválené redakcí. Viz %{link}."
+      new_topics_unless_trust_level: "Uživatelé s nízkou úrovní důvěry musí mít témata schválená redakcí. Viz %{link}."
+      fast_typer: "Nový uživatel napsal svůj první příspěvek podezřele rychle, podezření na chování bota nebo spammera. Viz %{link}."
       auto_silence_regex: "Nový uživatel, jehož první příspěvek odpovídá nastavení %{link} ."
+      watched_word:
+        one: "Tento příspěvek obsahoval sledované slovo, označené slovo je: %{words}. Více informací naleznete v %{link} ."
+        few: "Tento příspěvek obsahoval sledovaná slova, označená slova jsou: %{words}. Více informací naleznete v %{link} ."
+        many: "Tento příspěvek obsahoval sledovaná slova, označená slova jsou: %{words}. Více informací naleznete v %{link} ."
+        other: "Tento příspěvek obsahoval sledovaná slova, označená slova jsou: %{words}. Více informací naleznete v %{link} ."
       staged: "Nová témata a příspěvky pro předběžně založené uživatele musí schválit členové redakce. Viz %{link}."
+      category: "Příspěvky v této kategorii vyžadují ruční schválení redakcí. Viz %{link}."
+      must_approve_users: "Všichni noví uživatelé musí být schváleni redakcí. Viz %{link}."
+      invite_only: "Všichni noví uživatelé by měli být pozváni. Viz %{link}."
+      email_auth_res_enqueue: "Tento e-mail neprošel kontrolou DMARC, s největší pravděpodobností nepochází od toho, od koho se zdá, že pochází. Další informace naleznete v záhlavích e-mailu."
+      email_spam: "Tento e-mail byl označen jako spam podle hlavičky definované v %{link}."
+      suspect_user: "Tento nový uživatel zadal informace o profilu, aniž by si přečetl jakákoli témata nebo příspěvky, což silně naznačuje, že by mohl být spammer. Viz %{link}."
+      contains_media: "Tento příspěvek obsahuje vložená média. Viz %{link}."
+      queued_by_staff: "Člen redakce si myslí, že tento příspěvek potřebuje kontrolu. Do té doby zůstane skrytý."
+      links:
+        watched_word: nastavení sledovaných slov
+        category: nastavení kategorií
+      no_context:
+        watched_word: "Tento příspěvek obsahoval sledované slovo. Více informací naleznete v %{link}."
     actions:
       agree:
         title: "Ano"
       agree_and_keep:
         title: "Ponechat příspěvek"
         description: "Souhlasit s nahlášením, ale ponechat tento příspěvek beze změny."
+        complete: "Příspěvek ponechán beze změny."
       agree_and_keep_hidden:
         title: "Ponechat příspěvek skrytý"
         description: "Souhlasit s nahlášením a nechat příspěvek skrytý."
+        complete: "Příspěvek zůstal skryt."
       agree_and_suspend:
         title: "Pozastavit uživatele"
         description: "Schválit nahlášení a pozastavit uživatele."
+        complete: "Uživatel pozastaven."
       agree_and_silence:
         title: "Ztišit uživatele"
         description: "Schválit nahlášení a ztišit uživatele."
+        complete: "Uživatel ztišen."
       agree_and_restore:
+        title: "Obnovit příspěvek"
         description: "Obnov příspěvek, aby ho mohli vidět všichni ostatní uživatelé."
+        complete: "Příspěvek obnoven."
+      agree_and_hide:
+        title: "Skrýt příspěvek"
+        description: "Souhlasit s nahlášením a skrytím tohoto příspěvku + automaticky odeslat uživateli zprávu s výzvou k jeho úpravě."
+        complete: "Příspěvek byl skryt a uživatel byl upozorněn."
+      agree_and_edit:
+        title: "Souhlasit a upravit příspěvek"
+        description: "Souhlasit s nahlášením a otevřít okno editoru pro úpravu příspěvku."
+        complete: "Nahlášení potvrzeno, nyní můžete příspěvek upravit."
       delete:
         title: "Smazat"
         complete: "Příspěvek smazán."
@@ -4645,6 +4594,7 @@ cs:
         title: "Ignorovat nahlášení, smazat příspěvek a odpovědi"
         description: "Ignorovat nahlášení odstraněním z fronty, smazáním příspěvku a všech jeho odpovědí; pokud jde o první příspěvek, smaže i téma"
         confirm: "Jste si jisti, že chcete odstranit i odpovědi na příspěvek?"
+        complete: "Příspěvek a odpovědi byly odstraněny."
       delete_and_agree:
         title: "Odstranit příspěvek"
         description: "Souhlasit s nahlášením a smazat tento příspěvek. Pokud jde o první příspěvek, smaže i téma."
@@ -4653,16 +4603,20 @@ cs:
         title: "Smazat příspěvek a odpovědi"
         description: "Souhlasit s nahlášením a odstranit tento příspěvek a všechny jeho odpovědi; pokud jde první příspěvek, smaže i téma."
         confirm: "Jste si jisti, že chcete odstranit i odpovědi na příspěvek?"
+        complete: "Příspěvek a odpovědi byly odstraněny."
       disagree_and_restore:
         title: "Ne, obnovit příspěvek"
         description: "Obnov příspěvek, aby ho mohli vidět všichni ostatní uživatelé."
+        complete: "Příspěvek obnoven."
       disagree:
         title: "Ne"
         complete: "Nahlášení ignorováno."
       discard_post:
         title: "Zahodit příspěvek"
+        complete: "Příspěvek zahozen."
       revise_and_reject_post:
-        title: "Revize příspěvku..."
+        title: "Žádost o revizi..."
+        complete: "Příspěvek zamítnut a čeká na revizi."
       ignore:
         title: "ignorovat"
         complete: "Nahlášení ignorováno."
@@ -4695,36 +4649,89 @@ cs:
         block:
           title: "Odstranit a blokovat uživatele"
           description: "Uživatel bude smazán a zablokujeme jeho IP a e-mailovou adresu."
+          complete: "Uživatel smazán a zablokován."
       reject:
         title: "Odmítnout"
         bundle_title: "Odmítnout…"
       reject_and_suspend:
         title: "Odmítnout a pozastavit uživatele"
+        complete: "Příspěvek zamítnut a uživatel pozastaven."
       reject_and_silence:
         title: "Odmítnout a ztišit uživatele"
+        complete: "Příspěvek odmítnut a uživatel ztišen."
       reject_and_delete:
         title: "Odmítnout a odstranit příspěvek"
+        complete: "Příspěvek odmítnut a smazán."
       reject_and_keep_deleted:
         title: "Ponechat příspěvek smazaný"
+        complete: "Příspěvek odmítnut a ponechán smazaný."
       scrub:
         title: Očistit záznam
       approve_and_restore:
         title: "Schválit a obnovit příspěvek"
+        complete: "Příspěvek schválen a obnoven."
+      approve_and_unhide:
+        title: "Schválit a zviditelnit příspěvek"
+        complete: "Příspěvek schválen a zviditelněn"
+      post_actions:
+        bundle_title: "Co chcete s příspěvkem udělat?"
       no_action_post:
         title: "Bez akce"
+        description: "S příspěvkem nepodniknout žádnou akci"
+        complete: "S příspěvkem nebyla provedena žádná akce"
       delete_post:
         title: "Odstranit příspěvek"
+        description: "Smazat příspěvek"
         complete: "Příspěvek smazán"
+      hide_post:
+        title: "Skrýt příspěvek"
+        description: "Skrýt tento příspěvek z veřejného zobrazení"
+        complete: "Příspěvek byl skryt"
+      unhide_post:
+        title: "Zviditelnit příspěvek"
+        description: "Zviditelnit tento příspěvek všem uživatelům"
+        complete: "Příspěvek byl zviditelněn"
+      restore_post:
+        title: "Obnovit příspěvek"
+        description: "Obnovit tento smazaný příspěvek"
+        complete: "Příspěvek obnoven"
+      edit_post:
+        title: "Upravit příspěvek"
+        description: "Upravit obsah tohoto příspěvku"
+        complete: "Příspěvek upraven"
+      convert_to_pm:
+        title: "Převést na SZ"
+        description: "Převést tento příspěvek na soukromou zprávu"
+        complete: "Příspěvek převeden na soukromou zprávu"
+      user_actions:
+        bundle_title: "Co chcete udělat s tímto uživatelem?"
       no_action_user:
         title: "Bez akce"
+        description: "Proti tomuto uživateli nepodniknout žádná opatření"
+        complete: "Proti uživateli nebyla podniknuta žádná opatření"
       silence_user:
         title: "Ztišit uživatele"
+        description: "Zabránit uživateli v publikování příspěvků"
+        complete: "Uživatel ztišen"
+        reason: "Uživatel ztišen prostřednictvím fronty revizí"
       suspend_user:
         title: "Pozastavit uživatele"
+        description: "Pozastavit uživatelský účet"
+        complete: "Uživatel pozastaven"
+        reason: "Pozastavení uživatele prostřednictvím fronty revizí"
       delete_user:
         title: "Smazat uživatele"
+        description: "Smazat tohoto uživatele z fóra"
         complete: "Uživatel smazán"
         reason: "Smazáno prostřednictvím fronty revizí"
+      delete_and_block_user:
+        title: "Smazat a zablokovat"
+        description: "Smazat uživatele a zablokovat jeho IP adresu/e-mail"
+        complete: "Uživatel smazán a zablokován"
+      delete_user_block:
+        title: "Smazat a zablokovat"
+        description: "Smazat uživatele a zablokovat jeho IP adresu/e-mail"
+        complete: "Uživatel smazán a zablokován"
   email_style:
     html_missing_placeholder: "Šablona html musí obsahovat %{placeholder}"
   notification_level:
@@ -4732,6 +4739,8 @@ cs:
     mute_error: "Je nám líto, tohoto uživatele nemůžete ztišit."
     error: "Je nám líto, ale úroveň upozorňování pro tohoto uživatele nelze změnit."
     invalid_value: '"%{value}" není platná úroveň upozornění.'
+  discord:
+    not_in_allowed_guild: "Ověření se nezdařilo. Nejste členem povoleného Discord klanu."
   old_keys_reminder:
     title: "Připomenutí starých přihlašovacích údajů"
     body: |
@@ -4751,6 +4760,9 @@ cs:
     post_raw: "Pokračování diskuse z %{parent_url}.\n\nPředchozí diskuse:\n\n%{previous_topics}"
     small_action_post_raw: "Pokračujte v diskusi na %{new_title}."
   fallback_username: "uživatel"
+  user_status:
+    errors:
+      ends_at_should_be_greater_than_set_at: "Hodnota ends_at by měla být větší než set_at."
   form_templates:
     errors:
       invalid_yaml: "není platný řetězec YAML"

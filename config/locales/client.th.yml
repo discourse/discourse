@@ -353,8 +353,6 @@ th:
         other: "กระทู้นี้มี<b>%{count}</b>โพสต์ที่กำลังรอการอนุมัติ"
       title: "รีวิว"
       topic: "กระทู้:"
-      filtered_user: "ผู้ใช้"
-      filtered_reviewed_by: "รีวิวโดย"
       show_all_topics: "แสดงกระทู้ทั้งหมด"
       deleted_post: "(โพสต์ถูกลบ)"
       deleted_user: "(ผู้ใช้ถูกลบ)"
@@ -383,7 +381,7 @@ th:
           other: "%{count} ผู้ใช้"
       replies:
         other: "%{count} ตอบ"
-      edit: "แก้ไข"
+      edit: "แก้ไขโพสต์"
       save: "บันทึก"
       cancel: "ยกเลิก"
       filters:
@@ -441,6 +439,7 @@ th:
       user_label: "ผู้ใช้"
       notes:
         delete: "ลบ"
+      topic_label: "หัวข้อ"
       review_user: "ผู้ใช้"
       insights:
         activities:
@@ -698,7 +697,6 @@ th:
       topic_stat_sentence_month:
         other: "%{count}กระทู้ใหม่ในเดือนที่ผ่านมา"
     ip_lookup:
-      title: มองหาที่อยู่ไอพี
       hostname: ชื่อโฮสต์
       location: สถานที่
       location_not_found: (ไม่ทราบ)
@@ -2073,16 +2071,10 @@ th:
       allow_global_tags_label: "อนุญาตแท็กอื่นด้วย"
       required_tag_group:
         delete: "ลบ"
-      delete: "ลบหมวดหมู่"
-      create: "หมวดหมู่ใหม่"
       create_long: "สร้างหมวดหมู่ใหม่"
-      save: "บันทึกหมวดหมู่"
       creation_error: มีข้อผิดพลาดขณะสร้างหมวดหมู่
       save_error: มีข้อผิดพลาดในการบันทึกหมวดหมู่
-      name: "ชื่อหมวดหมู่"
       description: "รายละเอียด"
-      logo: "รูปโลโก้หมวดหมู่"
-      background_image: "รูปพื้นหลังหมวดหมู่"
       background_color: "สี"
       styles:
         icon: "ไอคอน"
@@ -2094,7 +2086,6 @@ th:
       delete_confirm: "คุณแน่ใจหรือว่าจะลบหมวดหมู่นี้ออก"
       delete_error: "มีข้อผิดพลาดในการลบหมวดหมู่"
       no_description: "กรุณาเพิ่มรายละเอียดสำหรับหมวดหมู่นี้"
-      change_in_category_topic: "แก้ไขรายละเอียด"
       already_used: "สีนี้ถูกใช้สำหรับหมวดหมู่อื่นแล้ว"
       security: "ความปลอดภัย"
       permissions:
@@ -2106,7 +2097,6 @@ th:
       images: "รูปภาพ"
       email_in: "ตั้งที่อยู่สำหรับอีเมลขาเข้า:"
       email_in_allow_strangers: "ยอมรับอีเมลจากผู้ใช้ที่ไม่ระบุชื่อและไม่มีบัญชี"
-      edit_permissions: "แก้ไขการอนุญาต"
       review_group_name: "ชื่อกลุ่ม"
       require_topic_approval: "กระทู้ใหม่ทั้งหมดต้องผ่านการอนุมัติจากผู้ดูแลระบบ"
       require_reply_approval: "คำตอบใหม่ทั้งหมดต้องผ่านการอนุมัติจากผู้ดูแลระบบ"
@@ -2128,10 +2118,8 @@ th:
         options:
           normal: "ปกติ"
           ignore: "ไม่สนใจ"
-          very_low: "ต่ำมาก"
           low: "ต่ำ"
           high: "สูง"
-          very_high: "สูงมาก"
       sort_options:
         default: "ค่าเริ่มต้น"
         likes: "ถูกใจ"
@@ -2144,9 +2132,6 @@ th:
       settings_sections:
         general: "ทั่วไป"
         email: "อีเมล"
-      list_filters:
-        all: "กระทู้ทั้งหมด"
-        none: "ไม่มีหมวดหมู่ย่อย"
     flagging:
       notify_action: "ข้อความส่วนตัว"
       official_warning: "คำเตือนอย่างเป็นทางการ"
@@ -2266,8 +2251,6 @@ th:
       top:
         title: "บน"
         help: "กระทู้ที่มีการเคลื่อนไหวมากที่สุดในปี เดือน สัปดาห์ หรือวันที่ผ่านมา"
-        all:
-          title: "ตลอดเวลา"
         yearly:
           title: "รายปี"
         quarterly:
@@ -2278,7 +2261,6 @@ th:
           title: "รายสัปดาห์"
         daily:
           title: "รายวัน"
-        all_time: "ตลอดเวลา"
         this_year: "ปี"
         this_quarter: "ไตรมาส"
         this_month: "เดือน"
@@ -2321,7 +2303,6 @@ th:
         go_to_unread_post: "%{shortcut}ไปยังโพสต์แรกที่ยังไม่ได้อ่าน"
       application:
         title: "แอปพลิเคชัน"
-        create: "%{shortcut} สร้างกระทู้ใหม่"
         notifications: "%{shortcut} เปิดการแจ้งเตือน"
         user_profile_menu: "%{shortcut} เปิดเมนูผู้ใช้"
         show_incoming_updated_topics: "%{shortcut} แสดงกระทู้ที่อัปเดต"
@@ -2425,7 +2406,6 @@ th:
         muted:
           title: "ปิด"
       groups:
-        new: "กลุ่มใหม่"
         one_per_topic_label: "จำกัดหนึ่งแท็กต่อหนึ่งกระทู้จากกลุ่มนี้"
         name_placeholder: "ชื่อ"
         save: "บันทึก"
@@ -2567,6 +2547,8 @@ th:
       upcoming_changes:
         name: "ชื่อ"
         preview: "แสดงตัวอย่าง"
+        enabled_for_options:
+          everyone: "ทุกคน"
         impact_roles:
           admins: "แอดมิน"
           moderators: "ผู้ดูแลระบบ"
@@ -2595,6 +2577,12 @@ th:
         fonts:
           backfill_modal:
             modal_yes: "ใช่"
+        welcome_banner:
+          form:
+            location:
+              label: "ที่อยู่"
+            header_anonymous:
+              placeholder: "ยินดีต้อนรับสู่ %{site_name}!"
         navigation:
           title: "การนำทาง"
         notifications:
@@ -3123,7 +3111,6 @@ th:
           success: "สำเร็จ"
           exists: "มีอยู่แล้ว"
           upload: "เพิ่มจากไฟล์"
-          upload_successful: "อัปโหลดสำเร็จแล้ว เพิ่มคำเรียบร้อย"
           html_label: "HTML"
         test:
           no_matches: "ไม่พบผลลัพธ์ที่ตรงกัน"
@@ -3441,40 +3428,3 @@ th:
         modal:
           categories: "หมวดหมู่"
           topics: "กระทู้"
-  wizard_js:
-    wizard:
-      back: "กลับ"
-      next: "ต่อไป"
-      upload_error: "ขออภัย เกิดความผิดพลาดขณะกำลังอัปโหลดไฟล์ กรุณาลองใหม่อีกครั้ง"
-      staff_count:
-        other: "ชุมชนของคุณมีทีมงาน %{count}คน รวมถึงคุณด้วย"
-      invites:
-        add_user: "เพิ่ม"
-        none_added: "คุณยังไม่ได้เชิญทีมงาน คุณแน่ใจหรือว่าต้องการดำเนินการต่อ"
-        roles:
-          admin: "แอดมิน"
-          moderator: "ผู้ดูแล"
-          regular: "ผู้ใช้ทั่วไป"
-      homepage_choices:
-        style_type:
-          categories: "หมวดหมู่"
-          topics: "หัวข้อ"
-      top_menu_items:
-        new: "ใหม่"
-        unread: "ยังไม่อ่าน"
-        top: "บน"
-        latest: "ล่าสุด"
-        categories: "หมวดหมู่"
-        read: "อ่าน"
-        bookmarks: "บุ๊คมาร์ค"
-      previews:
-        share_button: "แบ่งปัน"
-        reply_button: "ตอบ"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "ทุกหมวดหมู่"
-        table_headers:
-          topic: "หัวข้อ"
-          replies: "ตอบ"
-          views: "ดู"
-          activity: "กิจกรรม"

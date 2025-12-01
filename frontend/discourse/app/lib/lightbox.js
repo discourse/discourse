@@ -5,27 +5,35 @@ import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { helperContext } from "discourse/lib/helpers";
 import { renderIcon } from "discourse/lib/icon-library";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
+import quoteImage, {
+  canBuildImageQuote,
+} from "discourse/lib/lightbox/quote-image";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import {
   escapeExpression,
   postRNWebviewMessage,
 } from "discourse/lib/utilities";
-import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
 export async function loadMagnificPopup() {
   await waitForPromise(import("magnific-popup"));
 }
 
-export default async function lightbox(elem, siteSettings) {
+export default async function lightbox(
+  elem,
+  siteSettings,
+  additionalData = {}
+) {
   if (!elem) {
     return;
   }
 
+  const currentUser = helperContext()?.currentUser;
   const caps = helperContext().capabilities;
   const imageClickNavigation = caps.touch;
   const canDownload =
-    !siteSettings.prevent_anons_from_downloading_files || User.current();
+    !siteSettings.prevent_anons_from_downloading_files || !!currentUser;
+  const canQuoteImage = !!currentUser;
 
   if (siteSettings.experimental_lightbox) {
     const { default: PhotoSwipeLightbox } = await import("photoswipe/lightbox");
@@ -55,19 +63,36 @@ export default async function lightbox(elem, siteSettings) {
       errorMsg: i18n("lightbox.error"),
       showHideAnimationType: isTestEnv ? "none" : "zoom",
       counter: false,
+      escKey: false,
       tapAction,
       paddingFn,
       pswpModule: async () => await import("photoswipe"),
       appendToEl: isTesting() && document.getElementById("ember-testing"),
     });
 
+    const keyDownHandler = function (event) {
+      if (event.key !== "Escape") {
+        return;
+      }
+
+      event.stopPropagation();
+      event.preventDefault();
+
+      lightboxEl.pswp.close();
+    };
+
     lightboxEl.on("afterInit", () => {
       const el = lightboxEl.pswp.currSlide.data.element;
       el.querySelector(".meta")?.classList.add("open");
+
+      lightboxEl.pswp.element.addEventListener("keydown", (event) =>
+        keyDownHandler(event)
+      );
     });
 
     lightboxEl.on("close", function () {
       lightboxEl.pswp.element.classList.add("pswp--behind-header");
+      lightboxEl.pswp.element.removeEventListener("keydown", keyDownHandler);
     });
 
     lightboxEl.on("destroy", () => {
@@ -182,6 +207,39 @@ export default async function lightbox(elem, siteSettings) {
         },
       });
 
+      if (canQuoteImage) {
+        lightboxEl.pswp.ui.registerElement({
+          name: "quote-image",
+          order: 10,
+          isButton: true,
+          title: i18n("lightbox.quote"),
+          html: {
+            isCustomSVG: true,
+            inner:
+              '<path id="pswp__icn-quote" d="M2 13.5C2 9.356 5.356 6 9.5 6L10 6C11.11 6 12 6.894 12 8C12 9.106 11.11 10 10 10L9.5 10C7.569 10 6 11.57 6 13.5L6 14L10 14C12.21 14 14 15.79 14 18L14 22C14 24.21 12.21 26 10 26L6 26C3.794 26 2 24.21 2 22L2 20L2 18L2 13.5M18 13.5C18 9.356 21.36 6 25.5 6L26 6C27.11 6 28 6.894 28 8C28 9.106 27.11 10 26 10L25.5 10C23.57 10 22 11.57 22 13.5L22 14L26 14C28.21 14 30 15.79 30 18L30 22C30 24.21 28.21 26 26 26L22 26C19.79 26 18 24.21 18 22L18 20L18 18L18 13.5"/>',
+            outlineID: "pswp__icn-quote",
+          },
+          onInit: (el, pswp) => {
+            pswp.on("change", () => {
+              const slideData = pswp.currSlide?.data;
+              const slideElement = slideData?.element;
+              el.style.display = canBuildImageQuote(slideElement, slideData)
+                ? ""
+                : "none";
+            });
+          },
+          onClick: () => {
+            const slideData = lightboxEl.pswp.currSlide?.data;
+            const slideElement = slideData?.element;
+            quoteImage(slideElement, slideData).then((didQuote) => {
+              if (didQuote) {
+                lightboxEl.pswp.close();
+              }
+            });
+          },
+        });
+      }
+
       lightboxEl.pswp.ui.registerElement({
         name: "custom-counter",
         order: 6,
@@ -222,6 +280,7 @@ export default async function lightbox(elem, siteSettings) {
       }
 
       const imgInfo = el.querySelector(".informations")?.textContent || "";
+      const imgEl = el.tagName === "IMG" ? el : el.querySelector("img");
 
       if (!width || !height) {
         const dimensions = imgInfo.trim().split(" ")[0];
@@ -232,14 +291,64 @@ export default async function lightbox(elem, siteSettings) {
       data.thumbCropped = true;
 
       data.src = data.src || el.getAttribute("data-large-src");
-      data.title = el.title || el.alt;
+      data.origSrc =
+        imgEl?.getAttribute("data-orig-src") ||
+        el.getAttribute("data-orig-src") ||
+        null;
+      data.title = el.title || imgEl?.alt || imgEl?.title || null;
+      data.base62SHA1 =
+        imgEl?.getAttribute("data-base62-sha1") ||
+        el.getAttribute("data-base62-sha1") ||
+        null;
       data.details = imgInfo;
       data.w = data.width = width;
       data.h = data.height = height;
+      data.targetWidth =
+        el.getAttribute("data-target-width") ||
+        imgEl?.getAttribute("width") ||
+        null;
+      data.targetHeight =
+        el.getAttribute("data-target-height") ||
+        imgEl?.getAttribute("height") ||
+        null;
+
+      // So we can attach things like a Post model from the caller.
+      Object.keys(additionalData).forEach((key) => {
+        data[key] = additionalData[key];
+      });
 
       return data;
     });
 
+    const itemsToPreload = items.filter((item) => {
+      const { largeSrc, targetWidth, targetHeight } = item.dataset;
+      const hasImageSrc = largeSrc || item.getAttribute("href");
+      const missingDimensions = !targetWidth || !targetHeight;
+      const imgDimensions = item
+        .querySelector(".informations")
+        ?.textContent.trim()
+        .split(" ")[0];
+      const missingMetaData = !imgDimensions?.split(/x|×/).every((d) => !!d);
+
+      return hasImageSrc && missingDimensions && missingMetaData;
+    });
+
+    await Promise.all(
+      itemsToPreload.map(
+        (item) =>
+          new Promise((resolve) => {
+            const img = new Image();
+            img.src =
+              item.getAttribute("data-large-src") || item.getAttribute("href");
+            img.onload = () => {
+              item.setAttribute("data-target-width", img.naturalWidth);
+              item.setAttribute("data-target-height", img.naturalHeight);
+              resolve();
+            };
+            img.onerror = resolve;
+          })
+      )
+    );
     function tapAction(pt, event) {
       const pswp = lightboxEl.pswp;
       if (event.target.classList.contains("pswp__img")) {

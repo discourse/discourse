@@ -92,6 +92,7 @@ pl_PL:
     ai_helper_enabled_features: "Wybierz funkcje, które chcesz włączyć w pomocniku AI."
     post_ai_helper_allowed_groups: "Grupy użytkowników uprawnione do dostępu do funkcji pomocnika AI w postach"
     ai_helper_image_caption_model: "Wybierz model, którego chcesz użyć do generowania podpisów do obrazów"
+    ai_helper_post_illustrator_persona: "Osobowość do wykorzystania w funkcji ilustrowania wpisów przez pomocnika AI. Uwaga: aby ta funkcja działała, musisz również utworzyć narzędzie do generowania obrazów (Administrator > Wtyczki > Discourse AI > Narzędzia)."
     ai_embeddings_selected_model: "Użyj wybranego modelu do generowania osadzeń."
     ai_embeddings_generate_for_pms: "Generuj osadzenia dla wiadomości osobistych."
     ai_embeddings_semantic_related_topics_enabled: "Użyj wyszukiwania semantycznego dla powiązanych tematów."
@@ -140,6 +141,9 @@ pl_PL:
     ai_translation_max_post_length: "Maksymalna liczba znaków w poście do przetłumaczenia. Posty dłuższe niż ta liczba nie będą tłumaczone."
     ai_translation_backfill_max_age_days: "Maksymalny wiek posta i tematu do przetłumaczenia. Posty i tematy starsze niż ten wiek nie będą tłumaczone. Wartość 0 wyłącza uzupełnianie, ale nie wyłącza tłumaczenia nowych postów."
     ai_translation_backfill_hourly_rate: "Liczba wpisów i tematów do przetłumaczenia na godzinę podczas operacji uzupełniania. Ustaw na 0, aby wyłączyć automatyczne uzupełnianie tłumaczeń dla istniejących treści."
+    ai_translation_max_tokens_multiplier: "Mnożnik określający maksymalną liczbę tokenów do wykorzystania w tłumaczeniu. Domyślnie maksymalna liczba tokenów jest równa około dwukrotności do pięciokrotności liczby znaków we wpisie. Ten mnożnik można dostosować, aby uwzględnić modele myślenia lub rozumowania, które będą wykorzystywać więcej tokenów."
+    ai_usage_rollup_after_days: "Liczba dni przechowywania statystyk użycia AI dla każdego żądania przed ich przekształceniem w dzienne agregaty. Ustaw na 0, aby wyłączyć agregacje."
+    ai_audit_logs_purge_after_days: "Usuń dzienniki audytu API AI starsze niż podana liczba dni. Domyślnie około 6 miesięcy. Ustaw na 0, aby zachować je na czas nieokreślony."
   reviewables:
     reasons:
       flagged_by_toxicity: Wtyczka AI oznaczyła to po sklasyfikowaniu jako toksyczne.
@@ -261,8 +265,18 @@ pl_PL:
           name: "Kurs wymiany"
         stock_quote:
           name: "Notowania giełdowe (AlphaVantage)"
-        image_generation:
-          name: "Generator obrazów Flux (Together.ai)"
+        image_generation_category:
+          name: "Generowanie obrazu..."
+        image_generation_custom:
+          name: "Niestandardowe"
+        image_generation_openai:
+          name: "OpenAI"
+        image_generation_gemini:
+          name: "Nano Banan"
+        image_generation_flux:
+          name: "FLUX 1.1 Pro"
+        image_generation_flux2:
+          name: "FLUX 2 Pro"
         empty_tool:
           name: "Zacznij od zera..."
       name:
@@ -272,6 +286,11 @@ pl_PL:
         completion_request_failed: "Coś poszło nie tak podczas próby przedstawienia sugestii. Spróbuj ponownie."
         credit_limit_exceeded_user: "Osiągnąłeś limit kredytów AI dla swojego planu. Odpowiedzi będą niedostępne do czasu zresetowania limitu %{reset_time}."
         credit_limit_exceeded_bot: "Odpowiedzi AI są obecnie niedostępne z powodu limitów kredytów. Spróbuj ponownie %{reset_time}."
+        no_illustrator_persona: "Osobowość ilustratora wpisów nie jest skonfigurowany. Sprawdź ustawienia witryny."
+        no_image_generation_tool: "Osobowość ilustratora wpisów musi mieć dołączone narzędzie do generowania obrazów. Skonfiguruj narzędzie do generowania obrazów dla tej postaci w panelu administracyjnym."
+        no_image_generated: "Nie udało się wygenerować obrazu. Spróbuj ponownie lub sprawdź konfigurację narzędzia."
+        llm_model_not_configured: "Do generowania obrazów nie skonfigurowano żadnego modelu językowego. Skonfiguruj domyślny model językowy w ustawieniach witryny."
+        unknown_error: "Wystąpił nieoczekiwany błąd podczas generowania miniatur. Spróbuj ponownie."
       prompts:
         translate: Przetłumacz na %{language}
         generate_titles: Zaproponuj tytuły tematu
@@ -281,10 +300,6 @@ pl_PL:
         explain: "Wyjaśnij"
         illustrate_post: "Zilustruj post"
         replace_dates: "Inteligentne daty"
-      painter:
-        attribution:
-          stable_diffusion_xl: "Zdjęcie autorstwa Stable Diffusion XL"
-          dall_e_3: "Zdjęcie autorstwa DALL-E 3"
       image_caption:
         attribution: "Napisy z AI"
     share_ai:
@@ -367,7 +382,7 @@ pl_PL:
           name: "Deduplikator koncepcyjny"
           description: "Bot AI specjalizujący się w deduplikacji koncepcji"
         custom_prompt:
-          name: "Niestandardowy prompt"
+          name: "Niestandardowy monit"
           description: "Domyślna osobowość obsługująca funkcję niestandardowego monitu pomocnika"
         smart_dates:
           name: "Inteligentne daty"
@@ -377,7 +392,7 @@ pl_PL:
           description: "Domyślna persona obsługująca funkcję generowania tabeli Markdown pomocnika"
         post_illustrator:
           name: "Ilustrator postów"
-          description: "Generuje monity StableDiffusion, które zasilają funkcję ilustrowania postów pomocnika"
+          description: "Generuje obrazy do ilustrowania wpisów, korzystając z dostępnych narzędzi do generowania obrazów"
         proofreader:
           name: "Korektor"
           description: "Domyślna osobowość obsługująca funkcję korekty tekstu pomocnika"
@@ -644,6 +659,7 @@ pl_PL:
     llm_models:
       missing_provider_param: "%{param} nie może być pusty"
       bedrock_invalid_url: "Wypełnij wszystkie pola, aby korzystać z tego modelu."
+      bedrock_missing_auth: "AWS Bedrock wymaga skonfigurowania Access Key ID lub Role ARN"
     ai_staff_action_logger:
       updated: "zaktualizowane"
       set: "ustaw"
@@ -651,8 +667,10 @@ pl_PL:
     translation:
       errors:
         disabled: "Funkcja tłumaczenia AI nie jest w pełni skonfigurowana."
+        all_posts_translated: "Wszystkie wpisy tego tematu są już przetłumaczone."
     llm_credit_allocation:
-      limit_exceeded: "Osiągnąłeś limit kredytów AI. Spróbuj ponownie za %{reset_time}."
+      limit_exceeded_user: "Osiągnięto limit kredytu AI. Spróbuj ponownie za %{reset_time}. Aby uzyskać więcej informacji, skontaktuj się z administratorem witryny."
+      limit_exceeded_admin: "Osiągnięto limit kredytów AI. Spróbuj ponownie za %{reset_time}."
     errors:
       quota_exceeded: "Przekroczyłeś limit dla tego modelu. Spróbuj ponownie za %{relative_time}."
       quota_required: "Musisz określić maksymalną liczbę tokenów lub użyć dla tego modelu"

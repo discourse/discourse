@@ -16,7 +16,6 @@ zh_TW:
       assigned: "已指派"
       group_everyone: "所有使用者"
       assigned_to: "已指派給"
-      assigned_to_w_ellipsis: "已指派給..."
       unassign:
         title: "取消指派"
         title_w_ellipsis: "取消指派..."

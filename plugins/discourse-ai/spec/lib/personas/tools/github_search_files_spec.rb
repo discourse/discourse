@@ -88,5 +88,23 @@ RSpec.describe DiscourseAi::Personas::Tools::GithubSearchFiles do
       )
       expect(result[:error]).to be_nil
     end
+
+    it "limits results to MAX_FILE_SEARCH_RESULTS and adds a note when limit is reached" do
+      max_results = described_class::MAX_FILE_SEARCH_RESULTS
+      matching_files = (1..max_results + 1).map { |i| "lib/tools/search_tool_#{i}.rb" }
+      stub_request(
+        :get,
+        "https://api.github.com/repos/discourse/discourse-ai/git/trees/#{default_branch}?recursive=1",
+      ).to_return(
+        status: 200,
+        body: { tree: matching_files.map { |path| { path: path, type: "blob" } } }.to_json,
+      )
+
+      result = tool.invoke
+      expect(result[:matching_files].length).to eq(max_results)
+      expect(result[:note]).to eq(
+        "Result limit reached (#{max_results} files). There may be more matching files.",
+      )
+    end
   end
 end

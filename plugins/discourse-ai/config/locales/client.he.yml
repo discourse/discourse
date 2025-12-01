@@ -296,6 +296,7 @@ he:
           custom_prompt: "בקשה מותאמת אישית"
           image_caption: "הוספת כותרות לתמונות"
           translator: "תרגום"
+          post_illustrator: "איור פוסטים"
         translation:
           name: "תרגום"
           description: "תרגום תוכן לשפות נתמכות"
@@ -460,8 +461,7 @@ he:
           low: איכות נמוכה - הזול ביותר (256×256)
           medium: איכות בינונית (512×512)
           high: איכות גבוהה - האיטית ביותר (1024×1024)
-        tool_details: הצגת פרטי כלי
-        tool_details_help: יופיעו פרטי משתמשי קצה בנוגע לאילו כלים מודל השפה הוזנק.
+        show_thinking: הצגת חשיבה
         mentionable: לאפשר אזכורים
         mentionable_help: אם האפשרות פעולה, משתמשים בקבוצות המורדות יכולים לאזכר את המשתמש הזה בפוסטים, הבינה המלאכותית תגיב בתור הדמות הזאת.
         user: משתמש
@@ -541,6 +541,7 @@ he:
           rag_chunk_tokens_help: "מספר האסימונים לשימוש לכל נתח במודל ה־RAG. הגדלה תגדיל את כמות ההקשר בו יכולה להשתמש הבינה המלאכותית. (שינוי יסדר את כל ההעלאות במפתח מחדש)"
           rag_chunk_overlap_tokens: "העלאת אסימוני חפיפת חלקים"
           rag_chunk_overlap_tokens_help: "מספר האסימון לחפיפה בין נתחים במודל ה־RAG. (שינוי יסדר את כל ההעלאות במפתח מחדש)"
+          rag_llm_model_help: "מודל השפה שמשמש לזיהוי תווים אופטי במהלך סידור קובצי PDF ותמונות במפתח"
           show_indexing_options: "הצגת אפשרויות העלאה"
           hide_indexing_options: "הסתרת אפשרויות העלאה"
         uploads:
@@ -610,6 +611,7 @@ he:
         ai_bot_user: "משתמש בוט בינה מלאכותית"
         cost_input: "עלות קלט"
         cost_cached_input: "עלות קלט מאוחסן"
+        cost_cache_write: "עלות כתיבה למטמון"
         cost_output: "עלות פלט"
         save: "שמירה"
         edit: "עריכה"
@@ -617,7 +619,6 @@ he:
         back: "חזרה"
         confirm_delete: למחוק את המודל הזה?
         delete: מחיקה
-        seeded_warning: "המודל הזה מוגדר מראש באתר שלך ואי אפשר לערוך אותו."
         quotas:
           title: "מכסות שימוש"
           add_title: "יצירת מכסה חדשה"
@@ -636,6 +637,8 @@ he:
           hours: "שעות"
           max_tokens_required: "חובה להגדיר אם לא הוגדרה כמות שימושים מרבית"
           max_usages_required: "חובה להגדיר אם לא הוגדרה כמות אסימונים מרבית"
+        credit_allocation:
+          next_reset: "האסימונים מתאפסים ב־%{time}"
         usage:
           ai_bot: "בוט בינה מלאכותית"
           ai_helper: "מסייע (%{persona})"
@@ -652,26 +655,25 @@ he:
           other: "המודל הזה משמש את: %{settings}. אם ההגדרות שגויות היכולת לא תעבודנה כמצופה."
         model_description:
           none: "הגדרות כלליות שעובדות עבור רוב המודלים של השפות"
-          anthropic-claude-opus-4-1: "המודל החכם ביותר של Anthropic"
-          anthropic-claude-sonnet-4-0: "איזון מיטבי בין מהירות לעלות"
-          anthropic-claude-3-7-sonnet-latest: "איזון מיטבי בין מהירות לעלות (הדור הקודם)"
-          anthropic-claude-3-5-haiku-latest: "מהיר וחסכוני"
+          anthropic-claude-opus-4-5: "המודל החכם ביותר של Anthropic"
+          anthropic-claude-sonnet-4-5: "איזון מיטבי בין מהירות לעלות"
+          anthropic-claude-haiku-4-5: "מהיר וחסכוני"
+          google-gemini-3-pro: "המודל החכם ביותר של Google"
           google-gemini-2-5-pro: "מודל גדול רב־נדבכים שבנוי למגוון רחב של משימות"
-          google-gemini-2-0-flash: "קליל, מהיר וחסכוני עם עיבוד מרובה נדבכים (מהדור הקודם)"
           google-gemini-2-5-flash: "קליל, מהיר וחסכוני עם עיבוד מרובה נדבכים"
-          google-gemini-2-0-flash-lite: "מודל חסכוני ומהיר"
-          open_ai-o3: "מודל ההיגיון החזק ביותר מבית OpenAI"
-          open_ai-o4-mini: "מודל הגיון מתקדם וחסכוני"
-          open_ai-gpt-5: "מודל הדגל של OpenAI. הוא מתאים היטב לפתרון בעיות בתחומים שונים"
+          google-gemini-2-5-flash-lite: "המודל הקטן והחסכוני ביותר של Google"
+          open_ai-gpt-5-1: "מודל הדגל של OpenAI. מותאם לפתרון בעיות בתחומים שונים"
           open_ai-gpt-5-mini: "מספק איזון בין בינה, מהירות ועלות, מה שהופך אותו למודל שמעורר משיכה עבור מקרי שימוש רבים."
           open_ai-gpt-5-nano: "מודל GPT-5 החסכוני והמהיר ביותר."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "דגם רב־לשוני, קליל ויעיל"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "מודל רב־תכליתי חזק"
           mistral-mistral-large-latest: "המודל החזק ביותר של Mistral"
           mistral-pixtral-large-latest: "המודל החזק ביותר של Mistral שבנוי לעיבוד חזותי"
-          open_router-x-ai-grok-3-beta: "המודל האחרון של xAI"
+          open_router-x-ai-grok-4: "המודל האחרון של xAI"
           open_router-deepseek-deepseek-r1-0528-free: "מודל ההנמקה העדכני ביותר של DeepSeek"
           open_router-meta-llama-3-3-70b-instruct: "מודל רב־לשוני עם יכולות גבוהות"
+          groq-openai-gpt-oss-120b: "מודל משקל פתוח מהשורה הראשונה מבית OpenAI"
+          groq-openai-gpt-oss-20b: "מודל קל משקל, מהיר ופתוח של OpenAI"
         preseeded_model_description: "מודל קוד פתוח שהוגדר מראש ומשתמש ב־%{model}"
         configured:
           title: "LLMs (מודלי שפה גדולים) מוגדרים"
@@ -698,7 +700,6 @@ he:
           vision_enabled: "אם האפשרות פעילה, הבינה מלאכותית תנסה להבין תמונות. כתלות בתמיכה של המודל בעיבוד תמונות. נתמך על ידי המודלים העדכניים ביותר מבית Anthropic,‏ Google ו־OpenAI."
           enabled_chat_bot: "אם האפשרות פעילה, משתמשים יכולים לבחור את המודל הזה בעת יצירת הודעות פרטיות עם בוט הבינה המלאכותית"
           cost_input: "עלות הקלט לכל מיליון אסימונים למודל זה"
-          cost_cached_input: "עלות הקלט המאוחסן לכל מיליון אסימונים למודל זה"
           cost_output: "עלות הפלט לכל מיליון אסימונים למודל זה"
           cost_measure: "$/מיליון אסימונים"
         providers:
@@ -734,6 +735,7 @@ he:
           reasoning_tokens: "כמות אסימונים המשמשים לנימוק"
           disable_temperature: "השבתת טמפרטורה (חלק ממודלי החשיבה אינם תומכים בטמפרטורה)"
           enable_responses_api: "הפעלת API לתגובות (נחוץ במודלים מסוימים של OpenAI)"
+          effort: "רמת מאמץ (Claude Opus 4.5 בלבד)"
       related_topics:
         title: "נושאים קשורים"
         pill: "קשורים"
@@ -780,12 +782,16 @@ he:
           title: "תמונות ממוזערות מומלצות"
           select: "בחירה"
           selected: "נבחרים"
+          try_again: "ניסיון נוסף"
         image_caption:
           button_label: "מתן כותרת עם בינה מלאכותית"
           generating: "הכותרת מתחוללת…"
           credits: "הכותרת נוספה ע״י בינה מלאכותית"
           save_caption: "שמירה"
         no_content_error: "יש להוסיף קודם תוכן כדי לבצע עליו פעולות בינה מלאכותית"
+      errors:
+        credit_limit_dialog:
+          title: "הגעת לגבול האסימונים של הבינה המלאכותית"
       reviewables:
         model_used: "דגם בשימוש:"
         accuracy: "דיוק:"
@@ -982,7 +988,6 @@ he:
         loading_convo: "הדיון נטען"
         collapse: "צמצום"
         timed_out: "Discobot לא הצליח למצוא תגליות. משהו השתבש."
-        user_setting: "הפעלת תגליות חיפוש"
         tooltip:
           header: "חיפוש מופעל בינה מלאכותית"
           content: "חיפוש בשפה טבעית מופעל על גבי %{model}"

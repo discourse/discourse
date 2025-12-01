@@ -1,8 +1,8 @@
 import { LinkTo } from "@ember/routing";
+import WebhookEvents from "discourse/admin/components/webhook-events";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import WebhookEvents from "admin/components/webhook-events";
 
 export default <template>
   <LinkTo @route="adminWebHooks" class="go-back">

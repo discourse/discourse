@@ -65,6 +65,8 @@ module DiscoursePostEvent
     end
 
     def set_next_date
+      return if closed
+
       next_date_result = calculate_next_date
 
       return event_dates.update_all(finished_at: Time.current) if next_date_result.nil?
@@ -78,6 +80,8 @@ module DiscoursePostEvent
     end
 
     def set_topic_bump
+      return if closed
+
       date = nil
 
       return if reminders.blank? || starts_at.nil?

@@ -621,7 +621,7 @@ RSpec.describe Admin::SiteSettingsController do
 
           put "/admin/site_settings/push_notifications_icon.json",
               params: {
-                push_notifications_icon: nil,
+                push_notifications_icon: "",
               }
 
           expect(response.status).to eq(204)
@@ -629,7 +629,7 @@ RSpec.describe Admin::SiteSettingsController do
         end
 
         it "can reset the site setting to the default" do
-          SiteSetting.push_notifications_icon = nil
+          SiteSetting.push_notifications_icon = ""
           default_upload = Upload.find(-1)
 
           put "/admin/site_settings/push_notifications_icon.json",

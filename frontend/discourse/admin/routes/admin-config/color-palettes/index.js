@@ -1,11 +1,13 @@
 import Route from "@ember/routing/route";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import ColorScheme from "discourse/admin/models/color-scheme";
+import Theme from "discourse/admin/models/theme";
 import { ajax } from "discourse/lib/ajax";
-import ColorScheme from "admin/models/color-scheme";
-import Theme from "admin/models/theme";
 
 export default class AdminConfigColorPalettesIndexRoute extends Route {
   async model() {
-    return await ajax("/admin/config/colors");
+    const value = await ajax("/admin/config/colors");
+    return value;
   }
 
   setupController(controller, model) {
@@ -15,7 +17,9 @@ export default class AdminConfigColorPalettesIndexRoute extends Route {
       : null;
     controller.set(
       "model",
-      model.palettes.map((palette) => ColorScheme.create(palette))
+      new TrackedArray(
+        model.palettes.map((palette) => ColorScheme.create(palette))
+      )
     );
     controller.set("defaultTheme", defaultTheme);
 

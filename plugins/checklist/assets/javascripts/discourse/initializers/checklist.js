@@ -1,10 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { withSilencedDeprecations } from "discourse/lib/deprecated";
-import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { iconHTML } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { i18n } from "discourse-i18n";
 import richEditorExtension from "../../lib/rich-editor-extension";
 
 function initializePlugin(api) {
@@ -60,15 +57,6 @@ export function checklistSyntax(elem, postDecorator) {
   addUlClasses(boxes);
 
   const postModel = postDecorator?.getModel();
-
-  // TODO (glimmer-post-stream): remove this when we remove the legacy post stream code
-  const postWidget = withSilencedDeprecations(
-    "discourse.post-stream-widget-overrides",
-    () =>
-      getOwnerWithFallback(this).lookup("service:site").useGlimmerPostStream
-        ? null
-        : postDecorator?.widget
-  );
 
   if (!postModel?.can_edit) {
     return;
@@ -156,16 +144,7 @@ export function checklistSyntax(elem, postDecorator) {
           }
         );
 
-        await postModel.save({
-          raw: newRaw,
-          edit_reason: i18n("checklist.edit_reason"),
-        });
-
-        // TODO (glimmer-post-stream): remove the following code when removing the legacy post stream code
-        if (postWidget) {
-          postWidget.attrs.isSaving = false;
-          postWidget.scheduleRerender();
-        }
+        await postModel.save({ raw: newRaw });
       } catch (e) {
         popupAjaxError(e);
       } finally {

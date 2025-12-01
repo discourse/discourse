@@ -190,7 +190,6 @@ hy:
     software_update_prompt:
       message: "Մենք թարմացրել ենք այս կայքը, <span>խնդրում ենք թարմացնել էջը</span>, որպեսզի ամեն ինչ սահուն աշխատի:"
       dismiss: "Չեղարկել"
-    bootstrap_mode: "Ինչպես սկսել"
     back_button: "Ետ"
     welcome_banner:
       header:
@@ -248,7 +247,7 @@ hy:
     joined: "Միացել է "
     admin_title: "Ադմին"
     show_more: "ցույց տալ ավելին"
-    show_help: "տարբերակներ"
+    show_help: "Տարբերակներ"
     links: "Հղումներ"
     links_lowercase:
       one: "հղում"
@@ -565,7 +564,6 @@ hy:
       title: "Վերանայում"
       topic: "Թեմա՝"
       filtered_topic: "Դուք ֆիլտրել եք դիտման համար՝ միայն մեկ թեմայի բովանդակությունը "
-      filtered_user: "Օգտատեր"
       filtered_reviewed_by: "Վերանայվել է"
       show_all_topics: "ցուցադրել բոլոր թեմաները"
       deleted_post: "(գրառումը ջնջված է)"
@@ -607,7 +605,7 @@ hy:
       replies:
         one: "%{count} պատասխան"
         other: "%{count} պատասխան"
-      edit: "Խմբագրել"
+      edit: "Խմբագրել Գրառումը"
       save: "Պահպանել"
       cancel: "Չեղարկել"
       new_topic: "Այս կետի հաստատումը նոր թեմա կստեղծի"
@@ -628,7 +626,6 @@ hy:
           created_at: "Ստեղծվել է At"
           created_at_asc: "Ստեղծվել է At (հետադարձ տեսակավորում)"
         priority:
-          title: "Մինիմալ Գերակայություն"
           any: "(ցանկացած)"
           low: "Բարձր"
           medium: "Միջին"
@@ -695,6 +692,7 @@ hy:
       user_label: "Օգտատեր"
       notes:
         delete: "Ջնջել"
+      topic_label: "Թեմա"
       review_user: "Օգտատեր"
       copy_link: "Պատճենել հղումը"
       insights:
@@ -1113,7 +1111,6 @@ hy:
         one: "Կատեգորիաներ (ևս %{count})…"
         other: "Կատեգորիաներ (ևս %{count})…"
     ip_lookup:
-      title: IP Հասցեի Որոնում
       hostname: Հոսթի անունը
       location: Վայրը
       location_not_found: (անհայտ)
@@ -3162,18 +3159,11 @@ hy:
       required_tag_group:
         delete: "Ջնջել"
       topic_featured_link_allowed: "Թույլատրել հանրահայտ հղումները այս կատեգորիայում"
-      delete: "Ջնջել Կատեգորիան"
-      create: "Նոր Կատեգորիա"
       create_long: "Ստեղծել նոր Կատեգորիա"
-      save: "Պահել Կատեգորիան"
-      slug: "Կատեգորիայի Սլագը"
       slug_placeholder: "(Ընտրովի) գծիկավոր-բառեր url-ի համար"
       creation_error: 'Կատեգորիայի ստեղծման ժամանակ տեղի է ունեցել սխալ:'
       save_error: 'Կատեգորիան պահելիս տեղի է ունեցել սխալ:'
-      name: "Կատեգորիայի Անունը"
       description: "Նկարագրույթուն"
-      logo: "Կատեգորիայի Լոգոյի Նկարը"
-      background_image: "Կատեգորիայի Ֆոնի Նկարը"
       background_color: "Գույն"
       color_validations:
         cant_be_empty: "չի կարող դատարկ լինել"
@@ -3187,9 +3177,7 @@ hy:
       color_placeholder: "Ցանկացած վեբ-գույն"
       delete_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս կատեգորիան:"
       delete_error: "Այս կատեգորիան ջնջելիս սխալ է տեղի ունեցել:"
-      list: "Ցուցադրել Կատեգորիաները"
       no_description: "Խնդրում ենք այս կատեգորիայի համար ավելացնել նկարագրություն:"
-      change_in_category_topic: "Խմբագրել Նկարագրությունը"
       already_used: "Այս գույնը օգտագործվել է մեկ այլ կատեգորիայի կողմից"
       security: "Անվտանգություն"
       permissions:
@@ -3211,19 +3199,13 @@ hy:
       subcategory_num_featured_topics: "Մայր կատեգորիայի էջում հանրահայտ թեմաների քանակը"
       all_topics_wiki: "Դարձնել նոր թեմաները wiki լռելյայն"
       subcategory_list_style: "Ենթակատեգորիաների Ցանկի Ոճը՝"
-      sort_order: "Թեմաների Ցանկը Դասավորել Ըստ՝"
-      default_view: "Լռելյայն Թեմաների Ցանկը՝"
-      default_top_period: "Լռելյայն թոփ ժամանակահատվածը՝"
       allow_badges_label: "Այս կատեգորիայում թույլ տալ կրծքանշանների շնորհումը"
-      edit_permissions: "Խմբագրել Թույլտվությունները"
       review_group_name: "խմբի անունը"
       require_topic_approval: "Բոլոր նոր թեմաների համար պահանջել մոդերատորի հաստատումը"
       require_reply_approval: "Բոլոր նոր պատասխանների համար պահանջել մոդերատորի հաստատումը "
       this_year: "այս տարի"
       position: "Դիրքը կատեգորիայի էջում."
-      default_position: "Լռելյայն Դիրքը"
       minimum_required_tags: "Թեմայում պահանջվող պիտակների նվազագույն քանակը՝"
-      parent: "Մայր Կատեգորիա"
       num_auto_bump_daily: "Օրեկան ավտոմատ բարձրացվող բաց թեմաների քանակը՝"
       navigate_to_first_post_after_read: "Բոլոր թեմաները կարդալուց հետո տեղափոխվել դեպի առաջին գրառում"
       notifications:
@@ -3241,18 +3223,14 @@ hy:
           title: "Խլացված"
           description: "Դուք երբեք ծանուցում չեք ստանա այս կատեգորիաի նոր թեմաների մասին, և դրանք չեն հայտնվի վերջիններում:"
       search_priority:
-        label: "Որոնման Առաջնահերթություն"
         options:
           normal: "Նորմալ"
           ignore: "Անտեսել"
-          very_low: "Շատ Ցածր"
           low: "Բարձր"
           high: "Բարձր"
-          very_high: "Շատ Բարձր"
       sort_options:
         default: "լռելյայն"
         likes: "Հավանումների"
-        op_likes: "Սկզբնական Գրառման Հավանումների"
         views: "Դիտումների"
         posts: "Գրառումների"
         activity: "Ակտիվության"
@@ -3271,8 +3249,6 @@ hy:
         moderation: "Մոդերացիա"
         appearance: "Արտաքին տեսք"
         email: "Էլ. հասցե"
-      list_filters:
-        none: "ենթակատեգորիաներ չկան"
     flagging:
       title: "Շնորհակալություն մեր համայնքում կարգուկանոն պահպանելու համար։"
       action: "Բողոքել Գրառումը"
@@ -3445,7 +3421,7 @@ hy:
         title: "Ամենահայտնի"
         help: "վերջին տարվա, ամսվա, շաբաթվա կամ օրվա ընթացքում ամենաակտիվ թեմաները"
         all:
-          title: "Ամբողջ Ժամանակ"
+          title: "Ամբողջ ժամանակ"
         yearly:
           title: "Տարվա Ընթացքում"
         quarterly:
@@ -3504,7 +3480,6 @@ hy:
         go_to_unread_post: "%{shortcut} Գնալ դեպի առաջին չընթերցված գրառումը"
       application:
         title: "Հավելված"
-        create: "%{shortcut} Ստեղծել նոր թեմա"
         notifications: "%{shortcut} Բացել ծանուցումները"
         user_profile_menu: "%{shortcut} Բացել օգտատիրոջ մենյուն"
         show_incoming_updated_topics: "%{shortcut} Ցուցադրել թարմացված թեմաները"
@@ -3652,10 +3627,7 @@ hy:
           title: "Խլացված"
           description: "Դուք ծանուցում չեք ստանա այս պիտակով որևէ նոր թեմայի մասին, և դրանք չեն հայտնվի Ձեր չկարդացածների ցանկում:"
       groups:
-        title: "Պիտակների Խմբեր"
-        new: "Նոր Խումբ"
         one_per_topic_label: "Մեկ թեմայում թույլատրել ոչ ավելի, քան մեկ պիտակ այս խմբից"
-        new_name: "Նոր Պիտակների Խումբ"
         name_placeholder: "Անուն"
         save: "Պահպանել"
         delete: "Ջնջել"
@@ -3854,6 +3826,8 @@ hy:
       upcoming_changes:
         name: "Անուն"
         preview: "Նախադիտում"
+        enabled_for_options:
+          everyone: "Բոլորը"
         impact_roles:
           moderators: "Մոդերատորներ"
           staff: "Անձնակազմ"
@@ -3883,6 +3857,12 @@ hy:
         fonts:
           backfill_modal:
             modal_yes: "Այո"
+        welcome_banner:
+          form:
+            location:
+              label: "Տեղակայություն"
+            header_anonymous:
+              placeholder: "Բարի գալուստ %{site_name}!"
         navigation:
           title: "Նավիգացիա"
         notifications:
@@ -4814,7 +4794,6 @@ hy:
           success: "Հաջողություն"
           exists: "Արդեն գոյություն ունի"
           upload: "Վերբեռնել ֆայլից"
-          upload_successful: "Վերբեռնումը հաջող էր: Բառերն ավելացվել են:"
           html_label: "HTML"
         test:
           button_label: "Փորձարկել"
@@ -5318,50 +5297,3 @@ hy:
           categories: "Կատեգորիաներ"
           topics: "Թեմաներ"
           replace: "Փոխարինել"
-  wizard_js:
-    wizard:
-      back: "Ետ"
-      next: "Հաջորդը"
-      step-text: "Քայլը"
-      step: "%{current} %{total}-ից"
-      uploading: "Վերբեռնվում է…"
-      upload_error: "Ներողություն, այդ ֆայլը վերբեռնելիս տեղի է ունեցել սխալ: Խնդրում ենք կրկին փորձել:"
-      staff_count:
-        one: "Ձեր համայնքը ունի անձնակազմի %{count} անդամ՝ Դուք:"
-        other: "Ձեր համայնքն ունի անձնակազմի %{count} անդամ՝ Դուք ներառյալ:"
-      invites:
-        add_user: "ավելացնել"
-        none_added: "Դուք չեք հրավիրել անձնակազմի որևէ անդամ: Դուք համոզվա՞ծ եք, որ ցանկանում եք շարունակել:"
-        roles:
-          admin: "Ադմին"
-          moderator: "Մոդերատոր"
-          regular: "Սովորական Օգտատեր"
-      homepage_choices:
-        custom:
-          label: "Մասնավոր"
-        style_type:
-          categories: "կատեգորիա"
-          topics: "թեմա"
-      top_menu_items:
-        new: "Նոր"
-        unread: "Չկարդացած"
-        top: "Ամենահայտնի"
-        latest: "Վերջինը"
-        hot: "Թոփ"
-        categories: "Կատեգորիաներ"
-        unseen: "Չդիտված"
-        read: "Կարդացել է"
-        bookmarks: "Էջանշաններ"
-      previews:
-        share_button: "Կիսվել"
-        reply_button: "Պատասխանել"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "բոլոր կատեգորիաները"
-        category_names:
-          site_feedback: "Կայքի Արձագանքներ"
-        table_headers:
-          topic: "Թեմա"
-          replies: "Պատասխաններ"
-          views: "Դիտում"
-          activity: "Ակտիվության"

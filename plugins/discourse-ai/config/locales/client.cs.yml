@@ -232,6 +232,7 @@ cs:
           title: "Navrhované miniatury"
           select: "Vybrat"
           selected: "Zaškrtnuté"
+          try_again: "Zkusit znovu"
         image_caption:
           button_label: "Popisek pomocí AI"
           generating: "Generování popisku..."
@@ -365,3 +366,5 @@ cs:
         tooltip:
           actions:
             disable: "Vypnout"
+      user_preferences:
+        empty: "Momentálně nejsou k dispozici žádná relevantní nastavení."

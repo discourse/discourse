@@ -147,6 +147,9 @@ export default class ComposerService extends Service {
     this._showPreview = value;
   }
 
+  /**
+   * @returns {import("discourse/controllers/topic").default};
+   */
   get topicController() {
     return getOwner(this).lookup("controller:topic");
   }
@@ -1182,32 +1185,23 @@ export default class ComposerService extends Service {
         if (result.responseJson.action === "enqueued") {
           this.postWasEnqueued(result.responseJson);
           if (result.responseJson.pending_post) {
-            let pendingPosts = this.get("topicController.model.pending_posts");
+            let pendingPosts = this.topicController.model.pending_posts;
             if (pendingPosts) {
-              pendingPosts.pushObject(result.responseJson.pending_post);
+              pendingPosts.push(result.responseJson.pending_post);
             }
           }
 
           return this.destroyDraft().then(() => {
             this.close();
-            // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-            this.appEvents.trigger("post-stream:refresh");
             return result;
           });
         }
 
         if (this.get("model.editingPost")) {
           this.appEvents.trigger("composer:edited-post");
-          // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-          this.appEvents.trigger("post-stream:refresh", {
-            id: parseInt(result.responseJson.id, 10),
-          });
           if (result.responseJson.post.post_number === 1) {
             this.appEvents.trigger("header:update-topic", composer.topic);
           }
-        } else {
-          // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-          this.appEvents.trigger("post-stream:refresh");
         }
 
         if (result.responseJson.action === "create_post") {
@@ -1275,9 +1269,6 @@ export default class ComposerService extends Service {
       staged = composer.get("stagedPost");
     }
 
-    // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-    this.appEvents.trigger("post-stream:posted", staged);
-
     this.messageBus.pause();
     promise.finally(() => this.messageBus.resume());
 
@@ -1307,6 +1298,7 @@ export default class ComposerService extends Service {
         );
       }
 
+      this.set("model.loading", false);
       this.close();
       this.toasts.success({
         duration: "short",
@@ -1317,8 +1309,6 @@ export default class ComposerService extends Service {
       this.selectedTranslationLocale = null;
     } catch (e) {
       popupAjaxError(e);
-    } finally {
-      this.set("model.loading", false);
     }
   }
 

@@ -291,10 +291,10 @@ de:
     software_update_prompt:
       message: "Wir haben diese Website aktualisiert. <span>Bitte aktualisiere</span>, damit alles reibungslos funktioniert."
       dismiss: "Verwerfen"
-    bootstrap_mode: "Erste Schritte"
     back_button: "Zurück"
     welcome_banner:
       header:
+        new_members: "Willkommen, %{preferred_display_name}!"
         logged_in_members: "Willkommen zurück, %{preferred_display_name}!"
         anonymous_members: "Willkommen bei %{site_name}!"
       search_placeholder: "Suche"
@@ -360,7 +360,7 @@ de:
     joined: "Beigetreten"
     admin_title: "Administration"
     show_more: "mehr anzeigen"
-    show_help: "Erweiterte Suche"
+    show_help: "Optionen"
     links: "Links"
     links_lowercase:
       one: "Link"
@@ -709,7 +709,7 @@ de:
       title: "Überprüfen"
       topic: "Thema:"
       filtered_topic: "Du hast nach zu prüfenden Inhalten in einem einzelnen Thema gefiltert."
-      filtered_user: "Benutzer"
+      filtered_user: "Gemeldeter Benutzer"
       filtered_reviewed_by: "Überprüft von"
       show_all_topics: "alle Themen zeigen"
       deleted_post: "(Beitrag gelöscht)"
@@ -760,7 +760,7 @@ de:
       replies:
         one: "%{count} Antwort"
         other: "%{count} Antworten"
-      edit: "Bearbeiten"
+      edit: "Beitrag bearbeiten"
       save: "Speichern"
       cancel: "Abbrechen"
       new_topic: "Das Bestätigen dieses Elements wird ein neues Thema erstellen"
@@ -848,9 +848,10 @@ de:
           noun: "Beitrag"
       flagged_as: "Gemeldet als"
       post_flagged_as: "Beitrag gemeldet als"
+      chat_flagged_as: "Chat gemeldet als"
       queued_post_label: "Beitrag in der Warteschlange"
+      queued_topic_label: "Thema in der Warteschlange"
       user_label: "Benutzer"
-      assigned_to: "Zugeordnet zu"
       moderator_actions: "Moderator-Aktionen"
       timeline_and_notes: "Zeitleiste & Notizen"
       timeline:
@@ -867,13 +868,12 @@ de:
         note_added_by: "Moderator-Notiz von %{username} · %{relativeDate}"
         no_events: "Keine Zeitleistenereignisse zum Anzeigen"
       notes:
-        add_note_description: "Nur für Moderatoren sichtbar. Verwende diese Notiz, um Kontext oder Entscheidungen zur Überprüfung hinzuzufügen."
         add_note_button: "Notiz hinzufügen"
         placeholder: "Schreib deine Notiz hier …"
         chars_remaining: "%{count} Zeichen verbleibend"
         delete_note: "Diese Notiz löschen"
         delete: "Löschen"
-      new_topic_label: "Neues Thema"
+      topic_label: "Thema"
       queued_user: "Benutzer in der Warteschlange"
       posted_in: "Veröffentlicht in"
       flagged_user: "Gemeldeter Benutzer"
@@ -889,11 +889,10 @@ de:
         flagged_by_users:
           one: "Gemeldet von %{count} eindeutigen Benutzer"
           other: "Gemeldet von %{count} eindeutigen Benutzern"
-        similar_posts: "Ähnliche frühere Beiträge"
-        flagged_in_timeframe: "%{count} zuvor gemeldet"
-        user_activity: "Benutzeraktivität"
+        flagged_in_timeframe:
+          one: "%{count} bestätigte Meldung"
+          other: "%{count} bestätigte Meldungen"
         activities:
-          new_account: "neues Konto"
           trust_level: "Vertrauensstufe: %{trustLevelName}"
           posts:
             one: "%{count} Beitrag"
@@ -901,7 +900,6 @@ de:
         solution_marked: "Lösung markiert"
         topic_has_solution: "Dieses Thema hat eine Lösung"
         visibility: "Sichtbarkeit"
-        topic_unlisted: "Dieses Thema ist nicht gelistet, sondern nur über einen direkten Link zugänglich. Es ist nicht öffentlich."
       help:
         moderation_guide: "Leitfaden zur Discourse-Moderation"
         flag_priorities: "Verwalten der Benutzerreputation und Meldeprioritäten"
@@ -1324,7 +1322,6 @@ de:
         one: "Kategorien (%{count} weitere) …"
         other: "Kategorien (%{count} weitere) …"
     ip_lookup:
-      title: IP-Adressen-Abfrage
       hostname: Hostname
       location: Standort
       location_not_found: (unbekannt)
@@ -2721,7 +2718,9 @@ de:
         title: "Beitrag übersetzen"
         select: "Übersetzung auswählen"
         save: "Übersetzung speichern"
-        original_content: "Inhalt des Originalbeitrags"
+        original_content: "Original-Beitrag"
+        translation_preview: "Übersetzungsvorschau"
+        original: "Original"
         translation: "Übersetzen"
         placeholder: "Übersetzung für den Beitrag hier eingeben …"
       group_mentioned_limit:
@@ -2890,7 +2889,7 @@ de:
           desc: "Antworten, ohne das Datum der neuesten Antwort zu ändern"
         toggle_unlisted:
           label: Sichtbarkeit umschalten
-          desc: Nicht aufgelistete Themen, die nur für Mitglieder über einen direkten Link zugänglich sind
+          desc: "Nicht aufgelistete Themen sind nur über einen direkten Link zugänglich"
       reload: "Neu laden"
       ignore: "Ignorieren"
       image_alt_text:
@@ -2910,6 +2909,7 @@ de:
         remove: "Link entfernen"
         visit: "Link in externer Registerkarte öffnen"
         link_copied: "Link kopiert!"
+      unsupported_token: "Der Rich-Text-Editor unterstützt nicht alle Funktionen, die in diesem Beitrag verwendet werden; es wird daher auf den Markdown-Editor ausgewichen."
     notifications:
       tooltip:
         regular:
@@ -3300,7 +3300,7 @@ de:
         progress:
           one: "Fortschritt: <strong>%{count}</strong> Thema"
           other: "Fortschritt: <strong>%{count}</strong> Themen"
-        silent: "Führe diese Aktion lautlos durch."
+        notify: "Informiere die Benutzer über diese Änderung."
         performing: "Massenoperationen werden durchgeführt, bitte warten …"
         completed: "Massenoperationen erfolgreich abgeschlossen!"
       none:
@@ -3464,13 +3464,14 @@ de:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Durchstöbere alle Kategorien</a>, <a href='%{basePath}/latest'>sieh dir die aktuellen Themen</a> oder die Top-Themen an:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Durchstöbere alle Schlagwörter</a> oder <a href='%{basePath}/latest'>sieh dir die aktuellen Themen an</a>."
       browse_latest_topics: "Aktuelle Themen durchstöbern"
+      browse_new_replies: "Neue Antworten durchstöbern"
+      browse_new_topics: "Neue Themen durchstöbern"
       suggest_create_topic: Bereit, <a href>eine neue Unterhaltung zu beginnen?</a>
       jump_reply: "Zum ursprünglichen Ort des Beitrags springen"
       jump_reply_aria: "Zum Beitrag von @%{username} an dessen ursprünglichen Ort springen"
       jump_reply_button: "Zum Beitrag springen"
       deleted: "Das Thema wurde gelöscht"
       slow_mode_update:
-        title: "Langsamer Modus"
         select: "Benutzer dürfen nur einmal in diesem Thema schreiben:"
         description: "Um in schnellen oder umstrittenen Diskussionen eine durchdachte Diskussion zu fördern, müssen Benutzer warten, bevor sie in diesem Thema erneut einen Beitrag verfassen können."
         enable: "Aktivieren"
@@ -3822,6 +3823,7 @@ de:
         clear_all: "Alle löschen"
         actions: "Massenaktionen"
     post:
+      accessible_heading: "Beitrag von %{username} %{date}"
       confirm_delete: "Möchtest du wirklich diesen Beitrag löschen?"
       quote_reply: "Zitieren"
       quote_reply_shortcut: "Zitieren (oder q drücken)"
@@ -3845,8 +3847,13 @@ de:
       deleted_by_author_simple: "(Beitrag vom Verfasser gelöscht)"
       collapse: "zuklappen"
       load_more_replies: "weitere Antworten laden"
+      load_more_posts_above: "Darüber weitere Beiträge laden"
+      load_more_posts_below: "Darunter weitere Beiträge laden"
       sr_collapse_replies: "Eingebettete Antworten einklappen"
       sr_load_more_replies: "Weitere eingebettete Antworten laden"
+      loading_more_posts_above: "Weitere Beiträge werden darüber geladen..."
+      loading_more_posts_below: "Weitere Beiträge werden darunter geladen..."
+      loading_complete: "Laden abgeschlossen"
       sr_date: "Beitragsdatum"
       sr_expand_replies:
         one: "Dieser Beitrag hat %{count} Antwort"
@@ -3911,7 +3918,6 @@ de:
         post_language_selector:
           none: "Keine"
         edit_warning:
-          message: "Dies ist ein übersetzter Beitrag.<br><br> Willst du den Originalbeitrag auf %{language} bearbeiten oder diese spezielle Übersetzung bearbeiten?"
           action_original: "Originalbeitrag bearbeiten"
           action_translation: "Diese Übersetzung bearbeiten"
       errors:
@@ -4148,22 +4154,12 @@ de:
         add: "Erforderliche Schlagwortgruppe hinzufügen"
         placeholder: "Schlagwortgruppe auswählen …"
       topic_featured_link_allowed: "Erlaube hervorgehobene Links in dieser Kategorie"
-      delete: "Kategorie löschen"
-      create: "Neue Kategorie"
       create_long: "Eine neue Kategorie erstellen"
-      save: "Kategorie speichern"
-      slug: "Sprechender Name für URL der Kategorie"
       slug_placeholder: "(Optional) durch Bindestrich getrennte Wörter für URL"
       creation_error: Beim Erstellen der Kategorie ist ein Fehler aufgetreten.
       save_error: Beim Speichern der Kategorie ist ein Fehler aufgetreten.
-      name: "Name der Kategorie"
-      untitled: "Unbenannte Kategorie"
       description: "Beschreibung"
-      logo: "Logo für Kategorie"
-      logo_dark: "Logobild der Kategorie „Dunkler Modus“"
       logo_description: "Empfohlenes Seitenverhältnis 1:1 mit einer Mindestgröße von 200 px. Wenn du nichts angibst, wird kein Bild angezeigt."
-      background_image: "Hintergrundbild für Kategorie"
-      background_image_dark: "Dunkles Kategorie-Hintergrundbild"
       style: "Stile"
       background_color: "Farbe"
       foreground_color: "Textfarbe"
@@ -4218,23 +4214,15 @@ de:
       all_topics_wiki: "Mache neue Themen standardmäßig zu Wikis."
       allow_unlimited_owner_edits_on_first_post: "Erlaube unbegrenzte Änderungen des Eigentümers am ersten Beitrag"
       subcategory_list_style: "Listenstil für Unterkategorien:"
-      sort_order: "Themenliste sortieren nach:"
-      default_view: "Standard-Themenliste:"
-      default_top_period: "Standard-Zeitraum für angesagte Themen:"
-      default_list_filter: "Standard-Listenfilter:"
       allow_badges_label: "Erlaube das Verleihen von Abzeichen in dieser Kategorie."
-      edit_permissions: "Berechtigungen bearbeiten"
       reviewable_by_group: "Zusätzlich zum Team können Inhalte in dieser Kategorie auch überprüft werden von:"
       review_group_name: "Gruppenname"
       require_topic_approval: "Erfordere Moderator-Genehmigung für alle neuen Themen"
       require_reply_approval: "Erfordere Moderator-Genehmigung für alle neuen Antworten"
       this_year: "dieses Jahr"
       position: "Position auf der Kategorien-Seite:"
-      default_position: "Standardposition"
       position_disabled: "Die Kategorien werden in der Reihenfolge ihrer Aktivität angezeigt. Um die Reihenfolge der Kategorien in den Listen zu kontrollieren, aktiviere die Einstellung <a href='%{url}'>„fixed category positions“</a>."
       minimum_required_tags: "Mindestanzahl an Schlagwörtern, die ein Thema erfordert"
-      default_slow_mode: '„Langsamer Modus“ für neue Themen in dieser Kategorie aktivieren.'
-      parent: "Übergeordnete Kategorie"
       num_auto_bump_daily: "Anzahl der offenen Themen, die automatisch täglich nach oben verschoben werden:"
       auto_bump_cooldown_days: "Mindestanzahl an Tagen, bevor das gleiche Thema erneut angesprochen wird:"
       navigate_to_first_post_after_read: "Gehe zum ersten Beitrag, nachdem Themen gelesen wurden"
@@ -4256,18 +4244,14 @@ de:
           title: "Stummgeschaltet"
           description: "Du erhältst nie mehr Benachrichtigungen über neue Themen in dieser Kategorie und die Themen werden auch nicht in der Liste der aktuellen Themen erscheinen."
       search_priority:
-        label: "Suchpriorität"
         options:
           normal: "Normal"
           ignore: "Ignorieren"
-          very_low: "Sehr niedrig"
           low: "Niedrig"
           high: "Hoch"
-          very_high: "Sehr hoch"
       sort_options:
         default: "Standard"
         likes: "„Gefällt mir“"
-        op_likes: "„Gefällt mir“ des Originalbeitrags"
         views: "Aufrufe"
         posts: "Beiträge"
         activity: "Aktivität"
@@ -4287,8 +4271,7 @@ de:
         appearance: "Erscheinungsbild"
         email: "E-Mail"
       list_filters:
-        all: "alle Themen"
-        none: "keine Unterkategorien"
+        all: "Alle Themen"
       colors_disabled: "Du kannst keine Farben auswählen, weil du den „category style“ „none“ verwendest."
     anonymous_flagging:
       title: "Illegale Inhalte melden"
@@ -4594,7 +4577,6 @@ de:
         go_to_unread_post: "%{shortcut} Zum ersten ungelesenen Beitrag springen"
       application:
         title: "Anwendung"
-        create: "%{shortcut} Neues Thema erstellen"
         notifications: "%{shortcut} Benachrichtigungen öffnen"
         hamburger_menu: "%{shortcut} Navigationsmenü öffnen"
         user_profile_menu: "%{shortcut} Benutzermenü öffnen"
@@ -4810,18 +4792,13 @@ de:
           description: "Du wirst nicht über neue Themen mit diesem Schlagwort benachrichtigt und sie werden nicht unter „Ungelesen“ auftauchen."
       groups:
         back_btn: "Zurück zu allen Schlagwörtern"
-        title: "Schlagwortgruppen"
         about_heading: "Wähle eine Schlagwortgruppe oder erstelle eine neue."
         about_heading_empty: "Erstelle eine neue Schlagwortgruppe, um loszulegen"
         about_description: "Schlagwortgruppen helfen dir, Berechtigungen für viele Schlagwörter an einem Ort zu verwalten."
-        new: "Neue Gruppe"
-        new_title: "Neue Gruppe erstellen"
-        edit_title: "Schlagwortgruppe bearbeiten"
         tags_label: "Schlagwörter in dieser Gruppe"
         parent_tag_label: "Übergeordnetes Schlagwort"
         parent_tag_description: "Schlagwörter aus dieser Gruppe können nur verwendet werden, wenn das übergeordnete Schlagwort vorhanden ist."
         one_per_topic_label: "Beschränke diese Gruppe auf ein Schlagwort pro Thema"
-        new_name: "Neue Schlagwortgruppe"
         name_placeholder: "Name"
         save: "Speichern"
         delete: "Löschen"
@@ -5311,6 +5288,9 @@ de:
         save_groups: "Gruppen speichern"
         select_groups: "Gruppen auswählen …"
         preview: "Vorschau"
+        enabled_for_options:
+          everyone: "Jeder"
+          staff: "Nur Team-Mitglieder"
         impact_roles:
           admins: "Administratoren"
           moderators: "Moderatoren"
@@ -5447,6 +5427,23 @@ de:
               other: "Du hast die Standardschriftgröße aktualisiert. Möchtest du diese Änderung auf %{count} bestehende Benutzer anwenden?"
             modal_yes: "Ja"
             modal_no: "Nein, die Änderung soll sich nur zukünftig auswirken"
+        welcome_banner:
+          form:
+            text_color:
+              label: "Textfarbe"
+            page_visibility:
+              options:
+                top_menu_pages: "Obere Menüseiten"
+                all_pages: "Alle Seiten"
+            location:
+              label: "Ort"
+              options:
+                above_topic_content: "Über dem Themeninhalt"
+                below_site_header: "Unter der Kopfzeile"
+            header_logged_in:
+              placeholder: "Willkommen zurück, %{preferred_display_name}!"
+            header_anonymous:
+              placeholder: "Willkommen bei %{site_name}!"
         navigation:
           title: "Navigation"
           header_description: "Konfiguriere die Navigationslinks und Menüpunkte für deine Website. Dazu gehören die Position und das Verhalten des Hauptnavigationsmenüs, die Quicklinks oben auf der Homepage und die Administrator-Seitenleiste."
@@ -7236,7 +7233,6 @@ de:
           success: "Erfolg"
           exists: "Existiert bereits"
           upload: "Aus Datei hinzufügen"
-          upload_successful: "Hochladen erfolgreich. Wörter wurden hinzugefügt."
           case_sensitivity_label: "Groß- und Kleinschreibung wird unterschieden"
           case_sensitivity_description: "Nur Wörter mit passender Groß- und Kleinschreibung"
           html_label: "HTML"
@@ -7328,10 +7324,7 @@ de:
             second: "Option 2"
             third: "Option 3"
         edit_category:
-          toggle_freeform: "Formularvorlage deaktiviert"
-          toggle_form_template: "Formularvorlage aktiviert"
           select_template: "Formularvorlagen auswählen"
-          select_template_help: "Formularvorlagen hinzufügen/bearbeiten"
         errors:
           multiple_tags_not_allowed: 'Du kannst nicht mehr Schlagwörter aus „%{tag_name}“ auswählen. Um Probleme zu vermeiden, verwende die Formularvorlage'
       impersonate:
@@ -8074,77 +8067,4 @@ de:
           replace: "Ersetzen"
   wizard_js:
     wizard:
-      jump_in: "Jetzt loslegen!"
-      finish: "Installation verlassen"
-      back: "Zurück"
-      next: "Nächstes"
-      configure_more: "Mehr konfigurieren …"
-      step-text: "Schritt"
-      step: "%{current} von %{total}"
-      upload: "Datei hochladen"
-      uploading: "Wird hochgeladen …"
-      upload_error: "Entschuldige, es gab einen Fehler beim Hochladen der Datei. Bitte versuche es noch einmal."
-      staff_count:
-        one: "Deine Community hat %{count} Team-Mitglied (du)."
-        other: "Deine Community hat %{count} Team-Mitglieder (einschließlich dir)."
-      invites:
-        add_user: "Hinzufügen"
-        none_added: "Du hast bisher keine Team-Mitglieder eingeladen. Möchtest du wirklich fortfahren?"
-        roles:
-          admin: "Administration"
-          moderator: "Moderator"
-          regular: "Normaler Benutzer"
-      homepage_choices:
-        custom:
-          label: "Benutzerdefiniert"
-          description: "Zeige eine %{type}-orientierte Homepage. Die Benutzer landen auf %{landingPage}."
-        style_type:
-          categories: "Kategorie"
-          topics: "Thema"
-      top_menu_items:
-        new: "Neu"
-        unread: "Ungelesen"
-        top: "Angesagt"
-        latest: "Aktuelle"
-        hot: "Heiß"
-        categories: "Kategorien"
-        unseen: "Ungesehen"
-        read: "Gelesen"
-        bookmarks: "Lesezeichen"
-      previews:
-        topic_title: "Welche Bücher liest du gerade?"
-        share_button: "Teilen"
-        reply_button: "Antworten"
-        topic_preview: "Themenvorschau"
-        homepage_preview: "Vorschau der Homepage"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "alle Kategorien"
-        topic_titles:
-          what_books: "Welche Bücher liest du gerade?"
-          what_movies: "Welche Filme hast du in letzter Zeit gesehen?"
-          random_fact: "Kuriosität des Tages"
-          tv_show: "Eine Fernsehsendung empfehlen"
-          what_hobbies: "Was sind deine Hobbys?"
-          what_music: "Was hörst du gerade?"
-          funniest_thing: "Das Lustigste, was du heute gesehen hast"
-          share_art: "Teile deine Kunst!"
-        topic_ops:
-          what_books: |
-            Wir alle lieben es zu lesen, also lasst uns dieses Thema nutzen, um unsere
-            aktuellen oder kürzlich gelesenen Bücher zu teilen. Ich bin ein Fantasy-Fan und habe
-            zum 100. Mal „Der Herr der Ringe“ gelesen.
-            Was ist mit dir?
-        category_descriptions:
-          icebreakers: "Lerne deine Community-Mitglieder mit lustigen Fragen kennen."
-          news: "Diskutiere die neuesten Nachrichten und Ereignisse."
-          site_feedback: "Teile deine Meinung über die Community mit und schlage Verbesserungen vor."
-        category_names:
-          icebreakers: "Eisbrecher"
-          news: "Nachrichten"
-          site_feedback: "Website-Feedback"
-        table_headers:
-          topic: "Thema"
-          replies: "Antworten"
-          views: "Aufrufe"
-          activity: "Aktivität"
+      jump_in: "Los geht's!"

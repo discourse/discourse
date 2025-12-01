@@ -17,6 +17,11 @@ pl_PL:
         few: "edytuje"
         many: "edytuje"
         other: "edytuje"
+      translating:
+        one: "tłumaczenie"
+        few: "tłumaczenia"
+        many: "tłumaczenia"
+        other: "tłumaczenia"
       replying_to_topic:
         one: "odpowiada"
         few: "odpowiada"

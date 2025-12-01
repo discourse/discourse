@@ -253,6 +253,7 @@ fr:
           custom_prompt: "Invite personnalisée"
           image_caption: "Images de légende"
           translator: "Traducteur"
+          post_illustrator: "Illustrateur de publications"
         translation:
           name: "Traduction"
           description: "Traduit le contenu dans les langues prises en charge"
@@ -391,8 +392,6 @@ fr:
           low: Qualité faible - moins cher (256x256)
           medium: Qualité moyenne (512x512)
           high: Qualité élevée - plus lent (1024x1024)
-        tool_details: Afficher les détails de l'outil
-        tool_details_help: Affiche aux utilisateurs finaux des informations sur les outils que le modèle linguistique a déclenchés.
         mentionable: Autoriser les mentions
         mentionable_help: Si cette option est activée, les utilisateurs des groupes autorisés peuvent mentionner cet utilisateur dans les publications, l'IA répondra en tant que personnage.
         user: Utilisateur
@@ -549,7 +548,6 @@ fr:
         back: "Retour"
         confirm_delete: Voulez-vous vraiment supprimer ce modèle ?
         delete: Supprimer
-        seeded_warning: "Ce modèle est préconfiguré sur votre site et ne peut pas être modifié."
         quotas:
           title: "Quotas d'utilisation"
           add_title: "Créer un nouveau quota"
@@ -584,22 +582,18 @@ fr:
           other: "Ce modèle est actuellement utilisé par %{settings}. Si la configuration est incorrecte, les fonctionnalités ne fonctionneront pas comme prévu. "
         model_description:
           none: "Paramètres généraux qui fonctionnent pour la plupart des modèles linguistiques"
-          anthropic-claude-opus-4-1: "Le modèle le plus intelligent d'Anthropic"
-          anthropic-claude-sonnet-4-0: "Équilibre optimal entre vitesse et coût"
-          anthropic-claude-3-7-sonnet-latest: "Équilibre optimal entre vitesse et coût (génération précédente)"
-          anthropic-claude-3-5-haiku-latest: "Rapide et économique"
+          anthropic-claude-opus-4-5: "Le modèle le plus intelligent d'Anthropic"
+          anthropic-claude-sonnet-4-5: "Équilibre optimal entre vitesse et coût"
+          anthropic-claude-haiku-4-5: "Rapide et économique"
           google-gemini-2-5-pro: "Grand modèle multimodal capable d'effectuer un large éventail de tâches"
-          google-gemini-2-0-flash: "Léger, rapide et économique avec raisonnement multimodal (génération précédente)"
           google-gemini-2-5-flash: "Léger, rapide et économique avec raisonnement multimodal"
-          google-gemini-2-0-flash-lite: "Modèle économique et à faible latence"
-          open_ai-o4-mini: "Modèle de raisonnement avancé et économique"
           open_ai-gpt-5-mini: "Offre un équilibre entre intelligence, rapidité et coût, ce qui en fait un modèle attrayant pour de nombreux cas d'utilisation."
           open_ai-gpt-5-nano: "Le modèle GPT-5 le plus rapide et le plus économique."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Modèle multilingue léger et efficace"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "Modèle polyvalent et puissant"
           mistral-mistral-large-latest: "Le modèle le plus puissant de Mistral"
           mistral-pixtral-large-latest: "Le modèle de Mistral le plus performant en matière de vision"
-          open_router-x-ai-grok-3-beta: "Le dernier modèle de xAI"
+          open_router-x-ai-grok-4: "Le dernier modèle de xAI"
           open_router-deepseek-deepseek-r1-0528-free: "Le dernier modèle de raisonnement de DeepSeek"
           open_router-meta-llama-3-3-70b-instruct: "Modèle multilingue hautement performant"
         preseeded_model_description: "Modèle open source préconfiguré utilisant %{model}"
@@ -627,7 +621,6 @@ fr:
           vision_enabled: "Si cette option est activée, l'IA tentera de comprendre les images. Cela dépend du modèle utilisé prenant en charge la vision. Pris en charge par les derniers modèles d'Anthropic, Google et OpenAI."
           enabled_chat_bot: "Si cette option est activée, les utilisateurs peuvent sélectionner ce modèle lors de la création de MP avec le robot IA"
           cost_input: "Le coût d'entrée par million de jetons pour ce modèle"
-          cost_cached_input: "Le coût d'entrée mis en cache par million de jetons pour ce modèle"
           cost_output: "Le coût de sortie par million de jetons pour ce modèle"
           cost_measure: "$/million de jetons"
         providers:
@@ -707,6 +700,7 @@ fr:
           title: "Miniatures suggérées"
           select: "Sélectionner"
           selected: "Sélectionné"
+          try_again: "Réessayer"
         image_caption:
           button_label: "Légende avec IA"
           generating: "Génération de la légende..."
@@ -900,7 +894,6 @@ fr:
         loading_convo: "Chargement de la conversation"
         collapse: "Réduire"
         timed_out: "Discobot n'a trouvé aucune découverte. Un problème est survenu."
-        user_setting: "Activer les découvertes de recherche"
         tooltip:
           header: "Recherche alimentée par l'IA"
           content: "Recherche en langage naturel propulsée par %{model}"

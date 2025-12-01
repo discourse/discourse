@@ -190,7 +190,6 @@ te:
     software_update_prompt:
       message: "మేము ఈ సైట్‌ని నవీకరించాము. ప్రతిదీ సజావుగా పని చేస్తుందని నిర్ధారించుకోవడానికి <span>దయచేసి ఈ పేజీని రిఫ్రెష్ చేయండి</span>."
       dismiss: "రద్దుచేయండి"
-    bootstrap_mode: "ప్రారంభించడం"
     back_button: "వెనుకకు"
     welcome_banner:
       header:
@@ -247,7 +246,7 @@ te:
     joined: "చేరినారు"
     admin_title: "అడ్మిన్"
     show_more: "మరిన్ని చూపించండి"
-    show_help: "ఐచ్చికాలు"
+    show_help: "ఎంపికలు"
     links: "లింకులు"
     links_lowercase:
       one: "లంకె"
@@ -500,7 +499,6 @@ te:
       title: "సమీక్ష"
       topic: "విషయం:"
       filtered_topic: "మీరు ఒకే విషయంలో సమీక్షించదగిన కంటెంట్‌కు ఫిల్టర్ చేసారు."
-      filtered_user: "సభ్యుడు"
       filtered_reviewed_by: "ద్వారా సమీక్షించబడింది"
       show_all_topics: "అన్ని విషయలను చూపించండి"
       deleted_post: "(పోస్ట్ తొలగించబడింది)"
@@ -542,7 +540,7 @@ te:
       replies:
         one: "%{count} ప్రత్యుత్తరం"
         other: "%{count} ప్రత్యుత్తరాలు"
-      edit: "సవరించండి"
+      edit: "పోస్ట్‌ని సవరించండి"
       save: "సేవ్ చేయండి"
       cancel: "రద్దు చేయండి"
       new_topic: "ఈ విషయాన్ని ఆమోదించడం వలన కొత్త విషయం సృష్టించబడుతుంది"
@@ -563,7 +561,6 @@ te:
           created_at: "వద్ద సృష్టించబడింది"
           created_at_asc: "వద్ద సృష్టించబడింది (ఆరోహణ క్రమం)"
         priority:
-          title: "కనీస ప్రాధాన్యత"
           any: "(ఏదైనా)"
           low: "తక్కువ"
           medium: "మధ్యస్థం"
@@ -630,6 +627,7 @@ te:
       user_label: "సభ్యుడు"
       notes:
         delete: "తొలగించు"
+      topic_label: "విషయం"
       review_user: "సభ్యుడు"
       insights:
         activities:
@@ -1034,7 +1032,6 @@ te:
         one: "వర్గాలు (%{count} మరిన్ని)…"
         other: "వర్గాలు (%{count} మరిన్ని)…"
     ip_lookup:
-      title: IP చిరునామా శోధన
       hostname: హోస్ట్ పేరు
       location: ప్రాంతం
       location_not_found: (తెలీని)
@@ -2683,7 +2680,6 @@ te:
         progress:
           one: "పురోగతి: <strong>%{count}</strong> విషయం"
           other: "పురోగతి: <strong>%{count}</strong> విషయాలు"
-        silent: "ఈ చర్యను నిశ్శబ్దంగా చేయండి."
         performing: "సమూహ కార్యకలాపాలను అమలు చేస్తోంది, దయచేసి వేచి ఉండండి…"
         completed: "సమూహ కార్యకలాపాలు విజయవంతంగా పూర్తయ్యాయి!"
       none:
@@ -2832,7 +2828,6 @@ te:
       jump_reply_aria: "@%{username}యొక్క పోస్ట్‌ అసలు స్థానం కి వెళ్లండి"
       deleted: "ఈ విషయం తొలగించబడింది"
       slow_mode_update:
-        title: "స్లో మోడ్"
         select: "సభ్యులు ప్రతి ఒక్కసారి మాత్రమే ఈ విషయంలో పోస్ట్ చేయవచ్చు:"
         description: "వేగంగా కదిలే లేదా వివాదాస్పద చర్చలలో ఆలోచనాత్మక చర్చను ప్రోత్సహించడానికి, సభ్యులు ఈ విషయంలో మళ్లీ పోస్ట్ చేయడానికి ముందు వేచి ఉండాలి."
         enable: "ప్రారంభించండి"
@@ -3452,20 +3447,11 @@ te:
         add: "అవసరమైన ట్యాగ్ సమూహాన్ని జోడించండి"
         placeholder: "ట్యాగ్ సమూహాన్ని ఎంచుకోండి…"
       topic_featured_link_allowed: "ఈ వర్గంలో ఫీచర్ చేసిన లింక్లను అనుమతించండి"
-      delete: "వర్గాన్ని తొలగించండి"
-      create: "కొత్త వర్గం"
       create_long: "కొత్త వర్గాన్ని సృష్టించండి"
-      save: "వర్గాన్ని సేవ్ చేయండి"
-      slug: "వర్గం స్లగ్"
       slug_placeholder: "(ఐచ్చికం) వెబ్ చిరునామాలో పేరు డాష్ లతో"
       creation_error: ఈ వర్గం సృష్టించేప్పుడు దోషం
       save_error: వర్గాన్ని సేవ్ చేయడంలో లోపం ఏర్పడింది.
-      name: "వర్గం పేరు"
       description: "వివరణ"
-      logo: "వర్గం లోగో చిత్రం"
-      logo_dark: "డార్క్ మోడ్ వర్గం లోగో చిత్రం"
-      background_image: "వర్గం నేపథ్య చిత్రం"
-      background_image_dark: "డార్క్ వర్గం నేపథ్య చిత్రం"
       background_color: "రంగు"
       color_validations:
         cant_be_empty: "ఖాళీ ఉండకూడదు"
@@ -3479,9 +3465,7 @@ te:
       color_placeholder: "ఏదేనీ జాల రంగు"
       delete_confirm: "మీరు నిజంగా ఈ వర్గాన్ని తొలగించాలనుకుంటున్నారా?"
       delete_error: "ఈ వర్గం తొలగించేప్పుడు దొషం."
-      list: "వర్గాల జాబితా చూపండి"
       no_description: "ఈ వర్గానికి వివరణ రాయండి"
-      change_in_category_topic: "వివరణను సవరించండి"
       already_used: "ఈ రంగు వేరే వర్గం వాడింది"
       security: "సెక్యూరిటీ"
       security_add_group: "సమూహాన్ని జోడించండి"
@@ -3512,23 +3496,15 @@ te:
       all_topics_wiki: "డిఫాల్ట్‌గా కొత్త విషయాలను వికీలుగా చేయండి"
       allow_unlimited_owner_edits_on_first_post: "మొదటి పోస్ట్‌లో అపరిమిత యజమాని సవరణలను అనుమతించండి"
       subcategory_list_style: "ఉపవర్గం జాబితా శైలి:"
-      sort_order: "విషయాల జాబితా క్రమబద్ధీకరించండి:"
-      default_view: "డిఫాల్ట్ విషయాల జాబితా:"
-      default_top_period: "డిఫాల్ట్ అగ్ర కాలం:"
-      default_list_filter: "డిఫాల్ట్ జాబితా ఫిల్టర్:"
       allow_badges_label: "ఈ వర్గంలో బ్యాడ్జ్‌లను ప్రదానం చేయడానికి అనుమతించండి"
-      edit_permissions: "అనుమతులను సవరించండి"
       reviewable_by_group: "సిబ్బందితో పాటు, ఈ వర్గంలోని కంటెంట్‌ని వీరి ద్వారా కూడా సమీక్షించవచ్చు:"
       review_group_name: "సమూహం పేరు"
       require_topic_approval: "అన్ని కొత్త విషయాలకు మోడరేటర్ ఆమోదం అవసరం"
       require_reply_approval: "అన్ని కొత్త ప్రత్యుత్తరాలకు మోడరేటర్ ఆమోదం అవసరం"
       this_year: "ఈ సంవత్సరం"
       position: "వర్గాల పేజీలో స్థానం:"
-      default_position: "అప్రమేయ స్థానం"
       position_disabled: "కార్యాచరణ క్రమంలో వర్గాలు ప్రదర్శించబడతాయి. జాబితాలలోని వర్గాల క్రమాన్ని నియంత్రించడానికి, <a href='%{url}'>'స్థిర వర్గం స్థానాలు'</a> సెట్టింగ్‌ని ప్రారంభించండి."
       minimum_required_tags: "విషయంలో కనీస ట్యాగ్‌ల సంఖ్య అవసరం:"
-      default_slow_mode: 'ఈ వర్గంలోని కొత్త విషయాల కోసం "స్లో మోడ్"ని ప్రారంభించండి.'
-      parent: "మాతృ వర్గం"
       num_auto_bump_daily: "ప్రతిరోజూ స్వయంచాలకంగా బంప్ చేయడానికి ఓపెన్ విషయాల సంఖ్య:"
       auto_bump_cooldown_days: "అదే విషయాన్ని మళ్లీ బంప్ చేయడానికి కనీసం రోజుల అంతరం:"
       navigate_to_first_post_after_read: "విషయాలు చదివిన తర్వాత మొదటి పోస్ట్‌కి నావిగేట్ చేయండి"
@@ -3550,18 +3526,14 @@ te:
           title: "నిశ్శబ్దం చేయబడిన"
           description: "ఈ వర్గంలోని కొత్త విషయాల గురించి మీకు ఎప్పటికీ తెలియజేయబడదు మరియు అవి తాజాగా కనిపించవు."
       search_priority:
-        label: "శోధన ప్రాధాన్యత"
         options:
           normal: "సాధారణ"
           ignore: "విస్మరించండి"
-          very_low: "చాలా తక్కువ"
           low: "తక్కువ"
           high: "అధిక"
-          very_high: "చాలా ఎక్కువ"
       sort_options:
         default: "అప్రమేయ"
         likes: "ఇష్టాలు"
-        op_likes: "అసలు పోస్ట్ ఇష్టాలు"
         views: "వీక్షణలు"
         posts: "పోస్ట్‌లు"
         activity: "కార్యకలాపం"
@@ -3582,7 +3554,6 @@ te:
         email: "ఈమెయిల్"
       list_filters:
         all: "అన్ని విషయాలు"
-        none: "ఉపవర్గాలు లేవు"
       colors_disabled: "మీరు ఏదీ లేని వర్గ శైలిని కలిగి ఉన్నందున మీరు రంగులను ఎంచుకోలేరు."
     flagging:
       action: "ఈ పోస్ట్‌పై ఫిర్యాదు చేయండి"
@@ -3778,7 +3749,7 @@ te:
         title: "అగ్ర"
         help: "గత సంవత్సరం, నెల, వారం లేదా రోజులోని అత్యంత క్రియాశీల విషయాలు"
         all:
-          title: "ఆల్ టైమ్"
+          title: "ఎప్పటికీ"
         yearly:
           title: "వార్షిక"
         quarterly:
@@ -3789,7 +3760,7 @@ te:
           title: "వారానికోసారి"
         daily:
           title: "రోజువారీ"
-        all_time: "ఆల్ టైమ్"
+        all_time: "ఎప్పటికీ"
         this_year: "సంవత్సరం"
         this_quarter: "త్రైమాసికం"
         this_month: "ఈ నెల"
@@ -3841,7 +3812,6 @@ te:
         go_to_unread_post: "%{shortcut} మొదటి చదవని పోస్ట్‌కి వెళ్లండి"
       application:
         title: "అనువర్తనం"
-        create: "%{shortcut} కొత్త విషయాన్ని సృష్టించండి"
         notifications: "%{shortcut} చదవని నోటిఫికేషన్‌లు"
         user_profile_menu: "%{shortcut} సభ్యుడు మెనుని తెరవండి"
         show_incoming_updated_topics: "%{shortcut} నవీకరించిన విషయాలను చూపించండి"
@@ -4032,18 +4002,13 @@ te:
           description: "ఈ ట్యాగ్‌తో కొత్త విషయాల గురించి మీకు ఏమీ తెలియజేయబడదు మరియు అవి మీ చదవని ట్యాబ్‌లో కనిపించవు."
       groups:
         back_btn: "అన్ని ట్యాగ్‌లకు తిరిగి వెళ్ళండి"
-        title: "ట్యాగ్ సమూహాలు"
         about_heading: "ట్యాగ్ సమూహాన్ని ఎంచుకోండి లేదా కొత్తదాన్ని సృష్టించండి"
         about_heading_empty: "ప్రారంభించడానికి కొత్త ట్యాగ్ సమూహాన్ని సృష్టించండి"
         about_description: "ఒకే చోట అనేక ట్యాగ్‌ల కోసం అనుమతులను నిర్వహించడంలో ట్యాగ్ సమూహాలు మీకు సహాయపడతాయి."
-        new: "కొత్త సమూహం"
-        new_title: "కొత్త సమూహాన్ని సృష్టించండి"
-        edit_title: "ట్యాగ్ సమూహాన్ని సవరించండి"
         tags_label: "ఈ సమూహంలోని టాగ్లు"
         parent_tag_label: "పేరెంట్ ట్యాగ్"
         parent_tag_description: "పేరెంట్ ట్యాగ్ ఉన్నట్లయితే మాత్రమే ఈ సమూహం నుండి ట్యాగ్‌లు ఉపయోగించబడతాయి."
         one_per_topic_label: "ఈ సమూహం నుండి ప్రతి విషయానికి ఒక ట్యాగ్ను పరిమితం చేయండి"
-        new_name: "కొత్త ట్యాగ్ సమూహం"
         name_placeholder: "పేరు"
         save: "సేవ్ చేయండి"
         delete: "తొలగించండి"
@@ -4415,6 +4380,8 @@ te:
         enabled: "ప్రారంభించబడింది"
         select_groups: "సమూహాలను ఎంచుకోండి…"
         preview: "ప్రివ్యూ"
+        enabled_for_options:
+          everyone: "అందరూ"
         impact_roles:
           moderators: "నిర్వాహకులు"
           staff: "సిబ్బంది"
@@ -4454,6 +4421,12 @@ te:
               title: "శీర్షిక ఫాంట్"
           backfill_modal:
             modal_yes: "అవును"
+        welcome_banner:
+          form:
+            location:
+              label: "ప్రాంతం"
+            header_anonymous:
+              placeholder: "%{site_name} కు సుస్వాగతం!"
         navigation:
           title: "నావిగేషన్"
         notifications:
@@ -5664,7 +5637,6 @@ te:
           success: "విజయం"
           exists: "ఇప్పటికే ఉన్నది"
           upload: "ఫైల్ నుండి జోడించండి"
-          upload_successful: "అప్‌లోడ్ విజయవంతమైంది. పదాలు జోడించబడ్డాయి."
           case_sensitivity_label: "కేస్ సెన్సిటివ్"
           case_sensitivity_description: "సరిపోలే క్యారెక్టర్ కేసింగ్ ఉన్న పదాలు మాత్రమే"
           html_label: "HTML"
@@ -5753,10 +5725,7 @@ te:
             second: "ఎంపిక 2"
             third: "ఎంపిక 3"
         edit_category:
-          toggle_freeform: "ఫారమ్ టెంప్లేట్ నిలిపివేయబడింది"
-          toggle_form_template: "ఫారమ్ టెంప్లేట్ ప్రారంభించబడింది"
           select_template: "ఫారమ్ టెంప్లేట్‌లను ఎంచుకోండి"
-          select_template_help: "ఫారమ్ టెంప్లేట్‌లను జోడించండి/ఎడిట్ చేయండి"
       impersonate:
         title: "పరకాయప్రవేశించు"
         help: "అనుకరించిన వినియోగదారుని ఖాతా దోషవిశ్లేషణ ప్రయోజనాలకు ఈ ఉపకరణం వినియోగించండి.పూర్తి అయిన తర్వాత మీరు లాగవుట్ చేయండి."
@@ -6326,56 +6295,3 @@ te:
           categories: "వర్గాలు"
           topics: "విషయాలు"
           replace: "భర్తీ చేయండి"
-  wizard_js:
-    wizard:
-      jump_in: "లోపలికి దూకండి!"
-      finish: "సెటప్ నిష్క్రమించండి"
-      back: "వెనుకకు"
-      next: "తదుపరి"
-      configure_more: "మరిన్ని కాన్ఫిగర్ చేయండి…"
-      step-text: "దశ"
-      step: "%{total} లో %{current}"
-      upload: "ఫైల్‌ని అప్‌లోడ్ చేయండి"
-      uploading: "అప్‌లోడ్ చేయబడుతోంది…"
-      upload_error: "క్షమించాలి. దస్త్రం ఎగుమతించుటలో దోషం. దయచేసి మరలా ప్రయత్నించండి. "
-      staff_count:
-        one: "మీ సంఘంలో %{count} సిబ్బంది (మీరు) ఉన్నారు."
-        other: "మీ సంఘం మీతో సహా %{count} సిబ్బందిని కలిగి ఉంది."
-      invites:
-        add_user: "జోడించండి"
-        none_added: "మీరు ఏ సిబ్బందిని ఆహ్వానించలేదు. మీరు ఖచ్చితంగా కొనసాగించాలనుకుంటున్నారా?"
-        roles:
-          admin: "నిర్వాహకుడు"
-          moderator: "నిర్వాహకుడు"
-          regular: "సాధారణ సభ్యుడు"
-      homepage_choices:
-        custom:
-          label: "అనురూప"
-        style_type:
-          categories: "వర్గం"
-          topics: "విషయం"
-      top_menu_items:
-        new: "కొత్త "
-        unread: "చదవని"
-        top: "అగ్ర"
-        latest: "తాజా"
-        hot: "హాట్"
-        categories: "వర్గాలు"
-        unseen: "చూడనవి"
-        read: "చదివిన"
-        bookmarks: "బుక్‌మార్క్‌లు"
-      previews:
-        share_button: "షేర్ చేయండి"
-        reply_button: "ప్రత్యుత్తరం ఇవ్వండి"
-        topic_preview: "విషయం ప్రివ్యూ"
-        homepage_preview: "మొదటి పేజీ ప్రివ్యూ"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "అన్ని వర్గాలు"
-        category_names:
-          site_feedback: "సైట్ పై అభిప్రాయం"
-        table_headers:
-          topic: "విషయం"
-          replies: "ప్రత్యుత్తరాలు"
-          views: "వీక్షణలు"
-          activity: "కలాపం"

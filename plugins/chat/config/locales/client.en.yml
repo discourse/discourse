@@ -126,7 +126,7 @@ en:
       email_frequency:
         description: "We'll only email you if we haven't seen you in the last 15 minutes."
         never: "Never"
-        title: "Email Notifications"
+        title: "Email me when I am sent a chat direct message or group chat"
         when_away: "Only when away"
       header_indicator_preference:
         title: "Show activity indicator in header"
@@ -383,6 +383,8 @@ en:
         slug_description: A channel slug is used in the URL instead of the channel name
         name: Channel name
         slug: Channel slug (optional)
+        emoji: Channel emoji (optional)
+        reset_emoji: Reset emoji
 
       channel_edit_description_modal:
         title: Edit description
@@ -451,6 +453,9 @@ en:
         types:
           category: "Category"
           topic: "Topic"
+        emoji:
+          label: "Channel emoji (optional)"
+          reset: "Reset emoji"
 
       reviewable:
         type: "Chat message"

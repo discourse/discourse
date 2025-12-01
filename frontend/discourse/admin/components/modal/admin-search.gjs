@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import AdminSearch from "discourse/admin/components/admin-search";
 import DModal from "discourse/components/d-modal";
-import AdminSearch from "admin/components/admin-search";
 
 export default class AdminSearchModal extends Component {
   @service router;

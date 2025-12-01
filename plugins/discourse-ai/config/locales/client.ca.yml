@@ -143,6 +143,8 @@ ca:
           copy: "Còpia"
           copied: "Copiat!"
           cancel: "Cancel·la"
+        thumbnail_suggestions:
+          try_again: "Torna-ho a intentar"
         image_caption:
           save_caption: "Desa"
       embeddings:

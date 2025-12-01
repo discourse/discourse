@@ -1774,7 +1774,6 @@ ko:
     push_notifications_icon: "알림 코너에 표시되는 배지 아이콘입니다. 투명도가 있는 96×96 단색 PNG를 사용하는 것이 좋습니다."
     base_font: "사이트에서 대부분의 텍스트에 사용할 기본 글꼴입니다. 테마는 `--font-family` CSS 사용자 지정 프로퍼티를 통해 오버라이드할 수 있습니다."
     heading_font: "사이트 헤딩에 사용할 폰트입니다. 테마는 `--heading-font-family` CSS 사용자 지정 프로퍼티를 통해 재정의할 수 있습니다."
-    short_title: "짧은 제목은 사용자의 홈 화면, 런처 또는 공간이 제한될 수 있는 기타 위치에 사용되며, 12자로 제한됩니다."
     dashboard_hidden_reports: "대시보드에서 지정된 리포트를 숨기도록 허용합니다."
     dashboard_visible_tabs: "표시할 대시보드 탭을 선택합니다."
     dashboard_general_tab_activity_metrics: "일반 탭에서 활동 메트릭으로 표시할 리포트를 선택합니다."
@@ -2606,6 +2605,9 @@ ko:
     user_automatically_silenced:
       title: "사용자가 자동 차단됨"
       subject_template: "커뮤니티 신고로 신규 유저 %{username} 님이 차단됨"
+    user_automatically_silenced_with_reason:
+      title: "사용자가 자동으로 쓰기 금지됨"
+      subject_template: "신고로 인해 새 사용자 %{username}이 쓰기 금지됨"
     spam_post_blocked:
       title: "스팸 게시글 차단됨"
       subject_template: "신규 사용자 %{username} 님의 게시물이 연속된 링크로 인해 차단됨"
@@ -3327,19 +3329,12 @@ ko:
     nice_share:
       name: 멋진 공유
       description: 공유한 게시물에서 고유 방문자 25명 달성
-      long_description: |2
-
-        이 배지는 공유한 링크를 외부 방문자 25명이 클릭하면 부여됩니다. 토론과 커뮤니티를 널리 알려 주셔서 감사합니다.
     good_share:
       name: 훌륭한 공유
       description: 공유한 게시물에서 고유 방문자 300명 달성
-      long_description: |
-        이 배지는 공유한 링크를 외부 방문자 300명이 클릭하면 부여됩니다. 많은 외부 사람들에게 이 멋진 토론을 알렸고 커뮤니티 성장에 기여하셨네요.
     great_share:
       name: 최고의 공유
       description: 공유한 게시물에서 고유 방문자 1000명 달성
-      long_description: |
-        이 배지는 공유한 링크를 외부 방문자 1000명이 클릭하면 부여됩니다. 많은 외부 사람들에게 흥미로운 토론을 홍보하고 커뮤니티 성장에 아주 크게 기여하셨습니다!
     first_like:
       name: 첫 번째 좋아요
       description: 게시물에 좋아요 보냄
@@ -3548,17 +3543,13 @@ ko:
   wizard:
     title: "Discourse Setup"
     step:
-      introduction:
+      setup:
+        title: "시작하기"
         fields:
           title:
             label: "커뮤니티 이름"
-            placeholder: "빠오 소굴"
-          site_description:
-            placeholder: "빠오가 친구와 함께 재밌는 일들에 대하여 이야기나누는 곳"
           default_locale:
             label: "언어"
-      privacy:
-        fields:
           login_required:
             label: "시계"
             choices:
@@ -3566,41 +3557,6 @@ ko:
                 label: "공개"
               private:
                 label: "비공개"
-          chat_enabled:
-            placeholder: "채팅 활성화"
-      styling:
-        fields:
-          body_font:
-            label: "본문 폰트"
-          heading_font:
-            label: "헤딩 폰트"
-          styling_preview:
-            label: "미리보기"
-          homepage_style:
-            label: "홈페이지 스타일"
-            choices:
-              latest:
-                label: "최신"
-      corporate:
-        fields:
-          governing_law:
-            placeholder: "캘리포니아 법"
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
-          city_for_disputes:
-            placeholder: "캘리포니아주 샌프란시스코"
-          site_contact:
-            description: "신고 알림 및 백업 완료 알림과 같은 모든 자동화 된 Discourse 메시지가 이 사용자의 아이디로 전송됩니다."
-      invites:
-        title: "운영진 초대"
-        description: "거의 다 끝났습니다! 커뮤니티를 시작하기 위해 흥미로운 주제와 답변으로 <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>토론</a>을 시작하는 데 도움을 줄 사람을 초대해 보세요."
-        disabled: "로컬 로그인이 비활성화되어 있으므로 누구에게도 초대장을 보낼 수 없습니다. 다음 단계로 진행하세요."
-      finished:
-        title: "이제 Discourse를 시작할 수 있습니다!"
-        description: |
-          <p>이 설정을 변경하고 싶다면 언제든 <b>이 마법사를 다시 실행</b>하거나 <a href='%{base_path}/admin' target='_blank'>관리자 섹션</a>을 방문하세요. 사이트 메뉴의 렌치 아이콘 옆에 있습니다.</p>
-          <p>강력한 테마 시스템을 사용하여 Discourse를 더욱 쉽게 사용자 지정할 수 있습니다. 예를 들어, <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>의 <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">주요 테마 및 구성 요소</a>를 확인하세요. </p>
-          <p>즐거운 시간 보내세요! <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>새로운 커뮤니티 구축에 행운을 빕니다!</a></p>
   search_logs:
     graph_title: "검색 횟수"
   onebox:

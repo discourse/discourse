@@ -1263,8 +1263,6 @@ nl:
       yaxis: "Dag"
       description: "API-verzoeken voor reguliere API-sleutels en gebruikers-API-sleutels."
     consolidated_page_views_browser_detection:
-      title: "Geconsolideerde paginaweergaven met browserdetectie (experimenteel)"
-      title_legacy: "Geconsolideerde paginaweergaven met browserdetectie (experimenteel)"
       xaxis:
         page_view_anon_browser: "Anonieme browser"
         page_view_logged_in_browser: "Aangemelde browser"
@@ -1646,7 +1644,6 @@ nl:
     allow_duplicate_topic_titles_category: "Topics met identieke, dubbele titels toestaan als de categorie anders is. allow_duplicate_topic_titles moet uitgeschakeld zijn."
     unique_posts_mins: "Hoeveel minuten iemand moet wachten voordat deze een bericht met dezelfde inhoud mag plaatsen"
     educate_until_posts: "De pop-up voor nieuwe gebruikers weergeven als een gebruiker begint met het typen van de eerste (n) nieuwe berichten in de berichteditor."
-    title: "De naam van deze site. Zichtbaar voor alle bezoekers, inclusief anonieme gebruikers."
     site_description: "Beschrijf deze site in één zin. Zichtbaar voor alle bezoekers, inclusief anonieme gebruikers."
     short_site_description: "Korte beschrijving in een paar woorden. Zichtbaar voor alle bezoekers, inclusief anonieme gebruikers."
     contact_email: "E-mailadres van de belangrijkste contactpersoon die verantwoordelijk is voor deze website. Wordt gebruikt voor kritieke meldingen en wordt weergegeven op de <a href='%{base_path}/about' target='_blank'>/over</a>-pagina. Zichtbaar voor anonieme gebruiker op openbare sites."
@@ -2105,7 +2102,6 @@ nl:
     allow_all_users_to_flag_illegal_content: "Anonieme gebruikers zien informatie dat ze een e-mail moeten sturen naar de beheerders om illegale content te melden. Deze instelling heeft voorrang op 'flag post allowed groups'."
     email_address_to_report_illegal_content: "Als dit leeg wordt gelaten, wordt het e-mailadres van de standaard sitebeheerder gebruikt."
     cooldown_hours_until_reflag: "De tijd dat gebruikers moeten wachten voordat ze een bericht opnieuw kunnen markeren"
-    slow_mode_prevents_editing: "Verhindert de 'Langzame modus' bewerking na editing_grace_period?"
     reply_by_email_enabled: "Activeert de functie waarmee gebruikers rechtstreeks via e-mail kunnen reageren op topics, in plaats van dat ze zich moeten aanmelden op de website. Zie de <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>gids over Meta</a> voor meer informatie."
     reply_by_email_address: "Sjabloon voor adres voor inkomende e-mail bij antwoorden per e-mail, bijvoorbeeld: %%{reply_key}@reply.example.com of replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Lijst van alternatieve sjablonen voor adressen voor inkomende e-mail bij antwoorden per e-mail. Voorbeeld: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -2410,7 +2406,6 @@ nl:
     sitemap_page_size: "Aantal URL's om op te nemen in elke sitemappagina. Maximaal 50.000"
     enable_user_status: "Sta gebruikers toe om een aangepast statusbericht in te stellen (emoji + beschrijving)."
     enable_user_tips: "Schakel nieuwe gebruikerstips in die belangrijke functies beschrijven voor gebruikers"
-    short_title: "De korte titel wordt gebruikt op het startscherm van de gebruiker, de starter, of andere plaatsen waar ruimte beperkt kan zijn. Beperk de naam tot 12 tekens."
     dashboard_hidden_reports: "Toestaan dat de opgegeven rapporten worden verborgen op het dashboard."
     dashboard_visible_tabs: "Kiezen welke dashboardtabbladen zichtbaar zijn."
     dashboard_general_tab_activity_metrics: "Kies rapporten die als activiteitsgegevens op het algemene tabblad worden weergegeven."
@@ -2436,8 +2431,6 @@ nl:
     default_navigation_menu_categories: "De geselecteerde categorieën worden standaard weergegeven in de sectie Categorieën van het navigatiemenu."
     default_navigation_menu_tags: "De geselecteerde tags worden standaard weergegeven in de sectie Tags van het navigatiemenu."
     experimental_new_new_view_groups: 'Schakel een nieuwe topicslijst in die ongelezen en nieuwe topics combineert en laat de link "Alles" in de zijbalk ernaartoe verwijzen.'
-    floatkit_autocomplete_composer: "Activeer het op Floatkit gebaseerde menu voor automatische aanvulling in de editor. Dit is een verbetering van de gebruikersinterface die het huidige op jQuery gebaseerde menu voor automatische aanvulling zal vervangen."
-    floatkit_autocomplete_chat_composer: "Activeer het op Floatkit gebaseerde menu voor automatische aanvulling in de chateditor. Dit is een verbetering van de gebruikersinterface die het huidige op jQuery gebaseerde menu voor automatische aanvulling zal vervangen."
     experimental_form_templates: "Schakel de functie Formuliersjablonen in. Beheer de sjablonen via <a href='%{base_path}/admin/customize/form-templates'>Aanpassen / Sjablonen</a>."
     show_preview_for_form_templates: "Schakel het voorbeeld voor formuliersjablonenfunctie in"
     lazy_load_categories_groups: "Laad categorie-informatie op luie wijze, alleen voor gebruikers van deze groepen. Dit verbetert de prestaties op sites met veel categorieën."
@@ -2519,7 +2512,6 @@ nl:
         other: "De lijst moet precies %{count} waarden bevatten."
       markdown_linkify_tlds: "Je kunt de waarde '*' niet gebruiken."
       google_oauth2_hd_groups: "Je moet alle 'Google OAuth2 HD'-instellingen configureren voordat je deze instelling inschakelt."
-      discourse_id_credentials: "Je moet de Discourse ID-aanmeldgegevens ('discourse_id_client_id' en 'discourse_id_client_secret') configureren voordat je deze instelling inschakelt."
       linkedin_oidc_credentials: "Je moet de LinkedIn OIDC-aanmeldgegevens ('linkedin_oidc_client_id' en 'linkedin_oidc_client_secret') configureren voordat je deze instelling inschakelt."
       search_tokenize_chinese_enabled: "Je moet 'search_tokenize_chinese' uitschakelen voordat je deze instelling inschakelt."
       search_tokenize_japanese_enabled: "Je moet 'search_tokenize_japanese' uitschakelen voordat je deze instelling inschakelt."
@@ -3612,14 +3604,9 @@ nl:
     user_automatically_silenced:
       title: "Gebruiker automatisch gedempt"
       subject_template: "Nieuwe gebruiker %{username} gedempt wegens markeringen door community"
-      text_body_template: |
-        Dit is een automatisch bericht.
-
-        De nieuwe gebruiker [%{username}](%{user_url}) is automatisch gedempt, omdat meerdere gebruikers een of meer berichten van %{username} hebben gemarkeerd.
-
-        [Beoordeel de markeringen](%{base_url}/review). Als %{username} ten onrechte is gedempt, klik dan op de knop voor opheffen van het dempen op [de beheerpagina van deze gebruiker](%{user_url}).
-
-        Deze drempel kan worden gewijzigd via de 'silence_new_user'-website-instellingen.
+    user_automatically_silenced_with_reason:
+      title: "Gebruiker automatisch gedempt"
+      subject_template: "Nieuwe gebruiker %{username} gedempt wegens markeringen door community"
     spam_post_blocked:
       title: "Spambericht geblokkeerd"
       subject_template: "Berichten van nieuwe gebruiker %{username} geblokkeerd vanwege herhaalde links"
@@ -4736,18 +4723,12 @@ nl:
     nice_share:
       name: Leuk gedeeld
       description: Heeft een bericht met 25 unieke bezoekers gedeeld
-      long_description: |
-        Deze badge wordt toegekend voor het delen van een link waarop 25 externe bezoekers hebben geklikt. Bedankt voor het verspreiden van het nieuws over onze discussies en deze community.
     good_share:
       name: Goed gedeeld
       description: Heeft een bericht met 300 unieke bezoekers gedeeld
-      long_description: |
-        Deze badge wordt toegekend voor het delen van een link waarop 300 externe bezoekers hebben geklikt. Goed werk! Je hebt een geweldige discussie laten zien aan een aantal nieuwe mensen en deze community helpen groeien.
     great_share:
       name: Geweldig gedeeld
       description: Heeft een bericht met 1000 unieke bezoekers gedeeld
-      long_description: |
-        Deze badge wordt toegekend voor het delen van een link waarop 1000 externe bezoekers hebben geklikt. Wauw! Je hebt een interessante discussie gepromoot voor een enorm nieuw publiek en ons geholpen onze community enorm te laten groeien!
     first_like:
       name: Eerste like
       description: Heeft een bericht geliket
@@ -4965,21 +4946,13 @@ nl:
   wizard:
     title: "Discourse instellen"
     step:
-      introduction:
-        title: "Over je site"
-        description: "Deze worden weergegeven op je aanmeldpagina en eventuele openbare pagina's. Je kunt ze later altijd wijzigen."
+      setup:
+        title: "Aan de slag"
         fields:
           title:
             label: "Communitynaam"
-            placeholder: "Jane's Hangout"
-          site_description:
-            label: "Beschrijf je community in één zin"
-            placeholder: "Een plek voor Jane en haar vrienden om coole dingen te bespreken"
           default_locale:
             label: "Taal"
-      privacy:
-        title: "Ledentoegang"
-        fields:
           login_required:
             label: "Zichtbaarheid"
             description: "Is je community openbaar of privé?"
@@ -5003,82 +4976,6 @@ nl:
                 label: "Nee, nieuwe mensen kunnen direct lid worden"
               "yes":
                 label: "Ja, nieuwe mensen moeten door moderators worden goedgekeurd"
-          chat_enabled:
-            placeholder: "Chat inschakelen"
-            extra_description: "Ga in realtime in gesprek met je leden"
-      ready:
-        title: "Je site is klaar!"
-        description: "Dat was het! Je hebt de basis van het opzetten van je community voltooid. Je kunt nu beginnen en rondkijken, een welkomsttopic schrijven en uitnodigingen sturen!<br><br>Veel plezier!"
-      styling:
-        title: "Look en feel"
-        fields:
-          color_scheme:
-            label: "Kleurenpalet"
-          body_font:
-            label: "Lettertype inhoud"
-          site_font:
-            label: "Lettertype"
-          heading_font:
-            label: "Lettertype kop"
-          styling_preview:
-            label: "Voorbeeld"
-          homepage_style:
-            label: "Stijl startpagina"
-            choices:
-              latest:
-                label: "Nieuwste"
-                description: "Geeft de meest recent actieve topics in alle categorieën weer, zodat leden op de hoogte blijven van discussies die hen interesseren"
-              hot:
-                label: "Veelgelezen"
-                description: "Brengt trending topics naar voren door recente en algemene populariteit te combineren, laat zien waar leden in je community op dit moment over praten"
-              categories_and_latest_topics:
-                label: "Categorieën met nieuwste topics"
-                description: "Combineert de recent actieve topics in alle categorieën met een lijst van categorieën, hun beschrijving en het totale aantal topics"
-              categories_boxes:
-                label: "Categorievakken"
-                description: "Geeft de categorieën en hun beschrijving weer in een raster, ideaal voor leden om een overzicht te bekijken van de subcommunity's van je site"
-      branding:
-        title: "Sitelogo"
-        fields:
-          logo:
-            label: "Primair logo"
-            description: "Aanbevolen grootte: 600 x 200"
-          logo_small:
-            label: "Vierkant logo"
-            description: "Aanbevolen grootte: 512 x 512. Wordt ook gebruikt als favorieten- en app-pictogram voor het mobiele startscherm."
-      corporate:
-        title: "Je organisatie"
-        description: "De volgende informatie wordt gebruiken op je Gebruiksvoorwaarden- en Over-pagina. Sla dit gerust over als er geen bedrijf is."
-        fields:
-          company_name:
-            label: "Bedrijfsnaam"
-            placeholder: "Acme-organisatie"
-          governing_law:
-            label: "Toepasselijk recht"
-            placeholder: "Californische wet"
-          contact_url:
-            label: "Webpagina"
-            placeholder: "https://www.example.com/contact-us"
-          city_for_disputes:
-            label: "Plaats voor geschillen"
-            placeholder: "San Francisco, Californië"
-          site_contact:
-            label: "Geautomatiseerde berichten"
-            description: "Alle geautomatiseerde persoonlijke berichten op Discourse worden verzonden door deze gebruiker, zoals markeringswaarschuwingen en back-upvoltooiingsmeldingen."
-          contact_email:
-            label: "Contactpunt"
-            placeholder: "voorbeeld@gebruiker.com"
-            description: "E-mailadres van de belangrijkste contactpersoon die verantwoordelijk is voor deze site. Wordt gebruikt voor kritieke meldingen en wordt weergegeven op je <a href='%{base_path}/about' target='_blank'>Over-pagina</a> voor dringende kwesties."
-      invites:
-        title: "Medewerker uitnodigen"
-        description: "Je bent bijna klaar! Nodig wat mensen uit om te helpen met het <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>opstarten van je discussies</a> met interessante topics en berichten om je community op te zetten."
-        disabled: "Omdat sociale aanmeldingen zijn uitgeschakeld, is het niet mogelijk om uitnodigingen naar iedereen te versturen. Ga verder met de volgende stap."
-      finished:
-        title: "Je Discourse is gereed!"
-        description: |
-          <p>Als je deze instellingen ooit wilt wijzigen, <b>kun je deze wizard op elk gewenst moment opnieuw uitvoeren</b>, of naar <a href='%{base_path}/admin' target='_blank'>je beheerdersgedeelte</a> gaan; je vindt het naast het moersleutelpictogram in het websitemenu.</p>
-          <p>Het is eenvoudig om je Discourse nog verder aan te passen met behulp van ons krachtige themasysteem. Zie voor voorbeelden de <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">topthema's en componenten</a> op <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
-          <p>Veel plezier en succes met het <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>bouwen van je nieuwe community!</a></p>
   search_logs:
     graph_title: "Aantal zoekopdrachten"
   onebox:
@@ -5243,7 +5140,6 @@ nl:
         title: "Bericht weggooien"
         complete: "Bericht verworpen."
       revise_and_reject_post:
-        title: "Bericht herzien…"
         complete: "Bericht afgewezen in afwachting van herziening."
       ignore:
         title: "Negeren"

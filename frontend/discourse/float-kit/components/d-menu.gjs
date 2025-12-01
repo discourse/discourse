@@ -6,14 +6,14 @@ import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import curryComponent from "ember-curry-component";
 import { modifier } from "ember-modifier";
-import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
+import DFloatBody from "discourse/float-kit/components/d-float-body";
+import { MENU } from "discourse/float-kit/lib/constants";
+import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 import concatClass from "discourse/helpers/concat-class";
 import { isTesting } from "discourse/lib/environment";
-import DFloatBody from "float-kit/components/d-float-body";
-import { MENU } from "float-kit/lib/constants";
-import DMenuInstance from "float-kit/lib/d-menu-instance";
+import { and } from "discourse/truth-helpers";
 
 export default class DMenu extends Component {
   @service site;

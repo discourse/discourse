@@ -1,0 +1,629 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+require "optparse"
+require "shellwords"
+require "json"
+require "fileutils"
+require "socket"
+require "uri"
+require "net/http"
+require_relative "../lib/chrome_installed_checker"
+
+class QunitRunner
+  def initialize(args)
+    @file_paths = []
+    @verbose = ENV["ACTIONS_STEP_DEBUG"] == "true"
+    @dry_run = false
+    @rails_port = ENV["UNICORN_PORT"]&.to_i || 3000
+
+    @standalone_mode = false
+
+    @parallel = ENV["QUNIT_PARALLEL"]
+    @seed = ENV["QUNIT_SEED"]
+    @theme_name = ENV["THEME_NAME"]
+    @theme_url = ENV["THEME_URL"]
+    @theme_id = ENV["THEME_ID"]
+    @qunit_path = nil
+    @rails_env = ENV["QUNIT_RAILS_ENV"] || "test"
+    @plugin_targets = []
+
+    @headless = true
+
+    parse_options(args)
+  end
+
+  def run
+    if @standalone_mode
+      with_standalone_rails { run_tests }
+    else
+      run_tests
+    end
+  end
+
+  private
+
+  def parse_options(args)
+    parser =
+      OptionParser.new do |opts|
+        opts.banner = <<~BANNER
+          Usage: bin/qunit [options] [files|directories]
+
+          Runs the Discourse QUnit suite. By default, tests will be run against the running Rails server and existing JS assets.
+          Add --standalone to spin up an isolated Rails server and run a standalone asset build.
+        BANNER
+
+        opts.separator ""
+        opts.separator "Options:"
+
+        opts.on("-f", "--filter FILTER", "Run tests matching this filter") do |filter|
+          @filter = filter
+        end
+
+        opts.on("--dry-run", "Show what would run without executing") { @dry_run = true }
+
+        opts.on(
+          "--rails-port PORT",
+          Integer,
+          "Rails server port (default: 3000) (env: UNICORN_PORT)",
+        ) { |port| @rails_port = port }
+
+        opts.on("--standalone", "Use standalone mode (spins up own test server)") do
+          @standalone_mode = true
+        end
+
+        opts.on(
+          "--parallel N",
+          Integer,
+          "Run tests in parallel (N workers) (env: QUNIT_PARALLEL)",
+        ) { |n| @parallel = n.to_s }
+
+        opts.on("--seed SEED", "Random seed for test order (env: QUNIT_SEED)") do |seed|
+          @seed = seed
+        end
+
+        opts.on(
+          "--target TARGET",
+          "Target: 'core', 'plugins' (all plugins), or comma separated plugin names",
+        ) { |target| @target = target }
+
+        opts.on("--module MODULE", "Run specific module") { |mod| @module = mod }
+
+        opts.on("--theme-name NAME", "Theme name for theme tests (env: THEME_NAME)") do |name|
+          @theme_name = name
+        end
+        opts.on("--theme-url URL", "Theme URL for theme tests (env: THEME_URL)") do
+          @theme_url = url
+        end
+        opts.on("--theme-id ID", "Theme ID for theme tests (env: THEME_ID)") { |id| @theme_id = id }
+        opts.on("--qunit-path PATH", "QUnit path (e.g., /theme-qunit)") do |path|
+          @qunit_path = path
+        end
+
+        opts.on("--rails-env ENV", "Rails environment (default: test) (env: RAILS_ENV)") do |env|
+          @rails_env = env
+        end
+
+        opts.on("--report-requests", "Report HTTP requests during tests") do
+          @report_requests = true
+        end
+
+        opts.on("--[no-]headless", "Run tests in headless mode (env: QUNIT_HEADLESS)") do |h|
+          @headless = h
+        end
+
+        opts.on("-v", "--verbose", "Verbose output") { @verbose = true }
+
+        opts.on("-h", "--help", "Show this help message") do
+          puts opts
+          exit 0
+        end
+
+        opts.separator <<~NOTES
+          \nExamples:
+            bin/qunit frontend/discourse/tests/unit/models/user-test.js
+            bin/qunit --standalone --target plugins  # Run all plugin tests
+            bin/qunit --standalone --target chat     # Run single plugin tests
+            bin/qunit --standalone plugins/chat/test/javascripts/unit/lib/chat-audio-test.js
+            bin/qunit --standalone --filter "Acceptance: Emoji"
+        NOTES
+      end
+
+    begin
+      parser.parse!(args)
+    rescue OptionParser::InvalidOption => e
+      warn "Error: #{e.message}"
+      puts ""
+      puts parser
+      exit 1
+    end
+
+    ensure_supported_target!
+
+    @file_paths = args
+
+    detect_plugin_targets!
+    expand_directory_paths!
+  end
+
+  def detect_plugin_targets!
+    if resolved_target.include?(",")
+      @plugin_targets = resolved_target.split(",").map(&:strip)
+      puts "Running tests for #{@plugin_targets.join(", ")}" if @verbose
+    elsif resolved_target == "plugins"
+      @plugin_targets = find_all_plugins_with_tests
+      puts "Discovered #{@plugin_targets.length} plugins with tests" if @verbose
+    end
+  end
+
+  def find_all_plugins_with_tests
+    plugins_dir = File.expand_path("../plugins", __dir__)
+    return [] unless Dir.exist?(plugins_dir)
+
+    Dir
+      .children(plugins_dir)
+      .sort
+      .select do |plugin_dir_name|
+        plugin_path = File.join(plugins_dir, plugin_dir_name)
+        next false unless File.directory?(plugin_path)
+
+        # Check if plugin has tests
+        test_dirs = %w[test/javascripts test].map { |subdir| File.join(plugin_path, subdir) }
+        test_dirs.any? do |test_dir|
+          Dir.exist?(test_dir) && Dir.glob(File.join(test_dir, "**", "*-test.{js,gjs}")).any?
+        end
+      end
+      .map { |plugin_dir_name| resolve_plugin_namespace(plugin_dir_name) }
+  end
+
+  def expand_directory_paths!
+    expanded = []
+
+    @file_paths.each do |path|
+      if File.directory?(path)
+        test_files = Dir.glob(File.join(path, "**", "*-test.{js,gjs}"))
+        if test_files.empty?
+          puts "Warning: No test files found in directory: #{path}" if @verbose
+        else
+          expanded.concat(test_files)
+        end
+      elsif File.file?(path)
+        expanded << path
+      else
+        puts "Warning: Path not found: #{path}"
+      end
+    end
+
+    @file_paths = expanded.uniq
+  end
+
+  def run_tests
+    ensure_file_paths_exist!
+
+    if @file_paths && @verbose
+      puts "Files to test: #{@file_paths.length}"
+      puts "  #{@file_paths.join("\n  ")}"
+    end
+
+    target = resolved_target
+    puts "Target: #{target}" if @verbose
+
+    file_path_filter = build_file_path_filter(@file_paths)
+
+    run_ember_exam(file_path_filter: file_path_filter, filter: @filter)
+  end
+
+  def run_ember_exam(filter: nil, file_path_filter: nil)
+    check_dev_environment!
+
+    puts "\nRunning tests against Rails on localhost:#{@rails_port}"
+    puts "  Using existing build in frontend/discourse/dist" unless @standalone_mode
+
+    if @plugin_targets.any?
+      puts "  Plugins: #{@plugin_targets.join(", ")}"
+    elsif file_path_filter
+      puts "  Filtered by file path" if file_path_filter
+    end
+    puts "  Filter: #{filter}" if filter
+    puts "  Load plugins: #{should_load_plugins?}"
+    puts ""
+
+    dir = frontend_dir
+
+    unless Dir.exist?(dir)
+      puts "Error: frontend/discourse directory not found at #{dir}"
+      exit 1
+    end
+
+    env = {}
+    env["LOAD_PLUGINS"] = should_load_plugins? ? "1" : "0"
+    env["REPORT_REQUESTS"] = "1" if @report_requests
+    env["UNICORN_PORT"] = @rails_port.to_s
+    env["TESTEM_DEFAULT_BROWSER"] = ENV["TESTEM_DEFAULT_BROWSER"] || detect_browser
+    env["PLUGIN_TARGETS"] = @plugin_targets.join(",") if @plugin_targets.any?
+    env["QUNIT_HEADLESS"] = "0" if !@headless
+
+    parallel = !@plugin_targets.any? && present_string(@parallel)
+    reuse_build = ENV["QUNIT_REUSE_BUILD"] == "1" || !@standalone_mode
+
+    query = build_query
+
+    args = []
+
+    if @qunit_path
+      run_theme_build(unless_build_reused: reuse_build)
+      env["THEME_TEST_PAGES"] = build_theme_test_pages(query)
+      args += %w[pnpm testem ci -f testem.js]
+      args += ["--parallel", parallel.to_s] if parallel
+    else
+      args = %w[pnpm ember exam]
+      args += ["--query", query] if query && !query.empty?
+      args += ["--filter", filter] if filter
+      args += ["--file-path", file_path_filter] if file_path_filter
+      args += ["--load-balance", "--parallel", parallel.to_s] if parallel
+      args += %w[--path dist] if reuse_build
+      args << "--write-execution-file" if ENV["QUNIT_WRITE_EXECUTION_FILE"]
+    end
+
+    puts <<~MESSAGE if @verbose || @dry_run
+      Executing: #{JSON.pretty_generate(args)}
+      with env: #{JSON.pretty_generate(env)}
+    MESSAGE
+
+    if @dry_run
+      puts "[dry-run] tests not executed"
+      exit 0
+    end
+
+    system(env, *args, chdir: dir)
+    exit $?.exitstatus
+  end
+
+  def convert_to_ember_relative_path(file_path)
+    path = File.expand_path(file_path)
+
+    if path.match?(%r{(?:^|/)plugins/})
+      relative = path.split("/plugins/").last
+      plugin_dir, remainder = relative.split("/", 2)
+      plugin_dir ||= relative
+      namespaced_plugin = resolve_plugin_namespace(plugin_dir)
+      remainder_path = normalize_plugin_test_path(remainder)
+
+      parts = ["discourse", "plugins", namespaced_plugin]
+      parts << remainder_path unless remainder_path.empty?
+      return parts.join("/")
+    end
+
+    if path.include?("/frontend/discourse/tests/")
+      return path.split("/frontend/discourse/").last
+    elsif path.include?("/tests/")
+      return path.split("/tests/").last.prepend("tests/")
+    end
+
+    parts = path.split("/")
+    if idx = parts.index("tests")
+      return parts[idx..-1].join("/")
+    end
+
+    file_path
+  end
+
+  def ensure_file_paths_exist!
+    @file_paths.each do |file_path|
+      next if File.exist?(file_path)
+
+      puts "Error: File not found: #{file_path}"
+      exit 1
+    end
+  end
+
+  def check_dev_environment!
+    if @dry_run
+      puts "[dry-run] skipping dev environment check"
+      return
+    end
+
+    rails_ok = check_server(@rails_port, "Rails")
+
+    unless rails_ok
+      puts "\n? Dev environment not ready!\n"
+      puts "Expected Rails to be running on #{@rails_port}, but it is not responding."
+      puts
+      puts "Start with: bin/rails server, or use --standalone mode to spin up automatically"
+      puts ""
+      exit 1
+    end
+  end
+
+  def check_server(port, name)
+    uri = URI("http://localhost:#{port}")
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.open_timeout = 5
+    http.read_timeout = 5
+
+    begin
+      response = http.get("/")
+      if response.is_a?(Net::HTTPSuccess) || response.is_a?(Net::HTTPRedirection)
+        puts "? #{name} server responding on :#{port}" if @verbose
+        true
+      else
+        puts "? #{name} server on :#{port} returned #{response.code}"
+        false
+      end
+    rescue Errno::ECONNREFUSED
+      puts "? #{name} server not responding on :#{port} (connection refused)"
+      false
+    rescue => e
+      puts "? #{name} server on :#{port}: #{e.message}" if @verbose
+      false
+    end
+  end
+
+  def with_standalone_rails(&block)
+    puts "Running in standalone mode (spinning up test server)..." if @verbose
+
+    ensure_pnpm_installed!
+    install_node_dependencies!
+
+    @rails_port = next_available_port(60_098)
+    unicorn_env = build_unicorn_environment(@rails_port)
+    unicorn_pid = nil
+
+    begin
+      if @dry_run
+        puts "[dry-run] skipping unicorn startup"
+      else
+        unicorn_pid =
+          Process.spawn(unicorn_env, File.join(rails_root, "bin", "unicorn"), pgroup: true)
+      end
+      wait_for_rails_server(@rails_port)
+      yield
+    ensure
+      stop_unicorn(unicorn_pid, unicorn_env["UNICORN_PID_PATH"]) if unicorn_pid
+    end
+  end
+
+  def ensure_pnpm_installed!
+    return if system("command -v pnpm >/dev/null")
+    abort "pnpm is not installed. See https://pnpm.io/installation"
+  end
+
+  def install_node_dependencies!
+    if @dry_run
+      puts "[dry-run] skipping pnpm install"
+      return
+    end
+    system("pnpm", "install", exception: true)
+  end
+
+  def detect_browser
+    ChromeInstalledChecker.run
+  rescue ChromeInstalledChecker::ChromeError => err
+    abort err.message
+  end
+
+  def next_available_port(start_port)
+    port = (ENV["TEST_SERVER_PORT"] || start_port).to_i
+    port += 1 while !port_available?(port)
+    port
+  end
+
+  def port_available?(port)
+    server = TCPServer.open(port)
+    server.close
+    true
+  rescue Errno::EADDRINUSE
+    false
+  end
+
+  def build_unicorn_environment(unicorn_port)
+    pid_path = File.join(rails_root, "tmp/pids", "unicorn_test_#{unicorn_port}.pid")
+    env = {
+      "RAILS_ENV" => @rails_env || "test",
+      "SKIP_ENFORCE_HOSTNAME" => "1",
+      "UNICORN_PID_PATH" => pid_path,
+      "UNICORN_PORT" => unicorn_port.to_s,
+      "UNICORN_SIDEKIQS" => "0",
+      "DISCOURSE_SKIP_CSS_WATCHER" => "1",
+      "UNICORN_LISTENER" => "127.0.0.1:#{unicorn_port}",
+      "LOGSTASH_UNICORN_URI" => nil,
+      "UNICORN_WORKERS" => "1",
+      "UNICORN_TIMEOUT" => "90",
+    }
+
+    env["LOAD_PLUGINS"] = "1" if should_load_plugins?
+
+    env
+  end
+
+  def wait_for_rails_server(port)
+    if @dry_run
+      puts "[dry-run] skipping Rails server warm-up"
+      return
+    end
+    uri = URI("http://localhost:#{port}/srv/status")
+    puts "Warming up Rails server"
+
+    deadline = Time.now + 60
+    begin
+      Net::HTTP.get(uri)
+    rescue Errno::ECONNREFUSED,
+           Errno::EADDRNOTAVAIL,
+           Net::ReadTimeout,
+           Net::HTTPBadResponse,
+           EOFError
+      if Time.now <= deadline
+        sleep 1
+        retry
+      end
+
+      puts "Timed out. Cannot connect to forked server!"
+      exit 1
+    end
+
+    puts "Rails server is warmed up"
+  end
+
+  def run_theme_build(unless_build_reused: false)
+    if @dry_run
+      puts "[dry-run] skipping ember build for themes"
+      return
+    end
+
+    return if unless_build_reused
+
+    system("pnpm", "ember", "build", chdir: frontend_dir, exception: true)
+  end
+
+  def build_theme_test_pages(query)
+    pages =
+      if ENV["THEME_IDS"] && !ENV["THEME_IDS"].empty?
+        ENV["THEME_IDS"]
+          .split("|")
+          .map { |theme_id| "#{@qunit_path}?#{query}&testem=1&id=#{theme_id}" }
+      else
+        ["#{@qunit_path}?#{query}&testem=1"]
+      end
+
+    pages.shuffle.join(",")
+  end
+
+  def build_file_path_filter(paths)
+    return nil if paths.empty?
+
+    relative_paths = paths.map { |path| convert_to_ember_relative_path(path) }
+    relative_paths.join(",")
+  end
+
+  def build_query
+    params = {}
+    params["seed"] = resolved_seed
+    params["module"] = @module if @module
+    params["theme_name"] = @theme_name if @theme_name
+    params["theme_url"] = @theme_url if @theme_url
+    params["theme_id"] = @theme_id if @theme_id
+    params["target"] = resolved_target if resolved_target && !@plugin_targets.any?
+    params["report_requests"] = "1" if @report_requests
+
+    encode_query_string(params)
+  end
+
+  def stop_unicorn(pid, pid_path)
+    if @dry_run
+      puts "[dry-run] skipping unicorn shutdown"
+      return
+    end
+    Process.kill("-KILL", pid)
+  rescue Errno::ESRCH
+  ensure
+    FileUtils.rm_f(pid_path) if pid_path
+  end
+
+  def rails_root
+    @rails_root ||= File.expand_path("..", __dir__)
+  end
+
+  def frontend_dir
+    @frontend_dir ||= File.expand_path("../frontend/discourse", __dir__)
+  end
+
+  def resolved_target
+    @resolved_target ||=
+      begin
+        implicit_target = (target_from_paths(@file_paths) if @file_paths.any?)
+
+        if @target && implicit_target && @target != implicit_target
+          puts "Files are for '#{implicit_target}', but target was configured as '#{@target}'"
+          exit 1
+        end
+
+        implicit_target || @target || "core"
+      end
+  end
+
+  def resolved_seed
+    @resolved_seed ||= present_string(@seed) || Random.new.seed
+  end
+
+  def should_load_plugins?
+    resolved_target != "core"
+  end
+
+  def target_from_paths(paths)
+    targets = paths.map { |path| target_from_path(path) }.uniq
+    if targets.length > 1
+      puts "Error: Cannot mix multiple plugin/core targets when running specific files"
+      exit 1
+    end
+    targets.first
+  end
+
+  def target_from_path(path)
+    match = path.match(%r{(?:^|/)plugins/([^/]+)/})
+    return "core" unless match
+
+    resolve_plugin_namespace(match[1])
+  end
+
+  def plugin_path?(path)
+    path.match?(%r{(?:^|/)plugins/})
+  end
+
+  def encode_query_string(params = {})
+    cleaned = params.compact
+    return nil if cleaned.empty?
+
+    URI.encode_www_form(cleaned)
+  end
+
+  def present_string(value)
+    return nil if value.nil?
+
+    str = value.to_s
+    str.empty? ? nil : str
+  end
+
+  def resolve_plugin_namespace(directory_name)
+    @plugin_namespace_cache ||= {}
+    return @plugin_namespace_cache[directory_name] if @plugin_namespace_cache.key?(directory_name)
+
+    plugin_rb = File.expand_path("../plugins/#{directory_name}/plugin.rb", __dir__)
+
+    if File.exist?(plugin_rb)
+      File.foreach(plugin_rb) do |line|
+        next unless line.start_with?("#")
+        attribute, value = line[1..].split(":", 2)
+        next unless attribute&.strip == "name"
+
+        plugin_name = value&.strip
+        if plugin_name && !plugin_name.empty?
+          @plugin_namespace_cache[directory_name] = plugin_name
+          return plugin_name
+        end
+      end
+    end
+
+    @plugin_namespace_cache[directory_name] = directory_name
+  end
+
+  def normalize_plugin_test_path(path)
+    path.sub(%r{\Atests?/javascripts/}, "")
+  end
+
+  def plugin_names_from_filter(filter)
+    return [] unless filter
+
+    filter.scan(%r{plugins/([^/]+)/}).flatten.uniq.map { |dir| resolve_plugin_namespace(dir) }
+  end
+
+  def ensure_supported_target!
+    value = present_string(@target)
+    return unless value
+
+    normalized = value.downcase
+    if normalized == "all"
+      abort "Error: Target 'all' is no longer supported. Use 'core' or 'plugins'."
+    end
+  end
+end
+
+QunitRunner.new(ARGV).run

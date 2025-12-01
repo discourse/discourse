@@ -6,11 +6,11 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { LinkTo } from "@ember/routing";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import { and, eq, not, or } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
+import { and, eq, not, or } from "discourse/truth-helpers";
 import SectionLinkPrefix from "./section-link-prefix";
 
 /**

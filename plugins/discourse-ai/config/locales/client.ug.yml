@@ -173,6 +173,7 @@ ug:
         thumbnail_suggestions:
           select: "تاللا"
           selected: "تاللاندى"
+          try_again: "قايتا سىنا"
         image_caption:
           save_caption: "ساقلا"
       embeddings:

@@ -111,6 +111,8 @@ he:
     ai_bot_allowed_groups: "כאשר לבוט של GPT יש גישה להודעות הפרטיות, הוא יגיב לחברים בקבוצות האלה."
     ai_bot_debugging_allowed_groups: "לאפשר לקבוצות האלו לצפות בכפתור ניפוי שיאות שמציג את בקשת ותגובה הבינה המלאכותית באופן גולמי"
     ai_bot_public_sharing_allowed_groups: "לאפשר לקבוצות האלה לשתף הודעות אישיות של בינה למאכותית עם הציבור באמצעות קישור ייחודי גלוי לציבור. הערה: אם האתר שלך דורש כניסה, גם שיתופים ידרשו כניסה."
+    ai_bot_add_to_header: "הצגת כפתור בכותרת כדי לפתוח הודעה פרטית עם בוט בינה מלאכותית"
+    ai_bot_add_to_community_section: "הצגת קישור בסרגל הצד כדי לפתוח הודעה פרטית עם בוט בינה מלאכותית"
     ai_bot_github_access_token: "אסימון גישה ל־GitHub לשימוש עם כלי הבינה המלאכותית של GitHub (נחוץ לתמיכה בחיפוש)"
     ai_discover_enabled: "הפעלת יכולת חיפוש גילוי"
     ai_discover_persona: "דמות לשימוש ליכולת חיפוש גילוי"
@@ -127,7 +129,12 @@ he:
     ai_discord_allowed_guilds: "גילדות (שרתי) Discord בהן מותר לבוט לחפש"
     ai_translation_enabled: "הפעלת יכולת תרגום עם בינה מלאכותית"
     ai_translation_model: "המודל לשימוש לתרגום. המודל הזה חייב לתמוך בתרגום. הדמויות יכולות לדרוס את ההגדרה הזאת."
+    ai_translation_backfill_limit_to_public_content: "כשהאפשרות פעילה, רק תוכן בקטגוריות ציבוריות יתורגם. כשהאפשרות מושבתת, התוכן בהודעות קבוצתיות פרטיות וקטגוריות פרטיות יישלח גם הוא לתרגום."
     ai_translation_max_post_length: "מספר התווים המרבי בפוסט לתרגום. פוסטים ארוכים מהערך הזה לא יתורגמו."
+    ai_translation_backfill_max_age_days: "הגיל המרבי של פוסט ונושא לתרגום. פוסטים ונושאים שהם ותיקים יותר ממשך הזמן הזה לא יתורגמו. 0 משבית מילוי לאחור אבל לא משבית תרגום של פוסטים חדשים."
+    ai_translation_backfill_hourly_rate: "מספר הפוסטים והנושאים לתרגום לשעה במהלך פעולות מילוי לאחור. יש להגדיר ל־0 כדי להשבית מילוי לאחור של תרגומים אוטומטית לתוכן קיים."
+    ai_usage_rollup_after_days: "מספר הימים לשמירת סטטיסטיקות שימוש בבינה מלאכותית לפי בקשה לפני גלגולן לצבירה יומית. הגדרה ל־0 תשבית איסופים."
+    ai_audit_logs_purge_after_days: "מחיקת יומני ביקורת של API של בינה מלאכותית שגילם עולה על מספר הימים הזה. ברירת המחדל היא כ־6 חודשים. הגדרה ל־0 תשמור ללא הגבלת זמן."
   reviewables:
     reasons:
       flagged_by_toxicity: תוסף הבינה המלאכותית סימן את זה לאחר סיווג כרעיל.
@@ -243,8 +250,18 @@ he:
           name: "שער חליפין"
         stock_quote:
           name: "מחיר המניה (AlphaVantage)"
-        image_generation:
-          name: "מחולל תמונות Flux‏ (Together.ai)"
+        image_generation_category:
+          name: "יצירת תמונות…"
+        image_generation_custom:
+          name: "מותאם"
+        image_generation_openai:
+          name: "OpenAI"
+        image_generation_gemini:
+          name: "ננו בננה"
+        image_generation_flux:
+          name: "FLUX 1.1 Pro"
+        image_generation_flux2:
+          name: "FLUX 2 Pro"
         empty_tool:
           name: "התחלה מאפס…"
       name:
@@ -252,6 +269,13 @@ he:
     ai_helper:
       errors:
         completion_request_failed: "משהו השתבש במהלך הניסיון לספק הצעות. נא לנסות שוב."
+        credit_limit_exceeded_user: "הגעת למגבלת אסימוני הבינה המלאכותית עבור התוכנית שלך. תגובות לא תהיינה זמינות עד שהמגבלה שלך תתאפס ב־%{reset_time}."
+        credit_limit_exceeded_bot: "תגובות בינה מלאכותית אינן זמינות כרגע עקב מגבלות אסימונים. נא לנסות שוב %{reset_time}."
+        no_illustrator_persona: "לא מוגדר דמות איור לפוסטים. נא לבדוק את הגדרות האתר שלך."
+        no_image_generation_tool: "לדמות איור הפוסטים חייב להיות מוצמד כלי יצירת תמונות. נא להגדיר כלי יצירת תמונות לדמות הזאת בלוח הניהול."
+        no_image_generated: "יצירת תמונות נכשלה. נא לנסות שוב או לבדוק את הגדרות הכלי שלך."
+        llm_model_not_configured: "לא מוגדר מודל שפה ליצירת תמונות. נא להגדיר מודל שפה כברירת מחדל בהגדרות האתר שלך."
+        unknown_error: "אירעה שגיאה מפתיעה בעת יצירת תמונות ממוזערות. נא לנסות שוב."
       prompts:
         translate: תרגום ל%{language}
         generate_titles: הצעת כותרות לנושא
@@ -261,10 +285,6 @@ he:
         explain: "הסבר"
         illustrate_post: "איור פוסט"
         replace_dates: "תאריכים חכמים"
-      painter:
-        attribution:
-          stable_diffusion_xl: "תמונה מאת Stable Diffusion XL"
-          dall_e_3: "תמונה מאת DALL-E 3"
       image_caption:
         attribution: "הכותרת נוספה ע״י בינה מלאכותית"
     share_ai:
@@ -284,6 +304,7 @@ he:
       invalid_error_type: "סוג השגיאה שסופק לא תקין"
       unexpected: "אירעה שגיאה בלתי צפויה"
       bot_user_update_failed: "עדכון משתמש בוט סריקת הזבל נכשל"
+      configuration_missing: "הגדרות זיהוי ספאם עם בינה מלאכותית חסרות. יש להוסיף הגדרות דרך ‚ניהול > תוספים > בינה מלאכותית ב־Dicsourse > ספאם’ לפני הפעלת האפשרות הזאת."
       logging_subject: "זיהוי זבל"
     ai_bot:
       reply_error: "נראה שהמערכת שלך נתקלה בקשיים לא צפויים בעת הניסיון להשיב, עמך הסליחה.\n\n[details='פרטי השגיאה']\n%{details}\n[/details]"
@@ -335,6 +356,7 @@ he:
           description: "דמות ברירת מחדל שעליה מופעלים תקצירי בינה מלאכותית"
         short_summarizer:
           name: "מסכם (מקוצר)"
+          description: "דמות ברירת מחדל שמסכמת עם פריטי רשימות נושאים עם בינה מלאכותית"
         concept_finder:
           name: "איתור מושגים"
           description: "בוט בינה מלאכותית שמתמחה בזיהוי מושגים וערכות עיצוב בתוכן"
@@ -355,7 +377,7 @@ he:
           description: "דמות ברירת מחדל שעליה פועלת יכולת יצירת הטבלאות ב־Markdown של המסייע"
         post_illustrator:
           name: "איור פוסטים"
-          description: "מייצר הנחיות ל־StableDiffusion כדי לתפעל את יכולת איור הפוסטים של המסייע"
+          description: "יצירת תמונות לאיור פוסטים באמצעות כלי יצירת תמונות זמינים"
         proofreader:
           name: "הגהה"
           description: "דמות ברירת מחדל שעליה פועלת יכולת הגהת הטקסט של המסייע"
@@ -562,6 +584,7 @@ he:
           other: "נמצאו %{count} תוצאות לחיפוש אחר ‚%{query}’"
       discoveries:
         continue_conversation:
+          title: "שיחת גילוי: חיפוש אחר %{query}"
           raw: "בחיפוש שלי אחר %{query}, הצגת לי את המידע הבא:\n\n%{context}\n\nאפשר להמשיך את השיחה."
     summarization:
       configuration_hint:
@@ -620,6 +643,7 @@ he:
     llm_models:
       missing_provider_param: "%{param} לא יכול להישאר ריק"
       bedrock_invalid_url: "נא למלא את כל השדות די להשתמש במודל הזה."
+      bedrock_missing_auth: "AWS Bedrock דורש שאו שמפתח הגישה (Access Key ID) או שכתובת התפקיד (Role ARN) יהיו מוגדרים"
     ai_staff_action_logger:
       updated: "עודכן"
       set: "הגדרה"
@@ -627,6 +651,9 @@ he:
     translation:
       errors:
         disabled: "יכולת התרגום של הבינה המלאכותית אינה מוגדרת במלואה."
+        all_posts_translated: "כל הפוסטים בנושא הזה כבר מתורגמים."
+    llm_credit_allocation:
+      limit_exceeded_admin: "ניצלת את כל אסימוני הבינה המלאכותית שלך. נא לנסות שוב בעוד %{reset_time}."
     errors:
       quota_exceeded: "חרגת מהמכסה למודל הזה. נא לנסות שוב בעוד %{relative_time}."
       quota_required: "יש לציין את כמות האסימונים המרבית לשימוש למודל הזה"
@@ -648,3 +675,4 @@ he:
   dashboard:
     problem:
       ai_llm_status: "מודל השפה הגדול: %{model_name} נתקל בקשיים. נא לגשת ל<a href='%{url}'>עמוד ההגדרות של המודל</a>."
+      ai_credit_soft_limit: "ל־%{model_name} נותרו רק %{percentage_remaining}% מהאסימונים. האסימונים יתאפסו ב־%{reset_date}. <a href='%{url}'>הצגת מודלים של בינה מלאכותית</a>"

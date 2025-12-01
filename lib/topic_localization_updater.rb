@@ -2,10 +2,12 @@
 
 class TopicLocalizationUpdater
   def self.update(topic_id:, locale:, title:, user:)
-    Guardian.new(user).ensure_can_localize_content!
+    Guardian.new(user).ensure_can_localize_topic!(topic_id)
 
     localization = TopicLocalization.find_by(topic_id: topic_id, locale: locale)
     raise Discourse::NotFound unless localization
+
+    return localization if localization.title == title
 
     localization.title = title
     localization.fancy_title = Topic.fancy_title(title)

@@ -1,12 +1,13 @@
 import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import DButton from "discourse/components/d-button";
+import GroupFlairVisibilityWarning from "discourse/components/group-flair-visibility-warning";
 import GroupsFormInteractionFields from "discourse/components/groups-form-interaction-fields";
 import GroupsFormMembershipFields from "discourse/components/groups-form-membership-fields";
 import GroupsFormProfileFields from "discourse/components/groups-form-profile-fields";
 import bodyClass from "discourse/helpers/body-class";
+import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import { i18n } from "discourse-i18n";
-import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
 
 export default <template>
   {{bodyClass "groups-new-page"}}
@@ -53,6 +54,7 @@ export default <template>
       <GroupsFormMembershipFields @model={{@controller.model}} />
       <GroupsFormInteractionFields @model={{@controller.model}} />
 
+      <GroupFlairVisibilityWarning @model={{@controller.model}} />
       <div class="control-group buttons">
         <DButton
           @action={{@controller.save}}

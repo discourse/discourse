@@ -3,20 +3,10 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { makeArray } from "discourse/lib/helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
-let _lastCheckedByHandlers = {};
-
 function _handleLastCheckedByEvent(event) {
   ajax(`/append-last-checked-by/${event.currentTarget.postId}`, {
     type: "PUT",
   }).catch(popupAjaxError);
-}
-
-function _cleanUp() {
-  Object.values(_lastCheckedByHandlers || {}).forEach((handler) => {
-    handler.removeEventListener("click", _handleLastCheckedByEvent);
-  });
-
-  _lastCheckedByHandlers = {};
 }
 
 function _initializeDiscourseAutomation(api) {
@@ -26,8 +16,6 @@ function _initializeDiscourseAutomation(api) {
     api.decorateCookedElement(_decorateCheckedButton, {
       id: "discourse-automation",
     });
-
-    api.cleanupStream(_cleanUp);
   }
 }
 
@@ -40,19 +28,7 @@ function _decorateCheckedButton(element, postDecorator) {
   const postModel = postDecorator.getModel();
 
   Array.from(elems).forEach((elem) => {
-    const postId = postModel.id;
-    elem.postId = postId;
-
-    if (_lastCheckedByHandlers[postId]) {
-      _lastCheckedByHandlers[postId].removeEventListener(
-        "click",
-        _handleLastCheckedByEvent,
-        false
-      );
-      delete _lastCheckedByHandlers[postId];
-    }
-
-    _lastCheckedByHandlers[postId] = elem;
+    elem.postId = postModel.id;
     elem.addEventListener("click", _handleLastCheckedByEvent, false);
   });
 }

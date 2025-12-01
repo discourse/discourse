@@ -13,13 +13,11 @@ export default function () {
 
   // Topic routes
   this.route("topic", { path: "/t/:slug/:id" }, function () {
-    this.route("from-params", { path: "/" });
-    this.route("from-params-near", { path: "/:nearPost" });
+    this.route("fromParams", { path: "/" });
+    this.route("fromParamsNear", { path: "/:nearPost" });
   });
 
-  this.route("topicBySlugOrId", {
-    path: "/t/:slug_or_id",
-  });
+  this.route("topicBySlugOrId", { path: "/t/:slug_or_id" });
 
   this.route("discovery", { path: "/" }, function () {
     // top by periods - legacy route

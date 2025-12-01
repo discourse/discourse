@@ -192,7 +192,6 @@ ca:
     software_update_prompt:
       message: "Hem actualitzat aquest lloc, <span>si us plau, refresqueu</span> per mantenir les coses funcionant sense problemes."
       dismiss: "Descarta-ho"
-    bootstrap_mode: "Primers passos"
     back_button: "Enrere"
     welcome_banner:
       header:
@@ -250,7 +249,7 @@ ca:
     joined: "Registrat"
     admin_title: "Admin"
     show_more: "mostra'n més"
-    show_help: "opcions"
+    show_help: "Opcions"
     links: "Enllaços"
     links_lowercase:
       one: "enllaç"
@@ -483,8 +482,6 @@ ca:
       title: "Revisa"
       topic: "Tema:"
       filtered_topic: "Heu filtrat a contingut revisable en un sol tema."
-      filtered_user: "Usuari"
-      filtered_reviewed_by: "Revisat per"
       show_all_topics: "mostra tots els temes"
       deleted_post: "(publicació suprimida)"
       deleted_user: "(usuari suprimit)"
@@ -522,7 +519,7 @@ ca:
       replies:
         one: "%{count} resposta"
         other: "%{count} respostes"
-      edit: "Edita"
+      edit: "Edita publicació"
       save: "Desa"
       cancel: "Cancel·la"
       new_topic: "Aprovar aquest element crearà un tema nou"
@@ -543,7 +540,6 @@ ca:
           created_at: "Creat"
           created_at_asc: "Creat (invers)"
         priority:
-          title: "Prioritat mínima"
           any: "(qualsevol)"
           low: "Baixa"
           medium: "Mitjana"
@@ -589,6 +585,7 @@ ca:
       user_label: "Usuari"
       notes:
         delete: "Suprimeix"
+      topic_label: "Tema"
       review_user: "Usuari"
       insights:
         activities:
@@ -905,7 +902,6 @@ ca:
         one: "%{count} tema nou el mes passat."
         other: "%{count} temes nous el mes passat. "
     ip_lookup:
-      title: Explora adreça IP
       hostname: Nom d'amfitrió
       location: Ubicació
       location_not_found: (desconegut)
@@ -2487,18 +2483,11 @@ ca:
       required_tag_group:
         delete: "Suprimeix"
       topic_featured_link_allowed: "Permet enllaços destacats dins aquesta categoria"
-      delete: "Suprimeix categoria"
-      create: "Nova categoria"
       create_long: "Crea una categoria nova"
-      save: "Desa la categoria"
-      slug: "Slug de categoria"
       slug_placeholder: "(opcional) paraules amb guionets per a url"
       creation_error: Hi ha hagut un error en crear aquesta categoria.
       save_error: Hi ha hagut un error en desar la categoria.
-      name: "Nom de la categoria"
       description: "Descripció"
-      logo: "Imatge del logo de la categoria"
-      background_image: "Imatge de fons de la categoria"
       background_color: "Color"
       color_validations:
         cant_be_empty: "no pot ser buit"
@@ -2512,9 +2501,7 @@ ca:
       color_placeholder: "Qualsevol color web"
       delete_confirm: "Esteu segur que voleu suprimir aquesta categoria?"
       delete_error: "Hi ha hagut un error en suprimir aquesta categoria"
-      list: "Llista les categories"
       no_description: "Introduïu una descripció per a aquesta categoria."
-      change_in_category_topic: "Edita la descripció"
       already_used: "Aquest color ha estat utilitzat per una altra categoria"
       security: "Seguretat"
       permissions:
@@ -2535,19 +2522,13 @@ ca:
       subcategory_num_featured_topics: "Nombre de temes destacats en la pàgina de la categoria primària:"
       all_topics_wiki: "Converteix els temes nous en wikis per defecte"
       subcategory_list_style: "Estil de llista de la subcategoria:"
-      sort_order: "Llista de temes ordenada per:"
-      default_view: "Llista de temes per defecte:"
-      default_top_period: "Període superior per defecte:"
       allow_badges_label: "Permet concedir insígnies dins aquesta categoria"
-      edit_permissions: "Edita permisos"
       review_group_name: "nom del grup"
       require_topic_approval: "Requereix aprovació del moderador en tots els temes nous"
       require_reply_approval: "Requereix aprovació del moderador en totes les respostes noves"
       this_year: "enguany"
       position: "Posició en la pàgina de categories:"
-      default_position: "Posició per defecte"
       minimum_required_tags: "Nombre mínim d'etiquetes necessari en un tema:"
-      parent: "Categoria primària"
       num_auto_bump_daily: "Nombre de temes oberts que s'eleven automàticament cada dia:"
       navigate_to_first_post_after_read: "Navega fins a la primera publicació després de la lectura dels temes"
       notifications:
@@ -2564,18 +2545,14 @@ ca:
         muted:
           title: "Silenciat"
       search_priority:
-        label: "Prioritat de cerca"
         options:
           normal: "Normal"
           ignore: "Ignora"
-          very_low: "Molt baixa"
           low: "Baixa"
           high: "Alta"
-          very_high: "Molt alta"
       sort_options:
         default: "per defecte"
         likes: "'M'agrada'"
-        op_likes: "'M'agrada' a la publicació original"
         views: "Vistes"
         posts: "Publicacions"
         activity: "Activitat"
@@ -2749,8 +2726,6 @@ ca:
       top:
         title: "Principals"
         help: "els temes més actius durant el darrer any, mes, setmana o dia"
-        all:
-          title: "Sempre"
         yearly:
           title: "Anualment"
         quarterly:
@@ -2761,7 +2736,6 @@ ca:
           title: "Setmanalment"
         daily:
           title: "Diàriament"
-        all_time: "Sempre"
         this_year: "Any"
         this_quarter: "Trimestre"
         this_month: "Mes"
@@ -2809,7 +2783,6 @@ ca:
         go_to_unread_post: "%{shortcut} Vés a la primera publicació no llegida"
       application:
         title: "Aplicació"
-        create: "%{shortcut} Crea un tema nou"
         notifications: "%{shortcut} Obre notificacions"
         user_profile_menu: "%{shortcut} Obre el menú usuari"
         show_incoming_updated_topics: "%{shortcut} Mostra temes actualitzats"
@@ -2923,12 +2896,9 @@ ca:
           title: "Silenciat"
           description: "No sereu notificat de res sobre temes nous amb aquesta etiqueta, i no apareixeran en la pestanya de no llegits."
       groups:
-        title: "Grups d'etiquetes"
-        new: "Nou grup"
         tags_label: "Etiquetes en aquest grup"
         parent_tag_label: "Etiqueta primària"
         one_per_topic_label: "Limita a una etiqueta per cada tema d'aquest grup"
-        new_name: "Nou grup d'etiquetes"
         name_placeholder: "Nom"
         save: "Desa"
         delete: "Suprimeix"
@@ -3095,6 +3065,9 @@ ca:
         name: "Nom"
         enabled: "Activat"
         preview: "Previsualitza"
+        enabled_for_options:
+          everyone: "Tothom"
+          staff: "Només l'equip responsable"
         impact_roles:
           admins: "Administradors"
           moderators: "Moderadors"
@@ -3126,6 +3099,14 @@ ca:
         fonts:
           backfill_modal:
             modal_yes: "Sí"
+        welcome_banner:
+          form:
+            location:
+              label: "Ubicació"
+            header_logged_in:
+              placeholder: "Benvingut de nou, %{preferred_display_name}!"
+            header_anonymous:
+              placeholder: "Benvingut a %{site_name}!"
         navigation:
           title: "Navegació"
         notifications:
@@ -4019,7 +4000,6 @@ ca:
           success: "Èxit"
           exists: "Ja existeix"
           upload: "Afegeix des de fitxer"
-          upload_successful: "Càrrega feta amb èxit. S'han afegit paraules."
           html_label: "HTML"
         test:
           button_label: "Test"
@@ -4484,47 +4464,3 @@ ca:
           categories: "Categories"
           topics: "Temes"
           replace: "Reemplaça"
-  wizard_js:
-    wizard:
-      back: "Enrere"
-      next: "Següent"
-      step-text: "Pas"
-      step: "%{current} de %{total}"
-      upload_error: "S'ha produït un error en carregar aquest fitxer. Torneu-ho a provar."
-      staff_count:
-        one: "La comunitat té %{count}membre responsable (vós inclòs)."
-        other: "La comunitat té %{count} membres responsables (vós inclòs)."
-      invites:
-        add_user: "afegeix"
-        none_added: "No heu convidat cap membre de l'equip responsable. Esteu segur que voleu continuar?"
-        roles:
-          admin: "Admin"
-          moderator: "Moderador"
-          regular: "Usuari habitual"
-      homepage_choices:
-        custom:
-          label: "Personalitzat"
-        style_type:
-          categories: "categoria"
-          topics: "tema"
-      top_menu_items:
-        new: "Nou"
-        unread: "No llegits"
-        top: "Principals"
-        latest: "Més recents"
-        categories: "Categories"
-        read: "Llegit"
-        bookmarks: "Preferits"
-      previews:
-        share_button: "Comparteix"
-        reply_button: "Respon"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "totes les categories"
-        category_names:
-          site_feedback: "Comentaris sobre el lloc web"
-        table_headers:
-          topic: "Tema"
-          replies: "Respostes"
-          views: "Vistes"
-          activity: "Activitat"

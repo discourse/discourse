@@ -55,7 +55,21 @@ class UpcomingChanges::List
 
     upcoming_changes.each do |setting|
       group_ids_for_setting = SiteSetting.site_setting_group_ids[setting[:setting]]
-      setting[:groups] = groups.values_at(*group_ids_for_setting) if group_ids_for_setting.present?
+      setting[:groups] = groups.values_at(*group_ids_for_setting).join(
+        ",",
+      ) if group_ids_for_setting.present?
+
+      setting[:upcoming_change][:enabled_for] = if !setting[:value]
+        "no_one"
+      elsif setting[:groups].blank?
+        "everyone"
+      else
+        if group_ids_for_setting == [Group::AUTO_GROUPS[:staff]]
+          "staff"
+        else
+          "groups"
+        end
+      end
     end
   end
 
