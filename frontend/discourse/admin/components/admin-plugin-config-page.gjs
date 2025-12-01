@@ -28,9 +28,8 @@ export default class AdminPluginConfigPage extends Component {
   }
 
   get currentNavLink() {
-    const currentRouteName = this.router.currentRouteName;
     return this.adminPluginNavManager.currentConfigNav.links.find(
-      (link) => link.route === currentRouteName
+      (link) => link.route === this.router.currentRouteName
     );
   }
 
