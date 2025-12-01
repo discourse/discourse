@@ -8,7 +8,10 @@ module Jobs
           "jobs_chat_process_message_#{args[:chat_message_id]}",
           validity: 10.minutes,
         ) do
-          chat_message = ::Chat::Message.find_by(id: args[:chat_message_id])
+          chat_message =
+            ::Chat::Message.includes(uploads: { optimized_videos: :optimized_upload }).find_by(
+              id: args[:chat_message_id],
+            )
           return if !chat_message
 
           processor =
@@ -35,15 +38,7 @@ module Jobs
             ::Chat::Notifier.new(chat_message, chat_message.created_at).notify_new
           end
 
-          # Reload message with associations to ensure we have fresh data (e.g., optimized videos)
-          # This is important when video conversion completes and adds optimized_video associations
-          # Use the original message as fallback if reload fails (e.g., message was deleted)
-          message_to_publish =
-            ::Chat::Message.includes(uploads: { optimized_videos: :optimized_upload }).find_by(
-              id: chat_message.id,
-            ) || chat_message
-
-          ::Chat::Publisher.publish_processed!(message_to_publish)
+          ::Chat::Publisher.publish_processed!(chat_message)
         end
       end
     end
