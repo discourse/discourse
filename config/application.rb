@@ -167,6 +167,10 @@ module Discourse
     require "middleware/csp_script_nonce_injector"
     config.middleware.insert_after(ActionDispatch::Flash, Middleware::CspScriptNonceInjector)
 
+    if Rails.env.production? || Rails.env.test?
+      config.middleware.use Rack::Sendfile, "X-Accel-Redirect"
+    end
+
     require "middleware/discourse_public_exceptions"
     config.exceptions_app = Middleware::DiscoursePublicExceptions.new(Rails.public_path)
 
