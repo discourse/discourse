@@ -51,13 +51,21 @@ module DiscourseAi
           }
         end
 
-        # Don't add gists to the following topic lists.
-        gist_skipped_lists = %i[suggested semantic_related]
-
         plugin.register_modifier(:topic_query_create_list_topics) do |topics, options|
-          if SiteSetting.ai_summarization_enabled && SiteSetting.ai_summary_gists_enabled &&
-               !gist_skipped_lists.include?(options[:filter])
+          unless SiteSetting.ai_summarization_enabled && SiteSetting.ai_summary_gists_enabled
+            next topics
+          end
+
+          if topics.respond_to?(:includes)
+            # For ActiveRecord relations, use includes to preload gists
             topics.includes(:ai_gist_summary)
+          elsif topics.is_a?(Array) && topics.present?
+            # For Arrays (like suggested topics), preload associations manually
+            ActiveRecord::Associations::Preloader.new(
+              records: topics,
+              associations: :ai_gist_summary,
+            ).call
+            topics
           else
             topics
           end
@@ -67,10 +75,13 @@ module DiscourseAi
           :topic_list_item,
           :ai_topic_gist,
           include_condition: -> { scope.can_see_gists? },
-        ) do
-          return if gist_skipped_lists.include?(options[:filter])
-          object.ai_gist_summary&.summarized_text
-        end
+        ) { object.ai_gist_summary&.summarized_text }
+
+        plugin.add_to_serializer(
+          :suggested_topic,
+          :ai_topic_gist,
+          include_condition: -> { scope.can_see_gists? },
+        ) { object.ai_gist_summary&.summarized_text }
 
         # As this event can be triggered quite often, let's be overly cautious enqueueing
         # jobs if the feature is disabled.
