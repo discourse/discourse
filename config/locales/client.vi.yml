@@ -161,7 +161,6 @@ vi:
     software_update_prompt:
       message: "Chúng tôi đã cập nhật trang này, <span>vui lòng tải lại trang</span> để cho mọi thứ hoạt động ổn định."
       dismiss: "Hủy bỏ"
-    bootstrap_mode: "Bắt đầu"
     back_button: "Quay lại"
     welcome_banner:
       header:
@@ -470,7 +469,6 @@ vi:
       title: "Review"
       topic: "Chủ đề:"
       filtered_topic: "Bạn đã lọc đến nội dung có thể xem lại trong một chủ đề."
-      filtered_user: "Người dùng"
       show_all_topics: "hiển thị toàn bộ chủ đề"
       deleted_post: "(bài viết đã bị xóa)"
       deleted_user: "(người dùng đã bị xóa)"
@@ -579,7 +577,6 @@ vi:
       view_source: "Xem mã nguồn"
       insights:
         activities:
-          new_account: "tài khoản mới"
           posts:
             other: "%{count} bài đăng"
         visibility: "Khả năng hiển thị"
@@ -972,7 +969,6 @@ vi:
       topic_stat_sentence_month:
         other: "%{count}chủ đề mới trong tháng qua."
     ip_lookup:
-      title: Tìm kiếm địa chỉ IP
       hostname: Hostname
       location: Vị trí
       location_not_found: (không biết)
@@ -3776,6 +3772,9 @@ vi:
         name: "Tên"
         select_groups: "Chọn nhóm…"
         preview: "Xem trước"
+        enabled_for_options:
+          everyone: "Mọi người"
+          staff: "Chỉ nhân viên"
         impact_roles:
           admins: "Quản trị"
           moderators: "Điều hành viên"
@@ -5413,53 +5412,3 @@ vi:
           categories: "Thư mục"
           topics: "Chủ đề"
           replace: "Thay thế"
-  wizard_js:
-    wizard:
-      jump_in: "Nhay vào!"
-      finish: "Thoát thiết lập"
-      back: "Quay lại"
-      next: "Kế tiếp"
-      configure_more: "Cấu hình thêm…"
-      step-text: "Bước"
-      step: "%{current} trên %{total}"
-      uploading: "Đang tải lên…"
-      upload_error: "Xin lỗi, có lỗi xảy ra khi tải lên tập tin này. Vui lòng thử lại."
-      staff_count:
-        other: "Cộng đồng của bạn có %{count} nhân viên, bao gồm cả bạn."
-      invites:
-        add_user: "thêm vào"
-        none_added: "Bạn chưa mời bất kỳ nhân viên nào. Bạn có chắc chắn muốn tiếp tục không?"
-        roles:
-          admin: "Quản trị"
-          moderator: "Điều hành"
-          regular: "Người sử dụng thường xuyên"
-      homepage_choices:
-        custom:
-          label: "Tùy biến"
-        style_type:
-          categories: "danh mục"
-          topics: "chủ đề"
-      top_menu_items:
-        new: "Mới"
-        unread: "Chưa đọc"
-        top: "Top"
-        latest: "Mới nhất"
-        categories: "Danh mục"
-        unseen: "Không nhìn thấy"
-        read: "Đọc"
-        bookmarks: "Các đánh dấu"
-      previews:
-        share_button: "Chia sẻ"
-        reply_button: "Trả lời "
-        topic_preview: "Xem trước chủ đề"
-        homepage_preview: "Xem trước trang chủ"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "tất cả chuyên mục"
-        category_names:
-          site_feedback: "Phản hồi"
-        table_headers:
-          topic: "Chủ đề"
-          replies: "Trả lời"
-          views: "Lượt xem"
-          activity: "Hoạt động"

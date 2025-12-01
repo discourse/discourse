@@ -172,6 +172,7 @@ da:
           cancel: "Annuller"
         thumbnail_suggestions:
           select: "Vælg"
+          try_again: "Prøv igen"
         image_caption:
           save_caption: "Gem"
       embeddings:

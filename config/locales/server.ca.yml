@@ -2551,17 +2551,12 @@ ca:
     nice_share:
       name: Bonica compartició
       description: Ha compartit una publicació amb 25 visitants únics
-      long_description: "Aquesta insígnia es concedeix quan comparteixes un enllaç en el qual han fet clic 25 visitants. Gràcies per escampar la veu sobre les nostres discussions i sobre la comunitat. \n"
     good_share:
       name: Bona compartició
       description: Publicació compartida amb 300 visitants únics
-      long_description: |
-        Aquesta insígnia es concedeix per haver compartit un enllaç clicat per 300 visitants externs. Bona feina! Heu mostrat una gran discussió a un grup de persones noves i heu ajudat a fer créixer la comunitat.
     great_share:
       name: Gran compartició
       description: Publicació compartida amb 1.000 visites úniques
-      long_description: |
-        Aquesta insígnia es concedeix per haver compartit un enllaç en el qual han fet clic 1000 visitants externs. Molt bé! Heu promogut un debat interessant a un públic nou i enorme, i ens heu ajudat a fer créixer la comunitat en gran manera!
     first_like:
       name: Primer 'M'agrada'
       description: Ha fet 'M'agrada' a una publicació
@@ -2750,13 +2745,8 @@ ca:
   wizard:
     title: "Instal·lació de Discourse"
     step:
-      introduction:
-        fields:
-          title:
-            placeholder: "Cau de la Jane"
-          site_description:
-            placeholder: "Un lloc on la Jane i les seves amistats poden conversar sobre temes interessants"
-      privacy:
+      setup:
+        title: "Primers passos"
         fields:
           login_required:
             label: "Visibilitat"
@@ -2765,30 +2755,6 @@ ca:
                 label: "Públic"
               private:
                 label: "Privat"
-      styling:
-        fields:
-          styling_preview:
-            label: "Previsualitza"
-          homepage_style:
-            choices:
-              latest:
-                label: "Més recents"
-      corporate:
-        fields:
-          governing_law:
-            placeholder: "Jurisdicció de Califòrnia"
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
-          city_for_disputes:
-            placeholder: "San Francisco, Califòrnia"
-          site_contact:
-            description: "Tots els missatges personals automatitzats de Discourse s'enviaran des d'aquest usuari, com ara avisos de bandera i avisos de finalització de còpies de seguretat."
-      invites:
-        title: "Convida l'equip responsable"
-        description: "Esteu a punt d'acabar! Convidem unes quantes persones a ajudar a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>generar les discussions</a> amb temes i respostes interessants per a posar en marxa la comunitat."
-        disabled: "Atès que els inicis de sessió locals no estan habilitats, no és possible enviar invitacions a ningú. Procediu al pas següent."
-      finished:
-        title: "El vostre Discourse està a punt!"
   search_logs:
     graph_title: "Recompte de cerques"
   onebox:

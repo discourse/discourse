@@ -291,7 +291,6 @@ fi:
     software_update_prompt:
       message: "Olemme päivittäneet tämän sivuston, <span>päivitä</span> sivu, jotta asiat toimivat sujuvasti."
       dismiss: "Sulje"
-    bootstrap_mode: "Aloittaminen"
     back_button: "Takaisin"
     welcome_banner:
       header:
@@ -697,7 +696,7 @@ fi:
       title: "Käsittele"
       topic: "Ketju:"
       filtered_topic: "Olet suodattanut käsiteltävän sisällön yhdestä ketjusta."
-      filtered_user: "Käyttäjä"
+      filtered_user: "Liputettu käyttäjä"
       filtered_reviewed_by: "Käsittelijä:"
       show_all_topics: "näytä kaikki ketjut"
       deleted_post: "(viesti poistettu)"
@@ -835,7 +834,6 @@ fi:
           noun: "viesti"
       flagged_as: "Liputettu merkinnällä"
       user_label: "Käyttäjä"
-      assigned_to: "Osoitettu käyttäjälle"
       moderator_actions: "Valvojan toiminnot"
       timeline_and_notes: "Aikajana ja huomautukset"
       timeline:
@@ -873,7 +871,6 @@ fi:
           one: "%{count} yksittäisen käyttäjän liputtama"
           other: "%{count} yksittäisen käyttäjän liputtama"
         activities:
-          new_account: "uusi tili"
           trust_level: "luottamustaso: %{trustLevelName}"
           posts:
             one: "%{count} viesti"
@@ -881,7 +878,6 @@ fi:
         solution_marked: "Ratkaisu merkitty"
         topic_has_solution: "Tämä ketju on ratkaistu"
         visibility: "Näkyvyys"
-        topic_unlisted: "Tämä ketju on listaamaton. Siihen pääsee vain suoran linkin kautta – ei julkinen."
       help:
         moderation_guide: "Discoursen valvontaopas"
         flag_priorities: "Käyttäjien maineen hallinta ja liputusprioriteetit"
@@ -1304,7 +1300,6 @@ fi:
         one: "Alueet (%{count} muuta)…"
         other: "Alueet (%{count} muuta)…"
     ip_lookup:
-      title: IP-osoitteen haku
       hostname: Isäntänimi
       location: Sijainti
       location_not_found: (tuntematon)
@@ -5213,6 +5208,9 @@ fi:
         enabled: "Käytössä"
         select_groups: "Valitse ryhmät…"
         preview: "Esikatselu"
+        enabled_for_options:
+          everyone: "Kaikki"
+          staff: "Vain henkilökunnalle"
         impact_roles:
           admins: "Ylläpitäjät"
           moderators: "Valvojat"
@@ -7959,75 +7957,4 @@ fi:
           replace: "Korvaa"
   wizard_js:
     wizard:
-      jump_in: "Aloitetaan!"
-      finish: "Poistu määrityksestä"
-      back: "Takaisin"
-      next: "Seuraava"
-      configure_more: "Määritä lisää…"
-      step-text: "Askelväli"
-      step: "%{current}/%{total}"
-      upload: "Lataa tiedosto"
-      uploading: "Ladataan…"
-      upload_error: "Tiedoston lataaminen epäonnistui. Yritä uudelleen."
-      staff_count:
-        one: "Henkilökuntalaisia on yhteisössä %{count} (eli sinä)"
-        other: "Henkilökuntalaisia on yhteisössä %{count}, sinä mukaan lukien."
-      invites:
-        add_user: "lisää"
-        none_added: "Et ole kutsunut henkilökuntaa. Oletko varma, että haluat jatkaa?"
-        roles:
-          admin: "Ylläpitäjä"
-          moderator: "Valvoja"
-          regular: "Tavallinen käyttäjä"
-      homepage_choices:
-        custom:
-          label: "Mukautettu"
-          description: "Näytä %{type}painotteinen etusivu, jossa käyttäjät päätyvät sivulle %{landingPage}"
-        style_type:
-          categories: "kategoria"
-          topics: "ketju"
-      top_menu_items:
-        new: "Uudet"
-        unread: "Lukemattomat"
-        top: "Suositut"
-        latest: "Tuoreimmat"
-        hot: "Liekeissä"
-        categories: "Luokat"
-        unseen: "Näkemätön"
-        read: "Luetut"
-        bookmarks: "Kirjanmerkit"
-      previews:
-        topic_title: "Mitä kirjoja luet?"
-        share_button: "Jaa"
-        reply_button: "Vastaa"
-        topic_preview: "Ketjun esikatselu"
-        homepage_preview: "Aloitussivun esikatselu"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "kaikki alueet"
-        topic_titles:
-          what_books: "Mitä kirjoja luet?"
-          what_movies: "Mitä elokuvia olet nähnyt viime aikoina?"
-          random_fact: "Päivän satunnainen fakta"
-          tv_show: "Suosittele TV-ohjelmaa"
-          what_hobbies: "Mitkä ovat harrastuksesi?"
-          what_music: "Mitä kuuntelet juuri nyt?"
-          funniest_thing: "Hauskin asia, jonka olet nähnyt tänään"
-          share_art: "Jaa taidettasi!"
-        topic_ops:
-          what_books: |
-            Me kaikki rakastamme lukemista, käytä tätä ketjua tämänhetkisten tai viimeaikaisten lukukokemusten jakamiseen. Olen fantasiafani, ja olen lukenut Tarua sormusten herrasta sadannen kerran.
-            Entä sinä?
-        category_descriptions:
-          icebreakers: "Tutustu muihin yhteisön jäseniin hauskoilla kysymyksillä."
-          news: "Keskustele viimeisimmistä uutisista ja tapahtumista."
-          site_feedback: "Jaa ajatuksiasi yhteisöstä ja ehdota parannuksia."
-        category_names:
-          icebreakers: "Jäänmurtajat"
-          news: "Uutiset"
-          site_feedback: "Sivuston palaute"
-        table_headers:
-          topic: "Ketju"
-          replies: "Vastaukset"
-          views: "Katselut"
-          activity: "Toiminta"
+      jump_in: "Mennään!"

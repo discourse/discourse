@@ -1261,8 +1261,6 @@ sq:
     nice_share:
       name: Shpërndarje e mirë
       description: Ndau një postim me 25 vizitorë unikë
-      long_description: |
-        Kjo stemë jepet kur shpërdan një lidhje që është klikuar nga 25 vizitorë të jashtëm. Faleminderit që keni përhapur fjalën rreth bisedave tona, dhe këtij komuniteti.
     good_share:
       name: Shpërndarje goxha e mirë
       description: Ndau një postim me 300 vizitorë unikë
@@ -1382,14 +1380,15 @@ sq:
       title: "Dërgo përsëri emailin e aktivizimit"
   wizard:
     step:
-      styling:
+      setup:
+        title: "Material Hyrës"
         fields:
-          styling_preview:
-            label: "Parashikimi"
-          homepage_style:
+          login_required:
             choices:
-              latest:
-                label: "Më të fundit"
+              public:
+                label: "Publike"
+              private:
+                label: "Private"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} ju përmendi në "%{topic}" - %{site_title}'

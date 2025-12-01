@@ -9,7 +9,6 @@ ro:
     discourse_assign:
       group_everyone: "Toată lumea"
       assigned_to: "Atribuit la"
-      assigned_to_w_ellipsis: "Atribuit la..."
       reassign:
         title: "Editează"
       assign_modal:

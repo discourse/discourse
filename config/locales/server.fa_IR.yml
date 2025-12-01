@@ -2624,8 +2624,6 @@ fa_IR:
     nice_share:
       name: اشتراک‌گذاری خوب
       description: یک نوشته با 25 بازدید‌کننده یکتا را به اشتراک گذاشته‌اید.
-      long_description: |
-        این نشان زمانی اعطا می‌شود که یک لینک را به اشتراک بگذارید و 25 کلیک دریافت کند. با تشکر از شما برای کمک به گسترش سخن درباره بحث‌های ما، و این انجمن.
     good_share:
       name: اشتراک‌گذاری بهتر
       description: یک نوشته با 300 بازدید یکتا را به اشتراک گذاشته
@@ -2773,19 +2771,13 @@ fa_IR:
   wizard:
     title: "راه اندازی Discourse"
     step:
-      introduction:
-        title: "درباره سایت شما"
+      setup:
+        title: "شروع"
         fields:
           title:
             label: "نام انجمن"
-            placeholder: "انجمن آزموده"
-          site_description:
-            label: "انجمن خود را در یک جمله توصیف کنید"
-            placeholder: "محلی برای آموزش انواع زبان‌های برنامه نویسی"
           default_locale:
             label: "زبان"
-      privacy:
-        fields:
           login_required:
             label: "قابل مشاهده"
             choices:
@@ -2793,42 +2785,6 @@ fa_IR:
                 label: "عمومی"
               private:
                 label: "خصوصی"
-          chat_enabled:
-            placeholder: "فعال کردن گفتگو"
-      ready:
-        title: "سایت شما آماده است!"
-      styling:
-        fields:
-          styling_preview:
-            label: "پیش‌نمایش"
-          homepage_style:
-            choices:
-              latest:
-                label: "آخرین"
-              hot:
-                label: "داغ"
-      branding:
-        title: "لوگوی سایت"
-        fields:
-          logo:
-            label: "لوگوی اصلی"
-            description: "اندازه پیشنهادی: 600*200"
-          logo_small:
-            label: "لوگو مربع"
-      corporate:
-        title: "سازمان شما"
-        fields:
-          company_name:
-            label: "نام شرکت"
-          contact_url:
-            label: "صفحه وب"
-            placeholder: "https://www.example.com/contact-us"
-          contact_email:
-            placeholder: "example@user.com"
-      invites:
-        title: "دعوت همکاران"
-      finished:
-        title: "Discourse شما آماده‌ست!"
   onebox:
     discourse:
       user_joined_community: "در %{date} عضو شدن"

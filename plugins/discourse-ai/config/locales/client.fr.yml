@@ -548,7 +548,6 @@ fr:
         back: "Retour"
         confirm_delete: Voulez-vous vraiment supprimer ce modèle ?
         delete: Supprimer
-        seeded_warning: "Ce modèle est préconfiguré sur votre site et ne peut pas être modifié."
         quotas:
           title: "Quotas d'utilisation"
           add_title: "Créer un nouveau quota"
@@ -583,7 +582,7 @@ fr:
           other: "Ce modèle est actuellement utilisé par %{settings}. Si la configuration est incorrecte, les fonctionnalités ne fonctionneront pas comme prévu. "
         model_description:
           none: "Paramètres généraux qui fonctionnent pour la plupart des modèles linguistiques"
-          anthropic-claude-opus-4-1: "Le modèle le plus intelligent d'Anthropic"
+          anthropic-claude-opus-4-5: "Le modèle le plus intelligent d'Anthropic"
           anthropic-claude-sonnet-4-5: "Équilibre optimal entre vitesse et coût"
           anthropic-claude-haiku-4-5: "Rapide et économique"
           google-gemini-2-5-pro: "Grand modèle multimodal capable d'effectuer un large éventail de tâches"
@@ -701,6 +700,7 @@ fr:
           title: "Miniatures suggérées"
           select: "Sélectionner"
           selected: "Sélectionné"
+          try_again: "Réessayer"
         image_caption:
           button_label: "Légende avec IA"
           generating: "Génération de la légende..."

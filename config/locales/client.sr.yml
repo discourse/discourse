@@ -218,7 +218,6 @@ sr:
     software_update_prompt:
       message: "Unapredili smo ovaj sajt, <span>molimo osvežite stranicu</span> da bi se učitala nova verzija."
       dismiss: "Одбаци"
-    bootstrap_mode: "Prvi koraci"
     back_button: "Nazad"
     welcome_banner:
       header:
@@ -638,7 +637,6 @@ sr:
       title: "Pregled"
       topic: "Tema:"
       filtered_topic: "Prikazujete samo sadržaje unutar jedne teme koji zahtevaju pregled."
-      filtered_user: "Korisnik"
       filtered_reviewed_by: "Pregledano od"
       show_all_topics: "prikaži sve teme"
       deleted_post: "(post izbrisan)"
@@ -1109,7 +1107,6 @@ sr:
         week: "nedelja"
         month: "mesec"
     ip_lookup:
-      title: Pretraga po IP adresi
       hostname: Ime računara
       location: Lokacija
       location_not_found: (nepoznato)
@@ -2618,6 +2615,9 @@ sr:
       upcoming_changes:
         name: "Ime foruma"
         enabled: "Omogućeno"
+        enabled_for_options:
+          everyone: "Svi"
+          staff: "Samo članovi osoblja"
         impact_roles:
           admins: "Admini"
           moderators: "Moderatori"
@@ -3468,46 +3468,3 @@ sr:
         modal:
           categories: "Kategorije"
           topics: "Teme"
-  wizard_js:
-    wizard:
-      back: "Nazad"
-      next: "Dalje"
-      step-text: "Korak"
-      step: "%{current} od %{total}"
-      upload_error: "Žao nam je, dogodila se greška pri učitavanju te datoteke. Molimo pokušajte ponovo."
-      staff_count:
-        one: "Tvoja zajednica ima %{count} člana tima (tebe). "
-        few: "Vaša zajednica ima %{count} članova tima, uključujući i vas."
-        other: "Vaša zajednica ima %{count} članova tima, uključujući i vas."
-      invites:
-        add_user: "dodaj"
-        none_added: "Nikoga još niste pozvali za člana tima. Jesi li siguran da želiš da nastaviš dalje?"
-        roles:
-          admin: "Admin"
-          moderator: "Moderator"
-          regular: "Običan korisnik"
-      homepage_choices:
-        custom:
-          label: "Posebna"
-        style_type:
-          categories: "kategorija"
-          topics: "tema"
-      top_menu_items:
-        new: "Nova"
-        unread: "Nepročitano"
-        top: "Top"
-        latest: "Poslednje"
-        categories: "Kategorije"
-        read: "Pročitano"
-        bookmarks: "Markiraj"
-      previews:
-        share_button: "Podeli"
-        reply_button: "Odgovori"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "sve kategorije"
-        table_headers:
-          topic: "Tema"
-          replies: "Odgovori"
-          views: "Pregledi"
-          activity: "Aktivnosti"

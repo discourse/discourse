@@ -192,7 +192,6 @@ ca:
     software_update_prompt:
       message: "Hem actualitzat aquest lloc, <span>si us plau, refresqueu</span> per mantenir les coses funcionant sense problemes."
       dismiss: "Descarta-ho"
-    bootstrap_mode: "Primers passos"
     back_button: "Enrere"
     welcome_banner:
       header:
@@ -483,7 +482,6 @@ ca:
       title: "Revisa"
       topic: "Tema:"
       filtered_topic: "Heu filtrat a contingut revisable en un sol tema."
-      filtered_user: "Usuari"
       show_all_topics: "mostra tots els temes"
       deleted_post: "(publicació suprimida)"
       deleted_user: "(usuari suprimit)"
@@ -904,7 +902,6 @@ ca:
         one: "%{count} tema nou el mes passat."
         other: "%{count} temes nous el mes passat. "
     ip_lookup:
-      title: Explora adreça IP
       hostname: Nom d'amfitrió
       location: Ubicació
       location_not_found: (desconegut)
@@ -3068,6 +3065,9 @@ ca:
         name: "Nom"
         enabled: "Activat"
         preview: "Previsualitza"
+        enabled_for_options:
+          everyone: "Tothom"
+          staff: "Només l'equip responsable"
         impact_roles:
           admins: "Administradors"
           moderators: "Moderadors"
@@ -4464,47 +4464,3 @@ ca:
           categories: "Categories"
           topics: "Temes"
           replace: "Reemplaça"
-  wizard_js:
-    wizard:
-      back: "Enrere"
-      next: "Següent"
-      step-text: "Pas"
-      step: "%{current} de %{total}"
-      upload_error: "S'ha produït un error en carregar aquest fitxer. Torneu-ho a provar."
-      staff_count:
-        one: "La comunitat té %{count}membre responsable (vós inclòs)."
-        other: "La comunitat té %{count} membres responsables (vós inclòs)."
-      invites:
-        add_user: "afegeix"
-        none_added: "No heu convidat cap membre de l'equip responsable. Esteu segur que voleu continuar?"
-        roles:
-          admin: "Admin"
-          moderator: "Moderador"
-          regular: "Usuari habitual"
-      homepage_choices:
-        custom:
-          label: "Personalitzat"
-        style_type:
-          categories: "categoria"
-          topics: "tema"
-      top_menu_items:
-        new: "Nou"
-        unread: "No llegits"
-        top: "Principals"
-        latest: "Més recents"
-        categories: "Categories"
-        read: "Llegit"
-        bookmarks: "Preferits"
-      previews:
-        share_button: "Comparteix"
-        reply_button: "Respon"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "totes les categories"
-        category_names:
-          site_feedback: "Comentaris sobre el lloc web"
-        table_headers:
-          topic: "Tema"
-          replies: "Respostes"
-          views: "Vistes"
-          activity: "Activitat"

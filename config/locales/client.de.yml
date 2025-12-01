@@ -291,7 +291,6 @@ de:
     software_update_prompt:
       message: "Wir haben diese Website aktualisiert. <span>Bitte aktualisiere</span>, damit alles reibungslos funktioniert."
       dismiss: "Verwerfen"
-    bootstrap_mode: "Erste Schritte"
     back_button: "Zurück"
     welcome_banner:
       header:
@@ -710,7 +709,7 @@ de:
       title: "Überprüfen"
       topic: "Thema:"
       filtered_topic: "Du hast nach zu prüfenden Inhalten in einem einzelnen Thema gefiltert."
-      filtered_user: "Benutzer"
+      filtered_user: "Gemeldeter Benutzer"
       filtered_reviewed_by: "Überprüft von"
       show_all_topics: "alle Themen zeigen"
       deleted_post: "(Beitrag gelöscht)"
@@ -853,7 +852,6 @@ de:
       queued_post_label: "Beitrag in der Warteschlange"
       queued_topic_label: "Thema in der Warteschlange"
       user_label: "Benutzer"
-      assigned_to: "Zugeordnet zu"
       moderator_actions: "Moderator-Aktionen"
       timeline_and_notes: "Zeitleiste & Notizen"
       timeline:
@@ -891,12 +889,10 @@ de:
         flagged_by_users:
           one: "Gemeldet von %{count} eindeutigen Benutzer"
           other: "Gemeldet von %{count} eindeutigen Benutzern"
-        similar_posts: "Frühere Verstöße"
         flagged_in_timeframe:
           one: "%{count} bestätigte Meldung"
           other: "%{count} bestätigte Meldungen"
         activities:
-          new_account: "neues Konto"
           trust_level: "Vertrauensstufe: %{trustLevelName}"
           posts:
             one: "%{count} Beitrag"
@@ -904,7 +900,6 @@ de:
         solution_marked: "Lösung markiert"
         topic_has_solution: "Dieses Thema hat eine Lösung"
         visibility: "Sichtbarkeit"
-        topic_unlisted: "Dieses Thema ist nicht gelistet, sondern nur über einen direkten Link zugänglich. Es ist nicht öffentlich."
       help:
         moderation_guide: "Leitfaden zur Discourse-Moderation"
         flag_priorities: "Verwalten der Benutzerreputation und Meldeprioritäten"
@@ -1327,7 +1322,6 @@ de:
         one: "Kategorien (%{count} weitere) …"
         other: "Kategorien (%{count} weitere) …"
     ip_lookup:
-      title: IP-Adressen-Abfrage
       hostname: Hostname
       location: Standort
       location_not_found: (unbekannt)
@@ -5294,6 +5288,9 @@ de:
         save_groups: "Gruppen speichern"
         select_groups: "Gruppen auswählen …"
         preview: "Vorschau"
+        enabled_for_options:
+          everyone: "Jeder"
+          staff: "Nur Team-Mitglieder"
         impact_roles:
           admins: "Administratoren"
           moderators: "Moderatoren"
@@ -8070,77 +8067,4 @@ de:
           replace: "Ersetzen"
   wizard_js:
     wizard:
-      jump_in: "Jetzt loslegen!"
-      finish: "Installation verlassen"
-      back: "Zurück"
-      next: "Nächstes"
-      configure_more: "Mehr konfigurieren …"
-      step-text: "Schritt"
-      step: "%{current} von %{total}"
-      upload: "Datei hochladen"
-      uploading: "Wird hochgeladen …"
-      upload_error: "Entschuldige, es gab einen Fehler beim Hochladen der Datei. Bitte versuche es noch einmal."
-      staff_count:
-        one: "Deine Community hat %{count} Team-Mitglied (du)."
-        other: "Deine Community hat %{count} Team-Mitglieder (einschließlich dir)."
-      invites:
-        add_user: "Hinzufügen"
-        none_added: "Du hast bisher keine Team-Mitglieder eingeladen. Möchtest du wirklich fortfahren?"
-        roles:
-          admin: "Administration"
-          moderator: "Moderator"
-          regular: "Normaler Benutzer"
-      homepage_choices:
-        custom:
-          label: "Benutzerdefiniert"
-          description: "Zeige eine %{type}-orientierte Homepage. Die Benutzer landen auf %{landingPage}."
-        style_type:
-          categories: "Kategorie"
-          topics: "Thema"
-      top_menu_items:
-        new: "Neu"
-        unread: "Ungelesen"
-        top: "Angesagt"
-        latest: "Aktuelle"
-        hot: "Heiß"
-        categories: "Kategorien"
-        unseen: "Ungesehen"
-        read: "Gelesen"
-        bookmarks: "Lesezeichen"
-      previews:
-        topic_title: "Welche Bücher liest du gerade?"
-        share_button: "Teilen"
-        reply_button: "Antworten"
-        topic_preview: "Themenvorschau"
-        homepage_preview: "Vorschau der Homepage"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "alle Kategorien"
-        topic_titles:
-          what_books: "Welche Bücher liest du gerade?"
-          what_movies: "Welche Filme hast du in letzter Zeit gesehen?"
-          random_fact: "Kuriosität des Tages"
-          tv_show: "Eine Fernsehsendung empfehlen"
-          what_hobbies: "Was sind deine Hobbys?"
-          what_music: "Was hörst du gerade?"
-          funniest_thing: "Das Lustigste, was du heute gesehen hast"
-          share_art: "Teile deine Kunst!"
-        topic_ops:
-          what_books: |
-            Wir alle lieben es zu lesen, also lasst uns dieses Thema nutzen, um unsere
-            aktuellen oder kürzlich gelesenen Bücher zu teilen. Ich bin ein Fantasy-Fan und habe
-            zum 100. Mal „Der Herr der Ringe“ gelesen.
-            Was ist mit dir?
-        category_descriptions:
-          icebreakers: "Lerne deine Community-Mitglieder mit lustigen Fragen kennen."
-          news: "Diskutiere die neuesten Nachrichten und Ereignisse."
-          site_feedback: "Teile deine Meinung über die Community mit und schlage Verbesserungen vor."
-        category_names:
-          icebreakers: "Eisbrecher"
-          news: "Nachrichten"
-          site_feedback: "Website-Feedback"
-        table_headers:
-          topic: "Thema"
-          replies: "Antworten"
-          views: "Aufrufe"
-          activity: "Aktivität"
+      jump_in: "Los geht's!"

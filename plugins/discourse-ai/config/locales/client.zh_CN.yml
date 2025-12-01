@@ -174,6 +174,7 @@ zh_CN:
               label: "PM 发送者"
               description: "发送 PM 的用户（默认为系统）"
             notify_author_pm_message:
+              label: "PM 内容"
               description: "可选发送给作者的自定义消息"
             include_personal_messages:
               label: "包括个人消息"
@@ -187,6 +188,38 @@ zh_CN:
             max_output_tokens:
               label: "最大输出词元数"
               description: "指定后，设置模型可以生成的词元数上限。遵守 LLM 的输出词元数上限"
+        llm_tagger:
+          tag_mode:
+            manual: "使用特定标签列表（配置如下）"
+            discover: "让 AI 发现并使用任何网站标签"
+          fields:
+            tagger_persona:
+              label: "AI 角色"
+              description: "用于分析和标记话题的 AI 角色"
+            tag_mode:
+              label: "标签选择模式"
+              description: "选择 AI 如何选取标签"
+            available_tags:
+              label: "可用标签"
+              description: "AI 可选择的标签（仅在手动模式下使用）"
+            confidence_threshold:
+              label: "置信度阈值"
+              description: "应用建议标签所需的最低置信度百分比 (0-100)"
+            max_tags_per_post:
+              label: "每个帖子的最大标签数"
+              description: "单个帖子可应用的标签数量上限"
+            max_post_tokens:
+              label: "帖子最大词元数"
+              description: "要分析的帖子内容中可使用的最大词元数"
+            allow_restricted_tags:
+              label: "允许受限标签"
+              description: "允许 AI 建议并应用受限权限或可见性的标签。"
+            max_posts_for_context:
+              label: "用于上下文的最大帖子数量"
+              description: "用于分析上下文时可包含的话题帖子数量上限（默认：5）"
+            allow_system_posts:
+              label: "允许系统帖子"
+              description: "允许系统用户为创建的帖子添加标签。"
     discourse_ai:
       title: "AI"
       default_llm:
@@ -266,6 +299,10 @@ zh_CN:
           post_raw_translator: "帖子原始翻译器"
           topic_title_translator: "话题标题翻译器"
           short_text_translator: "短文本翻译器"
+          schedule_untranslated: "定时翻译"
+          schedule_topic_success:
+            other: "已定时翻译 %{count} 未翻译的帖子。"
+          schedule_topic_error: "定时翻译失败。请重试。"
         spam:
           name: "垃圾信息"
           description: "使用所选 LLM 识别潜在垃圾信息，并进行标记，使其进入审核队列，以便站点版主可以进行检查"
@@ -291,6 +328,7 @@ zh_CN:
           localization_settings: "本地化设置"
           enable_translations: "启用自动翻译"
         stats:
+          title: "翻译统计"
           complete_language_detection_description: "所有符合 %{total} 条件的帖子均已检测到其语言。"
           incomplete_language_detection_description: "%{done} 个符合条件的帖子中的 %{total} 个已检测到其语言。"
           backfill_disabled: "回填功能已禁用，仅翻译新帖子。"
@@ -303,6 +341,7 @@ zh_CN:
             other: "%{count} 天"
         progress_chart:
           title: "翻译进度"
+          data_label: "%{percentage}%"
           tooltip_translated: "%{done} 篇非 %{language} 篇帖子已翻译，共 %{total} 篇"
           bar_done:
             other: "%{count} 个帖子"
@@ -312,6 +351,8 @@ zh_CN:
             title: "将这篇帖子翻译成所有支持的语言"
             confirm: "这将更新此帖子的所有现有翻译。你确定吗？"
             success: "帖子已发送供翻译"
+        credit_limit_warning: "由于额度限制，翻译已暂停。额度重置后将自动恢复 (%{reset_time})。"
+        credit_limit_warning_no_time: "由于额度限制，翻译已暂停。额度重置后将自动恢复。"
       spam:
         short_title: "垃圾信息"
         title: "配置垃圾信息处理"
@@ -367,6 +408,8 @@ zh_CN:
         request_tokens: "请求词元"
         response_tokens: "回答词元"
         net_request_tokens: "网络请求词元"
+        cache_read_tokens: "缓存读取词元数"
+        cache_write_tokens: "缓存写入词元数"
         cached_tokens: "缓存的词元"
         cached_request_tokens: "缓存的请求词元"
         total_spending: "预估费用"
@@ -379,6 +422,8 @@ zh_CN:
           total_tokens: "提示 LLM 时使用的所有词元"
           request_tokens: "LLM 试图理解您所说的话时使用的词元"
           response_tokens: "LLM 回答您的提示时使用的词元"
+          cache_read_tokens: "从缓存中复用的、先前处理过的请求词元，LLM 会重复使用这些词元优化性能和成本"
+          cache_write_tokens: "写入缓存，以便将来重复使用的请求词元数"
           cached_tokens: "先前处理过的请求词元，LLM 会重复使用这些词元优化性能和成本"
           total_spending: "根据添加到 LLM 配置设置中的指定成本指标，LLM 使用的所有词元的累计成本"
         periods:
@@ -386,6 +431,7 @@ zh_CN:
           last_week: "过去一周"
           last_month: "过去一个月"
           custom: "自定义…"
+        credit_allocations: "额度分配"
       ai_persona:
         ai_tools: "工具"
         tool_strategies:
@@ -411,6 +457,8 @@ zh_CN:
           low: 低品质 - 最便宜 (256x256)
           medium: 中等品质 (512x512)
           high: 高品质 - 最慢 (1024x1024)
+        show_thinking: 显示思考过程
+        show_thinking_help: 将向终端用户显示语言模型的内部思考过程和工具调用。
         mentionable: 允许提及
         mentionable_help: 如果启用，允许的群组中的用户可以在帖子中提及此用户，AI 将以此角色的身份进行回复。
         user: 用户
@@ -559,6 +607,7 @@ zh_CN:
         ai_bot_user: "AI 机器人用户"
         cost_input: "输入成本"
         cost_cached_input: "缓存输入成本"
+        cost_cache_write: "缓存写入成本"
         cost_output: "输出成本"
         save: "保存"
         edit: "编辑"
@@ -566,7 +615,6 @@ zh_CN:
         back: "返回"
         confirm_delete: 确定要删除此模型吗？
         delete: 删除
-        seeded_warning: "此模型已在您的站点上预先配置，无法编辑。"
         quotas:
           title: "使用配额"
           add_title: "创建新配额"
@@ -587,6 +635,11 @@ zh_CN:
           max_tokens_required: "如果未设置最大使用量，则必须设置"
           max_usages_help: "此群组中每个用户在指定时长内可以使用 AI 模型的最大次数。此配额按个别用户进行跟踪，不在整个群组中共享。"
           max_usages_required: "如果未设置最大词元数，则必须设置"
+        credit_allocation:
+          credits_remaining: "剩余 %{remaining} / %{total} 额度（%{percentage}%）"
+          soft_limit_warning: "该模型今天剩余 %{percentage}% 的 AI 额度"
+          hard_limit_warning: "您已用完此模型的 AI 额度。使用该模型的 AI 功能将暂停使用，直至 %{reset_date}。"
+          next_reset: "额度重置于 %{time}"
         usage:
           ai_bot: "AI 机器人"
           ai_helper: "助手 (%{persona})"
@@ -600,13 +653,14 @@ zh_CN:
           other: "此模型目前的使用者为 %{settings}。如果配置错误，功能将无法按预期运行。"
         model_description:
           none: "适用于大多数语言模型的常规设置"
-          anthropic-claude-opus-4-1: "Anthropic 最聪明的模型"
+          anthropic-claude-opus-4-5: "Anthropic 最聪明的模型"
           anthropic-claude-sonnet-4-5: "速度与成本的最佳平衡"
           anthropic-claude-haiku-4-5: "快速、经济高效"
           google-gemini-3-pro: "谷歌最智能的模型"
           google-gemini-2-5-pro: "能够执行多种任务的大型多模态模型"
           google-gemini-2-5-flash: "轻量、快速、经济高效，具有多模态推理能力"
           google-gemini-2-5-flash-lite: "谷歌最小、性价比最高的机型"
+          google-gemini-2-5-flash-image-preview: "具备视觉能力的最新图像生成模型"
           open_ai-gpt-5-1: "OpenAI 的旗舰模型。它非常适合跨领域解决问题"
           open_ai-gpt-5-mini: "在智能、速度和成本之间实现平衡，使其成为适合许多用例的极具吸引力的模型。"
           open_ai-gpt-5-nano: "最快、最具成本效益的 GPT-5 模型。"
@@ -617,6 +671,8 @@ zh_CN:
           open_router-x-ai-grok-4: "xAI 的最新模型"
           open_router-deepseek-deepseek-r1-0528-free: "DeepSeek 的最新推理模型"
           open_router-meta-llama-3-3-70b-instruct: "功能强大的多语言模式"
+          groq-openai-gpt-oss-120b: "OpenAI 最先进的开放权重模型"
+          groq-openai-gpt-oss-20b: "OpenAI 的轻量级、快速、开放权重模型"
         preseeded_model_description: "利用 %{model} 的预配置开源模型"
         configured:
           title: "配置的 LLM"
@@ -643,6 +699,8 @@ zh_CN:
           vision_enabled: "如果启用，AI 将尝试理解图片，这取决于使用的模型是否支持视觉。Anthropic、Google 和 OpenAI 的最新模型支持该功能。"
           enabled_chat_bot: "如果启用，用户可以在使用 AI 机器人创建私信时选择此模型"
           cost_input: "此模型每 100 万个词元的输入成本"
+          cost_cached_input: "该模型每 100 万个词元的缓存输入成本（从提示缓存读取时）"
+          cost_cache_write: "该模型每写入 100 万个词元的缓存写入成本（从提示缓存写入时）"
           cost_output: "此模型每 100 万个词元的输出成本"
           cost_measure: "$/100 万个词元"
         providers:
@@ -663,6 +721,7 @@ zh_CN:
           fake: "自定义"
         provider_fields:
           access_key_id: "AWS Bedrock 访问密钥 ID"
+          role_arn: "AWS Bedrock Role ARN"
           region: "AWS Bedrock 区域"
           organization: "可选 OpenAI 组织 ID"
           disable_system_prompt: "在提示中禁用系统消息"
@@ -679,6 +738,11 @@ zh_CN:
           disable_temperature: "禁用温度（某些思考模型不支持温度）"
           disable_top_p: "禁用 Top P（某些思考模型不支持 Top P）"
           enable_responses_api: "启用回答 API（某些 OpenAI 模型需要）"
+          prompt_caching: "提示缓存模式"
+          prompt_caching_never: "从不 - 不使用提示缓存"
+          prompt_caching_tool_results: "工具结果 - 出现工具结果时进行缓存（推荐）"
+          prompt_caching_always: "总是-总是使用提示缓存"
+          effort: "推理强度（仅适用于 Claude Opus 4.5）"
       related_topics:
         title: "相关话题"
         pill: "相关"
@@ -722,12 +786,20 @@ zh_CN:
           title: "建议的缩略图"
           select: "选择"
           selected: "已选择"
+          try_again: "重试"
         image_caption:
           button_label: "使用 AI 生成标题"
           generating: "正在生成标题…"
           credits: "由 AI 生成标题"
           save_caption: "保存"
         no_content_error: "先添加内容，然后对其执行 AI 操作"
+      errors:
+        credit_limit_dialog:
+          title: "已达到 AI 额度限制"
+          message_user: "您已达到当前方案的 AI 额度上限。在额度于 %{reset_time} 重置前，系统将无法提供响应。有关详情，请联系您的站点管理员。"
+          message_without_time_user: "您已达到当前方案的 AI 额度上限。在额度重置之前，将无法获得回复。如需更多信息，请联系站点管理员。"
+          message_admin: "您已达到当前方案的 AI 额度上限。在额度于 %{reset_time} 重置之前，系统将无法提供回复。"
+          message_without_time_admin: "您已达到当前方案的 AI 额度上限。在额度重置之前，系统将无法提供回复。"
       reviewables:
         model_used: "使用的模型："
         accuracy: "准确性："
@@ -788,6 +860,7 @@ zh_CN:
           none: "抱歉，我们的 AI 搜索没有找到匹配的话题"
           new: "按“搜索”开始使用 AI 查找新结果"
           unavailable: "AI 结果不可用"
+          zero_results_expanded: "未找到任何结果，显示 %{count} AI 结果"
         semantic_search_tooltips:
           results_explanation: "启用后，将在下方添加更多 AI 搜索结果。"
           invalid_sort: "搜索结果必须按相关性排序才能显示 AI 结果"
@@ -819,6 +892,8 @@ zh_CN:
           copy_response: "复制回答"
           request_tokens: "请求词元："
           response_tokens: "回答词元："
+          cache_read_tokens: "缓存读取词元数:"
+          cache_write_tokens: "缓存写入词元数:"
           request: "请求"
           response: "回答"
           next_log: "下一步"
@@ -919,6 +994,7 @@ zh_CN:
         loading_convo: "正在加载对话"
         collapse: "收起"
         timed_out: "Discobot 找不到任何发现。出错了。"
+        user_setting: "启用 AI 搜索发现"
         tooltip:
           header: "AI 支持的搜索"
           content: "自然语言搜索由 %{model} 提供支持"

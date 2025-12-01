@@ -461,6 +461,7 @@ he:
           low: איכות נמוכה - הזול ביותר (256×256)
           medium: איכות בינונית (512×512)
           high: איכות גבוהה - האיטית ביותר (1024×1024)
+        show_thinking: הצגת חשיבה
         mentionable: לאפשר אזכורים
         mentionable_help: אם האפשרות פעולה, משתמשים בקבוצות המורדות יכולים לאזכר את המשתמש הזה בפוסטים, הבינה המלאכותית תגיב בתור הדמות הזאת.
         user: משתמש
@@ -540,6 +541,7 @@ he:
           rag_chunk_tokens_help: "מספר האסימונים לשימוש לכל נתח במודל ה־RAG. הגדלה תגדיל את כמות ההקשר בו יכולה להשתמש הבינה המלאכותית. (שינוי יסדר את כל ההעלאות במפתח מחדש)"
           rag_chunk_overlap_tokens: "העלאת אסימוני חפיפת חלקים"
           rag_chunk_overlap_tokens_help: "מספר האסימון לחפיפה בין נתחים במודל ה־RAG. (שינוי יסדר את כל ההעלאות במפתח מחדש)"
+          rag_llm_model_help: "מודל השפה שמשמש לזיהוי תווים אופטי במהלך סידור קובצי PDF ותמונות במפתח"
           show_indexing_options: "הצגת אפשרויות העלאה"
           hide_indexing_options: "הסתרת אפשרויות העלאה"
         uploads:
@@ -609,6 +611,7 @@ he:
         ai_bot_user: "משתמש בוט בינה מלאכותית"
         cost_input: "עלות קלט"
         cost_cached_input: "עלות קלט מאוחסן"
+        cost_cache_write: "עלות כתיבה למטמון"
         cost_output: "עלות פלט"
         save: "שמירה"
         edit: "עריכה"
@@ -616,7 +619,6 @@ he:
         back: "חזרה"
         confirm_delete: למחוק את המודל הזה?
         delete: מחיקה
-        seeded_warning: "המודל הזה מוגדר מראש באתר שלך ואי אפשר לערוך אותו."
         quotas:
           title: "מכסות שימוש"
           add_title: "יצירת מכסה חדשה"
@@ -635,6 +637,8 @@ he:
           hours: "שעות"
           max_tokens_required: "חובה להגדיר אם לא הוגדרה כמות שימושים מרבית"
           max_usages_required: "חובה להגדיר אם לא הוגדרה כמות אסימונים מרבית"
+        credit_allocation:
+          next_reset: "האסימונים מתאפסים ב־%{time}"
         usage:
           ai_bot: "בוט בינה מלאכותית"
           ai_helper: "מסייע (%{persona})"
@@ -651,7 +655,7 @@ he:
           other: "המודל הזה משמש את: %{settings}. אם ההגדרות שגויות היכולת לא תעבודנה כמצופה."
         model_description:
           none: "הגדרות כלליות שעובדות עבור רוב המודלים של השפות"
-          anthropic-claude-opus-4-1: "המודל החכם ביותר של Anthropic"
+          anthropic-claude-opus-4-5: "המודל החכם ביותר של Anthropic"
           anthropic-claude-sonnet-4-5: "איזון מיטבי בין מהירות לעלות"
           anthropic-claude-haiku-4-5: "מהיר וחסכוני"
           google-gemini-3-pro: "המודל החכם ביותר של Google"
@@ -668,6 +672,8 @@ he:
           open_router-x-ai-grok-4: "המודל האחרון של xAI"
           open_router-deepseek-deepseek-r1-0528-free: "מודל ההנמקה העדכני ביותר של DeepSeek"
           open_router-meta-llama-3-3-70b-instruct: "מודל רב־לשוני עם יכולות גבוהות"
+          groq-openai-gpt-oss-120b: "מודל משקל פתוח מהשורה הראשונה מבית OpenAI"
+          groq-openai-gpt-oss-20b: "מודל קל משקל, מהיר ופתוח של OpenAI"
         preseeded_model_description: "מודל קוד פתוח שהוגדר מראש ומשתמש ב־%{model}"
         configured:
           title: "LLMs (מודלי שפה גדולים) מוגדרים"
@@ -729,6 +735,7 @@ he:
           reasoning_tokens: "כמות אסימונים המשמשים לנימוק"
           disable_temperature: "השבתת טמפרטורה (חלק ממודלי החשיבה אינם תומכים בטמפרטורה)"
           enable_responses_api: "הפעלת API לתגובות (נחוץ במודלים מסוימים של OpenAI)"
+          effort: "רמת מאמץ (Claude Opus 4.5 בלבד)"
       related_topics:
         title: "נושאים קשורים"
         pill: "קשורים"
@@ -775,6 +782,7 @@ he:
           title: "תמונות ממוזערות מומלצות"
           select: "בחירה"
           selected: "נבחרים"
+          try_again: "ניסיון נוסף"
         image_caption:
           button_label: "מתן כותרת עם בינה מלאכותית"
           generating: "הכותרת מתחוללת…"

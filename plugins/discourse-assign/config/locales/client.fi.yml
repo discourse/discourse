@@ -41,7 +41,6 @@ fi:
       assigned_topic_to: "Osoitti ketjun käyttäjälle <a href='%{path}'>%{username}</a>"
       assign_post_to: "Osoitti viestin %{post_number} käyttäjälle %{username}"
       assign_post_to_multiple: "#%{post_number} käyttäjälle %{username}"
-      assigned_to_w_ellipsis: "Osoitettu käyttäjälle..."
       unassign:
         title: "Peru osoitus"
         title_w_ellipsis: "Peru osoitus..."

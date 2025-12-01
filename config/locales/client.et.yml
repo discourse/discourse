@@ -383,7 +383,6 @@ et:
       view_pending: "vaata ootel"
       title: "Vaata üle"
       topic: "Teema:"
-      filtered_user: "Kasutaja"
       show_all_topics: "näita kõiki teemasid"
       deleted_post: "(postitus kustutatud)"
       deleted_user: "(kasutaja kustutatud)"
@@ -776,7 +775,6 @@ et:
         one: "Kategooriad (%{count} veel)…"
         other: "Kategooriad (%{count} veel)…"
     ip_lookup:
-      title: IP-aadressi otsing
       hostname: Hostinimi
       location: Asukoht
       location_not_found: (teadmata)
@@ -2724,6 +2722,8 @@ et:
         name: "Nimi"
         enabled: "Sisse lülitatud"
         preview: "Eelvaade"
+        enabled_for_options:
+          everyone: "Kõik"
         impact_roles:
           admins: "Adminnid"
           moderators: "Moderaatorid"
@@ -3886,45 +3886,3 @@ et:
         modal:
           categories: "Kategooriad"
           topics: "Teemasid"
-  wizard_js:
-    wizard:
-      back: "Tagasi"
-      next: "Järgmine"
-      step-text: "Samm"
-      step: "%{current} %{total}-st"
-      uploading: "Laadin üles..."
-      upload_error: "Vabandame, selle faili üleslaadimisel tekkis viga. Palun proovi uuesti."
-      invites:
-        add_user: "lisa"
-        none_added: "Sa ei ole kutsunud ühtegi tiimi liiget. Kas oled kindel, et soovid jätkata?"
-        roles:
-          admin: "Adminn"
-          moderator: "Moderaator"
-          regular: "Tavakasutaja"
-      homepage_choices:
-        custom:
-          label: "Individuaalne"
-        style_type:
-          categories: "kategooria"
-          topics: "teema"
-      top_menu_items:
-        new: "Uus"
-        unread: "Lugemata"
-        top: "Juhtivad"
-        latest: "Värskeimad"
-        categories: "Kategooriad"
-        read: "Loe"
-        bookmarks: "Järjehoidjad"
-      previews:
-        share_button: "Jaga"
-        reply_button: "Vasta"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "kõik kategooriad"
-        category_names:
-          site_feedback: "Saidi tagasiside."
-        table_headers:
-          topic: "Teema"
-          replies: "Vastused"
-          views: "Vaatamisi"
-          activity: "Aktiivsus"
