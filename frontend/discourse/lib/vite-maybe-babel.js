@@ -4,6 +4,7 @@ import { walk } from "zimmerframe";
 const babelRequiredImports = new Set([
   // Templates
   "@ember/template-compiler",
+  "@ember/template-compilation",
   "ember-cli-htmlbars",
   "ember-cli-htmlbars-inline-precompile",
   "htmlbars-inline-precompile",

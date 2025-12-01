@@ -7,6 +7,7 @@ import config from "discourse/config/environment";
 import setupTests from "discourse/tests/setup-tests";
 
 defineModules(
+  "discourse/tests",
   Object.fromEntries(
     Object.entries(import.meta.glob("./**/*.{gjs,js}", { eager: true })).map(
       ([key, mod]) => {
@@ -14,8 +15,7 @@ defineModules(
         return [key, mod];
       }
     )
-  ),
-  "discourse/tests/"
+  )
 );
 
 document.addEventListener("discourse-init", async () => {
