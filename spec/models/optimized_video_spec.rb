@@ -49,6 +49,39 @@ RSpec.describe OptimizedVideo do
       expect(optimized_upload.url).to eq("//bucket.s3.region.amazonaws.com/original/1X/test.mp4")
       expect(optimized_upload.extension).to eq("mp4")
     end
+
+    it "inherits the secure flag from the original upload" do
+      user = User.create!(username: "testuser", email: "test@example.com")
+      secure_upload =
+        Upload.create!(
+          user: user,
+          original_filename: "original.mp4",
+          filesize: 2048,
+          sha1: "original-sha1",
+          extension: "mp4",
+          url: "//bucket.s3.region.amazonaws.com/original.mp4",
+          secure: true,
+        )
+
+      optimized_video =
+        OptimizedVideo.create_for(secure_upload, "test.mp4", secure_upload.user_id, options)
+      expect(optimized_video.optimized_upload.secure).to eq(true)
+
+      insecure_upload =
+        Upload.create!(
+          user: user,
+          original_filename: "original2.mp4",
+          filesize: 2048,
+          sha1: "original-sha1-2",
+          extension: "mp4",
+          url: "//bucket.s3.region.amazonaws.com/original2.mp4",
+          secure: false,
+        )
+
+      optimized_video2 =
+        OptimizedVideo.create_for(insecure_upload, "test2.mp4", insecure_upload.user_id, options)
+      expect(optimized_video2.optimized_upload.secure).to eq(false)
+    end
   end
 
   describe "#destroy" do
