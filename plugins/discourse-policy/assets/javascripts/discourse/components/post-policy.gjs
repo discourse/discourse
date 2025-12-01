@@ -8,6 +8,7 @@ import avatar from "discourse/helpers/bound-avatar-template";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import { and, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -126,21 +127,17 @@ export default class PostPolicy extends Component {
 
   @action
   revokePolicy() {
-    this.post.policy_not_accepted_by.pushObject(this.currentUser);
-    this.post.set(
-      "policy_not_accepted_by_count",
-      this.post.policy_not_accepted_by_count + 1
-    );
+    this.post.policy_not_accepted_by.push(this.currentUser);
+    this.post.policy_not_accepted_by_count =
+      this.post.policy_not_accepted_by_count + 1;
 
     const obj = this.post.policy_accepted_by.find(
       (item) => item.id === this.currentUser.id
     );
     if (obj) {
-      this.post.policy_accepted_by.removeObject(obj);
-      this.post.set(
-        "policy_accepted_by_count",
-        this.post.policy_accepted_by_count - 1
-      );
+      removeValueFromArray(this.post.policy_accepted_by, obj);
+      this.post.policy_accepted_by_count =
+        this.post.policy_accepted_by_count - 1;
     }
 
     if (this.post.policy_can_accept !== this.post.policy_can_revoke) {
@@ -157,22 +154,17 @@ export default class PostPolicy extends Component {
 
   @action
   acceptPolicy() {
-    this.post.policy_accepted_by.pushObject(this.currentUser);
-    this.post.set(
-      "policy_accepted_by_count",
-      this.post.policy_accepted_by_count + 1
-    );
+    this.post.policy_accepted_by.push(this.currentUser);
+    this.post.policy_accepted_by_count = this.post.policy_accepted_by_count + 1;
 
     const obj = this.post.policy_not_accepted_by.find(
       (item) => item.id === this.currentUser.id
     );
 
     if (obj) {
-      this.post.policy_not_accepted_by.removeObject(obj);
-      this.post.set(
-        "policy_not_accepted_by_count",
-        this.post.policy_not_accepted_by_count - 1
-      );
+      removeValueFromArray(this.post.policy_not_accepted_by, obj);
+      this.post.policy_not_accepted_by_count =
+        this.post.policy_not_accepted_by_count - 1;
     }
 
     if (this.post.policy_can_accept !== this.post.policy_can_revoke) {
@@ -219,7 +211,7 @@ export default class PostPolicy extends Component {
         },
       });
       result.users.forEach((user) => {
-        this.post.policy_not_accepted_by.pushObject(user);
+        this.post.policy_not_accepted_by.push(user);
       });
     } catch (e) {
       popupAjaxError(e);
