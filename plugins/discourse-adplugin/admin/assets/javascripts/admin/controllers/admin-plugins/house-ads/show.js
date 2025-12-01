@@ -6,6 +6,7 @@ import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { observes } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 import Preview from "../../../components/modal/preview";
@@ -71,7 +72,7 @@ export default class adminPluginsHouseAdsShow extends Controller {
         if (newRecord) {
           this.buffered.id = ajaxData.house_ad.id;
           if (!houseAds.includes(this.buffered)) {
-            houseAds.pushObject(EmberObject.create(this.buffered));
+            houseAds.push(EmberObject.create(this.buffered));
           }
           this.router.transitionTo(
             "adminPlugins.houseAds.show",
@@ -126,7 +127,8 @@ export default class adminPluginsHouseAdsShow extends Controller {
           type: "DELETE",
         }
       );
-      this.houseAdsController.model.removeObject(
+      removeValueFromArray(
+        this.houseAdsController.model,
         this.houseAdsController.model.find(
           (item) => item.id === this.buffered.id
         )
