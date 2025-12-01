@@ -1,4 +1,28 @@
 en:
+  reports:
+    ad_plugin_house_ads_performance:
+      title: Adplugin House Ads impressions 
+      description: "House Ads impressions report"
+    ad_plugin_ad_impressions:
+      title: Adplugin Ad impressions 
+      description: "Ads impressions report"
+    ad_plugin_impressions_by_user:
+      title: Ad Plugin Impressions by User
+      description: "Ad impressions grouped by user"
+    ad_plugin_click_through_rate:
+      title: Adplugin conversion performance
+      description: "Ad performance report by ad and placement"
+    ad_plugin_click_through_rate_by_placement:
+      title: Adplugin performance by placement 
+      description: "Ad performance report by placement"
+    ad_plugin_click_through_rate_by_ad_type:
+      title: Adplugin performance by ad type
+      description: "Ad performance report by ad type"
+
+
+  errors:
+    already_clicked: "Click already recorded"
+
   site_settings:
     discourse_adplugin_enabled: Enable the discourse-adplugin.
 

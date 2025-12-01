@@ -4,7 +4,7 @@ export default {
   map() {
     this.route("houseAds", { path: "/pluginad/house_creatives" }, function () {
       this.route("index", { path: "/" });
-      this.route("show", { path: "/:ad_id" });
+      this.route("show", { path: "/:id" });
     });
   },
 };
