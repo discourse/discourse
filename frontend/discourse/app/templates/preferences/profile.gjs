@@ -194,41 +194,6 @@ export default class Profile extends Component {
 
   <template>
     <Form @data={{this.formData}} @onSubmit={{this.saveForm}} as |form|>
-      {{#if @controller.siteSettings.allow_users_to_hide_profile}}
-        <form.Field
-          @name="hide_profile"
-          @title={{i18n "user.hide_profile"}}
-          as |field|
-        >
-          <field.Checkbox />
-        </form.Field>
-      {{/if}}
-
-      {{#each @controller.userFields as |uf|}}
-        <form.Field
-          @name={{concat "user_field_" uf.field.id}}
-          @title={{uf.field.name}}
-          @description={{uf.field.description}}
-          @validation={{validationFor uf.field}}
-          as |field|
-        >
-          <field.Custom>
-            <MutableField
-              @value={{field.value}}
-              @set={{field.set}}
-              as |wrapper|
-            >
-              <UserField
-                @field={{uf.field}}
-                @value={{wrapper.value}}
-                @validation={{field.validation}}
-                @showLabel={{false}}
-                @showDescription={{false}}
-              />
-            </MutableField>
-          </field.Custom>
-        </form.Field>
-      {{/each}}
 
       {{#if @controller.canChangeBio}}
         <form.Field
@@ -253,76 +218,141 @@ export default class Profile extends Component {
         </form.Field>
       {{/if}}
 
-      <form.Field @name="timezone" @title={{i18n "user.timezone"}} as |field|>
-        <field.Custom>
-          <TimezoneInput
-            @value={{field.value}}
-            @onChange={{fn this.updateTimezone field}}
-            class="input-xxlarge"
-          />
-          <DButton
-            @icon="globe"
-            @label="user.use_current_timezone"
-            @action={{fn this.useCurrentTimezone field}}
-            class="btn-default"
-          />
-        </field.Custom>
-      </form.Field>
-
-      {{#if @controller.model.can_change_location}}
-        <form.Field @name="location" @title={{i18n "user.location"}} as |field|>
-          <field.Input class="input-xxlarge" />
+      {{#if @controller.siteSettings.allow_users_to_hide_profile}}
+        <form.Field
+          @format="large"
+          @name="hide_profile"
+          @title={{i18n "user.hide_profile"}}
+          as |field|
+        >
+          <field.Checkbox />
         </form.Field>
       {{/if}}
 
-      {{#if @controller.model.can_change_website}}
-        <form.Field @name="website" @title={{i18n "user.website"}} as |field|>
-          <field.Input class="input-xxlarge" />
+      {{#if @controller.userFields.length}}
+        <form.Section @title="Custom Fields">
+          {{#each @controller.userFields as |uf|}}
+            <form.Field
+              @format="large"
+              @name={{concat "user_field_" uf.field.id}}
+              @title={{uf.field.name}}
+              @description={{uf.field.description}}
+              @validation={{validationFor uf.field}}
+              as |field|
+            >
+              <field.Custom>
+                <MutableField
+                  @value={{field.value}}
+                  @set={{field.set}}
+                  as |wrapper|
+                >
+                  <UserField
+                    @field={{uf.field}}
+                    @value={{wrapper.value}}
+                    @validation={{field.validation}}
+                    @showLabel={{false}}
+                    @showDescription={{false}}
+                  />
+                </MutableField>
+              </field.Custom>
+            </form.Field>
+          {{/each}}
+        </form.Section>
+      {{/if}}
+
+      <form.Section @title="Location and Website">
+        <form.Field
+          @format="large"
+          @name="timezone"
+          @title={{i18n "user.timezone"}}
+          as |field|
+        >
+          <field.Custom>
+            <TimezoneInput
+              @value={{field.value}}
+              @onChange={{fn this.updateTimezone field}}
+            />
+            <DButton
+              @icon="globe"
+              @label="user.use_current_timezone"
+              @action={{fn this.useCurrentTimezone field}}
+              class="btn-default"
+            />
+          </field.Custom>
         </form.Field>
-      {{/if}}
 
-      {{#if @controller.siteSettings.allow_profile_backgrounds}}
-        {{#if @controller.canUploadProfileHeader}}
+        {{#if @controller.model.can_change_location}}
           <form.Field
-            @name="profile_background_upload_url"
-            @title={{i18n "user.change_profile_background.title"}}
-            @description={{i18n "user.change_profile_background.instructions"}}
+            @format="large"
+            @name="location"
+            @title={{i18n "user.location"}}
             as |field|
           >
-            <field.Custom>
-              <UppyImageUploader
-                @imageUrl={{field.value}}
-                @onUploadDone={{fn this.profileBackgroundUploadDone field}}
-                @onUploadDeleted={{fn field.set null}}
-                @type="profile_background"
-                @id="profile-background-uploader-sandbox"
-              />
-            </field.Custom>
+            <field.Input />
           </form.Field>
         {{/if}}
 
-        {{#if @controller.canUploadUserCardBackground}}
+        {{#if @controller.model.can_change_website}}
           <form.Field
-            @name="card_background_upload_url"
-            @title={{i18n "user.change_card_background.title"}}
-            @description={{i18n "user.change_card_background.instructions"}}
+            @format="large"
+            @name="website"
+            @title={{i18n "user.website"}}
             as |field|
           >
-            <field.Custom>
-              <UppyImageUploader
-                @imageUrl={{field.value}}
-                @onUploadDone={{fn this.cardBackgroundUploadDone field}}
-                @onUploadDeleted={{fn field.set null}}
-                @type="card_background"
-                @id="profile-card-background-uploader-sandbox"
-              />
-            </field.Custom>
+            <field.Input />
           </form.Field>
         {{/if}}
-      {{/if}}
+      </form.Section>
+
+      <form.Section @title="User Card Images">
+        {{#if @controller.siteSettings.allow_profile_backgrounds}}
+          {{#if @controller.canUploadProfileHeader}}
+            <form.Field
+              @format="large"
+              @name="profile_background_upload_url"
+              @title={{i18n "user.change_profile_background.title"}}
+              @description={{i18n
+                "user.change_profile_background.instructions"
+              }}
+              as |field|
+            >
+              <field.Custom>
+                <UppyImageUploader
+                  @imageUrl={{field.value}}
+                  @onUploadDone={{fn this.profileBackgroundUploadDone field}}
+                  @onUploadDeleted={{fn field.set null}}
+                  @type="profile_background"
+                  @id="profile-background-uploader-sandbox"
+                />
+              </field.Custom>
+            </form.Field>
+          {{/if}}
+
+          {{#if @controller.canUploadUserCardBackground}}
+            <form.Field
+              @format="large"
+              @name="card_background_upload_url"
+              @title={{i18n "user.change_card_background.title"}}
+              @description={{i18n "user.change_card_background.instructions"}}
+              as |field|
+            >
+              <field.Custom>
+                <UppyImageUploader
+                  @imageUrl={{field.value}}
+                  @onUploadDone={{fn this.cardBackgroundUploadDone field}}
+                  @onUploadDeleted={{fn field.set null}}
+                  @type="card_background"
+                  @id="profile-card-background-uploader-sandbox"
+                />
+              </field.Custom>
+            </form.Field>
+          {{/if}}
+        {{/if}}
+      </form.Section>
 
       {{#if @controller.siteSettings.allow_featured_topic_on_user_profiles}}
         <form.Field
+          @format="large"
           @name="featured_topic"
           @title={{i18n "user.featured_topic"}}
           @description={{i18n "user.change_featured_topic.instructions"}}
@@ -360,6 +390,7 @@ export default class Profile extends Component {
 
       {{#if @controller.canChangeDefaultCalendar}}
         <form.Field
+          @format="large"
           @name="default_calendar"
           @title={{i18n "download_calendar.default_calendar"}}
           @description={{i18n "download_calendar.default_calendar_instruction"}}
