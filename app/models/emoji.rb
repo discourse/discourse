@@ -62,23 +62,27 @@ class Emoji
   end
 
   def self.exists?(name)
-    Emoji[name].present? || Emoji.aliases_values.include?(name)
+    Emoji[name].present?
   end
 
   def self.[](name)
     name = name.delete_prefix(":").delete_suffix(":")
     is_toned = name.match?(/\A.+:t[1-6]\z/)
-    normalized_name = name.gsub(/\A(.+):t[1-6]\z/, '\1')
+    normalized_name = name.sub(/:t[1-6]\z/, "")
 
+    find_emoji(normalized_name, is_toned) || find_emoji(resolve_alias(normalized_name), is_toned)
+  end
+
+  def self.find_emoji(name, is_toned)
     found_emoji = nil
 
     [[global_emoji_cache, :standard], [site_emoji_cache, :custom]].each do |cache, list_key|
       found_emoji =
-        cache.defer_get_set(normalized_name) do
+        cache.defer_get_set(name) do
           [
             Emoji
               .public_send(list_key)
-              .detect { |e| e.name == normalized_name && (!is_toned || (is_toned && e.tonable)) },
+              .detect { |e| e.name == name && (!is_toned || (is_toned && e.tonable)) },
           ]
         end[
           0
@@ -89,6 +93,7 @@ class Emoji
 
     found_emoji
   end
+  private_class_method :find_emoji
 
   def self.create_from_db_item(emoji)
     name = emoji["name"]
@@ -180,6 +185,17 @@ class Emoji
 
   def self.aliases_values
     @aliases_values ||= Set.new(Emoji.aliases_db.values.flatten)
+  end
+
+  def self.reverse_aliases
+    @reverse_aliases ||=
+      aliases_db.each_with_object({}) do |(original, alias_names), map|
+        alias_names.each { |alias_name| map[alias_name] = original }
+      end
+  end
+
+  def self.resolve_alias(name)
+    reverse_aliases[name] || name
   end
 
   def self.search_aliases_db_file

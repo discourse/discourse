@@ -71,6 +71,57 @@ RSpec.describe Emoji do
     end
   end
 
+  describe ".[]" do
+    it "returns emoji by name" do
+      expect(Emoji["blonde_woman"]).to be_present
+      expect(Emoji["blonde_woman"].name).to eq("blonde_woman")
+    end
+
+    it "returns emoji with colons" do
+      expect(Emoji[":blonde_woman:"]).to be_present
+      expect(Emoji[":blonde_woman:"].name).to eq("blonde_woman")
+    end
+
+    it "returns tonable emoji with skin tone" do
+      expect(Emoji["blonde_woman:t6"]).to be_present
+      expect(Emoji[":blonde_woman:t6:"]).to be_present
+    end
+
+    it "returns emoji by alias" do
+      expect(Emoji["xray"]).to be_present
+      expect(Emoji["xray"].name).to eq("x_ray")
+    end
+
+    it "returns emoji by alias with colons" do
+      expect(Emoji[":xray:"]).to be_present
+      expect(Emoji[":xray:"].name).to eq("x_ray")
+    end
+
+    it "returns tonable emoji by alias with skin tone" do
+      expect(Emoji[":basketball_man:t4:"]).to be_present
+      expect(Emoji[":basketball_man:t4:"].name).to eq("man_bouncing_ball")
+    end
+
+    it "returns nil for non-existing emoji" do
+      expect(Emoji["foo_bar_baz"]).to be_nil
+      expect(Emoji[":foo_bar_baz:"]).to be_nil
+    end
+
+    it "returns nil for non-tonable emoji with skin tone" do
+      expect(Emoji["apple:t4"]).to be_nil
+    end
+  end
+
+  describe ".resolve_alias" do
+    it "returns the canonical name for an alias" do
+      expect(Emoji.resolve_alias("xray")).to eq("x_ray")
+    end
+
+    it "returns the same name if not an alias" do
+      expect(Emoji.resolve_alias("blonde_woman")).to eq("blonde_woman")
+    end
+  end
+
   describe ".exists?" do
     it "finds existing emoji" do
       expect(Emoji.exists?(":blonde_woman:")).to be(true)
@@ -96,7 +147,7 @@ RSpec.describe Emoji do
       expect(Emoji.exists?("test:t1:foo")).to be(true)
     end
 
-    it "doesn’t find non-existing emoji" do
+    it "doesn't find non-existing emoji" do
       expect(Emoji.exists?(":foo-bar:")).to be(false)
       expect(Emoji.exists?(":blonde_woman:t7:")).to be(false)
       expect(Emoji.exists?("blonde_woman:t0")).to be(false)
@@ -104,10 +155,13 @@ RSpec.describe Emoji do
     end
 
     it "finds aliases" do
-      aliases_list = Emoji.aliases_db.values
-      expect(Emoji.exists?(aliases_list[0][0])).to be(true)
-      expect(Emoji.exists?(aliases_list[1][0])).to be(true)
-      expect(Emoji.exists?(aliases_list[2][0])).to be(true)
+      expect(Emoji.exists?("xray")).to be(true)
+      expect(Emoji.exists?(":xray:")).to be(true)
+    end
+
+    it "finds aliases with skin tone modifiers" do
+      expect(Emoji.exists?("basketball_man:t4")).to be(true)
+      expect(Emoji.exists?(":basketball_man:t4:")).to be(true)
     end
   end
 
