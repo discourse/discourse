@@ -1,5 +1,6 @@
 import EmberObject from "@ember/object";
 import { service } from "@ember/service";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseRoute from "discourse/routes/discourse";
@@ -21,11 +22,11 @@ export default class DiscourseChatIncomingWebhooksIndex extends DiscourseRoute {
         ChatChannel.create(channel)
       );
 
-      model.incoming_chat_webhooks = model.incoming_chat_webhooks.map(
-        (webhook) => {
+      model.incoming_chat_webhooks = new TrackedArray(
+        model.incoming_chat_webhooks.map((webhook) => {
           webhook.chat_channel = ChatChannel.create(webhook.chat_channel);
           return EmberObject.create(webhook);
-        }
+        })
       );
 
       return model;
