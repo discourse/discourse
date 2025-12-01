@@ -2,15 +2,18 @@ import Component from "@glimmer/component";
 import { array, concat, fn } from "@ember/helper";
 import { action, get } from "@ember/object";
 import { LinkTo } from "@ember/routing";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import DEditor from "discourse/components/d-editor";
 import Form from "discourse/components/form";
+import FeatureTopicOnProfileModal from "discourse/components/modal/feature-topic-on-profile";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
 import UserField from "discourse/components/user-field";
 import lazyHash from "discourse/helpers/lazy-hash";
 import replaceEmoji from "discourse/helpers/replace-emoji";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import TimezoneInput from "discourse/select-kit/components/timezone-input";
@@ -36,6 +39,9 @@ class MutableField extends Component {
 }
 
 export default class Profile extends Component {
+  @service dialog;
+  @service modal;
+
   constructor() {
     super(...arguments);
   }
@@ -61,8 +67,38 @@ export default class Profile extends Component {
   }
 
   @action
-  setFeaturedTopic(field, v) {
-    field.set(v);
+  setFeaturedTopic(field, topicId) {
+    field.set(topicId);
+  }
+
+  @action
+  async showFeaturedTopicModal(field) {
+    await this.modal.show(FeatureTopicOnProfileModal, {
+      model: {
+        user: this.args.controller.model,
+        setFeaturedTopic: (topicId) => this.setFeaturedTopic(field, topicId),
+      },
+    });
+    document.querySelector(".feature-topic-on-profile-btn")?.focus();
+  }
+
+  @action
+  clearFeaturedTopicFromProfile(field) {
+    this.dialog.yesNoConfirm({
+      message: i18n("user.feature_topic_on_profile.clear.warning"),
+      didConfirm: () => {
+        return ajax(
+          `/u/${this.args.controller.model.username}/clear-featured-topic`,
+          {
+            type: "PUT",
+          }
+        )
+          .then(() => {
+            field.set(null);
+          })
+          .catch(popupAjaxError);
+      },
+    });
   }
 
   get formData() {
@@ -89,7 +125,6 @@ export default class Profile extends Component {
 
   @action
   saveForm(data) {
-    // ... existing mapped fields ...
     if (data.hide_profile !== undefined) {
       this.args.controller.model.set(
         "user_option.hide_profile",
@@ -130,7 +165,6 @@ export default class Profile extends Component {
       );
     }
 
-    // Update User Fields
     const modelFields = this.args.controller.model.get("user_fields");
     if (modelFields) {
       this.args.controller.userFields?.forEach((uf) => {
@@ -336,13 +370,13 @@ export default class Profile extends Component {
 
             <div>
               <DButton
-                @action={{@controller.showFeaturedTopicModal}}
+                @action={{fn this.showFeaturedTopicModal field}}
                 @label="user.feature_topic_on_profile.open_search"
                 class="btn-default feature-topic-on-profile-btn"
               />
-              {{#if @controller.model.featured_topic}}
+              {{#if field.value}}
                 <DButton
-                  @action={{@controller.clearFeaturedTopicFromProfile}}
+                  @action={{fn this.clearFeaturedTopicFromProfile field}}
                   @label="user.feature_topic_on_profile.clear.title"
                   class="btn-danger clear-feature-topic-on-profile-btn"
                 />

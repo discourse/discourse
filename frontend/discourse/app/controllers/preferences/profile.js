@@ -1,18 +1,11 @@
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
-import { service } from "@ember/service";
 import { compare, isEmpty } from "@ember/utils";
-import FeatureTopicOnProfileModal from "discourse/components/modal/feature-topic-on-profile";
-import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class ProfileController extends Controller {
-  @service dialog;
-  @service modal;
-
   subpageTitle = i18n("user.preferences_nav.profile");
 
   @readOnly("model.can_change_bio") canChangeBio;
@@ -78,17 +71,6 @@ export default class ProfileController extends Controller {
     return defaultCalendar !== "none_selected";
   }
 
-  @action
-  async showFeaturedTopicModal() {
-    await this.modal.show(FeatureTopicOnProfileModal, {
-      model: {
-        user: this.model,
-        setFeaturedTopic: (v) => this.set("model.featured_topic", v),
-      },
-    });
-    document.querySelector(".feature-topic-on-profile-btn")?.focus();
-  }
-
   _missingRequiredFields(siteFields, userFields) {
     return siteFields
       .filter(
@@ -99,42 +81,8 @@ export default class ProfileController extends Controller {
   }
 
   @action
-  clearFeaturedTopicFromProfile() {
-    this.dialog.yesNoConfirm({
-      message: i18n("user.feature_topic_on_profile.clear.warning"),
-      didConfirm: () => {
-        return ajax(`/u/${this.model.username}/clear-featured-topic`, {
-          type: "PUT",
-        })
-          .then(() => {
-            this.model.set("featured_topic", null);
-          })
-          .catch(popupAjaxError);
-      },
-    });
-  }
-
-  @action
   useCurrentTimezone() {
     this.model.set("user_option.timezone", moment.tz.guess(true));
-  }
-
-  @action
-  _updateUserFields() {
-    const model = this.model,
-      userFields = this.userFields;
-
-    if (!isEmpty(userFields)) {
-      const modelFields = model.get("user_fields");
-      if (!isEmpty(modelFields)) {
-        userFields.forEach(function (uf) {
-          const value = uf.get("value");
-          modelFields[uf.get("field.id").toString()] = isEmpty(value)
-            ? null
-            : value;
-        });
-      }
-    }
   }
 
   @action
@@ -145,22 +93,5 @@ export default class ProfileController extends Controller {
   @action
   cardBackgroundUploadDone(upload) {
     this.model.set("card_background_upload_url", upload.url);
-  }
-
-  @action
-  save() {
-    this.set("saved", false);
-
-    // Update the user fields
-    this.send("_updateUserFields");
-
-    return this.model
-      .save(this.saveAttrNames)
-      .then(({ user }) => {
-        this.model.set("bio_cooked", user.bio_cooked);
-        this.currentUser.set("needs_required_fields_check", false);
-        this.set("saved", true);
-      })
-      .catch(popupAjaxError);
   }
 }
