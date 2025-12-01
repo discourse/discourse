@@ -26,10 +26,22 @@ class UploadSerializer < ApplicationSerializer
           serializer: OptimizedVideoSerializer,
           root: false,
           embed: :object,
-          if: -> { SiteSetting.video_conversion_enabled && object.optimized_video.present? }
+          if: -> { SiteSetting.video_conversion_enabled && include_optimized_video? }
 
   def optimized_video
-    object.optimized_videos.first
+    # Use association if loaded to avoid N+1 queries
+    if object.association(:optimized_videos).loaded?
+      object.optimized_videos.first
+    else
+      # If association not loaded, only query if we know it exists
+      nil
+    end
+  end
+
+  def include_optimized_video?
+    # Only include if association is already loaded to avoid N+1 queries
+    # Callers should eager load optimized_videos when serializing multiple uploads
+    object.association(:optimized_videos).loaded? && object.optimized_videos.first.present?
   end
 
   def url

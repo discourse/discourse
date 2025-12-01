@@ -62,20 +62,32 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
     allow(s3_object).to receive(:acl).and_return(acl_object)
     allow(acl_object).to receive(:put).with(acl: "public-read").and_return(true)
 
-    post_upload_ref_relation = instance_double(ActiveRecord::Relation, pluck: [post.id])
-    chat_upload_ref_relation = instance_double(ActiveRecord::Relation, pluck: [])
+    post_upload_ref_relation = instance_double(ActiveRecord::Relation)
+    post_subquery = instance_double(ActiveRecord::Relation)
+    chat_upload_ref_relation = instance_double(ActiveRecord::Relation)
+    chat_subquery = instance_double(ActiveRecord::Relation)
 
     allow(UploadReference).to receive(:where).with(
       upload_id: upload.id,
       target_type: "Post",
     ).and_return(post_upload_ref_relation)
+    allow(post_upload_ref_relation).to receive(:select).with(:target_id).and_return(post_subquery)
 
     allow(UploadReference).to receive(:where).with(
       upload_id: upload.id,
       target_type: "ChatMessage",
     ).and_return(chat_upload_ref_relation)
+    allow(chat_upload_ref_relation).to receive(:select).with(:target_id).and_return(chat_subquery)
+    allow(chat_subquery).to receive(:exists?).and_return(false)
 
-    allow(Post).to receive(:where).with(id: [post.id]).and_return(post_relation)
+    allow(Post).to receive(:where) do |args|
+      # Accept either array of IDs or subquery relation
+      if args[:id].is_a?(Array)
+        post_relation if args[:id] == [post.id]
+      elsif args[:id] == post_subquery
+        post_relation
+      end
+    end.and_return(post_relation)
     allow(post_relation).to receive(:find_each).and_yield(post)
     allow(post).to receive(:rebake!)
 

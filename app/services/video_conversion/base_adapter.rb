@@ -48,21 +48,21 @@ module VideoConversion
     end
 
     def update_posts_with_optimized_video(optimized_video)
-      post_ids = UploadReference.where(upload_id: @upload.id, target_type: "Post").pluck(:target_id)
-
       Post
-        .where(id: post_ids)
+        .where(
+          id: UploadReference.where(upload_id: @upload.id, target_type: "Post").select(:target_id),
+        )
         .find_each do |post|
           Rails.logger.info("Rebaking post #{post.id} to use optimized video")
           post.rebake!
         end
 
-      chat_message_ids =
-        UploadReference.where(upload_id: @upload.id, target_type: "ChatMessage").pluck(:target_id)
+      chat_message_subquery =
+        UploadReference.where(upload_id: @upload.id, target_type: "ChatMessage").select(:target_id)
 
-      if chat_message_ids.any? && defined?(Chat::Message)
+      if chat_message_subquery.exists? && defined?(Chat::Message)
         Chat::Message
-          .where(id: chat_message_ids)
+          .where(id: chat_message_subquery)
           .includes(uploads: { optimized_videos: :optimized_upload })
           .find_each do |chat_message|
             Rails.logger.info(
