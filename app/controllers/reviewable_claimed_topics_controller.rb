@@ -29,28 +29,25 @@ class ReviewableClaimedTopicsController < ApplicationController
     ReviewableClaimedTopic.where(topic_id: topic.id).delete_all
     topic.reviewables.find_each { |reviewable| reviewable.log_history(:unclaimed, current_user) }
 
-    notify_users(topic, nil, automatic)
+    notify_users(topic, current_user, automatic, claimed: false)
     render json: success_json
   end
 
   private
 
-  def notify_users(topic, claimed_by, automatic)
+  def notify_users(topic, user, automatic, claimed: true)
     group_ids = Set.new([Group::AUTO_GROUPS[:staff]])
 
     if SiteSetting.enable_category_group_moderation? && topic.category
       group_ids.merge(topic.category.moderating_group_ids)
     end
 
-    if claimed_by.present?
-      data = {
-        topic_id: topic.id,
-        user: BasicUserSerializer.new(claimed_by, root: false).as_json,
-        automatic:,
-      }
-    else
-      data = { topic_id: topic.id, automatic: }
-    end
+    data = {
+      topic_id: topic.id,
+      user: BasicUserSerializer.new(user, root: false).as_json,
+      automatic:,
+      claimed:,
+    }
 
     MessageBus.publish("/reviewable_claimed", data, group_ids: group_ids.to_a)
 

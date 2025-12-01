@@ -47,6 +47,7 @@ RSpec.describe ReviewableClaimedTopicsController do
 
         expect(message.data[:topic_id]).to eq(topic.id)
         expect(message.data[:user][:id]).to eq(moderator.id)
+        expect(message.data[:claimed]).to be true
         expect(message.group_ids).to contain_exactly(Group::AUTO_GROUPS[:staff])
       end
 
@@ -170,7 +171,8 @@ RSpec.describe ReviewableClaimedTopicsController do
       message = messages[0]
 
       expect(message.data[:topic_id]).to eq(topic.id)
-      expect(message.data[:user]).to eq(nil)
+      expect(message.data[:user][:id]).to eq(moderator.id)
+      expect(message.data[:claimed]).to be false
       expect(message.group_ids).to contain_exactly(Group::AUTO_GROUPS[:staff])
     end
 

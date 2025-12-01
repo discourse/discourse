@@ -4,6 +4,7 @@ require "discourse_ip_info"
 
 describe "Viewing reviewable item", type: :system do
   fab!(:admin)
+  fab!(:moderator)
   fab!(:group)
   fab!(:reviewable_flagged_post)
 
@@ -277,6 +278,40 @@ describe "Viewing reviewable item", type: :system do
 
         expect(refreshed_review_page).to have_reviewable_with_approved_status(reviewable)
       end
+    end
+  end
+
+  describe "moderator" do
+    before do
+      SiteSetting.reviewable_ui_refresh = group.name
+      SiteSetting.reviewable_old_moderator_actions = false
+      group.add(admin)
+      group.add(moderator)
+      sign_in(moderator)
+    end
+
+    it "shows claimed and unclaimed events in the timeline" do
+      SiteSetting.reviewable_claiming = "required"
+
+      refreshed_review_page.visit_reviewable(reviewable_flagged_post)
+      expect(refreshed_review_page).to have_history_items(count: 2)
+
+      refreshed_review_page.click_claim_reviewable
+      page.refresh
+      expect(refreshed_review_page).to have_history_items(count: 3)
+      expect(refreshed_review_page).to have_claimed_history_item(moderator)
+
+      refreshed_review_page.click_unclaim_reviewable
+      page.refresh
+      expect(refreshed_review_page).to have_history_items(count: 4)
+      expect(refreshed_review_page).to have_unclaimed_history_item(moderator)
+
+      # remove history items created by deleted users
+      UserDestroyer.new(admin).destroy(moderator)
+      sign_in(admin)
+      refreshed_review_page.visit_reviewable(reviewable_flagged_post)
+
+      expect(refreshed_review_page).to have_history_items(count: 2)
     end
   end
 end
