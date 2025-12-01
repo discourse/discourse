@@ -10,10 +10,16 @@ describe "Admin Customize Themes", type: :system do
   let(:theme_page) { PageObjects::Pages::AdminCustomizeThemes.new }
   let(:themes_page) { PageObjects::Pages::AdminCustomizeThemesConfigArea.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
+  let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
   before { sign_in(admin) }
 
   describe "when visiting the page to customize a single theme" do
+    it "should keep sidebar navigation link active" do
+      theme_page.visit(theme)
+      expect(sidebar).to have_active_link("admin_themes_and_components")
+    end
+
     it "should allow admin to update the light color scheme of the theme" do
       theme_page.visit(theme)
 
