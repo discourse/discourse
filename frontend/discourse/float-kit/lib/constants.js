@@ -30,6 +30,7 @@ export const TOOLTIP = {
     component: null,
     content: null,
     identifier: null,
+    inline: null,
     interactive: false,
     listeners: false,
     maxWidth: 350,
