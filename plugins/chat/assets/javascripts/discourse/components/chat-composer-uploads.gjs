@@ -6,8 +6,10 @@ import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
 import PickFilesButton from "discourse/components/pick-files-button";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import { cloneJSON } from "discourse/lib/object";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
 import { clipboardHelpers } from "discourse/lib/utilities";
@@ -17,6 +19,8 @@ import ChatComposerUpload from "discourse/plugins/chat/discourse/components/chat
 export default class ChatComposerUploads extends Component {
   @service capabilities;
   @service mediaOptimizationWorker;
+
+  @trackedArray uploads = null;
 
   uppyUpload = new UppyUpload(getOwner(this), {
     id: "chat-composer-uploader",
@@ -50,7 +54,7 @@ export default class ChatComposerUploads extends Component {
     },
 
     uploadDone: (upload) => {
-      this.uploads.pushObject(upload);
+      this.uploads.push(upload);
       this._triggerUploadsChanged();
     },
 
@@ -66,7 +70,6 @@ export default class ChatComposerUploads extends Component {
   });
 
   existingUploads = null;
-  uploads = null;
   uploadDropZone = null;
 
   get inProgressUploads() {
@@ -79,10 +82,7 @@ export default class ChatComposerUploads extends Component {
       this.uppyUpload.uppyWrapper.uppyInstance?.cancelAll();
     }
 
-    this.set(
-      "uploads",
-      this.existingUploads ? cloneJSON(this.existingUploads) : []
-    );
+    this.uploads = this.existingUploads ? cloneJSON(this.existingUploads) : [];
   }
 
   didInsertElement() {
@@ -101,7 +101,7 @@ export default class ChatComposerUploads extends Component {
   }
 
   get showUploadsContainer() {
-    return this.get("uploads.length") > 0 || this.inProgressUploads.length > 0;
+    return this.uploads.length > 0 || this.inProgressUploads.length > 0;
   }
 
   @action
@@ -114,7 +114,7 @@ export default class ChatComposerUploads extends Component {
 
   @action
   removeUpload(upload) {
-    this.uploads.removeObject(upload);
+    removeValueFromArray(this.uploads, upload);
     this._triggerUploadsChanged();
   }
 
