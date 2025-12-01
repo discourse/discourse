@@ -31,8 +31,8 @@ export default class AiBlinkingAnimation extends Component {
 
   @action
   setupAnimation() {
-    this.blocks.firstObject.show = true;
-    this.blocks.firstObject.shown = true;
+    this.blocks[0].show = true;
+    this.blocks[0].shown = true;
   }
 
   @action
@@ -72,8 +72,8 @@ export default class AiBlinkingAnimation extends Component {
         this.#nextBlock(block).show = true;
         this.#nextBlock(block).shown = true;
 
-        if (this.blocks.lastObject === block) {
-          this.blocks.firstObject.blinking = true;
+        if (this.blocks.at(-1) === block) {
+          this.blocks[0].blinking = true;
         }
       },
       250
@@ -88,10 +88,10 @@ export default class AiBlinkingAnimation extends Component {
   }
 
   #nextBlock(currentBlock) {
-    if (currentBlock === this.blocks.lastObject) {
-      return this.blocks.firstObject;
+    if (currentBlock === this.blocks.at(-1)) {
+      return this.blocks[0];
     } else {
-      return this.blocks.objectAt(this.blocks.indexOf(currentBlock) + 1);
+      return this.blocks[this.blocks.indexOf(currentBlock) + 1];
     }
   }
 

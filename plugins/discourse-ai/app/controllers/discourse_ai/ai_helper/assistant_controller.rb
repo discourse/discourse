@@ -70,10 +70,12 @@ module DiscourseAi
                      current_user,
                    ),
                  status: :ok
+        rescue LlmCreditAllocation::CreditLimitExceeded => e
+          render_credit_limit_error(e)
+        rescue DiscourseAi::Completions::Endpoints::Base::CompletionFailed
+          render_json_error I18n.t("discourse_ai.ai_helper.errors.completion_request_failed"),
+                            status: 502
         end
-      rescue DiscourseAi::Completions::Endpoints::Base::CompletionFailed
-        render_json_error I18n.t("discourse_ai.ai_helper.errors.completion_request_failed"),
-                          status: 502
       end
 
       def suggest_category
@@ -155,6 +157,8 @@ module DiscourseAi
           else
             render json: { thumbnails: result[:thumbnails] }, status: :ok
           end
+        rescue LlmCreditAllocation::CreditLimitExceeded => e
+          render_credit_limit_error(e)
         end
       end
 

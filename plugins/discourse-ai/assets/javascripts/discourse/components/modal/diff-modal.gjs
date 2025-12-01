@@ -110,8 +110,8 @@ export default class ModalDiffModal extends Component {
   updateResult(result) {
     if (isAiCreditLimitError(result)) {
       this.loading = false;
+      this.cleanupAndClose();
       popupAiCreditLimitError(result);
-      this.cleanup();
       return;
     }
 
@@ -150,6 +150,7 @@ export default class ModalDiffModal extends Component {
       this.progressChannel = result.progress_channel;
     } catch (e) {
       if (isAiCreditLimitError(e)) {
+        this.cleanupAndClose();
         popupAiCreditLimitError(e);
       } else {
         popupAjaxError(e);
@@ -183,6 +184,7 @@ export default class ModalDiffModal extends Component {
 
   @action
   cleanupAndClose() {
+    this.cleanup();
     this.#resetState();
     this.loading = false;
     this.args.closeModal();

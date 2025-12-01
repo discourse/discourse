@@ -67,6 +67,8 @@ module DiscourseAi
 
         context[:captured_custom_raw] = captured_custom_raw
         fail!("no_image_generated") if captured_custom_raw.blank?
+      rescue LlmCreditAllocation::CreditLimitExceeded
+        raise
       rescue => e
         Rails.logger.error(
           "Image generation failed: #{e.class} - #{e.message}\n#{e.backtrace.first(5).join("\n")}",
