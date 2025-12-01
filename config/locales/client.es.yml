@@ -291,7 +291,6 @@ es:
     software_update_prompt:
       message: "Hemos actualizado este sitio, <span>vuelva a cargarlo</span> para que todo funcione sin problemas."
       dismiss: "Descartar"
-    bootstrap_mode: "Cómo empezar"
     back_button: "Volver"
     welcome_banner:
       header:
@@ -697,7 +696,7 @@ es:
       title: "Revisión"
       topic: "Tema:"
       filtered_topic: "Has filtrado a contenido revisable en un solo tema."
-      filtered_user: "Usuario"
+      filtered_user: "Usuario denunciado"
       filtered_reviewed_by: "Revisado por"
       show_all_topics: "mostrar todos los temas"
       deleted_post: "(publicación eliminada)"
@@ -835,7 +834,6 @@ es:
           noun: "publicación"
       flagged_as: "Marcado como"
       user_label: "Usuario"
-      assigned_to: "Asignado a"
       moderator_actions: "Acciones del moderador"
       timeline_and_notes: "Cronología y notas"
       timeline:
@@ -872,7 +870,6 @@ es:
           one: "Denunciado por %{count} usuario único"
           other: "Denunciado por %{count} usuarios únicos"
         activities:
-          new_account: "nueva cuenta"
           trust_level: "nivel de confianza: %{trustLevelName}"
           posts:
             one: "%{count} publicación"
@@ -880,7 +877,6 @@ es:
         solution_marked: "Solución marcada"
         topic_has_solution: "Este tema tiene una solución"
         visibility: "Visibilidad"
-        topic_unlisted: "Este tema no está en la lista. Solo se puede acceder mediante enlace directo (no público)."
       help:
         moderation_guide: "Guía de moderación de Discourse"
         flag_priorities: "Gestión de la reputación del usuario y prioridades"
@@ -1303,7 +1299,6 @@ es:
         one: "Categorías (%{count} más)…"
         other: "Categorías (%{count} más)…"
     ip_lookup:
-      title: Búsqueda de dirección IP
       hostname: Nombre del host
       location: Ubicación
       location_not_found: (desconocido)
@@ -5212,6 +5207,9 @@ es:
         enabled: "Activado"
         select_groups: "Seleccionar grupos…"
         preview: "Vista previa"
+        enabled_for_options:
+          everyone: "Todos"
+          staff: "Solo personal"
         impact_roles:
           admins: "Administradores"
           moderators: "Moderadores"
@@ -7961,77 +7959,4 @@ es:
           replace: "Reemplazar"
   wizard_js:
     wizard:
-      jump_in: "¡Empezar!"
-      finish: "Salir del configurador"
-      back: "Atrás"
-      next: "Siguiente"
-      configure_more: "Configurar más…"
-      step-text: "Intervalo"
-      step: "%{current} de %{total}"
-      upload: "Subir archivo"
-      uploading: "Subiendo…"
-      upload_error: "Lo sentimos, se ha producido un error al cargar este archivo. Inténtalo de nuevo."
-      staff_count:
-        one: "Tu comunidad tiene %{count} miembro del equipo (tú)."
-        other: "Tu comunidad tiene %{count} miembros del personal, tú incluido."
-      invites:
-        add_user: "añadir"
-        none_added: "No has invitado a ningún miembro del equipo. ¿Seguro que quieres continuar?"
-        roles:
-          admin: "Administrador"
-          moderator: "Moderador"
-          regular: "Usuario habitual"
-      homepage_choices:
-        custom:
-          label: "Personalizado"
-          description: "Muestra una página de inicio centrada en %{type} con los usuarios que llegan a %{landingPage}"
-        style_type:
-          categories: "categoría"
-          topics: "tema"
-      top_menu_items:
-        new: "Nuevo"
-        unread: "Sin leer"
-        top: "Destacados"
-        latest: "Recientes"
-        hot: "Caliente"
-        categories: "Categorías"
-        unseen: "No vistos"
-        read: "Leer"
-        bookmarks: "Marcadores"
-      previews:
-        topic_title: "¿Qué libros estás leyendo?"
-        share_button: "Compartir"
-        reply_button: "Responder"
-        topic_preview: "Vista previa de tema"
-        homepage_preview: "Vista previa de la página de inicio"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "todas las categorías"
-        topic_titles:
-          what_books: "¿Qué libros estás leyendo?"
-          what_movies: "¿Qué películas has visto recientemente?"
-          random_fact: "Dato aleatorio del día"
-          tv_show: "Recomienda un programa de TV"
-          what_hobbies: "¿Cuáles son tus aficiones?"
-          what_music: "¿Qué estás escuchando ahora mismo?"
-          funniest_thing: "Lo más gracioso que has visto hoy"
-          share_art: "¡Comparte tu arte!"
-        topic_ops:
-          what_books: |
-            A todos nos gusta leer, utilicemos este tema para compartir nuestras
-            lecturas actuales o recientes. Me gusta la fantasía y he estado releyendo
-            El Señor de los Anillos por centésima vez.
-            ¿Y tú?
-        category_descriptions:
-          icebreakers: "Conoce a tus compañeros de comunidad con preguntas divertidas."
-          news: "Comenta las últimas noticias y eventos."
-          site_feedback: "Comparte tus opiniones sobre la comunidad y sugiere mejoras."
-        category_names:
-          icebreakers: "Rompehielos"
-          news: "Noticias"
-          site_feedback: "Sugerencias sobre el sitio"
-        table_headers:
-          topic: "Tema"
-          replies: "Respuestas"
-          views: "Vistas"
-          activity: "Actividad"
+      jump_in: "¡Vamos!"

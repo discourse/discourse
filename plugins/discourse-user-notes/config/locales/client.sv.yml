@@ -8,8 +8,4 @@ sv:
   js:
     user_notes:
       title: "Användaranteckningar"
-      attach: "Lägg till användaranteckning"
-      remove: "Ta bort användaranteckning"
-      show: "Användaranteckningar (%{count})"
       delete_confirm: "Är du säker på att du vill radera den användaranteckningen?"
-      show_post: "Visa inlägg"

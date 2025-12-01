@@ -293,7 +293,6 @@ el:
     software_update_prompt:
       message: "Ενημερώσαμε αυτόν τον ιστότοπο, <span>παρακαλούμε κάντε ανανέωση</span> για να συνεχιστεί η ομαλή λειτουργία."
       dismiss: "Απόρριψη"
-    bootstrap_mode: "Ξεκινώντας"
     back_button: "Πίσω"
     welcome_banner:
       header:
@@ -710,7 +709,7 @@ el:
       title: "Έλεγχος"
       topic: "Θέμα:"
       filtered_topic: "Έχετε φιλτράρει σε περιεχόμενο με δυνατότητα ελέγχου σε ένα μόνο θέμα."
-      filtered_user: "Χρήστης"
+      filtered_user: "Αναφερόμενος χρήστης"
       filtered_reviewed_by: "Αναθεωρήθηκε από"
       show_all_topics: "εμφάνιση όλων των θεμάτων"
       deleted_post: "(η ανάρτηση διαγράφηκε)"
@@ -848,7 +847,6 @@ el:
       queued_post_label: "Ανάρτηση σε ουρά"
       queued_topic_label: "Θέμα σε ουρά"
       user_label: "Χρήστης"
-      assigned_to: "Ανατέθηκε σε"
       moderator_actions: "Ενέργειες συντονιστή"
       timeline_and_notes: "Χρονοδιάγραμμα & σημειώσεις"
       timeline:
@@ -886,13 +884,11 @@ el:
         flagged_by_users:
           one: "Αναφέρθηκε από %{count} μοναδικό χρήστη"
           other: "Αναφέρθηκε από %{count} μοναδικούς χρήστες"
-        similar_posts: "Προηγούμενες παραβάσεις"
         flagged_in_timeframe:
           one: "%{count} επιβεβαιωμένη αναφορά"
           other: "%{count} επιβεβαιωμένες αναφορές"
         user_activity: "Πληροφορίες χρήστη"
         activities:
-          new_account: "νέος λογαριασμός"
           trust_level: "επίπεδο εμπιστοσύνης: %{trustLevelName}"
           posts:
             one: "%{count} ανάρτηση"
@@ -1300,7 +1296,6 @@ el:
         one: "Κατηγορίες (%{count} επιπλέον)…"
         other: "Κατηγορίες (%{count} επιπλέον)…"
     ip_lookup:
-      title: Αναζήτηση Διεύθυνσης IP
       hostname: Hostname
       location: Τοποθεσία
       location_not_found: (άγνωστο)
@@ -4616,6 +4611,9 @@ el:
         enabled: "Ενεργοποιημένα"
         select_groups: "Επιλέξτε ομάδες…"
         preview: "Προεπισκόπηση"
+        enabled_for_options:
+          everyone: "Όλοι"
+          staff: "Μόνο το προσωπικό"
         impact_roles:
           admins: "Διαχειριστές"
           moderators: "Συντονιστές"
@@ -6280,50 +6278,3 @@ el:
           categories: "Κατηγορίες"
           topics: "Θέματα"
           replace: "Αντικατάσταση"
-  wizard_js:
-    wizard:
-      back: "Πίσω"
-      next: "Επόμενο"
-      step-text: "Βήμα"
-      step: "%{current} από %{total}"
-      uploading: "Μεταφορτώνεται…"
-      upload_error: "Λυπούμαστε, παρουσιάστηκε σφάλμα κατά το ανέβασμα του αρχείου. Προσπάθησε πάλι."
-      staff_count:
-        one: "Η κοινότητα έχει %{count} συνεργάτη (εσένα). "
-        other: "Η κοινότητά σας έχει %{count} συνεργάτες, μαζί με σένα."
-      invites:
-        add_user: "προσθήκη"
-        none_added: "Δεν έχεις προσκαλέσει συνεργάτες. Είσαι βέβαιος πως θέλεις να συνεχίσεις;"
-        roles:
-          admin: "Διαχειριστής"
-          moderator: "Συντονιστής"
-          regular: "Τακτικός χρήστης"
-      homepage_choices:
-        custom:
-          label: "Προσαρμοσμένο"
-        style_type:
-          categories: "κατηγορία"
-          topics: "θέμα"
-      top_menu_items:
-        new: "Νέο"
-        unread: "Αδιάβαστα"
-        top: "Κορυφαία"
-        latest: "Πρόσφατα"
-        hot: "Δημοφιλή"
-        categories: "Κατηγορίες"
-        read: "Διαβασμένα"
-        bookmarks: "Σελιδοδείκτες"
-      previews:
-        share_button: "Κοινοποίηση"
-        reply_button: "Απάντηση"
-        topic_preview: "Προεπισκόπηση θέματος"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "όλες οι κατηγορίες"
-        category_names:
-          site_feedback: "Σχολιασμός Ιστοσελίδας"
-        table_headers:
-          topic: "Νήμα"
-          replies: "Απαντήσεις"
-          views: "Προβολές"
-          activity: "Δραστηριότητα"

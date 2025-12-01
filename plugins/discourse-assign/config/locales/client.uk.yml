@@ -41,7 +41,6 @@ uk:
       assigned_topic_to: "Призначена тема для <a href='%{path}'>%{username}</a>"
       assign_post_to: "Призначено з #%{post_number} на %{username}"
       assign_post_to_multiple: "#%{post_number} для %{username}"
-      assigned_to_w_ellipsis: "Призначено для..."
       unassign:
         title: "Скасувати призначення"
         title_w_ellipsis: "Скасувати призначення..."

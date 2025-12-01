@@ -8,8 +8,4 @@ ro:
   js:
     user_notes:
       title: "Note utilizator"
-      attach: "Adaugă notă utilizator"
-      remove: "Elimină notă utilizator"
-      show: "Note utilizator (%{count})"
       delete_confirm: "Sigur vrei să ștergi acea notă de utilizator?"
-      show_post: "Arată postare"

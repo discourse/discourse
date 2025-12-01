@@ -271,8 +271,6 @@ uk:
           name: "OpenAI"
         image_generation_gemini:
           name: "Nano Banana"
-        image_generation_flux:
-          name: "FLUX"
         empty_tool:
           name: "Почніть з чистого аркуша..."
       name:
@@ -664,7 +662,7 @@ uk:
       errors:
         disabled: "Функція перекладу ШІ не повністю налаштована."
     llm_credit_allocation:
-      limit_exceeded: "Ви досягли ліміту кредитів ШІ. Будь ласка, спробуйте ще раз через %{reset_time}."
+      limit_exceeded_admin: "Ви досягли ліміту кредитів ШІ. Будь ласка, спробуйте ще раз через %{reset_time}."
     errors:
       quota_exceeded: "Ви перевищили квоту для цієї моделі. Будь ласка, спробуйте ще раз через %{relative_time}."
       quota_required: "Ви повинні вказати максимальну кількість токенів або варіантів використання для цієї моделі"

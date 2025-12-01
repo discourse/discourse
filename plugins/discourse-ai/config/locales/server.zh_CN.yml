@@ -16,6 +16,7 @@ zh_CN:
         review: "将帖子添加到审核队列"
         review_hide: "将帖子添加到审核队列并隐藏帖子"
         review_delete: "将帖子添加到审核队列并删除帖子"
+        review_delete_silence: "将帖子加入审核队列、删除帖子并将用户设为静音。"
         spam: "标记为垃圾信息并隐藏帖子"
         spam_silence: "标记为垃圾信息，隐藏帖子并将用户禁言"
     scriptables:
@@ -28,6 +29,10 @@ zh_CN:
       llm_triage:
         title: 使用 AI 对帖子进行分类
         description: "使用大语言模型对帖子进行分类"
+        flagged_post: |
+          <div>模型的回答：</div>
+          <p>%{llm_response}</p>
+          <b>由 <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a>规则触发。</b>
         notify_author_pm:
           subject: "您的帖子已暂时移除供审核"
           body: |
@@ -39,6 +44,9 @@ zh_CN:
       llm_report:
         title: 使用 AI 的定期报告
         description: "基于大语言模型的定期报告"
+      llm_tagger:
+        title: 使用 AI 为话题添加标签
+        description: "使用 AI 自动为话题添加标签"
   site_settings:
     discourse_ai_enabled: "启用 Discourse AI 插件。"
     ai_default_llm_model: "用于所有 AI 功能的默认 LLM 模型"
@@ -84,6 +92,7 @@ zh_CN:
     ai_helper_enabled_features: "选择要在 AI 助手中启用的功能。"
     post_ai_helper_allowed_groups: "能够在帖子中访问 AI 助手功能的用户群组"
     ai_helper_image_caption_model: "选择用于生成图片标题的模型"
+    ai_helper_post_illustrator_persona: "用于 AI 助手“帖子插图”功能的角色。注意：要使此功能生效，您还必须创建一个图像生成工具（Admin > Plugins > Discourse AI > Tools）。"
     ai_embeddings_selected_model: "使用所选模型生成嵌入向量。"
     ai_embeddings_generate_for_pms: "为个人消息生成嵌入向量。"
     ai_embeddings_semantic_related_topics_enabled: "将语义搜索用于相关话题。"
@@ -93,6 +102,7 @@ zh_CN:
     ai_embeddings_semantic_search_use_hyde: "使用 HyDE 进行语义全页搜索。使用 LLM 可以根据用户搜索词创建一个假设的帖子来帮助匹配。"
     ai_embeddings_semantic_quick_search_enabled: "在搜索菜单弹出窗口中启用语义搜索选项。"
     ai_embeddings_semantic_related_include_closed_topics: "在语义搜索结果中包含已关闭话题"
+    ai_embeddings_semantic_related_age_penalty: "对语义搜索结果中的话题适用指数式的年龄惩罚。0.0 = 无惩罚，0.3 = gentle 偏向于近期活跃的内容，1.0+ = 强烈的偏向近期内容。"
     ai_embeddings_semantic_related_age_time_scale: "计算年龄惩罚的时间尺度，以天为单位。话题在此时间范围内未活跃，将受到约50%的惩罚，惩罚系数为1.0。使用365表示年度尺度，90表示季度尺度。"
     ai_embeddings_semantic_search_hyde_model: "用于在语义搜索中扩展关键字以获得更好结果的模型"
     ai_embeddings_per_post_enabled: 为每个帖子生成嵌入向量
@@ -109,6 +119,8 @@ zh_CN:
     ai_bot_allowed_groups: "当 GPT 机器人可以访问私信时，它将回复这些群组的成员。"
     ai_bot_debugging_allowed_groups: "允许这些群组在帖子上看到显示原始 AI 请求和回答的调试按钮"
     ai_bot_public_sharing_allowed_groups: "允许这些群组通过唯一的公开链接与公众分享 AI 个人消息。注意：如果您的站点需要登录，分享时也需要登录。"
+    ai_bot_add_to_header: "在标题中显示按钮以使用 AI 机器人启动 PM"
+    ai_bot_add_to_community_section: "在侧边栏社区版块显示一个链接，以开始使用 AI 机器人启动 PM。"
     ai_bot_github_access_token: "搭配使用 GitHub AI 工具所需的 GitHub 访问令牌（搜索支持需要）"
     ai_discover_enabled: "启用发现搜索功能"
     ai_discover_persona: "用于发现搜索功能的 Persona"
@@ -128,6 +140,9 @@ zh_CN:
     ai_translation_backfill_limit_to_public_content: "启用时，仅翻译公共类别中的内容。禁用时，群组 PM 和不公开类别中的内容也将发送以进行翻译。"
     ai_translation_max_post_length: "帖子翻译的最大字符数。超过此长度的帖子将不会被翻译。"
     ai_translation_backfill_max_age_days: "待翻译帖子和话题的最长期限。超过此期限的帖子和话题将不进行翻译。0 表示禁用回填，但不会禁用新帖子的翻译。"
+    ai_translation_backfill_hourly_rate: "每小时回填翻译的帖子和话题数量。设置为 0 可禁用现有内容的自动翻译回填。"
+    ai_usage_rollup_after_days: "每次请求的 AI 使用数据在被汇总为每日统计之前要保留的天数。设为 0 表示不进行汇总。"
+    ai_audit_logs_purge_after_days: "删除超过指定天数的 AI API 审计日志。默认值约为 6 个月。设置为 0 则无限期保留。"
   reviewables:
     reasons:
       flagged_by_toxicity: AI 插件将其分类为有毒后对其进行了标记。
@@ -250,6 +265,10 @@ zh_CN:
           name: "自定义"
         image_generation_openai:
           name: "OpenAI"
+        image_generation_flux:
+          name: "FLUX 1.1 Pro"
+        image_generation_flux2:
+          name: "FLUX 2 Pro"
         empty_tool:
           name: "从空白开始…"
       name:
@@ -597,6 +616,7 @@ zh_CN:
     translation:
       errors:
         disabled: "人工智能翻译功能未完全配置。"
+        all_posts_translated: "此话题中的所有帖子均已翻译。"
     errors:
       quota_exceeded: "您已超出此模型的配额。请在 %{relative_time}后再试。"
       quota_required: "必须为此模型指定最大词元数或使用次数"

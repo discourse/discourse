@@ -181,7 +181,7 @@ ro:
           ai_summarization: "Rezumat"
           ai_spam: "Spam"
         model_description:
-          anthropic-claude-opus-4-1: "Cel mai inteligent model de la Anthropic"
+          anthropic-claude-opus-4-5: "Cel mai inteligent model de la Anthropic"
           google-gemini-2-5-flash: "Ușoare, rapide și rentabile cu raționament multi-modal"
           google-gemini-2-5-flash-image-preview: "Cel mai recent model de generare a imaginilor cu capacități vizuale"
           open_ai-gpt-5-1: "Modelul emblematic al OpenAI. Este foarte potrivit pentru rezolvarea problemelor în diverse domenii."
@@ -209,6 +209,8 @@ ro:
           copy: "Copiază"
           copied: "Copiat!"
           cancel: "Anulează"
+        thumbnail_suggestions:
+          try_again: "Încearcă din nou"
         image_caption:
           save_caption: "Salvează"
       embeddings:

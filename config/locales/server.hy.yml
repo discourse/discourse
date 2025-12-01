@@ -2567,18 +2567,12 @@ hy:
     nice_share:
       name: Լավ Կիսում
       description: Կիսվել է գրառմամբ 25 եզակի այցելուների հետ
-      long_description: |
-        Այս կրծքանշանը շնորհվում է կիսվելու համար հղումով, որը սեղմվել է 25 դրսի այցելուների կողմից: Շնորհակալ ենք մեր քննարկումների և այս համայնքի մասին տարածելու համար:
     good_share:
       name: Լավ Առաջխաղացում
       description: Կիսվել է գրառմամբ 300 եզակի այցելուների հետ
-      long_description: |
-        Այս կրծքանշանը շնորհվում է 300 դրսի այցելուների կողմից սեղմված հղումով կիսվելու համար: Հիանալի աշխատանք է! Դուք մի խումբ նոր մարդկանց հրաշալի քննարկում եք ցույց տվել և օգնել եք այս համայնքին աճել:
     great_share:
       name: Հրաշալի Առաջխաղացում
       description: Կիսվել է գրառմամբ 1000 եզակի այցելուների հետ
-      long_description: |
-        Այս կրծքանշանը շնորհվում է կիսվելու համար հղումով, որը սեղմվել է 1000 դրսի այցելուների կողմից: Վաու! Դուք առաջ եք մղել հետաքրքիր քննարկում դեպի նոր, ահռելի լսարան և օգնել եք մեզ մեծապես ընդլայնելու մեր համայնքը!
     first_like:
       name: Առաջին Հավանում
       description: Հավանել է գրառում
@@ -2751,13 +2745,8 @@ hy:
   wizard:
     title: "Discourse Տեղադրում"
     step:
-      introduction:
-        fields:
-          title:
-            placeholder: "Jane’s Hangout"
-          site_description:
-            placeholder: "Ջեյնի և իր ընկերների համար ընտիր թեմաներ քննարկելու վայր"
-      privacy:
+      setup:
+        title: "Ինչպես սկսել"
         fields:
           login_required:
             label: "Տեսանելիություն"
@@ -2766,32 +2755,6 @@ hy:
                 label: "Հանրային"
               private:
                 label: "Մասնավոր"
-      styling:
-        fields:
-          styling_preview:
-            label: "Նախադիտում"
-          homepage_style:
-            choices:
-              latest:
-                label: "Վերջինը"
-              hot:
-                label: "Թոփ"
-      corporate:
-        fields:
-          governing_law:
-            placeholder: "Կալիֆորնիայի օրենք"
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
-          city_for_disputes:
-            placeholder: "Սան-Ֆրանցիսկո, Կալիֆորնիա"
-          site_contact:
-            description: "Բոլոր ավտոմատացված Discourse անձնական նամակները կուղարկվեն այս օգտատիրոջից, օրինակ՝ դրոշակավորված զգուշացումներ և պահուստային լրացւոմների նշումներ:"
-      invites:
-        title: "Հրավիրել Անձնակազմին"
-        description: "Դուք գրեթե վերջացրել եք! Եկեք հրավիրենք որոշ մարդկանց՝ օգնելու <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>լցնել Ձեր քննարկումները</a> հետաքրքիր թեմաներով և պատասխաններով՝ Ձեր համայնքին սկիզբ դնելու համար:"
-        disabled: "Քանի որ տեղական մուտքերը անջատված են, անհնար է ուղարկել հրավերներ որևէ մեկին: Խնդրում ենք անցնել մյուս քայլին:"
-      finished:
-        title: "Ձեր Discourse -ը պատրաստ է!"
   search_logs:
     graph_title: "Որոնումների Քանակ"
   onebox:

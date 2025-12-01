@@ -41,7 +41,6 @@ pl_PL:
       assigned_topic_to: "Przypisano temat do <a href='%{path}'>%{username}</a>"
       assign_post_to: "Przypisano #%{post_number} do %{username}"
       assign_post_to_multiple: "#%{post_number} przez %{username}"
-      assigned_to_w_ellipsis: "Przypisano do..."
       unassign:
         title: "Cofnij przypisanie"
         title_w_ellipsis: "Cofnij przypisanie..."

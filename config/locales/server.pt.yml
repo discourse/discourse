@@ -1901,9 +1901,6 @@ pt:
     nice_share:
       name: Boa Partilha
       description: Partilhou uma publicação com 25 visitantes únicos
-      long_description: |2
-
-        Este distintivo é concedido por partilhar uma ligação que foi clicada por 25 visitantes externos. Obrigado por espalhar a palavra sobre as nossas discussões, e esta comunidade.
     good_share:
       name: Boa Partilha
       description: Partilhou uma publicação com 300 visitantes únicos
@@ -2045,13 +2042,8 @@ pt:
   wizard:
     title: "Configuração do Discourse"
     step:
-      introduction:
-        fields:
-          title:
-            placeholder: "Reduto da Joana"
-          site_description:
-            placeholder: "Um lugar para a Jona e os seus amigos falarem de coisas giras"
-      privacy:
+      setup:
+        title: "Começar"
         fields:
           login_required:
             label: "Visibilidade"
@@ -2060,22 +2052,6 @@ pt:
                 label: "Público"
               private:
                 label: "Privado"
-      styling:
-        fields:
-          styling_preview:
-            label: "Pré-visualização"
-          homepage_style:
-            choices:
-              latest:
-                label: "Mais Recente"
-      corporate:
-        fields:
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
-      invites:
-        title: "Convidar Equipa de Apoio"
-      finished:
-        title: "O seu Discourse está Pronto!"
   onebox:
     github:
       closed: "fechado"
