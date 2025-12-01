@@ -2,7 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
 
 const TOPIC_LIST_LAYOUT_KEY = "topicListLayout";
-const PM_TOPIC_LIST_LAYOUT_KEY = "pmTopicListLayout";
+const DEPRECATED_PM_TOPIC_LIST_LAYOUT_KEY = "pmTopicListLayout";
 
 export const TABLE_LAYOUT = "table";
 export const TABLE_AI_LAYOUT = "table-ai";
@@ -10,16 +10,30 @@ export const TABLE_AI_LAYOUT = "table-ai";
 export default class Gists extends Service {
   @service router;
 
-  @tracked preference = localStorage.getItem(TOPIC_LIST_LAYOUT_KEY);
-  @tracked pmPreference = localStorage.getItem(PM_TOPIC_LIST_LAYOUT_KEY);
+  @tracked preference = this.#loadPreference();
+
+  #loadPreference() {
+    // Migrate from old PM-specific key if it exists and main key doesn't
+    const oldPmPreference = localStorage.getItem(
+      DEPRECATED_PM_TOPIC_LIST_LAYOUT_KEY
+    );
+    const currentPreference = localStorage.getItem(TOPIC_LIST_LAYOUT_KEY);
+
+    if (oldPmPreference && !currentPreference) {
+      // Migrate the PM preference to the unified key
+      localStorage.setItem(TOPIC_LIST_LAYOUT_KEY, oldPmPreference);
+      localStorage.removeItem(DEPRECATED_PM_TOPIC_LIST_LAYOUT_KEY);
+      return oldPmPreference;
+    } else if (oldPmPreference) {
+      // Just clean up the old key if main key exists
+      localStorage.removeItem(DEPRECATED_PM_TOPIC_LIST_LAYOUT_KEY);
+    }
+
+    return currentPreference;
+  }
 
   get routerAttributes() {
     return this.router.currentRoute.attributes;
-  }
-
-  get isPm() {
-    const routeName = this.router.currentRouteName;
-    return routeName?.startsWith("userPrivateMessages");
   }
 
   get topics() {
@@ -57,24 +71,11 @@ export default class Gists extends Service {
   }
 
   get currentPreference() {
-    return this.isPm ? this.pmPreference : this.preference;
+    return this.preference;
   }
 
-  preferenceFor(isPmOverride) {
-    if (typeof isPmOverride === "boolean") {
-      return isPmOverride ? this.pmPreference : this.preference;
-    }
-
-    return this.currentPreference;
-  }
-
-  setPreference(value, isPm = false) {
-    if (isPm) {
-      this.pmPreference = value;
-      localStorage.setItem(PM_TOPIC_LIST_LAYOUT_KEY, value);
-    } else {
-      this.preference = value;
-      localStorage.setItem(TOPIC_LIST_LAYOUT_KEY, value);
-    }
+  setPreference(value) {
+    this.preference = value;
+    localStorage.setItem(TOPIC_LIST_LAYOUT_KEY, value);
   }
 }

@@ -31,7 +31,7 @@ export default class AiGistToggle extends Component {
   }
 
   get selectedOptionId() {
-    return this.gists.preferenceFor(this.isPmContext);
+    return this.gists.currentPreference;
   }
 
   get currentButton() {
@@ -41,14 +41,6 @@ export default class AiGistToggle extends Component {
     return buttonPreference || this.buttons[0];
   }
 
-  get isPmContext() {
-    if (typeof this.args?.isPm === "boolean") {
-      return this.args.isPm;
-    }
-
-    return this.gists.isPm;
-  }
-
   @action
   onRegisterApi(api) {
     this.dMenu = api;
@@ -56,7 +48,7 @@ export default class AiGistToggle extends Component {
 
   @action
   onSelect(optionId) {
-    this.gists.setPreference(optionId, this.isPmContext);
+    this.gists.setPreference(optionId);
     this.dMenu.close();
   }
 
