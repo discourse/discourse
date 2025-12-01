@@ -3,11 +3,11 @@ const REGEX = /\[( |x)?\]/gi;
 function getClasses(str) {
   switch (str) {
     case "x":
-      return "checked fa fa-square-check-o fa-fw";
+      return "checked fa fa-square-check-o";
     case "X":
-      return "checked permanent fa fa-square-check fa-fw";
+      return "checked permanent fa fa-square-check";
     default:
-      return "fa fa-square-o fa-fw";
+      return "fa fa-square-o";
   }
 }
 
@@ -93,9 +93,9 @@ export function setup(helper) {
 
   helper.allowList([
     "span.chcklst-stroked",
-    "span.chcklst-box fa fa-square-o fa-fw",
-    "span.chcklst-box checked fa fa-square-check-o fa-fw",
-    "span.chcklst-box checked permanent fa fa-square-check fa-fw",
+    "span.chcklst-box fa fa-square-o",
+    "span.chcklst-box checked fa fa-square-check-o",
+    "span.chcklst-box checked permanent fa fa-square-check",
   ]);
 
   helper.registerPlugin((md) =>

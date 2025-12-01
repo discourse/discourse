@@ -15,8 +15,8 @@ const extension = {
           "span",
           {
             class: node.attrs.checked
-              ? "chcklst-box checked fa fa-square-check-o fa-fw"
-              : "chcklst-box fa fa-square-o fa-fw",
+              ? "chcklst-box checked fa fa-square-check-o"
+              : "chcklst-box fa fa-square-o",
           },
         ];
       },
