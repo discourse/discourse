@@ -185,6 +185,8 @@ export default class Profile extends Component {
         if (controller.currentUser) {
           controller.currentUser.set("needs_required_fields_check", false);
         }
+      })
+      .finally(() => {
         controller.set("saved", true);
       })
       .catch(popupAjaxError);
