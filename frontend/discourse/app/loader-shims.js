@@ -149,13 +149,10 @@ loaderShim("ember-route-template", () => importSync("ember-route-template"));
 loaderShim("ember", () => importSync("ember"));
 loaderShim("jquery", () => importSync("jquery"));
 loaderShim("js-yaml", () => importSync("js-yaml"));
-loaderShim("virtual-dom", () => importSync("virtual-dom"));
 loaderShim("xss", () => importSync("xss"));
 // loaderShim("message-bus-client", () => importSync("message-bus-client"));
 loaderShim("moment", () => importSync("moment"));
 loaderShim("rsvp", () => importSync("rsvp"));
-loaderShim("virtual-dom", () => importSync("virtual-dom"));
-loaderShim("xss", () => importSync("xss"));
 otherLoader("@messageformat/runtime/messages", () =>
   importSync("@messageformat/runtime/messages")
 );
