@@ -56,7 +56,7 @@ RSpec.describe FileStore::S3Store do
 
       it "adds `stale-while-revalidate` response directive when `s3_stale_while_revalidate` site setting is set" do
         SiteSetting.s3_stale_while_revalidate = 3600
-
+        expected_cache_control = "max-age=31556952, public, immutable, stale-while-revalidate=3600"
         s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
 
         s3_bucket
@@ -69,7 +69,7 @@ RSpec.describe FileStore::S3Store do
           .with(
             {
               acl: FileStore::S3Store::CANNED_ACL_PUBLIC_READ,
-              cache_control: "max-age=31556952, public, immutable, stale-while-revalidate=3600",
+              cache_control: expected_cache_control,
               content_type: "image/png",
               content_disposition: "inline; filename=\"logo.png\"; filename*=UTF-8''logo.png",
               body: uploaded_file,
@@ -86,6 +86,7 @@ RSpec.describe FileStore::S3Store do
 
       it "respects `s3_max_age` site setting for cache_control" do
         SiteSetting.s3_max_age = 60
+        expected_cache_control = "max-age=60, public, immutable"
         s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
 
         s3_bucket
@@ -98,7 +99,7 @@ RSpec.describe FileStore::S3Store do
           .with(
             {
               acl: FileStore::S3Store::CANNED_ACL_PUBLIC_READ,
-              cache_control: "max-age=60, public, immutable",
+              cache_control: expected_cache_control,
               content_type: "image/png",
               content_disposition: "inline; filename=\"logo.png\"; filename*=UTF-8''logo.png",
               body: uploaded_file,
@@ -111,6 +112,37 @@ RSpec.describe FileStore::S3Store do
         )
 
         expect(upload.etag).to eq(etag)
+      end
+
+      describe "when default site settings are set" do
+        it "cache_control is `max-age=31556952, public, immutable`" do
+          default_cache_control = "max-age=31556952, public, immutable"
+
+          s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+
+          s3_bucket
+            .expects(:object)
+            .with(regexp_matches(%r{original/\d+X.*/#{upload.sha1}\.png}))
+            .returns(s3_object)
+
+          s3_object
+            .expects(:put)
+            .with(
+              {
+                acl: FileStore::S3Store::CANNED_ACL_PUBLIC_READ,
+                cache_control: default_cache_control,
+                content_type: "image/png",
+                content_disposition: "inline; filename=\"logo.png\"; filename*=UTF-8''logo.png",
+                body: uploaded_file,
+              },
+            )
+            .returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
+
+          expect(store.store_upload(uploaded_file, upload)).to match(
+            %r{//s3-upload-bucket\.s3\.dualstack\.us-west-1\.amazonaws\.com/original/\d+X.*/#{upload.sha1}\.png},
+          )
+          expect(upload.etag).to eq(etag)
+        end
       end
 
       describe "when s3_upload_bucket includes folders path" do
