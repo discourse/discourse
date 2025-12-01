@@ -1509,14 +1509,14 @@ en:
         profile:
           enforced_required_fields: "You are required to provide additional information before continuing to use this site."
       feature_topic_on_profile:
-        open_search: "Select a New Topic"
-        title: "Select a Topic"
-        search_label: "Search for Topic by title"
+        open_search: "Select a new topic"
+        title: "Select a topic"
+        search_label: "Search for topic by title"
         save: "Save"
         clear:
           title: "Clear"
           warning: "Are you sure you want to clear your featured topic?"
-      use_current_timezone: "Use Current Timezone"
+      use_current_timezone: "Use current timezone"
       profile_hidden: "This user's public profile is hidden."
       login_to_view_profile: "You must log in to view user profiles"
       inactive_user: "This user is no longer active."
@@ -1609,7 +1609,7 @@ en:
         link_to_filtered_list_checkbox_description: "Link to the filtered list"
         show_count_new_items_checkbox_description: "Show a count of the new items"
       change: "change"
-      featured_topic: "Featured Topic"
+      featured_topic: "Featured topic"
       moderator: "%{user} is a moderator"
       admin: "%{user} is an admin"
       moderator_tooltip: "This user is a moderator"
@@ -1969,21 +1969,21 @@ en:
         use_custom: "Or upload a custom avatar:"
 
       user_profile_section:
-        title: "User Profile"
-        images: "User Images"
-        custom_fields: "Custom Fields"
-        location_and_website: "Location and Website"
+        title: "User profile"
+        images: "User images"
+        custom_fields: "Custom fields"
+        location_and_website: "Location and website"
 
       change_profile_background:
-        title: "Profile Header"
+        title: "Profile header"
         instructions: "Profile headers will be centered and have a default width of 1110px."
 
       change_card_background:
-        title: "User Card Background"
+        title: "User card background"
         instructions: "Background images will be centered and have a default width of 590px."
 
       change_featured_topic:
-        title: "Featured Topic"
+        title: "Featured topic"
         instructions: "A link to this topic will be on your user card, and profile."
 
       email:
@@ -2094,7 +2094,7 @@ en:
       log_out: "Log Out"
       location: "Location"
 
-      website: "Web Site"
+      website: "Web site"
       email_settings: "Email"
       hide_profile: "Hide my public profile"
       enable_physical_keyboard: "Enable physical keyboard support on iPad"
