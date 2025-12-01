@@ -63,6 +63,7 @@ class SiteSettings::TypeSupervisor
         file_size_restriction: 27,
         objects: 28,
         locale_enum: 29,
+        topic: 30,
       )
   end
 
@@ -344,6 +345,8 @@ class SiteSettings::TypeSupervisor
       StringSettingValidator
     when self.class.types[:host_list]
       HostListSettingValidator
+    when self.class.types[:topic]
+      TopicSettingValidator
     else
       nil
     end
