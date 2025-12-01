@@ -192,7 +192,7 @@ export default class PostPolicy extends Component {
       });
 
       result.users.forEach((user) => {
-        this.post.policy_accepted_by.pushObject(user);
+        this.post.policy_accepted_by.push(user);
       });
     } catch (e) {
       popupAjaxError(e);
