@@ -37,6 +37,9 @@ export default class AdminPluginConfigPage extends Component {
     if (!this.currentNavLink) {
       return null;
     }
+
+    // currentConfigNav in adminPluginNavManager automatically adds Settings
+    // here we opt to skip it so it doesn't get added twice for plugins
     if (this.currentNavLink.route === "adminPlugins.show.settings") {
       return null;
     }

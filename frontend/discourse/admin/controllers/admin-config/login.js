@@ -5,7 +5,7 @@ import { i18n } from "discourse-i18n";
 export default class AdminConfigLoginController extends Controller {
   @service router;
 
-  get currentTabLabel() {
+  get currentBreadcrumbLabel() {
     const routeName = this.router.currentRouteName;
 
     if (routeName === "adminConfig.login.authenticators") {
