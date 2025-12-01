@@ -9,9 +9,7 @@ import "./loader"; // todo, loader.js from npm?
 import "./loader-shims";
 import "./discourse-common-loader-shims";
 import "./global-compat";
-import "./compat-modules";
-import { importSync } from "@embroider/macros";
-import compatModules from "@embroider/virtual/compat-modules";
+import embroiderCompatModules from "@embroider/virtual/compat-modules";
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
 
 // Register Discourse's standard implicit injections on common framework classes.
@@ -58,12 +56,7 @@ function populatePreloadStore() {
 
 populatePreloadStore();
 
-let adminCompatModules = {};
-// if (PreloadStore.get("currentUser")?.staff) {
-adminCompatModules = (await import("../admin/compat-modules")).default;
-// }
-
-await loadThemes();
+defineModules(null, embroiderCompatModules);
 
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
@@ -99,14 +92,17 @@ export async function loadThemes() {
 }
 
 function defineModules(name, compatModules) {
-  for (const [key, mod] of Object.entries(compatModules)) {
-    define(`discourse/${name}/${key.slice(2)}`, () => mod);
+  for (let [key, mod] of Object.entries(compatModules)) {
+    if (key.startsWith("./")) {
+      key = key.slice(2);
+    }
+    define(`${name ? `${name}/` : ""}${key}`, () => mod);
   }
 }
 
 export async function loadAdmin() {
   defineModules(
-    "admin",
+    "discourse/admin",
     (
       await import(
         /* webpackChunkName: "admin" */ "discourse/admin/compat-modules"
@@ -125,17 +121,7 @@ class Discourse extends Application {
     paste: "paste",
   };
 
-  Resolver = buildResolver("discourse").withModules({
-    ...compatModules,
-
-    "discourse/templates/discovery/list": importSync(
-      "discourse/templates/discovery/list"
-    ),
-    "discourse/controllers/discovery/list": importSync(
-      "discourse/controllers/discovery/list"
-    ),
-    ...adminCompatModules,
-  });
+  Resolver = buildResolver("discourse");
 
   // Start up the Discourse application by running all the initializers we've defined.
   start() {

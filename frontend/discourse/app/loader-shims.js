@@ -1,67 +1,8 @@
 import { importSync } from "@embroider/macros";
-import otherLoader from "discourse/lib/loader-shim";
-
-const discourseModules = import.meta.glob("./**/*.{gjs,js}");
-// console.log(discourseModules);
-
-window.moduleBroker = {
-  lookup: async function (moduleName) {
-    // discourse/components/d-button
-    // {
-    //   '../components/d-button.gjs': load() {}
-    // }
-
-    const name = moduleName.replace(/^discourse\//, "./");
-    try {
-      // TODO: clean up
-      return await (
-        discourseModules[`${name}.gjs`] ||
-        discourseModules[`${name}.js`] ||
-        discourseModules[name]
-      )();
-    } catch (error) {
-      debugger;
-      // console.error(error);
-      throw error;
-    }
-
-    // return require(moduleName);
-  },
-};
-
-// export const map = {};
-
-function loaderShim(pkg, callback) {
-  // if (!__require__.has(pkg)) {
-  //   __define__(pkg, callback);
-  // }
-  discourseModules[pkg] = callback;
-}
+import loaderShim from "discourse/lib/loader-shim";
 
 // AMD shims for the app bundle, see the comment in loader-shim.js
 // These effectively become public APIs for plugins, so add/remove them carefully
-
-loaderShim("@glimmer/component", () => importSync("@glimmer/component"));
-loaderShim("@ember/helper", () => importSync("@ember/helper"));
-loaderShim("@ember/modifier", () => importSync("@ember/modifier"));
-loaderShim("@ember/object", () => importSync("@ember/object"));
-loaderShim("@ember/template", () => importSync("@ember/template"));
-loaderShim("@ember/template-factory", () =>
-  importSync("@ember/template-factory")
-);
-loaderShim("@ember/render-modifiers/modifiers/did-insert", () =>
-  importSync("@ember/render-modifiers/modifiers/did-insert")
-);
-loaderShim("@ember/render-modifiers/modifiers/did-update", () =>
-  importSync("@ember/render-modifiers/modifiers/did-update")
-);
-loaderShim("@ember/runloop", () => importSync("@ember/runloop"));
-loaderShim("@ember/service", () => importSync("@ember/service"));
-loaderShim("@ember/component", () => importSync("@ember/component"));
-loaderShim("@ember/component/template-only", () =>
-  importSync("@ember/component/template-only")
-);
-loaderShim("@glimmer/tracking", () => importSync("@glimmer/tracking"));
 loaderShim("@discourse/itsatrap", () => importSync("@discourse/itsatrap"));
 loaderShim("@ember-compat/tracked-built-ins", () =>
   importSync("@ember-compat/tracked-built-ins")
@@ -149,22 +90,39 @@ loaderShim("ember-route-template", () => importSync("ember-route-template"));
 loaderShim("ember", () => importSync("ember"));
 loaderShim("jquery", () => importSync("jquery"));
 loaderShim("js-yaml", () => importSync("js-yaml"));
-loaderShim("xss", () => importSync("xss"));
-// loaderShim("message-bus-client", () => importSync("message-bus-client"));
+loaderShim("message-bus-client", () => importSync("message-bus-client"));
 loaderShim("moment", () => importSync("moment"));
 loaderShim("rsvp", () => importSync("rsvp"));
-otherLoader("@messageformat/runtime/messages", () =>
-  importSync("@messageformat/runtime/messages")
+loaderShim("truth-helpers", () => importSync("discourse/truth-helpers"));
+loaderShim("truth-helpers/helpers/and", () =>
+  importSync("discourse/truth-helpers/helpers/and")
 );
-otherLoader("@messageformat/runtime", () =>
-  importSync("@messageformat/runtime")
+loaderShim("truth-helpers/helpers/eq", () =>
+  importSync("discourse/truth-helpers/helpers/eq")
 );
-otherLoader("@messageformat/runtime/lib/cardinals", () =>
-  importSync("@messageformat/runtime/lib/cardinals")
+loaderShim("truth-helpers/helpers/gt", () =>
+  importSync("discourse/truth-helpers/helpers/gt")
 );
-loaderShim("@ember/string", () => importSync("@ember/string"));
-loaderShim("moment", () => importSync("moment"));
-loaderShim("ember-curry-component", () => importSync("ember-curry-component"));
-loaderShim("@ember-decorators/component", () =>
-  importSync("@ember-decorators/component")
+loaderShim("truth-helpers/helpers/gte", () =>
+  importSync("discourse/truth-helpers/helpers/gte")
 );
+loaderShim("truth-helpers/helpers/includes", () =>
+  importSync("discourse/truth-helpers/helpers/includes")
+);
+loaderShim("truth-helpers/helpers/lt", () =>
+  importSync("discourse/truth-helpers/helpers/lt")
+);
+loaderShim("truth-helpers/helpers/lte", () =>
+  importSync("discourse/truth-helpers/helpers/lte")
+);
+loaderShim("truth-helpers/helpers/not-eq", () =>
+  importSync("discourse/truth-helpers/helpers/not-eq")
+);
+loaderShim("truth-helpers/helpers/not", () =>
+  importSync("discourse/truth-helpers/helpers/not")
+);
+loaderShim("truth-helpers/helpers/or", () =>
+  importSync("discourse/truth-helpers/helpers/or")
+);
+loaderShim("virtual-dom", () => importSync("discourse/widgets/virtual-dom"));
+loaderShim("xss", () => importSync("xss"));

@@ -1,8 +1,19 @@
-import App from "discourse/app";
+import App, { loadAdmin, loadThemes } from "discourse/app";
 
-document.addEventListener("discourse-init", (e) => {
+document.addEventListener("discourse-init", async (e) => {
   performance.mark("discourse-init");
   const config = e.detail;
+
+  // if (
+  //   document.querySelector(
+  //     'link[rel="preload"][data-discourse-entrypoint="admin"]'
+  //   )
+  // ) {
+  await loadAdmin();
+  // }
+
+  await loadThemes();
+
   const app = App.create(config);
   app.start();
 });
