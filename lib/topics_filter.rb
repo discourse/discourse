@@ -37,6 +37,10 @@ class TopicsFilter
       filters[key]["values"] << value
     end
 
+    if (in_filter = filters.delete("in"))
+      filter_in(values: extract_and_validate_value_for("in", in_filter["values"]))
+    end
+
     filters.each do |filter, hash|
       key_prefixes = hash["key_prefixes"]
       values = hash["values"]
@@ -55,8 +59,6 @@ class TopicsFilter
         filter_by_created(before: filter_values)
       when "created-by"
         filter_created_by(names: filter_values.flat_map { |value| value.split(",") })
-      when "in"
-        filter_in(values: filter_values)
       when "latest-post-after"
         filter_by_latest_post(after: filter_values)
       when "latest-post-before"
