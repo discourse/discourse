@@ -1,11 +1,10 @@
 import Component from "@glimmer/component";
-import { concat, fn } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
-import bodyClass from "discourse/helpers/body-class";
 import icon from "discourse/helpers/d-icon";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -49,13 +48,12 @@ export default class AiGistToggle extends Component {
 
   @action
   onSelect(optionId) {
-    this.gists.setPreference(optionId, this.gists.isPm);
+    this.gists.setPreference(optionId);
     this.dMenu.close();
   }
 
   <template>
     {{#if this.gists.showToggle}}
-      {{bodyClass (concat "topic-list-layout-" this.gists.currentPreference)}}
       <DMenu
         @modalForMobile={{true}}
         @autofocus={{true}}
