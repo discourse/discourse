@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import BackButton from "discourse/components/back-button";
+import DPageSubheader from "discourse/components/d-page-subheader";
+import { i18n } from "discourse-i18n";
 import AiToolEditorForm from "./ai-tool-editor-form";
 
 export default class AiToolEditor extends Component {
@@ -25,9 +26,12 @@ export default class AiToolEditor extends Component {
   }
 
   <template>
-    <BackButton
-      @route="adminPlugins.show.discourse-ai-tools"
-      @label="discourse_ai.tools.back"
+    <DPageSubheader
+      @titleLabel={{if
+        @model.isNew
+        (i18n "discourse_ai.tools.new_tool")
+        (i18n "discourse_ai.tools.edit_tool")
+      }}
     />
 
     <AiToolEditorForm

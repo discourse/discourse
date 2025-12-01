@@ -123,6 +123,12 @@ describe "Admin Customize Themes Config Area Page", type: :system do
       expect(page).to have_current_path("/admin/customize/themes/#{enabled_component.id}")
     end
 
+    it "shows correct breadcrumbs on component page" do
+      component_page = PageObjects::Pages::AdminCustomizeThemes.new
+      component_page.visit(enabled_component)
+      expect(component_page).to have_breadcrumbs_for_component(enabled_component.name)
+    end
+
     it "displays various metadata for components" do
       disabled_component.update!(parent_themes: [parent_theme])
       remote_component.update!(parent_themes: [parent_theme, parent_theme_2])

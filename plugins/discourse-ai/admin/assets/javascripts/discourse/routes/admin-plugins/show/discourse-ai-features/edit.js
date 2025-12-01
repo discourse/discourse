@@ -1,9 +1,12 @@
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import SiteSetting from "discourse/admin/models/site-setting";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class AdminPluginsShowDiscourseAiFeaturesEdit extends DiscourseRoute {
+  @service router;
+
   async model(params) {
     const allFeatures = this.modelFor(
       "adminPlugins.show.discourse-ai-features"

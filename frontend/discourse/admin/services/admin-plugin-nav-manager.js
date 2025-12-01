@@ -11,7 +11,6 @@ export default class AdminPluginNavManager extends Service {
   @tracked viewingPluginsList = false;
 
   get currentConfigNav() {
-    const configNav = configNavForPlugin(this.currentPlugin.id);
     const settingsNav = {
       links: [
         {
@@ -20,6 +19,8 @@ export default class AdminPluginNavManager extends Service {
         },
       ],
     };
+
+    const configNav = configNavForPlugin(this.currentPlugin?.id);
 
     // Not all plugins have a more complex config UI and navigation,
     // in that case only the settings route will be available.

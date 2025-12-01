@@ -18,8 +18,6 @@ RSpec.describe "Admin AI persona configuration", type: :system do
 
     find(".ai-persona-list-editor__new-button").click()
 
-    expect(page_header).to be_hidden
-
     form.field("name").fill_in("Test Persona")
     form.field("description").fill_in("I am a test persona")
     form.field("system_prompt").fill_in("You are a helpful bot")
