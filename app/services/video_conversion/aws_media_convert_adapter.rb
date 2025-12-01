@@ -196,12 +196,33 @@ module VideoConversion
           [nil, nil]
         end
 
+        # Log ACL settings for debugging
+        if copy_options[:acl].present?
+          Rails.logger.debug(
+            "MediaConvert copied file with ACL: #{copy_options[:acl]} (secure: #{@upload.secure?}) for upload #{@upload.id}",
+          )
+        end
+
         [destination_path, etag]
       rescue Aws::S3::Errors::NotFound => e
         Rails.logger.error(
           "MediaConvert copy failed - source or destination not found: #{e.message} (source: #{temp_path}, destination: #{destination_path}) for upload #{@upload.id}",
         )
         [nil, nil]
+      rescue Aws::S3::Errors::AccessDenied, Aws::S3::Errors::Forbidden => e
+        # Copy failed due to permissions - this is critical
+        Discourse.warn_exception(
+          e,
+          message: "MediaConvert copy failed due to permissions - ACL may not be applied",
+          env: {
+            upload_id: @upload.id,
+            temp_path: temp_path,
+            destination_path: destination_path,
+            secure: @upload.secure?,
+            copy_options: copy_options,
+          },
+        )
+        raise
       rescue => e
         Rails.logger.error(
           "MediaConvert copy failed: #{e.class.name} - #{e.message} (source: #{temp_path}, destination: #{destination_path}) for upload #{@upload.id}",
@@ -216,6 +237,31 @@ module VideoConversion
       rescue Aws::S3::Errors::NotFound => e
         Rails.logger.error(
           "MediaConvert file not found when updating access control at #{destination_path} for upload #{@upload.id}: #{e.message}",
+        )
+        raise
+      rescue Aws::S3::Errors::AccessDenied, Aws::S3::Errors::Forbidden => e
+        # ACL update failed due to permissions - this is critical as it will cause 403s
+        Discourse.warn_exception(
+          e,
+          message: "MediaConvert ACL update failed due to permissions - file may be inaccessible",
+          env: {
+            upload_id: @upload.id,
+            destination_path: destination_path,
+            secure: @upload.secure?,
+          },
+        )
+        raise
+      rescue Aws::S3::Errors::ServiceError => e
+        # Catch other AWS S3 errors that might prevent ACL from being set
+        Discourse.warn_exception(
+          e,
+          message: "MediaConvert ACL update failed with AWS error",
+          env: {
+            upload_id: @upload.id,
+            destination_path: destination_path,
+            secure: @upload.secure?,
+            error_code: e.code,
+          },
         )
         raise
       end
