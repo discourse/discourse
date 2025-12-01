@@ -44,6 +44,7 @@ export default class ThumbnailSuggestions extends Component {
       this.thumbnails = thumbnails.thumbnails;
     } catch (error) {
       if (isAiCreditLimitError(error)) {
+        this.args.closeModal();
         popupAiCreditLimitError(error);
       } else {
         popupAjaxError(error);
