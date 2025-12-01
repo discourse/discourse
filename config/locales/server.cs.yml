@@ -2365,6 +2365,7 @@ cs:
       staged_users_disabled: "Než toto nastavení povolíte, musíte nejprve povolit „předběžně založené uživatele“."
       min_username_length_range: "Nemůžete nastavit minimum nad maximum."
       max_username_length_range: "Nemůžete nastavit maximum pod minimum."
+      discourse_id_credentials: "Před povolením tohoto nastavení musíte nakonfigurovat přihlašovací údaje Discourse ID („discourse_id_client_id“ a „discourse_id_client_secret“)."
       delete_rejected_email_after_days: "Toto nastavení nemůže být nižší než nastavení delete_email_logs_after_days nebo vyšší než %{max}."
       content_localization_anon_language_switcher_requirements: "Přepínač jazyků vyžaduje, aby bylo povoleno nastavení webu `set locale from cookie` a aby `content localization supported locales` obsahovalo alespoň jeden jazyk."
     keywords:
@@ -4626,8 +4627,13 @@ cs:
     unknown: "neznámá"
     api_key:
       revoked: Zrušeno
+    user_associated_posts_deleted: "Uživatel byl zcela odstraněn"
+    imap_email_deleted: "E-mail byl na serveru IMAP odstraněn"
+    imap_email_marked_as_spam: "E-mail byl na serveru IMAP přesunut do spamu."
+    auto_deleted_hidden_posts: "Automaticky smazané skryté příspěvky"
   reviewables:
     already_handled: "Děkujeme, ale tento příspěvek jsme již zkontrolovali a rozhodli jsme se, že jej není třeba znovu nahlašovat."
+    already_handled_and_user_not_exist: "Díky, ale někdo již revizi provedl a tento uživatel již neexistuje."
     priorities:
       low: "Nízká"
       medium: "Střední"
@@ -4639,26 +4645,65 @@ cs:
       high: "Vysoká"
     must_claim: "Než budete jednat, musíte si položky nejdříve nárokovat."
     user_claimed: "Tuto položku si nárokoval jiný uživatel."
+    missing_version: "Musíte zadat parametr verze."
+    conflict: "Došlo k konfliktu aktualizací, který vám v tom zabránil."
     reasons:
+      post_count: "Prvních několik příspěvků od každého uživatele musí schválit redakce. Viz %{link}."
+      trust_level: "Uživatelé s nízkou úrovní důvěry musí mít odpovědi schválené redakcí. Viz %{link}."
+      group: "Uživatelé, kteří nejsou v uvedených skupinách, musí mít odpovědi schválené redakcí. Viz %{link}."
+      new_topics_unless_trust_level: "Uživatelé s nízkou úrovní důvěry musí mít témata schválená redakcí. Viz %{link}."
+      fast_typer: "Nový uživatel napsal svůj první příspěvek podezřele rychle, podezření na chování bota nebo spammera. Viz %{link}."
       auto_silence_regex: "Nový uživatel, jehož první příspěvek odpovídá nastavení %{link} ."
+      watched_word:
+        one: "Tento příspěvek obsahoval sledované slovo, označené slovo je: %{words}. Více informací naleznete v %{link} ."
+        few: "Tento příspěvek obsahoval sledovaná slova, označená slova jsou: %{words}. Více informací naleznete v %{link} ."
+        many: "Tento příspěvek obsahoval sledovaná slova, označená slova jsou: %{words}. Více informací naleznete v %{link} ."
+        other: "Tento příspěvek obsahoval sledovaná slova, označená slova jsou: %{words}. Více informací naleznete v %{link} ."
       staged: "Nová témata a příspěvky pro předběžně založené uživatele musí schválit členové redakce. Viz %{link}."
+      category: "Příspěvky v této kategorii vyžadují ruční schválení redakcí. Viz %{link}."
+      must_approve_users: "Všichni noví uživatelé musí být schváleni redakcí. Viz %{link}."
+      invite_only: "Všichni noví uživatelé by měli být pozváni. Viz %{link}."
+      email_auth_res_enqueue: "Tento e-mail neprošel kontrolou DMARC, s největší pravděpodobností nepochází od toho, od koho se zdá, že pochází. Další informace naleznete v záhlavích e-mailu."
+      email_spam: "Tento e-mail byl označen jako spam podle hlavičky definované v %{link}."
+      suspect_user: "Tento nový uživatel zadal informace o profilu, aniž by si přečetl jakákoli témata nebo příspěvky, což silně naznačuje, že by mohl být spammer. Viz %{link}."
+      contains_media: "Tento příspěvek obsahuje vložená média. Viz %{link}."
+      queued_by_staff: "Člen redakce si myslí, že tento příspěvek potřebuje kontrolu. Do té doby zůstane skrytý."
+      links:
+        watched_word: nastavení sledovaných slov
+        category: nastavení kategorií
+      no_context:
+        watched_word: "Tento příspěvek obsahoval sledované slovo. Více informací naleznete v %{link}."
     actions:
       agree:
         title: "Ano"
       agree_and_keep:
         title: "Ponechat příspěvek"
         description: "Souhlasit s nahlášením, ale ponechat tento příspěvek beze změny."
+        complete: "Příspěvek ponechán beze změny."
       agree_and_keep_hidden:
         title: "Ponechat příspěvek skrytý"
         description: "Souhlasit s nahlášením a nechat příspěvek skrytý."
+        complete: "Příspěvek zůstal skryt."
       agree_and_suspend:
         title: "Pozastavit uživatele"
         description: "Schválit nahlášení a pozastavit uživatele."
+        complete: "Uživatel pozastaven."
       agree_and_silence:
         title: "Ztišit uživatele"
         description: "Schválit nahlášení a ztišit uživatele."
+        complete: "Uživatel ztišen."
       agree_and_restore:
+        title: "Obnovit příspěvek"
         description: "Obnov příspěvek, aby ho mohli vidět všichni ostatní uživatelé."
+        complete: "Příspěvek obnoven."
+      agree_and_hide:
+        title: "Skrýt příspěvek"
+        description: "Souhlasit s nahlášením a skrytím tohoto příspěvku + automaticky odeslat uživateli zprávu s výzvou k jeho úpravě."
+        complete: "Příspěvek byl skryt a uživatel byl upozorněn."
+      agree_and_edit:
+        title: "Souhlasit a upravit příspěvek"
+        description: "Souhlasit s nahlášením a otevřít okno editoru pro úpravu příspěvku."
+        complete: "Nahlášení potvrzeno, nyní můžete příspěvek upravit."
       delete:
         title: "Smazat"
         complete: "Příspěvek smazán."
@@ -4670,6 +4715,7 @@ cs:
         title: "Ignorovat nahlášení, smazat příspěvek a odpovědi"
         description: "Ignorovat nahlášení odstraněním z fronty, smazáním příspěvku a všech jeho odpovědí; pokud jde o první příspěvek, smaže i téma"
         confirm: "Jste si jisti, že chcete odstranit i odpovědi na příspěvek?"
+        complete: "Příspěvek a odpovědi byly odstraněny."
       delete_and_agree:
         title: "Odstranit příspěvek"
         description: "Souhlasit s nahlášením a smazat tento příspěvek. Pokud jde o první příspěvek, smaže i téma."
@@ -4678,16 +4724,20 @@ cs:
         title: "Smazat příspěvek a odpovědi"
         description: "Souhlasit s nahlášením a odstranit tento příspěvek a všechny jeho odpovědi; pokud jde první příspěvek, smaže i téma."
         confirm: "Jste si jisti, že chcete odstranit i odpovědi na příspěvek?"
+        complete: "Příspěvek a odpovědi byly odstraněny."
       disagree_and_restore:
         title: "Ne, obnovit příspěvek"
         description: "Obnov příspěvek, aby ho mohli vidět všichni ostatní uživatelé."
+        complete: "Příspěvek obnoven."
       disagree:
         title: "Ne"
         complete: "Nahlášení ignorováno."
       discard_post:
         title: "Zahodit příspěvek"
+        complete: "Příspěvek zahozen."
       revise_and_reject_post:
         title: "Revize příspěvku..."
+        complete: "Příspěvek zamítnut a čeká na revizi."
       ignore:
         title: "ignorovat"
         complete: "Nahlášení ignorováno."
@@ -4720,19 +4770,28 @@ cs:
         block:
           title: "Odstranit a blokovat uživatele"
           description: "Uživatel bude smazán a zablokujeme jeho IP a e-mailovou adresu."
+          complete: "Uživatel smazán a zablokován."
       reject:
         title: "Odmítnout"
         bundle_title: "Odmítnout…"
       reject_and_suspend:
         title: "Odmítnout a pozastavit uživatele"
+        complete: "Příspěvek zamítnut a uživatel pozastaven."
       reject_and_silence:
         title: "Odmítnout a ztišit uživatele"
+        complete: "Příspěvek odmítnut a uživatel ztišen."
       reject_and_delete:
         title: "Odmítnout a odstranit příspěvek"
+        complete: "Příspěvek odmítnut a smazán."
       reject_and_keep_deleted:
         title: "Ponechat příspěvek smazaný"
+        complete: "Příspěvek odmítnut a ponechán smazaný."
       approve_and_restore:
         title: "Schválit a obnovit příspěvek"
+        complete: "Příspěvek schválen a obnoven."
+      approve_and_unhide:
+        title: "Schválit a zviditelnit příspěvek"
+        complete: "Příspěvek schválen a zviditelněn"
       delete_user:
         reason: "Smazáno prostřednictvím fronty revizí"
         complete: "Uživatel smazán."
@@ -4743,6 +4802,8 @@ cs:
     mute_error: "Je nám líto, tohoto uživatele nemůžete ztišit."
     error: "Je nám líto, ale úroveň upozorňování pro tohoto uživatele nelze změnit."
     invalid_value: '"%{value}" není platná úroveň upozornění.'
+  discord:
+    not_in_allowed_guild: "Ověření se nezdařilo. Nejste členem povoleného Discord klanu."
   old_keys_reminder:
     title: "Připomenutí starých přihlašovacích údajů"
     body: |
@@ -4762,6 +4823,9 @@ cs:
     post_raw: "Pokračování diskuse z %{parent_url}.\n\nPředchozí diskuse:\n\n%{previous_topics}"
     small_action_post_raw: "Pokračujte v diskusi na %{new_title}."
   fallback_username: "uživatel"
+  user_status:
+    errors:
+      ends_at_should_be_greater_than_set_at: "Hodnota ends_at by měla být větší než set_at."
   form_templates:
     errors:
       invalid_yaml: "není platný řetězec YAML"

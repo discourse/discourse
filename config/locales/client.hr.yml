@@ -5693,6 +5693,7 @@ hr:
         watched_words:
           title: "Praćene riječi"
         color_palettes:
+          title: "Palete boja"
           header_description: "Ove palete kontroliraju boje koje se koriste u vašoj zajednici. Kada paletu učinite dostupnom korisnicima, članovi mogu odabrati svoje željene boje iz svojih preferencija."
         emoji:
           title: "Emoji"
@@ -6301,8 +6302,18 @@ hr:
           delete: "Pobriši"
           color_options:
             title: "Opcije boja"
+            toggle: "Korisnik može odabrati"
+            toggle_description: "Korisnici mogu odabrati paletu boja"
           colors:
             title: "Boje"
+          save_changes: "Zabilježi promjene"
+          unsaved_changes: "Imate nespremljene promjene"
+          copy_of: "Kopija %{name}"
+          copy_created: 'Stvorena je nova kopija "%{name}"'
+          illegal_character_in_color: "Boja mora sadržavati samo heksadecimalne znakove"
+          invalid_color_length: "Boja mora biti u formatu #rrggbb ili #rgb"
+          blocked_edit_for_system: "Paleta boja koja pripada sistemskoj temi ne može se uređivati."
+          delete_confirm: "Jeste li sigurni da želite izbrisati ovu paletu boja?"
       plugins:
         title: "Dodaci"
         name: "Naziv"
@@ -6600,8 +6611,10 @@ hr:
           edit: "Uredi"
           filters:
             all: "Sve"
+            no_results: "Nisu pronađene palete boja"
           default_light_badge:
             reset: "Poništi filtere"
+          back_to_colors: "Povratak na palete boja"
           long_title: "Palete boja"
           about: "Izmijenite boje koje koriste vaše teme. Za početak izradite novu paletu boja."
           copy_name_prefix: "Kopija"
