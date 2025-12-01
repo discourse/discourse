@@ -2439,7 +2439,6 @@ ja:
         other: "リストには正確に %{count} 個の値が含まれている必要があります。"
       markdown_linkify_tlds: "値 '*' を含めることはできません。"
       google_oauth2_hd_groups: "この設定を有効にする前に、すべての 'google oauth2 hd' 設定を構成する必要があります。"
-      discourse_id_credentials: "この設定を有効にする前に、Discourse ID 資格情報 ('discourse_id_client_id' と 'discourse_id_client_secret') を構成する必要があります。"
       linkedin_oidc_credentials: "この設定を有効にする前に、LinkedIn OIDC 資格情報 ('linkedin_oidc_client_id' および 'linkedin_oidc_client_secret') を構成する必要があります。"
       search_tokenize_chinese_enabled: "この設定を有効にする前に 'search_tokenize_chinese' を無効にする必要があります。"
       search_tokenize_japanese_enabled: "この設定を有効にする前に 'search_tokenize_japanese' を無効にする必要があります。"
@@ -4602,18 +4601,12 @@ ja:
     nice_share:
       name: ナイスな共有
       description: 25 人の訪問者に投稿を共有
-      long_description: |
-        このバッジは、共有したリンクを 25 人の外部訪問者がクリックすると付与されます。ディスカッションとこのコミュニティーの存在を伝えてくれ、ありがとう！
     good_share:
       name: イカした共有
       description: 300 人の訪問者に投稿を共有
-      long_description: |
-        このバッジは、300 人の外部訪問者がクリックしたリンクを共有したときに付与されます。よくできました！あなたはたくさんの新しい人々に素晴らしいディスカッションを披露し、このコミュニティーの成長を助けました。
     great_share:
       name: グレートな共有
       description: 1000 人の訪問者に投稿を共有
-      long_description: |
-        このバッジは、1000 人の外部訪問者がクリックしたリンクを共有したときに付与されます。わぉ！あなたは大勢の新しいオーディエンスに興味深いディスカッションを促進し、コミュニティーを大きく成長させることに役立ちました！
     first_like:
       name: 初めての「いいね！」
       description: 投稿に「いいね！」した
@@ -4825,21 +4818,13 @@ ja:
   wizard:
     title: "Discourse のセットアップ"
     step:
-      introduction:
-        title: "サイトについて"
-        description: "これらは、ログインとすべての公開ページに表示されます。後でいつでも変更できます。"
+      setup:
+        title: "はじめに"
         fields:
           title:
             label: "コミュニティー名"
-            placeholder: "純子のたまり場"
-          site_description:
-            label: "コミュニティーについて一文で説明してください"
-            placeholder: "純子と純子の仲間がワイワイする場所"
           default_locale:
             label: "言語"
-      privacy:
-        title: "メンバーアクセス"
-        fields:
           login_required:
             label: "表示状態"
             description: "コミュニティーは公開ですか、非公開ですか？"
@@ -4863,82 +4848,6 @@ ja:
                 label: "いいえ。新しいメンバーはすぐに参加できます"
               "yes":
                 label: "はい。新しいメンバーはモデレーターの承認が必要です"
-          chat_enabled:
-            placeholder: "チャットを有効にする"
-            extra_description: "メンバーとリアルタイムで交流"
-      ready:
-        title: "サイトの準備が整いました！"
-        description: "以上です！コミュニティーを設定するための基本を完了しました。後は、コミュニティーにアクセスして見て回り、ウェルカムトピックを書いて招待状を送信しましょう！<br><br>お楽しみください！"
-      styling:
-        title: "外観"
-        fields:
-          color_scheme:
-            label: "色パレット"
-          body_font:
-            label: "本文のフォント"
-          site_font:
-            label: "フォント"
-          heading_font:
-            label: "見出しのフォント"
-          styling_preview:
-            label: "プレビュー"
-          homepage_style:
-            label: "ホームページのスタイル"
-            choices:
-              latest:
-                label: "最新"
-                description: "すべてのカテゴリで直近のアクティブなトピックを表示し、メンバーが関心のあるディスカッションの最新情報を把握できるようにします。"
-              hot:
-                label: "ホット"
-                description: "最近の人気と全体的な人気を組み合わせてトレンド中のトピックを表示し、現在コミュニティーでメンバーが何について語っているのかを紹介します。"
-              categories_and_latest_topics:
-                label: "カテゴリと最新トピック"
-                description: "全カテゴリの最近アクティブなトピックとカテゴリのリスト、説明、および合計トピック数を合わせて表示します。"
-              categories_boxes:
-                label: "カテゴリボックス"
-                description: "カテゴリとその説明をグリッドに表示します。メンバーがサイトのサブコミュニティーの概要を確認するのに最適です。"
-      branding:
-        title: "サイトのロゴ"
-        fields:
-          logo:
-            label: "プライマリーロゴ"
-            description: "推奨サイズ: 600 x 200"
-          logo_small:
-            label: "正方形のロゴ"
-            description: "推奨サイズ: 512 x 512。ファビコンやモバイルホーム画面のアプリアイコンとしても使用されます。"
-      corporate:
-        title: "あなたの組織"
-        description: "次の情報は、利用規約と会社情報のページに使用されます。会社が存在しない場合は、スキップしてください。"
-        fields:
-          company_name:
-            label: "会社名"
-            placeholder: "Acme 組織"
-          governing_law:
-            label: "準拠法"
-            placeholder: "カリフォルニア州法"
-          contact_url:
-            label: "ウェブページ"
-            placeholder: "https://www.example.com/contact-us"
-          city_for_disputes:
-            label: "紛争都市"
-            placeholder: "カリフォルニア州サンフランシスコ"
-          site_contact:
-            label: "自動メッセージ"
-            description: "通報の警告やバックアップ完了の通知など、Discourse のすべての自動個人メッセージはこのユーザーから送信されます。"
-          contact_email:
-            label: "連絡先"
-            placeholder: "example@user.com"
-            description: "このサイトの責任者の主要連絡先のメールアドレス。重要な通知に使用され、緊急事項の<a href='%{base_path}/about' target='_blank'>サイト情報</a>に表示されます。"
-      invites:
-        title: "スタッフの招待"
-        description: "ほぼ完了です！コミュニティーを始動させるために、興味深いトピックや返信で<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>ディスカッションを生み出せる</a>人を何人が招待しましょう。"
-        disabled: "ローカルログインが無効になっているため、誰にも招待を送れません。次のステップに進んでください。"
-      finished:
-        title: "あなたの Discourse の準備が整いました！"
-        description: |
-          <p>これらの設定を変更することがある場合は、<b>いつでもこのウィザードを実行</b>するか、<a href='%{base_path}/admin' target='_blank'>あなたの管理者セクション</a>にアクセスしてください。このセクションはサイトメニューのレンチアイコンの横にあります。</p>
-          <p>強力なテーマシステムを使用すると、Discourse をさらにカスタマイズすることができます。たとえば、<a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a> で<a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">人気のテーマやコンポーネント</a>をご覧ください。</p>
-          <p>それでは、<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>新しいコミュニティーの構築</a>をお楽しみください！</p>
   search_logs:
     graph_title: "検索数"
   onebox:

@@ -172,6 +172,7 @@ export default class ChatModalEditChannelName extends Component {
             @btnClass="btn-emoji"
             @modalForMobile={{false}}
             @context="channel-emoji"
+            @inline={{true}}
           />
 
           <DButton

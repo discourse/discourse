@@ -126,6 +126,8 @@ sw:
           close: "Funga"
           copy: "Nakili"
           cancel: "Batili"
+        thumbnail_suggestions:
+          try_again: "Jaribu Tena"
         image_caption:
           save_caption: "Hifadhi"
       embeddings:

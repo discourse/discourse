@@ -291,7 +291,6 @@ hu:
     software_update_prompt:
       message: "Frissítettük ezt az oldalt, <span>frissítse</span> a zökkenőmentes működésért."
       dismiss: "Elvetés"
-    bootstrap_mode: "Első lépések"
     back_button: "Vissza"
     welcome_banner:
       header:
@@ -706,7 +705,7 @@ hu:
       title: "Áttekintés"
       topic: "Téma:"
       filtered_topic: "A jóváhagyandó tartalmakra szűrt egyetlen témában."
-      filtered_user: "Felhasználó"
+      filtered_user: "Megjelölt felhasználó"
       filtered_reviewed_by: "Jóváhagyta:"
       show_all_topics: "összes téma megjelenítése"
       deleted_post: "(bejegyzés törölve)"
@@ -842,7 +841,6 @@ hu:
           noun: "bejegyzéssel"
       flagged_as: "Megjelölt"
       user_label: "Felhasználó"
-      assigned_to: "Hozzárendelve"
       moderator_actions: "Moderátori intézkedések"
       timeline_and_notes: "Idővonal és jegyzetek"
       timeline:
@@ -879,7 +877,6 @@ hu:
           one: "%{count} egyedi felhasználó jelölte meg"
           other: "%{count} egyedi felhasználó jelölte meg"
         activities:
-          new_account: "új fiók"
           trust_level: "bizalmi szint: %{trustLevelName}"
           posts:
             one: "%{count} bejegyzés"
@@ -887,7 +884,6 @@ hu:
         solution_marked: "Megoldás megjelölve"
         topic_has_solution: "A témának van megoldása"
         visibility: "Láthatóság"
-        topic_unlisted: "Ez a téma nem nyilvános. Csak közvetlen linken keresztül érhető el – nem nyilvános."
       help:
         moderation_guide: "Discourse moderálási útmutató"
         flag_priorities: "Felhasználói hírnév kezelése és a prioritások megjelölése"
@@ -1310,7 +1306,6 @@ hu:
         one: "Kategóriák (%{count} további)…"
         other: "Kategóriák (%{count} további)…"
     ip_lookup:
-      title: IP-cím keresése
       hostname: Gépnév
       location: Hely
       location_not_found: (ismeretlen)
@@ -5261,6 +5256,9 @@ hu:
         show_image: "Kép megjelenítése"
         select_groups: "Csoportok kiválasztása…"
         preview: "Előnézet"
+        enabled_for_options:
+          everyone: "Mindenki"
+          staff: "Csak a stáb"
         impact_roles:
           admins: "Adminisztrátorok"
           moderators: "Moderátorok"
@@ -8041,79 +8039,3 @@ hu:
           categories: "Kategóriák"
           topics: "Témák"
           replace: "Csere"
-  wizard_js:
-    wizard:
-      jump_in: "Ugorj be!"
-      finish: "Kilépés a beállításból"
-      back: "Vissza"
-      next: "Tovább"
-      configure_more: "További beállítások…"
-      step-text: "Lépés"
-      step: "%{current} / %{total}"
-      upload: "Fájl feltöltése"
-      uploading: "Feltöltés"
-      upload_error: "Sajnáljuk, de hiba lépett fel a fájl feltöltése során. Próbálja újra."
-      staff_count:
-        one: "A közösségében %{count} stábtag van (Ön)."
-        other: "A közösségében Önnel együtt %{count} stábtag van."
-      invites:
-        add_user: "hozzáadás"
-        none_added: "Nem hívott meg egy stábtagot sem. Biztos, hogy tovább lép?"
-        roles:
-          admin: "Adminisztrátor"
-          moderator: "Moderátor"
-          regular: "Felhasználó"
-      homepage_choices:
-        custom:
-          label: "Egyéni"
-          description: "Jelenítsen meg egy %{type}-központú kezdőlapot, ahol a felhasználók a %{landingPage}címre kerülnek"
-        style_type:
-          categories: "kategória"
-          topics: "témával"
-      top_menu_items:
-        new: "Új"
-        unread: "Olvasatlan"
-        top: "Népszerű"
-        latest: "Legutóbbi"
-        hot: "Felkapott"
-        categories: "Kategóriák"
-        unseen: "Nem látott"
-        read: "Olvasott"
-        bookmarks: "Könyvjelzők"
-      previews:
-        topic_title: "Milyen könyveket olvasol?"
-        share_button: "Megosztás"
-        reply_button: "Válasz"
-        topic_preview: "Téma előnézet"
-        homepage_preview: "Kezdőlap előnézete"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "összes kategória"
-        topic_titles:
-          what_books: "Milyen könyveket olvasol?"
-          what_movies: "Milyen filmeket láttál mostanában?"
-          random_fact: "A nap véletlenszerű ténye"
-          tv_show: "Ajánlj egy tévéműsort"
-          what_hobbies: "Mi a hobbija?"
-          what_music: "Mit hallgatsz most?"
-          funniest_thing: "A legviccesebb dolog, amit ma láttál"
-          share_art: "Oszd meg a művészeted!"
-        topic_ops:
-          what_books: |
-            Mindannyian szeretünk olvasni, használjuk ezt a témát arra, hogy megosszuk a
-            aktuális vagy nemrégiben olvasott könyveinket. Én fantasy rajongó vagyok, és a
-            A Gyűrűk Urát olvastam újra, immár 100. alkalommal.
-            És ti?
-        category_descriptions:
-          icebreakers: "Ismerd meg a közösség tagjait szórakoztató kérdésekkel."
-          news: "Beszélje meg a legfrissebb híreket és eseményeket."
-          site_feedback: "Ossza meg gondolatait a közösséggel kapcsolatban, és javasoljon fejlesztéseket."
-        category_names:
-          icebreakers: "Jégtörők"
-          news: "Hírek"
-          site_feedback: "Visszajelzés"
-        table_headers:
-          topic: "Téma"
-          replies: "Válaszok"
-          views: "Megtekintések"
-          activity: "Tevékenység"

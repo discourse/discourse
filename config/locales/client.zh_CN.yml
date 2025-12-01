@@ -269,7 +269,6 @@ zh_CN:
     software_update_prompt:
       message: "我们更新了网站，<span>请刷新</span>以保持网站顺利运行。"
       dismiss: "忽略"
-    bootstrap_mode: "使用入门"
     back_button: "返回"
     welcome_banner:
       header:
@@ -658,8 +657,9 @@ zh_CN:
       title: "审核"
       topic: "话题："
       filtered_topic: "您已筛选到一个话题下的可审核内容。"
-      filtered_user: "用户"
+      filtered_user: "被举报用户"
       filtered_reviewed_by: "审核人"
+      filtered_claimed_by: "举报被认领"
       show_all_topics: "显示所有话题"
       deleted_post: "（帖子已删除）"
       deleted_user: "（用户已删除）"
@@ -730,6 +730,8 @@ zh_CN:
           low: "低"
           medium: "中"
           high: "高"
+        active_filters: "启用筛选器："
+        clear_filter: "移除 %{filter}"
       conversation:
         view_full: "查看完整对话"
       scores:
@@ -795,7 +797,7 @@ zh_CN:
       queued_post_label: "队列中的帖子"
       queued_topic_label: "已加入队列的话题"
       user_label: "用户"
-      assigned_to: "已指定给"
+      assigned_to: "帖子被指定给"
       moderator_actions: "版主操作"
       timeline_and_notes: "时间线和注释"
       timeline:
@@ -833,19 +835,17 @@ zh_CN:
         flag_volume: "举报量"
         flagged_by_users:
           other: "由 %{count} 位唯一身份用户举报"
-        similar_posts: "过去的违规行为"
         flagged_in_timeframe:
           other: "%{count} 个已确认举报"
         user_activity: "用户信息"
         activities:
-          new_account: "新帐户"
+          joined_on: "加入：%{joinDate}"
           trust_level: "信任级别：%{trustLevelName}"
           posts:
             other: "%{count} 个帖子"
         solution_marked: "被标记为解决方案"
         topic_has_solution: "此话题有解决方案"
         visibility: "公开范围"
-        topic_unlisted: "此话题未公开。仅可通过直接链接访问，不公开。"
       help:
         moderation_guide: "Discourse 审核指南"
         flag_priorities: "管理用户声誉和举报优先级"
@@ -1252,7 +1252,6 @@ zh_CN:
       n_more:
         other: "类别（其他 %{count} 个）…"
     ip_lookup:
-      title: IP 地址查询
       hostname: 主机名
       location: 地点
       location_not_found: '（未知）'
@@ -4321,6 +4320,7 @@ zh_CN:
       download: "下载"
       open: "原始图片"
       image_info: "图片信息"
+      quote: "引用图片"
       previous: "上一个（左方向键）"
       next: "下一个（右方向键）"
       counter: "%curr%/%total%"
@@ -5054,20 +5054,30 @@ zh_CN:
         plugin: "插件"
         metadata: "元数据"
         enabled: "已启用"
+        enabled_for: "已启用……"
         show_image: "显示图片"
         edit_groups: "编辑选择加入的群组"
         groups_updated: "群组已更新"
         save_groups: "保存群组"
+        add_groups_to_enable: "添加群组以启用此功能"
+        no_changes_to_save: "没有要保存的更改"
         select_groups: "选择群组…"
         opt_in_groups: "选择加入的群组"
         opt_in_groups_instructions: "“选择加入的群组”可以用于让特定用户在正式变更发布前进行测试。请注意，当变更进入稳定状态后，所有用户都会适用于变更。"
-        toggled_too_fast: "您修改设置的频率过快，请等几秒钟后再试。"
-        change_enabled: "您已选择加入此变更"
+        enabled_for_throttle: "您太频繁地修改该功能对哪些用户启用了，请等待几秒后重试。"
+        change_enabled_for_success: "您已为 %{enabledFor} 启用此更改"
         change_disabled: "您已选择不加入此变更"
         permanent_notice: "这项变更已永久生效，并将很快被移除。您不能选择退出。"
         permanent_no_group_selection: "不适用，永久性变更适用于所有群组。"
         no_changes: "目前暂无变更计划"
         preview: "预览"
+        enabled_for_options:
+          no_one: "没有人"
+          everyone: "所有人"
+          staff: "仅管理人员"
+          specific_groups: "特定群组"
+          specific_groups_with_group_names:
+            other: "群组 %{groupNames}"
         statuses:
           pre_alpha: "Pre-Alpha"
           alpha: "Alpha"
@@ -7590,6 +7600,7 @@ zh_CN:
           experimental: "实验性"
         secret_list:
           invalid_input: "输入字段不能为空或包含竖线字符。"
+          already_exists: "条目 %{key} 已存在。"
         default_categories:
           modal_description:
             other: "要回溯应用此变更吗？这将更改 %{count} 位现有用户的偏好设置。"
@@ -7832,73 +7843,4 @@ zh_CN:
           replace: "替换"
   wizard_js:
     wizard:
-      jump_in: "跳转！"
-      finish: "退出设置"
-      back: "返回"
-      next: "下一步"
-      configure_more: "配置更多…"
-      step-text: "步骤"
-      step: "%{current}/%{total}"
-      upload: "上传文件"
-      uploading: "正在上传…"
-      upload_error: "抱歉，上传该文件时出错。请重试。"
-      staff_count:
-        other: "您的社区有 %{count} 位管理人员，包括您。"
-      invites:
-        add_user: "添加"
-        none_added: "您还没有邀请任何管理人员。确定要继续吗？"
-        roles:
-          admin: "管理员"
-          moderator: "版主"
-          regular: "普通用户"
-      homepage_choices:
-        custom:
-          label: "自定义"
-          description: "显示以%{type}为中心的首页以及登录 %{landingPage} 的用户"
-        style_type:
-          categories: "类别"
-          topics: "话题"
-      top_menu_items:
-        new: "新"
-        unread: "未读"
-        top: "热门"
-        latest: "最新"
-        hot: "热议"
-        categories: "类别"
-        unseen: "未读"
-        read: "已读"
-        bookmarks: "书签"
-      previews:
-        topic_title: "您在读什么书？"
-        share_button: "分享"
-        reply_button: "回复"
-        topic_preview: "话题预览"
-        homepage_preview: "首页预览"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "所有类别"
-        topic_titles:
-          what_books: "您在读什么书？"
-          what_movies: "您最近看了什么电影？"
-          random_fact: "今日随想"
-          tv_show: "推荐一部电视节目"
-          what_hobbies: "您有什么爱好？"
-          what_music: "你正在听什么？"
-          funniest_thing: "您今天看到的最有趣的事"
-          share_art: "分享您的作品！"
-        topic_ops:
-          what_books: |
-            我们都爱阅读，让我们用这个话题来分享我们目前在读或最近读过的书。我是一个奇幻小说迷，我反复读了 100 遍《指环王》。您呢？
-        category_descriptions:
-          icebreakers: "通过有趣的问题了解您的社区成员。"
-          news: "讨论近期的新闻和事件。"
-          site_feedback: "分享您对社区的想法并提出改进建议。"
-        category_names:
-          icebreakers: "破冰问题"
-          news: "新闻"
-          site_feedback: "网站反馈"
-        table_headers:
-          topic: "话题"
-          replies: "回复"
-          views: "浏览量"
-          activity: "活动"
+      jump_in: "我们开始吧！"

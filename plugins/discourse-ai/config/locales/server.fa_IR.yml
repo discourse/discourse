@@ -15,6 +15,10 @@ fa_IR:
       presets:
         image_generation_custom:
           name: "سفارشی"
+        image_generation_flux:
+          name: "FLUX 1.1 Pro"
+        image_generation_flux2:
+          name: "FLUX 2 Pro"
     share_ai:
       onebox_title: "گفتگوی هوش‌مصنوعی با %{llm_name}"
       formatted_excerpt: "گفتگوی هوش‌مصنوعی با %{llm_name}:\n %{excerpt}"

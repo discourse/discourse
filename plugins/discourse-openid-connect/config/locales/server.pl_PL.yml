@@ -19,7 +19,7 @@ pl_PL:
     openid_connect_verbose_logging: "Rejestruj szczegółowe informacje o uwierzytelnianiu OpenID-Connect w `/logs`. Wyłącz tę opcję podczas normalnego użytkowania."
     openid_connect_authorize_parameters: "Parametry adresu URL, które zostaną uwzględnione w przekierowaniu z /auth/oidc do punktu końcowego autoryzacji dostawcy tożsamości"
     openid_connect_overrides_email: "Przy każdym logowaniu zastąp adres e-mail użytkownika wartością openid-connect. Działa tak samo jak ustawienie `auth_overrides_email`, ale jest specyficzne dla logowań OpenID Connect."
-    openid_connect_claims: "Jasno zdefiniuj oświadczenia do wykorzystania z dostawcami, którzy nie przekazują danych z powrotem na podstawie zakresów. (JSON)"
+    openid_connect_claims: "Jasno zdefiniuj zgłoszenia do wykorzystania z dostawcami, którzy nie przekazują danych z powrotem na podstawie zakresów. (JSON)"
     openid_connect_match_by_email: "Użyj adresu e-mail, aby dopasować uwierzytelnienia OpenID Connect do istniejących kont użytkowników Discourse."
     openid_connect_use_pkce: "Włącz Proof Key for Code Exchange (PKCE) w celu uwierzytelniania OpenID Connect."
   login:

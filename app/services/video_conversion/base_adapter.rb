@@ -47,6 +47,32 @@ module VideoConversion
       )
     end
 
+    def update_posts_with_optimized_video(optimized_video)
+      Post
+        .where(
+          id: UploadReference.where(upload_id: @upload.id, target_type: "Post").select(:target_id),
+        )
+        .find_each do |post|
+          Rails.logger.info("Rebaking post #{post.id} to use optimized video")
+          post.rebake!
+        end
+
+      chat_message_subquery =
+        UploadReference.where(upload_id: @upload.id, target_type: "ChatMessage").select(:target_id)
+
+      if chat_message_subquery.exists? && defined?(Chat::Message)
+        Chat::Message
+          .where(id: chat_message_subquery)
+          .includes(uploads: { optimized_videos: :optimized_upload })
+          .find_each do |chat_message|
+            Rails.logger.info(
+              "Rebaking chat message #{chat_message.id} to use optimized video (upload_id: #{@upload.id}, optimized_upload_id: #{optimized_video.optimized_upload.id})",
+            )
+            chat_message.rebake!
+          end
+      end
+    end
+
     private
 
     def adapter_name

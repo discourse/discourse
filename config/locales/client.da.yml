@@ -288,7 +288,6 @@ da:
     software_update_prompt:
       message: "Vi har opdateret dette websted. <span>Genopfrisk siden</span> for at undgå problemer."
       dismiss: "Afvis alle"
-    bootstrap_mode: "Sådan kommer du i gang"
     back_button: "Tilbage"
     welcome_banner:
       header:
@@ -651,7 +650,6 @@ da:
       title: "Anmeldelse"
       topic: "Emne:"
       filtered_topic: "Du har filtreret til indhold der kan andmeldes i ét enkelt emne."
-      filtered_user: "Bruger"
       filtered_reviewed_by: "Gennemgået af"
       show_all_topics: "vis alle emner"
       deleted_post: "(indlæg slettet)"
@@ -782,7 +780,6 @@ da:
           noun: "indlæg"
       flagged_as: "Anmeldt som"
       user_label: "Bruger"
-      assigned_to: "Tildelt til"
       moderator_actions: "Moderatorhandlinger"
       timeline_and_notes: "Tidslinje og noter"
       timeline:
@@ -811,7 +808,6 @@ da:
       insights:
         title: "Indsigter"
         activities:
-          new_account: "ny konto"
           trust_level: "tillidsniveau: %{trustLevelName}"
           posts:
             one: "%{count} indlæg"
@@ -1228,7 +1224,6 @@ da:
         one: "Kategorier (%{count} mere)…"
         other: "Kategorier (%{count} mere)…"
     ip_lookup:
-      title: IP-adresse opslag
       hostname: Værtsnavn
       location: Sted
       location_not_found: (ukendt)
@@ -4359,6 +4354,9 @@ da:
         enabled: "Aktiveret"
         select_groups: "Vælg grupper…"
         preview: "Forhåndsvisning"
+        enabled_for_options:
+          everyone: "Alle"
+          staff: "Kun personale"
         impact_roles:
           admins: "Admins"
           moderators: "Moderatorer"
@@ -6333,62 +6331,3 @@ da:
           categories: "Kategorier"
           topics: "Emner"
           replace: "Erstat"
-  wizard_js:
-    wizard:
-      finish: "Afslut opsætning"
-      back: "Tilbage"
-      next: "Næste"
-      configure_more: "Konfigurer mere…"
-      step-text: "Trin"
-      step: "%{current} af %{total}"
-      upload: "Overfør en fil"
-      uploading: "Overfører…"
-      upload_error: "Beklager, der opstod en fejl under overførsel af filen. Prøv venligst igen."
-      staff_count:
-        one: "Dit fællesskab har %{count} personale medlem (dig)."
-        other: "Dit fællesskab har %{count} personale medlem, inklusive dig."
-      invites:
-        add_user: "tilføj"
-        none_added: "Du har ikke inviteret nogen til dit personale. Er du sikker på, at du vil fortsætte?"
-        roles:
-          admin: "Admin"
-          moderator: "Moderator"
-          regular: "Fast bruger"
-      homepage_choices:
-        custom:
-          label: "Tilpasset"
-        style_type:
-          categories: "kategori"
-          topics: "emne"
-      top_menu_items:
-        new: "Nye"
-        unread: "Ulæste"
-        top: "Top"
-        latest: "Seneste"
-        categories: "Kategorier"
-        unseen: "Usete"
-        read: "Læs"
-        bookmarks: "Bogmærker"
-      previews:
-        topic_title: "Hvilke bøger læser du?"
-        share_button: "Del"
-        reply_button: "Svar"
-        topic_preview: "Forhåndsvisning af emne"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "alle kategorier"
-        topic_titles:
-          what_books: "Hvilke bøger læser du?"
-          what_movies: "Hvilke film har du set for nylig?"
-          tv_show: "Anbefal et tv-program"
-          funniest_thing: "Sjovste ting, du har set i dag"
-          share_art: "Del din kunst!"
-        category_names:
-          icebreakers: "Isbrydere"
-          news: "Nyheder"
-          site_feedback: "Site Feedback"
-        table_headers:
-          topic: "Emne"
-          replies: "Svar"
-          views: "Visninger"
-          activity: "Aktivitet"

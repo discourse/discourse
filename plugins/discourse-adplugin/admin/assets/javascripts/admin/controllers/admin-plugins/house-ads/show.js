@@ -7,7 +7,6 @@ import { observes } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
-import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 import Preview from "../../../components/modal/preview";
 
@@ -27,13 +26,12 @@ export default class adminPluginsHouseAdsShow extends Controller {
   modelChanged() {
     this.buffered = new TrackedObject({ ...this.model });
     this.selectedCategories = this.model.categories || [];
-    this.selectedGroups = this.model.group_ids || [];
+    this.selectedGroups = this.model.groups || [];
   }
 
   get disabledSave() {
     for (const key in this.buffered) {
-      // we don't want to compare the categories array
-      if (key !== "categories" && this.buffered[key] !== this.model[key]) {
+      if (this.buffered[key] !== this.model[key]) {
         return false;
       }
     }
@@ -55,8 +53,12 @@ export default class adminPluginsHouseAdsShow extends Controller {
       data.visible_to_logged_in_users =
         this.buffered.visible_to_logged_in_users;
       data.visible_to_anons = this.buffered.visible_to_anons;
-      data.category_ids = this.buffered.category_ids;
-      data.group_ids = this.buffered.group_ids;
+      data.category_ids = this.buffered.categories
+        ? this.buffered.categories.map((c) => c.id)
+        : [];
+      data.group_ids = this.buffered.groups
+        ? this.buffered.groups.map((g) => g.id)
+        : [];
       try {
         const ajaxData = await ajax(
           newRecord
@@ -96,22 +98,20 @@ export default class adminPluginsHouseAdsShow extends Controller {
   @action
   setCategoryIds(categoryArray) {
     this.selectedCategories = categoryArray;
-    this.buffered.category_ids = categoryArray.map((c) => c.id);
-    this.setCategoriesForBuffered();
+    this.buffered.categories = this.selectedCategories;
   }
 
   @action
   setGroupIds(groupIds) {
     this.selectedGroups = groupIds;
-    this.buffered.group_ids = groupIds.map((id) => id);
+    this.buffered.groups = groupIds;
   }
 
   @action
   cancel() {
     this.buffered = new TrackedObject({ ...this.model });
     this.selectedCategories = this.model.categories || [];
-    this.selectedGroups = this.model.group_ids || [];
-    this.setCategoriesForBuffered();
+    this.selectedGroups = this.model.groups || [];
   }
 
   @action
@@ -146,15 +146,5 @@ export default class adminPluginsHouseAdsShow extends Controller {
         html: this.buffered.html,
       },
     });
-  }
-
-  setCategoriesForBuffered() {
-    // we need to fetch the categories because the serializer is not being used
-    // to attach the category object to the house ads
-    this.buffered.categories = this.buffered.category_ids
-      ? this.buffered.category_ids.map((categoryId) =>
-          Category.findById(categoryId)
-        )
-      : [];
   }
 }

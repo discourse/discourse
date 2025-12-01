@@ -190,7 +190,6 @@ nb_NO:
     software_update_prompt:
       message: "Vi har oppdatert denne siden, <span>vennligst oppdater siden</span> for å sikre at alt fungerer som det skal."
       dismiss: "Avslå"
-    bootstrap_mode: "Kom godt i gang"
     back_button: "Forrige"
     welcome_banner:
       header:
@@ -547,7 +546,6 @@ nb_NO:
       title: "Gjennomgang"
       topic: "Emne:"
       filtered_topic: "Du har filtrert etter gjennomsyn i ett enkelt emne."
-      filtered_user: "Bruker"
       filtered_reviewed_by: "Gjennomgått av"
       show_all_topics: "vis alle emner"
       deleted_post: "(post slettet)"
@@ -1090,7 +1088,6 @@ nb_NO:
         one: "Kategorier (%{count} til)…"
         other: "Kategorier (%{count} til)…"
     ip_lookup:
-      title: Slå opp IP-adresse
       hostname: Vertsnavn
       location: Sted
       location_not_found: (ukjent)
@@ -4368,6 +4365,9 @@ nb_NO:
         name: "Navn"
         enabled: "Aktivert"
         preview: "Forhåndsvis"
+        enabled_for_options:
+          everyone: "Alle"
+          staff: "Bare ansatte"
         impact_roles:
           admins: "Adminer"
           moderators: "Moderatorer"
@@ -5754,49 +5754,3 @@ nb_NO:
         modal:
           categories: "Kategorier"
           topics: "Emner"
-  wizard_js:
-    wizard:
-      back: "Forrige"
-      next: "Neste"
-      step-text: "Steg"
-      step: "%{current} av %{total}"
-      uploading: "Laster opp…"
-      upload_error: "Beklager, det skjedde en feil ved opplastingen av den filen. Vennligst prøv igjen."
-      staff_count:
-        one: "Din gemenskap har ett stabsmedlem (deg)."
-        other: " Ditt fellesskap har %{count} stab, inkludert deg selv."
-      invites:
-        add_user: "legg til"
-        none_added: "Du har ikke invitert noen til staben. Er du sikker på at du vil fortsette?"
-        roles:
-          admin: "Administrator"
-          moderator: "Moderator"
-          regular: "Aktivt medlem"
-      homepage_choices:
-        custom:
-          label: "Egendefinert"
-        style_type:
-          categories: "kategori"
-          topics: "emne"
-      top_menu_items:
-        new: "Ny"
-        unread: "Uleste"
-        top: "Aktive"
-        latest: "Siste"
-        categories: "Kategorier"
-        unseen: "Usette"
-        read: "Les"
-        bookmarks: "Bokmerker"
-      previews:
-        share_button: "Del"
-        reply_button: "Svar"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "alle kategorier"
-        category_names:
-          site_feedback: "Tilbakemeldinger"
-        table_headers:
-          topic: "Emne"
-          replies: "Svar"
-          views: "Visninger"
-          activity: "Aktivitet"

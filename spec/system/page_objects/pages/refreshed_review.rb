@@ -104,6 +104,28 @@ module PageObjects
         within(".ip-lookup-other-accounts-modal") { page.has_text?(username) }
       end
 
+      def click_claim_reviewable
+        find(".reviewable-claimed-topic .claim").click
+      end
+
+      def click_unclaim_reviewable
+        find(".reviewable-claimed-topic .unclaim").click
+      end
+
+      def has_claimed_history_item?(user)
+        expect(page).to have_css(".timeline-event__icon .d-icon-user-plus")
+        expect(page).to have_text("Claimed by")
+      end
+
+      def has_unclaimed_history_item?(user)
+        expect(page).to have_css(".timeline-event__icon .d-icon-user-xmark")
+        expect(page).to have_text("Unclaimed by")
+      end
+
+      def has_history_items?(count:)
+        expect(page).to have_css(".timeline-event", count: count)
+      end
+
       private
 
       def reviewable_by_id(id)

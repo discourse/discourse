@@ -28,7 +28,7 @@ module Jobs
         backfill_candidates(gist_t)
           .limit(current_budget(gist_t))
           .each do |topic|
-            strategy = DiscourseAi::Summarization.topic_gist(topic)
+            strategy = DiscourseAi::Summarization.topic_gist(topic, llm_model: llm_model)
             try_summarize(strategy, system_user, topic)
           end
       end
@@ -37,7 +37,7 @@ module Jobs
       backfill_candidates(complete_t)
         .limit(current_budget(complete_t))
         .each do |topic|
-          strategy = DiscourseAi::Summarization.topic_summary(topic)
+          strategy = DiscourseAi::Summarization.topic_summary(topic, llm_model: llm_model)
           try_summarize(strategy, system_user, topic)
         end
     end

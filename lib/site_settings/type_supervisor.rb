@@ -63,6 +63,7 @@ class SiteSettings::TypeSupervisor
         file_size_restriction: 27,
         objects: 28,
         locale_enum: 29,
+        topic: 30,
       )
   end
 
@@ -288,6 +289,14 @@ class SiteSettings::TypeSupervisor
     name = name.to_sym
     type = @types[name] || self.class.parse_value_type(val)
 
+    if val.nil?
+      Discourse.deprecate(
+        "Site setting #{name} expects a #{self.class.types[type]} value. Implicit casts from `nil` are a source of bugs and will not be supported in future releases.",
+        drop_from: "3.7.0",
+        output_in_test: true,
+      )
+    end
+
     if type == self.class.types[:bool]
       val = (val == true || val == "t" || val == "true") ? "t" : "f"
     elsif type == self.class.types[:integer] && !val.is_a?(Integer)
@@ -344,6 +353,8 @@ class SiteSettings::TypeSupervisor
       StringSettingValidator
     when self.class.types[:host_list]
       HostListSettingValidator
+    when self.class.types[:topic]
+      TopicSettingValidator
     else
       nil
     end

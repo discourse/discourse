@@ -319,8 +319,10 @@ cs:
         few: "Zobrazit %{count} další zprávy"
         many: "Zobrazit %{count} dalších zpráv"
         other: "Zobrazit %{count} dalších zpráv"
+      your_chat_settings: "předvolby e-mailu chatu"
   unsubscribe:
     chat_summary:
+      select_title: "Nastavte souhrnné e-maily chatu na:"
       never: Nikdy
       when_away: Jen v nepřítomnosti
   category:

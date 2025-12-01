@@ -104,13 +104,13 @@ RSpec.describe PublishedPagesController do
         end
 
         it "works even if image logos are not available" do
-          SiteSetting.logo_small = nil
+          SiteSetting.logo_small = ""
           get published_page.path
           expect(response.body).to include(
             "<img class=\"published-page-logo\" src=\"#{SiteSetting.logo.url}\"/>",
           )
 
-          SiteSetting.logo = nil
+          SiteSetting.logo = ""
           get published_page.path
           expect(response.body).not_to include("published-page-logo")
         end

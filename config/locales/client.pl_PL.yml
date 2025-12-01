@@ -353,7 +353,6 @@ pl_PL:
     software_update_prompt:
       message: "Zaktualizowaliśmy tę witrynę, <span>odśwież</span>, aby wszystko działało sprawnie."
       dismiss: "Odrzuć"
-    bootstrap_mode: "Pierwsze kroki"
     back_button: "Poprzednia"
     welcome_banner:
       header:
@@ -801,15 +800,15 @@ pl_PL:
         optional: "opcjonalnie"
       stale_help: "Wiadomość została już zweryfikowana przez <b>%{username}</b>."
       claim_help:
-        optional: "Możesz zgłosić roszczenie do tego elementu, aby uniemożliwić innym jego sprawdzenie."
+        optional: "Możesz przejąć tę pozycję, aby uniemożliwić innym jego sprawdzenie."
         required: "Musisz przejąć tę pozycję, zanim będziesz mógł/mogła je przejrzeć."
-        claimed_by_you: "Przejąłeś/łaś tę pozycję i możesz ją teraz przejrzeć."
-        claimed_by_other: "Ten przedmiot może być sprawdzony tylko przez <b>%{username}</b> ."
+        claimed_by_you: "Przejęto tę pozycję i możesz ją teraz przejrzeć."
+        claimed_by_other: "Tę pozycję może zrecenzować tylko <b>%{username}</b>."
         automatically_claimed_by: "Ta pozycja jest obecnie sprawdzana przez <b>%{username}</b>."
       claim:
-        title: "Zgłoś ten temat"
+        title: "Przejmij ten temat"
       unclaim:
-        help: "Usuń to roszczenie"
+        help: "Usuń to przejęcie"
       awaiting_approval: "Oczekuje na zatwierdzenie"
       delete: "Usuń"
       settings:
@@ -831,8 +830,9 @@ pl_PL:
       title: "Sprawdź"
       topic: "Temat:"
       filtered_topic: "Przefiltrowałeś/łaś do przeglądalnej zawartości w jednym temacie."
-      filtered_user: "Użytkownik"
+      filtered_user: "Oflagowany użytkownik"
       filtered_reviewed_by: "Sprawdzony przez"
+      filtered_claimed_by: "Flaga przejęta przez"
       show_all_topics: "pokaż wszystkie tematy"
       deleted_post: "(wpis usunięty)"
       deleted_user: "(użytkownik usunięty)"
@@ -921,6 +921,8 @@ pl_PL:
           low: "Niski"
           medium: "Średni"
           high: "Wysoki"
+        active_filters: "Aktywne filtry:"
+        clear_filter: "Usuń %{filter}"
       conversation:
         view_full: "zobacz całą rozmowę"
       scores:
@@ -986,7 +988,7 @@ pl_PL:
       queued_post_label: "Wpis w kolejce"
       queued_topic_label: "Temat w kolejce"
       user_label: "Użytkownik"
-      assigned_to: "Przypisany do"
+      assigned_to: "Wpis przypisany do"
       moderator_actions: "Działania moderatora"
       timeline_and_notes: "Oś czasu i uwagi"
       timeline:
@@ -994,8 +996,8 @@ pl_PL:
         target_created_by: "Wpis utworzony przez %{username} · %{relativeDate}"
         flagged: "Oflagowany"
         flagged_as_by: "Oflagowany jako %{flagReason} przez %{username} · %{relativeDate}"
-        claimed: "Zgłoszony"
-        claimed_by: "Zgłoszony przez %{username} - %{relativeDate}"
+        claimed: "Przejęto"
+        claimed_by: "Przejęto przez %{username} - %{relativeDate}"
         reviewed: "Przejrzany"
         reviewed_by: "Przejrzany przez %{username} · %{relativeDate}"
         view_conversation: "zobacz PW"
@@ -1027,7 +1029,6 @@ pl_PL:
           few: "Oflagowany przez %{count} unikalnych użytkowników"
           many: "Oflagowany przez %{count} unikalnych użytkowników"
           other: "Oflagowany przez %{count} unikalnych użytkowników"
-        similar_posts: "Przeszłe naruszenia"
         flagged_in_timeframe:
           one: "%{count} potwierdzona flaga"
           few: "%{count} potwierdzone flagi"
@@ -1035,7 +1036,7 @@ pl_PL:
           other: "%{count} potwierdzonych flag"
         user_activity: "Informacje o użytkowniku"
         activities:
-          new_account: "nowe konto"
+          joined_on: "dołączył: %{joinDate}"
           trust_level: "poziom zaufania: %{trustLevelName}"
           posts:
             one: "%{count} wpis"
@@ -1045,8 +1046,9 @@ pl_PL:
         solution_marked: "Rozwiązanie oznaczone"
         topic_has_solution: "Ten temat ma rozwiązanie"
         visibility: "Widoczność"
-        topic_unlisted: "Ten temat jest zastrzeżony. Dostępny tylko za pośrednictwem bezpośredniego linku — niepubliczny."
+        topic_unlisted: "Ten temat nie jest wymieniony na liście i można do niego uzyskać dostęp jedynie za pośrednictwem bezpośredniego linku."
       help:
+        community_moderation_guide: "Przewodnik moderacji tej społeczności"
         moderation_guide: "Przewodnik moderacji Discourse"
         flag_priorities: "Zarządzanie reputacją użytkowników i priorytetami flag"
         spam_detection: "Wykrywanie spamu"
@@ -1500,13 +1502,18 @@ pl_PL:
         many: "Kategorie (%{count} więcej)…"
         other: "Kategorie (%{count} więcej)…"
     ip_lookup:
-      title: Wyszukiwanie adresu IP
+      title: Adres IP
       hostname: Nazwa hosta
       location: Lokalizacja
       location_not_found: (nieznane)
       organisation: Organizacja
       phone: Numer telefonu
       other_accounts: "Inne konta z tym adresem IP:"
+      other_accounts_with_ip:
+        one: "%{count} inne konto z tym adresem IP"
+        few: "%{count} inne konta z tym adresem IP"
+        many: "%{count} innych kont z tym adresem IP"
+        other: "%{count} innych kont z tym adresem IP"
       delete_other_accounts:
         one: "Usuń %{count}"
         few: "Usuń %{count}"
@@ -4258,6 +4265,7 @@ pl_PL:
         actions: "Działania zbiorcze"
     post:
       accessible_heading: "wpis %{username} %{date}"
+      heading_anchor: "Łącze nagłówka"
       confirm_delete: "Czy na pewno chcesz usunąć ten post?"
       quote_reply: "Cytuj"
       quote_reply_shortcut: "Cytuj (lub naciśnij q)"
@@ -5063,6 +5071,7 @@ pl_PL:
       download: "Pobierz"
       open: "Oryginalny obraz"
       image_info: "Informacje o obrazie"
+      quote: "Cytuj obraz"
       previous: "Poprzedni (klawisz strzałki w lewo)"
       next: "Następny (klawisz strzałki w prawo)"
       counter: "%curr% z %total%"
@@ -5874,20 +5883,33 @@ pl_PL:
         plugin: "Wtyczka"
         metadata: "Metadane"
         enabled: "Włączona"
+        enabled_for: "Włączone dla..."
         show_image: "Pokaż obraz"
         edit_groups: "Edytuj grupy opt-in"
         groups_updated: "Grupy zaktualizowane!"
         save_groups: "Zapisz grupy"
+        add_groups_to_enable: "Dodaj grupy, aby włączyć tę funkcję"
+        no_changes_to_save: "Brak zmian do zapisania"
         select_groups: "Wybierz grupy…"
         opt_in_groups: "Grupy opt-in"
         opt_in_groups_instructions: "Grupy opt-in można wykorzystać, aby umożliwić określonej grupie użytkowników przetestowanie zmiany przed jej udostępnieniem wszystkim. Należy pamiętać, że grupy te staną się nieistotne, gdy zmiana osiągnie status stabilnej."
-        toggled_too_fast: "Wprowadziłeś tę zmianę zbyt szybko. Odczekaj kilka sekund, zanim spróbujesz ponownie."
-        change_enabled: "Wyraziłeś zgodę na tę zmianę"
+        enabled_for_throttle: "Zbyt szybko zmodyfikowano, dla kogo ta zmiana jest włączona. Odczekaj kilka sekund, zanim spróbujesz ponownie."
+        change_enabled_for_success: "Włączono tę zmianę dla %{enabledFor}"
         change_disabled: "Zrezygnowałeś z tej zmiany"
         permanent_notice: "Ta zmiana jest teraz trwała i wkrótce zostanie usunięta. Nie możesz już zrezygnować."
         permanent_no_group_selection: "Nie dotyczy, stałe zmiany dotyczą wszystkich grup."
         no_changes: "W tej chwili nie ma żadnych nadchodzących zmian."
         preview: "Podgląd"
+        enabled_for_options:
+          no_one: "Nikt"
+          everyone: "Wszyscy"
+          staff: "Wyłącznie dla zespołu"
+          specific_groups: "Określone grupy"
+          specific_groups_with_group_names:
+            one: "grupa %{groupNames}"
+            few: "grupy %{groupNames}"
+            many: "grupy %{groupNames}"
+            other: "grupy %{groupNames}"
         statuses:
           pre_alpha: "Pre-alfa"
           alpha: "Alfa"
@@ -6777,6 +6799,7 @@ pl_PL:
           user_destroyed: "Użytkownik został usunięty"
           user_suspended: "Użytkownik został zawieszony"
           user_unsuspended: "Użytkownik przestał być zawieszony"
+          user_anonymized: "Użytkownik jest anonimizowany"
         reviewable_event:
           group_name: "Zdarzenia do sprawdzenia"
           reviewable_created: "Element do sprawdzenia jest gotowy"
@@ -7910,6 +7933,7 @@ pl_PL:
         clear_all: Wyczyść wszystko
         clear_all_confirm: "Czy na pewno chcesz wyczyścić wszystkie obejrzane słowa dla akcji %{action}?"
         invalid_regex: 'Obserwowane słowo "%{word}" jest nieprawidłowym wyrażeniem regularnym.'
+        invalid_regex_multiple: "Nieprawidłowe wyrażenia regularne:"
         regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">Obserwowane słowa są wyrażeniami regularnymi</a> i nie zawierają w sobie automatycznie granic słów. Jeśli chcesz, aby wyrażenie regularne pasowało do całych słów, dodaj <code>\b</code> na początku i na końcu wyrażenia regularnego.'
         actions:
           block: "Zablokuj"
@@ -8564,6 +8588,7 @@ pl_PL:
           experimental: "Eksperymentalne"
         secret_list:
           invalid_input: "Pola tekstowe nie mogą być puste ani zawierać znaku pionowej kreski."
+          already_exists: "Wpis dla %{key} już istnieje."
         default_categories:
           modal_description:
             one: "Czy chcesz wprowadzić tę zmianę wstecz? Zmieni to ustawienia %{count} istniejącego użytkownika."
@@ -8818,79 +8843,4 @@ pl_PL:
           replace: "Zamień"
   wizard_js:
     wizard:
-      jump_in: "Wskakuj!"
-      finish: "Zakończ konfigurację"
-      back: "Poprzednia"
-      next: "Następna"
-      configure_more: "Skonfiguruj więcej…"
-      step-text: "Krok"
-      step: "%{current} z %{total}"
-      upload: "Prześlij plik"
-      uploading: "Przesyłanie…"
-      upload_error: "Przepraszamy, wystąpił błąd podczas wysyłania tego pliku. Proszę spróbuj ponownie."
-      staff_count:
-        one: "W twojej społeczności jest %{count} członek załogi (Ty)."
-        few: "W twojej społeczności jest %{count} członków załogi, w tym Ty."
-        many: "W twojej społeczności jest %{count} członków załogi, w tym Ty."
-        other: "W twojej społeczności jest %{count}członków zespołu, w tym Ty."
-      invites:
-        add_user: "dodaj"
-        none_added: "Nie zaprosiłeś/łaś nikogo. Czy na pewno chcesz kontynuować?"
-        roles:
-          admin: "Administratorzy"
-          moderator: "Moderatorzy"
-          regular: "Zwykli użytkownicy"
-      homepage_choices:
-        custom:
-          label: "Niestandardowe"
-          description: "Wyświetl stronę główną skupioną na %{type}, z użytkownikami trafiającymi na %{landingPage}."
-        style_type:
-          categories: "kategoria"
-          topics: "temat"
-      top_menu_items:
-        new: "Nowa"
-        unread: "Nieprzeczytane"
-        top: "Popularne"
-        latest: "Najnowsza"
-        hot: "Gorące"
-        categories: "Kategorie"
-        unseen: "Niewidziany"
-        read: "Przeczytane"
-        bookmarks: "Zakładki"
-      previews:
-        topic_title: "Jakie książki czytasz?"
-        share_button: "Udostępnij"
-        reply_button: "Odpowiedz"
-        topic_preview: "Podgląd tematu"
-        homepage_preview: "Podgląd strony głównej"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "wszystkie kategorie"
-        topic_titles:
-          what_books: "Jakie książki czytasz?"
-          what_movies: "Jakie filmy widziałeś ostatnio?"
-          random_fact: "Losowy fakt dnia"
-          tv_show: "Poleć program telewizyjny"
-          what_hobbies: "Jakie masz hobby?"
-          what_music: "Czego teraz słuchasz?"
-          funniest_thing: "Najzabawniejsza rzecz, jaką dziś widziałeś"
-          share_art: "Podziel się swoją sztuką!"
-        topic_ops:
-          what_books: |
-            Wszyscy kochamy czytać, użyjmy tego tematu, aby podzielić się naszymi
-            aktualnymi lub niedawnymi lekturami. Jestem fanem fantasy i właśnie
-            ponownie czytam Władcę Pierścieni po raz setny.
-            A Ty?
-        category_descriptions:
-          icebreakers: "Poznaj innych członków społeczności dzięki zabawnym pytaniom."
-          news: "Omów najnowsze wiadomości i wydarzenia."
-          site_feedback: "Podziel się swoimi przemyśleniami na temat społeczności i zasugeruj ulepszenia."
-        category_names:
-          icebreakers: "Lodołamacze"
-          news: "Wiadomości"
-          site_feedback: "Dyskusje o serwisie"
-        table_headers:
-          topic: "Temat"
-          replies: "Odpowiedzi"
-          views: "Odsłony"
-          activity: "Aktywność"
+      jump_in: "Zaczynajmy!"

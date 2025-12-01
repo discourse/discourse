@@ -548,7 +548,6 @@ pt_BR:
         back: "Voltar"
         confirm_delete: Tem certeza de que deseja excluir este modelo?
         delete: Excluir
-        seeded_warning: "Este modelo foi pré-configurado no seu site e não pode ser editado."
         quotas:
           title: "Cotas de uso"
           add_title: "Criar nova cota"
@@ -583,7 +582,7 @@ pt_BR:
           other: "Este modelo é usado atualmente por %{settings}. Se for configurado incorretamente, os recursos não funcionarão como esperado. "
         model_description:
           none: "Configurações gerais que funcionam com a maioria dos modelos de linguagens"
-          anthropic-claude-opus-4-1: "Modelo mais inteligente da Anthropic"
+          anthropic-claude-opus-4-5: "Modelo mais inteligente da Anthropic"
           anthropic-claude-sonnet-4-5: "Equilíbrio ideal entre custo e velocidade"
           anthropic-claude-haiku-4-5: "Rápido e econômico"
           google-gemini-2-5-pro: "Modelo multimodal grande capaz de executar uma ampla variedade de tarefas"
@@ -701,6 +700,7 @@ pt_BR:
           title: "Miniaturas sugeridas"
           select: "Selecionar"
           selected: "Selecionado(a)"
+          try_again: "Tentar novamente"
         image_caption:
           button_label: "Legenda com IA"
           generating: "Gerando legenda..."

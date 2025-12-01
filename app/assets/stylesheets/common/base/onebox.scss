@@ -884,12 +884,19 @@ aside.onebox.xkcd .onebox-body img {
     border: 1px solid var(--content-border-color);
     padding-left: calc(1em - 5px);
     margin-left: 5px;
+
+    .subcategories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.625em;
+    }
   }
 
   .badge-category-bg {
     display: inline-block;
     width: 0.625rem;
     height: 0.625rem;
+    margin-right: 0.33em;
   }
 }
 

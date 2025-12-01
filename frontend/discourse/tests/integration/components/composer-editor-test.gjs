@@ -31,7 +31,9 @@ module("Integration | Component | ComposerEditor", function (hooks) {
     });
 
     const originalComposerService = this.owner.lookup("service:composer");
-    const composerMockClass = class ComposerMock extends originalComposerService.constructor {
+    const composerMockClass = class ComposerMock
+      extends originalComposerService.constructor
+    {
       cannotSeeMention() {
         expectation(...arguments);
       }

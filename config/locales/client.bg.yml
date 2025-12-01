@@ -188,7 +188,6 @@ bg:
     emails_are_disabled_non_staff: "Изходящият имейл е деактивиран за потребители, които не са от екипа"
     software_update_prompt:
       dismiss: "Отмени"
-    bootstrap_mode: "Първи стъпки"
     back_button: "Назад"
     welcome_banner:
       header:
@@ -474,7 +473,6 @@ bg:
       title: "Преглед"
       topic: "Тема:"
       filtered_topic: "Филтрирахте съдържание, което може да бъде прегледано, в една тема."
-      filtered_user: "Потребител"
       filtered_reviewed_by: "Прегледан от"
       show_all_topics: "покажи всички теми"
       deleted_post: "(публикацията е изтрита)"
@@ -1003,7 +1001,6 @@ bg:
         one: "%{count}нова тема през последния месец."
         other: "%{count}през последния месец."
     ip_lookup:
-      title: Търсене по IP адрес
       hostname: Хост
       location: Локация
       location_not_found: (неизвестно)
@@ -3448,6 +3445,9 @@ bg:
         name: "Име"
         enabled: "Да е включен"
         preview: "Преглед"
+        enabled_for_options:
+          everyone: "Всички"
+          staff: "Само за екипа"
         impact_roles:
           admins: "Админи"
           moderators: "Модератори"
@@ -4517,44 +4517,3 @@ bg:
         modal:
           categories: "Категории"
           topics: "Теми"
-  wizard_js:
-    wizard:
-      back: "Назад"
-      next: "Напред"
-      step-text: "Стъпка"
-      uploading: "Качване…"
-      upload_error: "Съжаляваме, възникна грешка при качването на този файл. Моля, опитайте отново."
-      invites:
-        add_user: "добавяне"
-        roles:
-          admin: "Администратор"
-          moderator: "Модератор"
-          regular: "Обикновен потребител"
-      homepage_choices:
-        custom:
-          label: "По избор"
-        style_type:
-          categories: "категория"
-          topics: "тема"
-      top_menu_items:
-        new: "Нова"
-        unread: "Непрочетени"
-        top: "Топ"
-        latest: "Последни"
-        categories: "Категории"
-        unseen: "Непрегледани"
-        read: "Прочети"
-        bookmarks: "Отметки"
-      previews:
-        share_button: "Споделяне"
-        reply_button: "Отговорете"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "всички категории"
-        category_names:
-          site_feedback: "Заявка към сайта"
-        table_headers:
-          topic: "Тема"
-          replies: "Отговори"
-          views: "Прегледи"
-          activity: "Активност"

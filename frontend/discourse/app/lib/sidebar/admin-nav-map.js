@@ -290,7 +290,7 @@ export const ADMIN_NAV_MAP = [
         icon: "paintbrush",
         keywords: "admin.config.themes_and_components.keywords",
         currentWhen:
-          "adminConfig.customize.themes adminConfig.customize.components adminConfig.customize.themeSiteSettings",
+          "adminConfig.customize.themes adminConfig.customize.components adminConfig.customize.themeSiteSettings adminCustomizeThemes.show.index",
         links: [
           {
             name: "admin_theme_site_settings",

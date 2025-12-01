@@ -5,7 +5,10 @@ import AiCancelStreamingButton from "../components/post-menu/ai-cancel-streaming
 import AiDebugButton from "../components/post-menu/ai-debug-button";
 import AiShareButton from "../components/post-menu/ai-share-button";
 import { isGPTBot, showShareConversationModal } from "../lib/ai-bot-helper";
-import { streamPostText } from "../lib/ai-streamer/progress-handlers";
+import {
+  cleanupStreamingData,
+  streamPostText,
+} from "../lib/ai-streamer/progress-handlers";
 
 let allowDebug = false;
 
@@ -30,16 +33,18 @@ function initializeAIBotReplies(api) {
         this.model.details.allowed_users &&
         this.model.details.allowed_users.filter(isGPTBot).length >= 1
       ) {
-        // we attempt to recover the last message in the bus
-        // so we subscribe at -2
+        // -3 is not obvious, but the implementation in message bus is -2 (last + new), -3 (last 2 + new)
         this.messageBus.subscribe(
           `discourse-ai/ai-bot/topic/${this.model.id}`,
           this.onAIBotStreamedReply.bind(this),
-          -2
+          -3
         );
       }
     },
     unsubscribe: function () {
+      // we may have infected post stream so lets clean it up
+      cleanupStreamingData(this.model.postStream);
+
       this.messageBus.unsubscribe("discourse-ai/ai-bot/topic/*");
       this._super();
     },
