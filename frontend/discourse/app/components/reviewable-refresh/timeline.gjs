@@ -22,6 +22,9 @@ import escape from "discourse/lib/escape";
 import { and, eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
+const HISTORY_CLAIMED_ID = 3;
+const HISTORY_UNCLAIMED_ID = 4;
+
 /**
  * Timeline component for reviewable items that displays chronological events
  * including flags, reviews, notes, and target post creation.
@@ -179,7 +182,7 @@ export default class ReviewableTimeline extends Component {
     });
 
     this.args.historyEvents?.forEach((history) => {
-      if (history.reviewable_history_type === 3) {
+      if (history.reviewable_history_type === HISTORY_CLAIMED_ID) {
         events.push({
           type: "claimed",
           date: history.created_at,
@@ -187,7 +190,7 @@ export default class ReviewableTimeline extends Component {
           icon: "user-plus",
           titleKey: "review.timeline.claimed_by",
         });
-      } else if (history.reviewable_history_type === 4) {
+      } else if (history.reviewable_history_type === HISTORY_UNCLAIMED_ID) {
         events.push({
           type: "unclaimed",
           date: history.created_at,
