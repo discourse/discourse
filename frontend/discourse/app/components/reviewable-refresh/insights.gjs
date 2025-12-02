@@ -96,6 +96,22 @@ export default class ReviewableInsights extends Component {
       });
     }
 
+    const moderationActions = [
+      i18n("review.insights.moderation_history.silenced", {
+        count: user.silenced_count,
+      }),
+      i18n("review.insights.moderation_history.suspended", {
+        count: user.suspended_count,
+      }),
+      i18n("review.insights.moderation_history.rejected_posts", {
+        count: user.rejected_posts_count,
+      }),
+    ];
+    insights.push({
+      label: i18n("review.insights.moderation_history.label"),
+      description: moderationActions.join(", "),
+    });
+
     return insights;
   }
 

@@ -982,6 +982,11 @@ en:
           posts:
             one: "%{count} post"
             other: "%{count} posts"
+        moderation_history:
+          label: "Moderation history"
+          silenced: "Silenced: %{count}"
+          suspended: "Suspended: %{count}"
+          rejected_posts: "Posts rejected: %{count}"
         solution_marked: "Solution marked"
         topic_has_solution: "This topic has a solution"
         visibility: "Visibility"
