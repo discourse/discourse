@@ -972,6 +972,7 @@ en:
         flagged_by_users:
           one: "Flagged by %{count} unique user"
           other: "Flagged by %{count} unique users"
+        similar_posts: "Past violations"
         flagged_in_timeframe:
           one: "%{count} confirmed flag"
           other: "%{count} confirmed flags"
