@@ -333,30 +333,11 @@ acceptance("discourse-templates | keyboard shortcut", function (needs) {
       .exists("displays the standard templates modal");
   });
 
-  test("Modal | Templates modal | Show the modal if a textarea is focused", async function (assert) {
-    // if the text area is outside a modal then simply show the insert template modal
-    // because there is no need to hijack
-    await visit("/u/charlie/preferences/profile");
-
-    await focus(".d-editor-input");
-
-    await triggerKeyboardShortcut();
-    assert
-      .dom(".d-modal.d-templates")
-      .exists("displays the standard templates modal");
-  });
-
   test("Modal | Templates modal | Template is inserted", async function (assert) {
-    await visit("/u/charlie/preferences/profile");
+    await visit("/");
 
-    await focus(".d-editor-input");
-
-    await triggerKeyboardShortcut();
-    await assertTemplateWasInserted(assert, ".d-editor-input");
-  });
-
-  test("Modal | Templates modal | Template is inserted", async function (assert) {
-    await visit("/u/charlie/preferences/profile");
+    await click("#create-topic");
+    await selectCategory();
 
     await focus(".d-editor-input");
 
