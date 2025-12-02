@@ -82,9 +82,7 @@ class UpcomingChanges::AutoPromotionInitializer
           end
 
           on_success do
-            if SiteSetting.send(setting_name)
-              verbose_log(site, :info, "Successfully promoted '#{setting_name}' to enabled.")
-            end
+            verbose_log(site, :info, "Successfully promoted '#{setting_name}' to enabled.")
           end
         end
       end

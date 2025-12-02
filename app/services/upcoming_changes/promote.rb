@@ -8,8 +8,8 @@ class UpcomingChanges::Promote
     attribute :promotion_status_threshold
 
     before_validation do
-      self.setting_name = setting_name.to_sym
-      self.promotion_status_threshold = promotion_status_threshold.to_sym
+      self.setting_name = setting_name.try(:to_sym)
+      self.promotion_status_threshold = promotion_status_threshold.try(:to_sym)
     end
 
     validates :setting_name, presence: true
@@ -61,7 +61,7 @@ class UpcomingChanges::Promote
       },
     ) do |result|
       on_failure do
-        return fail!("Unexpected failure when enabling upcoming change #{params.setting_name}")
+        fail!("Unexpected failure when enabling upcoming change #{params.setting_name}")
       end
     end
   end

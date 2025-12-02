@@ -23,8 +23,27 @@ RSpec.describe UpcomingChanges::Promote do
       )
     end
 
+    describe described_class::Contract, type: :model do
+      subject(:contract) { described_class.new }
+
+      it { is_expected.to validate_presence_of(:setting_name) }
+      it { is_expected.to validate_presence_of(:promotion_status_threshold) }
+      it do
+        is_expected.to validate_inclusion_of(:promotion_status_threshold).in_array(
+          UpcomingChanges.statuses.keys,
+        )
+      end
+    end
+
+    context "when contract is invalid" do
+      let(:params) { {} }
+
+      it { is_expected.to fail_a_contract }
+    end
+
     context "when the upcoming change does not meet the status promotion criteria" do
       let(:promotion_status_threshold) { :stable }
+
       it { is_expected.to fail_a_policy(:meets_promotion_criteria) }
     end
 
@@ -33,23 +52,26 @@ RSpec.describe UpcomingChanges::Promote do
 
       before do
         SiteSetting.enable_upload_debug_mode = false
-        DB.exec(
-          "INSERT INTO site_settings (name, value, data_type, created_at, updated_at)
-          VALUES ('enable_upload_debug_mode', 'false', 5, NOW(), NOW())",
+        SiteSetting.create!(
+          name: "enable_upload_debug_mode",
+          value: "f",
+          data_type: SiteSetting.types[:bool],
         )
       end
 
-      after { DB.exec("DELETE FROM site_settings WHERE name = 'enable_upload_debug_mode'") }
+      after { SiteSetting.find_by(name: "enable_upload_debug_mode").destroy! }
 
-      it { is_expected.to fail_a_policy(:setting_not_modified) }
+      context "when the current_change_status is not permanent" do
+        let(:current_change_status) { :beta }
+
+        it { is_expected.to fail_a_policy(:setting_not_modified) }
+      end
 
       context "when the current_change_status is permanent" do
         let(:current_change_status) { :permanent }
 
         it "enables the upcoming change setting" do
-          expect(SiteSetting.enable_upload_debug_mode).to be_falsey
-          result
-          expect(SiteSetting.enable_upload_debug_mode).to be_truthy
+          expect { result }.to change { SiteSetting.enable_upload_debug_mode }.to be_truthy
         end
 
         it "logs the change context in the staff action log" do
@@ -85,9 +107,7 @@ RSpec.describe UpcomingChanges::Promote do
       it { is_expected.to run_successfully }
 
       it "enables the upcoming change setting" do
-        expect(SiteSetting.enable_upload_debug_mode).to be_falsey
-        result
-        expect(SiteSetting.enable_upload_debug_mode).to be_truthy
+        expect { result }.to change { SiteSetting.enable_upload_debug_mode }.to be_truthy
       end
 
       it "logs the change context in the staff action log" do

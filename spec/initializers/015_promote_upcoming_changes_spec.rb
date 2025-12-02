@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Promote upcoming changes initializer" do
+RSpec.describe "Promote upcoming changes initializer" do
   context "when enable_upcoming_changes is disabled" do
     before do
       SiteSetting.enable_upcoming_changes = false
@@ -60,14 +60,15 @@ describe "Promote upcoming changes initializer" do
 
     context "when the upcoming change has already been set by the admin" do
       before do
-        SiteSetting.enable_upload_debug_mode = true
-        DB.exec(
-          "INSERT INTO site_settings (name, value, data_type, created_at, updated_at)
-          VALUES ('enable_upload_debug_mode', 'false', 5, NOW(), NOW())",
+        SiteSetting.enable_upload_debug_mode = false
+        SiteSetting.create!(
+          name: "enable_upload_debug_mode",
+          value: "f",
+          data_type: SiteSetting.types[:bool],
         )
       end
 
-      after { DB.exec("DELETE FROM site_settings WHERE name = 'enable_upload_debug_mode'") }
+      after { SiteSetting.find_by(name: "enable_upload_debug_mode").destroy! }
 
       it "does not enable the upcoming change and logs output" do
         track_log_messages do |logger|
@@ -80,11 +81,15 @@ describe "Promote upcoming changes initializer" do
 
       context "when the upcoming change has reached the permanent state" do
         before do
-          DB.exec(
-            "INSERT INTO site_settings (name, value, data_type, created_at, updated_at)
-          VALUES ('show_user_menu_avatars', 'false', 5, NOW(), NOW())",
+          SiteSetting.show_user_menu_avatars = false
+          SiteSetting.create!(
+            name: "show_user_menu_avatars",
+            value: "f",
+            data_type: SiteSetting.types[:bool],
           )
         end
+
+        after { SiteSetting.find_by(name: "show_user_menu_avatars").destroy! }
 
         it "does enable the upcoming change and logs output" do
           track_log_messages do |logger|

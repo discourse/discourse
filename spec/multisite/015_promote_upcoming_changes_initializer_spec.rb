@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Promote upcoming changes initializer", type: :multisite do
+RSpec.describe "Promote upcoming changes initializer", type: :multisite do
   context "when enable_upcoming_changes is enabled" do
     before do
       SiteSetting.enable_upcoming_changes = true
