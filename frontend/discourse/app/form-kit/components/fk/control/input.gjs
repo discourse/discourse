@@ -46,14 +46,40 @@ export default class FKControlInput extends Component {
     return this.args.type ?? "text";
   }
 
+  get displayValue() {
+    if (this.type === "number" && this.inputValue !== undefined) {
+      return this.inputValue;
+    }
+
+    return this.args.field.value ?? "";
+  }
+
+  @action
+  handleFocus() {
+    if (this.type === "number") {
+      this.inputValue = this.args.field.value ?? "";
+    }
+  }
+
+  @action
+  handleBlur() {
+    this.inputValue = undefined;
+  }
+
   @action
   handleInput(event) {
+    const rawValue = event.target.value;
+
+    if (this.type === "number") {
+      this.inputValue = rawValue;
+    }
+
     const value =
-      event.target.value === ""
+      rawValue === ""
         ? null
         : this.type === "number"
-          ? parseFloat(event.target.value)
-          : event.target.value;
+          ? parseFloat(rawValue)
+          : rawValue;
 
     this.args.field.set(value);
   }
@@ -66,7 +92,7 @@ export default class FKControlInput extends Component {
 
       <input
         type={{this.type}}
-        value={{@field.value}}
+        value={{this.displayValue}}
         class={{concatClass
           "form-kit__control-input"
           (if @before "has-prefix")
@@ -74,6 +100,8 @@ export default class FKControlInput extends Component {
         }}
         disabled={{@field.disabled}}
         ...attributes
+        {{on "focus" this.handleFocus}}
+        {{on "blur" this.handleBlur}}
         {{on "input" this.handleInput}}
       />
 
