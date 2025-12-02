@@ -421,9 +421,6 @@ module CookedProcessorMixin
     src = img["src"]
     return if src.blank? || is_a_hyperlink?(img)
 
-    # SVG images can only use the zoom feature in the new lightbox
-    return if is_svg?(img) && !SiteSetting.experimental_lightbox
-
     upload = Upload.get_from_url(src)
 
     original_width, original_height = nil

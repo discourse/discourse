@@ -14,7 +14,6 @@ describe "Lightbox | Photoswipe", type: :system do
   let(:cpp) { CookedPostProcessor.new(post, disable_dominant_color: true) }
 
   before do
-    SiteSetting.experimental_lightbox = true
     SiteSetting.create_thumbnails = true
 
     sign_in(current_user)

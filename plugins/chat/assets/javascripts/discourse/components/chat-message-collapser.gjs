@@ -4,19 +4,19 @@ import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
 import DecoratedHtml from "discourse/components/decorated-html";
 import domFromString from "discourse/lib/dom-from-string";
+import lightbox from "discourse/lib/lightbox";
 import { escapeExpression } from "discourse/lib/utilities";
 import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ChatUpload from "discourse/plugins/chat/discourse/components/chat-upload";
 import Collapser from "discourse/plugins/chat/discourse/components/collapser";
-import loadLightbox from "../lib/lightbox";
 
 export default class ChatMessageCollapser extends Component {
   @service siteSettings;
 
   lightbox = modifier((element) => {
     if (this.args.uploads.length > 0) {
-      loadLightbox(element, this.siteSettings);
+      lightbox(element);
     }
   });
 
