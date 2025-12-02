@@ -175,6 +175,9 @@ export default class Profile extends Component {
       });
     }
 
+    // Normalize user field values (empty arrays to null)
+    this.args.controller._updateUserFields();
+
     const controller = this.args.controller;
     controller.set("saved", false);
 

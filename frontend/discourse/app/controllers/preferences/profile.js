@@ -94,4 +94,18 @@ export default class ProfileController extends Controller {
   cardBackgroundUploadDone(upload) {
     this.model.set("card_background_upload_url", upload.url);
   }
+
+  @action
+  _updateUserFields() {
+    const modelFields = this.model.get("user_fields");
+    if (modelFields && this.userFields) {
+      this.userFields.forEach((uf) => {
+        const value = modelFields[uf.field.id.toString()];
+        // Normalize empty arrays to null
+        if (Array.isArray(value) && value.length === 0) {
+          modelFields[uf.field.id.toString()] = null;
+        }
+      });
+    }
+  }
 }
