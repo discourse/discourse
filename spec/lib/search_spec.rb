@@ -2082,20 +2082,26 @@ RSpec.describe Search do
       ).to contain_exactly(post_1.id)
     end
 
-    it "supports in:first, user:, @username" do
+    it "supports in:first, in:replies, user:, @username" do
       post_1 = Fabricate(:post, raw: "hi this is a test 123 123", topic: topic)
       post_2 = Fabricate(:post, raw: "boom boom shake the room test", topic: topic)
 
       expect(Search.execute("test in:first").posts).to contain_exactly(post_1)
       expect(Search.execute("test IN:FIRST").posts).to contain_exactly(post_1)
 
+      expect(Search.execute("test in:replies").posts).to contain_exactly(post_2)
+
       expect(Search.execute("boom").posts).to contain_exactly(post_2)
 
       expect(Search.execute("boom in:first").posts).to eq([])
       expect(Search.execute("boom f").posts).to eq([])
 
+      expect(Search.execute("boom in:replies").posts).to contain_exactly(post_2)
+
       expect(Search.execute("123 in:first").posts).to contain_exactly(post_1)
       expect(Search.execute("123 f").posts).to contain_exactly(post_1)
+
+      expect(Search.execute("123 in:replies").posts).to eq([])
 
       expect(Search.execute("user:nobody").posts).to eq([])
       expect(Search.execute("user:#{post_1.user.username}").posts).to contain_exactly(post_1)

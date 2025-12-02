@@ -551,7 +551,7 @@ export default class FullPageSearchController extends Controller {
   selectAll() {
     addUniqueValuesToArray(
       this.bulkSelectHelper.selected,
-      this.searchResultPosts.map((item) => item.topic)
+      this.searchResultPosts.map((item) => item)
     );
 
     // Doing this the proper way is a HUGE pain,
