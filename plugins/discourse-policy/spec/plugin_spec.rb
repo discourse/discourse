@@ -87,4 +87,22 @@ describe DiscoursePolicy do
       end
     end
   end
+
+  describe "current user serializer extensions" do
+    let(:serializer) { CurrentUserSerializer.new(user1, scope: Guardian.new(user1)) }
+
+    fab!(:group)
+
+    before { SiteSetting.create_policy_allowed_groups = "1|2|#{group.id}" }
+
+    it "returns false when user is not in a policy creation group" do
+      expect(serializer.can_create_policy).to be_falsey
+    end
+
+    it "returns true when user is in a policy creation group" do
+      group.add(user1)
+
+      expect(serializer.can_create_policy).to be_truthy
+    end
+  end
 end
