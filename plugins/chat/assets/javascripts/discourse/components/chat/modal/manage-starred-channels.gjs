@@ -1,13 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn, hash } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import DModalCancel from "discourse/components/d-modal-cancel";
-import FilterInput from "discourse/components/filter-input";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
@@ -17,37 +16,12 @@ export default class ChatModalManageStarredChannels extends Component {
   @service chatApi;
   @service chatChannelsManager;
 
-  @tracked filter = "";
   @tracked togglingChannelIds = new Set();
 
   get allFollowingChannels() {
     const publicChannels = this.chatChannelsManager.publicMessageChannels;
     const dmChannels = this.chatChannelsManager.directMessageChannels;
     return [...publicChannels, ...dmChannels];
-  }
-
-  get filteredChannels() {
-    const filterStr = String(this.filter ?? "").trim();
-    if (filterStr === "") {
-      return this.allFollowingChannels;
-    }
-
-    const filterLower = filterStr.toLowerCase();
-    return this.allFollowingChannels.filter((channel) => {
-      const title = channel.title?.toLowerCase() || "";
-      const slug = channel.slug?.toLowerCase() || "";
-      return title.includes(filterLower) || slug.includes(filterLower);
-    });
-  }
-
-  @action
-  onFilterInput(eventOrValue) {
-    // FilterInput passes the event object, not the string value
-    const value =
-      typeof eventOrValue === "string"
-        ? eventOrValue
-        : eventOrValue?.target?.value || "";
-    this.filter = value;
   }
 
   @action
@@ -97,20 +71,9 @@ export default class ChatModalManageStarredChannels extends Component {
     >
       <:body>
         <div class="manage-starred-channels">
-          <div class="manage-starred-channels__filter">
-            <FilterInput
-              @value={{this.filter}}
-              @filterAction={{this.onFilterInput}}
-              @icons={{hash left="magnifying-glass"}}
-              placeholder={{i18n
-                "chat.manage_starred_channels.filter_placeholder"
-              }}
-            />
-          </div>
-
           <div class="manage-starred-channels__list">
-            {{#if this.filteredChannels.length}}
-              {{#each this.filteredChannels as |channel|}}
+            {{#if this.allFollowingChannels.length}}
+              {{#each this.allFollowingChannels as |channel|}}
                 <div class="manage-starred-channels__row">
                   <div class="manage-starred-channels__channel-info">
                     <ChannelIcon @channel={{channel}} />
@@ -141,11 +104,7 @@ export default class ChatModalManageStarredChannels extends Component {
               {{/each}}
             {{else}}
               <div class="manage-starred-channels__empty">
-                {{#if this.filter}}
-                  {{i18n "chat.manage_starred_channels.no_results"}}
-                {{else}}
-                  {{i18n "chat.manage_starred_channels.no_channels"}}
-                {{/if}}
+                {{i18n "chat.manage_starred_channels.no_channels"}}
               </div>
             {{/if}}
           </div>

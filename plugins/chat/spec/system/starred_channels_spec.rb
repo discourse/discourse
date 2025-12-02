@@ -287,5 +287,66 @@ RSpec.describe "Starred channels", type: :system do
         ".channel-#{channel_1.id}",
       )
     end
+
+    it "does not show the star button in the channel navbar" do
+      chat_page.visit_channel(channel_1)
+
+      expect(page).to have_no_css(".c-navbar__star-channel-button")
+    end
+  end
+
+  context "when using the navbar star button" do
+    fab!(:channel_1) { Fabricate(:category_channel, name: "Channel A") }
+
+    before { channel_1.add(current_user) }
+
+    it "can star a channel from the navbar" do
+      chat_page.visit_channel(channel_1)
+
+      expect(page).to have_css(".c-navbar__star-channel-button .d-icon-far-star")
+
+      find(".c-navbar__star-channel-button").click
+
+      expect(page).to have_css(".c-navbar__star-channel-button.--starred .d-icon-star")
+      expect(channel_1.membership_for(current_user).reload.starred).to eq(true)
+    end
+
+    it "can unstar a channel from the navbar" do
+      channel_1.membership_for(current_user).update!(starred: true)
+
+      chat_page.visit_channel(channel_1)
+
+      expect(page).to have_css(".c-navbar__star-channel-button.--starred .d-icon-star")
+
+      find(".c-navbar__star-channel-button").click
+
+      expect(page).to have_css(".c-navbar__star-channel-button .d-icon-far-star")
+      expect(page).to have_no_css(".c-navbar__star-channel-button.--starred")
+      expect(channel_1.membership_for(current_user).reload.starred).to eq(false)
+    end
+
+    it "shows the correct tooltip when hovering over the star button" do
+      chat_page.visit_channel(channel_1)
+
+      find(".c-navbar__star-channel-button").hover
+
+      expect(page).to have_css(
+        ".fk-d-tooltip__content",
+        text: I18n.t("js.chat.channel_settings.star_channel"),
+      )
+    end
+
+    it "shows the correct tooltip when channel is already starred" do
+      channel_1.membership_for(current_user).update!(starred: true)
+
+      chat_page.visit_channel(channel_1)
+
+      find(".c-navbar__star-channel-button").hover
+
+      expect(page).to have_css(
+        ".fk-d-tooltip__content",
+        text: I18n.t("js.chat.channel_settings.unstar_channel"),
+      )
+    end
   end
 end
