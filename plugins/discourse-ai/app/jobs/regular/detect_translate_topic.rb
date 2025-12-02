@@ -52,9 +52,8 @@ module Jobs
         next if LocaleNormalizer.is_same?(locale, detected_locale)
         exists = topic.localizations.matching_locale(locale).exists?
 
-        if exists && !DiscourseAi::Translation::TopicLocalizer.has_relocalize_quota?(topic, locale)
-          next
-        end
+        has_quota = DiscourseAi::Translation::TopicLocalizer.has_relocalize_quota?(topic, locale)
+        next if !force && exists && !has_quota
 
         begin
           DiscourseAi::Translation::TopicLocalizer.localize(topic, locale)

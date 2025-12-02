@@ -108,6 +108,15 @@ describe Jobs::DetectTranslatePost do
 
       job.execute({ post_id: post.id })
     end
+
+    it "translates if force is true" do
+      post.update(locale: "en")
+      Fabricate(:post_localization, post:, locale: "ja")
+
+      DiscourseAi::Translation::PostLocalizer.expects(:localize).with(post, "ja").once
+
+      job.execute({ post_id: post.id, force: true })
+    end
   end
 
   it "handles translation errors gracefully" do

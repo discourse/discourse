@@ -103,6 +103,15 @@ describe Jobs::DetectTranslateTopic do
 
       job.execute({ topic_id: topic.id })
     end
+
+    it "translates when force is true" do
+      topic.update(locale: "en")
+      Fabricate(:topic_localization, topic:, locale: "ja")
+
+      DiscourseAi::Translation::TopicLocalizer.expects(:localize).with(topic, "ja").once
+
+      job.execute({ topic_id: topic.id, force: true })
+    end
   end
 
   it "handles translation errors gracefully" do
