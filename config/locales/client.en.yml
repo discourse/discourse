@@ -5921,11 +5921,13 @@ en:
             enabled_themes:
               label: "Enabled on themes..."
               description: "Select which themes should display the banner. Only active themes are shown."
+              select_label: "Select themes"
             background_image:
               label: "Background image"
               description: "This image will be displayed behind the banner text."
             text_color:
               label: "Text color"
+              description: "When 'Background image' above is uploaded, use this setting to change the banner text color to ensure it remains readable. When left blank or without background image uploaded, the active theme controls the color."
             page_visibility:
               label: "Page visibility"
               description: "Choose where the banner should be displayed."
