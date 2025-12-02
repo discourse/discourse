@@ -62,7 +62,7 @@ acceptance("User Preferences", function (needs) {
     await savePreferences();
 
     await click(".user-nav__preferences-profile a");
-    await fillIn("#edit-location", "Westeros");
+    await fillIn("#control-location .form-kit__control-input", "Westeros");
     await savePreferences();
 
     await click(".user-nav__preferences-emails a");
