@@ -66,6 +66,7 @@ The above schema definition states that the `link` object has a `name` property 
 - `integer`: Value of property is stored as an integer.
 - `float`: Value of property is stored as a float.
 - `boolean`: Value of property is `true` or `false`.
+- `uploads`: Value of property is the attachment URL
 - `enum`: Value of property must be one of the values defined in the `choices` keyword.
   ```yaml
   links:
