@@ -133,61 +133,63 @@ module SiteSettings::DeprecatedSettings
   end
 
   def setup_deprecated_methods
-    SETTINGS.each do |old_setting, new_setting, override, version|
-      SiteSetting.singleton_class.alias_method(:"_#{old_setting}", :"#{old_setting}") if !override
+    SETTINGS.each { |s| setup_deprecated_method(*s) }
+  end
+
+  def setup_deprecated_method(old_setting, new_setting, override, version)
+    SiteSetting.singleton_class.alias_method(:"_#{old_setting}", :"#{old_setting}") if !override
+
+    if OVERRIDE_TL_GROUP_SETTINGS.include?(old_setting)
+      define_singleton_method "_group_to_tl_#{old_setting}" do |warn: true|
+        group_to_tl(old_setting, new_setting)
+      end
+    end
+
+    define_singleton_method old_setting do |scoped_to = nil, warn: true|
+      if warn
+        Discourse.deprecate(
+          "`SiteSetting.#{old_setting}` has been deprecated. Please use `SiteSetting.#{new_setting}` instead.",
+          drop_from: version,
+        )
+      end
 
       if OVERRIDE_TL_GROUP_SETTINGS.include?(old_setting)
-        define_singleton_method "_group_to_tl_#{old_setting}" do |warn: true|
-          group_to_tl(old_setting, new_setting)
-        end
+        self.public_send("_group_to_tl_#{old_setting}")
+      else
+        self.public_send(override ? new_setting : "_#{old_setting}", scoped_to)
+      end
+    end
+
+    SiteSetting.singleton_class.alias_method(:"_#{old_setting}?", :"#{old_setting}?") if !override
+
+    define_singleton_method "#{old_setting}?" do |scoped_to = nil, warn: true|
+      if warn
+        Discourse.deprecate(
+          "`SiteSetting.#{old_setting}?` has been deprecated. Please use `SiteSetting.#{new_setting}?` instead.",
+          drop_from: version,
+        )
       end
 
-      define_singleton_method old_setting do |scoped_to = nil, warn: true|
-        if warn
-          Discourse.deprecate(
-            "`SiteSetting.#{old_setting}` has been deprecated. Please use `SiteSetting.#{new_setting}` instead.",
-            drop_from: version,
-          )
-        end
+      self.public_send("#{override ? new_setting : "_" + old_setting}?", scoped_to)
+    end
 
-        if OVERRIDE_TL_GROUP_SETTINGS.include?(old_setting)
-          self.public_send("_group_to_tl_#{old_setting}")
-        else
-          self.public_send(override ? new_setting : "_#{old_setting}", scoped_to)
-        end
+    SiteSetting.singleton_class.alias_method(:"_#{old_setting}=", :"#{old_setting}=") if !override
+
+    define_singleton_method "#{old_setting}=" do |val, warn: true|
+      if warn
+        Discourse.deprecate(
+          "`SiteSetting.#{old_setting}=` has been deprecated. Please use `SiteSetting.#{new_setting}=` instead.",
+          drop_from: version,
+        )
       end
 
-      SiteSetting.singleton_class.alias_method(:"_#{old_setting}?", :"#{old_setting}?") if !override
-
-      define_singleton_method "#{old_setting}?" do |scoped_to = nil, warn: true|
-        if warn
-          Discourse.deprecate(
-            "`SiteSetting.#{old_setting}?` has been deprecated. Please use `SiteSetting.#{new_setting}?` instead.",
-            drop_from: version,
-          )
-        end
-
-        self.public_send("#{override ? new_setting : "_" + old_setting}?", scoped_to)
-      end
-
-      SiteSetting.singleton_class.alias_method(:"_#{old_setting}=", :"#{old_setting}=") if !override
-
-      define_singleton_method "#{old_setting}=" do |val, warn: true|
-        if warn
-          Discourse.deprecate(
-            "`SiteSetting.#{old_setting}=` has been deprecated. Please use `SiteSetting.#{new_setting}=` instead.",
-            drop_from: version,
-          )
-        end
-
-        if OVERRIDE_TL_GROUP_SETTINGS.include?(old_setting)
-          # We want to set both the new group setting here to the equivalent of the
-          # TL, as well as setting the TL value in the DB so they remain in sync.
-          self.public_send("_#{old_setting}=", val)
-          self.public_send("#{new_setting}=", tl_to_group(old_setting, val).to_s)
-        else
-          self.public_send("#{override ? new_setting : "_" + old_setting}=", val)
-        end
+      if OVERRIDE_TL_GROUP_SETTINGS.include?(old_setting)
+        # We want to set both the new group setting here to the equivalent of the
+        # TL, as well as setting the TL value in the DB so they remain in sync.
+        self.public_send("_#{old_setting}=", val)
+        self.public_send("#{new_setting}=", tl_to_group(old_setting, val).to_s)
+      else
+        self.public_send("#{override ? new_setting : "_" + old_setting}=", val)
       end
     end
   end
