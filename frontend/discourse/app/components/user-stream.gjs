@@ -183,6 +183,7 @@ export default class UserStreamComponent extends Component {
   <template>
     <PostList
       @posts={{@stream.content}}
+      @isLoading={{@stream.loading}}
       @idPath="post_id"
       @urlPath="postUrl"
       @usernamePath={{this.usernamePath}}

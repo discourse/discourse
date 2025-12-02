@@ -50,6 +50,10 @@ export default class PostList extends Component {
   @tracked canLoadMore = true;
   @tracked emptyText = this.args.emptyText || i18n("post_list.empty");
 
+  get isLoadingContent() {
+    return this.loading || this.args.isLoading;
+  }
+
   @action
   async loadMore() {
     if (
@@ -128,7 +132,9 @@ export default class PostList extends Component {
             </:belowPostItem>
           </PostListItem>
         {{else}}
-          <div class="post-list__empty-text">{{this.emptyText}}</div>
+          {{#unless this.isLoadingContent}}
+            <div class="post-list__empty-text">{{this.emptyText}}</div>
+          {{/unless}}
         {{/each}}
       </div>
       <ConditionalLoadingSpinner @condition={{this.loading}} />
