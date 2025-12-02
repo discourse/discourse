@@ -746,13 +746,13 @@ RSpec.describe PostCreator do
       expect(topic.highest_post_number).to eq(1)
       expect(topic.reply_count).to eq(0)
       expect(topic.posts_count).to eq(1)
-      expect(topic.highest_staff_post_number).to eq(3)
+      expect(topic.highest_whisperer_post_number).to eq(3)
       expect(topic.last_posted_at).to eq_time(first.created_at)
       expect(topic.last_post_user_id).to eq(first.user_id)
       expect(topic.word_count).to eq(5)
 
       topic.update_columns(
-        highest_staff_post_number: 0,
+        highest_whisperer_post_number: 0,
         highest_post_number: 0,
         posts_count: 0,
         word_count: 0,
@@ -766,7 +766,7 @@ RSpec.describe PostCreator do
       expect(topic.posts_count).to eq(1)
       expect(topic.word_count).to eq(5)
       expect(topic.last_posted_at).to eq_time(first.created_at)
-      expect(topic.highest_staff_post_number).to eq(3)
+      expect(topic.highest_whisperer_post_number).to eq(3)
     end
   end
 

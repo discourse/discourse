@@ -73,7 +73,7 @@ class PostTiming < ActiveRecord::Base
 
   def self.destroy_last_for(user, topic_id: nil, topic: nil)
     topic ||= Topic.find(topic_id)
-    post_number = user.whisperer? ? topic.highest_staff_post_number : topic.highest_post_number
+    post_number = user.whisperer? ? topic.highest_whisperer_post_number : topic.highest_post_number
 
     last_read = post_number - 1
 
@@ -154,7 +154,8 @@ class PostTiming < ActiveRecord::Base
   MAX_READ_TIME_PER_BATCH = 60 * 1000.0
 
   def self.process_timings(current_user, topic_id, topic_time, timings, opts = {})
-    lookup_column = current_user.whisperer? ? "highest_staff_post_number" : "highest_post_number"
+    lookup_column =
+      current_user.whisperer? ? "highest_whisperer_post_number" : "highest_post_number"
     highest_post_number = DB.query_single(<<~SQL, topic_id: topic_id).first
           SELECT #{lookup_column}
           FROM topics

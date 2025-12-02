@@ -1040,7 +1040,7 @@ RSpec.describe PostMover do
 
               destination_topic.reload
               expect(destination_topic.highest_post_number).to eq(2)
-              expect(destination_topic.highest_staff_post_number).to eq(3)
+              expect(destination_topic.highest_whisperer_post_number).to eq(3)
 
               create_topic_user(user1, topic, last_read_post_number: 3, last_emailed_post_number: 3)
               create_topic_user(
@@ -2298,7 +2298,7 @@ RSpec.describe PostMover do
 
               destination_topic.reload
               expect(destination_topic.highest_post_number).to eq(2)
-              expect(destination_topic.highest_staff_post_number).to eq(3)
+              expect(destination_topic.highest_whisperer_post_number).to eq(3)
 
               create_topic_user(user1, topic, last_read_post_number: 3, last_emailed_post_number: 3)
               create_topic_user(

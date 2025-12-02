@@ -451,7 +451,7 @@ class TopicQuery
   end
 
   def self.unread_filter(list, whisperer: false)
-    col_name = whisperer ? "highest_staff_post_number" : "highest_post_number"
+    col_name = whisperer ? "highest_whisperer_post_number" : "highest_post_number"
 
     list.where("tu.last_read_post_number < topics.#{col_name}").where(
       "COALESCE(tu.notification_level, :regular) >= :tracking",
@@ -700,7 +700,7 @@ class TopicQuery
   def unseen_filter(list, user_first_seen_at, whisperer)
     list = list.where("topics.bumped_at >= ?", user_first_seen_at)
 
-    col_name = whisperer ? "highest_staff_post_number" : "highest_post_number"
+    col_name = whisperer ? "highest_whisperer_post_number" : "highest_post_number"
     list.where("tu.last_read_post_number IS NULL OR tu.last_read_post_number < topics.#{col_name}")
   end
 

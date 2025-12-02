@@ -122,7 +122,7 @@ RSpec.describe TopicsBulkAction do
     context "when the user is staff" do
       fab!(:user, :admin)
 
-      context "when the highest_staff_post_number is > highest_post_number for a topic (e.g. whisper is last post)" do
+      context "when the highest_whisperer_post_number is > highest_post_number for a topic (e.g. whisper is last post)" do
         it "dismisses posts" do
           SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
           post1 = create_post(user: user)

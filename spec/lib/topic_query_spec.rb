@@ -1489,7 +1489,7 @@ RSpec.describe TopicQuery do
       Fabricate(:post, topic: topic)
       Fabricate(:post, topic: topic)
       Fabricate(:post, topic: topic)
-      topic.highest_staff_post_number = 3
+      topic.highest_whisperer_post_number = 3
       topic.highest_post_number = 3
       topic
     end

@@ -37,7 +37,7 @@ class UserStat < ActiveRecord::Base
         AND t.archetype = :archetype
         AND tu.last_read_post_number < CASE
                                        WHEN u.admin OR u.moderator #{SiteSetting.whispers_allowed_groups_map.any? ? "OR gu.id IS NOT NULL" : ""}
-                                       THEN t.highest_staff_post_number
+                                       THEN t.highest_whisperer_post_number
                                        ELSE t.highest_post_number
                                        END
         AND (COALESCE(tu.notification_level, 1) >= 2)
@@ -99,7 +99,7 @@ class UserStat < ActiveRecord::Base
              AND (("topics"."deleted_at" IS NULL
                    AND tu.last_read_post_number < CASE
                                                       WHEN u.admin
-                                                           OR u.moderator THEN topics.highest_staff_post_number
+                                                           OR u.moderator THEN topics.highest_whisperer_post_number
                                                       ELSE topics.highest_post_number
                                                   END
                    AND COALESCE(tu.notification_level, 1) >= 2)
