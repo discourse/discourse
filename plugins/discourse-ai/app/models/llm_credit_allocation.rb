@@ -111,7 +111,7 @@ class LlmCreditAllocation < ActiveRecord::Base
         reload
         day_key = current_day_key
         self.daily_usage = daily_usage.merge(day_key => daily_used + credits)
-        cleanup_old_days!
+
         # Inline JSONB cleanup (original behavior for backwards compatibility)
         cutoff = DAILY_USAGE_RETENTION_DAYS.days.ago.beginning_of_day.utc.strftime("%Y-%m-%d")
         self.daily_usage = daily_usage.select { |k, _| k >= cutoff }
