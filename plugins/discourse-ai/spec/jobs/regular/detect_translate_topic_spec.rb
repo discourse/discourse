@@ -78,21 +78,31 @@ describe Jobs::DetectTranslateTopic do
     job.execute({ topic_id: topic.id })
   end
 
-  it "skips translating if the topic is already localized" do
-    topic.update(locale: "en")
-    Fabricate(:topic_localization, topic:, locale: "ja")
-    DiscourseAi::Translation::TopicLocalizer.expects(:localize).never
+  context "when translation exists and retranslation quota hit" do
+    before do
+      DiscourseAi::Translation::TopicLocalizer
+        .expects(:has_relocalize_quota?)
+        .with(topic, "ja")
+        .returns(false)
+    end
 
-    job.execute({ topic_id: topic.id })
-  end
+    it "skips translating if the topic is already localized" do
+      topic.update(locale: "en")
+      Fabricate(:topic_localization, topic:, locale: "ja")
 
-  it "does not translate to language of similar variant" do
-    topic.update(locale: "en_GB")
-    Fabricate(:topic_localization, topic:, locale: "ja_JP")
+      DiscourseAi::Translation::TopicLocalizer.expects(:localize).never
 
-    DiscourseAi::Translation::PostLocalizer.expects(:localize).never
+      job.execute({ topic_id: topic.id })
+    end
 
-    job.execute({ topic_id: topic.id })
+    it "does not translate to language of similar variant" do
+      topic.update(locale: "en_GB")
+      Fabricate(:topic_localization, topic:, locale: "ja_JP")
+
+      DiscourseAi::Translation::TopicLocalizer.expects(:localize).never
+
+      job.execute({ topic_id: topic.id })
+    end
   end
 
   it "handles translation errors gracefully" do

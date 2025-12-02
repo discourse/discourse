@@ -80,6 +80,30 @@ describe DiscourseAi::Translation::EntryPoint do
       expect(job_enqueued?(job: :detect_translate_post)).to eq false
     end
 
+    it "enqueues in grace period detect translate topic job if first post (excerpt) changed" do
+      freeze_time
+
+      SiteSetting.editing_grace_period = 10.minutes
+      SiteSetting.ai_translation_enabled = true
+      topic = post.topic
+      revisor = PostRevisor.new(post, topic)
+      revisor.revise!(
+        post.user,
+        { raw: post.raw + " Additional content." },
+        { skip_validations: true },
+      )
+      revisor.post_process_post
+
+      expect_job_enqueued(
+        job: :detect_translate_topic,
+        args: {
+          topic_id: topic.id,
+        },
+        at: 10.minutes.from_now,
+      )
+      expect(job_enqueued?(job: :detect_translate_post)).to eq true
+    end
+
     it "does not enqueue detect translate topic job if title did not change" do
       new_category = Fabricate(:category)
       SiteSetting.ai_translation_enabled = true
@@ -106,8 +130,8 @@ describe DiscourseAi::Translation::EntryPoint do
 
       SiteSetting.editing_grace_period = 10.minutes
       SiteSetting.ai_translation_enabled = true
-      post = Fabricate(:post, post_number: 1)
-      post.revise(post.user, { raw: "new raw" }, { force_new_version: true })
+      post = Fabricate(:post, post_number: 2)
+      post.revise(post.user, { raw: "new raw" })
 
       expect_job_enqueued(
         job: :detect_translate_post,
@@ -116,15 +140,6 @@ describe DiscourseAi::Translation::EntryPoint do
         },
         at: 10.minutes.from_now,
       )
-      expect(job_enqueued?(job: :detect_translate_topic)).to eq false
-    end
-
-    it "does not enqueue detect translate post job if no new version of post" do
-      SiteSetting.ai_translation_enabled = true
-      post = Fabricate(:post, post_number: 1)
-      post.revise(post.user, { raw: post.raw + "A" })
-
-      expect(job_enqueued?(job: :detect_translate_post)).to eq false
       expect(job_enqueued?(job: :detect_translate_topic)).to eq false
     end
   end

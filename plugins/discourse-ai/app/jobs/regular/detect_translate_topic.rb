@@ -50,7 +50,11 @@ module Jobs
 
       locales.each do |locale|
         next if LocaleNormalizer.is_same?(locale, detected_locale)
-        next if topic.localizations.matching_locale(locale).exists?
+        exists = topic.localizations.matching_locale(locale).exists?
+
+        if exists && !DiscourseAi::Translation::TopicLocalizer.has_relocalize_quota?(topic, locale)
+          next
+        end
 
         begin
           DiscourseAi::Translation::TopicLocalizer.localize(topic, locale)
