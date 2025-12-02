@@ -813,7 +813,7 @@ RSpec.describe TagsController do
         multi_tag_topic
         all_tag_topic
 
-        get "/tag/#{tag.name}/l/latest.json", params: { additional_tag_ids: other_tag.name }
+        get "/tag/#{tag.name}/l/latest.json", params: { additional_tag_names: other_tag.name }
 
         expect(response.status).to eq(200)
 
@@ -830,7 +830,7 @@ RSpec.describe TagsController do
 
         get "/tag/#{tag.name}/l/latest.json",
             params: {
-              additional_tag_ids: "#{other_tag.name}/#{third_tag.name}",
+              additional_tag_names: "#{other_tag.name}/#{third_tag.name}",
             }
 
         expect(response.status).to eq(200)
@@ -844,7 +844,7 @@ RSpec.describe TagsController do
       it "does not find any tags when a tag which doesn't exist is passed" do
         single_tag_topic
 
-        get "/tag/#{tag.name}/l/latest.json", params: { additional_tag_ids: "notatag" }
+        get "/tag/#{tag.name}/l/latest.json", params: { additional_tag_names: "notatag" }
 
         expect(response.status).to eq(200)
 
