@@ -807,6 +807,7 @@ zh_CN:
         flagged_as_by: "被 %{username} 举报为%{flagReason} · %{relativeDate}"
         claimed: "已申领"
         claimed_by: "由 %{username} 申领 · %{relativeDate}"
+        unclaimed_by: "%{username} 已取消认领 · %{relativeDate}"
         reviewed: "已审核"
         reviewed_by: "由 %{username} 审核 · %{relativeDate}"
         view_conversation: "查看私信"
@@ -846,7 +847,9 @@ zh_CN:
         solution_marked: "被标记为解决方案"
         topic_has_solution: "此话题有解决方案"
         visibility: "公开范围"
+        topic_unlisted: "该话题未公开，只能通过直接链接访问。"
       help:
+        community_moderation_guide: "本社区的版主指南"
         moderation_guide: "Discourse 审核指南"
         flag_priorities: "管理用户声誉和举报优先级"
         spam_detection: "垃圾信息检测"
@@ -1252,12 +1255,15 @@ zh_CN:
       n_more:
         other: "类别（其他 %{count} 个）…"
     ip_lookup:
+      title: IP 地址
       hostname: 主机名
       location: 地点
       location_not_found: '（未知）'
       organisation: 组织
       phone: 电话
       other_accounts: "使用此 IP 地址的其他帐户："
+      other_accounts_with_ip:
+        other: "%{count} 个使用此 IP 地址的其他账户"
       delete_other_accounts:
         other: "删除 %{count} 个"
       username: "用户名"
@@ -2761,6 +2767,9 @@ zh_CN:
         zoom_out: "减小图片尺寸"
         zoom_in: "增大图片尺寸"
         remove: "移除图片"
+        add_to_grid: "添加到网格"
+        move_outside_grid: "移出网格"
+      grid_label: "这将以网格形式显示"
       image_scale_button: "将图片缩放至 %{percent}%"
       delete_image_button: 删除图片
       toggle_image_grid: 切换图片网格
@@ -3616,6 +3625,11 @@ zh_CN:
         description:
           other: "您已选择 <b>%{count}</b> 个帖子。"
       deleted_by_author_simple: "（话题已被作者删除）"
+      localizations:
+        title_edit_warning:
+          message: "这是一个翻译后的话题。<br><br>您想编辑 %{language} 原始标题，还是编辑此特定翻译？"
+          action_original: "编辑原话题标题"
+          action_translation: "编辑翻译后的话题标题"
     post_list:
       title: "最新帖子"
       empty: "没有帖子"
@@ -3628,6 +3642,7 @@ zh_CN:
         actions: "批量操作"
     post:
       accessible_heading: "由 %{username} 发布于 %{date}"
+      heading_anchor: "标题链接"
       confirm_delete: "确定要删除此帖子吗？"
       quote_reply: "引用"
       quote_reply_shortcut: "引用（或按 q）"
@@ -3712,6 +3727,7 @@ zh_CN:
         post_language_selector:
           none: "无"
         edit_warning:
+          message: "这是一篇翻译的帖子。<br><br>您想编辑 %{language} 原帖还是编辑此特定翻译？"
           action_original: "编辑原帖"
           action_translation: "编辑此翻译"
       errors:
@@ -4013,15 +4029,18 @@ zh_CN:
       default_top_period: "默认热门时长："
       default_list_filter: "默认列表筛选器："
       allow_badges_label: "允许在此类别中授予徽章"
+      edit_permissions: "编辑权限"
       reviewable_by_group: "除管理人员外，此类别中的内容还可以由以下群组审核："
       review_group_name: "群组名称"
       require_topic_approval: "所有新话题都需要版主审批"
       require_reply_approval: "所有新回复都需要版主审批"
       this_year: "今年"
       position: "类别页面上的位置："
+      default_position: "默认位置"
       position_disabled: "类别将按活动顺序显示。要控制列表中类别的顺序，请启用<a href='%{url}'>固定类别位置</a>设置。"
       minimum_required_tags: "话题中所需的最少标签数："
       default_slow_mode: '为此类别中的新话题启用“慢速模式”。'
+      parent: "父类别"
       num_auto_bump_daily: "每天自动顶贴的开放话题的数量："
       auto_bump_cooldown_days: "再次顶帖同一话题之前的最短天数。"
       navigate_to_first_post_after_read: "阅读话题后导航到第一个帖子"

@@ -5,6 +5,27 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  reports:
+    ad_plugin_house_ads_performance:
+      title: Wyświetlenia wtyczki reklamowej reklam własnych
+      description: "Raport wyświetleń reklam własnych"
+    ad_plugin_ad_impressions:
+      title: Wyświetlenia wtyczki reklamowej
+      description: "Raport wyświetleń reklam"
+    ad_plugin_impressions_by_user:
+      title: Wyświetlenia wtyczki reklamowej według użytkownika
+      description: "Wyświetlenia reklam pogrupowane według użytkownika"
+    ad_plugin_click_through_rate:
+      title: Wydajność konwersji wtyczki reklamowej
+      description: "Raport skuteczności reklam według reklamy i miejsca docelowego"
+    ad_plugin_click_through_rate_by_placement:
+      title: Wydajność wtyczki reklamowej według umiejscowienia
+      description: "Raport skuteczności reklam według umiejscowienia"
+    ad_plugin_click_through_rate_by_ad_type:
+      title: Wydajność wtyczki reklamowej według typu reklamy
+      description: "Raport skuteczności reklam według typu reklamy"
+  errors:
+    already_clicked: "Kliknięcie już zarejestrowane"
   site_settings:
     discourse_adplugin_enabled: Włącz wtyczkę discourse-adplugin.
     no_ads_for_personal_messages: "Nie pokazuj reklam podczas przeglądania prywatnych wiadomości"
