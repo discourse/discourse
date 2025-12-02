@@ -46,8 +46,15 @@ class LlmCreditAllocation < ActiveRecord::Base
 
   def daily_used
     # Primary: Use llm_credit_daily_usages table
-    usage_record = LlmCreditDailyUsage.find_by(llm_model_id: llm_model_id, usage_date: Date.current)
-    return usage_record.credits_used if usage_record
+    # Check if association is preloaded to avoid N+1 queries
+    if association(:daily_usages).loaded?
+      usage_record = daily_usages.find { |u| u.usage_date == Date.current }
+      return usage_record.credits_used if usage_record
+    else
+      usage_record =
+        LlmCreditDailyUsage.find_by(llm_model_id: llm_model_id, usage_date: Date.current)
+      return usage_record.credits_used if usage_record
+    end
 
     # DEPRECATED: Fallback to JSONB daily_usage column for backwards compatibility
     # TODO: Remove this fallback once daily_usage column is dropped and added to ignored_columns
