@@ -14,7 +14,7 @@ acceptance(
       await visit("/my/preferences/profile");
 
       assert
-        .dom(".pref-hide-profile")
+        .dom("#control-hide_profile")
         .exists("checkbox to hide profile is shown");
     });
   }
@@ -103,7 +103,7 @@ acceptance(
       await visit("/u/eviltrout/preferences/profile");
 
       assert
-        .dom("#user-default-calendar")
+        .dom("#control-default_calendar")
         .doesNotExist("option to change default calendar is hidden");
     });
   }
@@ -127,7 +127,7 @@ acceptance(
       await visit("/u/eviltrout/preferences/profile");
 
       assert
-        .dom("#user-default-calendar")
+        .dom("#control-default_calendar")
         .exists("option to change default calendar");
     });
   }
