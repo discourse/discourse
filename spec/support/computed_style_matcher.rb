@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec::Matchers.define :have_computed_style do |expected|
   match { |element| computed_style(element, expected.keys.first) == expected.values.first }
 
