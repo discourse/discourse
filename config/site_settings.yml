@@ -673,6 +673,10 @@ login:
   google_oauth2_verbose_logging:
     default: false
     area: "authenticators"
+  google_oauth2_hd_groups:
+    default: false
+    validator: GoogleOauth2HdGroupsValidator
+    area: "authenticators"
   enable_twitter_logins:
     default: false
     area: "authenticators"
@@ -4279,10 +4283,6 @@ experimental:
   enable_rich_text_paste:
     client: true
     default: true
-    area: "experimental"
-  google_oauth2_hd_groups:
-    default: false
-    validator: GoogleOauth2HdGroupsValidator
     area: "experimental"
   lazy_load_categories_groups:
     default: ""
