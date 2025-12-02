@@ -313,6 +313,7 @@ export default class AdminWelcomeBannerForm extends Component {
           @description={{i18n
             "admin.config.welcome_banner.form.enabled_themes.description"
           }}
+          @format="large"
           as |field|
         >
           <field.Custom>
