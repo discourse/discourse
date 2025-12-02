@@ -63,8 +63,7 @@ RSpec.describe UpcomingChanges::Promoter do
           expect(UserHistory.last.context).to eq(
             I18n.t(
               "staff_action_logs.upcoming_changes.log_promoted",
-              change_status: UpcomingChanges.change_status(:enable_upload_debug_mode),
-              promotion_status_threshold: promotion_status_threshold,
+              change_status: UpcomingChanges.change_status(:enable_upload_debug_mode).to_s.titleize,
               base_path: Discourse.base_path,
             ),
           )
@@ -102,8 +101,7 @@ RSpec.describe UpcomingChanges::Promoter do
         expect(UserHistory.last.context).to eq(
           I18n.t(
             "staff_action_logs.upcoming_changes.log_promoted",
-            change_status: UpcomingChanges.change_status(:enable_upload_debug_mode),
-            promotion_status_threshold: promotion_status_threshold,
+            change_status: UpcomingChanges.change_status(:enable_upload_debug_mode).to_s.titleize,
             base_path: Discourse.base_path,
           ),
         )

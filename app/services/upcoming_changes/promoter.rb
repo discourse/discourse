@@ -70,8 +70,7 @@ class UpcomingChanges::Promoter
     context =
       I18n.t(
         "staff_action_logs.upcoming_changes.log_promoted",
-        change_status: UpcomingChanges.change_status(params.setting_name),
-        promotion_status_threshold: params.promotion_status_threshold,
+        change_status: UpcomingChanges.change_status(params.setting_name).to_s.titleize,
         base_path: Discourse.base_path,
       )
 
