@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import concatClass from "discourse/helpers/concat-class";
@@ -24,8 +23,6 @@ const SUPPORTED_TYPES = [
 
 export default class FKControlInput extends Component {
   static controlType = "input";
-
-  @tracked isFocused = false;
 
   constructor(owner, args) {
     super(...arguments);
@@ -59,8 +56,6 @@ export default class FKControlInput extends Component {
 
   @action
   handleFocus() {
-    this.isFocused = true;
-
     if (this.type === "number") {
       this.inputValue = this.args.field.value ?? "";
     }
@@ -68,7 +63,6 @@ export default class FKControlInput extends Component {
 
   @action
   handleBlur() {
-    this.isFocused = false;
     this.inputValue = undefined;
   }
 

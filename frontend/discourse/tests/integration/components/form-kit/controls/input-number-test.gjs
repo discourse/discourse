@@ -42,7 +42,8 @@ module(
         <template>
           <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
             <form.Field @name="foo" @title="Foo" as |field|>
-              <field.Input @type="number" step="any" lang="en" />
+
+              <field.Input @type="number" />
             </form.Field>
           </Form>
         </template>
