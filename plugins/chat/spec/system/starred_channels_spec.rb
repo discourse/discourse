@@ -5,7 +5,6 @@ RSpec.describe "Starred channels", type: :system do
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:sidebar) { PageObjects::Pages::Sidebar.new }
-  let(:toasts) { PageObjects::Components::Toasts.new }
 
   before do
     chat_system_bootstrap
@@ -28,14 +27,14 @@ RSpec.describe "Starred channels", type: :system do
 
       expect(page).to have_no_css("#sidebar-section-content-chat-starred-channels")
 
-      chat_page.visit_channel_settings(channel_1)
+      chat_page.visit_channel(channel_1)
 
       membership = channel_1.membership_for(current_user)
 
-      expect {
-        PageObjects::Components::DToggleSwitch.new(".c-channel-settings__star-switch").toggle
-        expect(toasts).to have_success(I18n.t("js.saved"))
-      }.to change { membership.reload.starred }.from(false).to(true)
+      expect(page).to have_css(".c-navbar__star-channel-button .d-icon-far-star")
+      find(".c-navbar__star-channel-button").click
+      expect(page).to have_css(".c-navbar__star-channel-button.--starred .d-icon-star")
+      expect(membership.reload.starred).to eq(true)
 
       visit("/")
 
@@ -52,10 +51,10 @@ RSpec.describe "Starred channels", type: :system do
         ".channel-#{channel_1.id}",
       )
 
-      chat_page.visit_channel_settings(channel_1)
+      chat_page.visit_channel(channel_1)
 
-      PageObjects::Components::DToggleSwitch.new(".c-channel-settings__star-switch").toggle
-      expect(toasts).to have_success(I18n.t("js.saved"))
+      find(".c-navbar__star-channel-button").click
+      expect(page).to have_css(".c-navbar__star-channel-button.--starred .d-icon-star")
 
       visit("/")
 
@@ -142,14 +141,15 @@ RSpec.describe "Starred channels", type: :system do
         ".channel-#{channel_1.id}",
       )
 
-      chat_page.visit_channel_settings(channel_1)
+      chat_page.visit_channel(channel_1)
 
       membership = channel_1.membership_for(current_user)
 
-      expect {
-        PageObjects::Components::DToggleSwitch.new(".c-channel-settings__star-switch").toggle
-        expect(toasts).to have_success(I18n.t("js.saved"))
-      }.to change { membership.reload.starred }.from(true).to(false)
+      expect(page).to have_css(".c-navbar__star-channel-button.--starred .d-icon-star")
+      find(".c-navbar__star-channel-button").click
+      expect(page).to have_css(".c-navbar__star-channel-button .d-icon-far-star")
+      expect(page).to have_no_css(".c-navbar__star-channel-button.--starred")
+      expect(membership.reload.starred).to eq(false)
 
       visit("/")
 
@@ -201,14 +201,14 @@ RSpec.describe "Starred channels", type: :system do
     it "shows the starred DM channel in the Starred Channels section" do
       visit("/")
 
-      chat_page.visit_channel_settings(dm_channel_1)
+      chat_page.visit_channel(dm_channel_1)
 
       membership = dm_channel_1.membership_for(current_user)
 
-      expect {
-        PageObjects::Components::DToggleSwitch.new(".c-channel-settings__star-switch").toggle
-        expect(toasts).to have_success(I18n.t("js.saved"))
-      }.to change { membership.reload.starred }.from(false).to(true)
+      expect(page).to have_css(".c-navbar__star-channel-button .d-icon-far-star")
+      find(".c-navbar__star-channel-button").click
+      expect(page).to have_css(".c-navbar__star-channel-button.--starred .d-icon-star")
+      expect(membership.reload.starred).to eq(true)
 
       visit("/")
 
@@ -343,6 +343,25 @@ RSpec.describe "Starred channels", type: :system do
 
       find(".c-navbar__star-channel-button").hover
 
+      expect(page).to have_css(
+        ".fk-d-tooltip__content",
+        text: I18n.t("js.chat.channel_settings.unstar_channel"),
+      )
+    end
+
+    it "updates tooltip after toggling starred state" do
+      chat_page.visit_channel(channel_1)
+
+      find(".c-navbar__star-channel-button").hover
+      expect(page).to have_css(
+        ".fk-d-tooltip__content",
+        text: I18n.t("js.chat.channel_settings.star_channel"),
+      )
+
+      find(".c-navbar__star-channel-button").click
+      expect(page).to have_css(".c-navbar__star-channel-button.--starred")
+
+      find(".c-navbar__star-channel-button").hover
       expect(page).to have_css(
         ".fk-d-tooltip__content",
         text: I18n.t("js.chat.channel_settings.unstar_channel"),

@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -39,8 +38,6 @@ export default class ChatRouteChannelInfoSettings extends Component {
   @service toasts;
   @service router;
 
-  @tracked isTogglingStarred = false;
-
   notificationLevels = NOTIFICATION_LEVELS;
 
   settingsSectionTitle = i18n("chat.settings.settings_title");
@@ -59,7 +56,6 @@ export default class ChatRouteChannelInfoSettings extends Component {
     "chat.settings.channel_threading_description"
   );
   muteSectionLabel = i18n("chat.settings.mute");
-  starChannelLabel = i18n("chat.channel_settings.star_channel");
   channelWideMentionsLabel = i18n("chat.settings.channel_wide_mentions_label");
   autoJoinLabel = i18n("chat.settings.auto_join_users_label");
   notificationsLevelLabel = i18n("chat.settings.notification_level");
@@ -224,32 +220,6 @@ export default class ChatRouteChannelInfoSettings extends Component {
   onToggleMuted() {
     const newValue = !this.args.channel.currentUserMembership.muted;
     this.saveNotificationSettings("muted", "muted", newValue);
-  }
-
-  @action
-  async onToggleStarred() {
-    if (!this.args.channel.currentUserMembership || this.isTogglingStarred) {
-      return;
-    }
-
-    const newValue = !this.args.channel.currentUserMembership.starred;
-    const previousValue = this.args.channel.currentUserMembership.starred;
-
-    this.args.channel.currentUserMembership.starred = newValue;
-    this.isTogglingStarred = true;
-
-    try {
-      await this.chatApi.updateCurrentUserChannelMembership(
-        this.args.channel.id,
-        { starred: newValue }
-      );
-      this.toasts.success({ data: { message: i18n("saved") } });
-    } catch (error) {
-      this.args.channel.currentUserMembership.starred = previousValue;
-      popupAjaxError(error);
-    } finally {
-      this.isTogglingStarred = false;
-    }
   }
 
   @action
@@ -423,19 +393,6 @@ export default class ChatRouteChannelInfoSettings extends Component {
 
           {{#if @channel.isOpen}}
             <form.section @title={{this.settingsSectionTitle}} as |section|>
-              {{#if this.siteSettings.star_chat_channels}}
-                <section.row @label={{this.starChannelLabel}}>
-                  <:action>
-                    <DToggleSwitch
-                      @state={{@channel.currentUserMembership.starred}}
-                      @disabled={{this.isTogglingStarred}}
-                      class="c-channel-settings__star-switch"
-                      {{on "click" this.onToggleStarred}}
-                    />
-                  </:action>
-                </section.row>
-              {{/if}}
-
               <section.row @label={{this.muteSectionLabel}}>
                 <:action>
                   <DToggleSwitch

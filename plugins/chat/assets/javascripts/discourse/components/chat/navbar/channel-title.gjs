@@ -84,7 +84,7 @@ export default class ChatNavbarChannelTitle extends Component {
         </div>
       {{/if}}
       {{#if this.showStarButton}}
-        <DTooltip @content={{this.starTooltip}} @placement="bottom">
+        <DTooltip @placement="bottom">
           <:trigger>
             <DButton
               @action={{this.toggleStarred}}
@@ -97,6 +97,9 @@ export default class ChatNavbarChannelTitle extends Component {
               }}
             />
           </:trigger>
+          <:content>
+            {{this.starTooltip}}
+          </:content>
         </DTooltip>
       {{/if}}
     {{/if}}
