@@ -116,8 +116,8 @@ export default <template>
       />
     </span>
 
-    <form class="form-vertical">
+    <div class="form-vertical">
       {{outlet}}
-    </form>
+    </div>
   </section>
 </template>

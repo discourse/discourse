@@ -59,6 +59,14 @@
   }
 }
 
+.user-preferences {
+  &__topic-settings-form {
+    padding: var(--space-4);
+    border: 1px solid var(--content-border-color);
+    border-radius: var(--d-border-radius);
+  }
+}
+
 .new-user-wrapper {
   .user-navigation {
     --user-navigation__border-width: 4px;
@@ -158,12 +166,6 @@
   .solo-preference {
     grid-column-start: 1;
     grid-column-end: -1;
-  }
-}
-
-.user-preferences-tracking-page {
-  .user-preferences .form-vertical {
-    width: 100%;
   }
 }
 
