@@ -26,26 +26,21 @@ class LlmCreditDailyUsage < ActiveRecord::Base
   def self.usage_for_date(llm_model, date)
     find_by(llm_model: llm_model, usage_date: date)&.credits_used || 0
   end
-
-  def self.cleanup_old_records!(retention_days)
-    cutoff = retention_days.days.ago.to_date
-    where("usage_date < ?", cutoff).delete_all
-  end
 end
 
 # == Schema Information
 #
 # Table name: llm_credit_daily_usages
 #
-#  id            :bigint           not null, primary key
-#  llm_model_id  :bigint           not null
-#  usage_date    :date             not null
-#  credits_used  :bigint           default(0), not null
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
+#  id           :bigint           not null, primary key
+#  credits_used :bigint           default(0), not null
+#  usage_date   :date             not null
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  llm_model_id :bigint           not null
 #
 # Indexes
 #
-#  index_llm_credit_daily_usages_on_llm_model_id               (llm_model_id)
+#  index_llm_credit_daily_usages_on_llm_model_id                 (llm_model_id)
 #  index_llm_credit_daily_usages_on_llm_model_id_and_usage_date  (llm_model_id,usage_date) UNIQUE
 #

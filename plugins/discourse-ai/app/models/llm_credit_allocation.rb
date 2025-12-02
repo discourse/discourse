@@ -12,6 +12,8 @@ class LlmCreditAllocation < ActiveRecord::Base
     end
   end
 
+  # DEPRECATED: Only used for JSONB daily_usage cleanup during migration period
+  # TODO: Remove this constant once daily_usage column is dropped
   DAILY_USAGE_RETENTION_DAYS = 90
 
   belongs_to :llm_model
