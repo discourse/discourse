@@ -21,7 +21,7 @@
   },
   "scripts": {
     "build": "ember build",
-    "start": "ember serve",
+    "start": "vite dev",
     "test": "ember test"
   },
   "dependencies": {
