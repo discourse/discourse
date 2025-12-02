@@ -434,7 +434,12 @@ export default class Profile extends Component {
         @outletArgs={{lazyHash model=@controller.model}}
       />
 
-      <form.Submit class="save-profile-changes" />
+      <div class="controls save-button">
+        <form.Submit class="save-changes" @disabled={{form.isDirty}} />
+        {{#if @controller.saved}}
+          <span class="saved">{{i18n "saved"}}</span>
+        {{/if}}
+      </div>
     </Form>
   </template>
 }
