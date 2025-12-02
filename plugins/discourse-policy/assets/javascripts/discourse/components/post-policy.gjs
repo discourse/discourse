@@ -24,12 +24,6 @@ export default class PostPolicy extends Component {
 
   constructor() {
     super(...arguments);
-
-    this.post?.setProperties({
-      policy_accepted_by: this.post?.policy_accepted_by || [],
-      policy_not_accepted_by: this.post?.policy_not_accepted_by || [],
-    });
-
     this.appEvents.on("policy:changed", this, "policyChanged");
   }
 

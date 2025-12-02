@@ -87,13 +87,21 @@ export default {
 
   initialize() {
     withPluginApi(function (api) {
-      api.addTrackedPostProperties("policy_accepted_by_count");
+      api.addTrackedPostProperties(
+        "policy_accepted",
+        "policy_accepted_by_count",
+        "policy_can_accept",
+        "policy_can_revoke",
+        "policy_not_accepted_by_count",
+        "policy_revoked"
+      );
+
       api.modifyClass(
         "model:post",
         (Superclass) =>
           class extends Superclass {
-            @trackedArray policy_accepted_by;
-            @trackedArray policy_not_accepted_by;
+            @trackedArray policy_accepted_by = [];
+            @trackedArray policy_not_accepted_by = [];
           }
       );
 
