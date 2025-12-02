@@ -986,6 +986,9 @@ class Search
         elsif word =~ /\Ain:all\z/i
           @search_all_topics = true
           nil
+        elsif word =~ /\Ain:all-posts\z/i
+          @all_posts = true
+          nil
         elsif word =~ /\Ain:personal\z/i
           @search_pms = true
           nil
@@ -1544,6 +1547,9 @@ class Search
           @search_context.id,
         )
 
+      posts.each { |post| @results.add(post) }
+    elsif @all_posts
+      posts = posts_scope(posts_eager_loads(posts_query(limit)))
       posts.each { |post| @results.add(post) }
     else
       aggregate_search

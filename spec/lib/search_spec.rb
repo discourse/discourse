@@ -1026,6 +1026,22 @@ RSpec.describe Search do
       expect(results.posts.map(&:id)).to eq([post.id, post3.id])
     end
 
+    it "returns multiple posts per topic when using in:all-posts" do
+      post1 = Fabricate(:post, topic: topic, raw: "this is a zebra post")
+      post2 = Fabricate(:post, topic: topic, raw: "zebra zebra playing")
+      post3 = Fabricate(:post, topic: topic, raw: "another zebra mention")
+      post4 = Fabricate(:post, raw: "this is a zebra in another topic")
+
+      results = Search.execute("zebra")
+      expect(results.posts.map(&:id)).to contain_exactly(post1.id, post4.id)
+
+      results = Search.execute("zebra in:all-posts")
+      expect(results.posts.map(&:id)).to contain_exactly(post1.id, post2.id, post3.id, post4.id)
+
+      results = Search.execute("zebra IN:ALL-POSTS")
+      expect(results.posts.map(&:id)).to contain_exactly(post1.id, post2.id, post3.id, post4.id)
+    end
+
     it "is able to search with an offset when configured" do
       post_1 = Fabricate(:post, raw: "this is a play post")
       SiteSetting.search_recent_regular_posts_offset_post_id = post_1.id + 1
