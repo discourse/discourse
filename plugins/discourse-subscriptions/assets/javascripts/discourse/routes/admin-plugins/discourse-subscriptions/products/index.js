@@ -9,8 +9,9 @@ import AdminProduct from "discourse/plugins/discourse-subscriptions/discourse/mo
 export default class AdminPluginsDiscourseSubscriptionsProductsIndexRoute extends Route {
   @service dialog;
 
-  model() {
-    return new TrackedArray(AdminProduct.findAll());
+  async model() {
+    const products = await AdminProduct.findAll();
+    return new TrackedArray(products);
   }
 
   @action
