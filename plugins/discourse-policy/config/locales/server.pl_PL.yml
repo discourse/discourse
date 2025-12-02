@@ -8,6 +8,7 @@ pl_PL:
   site_settings:
     policy_enabled: "Zezwolić na zasady?"
     policy_restrict_to_staff_posts: "Zasady mogą być widoczne tylko w postach obsługi"
+    create_policy_allowed_groups: "Do dodawania zasad do wpisów wymagane jest członkostwo w grupie"
     policy_easy_revoke: "Pokaż jednocześnie przyciski akceptacji i odwołania"
   discourse_policy:
     errors:
