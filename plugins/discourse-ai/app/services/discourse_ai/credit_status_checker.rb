@@ -39,8 +39,12 @@ module DiscourseAi
       llm_model_ids =
         personas.map { |p| p.default_llm_id || SiteSetting.ai_default_llm_model }.compact.uniq
 
-      # Batch load LLM models with their credit allocations
-      llm_models = LlmModel.where(id: llm_model_ids).includes(:llm_credit_allocation).index_by(&:id)
+      # Batch load LLM models with their credit allocations and daily usage
+      llm_models =
+        LlmModel
+          .where(id: llm_model_ids)
+          .includes(llm_credit_allocation: :daily_usages)
+          .index_by(&:id)
 
       personas.each do |persona|
         llm_model_id = persona.default_llm_id || SiteSetting.ai_default_llm_model
@@ -76,11 +80,11 @@ module DiscourseAi
         features_with_models[feature_name] = llm_model.id if llm_model
       end
 
-      # Batch load all LLM models
+      # Batch load all LLM models with credit allocations and daily usage
       llm_models =
         LlmModel
           .where(id: llm_model_ids.compact.uniq)
-          .includes(:llm_credit_allocation)
+          .includes(llm_credit_allocation: :daily_usages)
           .index_by(&:id)
 
       features_with_models.each do |feature_name, llm_model_id|
@@ -100,9 +104,12 @@ module DiscourseAi
       context[:llm_models] = {}
       return true if params.llm_model_ids.blank?
 
-      # Batch load LLM models with their credit allocations
+      # Batch load LLM models with their credit allocations and daily usage
       llm_models =
-        LlmModel.where(id: params.llm_model_ids).includes(:llm_credit_allocation).index_by(&:id)
+        LlmModel
+          .where(id: params.llm_model_ids)
+          .includes(llm_credit_allocation: :daily_usages)
+          .index_by(&:id)
 
       params.llm_model_ids.each do |id|
         llm_model = llm_models[id]
