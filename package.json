@@ -28,8 +28,8 @@
     "playwright": "1.56.1",
     "prettier": "3.6.2",
     "puppeteer-core": "^24.31.0",
-    "stylelint": "16.26.0",
     "strip-ansi": "^7.1.0",
+    "stylelint": "16.26.0",
     "terser": "^5.44.1",
     "typescript": "^5.9.3"
   },
@@ -67,7 +67,8 @@
       "@ember-compat/tracked-built-ins@0.9.1": "patches/@ember-compat__tracked-built-ins@0.9.1.patch",
       "ember-source@6.6.0": "patches/ember-source@6.6.0.patch",
       "http-proxy@1.18.1": "patches/http-proxy@1.18.1.patch",
-      "message-bus-client": "patches/message-bus-client.patch"
+      "message-bus-client": "patches/message-bus-client.patch",
+      "ember-buffered-proxy": "patches/ember-buffered-proxy.patch"
     },
     "peerDependencyRules": {
       "allowedVersions": {

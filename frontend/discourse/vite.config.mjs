@@ -17,16 +17,33 @@ export default defineConfig(({ mode, command }) => {
       alias: [
         { find: "pretty-text", replacement: "/../pretty-text/addon" },
         {
-          find: "discourse-widget-hbs",
-          replacement: "/../discourse-widget-hbs/addon",
+          find: "@ember-decorators/object",
+          replacement: "@ember-decorators/object/addon",
+        },
+        {
+          find: "@ember-decorators/utils/decorator",
+          replacement: "@ember-decorators/utils/addon/decorator",
+        },
+        {
+          find: "@ember-decorators/utils/collapse-proto",
+          replacement: "@ember-decorators/utils/addon/collapse-proto",
+        },
+        {
+          find: "@ember-decorators/component",
+          replacement: "@ember-decorators/component/addon",
+        },
+        {
+          find: "ember-buffered-proxy/proxy",
+          replacement: "ember-buffered-proxy/addon/proxy",
         },
       ],
     },
     plugins: [
       // Standard Ember stuff
+
       ember(),
 
-      classicEmberSupport(),
+      // classicEmberSupport(),
 
       discourseTestSiteSettings(),
 
