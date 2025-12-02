@@ -23,7 +23,7 @@ export default class AiSummaryTrigger extends Component {
     }
 
     const instance = this.tooltip.register(element, {
-      identifier: "ai-summary-credit-limit-tooltip",
+      identifier: "ai-credit-limit-tooltip",
       content: htmlSafe(
         this.aiCredits.getCreditLimitMessage(this.creditStatus)
       ),
