@@ -20,7 +20,7 @@ class UpcomingChanges::Promote
               }
   end
 
-  policy :current_user_is_admin, class_name: User::Policy::IsAdmin
+  policy :current_user_is_admin
   policy :setting_is_available, class_name: SiteSetting::Policy::SettingIsAvailable
   policy :meets_promotion_criteria
   policy :setting_not_modified
@@ -29,6 +29,10 @@ class UpcomingChanges::Promote
   step :log_promotion
 
   private
+
+  def current_user_is_admin(guardian:)
+    guardian.is_admin?
+  end
 
   def meets_promotion_criteria(params:)
     UpcomingChanges.meets_or_exceeds_status?(params.setting_name, params.promotion_status_threshold)

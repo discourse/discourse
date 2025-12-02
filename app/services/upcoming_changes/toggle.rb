@@ -14,7 +14,7 @@ class UpcomingChanges::Toggle
     validates :enabled, inclusion: [true, false]
   end
 
-  policy :current_user_is_admin, class_name: User::Policy::IsAdmin
+  policy :current_user_is_admin
   policy :setting_is_available, class_name: SiteSetting::Policy::SettingIsAvailable
   transaction { step :toggle }
 
