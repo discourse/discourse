@@ -998,6 +998,7 @@ pl_PL:
         flagged_as_by: "Oflagowany jako %{flagReason} przez %{username} · %{relativeDate}"
         claimed: "Przejęto"
         claimed_by: "Przejęto przez %{username} - %{relativeDate}"
+        unclaimed_by: "Zrezygnowano z przejęcia przez %{username} - %{relativeDate}"
         reviewed: "Przejrzany"
         reviewed_by: "Przejrzany przez %{username} · %{relativeDate}"
         view_conversation: "zobacz PW"
@@ -1043,6 +1044,11 @@ pl_PL:
             few: "%{count} wpisy"
             many: "%{count} wpisów"
             other: "%{count} wpisów"
+        moderation_history:
+          label: "Historia moderacji"
+          silenced: "Wyciszono: %{count}"
+          suspended: "Zawieszono: %{count}"
+          rejected_posts: "Odrzucono wpisy: %{count}"
         solution_marked: "Rozwiązanie oznaczone"
         topic_has_solution: "Ten temat ma rozwiązanie"
         visibility: "Widoczność"
@@ -6077,11 +6083,13 @@ pl_PL:
             enabled_themes:
               label: "Włączone w motywach..."
               description: "Wybierz motywy, które mają wyświetlać baner. Wyświetlane są tylko aktywne motywy."
+              select_label: "Wybierz motywy"
             background_image:
               label: "Obraz tła"
               description: "Ten obraz będzie wyświetlany za tekstem baneru."
             text_color:
               label: "Kolor tekstu"
+              description: "Po przesłaniu powyższego „Obrazu tła” użyj tego ustawienia, aby zmienić kolor tekstu baneru i zapewnić jego czytelność. Jeśli pole pozostanie puste lub nie zostanie przesłany obraz tła, aktywny motyw będzie decydował o kolorze."
             page_visibility:
               label: "Widoczność strony"
               description: "Wybierz miejsce, w którym baner ma być wyświetlany."
