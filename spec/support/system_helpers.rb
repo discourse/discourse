@@ -332,11 +332,6 @@ module SystemHelpers
     end
   end
 
-  def get_style(element, key)
-    script = "window.getComputedStyle(arguments[0]).getPropertyValue(arguments[1])"
-    page.evaluate_script(script, element, key)
-  end
-
   def expect_no_alert
     opened_dialog = false
 
