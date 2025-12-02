@@ -3,7 +3,6 @@ import { service } from "@ember/service";
 import { i18n } from "discourse-i18n";
 import ChannelsListStarred from "../../channels-list-starred";
 import Navbar from "../navbar";
-import ManageStarredButton from "../navbar/manage-starred-button";
 
 export default class ChatRoutesStarredChannels extends Component {
   @service site;
@@ -16,8 +15,6 @@ export default class ChatRoutesStarredChannels extends Component {
           {{#if this.site.mobileView}}
             <action.SearchButton />
           {{/if}}
-
-          <ManageStarredButton />
           <action.OpenDrawerButton />
         </navbar.Actions>
       </Navbar>

@@ -44,24 +44,6 @@ RSpec.describe "Drawer - starred channels", type: :system do
       expect(page).to have_css(".chat-channel-row[data-chat-channel-id='#{channel_1.id}']")
     end
 
-    it "shows header with manage button" do
-      visit("/")
-      chat_page.open_from_header
-      drawer_page.click_starred_channels
-
-      expect(page).to have_css(".chat-channel-divider.starred-channels-section")
-      expect(page).to have_css(".open-manage-starred-btn")
-    end
-
-    it "opens manage starred modal when clicking pencil button" do
-      visit("/")
-      chat_page.open_from_header
-      drawer_page.click_starred_channels
-      find(".open-manage-starred-btn").click
-
-      expect(page).to have_css(".chat-modal-manage-starred-channels")
-    end
-
     it "can open a starred channel" do
       visit("/")
       chat_page.open_from_header
