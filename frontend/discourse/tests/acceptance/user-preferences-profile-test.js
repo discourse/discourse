@@ -30,7 +30,7 @@ acceptance(
       await visit("/my/preferences/profile");
 
       assert
-        .dom(".pref-hide-profile")
+        .dom("#control-hide_profile")
         .doesNotExist("checkbox to hide profile is hidden");
     });
   }

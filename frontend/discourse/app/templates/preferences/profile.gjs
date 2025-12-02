@@ -196,6 +196,12 @@ export default class Profile extends Component {
   }
 
   <template>
+    {{#if @controller.showEnforcedRequiredFieldsNotice}}
+      <div class="alert alert-error">
+        {{i18n "user.preferences.profile.enforced_required_fields"}}
+      </div>
+    {{/if}}
+
     <Form @data={{this.formData}} @onSubmit={{this.saveForm}} as |form|>
       <form.Section @title={{i18n "user.user_profile_section.title"}}>
         {{#if @controller.canChangeBio}}
@@ -428,7 +434,7 @@ export default class Profile extends Component {
         @outletArgs={{lazyHash model=@controller.model}}
       />
 
-      <form.Submit />
+      <form.Submit class="save-profile-changes" />
     </Form>
   </template>
 }
