@@ -10,6 +10,10 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 import {
+  isAiCreditLimitError,
+  popupAiCreditLimitError,
+} from "../../lib/ai-errors";
+import {
   MIN_CHARACTER_COUNT,
   showSuggestionsError,
 } from "../../lib/ai-helper-suggestions";
@@ -92,7 +96,11 @@ export default class AiTitleSuggester extends Component {
         return;
       }
     } catch (error) {
-      popupAjaxError(error);
+      if (isAiCreditLimitError(error)) {
+        popupAiCreditLimitError(error);
+      } else {
+        popupAjaxError(error);
+      }
     } finally {
       this.loading = false;
       this.triggerIcon = "rotate";

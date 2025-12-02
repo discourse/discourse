@@ -331,6 +331,7 @@ lt:
           cancel: "Atšaukti"
         thumbnail_suggestions:
           select: "Pasirinkite"
+          try_again: "Bandyti dar kartą"
         image_caption:
           button_label: "Antraštė su AI"
           generating: "Generuojama antraštė..."

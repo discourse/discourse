@@ -347,7 +347,6 @@ ru:
     software_update_prompt:
       message: "Мы обновили этот сайт. <span>Обновите страницу</span>, чтобы все работало гладко."
       dismiss: "Закрыть"
-    bootstrap_mode: "Начало работы"
     back_button: "Назад"
     welcome_banner:
       header:
@@ -816,7 +815,7 @@ ru:
       title: "Очередь проверки"
       topic: "Тема:"
       filtered_topic: "Вы отфильтровали проверяемый контент в рамках одной темы."
-      filtered_user: "Пользователь"
+      filtered_user: "Пользователь, на которого пожаловались"
       filtered_reviewed_by: "Кем проверена"
       show_all_topics: "показать все темы"
       deleted_post: "(сообщение удалено)"
@@ -965,7 +964,6 @@ ru:
           noun: "публикация"
       flagged_as: "Помечено как"
       user_label: "Пользователь"
-      assigned_to: "Назначено:"
       moderator_actions: "Действия модератора"
       timeline_and_notes: "Хронология и заметки"
       timeline:
@@ -1005,7 +1003,6 @@ ru:
           many: "Жалобу подали %{count} уникальных пользователей"
           other: "Жалобу подали столько уникальных пользователей: %{count}"
         activities:
-          new_account: "новый аккаунт"
           trust_level: "уровень доверия: %{trustLevelName}"
           posts:
             one: "%{count} публикация"
@@ -1015,7 +1012,6 @@ ru:
         solution_marked: "Отмечено как решение"
         topic_has_solution: "Тема содержит решение вопроса"
         visibility: "Видимость"
-        topic_unlisted: "Эта тема не опубликована. Доступна только по прямой ссылке, а не публично."
       help:
         moderation_guide: "Руководство по модерации Discourse"
         flag_priorities: "Управление репутацией пользователей и приоритетами жалоб"
@@ -1470,7 +1466,6 @@ ru:
         many: "Категории (ещё %{count})…"
         other: "Категории (ещё %{count})…"
     ip_lookup:
-      title: Поиск IP-адреса
       hostname: Название хоста
       location: Местонахождение
       location_not_found: (расположение неизвестно)
@@ -5760,6 +5755,9 @@ ru:
         enabled: "Включено"
         select_groups: "Выберите группы…"
         preview: "Предпросмотр"
+        enabled_for_options:
+          everyone: "Все"
+          staff: "Только для персонала"
         impact_roles:
           admins: "Администраторы"
           moderators: "Модераторы"
@@ -8596,76 +8594,4 @@ ru:
           replace: "Заменить"
   wizard_js:
     wizard:
-      jump_in: "Приступим!"
-      finish: "Выйти из настройки"
-      back: "Назад"
-      next: "Далее"
-      configure_more: "Настроить больше…"
-      step-text: "Шаг"
-      step: "%{current} из %{total}"
-      upload: "Загрузить файл"
-      uploading: "Загрузка…"
-      upload_error: "Не удалось загрузить файл. Попробуйте ещё раз."
-      staff_count:
-        one: "В вашем сообществе %{count} сотрудник (это вы)."
-        few: "В вашем сообществе %{count} сотрудника, включая вас."
-        many: "В вашем сообществе %{count} сотрудников, включая вас."
-        other: "В вашем сообществе %{count} сотрудника, включая вас."
-      invites:
-        add_user: "Добавить"
-        none_added: "Вы ещё не пригласили сотрудников. Действительно продолжить?"
-        roles:
-          admin: "Администратор"
-          moderator: "Модератор"
-          regular: "Обычный пользователь"
-      homepage_choices:
-        custom:
-          label: "Настраиваемые"
-          description: "Показать главную страницу, ориентированную на %{type}, с переходом пользователей на %{landingPage}"
-        style_type:
-          categories: "категория"
-          topics: "тема"
-      top_menu_items:
-        new: "Новое"
-        unread: "Непрочитанные"
-        top: "Обсуждаемые"
-        latest: "Последние"
-        hot: "Горячие"
-        categories: "Категории"
-        unseen: "Непросмотренные"
-        read: "Прочитанные"
-        bookmarks: "Закладки"
-      previews:
-        topic_title: "Какие книги вы читаете?"
-        share_button: "Поделиться"
-        reply_button: "Ответить"
-        topic_preview: "Предпросмотр темы"
-        homepage_preview: "Предпросмотр главной страницы"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "все категории"
-        topic_titles:
-          what_books: "Какие книги вы читаете?"
-          what_movies: "Какие фильмы вы недавно посмотрели?"
-          random_fact: "Случайный факт дня"
-          tv_show: "Посоветуйте сериал или шоу"
-          what_hobbies: "Какие у вас хобби?"
-          what_music: "Что вы сейчас слушаете?"
-          funniest_thing: "Самое смешное, что вы увидели сегодня"
-          share_art: "Поделитесь своим творчеством!"
-        topic_ops:
-          what_books: |
-            Все мы обожаем книги! Давайте здесь делиться тем, что читаем сейчас или недавно прочитали. Я люблю фэнтези и снова перечитываю «Властелина колец» в сотый раз. А что читаете вы?
-        category_descriptions:
-          icebreakers: "Познакомьтесь с другими участниками сообщества через забавные вопросы."
-          news: "Обсудите последние новости и события."
-          site_feedback: "Поделитесь своими мыслями о сообществе и предложите улучшения."
-        category_names:
-          icebreakers: "Темы для знакомства"
-          news: "Новости"
-          site_feedback: "Отзывы по сайту"
-        table_headers:
-          topic: "Тема"
-          replies: "Ответы"
-          views: "Просмотры"
-          activity: "Активность"
+      jump_in: "Вперед!"

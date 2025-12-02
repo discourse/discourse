@@ -217,6 +217,9 @@ he:
       errors:
         slug_contains_non_ascii_chars: "מכיל תווים שאינם בתחום ASCII"
         is_already_in_use: "כבר בשימוש"
+    bookmarkable:
+      notification_title_channel: "הודעה ב־%{channel_name}"
+      notification_title_direct_message: "הודעה עם %{channel_name}"
     personal_chat: "צ׳אט אישי"
     onebox:
       inline_to_message: "הודעה מס׳ %{message_id} מאת ‎%{username}‏ – ‎#%{chat_channel}"
@@ -316,8 +319,10 @@ he:
         two: "הצגת %{count} הודעות נוספות"
         many: "הצגת %{count} הודעות נוספות"
         other: "הצגת %{count} הודעות נוספות"
+      your_chat_settings: "העדפת דוא״ל צ׳אט"
   unsubscribe:
     chat_summary:
+      select_title: "הגדרת הודעות תקציר צ׳אט אל:"
       never: לעולם לא
       when_away: רק כשלא במערכת
   category:

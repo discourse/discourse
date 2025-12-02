@@ -599,7 +599,6 @@ de:
         back: "Zurück"
         confirm_delete: Bist du sicher, dass du dieses Modell löschen willst?
         delete: Löschen
-        seeded_warning: "Dieses Modell ist auf deiner Website vorkonfiguriert und kann nicht bearbeitet werden."
         quotas:
           title: "Nutzungskontingente"
           add_title: "Neues Kontingent erstellen"
@@ -634,7 +633,7 @@ de:
           other: "Dieses Modell wird derzeit verwendet von: %{settings}. Wenn es falsch konfiguriert ist, werden die Funktionen nicht wie erwartet funktionieren. "
         model_description:
           none: "Allgemeine Einstellungen, die für die meisten Sprachmodelle funktionieren"
-          anthropic-claude-opus-4-1: "Das intelligenteste Modell von Anthropic"
+          anthropic-claude-opus-4-5: "Das intelligenteste Modell von Anthropic"
           anthropic-claude-sonnet-4-5: "Optimales Gleichgewicht zwischen Geschwindigkeit und Kosten"
           anthropic-claude-haiku-4-5: "Schnell und kosteneffizient"
           google-gemini-2-5-pro: "Großes multimodales Modell, das eine Vielzahl von Aufgaben bewältigen kann"
@@ -758,6 +757,7 @@ de:
           title: "Vorgeschlagene Miniaturansichten"
           select: "Auswählen"
           selected: "Ausgewählt"
+          try_again: "Erneut versuchen"
         image_caption:
           button_label: "Beschriftung mit KI"
           generating: "Beschriftung wird generiert …"

@@ -409,7 +409,6 @@ gl:
       title: "Revisar"
       topic: "Tema:"
       filtered_topic: "Filtrou o contido revisábel nun único tema."
-      filtered_user: "Usuario"
       show_all_topics: "buscar todos os temas"
       deleted_post: "(publicación eliminada)"
       deleted_user: "(usuario eliminado)"
@@ -889,7 +888,6 @@ gl:
         one: "%{count} tema novo no último mes."
         other: "%{count} temas novos no último mes."
     ip_lookup:
-      title: Busca do enderezo IP
       hostname: Nome do servidor
       location: Localización
       location_not_found: (descoñecido)
@@ -3415,6 +3413,9 @@ gl:
         name: "Nome"
         enabled: "Activado"
         preview: "Visualizar"
+        enabled_for_options:
+          everyone: "Todos"
+          staff: "Soamente ao equipo"
         impact_roles:
           admins: "Administradores"
           moderators: "Moderadores"
@@ -4987,47 +4988,3 @@ gl:
           categories: "Categorías"
           topics: "Temas"
           replace: "Substituír"
-  wizard_js:
-    wizard:
-      back: "Volver"
-      next: "Seguinte"
-      step-text: "Paso"
-      step: "%{current} de %{total}"
-      upload_error: "Sentímolo pero produciuse un erro ao cargar ese ficheiro. Ténteo de novo."
-      staff_count:
-        one: "A súa comunidade ten %{count} en equipo (vostede)."
-        other: "A súa comunidade ten %{count} en equipo, incluído vostede."
-      invites:
-        add_user: "engadir"
-        none_added: "Non convidou a ninguén do equipo. Confirma que quere continuar?"
-        roles:
-          admin: "Administración"
-          moderator: "Moderador"
-          regular: "Usuario normal"
-      homepage_choices:
-        custom:
-          label: "Personalizado"
-        style_type:
-          categories: "categoría"
-          topics: "tema"
-      top_menu_items:
-        new: "Novo"
-        unread: "Pendentes de lectura"
-        top: "Destacados"
-        latest: "Últimos"
-        categories: "Categorías"
-        read: "Lidas"
-        bookmarks: "Marcadores"
-      previews:
-        share_button: "Compartir"
-        reply_button: "Responder"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "todas as categorías"
-        category_names:
-          site_feedback: "Opinións sobre o sitio"
-        table_headers:
-          topic: "Tema"
-          replies: "Réplicas"
-          views: "Visualizacións"
-          activity: "Actividade"

@@ -68,11 +68,10 @@ module DiscourseAi
         llm_step = structured_logger.add_child_step(name: "Evaluating with LLM: #{llm_name}")
 
         logger.info("Evaluating with LLM: #{llm_name}")
-        output.puts "#{llm_name}: "
 
         results.each do |result|
           if result[:result] == :fail
-            output.puts "Failed 🔴"
+            output.puts "#{llm_name}: Failed 🔴\n"
             output.puts "Error: #{result[:message]}" if result[:message]
             # this is deliberate, it creates a lot of noise, but sometimes for debugging it's useful
             # output.puts "Context: #{result[:context].to_s[0..2000]}" if result[:context]
@@ -86,7 +85,7 @@ module DiscourseAi
             logger.error("Actual: #{result[:actual_output]}") if result[:actual_output]
             logger.error("Context: #{result[:context]}") if result[:context]
           elsif result[:result] == :pass
-            output.puts "Passed 🟢"
+            output.puts "#{llm_name}: Passed 🟢"
             logger.info("Evaluation passed with LLM: #{llm_name}")
           else
             STDERR.puts "Error: Unknown result #{an_eval.inspect}"
@@ -100,6 +99,105 @@ module DiscourseAi
             ended_at: Time.now.utc,
           )
         end
+      end
+
+      def announce_comparison_judged(eval_case_id:, mode_label:, persona_key: nil, result:)
+        step = start_comparison_step(eval_case_id, mode_label, persona_key)
+
+        output.puts
+        output.puts "#{comparison_header(eval_case_id, mode_label, persona_key)}\n"
+        logger.info(comparison_header(eval_case_id, mode_label, persona_key))
+
+        if result[:winner].present?
+          output.puts "Winner: #{result[:winner]}\n"
+          logger.info("Winner: #{result[:winner]}")
+          append_comparison_entry(step, "winner", result.slice(:winner, :winner_explanation))
+        elsif result[:winner_label].to_s.casecmp("tie").zero?
+          output.puts "Result: tie\n"
+          logger.info("Result: tie")
+          append_comparison_entry(step, "winner", result.slice(:winner_label, :winner_explanation))
+        else
+          output.puts "Result: no winner reported\n"
+          logger.info("Result: no winner reported")
+          append_comparison_entry(step, "winner", result.slice(:winner_label, :winner_explanation))
+        end
+        if result[:winner_explanation].present?
+          output.puts "Reason: #{result[:winner_explanation]}\n"
+        end
+        if result[:winner_explanation].present?
+          logger.info("Reason: #{result[:winner_explanation]}")
+        end
+
+        Array(result[:ratings]).each do |rating|
+          output.puts "  - #{rating[:candidate]}: #{rating[:rating]}/10 — #{rating[:explanation]}"
+          logger.info("  - #{rating[:candidate]}: #{rating[:rating]}/10 — #{rating[:explanation]}")
+          append_comparison_entry(step, "rating", rating)
+        end
+
+        finish_comparison_step(step)
+      end
+
+      def announce_comparison_expected(
+        eval_case_id:,
+        mode_label:,
+        persona_key: nil,
+        winner:,
+        status_line: nil,
+        failures: []
+      )
+        step = start_comparison_step(eval_case_id, mode_label, persona_key)
+
+        output.puts
+        output.puts comparison_header(eval_case_id, mode_label, persona_key)
+        logger.info(comparison_header(eval_case_id, mode_label, persona_key))
+
+        if winner == :tie
+          output.puts "Result: tie\n"
+          logger.info("Result: tie")
+          append_comparison_entry(step, "winner", winner: "tie")
+        else
+          output.puts "Winner: #{winner}\n"
+          logger.info("Winner: #{winner}")
+          append_comparison_entry(step, "winner", winner: winner)
+        end
+
+        output.puts "  #{status_line}" if status_line.present?
+        logger.info("  #{status_line}") if status_line.present?
+        append_comparison_entry(step, "status", status_line: status_line) if status_line.present?
+
+        failures.each do |failure|
+          output.puts "      #{failure[:label]} expected: #{failure[:expected].inspect}, actual: #{failure[:actual].inspect}"
+          logger.info(
+            "      #{failure[:label]} expected: #{failure[:expected].inspect}, actual: #{failure[:actual].inspect}",
+          )
+          append_comparison_entry(step, "failure", failure)
+        end
+
+        finish_comparison_step(step)
+      end
+
+      def announce_comparison_aggregate(mode_label:, persona_key: nil, aggregate_scores:)
+        return if aggregate_scores.blank?
+
+        step = start_comparison_step(nil, mode_label, persona_key, summary: true)
+
+        output.puts
+        output.puts "#{comparison_header(nil, mode_label, persona_key, summary: true)}\n"
+        logger.info(comparison_header(nil, mode_label, persona_key, summary: true))
+
+        aggregate_scores.each do |label, stats|
+          output.puts "  - #{label}: #{stats[:passes]}/#{stats[:evals]} passed"
+          logger.info("  - #{label}: #{stats[:passes]}/#{stats[:evals]} passed")
+          append_comparison_entry(
+            step,
+            "aggregate",
+            label: label,
+            passes: stats[:passes],
+            evals: stats[:evals],
+          )
+        end
+
+        finish_comparison_step(step)
       end
 
       def finish
@@ -147,6 +245,37 @@ module DiscourseAi
       def detach_thread_loggers
         Thread.current[:llm_audit_log] = @previous_thread_loggers[:audit_log]
         Thread.current[:llm_audit_structured_log] = @previous_thread_loggers[:structured_log]
+      end
+
+      def comparison_header(eval_case_id, mode_label, persona_key, summary: false)
+        header = "=== Comparison (#{mode_label}"
+        header << ", persona: #{persona_key}" if persona_key
+        header << ")"
+        header << " #{eval_case_id}" if eval_case_id && !summary
+        header
+      end
+
+      def start_comparison_step(eval_case_id, mode_label, persona_key, summary: false)
+        ensure_root!
+        name = "Comparison (#{mode_label}"
+        name += ", persona: #{persona_key}" if persona_key
+        name += ")"
+        name += " #{eval_case_id}" if eval_case_id && !summary
+        structured_logger.add_child_step(name: name)
+      end
+
+      def finish_comparison_step(step)
+        step[:end_time] = Time.now.utc if step && step[:end_time].nil?
+      end
+
+      def append_comparison_entry(step, name, args)
+        structured_logger.append_entry(step: step, name: name, args: args, started_at: Time.now.utc)
+      end
+
+      def ensure_root!
+        unless structured_logger.root_started?
+          raise ArgumentError, "Structured logger root not started"
+        end
       end
     end
   end

@@ -2261,6 +2261,7 @@ he:
     auto_silence_fast_typers_on_first_post: "להשתיק אוטומטית משתמשים שאינם עונים ל־`fast typing threshold` (סף הקלדה מהירה)"
     auto_silence_fast_typers_max_trust_level: "דרגת האמון המרבית להשתקה אוטומטית של קלדנים נמרצים"
     auto_silence_first_post_regex: "ביטוי רגולרי שאינו מתחשב ברשיות (הבדל בין אותיות קטנות לגדולות) יגרום לכך שהפוסט הראשון שמפרסם משתמש יושתק ויועבר לתור לאישור. למשל: raging|a[bc]a, תגרום לכך שכל הפוסטים שמכילים את המילים raging או aba או aca יושתקו תחילה ובעברית: מתקפה|א[במ]א - מכילים את המילים מתקפה, אבא או אמא. תקף על הפוסט הראשון בלבד. השימוש בזה הופסק: נא להשתמש בהשתקת מילים מושגחות במקום."
+    moderator_guide_topic: "הנושא שמתאר איך הקהילה מנוהלת. הקישור יהיה זמין בתור הסקירה לשימוש המפקחים והמנהלים."
     reviewable_claiming: "האם צריך לדרוש תוכן שמיועד לסקירה לפני שאפשר לפעול לגביו?"
     reviewable_default_topics: "הצגת תוכן שמיועד לסקירה בקיבוץ לפי נושא כבררת מחדל"
     reviewable_default_visibility: "לא להציג פריטים שמיועדים לסקירה אלמלא הם תואמים את העדיפות הזו"
@@ -2602,8 +2603,6 @@ he:
     default_navigation_menu_categories: "הקטגוריות הנבחרות תוצגנה תחת סעיף הקטגוריות של תפריט הניווט כברירת מחדל."
     default_navigation_menu_tags: "התגיות הנבחרות תוצגנה תחת סעיף התגיות של תפריט הניווט כברירת מחדל."
     experimental_new_new_view_groups: 'לאפשר רשימת נושאים חדשה המשלבת נושאים שלא נקראו וחדשים ולקשר אליה את „הכול” בסרגל הצד.'
-    glimmer_post_stream_mode: "שליטה האם להשתמש במימוש תזרים הפוסטים ‚glimmer’.‏ ‚auto’ יפעיל אותה אוטומטית לאחר שכל ערכות העיצוב והתוספים שלך מוכנים."
-    glimmer_post_stream_mode_auto_groups: "הפעלת מימוש תזרים הפוסטים החדש ‚glimmer’ במצב ‚auto’ (אוטומטי) לקבוצות המשתמשים שצוינו."
     experimental_form_templates: "יש להפעיל את יכולת תבניות הטפסים. אפשר לנהל את התבניות דרך <a href='%{base_path}/admin/customize/form-templates'>התאמה / תבניות</a>."
     show_preview_for_form_templates: "הפעלת התצוגה המקדימה של יכולת תבניות הטפסים"
     lazy_load_categories_groups: "לטעון בעצלות את פרטי הקטגוריה רק למשתמשים בקבוצות האלה. הגדרה זו משפרת את הביצועים באתרים עם הרבה קטגוריות."
@@ -2633,6 +2632,7 @@ he:
       invalid_username: "אין משתמש/ת עם שם משתמש כזה."
       valid_username: "יש משתמש עם שם משתמש כזה."
       invalid_group: "אין קבוצה בשם הזה."
+      invalid_topic: "אין נושא עם המזהה הזה."
       invalid_integer_min_max: "הערך חייב להיות בין %{min} ל-%{max}."
       invalid_integer_min: "הערך חייב להיות %{min} ומעלה."
       invalid_integer_max: "הערך חייב לא יכול להיות גדול מ- %{max}."
@@ -2695,7 +2695,6 @@ he:
         other: "הרשימה חייבת להכיל בדיוק %{count} ערכים."
       markdown_linkify_tlds: "לא ניתן לכלול ערך של ‚*’."
       google_oauth2_hd_groups: "עליך להגדיר את כל הגדרות ‚google oauth2 hd’ בטרם הפעלת ההגדרה הזאת."
-      discourse_id_credentials: "יש להגדיר פרטי גישה ל־Discourse ID (‚discourse_id_client_id’ ואת ‚discourse_id_client_secret’) בטרם הפעלת ההגדרה הזאת."
       linkedin_oidc_credentials: "יש להגדיר פרטי גישה ל־LinkedIn מסוג OIDC‏ (‚linkedin_oidc_client_id’ ואת ‚linkedin_oidc_client_secret’) בטרם הפעלת ההגדרה הזאת."
       search_tokenize_chinese_enabled: "עליך להשבית את ‚search_tokenize_chinese’ (חיפוש מפרק סינית) בטרם הפעלת הגדרה זו."
       search_tokenize_japanese_enabled: "עליך להשבית את ‚search_tokenize_japanese’ (חיפוש מפרק יפנית) בטרם הפעלת הגדרה זו."
@@ -2806,6 +2805,9 @@ he:
       group: "סינון נושאים לפי קבוצות"
       groups_any: "הצגת נושאים עם כל אחת מהקבוצות המפורטות (עם פסיקים ביניהן)"
       groups_all: "הצגת נושאים עם כל התגיות שצוינו (מופרדים בפלוס)"
+      locale: "סנן נושאים לפי שפת המקור"
+      locale_any: "הצגת נושאים שנכתבו במקור באיזושהי שפה מהשפות שצוינו (מופרדות בפסיקים)"
+      exclude_locale: "החרגת נושאים שנכתבו במקור בשפה מסוימת"
   discourse_connect:
     login_error: "שגיאת כניסה"
     not_found: "החשבון שלך לא נמצא. נא ליצור קשר עם הנהלת האתר."
@@ -4960,17 +4962,17 @@ he:
       name: שיתוף נחמד
       description: שיתפו פוסט עם 25 מבקרים שונים
       long_description: |
-        עיטור זה מוענק על שיתוף של קישור ש־25 מבקרים חיצוניים לחצו עליו. תודה על הפצת הדיונים שלנו, והקהילה הזו.
+        עיטור זה מוענק על שיתוף של קישור שלחצו עליו 25 מבקרים חיצוניים ייחודיים. תודה על הפצת הדיונים שלנו, והקהילה הזו.
     good_share:
       name: שיתוף טוב
       description: שיתפו פוסט עם 300 מבקרים ייחודיים
       long_description: |
-        עיטור זה מוענק על שיתוף קישור שלחצו עליו 300 מבקרים חיצוניים. עבודה יפה! חשפת דיון מעולה בפני מגוון של אנשים חדשים וסייעת בהגדלת הקהילה.
+        עיטור זה מוענק על שיתוף קישור שלחצו עליו 300 מבקרים חיצוניים ייחודיים. עבודה יפה! חשפת דיון מעולה בפני מגוון של אנשים חדשים וסייעת בהגדלת הקהילה.
     great_share:
       name: שיתוף מעולה
       description: שיתפו פוסט עם למעלה מ 1000 מבקרים שונים
       long_description: |
-        עיטור זה מוענק על שיתוף קישור שלחצו עליו 1000 מבקרים חיצוניים. מרשים ביותר! קידמת דיון מעניין בפני קהל עצום חדש וסייעת לנו להגדיל את הקהילה שלנו בענק!
+        עיטור זה מוענק על שיתוף קישור שלחצו עליו 1000 מבקרים חיצוניים ייחודיים. מרשים ביותר! קידמת דיון מעניין בפני קהל עצום חדש וסייעת לנו להגדיל את הקהילה שלנו בענק!
     first_like:
       name: לייק ראשון
       description: אהבו פוסט
@@ -5200,27 +5202,19 @@ he:
   wizard:
     title: "הקמת Discourse"
     step:
-      introduction:
-        title: "על האתר שלך"
-        description: "אלה יוצגו בכניסה שלך ובכל עמוד ציבורי. ניתן לשנות אותם בכל עת."
+      setup:
+        title: "איך מתחילים"
         fields:
           title:
             label: "שם הקהילה"
-            placeholder: "המקום של ג׳יין"
-          site_description:
-            label: "תיאור הקהילה שלך במשפט קצר"
-            placeholder: "מקום לג׳יין וחבריה לשוחח על דברים מגניבים"
           default_locale:
             label: "שפה"
-      privacy:
-        title: "גישה לחברים"
-        fields:
           login_required:
             label: "חשיפה"
             description: "הקהילה שלך ציבורית או פרטית?"
             choices:
               public:
-                label: "פומבי"
+                label: "ציבורי"
               private:
                 label: "פרטי"
           invite_only:
@@ -5238,82 +5232,6 @@ he:
                 label: "לא, חברים חדשים יכולים להצטרף מיידית"
               "yes":
                 label: "כן, חברים חדשים חייבים לקבל אישור מפקחים"
-          chat_enabled:
-            placeholder: "הפעלת צ׳אט"
-            extra_description: "יצירת חיבור מיידי לחבריך בזמן אמת"
-      ready:
-        title: "האתר שלך מוכן!"
-        description: "זהו זה! סיימת את ההגדרות הראשוניות של הקהילה שלך. עכשיו אפשר לצלול פנימה ולחקור קצת את המערכת, לכתוב נושא לקבלת פנים ולשלוח הזמנות!<br><br>שיהיה בכיף!"
-      styling:
-        title: "מראה ותחושה"
-        fields:
-          color_scheme:
-            label: "ערכת צבעים"
-          body_font:
-            label: "גופן גוף"
-          site_font:
-            label: "גופן"
-          heading_font:
-            label: "גופן כותרת"
-          styling_preview:
-            label: "תצוגה מקדימה"
-          homepage_style:
-            label: "סגנון עמוד הבית"
-            choices:
-              latest:
-                label: "אחרונות"
-                description: "הצגת הנושאים האחרונים שהיו פעילים בכל הקטגוריות, בכך ניתן לעזור לחברים להתעדכן בדיונים שחשובים להם."
-              hot:
-                label: "חמים"
-                description: "הצפת נושאים מובילים על ידי שילוב בין פופולריות לאחרונה ובסך הכול, משקף על מה מדברים חברים בקהילה שלך כרגע"
-              categories_and_latest_topics:
-                label: "קטגוריות עם הנושאים העדכניים ביותר"
-                description: "שילוב בין הנושאים הפעילים האחרונים על פני כל הקטגוריות לבין רשימת הקטגוריות, התיאור שלהן וסך כל הנושאים"
-              categories_boxes:
-                label: "תיבות קטגוריות"
-                description: "הצגת הקטגוריות והתיאור שלהן ברשת, מעולה כדי להציג לחברים סקירה של תת־הקהילות באתר שלך"
-      branding:
-        title: "לוגו האתר"
-        fields:
-          logo:
-            label: "לוגו עיקרי"
-            description: "גודל מומלץ: ‎600 × 200"
-          logo_small:
-            label: "לוגו ריבועי"
-            description: "גודל מומלץ: 512 × 512. משמש גם כסמל המועדפים (favicon) וסמל יישומון מסך בית בנייד."
-      corporate:
-        title: "הארגון שלך"
-        description: "המידע הבא ישמש בדפי התנאים וההגבלות והמידע עליך. אפשר לדלג אם לא מדובר בחברה."
-        fields:
-          company_name:
-            label: "שם החברה"
-            placeholder: "עמותת לקט ישראל"
-          governing_law:
-            label: "החוק המחייב"
-            placeholder: "החוקים של קליפורניה"
-          contact_url:
-            label: "דף אינטרנט"
-            placeholder: "https://www.example.com/contact-us"
-          city_for_disputes:
-            label: "עיר המחלוקת"
-            placeholder: "סן פרנסיסקו, קליפורניה"
-          site_contact:
-            label: "הודעות אוטומטיות"
-            description: "כל ההודעות האישיות האוטומטיות שנשלחות על ידי Discourse נשלחות מהמשתמש הזה, כגון אזהרות על סימוני דגלים והתראות על השלמת גיבוי."
-          contact_email:
-            label: "נקודת קשר"
-            placeholder: "example@user.com"
-            description: "כתובת דוא״ל של איש קשר מוביל שאחראי על האתר הזה. משמש להתראות קריטיות, וגם מופיע ב<a href='%{base_path}/about' target='_blank'>‎עמוד המידע על האתר שלך</a> לנושאים דחופים."
-      invites:
-        title: "הזמנת סגל"
-        description: "כמעט סיימת! אולי נזמין כמה אנשים כדי <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>לעורר דיונים</a> עם נושאים מעניינים ותגובות שיניעו קדימה את הקהילה שלך."
-        disabled: "מאחר שכניסה בשליטה מקומית מושבתת, אי אפשר לשלוח לכולם הזמנות. נא להמשיך לשלב הבא."
-      finished:
-        title: "ה־Discourse שלך מוכן!"
-        description: |
-          <p>אם אי פעם יתחשק לך לשנות את ההגדרות האלו, <b>ניתן להפעיל את האשף הזה מחדש בכל עת</b>, או לבקר <a href='%{base_path}/admin' target='_blank'>בסעיף הניהול שלך</a>; ניתן למצוא אותו ליד סמל מפתח הצינורות בתפריט האתר.</p>
-          <p>קל ופשוט להתאים את Discourse לטעמך עם מערכת עצמתית לעיצוב לפי נושא. למשל, הנה <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">ערכות עיצוב ורכיבים מובילים</a> ב־<a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
-          <p>רצוי להתפרע והמון הצלחה <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>בבניית הקהילה החדשה שלך!</a></p>
   search_logs:
     graph_title: "מניין חיפושים"
   onebox:
@@ -5353,6 +5271,8 @@ he:
     json_too_long: "הערכים לא תועדו כיוון שחרגו מגבולות אורך העמודות"
     not_found: "לא נמצא"
     unknown: "לא ידוע"
+    site_setting:
+      update_existing_users: "לעדכן משתמשים קיימים? %{value}"
     user_merged: "%{username} מוזג לתוך החשבון הזה"
     user_delete_self: "מחיקה עצמית מתוך %{url}"
     webhook_deactivation_reason: "ההתלייה שלך הושבתה אוטומטית. קיבלו מגוון תגובות כשל בצורת HTTP ‚%{status}’."

@@ -16,8 +16,14 @@ class ThemeSiteSetting < ActiveRecord::Base
     if saved_change_to_value?
       if self.data_type == SiteSettings::TypeSupervisor.types[:upload]
         UploadReference.ensure_exist!(upload_ids: [self.value], target: self)
-      elsif self.data_type == SiteSettings::TypeSupervisor.types[:objects]
-        upload_ids = extract_upload_ids_from_objects_value
+      elsif self.data_type == SiteSettings::TypeSupervisor.types[:objects] && self.value.present?
+        upload_ids =
+          SchemaSettingsObjectValidator.property_values_of_type(
+            schema: SiteSetting.type_supervisor.type_hash(self.name.to_sym)[:schema],
+            objects: JSON.parse(self.value),
+            type: "upload",
+          )
+
         UploadReference.ensure_exist!(upload_ids: upload_ids, target: self) if upload_ids.any?
       end
     end
@@ -120,30 +126,6 @@ class ThemeSiteSetting < ActiveRecord::Base
 
   def setting_rb_value
     SiteSetting.type_supervisor.to_rb_value(self.name, self.value, self.data_type)
-  end
-
-  private
-
-  def extract_upload_ids_from_objects_value
-    return [] if self.value.blank?
-
-    type_hash = SiteSetting.type_supervisor.type_hash(self.name.to_sym)
-    return [] unless type_hash[:schema]&.dig(:properties)
-
-    begin
-      parsed_value = JSON.parse(self.value)
-      parsed_value = [parsed_value] unless parsed_value.is_a?(Array)
-      upload_ids = Set.new
-
-      parsed_value.each do |obj|
-        validator = SchemaSettingsObjectValidator.new(schema: type_hash[:schema], object: obj)
-        upload_ids.merge(validator.property_values_of_type("upload"))
-      end
-
-      upload_ids.to_a
-    rescue JSON::ParserError
-      []
-    end
   end
 end
 

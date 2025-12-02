@@ -5,7 +5,7 @@
   "license": "GPL-2.0-only",
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.28.0",
-    "@discourse/lint-configs": "^2.35.0",
+    "@discourse/lint-configs": "^2.35.2",
     "@discourse/moment-timezone-names-translations": "^1.0.0",
     "@fortawesome/fontawesome-free": "6.7.2",
     "@glint/ember-tsc": "^1.0.7",
@@ -25,9 +25,9 @@
     "lint-to-the-future-ember-template": "^3.1.0",
     "lint-to-the-future-eslint": "^3.2.0",
     "playwright": "1.56.1",
-    "prettier": "3.6.2",
+    "prettier": "3.7.3",
     "puppeteer-core": "^24.31.0",
-    "stylelint": "16.26.0",
+    "stylelint": "16.26.1",
     "terser": "^5.44.1",
     "typescript": "^5.9.3"
   },

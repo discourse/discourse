@@ -51,6 +51,7 @@ const CUSTOM_TYPES = [
   "font_list",
   "locale_list",
   "locale_enum",
+  "topic",
 ];
 
 export default class SiteSettingComponent extends Component {

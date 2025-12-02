@@ -431,7 +431,7 @@
 
 // stylelint-disable-next-line no-duplicate-selectors
 .ProseMirror {
-  word-wrap: break-word;
+  overflow-wrap: break-word;
   white-space: break-spaces;
 }
 

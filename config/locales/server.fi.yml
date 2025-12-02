@@ -2517,7 +2517,6 @@ fi:
         other: "Luettelon täytyy sisältää täsmälleen %{count} arvoa."
       markdown_linkify_tlds: "Et voi lisätä arvoa \"*\"."
       google_oauth2_hd_groups: "Sinun täytyy määrittää kaikki \"google oauth2 hd\" -asetukset ennen kuin otat tämän asetuksen käyttöön."
-      discourse_id_credentials: "Sinun täytyy määrittää Discourse ID -tunnistetiedot (discourse_id_client_id ja discourse_id_client_secret) ennen tämän asetuksen käyttöönottoa."
       linkedin_oidc_credentials: "Sinun täytyy määrittää LinkedIn OIDC -tunnistetiedot (\"linkedin_oidc_client_id\" ja \"linkedin_oidc_client_secret\") ennen tämän asetuksen käyttöönottoa."
       search_tokenize_chinese_enabled: "\"search_tokenize_chinese\" on poistettava käytöstä ennen tämän asetuksen käyttöönottoa."
       search_tokenize_japanese_enabled: "\"search_tokenize_japanese\" on poistettava käytöstä ennen tämän asetuksen käyttöönottoa."
@@ -4633,18 +4632,12 @@ fi:
     nice_share:
       name: Hyvä jako
       description: Jakoi viestin, ja linkin kautta saapui 25 vierailijaa
-      long_description: |
-        Tämä kunniamerkki myönnetään, kun jaat linkin, jota klikkaa 25 ulkopuolista vierailijaa. Kiitos kun levität sanaa palstan keskusteluista ja yhteisöstä.
     good_share:
       name: Erinomainen jako
       description: Jakoi viestin, ja linkin kautta saapui 300 vierailijaa
-      long_description: |
-        Tämä kunniamerkki myönnetään, kun jaat linkin, jota klikkaa 300 ulkopuolista vierailijaa. Hyvää työtä! Olet esitellyt upean keskustelun joukolle uusia ihmisiä ja siten auttanut yhteisöä kasvamaan.
     great_share:
       name: Loistava jako
       description: Jakoi viestin, ja linkin kautta saapui 1 000 vierailijaa
-      long_description: |
-        Tämä kunniamerkki myönnetään, kun jaat linkin, jota klikkaa 1 000 ulkopuolista vierailijaa. Vau! Olet mainostanut kiinnostavaa keskustelua valtavalle joukolle uusia ihmisiä ja siten auttanut yhteisöä kasvamaan merkittävästi.
     first_like:
       name: Ensimmäinen tykkäys
       description: Tykkäsi viestistä
@@ -4862,21 +4855,13 @@ fi:
   wizard:
     title: "Discoursen asennus"
     step:
-      introduction:
-        title: "Tietoa sivustostasi"
-        description: "Nämä näkyvät kirjautumisessasi ja kaikilla julkisilla sivuilla. Voit aina muuttaa niitä myöhemmin."
+      setup:
+        title: "Aloittaminen"
         fields:
           title:
             label: "Yhteisön nimi"
-            placeholder: "Jennin mesta"
-          site_description:
-            label: "Kuvaile yhteisöä yhdellä lauseella"
-            placeholder: "Paikka, jossa Jenni ja hänen ystävänsä voivat keskustella kivoista jutuista"
           default_locale:
             label: "Kieli"
-      privacy:
-        title: "Jäsenten pääsy"
-        fields:
           login_required:
             label: "Näkyvyys"
             description: "Onko yhteisösi julkinen vai yksityinen?"
@@ -4900,82 +4885,6 @@ fi:
                 label: "En, uudet jäsenet voivat liittyä heti"
               "yes":
                 label: "Kyllä, valvojien täytyy hyväksyä uudet jäsenet"
-          chat_enabled:
-            placeholder: "Ota chat käyttöön"
-            extra_description: "Pidä yhteyttä jäseniisi reaaliajassa"
-      ready:
-        title: "Sivustosi on valmis!"
-        description: "Olet nyt tehnyt perusasioat yhteisösi määrittämiseksi. Nyt voit alkaa tutustumaan paikkoihin, kirjoittaa tervetuloketjun ja lähettää kutsuja!<br><br>Pidä hauskaa!"
-      styling:
-        title: "Ulkoasu ja tuntuma"
-        fields:
-          color_scheme:
-            label: "Väripaletti"
-          body_font:
-            label: "Leipätekstin fontti"
-          site_font:
-            label: "Fontti"
-          heading_font:
-            label: "Otsikon fontti"
-          styling_preview:
-            label: "Esikatselu"
-          homepage_style:
-            label: "Aloitussivun tyyli"
-            choices:
-              latest:
-                label: "Tuoreimmat"
-                description: "Näyttää viimeisimmät aktiiviset ketjut kaikissa luokissa, mikä auttaa jäseniä pysymään ajan tasalla heitä kiinnostavista keskusteluista"
-              hot:
-                label: "Suosittu"
-                description: "Tuo esiin trendikkäitä ketjuja yhdistämällä viimeaikaisen ja yleisen suosion, esittelee, mistä jäsenet puhuvat yhteisössäsi juuri nyt"
-              categories_and_latest_topics:
-                label: "Alueet ja tuoreimmat ketjut"
-                description: "Yhdistää hiljattain aktiiviset ketjut kaikista alueista sekä alueiden luettelon, niiden kuvauksen ja ketjujen kokonaismäärän"
-              categories_boxes:
-                label: "Alueruudut"
-                description: "Näyttää luokat ja niiden kuvauksen ruudukossa, mikä auttaa jäseniä näkemään yleiskatsauksen sivustosi alayhteisöistä"
-      branding:
-        title: "Sivuston logo"
-        fields:
-          logo:
-            label: "Ensisijainen logo"
-            description: "Suositeltu koko: 600 x 200"
-          logo_small:
-            label: "Neliölogo"
-            description: "Suositeltu koko: 512 x 512. Käytetään myös faviconina ja mobiilialoitusnäytön sovelluskuvakkeena."
-      corporate:
-        title: "Organisaatiosi"
-        description: "Seuraavia tietoja käytetään käyttöehdoissasi ja tietosivuillasi. Jos yritystä ei ole, voit ohittaa nämä."
-        fields:
-          company_name:
-            label: "Yrityksen nimi"
-            placeholder: "Esimerkkiorganisaatio"
-          governing_law:
-            label: "Sovellettava lainsäädäntö"
-            placeholder: "Kalifornian laki"
-          contact_url:
-            label: "Verkkosivu"
-            placeholder: "https://www.esimerkki.fi/ota-yhteytta"
-          city_for_disputes:
-            label: "Kaupunki, jonka oikeudessa riidat ratkotaan"
-            placeholder: "San Francisco, Kalifornia"
-          site_contact:
-            label: "Automaattiset viestit"
-            description: "Kaikki Discoursen automaattiset yksityisviestit lähetetään tältä käyttäjältä, kuten varoitukset merkinnöistä ja ilmoitukset valmistuneista varmuuskopioista."
-          contact_email:
-            label: "Yhteyshenkilö"
-            placeholder: "esimerkki@käyttäjä.com"
-            description: "Sivustosta vastaavan henkilön sähköpostiosoite. Siihen lähetetään kriittiset ilmoitukset, ja se näkyy myös <a href='%{base_path}/about' target='_blank'>tietosivullasi</a> kiireellisiä yhteydenottoja varten."
-      invites:
-        title: "Kutsu henkilökuntaa"
-        description: "Melkein valmista! Kutsu vielä joitakin ihmisiä <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>pohjustamaan keskusteluita</a> mielenkiintoisilla aiheilla ja vastauksilla, jotta yhteisösi pääsee alkuun."
-        disabled: "Koska paikalliset kirjautumiset ovat pois käytöstä, ei ole mahdollista kutsua ketään. Jatka seuraavaan vaiheeseen."
-      finished:
-        title: "Discourse-sivustosi on valmis!"
-        description: |
-          <p>Jos haluat muuttaa näitä asetuksia myöhemmin, <b>suorita tämä ohjattu toiminto uudelleen</b> tai vieraile <a href='%{base_path}/admin' target='_blank'>ylläpitopaneelissa</a>; löydät sen jakoavainkuvakkeen vierestä sivuston valikosta.</p>
-          <p>Discoursea on helppo mukauttaa entisestään sen tehokkaalla teemajärjestelmällä. <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>-sivustosta löydät esimerkkejä <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">suosituista teemoista ja komponenteista</a>.</p>
-          <p>Onnittelut, ja pidä hauskaa <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>rakentaessasi uutta yhteisöäsi!</a></p>
   search_logs:
     graph_title: "Hakujen määrä"
   onebox:

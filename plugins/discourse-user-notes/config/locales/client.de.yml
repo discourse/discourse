@@ -8,9 +8,5 @@ de:
   js:
     user_notes:
       title: "Benutzer-Notizen"
-      attach: "Benutzer-Notiz hinzufügen"
       attach_note_description: "Füge eine Notiz über diesen Benutzer hinzu. Diese Notiz ist nur für das Team sichtbar."
-      remove: "Benutzer-Notiz entfernen"
-      show: "Benutzer-Notizen (%{count})"
       delete_confirm: "Bist du sicher, dass du diese Benutzer-Notiz löschen möchtest?"
-      show_post: "Beitrag anzeigen"

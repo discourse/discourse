@@ -35,16 +35,25 @@
       "type": "string"
     },
     "retain_hours": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "human_filesize": {
       "type": "string"
     },
     "dominant_color": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "thumbnail": {
-      "type": ["object", "null"],
+      "type": [
+        "object",
+        "null"
+      ],
       "additionalProperties": false,
       "properties": {
         "id": {
@@ -67,6 +76,36 @@
         },
         "filesize": {
           "type": "integer"
+        }
+      }
+    },
+    "optimized_video": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "upload_id": {
+          "type": "integer"
+        },
+        "url": {
+          "type": "string"
+        },
+        "extension": {
+          "type": "string"
+        },
+        "filesize": {
+          "type": "integer"
+        },
+        "sha1": {
+          "type": "string"
+        },
+        "original_filename": {
+          "type": "string"
         }
       }
     }

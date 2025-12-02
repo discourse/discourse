@@ -548,7 +548,6 @@ nl:
         back: "Terug"
         confirm_delete: Weet je zeker dat je dit model wilt verwijderen?
         delete: Verwijderen
-        seeded_warning: "Dit model is vooraf geconfigureerd op je site en kan niet worden bewerkt."
         quotas:
           title: "Gebruiksquota's"
           add_title: "Nieuw quotum maken"
@@ -583,7 +582,7 @@ nl:
           other: "Dit model wordt momenteel gebruikt door de volgende: %{settings}. Als het onjuist is geconfigureerd, werken functies niet zoals verwacht. "
         model_description:
           none: "Algemene instellingen die werken voor de meeste taalmodellen"
-          anthropic-claude-opus-4-1: "Het intelligentste model van Antropic"
+          anthropic-claude-opus-4-5: "Het intelligentste model van Antropic"
           anthropic-claude-sonnet-4-5: "Optimale balans tussen snelheid en kosten"
           anthropic-claude-haiku-4-5: "Snel en kosteneffectief"
           google-gemini-2-5-pro: "Groot multimodaal model dat een groot aantal taken kan uitvoeren"
@@ -701,6 +700,7 @@ nl:
           title: "Voorgestelde miniaturen"
           select: "Selecteren"
           selected: "Geselecteerd"
+          try_again: "Opnieuw proberen"
         image_caption:
           button_label: "Bijschrift met AI"
           generating: "Bijschrift genereren..."

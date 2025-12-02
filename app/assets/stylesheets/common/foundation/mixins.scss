@@ -103,9 +103,8 @@ $breakpoints: (
   display: -webkit-box;
   overflow: hidden;
   text-overflow: ellipsis;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
   -webkit-line-clamp: $lines;
-  -moz-box-orient: vertical;
   -webkit-box-orient: vertical;
 }
 
@@ -147,6 +146,7 @@ $hpad: 0.65em;
   animation: $name $duration $easing forwards;
 
   @media (prefers-reduced-motion) {
+    /* stylelint-disable-next-line no-invalid-position-declaration */
     animation-duration: 0s;
   }
 }

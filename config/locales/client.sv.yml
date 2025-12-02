@@ -190,7 +190,6 @@ sv:
     software_update_prompt:
       message: "Vi har uppdaterat den här webbplatsen, <span>ladda om</span> för att få saker att fungera smidigt."
       dismiss: "Avfärda"
-    bootstrap_mode: "Komma igång"
     back_button: "Tillbaka"
     welcome_banner:
       header:
@@ -502,7 +501,6 @@ sv:
       title: "Granska"
       topic: "Ämne:"
       filtered_topic: "Du har filtrerat för granskning av innehåll i ett enskilt ämne."
-      filtered_user: "Användare"
       filtered_reviewed_by: "Granskade av"
       show_all_topics: "visa alla ämnen"
       deleted_post: "(inlägg raderat)"
@@ -1041,7 +1039,6 @@ sv:
         one: "Kategorier (%{count} till)…"
         other: "Kategorier (%{count} till)…"
     ip_lookup:
-      title: Kolla upp IP-adress
       hostname: Värdnamn
       location: Plats
       location_not_found: (okänd)
@@ -4387,6 +4384,9 @@ sv:
         enabled: "Aktiverad"
         select_groups: "Välj grupper…"
         preview: "Förhandsgranska"
+        enabled_for_options:
+          everyone: "Alla"
+          staff: "Endast personal"
         impact_roles:
           admins: "Administratörer"
           moderators: "Moderatorer"
@@ -6310,54 +6310,4 @@ sv:
           replace: "Ersätt"
   wizard_js:
     wizard:
-      jump_in: "Hoppa in!"
-      finish: "Avsluta konfigureringen"
-      back: "Tillbaka"
-      next: "Nästa"
-      configure_more: "Konfigurera fler…"
-      step-text: "Steg"
-      step: "%{current} av %{total}"
-      upload: "Ladda upp fil"
-      uploading: "Laddar upp…"
-      upload_error: "Tyvärr uppstod det ett fel under uppladdandet av den filen. Försök igen."
-      staff_count:
-        one: "Din gemenskap har %{count} arbetare (du)."
-        other: "Din gemenskap har %{count} arbetare, inklusive dig."
-      invites:
-        add_user: "lägg till"
-        none_added: "Du har inte bjudit in någon personal. Är du säker på att du vill fortsätta?"
-        roles:
-          admin: "Administratör"
-          moderator: "Moderator"
-          regular: "Regelbunden användare"
-      homepage_choices:
-        custom:
-          label: "Anpassad"
-        style_type:
-          categories: "kategori"
-          topics: "ämne"
-      top_menu_items:
-        new: "Nya"
-        unread: "Olästa"
-        top: "Topp"
-        latest: "Senaste"
-        hot: "Hett"
-        categories: "Kategorier"
-        unseen: "Osedda"
-        read: "Läs"
-        bookmarks: "Bokmärken"
-      previews:
-        share_button: "Dela"
-        reply_button: "Svara"
-        topic_preview: "Ämnesförhandsgranskning"
-        homepage_preview: "Förhandsgranskning av hemsida"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "alla kategorier"
-        category_names:
-          site_feedback: "Feedback om webbplatsen"
-        table_headers:
-          topic: "Ämne"
-          replies: "Svar"
-          views: "Visningar"
-          activity: "Aktivitet"
+      jump_in: "Nu kör vi!"

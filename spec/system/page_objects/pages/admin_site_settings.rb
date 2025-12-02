@@ -97,6 +97,12 @@ module PageObjects
         true
       end
 
+      def has_overridden_topic_setting?(setting_name, value: nil)
+        setting_field = find_setting(setting_name, overridden: true)
+        return setting_field.find(".selected-name")["data-value"] == value.to_s if value
+        true
+      end
+
       def has_no_overridden_setting?(setting_name)
         find_setting(setting_name, overridden: false)
       end

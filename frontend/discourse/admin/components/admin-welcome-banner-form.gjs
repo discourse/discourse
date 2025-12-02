@@ -424,6 +424,8 @@ export default class AdminWelcomeBannerForm extends Component {
             <field.Input
               placeholder={{i18n
                 "admin.config.welcome_banner.form.header_new_members.placeholder"
+                site_name="%{site_name}"
+                preferred_display_name="%{preferred_display_name}"
               }}
             />
           </form.Field>
@@ -440,6 +442,7 @@ export default class AdminWelcomeBannerForm extends Component {
             <field.Input
               placeholder={{i18n
                 "admin.config.welcome_banner.form.header_logged_in.placeholder"
+                preferred_display_name="%{preferred_display_name}"
               }}
             />
           </form.Field>
@@ -456,6 +459,7 @@ export default class AdminWelcomeBannerForm extends Component {
             <field.Input
               placeholder={{i18n
                 "admin.config.welcome_banner.form.header_anonymous.placeholder"
+                site_name="%{site_name}"
               }}
             />
           </form.Field>

@@ -1,9 +1,17 @@
 # frozen_string_literal: true
 
+require "discourse_ip_info"
+
 describe "Viewing reviewable item", type: :system do
   fab!(:admin)
+  fab!(:moderator)
   fab!(:group)
-  fab!(:reviewable_flagged_post)
+  fab!(:reviewable_flagged_post) do
+    Fabricate(
+      :reviewable_flagged_post,
+      target_created_by: Fabricate(:user, email: "flagged@example.com"),
+    )
+  end
 
   let(:review_page) { PageObjects::Pages::Review.new }
   let(:refreshed_review_page) { PageObjects::Pages::RefreshedReview.new }
@@ -143,11 +151,62 @@ describe "Viewing reviewable item", type: :system do
         expect(page).to have_current_path("/")
       end
 
-      it "allows to lookup IP" do
-        SiteSetting.reviewable_old_moderator_actions = true
+      it "displays the flagged user's email address in user activity" do
         refreshed_review_page.visit_reviewable(reviewable_flagged_post)
-        refreshed_review_page.click_ip_lookup_button
-        expect(page).to have_content(I18n.t("js.ip_lookup.hostname"))
+        refreshed_review_page.click_insights_tab
+
+        expect(page).to have_text("flagged@example.com")
+      end
+
+      describe "IP lookup" do
+        fab!(:reviewable_flagged_post)
+
+        before do
+          reviewable_flagged_post.target_created_by.update!(ip_address: "81.2.69.142")
+
+          DiscourseIpInfo.open_db(File.join(Rails.root, "spec", "fixtures", "mmdb"))
+          Resolv::DNS
+            .any_instance
+            .stubs(:getname)
+            .with("81.2.69.142")
+            .returns("ip-81-2-69-142.example.com")
+        end
+
+        it "shows IP lookup information when insights tab is viewed" do
+          refreshed_review_page.visit_reviewable(reviewable_flagged_post)
+          refreshed_review_page.click_insights_tab
+
+          expect(refreshed_review_page).to have_ip_lookup_info
+        end
+
+        it "displays IP location, hostname, and organization when available" do
+          refreshed_review_page.visit_reviewable(reviewable_flagged_post)
+          refreshed_review_page.click_insights_tab
+
+          expect(refreshed_review_page).to have_ip_location("London, England, United Kingdom")
+          expect(refreshed_review_page).to have_ip_hostname("ip-81-2-69-142.example.com")
+        end
+
+        it "shows other accounts link when there are multiple accounts with same IP" do
+          other_user_1 = Fabricate(:user, ip_address: "81.2.69.142")
+          other_user_2 = Fabricate(:user, ip_address: "81.2.69.142")
+
+          refreshed_review_page.visit_reviewable(reviewable_flagged_post)
+          refreshed_review_page.click_insights_tab
+
+          expect(refreshed_review_page).to have_other_accounts_link(count: 2)
+        end
+
+        it "opens modal with account list when clicking other accounts link" do
+          other_user = Fabricate(:user, username: "suspicious_user", ip_address: "81.2.69.142")
+
+          refreshed_review_page.visit_reviewable(reviewable_flagged_post)
+          refreshed_review_page.click_insights_tab
+          refreshed_review_page.click_other_accounts_link
+
+          expect(refreshed_review_page).to have_ip_lookup_modal
+          expect(refreshed_review_page).to have_account_in_modal(other_user.username)
+        end
       end
     end
 
@@ -231,6 +290,40 @@ describe "Viewing reviewable item", type: :system do
 
         expect(refreshed_review_page).to have_reviewable_with_approved_status(reviewable)
       end
+    end
+  end
+
+  describe "moderator" do
+    before do
+      SiteSetting.reviewable_ui_refresh = group.name
+      SiteSetting.reviewable_old_moderator_actions = false
+      group.add(admin)
+      group.add(moderator)
+      sign_in(moderator)
+    end
+
+    it "shows claimed and unclaimed events in the timeline" do
+      SiteSetting.reviewable_claiming = "required"
+
+      refreshed_review_page.visit_reviewable(reviewable_flagged_post)
+      expect(refreshed_review_page).to have_history_items(count: 2)
+
+      refreshed_review_page.click_claim_reviewable
+      page.refresh
+      expect(refreshed_review_page).to have_history_items(count: 3)
+      expect(refreshed_review_page).to have_claimed_history_item(moderator)
+
+      refreshed_review_page.click_unclaim_reviewable
+      page.refresh
+      expect(refreshed_review_page).to have_history_items(count: 4)
+      expect(refreshed_review_page).to have_unclaimed_history_item(moderator)
+
+      # remove history items created by deleted users
+      UserDestroyer.new(admin).destroy(moderator)
+      sign_in(admin)
+      refreshed_review_page.visit_reviewable(reviewable_flagged_post)
+
+      expect(refreshed_review_page).to have_history_items(count: 2)
     end
   end
 end

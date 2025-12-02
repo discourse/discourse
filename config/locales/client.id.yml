@@ -158,7 +158,6 @@ id:
     emails_are_disabled_non_staff: "Surel keluar telah dimatikan untuk pengguna yang bukan staf."
     software_update_prompt:
       dismiss: "Bubar"
-    bootstrap_mode: "Memulai"
     welcome_banner:
       header:
         anonymous_members: "Selamat datang ke %{site_name}!"
@@ -454,7 +453,6 @@ id:
       title: "Ulasan"
       topic: "Topik:"
       filtered_topic: "Anda telah menyaring ke konten yang dapat ditinjau dalam satu topik."
-      filtered_user: "Pengguna"
       filtered_reviewed_by: "Diperiksa oleh"
       show_all_topics: "tampilkan semua topik"
       deleted_post: "(pos dihapus)"
@@ -934,7 +932,6 @@ id:
       topic_stat_sentence_month:
         other: "%{count} topik baru dalam sebulan terakhir."
     ip_lookup:
-      title: Pencarian Alamat IP
       hostname: nama host
       location: Lokasi
       location_not_found: (tidak diketahui)
@@ -2317,6 +2314,9 @@ id:
       upcoming_changes:
         name: "Nama"
         enabled: "Diaktifkan"
+        enabled_for_options:
+          everyone: "Semua orang"
+          staff: "Hanya staf"
         impact_roles:
           moderators: "Moderator"
           staff: "Staf"
@@ -2921,33 +2921,4 @@ id:
           topics: "Topik"
   wizard_js:
     wizard:
-      step-text: "Langkah"
-      uploading: "Mengunggah…"
-      invites:
-        add_user: "menambahkan"
-        roles:
-          admin: "Admin"
-          moderator: "Moderator"
-      homepage_choices:
-        style_type:
-          categories: "kategori"
-          topics: "topik"
-      top_menu_items:
-        new: "New"
-        unread: "Belum dibaca"
-        latest: "Terbaru"
-        categories: "Kategori"
-        unseen: "Tak terlihat"
-        read: "Dibaca"
-        bookmarks: "Markah"
-      previews:
-        reply_button: "Balas"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "Semua kategori"
-        category_names:
-          site_feedback: "Umpan Balik Situs"
-        table_headers:
-          topic: "Topik"
-          replies: "balasan"
-          activity: "Activity"
+      jump_in: "Ayo berangkat!"

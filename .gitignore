@@ -25,11 +25,6 @@
 /public/uploads
 /public/images/emoji
 
-# Ignore the default SQLite database and db dumps
-*.sql
-*.sql.gz
-!/spec/fixtures/**/*.sql
-/db/*.sqlite3
 /db/schema_cache.yml
 
 # Plugins except for the bundled ones

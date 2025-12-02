@@ -41,7 +41,6 @@ es:
       assigned_topic_to: "Tema asignado a <a href='%{path}'>%{username}</a>"
       assign_post_to: "Asignado #%{post_number} a %{username}"
       assign_post_to_multiple: "#%{post_number} a %{username}"
-      assigned_to_w_ellipsis: "Asignado a..."
       unassign:
         title: "Anular asignación"
         title_w_ellipsis: "Anular asignación..."

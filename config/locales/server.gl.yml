@@ -3224,18 +3224,12 @@ gl:
     nice_share:
       name: Boa compartición
       description: Compartiu unha publicación con 25 visitantes únicos
-      long_description: |
-        Esta insignia concédese por compartir unha ligazón en que premeron 25 veces visitantes externos. Grazas por difundir as nosas discusións e a comunidade en xeral.
     good_share:
       name: Moi boa compartición
       description: Compartiu unha publicación con 300 visitantes únicos
-      long_description: |
-        Esta insignia concédese por compartir unha ligazón que foi visitada 300 veces por visitantes externos. Bo traballo! Mostroulle unha conversa excelente a moitas persoas novas e axudou á comunidade a medrar.
     great_share:
       name: Gran compartición
       description: Compartiu unha publicación con 1000 visitantes únicos
-      long_description: |
-        Esta insignia concédese por compartir unha ligazón en que premeron 1000 veces por visitantes externos. Bravo! Difundiu unha conversa moi interesante entre unha grande audiencia e contribuíu enormemente a que a comunidade medrase!
     first_like:
       name: Primeiro gústame
       description: Premeu gústame nunha publicación
@@ -3433,16 +3427,10 @@ gl:
   wizard:
     title: "Configuración de Discourse"
     step:
-      introduction:
+      setup:
         fields:
-          title:
-            placeholder: "Reunión de Helena"
-          site_description:
-            placeholder: "Un lugar para que Helena e as súas amizades discutan sobre cousas interesantes"
           default_locale:
             label: "Idioma"
-      privacy:
-        fields:
           login_required:
             label: "Visibilidade"
             choices:
@@ -3450,38 +3438,6 @@ gl:
                 label: "Pública"
               private:
                 label: "Privada"
-      styling:
-        fields:
-          body_font:
-            label: "Tipo de letra do corpo"
-          heading_font:
-            label: "Tipo de letra de título"
-          styling_preview:
-            label: "Previsualizar"
-          homepage_style:
-            choices:
-              latest:
-                label: "Últimos"
-      corporate:
-        fields:
-          governing_law:
-            placeholder: "Lei de California"
-          contact_url:
-            placeholder: "https://www.exemplo.com/contactanos"
-          city_for_disputes:
-            placeholder: "San Francisco, California"
-          site_contact:
-            description: "Todas as mensaxes privadas automáticas de Discourse serán enviadas deste este usuario, sexan advertencias de denuncias sexan apoios recibidos."
-      invites:
-        title: "Convidar o equipo"
-        description: "Xa case está! Imos convidar outras persoas para axudar a<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>iniciar discusións</a> con temas e respostas de interese para que comece a súa comunidade."
-        disabled: "Como os inicios de sesión locais están desactivados, non é posible enviar invitacións a ninguén. Vaia ao seguinte paso."
-      finished:
-        title: "O seu Discourse está listo!"
-        description: |
-          <p>Se xa comprende como cambiar esta configuración, <b>volva executar este asistente en calquera momento</b>, ou visite <a href='%{base_path}/admin' target='_blank'>a sección de administración</a>; atoparaa xunto á icona de chave inglesa no menú do sitio.</p>
-          <p>É doado personalizar Discourse aínda máis usando o noso poderoso sistema de temas. Para ver exemplos, consulte os <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">principais temas e compoñentes</a> en <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
-          <p>Páseo ben e moita sorte <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>organizando a súa nova comunidade.</a></p>
   search_logs:
     graph_title: "Análise das buscas"
   onebox:

@@ -18,6 +18,9 @@ module Jobs
         return
       end
 
+      llm_model = find_llm_model_for_persona(SiteSetting.ai_translation_post_raw_translator_persona)
+      return if llm_model.blank?
+
       locales = SiteSetting.content_localization_supported_locales.split("|")
       locales.each do |locale|
         base_locale = locale.split("_").first
@@ -40,7 +43,7 @@ module Jobs
           next unless DiscourseAi::Translation::PostLocalizer.has_relocalize_quota?(post, locale)
 
           begin
-            DiscourseAi::Translation::PostLocalizer.localize(post, locale)
+            DiscourseAi::Translation::PostLocalizer.localize(post, locale, llm_model: llm_model)
           rescue FinalDestination::SSRFDetector::LookupFailedError
             # do nothing, there are too many sporadic lookup failures
           rescue => e
@@ -52,6 +55,17 @@ module Jobs
 
         DiscourseAi::Translation::VerboseLogger.log("Translated #{posts.size} posts to #{locale}")
       end
+    end
+
+    private
+
+    def find_llm_model_for_persona(persona_id)
+      return nil if persona_id.blank?
+
+      persona_klass = AiPersona.find_by_id_from_cache(persona_id)
+      return nil if persona_klass.blank?
+
+      DiscourseAi::Translation::BaseTranslator.preferred_llm_model(persona_klass)
     end
   end
 end

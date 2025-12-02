@@ -282,9 +282,7 @@
 
       .item {
         .blurb {
-          // https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/
           overflow-wrap: break-word;
-          word-wrap: break-word;
           word-break: break-word;
           hyphens: auto;
           color: var(--primary-high);

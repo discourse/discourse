@@ -555,7 +555,6 @@ sk:
         back: "Späť"
         confirm_delete: Naozaj chcete odstrániť tento model?
         delete: Odstrániť
-        seeded_warning: "Tento model je predkonfigurovaný na vašej stránke a nemožno ho upravovať."
         quotas:
           title: "Kvóty používania"
           add_title: "Vytvoriť novú kvótu"
@@ -591,7 +590,7 @@ sk:
           other: "Tento model momentálne používa nasledovné %{settings}. Ak je nesprávne nakonfigurovaný, funkcia nebude fungovať podľa očakávania. "
         model_description:
           none: "Všeobecné nastavenia, ktoré fungujú pre väčšinu jazykových modelov"
-          anthropic-claude-opus-4-1: "Najinteligentnejší model spoločnosti Anthropic"
+          anthropic-claude-opus-4-5: "Najinteligentnejší model spoločnosti Anthropic"
           anthropic-claude-sonnet-4-5: "Optimálna rovnováha medzi rýchlosťou a cenou"
           anthropic-claude-haiku-4-5: "Rýchle a cenovo výhodné"
           google-gemini-2-5-pro: "Veľký multimodálny model schopný širokej škály úloh"
@@ -711,6 +710,7 @@ sk:
           title: "Navrhované miniatúry"
           select: "Vyberte"
           selected: "Vybrané"
+          try_again: "Skúsiť znova"
         image_caption:
           button_label: "Titulky s AI"
           generating: "Generovanie titulkov..."

@@ -16,7 +16,7 @@ RSpec.describe ExceptionsController do
     end
 
     describe "text site logo" do
-      before { SiteSetting.logo = nil }
+      before { SiteSetting.logo = "" }
 
       it "should return the right response" do
         get "/404"

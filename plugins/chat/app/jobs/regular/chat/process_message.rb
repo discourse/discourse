@@ -8,7 +8,10 @@ module Jobs
           "jobs_chat_process_message_#{args[:chat_message_id]}",
           validity: 10.minutes,
         ) do
-          chat_message = ::Chat::Message.find_by(id: args[:chat_message_id])
+          chat_message =
+            ::Chat::Message.includes(uploads: { optimized_videos: :optimized_upload }).find_by(
+              id: args[:chat_message_id],
+            )
           return if !chat_message
 
           processor =

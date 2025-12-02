@@ -396,7 +396,6 @@ lv:
       title: "Pārskats"
       topic: "Tēma:"
       filtered_topic: "Jūs esat filtrējis līdz pārskatāmam saturam vienā tēmā."
-      filtered_user: "Lietotājs"
       show_all_topics: "rādīt visas tēmas"
       deleted_post: "(ieraksts dzēsts)"
       deleted_user: "(lietotājs dzēsts)"
@@ -853,7 +852,6 @@ lv:
         week: "nedēļa"
         month: "mēnesis"
     ip_lookup:
-      title: IP adreses meklēšana
       hostname: Resursdatora nosaukums
       location: Atrašanās vieta
       location_not_found: (nezināms)
@@ -2859,6 +2857,9 @@ lv:
         name: "Vārds"
         enabled: "Ieslēgts"
         preview: "Priekšskatījums"
+        enabled_for_options:
+          everyone: "Ikviens"
+          staff: "Tikai darbiniekiem"
         impact_roles:
           admins: "Administratori"
           moderators: "Moderātori"
@@ -3916,41 +3917,3 @@ lv:
         modal:
           categories: "Sadaļas"
           topics: "Tēmas"
-  wizard_js:
-    wizard:
-      back: "Atpakaļ"
-      next: "Nākamais"
-      step-text: "Solis"
-      step: "%{current} no %{total}"
-      upload_error: "Atvainojiet, augšuplādējot šo failu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
-      invites:
-        add_user: "Pievienot"
-        none_added: "Neesi nevienu uzaicinājis. Droši zini ka vēlies turpināt?"
-        roles:
-          admin: "Administrators"
-          moderator: "Moderātors"
-          regular: "Lietotājs"
-      homepage_choices:
-        style_type:
-          categories: "sadaļa"
-          topics: "tēmas"
-      top_menu_items:
-        new: "jauns"
-        unread: "Nelasīts"
-        top: "Populārākās"
-        latest: "Pēdējais"
-        categories: "Sadaļas"
-        unseen: "Neredzēts"
-        read: "Lasīts"
-        bookmarks: "Grāmatzīmes"
-      previews:
-        share_button: "Dalīties"
-        reply_button: "Atbilde"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "visas sadaļas"
-        table_headers:
-          topic: "Tēmas"
-          replies: "Atbildes"
-          views: "Skatījumi"
-          activity: "Aktivitāte"

@@ -50,7 +50,7 @@ pl_PL:
     forbidden_group_assignee_not_pm_participant: "Nie można przypisać @%{group}, ponieważ nie wszyscy członkowie mają dostęp do tej prywatnej wiadomości."
     forbidden_group_assignee_cant_see_topic: "Nie można przypisać @%{group}, ponieważ nie wszyscy członkowie mają dostęp do tego tematu."
     flag_assigned: "Przepraszamy, temat, w którym jest ta flaga, został przypisany do innego użytkownika."
-    flag_unclaimed: "Musisz przejąć ten temat, zanim zaczniesz działać na fladze."
+    flag_unclaimed: "Musisz zgłosić ten temat, zanim zaczniesz działać na fladze."
     topic_assigned_excerpt: "przypisano Ci temat '%{title}'"
     topic_group_assigned_excerpt: "przypisano temat '%{title}' do @%{group}"
     reminders_frequency:

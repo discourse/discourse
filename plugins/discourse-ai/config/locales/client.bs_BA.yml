@@ -136,6 +136,8 @@ bs_BA:
           copy: "Copy"
           copied: "Kopirano!"
           cancel: "Odustani"
+        thumbnail_suggestions:
+          try_again: "Pokušaj ponovo"
         image_caption:
           save_caption: "Sačuvaj"
       embeddings:

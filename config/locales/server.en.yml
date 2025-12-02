@@ -2306,6 +2306,7 @@ en:
     auto_silence_fast_typers_on_first_post: "Automatically silence users that do not meet `fast typing threshold`"
     auto_silence_fast_typers_max_trust_level: "Maximum trust level to auto silence fast typers"
     auto_silence_first_post_regex: "Case insensitive regex that if passed will cause first post by user to be silenced and sent to approval queue. Example: raging|a[bc]a , will cause all posts containing raging or aba or aca to be silenced on first. Only applies to first post. DEPRECATED: Use Silence Watched Words instead."
+    moderator_guide_topic: "The topic that outlines how you moderate your community. Link will be visible on the review queue for moderators and admins."
     reviewable_claiming: "Does reviewable content need to be claimed before it can be acted upon?"
     reviewable_default_topics: "Show reviewable content grouped by topic by default"
     reviewable_default_visibility: "Don't show reviewable items unless they meet this priority"
@@ -2781,6 +2782,7 @@ en:
       invalid_username: "There's no user with that username."
       valid_username: "There's a user with that username."
       invalid_group: "There's no group with that name."
+      invalid_topic: "There's no topic with that ID."
       invalid_integer_min_max: "Value must be between %{min} and %{max}."
       invalid_integer_min: "Value must be %{min} or greater."
       invalid_integer_max: "Value cannot be higher than %{max}."
@@ -5294,17 +5296,17 @@ en:
       name: Nice Share
       description: Shared a post with 25 unique visitors
       long_description: |
-        This badge is granted for sharing a link that was clicked by 25 outside visitors. Thanks for spreading the word about our discussions, and this community.
+        This badge is granted for sharing a link that was clicked by 25 unique outside visitors. Thanks for spreading the word about our discussions, and this community.
     good_share:
       name: Good Share
       description: Shared a post with 300 unique visitors
       long_description: |
-        This badge is granted for sharing a link that was clicked by 300 outside visitors. Good work! You’ve shown off a great discussion to a bunch of new people and helped this community grow.
+        This badge is granted for sharing a link that was clicked by 300 unique outside visitors. Good work! You’ve shown off a great discussion to a bunch of new people and helped this community grow.
     great_share:
       name: Great Share
       description: Shared a post with 1000 unique visitors
       long_description: |
-        This badge is granted for sharing a link that was clicked by 1000 outside visitors. Wow! You’ve promoted an interesting discussion to a huge new audience, and helped us grow our community in a big way!
+        This badge is granted for sharing a link that was clicked by 1000 unique outside visitors. Wow! You’ve promoted an interesting discussion to a huge new audience, and helped us grow our community in a big way!
     first_like:
       name: First Like
       description: Liked a post
@@ -5603,6 +5605,8 @@ en:
     json_too_long: "Values not logged because they exceed the column length limits"
     not_found: "not found"
     unknown: "unknown"
+    site_setting:
+      update_existing_users: "update existing users? %{value}"
     user_merged: "%{username} was merged into this account"
     user_delete_self: "Deleted by self from %{url}"
     webhook_deactivation_reason: "Your webhook has been automatically deactivated. We received multiple '%{status}' HTTP status failure responses."

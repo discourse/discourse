@@ -72,8 +72,58 @@ module PageObjects
         find(".reviewable-action.save-edit").click
       end
 
-      def click_ip_lookup_button
-        find(".reviewable-ip-lookup button").click
+      def has_ip_lookup_info?
+        page.has_css?(".reviewable-ip-lookup")
+      end
+
+      def has_ip_location?(location)
+        page.has_text?(location)
+      end
+
+      def has_ip_hostname?(hostname)
+        page.has_text?(hostname)
+      end
+
+      def has_ip_organization?(organization)
+        page.has_text?(organization)
+      end
+
+      def has_other_accounts_link?(count:)
+        page.has_button?(I18n.t("js.ip_lookup.other_accounts_with_ip", count: count))
+      end
+
+      def click_other_accounts_link
+        find(".ip-lookup-other-accounts-link").click
+      end
+
+      def has_ip_lookup_modal?
+        page.has_css?(".ip-lookup-other-accounts-modal")
+      end
+
+      def has_account_in_modal?(username)
+        within(".ip-lookup-other-accounts-modal") { page.has_text?(username) }
+      end
+
+      def click_claim_reviewable
+        find(".reviewable-claimed-topic .claim").click
+      end
+
+      def click_unclaim_reviewable
+        find(".reviewable-claimed-topic .unclaim").click
+      end
+
+      def has_claimed_history_item?(user)
+        expect(page).to have_css(".timeline-event__icon .d-icon-user-plus")
+        expect(page).to have_text("Claimed by")
+      end
+
+      def has_unclaimed_history_item?(user)
+        expect(page).to have_css(".timeline-event__icon .d-icon-user-xmark")
+        expect(page).to have_text("Unclaimed by")
+      end
+
+      def has_history_items?(count:)
+        expect(page).to have_css(".timeline-event", count: count)
       end
 
       private
