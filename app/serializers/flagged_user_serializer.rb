@@ -6,6 +6,7 @@ class FlaggedUserSerializer < BasicUserSerializer
              :post_count,
              :topic_count,
              :ip_address,
+             :email,
              :custom_fields,
              :flags_agreed,
              :flags_disagreed,
@@ -62,5 +63,9 @@ class FlaggedUserSerializer < BasicUserSerializer
 
   def include_trust_level?
     scope.can_see_reviewable_ui_refresh?
+  end
+
+  def include_email?
+    scope.can_check_emails?(scope.user)
   end
 end
