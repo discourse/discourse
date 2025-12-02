@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class UpcomingChanges::Promoter
+class UpcomingChanges::Promote
   include Service::Base
 
   params do

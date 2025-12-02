@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe UpcomingChanges::Promoter do
+RSpec.describe UpcomingChanges::Promote do
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 

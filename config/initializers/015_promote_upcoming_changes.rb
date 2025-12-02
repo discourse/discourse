@@ -30,7 +30,7 @@ class UpcomingChanges::AutoPromotionInitializer
       end
 
       SiteSetting.upcoming_change_site_settings.each do |setting_name|
-        UpcomingChanges::Promoter.call(
+        UpcomingChanges::Promote.call(
           params: {
             setting_name:,
             promotion_status_threshold: SiteSetting.promote_upcoming_changes_on_status,

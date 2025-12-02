@@ -3,7 +3,7 @@
 class UpcomingChanges::Toggle
   include Service::Base
 
-  # For cases like the UpcomingChanges::Promoter where we don't want to log
+  # For cases like the UpcomingChanges::Promote where we don't want to log
   # the change again since it's already being logged there.
   options { attribute :log_change, default: true }
 
