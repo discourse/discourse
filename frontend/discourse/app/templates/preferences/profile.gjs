@@ -114,6 +114,7 @@ export default class Profile extends Component {
         this.args.controller.model.card_background_upload_url,
       featured_topic: this.args.controller.model.featured_topic,
       default_calendar: this.args.controller.model.user_option.default_calendar,
+      custom_fields: this.args.controller.model.custom_fields || {},
     };
 
     this.args.controller.userFields?.forEach((uf) => {
@@ -163,6 +164,9 @@ export default class Profile extends Component {
         "user_option.default_calendar",
         data.default_calendar
       );
+    }
+    if (data.custom_fields !== undefined) {
+      this.args.controller.model.set("custom_fields", data.custom_fields);
     }
 
     const modelFields = this.args.controller.model.get("user_fields");
@@ -425,7 +429,7 @@ export default class Profile extends Component {
       <PluginOutlet
         @name="user-custom-preferences"
         @connectorTagName="div"
-        @outletArgs={{lazyHash model=@controller.model}}
+        @outletArgs={{lazyHash model=@controller.model form=form}}
       />
 
       <PluginOutlet

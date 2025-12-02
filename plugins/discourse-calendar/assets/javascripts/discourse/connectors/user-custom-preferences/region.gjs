@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import { i18n } from "discourse-i18n";
@@ -10,38 +11,55 @@ export default class Region extends Component {
     return siteSettings.calendar_enabled;
   }
 
+  @tracked _regionValue;
+
+  constructor() {
+    super(...arguments);
+    this._regionValue =
+      this.args.outletArgs?.model?.custom_fields?.["holidays-region"];
+  }
+
   @action
-  onChange(value) {
-    this.args.outletArgs.model.set("custom_fields.holidays-region", value);
+  updateRegion(value) {
+    this._regionValue = value;
+    const form = this.args.outletArgs?.form;
+    if (form?.set) {
+      form.set("custom_fields.holidays-region", value);
+    }
   }
 
   @action
   useCurrentRegion() {
-    this.args.outletArgs.model.set(
-      "custom_fields.holidays-region",
-      TIME_ZONE_TO_REGION[moment.tz.guess()] || "us"
-    );
+    const value = TIME_ZONE_TO_REGION[moment.tz.guess()] || "us";
+    this._regionValue = value;
+    const form = this.args.outletArgs?.form;
+    if (form?.set) {
+      form.set("custom_fields.holidays-region", value);
+    }
+  }
+
+  get regionValue() {
+    return this._regionValue;
   }
 
   <template>
-    <div class="control-group region">
-      <label class="control-label">
-        {{i18n "discourse_calendar.region.title"}}
-      </label>
-
-      <div class="controls">
+    <@form.Field
+      @name={{i18n "discourse_calendar.region.title"}}
+      @title={{i18n "discourse_calendar.region.title"}}
+      as |field|
+    >
+      <field.Custom>
         <RegionInput
-          @value={{@outletArgs.model.custom_fields.holidays-region}}
+          @value={{this.regionValue}}
           @allowNoneRegion={{true}}
-          @onChange={{this.onChange}}
+          @onChange={{this.updateRegion}}
         />
-      </div>
-
-      <DButton
-        @icon="globe"
-        @label="discourse_calendar.region.use_current_region"
-        @action={{this.useCurrentRegion}}
-      />
-    </div>
+        <DButton
+          @icon="globe"
+          @label="discourse_calendar.region.use_current_region"
+          @action={{this.useCurrentRegion}}
+        />
+      </field.Custom>
+    </@form.Field>
   </template>
 }
