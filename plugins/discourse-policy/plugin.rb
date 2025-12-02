@@ -45,6 +45,13 @@ after_initialize do
 
   UserNotifications.append_view_path(File.expand_path("../app/views", __FILE__))
 
+  deprecate_setting(
+    "policy_restrict_to_staff_posts",
+    "create_policy_allowed_groups",
+    false,
+    "3.7.0",
+  )
+
   add_to_serializer(:user_option, :policy_email_frequency) { object.policy_email_frequency }
 
   register_email_unsubscriber("policy_email", EmailControllerHelper::PolicyEmailUnsubscriber)
