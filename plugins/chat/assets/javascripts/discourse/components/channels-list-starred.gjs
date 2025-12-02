@@ -17,20 +17,19 @@ export default class ChannelsListStarred extends Component {
 
   <template>
     <div class="channels-list-container starred-channels">
-      {{#if this.hasChannels}}
-        {{#each this.channelList as |channel|}}
-          <ChatChannelRow
-            @channel={{channel}}
-            @options={{hash leaveButton=channel.isDirectMessageChannel}}
-          />
-        {{/each}}
+      {{#each this.channelList as |channel|}}
+        <ChatChannelRow
+          @channel={{channel}}
+          @options={{hash leaveButton=channel.isDirectMessageChannel}}
+        />
       {{else}}
         <div class="chat-channel-list__empty">
           <span class="chat-channel-list__empty-message">
             {{i18n "chat.starred_channels_empty"}}
           </span>
         </div>
-      {{/if}}
+      {{/each}}
+
     </div>
   </template>
 }

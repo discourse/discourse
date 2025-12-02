@@ -51,11 +51,11 @@ export default class ChatNavbarChannelTitle extends Component {
       return;
     }
 
+    this.isTogglingStarred = true;
     const newValue = !channel.currentUserMembership.starred;
     const previousValue = channel.currentUserMembership.starred;
 
     channel.currentUserMembership.starred = newValue;
-    this.isTogglingStarred = true;
 
     try {
       await this.chatApi.updateCurrentUserChannelMembership(channel.id, {
