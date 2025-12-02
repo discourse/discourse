@@ -15,6 +15,11 @@ class LlmCreditAllocation < ActiveRecord::Base
   DAILY_USAGE_RETENTION_DAYS = 90
 
   belongs_to :llm_model
+  has_many :daily_usages,
+           class_name: "LlmCreditDailyUsage",
+           foreign_key: :llm_model_id,
+           primary_key: :llm_model_id,
+           dependent: :destroy
 
   # TODO: Remove once both column-dropping migrations have been promoted to pre-deploy:
   #   - 20251105174003 (drops monthly_used, last_reset_at)
@@ -31,17 +36,35 @@ class LlmCreditAllocation < ActiveRecord::Base
               less_than_or_equal_to: 100,
             }
 
+  # DEPRECATED: Used for JSONB daily_usage column which is being phased out
+  # TODO: Remove once daily_usage column is dropped
   def current_day_key
     Time.current.utc.strftime("%Y-%m-%d")
   end
 
   def daily_used
-    daily_usage[current_day_key].to_i
+    # Primary: Use llm_credit_daily_usages table
+    usage_record = LlmCreditDailyUsage.find_by(llm_model_id: llm_model_id, usage_date: Date.current)
+    return usage_record.credits_used if usage_record
+
+    # DEPRECATED: Fallback to JSONB daily_usage column for backwards compatibility
+    # TODO: Remove this fallback once daily_usage column is dropped and added to ignored_columns
+    return daily_usage[current_day_key].to_i if respond_to?(:daily_usage) && daily_usage.present?
+
+    0
   end
 
   def daily_used=(value)
-    day_key = current_day_key
-    self.daily_usage = (daily_usage || {}).merge(day_key => value.to_i)
+    usage_record =
+      LlmCreditDailyUsage.find_or_create_by!(llm_model_id: llm_model_id, usage_date: Date.current)
+    usage_record.update!(credits_used: value.to_i)
+
+    # DEPRECATED: Dual-write to JSONB daily_usage column during migration period
+    # TODO: Remove this dual-write once daily_usage column is dropped
+    if respond_to?(:daily_usage=)
+      day_key = current_day_key
+      self.daily_usage = (daily_usage || {}).merge(day_key => value.to_i)
+    end
   end
 
   def credits_remaining
@@ -79,12 +102,18 @@ class LlmCreditAllocation < ActiveRecord::Base
   end
 
   def deduct_credits!(credits)
-    with_lock do
-      reload
-      day_key = current_day_key
-      self.daily_usage = daily_usage.merge(day_key => daily_used + credits)
-      cleanup_old_days!
-      save!
+    LlmCreditDailyUsage.increment_usage!(llm_model, credits)
+
+    # DEPRECATED: Dual-write to JSONB daily_usage column during migration period
+    # TODO: Remove this entire block once daily_usage column is dropped
+    if respond_to?(:daily_usage=)
+      with_lock do
+        reload
+        day_key = current_day_key
+        self.daily_usage = daily_usage.merge(day_key => daily_used + credits)
+        cleanup_old_days!
+        save!
+      end
     end
   end
 
@@ -139,8 +168,16 @@ class LlmCreditAllocation < ActiveRecord::Base
   private
 
   def cleanup_old_days!
-    cutoff = DAILY_USAGE_RETENTION_DAYS.days.ago.beginning_of_day.utc.strftime("%Y-%m-%d")
-    self.daily_usage = daily_usage.select { |k, _| k >= cutoff }
+    # This call is redundant and should be removed
+    # TODO: Remove this method call from deduct_credits! - cleanup only via scheduled job
+    LlmCreditDailyUsage.cleanup_old_records!(DAILY_USAGE_RETENTION_DAYS)
+
+    # DEPRECATED: Also cleanup JSONB daily_usage column if it still exists
+    # TODO: Remove this block once daily_usage column is dropped
+    if respond_to?(:daily_usage=) && daily_usage.present?
+      cutoff = DAILY_USAGE_RETENTION_DAYS.days.ago.beginning_of_day.utc.strftime("%Y-%m-%d")
+      self.daily_usage = daily_usage.select { |k, _| k >= cutoff }
+    end
   end
 
   def format_reset_time
