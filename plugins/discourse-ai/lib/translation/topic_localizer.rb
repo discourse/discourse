@@ -3,6 +3,8 @@
 module DiscourseAi
   module Translation
     class TopicLocalizer
+      include LocalizableQuota
+
       def self.localize(
         topic,
         target_locale = I18n.locale,
@@ -37,6 +39,10 @@ module DiscourseAi
         localization.localizer_user_id = Discourse.system_user.id
         localization.save!
         localization
+      end
+
+      def self.model_name
+        "topic"
       end
     end
   end
