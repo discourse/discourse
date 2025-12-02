@@ -17,6 +17,9 @@ class MigrateHouseAdsFromPluginStore < ActiveRecord::Migration[7.0]
     groups_data = []
     categories_data = []
 
+    valid_group_ids = DB.query_single("SELECT id FROM groups").to_set
+    valid_category_ids = DB.query_single("SELECT id FROM categories").to_set
+
     plugin_store_ads.each do |psr|
       data = PluginStore.cast_value(psr.type_name, psr.value)
 
@@ -31,12 +34,18 @@ class MigrateHouseAdsFromPluginStore < ActiveRecord::Migration[7.0]
       }
 
       if data[:group_ids].present?
-        data[:group_ids].each { |group_id| groups_data << { ad_id: data[:id], group_id: group_id } }
+        data[:group_ids].each do |group_id|
+          if valid_group_ids.include?(group_id)
+            groups_data << { ad_id: data[:id], group_id: group_id }
+          end
+        end
       end
 
       if data[:category_ids].present?
         data[:category_ids].each do |category_id|
-          categories_data << { ad_id: data[:id], category_id: category_id }
+          if valid_category_ids.include?(category_id)
+            categories_data << { ad_id: data[:id], category_id: category_id }
+          end
         end
       end
     end
