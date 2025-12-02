@@ -6,7 +6,7 @@ import { observes } from "@ember-decorators/object";
 import $ from "jquery";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import List from "discourse/components/topic-list/list";
-import discourseComputed, { bind } from "discourse/lib/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class BasicTopicList extends Component {
@@ -44,37 +44,6 @@ export default class BasicTopicList extends Component {
       this.set("topics", topicList.get("topics"));
       this.rerender();
     }
-  }
-
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-
-    this.topics.forEach((topic) => {
-      if (typeof topic.unread_by_group_member !== "undefined") {
-        this.messageBus.subscribe(
-          `/private-messages/unread-indicator/${topic.id}`,
-          this.onMessage
-        );
-      }
-    });
-  }
-
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-
-    this.messageBus.unsubscribe(
-      "/private-messages/unread-indicator/*",
-      this.onMessage
-    );
-  }
-
-  @bind
-  onMessage(data) {
-    const nodeClassList = document.querySelector(
-      `.indicator-topic-${data.topic_id}`
-    ).classList;
-
-    nodeClassList.toggle("read", !data.show_indicator);
   }
 
   @discourseComputed("topics")
