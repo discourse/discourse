@@ -6,7 +6,12 @@ describe "Viewing reviewable item", type: :system do
   fab!(:admin)
   fab!(:moderator)
   fab!(:group)
-  fab!(:reviewable_flagged_post)
+  fab!(:reviewable_flagged_post) do
+    Fabricate(
+      :reviewable_flagged_post,
+      target_created_by: Fabricate(:user, email: "flagged@example.com"),
+    )
+  end
 
   let(:review_page) { PageObjects::Pages::Review.new }
   let(:refreshed_review_page) { PageObjects::Pages::RefreshedReview.new }
@@ -144,6 +149,13 @@ describe "Viewing reviewable item", type: :system do
 
         expect(dialog).to be_closed
         expect(page).to have_current_path("/")
+      end
+
+      it "displays the flagged user's email address in user activity" do
+        refreshed_review_page.visit_reviewable(reviewable_flagged_post)
+        refreshed_review_page.click_insights_tab
+
+        expect(page).to have_text("flagged@example.com")
       end
 
       describe "IP lookup" do

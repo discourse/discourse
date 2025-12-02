@@ -77,6 +77,10 @@ export default class ReviewableInsights extends Component {
       activities.push(postsText);
     }
 
+    if (user?.email) {
+      activities.push(user.email);
+    }
+
     insights.push({
       icon: "users",
       label: i18n("review.insights.user_activity"),
