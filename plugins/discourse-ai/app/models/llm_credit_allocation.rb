@@ -112,6 +112,10 @@ class LlmCreditAllocation < ActiveRecord::Base
         day_key = current_day_key
         self.daily_usage = daily_usage.merge(day_key => daily_used + credits)
         cleanup_old_days!
+        # Inline JSONB cleanup (original behavior for backwards compatibility)
+        cutoff = DAILY_USAGE_RETENTION_DAYS.days.ago.beginning_of_day.utc.strftime("%Y-%m-%d")
+        self.daily_usage = daily_usage.select { |k, _| k >= cutoff }
+
         save!
       end
     end
@@ -166,24 +170,6 @@ class LlmCreditAllocation < ActiveRecord::Base
   end
 
   private
-
-  def cleanup_old_days!
-    # This call is redundant and should be removed
-    # TODO: Remove this method call from deduct_credits! - cleanup only via scheduled job
-    LlmCreditDailyUsage.cleanup_old_records!(DAILY_USAGE_RETENTION_DAYS)
-
-    # DEPRECATED: Also cleanup JSONB daily_usage column if it still exists
-    # TODO: Remove this block once daily_usage column is dropped
-    if respond_to?(:daily_usage=) && daily_usage.present?
-      cutoff = DAILY_USAGE_RETENTION_DAYS.days.ago.beginning_of_day.utc.strftime("%Y-%m-%d")
-      self.daily_usage = daily_usage.select { |k, _| k >= cutoff }
-    end
-  end
-
-  def format_reset_time
-    return "" if next_reset_at.nil?
-    AgeWords.distance_of_time_in_words(next_reset_at, Time.now)
-  end
 end
 
 # == Schema Information

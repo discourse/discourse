@@ -18,12 +18,12 @@ Fabricator(:llm_credit_allocation) do
   after_create do |allocation, transients|
     if transients[:daily_used]
       # Also create the daily usage record in the new table
-      LlmCreditDailyUsage
-        .find_or_create_by!(
+      usage =
+        LlmCreditDailyUsage.find_or_create_by!(
           llm_model_id: allocation.llm_model_id,
           usage_date: Date.current,
-        ) { |usage| usage.credits_used = transients[:daily_used] }
-        .update!(credits_used: transients[:daily_used])
+        )
+      usage.update!(credits_used: transients[:daily_used])
     end
   end
 end
