@@ -30,6 +30,7 @@ export const TOOLTIP = {
     component: null,
     content: null,
     identifier: null,
+    inline: null,
     interactive: false,
     listeners: false,
     maxWidth: 350,
@@ -46,6 +47,7 @@ export const TOOLTIP = {
     onShow: null,
     onRegisterApi: null,
     updateOnScroll: true,
+    portalOutletElement: null,
   },
   portalOutletId: "d-tooltip-portal-outlet",
 };
@@ -87,6 +89,7 @@ export const MENU = {
     updateOnScroll: true,
     matchTriggerMinWidth: false,
     matchTriggerWidth: false,
+    portalOutletElement: null,
   },
   portalOutletId: "d-menu-portal-outlet",
 };

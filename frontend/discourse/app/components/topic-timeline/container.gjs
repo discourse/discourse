@@ -567,7 +567,8 @@ export default class TopicTimelineScrollArea extends Component {
         @titleText={{i18n "user_tips.topic_timeline.title"}}
         @contentText={{i18n "user_tips.topic_timeline.content"}}
         @placement="left"
-        @triggerSelector=".timeline-scrollarea-wrapper"
+        @portalOutletSelector=".timeline-scrollarea-wrapper"
+        @triggerSelector=".timeline-scrollarea"
         @priority={{900}}
       />
 
