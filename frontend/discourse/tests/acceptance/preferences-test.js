@@ -53,7 +53,7 @@ acceptance("User Preferences", function (needs) {
 
     const savePreferences = async () => {
       assert.dom(".saved").doesNotExist("it hasn't been saved yet");
-      await click(".save-changes");
+      await click(".save-profile-changes");
       assert.dom(".saved").exists("it displays the saved message");
       find(".saved").remove();
     };
