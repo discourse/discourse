@@ -739,7 +739,11 @@ RSpec.describe Upload do
     end
 
     context "with optimized videos" do
-      before { Discourse.stubs(:store).returns(stub(external?: true)) }
+      before do
+        extensions = SiteSetting.authorized_extensions.split("|")
+        SiteSetting.authorized_extensions = (extensions | %w[mp4 mov avi mkv]).join("|")
+        enable_secure_uploads
+      end
 
       it "syncs optimized video secure status when original upload secure status changes from false to true" do
         original_upload = Fabricate(:upload, secure: false)
@@ -753,9 +757,10 @@ RSpec.describe Upload do
           .expects(:update_upload_access_control)
           .with(optimized_upload)
 
-        original_upload.update!(secure: true, access_control_post: Fabricate(:private_message_post))
+        original_upload.update!(access_control_post: Fabricate(:private_message_post))
         original_upload.update_secure_status
 
+        expect(original_upload.reload.secure).to eq(true)
         expect(optimized_upload.reload.secure).to eq(true)
       end
 
@@ -772,28 +777,29 @@ RSpec.describe Upload do
           .expects(:update_upload_access_control)
           .with(optimized_upload)
 
-        original_upload.update!(secure: false, access_control_post: Fabricate(:post))
+        original_upload.update!(access_control_post: Fabricate(:post))
         original_upload.update_secure_status
 
+        expect(original_upload.reload.secure).to eq(false)
         expect(optimized_upload.reload.secure).to eq(false)
       end
 
       it "does not update optimized video secure status if it already matches" do
-        original_upload = Fabricate(:upload, secure: false)
+        original_upload =
+          Fabricate(:upload, secure: true, access_control_post: Fabricate(:private_message_post))
         optimized_video = Fabricate(:optimized_video, upload: original_upload)
         optimized_upload = optimized_video.optimized_upload
         optimized_upload.update!(secure: true)
 
-        FileStore::S3Store.any_instance.expects(:update_upload_access_control).with(original_upload)
         FileStore::S3Store
           .any_instance
           .expects(:update_upload_access_control)
-          .with(optimized_upload)
+          .with(original_upload)
           .never
 
-        original_upload.update!(secure: true, access_control_post: Fabricate(:private_message_post))
         original_upload.update_secure_status
 
+        expect(original_upload.reload.secure).to eq(true)
         expect(optimized_upload.reload.secure).to eq(true)
       end
 
@@ -818,9 +824,10 @@ RSpec.describe Upload do
           .expects(:update_upload_access_control)
           .with(optimized_upload2)
 
-        original_upload.update!(secure: true, access_control_post: Fabricate(:private_message_post))
+        original_upload.update!(access_control_post: Fabricate(:private_message_post))
         original_upload.update_secure_status
 
+        expect(original_upload.reload.secure).to eq(true)
         expect(optimized_upload1.reload.secure).to eq(true)
         expect(optimized_upload2.reload.secure).to eq(true)
       end
