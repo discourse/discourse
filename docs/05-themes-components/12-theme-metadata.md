@@ -37,14 +37,15 @@ You can add various pieces of metadata to a theme. Some are stored in the `about
 Themes and components can define a _maximum of two screenshots_ in the `screenshots` key of `about.json`, which will look something like this:
 
 ```json
-"screenshots": ["screenshots/light.png", "screenshots/dark.png"]
+"screenshots": ["screenshots/light.webp", "screenshots/dark.webp"]
 ```
 
-There are several restrictions that must be considered:
+Keep these restrictions in mind:
 
-- The screenshots must be in a folder called `screenshots` in the theme's GitHub repo
-- Screenshots cannot exceed 1 megabyte in size
-- Screenshots cannot be bigger than 3840x2160, which is 4K resolution. The recommended resolution is 2840x1860.
-- Screenshots can only be in jpeg, gif, or png format
+- Screenshots must be in a `screenshots` folder in the theme’s GitHub repo
+- Max file size: `1 MB`
+- Max resolution: `3840×2160` (4K)
+- Recommended ratio: `16:9`
+- Allowed formats: `.webp`, `.png`, `.jpeg`, `.jpg`
 
-We currently have a convention to provide both a `light` and a `dark` screenshot, but at this time the `dark` screenshot is not used.
+We also follow a convention to include both `light` and `dark` screenshots.
