@@ -516,40 +516,42 @@ module ApplicationHelper
     CategoryBadge.html_for(category, opts).html_safe
   end
 
-  def self.all_connectors
-    @all_connectors = Dir.glob("plugins/*/app/views/connectors/**/*.html.erb")
+  SERVER_PLUGIN_OUTLET_PLUGINS_PREFIXES = [Rails.root.join("plugins/").to_s]
+  private_constant :SERVER_PLUGIN_OUTLET_PLUGINS_PREFIXES
+
+  if Rails.env.test?
+    SERVER_PLUGIN_OUTLET_PLUGINS_PREFIXES << Rails.root.join("spec/fixtures/plugins/").to_s
   end
 
-  PLUGIN_OUTLET_TEMPLATE_CACHE = Concurrent::Map.new
+  SERVER_PLUGIN_OUTLET_CONNECTOR_TEMPLATES =
+    SERVER_PLUGIN_OUTLET_PLUGINS_PREFIXES.each_with_object({}) do |plugins_prefix, connectors|
+      Dir
+        .glob("#{plugins_prefix}*/app/views/connectors/**/*.html.erb")
+        .each do |template_path|
+          template_path =~ Regexp.new("/connectors/(.*)/.*\.html\.erb$")
+          outlet_name = Regexp.last_match(1)
+          connectors[outlet_name] ||= []
+
+          connectors[outlet_name] << begin
+            ActionView::Template.new(
+              File.read(template_path),
+              "discourse_plugin_outlet__#{name}",
+              ActionView::Template.handler_for_extension("erb"),
+              locals: [],
+              format: :html,
+              virtual_path: template_path,
+            )
+          end
+        end
+    end
+  private_constant :SERVER_PLUGIN_OUTLET_CONNECTOR_TEMPLATES
 
   def server_plugin_outlet(name, locals: {})
     return "" if !GlobalSetting.load_plugins?
+    return "" if !SERVER_PLUGIN_OUTLET_CONNECTOR_TEMPLATES.key?(name)
 
-    matcher = Regexp.new("/connectors/#{name}/.*\.html\.erb$")
-    erbs = ApplicationHelper.all_connectors.select { |c| c =~ matcher }
-    return "" if erbs.blank?
-
-    erbs
-      .map do |erb|
-        cache_key = [erb, locals.keys.sort]
-
-        template =
-          PLUGIN_OUTLET_TEMPLATE_CACHE.compute_if_absent(cache_key) do
-            source = File.read(erb)
-            handler = ActionView::Template.handler_for_extension("erb")
-
-            ActionView::Template.new(
-              source,
-              "discourse_plugin_outlet__#{name}",
-              handler,
-              locals: locals.keys,
-              format: :html,
-              virtual_path: erb,
-            )
-          end
-
-        render template: template, locals: locals
-      end
+    SERVER_PLUGIN_OUTLET_CONNECTOR_TEMPLATES[name]
+      .map { |template| render template:, locals: }
       .join
       .html_safe
   end
