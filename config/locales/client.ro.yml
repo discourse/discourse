@@ -866,6 +866,7 @@ ro:
           one: "Semnalat de un utilizator unic"
           few: "Semnalat de %{count} utilizatori unici"
           other: "Semnalat de %{count} de utilizatori unici"
+        similar_posts: "Încălcări anterioare"
         flagged_in_timeframe:
           one: "o semnalizare confirmată"
           few: "%{count} semnalizări confirmate"

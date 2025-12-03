@@ -889,6 +889,7 @@ de:
         flagged_by_users:
           one: "Gemeldet von %{count} eindeutigen Benutzer"
           other: "Gemeldet von %{count} eindeutigen Benutzern"
+        similar_posts: "Frühere Verstöße"
         flagged_in_timeframe:
           one: "%{count} bestätigte Meldung"
           other: "%{count} bestätigte Meldungen"

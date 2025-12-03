@@ -18,24 +18,42 @@ module ::AdPlugin
 end
 
 require_relative "lib/adplugin/engine"
+require_relative "lib/ad_plugin/ad_type"
 
 after_initialize do
   require_relative "app/controllers/ad_plugin/house_ad_settings_controller"
   require_relative "app/controllers/ad_plugin/house_ads_controller"
   require_relative "app/controllers/adstxt_controller"
+  require_relative "app/controllers/ad_plugin/ad_impressions_controller"
+  require_relative "app/serializers/ad_plugin/house_ad_serializer"
+
   require_relative "app/models/ad_plugin/house_ad_setting"
   require_relative "app/models/ad_plugin/house_ad"
+  require_relative "app/models/ad_plugin/ad_impression"
+  require_relative "app/models/concerns/reports/ad_plugin"
   require_relative "lib/adplugin/guardian_extensions"
 
-  reloadable_patch { Guardian.prepend AdPlugin::GuardianExtensions }
+  reloadable_patch do
+    Guardian.prepend AdPlugin::GuardianExtensions
+    Report.include(Reports::AdPlugin)
+  end
 
   Discourse::Application.routes.append do
     get "/ads.txt" => "adstxt#index"
+
+    post "/ad_plugin/ad_impressions/:id" => "ad_plugin/ad_impressions#update"
+    patch "/ad_plugin/ad_impressions/:id" => "ad_plugin/ad_impressions#update"
+    post "/ad_plugin/ad_impressions" => "ad_plugin/ad_impressions#create"
+
     mount AdPlugin::Engine, at: "/admin/plugins/pluginad", constraints: AdminConstraint.new
   end
 
   add_to_serializer :site, :house_creatives do
     AdPlugin::HouseAdSetting.settings_and_ads(for_anons: scope.anonymous?, scope: scope)
+  end
+
+  add_to_serializer :site, :ad_types do
+    AdPlugin::AdType.types
   end
 
   add_to_serializer :topic_view, :tags_disable_ads do

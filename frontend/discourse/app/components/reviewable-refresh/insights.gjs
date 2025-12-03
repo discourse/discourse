@@ -77,6 +77,10 @@ export default class ReviewableInsights extends Component {
       activities.push(postsText);
     }
 
+    if (user?.email) {
+      activities.push(user.email);
+    }
+
     insights.push({
       icon: "users",
       label: i18n("review.insights.user_activity"),
@@ -89,6 +93,29 @@ export default class ReviewableInsights extends Component {
         icon: "far-eye-slash",
         label: i18n("review.insights.visibility"),
         description: i18n("review.insights.topic_unlisted"),
+      });
+    }
+
+    if (
+      user &&
+      (user.silenced_count !== undefined ||
+        user.suspended_count !== undefined ||
+        user.rejected_posts_count !== undefined)
+    ) {
+      const moderationActions = [
+        i18n("review.insights.moderation_history.silenced", {
+          count: user.silenced_count,
+        }),
+        i18n("review.insights.moderation_history.suspended", {
+          count: user.suspended_count,
+        }),
+        i18n("review.insights.moderation_history.rejected_posts", {
+          count: user.rejected_posts_count,
+        }),
+      ];
+      insights.push({
+        label: i18n("review.insights.moderation_history.label"),
+        description: moderationActions.join(", "),
       });
     }
 

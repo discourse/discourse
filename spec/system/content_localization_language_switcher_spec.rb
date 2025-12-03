@@ -41,10 +41,16 @@ describe "Content localization language switcher", type: :system do
     )
   end
 
-  it "only shows the language switcher based on what is in target languages" do
+  it "only shows the language switcher based on enabled state and what is in target languages" do
+    SiteSetting.content_localization_enabled = false
     SiteSetting.content_localization_language_switcher = "anonymous"
-    visit("/")
 
+    visit("/")
+    expect(page).to have_no_css(SWITCHER_SELECTOR)
+
+    SiteSetting.content_localization_enabled = true
+
+    page.refresh
     switcher.expand
     expect(switcher).to have_content("English (US)")
     expect(switcher).to have_content("Japanese (日本語)")

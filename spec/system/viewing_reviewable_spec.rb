@@ -6,7 +6,12 @@ describe "Viewing reviewable item", type: :system do
   fab!(:admin)
   fab!(:moderator)
   fab!(:group)
-  fab!(:reviewable_flagged_post)
+  fab!(:reviewable_flagged_post) do
+    Fabricate(
+      :reviewable_flagged_post,
+      target_created_by: Fabricate(:user, email: "flagged@example.com"),
+    )
+  end
 
   let(:review_page) { PageObjects::Pages::Review.new }
   let(:refreshed_review_page) { PageObjects::Pages::RefreshedReview.new }
@@ -144,6 +149,64 @@ describe "Viewing reviewable item", type: :system do
 
         expect(dialog).to be_closed
         expect(page).to have_current_path("/")
+      end
+
+      it "displays the flagged user's email address in user activity" do
+        refreshed_review_page.visit_reviewable(reviewable_flagged_post)
+        refreshed_review_page.click_insights_tab
+
+        expect(page).to have_text("flagged@example.com")
+      end
+
+      describe "Moderation history" do
+        fab!(:flagged_user) { reviewable_flagged_post.target_created_by }
+
+        it "displays the number of times the user has been silenced, suspended and number of rejected posts" do
+          UserHistory.create!(
+            action: UserHistory.actions[:silence_user],
+            target_user_id: flagged_user.id,
+            acting_user_id: admin.id,
+          )
+          UserHistory.create!(
+            action: UserHistory.actions[:silence_user],
+            target_user_id: flagged_user.id,
+            acting_user_id: admin.id,
+          )
+          UserHistory.create!(
+            action: UserHistory.actions[:suspend_user],
+            target_user_id: flagged_user.id,
+            acting_user_id: admin.id,
+          )
+          ReviewableQueuedPost.create!(
+            created_by: admin,
+            target_created_by: flagged_user,
+            status: Reviewable.statuses[:rejected],
+            payload: {
+              raw: "test post 1",
+            },
+          )
+          ReviewableQueuedPost.create!(
+            created_by: admin,
+            target_created_by: flagged_user,
+            status: Reviewable.statuses[:rejected],
+            payload: {
+              raw: "test post 2",
+            },
+          )
+
+          refreshed_review_page.visit_reviewable(reviewable_flagged_post)
+          refreshed_review_page.click_insights_tab
+
+          expect(page).to have_text(
+            I18n.t("js.review.insights.moderation_history.silenced", count: 2),
+          )
+          expect(page).to have_text(
+            I18n.t("js.review.insights.moderation_history.suspended", count: 1),
+          )
+          expect(page).to have_text(
+            I18n.t("js.review.insights.moderation_history.rejected_posts", count: 2),
+          )
+        end
       end
 
       describe "IP lookup" do

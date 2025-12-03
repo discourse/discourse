@@ -285,7 +285,7 @@ export default class TopicFooterButtons extends Component {
         {{#if this.showNotificationUserTip}}
           <UserTip
             @id="topic_notification_levels"
-            @triggerSelector=".notifications-button-footer details"
+            @triggerSelector=".notifications-button-footer [data-identifier='notifications-tracking']"
             @titleText={{i18n "user_tips.topic_notification_levels.title"}}
             @contentText={{i18n "user_tips.topic_notification_levels.content"}}
             @priority={{800}}

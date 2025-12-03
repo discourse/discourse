@@ -531,9 +531,17 @@ module ApplicationHelper
           template_path =~ Regexp.new("/connectors/(.*)/.*\.html\.erb$")
           outlet_name = Regexp.last_match(1)
           connectors[outlet_name] ||= []
-          connectors[outlet_name] << template_path.sub(plugins_prefix, "").delete_suffix(
-            ".html.erb",
-          )
+
+          connectors[outlet_name] << begin
+            ActionView::Template.new(
+              File.read(template_path),
+              "discourse_plugin_outlet__#{name}",
+              ActionView::Template.handler_for_extension("erb"),
+              locals: [],
+              format: :html,
+              virtual_path: template_path,
+            )
+          end
         end
     end
   private_constant :SERVER_PLUGIN_OUTLET_CONNECTOR_TEMPLATES
@@ -541,8 +549,6 @@ module ApplicationHelper
   def server_plugin_outlet(name, locals: {})
     return "" if !GlobalSetting.load_plugins?
     return "" if !SERVER_PLUGIN_OUTLET_CONNECTOR_TEMPLATES.key?(name)
-
-    lookup_context.append_view_paths(SERVER_PLUGIN_OUTLET_PLUGINS_PREFIXES)
 
     SERVER_PLUGIN_OUTLET_CONNECTOR_TEMPLATES[name]
       .map { |template| render template:, locals: }
