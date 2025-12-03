@@ -422,6 +422,7 @@ schema:
         - "javascript_caches"
         - "linked_topics"
         - "llm_credit_allocations"
+        - "llm_credit_daily_usages"
         - "llm_feature_credit_costs"
         - "llm_models"
         - "llm_quota_usages"
