@@ -7,6 +7,19 @@ module Chat
                :notification_level,
                :chat_channel_id,
                :last_read_message_id,
-               :last_viewed_at
+               :last_viewed_at,
+               :starred
+
+    def starred
+      if scope.user&.upcoming_change_enabled?(:star_chat_channels)
+        object.starred
+      else
+        false
+      end
+    end
+
+    def include_starred?
+      scope.authenticated?
+    end
   end
 end
