@@ -901,6 +901,7 @@ ug:
         flagged_by_users:
           one: "%{count} يەككە ئىشلەتكۈچى پاش قىلغان"
           other: "%{count} يەككە ئىشلەتكۈچى پاش قىلغان"
+        similar_posts: "ئىلگىرىكى قانۇنغا خىلاپ قىلمىش"
         flagged_in_timeframe:
           one: "%{count} جەزملەنگەن پش قىلىش"
           other: "%{count} جەزملەنگەن پش قىلىش"
