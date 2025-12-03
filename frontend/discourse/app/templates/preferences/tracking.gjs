@@ -11,7 +11,7 @@ import { i18n } from "discourse-i18n";
 
 export default class Tracking extends Component {
   get topicTrackingData() {
-    return {
+    const data = {
       new_topic_duration_minutes:
         this.args.controller.model.user_option.new_topic_duration_minutes,
       auto_track_topics_after_msecs:
@@ -23,6 +23,22 @@ export default class Tracking extends Component {
       watched_precedence_over_muted:
         this.args.controller.model.user_option.watched_precedence_over_muted,
     };
+
+    // Include plugin-added fields from customAttrNames
+    this.args.controller.get("customAttrNames")?.forEach((fieldName) => {
+      // Check if field exists on user_option
+      if (this.args.controller.model.user_option[fieldName] !== undefined) {
+        data[fieldName] = this.args.controller.model.get(
+          `user_option.${fieldName}`
+        );
+      }
+      // check if field exists directly on model
+      else if (this.args.controller.model[fieldName] !== undefined) {
+        data[fieldName] = this.args.controller.model.get(fieldName);
+      }
+    });
+
+    return data;
   }
 
   get categoryTrackingData() {
@@ -85,6 +101,24 @@ export default class Tracking extends Component {
         data.watched_precedence_over_muted
       );
     }
+
+    // Handle plugin-added fields from customAttrNames
+    this.args.controller.customAttrNames?.forEach((fieldName) => {
+      if (data[fieldName] !== undefined) {
+        // Most custom fields are stored on user_option
+        const userOptionValue = this.args.controller.model.get(
+          `user_option.${fieldName}`
+        );
+        if (userOptionValue !== undefined) {
+          this.args.controller.model.set(
+            `user_option.${fieldName}`,
+            data[fieldName]
+          );
+        } else {
+          this.args.controller.model.set(fieldName, data[fieldName]);
+        }
+      }
+    });
 
     const controller = this.args.controller;
     controller.trackedTopicsSaved = false;
@@ -179,7 +213,7 @@ export default class Tracking extends Component {
     <Form
       @data={{this.topicTrackingData}}
       @onSubmit={{this.saveTopicTrackingData}}
-      class="user-preferences__tracking-form"
+      class="user-preferences__tracking-form topic-tracking"
       as |form|
     >
       <form.Section @title={{i18n "user.topics_settings"}}>
@@ -257,7 +291,7 @@ export default class Tracking extends Component {
         {{/if}}
       </form.Section>
       <div class="controls save-button">
-        <form.Submit />
+        <form.Submit class="save-changes" />
         {{#if @controller.trackedTopicsSaved}}
           <span class="saved">{{i18n "saved"}}</span>
         {{/if}}
@@ -281,7 +315,7 @@ export default class Tracking extends Component {
         />
       </form.Section>
       <div class="controls save-button">
-        <form.Submit />
+        <form.Submit class="save-changes" />
         {{#if @controller.trackedCategoriesSaved}}
           <span class="saved">{{i18n "saved"}}</span>
         {{/if}}
@@ -304,7 +338,7 @@ export default class Tracking extends Component {
           />
         </form.Section>
         <div class="controls save-button">
-          <form.Submit />
+          <form.Submit class="save-changes" />
           {{#if @controller.trackedTagsSaved}}
             <span class="saved">{{i18n "saved"}}</span>
           {{/if}}
