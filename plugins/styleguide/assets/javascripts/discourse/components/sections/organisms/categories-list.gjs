@@ -1,10 +1,24 @@
+import Component from "@glimmer/component";
 import CategoriesOnly from "discourse/components/categories-only";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
-const CategoriesList = <template>
-  <StyleguideExample @title="<CategoriesOnly>">
-    <CategoriesOnly @categories={{@dummy.categories}} />
-  </StyleguideExample>
-</template>;
+export default class CategoriesList extends Component {
+  get categoriesOnlyCode() {
+    return `
+import CategoriesOnly from "discourse/components/categories-only";
 
-export default CategoriesList;
+<template>
+  <CategoriesOnly @categories={{@dummy.categories}} />
+</template>
+    `;
+  }
+
+  <template>
+    <StyleguideExample
+      @title="<CategoriesOnly>"
+      @code={{this.categoriesOnlyCode}}
+    >
+      <CategoriesOnly @categories={{@dummy.categories}} />
+    </StyleguideExample>
+  </template>
+}

@@ -77,6 +77,9 @@
         font-weight: bold;
         border-bottom: 1px solid var(--content-border-color);
         margin-bottom: 1em;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
       }
 
       .rendered {
@@ -193,7 +196,7 @@
   }
 }
 
-.buttons-examples {
+.buttons-examples .rendered {
   button {
     margin-right: 0.5em;
     margin-bottom: 0.5em;
