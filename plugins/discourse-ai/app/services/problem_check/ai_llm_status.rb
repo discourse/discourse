@@ -10,6 +10,21 @@ class ProblemCheck::AiLlmStatus < ProblemCheck
   MIN_FAILED_CALLS = 3
   FAILURE_RATE_THRESHOLD = 0.5
 
+  def self.override_data_for(model)
+    {
+      model_id: model.id,
+      model_name: model.display_name,
+      url: "#{Discourse.base_path}/admin/plugins/discourse-ai/ai-llms/#{model.id}/edit",
+    }
+  end
+
+  def self.trigger_problem!(model)
+    return if model.blank?
+
+    tracker = ProblemCheckTracker[:ai_llm_status, model.id]
+    tracker.problem!(details: override_data_for(model))
+  end
+
   def call
     return no_problem if !SiteSetting.discourse_ai_enabled
 
@@ -38,6 +53,10 @@ class ProblemCheck::AiLlmStatus < ProblemCheck
 
   private
 
+  def override_data_for(model)
+    self.class.override_data_for(model)
+  end
+
   def audit_log_counts(model)
     counts = DB.query_single(<<~SQL, llm_id: model.id, since: LOOKBACK_WINDOW.ago)
         SELECT
@@ -65,13 +84,5 @@ class ProblemCheck::AiLlmStatus < ProblemCheck
     return 0.0 if total_calls.to_i.zero?
 
     failed_calls.to_f / total_calls
-  end
-
-  def override_data_for(model)
-    {
-      model_id: model.id,
-      model_name: model.display_name,
-      url: "#{Discourse.base_path}/admin/plugins/discourse-ai/ai-llms/#{model.id}/edit",
-    }
   end
 end

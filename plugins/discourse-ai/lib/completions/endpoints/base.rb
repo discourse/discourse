@@ -7,6 +7,8 @@ module DiscourseAi
         attr_reader :partial_tool_calls, :output_thinking
 
         CompletionFailed = Class.new(StandardError)
+        FAIL_THRESHOLD = 5
+        FAIL_TTL = 1.hour
         # 6 minutes
         # Reasoning LLMs can take a very long time to respond, generally it will be under 5 minutes
         # The alternative is to have per LLM timeouts but that would make it extra confusing for people
@@ -310,6 +312,9 @@ module DiscourseAi
                   puts "#{self.class.name}: request_tokens #{log.request_tokens} response_tokens #{log.response_tokens}"
                 end
               end
+
+              track_failures(call_status)
+
               if log && (logger = Thread.current[:llm_audit_log])
                 call_data = <<~LOG
                   #{self.class.name}: request_tokens #{log.request_tokens} response_tokens #{log.response_tokens}
@@ -432,6 +437,23 @@ module DiscourseAi
           rescue JSON::ParserError
             payload
           end
+        end
+
+        def track_failures(call_status)
+          return if llm_model.blank? || llm_model.seeded?
+          key = "ai_llm_status_fast_fail:#{llm_model.id}"
+
+          if call_status == :success
+            Discourse.redis.del(key)
+            return
+          end
+
+          count = Discourse.redis.incr(key)
+          Discourse.redis.expire(key, FAIL_TTL.to_i)
+
+          return if count < FAIL_THRESHOLD
+
+          ProblemCheck::AiLlmStatus.trigger_problem!(llm_model)
         end
 
         def start_log(
