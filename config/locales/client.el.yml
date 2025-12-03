@@ -884,6 +884,7 @@ el:
         flagged_by_users:
           one: "Αναφέρθηκε από %{count} μοναδικό χρήστη"
           other: "Αναφέρθηκε από %{count} μοναδικούς χρήστες"
+        similar_posts: "Προηγούμενες παραβάσεις"
         flagged_in_timeframe:
           one: "%{count} επιβεβαιωμένη αναφορά"
           other: "%{count} επιβεβαιωμένες αναφορές"

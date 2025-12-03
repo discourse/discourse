@@ -1033,6 +1033,7 @@ cs:
           few: "Nahlášeno %{count} unikátními uživateli"
           many: "Nahlášeno %{count} unikátními uživateli"
           other: "Nahlášeno %{count} unikátními uživateli"
+        similar_posts: "Minulá porušení"
         flagged_in_timeframe:
           one: "%{count} potvrzený příznak"
           few: "%{count} potvrzené příznaky"

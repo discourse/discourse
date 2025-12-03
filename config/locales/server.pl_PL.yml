@@ -2629,7 +2629,6 @@ pl_PL:
     experimental_auto_grid_images: "Automatycznie zawija obrazy w tagi [grid], gdy w kompozytorze zostanie przesłane 3 lub więcej obrazów."
     experimental_impersonation: "Podszywaj się pod użytkownika bez konieczności wylogowywania się z konta administratora."
     experimental_impersonation_time_limit_minutes: "Jak długo musi upłynąć, zanim sesja podszywania się zostanie automatycznie zakończona."
-    experimental_lightbox: "Użyj PhotoSwipe, aby dodać lightbox do większych obrazów."
     page_loading_indicator: "Skonfiguruj wskaźnik ładowania, który pojawia się podczas nawigacji po stronie w Discourse. \"Spinner\" to wskaźnik na pełnym ekranie. \"Slider\" wyświetla wąski pasek u góry ekranu."
     show_user_menu_avatars: "Pokaż awatary użytkowników w menu użytkownika"
     about_page_hidden_groups: "Nie pokazuj członków określonych grup na stronie /about."

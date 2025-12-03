@@ -836,6 +836,7 @@ zh_CN:
         flag_volume: "举报量"
         flagged_by_users:
           other: "由 %{count} 位唯一身份用户举报"
+        similar_posts: "过去的违规行为"
         flagged_in_timeframe:
           other: "%{count} 个已确认举报"
         user_activity: "用户信息"
