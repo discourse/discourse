@@ -32,17 +32,17 @@ RSpec.describe "Shortcuts | mark all read", type: :system do
     context "when pressing shift+esc" do
       it "marks all channels read" do
         expect(page).to have_css(
-          ".sidebar-section-link.channel-#{channel_1.id} .sidebar-section-link-suffix.unread",
+          ".sidebar-section-link.channel-#{channel_1.id} .sidebar-section-link-content-badge.unread",
         )
         expect(page).to have_css(
-          ".sidebar-section-link.channel-#{channel_2.id} .sidebar-section-link-suffix.unread",
+          ".sidebar-section-link.channel-#{channel_2.id} .sidebar-section-link-content-badge.unread",
         )
         find("body").send_keys(%i[shift escape])
         expect(page).not_to have_css(
-          ".sidebar-section-link.channel-#{channel_1.id} .sidebar-section-link-suffix.unread",
+          ".sidebar-section-link.channel-#{channel_1.id} .sidebar-section-link-content-badge.unread",
         )
         expect(page).not_to have_css(
-          ".sidebar-section-link.channel-#{channel_2.id} .sidebar-section-link-suffix.unread",
+          ".sidebar-section-link.channel-#{channel_2.id} .sidebar-section-link-content-badge.unread",
         )
         chat_sidebar.open_channel(channel_2)
         expect(page).to have_content("all read message 9")

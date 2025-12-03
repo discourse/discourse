@@ -7,6 +7,7 @@ import { i18n } from "discourse-i18n";
 import {
   UnreadChannelsIndicator,
   UnreadDirectMessagesIndicator,
+  UnreadStarredIndicator,
   UnreadThreadsIndicator,
 } from "discourse/plugins/chat/discourse/components/chat/footer/unread-indicator";
 
@@ -17,6 +18,13 @@ export default class ChatFooter extends Component {
   @service site;
   @service chatChannelsManager;
   @service chatStateManager;
+
+  get includeStarred() {
+    return (
+      this.siteSettings.star_chat_channels &&
+      this.chatChannelsManager.hasStarredChannels
+    );
+  }
 
   get includeThreads() {
     if (!this.siteSettings.chat_threads_enabled) {
@@ -36,6 +44,7 @@ export default class ChatFooter extends Component {
 
   get enabledRouteCount() {
     return [
+      this.includeStarred,
       this.includeThreads,
       this.directMessagesEnabled,
       this.siteSettings.enable_public_channels,
@@ -53,6 +62,23 @@ export default class ChatFooter extends Component {
   <template>
     {{#if this.shouldRenderFooter}}
       <nav class="c-footer">
+        {{#if this.includeStarred}}
+          <DButton
+            @route="chat.starred-channels"
+            @icon="star"
+            @translatedLabel={{i18n "chat.starred"}}
+            aria-label={{i18n "chat.starred"}}
+            id="c-footer-starred"
+            class={{concatClass
+              "btn-transparent"
+              "c-footer__item"
+              (if (eq this.currentRouteName "chat.starred-channels") "--active")
+            }}
+          >
+            <UnreadStarredIndicator />
+          </DButton>
+        {{/if}}
+
         <DButton
           @route="chat.channels"
           @icon="comments"

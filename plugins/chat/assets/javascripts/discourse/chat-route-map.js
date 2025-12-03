@@ -15,6 +15,7 @@ export default function () {
 
     this.route("direct-messages");
     this.route("channels");
+    this.route("starred-channels");
     this.route("threads");
 
     this.route("new-message");

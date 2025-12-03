@@ -196,7 +196,9 @@ export default class ChatChannelRow extends Component {
       >
         <ChannelIcon @channel={{@channel}} />
         <div class="chat-channel-row__info">
-          <ChannelName @channel={{@channel}} @unreadIndicator={{true}} />
+          <div class="chat-channel-row__name-container">
+            <ChannelName @channel={{@channel}} @unreadIndicator={{true}} />
+          </div>
           <ChatChannelMetadata @channel={{@channel}} />
           {{#if this.shouldRenderLastMessage}}
             <div class="chat-channel__last-message">
