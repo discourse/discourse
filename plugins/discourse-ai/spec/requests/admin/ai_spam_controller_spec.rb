@@ -242,7 +242,9 @@ RSpec.describe DiscourseAi::Admin::AiSpamController do
 
       llm2 = Fabricate(:llm_model, name: "DiffLLM")
 
-      DiscourseAi::Completions::Llm.with_prepared_responses([{ spam: true, reason: "just because" }]) do
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ spam: true, reason: "just because" }],
+      ) do
         post "/admin/plugins/discourse-ai/ai-spam/test.json",
              params: {
                post_url: spam_post2.url,
@@ -259,7 +261,9 @@ RSpec.describe DiscourseAi::Admin::AiSpamController do
     end
 
     it "can scan using post id" do
-      DiscourseAi::Completions::Llm.with_prepared_responses([{ spam: true, reason: "because apples" }]) do
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ spam: true, reason: "because apples" }],
+      ) do
         post "/admin/plugins/discourse-ai/ai-spam/test.json",
              params: {
                post_url: spam_post.id.to_s,
@@ -285,7 +289,9 @@ RSpec.describe DiscourseAi::Admin::AiSpamController do
 
       AiSpamLog.create!(post: spam_post, llm_model: llm_model, is_spam: true, created_at: 1.day.ago)
 
-      DiscourseAi::Completions::Llm.with_prepared_responses([{ spam: true, reason: "because banana" }]) do
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ spam: true, reason: "because banana" }],
+      ) do
         post "/admin/plugins/discourse-ai/ai-spam/test.json",
              params: {
                post_url: spam_post.url,

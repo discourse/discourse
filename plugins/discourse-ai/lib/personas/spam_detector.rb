@@ -58,10 +58,7 @@ module DiscourseAi
       end
 
       def response_format
-        [
-          { "key" => "spam", "type" => "boolean" },
-          { "key" => "reason", "type" => "string" },
-        ]
+        [{ "key" => "spam", "type" => "boolean" }, { "key" => "reason", "type" => "string" }]
       end
     end
   end

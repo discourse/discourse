@@ -93,9 +93,9 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
 
     it "scans when post should be scanned" do
       expect do
-        DiscourseAi::Completions::Llm.with_prepared_responses([{ spam: true, reason: "spam detected" }]) do
-          described_class.perform_scan!(post)
-        end
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [{ spam: true, reason: "spam detected" }],
+        ) { described_class.perform_scan!(post) }
       end.to change { AiSpamLog.count }.by(1)
     end
   end
@@ -103,9 +103,9 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
   describe ".perform_scan!" do
     it "creates spam log entry when scanning post" do
       expect do
-        DiscourseAi::Completions::Llm.with_prepared_responses([{ spam: true, reason: "spam detected" }]) do
-          described_class.perform_scan!(post)
-        end
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [{ spam: true, reason: "spam detected" }],
+        ) { described_class.perform_scan!(post) }
       end.to change { AiSpamLog.count }.by(1)
     end
 
@@ -289,7 +289,9 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
       described_class.new_post(post)
 
       prompt = nil
-      DiscourseAi::Completions::Llm.with_prepared_responses([{ spam: true, reason: "spam detected" }]) do |_, _, _prompts|
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ spam: true, reason: "spam detected" }],
+      ) do |_, _, _prompts|
         # force a rebake so we actually scan
         post.rebake!
         prompt = _prompts.first
@@ -341,7 +343,9 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
 
       described_class.new_post(post)
 
-      DiscourseAi::Completions::Llm.with_prepared_responses([{ spam: true, reason: "spam detected" }]) do |_, _, _prompts|
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ spam: true, reason: "spam detected" }],
+      ) do |_, _, _prompts|
         # force a rebake so we actually scan
         post.rebake!
       end
