@@ -8,9 +8,9 @@ import GoogleSearch from "discourse/components/google-search";
 import LoadMore from "discourse/components/load-more";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SearchAdvancedOptions from "discourse/components/search-advanced-options";
+import SearchBulkSelectDropdown from "discourse/components/search-bulk-select-dropdown";
 import SearchResultEntries from "discourse/components/search-result-entries";
 import SearchTextField from "discourse/components/search-text-field";
-import TopicBulkSelectDropdown from "discourse/components/topic-list/topic-bulk-select-dropdown";
 import UserLink from "discourse/components/user-link";
 import avatar from "discourse/helpers/avatar";
 import bodyClass from "discourse/helpers/body-class";
@@ -155,7 +155,7 @@ export default <template>
                 class="btn-default bulk-select"
               />
               {{#if @controller.bulkSelectHelper.selected}}
-                <TopicBulkSelectDropdown
+                <SearchBulkSelectDropdown
                   @bulkSelectHelper={{@controller.bulkSelectHelper}}
                   @afterBulkActionComplete={{@controller.afterBulkActionComplete}}
                 />

@@ -16,6 +16,7 @@ import { TrackedArray } from "@ember-compat/tracked-built-ins";
 export default class PostBulkSelectHelper {
   @tracked loading = false;
   @tracked lastClickedPost = null;
+  @tracked bulkSelectEnabled = false;
   @tracked posts = null;
   selected = new TrackedArray();
 
@@ -151,6 +152,18 @@ export default class PostBulkSelectHelper {
   clearAll() {
     this.selected.length = 0;
     this.lastClickedPost = null;
+  }
+
+  @action
+  toggleBulkSelect(event) {
+    event?.preventDefault();
+    this.bulkSelectEnabled = !this.bulkSelectEnabled;
+    this.clearAll();
+  }
+
+  // Backward-compatible alias used by existing components
+  clear() {
+    this.clearAll();
   }
 
   isSelected(post) {

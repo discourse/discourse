@@ -1,0 +1,98 @@
+import Component from "@glimmer/component";
+import { array } from "@ember/helper";
+import { action } from "@ember/object";
+import { service } from "@ember/service";
+import TopicBulkSelectDropdown from "discourse/components/topic-list/topic-bulk-select-dropdown";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import BulkSelectHelper from "discourse/lib/bulk-select-helper";
+import Post from "discourse/models/post";
+import { i18n } from "discourse-i18n";
+
+export default class SearchBulkSelectDropdown extends Component {
+  @service dialog;
+
+  _bulkSelectHelper = null;
+
+  get topics() {
+    const topics = new Map();
+    (this.args.bulkSelectHelper.selected || []).forEach((post) => {
+      if (post.topic) {
+        topics.set(post.topic.id, post.topic);
+      }
+    });
+    return Array.from(topics.values());
+  }
+
+  get topicBulkSelectHelper() {
+    if (!this._bulkSelectHelper) {
+      this._bulkSelectHelper = new BulkSelectHelper(this, this.topics);
+      this._bulkSelectHelper.onBulkSelectToggle = () => {
+        this.args.bulkSelectHelper.toggleBulkSelect();
+      };
+      return this._bulkSelectHelper;
+    }
+    this._bulkSelectHelper.setTopics(this.topics);
+    return this._bulkSelectHelper;
+  }
+
+  get extraButtons() {
+    return [
+      {
+        id: "delete-topics",
+        icon: "trash-can",
+        name: i18n("topics.bulk.delete_topics_count", {
+          count: this.topics.length,
+        }),
+        visible: ({ currentUser }) => currentUser?.staff,
+      },
+      {
+        id: "delete-posts",
+        icon: "trash-can",
+        name: i18n("topics.bulk.delete_posts_count", {
+          count: this.args.bulkSelectHelper.selected.length,
+        }),
+        visible: ({ currentUser }) => currentUser?.staff,
+      },
+    ];
+  }
+
+  @action
+  handleAction(actionId) {
+    if (actionId === "delete-posts") {
+      this.deletePosts();
+    }
+  }
+
+  @action
+  deletePosts() {
+    const posts = this.args.bulkSelectHelper.selected;
+    if (!posts.length) {
+      return;
+    }
+
+    this.dialog.confirm({
+      message: i18n("topics.bulk.delete_posts_confirmation", {
+        count: posts.length,
+      }),
+      didConfirm: async () => {
+        try {
+          await Post.deleteMany(posts.map((p) => p.id));
+          this.args.bulkSelectHelper.clear();
+          await this.args.afterBulkActionComplete?.();
+        } catch (error) {
+          popupAjaxError(error);
+        }
+      },
+    });
+  }
+
+  <template>
+    <TopicBulkSelectDropdown
+      @bulkSelectHelper={{this.topicBulkSelectHelper}}
+      @afterBulkActionComplete={{@afterBulkActionComplete}}
+      @extraButtons={{this.extraButtons}}
+      @excludedButtonIds={{array "delete-topics"}}
+      @onAction={{this.handleAction}}
+    />
+  </template>
+}

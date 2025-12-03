@@ -18,9 +18,14 @@ export default class BulkSelectHelper {
   @tracked autoAddBookmarksToBulkSelect = false;
   @tracked lastCheckedElementId = null;
 
-  @trackedArray selected = [];
+  @trackedArray selected;
 
-  constructor(context) {
+  constructor(context, topics) {
+    if (topics) {
+      this.selected = topics;
+    } else {
+      this.selected = [];
+    }
     setOwner(this, getOwner(context));
   }
 
@@ -30,7 +35,19 @@ export default class BulkSelectHelper {
   }
 
   addTopics(topics) {
-    this.selected.concat(topics);
+    this.selected = this.selected.concat(topics);
+  }
+
+  setTopics(topics) {
+    this.selected = topics;
+  }
+
+  get onBulkSelectToggle() {
+    return this._onBulkSelectToggle;
+  }
+
+  set onBulkSelectToggle(callback) {
+    this._onBulkSelectToggle = callback;
   }
 
   get selectedCategoryIds() {
@@ -40,6 +57,7 @@ export default class BulkSelectHelper {
   @action
   toggleBulkSelect(event) {
     event?.preventDefault();
+    this._onBulkSelectToggle?.(this.bulkSelectEnabled);
     this.bulkSelectEnabled = !this.bulkSelectEnabled;
     this.clear();
   }
