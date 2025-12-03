@@ -3,7 +3,7 @@
 describe "Assign | User Preferences", type: :system do
   fab!(:user)
 
-  let(:selector) { "[data-setting-name='user-notification-level-when-assigned'] .combobox" }
+  let(:selector) { "#control-notification_level_when_assigned .form-kit__control-select" }
 
   before { sign_in(user) }
 
@@ -20,24 +20,24 @@ describe "Assign | User Preferences", type: :system do
   describe "when discourse-assign is enabled" do
     before { SiteSetting.assign_enabled = true }
 
-    let(:when_assigned) { PageObjects::Components::SelectKit.new(selector) }
+    let(:form) { PageObjects::Components::FormKit.new(".topic-tracking") }
+    let(:when_assigned) { form.field("notification_level_when_assigned") }
 
     it "shows the 'when assigned' tracking user preference" do
       visit "/my/preferences/tracking"
 
-      expect(when_assigned).to have_selected_value("watch_topic")
+      expect(when_assigned).to have_value("watch_topic")
     end
 
     it "supports changing the 'when assigned' tracking user preference" do
       visit "/my/preferences/tracking"
 
-      when_assigned.expand
-      when_assigned.select_row_by_value("track_topic")
+      when_assigned.select("track_topic")
+      form.submit()
 
-      page.find("button.save-changes").click
       page.refresh
 
-      expect(when_assigned).to have_selected_value("track_topic")
+      expect(when_assigned).to have_value("track_topic")
     end
   end
 end
