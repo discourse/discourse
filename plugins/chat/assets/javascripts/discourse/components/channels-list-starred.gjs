@@ -11,10 +11,6 @@ export default class ChannelsListStarred extends Component {
     return this.args.channels || this.chatChannelsManager.starredChannels;
   }
 
-  get hasChannels() {
-    return this.channelList.length > 0;
-  }
-
   <template>
     <div class="channels-list-container starred-channels">
       {{#each this.channelList as |channel|}}
