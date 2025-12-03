@@ -28,7 +28,7 @@ export default {
       });
 
       api.decorateCookedElement((elem, helper) => {
-        return lightbox(elem, siteSettings, { post: helper.model });
+        return lightbox(elem, { post: helper.model });
       });
 
       api.decorateCookedElement((elem) => {
