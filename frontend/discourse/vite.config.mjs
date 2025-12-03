@@ -4,10 +4,24 @@ import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig } from "vite";
 import mkcert from "vite-plugin-mkcert";
 import customProxy from "../custom-proxy";
+import writeResolverConfig from "./lib/embroider-vite-resolver-options";
 import discourseTestSiteSettings from "./lib/site-settings-plugin";
 import maybeBabel from "./lib/vite-maybe-babel";
 
 const extensions = [".gjs", ".mjs", ".js", ".mts", ".gts", ".ts", ".hbs"];
+
+writeResolverConfig(
+  {
+    staticAppPaths: ["static", "admin"],
+    splitAtRoutes: [{ type: "string", value: "wizard" }],
+  },
+  {
+    options: {
+      staticInvokables: false,
+      allowUnsafeDynamicComponents: false,
+    },
+  }
+);
 
 export default defineConfig(({ mode, command }) => {
   const aliases = [
