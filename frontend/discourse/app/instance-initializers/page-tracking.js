@@ -92,8 +92,8 @@ export default {
     trackNextAjaxAsPageview();
 
     if (
-      transition.to.name === "topic.fromParamsNear" ||
-      transition.to.name === "topic.fromParams"
+      transition.to.name === "topic.from-params-near" ||
+      transition.to.name === "topic.from-params"
     ) {
       trackNextAjaxAsTopicView(transition.to.parent.params.id);
     }

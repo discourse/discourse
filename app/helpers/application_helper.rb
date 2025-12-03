@@ -130,7 +130,7 @@ module ApplicationHelper
     path
   end
 
-  def preload_script(script)
+  def preload_script(script, type_module: false)
     scripts = []
 
     if chunks = EmberCli.script_chunks[script]
@@ -142,7 +142,7 @@ module ApplicationHelper
     scripts
       .map do |name|
         path = script_asset_path(name)
-        preload_script_url(path, entrypoint: script)
+        preload_script_url(path, entrypoint: script, type_module:)
       end
       .join("\n")
       .html_safe
@@ -826,6 +826,22 @@ module ApplicationHelper
       .to_json
   end
 
+  def preload_modules
+    # puts params[:controller]
+    ember_route_name =
+      if params[:controller] == "list"
+        "discovery"
+      elsif params[:controller] == "topics"
+        "topic"
+      end
+
+    modules_to_preload = EmberCli.route_bundles[ember_route_name]
+
+    modules_to_preload&.map { |module_name| <<~HTML }&.join("\n")&.html_safe
+        <link rel="modulepreload" href="#{script_asset_path(module_name)}" />
+      HTML
+  end
+
   def client_side_setup_data
     setup_data = {
       cdn: Rails.configuration.action_controller.asset_host,
@@ -839,10 +855,10 @@ module ApplicationHelper
       disable_custom_css: loading_admin?,
       highlight_js_path: HighlightJs.path,
       svg_sprite_path: SvgSprite.path(theme_id),
-      media_optimization_bundle:
-        script_asset_path(
-          EmberCli.script_chunks["media-optimization-bundle"]&.first || "media-optimization-bundle",
-        ),
+      # media_optimization_bundle:
+        # script_asset_path(
+        #   EmberCli.script_chunks["media-optimization-bundle"]&.first || "media-optimization-bundle",
+        # ),
       enable_js_error_reporting: GlobalSetting.enable_js_error_reporting,
       color_scheme_is_dark: dark_color_scheme?,
       user_color_scheme_id: user_scheme_id || -1,

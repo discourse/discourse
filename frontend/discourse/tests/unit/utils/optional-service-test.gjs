@@ -43,19 +43,12 @@ module("Unit | Utils | optional-service", function (hooks) {
   });
 
   test("optionalService works in EmberObject classes", async function (assert) {
-    this.registry.register(
-      "component:ember-object-component",
-      EmberObjectComponent
-    );
-
     await render(<template><EmberObjectComponent /></template>);
 
     assert.dom(".ember-object-component").hasText("foo bar");
   });
 
   test("optionalService works in native classes", async function (assert) {
-    this.registry.register("component:native-component", NativeComponent);
-
     await render(<template><NativeComponent /></template>);
 
     assert.dom(".native-component").hasText("foo bar");

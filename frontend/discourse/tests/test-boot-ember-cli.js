@@ -2,9 +2,21 @@ import loadEmberExam from "ember-exam/test-support/load";
 import { setupEmberOnerrorValidation, start } from "ember-qunit";
 import * as QUnit from "qunit";
 import { setup } from "qunit-dom";
-import { loadAdmin, loadThemes } from "discourse/app";
+import { defineModules, loadAdmin, loadThemes } from "discourse/app";
+import config from "discourse/config/environment";
 import setupTests from "discourse/tests/setup-tests";
-import config from "../config/environment";
+
+defineModules(
+  "discourse/tests",
+  Object.fromEntries(
+    Object.entries(import.meta.glob("./**/*.{gjs,js}", { eager: true })).map(
+      ([key, mod]) => {
+        key = key.replace(/\.(gjs|js)$/, "");
+        return [key, mod];
+      }
+    )
+  )
+);
 
 document.addEventListener("discourse-init", async () => {
   await loadAdmin();
