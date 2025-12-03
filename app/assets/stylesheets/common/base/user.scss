@@ -765,10 +765,6 @@
   .form-vertical {
     width: 500px;
     max-width: 100%;
-
-    .control-group {
-      margin-bottom: 2em;
-    }
   }
 
   .category-selector,
@@ -784,8 +780,6 @@
   }
 
   .tracking-controls {
-    margin-top: 24px;
-
     label {
       align-items: center;
       display: inline-block;

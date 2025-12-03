@@ -60,10 +60,8 @@
 }
 
 .user-preferences {
-  &__topic-settings-form {
-    padding: var(--space-4);
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+  .show-tracking {
+    font-size: var(--font-down-1-rem);
   }
 }
 
