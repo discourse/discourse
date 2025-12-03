@@ -442,6 +442,9 @@ importers:
       '@ember-decorators/object':
         specifier: ^6.1.1
         version: 6.1.1
+      '@ember-decorators/utils':
+        specifier: ^6.1.1
+        version: 6.1.1
       '@ember/optional-features':
         specifier: ^2.3.0
         version: 2.3.0

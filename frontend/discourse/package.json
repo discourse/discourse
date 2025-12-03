@@ -93,6 +93,7 @@
     "@ember-compat/tracked-built-ins": "^0.9.1",
     "@ember-decorators/component": "^6.1.1",
     "@ember-decorators/object": "^6.1.1",
+    "@ember-decorators/utils": "^6.1.1",
     "@ember/optional-features": "^2.3.0",
     "@ember/render-modifiers": "link:jrjohnson/ember-render-modifiers@v2-addon",
     "@ember/string": "^4.0.1",
