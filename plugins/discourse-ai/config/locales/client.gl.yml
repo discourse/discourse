@@ -150,6 +150,8 @@ gl:
           copy: "Copiar"
           copied: "Copiado!"
           cancel: "Cancelar"
+        thumbnail_suggestions:
+          try_again: "Tentar de novo"
         image_caption:
           save_caption: "Gardar"
       embeddings:

@@ -163,6 +163,7 @@ hr:
         thumbnail_suggestions:
           select: "Odaberite"
           selected: "Odabrano"
+          try_again: "Pokušaj ponovno"
         image_caption:
           save_caption: "Spremi"
       embeddings:

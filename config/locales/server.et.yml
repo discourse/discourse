@@ -1023,13 +1023,7 @@ et:
   wizard:
     title: "Discourse sätted"
     step:
-      introduction:
-        fields:
-          title:
-            placeholder: "Jane ajaviitenurgake"
-          site_description:
-            placeholder: "Koht Janele ja tema sõpradele lahedate arutelude jaoks"
-      privacy:
+      setup:
         fields:
           login_required:
             label: "Nähtavus"
@@ -1038,22 +1032,6 @@ et:
                 label: "Avalik"
               private:
                 label: "Privaatne"
-      styling:
-        fields:
-          styling_preview:
-            label: "Eelvaade"
-          homepage_style:
-            choices:
-              latest:
-                label: "Värskeimad"
-      corporate:
-        fields:
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
-      invites:
-        title: "Kutsu meeskonda"
-      finished:
-        title: "Sinu Discourse on valmis!"
   onebox:
     github:
       closed: "suletud"

@@ -191,7 +191,6 @@ sq:
     software_update_prompt:
       message: "Ne e kemi përditësuar këtë faqe, <span>ju lutemi rifreskoni</span> për të mos patur probleme në funksionim."
       dismiss: "Hiqe"
-    bootstrap_mode: "Material Hyrës"
     back_button: "Kthehu mbrapa"
     welcome_banner:
       header:
@@ -567,7 +566,6 @@ sq:
       title: "Shqyrtuar"
       topic: "Tema:"
       filtered_topic: "Ju keni filtruar në përmbajtje të artikujve të rishikueshëm në një temë të vetme."
-      filtered_user: "User"
       filtered_reviewed_by: "Shqyrtuar nga"
       show_all_topics: "shfaq të gjitha temat"
       deleted_post: "(postimi u fshi)"
@@ -1123,7 +1121,6 @@ sq:
         one: "Kategoritë (%{count} më shumë)…"
         other: "Kategoritë (%{count} më shumë)…"
     ip_lookup:
-      title: Shiko adresën IP
       hostname: Hostname
       location: Vendndodhja
       location_not_found: (i panjohur)
@@ -3978,6 +3975,8 @@ sq:
         name: "Emri"
         enabled: "Aktivizuar"
         preview: "Parashikimi"
+        enabled_for_options:
+          everyone: "Të gjithë"
         impact_roles:
           admins: "Administratorët"
           moderators: "Moderatorë"
@@ -4956,45 +4955,3 @@ sq:
         modal:
           categories: "Categories"
           topics: "Tema"
-  wizard_js:
-    wizard:
-      back: "Kthehu mbrapa"
-      next: "Vazhdo përpara"
-      step-text: "Hapi"
-      step: "%{current} nga %{total}"
-      upload_error: "Na vjen keq, pati një gabim gjatë ngarkimit të skedarit. Provo përsëri. "
-      invites:
-        add_user: "shto"
-        none_added: "Nuk keni ftuar asnjë staf. Doni të vazhdoni?"
-        roles:
-          admin: "Admin"
-          moderator: "Moderator"
-          regular: "Përdorues i thjeshtë"
-      homepage_choices:
-        custom:
-          label: "Grupet e krijuara"
-        style_type:
-          categories: "kategori"
-          topics: "topic"
-      top_menu_items:
-        new: "I Ri"
-        unread: "Të palexuara"
-        top: "Popullore"
-        latest: "Më të fundit"
-        categories: "Categories"
-        unseen: "E padukshme"
-        read: "Lexo"
-        bookmarks: "Të preferuarat"
-      previews:
-        share_button: "Shpërndaje"
-        reply_button: "Përgjigju"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "kategoritë"
-        category_names:
-          site_feedback: "Reagimet e Faqes"
-        table_headers:
-          topic: "Topic"
-          replies: "Përgjigjet"
-          views: "Shikimet"
-          activity: "Aktiviteti"

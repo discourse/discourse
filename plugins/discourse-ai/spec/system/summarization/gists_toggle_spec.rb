@@ -84,30 +84,6 @@ describe "Gists Toggle Functionality", type: :system do
 
       expect(page).to have_css("body.topic-list-layout-table-ai")
     end
-
-    it "PM and public topic toggles are independent from each other" do
-      visit("/latest")
-      find(".topic-list-layout-trigger").click
-      find(
-        ".dropdown-menu__item .d-button-label",
-        text: I18n.t("js.discourse_ai.summarization.topic_list_layout.button.compact"),
-      ).click
-
-      visit("/u/#{admin.username}/messages/new")
-      find(".topic-list-layout-trigger").click
-      find(
-        ".dropdown-menu__item .d-button-label",
-        text: I18n.t("js.discourse_ai.summarization.topic_list_layout.button.expanded"),
-      ).click
-
-      visit("/latest")
-      expect(page).to have_css("body.topic-list-layout-table")
-      expect(page).not_to have_css("body.topic-list-layout-table-ai")
-
-      visit("/u/#{admin.username}/messages/new")
-      expect(page).to have_css("body.topic-list-layout-table-ai")
-      expect(page).not_to have_css("body.topic-list-layout-table")
-    end
   end
 
   context "when no gists are available" do

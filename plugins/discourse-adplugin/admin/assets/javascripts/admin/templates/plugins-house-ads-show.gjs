@@ -55,8 +55,8 @@ export default <template>
 
         <GroupChooser
           @content={{@controller.site.groups}}
-          @onChange={{@controller.setGroupIds}}
           @value={{@controller.selectedGroups}}
+          @onChange={{@controller.setGroupIds}}
           class="banner-groups"
         />
         <div class="description">

@@ -543,7 +543,6 @@ ja:
         back: "戻る"
         confirm_delete: このモデルを削除してもよろしいですか？
         delete: 削除
-        seeded_warning: "このモデルはサイト上で事前設定されているため、編集できません。"
         quotas:
           title: "使用量制限"
           add_title: "新しい制限の作成"
@@ -577,7 +576,7 @@ ja:
           other: "このモデルは現在次によって使用されています: %{settings}。誤って構成されると、機能は期待どおりに動作しなくなります。 "
         model_description:
           none: "ほとんどの言語モデルで機能する一般的な設定"
-          anthropic-claude-opus-4-1: "Anthropic の最もインテリジェントなモデル"
+          anthropic-claude-opus-4-5: "Anthropic の最もインテリジェントなモデル"
           anthropic-claude-sonnet-4-5: "速度とコストの最適なバランス"
           anthropic-claude-haiku-4-5: "高速でコスト効率に優れています"
           google-gemini-2-5-pro: "広範なタスクに対応できる大規模マルチモーダルモデル"
@@ -694,6 +693,7 @@ ja:
           title: "提案されたサムネイル"
           select: "選択"
           selected: "選択済み"
+          try_again: "やり直す"
         image_caption:
           button_label: "AI によるキャプション"
           generating: "キャプションを生成中..."

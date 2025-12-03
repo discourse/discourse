@@ -1330,7 +1330,6 @@ ro:
       invalid_regex: "Regex invalid sau nepermis."
       min_username_length_range: "Nu poți seta minimum cu o valoare mai mare decât a maximului."
       max_username_length_range: "Nu poți seta maximum cu o valoare mai mică decât a minimului."
-      discourse_id_credentials: "Trebuie să configurezi datele de conectare Discourse ID ('discourse_id_client_id' și 'discourse_id_client_secret') înainte de a activa această setare."
       content_localization_locale_limit: "Numărul de locale acceptate nu poate depăși %{max}."
       content_localization_language_switcher_requirements: "Comutatorul de limbă necesită ca „setarea localei din cookie” și „permite locala utilizatorului” din setările site-ului să fie activate, și „locale acceptate din localizarea de conținut” să aibă cel puțin o limbă."
       mediaconvert_role_arn_required: "Rolul AWS IAM ARN este necesar atunci când utilizezi AWS MediaConvert pentru conversia video."
@@ -2066,8 +2065,6 @@ ro:
     nice_share:
       name: Distribuție faină
       description: Ai distribuit o postare care a atras 25 de vizitatori unici
-      long_description: |
-        Acest ecuson se acordă pentru distribuirea unui link care a fost accesat de 25 de vizitatori externi. Îți mulțumim că popularizezi discuțiile noastre și informațiile despre această comunitate.
     good_share:
       name: Distribuție mișto
       description: Ai distribuit o postare care a atras 300 de vizitatori unici
@@ -2217,43 +2214,16 @@ ro:
   wizard:
     title: "Configurare Discourse"
     step:
-      introduction:
-        fields:
-          title:
-            placeholder: "Bârlogul Mariei"
-          site_description:
-            placeholder: "Un loc în care Maria și prietenii stau la taifas despre chestii mișto"
-      privacy:
+      setup:
+        title: "Începe"
         fields:
           login_required:
+            label: "Vizibilitate"
             choices:
               public:
                 label: "Public"
               private:
                 label: "Privat"
-      styling:
-        fields:
-          color_scheme:
-            label: "Paletă de culori"
-          site_font:
-            label: "Font"
-          styling_preview:
-            label: "Previzualizează"
-          homepage_style:
-            choices:
-              latest:
-                label: "Ultima"
-      branding:
-        title: "Logo site"
-      corporate:
-        fields:
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
-      invites:
-        title: "Invită membrii echipei"
-        description: "Aproape ai încheiat ! Hai să invităm câțiva prieteni să te ajute <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>cu demararea comunității </a> prin discuții și răspunsuri interesante."
-      finished:
-        title: "Discourse-ul tău e gata!"
   onebox:
     github:
       closed: "închis"

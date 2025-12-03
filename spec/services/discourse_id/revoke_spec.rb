@@ -62,8 +62,8 @@ RSpec.describe DiscourseId::Revoke do
 
     context "when discourse id is not properly configured" do
       before do
-        SiteSetting.discourse_id_client_id = nil
-        SiteSetting.discourse_id_client_secret = nil
+        SiteSetting.discourse_id_client_id = ""
+        SiteSetting.discourse_id_client_secret = ""
       end
 
       it { is_expected.to fail_a_policy(:discourse_id_properly_configured) }

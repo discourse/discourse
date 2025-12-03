@@ -353,7 +353,6 @@ th:
         other: "กระทู้นี้มี<b>%{count}</b>โพสต์ที่กำลังรอการอนุมัติ"
       title: "รีวิว"
       topic: "กระทู้:"
-      filtered_user: "ผู้ใช้"
       show_all_topics: "แสดงกระทู้ทั้งหมด"
       deleted_post: "(โพสต์ถูกลบ)"
       deleted_user: "(ผู้ใช้ถูกลบ)"
@@ -698,7 +697,6 @@ th:
       topic_stat_sentence_month:
         other: "%{count}กระทู้ใหม่ในเดือนที่ผ่านมา"
     ip_lookup:
-      title: มองหาที่อยู่ไอพี
       hostname: ชื่อโฮสต์
       location: สถานที่
       location_not_found: (ไม่ทราบ)
@@ -2549,6 +2547,8 @@ th:
       upcoming_changes:
         name: "ชื่อ"
         preview: "แสดงตัวอย่าง"
+        enabled_for_options:
+          everyone: "ทุกคน"
         impact_roles:
           admins: "แอดมิน"
           moderators: "ผู้ดูแลระบบ"
@@ -3428,40 +3428,3 @@ th:
         modal:
           categories: "หมวดหมู่"
           topics: "กระทู้"
-  wizard_js:
-    wizard:
-      back: "กลับ"
-      next: "ต่อไป"
-      upload_error: "ขออภัย เกิดความผิดพลาดขณะกำลังอัปโหลดไฟล์ กรุณาลองใหม่อีกครั้ง"
-      staff_count:
-        other: "ชุมชนของคุณมีทีมงาน %{count}คน รวมถึงคุณด้วย"
-      invites:
-        add_user: "เพิ่ม"
-        none_added: "คุณยังไม่ได้เชิญทีมงาน คุณแน่ใจหรือว่าต้องการดำเนินการต่อ"
-        roles:
-          admin: "แอดมิน"
-          moderator: "ผู้ดูแล"
-          regular: "ผู้ใช้ทั่วไป"
-      homepage_choices:
-        style_type:
-          categories: "หมวดหมู่"
-          topics: "หัวข้อ"
-      top_menu_items:
-        new: "ใหม่"
-        unread: "ยังไม่อ่าน"
-        top: "บน"
-        latest: "ล่าสุด"
-        categories: "หมวดหมู่"
-        read: "อ่าน"
-        bookmarks: "บุ๊คมาร์ค"
-      previews:
-        share_button: "แบ่งปัน"
-        reply_button: "ตอบ"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "ทุกหมวดหมู่"
-        table_headers:
-          topic: "หัวข้อ"
-          replies: "ตอบ"
-          views: "ดู"
-          activity: "กิจกรรม"

@@ -1939,9 +1939,6 @@ vi:
     nice_share:
       name: Chia Sẻ Hay
       description: Chia sẻ một bài viết có 25 lượt truy cập
-      long_description: |2
-
-        Huy hiệu này được cấp khi liên kết chia sẻ của bạn nhận được 25 lượt truy cập. Cám ơn bạn đã giúp lan tỏa các cuộc thảo luận của cộng đồng.
     good_share:
       name: Chia Sẻ Tốt
       description: Chia sẻ một bài viết có 300 lượt truy cập
@@ -2065,12 +2062,11 @@ vi:
       title: "Gửi lại email kích hoạt"
   wizard:
     step:
-      introduction:
+      setup:
+        title: "Bắt đầu"
         fields:
           default_locale:
             label: "Ngôn ngữ"
-      privacy:
-        fields:
           login_required:
             label: "Khả năng hiển thị"
             choices:
@@ -2078,18 +2074,6 @@ vi:
                 label: "Công khai"
               private:
                 label: "Riêng tư"
-      styling:
-        fields:
-          styling_preview:
-            label: "Xem trước"
-          homepage_style:
-            choices:
-              latest:
-                label: "Mới nhất"
-      corporate:
-        fields:
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
   onebox:
     github:
       closed: "đã "

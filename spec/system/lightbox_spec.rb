@@ -14,7 +14,6 @@ describe "Lightbox | Photoswipe", type: :system do
   let(:cpp) { CookedPostProcessor.new(post, disable_dominant_color: true) }
 
   before do
-    SiteSetting.experimental_lightbox = true
     SiteSetting.create_thumbnails = true
 
     sign_in(current_user)
@@ -139,7 +138,7 @@ describe "Lightbox | Photoswipe", type: :system do
       expect(lightbox).to be_visible
 
       # text is reversed by CSS, so check for correct property
-      expect(get_style(lightbox.counter, "direction")).to eq("rtl")
+      expect(lightbox.counter).to have_computed_style(direction: "rtl")
 
       expect(lightbox).to have_counter("1 / 3")
       expect(lightbox).to have_image_source(upload_1)
@@ -245,6 +244,9 @@ describe "Lightbox | Photoswipe", type: :system do
 
       topic_page.visit_topic(topic)
       lightbox_link = topic_page.post_by_number(1).find("a.lightbox")
+
+      lightbox_link.click
+      expect(lightbox).to be_visible
 
       expect(lightbox_link["data-target-width"]).to eq(upload_1.width.to_s)
       expect(lightbox_link["data-target-height"]).to eq(upload_1.height.to_s)

@@ -154,6 +154,7 @@ ko:
           cancel: "취소"
         thumbnail_suggestions:
           select: "선택"
+          try_again: "다시 시도"
         image_caption:
           save_caption: "저장"
       embeddings:

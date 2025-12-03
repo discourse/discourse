@@ -50,37 +50,5 @@ RSpec.describe SiteSettingsTask do
       expect(counts[:errors]).to eq 1
       expect(SiteSetting.min_password_length).to eq 10
     end
-
-    context "for objects with upload fields" do
-      let(:provider) { SiteSettings::DbProvider.new(SiteSetting) }
-      fab!(:upload)
-      fab!(:upload2, :upload)
-
-      it "creates upload references for objects with upload fields" do
-        objects_value =
-          JSON.generate(
-            [
-              { "name" => "object1", "upload_id" => upload.id },
-              { "name" => "object2", "upload_id" => upload2.id },
-            ],
-          )
-
-        expect {
-          provider.save(
-            "test_objects_with_uploads",
-            objects_value,
-            SiteSettings::TypeSupervisor.types[:objects],
-          )
-        }.to change { UploadReference.count }.by(2)
-
-        upload_references =
-          UploadReference.all.where(target: SiteSetting.find_by(name: "test_objects_with_uploads"))
-        expect(upload_references.pluck(:upload_id)).to contain_exactly(upload.id, upload2.id)
-
-        expect { provider.destroy("test_objects_with_uploads") }.to change {
-          UploadReference.count
-        }.by(-2)
-      end
-    end
   end
 end

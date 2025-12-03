@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
+import IpLookup from "discourse/components/reviewable-refresh/ip-lookup";
 import { shortDate } from "discourse/lib/formatter";
 import { i18n } from "discourse-i18n";
 
@@ -23,13 +24,16 @@ export default class ReviewableInsights extends Component {
     const user = this.args.reviewable.target_created_by;
 
     // Flag volume insight
-    insights.push({
-      icon: "triangle-exclamation",
-      label: i18n("review.insights.flag_volume"),
-      description: i18n("review.insights.flagged_by_users", {
-        count: reviewable?.reviewable_scores?.length || 0,
-      }),
-    });
+    const flagCount = reviewable?.reviewable_scores?.length || 0;
+    if (flagCount > 1) {
+      insights.push({
+        icon: "triangle-exclamation",
+        label: i18n("review.insights.flag_volume"),
+        description: i18n("review.insights.flagged_by_users", {
+          count: flagCount,
+        }),
+      });
+    }
 
     // Similar posts insight
     if (user?.flags_agreed) {
@@ -73,6 +77,10 @@ export default class ReviewableInsights extends Component {
       activities.push(postsText);
     }
 
+    if (user?.email) {
+      activities.push(user.email);
+    }
+
     insights.push({
       icon: "users",
       label: i18n("review.insights.user_activity"),
@@ -85,6 +93,29 @@ export default class ReviewableInsights extends Component {
         icon: "far-eye-slash",
         label: i18n("review.insights.visibility"),
         description: i18n("review.insights.topic_unlisted"),
+      });
+    }
+
+    if (
+      user &&
+      (user.silenced_count !== undefined ||
+        user.suspended_count !== undefined ||
+        user.rejected_posts_count !== undefined)
+    ) {
+      const moderationActions = [
+        i18n("review.insights.moderation_history.silenced", {
+          count: user.silenced_count,
+        }),
+        i18n("review.insights.moderation_history.suspended", {
+          count: user.suspended_count,
+        }),
+        i18n("review.insights.moderation_history.rejected_posts", {
+          count: user.rejected_posts_count,
+        }),
+      ];
+      insights.push({
+        label: i18n("review.insights.moderation_history.label"),
+        description: moderationActions.join(", "),
       });
     }
 
@@ -103,6 +134,7 @@ export default class ReviewableInsights extends Component {
           </div>
         </div>
       {{/each}}
+      <IpLookup @reviewable={{@reviewable}} />
     </div>
   </template>
 }

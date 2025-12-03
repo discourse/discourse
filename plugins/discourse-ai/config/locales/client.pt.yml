@@ -221,6 +221,8 @@ pt:
         usage:
           ai_summarization: "Resumir"
           ai_spam: "Spam"
+        model_description:
+          anthropic-claude-opus-4-5: "O modelo mais inteligente da Anthropic"
         next:
           title: "Próximo"
         tests:
@@ -228,6 +230,8 @@ pt:
         providers:
           google: "Google"
           fake: "Personalizar"
+        provider_fields:
+          effort: "Nível de esforço (apenas Claude Opus 4.5)"
       ai_helper:
         context_menu:
           cancel: "Cancelar"
@@ -240,6 +244,7 @@ pt:
           cancel: "Cancelar"
         thumbnail_suggestions:
           select: "Selecionar"
+          try_again: "Tentar Novamente"
         image_caption:
           save_caption: "Guardar"
       embeddings:

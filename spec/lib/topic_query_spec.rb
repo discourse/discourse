@@ -2056,7 +2056,7 @@ RSpec.describe TopicQuery do
 
       it "doesn't include shared draft topics for regular users" do
         group.add(user)
-        SiteSetting.shared_drafts_category = nil
+        SiteSetting.shared_drafts_category = ""
         list = TopicQuery.new(user).list_latest
         expect(list.topics).to include(topic)
 

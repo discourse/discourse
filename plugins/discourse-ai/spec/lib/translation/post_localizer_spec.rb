@@ -16,6 +16,7 @@ describe DiscourseAi::Translation::PostLocalizer do
         text: opts[:text],
         target_locale: opts[:target_locale],
         post: opts[:post] || post,
+        llm_model: be_nil,
       ).and_return(mock)
       allow(mock).to receive(:translate).and_return(opts[:translated])
     end

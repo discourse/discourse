@@ -313,12 +313,16 @@ export default class AdminWelcomeBannerForm extends Component {
           @description={{i18n
             "admin.config.welcome_banner.form.enabled_themes.description"
           }}
+          @format="large"
           as |field|
         >
           <field.Custom>
             <DMultiSelect
               @loadFn={{this.loadThemes}}
               @selection={{field.value}}
+              @label={{i18n
+                "admin.config.welcome_banner.form.enabled_themes.select_label"
+              }}
               @onChange={{field.set}}
             >
               <:selection as |theme|>
@@ -348,6 +352,9 @@ export default class AdminWelcomeBannerForm extends Component {
         <form.Field
           @name="welcomeBannerTextColor"
           @title={{i18n "admin.config.welcome_banner.form.text_color.label"}}
+          @description={{i18n
+            "admin.config.welcome_banner.form.text_color.description"
+          }}
           @format="large"
           as |field|
         >
@@ -424,6 +431,8 @@ export default class AdminWelcomeBannerForm extends Component {
             <field.Input
               placeholder={{i18n
                 "admin.config.welcome_banner.form.header_new_members.placeholder"
+                site_name="%{site_name}"
+                preferred_display_name="%{preferred_display_name}"
               }}
             />
           </form.Field>
@@ -440,6 +449,7 @@ export default class AdminWelcomeBannerForm extends Component {
             <field.Input
               placeholder={{i18n
                 "admin.config.welcome_banner.form.header_logged_in.placeholder"
+                preferred_display_name="%{preferred_display_name}"
               }}
             />
           </form.Field>
@@ -456,6 +466,7 @@ export default class AdminWelcomeBannerForm extends Component {
             <field.Input
               placeholder={{i18n
                 "admin.config.welcome_banner.form.header_anonymous.placeholder"
+                site_name="%{site_name}"
               }}
             />
           </form.Field>

@@ -294,6 +294,11 @@ module DiscourseAi
           { title: post.topic.title },
           user_ids: allowed_users,
         )
+        MessageBus.publish(
+          "/discourse-ai/ai-bot/topic-titles",
+          { title: post.topic.title, topic_id: post.topic.id },
+          user_ids: allowed_users,
+        )
       end
 
       def reply_to_chat_message(message, channel, context_post_ids)

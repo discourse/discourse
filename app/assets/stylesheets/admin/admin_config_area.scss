@@ -280,3 +280,14 @@
     }
   }
 }
+
+.admin-welcome-banner-form {
+  #control-enabledThemes {
+    .form-kit__container-content.--large {
+      .d-multi-select-trigger__selection-label {
+        // show selection full names (overrides unnecessary truncation)
+        max-width: unset;
+      }
+    }
+  }
+}

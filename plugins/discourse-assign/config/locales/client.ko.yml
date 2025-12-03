@@ -22,7 +22,6 @@ ko:
       assigned: "할당됨"
       group_everyone: "모두"
       assigned_to: "다음으로 할당"
-      assigned_to_w_ellipsis: "다음으로 할당..."
       unassign:
         title: "할당 해제"
         title_w_ellipsis: "할당 해제..."

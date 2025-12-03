@@ -288,6 +288,10 @@ schema:
 
     tables:
       exclude:
+        - "ad_plugin_house_ads"
+        - "ad_plugin_house_ads_categories"
+        - "ad_plugin_house_ads_groups"
+        - "ad_plugin_impressions"
         - "admin_notices"
         - "ai_api_audit_logs"
         - "ai_api_request_stats"

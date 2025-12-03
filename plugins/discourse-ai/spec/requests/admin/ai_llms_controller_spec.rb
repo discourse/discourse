@@ -501,6 +501,24 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
         )
       end
     end
+
+    context "when testing a seeded model" do
+      fab!(:seeded_llm) { Fabricate(:fake_model, id: -200) }
+
+      it "tests the existing model directly instead of using params" do
+        DiscourseAi::Completions::Llm.with_prepared_responses(["a response"]) do
+          get "/admin/plugins/discourse-ai/ai-llms/test.json",
+              params: {
+                ai_llm: {
+                  id: seeded_llm.id,
+                },
+              }
+
+          expect(response).to be_successful
+          expect(response.parsed_body["success"]).to eq(true)
+        end
+      end
+    end
   end
 
   describe "DELETE #destroy" do

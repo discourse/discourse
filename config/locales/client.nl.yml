@@ -291,7 +291,6 @@ nl:
     software_update_prompt:
       message: "We hebben deze site bijgewerkt, <span>vernieuw</span> om alles soepel te laten werken."
       dismiss: "Negeren"
-    bootstrap_mode: "Aan de slag"
     back_button: "Terug"
     welcome_banner:
       header:
@@ -697,7 +696,7 @@ nl:
       title: "Beoordelen"
       topic: "Topic:"
       filtered_topic: "Je hebt op beoordeelbare inhoud in één topic gefilterd."
-      filtered_user: "Gebruiker"
+      filtered_user: "Gemarkeerde gebruiker"
       filtered_reviewed_by: "Beoordeeld door"
       show_all_topics: "alle topics weergeven"
       deleted_post: "(bericht verwijderd)"
@@ -835,7 +834,6 @@ nl:
           noun: "bericht"
       flagged_as: "Gemarkeerd als"
       user_label: "Gebruiker"
-      assigned_to: "Toegewezen aan"
       moderator_actions: "Moderatoracties"
       timeline_and_notes: "Tijdlijn en opmerkingen"
       timeline:
@@ -873,7 +871,6 @@ nl:
           one: "Gemarkeerd door %{count} unieke gebruiker"
           other: "Gemarkeerd door %{count} unieke gebruikers"
         activities:
-          new_account: "nieuw account"
           trust_level: "vertrouwensniveau: %{trustLevelName}"
           posts:
             one: "%{count} bericht"
@@ -881,7 +878,6 @@ nl:
         solution_marked: "Oplossing gemarkeerd"
         topic_has_solution: "Dit topic heeft een oplossing"
         visibility: "Zichtbaarheid"
-        topic_unlisted: "Dit topic is niet zichtbaar. Alleen toegankelijk via een directe link – niet openbaar."
       help:
         moderation_guide: "Discourse-moderatiegids"
         flag_priorities: "Beheer van gebruikersreputatie en markeringsprioriteiten"
@@ -1304,7 +1300,6 @@ nl:
         one: "Categorieën (nog %{count})…"
         other: "Categorieën (nog %{count})…"
     ip_lookup:
-      title: IP-adres zoeken
       hostname: Hostnaam
       location: Locatie
       location_not_found: (onbekend)
@@ -5213,6 +5208,9 @@ nl:
         enabled: "Ingeschakeld"
         select_groups: "Selecteer groepen…"
         preview: "Voorbeeld"
+        enabled_for_options:
+          everyone: "Iedereen"
+          staff: "Alleen medewerkers"
         impact_roles:
           admins: "Beheerders"
           moderators: "Moderators"
@@ -7945,76 +7943,3 @@ nl:
   wizard_js:
     wizard:
       jump_in: "Aan de slag!"
-      finish: "Configuratie afsluiten"
-      back: "Terug"
-      next: "Volgende"
-      configure_more: "Meer configureren…"
-      step-text: "Stap"
-      step: "%{current} van %{total}"
-      upload: "Bestand uploaden"
-      uploading: "Uploaden…"
-      upload_error: "Sorry, er is een fout opgetreden bij het uploaden van het bestand. Probeer het opnieuw."
-      staff_count:
-        one: "Je community heeft %{count} medewerker (jij)."
-        other: "Je community heeft %{count} medewerkers, waaronder jij."
-      invites:
-        add_user: "toevoegen"
-        none_added: "Je hebt geen medewerkers uitgenodigd. Weet je zeker dat je door wilt gaan?"
-        roles:
-          admin: "Beheerder"
-          moderator: "Moderator"
-          regular: "Vaste gebruiker"
-      homepage_choices:
-        custom:
-          label: "Aangepast"
-          description: "Geef een startpagina weer gericht op %{type}, waarbij gebruikers terechtkomen op %{landingPage}"
-        style_type:
-          categories: "categorie"
-          topics: "topic"
-      top_menu_items:
-        new: "Nieuw"
-        unread: "Ongelezen"
-        top: "Top"
-        latest: "Nieuwste"
-        hot: "Populair"
-        categories: "Categorieën"
-        unseen: "Ongezien"
-        read: "Gelezen"
-        bookmarks: "Bladwijzers"
-      previews:
-        topic_title: "Welke boeken lees je?"
-        share_button: "Delen"
-        reply_button: "Antwoorden"
-        topic_preview: "Topicvoorbeeld"
-        homepage_preview: "Startpaginavoorbeeld"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "alle categorieën"
-        topic_titles:
-          what_books: "Welke boeken lees je?"
-          what_movies: "Welke films heb je onlangs gezien?"
-          random_fact: "Willekeurig feit van de dag"
-          tv_show: "Beveel een tv-programma aan"
-          what_hobbies: "Wat zijn je hobby's?"
-          what_music: "Waar luister je nu naar?"
-          funniest_thing: "Het grappigste dat je vandaag hebt gezien"
-          share_art: "Deel je kunst!"
-        topic_ops:
-          what_books: |
-            We houden allemaal van lezen. Laten we dit topic gebruiken om onze
-            huidige of recente leeservaringen te delen. Ik ben een fantasyfan en
-            ik heb The Lord of the Rings voor de 100e keer opnieuw gelezen.
-            En jij?
-        category_descriptions:
-          icebreakers: "Leer de communityleden kennen door leuke vragen te stellen."
-          news: "Bespreek het laatste nieuws en gebeurtenissen."
-          site_feedback: "Deel je gedachten over de community en stel verbeteringen voor."
-        category_names:
-          icebreakers: "IJsbrekers"
-          news: "Nieuws"
-          site_feedback: "Feedback op website"
-        table_headers:
-          topic: "Topic"
-          replies: "Antwoorden"
-          views: "Weergaven"
-          activity: "Activiteit"

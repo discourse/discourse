@@ -7,41 +7,78 @@ module AdPlugin
     def index
       render_json_dump(
         house_ads:
-          HouseAd.all.map do |ad|
-            ad.to_hash.merge!(categories: Category.secured(@guardian).where(id: ad.category_ids))
-          end,
+          serialize_data(
+            HouseAd.all,
+            HouseAdSerializer,
+            { include_categories: true, include_groups: true },
+          ),
         settings: HouseAdSetting.all,
       )
     end
 
     def show
-      house_ad_hash = HouseAd.find(params[:id])&.to_hash
-      if house_ad_hash
-        house_ad_hash.merge!(
-          categories: Category.secured(@guardian).where(id: house_ad_hash[:category_ids]),
+      house_ad = HouseAd.find_by(id: params[:id])
+      if house_ad
+        render_json_dump(
+          house_ad:
+            serialize_data(
+              house_ad,
+              HouseAdSerializer,
+              { include_categories: true, include_groups: true },
+            ),
         )
+      else
+        render_json_error(I18n.t("not_found"), status: 404)
       end
-      render_json_dump(house_ad: house_ad_hash)
     end
 
     def create
-      ad = HouseAd.create(house_ad_params)
-      ad.valid? ? render_json_dump(house_ad: ad.to_hash) : render_json_error(ad)
+      ad = HouseAd.new(house_ad_params)
+      if ad.save
+        render_json_dump(
+          serialize_data(ad, HouseAdSerializer, { include_categories: true, include_groups: true }),
+        )
+      else
+        render_json_error(ad)
+      end
     end
 
     def update
-      if ad = HouseAd.find(house_ad_params[:id])
-        ad.update(house_ad_params)
-      else
-        ad = HouseAd.create(house_ad_params.except(:id))
-      end
+      ad = HouseAd.find_by(id: house_ad_params[:id])
 
-      ad.valid? ? render_json_dump(house_ad: ad.to_hash) : render_json_error(ad)
+      if ad.nil?
+        ad = HouseAd.new(house_ad_params.except(:id))
+        if ad.save
+          render_json_dump(
+            serialize_data(
+              ad,
+              HouseAdSerializer,
+              { include_categories: true, include_groups: true },
+            ),
+          )
+        else
+          render_json_error(ad)
+        end
+      else
+        if ad.update(house_ad_params.except(:id))
+          render_json_dump(
+            serialize_data(
+              ad,
+              HouseAdSerializer,
+              { include_categories: true, include_groups: true },
+            ),
+          )
+        else
+          render_json_error(ad)
+        end
+      end
     end
 
     def destroy
-      if ad = HouseAd.find(house_ad_params[:id])
+      ad = HouseAd.find_by(id: house_ad_params[:id])
+      if ad
         ad.destroy
+        render json: success_json
       else
         render_json_error(I18n.t("not_found"), status: 404)
       end
@@ -68,6 +105,9 @@ module AdPlugin
           permitted[:visible_to_anons] = ActiveModel::Type::Boolean.new.cast(
             permitted[:visible_to_anons],
           )
+
+          permitted[:group_ids] ||= [] if !params.key?(:group_ids)
+          permitted[:category_ids] ||= [] if !params.key?(:category_ids)
           permitted
         end
     end

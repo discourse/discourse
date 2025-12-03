@@ -40,34 +40,35 @@ RSpec.describe TopicsController do
   describe "topic_header plugin outlet" do
     fab!(:another_topic) { Fabricate(:topic, title: "Another topic by me") }
 
-    let(:tmp_dir) { Dir.mktmpdir }
-    let(:template_dir) do
-      path = File.join(tmp_dir, "connectors", "topic_header")
-      FileUtils.mkdir_p(path)
-      path
-    end
-    let(:template_file) do
-      file = Tempfile.new(%w[test_template .html.erb], template_dir)
-      file.write("Topic title from outlet: <%= @topic_view.topic.title %>")
-      file.close
-      file
-    end
+    before { global_setting(:load_plugins?, true) }
 
-    before do
-      global_setting(:load_plugins?, true)
-      ApplicationHelper.stubs(:all_connectors).returns([template_file.path])
-    end
-
-    after { FileUtils.remove_entry(tmp_dir) if tmp_dir }
-
-    it "doesn't leak state between requests" do
+    it "renders the connector templates from multiple plugins" do
       get "/t/#{topic.slug}/#{topic.id}"
+
       expect(response.status).to eq(200)
-      expect(response.body).to include("Topic title from outlet: #{topic.title}")
+      expect(response.body).to include("Fixture from my_plugin template 1: #{topic.title}")
+      expect(response.body).to include("Fixture from my_plugin template 2: #{topic.title}")
+      expect(response.body).to include("Fixture from my_plugin_2 template 1: #{topic.title}")
+      expect(response.body).to include("Fixture from my_plugin_2 template 2: #{topic.title}")
+      expect(response.body).not_to include("Fixture from my_plugin_3 template 1: #{topic.title}")
 
       get "/t/#{another_topic.slug}/#{another_topic.id}"
+
       expect(response.status).to eq(200)
-      expect(response.body).to include("Topic title from outlet: #{another_topic.title}")
+      expect(response.body).to include("Fixture from my_plugin template 1: #{another_topic.title}")
+      expect(response.body).to include("Fixture from my_plugin template 2: #{another_topic.title}")
+
+      expect(response.body).to include(
+        "Fixture from my_plugin_2 template 1: #{another_topic.title}",
+      )
+
+      expect(response.body).to include(
+        "Fixture from my_plugin_2 template 2: #{another_topic.title}",
+      )
+
+      expect(response.body).not_to include(
+        "Fixture from my_plugin_3 template 1: #{another_topic.title}",
+      )
     end
   end
 

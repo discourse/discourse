@@ -399,12 +399,14 @@ export default class UserCardContents extends CardContentsBase {
                     class="card-huge-avatar"
                     tabindex="-1"
                   >
+                    {{boundAvatar this.user "huge"}}
                     {{#if this.isOwnCard}}
                       <span class="own-avatar-pencil">
-                        {{icon "pencil"}}
+                        <span class="own-avatar-pencil--icon">
+                          {{icon "pencil"}}
+                        </span>
                       </span>
                     {{/if}}
-                    {{boundAvatar this.user "huge"}}
                   </a>
                 {{/if}}
 

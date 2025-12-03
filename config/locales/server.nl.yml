@@ -2512,7 +2512,6 @@ nl:
         other: "De lijst moet precies %{count} waarden bevatten."
       markdown_linkify_tlds: "Je kunt de waarde '*' niet gebruiken."
       google_oauth2_hd_groups: "Je moet alle 'Google OAuth2 HD'-instellingen configureren voordat je deze instelling inschakelt."
-      discourse_id_credentials: "Je moet de Discourse ID-aanmeldgegevens ('discourse_id_client_id' en 'discourse_id_client_secret') configureren voordat je deze instelling inschakelt."
       linkedin_oidc_credentials: "Je moet de LinkedIn OIDC-aanmeldgegevens ('linkedin_oidc_client_id' en 'linkedin_oidc_client_secret') configureren voordat je deze instelling inschakelt."
       search_tokenize_chinese_enabled: "Je moet 'search_tokenize_chinese' uitschakelen voordat je deze instelling inschakelt."
       search_tokenize_japanese_enabled: "Je moet 'search_tokenize_japanese' uitschakelen voordat je deze instelling inschakelt."
@@ -4724,18 +4723,12 @@ nl:
     nice_share:
       name: Leuk gedeeld
       description: Heeft een bericht met 25 unieke bezoekers gedeeld
-      long_description: |
-        Deze badge wordt toegekend voor het delen van een link waarop 25 externe bezoekers hebben geklikt. Bedankt voor het verspreiden van het nieuws over onze discussies en deze community.
     good_share:
       name: Goed gedeeld
       description: Heeft een bericht met 300 unieke bezoekers gedeeld
-      long_description: |
-        Deze badge wordt toegekend voor het delen van een link waarop 300 externe bezoekers hebben geklikt. Goed werk! Je hebt een geweldige discussie laten zien aan een aantal nieuwe mensen en deze community helpen groeien.
     great_share:
       name: Geweldig gedeeld
       description: Heeft een bericht met 1000 unieke bezoekers gedeeld
-      long_description: |
-        Deze badge wordt toegekend voor het delen van een link waarop 1000 externe bezoekers hebben geklikt. Wauw! Je hebt een interessante discussie gepromoot voor een enorm nieuw publiek en ons geholpen onze community enorm te laten groeien!
     first_like:
       name: Eerste like
       description: Heeft een bericht geliket
@@ -4953,21 +4946,13 @@ nl:
   wizard:
     title: "Discourse instellen"
     step:
-      introduction:
-        title: "Over je site"
-        description: "Deze worden weergegeven op je aanmeldpagina en eventuele openbare pagina's. Je kunt ze later altijd wijzigen."
+      setup:
+        title: "Aan de slag"
         fields:
           title:
             label: "Communitynaam"
-            placeholder: "Jane's Hangout"
-          site_description:
-            label: "Beschrijf je community in één zin"
-            placeholder: "Een plek voor Jane en haar vrienden om coole dingen te bespreken"
           default_locale:
             label: "Taal"
-      privacy:
-        title: "Ledentoegang"
-        fields:
           login_required:
             label: "Zichtbaarheid"
             description: "Is je community openbaar of privé?"
@@ -4991,82 +4976,6 @@ nl:
                 label: "Nee, nieuwe mensen kunnen direct lid worden"
               "yes":
                 label: "Ja, nieuwe mensen moeten door moderators worden goedgekeurd"
-          chat_enabled:
-            placeholder: "Chat inschakelen"
-            extra_description: "Ga in realtime in gesprek met je leden"
-      ready:
-        title: "Je site is klaar!"
-        description: "Dat was het! Je hebt de basis van het opzetten van je community voltooid. Je kunt nu beginnen en rondkijken, een welkomsttopic schrijven en uitnodigingen sturen!<br><br>Veel plezier!"
-      styling:
-        title: "Look en feel"
-        fields:
-          color_scheme:
-            label: "Kleurenpalet"
-          body_font:
-            label: "Lettertype inhoud"
-          site_font:
-            label: "Lettertype"
-          heading_font:
-            label: "Lettertype kop"
-          styling_preview:
-            label: "Voorbeeld"
-          homepage_style:
-            label: "Stijl startpagina"
-            choices:
-              latest:
-                label: "Nieuwste"
-                description: "Geeft de meest recent actieve topics in alle categorieën weer, zodat leden op de hoogte blijven van discussies die hen interesseren"
-              hot:
-                label: "Veelgelezen"
-                description: "Brengt trending topics naar voren door recente en algemene populariteit te combineren, laat zien waar leden in je community op dit moment over praten"
-              categories_and_latest_topics:
-                label: "Categorieën met nieuwste topics"
-                description: "Combineert de recent actieve topics in alle categorieën met een lijst van categorieën, hun beschrijving en het totale aantal topics"
-              categories_boxes:
-                label: "Categorievakken"
-                description: "Geeft de categorieën en hun beschrijving weer in een raster, ideaal voor leden om een overzicht te bekijken van de subcommunity's van je site"
-      branding:
-        title: "Sitelogo"
-        fields:
-          logo:
-            label: "Primair logo"
-            description: "Aanbevolen grootte: 600 x 200"
-          logo_small:
-            label: "Vierkant logo"
-            description: "Aanbevolen grootte: 512 x 512. Wordt ook gebruikt als favorieten- en app-pictogram voor het mobiele startscherm."
-      corporate:
-        title: "Je organisatie"
-        description: "De volgende informatie wordt gebruiken op je Gebruiksvoorwaarden- en Over-pagina. Sla dit gerust over als er geen bedrijf is."
-        fields:
-          company_name:
-            label: "Bedrijfsnaam"
-            placeholder: "Acme-organisatie"
-          governing_law:
-            label: "Toepasselijk recht"
-            placeholder: "Californische wet"
-          contact_url:
-            label: "Webpagina"
-            placeholder: "https://www.example.com/contact-us"
-          city_for_disputes:
-            label: "Plaats voor geschillen"
-            placeholder: "San Francisco, Californië"
-          site_contact:
-            label: "Geautomatiseerde berichten"
-            description: "Alle geautomatiseerde persoonlijke berichten op Discourse worden verzonden door deze gebruiker, zoals markeringswaarschuwingen en back-upvoltooiingsmeldingen."
-          contact_email:
-            label: "Contactpunt"
-            placeholder: "voorbeeld@gebruiker.com"
-            description: "E-mailadres van de belangrijkste contactpersoon die verantwoordelijk is voor deze site. Wordt gebruikt voor kritieke meldingen en wordt weergegeven op je <a href='%{base_path}/about' target='_blank'>Over-pagina</a> voor dringende kwesties."
-      invites:
-        title: "Medewerker uitnodigen"
-        description: "Je bent bijna klaar! Nodig wat mensen uit om te helpen met het <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>opstarten van je discussies</a> met interessante topics en berichten om je community op te zetten."
-        disabled: "Omdat sociale aanmeldingen zijn uitgeschakeld, is het niet mogelijk om uitnodigingen naar iedereen te versturen. Ga verder met de volgende stap."
-      finished:
-        title: "Je Discourse is gereed!"
-        description: |
-          <p>Als je deze instellingen ooit wilt wijzigen, <b>kun je deze wizard op elk gewenst moment opnieuw uitvoeren</b>, of naar <a href='%{base_path}/admin' target='_blank'>je beheerdersgedeelte</a> gaan; je vindt het naast het moersleutelpictogram in het websitemenu.</p>
-          <p>Het is eenvoudig om je Discourse nog verder aan te passen met behulp van ons krachtige themasysteem. Zie voor voorbeelden de <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">topthema's en componenten</a> op <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
-          <p>Veel plezier en succes met het <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>bouwen van je nieuwe community!</a></p>
   search_logs:
     graph_title: "Aantal zoekopdrachten"
   onebox:

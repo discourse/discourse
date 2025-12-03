@@ -105,13 +105,13 @@ function registerTopicFooterButtons(api) {
     translatedLabel() {
       const user = this.topic.assigned_to_user;
       const group = this.topic.assigned_to_group;
-      const label = i18n("discourse_assign.assigned_to_w_ellipsis");
+      const label = i18n("discourse_assign.assigned_to");
 
       if (user) {
         return htmlSafe(
-          `<span class="unassign-label"><span class="text">${label}</span><span class="username">${
+          `<span class="unassign-label"><span class="text">${label}&nbsp;</span><span class="username">${
             user.username
-          }</span></span>${renderAvatar(user, {
+          }</span></span>&nbsp;${renderAvatar(user, {
             imageSize: "small",
             ignoreTitle: true,
           })}`

@@ -1772,8 +1772,8 @@ RSpec.describe Email::Receiver do
 
   describe "#reply_by_email_address_regex" do
     before do
-      SiteSetting.reply_by_email_address = nil
-      SiteSetting.alternative_reply_by_email_addresses = nil
+      SiteSetting.reply_by_email_address = ""
+      SiteSetting.alternative_reply_by_email_addresses = ""
     end
 
     it "it matches nothing if there is not reply_by_email_address" do

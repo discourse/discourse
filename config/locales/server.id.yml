@@ -1765,30 +1765,17 @@ id:
     no_plugins: "Nonaktifkan semua penyesuaian plugin client-side"
   wizard:
     step:
-      introduction:
+      setup:
+        title: "Memulai"
         fields:
           title:
             label: "Nama komunitas"
-      privacy:
-        fields:
           login_required:
             choices:
               public:
                 label: "Umum"
               private:
                 label: "Pribadi"
-          chat_enabled:
-            placeholder: "Aktifkan obrolan"
-      styling:
-        fields:
-          homepage_style:
-            choices:
-              latest:
-                label: "Terbaru"
-      corporate:
-        fields:
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
   onebox:
     discourse:
       user_joined_community: "Bergabung %{date}"

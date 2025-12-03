@@ -129,6 +129,9 @@ export async function applyProgress(status, updater) {
  */
 async function handleProgress(postStream) {
   const status = postStream.aiStreamingStatus;
+  if (!status) {
+    return false;
+  }
 
   let keepPolling = false;
 
@@ -185,6 +188,10 @@ export function streamPostText(postStream, data) {
     postStream.aiStreamingStatus || {});
   status[data.post_id] = data;
   ensureProgress(postStream);
+}
+
+export function cleanupStreamingData(postStream) {
+  postStream.aiStreamingStatus = undefined;
 }
 
 /**

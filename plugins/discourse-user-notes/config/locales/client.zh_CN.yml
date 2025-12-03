@@ -14,3 +14,4 @@ zh_CN:
       show: "用户备注 (%{count})"
       delete_confirm: "确定要删除该用户备注吗？"
       show_post: "显示帖子"
+      show_flag: "显示举报"

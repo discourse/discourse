@@ -392,6 +392,8 @@ he:
         slug_description: במזהה הייצוגי נעשה שימוש בכתובת במקום בשם הערוץ
         name: שם הערוץ
         slug: מזהה ייצוגי של הערוץ (רשות)
+        emoji: אמוג׳י של הערוץ (רשות)
+        reset_emoji: איפוס אמוג׳י
       channel_edit_description_modal:
         title: עריכת תיאור
         input_placeholder: הוספת תיאור
@@ -466,6 +468,9 @@ he:
         types:
           category: "קטגוריה"
           topic: "נושא"
+        emoji:
+          label: "אמוג׳י של הערוץ (רשות)"
+          reset: "איפוס אמוג׳י"
       reviewable:
         type: "הודעת צ׳אט"
         message_in_channel: "ערוץ"
