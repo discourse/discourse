@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import BulkSelectTopicsDropdown from "discourse/components/bulk-select-topics-dropdown";
+import TopicBulkSelectDropdown from "discourse/components/topic-list/topic-bulk-select-dropdown";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Post from "discourse/models/post";
 import { i18n } from "discourse-i18n";
@@ -83,20 +83,12 @@ export default class SearchBulkSelectDropdown extends Component {
   }
 
   <template>
-    <div class="bulk-select-topics-dropdown">
-      <span class="bulk-select-topic-dropdown__count">
-        {{i18n
-          "topics.bulk.selected_count"
-          count=@bulkSelectHelper.selected.length
-        }}
-      </span>
-      <BulkSelectTopicsDropdown
-        @bulkSelectHelper={{this.topicBulkSelectHelper}}
-        @afterBulkActionComplete={{@afterBulkActionComplete}}
-        @extraButtons={{this.extraButtons}}
-        @excludedButtonIds={{array "delete-topics"}}
-        @onAction={{this.handleAction}}
-      />
-    </div>
+    <TopicBulkSelectDropdown
+      @bulkSelectHelper={{this.topicBulkSelectHelper}}
+      @afterBulkActionComplete={{@afterBulkActionComplete}}
+      @extraButtons={{this.extraButtons}}
+      @excludedButtonIds={{array "delete-topics"}}
+      @onAction={{this.handleAction}}
+    />
   </template>
 }
