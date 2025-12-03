@@ -4,11 +4,14 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import TopicBulkSelectDropdown from "discourse/components/topic-list/topic-bulk-select-dropdown";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import Post from "discourse/models/post";
 import { i18n } from "discourse-i18n";
 
 export default class SearchBulkSelectDropdown extends Component {
   @service dialog;
+
+  _bulkSelectHelper = null;
 
   get topics() {
     const topics = new Map();
@@ -21,14 +24,15 @@ export default class SearchBulkSelectDropdown extends Component {
   }
 
   get topicBulkSelectHelper() {
-    const topics = this.topics;
-    return {
-      selected: topics,
-      selectedCategoryIds: [
-        ...new Set(topics.map((t) => t.category_id).filter(Boolean)),
-      ],
-      toggleBulkSelect: () => this.args.bulkSelectHelper.toggleBulkSelect(),
-    };
+    if (!this._bulkSelectHelper) {
+      this._bulkSelectHelper = new BulkSelectHelper(this, this.topics);
+      this._bulkSelectHelper.onBulkSelectToggle = () => {
+        this.args.bulkSelectHelper.toggleBulkSelect();
+      };
+      return this._bulkSelectHelper;
+    }
+    this._bulkSelectHelper.setTopics(this.topics);
+    return this._bulkSelectHelper;
   }
 
   get extraButtons() {
