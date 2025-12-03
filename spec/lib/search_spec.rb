@@ -1026,6 +1026,22 @@ RSpec.describe Search do
       expect(results.posts.map(&:id)).to eq([post.id, post3.id])
     end
 
+    it "returns multiple posts per topic when using in:all-posts" do
+      post1 = Fabricate(:post, topic: topic, raw: "this is a zebra post")
+      post2 = Fabricate(:post, topic: topic, raw: "zebra zebra playing")
+      post3 = Fabricate(:post, topic: topic, raw: "another zebra mention")
+      post4 = Fabricate(:post, raw: "this is a zebra in another topic")
+
+      results = Search.execute("zebra")
+      expect(results.posts.map(&:id)).to contain_exactly(post1.id, post4.id)
+
+      results = Search.execute("zebra in:all-posts")
+      expect(results.posts.map(&:id)).to contain_exactly(post1.id, post2.id, post3.id, post4.id)
+
+      results = Search.execute("zebra IN:ALL-POSTS")
+      expect(results.posts.map(&:id)).to contain_exactly(post1.id, post2.id, post3.id, post4.id)
+    end
+
     it "is able to search with an offset when configured" do
       post_1 = Fabricate(:post, raw: "this is a play post")
       SiteSetting.search_recent_regular_posts_offset_post_id = post_1.id + 1
@@ -2082,20 +2098,26 @@ RSpec.describe Search do
       ).to contain_exactly(post_1.id)
     end
 
-    it "supports in:first, user:, @username" do
+    it "supports in:first, in:replies, user:, @username" do
       post_1 = Fabricate(:post, raw: "hi this is a test 123 123", topic: topic)
       post_2 = Fabricate(:post, raw: "boom boom shake the room test", topic: topic)
 
       expect(Search.execute("test in:first").posts).to contain_exactly(post_1)
       expect(Search.execute("test IN:FIRST").posts).to contain_exactly(post_1)
 
+      expect(Search.execute("test in:replies").posts).to contain_exactly(post_2)
+
       expect(Search.execute("boom").posts).to contain_exactly(post_2)
 
       expect(Search.execute("boom in:first").posts).to eq([])
       expect(Search.execute("boom f").posts).to eq([])
 
+      expect(Search.execute("boom in:replies").posts).to contain_exactly(post_2)
+
       expect(Search.execute("123 in:first").posts).to contain_exactly(post_1)
       expect(Search.execute("123 f").posts).to contain_exactly(post_1)
+
+      expect(Search.execute("123 in:replies").posts).to eq([])
 
       expect(Search.execute("user:nobody").posts).to eq([])
       expect(Search.execute("user:#{post_1.user.username}").posts).to contain_exactly(post_1)
