@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Chat::ChannelUnreadsQuery do
+RSpec.describe Chat::ChannelUnreadsQuery do
   subject(:query) do
     described_class.call(
       channel_ids: channel_ids,

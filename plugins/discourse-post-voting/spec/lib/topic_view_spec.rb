@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicView do
+RSpec.describe TopicView do
   fab!(:user)
   fab!(:admin)
   fab!(:topic) { Fabricate(:topic, subtype: Topic::POST_VOTING_SUBTYPE) }

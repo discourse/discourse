@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Navigating with breadcrumbs", type: :system do
+RSpec.describe "Navigating with breadcrumbs", type: :system do
   let(:discovery) { PageObjects::Pages::Discovery.new }
 
   fab!(:category1, :category)

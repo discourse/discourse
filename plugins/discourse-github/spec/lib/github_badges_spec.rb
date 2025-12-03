@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseGithubPlugin::GithubBadges do
+RSpec.describe DiscourseGithubPlugin::GithubBadges do
   let(:bronze_user) { Fabricate(:user) }
   let(:bronze_user_repo_2) { Fabricate(:user) }
   let(:silver_user) { Fabricate(:user) }

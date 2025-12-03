@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "UserGlobalNotice" do
+RSpec.describe "UserGlobalNotice" do
   before { SiteSetting.discourse_automation_enabled = true }
 
   context "when triggered by a stalled topic" do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::Chat::NotifyMentioned do
+RSpec.describe Jobs::Chat::NotifyMentioned do
   subject(:job) { described_class.new }
 
   fab!(:user_1) { Fabricate(:user, refresh_auto_groups: true) }

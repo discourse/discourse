@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "SuspendUserByEmail" do
+RSpec.describe "SuspendUserByEmail" do
   let(:suspend_until) { 10.days.from_now }
   let(:reason) { "banned for spam" }
 

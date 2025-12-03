@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::Embeddings::EntryPoint do
+RSpec.describe DiscourseAi::Embeddings::EntryPoint do
   fab!(:user)
 
   before { enable_current_plugin }

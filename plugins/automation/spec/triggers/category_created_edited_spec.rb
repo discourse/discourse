@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "CategoryCreatedEdited" do
+RSpec.describe "CategoryCreatedEdited" do
   before { SiteSetting.discourse_automation_enabled = true }
 
   fab!(:automation) do

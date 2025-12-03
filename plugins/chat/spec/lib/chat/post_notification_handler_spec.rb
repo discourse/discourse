@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Chat::PostNotificationHandler do
+RSpec.describe Chat::PostNotificationHandler do
   subject(:handler) { described_class.new(post, notified_users) }
 
   let(:acting_user) { Fabricate(:user) }

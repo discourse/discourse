@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe GithubLinkback do
+RSpec.describe GithubLinkback do
   let(:github_commit_link) do
     "https://github.com/discourse/discourse/commit/76981605fa10975e2e7af457e2f6a31909e0c811"
   end

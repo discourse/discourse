@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin House Ad", type: :system do
+RSpec.describe "Admin House Ad", type: :system do
   fab!(:admin)
   let(:house_ad) do
     AdPlugin::HouseAd.create(

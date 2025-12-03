@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::RefreshLeaderboardPositions do
+RSpec.describe Jobs::RefreshLeaderboardPositions do
   fab!(:leaderboard, :gamification_leaderboard)
   let(:leaderboard_positions) { DiscourseGamification::LeaderboardCachedView.new(leaderboard) }
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Slack Command Controller", type: :request do
+RSpec.describe "Slack Command Controller", type: :request do
   before { Discourse.cache.clear }
 
   let(:category) { Fabricate(:category) }

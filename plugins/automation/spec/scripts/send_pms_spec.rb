@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "SendPms" do
+RSpec.describe "SendPms" do
   fab!(:automation) do
     Fabricate(:automation, script: DiscourseAutomation::Scripts::SEND_PMS, trigger: "stalled_wiki")
   end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SiteSerializer do
+RSpec.describe SiteSerializer do
   fab!(:user)
   let(:guardian) { Guardian.new(user) }
 

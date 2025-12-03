@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicViewStatsController do
+RSpec.describe TopicViewStatsController do
   fab!(:topic)
 
   it "will error if accessed on require login sites" do

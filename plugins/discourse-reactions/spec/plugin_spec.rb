@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseReactions do
+RSpec.describe DiscourseReactions do
   before do
     SiteSetting.discourse_reactions_enabled = true
     SiteSetting.discourse_reactions_like_sync_enabled = true

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostLocalizationsController do
+RSpec.describe PostLocalizationsController do
   fab!(:user)
   fab!(:group)
   fab!(:post_record) { Fabricate(:post, version: 100) }

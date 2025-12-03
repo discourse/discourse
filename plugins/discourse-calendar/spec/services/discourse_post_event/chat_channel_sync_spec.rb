@@ -2,7 +2,7 @@
 
 return if !defined?(Chat)
 
-describe DiscoursePostEvent::ChatChannelSync do
+RSpec.describe DiscoursePostEvent::ChatChannelSync do
   fab!(:user)
   fab!(:admin)
   fab!(:admin_post) { Fabricate(:post, user: admin) }

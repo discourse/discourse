@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Auth::DiscourseIdAuthenticator do
+RSpec.describe Auth::DiscourseIdAuthenticator do
   let(:authenticator) { described_class.new }
   let(:user) { Fabricate(:user) }
 

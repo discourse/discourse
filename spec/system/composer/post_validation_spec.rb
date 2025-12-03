@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer Post Validations", type: :system do
+RSpec.describe "Composer Post Validations", type: :system do
   fab!(:tl0_user) { Fabricate(:user, trust_level: TrustLevel[0]) }
   fab!(:tl1_user) { Fabricate(:user, trust_level: TrustLevel[1]) }
   fab!(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2]) }

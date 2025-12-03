@@ -3,7 +3,7 @@
 require_relative "../support/assign_allowed_group"
 require_relative "../fabricators/assign_hook_fabricator"
 
-describe "integration tests" do
+RSpec.describe "integration tests" do
   before { SiteSetting.assign_enabled = true }
 
   it "preloads data in topic list" do

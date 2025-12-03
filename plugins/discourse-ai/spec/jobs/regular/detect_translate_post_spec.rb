@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::DetectTranslatePost do
+RSpec.describe Jobs::DetectTranslatePost do
   subject(:job) { described_class.new }
 
   fab!(:post)

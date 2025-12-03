@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::UserEmail do
+RSpec.describe Jobs::UserEmail do
   fab!(:user1, :user)
 
   fab!(:group1) do

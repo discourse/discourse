@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicQuery do
+RSpec.describe TopicQuery do
   describe "sorts events" do
     fab!(:user) { Fabricate(:user, admin: true) }
     fab!(:notified_user, :user)

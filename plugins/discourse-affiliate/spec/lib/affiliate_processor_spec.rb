@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe AffiliateProcessor do
+RSpec.describe AffiliateProcessor do
   def r(url)
     AffiliateProcessor.apply(url)
   end

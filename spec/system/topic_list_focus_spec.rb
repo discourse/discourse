@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Topic list focus", type: :system do
+RSpec.describe "Topic list focus", type: :system do
   fab!(:topics) { Fabricate.times(10, :post).map(&:topic) }
 
   before_all do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Topic do
+RSpec.describe Topic do
   let(:user1) { Fabricate(:user) }
   let(:user2) { Fabricate(:user) }
   let(:group) { Fabricate(:group) }

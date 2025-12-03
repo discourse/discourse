@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseSubscriptions::Campaign do
+RSpec.describe DiscourseSubscriptions::Campaign do
   describe "campaign data is refreshed" do
     let(:user) { Fabricate(:user) }
     let(:user2) { Fabricate(:user) }

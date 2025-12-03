@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicQuery do
+RSpec.describe TopicQuery do
   fab!(:user0, :user)
   fab!(:category1, :category)
   fab!(:topic0) { Fabricate(:topic, category: category1) }

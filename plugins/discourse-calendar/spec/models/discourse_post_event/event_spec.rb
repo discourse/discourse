@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscoursePostEvent::Event do
+RSpec.describe DiscoursePostEvent::Event do
   before do
     freeze_time DateTime.parse("2020-04-24 14:10")
     Jobs.run_immediately!
@@ -774,7 +774,7 @@ describe DiscoursePostEvent::Event do
   end
 end
 
-describe DiscoursePostEvent::Event, "#capacity" do
+RSpec.describe DiscoursePostEvent::Event, "#capacity" do
   before do
     Jobs.run_immediately!
     SiteSetting.calendar_enabled = true

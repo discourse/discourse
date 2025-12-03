@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Powered by Discourse", type: :system do
+RSpec.describe "Powered by Discourse", type: :system do
   it "appears when enabled" do
     SiteSetting.enable_powered_by_discourse = true
 

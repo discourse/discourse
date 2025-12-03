@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "New Category", type: :system do
+RSpec.describe "New Category", type: :system do
   fab!(:admin)
   let(:category_page) { PageObjects::Pages::Category.new }
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Chat::ThreadOriginalMessageSerializer do
+RSpec.describe Chat::ThreadOriginalMessageSerializer do
   subject(:serializer) { described_class.new(message_1, scope: guardian, root: nil) }
 
   fab!(:message_1, :chat_message)

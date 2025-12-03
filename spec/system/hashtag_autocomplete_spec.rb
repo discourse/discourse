@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-describe "Using #hashtag autocompletion to search for and lookup categories and tags",
-         type: :system do
+RSpec.describe "Using #hashtag autocompletion to search for and lookup categories and tags",
+               type: :system do
   fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:category) do
     Fabricate(:category, name: "Cool Category", slug: "cool-cat", topic_count: 3234)

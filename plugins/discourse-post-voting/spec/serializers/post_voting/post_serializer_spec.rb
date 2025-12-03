@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostVoting::PostSerializerExtension do
+RSpec.describe PostVoting::PostSerializerExtension do
   fab!(:user)
   fab!(:topic) { Fabricate(:topic, subtype: Topic::POST_VOTING_SUBTYPE) }
   fab!(:topic_post) { Fabricate(:post, topic: topic) }

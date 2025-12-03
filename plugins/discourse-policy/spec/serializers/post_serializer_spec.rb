@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostSerializer do
+RSpec.describe PostSerializer do
   fab!(:group)
   fab!(:admin)
   fab!(:user1, :user)

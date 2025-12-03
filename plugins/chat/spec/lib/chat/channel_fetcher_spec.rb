@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Chat::ChannelFetcher do
+RSpec.describe Chat::ChannelFetcher do
   fab!(:category) { Fabricate(:category, name: "support") }
   fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
   fab!(:category_channel) { Fabricate(:category_channel, chatable: category, slug: "support") }

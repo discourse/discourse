@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Crawler hreflang tags" do
+RSpec.describe "Crawler hreflang tags" do
   fab!(:user)
   fab!(:post) { Fabricate(:post, user:) }
 

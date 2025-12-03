@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "GroupCategoryNotificationDefault" do
+RSpec.describe "GroupCategoryNotificationDefault" do
   fab!(:category)
   fab!(:group)
 

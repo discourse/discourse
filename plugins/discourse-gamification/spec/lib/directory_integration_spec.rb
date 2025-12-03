@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseGamification::DirectoryIntegration do
+RSpec.describe DiscourseGamification::DirectoryIntegration do
   fab!(:user_1, :admin)
   fab!(:user_2, :user)
   fab!(:leaderboard, :gamification_leaderboard)

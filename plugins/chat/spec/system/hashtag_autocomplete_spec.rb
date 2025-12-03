@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Using #hashtag autocompletion to search for and lookup channels", type: :system do
+RSpec.describe "Using #hashtag autocompletion to search for and lookup channels", type: :system do
   fab!(:user)
   fab!(:channel1) { Fabricate(:chat_channel, name: "Music Lounge", slug: "music") }
   fab!(:channel2) { Fabricate(:chat_channel, name: "Random", slug: "random") }

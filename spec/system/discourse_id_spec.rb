@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "discourse login client auth" do
+RSpec.describe "discourse login client auth" do
   include OmniauthHelpers
 
   before do

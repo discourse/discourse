@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe GithubPermalinks do
+RSpec.describe GithubPermalinks do
   before { enable_current_plugin }
 
   context "when it doesn't contain github link to the file" do

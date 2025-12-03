@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DeleteRejectedEmailAfterDaysValidator do
+RSpec.describe DeleteRejectedEmailAfterDaysValidator do
   it "is not valid if value is smaller than the value of SiteSetting.delete_email_logs_after_days" do
     SiteSetting.delete_email_logs_after_days = 90
 

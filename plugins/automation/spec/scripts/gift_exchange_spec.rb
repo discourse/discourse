@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "GiftExchange" do
+RSpec.describe "GiftExchange" do
   fab!(:automation) do
     Fabricate(
       :automation,

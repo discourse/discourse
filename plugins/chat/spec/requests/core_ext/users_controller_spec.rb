@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UsersController do
+RSpec.describe UsersController do
   describe "#perform_account_activation" do
     let!(:channel) { Fabricate(:category_channel, auto_join_users: true) }
 

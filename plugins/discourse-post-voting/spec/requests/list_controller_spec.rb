@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ListController do
+RSpec.describe ListController do
   fab!(:user)
   fab!(:category)
   fab!(:post_voting_topic) do

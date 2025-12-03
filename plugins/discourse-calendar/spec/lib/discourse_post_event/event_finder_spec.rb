@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscoursePostEvent::EventFinder do
+RSpec.describe DiscoursePostEvent::EventFinder do
   fab!(:current_user, :user)
   fab!(:user)
 

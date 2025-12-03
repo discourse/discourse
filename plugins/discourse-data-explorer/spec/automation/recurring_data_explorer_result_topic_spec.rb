@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "RecurringDataExplorerResultTopic" do
+RSpec.describe "RecurringDataExplorerResultTopic" do
   fab!(:admin)
 
   fab!(:user)

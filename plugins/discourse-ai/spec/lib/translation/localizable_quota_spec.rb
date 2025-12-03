@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::Translation::LocalizableQuota do
+RSpec.describe DiscourseAi::Translation::LocalizableQuota do
   let(:test_class) do
     Class.new do
       include DiscourseAi::Translation::LocalizableQuota

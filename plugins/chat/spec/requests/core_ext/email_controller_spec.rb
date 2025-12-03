@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe EmailController do
+RSpec.describe EmailController do
   describe "unsubscribing from chat email settings" do
     fab!(:user)
 

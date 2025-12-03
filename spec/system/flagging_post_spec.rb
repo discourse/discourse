@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Flagging post", type: :system do
+RSpec.describe "Flagging post", type: :system do
   fab!(:current_user, :admin)
   fab!(:category)
   fab!(:topic) { Fabricate(:topic, category: category) }

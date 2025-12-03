@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Permalinks Page", type: :system do
+RSpec.describe "Admin Permalinks Page", type: :system do
   fab!(:admin)
   fab!(:post)
 

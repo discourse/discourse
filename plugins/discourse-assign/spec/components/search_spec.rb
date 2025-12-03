@@ -2,7 +2,7 @@
 
 require_relative "../support/assign_allowed_group"
 
-describe Search do
+RSpec.describe Search do
   fab!(:user, :active_user)
   fab!(:user2, :user)
 

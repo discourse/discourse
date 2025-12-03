@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe AdPlugin::HouseAdsController do
+RSpec.describe AdPlugin::HouseAdsController do
   let(:admin) { Fabricate(:admin) }
   let(:category) { Fabricate(:category) }
   let(:group) { Fabricate(:group) }

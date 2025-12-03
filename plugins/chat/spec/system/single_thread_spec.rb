@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Single thread in side panel", type: :system do
+RSpec.describe "Single thread in side panel", type: :system do
   fab!(:current_user, :user)
 
   let(:chat_page) { PageObjects::Pages::Chat.new }

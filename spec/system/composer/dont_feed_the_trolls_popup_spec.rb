@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer don't feed the trolls popup", type: :system do
+RSpec.describe "Composer don't feed the trolls popup", type: :system do
   fab!(:user)
   fab!(:troll, :user)
   fab!(:topic) { Fabricate(:topic, user: user) }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscoursePostEvent::EventSerializer do
+RSpec.describe DiscoursePostEvent::EventSerializer do
   before do
     Jobs.run_immediately!
     SiteSetting.calendar_enabled = true

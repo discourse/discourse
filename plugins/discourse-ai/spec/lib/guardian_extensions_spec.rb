@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::GuardianExtensions do
+RSpec.describe DiscourseAi::GuardianExtensions do
   fab!(:user)
   fab!(:group)
   fab!(:topic)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseGithubPlugin::GithubRepo do
+RSpec.describe DiscourseGithubPlugin::GithubRepo do
   before { enable_current_plugin }
 
   it "strips .git from url" do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Chat do
+RSpec.describe Chat do
   before do
     SiteSetting.clean_up_uploads = true
     SiteSetting.clean_orphan_uploads_grace_period_hours = 1

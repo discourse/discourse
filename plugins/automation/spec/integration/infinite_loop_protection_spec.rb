@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Infinite loop protection" do
+RSpec.describe "Infinite loop protection" do
   fab!(:automation_1) do
     Fabricate(:automation, script: "auto_responder", trigger: "post_created_edited", enabled: true)
   end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::Translation::TranslationController do
+RSpec.describe DiscourseAi::Translation::TranslationController do
   fab!(:user)
   fab!(:admin)
   fab!(:test_post, :post)

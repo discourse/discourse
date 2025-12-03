@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Site Setting Category Bulk Action", type: :system do
+RSpec.describe "Admin Site Setting Category Bulk Action", type: :system do
   let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
   let(:banner) { PageObjects::Components::AdminChangesBanner.new }
   let(:dialog) { PageObjects::Components::Dialog.new }

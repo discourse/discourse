@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Reactions | Post reaction user list", type: :system do
+RSpec.describe "Reactions | Post reaction user list", type: :system do
   fab!(:current_user, :user)
   fab!(:user_2, :user)
   fab!(:user_3, :user)

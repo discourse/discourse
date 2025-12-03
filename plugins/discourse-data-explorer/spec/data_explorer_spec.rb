@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseDataExplorer::DataExplorer do
+RSpec.describe DiscourseDataExplorer::DataExplorer do
   describe ".run_query" do
     fab!(:topic)
 

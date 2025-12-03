@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "script encoding" do
+RSpec.describe "script encoding" do
   let(:js_cdn_requests) { [] }
 
   before { stub_and_log_cdn_requests }

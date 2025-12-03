@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::Chat::EmailNotifications do
+RSpec.describe Jobs::Chat::EmailNotifications do
   before { Jobs.run_immediately! }
 
   context "when chat is enabled" do

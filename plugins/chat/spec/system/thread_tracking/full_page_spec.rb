@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Thread tracking state | full page", type: :system do
+RSpec.describe "Thread tracking state | full page", type: :system do
   fab!(:current_user, :user)
   fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
   fab!(:other_user, :user)

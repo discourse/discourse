@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::CleanUpTags do
+RSpec.describe Jobs::CleanUpTags do
   subject(:job) { described_class.new }
 
   let!(:tags) do

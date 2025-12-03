@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe OAuth2BasicAuthenticator do
+RSpec.describe OAuth2BasicAuthenticator do
   describe "after_authenticate" do
     before { SiteSetting.oauth2_user_json_url = "https://provider.com/user" }
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "LTI Plugin" do
+RSpec.describe "LTI Plugin" do
   let(:authorize_url) { "https://example.com/authorize" }
   let(:platform_private_key) { OpenSSL::PKey::RSA.generate 2048 }
   let(:platform_public_key) { platform_private_key.public_key }

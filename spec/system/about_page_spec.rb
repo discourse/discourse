@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "About page", type: :system do
+RSpec.describe "About page", type: :system do
   fab!(:image_upload)
   fab!(:admin) { Fabricate(:admin, last_seen_at: 1.hour.ago) }
   fab!(:moderator) { Fabricate(:moderator, last_seen_at: 1.hour.ago) }

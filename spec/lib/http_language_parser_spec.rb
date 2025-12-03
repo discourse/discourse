@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe HttpLanguageParser do
+RSpec.describe HttpLanguageParser do
   it "returns the default locale when no language is matched" do
     expect(HttpLanguageParser.parse("")).to eq(SiteSetting.default_locale)
   end

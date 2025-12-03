@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SiteSetting do
+RSpec.describe SiteSetting do
   before { SiteSetting.calendar_enabled = true }
 
   it "has the correct default value" do

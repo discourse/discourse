@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "DiscourseAutomation | error", type: :system do
+RSpec.describe "DiscourseAutomation | error", type: :system do
   fab!(:admin)
 
   let(:new_automation_page) { PageObjects::Pages::NewAutomation.new }

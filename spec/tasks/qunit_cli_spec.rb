@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "bin/qunit" do
+RSpec.describe "bin/qunit" do
   def run(*args)
     out, err, status = Open3.capture3("bin/qunit", "--dry-run", *args, chdir: Rails.root.to_s)
 

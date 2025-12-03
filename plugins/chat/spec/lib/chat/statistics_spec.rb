@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Chat::Statistics do
+RSpec.describe Chat::Statistics do
   fab!(:frozen_time) { DateTime.parse("2022-07-08 09:30:00") }
 
   def minus_time(time)
@@ -118,7 +118,7 @@ describe Chat::Statistics do
   end
 end
 
-describe Chat::Statistics do
+RSpec.describe Chat::Statistics do
   describe "#channel_messages" do
     now = Time.now
 

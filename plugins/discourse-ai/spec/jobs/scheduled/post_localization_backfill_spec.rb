@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::PostLocalizationBackfill do
+RSpec.describe Jobs::PostLocalizationBackfill do
   before do
     enable_current_plugin
     assign_fake_provider_to(:ai_default_llm_model)

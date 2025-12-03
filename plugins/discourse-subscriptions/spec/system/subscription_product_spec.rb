@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Subscription products", type: :system do
+RSpec.describe "Subscription products", type: :system do
   fab!(:admin)
   fab!(:product) { Fabricate(:product, external_id: "prod_OiK") }
   let(:dialog) { PageObjects::Components::Dialog.new }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostMover do
+RSpec.describe PostMover do
   fab!(:admin)
   fab!(:user)
   fab!(:topic_1) { Fabricate(:topic, user: user) }

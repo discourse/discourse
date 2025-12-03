@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe GithubLinkbackAccessTokenSettingValidator do
+RSpec.describe GithubLinkbackAccessTokenSettingValidator do
   subject(:validator) { described_class.new }
 
   let(:value) { SecureRandom.hex(10) }

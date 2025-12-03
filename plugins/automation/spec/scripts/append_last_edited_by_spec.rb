@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "AppendLastEditedBy" do
+RSpec.describe "AppendLastEditedBy" do
   fab!(:post) { Fabricate(:post, raw: "this is a post with no edit") }
   fab!(:moderator)
 

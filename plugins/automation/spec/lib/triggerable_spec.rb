@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAutomation::Triggerable do
+RSpec.describe DiscourseAutomation::Triggerable do
   before do
     DiscourseAutomation::Triggerable.add("cats_everywhere") do
       placeholder :foo

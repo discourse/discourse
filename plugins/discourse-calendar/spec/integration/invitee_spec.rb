@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscoursePostEvent::Invitee do
+RSpec.describe DiscoursePostEvent::Invitee do
   before do
     freeze_time
     Jobs.run_immediately!

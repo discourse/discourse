@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "AdPlugin::AdImpression", type: :system do
+RSpec.describe "AdPlugin::AdImpression", type: :system do
   before { enable_current_plugin }
 
   describe "when a user sees an ad" do

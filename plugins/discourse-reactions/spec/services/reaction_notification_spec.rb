@@ -3,7 +3,7 @@
 require_relative "../fabricators/reaction_fabricator"
 require_relative "../fabricators/reaction_user_fabricator"
 
-describe DiscourseReactions::ReactionNotification do
+RSpec.describe DiscourseReactions::ReactionNotification do
   before do
     SiteSetting.discourse_reactions_enabled = true
     PostActionNotifier.enable

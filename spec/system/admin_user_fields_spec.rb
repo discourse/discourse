@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin User Fields", type: :system do
+RSpec.describe "Admin User Fields", type: :system do
   fab!(:current_user, :admin)
 
   before { sign_in(current_user) }

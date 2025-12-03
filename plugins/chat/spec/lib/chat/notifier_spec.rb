@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Chat::Notifier do
+RSpec.describe Chat::Notifier do
   describe "#notify_new" do
     fab!(:channel, :category_channel)
     fab!(:user_1) { Fabricate(:user, refresh_auto_groups: true) }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicsController do
+RSpec.describe TopicsController do
   fab!(:user)
   fab!(:topic) { Fabricate(:topic, subtype: Topic::POST_VOTING_SUBTYPE) }
   fab!(:post) { create_post(topic: topic) }

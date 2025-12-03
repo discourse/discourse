@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DirectoryItem, type: :model do
+RSpec.describe DirectoryItem, type: :model do
   describe "Updating user directory with solutions count" do
     fab!(:user)
     fab!(:admin)

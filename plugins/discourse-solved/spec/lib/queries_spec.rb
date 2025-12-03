@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseSolved::Queries do
+RSpec.describe DiscourseSolved::Queries do
   fab!(:user)
   fab!(:admin)
 

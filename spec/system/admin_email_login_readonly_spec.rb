@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin email login in readonly mode", type: :system do
+RSpec.describe "Admin email login in readonly mode", type: :system do
   fab!(:admin)
 
   context "when site is in readonly mode" do

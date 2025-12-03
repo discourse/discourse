@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Revamp | Sidebar Navigation | Plugin Links", type: :system do
+RSpec.describe "Admin Revamp | Sidebar Navigation | Plugin Links", type: :system do
   fab!(:admin)
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
   let(:chat_page) { PageObjects::Pages::Chat.new }

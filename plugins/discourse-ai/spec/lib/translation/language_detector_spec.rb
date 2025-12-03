@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::Translation::LanguageDetector do
+RSpec.describe DiscourseAi::Translation::LanguageDetector do
   let!(:persona) do
     AiPersona.find(
       DiscourseAi::Personas::Persona.system_personas[DiscourseAi::Personas::LocaleDetector],

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "UserAddedToGroup" do
+RSpec.describe "UserAddedToGroup" do
   fab!(:user)
   fab!(:tracked_group, :group)
   fab!(:automation) do

@@ -2,7 +2,7 @@
 
 return if !defined?(DiscourseAutomation)
 
-describe DiscourseAi::Automation::LlmPersonaTriage do
+RSpec.describe DiscourseAi::Automation::LlmPersonaTriage do
   fab!(:user)
   fab!(:bot_user, :user)
 

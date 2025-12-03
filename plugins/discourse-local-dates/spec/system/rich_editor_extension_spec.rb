@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer - ProseMirror editor - Local Dates extension", type: :system do
+RSpec.describe "Composer - ProseMirror editor - Local Dates extension", type: :system do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   let(:cdp) { PageObjects::CDP.new }
   let(:composer) { PageObjects::Components::Composer.new }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAutomation::AutomationSerializer do
+RSpec.describe DiscourseAutomation::AutomationSerializer do
   fab!(:user)
   fab!(:automation) do
     Fabricate(

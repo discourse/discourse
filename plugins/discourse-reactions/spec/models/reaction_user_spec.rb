@@ -3,7 +3,7 @@
 require_relative "../fabricators/reaction_fabricator"
 require_relative "../fabricators/reaction_user_fabricator"
 
-describe DiscourseReactions::ReactionUser do
+RSpec.describe DiscourseReactions::ReactionUser do
   before { SiteSetting.discourse_reactions_enabled = true }
 
   describe "delegating methods when the user is nil" do

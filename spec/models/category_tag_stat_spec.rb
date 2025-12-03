@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe CategoryTagStat do
+RSpec.describe CategoryTagStat do
   fab!(:category)
   fab!(:tag)
   fab!(:topic) { Fabricate(:topic, category: category, tags: [tag]) }

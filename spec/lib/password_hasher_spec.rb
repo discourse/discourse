@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PasswordHasher do
+RSpec.describe PasswordHasher do
   def hash(password: "mypass", salt: "mysalt", algorithm:)
     PasswordHasher.hash_password(password: password, salt: salt, algorithm: algorithm)
   end

@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'validation/month_validator'
 
-describe Definitions::Validation::Month do
+RSpec.describe Definitions::Validation::Month do
   subject { described_class.new }
 
   context 'months are valid' do

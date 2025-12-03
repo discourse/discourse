@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAutomation::EventHandlers do
+RSpec.describe DiscourseAutomation::EventHandlers do
   before { SiteSetting.discourse_automation_enabled = true }
 
   describe "#handle_stalled_topic" do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Chat::ReviewQueue do
+RSpec.describe Chat::ReviewQueue do
   subject(:queue) { described_class.new }
 
   fab!(:message_poster, :user)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Tag synonyms", type: :system do
+RSpec.describe "Tag synonyms", type: :system do
   let(:tags_page) { PageObjects::Pages::Tag.new }
   fab!(:tag_1) { Fabricate(:tag, name: "design") }
   fab!(:tag_2) { Fabricate(:tag, name: "art") }

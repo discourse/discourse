@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Viewing user private messages", type: :system do
+RSpec.describe "Viewing user private messages", type: :system do
   fab!(:user) { Fabricate(:user, username: "mIxed_caSE_usERNAME") }
   fab!(:user2, :user)
 

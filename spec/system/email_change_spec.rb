@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Changing email", type: :system do
+RSpec.describe "Changing email", type: :system do
   fab!(:password) { "mysupersecurepassword" }
   fab!(:user) { Fabricate(:user, active: true, password: password) }
   let(:new_email) { "newemail@example.com" }

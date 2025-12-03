@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::ReplaceGithubNonPermalinks do
+RSpec.describe Jobs::ReplaceGithubNonPermalinks do
   let(:job) { described_class.new }
   let(:github_url) do
     "https://github.com/test/onebox/blob/master/lib/onebox/engine/github_blob_onebox.rb"

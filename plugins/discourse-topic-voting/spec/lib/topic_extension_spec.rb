@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseTopicVoting::TopicExtension do
+RSpec.describe DiscourseTopicVoting::TopicExtension do
   let(:user) { Fabricate(:user) }
   let(:user2) { Fabricate(:user) }
 

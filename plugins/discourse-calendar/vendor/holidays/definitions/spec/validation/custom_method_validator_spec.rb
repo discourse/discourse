@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'validation/custom_method_validator'
 
-describe Definitions::Validation::CustomMethod do
+RSpec.describe Definitions::Validation::CustomMethod do
   let(:methods) {
     {
       'test' => {

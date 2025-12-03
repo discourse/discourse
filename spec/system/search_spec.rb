@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Search", type: :system do
+RSpec.describe "Search", type: :system do
   let(:search_page) { PageObjects::Pages::Search.new }
   fab!(:topic)
   fab!(:op) { Fabricate(:post, topic: topic) }

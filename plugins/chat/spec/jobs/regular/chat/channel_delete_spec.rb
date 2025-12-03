@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::Chat::ChannelDelete do
+RSpec.describe Jobs::Chat::ChannelDelete do
   fab!(:chat_channel)
   fab!(:user1, :user)
   fab!(:user2, :user)

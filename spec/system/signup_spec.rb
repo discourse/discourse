@@ -434,7 +434,7 @@ shared_examples "signup scenarios" do
   end
 end
 
-describe "Signup", type: :system do
+RSpec.describe "Signup", type: :system do
   context "when desktop" do
     include_examples "signup scenarios"
   end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "hide_user_profiles_from_public", type: :system do
+RSpec.describe "hide_user_profiles_from_public", type: :system do
   let(:user) { Fabricate(:user) }
   before { SiteSetting.hide_user_profiles_from_public = true }
 

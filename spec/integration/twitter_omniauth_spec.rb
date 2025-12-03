@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Twitter OAuth 1.0a" do
+RSpec.describe "Twitter OAuth 1.0a" do
   let(:access_token) { "twitter_access_token_448" }
   let(:consumer_key) { "abcdef11223344" }
   let(:consumer_secret) { "adddcccdddd99922" }

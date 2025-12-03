@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PrettyText do
+RSpec.describe PrettyText do
   context "with discourse math" do
     before { SiteSetting.discourse_math_enabled = true }
 

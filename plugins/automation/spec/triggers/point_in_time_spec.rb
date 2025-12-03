@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "PointInTime" do
+RSpec.describe "PointInTime" do
   fab!(:user)
   fab!(:topic)
   fab!(:automation) do

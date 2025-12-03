@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Topic do
+RSpec.describe Topic do
   fab!(:user)
   fab!(:category)
   fab!(:topic) { Fabricate(:topic, category: category, subtype: Topic::POST_VOTING_SUBTYPE) }

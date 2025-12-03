@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostLocalizationCreator do
+RSpec.describe PostLocalizationCreator do
   fab!(:user)
   fab!(:post)
   fab!(:group)

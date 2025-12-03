@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe AdPlugin::AdImpression do
+RSpec.describe AdPlugin::AdImpression do
   fab!(:house_ad)
   fab!(:user)
   fab!(:house_ad_impression) { Fabricate(:house_ad_impression, house_ad: house_ad, user: user) }

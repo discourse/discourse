@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::PublishGroupMembershipUpdates do
+RSpec.describe Jobs::PublishGroupMembershipUpdates do
   subject(:job) { described_class.new }
 
   fab!(:user)

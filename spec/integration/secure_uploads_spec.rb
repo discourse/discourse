@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Secure uploads" do
+RSpec.describe "Secure uploads" do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:group)
   fab!(:secure_category) { Fabricate(:private_category, group: group) }

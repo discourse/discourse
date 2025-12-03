@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Ember route-scroll-manager service", type: :system do
+RSpec.describe "Ember route-scroll-manager service", type: :system do
   before do
     Fabricate(:admin)
     Fabricate.times(50, :post)

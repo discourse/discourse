@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'validation/definition_validator'
 
-describe Definitions::Validation::Definition do
+RSpec.describe Definitions::Validation::Definition do
   let(:custom_method_validator) { double(:custom_method_validator, :call => true) }
   let(:months_validator) { double(:months_validator, :call => nil) }
   let(:test_validator) { double(:test_validator, :call => true) }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Discovery heading accessibility", type: :system do
+RSpec.describe "Discovery heading accessibility", type: :system do
   let(:discovery) { PageObjects::Pages::Discovery.new }
 
   fab!(:category) { Fabricate(:category, name: "General") }

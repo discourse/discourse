@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::Embeddings::EntryPoint do
+RSpec.describe DiscourseAi::Embeddings::EntryPoint do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
   fab!(:embedding_definition)

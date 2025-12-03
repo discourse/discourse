@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Reactions | Activity", type: :system do
+RSpec.describe "Reactions | Activity", type: :system do
   fab!(:current_user, :user)
 
   before do

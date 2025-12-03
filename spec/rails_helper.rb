@@ -239,6 +239,7 @@ RSpec::Mocks::Syntax.singleton_class.define_method(:disable_should) { |*| nil }
 RSpec::Mocks::ArgumentMatchers.remove_method(:hash_including) # We’re currently relying on the version from Webmock
 
 RSpec.configure do |config|
+  config.disable_monkey_patching!
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end

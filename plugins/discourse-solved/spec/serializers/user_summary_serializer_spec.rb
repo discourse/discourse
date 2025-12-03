@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserSummarySerializer do
+RSpec.describe UserSummarySerializer do
   fab!(:user)
 
   let(:guardian) { Guardian.new }

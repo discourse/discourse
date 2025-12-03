@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Post translations", type: :system do
+RSpec.describe "Post translations", type: :system do
   POST_LANGUAGE_SWITCHER_SELECTOR = "button[data-identifier='post-language-selector']"
 
   fab!(:admin)

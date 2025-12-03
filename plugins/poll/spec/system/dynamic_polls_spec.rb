@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Dynamic polls", type: :system do
+RSpec.describe "Dynamic polls", type: :system do
   fab!(:admin)
   fab!(:topic)
 

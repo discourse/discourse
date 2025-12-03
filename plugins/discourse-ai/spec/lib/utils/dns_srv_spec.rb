@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::Utils::DnsSrv do
+RSpec.describe DiscourseAi::Utils::DnsSrv do
   let(:domain) { "example.com" }
   let(:weighted_dns_results) do
     [

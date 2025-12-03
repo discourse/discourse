@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::TopicsLocaleDetectionBackfill do
+RSpec.describe Jobs::TopicsLocaleDetectionBackfill do
   subject(:job) { described_class.new }
 
   fab!(:topic) { Fabricate(:topic, locale: nil) }

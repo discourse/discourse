@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Content localization site setting changes" do
+RSpec.describe "Content localization site setting changes" do
   describe "when content_localization_enabled is enabled" do
     it "adds addTranslation button to post_menu after edit button" do
       original_menu = "read|like|edit|reply"

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseReactions::CustomReactionsController do
+RSpec.describe DiscourseReactions::CustomReactionsController do
   fab!(:user)
   fab!(:post_1, :post)
 

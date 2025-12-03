@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Discovery Category Routes", type: :system do
+RSpec.describe "Discovery Category Routes", type: :system do
   fab!(:category) do
     Fabricate(:category, show_subcategory_list: true, subcategory_list_style: "boxes")
   end

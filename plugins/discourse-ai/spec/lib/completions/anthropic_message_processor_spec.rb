@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::Completions::AnthropicMessageProcessor do
+RSpec.describe DiscourseAi::Completions::AnthropicMessageProcessor do
   before { enable_current_plugin }
 
   it "correctly handles and combines partial thinking chunks into complete thinking objects" do

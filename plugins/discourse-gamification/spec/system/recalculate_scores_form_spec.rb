@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Recalculate Scores Form", type: :system do
+RSpec.describe "Recalculate Scores Form", type: :system do
   let(:recalculate_scores_modal) { PageObjects::Modals::RecalculateScoresForm.new }
 
   fab!(:admin)

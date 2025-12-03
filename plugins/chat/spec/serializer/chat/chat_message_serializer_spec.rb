@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Chat::MessageSerializer do
+RSpec.describe Chat::MessageSerializer do
   subject(:serializer) { described_class.new(message_1, scope: guardian, root: nil) }
 
   fab!(:chat_channel, :category_channel)

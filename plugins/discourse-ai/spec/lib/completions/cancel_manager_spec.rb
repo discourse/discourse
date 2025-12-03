@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::Completions::CancelManager do
+RSpec.describe DiscourseAi::Completions::CancelManager do
   fab!(:model) { Fabricate(:anthropic_model, name: "test-model") }
 
   before do

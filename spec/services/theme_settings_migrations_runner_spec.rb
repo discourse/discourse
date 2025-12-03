@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ThemeSettingsMigrationsRunner do
+RSpec.describe ThemeSettingsMigrationsRunner do
   fab!(:theme)
   fab!(:migration_field) { Fabricate(:migration_theme_field, version: 1, theme: theme) }
   fab!(:settings_field) { Fabricate(:settings_theme_field, theme: theme, value: <<~YAML) }

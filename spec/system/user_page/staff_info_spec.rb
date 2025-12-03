@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Viewing user staff info as an admin", type: :system do
+RSpec.describe "Viewing user staff info as an admin", type: :system do
   fab!(:user)
   fab!(:admin)
   let(:user_page) { PageObjects::Pages::User.new }

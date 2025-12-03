@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe FinalDestination::Resolver do
+RSpec.describe FinalDestination::Resolver do
   let(:mock_response) { [Addrinfo.ip("1.1.1.1"), Addrinfo.ip("2.2.2.2")] }
 
   before do

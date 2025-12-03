@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "FlagPostsOnWords" do
+RSpec.describe "FlagPostsOnWords" do
   fab!(:user)
   fab!(:category) { Fabricate(:category, user: user) }
   fab!(:topic) { Fabricate(:topic, category_id: category.id) }

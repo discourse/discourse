@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "AddUserToGroupThroughCustomField" do
+RSpec.describe "AddUserToGroupThroughCustomField" do
   fab!(:user_1, :user)
   fab!(:user_2, :user)
   fab!(:target_group) { Fabricate(:group, full_name: "Groupity Group") }

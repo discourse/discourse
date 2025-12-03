@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer - ProseMirror editor", type: :system do
+RSpec.describe "Composer - ProseMirror editor", type: :system do
   fab!(:current_user) do
     Fabricate(
       :user,

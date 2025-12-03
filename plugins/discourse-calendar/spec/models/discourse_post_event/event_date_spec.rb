@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscoursePostEvent::EventDate do
+RSpec.describe DiscoursePostEvent::EventDate do
   let(:user) { Fabricate(:user, admin: true) }
   let(:topic) { Fabricate(:topic, user: user) }
   let!(:first_post) { Fabricate(:post, topic: topic) }

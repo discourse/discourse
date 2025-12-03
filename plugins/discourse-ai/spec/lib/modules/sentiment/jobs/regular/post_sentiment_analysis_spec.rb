@@ -2,7 +2,7 @@
 
 require_relative "../../../../../support/sentiment_inference_stubs"
 
-describe Jobs::PostSentimentAnalysis do
+RSpec.describe Jobs::PostSentimentAnalysis do
   subject(:job) { described_class.new }
 
   before { enable_current_plugin }

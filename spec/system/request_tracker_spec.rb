@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Request tracking", type: :system do
+RSpec.describe "Request tracking", type: :system do
   before do
     ApplicationRequest.enable
     CachedCounting.reset

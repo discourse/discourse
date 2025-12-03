@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseSolved::GuardianExtensions do
+RSpec.describe DiscourseSolved::GuardianExtensions do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:other_user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:topic, :topic_with_op)

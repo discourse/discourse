@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Chat::DirectMessageSerializer do
+RSpec.describe Chat::DirectMessageSerializer do
   describe "#user" do
     it "returns you when there are two of us" do
       me = Fabricate(:user)

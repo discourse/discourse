@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Chat::DirectMessage do
+RSpec.describe Chat::DirectMessage do
   fab!(:user1) { Fabricate(:user, username: "chatdmfellow1") }
   fab!(:user2) { Fabricate(:user, username: "chatdmuser") }
   fab!(:chat_channel, :direct_message_channel)

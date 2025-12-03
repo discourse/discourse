@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe CategoriesController do
+RSpec.describe CategoriesController do
   fab!(:category)
   fab!(:topic) { Fabricate(:topic, category: category) }
   fab!(:admin) { Fabricate(:user, admin: true) }

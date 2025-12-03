@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostSerializer do
+RSpec.describe PostSerializer do
   before do
     Jobs.run_immediately!
     SiteSetting.calendar_enabled = true

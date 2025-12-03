@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Plugin API for chat" do
+RSpec.describe "Plugin API for chat" do
   before { SiteSetting.chat_enabled = true }
 
   let(:metadata) do

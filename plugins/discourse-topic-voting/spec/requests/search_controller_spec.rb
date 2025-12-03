@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SearchController do
+RSpec.describe SearchController do
   fab!(:user)
 
   fab!(:category)

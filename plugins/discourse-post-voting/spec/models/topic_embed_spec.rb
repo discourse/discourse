@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicEmbed do
+RSpec.describe TopicEmbed do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   let(:title) { "How to turn a fish from good to evil in 30 seconds" }
   let(:url) { "http://eviltrout.com/123" }

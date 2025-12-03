@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Post calendar", type: :system do
+RSpec.describe "Post calendar", type: :system do
   fab!(:admin)
 
   let(:calendar_post) { create_post(user: admin, raw: "[calendar]\n[/calendar]") }

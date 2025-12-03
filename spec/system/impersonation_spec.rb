@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Impersonation", type: :system do
+RSpec.describe "Impersonation", type: :system do
   fab!(:admin)
   fab!(:user)
 

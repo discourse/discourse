@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Theme Site Settings", type: :system do
+RSpec.describe "Admin Theme Site Settings", type: :system do
   fab!(:current_user, :admin)
   fab!(:theme_1) { Fabricate(:theme, name: "Blue Steel") }
   fab!(:theme_2) { Fabricate(:theme, name: "Derelicte") }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ReviewableAiPost do
+RSpec.describe ReviewableAiPost do
   subject(:reviewable_ai_post) { described_class.new }
 
   fab!(:target, :post)

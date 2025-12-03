@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::DiscourseAutomation::CallZapierWebhook do
+RSpec.describe Jobs::DiscourseAutomation::CallZapierWebhook do
   before do
     SiteSetting.discourse_automation_enabled = true
     freeze_time

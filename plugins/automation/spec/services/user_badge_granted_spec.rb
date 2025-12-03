@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAutomation::UserBadgeGrantedHandler do
+RSpec.describe DiscourseAutomation::UserBadgeGrantedHandler do
   fab!(:user)
   fab!(:automation) do
     Fabricate(:automation, trigger: DiscourseAutomation::Triggers::USER_BADGE_GRANTED)

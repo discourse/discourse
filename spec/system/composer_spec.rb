@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer", type: :system do
+RSpec.describe "Composer", type: :system do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   let(:composer) { PageObjects::Components::Composer.new }
 

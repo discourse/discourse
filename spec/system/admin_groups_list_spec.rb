@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Users Page", type: :system do
+RSpec.describe "Admin Users Page", type: :system do
   fab!(:current_user, :admin)
   fab!(:group_1) { Fabricate(:group, name: "group_a") }
   fab!(:group_2) { Fabricate(:group, name: "group_b") }

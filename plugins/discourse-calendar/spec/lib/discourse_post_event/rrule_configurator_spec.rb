@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe RRuleConfigurator do
+RSpec.describe RRuleConfigurator do
   let(:time) { Time.now }
 
   before { freeze_time Time.utc(2020, 8, 12, 16, 32) }

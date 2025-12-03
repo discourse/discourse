@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::Completions::JsonStreamDecoder do
+RSpec.describe DiscourseAi::Completions::JsonStreamDecoder do
   let(:decoder) { DiscourseAi::Completions::JsonStreamDecoder.new }
 
   before { enable_current_plugin }

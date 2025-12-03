@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseGithubPlugin::CommitsPopulator do
+RSpec.describe DiscourseGithubPlugin::CommitsPopulator do
   subject(:populator) { described_class.new(repo) }
 
   let(:repo) { DiscourseGithubPlugin::GithubRepo.new(name: "discourse/discourse") }

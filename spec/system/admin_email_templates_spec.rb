@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Email Templates", type: :system do
+RSpec.describe "Admin Email Templates", type: :system do
   fab!(:admin)
 
   let(:email_templates_page) { PageObjects::Pages::AdminEmailTemplates.new }

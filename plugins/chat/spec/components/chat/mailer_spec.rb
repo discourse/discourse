@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Chat::Mailer do
+RSpec.describe Chat::Mailer do
   fab!(:user) { Fabricate(:user, last_seen_at: 1.hour.ago) }
   fab!(:other, :user)
 

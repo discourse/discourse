@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::DiscoursePostEventBulkInvite do
+RSpec.describe Jobs::DiscoursePostEventBulkInvite do
   let(:user_1) { Fabricate(:user, admin: true) }
   let(:topic_1) { Fabricate(:topic, user: user_1) }
   let(:post_1) { Fabricate(:post, topic: topic_1) }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Data explorer group serializer additions" do
+RSpec.describe "Data explorer group serializer additions" do
   fab!(:group_user, :user)
   fab!(:other_user, :user)
   fab!(:group)

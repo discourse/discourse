@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAutomation::AdminAutomationsController do
+RSpec.describe DiscourseAutomation::AdminAutomationsController do
   before { SiteSetting.discourse_automation_enabled = true }
 
   describe "#trigger" do

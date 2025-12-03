@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicViewSerializer do
+RSpec.describe TopicViewSerializer do
   fab!(:topic)
   fab!(:post1) { Fabricate(:post, topic:) }
   fab!(:post2) { Fabricate(:post, topic:) }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Data Explorer rake tasks" do
+RSpec.describe "Data Explorer rake tasks" do
   before do
     Rake::Task.clear
     Discourse::Application.load_tasks

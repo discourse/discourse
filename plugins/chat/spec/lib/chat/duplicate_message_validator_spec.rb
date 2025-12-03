@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Chat::DuplicateMessageValidator do
+RSpec.describe Chat::DuplicateMessageValidator do
   let(:message) { "goal!" }
   fab!(:category_channel, :chat_channel)
   fab!(:dm_channel, :direct_message_channel)

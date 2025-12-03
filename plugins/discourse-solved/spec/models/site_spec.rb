@@ -2,7 +2,7 @@
 
 require_dependency "site"
 
-describe Site do
+RSpec.describe Site do
   let(:category) { Fabricate(:category) }
   let(:guardian) { Guardian.new }
 

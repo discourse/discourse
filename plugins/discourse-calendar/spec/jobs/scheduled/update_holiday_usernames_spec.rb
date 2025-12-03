@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::DiscourseCalendar::UpdateHolidayUsernames do
+RSpec.describe Jobs::DiscourseCalendar::UpdateHolidayUsernames do
   subject(:job) { described_class.new }
 
   let(:calendar_post) { create_post(raw: "[calendar]\n[/calendar]") }

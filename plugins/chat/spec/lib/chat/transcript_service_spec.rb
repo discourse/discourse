@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Chat::TranscriptService do
+RSpec.describe Chat::TranscriptService do
   let(:acting_user) { Fabricate(:user) }
   let(:user1) { Fabricate(:user, username: "martinchat") }
   let(:user2) { Fabricate(:user, username: "brucechat") }

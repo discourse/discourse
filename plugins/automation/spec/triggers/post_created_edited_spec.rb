@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "PostCreatedEdited" do
+RSpec.describe "PostCreatedEdited" do
   before { SiteSetting.discourse_automation_enabled = true }
 
   let(:basic_topic_params) do

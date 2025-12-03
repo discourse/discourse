@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Chat::MessageRateLimiter do
+RSpec.describe Chat::MessageRateLimiter do
   fab!(:user) { Fabricate(:user, trust_level: 3) }
   let(:limiter) { described_class.new(user) }
 

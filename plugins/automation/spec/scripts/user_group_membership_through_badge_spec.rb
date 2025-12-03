@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "UserGroupMembershipThroughBadge" do
+RSpec.describe "UserGroupMembershipThroughBadge" do
   fab!(:user)
   fab!(:other_users) { Fabricate.times(5, :user) }
   fab!(:badge)

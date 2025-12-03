@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "User preferences | Notifications", type: :system do
+RSpec.describe "User preferences | Notifications", type: :system do
   fab!(:user)
   let(:user_preferences_notifications_page) { PageObjects::Pages::UserPreferencesNotifications.new }
 

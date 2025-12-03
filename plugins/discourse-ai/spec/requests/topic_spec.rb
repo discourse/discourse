@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ::TopicsController do
+RSpec.describe ::TopicsController do
   fab!(:topic)
   fab!(:topic1, :topic)
   fab!(:topic2, :topic)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Disabling topic list sorting", type: :system do
+RSpec.describe "Disabling topic list sorting", type: :system do
   fab!(:category)
   let(:category_page) { PageObjects::Pages::Category.new }
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Post menu", type: :system do
+RSpec.describe "Post menu", type: :system do
   fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:topic, reload: true)

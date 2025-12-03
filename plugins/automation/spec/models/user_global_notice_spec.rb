@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAutomation::UserGlobalNotice do
+RSpec.describe DiscourseAutomation::UserGlobalNotice do
   fab!(:user_1, :user)
 
   describe "creating duplicates" do

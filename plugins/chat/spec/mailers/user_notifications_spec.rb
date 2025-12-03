@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserNotifications do
+RSpec.describe UserNotifications do
   fab!(:user) { Fabricate(:user, last_seen_at: 1.hour.ago) }
   fab!(:other, :user)
   fab!(:another, :user)

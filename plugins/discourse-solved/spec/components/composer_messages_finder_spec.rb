@@ -3,7 +3,7 @@
 
 require "composer_messages_finder"
 
-describe ComposerMessagesFinder do
+RSpec.describe ComposerMessagesFinder do
   describe ".check_topic_is_solved" do
     fab!(:user)
     fab!(:topic)

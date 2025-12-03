@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseSolved::SolvedTopicsController do
+RSpec.describe DiscourseSolved::SolvedTopicsController do
   fab!(:user)
   fab!(:another_user, :user)
   fab!(:admin)

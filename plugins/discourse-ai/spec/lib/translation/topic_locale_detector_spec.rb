@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::Translation::TopicLocaleDetector do
+RSpec.describe DiscourseAi::Translation::TopicLocaleDetector do
   before { enable_current_plugin }
 
   describe ".detect_locale" do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Site Texts Page", type: :system do
+RSpec.describe "Admin Site Texts Page", type: :system do
   fab!(:admin)
 
   let(:site_texts_page) { PageObjects::Pages::AdminSiteTexts.new }

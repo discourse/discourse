@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe AdPlugin::AdImpressionsController do
+RSpec.describe AdPlugin::AdImpressionsController do
   fab!(:user)
   fab!(:house_ad)
 

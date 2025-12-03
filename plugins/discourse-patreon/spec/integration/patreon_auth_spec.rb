@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Patreon Oauth2" do
+RSpec.describe "Patreon Oauth2" do
   let(:access_token) { "patreon_access_token_448" }
   let(:client_id) { "abcdef11223344" }
   let(:client_secret) { "adddcccdddd99922" }

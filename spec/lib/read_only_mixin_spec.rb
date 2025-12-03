@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ReadOnlyMixin do
+RSpec.describe ReadOnlyMixin do
   before { Rails.application.eager_load! }
 
   it "allows only these actions in readonly mode" do

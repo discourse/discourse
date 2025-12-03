@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe AdPlugin::HouseAdSetting do
+RSpec.describe AdPlugin::HouseAdSetting do
   let(:defaults) { AdPlugin::HouseAdSetting::DEFAULTS }
 
   before { enable_current_plugin }

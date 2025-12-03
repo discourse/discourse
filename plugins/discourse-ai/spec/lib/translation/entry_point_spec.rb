@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::Translation::EntryPoint do
+RSpec.describe DiscourseAi::Translation::EntryPoint do
   before do
     assign_fake_provider_to(:ai_default_llm_model)
     enable_current_plugin

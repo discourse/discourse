@@ -4,7 +4,7 @@ require Rails.root.join(
           "plugins/discourse-topic-voting/db/migrate/20240711102255_ensure_consistency.rb",
         )
 
-describe EnsureConsistency do
+RSpec.describe EnsureConsistency do
   it "ensures consistency" do
     user = Fabricate(:user)
     user2 = Fabricate(:user)

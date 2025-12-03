@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Tag Edit", type: :system do
+RSpec.describe "Tag Edit", type: :system do
   let(:tags_page) { PageObjects::Pages::Tag.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
   fab!(:tag_1) { Fabricate(:tag, name: "design") }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe CalendarSettingsValidator do
+RSpec.describe CalendarSettingsValidator do
   def expect_invalid(val)
     expect(subject.valid_value?(val)).to eq(false)
   end

@@ -2,7 +2,7 @@
 
 require_relative "../support/assign_allowed_group"
 
-describe FlaggedTopicSerializer do
+RSpec.describe FlaggedTopicSerializer do
   fab!(:user)
   let(:guardian) { Guardian.new(user) }
 

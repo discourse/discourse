@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::Translation::TopicLocalizer do
+RSpec.describe DiscourseAi::Translation::TopicLocalizer do
   before { enable_current_plugin }
 
   describe ".localize" do

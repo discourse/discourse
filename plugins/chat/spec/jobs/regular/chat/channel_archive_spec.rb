@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::Chat::ChannelArchive do
+RSpec.describe Jobs::Chat::ChannelArchive do
   fab!(:chat_channel, :category_channel)
   fab!(:user) { Fabricate(:user, admin: true) }
   fab!(:category)

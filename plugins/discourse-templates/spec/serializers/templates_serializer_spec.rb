@@ -4,7 +4,7 @@ require_relative "../helpers/topics_helper"
 
 RSpec.configure { |c| c.include DiscourseTemplates::TopicsHelper }
 
-describe DiscourseTemplates::TemplatesSerializer do
+RSpec.describe DiscourseTemplates::TemplatesSerializer do
   fab!(:template_item) # uncategorized
   fab!(:tag1) { Fabricate(:tag, topics: [template_item], name: "tag1") }
   fab!(:tag2) { Fabricate(:tag, topics: [template_item], name: "tag2") }

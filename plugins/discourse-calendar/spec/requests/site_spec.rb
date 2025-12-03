@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "calendar site additions" do
+RSpec.describe "calendar site additions" do
   let(:user) { Fabricate(:user) }
   let(:admin) { Fabricate(:admin) }
 

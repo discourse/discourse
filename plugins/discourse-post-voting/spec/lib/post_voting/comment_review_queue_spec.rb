@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostVoting::CommentReviewQueue do
+RSpec.describe PostVoting::CommentReviewQueue do
   subject(:queue) { described_class.new }
 
   fab!(:comment_poster, :user)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::UpdateScoresForToday do
+RSpec.describe Jobs::UpdateScoresForToday do
   fab!(:user)
   fab!(:user_2, :user)
   fab!(:post) { Fabricate(:post, user: user, post_number: 2) }

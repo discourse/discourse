@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAutomation::AdminAutomationsController do
+RSpec.describe DiscourseAutomation::AdminAutomationsController do
   fab!(:automation) { Fabricate(:automation, enabled: true) }
 
   before do

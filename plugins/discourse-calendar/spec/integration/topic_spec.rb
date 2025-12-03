@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Topic do
+RSpec.describe Topic do
   before do
     freeze_time
     Jobs.run_immediately!

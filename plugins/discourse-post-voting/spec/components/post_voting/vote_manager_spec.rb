@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostVoting::VoteManager do
+RSpec.describe PostVoting::VoteManager do
   fab!(:user)
   fab!(:user_2, :user)
   fab!(:user_3, :user)

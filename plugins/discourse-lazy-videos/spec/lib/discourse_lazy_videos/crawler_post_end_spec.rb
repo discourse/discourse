@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseLazyVideos::CrawlerPostEnd do
+RSpec.describe DiscourseLazyVideos::CrawlerPostEnd do
   fab!(:topic)
   fab!(:post1) { Fabricate(:post, topic: topic, post_number: 1) }
   fab!(:post2) { Fabricate(:post, topic: topic, post_number: 2) }

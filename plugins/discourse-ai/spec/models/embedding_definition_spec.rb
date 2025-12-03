@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe EmbeddingDefinition do
+RSpec.describe EmbeddingDefinition do
   fab!(:embedding_definition, :open_ai_embedding_def)
   fab!(:gemini_embedding_definition, :gemini_embedding_def)
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Recurring" do
+RSpec.describe "Recurring" do
   fab!(:user)
   fab!(:topic)
   fab!(:automation) do

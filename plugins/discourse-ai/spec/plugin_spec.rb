@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Plugin::Instance do
+RSpec.describe Plugin::Instance do
   before { enable_current_plugin }
 
   describe "current_user_serializer#ai_helper_prompts" do

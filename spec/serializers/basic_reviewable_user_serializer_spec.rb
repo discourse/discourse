@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe BasicReviewableUserSerializer do
+RSpec.describe BasicReviewableUserSerializer do
   subject(:serializer) { described_class.new(reviewable, root: false).as_json }
 
   fab!(:user)

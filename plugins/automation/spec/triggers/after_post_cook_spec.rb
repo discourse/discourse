@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAutomation::Triggers::AFTER_POST_COOK do
+RSpec.describe DiscourseAutomation::Triggers::AFTER_POST_COOK do
   before { SiteSetting.discourse_automation_enabled = true }
 
   fab!(:post)

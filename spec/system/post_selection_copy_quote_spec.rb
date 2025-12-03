@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Post selection | Copy quote", type: :system do
+RSpec.describe "Post selection | Copy quote", type: :system do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:cdp) { PageObjects::CDP.new }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Unified new topic list", type: :system do
+RSpec.describe "Unified new topic list", type: :system do
   fab!(:user)
   fab!(:group) { Fabricate(:group, users: [user]) }
   fab!(:category)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer using review_media", type: :system do
+RSpec.describe "Composer using review_media", type: :system do
   fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:topic) { Fabricate(:topic, category: Category.find(SiteSetting.uncategorized_category_id)) }
   fab!(:post) { Fabricate(:post, topic: topic) }

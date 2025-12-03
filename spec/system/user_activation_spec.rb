@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Account activation", type: :system do
+RSpec.describe "Account activation", type: :system do
   fab!(:password) { "myverysecurepassword" }
   fab!(:user) { Fabricate(:user, password: password, active: false) }
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::Translation::TopicCandidates do
+RSpec.describe DiscourseAi::Translation::TopicCandidates do
   describe ".get" do
     it "does not return bot topics" do
       topic = Fabricate(:topic, user: Discourse.system_user)

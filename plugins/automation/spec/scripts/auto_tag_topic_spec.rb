@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "AutoTagTopic" do
+RSpec.describe "AutoTagTopic" do
   fab!(:topic)
   fab!(:tag1) { Fabricate(:tag, name: "tag1") }
   fab!(:tag2) { Fabricate(:tag, name: "tag2") }

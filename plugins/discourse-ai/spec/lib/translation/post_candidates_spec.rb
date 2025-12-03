@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::Translation::PostCandidates do
+RSpec.describe DiscourseAi::Translation::PostCandidates do
   describe ".get" do
     it "does not return bot posts" do
       post = Fabricate(:post, user: Discourse.system_user)

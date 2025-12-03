@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Custom sidebar sections", type: :system do
+RSpec.describe "Custom sidebar sections", type: :system do
   fab!(:user)
   fab!(:admin)
   let(:section_modal) { PageObjects::Modals::SidebarSectionForm.new }

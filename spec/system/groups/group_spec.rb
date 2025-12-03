@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Group", type: :system do
+RSpec.describe "Group", type: :system do
   let(:group_page) { PageObjects::Pages::Group.new }
   let(:group_index_page) { PageObjects::Pages::GroupIndex.new }
   let(:group_form_page) { PageObjects::Pages::GroupForm.new }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer - Drafts", type: :system do
+RSpec.describe "Composer - Drafts", type: :system do
   fab!(:topic, :topic_with_op)
   fab!(:current_user, :admin)
 

@@ -2,7 +2,7 @@
 
 require_relative "../support/assign_allowed_group"
 
-describe ListController do
+RSpec.describe ListController do
   before do
     SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_0]
     SiteSetting.assign_enabled = true
