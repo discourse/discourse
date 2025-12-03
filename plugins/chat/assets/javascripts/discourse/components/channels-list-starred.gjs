@@ -29,7 +29,6 @@ export default class ChannelsListStarred extends Component {
           </span>
         </div>
       {{/each}}
-
     </div>
   </template>
 }
