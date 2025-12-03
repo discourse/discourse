@@ -10,7 +10,13 @@ module DiscourseZendeskPlugin
 
     def generate_zendesk_ticket
       return unless SiteSetting.zendesk_enabled?
-      return unless DiscourseZendeskPlugin::Helper.autogeneration_category?(topic.category_id)
+
+      has_zendesk_ticket = topic.custom_fields[DiscourseZendeskPlugin::ZENDESK_ID_FIELD].present?
+      unless has_zendesk_ticket ||
+               DiscourseZendeskPlugin::Helper.autogeneration_category?(topic.category_id)
+        return
+      end
+
       Jobs.enqueue_in(5.seconds, :zendesk_job, post_id: id)
     end
   end
