@@ -182,6 +182,11 @@
         .prefix-text {
           font-size: var(--font-0);
         }
+
+        &.emoji img {
+          width: calc(var(--d-sidebar-section-link-prefix-width) - 2px);
+          height: calc(var(--d-sidebar-section-link-prefix-width) - 2px);
+        }
       }
     }
 
