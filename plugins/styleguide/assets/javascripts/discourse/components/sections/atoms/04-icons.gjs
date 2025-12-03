@@ -7,8 +7,7 @@ export default class Icons extends Component {
   get codeSample() {
     return `import icon from "discourse/helpers/d-icon";
 
-{{icon "link"}}
-`;
+{{icon "link"}}`;
   }
 
   <template>

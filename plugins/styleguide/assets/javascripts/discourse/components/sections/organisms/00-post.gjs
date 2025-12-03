@@ -4,13 +4,11 @@ import StyleguideExample from "discourse/plugins/styleguide/discourse/components
 
 export default class PostOrganism extends Component {
   get postCode() {
-    return `
-import Post from "discourse/components/post";
+    return `import Post from "discourse/components/post";
 
 <template>
   <Post @post={{@dummy.postModel}} />
-</template>
-    `;
+</template>`;
   }
 
   <template>
