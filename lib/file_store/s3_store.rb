@@ -96,11 +96,11 @@ module FileStore
           opts[:content_type].presence || MiniMime.lookup_by_filename(filename)&.content_type,
       }.merge(default_s3_options(secure: opts[:private]))
 
-      # Only add a "content disposition: attachment" header for svgs
-      # see https://github.com/discourse/discourse/commit/31e31ef44973dc4daaee2f010d71588ea5873b53.
-      # Adding this header for all files would break the ability to view attachments in the browser
+      # Only serve inline for allowlisted safe file types (non-SVG images and PDFs)
+      # to prevent XSS via HTML/XML/SVG uploads. All other files force download.
+      # See https://github.com/discourse/discourse/commit/31e31ef44973dc4daaee2f010d71588ea5873b53
       options[:content_disposition] = ActionDispatch::Http::ContentDisposition.format(
-        disposition: FileHelper.is_svg?(filename) ? "attachment" : "inline",
+        disposition: FileHelper.is_inline_safe?(filename) ? "inline" : "attachment",
         filename: filename,
       )
 
@@ -251,7 +251,9 @@ module FileStore
       force_download: false
     )
       key = path.sub(absolute_base_url + "/", "")
-      presigned_get_url(key, expires_in: expires_in, force_download: force_download)
+
+      filename = force_download ? File.basename(path) : false
+      presigned_get_url(key, expires_in:, force_download:, filename:)
     end
 
     def signed_request_for_temporary_upload(
