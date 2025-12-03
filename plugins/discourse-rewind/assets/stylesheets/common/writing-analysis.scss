@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .--writing-analysis {
   .writing-analysis {
     border: 2px solid var(--rewind-green);
@@ -50,6 +52,10 @@
     width: 180px;
     text-align: center;
     height: 20px;
+
+    @include viewport.until(sm) {
+      height: auto;
+    }
   }
 
   .writing-analysis__release {
@@ -72,6 +78,14 @@
     padding: 0 20px;
     display: flex;
     gap: 20px;
+
+    @include viewport.until(sm) {
+      flex-direction: column;
+      border-top: none;
+      border-bottom: 14px solid var(--rewind-green);
+      padding: 20px 0;
+      gap: 10px;
+    }
   }
 
   .writing-analysis__stats-col {
@@ -81,6 +95,13 @@
 
     &:last-of-type {
       border-right: none;
+    }
+
+    @include viewport.until(sm) {
+      border-right: none;
+      border-top: 10px solid var(--rewind-green);
+      padding: 10px 10px 0 10px;
+      width: auto;
     }
   }
 
