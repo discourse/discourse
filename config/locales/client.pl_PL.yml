@@ -1030,6 +1030,7 @@ pl_PL:
           few: "Oflagowany przez %{count} unikalnych użytkowników"
           many: "Oflagowany przez %{count} unikalnych użytkowników"
           other: "Oflagowany przez %{count} unikalnych użytkowników"
+        similar_posts: "Przeszłe naruszenia"
         flagged_in_timeframe:
           one: "%{count} potwierdzona flaga"
           few: "%{count} potwierdzone flagi"
