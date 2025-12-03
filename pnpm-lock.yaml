@@ -546,8 +546,8 @@ importers:
         specifier: ^6.1.1
         version: 6.1.1
       ember-exam:
-        specifier: ^10.0.0
-        version: 10.0.0(@glint/template@1.7.3)(ember-qunit@9.0.4(@ember/test-helpers@5.4.1(@babel/core@7.28.5)(@glint/template@1.7.3))(@glint/template@1.7.3)(qunit@2.24.3))(ember-source@6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5))(qunit@2.24.3)(webpack@5.99.9(@swc/core@1.15.3)(esbuild@0.25.12))
+        specifier: ^10.0.1
+        version: 10.0.1(@glint/template@1.7.3)(ember-qunit@9.0.4(@ember/test-helpers@5.4.1(@babel/core@7.28.5)(@glint/template@1.7.3))(@glint/template@1.7.3)(qunit@2.24.3))(ember-source@6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5))(qunit@2.24.3)(webpack@5.99.9(@swc/core@1.15.3)(esbuild@0.25.12))
       ember-load-initializers:
         specifier: ^3.0.1
         version: 3.0.1(ember-source@6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5))
@@ -3771,8 +3771,8 @@ packages:
     resolution: {integrity: sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==}
     engines: {node: '>=10'}
 
-  chalk@5.6.0:
-    resolution: {integrity: sha512-46QrSQFyVSEyYAgQ22hQ+zDa60YHA4fBstHmtSApj1Y5vKtG27fWowW03jCk5KcbXEWPZUIR894aARCA/G1kfQ==}
+  chalk@5.6.2:
+    resolution: {integrity: sha512-7NzBL0rN6fMUW+f7A6Io4h40qQlG+xGmtMxfbnH/K7TAtt8JQWVQK+6g0UXKMeVJoyV5EkkNsErQ8pVD3bLHbA==}
     engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
 
   chardet@0.7.0:
@@ -4613,8 +4613,8 @@ packages:
       '@typescript-eslint/parser':
         optional: true
 
-  ember-exam@10.0.0:
-    resolution: {integrity: sha512-0pCrLqcUgni7QUYqu2xKWX0ikiR0xdvX8DWDdhokZwrvxV17gsTNb7uXqZd1OsBbfAZsqbm/0Wv34pc6yXklGw==}
+  ember-exam@10.0.1:
+    resolution: {integrity: sha512-ieWoVWrqCnuAx+5+u6epnKPgEAraWFM/1xqlhN963cyTj9lyaNZKfRM4XaiVOXPd1RW3ULOLOCdnY/fw2KEk+A==}
     engines: {node: '>= 18'}
     peerDependencies:
       ember-qunit: '*'
@@ -12852,7 +12852,7 @@ snapshots:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
 
-  chalk@5.6.0: {}
+  chalk@5.6.2: {}
 
   chardet@0.7.0: {}
 
@@ -13844,10 +13844,10 @@ snapshots:
       - eslint
       - typescript
 
-  ember-exam@10.0.0(@glint/template@1.7.3)(ember-qunit@9.0.4(@ember/test-helpers@5.4.1(@babel/core@7.28.5)(@glint/template@1.7.3))(@glint/template@1.7.3)(qunit@2.24.3))(ember-source@6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5))(qunit@2.24.3)(webpack@5.99.9(@swc/core@1.15.3)(esbuild@0.25.12)):
+  ember-exam@10.0.1(@glint/template@1.7.3)(ember-qunit@9.0.4(@ember/test-helpers@5.4.1(@babel/core@7.28.5)(@glint/template@1.7.3))(@glint/template@1.7.3)(qunit@2.24.3))(ember-source@6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5))(qunit@2.24.3)(webpack@5.99.9(@swc/core@1.15.3)(esbuild@0.25.12)):
     dependencies:
       '@babel/core': 7.28.5(supports-color@8.1.1)
-      chalk: 5.6.0
+      chalk: 5.6.2
       cli-table3: 0.6.5
       debug: 4.4.3(supports-color@8.1.1)
       ember-auto-import: 2.12.0(@glint/template@1.7.3)(webpack@5.99.9(@swc/core@1.15.3)(esbuild@0.25.12))
