@@ -42,7 +42,7 @@ jobs:
       TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
       TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
       EMBER_ENV: development
-      LOAD_PLUGINS: ${{ (matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
+      LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'chat') && '1' || '0' }}
       ACTIONS_STEP_DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG }}
 
     strategy:
@@ -50,7 +50,7 @@ jobs:
 
       matrix:
         build_type: [backend, frontend, system]
-        target: [core, plugins, themes]
+        target: [core, core-plugins, official-plugins, themes]
         browser: [Chrome]
         exclude:
           - build_type: backend
@@ -119,11 +119,11 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Checkout official plugins
-        if: matrix.target == 'plugins'
+        if: matrix.target == 'official-plugins'
         run: bin/rake plugin:install_all_official
 
       - name: Symlinking plugin gems from image
-        if: matrix.target == 'plugins'
+        if: matrix.target == 'core-plugins' || matrix.target == 'official-plugins'
         run: |
           for dir in /var/www/discourse/plugins/*/gems; do
             plugin_name=$(basename "$(dirname "$dir")")
@@ -270,10 +270,6 @@ jobs:
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: bin/turbo_rspec --use-runtime-info --verbose --format=progress --profile=50
 
-      - name: Plugin RSpec
-        if: matrix.build_type == 'backend' && matrix.target == 'plugins'
-        run: bin/rake plugin:turbo_spec['*','--verbose --format=progress --use-runtime-info --profile=50']
-
       - name: Core QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
         run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
@@ -283,9 +279,35 @@ jobs:
         working-directory: frontend/asset-processor
         run: pnpm test
 
-      - name: Plugin QUnit
-        if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
-        run: bin/rake plugin:qunit['*']
+      - name: Split core and official plugins
+        if: matrix.target == 'core-plugins' || matrix.target == 'official-plugins'
+        run: |
+          CORE_PLUGINS=`script/list_bundled_plugins | sed 's|.*/||' | paste -sd, -`
+          echo "CORE_PLUGINS=$CORE_PLUGINS" >> $GITHUB_ENV
+          echo "CORE_PLUGINS_ESCAPED=`echo $CORE_PLUGINS | sed 's/,/\\\\,/g'`" >> $GITHUB_ENV
+          OFFICIAL_PLUGINS=`grep -Fvx -f <(script/list_bundled_plugins | sed 's|.*/||') <(bin/rake plugin:list_official) | paste -sd, -`
+          echo "OFFICIAL_PLUGINS=$OFFICIAL_PLUGINS" >> $GITHUB_ENV
+          echo "OFFICIAL_PLUGINS_ESCAPED=`echo $OFFICIAL_PLUGINS | sed 's/,/\\\\,/g'`" >> $GITHUB_ENV
+
+      - name: Core Plugins RSpec
+        if: matrix.build_type == 'backend' && matrix.target == 'core-plugins'
+        run: |
+          EMBER_RAISE_ON_DEPRECATION=1 bin/rake plugin:turbo_spec["${{ env.CORE_PLUGINS_ESCAPED }}",'--verbose --format=progress --use-runtime-info --profile=50']
+
+      - name: Core Plugins QUnit
+        if: matrix.build_type == 'frontend' && matrix.target == 'core-plugins'
+        run: |
+          EMBER_RAISE_ON_DEPRECATION=1 bin/rake plugin:qunit["${{ env.CORE_PLUGINS_ESCAPED }}"]
+
+      - name: Official Plugins RSpec
+        if: matrix.build_type == 'backend' && matrix.target == 'official-plugins'
+        run: |
+          bin/rake plugin:turbo_spec["${{ env.OFFICIAL_PLUGINS_ESCAPED }}",'--verbose --format=progress --use-runtime-info --profile=50']
+
+      - name: Official Plugins QUnit
+        if: matrix.build_type == 'frontend' && matrix.target == 'official-plugins'
+        run: |
+          bin/rake plugin:qunit["${{ env.OFFICIAL_PLUGINS_ESCAPED }}"]
 
       - name: Theme QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'themes'
@@ -311,12 +333,20 @@ jobs:
           CHECKOUT_TIMEOUT: 10
         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system
 
-      - name: Plugin System Tests
-        if: matrix.build_type == 'system' && matrix.target == 'plugins'
+      - name: Core Plugins System Tests
+        if: matrix.build_type == 'system' && matrix.target == 'core-plugins'
         env:
           CHECKOUT_TIMEOUT: 10
         run: |
-          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
+          EMBER_RAISE_ON_DEPRECATION=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation plugins/{${{ env.CORE_PLUGINS_ESCAPED }}}/spec/system
+        shell: bash
+
+      - name: Official Plugins System Tests
+        if: matrix.build_type == 'system' && matrix.target == 'official-plugins'
+        env:
+          CHECKOUT_TIMEOUT: 10
+        run: |
+          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation plugins/{${{ env.OFFICIAL_PLUGINS_ESCAPED }}}/spec/system
         shell: bash
 
       - name: Chat System Tests
