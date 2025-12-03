@@ -1167,19 +1167,27 @@ export default class PostStream extends RestModel {
     return ajax(url, {
       data,
       headers,
-    }).then((result) => {
-      this._setSuggestedTopics(result);
-      if (result.user_badges) {
-        this.topic.user_badges ??= {};
-        Object.assign(this.topic.user_badges, result.user_badges);
-      }
+    })
+      .then((result) => {
+        this._setSuggestedTopics(result);
+        if (result.user_badges) {
+          this.topic.user_badges ??= {};
+          Object.assign(this.topic.user_badges, result.user_badges);
+        }
 
-      const posts = get(result, "post_stream.posts");
+        const posts = get(result, "post_stream.posts");
 
-      if (posts) {
-        posts.forEach((p) => this.storePost(store.createRecord("post", p)));
-      }
-    });
+        if (posts) {
+          posts.forEach((p) => this.storePost(store.createRecord("post", p)));
+        }
+      })
+      .catch((error) => {
+        // If we get a 403 error, refresh the window to prevent continuous retries
+        if (error.jqXHR && error.jqXHR.status === 403) {
+          window.location.reload();
+          return;
+        }
+      });
   }
 
   backfillExcerpts(streamPosition) {
