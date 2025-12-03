@@ -3,10 +3,14 @@
 # name: discourse-rewind
 # about: A fun end-of-year summary for members' activity in the community.
 # meta_topic_id: https://meta.discourse.org/t/discourse-rewind-2024/348063
-# version: 0.0.1
+# version: 2025.12.0
 # authors: Discourse
 # url: https://github.com/discourse/discourse-rewind
 # required_version: 2.7.0
+
+# TODO (martin): Remove this when we are ready to
+# launch rewind for 2025
+hide_plugin
 
 enabled_site_setting :discourse_rewind_enabled
 
