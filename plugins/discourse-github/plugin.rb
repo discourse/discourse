@@ -19,12 +19,11 @@ enabled_site_setting :enable_discourse_github_plugin
 register_asset "stylesheets/common/github-pr-status.scss"
 
 after_initialize do
-  require_relative "lib/github_pr_status"
-  require_relative "app/controllers/discourse_github/pull_requests_controller"
+  require_relative "app/controllers/discourse_github/webhooks_controller"
+  require_relative "app/jobs/regular/rebake_github_pr_posts"
 
   Discourse::Application.routes.append do
-    get "/discourse-github/:owner/:repo/pulls/:number/status" =>
-          "discourse_github/pull_requests#status"
+    post "/discourse-github/webhooks/github" => "discourse_github/webhooks#github"
   end
 
   %w[

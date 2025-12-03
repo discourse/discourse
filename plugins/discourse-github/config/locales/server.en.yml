@@ -7,6 +7,7 @@ en:
     github_linkback_maximum_links: "Maximum number of linkbacks to create from one single post. When a post contains more links, none is created."
     github_permalinks_enabled: "Enable GitHub permalink overwrites"
     github_pr_status_enabled: "Show GitHub pull request status on oneboxes (draft, open, approved, changes requested, merged, closed)"
+    github_webhook_secret: "Secret token for GitHub webhook signature verification. Configure this value in your GitHub webhook settings."
     github_permalinks_exclude: "Filename or directory that should be excluded from permalink overwrites. Provide only filename or full path: user/repository/optional-directory/filename"
     github_badges_enabled: "Enable GitHub badges"
     github_badges_repos: "URLs of the GitHub repos to scan for contributions and commits"
@@ -16,11 +17,6 @@ en:
     errors:
       invalid_badge_repo: "You must provide a GitHub URL or the repository name in the format github_user/repository_name"
       invalid_github_linkback_access_token: "You must provide a valid GitHub linkback access token which has access to the badge repositories you have provided."
-
-  discourse_github:
-    errors:
-      missing_parameters: "Missing parameters"
-      failed_to_fetch_pr_status: "Failed to fetch PR status"
 
   github_linkback:
     commit_template: |
