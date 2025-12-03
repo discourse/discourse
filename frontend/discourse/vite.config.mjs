@@ -32,32 +32,32 @@ export default defineConfig(({ mode, command }) => {
     },
   ];
 
-  if (command !== "build") {
-    // v1 addon patches for dev only
-    aliases.push(
-      {
-        find: "@ember-decorators/object",
-        replacement: "@ember-decorators/object/addon",
-      },
-      {
-        find: "@ember-decorators/utils/decorator",
-        replacement: "@ember-decorators/utils/addon/decorator",
-      },
-      {
-        find: "@ember-decorators/utils/collapse-proto",
-        replacement: "@ember-decorators/utils/addon/collapse-proto",
-      },
-      {
-        find: "@ember-decorators/component",
-        replacement: "@ember-decorators/component/addon",
-      },
+  // if (command !== "build") {
+  // v1 addon patches for dev only
+  aliases.push(
+    {
+      find: "@ember-decorators/object",
+      replacement: "@ember-decorators/object/addon",
+    },
+    {
+      find: "@ember-decorators/utils/decorator",
+      replacement: "@ember-decorators/utils/addon/decorator",
+    },
+    {
+      find: "@ember-decorators/utils/collapse-proto",
+      replacement: "@ember-decorators/utils/addon/collapse-proto",
+    },
+    {
+      find: "@ember-decorators/component",
+      replacement: "@ember-decorators/component/addon",
+    },
 
-      {
-        find: "ember-exam/test-support/load",
-        replacement: "ember-exam/addon-test-support/load",
-      }
-    );
-  }
+    {
+      find: "ember-exam/test-support/load",
+      replacement: "ember-exam/addon-test-support/load",
+    }
+  );
+  // }
   return {
     base: "",
     resolve: {
