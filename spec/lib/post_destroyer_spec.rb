@@ -444,6 +444,65 @@ RSpec.describe PostDestroyer do
       expect(post.revisions[0].modifications["raw"]).to be_present
     end
 
+    it "resolves reviewable when author deletes their flagged post and undeletes" do
+      reply = create_post(topic: post.topic)
+      result = PostActionCreator.spam(coding_horror, reply)
+      reviewable = result.reviewable
+
+      expect(reviewable).to be_pending
+
+      PostDestroyer.new(reply.user, reply).destroy
+
+      expect(reply.reload.user_deleted).to eq(true)
+      expect(reviewable.reload).to be_ignored
+
+      note = reviewable.reviewable_notes.last
+      expect(note.user).to eq(Discourse.system_user)
+      expect(note.content).to eq(I18n.t("reviewables.post_deleted_by_author"))
+
+      expect(reviewable.reviewable_scores.first.reviewed_by_id).to eq(Discourse.system_user.id)
+      expect(reviewable.reviewable_scores.first.reviewed_at).to be_present
+
+      history = reviewable.reviewable_histories.last
+      expect(history.reviewable_history_type).to eq("transitioned")
+      expect(history.created_by).to eq(Discourse.system_user)
+
+      PostDestroyer.new(reply.user, reply).recover
+      expect(reply.reload.user_deleted).to eq(false)
+      expect(reviewable.reload).to be_pending
+
+      recovery_note = reviewable.reviewable_notes.last
+      expect(recovery_note.user).to eq(Discourse.system_user)
+      expect(recovery_note.content).to eq(I18n.t("reviewables.post_undeleted_by_author"))
+
+      history = reviewable.reviewable_histories.last
+      expect(history.reviewable_history_type).to eq("transitioned")
+      expect(history.created_by).to eq(Discourse.system_user)
+    end
+
+    it "does not restore reviewable when manually ignored by moderator" do
+      reply = create_post(topic: post.topic)
+      result = PostActionCreator.spam(coding_horror, reply)
+      reviewable = result.reviewable
+
+      expect(reviewable).to be_present
+      expect(reviewable).to be_pending
+
+      reviewable.perform(moderator, :ignore_and_do_nothing)
+
+      expect(reviewable.reload).to be_ignored
+      expect(reviewable.reviewable_scores.first.reviewed_by_id).to eq(moderator.id)
+
+      PostDestroyer.new(reply.user, reply).destroy
+
+      expect(reply.reload.user_deleted).to eq(true)
+
+      PostDestroyer.new(reply.user, reply).recover
+
+      expect(reply.reload.user_deleted).to eq(false)
+      expect(reviewable.reload).to be_ignored
+    end
+
     it "when topic is destroyed, it updates user_stats correctly" do
       SiteSetting.min_topic_title_length = 5
       post.topic.update_column(:title, "xyz")
