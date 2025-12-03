@@ -214,6 +214,10 @@ after_initialize do
     end
   end
 
+  on(:merging_users) do |source_user, target_user|
+    DiscourseTopicVoting::UserMerger.merge(source_user, target_user)
+  end
+
   Discourse::Application.routes.prepend do
     get "c/*category_slug_path_with_id/l/votes.rss" => "list#votes_feed", :format => :rss
   end
