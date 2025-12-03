@@ -26,45 +26,7 @@ acceptance("Lightbox", function (needs) {
     );
   });
 
-  test("Shows download and direct URL", async function (assert) {
-    this.siteSettings.experimental_lightbox = false;
-
-    await visit("/t/internationalization-localization/280");
-    await click(".lightbox");
-
-    assert
-      .dom(".mfp-title")
-      .hasText(
-        "<script>image</script> · 1500×842 234 KB · Download · Original image"
-      );
-
-    assert
-      .dom(".image-source-link:nth-child(1)")
-      .hasAttribute(
-        "href",
-        "//discourse.local/uploads/default/ad768537789cdf4679a18161ac0b0b6f0f4ccf9e"
-      );
-
-    assert
-      .dom(".image-source-link:nth-child(2)")
-      .hasAttribute("href", `/images/d-logo-sketch.png`);
-
-    await click(".mfp-close");
-  });
-
-  test("Correctly escapes image caption", async function (assert) {
-    this.siteSettings.experimental_lightbox = false;
-
-    await visit("/t/internationalization-localization/280");
-    await click(".lightbox");
-
-    assert.dom(".mfp-title").hasHtml(/^&lt;script&gt;image&lt;\/script&gt; · /);
-  });
-
-  // PhotoSwipe
   test("Shows 'download' and 'original image' buttons", async function (assert) {
-    this.siteSettings.experimental_lightbox = true;
-
     await visit("/t/internationalization-localization/280");
     await click(".lightbox");
 
@@ -92,8 +54,6 @@ acceptance("Lightbox", function (needs) {
   });
 
   test("Correctly escapes image caption", async function (assert) {
-    this.siteSettings.experimental_lightbox = true;
-
     await visit("/t/internationalization-localization/280");
     await click(".lightbox");
 

@@ -55,7 +55,6 @@
     "highlight.js": "11.11.1",
     "immer": "^11.0.1",
     "jspreadsheet-ce": "^4.15.0",
-    "magnific-popup": "1.1.0",
     "moment": "2.30.1",
     "moment-timezone": "0.5.45",
     "morphlex": "^0.0.16",
