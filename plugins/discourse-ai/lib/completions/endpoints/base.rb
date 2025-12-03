@@ -181,14 +181,16 @@ module DiscourseAi
                   )
               end
 
-            # during dev we want to log all requests even ones that fail
-            start_logging.call if Rails.env.development?
+            start_logging.call
 
             http.request(request) do |response|
+              log.response_status = response.code.to_i if log
+
               if response.code.to_i != 200
                 Rails.logger.error(
                   "#{self.class.name}: status: #{response.code.to_i} - body: #{response.body}",
                 )
+                response_raw << response.body.to_s
                 raise CompletionFailed, response.body
               end
 
@@ -216,8 +218,6 @@ module DiscourseAi
                     orig_blk.call(partial) if partial
                   end
               end
-
-              start_logging.call if !log
 
               if !@streaming_mode
                 response_data =
@@ -282,6 +282,7 @@ module DiscourseAi
                 log.raw_response_payload = response_raw
                 final_log_update(log)
                 log.response_tokens = tokenizer.size(partials_raw) if log.response_tokens.blank?
+                log.response_status ||= 200
                 log.created_at = start_time
                 log.updated_at = Time.now
                 log.duration_msecs = (Time.now - start_time) * 1000

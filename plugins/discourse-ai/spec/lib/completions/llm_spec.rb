@@ -121,6 +121,39 @@ RSpec.describe DiscourseAi::Completions::Llm do
       expect(stat.usage_count).to eq(1)
       expect(stat.rolled_up).to be(false)
     end
+
+    it "records response status for successes and failures" do
+      success_body = {
+        model: "gpt-3.5-turbo-0301",
+        usage: {
+          prompt_tokens: 10,
+          completion_tokens: 5,
+          total_tokens: 15,
+        },
+        choices: [{ message: { role: "assistant", content: "hi" } }],
+      }.to_json
+
+      WebMock.stub_request(:post, "https://api.openai.com/v1/chat/completions").to_return(
+        status: 200,
+        body: success_body,
+      )
+
+      described_class.proxy(model).generate("Hello", user: user, feature_name: "llm_triage")
+      expect(AiApiAuditLog.order("id desc").first.response_status).to eq(200)
+
+      WebMock.stub_request(:post, "https://api.openai.com/v1/chat/completions").to_return(
+        status: 401,
+        body: "invalid auth",
+      )
+
+      expect do
+        described_class.proxy(model).generate("Hello", user: user, feature_name: "llm_triage")
+      end.to raise_error(DiscourseAi::Completions::Endpoints::Base::CompletionFailed)
+
+      failure_log = AiApiAuditLog.order("id desc").first
+      expect(failure_log.response_status).to eq(401)
+      expect(failure_log.response_tokens).to eq(0)
+    end
   end
 
   describe "#generate with fake model" do

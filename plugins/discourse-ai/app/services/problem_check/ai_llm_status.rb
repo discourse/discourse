@@ -3,10 +3,12 @@
 class ProblemCheck::AiLlmStatus < ProblemCheck
   self.priority = "high"
   self.perform_every = 6.hours
-  self.max_retries = 2
-  self.retry_after = 1.minute
-  self.max_blips = 2
   self.targets = -> { LlmModel.in_use.pluck(:id) }
+
+  LOOKBACK_WINDOW = 6.hours
+  MIN_TOTAL_CALLS = 5
+  MIN_FAILED_CALLS = 3
+  FAILURE_RATE_THRESHOLD = 0.5
 
   def call
     return no_problem if !SiteSetting.discourse_ai_enabled
@@ -16,88 +18,60 @@ class ProblemCheck::AiLlmStatus < ProblemCheck
     return no_problem if model.blank?
     return no_problem if model.seeded?
 
-    try_validate(model) { validator.run_test(model) }
+    total_calls, failed_calls = audit_log_counts(model)
+
+    return no_problem if total_calls < MIN_TOTAL_CALLS
+    return no_problem if failed_calls < MIN_FAILED_CALLS
+    return no_problem if failure_rate(total_calls, failed_calls) < FAILURE_RATE_THRESHOLD
+
+    problem(
+      model,
+      override_data: override_data_for(model),
+      details: {
+        model_name: model.display_name,
+        failed_calls: failed_calls,
+        total_calls: total_calls,
+        lookback_hours: (LOOKBACK_WINDOW / 1.hour),
+      },
+    )
   end
 
   private
 
-  def try_validate(model, &blk)
-    begin
-      blk.call
-      no_problem
-    rescue => e
-      # Skip problem reporting for rate limiting and temporary service issues
-      # These are expected to resolve on their own
-      if rate_limit_error?(e)
-        Rails.logger.info(
-          "AI LLM Status Check: Rate limit detected for model #{model.display_name} (#{model.id}), skipping problem report",
-        )
-        return no_problem
-      end
+  def audit_log_counts(model)
+    counts = DB.query_single(<<~SQL, llm_id: model.id, since: LOOKBACK_WINDOW.ago)
+        SELECT
+          COUNT(*) AS total_calls,
+          SUM(
+            CASE
+              WHEN response_status IS NOT NULL THEN
+                CASE WHEN response_status NOT BETWEEN 200 AND 299 THEN 1 ELSE 0 END
+              ELSE
+                CASE WHEN COALESCE(response_tokens, 0) <= 0 THEN 1 ELSE 0 END
+            END
+          ) AS failed_calls
+        FROM ai_api_audit_logs
+        WHERE llm_id = :llm_id
+          AND created_at >= :since
+      SQL
 
-      # Log transient errors but still return a problem
-      # The framework's max_retries and max_blips will handle retries and alert suppression
-      if transient_error?(e)
-        Rails.logger.info(
-          "AI LLM Status Check: Transient error for model #{model.display_name} (#{model.id}): #{e.message}",
-        )
-      end
+    total_calls = counts[0].to_i
+    failed_calls = counts[1].to_i
 
-      override_data = {
-        model_id: model.id,
-        model_name: model.display_name,
-        url: "#{Discourse.base_path}/admin/plugins/discourse-ai/ai-llms/#{model.id}/edit",
-      }
-
-      problem(model, override_data:, details: { error: parse_error_message(e.message) })
-    end
+    [total_calls, failed_calls]
   end
 
-  def validator
-    @validator ||= DiscourseAi::Configuration::LlmValidator.new
+  def failure_rate(total_calls, failed_calls)
+    return 0.0 if total_calls.to_i.zero?
+
+    failed_calls.to_f / total_calls
   end
 
-  def parse_error_message(message)
-    begin
-      JSON.parse(message)["message"]
-    rescue JSON::ParserError
-      message.to_s
-    end
-  end
-
-  def rate_limit_error?(error)
-    error_message = error.message.to_s.downcase
-
-    # Check for rate limit indicators in the error message
-    rate_limit_indicators = [
-      "rate limit",
-      "rate_limit",
-      "ratelimit",
-      "too many requests",
-      "quota exceeded",
-      "retry after",
-      "throttled",
-      "429",
-      "503",
-      "temporarily unavailable",
-      "service unavailable",
-      "overloaded",
-    ]
-
-    rate_limit_indicators.any? { |indicator| error_message.include?(indicator) }
-  end
-
-  def transient_error?(error)
-    # Network errors and timeouts are transient - may succeed on retry
-    transient_errors = [
-      Errno::ECONNREFUSED,
-      Errno::ECONNRESET,
-      Errno::ETIMEDOUT,
-      Net::OpenTimeout,
-      Net::ReadTimeout,
-      IOError,
-    ]
-
-    transient_errors.any? { |error_class| error.is_a?(error_class) }
+  def override_data_for(model)
+    {
+      model_id: model.id,
+      model_name: model.display_name,
+      url: "#{Discourse.base_path}/admin/plugins/discourse-ai/ai-llms/#{model.id}/edit",
+    }
   end
 end
