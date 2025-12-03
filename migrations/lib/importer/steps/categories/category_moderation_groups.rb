@@ -19,7 +19,7 @@ module Migrations::Importer::Steps
     SQL
 
     rows_query <<~SQL, MappingType::CATEGORIES, MappingType::GROUPS
-      SELECT category_moderation_groups*,
+      SELECT category_moderation_groups.*,
              mapped_categories.discourse_id AS discourse_category_id,
              mapped_groups.discourse_id AS discourse_group_id
       FROM category_moderation_groups
