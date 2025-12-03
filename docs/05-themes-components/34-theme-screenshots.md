@@ -18,8 +18,8 @@ To add preview screenshots to your theme:
 
 1. Create a folder called `screenshots` in the root directory of your theme
 2. Add two image files to this folder:
-   - `light.png` - Shows your theme in light mode
-   - `dark.png` - Shows your theme in dark mode
+   - `light.webp` - Shows your theme in light mode
+   - `dark.webp` - Shows your theme in dark mode
 
 ## Setting up the image files
 
@@ -28,7 +28,7 @@ Your screenshot images must meet these requirements:
 - **Ratio**: 16:9 aspect ratio
 - **Dimensions**: 2560 × 1440 pixels (recommended)
 - **File size**: Under 1MB per image
-- **Format**: PNG format
+- **Format**: WebP, PNG, JPEG
 
 > :information_source: Using the recommended dimensions ensures your screenshots look crisp on high-resolution displays while maintaining reasonable file sizes.
 
@@ -40,7 +40,7 @@ After creating your screenshots, you need to update your theme’s `about.json` 
 2. Add the `screenshots` array to the JSON object:
 
 ```json
-  "screenshots": ["screenshots/light.png", "screenshots/dark.png"]
+  "screenshots": ["screenshots/light.webp", "screenshots/dark.webp"]
 ```
 
 ## Best practices for theme screenshots
@@ -58,7 +58,8 @@ When taking screenshots of your theme:
 
 Keep your images under the 1MB size limit by:
 
-- Using PNG optimization tools like [TinyPNG](https://tinypng.com/) or [ImageOptim](https://imageoptim.com/).
+- Using WebP format, as it combines the advantages of JPEG and PNG, offering more efficient compression than both.
+- For PNG format, using optimization tools like [TinyPNG](https://tinypng.com/) or [ImageOptim](https://imageoptim.com/).
 - Removing unnecessary metadata from image files.
 - Considering slightly reduced dimensions if needed while maintaining the 16:9 ratio.
 
