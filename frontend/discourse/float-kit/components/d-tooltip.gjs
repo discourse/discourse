@@ -64,7 +64,7 @@ export default class DTooltip extends Component {
       <span class="fk-d-tooltip__trigger-container">
         {{#if (has-block "trigger")}}
           {{yield this.componentArgs to="trigger"}}
-        {{else}}
+        {{~else~}}
           {{#if @icon}}
             <span class="fk-d-tooltip__icon">
               {{~icon @icon~}}
@@ -73,11 +73,9 @@ export default class DTooltip extends Component {
           {{#if @label}}
             <span class="fk-d-tooltip__label">{{@label}}</span>
           {{/if}}
-        {{/if}}
-      </span>
-    </span>
-
-    {{#if this.tooltipInstance.expanded}}
+        {{~/if~}}
+      </span></span>
+    {{~#if this.tooltipInstance.expanded~}}
       <DFloatBody
         @instance={{this.tooltipInstance}}
         @trapTab={{and this.options.interactive this.options.trapTab}}
@@ -102,6 +100,6 @@ export default class DTooltip extends Component {
           {{this.options.content}}
         {{/if}}
       </DFloatBody>
-    {{/if}}
+    {{~/if~}}
   </template>
 }
