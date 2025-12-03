@@ -3,6 +3,7 @@ import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import BulkSelectTopicsDropdown from "discourse/components/bulk-select-topics-dropdown";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import Post from "discourse/models/post";
 import { i18n } from "discourse-i18n";
 
@@ -23,12 +24,9 @@ export default class SearchBulkSelectDropdown extends Component {
     const topics = this.topics;
     return {
       selected: topics,
-      selectedIds: topics.map((t) => t.id),
       selectedCategoryIds: [
         ...new Set(topics.map((t) => t.category_id).filter(Boolean)),
       ],
-      dismissRead: (operationType, options) =>
-        this.args.bulkSelectHelper.dismissRead(operationType, options, topics),
       toggleBulkSelect: () => this.args.bulkSelectHelper.toggleBulkSelect(),
     };
   }
@@ -77,8 +75,8 @@ export default class SearchBulkSelectDropdown extends Component {
           await Post.deleteMany(posts.map((p) => p.id));
           this.args.bulkSelectHelper.clear();
           await this.args.afterBulkActionComplete?.();
-        } catch {
-          this.dialog.alert(i18n("generic_error"));
+        } catch (error) {
+          popupAjaxError(error);
         }
       },
     });
