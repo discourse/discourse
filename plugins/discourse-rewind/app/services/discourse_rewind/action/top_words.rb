@@ -35,6 +35,13 @@ module DiscourseRewind
                   AND posts.created_at BETWEEN :date_start AND :date_end
               $INNERSQL$
             ) AS search_data
+          WHERE LENGTH(word) >= 2
+          AND word ~ '^[a-zA-Z]+$'
+          AND word NOT IN (
+             'com', 'org', 'net', 'io', 'dev', 'co', 'uk', 'http', 'https',
+             'www', 'github', 'gitlab', 'google', 'youtube', 'twitter',
+             'slack', 'discord', 'drive'
+           )
           ORDER BY
             nentry DESC,
             ndoc DESC,
@@ -48,17 +55,21 @@ module DiscourseRewind
           FROM
             ts_stat ($INNERSQL$
               SELECT
-                to_tsvector('simple', raw)
+                to_tsvector('simple',
+                  regexp_replace(raw, 'https?://[^\\s]+', ' ', 'g')
+                )
               FROM
                 posts AS p
               WHERE
-                p.created_at BETWEEN :date_start AND :date_end
-                AND p.user_id = :user_id
+                p.user_id = :user_id
+                AND p.created_at BETWEEN :date_start AND :date_end
             $INNERSQL$)
+          WHERE LENGTH(word) >= 2
+          AND word ~ '^[a-zA-Z]+$'
         ), ranked_words AS (
           SELECT
             popular_words.*, lex.original_word,
-            ROW_NUMBER() OVER (PARTITION BY word ORDER BY LENGTH(original_word)) AS rn
+            ROW_NUMBER() OVER (PARTITION BY word ORDER BY LENGTH(original_word) DESC) AS rn
           FROM
             popular_words
           INNER JOIN
@@ -75,12 +86,18 @@ module DiscourseRewind
           rn = 1
         ORDER BY
           ndoc + nentry DESC
-        LIMIT 100
+        LIMIT 10
       SQL
 
         word_score =
           words
             .map do |word_data|
+              # Little cheat, since sometimes the stemming process turns
+              # "discourse" into "discour" or "discours"
+              if word_data.original_word == "discour" || word_data.original_word == "discours"
+                word_data.original_word = "discourse"
+              end
+
               { word: word_data.original_word, score: word_data.ndoc + word_data.nentry }
             end
             .sort_by! { |w| -w[:score] }
