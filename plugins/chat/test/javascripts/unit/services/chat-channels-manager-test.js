@@ -150,6 +150,214 @@ module(
       });
     });
 
+    module("#unstarredPublicMessageChannelsByActivity", function () {
+      test("returns all channels sorted by activity when starring is disabled", function (assert) {
+        this.siteSettings.star_chat_channels = false;
+
+        const channelA = this.fabricators.channel({
+          chatable: this.fabricators.coreFabricators.category({
+            slug: "channel-a",
+          }),
+        });
+        const channelB = this.fabricators.channel({
+          chatable: this.fabricators.coreFabricators.category({
+            slug: "channel-b",
+          }),
+        });
+
+        channelA.currentUserMembership = UserChatChannelMembership.create({
+          following: true,
+          starred: true,
+        });
+        channelB.currentUserMembership = UserChatChannelMembership.create({
+          following: true,
+          starred: false,
+        });
+
+        this.subject.store(channelA);
+        this.subject.store(channelB);
+
+        const result = this.subject.unstarredPublicMessageChannelsByActivity;
+
+        assert.strictEqual(result.length, 2, "returns all channels");
+      });
+
+      test("excludes starred channels when starring is enabled", function (assert) {
+        const starredChannel = this.fabricators.channel({
+          chatable: this.fabricators.coreFabricators.category({
+            slug: "starred-channel",
+          }),
+        });
+        const unstarredChannel = this.fabricators.channel({
+          chatable: this.fabricators.coreFabricators.category({
+            slug: "unstarred-channel",
+          }),
+        });
+
+        starredChannel.currentUserMembership = UserChatChannelMembership.create(
+          {
+            following: true,
+            starred: true,
+          }
+        );
+        unstarredChannel.currentUserMembership =
+          UserChatChannelMembership.create({
+            following: true,
+            starred: false,
+          });
+
+        this.subject.store(starredChannel);
+        this.subject.store(unstarredChannel);
+
+        const result = this.subject.unstarredPublicMessageChannelsByActivity;
+
+        assert.strictEqual(result.length, 1, "returns only unstarred channels");
+        assert.strictEqual(
+          result[0].id,
+          unstarredChannel.id,
+          "returns the unstarred channel"
+        );
+      });
+
+      test("sorts unstarred channels by activity with unreads first", function (assert) {
+        const channelWithUnread = this.fabricators.channel({
+          chatable: this.fabricators.coreFabricators.category({
+            slug: "channel-with-unread",
+          }),
+        });
+        const channelNoUnread = this.fabricators.channel({
+          chatable: this.fabricators.coreFabricators.category({
+            slug: "channel-no-unread",
+          }),
+        });
+
+        channelWithUnread.currentUserMembership =
+          UserChatChannelMembership.create({
+            following: true,
+            starred: false,
+          });
+        channelNoUnread.currentUserMembership =
+          UserChatChannelMembership.create({
+            following: true,
+            starred: false,
+          });
+
+        channelWithUnread.tracking.unreadCount = 5;
+        channelNoUnread.tracking.unreadCount = 0;
+
+        this.subject.store(channelNoUnread);
+        this.subject.store(channelWithUnread);
+
+        const result = this.subject.unstarredPublicMessageChannelsByActivity;
+
+        assert.strictEqual(
+          result[0].id,
+          channelWithUnread.id,
+          "channel with unreads comes first"
+        );
+        assert.strictEqual(
+          result[1].id,
+          channelNoUnread.id,
+          "channel without unreads comes second"
+        );
+      });
+    });
+
+    module("#starredChannelsByActivity", function () {
+      test("returns empty array when starring is disabled", function (assert) {
+        this.siteSettings.star_chat_channels = false;
+
+        const channel = this.fabricators.channel({
+          chatable: this.fabricators.coreFabricators.category({
+            slug: "test",
+          }),
+        });
+        channel.currentUserMembership = UserChatChannelMembership.create({
+          following: true,
+          starred: true,
+        });
+
+        this.subject.store(channel);
+
+        assert.strictEqual(
+          this.subject.starredChannelsByActivity.length,
+          0,
+          "returns empty array"
+        );
+      });
+
+      test("sorts starred channels with unreads first", function (assert) {
+        const channelWithUnread = this.fabricators.channel({
+          chatable: this.fabricators.coreFabricators.category({
+            slug: "channel-with-unread",
+          }),
+        });
+        const channelNoUnread = this.fabricators.channel({
+          chatable: this.fabricators.coreFabricators.category({
+            slug: "channel-no-unread",
+          }),
+        });
+
+        channelWithUnread.currentUserMembership =
+          UserChatChannelMembership.create({
+            following: true,
+            starred: true,
+          });
+        channelNoUnread.currentUserMembership =
+          UserChatChannelMembership.create({
+            following: true,
+            starred: true,
+          });
+
+        channelWithUnread.tracking.unreadCount = 5;
+        channelNoUnread.tracking.unreadCount = 0;
+
+        this.subject.store(channelNoUnread);
+        this.subject.store(channelWithUnread);
+
+        const result = this.subject.starredChannelsByActivity;
+
+        assert.strictEqual(
+          result[0].id,
+          channelWithUnread.id,
+          "channel with unreads comes first"
+        );
+        assert.strictEqual(
+          result[1].id,
+          channelNoUnread.id,
+          "channel without unreads comes second"
+        );
+      });
+
+      test("includes both public and DM starred channels", function (assert) {
+        const publicChannel = this.fabricators.channel({
+          chatable: this.fabricators.coreFabricators.category({
+            slug: "public",
+          }),
+        });
+        const dmChannel = this.fabricators.channel({
+          chatable: this.fabricators.directMessage(),
+          title: "DM User",
+        });
+
+        publicChannel.currentUserMembership = UserChatChannelMembership.create({
+          following: true,
+          starred: true,
+        });
+        dmChannel.currentUserMembership = UserChatChannelMembership.create({
+          following: true,
+          starred: true,
+        });
+
+        this.subject.store(publicChannel);
+        this.subject.store(dmChannel);
+
+        const result = this.subject.starredChannelsByActivity;
+
+        assert.strictEqual(result.length, 2, "returns both channels");
+      });
+    });
+
     module("#sortDirectMessageChannels with starred channels", function () {
       test("prioritizes starred DM channels over unstarred", function (assert) {
         const dmA = this.fabricators.channel({

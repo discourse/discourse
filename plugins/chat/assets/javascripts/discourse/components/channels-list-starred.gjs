@@ -7,8 +7,18 @@ import ChatChannelRow from "./chat-channel-row";
 export default class ChannelsListStarred extends Component {
   @service chatChannelsManager;
 
+  get inSidebar() {
+    return this.args.inSidebar ?? false;
+  }
+
   get channelList() {
-    return this.args.channels || this.chatChannelsManager.starredChannels;
+    if (this.args.channels) {
+      return this.args.channels;
+    }
+    if (!this.inSidebar) {
+      return this.chatChannelsManager.starredChannelsByActivity;
+    }
+    return this.chatChannelsManager.starredChannels;
   }
 
   <template>
