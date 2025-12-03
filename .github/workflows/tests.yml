@@ -338,7 +338,7 @@ jobs:
         env:
           CHECKOUT_TIMEOUT: 10
         run: |
-          EMBER_RAISE_ON_DEPRECATION=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation plugins/{${{ env.CORE_PLUGINS_ESCAPED }}}/spec/system
+          EMBER_RAISE_ON_DEPRECATION=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation plugins/{${{ env.CORE_PLUGINS }}}/spec/system
         shell: bash
 
       - name: Official Plugins System Tests
@@ -346,7 +346,7 @@ jobs:
         env:
           CHECKOUT_TIMEOUT: 10
         run: |
-          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation plugins/{${{ env.OFFICIAL_PLUGINS_ESCAPED }}}/spec/system
+          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation plugins/{${{ env.OFFICIAL_PLUGINS }}}/spec/system
         shell: bash
 
       - name: Chat System Tests
