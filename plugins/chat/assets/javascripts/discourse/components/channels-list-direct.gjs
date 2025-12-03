@@ -20,6 +20,7 @@ export default class ChannelsListDirect extends Component {
   @service chatChannelsManager;
   @service site;
   @service modal;
+  @service siteSettings;
 
   get inSidebar() {
     return this.args.inSidebar ?? false;
@@ -45,6 +46,13 @@ export default class ChannelsListDirect extends Component {
 
   get directMessageChannelsEmpty() {
     return this.chatChannelsManager.directMessageChannels?.length === 0;
+  }
+
+  get channelList() {
+    if (!this.inSidebar && this.siteSettings.star_chat_channels) {
+      return this.chatChannelsManager.truncatedUnstarredDirectMessageChannels;
+    }
+    return this.chatChannelsManager.truncatedDirectMessageChannels;
   }
 
   @action
@@ -118,10 +126,7 @@ export default class ChannelsListDirect extends Component {
           @ctaAction={{this.openNewMessageModal}}
         />
       {{else}}
-        {{#each
-          this.chatChannelsManager.truncatedDirectMessageChannels
-          as |channel|
-        }}
+        {{#each this.channelList as |channel|}}
           <ChatChannelRow
             @channel={{channel}}
             @options={{hash leaveButton=true}}

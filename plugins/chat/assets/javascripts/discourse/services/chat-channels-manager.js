@@ -179,6 +179,28 @@ export default class ChatChannelsManager extends Service {
     return this.#sortChannelsByActivity([...this.publicMessageChannels]);
   }
 
+  /**
+   * Returns public message channels that are not starred, sorted by activity.
+   * Falls back to all public channels by activity if starring is disabled.
+   * Channels with unreads appear first, then sorted alphabetically.
+   *
+   * @returns {ChatChannel[]} Array of unstarred public channels sorted by activity
+   */
+  get unstarredPublicMessageChannelsByActivity() {
+    if (!this.siteSettings.star_chat_channels) {
+      return this.publicMessageChannelsByActivity;
+    }
+
+    return this.#sortChannelsByActivity(
+      this.channels.filter(
+        (channel) =>
+          channel.isCategoryChannel &&
+          channel.currentUserMembership?.following &&
+          !channel.currentUserMembership?.starred
+      )
+    );
+  }
+
   @cached
   get directMessageChannels() {
     return this.#sortDirectMessageChannels(
@@ -236,6 +258,81 @@ export default class ChatChannelsManager extends Service {
    */
   get hasStarredChannels() {
     return this.starredChannels.length > 0;
+  }
+
+  /**
+   * Returns all starred channels sorted by activity (unreads first).
+   * Channels with urgent notifications (mentions, DM unreads) come first,
+   * then channels with regular unreads, then by most recent message.
+   *
+   * @returns {ChatChannel[]} Array of starred channels sorted by activity
+   */
+  get starredChannelsByActivity() {
+    if (!this.siteSettings.star_chat_channels) {
+      return [];
+    }
+
+    const starredChannels = this.channels.filter(
+      (channel) =>
+        channel.currentUserMembership?.following &&
+        channel.currentUserMembership?.starred
+    );
+
+    return starredChannels.sort((a, b) => {
+      const aUrgent = this.#getChannelUrgentCount(a);
+      const bUrgent = this.#getChannelUrgentCount(b);
+
+      // Channels with urgent notifications come first
+      if (aUrgent > 0 && bUrgent > 0) {
+        return this.#compareByLastActivity(a, b);
+      }
+      if (aUrgent > 0 || bUrgent > 0) {
+        return aUrgent > bUrgent ? -1 : 1;
+      }
+
+      const aUnread = this.#getChannelUnreadCount(a);
+      const bUnread = this.#getChannelUnreadCount(b);
+
+      // Channels with unreads come next
+      if (aUnread > 0 && bUnread > 0) {
+        return this.#compareByLastActivity(a, b);
+      }
+      if (aUnread > 0 || bUnread > 0) {
+        return aUnread > bUnread ? -1 : 1;
+      }
+
+      // Sort remaining by last activity
+      return this.#compareByLastActivity(a, b);
+    });
+  }
+
+  #getChannelUrgentCount(channel) {
+    if (channel.isDirectMessageChannel) {
+      return (
+        channel.tracking.unreadCount +
+        channel.tracking.mentionCount +
+        channel.tracking.watchedThreadsUnreadCount
+      );
+    }
+    return (
+      channel.tracking.mentionCount + channel.tracking.watchedThreadsUnreadCount
+    );
+  }
+
+  #getChannelUnreadCount(channel) {
+    return (
+      channel.tracking.unreadCount + channel.unreadThreadsCountSinceLastViewed
+    );
+  }
+
+  #compareByLastActivity(a, b) {
+    const aDate = a.lastMessage?.createdAt
+      ? new Date(a.lastMessage.createdAt)
+      : new Date(0);
+    const bDate = b.lastMessage?.createdAt
+      ? new Date(b.lastMessage.createdAt)
+      : new Date(0);
+    return bDate - aDate;
   }
 
   /**
