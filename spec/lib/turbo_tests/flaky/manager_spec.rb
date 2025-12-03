@@ -2,7 +2,7 @@
 
 RSpec.describe TurboTests::Flaky::Manager do
   fab!(:rspec_example_1) do
-    RSpec::Core::Example
+    RSpec
       .describe
       .example("rspec example 1")
       .tap do |example|
@@ -17,7 +17,7 @@ RSpec.describe TurboTests::Flaky::Manager do
   end
 
   fab!(:rspec_example_2) do
-    RSpec::Core::Example
+    RSpec
       .describe
       .example("rspec example 2")
       .tap do |example|
