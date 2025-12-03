@@ -22,10 +22,11 @@ module DiscourseAi
         last_update_sent_at = Time.now - 1
         reply = +""
 
-        context = DiscourseAi::Personas::BotContext.new(
-          messages: [{ type: :user, content: @query }],
-          skip_show_thinking: true
-        )
+        context = 
+          DiscourseAi::Personas::BotContext.new(
+            messages: [{ type: :user, content: @query }],
+            skip_show_thinking: true
+          )
 
         full_reply =
           @bot.reply(context) do |partial, _something|
