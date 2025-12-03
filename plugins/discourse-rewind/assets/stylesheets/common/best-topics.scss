@@ -46,6 +46,26 @@
     text-overflow: ellipsis;
   }
 
+  .best-topics__metadata a {
+    font-family: var(--pixel-text);
+    text-transform: uppercase;
+    color: var(--rewind-blue);
+    text-decoration: underline;
+  }
+
+  .best-topics__metadata {
+    font-weight: normal;
+    font-size: 12px;
+    display: flex;
+    gap: 10px;
+    color: var(--primary-700);
+    align-items: center;
+    margin-top: auto;
+    width: 100%;
+    padding-top: 10px;
+    justify-content: flex-end;
+  }
+
   .best-topics__topic {
     box-sizing: border-box;
     padding: 0.5em;

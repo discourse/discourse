@@ -40,6 +40,7 @@ en:
             one: Your most viewed tag
             other: Your %{count} most viewed tags
         best_topics:
+          view_topic: View topic
           title:
             one: Your best topic
             other: Your %{count} best topics

@@ -23,8 +23,7 @@ export default class BestTopics extends Component {
         <div class="rewind-report-container">
           <div class="rewind-card">
             {{#each @report.data as |topic idx|}}
-              <a
-                href={{getURL (concat "/t/-/" topic.topic_id)}}
+              <div
                 class={{concatClass "best-topics__topic" (this.rankClass idx)}}
               >
                 <span class="best-topics --rank"></span>
@@ -33,7 +32,13 @@ export default class BestTopics extends Component {
                 <span class="best-topics__excerpt">
                   {{replaceEmoji (htmlSafe topic.excerpt)}}
                 </span>
-              </a>
+
+                <div class="best-topics__metadata">
+                  <a href={{getURL (concat "/t/-/" topic.topic_id)}}>
+                    {{i18n "discourse_rewind.reports.best_topics.view_topic"}}
+                  </a>
+                </div>
+              </div>
             {{/each}}
           </div>
         </div>

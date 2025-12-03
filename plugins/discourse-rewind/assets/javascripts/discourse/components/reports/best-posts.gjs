@@ -1,7 +1,9 @@
 import Component from "@glimmer/component";
+import { concat } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 export default class BestPosts extends Component {
@@ -33,7 +35,11 @@ export default class BestPosts extends Component {
                 <span class="best-posts__replies">
                   {{icon "comment"}}{{post.reply_count}}
                 </span>
-                <a href="/t/{{post.topic_id}}/{{post.post_number}}">
+                <a
+                  href={{getURL
+                    (concat "/t/" post.topic_id "/" post.post_number)
+                  }}
+                >
                   {{i18n "discourse_rewind.reports.best_posts.view_post"}}
                 </a>
               </div>
