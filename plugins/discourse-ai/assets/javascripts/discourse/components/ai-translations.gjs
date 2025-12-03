@@ -69,8 +69,8 @@ export default class AiTranslations extends Component {
       return null;
     }
     const resetTime =
-      this.creditStatus?.reset_time_relative ||
-      this.creditStatus?.reset_time_formatted;
+      this.creditStatus?.reset_time_formatted ||
+      this.creditStatus?.reset_time_absolute;
     if (resetTime) {
       return htmlSafe(
         i18n("discourse_ai.translations.credit_limit_warning", {

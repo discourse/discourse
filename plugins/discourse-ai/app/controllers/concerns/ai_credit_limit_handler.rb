@@ -21,7 +21,7 @@ module AiCreditLimitHandler
     end
 
     user_type = current_user&.admin? ? "admin" : "user"
-    reset_time = allocation&.relative_reset_time.presence || ""
+    reset_time = allocation&.formatted_reset_time.presence || ""
 
     message =
       I18n.t(
