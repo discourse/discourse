@@ -97,6 +97,11 @@ export default class AiPersonaLlmSelector extends Component {
     this.llm = newValue;
     this.keyValueStore.setItem(LLM_SELECTOR_KEY, newValue);
 
+    // Pass the LLM model ID (not user ID) for credit checking
+    const bot = this.currentUser.ai_enabled_chat_bots.find(
+      (b) => b.id === newValue
+    );
+    this.args.setLlmId?.(bot?.llm_model_id);
     this.resetTargetRecipients();
   }
 

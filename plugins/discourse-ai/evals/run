@@ -10,7 +10,6 @@ require_relative "lib/features"
 require_relative "lib/recorder"
 require_relative "lib/workbench"
 require_relative "lib/persona_prompt_loader"
-require_relative "lib/comparison_runner"
 require_relative "lib/cli"
 
 features_registry =
@@ -50,81 +49,49 @@ if llms.empty?
   exit 1
 end
 
-selected_evals = cli.select_evals(available_evals)
+selected_evals =
+  if cli.dataset_path.present?
+    DiscourseAi::Evals::Eval.from_dataset_csv(path: cli.dataset_path, feature: cli.feature_key)
+  else
+    cli.select_evals(available_evals)
+  end
 
 judge_llm = nil
 default_judge_error = nil
 
-begin
-  judge_llm = llm_repository.hydrate(cli.judge_name)
-rescue StandardError => e
-  if cli.judge_provided
-    puts "Error: #{e.message}"
-    exit 1
-  else
-    judge_llm = nil
-    default_judge_error = e.message
+requires_judge = selected_evals.any? { |eval_case| eval_case.judge.present? }
+
+judge_name = cli.judge_name.presence
+judge_name = DiscourseAi::Evals::Cli::DEFAULT_JUDGE if requires_judge && judge_name.blank?
+
+if judge_name.present?
+  begin
+    judge_llm = llm_repository.hydrate(judge_name)
+  rescue StandardError => e
+    if cli.judge_provided?
+      puts "Error: #{e.message}"
+      exit 1
+    else
+      judge_llm = nil
+      default_judge_error = e.message
+    end
   end
 end
 
 persona_variants =
   persona_loader.variants_for(cli.persona_keys, comparison_mode: cli.comparison_mode)
 
-requires_judge =
-  cli.comparison_mode.present? || selected_evals.any? { |eval_case| eval_case.judge.present? }
+cli.validate_comparison_requirements!(llms: llms, persona_variants: persona_variants)
 
-if requires_judge && judge_llm.nil?
-  message = "Error: Selected evaluations require a judge."
-  if default_judge_error
-    message += " Configure '#{cli.judge}' or pass --judge with an LLM config name."
-    message += "\n\n"
-    message += default_judge_error
-  else
-    message += " Pass --judge with an LLM config name."
-  end
-  puts message
-  exit 1
-end
+cli.validate_judge_presence!(
+  requires_judge: requires_judge,
+  judge_llm: judge_llm,
+  default_judge_error: default_judge_error,
+)
 
-if cli.comparison_mode
-  begin
-    DiscourseAi::Evals::ComparisonRunner.new(
-      mode: cli.comparison_mode,
-      judge_llm: judge_llm,
-      output: $stdout,
-    ).run(eval_cases: selected_evals, persona_variants: persona_variants, llms: llms)
-  rescue DiscourseAi::Evals::ComparisonRunner::ComparisonError => e
-    puts "Error: #{e.message}"
-    exit 1
-  end
-  exit 0
-end
-
-persona_variants.each do |variant|
-  if variant[:key]
-    label =
-      if variant[:key] == default_persona_key
-        "default (built-in)"
-      else
-        variant[:key]
-      end
-
-    puts "\n=== Persona: #{label} ==="
-  end
-
-  playground =
-    DiscourseAi::Evals::Workbench.new(
-      output: $stdout,
-      judge_llm: judge_llm,
-      persona_prompt: variant[:prompt],
-      persona_label: variant[:key],
-    )
-
-  selected_evals.each do |eval_case|
-    if cli.judge_provided && eval_case.judge.blank?
-      puts "Notice: Eval '#{eval_case.id}' has no judge block. --judge is ignored for this eval."
-    end
-
-    playground.run(eval_case: eval_case, llms: llms)
-  end
-end
+DiscourseAi::Evals::Workbench.new(
+  output: $stdout,
+  judge_llm: judge_llm,
+  persona_variants: persona_variants,
+  comparison: cli.comparison_mode,
+).run_evals(eval_cases: selected_evals, llms: llms, persona_variants: persona_variants)

@@ -291,7 +291,6 @@ tr_TR:
     software_update_prompt:
       message: "Bu siteyi güncelledik, işlerin sorunsuz bir şekilde devam etmesi için <span>lütfen yenileyin</span>."
       dismiss: "Kapat"
-    bootstrap_mode: "Başlarken"
     back_button: "Geri"
     welcome_banner:
       header:
@@ -697,7 +696,7 @@ tr_TR:
       title: "İncele"
       topic: "Konu:"
       filtered_topic: "Tek bir konu içerisinde incelenebilir içerikleri filtrelediniz."
-      filtered_user: "Kullanıcı"
+      filtered_user: "Bayrak eklenen kullanıcı"
       filtered_reviewed_by: "İnceleyen:"
       show_all_topics: "bütün konuları göster"
       deleted_post: "(gönderi silindi)"
@@ -835,7 +834,6 @@ tr_TR:
           noun: "gönderi"
       flagged_as: "Bayrak ekleme nedeni:"
       user_label: "Kullanıcı"
-      assigned_to: "Şuraya atandı:"
       moderator_actions: "Moderatör eylemleri"
       timeline_and_notes: "Zaman çizelgesi ve notlar"
       timeline:
@@ -873,7 +871,6 @@ tr_TR:
           one: "%{count} benzersiz kullanıcı tarafından bayrak eklendi"
           other: "%{count} benzersiz kullanıcı tarafından bayrak eklendi"
         activities:
-          new_account: "yeni hesap"
           trust_level: "güven seviyesi: %{trustLevelName}"
           posts:
             one: "%{count} gönderi"
@@ -881,7 +878,6 @@ tr_TR:
         solution_marked: "Çözüm işaretlendi"
         topic_has_solution: "Bu konunun bir çözümü var"
         visibility: "Görünürlük"
-        topic_unlisted: "Bu konu listeden kaldırıldı. Yalnızca doğrudan bağlantı yoluyla erişilebilir; herkese açık değil."
       help:
         moderation_guide: "Discourse moderasyon kılavuzu"
         flag_priorities: "Kullanıcı itibarını ve bayrak önceliklerini yönetme"
@@ -1304,7 +1300,6 @@ tr_TR:
         one: "Kategoriler (%{count} tane daha)…"
         other: "Kategoriler (%{count} tane daha)…"
     ip_lookup:
-      title: IP Adresi Ara
       hostname: Sunucu Adı
       location: Konum
       location_not_found: (bilinmeyen)
@@ -5213,6 +5208,9 @@ tr_TR:
         enabled: "Etkin mi"
         select_groups: "Grupları seç…"
         preview: "Ön izle"
+        enabled_for_options:
+          everyone: "Herkes"
+          staff: "Sadece personel"
         impact_roles:
           admins: "Yöneticiler"
           moderators: "Moderatörler"
@@ -7944,78 +7942,4 @@ tr_TR:
           replace: "Değiştir"
   wizard_js:
     wizard:
-      jump_in: "Başlayın!"
-      finish: "Kurulumdan çık"
-      back: "Geri"
-      next: "İleri"
-      configure_more: "Daha fazla yapılandırın…"
-      step-text: "Adım"
-      step: "%{current} / %{total}"
-      upload: "Dosya yükle"
-      uploading: "Yükleniyor…"
-      upload_error: "Üzgünüz, bu dosyayı yüklerken bir hata oluştu. Lütfen yeniden deneyin."
-      staff_count:
-        one: "Topluluğunuzda %{count} personel (siz) var."
-        other: "Topluluğunuzda siz dahil toplam %{count} personel var."
-      invites:
-        add_user: "ekle"
-        none_added: "Personel davet etmediniz. Devam etmek istediğinize emin misiniz?"
-        roles:
-          admin: "Yönetici"
-          moderator: "Moderatör"
-          regular: "Normal Kullanıcı"
-      homepage_choices:
-        custom:
-          label: "Özel"
-          description: "Kullanıcıların %{landingPage} üzerinde ulaştığı %{type} odaklı bir ana sayfa gösterin"
-        style_type:
-          categories: "kategori"
-          topics: "konu"
-      top_menu_items:
-        new: "Yeni"
-        unread: "Okunmamış"
-        top: "En iyi"
-        latest: "En son"
-        hot: "Popüler"
-        categories: "Kategoriler"
-        unseen: "Görülmemiş"
-        read: "Okunmuş"
-        bookmarks: "Yer imleri"
-      previews:
-        topic_title: "Hangi kitapları okuyorsunuz?"
-        share_button: "Paylaş"
-        reply_button: "Yanıtla"
-        topic_preview: "Konu ön izlemesi"
-        homepage_preview: "Ana sayfa ön izlemesi"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "tüm kategoriler"
-        topic_titles:
-          what_books: "Hangi kitapları okuyorsunuz?"
-          what_movies: "Son zamanlarda hangi filmleri izlediniz?"
-          random_fact: "Günün rastgele bilgisi"
-          tv_show: "TV programı öner"
-          what_hobbies: "Hobileriniz neler?"
-          what_music: "Şu anda ne dinliyorsunuz?"
-          funniest_thing: "Bugün gördüğünüz en komik şey"
-          share_art: "Sanatınızı paylaşın!"
-        topic_ops:
-          what_books: |
-            Hepimiz okumayı severiz, bu konuyu
-            bugünlerde veya yakın zamanda okuduklarımızı
-            paylaşmak için kullanalım. Ben bir fantastik kurgu severim
-            ve Yüzüklerin Efendisi'ni 100. kez tekrar okuyorum.
-            Peki ya siz?
-        category_descriptions:
-          icebreakers: "Eğlenceli sorularla topluluğunuzdaki diğer üyeleri tanıyın."
-          news: "En son haber ve olayları tartışın."
-          site_feedback: "Topluluk hakkındaki düşüncelerinizi paylaşın ve iyileştirmeler önerin."
-        category_names:
-          icebreakers: "Kaynaştırma soruları"
-          news: "Haberler"
-          site_feedback: "Site Geri Bildirimi"
-        table_headers:
-          topic: "Konu"
-          replies: "Yanıtlar"
-          views: "Görüntülemeler"
-          activity: "Aktivite"
+      jump_in: "Hadi başlayalım!"

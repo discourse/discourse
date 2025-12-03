@@ -1809,8 +1809,6 @@ sw:
     nice_share:
       name: Gawiza Zuri
       description: Gawizo la chapisho kwa watumiaji 25 wa kipekee
-      long_description: |
-        Beji hii inatolewa gawizo la kiungo kikibonyezwa na watu 25 kutoka nje. Asante kwa kusambaza neno kuhusu majadiliano, na jumuiya yetu!
     good_share:
       name: Gawizo Zuri
       description: Gawizo la chapisho kwa watu 300 wa kipekee
@@ -1950,13 +1948,7 @@ sw:
   wizard:
     title: "Mpangilio wa Discourse"
     step:
-      introduction:
-        fields:
-          title:
-            placeholder: "Sehemu ya Jeni ya Kuburudika"
-          site_description:
-            placeholder: "Sehemu ya Jeni na marafiki zake kujadili vitu vizuri"
-      privacy:
+      setup:
         fields:
           login_required:
             label: "Uonekanaji"
@@ -1965,25 +1957,6 @@ sw:
                 label: "Umma"
               private:
                 label: "Binafsi"
-      styling:
-        fields:
-          styling_preview:
-            label: "Kihakiki"
-          homepage_style:
-            choices:
-              latest:
-                label: "Hivi Karibuni"
-      corporate:
-        fields:
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
-          site_contact:
-            description: "Ujumbe wote wa kibinafsi utatumwa kutoka kwa mtumiaji huyu, kama ripoti za onyo na ilani ya umalizaji wa chelezo."
-      invites:
-        title: "Alika Wasaidizi"
-        description: "Una karibia kumaliza! Karibisha watu kadhaa kusaidia <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>kuanzisha majadiliano</a>na mada nzuri na majibu kufanya jumuiya yako ianze."
-      finished:
-        title: "Discourse yako iko Tayari!"
   search_logs:
     graph_title: "Idadi ya Utafiti"
   onebox:

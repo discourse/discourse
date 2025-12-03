@@ -207,6 +207,7 @@ id:
         thumbnail_suggestions:
           select: "Pilih"
           selected: "Dipilih"
+          try_again: "Coba Lagi"
         image_caption:
           button_label: "Keterangan dengan AI"
           generating: "Menghasilkan keterangan..."

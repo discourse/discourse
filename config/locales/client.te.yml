@@ -190,7 +190,6 @@ te:
     software_update_prompt:
       message: "మేము ఈ సైట్‌ని నవీకరించాము. ప్రతిదీ సజావుగా పని చేస్తుందని నిర్ధారించుకోవడానికి <span>దయచేసి ఈ పేజీని రిఫ్రెష్ చేయండి</span>."
       dismiss: "రద్దుచేయండి"
-    bootstrap_mode: "ప్రారంభించడం"
     back_button: "వెనుకకు"
     welcome_banner:
       header:
@@ -500,7 +499,6 @@ te:
       title: "సమీక్ష"
       topic: "విషయం:"
       filtered_topic: "మీరు ఒకే విషయంలో సమీక్షించదగిన కంటెంట్‌కు ఫిల్టర్ చేసారు."
-      filtered_user: "సభ్యుడు"
       filtered_reviewed_by: "ద్వారా సమీక్షించబడింది"
       show_all_topics: "అన్ని విషయలను చూపించండి"
       deleted_post: "(పోస్ట్ తొలగించబడింది)"
@@ -1034,7 +1032,6 @@ te:
         one: "వర్గాలు (%{count} మరిన్ని)…"
         other: "వర్గాలు (%{count} మరిన్ని)…"
     ip_lookup:
-      title: IP చిరునామా శోధన
       hostname: హోస్ట్ పేరు
       location: ప్రాంతం
       location_not_found: (తెలీని)
@@ -4383,6 +4380,8 @@ te:
         enabled: "ప్రారంభించబడింది"
         select_groups: "సమూహాలను ఎంచుకోండి…"
         preview: "ప్రివ్యూ"
+        enabled_for_options:
+          everyone: "అందరూ"
         impact_roles:
           moderators: "నిర్వాహకులు"
           staff: "సిబ్బంది"
@@ -6296,56 +6295,3 @@ te:
           categories: "వర్గాలు"
           topics: "విషయాలు"
           replace: "భర్తీ చేయండి"
-  wizard_js:
-    wizard:
-      jump_in: "లోపలికి దూకండి!"
-      finish: "సెటప్ నిష్క్రమించండి"
-      back: "వెనుకకు"
-      next: "తదుపరి"
-      configure_more: "మరిన్ని కాన్ఫిగర్ చేయండి…"
-      step-text: "దశ"
-      step: "%{total} లో %{current}"
-      upload: "ఫైల్‌ని అప్‌లోడ్ చేయండి"
-      uploading: "అప్‌లోడ్ చేయబడుతోంది…"
-      upload_error: "క్షమించాలి. దస్త్రం ఎగుమతించుటలో దోషం. దయచేసి మరలా ప్రయత్నించండి. "
-      staff_count:
-        one: "మీ సంఘంలో %{count} సిబ్బంది (మీరు) ఉన్నారు."
-        other: "మీ సంఘం మీతో సహా %{count} సిబ్బందిని కలిగి ఉంది."
-      invites:
-        add_user: "జోడించండి"
-        none_added: "మీరు ఏ సిబ్బందిని ఆహ్వానించలేదు. మీరు ఖచ్చితంగా కొనసాగించాలనుకుంటున్నారా?"
-        roles:
-          admin: "నిర్వాహకుడు"
-          moderator: "నిర్వాహకుడు"
-          regular: "సాధారణ సభ్యుడు"
-      homepage_choices:
-        custom:
-          label: "అనురూప"
-        style_type:
-          categories: "వర్గం"
-          topics: "విషయం"
-      top_menu_items:
-        new: "కొత్త "
-        unread: "చదవని"
-        top: "అగ్ర"
-        latest: "తాజా"
-        hot: "హాట్"
-        categories: "వర్గాలు"
-        unseen: "చూడనవి"
-        read: "చదివిన"
-        bookmarks: "బుక్‌మార్క్‌లు"
-      previews:
-        share_button: "షేర్ చేయండి"
-        reply_button: "ప్రత్యుత్తరం ఇవ్వండి"
-        topic_preview: "విషయం ప్రివ్యూ"
-        homepage_preview: "మొదటి పేజీ ప్రివ్యూ"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "అన్ని వర్గాలు"
-        category_names:
-          site_feedback: "సైట్ పై అభిప్రాయం"
-        table_headers:
-          topic: "విషయం"
-          replies: "ప్రత్యుత్తరాలు"
-          views: "వీక్షణలు"
-          activity: "కలాపం"

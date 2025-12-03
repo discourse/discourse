@@ -63,8 +63,6 @@ module PageObjects
       end
 
       def has_input_title?(value)
-        puts "reply title value"
-        puts find("#{@composer_id} input#reply-title").value
         expect(find("#{@composer_id} input#reply-title").value).to eq(value)
       end
 

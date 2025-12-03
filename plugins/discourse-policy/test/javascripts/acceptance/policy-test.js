@@ -36,7 +36,7 @@ acceptance("Discourse Policy - post", function (needs) {
   });
 
   test("insert a policy", async function (assert) {
-    updateCurrentUser({ admin: true });
+    updateCurrentUser({ can_create_policy: true });
     await visit("/t/-/130");
     await click(".actions .edit");
 

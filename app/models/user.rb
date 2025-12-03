@@ -90,6 +90,7 @@ class User < ActiveRecord::Base
   has_many :muted_user_records, class_name: "MutedUser", dependent: :delete_all
   has_many :ignored_user_records, class_name: "IgnoredUser", dependent: :delete_all
   has_many :do_not_disturb_timings, dependent: :delete_all
+  has_many :reviewable_histories, foreign_key: :created_by_id, dependent: :delete_all
   has_many :sidebar_sections, dependent: :destroy
   has_one :user_status, dependent: :destroy
 

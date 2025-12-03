@@ -34,6 +34,7 @@ class Admin::SiteSettingsController < Admin::AdminController
 
     SiteSetting::Update.call(params: { settings: }, guardian:) do
       on_success { head :no_content }
+      on_exceptions { |e| raise Discourse::InvalidParameters, e }
       on_failed_policy(:settings_are_not_deprecated) do |policy|
         raise Discourse::InvalidParameters, policy.reason
       end
@@ -44,9 +45,6 @@ class Admin::SiteSettingsController < Admin::AdminController
         raise Discourse::InvalidParameters, policy.reason
       end
       on_failed_policy(:settings_are_configurable) do |policy|
-        raise Discourse::InvalidParameters, policy.reason
-      end
-      on_failed_policy(:values_are_valid) do |policy|
         raise Discourse::InvalidParameters, policy.reason
       end
     end

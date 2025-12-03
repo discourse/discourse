@@ -162,12 +162,13 @@ export default class ChatChannelsManager extends Service {
 
   @cached
   get publicMessageChannels() {
-    return this.channels
-      .filter(
+    return this.#sortChannelsByProperty(
+      this.channels.filter(
         (channel) =>
           channel.isCategoryChannel && channel.currentUserMembership.following
-      )
-      .sort((a, b) => a?.slug?.localeCompare?.(b?.slug));
+      ),
+      "slug"
+    );
   }
 
   get publicMessageChannelsWithActivity() {
@@ -176,6 +177,28 @@ export default class ChatChannelsManager extends Service {
 
   get publicMessageChannelsByActivity() {
     return this.#sortChannelsByActivity([...this.publicMessageChannels]);
+  }
+
+  /**
+   * Returns public message channels that are not starred, sorted by activity.
+   * Falls back to all public channels by activity if starring is disabled.
+   * Channels with unreads appear first, then sorted alphabetically.
+   *
+   * @returns {ChatChannel[]} Array of unstarred public channels sorted by activity
+   */
+  get unstarredPublicMessageChannelsByActivity() {
+    if (!this.siteSettings.star_chat_channels) {
+      return this.publicMessageChannelsByActivity;
+    }
+
+    return this.#sortChannelsByActivity(
+      this.channels.filter(
+        (channel) =>
+          channel.isCategoryChannel &&
+          channel.currentUserMembership?.following &&
+          !channel.currentUserMembership?.starred
+      )
+    );
   }
 
   @cached
@@ -194,6 +217,176 @@ export default class ChatChannelsManager extends Service {
 
   get truncatedDirectMessageChannels() {
     return this.directMessageChannels.slice(0, DIRECT_MESSAGE_CHANNELS_LIMIT);
+  }
+
+  /**
+   * Returns all channels (public and DM) that the current user has starred.
+   * Public channels are sorted alphabetically by slug, DMs by title.
+   *
+   * @returns {ChatChannel[]} Array of starred channels
+   */
+  get starredChannels() {
+    if (!this.siteSettings.star_chat_channels) {
+      return [];
+    }
+
+    const starredPublic = this.channels
+      .filter(
+        (channel) =>
+          channel.isCategoryChannel &&
+          channel.currentUserMembership?.following &&
+          channel.currentUserMembership?.starred
+      )
+      .sort((a, b) => (a.slug || "").localeCompare(b.slug || ""));
+
+    const starredDMs = this.channels
+      .filter(
+        (channel) =>
+          channel.isDirectMessageChannel &&
+          channel.currentUserMembership?.following &&
+          channel.currentUserMembership?.starred
+      )
+      .sort((a, b) => (a.title || "").localeCompare(b.title || ""));
+
+    return [...starredPublic, ...starredDMs];
+  }
+
+  /**
+   * Checks if the current user has any starred channels.
+   *
+   * @returns {boolean} True if user has starred at least one channel
+   */
+  get hasStarredChannels() {
+    return this.starredChannels.length > 0;
+  }
+
+  /**
+   * Returns all starred channels sorted by activity (unreads first).
+   * Channels with urgent notifications (mentions, DM unreads) come first,
+   * then channels with regular unreads, then by most recent message.
+   *
+   * @returns {ChatChannel[]} Array of starred channels sorted by activity
+   */
+  get starredChannelsByActivity() {
+    if (!this.siteSettings.star_chat_channels) {
+      return [];
+    }
+
+    const starredChannels = this.channels.filter(
+      (channel) =>
+        channel.currentUserMembership?.following &&
+        channel.currentUserMembership?.starred
+    );
+
+    return starredChannels.sort((a, b) => {
+      const aUrgent = this.#getChannelUrgentCount(a);
+      const bUrgent = this.#getChannelUrgentCount(b);
+
+      // Channels with urgent notifications come first
+      if (aUrgent > 0 && bUrgent > 0) {
+        return this.#compareByLastActivity(a, b);
+      }
+      if (aUrgent > 0 || bUrgent > 0) {
+        return aUrgent > bUrgent ? -1 : 1;
+      }
+
+      const aUnread = this.#getChannelUnreadCount(a);
+      const bUnread = this.#getChannelUnreadCount(b);
+
+      // Channels with unreads come next
+      if (aUnread > 0 && bUnread > 0) {
+        return this.#compareByLastActivity(a, b);
+      }
+      if (aUnread > 0 || bUnread > 0) {
+        return aUnread > bUnread ? -1 : 1;
+      }
+
+      // Sort remaining by last activity
+      return this.#compareByLastActivity(a, b);
+    });
+  }
+
+  #getChannelUrgentCount(channel) {
+    if (channel.isDirectMessageChannel) {
+      return (
+        channel.tracking.unreadCount +
+        channel.tracking.mentionCount +
+        channel.tracking.watchedThreadsUnreadCount
+      );
+    }
+    return (
+      channel.tracking.mentionCount + channel.tracking.watchedThreadsUnreadCount
+    );
+  }
+
+  #getChannelUnreadCount(channel) {
+    return (
+      channel.tracking.unreadCount + channel.unreadThreadsCountSinceLastViewed
+    );
+  }
+
+  #compareByLastActivity(a, b) {
+    const aDate = a.lastMessage?.createdAt
+      ? new Date(a.lastMessage.createdAt)
+      : new Date(0);
+    const bDate = b.lastMessage?.createdAt
+      ? new Date(b.lastMessage.createdAt)
+      : new Date(0);
+    return bDate - aDate;
+  }
+
+  /**
+   * Returns public message channels that are not starred.
+   * Falls back to all public channels if starring is disabled.
+   * Channels are sorted with starred channels first, then by slug.
+   *
+   * @returns {ChatChannel[]} Array of unstarred public channels
+   */
+  get unstarredPublicMessageChannels() {
+    if (!this.siteSettings.star_chat_channels) {
+      return this.publicMessageChannels;
+    }
+
+    return this.#sortChannelsByProperty(
+      this.channels.filter(
+        (channel) =>
+          channel.isCategoryChannel &&
+          channel.currentUserMembership?.following &&
+          !channel.currentUserMembership?.starred
+      ),
+      "slug"
+    );
+  }
+
+  /**
+   * Returns direct message channels that are not starred.
+   * Falls back to all DM channels if starring is disabled.
+   * Channels are sorted with starred channels first, then by activity.
+   *
+   * @returns {ChatChannel[]} Array of unstarred DM channels
+   */
+  get unstarredDirectMessageChannels() {
+    if (!this.siteSettings.star_chat_channels) {
+      return this.directMessageChannels;
+    }
+
+    return this.#sortDirectMessageChannels(
+      this.channels.filter((channel) => {
+        const membership = channel.currentUserMembership;
+        return (
+          channel.isDirectMessageChannel &&
+          membership?.following &&
+          !membership?.starred
+        );
+      })
+    );
+  }
+
+  get truncatedUnstarredDirectMessageChannels() {
+    return this.unstarredDirectMessageChannels.slice(
+      0,
+      DIRECT_MESSAGE_CHANNELS_LIMIT
+    );
   }
 
   async #find(id) {
@@ -243,96 +436,162 @@ export default class ChatChannelsManager extends Service {
     return this._cached[id];
   }
 
+  /**
+   * Compares two channels for sorting, prioritizing starred channels.
+   * Returns a sort value if starred status differs, or if both are starred.
+   * Returns null if both channels have the same starred status (both unstarred).
+   *
+   * @param {ChatChannel} a - First channel to compare
+   * @param {ChatChannel} b - Second channel to compare
+   * @param {string} property - Property name to use for sorting starred channels
+   * @returns {number|null} Sort value (-1, 0, 1) or null if no starred sorting needed
+   */
+  #compareStarredChannels(a, b, property) {
+    if (!this.siteSettings.star_chat_channels) {
+      return null;
+    }
+
+    const aStarred = a.currentUserMembership?.starred;
+    const bStarred = b.currentUserMembership?.starred;
+
+    // if both channels are starred, sort by the specified property
+    if (aStarred && bStarred) {
+      const aValue = a[property] || "";
+      const bValue = b[property] || "";
+      return aValue.localeCompare(bValue);
+    }
+
+    // prioritize starred channels over non-starred
+    if (aStarred || bStarred) {
+      return aStarred ? -1 : 1;
+    }
+
+    return null; // no starred sorting needed
+  }
+
+  /**
+   * Wraps a comparison function with starred channel prioritization.
+   * Starred channels are always sorted first, then the provided comparison
+   * function is used for unstarred channels.
+   *
+   * @param {string} property - Property name to use for sorting starred channels
+   * @param {Function} compareFn - Comparison function for unstarred channels
+   * @returns {Function} Wrapped comparison function
+   */
+  #withStarredPriority(property, compareFn) {
+    return (a, b) => {
+      const starredResult = this.#compareStarredChannels(a, b, property);
+      if (starredResult !== null) {
+        return starredResult;
+      }
+      return compareFn(a, b);
+    };
+  }
+
   #sortChannelsByActivity(channels) {
-    return channels.sort((a, b) => {
-      const stats = {
-        a: {
-          urgent:
-            a.tracking.mentionCount + a.tracking.watchedThreadsUnreadCount,
-          unread: a.tracking.unreadCount + a.unreadThreadsCountSinceLastViewed,
-        },
-        b: {
-          urgent:
-            b.tracking.mentionCount + b.tracking.watchedThreadsUnreadCount,
-          unread: b.tracking.unreadCount + b.unreadThreadsCountSinceLastViewed,
-        },
-      };
+    return channels.sort(
+      this.#withStarredPriority("slug", (a, b) => {
+        const stats = {
+          a: {
+            urgent:
+              a.tracking.mentionCount + a.tracking.watchedThreadsUnreadCount,
+            unread:
+              a.tracking.unreadCount + a.unreadThreadsCountSinceLastViewed,
+          },
+          b: {
+            urgent:
+              b.tracking.mentionCount + b.tracking.watchedThreadsUnreadCount,
+            unread:
+              b.tracking.unreadCount + b.unreadThreadsCountSinceLastViewed,
+          },
+        };
 
-      // if both channels have urgent count, sort by slug
-      // otherwise prioritize channel with urgent count
-      if (stats.a.urgent > 0 && stats.b.urgent > 0) {
+        // if both channels have urgent count, sort by slug
+        // otherwise prioritize channel with urgent count
+        if (stats.a.urgent > 0 && stats.b.urgent > 0) {
+          return a.slug?.localeCompare?.(b.slug);
+        }
+
+        if (stats.a.urgent > 0 || stats.b.urgent > 0) {
+          return stats.a.urgent > stats.b.urgent ? -1 : 1;
+        }
+
+        // if both channels have unread messages or threads, sort by slug
+        // otherwise prioritize channel with unread count
+        if (stats.a.unread > 0 && stats.b.unread > 0) {
+          return a.slug?.localeCompare?.(b.slug);
+        }
+
+        if (stats.a.unread > 0 || stats.b.unread > 0) {
+          return stats.a.unread > stats.b.unread ? -1 : 1;
+        }
+
         return a.slug?.localeCompare?.(b.slug);
-      }
+      })
+    );
+  }
 
-      if (stats.a.urgent > 0 || stats.b.urgent > 0) {
-        return stats.a.urgent > stats.b.urgent ? -1 : 1;
-      }
-
-      // if both channels have unread messages or threads, sort by slug
-      // otherwise prioritize channel with unread count
-      if (stats.a.unread > 0 && stats.b.unread > 0) {
-        return a.slug?.localeCompare?.(b.slug);
-      }
-
-      if (stats.a.unread > 0 || stats.b.unread > 0) {
-        return stats.a.unread > stats.b.unread ? -1 : 1;
-      }
-
-      return a.slug?.localeCompare?.(b.slug);
-    });
+  #sortChannelsByProperty(channels, property) {
+    return channels.sort(
+      this.#withStarredPriority(property, (a, b) => {
+        return (a[property] || "").localeCompare(b[property] || "");
+      })
+    );
   }
 
   #sortDirectMessageChannels(channels) {
-    return channels.sort((a, b) => {
-      if (!a.lastMessage.id) {
-        return 1;
-      }
+    return channels.sort(
+      this.#withStarredPriority("title", (a, b) => {
+        if (!a.lastMessage.id) {
+          return 1;
+        }
 
-      if (!b.lastMessage.id) {
-        return -1;
-      }
+        if (!b.lastMessage.id) {
+          return -1;
+        }
 
-      const aUrgent =
-        a.tracking.unreadCount +
-        a.tracking.mentionCount +
-        a.tracking.watchedThreadsUnreadCount;
+        const aUrgent =
+          a.tracking.unreadCount +
+          a.tracking.mentionCount +
+          a.tracking.watchedThreadsUnreadCount;
 
-      const bUrgent =
-        b.tracking.unreadCount +
-        b.tracking.mentionCount +
-        b.tracking.watchedThreadsUnreadCount;
+        const bUrgent =
+          b.tracking.unreadCount +
+          b.tracking.mentionCount +
+          b.tracking.watchedThreadsUnreadCount;
 
-      const aUnread = a.unreadThreadsCountSinceLastViewed;
-      const bUnread = b.unreadThreadsCountSinceLastViewed;
+        const aUnread = a.unreadThreadsCountSinceLastViewed;
+        const bUnread = b.unreadThreadsCountSinceLastViewed;
 
-      // if both channels have urgent count, sort by last message date
-      if (aUrgent > 0 && bUrgent > 0) {
+        // if both channels have urgent count, sort by last message date
+        if (aUrgent > 0 && bUrgent > 0) {
+          return new Date(a.lastMessage.createdAt) >
+            new Date(b.lastMessage.createdAt)
+            ? -1
+            : 1;
+        }
+
+        // otherwise prioritize channel with urgent count
+        if (aUrgent > 0 || bUrgent > 0) {
+          return aUrgent > bUrgent ? -1 : 1;
+        }
+
+        // if both channels have unread threads, sort by last thread reply date
+        if (aUnread > 0 && bUnread > 0) {
+          return a.lastUnreadThreadDate > b.lastUnreadThreadDate ? -1 : 1;
+        }
+
+        // otherwise prioritize channel with unread thread count
+        if (aUnread > 0 || bUnread > 0) {
+          return aUnread > bUnread ? -1 : 1;
+        }
+
+        // read channels are sorted by last message date
         return new Date(a.lastMessage.createdAt) >
           new Date(b.lastMessage.createdAt)
           ? -1
           : 1;
-      }
-
-      // otherwise prioritize channel with urgent count
-      if (aUrgent > 0 || bUrgent > 0) {
-        return aUrgent > bUrgent ? -1 : 1;
-      }
-
-      // if both channels have unread threads, sort by last thread reply date
-      if (aUnread > 0 && bUnread > 0) {
-        return a.lastUnreadThreadDate > b.lastUnreadThreadDate ? -1 : 1;
-      }
-
-      // otherwise prioritize channel with unread thread count
-      if (aUnread > 0 || bUnread > 0) {
-        return aUnread > bUnread ? -1 : 1;
-      }
-
-      // read channels are sorted by last message date
-      return new Date(a.lastMessage.createdAt) >
-        new Date(b.lastMessage.createdAt)
-        ? -1
-        : 1;
-    });
+      })
+    );
   }
 }

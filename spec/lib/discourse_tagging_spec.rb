@@ -1535,6 +1535,55 @@ RSpec.describe DiscourseTagging do
         expect(DiscourseTagging.clean_tag("Finances & Accounting")).to eq("finances-accounting")
       end
     end
+
+    describe "with plugin modifiers" do
+      let!(:plugin) { Plugin::Instance.new }
+      let!(:modifier) { :tags_for_saving }
+
+      let!(:modify_tag_names_block) do
+        Proc.new { |saving_tags, tag_names, guardian, opts| saving_tags.map! { |t| "plugin-#{t}" } }
+      end
+
+      let!(:add_tag_block) do
+        Proc.new { |saving_tags, tag_names, guardian, opts| saving_tags << "added-by-plugin" }
+      end
+
+      let!(:remove_tag_block) do
+        Proc.new do |saving_tags, tag_names, guardian, opts|
+          saving_tags.delete_if { |t| t == "tag2" }
+        end
+      end
+
+      it "allows plugins to modify tag names before saving" do
+        DiscoursePluginRegistry.register_modifier(plugin, modifier, &modify_tag_names_block)
+
+        expect(described_class.tags_for_saving(%w[tag1 tag2], guardian).try(:sort)).to eq(
+          %w[plugin-tag1 plugin-tag2].sort,
+        )
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &modify_tag_names_block)
+      end
+
+      it "allows plugins to add tag names before saving" do
+        DiscoursePluginRegistry.register_modifier(plugin, modifier, &add_tag_block)
+
+        expect(described_class.tags_for_saving(%w[tag1 tag2], guardian).try(:sort)).to eq(
+          %w[tag1 tag2 added-by-plugin].sort,
+        )
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &add_tag_block)
+      end
+
+      it "allows plugins to remove tag names before saving" do
+        DiscoursePluginRegistry.register_modifier(plugin, modifier, &remove_tag_block)
+
+        expect(described_class.tags_for_saving(%w[tag1 tag2 tag3], guardian).try(:sort)).to eq(
+          %w[tag1 tag3].sort,
+        )
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &remove_tag_block)
+      end
+    end
   end
 
   describe "Tag in multiple tag groups" do

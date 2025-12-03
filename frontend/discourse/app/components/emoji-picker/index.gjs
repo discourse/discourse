@@ -35,6 +35,7 @@ export default class EmojiPicker extends Component {
       @maxWidth={{405}}
       @onShow={{@onShow}}
       @onClose={{@onClose}}
+      @inline={{@inline}}
     >
       <:trigger>
         {{#if @emoji}}

@@ -548,7 +548,6 @@ fi:
         back: "Takaisin"
         confirm_delete: Oletko varma, että haluat poistaa tämän mallin?
         delete: Poista
-        seeded_warning: "Tämä malli on valmiiksi määritetty sivustollesi, eikä sitä voi muokata."
         quotas:
           title: "Käyttökiintiöt"
           add_title: "Luo uusi kiintiö"
@@ -583,7 +582,7 @@ fi:
           other: "Tätä mallia käyttää tällä hetkellä seuraavat: %{settings}. Jos se on määritetty väärin, ominaisuus ei toimi odotetulla tavalla. "
         model_description:
           none: "Yleiset asetukset, jotka toimivat useimmissa kielimalleissa"
-          anthropic-claude-opus-4-1: "Anthropicin älykkäin malli"
+          anthropic-claude-opus-4-5: "Anthropicin älykkäin malli"
           anthropic-claude-sonnet-4-5: "Optimaalinen tasapaino nopeuden ja kustannusten välillä"
           anthropic-claude-haiku-4-5: "Nopea ja kustannustehokas"
           google-gemini-2-5-pro: "Suuri multimodaalinen malli, joka pystyy suorittamaan monenlaisia tehtäviä"
@@ -701,6 +700,7 @@ fi:
           title: "Ehdotetut pikkukuvat"
           select: "Valitse"
           selected: "Valittu"
+          try_again: "Yritä uudelleen"
         image_caption:
           button_label: "Kuvateksti tekoälyllä"
           generating: "Luodaan kuvatekstiä..."

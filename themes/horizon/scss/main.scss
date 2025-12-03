@@ -25,7 +25,7 @@ body {
 }
 
 body.has-sidebar-page.has-full-page-chat #main-outlet-wrapper {
-  grid-column-gap: var(--main-grid-gap);
+  column-gap: var(--main-grid-gap);
   background-color: var(--background-color);
 }
 

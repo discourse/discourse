@@ -263,7 +263,6 @@ ja:
     software_update_prompt:
       message: "このサイトを更新しました。スムーズに動作するように<span>更新してください</span>。"
       dismiss: "閉じる"
-    bootstrap_mode: "はじめに"
     back_button: "戻る"
     welcome_banner:
       header:
@@ -639,7 +638,7 @@ ja:
       title: "レビュー"
       topic: "トピック:"
       filtered_topic: "1 つのトピックのレビュー待ちコンテンツにフィルターを適用しました。"
-      filtered_user: "ユーザー"
+      filtered_user: "通報されたユーザー"
       filtered_reviewed_by: "レビュー者:"
       show_all_topics: "すべてのトピックを表示"
       deleted_post: "(削除された投稿)"
@@ -771,7 +770,6 @@ ja:
           noun: "投稿"
       flagged_as: "通報:"
       user_label: "ユーザー"
-      assigned_to: "割り当て先"
       moderator_actions: "モデレーターのアクション"
       timeline_and_notes: "タイムラインとメモ"
       timeline:
@@ -807,14 +805,12 @@ ja:
         flagged_by_users:
           other: "%{count} 人のユニークユーザーによる通報"
         activities:
-          new_account: "新規アカウント"
           trust_level: "信頼レベル: %{trustLevelName}"
           posts:
             other: "投稿 %{count} 件"
         solution_marked: "解決策に指定"
         topic_has_solution: "このトピックには解決策があります"
         visibility: "表示状態"
-        topic_unlisted: "このトピックは非表示です。ダイレクトリンクでのみアクセスできます。非公開。"
       help:
         moderation_guide: "Discourse モデレーションガイド"
         flag_priorities: "ユーザーの評判と通報の優先順位の管理"
@@ -1221,7 +1217,6 @@ ja:
       n_more:
         other: "カテゴリ (その他 %{count} 個)…"
     ip_lookup:
-      title: IP アドレスを検索
       hostname: ホスト名
       location: 場所
       location_not_found: (不明)
@@ -4949,6 +4944,9 @@ ja:
         enabled: "有効"
         select_groups: "グループを選択…"
         preview: "プレビュー"
+        enabled_for_options:
+          everyone: "全員"
+          staff: "スタッフのみ"
         impact_roles:
           admins: "管理者"
           moderators: "モデレーター"
@@ -7651,76 +7649,4 @@ ja:
           replace: "置換"
   wizard_js:
     wizard:
-      jump_in: "始めましょう！"
-      finish: "セットアップを終了"
-      back: "戻る"
-      next: "次へ"
-      configure_more: "さらに構成…"
-      step-text: "手順"
-      step: "%{current} / %{total}"
-      upload: "ファイルのアップロード"
-      uploading: "アップロード中…"
-      upload_error: "ファイルのアップロード中にエラーが発生しました。もう一度お試しください。"
-      staff_count:
-        other: "あなたのコミュニティーには、あなたを含めて %{count} 名のスタッフがいます。"
-      invites:
-        add_user: "追加"
-        none_added: "あなたはスタッフを招待していません。 続行してもよろしいですか？"
-        roles:
-          admin: "管理者"
-          moderator: "モデレーター"
-          regular: "レギュラーユーザー"
-      homepage_choices:
-        custom:
-          label: "カスタム"
-          description: "ユーザーが %{landingPage} にアクセスする %{type} に焦点を当てたホームページを表示します"
-        style_type:
-          categories: "カテゴリ"
-          topics: "トピック"
-      top_menu_items:
-        new: "新規"
-        unread: "未読"
-        top: "人気"
-        latest: "最新"
-        hot: "ホット"
-        categories: "カテゴリ"
-        unseen: "未読"
-        read: "既読"
-        bookmarks: "ブックマーク"
-      previews:
-        topic_title: "どんな本を読んでいますか？"
-        share_button: "共有"
-        reply_button: "返信"
-        topic_preview: "トピックのプレビュー"
-        homepage_preview: "ホームページのプレビュー"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "すべてのカテゴリ"
-        topic_titles:
-          what_books: "どんな本を読んでいますか？"
-          what_movies: "最近どんな映画を見ましたか？"
-          random_fact: "今日のランダム情報"
-          tv_show: "テレビ番組を推奨する"
-          what_hobbies: "趣味は何ですか？"
-          what_music: "今何を聴いていますか？"
-          funniest_thing: "今日見た一番面白いもの"
-          share_art: "アートを共有しましょう！"
-        topic_ops:
-          what_books: |
-            読書は誰でも好きなことです。このトピックを使って
-            今または最近読んだものを共有しましょう。私は
-            ファンタジー系が好きで、100 回目の『指輪物語』を
-            読了中です。あなたはどうですか？
-        category_descriptions:
-          icebreakers: "楽しい質問を通じてコミュニティーメンバーをもっと知りましょう。"
-          news: "最新のニュースやイベントについて語り合います。"
-          site_feedback: "コミュニティーに対するあなたの考えを共有し、改善できることを提案します。"
-        category_names:
-          icebreakers: "アイスブレーカー"
-          news: "ニュース"
-          site_feedback: "サイトに関する意見"
-        table_headers:
-          topic: "トピック"
-          replies: "返信"
-          views: "ビュー"
-          activity: "アクティビティ"
+      jump_in: "はじめましょう！"

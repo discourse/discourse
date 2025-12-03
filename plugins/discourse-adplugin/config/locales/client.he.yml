@@ -18,6 +18,17 @@ he:
           amazon_plugin: "Amazon"
           carbonads_plugin: "Carbon Ads"
           adbutler_plugin: "AdButler"
+      dashboard:
+        reports:
+          filters:
+            ad_type:
+              label: "סוג הפרסומת"
+            house_ad_name:
+              label: "שם מודעת הבית"
+            ad_placement:
+              label: "מקום הפרסומת"
+            user_type:
+              label: "סוג משתמש"
       adplugin:
         house_ads:
           title: "מודעות הבית"

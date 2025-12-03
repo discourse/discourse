@@ -111,7 +111,7 @@ a.holiday {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   grid-template-rows: auto;
-  grid-gap: 0.25em;
+  gap: 0.25em;
   box-sizing: border-box;
   overflow-y: auto;
 

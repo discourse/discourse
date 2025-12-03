@@ -3,9 +3,9 @@
 module DiscourseAi
   module Translation
     class PostLocalizer
-      MAX_QUOTA_PER_DAY = 2
+      include LocalizableQuota
 
-      def self.localize(post, target_locale = I18n.locale)
+      def self.localize(post, target_locale = I18n.locale, llm_model: nil)
         if post.blank? || target_locale.blank? ||
              LocaleNormalizer.is_same?(post.locale, target_locale) || post.raw.blank?
           return
@@ -13,7 +13,8 @@ module DiscourseAi
         return if post.raw.length > SiteSetting.ai_translation_max_post_length
         target_locale = target_locale.to_s.sub("-", "_")
 
-        translated_raw = PostRawTranslator.new(text: post.raw, target_locale:, post:).translate
+        translated_raw =
+          PostRawTranslator.new(text: post.raw, target_locale:, post:, llm_model:).translate
 
         localization =
           PostLocalization.find_or_initialize_by(post_id: post.id, locale: target_locale)
@@ -39,33 +40,8 @@ module DiscourseAi
         localization
       end
 
-      def self.has_relocalize_quota?(post, locale, skip_incr: false)
-        return false if get_relocalize_quota(post, locale).to_i >= MAX_QUOTA_PER_DAY
-
-        incr_relocalize_quota(post, locale) unless skip_incr
-        true
-      end
-
-      private
-
-      def self.relocalize_key(post, locale)
-        "post_relocalized_#{post.id}_#{locale}"
-      end
-
-      def self.get_relocalize_quota(post, locale)
-        Discourse.redis.get(relocalize_key(post, locale)).to_i || 0
-      end
-
-      def self.incr_relocalize_quota(post, locale)
-        key = relocalize_key(post, locale)
-
-        if (count = get_relocalize_quota(post, locale)).zero?
-          Discourse.redis.set(key, 1, ex: 1.day.to_i)
-        else
-          ttl = Discourse.redis.ttl(key)
-          incr = count.to_i + 1
-          Discourse.redis.set(key, incr, ex: ttl)
-        end
+      def self.model_name
+        "post"
       end
     end
   end

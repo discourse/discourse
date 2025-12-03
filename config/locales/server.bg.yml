@@ -1577,7 +1577,8 @@ bg:
     no_plugins: "Деактивирайте всички персонализации на приставки от страна на клиента"
   wizard:
     step:
-      privacy:
+      setup:
+        title: "Първи стъпки"
         fields:
           login_required:
             label: "Видимост"
@@ -1586,18 +1587,6 @@ bg:
                 label: "Публични"
               private:
                 label: "Затворени"
-      styling:
-        fields:
-          styling_preview:
-            label: "Преглед"
-          homepage_style:
-            choices:
-              latest:
-                label: "Последни"
-      invites:
-        title: "Поканете персонал"
-      finished:
-        title: "Вашият Discourse е готов!"
   search_logs:
     graph_title: "Брой търсения"
   onebox:

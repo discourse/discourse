@@ -2538,7 +2538,6 @@ hu:
         other: "A listának pontosan %{count} értéket kell tartalmaznia."
       markdown_linkify_tlds: "Nem adhat meg „*” értéket."
       google_oauth2_hd_groups: "A beállítás engedélyezése előtt konfigurálnia kell a „google oauth2 hd” összes beállítását."
-      discourse_id_credentials: "A beállítás engedélyezése előtt konfigurálnia kell a Discourse ID hitelesítő adatait („discourse_id_client_id” és „discourse_id_client_secret”)."
       linkedin_oidc_credentials: "A beállítás engedélyezése előtt konfigurálnia kell a LinkedIn OIDC hitelesítő adatait (\"linkedin_oidc_client_id\" és \"linkedin_oidc_client_secret\")."
       search_tokenize_chinese_enabled: "A beállítás engedélyezése előtt le kell tiltania a „search_tokenize_chinese” beállítást."
       search_tokenize_japanese_enabled: "A beállítás engedélyezése előtt le kell tiltania a „search_tokenize_japanese” beállítást."
@@ -4721,18 +4720,12 @@ hu:
     nice_share:
       name: Szép megosztás
       description: A megosztásod 25 felhasználót ért el.
-      long_description: |
-        Ezt a jelvényt olyan link megosztásáért kapod, amelyre 25 külső látogató kattintott. Köszönjük, hogy terjesztetted a hírt beszélgetéseinkről és erről a közösségről.
     good_share:
       name: Jó megosztás
       description: A megosztásod 300 felhasználót ért el.
-      long_description: |
-        Ezt a jelvényt olyan link megosztásáért kapod, amelyre 300 külső látogató kattintott. Szép munka! Remek beszélgetést mutattál meg egy csomó új embernek, és segítetted a közösség növekedését.
     great_share:
       name: Nagyszerű megosztás
       description: A megosztásod 1000 felhasználót ért el.
-      long_description: |
-        Ezt a jelvényt olyan link megosztásáért kapod, amelyre 1000 külső látogató kattintott. Azta! Érdekes beszélgetést hirdettél egy hatalmas új közönség számára, és nagyban hozzájárultál a közösségünk növekedéséhez!
     first_like:
       name: Első kedvelés
       description: Tetszett egy bejegyzés
@@ -4950,21 +4943,13 @@ hu:
   wizard:
     title: "Discourse telepítő"
     step:
-      introduction:
-        title: "Az Ön webhelyéről"
-        description: "A következők jelennek meg a bejelentkezési és egyéb nyilvános oldalakon. Később bármikor megváltoztathatja őket."
+      setup:
+        title: "Első lépések"
         fields:
           title:
             label: "Közösség neve"
-            placeholder: "Jane társalgója"
-          site_description:
-            label: "Jellemezze a közösségét egy mondatban!"
-            placeholder: "Egy hely, ahol Jane és barátai megbeszélhetik a klassz dolgokat"
           default_locale:
             label: "Nyelv"
-      privacy:
-        title: "Tagok hozzáférése"
-        fields:
           login_required:
             label: "Láthatóság"
             description: "A közösség nyitott vagy privát?"
@@ -4988,82 +4973,6 @@ hu:
                 label: "Nem, az új tagok azonnal csatlakozhatnak"
               "yes":
                 label: "Igen, az új tagokat a moderátoroknak jóvá kell hagyniuk."
-          chat_enabled:
-            placeholder: "Csevegés engedélyezése"
-            extra_description: "Lépjen kapcsolatba tagjaival valós időben"
-      ready:
-        title: "Az oldala készen áll!"
-        description: "Ennyi az egész! Elvégezte a közössége beállításához szükséges alapvető lépéseket. Most már belevethetni magát, körülnézhet, írhat egy üdvözlő témát, és küldhet meghívókat!<br><br>Jó szórakozást!"
-      styling:
-        title: "Megjelenés és élmény"
-        fields:
-          color_scheme:
-            label: "Színpaletta"
-          body_font:
-            label: "Törzs betűtípus"
-          site_font:
-            label: "Betűtípus"
-          heading_font:
-            label: "Fejléc betűtípus"
-          styling_preview:
-            label: "Előnézet"
-          homepage_style:
-            label: "Kezdőlap stílusa"
-            choices:
-              latest:
-                label: "Legutóbbi"
-                description: "Megjeleníti a legfrissebb aktív témákat minden kategóriában, így a tagok naprakészek maradhatnak a számukra fontos vitákban"
-              hot:
-                label: "Felkapott"
-                description: "Felkapja a felkapott témákat a közelmúlt és az általános népszerűség ötvözésével, bemutatja, hogy a tagok miről beszélnek most a közösségedben"
-              categories_and_latest_topics:
-                label: "Kategóriák legújabb témákkal"
-                description: "Összevonja az összes kategóriában nemrégiben aktív témákat a kategóriák listájával, azok leírásával és az összes témák számával."
-              categories_boxes:
-                label: "Kategória dobozok"
-                description: "Megjeleníti a kategóriákat és azok leírását egy rácsban, ideális a tagok számára, hogy áttekintést kapjanak a webhely alközösségeiről."
-      branding:
-        title: "Webhely logó"
-        fields:
-          logo:
-            label: "Elsődleges logó"
-            description: "Ajánlott méret: 600 x 200"
-          logo_small:
-            label: "Négyzet alakú logó"
-            description: "Ajánlott méret: 512 x 512. A favicon és a mobil kezdőképernyő alkalmazás ikonjaként is használható."
-      corporate:
-        title: "Az Ön szervezete"
-        description: "Az alábbi információkat a Felhasználási feltételek és a Rólunk oldalakon használjuk fel. Nyugodtan kihagyhatja, ha nem létezik cég."
-        fields:
-          company_name:
-            label: "Cégnév"
-            placeholder: "Példa szervezet"
-          governing_law:
-            label: "Irányadó jog"
-            placeholder: "Kaliforniai törvény"
-          contact_url:
-            label: "Weboldal"
-            placeholder: "https://www.example.com/contact-us"
-          city_for_disputes:
-            label: "Város a vitákért"
-            placeholder: "San Francisco, Kalifornia"
-          site_contact:
-            label: "Automatikus üzenetek"
-            description: "Minden automatikus Discourse személyes üzenet ettől a felhasználótól kerül elküldésre, például a megjelölési figyelmeztetések és a biztonsági mentés befejezéséről szóló értesítések."
-          contact_email:
-            label: "Kapcsolattartó"
-            placeholder: "example@user.com"
-            description: "Az oldalért felelős fő kapcsolattartó e-mail címe. Kritikus értesítésekhez használják, és sürgős ügyek esetén <a href='%{base_path}/about' target='_blank'>az Önről szóló oldalon</a> szerepel."
-      invites:
-        title: "Stáb meghívása"
-        description: "Már majdnem kész! Hívjunk meg néhány embert, hogy segítsenek <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>elindítani a beszélgetéseket</a> érdekes témákkal és válaszokkal, hogy beindíthassák a közösséget."
-        disabled: "Mivel a helyi bejelentkezés le van tiltva, senkinek nem lehet meghívót küldeni. Kérjük, folytassa a következő lépéssel."
-      finished:
-        title: "A Discourse készen áll!"
-        description: |
-          <p>Ha bármikor úgy érzi, hogy szeretné megváltoztatni ezeket a beállításokat, <b>bármikor újra futtathatja ezt a varázslót</b>, vagy látogasson el az <a href='%{base_path}/admin' target='_blank'>adminisztrációs részbe</a>; ezt a csavarkulcs ikon mellett találja a webhely menüjében.</p>
-          <p>Könnyedén tovább testreszabhatja a Discourse-t a hatékony témarendszerünk segítségével. Példákért nézze meg a <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">legnépszerűbb témákat és komponenseket</a> a <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a> oldalon.</p>
-          <p>Jó szórakozást és sok sikert kívánunk az <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>új közössége építéséhez!</a></p>
   search_logs:
     graph_title: "Keresés száma"
   onebox:

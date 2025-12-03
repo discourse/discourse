@@ -942,6 +942,7 @@ en:
         flagged_as_by: "Flagged as %{flagReason} by %{username} · %{relativeDate}"
         claimed: "Claimed"
         claimed_by: "Claimed by %{username} · %{relativeDate}"
+        unclaimed_by: "Unclaimed by %{username} · %{relativeDate}"
         reviewed: "Reviewed"
         reviewed_by: "Reviewed by %{username} · %{relativeDate}"
         view_conversation: "view PM"
@@ -977,16 +978,22 @@ en:
           other: "%{count} confirmed flags"
         user_activity: "User info"
         activities:
-          new_account: "new account"
+          joined_on: "joined: %{joinDate}"
           trust_level: "trust level: %{trustLevelName}"
           posts:
             one: "%{count} post"
             other: "%{count} posts"
+        moderation_history:
+          label: "Moderation history"
+          silenced: "Silenced: %{count}"
+          suspended: "Suspended: %{count}"
+          rejected_posts: "Posts rejected: %{count}"
         solution_marked: "Solution marked"
         topic_has_solution: "This topic has a solution"
         visibility: "Visibility"
-        topic_unlisted: "This topic is unlisted. Only accessible via direct link — not public."
+        topic_unlisted: "This topic is unlisted and only accessible via direct link."
       help:
+        community_moderation_guide: "This community's moderation guide"
         moderation_guide: "Discourse moderation guide"
         flag_priorities: "Managing user reputation and flag priorities"
         spam_detection: "Spam detection"
@@ -1419,13 +1426,16 @@ en:
         other: "Categories (%{count} more)…"
 
     ip_lookup:
-      title: IP Address Lookup
+      title: IP Address
       hostname: Hostname
       location: Location
       location_not_found: (unknown)
       organisation: Organization
       phone: Phone
       other_accounts: "Other accounts with this IP address:"
+      other_accounts_with_ip:
+        one: "%{count} other account with this IP address"
+        other: "%{count} other accounts with this IP address"
       delete_other_accounts:
         one: "Delete %{count}"
         other: "Delete %{count}"
@@ -3505,6 +3515,15 @@ en:
         reset_bump_dates: "Reset bump dates"
         defer: "Mark unread"
         delete: "Delete Topics"
+        delete_topics_count:
+          one: "Delete Topic"
+          other: "Delete Topics"
+        delete_posts_count:
+          one: "Delete Post"
+          other: "Delete Posts"
+        delete_posts_confirmation:
+          one: "Are you sure you want to delete %{count} post?"
+          other: "Are you sure you want to delete %{count} posts?"
         dismiss: "Dismiss"
         dismiss_read: "Dismiss all unread"
         dismiss_read_with_selected:
@@ -5917,11 +5936,13 @@ en:
             enabled_themes:
               label: "Enabled on themes..."
               description: "Select which themes should display the banner. Only active themes are shown."
+              select_label: "Select themes"
             background_image:
               label: "Background image"
               description: "This image will be displayed behind the banner text."
             text_color:
               label: "Text color"
+              description: "When 'Background image' above is uploaded, use this setting to change the banner text color to ensure it remains readable. When left blank or without background image uploaded, the active theme controls the color."
             page_visibility:
               label: "Page visibility"
               description: "Choose where the banner should be displayed."

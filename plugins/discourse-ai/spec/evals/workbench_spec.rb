@@ -54,11 +54,10 @@ RSpec.describe DiscourseAi::Evals::Workbench do
         { raw: "output", raw_entries: ["output"], classified: [{ result: :pass }] },
       )
 
-      workbench.run(eval_case: eval_case, llms: [llm])
+      workbench.run(eval_cases: [eval_case], llms: [llm])
 
       expect(DiscourseAi::Evals::Recorder).to have_received(:with_cassette).with(
         eval_case,
-        persona_key: "default",
         output: output,
       )
       expect(recorder).to have_received(:record_llm_results).with(
@@ -69,30 +68,12 @@ RSpec.describe DiscourseAi::Evals::Workbench do
       expect(recorder).to have_received(:finish)
     end
 
-    it "yields execution payloads to the provided block" do
-      execution_payload = {
-        raw: "output",
-        raw_entries: ["output"],
-        classified: [{ result: :pass }],
-      }
-      allow(workbench).to receive(:execute_eval).and_return(execution_payload) # rubocop:disable RSpec/SubjectStub
-
-      yielded = nil
-
-      workbench.run(eval_case: eval_case, llms: [llm]) { |payload| yielded = payload }
-
-      expect(yielded[:raw_entries]).to eq(["output"])
-      expect(yielded[:classified_entries]).to eq([{ result: :pass }])
-      expect(yielded[:llm_name]).to eq("gpt-4")
-      expect(yielded[:eval_case]).to eq(eval_case)
-    end
-
     context "when the eval requires vision but the llm does not support it" do
       let(:requires_vision) { true }
       let(:llm_supports_vision) { false }
 
       it "skips the llm and records the reason" do
-        workbench.run(eval_case: eval_case, llms: [llm])
+        workbench.run(eval_cases: [eval_case], llms: [llm])
 
         expect(recorder).to have_received(:record_llm_skip).with(
           "gpt-4",
@@ -107,7 +88,7 @@ RSpec.describe DiscourseAi::Evals::Workbench do
         error = DiscourseAi::Evals::Eval::EvalError.new("boom", { foo: "bar" })
         allow(workbench).to receive(:execute_eval).and_raise(error) # rubocop:disable RSpec/SubjectStub
 
-        workbench.run(eval_case: eval_case, llms: [llm])
+        workbench.run(eval_cases: [eval_case], llms: [llm])
 
         expect(recorder).to have_received(:record_llm_results).with(
           "gpt-4",
@@ -122,7 +103,7 @@ RSpec.describe DiscourseAi::Evals::Workbench do
       it "records the failure with the exception message" do
         allow(workbench).to receive(:execute_eval).and_raise(StandardError.new("kaboom")) # rubocop:disable RSpec/SubjectStub
 
-        workbench.run(eval_case: eval_case, llms: [llm])
+        workbench.run(eval_cases: [eval_case], llms: [llm])
 
         expect(recorder).to have_received(:record_llm_results).with(
           "gpt-4",

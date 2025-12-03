@@ -223,7 +223,6 @@ lt:
     software_update_prompt:
       message: "Atnaujinome šią svetainę, <span>prašome atnaujinti</span> , kad viskas veiktų sklandžiai."
       dismiss: "Praleisti"
-    bootstrap_mode: "Darbo pradžia"
     back_button: "Atgal"
     welcome_banner:
       header:
@@ -662,7 +661,6 @@ lt:
       title: "Peržiūra"
       topic: "Tema:"
       filtered_topic: "Išfiltravote turinį, kurį galima peržiūrėti vienoje temoje."
-      filtered_user: "Narys"
       filtered_reviewed_by: "Apžvelgė"
       show_all_topics: "rodyti visas temas"
       deleted_post: "(įrašas ištrintas)"
@@ -1224,7 +1222,6 @@ lt:
         week: "savaitė"
         month: "mėnesis"
     ip_lookup:
-      title: IP adreso peržiųra
       hostname: Adresas
       location: Vieta
       location_not_found: (nežinoma)
@@ -4103,6 +4100,9 @@ lt:
         name: "Vardas"
         enabled: "Galimas"
         preview: "Peržiūrėti"
+        enabled_for_options:
+          everyone: "Visi"
+          staff: "Tik personalui"
         impact_roles:
           admins: "Administratoriai"
           moderators: "Moderatoriai"
@@ -5612,47 +5612,3 @@ lt:
           categories: "Kategorijos"
           topics: "Temos"
           replace: "Pakeisti"
-  wizard_js:
-    wizard:
-      back: "Atgal"
-      next: "Kitas"
-      step-text: "Žingsnis"
-      step: "%{current} iš %{total}"
-      upload_error: "Atsiprašome, įvyko klaida įkeliant šį dokumentą. Prašome pamėginti dar kartą."
-      invites:
-        add_user: "pridėti"
-        none_added: "Jūs nekvietėte jokių darbuotojų. Ar tikrai norite tęsti?"
-        roles:
-          admin: "Adminas"
-          moderator: "Moderatorius"
-          regular: "Regulerus narys"
-      homepage_choices:
-        custom:
-          label: "Išskirtinės"
-        style_type:
-          categories: "kategorija"
-          topics: "tema"
-      top_menu_items:
-        new: "Nauji"
-        unread: "Neperskaitytos"
-        top: "Populiarios"
-        latest: "Naujausia"
-        categories: "Kategorijos"
-        unseen: "Nematytas"
-        read: "Skaitykite"
-        bookmarks: "Žymės"
-      previews:
-        share_button: "Dalintis"
-        reply_button: "Atsakyti"
-        topic_preview: "Temos peržiūra"
-        homepage_preview: "Pagrindinio puslapio peržiūra"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "visos kategorijos"
-        category_names:
-          site_feedback: "Puslapio atsiliepimai"
-        table_headers:
-          topic: "Tema"
-          replies: "Atsakymai"
-          views: "Peržiūros"
-          activity: "Aktyvumas"

@@ -132,5 +132,28 @@ RSpec.describe Jobs::SummariesBackfill do
 
       expect(existing_summary.reload.highest_target_number).to eq(og_highest_post_number + 1)
     end
+
+    it "caches the LlmModel and reuses it for all summaries in a batch" do
+      topic_2 =
+        Fabricate(:topic, word_count: 200, last_posted_at: 2.minutes.ago, highest_post_number: 1)
+      topic.update!(last_posted_at: 1.minute.ago)
+
+      # Track LlmModel.find_by calls
+      find_by_call_count = 0
+      LlmModel
+        .stubs(:find_by)
+        .with do
+          find_by_call_count += 1
+          true
+        end
+        .returns(LlmModel.last)
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        %w[gist_1 gist_2 summary_1 summary_2],
+      ) { job.execute({}) }
+
+      # Should only call LlmModel.find_by once for the entire batch, not once per topic
+      expect(find_by_call_count).to eq(1)
+    end
   end
 end

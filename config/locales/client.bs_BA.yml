@@ -431,7 +431,6 @@ bs_BA:
       title: "Pregled"
       topic: "Tema:"
       filtered_topic: "Filtrirali ste sadržaj koji se može pregledati u jednoj temi."
-      filtered_user: "User"
       show_all_topics: "(pokaži sve teme)"
       deleted_post: "(post izbrisan)"
       deleted_user: "(korisnik izbrisan)"
@@ -870,7 +869,6 @@ bs_BA:
         few: "%{count} nove teme u posljednjih mjesec dana."
         other: "%{count} novih tema u zadnjih mjesec dana."
     ip_lookup:
-      title: forenzika IP adrese
       hostname: Hostname
       location: Lokacija
       location_not_found: (unknown)
@@ -3157,6 +3155,9 @@ bs_BA:
         name: "Ime"
         enabled: "Omogućen"
         preview: "Pregled"
+        enabled_for_options:
+          everyone: "Svatko"
+          staff: "Samo za urednike i admine"
         impact_roles:
           admins: "Admins"
           moderators: "Moderators"
@@ -4534,42 +4535,3 @@ bs_BA:
           categories: "Kategorije"
           topics: "Teme"
           replace: "Zamijeni"
-  wizard_js:
-    wizard:
-      back: "Prethodno"
-      next: "Iduće"
-      step-text: "Korak"
-      step: "%{current} od %{total}"
-      upload_error: "Izvinite, doslo je greske prilikom uploada ovog fajla. Molimo pokusajte ponovo."
-      invites:
-        add_user: "Dodaj"
-        none_added: "Niste pozvali ni jednog admina/moderatora. Jeste li sigurni da želite nastaviti?"
-        roles:
-          admin: "Admin"
-          moderator: "Moderator"
-          regular: "Regularan korisnik"
-      homepage_choices:
-        custom:
-          label: "Custom"
-        style_type:
-          categories: "kategorija"
-          topics: "topic"
-      top_menu_items:
-        new: "Novi"
-        unread: "Nepročitano"
-        top: "Top teme"
-        latest: "Zadnje"
-        categories: "Kategorije"
-        read: "Čitao"
-        bookmarks: "Zabilješke"
-      previews:
-        share_button: "Podijeli"
-        reply_button: "Odgovori"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "Sve kategorije"
-        table_headers:
-          topic: "Topic"
-          replies: "Odgovori"
-          views: "Pregledi"
-          activity: "Activity"

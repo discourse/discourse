@@ -312,6 +312,7 @@ end
 #  threading_enabled           :boolean          default(FALSE), not null
 #  last_message_id             :bigint
 #  icon_upload_id              :integer
+#  emoji                       :string
 #
 # Indexes
 #

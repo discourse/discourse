@@ -139,6 +139,7 @@ sr:
           cancel: "Odustani"
         thumbnail_suggestions:
           select: "Odaberite"
+          try_again: "Pokušaj ponovno"
         image_caption:
           save_caption: "Sačuvaj"
       embeddings:

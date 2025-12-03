@@ -405,7 +405,6 @@ ar:
     software_update_prompt:
       message: "لقد أجرينا تحديثًا على هذا الموقع، <span>يُرجى تحديث الصفحة</span> للحفاظ على سير الأمور بسلاسة."
       dismiss: "تجاهل"
-    bootstrap_mode: "خطوات البدء"
     back_button: "الرجوع"
     welcome_banner:
       header:
@@ -937,7 +936,7 @@ ar:
       title: "المراجعة"
       topic: "الموضوع:"
       filtered_topic: "لقد قمت بالتصفية لعرض المحتوى القابل للمراجعة في موضوع واحد."
-      filtered_user: "المستخدم"
+      filtered_user: "المستخدم المبلَّغ عنه"
       filtered_reviewed_by: "تمت المراجعة بواسطة"
       show_all_topics: "عرض كل الموضوعات"
       deleted_post: "(تم حذف المنشور)"
@@ -1101,7 +1100,6 @@ ar:
       post_flagged_as: "عُلّم على المنشور على أنه"
       chat_flagged_as: "عُلّم على الدردشة على أنها"
       user_label: "المستخدم"
-      assigned_to: "معيَّنة إلى"
       moderator_actions: "الإجراءات المتاحة للمشرفين"
       timeline_and_notes: "المخطط الزمني والملاحظات"
       timeline:
@@ -1144,7 +1142,6 @@ ar:
           other: "جرى الإبلاغ بواسطة %{count} مستخدم مختلف"
         user_activity: "معلومات المستخدم"
         activities:
-          new_account: "حساب جديد"
           trust_level: "مستوى الثقة: %{trustLevelName}"
           posts:
             zero: "%{count} من المنشورات"
@@ -1156,7 +1153,6 @@ ar:
         solution_marked: "جرى تعيين الحل"
         topic_has_solution: "هناك حل لهذا الموضوع"
         visibility: "الرؤية"
-        topic_unlisted: "جرى إلغاء إدراج هذا الموضوع ولم يعد منشورًا للعام. لا يمكن الوصول إليه إلا عبر رابط مباشر."
       help:
         moderation_guide: "دليل الإشراف في Discourse"
         flag_priorities: "إدارة سمعة المستخدم وأولويات الإبلاغ"
@@ -1643,7 +1639,6 @@ ar:
         many: "الفئات (%{count} أكثر)…"
         other: "الفئات (%{count} أكثر)…"
     ip_lookup:
-      title: البحث عن عناوين IP
       hostname: اسم المضيف
       location: الموقع الجغرافي
       location_not_found: (غير معروف)
@@ -6309,6 +6304,9 @@ ar:
         save_groups: "احفظ المجموعات"
         select_groups: "تحديد المجموعات…"
         preview: "معاينة"
+        enabled_for_options:
+          everyone: "الجميع"
+          staff: "لفريق العمل فقط"
         impact_roles:
           admins: "المسؤولون"
           moderators: "المشرفون"
@@ -9232,81 +9230,4 @@ ar:
           replace: "استبدال"
   wizard_js:
     wizard:
-      jump_in: "ابدأ الآن!"
-      finish: "الخروج من الإعداد"
-      back: "الرجوع"
-      next: "التالي"
-      configure_more: "إعداد المزيد…"
-      step-text: "الخطوة"
-      step: "%{current} من %{total}"
-      upload: "تحميل ملف"
-      uploading: "جارٍ التحميل…"
-      upload_error: "عذرًا، حدث خطأ في أثناء تحميل هذا الملف. يُرجى إعادة المحاولة."
-      staff_count:
-        zero: "يضم مجتمعك %{count} عضو في فريق العمل."
-        one: "يضم مجتمعك عضوًا واحدًا (%{count}) في فريق العمل (أنت)."
-        two: "يضم مجتمعك عضوَين (%{count}) في فريق العمل، بما فيهما أنت."
-        few: "يضم مجتمعك %{count} أعضاء في فريق العمل، بما فيهم أنت."
-        many: "يضم مجتمعك %{count} عضوًا في فريق العمل، بما فيهم أنت."
-        other: "يضم مجتمعك %{count} عضو في فريق العمل، بما فيهم أنت."
-      invites:
-        add_user: "إضافة"
-        none_added: "لم تُرسِل دعوة إلى أي عضو في فريق العمل. هل تريد بالتأكيد المتابعة؟"
-        roles:
-          admin: "مسؤول"
-          moderator: "مشرف"
-          regular: "مستخدم منتظم"
-      homepage_choices:
-        custom:
-          label: "مخصَّصة"
-          description: "عرض صفحة رئيسية تُركِّز على %{type} مع وصول المستخدمين إلى %{landingPage}"
-        style_type:
-          categories: "الفئة"
-          topics: "الموضوع"
-      top_menu_items:
-        new: "الجديدة"
-        unread: "غير المقروءة"
-        top: "الأكثر نشاطًا"
-        latest: "الحديثة"
-        hot: "ساخن"
-        categories: "الفئات"
-        unseen: "غير مقروءة"
-        read: "وقت القراءة"
-        bookmarks: "الإشارات المرجعية"
-      previews:
-        topic_title: "ما الكتب التي تقرأها؟"
-        share_button: "مشاركة"
-        reply_button: "الرد"
-        topic_preview: "معاينة الموضوع"
-        homepage_preview: "معاينة الصفحة الرئيسية"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "جميع الفئات"
-        topic_titles:
-          what_books: "ما الكتب التي تقرأها؟"
-          what_movies: "ما الأفلام التي شاهدتها مؤخرًا؟"
-          random_fact: "الحقيقة العشوائية لليوم"
-          tv_show: "اقتراح عرض تلفزيوني"
-          what_hobbies: "ما هواياتك؟"
-          what_music: "ما الذي تستمع إليه الآن؟"
-          funniest_thing: "أطرف شيء رأيته اليوم"
-          share_art: "شارك فنك!"
-        topic_ops:
-          what_books: |
-            نحب جميعًا القراءة، لنستخدم هذا الموضوع لمشاركة
-            قراءاتنا الحالية أو الأخيرة. أن من محبي الخيال
-            وكنت أقرأ رواية "سيد الخواتم" مجددًا للمرة المئة.
-            ماذا عنك؟
-        category_descriptions:
-          icebreakers: "تعرَّف على أعضاء مجتمعك من خلال الأسئلة الممتعة."
-          news: "ناقش آخر الأخبار والأحداث."
-          site_feedback: "شارك آراءك حول المجتمع واقترح التحسينات."
-        category_names:
-          icebreakers: "أسئلة كسر الجمود"
-          news: "الأخبار"
-          site_feedback: "التعليقات على الموقع"
-        table_headers:
-          topic: "الموضوع"
-          replies: "الردود"
-          views: "مرات العرض"
-          activity: "النشاط"
+      jump_in: "هيا بنا!"

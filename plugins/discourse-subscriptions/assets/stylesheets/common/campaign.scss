@@ -10,7 +10,7 @@
     display: grid;
     grid-template-columns: 78% calc(22% - 2em);
     grid-template-areas: "content sidebar";
-    grid-column-gap: 2em;
+    column-gap: 2em;
 
     span:first-of-type {
       grid-area: sidebar;

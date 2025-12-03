@@ -146,6 +146,8 @@ hy:
           copy: "Կրկնօրինակել"
           copied: "Պատճենված է!"
           cancel: "Չեղարկել"
+        thumbnail_suggestions:
+          try_again: "Կրկին Փորձել"
         image_caption:
           save_caption: "Պահպանել"
       embeddings:

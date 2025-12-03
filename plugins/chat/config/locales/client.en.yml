@@ -53,6 +53,9 @@ en:
       cancel: "Cancel"
       cancel_reply: "Cancel reply"
       chat_channels: "Channels"
+      starred: "Starred"
+      starred_channels: "Starred channels"
+      starred_channels_empty: "You haven't starred any channels yet. Star channels to see them here for quick access."
       browse_all_channels: "Browse all channels"
       see_in: "See in"
       open_channel_menu: "Open channel menu"
@@ -70,6 +73,8 @@ en:
         title: "Channel settings"
         edit: "Edit"
         add: "Add"
+        star_channel: "Star channel"
+        unstar_channel: "Unstar channel"
         close_channel: "Close channel"
         open_channel: "Open channel"
         archive_channel: "Archive channel"
@@ -385,6 +390,8 @@ en:
         slug_description: A channel slug is used in the URL instead of the channel name
         name: Channel name
         slug: Channel slug (optional)
+        emoji: Channel emoji (optional)
+        reset_emoji: Reset emoji
 
       channel_edit_description_modal:
         title: Edit description
@@ -453,6 +460,9 @@ en:
         types:
           category: "Category"
           topic: "Topic"
+        emoji:
+          label: "Channel emoji (optional)"
+          reset: "Reset emoji"
 
       reviewable:
         type: "Chat message"

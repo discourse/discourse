@@ -10,12 +10,14 @@ import Chart from "discourse/admin/components/chart";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
+import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import MultiSelect from "discourse/select-kit/components/multi-select";
 import { i18n } from "discourse-i18n";
 
 export default class AiTranslations extends Component {
+  @service aiCredits;
   @service router;
   @service languageNameLookup;
   @service site;
@@ -40,6 +42,46 @@ export default class AiTranslations extends Component {
   @tracked isSavingLocales = false;
   @tracked isTogglingTranslation = false;
   @tracked hourlyRate = this.args.model?.hourly_rate || 0;
+  @tracked creditStatus = null;
+  @tracked creditCheckComplete = false;
+
+  constructor() {
+    super(...arguments);
+    this._checkCredits();
+  }
+
+  async _checkCredits() {
+    try {
+      this.creditStatus =
+        await this.aiCredits.getFeatureCreditStatus("locale_detector");
+    } catch {
+      this.creditStatus = null;
+    }
+    this.creditCheckComplete = true;
+  }
+
+  get creditLimitReached() {
+    return this.creditStatus?.hard_limit_reached === true;
+  }
+
+  get creditLimitWarningMessage() {
+    if (!this.creditLimitReached) {
+      return null;
+    }
+    const resetTime =
+      this.creditStatus?.reset_time_relative ||
+      this.creditStatus?.reset_time_formatted;
+    if (resetTime) {
+      return htmlSafe(
+        i18n("discourse_ai.translations.credit_limit_warning", {
+          reset_time: resetTime,
+        })
+      );
+    }
+    return htmlSafe(
+      i18n("discourse_ai.translations.credit_limit_warning_no_time")
+    );
+  }
 
   get localesChanged() {
     const current = [...this.selectedLocales].sort().join("|");
@@ -426,6 +468,13 @@ export default class AiTranslations extends Component {
           {{/if}}
         </:actions>
       </DPageSubheader>
+
+      {{#if this.creditLimitReached}}
+        <div class="alert alert-warning ai-translations__credit-warning">
+          {{icon "triangle-exclamation"}}
+          <span>{{this.creditLimitWarningMessage}}</span>
+        </div>
+      {{/if}}
 
       {{#if this.showLocaleSelector}}
         <div class="alert alert-info">

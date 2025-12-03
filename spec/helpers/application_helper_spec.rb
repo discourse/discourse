@@ -614,20 +614,20 @@ RSpec.describe ApplicationHelper do
 
         expect(helper.crawlable_meta_data).to include(SiteSetting.site_opengraph_image_url)
 
-        SiteSetting.opengraph_image = nil
+        SiteSetting.opengraph_image = ""
 
         expect(helper.crawlable_meta_data).to include(SiteSetting.site_x_summary_large_image_url)
 
-        SiteSetting.x_summary_large_image = nil
+        SiteSetting.x_summary_large_image = ""
 
         expect(helper.crawlable_meta_data).to include(SiteSetting.site_large_icon_url)
 
-        SiteSetting.large_icon = nil
-        SiteSetting.logo_small = nil
+        SiteSetting.large_icon = ""
+        SiteSetting.logo_small = ""
 
         expect(helper.crawlable_meta_data).to include(SiteSetting.site_logo_url)
 
-        SiteSetting.logo = nil
+        SiteSetting.logo = ""
 
         expect(helper.crawlable_meta_data).to include(
           Upload.find(SiteIconManager::SKETCH_LOGO_ID).url,
