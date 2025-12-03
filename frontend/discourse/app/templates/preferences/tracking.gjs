@@ -10,8 +10,8 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 
 export default class Tracking extends Component {
-  get formData() {
-    const data = {
+  get topicTrackingData() {
+    return {
       new_topic_duration_minutes:
         this.args.controller.model.user_option.new_topic_duration_minutes,
       auto_track_topics_after_msecs:
@@ -22,34 +22,39 @@ export default class Tracking extends Component {
         this.args.controller.model.user_option.topics_unread_when_closed,
       watched_precedence_over_muted:
         this.args.controller.model.user_option.watched_precedence_over_muted,
+    };
+  }
+
+  get categoryTrackingData() {
+    return {
       watched_category_ids: this.args.controller.model.watchedCategories || [],
       tracked_category_ids: this.args.controller.model.trackedCategories || [],
       watched_first_post_category_ids:
         this.args.controller.model.watchedFirstPostCategories || [],
+      ...(this.args.controller.siteSettings.mute_all_categories_by_default
+        ? {
+            regular_category_ids:
+              this.args.controller.model.regularCategories || [],
+          }
+        : {
+            muted_category_ids:
+              this.args.controller.model.mutedCategories || [],
+          }),
     };
+  }
 
-    if (this.args.controller.siteSettings.mute_all_categories_by_default) {
-      data.regular_category_ids =
-        this.args.controller.model.regularCategories || [];
-    } else {
-      data.muted_category_ids =
-        this.args.controller.model.mutedCategories || [];
-    }
-
-    if (this.args.controller.siteSettings.tagging_enabled) {
-      data.watched_tags = this.args.controller.model.watched_tags || [];
-      data.tracked_tags = this.args.controller.model.tracked_tags || [];
-      data.watching_first_post_tags =
-        this.args.controller.model.watching_first_post_tags || [];
-      data.muted_tags = this.args.controller.model.muted_tags || [];
-    }
-
-    return data;
+  get tagTrackingData() {
+    return {
+      watched_tags: this.args.controller.model.watched_tags || [],
+      tracked_tags: this.args.controller.model.tracked_tags || [],
+      watching_first_post_tags:
+        this.args.controller.model.watching_first_post_tags || [],
+      muted_tags: this.args.controller.model.muted_tags || [],
+    };
   }
 
   @action
-  saveForm(data) {
-    // Topic settings
+  saveTopicTrackingData(data) {
     if (data.new_topic_duration_minutes !== undefined) {
       this.args.controller.model.set(
         "user_option.new_topic_duration_minutes",
@@ -81,7 +86,19 @@ export default class Tracking extends Component {
       );
     }
 
-    // Category settings
+    const controller = this.args.controller;
+    controller.set("saved", false);
+
+    return controller.model
+      .save(controller.saveAttrNames)
+      .then(() => {
+        controller.set("saved", true);
+      })
+      .catch(popupAjaxError);
+  }
+
+  @action
+  saveCategoryTrackingData(data) {
     if (data.watched_category_ids !== undefined) {
       this.args.controller.model.set(
         "watchedCategories",
@@ -116,23 +133,33 @@ export default class Tracking extends Component {
       }
     }
 
-    // Tag settings
-    if (this.args.controller.siteSettings.tagging_enabled) {
-      if (data.watched_tags !== undefined) {
-        this.args.controller.model.set("watched_tags", data.watched_tags);
-      }
-      if (data.tracked_tags !== undefined) {
-        this.args.controller.model.set("tracked_tags", data.tracked_tags);
-      }
-      if (data.watching_first_post_tags !== undefined) {
-        this.args.controller.model.set(
-          "watching_first_post_tags",
-          data.watching_first_post_tags
-        );
-      }
-      if (data.muted_tags !== undefined) {
-        this.args.controller.model.set("muted_tags", data.muted_tags);
-      }
+    const controller = this.args.controller;
+    controller.set("saved", false);
+
+    return controller.model
+      .save(controller.saveAttrNames)
+      .then(() => {
+        controller.set("saved", true);
+      })
+      .catch(popupAjaxError);
+  }
+
+  @action
+  saveTagTrackingData(data) {
+    if (data.watched_tags !== undefined) {
+      this.args.controller.model.set("watched_tags", data.watched_tags);
+    }
+    if (data.tracked_tags !== undefined) {
+      this.args.controller.model.set("tracked_tags", data.tracked_tags);
+    }
+    if (data.watching_first_post_tags !== undefined) {
+      this.args.controller.model.set(
+        "watching_first_post_tags",
+        data.watching_first_post_tags
+      );
+    }
+    if (data.muted_tags !== undefined) {
+      this.args.controller.model.set("muted_tags", data.muted_tags);
     }
 
     const controller = this.args.controller;
@@ -150,8 +177,8 @@ export default class Tracking extends Component {
     {{bodyClass "user-preferences-tracking-page"}}
 
     <Form
-      @data={{this.formData}}
-      @onSubmit={{this.saveForm}}
+      @data={{this.topicTrackingData}}
+      @onSubmit={{this.saveTopicTrackingData}}
       class="user-preferences__tracking-form"
       as |form|
     >
@@ -229,7 +256,15 @@ export default class Tracking extends Component {
           </form.Field>
         {{/if}}
       </form.Section>
+      <form.Submit />
+    </Form>
 
+    <Form
+      @data={{this.categoryTrackingData}}
+      @onSubmit={{this.saveCategoryTrackingData}}
+      class="user-preferences__tracking-form"
+      as |form|
+    >
       <form.Section @title={{i18n "user.categories_settings"}}>
         <Categories
           @canSee={{@controller.canSee}}
@@ -240,8 +275,16 @@ export default class Tracking extends Component {
           @form={{form}}
         />
       </form.Section>
+      <form.Submit />
+    </Form>
 
-      {{#if @controller.siteSettings.tagging_enabled}}
+    {{#if @controller.siteSettings.tagging_enabled}}
+      <Form
+        @data={{this.tagTrackingData}}
+        @onSubmit={{this.saveTagTrackingData}}
+        class="user-preferences__tracking-form"
+        as |form|
+      >
         <form.Section @title={{i18n "user.tag_settings"}}>
           <Tags
             @model={{@controller.model}}
@@ -250,9 +293,8 @@ export default class Tracking extends Component {
             @form={{form}}
           />
         </form.Section>
-      {{/if}}
-
-      <form.Submit />
-    </Form>
+        <form.Submit />
+      </Form>
+    {{/if}}
   </template>
 }

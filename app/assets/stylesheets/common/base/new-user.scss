@@ -60,6 +60,13 @@
 }
 
 .user-preferences {
+  &__tracking-form {
+    padding: var(--space-4);
+    border: 1px solid var(--content-border-color);
+    border-radius: var(--d-border-radius);
+    margin-bottom: var(--space-4);
+  }
+
   .show-tracking {
     font-size: var(--font-down-1-rem);
   }
