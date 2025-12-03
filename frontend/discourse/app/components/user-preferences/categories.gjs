@@ -118,13 +118,13 @@ const Categories = <template>
   <PluginOutlet
     @name="user-preferences-categories"
     @connectorTagName="div"
-    @outletArgs={{lazyHash model=@model save=@save}}
+    @outletArgs={{lazyHash model=@model form=@form}}
   />
 
   <PluginOutlet
     @name="user-custom-controls"
     @connectorTagName="div"
-    @outletArgs={{lazyHash model=@model}}
+    @outletArgs={{lazyHash model=@model form=@form}}
   />
 </template>;
 
