@@ -78,6 +78,10 @@ export default class Icons extends Component {
   }
 
   get showLanguageSwitcher() {
+    if (!this.siteSettings.content_localization_enabled) {
+      return false;
+    }
+
     const has_locales =
       !!this.siteSettings.content_localization_supported_locales;
     switch (this.siteSettings.content_localization_language_switcher) {
