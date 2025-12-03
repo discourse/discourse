@@ -10,37 +10,45 @@ import maybeBabel from "./lib/vite-maybe-babel";
 const extensions = [".gjs", ".mjs", ".js", ".mts", ".gts", ".ts", ".hbs"];
 
 export default defineConfig(({ mode, command }) => {
+  const aliases = [
+    { find: "pretty-text", replacement: "/../pretty-text/addon" },
+    {
+      find: "ember-buffered-proxy/proxy",
+      replacement: "ember-buffered-proxy/addon/proxy",
+    },
+  ];
+
+  if (command !== "build") {
+    // v1 addon patches for dev only
+    aliases.push(
+      {
+        find: "@ember-decorators/object",
+        replacement: "@ember-decorators/object/addon",
+      },
+      {
+        find: "@ember-decorators/utils/decorator",
+        replacement: "@ember-decorators/utils/addon/decorator",
+      },
+      {
+        find: "@ember-decorators/utils/collapse-proto",
+        replacement: "@ember-decorators/utils/addon/collapse-proto",
+      },
+      {
+        find: "@ember-decorators/component",
+        replacement: "@ember-decorators/component/addon",
+      },
+
+      {
+        find: "ember-exam/test-support/load",
+        replacement: "ember-exam/addon-test-support/load",
+      }
+    );
+  }
   return {
     base: "",
     resolve: {
       extensions,
-      alias: [
-        { find: "pretty-text", replacement: "/../pretty-text/addon" },
-        {
-          find: "@ember-decorators/object",
-          replacement: "@ember-decorators/object/addon",
-        },
-        {
-          find: "@ember-decorators/utils/decorator",
-          replacement: "@ember-decorators/utils/addon/decorator",
-        },
-        {
-          find: "@ember-decorators/utils/collapse-proto",
-          replacement: "@ember-decorators/utils/addon/collapse-proto",
-        },
-        {
-          find: "@ember-decorators/component",
-          replacement: "@ember-decorators/component/addon",
-        },
-        {
-          find: "ember-buffered-proxy/proxy",
-          replacement: "ember-buffered-proxy/addon/proxy",
-        },
-        {
-          find: "ember-exam/test-support/load",
-          replacement: "ember-exam/addon-test-support/load",
-        },
-      ],
+      alias: aliases,
     },
     plugins: [
       // Standard Ember stuff
@@ -65,7 +73,7 @@ export default defineConfig(({ mode, command }) => {
       strictPort: true,
 
       proxy: {
-        "/": customProxy,
+        "/": customProxy(),
       },
 
       warmup: {
@@ -76,7 +84,7 @@ export default defineConfig(({ mode, command }) => {
       port: 4200,
       strictPort: true,
       proxy: {
-        "^/(?!@vite/)": customProxy,
+        "/": customProxy({ rewriteHtml: false }),
       },
     },
     build: {

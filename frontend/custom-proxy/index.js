@@ -104,73 +104,78 @@ function updateScriptReferences({
   });
 }
 
-export default {
-  target: "http://localhost:3000",
-  headers: {
-    "X-Discourse-Ember-CLI": "true",
-  },
-  configure: (proxy, options) => {
-    proxy.on("proxyRes", function (proxyRes, req, res) {
-      if (proxyRes.statusMessage) {
-        res.statusCode = proxyRes.statusCode;
-        res.statusMessage = proxyRes.statusMessage;
-      } else {
-        res.statusCode = proxyRes.statusCode;
+export default function customProxy({ rewriteHtml = true } = {}) {
+  return {
+    target: "http://localhost:3000",
+    headers: {
+      "X-Discourse-Ember-CLI": "true",
+    },
+    configure: (proxy, options) => {
+      proxy.on("proxyRes", function (proxyRes, req, res) {
+        if (proxyRes.statusMessage) {
+          res.statusCode = proxyRes.statusCode;
+          res.statusMessage = proxyRes.statusMessage;
+        } else {
+          res.statusCode = proxyRes.statusCode;
+        }
+
+        const resolvedHeaders = {};
+
+        for (let i = 0; i < proxyRes.rawHeaders.length; i += 2) {
+          let values = (resolvedHeaders[proxyRes.rawHeaders[i]] ||= []);
+          values.push(proxyRes.rawHeaders[i + 1]);
+        }
+
+        for (const [header, values] of Object.entries(resolvedHeaders)) {
+          res.setHeader(header, values);
+        }
+
+        if (
+          rewriteHtml &&
+          proxyRes.headers["content-type"]?.includes("text/html")
+        ) {
+          const rewriter = new HTMLRewriter((outputChunk) => {
+            res.write(outputChunk);
+          });
+
+          updateScriptReferences({
+            rewriter,
+            selector: "script[data-discourse-entrypoint]",
+            attribute: "src",
+          });
+
+          updateScriptReferences({
+            rewriter,
+            selector: "link[rel=preload][data-discourse-entrypoint]",
+            attribute: "href",
+          });
+
+          proxyRes.on("data", function (chunk) {
+            rewriter.write(chunk);
+          });
+
+          proxyRes.on("end", function () {
+            rewriter.end();
+            rewriter.free();
+            res.end();
+          });
+        } else {
+          proxyRes.pipe(res);
+        }
+      });
+    },
+    selfHandleResponse: true,
+    bypass: (req) => {
+      const url = req.url;
+      if (
+        VITE_PATTERNS.some((pattern) => pattern.test(url)) &&
+        !RAILS_JAVASCRIPTS_ROOTS.some((root) => url.startsWith(root))
+      ) {
+        return url; // skip proxying, let vite handle it
       }
-
-      const resolvedHeaders = {};
-
-      for (let i = 0; i < proxyRes.rawHeaders.length; i += 2) {
-        let values = (resolvedHeaders[proxyRes.rawHeaders[i]] ||= []);
-        values.push(proxyRes.rawHeaders[i + 1]);
-      }
-
-      for (const [header, values] of Object.entries(resolvedHeaders)) {
-        res.setHeader(header, values);
-      }
-
-      if (proxyRes.headers["content-type"]?.includes("text/html")) {
-        const rewriter = new HTMLRewriter((outputChunk) => {
-          res.write(outputChunk);
-        });
-
-        updateScriptReferences({
-          rewriter,
-          selector: "script[data-discourse-entrypoint]",
-          attribute: "src",
-        });
-
-        updateScriptReferences({
-          rewriter,
-          selector: "link[rel=preload][data-discourse-entrypoint]",
-          attribute: "href",
-        });
-
-        proxyRes.on("data", function (chunk) {
-          rewriter.write(chunk);
-        });
-
-        proxyRes.on("end", function () {
-          rewriter.end();
-          rewriter.free();
-          res.end();
-        });
-      } else {
-        proxyRes.pipe(res);
-      }
-    });
-  },
-  selfHandleResponse: true,
-  bypass: (req) => {
-    const url = req.url;
-    if (
-      VITE_PATTERNS.some((pattern) => pattern.test(url)) &&
-      !RAILS_JAVASCRIPTS_ROOTS.some((root) => url.startsWith(root))
-    ) {
-      return url; // skip proxying, let vite handle it
-    }
-  },
-};
+    },
+  };
+}
 
 const VITE_PATTERNS = [
   /^\/@vite\//,
