@@ -15,25 +15,18 @@ import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const _customButtons = [];
-const _customOnSelection = {};
 
 export function addBulkDropdownButton(opts) {
   _customButtons.push({
     id: opts.id,
     icon: opts.icon,
     name: i18n(opts.label),
+    translationKey: opts.label,
     visible: opts.visible,
     class: opts.class,
+    setComponent: opts.actionType !== "performAndRefresh",
   });
   addBulkDropdownAction(opts.id, opts.action);
-  const actionOpts = {
-    label: opts.label,
-    setComponent: true,
-  };
-  if (opts.actionType === "performAndRefresh") {
-    actionOpts.setComponent = false;
-  }
-  _customOnSelection[opts.id] = actionOpts;
 }
 
 export default class BulkSelectTopicsDropdown extends Component {
@@ -49,12 +42,28 @@ export default class BulkSelectTopicsDropdown extends Component {
         icon: "check",
         name: i18n("topic_bulk_actions.dismiss.name"),
         visible: ({ router }) => router.currentRouteName === "discovery.unread",
+        action: () =>
+          this.modal.show(DismissReadModal, {
+            model: {
+              title: "topics.bulk.dismiss_read_with_selected",
+              count: this.args.bulkSelectHelper.selected.length,
+              dismissRead: (dismissTopics) => this.dismissRead(dismissTopics),
+            },
+          }),
       },
       {
         id: "dismiss-new",
         icon: "check",
         name: i18n("topic_bulk_actions.dismiss.name"),
         visible: ({ router }) => router.currentRouteName === "discovery.new",
+        action: () =>
+          this.modal.show(DismissNew, {
+            model: {
+              selectedTopics: this.args.bulkSelectHelper.selected,
+              dismissCallback: (dismissTopics) =>
+                this.dismissRead(dismissTopics),
+            },
+          }),
       },
       {
         id: "update-category",
@@ -63,45 +72,90 @@ export default class BulkSelectTopicsDropdown extends Component {
         visible: ({ topics }) => {
           return !topics.some((t) => t.isPrivateMessage);
         },
+        action: () =>
+          this.showBulkTopicActionsModal("update-category", "change_category", {
+            allowSilent: true,
+            description: i18n(`topic_bulk_actions.update_category.description`),
+          }),
       },
       {
         id: "update-notifications",
         icon: "d-regular",
         name: i18n("topic_bulk_actions.update_notifications.name"),
+        action: () =>
+          this.showBulkTopicActionsModal(
+            "update-notifications",
+            "notification_level",
+            {
+              description: i18n(
+                `topic_bulk_actions.update_notifications.description`
+              ),
+            }
+          ),
       },
       {
         id: "reset-bump-dates",
         icon: "anchor",
         name: i18n("topic_bulk_actions.reset_bump_dates.name"),
+        action: () =>
+          this.showBulkTopicActionsModal(
+            "reset-bump-dates",
+            "reset_bump_dates",
+            {
+              description: i18n(
+                `topic_bulk_actions.reset_bump_dates.description`
+              ),
+            }
+          ),
       },
       {
         id: "defer",
         icon: "circle",
         name: i18n("topic_bulk_actions.defer.name"),
         visible: ({ currentUser }) => currentUser.user_option.enable_defer,
+        action: () =>
+          this.showBulkTopicActionsModal("defer", "defer", {
+            description: i18n(`topic_bulk_actions.defer.description`),
+          }),
       },
       {
         id: "close-topics",
         icon: "topic.closed",
         name: i18n("topic_bulk_actions.close_topics.name"),
+        action: () =>
+          this.showBulkTopicActionsModal("close", "close_topics", {
+            allowSilent: true,
+          }),
       },
       {
         id: "archive-topics",
         icon: "folder",
         name: i18n("topic_bulk_actions.archive_topics.name"),
         visible: ({ topics }) => !topics.some((t) => t.isPrivateMessage),
+        action: () =>
+          this.showBulkTopicActionsModal("archive", "archive_topics"),
       },
       {
         id: "archive-messages",
         icon: "box-archive",
         name: i18n("topic_bulk_actions.archive_messages.name"),
         visible: ({ topics }) => topics.every((t) => t.isPrivateMessage),
+        action: () =>
+          this.showBulkTopicActionsModal(
+            "archive_messages",
+            "archive_messages"
+          ),
       },
       {
         id: "move-messages-to-inbox",
         icon: "envelope",
         name: i18n("topic_bulk_actions.move_messages_to_inbox.name"),
         visible: ({ topics }) => topics.every((t) => t.isPrivateMessage),
+        action: () =>
+          this.showBulkTopicActionsModal(
+            "move_messages_to_inbox",
+            "move_messages_to_inbox"
+          ),
       },
       {
         id: "unlist-topics",
@@ -110,6 +164,7 @@ export default class BulkSelectTopicsDropdown extends Component {
         visible: ({ topics }) =>
           topics.some((t) => t.visible) &&
           !topics.some((t) => t.isPrivateMessage),
+        action: () => this.showBulkTopicActionsModal("unlist", "unlist_topics"),
       },
       {
         id: "relist-topics",
@@ -118,6 +173,7 @@ export default class BulkSelectTopicsDropdown extends Component {
         visible: ({ topics }) =>
           topics.some((t) => !t.visible) &&
           !topics.some((t) => t.isPrivateMessage),
+        action: () => this.showBulkTopicActionsModal("relist", "relist_topics"),
       },
       {
         id: "append-tags",
@@ -125,6 +181,8 @@ export default class BulkSelectTopicsDropdown extends Component {
         name: i18n("topic_bulk_actions.append_tags.name"),
         visible: ({ currentUser, siteSettings }) =>
           siteSettings.tagging_enabled && currentUser.canManageTopic,
+        action: () =>
+          this.showBulkTopicActionsModal("append-tags", "choose_append_tags"),
       },
       {
         id: "replace-tags",
@@ -132,6 +190,8 @@ export default class BulkSelectTopicsDropdown extends Component {
         name: i18n("topic_bulk_actions.replace_tags.name"),
         visible: ({ currentUser, siteSettings }) =>
           siteSettings.tagging_enabled && currentUser.canManageTopic,
+        action: () =>
+          this.showBulkTopicActionsModal("replace-tags", "change_tags"),
       },
       {
         id: "remove-tags",
@@ -139,16 +199,29 @@ export default class BulkSelectTopicsDropdown extends Component {
         name: i18n("topic_bulk_actions.remove_tags.name"),
         visible: ({ currentUser, siteSettings }) =>
           siteSettings.tagging_enabled && currentUser.canManageTopic,
+        action: () =>
+          this.showBulkTopicActionsModal("remove-tags", "remove_tags"),
       },
       {
         id: "delete-topics",
         icon: "trash-can",
         name: i18n("topic_bulk_actions.delete_topics.name"),
         visible: ({ currentUser }) => currentUser.staff,
+        action: () => this.showBulkTopicActionsModal("delete", "delete"),
       },
     ];
 
-    return [...options, ..._customButtons].filter(({ visible }) => {
+    const customButtons = _customButtons.map((button) => ({
+      ...button,
+      action: () =>
+        this.showBulkTopicActionsModal(button.id, button.translationKey, {
+          custom: true,
+          setComponent: button.setComponent,
+          translationKey: button.translationKey,
+        }),
+    }));
+
+    return [...options, ...customButtons].filter(({ visible }) => {
       if (visible) {
         return visible({
           topics: this.args.bulkSelectHelper.selected,
@@ -166,27 +239,26 @@ export default class BulkSelectTopicsDropdown extends Component {
     let allowSilent = false;
     let initialAction = null;
     let initialActionLabel = null;
-    let description = null;
+    let description = opts.description;
+    let translatedTitle;
+
     if (opts.allowSilent === true) {
       allowSilent = true;
     }
     if (opts.custom === true) {
-      title = i18n(_customOnSelection[actionName].label);
+      translatedTitle = i18n(opts.translationKey || title);
       initialActionLabel = actionName;
       if (opts.setComponent === true) {
         initialAction = "set-component";
       }
     } else {
-      title = i18n(`topics.bulk.${title}`);
-    }
-    if (opts.description) {
-      description = opts.description;
+      translatedTitle = i18n(`topics.bulk.${title}`);
     }
 
     this.modal.show(BulkTopicActions, {
       model: {
         action: actionName,
-        title,
+        title: translatedTitle,
         description,
         bulkSelectHelper: this.args.bulkSelectHelper,
         refreshClosure: () => this.args.afterBulkActionComplete(),
@@ -198,97 +270,10 @@ export default class BulkSelectTopicsDropdown extends Component {
   }
 
   @action
-  async onSelect(actionId) {
+  async onSelect(button) {
     await this.dMenu.close();
 
-    switch (actionId) {
-      case "dismiss-unread":
-        this.modal.show(DismissReadModal, {
-          model: {
-            title: "topics.bulk.dismiss_read_with_selected",
-            count: this.args.bulkSelectHelper.selected.length,
-            dismissRead: (dismissTopics) => this.dismissRead(dismissTopics),
-          },
-        });
-        break;
-      case "dismiss-new":
-        this.modal.show(DismissNew, {
-          model: {
-            selectedTopics: this.args.bulkSelectHelper.selected,
-            dismissCallback: (dismissTopics) => this.dismissRead(dismissTopics),
-          },
-        });
-        break;
-      case "update-category":
-        this.showBulkTopicActionsModal(actionId, "change_category", {
-          allowSilent: true,
-          description: i18n(`topic_bulk_actions.update_category.description`),
-        });
-        break;
-      case "update-notifications":
-        this.showBulkTopicActionsModal(actionId, "notification_level", {
-          description: i18n(
-            `topic_bulk_actions.update_notifications.description`
-          ),
-        });
-        break;
-      case "close-topics":
-        this.showBulkTopicActionsModal("close", "close_topics", {
-          allowSilent: true,
-        });
-        break;
-      case "archive-topics":
-        this.showBulkTopicActionsModal("archive", "archive_topics");
-        break;
-      case "archive-messages":
-        this.showBulkTopicActionsModal("archive_messages", "archive_messages");
-        break;
-      case "move-messages-to-inbox":
-        this.showBulkTopicActionsModal(
-          "move_messages_to_inbox",
-          "move_messages_to_inbox"
-        );
-        break;
-      case "unlist-topics":
-        this.showBulkTopicActionsModal("unlist", "unlist_topics");
-        break;
-      case "relist-topics":
-        this.showBulkTopicActionsModal("relist", "relist_topics");
-        break;
-      case "append-tags":
-        this.showBulkTopicActionsModal(actionId, "choose_append_tags");
-        break;
-      case "replace-tags":
-        this.showBulkTopicActionsModal(actionId, "change_tags");
-        break;
-      case "remove-tags":
-        this.showBulkTopicActionsModal(actionId, "remove_tags");
-        break;
-      case "delete-topics":
-        this.showBulkTopicActionsModal("delete", "delete");
-        break;
-      case "reset-bump-dates":
-        this.showBulkTopicActionsModal(actionId, "reset_bump_dates", {
-          description: i18n(`topic_bulk_actions.reset_bump_dates.description`),
-        });
-        break;
-      case "defer":
-        this.showBulkTopicActionsModal(actionId, "defer", {
-          description: i18n(`topic_bulk_actions.defer.description`),
-        });
-        break;
-      default:
-        if (_customOnSelection[actionId]) {
-          this.showBulkTopicActionsModal(
-            actionId,
-            _customOnSelection[actionId].label,
-            {
-              custom: true,
-              setComponent: _customOnSelection[actionId].setComponent,
-            }
-          );
-        }
-    }
+    await button?.action?.();
   }
 
   dismissRead(stopTracking) {
@@ -322,7 +307,7 @@ export default class BulkSelectTopicsDropdown extends Component {
                 @translatedLabel={{button.name}}
                 @icon={{button.icon}}
                 class={{concatClass "btn-transparent" button.id button.class}}
-                @action={{fn this.onSelect button.id}}
+                @action={{fn this.onSelect button}}
               />
             </dropdown.item>
           {{/each}}
