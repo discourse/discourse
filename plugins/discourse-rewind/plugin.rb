@@ -1,0 +1,36 @@
+# frozen_string_literal: true
+
+# name: discourse-rewind
+# about: A fun end-of-year summary for members' activity in the community.
+# meta_topic_id: https://meta.discourse.org/t/discourse-rewind-2024/348063
+# version: 0.0.1
+# authors: Discourse
+# url: https://github.com/discourse/discourse-rewind
+# required_version: 2.7.0
+
+enabled_site_setting :discourse_rewind_enabled
+
+register_svg_icon "repeat"
+register_svg_icon "volume-high"
+register_svg_icon "volume-xmark"
+
+register_asset "stylesheets/common/_index.scss"
+register_asset "stylesheets/mobile/_index.scss", :mobile
+
+module ::DiscourseRewind
+  PLUGIN_NAME = "discourse-rewind"
+
+  def self.public_asset_path(name)
+    File.expand_path(File.join(__dir__, "public", name))
+  end
+end
+
+require_relative "lib/discourse_rewind/engine"
+
+after_initialize do
+  add_to_serializer(:current_user, :is_rewind_active) do
+    Rails.env.development? || Date.today.month == 1 || Date.today.month == 12
+  end
+
+  add_to_serializer(:current_user, :is_development_env) { Rails.env.development? }
+end
