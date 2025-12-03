@@ -258,7 +258,7 @@ const DeprecationWorkflow = new DiscourseDeprecationWorkflow([
     matchId: "deprecate-import-meta-from-ember",
   },
   {
-    handler: "throw",
+    handler: "log",
     matchId: /^discourse\.native-array-extensions\..+$/,
   },
   // widget-related code should fail on all CI tests including plugins and custom themes
