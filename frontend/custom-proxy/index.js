@@ -36,9 +36,9 @@ function updateScriptReferences({
       // }
 
       const entrypoints = {
-        discourse: "/@vite/discourse.js",
-        vendor: "/@vite/vendor.js",
-        "start-discourse": "/@vite/start-discourse.js",
+        discourse: "/discourse.js",
+        vendor: "/vendor.js",
+        "start-discourse": "/start-discourse.js",
         // admin: "/@vite/admin.js",
       };
 
@@ -93,7 +93,7 @@ function updateScriptReferences({
         // ember-cli-live-reload doesn't select ports correctly, so we use _lr/livereload directly
         // (important for cloud development environments like GitHub CodeSpaces)
         newElements.unshift(
-          `<script type="module" src="/@vite/@vite/client" nonce="${nonce}"></script>`
+          `<script type="module" src="/@vite/client" nonce="${nonce}"></script>`
         );
       }
 
@@ -161,4 +161,24 @@ export default {
     });
   },
   selfHandleResponse: true,
+  bypass: (req) => {
+    const url = req.url;
+    if (
+      VITE_PATTERNS.some((pattern) => pattern.test(url)) &&
+      !RAILS_JAVASCRIPTS_ROOTS.some((root) => url.startsWith(root))
+    ) {
+      return url; // skip proxying, let vite handle it
+    }
+  },
 };
+
+const VITE_PATTERNS = [
+  /^\/@vite\//,
+  /^\/app\//,
+  /\.[mgc]?js/,
+  /^\/tests/,
+  /^\/@fs\//,
+  /^\/@id\//,
+  /^\/@embroider\//,
+];
+const RAILS_JAVASCRIPTS_ROOTS = ["/theme-javascripts/", "/extra-locales/"];

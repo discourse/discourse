@@ -11,7 +11,7 @@ const extensions = [".gjs", ".mjs", ".js", ".mts", ".gts", ".ts", ".hbs"];
 
 export default defineConfig(({ mode, command }) => {
   return {
-    base: command === "build" ? "" : "/@vite/",
+    base: "",
     resolve: {
       extensions,
       alias: [
@@ -35,6 +35,10 @@ export default defineConfig(({ mode, command }) => {
         {
           find: "ember-buffered-proxy/proxy",
           replacement: "ember-buffered-proxy/addon/proxy",
+        },
+        {
+          find: "ember-exam/test-support/load",
+          replacement: "ember-exam/addon-test-support/load",
         },
       ],
     },
@@ -61,7 +65,7 @@ export default defineConfig(({ mode, command }) => {
       strictPort: true,
 
       proxy: {
-        "^/(?!@vite/)": customProxy,
+        "/": customProxy,
       },
 
       warmup: {

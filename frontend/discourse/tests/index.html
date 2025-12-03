@@ -15,13 +15,13 @@
 
     <meta name="color-scheme" content="light dark">
 
-    {{content-for "head"}} {{content-for "test-head"}}
+    <!-- {{content-for "head"}} {{content-for "test-head"}} -->
 
     <link rel="stylesheet" href="/@embroider/virtual/vendor.css" />
     <link rel="stylesheet" href="/@embroider/virtual/test-support.css" />
     <link rel="stylesheet" href="/../bootstrap/core-css-for-tests.css" data-embroider-ignore />
 
-    {{content-for "head-footer"}} {{content-for "test-head-footer"}}
+    <!-- {{content-for "head-footer"}} {{content-for "test-head-footer"}} -->
 
     <style>
       #ember-testing * {
@@ -42,7 +42,7 @@
   <body>
     <discourse-assets-icons></discourse-assets-icons>
 
-    {{content-for "body"}} {{content-for "test-body"}}
+    <!-- {{content-for "body"}} {{content-for "test-body"}} -->
 
     <!-- <script src="/testem.js" integrity="" data-embroider-ignore></script> -->
 
@@ -79,12 +79,13 @@
           throw "Unsupported browser detected";
         }
 
-        let element = document.querySelector(
-          `meta[name="discourse/config/environment"]`
-        );
-        const config = JSON.parse(
-          decodeURIComponent(element.getAttribute("content"))
-        );
+        // let element = document.querySelector(
+        //   `meta[name="discourse/config/environment"]`
+        // );
+        // const config = JSON.parse(
+        //   decodeURIComponent(element.getAttribute("content"))
+        // );
+        const config = {};
         const event = new CustomEvent("discourse-init", { detail: config });
         document.dispatchEvent(event);
       })();
@@ -104,6 +105,6 @@
     <!-- This script takes the <template>, filters plugin assets as required, then appends to discourse-dynamic-test-js -->
     <!-- <script src="{{rootURL}}assets/scripts/discourse-test-load-dynamic-js.js" data-embroider-ignore></script> -->
 
-    <link rel="stylesheet" href="{{rootURL}}stylesheets/qunit-custom.css" data-embroider-ignore />
+    <link rel="stylesheet" href="/stylesheets/qunit-custom.css" data-embroider-ignore />
   </body>
 </html>
