@@ -1,7 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { next } from "@ember/runloop";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import Form from "discourse/components/form";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import Categories from "discourse/components/user-preferences/categories";
@@ -52,17 +53,25 @@ export default class Tracking extends Component {
       return;
     }
 
-    // Get the current data including custom fields
-    const data = this.topicTrackingData;
-
-    // Add any custom fields that aren't already in the form data
+    // Add any custom fields to the form data
+    // This ensures fields are tracked even if they're registered after form initialization
     this.args.controller.customAttrNames?.forEach((fieldName) => {
-      const currentValue = this.topicTrackingFormApi.get(fieldName);
-      const newValue = data[fieldName];
+      const currentFormValue = this.topicTrackingFormApi.get(fieldName);
 
-      // Only update if the value exists and is different from current
-      if (newValue !== undefined && currentValue !== newValue) {
-        this.topicTrackingFormApi.set(fieldName, newValue);
+      // Get the value from the model (check user_option first, then model directly)
+      let modelValue;
+      if (this.args.controller.model.user_option[fieldName] !== undefined) {
+        modelValue = this.args.controller.model.get(`user_option.${fieldName}`);
+      } else if (this.args.controller.model[fieldName] !== undefined) {
+        modelValue = this.args.controller.model.get(fieldName);
+      }
+
+      // Set the value in the form if:
+      // 1. The field doesn't exist in form data yet (currentFormValue is undefined), OR
+      // 2. The model value is different from the form value
+      // This ensures the field is always registered and synced with the model
+      if (currentFormValue === undefined || currentFormValue !== modelValue) {
+        this.topicTrackingFormApi.set(fieldName, modelValue);
       }
     });
   }
@@ -70,13 +79,14 @@ export default class Tracking extends Component {
   @action
   registerTopicTrackingFormApi(api) {
     this.topicTrackingFormApi = api;
-    // Update form data after the next render cycle to ensure plugin outlets have rendered
-    // Use a double next() to ensure plugin outlet components have had time to register their fields
-    next(() => {
-      next(() => {
-        this.updateFormDataWithCustomFields();
-      });
-    });
+    // Update form data immediately if custom fields are already registered
+    // The did-update modifier will handle updates when customAttrNames changes
+    this.updateFormDataWithCustomFields();
+  }
+
+  get customAttrNamesKey() {
+    // Create a reactive key based on the array contents for did-update to watch
+    return this.args.controller.customAttrNames?.join(",") || "";
   }
 
   get categoryTrackingData() {
@@ -301,14 +311,22 @@ export default class Tracking extends Component {
           </field.Select>
         </form.Field>
 
-        <PluginOutlet
-          @name="user-preferences-tracking-topics"
-          @outletArgs={{lazyHash
-            model=@controller.model
-            customAttrNames=@controller.customAttrNames
-            form=form
+        <div
+          {{didInsert this.updateFormDataWithCustomFields}}
+          {{didUpdate
+            this.updateFormDataWithCustomFields
+            this.customAttrNamesKey
           }}
-        />
+        >
+          <PluginOutlet
+            @name="user-preferences-tracking-topics"
+            @outletArgs={{lazyHash
+              model=@controller.model
+              customAttrNames=@controller.customAttrNames
+              form=form
+            }}
+          />
+        </div>
 
         <form.Field
           @name="topics_unread_when_closed"
