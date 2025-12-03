@@ -152,6 +152,12 @@ class Plugin::Instance
     @plugin_settings ||= SiteSetting.plugins.select { |_, plugin_name| plugin_name == self.name }
   end
 
+  def deprecate_setting(old_setting, new_setting, override, drom_from)
+    setting = [old_setting, new_setting, override, drom_from]
+    SiteSettings::DeprecatedSettings::SETTINGS << setting
+    SiteSetting.setup_deprecated_method(*setting)
+  end
+
   def configurable?
     true
   end
