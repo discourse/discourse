@@ -11,8 +11,8 @@ export default <template>
     @showUserInfo={{false}}
     class="user-stream"
   >
-    <:belowPostItem as |reaction|>
+    <:abovePostItemExcerpt as |reaction|>
       <DiscourseReactionsReactionEmoji @reaction={{reaction}} />
-    </:belowPostItem>
+    </:abovePostItemExcerpt>
   </PostList>
 </template>
