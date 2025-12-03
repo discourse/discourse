@@ -1,5 +1,7 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { next } from "@ember/runloop";
 import Form from "discourse/components/form";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import Categories from "discourse/components/user-preferences/categories";
@@ -10,6 +12,8 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 
 export default class Tracking extends Component {
+  @tracked topicTrackingFormApi = null;
+
   get topicTrackingData() {
     const data = {
       new_topic_duration_minutes:
@@ -25,7 +29,8 @@ export default class Tracking extends Component {
     };
 
     // Include plugin-added fields from customAttrNames
-    this.args.controller.get("customAttrNames")?.forEach((fieldName) => {
+    // Access customAttrNames directly (not via .get()) to ensure reactivity
+    this.args.controller.customAttrNames?.forEach((fieldName) => {
       // Check if field exists on user_option
       if (this.args.controller.model.user_option[fieldName] !== undefined) {
         data[fieldName] = this.args.controller.model.get(
@@ -39,6 +44,39 @@ export default class Tracking extends Component {
     });
 
     return data;
+  }
+
+  @action
+  updateFormDataWithCustomFields() {
+    if (!this.topicTrackingFormApi) {
+      return;
+    }
+
+    // Get the current data including custom fields
+    const data = this.topicTrackingData;
+
+    // Add any custom fields that aren't already in the form data
+    this.args.controller.customAttrNames?.forEach((fieldName) => {
+      const currentValue = this.topicTrackingFormApi.get(fieldName);
+      const newValue = data[fieldName];
+
+      // Only update if the value exists and is different from current
+      if (newValue !== undefined && currentValue !== newValue) {
+        this.topicTrackingFormApi.set(fieldName, newValue);
+      }
+    });
+  }
+
+  @action
+  registerTopicTrackingFormApi(api) {
+    this.topicTrackingFormApi = api;
+    // Update form data after the next render cycle to ensure plugin outlets have rendered
+    // Use a double next() to ensure plugin outlet components have had time to register their fields
+    next(() => {
+      next(() => {
+        this.updateFormDataWithCustomFields();
+      });
+    });
   }
 
   get categoryTrackingData() {
@@ -213,6 +251,7 @@ export default class Tracking extends Component {
     <Form
       @data={{this.topicTrackingData}}
       @onSubmit={{this.saveTopicTrackingData}}
+      @onRegisterApi={{this.registerTopicTrackingFormApi}}
       class="user-preferences__tracking-form topic-tracking"
       as |form|
     >
