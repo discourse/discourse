@@ -87,12 +87,12 @@ export default class Tracking extends Component {
     }
 
     const controller = this.args.controller;
-    controller.set("saved", false);
+    controller.trackedTopicsSaved = false;
 
     return controller.model
       .save(controller.saveAttrNames)
       .then(() => {
-        controller.set("saved", true);
+        controller.trackedTopicsSaved = true;
       })
       .catch(popupAjaxError);
   }
@@ -134,12 +134,12 @@ export default class Tracking extends Component {
     }
 
     const controller = this.args.controller;
-    controller.set("saved", false);
+    controller.trackedCategoriesSaved = false;
 
     return controller.model
       .save(controller.saveAttrNames)
       .then(() => {
-        controller.set("saved", true);
+        controller.trackedCategoriesSaved = true;
       })
       .catch(popupAjaxError);
   }
@@ -163,12 +163,12 @@ export default class Tracking extends Component {
     }
 
     const controller = this.args.controller;
-    controller.set("saved", false);
+    controller.trackedTagsSaved = false;
 
     return controller.model
       .save(controller.saveAttrNames)
       .then(() => {
-        controller.set("saved", true);
+        controller.trackedTagsSaved = true;
       })
       .catch(popupAjaxError);
   }
@@ -256,7 +256,12 @@ export default class Tracking extends Component {
           </form.Field>
         {{/if}}
       </form.Section>
-      <form.Submit />
+      <div class="controls save-button">
+        <form.Submit />
+        {{#if @controller.trackedTopicsSaved}}
+          <span class="saved">{{i18n "saved"}}</span>
+        {{/if}}
+      </div>
     </Form>
 
     <Form
@@ -275,7 +280,12 @@ export default class Tracking extends Component {
           @form={{form}}
         />
       </form.Section>
-      <form.Submit />
+      <div class="controls save-button">
+        <form.Submit />
+        {{#if @controller.trackedCategoriesSaved}}
+          <span class="saved">{{i18n "saved"}}</span>
+        {{/if}}
+      </div>
     </Form>
 
     {{#if @controller.siteSettings.tagging_enabled}}
@@ -293,7 +303,12 @@ export default class Tracking extends Component {
             @form={{form}}
           />
         </form.Section>
-        <form.Submit />
+        <div class="controls save-button">
+          <form.Submit />
+          {{#if @controller.trackedTagsSaved}}
+            <span class="saved">{{i18n "saved"}}</span>
+          {{/if}}
+        </div>
       </Form>
     {{/if}}
   </template>
