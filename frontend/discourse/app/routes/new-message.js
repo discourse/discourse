@@ -32,8 +32,8 @@ export default class extends DiscourseRoute {
       .then(() => this.#openComposerWithPrefilledValues(params));
   }
 
-  #openComposer({ title, body }, recipients = "") {
-    next(() => this.composer.openNewMessage({ recipients, title, body }));
+  #openComposer({ title, body, tags }, recipients = "") {
+    next(() => this.composer.openNewMessage({ recipients, title, body, tags }));
   }
 
   #openComposerWithPrefilledValues(params) {
