@@ -44,19 +44,24 @@ module DiscourseAi
           - Site description: {site_description}
           - Site top 10 categories: {top_categories}
 
-          Format your response as a JSON object with a one key named "spam", which is a boolean that indicates if a post is spam or legitimate.
+          Format your response as a JSON object with two keys:
+          1. "spam": a boolean that indicates if a post is spam (true) or legitimate (false)
+          2. "reason": a brief explanation (1-2 sentences) of why you classified it this way
+
           Your output should be in the following format:
 
-          {"spam": xx}
+          {"spam": xx, "reason": "explanation here"}
 
-          Where xx is true if the post is spam, or false if it's legitimate.
-          reply with valid JSON only
+          Reply with valid JSON only
 
         PROMPT
       end
 
       def response_format
-        [{ "key" => "spam", "type" => "boolean" }]
+        [
+          { "key" => "spam", "type" => "boolean" },
+          { "key" => "reason", "type" => "string" },
+        ]
       end
     end
   end
