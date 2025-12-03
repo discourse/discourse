@@ -12,10 +12,14 @@ RSpec.describe DiscourseAi::Discord::Bot::PersonaReplier do
   before do
     enable_current_plugin
     SiteSetting.ai_discord_search_persona = persona.id.to_s
-    allow_any_instance_of(DiscourseAi::Personas::Bot).to receive(:reply)
-    .with(kind_of(DiscourseAi::Personas::BotContext))
-    .and_return("This is a reply from bot!",)
-    allow(persona_replier).to receive(:create_reply)
+
+    DiscourseAi::Personas::Bot
+      .any_instance
+      .stubs(:reply)
+      .with(is_a(DiscourseAi::Personas::BotContext))
+      .returns([["Mock Reply"]])
+
+    persona_replier.stubs(:create_reply)
   end
 
   describe "#handle_interaction!" do
