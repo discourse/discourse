@@ -10,19 +10,22 @@ class ProblemCheck::AiLlmStatus < ProblemCheck
   MIN_FAILED_CALLS = 3
   FAILURE_RATE_THRESHOLD = 0.5
 
-  def self.override_data_for(model)
+  def self.problem_details(model, failed_calls, total_calls, lookback_hours)
     {
-      model_id: model.id,
+      target: model.id,
       model_name: model.display_name,
-      url: "#{Discourse.base_path}/admin/plugins/discourse-ai/ai-llms/#{model.id}/edit",
+      failed_calls: failed_calls,
+      total_calls: total_calls,
+      count: lookback_hours,
     }
   end
 
-  def self.trigger_problem!(model)
+  def self.fast_track_problem!(model, failed_calls, lookback_hours)
     return if model.blank?
 
     tracker = ProblemCheckTracker[:ai_llm_status, model.id]
-    tracker.problem!(details: override_data_for(model))
+    details = problem_details(model, failed_calls, failed_calls, lookback_hours)
+    tracker.problem!(details: details)
   end
 
   def call
@@ -39,23 +42,13 @@ class ProblemCheck::AiLlmStatus < ProblemCheck
     return no_problem if failed_calls < MIN_FAILED_CALLS
     return no_problem if failure_rate(total_calls, failed_calls) < FAILURE_RATE_THRESHOLD
 
-    problem(
-      model,
-      override_data: override_data_for(model),
-      details: {
-        model_name: model.display_name,
-        failed_calls: failed_calls,
-        total_calls: total_calls,
-        lookback_hours: (LOOKBACK_WINDOW / 1.hour),
-      },
-    )
+    details =
+      self.class.problem_details(model, failed_calls, total_calls, (LOOKBACK_WINDOW / 1.hour))
+
+    problem(model, override_data: details, details: details)
   end
 
   private
-
-  def override_data_for(model)
-    self.class.override_data_for(model)
-  end
 
   def audit_log_counts(model)
     counts = DB.query_single(<<~SQL, llm_id: model.id, since: LOOKBACK_WINDOW.ago)

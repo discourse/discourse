@@ -448,12 +448,16 @@ module DiscourseAi
             return
           end
 
-          count = Discourse.redis.incr(key)
+          failures_count = Discourse.redis.incr(key)
           Discourse.redis.expire(key, FAIL_TTL.to_i)
 
-          return if count < FAIL_THRESHOLD
+          return if failures_count < FAIL_THRESHOLD
 
-          ProblemCheck::AiLlmStatus.trigger_problem!(llm_model)
+          ProblemCheck::AiLlmStatus.fast_track_problem!(
+            llm_model,
+            failures_count,
+            (FAIL_TTL / 1.hour),
+          )
         end
 
         def start_log(

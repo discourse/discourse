@@ -33,7 +33,11 @@ RSpec.describe ProblemCheck::AiLlmStatus do
             "dashboard.problem.ai_llm_status",
             {
               model_name: llm_model.display_name,
-              url: "/admin/plugins/discourse-ai/ai-llms/#{llm_model.id}/edit",
+              target: llm_model.id,
+              base_path: Discourse.base_path,
+              count: (ProblemCheck::AiLlmStatus::LOOKBACK_WINDOW / 1.hour),
+              failed_calls: 3,
+              total_calls: 5,
             },
           )
 
