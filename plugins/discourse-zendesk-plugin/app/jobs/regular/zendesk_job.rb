@@ -20,10 +20,12 @@ module Jobs
 
     def push_topic!(topic_id)
       topic = Topic.find_by(id: topic_id)
-
       return if topic.blank?
-      return if topic.custom_fields[DiscourseZendeskPlugin::ZENDESK_ID_FIELD].blank?
-      return if !DiscourseZendeskPlugin::Helper.autogeneration_category?(topic.category_id)
+
+      has_zendesk_ticket = topic.custom_fields[DiscourseZendeskPlugin::ZENDESK_ID_FIELD].present?
+      in_autogeneration_category =
+        DiscourseZendeskPlugin::Helper.autogeneration_category?(topic.category_id)
+      return if !has_zendesk_ticket && !in_autogeneration_category
 
       topic.post_ids.each { |post_id| push_post!(post_id) }
     end
