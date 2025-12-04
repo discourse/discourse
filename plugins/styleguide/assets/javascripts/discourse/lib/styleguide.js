@@ -37,7 +37,6 @@ import modal from "../components/sections/organisms/modal";
 import moreTopics from "../components/sections/organisms/more-topics";
 import navigation from "../components/sections/organisms/navigation";
 import siteHeader from "../components/sections/organisms/site-header";
-import userAbout from "../components/sections/organisms/user-about";
 import bem from "../components/sections/syntax/00-bem";
 
 let _allCategories = null;
@@ -109,7 +108,6 @@ const SECTIONS = [
   { component: navigation, category: "organisms", id: "navigation" },
   { component: siteHeader, category: "organisms", id: "site-header" },
   { component: moreTopics, category: "organisms", id: "more-topics" },
-  { component: userAbout, category: "organisms", id: "user-about" },
 ];
 
 export function addSection(section) {
