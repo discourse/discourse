@@ -388,6 +388,7 @@ module DiscourseAi
         auto_set_title: true,
         silent_mode: false,
         feature_name: nil,
+        existing_reply_post: nil,
         cancel_manager: nil,
         &blk
       )
@@ -459,21 +460,44 @@ module DiscourseAi
         end
 
         if stream_reply
-          reply_post =
-            PostCreator.create!(
-              reply_user,
-              topic_id: post.topic_id,
-              raw: "",
-              skip_validations: true,
-              skip_jobs: true,
-              post_type: post_type,
-              skip_guardian: true,
-              custom_fields: {
-                DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD => bot.llm.llm_model.display_name,
-              },
-            )
+          reply_post = existing_reply_post
 
-          publish_update(reply_post, { raw: reply_post.cooked })
+          if reply_post
+            if reply_post.topic_id != post.topic_id
+              raise Discourse::InvalidParameters.new(:reply_post_id)
+            end
+
+            if reply_post.user_id != reply_user.id
+              raise Discourse::InvalidParameters.new(:reply_post_id)
+            end
+
+            reply_post.update_columns(raw: "", cooked: "")
+            reply_post.post_custom_prompt&.destroy
+          else
+            reply_post =
+              PostCreator.create!(
+                reply_user,
+                topic_id: post.topic_id,
+                raw: "",
+                skip_validations: true,
+                skip_jobs: true,
+                post_type: post_type,
+                skip_guardian: true,
+                custom_fields: {
+                  DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD => bot.llm.llm_model.display_name,
+                  DiscourseAi::AiBot::POST_AI_PERSONA_ID_FIELD => bot.persona.id,
+                },
+              )
+          end
+
+          reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD] = bot
+            .llm
+            .llm_model
+            .display_name
+          reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_PERSONA_ID_FIELD] = bot.persona.id
+          reply_post.save_custom_fields
+
+          publish_update(reply_post, { raw: "" })
 
           redis_stream_key = "gpt_cancel:#{reply_post.id}"
           Discourse.redis.setex(redis_stream_key, MAX_STREAM_DELAY_SECONDS, 1)
@@ -551,6 +575,10 @@ module DiscourseAi
               skip_validations: true,
               post_type: post_type,
               skip_guardian: true,
+              custom_fields: {
+                DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD => bot.llm.llm_model.display_name,
+                DiscourseAi::AiBot::POST_AI_PERSONA_ID_FIELD => bot.persona.id,
+              },
             )
         end
 
