@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .--most-viewed-tags,
 .--most-viewed-categories {
   .rewind-card {
@@ -13,6 +15,18 @@
 
     p {
       color: var(--rewind-white);
+    }
+  }
+
+  .rewind-report-container {
+    @include viewport.until(sm) {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+
+      .folder-wrapper {
+        width: 100%;
+      }
     }
   }
 
@@ -51,6 +65,16 @@
     position: relative;
     flex: 1;
     margin-top: 1.5em;
+    width: 25%;
+    overflow-wrap: anywhere;
+
+    .rewind-card {
+      padding: 0.5em 0.5em;
+    }
+
+    @include viewport.until(sm) {
+      width: 50%;
+    }
 
     &.--opened {
       z-index: 4;
