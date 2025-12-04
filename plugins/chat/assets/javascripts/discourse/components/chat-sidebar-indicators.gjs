@@ -16,14 +16,16 @@ import icon from "discourse/helpers/d-icon";
  */
 export default class ChatSidebarIndicators extends Component {
   /**
-   * Determines if the channel has any unread content (messages or threads).
+   * Determines if the channel has any unread content (messages, threads, mentions, or watched threads).
    *
-   * @returns {boolean} True if there are unread messages or threads
+   * @returns {boolean} True if there are any unreads that should show an indicator
    */
   get hasUnread() {
     return (
       this.args.status?.unreadCount > 0 ||
-      this.args.status?.unreadThreadsCount > 0
+      this.args.status?.unreadThreadsCount > 0 ||
+      this.args.status?.mentionCount > 0 ||
+      this.args.status?.watchedThreadsUnreadCount > 0
     );
   }
 
