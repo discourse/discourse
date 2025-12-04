@@ -47,7 +47,6 @@ acceptance("Login Fields - From Signup Form", function () {
     await visit("/");
     await click("header .sign-up-button");
     await fillIn("#new-account-email", "test@example.com");
-    await fillIn("#new-account-email", "test@example.com");
 
     // Go to login
     await click(".signup-page-cta__login");
