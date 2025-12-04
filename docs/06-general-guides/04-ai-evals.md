@@ -25,27 +25,27 @@ The Discourse AI plugin ships a Ruby CLI under `plugins/discourse-ai/evals` that
   - `OPENAI_API_KEY=...`
   - `ANTHROPIC_API_KEY=...`
   - `GEMINI_API_KEY=...`
-- From the repository root, change into `plugins/discourse-ai/evals` and run `./run --help` to confirm the CLI is wired up. If `evals/cases` is missing it will be cloned automatically from `discourse/discourse-ai-evals`.
+- From the repository root, change into `plugins/discourse-ai/evals` and run `bundle exec ruby ./run --help` to confirm the CLI is wired up. If `evals/cases` is missing it will be cloned automatically from `discourse/discourse-ai-evals`.
 
 ## Discover available inputs
 
-- `./run --list` lists all eval ids from `evals/cases/*/*.yml`.
-- `./run --list-features` prints feature keys grouped by module (format: `module:feature`).
-- `./run --list-models` shows LLM configs that can be hydrated from `eval-llms.yml`/`.local.yml`.
-- `./run --list-personas` lists persona keys defined under `evals/personas/*.yml` plus the built-in `default`.
+- `bundle exec ruby ./run --list` lists all eval ids from `evals/cases/*/*.yml`.
+- `bundle exec ruby ./run --list-features` prints feature keys grouped by module (format: `module:feature`).
+- `bundle exec ruby ./run --list-models` shows LLM configs that can be hydrated from `eval-llms.yml`/`.local.yml`.
+- `bundle exec ruby ./run --list-personas` lists persona keys defined under `evals/personas/*.yml` plus the built-in `default`.
 
 ## Run evals
 
 - Run a single eval against specific models:
 
   ```sh
-  OPENAI_API_KEY=... ./run --eval simple_summarization --models gpt-4o-mini
+  OPENAI_API_KEY=... bundle exec ruby ./run --eval simple_summarization --models gpt-4o-mini
   ```
 
 - Run every eval for a feature (or the whole suite) against multiple models:
 
   ```sh
-  ./run --feature summarization:topic_summaries --models gpt-4o-mini,claude-3-5-sonnet-latest
+  bundle exec ruby ./run --feature summarization:topic_summaries --models gpt-4o-mini,claude-3-5-sonnet-latest
   ```
 
   Omitting `--models` hydrates every configured LLM. Models that cannot hydrate (missing API keys, etc.) are skipped with a log message.
@@ -82,7 +82,7 @@ The Discourse AI plugin ships a Ruby CLI under `plugins/discourse-ai/evals` that
 - Example:
 
   ```sh
-  ./run --dataset evals/cases/spam/spam_eval_dataset.csv --feature spam:inspect_posts --models gpt-4o-mini
+  bundle exec ruby ./run --dataset evals/cases/spam/spam_eval_dataset.csv --feature spam:inspect_posts --models gpt-4o-mini
   ```
 
 ## Writing eval cases
