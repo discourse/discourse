@@ -35,6 +35,7 @@
   display: inline-flex;
   align-items: center;
   margin-left: 0.5em;
+  flex-shrink: 0;
 
   svg {
     font-size: var(--font-down-2);
