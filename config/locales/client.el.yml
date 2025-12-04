@@ -2894,6 +2894,9 @@ el:
         unlist_topics: "Απόκρυψη Νημάτων"
         relist_topics: "Εμφάνιση Νημάτων"
         delete: "Διαγραφή Νημάτων"
+        delete_topics_count:
+          one: "Διαγραφή θέματος"
+          other: "Διαγραφή Νημάτων"
         dismiss: "Απόρριψη"
         dismiss_read: "Παράβλεψη όλων των αδιάβαστων"
         dismiss_button: "Απόρριψη..."

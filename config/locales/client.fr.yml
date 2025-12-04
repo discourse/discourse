@@ -3209,6 +3209,9 @@ fr:
         reset_bump_dates: "Réinitialiser la date d'actualisation"
         defer: "Marquer comme non lu"
         delete: "Supprimer les sujets"
+        delete_topics_count:
+          one: "Supprimer le sujet"
+          other: "Supprimer les sujets"
         dismiss: "Marquer comme vus"
         dismiss_read: "Marquer tous les sujets comme vus"
         dismiss_read_with_selected:
