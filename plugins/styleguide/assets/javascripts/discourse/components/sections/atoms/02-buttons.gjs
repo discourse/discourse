@@ -14,7 +14,9 @@ import DButton from "discourse/components/d-button";
 
 // Size classes: btn-large, btn-default, btn-small
 <template>
-  <DButton @icon="xmark" @disabled={{false}} class={{this.class}}/>
+  <DButton @icon="xmark" @disabled={{false}} class="btn-large" />
+  <DButton @icon="xmark" @disabled={{false}} class="btn-default" />
+  <DButton @icon="xmark" @disabled={{false}} class="btn-small" />
 </template>
     `;
   }
@@ -25,7 +27,9 @@ import DButton from "discourse/components/d-button";
 
 // Available states: normal, hover, disabled
 <template>
-  <DButton @icon="xmark" @disabled={{false}} class={{this.class}}/>
+  <DButton @icon="xmark" @disabled={{false}} class="btn-default" />
+  <DButton @icon="xmark" @disabled={{false}} class="btn-default btn-hover" />
+  <DButton @icon="xmark" @disabled={{true}} class="btn-default" />
 </template>
     `;
   }

@@ -3,6 +3,7 @@
 
 .styleguide {
   display: flex;
+  padding: 1rem 1rem;
 
   .styleguide-note {
     padding: 1em;
@@ -11,13 +12,12 @@
   }
 
   .styleguide-menu {
-    margin-top: 1em;
     flex: 1 0 0;
 
     ul {
       list-style: none;
-      margin-bottom: 1.5em;
-      margin-left: 0;
+      margin: 0;
+      margin-bottom: 2em;
 
       li.styleguide-heading {
         color: var(--primary-medium);
@@ -64,19 +64,15 @@
     }
 
     .styleguide-example {
-      output {
-        border: 1px dotted var(--content-border-color);
-        width: 100%;
-        padding: 1rem;
-        box-sizing: border-box;
-      }
+      border: 1px dotted var(--content-border-color);
+      background-color: var(--secondary);
+      padding: 1rem;
 
       .example-title {
         color: var(--primary-medium);
         font-size: var(--font-up-1);
-        font-weight: bold;
-        border-bottom: 1px solid var(--content-border-color);
-        margin-bottom: 1em;
+        border-bottom: 1px dotted var(--content-border-color);
+        margin-bottom: 1rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -124,24 +120,6 @@
 
     &.colors-examples {
       .styleguide-example {
-        display: flex;
-
-        .example-title {
-          min-width: 15%;
-          margin-right: 1em;
-          border-bottom: none;
-
-          &-text {
-            color: var(--primary);
-            text-transform: capitalize;
-          }
-
-          &-use-case {
-            font-size: var(--font-down-1);
-            display: block;
-          }
-        }
-
         .color-row {
           display: flex;
 
@@ -245,7 +223,7 @@
 }
 
 .styleguide__component {
-  border: 2px dotted var(--primary-low);
+  border: 1px dotted var(--content-border-color);
   margin-bottom: 2rem;
   position: relative;
 

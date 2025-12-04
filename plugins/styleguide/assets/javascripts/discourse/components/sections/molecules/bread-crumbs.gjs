@@ -15,7 +15,7 @@ import BreadCrumbs from "discourse/components/bread-crumbs";
 
   <template>
     <StyleguideExample
-      @title="category-breadcrumbs"
+      @title="<BreadCrumbs>"
       @code={{this.categoryBreadcrumbsCode}}
     >
       <BreadCrumbs @categories={{@dummy.categories}} @showTags={{false}} />

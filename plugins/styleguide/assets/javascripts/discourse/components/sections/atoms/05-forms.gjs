@@ -5,8 +5,7 @@ import StyleguideExample from "discourse/plugins/styleguide/discourse/components
 
 export default class Forms extends Component {
   get inputCode() {
-    return `
-import Form from "discourse/components/form";
+    return `import Form from "discourse/components/form";
 
 <template>
   <Form as |form|>
@@ -34,13 +33,11 @@ import Form from "discourse/components/form";
       <field.Password />
     </form.Field>
   </Form>
-</template>
-    `;
+</template>`;
   }
 
   get questionCode() {
-    return `
-import Form from "discourse/components/form";
+    return `import Form from "discourse/components/form";
 
 <template>
   <Form as |form|>
@@ -48,13 +45,11 @@ import Form from "discourse/components/form";
       <field.Question />
     </form.Field>
   </Form>
-</template>
-    `;
+</template>`;
   }
 
   get toggleCode() {
-    return `
-import Form from "discourse/components/form";
+    return `import Form from "discourse/components/form";
 
 <template>
   <Form as |form|>
@@ -62,13 +57,11 @@ import Form from "discourse/components/form";
       <field.Toggle />
     </form.Field>
   </Form>
-</template>
-    `;
+</template>`;
   }
 
   get composerCode() {
-    return `
-import Form from "discourse/components/form";
+    return `import Form from "discourse/components/form";
 
 <template>
   <Form as |form|>
@@ -76,13 +69,11 @@ import Form from "discourse/components/form";
       <field.Composer />
     </form.Field>
   </Form>
-</template>
-    `;
+</template>`;
   }
 
   get codeCode() {
-    return `
-import Form from "discourse/components/form";
+    return `import Form from "discourse/components/form";
 
 <template>
   <Form as |form|>
@@ -90,13 +81,11 @@ import Form from "discourse/components/form";
       <field.Code />
     </form.Field>
   </Form>
-</template>
-    `;
+</template>`;
   }
 
   get textareaCode() {
-    return `
-import Form from "discourse/components/form";
+    return `import Form from "discourse/components/form";
 
 <template>
   <Form as |form|>
@@ -104,13 +93,11 @@ import Form from "discourse/components/form";
       <field.Textarea />
     </form.Field>
   </Form>
-</template>
-    `;
+</template>`;
   }
 
   get selectCode() {
-    return `
-import Form from "discourse/components/form";
+    return `import Form from "discourse/components/form";
 
 <template>
   <Form as |form|>
@@ -121,13 +108,11 @@ import Form from "discourse/components/form";
       </field.Select>
     </form.Field>
   </Form>
-</template>
-    `;
+</template>`;
   }
 
   get checkboxGroupCode() {
-    return `
-import Form from "discourse/components/form";
+    return `import Form from "discourse/components/form";
 
 <template>
   <Form as |form|>
@@ -152,13 +137,11 @@ import Form from "discourse/components/form";
       </checkboxGroup.Field>
     </form.CheckboxGroup>
   </Form>
-</template>
-    `;
+</template>`;
   }
 
   get imageCode() {
-    return `
-import Form from "discourse/components/form";
+    return `import Form from "discourse/components/form";
 
 <template>
   <Form as |form|>
@@ -166,13 +149,11 @@ import Form from "discourse/components/form";
       <field.Image @type="avatar" />
     </form.Field>
   </Form>
-</template>
-    `;
+</template>`;
   }
 
   get iconCode() {
-    return `
-import Form from "discourse/components/form";
+    return `import Form from "discourse/components/form";
 
 <template>
   <Form as |form|>
@@ -180,13 +161,11 @@ import Form from "discourse/components/form";
       <field.Icon />
     </form.Field>
   </Form>
-</template>
-    `;
+</template>`;
   }
 
   get menuCode() {
-    return `
-import Form from "discourse/components/form";
+    return `import Form from "discourse/components/form";
 
 <template>
   <Form as |form data|>
@@ -198,13 +177,11 @@ import Form from "discourse/components/form";
       </field.Menu>
     </form.Field>
   </Form>
-</template>
-    `;
+</template>`;
   }
 
   get radioGroupCode() {
-    return `
-import Form from "discourse/components/form";
+    return `import Form from "discourse/components/form";
 
 <template>
   <Form as |form|>
@@ -220,13 +197,11 @@ import Form from "discourse/components/form";
       </field.RadioGroup>
     </form.Field>
   </Form>
-</template>
-    `;
+</template>`;
   }
 
   get sectionCode() {
-    return `
-import Form from "discourse/components/form";
+    return `import Form from "discourse/components/form";
 
 <template>
   <Form as |form|>
@@ -234,13 +209,11 @@ import Form from "discourse/components/form";
       Content
     </form.Section>
   </Form>
-</template>
-    `;
+</template>`;
   }
 
   get alertCode() {
-    return `
-import Form from "discourse/components/form";
+    return `import Form from "discourse/components/form";
 
 <template>
   <Form as |form|>
@@ -248,13 +221,11 @@ import Form from "discourse/components/form";
       You can edit this form.
     </form.Alert>
   </Form>
-</template>
-    `;
+</template>`;
   }
 
   get inputGroupCode() {
-    return `
-import Form from "discourse/components/form";
+    return `import Form from "discourse/components/form";
 
 <template>
   <Form as |form|>
@@ -267,13 +238,11 @@ import Form from "discourse/components/form";
       </inputGroup.Field>
     </form.InputGroup>
   </Form>
-</template>
-    `;
+</template>`;
   }
 
   get collectionCode() {
-    return `
-import { array, fn, hash } from "@ember/helper";
+    return `import { array, fn, hash } from "@ember/helper";
 import Form from "discourse/components/form";
 
 <template>
@@ -304,13 +273,11 @@ import Form from "discourse/components/form";
     </form.Collection>
 
   </Form>
-</template>
-    `;
+</template>`;
   }
 
   get rowColCode() {
-    return `
-import Form from "discourse/components/form";
+    return `import Form from "discourse/components/form";
 
 <template>
   <Form as |form|>
@@ -335,13 +302,11 @@ import Form from "discourse/components/form";
       </row.Col>
     </form.Row>
   </Form>
-</template>
-    `;
+</template>`;
   }
 
   get multilineCode() {
-    return `
-import Form from "discourse/components/form";
+    return `import Form from "discourse/components/form";
 
 <template>
   <Form as |form|>
@@ -369,13 +334,11 @@ import Form from "discourse/components/form";
       </row.Col>
     </form.Row>
   </Form>
-</template>
-    `;
+</template>`;
   }
 
   get validationCode() {
-    return `
-import Form from "discourse/components/form";
+    return `import Form from "discourse/components/form";
 
 <template>
   <Form @validateOn="change" as |form|>
@@ -400,8 +363,7 @@ import Form from "discourse/components/form";
 
     <form.Submit />
   </Form>
-</template>
-    `;
+</template>`;
   }
 
   <template>

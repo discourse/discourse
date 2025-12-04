@@ -25,23 +25,19 @@ export default class OTP extends Component {
   }
 
   get codeSample1() {
-    return `
-import DOTP from "discourse/components/d-otp";
+    return `import DOTP from "discourse/components/d-otp";
 
 <template>
   <DOTP @onFill={{this.filled}} @onChange={{this.changed}} />
-</template>
-    `;
+</template>`;
   }
 
   get codeSample2() {
-    return `
-import DOTP from "discourse/components/d-otp";
+    return `import DOTP from "discourse/components/d-otp";
 
 <template>
   <DOTP @slots={{4}} />
-</template>
-    `;
+</template>`;
   }
 
   <template>

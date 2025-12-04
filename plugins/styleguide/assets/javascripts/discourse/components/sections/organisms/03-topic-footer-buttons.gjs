@@ -42,12 +42,14 @@ import DButton from "discourse/components/d-button";
       @title="<TopicFooterButtons> - anonymous"
       @code={{this.anonymousCode}}
     >
-      <div id="topic-footer-buttons">
-        <DButton
-          @icon="reply"
-          @label="topic.reply.title"
-          class="btn-primary pull-right"
-        />
+      <div class="styleguide-anon">
+        <div id="topic-footer-buttons">
+          <DButton
+            @icon="reply"
+            @label="topic.reply.title"
+            class="btn-primary pull-right"
+          />
+        </div>
       </div>
     </StyleguideExample>
   </template>

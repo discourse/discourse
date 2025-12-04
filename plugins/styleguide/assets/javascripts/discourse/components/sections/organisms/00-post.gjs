@@ -13,7 +13,10 @@ export default class PostOrganism extends Component {
 
   <template>
     <StyleguideExample @title="<Post>" @code={{this.postCode}}>
-      <Post @post={{@dummy.postModel.transformedPost}} />
+      <Post
+        @post={{@dummy.postModel.transformedPost}}
+        @canCreatePost={{true}}
+      />
     </StyleguideExample>
   </template>
 }
