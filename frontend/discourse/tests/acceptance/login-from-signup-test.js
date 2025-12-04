@@ -27,7 +27,7 @@ acceptance("Login Fields - From Signup Form", function () {
       .hasValue("testuser", "login name is autofilled with username");
   });
 
-  test("prefers email over username when both are filled", async function (assert) {
+  test("prefers email over username when both email and username fields have been filled", async function (assert) {
     await visit("/");
     await click("header .sign-up-button");
     await fillIn("#new-account-email", "test@example.com");
