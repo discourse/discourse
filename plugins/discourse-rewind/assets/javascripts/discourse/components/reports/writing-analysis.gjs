@@ -69,104 +69,113 @@ export default class WritingAnalysis extends Component {
     }
   }
 
+  get minimumDataThresholdMet() {
+    return (
+      this.args.report.data.total_words >= 100 &&
+      this.args.report.data.total_posts >= 5
+    );
+  }
+
   <template>
-    <div
-      class="rewind-report-page --writing-analysis"
-      {{didInsert this.setupKeyListener}}
-      {{willDestroy this.teardownKeyListener}}
-    >
-      <h2 class="rewind-report-title">
-        {{i18n "discourse_rewind.reports.writing_analysis.title"}}
-      </h2>
+    {{#if this.minimumDataThresholdMet}}
+      <div
+        class="rewind-report-page --writing-analysis"
+        {{didInsert this.setupKeyListener}}
+        {{willDestroy this.teardownKeyListener}}
+      >
+        <h2 class="rewind-report-title">
+          {{i18n "discourse_rewind.reports.writing_analysis.title"}}
+        </h2>
 
-      <div class="writing-analysis">
+        <div class="writing-analysis">
 
-        <div class="writing-analysis__menubar">
-          <span class="writing-analysis__menu-item">{{i18n
-              "discourse_rewind.reports.writing_analysis.menu_file"
-            }}</span>
-          <span class="writing-analysis__menu-item">{{i18n
-              "discourse_rewind.reports.writing_analysis.menu_other"
-            }}</span>
-          <span class="writing-analysis__menu-item">{{i18n
-              "discourse_rewind.reports.writing_analysis.menu_additional"
-            }}</span>
-          <span
-            class="writing-analysis__menu-item writing-analysis__menu-item--right"
-          >{{i18n
-              "discourse_rewind.reports.writing_analysis.menu_opening"
-            }}</span>
-        </div>
+          <div class="writing-analysis__menubar">
+            <span class="writing-analysis__menu-item">{{i18n
+                "discourse_rewind.reports.writing_analysis.menu_file"
+              }}</span>
+            <span class="writing-analysis__menu-item">{{i18n
+                "discourse_rewind.reports.writing_analysis.menu_other"
+              }}</span>
+            <span class="writing-analysis__menu-item">{{i18n
+                "discourse_rewind.reports.writing_analysis.menu_additional"
+              }}</span>
+            <span
+              class="writing-analysis__menu-item writing-analysis__menu-item--right"
+            >{{i18n
+                "discourse_rewind.reports.writing_analysis.menu_opening"
+              }}</span>
+          </div>
 
-        <div class="writing-analysis__frame">
+          <div class="writing-analysis__frame">
 
-          <div class="writing-analysis__header-row">
+            <div class="writing-analysis__header-row">
 
-            <div class="writing-analysis__helpbox">
-              {{i18n "discourse_rewind.reports.writing_analysis.help_text"}}
-            </div>
-
-            <div class="writing-analysis__release">
-              <div class="writing-analysis__release-name">{{i18n
-                  "discourse_rewind.reports.writing_analysis.app_name"
-                }}</div>
-              <div class="writing-analysis__release-meta">
-                {{i18n
-                  "discourse_rewind.reports.writing_analysis.release_info"
-                }}
-                <span>&lt;3</span>
+              <div class="writing-analysis__helpbox">
+                {{i18n "discourse_rewind.reports.writing_analysis.help_text"}}
               </div>
+
+              <div class="writing-analysis__release">
+                <div class="writing-analysis__release-name">{{i18n
+                    "discourse_rewind.reports.writing_analysis.app_name"
+                  }}</div>
+                <div class="writing-analysis__release-meta">
+                  {{i18n
+                    "discourse_rewind.reports.writing_analysis.release_info"
+                  }}
+                  <span>&lt;3</span>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="writing-analysis__stats">
+
+              <div class="writing-analysis__stats-col">
+                <div class="writing-analysis__stats-label">{{i18n
+                    "discourse_rewind.reports.writing_analysis.total_words"
+                  }}</div>
+                <div
+                  class="writing-analysis__stats-value"
+                >{{@report.data.total_words}}</div>
+
+                <div class="writing-analysis__stats-label">{{i18n
+                    "discourse_rewind.reports.writing_analysis.total_posts"
+                  }}</div>
+                <div
+                  class="writing-analysis__stats-value"
+                >{{@report.data.total_posts}}</div>
+              </div>
+
+              <div class="writing-analysis__stats-col">
+                <div class="writing-analysis__stats-label">{{i18n
+                    "discourse_rewind.reports.writing_analysis.avg_post_length"
+                  }}</div>
+                <div
+                  class="writing-analysis__stats-value"
+                >{{@report.data.average_post_length}}</div>
+
+                <div class="writing-analysis__stats-label">{{i18n
+                    "discourse_rewind.reports.writing_analysis.readability_score_label"
+                  }}</div>
+                <div
+                  class="writing-analysis__stats-value"
+                >{{@report.data.readability_score}}</div>
+              </div>
+
+              <div class="writing-analysis__stats-col">
+                <div class="writing-analysis__stats-label">{{i18n
+                    "discourse_rewind.reports.writing_analysis.readability_level"
+                  }}</div>
+                <div
+                  class="writing-analysis__stats-value"
+                >{{this.scoreLabel}}</div>
+              </div>
+
             </div>
 
           </div>
-
-          <div class="writing-analysis__stats">
-
-            <div class="writing-analysis__stats-col">
-              <div class="writing-analysis__stats-label">{{i18n
-                  "discourse_rewind.reports.writing_analysis.total_words"
-                }}</div>
-              <div
-                class="writing-analysis__stats-value"
-              >{{@report.data.total_words}}</div>
-
-              <div class="writing-analysis__stats-label">{{i18n
-                  "discourse_rewind.reports.writing_analysis.total_posts"
-                }}</div>
-              <div
-                class="writing-analysis__stats-value"
-              >{{@report.data.total_posts}}</div>
-            </div>
-
-            <div class="writing-analysis__stats-col">
-              <div class="writing-analysis__stats-label">{{i18n
-                  "discourse_rewind.reports.writing_analysis.avg_post_length"
-                }}</div>
-              <div
-                class="writing-analysis__stats-value"
-              >{{@report.data.average_post_length}}</div>
-
-              <div class="writing-analysis__stats-label">{{i18n
-                  "discourse_rewind.reports.writing_analysis.readability_score_label"
-                }}</div>
-              <div
-                class="writing-analysis__stats-value"
-              >{{@report.data.readability_score}}</div>
-            </div>
-
-            <div class="writing-analysis__stats-col">
-              <div class="writing-analysis__stats-label">{{i18n
-                  "discourse_rewind.reports.writing_analysis.readability_level"
-                }}</div>
-              <div
-                class="writing-analysis__stats-value"
-              >{{this.scoreLabel}}</div>
-            </div>
-
-          </div>
-
         </div>
       </div>
-    </div>
+    {{/if}}
   </template>
 }

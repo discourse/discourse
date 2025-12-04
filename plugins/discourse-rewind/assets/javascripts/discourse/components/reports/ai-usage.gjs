@@ -36,6 +36,10 @@ export default class AiUsage extends Component {
       .slice(0, 3);
   }
 
+  get minimumDataThresholdMet() {
+    return this.totalRequests >= 10 && this.totalTokens >= 1000;
+  }
+
   @action
   formatFeatureName(featureName) {
     return featureName.replace(/_/g, " ");
@@ -88,89 +92,93 @@ export default class AiUsage extends Component {
   }
 
   <template>
-    <div class="rewind-report-page --ai-usage">
-      <div class="matrix-container">
-        <canvas
-          class="matrix-rain"
-          {{didInsert this.setupMatrix}}
-          {{willDestroy this.cleanupMatrix}}
-        ></canvas>
+    {{#if this.minimumDataThresholdMet}}
+      <div class="rewind-report-page --ai-usage">
+        <div class="matrix-container">
+          <canvas
+            class="matrix-rain"
+            {{didInsert this.setupMatrix}}
+            {{willDestroy this.cleanupMatrix}}
+          ></canvas>
 
-        <div class="matrix-content">
-          <h2 class="matrix-title">
-            <div class="matrix-subhead">
-              {{i18n
-                "discourse_rewind.reports.ai_usage.wake_up"
-                username=this.currentUser.username
-              }}
-            </div>
-            {{i18n "discourse_rewind.reports.ai_usage.system_title"}}
-          </h2>
+          <div class="matrix-content">
+            <h2 class="matrix-title">
+              <div class="matrix-subhead">
+                {{i18n
+                  "discourse_rewind.reports.ai_usage.wake_up"
+                  username=this.currentUser.username
+                }}
+              </div>
+              {{i18n "discourse_rewind.reports.ai_usage.system_title"}}
+            </h2>
 
-          <div class="matrix-stats">
-            <div class="matrix-stat">
-              <div class="matrix-stat__label">
-                {{i18n "discourse_rewind.reports.ai_usage.total_requests"}}
+            <div class="matrix-stats">
+              <div class="matrix-stat">
+                <div class="matrix-stat__label">
+                  {{i18n "discourse_rewind.reports.ai_usage.total_requests"}}
+                </div>
+                <div class="matrix-stat__value">
+                  {{number this.totalRequests}}
+                </div>
               </div>
-              <div class="matrix-stat__value">
-                {{number this.totalRequests}}
+
+              <div class="matrix-stat">
+                <div class="matrix-stat__label">
+                  {{i18n "discourse_rewind.reports.ai_usage.total_tokens"}}
+                </div>
+                <div class="matrix-stat__value">{{number
+                    this.totalTokens
+                  }}</div>
+              </div>
+
+              <div class="matrix-stat">
+                <div class="matrix-stat__label">
+                  {{i18n "discourse_rewind.reports.ai_usage.success_rate"}}
+                </div>
+                <div class="matrix-stat__value">
+                  <span class="number">
+                    {{this.successRate}}%
+                  </span>
+                </div>
               </div>
             </div>
 
-            <div class="matrix-stat">
-              <div class="matrix-stat__label">
-                {{i18n "discourse_rewind.reports.ai_usage.total_tokens"}}
+            {{#if this.featureUsage.length}}
+              <div class="matrix-section">
+                <div class="matrix-section__title">&gt;
+                  {{i18n "discourse_rewind.reports.ai_usage.section_features"}}
+                </div>
+                <div class="matrix-list">
+                  {{#each this.featureUsage as |entry|}}
+                    <div class="matrix-list__item">
+                      <span class="matrix-list__name">
+                        {{this.formatFeatureName (get entry "0")}}
+                      </span>
+                      <span class="matrix-list__count">{{get entry "1"}}</span>
+                    </div>
+                  {{/each}}
+                </div>
               </div>
-              <div class="matrix-stat__value">{{number this.totalTokens}}</div>
-            </div>
+            {{/if}}
 
-            <div class="matrix-stat">
-              <div class="matrix-stat__label">
-                {{i18n "discourse_rewind.reports.ai_usage.success_rate"}}
+            {{#if this.modelUsage.length}}
+              <div class="matrix-section">
+                <div class="matrix-section__title">&gt;
+                  {{i18n "discourse_rewind.reports.ai_usage.section_models"}}
+                </div>
+                <div class="matrix-list">
+                  {{#each this.modelUsage as |entry|}}
+                    <div class="matrix-list__item">
+                      <span class="matrix-list__name">{{get entry "0"}}</span>
+                      <span class="matrix-list__count">{{get entry "1"}}</span>
+                    </div>
+                  {{/each}}
+                </div>
               </div>
-              <div class="matrix-stat__value">
-                <span class="number">
-                  {{this.successRate}}%
-                </span>
-              </div>
-            </div>
+            {{/if}}
           </div>
-
-          {{#if this.featureUsage.length}}
-            <div class="matrix-section">
-              <div class="matrix-section__title">&gt;
-                {{i18n "discourse_rewind.reports.ai_usage.section_features"}}
-              </div>
-              <div class="matrix-list">
-                {{#each this.featureUsage as |entry|}}
-                  <div class="matrix-list__item">
-                    <span class="matrix-list__name">
-                      {{this.formatFeatureName (get entry "0")}}
-                    </span>
-                    <span class="matrix-list__count">{{get entry "1"}}</span>
-                  </div>
-                {{/each}}
-              </div>
-            </div>
-          {{/if}}
-
-          {{#if this.modelUsage.length}}
-            <div class="matrix-section">
-              <div class="matrix-section__title">&gt;
-                {{i18n "discourse_rewind.reports.ai_usage.section_models"}}
-              </div>
-              <div class="matrix-list">
-                {{#each this.modelUsage as |entry|}}
-                  <div class="matrix-list__item">
-                    <span class="matrix-list__name">{{get entry "0"}}</span>
-                    <span class="matrix-list__count">{{get entry "1"}}</span>
-                  </div>
-                {{/each}}
-              </div>
-            </div>
-          {{/if}}
         </div>
       </div>
-    </div>
+    {{/if}}
   </template>
 }
