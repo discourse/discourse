@@ -510,7 +510,10 @@ class PostRevisor
     @post.link_post_uploads
     @post.save_reply_relationships
 
-    @editor.increment_post_edits_count if @post_successfully_saved
+    # we dont want to increment post count on user merge
+    if @post_successfully_saved && @editor.id != Discourse::SYSTEM_USER_ID
+      @editor.increment_post_edits_count
+    end
 
     # post owner changed
     if prev_owner && new_owner && prev_owner != new_owner
