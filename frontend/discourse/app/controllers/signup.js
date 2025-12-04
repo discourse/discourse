@@ -544,16 +544,7 @@ export default class SignupPageController extends Controller {
 
   @action
   goToLogin() {
-    const email = this.accountEmail || "";
-    const username = this.accountUsername || "";
-
-    let loginName;
-    if (email.length > 0) {
-      loginName = email;
-    } else if (username.length > 0) {
-      loginName = username;
-    }
-
+    const loginName = this.accountEmail || this.accountUsername;
     this.send("showLogin", { loginName });
   }
 
