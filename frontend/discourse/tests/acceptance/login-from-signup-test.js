@@ -15,7 +15,7 @@ acceptance("Login Fields - From Signup Form", function () {
       .hasValue("test@example.com", "login name is autofilled with email");
   });
 
-  test("autofills login field with signup username value when no email", async function (assert) {
+  test("autofills login field with signup username value when email field is empty", async function (assert) {
     await visit("/");
     await click("header .sign-up-button");
     await fillIn("#new-account-username", "testuser");
