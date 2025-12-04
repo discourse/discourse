@@ -42,7 +42,10 @@ RSpec.describe MiniSchedulerLongRunningJobLogger do
 
   before { Rails.logger.broadcast_to(fake_logger) }
 
-  after { Rails.logger.stop_broadcasting_to(fake_logger) }
+  after do
+    Rails.logger.stop_broadcasting_to(fake_logger)
+    MiniScheduler.redis.flushdb
+  end
 
   it "logs long running jobs" do
     with_running_scheduled_job(Every10MinutesJob) do
