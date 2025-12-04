@@ -52,7 +52,7 @@
     flex: 1;
     margin-top: 1.5em;
 
-    &:hover {
+    &.--opened {
       z-index: 4;
 
       .folder-bg,
