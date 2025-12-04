@@ -175,7 +175,7 @@ export default class LocalLoginForm extends Component {
         <div class="input-group" {{didInsert this.passkeyConditionalLogin}}>
           <Input
             {{on "focusin" this.scrollInputIntoView}}
-            value={{@loginName}}
+            @value={{@loginName}}
             @type="email"
             id="login-account-name"
             class={{valueEntered @loginName}}

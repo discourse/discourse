@@ -543,6 +543,12 @@ export default class SignupPageController extends Controller {
   }
 
   @action
+  goToLogin() {
+    const loginName = this.accountEmail || this.accountUsername;
+    this.send("showLogin", { loginName });
+  }
+
+  @action
   createAccount() {
     this.set("flash", "");
     this.nameValidationHelper.forceValidationReason = true;
