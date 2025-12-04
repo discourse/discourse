@@ -112,6 +112,9 @@ class LlmModel < ActiveRecord::Base
           values: %w[default minimal low medium high],
           default: "default",
         },
+        disable_temperature: :checkbox,
+        disable_top_p: :checkbox,
+        disable_streaming: :checkbox,
       },
       hugging_face: {
         disable_system_prompt: :checkbox,
