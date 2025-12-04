@@ -20,10 +20,7 @@ RSpec.describe Chat::MessageLink do
       expect(Chat::MessageLink.count).to eq(1)
       link = Chat::MessageLink.first
       expect(link.url).to eq("https://github.com/discourse/discourse/pull/123")
-      expect(link.domain).to eq("github.com")
       expect(link.chat_message_id).to eq(message.id)
-      expect(link.chat_channel_id).to eq(channel.id)
-      expect(link.user_id).to eq(user.id)
     end
 
     it "extracts multiple links from a message" do

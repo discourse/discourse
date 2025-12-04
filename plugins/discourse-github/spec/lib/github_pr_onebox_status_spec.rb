@@ -50,6 +50,7 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
           resp = open_pr_response
           resp["merged"] = true
           stub_request(:get, api_uri).to_return(status: 200, body: MultiJson.dump(resp))
+          stub_request(:get, reviews_api_uri).to_return(status: 200, body: "[]")
         end
 
         it "includes merged status" do
@@ -62,6 +63,7 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
           resp = open_pr_response
           resp["state"] = "closed"
           stub_request(:get, api_uri).to_return(status: 200, body: MultiJson.dump(resp))
+          stub_request(:get, reviews_api_uri).to_return(status: 200, body: "[]")
         end
 
         it "includes closed status" do
@@ -93,6 +95,27 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
 
         it "includes approved status" do
           expect(onebox_html).to include("--gh-status-approved")
+        end
+      end
+
+      context "when PR has changes requested" do
+        before do
+          stub_request(:get, api_uri).to_return(status: 200, body: MultiJson.dump(open_pr_response))
+          reviews = [
+            {
+              "user" => {
+                "id" => 1,
+              },
+              "state" => "CHANGES_REQUESTED",
+              "submitted_at" => Time.now.iso8601,
+            },
+          ]
+          stub_request(:get, reviews_api_uri).to_return(status: 200, body: MultiJson.dump(reviews))
+        end
+
+        it "shows as open status (not approved)" do
+          expect(onebox_html).to include("--gh-status-open")
+          expect(onebox_html).not_to include("--gh-status-approved")
         end
       end
 

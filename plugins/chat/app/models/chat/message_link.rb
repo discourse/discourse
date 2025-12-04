@@ -5,13 +5,11 @@ module Chat
     self.table_name = "chat_message_links"
 
     belongs_to :chat_message, class_name: "Chat::Message"
-    belongs_to :chat_channel, class_name: "Chat::Channel"
-    belongs_to :user
 
     validates :url, presence: true, length: { maximum: 500 }
 
     def self.extract_from(message)
-      return if message.blank? || message.user_id.blank? || message.deleted_at.present?
+      return if message.blank? || message.deleted_at.present?
 
       current_urls = []
 
@@ -26,28 +24,20 @@ module Chat
           next if parsed.host.blank? || parsed.host.length > 100
 
           current_urls << url
-          upsert_link(message, url, parsed.host)
+          upsert_link(message, url)
         end
 
       cleanup_entries(message, current_urls)
     end
 
-    def self.upsert_link(message, url, domain)
+    def self.upsert_link(message, url)
       sql = <<~SQL
-        INSERT INTO chat_message_links (chat_message_id, chat_channel_id, user_id, url, domain, created_at, updated_at)
-        VALUES (:chat_message_id, :chat_channel_id, :user_id, :url, :domain, :now, :now)
+        INSERT INTO chat_message_links (chat_message_id, url, created_at, updated_at)
+        VALUES (:chat_message_id, :url, :now, :now)
         ON CONFLICT (chat_message_id, url) DO NOTHING
       SQL
 
-      DB.exec(
-        sql,
-        chat_message_id: message.id,
-        chat_channel_id: message.chat_channel_id,
-        user_id: message.user_id,
-        url: url,
-        domain: domain,
-        now: Time.current,
-      )
+      DB.exec(sql, chat_message_id: message.id, url: url, now: Time.current)
     end
 
     def self.cleanup_entries(message, current_urls)
@@ -63,3 +53,20 @@ module Chat
     end
   end
 end
+
+# == Schema Information
+#
+# Table name: chat_message_links
+#
+#  id              :bigint           not null, primary key
+#  url             :string(500)      not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  chat_message_id :bigint           not null
+#
+# Indexes
+#
+#  index_chat_message_links_on_chat_message_id  (chat_message_id)
+#  index_chat_message_links_on_url              (url)
+#  unique_chat_message_links                    (chat_message_id,url) UNIQUE
+#

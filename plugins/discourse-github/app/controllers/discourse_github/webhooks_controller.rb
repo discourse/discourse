@@ -31,6 +31,7 @@ module DiscourseGithub
       signature = request.headers["X-Hub-Signature-256"]
       return false if signature.blank?
 
+      request.body.rewind
       body = request.body.read
       expected = "sha256=" + OpenSSL::HMAC.hexdigest("SHA256", secret, body)
 

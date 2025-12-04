@@ -112,6 +112,9 @@ module Onebox
         ::MultiJson.load(
           URI.parse(url).open({ read_timeout: timeout }.merge(github_auth_header(match[:org]))),
         )
+      rescue OpenURI::HTTPError => e
+        Rails.logger.warn("GitHub API error: #{e.io.status[0]} fetching #{url}")
+        raise
       end
 
       def fetch_pr_status(pr_data)
