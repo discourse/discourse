@@ -24,7 +24,7 @@ export default class CustomReaction extends RestModel {
       // Original reaction data
       ...reaction,
       // Flatten post fields to top level for PostListItem
-      id: reaction.post.id,
+      post_id: reaction.post.id,
       user_id: reaction.post.user_id,
       username: reaction.post.username,
       name: reaction.post.name,
