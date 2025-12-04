@@ -11,20 +11,17 @@ export default class SiteHeaderStyleguideExample extends Component {
   }
 
   get headerCode() {
-    return `
-import Header from "discourse/components/header";
+    return `import Header from "discourse/components/header";
 
 <template>
   <div inert class="d-header-wrap">
     <Header @sidebarEnabled={{this.sidebarEnabled}} />
   </div>
-</template>
-    `;
+</template>`;
   }
 
   get headerInTopicCode() {
-    return `
-import Header from "discourse/components/header";
+    return `import Header from "discourse/components/header";
 
 <template>
   <div inert class="d-header-wrap">
@@ -34,8 +31,7 @@ import Header from "discourse/components/header";
       @topicInfoVisible={{true}}
     />
   </div>
-</template>
-    `;
+</template>`;
   }
 
   <template>
