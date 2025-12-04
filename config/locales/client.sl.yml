@@ -2305,6 +2305,11 @@ sl:
         unlist_topics: "Izloči temo iz seznamov"
         relist_topics: "Postavi temo nazaj na seznam"
         delete: "Izbriši teme"
+        delete_topics_count:
+          one: "Izbriši temo"
+          two: "Izbriši teme"
+          few: "Izbriši teme"
+          other: "Izbriši teme"
         dismiss: "Opusti"
         dismiss_read: "Opusti vse neprebrane"
         dismiss_button: "Opusti"

@@ -3090,6 +3090,8 @@ zh_CN:
         reset_bump_dates: "重置顶帖日期"
         defer: "标记为未读"
         delete: "删除话题"
+        delete_topics_count:
+          other: "删除话题"
         dismiss: "忽略"
         dismiss_read: "忽略所有未读话题"
         dismiss_read_with_selected:

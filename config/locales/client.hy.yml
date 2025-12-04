@@ -2548,6 +2548,9 @@ hy:
         unlist_topics: "Թեմաները Ցուցակից Հանել"
         relist_topics: "Վերացանկավորել Թեմաները"
         delete: "Ջնջել Թեմաները"
+        delete_topics_count:
+          one: "Ջնջել Թեման"
+          other: "Ջնջել Թեմաները"
         dismiss: "Չեղարկել"
         dismiss_read: "Չեղարկել բոլոր չկարդացածները"
         dismiss_button: "Չեղարկել..."

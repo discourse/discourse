@@ -3868,6 +3868,13 @@ ar:
         reset_bump_dates: "إعادة تعيين تواريخ الرفع"
         defer: "وضع علامة كغير مقروءة"
         delete: "حذف الموضوعات"
+        delete_topics_count:
+          zero: "حذف الموضوعات"
+          one: "حذف الموضوع"
+          two: "حذف الموضوعات"
+          few: "حذف الموضوعات"
+          many: "حذف الموضوعات"
+          other: "حذف الموضوعات"
         dismiss: "تجاهل"
         dismiss_read: "تجاهل كل الموضوعات غير المقروءة"
         dismiss_read_with_selected:

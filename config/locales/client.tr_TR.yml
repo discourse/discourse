@@ -3198,6 +3198,9 @@ tr_TR:
         reset_bump_dates: "Üste sıçratma tarihlerini sıfırla"
         defer: "Okunmamış olarak işaretle"
         delete: "Konuları sil"
+        delete_topics_count:
+          one: "Konuyu Sil"
+          other: "Konuları sil"
         dismiss: "Kapat"
         dismiss_read: "Tüm okunmamışları kapat"
         dismiss_read_with_selected:

@@ -1868,6 +1868,10 @@ sr:
       bulk:
         select_all: "Izaberi sve"
         delete: "Obriši Teme"
+        delete_topics_count:
+          one: "Obriši temu"
+          few: "Obriši Teme"
+          other: "Obriši Teme"
         dismiss: "Odbaci"
         dismiss_new: "Odbaci Novo"
         toggle: "uključi/isključi grupni odabir tema"

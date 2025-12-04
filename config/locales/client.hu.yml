@@ -3219,6 +3219,9 @@ hu:
         reset_bump_dates: "Előrehozási dátumok alaphelyzetbe állítása"
         defer: "Megjelölés olvasatlanként"
         delete: "Témák törlése"
+        delete_topics_count:
+          one: "Téma törlése"
+          other: "Témák törlése"
         dismiss: "Elvetés"
         dismiss_read: "Olvasatlan üzenetek elvetése"
         dismiss_read_with_selected:

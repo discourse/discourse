@@ -2100,6 +2100,9 @@ gl:
         unlist_topics: "Retirar temas da listaxe"
         relist_topics: "Refacer a listaxe de temas"
         delete: "Eliminar temas"
+        delete_topics_count:
+          one: "Eliminar tema"
+          other: "Eliminar temas"
         dismiss: "Desbotar"
         dismiss_read: "Desbotar os non lidos"
         dismiss_button: "Desbotar…"

@@ -3197,6 +3197,9 @@ es:
         reset_bump_dates: "Restablecer fechas de reflote"
         defer: "Marcar como no leído"
         delete: "Eliminar temas"
+        delete_topics_count:
+          one: "Eliminar tema"
+          other: "Eliminar temas"
         dismiss: "Descartar"
         dismiss_read: "Descartar todos los temas sin leer"
         dismiss_read_with_selected:

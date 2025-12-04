@@ -3377,6 +3377,10 @@ hr:
         reset_bump_dates: "Resetiraj datum obnove"
         defer: "Označi kao nepročitano"
         delete: "Obriši teme"
+        delete_topics_count:
+          one: "Obriši temu"
+          few: "Obriši teme"
+          other: "Obriši teme"
         dismiss: "Skloni"
         dismiss_read: "Skloni sve nepročitano"
         dismiss_read_with_selected:

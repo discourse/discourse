@@ -2749,6 +2749,9 @@ da:
         reset_bump_dates: "Nulstil bump datoer"
         defer: "Markér som ulæst"
         delete: "Slet emner"
+        delete_topics_count:
+          one: "Slet emne"
+          other: "Slet emner"
         dismiss: "Skjul"
         dismiss_read: "Afvis alle ulæste"
         dismiss_button: "Afvis..."

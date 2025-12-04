@@ -1874,6 +1874,10 @@ lv:
         unlist_topics: "Izņemt no sarakstiem tēmas"
         relist_topics: "Atkal padarīt tēmas redzamas sarakstiem"
         delete: "Dzēst tēmas"
+        delete_topics_count:
+          zero: "Dzēst tēmas"
+          one: "Dzēst tēmu"
+          other: "Dzēst tēmas"
         dismiss: "Nerādīt"
         dismiss_read: "Nerādīt visu neizlasīto"
         dismiss_button: "Nerādīt..."

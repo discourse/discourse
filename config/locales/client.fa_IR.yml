@@ -2989,6 +2989,9 @@ fa_IR:
         reset_bump_dates: "بازنشانی تاریخ بالا آوردن"
         defer: "علامت گذاری به عنوان خوانده نشده"
         delete: "حذف موضوعات"
+        delete_topics_count:
+          one: "پاک کردن موضوع"
+          other: "حذف موضوعات"
         dismiss: "پنهان کردن"
         dismiss_read: "پنهان کردن تمامی خوانده نشده ها"
         dismiss_read_with_selected:

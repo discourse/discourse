@@ -3597,6 +3597,11 @@ uk:
         reset_bump_dates: "Скинути дату підняття"
         defer: "Позначити як непрочитане"
         delete: "Видалити теми"
+        delete_topics_count:
+          one: "Видалити тему"
+          few: "Видалити теми"
+          many: "Видалити теми"
+          other: "Видалити теми"
         dismiss: "Відхилити"
         dismiss_read: "Відхилити всі непрочитані"
         dismiss_read_with_selected:

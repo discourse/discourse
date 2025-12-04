@@ -2366,6 +2366,9 @@ bg:
         clear_all: "Изчисти всички"
         unlist_topics: "Непоказани теми"
         delete: "Изтрий темите"
+        delete_topics_count:
+          one: "Изтрий темата"
+          other: "Изтрий темите"
         dismiss: "Отмени"
         dismiss_read: "Отхвърли всички непрочетени"
         dismiss_button: "Отмени..."

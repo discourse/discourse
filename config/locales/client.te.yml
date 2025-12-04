@@ -2626,6 +2626,9 @@ te:
         relist_topics: "విషయాలను మళ్లీ జాబితా చేయండి"
         reset_bump_dates: "బంప్ తేదీలను రీసెట్ చేయండి"
         delete: "విషయాలను తొలగించండి"
+        delete_topics_count:
+          one: "విషయాన్ని తొలగించండి"
+          other: "విషయాలను తొలగించండి"
         dismiss: "రద్దుచేయండి"
         dismiss_read: "చదవనివన్నీ తీసివేయండి"
         dismiss_read_with_selected:

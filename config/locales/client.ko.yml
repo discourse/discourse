@@ -2347,6 +2347,8 @@ ko:
         relist_topics: "목록에서 주제 다시 표시"
         reset_bump_dates: "끌어올림 날짜 초기화"
         delete: "글 삭제"
+        delete_topics_count:
+          other: "글 삭제"
         dismiss: "무시"
         dismiss_read: "읽지 않은 항목 모두 무시"
         dismiss_read_with_selected:

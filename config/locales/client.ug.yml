@@ -3273,6 +3273,9 @@ ug:
         reset_bump_dates: "چوققىلانغان چېسلانى ئەسلىگە قايتۇر"
         defer: "ئوقۇلمىغان بەلگىسى سال"
         delete: "تېما ئۆچۈر"
+        delete_topics_count:
+          one: "تېما ئۆچۈر"
+          other: "تېما ئۆچۈر"
         dismiss: "پەرۋا قىلما"
         dismiss_read: "ئوقۇلمىغاننىڭ ھەممىسگە پەرۋا قىلما"
         dismiss_read_with_selected:

@@ -1939,6 +1939,9 @@ ca:
         unlist_topics: "Fes temes invisibles"
         relist_topics: "Torna a llistar els temes"
         delete: "Suprimeix temes"
+        delete_topics_count:
+          one: "Suprimeix tema"
+          other: "Suprimeix temes"
         dismiss: "Descarta-ho"
         dismiss_read: "Descarta tots els llegits"
         dismiss_button: "Descarta-ho..."

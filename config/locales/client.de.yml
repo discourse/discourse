@@ -3243,6 +3243,9 @@ de:
         reset_bump_dates: "„Nach oben verschieben“-Zeitangaben zurücksetzen"
         defer: "Als ungelesen markieren"
         delete: "Themen löschen"
+        delete_topics_count:
+          one: "Thema löschen"
+          other: "Themen löschen"
         dismiss: "Ignorieren"
         dismiss_read: "Blende alle ungelesenen Beiträge aus"
         dismiss_read_with_selected:

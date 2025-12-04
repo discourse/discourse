@@ -2826,6 +2826,9 @@ nb_NO:
         reset_bump_dates: "Tilbakestill støtdatoer"
         defer: "Merk ulest"
         delete: "Slett emner"
+        delete_topics_count:
+          one: "Slett emne"
+          other: "Slett emner"
         dismiss: "Avvis"
         dismiss_read: "Avvis alle uleste"
         dismiss_read_with_selected:

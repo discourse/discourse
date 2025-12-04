@@ -3141,6 +3141,9 @@ pt:
         unlist_topics: "Remover Tópicos da Lista"
         relist_topics: "Voltar a Listar Tópicos"
         delete: "Eliminar Tópicos"
+        delete_topics_count:
+          one: "Eliminar Tópico"
+          other: "Eliminar Tópicos"
         dismiss: "Marcar Visto"
         dismiss_read: "Marcar todos os não lidos como vistos"
         dismiss_read_with_selected:

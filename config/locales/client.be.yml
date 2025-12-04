@@ -1424,6 +1424,11 @@ be:
       bulk:
         select_all: "выбраць усе"
         delete: "Выдаліць тэмы"
+        delete_topics_count:
+          one: "Выдаліць тэму"
+          few: "Выдаліць тэмы"
+          many: "Выдаліць тэмы"
+          other: "Выдаліць тэмы"
         dismiss_read: "Пазначыць усе як прачытаныя"
         dismiss_new: "Dismiss New"
         toggle: "перамыкач масавай дзеянні над тэмамі"
