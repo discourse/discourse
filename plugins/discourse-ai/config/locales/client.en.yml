@@ -926,6 +926,7 @@ en:
         llm: "Model"
         pm_warning: "AI chatbot messages are monitored regularly by moderators."
         cancel_streaming: "Stop reply"
+        try_again: "Try again"
         default_pm_prefix: "[Untitled AI bot PM]"
         shortcut_title: "Start a PM with an AI bot"
         shortcut_link: "AI bot"

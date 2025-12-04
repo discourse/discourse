@@ -28,6 +28,7 @@ DiscourseAi::Engine.routes.draw do
     get "post/:post_id/show-debug-info" => "bot#show_debug_info"
     get "show-debug-info/:id" => "bot#show_debug_info_by_id"
     post "post/:post_id/stop-streaming" => "bot#stop_streaming_response"
+    post "post/:post_id/retry" => "bot#retry_response"
   end
 
   scope module: :discover, path: "/discoveries", defaults: { format: :json } do
