@@ -132,7 +132,7 @@
     "ember-cli-sri": "^2.1.1",
     "ember-cli-terser": "^4.0.2",
     "ember-decorators": "^6.1.1",
-    "ember-exam": "^10.0.0",
+    "ember-exam": "^10.0.1",
     "ember-load-initializers": "^3.0.1",
     "ember-modifier": "^4.2.2",
     "ember-qunit": "^9.0.4",
