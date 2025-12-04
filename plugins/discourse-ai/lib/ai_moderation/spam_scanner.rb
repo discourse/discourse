@@ -3,7 +3,6 @@
 module DiscourseAi
   module AiModeration
     class SpamScanner
-      POSTS_TO_SCAN = 3
       MINIMUM_EDIT_DIFFERENCE = 10
       EDIT_DELAY_MINUTES = 10
       MAX_AGE_TO_SCAN = 1.day
@@ -103,9 +102,16 @@ module DiscourseAi
         SiteSetting.ai_spam_detection_enabled && SiteSetting.discourse_ai_enabled
       end
 
-      def self.should_scan_post?(post)
+      def self.should_scan_post?(post, settings: nil)
         return false if !post.present?
-        return false if post.user.trust_level > TrustLevel[1]
+
+        settings ||= AiModerationSetting.spam
+        max_trust_level =
+          settings&.max_allowed_trust_level || AiModerationSetting::DEFAULT_MAX_ALLOWED_TRUST_LEVEL
+        post_threshold =
+          settings&.scanned_post_threshold || AiModerationSetting::DEFAULT_SCANNED_POST_THRESHOLD
+
+        return false if post.user.trust_level > TrustLevel[max_trust_level]
         return false if post.topic.private_message?
         return false if post.user.bot?
         return false if post.user.staff?
@@ -114,8 +120,8 @@ module DiscourseAi
              .where(user_id: post.user_id)
              .joins(:topic)
              .where(topic: { archetype: Archetype.default })
-             .limit(4)
-             .count > 3
+             .limit(post_threshold + 1)
+             .count > post_threshold
           return false
         end
         true

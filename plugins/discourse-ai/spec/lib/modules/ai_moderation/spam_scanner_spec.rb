@@ -73,6 +73,26 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
       expect(described_class.should_scan_post?(post)).to eq(false)
     end
 
+    it "respects custom post threshold from settings" do
+      spam_setting.update!(data: spam_setting.data.merge("scanned_post_threshold" => 5))
+
+      4.times { Fabricate(:post, user: user) }
+      expect(described_class.should_scan_post?(post)).to eq(true)
+
+      Fabricate(:post, user: user)
+      expect(described_class.should_scan_post?(post)).to eq(false)
+    end
+
+    it "respects custom max trust level from settings" do
+      spam_setting.update!(data: spam_setting.data.merge("max_allowed_trust_level" => 2))
+
+      post.user.trust_level = TrustLevel[2]
+      expect(described_class.should_scan_post?(post)).to eq(true)
+
+      post.user.trust_level = TrustLevel[3]
+      expect(described_class.should_scan_post?(post)).to eq(false)
+    end
+
     it "returns false for private messages" do
       pm_topic = Fabricate(:private_message_topic)
       pm_post = Fabricate(:post, topic: pm_topic, user: user)

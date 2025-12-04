@@ -10,7 +10,9 @@ class AiSpamSerializer < ApplicationSerializer
              :spam_score_type,
              :spam_scanning_user,
              :ai_persona_id,
-             :available_personas
+             :available_personas,
+             :scanned_post_threshold,
+             :max_allowed_trust_level
 
   def is_enabled
     object[:enabled]
@@ -66,5 +68,13 @@ class AiSpamSerializer < ApplicationSerializer
     user = DiscourseAi::AiModeration::SpamScanner.flagging_user
 
     user.serializable_hash(only: %i[id username name admin]) if user.present?
+  end
+
+  def scanned_post_threshold
+    settings&.scanned_post_threshold || AiModerationSetting::DEFAULT_SCANNED_POST_THRESHOLD
+  end
+
+  def max_allowed_trust_level
+    settings&.max_allowed_trust_level || AiModerationSetting::DEFAULT_MAX_ALLOWED_TRUST_LEVEL
   end
 end

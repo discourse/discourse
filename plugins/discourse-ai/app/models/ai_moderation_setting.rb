@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 class AiModerationSetting < ActiveRecord::Base
+  DEFAULT_SCANNED_POST_THRESHOLD = 3
+  DEFAULT_MAX_ALLOWED_TRUST_LEVEL = 1
+
   belongs_to :llm_model
   belongs_to :ai_persona
 
@@ -13,6 +16,14 @@ class AiModerationSetting < ActiveRecord::Base
 
   def custom_instructions
     data["custom_instructions"]
+  end
+
+  def scanned_post_threshold
+    data["scanned_post_threshold"] || DEFAULT_SCANNED_POST_THRESHOLD
+  end
+
+  def max_allowed_trust_level
+    data["max_allowed_trust_level"] || DEFAULT_MAX_ALLOWED_TRUST_LEVEL
   end
 end
 

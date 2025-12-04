@@ -30,6 +30,21 @@ RSpec.describe DiscourseAi::Admin::AiSpamController do
         expect(AiModerationSetting.spam.data["custom_instructions"]).to eq("custom instructions")
       end
 
+      it "can update scanned_post_threshold and max_allowed_trust_level" do
+        put "/admin/plugins/discourse-ai/ai-spam.json",
+            params: {
+              llm_model_id: llm_model.id,
+              ai_persona_id:
+                DiscourseAi::Personas::Persona.system_personas[DiscourseAi::Personas::SpamDetector],
+              scanned_post_threshold: 10,
+              max_allowed_trust_level: 2,
+            }
+
+        expect(response.status).to eq(200)
+        expect(AiModerationSetting.spam.scanned_post_threshold).to eq(10)
+        expect(AiModerationSetting.spam.max_allowed_trust_level).to eq(2)
+      end
+
       it "validates the selected persona has a valid response format" do
         ai_persona = Fabricate(:ai_persona, response_format: nil)
 
@@ -214,6 +229,34 @@ RSpec.describe DiscourseAi::Admin::AiSpamController do
           expect(history.details).to include("llm_model_id")
           expect(history.details).to include("custom_instructions")
         end
+
+        it "logs staff action when scanned_post_threshold changes" do
+          put "/admin/plugins/discourse-ai/ai-spam.json", params: { scanned_post_threshold: 10 }
+
+          expect(response.status).to eq(200)
+
+          history =
+            UserHistory.where(
+              action: UserHistory.actions[:custom_staff],
+              custom_type: "update_ai_spam_settings",
+            ).last
+          expect(history).to be_present
+          expect(history.details).to include("scanned_post_threshold")
+        end
+
+        it "logs staff action when max_allowed_trust_level changes" do
+          put "/admin/plugins/discourse-ai/ai-spam.json", params: { max_allowed_trust_level: 2 }
+
+          expect(response.status).to eq(200)
+
+          history =
+            UserHistory.where(
+              action: UserHistory.actions[:custom_staff],
+              custom_type: "update_ai_spam_settings",
+            ).last
+          expect(history).to be_present
+          expect(history.details).to include("max_allowed_trust_level")
+        end
       end
     end
   end
@@ -367,6 +410,41 @@ RSpec.describe DiscourseAi::Admin::AiSpamController do
         )
 
         expect(json["flagging_username"]).to eq(flagging_user.username)
+      end
+
+      it "returns scanned_post_threshold and max_allowed_trust_level" do
+        SiteSetting.ai_spam_detection_enabled = true
+
+        AiModerationSetting.update!(
+          {
+            setting_type: :spam,
+            llm_model_id: llm_model.id,
+            data: {
+              scanned_post_threshold: 5,
+              max_allowed_trust_level: 2,
+            },
+          },
+        )
+
+        get "/admin/plugins/discourse-ai/ai-spam.json"
+
+        json = response.parsed_body
+        expect(json["scanned_post_threshold"]).to eq(5)
+        expect(json["max_allowed_trust_level"]).to eq(2)
+      end
+
+      it "returns default values for scanned_post_threshold and max_allowed_trust_level when not set" do
+        SiteSetting.ai_spam_detection_enabled = true
+
+        AiModerationSetting.update!(
+          { setting_type: :spam, llm_model_id: llm_model.id, data: {} },
+        )
+
+        get "/admin/plugins/discourse-ai/ai-spam.json"
+
+        json = response.parsed_body
+        expect(json["scanned_post_threshold"]).to eq(3)
+        expect(json["max_allowed_trust_level"]).to eq(1)
       end
     end
 

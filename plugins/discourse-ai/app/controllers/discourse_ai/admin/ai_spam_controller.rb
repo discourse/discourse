@@ -16,6 +16,8 @@ module DiscourseAi
           custom_instructions: initial_settings&.data&.dig("custom_instructions"),
           llm_model_id: initial_settings&.llm_model_id,
           ai_persona_id: initial_settings&.ai_persona_id,
+          scanned_post_threshold: initial_settings&.scanned_post_threshold,
+          max_allowed_trust_level: initial_settings&.max_allowed_trust_level,
         }
 
         initial_custom_instructions = initial_settings&.data&.dig("custom_instructions")
@@ -41,9 +43,17 @@ module DiscourseAi
             )
           end
         end
-        updated_params[:data] = {
-          custom_instructions: allowed_params[:custom_instructions],
-        } if allowed_params.key?(:custom_instructions)
+        data_params = {}
+        data_params[:custom_instructions] = allowed_params[:custom_instructions] if allowed_params.key?(
+          :custom_instructions,
+        )
+        data_params[:scanned_post_threshold] = allowed_params[:scanned_post_threshold].to_i if allowed_params.key?(
+          :scanned_post_threshold,
+        )
+        data_params[:max_allowed_trust_level] = allowed_params[:max_allowed_trust_level].to_i if allowed_params.key?(
+          :max_allowed_trust_level,
+        )
+        updated_params[:data] = data_params if data_params.present?
 
         if updated_params.present?
           # not using upsert cause we will not get the correct validation errors
@@ -160,6 +170,22 @@ module DiscourseAi
           changes_to_log[:ai_persona_id] = "#{old_persona_name} → #{new_persona_name}"
         end
 
+        initial_scanned_post_threshold = initial_data[:scanned_post_threshold]
+        if params.key?(:scanned_post_threshold) &&
+             initial_scanned_post_threshold.to_s != params[:scanned_post_threshold].to_s
+          changes_to_log[
+            :scanned_post_threshold
+          ] = "#{initial_scanned_post_threshold} → #{params[:scanned_post_threshold]}"
+        end
+
+        initial_max_allowed_trust_level = initial_data[:max_allowed_trust_level]
+        if params.key?(:max_allowed_trust_level) &&
+             initial_max_allowed_trust_level.to_s != params[:max_allowed_trust_level].to_s
+          changes_to_log[
+            :max_allowed_trust_level
+          ] = "#{initial_max_allowed_trust_level} → #{params[:max_allowed_trust_level]}"
+        end
+
         if changes_to_log.present?
           changes_to_log[:subject] = I18n.t("discourse_ai.spam_detection.logging_subject")
           logger = DiscourseAi::Utils::AiStaffActionLogger.new(current_user)
@@ -168,7 +194,14 @@ module DiscourseAi
       end
 
       def allowed_params
-        params.permit(:is_enabled, :llm_model_id, :custom_instructions, :ai_persona_id)
+        params.permit(
+          :is_enabled,
+          :llm_model_id,
+          :custom_instructions,
+          :ai_persona_id,
+          :scanned_post_threshold,
+          :max_allowed_trust_level,
+        )
       end
 
       def spam_config

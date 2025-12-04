@@ -36,6 +36,8 @@ export default class AiSpam extends Component {
   @tracked selectedLLM = null;
   @tracked selectedPersonaId = null;
   @tracked customInstructions = "";
+  @tracked scannedPostThreshold = 3;
+  @tracked maxAllowedTrustLevel = 1;
   @tracked errors = [];
 
   constructor() {
@@ -99,6 +101,8 @@ export default class AiSpam extends Component {
     this.customInstructions = model.custom_instructions;
     this.stats = model.stats;
     this.selectedPersonaId = model.ai_persona_id;
+    this.scannedPostThreshold = model.scanned_post_threshold ?? 3;
+    this.maxAllowedTrustLevel = model.max_allowed_trust_level ?? 1;
   }
 
   get availableLLMs() {
@@ -148,6 +152,8 @@ export default class AiSpam extends Component {
           llm_model_id: this.llmId,
           custom_instructions: this.customInstructions,
           ai_persona_id: this.selectedPersonaId,
+          scanned_post_threshold: this.scannedPostThreshold,
+          max_allowed_trust_level: this.maxAllowedTrustLevel,
         },
       });
       this.toasts.success({
@@ -157,6 +163,26 @@ export default class AiSpam extends Component {
     } catch (error) {
       popupAjaxError(error);
     }
+  }
+
+  @action
+  updateScannedPostThreshold(value) {
+    this.scannedPostThreshold = parseInt(value, 10);
+  }
+
+  @action
+  updateMaxAllowedTrustLevel(value) {
+    this.maxAllowedTrustLevel = value;
+  }
+
+  get trustLevelOptions() {
+    return [
+      { id: 0, name: i18n("discourse_ai.spam.trust_levels.tl0") },
+      { id: 1, name: i18n("discourse_ai.spam.trust_levels.tl1") },
+      { id: 2, name: i18n("discourse_ai.spam.trust_levels.tl2") },
+      { id: 3, name: i18n("discourse_ai.spam.trust_levels.tl3") },
+      { id: 4, name: i18n("discourse_ai.spam.trust_levels.tl4") },
+    ];
   }
 
   @action
@@ -272,6 +298,40 @@ export default class AiSpam extends Component {
             @content={{@model.available_personas}}
             @onChange={{this.updatePersona}}
             class="ai-spam__persona-selector"
+          />
+        </div>
+
+        <div class="ai-spam__post-threshold">
+          <label class="ai-spam__post-threshold-label">
+            {{i18n "discourse_ai.spam.scanned_post_threshold"}}
+            <DTooltip
+              @icon="circle-question"
+              @content={{i18n "discourse_ai.spam.scanned_post_threshold_help"}}
+            />
+          </label>
+          <input
+            type="number"
+            min="1"
+            max="100"
+            value={{this.scannedPostThreshold}}
+            class="ai-spam__post-threshold-input"
+            {{on "input" (withEventValue this.updateScannedPostThreshold)}}
+          />
+        </div>
+
+        <div class="ai-spam__trust-level">
+          <label class="ai-spam__trust-level-label">
+            {{i18n "discourse_ai.spam.max_allowed_trust_level"}}
+            <DTooltip
+              @icon="circle-question"
+              @content={{i18n "discourse_ai.spam.max_allowed_trust_level_help"}}
+            />
+          </label>
+          <ComboBox
+            @value={{this.maxAllowedTrustLevel}}
+            @content={{this.trustLevelOptions}}
+            @onChange={{this.updateMaxAllowedTrustLevel}}
+            class="ai-spam__trust-level-selector"
           />
         </div>
 
