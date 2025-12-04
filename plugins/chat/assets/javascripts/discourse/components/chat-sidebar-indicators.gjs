@@ -22,10 +22,10 @@ export default class ChatSidebarIndicators extends Component {
    */
   get hasUnread() {
     return (
-      this.args.status?.unreadCount > 0 ||
-      this.args.status?.unreadThreadsCount > 0 ||
-      this.args.status?.mentionCount > 0 ||
-      this.args.status?.watchedThreadsUnreadCount > 0
+      this.args.args?.unreadCount > 0 ||
+      this.args.args?.unreadThreadsCount > 0 ||
+      this.args.args?.mentionCount > 0 ||
+      this.args.args?.watchedThreadsUnreadCount > 0
     );
   }
 
