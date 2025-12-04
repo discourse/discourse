@@ -189,11 +189,11 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
       return "";
     }
 
-    get contentComponent() {
+    get suffixComponent() {
       return ChatSidebarIndicators;
     }
 
-    get contentComponentArgs() {
+    get suffixComponentArgs() {
       if (this.isDM) {
         return {
           userStatus: this.isOneOnOneDM
@@ -529,11 +529,11 @@ export default {
                 return this.channel.chatable.read_restricted ? "lock" : "";
               }
 
-              get contentComponent() {
+              get suffixComponent() {
                 return ChatSidebarIndicators;
               }
 
-              get contentComponentArgs() {
+              get suffixComponentArgs() {
                 return {
                   unreadCount: this.channel.tracking.unreadCount,
                   // We want to do this so we don't show a blue dot if the user is inside
@@ -680,11 +680,11 @@ export default {
                 return this.channel.chatable.users.length === 1;
               }
 
-              get contentComponent() {
+              get suffixComponent() {
                 return ChatSidebarIndicators;
               }
 
-              get contentComponentArgs() {
+              get suffixComponentArgs() {
                 return {
                   userStatus: this.oneOnOneMessage
                     ? this.channel.chatable.users[0].get("status")
