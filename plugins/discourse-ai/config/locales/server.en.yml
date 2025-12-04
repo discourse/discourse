@@ -4,6 +4,13 @@ en:
       llm_model:
         name: "Model ID"
         max_prompt_tokens: "Context window"
+  dashboard:
+    problem:
+      ai_llm_status: 
+        one: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> needs attention. In the past hour, it failed to respond %{failed_calls} out of %{total_calls} times."
+        other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> needs attention. Over the last %{count} hours, it failed to respond %{failed_calls} out of %{total_calls} times."
+      ai_credit_soft_limit: "%{model_name} has only %{percentage_remaining}% of credits remaining. Credits will reset at %{reset_date}. <a href='%{url}'>View AI models</a>"
+      ai_credit_hard_limit: "You have run out of AI credits for %{model_name}. AI features will be unavailable until %{reset_date}. <a href='%{url}'>View AI models</a>"
 
   discourse_automation:
     ai:
@@ -690,8 +697,4 @@ en:
       custom_tool_exists:
         one: "Custom tool with the name %{names} already exists."
         other: "Custom tools with the names %{names} already exist."
-  dashboard:
-    problem:
-      ai_llm_status: "The LLM model: %{model_name} is encountering issues. Please check the <a href='%{url}'>model's configuration page</a>."
-      ai_credit_soft_limit: "%{model_name} has only %{percentage_remaining}% of credits remaining. Credits will reset at %{reset_date}. <a href='%{url}'>View AI models</a>"
-      ai_credit_hard_limit: "You have run out of AI credits for %{model_name}. AI features will be unavailable until %{reset_date}. <a href='%{url}'>View AI models</a>"
+

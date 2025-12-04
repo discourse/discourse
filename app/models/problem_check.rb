@@ -164,7 +164,9 @@ class ProblemCheck
   end
 
   def run
-    if targeted? && (target == NO_TARGET || targets.call.exclude?(target))
+    # target is always a string when initializing this class, but the targets function
+    # could return IDs from the DB. Make everything string so we don't return early all the time.
+    if targeted? && (target == NO_TARGET || targets.call.map(&:to_s).exclude?(target))
       tracker.destroy
       return
     end
