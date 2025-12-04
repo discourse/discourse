@@ -170,7 +170,7 @@ export default class ChatChannel {
   }
 
   get escapedDescription() {
-    return escapeExpression(this.description);
+    return escapeExpression(this.description?.trim());
   }
 
   get slugifiedTitle() {
