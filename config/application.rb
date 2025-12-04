@@ -169,7 +169,7 @@ module Discourse
 
     sendfile_variation =
       if Rails.env.production? || Rails.env.test?
-        "X-Accel-Redirect"
+        nil
       else
         nil
       end
