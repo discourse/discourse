@@ -110,14 +110,16 @@ class PostRevisor
     if tc.guardian.can_tag_topics?
       prev_tags = tc.topic.tags.map(&:name)
       next if tags.blank? && prev_tags.blank?
+
       if !DiscourseTagging.tag_topic_by_names(tc.topic, tc.guardian, tags)
         tc.check_result(false)
         next
       end
-      new_tag_names = Array(tc.topic.tags.map(&:name))
 
-      if prev_tags.sort != new_tag_names.sort
-        tc.record_change("tags", prev_tags, new_tag_names)
+      new_tags = tc.topic.tags.map(&:name)
+
+      if prev_tags.sort != new_tags.sort
+        tc.record_change("tags", prev_tags, new_tags)
         DB.after_commit do
           topic = tc.topic.reload
           post = topic.ordered_posts.first
@@ -126,24 +128,18 @@ class PostRevisor
           persisted_tag_names = topic.tags.pluck(:name)
           added_tags = persisted_tag_names - prev_tags
           removed_tags = prev_tags - persisted_tag_names
-
-          diff_tags = (added_tags | removed_tags)
-
-          if diff_tags.present? && !SiteSetting.disable_tags_edit_notifications
-            Jobs.enqueue(
-              :notify_tag_change,
-              post_id: post.id,
-              notified_user_ids: notified_user_ids,
-              diff_tags: diff_tags,
-            )
-          end
+          diff_tags = added_tags | removed_tags
 
           if diff_tags.present?
+            if !SiteSetting.disable_tags_edit_notifications
+              Jobs.enqueue(:notify_tag_change, post_id: post.id, notified_user_ids:, diff_tags:)
+            end
+
             create_small_action_for_tag_changes(
               topic: topic,
               user: tc.user,
-              added_tags: added_tags,
-              removed_tags: removed_tags,
+              added_tags:,
+              removed_tags:,
             )
           end
         end

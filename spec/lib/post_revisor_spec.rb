@@ -303,7 +303,7 @@ describe PostRevisor do
         expect(post.topic.ordered_posts.last.post_type).to eq(Post.types[:whisper])
       end
 
-      it "does not create a small_action when a restricted tag is rejected" do
+      it "does not create a small_action or notification when a restricted tag is rejected" do
         allowed_tag = Fabricate(:tag, name: "allowed-tag")
 
         post.topic.update!(tags: [allowed_tag])
@@ -318,6 +318,7 @@ describe PostRevisor do
         end.not_to change { Post.where(topic_id: post.topic_id, action_code: "tags_changed").count }
 
         expect(post.topic.reload.tags.pluck(:name)).to contain_exactly(allowed_tag.name)
+        expect(Jobs::NotifyTagChange.jobs.size).to eq(0)
       end
 
       describe "with PMs" do
