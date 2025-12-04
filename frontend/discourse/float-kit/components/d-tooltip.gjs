@@ -62,7 +62,7 @@ export default class DTooltip extends Component {
       ...attributes
     >
       <span class="fk-d-tooltip__trigger-container">
-        {{#if (has-block "trigger")}}
+        {{~#if (has-block "trigger")~}}
           {{yield this.componentArgs to="trigger"}}
         {{~else~}}
           {{#if @icon}}
