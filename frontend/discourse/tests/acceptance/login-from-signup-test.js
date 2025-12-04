@@ -63,7 +63,7 @@ acceptance("Login Fields - From Signup Form", function () {
       .hasValue("test@example.com", "email is preserved on round-trip");
   });
 
-  test("preserves username on round-trip when no email", async function (assert) {
+  test("preserves username on round-trip when email field is empty", async function (assert) {
     await visit("/");
     await click("header .sign-up-button");
     await fillIn("#new-account-username", "testuser");
