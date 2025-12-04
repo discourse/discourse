@@ -29,6 +29,14 @@ export function isHex(input) {
   }
 }
 
+/**
+ * Sidebar section link component.
+ *
+ * @component SectionLink
+ * @param {Component} @contentComponent - Component to render inside the link text span (gets ellipsized)
+ * @param {Component} @suffixComponent - Component to render after the link text (stays visible, not ellipsized)
+ * @param {Object} @suffixArgs - Arguments to pass to the suffix component
+ */
 export default class SectionLink extends Component {
   @service currentUser;
 
@@ -199,6 +207,10 @@ export default class SectionLink extends Component {
               <span class="sidebar-section-link-content-badge">
                 {{@badgeText}}
               </span>
+            {{/if}}
+
+            {{#if @suffixComponent}}
+              <@suffixComponent @suffixArgs={{@suffixArgs}} />
             {{/if}}
 
             {{#if @suffixValue}}
