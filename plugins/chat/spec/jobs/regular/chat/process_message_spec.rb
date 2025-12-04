@@ -31,4 +31,12 @@ describe Jobs::Chat::ProcessMessage do
     chat_message.destroy
     expect { described_class.new.execute(chat_message_id: chat_message.id) }.not_to raise_exception
   end
+
+  it "extracts links from the message" do
+    described_class.new.execute(chat_message_id: chat_message.id)
+
+    link = Chat::MessageLink.find_by(chat_message_id: chat_message.id)
+    expect(link).to be_present
+    expect(link.url).to eq("https://discourse.org/team")
+  end
 end

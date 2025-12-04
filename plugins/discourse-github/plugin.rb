@@ -16,7 +16,16 @@ require_relative "app/lib/github_linkback_access_token_setting_validator"
 
 enabled_site_setting :enable_discourse_github_plugin
 
+register_asset "stylesheets/common/github-pr-status.scss"
+
 after_initialize do
+  require_relative "app/controllers/discourse_github/webhooks_controller"
+  require_relative "app/jobs/regular/rebake_github_pr_posts"
+
+  Discourse::Application.routes.append do
+    post "/discourse-github/webhooks/github" => "discourse_github/webhooks#github"
+  end
+
   %w[
     ../app/models/github_commit.rb
     ../app/models/github_repo.rb
