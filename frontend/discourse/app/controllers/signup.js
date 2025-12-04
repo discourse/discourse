@@ -4,7 +4,6 @@ import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { notEmpty } from "@ember/object/computed";
-import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
@@ -28,7 +27,6 @@ export default class SignupPageController extends Controller {
   @service site;
   @service siteSettings;
   @service login;
-  @service router;
 
   @tracked accountName;
   @tracked accountPassword;
@@ -546,29 +544,17 @@ export default class SignupPageController extends Controller {
 
   @action
   goToLogin() {
+    const email = this.accountEmail || "";
+    const username = this.accountUsername || "";
+
     let loginName;
-
-    const email =
-      this.accountEmail ||
-      document.getElementById("new-account-email")?.value ||
-      "";
-
-    const username =
-      this.accountUsername ||
-      document.getElementById("new-account-username")?.value ||
-      "";
-
-    if (email && email.length > 0) {
+    if (email.length > 0) {
       loginName = email;
-    } else if (username && username.length > 0) {
+    } else if (username.length > 0) {
       loginName = username;
     }
 
-    const transition = this.router.transitionTo("login");
-    transition.wantsTo = true;
-    transition.then(() => {
-      getOwner(this).lookup("controller:login").setProperties({ loginName });
-    });
+    this.send("showLogin", { loginName });
   }
 
   @action
