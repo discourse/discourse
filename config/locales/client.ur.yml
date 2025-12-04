@@ -3237,6 +3237,9 @@ ur:
         reset_bump_dates: "ٹکرانے کی تاریخوں کی دوبارہ ترتیب"
         defer: "بغیر پڑھے نشان زد"
         delete: "موضوعات حذف کریں"
+        delete_topics_count:
+          one: "موضوع حذف کریں"
+          other: "موضوعات حذف کریں"
         dismiss: "بر خاست کریں"
         dismiss_read: "تمام بغیر پڑھے ہوئے بر خاست کریں"
         dismiss_read_with_selected:

@@ -2893,6 +2893,8 @@ zh_TW:
         reset_bump_dates: "重設上浮日期"
         defer: "標記未讀"
         delete: "刪除話題"
+        delete_topics_count:
+          other: "刪除話題"
         dismiss: "忽略"
         dismiss_read: "忽略所有未讀話題"
         dismiss_read_with_selected:

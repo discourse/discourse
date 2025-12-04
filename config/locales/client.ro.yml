@@ -2530,6 +2530,10 @@ ro:
         relist_topics: "Relistează subiecte"
         defer: "Marchează ca necitite"
         delete: "Șterge subiecte"
+        delete_topics_count:
+          one: "Șterge subiect"
+          few: "Șterge subiecte"
+          other: "Șterge subiecte"
         dismiss: "Respinge"
         dismiss_read: "Abandonează toate necitite"
         dismiss_button: "Respinge..."

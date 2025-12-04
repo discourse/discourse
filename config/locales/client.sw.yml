@@ -1471,6 +1471,9 @@ sw:
         unlist_topics: "Ondoa Mada kwenye listi"
         relist_topics: "Orodhesha Upya Mada"
         delete: "Futa Mada"
+        delete_topics_count:
+          one: "Futa Mada"
+          other: "Futa Mada"
         dismiss: "Ondosha..."
         dismiss_read: "Ondosha zote ambazo hazijasomwa"
         dismiss_button: "Ondosha..."
