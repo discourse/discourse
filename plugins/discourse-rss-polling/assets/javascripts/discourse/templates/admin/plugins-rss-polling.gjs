@@ -38,7 +38,7 @@ export default <template>
               <input
                 class="rss-polling-feed-url"
                 disabled={{setting.disabled}}
-                placeholder="SSShttps://blog.example.com/feed"
+                placeholder="https://blog.example.com/feed"
                 type="text"
                 value={{setting.feed_url}}
                 {{on

@@ -101,7 +101,7 @@ export default class ChatComposerUploads extends Component {
   }
 
   get showUploadsContainer() {
-    return this.uploads.length > 0 || this.inProgressUploads.length > 0;
+    return this.uploads?.length > 0 || this.inProgressUploads.length > 0;
   }
 
   @action

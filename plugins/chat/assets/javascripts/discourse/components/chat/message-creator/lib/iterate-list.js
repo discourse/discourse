@@ -35,9 +35,9 @@ export function getPrevious(list, current = null) {
     if (currentIndex > 0) {
       return list[currentIndex - 1];
     } else {
-      return list[list.length - 1];
+      return list.at(-1);
     }
   } else {
-    return list[list.length - 1];
+    return list.at(-1);
   }
 }

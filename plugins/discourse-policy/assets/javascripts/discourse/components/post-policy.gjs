@@ -122,16 +122,14 @@ export default class PostPolicy extends Component {
   @action
   revokePolicy() {
     this.post.policy_not_accepted_by.push(this.currentUser);
-    this.post.policy_not_accepted_by_count =
-      this.post.policy_not_accepted_by_count + 1;
+    this.post.policy_not_accepted_by_count += 1;
 
     const obj = this.post.policy_accepted_by.find(
       (item) => item.id === this.currentUser.id
     );
     if (obj) {
       removeValueFromArray(this.post.policy_accepted_by, obj);
-      this.post.policy_accepted_by_count =
-        this.post.policy_accepted_by_count - 1;
+      this.post.policy_accepted_by_count -= 1;
     }
 
     if (this.post.policy_can_accept !== this.post.policy_can_revoke) {
@@ -149,7 +147,7 @@ export default class PostPolicy extends Component {
   @action
   acceptPolicy() {
     this.post.policy_accepted_by.push(this.currentUser);
-    this.post.policy_accepted_by_count = this.post.policy_accepted_by_count + 1;
+    this.post.policy_accepted_by_count += 1;
 
     const obj = this.post.policy_not_accepted_by.find(
       (item) => item.id === this.currentUser.id
@@ -157,8 +155,7 @@ export default class PostPolicy extends Component {
 
     if (obj) {
       removeValueFromArray(this.post.policy_not_accepted_by, obj);
-      this.post.policy_not_accepted_by_count =
-        this.post.policy_not_accepted_by_count - 1;
+      this.post.policy_not_accepted_by_count -= 1;
     }
 
     if (this.post.policy_can_accept !== this.post.policy_can_revoke) {
