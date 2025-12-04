@@ -35,7 +35,7 @@ export function isHex(input) {
  * @component SectionLink
  * @param {Component} @contentComponent - Component to render inside the link text span (gets ellipsized)
  * @param {Component} @suffixComponent - Component to render after the link text (stays visible, not ellipsized)
- * @param {Object} @suffixComponentArgs - Arguments to pass to the suffix component via @args
+ * @param {Object} @suffixArgs - Arguments to pass to the suffix component
  */
 export default class SectionLink extends Component {
   @service currentUser;
@@ -210,7 +210,7 @@ export default class SectionLink extends Component {
             {{/if}}
 
             {{#if @suffixComponent}}
-              <@suffixComponent @args={{@suffixComponentArgs}} />
+              <@suffixComponent @suffixArgs={{@suffixArgs}} />
             {{/if}}
 
             {{#if @suffixValue}}

@@ -12,7 +12,7 @@ module(
       const status = { unreadCount: 1 };
 
       await render(
-        <template><ChatSidebarIndicators @status={{status}} /></template>
+        <template><ChatSidebarIndicators @suffixArgs={{status}} /></template>
       );
 
       assert.dom(".sidebar-section-link-content-badge").exists();
@@ -22,7 +22,7 @@ module(
       const status = { unreadThreadsCount: 1 };
 
       await render(
-        <template><ChatSidebarIndicators @status={{status}} /></template>
+        <template><ChatSidebarIndicators @suffixArgs={{status}} /></template>
       );
 
       assert.dom(".sidebar-section-link-content-badge").exists();
@@ -32,7 +32,7 @@ module(
       const status = { mentionCount: 1 };
 
       await render(
-        <template><ChatSidebarIndicators @status={{status}} /></template>
+        <template><ChatSidebarIndicators @suffixArgs={{status}} /></template>
       );
 
       assert.dom(".sidebar-section-link-content-badge").exists();
@@ -43,7 +43,7 @@ module(
       const status = { watchedThreadsUnreadCount: 1 };
 
       await render(
-        <template><ChatSidebarIndicators @status={{status}} /></template>
+        <template><ChatSidebarIndicators @suffixArgs={{status}} /></template>
       );
 
       assert.dom(".sidebar-section-link-content-badge").exists();
@@ -59,7 +59,7 @@ module(
       };
 
       await render(
-        <template><ChatSidebarIndicators @status={{status}} /></template>
+        <template><ChatSidebarIndicators @suffixArgs={{status}} /></template>
       );
 
       assert.dom(".sidebar-section-link-content-badge").doesNotExist();
@@ -72,7 +72,7 @@ module(
       };
 
       await render(
-        <template><ChatSidebarIndicators @status={{status}} /></template>
+        <template><ChatSidebarIndicators @suffixArgs={{status}} /></template>
       );
 
       assert.dom(".sidebar-section-link-content-badge").hasClass("urgent");
@@ -85,7 +85,7 @@ module(
       };
 
       await render(
-        <template><ChatSidebarIndicators @status={{status}} /></template>
+        <template><ChatSidebarIndicators @suffixArgs={{status}} /></template>
       );
 
       assert.dom(".sidebar-section-link-content-badge").hasClass("unread");
@@ -101,7 +101,7 @@ module(
       };
 
       await render(
-        <template><ChatSidebarIndicators @status={{status}} /></template>
+        <template><ChatSidebarIndicators @suffixArgs={{status}} /></template>
       );
 
       assert.dom(".sidebar-section-link-content-badge").exists();

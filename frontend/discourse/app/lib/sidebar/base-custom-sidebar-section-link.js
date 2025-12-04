@@ -123,7 +123,7 @@ export default class BaseCustomSidebarSectionLink {
   /**
    * @returns {Object} Arguments to pass to the suffix component
    */
-  get suffixComponentArgs() {}
+  get suffixArgs() {}
 
   /**
    * @returns {string} Type of the hover button. Accepted value: icon

@@ -6,13 +6,13 @@ import icon from "discourse/helpers/d-icon";
  * Displays unread indicators and user status for chat channels in the sidebar.
  *
  * @component ChatSidebarIndicators
- * @param {Object} @args - Arguments object when used as @suffixComponent
- * @param {number} @args.unreadCount - Number of unread messages
- * @param {number} @args.unreadThreadsCount - Number of unread threads
- * @param {number} @args.mentionCount - Number of unread mentions
- * @param {number} @args.watchedThreadsUnreadCount - Number of unread watched threads
- * @param {boolean} @args.isDirectMessageChannel - Whether this is a DM channel
- * @param {Object} @args.userStatus - User status object for DM channels
+ * @param {Object} @suffixArgs - Arguments object when used as @suffixComponent
+ * @param {number} @suffixArgs.unreadCount - Number of unread messages
+ * @param {number} @suffixArgs.unreadThreadsCount - Number of unread threads
+ * @param {number} @suffixArgs.mentionCount - Number of unread mentions
+ * @param {number} @suffixArgs.watchedThreadsUnreadCount - Number of unread watched threads
+ * @param {boolean} @suffixArgs.isDirectMessageChannel - Whether this is a DM channel
+ * @param {Object} @suffixArgs.userStatus - User status object for DM channels
  */
 export default class ChatSidebarIndicators extends Component {
   /**
@@ -22,10 +22,10 @@ export default class ChatSidebarIndicators extends Component {
    */
   get hasUnread() {
     return (
-      this.args.args?.unreadCount > 0 ||
-      this.args.args?.unreadThreadsCount > 0 ||
-      this.args.args?.mentionCount > 0 ||
-      this.args.args?.watchedThreadsUnreadCount > 0
+      this.args.suffixArgs?.unreadCount > 0 ||
+      this.args.suffixArgs?.unreadThreadsCount > 0 ||
+      this.args.suffixArgs?.mentionCount > 0 ||
+      this.args.suffixArgs?.watchedThreadsUnreadCount > 0
     );
   }
 
@@ -38,12 +38,13 @@ export default class ChatSidebarIndicators extends Component {
    */
   get urgencyClass() {
     const hasUrgent =
-      this.args.args?.mentionCount > 0 ||
-      this.args.args?.watchedThreadsUnreadCount > 0;
+      this.args.suffixArgs?.mentionCount > 0 ||
+      this.args.suffixArgs?.watchedThreadsUnreadCount > 0;
 
     // For DMs, treat all unreads as urgent
     const hasUnreadDM =
-      this.args.args?.isDirectMessageChannel && this.args.args?.unreadCount > 0;
+      this.args.suffixArgs?.isDirectMessageChannel &&
+      this.args.suffixArgs?.unreadCount > 0;
 
     if (hasUrgent || hasUnreadDM) {
       return "urgent";
@@ -52,8 +53,8 @@ export default class ChatSidebarIndicators extends Component {
   }
 
   <template>
-    {{#if @args.userStatus}}
-      <UserStatusMessage @status={{@args.userStatus}} />
+    {{#if @suffixArgs.userStatus}}
+      <UserStatusMessage @status={{@suffixArgs.userStatus}} />
     {{/if}}
     {{#if this.hasUnread}}
       <span

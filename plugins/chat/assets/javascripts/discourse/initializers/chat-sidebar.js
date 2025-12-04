@@ -193,7 +193,7 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
       return ChatSidebarIndicators;
     }
 
-    get suffixComponentArgs() {
+    get suffixArgs() {
       if (this.isDM) {
         return {
           userStatus: this.isOneOnOneDM
@@ -533,7 +533,7 @@ export default {
                 return ChatSidebarIndicators;
               }
 
-              get suffixComponentArgs() {
+              get suffixArgs() {
                 return {
                   unreadCount: this.channel.tracking.unreadCount,
                   // We want to do this so we don't show a blue dot if the user is inside
@@ -684,7 +684,7 @@ export default {
                 return ChatSidebarIndicators;
               }
 
-              get suffixComponentArgs() {
+              get suffixArgs() {
                 return {
                   userStatus: this.oneOnOneMessage
                     ? this.channel.chatable.users[0].get("status")
