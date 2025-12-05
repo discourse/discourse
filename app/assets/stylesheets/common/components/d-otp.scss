@@ -1,18 +1,27 @@
+@use "lib/viewport";
+
 .d-otp {
   display: flex;
   align-items: center;
   position: relative;
-  width: min-content;
 }
 
 .d-otp-group {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  justify-content: space-between;
+  flex: 1;
+  max-width: 640px;
+
+  .d-modal & {
+    max-width: 430px;
+  }
 }
 
 .d-otp-slot {
-  padding: 0.5em 0.65em;
+  --otp-padding: 0.85em 1em;
+  padding: var(--otp-padding);
   line-height: normal;
   display: flex;
   align-items: center;
@@ -22,9 +31,11 @@
   position: relative;
   transition: all 0.3s ease-out;
   width: 1em;
+  font-size: var(--font-up-1);
 
   &.--is-focused {
     @include default-focus;
+    padding: var(--otp-padding);
   }
 
   &.--show-cursor {
@@ -43,7 +54,7 @@
   }
 
   &.--placeholder {
-    font-size: var(--font-up-0);
+    font-size: var(--font-up-1);
   }
 }
 
@@ -56,7 +67,7 @@
 .d-otp-input {
   position: absolute;
   inset: 0;
-  width: calc(100% + 40px);
+  width: 100%;
   height: 100%;
   display: flex;
   text-align: left;
@@ -74,6 +85,10 @@
   font-family: monospace;
   font-variant-numeric: tabular-nums;
   clip-path: inset(0 40px 0 0);
+
+  @include viewport.from(md) {
+    width: calc(100% + 60px);
+  }
 
   &[data-com-onepassword-filled] {
     background-clip: text;
