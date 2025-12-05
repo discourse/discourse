@@ -34,8 +34,7 @@ export default class DiscourseReactionsListEmoji extends Component {
   }
 
   showTooltip() {
-    const elementId = CSS.escape(this.elementId);
-    const referenceElement = document.getElementById(elementId);
+    const referenceElement = document.getElementById(this.elementId);
     const floatingElement = referenceElement.querySelector(".user-list");
 
     computePosition(referenceElement, floatingElement, {
