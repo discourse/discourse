@@ -783,6 +783,7 @@ tr_TR:
         llm: "Model"
         pm_warning: "YZ sohbet robotu mesajları moderatörler tarafından düzenli olarak izlenir."
         cancel_streaming: "Yanıtı durdur"
+        try_again: "Tekrar deneyin"
         default_pm_prefix: "[Adsız YZ bot kişisel mesajı]"
         shortcut_title: "YZ botuyla kişisel mesaj başlatın"
         shortcut_link: "YZ botu"

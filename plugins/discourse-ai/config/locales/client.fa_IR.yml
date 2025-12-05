@@ -230,6 +230,7 @@ fa_IR:
       ai_bot:
         llm: "مدل"
         cancel_streaming: "توقف پاسخ"
+        try_again: "دوباره امتحان کنید"
         conversation_shared: "گفتگو کپی شد"
         debug_ai_modal:
           request: "درخواست"
