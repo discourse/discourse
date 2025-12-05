@@ -475,6 +475,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
   end
 
   it "passes pdf documents using inlineData" do
+    model.update!(allowed_attachment_types: %w[pdf])
     pdf_upload = build_pdf_upload
 
     prompt =

@@ -618,6 +618,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenAi do
 
     it "can handle pdf documents via input_file nodes" do
       model = Fabricate(:llm_model, vision_enabled: true)
+      model.update!(allowed_attachment_types: %w[pdf])
       llm = DiscourseAi::Completions::Llm.proxy(model)
 
       pdf_upload = build_pdf_upload

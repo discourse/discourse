@@ -372,6 +372,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
   end
 
   it "can send pdf documents via a completion prompt" do
+    model.update!(allowed_attachment_types: %w[pdf])
     pdf_upload = build_pdf_upload
 
     prompt =
