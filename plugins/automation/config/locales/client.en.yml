@@ -4,6 +4,8 @@ en:
       logs:
         staff_actions:
           actions:
+            create_automation: create automation
+            update_automation: update automation
             delete_automation: delete automation
     discourse_automation:
       title: Automation
