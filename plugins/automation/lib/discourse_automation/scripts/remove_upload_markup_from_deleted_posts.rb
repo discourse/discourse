@@ -16,9 +16,12 @@ DiscourseAutomation::Scriptable.add(
     edit_reason =
       I18n.t("discourse_automation.scriptables.remove_upload_markup_from_deleted_posts.edit_reason")
 
-    # it matches both ![alt|size](upload://key) and [small.pdf|attachment](upload://key.pdf) (Number Bytes)
+    # it matches:
+    #  ![alt|size](upload://key)
+    #  [small.pdf|attachment](upload://key.pdf) (Number Bytes)
+    #  ![](upload://key.png)
     upload_and_attachment_regex =
-      %r{!?\[([^\]|]+)(?:\|[^\]]*)?\]\(upload://([A-Za-z0-9_-]+)[^)]*\)(?:\s*\([^)]*\))?}
+      %r{!?\[([^\]|]*)(?:\|[^\]]*)?\]\(upload://([A-Za-z0-9_-]+)(?:[^)]*)\)(?:\s*\([^)]*\))?}
 
     Post
       .with_deleted
