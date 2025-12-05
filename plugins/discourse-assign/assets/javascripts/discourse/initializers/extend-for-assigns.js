@@ -396,8 +396,13 @@ function initialize(api) {
       let assignedPath;
       if (assignee.assignedToPostId) {
         assignedPath = `/p/${assignee.assignedToPostId}`;
+      } else if (assignee.username) {
+        assignedPath = siteSettings.assigns_user_url_path.replace(
+          "{username}",
+          assignee.username
+        );
       } else {
-        assignedPath = `/t/${topic.id}`;
+        assignedPath = `/g/${assignee.name}/assigned/everyone`;
       }
 
       const icon = iconHTML(assignee.username ? "user-plus" : "group-plus");
