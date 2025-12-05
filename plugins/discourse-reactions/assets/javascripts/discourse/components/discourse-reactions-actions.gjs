@@ -103,8 +103,8 @@ function scaleReactionAnimation(mainReaction, start, end, complete) {
         step(now) {
           $(this)
             .css("transform", `scale(${now})`)
-            .addClass("far-heart")
-            .removeClass("heart");
+            .addClass("d-icon-d-unliked")
+            .removeClass("d-icon-d-liked");
         },
         duration: 150,
       },
