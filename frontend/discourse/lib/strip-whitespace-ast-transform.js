@@ -9,7 +9,7 @@ module.exports = function (env) {
   const b = env.syntax.builders;
 
   return {
-    name: "theme-template-manipulator",
+    name: "strip-whitespace-helper",
     visitor: {
       BlockStatement: {
         enter(node) {
