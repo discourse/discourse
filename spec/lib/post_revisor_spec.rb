@@ -972,6 +972,15 @@ describe PostRevisor do
 
         post_revisor.revise!(admin, user_id: new_owner.id, raw: "updated body")
       end
+
+      it "does not increment post_edits_count when system user changes ownership" do
+        new_owner = Fabricate(:user)
+        system_user = Discourse.system_user
+
+        expect do post_revisor.revise!(system_user, user_id: new_owner.id) end.not_to change {
+          system_user.user_stat.post_edits_count.to_i
+        }
+      end
     end
 
     it "doesn't strip starting whitespaces" do
