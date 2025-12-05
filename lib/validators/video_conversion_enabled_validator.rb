@@ -34,10 +34,8 @@ class VideoConversionEnabledValidator
   private
 
   def s3_credentials_missing?
-    # Check if using IAM profile
-    return false if SiteSetting.s3_use_iam_profile
-
-    # Check if access key and secret are provided
-    SiteSetting.s3_access_key_id.blank? || SiteSetting.s3_secret_access_key.blank?
+    # Missing if exactly one credential is provided (broken partial config)
+    (SiteSetting.s3_access_key_id.present? && SiteSetting.s3_secret_access_key.blank?) ||
+      (SiteSetting.s3_access_key_id.blank? && SiteSetting.s3_secret_access_key.present?)
   end
 end

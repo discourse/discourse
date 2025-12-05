@@ -18,8 +18,9 @@ module FileStore
     end
 
     def self.s3_options_from_site_settings
+      profile = SiteSetting.respond_to?(:s3_profile) ? SiteSetting.s3_profile : nil
       {
-        client_options: S3Helper.s3_options(SiteSetting),
+        client_options: S3Helper.s3_options(SiteSetting, profile: profile),
         bucket: SiteSetting.Upload.s3_upload_bucket,
       }
     end
