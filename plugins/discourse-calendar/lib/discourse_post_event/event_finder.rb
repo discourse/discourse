@@ -38,6 +38,8 @@ module DiscoursePostEvent
         )
     end
 
+    # NOTE: The ORDER BY logic here mirrors Event#current_event_date.
+    # If you change one, update the other.
     def self.latest_event_date_join
       <<~SQL
         LEFT JOIN (
@@ -46,7 +48,10 @@ module DiscoursePostEvent
             starts_at,
             finished_at
           FROM discourse_calendar_post_event_dates
-          ORDER BY event_id, finished_at DESC NULLS FIRST, starts_at DESC
+          ORDER BY event_id,
+                   finished_at IS NOT NULL,
+                   CASE WHEN finished_at IS NULL THEN starts_at ELSE updated_at END DESC,
+                   id DESC
         ) latest_event_dates ON latest_event_dates.event_id = discourse_post_event_events.id
       SQL
     end

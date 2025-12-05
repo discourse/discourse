@@ -238,6 +238,47 @@ describe DiscoursePostEvent::EventFinder do
       end
     end
 
+    describe "event edited to earlier date" do
+      it "returns the event when querying its new date range after multiple edits" do
+        freeze_time DateTime.parse("2025-12-05 12:00")
+
+        event =
+          Fabricate(
+            :event,
+            original_starts_at: Time.parse("2025-12-05 15:30"),
+            original_ends_at: Time.parse("2025-12-05 16:30"),
+          )
+
+        expect(event.event_dates.count).to eq(1)
+        expect(event.event_dates.first.finished_at).to be_nil
+
+        event.update!(
+          original_starts_at: Time.parse("2025-11-05 15:30"),
+          original_ends_at: Time.parse("2025-11-05 16:30"),
+        )
+
+        expect(event.event_dates.count).to eq(2)
+
+        event.update!(
+          original_starts_at: Time.parse("2025-10-05 15:30"),
+          original_ends_at: Time.parse("2025-10-05 16:30"),
+        )
+
+        expect(event.event_dates.count).to eq(3)
+
+        october_results =
+          finder.search(
+            current_user,
+            {
+              after: Time.parse("2025-09-29 00:00:00").to_s,
+              before: Time.parse("2025-11-10 00:00:00").to_s,
+            },
+          )
+
+        expect(october_results).to include(event)
+      end
+    end
+
     describe "with an order parameter provided" do
       let!(:event1) { Fabricate(:event, original_starts_at: 3.days.from_now) }
       let!(:event2) { Fabricate(:event, original_starts_at: 1.day.from_now) }
