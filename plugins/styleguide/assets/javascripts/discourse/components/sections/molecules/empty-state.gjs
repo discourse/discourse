@@ -1,10 +1,13 @@
+import Component from "@glimmer/component";
 import EmptyState from "discourse/components/empty-state";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
-const EmptyStateMolecule = <template>
-  <StyleguideExample @title="<EmptyState>">
-    <EmptyState @title={{@dummy.sentence}} @body={{@dummy.short_sentence}} />
-  </StyleguideExample>
-</template>;
+export default class EmptyStateMolecule extends Component {
+  emptyStateCode = `<EmptyState @title={{@dummy.sentence}} @body={{@dummy.short_sentence}} />`;
 
-export default EmptyStateMolecule;
+  <template>
+    <StyleguideExample @title="<EmptyState>" @code={{this.emptyStateCode}}>
+      <EmptyState @title={{@dummy.sentence}} @body={{@dummy.short_sentence}} />
+    </StyleguideExample>
+  </template>
+}

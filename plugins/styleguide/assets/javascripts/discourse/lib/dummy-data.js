@@ -178,6 +178,7 @@ export function createData(store) {
       color: categories[0].color,
     },
     created_at: "2024-11-13T21:12:37.835Z",
+    displayDate: moment().subtract(3, "days"),
     cooked,
     excerpt,
     post_number: 1,

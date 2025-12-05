@@ -1,24 +1,42 @@
+import Component from "@glimmer/component";
 import MobileNav from "discourse/components/mobile-nav";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
-const NavigationStacked = <template>
-  <StyleguideExample @title=".nav-stacked" class="half-size">
-    <MobileNav
-      @desktopClass="preferences-list action-list nav-stacked"
-      class="preferences-nav"
-    >
-      {{#each @dummy.navItems as |ni|}}
-        <li>
-          <a href={{ni.href}} class={{if ni.styleGuideActive "active"}}>
-            {{ni.displayName}}
-          </a>
-        </li>
-      {{/each}}
-    </MobileNav>
-  </StyleguideExample>
+export default class NavigationStacked extends Component {
+  navStackedCode = `<MobileNav
+  @desktopClass="preferences-list action-list nav-stacked"
+  class="preferences-nav"
+>
+  {{#each @dummy.navItems as |ni|}}
+    <li>
+      <a href={{ni.href}} class={{if ni.styleGuideActive "active"}}>
+        {{ni.displayName}}
+      </a>
+    </li>
+  {{/each}}
+</MobileNav>`;
 
-  <StyleguideExample @title=".user-navigation .nav-stacked" class="half-size">
-    <section class="user-navigation">
+  userNavStackedCode = `<section class="user-navigation">
+  <MobileNav
+    @desktopClass="preferences-list action-list nav-stacked"
+    class="preferences-nav"
+  >
+    {{#each @dummy.navItems as |ni|}}
+      <li>
+        <a href={{ni.href}} class={{if ni.styleGuideActive "active"}}>
+          {{ni.displayName}}
+        </a>
+      </li>
+    {{/each}}
+  </MobileNav>
+</section>`;
+
+  <template>
+    <StyleguideExample
+      @title=".nav-stacked"
+      class="half-size"
+      @code={{this.navStackedCode}}
+    >
       <MobileNav
         @desktopClass="preferences-list action-list nav-stacked"
         class="preferences-nav"
@@ -31,8 +49,27 @@ const NavigationStacked = <template>
           </li>
         {{/each}}
       </MobileNav>
-    </section>
-  </StyleguideExample>
-</template>;
+    </StyleguideExample>
 
-export default NavigationStacked;
+    <StyleguideExample
+      @title=".user-navigation .nav-stacked"
+      class="half-size"
+      @code={{this.userNavStackedCode}}
+    >
+      <section class="user-navigation">
+        <MobileNav
+          @desktopClass="preferences-list action-list nav-stacked"
+          class="preferences-nav"
+        >
+          {{#each @dummy.navItems as |ni|}}
+            <li>
+              <a href={{ni.href}} class={{if ni.styleGuideActive "active"}}>
+                {{ni.displayName}}
+              </a>
+            </li>
+          {{/each}}
+        </MobileNav>
+      </section>
+    </StyleguideExample>
+  </template>
+}

@@ -26,8 +26,26 @@ export default class StyleguideCalendarDateTimeInput extends Component {
     this.time = time;
   }
 
+  get calendarDateTimeInputCode() {
+    return `
+import CalendarDateTimeInput from "discourse/components/calendar-date-time-input";
+
+<template>
+  <CalendarDateTimeInput
+    @datePickerId="styleguide"
+    @date={{this.date}}
+    @time={{this.time}}
+    @minDate={{this.minDate}}
+  />
+</template>
+    `;
+  }
+
   <template>
-    <StyleguideExample @title="<CalendarDateTimeInput>">
+    <StyleguideExample
+      @title="CalendarDateTimeInput"
+      @code={{this.calendarDateTimeInputCode}}
+    >
       <StyleguideComponent>
         <CalendarDateTimeInput
           @datePickerId="styleguide"

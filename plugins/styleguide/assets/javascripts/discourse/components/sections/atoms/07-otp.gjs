@@ -24,8 +24,24 @@ export default class OTP extends Component {
     }
   }
 
+  get codeSample1() {
+    return `import DOTP from "discourse/components/d-otp";
+
+<template>
+  <DOTP @onFill={{this.filled}} @onChange={{this.changed}} />
+</template>`;
+  }
+
+  get codeSample2() {
+    return `import DOTP from "discourse/components/d-otp";
+
+<template>
+  <DOTP @slots={{4}} />
+</template>`;
+  }
+
   <template>
-    <StyleguideExample @title="d-otp">
+    <StyleguideExample @title="DOTP" @code={{this.codeSample1}}>
       <DOTP @onFill={{this.filled}} @onChange={{this.changed}} />
 
       {{#if this.changedOutput}}
@@ -41,7 +57,7 @@ export default class OTP extends Component {
       {{/if}}
     </StyleguideExample>
 
-    <StyleguideExample @title="@slots={{4}}">
+    <StyleguideExample @title="DOTP @slots={{4}}" @code={{this.codeSample2}}>
       <DOTP @slots={{4}} />
     </StyleguideExample>
   </template>
