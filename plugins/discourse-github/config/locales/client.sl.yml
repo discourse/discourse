@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 sl:
+  js:
+    github:
+      pr_status:
+        draft: "Osnutek"
+        open: "Odpri"
+        approved: "Potrjeno"
+        closed: "Zaprta"

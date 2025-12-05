@@ -604,6 +604,3 @@ fr:
       custom_tool_exists:
         one: "L'outil personnalisé portant le nom %{names} existe déjà."
         other: "Des outils personnalisés portant le nom %{names} existent déjà."
-  dashboard:
-    problem:
-      ai_llm_status: "Le modèle LLM : %{model_name} rencontre des problèmes. Veuillez consulter la <a href='%{url}'>page de configuration du modèle</a>."

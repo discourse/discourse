@@ -12,6 +12,8 @@ pl_PL:
     github_linkback_access_token: 'Ważny token dostępu dla użytkownika, który opublikuje link zwrotny oraz do liczenia commitów/wkładów w celu przyznania odznak. Zerknij <a href="https://meta.discourse.org/t/99895">tutaj</a>, aby uzyskać instrukcje, jak zdobyć token.'
     github_linkback_maximum_links: "Maksymalna liczba linków zwrotnych, jakie można utworzyć z jednego wpisu. Jeśli wpis zawiera więcej linków, żaden nie zostanie utworzony."
     github_permalinks_enabled: "Włącz nadpisywanie stałych linków GitHub"
+    github_pr_status_enabled: "Pokaż status żądania ściągnięcia GitHub na oneboxach (wersja robocza, otwarta, zatwierdzona, scalona, zamknięta)"
+    github_webhook_secret: "Tajny token do weryfikacji podpisu webhooka GitHub. Skonfiguruj tę wartość w ustawieniach webhooka GitHub."
     github_permalinks_exclude: "Nazwa pliku lub katalogu, który ma zostać wykluczony z nadpisywania permalinków. Podaj tylko nazwę pliku lub pełną ścieżkę: użytkownik/repozytorium/katalog-opcjonalny/nazwa-pliku"
     github_badges_enabled: "Włącz odznaki GitHub"
     github_badges_repos: "Adresy URL repozytoriów GitHub do skanowania w poszukiwaniu wkładów i zatwierdzeń"

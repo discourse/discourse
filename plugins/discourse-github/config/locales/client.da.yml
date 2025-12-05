@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 da:
+  js:
+    github:
+      pr_status:
+        draft: "Kladde"
+        open: "Åbn"
+        approved: "Godkendt"
+        closed: "Lukket"

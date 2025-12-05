@@ -60,6 +60,9 @@ cs:
       cancel: "Zrušit"
       cancel_reply: "Zrušit odpověď"
       chat_channels: "Kanály"
+      starred: "Oblíbené"
+      starred_channels: "Oblíbené kanály"
+      starred_channels_empty: "Zatím jste neoznačili žádné kanály jako oblíbené. Ty se zde objeví pro rychlejší přístup."
       browse_all_channels: "Procházet všechny kanály"
       see_in: "Zobrazit v"
       move_to_channel:
@@ -80,6 +83,8 @@ cs:
         title: "Nastavení kanálu"
         edit: "Upravit"
         add: "přidat"
+        star_channel: "Nastavit jako oblíbený"
+        unstar_channel: "Odebrat z oblíbených"
         close_channel: "Zavřít kanál"
         open_channel: "Otevřít kanál"
         archive_channel: "Archivovat kanál"

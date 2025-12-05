@@ -221,6 +221,7 @@ el:
           fake: "Προσαρμοσμένο"
       ai_bot:
         llm: "Μοντέλο"
+        try_again: "Δοκιμάστε ξανά"
         debug_ai_modal:
           request: "Αίτημα"
           response: "Απάντηση"

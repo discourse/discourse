@@ -627,6 +627,3 @@ sk:
         few: "Vlastné nástroje s názvom %{names} už existujú."
         many: "Vlastné nástroje s názvom %{names} už existujú."
         other: "Vlastné nástroje s názvom %{names} už existujú."
-  dashboard:
-    problem:
-      ai_llm_status: "Model LLM: %{model_name} má problémy. Skontrolujte konfiguračnú stránku modelu <a href='%{url}'></a>."

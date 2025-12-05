@@ -604,6 +604,3 @@ tr_TR:
       custom_tool_exists:
         one: "%{names} adlı bir özel araç zaten mevcut."
         other: "%{names} adlı özel araçlar zaten mevcut."
-  dashboard:
-    problem:
-      ai_llm_status: "LLM modeli: %{model_name} sorunlarla karşılaşıyor. Lütfen <a href='%{url}'>modelin yapılandırma sayfasını</a> kontrol edin."

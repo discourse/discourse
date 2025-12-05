@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 sk:
+  js:
+    github:
+      pr_status:
+        draft: "Návrh"
+        open: "Zahájiť"
+        approved: "Schválený"
+        closed: "Hlasovanie ukončené"
   admin_js:
     admin:
       site_settings:

@@ -227,6 +227,7 @@ ro:
           google: "Google"
           fake: "Personalizat"
       ai_bot:
+        try_again: "Încearcă din nou"
         exit: "ieșire bot IA"
         debug_ai_modal:
           request: "Cere"

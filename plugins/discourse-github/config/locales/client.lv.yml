@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 lv:
+  js:
+    github:
+      pr_status:
+        open: "Atvērt"
+        approved: "Apstiprināt"
+        closed: "Slēgts"

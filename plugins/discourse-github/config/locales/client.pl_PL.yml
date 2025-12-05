@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  js:
+    github:
+      pr_status:
+        draft: "Szkic"
+        open: "Otwórz"
+        approved: "Zaakceptowany"
+        merged: "Scalono"
+        closed: "Zamknięte"
   admin_js:
     admin:
       site_settings:

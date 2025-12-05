@@ -793,6 +793,7 @@ sk:
         llm: "Model"
         pm_warning: "Správy AI chatbota pravidelne monitorujú moderátori."
         cancel_streaming: "Zastaviť odpoveď"
+        try_again: "Skúste to znova"
         default_pm_prefix: "[Bez názvu AI bot PM]"
         shortcut_title: "Spustenie PM s botom AI"
         shortcut_link: "AI bot"
