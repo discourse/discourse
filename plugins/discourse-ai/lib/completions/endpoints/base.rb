@@ -7,6 +7,8 @@ module DiscourseAi
         attr_reader :partial_tool_calls, :output_thinking
 
         CompletionFailed = Class.new(StandardError)
+        FAIL_THRESHOLD = 5
+        FAIL_TTL = 1.hour
         # 6 minutes
         # Reasoning LLMs can take a very long time to respond, generally it will be under 5 minutes
         # The alternative is to have per LLM timeouts but that would make it extra confusing for people
@@ -149,6 +151,7 @@ module DiscourseAi
               cancel_manager_callback =
                 lambda do
                   cancelled = true
+                  call_status = :cancelled
                   http.finish
                 end
               cancel_manager.add_callback(cancel_manager_callback)
@@ -181,14 +184,21 @@ module DiscourseAi
                   )
               end
 
-            # during dev we want to log all requests even ones that fail
-            start_logging.call if Rails.env.development?
+            start_logging.call
+
+            if cancelled || cancel_manager&.cancelled?
+              call_status = :cancelled
+              break
+            end
 
             http.request(request) do |response|
+              log.response_status = response.code.to_i if log
+
               if response.code.to_i != 200
                 Rails.logger.error(
                   "#{self.class.name}: status: #{response.code.to_i} - body: #{response.body}",
                 )
+                response_raw << response.body.to_s
                 raise CompletionFailed, response.body
               end
 
@@ -216,8 +226,6 @@ module DiscourseAi
                     orig_blk.call(partial) if partial
                   end
               end
-
-              start_logging.call if !log
 
               if !@streaming_mode
                 response_data =
@@ -278,10 +286,13 @@ module DiscourseAi
               call_status = :success
               return response_data
             ensure
-              if log
+              should_log = log && call_status != :cancelled
+
+              if should_log
                 log.raw_response_payload = response_raw
                 final_log_update(log)
                 log.response_tokens = tokenizer.size(partials_raw) if log.response_tokens.blank?
+                log.response_status ||= 200
                 log.created_at = start_time
                 log.updated_at = Time.now
                 log.duration_msecs = (Time.now - start_time) * 1000
@@ -309,7 +320,10 @@ module DiscourseAi
                   puts "#{self.class.name}: request_tokens #{log.request_tokens} response_tokens #{log.response_tokens}"
                 end
               end
-              if log && (logger = Thread.current[:llm_audit_log])
+
+              track_failures(call_status)
+
+              if should_log && (logger = Thread.current[:llm_audit_log])
                 call_data = <<~LOG
                   #{self.class.name}: request_tokens #{log.request_tokens} response_tokens #{log.response_tokens}
                   request:
@@ -319,7 +333,7 @@ module DiscourseAi
                 LOG
                 logger.info(call_data)
               end
-              if log && (structured_logger = Thread.current[:llm_audit_structured_log])
+              if should_log && (structured_logger = Thread.current[:llm_audit_structured_log])
                 llm_request =
                   begin
                     JSON.parse(log.raw_request_payload)
@@ -431,6 +445,28 @@ module DiscourseAi
           rescue JSON::ParserError
             payload
           end
+        end
+
+        def track_failures(call_status)
+          return if call_status == :cancelled
+          return if llm_model.blank? || llm_model.seeded?
+          key = "ai_llm_status_fast_fail:#{llm_model.id}"
+
+          if call_status == :success
+            Discourse.redis.del(key)
+            return
+          end
+
+          failures_count = Discourse.redis.incr(key)
+          Discourse.redis.expire(key, FAIL_TTL.to_i)
+
+          return if failures_count < FAIL_THRESHOLD
+
+          ProblemCheck::AiLlmStatus.fast_track_problem!(
+            llm_model,
+            failures_count,
+            (FAIL_TTL / 1.hour),
+          )
         end
 
         def start_log(

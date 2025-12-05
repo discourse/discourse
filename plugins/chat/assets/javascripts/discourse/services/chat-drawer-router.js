@@ -10,6 +10,7 @@ import ChatDrawerRoutesChannelThreads from "discourse/plugins/chat/discourse/com
 import ChatDrawerRoutesChannels from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channels";
 import ChatDrawerRoutesDirectMessages from "discourse/plugins/chat/discourse/components/chat/drawer-routes/direct-messages";
 import ChatDrawerRoutesSearch from "discourse/plugins/chat/discourse/components/chat/drawer-routes/search";
+import ChatDrawerRoutesStarredChannels from "discourse/plugins/chat/discourse/components/chat/drawer-routes/starred-channels";
 import ChatDrawerRoutesThreads from "discourse/plugins/chat/discourse/components/chat/drawer-routes/threads";
 
 const ROUTES = {
@@ -156,6 +157,9 @@ const ROUTES = {
   },
   "chat.direct-messages": {
     name: ChatDrawerRoutesDirectMessages,
+  },
+  "chat.starred-channels": {
+    name: ChatDrawerRoutesStarredChannels,
   },
   "chat.threads": {
     name: ChatDrawerRoutesThreads,

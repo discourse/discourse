@@ -2642,6 +2642,9 @@ sv:
         relist_topics: "Lista om ämnen"
         reset_bump_dates: "Återställ knuffdatum"
         delete: "Ta bort ämnen"
+        delete_topics_count:
+          one: "Radera ämne"
+          other: "Ta bort ämnen"
         dismiss: "Avfärda"
         dismiss_read: "Avfärda alla olästa"
         dismiss_read_with_selected:

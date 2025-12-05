@@ -604,6 +604,3 @@ nl:
       custom_tool_exists:
         one: "Aangepaste tool met de naam %{names} bestaat al."
         other: "Aangepaste tools met de namen %{names} bestaan al."
-  dashboard:
-    problem:
-      ai_llm_status: "Het LLM-model %{model_name} ondervindt problemen. Controleer de <a href='%{url}'>configuratiepagina van het model</a>."

@@ -53,6 +53,9 @@ en:
       cancel: "Cancel"
       cancel_reply: "Cancel reply"
       chat_channels: "Channels"
+      starred: "Starred"
+      starred_channels: "Starred channels"
+      starred_channels_empty: "You haven't starred any channels yet. Star channels to see them here for quick access."
       browse_all_channels: "Browse all channels"
       see_in: "See in"
       move_to_channel:
@@ -69,6 +72,8 @@ en:
         title: "Channel settings"
         edit: "Edit"
         add: "Add"
+        star_channel: "Star channel"
+        unstar_channel: "Unstar channel"
         close_channel: "Close channel"
         open_channel: "Open channel"
         archive_channel: "Archive channel"

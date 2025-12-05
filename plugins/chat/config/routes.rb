@@ -93,6 +93,7 @@ Chat::Engine.routes.draw do
   get "/new-message" => "chat#respond"
   get "/direct-messages" => "chat#respond"
   get "/channels" => "chat#respond"
+  get "/starred-channels" => "chat#respond"
   get "/threads" => "chat#respond"
   get "/browse" => "chat#respond"
   get "/browse/all" => "chat#respond"

@@ -2374,6 +2374,8 @@ vi:
         unlist_topics: "Chủ đề không công khai"
         relist_topics: "Chủ đề liên quan"
         delete: "Xóa chủ đề"
+        delete_topics_count:
+          other: "Xóa chủ đề"
         dismiss: "Bỏ qua"
         dismiss_read: "Bỏ qua tất cả thư chưa đọc"
         dismiss_read_with_selected:

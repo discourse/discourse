@@ -783,6 +783,7 @@ pt_BR:
         llm: "Modelo"
         pm_warning: "Todas as mensagens do chatbot de IA são monitoradas regularmente por moderadores(as)."
         cancel_streaming: "Parar resposta"
+        try_again: "Tentar novamente"
         default_pm_prefix: "[MP de bot de IA não identificado]"
         shortcut_title: "Iniciar uma MP com bot de IA"
         shortcut_link: "Bot de IA"

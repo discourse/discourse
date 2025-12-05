@@ -34,6 +34,7 @@ RSpec.describe "Middleware order" do
       Rack::ConditionalGet,
       Rack::TempfileReaper,
       Middleware::CrawlerHooks,
+      Rack::Sendfile,
       Middleware::OmniauthBypassMiddleware,
     ]
   end

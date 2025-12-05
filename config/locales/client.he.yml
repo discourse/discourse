@@ -3602,6 +3602,11 @@ he:
         reset_bump_dates: "איפוס תאריכי ההקפצות"
         defer: "סימון כלא נקרא"
         delete: "מחיקת נושאים"
+        delete_topics_count:
+          one: "מחק נושא"
+          two: "מחיקת נושאים"
+          many: "מחיקת נושאים"
+          other: "מחיקת נושאים"
         dismiss: "ביטול"
         dismiss_read: "התעלמות מאלו שלא נקראו"
         dismiss_read_with_selected:

@@ -32,6 +32,7 @@ pl_PL:
     chat_preferred_index: "Preferowana zakładka podczas ładowania /chat."
     allow_chat_in_anonymous_mode: "Włącz to ustawienie, aby umożliwić użytkownikom, którzy przeglądają twoją stronę anonimowo, korzystanie z czatu. To ustawienie wymaga włączenia ustawienia `allow anonymous mode`."
     chat_search_enabled: "Włącz to ustawienie, aby umożliwić użytkownikom przeszukiwanie wiadomości na czacie."
+    star_chat_channels: "Włącz wyróżnianie kanałów czatu. Wyróżnione kanały będą znajdować się w osobnej sekcji na pasku bocznym, umożliwiając szybki dostęp."
     errors:
       chat_default_channel: "Domyślny kanał czatu musi być kanałem publicznym."
       direct_message_enabled_groups_invalid: "Musisz określić co najmniej jedną grupę dla tego ustawienia. Jeśli nie chcesz, aby ktokolwiek poza personelem wysyłał bezpośrednie wiadomości, wybierz grupę pracowników."

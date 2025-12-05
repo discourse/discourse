@@ -10,6 +10,15 @@ pl_PL:
       llm_model:
         name: "Identyfikator modelu"
         max_prompt_tokens: "Okno kontekstowe"
+  dashboard:
+    problem:
+      ai_llm_status:
+        one: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> wymaga uwagi. W ciągu ostatniej godziny nie odpowiedział w %{failed_calls} na %{total_calls}."
+        few: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> wymaga uwagi. W ciągu ostatnich %{count} godzin nie odpowiedział w %{failed_calls} na %{total_calls}."
+        many: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> wymaga uwagi. W ciągu ostatnich %{count} godzin nie odpowiedział w %{failed_calls} na %{total_calls}."
+        other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> wymaga uwagi. W ciągu ostatnich %{count} godzin nie odpowiedział w %{failed_calls} na %{total_calls}."
+      ai_credit_soft_limit: "%{model_name} ma tylko %{percentage_remaining}% pozostałych kredytów. Kredyty zostaną zresetowane o %{reset_date}. <a href='%{url}'>Zobacz modele AI</a>"
+      ai_credit_hard_limit: "Skończyły Ci się kredyty AI na %{model_name}. Funkcje AI będą niedostępne do %{reset_date}. <a href='%{url}'>Zobacz modele AI</a>"
   discourse_automation:
     ai:
       flag_types:
@@ -668,9 +677,6 @@ pl_PL:
       errors:
         disabled: "Funkcja tłumaczenia AI nie jest w pełni skonfigurowana."
         all_posts_translated: "Wszystkie wpisy tego tematu są już przetłumaczone."
-    llm_credit_allocation:
-      limit_exceeded_user: "Osiągnięto limit kredytu AI. Spróbuj ponownie za %{reset_time}. Aby uzyskać więcej informacji, skontaktuj się z administratorem witryny."
-      limit_exceeded_admin: "Osiągnięto limit kredytów AI. Spróbuj ponownie za %{reset_time}."
     errors:
       quota_exceeded: "Przekroczyłeś limit dla tego modelu. Spróbuj ponownie za %{relative_time}."
       quota_required: "Musisz określić maksymalną liczbę tokenów lub użyć dla tego modelu"
@@ -689,8 +695,3 @@ pl_PL:
         few: "Niestandardowe narzędzia o nazwach %{names} już istnieją."
         many: "Niestandardowe narzędzia o nazwach %{names} już istnieją."
         other: "Niestandardowe narzędzia o nazwach %{names} już istnieją."
-  dashboard:
-    problem:
-      ai_llm_status: "Model LLM: %{model_name} napotyka problemy. Proszę sprawdzić stronę konfiguracji modelu <a href='%{url}'></a>."
-      ai_credit_soft_limit: "%{model_name} ma tylko %{percentage_remaining}% pozostałych kredytów. Kredyty zostaną zresetowane o %{reset_date}. <a href='%{url}'>Zobacz modele AI</a>"
-      ai_credit_hard_limit: "Skończyły Ci się kredyty AI na %{model_name}. Funkcje AI będą niedostępne do %{reset_date}. <a href='%{url}'>Zobacz modele AI</a>"

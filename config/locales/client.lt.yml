@@ -2720,6 +2720,11 @@ lt:
         clear_all: "Išvalyti viską"
         unlist_topics: "Atžymėti temas"
         delete: "Ištrinti temas"
+        delete_topics_count:
+          one: "Ištrinti temą"
+          few: "Ištrinti temas"
+          many: "Ištrinti temas"
+          other: "Ištrinti temas"
         dismiss: "Praleisti"
         dismiss_read: "Praleisti visas neperskaitytas"
         dismiss_button: "Praleisti..."

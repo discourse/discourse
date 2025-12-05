@@ -632,6 +632,3 @@ zh_CN:
       persona_already_exists: 名称为“%{name}”的角色已存在。
       custom_tool_exists:
         other: "名称为“%{names}”的自定义工具已存在。"
-  dashboard:
-    problem:
-      ai_llm_status: "LLM 模型：%{model_name} 遇到了问题。请检查<a href='%{url}'>模型的配置页面</a>。"

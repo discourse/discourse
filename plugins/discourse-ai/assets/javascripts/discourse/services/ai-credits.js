@@ -113,7 +113,7 @@ export default class AiCredits extends Service {
    */
   getCreditLimitMessage(creditStatus) {
     const resetTime =
-      creditStatus?.reset_time_relative || creditStatus?.reset_time_formatted;
+      creditStatus?.reset_time_formatted || creditStatus?.reset_time_absolute;
 
     return getAiCreditLimitMessage({
       resetTime,

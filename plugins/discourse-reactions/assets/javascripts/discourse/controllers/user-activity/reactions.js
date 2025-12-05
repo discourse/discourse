@@ -15,7 +15,7 @@ export default class UserActivityReactions extends Controller {
   @tracked beforeReactionUserId = null;
 
   #getLastIdFrom(array) {
-    return array.length ? array[array.length - 1].id : null;
+    return array.length ? array[array.length - 1].reaction_user_id : null;
   }
 
   #updateBeforeIds(reactionUsers) {
