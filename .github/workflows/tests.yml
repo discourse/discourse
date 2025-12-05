@@ -1,4 +1,4 @@
-fname: Tests
+name: Tests
 
 on:
   pull_request:
