@@ -279,6 +279,10 @@ export default class ChatChannelsManager extends Service {
     );
 
     return starredChannels.sort((a, b) => {
+      if (a.isDirectMessageChannel !== b.isDirectMessageChannel) {
+        return a.isDirectMessageChannel ? 1 : -1;
+      }
+
       const aUrgent = this.#getChannelUrgentCount(a);
       const bUrgent = this.#getChannelUrgentCount(b);
 
