@@ -6,7 +6,7 @@ import concatClass from "discourse/helpers/concat-class";
 import { blockConfigs } from "discourse/lib/plugin-api";
 import { or } from "discourse/truth-helpers";
 
-export default class BlockFrame extends Component {
+export default class BlockOutlet extends Component {
   @service discovery;
 
   get blocks() {
@@ -54,9 +54,9 @@ export default class BlockFrame extends Component {
           <div class={{concat @name "__layout"}}>
             {{#each this.blocks as |block|}}
               {{#if block.group}}
-                <GroupedBlocks @group={{block}} @blockLayoutName={{@name}} />
+                <GroupedBlocks @group={{block}} @blockOutlet={{@name}} />
               {{else}}
-                <WrappedBlock @block={{block}} @blockLayoutName={{@name}} />
+                <WrappedBlock @block={{block}} @blockOutlet={{@name}} />
               {{/if}}
             {{/each}}
           </div>
@@ -69,7 +69,7 @@ export default class BlockFrame extends Component {
 const WrappedBlock = <template>
   <div
     class={{concatClass
-      (concat @blockLayoutName "__block ")
+      (concat @blockOutlet "__block ")
       (concat "block-" @block.block.blockName)
       @block.customClass
     }}
@@ -84,9 +84,9 @@ const WrappedBlock = <template>
 </template>;
 
 const GroupedBlocks = <template>
-  <div class={{concatClass (concat @blockLayoutName "__group ") @group.group}}>
+  <div class={{concatClass (concat @blockOutlet "__group ") @group.group}}>
     {{#each @group.blocks as |block|}}
-      <WrappedBlock @block={{block}} @blockLayoutName={{@blockLayoutName}} />
+      <WrappedBlock @block={{block}} @blockOutlet={{@blockOutlet}} />
     {{/each}}
 
   </div>
