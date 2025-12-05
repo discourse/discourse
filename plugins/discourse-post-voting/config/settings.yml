@@ -29,3 +29,16 @@ plugins:
     allow_any: false
     refresh: true
     validator: "AtLeastOneGroupValidator"
+  post_voting_serialize_topic_votes_count:
+    client: true
+    default: false
+  post_voting_topic_vote_count_mode:
+    client: true
+    default: first_post
+    type: enum
+    choices:
+      - first_post
+      - total
+    description: |
+      Choose whether the Votes column shows only the first post's vote count
+      or the total votes across all posts in the topic.
