@@ -54,10 +54,19 @@ export default {
 
       api.modifySelectKit("composer-actions").appendContent((options) => {
         if (options.action === CREATE_TOPIC) {
-          if (
-            options.composerModel.createAsPostVoting &&
-            !options.composerModel.onlyPostVotingInThisCategory
-          ) {
+          const currentUser = api.getCurrentUser();
+          const canCreatePostVotingTopic =
+            currentUser?.can_create_post_voting_topic;
+
+          if (options.composerModel.onlyPostVotingInThisCategory) {
+            return [];
+          }
+
+          if (!canCreatePostVotingTopic) {
+            return [];
+          }
+
+          if (options.composerModel.createAsPostVoting) {
             return [
               {
                 name: i18n(
@@ -70,8 +79,6 @@ export default {
                 id: "togglePostVoting",
               },
             ];
-          } else if (options.composerModel.onlyPostVotingInThisCategory) {
-            return [];
           } else {
             return [
               {
