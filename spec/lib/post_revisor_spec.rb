@@ -976,6 +976,31 @@ describe PostRevisor do
       end
     end
 
+    describe "changing post ownership" do
+      it "does not call Topic.reset_highest when only user_id is changed" do
+        new_owner = Fabricate(:user)
+        Topic.expects(:reset_highest).never
+
+        post_revisor.revise!(admin, user_id: new_owner.id)
+      end
+
+      it "calls Topic.reset_highest when user_id and other fields are changed" do
+        new_owner = Fabricate(:user)
+        Topic.expects(:reset_highest).once
+
+        post_revisor.revise!(admin, user_id: new_owner.id, raw: "updated body")
+      end
+
+      it "does not increment post_edits_count when system user changes ownership" do
+        new_owner = Fabricate(:user)
+        system_user = Discourse.system_user
+
+        expect do post_revisor.revise!(system_user, user_id: new_owner.id) end.not_to change {
+          system_user.user_stat.post_edits_count.to_i
+        }
+      end
+    end
+
     it "doesn't strip starting whitespaces" do
       post_revisor.revise!(post.user, raw: "    <-- whitespaces -->    ")
       post.reload
