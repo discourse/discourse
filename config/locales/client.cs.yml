@@ -1033,6 +1033,7 @@ cs:
           few: "Nahlášeno %{count} unikátními uživateli"
           many: "Nahlášeno %{count} unikátními uživateli"
           other: "Nahlášeno %{count} unikátními uživateli"
+        similar_posts: "Minulá porušení"
         flagged_in_timeframe:
           one: "%{count} potvrzený příznak"
           few: "%{count} potvrzené příznaky"
@@ -3617,6 +3618,11 @@ cs:
         reset_bump_dates: "Resetovat data pošťouchnutí"
         defer: "Označit jako nepřečtené"
         delete: "Smazat témata"
+        delete_topics_count:
+          one: "Odstranit téma"
+          few: "Smazat témata"
+          many: "Smazat témata"
+          other: "Smazat témata"
         dismiss: "Označit jako přečtené"
         dismiss_read: "Označit všechno nepřečtené jako přečtené"
         dismiss_read_with_selected:

@@ -1655,6 +1655,9 @@ et:
         clear_all: "Puhasta kõik"
         unlist_topics: "Eemalda teemad loetelust"
         delete: "Kustuta teemad"
+        delete_topics_count:
+          one: "Kustuta teema"
+          other: "Kustuta teemad"
         dismiss: "Ignoreeri"
         dismiss_read: "Ignoreeri lugemata"
         dismiss_button: "Ignoreeri..."

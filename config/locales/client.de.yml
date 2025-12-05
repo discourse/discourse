@@ -889,6 +889,7 @@ de:
         flagged_by_users:
           one: "Gemeldet von %{count} eindeutigen Benutzer"
           other: "Gemeldet von %{count} eindeutigen Benutzern"
+        similar_posts: "Frühere Verstöße"
         flagged_in_timeframe:
           one: "%{count} bestätigte Meldung"
           other: "%{count} bestätigte Meldungen"
@@ -3242,6 +3243,9 @@ de:
         reset_bump_dates: "„Nach oben verschieben“-Zeitangaben zurücksetzen"
         defer: "Als ungelesen markieren"
         delete: "Themen löschen"
+        delete_topics_count:
+          one: "Thema löschen"
+          other: "Themen löschen"
         dismiss: "Ignorieren"
         dismiss_read: "Blende alle ungelesenen Beiträge aus"
         dismiss_read_with_selected:

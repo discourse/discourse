@@ -3031,6 +3031,8 @@ ja:
         reset_bump_dates: "バンプ日をリセットする"
         defer: "未読にする"
         delete: "トピックを削除"
+        delete_topics_count:
+          other: "トピックを削除"
         dismiss: "閉じる"
         dismiss_read: "未読をすべて閉じる"
         dismiss_read_with_selected:

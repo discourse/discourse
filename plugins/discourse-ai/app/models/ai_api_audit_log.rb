@@ -43,6 +43,7 @@ end
 #  raw_request_payload  :string
 #  raw_response_payload :string
 #  request_tokens       :integer
+#  response_status      :integer
 #  response_tokens      :integer
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null

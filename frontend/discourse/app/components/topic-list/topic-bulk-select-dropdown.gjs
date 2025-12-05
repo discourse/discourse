@@ -12,6 +12,9 @@ const TopicBulkSelectDropdown = <template>
     <BulkSelectTopicsDropdown
       @bulkSelectHelper={{@bulkSelectHelper}}
       @afterBulkActionComplete={{@afterBulkActionComplete}}
+      @extraButtons={{@extraButtons}}
+      @excludedButtonIds={{@excludedButtonIds}}
+      @onAction={{@onAction}}
     />
   </div>
 </template>;

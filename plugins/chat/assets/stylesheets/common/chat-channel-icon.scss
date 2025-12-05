@@ -20,6 +20,13 @@
     }
   }
 
+  img.emoji {
+    .chat-channel-row .is-dm & {
+      width: var(--channel-list-avatar-size);
+      height: var(--channel-list-avatar-size);
+    }
+  }
+
   .chat-user-avatar {
     .avatar {
       .chat-channel-row & {

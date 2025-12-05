@@ -3,6 +3,7 @@
 describe "Search", type: :system do
   let(:search_page) { PageObjects::Pages::Search.new }
   fab!(:topic)
+  fab!(:op) { Fabricate(:post, topic: topic) }
   fab!(:post) { Fabricate(:post, topic: topic, raw: "This is a test post in a test topic") }
   fab!(:topic2) { Fabricate(:topic, title: "Another test topic") }
   fab!(:post2) { Fabricate(:post, topic: topic2, raw: "This is another test post in a test topic") }
@@ -241,6 +242,7 @@ describe "Search", type: :system do
     before do
       SearchIndexer.enable
       SearchIndexer.index(topic, force: true)
+      SearchIndexer.index(post, force: true)
       SearchIndexer.index(topic2, force: true)
       Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: false)
       sign_in(admin)
@@ -264,6 +266,23 @@ describe "Search", type: :system do
       expect(
         find(".fps-result .fps-topic[data-topic-id=\"#{topic.id}\"] .discourse-tags"),
       ).to have_content(tag1.name)
+    end
+
+    it "allows the user to delete posts in bulk" do
+      visit("/search?q=This%20is%20a%20test%20post")
+      expect(page).to have_content(post.raw)
+
+      find(".search-info .bulk-select").click
+      find(".fps-result .fps-topic[data-topic-id=\"#{topic.id}\"] .bulk-select input").click
+      find(".search-info .bulk-select-topics-dropdown-trigger").click
+
+      find(".bulk-select-topics-dropdown-content .delete-posts").click
+
+      find(".dialog-content")
+      click_button "OK"
+
+      expect(page).to have_no_content(post.raw)
+      expect(Post.with_deleted.find_by(id: post.id).deleted_at).to be_present
     end
   end
 

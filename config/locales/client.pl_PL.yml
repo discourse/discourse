@@ -1030,6 +1030,7 @@ pl_PL:
           few: "Oflagowany przez %{count} unikalnych użytkowników"
           many: "Oflagowany przez %{count} unikalnych użytkowników"
           other: "Oflagowany przez %{count} unikalnych użytkowników"
+        similar_posts: "Przeszłe naruszenia"
         flagged_in_timeframe:
           one: "%{count} potwierdzona flaga"
           few: "%{count} potwierdzone flagi"
@@ -3613,6 +3614,21 @@ pl_PL:
         reset_bump_dates: "Zresetuj daty ważności"
         defer: "Oznacz jako nieprzeczytane"
         delete: "Usuń tematy"
+        delete_topics_count:
+          one: "Usuń temat"
+          few: "Usuń tematy"
+          many: "Usuń tematy"
+          other: "Usuń tematy"
+        delete_posts_count:
+          one: "Usuń wpis"
+          few: "Usuń wpisy"
+          many: "Usuń wpisy"
+          other: "Usuń wpisy"
+        delete_posts_confirmation:
+          one: "Czy na pewno chcesz usunąć %{count} wpis?"
+          few: "Czy na pewno chcesz usunąć %{count} wpisy?"
+          many: "Czy na pewno chcesz usunąć %{count} wpisów?"
+          other: "Czy na pewno chcesz usunąć %{count} wpisów?"
         dismiss: "Wyczyść"
         dismiss_read: "Wyczyść nieprzeczytane"
         dismiss_read_with_selected:

@@ -3419,6 +3419,11 @@ sk:
         reset_bump_dates: "Obnoviť dátumy bump"
         defer: "Označiť ako neprečítané"
         delete: "Zmazať témy"
+        delete_topics_count:
+          one: "Zmazať tému"
+          few: "Zmazať témy"
+          many: "Zmazať témy"
+          other: "Zmazať témy"
         dismiss: "Zahodiť"
         dismiss_read: "Zahodiť všetký neprečítané"
         dismiss_read_with_selected:

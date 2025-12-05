@@ -3198,6 +3198,9 @@ nl:
         reset_bump_dates: "Omhoogplaatsingsdatums resetten"
         defer: "Markeren als ongelezen"
         delete: "Topics verwijderen"
+        delete_topics_count:
+          one: "Topic verwijderen"
+          other: "Topics verwijderen"
         dismiss: "Negeren"
         dismiss_read: "Alle ongelezen negeren"
         dismiss_read_with_selected:

@@ -3198,6 +3198,9 @@ pt_BR:
         reset_bump_dates: "Redefinir datas de promoção"
         defer: "Marcar não lido"
         delete: "Excluir tópicos"
+        delete_topics_count:
+          one: "Excluir tópico"
+          other: "Excluir tópicos"
         dismiss: "Descartar"
         dismiss_read: "Descartar todos os não lidos"
         dismiss_read_with_selected:

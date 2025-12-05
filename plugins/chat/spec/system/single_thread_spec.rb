@@ -233,7 +233,7 @@ describe "Single thread in side panel", type: :system do
         sign_in(current_user)
         chat_page.visit_channel(channel)
         expect(page).not_to have_css(
-          ".sidebar-section-link.channel-#{channel.id} .sidebar-section-link-suffix.unread",
+          ".sidebar-section-link.channel-#{channel.id} .sidebar-section-link-content-badge.unread",
         )
       end
     end
