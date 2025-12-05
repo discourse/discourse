@@ -30,11 +30,7 @@ export default defineConfig(({ mode, command }) => {
       find: "ember-buffered-proxy/proxy",
       replacement: "ember-buffered-proxy/addon/proxy",
     },
-  ];
 
-  // if (command !== "build") {
-  // v1 addon patches for dev only
-  aliases.push(
     {
       find: "@ember-decorators/object",
       replacement: "@ember-decorators/object/addon",
@@ -55,8 +51,8 @@ export default defineConfig(({ mode, command }) => {
     {
       find: "ember-exam/test-support/load",
       replacement: "ember-exam/addon-test-support/load",
-    }
-  );
+    },
+  ];
   // }
   return {
     base: "",
