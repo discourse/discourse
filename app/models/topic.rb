@@ -361,7 +361,7 @@ class Topic < ActiveRecord::Base
   scope :exclude_scheduled_bump_topics, -> { where.not(id: TopicTimer.scheduled_bump_topics) }
 
   scope :secured,
-        lambda { |guardian = nil|
+        lambda { |guardian = nil, include_uncategorized: true|
           ids = guardian.secure_category_ids if guardian
 
           # Query conditions
@@ -372,8 +372,10 @@ class Topic < ActiveRecord::Base
               ["NOT read_restricted"]
             end
 
+          uncategorized_condition = "topics.category_id IS NULL OR" if include_uncategorized
+
           where(
-            "topics.category_id IS NULL OR topics.category_id IN (SELECT id FROM categories WHERE #{condition[0]})",
+            "#{uncategorized_condition} topics.category_id IN (SELECT id FROM categories WHERE #{condition[0]})",
             condition[1],
           )
         }
