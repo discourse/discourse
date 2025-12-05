@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::Utils::Research::Filter do
+RSpec.describe DiscourseAi::Utils::Research::Filter do
   before { enable_current_plugin }
 
   describe "integration tests" do

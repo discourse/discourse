@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::Translation::CategoryLocalizer do
+RSpec.describe DiscourseAi::Translation::CategoryLocalizer do
   subject(:localizer) { described_class }
 
   before do

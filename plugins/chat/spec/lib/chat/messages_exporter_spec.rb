@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Chat::MessagesExporter do
+RSpec.describe Chat::MessagesExporter do
   context "with different kinds of channels" do
     fab!(:public_channel, :chat_channel)
     fab!(:public_channel_message_1) { Fabricate(:chat_message, chat_channel: public_channel) }

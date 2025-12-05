@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostVoting::TopicViewSerializerExtension do
+RSpec.describe PostVoting::TopicViewSerializerExtension do
   fab!(:topic) { Fabricate(:topic, subtype: Topic::POST_VOTING_SUBTYPE) }
   fab!(:topic_post) { Fabricate(:post, topic: topic) }
   fab!(:answer) { Fabricate(:post, topic: topic, reply_to_post_number: nil) }

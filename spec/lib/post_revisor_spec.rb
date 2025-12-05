@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostRevisor do
+RSpec.describe PostRevisor do
   fab!(:topic)
   fab!(:newuser) { Fabricate(:newuser, last_seen_at: Date.today) }
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }

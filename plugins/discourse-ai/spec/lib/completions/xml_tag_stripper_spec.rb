@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::Completions::PromptMessagesBuilder do
+RSpec.describe DiscourseAi::Completions::PromptMessagesBuilder do
   let(:tag_stripper) { DiscourseAi::Completions::XmlTagStripper.new(%w[thinking results]) }
 
   before { enable_current_plugin }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PrettyText do
+RSpec.describe PrettyText do
   describe "markdown it" do
     it "can properly bake boxes" do
       md = <<~MD

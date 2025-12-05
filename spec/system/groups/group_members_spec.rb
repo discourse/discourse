@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Group members", type: :system do
+RSpec.describe "Group members", type: :system do
   let(:group_page) { PageObjects::Pages::Group.new }
   fab!(:admin)
   fab!(:group)

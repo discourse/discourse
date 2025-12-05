@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PolicyUser do
+RSpec.describe PolicyUser do
   before do
     enable_current_plugin
     Jobs.run_immediately!

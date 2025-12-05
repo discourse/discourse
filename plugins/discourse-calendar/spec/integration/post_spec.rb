@@ -2,7 +2,7 @@
 
 require "securerandom"
 
-describe Post do
+RSpec.describe Post do
   before do
     freeze_time
     Jobs.run_immediately!

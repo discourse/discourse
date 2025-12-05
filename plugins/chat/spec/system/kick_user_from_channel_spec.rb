@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Kick user from chat channel", type: :system do
+RSpec.describe "Kick user from chat channel", type: :system do
   fab!(:current_user, :user)
   fab!(:channel_1, :chat_channel)
   fab!(:channel_2, :chat_channel)

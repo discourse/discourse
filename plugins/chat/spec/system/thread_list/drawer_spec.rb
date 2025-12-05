@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Thread list in side panel | drawer", type: :system do
+RSpec.describe "Thread list in side panel | drawer", type: :system do
   fab!(:current_user, :admin)
   fab!(:channel, :chat_channel)
   fab!(:other_user, :user)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "AI Tool Management", type: :system do
+RSpec.describe "AI Tool Management", type: :system do
   fab!(:admin)
   let(:page_header) { PageObjects::Components::DPageHeader.new }
 

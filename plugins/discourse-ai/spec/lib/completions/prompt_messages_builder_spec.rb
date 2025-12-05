@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::Completions::PromptMessagesBuilder do
+RSpec.describe DiscourseAi::Completions::PromptMessagesBuilder do
   let(:builder) { DiscourseAi::Completions::PromptMessagesBuilder.new }
   fab!(:user)
   fab!(:admin)

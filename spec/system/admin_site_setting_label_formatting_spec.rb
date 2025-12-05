@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Site Setting Formatting", type: :system do
+RSpec.describe "Admin Site Setting Formatting", type: :system do
   let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
   fab!(:admin)
 

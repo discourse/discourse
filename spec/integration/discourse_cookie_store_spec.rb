@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ActionDispatch::Session::DiscourseCookieStore, type: :request do
+RSpec.describe ActionDispatch::Session::DiscourseCookieStore, type: :request do
   it "only writes session cookie when changed" do
     get "/session/csrf.json"
     expect(response.status).to eq(200)

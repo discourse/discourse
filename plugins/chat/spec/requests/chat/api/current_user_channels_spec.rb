@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Chat::Api::CurrentUserChannelsController do
+RSpec.describe Chat::Api::CurrentUserChannelsController do
   fab!(:current_user, :user)
 
   before do

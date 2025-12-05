@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "fix query ids rake task" do
+RSpec.describe "fix query ids rake task" do
   before do
     Rake::Task.clear
     Discourse::Application.load_tasks

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe LocalizationGuardian do
+RSpec.describe LocalizationGuardian do
   fab!(:user)
   fab!(:admin)
   fab!(:moderator)

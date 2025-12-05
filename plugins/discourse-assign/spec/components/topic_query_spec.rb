@@ -2,7 +2,7 @@
 
 require_relative "../support/assign_allowed_group"
 
-describe TopicQuery do
+RSpec.describe TopicQuery do
   before { SiteSetting.assign_enabled = true }
 
   fab!(:user)

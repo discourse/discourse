@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAutomation::AppendLastCheckedByController do
+RSpec.describe DiscourseAutomation::AppendLastCheckedByController do
   before { SiteSetting.discourse_automation_enabled = true }
 
   describe "#post_checked" do

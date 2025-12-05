@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin New Features Page", type: :system do
+RSpec.describe "Admin New Features Page", type: :system do
   let(:new_features_page) { PageObjects::Pages::AdminNewFeatures.new }
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
   fab!(:admin)

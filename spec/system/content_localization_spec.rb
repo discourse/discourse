@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Content Localization" do
+RSpec.describe "Content Localization" do
   TOGGLE_LOCALIZE_BUTTON_SELECTOR = "button.btn-toggle-localized-content"
 
   fab!(:japanese_user) { Fabricate(:user, locale: "ja") }

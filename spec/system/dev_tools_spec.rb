@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Discourse dev tools", type: :system do
+RSpec.describe "Discourse dev tools", type: :system do
   it "works" do
     # Open site and check it loads successfully, with no dev-tools
     visit("/latest")

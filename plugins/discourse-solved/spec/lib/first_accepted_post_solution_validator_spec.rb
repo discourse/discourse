@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseSolved::FirstAcceptedPostSolutionValidator do
+RSpec.describe DiscourseSolved::FirstAcceptedPostSolutionValidator do
   fab!(:user_tl1) { Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true) }
 
   context "when trust level is 'any'" do

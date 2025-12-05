@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Post event", type: :system do
+RSpec.describe "Post event", type: :system do
   fab!(:admin)
   fab!(:user, :admin)
   fab!(:group)

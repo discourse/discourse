@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe CurrentUserSerializer, type: :serializer do
+RSpec.describe CurrentUserSerializer, type: :serializer do
   subject(:serializer) { described_class.new(user, scope: guardian, root: false) }
 
   describe "CurrentUserSerializer extension" do

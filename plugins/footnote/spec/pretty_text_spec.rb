@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PrettyText do
+RSpec.describe PrettyText do
   before { Jobs.run_immediately! }
 
   it "can be disabled" do

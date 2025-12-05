@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Post do
+RSpec.describe Post do
   fab!(:user1, :user)
   fab!(:user2, :user)
   fab!(:user3, :user)

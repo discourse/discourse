@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::DiscoursePolicy::CheckPolicy do
+RSpec.describe Jobs::DiscoursePolicy::CheckPolicy do
   subject(:job) { described_class.new }
 
   fab!(:user1, :user)

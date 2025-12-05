@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Mattermost Command Controller", type: :request do
+RSpec.describe "Mattermost Command Controller", type: :request do
   let(:category) { Fabricate(:category) }
   let(:tag) { Fabricate(:tag) }
   let(:tag2) { Fabricate(:tag) }

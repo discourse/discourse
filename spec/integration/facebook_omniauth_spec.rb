@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Facebook OAuth2" do
+RSpec.describe "Facebook OAuth2" do
   let(:access_token) { "facebook_access_token_448" }
   let(:app_id) { "432489234823984" }
   let(:app_secret) { "adddcccdddd99922" }

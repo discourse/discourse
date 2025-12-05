@@ -2,7 +2,7 @@
 
 require "topic_view"
 
-describe TopicQuery do
+RSpec.describe TopicQuery do
   fab!(:user)
   fab!(:admin)
   fab!(:other_admin, :admin)

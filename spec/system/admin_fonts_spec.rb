@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Fonts Page", type: :system do
+RSpec.describe "Admin Fonts Page", type: :system do
   fab!(:admin)
   fab!(:image_upload)
 

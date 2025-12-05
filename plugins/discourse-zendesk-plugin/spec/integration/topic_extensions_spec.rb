@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "TopicExtensions" do
+RSpec.describe "TopicExtensions" do
   before { freeze_time }
 
   fab!(:user_1) { Fabricate(:user, admin: true) }

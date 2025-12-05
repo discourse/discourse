@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Category calendar", type: :system do
+RSpec.describe "Category calendar", type: :system do
   fab!(:admin)
   fab!(:category)
 

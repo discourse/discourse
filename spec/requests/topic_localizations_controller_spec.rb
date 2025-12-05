@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicLocalizationsController do
+RSpec.describe TopicLocalizationsController do
   fab!(:user)
   fab!(:group)
   fab!(:topic)

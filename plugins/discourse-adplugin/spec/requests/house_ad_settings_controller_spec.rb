@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe AdPlugin::HouseAdSettingsController do
+RSpec.describe AdPlugin::HouseAdSettingsController do
   let(:admin) { Fabricate(:admin) }
 
   before do

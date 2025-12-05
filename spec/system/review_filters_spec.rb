@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Review filters", type: :system do
+RSpec.describe "Review filters", type: :system do
   fab!(:admin)
   fab!(:moderator)
   fab!(:regular_user, :user)

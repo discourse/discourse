@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseTemplates::TopicExtension do
+RSpec.describe DiscourseTemplates::TopicExtension do
   fab!(:topic)
 
   describe Topic, type: :model do

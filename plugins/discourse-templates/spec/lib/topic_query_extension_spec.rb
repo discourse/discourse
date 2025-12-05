@@ -4,7 +4,7 @@ require_relative "../helpers/topics_helper"
 
 RSpec.configure { |c| c.include DiscourseTemplates::TopicsHelper }
 
-describe DiscourseTemplates::TopicQueryExtension do
+RSpec.describe DiscourseTemplates::TopicQueryExtension do
   fab!(:user)
   let!(:topic_query) do
     TopicQuery.new(user, per_page: SiteSetting.discourse_templates_max_replies_fetched.to_i)

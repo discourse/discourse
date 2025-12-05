@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ModelAccuracy do
+RSpec.describe ModelAccuracy do
   before { enable_current_plugin }
 
   describe "#calculate_accuracy" do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseDataExplorer::QueryGroupBookmarkable do
+RSpec.describe DiscourseDataExplorer::QueryGroupBookmarkable do
   subject(:registered_bookmarkable) do
     RegisteredBookmarkable.new(DiscourseDataExplorer::QueryGroupBookmarkable)
   end

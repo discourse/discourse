@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Viewing categories page", type: :system do
+RSpec.describe "Viewing categories page", type: :system do
   fab!(:user)
   fab!(:category)
   fab!(:topic) { Fabricate(:topic, category: category) }

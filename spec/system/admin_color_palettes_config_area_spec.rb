@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Color Palettes Config Area Page", type: :system do
+RSpec.describe "Admin Color Palettes Config Area Page", type: :system do
   fab!(:admin)
   fab!(:palette) { Fabricate(:color_scheme, user_selectable: false, name: "A Test Palette") }
   fab!(:theme) { Fabricate(:theme, name: "Test Theme") }

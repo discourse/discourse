@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseTopicVoting::UserMerger do
+RSpec.describe DiscourseTopicVoting::UserMerger do
   fab!(:source_user, :user)
   fab!(:target_user, :user)
   fab!(:topic1, :topic)

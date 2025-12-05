@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Welcome banner", type: :system do
+RSpec.describe "Welcome banner", type: :system do
   fab!(:current_user) { Fabricate(:user, seen_before: true) }
   let(:banner) { PageObjects::Components::WelcomeBanner.new }
   let(:search_page) { PageObjects::Pages::Search.new }

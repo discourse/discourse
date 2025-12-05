@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostVotingVote do
+RSpec.describe PostVotingVote do
   fab!(:topic) { Fabricate(:topic, subtype: Topic::POST_VOTING_SUBTYPE) }
   fab!(:topic_post) { Fabricate(:post, topic: topic) }
   fab!(:post) { Fabricate(:post, topic: topic) }

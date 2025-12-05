@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "BannerTopic" do
+RSpec.describe "BannerTopic" do
   before { automation.upsert_field!("topic_id", "text", { value: topic.id }) }
 
   fab!(:automation) { Fabricate(:automation, script: DiscourseAutomation::Scripts::BANNER_TOPIC) }

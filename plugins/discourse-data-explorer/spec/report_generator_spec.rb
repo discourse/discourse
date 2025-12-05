@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseDataExplorer::ReportGenerator do
+RSpec.describe DiscourseDataExplorer::ReportGenerator do
   fab!(:user)
   fab!(:unauthorised_user, :user)
   fab!(:unauthorised_group, :group)

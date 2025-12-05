@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "bootstrap_error_pages", type: :system do
+RSpec.describe "bootstrap_error_pages", type: :system do
   before { SiteSetting.bootstrap_error_pages = true }
 
   it "boots ember for non-existent route" do

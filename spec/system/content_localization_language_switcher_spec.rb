@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Content localization language switcher", type: :system do
+RSpec.describe "Content localization language switcher", type: :system do
   SWITCHER_SELECTOR = "button[data-identifier='language-switcher']"
 
   let(:topic_list) { PageObjects::Components::TopicList.new }

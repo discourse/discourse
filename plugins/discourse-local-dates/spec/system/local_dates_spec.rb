@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Local dates", type: :system do
+RSpec.describe "Local dates", type: :system do
   fab!(:topic)
   fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
   let(:year) { Time.zone.now.year + 1 }

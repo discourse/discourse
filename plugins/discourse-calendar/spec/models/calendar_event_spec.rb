@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe CalendarEvent do
+RSpec.describe CalendarEvent do
   let(:calendar_post) { create_post(raw: "[calendar]\n[/calendar]") }
 
   before do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Group Card", type: :system do
+RSpec.describe "Group Card", type: :system do
   fab!(:current_user, :user)
   fab!(:members) { Fabricate.times(12, :user) }
   fab!(:topic)

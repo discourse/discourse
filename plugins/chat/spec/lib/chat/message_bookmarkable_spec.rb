@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Chat::MessageBookmarkable do
+RSpec.describe Chat::MessageBookmarkable do
   subject(:registered_bookmarkable) { RegisteredBookmarkable.new(described_class) }
 
   fab!(:chatters, :group)

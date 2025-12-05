@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Viewing sidebar preferences", type: :system do
+RSpec.describe "Viewing sidebar preferences", type: :system do
   let(:user_preferences_navigation_menu_page) do
     PageObjects::Pages::UserPreferencesNavigationMenu.new
   end

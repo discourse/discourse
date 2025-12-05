@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseDataExplorer::ResultFormatConverter do
+RSpec.describe DiscourseDataExplorer::ResultFormatConverter do
   fab!(:user)
   fab!(:post)
   fab!(:query) { DiscourseDataExplorer::Query.find(-1) }

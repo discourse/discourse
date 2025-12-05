@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe User, type: :model do
+RSpec.describe User, type: :model do
   fab!(:user)
   fab!(:leaderboard, :gamification_leaderboard)
 

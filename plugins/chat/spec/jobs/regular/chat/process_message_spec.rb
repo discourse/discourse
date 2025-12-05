@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::Chat::ProcessMessage do
+RSpec.describe Jobs::Chat::ProcessMessage do
   fab!(:chat_message) { Fabricate(:chat_message, message: "https://discourse.org/team") }
 
   before do

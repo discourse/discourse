@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Post selection | Fast edit", type: :system do
+RSpec.describe "Post selection | Fast edit", type: :system do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:fast_editor) { PageObjects::Components::FastEditor.new }
 

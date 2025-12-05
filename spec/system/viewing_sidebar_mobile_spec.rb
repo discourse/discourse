@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Viewing sidebar mobile", type: :system, mobile: true do
+RSpec.describe "Viewing sidebar mobile", type: :system, mobile: true do
   fab!(:user)
   let(:sidebar_dropdown) { PageObjects::Components::SidebarHeaderDropdown.new }
   let(:composer) { PageObjects::Components::Composer.new }

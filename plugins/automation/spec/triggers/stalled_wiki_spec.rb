@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "StalledWiki" do
+RSpec.describe "StalledWiki" do
   fab!(:topic_1, :topic)
   fab!(:automation) { Fabricate(:automation, trigger: DiscourseAutomation::Triggers::STALLED_WIKI) }
   fab!(:post_creator_1) { Fabricate(:user, admin: true) }

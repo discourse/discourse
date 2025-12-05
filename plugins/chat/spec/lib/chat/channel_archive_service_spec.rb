@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Chat::ChannelArchiveService do
+RSpec.describe Chat::ChannelArchiveService do
   class FakeArchiveError < StandardError
   end
 

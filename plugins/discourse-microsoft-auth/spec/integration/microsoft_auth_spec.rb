@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Microsoft OAuth2" do
+RSpec.describe "Microsoft OAuth2" do
   let(:access_token) { "microsoft_access_token_448" }
   let(:client_id) { "abcdef11223344" }
   let(:client_secret) { "adddcccdddd99922" }

@@ -1,6 +1,6 @@
 #frozen_string_literal: true
 
-describe DiscourseAi::AiBot::SiteSettingsExtension do
+RSpec.describe DiscourseAi::AiBot::SiteSettingsExtension do
   fab!(:claude_2) { Fabricate(:llm_model, name: "claude-2") }
   fab!(:gpt_4) { Fabricate(:llm_model, name: "gpt-4") }
   fab!(:gpt_35_turbo) { Fabricate(:llm_model, name: "gpt-3.5-turbo") }

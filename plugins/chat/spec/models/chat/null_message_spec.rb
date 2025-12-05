@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Chat::NullMessage do
+RSpec.describe Chat::NullMessage do
   subject(:null_message) { described_class.new }
 
   describe "#user" do

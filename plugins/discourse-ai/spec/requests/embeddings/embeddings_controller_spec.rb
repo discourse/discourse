@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::Embeddings::EmbeddingsController do
+RSpec.describe DiscourseAi::Embeddings::EmbeddingsController do
   context "when performing a topic search" do
     fab!(:vector_def, :open_ai_embedding_def)
 

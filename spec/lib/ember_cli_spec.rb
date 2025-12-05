@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe EmberCli do
+RSpec.describe EmberCli do
   describe "cache" do
     after { EmberCli.clear_cache! }
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Chat::Api::CategoryChatablesController do
+RSpec.describe Chat::Api::CategoryChatablesController do
   describe "#access_by_category" do
     fab!(:group)
     fab!(:private_category) { Fabricate(:private_category, group: group) }

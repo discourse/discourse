@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PrettyText do
+RSpec.describe PrettyText do
   let(:post) { Fabricate(:post) }
 
   def n(html)

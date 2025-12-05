@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "RemoveUploadMarkupFromDeletedPosts" do
+RSpec.describe "RemoveUploadMarkupFromDeletedPosts" do
   fab!(:topic)
   fab!(:upload)
 

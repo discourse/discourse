@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::AiHelper::EntryPoint do
+RSpec.describe DiscourseAi::AiHelper::EntryPoint do
   fab!(:english_user, :user)
   fab!(:french_user) { Fabricate(:user, locale: "fr") }
 

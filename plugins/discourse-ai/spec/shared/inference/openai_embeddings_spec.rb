@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::Inference::OpenAiEmbeddings do
+RSpec.describe DiscourseAi::Inference::OpenAiEmbeddings do
   let(:api_key) { "123456" }
   let(:dimensions) { 1000 }
   let(:model) { "text-embedding-ada-002" }

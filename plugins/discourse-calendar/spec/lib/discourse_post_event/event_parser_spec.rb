@@ -4,7 +4,7 @@ def build_post(user, raw)
   Post.new(user: user, raw: raw)
 end
 
-describe DiscoursePostEvent::EventParser do
+RSpec.describe DiscoursePostEvent::EventParser do
   subject(:parser) { DiscoursePostEvent::EventParser }
 
   let(:user) { Fabricate(:user) }

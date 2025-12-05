@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Uploading files in the composer to S3", type: :system do
+RSpec.describe "Uploading files in the composer to S3", type: :system do
   fab!(:current_user, :admin)
 
   let(:modal) { PageObjects::Modals::Base.new }

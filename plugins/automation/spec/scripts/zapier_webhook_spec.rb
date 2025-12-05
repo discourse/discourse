@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "ZapierWebhook" do
+RSpec.describe "ZapierWebhook" do
   fab!(:topic)
 
   fab!(:automation) { Fabricate(:automation, script: DiscourseAutomation::Scripts::ZAPIER_WEBHOOK) }

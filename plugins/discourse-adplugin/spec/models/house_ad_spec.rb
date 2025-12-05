@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe AdPlugin::HouseAd do
+RSpec.describe AdPlugin::HouseAd do
   let(:valid_attrs) do
     {
       name: "Find A Mechanic",

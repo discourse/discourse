@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Edit Category Images", type: :system do
+RSpec.describe "Edit Category Images", type: :system do
   fab!(:admin)
   fab!(:category)
   let(:category_page) { PageObjects::Pages::Category.new }

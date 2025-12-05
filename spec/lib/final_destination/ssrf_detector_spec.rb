@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe FinalDestination::SSRFDetector do
+RSpec.describe FinalDestination::SSRFDetector do
   describe "site setting parsing" do
     it "can parse the blocked_ip_blocks and allowed_internal_hosts settings when the delimiter is pipe" do
       SiteSetting.blocked_ip_blocks = "13.134.89.0/24|73.234.19.0/30\n"

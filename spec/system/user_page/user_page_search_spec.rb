@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "User page search", type: :system do
+RSpec.describe "User page search", type: :system do
   fab!(:user)
   let(:search_page) { PageObjects::Pages::Search.new }
 

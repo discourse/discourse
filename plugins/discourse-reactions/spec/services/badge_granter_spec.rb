@@ -3,7 +3,7 @@
 require_relative "../fabricators/reaction_fabricator"
 require_relative "../fabricators/reaction_user_fabricator"
 
-describe BadgeGranter do
+RSpec.describe BadgeGranter do
   fab!(:user)
   fab!(:post)
   fab!(:reaction) { Fabricate(:reaction, post: post) }

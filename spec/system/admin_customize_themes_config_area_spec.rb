@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Customize Themes Config Area Page", type: :system do
+RSpec.describe "Admin Customize Themes Config Area Page", type: :system do
   fab!(:admin)
   fab!(:theme) { Fabricate(:theme, name: "First theme") }
   fab!(:foundation_theme) { Theme.foundation_theme }

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe AiApiRequestStat do
+RSpec.describe AiApiRequestStat do
   describe ".record_from_audit_log" do
     let(:user) { Fabricate(:user) }
     let(:llm_model) { Fabricate(:llm_model) }

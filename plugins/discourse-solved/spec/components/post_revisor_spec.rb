@@ -2,7 +2,7 @@
 
 require "post_revisor"
 
-describe PostRevisor do
+RSpec.describe PostRevisor do
   fab!(:category, :category_with_definition)
   fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
 

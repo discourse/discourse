@@ -429,7 +429,7 @@ shared_examples "login scenarios" do
   end
 end
 
-describe "Login", type: :system do
+RSpec.describe "Login", type: :system do
   context "when desktop" do
     include_examples "login scenarios"
   end

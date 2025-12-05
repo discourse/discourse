@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Chat::ChatablesSerializer do
+RSpec.describe Chat::ChatablesSerializer do
   context "with status" do
     fab!(:user_1, :user)
 

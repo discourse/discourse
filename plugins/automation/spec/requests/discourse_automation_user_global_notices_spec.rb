@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAutomation::UserGlobalNoticesController do
+RSpec.describe DiscourseAutomation::UserGlobalNoticesController do
   fab!(:user_1, :user)
 
   before { SiteSetting.discourse_automation_enabled = true }

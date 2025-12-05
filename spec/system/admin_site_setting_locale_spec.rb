@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Site Setting Locales", type: :system do
+RSpec.describe "Admin Site Setting Locales", type: :system do
   let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
   fab!(:admin)
 

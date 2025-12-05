@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::UpdateStaleLeaderboardPositions do
+RSpec.describe Jobs::UpdateStaleLeaderboardPositions do
   fab!(:leaderboard, :gamification_leaderboard)
   fab!(:score) { Fabricate(:gamification_score, user_id: leaderboard.created_by_id) }
   let(:leaderboard_positions) { DiscourseGamification::LeaderboardCachedView.new(leaderboard) }

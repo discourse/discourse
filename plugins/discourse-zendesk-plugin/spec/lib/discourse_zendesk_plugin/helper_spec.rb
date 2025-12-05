@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseZendeskPlugin::Helper do
+RSpec.describe DiscourseZendeskPlugin::Helper do
   subject(:dummy) { Class.new { extend DiscourseZendeskPlugin::Helper } }
 
   it "Instantiates" do

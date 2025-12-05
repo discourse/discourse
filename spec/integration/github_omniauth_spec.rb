@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "GitHub Oauth2" do
+RSpec.describe "GitHub Oauth2" do
   let(:access_token) { "github_access_token_448" }
   let(:client_id) { "abcdef11223344" }
   let(:client_secret) { "adddcccdddd99922" }

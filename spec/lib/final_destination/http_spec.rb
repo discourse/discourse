@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe FinalDestination::HTTP do
+RSpec.describe FinalDestination::HTTP do
   before do
     # We need to test low-level stuff, switch off WebMock for FinalDestination::HTTP
     WebMock.enable!(except: [:final_destination])

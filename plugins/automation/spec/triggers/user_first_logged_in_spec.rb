@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAutomation::Triggers::USER_FIRST_LOGGED_IN do
+RSpec.describe DiscourseAutomation::Triggers::USER_FIRST_LOGGED_IN do
   before { SiteSetting.discourse_automation_enabled = true }
 
   fab!(:user)

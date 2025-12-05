@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe CategoryLocalization do
+RSpec.describe CategoryLocalization do
   context "when commit" do
     it "clears the site cache for the locale" do
       category = Fabricate(:category, name: "yy")

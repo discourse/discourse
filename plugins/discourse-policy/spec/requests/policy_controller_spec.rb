@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscoursePolicy::PolicyController do
+RSpec.describe DiscoursePolicy::PolicyController do
   fab!(:group)
   fab!(:moderator)
   fab!(:user1, :user)

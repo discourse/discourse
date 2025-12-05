@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Report do
+RSpec.describe Report do
   fab!(:user_1, :user)
   fab!(:user_2, :user)
   fab!(:post_1, :post)

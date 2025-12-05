@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "OAuth2 Overrides Email", type: :request do
+RSpec.describe "OAuth2 Overrides Email", type: :request do
   fab!(:initial_email) { "initial@example.com" }
   fab!(:new_email) { "new@example.com" }
   fab!(:user) { Fabricate(:user, email: initial_email) }

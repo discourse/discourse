@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseDataExplorer::ResultToMarkdown do
+RSpec.describe DiscourseDataExplorer::ResultToMarkdown do
   fab!(:user)
   fab!(:post)
   fab!(:query) { DiscourseDataExplorer::Query.find(-1) }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ColorMath do
+RSpec.describe ColorMath do
   describe "#brightness" do
     it "works" do
       expect(ColorMath.brightness("000")).to eq(0)

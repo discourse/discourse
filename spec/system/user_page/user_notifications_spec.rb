@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "User notifications", type: :system do
+RSpec.describe "User notifications", type: :system do
   fab!(:user) { Fabricate(:user, name: "Awesome Name") }
   let(:user_notifications_page) { PageObjects::Pages::UserNotifications.new }
   let(:user_page) { PageObjects::Pages::User.new }

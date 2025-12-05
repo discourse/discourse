@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAutomation::Automation do
+RSpec.describe DiscourseAutomation::Automation do
   describe "#trigger!" do
     context "when not enabled" do
       fab!(:automation) { Fabricate(:automation, enabled: false) }

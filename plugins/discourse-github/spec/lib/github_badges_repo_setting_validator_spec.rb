@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe GithubBadgesRepoSettingValidator do
+RSpec.describe GithubBadgesRepoSettingValidator do
   subject(:validator) { described_class.new }
 
   before { enable_current_plugin }

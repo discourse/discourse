@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe AdminUserActionSerializer do
+RSpec.describe AdminUserActionSerializer do
   fab!(:user)
   fab!(:admin)
   let(:guardian) { Guardian.new(admin) }

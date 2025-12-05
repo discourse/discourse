@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "DiscourseAutomation | Edit page", type: :system do
+RSpec.describe "DiscourseAutomation | Edit page", type: :system do
   fab!(:admin)
   fab!(:automation) { Fabricate(:automation, enabled: true) }
 

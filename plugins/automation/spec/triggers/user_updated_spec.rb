@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "UserUpdated" do
+RSpec.describe "UserUpdated" do
   before { SiteSetting.discourse_automation_enabled = true }
 
   fab!(:user_field_1) { Fabricate(:user_field, name: "custom field 1") }

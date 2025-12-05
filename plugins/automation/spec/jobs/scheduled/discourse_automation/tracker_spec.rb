@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::DiscourseAutomation::Tracker do
+RSpec.describe Jobs::DiscourseAutomation::Tracker do
   before { SiteSetting.discourse_automation_enabled = true }
 
   describe "pending automation" do

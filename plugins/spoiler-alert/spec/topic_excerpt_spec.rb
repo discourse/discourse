@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PrettyText do
+RSpec.describe PrettyText do
   it "should remove spoilers from excerpts" do
     expect(
       PrettyText.excerpt("<div class='spoiler'><img src='http://cnn.com/a.gif'></div>", 100),

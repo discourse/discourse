@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscoursePolicy do
+RSpec.describe DiscoursePolicy do
   fab!(:user1, :user)
 
   before { enable_current_plugin }

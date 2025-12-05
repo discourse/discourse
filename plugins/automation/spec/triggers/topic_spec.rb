@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "TopicRequiredWords" do
+RSpec.describe "TopicRequiredWords" do
   fab!(:user)
   fab!(:topic)
   fab!(:automation) do

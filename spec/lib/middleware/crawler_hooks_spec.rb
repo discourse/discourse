@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Middleware::CrawlerHooks do
+RSpec.describe Middleware::CrawlerHooks do
   let(:crawler_user_agent) { "GoogleBot/2.1 (+https://www.google.com/bot.html)" }
   let(:regular_user_agent) { "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" }
   let(:html_response) do

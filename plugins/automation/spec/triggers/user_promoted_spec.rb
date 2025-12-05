@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "UserPromoted" do
+RSpec.describe "UserPromoted" do
   before { SiteSetting.discourse_automation_enabled = true }
 
   fab!(:user) { Fabricate(:user, trust_level: TrustLevel[0]) }

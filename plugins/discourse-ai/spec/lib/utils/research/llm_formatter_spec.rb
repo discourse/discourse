@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 #
-describe DiscourseAi::Utils::Research::LlmFormatter do
+RSpec.describe DiscourseAi::Utils::Research::LlmFormatter do
   fab!(:user) { Fabricate(:user, username: "test_user") }
   fab!(:topic) { Fabricate(:topic, title: "This is a Test Topic", user: user) }
   fab!(:post) { Fabricate(:post, topic: topic, user: user) }

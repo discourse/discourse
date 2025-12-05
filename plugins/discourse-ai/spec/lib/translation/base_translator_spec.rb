@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::Translation::BaseTranslator do
+RSpec.describe DiscourseAi::Translation::BaseTranslator do
   let!(:persona) do
     AiPersona.find(
       DiscourseAi::Personas::Persona.system_personas[DiscourseAi::Personas::PostRawTranslator],

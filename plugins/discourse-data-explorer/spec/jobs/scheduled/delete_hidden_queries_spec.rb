@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::DeleteHiddenQueries do
+RSpec.describe Jobs::DeleteHiddenQueries do
   before do
     Jobs.run_immediately!
     SiteSetting.data_explorer_enabled = true

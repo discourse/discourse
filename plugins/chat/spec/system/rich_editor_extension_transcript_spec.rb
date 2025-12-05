@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "chat transcripts in rich editor", type: :system do
+RSpec.describe "chat transcripts in rich editor", type: :system do
   fab!(:current_user) do
     Fabricate(
       :user,

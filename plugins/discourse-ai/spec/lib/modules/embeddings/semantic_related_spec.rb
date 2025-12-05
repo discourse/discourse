@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::Embeddings::SemanticRelated do
+RSpec.describe DiscourseAi::Embeddings::SemanticRelated do
   subject(:semantic_related) { described_class.new }
 
   fab!(:target, :topic)

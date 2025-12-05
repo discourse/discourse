@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::LocalizeTopics do
+RSpec.describe Jobs::LocalizeTopics do
   subject(:job) { described_class.new }
 
   fab!(:topic)

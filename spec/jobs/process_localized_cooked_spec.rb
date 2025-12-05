@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::ProcessLocalizedCooked do
+RSpec.describe Jobs::ProcessLocalizedCooked do
   subject(:job) { described_class.new }
 
   fab!(:post)

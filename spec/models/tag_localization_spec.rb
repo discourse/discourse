@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TagLocalization do
+RSpec.describe TagLocalization do
   fab!(:tag)
 
   describe "validations" do

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-describe "Editing topic timers", type: :system do
+RSpec.describe "Editing topic timers", type: :system do
   fab!(:admin)
   fab!(:post)
   fab!(:topic) { post.topic }

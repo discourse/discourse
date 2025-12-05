@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Private Message", type: :system do
+RSpec.describe "Private Message", type: :system do
   let(:sender) { Fabricate(:user, refresh_auto_groups: true) }
   let(:recipient) { Fabricate(:user) }
   let(:pm_post) { Fabricate(:private_message_post, user: sender, recipient: recipient) }

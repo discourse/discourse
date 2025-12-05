@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Topics unread when closed", type: :system do
+RSpec.describe "Topics unread when closed", type: :system do
   fab!(:topics) { Fabricate.times(10, :post).map(&:topic) }
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }

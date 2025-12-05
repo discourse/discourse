@@ -2,7 +2,7 @@
 
 require_relative "../support/assign_allowed_group"
 
-describe TopicsBulkAction do
+RSpec.describe TopicsBulkAction do
   fab!(:post)
   fab!(:post1, :post)
   fab!(:post2, :post)

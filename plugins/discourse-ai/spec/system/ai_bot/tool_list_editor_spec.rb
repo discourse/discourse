@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "AI Tool List Editor Dropdown", type: :system do
+RSpec.describe "AI Tool List Editor Dropdown", type: :system do
   fab!(:admin)
 
   before do

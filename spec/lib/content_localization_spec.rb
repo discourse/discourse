@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ContentLocalization do
+RSpec.describe ContentLocalization do
   def create_scope(cookie: nil)
     env = create_request_env.merge("HTTP_COOKIE" => cookie)
     mock().tap { |m| m.stubs(:request).returns(ActionDispatch::Request.new(env)) }
