@@ -24,6 +24,7 @@ export default class UserField extends Component {
         @field={{@field}}
         @value={{@value}}
         @validation={{@validation}}
+        @showLabel={{@showLabel}}
         ...attributes
       />
     {{/let}}

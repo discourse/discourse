@@ -9,11 +9,11 @@ module PageObjects
       end
 
       def hide_profile
-        find(".user-hide-profile .pref-hide-profile").click
+        find("#control-hide_profile input[type=checkbox]").click
       end
 
       def has_hidden_profile?
-        has_css?(".user-hide-profile .pref-hide-profile input[type=checkbox]:checked")
+        has_css?("#control-hide_profile input[type=checkbox]:checked")
       end
 
       def expand_profile_details
@@ -21,11 +21,12 @@ module PageObjects
       end
 
       def fill_bio(with:)
-        find(".bio-composer .d-editor-input").fill_in(with:)
+        # DEditor renders a textarea with class d-editor-input
+        find(".d-editor-input").set(with)
       end
 
       def save
-        find(".save-button .btn-primary").click
+        find(".save-profile-changes").click
       end
 
       def cooked_bio

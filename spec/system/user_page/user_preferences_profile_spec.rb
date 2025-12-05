@@ -4,7 +4,6 @@ describe "User preferences | Profile", type: :system do
   fab!(:user) { Fabricate(:user, active: true) }
   let(:user_preferences_profile_page) { PageObjects::Pages::UserPreferencesProfile.new }
   let(:user_preferences_page) { PageObjects::Pages::UserPreferences.new }
-  let(:dialog) { PageObjects::Components::Dialog.new }
 
   before { sign_in(user) }
 
@@ -89,11 +88,14 @@ describe "User preferences | Profile", type: :system do
     it "allows user to fill up required fields" do
       user_preferences_profile_page.visit(user)
 
-      find(".user-field-favourite-pokemon input").fill_in(with: "Mudkip")
-      find(".user-field-updated-terms input").check
-      find(".save-button .btn-primary").click
+      field1 = page.find(".user-field-favourite-pokemon .controls input")
+      field1.fill_in(with: "Mudkip")
 
-      expect(page).to have_selector(".pref-bio")
+      field2 = page.find(".user-field-updated-terms .controls input")
+      field2.check
+      find(".save-profile-changes").click
+
+      expect(page).to have_selector(".user-preferences")
 
       visit("/")
 
@@ -103,18 +105,12 @@ describe "User preferences | Profile", type: :system do
     it "does not allow submitting blank values for required fields" do
       user_preferences_profile_page.visit(user)
 
-      find(".user-field-updated-terms input").check
-      find(".save-button .btn-primary").click
+      field1 = page.find(".user-field-updated-terms .controls input")
+      field1.check
+      find(".save-profile-changes").click
 
-      expect(dialog).to be_open
-      expect(dialog).to have_content(I18n.t("login.missing_user_field"))
-
-      dialog.click_yes
-
-      expect(page).to have_selector(
-        ".alert-error",
-        text: I18n.t("js.user.preferences.profile.enforced_required_fields"),
-      )
+      error_message = page.find(".form-kit__errors-summary-list")
+      expect(error_message).to have_text("Favourite Pokemon")
     end
 
     it "allows enabling safe-mode" do

@@ -13,18 +13,22 @@ export default class UserFieldText extends UserFieldBase {
         @value={{this.value}}
         maxlength={{this.site.user_field_max_length}}
       />
-      <label
-        class="control-label alt-placeholder"
-        for={{concat "user-" this.elementId}}
-      >
-        {{this.field.name}}
-        {{~#unless this.field.required}}
-          {{i18n "user_fields.optional"}}{{/unless~}}
-      </label>
+      {{#if @showLabel}}
+        <label
+          class="control-label alt-placeholder"
+          for={{concat "user-" this.elementId}}
+        >
+          {{this.field.name}}
+          {{~#unless this.field.required}}
+            {{i18n "user_fields.optional"}}{{/unless~}}
+        </label>
+      {{/if}}
       {{#if this.validation.failed}}
         <InputTip @validation={{this.validation}} />
       {{else}}
-        <div class="instructions">{{htmlSafe this.field.description}}</div>
+        {{#if @showDescription}}
+          <div class="instructions">{{htmlSafe this.field.description}}</div>
+        {{/if}}
       {{/if}}
     </div>
   </template>

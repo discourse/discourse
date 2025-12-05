@@ -12,12 +12,14 @@ export default class UserFieldConfirm extends UserFieldBase {
   }
 
   <template>
-    {{#if this.field.name}}
-      <label class="control-label">
-        {{this.field.name}}
-        {{~#unless this.field.required}}
-          {{i18n "user_fields.optional"}}{{/unless~}}
-      </label>
+    {{#if @showLabel}}
+      {{#if this.field.name}}
+        <label class="control-label">
+          {{this.field.name}}
+          {{~#unless this.field.required}}
+            {{i18n "user_fields.optional"}}{{/unless~}}
+        </label>
+      {{/if}}
     {{/if}}
 
     <div class="controls">
@@ -28,7 +30,9 @@ export default class UserFieldConfirm extends UserFieldBase {
           @type="checkbox"
         />
         <span>
-          {{htmlSafe this.field.description}}
+          {{#if @showDescription}}
+            {{htmlSafe this.field.description}}
+          {{/if}}
           {{#unless this.field.name}}{{#if this.field.required}}<span
                 class="required"
               >*</span>{{/if}}{{/unless}}

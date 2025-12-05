@@ -177,7 +177,10 @@ export default class DEditor extends Component {
 
   didInsertElement() {
     super.didInsertElement(...arguments);
-    this._previewMutationObserver = this._disablePreviewTabIndex();
+
+    if (!this.hidePreview) {
+      this._previewMutationObserver = this._disablePreviewTabIndex();
+    }
   }
 
   get editorContainerModeClass() {
@@ -287,10 +290,12 @@ export default class DEditor extends Component {
     }
 
     // Debouncing in test mode is complicated
-    if (isTesting()) {
-      await this._updatePreview();
-    } else {
-      discourseDebounce(this, this._updatePreview, 30);
+    if (!this.hidePreview) {
+      if (isTesting()) {
+        await this._updatePreview();
+      } else {
+        discourseDebounce(this, this._updatePreview, 30);
+      }
     }
   }
 
@@ -850,18 +855,20 @@ export default class DEditor extends Component {
         </div>
       </div>
 
-      {{#if @hijackPreview}}
-        <div class="d-editor-preview-wrapper">
-          <@hijackPreview.component @model={{@hijackPreview.model}} />
-        </div>
-      {{else}}
-        <DEditorPreview
-          @preview={{this.preview}}
-          @forcePreview={{this.forcePreview}}
-          @onPreviewUpdated={{this.previewUpdated}}
-          @outletArgs={{this.outletArgs}}
-        />
-      {{/if}}
+      {{#unless this.hidePreview}}
+        {{#if @hijackPreview}}
+          <div class="d-editor-preview-wrapper">
+            <@hijackPreview.component @model={{@hijackPreview.model}} />
+          </div>
+        {{else}}
+          <DEditorPreview
+            @preview={{this.preview}}
+            @forcePreview={{this.forcePreview}}
+            @onPreviewUpdated={{this.previewUpdated}}
+            @outletArgs={{this.outletArgs}}
+          />
+        {{/if}}
+      {{/unless}}
     </div>
   </template>
 }
