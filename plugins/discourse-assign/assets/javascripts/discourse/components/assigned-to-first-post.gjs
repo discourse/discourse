@@ -4,7 +4,11 @@ import { htmlSafe } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-import { assignedToGroupPath, assignedToUserPath } from "../lib/url";
+import {
+  assignedToGroupPath,
+  assignedToPostPath,
+  assignedToUserPath,
+} from "../lib/url";
 
 export default class AssignedToFirstPost extends Component {
   @service siteSettings;
@@ -31,13 +35,11 @@ export default class AssignedToFirstPost extends Component {
     }
 
     return Object.keys(this.indirectlyAssignedTo).map((postId) => {
-      const postNumber = this.indirectlyAssignedTo[postId].post_number;
-
       return {
         postId,
         assignee: this.indirectlyAssignedTo[postId].assigned_to,
-        postNumber,
-        url: `${this.args.post.topic.url}/${postNumber}`,
+        postNumber: this.indirectlyAssignedTo[postId].post_number,
+        url: assignedToPostPath(postId),
       };
     });
   }

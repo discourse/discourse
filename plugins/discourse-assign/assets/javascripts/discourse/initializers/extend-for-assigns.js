@@ -15,7 +15,11 @@ import BulkActionsAssignUser from "../components/bulk-actions/bulk-assign-user";
 import EditTopicAssignments from "../components/modal/edit-topic-assignments";
 import PostAssignmentsDisplay from "../components/post-assignments-display";
 import TopicLevelAssignMenu from "../components/topic-level-assign-menu";
-import { assignedToGroupPath, assignedToUserPath } from "../lib/url";
+import {
+  assignedToGroupPath,
+  assignedToPostPath,
+  assignedToUserPath,
+} from "../lib/url";
 import { extendTopicModel } from "../models/topic";
 
 const DEPENDENT_KEYS = [
@@ -395,9 +399,11 @@ function initialize(api) {
     const createTagHtml = ({ assignee, note }) => {
       let assignedPath;
       if (assignee.assignedToPostId) {
-        assignedPath = `/p/${assignee.assignedToPostId}`;
+        assignedPath = assignedToPostPath(assignee.assignedToPostId);
+      } else if (assignee.username) {
+        assignedPath = assignedToUserPath(assignee);
       } else {
-        assignedPath = `/t/${topic.id}`;
+        assignedPath = assignedToGroupPath(assignee);
       }
 
       const icon = iconHTML(assignee.username ? "user-plus" : "group-plus");
@@ -409,9 +415,7 @@ function initialize(api) {
 
       const tagName = params.tagName || "a";
       const href =
-        tagName === "a"
-          ? `href="${getURL(assignedPath)}" data-auto-route="true"`
-          : "";
+        tagName === "a" ? `href="${assignedPath}" data-auto-route="true"` : "";
 
       return `<${tagName} class="assigned-to discourse-tag simple" ${href}>${icon}<span title="${escapeExpression(
         note
