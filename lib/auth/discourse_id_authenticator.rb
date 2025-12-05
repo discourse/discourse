@@ -48,7 +48,7 @@ class Auth::DiscourseIdAuthenticator < Auth::ManagedAuthenticator
   end
 
   def site
-    SiteSetting.discourse_id_provider_url.presence || "https://id.discourse.com"
+    DiscourseId.provider_url
   end
 
   def register_middleware(omniauth)

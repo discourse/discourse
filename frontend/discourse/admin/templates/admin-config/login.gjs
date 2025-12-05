@@ -27,6 +27,10 @@ export default class extends Component {
           @label="admin.config.login.sub_pages.common_settings.title"
         />
         <NavItem
+          @route="adminConfig.login.discourse-id"
+          @label="admin.config.login.sub_pages.discourse_id.title"
+        />
+        <NavItem
           @route="adminConfig.login.authenticators"
           @label="admin.config.login.sub_pages.authenticators.title"
         />
