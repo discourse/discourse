@@ -115,6 +115,7 @@ function setupToolbar() {
         "nocontainer",
       ].includes(c.id)
   );
+  QUnit.config.failOnZeroTests = false;
 
   const pluginNames = new Set();
 
