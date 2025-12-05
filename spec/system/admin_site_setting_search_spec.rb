@@ -27,10 +27,12 @@ describe "Admin Site Setting Search", type: :system do
   end
 
   describe "when searching for keywords" do
-    it "finds the associated site setting" do
-      settings_page.visit
-      settings_page.type_in_search("anonymous_posting_min_trust_level")
-      expect(settings_page).to have_search_result("anonymous_posting_allowed_groups")
+    it "finds the replacement site setting when deprecated" do
+      stub_deprecated_settings!(override: false) do
+        settings_page.visit
+        settings_page.type_in_search("old_one")
+        expect(settings_page).to have_search_result("new_one")
+      end
     end
 
     it "finds the associated site setting when many keywords" do
@@ -41,9 +43,11 @@ describe "Admin Site Setting Search", type: :system do
     end
 
     it "can search for previous site setting without underscores" do
-      settings_page.visit
-      settings_page.type_in_search("anonymous posting min")
-      expect(settings_page).to have_search_result("anonymous_posting_allowed_groups")
+      stub_deprecated_settings!(override: false) do
+        settings_page.visit
+        settings_page.type_in_search("old one")
+        expect(settings_page).to have_search_result("new_one")
+      end
     end
   end
 end

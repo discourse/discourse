@@ -30,11 +30,8 @@ nl:
     post_voting_enable_likes_on_answers: "Likeknop inschakelen voor antwoorden in topics met Stemmen op berichten"
     post_voting_undo_vote_action_window: "Aantal minuten waarbinnen gebruikers stemmen in topics met Stemmen op berichten ongedaan kunnen maken (vul 0 in voor geen limiet)"
     post_voting_comment_limit_per_post: "Aantal toegestane reacties op elk bericht"
-    min_trust_to_flag_posts_voting_comments: "Minimaal vertrouwensniveau om een Stemmen op berichten-reactie te markeren"
     flag_posts_voting_comments_allowed_groups: "Groepen mogen een reactie op een Stemmen op berichten-reactie markeren"
     post_voting_comment_enabled: "Reacties op bericht in topics met stemmen op berichten inschakelen"
-    keywords:
-      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
   discourse_post_voting:
     reviewables:
       actions:

@@ -993,7 +993,7 @@ RSpec.describe Email::Receiver do
       user1 =
         Fabricate(
           :user,
-          trust_level: SiteSetting.email_in_min_trust,
+          trust_level: TrustLevel[2],
           user_emails: [
             Fabricate.build(:secondary_email, email: "discourse@bar.com"),
             Fabricate.build(:secondary_email, email: "someone@else.com"),
@@ -1004,7 +1004,7 @@ RSpec.describe Email::Receiver do
       user2 =
         Fabricate(
           :user,
-          trust_level: SiteSetting.email_in_min_trust,
+          trust_level: TrustLevel[2],
           user_emails: [
             Fabricate.build(:secondary_email, email: "team@bar.com"),
             Fabricate.build(:secondary_email, email: "wat@bar.com"),
@@ -1578,7 +1578,7 @@ RSpec.describe Email::Receiver do
         Fabricate(
           :user,
           email: "existing@bar.com",
-          trust_level: SiteSetting.email_in_min_trust,
+          trust_level: TrustLevel[2],
           refresh_auto_groups: true,
         )
       group = Fabricate(:group)
@@ -1607,7 +1607,7 @@ RSpec.describe Email::Receiver do
       Fabricate(
         :user,
         email: "existing@bar.com",
-        trust_level: SiteSetting.email_in_min_trust,
+        trust_level: TrustLevel[2],
         refresh_auto_groups: true,
       )
       expect { process(:existing_user) }.to change { Topic.count }.by(1) # Topic created
@@ -1628,7 +1628,7 @@ RSpec.describe Email::Receiver do
         Fabricate(
           :user,
           email: "existing@bar.com",
-          trust_level: SiteSetting.email_in_min_trust,
+          trust_level: TrustLevel[2],
           refresh_auto_groups: true,
         )
       expect { process(:spam_x_spam_flag) }.to change { ReviewableQueuedPost.count }.by(1)
@@ -1642,7 +1642,7 @@ RSpec.describe Email::Receiver do
         Fabricate(
           :user,
           email: "existing@bar.com",
-          trust_level: SiteSetting.email_in_min_trust,
+          trust_level: TrustLevel[2],
           refresh_auto_groups: true,
         )
       expect { process(:spam_x_spam_status) }.to change { ReviewableQueuedPost.count }.by(1)
@@ -1656,7 +1656,7 @@ RSpec.describe Email::Receiver do
         Fabricate(
           :user,
           email: "existing@bar.com",
-          trust_level: SiteSetting.email_in_min_trust,
+          trust_level: TrustLevel[2],
           refresh_auto_groups: true,
         )
       expect { process(:spam_x_ses_spam_verdict) }.to change { ReviewableQueuedPost.count }.by(1)
@@ -1670,7 +1670,7 @@ RSpec.describe Email::Receiver do
         Fabricate(
           :user,
           email: "existing@bar.com",
-          trust_level: SiteSetting.email_in_min_trust,
+          trust_level: TrustLevel[2],
           refresh_auto_groups: true,
         )
       expect { process(:dmarc_fail) }.to change { ReviewableQueuedPost.count }.by(1)
@@ -1683,7 +1683,7 @@ RSpec.describe Email::Receiver do
       Fabricate(
         :user,
         email: "existing@bar.com",
-        trust_level: SiteSetting.email_in_min_trust,
+        trust_level: TrustLevel[2],
         refresh_auto_groups: true,
       )
       expect { process(:forwarded_email_to_category) }.to change { Topic.count }.by(1) # Topic created
@@ -1718,7 +1718,7 @@ RSpec.describe Email::Receiver do
       user =
         Fabricate(
           :user,
-          trust_level: SiteSetting.email_in_min_trust,
+          trust_level: TrustLevel[2],
           user_emails: [Fabricate.build(:secondary_email, email: "existing@bar.com")],
           refresh_auto_groups: true,
         )

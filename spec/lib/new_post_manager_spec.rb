@@ -22,7 +22,7 @@ RSpec.describe NewPostManager do
     fab!(:other_user, :user)
 
     it "doesn't enqueue private messages" do
-      SiteSetting.approve_unless_trust_level = 4
+      SiteSetting.approve_unless_allowed_groups = "1|2|14"
 
       manager =
         NewPostManager.new(

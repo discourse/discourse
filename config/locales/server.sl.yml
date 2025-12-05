@@ -698,13 +698,11 @@ sl:
     enable_discourse_connect: "Omogoči vpis s pomočjo DiscourseConnect (prej »Discourse SSO«) (OPOZORILO: E-POŠTNI NASLOVI UPORABNIKOV *MORAJO* BITI OVERJENI PRI ZUNANJEM PONUDNIKU!)"
     avatar_sizes: "Seznam samodejno ustvarjenih velikosti avatarjev."
     use_site_small_logo_as_system_avatar: "Uporabi mali logotip spletnega mesta za avatar sistemskega uporabnika. Deluje le, če je logotip na voljo."
-    min_trust_level_to_allow_ignore: "Najmanjša raven zaupanja, potrebna za prezrtje uporabnikov"
     enable_filtered_replies_view: 'Gumb "(n) odgovorov" strne vse druge objave in prikaže samo trenutno objavo in njene odgovore.'
     dark_mode_none: "Brez"
     suppress_uncategorized_badge: "Ne prikaži značke za nerazvrščene teme na seznamih tem."
     skip_auto_delete_reply_likes: "Pri samodejnem brisanju starih odgovorov preskočite brisanje objav s tem ali večjim številom všečkov."
     default_other_skip_new_user_tips: "Preskoči namige in značke za nove uporabnike."
-    shared_drafts_min_trust_level: "Uporabnikom omogočite ogled in urejanje osnutkov v skupni rabi."
   search:
     within_post: "#%{post_number} od %{username}"
     types:
