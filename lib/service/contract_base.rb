@@ -12,15 +12,11 @@ class Service::ContractBase
     def attribute(name, cast_type = nil, **options, &block)
       return super(name, cast_type, **options) unless block_given?
 
-      nested_contract_class = Class.new(Service::ContractBase)
-
-      # Assign a constant name to the nested class so ActiveModel can generate error messages
-      # This is important because ActiveModel::Errors needs model_name to work properly
-      const_name = "#{name.to_s.camelize}Contract"
-      const_set(const_name, nested_contract_class)
-
-      nested_contract_class.class_eval(&block)
-
+      nested_contract_class =
+        Class.new(Service::ContractBase) do
+          define_singleton_method(:name) { "#{name}_contract".classify }
+          class_eval(&block)
+        end
       super(name, Service::NestedContractType.new(contract_class: nested_contract_class), **options)
     end
   end
@@ -54,10 +50,10 @@ class Service::ContractBase
   def nested_attributes_valid?
     @attributes
       .each_value
-      .select { _1.type.is_a?(Service::NestedContractType) }
-      .all? do |contract|
-        errors.add(contract.name, :invalid) if contract.value.invalid?
-        contract.value.valid?
+      .select { _1.type.is_a?(Service::NestedContractType) && _1.value }
+      .all? do |attribute|
+        errors.add(attribute.name, :invalid) if attribute.value.invalid?
+        attribute.value.valid?
       end
   end
 end
