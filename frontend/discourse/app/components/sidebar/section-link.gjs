@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { LinkTo } from "@ember/routing";
@@ -39,6 +41,8 @@ export function isHex(input) {
  */
 export default class SectionLink extends Component {
   @service currentUser;
+
+  @tracked hovering;
 
   constructor() {
     super(...arguments);
@@ -126,6 +130,16 @@ export default class SectionLink extends Component {
     }
   }
 
+  @action
+  hoveringSectionLink() {
+    this.hovering = true;
+  }
+
+  @action
+  stopHoveringSectionLink() {
+    this.hovering = false;
+  }
+
   @bind
   maybeScrollIntoView(element) {
     if (!this.args.scrollIntoView) {
@@ -150,6 +164,8 @@ export default class SectionLink extends Component {
       <li
         {{didInsert this.maybeScrollIntoView}}
         {{didUpdate this.maybeScrollIntoView @scrollIntoView}}
+        {{on "mouseenter" this.hoveringSectionLink}}
+        {{on "mouseleave" this.stopHoveringSectionLink}}
         data-list-item-name={{@linkName}}
         class="sidebar-section-link-wrapper"
         ...attributes
@@ -233,7 +249,10 @@ export default class SectionLink extends Component {
                   {{on "click" @hoverAction}}
                   type="button"
                   title={{@hoverTitle}}
-                  class="sidebar-section-hover-button"
+                  class={{concatClass
+                    "sidebar-section-hover-button"
+                    (if this.hovering "--hovering" "")
+                  }}
                 >
                   {{#if (eq @hoverType "icon")}}
                     {{icon @hoverValue class="hover-icon"}}
