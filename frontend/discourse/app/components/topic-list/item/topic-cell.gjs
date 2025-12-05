@@ -13,6 +13,7 @@ import TopicStatus from "discourse/components/topic-status";
 import categoryLink from "discourse/helpers/category-link";
 import discourseTags from "discourse/helpers/discourse-tags";
 import lazyHash from "discourse/helpers/lazy-hash";
+import stripWhitespace from "discourse/helpers/strip-whitespace";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { groupPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
@@ -48,99 +49,96 @@ export default class TopicCell extends Component {
   }
 
   <template>
-    <td class="main-link topic-list-data" colspan="1">
-      <PluginOutlet
-        @name="topic-list-before-link"
-        @outletArgs={{lazyHash topic=@topic}}
-      />
-
-      <span class="link-top-line" role="heading" aria-level="2">
-        {{~! no whitespace ~}}
+    {{#stripWhitespace}}
+      <td class="main-link topic-list-data" colspan="1">
         <PluginOutlet
-          @name="topic-list-before-status"
+          @name="topic-list-before-link"
           @outletArgs={{lazyHash topic=@topic}}
         />
-        {{~! no whitespace ~}}
-        <PluginOutlet
-          @name="topic-list-topic-cell-link-top-line"
-          @outletArgs={{lazyHash topic=@topic tagsForUser=@tagsForUser}}
-        >
-          {{~! no whitespace ~}}
-          <TopicStatus @topic={{@topic}} @context="topic-list" />
-          {{~! no whitespace ~}}
-          <TopicLink
-            {{on "focus" this.onTitleFocus}}
-            {{on "blur" this.onTitleBlur}}
-            @topic={{@topic}}
-            class="raw-link raw-topic-link"
-          />
-          {{~#if @topic.featured_link~}}
-            &nbsp;
-            {{~topicFeaturedLink @topic}}
-          {{~/if~}}
+
+        <span class="link-top-line" role="heading" aria-level="2">
           <PluginOutlet
-            @name="topic-list-after-title"
+            @name="topic-list-before-status"
             @outletArgs={{lazyHash topic=@topic}}
           />
-          {{~! no whitespace ~}}
-          <UnreadIndicator @topic={{@topic}} />
-          {{~#if @showTopicPostBadges~}}
-            <TopicPostBadges
-              @unreadPosts={{@topic.unread_posts}}
-              @unseen={{@topic.unseen}}
-              @newDotText={{this.newDotText}}
-              @url={{@topic.lastUnreadUrl}}
+          <PluginOutlet
+            @name="topic-list-topic-cell-link-top-line"
+            @outletArgs={{lazyHash topic=@topic tagsForUser=@tagsForUser}}
+          >
+            <TopicStatus @topic={{@topic}} @context="topic-list" />
+            <TopicLink
+              {{on "focus" this.onTitleFocus}}
+              {{on "blur" this.onTitleBlur}}
+              @topic={{@topic}}
+              class="raw-link raw-topic-link"
             />
-          {{~/if~}}
+            {{#if @topic.featured_link}}
+              &nbsp;
+              {{topicFeaturedLink @topic}}
+            {{/if}}
+            <PluginOutlet
+              @name="topic-list-after-title"
+              @outletArgs={{lazyHash topic=@topic}}
+            />
+            <UnreadIndicator @topic={{@topic}} />
+            {{#if @showTopicPostBadges}}
+              <TopicPostBadges
+                @unreadPosts={{@topic.unread_posts}}
+                @unseen={{@topic.unseen}}
+                @newDotText={{this.newDotText}}
+                @url={{@topic.lastUnreadUrl}}
+              />
+            {{/if}}
+            <PluginOutlet
+              @name="topic-list-after-badges"
+              @outletArgs={{lazyHash topic=@topic}}
+            />
+          </PluginOutlet>
+        </span>
+
+        <div class="link-bottom-line">
           <PluginOutlet
-            @name="topic-list-after-badges"
-            @outletArgs={{lazyHash topic=@topic}}
-          />
-        </PluginOutlet>
-      </span>
-
-      <div class="link-bottom-line">
-        <PluginOutlet
-          @name="topic-list-topic-cell-link-bottom-line"
-          @outletArgs={{lazyHash topic=@topic tagsForUser=@tagsForUser}}
-        >
-          {{#unless @hideCategory}}
-            {{#unless @topic.isPinnedUncategorized}}
-              <PluginOutlet
-                @name="topic-list-before-category"
-                @outletArgs={{lazyHash topic=@topic}}
-              />
-              {{categoryLink @topic.category}}
-              <PluginOutlet
-                @name="topic-list-after-category"
-                @outletArgs={{lazyHash topic=@topic}}
-              />
+            @name="topic-list-topic-cell-link-bottom-line"
+            @outletArgs={{lazyHash topic=@topic tagsForUser=@tagsForUser}}
+          >
+            {{#unless @hideCategory}}
+              {{#unless @topic.isPinnedUncategorized}}
+                <PluginOutlet
+                  @name="topic-list-before-category"
+                  @outletArgs={{lazyHash topic=@topic}}
+                />
+                {{categoryLink @topic.category}}
+                <PluginOutlet
+                  @name="topic-list-after-category"
+                  @outletArgs={{lazyHash topic=@topic}}
+                />
+              {{/unless}}
             {{/unless}}
-          {{/unless}}
 
-          {{discourseTags @topic mode="list" tagsForUser=@tagsForUser}}
+            {{discourseTags @topic mode="list" tagsForUser=@tagsForUser}}
 
-          {{#if this.participantGroups}}
-            <ParticipantGroups @groups={{this.participantGroups}} />
-          {{/if}}
+            {{#if this.participantGroups}}
+              <ParticipantGroups @groups={{this.participantGroups}} />
+            {{/if}}
 
-          <ActionList
-            @topic={{@topic}}
-            @postNumbers={{@topic.liked_post_numbers}}
-            @icon="heart"
-            class="likes"
-          />
-        </PluginOutlet>
-      </div>
+            <ActionList
+              @topic={{@topic}}
+              @postNumbers={{@topic.liked_post_numbers}}
+              @icon="heart"
+              class="likes"
+            />
+          </PluginOutlet>
+        </div>
 
-      {{#if @expandPinned}}
-        <TopicExcerpt @topic={{@topic}} />
-      {{/if}}
+        {{#if @expandPinned}}
+          <TopicExcerpt @topic={{@topic}} />
+        {{/if}}
 
-      <PluginOutlet
-        @name="topic-list-main-link-bottom"
-        @outletArgs={{lazyHash topic=@topic expandPinned=@expandPinned}}
-      />
-    </td>
+        <PluginOutlet
+          @name="topic-list-main-link-bottom"
+          @outletArgs={{lazyHash topic=@topic expandPinned=@expandPinned}}
+        />
+      </td>
+    {{/stripWhitespace}}
   </template>
 }
