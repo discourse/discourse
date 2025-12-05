@@ -6,6 +6,8 @@ import RestModel from "discourse/models/rest";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 
+export const PAGE_SIZE = 20;
+
 export default class CustomReaction extends RestModel {
   static toggle(post, reactionId, appEvents) {
     return ajax(
@@ -23,9 +25,10 @@ export default class CustomReaction extends RestModel {
     return {
       // Original reaction data
       ...reaction,
+      // Preserve reaction_user.id for pagination
+      reaction_user_id: reaction.get("id"),
       // Flatten post fields to top level for PostListItem
       id: reaction.post.id,
-      reaction_user_id: reaction.id,
       user_id: reaction.post.user_id,
       username: reaction.post.username,
       name: reaction.post.name,
