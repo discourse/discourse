@@ -2,10 +2,10 @@
 
 <%= server_plugin_outlet "topic_list_header" %>
 
-<%- if SiteSetting.tagging_enabled && @tag_id %>
+<%- if SiteSetting.tagging_enabled && @tag_name %>
   <h1>
-    <%= link_to "#{Discourse.base_url}/tag/#{@tag_id}", itemprop: 'item' do %>
-      <span itemprop='name'><%= @tag_id %></span>
+    <%= link_to "#{Discourse.base_url}/tag/#{@tag_name}", itemprop: 'item' do %>
+      <span itemprop='name'><%= @tag_name %></span>
     <% end %>
   </h1>
 <% end %>
@@ -142,7 +142,7 @@
     <%= auto_discovery_link_tag(:rss, { action: :category_feed }, rel: 'alternate nofollow', title: t('rss_topics_in_category', category: @category.name)) %>
     <%= raw crawlable_meta_data(title: @category.name, description: @category.description, image: @category.uploaded_logo&.url.presence) %>
   <% end %>
-<% elsif @tag_id %>
+<% elsif @tag_name %>
   <% content_for :head do %>
     <%= raw crawlable_meta_data(title: @title, description: @description_meta) %>
   <% end %>

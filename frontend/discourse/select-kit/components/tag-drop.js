@@ -192,10 +192,10 @@ export default class TagDrop extends ComboBoxComponent {
     }
 
     return json.results
-      .sort((a, b) => a.id > b.id)
+      .sort((a, b) => a.name > b.name)
       .map((r) => {
-        const content = this.defaultItem(r.id, r.text);
-        content.targetTagId = r.target_tag || r.id;
+        const content = this.defaultItem(r.name, r.text);
+        content.targetTagId = r.target_tag || r.name;
         if (!this.currentCategory) {
           content.count = r.count;
         }

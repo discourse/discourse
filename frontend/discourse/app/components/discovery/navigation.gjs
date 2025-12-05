@@ -81,7 +81,7 @@ export default class DiscoveryNavigation extends Component {
   <template>
     <AddCategoryTagClasses
       @category={{@category}}
-      @tags={{if @tag (array @tag.id)}}
+      @tags={{if @tag (array @tag.name)}}
     />
 
     <AccessibleDiscoveryHeading
