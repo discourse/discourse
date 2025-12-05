@@ -2,8 +2,10 @@
 @import "typography";
 
 .styleguide {
+  position: relative;
   display: flex;
-  padding: 1rem 1rem;
+  padding: 1rem;
+  padding-left: 0;
 
   .styleguide-note {
     padding: 1em;
@@ -12,12 +14,21 @@
   }
 
   .styleguide-menu {
+    position: sticky;
+    top: calc(var(--header-offset) + 3rem);
+    max-height: calc(100vh - 4rem - var(--header-offset));
     flex: 1 0 0;
+    overflow-y: auto;
+    margin-right: 2rem;
 
     ul {
       list-style: none;
       margin: 0;
       margin-bottom: 2em;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
 
       li.styleguide-heading {
         color: var(--primary-medium);
