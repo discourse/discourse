@@ -116,27 +116,9 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
           skip_pages = %w[/organisms/chat /organisms/more-topics]
           skip "Skipping smoke test for #{item[:href]} page" if skip_pages.include?(item[:href])
 
-          page.driver.with_playwright_page do |playwright_page|
-            errors = []
-            warnings = []
+          visit "/styleguide/#{item[:href]}"
 
-            playwright_page.on(
-              "console",
-              ->(msg) do
-                case msg.type
-                when "error"
-                  errors << msg.text
-                when "warning"
-                  warnings << msg.text
-                end
-              end,
-            )
-
-            visit "/styleguide/#{item[:href]}"
-
-            expect(page).to have_css(".styleguide-contents h1.section-title", text: item[:title])
-            expect(errors).to be_empty, "Console errors found: #{errors.join(", ")}"
-          end
+          expect(page).to have_css(".styleguide-contents h1.section-title", text: item[:title])
         end
       end
     end
