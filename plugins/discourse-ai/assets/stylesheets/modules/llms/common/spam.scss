@@ -63,45 +63,100 @@
 
 .spam-test-modal {
   &__body {
-    min-width: 500px;
+    min-width: 600px;
+    max-width: 800px;
   }
 
-  &__test-result {
+  &__results {
     margin-top: 1.5em;
-    padding-top: 1.5em;
-    border-top: 1px solid var(--primary-low);
   }
 
   &__verdict {
     font-size: var(--font-up-2);
     font-weight: bold;
-    padding: 0.5em;
-    border-radius: 0.25em;
+    padding: 0.75em;
+    border-radius: 6px;
     text-align: center;
-    margin: 1em 0;
+    margin-bottom: 1.5em;
 
     &.is-spam {
       background: var(--danger-low);
       color: var(--danger);
+      border: 2px solid var(--danger-medium);
     }
 
     &.not-spam {
       background: var(--success-low);
       color: var(--success);
+      border: 2px solid var(--success-medium);
     }
   }
 
-  &__log {
-    margin-top: 1em;
+  &__info-box {
+    background: var(--primary-very-low);
+    border: 1px solid var(--primary-low);
+    border-radius: 6px;
+    margin-bottom: 1em;
+    overflow: hidden;
+
+    &--reason {
+      background: var(--highlight-bg);
+      border-color: var(--tertiary-low);
+    }
+  }
+
+  &__info-box-title {
+    margin: 0;
+    padding: 0.75em 1em;
+    background: var(--primary-low);
+    font-size: var(--font-0);
+    font-weight: 600;
+    border-bottom: 1px solid var(--primary-low);
+    color: var(--primary-high);
+  }
+
+  &__info-box-content {
+    padding: 1em;
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    p {
+      margin: 0;
+      line-height: 1.5;
+    }
 
     pre {
-      max-height: 300px;
-      overflow-y: auto;
-      background: var(--primary-very-low);
-      padding: 1em;
-      margin: 0.5em 0;
-      font-family: monospace;
+      margin: 0;
+      padding: 0;
+      background: none;
+      font-family: var(--font-family-monospace);
+      font-size: var(--font-down-1);
       white-space: pre-wrap;
+      overflow-wrap: break-word;
+      line-height: 1.4;
     }
+  }
+
+  &__info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1em;
+    margin-bottom: 1em;
+  }
+
+  &__info-box--llm &__info-box-content {
+    max-height: 60px;
+    font-weight: 500;
+    color: var(--primary-high);
+  }
+
+  &__info-box--history &__info-box-content {
+    max-height: 150px;
+  }
+
+  &__info-box--message &__info-box-content,
+  &__info-box--prompt &__info-box-content {
+    max-height: 250px;
   }
 }
