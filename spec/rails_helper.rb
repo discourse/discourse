@@ -490,6 +490,24 @@ RSpec.configure do |config|
       end
     end
 
+    config.before(:each, type: :system) do |example|
+      next if example.metadata[:allow_network]
+      page.driver.with_playwright_page do |page|
+        page.route(
+          "**/*",
+          ->(route, request) do
+            uri = URI(route.request.url)
+            if %w[localhost discoursetest.minio.local].include?(uri.host)
+              route.fallback
+            else
+              STDERR.puts "Blocked network request to #{uri.host}"
+              route.abort
+            end
+          end,
+        )
+      end
+    end
+
     module CapybaraPlaywrightBasePatch
       private
 
