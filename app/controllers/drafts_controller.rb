@@ -32,7 +32,8 @@ class DraftsController < ApplicationController
     raise Discourse::NotFound.new if params[:id].blank?
 
     seq = params[:sequence] || DraftSequence.current(current_user, params[:id])
-    render json: { draft: Draft.get(current_user, params[:id], seq), draft_sequence: seq }
+    draft = Draft.get(current_user, params[:id], seq)
+    render json: { draft: draft, draft_sequence: seq }
   end
 
   def create
