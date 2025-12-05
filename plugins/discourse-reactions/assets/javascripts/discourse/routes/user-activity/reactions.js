@@ -1,6 +1,8 @@
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import DiscourseRoute from "discourse/routes/discourse";
-import CustomReaction from "../../models/discourse-reactions-custom-reaction";
+import CustomReaction, {
+  PAGE_SIZE,
+} from "../../models/discourse-reactions-custom-reaction";
 
 export default class UserActivityReactions extends DiscourseRoute {
   async model() {
@@ -15,7 +17,7 @@ export default class UserActivityReactions extends DiscourseRoute {
   }
 
   setupController(controller, model) {
-    let loadedAll = model.length < 20;
+    let loadedAll = model.length < PAGE_SIZE;
     this.controllerFor("user-activity.reactions").setProperties({
       model,
       canLoadMore: !loadedAll,
