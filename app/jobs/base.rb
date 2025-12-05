@@ -86,6 +86,7 @@ module Jobs
 
           @data["duration"] = profile[:total_duration] # Duration - length in seconds it took to run
           @data["sql_duration"] = profile.dig(:sql, :duration) || 0 # Sql Duration (s)
+          @data["sql_max_duration"] = profile.dig(:sql, :max_duration) || 0 # Sql Max Duration (s)
           @data["sql_calls"] = profile.dig(:sql, :calls) || 0 # Sql Statements - how many statements ran
           @data["redis_duration"] = profile.dig(:redis, :duration) || 0 # Redis Duration (s)
           @data["redis_calls"] = profile.dig(:redis, :calls) || 0 # Redis commands
