@@ -6,7 +6,7 @@ RSpec.describe Unread do
   let(:whisperers_group) { Fabricate(:group) }
   let(:user) { Fabricate(:user, groups: [whisperers_group]) }
   let(:topic) do
-    Fabricate(:topic, posts_count: 13, highest_staff_post_number: 15, highest_post_number: 13)
+    Fabricate(:topic, posts_count: 13, highest_whisperer_post_number: 15, highest_post_number: 13)
   end
 
   let(:topic_user) do

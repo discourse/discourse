@@ -8,11 +8,20 @@ class Topic < ActiveRecord::Base
   end
   include RateLimiter::OnCreateRecord
   include HasCustomFields
+  include HasDeprecatedColumns
   include Trashable
   include Searchable
   include LimitedEdit
   include Localizable
   extend Forwardable
+
+  self.ignored_columns = ["highest_staff_post_number"]
+
+  deprecate_column :highest_staff_post_number,
+                   drop_from: "3.5",
+                   message:
+                     "highest_staff_post_number is deprecated, use highest_whisperer_post_number instead"
+  alias_attribute :highest_staff_post_number, :highest_whisperer_post_number
 
   EXTERNAL_ID_MAX_LENGTH = 50
 
@@ -868,9 +877,9 @@ class Topic < ActiveRecord::Base
     if opts[:whisper]
       result = DB.query_single(<<~SQL, highest, topic_id)
         UPDATE topics
-        SET highest_staff_post_number = ? + 1
+        SET highest_whisperer_post_number = ? + 1
         WHERE id = ?
-        RETURNING highest_staff_post_number
+        RETURNING highest_whisperer_post_number
       SQL
 
       result.first.to_i
@@ -880,7 +889,7 @@ class Topic < ActiveRecord::Base
 
       result = DB.query_single(<<~SQL, highest: highest, topic_id: topic_id)
         UPDATE topics
-        SET highest_staff_post_number = :highest + 1,
+        SET highest_whisperer_post_number = :highest + 1,
             highest_post_number = :highest + 1
             #{reply_sql}
             #{posts_sql}
@@ -920,7 +929,7 @@ class Topic < ActiveRecord::Base
       )
       UPDATE topics
       SET
-        highest_staff_post_number = X.highest_post_number,
+        highest_whisperer_post_number = X.highest_post_number,
         highest_post_number = Y.highest_post_number,
         last_posted_at = Y.last_posted_at,
         posts_count = Y.posts_count,
@@ -931,7 +940,7 @@ class Topic < ActiveRecord::Base
         X.topic_id = topics.id AND
         Y.topic_id = topics.id AND
         Z.topic_id = topics.id AND (
-          topics.highest_staff_post_number <> X.highest_post_number OR
+          topics.highest_whisperer_post_number <> X.highest_post_number OR
           topics.highest_post_number <> Y.highest_post_number OR
           topics.last_posted_at <> Y.last_posted_at OR
           topics.posts_count <> Y.posts_count OR
@@ -966,7 +975,7 @@ class Topic < ActiveRecord::Base
       )
       UPDATE topics
       SET
-        highest_staff_post_number = X.highest_post_number,
+        highest_whisperer_post_number = X.highest_post_number,
         highest_post_number = Y.highest_post_number,
         last_posted_at = Y.last_posted_at,
         posts_count = Y.posts_count,
@@ -977,7 +986,7 @@ class Topic < ActiveRecord::Base
         X.topic_id = topics.id AND
         Y.topic_id = topics.id AND
         Z.topic_id = topics.id AND (
-          topics.highest_staff_post_number <> X.highest_post_number OR
+          topics.highest_whisperer_post_number <> X.highest_post_number OR
           topics.highest_post_number <> Y.highest_post_number OR
           topics.last_posted_at <> Y.last_posted_at OR
           topics.posts_count <> Y.posts_count OR
@@ -997,7 +1006,7 @@ class Topic < ActiveRecord::Base
     result = DB.query_single(<<~SQL, topic_id: topic_id)
       UPDATE topics
       SET
-        highest_staff_post_number = (
+        highest_whisperer_post_number = (
           SELECT COALESCE(MAX(post_number), 0) FROM posts
           WHERE topic_id = :topic_id AND
                 deleted_at IS NULL

@@ -181,7 +181,7 @@ schema:
           - "word_count"
           - "excerpt"
           - "fancy_title"
-          - "highest_staff_post_number"
+          - "highest_whisperer_post_number"
           - "reviewable_score"
           - "slow_mode_seconds"
       indexes:

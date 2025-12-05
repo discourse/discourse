@@ -309,7 +309,7 @@ class TopicUser < ActiveRecord::Base
         last_read_post_number =
           LEAST(
             CASE WHEN :whisperer
-              THEN highest_staff_post_number
+              THEN highest_whisperer_post_number
               ELSE highest_post_number END
             ,
             GREATEST(:post_number, tu.last_read_post_number)
