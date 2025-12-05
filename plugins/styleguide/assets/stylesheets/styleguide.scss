@@ -16,7 +16,7 @@
   .styleguide-menu {
     position: sticky;
     top: calc(var(--header-offset) + 3rem);
-    max-height: calc(100vh - 4rem - var(--header-offset));
+    max-height: calc(100vh - 3rem - var(--header-offset));
     flex: 1 0 0;
     overflow-y: auto;
     margin-right: 2rem;
