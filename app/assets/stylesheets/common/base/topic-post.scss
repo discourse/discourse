@@ -1726,6 +1726,7 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
+  align-items: end;
 
   &__list {
     margin: 0;

@@ -8,6 +8,7 @@ import UserAvatar from "discourse/components/user-avatar";
 import DMenu from "discourse/float-kit/components/d-menu";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import { and, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 const LIKE_ACTION = 2; // The action type ID for "like" in Discourse
@@ -19,6 +20,7 @@ export default class LikedUsersList extends Component {
   @tracked likedUsers;
   @tracked loadingLikedUsers = false;
   @tracked slicedUsersVisible = false;
+  @tracked moreUsersVisible = false;
 
   @action
   async fetchLikedUsers() {
@@ -40,7 +42,15 @@ export default class LikedUsersList extends Component {
 
   @action
   toggleSlicedUsersVisiblity() {
+    if (this.moreUsersVisible) {
+      this.moreUsersVisible = false;
+    }
     this.slicedUsersVisible = !this.slicedUsersVisible;
+  }
+
+  @action
+  toggleMoreUsersVisiblity() {
+    this.moreUsersVisible = !this.moreUsersVisible;
   }
 
   get icon() {
@@ -60,7 +70,7 @@ export default class LikedUsersList extends Component {
   get slicedUsers() {
     return this.likedUsers?.content.slice(
       DISPLAY_MAX_USERS,
-      DISPLAY_MAX_USERS * 2
+      DISPLAY_MAX_USERS * 2 + 1
     );
   }
 
@@ -68,6 +78,13 @@ export default class LikedUsersList extends Component {
     return (
       this.likedUsers?.length -
       (this.truncatedUsers.length + this.slicedUsers.length)
+    );
+  }
+
+  get moreUsers() {
+    return this.likedUsers?.content.slice(
+      DISPLAY_MAX_USERS * 2,
+      this.likedUsers?.content.length
     );
   }
 
@@ -138,13 +155,29 @@ export default class LikedUsersList extends Component {
                   </li>
                 {{/each}}
               </ul>
-              {{#if this.hiddenUserCount}}
-                <span class="liked-users-list__more">
+              {{#if (and this.hiddenUserCount (not this.moreUsersVisible))}}
+                <DButton
+                  @action={{this.toggleMoreUsersVisiblity}}
+                  class="btn-transparent liked-users-list__more"
+                >
                   {{i18n
                     "discourse_reactions.state_panel.more_users"
                     count=this.hiddenUserCount
                   }}
-                </span>
+                </DButton>
+              {{/if}}
+              {{#if this.moreUsersVisible}}
+                <ul class="liked-users-list__list">
+                  {{#each this.moreUsers as |user|}}
+                    <li class="liked-users-list__item">
+                      <UserAvatar
+                        class="trigger-user-card"
+                        @user={{user}}
+                        @size="small"
+                      />
+                    </li>
+                  {{/each}}
+                </ul>
               {{/if}}
             {{/if}}
           </div>
