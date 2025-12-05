@@ -1,4 +1,4 @@
-name: Tests
+fname: Tests
 
 on:
   pull_request:
@@ -25,9 +25,9 @@ jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }} # Update fetch-job-id step if changing this
-    runs-on: ${{ (github.repository_owner == 'discourse' && (matrix.target == 'plugins' && matrix.build_type == 'system' && 'debian-12-16core' || 'debian-12-8core')) || 'ubuntu-latest' }}
+    runs-on: ${{ (github.repository_owner == 'discourse' && ((matrix.target == 'core-plugins' || matrix.target == 'official-plugins') && matrix.build_type == 'system' && 'debian-12-16core' || 'debian-12-8core')) || 'ubuntu-latest' }}
     container: discourse/discourse_test:release
-    timeout-minutes: ${{ ((matrix.build_type == 'system' && (matrix.target == 'plugins' || matrix.target == 'core')) && 30) || 20 }}
+    timeout-minutes: ${{ ((matrix.build_type == 'system' && (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'core')) && 30) || 20 }}
 
     env:
       RAILS_ENV: test
@@ -141,7 +141,7 @@ jobs:
           done
 
       - name: Pull compatible versions of plugins
-        if: matrix.target == 'plugins' && (github.ref_name != 'main' && github.base_ref != 'main')
+        if: matrix.target == 'official-plugins' && (github.ref_name != 'main' && github.base_ref != 'main')
         run: LOAD_PLUGINS=0 bin/rake plugin:pull_compatible_all
 
       - name: Checkout official themes
@@ -184,7 +184,7 @@ jobs:
 
       - name: Create and migrate database
         env:
-          LOAD_PLUGINS: ${{ (matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
+          LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'chat') && '1' || '0' }}
         run: |
           bin/rake db:create
           script/silence_successful_output bin/rake db:migrate
@@ -194,7 +194,7 @@ jobs:
           env.USES_PARALLEL_DATABASES == 'true' &&
           steps.app-cache.outputs.cache-hit != 'true'
         env:
-          LOAD_PLUGINS: ${{ (matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
+          LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'chat') && '1' || '0' }}
         run: |
           bin/rake parallel:create
           script/silence_successful_output bin/rake parallel:migrate
@@ -217,7 +217,7 @@ jobs:
           restore-keys: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-
 
       - name: Check Annotations
-        if: matrix.build_type == 'backend' && (matrix.target == 'core' || matrix.target == 'plugins' || matrix.target == 'chat')
+        if: matrix.build_type == 'backend' && (matrix.target == 'core' || matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'chat')
         run: |
           bin/rake annotate:ensure_all_indexes
 
@@ -280,7 +280,8 @@ jobs:
         run: pnpm test
 
       - name: Split core and official plugins
-        if: matrix.target == 'core-plugins' || matrix.target == 'official-plugins'
+        if: matrix.target == 'official-plugins'
+        shell: bash
         run: |
           CORE_PLUGINS=`script/list_bundled_plugins | sed 's|.*/||' | paste -sd, -`
           echo "CORE_PLUGINS=$CORE_PLUGINS" >> $GITHUB_ENV
@@ -292,12 +293,12 @@ jobs:
       - name: Core Plugins RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core-plugins'
         run: |
-          EMBER_RAISE_ON_DEPRECATION=1 bin/rake plugin:turbo_spec["${{ env.CORE_PLUGINS_ESCAPED }}",'--verbose --format=progress --use-runtime-info --profile=50']
+          EMBER_RAISE_ON_DEPRECATION=1 bin/rake plugin:turbo_spec['*','--verbose --format=progress --use-runtime-info --profile=50']
 
       - name: Core Plugins QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'core-plugins'
         run: |
-          EMBER_RAISE_ON_DEPRECATION=1 bin/rake plugin:qunit["${{ env.CORE_PLUGINS_ESCAPED }}"]
+          EMBER_RAISE_ON_DEPRECATION=1 bin/rake plugin:qunit['*']
 
       - name: Official Plugins RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'official-plugins'
@@ -338,7 +339,7 @@ jobs:
         env:
           CHECKOUT_TIMEOUT: 10
         run: |
-          EMBER_RAISE_ON_DEPRECATION=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation plugins/{${{ env.CORE_PLUGINS }}}/spec/system
+          EMBER_RAISE_ON_DEPRECATION=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
         shell: bash
 
       - name: Official Plugins System Tests
