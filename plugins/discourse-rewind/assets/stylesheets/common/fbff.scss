@@ -1,0 +1,102 @@
+.--fbff {
+  --border-size: 6px;
+  margin-block: 1em;
+
+  @media screen and (width <= 768px) {
+    --border-size: 4px;
+  }
+
+  @media screen and (width <= 475px) {
+    --border-size: 3px;
+  }
+
+  .rewind-report-title {
+    width: 100%;
+    text-align: center;
+    border: none;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  .rewind-card {
+    display: grid;
+    grid-template-columns: 100px 1fr 100px;
+    border: none;
+
+    @media screen and (width <= 625px) {
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: min-content min-content;
+      grid-template-areas: "gif gif gif" "friend nothing you";
+    }
+  }
+
+  .fbff-gif-container {
+    position: relative;
+    width: 90%;
+    border-radius: var(--rewind-border-radius);
+    align-self: center;
+    justify-self: center;
+    z-index: 10;
+
+    @media screen and (width <= 625px) {
+      grid-area: gif;
+    }
+  }
+
+  .fbff-gif {
+    width: 100%;
+    border-radius: var(--rewind-border-radius);
+  }
+
+  .fbff-avatar-container {
+    z-index: 10;
+    display: grid;
+    grid-template-rows: 1fr min-content;
+    flex-direction: column;
+
+    @media screen and (width <= 625px) {
+      &:first-of-type {
+        grid-area: friend;
+      }
+
+      &:last-of-type {
+        grid-area: you;
+      }
+    }
+
+    img.avatar {
+      align-self: center;
+      justify-self: center;
+      width: 75px;
+      height: 75px;
+      border-radius: 0;
+
+      @media screen and (width <= 768px) {
+        width: 50px;
+        height: 50px;
+      }
+
+      @media screen and (width <= 475px) {
+        width: 25px;
+        height: 25px;
+      }
+    }
+  }
+
+  .fbff-avatar-name {
+    margin: 0;
+    align-self: center;
+    justify-self: center;
+    height: min-content;
+    font-size: var(--font-down-1);
+    font-family: "Pixelify Sans", sans-serif;
+    color: var(--rewind-magenta);
+    margin-top: 0.5em;
+    line-height: 1;
+    overflow-wrap: anywhere;
+
+    @media screen and (width <= 475px) {
+      font-size: var(--font-down-3);
+    }
+  }
+}

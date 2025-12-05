@@ -1,0 +1,44 @@
+.rewind-report-container {
+  perspective: 1000px;
+
+  --ambientAmount: 0.1;
+  --easeAmount: 0;
+  animation: ambientMovement;
+  animation-duration: 24s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+.rewind-card {
+  border-radius: var(--rewind-border-radius);
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  padding: 1em;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 700px;
+
+  &__title {
+    font-family: var(--jersey-heading) !important;
+    font-weight: 600;
+    font-size: var(--font-up-3);
+    -webkit-font-smoothing: antialiased;
+
+    @media screen and (width <= 525px) {
+      font-size: var(--font-up-2);
+    }
+
+    @media screen and (width <= 475px) {
+      font-size: var(--font-up-0);
+    }
+  }
+
+  &__data {
+    font-weight: normal;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+}

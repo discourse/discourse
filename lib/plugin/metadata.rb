@@ -84,6 +84,7 @@ class Plugin::Metadata
         discourse-yearly-review
         discourse-zendesk-plugin
         discourse-zoom
+        discourse-rewind
         automation
         chat
         checklist
