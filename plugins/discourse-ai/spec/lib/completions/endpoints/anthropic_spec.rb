@@ -10,6 +10,41 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
     UploadCreator.new(image100x100, "image.jpg").create_for(Discourse.system_user.id)
   end
 
+  def minimal_pdf_content
+    <<~PDF
+      %PDF-1.4
+      1 0 obj<< /Type /Catalog /Pages 2 0 R >>endobj
+      2 0 obj<< /Type /Pages /Count 1 /Kids [3 0 R] >>endobj
+      3 0 obj<< /Type /Page /Parent 2 0 R /MediaBox [0 0 200 200] /Contents 4 0 R >>endobj
+      4 0 obj<< /Length 44 >>stream
+      BT /F1 12 Tf 72 720 Td (Hello PDF) Tj ET
+      endstream
+      endobj
+      xref
+      0 5
+      0000000000 65535 f
+      0000000010 00000 n
+      0000000060 00000 n
+      0000000111 00000 n
+      0000000200 00000 n
+      trailer<< /Size 5 /Root 1 0 R >>
+      startxref
+      268
+      %%EOF
+    PDF
+  end
+
+  def build_pdf_upload
+    SiteSetting.authorized_extensions = "*"
+    file = Tempfile.new(%w[test-pdf .pdf])
+    file.binmode
+    file.write(minimal_pdf_content)
+    file.rewind
+    UploadCreator.new(file, "document.pdf").create_for(Discourse.system_user.id)
+  ensure
+    file.close! if file
+  end
+
   let(:prompt) do
     DiscourseAi::Completions::Prompt.new(
       "You are hello bot",
@@ -333,6 +368,75 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
     result = llm.generate(prompt, user: Discourse.system_user)
 
     expect(result).to eq("What a cool image")
+    expect(requested_body).to eq(request_body)
+  end
+
+  it "can send pdf documents via a completion prompt" do
+    pdf_upload = build_pdf_upload
+
+    prompt =
+      DiscourseAi::Completions::Prompt.new(
+        "You are pdf bot",
+        messages: [type: :user, id: "user1", content: ["hello", { upload_id: pdf_upload.id }]],
+      )
+
+    encoded = prompt.encoded_uploads(prompt.messages.last, allow_documents: true)
+
+    request_body = {
+      model: "claude-3-opus-20240229",
+      max_tokens: 4096,
+      messages: [
+        {
+          role: "user",
+          content: [
+            { type: "text", text: "user1: hello" },
+            {
+              type: "document",
+              source: {
+                type: "base64",
+                media_type: "application/pdf",
+                data: encoded[0][:base64],
+              },
+            },
+          ],
+        },
+      ],
+      system: "You are pdf bot",
+    }
+
+    response_body = <<~STRING
+      {
+        "content": [
+          {
+            "text": "What a cool pdf",
+            "type": "text"
+          }
+        ],
+        "id": "msg_013Zva2CMHLNnXjNJJKqJ2EF",
+        "model": "claude-3-opus-20240229",
+        "role": "assistant",
+        "stop_reason": "end_turn",
+        "stop_sequence": null,
+        "type": "message",
+        "usage": {
+          "input_tokens": 10,
+          "output_tokens": 25
+        }
+      }
+    STRING
+
+    requested_body = nil
+    stub_request(:post, url).with(
+      body:
+        proc do |req_body|
+          requested_body = JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+    ).to_return(status: 200, body: response_body)
+
+    result = llm.generate(prompt, user: Discourse.system_user)
+
+    expect(result).to eq("What a cool pdf")
     expect(requested_body).to eq(request_body)
   end
 

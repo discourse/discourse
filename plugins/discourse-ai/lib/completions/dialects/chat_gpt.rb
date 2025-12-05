@@ -12,7 +12,6 @@ module DiscourseAi
         end
 
         VALID_ID_REGEX = /\A[a-zA-Z0-9_]+\z/
-
         def native_tool_support?
           llm_model.provider == "open_ai" || llm_model.provider == "azure"
         end
@@ -165,16 +164,19 @@ module DiscourseAi
 
           content_array << msg[:content]
 
-          allow_vision = vision_support?
-          allow_vision = false if responses_api? && role == "assistant"
+          allow_images = vision_support?
+          allow_images = false if responses_api? && role == "assistant"
 
           content_array =
             to_encoded_content_array(
               content: content_array.flatten,
-              image_encoder: ->(details) { image_node(details) },
+              upload_encoder: ->(details) { upload_node(details) },
               text_encoder: ->(text) { text_node(text, role) },
               other_encoder: ->(hash) { thinking_signature_node(hash) },
-              allow_vision:,
+              allow_images:,
+              allow_documents: true,
+              allowed_attachment_types: llm_model.allowed_attachment_types,
+              upload_filter: ->(encoded) { document_allowed?(encoded) },
             )
 
           if responses_api? && role == "assistant" && reasoning_data&.dig(:next_message_id)
@@ -222,6 +224,14 @@ module DiscourseAi
           end
         end
 
+        def upload_node(details)
+          if details[:mime_type] == "application/pdf" || details[:kind] == :document
+            file_node(details)
+          else
+            image_node(details)
+          end
+        end
+
         def image_node(details)
           encoded_image = "data:#{details[:mime_type]};base64,#{details[:base64]}"
           if responses_api?
@@ -229,6 +239,14 @@ module DiscourseAi
           else
             { type: "image_url", image_url: { url: encoded_image } }
           end
+        end
+
+        def file_node(details)
+          {
+            type: "input_file",
+            filename: details[:filename] || "document.pdf",
+            file_data: "data:#{details[:mime_type]};base64,#{details[:base64]}",
+          }
         end
 
         def per_message_overhead

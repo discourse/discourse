@@ -3,6 +3,13 @@
 class LlmModel < ActiveRecord::Base
   FIRST_BOT_USER_ID = -1200
   BEDROCK_PROVIDER_NAME = "aws_bedrock"
+  DEFAULT_ALLOWED_ATTACHMENT_TYPES = [].freeze
+  ATTACHMENT_TYPE_ALIASES = {
+    "md" => "markdown",
+    "markdown" => "markdown",
+    "htm" => "html",
+    "text" => "txt",
+  }.freeze
 
   has_many :llm_quotas, dependent: :destroy
   has_one :llm_credit_allocation, dependent: :destroy
@@ -190,6 +197,21 @@ class LlmModel < ActiveRecord::Base
 
   def tokenizer_class
     tokenizer.constantize
+  end
+
+  def allowed_attachment_types
+    (self[:allowed_attachment_types].presence || DEFAULT_ALLOWED_ATTACHMENT_TYPES).map(&:downcase)
+  end
+
+  def allowed_attachment_types=(value)
+    normalized =
+      Array(value)
+        .map { |v| v.to_s.downcase.strip }
+        .map { |v| ATTACHMENT_TYPE_ALIASES[v] || v }
+        .reject(&:blank?)
+        .uniq
+    normalized = DEFAULT_ALLOWED_ATTACHMENT_TYPES if normalized.empty?
+    self[:allowed_attachment_types] = normalized
   end
 
   def lookup_custom_param(key)
