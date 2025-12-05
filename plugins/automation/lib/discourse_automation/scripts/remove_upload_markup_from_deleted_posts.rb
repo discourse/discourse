@@ -21,7 +21,7 @@ DiscourseAutomation::Scriptable.add(
     #  [small.pdf|attachment](upload://key.pdf) (Number Bytes)
     #  ![](upload://key.png)
     upload_and_attachment_regex =
-      %r{!?\[([^\]|]*)(?:\|[^\]]*)?\]\(upload://([A-Za-z0-9_-]+)(?:[^)]*)\)(?:\s*\([^)]*\))?}
+      %r{!?\[([^\]|]*)(?:\|[^\]]*)?\]\(upload://([A-Za-z0-9_-]+)[^)]*\)(?:\s*\([^)]*\))?}
 
     Post
       .with_deleted
