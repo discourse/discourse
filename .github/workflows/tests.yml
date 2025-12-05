@@ -69,6 +69,9 @@ jobs:
       - name: Set working directory owner
         run: chown root:root .
 
+      - name: Upgrade pnpm
+        run: npm install -g pnpm@10
+
       - name: Set PARALLEL_TEST_PROCESSORS for system tests
         if: matrix.build_type == 'system'
         run: |

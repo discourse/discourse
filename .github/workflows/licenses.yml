@@ -25,6 +25,9 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 1
+      
+      - name: Upgrade pnpm
+        run: npm install -g pnpm@10
 
       - name: Setup Git
         run: |
