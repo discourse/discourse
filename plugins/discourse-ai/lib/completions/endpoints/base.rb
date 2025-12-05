@@ -151,6 +151,7 @@ module DiscourseAi
               cancel_manager_callback =
                 lambda do
                   cancelled = true
+                  call_status = :cancelled
                   http.finish
                 end
               cancel_manager.add_callback(cancel_manager_callback)
@@ -184,6 +185,11 @@ module DiscourseAi
               end
 
             start_logging.call
+
+            if cancelled || cancel_manager&.cancelled?
+              call_status = :cancelled
+              break
+            end
 
             http.request(request) do |response|
               log.response_status = response.code.to_i if log
@@ -280,7 +286,9 @@ module DiscourseAi
               call_status = :success
               return response_data
             ensure
-              if log
+              should_log = log && call_status != :cancelled
+
+              if should_log
                 log.raw_response_payload = response_raw
                 final_log_update(log)
                 log.response_tokens = tokenizer.size(partials_raw) if log.response_tokens.blank?
@@ -315,7 +323,7 @@ module DiscourseAi
 
               track_failures(call_status)
 
-              if log && (logger = Thread.current[:llm_audit_log])
+              if should_log && (logger = Thread.current[:llm_audit_log])
                 call_data = <<~LOG
                   #{self.class.name}: request_tokens #{log.request_tokens} response_tokens #{log.response_tokens}
                   request:
@@ -325,7 +333,7 @@ module DiscourseAi
                 LOG
                 logger.info(call_data)
               end
-              if log && (structured_logger = Thread.current[:llm_audit_structured_log])
+              if should_log && (structured_logger = Thread.current[:llm_audit_structured_log])
                 llm_request =
                   begin
                     JSON.parse(log.raw_request_payload)
@@ -440,6 +448,7 @@ module DiscourseAi
         end
 
         def track_failures(call_status)
+          return if call_status == :cancelled
           return if llm_model.blank? || llm_model.seeded?
           key = "ai_llm_status_fast_fail:#{llm_model.id}"
 
