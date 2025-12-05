@@ -623,6 +623,31 @@ module DiscourseAi
         end
 
         reply_post
+      rescue LlmCreditAllocation::CreditLimitExceeded => e
+        reset_time = e.allocation&.relative_reset_time || ""
+        locale_key = post.user.admin? ? "limit_exceeded_admin" : "limit_exceeded_user"
+        error_message =
+          I18n.t("discourse_ai.llm_credit_allocation.#{locale_key}", reset_time: reset_time)
+
+        if reply_post
+          reply = "#{reply}#{started_thinking ? "\n\n</details>" : ""}\n\n#{error_message}"
+          reply_post.revise(
+            bot.bot_user,
+            { raw: reply },
+            skip_validations: true,
+            skip_revision: true,
+          )
+        else
+          PostCreator.create!(
+            bot.bot_user,
+            topic_id: post.topic_id,
+            raw: error_message,
+            skip_validations: true,
+            skip_guardian: true,
+          )
+        end
+
+        nil
       rescue => e
         if reply_post
           details = e.message.to_s

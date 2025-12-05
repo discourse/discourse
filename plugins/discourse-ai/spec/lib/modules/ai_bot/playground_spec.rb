@@ -1151,6 +1151,64 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       expect(custom_prompt.last.first).to eq(response2)
       expect(custom_prompt.last.last).to eq(bot_user.username)
     end
+
+    it "sends credit limit error message when credit limit is exceeded in PM" do
+      seeded_llm = Fabricate(:seeded_model)
+      allocation =
+        Fabricate(
+          :llm_credit_allocation,
+          llm_model: seeded_llm,
+          daily_credits: 1000,
+          daily_used: 1000,
+        )
+
+      exception = LlmCreditAllocation::CreditLimitExceeded.new("Credit limit exceeded", allocation:)
+      allow(LlmCreditAllocation).to receive(:check_credits!).and_raise(exception)
+
+      expect { playground.reply_to(third_post) }.not_to raise_error
+
+      last_post = pm.reload.posts.order(:post_number).last
+
+      expected_message =
+        I18n.t(
+          "discourse_ai.llm_credit_allocation.limit_exceeded_user",
+          reset_time: allocation.relative_reset_time,
+        )
+      expect(last_post.raw).to include(expected_message)
+      expect(last_post.user_id).to eq(bot_user.id)
+    end
+
+    it "sends admin credit limit error message when credit limit is exceeded for admin users" do
+      seeded_llm = Fabricate(:seeded_model)
+      allocation =
+        Fabricate(
+          :llm_credit_allocation,
+          llm_model: seeded_llm,
+          daily_credits: 1000,
+          daily_used: 1000,
+        )
+
+      # Add admin to existing PM
+      pm.topic_allowed_users.create!(user_id: admin.id)
+
+      admin_post =
+        Fabricate(:post, topic: pm, user: admin, post_number: 4, raw: "Hello bot from admin")
+
+      exception = LlmCreditAllocation::CreditLimitExceeded.new("Credit limit exceeded", allocation:)
+      allow(LlmCreditAllocation).to receive(:check_credits!).and_raise(exception)
+
+      expect { playground.reply_to(admin_post) }.not_to raise_error
+
+      last_post = pm.reload.posts.order(:post_number).last
+
+      expected_message =
+        I18n.t(
+          "discourse_ai.llm_credit_allocation.limit_exceeded_admin",
+          reset_time: allocation.relative_reset_time,
+        )
+      expect(last_post.raw).to include(expected_message)
+      expect(last_post.user_id).to eq(bot_user.id)
+    end
   end
 
   describe "#canceling a completions" do
