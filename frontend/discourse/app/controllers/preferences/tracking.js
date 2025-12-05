@@ -1,8 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action, computed } from "@ember/object";
+import { computed } from "@ember/object";
 import { service } from "@ember/service";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { i18n } from "discourse-i18n";
 
@@ -10,7 +9,9 @@ export default class extends Controller {
   @service currentUser;
   @service siteSettings;
 
-  @tracked saved = false;
+  @tracked trackedTopicsSaved = false;
+  @tracked trackedCategoriesSaved = false;
+  @tracked trackedTagsSaved = false;
   @tracked customAttrNames = [];
 
   subpageTitle = i18n("user.preferences_nav.tracking");
@@ -186,15 +187,5 @@ export default class extends Controller {
     }
 
     return attrs;
-  }
-
-  @action
-  save() {
-    this.saved = false;
-
-    return this.model
-      .save(this.saveAttrNames)
-      .then(() => (this.saved = true))
-      .catch(popupAjaxError);
   }
 }

@@ -1,7 +1,5 @@
 import Component from "@glimmer/component";
-import { fn } from "@ember/helper";
 import { service } from "@ember/service";
-import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
 
 export default class NotificationLevelWhenAssigned extends Component {
@@ -34,20 +32,20 @@ export default class NotificationLevelWhenAssigned extends Component {
 
   <template>
     {{#if this.siteSettings.assign_enabled}}
-      <div
-        class="controls controls-dropdown"
-        data-setting-name="user-notification-level-when-assigned"
+      <@form.Field
+        @name="notification_level_when_assigned"
+        @title={{i18n "user.notification_level_when_assigned.label"}}
+        @format="large"
+        as |field|
       >
-        <label>{{i18n "user.notification_level_when_assigned.label"}}</label>
-        <ComboBox
-          @content={{this.notificationLevelsWhenAssigned}}
-          @value={{@outletArgs.model.user_option.notification_level_when_assigned}}
-          @valueProperty="value"
-          @onChange={{fn
-            (mut @outletArgs.model.user_option.notification_level_when_assigned)
-          }}
-        />
-      </div>
+        <field.Select as |select|>
+          {{#each this.notificationLevelsWhenAssigned as |option|}}
+            <select.Option @value={{option.value}}>
+              {{option.name}}
+            </select.Option>
+          {{/each}}
+        </field.Select>
+      </@form.Field>
     {{/if}}
   </template>
 }
