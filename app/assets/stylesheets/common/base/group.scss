@@ -163,6 +163,26 @@ table.group-manage-logs {
 .group-members {
   grid-template-columns: 3fr repeat(3, minmax(min-content, 1fr));
 
+  .user-info .name-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 0.35em;
+
+    > a {
+      display: contents;
+    }
+
+    .username {
+      width: auto;
+    }
+
+    .name {
+      width: 100%;
+      order: 1;
+    }
+  }
+
   &--can-manage {
     grid-template-columns: 3fr repeat(4, minmax(min-content, 1fr)) 3em;
 
