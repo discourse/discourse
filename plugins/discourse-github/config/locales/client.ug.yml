@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 ug:
+  js:
+    github:
+      pr_status:
+        draft: "دەسلەپكى نۇسخا"
+        open: "ئاچ"
+        approved: "تەستىقلاندى"
+        closed: "تاقالدى"
