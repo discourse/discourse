@@ -280,7 +280,7 @@ jobs:
         run: pnpm test
 
       - name: Split core and official plugins
-        if: matrix.target == 'official-plugins'
+        if: matrix.target == 'core-plugins' || matrix.target == 'official-plugins'
         shell: bash
         run: |
           CORE_PLUGINS=`script/list_bundled_plugins | sed 's|.*/||' | paste -sd, -`
@@ -339,7 +339,17 @@ jobs:
         env:
           CHECKOUT_TIMEOUT: 10
         run: |
-          EMBER_RAISE_ON_DEPRECATION=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
+          IFS=',' read -r -a items <<< "${{ env.CORE_PLUGINS }}"
+          matches=()
+          for item in "${items[@]}"; do
+            dir="plugins/$item/spec/system"
+            if [ -d "$dir" ]; then
+              matches+=("$dir")
+            fi
+          done
+
+          echo "Running bin/turbo_rspec on: ${matches[*]}"
+          EMBER_RAISE_ON_DEPRECATION=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation "${matches[@]}"
         shell: bash
 
       - name: Official Plugins System Tests
@@ -347,7 +357,17 @@ jobs:
         env:
           CHECKOUT_TIMEOUT: 10
         run: |
-          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation plugins/{${{ env.OFFICIAL_PLUGINS }}}/spec/system
+          IFS=',' read -r -a items <<< "${{ env.OFFICIAL_PLUGINS }}"
+          matches=()
+          for item in "${items[@]}"; do
+            dir="plugins/$item/spec/system"
+            if [ -d "$dir" ]; then
+              matches+=("$dir")
+            fi
+          done
+
+          echo "Running bin/turbo_rspec on: ${matches[*]}"
+          EMBER_RAISE_ON_DEPRECATION=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation "${matches[@]}"
         shell: bash
 
       - name: Chat System Tests
