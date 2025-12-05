@@ -3,6 +3,8 @@
  */
 module.exports = function (env) {
   const stripWhitespaceStack = [];
+  const skipStack = [];
+
   /** @type {import('@glimmer/syntax').ASTPluginBuilder} */
   const b = env.syntax.builders;
 
@@ -40,8 +42,17 @@ module.exports = function (env) {
           }
         },
       },
+      AttrNode: {
+        // Don't touch TextNodes inside attributes
+        enter() {
+          skipStack.push(true);
+        },
+        exit() {
+          skipStack.pop();
+        },
+      },
       TextNode(node) {
-        if (stripWhitespaceStack.length > 0) {
+        if (stripWhitespaceStack.length > 0 && skipStack.length === 0) {
           node.chars = node.chars.trim();
           if (node.chars === "") {
             return null;

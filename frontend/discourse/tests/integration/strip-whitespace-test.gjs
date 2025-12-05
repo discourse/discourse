@@ -13,14 +13,14 @@ module("Integration | strip-whitespace", function (hooks) {
       <template>
         <div class="stripped">
           {{#stripWhitespace}}
-            <div>
+            <div class="">
               <p> Hello, World! </p>
             </div>
           {{/stripWhitespace}}
         </div>
 
         <div class="not-stripped">
-          <div>
+          <div class="">
             <p> Hello, World! </p>
           </div>
         </div>
@@ -28,10 +28,10 @@ module("Integration | strip-whitespace", function (hooks) {
     );
     assert.strictEqual(
       this.element.querySelector(".stripped div").outerHTML,
-      `<div><p>Hello, World!</p></div>`
+      `<div class=""><p>Hello, World!</p></div>`
     );
     assert.true(
-      /<div>\s+<p> Hello, World! <\/p>\s+<\/div>/.test(
+      /<div class="">\s+<p> Hello, World! <\/p>\s+<\/div>/.test(
         this.element.querySelector(".not-stripped div").outerHTML
       ),
       "whitespace is not stripped in the non-stripped block"
