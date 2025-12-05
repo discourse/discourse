@@ -17,8 +17,7 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
       { href: "/atoms/otp", title: "OTP" },
       { href: "/atoms/date-time-inputs", title: "Date/Time inputs" },
       { href: "/atoms/dropdowns", title: "Dropdowns" },
-      { href: "/atoms/topic-link", title: "Topic Link" },
-      { href: "/atoms/topic-statuses", title: "Topic Statuses" },
+      { href: "/atoms/topic-link", title: "Topic Link and Status" },
     ],
     "MOLECULES" => [
       { href: "/molecules/bread-crumbs", title: "Bread Crumbs" },
@@ -52,7 +51,6 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
       { href: "/organisms/navigation", title: "Navigation" },
       { href: "/organisms/site-header", title: "Site Header" },
       { href: "/organisms/more-topics", title: "More Topics" },
-      { href: "/organisms/user-about", title: "User About Box" },
     ],
   }
 
@@ -113,29 +111,32 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
 
     sections.each do |section, items|
       items.each do |item|
-        xit "renders the #{section}: #{item[:title]} page correctly" do
-          visit "/styleguide/#{item[:href]}"
+        it "renders the #{section}: #{item[:title]} page correctly" do
+          # TODO: fix chat and more-topics pages
+          skip_pages = %w[/organisms/chat /organisms/more-topics]
+          skip "Skipping smoke test for #{item[:href]} page" if skip_pages.include?(item[:href])
 
-          errors =
-            page
-              .driver
-              .browser
-              .logs
-              .get(:browser)
-              .select { |log| log.level == "SEVERE" }
-              .reject do |error|
-                ["Failed to load resource", "Manifest", "PresenceChannelNotFound"].any? do |msg|
-                  error.message.include?(msg)
+          page.driver.with_playwright_page do |playwright_page|
+            errors = []
+            warnings = []
+
+            playwright_page.on(
+              "console",
+              ->(msg) do
+                case msg.type
+                when "error"
+                  errors << msg.text
+                when "warning"
+                  warnings << msg.text
                 end
-              end
+              end,
+            )
 
-          if errors.present?
-            errors.each do |error|
-              expect(error.message).to be_nil, "smoke test failed with error: #{error.message}"
-            end
+            visit "/styleguide/#{item[:href]}"
+
+            expect(page).to have_css(".styleguide-contents h1.section-title", text: item[:title])
+            expect(errors).to be_empty, "Console errors found: #{errors.join(", ")}"
           end
-
-          expect(page).to have_css(".styleguide-contents h1.section-title", text: item[:title])
         end
       end
     end
