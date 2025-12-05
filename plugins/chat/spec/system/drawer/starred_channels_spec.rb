@@ -121,4 +121,39 @@ RSpec.describe "Drawer - starred channels", type: :system do
       expect(channels[3]["data-chat-channel-id"]).to eq(dm_channel_2.id.to_s)
     end
   end
+
+  context "when navigating from starred channels tab" do
+    fab!(:user_1, :user)
+    fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user, user_1]) }
+
+    before do
+      channel_1.membership_for(current_user).update!(starred: true)
+      channel_2.membership_for(current_user).update!(starred: true)
+      dm_channel_1.membership_for(current_user).update!(starred: true)
+    end
+
+    it "returns to starred channels tab when clicking back from a regular channel" do
+      visit("/")
+      chat_page.open_from_header
+      drawer_page.click_starred_channels
+
+      find(".chat-channel-row[data-chat-channel-id='#{channel_1.id}']").click
+      expect(drawer_page).to have_open_channel(channel_1)
+
+      find(".c-navbar__back-button").click
+      expect(drawer_page).to have_open_starred_channels
+    end
+
+    it "returns to starred channels tab when clicking back from a DM" do
+      visit("/")
+      chat_page.open_from_header
+      drawer_page.click_starred_channels
+
+      find(".chat-channel-row[data-chat-channel-id='#{dm_channel_1.id}']").click
+      expect(drawer_page).to have_open_channel(dm_channel_1)
+
+      find(".c-navbar__back-button").click
+      expect(drawer_page).to have_open_starred_channels
+    end
+  end
 end

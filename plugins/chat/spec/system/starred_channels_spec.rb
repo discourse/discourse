@@ -368,4 +368,32 @@ RSpec.describe "Starred channels", type: :system do
       )
     end
   end
+
+  context "when navigating from starred channels in sidebar on mobile", mobile: true do
+    fab!(:user_1, :user)
+    fab!(:channel_1) { Fabricate(:category_channel, name: "Channel A") }
+    fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user, user_1]) }
+
+    before do
+      channel_1.add(current_user)
+      channel_1.membership_for(current_user).update!(starred: true)
+      dm_channel_1.membership_for(current_user).update!(starred: true)
+    end
+
+    it "returns to channels list by default from a regular channel" do
+      visit("/")
+      find(".channel-#{channel_1.id}").click
+
+      find(".c-navbar__back-button").click
+      expect(page).to have_current_path("/chat/channels")
+    end
+
+    it "returns to DMs list by default from a DM" do
+      visit("/")
+      find(".channel-#{dm_channel_1.id}").click
+
+      find(".c-navbar__back-button").click
+      expect(page).to have_current_path("/chat/direct-messages")
+    end
+  end
 end
