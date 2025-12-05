@@ -71,7 +71,7 @@ export default class ProsemirrorTextManipulation {
   getSelected() {
     const start = this.view.state.selection.from;
     const end = this.view.state.selection.to;
-    const value = this.view.state.doc.textBetween(start, end, " ", " ");
+    const value = this.convertToMarkdown(this.view.state.selection.content());
     return {
       start,
       end,
