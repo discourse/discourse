@@ -72,6 +72,16 @@ describe DiscourseAutomation::AdminAutomationsController do
              }
         expect(response.status).to eq(200)
       end
+
+      it "logs a staff action" do
+        expect {
+          post "/admin/plugins/automation/automations.json", params: { automation: { script: } }
+        }.to change { UserHistory.where(custom_type: "create_automation").count }.by(1)
+
+        user_history = UserHistory.last
+        expect(user_history.custom_type).to eq("create_automation")
+        expect(user_history.details).to include("script: #{script}")
+      end
     end
 
     context "when logged in as a regular user" do
@@ -102,6 +112,76 @@ describe DiscourseAutomation::AdminAutomationsController do
               },
             }
         expect(response.status).to eq(200)
+      end
+
+      it "logs a staff action when changes are made" do
+        automation.update!(enabled: true)
+        original_name = automation.name
+
+        expect {
+          put "/admin/plugins/automation/automations/#{automation.id}.json",
+              params: {
+                automation: {
+                  name: "new-name",
+                  enabled: false,
+                },
+              }
+        }.to change { UserHistory.where(custom_type: "update_automation").count }.by(1)
+
+        user_history = UserHistory.last
+        expect(user_history.custom_type).to eq("update_automation")
+        expect(user_history.details).to include("id: #{automation.id}")
+        expect(user_history.details).to include("name: #{original_name} → new-name")
+        expect(user_history.details).to include("enabled: true → false")
+      end
+
+      it "logs field changes" do
+        point_in_time_automation =
+          Fabricate(:automation, trigger: DiscourseAutomation::Triggers::POINT_IN_TIME)
+        original_time = 1.hour.from_now.iso8601
+        new_time = 2.hours.from_now.iso8601
+
+        point_in_time_automation.upsert_field!(
+          "execute_at",
+          "date_time",
+          { "value" => original_time },
+          target: "trigger",
+        )
+
+        expect {
+          put "/admin/plugins/automation/automations/#{point_in_time_automation.id}.json",
+              params: {
+                automation: {
+                  script: point_in_time_automation.script,
+                  trigger: point_in_time_automation.trigger,
+                  fields: [
+                    {
+                      name: "execute_at",
+                      component: "date_time",
+                      target: "trigger",
+                      metadata: {
+                        value: new_time,
+                      },
+                    },
+                  ],
+                },
+              }
+        }.to change { UserHistory.where(custom_type: "update_automation").count }.by(1)
+
+        user_history = UserHistory.last
+        expect(user_history.details).to include("execute_at: #{original_time} → #{new_time}")
+      end
+
+      it "does not log a staff action when no changes are made" do
+        expect {
+          put "/admin/plugins/automation/automations/#{automation.id}.json",
+              params: {
+                automation: {
+                  name: automation.name,
+                  enabled: automation.enabled,
+                },
+              }
+        }.not_to change { UserHistory.where(custom_type: "update_automation").count }
       end
 
       describe "invalid field’s component" do
