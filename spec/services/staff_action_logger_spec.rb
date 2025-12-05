@@ -229,7 +229,12 @@ RSpec.describe StaffActionLogger do
 
     it "records the details of why the toggle happened" do
       details =
-        "This upcoming change was automatically enabled because it reached the 'Beta' status, which meets or exceeds the defined promotion status of 'Beta' on your site. See <a href='#{Discourse.base_url}/admin/config/upcoming-changes'>the upcoming changes page for details</a>."
+        I18n.t(
+          "staff_action_logs.upcoming_changes.log_promoted",
+          change_status: UpcomingChanges.change_status(:allow_user_locale),
+          base_path: Discourse.base_path,
+        )
+
       result = logger.log_upcoming_change_toggle("allow_user_locale", false, true, { details: })
       expect(result.details).to eq(details)
     end
