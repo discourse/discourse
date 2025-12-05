@@ -171,22 +171,14 @@ module DiscourseAi
           .limit(100)
           .each do |log|
             history ||= +"Scan History:\n"
-            history << "date: #{log.created_at} is_spam: #{log.is_spam}\n"
+            history << "date: #{log.created_at} is_spam: #{log.is_spam}"
+            history << " reason: #{log.reason}" if log.reason.present?
+            history << "\n"
           end
 
-        log = +"Scanning #{post.url}\n\n"
-
-        if history
-          log << history
-          log << "\n"
-        end
-
         used_llm = bot.model
-        log << "LLM: #{used_llm.name}\n\n"
-
         spam_persona = bot.persona
         used_prompt = spam_persona.craft_prompt(ctx, llm: used_llm).system_message_text
-        log << "System Prompt: #{used_prompt}\n\n"
 
         text_content =
           if target_msg[:content].is_a?(Array)
@@ -195,30 +187,18 @@ module DiscourseAi
             target_msg[:content]
           end
 
-        log << "Context: #{text_content}\n\n"
-
         is_spam = is_spam?(structured_output)
+        reasoning = extract_reason(structured_output)
 
-        reasoning_insts = {
-          type: :user,
-          content: "Don't return a JSON this time. Explain your reasoning in plain text.",
+        {
+          is_spam: is_spam,
+          reason: reasoning,
+          llm_name: used_llm.name,
+          system_prompt: used_prompt,
+          sent_message: text_content,
+          scan_history: history,
+          post_url: post.url,
         }
-        ctx.messages = [
-          target_msg,
-          { type: :model, content: { spam: is_spam }.to_json },
-          reasoning_insts,
-        ]
-        ctx.bypass_response_format = true
-
-        reasoning = +""
-
-        bot.reply(ctx, llm_args: llm_args.merge(max_tokens: 100)) do |partial, _, type|
-          reasoning << partial if type.blank?
-        end
-
-        log << "#{reasoning.strip}"
-
-        { is_spam: is_spam, log: log }
       end
 
       def self.perform_scan(post)
@@ -255,6 +235,7 @@ module DiscourseAi
           end
 
           is_spam = is_spam?(structured_output)
+          reason = extract_reason(structured_output)
 
           log = AiApiAuditLog.order(id: :desc).where(feature_name: "spam_detection").first
           text_content =
@@ -271,6 +252,7 @@ module DiscourseAi
                 ai_api_audit_log: log,
                 is_spam: is_spam,
                 payload: text_content,
+                reason: reason,
               )
             handle_spam(post, log) if is_spam
           end
@@ -329,6 +311,11 @@ module DiscourseAi
 
       def self.is_spam?(structured_output)
         structured_output.present? && structured_output.read_buffered_property(:spam)
+      end
+
+      def self.extract_reason(structured_output)
+        return nil if structured_output.blank?
+        structured_output.read_buffered_property(:reason)
       end
 
       def self.build_target_content_msg(post, topic = nil)

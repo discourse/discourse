@@ -242,7 +242,9 @@ RSpec.describe DiscourseAi::Admin::AiSpamController do
 
       llm2 = Fabricate(:llm_model, name: "DiffLLM")
 
-      DiscourseAi::Completions::Llm.with_prepared_responses([true, "just because"]) do
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ spam: true, reason: "just because" }],
+      ) do
         post "/admin/plugins/discourse-ai/ai-spam/test.json",
              params: {
                post_url: spam_post2.url,
@@ -253,12 +255,15 @@ RSpec.describe DiscourseAi::Admin::AiSpamController do
       expect(response.status).to eq(200)
 
       parsed = response.parsed_body
-      expect(parsed["log"]).to include(spam_post2.raw)
-      expect(parsed["log"]).to include("DiffLLM")
+      expect(parsed["sent_message"]).to include(spam_post2.raw)
+      expect(parsed["llm_name"]).to eq("DiffLLM")
+      expect(parsed["reason"]).to eq("just because")
     end
 
     it "can scan using post id" do
-      DiscourseAi::Completions::Llm.with_prepared_responses([true, "because apples"]) do
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ spam: true, reason: "because apples" }],
+      ) do
         post "/admin/plugins/discourse-ai/ai-spam/test.json",
              params: {
                post_url: spam_post.id.to_s,
@@ -268,7 +273,8 @@ RSpec.describe DiscourseAi::Admin::AiSpamController do
       expect(response.status).to eq(200)
 
       parsed = response.parsed_body
-      expect(parsed["log"]).to include(spam_post.raw)
+      expect(parsed["sent_message"]).to include(spam_post.raw)
+      expect(parsed["reason"]).to eq("because apples")
     end
 
     it "returns proper spam test results" do
@@ -283,7 +289,9 @@ RSpec.describe DiscourseAi::Admin::AiSpamController do
 
       AiSpamLog.create!(post: spam_post, llm_model: llm_model, is_spam: true, created_at: 1.day.ago)
 
-      DiscourseAi::Completions::Llm.with_prepared_responses([true, "because banana"]) do
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ spam: true, reason: "because banana" }],
+      ) do
         post "/admin/plugins/discourse-ai/ai-spam/test.json",
              params: {
                post_url: spam_post.url,
@@ -294,11 +302,11 @@ RSpec.describe DiscourseAi::Admin::AiSpamController do
       expect(response.status).to eq(200)
 
       parsed = response.parsed_body
-      expect(parsed["log"]).to include("special custom instructions")
-      expect(parsed["log"]).to include(spam_post.raw)
+      expect(parsed["system_prompt"]).to include("special custom instructions")
+      expect(parsed["sent_message"]).to include(spam_post.raw)
       expect(parsed["is_spam"]).to eq(true)
-      expect(parsed["log"]).to include("Scan History:")
-      expect(parsed["log"]).to include("banana")
+      expect(parsed["scan_history"]).to include("Scan History:")
+      expect(parsed["reason"]).to eq("because banana")
     end
   end
 
