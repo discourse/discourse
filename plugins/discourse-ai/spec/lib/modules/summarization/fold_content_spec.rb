@@ -85,5 +85,14 @@ RSpec.describe DiscourseAi::Summarization::FoldContent do
       expect(item[:text]).to include("🧩")
       expect(item[:text]).not_to start_with("⚖ ️")
     end
+
+    it "keeps the second half of the text in the original order" do
+      sample_text = "abcdefgh"
+
+      item = summarizer.truncate({ text: sample_text.dup })
+
+      expect(item[:text]).to include("efgh")
+      expect(item[:text]).not_to include("hgfe")
+    end
   end
 end
