@@ -6,7 +6,7 @@ en:
         max_prompt_tokens: "Context window"
   dashboard:
     problem:
-      ai_llm_status: 
+      ai_llm_status:
         one: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> needs attention. In the past hour, it failed to respond %{failed_calls} out of %{total_calls} times."
         other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> needs attention. Over the last %{count} hours, it failed to respond %{failed_calls} out of %{total_calls} times."
       ai_credit_soft_limit: "%{model_name} has only %{percentage_remaining}% of credits remaining. Credits will reset at %{reset_date}. <a href='%{url}'>View AI models</a>"
@@ -302,8 +302,6 @@ en:
     ai_helper:
       errors:
         completion_request_failed: "Something went wrong while trying to provide suggestions. Please, try again."
-        credit_limit_exceeded_user: "You've hit the AI credit limit for your plan. Responses will be unavailable until your limit resets %{reset_time}."
-        credit_limit_exceeded_bot: "AI responses are currently unavailable due to credit limits. Please try again %{reset_time}."
         no_illustrator_persona: "Post Illustrator persona is not configured. Please check your site settings."
         no_image_generation_tool: "Post Illustrator persona must have an image generation tool attached. Please configure an image generation tool for this persona in the admin panel."
         no_image_generated: "Failed to generate image. Please try again or check your tool configuration."

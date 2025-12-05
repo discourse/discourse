@@ -374,6 +374,36 @@ module DiscourseAi
         end
 
         reply
+      rescue LlmCreditAllocation::CreditLimitExceeded => e
+        if streamer && streamer.instance_variable_get(:@client_id)
+          ChatSDK::Channel.stop_reply(
+            channel_id: channel.id,
+            client_id: streamer.instance_variable_get(:@client_id),
+            guardian: guardian,
+            thread_id: message.thread_id,
+          )
+        end
+
+        reset_time = e.allocation&.relative_reset_time || ""
+        locale_key = message.user.admin? ? "limit_exceeded_admin" : "limit_exceeded_user"
+        error_message =
+          I18n.t("discourse_ai.llm_credit_allocation.#{locale_key}", reset_time: reset_time)
+
+        # Convert HTML links to markdown format for chat
+        error_message =
+          error_message.gsub(%r{<a\s+href=['"]([^'"]+)['"][^>]*>([^<]+)</a>}i, '[\2](\1)')
+
+        ChatSDK::Message.create(
+          raw: error_message,
+          channel_id: channel.id,
+          guardian: guardian,
+          thread_id: message.thread_id,
+          in_reply_to_id: in_reply_to_id,
+          force_thread: force_thread,
+          enforce_membership: !channel.direct_message_channel?,
+        )
+
+        nil
       ensure
         streamer.done if streamer
       end
