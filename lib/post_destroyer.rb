@@ -539,7 +539,7 @@ class PostDestroyer
   end
 
   def resolve_reviewables_for_author_deletion
-    reviewables = Reviewable.where(target: @post).where(status: Reviewable.statuses[:pending])
+    reviewables = Reviewable.where(target: @post, status: Reviewable.statuses[:pending])
 
     reviewables.each do |reviewable|
       reviewable.reviewable_notes.create!(
