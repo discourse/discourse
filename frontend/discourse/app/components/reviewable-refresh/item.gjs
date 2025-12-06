@@ -18,6 +18,7 @@ import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and
 import ReviewableBundledAction from "discourse/components/reviewable-bundled-action";
 import ReviewableClaimedTopic from "discourse/components/reviewable-claimed-topic";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
+import ReviewableActionsForm from "discourse/components/reviewable-refresh/actions-form";
 import ReviewableFlagReason from "discourse/components/reviewable-refresh/flag-reason";
 import ReviewableHelpResources from "discourse/components/reviewable-refresh/help-resources";
 import ReviewableInsights from "discourse/components/reviewable-refresh/insights";
@@ -122,21 +123,14 @@ export default class ReviewableItem extends Component {
 
   @discourseComputed(
     "reviewable.type",
-    "reviewable.last_performing_username",
     "siteSettings.blur_tl0_flagged_posts_media",
     "reviewable.target_created_by_trust_level",
     "reviewable.deleted_at"
   )
-  customClasses(
-    type,
-    lastPerformingUsername,
-    blurEnabled,
-    trustLevel,
-    deletedAt
-  ) {
+  customClasses(type, blurEnabled, trustLevel, deletedAt) {
     let classes = dasherize(type);
 
-    if (lastPerformingUsername) {
+    if (this.updatedElsewhere) {
       classes = `${classes} reviewable-stale`;
     }
 
@@ -335,6 +329,14 @@ export default class ReviewableItem extends Component {
     return "review.flagged_as";
   }
 
+  @discourseComputed("reviewable.last_performing_username")
+  updatedElsewhere(lastPerformingUsername) {
+    return (
+      lastPerformingUsername &&
+      lastPerformingUsername !== this.currentUser.username
+    );
+  }
+
   @bind
   _updateClaimedBy(data) {
     if (data.topic_id !== this.reviewable.topic.id) {
@@ -369,7 +371,10 @@ export default class ReviewableItem extends Component {
 
   @bind
   _updateStatus(data) {
-    if (data.remove_reviewable_ids.includes(this.reviewable.id)) {
+    if (
+      data.remove_reviewable_ids &&
+      data.remove_reviewable_ids.includes(this.reviewable.id)
+    ) {
       delete data.remove_reviewable_ids;
       this._performResult(data, {}, this.reviewable);
     }
@@ -704,6 +709,12 @@ export default class ReviewableItem extends Component {
     }
   }
 
+  @action
+  handleActionsPerformed(result) {
+    this._performResult(result, null, this.reviewable);
+    this.#unclaimAutomaticReviewable();
+  }
+
   <template>
     <div class="review-container">
 
@@ -828,7 +839,7 @@ export default class ReviewableItem extends Component {
 
         <div class="review-item__aside">
 
-          {{#unless this.reviewable.last_performing_username}}
+          {{#unless this.updatedElsewhere}}
             {{#if this.canPerform}}
               <div class="review-item__moderator-actions">
                 <h3 class="review-item__aside-title">
@@ -854,21 +865,31 @@ export default class ReviewableItem extends Component {
                     class="btn-danger reviewable-action cancel-edit"
                   />
                 {{else}}
-                  {{#each this.reviewable.bundled_actions as |bundle|}}
-                    <ReviewableBundledAction
-                      @bundle={{bundle}}
-                      @performAction={{this.perform}}
-                      @reviewableUpdating={{this.disabled}}
-                    />
-                  {{/each}}
+                  {{#if this.siteSettings.reviewable_old_moderator_actions}}
+                    {{#each this.reviewable.bundled_actions as |bundle|}}
+                      <ReviewableBundledAction
+                        @bundle={{bundle}}
+                        @performAction={{this.perform}}
+                        @reviewableUpdating={{this.disabled}}
+                      />
+                    {{/each}}
 
-                  {{#if this.reviewable.can_edit}}
-                    <DButton
-                      @disabled={{this.disabled}}
-                      @action={{this.edit}}
-                      @label="review.edit"
-                      class="reviewable-action btn-default edit"
-                    />
+                    {{#if this.reviewable.can_edit}}
+                      <DButton
+                        @disabled={{this.disabled}}
+                        @action={{this.edit}}
+                        @label="review.edit"
+                        class="reviewable-action btn-default edit"
+                      />
+                    {{/if}}
+                  {{else}}
+                    {{#each this.reviewable.bundled_actions as |bundle|}}
+                      <ReviewableActionsForm
+                        @bundle={{bundle}}
+                        @performAction={{this.perform}}
+                        @updating={{this.updating}}
+                      />
+                    {{/each}}
                   {{/if}}
                 {{/if}}
               </div>
