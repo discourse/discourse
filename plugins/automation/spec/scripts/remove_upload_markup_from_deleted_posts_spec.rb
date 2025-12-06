@@ -3,6 +3,7 @@
 describe "RemoveUploadMarkupFromDeletedPosts" do
   fab!(:topic)
   fab!(:upload)
+  fab!(:nameless_upload, :upload)
 
   fab!(:filename) { "small.pdf" }
   fab!(:file) { file_from_fixtures(filename, "pdf") }
@@ -12,11 +13,18 @@ describe "RemoveUploadMarkupFromDeletedPosts" do
     )
   end
   let!(:raw) do
-    "Hey it is a regular post with a link to [Discourse](https://www.discourse.org) and a #{upload.to_markdown} #{file_upload.to_markdown}"
+    "![](#{nameless_upload.short_url})Hey it is a regular post with a link to [Discourse](https://www.discourse.org) and a #{upload.to_markdown} #{file_upload.to_markdown}"
   end
 
   let!(:post) { Fabricate(:post, topic: topic, raw: raw) }
   let!(:deleted_post) { Fabricate(:post, topic: topic, raw: raw, deleted_at: 1.month.ago) }
+
+  let!(:nameless_upload_reference) do
+    Fabricate(:upload_reference, upload: nameless_upload, target: post)
+  end
+  let!(:deleted_nameless_upload_reference) do
+    Fabricate(:upload_reference, upload: nameless_upload, target: deleted_post)
+  end
 
   let!(:upload_reference) { Fabricate(:upload_reference, upload: upload, target: post) }
   let!(:deleted_upload_reference) do
