@@ -25,11 +25,13 @@ RSpec.describe Email::Renderer do
 
   context "with email_renderer_html modifier" do
     after { DiscoursePluginRegistry.reset! }
+
     it "can modify the html" do
       Plugin::Instance
         .new
         .register_modifier(:email_renderer_html) do |styles, _|
           styles.fragment.css("a").each { |link| link["href"] = "httpz://hijacked.sorry" }
+          styles
         end
 
       expect(renderer.html).not_to include("href=\"https://discourse.org\"")
