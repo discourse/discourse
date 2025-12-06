@@ -46,6 +46,73 @@ RSpec.describe "Shortcuts | sidebar", type: :system do
         expect(sidebar_page).to have_active_channel(dm_channel_1)
       end
     end
+
+    context "when star_chat_channels is enabled" do
+      fab!(:alpha_channel) { Fabricate(:chat_channel, name: "Alpha Channel") }
+      fab!(:beta_channel) { Fabricate(:chat_channel, name: "Beta Channel") }
+      fab!(:other_user, :user)
+      fab!(:dm_channel_2) { Fabricate(:direct_message_channel, users: [current_user, other_user]) }
+
+      before do
+        SiteSetting.star_chat_channels = true
+        # Unfollow channel_1 from parent context to make tests independent
+        channel_1.membership_for(current_user).update!(following: false)
+        alpha_channel.add(current_user)
+        beta_channel.add(current_user)
+      end
+
+      it "navigates through starred, then public, then DMs in sidebar order" do
+        # Star a DM channel - this should appear in the starred section (before public channels)
+        dm_channel_1.membership_for(current_user).update!(starred: true)
+
+        chat.visit_channel(dm_channel_1)
+        expect(sidebar_page).to have_active_channel(dm_channel_1)
+
+        # Alt+Down: starred DM -> first unstarred public channel (alpha_channel)
+        find("body").send_keys(%i[alt down])
+        expect(sidebar_page).to have_active_channel(alpha_channel)
+
+        # Alt+Down: alpha_channel -> beta_channel
+        find("body").send_keys(%i[alt down])
+        expect(sidebar_page).to have_active_channel(beta_channel)
+
+        # Alt+Down: beta_channel -> unstarred DM (dm_channel_2)
+        find("body").send_keys(%i[alt down])
+        expect(sidebar_page).to have_active_channel(dm_channel_2)
+
+        # Alt+Down: dm_channel_2 -> wrap to starred (dm_channel_1)
+        find("body").send_keys(%i[alt down])
+        expect(sidebar_page).to have_active_channel(dm_channel_1)
+
+        # Alt+Up: starred DM -> wrap to last unstarred DM
+        find("body").send_keys(%i[alt up])
+        expect(sidebar_page).to have_active_channel(dm_channel_2)
+      end
+
+      it "navigates correctly when a public channel is starred" do
+        # Star alpha_channel - it should appear in the starred section
+        alpha_channel.membership_for(current_user).update!(starred: true)
+
+        chat.visit_channel(alpha_channel)
+        expect(sidebar_page).to have_active_channel(alpha_channel)
+
+        # Alt+Down: starred public -> unstarred public (beta_channel)
+        find("body").send_keys(%i[alt down])
+        expect(sidebar_page).to have_active_channel(beta_channel)
+
+        # Alt+Down: beta_channel -> dm_channel_1
+        find("body").send_keys(%i[alt down])
+        expect(sidebar_page).to have_active_channel(dm_channel_1)
+
+        # Alt+Down: dm_channel_1 -> dm_channel_2
+        find("body").send_keys(%i[alt down])
+        expect(sidebar_page).to have_active_channel(dm_channel_2)
+
+        # Alt+Down: dm_channel_2 -> wrap to starred (alpha_channel)
+        find("body").send_keys(%i[alt down])
+        expect(sidebar_page).to have_active_channel(alpha_channel)
+      end
+    end
   end
 
   context "when using Alt+Shift+Up/Down arrows" do
