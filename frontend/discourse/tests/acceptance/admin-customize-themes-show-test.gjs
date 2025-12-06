@@ -53,7 +53,7 @@ acceptance("Admin - Customize - Themes - Show", function (needs) {
                 type_id: 5,
               },
             ],
-            screenshot_url:
+            screenshot_light_url:
               "/uploads/default/original/1X/f8a61b9a0bfac672daec9e401787812f8c5e28df.png",
             system: true,
             color_scheme: null,

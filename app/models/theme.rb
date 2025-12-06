@@ -402,9 +402,21 @@ class Theme < ActiveRecord::Base
     end
   end
 
-  def screenshot_url
+  def screenshot_dark_url
     theme_fields
-      .find { |field| field.type_id == ThemeField.types[:theme_screenshot_upload_var] }
+      .find do |field|
+        field.type_id == ThemeField.types[:theme_screenshot_upload_var] &&
+          field.name == "screenshot_dark"
+      end
+      &.upload_url
+  end
+
+  def screenshot_light_url
+    theme_fields
+      .find do |field|
+        field.type_id == ThemeField.types[:theme_screenshot_upload_var] &&
+          field.name == "screenshot_light"
+      end
       &.upload_url
   end
 
