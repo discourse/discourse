@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import I18n, { i18n } from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import DaBooleanField from "./fields/da-boolean-field";
 import DaCategoriesField from "./fields/da-categories-field";
 import DaCategoryField from "./fields/da-category-field";
@@ -94,6 +94,6 @@ export default class AutomationField extends Component {
   }
 
   get description() {
-    return I18n.lookup(this.translationKey);
+    return i18n(this.translationKey);
   }
 }
