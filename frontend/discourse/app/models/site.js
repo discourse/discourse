@@ -87,6 +87,7 @@ export default class Site extends RestModel {
   @service capabilities;
 
   @trackedArray categories = [];
+  @trackedArray groups = [];
 
   @alias("is_readonly") isReadOnly;
 

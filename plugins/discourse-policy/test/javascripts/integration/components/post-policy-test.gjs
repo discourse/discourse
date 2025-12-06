@@ -1,13 +1,16 @@
 import EmberObject from "@ember/object";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { i18n } from "discourse-i18n";
 import PostPolicy from "discourse/plugins/discourse-policy/discourse/components/post-policy";
 
 function fabricatePost(options = {}) {
-  return EmberObject.create({ id: 1, ...options });
+  const store = getOwnerWithFallback(this).lookup("service:store");
+  const topic = store.createRecord("topic", { id: 123 });
+  return store.createRecord("post", { id: 1, topic, ...options });
 }
 
 function fabricatePolicy(options = {}) {
@@ -191,7 +194,7 @@ module(
       );
 
       pretender.put("/policy/accept", () => {
-        this.post.set("policy_accepted_by", this.currentUser);
+        this.post.set("policy_accepted_by", [this.currentUser]);
         this.post.set("policy_accepted_by_count", 1);
         return response({});
       });
@@ -225,7 +228,7 @@ module(
       );
 
       pretender.put("/policy/unaccept", () => {
-        this.post.set("policy_not_accepted_by", this.currentUser);
+        this.post.set("policy_not_accepted_by", [this.currentUser]);
         this.post.set("policy_not_accepted_by_count", 1);
         return response({});
       });

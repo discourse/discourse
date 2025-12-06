@@ -1,4 +1,5 @@
 import EmberObject from "@ember/object";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
 
@@ -8,7 +9,9 @@ export default class AdminPluginsHouseAds extends DiscourseRoute {
   model() {
     return ajax("/admin/plugins/pluginad/house_creatives.json").then((data) => {
       this.set("settings", EmberObject.create(data.settings));
-      return data.house_ads.map((ad) => EmberObject.create(ad));
+      return new TrackedArray(
+        data.house_ads.map((ad) => EmberObject.create(ad))
+      );
     });
   }
 

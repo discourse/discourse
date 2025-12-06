@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 import { TrackedArray, TrackedObject } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
 import DEditor from "discourse/components/d-editor";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import { i18n } from "discourse-i18n";
 import PlaceholdersList from "../placeholders-list";
@@ -160,14 +161,14 @@ export default class PmsField extends BaseField {
     this.dialog.yesNoConfirm({
       message: i18n("discourse_automation.fields.pms.confirm_remove_pm"),
       didConfirm: () => {
-        return this.args.field.metadata.value.removeObject(pm);
+        return removeValueFromArray(this.args.field.metadata.value, pm);
       },
     });
   }
 
   @action
   insertPM() {
-    this.args.field.metadata.value.pushObject(
+    this.args.field.metadata.value.push(
       new TrackedObject({
         title: "",
         raw: "",

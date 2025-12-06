@@ -4,12 +4,13 @@ import { concat, fn, hash } from "@ember/helper";
 import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import GroupSelector from "discourse/components/group-selector";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
+import { removeValueFromArray } from "discourse/lib/array-tools";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import Group from "discourse/models/group";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
@@ -20,12 +21,12 @@ import CsvUploader from "../csv-uploader";
 export default class PostEventBulkInvite extends Component {
   @service dialog;
 
-  @tracked
-  bulkInvites = new TrackedArray([
-    EmberObject.create({ identifier: null, attendance: "unknown" }),
-  ]);
   @tracked bulkInviteDisabled = true;
   @tracked flash = null;
+  @trackedArray
+  bulkInvites = [
+    EmberObject.create({ identifier: null, attendance: "unknown" }),
+  ];
 
   get bulkInviteStatuses() {
     return [
@@ -84,10 +85,10 @@ export default class PostEventBulkInvite extends Component {
 
   @action
   removeBulkInvite(bulkInvite) {
-    this.bulkInvites.removeObject(bulkInvite);
+    removeValueFromArray(this.bulkInvites, bulkInvite);
 
     if (!this.bulkInvites.length) {
-      this.bulkInvites.pushObject(
+      this.bulkInvites.push(
         EmberObject.create({ identifier: null, attendance: "unknown" })
       );
     }
@@ -97,9 +98,7 @@ export default class PostEventBulkInvite extends Component {
   addBulkInvite() {
     const attendance =
       this.bulkInvites[this.bulkInvites.length - 1]?.attendance || "unknown";
-    this.bulkInvites.pushObject(
-      EmberObject.create({ identifier: null, attendance })
-    );
+    this.bulkInvites.push(EmberObject.create({ identifier: null, attendance }));
   }
 
   @action

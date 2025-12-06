@@ -45,7 +45,7 @@ export default class BrowseChannels extends Component {
     if (this.siteSettings.chat_allow_archiving_channels) {
       return TABS;
     } else {
-      return [...TABS].removeObject(ARCHIVED);
+      return TABS.filter((item) => item !== ARCHIVED);
     }
   }
 

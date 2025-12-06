@@ -1,14 +1,17 @@
 import { action } from "@ember/object";
 import Route from "@ember/routing/route";
 import { service } from "@ember/service";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import { i18n } from "discourse-i18n";
 import AdminProduct from "discourse/plugins/discourse-subscriptions/discourse/models/admin-product";
 
 export default class AdminPluginsDiscourseSubscriptionsProductsIndexRoute extends Route {
   @service dialog;
 
-  model() {
-    return AdminProduct.findAll();
+  async model() {
+    const products = await AdminProduct.findAll();
+    return new TrackedArray(products);
   }
 
   @action
@@ -21,11 +24,11 @@ export default class AdminPluginsDiscourseSubscriptionsProductsIndexRoute extend
         return product
           .destroy()
           .then(() => {
-            this.controllerFor(
+            const model = this.controllerFor(
               "adminPlugins.discourseSubscriptions.products.index"
-            )
-              .get("model")
-              .removeObject(product);
+            ).model;
+
+            removeValueFromArray(model, product);
           })
           .catch((data) =>
             this.dialog.alert(data.jqXHR.responseJSON.errors.join("\n"))

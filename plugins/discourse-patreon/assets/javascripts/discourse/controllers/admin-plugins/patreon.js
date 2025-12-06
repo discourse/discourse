@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
@@ -54,7 +55,7 @@ export default class AdminPluginsPatreonController extends Controller {
           obj.set("rewards", rewards);
           obj.set("rewards_ids", rule.rewards_ids);
         } else {
-          model.pushObject(
+          model.push(
             FilterRule.create({
               group: rule.get("group.name"),
               rewards,
@@ -76,7 +77,7 @@ export default class AdminPluginsPatreonController extends Controller {
     })
       .then(() => {
         let obj = model.find((x) => x.get("group_id") === rule.get("group_id"));
-        model.removeObject(obj);
+        removeValueFromArray(model, obj);
       })
       .catch(popupAjaxError);
   }

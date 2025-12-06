@@ -246,7 +246,7 @@ export default class ChatChannel extends Component {
       return;
     }
 
-    const targetMessageId = this.messagesManager.messages.lastObject.id;
+    const targetMessageId = this.messagesManager.messages.at(-1).id;
     this.messagesManager.addMessages(messages);
 
     if (direction === FUTURE && !opts.noScroll) {
@@ -309,7 +309,7 @@ export default class ChatChannel extends Component {
     }
 
     schedule("afterRender", () => {
-      const firstMessageId = this.messagesManager.messages.firstObject?.id;
+      const firstMessageId = this.messagesManager.messages[0]?.id;
       const messageContainer = this.scroller.querySelector(
         `.chat-message-container[data-id="${firstMessageId}"]`
       );
