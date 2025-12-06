@@ -19,7 +19,8 @@ export default class AiLlm extends RestModel {
       "input_cost",
       "cached_input_cost",
       "cache_write_cost",
-      "output_cost"
+      "output_cost",
+      "allowed_attachment_types"
     );
   }
 

@@ -138,7 +138,7 @@ module DiscourseAi
         tools.present?
       end
 
-      def encoded_uploads(message)
+      def encoded_uploads(message, allow_documents: false, allowed_attachment_types: nil)
         if message[:content].is_a?(Array)
           upload_ids =
             message[:content]
@@ -147,23 +147,45 @@ module DiscourseAi
               end
               .compact
           if !upload_ids.empty?
-            return UploadEncoder.encode(upload_ids: upload_ids, max_pixels: max_pixels)
+            allowed_kinds = allow_documents ? %i[image document] : %i[image]
+            return(
+              UploadEncoder.encode(
+                upload_ids: upload_ids,
+                max_pixels: max_pixels,
+                allowed_kinds: allowed_kinds,
+                allowed_attachment_types: allowed_attachment_types,
+              )
+            )
           end
         end
 
         []
       end
 
-      def encode_upload(upload_id)
-        UploadEncoder.encode(upload_ids: [upload_id], max_pixels: max_pixels).first
+      def encode_upload(upload_id, allow_documents: false, allowed_attachment_types: nil)
+        allowed_kinds = allow_documents ? %i[image document] : %i[image]
+        UploadEncoder.encode(
+          upload_ids: [upload_id],
+          max_pixels: max_pixels,
+          allowed_kinds: allowed_kinds,
+          allowed_attachment_types: allowed_attachment_types,
+        ).first
       end
 
-      def content_with_encoded_uploads(content)
+      def content_with_encoded_uploads(
+        content,
+        allow_documents: false,
+        allowed_attachment_types: nil
+      )
         return [content] unless content.is_a?(Array)
 
         content.map do |c|
           if c.is_a?(Hash) && c.key?(:upload_id)
-            encode_upload(c[:upload_id])
+            encode_upload(
+              c[:upload_id],
+              allow_documents: allow_documents,
+              allowed_attachment_types: allowed_attachment_types,
+            )
           else
             c
           end

@@ -140,6 +140,20 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
         expect(model.display_name).to eq(valid_attrs[:display_name])
       end
 
+      it "stores allowed_attachment_types" do
+        attrs = valid_attrs.merge(allowed_attachment_types: %w[pdf docx])
+
+        post "/admin/plugins/discourse-ai/ai-llms.json", params: { ai_llm: attrs }
+
+        expect(response.status).to eq(201)
+        model = LlmModel.last
+        expect(model.allowed_attachment_types).to contain_exactly("pdf", "docx")
+        expect(response.parsed_body["ai_llm"]["allowed_attachment_types"]).to contain_exactly(
+          "pdf",
+          "docx",
+        )
+      end
+
       it "logs staff action when creating an LLM model" do
         # Log the creation
         post "/admin/plugins/discourse-ai/ai-llms.json", params: { ai_llm: valid_attrs }

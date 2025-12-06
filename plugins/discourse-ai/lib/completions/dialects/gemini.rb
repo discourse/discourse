@@ -109,9 +109,12 @@ module DiscourseAi
           content_array =
             to_encoded_content_array(
               content: content_array,
-              image_encoder: ->(details) { image_node(details) },
+              upload_encoder: ->(details) { upload_node(details) },
               text_encoder: ->(text) { { text: text } },
-              allow_vision: vision_support? && beta_api?,
+              allow_images: vision_support? && beta_api?,
+              allow_documents: true,
+              allowed_attachment_types: llm_model.allowed_attachment_types,
+              upload_filter: ->(encoded) { document_allowed?(encoded) },
             )
 
           if beta_api?
@@ -123,6 +126,10 @@ module DiscourseAi
 
         def image_node(details)
           { inlineData: { mimeType: details[:mime_type], data: details[:base64] } }
+        end
+
+        def upload_node(details)
+          image_node(details)
         end
 
         def tool_call_msg(msg)
