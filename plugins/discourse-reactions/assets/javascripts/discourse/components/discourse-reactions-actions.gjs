@@ -6,7 +6,13 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel, later, run, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import { computePosition, flip, offset } from "@floating-ui/dom";
+import {
+  computePosition,
+  flip,
+  limitShift,
+  offset,
+  shift,
+} from "@floating-ui/dom";
 import curryComponent from "ember-curry-component";
 import $ from "jquery";
 import { Promise } from "rsvp";
@@ -678,7 +684,11 @@ export default class DiscourseReactionsActions extends Component {
 
       computePosition(referenceElement, floatingElement, {
         placement: "top",
-        middleware: [offset(-5), flip({ padding: 5 })],
+        middleware: [
+          offset(-5),
+          shift({ limiter: limitShift() }),
+          flip({ padding: 5 }),
+        ],
       }).then(({ x, y }) => {
         Object.assign(floatingElement.style, {
           left: `${x}px`,

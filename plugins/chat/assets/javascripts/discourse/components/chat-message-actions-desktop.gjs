@@ -7,7 +7,14 @@ import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
-import { computePosition, flip, hide, offset } from "@floating-ui/dom";
+import {
+  computePosition,
+  flip,
+  hide,
+  limitShift,
+  offset,
+  shift,
+} from "@floating-ui/dom";
 import BookmarkIcon from "discourse/components/bookmark-icon";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
@@ -79,6 +86,7 @@ export default class ChatMessageActionsDesktop extends Component {
           boundary,
           fallbackPlacements: ["bottom-end"],
         }),
+        shift({ limiter: limitShift() }),
         hide({ strategy: "referenceHidden" }),
         hide({ strategy: "escaped" }),
       ],

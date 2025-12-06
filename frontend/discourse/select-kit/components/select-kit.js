@@ -1060,12 +1060,7 @@ export default class SelectKit extends Component {
           }).fn(state);
         },
       },
-      {
-        name: "shift",
-        fn: (state) => {
-          return shift({ limiter: limitShift() }).fn(state);
-        },
-      },
+      shift({ limiter: limitShift() }),
       offset(this.selectKit.options.verticalOffset),
       {
         name: "applySmallScreenOffset",

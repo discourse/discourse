@@ -4,7 +4,13 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { debounce } from "@ember/runloop";
 import { service } from "@ember/service";
-import { computePosition, flip, offset } from "@floating-ui/dom";
+import {
+  computePosition,
+  flip,
+  limitShift,
+  offset,
+  shift,
+} from "@floating-ui/dom";
 import emoji from "discourse/helpers/emoji";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
@@ -39,7 +45,11 @@ export default class DiscourseReactionsListEmoji extends Component {
 
     computePosition(referenceElement, floatingElement, {
       placement: "bottom",
-      middleware: [offset(-5), flip({ padding: 5 })],
+      middleware: [
+        offset(-5),
+        shift({ limiter: limitShift() }),
+        flip({ padding: 5 }),
+      ],
     }).then(({ x, y }) => {
       Object.assign(floatingElement.style, {
         left: `${x}px`,
