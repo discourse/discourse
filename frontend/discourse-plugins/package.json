@@ -16,7 +16,7 @@
     "ember-this-fallback": "^0.4.0"
   },
   "devDependencies": {
-    "ember-cli": "~6.8.0",
+    "ember-cli": "~6.8.1",
     "webpack": "5.99.9"
   },
   "engines": {
