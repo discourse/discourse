@@ -1931,6 +1931,26 @@ RSpec.describe PostAlerter do
         ).and not_add_notification(staged_non_member, :watching_category_or_tag)
       end
 
+      it "notifies even if the user has disabled link notifications" do
+        linked_post = Fabricate(:post, user: user)
+        topic = Fabricate(:topic, category: category)
+
+        CategoryUser.set_notification_level_for_category(
+          user,
+          CategoryUser.notification_levels[:watching],
+          category.id,
+        )
+        user.user_option.update!(notify_on_linked_posts: false)
+
+        post = create_post(topic:, raw: "Check this out: #{linked_post.full_url}")
+
+        expect(post.topic_links.first.link_post_id).to eq(linked_post.id)
+        expect { PostAlerter.post_created(post) }.to add_notification(
+          user,
+          :watching_category_or_tag,
+        ).and not_add_notification(user, :linked)
+      end
+
       it "does not update existing unread notification" do
         CategoryUser.set_notification_level_for_category(
           user,
@@ -2033,6 +2053,23 @@ RSpec.describe PostAlerter do
         TagUser.change(user.id, tag.id, TagUser.notification_levels[:watching])
 
         expect { PostAlerter.post_created(post) }.to change { Notification.count }.by(1)
+      end
+
+      it "notifies even if the user has disabled link notifications" do
+        linked_post = Fabricate(:post, user: user)
+        tag = Fabricate(:tag)
+        topic = Fabricate(:topic, tags: [tag])
+
+        TagUser.change(user.id, tag.id, TagUser.notification_levels[:watching])
+        user.user_option.update!(notify_on_linked_posts: false)
+
+        post = create_post(topic:, raw: "Check this out: #{linked_post.full_url}")
+
+        expect(post.topic_links.first.link_post_id).to eq(linked_post.id)
+        expect { PostAlerter.post_created(post) }.to add_notification(
+          user,
+          :watching_category_or_tag,
+        ).and not_add_notification(user, :linked)
       end
     end
 
