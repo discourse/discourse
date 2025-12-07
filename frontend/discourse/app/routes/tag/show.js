@@ -40,35 +40,31 @@ export default class TagShowRoute extends DiscourseRoute {
   }
 
   async model(params, transition) {
-    const tagIdFromParams = escapeExpression(params.tag_id);
+    const name = escapeExpression(params.tag_name);
+    const id = params.tag_id;
     const tag = this.store.createRecord("tag", {
-      id: tagIdFromParams,
+      id,
+      name,
     });
-
-    // Handles renaming a tag, since we refer to the tag.id instead
-    // of tag.name which is the actual identifier.
-    if (tag.id !== tagIdFromParams) {
-      tag.set("id", tagIdFromParams);
-    }
 
     let additionalTags;
 
     if (params.additional_tags) {
       additionalTags = params.additional_tags.split("/").map((t) => {
         return this.store.createRecord("tag", {
-          id: escapeExpression(t),
-        }).id;
+          name: escapeExpression(t),
+        }).name;
       });
     }
 
     const filterType = filterTypeForMode(this.navMode);
 
     let tagNotification;
-    if (tag && tag.id !== NONE && this.currentUser && !additionalTags) {
+    if (tag && tag.name !== NONE && this.currentUser && !additionalTags) {
       // If logged in, we should get the tag's user settings
       tagNotification = await this.store.find(
         "tagNotification",
-        tag.id.toLowerCase()
+        tag.name.toLowerCase()
       );
     }
 
@@ -80,7 +76,7 @@ export default class TagShowRoute extends DiscourseRoute {
       {}
     );
     const topicFilter = this.navMode;
-    const tagId = tag ? tag.id.toLowerCase() : NONE;
+    const tagId = tag ? tag.name.toLowerCase() : NONE;
     let filter;
 
     if (category) {
@@ -132,7 +128,8 @@ export default class TagShowRoute extends DiscourseRoute {
     if (list.topic_list.tags && list.topic_list.tags.length === 1) {
       // Update name of tag (case might be different)
       tag.setProperties({
-        id: list.topic_list.tags[0].name,
+        id: list.topic_list.tags[0].id,
+        name: list.topic_list.tags[0].name,
         staff: list.topic_list.tags[0].staff,
       });
     }
@@ -159,13 +156,14 @@ export default class TagShowRoute extends DiscourseRoute {
     if (model.category || model.additionalTags) {
       const tagIntersectionSearchContext = {
         type: "tagIntersection",
-        tagId: model.tag.id,
+        tagId: model.tag.name,
         tag: model.tag,
         additionalTags: model.additionalTags || null,
         categoryId: model.category?.id || null,
         category: model.category || null,
       };
 
+      // id -> name
       this.searchService.searchContext = tagIntersectionSearchContext;
     } else {
       this.searchService.searchContext = model.tag.searchContext;
@@ -176,18 +174,18 @@ export default class TagShowRoute extends DiscourseRoute {
     const filterText = i18n(`filters.${this.navMode.replace("/", ".")}.title`);
     const model = this.currentModel;
 
-    const tag = model?.tag?.id;
+    const tag = model?.tag?.name;
     if (tag && tag !== NONE) {
       if (model.category) {
         return i18n("tagging.filters.with_category", {
           filter: filterText,
-          tag: model.tag.id,
+          tag: model.tag.name,
           category: model.category.displayName,
         });
       } else {
         return i18n("tagging.filters.without_category", {
           filter: filterText,
-          tag: model.tag.id,
+          tag: model.tag.name,
         });
       }
     } else {

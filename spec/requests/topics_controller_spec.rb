@@ -4524,7 +4524,7 @@ RSpec.describe TopicsController do
 
         it "dismisses topics for tag" do
           TopicTrackingState.expects(:publish_dismiss_new).with(user.id, topic_ids: [tag_topic.id])
-          put "/topics/reset-new.json?tag_id=#{tag.name}"
+          put "/topics/reset-new.json?tag_name=#{tag.name}"
           expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to eq([tag_topic.id])
         end
 
@@ -4546,7 +4546,7 @@ RSpec.describe TopicsController do
             group.add(user)
             messages =
               MessageBus.track_publish do
-                put "/topics/reset-new.json", params: { tag_id: restricted_tag.name }
+                put "/topics/reset-new.json", params: { tag_name: restricted_tag.name }
               end
             expect(messages.size).to eq(1)
             expect(messages[0].data["payload"]["topic_ids"]).to contain_exactly(
@@ -4560,7 +4560,7 @@ RSpec.describe TopicsController do
           it "ignores the tag param and dismisses all topics if the user can't see the tag" do
             messages =
               MessageBus.track_publish do
-                put "/topics/reset-new.json", params: { tag_id: restricted_tag.name }
+                put "/topics/reset-new.json", params: { tag_name: restricted_tag.name }
               end
             expect(messages.size).to eq(1)
             expect(messages[0].data["payload"]["topic_ids"]).to contain_exactly(
@@ -4588,7 +4588,7 @@ RSpec.describe TopicsController do
             user.id,
             topic_ids: [tag_and_category_topic.id],
           )
-          put "/topics/reset-new.json?tag_id=#{tag.name}&category_id=#{category.id}"
+          put "/topics/reset-new.json?tag_name=#{tag.name}&category_id=#{category.id}"
           expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to eq(
             [tag_and_category_topic.id],
           )
@@ -4819,7 +4819,7 @@ RSpec.describe TopicsController do
                 dismiss_topics: true,
                 dismiss_posts: true,
                 untrack: true,
-                tag_id: tag.name,
+                tag_name: tag.name,
               }
 
           expect(response.status).to eq(200)
