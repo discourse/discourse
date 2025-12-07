@@ -106,7 +106,7 @@ export default class SwipeModifier extends Modifier {
    * @param {Event} event - The swipe end event.
    */
   @bind
-  onDidEndSwipe() {
+  onDidEndSwipe(event) {
     if (this.lockBody) {
       unlock(this.element);
     }

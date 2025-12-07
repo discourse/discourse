@@ -96,14 +96,20 @@ export default class GrippieDragResize extends Modifier {
         this.performDragHandler(
           this.resizableElement,
           this.grippiePosition,
-          this.onThrottledDrag
+          this.onThrottledDrag,
+          event
         ),
       event,
       THROTTLE_RATE
     );
   }
 
-  performDragHandler(resizableElement, grippiePosition, onThrottledDrag) {
+  performDragHandler(
+    resizableElement,
+    grippiePosition,
+    onThrottledDrag,
+    event
+  ) {
     resizableElement.classList.add("clear-transitions");
     const currentMousePos = mouseYPos(event);
 

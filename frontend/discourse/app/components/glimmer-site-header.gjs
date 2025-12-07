@@ -366,13 +366,14 @@ export default class GlimmerSiteHeader extends Component {
           ele.classList.contains("panel-body") ||
           ele.classList.contains("header-cloak")
       );
+
     if (
       swipeOverValidElement &&
       (swipeEvent.direction === "left" || swipeEvent.direction === "right")
     ) {
       scrollLock(true, document.querySelector(".panel-body"));
     } else {
-      event.preventDefault();
+      swipeEvent.preventDefault();
     }
   }
 
