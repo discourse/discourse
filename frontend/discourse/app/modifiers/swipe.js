@@ -98,7 +98,7 @@ export default class SwipeModifier extends Modifier {
       lock(this.element);
     }
 
-    this.onDidStartSwipeCallback?.(event.detail);
+    this.onDidStartSwipeCallback?.(event.detail, event);
   }
 
   /**

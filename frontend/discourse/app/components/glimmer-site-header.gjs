@@ -357,7 +357,7 @@ export default class GlimmerSiteHeader extends Component {
   }
 
   @bind
-  onSwipeStart(swipeEvent) {
+  onSwipeStart(swipeEvent, fullEvent) {
     const center = swipeEvent.center;
     const swipeOverValidElement = document
       .elementsFromPoint(center.x, center.y)
@@ -373,7 +373,7 @@ export default class GlimmerSiteHeader extends Component {
     ) {
       scrollLock(true, document.querySelector(".panel-body"));
     } else {
-      swipeEvent.preventDefault();
+      fullEvent.preventDefault();
     }
   }
 
