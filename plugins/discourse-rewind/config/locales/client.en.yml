@@ -10,6 +10,8 @@ en:
       title: Rewind
       year: "2025"
       loading: "Reticulating splines..."
+      preferences:
+        disable_rewind: "Disable Rewind (hide the year-end activity summary)"
       reports:
         activity_calendar:
           title: Activity Calendar

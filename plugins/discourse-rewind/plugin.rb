@@ -32,9 +32,25 @@ end
 require_relative "lib/discourse_rewind/engine"
 
 after_initialize do
+  UserUpdater::OPTION_ATTR.push(:discourse_rewind_disabled)
+
+  add_to_serializer(:user_option, :discourse_rewind_disabled) { object.discourse_rewind_disabled }
+
+  add_to_serializer(:current_user_option, :discourse_rewind_disabled) do
+    object.discourse_rewind_disabled
+  end
+
   add_to_serializer(:current_user, :is_rewind_active) do
+    return false if object.user_option&.discourse_rewind_disabled
     Rails.env.development? || Date.today.month == 1 || Date.today.month == 12
   end
 
   add_to_serializer(:current_user, :is_development_env) { Rails.env.development? }
+
+  Discourse::Application.routes.append do
+    get "u/:username/preferences/rewind" => "users#preferences",
+        :constraints => {
+          username: RouteFormat.username,
+        }
+  end
 end
