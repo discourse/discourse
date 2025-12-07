@@ -1,5 +1,5 @@
-import { i18n } from "discourse-i18n";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import { i18n } from "discourse-i18n";
 
 export default <template>
   <div class="container">
