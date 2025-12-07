@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "DiscourseRewind | user preferences", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   before do
     SiteSetting.discourse_rewind_enabled = true
@@ -30,4 +30,3 @@ describe "DiscourseRewind | user preferences", type: :system do
     end
   end
 end
-

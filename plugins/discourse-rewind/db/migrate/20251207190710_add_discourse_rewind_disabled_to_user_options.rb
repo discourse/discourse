@@ -5,4 +5,3 @@ class AddDiscourseRewindDisabledToUserOptions < ActiveRecord::Migration[7.2]
     add_column :user_options, :discourse_rewind_disabled, :boolean, default: false, null: false
   end
 end
-
