@@ -39,13 +39,13 @@ RSpec.describe TagsController do
 
         tags = response.parsed_body["tags"]
 
-        serialized_tag = tags.find { |t| t["id"] == test_tag.name }
+        serialized_tag = tags.find { |t| t["name"] == test_tag.name }
 
         expect(serialized_tag["count"]).to eq(0)
         expect(serialized_tag["pm_count"]).to eq(nil)
         expect(serialized_tag["pm_only"]).to eq(false)
 
-        serialized_tag = tags.find { |t| t["id"] == topic_tag.name }
+        serialized_tag = tags.find { |t| t["name"] == topic_tag.name }
 
         expect(serialized_tag["count"]).to eq(1)
         expect(serialized_tag["pm_count"]).to eq(nil)
@@ -82,17 +82,17 @@ RSpec.describe TagsController do
 
         tags = response.parsed_body["tags"]
 
-        serialized_tag = tags.find { |t| t["id"] == test_tag.name }
+        serialized_tag = tags.find { |t| t["name"] == test_tag.name }
 
         expect(serialized_tag["pm_count"]).to eq(0)
         expect(serialized_tag["pm_only"]).to eq(false)
 
-        serialized_tag = tags.find { |t| t["id"] == topic_tag.name }
+        serialized_tag = tags.find { |t| t["name"] == topic_tag.name }
 
         expect(serialized_tag["pm_count"]).to eq(5)
         expect(serialized_tag["pm_only"]).to eq(false)
 
-        serialized_tag = tags.find { |t| t["id"] == pm_only_tag.name }
+        serialized_tag = tags.find { |t| t["name"] == pm_only_tag.name }
 
         expect(serialized_tag["pm_count"]).to eq(1)
         expect(serialized_tag["pm_only"]).to eq(true)
@@ -136,11 +136,11 @@ RSpec.describe TagsController do
           get "/tags.json"
           tags = response.parsed_body["tags"]
 
-          serialized_tag = tags.find { |t| t["id"] == topic_tag.name }
+          serialized_tag = tags.find { |t| t["name"] == topic_tag.name }
           expect(serialized_tag["count"]).to eq(2)
           expect(serialized_tag["pm_count"]).to eq(5)
 
-          serialized_tag = tags.find { |t| t["id"] == test_tag.name }
+          serialized_tag = tags.find { |t| t["name"] == test_tag.name }
           expect(serialized_tag["count"]).to eq(0)
           expect(serialized_tag["pm_count"]).to eq(1)
         end
@@ -740,7 +740,7 @@ RSpec.describe TagsController do
         expect(response.status).to eq(200)
 
         tag = response.parsed_body["tags"]
-        expect(tag[0]["id"]).to eq("test")
+        expect(tag[0]["name"]).to eq("test")
       end
     end
 
@@ -753,7 +753,7 @@ RSpec.describe TagsController do
         expect(response.status).to eq(200)
 
         tag = response.parsed_body["tags"]
-        expect(tag[0]["id"]).to eq("test")
+        expect(tag[0]["name"]).to eq("test")
       end
 
       it "can see their own pm tags" do
@@ -762,7 +762,7 @@ RSpec.describe TagsController do
         expect(response.status).to eq(200)
 
         tag = response.parsed_body["tags"]
-        expect(tag[0]["id"]).to eq("test")
+        expect(tag[0]["name"]).to eq("test")
       end
 
       it "works with usernames with a period" do
