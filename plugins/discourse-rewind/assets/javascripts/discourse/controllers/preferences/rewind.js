@@ -19,4 +19,3 @@ export default class PreferencesRewindController extends Controller {
       .catch(popupAjaxError);
   }
 }
-

@@ -17,4 +17,3 @@ export default class RewindPreferencesNav extends Component {
     </li>
   </template>
 }
-

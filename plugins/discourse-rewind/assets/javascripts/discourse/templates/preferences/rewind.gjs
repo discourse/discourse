@@ -25,4 +25,3 @@ export default <template>
     @saved={{@controller.saved}}
   />
 </template>
-

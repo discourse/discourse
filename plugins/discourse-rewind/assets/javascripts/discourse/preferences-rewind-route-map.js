@@ -5,4 +5,3 @@ export default {
     this.route("rewind");
   },
 };
-
