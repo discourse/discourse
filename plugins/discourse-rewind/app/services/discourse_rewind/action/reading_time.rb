@@ -66,10 +66,10 @@ module DiscourseRewind
           isbn: "978-0061120084",
           series: false,
         },
-        "Harry Potter and the Sorcerer's Stone" => {
+        "A Tale of Two Cities" => {
           reading_time: 24_600,
-          isbn: "978-0590353427",
-          series: true,
+          isbn: "978-0141439600",
+          series: false,
         },
         "Pride and Prejudice" => {
           reading_time: 25_200,
