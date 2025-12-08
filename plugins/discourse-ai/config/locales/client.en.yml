@@ -443,6 +443,7 @@ en:
         no_users: "No user usage data found"
         no_models: "No model usage data found"
         no_features: "No feature usage data found"
+        total: "Total"
         subheader_description: "Tokens are the basic units that LLMs use to understand and generate text, usage data may affect costs"
         stat_tooltips:
           total_requests: "All requests made to LLMs through Discourse"

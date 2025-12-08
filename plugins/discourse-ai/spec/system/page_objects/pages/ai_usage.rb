@@ -55,6 +55,18 @@ module PageObjects
       def has_summary_data?
         page.has_css?(".ai-usage__summary .d-stat-tiles")
       end
+
+      def has_features_total_row?
+        page.has_css?(".ai-usage__features-table .ai-usage__total-row")
+      end
+
+      def has_models_total_row?
+        page.has_css?(".ai-usage__models-table .ai-usage__total-row")
+      end
+
+      def has_users_total_row?
+        page.has_css?(".ai-usage__users-table .ai-usage__total-row")
+      end
     end
   end
 end
