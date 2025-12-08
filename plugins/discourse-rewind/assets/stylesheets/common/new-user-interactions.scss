@@ -1,0 +1,84 @@
+@use "lib/viewport";
+
+.--new-user-interactions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1em;
+
+  .wordart-container {
+    text-align: center;
+    margin: 2em 0 2.5em;
+  }
+
+  .wordart-text {
+    font-size: 32px;
+    color: var(--rewind-white);
+    font-family: "Comic Sans MS", cursive, sans-serif;
+  }
+
+  .wordart-3d {
+    font-size: 64px;
+    font-weight: 900;
+    font-family: Impact, Arial, sans-serif;
+    text-transform: uppercase;
+    display: inline-block;
+    transform: rotate(-3deg);
+    line-height: 1;
+
+    @include viewport.until(sm) {
+      font-size: 24px;
+      transform: translateY(1.5em);
+    }
+  }
+
+  .wordart-word {
+    display: inline-block;
+    white-space: nowrap;
+    margin-right: 0.75em;
+  }
+
+  .wordart-letter {
+    font-family: impact, arial, sans-serif;
+    font-weight: bold;
+    display: inline-block;
+    color: #0ff;
+    letter-spacing: -0.4em;
+    text-shadow:
+      1px 1px 0 #00d,
+      2px 2px 0 #00d,
+      3px 3px 0 #00b,
+      4px 4px 0 #00b,
+      5px 5px 0 #009,
+      6px 6px 0 #009,
+      7px 7px 0 #007,
+      8px 8px 0 #007,
+      9px 9px 0 #005,
+      10px 10px 0 #005,
+      11px 11px 0 #003,
+      12px 12px 0 #003,
+      13px 13px 0 #001,
+      14px 14px 0 #001,
+      15px 15px 20px rgb(0 0 0 / 0.5);
+    animation: wordart-wave 3s ease-in-out infinite;
+  }
+
+  // Wave pattern using nth-child
+  @for $i from 1 through 30 {
+    .wordart-letter:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.05}s;
+      transform: translateY(#{sin($i * 0.5) * 25}px);
+    }
+  }
+}
+
+@keyframes wordart-wave {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-35px);
+  }
+}
