@@ -8,7 +8,7 @@ RSpec.describe UpcomingChanges do
       {
         enable_upload_debug_mode: {
           impact: "other,developers",
-          status: :pre_alpha,
+          status: :experimental,
           impact_type: "other",
           impact_role: "developers",
         },
@@ -69,7 +69,7 @@ RSpec.describe UpcomingChanges do
       expect(metadata).to eq(
         {
           impact: "other,developers",
-          status: :pre_alpha,
+          status: :experimental,
           impact_type: "other",
           impact_role: "developers",
         },
@@ -85,18 +85,18 @@ RSpec.describe UpcomingChanges do
     it "accepts string setting names" do
       metadata = described_class.change_metadata(setting_name)
 
-      expect(metadata[:status]).to eq(:pre_alpha)
+      expect(metadata[:status]).to eq(:experimental)
     end
 
     it "accepts symbol setting names" do
       metadata = described_class.change_metadata(setting_name.to_sym)
 
-      expect(metadata[:status]).to eq(:pre_alpha)
+      expect(metadata[:status]).to eq(:experimental)
     end
   end
 
   describe ".not_yet_stable?" do
-    it "returns true for pre_alpha status" do
+    it "returns true for experimental status" do
       expect(described_class.not_yet_stable?(setting_name)).to eq(true)
     end
 
@@ -118,7 +118,7 @@ RSpec.describe UpcomingChanges do
   end
 
   describe ".stable_or_permanent?" do
-    it "returns false for pre_alpha status" do
+    it "returns false for experimental status" do
       expect(described_class.stable_or_permanent?(setting_name)).to eq(false)
     end
 
@@ -140,7 +140,7 @@ RSpec.describe UpcomingChanges do
   end
 
   describe ".change_status_value" do
-    it "returns 0 for pre_alpha status" do
+    it "returns 0 for experimental status" do
       expect(described_class.change_status_value(setting_name)).to eq(0)
     end
 
@@ -162,8 +162,8 @@ RSpec.describe UpcomingChanges do
   end
 
   describe ".change_status" do
-    it "returns :pre_alpha for pre_alpha status" do
-      expect(described_class.change_status(setting_name)).to eq(:pre_alpha)
+    it "returns :experimental for experimental status" do
+      expect(described_class.change_status(setting_name)).to eq(:experimental)
     end
 
     it "returns :alpha for alpha status" do

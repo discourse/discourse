@@ -5771,7 +5771,7 @@ en:
             one: "the group %{groupNames}"
             other: "the groups %{groupNames}"
         statuses:
-          pre_alpha: "Pre-Alpha"
+          experimental: "Experimental"
           alpha: "Alpha"
           beta: "Beta"
           stable: "Stable"
@@ -5793,7 +5793,7 @@ en:
           impact_type_feature: "Feature"
           impact_type_other: "Other"
           status_all: "All statuses"
-          status_pre_alpha: "Pre-Alpha"
+          status_experimental: "Experimental"
           status_alpha: "Alpha"
           status_beta: "Beta"
           status_stable: "Stable"

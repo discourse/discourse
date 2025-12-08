@@ -158,5 +158,5 @@ chat:
     hidden: true
     client: true
     upcoming_change:
-      status: "pre_alpha"
+      status: "experimental"
       impact: "feature,all_members"
