@@ -84,8 +84,16 @@
   top: -4px;
   content: "";
   background-image: absolute-image-url(
-    "/plugins/discourse-rewind/images/rewind-avatar-2-shimmer.gif"
+    "/plugins/discourse-rewind/images/rewind-avatar-shimmer.gif"
   );
   display: block;
   background-size: cover;
+
+  @media (prefers-reduced-motion) {
+    .rewind-notification-active #toggle-current-user::after {
+      background-image: absolute-image-url(
+        "/plugins/discourse-rewind/images/rewind-avatar-static.png"
+      );
+    }
+  }
 }
