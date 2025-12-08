@@ -177,7 +177,9 @@ module DiscourseAi
         end
 
         def lookup_bot_llms
-          LlmModel.where(enabled_chat_bot: true).to_a
+          persona_llms = AiPersona.where(id: lookup_bot_persona_ids).pluck(:default_llm_id)
+
+          LlmModel.where(id: persona_llms).where(enabled_chat_bot: true).to_a
         end
 
         def translation_features
