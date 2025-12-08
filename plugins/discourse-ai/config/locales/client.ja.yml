@@ -314,6 +314,8 @@ ja:
           post_url_label: "投稿の URL または ID"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 または投稿 ID"
           result: "結果"
+          llm: "LLM"
+          system_prompt: "システムプロンプト"
           scan_log: "スキャンログ"
           run: "テストを実行"
           spam: "迷惑"

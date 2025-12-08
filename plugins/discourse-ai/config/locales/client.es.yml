@@ -321,6 +321,8 @@ es:
           post_url_label: "URL o ID de la publicación"
           post_url_placeholder: "https://tu-foro.com/t/topic/123/4 o ID de publicación"
           result: "Resultado"
+          llm: "LLM"
+          system_prompt: "Aviso del sistema"
           scan_log: "Registro de escaneo"
           run: "Ejecutar prueba"
           spam: "Spam"

@@ -14,7 +14,7 @@ RSpec.describe UpcomingChanges::List do
         {
           enable_upload_debug_mode: {
             impact: "other,developers",
-            status: :pre_alpha,
+            status: :experimental,
             impact_type: "other",
             impact_role: "developers",
           },
@@ -46,7 +46,7 @@ RSpec.describe UpcomingChanges::List do
           impact: "other,developers",
           impact_role: "developers",
           impact_type: "other",
-          status: :pre_alpha,
+          status: :experimental,
         )
       end
 

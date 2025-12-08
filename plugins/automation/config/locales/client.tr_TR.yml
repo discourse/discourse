@@ -10,6 +10,7 @@ tr_TR:
       logs:
         staff_actions:
           actions:
+            update_automation: otomasyonu güncelle
             delete_automation: otomasyonu sil
     discourse_automation:
       title: Otomasyon

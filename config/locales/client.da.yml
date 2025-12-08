@@ -4360,6 +4360,8 @@ da:
         enabled_for_options:
           everyone: "Alle"
           staff: "Kun personale"
+        statuses:
+          experimental: "Eksperimentel"
         impact_roles:
           admins: "Admins"
           moderators: "Moderatorer"
@@ -4369,6 +4371,7 @@ da:
           enabled: "Aktiveret"
           disabled: "Deaktiveret"
           impact_type_other: "Andre"
+          status_experimental: "Eksperimentel"
       config:
         about:
           title: "Om dit websted"

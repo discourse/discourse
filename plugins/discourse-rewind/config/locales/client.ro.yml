@@ -1,0 +1,25 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  js:
+    discourse_rewind:
+      reports:
+        reading_time:
+          title: Durata citirii
+        chat_usage:
+          messages: mesaje
+          you: Tu
+          status_online: "● conectat"
+        invites:
+          title: Invitații
+          invitee_posts: Postări create
+          invitee_likes: Aprecieri oferite
+        new_user_interactions:
+          likes_given: Aprecieri oferite
+          mentions: Mențiuni
+        writing_analysis:
+          menu_other: Altele

@@ -4949,6 +4949,8 @@ ja:
         enabled_for_options:
           everyone: "全員"
           staff: "スタッフのみ"
+        statuses:
+          experimental: "実験的"
         impact_roles:
           admins: "管理者"
           moderators: "モデレーター"
@@ -4959,6 +4961,7 @@ ja:
           disabled: "無効"
           impact_type_feature: "機能"
           impact_type_other: "その他"
+          status_experimental: "実験的"
       config:
         about:
           title: "サイトについて"
