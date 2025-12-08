@@ -19,7 +19,7 @@ module DiscourseRewind
     #   @option params [Integer] :username of the rewind
     #   @return [Service::Base::Context]
 
-    CACHE_DURATION = Rails.env.development? ? 10.seconds : 5.minutes
+    CACHE_DURATION = Rails.env.development? ? 10.seconds : 3.days
 
     # The order here controls the order of reports in the UI,
     # so be careful when moving these around.
@@ -38,7 +38,7 @@ module DiscourseRewind
       Action::NewUserInteractions,
       Action::ChatUsage,
       Action::AiUsage,
-      Action::FavoriteGifs,
+      #Action::FavoriteGifs,
       Action::Assignments,
       Action::Invites,
     ]
