@@ -249,12 +249,12 @@ RSpec.describe Middleware::AnonymousCache do
           "HOST" => "site.com",
           "REQUEST_METHOD" => "GET",
           "REQUEST_URI" => "/somewhere/rainbow",
-          "REQUEST_QUEUE_SECONDS" => 2.1,
+          Middleware::ProcessingRequest::REQUEST_QUEUE_SECONDS_ENV_KEY => 2.1,
           "rack.input" => StringIO.new,
         )
 
       # non background ... long request
-      env["REQUEST_QUEUE_SECONDS"] = 2
+      env[Middleware::ProcessingRequest::REQUEST_QUEUE_SECONDS_ENV_KEY] = 2
 
       status, _ = app.call(env.dup)
       expect(status).to eq(200)
@@ -267,7 +267,7 @@ RSpec.describe Middleware::AnonymousCache do
       json = JSON.parse(body.join)
       expect(json["extras"]["wait_seconds"]).to be > 4.9
 
-      env["REQUEST_QUEUE_SECONDS"] = 0.4
+      env[Middleware::ProcessingRequest::REQUEST_QUEUE_SECONDS_ENV_KEY] = 0.4
 
       status, _ = app.call(env.dup)
       expect(status).to eq(200)
@@ -299,7 +299,7 @@ RSpec.describe Middleware::AnonymousCache do
           "HOST" => "site.com",
           "REQUEST_METHOD" => "GET",
           "REQUEST_URI" => "/somewhere/rainbow",
-          "REQUEST_QUEUE_SECONDS" => 2.1,
+          Middleware::ProcessingRequest::REQUEST_QUEUE_SECONDS_ENV_KEY => 2.1,
           "rack.input" => StringIO.new,
         )
 
@@ -323,14 +323,14 @@ RSpec.describe Middleware::AnonymousCache do
       # tricky change, a 50ms delay still will trigger protection
       # once it is tripped
 
-      env["REQUEST_QUEUE_SECONDS"] = 0.05
+      env[Middleware::ProcessingRequest::REQUEST_QUEUE_SECONDS_ENV_KEY] = 0.05
       is_anon = false
 
       app.call(env.dup)
       expect(is_anon).to eq(true)
 
       is_anon = false
-      env["REQUEST_QUEUE_SECONDS"] = 0.01
+      env[Middleware::ProcessingRequest::REQUEST_QUEUE_SECONDS_ENV_KEY] = 0.01
 
       app.call(env.dup)
       expect(is_anon).to eq(false)
