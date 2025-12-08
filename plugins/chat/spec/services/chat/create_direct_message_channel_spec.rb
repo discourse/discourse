@@ -58,14 +58,14 @@ RSpec.describe Chat::CreateDirectMessageChannel do
         )
       end
 
-      it "makes all target users a member of the channel and updates all users to following" do
+      it "makes all target users a member of the channel and defaults all users to following" do
         expect { result }.to change { Chat::UserChatChannelMembership.count }.by(3)
         expect(result.channel.user_chat_channel_memberships.pluck(:user_id)).to match_array(
           [current_user.id, user_1.id, user_2.id],
         )
         result.channel.user_chat_channel_memberships.each do |membership|
           expect(membership).to have_attributes(
-            following: false,
+            following: true,
             muted: false,
             notification_level: "always",
           )
