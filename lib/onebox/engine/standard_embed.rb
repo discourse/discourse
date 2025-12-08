@@ -50,6 +50,7 @@ module Onebox
         set_json_ld_data_on_raw
         set_favicon_data_on_raw
         set_description_on_raw
+        enhance_title_with_anchor
 
         @raw
       end
@@ -199,6 +200,69 @@ module Onebox
           description = get_description
           @raw[:description] = description if description.present?
         end
+      end
+
+      def enhance_title_with_anchor
+        return unless html_doc
+        return unless @raw[:title].present?
+
+        fragment = extract_url_fragment
+        return if fragment.blank?
+
+        section_title = find_section_title(fragment)
+        return if section_title.blank?
+
+        cleaned_title = clean_section_title(section_title)
+        return if cleaned_title.blank?
+        return if @raw[:title].include?(cleaned_title)
+
+        @raw[:title] = "#{cleaned_title} - #{@raw[:title]}"
+      end
+
+      def extract_url_fragment
+        uri = URI.parse(url)
+        fragment = uri.fragment
+        return nil if fragment.blank?
+
+        CGI.unescape(fragment)
+      rescue URI::InvalidURIError
+        nil
+      end
+
+      def find_section_title(fragment)
+        target = html_doc.at_xpath("//*[@id='#{fragment.gsub("'", "\\'")}']") ||
+                 html_doc.at_xpath("//a[@name='#{fragment.gsub("'", "\\'")}']") ||
+                 html_doc.at_css("##{CSS.escape(fragment)}")
+        return nil unless target
+
+        if target.name =~ /^h[1-6]$/i
+          return target.text.strip
+        end
+
+        code_content = target.at_css("code, .docstring-binding")&.text&.strip
+        return code_content if code_content.present?
+
+        heading = target.at_css("h1, h2, h3, h4, h5, h6")
+        return heading.text.strip if heading
+
+        find_nearest_heading(target)
+      end
+
+      def find_nearest_heading(element)
+        current = element
+        while current
+          current.previous_element&.tap do |prev|
+            return prev.text.strip if prev.name =~ /^h[1-6]$/i
+          end
+          current = current.parent
+          return current.text.strip if current&.name =~ /^h[1-6]$/i
+        end
+        nil
+      end
+
+      def clean_section_title(text)
+        cleaned = text.gsub(/[\u00B6\u00A7#]/, "").gsub(/\s+/, " ").strip
+        cleaned.truncate(80, separator: " ")
       end
     end
   end

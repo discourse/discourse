@@ -110,6 +110,112 @@ RSpec.describe Onebox::Engine::StandardEmbed do
     end
   end
 
+  describe "#enhance_title_with_anchor" do
+    let(:anchor_class) do
+      Class.new do
+        include Onebox::Engine::StandardEmbed
+
+        attr_accessor :url, :options, :html_doc_override
+
+        def initialize(url)
+          @url = url
+          @options = {}
+        end
+
+        def html_doc
+          @html_doc_override
+        end
+      end
+    end
+
+    it "extracts fragment from URL" do
+      embed = anchor_class.new("https://example.com/page#my-section")
+      expect(embed.send(:extract_url_fragment)).to eq("my-section")
+    end
+
+    it "URL-decodes the fragment" do
+      embed = anchor_class.new("https://example.com/page#Base.pkgversion-Tuple%7BModule%7D")
+      expect(embed.send(:extract_url_fragment)).to eq("Base.pkgversion-Tuple{Module}")
+    end
+
+    it "returns nil for URLs without fragments" do
+      embed = anchor_class.new("https://example.com/page")
+      expect(embed.send(:extract_url_fragment)).to be_nil
+    end
+
+    it "finds section title from heading element with matching ID" do
+      html = <<~HTML
+        <html><body>
+          <h2 id="my-section">My Section Title</h2>
+          <p>Content here</p>
+        </body></html>
+      HTML
+      embed = anchor_class.new("https://example.com/page#my-section")
+      embed.html_doc_override = Nokogiri::HTML(html)
+
+      expect(embed.send(:find_section_title, "my-section")).to eq("My Section Title")
+    end
+
+    it "finds section title from code element within target" do
+      html = <<~HTML
+        <html><body>
+          <div id="Base.pkgversion-Tuple{Module}">
+            <code>pkgversion(m::Module)</code>
+            <p>Returns the version of the package.</p>
+          </div>
+        </body></html>
+      HTML
+      embed = anchor_class.new("https://example.com/page#Base.pkgversion-Tuple{Module}")
+      embed.html_doc_override = Nokogiri::HTML(html)
+
+      expect(embed.send(:find_section_title, "Base.pkgversion-Tuple{Module}")).to eq("pkgversion(m::Module)")
+    end
+
+    it "does not duplicate title when section title already appears in page title" do
+      html = <<~HTML
+        <html><body>
+          <h2 id="installation">Installation</h2>
+        </body></html>
+      HTML
+      embed = anchor_class.new("https://example.com/page#installation")
+      embed.html_doc_override = Nokogiri::HTML(html)
+      embed.instance_variable_set(:@raw, { title: "Installation Guide - My Project" })
+
+      embed.send(:enhance_title_with_anchor)
+
+      expect(embed.instance_variable_get(:@raw)[:title]).to eq("Installation Guide - My Project")
+    end
+
+    it "prepends section title to page title" do
+      html = <<~HTML
+        <html><body>
+          <h2 id="getting-started">Getting Started</h2>
+        </body></html>
+      HTML
+      embed = anchor_class.new("https://example.com/page#getting-started")
+      embed.html_doc_override = Nokogiri::HTML(html)
+      embed.instance_variable_set(:@raw, { title: "My Project Documentation" })
+
+      embed.send(:enhance_title_with_anchor)
+
+      expect(embed.instance_variable_get(:@raw)[:title]).to eq("Getting Started - My Project Documentation")
+    end
+
+    it "cleans anchor symbols from section titles" do
+      embed = anchor_class.new("https://example.com/page#test")
+      expect(embed.send(:clean_section_title, "My Section ¶")).to eq("My Section")
+      expect(embed.send(:clean_section_title, "Another § Section")).to eq("Another Section")
+      expect(embed.send(:clean_section_title, "Title #")).to eq("Title")
+    end
+
+    it "truncates long section titles" do
+      embed = anchor_class.new("https://example.com/page#test")
+      long_title = "A" * 100
+      result = embed.send(:clean_section_title, long_title)
+      expect(result.length).to be <= 80
+    end
+  end
+
   private
 
   def mocked_html_doc(twitter_data: nil, favicon_url: nil)
