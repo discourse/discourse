@@ -41,7 +41,7 @@ export default class TagDrop extends ComboBoxComponent {
   @service tagUtils;
 
   valueProperty = "name";
-  nameProperty = "name";
+  nameProperty = "text";
 
   @setting("max_tag_search_results") maxTagSearchResults;
   @setting("tags_sort_alphabetically") sortTagsAlphabetically;
@@ -112,21 +112,23 @@ export default class TagDrop extends ComboBoxComponent {
     if (this.tagId) {
       shortcuts.push({
         id: ALL_TAGS_ID,
-        name: i18n("tagging.selector_remove_filter"),
+        name: ALL_TAGS_ID,
+        text: i18n("tagging.selector_remove_filter"),
       });
     }
 
     if (this.tagId !== NONE_TAG) {
       shortcuts.push({
         id: NO_TAG_ID,
-        name: i18n("tagging.selector_no_tags"),
+        name: NO_TAG_ID,
+        text: i18n("tagging.selector_no_tags"),
       });
     }
 
     // If there is a single shortcut, we can have a single "remove filter"
     // option
     if (shortcuts.length === 1 && shortcuts[0].id === ALL_TAGS_ID) {
-      shortcuts[0].name = i18n("tagging.selector_remove_filter");
+      shortcuts[0].text = i18n("tagging.selector_remove_filter");
     }
 
     return shortcuts;
@@ -182,6 +184,9 @@ export default class TagDrop extends ComboBoxComponent {
     } else {
       return (this.content || []).map((tag) => {
         if (tag.id && tag.name) {
+          if (!tag.text) {
+            return { ...tag, text: tag.name };
+          }
           return tag;
         }
         return this.defaultItem(tag, tag);

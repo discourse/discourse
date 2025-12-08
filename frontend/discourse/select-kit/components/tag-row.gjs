@@ -19,7 +19,7 @@ export default class TagRow extends SelectKitRowComponent {
         count=this.item.count
       }}
     {{else}}
-      <span class="name">{{this.item.name}}</span>
+      <span class="name">{{this.rowName}}</span>
     {{/if}}
   </template>
 }
