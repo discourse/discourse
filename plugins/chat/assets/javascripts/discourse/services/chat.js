@@ -299,26 +299,17 @@ export default class Chat extends Service {
   }
 
   /**
-   * Returns channels in sidebar display order.
-   * When starred channels are enabled, returns: starred, public, DMs.
-   * Otherwise returns: public, DMs.
+   * Returns channels in sidebar display order: starred, public, DMs.
    *
    * @returns {Array} Ordered array of chat channels matching sidebar order
    */
   #getOrderedChannels() {
     const manager = this.chatChannelsManager;
 
-    if (this.siteSettings.star_chat_channels) {
-      return [
-        ...manager.starredChannels,
-        ...manager.unstarredPublicMessageChannels,
-        ...manager.truncatedUnstarredDirectMessageChannels,
-      ];
-    }
-
     return [
-      ...manager.publicMessageChannels,
-      ...manager.truncatedDirectMessageChannels,
+      ...manager.starredChannels,
+      ...manager.unstarredPublicMessageChannels,
+      ...manager.truncatedUnstarredDirectMessageChannels,
     ];
   }
 
@@ -333,31 +324,23 @@ export default class Chat extends Service {
   #getOrderedChannelsWithActivity(activeChannel) {
     const manager = this.chatChannelsManager;
 
-    let allChannels;
-    if (this.siteSettings.star_chat_channels) {
-      // Filter each section for channels with activity
-      const starredWithActivity = manager.starredChannels.filter(
+    // Filter each section for channels with activity
+    const starredWithActivity = manager.starredChannels.filter(
+      (c) => c.hasUnread
+    );
+    const publicWithActivity = manager.unstarredPublicMessageChannels.filter(
+      (c) => c.hasUnread
+    );
+    const dmsWithActivity =
+      manager.truncatedUnstarredDirectMessageChannels.filter(
         (c) => c.hasUnread
       );
-      const publicWithActivity = manager.unstarredPublicMessageChannels.filter(
-        (c) => c.hasUnread
-      );
-      const dmsWithActivity =
-        manager.truncatedUnstarredDirectMessageChannels.filter(
-          (c) => c.hasUnread
-        );
 
-      allChannels = [
-        ...starredWithActivity,
-        ...publicWithActivity,
-        ...dmsWithActivity,
-      ];
-    } else {
-      allChannels = [
-        ...manager.publicMessageChannelsWithActivity,
-        ...manager.directMessageChannelsWithActivity,
-      ];
-    }
+    const allChannels = [
+      ...starredWithActivity,
+      ...publicWithActivity,
+      ...dmsWithActivity,
+    ];
 
     // If the active channel has no unread messages, insert it at its proper position
     if (!activeChannel.hasUnread) {
