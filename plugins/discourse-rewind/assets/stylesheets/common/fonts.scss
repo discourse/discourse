@@ -1,0 +1,63 @@
+@font-face {
+  font-family: receipt-narrow;
+  src: absolute-image-url(
+      "/plugins/discourse-rewind/fonts/receipt-narrow.woff2"
+    )
+    format("woff2");
+  font-display: auto;
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+}
+
+@font-face {
+  font-family: "Jersey 20";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: absolute-image-url(
+      "/plugins/discourse-rewind/fonts/jersey-20-v2-latin-regular.woff2"
+    )
+    format("woff2");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Pixelify Sans";
+  font-style: normal;
+  font-weight: 400;
+  src: absolute-image-url(
+      "/plugins/discourse-rewind/fonts/pixelify-sans-v1-latin-regular.woff2"
+    )
+    format("woff2");
+}
+
+.rewind {
+  --jersey-heading: "Jersey 20", helvetica, arial, sans-serif;
+  --pixel-text: "receipt-narrow", sans-serif;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-family: var(--jersey-heading);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  p,
+  span,
+  table,
+  td,
+  tr {
+    font-family: var(--pixel-text);
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+h2.rewind-report-title {
+  text-transform: uppercase;
+  color: var(--rewind-green);
+  z-index: 2;
+  line-height: 1.2;
+}

@@ -1,0 +1,27 @@
+:root {
+  --d-yellow: 251, 245, 175;
+  --d-blue: 40, 171, 226;
+  --d-green: 12, 166, 78;
+  --d-orange: 240, 121, 74;
+  --d-red: 232, 74, 81;
+  --d-yellow-dark: 197, 193, 140;
+  --d-blue-dark: 39, 137, 178;
+  --d-green-dark: 17, 138, 68;
+  --d-orange-dark: 188, 105, 65;
+  --d-red-dark: 183, 64, 70;
+  --rewind-border-radius: 4px;
+  --rewind-green: #0f0;
+  --rewind-blue: #00f;
+  --rewind-black: #111;
+  --rewind-white: #fff;
+  --rewind-magenta: #f0f;
+  --rewind-grey: #555;
+  --rewind-light-grey: #aaa;
+  --rewind-yellow: rgb(237, 237, 84);
+  --rewind-beige: #fbf8e4;
+}
+
+@mixin rewind-border() {
+  border: 2px solid var(--rewind-green);
+  border-radius: var(--rewind-border-radius);
+}

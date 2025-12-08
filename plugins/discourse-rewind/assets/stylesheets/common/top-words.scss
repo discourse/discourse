@@ -1,0 +1,279 @@
+.--top-words .rewind-report-container {
+  border: none;
+  background-color: transparent;
+  width: 100%;
+  flex-direction: column;
+  margin-bottom: 1em;
+
+  .rewind-report-title {
+    box-sizing: border-box;
+    width: 100%;
+    text-align: center;
+    margin-left: 0;
+    border: none !important;
+    margin-bottom: 1em;
+  }
+}
+
+.cards-container {
+  display: flex;
+
+  @media (width <= 525px) {
+    display: grid;
+    grid-template:
+      ".  .  .  .  w  w  .  .  .  . " auto
+      ".  .  .  .  w  w  .  .  .  . " auto
+      ".  .  a  a  w  w  z  z  .  . " auto
+      ".  .  a  a  w  w  z  z  .  . " auto
+      ".  .  a  a  .  .  z  z  .  . " auto
+      ".  .  a  a  .  .  z  z  .  . " auto
+      ".  .  .  d  d  c  c  .  .  . " auto
+      ".  .  .  d  d  c  c  .  .  . " auto
+      ".  .  .  d  d  c  c  .  .  . " auto
+      ".  .  .  d  d  c  c  .  .  . " auto
+      / auto auto auto auto auto auto auto auto;
+
+    .rewind-card__wrapper:nth-child(1) {
+      grid-area: w;
+    }
+
+    .rewind-card__wrapper:nth-child(2) {
+      grid-area: a;
+    }
+
+    .rewind-card__wrapper:nth-child(3) {
+      grid-area: z;
+    }
+
+    .rewind-card__wrapper:nth-child(4) {
+      grid-area: d;
+    }
+
+    .rewind-card__wrapper:nth-child(5) {
+      grid-area: c;
+    }
+  }
+}
+
+.rewind-card__wrapper {
+  width: 150px;
+  height: 175px;
+  perspective: 1000px;
+  will-change: transform;
+  transform-style: preserve-3d;
+  border-radius: var(--rewind-border-radius);
+  cursor: pointer;
+  animation-name: ambientMovement;
+  animation-duration: 4000ms;
+  animation-delay: calc(-4000ms * var(--rand));
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  transform: rotateZ(calc(var(--ambientAmount) * 10deg));
+  z-index: 1;
+
+  @media screen and (width <= 625px) {
+    width: 115px;
+  }
+
+  @media screen and (width <= 475px) {
+    width: 100px;
+    height: 125px;
+  }
+
+  @media screen and (width <= 350px) {
+    width: 80px;
+    height: 125px;
+  }
+
+  .rewind-card {
+    box-shadow: 0 0 0 4px rgb(var(--mystery-color-light), 1);
+    border: none;
+  }
+
+  .rewind-card__inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transform-style: preserve-3d;
+    transition: transform, box-shadow;
+    transition-duration: 0.35s;
+    transition-timing-function: cubic-bezier(0.73, 0.42, 0.03, 0.78);
+    box-shadow: 0 0 6px 2px rgb(var(--primary-rgb), 0.25);
+
+    @if is-dark-color-scheme() {
+      box-shadow: 0 0 6px 2px rgb(var(--secondary-rgb), 0.9);
+    }
+  }
+
+  &.mouseleave {
+    animation: flip-shrink 0.35s cubic-bezier(0.73, 0.42, 0.03, 0.78) 0s
+      forwards;
+    z-index: 999;
+  }
+
+  &.flipped .rewind-card__inner {
+    transform: rotateY(180deg);
+  }
+
+  &:hover {
+    animation: flip-zoom 0.35s cubic-bezier(0.73, 0.42, 0.03, 0.78) 0s forwards;
+    z-index: 999;
+  }
+
+  &:hover .rewind-card__inner {
+    box-shadow: 0 3px 8px 2px rgb(var(--primary-rgb), 0.25);
+
+    @if is-dark-color-scheme() {
+      box-shadow: 0 3px 8px 2px rgb(var(--primary-rgb), 0.25);
+    }
+  }
+
+  .rewind-card.--front {
+    padding: 0.5em;
+    display: grid;
+    grid-template:
+      "tl .  . " 1fr
+      ".  .  . " 1fr
+      ".  cr . " 3fr
+      ".  .  . " 1fr
+      ".  .  br" 1fr
+      / 1fr 3fr 1fr;
+    background:
+      radial-gradient(
+          circle at 4px 4px,
+          rgb(0 0 0 / 0.05) 1px,
+          var(--rewind-white) 1px,
+          var(--rewind-white) 6px
+        )
+        0 0 / 6px 6px,
+      var(--rewind-white);
+  }
+
+  .rewind-card.--back {
+    transform: rotateY(180deg);
+    background-color: var(--rewind-white);
+    color: var(--rewind-black);
+  }
+
+  .rewind-card.--front,
+  .rewind-card.--back {
+    position: absolute;
+    width: 100%;
+    height: 100%; /* Safari */
+    backface-visibility: hidden;
+  }
+
+  &.--long-word .rewind-card__title {
+    font-size: var(--font-0);
+  }
+
+  &.--long-word .rewind-card {
+    padding: 2px;
+  }
+
+  .rewind-card__title {
+    overflow-wrap: anywhere;
+    hyphens: auto;
+    line-height: 1;
+  }
+
+  .rewind-card__data {
+    margin-top: 0.5em;
+  }
+
+  .rewind-card__image {
+    image-rendering: pixelated;
+  }
+
+  .rewind-card__image.tl {
+    grid-area: tl;
+
+    img {
+      width: 20px;
+      height: 20px;
+
+      @media screen and (width <= 475px) {
+        height: 15px;
+        width: 15px;
+      }
+    }
+  }
+
+  .rewind-card__image.cr {
+    grid-area: cr;
+
+    img {
+      width: 50px;
+      height: 50px;
+
+      @media screen and (width <= 475px) {
+        height: 30px;
+        width: 30px;
+      }
+    }
+  }
+
+  .rewind-card__image.br {
+    grid-area: br;
+
+    img {
+      width: 20px;
+      height: 20px;
+      transform: rotate(180deg);
+
+      @media screen and (width <= 475px) {
+        height: 15px;
+        width: 15px;
+      }
+    }
+  }
+}
+
+@keyframes flip-zoom {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(0.9);
+  }
+
+  100% {
+    transform: scale(1.25);
+  }
+}
+
+@keyframes flip-shrink {
+  0% {
+    transform: scale(1.25);
+  }
+
+  50% {
+    transform: scale(0.9);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes ambientMovement {
+  0% {
+    --ambientAmount: 0.1;
+  }
+
+  50% {
+    --ambientAmount: -0.1;
+  }
+
+  100% {
+    --ambientAmount: 0.1;
+  }
+}
+
+@property --ambientAmount {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0.1;
+}
