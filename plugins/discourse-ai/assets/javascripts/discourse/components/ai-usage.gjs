@@ -26,7 +26,6 @@ import AiCreditBar from "./ai-credit-bar";
 
 export default class AiUsage extends Component {
   @service currentUser;
-  @service store;
 
   @tracked startDate = moment().subtract(30, "days").toDate();
   @tracked endDate = new Date();
@@ -36,36 +35,10 @@ export default class AiUsage extends Component {
   @tracked selectedPeriod = "month";
   @tracked isCustomDateActive = false;
   @tracked loadingData = true;
-  @tracked llmsWithCredits = [];
 
   constructor() {
     super(...arguments);
     this.fetchData();
-    this.fetchLlmsWithCredits();
-  }
-
-  formatResetDate(dateString) {
-    const resetDate = new Date(dateString);
-    const options = {
-      month: "long",
-      day: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-    };
-    return resetDate.toLocaleString(undefined, options);
-  }
-
-  @action
-  async fetchLlmsWithCredits() {
-    try {
-      const llms = await this.store.findAll("ai-llm");
-      this.llmsWithCredits = llms.filter(
-        (llm) => llm.llm_credit_allocation != null
-      );
-    } catch {
-      // Silently fail if LLMs can't be loaded
-      this.llmsWithCredits = [];
-    }
   }
 
   @action
@@ -292,6 +265,69 @@ export default class AiUsage extends Component {
         },
       },
     };
+  }
+
+  get modelsWithCredits() {
+    return (this.data?.models || []).filter((m) => m.credit_allocation);
+  }
+
+  get modelsWithoutCredits() {
+    return (this.data?.models || []).filter((m) => !m.credit_allocation);
+  }
+
+  get featuresTotals() {
+    const features = this.data?.features || [];
+    return {
+      usage_count: features.reduce((sum, f) => sum + (f.usage_count || 0), 0),
+      total_tokens: features.reduce((sum, f) => sum + (f.total_tokens || 0), 0),
+      total_spending: features.reduce(
+        (sum, f) =>
+          sum +
+          (f.input_spending || 0) +
+          (f.cache_read_spending || 0) +
+          (f.cache_write_spending || 0) +
+          (f.output_spending || 0),
+        0
+      ),
+    };
+  }
+
+  get modelsWithoutCreditsTotals() {
+    const models = this.modelsWithoutCredits || [];
+    return {
+      usage_count: models.reduce((sum, m) => sum + (m.usage_count || 0), 0),
+      total_tokens: models.reduce((sum, m) => sum + (m.total_tokens || 0), 0),
+      total_spending: models.reduce(
+        (sum, m) =>
+          sum +
+          (m.input_spending || 0) +
+          (m.cache_read_spending || 0) +
+          (m.cache_write_spending || 0) +
+          (m.output_spending || 0),
+        0
+      ),
+    };
+  }
+
+  get usersTotals() {
+    const users = this.data?.users || [];
+    return {
+      usage_count: users.reduce((sum, u) => sum + (u.usage_count || 0), 0),
+      total_tokens: users.reduce((sum, u) => sum + (u.total_tokens || 0), 0),
+      total_spending: users.reduce(
+        (sum, u) =>
+          sum +
+          (u.input_spending || 0) +
+          (u.cache_read_spending || 0) +
+          (u.cache_write_spending || 0) +
+          (u.output_spending || 0),
+        0
+      ),
+    };
+  }
+
+  formatSpending(value) {
+    return `$${(value || 0).toFixed(2)}`;
   }
 
   get availableFeatures() {
@@ -553,6 +589,18 @@ export default class AiUsage extends Component {
                           </td>
                         </tr>
                       {{/each}}
+                      <tr class="ai-usage__total-row">
+                        <td>{{i18n "discourse_ai.usage.total"}}</td>
+                        <td title={{this.featuresTotals.usage_count}}>{{number
+                            this.featuresTotals.usage_count
+                          }}</td>
+                        <td title={{this.featuresTotals.total_tokens}}>{{number
+                            this.featuresTotals.total_tokens
+                          }}</td>
+                        <td>{{this.formatSpending
+                            this.featuresTotals.total_spending
+                          }}</td>
+                      </tr>
                     </tbody>
                   </table>
                 {{/if}}
@@ -570,7 +618,41 @@ export default class AiUsage extends Component {
                   />
                 {{/unless}}
 
-                {{#if this.data.models.length}}
+                {{#if this.modelsWithCredits.length}}
+                  <table class="ai-usage__models-table">
+                    <thead>
+                      <tr>
+                        <th>{{i18n "discourse_ai.usage.model"}}</th>
+                        <th>{{i18n "discourse_ai.usage.usage_count"}}</th>
+                        <th>{{i18n "discourse_ai.usage.total_tokens"}}</th>
+                        <th>{{i18n "discourse_ai.usage.credits_remaining"}}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {{#each this.modelsWithCredits as |model|}}
+                        <tr class="ai-usage__models-row">
+                          <td class="ai-usage__models-cell">{{model.llm}}</td>
+                          <td
+                            class="ai-usage__models-cell"
+                            title={{model.usage_count}}
+                          >{{number model.usage_count}}</td>
+                          <td
+                            class="ai-usage__models-cell"
+                            title={{model.total_tokens}}
+                          >{{number model.total_tokens}}</td>
+                          <td class="ai-usage__models-credit-bar">
+                            <AiCreditBar
+                              @allocation={{model.credit_allocation}}
+                              @compact={{true}}
+                            />
+                          </td>
+                        </tr>
+                      {{/each}}
+                    </tbody>
+                  </table>
+                {{/if}}
+
+                {{#if this.modelsWithoutCredits.length}}
                   <table class="ai-usage__models-table">
                     <thead>
                       <tr>
@@ -578,11 +660,10 @@ export default class AiUsage extends Component {
                         <th>{{i18n "discourse_ai.usage.usage_count"}}</th>
                         <th>{{i18n "discourse_ai.usage.total_tokens"}}</th>
                         <th>{{i18n "discourse_ai.usage.total_spending"}}</th>
-
                       </tr>
                     </thead>
                     <tbody>
-                      {{#each this.data.models as |model|}}
+                      {{#each this.modelsWithoutCredits as |model|}}
                         <tr class="ai-usage__models-row">
                           <td class="ai-usage__models-cell">{{model.llm}}</td>
                           <td
@@ -603,6 +684,22 @@ export default class AiUsage extends Component {
                           </td>
                         </tr>
                       {{/each}}
+                      <tr class="ai-usage__total-row">
+                        <td>{{i18n "discourse_ai.usage.total"}}</td>
+                        <td
+                          title={{this.modelsWithoutCreditsTotals.usage_count}}
+                        >{{number
+                            this.modelsWithoutCreditsTotals.usage_count
+                          }}</td>
+                        <td
+                          title={{this.modelsWithoutCreditsTotals.total_tokens}}
+                        >{{number
+                            this.modelsWithoutCreditsTotals.total_tokens
+                          }}</td>
+                        <td>{{this.formatSpending
+                            this.modelsWithoutCreditsTotals.total_spending
+                          }}</td>
+                      </tr>
                     </tbody>
                   </table>
                 {{/if}}
@@ -673,6 +770,20 @@ export default class AiUsage extends Component {
                             </td>
                           </tr>
                         {{/each}}
+                        {{#unless (gt this.data.users.length 24)}}
+                          <tr class="ai-usage__total-row">
+                            <td>{{i18n "discourse_ai.usage.total"}}</td>
+                            <td title={{this.usersTotals.usage_count}}>{{number
+                                this.usersTotals.usage_count
+                              }}</td>
+                            <td title={{this.usersTotals.total_tokens}}>{{number
+                                this.usersTotals.total_tokens
+                              }}</td>
+                            <td>{{this.formatSpending
+                                this.usersTotals.total_spending
+                              }}</td>
+                          </tr>
+                        {{/unless}}
                       </tbody>
                     </table>
 
@@ -725,6 +836,18 @@ export default class AiUsage extends Component {
                               </td>
                             </tr>
                           {{/each}}
+                          <tr class="ai-usage__total-row">
+                            <td>{{i18n "discourse_ai.usage.total"}}</td>
+                            <td title={{this.usersTotals.usage_count}}>{{number
+                                this.usersTotals.usage_count
+                              }}</td>
+                            <td title={{this.usersTotals.total_tokens}}>{{number
+                                this.usersTotals.total_tokens
+                              }}</td>
+                            <td>{{this.formatSpending
+                                this.usersTotals.total_spending
+                              }}</td>
+                          </tr>
                         </tbody>
                       </table>
                     {{/if}}
@@ -733,33 +856,6 @@ export default class AiUsage extends Component {
               </:content>
             </AdminConfigAreaCard>
           </div>
-
-          {{#if this.llmsWithCredits.length}}
-            <AdminConfigAreaCard
-              class="ai-usage__credit-allocations"
-              @heading="discourse_ai.usage.credit_allocations"
-            >
-              <:content>
-                {{#each this.llmsWithCredits as |llm|}}
-                  <div class="ai-usage__credit-model">
-                    <h4>{{llm.display_name}}</h4>
-                    <AiCreditBar
-                      @allocation={{llm.llm_credit_allocation}}
-                      @showTooltip={{false}}
-                    />
-                    <div class="ai-usage__credit-details">
-                      <span>{{i18n
-                          "discourse_ai.llms.credit_allocation.next_reset"
-                          time=(this.formatResetDate
-                            llm.llm_credit_allocation.next_reset_at
-                          )
-                        }}</span>
-                    </div>
-                  </div>
-                {{/each}}
-              </:content>
-            </AdminConfigAreaCard>
-          {{/if}}
         </ConditionalLoadingSpinner>
       </div>
     </div>

@@ -47,6 +47,14 @@ export default class AiUsage extends Component {
 
   @action
   setupMatrix(element) {
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    if (prefersReducedMotion) {
+      return;
+    }
+
     const canvas = element;
     const ctx = canvas.getContext("2d");
 

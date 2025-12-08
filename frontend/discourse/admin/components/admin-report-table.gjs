@@ -194,21 +194,19 @@ export default class AdminReportTable extends Component {
     <table class="table">
       <thead>
         <tr>
-          {{#if this.model.computedLabels}}
-            {{#each this.model.computedLabels as |label|}}
-              <AdminReportTableHeader
-                @showSortingUI={{this.showSortingUI}}
-                @currentSortDirection={{this.sortDirection}}
-                @currentSortLabel={{this.sortLabel}}
-                @label={{label}}
-                @sortByLabel={{fn this.sortByLabel label}}
-              />
-            {{/each}}
+          {{#each this.model.computedLabels as |label|}}
+            <AdminReportTableHeader
+              @showSortingUI={{this.showSortingUI}}
+              @currentSortDirection={{this.sortDirection}}
+              @currentSortLabel={{this.sortLabel}}
+              @label={{label}}
+              @sortByLabel={{fn this.sortByLabel label}}
+            />
           {{else}}
             {{#each this.model.data as |data|}}
               <th>{{data.x}}</th>
             {{/each}}
-          {{/if}}
+          {{/each}}
         </tr>
       </thead>
       <tbody>

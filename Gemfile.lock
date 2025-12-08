@@ -674,7 +674,7 @@ GEM
     tiktoken_ruby (0.0.11.1-x86_64-darwin)
     tiktoken_ruby (0.0.11.1-x86_64-linux)
     tiktoken_ruby (0.0.11.1-x86_64-linux-musl)
-    timeout (0.4.4)
+    timeout (0.5.0)
     tokenizers (0.5.5)
       rb_sys
     tokenizers (0.5.5-aarch64-linux)
@@ -713,7 +713,7 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yaml-lint (0.1.2)
-    yard (0.9.37)
+    yard (0.9.38)
     zeitwerk (2.7.3)
     zendesk_api (1.38.0.rc1)
       faraday (> 2.0.0)
@@ -1220,7 +1220,7 @@ CHECKSUMS
   tiktoken_ruby (0.0.11.1-x86_64-darwin) sha256=554c84d14e66a7cef277b00ec26ce6c201d6b94d223f8d71397b1287cda11d78
   tiktoken_ruby (0.0.11.1-x86_64-linux) sha256=ab56c936876c2ccba41fd8dc6588097e6555345ad0bdf5f4204be771a3637618
   tiktoken_ruby (0.0.11.1-x86_64-linux-musl) sha256=fd52104cbeb14471136f8519a07eef457ca84d01693bfb9b92b150a1fb3f42f6
-  timeout (0.4.4) sha256=f0f6f970104b82427cd990680f539b6bbb8b1e55efa913a55c6492935e4e0edb
+  timeout (0.5.0) sha256=852aefd13f41d84c2d0d83099b275034c6517395884b58e635acc8847c9190cb
   tokenizers (0.5.5) sha256=7bf1600567a3f253ec3f24da51af338437ecd1c638874122a9c57ea1724f4d92
   tokenizers (0.5.5-aarch64-linux) sha256=55ac300cdcefcb4dccbe5b1577920d3ab47dab404c4e70a442aa5c97f084790d
   tokenizers (0.5.5-aarch64-linux-musl) sha256=ddd23414ef60e15860a1ec804496ff053aa817956036594923a086c2897c492a
@@ -1246,7 +1246,7 @@ CHECKSUMS
   webrick (1.9.2) sha256=beb4a15fc474defed24a3bda4ffd88a490d517c9e4e6118c3edce59e45864131
   xpath (3.2.0) sha256=6dfda79d91bb3b949b947ecc5919f042ef2f399b904013eb3ef6d20dd3a4082e
   yaml-lint (0.1.2) sha256=e3960b171766ae187338a169815e99fe10fcb0d9c22b1c539e8d57e114324c8a
-  yard (0.9.37) sha256=a6e910399e78e613f80ba9add9ba7c394b1a935f083cccbef82903a3d2a26992
+  yard (0.9.38) sha256=721fb82afb10532aa49860655f6cc2eaa7130889df291b052e1e6b268283010f
   zeitwerk (2.7.3) sha256=b2e86b4a9b57d26ba68a15230dcc7fe6f040f06831ce64417b0621ad96ba3e85
   zendesk_api (1.38.0.rc1) sha256=9ebe2575d223ed1c0651b2d10df6c010141cda49d524c38532b472f7e8bb3f7a
 

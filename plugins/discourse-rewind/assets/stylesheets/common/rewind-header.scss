@@ -76,16 +76,28 @@
   }
 }
 
-.rewind-notification-active #toggle-current-user::after {
-  width: 48px;
-  height: 48px;
-  position: absolute;
-  left: -4px;
-  top: -4px;
-  content: "";
-  background-image: absolute-image-url(
-    "/plugins/discourse-rewind/images/rewind-avatar-2-shimmer.gif"
-  );
-  display: block;
-  background-size: cover;
+.rewind-notification-active {
+  #toggle-current-user::after {
+    width: 48px;
+    height: 48px;
+    position: absolute;
+    left: -4px;
+    top: -4px;
+    content: "";
+    background-image: absolute-image-url(
+      "/plugins/discourse-rewind/images/rewind-avatar-shimmer.gif"
+    );
+    display: block;
+    background-size: cover;
+
+    @media (prefers-reduced-motion: reduce) {
+      background-image: absolute-image-url(
+        "/plugins/discourse-rewind/images/rewind-avatar-static.png"
+      );
+    }
+  }
+
+  .d-header-icons .badge-notification {
+    z-index: 1; // put badges above the avatar shimmer gif
+  }
 }

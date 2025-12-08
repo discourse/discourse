@@ -22,6 +22,10 @@
     width: 100%;
     height: 100%;
     opacity: 0.3;
+
+    @media (prefers-reduced-motion: reduce) {
+      display: none;
+    }
   }
 
   .matrix-content {

@@ -5213,6 +5213,8 @@ es:
         enabled_for_options:
           everyone: "Todos"
           staff: "Solo personal"
+        statuses:
+          experimental: "Experimental"
         impact_roles:
           admins: "Administradores"
           moderators: "Moderadores"
@@ -5223,6 +5225,7 @@ es:
           disabled: "Desactivado"
           impact_type_feature: "Característica"
           impact_type_other: "Otros"
+          status_experimental: "Experimental"
       config:
         about:
           title: "Acerca de tu sitio"
