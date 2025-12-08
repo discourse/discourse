@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { concat } from "@ember/helper";
+import { concat, get } from "@ember/helper";
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import replaceEmoji from "discourse/helpers/replace-emoji";
@@ -14,6 +14,11 @@ export default class Reactions extends Component {
 
   get receivedReactions() {
     return this.args.report.data.post_received_reactions ?? {};
+  }
+
+  get sortedUsedReactions() {
+    const reactions = this.args.report.data.post_used_reactions ?? {};
+    return Object.entries(reactions).sort((a, b) => b[1] - a[1]);
   }
 
   @action
@@ -54,19 +59,21 @@ export default class Reactions extends Component {
       </h2>
       <div class="rewind-card">
         <div class="rewind-reactions-chart">
-          {{#each-in @report.data.post_used_reactions as |emojiName count|}}
+          {{#each this.sortedUsedReactions as |reaction|}}
             <div class="rewind-reactions-row">
               <span class="emoji">
-                {{replaceEmoji (concat ":" emojiName ":")}}
+                {{replaceEmoji (concat ":" (get reaction "0") ":")}}
               </span>
-              <span class="percentage">{{this.computePercentage count}}</span>
+              <span class="percentage">{{this.computePercentage
+                  (get reaction "1")
+                }}</span>
               <div
                 class="rewind-reactions-bar"
-                style={{this.computePercentageStyle count}}
-                title={{count}}
+                style={{this.computePercentageStyle (get reaction "1")}}
+                title={{get reaction "1"}}
               ></div>
             </div>
-          {{/each-in}}
+          {{/each}}
 
           <span class="rewind-total-reactions">
             {{i18n
