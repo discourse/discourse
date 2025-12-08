@@ -10,6 +10,8 @@ class FinishInstallationController < ApplicationController
   before_action :ensure_no_admins, except: %w[confirm_email resend_email]
 
   def index
+    @setting_up_discourse_id = ENV["DISCOURSE_SKIP_EMAIL_SETUP"] == "1"
+    @allowed_emails = find_allowed_emails
   end
 
   def register

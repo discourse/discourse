@@ -10,6 +10,10 @@
       <%= t 'finish_installation.register.button' %>
     <% end %>
 
+    <% if @setting_up_discourse_id %>
+      <p>Setting up Discourse ID for you...</p>
+      <p><%= @allowed_emails.join(", ") %></p>
+    <% end %>
   </div>
 
   <div class='row finish-installation-image'>

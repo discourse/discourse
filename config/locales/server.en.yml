@@ -5514,6 +5514,8 @@ en:
     resend_email:
       title: "Resend Activation Email"
       message: "<p>We've re-sent the activation email to <b>%{email}</b>"
+    discourse_id:
+      help: "We are now setting up Discourse ID for you."
 
   safe_mode:
     title: "Enter safe mode"
