@@ -238,4 +238,79 @@ RSpec.describe DiscourseAi::Completions::Report do
       expect(period_data.total_cache_write_tokens).to eq(1000)
     end
   end
+
+  describe "#filter_by_model" do
+    it "filters by seeded models with negative IDs" do
+      seeded_model = Fabricate(:seeded_model)
+
+      AiApiRequestStat.create!(
+        provider_id: AiApiAuditLog::Provider::Anthropic,
+        user_id: user.id,
+        llm_id: seeded_model.id,
+        language_model: seeded_model.name,
+        request_tokens: 500,
+        response_tokens: 250,
+        created_at: 1.day.ago,
+      )
+
+      AiApiRequestStat.create!(
+        provider_id: AiApiAuditLog::Provider::Anthropic,
+        user_id: user.id,
+        llm_id: claude_model.id,
+        language_model: claude_model.name,
+        request_tokens: 1000,
+        response_tokens: 500,
+        created_at: 1.day.ago,
+      )
+
+      report =
+        described_class.new(start_date: 2.days.ago, end_date: Time.current).filter_by_model(
+          seeded_model.id,
+        )
+
+      expect(report.total_requests).to eq(1)
+      expect(report.total_request_tokens).to eq(500)
+      expect(report.total_response_tokens).to eq(250)
+    end
+
+    it "filters by regular models with positive IDs" do
+      AiApiRequestStat.create!(
+        provider_id: AiApiAuditLog::Provider::Anthropic,
+        user_id: user.id,
+        llm_id: claude_model.id,
+        language_model: claude_model.name,
+        request_tokens: 1000,
+        response_tokens: 500,
+        created_at: 1.day.ago,
+      )
+
+      report =
+        described_class.new(start_date: 2.days.ago, end_date: Time.current).filter_by_model(
+          claude_model.id,
+        )
+
+      expect(report.total_requests).to eq(1)
+      expect(report.total_request_tokens).to eq(1000)
+    end
+
+    it "filters by language_model string for legacy stats" do
+      AiApiRequestStat.create!(
+        provider_id: AiApiAuditLog::Provider::Anthropic,
+        user_id: user.id,
+        llm_id: nil,
+        language_model: "legacy-model-name",
+        request_tokens: 2000,
+        response_tokens: 1000,
+        created_at: 1.day.ago,
+      )
+
+      report =
+        described_class.new(start_date: 2.days.ago, end_date: Time.current).filter_by_model(
+          "legacy-model-name",
+        )
+
+      expect(report.total_requests).to eq(1)
+      expect(report.total_request_tokens).to eq(2000)
+    end
+  end
 end
