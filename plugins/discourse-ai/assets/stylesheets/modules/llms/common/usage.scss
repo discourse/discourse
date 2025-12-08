@@ -176,28 +176,14 @@
     width: 100%;
   }
 
-  &__credit-allocations {
-    margin-top: 2em;
-    grid-column: span 2;
-  }
-
-  &__credit-model {
-    padding: 1em;
+  &__models-credit-bar {
+    padding: var(--space-2);
     border-bottom: 1px solid var(--primary-low);
-
-    &:last-child {
-      border-bottom: none;
-    }
-
-    h4 {
-      margin: 0 0 0.5em 0;
-      font-size: var(--font-0);
-    }
+    min-width: 120px;
+    max-width: 200px;
   }
 
-  &__credit-details {
-    margin-top: 0.5em;
-    font-size: var(--font-down-1);
-    color: var(--primary-medium);
+  &__models-table + &__models-table {
+    margin-top: var(--space-6);
   }
 }
