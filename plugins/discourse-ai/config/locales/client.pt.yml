@@ -152,6 +152,7 @@ pt:
         last_seven_days: "Últimos 7 Dias"
         enable: "Ativar"
         test_modal:
+          llm: "LLM"
           spam: "Spam"
       usage:
         summary: "Resumo"

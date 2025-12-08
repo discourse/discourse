@@ -10,6 +10,7 @@ hu:
       logs:
         staff_actions:
           actions:
+            update_automation: automatizálás frissítése
             delete_automation: automatizálás törlése
     discourse_automation:
       title: Automatizálás

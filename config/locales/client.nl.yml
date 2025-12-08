@@ -5214,6 +5214,8 @@ nl:
         enabled_for_options:
           everyone: "Iedereen"
           staff: "Alleen medewerkers"
+        statuses:
+          experimental: "Experimenteel"
         impact_roles:
           admins: "Beheerders"
           moderators: "Moderators"
@@ -5224,6 +5226,7 @@ nl:
           disabled: "Uitgeschakeld"
           impact_type_feature: "Functie"
           impact_type_other: "Anders"
+          status_experimental: "Experimenteel"
       config:
         about:
           title: "Over je site"

@@ -5384,6 +5384,7 @@ ug:
             one: "گۇرۇپپا %{groupNames}"
             other: "گۇرۇپپا %{groupNames}"
         statuses:
+          experimental: "تەجرىبە"
           alpha: "ئالفا"
           beta: "سىناق"
           stable: "مۇقىم"
@@ -5403,6 +5404,7 @@ ug:
           impact_type_feature: "ئىقتىدار"
           impact_type_other: "باشقا"
           status_all: "بارلىق ھالەت"
+          status_experimental: "تەجرىبە"
           status_alpha: "ئالفا"
           status_beta: "سىناق"
           status_stable: "مۇقىم"

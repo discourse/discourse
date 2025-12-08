@@ -10,6 +10,7 @@ ur:
       logs:
         staff_actions:
           actions:
+            update_automation: آٹومیشن کو اپ ڈیٹ کریں۔
             delete_automation: آٹومیشن کو حذف کریں
     discourse_automation:
       title: آٹومیشن

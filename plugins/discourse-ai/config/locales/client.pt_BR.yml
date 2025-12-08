@@ -317,6 +317,8 @@ pt_BR:
           post_url_label: "Postar URL ou ID"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 ou ID da postagem"
           result: "Resultado"
+          llm: "LLM"
+          system_prompt: "Prompt do sistema"
           scan_log: "Registro de verificação"
           run: "Executar teste"
           spam: "Spam"
