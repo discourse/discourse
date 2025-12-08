@@ -43,8 +43,6 @@ $sidebar-width: 17em;
 }
 
 #main-outlet-wrapper {
-  padding: 0;
-
   body.has-sidebar-page & {
     .sidebar-wrapper {
       width: var(--d-sidebar-width);
