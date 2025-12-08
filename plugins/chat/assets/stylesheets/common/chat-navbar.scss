@@ -62,6 +62,25 @@
   align-items: center;
 }
 
+.c-navbar__star-channel-button {
+  height: var(--chat-header-offset);
+  color: var(--primary-medium);
+
+  &:hover,
+  &:focus {
+    color: var(--primary);
+  }
+
+  &.--starred {
+    color: var(--tertiary);
+
+    &:hover,
+    &:focus {
+      color: var(--tertiary-hover);
+    }
+  }
+}
+
 .c-navbar__title {
   display: flex;
   align-items: center;

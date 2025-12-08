@@ -6,10 +6,9 @@ import icons from "../components/sections/atoms/04-icons";
 import forms from "../components/sections/atoms/05-forms";
 import spinners from "../components/sections/atoms/06-spinners";
 import otp from "../components/sections/atoms/07-otp";
-import dateTimeInputs from "../components/sections/atoms/date-time-inputs";
-import dropdowns from "../components/sections/atoms/dropdowns";
-import topicLink from "../components/sections/atoms/topic-link";
-import topicStatuses from "../components/sections/atoms/topic-statuses";
+import dateTimeInputs from "../components/sections/atoms/08-date-time-inputs";
+import dropdowns from "../components/sections/atoms/09-dropdowns";
+import topicLink from "../components/sections/atoms/10-topic-link-status";
 import breadCrumbs from "../components/sections/molecules/bread-crumbs";
 import categories from "../components/sections/molecules/categories";
 import charCounter from "../components/sections/molecules/char-counter";
@@ -38,7 +37,6 @@ import modal from "../components/sections/organisms/modal";
 import moreTopics from "../components/sections/organisms/more-topics";
 import navigation from "../components/sections/organisms/navigation";
 import siteHeader from "../components/sections/organisms/site-header";
-import userAbout from "../components/sections/organisms/user-about";
 import bem from "../components/sections/syntax/00-bem";
 
 let _allCategories = null;
@@ -64,7 +62,6 @@ const SECTIONS = [
   { component: dateTimeInputs, category: "atoms", id: "date-time-inputs" },
   { component: dropdowns, category: "atoms", id: "dropdowns" },
   { component: topicLink, category: "atoms", id: "topic-link" },
-  { component: topicStatuses, category: "atoms", id: "topic-statuses" },
   { component: breadCrumbs, category: "molecules", id: "bread-crumbs" },
   { component: categories, category: "molecules", id: "categories" },
   { component: charCounter, category: "molecules", id: "char-counter" },
@@ -111,7 +108,6 @@ const SECTIONS = [
   { component: navigation, category: "organisms", id: "navigation" },
   { component: siteHeader, category: "organisms", id: "site-header" },
   { component: moreTopics, category: "organisms", id: "more-topics" },
-  { component: userAbout, category: "organisms", id: "user-about" },
 ];
 
 export function addSection(section) {

@@ -2,6 +2,8 @@ en:
   site_settings:
     discourse_automation_enabled: "Enable discourse-automation plugin"
   discourse_automation:
+    staff_action_logs:
+      empty_value: "(empty)"
     models:
       automations:
         validations:

@@ -22,10 +22,9 @@ export default {
     const chatChannelsManager = container.lookup(
       "service:chat-channels-manager"
     );
-    const siteSettings = container.lookup("service:site-settings");
 
     const openQuickChannelSelector = (e) => {
-      if (isInputSelection(event.target) && !isChatComposer(event.target)) {
+      if (isInputSelection(e.target) && !isChatComposer(e.target)) {
         return;
       }
       e.preventDefault();
@@ -104,10 +103,7 @@ export default {
 
     const closeChat = (event) => {
       // when escaping from lightbox, do not close chat
-      const lightboxClass = siteSettings.experimental_lightbox
-        ? "lightbox"
-        : "mfp-wrap";
-      if (event.srcElement?.classList?.value?.includes(lightboxClass)) {
+      if (event.srcElement?.classList?.value?.includes("lightbox")) {
         return;
       }
 

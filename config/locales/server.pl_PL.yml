@@ -2629,7 +2629,6 @@ pl_PL:
     experimental_auto_grid_images: "Automatycznie zawija obrazy w tagi [grid], gdy w kompozytorze zostanie przesłane 3 lub więcej obrazów."
     experimental_impersonation: "Podszywaj się pod użytkownika bez konieczności wylogowywania się z konta administratora."
     experimental_impersonation_time_limit_minutes: "Jak długo musi upłynąć, zanim sesja podszywania się zostanie automatycznie zakończona."
-    experimental_lightbox: "Użyj PhotoSwipe, aby dodać lightbox do większych obrazów."
     page_loading_indicator: "Skonfiguruj wskaźnik ładowania, który pojawia się podczas nawigacji po stronie w Discourse. \"Spinner\" to wskaźnik na pełnym ekranie. \"Slider\" wyświetla wąski pasek u góry ekranu."
     show_user_menu_avatars: "Pokaż awatary użytkowników w menu użytkownika"
     about_page_hidden_groups: "Nie pokazuj członków określonych grup na stronie /about."
@@ -5340,6 +5339,13 @@ pl_PL:
       review_by: "Recenzja przez"
       pr_summary: "%{commits} commity zmodyfikowały %{changed_files} pliki z %{additions} dodaniami i %{deletions} usunięciami"
       no_description: "Przyczyń się do rozwoju %{repo}, tworząc konto na GitHub."
+      pr_title:
+        default: "Pull request"
+        draft: "Projekt pull request"
+        open: "Otwórz pull request"
+        approved: "Zatwierdzony pull request"
+        merged: "Scalony pull request"
+        closed: "Zamknięty pull request"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} wspomina o tobie w "%{topic}" - %{site_title}'
@@ -5388,7 +5394,7 @@ pl_PL:
     upcoming_changes:
       log_manually_toggled: "Przełączanie ręczne przez użytkownika"
       log_promoted: >
-        Ta nadchodząca zmiana została automatycznie włączona, ponieważ osiągnęła status „%{change_status}”, który jest równy lub wyższy od zdefiniowanego statusu promocji „%{promotion_status_threshold}” na Twojej stronie. Więcej szczegółów znajdziesz na stronie „ <a href="%{base_url}/admin/config/upcoming-changes">nadchodzących zmian</a> ”.
+        Ta nadchodząca zmiana osiągnęła status „%{change_status}”, więc została automatycznie włączona w Twojej witrynie. Więcej szczegółów znajdziesz na stronie „ <a href="%{base_path}/admin/config/upcoming-changes">nadchodzących zmian</a> ”.
   reviewables:
     already_handled: "Dziękujemy, ale już przejrzeliśmy ten post i ustaliliśmy, że nie trzeba go ponownie oznaczać."
     already_handled_and_user_not_exist: "Dzięki, ale ktoś już to przejrzał i ten użytkownik już nie istnieje."

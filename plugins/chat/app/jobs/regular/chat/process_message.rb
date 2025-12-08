@@ -31,6 +31,9 @@ module Jobs
           # we dont process mentions when creating/updating message so we always have to do it
           chat_message.upsert_mentions
 
+          # extract external links for webhook-based rebaking
+          ::Chat::MessageLink.extract_from(chat_message)
+
           # notifier should be idempotent and not re-notify
           if args[:edit_timestamp]
             ::Chat::Notifier.new(chat_message, args[:edit_timestamp]).notify_edit

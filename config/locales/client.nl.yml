@@ -3198,6 +3198,9 @@ nl:
         reset_bump_dates: "Omhoogplaatsingsdatums resetten"
         defer: "Markeren als ongelezen"
         delete: "Topics verwijderen"
+        delete_topics_count:
+          one: "Topic verwijderen"
+          other: "Topics verwijderen"
         dismiss: "Negeren"
         dismiss_read: "Alle ongelezen negeren"
         dismiss_read_with_selected:
@@ -5211,6 +5214,8 @@ nl:
         enabled_for_options:
           everyone: "Iedereen"
           staff: "Alleen medewerkers"
+        statuses:
+          experimental: "Experimenteel"
         impact_roles:
           admins: "Beheerders"
           moderators: "Moderators"
@@ -5221,6 +5226,7 @@ nl:
           disabled: "Uitgeschakeld"
           impact_type_feature: "Functie"
           impact_type_other: "Anders"
+          status_experimental: "Experimenteel"
       config:
         about:
           title: "Over je site"

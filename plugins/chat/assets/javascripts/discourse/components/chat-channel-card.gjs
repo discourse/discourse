@@ -8,7 +8,7 @@ import { gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ToggleChannelMembershipButton from "./toggle-channel-membership-button";
 
-const ChatChannelCard = <template>
+<template>
   {{#if @channel}}
     <div
       class={{concatClass
@@ -84,6 +84,4 @@ const ChatChannelCard = <template>
       {{/if}}
     </div>
   {{/if}}
-</template>;
-
-export default ChatChannelCard;
+</template>

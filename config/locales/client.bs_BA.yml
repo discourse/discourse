@@ -1946,6 +1946,10 @@ bs_BA:
         unlist_topics: "Skini teme sa liste"
         relist_topics: "Listaj teme"
         delete: "Obriši teme"
+        delete_topics_count:
+          one: "Obriši temu"
+          few: "Obriši teme"
+          other: "Obriši teme"
         dismiss: "Odbaci"
         dismiss_read: "Odbaci sve nepročitane"
         dismiss_button: "Odbaci..."

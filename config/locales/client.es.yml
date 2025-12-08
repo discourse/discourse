@@ -3197,6 +3197,9 @@ es:
         reset_bump_dates: "Restablecer fechas de reflote"
         defer: "Marcar como no leído"
         delete: "Eliminar temas"
+        delete_topics_count:
+          one: "Eliminar tema"
+          other: "Eliminar temas"
         dismiss: "Descartar"
         dismiss_read: "Descartar todos los temas sin leer"
         dismiss_read_with_selected:
@@ -5210,6 +5213,8 @@ es:
         enabled_for_options:
           everyone: "Todos"
           staff: "Solo personal"
+        statuses:
+          experimental: "Experimental"
         impact_roles:
           admins: "Administradores"
           moderators: "Moderadores"
@@ -5220,6 +5225,7 @@ es:
           disabled: "Desactivado"
           impact_type_feature: "Característica"
           impact_type_other: "Otros"
+          status_experimental: "Experimental"
       config:
         about:
           title: "Acerca de tu sitio"

@@ -370,7 +370,7 @@ en:
             title: "Translates this post to all supported languages"
             confirm: "This will update any existing translations on this post. Are you sure?"
             success: "Post has been sent for translation"
-        credit_limit_warning: "Translations are paused due to credit limits. They will resume when credits reset %{reset_time}."
+        credit_limit_warning: "Translations are paused due to credit limits. They will resume when credits reset at %{reset_time}."
         credit_limit_warning_no_time: "Translations are paused due to credit limits. They will resume when credits reset."
 
       spam:
@@ -398,6 +398,11 @@ en:
           post_url_label: "Post URL or ID"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 or post ID"
           result: "Result"
+          reason: "Reasoning"
+          llm: "LLM"
+          scan_history: "Scan History"
+          sent_message: "Sent Message"
+          system_prompt: "System Prompt"
           scan_log: "Scan log"
           run: "Run test"
           spam: "Spam"
@@ -420,6 +425,7 @@ en:
         feature: "Feature"
         usage_count: "Usage count"
         model: "Model"
+        credits_remaining: "Credits remaining"
         models_breakdown: "Usage per model"
         users_breakdown: "Usage per user"
         all_features: "All features"
@@ -437,6 +443,7 @@ en:
         no_users: "No user usage data found"
         no_models: "No model usage data found"
         no_features: "No feature usage data found"
+        total: "Total"
         subheader_description: "Tokens are the basic units that LLMs use to understand and generate text, usage data may affect costs"
         stat_tooltips:
           total_requests: "All requests made to LLMs through Discourse"
@@ -839,8 +846,8 @@ en:
       errors:
         credit_limit_dialog:
           title: "AI credit limit reached"
-          message_user: "You have reached  the AI credit limit for your plan. Responses will be unavailable until your limit resets at %{reset_time}. Please contact your site administrator for more information."
-          message_without_time_user: "You have reached the AI credit limit for your plan. Responses will be unavailable until your limit resets. Please contact your site administrator for more information."
+          message_user: "This community has reached its AI credit limit for today. Please try again after %{reset_time} or contact your site administrator for more information."
+          message_without_time_user: "This community has reached its AI credit limit for today. Responses will be unavailable until your limit resets. Please contact your site administrator for more information."
           message_admin: "You have reached the AI credit limit for your plan. Responses will be unavailable until your limit resets at %{reset_time}."
           message_without_time_admin: "You have reached the AI credit limit for your plan. Responses will be unavailable until your limit resets."
 
@@ -926,6 +933,7 @@ en:
         llm: "Model"
         pm_warning: "AI chatbot messages are monitored regularly by moderators."
         cancel_streaming: "Stop reply"
+        try_again: "Try again"
         default_pm_prefix: "[Untitled AI bot PM]"
         shortcut_title: "Start a PM with an AI bot"
         shortcut_link: "AI bot"

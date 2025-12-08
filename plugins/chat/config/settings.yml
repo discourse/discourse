@@ -153,3 +153,10 @@ chat:
     validator: "Chat::AllowChatInAnonymousModeValidator"
     depends_on:
       - "allow_anonymous_mode"
+  star_chat_channels:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"

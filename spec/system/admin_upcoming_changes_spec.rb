@@ -11,7 +11,7 @@ describe "Admin upcoming changes", type: :system do
       {
         enable_upload_debug_mode: {
           impact: "other,developers",
-          status: :pre_alpha,
+          status: :experimental,
           impact_type: "other",
           impact_role: "developers",
         },
