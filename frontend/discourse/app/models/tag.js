@@ -10,14 +10,14 @@ export default class Tag extends RestModel {
     return pmCount ? count + pmCount : count;
   }
 
-  @discourseComputed("id")
-  searchContext(id) {
+  @discourseComputed("id", "name")
+  searchContext(id, name) {
     return {
       type: "tag",
       id,
       /** @type Tag */
       tag: this,
-      name: id,
+      name,
     };
   }
 }

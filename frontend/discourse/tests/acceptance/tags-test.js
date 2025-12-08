@@ -15,7 +15,7 @@ acceptance("Tags", function (needs) {
   needs.pretender((server, helper) => {
     server.get("/tag/test/notifications", () =>
       helper.response({
-        tag_notification: { id: "test", notification_level: 2 },
+        tag_notification: { id: 42, name: "test", notification_level: 2 },
       })
     );
 
@@ -130,7 +130,7 @@ acceptance("Tags listed by group", function (needs) {
   needs.pretender((server, helper) => {
     server.get("/tag/regular-tag/notifications", () =>
       helper.response({
-        tag_notification: { id: "regular-tag", notification_level: 1 },
+        tag_notification: { id: 1, name: "regular-tag", notification_level: 1 },
       })
     );
 
@@ -158,7 +158,11 @@ acceptance("Tags listed by group", function (needs) {
 
     server.get("/tag/staff-only-tag/notifications", () =>
       helper.response({
-        tag_notification: { id: "staff-only-tag", notification_level: 1 },
+        tag_notification: {
+          id: 1,
+          name: "staff-only-tag",
+          notification_level: 1,
+        },
       })
     );
 
@@ -256,7 +260,8 @@ acceptance("Tag info", function (needs) {
     server.get("/tag/:tag_name/notifications", (request) => {
       return helper.response({
         tag_notification: {
-          id: request.params.tag_name,
+          id: 1,
+          name: request.params.tag_name,
           notification_level: 1,
         },
       });
@@ -644,7 +649,8 @@ acceptance("Tag show - create topic", function (needs) {
     server.get("/tag/:tag_name/notifications", (request) => {
       return helper.response({
         tag_notification: {
-          id: request.params.tag_name,
+          id: 1,
+          name: request.params.tag_name,
           notification_level: 1,
         },
       });

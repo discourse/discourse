@@ -79,7 +79,7 @@ export default class AccessibleDiscoveryHeading extends Component {
 
     const params = {
       category: category?.name,
-      tag: tag?.id,
+      tag: tag?.name,
       filter: key,
     };
 

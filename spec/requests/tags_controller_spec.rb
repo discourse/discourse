@@ -164,9 +164,10 @@ RSpec.describe TagsController do
 
         it "hides pm tags" do
           get "/tags.json"
-          tags = response.parsed_body["tags"]
-          expect(tags.length).to eq(1)
-          expect(tags[0]["id"]).to eq(topic_tag.name)
+
+          expect(response.parsed_body["tags"]).to match(
+            [include("name" => topic_tag.name, :id => topic_tag.id)],
+          )
         end
       end
     end
@@ -185,8 +186,12 @@ RSpec.describe TagsController do
         expect(tags.length).to eq(0)
         group = response.parsed_body.dig("extras", "tag_groups")&.first
         expect(group).to be_present
-        expect(group["tags"].length).to eq(2)
-        expect(group["tags"].map { |t| t["id"] }).to contain_exactly(test_tag.name, topic_tag.name)
+        expect(group["tags"]).to match(
+          [
+            include(name: test_tag.name, id: test_tag.id),
+            include(name: topic_tag.name, id: topic_tag.id),
+          ],
+        )
       end
 
       it "does not result in N+1 queries with multiple tag_groups" do
@@ -1010,21 +1015,27 @@ RSpec.describe TagsController do
 
     context "with tagging enabled" do
       it "can return some tags" do
-        tag_names = %w[stuff stinky stumped]
-        tag_names.each { |name| Fabricate(:tag, name: name) }
+        stuff = Fabricate(:tag, name: "stuff")
+        stumped = Fabricate(:tag, name: "stumped")
+        Fabricate(:tag, name: "stinky")
+
         get "/tags/filter/search.json", params: { q: "stu" }
         expect(response.status).to eq(200)
-        expect(response.parsed_body["results"].map { |j| j["id"] }.sort).to eq(%w[stuff stumped])
+        expect(response.parsed_body["results"]).to match(
+          [include(name: "stuff", id: stuff.id), include(name: "stumped", id: stumped.id)],
+        )
       end
 
       it "returns tags ordered by public_topic_count, and prioritises exact matches" do
-        Fabricate(:tag, name: "tag1", public_topic_count: 10, staff_topic_count: 10)
-        Fabricate(:tag, name: "tag2", public_topic_count: 100, staff_topic_count: 100)
-        Fabricate(:tag, name: "tag", public_topic_count: 1, staff_topic_count: 1)
+        tag = Fabricate(:tag, name: "tag", public_topic_count: 1, staff_topic_count: 1)
+        tag1 = Fabricate(:tag, name: "tag1", public_topic_count: 10, staff_topic_count: 10)
+        tag2 = Fabricate(:tag, name: "tag2", public_topic_count: 100, staff_topic_count: 100)
 
         get "/tags/filter/search.json", params: { q: "tag", limit: 2 }
         expect(response.status).to eq(200)
-        expect(response.parsed_body["results"].map { |j| j["id"] }).to eq(%w[tag tag2])
+        expect(response.parsed_body["results"]).to match(
+          [include(name: tag.name, id: tag.id), include(name: tag2.name, id: tag2.id)],
+        )
       end
 
       context "with category restriction" do
@@ -1065,7 +1076,8 @@ RSpec.describe TagsController do
           Fabricate(:tag, name: "nope")
           get "/tags/filter/search.json", params: { categoryId: category.id }
           expect(response.status).to eq(200)
-          expect(response.parsed_body["results"].map { |j| j["id"] }.sort).to eq([yup.name])
+
+          expect(response.parsed_body["results"]).to match([include(name: yup.name, id: yup.id)])
         end
       end
 
@@ -1075,17 +1087,18 @@ RSpec.describe TagsController do
 
         it "can return synonyms" do
           get "/tags/filter/search.json", params: { q: "plant" }
+
           expect(response.status).to eq(200)
-          expect(response.parsed_body["results"].map { |j| j["id"] }).to contain_exactly(
-            "plant",
-            "plants",
+          expect(response.parsed_body["results"]).to match(
+            [include(name: tag.name, id: tag.id), include(name: synonym.name, id: synonym.id)],
           )
         end
 
         it "can omit synonyms" do
           get "/tags/filter/search.json", params: { q: "plant", excludeSynonyms: "true" }
           expect(response.status).to eq(200)
-          expect(response.parsed_body["results"].map { |j| j["id"] }).to contain_exactly("plant")
+
+          expect(response.parsed_body["results"]).to match([include(name: tag.name, id: tag.id)])
         end
 
         it "can return a message about synonyms not being allowed" do
@@ -1101,31 +1114,40 @@ RSpec.describe TagsController do
 
       it "matches tags after sanitizing input" do
         Fabricate(:tag, name: "yup")
-        Fabricate(:tag, name: "nope")
+        nope = Fabricate(:tag, name: "nope")
+
         get "/tags/filter/search.json", params: { q: "N/ope" }
+
         expect(response.status).to eq(200)
-        expect(response.parsed_body["results"].map { |j| j["id"] }.sort).to eq(["nope"])
+        expect(response.parsed_body["results"]).to match([include(name: nope.name, id: nope.id)])
       end
 
       it "can return tags that are in secured categories but are allowed to be used" do
         c = Fabricate(:private_category, group: Fabricate(:group))
-        Fabricate(:topic, category: c, tags: [Fabricate(:tag, name: "cooltag")])
+        tag = Fabricate(:tag, name: "cooltag")
+        Fabricate(:topic, category: c, tags: [tag])
+
         get "/tags/filter/search.json", params: { q: "cool" }
+
         expect(response.status).to eq(200)
-        expect(response.parsed_body["results"].map { |j| j["id"] }).to eq(["cooltag"])
+        expect(response.parsed_body["results"]).to match([include(name: tag.name, id: tag.id)])
       end
 
       it "supports Chinese and Russian" do
-        tag_names = %w[房地产 тема-в-разработке]
-        tag_names.each { |name| Fabricate(:tag, name: name) }
+        chinese_tag = Fabricate(:tag, name: "房屋买卖")
+        russian_tag = Fabricate(:tag, name: "тестовая-тема")
 
         get "/tags/filter/search.json", params: { q: "房" }
         expect(response.status).to eq(200)
-        expect(response.parsed_body["results"].map { |j| j["id"] }).to eq(["房地产"])
+        expect(response.parsed_body["results"]).to match(
+          [include(name: chinese_tag.name, id: chinese_tag.id)],
+        )
 
         get "/tags/filter/search.json", params: { q: "тема" }
         expect(response.status).to eq(200)
-        expect(response.parsed_body["results"].map { |j| j["id"] }).to eq(["тема-в-разработке"])
+        expect(response.parsed_body["results"]).to match(
+          [include(name: russian_tag.name, id: russian_tag.id)],
+        )
       end
 
       it "can return all the results" do
@@ -1141,9 +1163,13 @@ RSpec.describe TagsController do
             }
 
         expect(response.status).to eq(200)
-        expect_same_tag_names(
-          response.parsed_body["results"].map { |j| j["id"] },
-          %w[common1 common2 group1tag group1tag2],
+        expect(response.parsed_body["results"]).to match(
+          [
+            include(name: "common1"),
+            include(name: "common2"),
+            include(name: "group1tag"),
+            include(name: "group1tag2"),
+          ],
         )
       end
 
