@@ -279,6 +279,14 @@ class PostsController < ApplicationController
       opts[:skip_validations] = true
     end
 
+    # Allow API clients to skip bumping the topic when updating a post.
+    # Accept either ?bypass_bump=true or post[bypass_bump]=true
+    if params.key?(:bypass_bump) || (params[:post] && params[:post].key?(:bypass_bump))
+      opts[:bypass_bump] = ActiveModel::Type::Boolean.new.cast(
+        params[:bypass_bump].presence || params.dig(:post, :bypass_bump)
+      )
+    end
+
     topic = post.topic
     topic = Topic.with_deleted.find(post.topic_id) if guardian.is_staff?
 
