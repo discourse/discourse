@@ -78,7 +78,10 @@
     );
     border: 4px solid var(--rewind-black);
     box-shadow: 0 0 0 4px var(--rewind-white);
-    animation: anim 5s linear infinite;
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: anim 5s linear infinite;
+    }
   }
 
   @keyframes anim {

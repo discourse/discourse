@@ -60,7 +60,10 @@
       13px 13px 0 #001,
       14px 14px 0 #001,
       15px 15px 20px rgb(0 0 0 / 0.5);
-    animation: wordart-wave 3s ease-in-out infinite;
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: wordart-wave 3s ease-in-out infinite;
+    }
   }
 
   // Wave pattern using nth-child

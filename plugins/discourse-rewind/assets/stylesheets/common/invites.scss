@@ -45,7 +45,10 @@
       -1px 1px 0 #000,
       1px 1px 0 #000;
     font-weight: bold;
-    animation: rainbow-text 3s linear infinite;
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: rainbow-text 3s linear infinite;
+    }
   }
 
   @keyframes rainbow-text {
@@ -176,7 +179,10 @@
 
     &:hover {
       background: #ff9;
-      animation: blink 0.5s infinite;
+
+      @media (prefers-reduced-motion: no-preference) {
+        animation: blink 0.5s infinite;
+      }
     }
 
     .avatar {

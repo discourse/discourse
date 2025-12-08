@@ -81,10 +81,6 @@
 
   .best-posts__post {
     width: 100%;
-
-    @media screen and (width <= 475px) {
-      max-height: 300px;
-    }
   }
 
   .best-posts__post p {

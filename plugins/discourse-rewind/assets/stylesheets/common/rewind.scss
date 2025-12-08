@@ -70,7 +70,10 @@
     z-index: 3;
     background: rgb(0 0 0 / 0.3);
     opacity: 0.75;
-    animation: scanline 6s linear infinite;
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: scanline 6s linear infinite;
+    }
   }
 
   &::after {
@@ -85,7 +88,10 @@
       rgb(0 0 0 / 0.1) 51%
     );
     background-size: 100% 4px;
-    animation: scanlines 1s steps(60) infinite;
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: scanlines 1s steps(60) infinite;
+    }
   }
 }
 
@@ -132,16 +138,14 @@
   font-size: var(--font-down-1);
 
   .d-icon {
-    color: #333;
+    color: var(
+      --rewind-black
+    ) !important; // override very specific core selector
   }
 
   .discourse-no-touch & {
     &:hover {
       filter: brightness(0.95);
-
-      .d-icon {
-        color: var(--rewind-grey);
-      }
     }
 
     &:active {
