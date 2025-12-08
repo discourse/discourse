@@ -776,6 +776,7 @@ ja:
         llm: "モデル"
         pm_warning: "AI チャットボットのメッセージは、モデレーターによって定期的に監視されます。"
         cancel_streaming: "返信を停止する"
+        try_again: "やり直す"
         default_pm_prefix: "[無題の AI ボット PM]"
         shortcut_title: "AI ボットと PM を開始する"
         shortcut_link: "AI ボット"

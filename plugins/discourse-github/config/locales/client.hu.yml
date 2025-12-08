@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 hu:
+  js:
+    github:
+      pr_status:
+        draft: "Vázlat"
+        open: "Nyitott"
+        approved: "Jóváhagyott"
+        closed: "Lezárva"
   admin_js:
     admin:
       site_settings:

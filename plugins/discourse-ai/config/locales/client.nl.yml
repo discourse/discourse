@@ -783,6 +783,7 @@ nl:
         llm: "Model"
         pm_warning: "AI-chatbotberichten worden regelmatig gecontroleerd door moderators."
         cancel_streaming: "Stoppen met antwoorden"
+        try_again: "Opnieuw proberen"
         default_pm_prefix: "[Ongetitelde PB van AI-bot]"
         shortcut_title: "Start een PB met een AI-bot"
         shortcut_link: "AI-bot"

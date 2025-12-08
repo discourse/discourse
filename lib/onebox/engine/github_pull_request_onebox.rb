@@ -34,6 +34,7 @@ module Onebox
         result = raw(github_auth_header(match[:org])).clone
         result["link"] = link
         result["pr_status"] = fetch_pr_status(result)
+        result["pr_status_title"] = pr_status_title(result["pr_status"])
 
         created_at = Time.parse(result["created_at"])
         result["created_at"] = created_at.strftime("%I:%M%p - %d %b %y %Z")
@@ -84,6 +85,11 @@ module Onebox
         }
       end
 
+      def pr_status_title(status)
+        key = status.presence || "default"
+        I18n.t("onebox.github.pr_title.#{key}")
+      end
+
       def load_commit(link)
         if commit_match = link.match(%r{commits/(\h+)})
           load_json(
@@ -125,6 +131,7 @@ module Onebox
         return "draft" if pr_data["draft"]
 
         reviews_data = load_json(url + "/reviews")
+
         return "approved" if reviews_approved?(reviews_data)
 
         "open"

@@ -200,6 +200,35 @@ RSpec.describe "AI Composer helper", type: :system do
           expect(composer.composer_input.value).to eq(proofread_text)
         end
       end
+
+      it "replaces selected formatted content from rich editor as markdown" do
+        visit("/latest")
+        page.find("#create-topic").click
+
+        composer.toggle_rich_editor
+        expect(composer).to have_rich_editor_active
+
+        composer.focus
+        composer.type_content("This is **bld text** and *itlic text* with `cde`.")
+
+        composer.select_all
+
+        composer.click_toolbar_button("ai-helper-trigger")
+        expect(ai_helper_menu).to have_context_menu
+
+        proofread_text = "This is **bold text** and *italic text* with `code`."
+
+        DiscourseAi::Completions::Llm.with_prepared_responses([proofread_text]) do
+          ai_helper_menu.select_helper_model(mode)
+          diff_modal.confirm_changes
+
+          composer.toggle_rich_editor
+          expect(composer).to have_no_rich_editor_active
+
+          wait_for { composer.composer_input.value == proofread_text }
+          expect(composer.composer_input.value).to eq(proofread_text)
+        end
+      end
     end
   end
 
