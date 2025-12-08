@@ -2606,6 +2606,19 @@ RSpec.describe Topic do
         topic,
       )
     end
+
+    it "excludes uncategorized topics when `include_uncategorized` kwarg is false" do
+      uncategorized_topic =
+        Fabricate(:topic, category_id: nil, archetype: Archetype.private_message)
+
+      categorized_topic = Fabricate(:topic, category: Fabricate(:category))
+
+      expect(uncategorized_topic.reload.category_id).to eq(nil)
+
+      result = Topic.secured(Guardian.new(user), include_uncategorized: false)
+
+      expect(result.pluck(:id)).to contain_exactly(categorized_topic.id)
+    end
   end
 
   describe "all_allowed_users" do

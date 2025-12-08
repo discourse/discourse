@@ -76,7 +76,11 @@ class CategoryList
   def relevant_topics_query
     @all_topics =
       Topic
-        .secured(@guardian)
+        .secured(
+          @guardian,
+          include_uncategorized: false,
+        ) # perf optimization since category featured topics can't have `category_id` set to null
+        .listable_topics
         .joins(
           "INNER JOIN category_featured_topics ON topics.id = category_featured_topics.topic_id",
         )
