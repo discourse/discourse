@@ -577,7 +577,7 @@ basic:
     default: "stable"
     type: enum
     choices:
-      - pre_alpha
+      - experimental
       - alpha
       - beta
       - stable

@@ -10,7 +10,7 @@ RSpec.describe Admin::Config::UpcomingChangesController do
         {
           enable_upload_debug_mode: {
             impact: "other,developers",
-            status: :pre_alpha,
+            status: :experimental,
             impact_type: "other",
             impact_role: "developers",
           },
@@ -53,7 +53,7 @@ RSpec.describe Admin::Config::UpcomingChangesController do
             "impact" => "other,developers",
             "impact_role" => "developers",
             "impact_type" => "other",
-            "status" => "pre_alpha",
+            "status" => "experimental",
             "enabled_for" => "no_one",
           },
         )

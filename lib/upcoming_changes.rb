@@ -2,7 +2,7 @@
 
 module UpcomingChanges
   def self.statuses
-    @statuses ||= Enum.new(pre_alpha: 0, alpha: 100, beta: 200, stable: 300, permanent: 500)
+    @statuses ||= Enum.new(experimental: 0, alpha: 100, beta: 200, stable: 300, permanent: 500)
   end
 
   def self.image_exists?(change_setting_name)
