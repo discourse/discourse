@@ -131,8 +131,10 @@ module Onebox
         return "draft" if pr_data["draft"]
 
         reviews_data = load_json(url + "/reviews")
+        review_states = latest_review_states(reviews_data)
 
-        return "approved" if reviews_approved?(reviews_data)
+        return "changes_requested" if review_states.include?("CHANGES_REQUESTED")
+        return "approved" if review_states.include?("APPROVED")
 
         "open"
       rescue StandardError => e
@@ -140,19 +142,14 @@ module Onebox
         nil
       end
 
-      def reviews_approved?(reviews)
-        return false if reviews.blank?
+      def latest_review_states(reviews)
+        return [] if reviews.blank?
 
-        states =
-          reviews
-            .reject { |r| r.dig("user", "id").nil? || %w[PENDING COMMENTED].include?(r["state"]) }
-            .group_by { |r| r.dig("user", "id") }
-            .transform_values { |rs| rs.max_by { |r| r["submitted_at"] }["state"] }
-            .values
-
-        return false if states.empty?
-
-        states.all? { |s| %w[APPROVED DISMISSED].include?(s) } && states.include?("APPROVED")
+        reviews
+          .reject { |r| r.dig("user", "id").nil? || %w[PENDING COMMENTED].include?(r["state"]) }
+          .group_by { |r| r.dig("user", "id") }
+          .transform_values { |rs| rs.max_by { |r| r["submitted_at"] }["state"] }
+          .values
       end
     end
   end
