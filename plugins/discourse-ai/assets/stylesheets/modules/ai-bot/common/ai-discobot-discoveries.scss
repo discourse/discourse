@@ -226,7 +226,7 @@
 
     .search-results .fps-result {
       margin-bottom: 2.5em;
-      &.fps-result:not(.bulk-select-enabled) {
+      &:not(.bulk-select-enabled) {
         padding: 0;
       }
     }
