@@ -144,7 +144,7 @@ en:
           menu_opening: OPENING
           help_text: Press F1 for help
           app_name: DiscoStar Professional
-          release_info: Release 2025 from CDCK
+          release_info: Release %{rewindYear} from CDCK
           total_words: Total Words
           total_posts: Total Posts
           avg_post_length: Avg Post Length

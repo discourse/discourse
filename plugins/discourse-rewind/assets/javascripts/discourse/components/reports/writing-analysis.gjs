@@ -3,7 +3,9 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import number from "discourse/helpers/number";
 import { i18n } from "discourse-i18n";
+import { fetchRewindYear } from "../../connectors/before-panel-body/rewind-callout";
 
 export default class WritingAnalysis extends Component {
   @tracked currentColorIndex = 0;
@@ -121,6 +123,7 @@ export default class WritingAnalysis extends Component {
                 <div class="writing-analysis__release-meta">
                   {{i18n
                     "discourse_rewind.reports.writing_analysis.release_info"
+                    rewindYear=(fetchRewindYear)
                   }}
                   <span>&lt;3</span>
                 </div>
@@ -150,16 +153,16 @@ export default class WritingAnalysis extends Component {
                 <div class="writing-analysis__stats-label">{{i18n
                     "discourse_rewind.reports.writing_analysis.avg_post_length"
                   }}</div>
-                <div
-                  class="writing-analysis__stats-value"
-                >{{@report.data.average_post_length}}</div>
+                <div class="writing-analysis__stats-value">{{number
+                    @report.data.average_post_length
+                  }}</div>
 
                 <div class="writing-analysis__stats-label">{{i18n
                     "discourse_rewind.reports.writing_analysis.readability_score_label"
                   }}</div>
-                <div
-                  class="writing-analysis__stats-value"
-                >{{@report.data.readability_score}}</div>
+                <div class="writing-analysis__stats-value">{{number
+                    @report.data.readability_score
+                  }}</div>
               </div>
 
               <div class="writing-analysis__stats-col">
