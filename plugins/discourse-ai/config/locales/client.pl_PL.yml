@@ -345,7 +345,7 @@ pl_PL:
         all_features: "Wszystkie funkcje"
         all_models: "Wszystkie modele"
         username: "Nazwa użytkownika"
-        total_requests: "Razem zapytań"
+        total_requests: "Łącznie zapytań"
         request_tokens: "Tokeny żądania"
         response_tokens: "Tokeny odpowiedzi"
         net_request_tokens: "Tokeny żądania sieci"
@@ -889,7 +889,7 @@ pl_PL:
             tag: "Tag"
           table:
             sentiment: "Sentiment"
-            total_count: "Wszystkie"
+            total_count: "Łącznie"
       summarization:
         chat:
           title: "Podsumuj wiadomości"

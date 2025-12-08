@@ -7,6 +7,7 @@
 el:
   js:
     discourse_assign:
+      sidebar_name_filter_placeholder: "Όνομα/Όνομα χρήστη"
       group_everyone: "Όλοι"
       assigned_to: "Ανατέθηκε σε"
       assigned_to_w_ellipsis: "Ανατέθηκε σε..."

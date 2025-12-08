@@ -86,6 +86,13 @@ el:
         all_new: "Όλα Τα Νέα Μηνύματα"
         only_mentions: "Μόνο Επισημάνσεις"
         never: "Ποτέ"
+      send_shortcut:
+        enter:
+          label: "Αποστολή με Enter"
+          description: "Νέα γραμμή με Shift + Enter"
+        meta_enter:
+          label: "Αποστολή με %{meta_key} + Enter"
+          description: "Νέα γραμμή με Enter"
       enable: "Ενεργοποίηση συνομιλίας"
       flag: "Αναφορά"
       emoji: "Εισαγωγή emoji"
@@ -271,6 +278,12 @@ el:
       chat_watched_thread_label:
         one: "%{username} και %{username2}"
         other: "%{username} και %{count} ακόμη"
+      popup:
+        direct_message_chat_mention:
+          direct: "σας επισήμανε σε προσωπική συνομιλία"
+          direct_html: "<span>%{username}</span> <span>σας επισήμανε σε προσωπική συνομιλία</span>"
+          other_plain: "επισήμανε %{identifier} σε προσωπική συνομιλία"
+          other_html: "<span>%{username}</span> <span>επισήμανε %{identifier} σε προσωπική συνομιλία</span>"
     discourse_automation:
       scriptables:
         send_chat_message:
@@ -284,3 +297,25 @@ el:
         reviewable_chat_message:
           title: "Αναφερόμενο μήνυμα συνομιλίας"
           noun: "μήνυμα συνομιλίας"
+    keyboard_shortcuts_help:
+      chat:
+        title: "Συνομιλία"
+        keyboard_shortcuts:
+          switch_channel_arrows: "%{shortcut} Εναλλαγή καναλιού"
+          switch__unread_channel_arrows: "%{shortcut} Εναλλαγή αδιάβαστου καναλιού"
+          open_quick_channel_selector: "%{shortcut} Άνοιγμα γρήγορης επιλογής καναλιών"
+          open_insert_link_modal: "%{shortcut} Εισαγωγή συνδέσμου (μόνο για συνθέτη)"
+          composer_bold: "%{shortcut} Έντονη γραφή (μόνο για συνθέτη)"
+          composer_italic: "%{shortcut} Πλάγια γραφή (μόνο για συνθέτη)"
+          composer_code: "%{shortcut} Κώδικας (μόνο για συνθέτη)"
+          drawer_open: "%{shortcut} Άνοιγμα συρταριού συνομιλίας"
+          drawer_close: "%{shortcut} Κλείσιμο συρταριού συνομιλίας"
+          mark_all_channels_read: "%{shortcut} Σήμανση όλων των καναλιών ως διαβασμένα"
+    styleguide:
+      sections:
+        chat:
+          title: Συνομιλία
+    sidebar:
+      panels:
+        chat:
+          label: "Συνομιλία"
