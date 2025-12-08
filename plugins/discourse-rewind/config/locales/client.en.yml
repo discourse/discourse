@@ -10,6 +10,8 @@ en:
       title: Rewind
       year: "2025"
       loading: "Reticulating splines..."
+      preferences:
+        disable_rewind: "Disable Rewind (hide the year-end activity summary)"
       reports:
         activity_calendar:
           title: Activity Calendar
@@ -156,7 +158,7 @@ en:
               3: "Michael Crichton"
               4: "Roald Dahl"
             over_60:
-              1: "J.K. Rowling"
+              1: "C.S. Lewis"
               2: "Stephen King"
               3: "Agatha Christie"
               4: "George R.R. Martin"

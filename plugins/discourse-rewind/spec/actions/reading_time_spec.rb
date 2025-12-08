@@ -85,7 +85,7 @@ RSpec.describe DiscourseRewind::Action::ReadingTime do
 
     user_visit_1.update!(time_read: new_target_time_read(24_500))
     result = call_report
-    expect(result[:data][:book]).to eq("Harry Potter and the Sorcerer's Stone")
+    expect(result[:data][:book]).to eq("A Tale of Two Cities")
 
     user_visit_1.update!(time_read: new_target_time_read(25_100))
     result = call_report
