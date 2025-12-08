@@ -119,8 +119,6 @@ after_initialize do
   end
 
   register_modifier(:topics_filter_options) do |results, _guardian|
-    next results unless SiteSetting.topic_voting_enabled
-
     results.concat(
       [
         {
@@ -160,8 +158,6 @@ after_initialize do
   end
 
   add_filter_custom_filter("votes-min") do |scope, filter_values, _guardian|
-    next scope unless SiteSetting.topic_voting_enabled
-
     value = topic_votes_value_from.call(filter_values)
     next scope if value.nil?
 
@@ -169,8 +165,6 @@ after_initialize do
   end
 
   add_filter_custom_filter("votes-max") do |scope, filter_values, _guardian|
-    next scope unless SiteSetting.topic_voting_enabled
-
     value = topic_votes_value_from.call(filter_values)
     next scope if value.nil?
 
@@ -178,8 +172,6 @@ after_initialize do
   end
 
   filter_order_votes = ->(scope, order_direction, _guardian) do
-    next scope unless SiteSetting.topic_voting_enabled
-
     DiscourseTopicVoting::TopicVotesFilter.apply(scope, order_direction:)
   end
 
