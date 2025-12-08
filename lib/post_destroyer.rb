@@ -308,7 +308,7 @@ class PostDestroyer
       @post.revise(@user, { raw: last_revision.modifications["raw"][0] }, force_new_version: true)
     end
 
-    restore_reviewables_for_author_recovery
+    restore_reviewables_for_author_recovery if @user.id == @post.user_id
   end
 
   private
@@ -552,19 +552,19 @@ class PostDestroyer
   end
 
   def restore_reviewables_for_author_recovery
-    reviewables = Reviewable.where(target: @post, status: Reviewable.statuses[:ignored])
+    # Only restore if it was reviewed by system user
+    reviewables =
+      Reviewable
+        .where(target: @post, status: Reviewable.statuses[:ignored])
+        .joins(
+          "LEFT JOIN reviewable_scores ON reviewable_scores.reviewable_id = reviewables.id AND reviewable_scores.reviewed_by_id = #{Discourse::SYSTEM_USER_ID}",
+        )
+        .where("reviewable_scores.id IS NOT NULL")
 
     reviewables.each do |reviewable|
-      # Only restore if it was reviewed by system user
-      unless reviewable.reviewable_scores.any? { |score|
-               score.reviewed_by_id == Discourse::SYSTEM_USER_ID
-             }
-        next
-      end
-
       reviewable.reviewable_notes.create!(
         user: Discourse.system_user,
-        content: I18n.t("reviewables.post_undeleted_by_author"),
+        content: I18n.t("reviewables.post_restored_by_author"),
       )
 
       reviewable.transition_to(:pending, Discourse.system_user)

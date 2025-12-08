@@ -473,7 +473,7 @@ RSpec.describe PostDestroyer do
 
       recovery_note = reviewable.reviewable_notes.last
       expect(recovery_note.user).to eq(Discourse.system_user)
-      expect(recovery_note.content).to eq(I18n.t("reviewables.post_undeleted_by_author"))
+      expect(recovery_note.content).to eq(I18n.t("reviewables.post_restored_by_author"))
 
       history = reviewable.reviewable_histories.last
       expect(history.reviewable_history_type).to eq("transitioned")
