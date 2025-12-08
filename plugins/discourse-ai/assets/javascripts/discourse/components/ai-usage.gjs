@@ -275,6 +275,61 @@ export default class AiUsage extends Component {
     return (this.data?.models || []).filter((m) => !m.credit_allocation);
   }
 
+  get featuresTotals() {
+    const features = this.data?.features || [];
+    return {
+      usage_count: features.reduce((sum, f) => sum + (f.usage_count || 0), 0),
+      total_tokens: features.reduce((sum, f) => sum + (f.total_tokens || 0), 0),
+      total_spending: features.reduce(
+        (sum, f) =>
+          sum +
+          (f.input_spending || 0) +
+          (f.cache_read_spending || 0) +
+          (f.cache_write_spending || 0) +
+          (f.output_spending || 0),
+        0
+      ),
+    };
+  }
+
+  get modelsWithoutCreditsTotals() {
+    const models = this.modelsWithoutCredits || [];
+    return {
+      usage_count: models.reduce((sum, m) => sum + (m.usage_count || 0), 0),
+      total_tokens: models.reduce((sum, m) => sum + (m.total_tokens || 0), 0),
+      total_spending: models.reduce(
+        (sum, m) =>
+          sum +
+          (m.input_spending || 0) +
+          (m.cache_read_spending || 0) +
+          (m.cache_write_spending || 0) +
+          (m.output_spending || 0),
+        0
+      ),
+    };
+  }
+
+  get usersTotals() {
+    const users = this.data?.users || [];
+    return {
+      usage_count: users.reduce((sum, u) => sum + (u.usage_count || 0), 0),
+      total_tokens: users.reduce((sum, u) => sum + (u.total_tokens || 0), 0),
+      total_spending: users.reduce(
+        (sum, u) =>
+          sum +
+          (u.input_spending || 0) +
+          (u.cache_read_spending || 0) +
+          (u.cache_write_spending || 0) +
+          (u.output_spending || 0),
+        0
+      ),
+    };
+  }
+
+  formatSpending(value) {
+    return `$${(value || 0).toFixed(2)}`;
+  }
+
   get availableFeatures() {
     // when you switch we don't want the list to change
     // only when you switch durations
@@ -534,6 +589,18 @@ export default class AiUsage extends Component {
                           </td>
                         </tr>
                       {{/each}}
+                      <tr class="ai-usage__total-row">
+                        <td>{{i18n "discourse_ai.usage.total"}}</td>
+                        <td title={{this.featuresTotals.usage_count}}>{{number
+                            this.featuresTotals.usage_count
+                          }}</td>
+                        <td title={{this.featuresTotals.total_tokens}}>{{number
+                            this.featuresTotals.total_tokens
+                          }}</td>
+                        <td>{{this.formatSpending
+                            this.featuresTotals.total_spending
+                          }}</td>
+                      </tr>
                     </tbody>
                   </table>
                 {{/if}}
@@ -617,6 +684,22 @@ export default class AiUsage extends Component {
                           </td>
                         </tr>
                       {{/each}}
+                      <tr class="ai-usage__total-row">
+                        <td>{{i18n "discourse_ai.usage.total"}}</td>
+                        <td
+                          title={{this.modelsWithoutCreditsTotals.usage_count}}
+                        >{{number
+                            this.modelsWithoutCreditsTotals.usage_count
+                          }}</td>
+                        <td
+                          title={{this.modelsWithoutCreditsTotals.total_tokens}}
+                        >{{number
+                            this.modelsWithoutCreditsTotals.total_tokens
+                          }}</td>
+                        <td>{{this.formatSpending
+                            this.modelsWithoutCreditsTotals.total_spending
+                          }}</td>
+                      </tr>
                     </tbody>
                   </table>
                 {{/if}}
@@ -687,6 +770,20 @@ export default class AiUsage extends Component {
                             </td>
                           </tr>
                         {{/each}}
+                        {{#unless (gt this.data.users.length 24)}}
+                          <tr class="ai-usage__total-row">
+                            <td>{{i18n "discourse_ai.usage.total"}}</td>
+                            <td title={{this.usersTotals.usage_count}}>{{number
+                                this.usersTotals.usage_count
+                              }}</td>
+                            <td title={{this.usersTotals.total_tokens}}>{{number
+                                this.usersTotals.total_tokens
+                              }}</td>
+                            <td>{{this.formatSpending
+                                this.usersTotals.total_spending
+                              }}</td>
+                          </tr>
+                        {{/unless}}
                       </tbody>
                     </table>
 
@@ -739,6 +836,18 @@ export default class AiUsage extends Component {
                               </td>
                             </tr>
                           {{/each}}
+                          <tr class="ai-usage__total-row">
+                            <td>{{i18n "discourse_ai.usage.total"}}</td>
+                            <td title={{this.usersTotals.usage_count}}>{{number
+                                this.usersTotals.usage_count
+                              }}</td>
+                            <td title={{this.usersTotals.total_tokens}}>{{number
+                                this.usersTotals.total_tokens
+                              }}</td>
+                            <td>{{this.formatSpending
+                                this.usersTotals.total_spending
+                              }}</td>
+                          </tr>
                         </tbody>
                       </table>
                     {{/if}}

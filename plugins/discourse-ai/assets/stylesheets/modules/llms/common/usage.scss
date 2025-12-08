@@ -176,6 +176,20 @@
     width: 100%;
   }
 
+  &__total-row {
+    background: var(--primary-very-low);
+
+    td {
+      font-weight: 700;
+      padding: var(--space-2);
+      border-bottom: 1px solid var(--primary-low);
+    }
+
+    &:hover {
+      background: var(--primary-very-low);
+    }
+  }
+
   &__models-credit-bar {
     padding: var(--space-2);
     border-bottom: 1px solid var(--primary-low);
