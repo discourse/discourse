@@ -5590,6 +5590,7 @@ en:
         draft: "Draft Pull Request"
         open: "Open Pull Request"
         approved: "Approved Pull Request"
+        changes_requested: "Changes Requested"
         merged: "Merged Pull Request"
         closed: "Closed Pull Request"
 
