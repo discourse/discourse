@@ -15,7 +15,7 @@ module DiscourseRewind
       }
 
       def call
-        return FakeData if Rails.env.development?
+        return FakeData if should_use_fake_data?
 
         words = DB.query(<<~SQL, user_id: user.id, date_start: date.first, date_end: date.last)
         WITH popular_words AS (

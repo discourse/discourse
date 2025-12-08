@@ -28,7 +28,7 @@ module DiscourseRewind
       }
 
       def call
-        return FakeData if Rails.env.development?
+        return FakeData if should_use_fake_data?
 
         most_liked_users =
           like_query(date)

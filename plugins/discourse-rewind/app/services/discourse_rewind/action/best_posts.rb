@@ -33,7 +33,7 @@ module DiscourseRewind
       }
 
       def call
-        return FakeData if Rails.env.development?
+        return FakeData if should_use_fake_data?
         best_posts =
           Post
             .where(user_id: user.id)

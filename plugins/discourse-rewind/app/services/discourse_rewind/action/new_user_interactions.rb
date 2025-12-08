@@ -19,7 +19,7 @@ module DiscourseRewind
       }
 
       def call
-        return FakeData if Rails.env.development?
+        return FakeData if should_use_fake_data?
         year_start = Date.new(date.first.year, 1, 1)
 
         # Find users who created accounts this year

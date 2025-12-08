@@ -25,7 +25,7 @@ module DiscourseRewind
       }
 
       def call
-        return FakeData if Rails.env.development?
+        return FakeData if should_use_fake_data?
         # Get all invites created by this user in the date range
         invites = Invite.where(invited_by_id: user.id).where(created_at: date)
 

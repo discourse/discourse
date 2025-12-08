@@ -55,7 +55,7 @@ module DiscourseRewind
       }
 
       def call
-        return FakeData if Rails.env.development?
+        return FakeData if should_use_fake_data?
         gif_data = {}
 
         # Get GIFs from posts

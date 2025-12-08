@@ -14,7 +14,7 @@ module DiscourseRewind
         identifier: "most-viewed-categories",
       }
       def call
-        return FakeData if Rails.env.development?
+        return FakeData if should_use_fake_data?
 
         most_viewed_categories =
           TopicViewItem

@@ -39,7 +39,7 @@ module DiscourseRewind
       }
 
       def call
-        return FakeData if Rails.env.development?
+        return FakeData if should_use_fake_data?
         return if !enabled?
 
         data = {}

@@ -14,7 +14,7 @@ module DiscourseRewind
       }
 
       def call
-        return FakeData if Rails.env.development?
+        return FakeData if should_use_fake_data?
 
         total_words =
           DB.query_single(<<~SQL, user_id: user.id, date_start: date.first, date_end: date.last)
@@ -74,7 +74,7 @@ module DiscourseRewind
               syllables,
               plain,
 
-              CASE 
+              CASE
                 WHEN sentences_raw = 0 AND words > 5 THEN 1
                 ELSE sentences_raw
               END AS sentences_fixed,

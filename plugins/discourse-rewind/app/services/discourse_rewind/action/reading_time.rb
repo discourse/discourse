@@ -154,7 +154,7 @@ module DiscourseRewind
       }
 
       def call
-        return FakeData if Rails.env.development?
+        return FakeData if should_use_fake_data?
 
         reading_time = UserVisit.where(user_id: user.id).where(visited_at: date).sum(:time_read)
         book = best_book_fit(reading_time)

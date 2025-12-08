@@ -13,6 +13,10 @@ module DiscourseRewind
       def self.enabled?
         true
       end
+
+      def should_use_fake_data?
+        Rails.env.development?
+      end
     end
   end
 end

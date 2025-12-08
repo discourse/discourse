@@ -49,7 +49,7 @@ module DiscourseRewind
       }
 
       def call
-        return FakeData if Rails.env.development?
+        return FakeData if should_use_fake_data?
         # Get activity by hour of day (in user's timezone)
         activity_by_hour = get_activity_by_hour
 
