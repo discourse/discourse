@@ -119,7 +119,7 @@ describe "Admin Customize Themes", type: :system do
     expect(page).to have_no_css(".delete")
   end
 
-  it "hides unecessary sections and buttons for system themes" do
+  it "hides unnecessary sections and buttons for system themes" do
     theme.set_field(
       target: :extra_js,
       name: "discourse/api-initializers/test.js",
@@ -270,7 +270,7 @@ describe "Admin Customize Themes", type: :system do
     end
   end
 
-  context "when visting a component's page" do
+  context "when visiting a component's page" do
     fab!(:component) { Fabricate(:theme, component: true, name: "Cool component 493") }
 
     it "has a link to the components page" do

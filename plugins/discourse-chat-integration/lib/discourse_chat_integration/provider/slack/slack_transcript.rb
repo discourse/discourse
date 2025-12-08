@@ -13,7 +13,7 @@ module DiscourseChatIntegration::Provider::SlackProvider
       @requested_thread_ts = requested_thread_ts
 
       @first_message_index = 0
-      @last_message_index = -1 # We can use negative array indicies to select the last message - fancy!
+      @last_message_index = -1 # We can use negative array indices to select the last message - fancy!
     end
 
     def set_first_message_by_ts(ts)

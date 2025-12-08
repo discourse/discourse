@@ -23,7 +23,7 @@ module DiscourseAi
 
       def self.find_user_from_model(model_name)
         # Hack(Roman): Added this because Command R Plus had a different in the bot settings.
-        # Will eventually ammend it with a data migration.
+        # Will eventually amend it with a data migration.
         name = model_name
         name = "command-r-plus" if name == "cohere-command-r-plus"
 

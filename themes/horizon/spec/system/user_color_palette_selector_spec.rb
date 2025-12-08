@@ -37,7 +37,7 @@ describe "Horizon theme | User color palette selector", type: :system do
   describe "for logged in user" do
     before { sign_in(current_user) }
 
-    it "can open the user color palette menu and select a palette, which is preseved on reload" do
+    it "can open the user color palette menu and select a palette, which is preserved on reload" do
       visit "/"
       palette_selector.open_palette_menu
       palette_selector.click_palette_menu_item(marigold_palette.name)
@@ -74,7 +74,7 @@ describe "Horizon theme | User color palette selector", type: :system do
     context "when the theme is not default but is selected by a user" do
       let(:set_theme_as_default) { false }
 
-      it "can open the user color palette menu and select a palette, which is preseved on reload" do
+      it "can open the user color palette menu and select a palette, which is preserved on reload" do
         theme.update!(user_selectable: true)
         current_user.user_option.update!(theme_ids: [theme.id])
         visit "/"
@@ -90,7 +90,7 @@ describe "Horizon theme | User color palette selector", type: :system do
   end
 
   describe "for anon" do
-    it "can open the user color palette menu and select a palette, which is preseved on reload" do
+    it "can open the user color palette menu and select a palette, which is preserved on reload" do
       visit "/"
       palette_selector.open_palette_menu
       palette_selector.click_palette_menu_item(marigold_palette.name)

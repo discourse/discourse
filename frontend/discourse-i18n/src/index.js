@@ -22,7 +22,7 @@ export class I18n {
   noFallbacks = false;
   testing = false;
   verbose = false;
-  verboseIndicies = new Map();
+  verboseIndices = new Map();
 
   pluralizationRules = Cardinals;
 
@@ -442,10 +442,10 @@ export class I18n {
 
   _verboseTranslate(scope, options) {
     const result = this._translate(scope, options);
-    let i = this.verboseIndicies.get(scope);
+    let i = this.verboseIndices.get(scope);
     if (!i) {
-      i = this.verboseIndicies.size + 1;
-      this.verboseIndicies.set(scope, i);
+      i = this.verboseIndices.size + 1;
+      this.verboseIndices.set(scope, i);
     }
     let message = `Translation #${i}: ${scope}`;
     if (options && Object.keys(options).length > 0) {
