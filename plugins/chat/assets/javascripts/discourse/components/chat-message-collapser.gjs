@@ -11,13 +11,6 @@ import { i18n } from "discourse-i18n";
 import ChatUpload from "discourse/plugins/chat/discourse/components/chat-upload";
 import Collapser from "discourse/plugins/chat/discourse/components/collapser";
 
-const LazyVideo = optionalRequire(
-  "discourse/plugins/discourse-lazy-videos/discourse/components/lazy-video"
-);
-const getVideoAttributes = optionalRequire(
-  "discourse/plugins/discourse-lazy-videos/lib/lazy-video-attributes"
-);
-
 export default class ChatMessageCollapser extends Component {
   @service siteSettings;
 
@@ -71,7 +64,17 @@ export default class ChatMessageCollapser extends Component {
     return [];
   }
 
+  get lazyVideoComponent() {
+    return optionalRequire(
+      "discourse/plugins/discourse-lazy-videos/discourse/components/lazy-video"
+    );
+  }
+
   lazyVideoCooked(elements) {
+    const getVideoAttributes = optionalRequire(
+      "discourse/plugins/discourse-lazy-videos/lib/lazy-video-attributes"
+    );
+
     return elements.reduce((acc, e) => {
       if (this.siteSettings.lazy_videos_enabled && lazyVideoPredicate(e)) {
         const videoAttributes = getVideoAttributes(e);
@@ -181,9 +184,11 @@ export default class ChatMessageCollapser extends Component {
               @header={{cooked.header}}
               @onToggle={{@onToggleCollapse}}
             >
-              {{#if (and cooked.videoAttributes LazyVideo)}}
+              {{#if (and cooked.videoAttributes this.lazyVideoComponent)}}
                 <div class="chat-message-collapser-lazy-video">
-                  <LazyVideo @videoAttributes={{cooked.videoAttributes}} />
+                  <this.lazyVideoComponent
+                    @videoAttributes={{cooked.videoAttributes}}
+                  />
                 </div>
               {{else}}
                 <DecoratedHtml
