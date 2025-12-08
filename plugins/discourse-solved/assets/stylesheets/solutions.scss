@@ -64,6 +64,10 @@ aside.quote.accepted-answer {
     align-items: flex-start;
   }
 
+  &.accepted-answer--has-excerpt > .title {
+    cursor: pointer;
+  }
+
   &:not(.accepted-answer--has-excerpt) {
     > .title {
       padding: 0.8em;
@@ -112,5 +116,24 @@ aside.quote.accepted-answer {
 .topic-statuses .topic-status.solved {
   .d-icon {
     color: $solved-color;
+  }
+}
+
+aside.quote.accepted-answer[data-expanded="false"] {
+  > blockquote {
+    position: relative;
+    max-height: 300px;
+    overflow: hidden;
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 50px;
+      background: linear-gradient(transparent, var(--secondary));
+      pointer-events: none;
+    }
   }
 }
