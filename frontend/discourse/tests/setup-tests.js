@@ -385,6 +385,9 @@ export default function setupTests(config) {
   }
 
   const hasPluginJs = !!document.querySelector("script[data-discourse-plugin]");
+  const hasPreinstalledPluginJs = !!document.querySelector(
+    "script[data-discourse-plugin][data-preinstalled='true']"
+  );
   const hasThemeJs = !!document.querySelector("script[data-theme-id]");
 
   // forces 0 as duration for all jquery animations
@@ -404,7 +407,7 @@ export default function setupTests(config) {
 
   setLoadedFaker(FakerModule);
 
-  if (!hasPluginJs && !hasThemeJs) {
+  if ((!hasPluginJs || hasPreinstalledPluginJs) && !hasThemeJs) {
     configureRaiseOnDeprecation();
   }
 }

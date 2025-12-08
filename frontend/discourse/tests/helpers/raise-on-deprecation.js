@@ -31,7 +31,7 @@ export function configureRaiseOnDeprecation() {
 }
 
 function raiseDeprecationError(message, options) {
-  message = `DEPRECATION IN CORE TEST: ${message} (deprecation id: ${options.id})\n\nCore test runs must be deprecation-free. Use ember-deprecation-workflow to silence unresolved deprecations.`;
+  message = `DEPRECATION IN CORE TEST: ${message} (deprecation id: ${options.id})\n\nCore and preinstalled plugins tests runs must be deprecation-free. Use ember-deprecation-workflow to silence unresolved deprecations.`;
   if (QUnit.config.current && !disabledQUnitResult) {
     QUnit.assert.pushResult({
       result: false,
