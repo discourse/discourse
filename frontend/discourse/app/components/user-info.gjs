@@ -63,8 +63,8 @@ export default class UserInfo extends Component {
       <div
         class={{concatClass
           "name-line"
-          (if @showStatus "name-line--show-status")
-          (if this.nameFirst "name-line--name-first")
+          (if @showStatus "--show-status")
+          (if this.nameFirst "--name-first")
         }}
       >
         <span class="username-wrapper">
