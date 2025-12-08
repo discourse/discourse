@@ -190,7 +190,7 @@ module DiscourseAi
       end
 
       def filter_by_model(model_identifier)
-        if model_identifier.to_s.match?(/^\d+$/)
+        if model_identifier.to_s.match?(/^-?\d+$/)
           model = LlmModel.find_by(id: model_identifier)
           if model
             @base_query =
