@@ -8,6 +8,15 @@ RSpec.describe Chat::MessageProcessor do
     described_class.new(message)
   end
 
+  it "passes invalidate_oneboxes option to cook" do
+    Chat::Message.expects(:cook).with(
+      message.message,
+      user_id: message.last_editor_id,
+      invalidate_oneboxes: true,
+    )
+    described_class.new(message, invalidate_oneboxes: true)
+  end
+
   describe "#run!" do
     it "processes messages with hotlinked images in oneboxes without errors" do
       # Create a message with an image in a onebox (common when posting URLs with images)
