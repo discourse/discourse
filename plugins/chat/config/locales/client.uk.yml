@@ -60,6 +60,9 @@ uk:
       cancel: "Скасувати"
       cancel_reply: "Скасувати відповідь"
       chat_channels: "Канали"
+      starred: "Позначено зірочкою"
+      starred_channels: "Позначені канали"
+      starred_channels_empty: "Ви ще не позначили жодного каналу зірочкою. Позначте канали зірочкою, щоб побачити їх тут для швидкого доступу."
       browse_all_channels: "Переглянути всі канали"
       see_in: "Дивіться в"
       move_to_channel:
@@ -80,6 +83,8 @@ uk:
         title: "Налаштування каналу"
         edit: "Редагувати"
         add: "Додати"
+        star_channel: "Обраний канал"
+        unstar_channel: "Зняти зірочку з каналу"
         close_channel: "Закрити канал"
         open_channel: "Відкрити канал"
         archive_channel: "Архівувати канал"
@@ -406,6 +411,8 @@ uk:
         slug_description: Замість назви каналу в URL-адресі використовується slug каналу
         name: Назва каналу
         slug: Slug каналу (опціонально)
+        emoji: Емодзі каналу (необов'язково)
+        reset_emoji: Скинути емодзі
       channel_edit_description_modal:
         title: Редагувати опис
         input_placeholder: Додати опис
@@ -500,6 +507,9 @@ uk:
         types:
           category: "Розділ"
           topic: "Тема"
+        emoji:
+          label: "Емодзі каналу (необов'язково)"
+          reset: "Скинути емодзі"
       reviewable:
         type: "Повідомлення чату"
         message_in_channel: "Канал"

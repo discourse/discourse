@@ -373,6 +373,8 @@ ru:
           post_url_label: "URL-адрес или идентификатор публикации"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 или идентификатор публикации"
           result: "Результат"
+          llm: "Большая языковая модель"
+          system_prompt: "Системный запрос"
           scan_log: "Журнал сканирования"
           run: "Выполнить тест"
           spam: "Спам"

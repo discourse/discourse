@@ -317,6 +317,8 @@ fr:
           post_url_label: "URL ou ID de la publication"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 ou ID de la publication"
           result: "Résultat"
+          llm: "LLM "
+          system_prompt: "Invite du système"
           scan_log: "Journal d'analyse"
           run: "Lancer le test"
           spam: "Contenu indésirable"

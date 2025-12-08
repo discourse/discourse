@@ -5276,6 +5276,7 @@ pl_PL:
       add_to_calendar: "Dodaj do kalendarza"
       google: "Kalendarz Google"
       ics: "ICS"
+      default_title: "Zaplanowane wydarzenie"
     tagging:
       all_tags: "Wszystkie tagi"
       other_tags: "Inne tagi"
@@ -5933,7 +5934,7 @@ pl_PL:
             many: "grupy %{groupNames}"
             other: "grupy %{groupNames}"
         statuses:
-          pre_alpha: "Pre-alfa"
+          experimental: "Eksperymentalne"
           alpha: "Alfa"
           beta: "Beta"
           stable: "Stabilna"
@@ -5955,7 +5956,7 @@ pl_PL:
           impact_type_feature: "Funkcja"
           impact_type_other: "Inne"
           status_all: "Wszystkie statusy"
-          status_pre_alpha: "Pre-alfa"
+          status_experimental: "Eksperymentalne"
           status_alpha: "Alfa"
           status_beta: "Beta"
           status_stable: "Stabilna"

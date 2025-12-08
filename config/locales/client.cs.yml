@@ -5956,7 +5956,7 @@ cs:
             many: "skupiny %{groupNames}"
             other: "skupiny %{groupNames}"
         statuses:
-          pre_alpha: "Pre-Alpha"
+          experimental: "Experimentální"
           alpha: "Alpha"
           beta: "Beta"
           stable: "Stabilní"
@@ -5978,7 +5978,7 @@ cs:
           impact_type_feature: "Funkce"
           impact_type_other: "Ostatní"
           status_all: "Všechny stavy"
-          status_pre_alpha: "Pre-Alpha"
+          status_experimental: "Experimentální"
           status_alpha: "Alpha"
           status_beta: "Beta"
           status_stable: "Stabilní"

@@ -47,8 +47,6 @@ id:
           title: "Navigasi Bertumpuk"
         categories_list:
           title: "Daftar Kategori"
-        topic_link:
-          title: "Tautan Topik"
         topic_list_item:
           title: "Item Daftar Topik"
         topic_statuses:

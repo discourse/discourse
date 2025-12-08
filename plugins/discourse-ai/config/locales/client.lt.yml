@@ -242,6 +242,7 @@ lt:
           post_url_label: "Įrašo URL arba ID"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 arba įrašo ID"
           result: "Rezultatas"
+          system_prompt: "Sistemos pranešimas"
           scan_log: "Nuskaitymo žurnalas"
           spam: "Šlamštas"
       usage:
