@@ -90,12 +90,10 @@
     display: block;
     background-size: cover;
 
-    @media (prefers-reduced-motion) {
-      .rewind-notification-active #toggle-current-user::after {
-        background-image: absolute-image-url(
-          "/plugins/discourse-rewind/images/rewind-avatar-static.png"
-        );
-      }
+    @media (prefers-reduced-motion: reduce) {
+      background-image: absolute-image-url(
+        "/plugins/discourse-rewind/images/rewind-avatar-static.png"
+      );
     }
   }
 
