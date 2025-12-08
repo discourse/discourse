@@ -4,13 +4,8 @@ class UpcomingChanges::Promote
   include Service::Base
 
   params do
-    attribute :setting_name
-    attribute :promotion_status_threshold
-
-    before_validation do
-      self.setting_name = setting_name.try(:to_sym)
-      self.promotion_status_threshold = promotion_status_threshold.try(:to_sym)
-    end
+    attribute :setting_name, :symbol
+    attribute :promotion_status_threshold, :symbol
 
     validates :setting_name, presence: true
     validates :promotion_status_threshold,
@@ -21,7 +16,7 @@ class UpcomingChanges::Promote
   end
 
   policy :current_user_is_admin
-  policy :setting_is_available, class_name: SiteSetting::Policy::SettingIsAvailable
+  policy :setting_is_available
   policy :meets_promotion_criteria
   policy :setting_not_modified
   policy :setting_not_already_enabled
@@ -32,6 +27,10 @@ class UpcomingChanges::Promote
 
   def current_user_is_admin(guardian:)
     guardian.is_admin?
+  end
+
+  def setting_is_available(params:)
+    SiteSetting.respond_to?(params.setting_name)
   end
 
   def meets_promotion_criteria(params:)

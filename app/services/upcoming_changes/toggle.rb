@@ -15,13 +15,17 @@ class UpcomingChanges::Toggle
   end
 
   policy :current_user_is_admin
-  policy :setting_is_available, class_name: SiteSetting::Policy::SettingIsAvailable
+  policy :setting_is_available
   transaction { step :toggle }
 
   private
 
   def current_user_is_admin(guardian:)
     guardian.is_admin?
+  end
+
+  def setting_is_available(params:)
+    SiteSetting.respond_to?(params.setting_name)
   end
 
   def toggle(params:, guardian:, options:)

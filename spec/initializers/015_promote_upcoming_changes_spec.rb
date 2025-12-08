@@ -63,7 +63,7 @@ RSpec.describe "Promote upcoming changes initializer" do
         SiteSetting.enable_upload_debug_mode = false
         SiteSetting.create!(
           name: "enable_upload_debug_mode",
-          value: "f",
+          value: false,
           data_type: SiteSetting.types[:bool],
         )
       end
@@ -84,7 +84,7 @@ RSpec.describe "Promote upcoming changes initializer" do
           SiteSetting.show_user_menu_avatars = false
           SiteSetting.create!(
             name: "show_user_menu_avatars",
-            value: "f",
+            value: false,
             data_type: SiteSetting.types[:bool],
           )
         end

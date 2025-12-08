@@ -1,6 +1,18 @@
 # frozen_string_literal: true
 
 RSpec.describe UpcomingChanges::Promote do
+  describe described_class::Contract, type: :model do
+    subject(:contract) { described_class.new }
+
+    it { is_expected.to validate_presence_of(:setting_name) }
+    it { is_expected.to validate_presence_of(:promotion_status_threshold) }
+    it do
+      is_expected.to validate_inclusion_of(:promotion_status_threshold).in_array(
+        UpcomingChanges.statuses.keys,
+      )
+    end
+  end
+
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
@@ -23,18 +35,6 @@ RSpec.describe UpcomingChanges::Promote do
       )
     end
 
-    describe described_class::Contract, type: :model do
-      subject(:contract) { described_class.new }
-
-      it { is_expected.to validate_presence_of(:setting_name) }
-      it { is_expected.to validate_presence_of(:promotion_status_threshold) }
-      it do
-        is_expected.to validate_inclusion_of(:promotion_status_threshold).in_array(
-          UpcomingChanges.statuses.keys,
-        )
-      end
-    end
-
     context "when contract is invalid" do
       let(:params) { {} }
 
@@ -54,7 +54,7 @@ RSpec.describe UpcomingChanges::Promote do
         SiteSetting.enable_upload_debug_mode = false
         SiteSetting.create!(
           name: "enable_upload_debug_mode",
-          value: "f",
+          value: false,
           data_type: SiteSetting.types[:bool],
         )
       end
