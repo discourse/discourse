@@ -717,7 +717,8 @@ class PostsController < ApplicationController
 
     guardian.ensure_can_unhide!(post)
 
-    post.unhide!(skip_validations: true)
+    post.acting_user = current_user
+    post.unhide!
 
     render body: nil
   end

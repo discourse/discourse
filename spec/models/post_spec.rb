@@ -1675,13 +1675,15 @@ RSpec.describe Post do
 
       post.reload
 
-      expect { post.unhide!(skip_validations: true) }.not_to raise_error
+      post.acting_user = moderator
+      expect { post.unhide! }.not_to raise_error
       expect(post.reload.hidden).to eq(false)
     end
 
-    it "still enforces validations when skip_validations is false" do
+    it "prevents unhiding posts with embedded media when author lacks permission" do
       SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
 
+      moderator = Fabricate(:moderator, refresh_auto_groups: true)
       low_trust_user = Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true)
 
       post =
@@ -1693,9 +1695,9 @@ RSpec.describe Post do
 
       post.hide!(PostActionType.types[:off_topic])
 
-      post.update_columns(raw: "updated with media ![img](http://example.com/image.png)")
+      post.revise(moderator, raw: "updated with media ![img](http://example.com/image.png)")
 
-      post.reload
+      post = Post.find(post.id)
 
       expect { post.unhide! }.to raise_error(ActiveRecord::RecordInvalid)
     end

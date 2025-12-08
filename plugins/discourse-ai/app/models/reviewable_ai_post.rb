@@ -105,7 +105,10 @@ class ReviewableAiPost < Reviewable
 
   def perform_disagree(performed_by, args)
     # Undo hide/silence if applicable
-    post.unhide!(skip_validations: true) if post.hidden?
+    if post.hidden?
+      post.acting_user = performed_by
+      post.unhide!
+    end
 
     create_result(:success, :rejected) do |result|
       result.update_flag_stats = { status: :disagreed, user_ids: [created_by_id] }
