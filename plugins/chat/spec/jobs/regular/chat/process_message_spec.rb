@@ -39,4 +39,24 @@ describe Jobs::Chat::ProcessMessage do
     expect(link).to be_present
     expect(link.url).to eq("https://discourse.org/team")
   end
+
+  describe "invalidate_oneboxes" do
+    it "invalidates cached oneboxes and fetches fresh content" do
+      # Process the message once to populate the onebox cache
+      described_class.new.execute(chat_message_id: chat_message.id)
+      original_cooked = chat_message.reload.cooked
+      expect(original_cooked).to include("discourse.org")
+
+      # Update the stub to return different content
+      stub_request(:get, "https://discourse.org/team").to_return(
+        status: 200,
+        body: "<html><head><title>Updated Title</title></head></html>",
+      )
+
+      # Rebake with invalidate_oneboxes: true - this should fetch fresh content
+      described_class.new.execute(chat_message_id: chat_message.id, invalidate_oneboxes: true)
+      new_cooked = chat_message.reload.cooked
+      expect(new_cooked).to include("Updated Title")
+    end
+  end
 end
