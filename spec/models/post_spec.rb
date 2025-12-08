@@ -1656,6 +1656,50 @@ RSpec.describe Post do
       )
     end
 
+    it "allows staff to unhide posts containing media added by staff even if the author cannot embed" do
+      SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+
+      moderator = Fabricate(:moderator, refresh_auto_groups: true)
+      low_trust_user = Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true)
+
+      post =
+        create_post(
+          user: low_trust_user,
+          topic: Fabricate(:topic, user: low_trust_user),
+          raw: "original content",
+        )
+
+      post.hide!(PostActionType.types[:off_topic])
+
+      post.revise(moderator, raw: "updated with media ![img](http://example.com/image.png)")
+
+      post.reload
+
+      expect { post.unhide!(skip_validations: true) }.not_to raise_error
+      expect(post.reload.hidden).to eq(false)
+    end
+
+    it "still enforces validations when skip_validations is false" do
+      SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+
+      low_trust_user = Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true)
+
+      post =
+        create_post(
+          user: low_trust_user,
+          topic: Fabricate(:topic, user: low_trust_user),
+          raw: "original content",
+        )
+
+      post.hide!(PostActionType.types[:off_topic])
+
+      post.update_columns(raw: "updated with media ![img](http://example.com/image.png)")
+
+      post.reload
+
+      expect { post.unhide! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
     context "in a topic with multiple replies" do
       let!(:second_last_reply) do
         freeze_time 1.day.from_now

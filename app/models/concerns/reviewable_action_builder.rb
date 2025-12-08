@@ -222,7 +222,7 @@ module ReviewableActionBuilder
   end
 
   def perform_unhide_post(performed_by, _args)
-    target_post.unhide!
+    target_post.unhide!(skip_validations: true)
     create_result(:success, :approved, [created_by_id], false)
   end
 

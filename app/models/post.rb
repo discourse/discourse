@@ -679,8 +679,9 @@ class Post < ActiveRecord::Base
     topic.reset_bumped_at if should_reset_bumped_at
   end
 
-  def unhide!
+  def unhide!(skip_validations: false)
     Post.transaction do
+      self.skip_validation = skip_validations
       self.update!(hidden: false)
       should_update_user_stat = true
 
