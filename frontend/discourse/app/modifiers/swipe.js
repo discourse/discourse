@@ -98,7 +98,7 @@ export default class SwipeModifier extends Modifier {
       lock(this.element);
     }
 
-    this.onDidStartSwipeCallback?.(event.detail);
+    this.onDidStartSwipeCallback?.(event.detail, event);
   }
 
   /**
@@ -106,7 +106,7 @@ export default class SwipeModifier extends Modifier {
    * @param {Event} event - The swipe end event.
    */
   @bind
-  onDidEndSwipe() {
+  onDidEndSwipe(event) {
     if (this.lockBody) {
       unlock(this.element);
     }

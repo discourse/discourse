@@ -24,7 +24,7 @@ export default {
     );
 
     const openQuickChannelSelector = (e) => {
-      if (isInputSelection(event.target) && !isChatComposer(event.target)) {
+      if (isInputSelection(e.target) && !isChatComposer(e.target)) {
         return;
       }
       e.preventDefault();
