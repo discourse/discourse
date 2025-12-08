@@ -37,6 +37,7 @@ import {
   initUserStatusHtml,
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
+import { optionalRequire } from "discourse/lib/utilities";
 import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
 import DAutocompleteModifier, {
@@ -201,9 +202,9 @@ export default class ChatComposer extends Component {
 
   @action
   insertDiscourseLocalDate() {
-    // JIT import because local-dates isn't necessarily enabled
-    const LocalDatesCreateModal =
-      require("discourse/plugins/discourse-local-dates/discourse/components/modal/local-dates-create").default;
+    const LocalDatesCreateModal = optionalRequire(
+      "discourse/plugins/discourse-local-dates/discourse/components/modal/local-dates-create"
+    );
 
     this.modal.show(LocalDatesCreateModal, {
       model: {
