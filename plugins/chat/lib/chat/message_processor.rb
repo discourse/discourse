@@ -13,7 +13,7 @@ module Chat
       @opts = opts
 
       cook_opts = { user_id: chat_message.last_editor_id }
-      cook_opts[:invalidate_oneboxes] = true if !!opts[:invalidate_oneboxes]
+      cook_opts[:invalidate_oneboxes] = true if opts[:invalidate_oneboxes] == true
       cooked = Chat::Message.cook(chat_message.message, **cook_opts)
       @doc = Loofah.html5_fragment(cooked)
     end
