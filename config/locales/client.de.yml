@@ -5295,6 +5295,8 @@ de:
         enabled_for_options:
           everyone: "Jeder"
           staff: "Nur Team-Mitglieder"
+        statuses:
+          experimental: "Experimentell"
         impact_roles:
           admins: "Administratoren"
           moderators: "Moderatoren"
@@ -5305,6 +5307,7 @@ de:
           disabled: "Deaktiviert"
           impact_type_feature: "Funktion"
           impact_type_other: "Sonstiges"
+          status_experimental: "Experimentell"
       config:
         about:
           title: "Über deine Website"

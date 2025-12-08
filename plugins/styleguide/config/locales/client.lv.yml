@@ -43,8 +43,6 @@ lv:
           title: "Navigācija sakrauta"
         categories_list:
           title: "Sadaļu saraksts"
-        topic_link:
-          title: "Tēmas saite"
         topic_list_item:
           title: "Tēmu saraksta vienums"
         topic_statuses:

@@ -317,6 +317,8 @@ tr_TR:
           post_url_label: "Gönderi URL'si veya kimliği"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 veya gönderi kimliği"
           result: "Sonuç"
+          llm: "LLM"
+          system_prompt: "Sistem İstemi"
           scan_log: "Tarama günlüğü"
           run: "Testi çalıştır"
           spam: "İstenmeyen içerik"

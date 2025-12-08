@@ -88,6 +88,7 @@ ug:
         save_button: "ئۆزگەرتىشنى ساقلا"
         test_modal:
           result: "نەتىجە"
+          llm: "LLM"
           run: "سىناقنى ئىجرا قىل"
           spam: "ئەخلەت خەت"
       usage:

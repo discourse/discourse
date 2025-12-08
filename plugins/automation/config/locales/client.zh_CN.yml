@@ -10,6 +10,7 @@ zh_CN:
       logs:
         staff_actions:
           actions:
+            update_automation: 更新自动化
             delete_automation: 删除自动化
     discourse_automation:
       title: 自动化

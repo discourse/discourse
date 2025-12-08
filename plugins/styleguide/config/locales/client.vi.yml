@@ -38,8 +38,6 @@ vi:
           title: "Điều hướng ngăn xếp"
         categories_list:
           title: "Danh sách Danh mục"
-        topic_link:
-          title: "Liên kết chủ đề"
         topic_list_item:
           title: "Mục danh sách chủ đề"
         topic_statuses:

@@ -59,8 +59,6 @@ tr_TR:
           title: "Gezinti Yığılı"
         categories_list:
           title: "Kategori Listesi"
-        topic_link:
-          title: "Konu Bağlantısı"
         topic_list_item:
           title: "Konu Listesi Ögesi"
         topic_statuses:

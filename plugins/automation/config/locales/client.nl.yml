@@ -10,6 +10,7 @@ nl:
       logs:
         staff_actions:
           actions:
+            update_automation: automatisering bijwerken
             delete_automation: automatisering verwijderen
     discourse_automation:
       title: Automatisering

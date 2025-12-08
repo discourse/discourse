@@ -1,0 +1,25 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fa_IR:
+  js:
+    discourse_rewind:
+      reports:
+        reading_time:
+          title: زمان مطالعه
+        chat_usage:
+          messages: پیام‌ها
+          you: شما
+          status_online: "● آنلاین"
+        invites:
+          title: دعوت‌ها
+          invitee_posts: نوشته‌های ایجاد شده
+          invitee_likes: پسند‌های اعطایی
+        new_user_interactions:
+          likes_given: پسند‌های اعطایی
+          mentions: اشاره‌ها
+        writing_analysis:
+          menu_other: دیگر

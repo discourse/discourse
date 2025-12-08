@@ -5211,6 +5211,8 @@ it:
         enabled_for_options:
           everyone: "Chiunque"
           staff: "Solo staff"
+        statuses:
+          experimental: "Sperimentale"
         impact_roles:
           admins: "Amministratori"
           moderators: "Moderatori"
@@ -5221,6 +5223,7 @@ it:
           disabled: "Disabilitati"
           impact_type_feature: "Funzionalità"
           impact_type_other: "Altri"
+          status_experimental: "Sperimentale"
       config:
         about:
           title: "Informazioni sul tuo sito"

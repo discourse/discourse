@@ -1,0 +1,26 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  js:
+    discourse_rewind:
+      reports:
+        reading_time:
+          title: Tempo de leitura
+        chat_usage:
+          messages: mensagens
+          you: Você
+          status_online: "● on-line"
+        invites:
+          title: Convites
+          invitee_posts: Postagens criadas
+          invitee_likes: Curtidas dadas
+          label_invitations_sent: "Convites enviados:"
+        new_user_interactions:
+          likes_given: Curtidas dadas
+          mentions: Menções
+        writing_analysis:
+          menu_other: Outras

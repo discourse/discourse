@@ -1,0 +1,26 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sq:
+  js:
+    discourse_rewind:
+      reports:
+        reading_time:
+          title: Koha e leximit
+        chat_usage:
+          messages: mesazhet
+          you: Ju
+          status_online: "● online"
+        invites:
+          title: Ftesat
+          invitee_posts: Postime të krijuara
+          invitee_likes: Pëlqime të dhëna
+          label_invitations_sent: "Ftesat u dërguan:"
+        new_user_interactions:
+          likes_given: Pëlqime të dhëna
+          mentions: Përmendje
+        writing_analysis:
+          menu_other: Të tjerë

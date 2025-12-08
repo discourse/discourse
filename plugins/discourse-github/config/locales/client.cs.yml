@@ -9,9 +9,10 @@ cs:
     github:
       pr_status:
         draft: "Koncept"
-        open: "Otevřené"
-        approved: "Schválen"
-        closed: "Zavřené"
+        open: "Otevřeno"
+        approved: "Schváleno"
+        merged: "Sloučeno"
+        closed: "Zavřeno"
   admin_js:
     admin:
       site_settings:

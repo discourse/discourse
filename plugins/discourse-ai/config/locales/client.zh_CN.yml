@@ -377,6 +377,8 @@ zh_CN:
           post_url_label: "帖子 URL 或 ID"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 或帖子 ID"
           result: "结果"
+          llm: "LLM"
+          system_prompt: "系统提示"
           scan_log: "扫描日志"
           run: "运行测试"
           spam: "垃圾信息"

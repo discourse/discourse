@@ -1,0 +1,25 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+vi:
+  js:
+    discourse_rewind:
+      reports:
+        reading_time:
+          title: Thời gian đọc
+        chat_usage:
+          messages: tin nhắn
+          you: Bạn
+          status_online: "● trực tuyến"
+        invites:
+          title: Lời mời
+          invitee_posts: Bài đăng đã được tạo
+          invitee_likes: Lượt Likes
+        new_user_interactions:
+          likes_given: Lượt Likes
+          mentions: Được nhắc đến
+        writing_analysis:
+          menu_other: Khác

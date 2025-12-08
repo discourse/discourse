@@ -43,8 +43,6 @@ en_GB:
           title: "Navigation Stacked"
         categories_list:
           title: "Categories List"
-        topic_link:
-          title: "Topic Link"
         topic_list_item:
           title: "Topic List Item"
         topic_statuses:

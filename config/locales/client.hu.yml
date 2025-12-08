@@ -5262,6 +5262,8 @@ hu:
         enabled_for_options:
           everyone: "Mindenki"
           staff: "Csak a stáb"
+        statuses:
+          experimental: "Kísérleti"
         impact_roles:
           admins: "Adminisztrátorok"
           moderators: "Moderátorok"
@@ -5271,6 +5273,7 @@ hu:
           enabled: "Bekapcsolva"
           disabled: "Kikapcsolva"
           impact_type_other: "Egyéb"
+          status_experimental: "Kísérleti"
       config:
         about:
           title: "Az Ön webhelyéről"

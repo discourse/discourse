@@ -59,8 +59,6 @@ ja:
           title: "スタックナビゲーション"
         categories_list:
           title: "カテゴリリスト"
-        topic_link:
-          title: "トピックリンク"
         topic_list_item:
           title: "トピックリスト項目"
         topic_statuses:

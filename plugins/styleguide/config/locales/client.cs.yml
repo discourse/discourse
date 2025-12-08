@@ -61,8 +61,6 @@ cs:
           title: "Složená navigace"
         categories_list:
           title: "Seznam kategorií"
-        topic_link:
-          title: "Odkaz na téma"
         topic_list_item:
           title: "Položka seznamu témat"
         topic_statuses:

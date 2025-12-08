@@ -5214,6 +5214,8 @@ pt_BR:
         enabled_for_options:
           everyone: "Todos(as)"
           staff: "Somente equipe"
+        statuses:
+          experimental: "Experimental"
         impact_roles:
           moderators: "Moderadores(as)"
           staff: "Equipe"
@@ -5223,6 +5225,7 @@ pt_BR:
           disabled: "Desativados(as)"
           impact_type_feature: "Recurso"
           impact_type_other: "Outras"
+          status_experimental: "Experimental"
       config:
         about:
           title: "Sobre seu site"

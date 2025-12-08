@@ -1,0 +1,26 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+cs:
+  js:
+    discourse_rewind:
+      reports:
+        reading_time:
+          title: Čas čtení
+        chat_usage:
+          messages: zprávy
+          you: Vy
+          status_online: "● online"
+        invites:
+          title: Pozvánky
+          invitee_posts: Vytvořeno příspěvků
+          invitee_likes: Rozdaných 'líbí se'
+          label_invitations_sent: "Pozvánky odeslány:"
+        new_user_interactions:
+          likes_given: Rozdaných 'líbí se'
+          mentions: Zmínky
+        writing_analysis:
+          menu_other: Ostatní

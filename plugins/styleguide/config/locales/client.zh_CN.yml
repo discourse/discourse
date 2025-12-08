@@ -59,8 +59,6 @@ zh_CN:
           title: "堆叠式导航"
         categories_list:
           title: "类别列表"
-        topic_link:
-          title: "话题链接"
         topic_list_item:
           title: "话题列表项"
         topic_statuses:

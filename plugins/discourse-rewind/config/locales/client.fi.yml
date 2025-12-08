@@ -1,0 +1,26 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  js:
+    discourse_rewind:
+      reports:
+        reading_time:
+          title: Lukuaika
+        chat_usage:
+          messages: viestit
+          you: Sinä
+          status_online: "● online-tilassa"
+        invites:
+          title: Kutsut
+          invitee_posts: Kirjoitettuja viestejä
+          invitee_likes: Annettuja tykkäyksiä
+          label_invitations_sent: "Kutsut lähetettiin:"
+        new_user_interactions:
+          likes_given: Annettuja tykkäyksiä
+          mentions: Maininnat
+        writing_analysis:
+          menu_other: Muut

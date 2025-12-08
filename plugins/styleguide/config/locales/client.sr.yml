@@ -43,8 +43,6 @@ sr:
           title: "Složena navigacija"
         categories_list:
           title: "Lista Kategorija"
-        topic_link:
-          title: "Link za temu"
         topic_list_item:
           title: "Ставка листе тема"
         topic_statuses:

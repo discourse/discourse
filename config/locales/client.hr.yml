@@ -5491,6 +5491,8 @@ hr:
         enabled_for_options:
           everyone: "Svi"
           staff: "Samo osoblje"
+        statuses:
+          experimental: "Eksperimentalno"
         impact_roles:
           admins: "Admini"
           moderators: "Moderatori"
@@ -5500,6 +5502,7 @@ hr:
           enabled: "Omogućeno"
           disabled: "Onemogućeno"
           impact_type_other: "Ostalo"
+          status_experimental: "Eksperimentalno"
       config:
         about:
           title: "O vašoj web stranici"

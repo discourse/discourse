@@ -317,6 +317,8 @@ nl:
           post_url_label: "Bericht-URL of -ID"
           post_url_placeholder: "https://jouw-forum.com/t/topic/123/4 of bericht-ID"
           result: "Resultaat"
+          llm: "LLM"
+          system_prompt: "Systeemprompt"
           scan_log: "Scanlog"
           run: "Test uitvoeren"
           spam: "Spam"

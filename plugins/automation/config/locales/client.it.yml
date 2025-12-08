@@ -10,6 +10,7 @@ it:
       logs:
         staff_actions:
           actions:
+            update_automation: aggiorna automazione
             delete_automation: elimina automazione
     discourse_automation:
       title: Automazione

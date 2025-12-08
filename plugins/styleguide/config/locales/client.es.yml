@@ -59,8 +59,6 @@ es:
           title: "Navegación apilada"
         categories_list:
           title: "Lista de categorías"
-        topic_link:
-          title: "Enlace al tema"
         topic_list_item:
           title: "Elemento de la lista de temas"
         topic_statuses:

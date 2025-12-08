@@ -10,6 +10,7 @@ fi:
       logs:
         staff_actions:
           actions:
+            update_automation: päivitä automaatio
             delete_automation: poista automaatio
     discourse_automation:
       title: Automaatio

@@ -1,0 +1,28 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  js:
+    discourse_rewind:
+      reports:
+        reading_time:
+          title: Время на прочтение
+        assignments:
+          title: Назначения
+        chat_usage:
+          messages: сообщений
+          you: Вы
+          status_online: "● онлайн"
+        invites:
+          title: Приглашения
+          invitee_posts: Создано сообщений
+          invitee_likes: Лайков поставлено
+          label_invitations_sent: "Приглашений отправлены:"
+        new_user_interactions:
+          likes_given: Лайков поставлено
+          mentions: Упоминания
+        writing_analysis:
+          menu_other: Разное

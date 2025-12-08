@@ -59,8 +59,6 @@ sk:
           title: "Navigácia"
         categories_list:
           title: "Zoznam kategórií"
-        topic_link:
-          title: "Odkaz na tému"
         topic_list_item:
           title: "Položka zoznamu tém"
         topic_statuses:

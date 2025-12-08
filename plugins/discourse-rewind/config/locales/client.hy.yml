@@ -1,0 +1,25 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hy:
+  js:
+    discourse_rewind:
+      reports:
+        reading_time:
+          title: Կարդալու ժամանակը
+        chat_usage:
+          messages: հաղորդագրություն
+          you: Դուք
+          status_online: "● օնլայն"
+        invites:
+          title: Հրավերներ
+          invitee_posts: Ստեղծած Գրառում
+          invitee_likes: Տրված Հավանումները
+        new_user_interactions:
+          likes_given: Տրված Հավանումները
+          mentions: Հիշատակումներ
+        writing_analysis:
+          menu_other: Այլ

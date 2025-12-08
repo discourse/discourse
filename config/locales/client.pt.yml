@@ -4553,6 +4553,8 @@ pt:
         enabled_for_options:
           everyone: "Todos"
           staff: "Apenas Pessoal"
+        statuses:
+          experimental: "Experimental"
         impact_roles:
           admins: "Administradores"
           moderators: "Moderadores"
@@ -4563,6 +4565,7 @@ pt:
           disabled: "Desativado"
           impact_type_feature: "Funcionalidade"
           impact_type_other: "Outro"
+          status_experimental: "Experimental"
       config:
         about:
           title: "Sobre o seu ''site''"

@@ -5905,7 +5905,7 @@ he:
             many: "הקבוצות %{groupNames}"
             other: "הקבוצות %{groupNames}"
         statuses:
-          pre_alpha: "טרום אלפא"
+          experimental: "ניסיוני"
           alpha: "אלפא"
           beta: "בטא"
           stable: "יציב"
@@ -5927,7 +5927,7 @@ he:
           impact_type_feature: "יכולת"
           impact_type_other: "אחר"
           status_all: "כל המצבים"
-          status_pre_alpha: "טרום אלפא"
+          status_experimental: "ניסיוני"
           status_alpha: "אלפא"
           status_beta: "בטא"
           status_stable: "יציב"

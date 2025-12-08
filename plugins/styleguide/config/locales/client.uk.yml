@@ -61,8 +61,6 @@ uk:
           title: "Панель вибору налаштувань"
         categories_list:
           title: "Список категорій"
-        topic_link:
-          title: "Посилання на тему"
         topic_list_item:
           title: "Тема у списку тем"
         topic_statuses:

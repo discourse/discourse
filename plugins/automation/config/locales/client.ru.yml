@@ -10,6 +10,7 @@ ru:
       logs:
         staff_actions:
           actions:
+            update_automation: обновить автоматизацию
             delete_automation: удалить автоматизацию
     discourse_automation:
       title: Автоматизация

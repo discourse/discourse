@@ -836,6 +836,7 @@ uk:
       filtered_topic: "Ви відфільтрували контент до розгляду в одній темі."
       filtered_user: "Позначений користувач"
       filtered_reviewed_by: "Розглянуто"
+      filtered_claimed_by: "Прапор позначено"
       show_all_topics: "показати усі теми"
       deleted_post: "(допис вилучено)"
       deleted_user: "(користувача вилучено)"
@@ -924,6 +925,8 @@ uk:
           low: "Низький"
           medium: "Середній"
           high: "Високий"
+        active_filters: "Активні фільтри:"
+        clear_filter: "Видалити %{filter}"
       conversation:
         view_full: "переглянути усю розмову"
       scores:
@@ -989,6 +992,7 @@ uk:
       queued_post_label: "Повідомлення в черзі"
       queued_topic_label: "Тема в черзі"
       user_label: "Користувач"
+      assigned_to: "Пост, призначений для"
       moderator_actions: "Дії модератора"
       timeline_and_notes: "Хронологія та нотатки"
       timeline:
@@ -998,6 +1002,7 @@ uk:
         flagged_as_by: "Позначено як %{flagReason} від %{username} · %{relativeDate}"
         claimed: "Заявлено претензію"
         claimed_by: "Подано претензію %{username} · %{relativeDate}"
+        unclaimed_by: "Не затребувано %{username} · %{relativeDate}"
         reviewed: "Розглянуто"
         reviewed_by: "Переглянуто %{username} · %{relativeDate}"
         view_conversation: "перегляд ПП"
@@ -1037,16 +1042,24 @@ uk:
           other: "%{count} підтверджених прапорів"
         user_activity: "Інформація про користувача"
         activities:
+          joined_on: "приєднався: %{joinDate}"
           trust_level: "рівень довіри: %{trustLevelName}"
           posts:
             one: "%{count} допис"
             few: "%{count} дописи"
             many: "%{count} дописів"
             other: "%{count} дописів"
+        moderation_history:
+          label: "Історія модерації"
+          silenced: "Заблоковано %{count}"
+          suspended: "Призупинено: %{count}"
+          rejected_posts: "Відхилені повідомлення: %{count}"
         solution_marked: "Рішення позначено"
         topic_has_solution: "Ця тема має рішення"
         visibility: "Видимість"
+        topic_unlisted: "Ця тема не входить до списку та доступна лише за прямим посиланням."
       help:
+        community_moderation_guide: "Посібник з модерації цієї спільноти"
         moderation_guide: "Посібник з модерації дискурсу"
         flag_priorities: "Керування репутацією користувачів та пріоритетами скарг"
         spam_detection: "Виявлення спаму"
@@ -1500,12 +1513,18 @@ uk:
         many: "Категорії (ще %{count} )…"
         other: "Категорії (ще %{count} )…"
     ip_lookup:
+      title: IP-адреса
       hostname: Імʼя хоста
       location: Місцезнаходження
       location_not_found: (невідомо)
       organisation: Організація
       phone: Телефон
       other_accounts: "Інші облікові записи з цією IP адресою"
+      other_accounts_with_ip:
+        one: "%{count} інший обліковий запис із цією IP-адресою"
+        few: "%{count} інші облікові записи із цією IP-адресою"
+        many: "%{count} інших облікових записів із цією IP-адресою"
+        other: "%{count} інших облікових записів із цією IP-адресою"
       delete_other_accounts:
         one: "Видалити %{count}"
         few: "Видалити %{count}"
@@ -3209,6 +3228,9 @@ uk:
         zoom_out: "Зменшити розмір зображення"
         zoom_in: "Збільшити розмір зображення"
         remove: "Видалити зображення"
+        add_to_grid: "Додати до сітки"
+        move_outside_grid: "Переміщення за межі сітки"
+      grid_label: "Це відображатиметься у вигляді сітки"
       image_scale_button: "Масштабувати зображення до %{percent}%"
       delete_image_button: Видалити зображення
       toggle_image_grid: Перемкнути сітку зображень
@@ -3602,6 +3624,16 @@ uk:
           few: "Видалити теми"
           many: "Видалити теми"
           other: "Видалити теми"
+        delete_posts_count:
+          one: "Видалити повідомлення"
+          few: "Видалити повідомлення"
+          many: "Видалити повідомлення"
+          other: "Видалити повідомлення"
+        delete_posts_confirmation:
+          one: "Ви дійсно хочете видалити %{count} допис?"
+          few: "Ви дійсно бажаєте видалити %{count} дописи?"
+          many: "Ви дійсно бажаєте видалити %{count} дописів?"
+          other: "Ви дійсно бажаєте видалити %{count} дописів?"
         dismiss: "Відхилити"
         dismiss_read: "Відхилити всі непрочитані"
         dismiss_read_with_selected:
@@ -4260,6 +4292,7 @@ uk:
         actions: "Масові дії"
     post:
       accessible_heading: "публікація від %{username} %{date}"
+      heading_anchor: "Посилання заголовка"
       confirm_delete: "Ви справді бажаєте вилучити цей допис?"
       quote_reply: "Цитата"
       quote_reply_shortcut: "Цитата (або натисніть q)"
@@ -5067,6 +5100,7 @@ uk:
       download: "Завантажити"
       open: "Оригінальне зображення"
       image_info: "Інформація про зображення"
+      quote: "Цитувати зображення"
       previous: "Попередній (клавіша зі стрілкою вліво)"
       next: "Наступний (клавіша зі стрілкою вправо)"
       counter: "%curr% з %total%"
@@ -5878,23 +5912,35 @@ uk:
         plugin: "Плагін"
         metadata: "Метадані"
         enabled: "Включено"
+        enabled_for: "Увімкнено для..."
         show_image: "Показати зображення"
         edit_groups: "Редагувати групи підписки"
         groups_updated: "Групи оновлено!"
         save_groups: "Зберегти групи"
+        add_groups_to_enable: "Додайте групи, щоб увімкнути цю функцію"
+        no_changes_to_save: "Немає змін для збереження"
         select_groups: "Виберіть групи…"
         opt_in_groups: "Вибрані групи"
         opt_in_groups_instructions: "Групи вибрані можна використовувати, щоб дозволити певній групі користувачів протестувати зміну, перш ніж вона буде опублікована для всіх. Зверніть увагу, що ці групи втратять актуальність, щойно зміна перейде до статусу «Стабільна»."
+        enabled_for_throttle: "Ви занадто швидко змінили, для кого ввімкнено цю зміну. Зачекайте кілька секунд, перш ніж повторити спробу."
+        change_enabled_for_success: "Ви ввімкнули цю зміну для %{enabledFor}"
         change_disabled: "Ви відмовилися від цієї зміни"
         permanent_notice: "Ця зміна зараз постійна і незабаром буде видалена. Ви більше не зможете її відмінити."
         permanent_no_group_selection: "Н/Д, постійні зміни застосовуються до всіх груп."
         no_changes: "Наразі жодних змін не планується."
         preview: "Попередній перегляд"
         enabled_for_options:
+          no_one: "Ніхто"
           everyone: "Усі"
           staff: "Для команди обслуговування"
+          specific_groups: "Конкретна(і) група(и)"
+          specific_groups_with_group_names:
+            one: "група %{groupNames}"
+            few: "групи %{groupNames}"
+            many: "групи %{groupNames}"
+            other: "групи %{groupNames}"
         statuses:
-          pre_alpha: "Пре-альфа"
+          experimental: "Експериментальний"
           alpha: "Альфа"
           beta: "Бета"
           stable: "Стабільна"
@@ -5916,7 +5962,7 @@ uk:
           impact_type_feature: "Особливість"
           impact_type_other: "Інше"
           status_all: "Усі статуси"
-          status_pre_alpha: "Пре-альфа"
+          status_experimental: "Експериментальний"
           status_alpha: "Альфа"
           status_beta: "Бета"
           status_stable: "Стабільна"
@@ -6060,11 +6106,13 @@ uk:
             enabled_themes:
               label: "Увімкнено для тем..."
               description: "Виберіть, у яких темах має відображатися банер. Відображаються лише активні теми."
+              select_label: "Виберіть теми"
             background_image:
               label: "Фонове зображення"
               description: "Це зображення буде відображатися за текстом банера."
             text_color:
               label: "Колір тексту"
+              description: "Коли завантажено «Фонове зображення» вище, скористайтеся цим налаштуванням, щоб змінити колір тексту банера, щоб забезпечити його читабельність. Якщо залишити поле порожнім або не завантажити фонове зображення, колір контролюватиметься активною темою."
             page_visibility:
               label: "Видимість сторінки"
               description: "Виберіть, де має відображатися банер."
@@ -6782,6 +6830,7 @@ uk:
           user_destroyed: "Користувача видалено"
           user_suspended: "Користувача призупинено"
           user_unsuspended: "Користувача розблоковано"
+          user_anonymized: "Користувач анонімізований"
         reviewable_event:
           group_name: "Події, що підлягають перегляду"
           reviewable_created: "Елемент для перегляду готовий"
@@ -7915,6 +7964,7 @@ uk:
         clear_all: Очистити все
         clear_all_confirm: "Ви впевнені, що хочете видалити всі контрольні слова на %{action}?"
         invalid_regex: 'Контрольоване слово "%{word}" є недійсним регулярним виразом.'
+        invalid_regex_multiple: "Неправильні регулярні вирази:"
         regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">Контролюємі слова є регулярні вирази</a> і вони автоматично не включають межі слів. Якщо ви хочете, щоб регулярний вираз відповідав цілим словам, додайте <code>\b</code> на початку і в кінці вашого регулярного виразу.'
         actions:
           block: "Заблокувати"
@@ -8569,6 +8619,7 @@ uk:
           experimental: "Експериментальний"
         secret_list:
           invalid_input: "поля введення не можуть бути порожніми, або містити символ вертикальної риски."
+          already_exists: "Запис для %{key} вже існує."
         default_categories:
           modal_description:
             one: "Ви хочете застосувати цю зміну історично? Це змінить налаштування для існуючого користувача %{count} ."

@@ -43,8 +43,6 @@ gl:
           title: "Navegación vertical"
         categories_list:
           title: "Lista de categorías"
-        topic_link:
-          title: "Ligazón do tema"
         topic_list_item:
           title: "Elemento da lista de temas"
         topic_statuses:

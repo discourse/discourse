@@ -43,8 +43,6 @@ pt:
           title: "Navegação Empilhada"
         categories_list:
           title: "Lista de Categorias"
-        topic_link:
-          title: "Link de Tópico"
         topic_list_item:
           title: "Item da Lista de Tópicos"
         topic_statuses:

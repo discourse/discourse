@@ -1,0 +1,24 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  js:
+    discourse_rewind:
+      reports:
+        reading_time:
+          title: 읽은 시간
+        chat_usage:
+          messages: 메시지
+          you: 사용자님
+        invites:
+          title: 초대
+          invitee_posts: 글 수
+          invitee_likes: '''좋아요'' 선물한 횟수'
+        new_user_interactions:
+          likes_given: '''좋아요'' 선물한 횟수'
+          mentions: 멘션
+        writing_analysis:
+          menu_other: 기타

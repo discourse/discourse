@@ -5257,6 +5257,8 @@ ur:
         enabled_for_options:
           everyone: "ہر کوئی"
           staff: "صرف سٹاف کیلئے"
+        statuses:
+          experimental: "تجرباتی"
         impact_roles:
           admins: "منتظمین"
           moderators: "نگران"
@@ -5266,6 +5268,7 @@ ur:
           enabled: "فعال شدہ"
           disabled: "غیر فعال"
           impact_type_other: "دیگر"
+          status_experimental: "تجرباتی"
       config:
         about:
           title: "آپ کی سائٹ کے بارے میں"

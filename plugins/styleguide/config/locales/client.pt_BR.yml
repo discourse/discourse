@@ -59,8 +59,6 @@ pt_BR:
           title: "Navegação empilhada"
         categories_list:
           title: "Lista de categorias"
-        topic_link:
-          title: "Link de tópico"
         topic_list_item:
           title: "Item de lista de tópicos"
         topic_statuses:

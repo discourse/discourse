@@ -6314,6 +6314,8 @@ ar:
         enabled_for_options:
           everyone: "الجميع"
           staff: "لفريق العمل فقط"
+        statuses:
+          experimental: "تجريبي"
         impact_roles:
           admins: "المسؤولون"
           moderators: "المشرفون"
@@ -6324,6 +6326,7 @@ ar:
           disabled: "متوقفة"
           impact_type_feature: "الميزة"
           impact_type_other: "أخرى"
+          status_experimental: "تجريبي"
       config:
         about:
           title: "نبذة عن موقعك"

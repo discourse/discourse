@@ -10,6 +10,8 @@ pl_PL:
       logs:
         staff_actions:
           actions:
+            create_automation: utwórz automatyzację
+            update_automation: aktualizuj automatyzację
             delete_automation: usuń automatyzację
     discourse_automation:
       title: Automatyzacja

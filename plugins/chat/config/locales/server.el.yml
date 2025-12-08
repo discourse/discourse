@@ -56,6 +56,7 @@ el:
         is_already_in_use: "είναι ήδη σε χρήση"
     bookmarkable:
       notification_title_channel: "μήνυμα στο %{channel_name}"
+      notification_title_direct_message: "μήνυμα με %{channel_name}"
     personal_chat: "προσωπική συνομιλία"
     onebox:
       inline_to_channel: "Συνομιλία #%{chat_channel}"
@@ -75,6 +76,10 @@ el:
     popup:
       chat_mention:
         direct: '%{username} σε ανέφερε στο "%{channel}"'
+      direct_message_chat_mention:
+        direct: "%{username} σας επισήμανε σε προσωπική συνομιλία"
+        other_type: "%{username} επισήμανε %{identifier} σε προσωπική συνομιλία"
+      new_direct_chat_message: "%{username} έστειλε ένα μήνυμα σε προσωπική συνομιλία"
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

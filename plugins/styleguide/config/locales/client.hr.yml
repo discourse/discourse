@@ -43,8 +43,6 @@ hr:
           title: "Navigacija složena"
         categories_list:
           title: "Popis kategorija"
-        topic_link:
-          title: "Veza na temu"
         topic_list_item:
           title: "Stavka popisa tema"
         topic_statuses:

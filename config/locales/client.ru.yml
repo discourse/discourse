@@ -5763,6 +5763,8 @@ ru:
         enabled_for_options:
           everyone: "Все"
           staff: "Только для персонала"
+        statuses:
+          experimental: "Экспериментальная функция"
         impact_roles:
           admins: "Администраторы"
           moderators: "Модераторы"
@@ -5773,6 +5775,7 @@ ru:
           disabled: "Отключен"
           impact_type_feature: "Функция"
           impact_type_other: "Разное"
+          status_experimental: "Экспериментальная функция"
       config:
         about:
           title: "О вашем сайте"

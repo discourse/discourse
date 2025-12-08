@@ -9,5 +9,9 @@ el:
     discourse_templates:
       title: "Πρότυπα"
   js:
+    keyboard_shortcuts_help:
+      templates:
+        title: "Πρότυπα (εντός μιας περιοχής κειμένου)"
+        insert_template: "%{shortcut} Εισαγωγή προτύπου"
     templates:
       source: "Πηγή"
