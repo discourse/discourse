@@ -151,7 +151,7 @@ RSpec.describe Onebox::Engine::StandardEmbed do
         </body></html>
       HTML
       embed = anchor_class.new("https://example.com/page#my-section")
-      embed.html_doc_override = Nokogiri::HTML(html)
+      embed.html_doc_override = Nokogiri.HTML(html)
 
       expect(embed.send(:find_section_title, "my-section")).to eq("My Section Title")
     end
@@ -166,9 +166,11 @@ RSpec.describe Onebox::Engine::StandardEmbed do
         </body></html>
       HTML
       embed = anchor_class.new("https://example.com/page#Base.pkgversion-Tuple{Module}")
-      embed.html_doc_override = Nokogiri::HTML(html)
+      embed.html_doc_override = Nokogiri.HTML(html)
 
-      expect(embed.send(:find_section_title, "Base.pkgversion-Tuple{Module}")).to eq("pkgversion(m::Module)")
+      expect(embed.send(:find_section_title, "Base.pkgversion-Tuple{Module}")).to eq(
+        "pkgversion(m::Module)",
+      )
     end
 
     it "does not duplicate title when section title already appears in page title" do
@@ -178,7 +180,7 @@ RSpec.describe Onebox::Engine::StandardEmbed do
         </body></html>
       HTML
       embed = anchor_class.new("https://example.com/page#installation")
-      embed.html_doc_override = Nokogiri::HTML(html)
+      embed.html_doc_override = Nokogiri.HTML(html)
       embed.instance_variable_set(:@raw, { title: "Installation Guide - My Project" })
 
       embed.send(:enhance_title_with_anchor)
@@ -193,12 +195,14 @@ RSpec.describe Onebox::Engine::StandardEmbed do
         </body></html>
       HTML
       embed = anchor_class.new("https://example.com/page#getting-started")
-      embed.html_doc_override = Nokogiri::HTML(html)
+      embed.html_doc_override = Nokogiri.HTML(html)
       embed.instance_variable_set(:@raw, { title: "My Project Documentation" })
 
       embed.send(:enhance_title_with_anchor)
 
-      expect(embed.instance_variable_get(:@raw)[:title]).to eq("Getting Started - My Project Documentation")
+      expect(embed.instance_variable_get(:@raw)[:title]).to eq(
+        "Getting Started - My Project Documentation",
+      )
     end
 
     it "cleans anchor symbols from section titles" do

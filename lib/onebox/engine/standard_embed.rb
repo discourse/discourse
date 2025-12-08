@@ -204,7 +204,7 @@ module Onebox
 
       def enhance_title_with_anchor
         return unless html_doc
-        return unless @raw[:title].present?
+        return if @raw[:title].blank?
 
         fragment = extract_url_fragment
         return if fragment.blank?
@@ -230,14 +230,13 @@ module Onebox
       end
 
       def find_section_title(fragment)
-        target = html_doc.at_xpath("//*[@id='#{fragment.gsub("'", "\\'")}']") ||
-                 html_doc.at_xpath("//a[@name='#{fragment.gsub("'", "\\'")}']") ||
-                 html_doc.at_css("##{CSS.escape(fragment)}")
+        target =
+          html_doc.at_xpath("//*[@id='#{fragment.gsub("'", "\\'")}']") ||
+            html_doc.at_xpath("//a[@name='#{fragment.gsub("'", "\\'")}']") ||
+            html_doc.at_css("##{CSS.escape(fragment)}")
         return nil unless target
 
-        if target.name =~ /^h[1-6]$/i
-          return target.text.strip
-        end
+        return target.text.strip if target.name =~ /^h[1-6]$/i
 
         code_content = target.at_css("code, .docstring-binding")&.text&.strip
         return code_content if code_content.present?
