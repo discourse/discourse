@@ -64,6 +64,10 @@ el:
     popup:
       chat_mention:
         direct: '%{username} σε ανέφερε στο "%{channel}"'
+      direct_message_chat_mention:
+        direct: "%{username} σας επισήμανε σε προσωπική συνομιλία"
+        other_type: "%{username} επισήμανε %{identifier} σε προσωπική συνομιλία"
+      new_direct_chat_message: "%{username} έστειλε ένα μήνυμα σε προσωπική συνομιλία"
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"
