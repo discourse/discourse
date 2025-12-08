@@ -12,8 +12,13 @@ describe "RemoveUploadMarkupFromDeletedPosts" do
       Discourse.system_user.id,
     )
   end
+
   let!(:raw) do
-    "![](#{nameless_upload.short_url})Hey it is a regular post with a link to [Discourse](https://www.discourse.org) and a #{upload.to_markdown} #{file_upload.to_markdown}"
+    "![](#{nameless_upload.short_url}) Hey it is a regular post with a link to [Discourse](https://www.discourse.org) and a #{upload.to_markdown} #{file_upload.to_markdown}"
+  end
+
+  let!(:expected_raw) do
+    " Hey it is a regular post with a link to [Discourse](https://www.discourse.org) and a"
   end
 
   let!(:post) { Fabricate(:post, topic: topic, raw: raw) }
@@ -51,9 +56,7 @@ describe "RemoveUploadMarkupFromDeletedPosts" do
       expect {
         automation.trigger!
         deleted_post.reload
-      }.to change { deleted_post.raw }.from(raw).to(
-        "Hey it is a regular post with a link to [Discourse](https://www.discourse.org) and a",
-      )
+      }.to change { deleted_post.raw }.from(raw).to(expected_raw)
 
       expect(post.raw).to eq(raw)
     end
@@ -65,9 +68,7 @@ describe "RemoveUploadMarkupFromDeletedPosts" do
       expect {
         automation.trigger!
         deleted_post.reload
-      }.to change { deleted_post.raw }.from(raw).to(
-        "Hey it is a regular post with a link to [Discourse](https://www.discourse.org) and a",
-      )
+      }.to change { deleted_post.raw }.from(raw).to(expected_raw)
     end
 
     it "does not remove uploads from non-deleted posts" do
@@ -163,9 +164,7 @@ describe "RemoveUploadMarkupFromDeletedPosts" do
         expect {
           Jobs::DiscourseAutomation::Tracker.new.execute
           deleted_post.reload
-        }.to change { deleted_post.raw }.from(raw).to(
-          "Hey it is a regular post with a link to [Discourse](https://www.discourse.org) and a",
-        )
+        }.to change { deleted_post.raw }.from(raw).to(expected_raw)
 
         expect(post.raw).to eq(raw)
       end
