@@ -34,6 +34,25 @@
       background: var(--danger);
     }
   }
+
+  &--compact {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: 0;
+
+    .ai-credit-bar__progress {
+      flex: 1;
+      margin-bottom: 0;
+      min-width: 60px;
+    }
+
+    .ai-credit-bar__text {
+      flex-shrink: 0;
+      font-size: var(--font-down-2);
+      white-space: nowrap;
+    }
+  }
 }
 
 .ai-credit-warning {

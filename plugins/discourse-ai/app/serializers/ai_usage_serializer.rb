@@ -44,7 +44,7 @@ class AiUsageSerializer < ApplicationSerializer
 
   def models
     object.model_breakdown.map do |row|
-      {
+      model_data = {
         id: row.llm_id,
         llm: row.llm_label,
         usage_count: row.usage_count,
@@ -58,6 +58,18 @@ class AiUsageSerializer < ApplicationSerializer
         cache_read_spending: row.cache_read_spending,
         cache_write_spending: row.cache_write_spending,
       }
+
+      if row.llm_id.present? && row.llm_id.to_i.negative?
+        llm_model = LlmModel.find_by(id: row.llm_id)
+        if llm_model&.llm_credit_allocation.present?
+          model_data[:credit_allocation] = LlmCreditAllocationSerializer.new(
+            llm_model.llm_credit_allocation,
+            root: false,
+          ).as_json
+        end
+      end
+
+      model_data
     end
   end
 
