@@ -425,6 +425,7 @@ en:
         feature: "Feature"
         usage_count: "Usage count"
         model: "Model"
+        credits_remaining: "Credits remaining"
         models_breakdown: "Usage per model"
         users_breakdown: "Usage per user"
         all_features: "All features"
