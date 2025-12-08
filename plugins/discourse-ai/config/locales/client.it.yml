@@ -317,6 +317,8 @@ it:
           post_url_label: "URL o ID del messaggio"
           post_url_placeholder: "https://tuo-forum.com/t/topic/123/4 oppure l'ID del messaggio"
           result: "Risultato"
+          llm: "LLM"
+          system_prompt: "Comando di sistema"
           scan_log: "Registro di scansione"
           run: "Esegui test"
           spam: "Spam"

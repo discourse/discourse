@@ -59,8 +59,6 @@ ar:
           title: "التنقّل الرأسي"
         categories_list:
           title: "قائمة الفئات"
-        topic_link:
-          title: "رابط الموضوع"
         topic_list_item:
           title: "العنصر في قائمة الموضوعات"
         topic_statuses:

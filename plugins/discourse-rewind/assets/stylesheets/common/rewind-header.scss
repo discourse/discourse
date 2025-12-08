@@ -1,0 +1,99 @@
+.rewind-logo {
+  height: 40px;
+
+  &.--light {
+    display: none;
+  }
+
+  &.--dark {
+    display: block;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    &.--light {
+      display: block;
+    }
+
+    &.--dark {
+      display: none;
+    }
+  }
+
+  @if is-dark-color-scheme() {
+    &.--dark {
+      display: none;
+    }
+
+    &.--light {
+      display: block;
+    }
+  }
+}
+
+.rewind__header {
+  padding: 1em 0 1em 1em;
+  background-color: #fbf8e4;
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0    168.7 52.42"><path d="m0 0 49.67 52.42h23.8L23.81 0z" style="fill:%23d0222b"/><path d="m23.81 0    49.66 52.42h23.81L47.62 0z" style="fill:%23f15f25"/><path d="m47.62 0 49.66 52.42h23.81L71.42    0z" style="fill:%23fcf6b2"/><path d="m71.42 0 49.67 52.42h23.8L95.23 0z"    style="fill:%2310a94d"/><path d="m95.23 0 49.66 52.42h23.81L119.04 0z"    style="fill:%2329abe2"/></svg>');
+  background-repeat: no-repeat;
+  background-position: 150px;
+  top: 0;
+  position: sticky;
+  z-index: 3;
+  color: var(--rewind-black);
+
+  .rewind-logo {
+    margin-bottom: 5px;
+  }
+
+  p {
+    margin: 0 0.5em 0 0;
+    text-transform: uppercase;
+    font-size: var(--font-up-1);
+  }
+
+  &-logo {
+    display: grid;
+    grid-template-areas: "logo rewind" "logo year";
+    width: 7em;
+
+    svg {
+      grid-area: logo;
+      width: 2.5em;
+      height: 2.5em;
+    }
+  }
+
+  &-title {
+    grid-area: rewind;
+    line-height: 1;
+    transform: skewX(15deg);
+  }
+
+  &-year {
+    line-height: 1;
+    font-weight: bold;
+    font-size: 1.5em;
+  }
+}
+
+.rewind-notification-active #toggle-current-user::after {
+  width: 48px;
+  height: 48px;
+  position: absolute;
+  left: -4px;
+  top: -4px;
+  content: "";
+  background-image: absolute-image-url(
+    "/plugins/discourse-rewind/images/rewind-avatar-shimmer.gif"
+  );
+  display: block;
+  background-size: cover;
+
+  @media (prefers-reduced-motion) {
+    .rewind-notification-active #toggle-current-user::after {
+      background-image: absolute-image-url(
+        "/plugins/discourse-rewind/images/rewind-avatar-static.png"
+      );
+    }
+  }
+}

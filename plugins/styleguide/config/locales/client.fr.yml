@@ -59,8 +59,6 @@ fr:
           title: "Navigation empilée"
         categories_list:
           title: "Liste des catégories"
-        topic_link:
-          title: "Lien vers le sujet"
         topic_list_item:
           title: "Élément de liste de sujets"
         topic_statuses:

@@ -3901,6 +3901,8 @@ ro:
         enabled_for_options:
           everyone: "Toată lumea"
           staff: "Doar pentru personal"
+        statuses:
+          experimental: "Experimental"
         impact_roles:
           admins: "Admini"
           moderators: "Moderatori"
@@ -3910,6 +3912,7 @@ ro:
           enabled: "Activate"
           disabled: "Dezactivate"
           impact_type_other: "Altele"
+          status_experimental: "Experimental"
       config:
         about:
           title: "Despre site-ul tău"

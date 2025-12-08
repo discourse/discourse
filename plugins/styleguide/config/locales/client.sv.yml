@@ -50,8 +50,6 @@ sv:
           title: "Staplad navigering"
         categories_list:
           title: "Kategorilista"
-        topic_link:
-          title: "Ämneslänk"
         topic_list_item:
           title: "Punkt i ämneslista"
         topic_statuses:

@@ -368,6 +368,8 @@ de:
           post_url_label: "Beitrags-URL oder -ID"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 oder Beitrags-ID"
           result: "Ergebnis"
+          llm: "LLM"
+          system_prompt: "System-Eingabeaufforderung"
           scan_log: "Scan-Protokoll"
           run: "Test ausführen"
           spam: "Spam"

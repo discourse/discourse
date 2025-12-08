@@ -10,6 +10,7 @@ ug:
       logs:
         staff_actions:
           actions:
+            update_automation: ئاپتوماتلاشتۇرۇشنى يېڭىلا
             delete_automation: ئاپتوماتلاشتۇرۇشنى ئۆچۈر
     discourse_automation:
       title: ئاپتوماتلاشتۇرۇش

@@ -320,6 +320,8 @@ sk:
           post_url_label: "URL alebo ID príspevku"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 alebo ID príspevku"
           result: "Výsledok"
+          llm: "LLM"
+          system_prompt: "Systémový výzva"
           scan_log: "Záznam skenovania"
           run: "Spustiť test"
           spam: "Spam"
