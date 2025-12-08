@@ -10,6 +10,7 @@ module Chat
       def call
         return if !chat_channel.direct_message_channel?
         return if user_ids.empty?
+
         chat_channel
           .user_chat_channel_memberships
           .where(user_id: user_ids)
