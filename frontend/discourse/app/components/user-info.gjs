@@ -9,6 +9,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAvatarFlair from "discourse/components/user-avatar-flair";
 import UserStatusMessage from "discourse/components/user-status-message";
 import avatar from "discourse/helpers/avatar";
+import concatClass from "discourse/helpers/concat-class";
 import formatUsername from "discourse/helpers/format-username";
 import lazyHash from "discourse/helpers/lazy-hash";
 import discourseComputed from "discourse/lib/decorators";
@@ -60,9 +61,11 @@ export default class UserInfo extends Component {
     {{/if}}
     <div class="user-detail">
       <div
-        class="name-line
-          {{if @showStatus 'name-line--show-status'}}
-          {{if this.nameFirst 'name-line--name-first'}}"
+        class={{concatClass
+          "name-line"
+          (if @showStatus "name-line--show-status")
+          (if this.nameFirst "name-line--name-first")
+        }}
       >
         <span class="username-wrapper">
           {{#if this.includeLink}}
