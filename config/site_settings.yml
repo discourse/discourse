@@ -673,6 +673,10 @@ login:
     textarea: true
     secret: true
     area: "authenticators"
+  google_oauth2_hd_groups:
+    default: false
+    validator: GoogleOauth2HdGroupsValidator
+    area: "authenticators"
   google_oauth2_verbose_logging:
     default: false
     area: "authenticators"
@@ -4263,10 +4267,6 @@ experimental:
     default: 15
     hidden: true
     area: "experimental"
-  experimental_lightbox:
-    client: true
-    default: true
-    area: "experimental"
   show_preview_for_form_templates:
     client: true
     default: true
@@ -4282,10 +4282,6 @@ experimental:
   enable_rich_text_paste:
     client: true
     default: true
-    area: "experimental"
-  google_oauth2_hd_groups:
-    default: false
-    validator: GoogleOauth2HdGroupsValidator
     area: "experimental"
   lazy_load_categories_groups:
     default: ""

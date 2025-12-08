@@ -3195,6 +3195,9 @@ it:
         reset_bump_dates: "Reimposta la date di riproposizione"
         defer: "Contrassegna come non letto"
         delete: "Elimina argomenti"
+        delete_topics_count:
+          one: "Cancella Argomento"
+          other: "Elimina argomenti"
         dismiss: "Ignora"
         dismiss_read: "Ignora tutti i non letti"
         dismiss_read_with_selected:

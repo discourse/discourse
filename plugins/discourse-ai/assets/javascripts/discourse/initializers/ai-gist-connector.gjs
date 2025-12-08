@@ -109,6 +109,14 @@ export default apiInitializer((api) => {
         return true;
       }
 
+      if (routeName?.startsWith("tag.")) {
+        return true;
+      }
+
+      if (routeName?.startsWith("tags.")) {
+        return true;
+      }
+
       return false;
     }
 

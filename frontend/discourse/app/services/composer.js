@@ -1489,12 +1489,14 @@ export default class ComposerService extends Service {
   }
 
   @action
-  async openNewMessage({ title, body, recipients, hasGroups }) {
+  async openNewMessage({ title, body, recipients, hasGroups, tags }) {
+    tags = await this.filterTags(tags);
     return this.open({
       action: Composer.PRIVATE_MESSAGE,
       recipients,
       topicTitle: title,
       topicBody: body,
+      topicTags: tags,
       archetypeId: "private_message",
       draftKey: this.privateMessageDraftKey,
       hasGroups,
@@ -1565,7 +1567,11 @@ export default class ComposerService extends Service {
       this.model.set("title", opts.topicTitle);
     }
 
-    if (opts.topicTags && this.site.can_tag_topics) {
+    const isPrivateMessage = opts.action === Composer.PRIVATE_MESSAGE;
+    const canTag =
+      this.site.can_tag_topics && (!isPrivateMessage || this.site.can_tag_pms);
+
+    if (opts.topicTags && canTag) {
       let tags = escapeExpression(opts.topicTags)
         .split(",")
         .slice(0, this.siteSettings.max_tags_per_topic);

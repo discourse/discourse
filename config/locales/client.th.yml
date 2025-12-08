@@ -1607,6 +1607,8 @@ th:
         clear_all: "ล้างทั้งหมด"
         unlist_topics: "กระทู้ที่ไม่ได้แสดง"
         delete: "ลบกระทู้"
+        delete_topics_count:
+          other: "ลบกระทู้"
         dismiss: "ซ่อน"
         dismiss_read: "ซ่อนทั้งหมดที่ไม่ได้อ่าน"
         dismiss_button: "ซ่อน..."

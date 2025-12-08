@@ -10,6 +10,9 @@ he:
       llm_model:
         name: "מזהה מודל"
         max_prompt_tokens: "חלון הקשר"
+  dashboard:
+    problem:
+      ai_credit_soft_limit: "ל־%{model_name} נותרו רק %{percentage_remaining}% מהאסימונים. האסימונים יתאפסו ב־%{reset_date}. <a href='%{url}'>הצגת מודלים של בינה מלאכותית</a>"
   discourse_automation:
     ai:
       flag_types:
@@ -652,8 +655,6 @@ he:
       errors:
         disabled: "יכולת התרגום של הבינה המלאכותית אינה מוגדרת במלואה."
         all_posts_translated: "כל הפוסטים בנושא הזה כבר מתורגמים."
-    llm_credit_allocation:
-      limit_exceeded_admin: "ניצלת את כל אסימוני הבינה המלאכותית שלך. נא לנסות שוב בעוד %{reset_time}."
     errors:
       quota_exceeded: "חרגת מהמכסה למודל הזה. נא לנסות שוב בעוד %{relative_time}."
       quota_required: "יש לציין את כמות האסימונים המרבית לשימוש למודל הזה"
@@ -672,7 +673,3 @@ he:
         two: "כבר קיימים כלים מותאמים בשמות %{names}."
         many: "כבר קיימים כלים מותאמים בשמות %{names}."
         other: "כבר קיימים כלים מותאמים בשמות %{names}."
-  dashboard:
-    problem:
-      ai_llm_status: "מודל השפה הגדול: %{model_name} נתקל בקשיים. נא לגשת ל<a href='%{url}'>עמוד ההגדרות של המודל</a>."
-      ai_credit_soft_limit: "ל־%{model_name} נותרו רק %{percentage_remaining}% מהאסימונים. האסימונים יתאפסו ב־%{reset_date}. <a href='%{url}'>הצגת מודלים של בינה מלאכותית</a>"

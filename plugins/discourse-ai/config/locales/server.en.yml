@@ -4,6 +4,13 @@ en:
       llm_model:
         name: "Model ID"
         max_prompt_tokens: "Context window"
+  dashboard:
+    problem:
+      ai_llm_status:
+        one: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> needs attention. In the past hour, it failed to respond %{failed_calls} out of %{total_calls} times."
+        other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> needs attention. Over the last %{count} hours, it failed to respond %{failed_calls} out of %{total_calls} times."
+      ai_credit_soft_limit: "%{model_name} has only %{percentage_remaining}% of credits remaining. Credits will reset at %{reset_date}. <a href='%{url}'>View AI models</a>"
+      ai_credit_hard_limit: "You have run out of AI credits for %{model_name}. AI features will be unavailable until %{reset_date}. <a href='%{url}'>View AI models</a>"
 
   discourse_automation:
     ai:
@@ -295,8 +302,6 @@ en:
     ai_helper:
       errors:
         completion_request_failed: "Something went wrong while trying to provide suggestions. Please, try again."
-        credit_limit_exceeded_user: "You've hit the AI credit limit for your plan. Responses will be unavailable until your limit resets %{reset_time}."
-        credit_limit_exceeded_bot: "AI responses are currently unavailable due to credit limits. Please try again %{reset_time}."
         no_illustrator_persona: "Post Illustrator persona is not configured. Please check your site settings."
         no_image_generation_tool: "Post Illustrator persona must have an image generation tool attached. Please configure an image generation tool for this persona in the admin panel."
         no_image_generated: "Failed to generate image. Please try again or check your tool configuration."
@@ -671,8 +676,8 @@ en:
         all_posts_translated: "All posts in this topic are already translated."
 
     llm_credit_allocation:
-      limit_exceeded_user: "You have reached your AI credit limit. Please try again in %{reset_time}. Please contact your site administrator for more information."
-      limit_exceeded_admin: "You have reached your AI credit limit. Please try again in %{reset_time}."
+      limit_exceeded_user: "This community has reached its AI credit limit for today. Please try again after %{reset_time} or contact your site administrator for more information."
+      limit_exceeded_admin: "You have reached your AI credit limit. Please try again after %{reset_time}."
 
     errors:
       quota_exceeded: "You have exceeded the quota for this model. Please try again in %{relative_time}."
@@ -690,8 +695,4 @@ en:
       custom_tool_exists:
         one: "Custom tool with the name %{names} already exists."
         other: "Custom tools with the names %{names} already exist."
-  dashboard:
-    problem:
-      ai_llm_status: "The LLM model: %{model_name} is encountering issues. Please check the <a href='%{url}'>model's configuration page</a>."
-      ai_credit_soft_limit: "%{model_name} has only %{percentage_remaining}% of credits remaining. Credits will reset at %{reset_date}. <a href='%{url}'>View AI models</a>"
-      ai_credit_hard_limit: "You have run out of AI credits for %{model_name}. AI features will be unavailable until %{reset_date}. <a href='%{url}'>View AI models</a>"
+

@@ -1,0 +1,5 @@
+discourse_rewind:
+  discourse_rewind_enabled:
+    default: false
+    client: true
+    hidden: true

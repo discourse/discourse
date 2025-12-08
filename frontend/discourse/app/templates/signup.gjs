@@ -308,6 +308,7 @@ export default <template>
             @formSubmitted={{@controller.formSubmitted}}
             @hasAuthOptions={{@controller.hasAuthOptions}}
             @createAccount={{@controller.createAccount}}
+            @goToLogin={{@controller.goToLogin}}
             @submitDisabled={{@controller.submitDisabled}}
             @disclaimerHtml={{@controller.disclaimerHtml}}
           />

@@ -783,6 +783,7 @@ fr:
         llm: "Modèle"
         pm_warning: "Les messages du chatbot IA sont surveillés régulièrement par les modérateurs."
         cancel_streaming: "Arrêter de répondre"
+        try_again: "Réessayer"
         default_pm_prefix: "[MP de robot IA sans titre]"
         shortcut_title: "Démarrer une conversation avec un robot IA"
         shortcut_link: "Robot IA"

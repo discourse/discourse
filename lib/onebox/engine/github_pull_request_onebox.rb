@@ -33,6 +33,8 @@ module Onebox
       def data
         result = raw(github_auth_header(match[:org])).clone
         result["link"] = link
+        result["pr_status"] = fetch_pr_status(result)
+        result["pr_status_title"] = pr_status_title(result["pr_status"])
 
         created_at = Time.parse(result["created_at"])
         result["created_at"] = created_at.strftime("%I:%M%p - %d %b %y %Z")
@@ -83,6 +85,11 @@ module Onebox
         }
       end
 
+      def pr_status_title(status)
+        key = status.presence || "default"
+        I18n.t("onebox.github.pr_title.#{key}")
+      end
+
       def load_commit(link)
         if commit_match = link.match(%r{commits/(\h+)})
           load_json(
@@ -111,6 +118,41 @@ module Onebox
         ::MultiJson.load(
           URI.parse(url).open({ read_timeout: timeout }.merge(github_auth_header(match[:org]))),
         )
+      rescue OpenURI::HTTPError => e
+        Rails.logger.warn("GitHub API error: #{e.io.status[0]} fetching #{url}")
+        raise
+      end
+
+      def fetch_pr_status(pr_data)
+        return unless SiteSetting.github_pr_status_enabled
+
+        return "merged" if pr_data["merged"]
+        return "closed" if pr_data["state"] == "closed"
+        return "draft" if pr_data["draft"]
+
+        reviews_data = load_json(url + "/reviews")
+
+        return "approved" if reviews_approved?(reviews_data)
+
+        "open"
+      rescue StandardError => e
+        Rails.logger.warn("GitHub PR status fetch error: #{e.message}")
+        nil
+      end
+
+      def reviews_approved?(reviews)
+        return false if reviews.blank?
+
+        states =
+          reviews
+            .reject { |r| r.dig("user", "id").nil? || %w[PENDING COMMENTED].include?(r["state"]) }
+            .group_by { |r| r.dig("user", "id") }
+            .transform_values { |rs| rs.max_by { |r| r["submitted_at"] }["state"] }
+            .values
+
+        return false if states.empty?
+
+        states.all? { |s| %w[APPROVED DISMISSED].include?(s) } && states.include?("APPROVED")
       end
     end
   end

@@ -58,7 +58,7 @@ en:
         categories_list:
           title: "Categories List"
         topic_link:
-          title: "Topic Link"
+          title: "Topic Link and Status"
         topic_list_item:
           title: "Topic List Item"
         topic_statuses:

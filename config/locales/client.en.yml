@@ -972,6 +972,7 @@ en:
         flagged_by_users:
           one: "Flagged by %{count} unique user"
           other: "Flagged by %{count} unique users"
+        similar_posts: "Past violations"
         flagged_in_timeframe:
           one: "%{count} confirmed flag"
           other: "%{count} confirmed flags"
@@ -982,6 +983,11 @@ en:
           posts:
             one: "%{count} post"
             other: "%{count} posts"
+        moderation_history:
+          label: "Moderation history"
+          silenced: "Silenced: %{count}"
+          suspended: "Suspended: %{count}"
+          rejected_posts: "Posts rejected: %{count}"
         solution_marked: "Solution marked"
         topic_has_solution: "This topic has a solution"
         visibility: "Visibility"
@@ -3509,6 +3515,15 @@ en:
         reset_bump_dates: "Reset bump dates"
         defer: "Mark unread"
         delete: "Delete Topics"
+        delete_topics_count:
+          one: "Delete Topic"
+          other: "Delete Topics"
+        delete_posts_count:
+          one: "Delete Post"
+          other: "Delete Posts"
+        delete_posts_confirmation:
+          one: "Are you sure you want to delete %{count} post?"
+          other: "Are you sure you want to delete %{count} posts?"
         dismiss: "Dismiss"
         dismiss_read: "Dismiss all unread"
         dismiss_read_with_selected:
@@ -5102,6 +5117,7 @@ en:
       add_to_calendar: "Add to calendar"
       google: "Google Calendar"
       ics: "ICS"
+      default_title: "Scheduled Event"
     tagging:
       all_tags: "All tags"
       other_tags: "Other Tags"
@@ -5921,11 +5937,13 @@ en:
             enabled_themes:
               label: "Enabled on themes..."
               description: "Select which themes should display the banner. Only active themes are shown."
+              select_label: "Select themes"
             background_image:
               label: "Background image"
               description: "This image will be displayed behind the banner text."
             text_color:
               label: "Text color"
+              description: "When 'Background image' above is uploaded, use this setting to change the banner text color to ensure it remains readable. When left blank or without background image uploaded, the active theme controls the color."
             page_visibility:
               label: "Page visibility"
               description: "Choose where the banner should be displayed."

@@ -116,6 +116,10 @@ module PageObjects
         find("#c-footer-threads").click
       end
 
+      def click_starred_channels
+        find("#c-footer-starred").click
+      end
+
       def maximize
         mouseout
         find("#{VISIBLE_DRAWER} .c-navbar__full-page-button").click
@@ -149,6 +153,11 @@ module PageObjects
       def has_open_channels?
         has_css?("html.has-drawer-chat")
         has_css?("#{VISIBLE_DRAWER} .public-channels")
+      end
+
+      def has_open_starred_channels?
+        has_css?("html.has-drawer-chat")
+        has_css?("#{VISIBLE_DRAWER} .starred-channels")
       end
 
       def has_open_direct_messages?

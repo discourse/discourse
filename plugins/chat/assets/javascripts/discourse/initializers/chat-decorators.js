@@ -2,10 +2,10 @@ import { decorateGithubOneboxBody } from "discourse/instance-initializers/onebox
 import { samePrefix } from "discourse/lib/get-url";
 import { decorateHashtags } from "discourse/lib/hashtag-decorator";
 import highlightSyntax from "discourse/lib/highlight-syntax";
+import lightbox from "discourse/lib/lightbox";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
-import loadLightbox from "../lib/lightbox";
 
 export default {
   name: "chat-decorators",
@@ -64,7 +64,7 @@ export default {
     api.decorateChatMessage(this.forceLinksToOpenNewTab, {
       id: "linksNewTab",
     });
-    api.decorateChatMessage((element) => loadLightbox(element, siteSettings), {
+    api.decorateChatMessage((element) => lightbox(element), {
       id: "lightbox",
     });
     api.decorateChatMessage((element) => decorateHashtags(element, site), {

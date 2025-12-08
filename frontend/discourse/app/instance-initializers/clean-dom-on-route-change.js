@@ -1,5 +1,4 @@
 import { scheduleOnce } from "@ember/runloop";
-import $ from "jquery";
 
 function _clean(transition) {
   if (window.MiniProfiler && transition.from) {
@@ -17,12 +16,6 @@ function _clean(transition) {
 
   // Close PhotoSwipe
   window.pswp?.close();
-
-  // Close the lightbox
-  if ($.magnificPopup?.instance) {
-    $.magnificPopup.instance.close();
-    document.body.classList.remove("mfp-zoom-out-cur");
-  }
 
   // Remove any link focus
   const { activeElement } = document;
