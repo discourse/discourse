@@ -203,6 +203,13 @@ body.signup-page {
     flex-direction: column;
     margin-bottom: 1em;
 
+    details.select-kit,
+    details.single-select,
+    details.combobox,
+    details.combo-box {
+      width: 100%;
+    }
+
     input,
     .select-kit-header,
     textarea {
