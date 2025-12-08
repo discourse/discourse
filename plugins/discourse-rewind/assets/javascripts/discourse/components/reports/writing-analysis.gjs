@@ -162,7 +162,7 @@ export default class WritingAnalysis extends Component {
                   }}</div>
                 <div class="writing-analysis__stats-value">{{number
                     @report.data.readability_score
-                  }}</div>
+                  }}/100</div>
               </div>
 
               <div class="writing-analysis__stats-col">
