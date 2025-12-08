@@ -45,8 +45,6 @@ after_initialize do
     Rails.env.development? || Date.today.month == 1 || Date.today.month == 12
   end
 
-  add_to_serializer(:current_user, :is_development_env) { Rails.env.development? }
-
   Discourse::Application.routes.append do
     get "u/:username/preferences/rewind" => "users#preferences",
         :constraints => {

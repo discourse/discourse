@@ -25,13 +25,10 @@ export default class RewindCallout extends Component {
   @service router;
   @service currentUser;
 
-  store = new KeyValueStore("discourse_rewind_" + this.fetchYear);
+  store = new KeyValueStore("discourse_rewind_" + fetchRewindYear());
 
   get showCallout() {
-    return (
-      this.currentUser?.is_rewind_active &&
-      (this.currentUser?.is_development_env || !this.dismissed)
-    );
+    return this.currentUser?.is_rewind_active && !this.dismissed;
   }
 
   get dismissed() {
