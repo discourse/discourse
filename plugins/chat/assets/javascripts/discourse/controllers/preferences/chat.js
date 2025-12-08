@@ -116,6 +116,36 @@ export default class PreferencesChatController extends Controller {
     return emojis.split("|");
   }
 
+  get formData() {
+    const userOption = this.model.get("user_option");
+    const customEmojis = this.chatQuickReactionsCustom;
+
+    // Handle chat_separate_sidebar_mode default value
+    let separateSidebarMode = userOption.chat_separate_sidebar_mode;
+    if (separateSidebarMode === "default") {
+      separateSidebarMode = this.siteSettings.chat_separate_sidebar_mode;
+    }
+
+    return {
+      chat_enabled: userOption.chat_enabled || false,
+      chat_quick_reaction_type:
+        userOption.chat_quick_reaction_type || "frequent",
+      chat_quick_reactions_custom_0: customEmojis[0] || "",
+      chat_quick_reactions_custom_1: customEmojis[1] || "",
+      chat_quick_reactions_custom_2: customEmojis[2] || "",
+      only_chat_push_notifications:
+        userOption.only_chat_push_notifications || false,
+      ignore_channel_wide_mention:
+        userOption.ignore_channel_wide_mention || false,
+      chat_sound: userOption.chat_sound || null,
+      chat_header_indicator_preference:
+        userOption.chat_header_indicator_preference ||
+        HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS,
+      chat_separate_sidebar_mode: separateSidebarMode || "never",
+      chat_send_shortcut: userOption.chat_send_shortcut || "enter",
+    };
+  }
+
   @discourseComputed
   chatSounds() {
     return Object.keys(CHAT_SOUNDS).map((value) => {
@@ -129,6 +159,16 @@ export default class PreferencesChatController extends Controller {
       this.chatAudioManager.play(sound);
     }
     this.model.set("user_option.chat_sound", sound);
+  }
+
+  @action
+  onSetChatSound(value, { set }) {
+    // Play audio preview
+    if (value) {
+      this.chatAudioManager.play(value);
+    }
+    // Update form data
+    set("chat_sound", value);
   }
 
   @action
@@ -150,16 +190,57 @@ export default class PreferencesChatController extends Controller {
   }
 
   @action
-  save() {
+  async saveForm(data) {
     this.set("saved", false);
-    return this.model
-      .save(CHAT_ATTRS)
-      .then(() => {
-        this.set("saved", true);
-        if (!isTesting()) {
-          location.reload();
-        }
-      })
-      .catch(popupAjaxError);
+
+    // Map flat FormKit data back to nested model structure
+    const userOption = this.model.get("user_option");
+
+    userOption.set("chat_enabled", data.chat_enabled || false);
+    userOption.set(
+      "chat_quick_reaction_type",
+      data.chat_quick_reaction_type || "frequent"
+    );
+
+    // Combine emoji array back to pipe-separated string
+    const customEmojis = [
+      data.chat_quick_reactions_custom_0 || "",
+      data.chat_quick_reactions_custom_1 || "",
+      data.chat_quick_reactions_custom_2 || "",
+    ].filter(Boolean);
+    userOption.set(
+      "chat_quick_reactions_custom",
+      customEmojis.length > 0 ? customEmojis.join("|") : null
+    );
+
+    userOption.set(
+      "only_chat_push_notifications",
+      data.only_chat_push_notifications || false
+    );
+    userOption.set(
+      "ignore_channel_wide_mention",
+      data.ignore_channel_wide_mention || false
+    );
+    userOption.set("chat_sound", data.chat_sound || null);
+    userOption.set(
+      "chat_header_indicator_preference",
+      data.chat_header_indicator_preference ||
+        HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS
+    );
+    userOption.set(
+      "chat_separate_sidebar_mode",
+      data.chat_separate_sidebar_mode || "never"
+    );
+    userOption.set("chat_send_shortcut", data.chat_send_shortcut || "enter");
+
+    try {
+      await this.model.save(CHAT_ATTRS);
+      this.set("saved", true);
+      if (!isTesting()) {
+        location.reload();
+      }
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 }
