@@ -6,6 +6,21 @@ import icon from "discourse/helpers/d-icon";
 import KeyValueStore from "discourse/lib/key-value-store";
 import { i18n } from "discourse-i18n";
 
+// We want to show the previous year's rewind in January
+// but the current year's rewind in any other month (in
+// reality, only December).
+export function fetchRewindYear() {
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth();
+  const currentYear = currentDate.getFullYear();
+
+  if (currentMonth === 0) {
+    return currentYear - 1;
+  } else {
+    return currentYear;
+  }
+}
+
 export default class RewindCallout extends Component {
   @service router;
   @service currentUser;
@@ -17,21 +32,6 @@ export default class RewindCallout extends Component {
       this.currentUser?.is_rewind_active &&
       (this.currentUser?.is_development_env || !this.dismissed)
     );
-  }
-
-  // We want to show the previous year's rewind in January
-  // but the current year's rewind in any other month (in
-  // reality, only December).
-  get fetchYear() {
-    const currentDate = new Date();
-    const currentMonth = currentDate.getMonth();
-    const currentYear = currentDate.getFullYear();
-
-    if (currentMonth === 0) {
-      return currentYear - 1;
-    } else {
-      return currentYear;
-    }
   }
 
   get dismissed() {
@@ -108,7 +108,7 @@ export default class RewindCallout extends Component {
               text-anchor="middle"
               dominant-baseline="middle"
               style="font-size: 32px; font-weight: bold; fill: #010101;"
-            >{{i18n "discourse_rewind.year"}}</text>
+            >{{fetchRewindYear}}</text>
 
           </svg>
 

@@ -1,4 +1,5 @@
 import { i18n } from "discourse-i18n";
+import { fetchRewindYear } from "../../connectors/before-panel-body/rewind-callout";
 
 const RewindHeader = <template>
   <div class="rewind__header">
@@ -33,7 +34,7 @@ const RewindHeader = <template>
         {{i18n "discourse_rewind.title"}}
       </div>
       <div class="rewind__header-year">
-        {{i18n "discourse_rewind.year"}}
+        {{fetchRewindYear}}
       </div>
     </div>
   </div>

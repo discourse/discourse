@@ -8,10 +8,9 @@ en:
     discourse_rewind:
       placeholder: Discourse Rewind
       title: Rewind
-      year: "2025"
       loading: "Reticulating splines..."
       preferences:
-        disable_rewind: "Disable Rewind (hide the year-end activity summary)"
+        disable_rewind: "Disable Discourse Rewind. This hides the year-end activity summary in your profile and on your avatar."
       reports:
         activity_calendar:
           title: Activity Calendar
