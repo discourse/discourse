@@ -12,7 +12,6 @@ import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-ti
 export default class ChatNavbarChannelTitle extends Component {
   @service chatApi;
   @service chatStateManager;
-  @service siteSettings;
 
   @tracked isTogglingStarred = false;
 
@@ -38,10 +37,7 @@ export default class ChatNavbarChannelTitle extends Component {
   }
 
   get showStarButton() {
-    return (
-      this.args.channel?.currentUserMembership &&
-      this.siteSettings.star_chat_channels
-    );
+    return !!this.args.channel?.currentUserMembership;
   }
 
   @action

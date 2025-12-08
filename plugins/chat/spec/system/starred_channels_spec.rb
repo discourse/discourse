@@ -9,7 +9,6 @@ RSpec.describe "Starred channels", type: :system do
   before do
     chat_system_bootstrap
     SiteSetting.navigation_menu = "sidebar"
-    SiteSetting.star_chat_channels = true
     sign_in(current_user)
   end
 
@@ -267,31 +266,6 @@ RSpec.describe "Starred channels", type: :system do
       expect(starred_section.find("li:nth-child(1)")).to have_css(".channel-#{channel_2.id}")
       expect(starred_section.find("li:nth-child(2)")).to have_css(".channel-#{channel_1.id}")
       expect(starred_section.find("li:nth-child(3)")).to have_css(".channel-#{dm_channel_1.id}")
-    end
-  end
-
-  context "when the star_chat_channels setting is disabled" do
-    fab!(:channel_1) { Fabricate(:category_channel, name: "Channel A") }
-
-    before do
-      channel_1.add(current_user)
-      channel_1.membership_for(current_user).update!(starred: true)
-      SiteSetting.star_chat_channels = false
-    end
-
-    it "does not show the Starred Channels section" do
-      visit("/")
-
-      expect(page).to have_no_css("#sidebar-section-content-chat-starred-channels")
-      expect(page.find("#sidebar-section-content-chat-channels")).to have_css(
-        ".channel-#{channel_1.id}",
-      )
-    end
-
-    it "does not show the star button in the channel navbar" do
-      chat_page.visit_channel(channel_1)
-
-      expect(page).to have_no_css(".c-navbar__star-channel-button")
     end
   end
 

@@ -11,11 +11,7 @@ module Chat
                :starred
 
     def starred
-      if scope.user&.upcoming_change_enabled?(:star_chat_channels)
-        object.starred
-      else
-        false
-      end
+      object.starred
     end
 
     def include_starred?

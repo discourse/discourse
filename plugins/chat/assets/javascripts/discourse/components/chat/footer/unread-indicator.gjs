@@ -26,7 +26,6 @@ export const UnreadThreadsIndicator = <template>
 export default class FooterUnreadIndicator extends Component {
   @service chatChannelsManager;
   @service chatTrackingStateManager;
-  @service siteSettings;
 
   badgeType = this.args.badgeType;
 
@@ -57,9 +56,6 @@ export default class FooterUnreadIndicator extends Component {
   }
 
   get unstarredPublicChannelMentionCount() {
-    if (!this.siteSettings.star_chat_channels) {
-      return this.chatTrackingStateManager.publicChannelMentionCount;
-    }
     return this.chatChannelsManager.unstarredPublicMessageChannels.reduce(
       (count, channel) => count + channel.tracking.mentionCount,
       0
@@ -67,9 +63,6 @@ export default class FooterUnreadIndicator extends Component {
   }
 
   get unstarredPublicChannelUnreadCount() {
-    if (!this.siteSettings.star_chat_channels) {
-      return this.chatTrackingStateManager.publicChannelUnreadCount;
-    }
     return this.chatChannelsManager.unstarredPublicMessageChannels.reduce(
       (count, channel) => count + channel.tracking.unreadCount,
       0
@@ -77,12 +70,6 @@ export default class FooterUnreadIndicator extends Component {
   }
 
   get unstarredDMUrgentCount() {
-    if (!this.siteSettings.star_chat_channels) {
-      return (
-        this.chatTrackingStateManager.directMessageUnreadCount +
-        this.chatTrackingStateManager.directMessageMentionCount
-      );
-    }
     return this.chatChannelsManager.unstarredDirectMessageChannels.reduce(
       (count, channel) =>
         count + channel.tracking.unreadCount + channel.tracking.mentionCount,

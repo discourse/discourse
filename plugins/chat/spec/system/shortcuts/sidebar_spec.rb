@@ -47,14 +47,13 @@ RSpec.describe "Shortcuts | sidebar", type: :system do
       end
     end
 
-    context "when star_chat_channels is enabled" do
+    context "when there are starred channels" do
       fab!(:alpha_channel) { Fabricate(:chat_channel, name: "Alpha Channel") }
       fab!(:beta_channel) { Fabricate(:chat_channel, name: "Beta Channel") }
       fab!(:other_user, :user)
       fab!(:dm_channel_2) { Fabricate(:direct_message_channel, users: [current_user, other_user]) }
 
       before do
-        SiteSetting.star_chat_channels = true
         # Unfollow channel_1 from parent context to make tests independent
         channel_1.membership_for(current_user).update!(following: false)
         alpha_channel.add(current_user)
