@@ -399,7 +399,7 @@ class TagsController < ::ApplicationController
         TagUser.notification_levels[:regular]
     render json: {
              tag_notification: {
-               id: tag.id,
+               id: tag.name.downcase,
                name: tag.name,
                notification_level: level.to_i,
              },
