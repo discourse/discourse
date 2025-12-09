@@ -847,7 +847,10 @@ class Post < ActiveRecord::Base
     # make sure we trigger the post process
     trigger_post_process(bypass_bump: true, priority: priority)
 
-    publish_change_to_clients!(:rebaked)
+    # Skip publishing if invalidating oneboxes - the ProcessPost job will
+    # publish :revised after fetching fresh oneboxes, avoiding an intermediate
+    # state where raw links are shown before oneboxes are loaded.
+    publish_change_to_clients!(:rebaked) unless invalidate_oneboxes
 
     new_cooked != old_cooked
   end
