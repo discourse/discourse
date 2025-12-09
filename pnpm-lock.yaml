@@ -35,8 +35,8 @@ importers:
         specifier: ^7.28.0
         version: 7.28.0(@babel/core@7.28.5)
       '@discourse/lint-configs':
-        specifier: ^2.35.2
-        version: 2.35.2(ember-template-lint@7.9.3)(eslint@9.39.1(jiti@2.4.2))(postcss@8.5.6)(prettier@3.7.3)(stylelint@16.26.1(typescript@5.9.3))
+        specifier: ^2.36.0
+        version: 2.36.0(ember-template-lint@7.9.3)(eslint@9.39.1(jiti@2.4.2))(postcss@8.5.6)(prettier@3.7.3)(stylelint@16.26.1(typescript@5.9.3))
       '@discourse/moment-timezone-names-translations':
         specifier: ^1.0.0
         version: 1.0.0
@@ -1704,8 +1704,8 @@ packages:
   '@discourse/itsatrap@2.0.10':
     resolution: {integrity: sha512-Jn1gdiyHMGUsmUfLFf4Q7VnTAv0l7NePbegU6pKhKHEmbzV3FosGxq30fTOYgVyTS1bxqGjlA6LvQttJpv3ROw==}
 
-  '@discourse/lint-configs@2.35.2':
-    resolution: {integrity: sha512-VnXMUIOk6VQIGFr2D9l77wgPN08klcJBlK678VaFjDx8zJNPeq+ZL3+8ml9z15XBlurB8InLWc2bb2srBSOKZw==}
+  '@discourse/lint-configs@2.36.0':
+    resolution: {integrity: sha512-4UlhqQBZnhCRu4qx3/JFhr7ZRLbQiZ6fE318yHJxtulgMwz6dNoDrkwcMO+BJeFdt0JI9X6qWEySp7Hmtpwerg==}
     peerDependencies:
       ember-template-lint: 7.9.3
       eslint: 9.39.1
@@ -10077,7 +10077,7 @@ snapshots:
 
   '@discourse/itsatrap@2.0.10': {}
 
-  '@discourse/lint-configs@2.35.2(ember-template-lint@7.9.3)(eslint@9.39.1(jiti@2.4.2))(postcss@8.5.6)(prettier@3.7.3)(stylelint@16.26.1(typescript@5.9.3))':
+  '@discourse/lint-configs@2.36.0(ember-template-lint@7.9.3)(eslint@9.39.1(jiti@2.4.2))(postcss@8.5.6)(prettier@3.7.3)(stylelint@16.26.1(typescript@5.9.3))':
     dependencies:
       '@babel/core': 7.28.5(supports-color@8.1.1)
       '@babel/eslint-parser': 7.28.5(@babel/core@7.28.5)(eslint@9.39.1(jiti@2.4.2))
