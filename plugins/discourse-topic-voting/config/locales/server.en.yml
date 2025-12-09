@@ -16,3 +16,9 @@ en:
     duplicated_votes:
       one: "A vote could not be moved because the user already voted in the other topic."
       other: "%{count} votes could not be moved because their users already voted in the other topic."
+    filter:
+      description:
+        topic_votes_min: "Minimum number of topic votes"
+        topic_votes_max: "Maximum number of topic votes"
+        order_topic_votes: "Order topics by most votes"
+        order_topic_votes_asc: "Order topics by fewest votes"
