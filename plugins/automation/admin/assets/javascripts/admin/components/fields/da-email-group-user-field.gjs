@@ -44,20 +44,16 @@ export default class EmailGroupUserField extends BaseField {
   }
 
   _updateGroups(selected, newGroups) {
-    const groups = [];
+    const groups = new Set();
 
     this.groups.forEach((existing) => {
       if (selected.includes(existing)) {
-        groups.addObject(existing);
+        groups.add(existing);
       }
     });
 
-    newGroups.forEach((newGroup) => {
-      if (!groups.includes(newGroup)) {
-        groups.addObject(newGroup);
-      }
-    });
+    newGroups.forEach((newGroup) => groups.add(newGroup));
 
-    this.groups = groups;
+    this.groups = Array.from(groups);
   }
 }

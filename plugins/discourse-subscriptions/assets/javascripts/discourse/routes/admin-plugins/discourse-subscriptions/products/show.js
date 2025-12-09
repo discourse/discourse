@@ -2,6 +2,7 @@ import { action } from "@ember/object";
 import Route from "@ember/routing/route";
 import { service } from "@ember/service";
 import { hash } from "rsvp";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import { i18n } from "discourse-i18n";
 import AdminPlan from "discourse/plugins/discourse-subscriptions/discourse/models/admin-plan";
 import AdminProduct from "discourse/plugins/discourse-subscriptions/discourse/models/admin-product";
@@ -34,11 +35,11 @@ export default class AdminPluginsDiscourseSubscriptionsProductsShowRoute extends
         plan
           .destroy()
           .then(() => {
-            this.controllerFor(
+            const plans = this.controllerFor(
               "adminPlugins.discourseSubscriptions.products.show"
-            )
-              .get("model.plans")
-              .removeObject(plan);
+            ).model.plans;
+
+            removeValueFromArray(plans, plan);
           })
           .catch((data) =>
             this.dialog.alert(data.jqXHR.responseJSON.errors.join("\n"))

@@ -25,7 +25,7 @@ export default class AssignedToFilter extends Component {
 
   @action
   updateAssignedTo(selected) {
-    this.set("outletArgs.additionalFilters.assigned_to", selected.firstObject);
+    this.set("outletArgs.additionalFilters.assigned_to", selected[0]);
   }
 
   <template>

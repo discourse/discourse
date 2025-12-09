@@ -1,5 +1,6 @@
 import EmberObject from "@ember/object";
 import { service } from "@ember/service";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import DiscourseRoute from "discourse/routes/discourse";
 import GamificationLeaderboard from "discourse/plugins/discourse-gamification/discourse/models/gamification-leaderboard";
 
@@ -13,8 +14,10 @@ export default class DiscourseGamificationLeaderboards extends DiscourseRoute {
     const gamificationPlugin = this.adminPluginNavManager.currentPlugin;
 
     return EmberObject.create({
-      leaderboards: gamificationPlugin.extras.gamification_leaderboards.map(
-        (leaderboard) => GamificationLeaderboard.create(leaderboard)
+      leaderboards: new TrackedArray(
+        gamificationPlugin.extras.gamification_leaderboards.map((leaderboard) =>
+          GamificationLeaderboard.create(leaderboard)
+        )
       ),
       groups: gamificationPlugin.extras.gamification_groups,
       recalculate_scores_remaining:

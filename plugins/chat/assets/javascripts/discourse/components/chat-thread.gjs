@@ -267,12 +267,12 @@ export default class ChatThread extends Component {
     this.args.thread.details = meta;
 
     if (direction === FUTURE) {
-      this.scrollToMessageId(messages.firstObject.id, {
+      this.scrollToMessageId(messages[0].id, {
         position: "end",
         behavior: "auto",
       });
     } else if (direction === PAST) {
-      this.scrollToMessageId(messages.lastObject.id);
+      this.scrollToMessageId(messages.at(-1).id);
     }
 
     this.debounceFillPaneAttempt();
@@ -309,7 +309,7 @@ export default class ChatThread extends Component {
       return;
     }
 
-    const firstMessage = this.messagesManager.messages.firstObject;
+    const firstMessage = this.messagesManager.messages[0];
     if (!firstMessage?.visible) {
       return;
     }

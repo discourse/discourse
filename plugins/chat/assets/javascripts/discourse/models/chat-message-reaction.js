@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import User from "discourse/models/user";
 
 export const REACTIONS = { add: "add", remove: "remove" };
@@ -11,8 +11,8 @@ export default class ChatMessageReaction {
 
   @tracked count;
   @tracked reacted;
-  @tracked users;
   @tracked emoji;
+  @trackedArray users;
 
   constructor(args = {}) {
     this.count = args.count;
@@ -22,14 +22,12 @@ export default class ChatMessageReaction {
   }
 
   #initUsersModels(users = []) {
-    return new TrackedArray(
-      users.map((user) => {
-        if (user instanceof User) {
-          return user;
-        }
+    return users.map((user) => {
+      if (user instanceof User) {
+        return user;
+      }
 
-        return User.create(user);
-      })
-    );
+      return User.create(user);
+    });
   }
 }

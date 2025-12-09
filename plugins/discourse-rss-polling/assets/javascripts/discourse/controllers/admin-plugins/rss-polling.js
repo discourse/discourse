@@ -1,41 +1,47 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, set } from "@ember/object";
-import { alias } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
-import { observes } from "@ember-decorators/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
+import {
+  addUniqueValueToArray,
+  removeValueFromArray,
+} from "discourse/lib/array-tools";
+import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import RssPollingFeedSettings from "../../../admin/models/rss-polling-feed-settings";
 
 export default class AdminPluginsRssPollingController extends Controller {
   @service dialog;
 
-  @alias("model") feedSettings;
+  @tracked saving = false;
+  @tracked valid = false;
+  @tracked disabled = true;
 
-  saving = false;
-  valid = false;
-  disabled = true;
+  get feedSettings() {
+    return this.model;
+  }
 
-  @discourseComputed("valid", "saving")
-  unsavable(valid, saving) {
-    return !valid || saving;
+  get unsavable() {
+    return !this.valid || this.saving;
   }
 
   // TODO: extract feed setting into its own component && more validation
-  @observes("feedSettings.@each.{feed_url,author_username}")
+  @bind
   validate() {
     let overallValidity = true;
 
-    this.get("feedSettings").forEach((feedSetting) => {
+    this.feedSettings.forEach((feedSetting) => {
       const localValidity =
         !isBlank(feedSetting.feed_url) && !isBlank(feedSetting.author_username);
       set(feedSetting, "valid", localValidity);
       overallValidity = overallValidity && localValidity;
     });
 
-    this.set("valid", overallValidity);
+    if (this.valid !== overallValidity) {
+      this.valid = overallValidity;
+    }
   }
 
   @action
@@ -50,7 +56,9 @@ export default class AdminPluginsRssPollingController extends Controller {
       editing: true,
     };
 
-    this.get("feedSettings").addObject(newSetting);
+    addUniqueValueToArray(this.feedSettings, newSetting);
+
+    this.validate();
   }
 
   @action
@@ -60,48 +68,66 @@ export default class AdminPluginsRssPollingController extends Controller {
       didConfirm: async () => {
         try {
           await RssPollingFeedSettings.deleteFeed(setting);
-          this.get("feedSettings").removeObject(setting);
+          removeValueFromArray(this.feedSettings, setting);
         } catch (error) {
           popupAjaxError(error);
         } finally {
-          this.set("saving", false);
+          this.saving = false;
         }
       },
     });
+
+    this.validate();
   }
 
   @action
   editFeedSetting(setting) {
     set(setting, "disabled", false);
     set(setting, "editing", true);
+
+    this.validate();
   }
 
   @action
   cancelEdit(setting) {
     if (!setting.id) {
-      this.get("feedSettings").removeObject(setting);
+      removeValueFromArray(this.feedSettings, setting);
     }
     set(setting, "disabled", true);
     set(setting, "editing", false);
+
+    this.validate();
   }
 
   @action
   async updateFeedSetting(setting) {
-    this.set("saving", true);
+    this.saving = true;
 
     try {
       await RssPollingFeedSettings.updateFeed(setting);
     } catch (error) {
       popupAjaxError(error);
     } finally {
-      this.set("saving", false);
+      this.saving = false;
+
       set(setting, "disabled", true);
       set(setting, "editing", false);
     }
+
+    this.validate();
   }
 
   @action
   updateAuthorUsername(setting, selected) {
-    set(setting, "author_username", selected.firstObject);
+    set(setting, "author_username", selected[0]);
+
+    this.validate();
+  }
+
+  @action
+  updateSettingProperty(setting, property, event) {
+    set(setting, property, event.target.value);
+
+    this.validate();
   }
 }

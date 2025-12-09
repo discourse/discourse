@@ -1,3 +1,4 @@
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -50,7 +51,7 @@ export default class AdminPluginsPatreon extends DiscourseRoute {
     });
 
     controller.setProperties({
-      model: filtersArray,
+      model: new TrackedArray(filtersArray),
       groups,
       rewards,
       last_sync_at: model.last_sync_at,
