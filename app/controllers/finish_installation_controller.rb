@@ -11,7 +11,6 @@ class FinishInstallationController < ApplicationController
 
   def index
     @setting_up_discourse_id = ENV["DISCOURSE_SKIP_EMAIL_SETUP"] == "1"
-    @allowed_emails = find_allowed_emails
 
     setup_discourse_id if @setting_up_discourse_id
   end
@@ -80,9 +79,36 @@ class FinishInstallationController < ApplicationController
       SiteSetting.enable_local_logins = false
       @discourse_id_enabled = true
       @discourse_id_error = nil
+
+      create_admin_users
     rescue StandardError => e
       @discourse_id_enabled = false
       @discourse_id_error = e.message
+    end
+  end
+
+  def create_admin_users
+    allowed_emails = find_allowed_emails
+    if allowed_emails.empty?
+      raise StandardError.new("No allowed emails configured for Discourse ID setup.")
+    end
+
+    allowed_emails.each do |email|
+      next if User.find_by_email(email)
+
+      username = UserNameSuggester.suggest(email)
+
+      user =
+        User.new(
+          email: email,
+          username: username,
+          # no password needed, users will login via Discourse ID
+          active: true,
+          admin: true,
+          trust_level: TrustLevel[4],
+        )
+      user.save!(validate: false)
+      Group.refresh_automatic_groups!(:staff, :admins)
     end
   end
 

@@ -5504,7 +5504,7 @@ en:
   finish_installation:
     congratulations: "Congratulations, you installed Discourse!"
     login_with_discourse_id: "Login with Discourse ID"
-    discourse_id_help: "You have opted to skip setting up email for now. To complete the installation, please log in using Discourse ID, making sure you use the same email address for your Discourse ID account that you previously provided during the setup script."
+    discourse_id_help: "Email setup has been skipped. To complete the installation, please log in with Discourse ID using an email previously added to the DISCOURSE_DEVELOPER_EMAILS environment variable."
     discourse_id_error_help: "You have opted to skip setting up email for now. Unfortunately due to the error message above, the setup cannot continue. Please report this issue on <a href='https://meta.discourse.org/'>meta.discourse.org</a>."
     register:
       button: "Register"
