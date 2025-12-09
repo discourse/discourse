@@ -25,6 +25,7 @@ module ::DiscourseTopicVoting
 end
 
 require_relative "lib/discourse_topic_voting/engine"
+require_relative "lib/discourse_topic_voting/topic_votes_filter"
 
 after_initialize do
   reloadable_patch do
@@ -117,15 +118,61 @@ after_initialize do
     )
   end
 
+  register_modifier(:topics_filter_options) do |results, _guardian|
+    results.concat(
+      [
+        {
+          name: "votes-min:",
+          description: I18n.t("topic_voting.filter.description.topic_votes_min"),
+          type: "number",
+        },
+        {
+          name: "votes-max:",
+          description: I18n.t("topic_voting.filter.description.topic_votes_max"),
+          type: "number",
+        },
+        {
+          name: "order:votes",
+          description: I18n.t("topic_voting.filter.description.order_topic_votes"),
+        },
+        {
+          name: "order:votes-asc",
+          description: I18n.t("topic_voting.filter.description.order_topic_votes_asc"),
+        },
+      ],
+    )
+
+    results
+  end
+
   add_to_serializer(:current_user, :votes_exceeded) { object.reached_voting_limit? }
   add_to_serializer(:current_user, :votes_count) { object.vote_count }
   add_to_serializer(:current_user, :votes_left) { [object.vote_limit - object.vote_count, 0].max }
   add_to_serializer(:current_user, :vote_limit) { object.vote_limit }
 
+  topic_votes_value_from = ->(values) do
+    value = values&.last
+    return if value.blank? || value !~ /\A\d+\z/
+
+    value.to_i
+  end
+
+  add_filter_custom_filter("votes-min") do |scope, filter_values, _guardian|
+    value = topic_votes_value_from.call(filter_values)
+    next scope if value.nil?
+
+    DiscourseTopicVoting::TopicVotesFilter.apply(scope, min_votes: value)
+  end
+
+  add_filter_custom_filter("votes-max") do |scope, filter_values, _guardian|
+    value = topic_votes_value_from.call(filter_values)
+    next scope if value.nil?
+
+    DiscourseTopicVoting::TopicVotesFilter.apply(scope, max_votes: value)
+  end
+
   filter_order_votes = ->(scope, order_direction, _guardian) do
-    scope.joins(:topic_vote_count).order(
-      "COALESCE(topic_voting_topic_vote_count.votes_count, 0)::integer #{order_direction}",
-    )
+    DiscourseTopicVoting::TopicVotesFilter.apply(scope, order_direction:)
   end
 
   add_filter_custom_filter("order:votes", &filter_order_votes)
