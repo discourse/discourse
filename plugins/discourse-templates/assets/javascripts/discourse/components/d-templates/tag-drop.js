@@ -20,6 +20,9 @@ export default class DTemplatesTagDrop extends TagDrop {
     return (this.content || [])
       .map((tag) => {
         if (tag.id && tag.name) {
+          if (!tag.text) {
+            return { ...tag, text: tag.name };
+          }
           return tag;
         }
         return this.defaultItem(tag, tag);
