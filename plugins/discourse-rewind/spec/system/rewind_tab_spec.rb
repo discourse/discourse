@@ -2,6 +2,7 @@
 
 describe "DiscourseRewind | rewind tab", type: :system do
   fab!(:current_user, :user)
+  let(:rewind_page) { PageObjects::Pages::Rewind.new }
 
   before do
     SiteSetting.discourse_rewind_enabled = true
@@ -12,9 +13,8 @@ describe "DiscourseRewind | rewind tab", type: :system do
     before { freeze_time DateTime.parse("2022-01-10") }
 
     it "shows the tab" do
-      visit("/my/activity")
-
-      expect(page).to have_selector(".user-nav__activity-rewind")
+      rewind_page.visit_my_activity
+      expect(rewind_page).to have_rewind_tab
     end
   end
 
@@ -22,9 +22,8 @@ describe "DiscourseRewind | rewind tab", type: :system do
     before { freeze_time DateTime.parse("2022-12-05") }
 
     it "shows the tab" do
-      visit("/my/activity")
-
-      expect(page).to have_selector(".user-nav__activity-rewind")
+      rewind_page.visit_my_activity
+      expect(rewind_page).to have_rewind_tab
     end
   end
 
@@ -32,9 +31,8 @@ describe "DiscourseRewind | rewind tab", type: :system do
     before { freeze_time DateTime.parse("2022-11-24") }
 
     it "doesn't show the tab" do
-      visit("/my/activity")
-
-      expect(page).to have_no_selector(".user-nav__activity-rewind")
+      rewind_page.visit_my_activity
+      expect(rewind_page).to have_no_rewind_tab
     end
   end
 end

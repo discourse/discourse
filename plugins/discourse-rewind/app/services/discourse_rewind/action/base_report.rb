@@ -15,6 +15,7 @@ module DiscourseRewind
       end
 
       def should_use_fake_data?
+        return false if ENV["DISCOURSE_REWIND_USE_REAL_DATA"] == "1"
         Rails.env.development?
       end
     end

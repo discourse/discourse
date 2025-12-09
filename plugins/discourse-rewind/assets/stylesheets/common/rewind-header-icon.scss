@@ -1,0 +1,28 @@
+.rewind-header-icon-tooltip-content {
+  .fk-d-tooltip__inner-content {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 0;
+    z-index: z("max");
+
+    .rewind__header {
+      width: 100%;
+    }
+  }
+
+  .d-icon-tippy-rounded-arrow {
+    z-index: z("modal", "dialog");
+  }
+}
+
+.rewind-header-icon {
+  &__button {
+    margin-bottom: 0.5em;
+  }
+
+  &__preferences {
+    font-size: var(--font-down-3);
+    padding: 0 1em;
+  }
+}
