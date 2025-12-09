@@ -4,8 +4,8 @@ module DiscourseAi
   module Completions
     module Endpoints
       class Gemini < Base
-        def self.can_contact?(model_provider)
-          model_provider == "google"
+        def self.can_contact?(llm_model)
+          llm_model.provider == "google"
         end
 
         def default_options

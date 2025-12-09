@@ -216,6 +216,7 @@ module DiscourseAi
             :input_cost,
             :cached_input_cost,
             :output_cost,
+            allowed_attachment_types: [],
           )
 
         provider = updating ? updating.provider : permitted[:provider]
