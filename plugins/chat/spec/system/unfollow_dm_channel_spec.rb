@@ -37,10 +37,7 @@ RSpec.describe "Unfollow dm channel", type: :system do
     context "when channel was previously starred" do
       let(:membership) { dm_channel_1.membership_for(current_user) }
 
-      before do
-        membership.update!(starred: true)
-        SiteSetting.star_chat_channels = true
-      end
+      before { membership.update!(starred: true) }
 
       it "does not show the channel back in the starred section" do
         visit("/")

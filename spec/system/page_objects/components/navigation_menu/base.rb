@@ -56,7 +56,8 @@ module PageObjects
         end
 
         def sidebar_section_selector(name)
-          ".sidebar-section[data-section-name='#{name.parameterize}']"
+          name = name.parameterize if name.include?(" ") || name.match?(/[A-Z]/)
+          ".sidebar-sections [data-section-name='#{name}']"
         end
 
         def has_section?(name)
