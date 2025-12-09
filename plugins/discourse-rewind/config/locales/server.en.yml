@@ -4,3 +4,5 @@ en:
   discourse_rewind:
     report_failed: "Failed to generate Discourse Rewind report."
     invalid_year: "Rewind can only be generated in January or December."
+    reports_not_cached: "Reports have not been generated yet. Please refresh the page."
+    report_not_found: "Report not found."
