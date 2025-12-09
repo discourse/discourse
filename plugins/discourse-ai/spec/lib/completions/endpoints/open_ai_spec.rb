@@ -653,9 +653,11 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenAi do
             content: [
               { type: "text", text: "hello" },
               {
-                type: "input_file",
-                filename: "document.pdf",
-                file_data: "data:#{encoded[0][:mime_type]};base64,#{encoded[0][:base64]}",
+                type: "file",
+                file: {
+                  filename: "document.pdf",
+                  file_data: "data:#{encoded[0][:mime_type]};base64,#{encoded[0][:base64]}",
+                },
               },
             ],
             name: "user1",
