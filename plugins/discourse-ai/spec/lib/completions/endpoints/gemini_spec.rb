@@ -139,6 +139,41 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
     UploadCreator.new(image100x100, "image.jpg").create_for(Discourse.system_user.id)
   end
 
+  def minimal_pdf_content
+    <<~PDF
+      %PDF-1.4
+      1 0 obj<< /Type /Catalog /Pages 2 0 R >>endobj
+      2 0 obj<< /Type /Pages /Count 1 /Kids [3 0 R] >>endobj
+      3 0 obj<< /Type /Page /Parent 2 0 R /MediaBox [0 0 200 200] /Contents 4 0 R >>endobj
+      4 0 obj<< /Length 44 >>stream
+      BT /F1 12 Tf 72 720 Td (Hello PDF) Tj ET
+      endstream
+      endobj
+      xref
+      0 5
+      0000000000 65535 f
+      0000000010 00000 n
+      0000000060 00000 n
+      0000000111 00000 n
+      0000000200 00000 n
+      trailer<< /Size 5 /Root 1 0 R >>
+      startxref
+      268
+      %%EOF
+    PDF
+  end
+
+  def build_pdf_upload
+    SiteSetting.authorized_extensions = "*"
+    file = Tempfile.new(%w[test-pdf .pdf])
+    file.binmode
+    file.write(minimal_pdf_content)
+    file.rewind
+    UploadCreator.new(file, "document.pdf").create_for(Discourse.system_user.id)
+  ensure
+    file.close! if file
+  end
+
   let(:gemini_mock) { GeminiMock.new(endpoint) }
 
   let(:compliance) do
@@ -433,6 +468,64 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
       "systemInstruction" => {
         "role" => "system",
         "parts" => [{ "text" => "You are image bot" }],
+      },
+    }
+
+    expect(JSON.parse(req_body)).to eq(expected_prompt)
+  end
+
+  it "passes pdf documents using inlineData" do
+    model.update!(allowed_attachment_types: %w[pdf])
+    pdf_upload = build_pdf_upload
+
+    prompt =
+      DiscourseAi::Completions::Prompt.new(
+        "You are pdf bot",
+        messages: [type: :user, id: "user1", content: ["hello", { upload_id: pdf_upload.id }]],
+      )
+
+    encoded = prompt.encoded_uploads(prompt.messages.last, allow_documents: true)
+
+    response = gemini_mock.response("PDF processed").to_json
+
+    req_body = nil
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).with(
+      body:
+        proc do |_req_body|
+          req_body = _req_body
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    response = llm.generate(prompt, user: user)
+
+    expect(response).to eq("PDF processed")
+
+    expected_prompt = {
+      "generationConfig" => {
+      },
+      "safetySettings" => [
+        { "category" => "HARM_CATEGORY_HARASSMENT", "threshold" => "BLOCK_NONE" },
+        { "category" => "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold" => "BLOCK_NONE" },
+        { "category" => "HARM_CATEGORY_HATE_SPEECH", "threshold" => "BLOCK_NONE" },
+        { "category" => "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold" => "BLOCK_NONE" },
+      ],
+      "contents" => [
+        {
+          "role" => "user",
+          "parts" => [
+            { "text" => "user1: hello" },
+            { "inlineData" => { "mimeType" => "application/pdf", "data" => encoded[0][:base64] } },
+          ],
+        },
+      ],
+      "systemInstruction" => {
+        "role" => "system",
+        "parts" => [{ "text" => "You are pdf bot" }],
       },
     }
 

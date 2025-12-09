@@ -16,10 +16,11 @@ module DiscourseAi
         TIMEOUT = 360
 
         class << self
-          def endpoint_for(provider_name)
+          def endpoint_for(llm_model)
             endpoints = [
               DiscourseAi::Completions::Endpoints::AwsBedrock,
               DiscourseAi::Completions::Endpoints::OpenAi,
+              DiscourseAi::Completions::Endpoints::OpenAiResponses,
               DiscourseAi::Completions::Endpoints::HuggingFace,
               DiscourseAi::Completions::Endpoints::Gemini,
               DiscourseAi::Completions::Endpoints::Vllm,
@@ -35,11 +36,11 @@ module DiscourseAi
             endpoints << DiscourseAi::Completions::Endpoints::Fake if Rails.env.local?
 
             endpoints.detect(-> { raise DiscourseAi::Completions::Llm::UNKNOWN_MODEL }) do |ek|
-              ek.can_contact?(provider_name)
+              ek.can_contact?(llm_model)
             end
           end
 
-          def can_contact?(_model_provider)
+          def can_contact?(_llm_model)
             raise NotImplementedError
           end
         end

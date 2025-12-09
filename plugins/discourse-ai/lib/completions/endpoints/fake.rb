@@ -61,8 +61,8 @@ module DiscourseAi
       Congratulations, you've now seen a small sample of what Discourse's Markdown can do! For more intricate formatting, consider exploring the advanced styling options. Remember that the key to great formatting is not just the available tools, but also the **clarity** and **readability** it brings to your readers.
     TEXT
 
-        def self.can_contact?(model_provider)
-          model_provider == "fake"
+        def self.can_contact?(llm_model)
+          llm_model.provider == "fake"
         end
 
         def self.with_fake_content(content)

@@ -130,9 +130,6 @@ module DiscourseAi
                       max_output_tokens: 128_000,
                       endpoint: "https://api.openai.com/v1/responses",
                       vision_enabled: true,
-                      provider_params: {
-                        enable_responses_api: true,
-                      },
                     },
                     {
                       name: "gpt-5-mini",
@@ -143,9 +140,6 @@ module DiscourseAi
                       output_cost: 2.0,
                       max_output_tokens: 128_000,
                       endpoint: "https://api.openai.com/v1/responses",
-                      provider_params: {
-                        enable_responses_api: true,
-                      },
                     },
                     {
                       name: "gpt-5-nano",
@@ -156,9 +150,6 @@ module DiscourseAi
                       output_cost: 0.40,
                       max_output_tokens: 128_000,
                       endpoint: "https://api.openai.com/v1/responses",
-                      provider_params: {
-                        enable_responses_api: true,
-                      },
                     },
                   ],
                   tokenizer: DiscourseAi::Tokenizer::OpenAiTokenizer,
@@ -349,8 +340,7 @@ module DiscourseAi
             return new(dialect_klass, nil, llm_model, gateway: @canned_response)
           end
 
-          model_provider = llm_model.provider
-          gateway_klass = DiscourseAi::Completions::Endpoints::Base.endpoint_for(model_provider)
+          gateway_klass = DiscourseAi::Completions::Endpoints::Base.endpoint_for(llm_model)
 
           new(dialect_klass, gateway_klass, llm_model)
         end

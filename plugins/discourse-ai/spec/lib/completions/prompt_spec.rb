@@ -7,6 +7,36 @@ RSpec.describe DiscourseAi::Completions::Prompt do
   let(:user_msg) { "Write something nice" }
   let(:username) { "username1" }
   let(:image100x100) { plugin_file_from_fixtures("100x100.jpg") }
+  let(:pdf_upload) do
+    SiteSetting.authorized_extensions = "*"
+    file = Tempfile.new(%w[test-pdf .pdf])
+    file.binmode
+    file.write(<<~PDF)
+        %PDF-1.4
+        1 0 obj<< /Type /Catalog /Pages 2 0 R >>endobj
+        2 0 obj<< /Type /Pages /Count 1 /Kids [3 0 R] >>endobj
+        3 0 obj<< /Type /Page /Parent 2 0 R /MediaBox [0 0 200 200] /Contents 4 0 R >>endobj
+        4 0 obj<< /Length 44 >>stream
+        BT /F1 12 Tf 72 720 Td (Hello PDF) Tj ET
+        endstream
+        endobj
+        xref
+        0 5
+        0000000000 65535 f
+        0000000010 00000 n
+        0000000060 00000 n
+        0000000111 00000 n
+        0000000200 00000 n
+        trailer<< /Size 5 /Root 1 0 R >>
+        startxref
+        268
+        %%EOF
+      PDF
+    file.rewind
+    UploadCreator.new(file, "document.pdf").create_for(Discourse.system_user.id)
+  ensure
+    file.close! if file
+  end
 
   before { enable_current_plugin }
 
@@ -42,6 +72,18 @@ RSpec.describe DiscourseAi::Completions::Prompt do
       expect(encoded[0]).to eq("this is an image")
       expect(encoded[1][:mime_type]).to eq("image/jpeg")
       expect(encoded[2]).to eq("this was an image")
+    end
+
+    it "only encodes documents when explicitly allowed" do
+      prompt.push(type: :user, content: ["this is a pdf", { upload_id: pdf_upload.id }])
+
+      expect(prompt.encoded_uploads(prompt.messages.last)).to be_empty
+
+      encoded = prompt.encoded_uploads(prompt.messages.last, allow_documents: true)
+
+      expect(encoded.length).to eq(1)
+      expect(encoded.first[:mime_type]).to eq("application/pdf")
+      expect(encoded.first[:kind]).to eq(:document)
     end
   end
 
