@@ -200,4 +200,59 @@
   &__models-table + &__models-table {
     margin-top: var(--space-6);
   }
+
+  &__included-label {
+    color: var(--primary);
+  }
+
+  &__mixed-cost {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  &__info-icon {
+    color: var(--tertiary);
+    cursor: help;
+    margin-left: var(--space-2);
+    font-size: var(--font-down-1);
+  }
+
+  &__cost-breakdown {
+    padding: var(--space-2);
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  &__breakdown-section {
+    margin-bottom: var(--space-4);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    h4 {
+      margin: 0 0 var(--space-2) 0;
+      font-size: var(--font-down-1);
+      font-weight: bold;
+    }
+  }
+
+  &__breakdown-table {
+    width: 100%;
+    font-size: var(--font-down-1);
+
+    th,
+    td {
+      padding: var(--space-1) var(--space-2);
+      text-align: left;
+    }
+
+    th {
+      border-bottom: 1px solid var(--primary-low);
+    }
+
+    td {
+      border-bottom: 1px solid var(--primary-very-low);
+    }
+  }
 }

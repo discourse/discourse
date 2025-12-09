@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AiUsageSerializer < ApplicationSerializer
-  attributes :data, :features, :models, :users, :summary, :period
+  attributes :data, :features, :feature_models, :models, :users, :summary, :period
 
   def data
     object.tokens_by_period.map do |row|
@@ -42,33 +42,35 @@ class AiUsageSerializer < ApplicationSerializer
     end
   end
 
+  def feature_models
+    result = {}
+    breakdown_rows = object.feature_model_breakdown.to_a
+
+    llm_ids = breakdown_rows.map(&:llm_id).compact.select { |id| numeric_id?(id) }.map(&:to_i)
+    llm_models = LlmModel.where(id: llm_ids).includes(:llm_credit_allocation).index_by(&:id)
+
+    breakdown_rows.each do |row|
+      feature_name = row.feature_name.presence || "unknown"
+      result[feature_name] ||= []
+
+      model_data = build_model_data(row)
+      enrich_with_credit_allocation!(model_data, row.llm_id, llm_models)
+
+      result[feature_name] << model_data
+    end
+
+    result
+  end
+
   def models
-    object.model_breakdown.map do |row|
-      model_data = {
-        id: row.llm_id,
-        llm: row.llm_label,
-        usage_count: row.usage_count,
-        total_tokens: row.total_tokens,
-        total_cache_read_tokens: row.total_cache_read_tokens,
-        total_cache_write_tokens: row.total_cache_write_tokens,
-        total_request_tokens: row.total_request_tokens,
-        total_response_tokens: row.total_response_tokens,
-        input_spending: row.input_spending,
-        output_spending: row.output_spending,
-        cache_read_spending: row.cache_read_spending,
-        cache_write_spending: row.cache_write_spending,
-      }
+    breakdown_rows = object.model_breakdown.to_a
 
-      if row.llm_id.present? && row.llm_id.to_i.negative?
-        llm_model = LlmModel.find_by(id: row.llm_id)
-        if llm_model&.llm_credit_allocation.present?
-          model_data[:credit_allocation] = LlmCreditAllocationSerializer.new(
-            llm_model.llm_credit_allocation,
-            root: false,
-          ).as_json
-        end
-      end
+    llm_ids = breakdown_rows.map(&:llm_id).compact.select { |id| numeric_id?(id) }.map(&:to_i)
+    llm_models = LlmModel.where(id: llm_ids).includes(:llm_credit_allocation).index_by(&:id)
 
+    breakdown_rows.map do |row|
+      model_data = build_model_data(row, id_key: :id)
+      enrich_with_credit_allocation!(model_data, row.llm_id, llm_models)
       model_data
     end
   end
@@ -106,5 +108,40 @@ class AiUsageSerializer < ApplicationSerializer
         end: object.end_date,
       },
     }
+  end
+
+  private
+
+  def numeric_id?(value)
+    value.to_s.match?(DiscourseAi::Completions::Report::LLM_MODEL_ID_PATTERN)
+  end
+
+  def build_model_data(row, id_key: :llm_id)
+    {
+      id_key => row.llm_id,
+      :llm => row.llm_label,
+      :usage_count => row.usage_count,
+      :total_tokens => row.total_tokens,
+      :total_cache_read_tokens => row.total_cache_read_tokens,
+      :total_cache_write_tokens => row.total_cache_write_tokens,
+      :total_request_tokens => row.total_request_tokens,
+      :total_response_tokens => row.total_response_tokens,
+      :input_spending => row.input_spending,
+      :output_spending => row.output_spending,
+      :cache_read_spending => row.cache_read_spending,
+      :cache_write_spending => row.cache_write_spending,
+    }
+  end
+
+  def enrich_with_credit_allocation!(model_data, llm_id, llm_models_index)
+    return if llm_id.blank? || !numeric_id?(llm_id)
+
+    llm_model = llm_models_index[llm_id.to_i]
+    return if llm_model&.llm_credit_allocation.blank?
+
+    model_data[:credit_allocation] = LlmCreditAllocationSerializer.new(
+      llm_model.llm_credit_allocation,
+      root: false,
+    ).as_json
   end
 end
