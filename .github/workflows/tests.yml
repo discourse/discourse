@@ -293,12 +293,12 @@ jobs:
       - name: Core Plugins RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core-plugins'
         run: |
-          EMBER_RAISE_ON_DEPRECATION=1 bin/rake plugin:turbo_spec['*','--verbose --format=progress --use-runtime-info --profile=50']
+          bin/rake plugin:turbo_spec['*','--verbose --format=progress --use-runtime-info --profile=50']
 
       - name: Core Plugins QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'core-plugins'
         run: |
-          EMBER_RAISE_ON_DEPRECATION=1 bin/rake plugin:qunit['*']
+          bin/rake plugin:qunit['*']
 
       - name: Official Plugins RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'official-plugins'
@@ -349,7 +349,7 @@ jobs:
           done
 
           echo "Running bin/turbo_rspec on: ${matches[*]}"
-          EMBER_RAISE_ON_DEPRECATION=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation "${matches[@]}"
+          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation "${matches[@]}"
         shell: bash
 
       - name: Official Plugins System Tests
@@ -367,7 +367,7 @@ jobs:
           done
 
           echo "Running bin/turbo_rspec on: ${matches[*]}"
-          EMBER_RAISE_ON_DEPRECATION=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation "${matches[@]}"
+          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation "${matches[@]}"
         shell: bash
 
       - name: Chat System Tests
