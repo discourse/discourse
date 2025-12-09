@@ -15,7 +15,7 @@ module Chat
     end
 
     def include_starred?
-      scope.authenticated?
+      scope&.authenticated?
     end
   end
 end
