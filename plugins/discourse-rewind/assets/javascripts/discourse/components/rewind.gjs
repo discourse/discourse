@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
@@ -27,26 +28,103 @@ import TimeOfDayActivity from "discourse/plugins/discourse-rewind/discourse/comp
 import TopWords from "discourse/plugins/discourse-rewind/discourse/components/reports/top-words";
 import WritingAnalysis from "discourse/plugins/discourse-rewind/discourse/components/reports/writing-analysis";
 
+const BUFFER_SIZE = 3;
+const SCROLL_THRESHOLD = 0.7;
+
 export default class Rewind extends Component {
   @tracked rewind = [];
   @tracked fullScreen = true;
   @tracked loadingRewind = false;
+  @tracked totalAvailable = 0;
+  @tracked isLoadingMore = false;
+  nextReportIndex = 0;
 
   @action
   registerScrollWrapper(element) {
     this.scrollWrapper = element;
+    this.scrollWrapper.addEventListener("scroll", this.handleScroll);
+  }
+
+  @action
+  cleanup() {
+    this.scrollWrapper?.removeEventListener("scroll", this.handleScroll);
   }
 
   @action
   async loadRewind() {
     try {
       this.loadingRewind = true;
-      this.rewind = await ajax("/rewinds");
+      const response = await ajax("/rewinds.json");
+      this.rewind = response.reports;
+      this.totalAvailable = response.total_available;
+      this.nextReportIndex = response.reports.length;
     } catch (e) {
       popupAjaxError(e);
     } finally {
       this.loadingRewind = false;
     }
+
+    // Load more if content fits on screen without scrolling
+    this.checkIfMoreContentNeeded();
+  }
+
+  checkIfMoreContentNeeded() {
+    if (!this.scrollWrapper || this.nextReportIndex >= this.totalAvailable) {
+      return;
+    }
+
+    const { scrollHeight, clientHeight } = this.scrollWrapper;
+    if (scrollHeight <= clientHeight) {
+      this.preloadNextReports();
+    }
+  }
+
+  @action
+  handleScroll() {
+    if (this.isLoadingMore || this.nextReportIndex >= this.totalAvailable) {
+      return;
+    }
+
+    const { scrollTop, scrollHeight, clientHeight } = this.scrollWrapper;
+    const scrollProgress = (scrollTop + clientHeight) / scrollHeight;
+
+    if (scrollProgress > SCROLL_THRESHOLD) {
+      this.preloadNextReports();
+    }
+  }
+
+  async preloadNextReports() {
+    if (this.nextReportIndex >= this.totalAvailable) {
+      return;
+    }
+
+    const targetIndex = Math.min(
+      this.nextReportIndex + BUFFER_SIZE,
+      this.totalAvailable
+    );
+
+    this.isLoadingMore = true;
+
+    try {
+      while (this.nextReportIndex < targetIndex) {
+        try {
+          const response = await ajax(`/rewinds/${this.nextReportIndex}.json`, {
+            ignoreUnsent: false,
+          });
+          if (response.report) {
+            this.rewind = [...this.rewind, response.report];
+          }
+        } catch {
+          // Skip failed reports and continue loading
+        }
+        this.nextReportIndex++;
+      }
+    } finally {
+      this.isLoadingMore = false;
+    }
+
+    // Re-check in case we need more content (failed reports or content fits on screen)
+    this.checkIfMoreContentNeeded();
   }
 
   @action
@@ -144,6 +222,7 @@ export default class Rewind extends Component {
           <div
             class="rewind__scroll-wrapper"
             {{didInsert this.registerScrollWrapper}}
+            {{willDestroy this.cleanup}}
           >
 
             {{#each this.rewind as |report|}}
@@ -158,6 +237,12 @@ export default class Rewind extends Component {
                 {{/if}}
               {{/let}}
             {{/each}}
+
+            {{#if this.isLoadingMore}}
+              <div class="rewind-loader --more">
+                <div class="spinner small"></div>
+              </div>
+            {{/if}}
           </div>
 
           {{#if this.showPrev}}
