@@ -116,6 +116,22 @@ class Notification < ActiveRecord::Base
                AND t.id = n.topic_id
           )
     SQL
+
+    orphaned_pm_notifications.delete_all
+  end
+
+  def self.orphaned_pm_notifications
+    joins(:topic).where(topics: { archetype: Archetype.private_message }).where(<<~SQL)
+        NOT EXISTS (
+          SELECT 1 FROM topic_allowed_users tau
+          WHERE tau.topic_id = notifications.topic_id AND tau.user_id = notifications.user_id
+        )
+        AND NOT EXISTS (
+          SELECT 1 FROM topic_allowed_groups tag
+          INNER JOIN group_users gu ON gu.group_id = tag.group_id
+          WHERE tag.topic_id = notifications.topic_id AND gu.user_id = notifications.user_id
+        )
+      SQL
   end
 
   def self.types
@@ -229,10 +245,20 @@ class Notification < ActiveRecord::Base
     result
   end
 
-  # Clean up any notifications the user can no longer see. For example, if a topic was previously
-  # public then turns private.
+  # Clean up any notifications the user can no longer see.
+  # For example, if a topic was previously public then turns private.
   def self.remove_for(user_id, topic_id)
-    Notification.where(user_id: user_id, topic_id: topic_id).delete_all
+    Notification.where(user_id:, topic_id:).delete_all
+  end
+
+  def self.remove_for_group(group_id, topic_id)
+    group_user_ids = GroupUser.where(group_id:).select(:user_id)
+    orphaned_pm_notifications.where(topic_id:, user_id: group_user_ids).delete_all
+  end
+
+  def self.remove_for_user_removed_from_group(user_id, group_id)
+    pm_topic_ids = TopicAllowedGroup.where(group_id:).select(:topic_id)
+    orphaned_pm_notifications.where(user_id:, topic_id: pm_topic_ids).delete_all
   end
 
   def self.filter_inaccessible_topic_notifications(guardian, notifications)

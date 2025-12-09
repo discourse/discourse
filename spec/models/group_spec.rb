@@ -1050,6 +1050,16 @@ RSpec.describe Group do
       expect(events).to include(:user_removed_from_group)
     end
 
+    it "cleans up orphaned PM notifications" do
+      pm_topic = Fabricate(:private_message_topic)
+      Fabricate(:topic_allowed_group, topic: pm_topic, group: group)
+      notification = Fabricate(:notification, user: user, topic: pm_topic)
+
+      group.remove(user)
+
+      expect(Notification.exists?(notification.id)).to eq(false)
+    end
+
     describe "with webhook" do
       fab!(:group_user_web_hook)
 
@@ -1254,6 +1264,18 @@ RSpec.describe Group do
 
       group.bulk_remove([user.id, admin.id])
       expect(group.reload.user_count).to eq(0)
+    end
+
+    it "cleans up orphaned PM notifications" do
+      group.bulk_add([user.id, admin.id])
+
+      pm_topic = Fabricate(:private_message_topic)
+      Fabricate(:topic_allowed_group, topic: pm_topic, group: group)
+      notification = Fabricate(:notification, user: user, topic: pm_topic)
+
+      group.bulk_remove([user.id, admin.id])
+
+      expect(Notification.exists?(notification.id)).to eq(false)
     end
 
     describe "with webhook" do
