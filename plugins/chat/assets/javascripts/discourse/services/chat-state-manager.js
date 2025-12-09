@@ -24,6 +24,7 @@ export function resetChatDrawerStateCallbacks() {
 
 export default class ChatStateManager extends Service {
   @service chat;
+  @service chatChannelsManager;
   @service router;
   @service site;
   @service chatDrawerRouter;
@@ -189,7 +190,15 @@ export default class ChatStateManager extends Service {
   }
 
   get lastKnownChatURL() {
-    return this._chatURL || "/chat";
+    if (this._chatURL) {
+      return this._chatURL;
+    }
+
+    if (this.chatChannelsManager.hasStarredChannels) {
+      return "/chat/starred-channels";
+    }
+
+    return "/chat";
   }
 
   #publishStateChange() {

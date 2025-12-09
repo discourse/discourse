@@ -343,6 +343,34 @@ RSpec.describe "Starred channels", type: :system do
     end
   end
 
+  context "when opening chat without a known last location" do
+    fab!(:channel_1) { Fabricate(:category_channel, name: "Channel A") }
+
+    before { channel_1.add(current_user) }
+
+    context "when user has starred channels" do
+      before { channel_1.membership_for(current_user).update!(starred: true) }
+
+      it "opens to starred channels" do
+        visit("/")
+        chat_page.prefers_full_page
+        chat_page.open_from_header
+
+        expect(page).to have_current_path("/chat/starred-channels")
+      end
+    end
+
+    context "when user has no starred channels" do
+      it "opens to the default chat index" do
+        visit("/")
+        chat_page.prefers_full_page
+        chat_page.open_from_header
+
+        expect(page).to have_current_path("/chat/browse/open")
+      end
+    end
+  end
+
   context "when navigating from starred channels on mobile", mobile: true do
     fab!(:user_1, :user)
     fab!(:channel_1) { Fabricate(:category_channel, name: "Channel A") }
