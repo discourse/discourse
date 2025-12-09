@@ -72,6 +72,10 @@ module PageObjects
         find(".reviewable-action.edit").click
       end
 
+      def click_scrub_user_button
+        find(".user-scrub").click
+      end
+
       def fill_post_content(content)
         find(".d-editor-input").fill_in(with: content)
       end

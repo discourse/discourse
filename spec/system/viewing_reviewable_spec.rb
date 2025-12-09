@@ -343,6 +343,46 @@ describe "Viewing reviewable item", type: :system do
         expect(refreshed_review_page).to have_reviewable_with_approved_status(reviewable)
         expect(refreshed_review_page).to have_approved_item_in_timeline(reviewable)
       end
+
+      it "Allow to delete and scrub user when old moderator actions are enabled" do
+        SiteSetting.reviewable_old_moderator_actions = true
+
+        reviewable = ReviewableUser.find_by_target_id(user.id)
+
+        refreshed_review_page.visit_reviewable(reviewable)
+
+        expect(page).to have_text(user.name)
+        expect(page).to have_link(user.username, href: "/admin/users/#{user.id}/#{user.username}")
+
+        refreshed_review_page.select_bundled_action(reviewable, "user-delete_user")
+        rejection_reason_modal.fill_in_rejection_reason("Spamming the site")
+        rejection_reason_modal.delete_user
+
+        expect(refreshed_review_page).to have_reviewable_with_rejected_status(reviewable)
+
+        expect(page).to have_text(user.name)
+
+        refreshed_review_page.click_scrub_user_button
+
+        scrubbing_reason = "a spammer who knows how to make GDPR requests"
+        scrub_user_modal.fill_in_scrub_reason(scrubbing_reason)
+        expect(scrub_user_modal.scrub_button).not_to be_disabled
+        scrub_user_modal.scrub_button.click
+
+        expect(refreshed_review_page).to have_reviewable_with_scrubbed_by(
+          reviewable,
+          admin.username,
+        )
+        expect(refreshed_review_page).to have_reviewable_with_scrubbed_reason(
+          reviewable,
+          scrubbing_reason,
+        )
+        expect(refreshed_review_page).to have_reviewable_with_scrubbed_at(
+          reviewable,
+          reviewable.payload["scrubbed_at"],
+        )
+        expect(page).not_to have_text(user.name)
+      end
     end
   end
 
