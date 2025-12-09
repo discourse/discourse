@@ -11,7 +11,8 @@ module DiscourseZendeskPlugin
     def generate_zendesk_ticket
       return unless SiteSetting.zendesk_enabled?
 
-      has_zendesk_ticket = topic.custom_fields[DiscourseZendeskPlugin::ZENDESK_ID_FIELD].present?
+      has_zendesk_ticket =
+        TopicCustomField.exists?(topic_id:, name: DiscourseZendeskPlugin::ZENDESK_ID_FIELD)
       in_autogeneration_category =
         DiscourseZendeskPlugin::Helper.autogeneration_category?(topic.category_id)
       return if !has_zendesk_ticket && !in_autogeneration_category
