@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { Input } from "@ember/component";
-import { array, concat, fn, get, hash } from "@ember/helper";
+import { concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import EmojiPicker from "discourse/components/emoji-picker";
@@ -13,17 +13,40 @@ import { i18n } from "discourse-i18n";
 
 export default class Chat extends Component {
   get formData() {
+    let emojis =
+      this.args.controller.model.user_option.chat_quick_reactions_custom ||
+      "heart|+1|smile";
+    emojis = emojis.split("|");
     return {
       chat_enabled: this.args.controller.model.user_option.chat_enabled,
+      chat_quick_reaction_type:
+        this.args.controller.model.user_option.chat_quick_reaction_type,
+      chat_quick_reactions_custom: emojis,
     };
+  }
+
+  @action
+  handleEmojiSet(index, field, value) {
+    let newValue = [...field.value];
+    newValue[index] = value;
+    field.set(newValue);
   }
 
   @action
   handleSubmit(data) {
     this.args.controller.model.set(
+      "user_option.chat_quick_reaction_type",
+      data.chat_quick_reaction_type
+    );
+    this.args.controller.model.set(
+      "user_option.chat_quick_reactions_custom",
+      data.chat_quick_reactions_custom.join("|")
+    );
+    this.args.controller.model.set(
       "user_option.chat_enabled",
       data.chat_enabled
     );
+
     this.args.controller.save();
   }
 
@@ -46,7 +69,7 @@ export default class Chat extends Component {
           @name="chat_quick_reaction_type"
           as |field|
         >
-          <field.RadioGroup as |radioGroup|>
+          <field.RadioGroup @name="chat_quick_reaction_type" as |radioGroup|>
             {{#each @controller.chatQuickReactionTypes as |option|}}
               <radioGroup.Radio @value={{option.value}}>
                 {{option.label}}
@@ -55,8 +78,27 @@ export default class Chat extends Component {
           </field.RadioGroup>
         </form.Field>
 
-        {{#if (eq data.chat_quick_reaction_type "custom")}}{{/if}}
+        {{#if (eq data.chat_quick_reaction_type "custom")}}
+          <form.Field
+            @title={{i18n "chat.quick_reaction_type.title"}}
+            @showTitle={{false}}
+            @name="chat_quick_reactions_custom"
+            as |field|
+          >
+            <field.Custom>
 
+              {{#each data.chat_quick_reactions_custom as |emoji index|}}
+                <EmojiPicker
+                  @emoji={{emoji}}
+                  @context="chat_preferences"
+                  @didSelectEmoji={{fn this.handleEmojiSet index field}}
+                />
+              {{/each}}
+            </field.Custom>
+
+          </form.Field>
+
+        {{/if}}
         <form.Submit />
       </Form>
     </div>
@@ -111,7 +153,7 @@ export default class Chat extends Component {
       {{#if
         (eq @controller.model.user_option.chat_quick_reaction_type "custom")
       }}
-        <div class="controls tracking-controls emoji-pickers">
+        {{!-- <div class="controls tracking-controls emoji-pickers">
           {{#each (array 0 1 2) as |index|}}
             <EmojiPicker
               @emoji={{get @controller.chatQuickReactionsCustom index}}
@@ -119,7 +161,7 @@ export default class Chat extends Component {
               @context="chat_preferences"
             />
           {{/each}}
-        </div>
+        </div> --}}
       {{/if}}
     </fieldset>
 
