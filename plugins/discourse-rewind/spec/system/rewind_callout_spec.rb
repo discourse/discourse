@@ -91,7 +91,8 @@ describe "DiscourseRewind | rewind avatar decoration and callout", type: :system
 
       context "when user has dismissed rewind previously" do
         it "does not show the header icon" do
-          set_local_storage("discourse_rewind_2022_dismissed", "true")
+          page.execute_script "window.localStorage.setItem('discourse_d-editor-prefers-rich-editor', 'true');"
+
           visit("/")
 
           expect(rewind_page).to have_no_rewind_header_icon

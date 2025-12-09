@@ -380,16 +380,4 @@ module SystemHelpers
   def tap_screen_at(x, y)
     page.driver.with_playwright_page { |pw_page| pw_page.touchscreen.tap_point(x, y) }
   end
-
-  def set_local_storage(key, value)
-    page.execute_script "window.localStorage.setItem('#{key}','#{value}');"
-  end
-
-  def get_local_storage(key)
-    page.evaluate_script "window.localStorage.getItem('#{key}');"
-  end
-
-  def local_storage_equals?(key, expected_value)
-    page.evaluate_script "window.localStorage.getItem('#{key}') === #{expected_value};"
-  end
 end

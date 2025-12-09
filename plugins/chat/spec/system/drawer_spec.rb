@@ -70,8 +70,8 @@ RSpec.describe "Drawer", type: :system do
     it "uses stored size" do
       visit("/") # we need to visit the page first to set the local storage
 
-      set_local_storage("discourse_chat_drawer_size_width", "500")
-      set_local_storage("discourse_chat_drawer_size_height", "500")
+      page.execute_script "window.localStorage.setItem('discourse_chat_drawer_size_width','500');"
+      page.execute_script "window.localStorage.setItem('discourse_chat_drawer_size_height','500');"
 
       visit("/")
 
