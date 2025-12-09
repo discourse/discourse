@@ -1,195 +1,253 @@
+import Component from "@glimmer/component";
 import { Input } from "@ember/component";
 import { array, concat, fn, get, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import EmojiPicker from "discourse/components/emoji-picker";
+import Form from "discourse/components/form";
 import SaveControls from "discourse/components/save-controls";
 import withEventValue from "discourse/helpers/with-event-value";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
-export default <template>
-  <label class="control-label">{{i18n "chat.title_capitalized"}}</label>
+export default class Chat extends Component {
+  get formData() {
+    return {
+      chat_enabled: this.args.controller.model.user_option.chat_enabled,
+    };
+  }
 
-  <div class="control-group chat-setting" data-setting-name="user_chat_enabled">
-    <label class="controls">
-      <Input
-        id="user_chat_enabled"
-        @type="checkbox"
-        @checked={{@controller.model.user_option.chat_enabled}}
-      />
-      {{i18n "chat.enable"}}
-    </label>
-  </div>
+  @action
+  handleSubmit(data) {
+    this.args.controller.model.set(
+      "user_option.chat_enabled",
+      data.chat_enabled
+    );
+    this.args.controller.save();
+  }
 
-  <fieldset
-    class="control-group chat-setting"
-    data-setting-name="user_chat_quick_reaction_type"
-  >
-    <legend class="control-label">{{i18n
-        "chat.quick_reaction_type.title"
-      }}</legend>
-    <div class="radio-group">
-      {{#each @controller.chatQuickReactionTypes as |option|}}
-        <div class="radio-group-option">
-          <label class="controls">
-            <input
-              type="radio"
-              name="user_chat_quick_reaction_type"
-              id={{concat "user_chat_quick_reaction_type_" option.value}}
-              value={{option.value}}
-              checked={{eq
-                @controller.model.user_option.chat_quick_reaction_type
-                option.value
-              }}
-              {{on
-                "change"
-                (withEventValue @controller.onChangeQuickReactionType)
-              }}
-            />
-            {{option.label}}
-          </label>
-        </div>
-      {{/each}}
+  <template>
+    <div class="AI_FORM_SANDBOX">
+      <Form
+        @data={{this.formData}}
+        @onSubmit={{this.handleSubmit}}
+        as |form data|
+      >
+        <form.Field
+          @title={{i18n "chat.enable"}}
+          @name="chat_enabled"
+          as |field|
+        >
+          <field.Checkbox @value={{field.value}} />
+        </form.Field>
+        <form.Field
+          @title={{i18n "chat.quick_reaction_type.title"}}
+          @name="chat_quick_reaction_type"
+          as |field|
+        >
+          <field.RadioGroup as |radioGroup|>
+            {{#each @controller.chatQuickReactionTypes as |option|}}
+              <radioGroup.Radio @value={{option.value}}>
+                {{option.label}}
+              </radioGroup.Radio>
+            {{/each}}
+          </field.RadioGroup>
+        </form.Field>
+
+        {{#if (eq data.chat_quick_reaction_type "custom")}}{{/if}}
+
+        <form.Submit />
+      </Form>
     </div>
 
-    {{#if (eq @controller.model.user_option.chat_quick_reaction_type "custom")}}
-      <div class="controls tracking-controls emoji-pickers">
-        {{#each (array 0 1 2) as |index|}}
-          <EmojiPicker
-            @emoji={{get @controller.chatQuickReactionsCustom index}}
-            @didSelectEmoji={{fn @controller.didSelectEmoji index}}
-            @context="chat_preferences"
-          />
+    <label class="control-label">{{i18n "chat.title_capitalized"}}</label>
+
+    <div
+      class="control-group chat-setting"
+      data-setting-name="user_chat_enabled"
+    >
+      <label class="controls">
+        <Input
+          id="user_chat_enabled"
+          @type="checkbox"
+          @checked={{@controller.model.user_option.chat_enabled}}
+        />
+        {{i18n "chat.enable"}}
+      </label>
+    </div>
+
+    <fieldset
+      class="control-group chat-setting"
+      data-setting-name="user_chat_quick_reaction_type"
+    >
+      <legend class="control-label">{{i18n
+          "chat.quick_reaction_type.title"
+        }}</legend>
+      <div class="radio-group">
+        {{#each @controller.chatQuickReactionTypes as |option|}}
+          <div class="radio-group-option">
+            <label class="controls">
+              <input
+                type="radio"
+                name="user_chat_quick_reaction_type"
+                id={{concat "user_chat_quick_reaction_type_" option.value}}
+                value={{option.value}}
+                checked={{eq
+                  @controller.model.user_option.chat_quick_reaction_type
+                  option.value
+                }}
+                {{on
+                  "change"
+                  (withEventValue @controller.onChangeQuickReactionType)
+                }}
+              />
+              {{option.label}}
+            </label>
+          </div>
         {{/each}}
       </div>
-    {{/if}}
-  </fieldset>
 
-  <div
-    class="control-group chat-setting"
-    data-setting-name="user_chat_only_push_notifications"
-  >
-    <label class="controls">
-      <Input
-        id="user_chat_only_push_notifications"
-        @type="checkbox"
-        @checked={{@controller.model.user_option.only_chat_push_notifications}}
-      />
-      {{i18n "chat.only_chat_push_notifications.title"}}
-    </label>
-    <span class="control-instructions">
-      {{i18n "chat.only_chat_push_notifications.description"}}
-    </span>
-  </div>
-
-  <div
-    class="control-group chat-setting"
-    data-setting-name="user_chat_ignore_channel_wide_mention"
-  >
-    <label class="controls">
-      <Input
-        id="user_chat_ignore_channel_wide_mention"
-        @type="checkbox"
-        @checked={{@controller.model.user_option.ignore_channel_wide_mention}}
-      />
-      {{i18n "chat.ignore_channel_wide_mention.title"}}
-    </label>
-    <span class="control-instructions">
-      {{i18n "chat.ignore_channel_wide_mention.description"}}
-    </span>
-  </div>
-
-  <div
-    class="control-group chat-setting controls-dropdown"
-    data-setting-name="user_chat_sounds"
-  >
-    <label for="user_chat_sounds">{{i18n "chat.sound.title"}}</label>
-    <ComboBox
-      @options={{hash none="chat.sounds.none"}}
-      @valueProperty="value"
-      @content={{@controller.chatSounds}}
-      @value={{@controller.model.user_option.chat_sound}}
-      @id="user_chat_sounds"
-      @onChange={{@controller.onChangeChatSound}}
-    />
-  </div>
-
-  <div
-    class="control-group chat-setting controls-dropdown"
-    data-setting-name="user_chat_header_indicator_preference"
-  >
-    <label for="user_chat_header_indicator_preference">
-      {{i18n "chat.header_indicator_preference.title"}}
-    </label>
-    <ComboBox
-      @valueProperty="value"
-      @content={{@controller.headerIndicatorOptions}}
-      @value={{@controller.model.user_option.chat_header_indicator_preference}}
-      @id="user_chat_header_indicator_preference"
-      @onChange={{fn
-        (mut @controller.model.user_option.chat_header_indicator_preference)
+      {{#if
+        (eq @controller.model.user_option.chat_quick_reaction_type "custom")
       }}
-    />
-  </div>
-
-  <div
-    class="control-group chat-setting controls-dropdown"
-    data-setting-name="user_chat_separate_sidebar_mode"
-  >
-    <label for="user_chat_separate_sidebar_mode">
-      {{i18n "chat.separate_sidebar_mode.title"}}
-    </label>
-
-    <ComboBox
-      @valueProperty="value"
-      @content={{@controller.chatSeparateSidebarModeOptions}}
-      @value={{@controller.chatSeparateSidebarMode}}
-      @id="user_chat_separate_sidebar_mode"
-      @onChange={{fn
-        (mut @controller.model.user_option.chat_separate_sidebar_mode)
-      }}
-    />
-  </div>
-
-  <div
-    class="control-group chat-setting controls-dropdown"
-    data-setting-name="user_chat_send_shortcut"
-  >
-    <div class="radio-group">
-      {{#each @controller.chatSendShortcutOptions as |option|}}
-        <div class="radio-group-option">
-          <label class="controls">
-            <input
-              type="radio"
-              name="chat_send_shortcut"
-              id={{concat "chat_send_shortcut_" option.value}}
-              value={{option.value}}
-              checked={{eq
-                @controller.model.user_option.chat_send_shortcut
-                option.value
-              }}
-              {{on
-                "change"
-                (withEventValue
-                  (fn (mut @controller.model.user_option.chat_send_shortcut))
-                )
-              }}
+        <div class="controls tracking-controls emoji-pickers">
+          {{#each (array 0 1 2) as |index|}}
+            <EmojiPicker
+              @emoji={{get @controller.chatQuickReactionsCustom index}}
+              @didSelectEmoji={{fn @controller.didSelectEmoji index}}
+              @context="chat_preferences"
             />
-            {{option.label}}
-          </label>
-          <span class="control-instructions">
-            {{option.description}}
-          </span>
+          {{/each}}
         </div>
-      {{/each}}
-    </div>
-  </div>
+      {{/if}}
+    </fieldset>
 
-  <SaveControls
-    @id="user_chat_preference_save"
-    @model={{@controller.model}}
-    @action={{@controller.save}}
-    @saved={{@controller.saved}}
-  />
-</template>
+    <div
+      class="control-group chat-setting"
+      data-setting-name="user_chat_only_push_notifications"
+    >
+      <label class="controls">
+        <Input
+          id="user_chat_only_push_notifications"
+          @type="checkbox"
+          @checked={{@controller.model.user_option.only_chat_push_notifications}}
+        />
+        {{i18n "chat.only_chat_push_notifications.title"}}
+      </label>
+      <span class="control-instructions">
+        {{i18n "chat.only_chat_push_notifications.description"}}
+      </span>
+    </div>
+
+    <div
+      class="control-group chat-setting"
+      data-setting-name="user_chat_ignore_channel_wide_mention"
+    >
+      <label class="controls">
+        <Input
+          id="user_chat_ignore_channel_wide_mention"
+          @type="checkbox"
+          @checked={{@controller.model.user_option.ignore_channel_wide_mention}}
+        />
+        {{i18n "chat.ignore_channel_wide_mention.title"}}
+      </label>
+      <span class="control-instructions">
+        {{i18n "chat.ignore_channel_wide_mention.description"}}
+      </span>
+    </div>
+
+    <div
+      class="control-group chat-setting controls-dropdown"
+      data-setting-name="user_chat_sounds"
+    >
+      <label for="user_chat_sounds">{{i18n "chat.sound.title"}}</label>
+      <ComboBox
+        @options={{hash none="chat.sounds.none"}}
+        @valueProperty="value"
+        @content={{@controller.chatSounds}}
+        @value={{@controller.model.user_option.chat_sound}}
+        @id="user_chat_sounds"
+        @onChange={{@controller.onChangeChatSound}}
+      />
+    </div>
+
+    <div
+      class="control-group chat-setting controls-dropdown"
+      data-setting-name="user_chat_header_indicator_preference"
+    >
+      <label for="user_chat_header_indicator_preference">
+        {{i18n "chat.header_indicator_preference.title"}}
+      </label>
+      <ComboBox
+        @valueProperty="value"
+        @content={{@controller.headerIndicatorOptions}}
+        @value={{@controller.model.user_option.chat_header_indicator_preference}}
+        @id="user_chat_header_indicator_preference"
+        @onChange={{fn
+          (mut @controller.model.user_option.chat_header_indicator_preference)
+        }}
+      />
+    </div>
+
+    <div
+      class="control-group chat-setting controls-dropdown"
+      data-setting-name="user_chat_separate_sidebar_mode"
+    >
+      <label for="user_chat_separate_sidebar_mode">
+        {{i18n "chat.separate_sidebar_mode.title"}}
+      </label>
+
+      <ComboBox
+        @valueProperty="value"
+        @content={{@controller.chatSeparateSidebarModeOptions}}
+        @value={{@controller.chatSeparateSidebarMode}}
+        @id="user_chat_separate_sidebar_mode"
+        @onChange={{fn
+          (mut @controller.model.user_option.chat_separate_sidebar_mode)
+        }}
+      />
+    </div>
+
+    <div
+      class="control-group chat-setting controls-dropdown"
+      data-setting-name="user_chat_send_shortcut"
+    >
+      <div class="radio-group">
+        {{#each @controller.chatSendShortcutOptions as |option|}}
+          <div class="radio-group-option">
+            <label class="controls">
+              <input
+                type="radio"
+                name="chat_send_shortcut"
+                id={{concat "chat_send_shortcut_" option.value}}
+                value={{option.value}}
+                checked={{eq
+                  @controller.model.user_option.chat_send_shortcut
+                  option.value
+                }}
+                {{on
+                  "change"
+                  (withEventValue
+                    (fn (mut @controller.model.user_option.chat_send_shortcut))
+                  )
+                }}
+              />
+              {{option.label}}
+            </label>
+            <span class="control-instructions">
+              {{option.description}}
+            </span>
+          </div>
+        {{/each}}
+      </div>
+    </div>
+
+    <SaveControls
+      @id="user_chat_preference_save"
+      @model={{@controller.model}}
+      @action={{@controller.save}}
+      @saved={{@controller.saved}}
+    />
+  </template>
+}
