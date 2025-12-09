@@ -20,6 +20,7 @@ module DiscourseRewind
     #   @return [Service::Base::Context]
 
     CACHE_DURATION = Rails.env.development? ? 10.seconds : 3.days
+    INITIAL_REPORT_COUNT = 3
 
     # The order here controls the order of reports in the UI,
     # so be careful when moving these around.
@@ -45,7 +46,9 @@ module DiscourseRewind
 
     model :year
     model :date
+    model :all_reports
     model :reports
+    model :total_available
 
     private
 
@@ -74,19 +77,35 @@ module DiscourseRewind
       Date.new(year).all_year
     end
 
-    def fetch_reports(date:, guardian:, year:)
-      key = "rewind:#{guardian.user.username}:#{year}"
+    def fetch_all_reports(date:, guardian:, year:)
+      key = cache_key(guardian.user.username, year)
       reports = Discourse.redis.get(key)
 
       if !reports
         reports =
-          REPORTS.map { |report| report.call(date:, user: guardian.user, guardian:) }.compact
+          REPORTS.filter_map do |report|
+            report.call(date:, user: guardian.user, guardian:)
+          rescue StandardError
+            nil
+          end
         Discourse.redis.setex(key, CACHE_DURATION, MultiJson.dump(reports))
       else
         reports = MultiJson.load(reports, symbolize_keys: true)
       end
 
       reports
+    end
+
+    def fetch_reports(all_reports:)
+      all_reports.first(INITIAL_REPORT_COUNT)
+    end
+
+    def fetch_total_available(all_reports:)
+      all_reports.size
+    end
+
+    def cache_key(username, year)
+      "rewind:#{username}:#{year}"
     end
   end
 end

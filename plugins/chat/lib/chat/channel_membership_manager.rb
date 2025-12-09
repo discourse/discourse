@@ -44,7 +44,7 @@ module Chat
 
       ActiveRecord::Base.transaction do
         if membership.following
-          membership.update!(following: false)
+          membership.update!(following: false, starred: false)
           recalculate_user_count
         end
       end

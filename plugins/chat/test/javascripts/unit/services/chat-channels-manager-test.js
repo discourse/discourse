@@ -12,8 +12,6 @@ module(
     hooks.beforeEach(function () {
       this.subject = getOwner(this).lookup("service:chat-channels-manager");
       this.fabricators = new ChatFabricators(getOwner(this));
-      this.siteSettings = getOwner(this).lookup("service:site-settings");
-      this.siteSettings.star_chat_channels = true;
     });
 
     module("#sortChannelsByActivity with starred channels", function () {
@@ -151,38 +149,7 @@ module(
     });
 
     module("#unstarredPublicMessageChannelsByActivity", function () {
-      test("returns all channels sorted by activity when starring is disabled", function (assert) {
-        this.siteSettings.star_chat_channels = false;
-
-        const channelA = this.fabricators.channel({
-          chatable: this.fabricators.coreFabricators.category({
-            slug: "channel-a",
-          }),
-        });
-        const channelB = this.fabricators.channel({
-          chatable: this.fabricators.coreFabricators.category({
-            slug: "channel-b",
-          }),
-        });
-
-        channelA.currentUserMembership = UserChatChannelMembership.create({
-          following: true,
-          starred: true,
-        });
-        channelB.currentUserMembership = UserChatChannelMembership.create({
-          following: true,
-          starred: false,
-        });
-
-        this.subject.store(channelA);
-        this.subject.store(channelB);
-
-        const result = this.subject.unstarredPublicMessageChannelsByActivity;
-
-        assert.strictEqual(result.length, 2, "returns all channels");
-      });
-
-      test("excludes starred channels when starring is enabled", function (assert) {
+      test("excludes starred channels", function (assert) {
         const starredChannel = this.fabricators.channel({
           chatable: this.fabricators.coreFabricators.category({
             slug: "starred-channel",
@@ -264,28 +231,6 @@ module(
     });
 
     module("#starredChannelsByActivity", function () {
-      test("returns empty array when starring is disabled", function (assert) {
-        this.siteSettings.star_chat_channels = false;
-
-        const channel = this.fabricators.channel({
-          chatable: this.fabricators.coreFabricators.category({
-            slug: "test",
-          }),
-        });
-        channel.currentUserMembership = UserChatChannelMembership.create({
-          following: true,
-          starred: true,
-        });
-
-        this.subject.store(channel);
-
-        assert.strictEqual(
-          this.subject.starredChannelsByActivity.length,
-          0,
-          "returns empty array"
-        );
-      });
-
       test("sorts starred channels with unreads first", function (assert) {
         const channelWithUnread = this.fabricators.channel({
           chatable: this.fabricators.coreFabricators.category({

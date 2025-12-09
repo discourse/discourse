@@ -141,7 +141,7 @@ export default class ChatUsage extends Component {
                       >
                         <span
                           class="chat-channel-link__name"
-                        >#{{channel.channel_name}}</span>
+                        >#{{channel.channel_slug}}</span>
                         <span class="chat-channel-link__count">
                           {{number channel.message_count}}
                         </span>

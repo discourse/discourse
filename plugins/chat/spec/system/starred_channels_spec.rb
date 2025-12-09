@@ -9,7 +9,6 @@ RSpec.describe "Starred channels", type: :system do
   before do
     chat_system_bootstrap
     SiteSetting.navigation_menu = "sidebar"
-    SiteSetting.star_chat_channels = true
     sign_in(current_user)
   end
 
@@ -270,31 +269,6 @@ RSpec.describe "Starred channels", type: :system do
     end
   end
 
-  context "when the star_chat_channels setting is disabled" do
-    fab!(:channel_1) { Fabricate(:category_channel, name: "Channel A") }
-
-    before do
-      channel_1.add(current_user)
-      channel_1.membership_for(current_user).update!(starred: true)
-      SiteSetting.star_chat_channels = false
-    end
-
-    it "does not show the Starred Channels section" do
-      visit("/")
-
-      expect(page).to have_no_css("#sidebar-section-content-chat-starred-channels")
-      expect(page.find("#sidebar-section-content-chat-channels")).to have_css(
-        ".channel-#{channel_1.id}",
-      )
-    end
-
-    it "does not show the star button in the channel navbar" do
-      chat_page.visit_channel(channel_1)
-
-      expect(page).to have_no_css(".c-navbar__star-channel-button")
-    end
-  end
-
   context "when using the navbar star button" do
     fab!(:channel_1) { Fabricate(:category_channel, name: "Channel A") }
 
@@ -366,6 +340,30 @@ RSpec.describe "Starred channels", type: :system do
         ".fk-d-tooltip__content",
         text: I18n.t("js.chat.channel_settings.unstar_channel"),
       )
+    end
+  end
+
+  context "when opening chat without a known last location" do
+    fab!(:channel_1) { Fabricate(:category_channel, name: "Channel A") }
+
+    before do
+      channel_1.add(current_user)
+      channel_1.membership_for(current_user).update!(starred: true)
+    end
+
+    it "defaults to starred channels on mobile", mobile: true do
+      visit("/")
+      chat_page.open_from_header
+
+      expect(page).to have_current_path("/chat/starred-channels")
+    end
+
+    it "defaults to chat index on desktop fullscreen (starred channels in sidebar)" do
+      visit("/")
+      chat_page.prefers_full_page
+      chat_page.open_from_header
+
+      expect(page).to have_current_path("/chat/browse/open")
     end
   end
 

@@ -9,7 +9,7 @@ module Jobs
       return if pr_url.blank?
 
       rebake_posts(pr_url)
-      rebake_chat_messages(pr_url) if defined?(Chat)
+      rebake_chat_messages(pr_url) if SiteSetting.chat_enabled
     end
 
     private
@@ -30,15 +30,13 @@ module Jobs
     end
 
     def rebake_chat_messages(pr_url)
-      return unless defined?(Chat::MessageLink)
-
       message_ids =
-        Chat::MessageLink
+        ::Chat::MessageLink
           .where(url: pr_url)
-          .or(Chat::MessageLink.where("url LIKE ?", "#{pr_url}%"))
+          .or(::Chat::MessageLink.where("url LIKE ?", "#{pr_url}%"))
           .select(:chat_message_id)
 
-      Chat::Message
+      ::Chat::Message
         .where(id: message_ids)
         .find_each do |message|
           next unless has_github_pr_onebox?(message.cooked, pr_url)

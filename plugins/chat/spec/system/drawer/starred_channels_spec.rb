@@ -10,7 +10,6 @@ RSpec.describe "Drawer - starred channels", type: :system do
 
   before do
     chat_system_bootstrap
-    SiteSetting.star_chat_channels = true
     channel_1.add(current_user)
     channel_2.add(current_user)
     sign_in(current_user)
@@ -19,6 +18,13 @@ RSpec.describe "Drawer - starred channels", type: :system do
 
   context "when user has starred channels" do
     before { channel_1.membership_for(current_user).update!(starred: true) }
+
+    it "defaults to starred channels when opening drawer" do
+      visit("/")
+      chat_page.open_from_header
+
+      expect(drawer_page).to have_open_starred_channels
+    end
 
     it "shows starred tab in footer" do
       visit("/")
@@ -55,20 +61,6 @@ RSpec.describe "Drawer - starred channels", type: :system do
   end
 
   context "when user has no starred channels" do
-    it "does not show starred tab in footer" do
-      visit("/")
-      chat_page.open_from_header
-
-      expect(page).to have_no_css("#c-footer-starred")
-    end
-  end
-
-  context "when star_chat_channels setting is disabled" do
-    before do
-      channel_1.membership_for(current_user).update!(starred: true)
-      SiteSetting.star_chat_channels = false
-    end
-
     it "does not show starred tab in footer" do
       visit("/")
       chat_page.open_from_header
