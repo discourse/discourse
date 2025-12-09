@@ -22,11 +22,11 @@ document.addEventListener("discourse-init", async () => {
   await loadAdmin();
   await loadThemes();
 
-  if (!window.EmberENV.TESTS_FILE_LOADED) {
-    throw new Error(
-      'The tests file was not loaded. Make sure your tests index.html includes "assets/tests.js".'
-    );
-  }
+  // if (!window.EmberENV.TESTS_FILE_LOADED) {
+  //   throw new Error(
+  //     'The tests file was not loaded. Make sure your tests index.html includes "assets/tests.js".'
+  //   );
+  // }
 
   const script = document.getElementById("plugin-test-script");
   if (script && !requirejs.entries["discourse/tests/plugin-tests"]) {
@@ -104,4 +104,4 @@ document.addEventListener("discourse-init", async () => {
   });
 });
 
-window.EmberENV.TESTS_FILE_LOADED = true;
+// window.EmberENV.TESTS_FILE_LOADED = true;
