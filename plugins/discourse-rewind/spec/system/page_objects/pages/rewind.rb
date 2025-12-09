@@ -72,6 +72,14 @@ module PageObjects
       def on_rewind_page?(username)
         has_current_path?("/u/#{username}/activity/rewind")
       end
+
+      def has_rewind_profile_link?
+        has_css?("#quick-access-profile a[href*='/activity/rewind']")
+      end
+
+      def has_no_rewind_profile_link?
+        has_no_css?("#quick-access-profile a[href*='/activity/rewind']")
+      end
     end
   end
 end
