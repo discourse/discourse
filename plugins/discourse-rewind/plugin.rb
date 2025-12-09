@@ -27,6 +27,34 @@ module ::DiscourseRewind
   def self.public_asset_path(name)
     File.expand_path(File.join(__dir__, "public", name))
   end
+
+  def self.year_date_range(date_override = nil)
+    if date_override.present?
+      current_date = date_override
+    else
+      current_date = Time.zone.now
+    end
+
+    current_month = current_date.month
+    current_year = current_date.year
+
+    case current_month
+    when 1
+      current_year - 1
+    when 12
+      current_year
+    else
+      # Otherwise it's impossible to test in browser locally unless you're
+      # in December or January
+      if Rails.env.development?
+        current_year
+      else
+        false
+      end
+    end
+
+    Date.new(current_year).all_year
+  end
 end
 
 require_relative "lib/discourse_rewind/engine"

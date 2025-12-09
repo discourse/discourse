@@ -83,7 +83,7 @@ en:
           status_online: "● online"
           message_1: "You sent <strong>%{count}</strong> messages this year!"
           reply_1: "lol awesome B-)"
-          message_2: "You had <strong>%{dm_count}</strong> DM conversations with <strong>%{channel_count}</strong> different people"
+          message_2: "You had <strong>%{dm_count}</strong> DM conversations with <strong>%{channel_count}</strong> different people or groups"
           reply_2: "cOo0oL :D"
           message_3: "People loved your messages! You got <strong>%{count}</strong> reactions ❤️"
           reply_3: "r0fl rAwr 8-)"

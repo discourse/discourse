@@ -9,11 +9,11 @@ module DiscourseRewind
         data: {
           total_messages: 342,
           favorite_channels: [
-            { channel_id: 1, channel_name: "general", message_count: 156 },
-            { channel_id: 2, channel_name: "tech-talk", message_count: 89 },
-            { channel_id: 3, channel_name: "random", message_count: 45 },
-            { channel_id: 4, channel_name: "dev", message_count: 32 },
-            { channel_id: 5, channel_name: "announcements", message_count: 12 },
+            { channel_id: 1, channel_slug: "general", message_count: 156 },
+            { channel_id: 2, channel_slug: "tech-talk", message_count: 89 },
+            { channel_id: 3, channel_slug: "random", message_count: 45 },
+            { channel_id: 4, channel_slug: "dev", message_count: 32 },
+            { channel_id: 5, channel_slug: "announcements", message_count: 12 },
           ],
           dm_message_count: 87,
           unique_dm_channels: 12,
@@ -39,12 +39,12 @@ module DiscourseRewind
           messages
             .joins(:chat_channel)
             .where(chat_channels: { type: "CategoryChannel" })
-            .group("chat_channels.id", "chat_channels.name")
+            .group("chat_channels.id", "chat_channels.slug")
             .count
             .sort_by { |_, count| -count }
             .first(5)
-            .map do |(id, name), count|
-              { channel_id: id, channel_name: name, message_count: count }
+            .map do |(id, slug), count|
+              { channel_id: id, channel_slug: slug, message_count: count }
             end
 
         # DM statistics
