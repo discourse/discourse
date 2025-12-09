@@ -866,6 +866,7 @@ ro:
           one: "Semnalat de un utilizator unic"
           few: "Semnalat de %{count} utilizatori unici"
           other: "Semnalat de %{count} de utilizatori unici"
+        similar_posts: "Încălcări anterioare"
         flagged_in_timeframe:
           one: "o semnalizare confirmată"
           few: "%{count} semnalizări confirmate"
@@ -2529,6 +2530,10 @@ ro:
         relist_topics: "Relistează subiecte"
         defer: "Marchează ca necitite"
         delete: "Șterge subiecte"
+        delete_topics_count:
+          one: "Șterge subiect"
+          few: "Șterge subiecte"
+          other: "Șterge subiecte"
         dismiss: "Respinge"
         dismiss_read: "Abandonează toate necitite"
         dismiss_button: "Respinge..."
@@ -3896,6 +3901,8 @@ ro:
         enabled_for_options:
           everyone: "Toată lumea"
           staff: "Doar pentru personal"
+        statuses:
+          experimental: "Experimental"
         impact_roles:
           admins: "Admini"
           moderators: "Moderatori"
@@ -3905,6 +3912,7 @@ ro:
           enabled: "Activate"
           disabled: "Dezactivate"
           impact_type_other: "Altele"
+          status_experimental: "Experimental"
       config:
         about:
           title: "Despre site-ul tău"

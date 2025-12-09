@@ -577,11 +577,14 @@ basic:
     default: "stable"
     type: enum
     choices:
-      - pre_alpha
+      - experimental
       - alpha
       - beta
       - stable
       - never
+    hidden: true
+  upcoming_change_verbose_logging:
+    default: false
     hidden: true
 
 login:
@@ -4264,10 +4267,6 @@ experimental:
     default: 15
     hidden: true
     area: "experimental"
-  experimental_lightbox:
-    client: true
-    default: true
-    area: "experimental"
   show_preview_for_form_templates:
     client: true
     default: true
@@ -4303,11 +4302,3 @@ experimental:
     default: false
     hidden: true
     client: true
-  fake_upcoming_change:
-    default: false
-    hidden: true
-    client: true
-    upcoming_change:
-      status: "alpha"
-      impact: "other,all_members"
-      learn_more_url: "https://meta.discourse.org"

@@ -591,6 +591,3 @@ ja:
       persona_already_exists: '%{name} という名前のペルソナはすでに存在します。'
       custom_tool_exists:
         other: "%{names} という名前のカスタムツールはすでに存在します。"
-  dashboard:
-    problem:
-      ai_llm_status: "LLM モデル: %{model_name} に問題が発生しています。<a href='%{url}'>モデルの構成ページ</a>を確認してください。"

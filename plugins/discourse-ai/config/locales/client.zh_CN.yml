@@ -351,7 +351,6 @@ zh_CN:
             title: "将这篇帖子翻译成所有支持的语言"
             confirm: "这将更新此帖子的所有现有翻译。你确定吗？"
             success: "帖子已发送供翻译"
-        credit_limit_warning: "由于额度限制，翻译已暂停。额度重置后将自动恢复 (%{reset_time})。"
         credit_limit_warning_no_time: "由于额度限制，翻译已暂停。额度重置后将自动恢复。"
       spam:
         short_title: "垃圾信息"
@@ -378,6 +377,8 @@ zh_CN:
           post_url_label: "帖子 URL 或 ID"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 或帖子 ID"
           result: "结果"
+          llm: "LLM"
+          system_prompt: "系统提示"
           scan_log: "扫描日志"
           run: "运行测试"
           spam: "垃圾信息"
@@ -796,8 +797,6 @@ zh_CN:
       errors:
         credit_limit_dialog:
           title: "已达到 AI 额度限制"
-          message_user: "您已达到当前方案的 AI 额度上限。在额度于 %{reset_time} 重置前，系统将无法提供响应。有关详情，请联系您的站点管理员。"
-          message_without_time_user: "您已达到当前方案的 AI 额度上限。在额度重置之前，将无法获得回复。如需更多信息，请联系站点管理员。"
           message_admin: "您已达到当前方案的 AI 额度上限。在额度于 %{reset_time} 重置之前，系统将无法提供回复。"
           message_without_time_admin: "您已达到当前方案的 AI 额度上限。在额度重置之前，系统将无法提供回复。"
       reviewables:
@@ -877,6 +876,7 @@ zh_CN:
         llm: "模型"
         pm_warning: "版主会定期监控 AI 聊天机器人消息。"
         cancel_streaming: "停止回复"
+        try_again: "重试"
         default_pm_prefix: "[无标题 AI 机器人私信]"
         shortcut_title: "使用 AI 机器人启动私信"
         shortcut_link: "AI 机器人"

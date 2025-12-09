@@ -3,6 +3,13 @@
 class LlmModel < ActiveRecord::Base
   FIRST_BOT_USER_ID = -1200
   BEDROCK_PROVIDER_NAME = "aws_bedrock"
+  DEFAULT_ALLOWED_ATTACHMENT_TYPES = [].freeze
+  ATTACHMENT_TYPE_ALIASES = {
+    "md" => "markdown",
+    "markdown" => "markdown",
+    "htm" => "html",
+    "text" => "txt",
+  }.freeze
 
   has_many :llm_quotas, dependent: :destroy
   has_one :llm_credit_allocation, dependent: :destroy
@@ -76,7 +83,6 @@ class LlmModel < ActiveRecord::Base
         disable_temperature: :checkbox,
         disable_top_p: :checkbox,
         disable_streaming: :checkbox,
-        enable_responses_api: :checkbox,
         reasoning_effort: {
           type: :enum,
           values: %w[default minimal low medium high],
@@ -106,12 +112,14 @@ class LlmModel < ActiveRecord::Base
       },
       azure: {
         disable_native_tools: :checkbox,
-        enable_responses_api: :checkbox,
         reasoning_effort: {
           type: :enum,
           values: %w[default minimal low medium high],
           default: "default",
         },
+        disable_temperature: :checkbox,
+        disable_top_p: :checkbox,
+        disable_streaming: :checkbox,
       },
       hugging_face: {
         disable_system_prompt: :checkbox,
@@ -189,6 +197,21 @@ class LlmModel < ActiveRecord::Base
     tokenizer.constantize
   end
 
+  def allowed_attachment_types
+    (self[:allowed_attachment_types].presence || DEFAULT_ALLOWED_ATTACHMENT_TYPES).map(&:downcase)
+  end
+
+  def allowed_attachment_types=(value)
+    normalized =
+      Array(value)
+        .map { |v| v.to_s.downcase.strip }
+        .map { |v| ATTACHMENT_TYPE_ALIASES[v] || v }
+        .reject(&:blank?)
+        .uniq
+    normalized = DEFAULT_ALLOWED_ATTACHMENT_TYPES if normalized.empty?
+    self[:allowed_attachment_types] = normalized
+  end
+
   def lookup_custom_param(key)
     provider_params&.dig(key)
   end
@@ -256,23 +279,24 @@ end
 #
 # Table name: llm_models
 #
-#  id                :bigint           not null, primary key
-#  api_key           :string
-#  cache_write_cost  :float            default(0.0)
-#  cached_input_cost :float
-#  display_name      :string
-#  enabled_chat_bot  :boolean          default(FALSE), not null
-#  input_cost        :float
-#  max_output_tokens :integer
-#  max_prompt_tokens :integer          not null
-#  name              :string           not null
-#  output_cost       :float
-#  provider          :string           not null
-#  provider_params   :jsonb
-#  tokenizer         :string           not null
-#  url               :string
-#  vision_enabled    :boolean          default(FALSE), not null
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  user_id           :integer
+#  id                       :bigint           not null, primary key
+#  allowed_attachment_types :text             default([]), not null, is an Array
+#  api_key                  :string
+#  cache_write_cost         :float            default(0.0)
+#  cached_input_cost        :float
+#  display_name             :string
+#  enabled_chat_bot         :boolean          default(FALSE), not null
+#  input_cost               :float
+#  max_output_tokens        :integer
+#  max_prompt_tokens        :integer          not null
+#  name                     :string           not null
+#  output_cost              :float
+#  provider                 :string           not null
+#  provider_params          :jsonb
+#  tokenizer                :string           not null
+#  url                      :string
+#  vision_enabled           :boolean          default(FALSE), not null
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  user_id                  :integer
 #

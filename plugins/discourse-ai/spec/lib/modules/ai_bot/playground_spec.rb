@@ -448,6 +448,101 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         last_message = Chat::Message.where(chat_channel_id: channel.id).order("id desc").first
         expect(last_message.message).to eq("world")
       end
+
+      it "sends error message when credit limit is exceeded" do
+        # Create allocation to include in the exception
+        seeded_llm = Fabricate(:seeded_model)
+        allocation =
+          Fabricate(
+            :llm_credit_allocation,
+            llm_model: seeded_llm,
+            daily_credits: 1000,
+            daily_used: 1000,
+          )
+
+        # Add some chat history first (before stubbing to avoid side effects)
+        ChatSDK::Message.create(
+          channel_id: channel.id,
+          raw: "This is some background conversation",
+          guardian: guardian,
+        )
+
+        # Stub check_credits! to raise the exception (after background message is created)
+        exception =
+          LlmCreditAllocation::CreditLimitExceeded.new("Credit limit exceeded", allocation:)
+        allow(LlmCreditAllocation).to receive(:check_credits!).and_raise(exception)
+
+        ChatSDK::Message.create(
+          channel_id: channel.id,
+          raw: "Hello @#{persona.user.username}",
+          guardian: guardian,
+        )
+
+        last_message = Chat::Message.where(chat_channel_id: channel.id).order("id desc").first
+
+        # Error message has HTML links converted to markdown for chat
+        expected_message =
+          I18n.t(
+            "discourse_ai.llm_credit_allocation.limit_exceeded_user",
+            reset_time: allocation.relative_reset_time,
+          ).gsub(%r{<a\s+href=['"]([^'"]+)['"][^>]*>([^<]+)</a>}i, '[\2](\1)')
+        expect(last_message.message).to eq(expected_message)
+        expect(last_message.user_id).to eq(persona.user_id)
+      end
+
+      it "sends admin error message when credit limit is exceeded for admin users" do
+        # Stub external URL fetches that may be triggered by message processing
+        stub_request(:get, /meta\.discourse\.org/).to_return(
+          status: 200,
+          body: "",
+          headers: {
+            "Discourse-No-Onebox" => "1",
+          },
+        )
+
+        # Create allocation to include in the exception
+        seeded_llm = Fabricate(:seeded_model)
+        allocation =
+          Fabricate(
+            :llm_credit_allocation,
+            llm_model: seeded_llm,
+            daily_credits: 1000,
+            daily_used: 1000,
+          )
+
+        admin_membership =
+          Fabricate(:user_chat_channel_membership, user: admin, chat_channel: channel)
+        admin_guardian = Guardian.new(admin)
+
+        # Add some chat history first (before stubbing to avoid side effects)
+        ChatSDK::Message.create(
+          channel_id: channel.id,
+          raw: "This is some background conversation",
+          guardian: admin_guardian,
+        )
+
+        # Stub check_credits! to raise the exception (after background message is created)
+        exception =
+          LlmCreditAllocation::CreditLimitExceeded.new("Credit limit exceeded", allocation:)
+        allow(LlmCreditAllocation).to receive(:check_credits!).and_raise(exception)
+
+        ChatSDK::Message.create(
+          channel_id: channel.id,
+          raw: "Hello @#{persona.user.username}",
+          guardian: admin_guardian,
+        )
+
+        last_message = Chat::Message.where(chat_channel_id: channel.id).order("id desc").first
+
+        # Error message has HTML links converted to markdown for chat
+        expected_message =
+          I18n.t(
+            "discourse_ai.llm_credit_allocation.limit_exceeded_admin",
+            reset_time: allocation.relative_reset_time,
+          ).gsub(%r{<a\s+href=['"]([^'"]+)['"][^>]*>([^<]+)</a>}i, '[\2](\1)')
+        expect(last_message.message).to eq(expected_message)
+        expect(last_message.user_id).to eq(persona.user_id)
+      end
     end
 
     context "with chat dms" do
@@ -1055,6 +1150,64 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       expect(custom_prompt.to_s).not_to include("<details>")
       expect(custom_prompt.last.first).to eq(response2)
       expect(custom_prompt.last.last).to eq(bot_user.username)
+    end
+
+    it "sends credit limit error message when credit limit is exceeded in PM" do
+      seeded_llm = Fabricate(:seeded_model)
+      allocation =
+        Fabricate(
+          :llm_credit_allocation,
+          llm_model: seeded_llm,
+          daily_credits: 1000,
+          daily_used: 1000,
+        )
+
+      exception = LlmCreditAllocation::CreditLimitExceeded.new("Credit limit exceeded", allocation:)
+      allow(LlmCreditAllocation).to receive(:check_credits!).and_raise(exception)
+
+      expect { playground.reply_to(third_post) }.not_to raise_error
+
+      last_post = pm.reload.posts.order(:post_number).last
+
+      expected_message =
+        I18n.t(
+          "discourse_ai.llm_credit_allocation.limit_exceeded_user",
+          reset_time: allocation.relative_reset_time,
+        )
+      expect(last_post.raw).to include(expected_message)
+      expect(last_post.user_id).to eq(bot_user.id)
+    end
+
+    it "sends admin credit limit error message when credit limit is exceeded for admin users" do
+      seeded_llm = Fabricate(:seeded_model)
+      allocation =
+        Fabricate(
+          :llm_credit_allocation,
+          llm_model: seeded_llm,
+          daily_credits: 1000,
+          daily_used: 1000,
+        )
+
+      # Add admin to existing PM
+      pm.topic_allowed_users.create!(user_id: admin.id)
+
+      admin_post =
+        Fabricate(:post, topic: pm, user: admin, post_number: 4, raw: "Hello bot from admin")
+
+      exception = LlmCreditAllocation::CreditLimitExceeded.new("Credit limit exceeded", allocation:)
+      allow(LlmCreditAllocation).to receive(:check_credits!).and_raise(exception)
+
+      expect { playground.reply_to(admin_post) }.not_to raise_error
+
+      last_post = pm.reload.posts.order(:post_number).last
+
+      expected_message =
+        I18n.t(
+          "discourse_ai.llm_credit_allocation.limit_exceeded_admin",
+          reset_time: allocation.relative_reset_time,
+        )
+      expect(last_post.raw).to include(expected_message)
+      expect(last_post.user_id).to eq(bot_user.id)
     end
   end
 

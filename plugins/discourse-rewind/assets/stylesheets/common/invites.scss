@@ -1,0 +1,225 @@
+.--invites {
+  .guest-book {
+    max-width: 700px;
+    width: 100%;
+    margin: 2em auto;
+    background: #c0c0c0;
+    border: 4px outset #dfdfdf;
+    box-shadow: 5px 5px 0 rgb(0 0 0 / 0.2);
+  }
+
+  .guest-book__cover {
+    padding: 2em;
+    text-align: center;
+    background: linear-gradient(135deg, #f0f 0%, #0ff 100%);
+    border-bottom: 4px ridge #fff;
+    position: relative;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgb(255 255 255 / 0.1) 10px,
+        rgb(255 255 255 / 0.1) 20px
+      );
+      pointer-events: none;
+    }
+  }
+
+  .guest-book__title {
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    font-size: 48px;
+    color: #ff0;
+    margin-bottom: 0.25em;
+    text-shadow:
+      3px 3px 0 #f0f,
+      -1px -1px 0 #000,
+      1px -1px 0 #000,
+      -1px 1px 0 #000,
+      1px 1px 0 #000;
+    font-weight: bold;
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: rainbow-text 3s linear infinite;
+    }
+  }
+
+  @keyframes rainbow-text {
+    0% {
+      color: #ff0;
+    }
+
+    16% {
+      color: #0f0;
+    }
+
+    33% {
+      color: #0ff;
+    }
+
+    50% {
+      color: #f0f;
+    }
+
+    66% {
+      color: #f00;
+    }
+
+    83% {
+      color: #ff0;
+    }
+
+    100% {
+      color: #0f0;
+    }
+  }
+
+  .guest-book__subtitle {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    letter-spacing: 3px;
+    text-shadow: 2px 2px 0 #000;
+    text-transform: uppercase;
+  }
+
+  .guest-book__page {
+    padding: 2em;
+    background: #fff;
+    position: relative;
+  }
+
+  .guest-book__entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1em;
+    padding: 0.75em;
+    background: linear-gradient(to right, #ffd700 0%, #ff69b4 100%);
+    border: 3px ridge #fff;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+
+    &.--small {
+      background: linear-gradient(to right, #87ceeb 0%, #98fb98 100%);
+      font-size: 13px;
+      padding: 0.5em 0.75em;
+    }
+  }
+
+  .guest-book__entry-label {
+    color: #000;
+    text-shadow: 1px 1px 0 rgb(255 255 255 / 0.5);
+  }
+
+  .guest-book__entry-value {
+    color: #000;
+    font-size: 1.2em;
+    background: #fff;
+    padding: 0.25em 0.5em;
+    border: 2px inset #c0c0c0;
+
+    .number {
+      font-family: inherit;
+    }
+  }
+
+  .guest-book__divider {
+    height: 3px;
+    background: repeating-linear-gradient(
+      to right,
+      #f00 0,
+      #f00 10px,
+      #ff0 10px,
+      #ff0 20px,
+      #0f0 20px,
+      #0f0 30px,
+      #0ff 30px,
+      #0ff 40px,
+      #00f 40px,
+      #00f 50px,
+      #f0f 50px,
+      #f0f 60px
+    );
+    margin: 1.5em 0;
+    border: 1px solid #000;
+  }
+
+  .guest-book__section-title {
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    font-size: 24px;
+    font-weight: bold;
+    color: #f0f;
+    margin-bottom: 1em;
+    text-align: center;
+    text-shadow: 2px 2px 0 #0ff;
+    text-decoration: underline;
+  }
+
+  .guest-book__signature {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    padding: 1em;
+    background: #ff0;
+    border: 4px double #000;
+    text-decoration: none;
+    box-shadow:
+      inset 0 0 0 2px #f0f,
+      inset 0 0 0 4px #0ff;
+
+    &:hover {
+      background: #ff9;
+
+      @media (prefers-reduced-motion: no-preference) {
+        animation: blink 0.5s infinite;
+      }
+    }
+
+    .avatar {
+      flex-shrink: 0;
+      border: 3px solid #f0f;
+    }
+  }
+
+  @keyframes blink {
+    0%,
+    100% {
+      background: #ff0;
+    }
+
+    50% {
+      background: #f0f;
+    }
+  }
+
+  .guest-book__signature-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+  }
+
+  .guest-book__signature-name {
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    font-size: 22px;
+    color: #f0f;
+    font-weight: bold;
+    text-shadow: 1px 1px 0 #0ff;
+  }
+
+  .guest-book__signature-realname {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #000;
+    font-style: italic;
+  }
+}

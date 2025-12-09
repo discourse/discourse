@@ -3868,6 +3868,13 @@ ar:
         reset_bump_dates: "إعادة تعيين تواريخ الرفع"
         defer: "وضع علامة كغير مقروءة"
         delete: "حذف الموضوعات"
+        delete_topics_count:
+          zero: "حذف الموضوعات"
+          one: "حذف الموضوع"
+          two: "حذف الموضوعات"
+          few: "حذف الموضوعات"
+          many: "حذف الموضوعات"
+          other: "حذف الموضوعات"
         dismiss: "تجاهل"
         dismiss_read: "تجاهل كل الموضوعات غير المقروءة"
         dismiss_read_with_selected:
@@ -6307,6 +6314,8 @@ ar:
         enabled_for_options:
           everyone: "الجميع"
           staff: "لفريق العمل فقط"
+        statuses:
+          experimental: "تجريبي"
         impact_roles:
           admins: "المسؤولون"
           moderators: "المشرفون"
@@ -6317,6 +6326,7 @@ ar:
           disabled: "متوقفة"
           impact_type_feature: "الميزة"
           impact_type_other: "أخرى"
+          status_experimental: "تجريبي"
       config:
         about:
           title: "نبذة عن موقعك"

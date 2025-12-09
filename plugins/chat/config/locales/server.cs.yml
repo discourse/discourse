@@ -32,6 +32,7 @@ cs:
     chat_preferred_index: "Preferovaný panel při načítání /chat"
     allow_chat_in_anonymous_mode: "Povolením tohoto nastavení umožníte uživatelům, kteří procházejí vaše stránky anonymně, používat chat. Toto nastavení vyžaduje, aby bylo povoleno nastavení `allow anonymous mode`."
     chat_search_enabled: "Povolením tohoto nastavení umožníte uživatelům prohledávat zprávy chatu."
+    star_chat_channels: "Povolit označování kanálů chatu jako oblíbených. Kanály označené hvězdičkou budou mít kvůli rychlému přístupu vlastní sekci v postranním panelu."
     errors:
       chat_default_channel: "Výchozí kanál chatu musí být veřejný kanál."
       direct_message_enabled_groups_invalid: "Pro toto nastavení musíte zadat alespoň jednu skupinu. Pokud nechcete, aby nikdo kromě redakce posílal přímé zprávy, vyberte skupinu redakce."

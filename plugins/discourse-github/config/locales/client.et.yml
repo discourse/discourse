@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 et:
+  js:
+    github:
+      pr_status:
+        draft: "Mustand"
+        open: "Ava"
+        approved: "Heakskiidetud"
+        closed: "Suletud"

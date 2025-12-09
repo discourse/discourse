@@ -6,13 +6,14 @@ module DiscourseAi
       class ChatGpt < Dialect
         class << self
           def can_translate?(llm_model)
+            return false if llm_model.url.to_s.include?("/v1/responses")
+
             llm_model.provider == "open_router" || llm_model.provider == "open_ai" ||
               llm_model.provider == "azure"
           end
         end
 
         VALID_ID_REGEX = /\A[a-zA-Z0-9_]+\z/
-
         def native_tool_support?
           llm_model.provider == "open_ai" || llm_model.provider == "azure"
         end
@@ -20,17 +21,10 @@ module DiscourseAi
         def embed_user_ids?
           return @embed_user_ids if defined?(@embed_user_ids)
 
-          @embed_user_ids = true if responses_api?
-
           @embed_user_ids ||=
             prompt.messages.any? do |m|
               m[:id] && m[:type] == :user && !m[:id].to_s.match?(VALID_ID_REGEX)
             end
-        end
-
-        def responses_api?
-          return @responses_api if defined?(@responses_api)
-          @responses_api = llm_model.lookup_custom_param("enable_responses_api")
         end
 
         def max_prompt_tokens
@@ -52,43 +46,13 @@ module DiscourseAi
           !!@disable_native_tools = llm_model.lookup_custom_param("disable_native_tools")
         end
 
-        def translate
-          result = super
-          result = hoist_reasoning(result) if responses_api?
-          result
-        end
-
         private
-
-        def hoist_reasoning(messages)
-          new_messages = []
-          messages.each do |msg|
-            if msg[:content].is_a?(Array)
-              reasoning = []
-              msg[:content].delete_if do |item|
-                if item.is_a?(Hash) && item[:type] == "reasoning"
-                  reasoning << item
-                  true
-                else
-                  false
-                end
-              end
-              reasoning.each { |reason| new_messages << reason } if reasoning.present?
-            end
-            new_messages << msg
-          end
-          new_messages
-        end
 
         def tools_dialect
           if disable_native_tools?
             super
           else
-            @tools_dialect ||=
-              DiscourseAi::Completions::Dialects::OpenAiTools.new(
-                prompt.tools,
-                responses_api: responses_api?,
-              )
+            @tools_dialect ||= DiscourseAi::Completions::Dialects::OpenAiTools.new(prompt.tools)
           end
         end
 
@@ -147,11 +111,6 @@ module DiscourseAi
 
         def message_for_role(role, msg)
           content_array = []
-          reasoning_data = open_ai_reasoning_data(msg)
-
-          if responses_api? && reasoning_data.present?
-            content_array << { type: "thinking", message: msg }
-          end
 
           user_message = { role: }
 
@@ -165,21 +124,19 @@ module DiscourseAi
 
           content_array << msg[:content]
 
-          allow_vision = vision_support?
-          allow_vision = false if responses_api? && role == "assistant"
+          allow_images = vision_support?
 
           content_array =
             to_encoded_content_array(
               content: content_array.flatten,
-              image_encoder: ->(details) { image_node(details) },
+              upload_encoder: ->(details) { upload_node(details) },
               text_encoder: ->(text) { text_node(text, role) },
-              other_encoder: ->(hash) { thinking_signature_node(hash) },
-              allow_vision:,
+              other_encoder: ->(hash) { hash },
+              allow_images:,
+              allow_documents: true,
+              allowed_attachment_types: llm_model.allowed_attachment_types,
+              upload_filter: ->(encoded) { document_allowed?(encoded) },
             )
-
-          if responses_api? && role == "assistant" && reasoning_data&.dig(:next_message_id)
-            user_message[:id] = reasoning_data[:next_message_id]
-          end
 
           user_message[:content] = no_array_if_only_text(content_array)
           user_message
@@ -193,42 +150,31 @@ module DiscourseAi
           end
         end
 
-        def thinking_signature_node(hash)
-          return unless responses_api?
-
-          message = hash[:message]
-          reasoning_data = open_ai_reasoning_data(message)
-          return if reasoning_data.blank?
-
-          {
-            type: "reasoning",
-            id: reasoning_data[:reasoning_id],
-            encrypted_content: reasoning_data[:encrypted_content],
-            summary: [type: :summary_text, text: message[:thinking].to_s],
-          }.compact
-        end
-
-        def open_ai_reasoning_data(message)
-          info = message[:thinking_provider_info]
-          return if info.blank?
-          info[:open_ai_responses] || info["open_ai_responses"]
-        end
-
         def text_node(text, role)
-          if responses_api?
-            { type: role == "user" ? "input_text" : "output_text", text: text }
+          { type: "text", text: text }
+        end
+
+        def upload_node(details)
+          if details[:mime_type] == "application/pdf" || details[:kind] == :document
+            file_node(details)
           else
-            { type: "text", text: text }
+            image_node(details)
           end
         end
 
         def image_node(details)
           encoded_image = "data:#{details[:mime_type]};base64,#{details[:base64]}"
-          if responses_api?
-            { type: "input_image", image_url: encoded_image }
-          else
-            { type: "image_url", image_url: { url: encoded_image } }
-          end
+          { type: "image_url", image_url: { url: encoded_image } }
+        end
+
+        def file_node(details)
+          {
+            type: "file",
+            file: {
+              filename: details[:filename] || "document.pdf",
+              file_data: "data:#{details[:mime_type]};base64,#{details[:base64]}",
+            },
+          }
         end
 
         def per_message_overhead

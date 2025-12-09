@@ -901,6 +901,7 @@ ug:
         flagged_by_users:
           one: "%{count} يەككە ئىشلەتكۈچى پاش قىلغان"
           other: "%{count} يەككە ئىشلەتكۈچى پاش قىلغان"
+        similar_posts: "ئىلگىرىكى قانۇنغا خىلاپ قىلمىش"
         flagged_in_timeframe:
           one: "%{count} جەزملەنگەن پش قىلىش"
           other: "%{count} جەزملەنگەن پش قىلىش"
@@ -3272,6 +3273,9 @@ ug:
         reset_bump_dates: "چوققىلانغان چېسلانى ئەسلىگە قايتۇر"
         defer: "ئوقۇلمىغان بەلگىسى سال"
         delete: "تېما ئۆچۈر"
+        delete_topics_count:
+          one: "تېما ئۆچۈر"
+          other: "تېما ئۆچۈر"
         dismiss: "پەرۋا قىلما"
         dismiss_read: "ئوقۇلمىغاننىڭ ھەممىسگە پەرۋا قىلما"
         dismiss_read_with_selected:
@@ -5380,6 +5384,7 @@ ug:
             one: "گۇرۇپپا %{groupNames}"
             other: "گۇرۇپپا %{groupNames}"
         statuses:
+          experimental: "تەجرىبە"
           alpha: "ئالفا"
           beta: "سىناق"
           stable: "مۇقىم"
@@ -5399,6 +5404,7 @@ ug:
           impact_type_feature: "ئىقتىدار"
           impact_type_other: "باشقا"
           status_all: "بارلىق ھالەت"
+          status_experimental: "تەجرىبە"
           status_alpha: "ئالفا"
           status_beta: "سىناق"
           status_stable: "مۇقىم"

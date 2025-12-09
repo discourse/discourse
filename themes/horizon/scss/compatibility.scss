@@ -51,3 +51,16 @@
     }
   }
 }
+
+// livestream plugin: https://github.com/discourse/discourse-livestream
+.tag-livestream.chat-enabled.archetype-regular {
+  #custom-chat-container {
+    margin-left: 0;
+    border-top-left-radius: var(--d-border-radius-large);
+    border-top-right-radius: var(--d-border-radius-large);
+  }
+
+  .container.posts {
+    grid-template-columns: auto auto;
+  }
+}

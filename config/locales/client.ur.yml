@@ -3237,6 +3237,9 @@ ur:
         reset_bump_dates: "ٹکرانے کی تاریخوں کی دوبارہ ترتیب"
         defer: "بغیر پڑھے نشان زد"
         delete: "موضوعات حذف کریں"
+        delete_topics_count:
+          one: "موضوع حذف کریں"
+          other: "موضوعات حذف کریں"
         dismiss: "بر خاست کریں"
         dismiss_read: "تمام بغیر پڑھے ہوئے بر خاست کریں"
         dismiss_read_with_selected:
@@ -5254,6 +5257,8 @@ ur:
         enabled_for_options:
           everyone: "ہر کوئی"
           staff: "صرف سٹاف کیلئے"
+        statuses:
+          experimental: "تجرباتی"
         impact_roles:
           admins: "منتظمین"
           moderators: "نگران"
@@ -5263,6 +5268,7 @@ ur:
           enabled: "فعال شدہ"
           disabled: "غیر فعال"
           impact_type_other: "دیگر"
+          status_experimental: "تجرباتی"
       config:
         about:
           title: "آپ کی سائٹ کے بارے میں"

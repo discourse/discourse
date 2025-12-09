@@ -15,7 +15,10 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
   padding-bottom: 0.2rem;
 }
 
-html.ios-device.composer-open body,
+html.ios-device.composer-open body {
+  overflow: hidden;
+}
+
 html.ios-device.has-full-page-chat body {
   position: fixed;
   overflow: scroll;
@@ -289,10 +292,6 @@ html.has-full-page-chat {
       // allows containers to shrink to fit
       min-height: 0;
     }
-  }
-
-  [data-popper-reference-hidden] {
-    visibility: hidden;
   }
 }
 

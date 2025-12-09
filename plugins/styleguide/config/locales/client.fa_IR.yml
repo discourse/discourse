@@ -43,8 +43,6 @@ fa_IR:
           title: "پنل انتخاب تنظیمات"
         categories_list:
           title: "فهرست دسته‌بندی‌ها"
-        topic_link:
-          title: "پیوند موضوع"
         topic_list_item:
           title: "آیتم فهرست موضوع"
         topic_statuses:

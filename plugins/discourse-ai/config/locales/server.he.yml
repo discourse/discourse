@@ -10,6 +10,9 @@ he:
       llm_model:
         name: "מזהה מודל"
         max_prompt_tokens: "חלון הקשר"
+  dashboard:
+    problem:
+      ai_credit_soft_limit: "ל־%{model_name} נותרו רק %{percentage_remaining}% מהאסימונים. האסימונים יתאפסו ב־%{reset_date}. <a href='%{url}'>הצגת מודלים של בינה מלאכותית</a>"
   discourse_automation:
     ai:
       flag_types:
@@ -269,8 +272,6 @@ he:
     ai_helper:
       errors:
         completion_request_failed: "משהו השתבש במהלך הניסיון לספק הצעות. נא לנסות שוב."
-        credit_limit_exceeded_user: "הגעת למגבלת אסימוני הבינה המלאכותית עבור התוכנית שלך. תגובות לא תהיינה זמינות עד שהמגבלה שלך תתאפס ב־%{reset_time}."
-        credit_limit_exceeded_bot: "תגובות בינה מלאכותית אינן זמינות כרגע עקב מגבלות אסימונים. נא לנסות שוב %{reset_time}."
         no_illustrator_persona: "לא מוגדר דמות איור לפוסטים. נא לבדוק את הגדרות האתר שלך."
         no_image_generation_tool: "לדמות איור הפוסטים חייב להיות מוצמד כלי יצירת תמונות. נא להגדיר כלי יצירת תמונות לדמות הזאת בלוח הניהול."
         no_image_generated: "יצירת תמונות נכשלה. נא לנסות שוב או לבדוק את הגדרות הכלי שלך."
@@ -652,8 +653,6 @@ he:
       errors:
         disabled: "יכולת התרגום של הבינה המלאכותית אינה מוגדרת במלואה."
         all_posts_translated: "כל הפוסטים בנושא הזה כבר מתורגמים."
-    llm_credit_allocation:
-      limit_exceeded_admin: "ניצלת את כל אסימוני הבינה המלאכותית שלך. נא לנסות שוב בעוד %{reset_time}."
     errors:
       quota_exceeded: "חרגת מהמכסה למודל הזה. נא לנסות שוב בעוד %{relative_time}."
       quota_required: "יש לציין את כמות האסימונים המרבית לשימוש למודל הזה"
@@ -672,7 +671,3 @@ he:
         two: "כבר קיימים כלים מותאמים בשמות %{names}."
         many: "כבר קיימים כלים מותאמים בשמות %{names}."
         other: "כבר קיימים כלים מותאמים בשמות %{names}."
-  dashboard:
-    problem:
-      ai_llm_status: "מודל השפה הגדול: %{model_name} נתקל בקשיים. נא לגשת ל<a href='%{url}'>עמוד ההגדרות של המודל</a>."
-      ai_credit_soft_limit: "ל־%{model_name} נותרו רק %{percentage_remaining}% מהאסימונים. האסימונים יתאפסו ב־%{reset_date}. <a href='%{url}'>הצגת מודלים של בינה מלאכותית</a>"

@@ -10,6 +10,7 @@ el:
       logs:
         staff_actions:
           actions:
+            update_automation: ενημέρωση αυτοματισμού
             delete_automation: διαγραφή αυτοματισμού
     discourse_automation:
       title: Αυτοματισμός

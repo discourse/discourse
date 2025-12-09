@@ -10,6 +10,7 @@ he:
       logs:
         staff_actions:
           actions:
+            update_automation: עדכון אוטומציה
             delete_automation: מחיקת אוטומציה
     discourse_automation:
       title: אוטומציה

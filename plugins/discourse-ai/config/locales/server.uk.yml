@@ -10,6 +10,10 @@ uk:
       llm_model:
         name: "ID моделі"
         max_prompt_tokens: "Контекстне вікно"
+  dashboard:
+    problem:
+      ai_credit_soft_limit: "%{model_name} залишилося лише %{percentage_remaining}% кредитів. Кредити буде обнулено %{reset_date}. <a href='%{url}'>Перегляд моделей ШІ</a>"
+      ai_credit_hard_limit: "Ви вичерпали кредити ШІ на %{model_name}. Функції ШІ будуть недоступні до %{reset_date}. <a href='%{url}'>Переглянути моделі ШІ</a>"
   discourse_automation:
     ai:
       flag_types:
@@ -278,8 +282,6 @@ uk:
     ai_helper:
       errors:
         completion_request_failed: "Щось пішло не так під час спроби надати пропозиції. Будь ласка, спробуйте ще раз."
-        credit_limit_exceeded_user: "Ви досягли ліміту кредитів ШІ для вашого плану. Відповіді будуть недоступні, доки ваш ліміт не буде скинуто %{reset_time}."
-        credit_limit_exceeded_bot: "Відповіді ШІ наразі недоступні через обмеження кредитів. Будь ласка, спробуйте ще раз %{reset_time}."
         no_illustrator_persona: "Персонаж Post Illustrator не налаштовано. Перевірте налаштування вашого сайту."
         no_image_generation_tool: "Персона Post Illustrator має мати підключений інструмент генерації зображень. Будь ласка, налаштуйте інструмент генерації зображень для цієї персони в панелі адміністратора."
         no_image_generated: "Не вдалося згенерувати зображення. Спробуйте ще раз або перевірте конфігурацію вашого інструменту."
@@ -661,8 +663,6 @@ uk:
     translation:
       errors:
         disabled: "Функція перекладу ШІ не повністю налаштована."
-    llm_credit_allocation:
-      limit_exceeded_admin: "Ви досягли ліміту кредитів ШІ. Будь ласка, спробуйте ще раз через %{reset_time}."
     errors:
       quota_exceeded: "Ви перевищили квоту для цієї моделі. Будь ласка, спробуйте ще раз через %{relative_time}."
       quota_required: "Ви повинні вказати максимальну кількість токенів або варіантів використання для цієї моделі"
@@ -681,8 +681,3 @@ uk:
         few: "Користувацькі інструменти з назвами %{names} вже існують."
         many: "Користувацькі інструменти з назвами %{names} вже існують."
         other: "Користувацькі інструменти з назвами %{names} вже існують."
-  dashboard:
-    problem:
-      ai_llm_status: "У моделі LLM: %{model_name} виникають проблеми. Будь ласка, перевірте <a href='%{url}'>сторінку конфігурації моделі</a>."
-      ai_credit_soft_limit: "%{model_name} залишилося лише %{percentage_remaining}% кредитів. Кредити буде обнулено %{reset_date}. <a href='%{url}'>Перегляд моделей ШІ</a>"
-      ai_credit_hard_limit: "Ви вичерпали кредити ШІ на %{model_name}. Функції ШІ будуть недоступні до %{reset_date}. <a href='%{url}'>Переглянути моделі ШІ</a>"

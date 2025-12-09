@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 ko:
+  js:
+    github:
+      pr_status:
+        draft: "임시저장"
+        open: "열기"
+        approved: "승인"
+        closed: "닫힘"

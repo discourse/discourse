@@ -25,7 +25,6 @@ import { i18n } from "discourse-i18n";
 
 export default class UpcomingChangeItem extends Component {
   @service toasts;
-  @service siteSettings;
 
   @tracked bufferedGroups = this.args.change.groups;
   @tracked bufferedEnabledFor = this.args.change.upcoming_change.enabled_for;
@@ -34,7 +33,7 @@ export default class UpcomingChangeItem extends Component {
 
   registeredMenu = null;
 
-  applyLightbox = modifier((element) => lightbox(element, this.siteSettings));
+  applyLightbox = modifier((element) => lightbox(element));
 
   willDestroy() {
     super.willDestroy(...arguments);
