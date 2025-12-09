@@ -60,6 +60,13 @@
     <!-- <script type="module" src="/discourse.js"></script>
     <script type="module" src="/admin.js"></script> -->
 
+    <script type="module">
+      import "discourse/loader";
+      import "discourse/loader-shims";
+      import "discourse/discourse-common-loader-shims";
+      import "discourse/lib/load-moment";
+      import "discourse-i18n";
+    </script>
 
     <script src="/extra-locales/0000000000000000000000000000000000000000/en/main.js?url" data-embroider-ignore type="module"></script>
     <script src="/extra-locales/0000000000000000000000000000000000000000/en/mf.js?url" data-embroider-ignore type="module"></script>
