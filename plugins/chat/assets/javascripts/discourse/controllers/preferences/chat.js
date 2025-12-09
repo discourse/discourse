@@ -157,7 +157,7 @@ export default class PreferencesChatController extends Controller {
       .then(() => {
         this.set("saved", true);
         if (!isTesting()) {
-          location.reload();
+          // location.reload();
         }
       })
       .catch(popupAjaxError);
