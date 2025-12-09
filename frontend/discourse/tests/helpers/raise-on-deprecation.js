@@ -2,12 +2,13 @@ import { registerDeprecationHandler } from "@ember/debug";
 import QUnit from "qunit";
 import DeprecationWorkflow from "discourse/deprecation-workflow";
 import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse/lib/deprecated";
+import config from "discourse/config/environment";
 
 let disabled = false;
 let disabledQUnitResult = false;
 
 export function configureRaiseOnDeprecation() {
-  if (window.EmberENV.RAISE_ON_DEPRECATION !== undefined) {
+  if (config.RAISE_ON_DEPRECATION !== undefined) {
     return;
   }
 
