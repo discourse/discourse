@@ -245,9 +245,11 @@ en:
       no_public_channels: "You have not joined any channels yet!"
       no_public_channels_cta: "Browse channels"
       kicked_from_channel: "You can no longer access this channel."
+      chat_notifications_title: "Chat notifications"
       only_chat_push_notifications:
         title: "Only send chat push notifications"
         description: "Block all non-chat push notifications from being sent"
+      personalization_title: "Personalization"
       ignore_channel_wide_mention:
         title: "Ignore channel-wide mentions"
         description: "Do not send notifications for channel-wide mentions (@here and @all)"

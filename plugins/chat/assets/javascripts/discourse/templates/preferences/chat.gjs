@@ -24,6 +24,8 @@ export default class Chat extends Component {
       chat_quick_reactions_custom: emojis,
       only_chat_push_notifications:
         this.args.controller.model.user_option.only_chat_push_notifications,
+      ignore_channel_wide_mention:
+        this.args.controller.model.user_option.ignore_channel_wide_mention,
     };
   }
 
@@ -36,41 +38,79 @@ export default class Chat extends Component {
 
   @action
   handleSubmit(data) {
+    // eslint-disable-next-line no-console
+    console.log("reaction type", data.chat_quick_reaction_type);
     this.args.controller.model.set(
       "user_option.chat_quick_reaction_type",
       data.chat_quick_reaction_type
     );
+    // eslint-disable-next-line no-console
+    console.log("custom reactions", data.chat_quick_reactions_custom);
     this.args.controller.model.set(
       "user_option.chat_quick_reactions_custom",
       data.chat_quick_reactions_custom.join("|")
     );
+    // eslint-disable-next-line no-console
+    console.log("only push notifications", data.only_chat_push_notifications);
     this.args.controller.model.set(
       "user_option.only_chat_push_notifications",
       data.only_chat_push_notifications
+    );
+    // eslint-disable-next-line no-console
+    console.log(
+      "ignore channel wide mention",
+      data.ignore_channel_wide_mention
     );
     this.args.controller.model.set(
       "user_option.chat_enabled",
       data.chat_enabled
     );
+    // eslint-disable-next-line no-console
+    console.log("chat enabled", data.chat_enabled);
+    this.args.controller.model.set(
+      "user_option.ignore_channel_wide_mention",
+      data.ignore_channel_wide_mention
+    );
 
-    this.args.controller.save();
+    // this.args.controller.save();
   }
 
   <template>
-    <div class="AI_FORM_SANDBOX">
-      <Form
-        @data={{this.formData}}
-        @onSubmit={{this.handleSubmit}}
-        as |form data|
+    <Form
+      @data={{this.formData}}
+      @onSubmit={{this.handleSubmit}}
+      as |form data|
+    >
+      <form.Field
+        @title={{i18n "chat.enable"}}
+        @name="chat_enabled"
+        @format="large"
+        as |field|
       >
+        <field.Checkbox @value={{field.value}} />
+      </form.Field>
+
+      <form.Section @title={{i18n "chat.chat_notifications_title"}}>
         <form.Field
-          @title={{i18n "chat.enable"}}
-          @name="chat_enabled"
+          @title={{i18n "chat.only_chat_push_notifications.title"}}
+          @name="only_chat_push_notifications"
+          @format="large"
+          @description={{i18n "chat.only_chat_push_notifications.description"}}
+          as |field|
+        >
+          <field.Checkbox @value={{field.value}} />
+        </form.Field>
+        <form.Field
+          @title={{i18n "chat.ignore_channel_wide_mention.title"}}
+          @name="ignore_channel_wide_mention"
           @format="large"
           as |field|
         >
           <field.Checkbox @value={{field.value}} />
         </form.Field>
+
+      </form.Section>
+      <form.Section @title={{i18n "chat.personalization_title"}}>
         <form.Field
           @title={{i18n "chat.quick_reaction_type.title"}}
           @name="chat_quick_reaction_type"
@@ -105,21 +145,11 @@ export default class Chat extends Component {
                 />
               {{/each}}
             </field.Custom>
-
           </form.Field>
         {{/if}}
-
-        <form.Field
-          @title={{i18n "chat.only_chat_push_notifications.title"}}
-          @name="only_chat_push_notifications"
-          @format="large"
-          as |field|
-        >
-          <field.Checkbox @value={{field.value}} />
-        </form.Field>
-        <form.Submit />
-      </Form>
-    </div>
+      </form.Section>
+      <form.Submit />
+    </Form>
 
     <div
       class="control-group chat-setting"
