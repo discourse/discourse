@@ -46,7 +46,7 @@ module Jobs
 
     def has_github_pr_onebox?(cooked, pr_url)
       # quick & dirty check to avoid doing unnecessary rebakes
-      cooked.present? && cooked.include?("onebox") && cooked.include?(pr_url)
+      cooked.present? && cooked.include?("githubpullrequest") && cooked.include?(pr_url)
     end
   end
 end
