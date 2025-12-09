@@ -83,11 +83,9 @@ describe "Composer - ProseMirror editor", type: :system do
   it "saves the old keyValueStore editor preference to the database" do
     visit "/"
 
-    page.execute_script "window.localStorage.setItem('discourse_d-editor-prefers-rich-editor', 'true');"
+    set_local_storage("discourse_d-editor-prefers-rich-editor", "true")
 
-    expect(
-      page.evaluate_script("window.localStorage.getItem('discourse_d-editor-prefers-rich-editor')"),
-    ).to eq("true")
+    expect(get_local_storage("discourse_d-editor-prefers-rich-editor")).to eq("true")
 
     open_composer
 
@@ -99,11 +97,7 @@ describe "Composer - ProseMirror editor", type: :system do
       )
     end
 
-    expect(
-      page.evaluate_script(
-        "window.localStorage.getItem('discourse_d-editor-prefers-rich-editor') === null",
-      ),
-    ).to eq(true)
+    expect(local_storage_equals?("discourse_d-editor-prefers-rich-editor", "null")).to eq(true)
   end
 
   context "with autocomplete" do

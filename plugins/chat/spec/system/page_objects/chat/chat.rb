@@ -16,15 +16,11 @@ module PageObjects
       end
 
       def prefers_full_page
-        page.execute_script(
-          "window.localStorage.setItem('discourse_chat_preferred_mode', '\"FULL_PAGE_CHAT\"');",
-        )
+        set_local_storage("discourse_chat_preferred_mode", "FULL_PAGE_CHAT")
       end
 
       def prefers_drawer
-        page.execute_script(
-          "window.localStorage.setItem('discourse_chat_preferred_mode', '\"DRAWER_CHAT\"');",
-        )
+        set_local_storage("discourse_chat_preferred_mode", "DRAWER_CHAT")
       end
 
       def open_from_header
