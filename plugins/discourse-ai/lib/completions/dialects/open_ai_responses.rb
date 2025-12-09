@@ -48,15 +48,6 @@ module DiscourseAi
           end
         end
 
-        def embed_user_ids?
-          return @embed_user_ids if defined?(@embed_user_ids)
-
-          @embed_user_ids ||=
-            prompt.messages.any? do |m|
-              m[:id] && m[:type] == :user && !m[:id].to_s.match?(VALID_ID_REGEX)
-            end
-        end
-
         def system_msg(msg)
           content = msg[:content]
           if disable_native_tools? && tools_dialect.instructions.present?
@@ -98,13 +89,7 @@ module DiscourseAi
 
           user_message = { role: }
 
-          if msg[:id]
-            if embed_user_ids?
-              content_array << "#{msg[:id]}: "
-            else
-              user_message[:name] = msg[:id]
-            end
-          end
+          content_array << "#{msg[:id]}: " if msg[:id]
 
           content_array << msg[:content]
 
