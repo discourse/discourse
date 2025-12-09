@@ -22,6 +22,8 @@ export default class Chat extends Component {
       chat_quick_reaction_type:
         this.args.controller.model.user_option.chat_quick_reaction_type,
       chat_quick_reactions_custom: emojis,
+      only_chat_push_notifications:
+        this.args.controller.model.user_option.only_chat_push_notifications,
     };
   }
 
@@ -43,6 +45,10 @@ export default class Chat extends Component {
       data.chat_quick_reactions_custom.join("|")
     );
     this.args.controller.model.set(
+      "user_option.only_chat_push_notifications",
+      data.only_chat_push_notifications
+    );
+    this.args.controller.model.set(
       "user_option.chat_enabled",
       data.chat_enabled
     );
@@ -60,6 +66,7 @@ export default class Chat extends Component {
         <form.Field
           @title={{i18n "chat.enable"}}
           @name="chat_enabled"
+          @format="large"
           as |field|
         >
           <field.Checkbox @value={{field.value}} />
@@ -67,6 +74,7 @@ export default class Chat extends Component {
         <form.Field
           @title={{i18n "chat.quick_reaction_type.title"}}
           @name="chat_quick_reaction_type"
+          @format="large"
           as |field|
         >
           <field.RadioGroup @name="chat_quick_reaction_type" as |radioGroup|>
@@ -83,6 +91,7 @@ export default class Chat extends Component {
             @title={{i18n "chat.quick_reaction_type.title"}}
             @showTitle={{false}}
             @name="chat_quick_reactions_custom"
+            @format="large"
             as |field|
           >
             <field.Custom>
@@ -90,6 +99,7 @@ export default class Chat extends Component {
               {{#each data.chat_quick_reactions_custom as |emoji index|}}
                 <EmojiPicker
                   @emoji={{emoji}}
+                  @btnClass="btn-default"
                   @context="chat_preferences"
                   @didSelectEmoji={{fn this.handleEmojiSet index field}}
                 />
@@ -97,89 +107,18 @@ export default class Chat extends Component {
             </field.Custom>
 
           </form.Field>
-
         {{/if}}
+
+        <form.Field
+          @title={{i18n "chat.only_chat_push_notifications.title"}}
+          @name="only_chat_push_notifications"
+          @format="large"
+          as |field|
+        >
+          <field.Checkbox @value={{field.value}} />
+        </form.Field>
         <form.Submit />
       </Form>
-    </div>
-
-    <label class="control-label">{{i18n "chat.title_capitalized"}}</label>
-
-    <div
-      class="control-group chat-setting"
-      data-setting-name="user_chat_enabled"
-    >
-      <label class="controls">
-        <Input
-          id="user_chat_enabled"
-          @type="checkbox"
-          @checked={{@controller.model.user_option.chat_enabled}}
-        />
-        {{i18n "chat.enable"}}
-      </label>
-    </div>
-
-    <fieldset
-      class="control-group chat-setting"
-      data-setting-name="user_chat_quick_reaction_type"
-    >
-      <legend class="control-label">{{i18n
-          "chat.quick_reaction_type.title"
-        }}</legend>
-      <div class="radio-group">
-        {{#each @controller.chatQuickReactionTypes as |option|}}
-          <div class="radio-group-option">
-            <label class="controls">
-              <input
-                type="radio"
-                name="user_chat_quick_reaction_type"
-                id={{concat "user_chat_quick_reaction_type_" option.value}}
-                value={{option.value}}
-                checked={{eq
-                  @controller.model.user_option.chat_quick_reaction_type
-                  option.value
-                }}
-                {{on
-                  "change"
-                  (withEventValue @controller.onChangeQuickReactionType)
-                }}
-              />
-              {{option.label}}
-            </label>
-          </div>
-        {{/each}}
-      </div>
-
-      {{#if
-        (eq @controller.model.user_option.chat_quick_reaction_type "custom")
-      }}
-        {{!-- <div class="controls tracking-controls emoji-pickers">
-          {{#each (array 0 1 2) as |index|}}
-            <EmojiPicker
-              @emoji={{get @controller.chatQuickReactionsCustom index}}
-              @didSelectEmoji={{fn @controller.didSelectEmoji index}}
-              @context="chat_preferences"
-            />
-          {{/each}}
-        </div> --}}
-      {{/if}}
-    </fieldset>
-
-    <div
-      class="control-group chat-setting"
-      data-setting-name="user_chat_only_push_notifications"
-    >
-      <label class="controls">
-        <Input
-          id="user_chat_only_push_notifications"
-          @type="checkbox"
-          @checked={{@controller.model.user_option.only_chat_push_notifications}}
-        />
-        {{i18n "chat.only_chat_push_notifications.title"}}
-      </label>
-      <span class="control-instructions">
-        {{i18n "chat.only_chat_push_notifications.description"}}
-      </span>
     </div>
 
     <div
