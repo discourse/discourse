@@ -55,7 +55,7 @@ export default function deprecated(msg, options = {}) {
       globalThis.EmberENV?.RAISE_ON_DEPRECATION
     )
   ) {
-    throw msg;
+    throw [consolePrefix, msg].filter(Boolean).join(" ");
   }
 
   if (!DeprecationWorkflow.shouldSilence(id)) {
