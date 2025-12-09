@@ -125,7 +125,7 @@ export default class WritingAnalysis extends Component {
                 <div class="writing-analysis__release-meta">
                   {{i18n
                     "discourse_rewind.reports.writing_analysis.release_info"
-                    rewindYear=(this.rewind.fetchRewindYear)
+                    rewindYear=this.rewind.fetchRewindYear
                   }}
                   <span>&lt;3</span>
                 </div>
