@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin About Config Area Page", type: :system do
+RSpec.describe "Admin About Config Area Page", type: :system do
   fab!(:admin)
   fab!(:image_upload)
 

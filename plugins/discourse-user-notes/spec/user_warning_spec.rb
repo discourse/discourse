@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserWarning do
+RSpec.describe UserWarning do
   let(:user) { Fabricate(:user) }
   let(:admin) { Fabricate(:admin) }
   let(:category) { Fabricate(:category) }

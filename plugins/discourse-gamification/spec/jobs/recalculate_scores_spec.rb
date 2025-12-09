@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::RecalculateScores do
+RSpec.describe Jobs::RecalculateScores do
   fab!(:current_user, :admin)
 
   before { RateLimiter.enable }

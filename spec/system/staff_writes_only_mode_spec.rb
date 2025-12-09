@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Staff writes only mode", type: :system do
+RSpec.describe "Staff writes only mode", type: :system do
   password = SecureRandom.alphanumeric(20)
 
   fab!(:moderator) { Fabricate(:moderator, password:) }

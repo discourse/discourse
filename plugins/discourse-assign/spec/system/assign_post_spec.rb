@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Assign | Assigning posts", type: :system do
+RSpec.describe "Assign | Assigning posts", type: :system do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:assign_modal) { PageObjects::Modals::Assign.new }
   fab!(:staff_user) { Fabricate(:user, groups: [Group[:staff]]) }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::DiscourseAutomation::StalledTopicTracker do
+RSpec.describe Jobs::DiscourseAutomation::StalledTopicTracker do
   before { SiteSetting.discourse_automation_enabled = true }
 
   fab!(:automation) do

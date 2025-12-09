@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::CreateGithubLinkback do
+RSpec.describe Jobs::CreateGithubLinkback do
   before do
     enable_current_plugin
     SiteSetting.github_linkback_enabled = true

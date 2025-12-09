@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "PM user removal", type: :system do
+RSpec.describe "PM user removal", type: :system do
   fab!(:current_user, :admin)
   fab!(:other_user, :user)
 

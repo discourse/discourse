@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicLocalizationDestroyer do
+RSpec.describe TopicLocalizationDestroyer do
   fab!(:user)
   fab!(:group)
   fab!(:topic)

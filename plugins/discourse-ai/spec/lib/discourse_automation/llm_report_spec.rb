@@ -2,7 +2,7 @@
 
 return if !defined?(DiscourseAutomation)
 
-describe DiscourseAutomation do
+RSpec.describe DiscourseAutomation do
   let(:automation) { Fabricate(:automation, script: "llm_report", enabled: true) }
 
   fab!(:llm_model)

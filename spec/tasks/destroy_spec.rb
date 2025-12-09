@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "destroy:posts" do
+RSpec.describe "destroy:posts" do
   it "accepts a list of post IDs piped through STDIN" do
     destroy_task = instance_spy(DestroyTask)
     DestroyTask.stubs(:new).returns(destroy_task)

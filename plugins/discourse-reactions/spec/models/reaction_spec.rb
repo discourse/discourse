@@ -2,7 +2,7 @@
 
 require_relative "../fabricators/reaction_fabricator"
 
-describe DiscourseReactions::Reaction do
+RSpec.describe DiscourseReactions::Reaction do
   before { SiteSetting.discourse_reactions_enabled = true }
 
   it "knows which reactions are valid" do

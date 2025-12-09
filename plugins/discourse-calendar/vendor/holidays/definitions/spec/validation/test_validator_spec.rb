@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'validation/test_validator'
 
-describe Definitions::Validation::Test do
+RSpec.describe Definitions::Validation::Test do
   subject { described_class.new }
 
   context 'success' do

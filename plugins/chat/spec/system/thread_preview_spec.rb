@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Thread preview", type: :system do
+RSpec.describe "Thread preview", type: :system do
   fab!(:current_user, :admin)
   fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, use_service: true) }

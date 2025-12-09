@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::Chat::DeleteOldMessages do
+RSpec.describe Jobs::Chat::DeleteOldMessages do
   base_date = DateTime.parse("2020-12-01 00:00 UTC")
 
   fab!(:public_channel, :category_channel)

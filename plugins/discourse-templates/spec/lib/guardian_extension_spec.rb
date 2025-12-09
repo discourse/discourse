@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseTemplates::GuardianExtension do
+RSpec.describe DiscourseTemplates::GuardianExtension do
   fab!(:moderator) do
     moderator = Fabricate(:moderator)
     Group.refresh_automatic_groups!(:moderators)

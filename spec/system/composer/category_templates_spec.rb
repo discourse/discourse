@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer Form Templates", type: :system do
+RSpec.describe "Composer Form Templates", type: :system do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:form_template_1) do
     Fabricate(

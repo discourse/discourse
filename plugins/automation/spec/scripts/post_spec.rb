@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Post" do
+RSpec.describe "Post" do
   fab!(:topic_1, :topic)
   let!(:raw) { "this is me testing a post" }
 

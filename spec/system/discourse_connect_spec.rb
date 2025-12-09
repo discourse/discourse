@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Discourse Connect", type: :system do
+RSpec.describe "Discourse Connect", type: :system do
   include DiscourseConnectHelpers
 
   let(:sso_secret) { SecureRandom.alphanumeric(32) }

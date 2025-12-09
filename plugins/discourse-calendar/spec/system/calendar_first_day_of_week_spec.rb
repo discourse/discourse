@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Calendar first day of week", type: :system do
+RSpec.describe "Calendar first day of week", type: :system do
   fab!(:admin)
 
   let(:upcoming_events) { PageObjects::Pages::DiscourseCalendar::UpcomingEvents.new }

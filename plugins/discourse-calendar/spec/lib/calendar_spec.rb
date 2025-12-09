@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseCalendar::Calendar do
+RSpec.describe DiscourseCalendar::Calendar do
   before do
     Jobs.run_immediately!
     SiteSetting.calendar_enabled = true

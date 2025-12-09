@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::LocalizeCategories do
+RSpec.describe Jobs::LocalizeCategories do
   subject(:job) { described_class.new }
 
   def localize_all_categories(*locales)

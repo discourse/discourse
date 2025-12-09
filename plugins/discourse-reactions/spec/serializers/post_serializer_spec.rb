@@ -3,7 +3,7 @@
 require_relative "../fabricators/reaction_fabricator"
 require_relative "../fabricators/reaction_user_fabricator"
 
-describe PostSerializer do
+RSpec.describe PostSerializer do
   fab!(:user_1, :user)
   fab!(:user_2, :user)
   fab!(:user_3, :user)

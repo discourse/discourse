@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserCardSerializer do
+RSpec.describe UserCardSerializer do
   fab!(:user)
   let(:serializer) { described_class.new(user, scope: Guardian.new, root: false) }
 

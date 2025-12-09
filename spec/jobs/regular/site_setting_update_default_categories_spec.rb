@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::SiteSettingUpdateDefaultCategories do
+RSpec.describe Jobs::SiteSettingUpdateDefaultCategories do
   subject(:job) { described_class.new }
 
   context "when logged in as an admin" do

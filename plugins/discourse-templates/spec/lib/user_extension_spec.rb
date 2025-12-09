@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseTemplates::UserExtension do
+RSpec.describe DiscourseTemplates::UserExtension do
   fab!(:admin)
   fab!(:moderator)
   fab!(:user)

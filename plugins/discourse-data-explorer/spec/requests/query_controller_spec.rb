@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseDataExplorer::QueryController do
+RSpec.describe DiscourseDataExplorer::QueryController do
   def response_json
     response.parsed_body
   end

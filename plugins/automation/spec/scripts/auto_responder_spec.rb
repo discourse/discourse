@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "AutoResponder" do
+RSpec.describe "AutoResponder" do
   fab!(:topic)
 
   fab!(:automation) { Fabricate(:automation, script: DiscourseAutomation::Scripts::AUTO_RESPONDER) }

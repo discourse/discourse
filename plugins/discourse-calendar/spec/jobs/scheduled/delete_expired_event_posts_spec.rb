@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::DiscourseCalendar::DeleteExpiredEventPosts do
+RSpec.describe Jobs::DiscourseCalendar::DeleteExpiredEventPosts do
   subject(:job) { described_class.new }
 
   before do

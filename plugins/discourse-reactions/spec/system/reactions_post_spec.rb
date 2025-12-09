@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Reactions | Post reactions" do
+RSpec.describe "Reactions | Post reactions" do
   fab!(:current_user, :user)
   fab!(:topic)
   fab!(:post_1) { Fabricate(:post, topic:) }

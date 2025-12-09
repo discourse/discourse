@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::Translation::PostDetectionText do
+RSpec.describe DiscourseAi::Translation::PostDetectionText do
   before { enable_current_plugin }
 
   describe ".get_text" do

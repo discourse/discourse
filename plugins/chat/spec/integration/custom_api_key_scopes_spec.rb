@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "API keys scoped to chat#create_message" do
+RSpec.describe "API keys scoped to chat#create_message" do
   before do
     SiteSetting.chat_enabled = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]

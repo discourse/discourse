@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Notices", type: :system do
+RSpec.describe "Admin Notices", type: :system do
   let(:admin_dashboard) { PageObjects::Pages::AdminDashboard.new }
 
   before do

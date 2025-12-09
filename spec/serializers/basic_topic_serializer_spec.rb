@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe BasicTopicSerializer do
+RSpec.describe BasicTopicSerializer do
   fab!(:topic) { Fabricate(:topic, title: "Hur dur this is a title") }
 
   describe "#fancy_title" do

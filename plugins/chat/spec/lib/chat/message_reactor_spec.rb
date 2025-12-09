@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Chat::MessageReactor do
+RSpec.describe Chat::MessageReactor do
   subject(:message_reactor) { described_class.new(reacting_user, channel) }
 
   fab!(:reacting_user, :user)

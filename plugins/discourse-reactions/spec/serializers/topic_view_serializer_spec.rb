@@ -3,7 +3,7 @@
 require_relative "../fabricators/reaction_fabricator"
 require_relative "../fabricators/reaction_user_fabricator"
 
-describe TopicViewSerializer do
+RSpec.describe TopicViewSerializer do
   before { SiteSetting.discourse_reactions_enabled = true }
 
   context "with reactions and shadow like" do

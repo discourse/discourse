@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-describe DiscourseAi::Automation::LlmTriage do
+RSpec.describe DiscourseAi::Automation::LlmTriage do
   fab!(:post)
   fab!(:reply) { Fabricate(:post, topic: post.topic, user: Fabricate(:user)) }
   fab!(:llm_model)

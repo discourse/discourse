@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::DiscoursePostEventSendReminder do
+RSpec.describe Jobs::DiscoursePostEventSendReminder do
   let(:admin_1) { Fabricate(:user, admin: true) }
   let(:going_user) { Fabricate(:user) }
   let(:interested_user) { Fabricate(:user) }

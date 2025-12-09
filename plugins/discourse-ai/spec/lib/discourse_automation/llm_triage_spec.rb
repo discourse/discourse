@@ -2,7 +2,7 @@
 
 return if !defined?(DiscourseAutomation)
 
-describe DiscourseAi::Automation::LlmTriage do
+RSpec.describe DiscourseAi::Automation::LlmTriage do
   fab!(:category)
   fab!(:reply_user, :user)
   fab!(:personal_message, :private_message_topic)

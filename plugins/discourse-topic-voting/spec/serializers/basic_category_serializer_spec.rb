@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe BasicCategorySerializer do
+RSpec.describe BasicCategorySerializer do
   fab!(:category)
 
   it "does not return can_vote when voting disabled" do

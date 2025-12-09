@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostLocalizationSerializer do
+RSpec.describe PostLocalizationSerializer do
   fab!(:post_localization)
 
   describe "serialized attributes" do

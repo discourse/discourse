@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseCalendar::GroupTimezones do
+RSpec.describe DiscourseCalendar::GroupTimezones do
   before do
     Jobs.run_immediately!
     SiteSetting.calendar_enabled = true

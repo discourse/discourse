@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "PinTopic" do
+RSpec.describe "PinTopic" do
   fab!(:user)
   fab!(:category) { Fabricate(:category, user: user) }
   fab!(:topic) { Fabricate(:topic, category: category) }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Chat::SlackCompatibility do
+RSpec.describe Chat::SlackCompatibility do
   describe "#process_text" do
     it "converts mrkdwn links to regular markdown" do
       text = described_class.process_text("this is some text <https://discourse.org>")

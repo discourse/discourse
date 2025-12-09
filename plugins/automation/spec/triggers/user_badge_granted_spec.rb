@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "UserBadgeGranted" do
+RSpec.describe "UserBadgeGranted" do
   fab!(:user)
   fab!(:tracked_badge, :badge)
   fab!(:automation) do

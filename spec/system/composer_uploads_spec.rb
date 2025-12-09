@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Uploading files in the composer", type: :system do
+RSpec.describe "Uploading files in the composer", type: :system do
   fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
 
   let(:modal) { PageObjects::Modals::Base.new }

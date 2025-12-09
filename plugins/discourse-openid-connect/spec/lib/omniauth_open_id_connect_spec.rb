@@ -2,7 +2,7 @@
 
 require_relative "../../lib/omniauth_open_id_connect"
 
-describe OmniAuth::Strategies::OpenIDConnect do
+RSpec.describe OmniAuth::Strategies::OpenIDConnect do
   subject(:strategy) do
     OmniAuth::Strategies::OpenIDConnect.new(
       app,

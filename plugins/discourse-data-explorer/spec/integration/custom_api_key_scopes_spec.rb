@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "API keys scoped to query#run" do
+RSpec.describe "API keys scoped to query#run" do
   before { SiteSetting.data_explorer_enabled = true }
 
   fab!(:query1) do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseRssPolling::FeedSettingsController do
+RSpec.describe DiscourseRssPolling::FeedSettingsController do
   let!(:admin) { Fabricate(:admin) }
 
   before do

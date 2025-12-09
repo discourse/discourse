@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Automatic user removal from channels" do
+RSpec.describe "Automatic user removal from channels" do
   fab!(:user_1) { Fabricate(:user, trust_level: 1) }
   fab!(:user_2) { Fabricate(:user, trust_level: 3) }
 

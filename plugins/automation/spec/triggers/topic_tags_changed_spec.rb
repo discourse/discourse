@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
+RSpec.describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
   before { SiteSetting.discourse_automation_enabled = true }
 
   fab!(:cool_tag, :tag)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAutomation::Scriptable do
+RSpec.describe DiscourseAutomation::Scriptable do
   before do
     DiscourseAutomation::Scriptable.add("cats_everywhere") do
       version 1

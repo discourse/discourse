@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::DeleteLeaderboardPositions do
+RSpec.describe Jobs::DeleteLeaderboardPositions do
   fab!(:leaderboard, :gamification_leaderboard)
   fab!(:score) { Fabricate(:gamification_score, user_id: leaderboard.created_by_id) }
   let(:leaderboard_positions) { DiscourseGamification::LeaderboardCachedView.new(leaderboard) }

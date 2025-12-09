@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin User Badges Page", type: :system do
+RSpec.describe "Admin User Badges Page", type: :system do
   before { SiteSetting.enable_badges = true }
 
   fab!(:granter, :admin)

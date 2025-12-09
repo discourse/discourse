@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ChatSDK::Message do
+RSpec.describe ChatSDK::Message do
   describe ".create" do
     fab!(:channel_1, :chat_channel)
 

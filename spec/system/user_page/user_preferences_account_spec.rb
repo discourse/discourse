@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "User preferences | Account", type: :system do
+RSpec.describe "User preferences | Account", type: :system do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   let(:user_account_preferences_page) { PageObjects::Pages::UserPreferencesAccount.new }
   let(:avatar_selector_modal) { PageObjects::Modals::AvatarSelector.new }

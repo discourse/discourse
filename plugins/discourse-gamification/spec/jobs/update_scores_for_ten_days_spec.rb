@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::UpdateScoresForTenDays do
+RSpec.describe Jobs::UpdateScoresForTenDays do
   let(:user) { Fabricate(:user) }
   let(:user_2) { Fabricate(:user) }
   let(:post) { Fabricate(:post, user: user) }

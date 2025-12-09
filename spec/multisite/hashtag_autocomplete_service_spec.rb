@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "HashtagAutocompleteService multisite registry", type: :multisite do
+RSpec.describe "HashtagAutocompleteService multisite registry", type: :multisite do
   class MockPlugin
     def initialize(setting_provider)
       @setting_provider = setting_provider

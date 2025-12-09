@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Post stream", type: :system do
+RSpec.describe "Post stream", type: :system do
   fab!(:user)
   fab!(:admin)
 

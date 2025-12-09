@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "DFP External Ads", type: :system do
+RSpec.describe "DFP External Ads", type: :system do
   before { enable_current_plugin }
 
   fab!(:user) { Fabricate(:user, trust_level: 1) }

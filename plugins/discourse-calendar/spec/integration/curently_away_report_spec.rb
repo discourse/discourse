@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "currently_away report" do
+RSpec.describe "currently_away report" do
   fab!(:user_1, :user)
   fab!(:user_2, :user)
   fab!(:group_1, :group)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Viewing sidebar", type: :system do
+RSpec.describe "Viewing sidebar", type: :system do
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
   context "as logged in user" do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "PMCreated" do
+RSpec.describe "PMCreated" do
   before do
     SiteSetting.discourse_automation_enabled = true
     SiteSetting.personal_email_time_window_seconds = 0

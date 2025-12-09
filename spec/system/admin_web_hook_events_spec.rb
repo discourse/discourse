@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin WebHook Events", type: :system do
+RSpec.describe "Admin WebHook Events", type: :system do
   fab!(:web_hook)
   fab!(:admin)
   fab!(:web_hook_event1) { Fabricate(:web_hook_event, web_hook: web_hook, status: 200) }

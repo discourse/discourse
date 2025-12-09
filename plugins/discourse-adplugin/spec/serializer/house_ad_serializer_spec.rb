@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe AdPlugin::HouseAdSerializer do
+RSpec.describe AdPlugin::HouseAdSerializer do
   fab!(:user)
   fab!(:house_ad) do
     Fabricate(

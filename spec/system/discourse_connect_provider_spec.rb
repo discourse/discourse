@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "rotp"
 
-describe "Discourse Connect Provider", type: :system do
+RSpec.describe "Discourse Connect Provider", type: :system do
   include DiscourseConnectHelpers
 
   let(:sso_secret) { SecureRandom.alphanumeric(32) }

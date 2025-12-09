@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Reviewable do
+RSpec.describe Reviewable do
   fab!(:user)
   fab!(:admin)
   fab!(:post1, :post)

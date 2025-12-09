@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "UserRemovedFromGroup" do
+RSpec.describe "UserRemovedFromGroup" do
   fab!(:user)
   fab!(:group)
   fab!(:automation) do

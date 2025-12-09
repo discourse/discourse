@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::Translation::CategoryCandidates do
+RSpec.describe DiscourseAi::Translation::CategoryCandidates do
   describe ".get" do
     it "returns all categories" do
       expect(DiscourseAi::Translation::CategoryCandidates.get.count).to eq(Category.count)

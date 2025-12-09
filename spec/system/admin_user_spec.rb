@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin User Page", type: :system do
+RSpec.describe "Admin User Page", type: :system do
   fab!(:current_user, :admin)
 
   let(:admin_users_page) { PageObjects::Pages::AdminUsers.new }

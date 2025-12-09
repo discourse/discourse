@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe LocalizationAttributesReplacer do
+RSpec.describe LocalizationAttributesReplacer do
   describe ".replace_category_attributes" do
     fab!(:category) { Fabricate(:category, locale: "en") }
     fab!(:subcategory) { Fabricate(:category, parent_category: category, locale: "en") }

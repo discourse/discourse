@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseGamification::LeaderboardCachedView do
+RSpec.describe DiscourseGamification::LeaderboardCachedView do
   fab!(:admin)
   fab!(:user)
   fab!(:other_user, :user)

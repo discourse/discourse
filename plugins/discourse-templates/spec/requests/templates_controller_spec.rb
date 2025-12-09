@@ -4,7 +4,7 @@ require_relative "../helpers/topics_helper"
 
 RSpec.configure { |c| c.include DiscourseTemplates::TopicsHelper }
 
-describe DiscourseTemplates::TemplatesController do
+RSpec.describe DiscourseTemplates::TemplatesController do
   fab!(:admin)
   fab!(:moderator)
   fab!(:user)

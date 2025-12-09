@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Core extensions" do
+RSpec.describe "Core extensions" do
   fab!(:automation_1, :automation)
   fab!(:automation_2, :automation)
 

@@ -2,7 +2,7 @@
 
 require_relative "../support/assign_allowed_group"
 
-describe PostSerializer do
+RSpec.describe PostSerializer do
   fab!(:user)
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }

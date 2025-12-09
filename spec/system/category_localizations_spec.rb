@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Category Localizations", type: :system do
+RSpec.describe "Category Localizations", type: :system do
   SWITCHER_SELECTOR = "button[data-identifier='language-switcher']"
 
   fab!(:admin)

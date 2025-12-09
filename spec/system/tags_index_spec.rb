@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Tags index page", type: :system do
+RSpec.describe "Tags index page", type: :system do
   fab!(:admin)
   fab!(:user)
 

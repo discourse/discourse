@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::DiscourseCalendar::MonitorEventDates do
+RSpec.describe Jobs::DiscourseCalendar::MonitorEventDates do
   subject(:job) { described_class.new }
 
   fab!(:post_1, :post)

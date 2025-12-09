@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Chat::Publisher do
+RSpec.describe Chat::Publisher do
   fab!(:channel, :category_channel)
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel) }
 

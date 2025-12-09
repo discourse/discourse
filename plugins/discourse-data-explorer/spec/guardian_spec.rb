@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Guardian do
+RSpec.describe Guardian do
   before { SiteSetting.data_explorer_enabled = true }
 
   def make_query(group_ids = [])

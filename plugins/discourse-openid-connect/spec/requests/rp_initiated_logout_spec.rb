@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "OIDC RP-Initiated Logout" do
+RSpec.describe "OIDC RP-Initiated Logout" do
   let(:document_url) do
     SiteSetting.openid_connect_discovery_document =
       "https://id.example.com/.well-known/openid-configuration"

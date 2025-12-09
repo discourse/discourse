@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseCalendar::UsersOnHoliday do
+RSpec.describe DiscourseCalendar::UsersOnHoliday do
   it "returns users on holiday" do
     event1 = Fabricate(:calendar_event, start_date: "2000-01-01")
     event2 = Fabricate(:calendar_event, start_date: "2000-01-01")

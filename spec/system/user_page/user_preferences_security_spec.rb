@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "User preferences | Security", type: :system do
+RSpec.describe "User preferences | Security", type: :system do
   fab!(:password) { "kungfukenny" }
   fab!(:email) { "email@user.com" }
   fab!(:admin)

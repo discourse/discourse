@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PrettyText do
+RSpec.describe PrettyText do
   before do
     freeze_time Time.utc(2018, 6, 5, 18, 40)
 

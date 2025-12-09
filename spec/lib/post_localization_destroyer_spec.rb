@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostLocalizationDestroyer do
+RSpec.describe PostLocalizationDestroyer do
   fab!(:user)
   fab!(:post)
   fab!(:group)

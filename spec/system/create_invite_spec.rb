@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Creating Invites", type: :system do
+RSpec.describe "Creating Invites", type: :system do
   fab!(:group)
   fab!(:user) { Fabricate(:user, groups: [group]) }
   fab!(:topic) { Fabricate(:post).topic }

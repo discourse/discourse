@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Assign | Bulk Assign", type: :system do
+RSpec.describe "Assign | Bulk Assign", type: :system do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:assign_modal) { PageObjects::Modals::Assign.new }
   let(:topic_list_header) { PageObjects::Components::TopicListHeader.new }

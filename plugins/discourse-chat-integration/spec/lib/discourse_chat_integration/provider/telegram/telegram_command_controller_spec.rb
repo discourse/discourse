@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Telegram Command Controller", type: :request do
+RSpec.describe "Telegram Command Controller", type: :request do
   let(:category) { Fabricate(:category) }
   let!(:chan1) do
     DiscourseChatIntegration::Channel.create!(

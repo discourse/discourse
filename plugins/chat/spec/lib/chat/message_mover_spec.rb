@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Chat::MessageMover do
+RSpec.describe Chat::MessageMover do
   fab!(:acting_user) { Fabricate(:admin, username: "testmovechat") }
   fab!(:source_channel, :category_channel)
   fab!(:destination_channel, :category_channel)

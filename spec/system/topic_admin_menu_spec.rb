@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Topic Admin Menu", type: :system do
+RSpec.describe "Topic Admin Menu", type: :system do
   fab!(:admin)
   let(:topic_page) { PageObjects::Pages::Topic.new }
 

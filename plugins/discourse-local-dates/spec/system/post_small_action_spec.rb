@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Post small actions", type: :system do
+RSpec.describe "Post small actions", type: :system do
   fab!(:current_user, :user)
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }

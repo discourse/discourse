@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Patreon::PatreonAdminController do
+RSpec.describe Patreon::PatreonAdminController do
   describe "#list" do
     let(:group1) { Fabricate(:group) }
     let(:group2) { Fabricate(:group) }

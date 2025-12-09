@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "AdminFilterControls", type: :system do
+RSpec.describe "AdminFilterControls", type: :system do
   fab!(:admin)
 
   let(:filter_controls) do

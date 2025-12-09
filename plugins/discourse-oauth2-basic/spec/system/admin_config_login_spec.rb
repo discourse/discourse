@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Config Login and Authentication OAuth2 tab", type: :system do
+RSpec.describe "Admin Config Login and Authentication OAuth2 tab", type: :system do
   fab!(:current_user, :admin)
 
   let(:admin_login_page) { PageObjects::Pages::AdminLoginAndAuthentication.new }

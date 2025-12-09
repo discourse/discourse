@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "capabilities service", type: :system do
+RSpec.describe "capabilities service", type: :system do
   describe "viewport helpers" do
     it "works" do
       def matches(name)

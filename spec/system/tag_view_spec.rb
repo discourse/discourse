@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Tag view", type: :system do
+RSpec.describe "Tag view", type: :system do
   fab!(:tag_1) { Fabricate(:tag, name: "design") }
   fab!(:tag_2) { Fabricate(:tag, name: "art") }
   fab!(:topic) { Fabricate(:topic, tags: [tag_2]) }

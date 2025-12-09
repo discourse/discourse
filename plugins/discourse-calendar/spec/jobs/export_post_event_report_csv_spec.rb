@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::ExportCsvFile do
+RSpec.describe Jobs::ExportCsvFile do
   before do
     freeze_time
     Jobs.run_immediately!

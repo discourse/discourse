@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ChatSDK::Thread do
+RSpec.describe ChatSDK::Thread do
   describe ".update_title" do
     fab!(:thread_1, :chat_thread)
 

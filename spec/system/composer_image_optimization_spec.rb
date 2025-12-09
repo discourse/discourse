@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer image optimization for uploads using media-optimization-worker" do
+RSpec.describe "Composer image optimization for uploads using media-optimization-worker" do
   fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
 
   let(:composer) { PageObjects::Components::Composer.new }

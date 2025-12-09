@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe User do
+RSpec.describe User do
   Event = DiscoursePostEvent::Event
 
   before do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicViewSerializer do
+RSpec.describe TopicViewSerializer do
   let(:user) { Fabricate(:user) }
   let(:category) { Fabricate(:category) }
   let(:topic) { Fabricate(:topic, category_id: category.id) }

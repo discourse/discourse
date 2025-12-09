@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicsController do
+RSpec.describe TopicsController do
   fab!(:post)
 
   fab!(:laughing_reaction) { Fabricate(:reaction, post: post, reaction_value: "laughing") }

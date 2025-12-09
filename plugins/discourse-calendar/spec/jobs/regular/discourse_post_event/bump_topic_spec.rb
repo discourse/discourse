@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::DiscoursePostEventBumpTopic do
+RSpec.describe Jobs::DiscoursePostEventBumpTopic do
   let(:admin_1) { Fabricate(:user, admin: true) }
   let(:topic_1) { Fabricate(:topic, user: admin_1) }
 

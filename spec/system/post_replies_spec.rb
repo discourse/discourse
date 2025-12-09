@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Post replies", type: :system do
+RSpec.describe "Post replies", type: :system do
   fab!(:user)
   fab!(:topic)
   fab!(:post) { Fabricate(:post, user:, topic:) }

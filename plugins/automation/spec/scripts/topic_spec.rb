@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Topic" do
+RSpec.describe "Topic" do
   let!(:raw) { "this is me testing a new topic by automation" }
   let!(:title) { "This is a new topic created by automation" }
   fab!(:category)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Chat::Message do
+RSpec.describe Chat::Message do
   fab!(:message) { Fabricate(:chat_message, message: "hey friend, what's up?!") }
 
   it { is_expected.to have_many(:chat_mentions).dependent(:destroy) }

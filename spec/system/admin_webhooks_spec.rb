@@ -1,6 +1,6 @@
 #frozen_string_literal: true
 
-describe "Admin Webhooks Page", type: :system do
+RSpec.describe "Admin Webhooks Page", type: :system do
   fab!(:admin)
 
   let(:webhooks_page) { PageObjects::Pages::AdminWebhooks.new }
