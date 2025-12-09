@@ -186,4 +186,4 @@ const VITE_PATTERNS = [
   /^\/@id\//,
   /^\/@embroider\//,
 ];
-const RAILS_JAVASCRIPTS_ROOTS = ["/theme-javascripts/", "/extra-locales/"];
+const RAILS_JAVASCRIPTS_ROOTS = ["/theme-javascripts/", "/extra-locales/", "/svg-sprite/"];
