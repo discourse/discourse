@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 describe "DiscourseRewind | rewind profile link", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
+
   let(:rewind_page) { PageObjects::Pages::Rewind.new }
   let(:user_menu) { PageObjects::Components::UserMenu.new }
 
