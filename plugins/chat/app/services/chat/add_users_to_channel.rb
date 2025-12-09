@@ -105,7 +105,7 @@ module Chat
         .select { |row| row["inserted"] }
         .map { |row| row["user_id"] }
 
-      ::Chat::DirectMessageUser.upsert_all(
+      ::Chat::DirectMessageUser.insert_all(
         context.added_user_ids.map do |id|
           {
             user_id: id,
