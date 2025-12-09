@@ -19,6 +19,13 @@ RSpec.describe "Drawer - starred channels", type: :system do
   context "when user has starred channels" do
     before { channel_1.membership_for(current_user).update!(starred: true) }
 
+    it "defaults to starred channels when opening drawer" do
+      visit("/")
+      chat_page.open_from_header
+
+      expect(drawer_page).to have_open_starred_channels
+    end
+
     it "shows starred tab in footer" do
       visit("/")
       chat_page.open_from_header
