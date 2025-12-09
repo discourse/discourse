@@ -20,10 +20,10 @@ function isTemplate(moduleName) {
   return moduleName.includes("/templates/");
 }
 
-function appendToCache(cache, key, value) {
+function appendToCache(cache, key, moduleName, source) {
   let cachedValue = cache.get(key);
   cachedValue ??= [];
-  cachedValue.push(value);
+  cachedValue.push({ moduleName, source });
   cache.set(key, cachedValue);
 }
 
@@ -36,9 +36,15 @@ function buildPrioritizedMaps(moduleNames) {
     if (isInRecognisedNamespace(moduleName) && isTemplate(moduleName)) {
       let pluginMatch, themeMatch;
       if ((pluginMatch = moduleName.match(pluginRegex))) {
-        appendToCache(pluginTemplates, pluginMatch[2], moduleName);
+        appendToCache(pluginTemplates, pluginMatch[2], moduleName, {
+          type: "plugin",
+          name: pluginMatch[1],
+        });
       } else if ((themeMatch = moduleName.match(themeRegex))) {
-        appendToCache(themeTemplates, themeMatch[2], moduleName);
+        appendToCache(themeTemplates, themeMatch[2], moduleName, {
+          type: "theme",
+          name: themeMatch[1],
+        });
       } else {
         appendToCache(
           coreTemplates,
@@ -59,6 +65,7 @@ function buildPrioritizedMaps(moduleNames) {
  */
 class DiscourseTemplateMap {
   templates = new Map();
+  sources = new Map();
 
   /**
    * Reset the TemplateMap to use the supplied module names. It is expected that the list
@@ -66,17 +73,19 @@ class DiscourseTemplateMap {
    */
   setModuleNames(moduleNames) {
     this.templates.clear();
+    this.sources.clear();
 
     for (const templateMap of buildPrioritizedMaps(moduleNames)) {
-      for (const [path, modulesForPath] of templateMap) {
-        for (const moduleForPath of modulesForPath) {
-          this.#add(path, moduleForPath);
+      for (const [path, modulesInfoForPath] of templateMap) {
+        for (const moduleInfoForPath of modulesInfoForPath) {
+          const { moduleName, source } = moduleInfoForPath;
+          this.#add(path, moduleName, source);
         }
       }
     }
   }
 
-  #add(path, moduleName) {
+  #add(path, moduleName, source) {
     if (this.templates.has(path)) {
       const msg = `Duplicate templates found for '${path}': '${moduleName}' clashes with '${this.templates.get(path)}'`;
 
@@ -88,6 +97,7 @@ class DiscourseTemplateMap {
       }
     } else {
       this.templates.set(path, moduleName);
+      this.sources.set(path, source);
     }
   }
 
@@ -97,6 +107,10 @@ class DiscourseTemplateMap {
    */
   resolve(name) {
     return this.templates.get(name);
+  }
+
+  identifySource(name) {
+    return this.sources.get(name);
   }
 }
 

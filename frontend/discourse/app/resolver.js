@@ -314,30 +314,10 @@ export function buildResolver(baseName) {
     }
 
     findTemplate(parsedName, prefix) {
-      prefix = prefix || "";
-
-      const withoutType = parsedName.fullNameWithoutType,
-        underscored = decamelize(withoutType).replace(/-/g, "_"),
-        segments = withoutType.split("/");
-
-      // Default unmodified behavior of original resolveTemplate.
-      const original = prefix + withoutType;
-
-      const candidates = [
-        // Convert dots and dashes to slashes
-        prefix + withoutType.replace(/[\.-]/g, "/"),
-        original,
-        // Underscored without namespace
-        prefix + underscored,
-        // Underscored with first segment as directory
-        prefix + underscored.replace("_", "/"),
-        // Underscore only the last segment
-        `${prefix}${segments.slice(0, -1).join("/")}/${segments[
-          segments.length - 1
-        ].replace(/-/g, "_")}`,
-        // All dasherized
-        prefix + withoutType.replace(/\//g, "-"),
-      ];
+      const { original, candidates } = this.#buildTemplateCandidates(
+        parsedName,
+        prefix
+      );
 
       for (const candidate of candidates) {
         const result = this.discourseTemplateModule(candidate);
@@ -345,10 +325,24 @@ export function buildResolver(baseName) {
           if (candidate !== original) {
             deprecated(
               `Looking up 'template:${candidate}' is no longer permitted. Rename to 'template:${original}' instead`,
-              { id: "discourse.deprecated-resolver-normalization" }
+              {
+                id: "discourse.deprecated-resolver-normalization",
+                source: DiscourseTemplateMap.identifySource(candidate),
+              }
             );
           }
           return result;
+        }
+      }
+    }
+
+    findTemplateSource(parsedName, prefix) {
+      const { candidates } = this.#buildTemplateCandidates(parsedName, prefix);
+
+      for (const candidate of candidates) {
+        const result = this.discourseTemplateModule(candidate);
+        if (result) {
+          return DiscourseTemplateMap.identifySource(candidate);
         }
       }
     }
@@ -394,7 +388,10 @@ export function buildResolver(baseName) {
             if (candidate !== parsedName) {
               deprecated(
                 `Looking up '${candidate.fullName}' is no longer permitted. Rename to '${parsedName.fullName}' instead`,
-                { id: "discourse.deprecated-resolver-normalization" }
+                {
+                  id: "discourse.deprecated-resolver-normalization",
+                  source: this.findTemplateSource(candidate, prefix),
+                }
               );
             }
             return result;
@@ -403,6 +400,30 @@ export function buildResolver(baseName) {
       } else {
         return this.findTemplate(parsedName, "discourse/admin/templates/");
       }
+    }
+
+    #buildTemplateCandidates(parsedName, prefix = "") {
+      const withoutType = parsedName.fullNameWithoutType;
+      const underscored = decamelize(withoutType).replace(/-/g, "_");
+      const segments = withoutType.split("/");
+      const original = prefix + withoutType;
+
+      return {
+        original,
+        candidates: [
+          // Convert dots and dashes to slashes
+          prefix + withoutType.replace(/[\.-]/g, "/"),
+          original,
+          // Underscored without namespace
+          prefix + underscored,
+          // Underscored with first segment as directory
+          prefix + underscored.replace("_", "/"),
+          // Underscore only the last segment
+          `${prefix}${segments.slice(0, -1).join("/")}/${segments[segments.length - 1].replace(/-/g, "_")}`,
+          // All dasherized
+          prefix + withoutType.replace(/\//g, "-"),
+        ],
+      };
     }
   };
 }
