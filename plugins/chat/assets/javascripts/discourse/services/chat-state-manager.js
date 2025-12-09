@@ -194,7 +194,12 @@ export default class ChatStateManager extends Service {
       return this._chatURL;
     }
 
-    if (this.chatChannelsManager.hasStarredChannels) {
+    // On mobile or drawer mode, default to starred channels if user has any
+    // On desktop fullscreen, starred channels are shown in the sidebar
+    if (
+      (this.site.mobileView || this.isDrawerPreferred) &&
+      this.chatChannelsManager.hasStarredChannels
+    ) {
       return "/chat/starred-channels";
     }
 
