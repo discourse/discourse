@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class AiUsageSerializer < ApplicationSerializer
-  LLM_MODEL_ID_PATTERN = /^-?\d+$/
-
   attributes :data, :features, :feature_models, :models, :users, :summary, :period
 
   def data
@@ -115,7 +113,7 @@ class AiUsageSerializer < ApplicationSerializer
   private
 
   def numeric_id?(value)
-    value.to_s.match?(LLM_MODEL_ID_PATTERN)
+    value.to_s.match?(DiscourseAi::Completions::Report::LLM_MODEL_ID_PATTERN)
   end
 
   def build_model_data(row, id_key: :llm_id)
@@ -136,7 +134,7 @@ class AiUsageSerializer < ApplicationSerializer
   end
 
   def enrich_with_credit_allocation!(model_data, llm_id, llm_models_index)
-    return unless llm_id.present? && numeric_id?(llm_id)
+    return if llm_id.blank? || !numeric_id?(llm_id)
 
     llm_model = llm_models_index[llm_id.to_i]
     return if llm_model&.llm_credit_allocation.blank?
