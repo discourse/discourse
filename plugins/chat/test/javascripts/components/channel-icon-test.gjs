@@ -16,7 +16,7 @@ module("Discourse Chat | Component | <ChannelIcon />", function (hooks) {
     await render(<template><ChannelIcon @channel={{channel}} /></template>);
 
     assert
-      .dom(".chat-channel-icon.--category-badge")
+      .dom(".chat-channel-icon.--icon")
       .hasAttribute("style", `color: #${channel.chatable.color}`);
   });
 
