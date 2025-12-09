@@ -331,6 +331,7 @@ describe "Viewing reviewable item", type: :system do
         refreshed_review_page.visit_reviewable(reviewable)
         refreshed_review_page.select_bundled_action(reviewable, "user-delete_user_block")
         expect(refreshed_review_page).to have_reviewable_with_rejected_status(reviewable)
+        expect(refreshed_review_page).to have_rejected_item_in_timeline(reviewable)
       end
 
       it "Allows to approve user" do
@@ -340,6 +341,7 @@ describe "Viewing reviewable item", type: :system do
         refreshed_review_page.select_bundled_action(reviewable, "user-approve_user")
 
         expect(refreshed_review_page).to have_reviewable_with_approved_status(reviewable)
+        expect(refreshed_review_page).to have_approved_item_in_timeline(reviewable)
       end
     end
   end

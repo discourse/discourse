@@ -34,8 +34,16 @@ module PageObjects
         within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--rejected") }
       end
 
+      def has_rejected_item_in_timeline?(reviewable)
+        within(reviewable_by_id(reviewable.id)) { page.has_text?("Rejected by") }
+      end
+
       def has_reviewable_with_approved_status?(reviewable)
         within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--approved") }
+      end
+
+      def has_approved_item_in_timeline?(reviewable)
+        within(reviewable_by_id(reviewable.id)) { page.has_text?("Approved by") }
       end
 
       def has_reviewable_with_ignored_status?(reviewable)
