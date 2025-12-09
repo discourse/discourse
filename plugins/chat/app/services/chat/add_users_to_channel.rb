@@ -97,7 +97,7 @@ module Chat
       end
 
       context[:added_user_ids] = ::Chat::UserChatChannelMembership
-        .upsert_all(
+        .insert_all(
           memberships,
           unique_by: %i[user_id chat_channel_id],
           returning: Arel.sql("user_id, (xmax = '0') as inserted"),
