@@ -48,7 +48,7 @@ module Chat
              class_name: Chat::DirectMessageChannel::Policy::MaxUsersExcess
 
       transaction do
-        step :upsert_memberships
+        step :create_memberships
         step :recompute_users_count
         step :notice_channel
       end
@@ -75,7 +75,7 @@ module Chat
       ) + channel.chatable.users.where.not(id: guardian.user)
     end
 
-    def upsert_memberships(channel:, target_users:)
+    def create_memberships(channel:, target_users:)
       always_level = ::Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always]
 
       memberships =
