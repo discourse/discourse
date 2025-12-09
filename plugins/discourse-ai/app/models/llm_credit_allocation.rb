@@ -151,7 +151,6 @@ end
 #
 #  id                    :bigint           not null, primary key
 #  daily_credits         :bigint           default(0), not null
-#  daily_usage           :jsonb            not null
 #  soft_limit_percentage :integer          default(80), not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
