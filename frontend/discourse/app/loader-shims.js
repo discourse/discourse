@@ -70,7 +70,6 @@ loaderShim("@messageformat/runtime/lib/cardinals", () =>
 loaderShim("@messageformat/runtime/messages", () =>
   importSync("@messageformat/runtime/messages")
 );
-loaderShim("@popperjs/core", () => importSync("@popperjs/core"));
 loaderShim("@uppy/aws-s3", () => importSync("@uppy/aws-s3"));
 loaderShim("@uppy/core", () => importSync("@uppy/core"));
 loaderShim("@uppy/drop-target", () => importSync("@uppy/drop-target"));
