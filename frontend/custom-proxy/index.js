@@ -180,7 +180,7 @@ export default function customProxy({ rewriteHtml = true } = {}) {
 const VITE_PATTERNS = [
   /^\/@vite\//,
   /^\/app\//,
-  /\.[mgc]?js/,
+  /\.[mgc]?js(\?.*)?$/,
   /^\/tests/,
   /^\/@fs\//,
   /^\/@id\//,
