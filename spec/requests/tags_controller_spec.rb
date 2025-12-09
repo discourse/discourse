@@ -703,6 +703,46 @@ RSpec.describe TagsController do
       expect(event[:event_name]).to eq(:tag_updated)
       expect(event[:params].first).to eq(tag)
     end
+
+    it "updates the tag" do
+      put "/tag/#{tag.name}.json", params: { tag: { description: "New description" } }
+
+      expect(response.status).to eq(200)
+      expect(tag.reload.description).to eq("New description")
+    end
+
+    it "returns 403 for non-admins" do
+      sign_in(regular_user)
+      put "/tag/#{tag.name}.json", params: { tag: { description: "New description" } }
+
+      expect(response.status).to eq(403)
+    end
+
+    it "returns 404 for non-existing tags" do
+      put "/tag/nonexistenttag.json", params: { tag: { description: "New description" } }
+
+      expect(response.status).to eq(404)
+    end
+
+    it "logs the update into a UserHistory" do
+      put "/tag/#{tag.name}.json", params: { tag: { name: "new tag" } }
+
+      expect(response.status).to eq(200)
+
+      history = UserHistory.where(action: UserHistory.actions[:custom_staff]).last
+      expect(history).to have_attributes(
+        custom_type: "renamed_tag",
+        acting_user_id: admin.id,
+        previous_value: tag.name,
+        new_value: "new-tag",
+      )
+    end
+
+    it "does not log a UserHistory if the tag name is not changed" do
+      expect {
+        put "/tag/#{tag.name}.json", params: { tag: { description: "Updated description" } }
+      }.to_not change { UserHistory.count }
+    end
   end
 
   describe "#personal_messages" do

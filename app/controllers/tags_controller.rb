@@ -216,22 +216,28 @@ class TagsController < ::ApplicationController
   end
 
   def update
-    tag = Tag.find_by_name(params[:tag_name])
+    tag_name_param = params[:tag_name]
+
+    new_tag = params[:tag]
+    new_tag_name = new_tag[:name]
+    new_tag_description = new_tag[:description]
+
+    tag = Tag.find_by_name(tag_name_param)
     raise Discourse::NotFound if tag.nil?
 
     guardian.ensure_can_edit_tag!(tag)
 
-    if (params[:tag][:id].present?)
-      new_tag_name = DiscourseTagging.clean_tag(params[:tag][:id])
-      tag.name = new_tag_name
-    end
-    tag.description = params[:tag][:description] if params[:tag]&.has_key?(:description)
+    tag.name = DiscourseTagging.clean_tag(new_tag_name) if new_tag_name.present?
+    tag.description = new_tag_description if new_tag_description.present?
+
     if tag.save
-      StaffActionLogger.new(current_user).log_custom(
-        "renamed_tag",
-        previous_value: params[:tag_name],
-        new_value: new_tag_name,
-      )
+      if tag.name != tag_name_param
+        StaffActionLogger.new(current_user).log_custom(
+          "renamed_tag",
+          previous_value: tag_name_param,
+          new_value: tag.name,
+        )
+      end
       render json: { tag: { id: tag.id, name: tag.name, description: tag.description } }
     else
       render_json_error tag.errors.full_messages
