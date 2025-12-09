@@ -11,11 +11,7 @@ en:
       loading: "Reticulating splines..."
       preferences:
         disable_rewind: "Disable Discourse Rewind. This hides the year-end activity summary in your profile and on your avatar."
-      header_tooltip:
-        title: "View your %{rewindYear} Discourse Rewind"
-        description: "You can view your %{rewindYear} Discourse Rewind until February %{nextYear}"
-        take_me_there: "Take me there!"
-        preferences_link: "P.S. You can <a href='%{preferencesUrl}'>turn off Discourse Rewind in your preferences</a> at any time"
+      profile_link: "View your %{rewindYear} Discourse Rewind"
       reports:
         activity_calendar:
           title: Activity Calendar
