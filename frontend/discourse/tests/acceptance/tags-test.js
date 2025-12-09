@@ -343,11 +343,13 @@ acceptance("Tag info", function (needs) {
           staff: false,
           synonyms: [
             {
-              id: "containers",
+              id: "22",
+              name: "containers",
               text: "containers",
             },
             {
-              id: "planter",
+              id: "33",
+              name: "planter",
               text: "planter",
             },
           ],
@@ -375,12 +377,13 @@ acceptance("Tag info", function (needs) {
     });
     server.put("/tag/happy-monkey", (request) => {
       const data = helper.parsePostData(request.requestBody);
-      return helper.response({ tag: { id: data.tag.id } });
+      return helper.response({
+        tag: { id: data.tag.id, name: data.tag.name },
+      });
     });
 
     server.get("/tag/happy-monkey/info", () => {
       return helper.response({
-        __rest_serializer: "1",
         tag_info: {
           id: 13,
           name: "happy-monkey",
@@ -397,7 +400,6 @@ acceptance("Tag info", function (needs) {
 
     server.get("/tag/happy-monkey2/info", () => {
       return helper.response({
-        __rest_serializer: "1",
         tag_info: {
           id: 13,
           name: "happy-monkey2",

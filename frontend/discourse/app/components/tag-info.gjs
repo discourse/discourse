@@ -158,17 +158,23 @@ export default class TagInfo extends Component {
   @action
   finishedEditing() {
     const oldTagName = this.tag.name;
+    const id = this.tag.id;
     this.newTagDescription = this.newTagDescription?.replaceAll("\n", "<br>");
     this.tag
-      .update({ id: this.newTagName, description: this.newTagDescription })
+      .update({
+        id,
+        name: this.newTagName,
+        description: this.newTagDescription,
+      })
       .then((result) => {
         this.set("editing", false);
         this.tagInfo.set("description", this.newTagDescription);
-        if (
-          result.responseJson.tag &&
-          oldTagName !== result.responseJson.tag.name
-        ) {
-          this.router.transitionTo("tag.show", result.responseJson.tag.name);
+
+        if (result.responseJson.tag) {
+          this.tag.set("name", result.responseJson.tag.name);
+          if (oldTagName !== result.responseJson.tag.name) {
+            this.router.transitionTo("tag.show", result.responseJson.tag.name);
+          }
         }
       })
       .catch(popupAjaxError);
