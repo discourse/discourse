@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
-import { Input } from "@ember/component";
-import { concat, fn, hash } from "@ember/helper";
+import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import EmojiPicker from "discourse/components/emoji-picker";
 import Form from "discourse/components/form";
 import SaveControls from "discourse/components/save-controls";
@@ -12,6 +12,8 @@ import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class Chat extends Component {
+  @service chatAudioManager;
+
   get formData() {
     let emojis =
       this.args.controller.model.user_option.chat_quick_reactions_custom ||
@@ -26,6 +28,7 @@ export default class Chat extends Component {
         this.args.controller.model.user_option.only_chat_push_notifications,
       ignore_channel_wide_mention:
         this.args.controller.model.user_option.ignore_channel_wide_mention,
+      chat_sound: this.args.controller.model.user_option.chat_sound,
     };
   }
 
@@ -34,6 +37,14 @@ export default class Chat extends Component {
     let newValue = [...field.value];
     newValue[index] = value;
     field.set(newValue);
+  }
+
+  @action
+  handleChatSoundSet(sound, field) {
+    if (sound) {
+      this.chatAudioManager.play(sound);
+    }
+    field.set(sound);
   }
 
   @action
@@ -71,8 +82,10 @@ export default class Chat extends Component {
       "user_option.ignore_channel_wide_mention",
       data.ignore_channel_wide_mention
     );
-
-    // this.args.controller.save();
+    // eslint-disable-next-line no-console
+    console.log("chat sound", data.chat_sound);
+    this.args.controller.model.set("user_option.chat_sound", data.chat_sound);
+    this.args.controller.save();
   }
 
   <template>
@@ -107,6 +120,22 @@ export default class Chat extends Component {
           as |field|
         >
           <field.Checkbox @value={{field.value}} />
+        </form.Field>
+
+        <form.Field
+          @title={{i18n "chat.sound.title"}}
+          @name="chat_sound"
+          @format="large"
+          @onSet={{this.handleChatSoundSet}}
+          as |field|
+        >
+          <field.Select as |select|>
+            {{#each @controller.chatSounds as |sound|}}
+              <select.Option @value={{sound.value}}>
+                {{sound.name}}
+              </select.Option>
+            {{/each}}
+          </field.Select>
         </form.Field>
 
       </form.Section>
@@ -151,24 +180,7 @@ export default class Chat extends Component {
       <form.Submit />
     </Form>
 
-    <div
-      class="control-group chat-setting"
-      data-setting-name="user_chat_ignore_channel_wide_mention"
-    >
-      <label class="controls">
-        <Input
-          id="user_chat_ignore_channel_wide_mention"
-          @type="checkbox"
-          @checked={{@controller.model.user_option.ignore_channel_wide_mention}}
-        />
-        {{i18n "chat.ignore_channel_wide_mention.title"}}
-      </label>
-      <span class="control-instructions">
-        {{i18n "chat.ignore_channel_wide_mention.description"}}
-      </span>
-    </div>
-
-    <div
+    {{!-- <div
       class="control-group chat-setting controls-dropdown"
       data-setting-name="user_chat_sounds"
     >
@@ -181,7 +193,7 @@ export default class Chat extends Component {
         @id="user_chat_sounds"
         @onChange={{@controller.onChangeChatSound}}
       />
-    </div>
+    </div> --}}
 
     <div
       class="control-group chat-setting controls-dropdown"
