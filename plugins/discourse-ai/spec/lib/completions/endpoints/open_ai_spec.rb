@@ -1109,24 +1109,6 @@ TEXT
     let(:prompt) { compliance.generic_prompt }
     let(:dialect) { compliance.dialect(prompt: prompt) }
 
-    it "uses reasoning object format for responses API" do
-      model.update!(provider_params: { enable_responses_api: true, reasoning_effort: "minimal" })
-
-      parsed_body = nil
-      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
-        body:
-          proc do |req_body|
-            parsed_body = JSON.parse(req_body, symbolize_names: true)
-            true
-          end,
-      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
-
-      endpoint.perform_completion!(dialect, user)
-
-      expect(parsed_body[:reasoning]).to include(effort: "minimal", summary: "auto")
-      expect(parsed_body).not_to have_key(:reasoning_effort)
-    end
-
     it "uses reasoning_effort field for standard API" do
       model.update!(provider_params: { reasoning_effort: "low" })
 

@@ -11,6 +11,7 @@ module DiscourseAi
 
           def all_dialects
             [
+              DiscourseAi::Completions::Dialects::OpenAiResponses,
               DiscourseAi::Completions::Dialects::ChatGpt,
               DiscourseAi::Completions::Dialects::Gemini,
               DiscourseAi::Completions::Dialects::Claude,

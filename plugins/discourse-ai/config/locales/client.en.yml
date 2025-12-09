@@ -780,7 +780,6 @@ en:
           reasoning_tokens: "Number of tokens used for reasoning"
           disable_temperature: "Disable temperature (some thinking models don't support temperature)"
           disable_top_p: "Disable top P (some thinking models don't support top P)"
-          enable_responses_api: "Enable responses API (required on certain OpenAI models)"
           prompt_caching: "Prompt caching mode"
           prompt_caching_never: "Never - Do not use prompt caching"
           prompt_caching_tool_results: "Tool Results - Cache when tool results are present (recommended)"
