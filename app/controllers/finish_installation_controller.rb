@@ -103,7 +103,7 @@ class FinishInstallationController < ApplicationController
           email: email,
           username: username,
           # no password needed, users will login via Discourse ID
-          active: true,
+          active: false, # will be activated upon first login
           admin: true,
           trust_level: TrustLevel[4],
         )

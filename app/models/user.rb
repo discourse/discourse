@@ -1967,7 +1967,7 @@ class User < ActiveRecord::Base
   def clear_global_notice_if_needed
     return if id < 0
 
-    if admin && SiteSetting.has_login_hint
+    if admin && active && SiteSetting.has_login_hint
       SiteSetting.has_login_hint = false
       SiteSetting.global_notice = ""
     end
