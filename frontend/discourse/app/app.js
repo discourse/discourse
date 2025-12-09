@@ -58,6 +58,9 @@ populatePreloadStore();
 
 defineModules(null, embroiderCompatModules);
 
+import selectKitCompatModules from "discourse/select-kit/compat-modules";
+defineModules("discourse", selectKitCompatModules);
+
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
 
