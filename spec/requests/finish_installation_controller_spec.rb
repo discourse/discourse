@@ -18,6 +18,41 @@ RSpec.describe FinishInstallationController do
         get "/finish-installation"
         expect(response.status).to eq(200)
       end
+
+      context "when setting up Discourse ID" do
+        before { allow(ENV).to receive(:[]).with("DISCOURSE_SKIP_EMAIL_SETUP").and_return("1") }
+
+        it "enables the enable_discourse_id site setting and shows login button on success" do
+          stub_request(:post, "https://id.discourse.com/challenge").to_return(
+            status: 200,
+            body: { domain: Discourse.current_hostname, token: "test_token" }.to_json,
+          )
+          stub_request(:post, "https://id.discourse.com/register").to_return(
+            status: 200,
+            body: { client_id: "test_client_id", client_secret: "test_client_secret" }.to_json,
+          )
+
+          get "/finish-installation"
+          expect(response.status).to eq(200)
+          expect(SiteSetting.enable_discourse_id).to eq(true)
+          expect(SiteSetting.enable_local_logins).to eq(false)
+          expect(response.body).to include("Login with Discourse ID")
+          expect(response.body).to include("/auth/discourse_id")
+        end
+
+        it "shows error message and no login button on failure" do
+          stub_request(:post, "https://id.discourse.com/challenge").to_return(
+            status: 500,
+            body: "Internal Server Error",
+          )
+
+          get "/finish-installation"
+          expect(response.status).to eq(200)
+          expect(SiteSetting.enable_discourse_id).to eq(false)
+          expect(response.body).not_to include("Login with Discourse ID")
+          expect(response.body).to include("alert-error")
+        end
+      end
     end
   end
 

@@ -12,6 +12,8 @@ class FinishInstallationController < ApplicationController
   def index
     @setting_up_discourse_id = ENV["DISCOURSE_SKIP_EMAIL_SETUP"] == "1"
     @allowed_emails = find_allowed_emails
+
+    setup_discourse_id if @setting_up_discourse_id
   end
 
   def register
@@ -70,6 +72,18 @@ class FinishInstallationController < ApplicationController
       return []
     end
     GlobalSetting.developer_emails.split(",").map(&:strip)
+  end
+
+  def setup_discourse_id
+    begin
+      SiteSetting.enable_discourse_id = true
+      SiteSetting.enable_local_logins = false
+      @discourse_id_enabled = true
+      @discourse_id_error = nil
+    rescue StandardError => e
+      @discourse_id_enabled = false
+      @discourse_id_error = e.message
+    end
   end
 
   def ensure_no_admins
