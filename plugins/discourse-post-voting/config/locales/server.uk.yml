@@ -32,8 +32,11 @@ uk:
     post_voting_enable_likes_on_answers: "Увімкнути кнопку «Подобається» для відповідей у темах голосування за публікації"
     post_voting_undo_vote_action_window: "Кількість хвилин, протягом яких користувачі можуть скасувати голосування в темах після голосування (введіть 0, якщо обмеження немає)"
     post_voting_comment_limit_per_post: "Кількість дозволених коментарів в кожному повідомленні"
+    min_trust_to_flag_posts_voting_comments: "Мінімальний рівень довіри для позначення коментаря з голосуванням за допис"
     flag_posts_voting_comments_allowed_groups: "Групам дозволено позначати коментар до публікації з голосуванням"
     post_voting_comment_enabled: "Дозволити коментування дописів у темах для голосування"
+    keywords:
+      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
   discourse_post_voting:
     reviewables:
       actions:

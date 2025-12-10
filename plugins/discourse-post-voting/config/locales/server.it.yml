@@ -30,8 +30,11 @@ it:
     post_voting_enable_likes_on_answers: "Abilita il pulsante Mi piace nelle risposte agli argomenti con votazione dei messaggi"
     post_voting_undo_vote_action_window: "Numero di minuti consentiti agli utenti per annullare i voti negli argomenti con votazione dei messaggi (inserisci 0 per non definire alcun limite)"
     post_voting_comment_limit_per_post: "Numero di commenti consentiti su ogni messaggio"
+    min_trust_to_flag_posts_voting_comments: "Livello di attendibilità minimo per contrassegnare un commento di votazione dei messaggi"
     flag_posts_voting_comments_allowed_groups: "Gruppi autorizzati a contrassegnare un commento di votazione dei messaggi"
     post_voting_comment_enabled: "Abilita i commenti nei messaggi negli argomenti con voto sui messaggi"
+    keywords:
+      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
   discourse_post_voting:
     reviewables:
       actions:

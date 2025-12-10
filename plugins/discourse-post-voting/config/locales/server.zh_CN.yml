@@ -29,8 +29,11 @@ zh_CN:
     post_voting_enable_likes_on_answers: "在“帖子投票”话题中回复时启用“点赞”按钮"
     post_voting_undo_vote_action_window: "允许用户在“帖子投票”话题中撤消投票的分钟数（0 为不限制）"
     post_voting_comment_limit_per_post: "每个帖子允许的评论数"
+    min_trust_to_flag_posts_voting_comments: "举报帖子投票评论的最低信任级别"
     flag_posts_voting_comments_allowed_groups: "能够举报帖子投票评论的群组"
     post_voting_comment_enabled: "启用对“帖子投票”话题中的帖子发表评论"
+    keywords:
+      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
   discourse_post_voting:
     reviewables:
       actions:

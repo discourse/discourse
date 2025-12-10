@@ -29,8 +29,11 @@ ja:
     post_voting_enable_likes_on_answers: "投稿の投票トピックでの返信に「いいね！」ボタンを有効にする"
     post_voting_undo_vote_action_window: "投稿の投票トピックでユーザーが投票を取り消すことのできる分数 (無制限の場合は 0 を入力します)"
     post_voting_comment_limit_per_post: "各投稿に許可されるコメント数"
+    min_trust_to_flag_posts_voting_comments: "投稿の投票コメントを通報できる最低信頼レベル"
     flag_posts_voting_comments_allowed_groups: "投稿の投票コメントを通報できるグループ"
     post_voting_comment_enabled: "投稿の投票トピックで投稿へのコメントを有効にする"
+    keywords:
+      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
   discourse_post_voting:
     reviewables:
       actions:

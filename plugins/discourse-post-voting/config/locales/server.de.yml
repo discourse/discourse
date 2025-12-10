@@ -30,8 +30,11 @@ de:
     post_voting_enable_likes_on_answers: "„Gefällt mir“-Schaltfläche für Antworten in Beitragsabstimmungsthemen aktivieren"
     post_voting_undo_vote_action_window: "Anzahl an Minuten, in denen Benutzer Stimmen in Beitragsabstimmungsthemen zurücknehmen können (0 bedeutet kein Limit)"
     post_voting_comment_limit_per_post: "Anzahl der zulässigen Kommentare zu jedem Beitrag"
+    min_trust_to_flag_posts_voting_comments: "Mindestvertrauensstufe zum Melden eines Beitragsabstimmungskommentars"
     flag_posts_voting_comments_allowed_groups: "Gruppen, die einen Beitragsabstimmungskommentar melden dürfen"
     post_voting_comment_enabled: "Kommentare zu Beiträgen in Beitragsabstimmungsthemen aktivieren"
+    keywords:
+      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
   discourse_post_voting:
     reviewables:
       actions:
