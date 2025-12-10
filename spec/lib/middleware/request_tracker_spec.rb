@@ -609,7 +609,7 @@ RSpec.describe Middleware::RequestTracker do
         view = BrowserPageView.order(:created_at).last
         expect(view.http_status).to eq(200)
         expect(view.is_crawler).to eq(false)
-        expect(view.url).to be_present
+        expect(view.path).to be_present
       end
 
       it "logs browser page views for API requests" do
@@ -697,13 +697,13 @@ RSpec.describe Middleware::RequestTracker do
         }
       end
 
-      it "captures url, user_agent, referrer, and route" do
+      it "captures path, query_string, user_agent, referrer, and route" do
         data =
           Middleware::RequestTracker.get_data(
             env(
               "HTTP_DISCOURSE_TRACK_VIEW" => "1",
               "HTTP_REFERER" => "https://google.com/search?q=test",
-              :path => "/t/test-topic/123",
+              :path => "/t/test-topic/123?page=2&filter=latest",
             ),
             ["200", {}],
             0.1,
@@ -712,7 +712,8 @@ RSpec.describe Middleware::RequestTracker do
         Middleware::RequestTracker.log_request(data)
 
         view = BrowserPageView.order(:created_at).last
-        expect(view.url).to eq("/t/test-topic/123")
+        expect(view.path).to eq("/t/test-topic/123")
+        expect(view.query_string).to eq("page=2&filter=latest")
         expect(view.user_agent).to be_present
         expect(view.referrer).to eq("https://google.com/search?q=test")
       end

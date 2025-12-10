@@ -5,7 +5,8 @@ class CreateBrowserPageViews < ActiveRecord::Migration[7.2]
     create_table :browser_page_views, id: false do |t|
       t.integer :user_id
       t.integer :topic_id
-      t.string :url, limit: 1024
+      t.string :path, limit: 1024
+      t.string :query_string, limit: 1024
       t.string :route, limit: 100
       t.string :user_agent, limit: 512
       t.inet :ip_address

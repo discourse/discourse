@@ -10,7 +10,8 @@ class BrowserPageView < ActiveRecord::Base
     create!(
       user_id: data[:current_user_id],
       topic_id: data[:topic_id],
-      url: data[:url]&.slice(0, 1024),
+      path: data[:path]&.slice(0, 1024),
+      query_string: data[:query_string]&.slice(0, 1024),
       route: data[:route]&.slice(0, 100),
       user_agent: data[:user_agent]&.slice(0, 512),
       ip_address: data[:request_remote_ip],
@@ -26,3 +27,30 @@ class BrowserPageView < ActiveRecord::Base
     Discourse.warn_exception(e, message: "Failed to log browser page view")
   end
 end
+
+# == Schema Information
+#
+# Table name: browser_page_views
+#
+#  http_status  :integer
+#  ip_address   :inet
+#  is_api       :boolean          default(FALSE), not null
+#  is_crawler   :boolean          default(FALSE), not null
+#  is_mobile    :boolean          default(FALSE), not null
+#  is_user_api  :boolean          default(FALSE), not null
+#  path         :string(1024)
+#  query_string :string(1024)
+#  referrer     :string(1024)
+#  route        :string(100)
+#  user_agent   :string(512)
+#  created_at   :datetime         not null
+#  topic_id     :integer
+#  user_id      :integer
+#
+# Indexes
+#
+#  index_browser_page_views_on_created_at  (created_at)
+#  index_browser_page_views_on_ip_address  (ip_address)
+#  index_browser_page_views_on_topic_id    (topic_id)
+#  index_browser_page_views_on_user_id     (user_id)
+#
