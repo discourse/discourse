@@ -62,12 +62,7 @@ en:
           label: Text
       triggerables:
         post_flag_created:
-          title: Post flag created
-          description: Triggers when a post is flagged
           fields:
-            flag_type:
-              label: Flag type
-              description: Optionally limit to a single flag type
             categories:
               label: Categories
               description: Only trigger when the flagged topic is in these categories

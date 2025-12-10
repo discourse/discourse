@@ -19,16 +19,6 @@ en:
       post_flag_created:
         title: Post flag created
         description: Triggers an automation when a post is flagged
-        fields:
-          flag_type:
-            label: Flag type
-            description: Optionally restrict to a specific flag type
-          categories:
-            label: Categories
-            description: Only trigger when the flagged topic belongs to these categories
-          tags:
-            label: Tags
-            description: Only trigger when the flagged topic has any of these tags
       errors:
         custom_fields_or_user_profile_required: "At least one of 'custom_fields' or 'user_profile' must be provided."
       user_badge_granted:
