@@ -456,28 +456,7 @@ module DiscourseAutomation
             next if (topic_tag_names & tags).empty?
           end
 
-          automation.trigger!(
-            "kind" => name,
-            "post_action" => post_action,
-            "post" => post,
-            "placeholders" => {
-              "topic_url" => topic ? "#{Discourse.base_url}#{topic.relative_url}" : nil,
-              "topic_title" => topic&.title,
-              "post_url" => post&.full_url,
-              "post_number" => post&.post_number,
-              "flagger_username" => post_action.user&.username,
-              "flagged_username" => post&.user&.username,
-              "flag_type" => PostActionTypeView.new.names[post_action.post_action_type_id],
-              "category" => topic&.category&.name,
-              "tags" => topic&.tags&.map(&:name)&.join(", "),
-              "post_excerpt" =>
-                begin
-                  Post.excerpt(post, 300, strip_links: true)
-                rescue StandardError
-                  nil
-                end || post&.raw.to_s.truncate(300),
-            },
-          )
+          automation.trigger!("kind" => name, "post_action" => post_action, "post" => post)
         end
     end
   end
