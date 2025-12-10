@@ -515,6 +515,7 @@ module DiscourseAi
                 skip_guardian: true,
                 custom_fields: {
                   DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD => bot.llm.llm_model.display_name,
+                  DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD => bot.llm.llm_model.id,
                   DiscourseAi::AiBot::POST_AI_PERSONA_ID_FIELD => bot.persona.id,
                 },
               )
@@ -524,6 +525,10 @@ module DiscourseAi
             .llm
             .llm_model
             .display_name
+          reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD] = bot
+            .llm
+            .llm_model
+            .id
           reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_PERSONA_ID_FIELD] = bot.persona.id
           reply_post.save_custom_fields
 
@@ -607,6 +612,7 @@ module DiscourseAi
               skip_guardian: true,
               custom_fields: {
                 DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD => bot.llm.llm_model.display_name,
+                DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD => bot.llm.llm_model.id,
                 DiscourseAi::AiBot::POST_AI_PERSONA_ID_FIELD => bot.persona.id,
               },
             )
