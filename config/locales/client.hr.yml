@@ -912,7 +912,6 @@ hr:
         claimed: "Preuzeto"
         claimed_by: "Preuzeo/la %{username} · %{relativeDate}"
         reviewed: "Recenzirano"
-        reviewed_by: "Recenzirao/la %{username} · %{relativeDate}"
         view_conversation: "pogledaj privatnu poruku"
         note_added: "Napomena moderatora"
         note_added_by: "Napomena moderatora od %{username} · %{relativeDate}"

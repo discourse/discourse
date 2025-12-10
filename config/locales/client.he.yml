@@ -997,7 +997,6 @@ he:
         claimed: "נדרש"
         claimed_by: "נדרש על ידי %{username} · %{relativeDate}"
         reviewed: "נבדק"
-        reviewed_by: "נבדק על ידי %{username} · %{relativeDate}"
         view_conversation: "הצגת הודעה פרטית"
         note_added: "הערת פיקוח"
         note_added_by: "הערת פיקוח מאת %{username} · %{relativeDate}"

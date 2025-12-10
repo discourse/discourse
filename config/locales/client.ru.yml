@@ -974,7 +974,6 @@ ru:
         claimed: "Зарезервировано"
         claimed_by: "Зарезервировано пользователем %{username} · %{relativeDate}"
         reviewed: "Проверено"
-        reviewed_by: "Проверено пользователем %{username} · %{relativeDate}"
         view_conversation: "просмотреть ЛС"
         note_added: "Примечание модератора"
         note_added_by: "Примечание модератора %{username} · %{relativeDate}"

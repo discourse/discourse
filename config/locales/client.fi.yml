@@ -844,7 +844,6 @@ fi:
         claimed: "Omittu"
         claimed_by: "%{username} omi · %{relativeDate}"
         reviewed: "Käsitelty"
-        reviewed_by: "%{username} käsitteli · %{relativeDate}"
         view_conversation: "katso yksityisviesti"
         note_added: "Valvojan huomautus"
         note_added_by: "%{username} lisäsi valvojan huomautuksen · %{relativeDate}"

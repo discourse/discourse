@@ -790,7 +790,6 @@ da:
         claimed: "Påstået"
         claimed_by: "Påstået af %{username} · %{relativeDate}"
         reviewed: "Gennemgået"
-        reviewed_by: "Gennemgået af %{username} · %{relativeDate}"
         note_added: "Moderator note"
       notes:
         add_note_button: "Tilføj note"

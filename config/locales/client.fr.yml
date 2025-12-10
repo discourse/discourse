@@ -848,7 +848,6 @@ fr:
         claimed: "Réclamé"
         claimed_by: "Réclamé par %{username} · %{relativeDate}"
         reviewed: "Examiné"
-        reviewed_by: "Examiné par %{username} · %{relativeDate}"
         view_conversation: "voir PM"
         note_added: "Note du modérateur"
         note_added_by: "Note du modérateur par %{username} · %{relativeDate}"
