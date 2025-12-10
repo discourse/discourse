@@ -298,7 +298,7 @@ jobs:
       - name: Core Plugins QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'core-plugins'
         run: |
-          bin/rake plugin:qunit['*']
+          EMBER_RAISE_ON_DEPRECATION=1 bin/rake plugin:qunit['*']
 
       - name: Official Plugins RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'official-plugins'
@@ -349,7 +349,7 @@ jobs:
           done
 
           echo "Running bin/turbo_rspec on: ${matches[*]}"
-          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation "${matches[@]}"
+          EMBER_RAISE_ON_DEPRECATION=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation "${matches[@]}"
         shell: bash
 
       - name: Official Plugins System Tests
@@ -374,7 +374,7 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'chat'
         env:
           CHECKOUT_TIMEOUT: 10
-        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/chat/spec/system
+        run: EMBER_RAISE_ON_DEPRECATION=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/chat/spec/system
 
       - name: Theme System Tests
         if: matrix.build_type == 'system' && matrix.target == 'themes'
