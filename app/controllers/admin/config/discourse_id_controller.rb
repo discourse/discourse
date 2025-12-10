@@ -5,8 +5,6 @@ class Admin::Config::DiscourseIdController < Admin::AdminController
     render json: {
              enabled: SiteSetting.enable_discourse_id,
              configured: credentials_configured?,
-             client_id: DiscourseId.masked_client_id,
-             provider_url: DiscourseId.provider_url,
              stats: {
                total_users: total_users_count,
                signups_30_days: signups_last_30_days,

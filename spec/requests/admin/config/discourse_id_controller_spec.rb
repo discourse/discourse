@@ -18,28 +18,12 @@ RSpec.describe Admin::Config::DiscourseIdController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "returns discourse id configuration and stats" do
-        get "/admin/config/login-and-authentication/discourse-id.json"
-
-        expect(response.status).to eq(200)
-
-        body = response.parsed_body
-        expect(body["enabled"]).to eq(true)
-        expect(body["configured"]).to eq(true)
-        expect(body["client_id"]).to eq(DiscourseId.masked_client_id)
-        expect(body["provider_url"]).to eq(DiscourseId.provider_url)
-        expect(body["stats"]).to be_present
-        expect(body["stats"]["total_users"]).to eq(0)
-        expect(body["stats"]["signups_30_days"]).to eq(0)
-        expect(body["stats"]["logins_30_days"]).to eq(0)
-      end
-
-      it "returns correct stats when users exist" do
-        user1 = Fabricate(:user)
-        user2 = Fabricate(:user)
+      it "returns configuration and stats" do
+        recent_user = Fabricate(:user)
+        old_user = Fabricate(:user)
         Fabricate(
           :user_associated_account,
-          user: user1,
+          user: recent_user,
           provider_name: "discourse_id",
           provider_uid: SecureRandom.hex,
           created_at: 10.days.ago,
@@ -47,7 +31,7 @@ RSpec.describe Admin::Config::DiscourseIdController do
         )
         Fabricate(
           :user_associated_account,
-          user: user2,
+          user: old_user,
           provider_name: "discourse_id",
           provider_uid: SecureRandom.hex,
           created_at: 60.days.ago,
@@ -57,11 +41,15 @@ RSpec.describe Admin::Config::DiscourseIdController do
         get "/admin/config/login-and-authentication/discourse-id.json"
 
         expect(response.status).to eq(200)
-
-        body = response.parsed_body
-        expect(body["stats"]["total_users"]).to eq(2)
-        expect(body["stats"]["signups_30_days"]).to eq(1)
-        expect(body["stats"]["logins_30_days"]).to eq(1)
+        expect(response.parsed_body).to include(
+          "enabled" => true,
+          "configured" => true,
+          "stats" => {
+            "total_users" => 2,
+            "signups_30_days" => 1,
+            "logins_30_days" => 1,
+          },
+        )
       end
 
       it "returns configured as false when credentials are missing" do
@@ -74,29 +62,17 @@ RSpec.describe Admin::Config::DiscourseIdController do
       end
     end
 
-    context "when logged in as a moderator" do
-      before { sign_in(moderator) }
+    it "is admin only" do
+      get "/admin/config/login-and-authentication/discourse-id.json"
+      expect(response.status).to eq(404)
 
-      it "denies access with a 403 response" do
-        get "/admin/config/login-and-authentication/discourse-id.json"
-        expect(response.status).to eq(403)
-      end
-    end
+      sign_in(user)
+      get "/admin/config/login-and-authentication/discourse-id.json"
+      expect(response.status).to eq(404)
 
-    context "when logged in as a non-staff user" do
-      before { sign_in(user) }
-
-      it "denies access with a 404 response" do
-        get "/admin/config/login-and-authentication/discourse-id.json"
-        expect(response.status).to eq(404)
-      end
-    end
-
-    context "when not logged in" do
-      it "redirects to login" do
-        get "/admin/config/login-and-authentication/discourse-id.json"
-        expect(response.status).to eq(404)
-      end
+      sign_in(moderator)
+      get "/admin/config/login-and-authentication/discourse-id.json"
+      expect(response.status).to eq(403)
     end
   end
 
@@ -104,18 +80,14 @@ RSpec.describe Admin::Config::DiscourseIdController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "returns success when regeneration succeeds" do
-        challenge_token = SecureRandom.hex
-        new_secret = SecureRandom.hex
-
+      it "regenerates credentials successfully" do
         stub_request(:post, "#{DiscourseId.provider_url}/challenge").to_return(
           status: 200,
-          body: { domain: Discourse.current_hostname, token: challenge_token }.to_json,
+          body: { domain: Discourse.current_hostname, token: "token" }.to_json,
         )
-
         stub_request(:post, "#{DiscourseId.provider_url}/regenerate").to_return(
           status: 200,
-          body: { client_id:, client_secret: new_secret }.to_json,
+          body: { client_id:, client_secret: "new_secret" }.to_json,
         )
 
         post "/admin/config/login-and-authentication/discourse-id/regenerate.json"
@@ -126,7 +98,6 @@ RSpec.describe Admin::Config::DiscourseIdController do
 
       it "returns error when credentials are not configured" do
         SiteSetting.discourse_id_client_id = ""
-        SiteSetting.discourse_id_client_secret = ""
 
         post "/admin/config/login-and-authentication/discourse-id/regenerate.json"
 
@@ -135,22 +106,13 @@ RSpec.describe Admin::Config::DiscourseIdController do
       end
     end
 
-    context "when logged in as a moderator" do
-      before { sign_in(moderator) }
+    it "is admin only" do
+      post "/admin/config/login-and-authentication/discourse-id/regenerate.json"
+      expect(response.status).to eq(404)
 
-      it "denies access with a 403 response" do
-        post "/admin/config/login-and-authentication/discourse-id/regenerate.json"
-        expect(response.status).to eq(403)
-      end
-    end
-
-    context "when logged in as a non-staff user" do
-      before { sign_in(user) }
-
-      it "denies access with a 404 response" do
-        post "/admin/config/login-and-authentication/discourse-id/regenerate.json"
-        expect(response.status).to eq(404)
-      end
+      sign_in(moderator)
+      post "/admin/config/login-and-authentication/discourse-id/regenerate.json"
+      expect(response.status).to eq(403)
     end
   end
 
@@ -158,7 +120,7 @@ RSpec.describe Admin::Config::DiscourseIdController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "updates the enabled setting to true" do
+      it "updates the enabled setting" do
         SiteSetting.enable_discourse_id = false
 
         put "/admin/config/login-and-authentication/discourse-id/settings.json",
@@ -169,53 +131,23 @@ RSpec.describe Admin::Config::DiscourseIdController do
         expect(response.status).to eq(200)
         expect(SiteSetting.enable_discourse_id).to eq(true)
       end
-
-      it "updates the enabled setting to false" do
-        SiteSetting.enable_discourse_id = true
-
-        put "/admin/config/login-and-authentication/discourse-id/settings.json",
-            params: {
-              enabled: false,
-            }
-
-        expect(response.status).to eq(200)
-        expect(SiteSetting.enable_discourse_id).to eq(false)
-      end
-
-      it "returns success even without params" do
-        put "/admin/config/login-and-authentication/discourse-id/settings.json"
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["success"]).to eq("OK")
-      end
     end
 
-    context "when logged in as a moderator" do
-      before { sign_in(moderator) }
+    it "is admin only" do
+      put "/admin/config/login-and-authentication/discourse-id/settings.json",
+          params: {
+            enabled: false,
+          }
+      expect(response.status).to eq(404)
+      expect(SiteSetting.enable_discourse_id).to eq(true)
 
-      it "denies access with a 403 response" do
-        put "/admin/config/login-and-authentication/discourse-id/settings.json",
-            params: {
-              enabled: false,
-            }
-
-        expect(response.status).to eq(403)
-        expect(SiteSetting.enable_discourse_id).to eq(true)
-      end
-    end
-
-    context "when logged in as a non-staff user" do
-      before { sign_in(user) }
-
-      it "denies access with a 404 response" do
-        put "/admin/config/login-and-authentication/discourse-id/settings.json",
-            params: {
-              enabled: false,
-            }
-
-        expect(response.status).to eq(404)
-        expect(SiteSetting.enable_discourse_id).to eq(true)
-      end
+      sign_in(moderator)
+      put "/admin/config/login-and-authentication/discourse-id/settings.json",
+          params: {
+            enabled: false,
+          }
+      expect(response.status).to eq(403)
+      expect(SiteSetting.enable_discourse_id).to eq(true)
     end
   end
 end

@@ -5849,24 +5849,14 @@ en:
             discourse_id:
               title: "Discourse ID"
         discourse_id:
-          status:
-            title: "Status"
-          enabled: "Enabled"
-          provider: "Provider"
-          client_id: "Client ID"
-          not_configured: "Not configured"
+          title: "Discourse ID"
           stats:
-            title: "Statistics"
             total_users: "Total users"
             signups_30_days: "Signups (30 days)"
             logins_30_days: "Logins (30 days)"
-          advanced:
-            title: "Advanced"
-            regenerate_credentials: "Regenerate credentials"
-            regenerate_warning: "Invalidates current client secret. Only use if compromised."
-            regenerate_button: "Regenerate"
-            regenerate_confirm: "Are you sure you want to regenerate your Discourse ID credentials? This will invalidate your current client secret."
-            regenerate_success: "Credentials regenerated successfully."
+          regenerate_credentials: "Regenerate credentials…"
+          regenerate_confirm: "Are you sure you want to regenerate your Discourse ID credentials? This will generate a new client secret."
+          regenerate_success: "Credentials regenerated successfully."
         logo:
           title: "Logo"
           header_description: "Configure the logos and icons used throughout your site"
