@@ -25,7 +25,7 @@ describe DiscourseAutomation::Triggers::FLAG_ON_POST_CREATED do
     end.to change { automation.reload.stats.count }.by(1)
   end
 
-  it "does not trigger the automation if flagged post is not in a topic with the specified tag" do
+  it "only triggers the automation if flagged post is in a topic with the specified tags defined by the tags field" do
     automation.upsert_field!("tags", "tags", { value: [tag.name] }, target: "trigger")
 
     triggered_automations =
@@ -46,7 +46,7 @@ describe DiscourseAutomation::Triggers::FLAG_ON_POST_CREATED do
     expect(triggered_automation["post"]).to eq(post)
   end
 
-  it "does not trigger the automation if flagged post is not in a topic with the specified category" do
+  it "only triggers the automation if flagged post is in a topic with the specified categories defined by the categories field" do
     automation.upsert_field!(
       "categories",
       "categories",
@@ -72,7 +72,7 @@ describe DiscourseAutomation::Triggers::FLAG_ON_POST_CREATED do
     expect(triggered_automation["post"]).to eq(post)
   end
 
-  it "does not trigger the automation if flag is not of the specified flag type" do
+  it "only triggers the automation if flag is of the specified flag type defined by the flag_type field" do
     automation.upsert_field!(
       "flag_type",
       "choices",
