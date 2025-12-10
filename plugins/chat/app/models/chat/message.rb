@@ -198,9 +198,11 @@ module Chat
       invalidate_parsed_mentions
     end
 
-    def rebake!(invalidate_oneboxes: false, priority: nil)
+    def rebake!(invalidate_oneboxes: false, priority: nil, skip_notifications: false)
       ensure_last_editor_id
-      args = { chat_message_id: self.id, invalidate_oneboxes: invalidate_oneboxes }
+      args = { chat_message_id: self.id }
+      args[:invalidate_oneboxes] = true if invalidate_oneboxes
+      args[:skip_notifications] = true if skip_notifications
       args[:queue] = priority.to_s if priority && priority != :normal
       Jobs.enqueue(Jobs::Chat::ProcessMessage, args)
     end

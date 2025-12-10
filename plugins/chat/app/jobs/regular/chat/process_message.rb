@@ -34,11 +34,12 @@ module Jobs
           # extract external links for webhook-based rebaking
           ::Chat::MessageLink.extract_from(chat_message)
 
-          # notifier should be idempotent and not re-notify
-          if args[:edit_timestamp]
-            ::Chat::Notifier.new(chat_message, args[:edit_timestamp]).notify_edit
-          else
-            ::Chat::Notifier.new(chat_message, chat_message.created_at).notify_new
+          unless args[:skip_notifications]
+            if args[:edit_timestamp]
+              ::Chat::Notifier.new(chat_message, args[:edit_timestamp]).notify_edit
+            else
+              ::Chat::Notifier.new(chat_message, chat_message.created_at).notify_new
+            end
           end
 
           ::Chat::Publisher.publish_processed!(chat_message)

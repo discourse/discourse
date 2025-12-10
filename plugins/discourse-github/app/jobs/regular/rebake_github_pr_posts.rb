@@ -40,7 +40,7 @@ module Jobs
         .where(id: message_ids)
         .find_each do |message|
           next unless has_github_pr_onebox?(message.cooked, pr_url)
-          message.rebake!(invalidate_oneboxes: true, priority: :low)
+          message.rebake!(invalidate_oneboxes: true, priority: :low, skip_notifications: true)
         end
     end
 
