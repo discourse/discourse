@@ -482,6 +482,30 @@ RSpec.configure do |config|
     Capybara::Node::Base.prepend(CapybaraTimeoutExtension)
 
     config.before(:each, type: :system) do |example|
+      # Only set ENV["EMBER_RAISE_ON_DEPRECATION"] if not already set
+      if ENV["EMBER_RAISE_ON_DEPRECATION"].nil? && example_file_path = example.metadata[:file_path]
+        # Check if the example is from a plugin
+        if example_file_path.include?("/plugins/")
+          # Extract plugin directory name from path
+          # Path format: .../plugins/plugin-name/spec/...
+          plugin_match = example_file_path.match(%r{/plugins/([^/]+)/})
+
+          if plugin_match
+            plugin_name = plugin_match[1]
+            plugin_dir = Rails.root.join("plugins", plugin_name)
+
+            # Check if plugin is preinstalled (no .git directory)
+            is_preinstalled = !File.exist?(File.join(plugin_dir, ".git"))
+
+            # Only set the env var if the plugin is preinstalled
+            ENV["EMBER_RAISE_ON_DEPRECATION"] = "1" if is_preinstalled
+          end
+        else
+          # Not a plugin spec, set the env var
+          ENV["EMBER_RAISE_ON_DEPRECATION"] = "1"
+        end
+      end
+
       if example.metadata[:time]
         freeze_time(example.metadata[:time])
         page.driver.with_playwright_page do |pw_page|
