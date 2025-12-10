@@ -54,14 +54,18 @@ module DiscourseAi
         guardian.ensure_can_see!(prompt_post)
 
         persona_id = retry_persona_id(post, prompt_post)
+        llm_model_id = post.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD]
 
-        Jobs.enqueue(
-          :create_ai_reply,
+        args = {
           post_id: prompt_post.id,
           bot_user_id: post.user_id,
           persona_id: persona_id,
           reply_post_id: post.id,
-        )
+        }
+
+        args[:llm_model_id] = llm_model_id.to_i if llm_model_id.to_i.positive?
+
+        Jobs.enqueue(:create_ai_reply, args)
 
         render json: success_json
       end

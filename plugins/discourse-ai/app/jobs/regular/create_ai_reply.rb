@@ -11,12 +11,14 @@ module Jobs
       return if args[:reply_post_id].present? && reply_post.nil?
       return if reply_post && reply_post.topic_id != post.topic_id
       persona_id = args[:persona_id]
+      llm_model_id = args[:llm_model_id]
 
       begin
         persona = DiscourseAi::Personas::Persona.find_by(user: post.user, id: persona_id)
         raise DiscourseAi::Personas::Bot::BOT_NOT_FOUND if persona.nil?
 
-        bot = DiscourseAi::Personas::Bot.as(bot_user, persona: persona.new)
+        llm_model = LlmModel.find_by(id: llm_model_id.to_i) if llm_model_id.to_i > 0
+        bot = DiscourseAi::Personas::Bot.as(bot_user, persona: persona.new, model: llm_model)
 
         DiscourseAi::AiBot::Playground.new(bot).reply_to(
           post,
