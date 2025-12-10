@@ -30,8 +30,6 @@ describe "EmailOnFlag" do
     automation.reload
     expect(automation.serialized_fields["recipients"]).to be_present
     expect(automation.scriptable.not_found).to eq(false)
-
-    ActionMailer::Base.deliveries.clear
   end
 
   def run_script(post_action)
