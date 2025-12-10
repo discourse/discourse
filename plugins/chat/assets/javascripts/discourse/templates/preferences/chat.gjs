@@ -7,30 +7,28 @@ import Form from "discourse/components/form";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
+export const CHAT_QUICK_REACTIONS_CUSTOM_DEFAULT = "heart|+1|smile";
+
 export default class Chat extends Component {
   @service chatAudioManager;
 
   get formData() {
-    let emojis =
-      this.args.controller.model.user_option.chat_quick_reactions_custom ||
-      "heart|+1|smile";
-    emojis = emojis.split("|");
+    const userOption = this.args.controller.model.user_option;
+    const emojis =
+      userOption.chat_quick_reactions_custom?.split("|") ||
+      CHAT_QUICK_REACTIONS_CUSTOM_DEFAULT.split("|");
+
     return {
-      chat_enabled: this.args.controller.model.user_option.chat_enabled,
-      chat_quick_reaction_type:
-        this.args.controller.model.user_option.chat_quick_reaction_type,
+      chat_enabled: userOption.chat_enabled,
+      chat_quick_reaction_type: userOption.chat_quick_reaction_type,
       chat_quick_reactions_custom: emojis,
-      only_chat_push_notifications:
-        this.args.controller.model.user_option.only_chat_push_notifications,
-      ignore_channel_wide_mention:
-        this.args.controller.model.user_option.ignore_channel_wide_mention,
-      chat_sound: this.args.controller.model.user_option.chat_sound,
+      only_chat_push_notifications: userOption.only_chat_push_notifications,
+      ignore_channel_wide_mention: userOption.ignore_channel_wide_mention,
+      chat_sound: userOption.chat_sound,
       chat_header_indicator_preference:
-        this.args.controller.model.user_option.chat_header_indicator_preference,
-      chat_separate_sidebar_mode:
-        this.args.controller.model.user_option.chat_separate_sidebar_mode,
-      chat_send_shortcut:
-        this.args.controller.model.user_option.chat_send_shortcut,
+        userOption.chat_header_indicator_preference,
+      chat_separate_sidebar_mode: userOption.chat_separate_sidebar_mode,
+      chat_send_shortcut: userOption.chat_send_shortcut,
     };
   }
 
