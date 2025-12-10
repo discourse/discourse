@@ -121,6 +121,26 @@ export default class DNavigation extends Component {
     return canEdit;
   }
 
+  @discourseComputed(
+    "createTopicDisabled",
+    "categoryReadOnlyBanner",
+    "canCreateTopicOnTag",
+    "tag.id"
+  )
+  createTopicButtonDisabled(
+    createTopicDisabled,
+    categoryReadOnlyBanner,
+    canCreateTopicOnTag,
+    tagId
+  ) {
+    if (tagId && !canCreateTopicOnTag) {
+      return true;
+    } else if (categoryReadOnlyBanner) {
+      return false;
+    }
+    return createTopicDisabled;
+  }
+
   @discourseComputed("additionalTags", "category", "tag.id")
   showToggleInfo(additionalTags, category, tagId) {
     return !additionalTags && !category && tagId !== "none";
@@ -304,12 +324,13 @@ export default class DNavigation extends Component {
           tag=this.tag
         }}
       />
-
+      here
       <CreateTopicButton
         @canCreateTopic={{this.canCreateTopic}}
         @action={{this.clickCreateTopicButton}}
         @label={{this.createTopicLabel}}
         @showDrafts={{if (gt this.draftCount 0) true false}}
+        @disabled={{this.createTopicButtonDisabled}}
       />
 
       <PluginOutlet

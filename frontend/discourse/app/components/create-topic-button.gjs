@@ -10,6 +10,14 @@ export default class CreateTopicButton extends Component {
 
   btnId = this.args.btnId ?? "create-topic";
 
+  get visibilityClass() {
+    if (this.args.disabled) {
+      return "cannot-create-topic";
+    } else {
+      return "can-create-topic";
+    }
+  }
+
   <template>
     {{#if @canCreateTopic}}
       <DButton
@@ -17,7 +25,7 @@ export default class CreateTopicButton extends Component {
         @icon="far-pen-to-square"
         @label={{this.label}}
         id={{this.btnId}}
-        class={{concatClass @btnClass this.btnTypeClass}}
+        class={{concatClass @btnClass this.btnTypeClass this.visibilityClass}}
       />
 
       {{#if @showDrafts}}
