@@ -115,7 +115,6 @@ export default class Chat extends Component {
           @title={{i18n "chat.only_chat_push_notifications.title"}}
           @name="only_chat_push_notifications"
           @format="large"
-          @description={{i18n "chat.only_chat_push_notifications.description"}}
           as |field|
         >
           <field.Checkbox @value={{field.value}} />
