@@ -10,6 +10,7 @@ uk:
       logs:
         staff_actions:
           actions:
+            create_automation: створити автоматизацію
             update_automation: оновлення автоматизації
             delete_automation: видалити автоматизацію
     discourse_automation:

@@ -7,9 +7,11 @@
 zh_CN:
   admin_js:
     admin:
+      calendar: "日历与活动"
       site_settings:
         categories:
           discourse_post_event: "Discourse Event"
+          discourse_calendar: "日历与活动"
   js:
     notifications:
       titles:
@@ -408,6 +410,7 @@ zh_CN:
         event:
           expired: "已过期"
           closed: "已关闭"
+          full: "已满"
           status:
             standalone:
               title: "独立"
@@ -465,6 +468,9 @@ zh_CN:
         minimal:
           label: "最低限度活动"
           checkbox_label: "隐藏“参加/不参加”按钮和受邀者状态"
+        max_attendees:
+          label: "最多参与者"
+          placeholder: "无限制"
         allow_chat:
           label: "聊天集成"
           checkbox_label: "创建和管理活动特定的聊天频道"

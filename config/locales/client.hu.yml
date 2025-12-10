@@ -851,7 +851,6 @@ hu:
         claimed: "Igényelt"
         claimed_by: "%{username} által igényelve · %{relativeDate}"
         reviewed: "Felülvizsgált"
-        reviewed_by: "%{username} által felülvizsgálva · %{relativeDate}"
         view_conversation: "PÜ megtekintése"
         note_added: "Moderátori megjegyzés"
         note_added_by: "%{username} moderátor megjegyzése · %{relativeDate}"

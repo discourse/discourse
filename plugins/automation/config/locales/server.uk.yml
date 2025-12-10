@@ -8,6 +8,8 @@ uk:
   site_settings:
     discourse_automation_enabled: "Увімкнути плагін для автоматизації дискурсу"
   discourse_automation:
+    staff_action_logs:
+      empty_value: "(порожній)"
     models:
       automations:
         validations:
