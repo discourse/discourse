@@ -209,21 +209,16 @@ class Middleware::RequestTracker
 
     # Auth cookie can be used to find the ID for logged in users, but API calls must look up the
     # current user based on env variables.
-    #
-    # We only care about this for topic views, other pageviews it's enough to know if the user is
-    # logged in or not, and we have separate pageview tracking for API views.
     current_user_id =
-      if topic_id.present?
-        begin
-          (auth_cookie&.[](:user_id) || CurrentUser.lookup_from_env(env)&.id)
-        rescue Discourse::InvalidAccess => err
-          # This error is raised when the API key is invalid, no need to stop the show.
-          Discourse.warn_exception(
-            err,
-            message: "RequestTracker.get_data failed with an invalid API key error",
-          )
-          nil
-        end
+      begin
+        (auth_cookie&.[](:user_id) || CurrentUser.lookup_from_env(env)&.id)
+      rescue Discourse::InvalidAccess => err
+        # This error is raised when the API key is invalid, no need to stop the show.
+        Discourse.warn_exception(
+          err,
+          message: "RequestTracker.get_data failed with an invalid API key error",
+        )
+        nil
       end
 
     request_data = {
