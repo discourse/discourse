@@ -59,4 +59,42 @@ describe Jobs::Chat::ProcessMessage do
       expect(new_cooked).to include("Updated Title")
     end
   end
+
+  describe "skip_notifications" do
+    fab!(:user)
+    fab!(:mentioned_user, :user)
+    fab!(:chat_channel)
+    fab!(:message_with_mention) do
+      Fabricate(:chat_message, chat_channel:, user:, message: "Hey @#{mentioned_user.username}!")
+    end
+
+    before do
+      chat_channel.add(user)
+      chat_channel.add(mentioned_user)
+    end
+
+    it "sends notifications by default" do
+      expect_enqueued_with(job: Jobs::Chat::NotifyMentioned) do
+        described_class.new.execute(chat_message_id: message_with_mention.id)
+      end
+    end
+
+    it "skips notifications when skip_notifications is true" do
+      expect_not_enqueued_with(job: Jobs::Chat::NotifyMentioned) do
+        described_class.new.execute(
+          chat_message_id: message_with_mention.id,
+          skip_notifications: true,
+        )
+      end
+    end
+
+    it "skips watching notifications when skip_notifications is true" do
+      expect_not_enqueued_with(job: Jobs::Chat::NotifyWatching) do
+        described_class.new.execute(
+          chat_message_id: message_with_mention.id,
+          skip_notifications: true,
+        )
+      end
+    end
+  end
 end
