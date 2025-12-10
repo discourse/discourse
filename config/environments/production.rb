@@ -53,4 +53,7 @@ Discourse::Application.configure do
   end
 
   config.active_record.action_on_strict_loading_violation = :log
+
+  # This is a NGINX specific header
+  config.action_dispatch.x_sendfile_header = "X-Accel-Redirect"
 end
