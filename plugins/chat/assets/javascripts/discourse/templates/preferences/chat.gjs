@@ -1,12 +1,11 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import EmojiPicker from "discourse/components/emoji-picker";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
+import { isTesting } from "discourse/lib/environment";
 import { translateModKey } from "discourse/lib/utilities";
 import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
 import { eq } from "discourse/truth-helpers";
@@ -36,8 +35,6 @@ export const HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS = "only_mentions";
 
 export default class Chat extends Component {
   @service chatAudioManager;
-
-  @tracked saved = false;
 
   get chatQuickReactionTypes() {
     return [
@@ -105,11 +102,18 @@ export default class Chat extends Component {
     ];
   }
 
+  get chatSounds() {
+    return Object.keys(CHAT_SOUNDS).map((value) => {
+      return { name: i18n(`chat.sounds.${value}`), value };
+    });
+  }
+
   get formData() {
     const userOption = this.args.model.user_option;
-    const emojis =
-      userOption.chat_quick_reactions_custom?.split("|") ||
-      CHAT_QUICK_REACTIONS_CUSTOM_DEFAULT.split("|");
+    const rawValue =
+      userOption.chat_quick_reactions_custom ||
+      CHAT_QUICK_REACTIONS_CUSTOM_DEFAULT;
+    const emojis = rawValue.split("|");
 
     return {
       chat_enabled: userOption.chat_enabled,
@@ -135,7 +139,7 @@ export default class Chat extends Component {
   @action
   handleChatSoundSet(sound, { set, name }) {
     if (sound) {
-      this.chatAudioManager.play(sound);
+      this.chatAudioManager?.play(sound);
     }
     set(name, sound);
   }
@@ -154,23 +158,14 @@ export default class Chat extends Component {
     for (const [key, value] of Object.entries(userOptions)) {
       this.args.model.set(`user_option.${key}`, value);
     }
-    this.saved = false;
     return this.args.model
       .save(CHAT_ATTRS)
       .then(() => {
-        this.saved = true;
-        if (shouldReload) {
+        if (shouldReload && !isTesting()) {
           location.reload();
         }
       })
       .catch(popupAjaxError);
-  }
-
-  @discourseComputed
-  chatSounds() {
-    return Object.keys(CHAT_SOUNDS).map((value) => {
-      return { name: i18n(`chat.sounds.${value}`), value };
-    });
   }
 
   <template>
