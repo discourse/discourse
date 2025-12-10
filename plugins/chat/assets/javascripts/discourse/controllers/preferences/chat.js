@@ -3,7 +3,6 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
-import { isTesting } from "discourse/lib/environment";
 import { translateModKey } from "discourse/lib/utilities";
 import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
 import { i18n } from "discourse-i18n";
@@ -147,9 +146,6 @@ export default class PreferencesChatController extends Controller {
       .save(CHAT_ATTRS)
       .then(() => {
         this.set("saved", true);
-        if (!isTesting()) {
-          // location.reload();
-        }
       })
       .catch(popupAjaxError);
   }

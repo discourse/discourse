@@ -35,9 +35,9 @@ export default class Chat extends Component {
   }
 
   @action
-  handleEmojiSet(index, field, value) {
+  handleEmojiSet(index, field, selectedEmoji) {
     let newValue = [...field.value];
-    newValue[index] = value;
+    newValue[index] = selectedEmoji;
     field.set(newValue);
   }
 
