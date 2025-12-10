@@ -142,6 +142,7 @@ en:
       separate_sidebar_mode:
         title: "Show separate sidebar modes for forum and chat"
       send_shortcut:
+        title: "Send shortcut"
         enter:
           label: "Send by Enter"
           description: "New line by Shift + Enter"
