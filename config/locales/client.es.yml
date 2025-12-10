@@ -844,7 +844,6 @@ es:
         claimed: "Reclamado"
         claimed_by: "Reclamado por %{username} · %{relativeDate}"
         reviewed: "Revisado"
-        reviewed_by: "Revisado por %{username} · %{relativeDate}"
         view_conversation: "ver PM"
         note_added: "Nota del moderador"
         note_added_by: "Nota del moderador creada por %{username} · %{relativeDate}"

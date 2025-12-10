@@ -1908,6 +1908,7 @@ zh_CN:
     video_conversion_enabled: "为上传的视频文件启用视频转换。这可以将视频转换为与网页兼容的格式。"
     video_conversion_service: "用于处理所上传视频的视频转换服务。"
     mediaconvert_role_arn: "用于 MediaConvert 服务的 AWS IAM 角色 ARN。使用 AWS MediaConvert 进行视频转换时需要此角色。"
+    mediaconvert_output_subdirectory: "S3 存储桶中的子目录。MediaConvert 会将转码后的视频临时写入此目录，之后再移动到最终的上传位置。"
     min_ratio_to_crop: "用于裁剪高图片的比率。输入宽度/高度的结果。"
     simultaneous_uploads: "可以在编辑器中拖放的最大文件数"
     default_invitee_trust_level: "受邀用户的默认信任级别 (0-4)。"
@@ -2048,6 +2049,7 @@ zh_CN:
     allow_all_users_to_flag_illegal_content: "匿名用户将看到需要通过电子邮件向管理员举报非法内容的信息。此设置优先于“允许举报帖子的群组”。"
     email_address_to_report_illegal_content: "如果留空，将使用默认的网站管理员电子邮件地址。"
     cooldown_hours_until_reflag: "用户需要等待多长时间才能重新举报帖子"
+    slow_mode_prevents_editing: "在 \"编辑宽限期 \"之后，\"慢速模式 \"是否会阻止编辑？"
     reply_by_email_enabled: "激活允许用户直接通过电子邮件回复话题的功能，无需他们登录网站。有关详情，请参阅 <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>Meta 上的指南</a> 。"
     reply_by_email_address: "通过传入电子邮件地址回复的模板。示例：%%{reply_key}@reply.example.com 或 replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "通过传入电子邮件地址回复的备用模板列表。示例：%%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -2150,6 +2152,7 @@ zh_CN:
     enable_category_group_moderation: "允许群组审核特定类别的内容"
     group_in_subject: "在电子邮件主题中将 %%{optional_pm} 设置为私信中第一个群组的名称，请参阅：<a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>自定义标准电子邮件的主题格式</a>"
     allow_anonymous_mode: "启用可供用户切换到匿名发帖模式的选项。激活后，用户在网站上创建帖子或话题时可以选择隐藏身份。另请参阅 `allow anonymous likes`。"
+    allow_likes_in_anonymous_mode: "启用此设置，允许匿名浏览网站的用户点赞帖子。 激活后，用户在为帖子或话题点赞时，可以选择隐藏其身份。 此设置需要先启用 `允许匿名模式`。"
     anonymous_account_duration_minutes: "为了保护匿名性，每 N 分钟为每个用户创建一个新的匿名帐户。示例：如果设置为 600，则在距离上次发帖 600 分钟且用户切换到匿名时，将创建一个新的匿名帐户。"
     hide_user_profiles_from_public: "禁用匿名用户的用户卡片、用户个人资料和用户目录。"
     hide_new_user_profiles: "向公众隐藏信任级别 1 或更低的用户个人资料，并隐藏信任级别 1 的用户，直到他们首次发帖。此功能在 must_approve_users 和 invite_only 网站上无条件禁用。"
@@ -2564,6 +2567,8 @@ zh_CN:
       order_views_asc: "按浏览量排序（数量最少的优先）"
       order_read: "按最后阅读时间排序（时间最近的优先）"
       order_read_asc: "按最后阅读时间排序（时间最早的优先）"
+      order_hot: "按热门程度排序（最高优先）"
+      order_hot_asc: "按热门程度排序（最低优先）"
       exclude_users: "排除特定用户的话题"
       locale: "按原始语言过滤话题"
       locale_any: "显示以任何指定语言撰写的原始话题（以逗号分隔）"
@@ -4922,6 +4927,8 @@ zh_CN:
       review_by: "审查者"
       pr_summary: "%{commits} 提交了更改的 %{changed_files} 文件，其中包含 %{additions} 项增加和 %{deletions} 项删除"
       no_description: "通过在 GitHub 上创建帐户来为 %{repo} 开发做出贡献。"
+      pr_title:
+        changes_requested: "请求更改"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} 在“%{topic}”中提及了您 - %{site_title}'
@@ -4961,9 +4968,14 @@ zh_CN:
     auto_deleted_hidden_posts: "自动删除隐藏的帖子"
     seed_data_topic_updated: "种子数据话题已更新"
     seed_data_topic_deleted: "种子数据话题已删除"
+    upcoming_changes:
+      log_promoted: >
+        这项即将进行的更改达到了 '%{change_status}' 状态，因此它已在您的网站上自动启用。有关更多详细信息，请参阅 <a href="%{base_path}/admin/config/upcoming-changes">即将进行的更改页面</a> 。
   reviewables:
     already_handled: "谢谢，但我们已经审核该帖子并确定不需要再次举报它。"
     already_handled_and_user_not_exist: "谢谢，但有人已经审核过了，该用户已不存在。"
+    post_deleted_by_author: "帖子被作者删除"
+    post_restored_by_author: "帖子被作者恢复。"
     priorities:
       low: "低"
       medium: "中"
@@ -5156,6 +5168,7 @@ zh_CN:
         title: "无行动"
       silence_user:
         title: "禁言用户"
+        description: "禁止该用户发帖"
       suspend_user:
         title: "封禁用户"
       delete_user:

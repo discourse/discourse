@@ -76,6 +76,7 @@ et:
         summary: "Kokkuvõte"
         username: "Kasutajanimi"
         total_requests: "Kokku päringuid"
+        total: "Kokku"
       ai_persona:
         back: "Tagasi"
         name: "Nimi"

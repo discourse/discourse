@@ -87,6 +87,7 @@ hr:
         summary: "Sažetak"
         username: "Korisničko ime"
         total_requests: "Ukupno zahtjeva"
+        total: "Ukupno"
         periods:
           last_day: "Posljednja 24 sata"
           custom: "Prilagođeno..."

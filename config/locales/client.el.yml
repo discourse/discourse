@@ -860,7 +860,6 @@ el:
         claimed: "Διεκδικήθηκε"
         claimed_by: "Διεκδικήθηκε από %{username} · %{relativeDate}"
         reviewed: "Αναθεωρήθηκε"
-        reviewed_by: "Αναθεωρήθηκε από %{username} · %{relativeDate}"
         view_conversation: "προβολή ΠΜ"
         note_added: "Σημείωση συντονιστή"
         note_added_by: "Σημείωση συντονιστή από %{username} · %{relativeDate}"

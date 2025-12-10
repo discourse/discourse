@@ -11,6 +11,7 @@ uk:
         draft: "Чернетка"
         open: "Відкрити"
         approved: "Схвалено"
+        merged: "Об'єднано"
         closed: "Закриті"
   admin_js:
     admin:

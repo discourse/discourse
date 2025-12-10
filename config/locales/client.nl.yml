@@ -844,7 +844,6 @@ nl:
         claimed: "Geclaimd"
         claimed_by: "Geclaimd door %{username} · %{relativeDate}"
         reviewed: "Beoordeeld"
-        reviewed_by: "Beoordeeld door %{username} · %{relativeDate}"
         view_conversation: "PB weergeven"
         note_added: "Moderatoropmerking"
         note_added_by: "Moderatoropmerking door %{username} · %{relativeDate}"

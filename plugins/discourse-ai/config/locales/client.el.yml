@@ -128,6 +128,7 @@ el:
         model: "Μοντέλο"
         username: "Όνομα Χρήστη"
         total_requests: "Σύνολο αιτήσεων"
+        total: "Σύνολο"
         periods:
           last_day: "Τελευταίες 24 ώρες"
           custom: "Προσαρμοσμένο..."

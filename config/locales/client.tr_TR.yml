@@ -844,7 +844,6 @@ tr_TR:
         claimed: "Alındı"
         claimed_by: "%{username} tarafından alındı · %{relativeDate}"
         reviewed: "İncelendi"
-        reviewed_by: "%{username} tarafından incelendi · %{relativeDate}"
         view_conversation: "kişisel mesajı görüntüle"
         note_added: "Moderatör notu"
         note_added_by: "%{username} tarafından moderatör notu · %{relativeDate}"

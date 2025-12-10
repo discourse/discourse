@@ -77,6 +77,7 @@ bs_BA:
       usage:
         summary: "Sažetak"
         username: "Nadimak"
+        total: "Suma"
       ai_persona:
         back: "Prethodno"
         name: "Ime"

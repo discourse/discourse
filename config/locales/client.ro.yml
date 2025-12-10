@@ -840,7 +840,6 @@ ro:
         claimed: "Revendicat"
         claimed_by: "Revendicat de %{username} · %{relativeDate}"
         reviewed: "Revizuit"
-        reviewed_by: "Revizuit de %{username} · %{relativeDate}"
         view_conversation: "vezi MP"
         note_added: "Notă moderator"
         note_added_by: "Notă moderator de la %{username} · %{relativeDate}"

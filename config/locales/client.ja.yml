@@ -780,7 +780,6 @@ ja:
         claimed: "引き受け"
         claimed_by: "%{username} が引き受け · %{relativeDate}"
         reviewed: "レビュー"
-        reviewed_by: "%{username} がレビュー · %{relativeDate}"
         view_conversation: "PM を見る"
         note_added: "モデレーターのメモ"
         note_added_by: "%{username} のモデレーターメモ · %{relativeDate}"

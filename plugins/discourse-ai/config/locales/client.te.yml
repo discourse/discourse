@@ -76,6 +76,7 @@ te:
         summary: "సారాంశం"
         username: "సభ్యనామం"
         total_requests: "మొత్తం అభ్యర్థనలు"
+        total: "మొత్తం"
       ai_persona:
         back: "వెనుకకు"
         name: "పేరు"

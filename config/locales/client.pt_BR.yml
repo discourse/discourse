@@ -844,7 +844,6 @@ pt_BR:
         claimed: "Reivindicado(a)"
         claimed_by: "Reivindicado(a) por %{username} - %{relativeDate}"
         reviewed: "Revisado(a)"
-        reviewed_by: "Avaliado(a) por %{username} - %{relativeDate}"
         view_conversation: "visualizar MP"
         note_added: "Observação da moderação"
         note_added_by: "Observação da moderação por %{username} - %{relativeDate}"

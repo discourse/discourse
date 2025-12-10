@@ -10,16 +10,85 @@ uk:
       reports:
         reading_time:
           title: Час читання
+        ai_usage:
+          favorite_models: Найбільш використовувані моделі штучного інтелекту
+          wake_up: "Прокинься, %{username}..."
+          system_title: "ВИЯВЛЕНО ВИКОРИСТАННЯ ШІ"
+          section_features: "ГОЛОВНІ ОСОБЛИВОСТІ"
+          section_models: "ТОП-МОДЕЛІ"
+        assignments:
+          title: Призначення
+          total_assigned: Призначено мені
+          completed: Призначення виконані
+          pending: Завдання очікують на розгляд
+          assigned_by_user: Вручено призначень
+          completion_rate: Показник завершених
         chat_usage:
+          title: Активність в чаті
+          total_messages: Всього повідомлень
+          dm_messages: Особисті повідомлення
+          unique_dm_channels: Розмови в особистих повідомленнях
+          reactions_received: Отримані реакції
+          avg_message_length: Середня довжина повідомлення
+          favorite_channels: Улюблені канали
           messages: повідомлення
+          bot_name: XxRewindBotxX
           you: Ви
+          channel_title: "#chat-activity"
           status_online: "● онлайн"
+          message_1: "Ви надіслали <strong>%{count}</strong> повідомлень цього року!"
+          reply_1: "лол, круто B-)"
+          message_2: "Ви мали <strong>%{dm_count}</strong> DM розмови з <strong>%{channel_count}</strong> різними людьми або групами"
+          reply_2: "круто :D"
+          message_3: "Людям сподобалися ваші повідомлення! Ви отримали <strong>%{count}</strong> реакцій ❤️"
+          reply_3: "r0fl rAwr 8-)"
+          message_4: "Середня довжина вашого повідомлення становила <strong>%{length}</strong> символів"
+          message_5: "Ваші улюблені канали:"
+          dancing_baby_alt: "Танцююча дитина"
+        favorite_gifs:
+          title:
+            one: Ваш улюблений GIF
+            few: Ваші %{count} улюблені GIF
+            many: Ваші %{count} улюблені GIF
+            other: Ваші %{count} улюблені GIF
+          total_usage:
+            one: Використано %{count} раз
+            few: Використано %{count} разів
+            many: Використано %{count} разів
+            other: Використано %{count} разів
         invites:
           title: Запрошення
+          total_invites: Всього надіслано запрошень
+          redeemed: Прийняті запрошення
+          redemption_rate: Коефіцієнт прийняття
+          avg_trust_level: Середній рівень довіри
+          invitee_impact: Вплив ваших запрошених
           invitee_posts: Дописів створено
+          invitee_topics: Розпочаті теми
           invitee_likes: Вподобані
+          most_active_invitee: Найактивніші запрошення
+          guest_book_title: Гостьова книга
+          guest_book_subtitle: Ваші запрошення до спільноти
           label_invitations_sent: "Запрошення надіслані:"
+          label_guests_joined: "Запрошення прийнято:"
+          label_acceptance_rate: "Коефіцієнт прийняття:"
+          section_contributions: Внески запрошених
+          label_posts_written: "Написані дописи:"
+          label_topics_started: "Розпочаті теми:"
+          label_likes_given: "Вподобайки:"
+          section_most_active: Найактивніший гість
         new_user_interactions:
+          title: Наставництво для нових користувачів
+          subtitle:
+            one: Ви допомогли %{count} новому користувачеві цього року
+            few: Ви допомогли %{count} новим користувачам цього року
+            many: Ви допомогли %{count} новим користувачам цього року
+            other: Ви допомогли %{count} новим користувачам цього року
+          new_member:
+            one: "%{count} новий учасник"
+            few: "%{count} нові учасники"
+            many: "%{count} нові учасники"
+            other: "%{count} нові учасники"
           likes_given: Вподобані
           mentions: Згадки
         writing_analysis:

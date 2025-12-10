@@ -250,6 +250,7 @@ lt:
         model: "Modelis"
         username: "Naudotojo vardas"
         total_requests: "Visos užklausos"
+        total: "Viso"
         periods:
           last_day: "Paskutinės 24 valandos"
           custom: "Pasirinktinis..."

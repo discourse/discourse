@@ -862,7 +862,6 @@ de:
         claimed: "Übernommen"
         claimed_by: "Übernommen von %{username} · %{relativeDate}"
         reviewed: "Überprüft"
-        reviewed_by: "Überprüft von %{username} · %{relativeDate}"
         view_conversation: "PM anzeigen"
         note_added: "Moderator-Notiz"
         note_added_by: "Moderator-Notiz von %{username} · %{relativeDate}"

@@ -844,7 +844,6 @@ it:
         claimed: "Rivendicato"
         claimed_by: "Rivendicato da %{username} · %{relativeDate}"
         reviewed: "Rivisto"
-        reviewed_by: "Rivisto da %{username} · %{relativeDate}"
         view_conversation: "visualizza PM"
         note_added: "Note del moderatore"
         note_added_by: "Note del moderatore di %{username} · %{relativeDate}"

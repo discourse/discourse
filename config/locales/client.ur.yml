@@ -864,7 +864,6 @@ ur:
         claimed: "دعویٰ کیا"
         claimed_by: "%{username} نے %{relativeDate}پر دعویٰ کیا"
         reviewed: "جائزہ لیا گیا"
-        reviewed_by: "%{username} نے%{relativeDate}پر جائزہ لیا"
         view_conversation: "ذاتی پیغام دیکھیں"
         note_added: "نگران کا نوٹ"
         note_added_by: "نگران کا نوٹ بذریعہ %{username} · %{relativeDate}"

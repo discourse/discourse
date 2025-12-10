@@ -17,6 +17,7 @@ pl_PL:
       loading: "Łączenie siatki..."
       preferences:
         disable_rewind: "Wyłącz funkcję Discourse Rewind. Spowoduje to ukrycie podsumowania aktywności na koniec roku w Twoim profilu i awatarze."
+      profile_link: "Zobacz swój %{rewindYear} Discourse Rewind"
       reports:
         activity_calendar:
           title: Kalendarz aktywności
@@ -99,7 +100,7 @@ pl_PL:
           status_online: "● dostępny"
           message_1: "W tym roku wysłałeś <strong>%{count}</strong> wiadomości!"
           reply_1: "lol super B-)"
-          message_2: "Prowadziłeś <strong>%{dm_count}</strong> rozmowy PW z <strong>%{channel_count}</strong> różnymi osobami"
+          message_2: "Prowadziłeś <strong>%{dm_count}</strong> rozmowy na PW z <strong>%{channel_count}</strong> różnymi osobami lub grupami"
           reply_2: "super :D"
           message_3: "Ludzie uwielbiali Twoje wiadomości! Otrzymałeś <strong>%{count}</strong> reakcji ❤️"
           reply_3: "r0fl rAwr 8-)"

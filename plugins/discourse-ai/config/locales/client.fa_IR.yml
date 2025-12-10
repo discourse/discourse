@@ -116,6 +116,7 @@ fa_IR:
         model: "مدل"
         username: "نام‌کاربری"
         total_requests: "مجموع درخواست‌ها"
+        total: "مجموع"
         periods:
           last_day: "۲۴ ساعت گذشته"
           custom: "سفارشی..."

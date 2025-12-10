@@ -87,6 +87,7 @@ zh_CN:
           raw_invitees:
             only_group: "活动只接受群组名称。"
           ends_at_before_starts_at: "活动的结束日期不能早于开始日期。"
+          max_attendees_reached: "本次活动已满。"
           start_must_be_present_and_a_valid_date: "活动需要有效的开始日期。"
           end_must_be_a_valid_date: "结束日期必须是有效日期。"
           invalid_recurrence: "重复必须是以下值之一：every_month、every_week、every_two_weeks、every_four_weeks、every_day、every_weekday。"

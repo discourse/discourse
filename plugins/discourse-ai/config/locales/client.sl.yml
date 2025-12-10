@@ -90,6 +90,7 @@ sl:
       usage:
         summary: "Povzetek"
         username: "Uporabniško ime"
+        total: "Skupaj"
         periods:
           last_day: "Zadnjih 24 ur"
           custom: "Po meri..."

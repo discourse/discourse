@@ -78,6 +78,7 @@ ca:
         summary: "Resum"
         username: "Nom d'usuari "
         total_requests: "Total de peticions"
+        total: "Total"
         periods:
           last_day: "Últimes 24 hores"
       ai_persona:

@@ -422,6 +422,7 @@ he:
         no_users: "לא נמצאו נתוני שימוש של משתמשים"
         no_models: "לא נמצאו נתוני שימוש במודל"
         no_features: "לא נמצאו נתוני שימוש ביכולת"
+        total: "סך הכל"
         subheader_description: "אסימונים הם היחידות הבסיסיות שבהם משתמשים LLMים כדי להבין וליצור טקסט, נתוני שימוש עשויים להשפיע על העלויות"
         stat_tooltips:
           total_requests: "כל הבקשות שהוגשו ל־LLMים דרך Discourse"
@@ -736,7 +737,6 @@ he:
           thinking_tokens: "כמות אסימונים המשמשים לחשיבה"
           reasoning_tokens: "כמות אסימונים המשמשים לנימוק"
           disable_temperature: "השבתת טמפרטורה (חלק ממודלי החשיבה אינם תומכים בטמפרטורה)"
-          enable_responses_api: "הפעלת API לתגובות (נחוץ במודלים מסוימים של OpenAI)"
           effort: "רמת מאמץ (Claude Opus 4.5 בלבד)"
       related_topics:
         title: "נושאים קשורים"

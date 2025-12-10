@@ -5344,6 +5344,7 @@ pl_PL:
         draft: "Projekt pull request"
         open: "Otwórz pull request"
         approved: "Zatwierdzony pull request"
+        changes_requested: "Żądane zmiany"
         merged: "Scalony pull request"
         closed: "Zamknięty pull request"
   discourse_push_notifications:
@@ -5398,6 +5399,8 @@ pl_PL:
   reviewables:
     already_handled: "Dziękujemy, ale już przejrzeliśmy ten post i ustaliliśmy, że nie trzeba go ponownie oznaczać."
     already_handled_and_user_not_exist: "Dzięki, ale ktoś już to przejrzał i ten użytkownik już nie istnieje."
+    post_deleted_by_author: "Wpis został usunięty przez autora"
+    post_restored_by_author: "Wpis został przywrócony przez autora"
     priorities:
       low: "Niski"
       medium: "Średni"

@@ -873,7 +873,6 @@ ug:
         claimed: "تەلەپ قىلىندى"
         claimed_by: "%{username} · %{relativeDate} تەلەپ قىلدى"
         reviewed: "تەكشۈردى"
-        reviewed_by: "%{username} · %{relativeDate} تەكشۈردى"
         view_conversation: "شەخسىي ئۇچۇرنى كۆرسىتىدۇ"
         note_added: "رىياسەتچى ئىزاھاتى"
         note_added_by: "%{username} · %{relativeDate} رىياسەتچى ئىزاھاتى"
@@ -912,10 +911,15 @@ ug:
           posts:
             one: "%{count} يازما"
             other: "%{count} يازما"
+        moderation_history:
+          suspended: "توختىتىلغان: %{count}"
+          rejected_posts: "رەت قىلىنغان يازما: %{count}"
         solution_marked: "ھەل قىلىش چارىسى دەپ بەلگە سېلىندى"
         topic_has_solution: "بۇ تېمىنىڭ ھەل قىلىش چارىسى بار"
         visibility: "كۆرۈنۈشچانلىقى"
+        topic_unlisted: "بۇ تېما تىزىمدىن قالدۇرۇلدى. پەقەت بىۋاسىتە ئۇلانما ئارقىلىقلا زىيارەت قىلغىلى بولىدۇ."
       help:
+        community_moderation_guide: "بۇ جامائەتنىڭ رىياسەتچىلىك يېتەكچىسى"
         moderation_guide: "Discourse رىياسەتچىلىك يېتەكچىسى"
         flag_priorities: "ئىشلەتكۈچىنىڭ ئىناۋىتى ۋە پاش قىلىش ئالدىنلىقىنى باشقۇرىدۇ"
         spam_detection: "ئەخلەت ئۇچۇر بايقاش"
@@ -1337,6 +1341,7 @@ ug:
         one: "سەھىپە (يەنە %{count})…"
         other: "سەھىپە (يەنە %{count})…"
     ip_lookup:
+      title: IP ئادرېس
       hostname: مۇلازىمېتىر ئىسمى
       location: ئورنى
       location_not_found: (يوچۇن)
@@ -5541,8 +5546,11 @@ ug:
             text_color:
               label: "تېكىست رەڭگى"
             page_visibility:
+              label: "بەت كۆرۈنۈشچانلىقى"
               options:
                 top_menu_pages: "چوققا تىزىملىك بېتى"
+                homepage: "باش بەتلا"
+                discovery: "بايقاش بېتى"
                 all_pages: "ھەممە بەت"
             location:
               label: "ئورنى"

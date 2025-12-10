@@ -872,7 +872,6 @@ sk:
         claimed: "Nárokované"
         claimed_by: "Nárokované používateľom %{username} · %{relativeDate}"
         reviewed: "Preskúmal"
-        reviewed_by: "Preskúmal %{username} - %{relativeDate}"
         view_conversation: "zobrazenie PM"
         note_added: "Poznámka moderátora"
         note_added_by: "Moderátorská poznámka od %{username} - %{relativeDate}"
