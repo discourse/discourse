@@ -83,11 +83,16 @@ class Middleware::RequestTracker
   end
 
   def self.log_request(data)
+    did_track = false
+
     if data[:is_api]
       ApplicationRequest.increment!(:api)
+      did_track = true
     elsif data[:is_user_api]
       ApplicationRequest.increment!(:user_api)
+      did_track = true
     elsif data[:track_view]
+      did_track = true
       if data[:is_crawler]
         ApplicationRequest.increment!(:page_view_crawler)
         WebCrawlerRequest.increment!(data[:user_agent])
@@ -127,6 +132,7 @@ class Middleware::RequestTracker
     # Message-bus requests may include this 'deferred track' header which we use to detect
     # 'real browser' views.
     if data[:deferred_track_view] && !data[:is_crawler]
+      did_track = true
       if data[:has_auth_cookie]
         ApplicationRequest.increment!(:page_view_logged_in_browser)
         ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
@@ -162,6 +168,8 @@ class Middleware::RequestTracker
     elsif status >= 200
       ApplicationRequest.increment!(:http_2xx)
     end
+
+    BrowserPageView.log!(data) if did_track && SiteSetting.enable_browser_page_view_logging
   end
 
   def self.get_data(env, result, timing, request = nil)
@@ -209,21 +217,25 @@ class Middleware::RequestTracker
 
     # Auth cookie can be used to find the ID for logged in users, but API calls must look up the
     # current user based on env variables.
-    #
-    # We only care about this for topic views, other pageviews it's enough to know if the user is
-    # logged in or not, and we have separate pageview tracking for API views.
     current_user_id =
-      if topic_id.present?
-        begin
-          (auth_cookie&.[](:user_id) || CurrentUser.lookup_from_env(env)&.id)
-        rescue Discourse::InvalidAccess => err
-          # This error is raised when the API key is invalid, no need to stop the show.
-          Discourse.warn_exception(
-            err,
-            message: "RequestTracker.get_data failed with an invalid API key error",
-          )
-          nil
-        end
+      begin
+        (auth_cookie&.[](:user_id) || CurrentUser.lookup_from_env(env)&.id)
+      rescue Discourse::InvalidAccess => err
+        # This error is raised when the API key is invalid, no need to stop the show.
+        Discourse.warn_exception(
+          err,
+          message: "RequestTracker.get_data failed with an invalid API key error",
+        )
+        nil
+      end
+
+    user_agent = env["HTTP_USER_AGENT"]
+    user_agent = HttpUserAgentEncoder.ensure_utf8(user_agent) if user_agent
+
+    path_params = env[ActionDispatch::Http::Parameters::PARAMETERS_KEY] || {}
+    route =
+      if path_params[:controller].present? && path_params[:action].present?
+        "#{path_params[:controller]}##{path_params[:action]}"
       end
 
     request_data = {
@@ -239,6 +251,10 @@ class Middleware::RequestTracker
       timing: timing,
       queue_seconds: env["REQUEST_QUEUE_SECONDS"],
       request_remote_ip: request_remote_ip,
+      url: request.fullpath,
+      referrer: env["HTTP_REFERER"],
+      user_agent: user_agent,
+      route: route,
     }.merge(view_tracking_data)
 
     if request_data[:is_background]
@@ -253,12 +269,6 @@ class Middleware::RequestTracker
       else
         "topic-timings"
       end
-    end
-
-    if request_data[:is_crawler]
-      user_agent = env["HTTP_USER_AGENT"]
-      user_agent = HttpUserAgentEncoder.ensure_utf8(user_agent) if user_agent
-      request_data[:user_agent] = user_agent
     end
 
     if cache = headers["X-Discourse-Cached"]
