@@ -431,8 +431,8 @@ module DiscourseAutomation
         end
     end
 
-    def self.handle_flag_on_post_created(post_action)
-      name = DiscourseAutomation::Triggers::FLAG_ON_POST_CREATED
+    def self.handle_post_flag_created(post_action)
+      name = DiscourseAutomation::Triggers::POST_FLAG_CREATED
 
       post = post_action.post
       topic = post.topic

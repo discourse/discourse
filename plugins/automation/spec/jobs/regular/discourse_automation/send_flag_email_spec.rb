@@ -10,7 +10,7 @@ describe Jobs::DiscourseAutomation::SendFlagEmail do
     Fabricate(
       :automation,
       script: DiscourseAutomation::Scripts::EMAIL_ON_FLAGGED_POST,
-      trigger: DiscourseAutomation::Triggers::FLAG_ON_POST_CREATED,
+      trigger: DiscourseAutomation::Triggers::POST_FLAG_CREATED,
     ).tap do |automation|
       field =
         automation.upsert_field!(

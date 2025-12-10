@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAutomation::Triggers::FLAG_ON_POST_CREATED do
+describe DiscourseAutomation::Triggers::POST_FLAG_CREATED do
   fab!(:flagger) { Fabricate(:user, trust_level: TrustLevel[2]) }
   fab!(:second_flagger) { Fabricate(:user, trust_level: TrustLevel[2]) }
   fab!(:category)
@@ -9,7 +9,7 @@ describe DiscourseAutomation::Triggers::FLAG_ON_POST_CREATED do
   fab!(:post) { Fabricate(:post, topic: topic) }
 
   fab!(:automation) do
-    Fabricate(:automation, trigger: DiscourseAutomation::Triggers::FLAG_ON_POST_CREATED)
+    Fabricate(:automation, trigger: DiscourseAutomation::Triggers::POST_FLAG_CREATED)
   end
 
   before { SiteSetting.discourse_automation_enabled = true }
@@ -46,7 +46,7 @@ describe DiscourseAutomation::Triggers::FLAG_ON_POST_CREATED do
 
     triggered_automation = triggered_automations.first
 
-    expect(triggered_automation["kind"]).to eq(DiscourseAutomation::Triggers::FLAG_ON_POST_CREATED)
+    expect(triggered_automation["kind"]).to eq(DiscourseAutomation::Triggers::POST_FLAG_CREATED)
     expect(triggered_automation["post_action_id"]).to eq(post_action_id)
   end
 
@@ -76,7 +76,7 @@ describe DiscourseAutomation::Triggers::FLAG_ON_POST_CREATED do
 
     triggered_automation = triggered_automations.first
 
-    expect(triggered_automation["kind"]).to eq(DiscourseAutomation::Triggers::FLAG_ON_POST_CREATED)
+    expect(triggered_automation["kind"]).to eq(DiscourseAutomation::Triggers::POST_FLAG_CREATED)
     expect(triggered_automation["post_action_id"]).to eq(post_action_id)
   end
 
@@ -107,6 +107,6 @@ describe DiscourseAutomation::Triggers::FLAG_ON_POST_CREATED do
     triggered_automation = triggered_automations.first
 
     expect(triggered_automation["post_action_id"]).to eq(post_action_id)
-    expect(triggered_automation["kind"]).to eq(DiscourseAutomation::Triggers::FLAG_ON_POST_CREATED)
+    expect(triggered_automation["kind"]).to eq(DiscourseAutomation::Triggers::POST_FLAG_CREATED)
   end
 end

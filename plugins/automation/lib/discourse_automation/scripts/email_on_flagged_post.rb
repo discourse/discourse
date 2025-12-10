@@ -4,7 +4,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::EMAIL_ON_FLAGG
   version 1
   run_in_background if !Rails.env.test?
 
-  triggerables [DiscourseAutomation::Triggers::FLAG_ON_POST_CREATED]
+  triggerables [DiscourseAutomation::Triggers::POST_FLAG_CREATED]
 
   field :email_template,
         component: :message,

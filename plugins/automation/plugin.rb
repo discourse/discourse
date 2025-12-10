@@ -72,11 +72,11 @@ after_initialize do
     lib/discourse_automation/triggers/pm_created
     lib/discourse_automation/triggers/point_in_time
     lib/discourse_automation/triggers/post_created_edited
+    lib/discourse_automation/triggers/post_flag_created
     lib/discourse_automation/triggers/recurring
     lib/discourse_automation/triggers/stalled_topic
     lib/discourse_automation/triggers/stalled_wiki
     lib/discourse_automation/triggers/topic_tags_changed
-    lib/discourse_automation/triggers/flag_on_post_created
     lib/discourse_automation/triggers/topic
     lib/discourse_automation/triggers/topic_closed
     lib/discourse_automation/triggers/user_added_to_group
@@ -209,7 +209,7 @@ after_initialize do
   end
 
   on(:flag_created) do |post_action|
-    DiscourseAutomation::EventHandlers.handle_flag_on_post_created(post_action) if post_action.post
+    DiscourseAutomation::EventHandlers.handle_post_flag_created(post_action) if post_action.post
   end
 
   on(:category_created) do |category|
