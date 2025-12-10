@@ -1,0 +1,108 @@
+# frozen_string_literal: true
+
+describe DiscourseAutomation::Triggers::FLAG_ON_POST_CREATED do
+  fab!(:flagger) { Fabricate(:user, trust_level: TrustLevel[2]) }
+  fab!(:second_flagger) { Fabricate(:user, trust_level: TrustLevel[2]) }
+  fab!(:category)
+  fab!(:tag)
+  fab!(:topic) { Fabricate(:topic, category: category, tags: [tag]) }
+  fab!(:post) { Fabricate(:post, topic: topic) }
+
+  fab!(:automation) do
+    Fabricate(:automation, trigger: DiscourseAutomation::Triggers::FLAG_ON_POST_CREATED)
+  end
+
+  before { SiteSetting.discourse_automation_enabled = true }
+
+  it "ignores the tags field if tagging is disabled" do
+    SiteSetting.tagging_enabled = false
+
+    automation.upsert_field!("tags", "tags", { value: [tag.name] }, target: "trigger")
+
+    expect do
+      result = PostActionCreator.spam(flagger, Fabricate(:post, topic: Fabricate(:topic)))
+      expect(result.success).to eq(true)
+    end.to change { automation.reload.stats.count }.by(1)
+  end
+
+  it "does not trigger the automation if flagged post is not in a topic with the specified tag" do
+    automation.upsert_field!("tags", "tags", { value: [tag.name] }, target: "trigger")
+
+    triggered_automations =
+      capture_contexts do
+        expect do
+          result = PostActionCreator.spam(flagger, post)
+          expect(result.success).to eq(true)
+
+          result = PostActionCreator.spam(flagger, Fabricate(:post, topic: Fabricate(:topic)))
+          expect(result.success).to eq(true)
+        end.to change { automation.reload.stats.count }.by(1)
+      end
+
+    expect(triggered_automations.length).to eq(1)
+
+    triggered_automation = triggered_automations.first
+
+    expect(triggered_automation["post"]).to eq(post)
+  end
+
+  it "does not trigger the automation if flagged post is not in a topic with the specified category" do
+    automation.upsert_field!(
+      "categories",
+      "categories",
+      { value: [category.id] },
+      target: "trigger",
+    )
+
+    triggered_automations =
+      capture_contexts do
+        expect do
+          result = PostActionCreator.spam(flagger, post)
+          expect(result.success).to eq(true)
+
+          result = PostActionCreator.spam(flagger, Fabricate(:post, topic: Fabricate(:topic)))
+          expect(result.success).to eq(true)
+        end.to change { automation.reload.stats.count }.by(1)
+      end
+
+    expect(triggered_automations.length).to eq(1)
+
+    triggered_automation = triggered_automations.first
+
+    expect(triggered_automation["post"]).to eq(post)
+  end
+
+  it "does not trigger the automation if flag is not of the specified flag type" do
+    automation.upsert_field!(
+      "flag_type",
+      "choices",
+      { value: PostActionType.types[:off_topic] },
+      target: "trigger",
+    )
+
+    triggered_automations =
+      capture_contexts do
+        expect do
+          result = PostActionCreator.spam(flagger, post)
+          expect(result.success).to eq(true)
+
+          result = PostActionCreator.off_topic(second_flagger, post)
+          expect(result.success).to eq(true)
+        end.to change { automation.reload.stats.count }.by(1)
+      end
+
+    expect(triggered_automations.length).to eq(1)
+
+    triggered_automation = triggered_automations.first
+
+    expect(triggered_automation["post_action"]).to eq(
+      PostAction.where(
+        post_id: post.id,
+        post_action_type_id: PostActionType.types[:off_topic],
+      ).last,
+    )
+
+    expect(triggered_automation["kind"]).to eq(DiscourseAutomation::Triggers::FLAG_ON_POST_CREATED)
+    expect(triggered_automation["post"]).to eq(post)
+  end
+end

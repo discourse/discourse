@@ -5,7 +5,7 @@ module DiscourseAutomation
     AFTER_POST_COOK = "after_post_cook"
     API_CALL = "api_call"
     CATEGORY_CREATED_EDITED = "category_created_edited"
-    FLAG_CREATED = "flag_created"
+    FLAG_ON_POST_CREATED = "flag_on_post_created"
     PM_CREATED = "pm_created"
     TOPIC_TAGS_CHANGED = "topic_tags_changed"
     POINT_IN_TIME = "point_in_time"

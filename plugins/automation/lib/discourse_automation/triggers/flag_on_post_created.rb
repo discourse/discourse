@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggers::FLAG_CREATED) do
+DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggers::FLAG_ON_POST_CREATED) do
   flag_types =
     PostActionTypeView.new.notify_flag_types.map do |sym, id|
       { id: id, name: "discourse_automation.triggerables.flag_created.flag_types.#{sym}" }

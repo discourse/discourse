@@ -431,11 +431,11 @@ module DiscourseAutomation
         end
     end
 
-    def self.handle_flag_created(post_action, creator)
-      name = DiscourseAutomation::Triggers::FLAG_CREATED
+    def self.handle_flag_on_post_created(post_action)
+      name = DiscourseAutomation::Triggers::FLAG_ON_POST_CREATED
 
       post = post_action.post
-      topic = post&.topic
+      topic = post.topic
 
       DiscourseAutomation::Automation
         .where(trigger: name, enabled: true)
@@ -446,14 +446,11 @@ module DiscourseAutomation
           next if flag_type_id.present? && flag_type_id != post_action.post_action_type_id
 
           categories = automation.trigger_field("categories")["value"]
-          if categories.present?
-            next if topic.blank? || !categories.include?(topic.category_id)
-          end
+          next if categories.present? && !categories.include?(topic.category_id)
 
-          tags = automation.trigger_field("tags")["value"]
-          if tags.present?
-            topic_tag_names = topic&.tags&.map(&:name) || []
-            next if (topic_tag_names & tags).empty?
+          if SiteSetting.tagging_enabled?
+            tags = automation.trigger_field("tags")["value"]
+            next if tags.present? && (topic.tags.map(&:name) & tags).empty?
           end
 
           automation.trigger!("kind" => name, "post_action" => post_action, "post" => post)
