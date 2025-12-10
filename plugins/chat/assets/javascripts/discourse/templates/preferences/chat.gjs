@@ -29,6 +29,8 @@ export default class Chat extends Component {
       ignore_channel_wide_mention:
         this.args.controller.model.user_option.ignore_channel_wide_mention,
       chat_sound: this.args.controller.model.user_option.chat_sound,
+      chat_header_indicator_preference:
+        this.args.controller.model.user_option.chat_header_indicator_preference,
     };
   }
 
@@ -40,11 +42,11 @@ export default class Chat extends Component {
   }
 
   @action
-  handleChatSoundSet(sound, field) {
+  handleChatSoundSet(sound, { set, name }) {
     if (sound) {
       this.chatAudioManager.play(sound);
     }
-    field.set(sound);
+    set(name, sound);
   }
 
   @action
@@ -85,6 +87,15 @@ export default class Chat extends Component {
     // eslint-disable-next-line no-console
     console.log("chat sound", data.chat_sound);
     this.args.controller.model.set("user_option.chat_sound", data.chat_sound);
+    // eslint-disable-next-line no-console
+    console.log(
+      "chat header indicator preference",
+      data.chat_header_indicator_preference
+    );
+    this.args.controller.model.set(
+      "user_option.chat_header_indicator_preference",
+      data.chat_header_indicator_preference
+    );
     this.args.controller.save();
   }
 
@@ -138,6 +149,20 @@ export default class Chat extends Component {
           </field.Select>
         </form.Field>
 
+        <form.Field
+          @title={{i18n "chat.header_indicator_preference.title"}}
+          @name="chat_header_indicator_preference"
+          @format="large"
+          as |field|
+        >
+          <field.Select as |select|>
+            {{#each @controller.headerIndicatorOptions as |option|}}
+              <select.Option @value={{option.value}}>
+                {{option.name}}
+              </select.Option>
+            {{/each}}
+          </field.Select>
+        </form.Field>
       </form.Section>
       <form.Section @title={{i18n "chat.personalization_title"}}>
         <form.Field
@@ -179,39 +204,6 @@ export default class Chat extends Component {
       </form.Section>
       <form.Submit />
     </Form>
-
-    {{!-- <div
-      class="control-group chat-setting controls-dropdown"
-      data-setting-name="user_chat_sounds"
-    >
-      <label for="user_chat_sounds">{{i18n "chat.sound.title"}}</label>
-      <ComboBox
-        @options={{hash none="chat.sounds.none"}}
-        @valueProperty="value"
-        @content={{@controller.chatSounds}}
-        @value={{@controller.model.user_option.chat_sound}}
-        @id="user_chat_sounds"
-        @onChange={{@controller.onChangeChatSound}}
-      />
-    </div> --}}
-
-    <div
-      class="control-group chat-setting controls-dropdown"
-      data-setting-name="user_chat_header_indicator_preference"
-    >
-      <label for="user_chat_header_indicator_preference">
-        {{i18n "chat.header_indicator_preference.title"}}
-      </label>
-      <ComboBox
-        @valueProperty="value"
-        @content={{@controller.headerIndicatorOptions}}
-        @value={{@controller.model.user_option.chat_header_indicator_preference}}
-        @id="user_chat_header_indicator_preference"
-        @onChange={{fn
-          (mut @controller.model.user_option.chat_header_indicator_preference)
-        }}
-      />
-    </div>
 
     <div
       class="control-group chat-setting controls-dropdown"
