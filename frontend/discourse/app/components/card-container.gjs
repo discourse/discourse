@@ -10,8 +10,7 @@ import PluginOutlet from "./plugin-outlet";
 
 export default class CardContainer extends Component {
   @service site;
-  // FIXME: this is breaking mentions/tests
-  // @controller topic;
+  @controller topic;
 
   @action
   filterPosts(user) {
