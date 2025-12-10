@@ -109,4 +109,7 @@ Discourse::Application.configure do
       system("bundle exec rubocop -A --fail-level=E #{parsable_files.shelljoin}", exception: true)
     end
   end
+
+  # This is a NGINX specific header
+  config.action_dispatch.x_sendfile_header = nil
 end
