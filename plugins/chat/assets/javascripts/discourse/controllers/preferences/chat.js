@@ -31,7 +31,6 @@ export const HEADER_INDICATOR_PREFERENCE_ALL_NEW = "all_new";
 export const HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS = "only_mentions";
 
 export default class PreferencesChatController extends Controller {
-  @service chatAudioManager;
   @service siteSettings;
 
   subpageTitle = i18n("chat.admin.title");
@@ -121,14 +120,6 @@ export default class PreferencesChatController extends Controller {
     return Object.keys(CHAT_SOUNDS).map((value) => {
       return { name: i18n(`chat.sounds.${value}`), value };
     });
-  }
-
-  @action
-  onChangeChatSound(sound) {
-    if (sound) {
-      this.chatAudioManager.play(sound);
-    }
-    this.model.set("user_option.chat_sound", sound);
   }
 
   @action
