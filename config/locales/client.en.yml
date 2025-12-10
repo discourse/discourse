@@ -5854,8 +5854,10 @@ en:
             total_users: "Total users"
             signups_30_days: "Signups (30 days)"
             logins_30_days: "Logins (30 days)"
-          regenerate_credentials: "Regenerate credentials…"
-          regenerate_confirm: "Are you sure you want to regenerate your Discourse ID credentials? This will generate a new client secret."
+          regenerate_credentials: "Regenerate credentials"
+          regenerate_confirm: "Are you sure you want to regenerate your Discourse ID credentials? This will generate a new client secret. Regenerating credentials isn't normally required but can be useful for enhanced security."
+          description: "Discourse ID is a single sign-on service that allows users to log in to multiple Discourse sites using a single account. Common social login providers like Google, Facebook, Apple, and Github are supported without additional configuration."
+          learn_more: "Learn more"
           regenerate_success: "Credentials regenerated successfully."
         logo:
           title: "Logo"

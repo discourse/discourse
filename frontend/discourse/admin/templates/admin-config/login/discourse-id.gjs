@@ -84,6 +84,15 @@ class DiscourseIdAdmin extends Component {
             />
           </div>
 
+          <p class="admin-config-area-card__description">
+            {{i18n "admin.config.discourse_id.description"}}
+            <a
+              href="https://id.discourse.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >{{i18n "admin.config.discourse_id.learn_more"}}</a>
+          </p>
+
           <div class="admin-config-area-card__content">
             <div class="discourse-id-stats">
               <div class="discourse-id-stats__item">

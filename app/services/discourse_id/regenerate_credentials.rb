@@ -40,7 +40,7 @@ class DiscourseId::RegenerateCredentials
   def log_action(guardian:)
     StaffActionLogger.new(guardian.user).log_custom(
       "discourse_id_regenerate_credentials",
-      client_id: DiscourseId.masked_client_id,
+      client_id: SiteSetting.discourse_id_client_id,
     )
   end
 end
