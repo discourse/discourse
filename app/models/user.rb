@@ -54,6 +54,10 @@ class User < ActiveRecord::Base
            -> { merge(Reviewable.pending) },
            class_name: "ReviewableQueuedPost",
            foreign_key: :target_created_by_id
+  has_many :rejected_posts,
+           -> { merge(Reviewable.rejected) },
+           class_name: "ReviewableQueuedPost",
+           foreign_key: :target_created_by_id
 
   has_one :user_option, dependent: :destroy
   has_one :user_avatar, dependent: :destroy
@@ -144,6 +148,7 @@ class User < ActiveRecord::Base
 
   has_many :sidebar_section_links, dependent: :delete_all
   has_many :embeddable_hosts
+  has_many :user_histories, foreign_key: :target_user_id
 
   delegate :last_sent_email_address, to: :email_logs
 
@@ -1329,7 +1334,7 @@ class User < ActiveRecord::Base
   end
 
   def silenced_record
-    UserHistory.for(self, :silence_user).order("id DESC").first
+    user_histories.where(action: UserHistory.actions[:silence_user]).order("id DESC").first
   end
 
   def silence_reason
@@ -1345,7 +1350,7 @@ class User < ActiveRecord::Base
   end
 
   def suspend_record
-    UserHistory.for(self, :suspend_user).order("id DESC").first
+    user_histories.where(action: UserHistory.actions[:suspend_user]).order("id DESC").first
   end
 
   def full_suspend_reason
@@ -1638,7 +1643,7 @@ class User < ActiveRecord::Base
   end
 
   def number_of_rejected_posts
-    ReviewableQueuedPost.rejected.where(target_created_by_id: self.id).count
+    rejected_posts.length
   end
 
   def number_of_flags_given
@@ -1649,12 +1654,17 @@ class User < ActiveRecord::Base
       .count
   end
 
+  def user_history_stats
+    @user_history_stats ||=
+      user_histories.group_by { |history| history[:action] }.transform_values(&:count)
+  end
+
   def number_of_silencings
-    UserHistory.for(self, :silence_user).count
+    user_history_stats[UserHistory.actions[:silence_user]]
   end
 
   def number_of_suspensions
-    UserHistory.for(self, :suspend_user).count
+    user_history_stats[UserHistory.actions[:suspend_user]]
   end
 
   def create_user_profile

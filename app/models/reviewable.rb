@@ -462,8 +462,17 @@ class Reviewable < ActiveRecord::Base
           .includes(
             { created_by: :user_stat },
             :topic,
-            :target,
-            :target_created_by,
+            {
+              target: [
+                :user_stat,
+                :primary_email,
+                { topic: :category },
+                :user_histories,
+                :rejected_posts,
+                :user_custom_fields,
+              ],
+            },
+            { target_created_by: :rejected_posts },
             :reviewable_histories,
           )
           .includes(reviewable_scores: { user: :user_stat, meta_topic: :posts })
