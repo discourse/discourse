@@ -28,9 +28,6 @@ RSpec.describe SidebarSectionsController do
 
     it "returns Community section first even when public sections are alphabetically before it" do
       sign_in(user)
-
-      Fabricate(:sidebar_section, title: "Community", public: true, section_type: 0)
-
       Fabricate(:sidebar_section, title: "Apple", public: true)
 
       get "/sidebar_sections.json"
