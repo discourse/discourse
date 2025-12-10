@@ -220,6 +220,151 @@ RSpec.describe Onebox::Engine::StandardEmbed do
     end
   end
 
+  describe "#enhance_description_with_anchor" do
+    let(:anchor_class) do
+      Class.new do
+        include Onebox::Engine::StandardEmbed
+
+        attr_accessor :url, :options, :html_doc_override
+
+        def initialize(url)
+          @url = url
+          @options = {}
+        end
+
+        def html_doc
+          @html_doc_override
+        end
+      end
+    end
+
+    it "extracts description from paragraph within anchored section" do
+      html = <<~HTML
+        <html><body>
+          <article>
+            <summary id="my-function">
+              <code>my_function(x)</code>
+            </summary>
+            <div>
+              <p>Returns the sum of all elements in x.</p>
+            </div>
+          </article>
+        </body></html>
+      HTML
+      embed = anchor_class.new("https://example.com/page#my-function")
+      embed.html_doc_override = Nokogiri.HTML(html)
+      embed.instance_variable_set(:@raw, { description: "Generic page description." })
+
+      embed.send(:enhance_description_with_anchor)
+
+      expect(embed.instance_variable_get(:@raw)[:description]).to eq(
+        "Returns the sum of all elements in x. | Generic page description.",
+      )
+    end
+
+    it "extracts description from Julia docs docstring structure" do
+      html = <<~HTML
+        <html><body>
+          <article>
+            <details class="docstring">
+              <summary id="Base.pkgversion-Tuple{Module}">
+                <code>Base.pkgversion</code>
+              </summary>
+              <div>
+                <pre><code>pkgversion(m::Module)</code></pre>
+                <p>Return the version of the package that imported module m.</p>
+              </div>
+            </details>
+          </article>
+        </body></html>
+      HTML
+      embed = anchor_class.new("https://example.com/page#Base.pkgversion-Tuple%7BModule%7D")
+      embed.html_doc_override = Nokogiri.HTML(html)
+      embed.instance_variable_set(:@raw, { description: "Documentation for The Julia Language." })
+
+      embed.send(:enhance_description_with_anchor)
+
+      expect(embed.instance_variable_get(:@raw)[:description]).to eq(
+        "Return the version of the package that imported module m. | Documentation for The Julia Language.",
+      )
+    end
+
+    it "sets description when none exists" do
+      html = <<~HTML
+        <html><body>
+          <section id="getting-started">
+            <h2>Getting Started</h2>
+            <p>This guide will help you get started with our library.</p>
+          </section>
+        </body></html>
+      HTML
+      embed = anchor_class.new("https://example.com/page#getting-started")
+      embed.html_doc_override = Nokogiri.HTML(html)
+      embed.instance_variable_set(:@raw, {})
+
+      embed.send(:enhance_description_with_anchor)
+
+      expect(embed.instance_variable_get(:@raw)[:description]).to eq(
+        "This guide will help you get started with our library.",
+      )
+    end
+
+    it "does not duplicate description when section text already appears" do
+      html = <<~HTML
+        <html><body>
+          <div id="intro">
+            <p>Welcome to our documentation.</p>
+          </div>
+        </body></html>
+      HTML
+      embed = anchor_class.new("https://example.com/page#intro")
+      embed.html_doc_override = Nokogiri.HTML(html)
+      embed.instance_variable_set(:@raw, { description: "Welcome to our documentation." })
+
+      embed.send(:enhance_description_with_anchor)
+
+      expect(embed.instance_variable_get(:@raw)[:description]).to eq(
+        "Welcome to our documentation.",
+      )
+    end
+
+    it "truncates very long descriptions" do
+      long_text = "A" * 400
+      html = <<~HTML
+        <html><body>
+          <div id="section">
+            <p>#{long_text}</p>
+          </div>
+        </body></html>
+      HTML
+      embed = anchor_class.new("https://example.com/page#section")
+      embed.html_doc_override = Nokogiri.HTML(html)
+      embed.instance_variable_set(:@raw, {})
+
+      embed.send(:enhance_description_with_anchor)
+
+      expect(embed.instance_variable_get(:@raw)[:description].length).to be <= 301
+    end
+
+    it "finds paragraph following the anchor element" do
+      html = <<~HTML
+        <html><body>
+          <h2 id="features">Features</h2>
+          <p>Here are the main features of our product.</p>
+        </body></html>
+      HTML
+      embed = anchor_class.new("https://example.com/page#features")
+      embed.html_doc_override = Nokogiri.HTML(html)
+      embed.instance_variable_set(:@raw, {})
+
+      embed.send(:enhance_description_with_anchor)
+
+      expect(embed.instance_variable_get(:@raw)[:description]).to eq(
+        "Here are the main features of our product.",
+      )
+    end
+  end
+
   private
 
   def mocked_html_doc(twitter_data: nil, favicon_url: nil)
