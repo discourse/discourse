@@ -56,12 +56,20 @@ end
 require_relative "lib/discourse_rewind/engine"
 
 after_initialize do
-  UserUpdater::OPTION_ATTR.push(:discourse_rewind_disabled)
+  UserUpdater::OPTION_ATTR.push(:discourse_rewind_disabled, :discourse_rewind_share_publicly)
 
   add_to_serializer(:user_option, :discourse_rewind_disabled) { object.discourse_rewind_disabled }
 
   add_to_serializer(:current_user_option, :discourse_rewind_disabled) do
     object.discourse_rewind_disabled
+  end
+
+  add_to_serializer(:user_option, :discourse_rewind_share_publicly) do
+    object.discourse_rewind_share_publicly
+  end
+
+  add_to_serializer(:current_user_option, :discourse_rewind_share_publicly) do
+    object.discourse_rewind_share_publicly
   end
 
   add_to_serializer(:current_user, :is_rewind_active) do

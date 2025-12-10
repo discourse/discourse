@@ -16,19 +16,35 @@ module DiscourseRewind
     #   @param [Guardian] guardian
     #   @param [Hash] params
     #   @option params [Integer] :index of the report
+    #   @option params [String] :for_user_username (optional) username of the user to see the rewind for, otherwise the guardian user is used
     #   @return [Service::Base::Context]
 
     params do
       attribute :index, :integer
+      attribute :for_user_username, :string
 
       validates :index, presence: true, numericality: { greater_than_or_equal_to: 0 }
     end
 
+    model :for_user
     model :year
     model :all_reports
     model :report
 
     private
+
+    def fetch_for_user(params:, guardian:)
+      return guardian.user if params.for_user_username.blank?
+
+      user = User.find_by(username: params.for_user_username)
+      return if user.nil?
+
+      if guardian.user.id != user.id
+        return if !user.user_option.discourse_rewind_share_publicly
+      end
+
+      user
+    end
 
     def fetch_year
       current_date = Time.zone.now
@@ -49,8 +65,8 @@ module DiscourseRewind
       end
     end
 
-    def fetch_all_reports(guardian:, year:)
-      key = "rewind:#{guardian.user.username}:#{year}"
+    def fetch_all_reports(for_user:, year:)
+      key = "rewind:#{for_user.username}:#{year}"
       reports = Discourse.redis.get(key)
       return nil unless reports
 

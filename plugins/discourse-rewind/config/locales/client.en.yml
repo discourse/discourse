@@ -11,7 +11,10 @@ en:
       loading: "Reticulating splines..."
       preferences:
         disable_rewind: "Disable Discourse Rewind. This hides the year-end activity summary in your profile and on your avatar."
+        share_publicly: "Share Discourse Rewind summary publicly. Any forum user will be able to view your Discourse Rewind summary."
       profile_link: "View your %{rewindYear} Discourse Rewind"
+      share:
+        confirm: "Are you sure you want to share your Discourse Rewind summary? This will make it visible to all members of this forum. You can unshare at any time by clicking the share button again."
       reports:
         activity_calendar:
           title: Activity Calendar

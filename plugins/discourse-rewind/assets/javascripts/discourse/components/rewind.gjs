@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
@@ -32,6 +33,8 @@ const BUFFER_SIZE = 3;
 const SCROLL_THRESHOLD = 0.7;
 
 export default class Rewind extends Component {
+  @service dialog;
+
   @tracked rewind = [];
   @tracked fullScreen = true;
   @tracked loadingRewind = false;
@@ -54,7 +57,9 @@ export default class Rewind extends Component {
   async loadRewind() {
     try {
       this.loadingRewind = true;
-      const response = await ajax("/rewinds.json");
+      const response = await ajax(
+        `/rewinds.json?for_user_username=${this.args.user.username}`
+      );
       this.rewind = response.reports;
       this.totalAvailable = response.total_available;
       this.nextReportIndex = response.reports.length;
@@ -108,9 +113,12 @@ export default class Rewind extends Component {
     try {
       while (this.nextReportIndex < targetIndex) {
         try {
-          const response = await ajax(`/rewinds/${this.nextReportIndex}.json`, {
-            ignoreUnsent: false,
-          });
+          const response = await ajax(
+            `/rewinds/${this.nextReportIndex}.json?for_user_username=${this.args.user.username}`,
+            {
+              ignoreUnsent: false,
+            }
+          );
           if (response.report) {
             this.rewind = [...this.rewind, response.report];
           }
@@ -130,6 +138,16 @@ export default class Rewind extends Component {
   @action
   toggleFullScreen() {
     this.fullScreen = !this.fullScreen;
+  }
+
+  @action
+  async shareRewind() {
+    await this.dialog.yesNoConfirm({
+      message: i18n("discourse_rewind.share.confirm"),
+      didConfirm: () => {
+        // console.log("confirmed");
+      },
+    });
   }
 
   @action
@@ -214,6 +232,11 @@ export default class Rewind extends Component {
             </div>
           </div>
         {{else}}
+          <DButton
+            class="btn-default rewind__share-btn --special-kbd"
+            @icon="link"
+            @action={{this.shareRewind}}
+          />
           <DButton
             class="btn-default rewind__exit-fullscreen-btn --special-kbd"
             @icon={{if this.fullScreen "discourse-compress" "discourse-expand"}}

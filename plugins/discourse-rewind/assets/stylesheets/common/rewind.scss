@@ -20,7 +20,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 9999;
+    z-index: z("fullscreen");
     width: calc(100vw - (100vw - 100%) + 2px);
     height: 100vh;
     position: fixed;
@@ -124,7 +124,6 @@
 .btn.no-text.--special-kbd {
   position: absolute;
   top: 15px;
-  right: 24px;
   background-color: #ede9d4;
   border-color: #d7d1b0 #c5bfa0 #d7d1b0 #c5bfa0;
   border-width: 1px 5px 7px 4px;
@@ -136,6 +135,14 @@
     box-shadow 0.1s ease;
   transform: skew(3deg);
   font-size: var(--font-down-1);
+
+  &.rewind__share-btn {
+    right: 78px;
+  }
+
+  &.rewind__exit-fullscreen-btn {
+    right: 24px;
+  }
 
   .d-icon {
     color: var(

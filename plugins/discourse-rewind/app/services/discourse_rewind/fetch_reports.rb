@@ -6,7 +6,7 @@ module DiscourseRewind
   # @example
   #  ::DiscourseRewind::Rewind::Fetch.call(
   #    guardian: guardian,
-  #    params: { year: 2023, username: 'codinghorror' }
+  #    params: { for_user_username: 'codinghorror' }
   #  )
   #
   class FetchReports
@@ -15,8 +15,7 @@ module DiscourseRewind
     # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
     #   @param [Hash] params
-    #   @option params [Integer] :year of the rewind
-    #   @option params [Integer] :username of the rewind
+    #   @option params [String] :for_user_username (optional) username of the user to see the rewind for, otherwise the guardian user is used
     #   @return [Service::Base::Context]
 
     CACHE_DURATION = Rails.env.development? ? 10.seconds : 3.days
@@ -44,6 +43,9 @@ module DiscourseRewind
       Action::Invites,
     ]
 
+    params { attribute :for_user_username, :string }
+
+    model :for_user
     model :year
     model :date
     model :all_reports
@@ -51,6 +53,19 @@ module DiscourseRewind
     model :total_available
 
     private
+
+    def fetch_for_user(params:, guardian:)
+      return guardian.user if params.for_user_username.blank?
+
+      user = User.find_by(username: params.for_user_username)
+      return if user.nil?
+
+      if guardian.user.id != user.id
+        return if !user.user_option.discourse_rewind_share_publicly
+      end
+
+      user
+    end
 
     def fetch_year
       current_date = Time.zone.now
@@ -77,14 +92,14 @@ module DiscourseRewind
       Date.new(year).all_year
     end
 
-    def fetch_all_reports(date:, guardian:, year:)
-      key = cache_key(guardian.user.username, year)
+    def fetch_all_reports(date:, for_user:, year:)
+      key = cache_key(for_user.username, year)
       reports = Discourse.redis.get(key)
 
       if !reports
         reports =
           REPORTS.filter_map do |report|
-            report.call(date:, user: guardian.user, guardian:)
+            report.call(date:, user: for_user, guardian:)
           rescue StandardError
             nil
           end

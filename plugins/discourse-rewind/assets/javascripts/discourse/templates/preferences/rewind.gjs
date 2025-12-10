@@ -19,6 +19,20 @@ export default <template>
     </label>
   </div>
 
+  <div
+    class="control-group rewind-setting"
+    data-setting-name="user_discourse_rewind_share_publicly"
+  >
+    <label class="controls">
+      <Input
+        id="user_discourse_rewind_share_publicly"
+        @type="checkbox"
+        @checked={{@controller.model.user_option.discourse_rewind_share_publicly}}
+      />
+      {{i18n "discourse_rewind.preferences.share_publicly"}}
+    </label>
+  </div>
+
   <SaveControls
     @model={{@controller.model}}
     @action={{@controller.save}}
