@@ -10,28 +10,15 @@ import { translateModKey } from "discourse/lib/utilities";
 import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import {
+  CHAT_ATTRS,
+  CHAT_QUICK_REACTIONS_CUSTOM_DEFAULT,
+  HEADER_INDICATOR_PREFERENCE_ALL_NEW,
+  HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS,
+  HEADER_INDICATOR_PREFERENCE_NEVER,
+  HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS,
+} from "discourse/plugins/chat/discourse/lib/chat-constants";
 import { CHAT_SOUNDS } from "discourse/plugins/chat/discourse/services/chat-audio-manager";
-
-const CHAT_ATTRS = [
-  "chat_enabled",
-  "only_chat_push_notifications",
-  "ignore_channel_wide_mention",
-  "show_thread_title_prompts",
-  "chat_sound",
-  "chat_email_frequency",
-  "chat_header_indicator_preference",
-  "chat_separate_sidebar_mode",
-  "chat_send_shortcut",
-  "chat_quick_reaction_type",
-  "chat_quick_reactions_custom",
-];
-
-export const CHAT_QUICK_REACTIONS_CUSTOM_DEFAULT = "heart|+1|smile";
-
-export const HEADER_INDICATOR_PREFERENCE_NEVER = "never";
-export const HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS = "dm_and_mentions";
-export const HEADER_INDICATOR_PREFERENCE_ALL_NEW = "all_new";
-export const HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS = "only_mentions";
 
 export default class Chat extends Component {
   @service chatAudioManager;
