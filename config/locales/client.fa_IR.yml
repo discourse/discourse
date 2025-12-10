@@ -2989,6 +2989,9 @@ fa_IR:
         reset_bump_dates: "بازنشانی تاریخ بالا آوردن"
         defer: "علامت گذاری به عنوان خوانده نشده"
         delete: "حذف موضوعات"
+        delete_topics_count:
+          one: "پاک کردن موضوع"
+          other: "حذف موضوعات"
         dismiss: "پنهان کردن"
         dismiss_read: "پنهان کردن تمامی خوانده نشده ها"
         dismiss_read_with_selected:
@@ -4881,6 +4884,8 @@ fa_IR:
         enabled_for_options:
           everyone: "همه"
           staff: "فقط به تیم مدیریت"
+        statuses:
+          experimental: "آزمایشی"
         impact_roles:
           admins: "مدیران ارشد"
           moderators: "ناظران"
@@ -4890,6 +4895,7 @@ fa_IR:
           enabled: "فعال شده"
           disabled: "غیرفعال"
           impact_type_other: "دیگر"
+          status_experimental: "آزمایشی"
       config:
         about:
           title: "درباره سایت شما"

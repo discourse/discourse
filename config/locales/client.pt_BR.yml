@@ -3198,6 +3198,9 @@ pt_BR:
         reset_bump_dates: "Redefinir datas de promoção"
         defer: "Marcar não lido"
         delete: "Excluir tópicos"
+        delete_topics_count:
+          one: "Excluir tópico"
+          other: "Excluir tópicos"
         dismiss: "Descartar"
         dismiss_read: "Descartar todos os não lidos"
         dismiss_read_with_selected:
@@ -5211,6 +5214,8 @@ pt_BR:
         enabled_for_options:
           everyone: "Todos(as)"
           staff: "Somente equipe"
+        statuses:
+          experimental: "Experimental"
         impact_roles:
           moderators: "Moderadores(as)"
           staff: "Equipe"
@@ -5220,6 +5225,7 @@ pt_BR:
           disabled: "Desativados(as)"
           impact_type_feature: "Recurso"
           impact_type_other: "Outras"
+          status_experimental: "Experimental"
       config:
         about:
           title: "Sobre seu site"

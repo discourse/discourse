@@ -108,10 +108,11 @@ module DiscourseAi
           content_array =
             to_encoded_content_array(
               content: [content_array, msg[:content]].flatten,
-              image_encoder: ->(details) {},
+              upload_encoder: ->(_details) {},
               text_encoder: ->(text) { { type: "text", text: text } },
               other_encoder: ->(details) { details },
-              allow_vision: false,
+              allow_images: false,
+              allow_documents: false,
             )
 
           { role: "assistant", content: no_array_if_only_text(content_array) }
@@ -141,9 +142,12 @@ module DiscourseAi
           content_array =
             to_encoded_content_array(
               content: content_array,
-              image_encoder: ->(details) { image_node(details) },
+              upload_encoder: ->(details) { upload_node(details) },
               text_encoder: ->(text) { { type: "text", text: text } },
-              allow_vision: vision_support?,
+              allow_images: vision_support?,
+              allow_documents: true,
+              allowed_attachment_types: llm_model.allowed_attachment_types,
+              upload_filter: ->(encoded) { document_allowed?(encoded) },
             )
 
           { role: "user", content: no_array_if_only_text(content_array) }
@@ -167,6 +171,23 @@ module DiscourseAi
             },
             type: "image",
           }
+        end
+
+        def upload_node(details)
+          return if details.blank?
+
+          if details[:kind] == :document || details[:mime_type] == "application/pdf"
+            {
+              type: "document",
+              source: {
+                type: "base64",
+                data: details[:base64],
+                media_type: details[:mime_type],
+              },
+            }
+          else
+            image_node(details)
+          end
         end
       end
     end

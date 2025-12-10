@@ -1,0 +1,25 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  js:
+    discourse_rewind:
+      reports:
+        reading_time:
+          title: ئوقۇش ۋاقتى
+        chat_usage:
+          messages: ئۇچۇر
+          status_online: "● توردا"
+        invites:
+          title: تەكلىپ
+          invitee_posts: قۇرغان يازما
+          invitee_likes: بېرىلگەن ياقتۇرۇش
+          label_invitations_sent: "تەكلىپ يوللاندى:"
+        new_user_interactions:
+          likes_given: بېرىلگەن ياقتۇرۇش
+          mentions: ئاتاش
+        writing_analysis:
+          menu_other: باشقا

@@ -110,34 +110,38 @@ class PostRevisor
     if tc.guardian.can_tag_topics?
       prev_tags = tc.topic.tags.map(&:name)
       next if tags.blank? && prev_tags.blank?
+
       if !DiscourseTagging.tag_topic_by_names(tc.topic, tc.guardian, tags)
         tc.check_result(false)
         next
       end
-      if prev_tags.sort != tags.sort
-        tc.record_change("tags", prev_tags, tags)
+
+      new_tags = tc.topic.tags.map(&:name)
+
+      if prev_tags.sort != new_tags.sort
+        tc.record_change("tags", prev_tags, new_tags)
         DB.after_commit do
-          post = tc.topic.ordered_posts.first
+          topic = tc.topic.reload
+          post = topic.ordered_posts.first
           notified_user_ids = [post.user_id, post.last_editor_id].uniq
 
-          added_tags = tags - prev_tags
-          removed_tags = prev_tags - tags
+          persisted_tag_names = topic.tags.pluck(:name)
+          added_tags = persisted_tag_names - prev_tags
+          removed_tags = prev_tags - persisted_tag_names
+          diff_tags = added_tags | removed_tags
 
-          if !SiteSetting.disable_tags_edit_notifications
-            Jobs.enqueue(
-              :notify_tag_change,
-              post_id: post.id,
-              notified_user_ids: notified_user_ids,
-              diff_tags: (added_tags | removed_tags),
+          if diff_tags.present?
+            if !SiteSetting.disable_tags_edit_notifications
+              Jobs.enqueue(:notify_tag_change, post_id: post.id, notified_user_ids:, diff_tags:)
+            end
+
+            create_small_action_for_tag_changes(
+              topic: topic,
+              user: tc.user,
+              added_tags:,
+              removed_tags:,
             )
           end
-
-          create_small_action_for_tag_changes(
-            topic: tc.topic,
-            user: tc.user,
-            added_tags: added_tags,
-            removed_tags: removed_tags,
-          )
         end
       end
     end
@@ -330,7 +334,8 @@ class PostRevisor
     QuotedPost.extract_from(@post)
     TopicLink.extract_from(@post)
 
-    Topic.reset_highest(@topic.id)
+    # Skip resetting highest post number if only changing post ownership
+    Topic.reset_highest(@topic.id) unless @fields.size == 1 && @fields.has_key?("user_id")
 
     post_process_post
     alert_users
@@ -509,7 +514,10 @@ class PostRevisor
     @post.link_post_uploads
     @post.save_reply_relationships
 
-    @editor.increment_post_edits_count if @post_successfully_saved
+    # we dont want to increment post count on user merge
+    if @post_successfully_saved && @editor.id != Discourse::SYSTEM_USER_ID
+      @editor.increment_post_edits_count
+    end
 
     # post owner changed
     if prev_owner && new_owner && prev_owner != new_owner

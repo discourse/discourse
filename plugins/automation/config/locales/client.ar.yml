@@ -10,6 +10,7 @@ ar:
       logs:
         staff_actions:
           actions:
+            update_automation: تحديث الأتمتة
             delete_automation: حذف الأتمتة
     discourse_automation:
       title: الأتمتة

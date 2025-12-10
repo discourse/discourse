@@ -4,8 +4,8 @@ module DiscourseAi
   module Completions
     module Endpoints
       class Vllm < Base
-        def self.can_contact?(model_provider)
-          model_provider == "vllm"
+        def self.can_contact?(llm_model)
+          llm_model.provider == "vllm"
         end
 
         def normalize_model_params(model_params)

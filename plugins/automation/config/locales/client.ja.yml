@@ -10,6 +10,7 @@ ja:
       logs:
         staff_actions:
           actions:
+            update_automation: 自動化を更新
             delete_automation: 自動化を削除
     discourse_automation:
       title: 自動化

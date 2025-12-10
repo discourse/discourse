@@ -3419,6 +3419,11 @@ sk:
         reset_bump_dates: "Obnoviť dátumy bump"
         defer: "Označiť ako neprečítané"
         delete: "Zmazať témy"
+        delete_topics_count:
+          one: "Zmazať tému"
+          few: "Zmazať témy"
+          many: "Zmazať témy"
+          other: "Zmazať témy"
         dismiss: "Zahodiť"
         dismiss_read: "Zahodiť všetký neprečítané"
         dismiss_read_with_selected:
@@ -5619,6 +5624,8 @@ sk:
         enabled_for_options:
           everyone: "Každý"
           staff: "Len pre zamestnancov"
+        statuses:
+          experimental: "Experimentálne"
         impact_roles:
           admins: "Administrátori"
           moderators: "Moderátori"
@@ -5629,6 +5636,7 @@ sk:
           disabled: "Vypnuté"
           impact_type_feature: "Funkcia"
           impact_type_other: "Ostatné"
+          status_experimental: "Experimentálne"
       config:
         about:
           title: "O vašej stránke"

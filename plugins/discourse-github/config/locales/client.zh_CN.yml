@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  js:
+    github:
+      pr_status:
+        draft: "草稿"
+        open: "开放"
+        approved: "已批准"
+        closed: "已关闭"
   admin_js:
     admin:
       site_settings:

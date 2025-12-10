@@ -75,7 +75,7 @@ module DiscourseAi
         midpoint = graphemes.size / 2
 
         first_half = graphemes.slice(0, midpoint)&.join || ""
-        reversed_second_half = (graphemes.slice(midpoint, graphemes.size - midpoint) || []).join
+        second_half = (graphemes.slice(midpoint, graphemes.size - midpoint) || []).join
 
         truncation_length = 500
         tokenizer = llm_model.tokenizer_class
@@ -86,14 +86,11 @@ module DiscourseAi
             truncation_length,
             strict: SiteSetting.ai_strict_token_counting,
           ).to_s,
-          tokenizer
-            .truncate(
-              reversed_second_half,
-              truncation_length,
-              strict: SiteSetting.ai_strict_token_counting,
-            )
-            .to_s
-            .reverse,
+          tokenizer.truncate(
+            second_half,
+            truncation_length,
+            strict: SiteSetting.ai_strict_token_counting,
+          ).to_s,
         ].join(" ")
 
         item

@@ -1,0 +1,104 @@
+.--post-used-reactions {
+  .rewind-card {
+    @include rewind-border;
+    border-radius: 0 var(--rewind-border-radius) var(--rewind-border-radius)
+      var(--rewind-border-radius);
+  }
+
+  .rewind-reactions-chart {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .rewind-reactions-row {
+    display: grid;
+    grid-template-columns: 25px 50px 1fr;
+    gap: 1em;
+    padding: 1em 0;
+
+    img.emoji {
+      vertical-align: baseline;
+      image-rendering: crisp-edges;
+      transform: scale(1);
+    }
+
+    &:nth-child(2) {
+      .rewind-reactions-bar {
+        animation-delay: 0.25s;
+      }
+    }
+
+    &:nth-child(3) {
+      .rewind-reactions-bar {
+        animation-delay: -0.25s;
+      }
+    }
+
+    &:nth-child(4) {
+      .rewind-reactions-bar {
+        animation-delay: 0.5s;
+      }
+    }
+
+    &:nth-child(5) {
+      .rewind-reactions-bar {
+        animation-delay: -0.5s;
+      }
+    }
+  }
+
+  .emoji {
+    height: 25px;
+    width: 25px;
+    padding-top: 2px;
+  }
+
+  .percentage {
+    font-weight: normal;
+    font-display: var(--pixel-text);
+    font-size: 16px;
+    color: var(--rewind-white);
+    padding-top: 0.35em;
+  }
+
+  .rewind-reactions-bar {
+    background: var(--rewind-white);
+    height: 25px;
+    background-size: 50px 50px;
+    border-radius: 3px;
+    background-image: linear-gradient(
+      -45deg,
+      var(--rewind-black) 12.5%,
+      var(--rewind-white) 12.5%,
+      var(--rewind-white) 50%,
+      var(--rewind-black) 50%,
+      var(--rewind-black) 62.5%,
+      var(--rewind-white) 62.5%
+    );
+    border: 4px solid var(--rewind-black);
+    box-shadow: 0 0 0 4px var(--rewind-white);
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: anim 5s linear infinite;
+    }
+  }
+
+  @keyframes anim {
+    0% {
+      background-position: 0 0;
+    }
+
+    100% {
+      background-position: 25px 25px;
+    }
+  }
+
+  .rewind-total-reactions {
+    font-size: 12px;
+    font-weight: normal;
+    margin-top: 1em;
+    color: var(--rewind-green);
+    text-align: start;
+  }
+}

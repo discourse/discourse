@@ -604,6 +604,3 @@ fi:
       custom_tool_exists:
         one: "Mukautettu työkalu nimeltä %{names} on jo olemassa."
         other: "Mukautetut työkalut nimillä %{names} on jo olemassa."
-  dashboard:
-    problem:
-      ai_llm_status: "LLM-mallissa %{model_name} on ongelmia. Tarkista <a href='%{url}'>-mallin määrityssivu</a>."

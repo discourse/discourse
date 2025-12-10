@@ -1,5 +1,5 @@
-import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import DButton from "discourse/components/d-button";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
@@ -35,19 +35,33 @@ export default <template>
         {{#each @controller.model as |setting|}}
           <tr>
             <td>
-              <Input
-                @value={{setting.feed_url}}
-                placeholder="https://blog.example.com/feed"
-                disabled={{setting.disabled}}
+              <input
                 class="rss-polling-feed-url"
+                disabled={{setting.disabled}}
+                placeholder="https://blog.example.com/feed"
+                type="text"
+                value={{setting.feed_url}}
+                {{on
+                  "input"
+                  (fn @controller.updateSettingProperty setting "feed_url")
+                }}
               />
             </td>
             <td>
-              <Input
-                @value={{setting.feed_category_filter}}
-                placeholder="updates"
-                disabled={{setting.disabled}}
+              <input
                 class="rss-polling-feed-updates"
+                disabled={{setting.disabled}}
+                placeholder="updates"
+                type="text"
+                value={{setting.feed_category_filter}}
+                {{on
+                  "input"
+                  (fn
+                    @controller.updateSettingProperty
+                    setting
+                    "feed_category_filter"
+                  )
+                }}
               />
             </td>
             <td>

@@ -457,7 +457,7 @@ export default class Report extends EmberObject {
 
   @discourseComputed("data")
   sortedData(data) {
-    return this.xAxisIsDate ? data.toArray().reverse() : data.toArray();
+    return this.xAxisIsDate ? [...data].reverse() : [...data];
   }
 
   @discourseComputed("data")

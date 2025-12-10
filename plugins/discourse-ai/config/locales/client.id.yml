@@ -122,6 +122,7 @@ id:
         last_seven_days: "7 hari terakhir"
         enable: "Aktifkan"
         test_modal:
+          system_prompt: "Perintah Sistem"
           spam: "Spam"
       usage:
         summary: "Ringkasan"
