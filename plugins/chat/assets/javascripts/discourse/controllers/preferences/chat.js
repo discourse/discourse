@@ -47,14 +47,12 @@ export default class PreferencesChatController extends Controller {
     {
       label: i18n("chat.send_shortcut.enter.label"),
       value: "enter",
-      description: i18n("chat.send_shortcut.enter.description"),
     },
     {
       label: i18n("chat.send_shortcut.meta_enter.label", {
         meta_key: translateModKey(PLATFORM_KEY_MODIFIER),
       }),
       value: "meta_enter",
-      description: i18n("chat.send_shortcut.meta_enter.description"),
     },
   ];
 
