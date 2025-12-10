@@ -286,7 +286,7 @@ en:
               description: Supports automation placeholders
             recipients:
               label: Recipients
-              description: Users, groups, or email addresses to notify
+              description: Users or email addresses to notify
         not_found: Couldn’t find script `%{script}` for automation `%{automation}`, ensure the associated plugin is installed
         zapier_webhook:
           fields:

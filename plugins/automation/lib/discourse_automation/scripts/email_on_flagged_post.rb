@@ -13,7 +13,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::EMAIL_ON_FLAGG
         default_value:
           I18n.t("discourse_automation.scriptables.email_on_flagged_post.default_template")
 
-  field :recipients, component: :email_group_user, required: true
+  field :recipients, component: :users, required: true
 
   script do |context, fields, automation|
     recipients = fields.dig("recipients", "value").uniq

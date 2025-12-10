@@ -22,11 +22,7 @@ describe "EmailOnFlaggedPost" do
   end
 
   it "enqueues a job per recipient with placeholders applied" do
-    automation.upsert_field!(
-      "recipients",
-      "email_group_user",
-      { value: [recipient.email, user_2.username] },
-    )
+    automation.upsert_field!("recipients", "users", { value: [recipient.email, user_2.username] })
 
     field =
       automation.upsert_field!(
