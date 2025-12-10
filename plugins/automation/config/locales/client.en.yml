@@ -64,13 +64,6 @@ en:
         post_flag_created:
           title: Post flag created
           description: Triggers when a post is flagged
-          flag_types:
-            spam: Spam
-            inappropriate: Inappropriate
-            off_topic: Off-Topic
-            notify_moderators: Something Else
-            notify_user: Notify User
-            illegal: Illegal
           fields:
             flag_type:
               label: Flag type
