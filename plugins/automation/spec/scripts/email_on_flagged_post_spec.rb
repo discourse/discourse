@@ -27,7 +27,7 @@ describe "EmailOnFlaggedPost" do
     expect do
       result = PostActionCreator.spam(flagger, post)
       expect(result.success).to eq(true)
-    end.to change { Jobs::DiscourseAutomation::SendFlagEmail.jobs.length }.by(0)
+    end.not_to change { Jobs::DiscourseAutomation::SendFlagEmail.jobs.length }
   end
 
   it "rejects usernames that do not exist" do
@@ -36,7 +36,7 @@ describe "EmailOnFlaggedPost" do
     expect do
       result = PostActionCreator.spam(flagger, post)
       expect(result.success).to eq(true)
-    end.to change { Jobs::DiscourseAutomation::SendFlagEmail.jobs.length }.by(0)
+    end.not_to change { Jobs::DiscourseAutomation::SendFlagEmail.jobs.length }
   end
 
   it "deduplicates email addresses" do
