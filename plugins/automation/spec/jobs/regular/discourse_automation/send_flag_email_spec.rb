@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe Jobs::DiscourseAutomation::SendFlagEmail do
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
   fab!(:post) { Fabricate(:post, topic:) }
 
   fab!(:email_template_automation_field) do
