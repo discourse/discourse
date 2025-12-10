@@ -42,13 +42,13 @@ export default class SidebarNewTopicButton extends Component {
     let subcategory;
 
     if (
-      !this.currentCategory?.canCreateTopic &&
+      !this.category?.canCreateTopic &&
       this.siteSettings.default_subcategory_on_read_only_category
     ) {
-      subcategory = this.currentCategory?.subcategoryWithCreateTopicPermission;
+      subcategory = this.category?.subcategoryWithCreateTopicPermission;
     }
 
-    return subcategory ?? this.currentCategory;
+    return subcategory ?? this.category;
   }
 
   get tagRestricted() {
@@ -66,7 +66,7 @@ export default class SidebarNewTopicButton extends Component {
   createNewTopic() {
     this.composer.openNewTopic({
       category: this.createTopicTargetCategory,
-      tags: this.currentTag?.id,
+      tags: this.tag?.id,
     });
   }
 
