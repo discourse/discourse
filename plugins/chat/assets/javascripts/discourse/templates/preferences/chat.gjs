@@ -92,7 +92,7 @@ export default class Chat extends Component {
       "user_option.chat_send_shortcut",
       data.chat_send_shortcut
     );
-    this.args.controller.save();
+    return this.args.controller.save();
   }
 
   <template>
