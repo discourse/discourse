@@ -1,7 +1,6 @@
-import DeprecationWorkflow from "../deprecation-workflow";
-
 // FIXME: This doesn't work in the MiniRacer environment
 import config from "discourse/config/environment";
+import DeprecationWorkflow from "../deprecation-workflow";
 
 const handlers = [];
 const disabledDeprecations = [];
@@ -53,10 +52,7 @@ export default function deprecated(msg, options = {}) {
 
   if (
     raiseError ||
-    DeprecationWorkflow.shouldThrow(
-      id,
-      config.RAISE_ON_DEPRECATION
-    )
+    DeprecationWorkflow.shouldThrow(id, config.RAISE_ON_DEPRECATION)
   ) {
     throw msg;
   }

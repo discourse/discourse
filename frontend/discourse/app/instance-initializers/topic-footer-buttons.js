@@ -19,9 +19,8 @@ export default {
       },
       title: "topic.share.help",
       async action() {
-        const ShareTopicModal = await import(
-          "discourse/components/modal/share-topic"
-        );
+        const ShareTopicModal =
+          await import("discourse/components/modal/share-topic");
         owner.lookup("service:modal").show(ShareTopicModal, {
           model: {
             category: this.topic.category,

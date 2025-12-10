@@ -1,8 +1,8 @@
 import { registerDeprecationHandler } from "@ember/debug";
 import QUnit from "qunit";
+import config from "discourse/config/environment";
 import DeprecationWorkflow from "discourse/deprecation-workflow";
 import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse/lib/deprecated";
-import config from "discourse/config/environment";
 
 let disabled = false;
 let disabledQUnitResult = false;

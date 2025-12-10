@@ -1,8 +1,8 @@
-import Component from "@ember/component";
-import { get, set, computed } from "@ember/object";
-import Mixin from "@ember/object/mixin";
 import { MUTABLE_CELL } from "@ember/-internals/views";
+import Component from "@ember/component";
 import { assert } from "@ember/debug";
+import { computed,get, set } from "@ember/object";
+import Mixin from "@ember/object/mixin";
 
 const inputTypes = Object.create(null);
 function canSetTypeOfInput(type) {

@@ -1,5 +1,5 @@
 import loadConfigFromMeta from "@embroider/config-meta-loader";
-import { isTesting } from '@embroider/macros';
+import { isTesting } from "@embroider/macros";
 
 let output;
 
@@ -11,7 +11,7 @@ if (isTesting()) {
     APP: {
       autoboot: false,
       rootElement: "#ember-testing",
-    }
+    },
   };
 } else {
   console.log("loadConfigFromMeta", loadConfigFromMeta("discourse"));
