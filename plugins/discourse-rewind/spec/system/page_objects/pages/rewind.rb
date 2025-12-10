@@ -53,6 +53,10 @@ module PageObjects
         find("#toggle-current-user").click
       end
 
+      def click_profile_tab
+        click_link("user-menu-button-profile")
+      end
+
       def has_callout?
         has_css?(".rewind-callout__container")
       end
