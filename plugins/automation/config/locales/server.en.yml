@@ -89,7 +89,7 @@ en:
     scriptables:
       email_on_flagged_post:
         title: Email on flagged post
-        description: Send a custom email whenever a post is flagged
+        description: Send a custom email whenever a flag is created on a post
         subject: "Flagged post: %{topic_title} (%{flagger_username})"
         default_template: |-
           A post has been flagged.
@@ -105,13 +105,6 @@ en:
           --------
           Post excerpt:
           {{post_excerpt}}
-        fields:
-          email_template:
-            label: Email template
-            description: Supports automation placeholders
-          recipients:
-            label: Recipients
-            description: Users, groups, or email addresses to notify
       post:
         title: Create a post
         description: Create a post on a specified topic

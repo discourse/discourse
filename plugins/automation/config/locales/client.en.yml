@@ -285,8 +285,6 @@ en:
               description: Optional, will trigger only if the post has any of these tags
       scriptables:
         email_on_flagged_post:
-          title: Email on flagged post
-          description: Send a custom email whenever a flag is created on a post
           fields:
             email_template:
               label: Email template
