@@ -2,6 +2,7 @@
 
 describe "EmailOnFlag" do
   fab!(:recipient) { Fabricate(:user, email: "recipient@example.com") }
+  fab!(:user_2, :user)
   fab!(:flagger) { Fabricate(:user, trust_level: TrustLevel[2]) }
   fab!(:second_flagger) { Fabricate(:user, trust_level: TrustLevel[2]) }
   fab!(:post)
@@ -18,13 +19,18 @@ describe "EmailOnFlag" do
     SiteSetting.discourse_automation_enabled = true
     SiteSetting.disable_emails = "no"
 
-    automation.upsert_field!("recipients", "email_group_user", { value: [recipient.email] })
+    automation.upsert_field!(
+      "recipients",
+      "email_group_user",
+      { value: [recipient.email, user_2.username] },
+    )
+
     automation.upsert_field!(
       "email_template",
       "message",
       {
         value:
-          "Flagged by {{flagged_username}} on {{topic_title}}\n{{topic_url}}\n{{post_excerpt}}",
+          "Flagged by {{flagger_username}} on {{topic_title}}\n{{topic_url}}\n{{post_excerpt}}",
       },
     )
     automation.reload
@@ -48,15 +54,22 @@ describe "EmailOnFlag" do
     result = PostActionCreator.spam(flagger, post)
     expect(result.success).to eq(true)
 
-    expect { run_script(result.post_action) }.to change { ActionMailer::Base.deliveries.size }.by(1)
+    expect { run_script(result.post_action) }.to change { ActionMailer::Base.deliveries.size }.by(2)
 
-    mail = ActionMailer::Base.deliveries.last
+    mail_to_recipient = ActionMailer::Base.deliveries.find { |m| m.to == [recipient.email] }
 
-    expect(mail.to).to contain_exactly(recipient.email)
-    expect(mail.subject).to include(post.topic.title)
+    expect(mail_to_recipient.subject).to include(post.topic.title)
+    expect(mail_to_recipient.body.encoded).to include(flagger.username)
+    expect(mail_to_recipient.body.encoded).to include(post.excerpt(300, strip_links: true))
+    expect(mail_to_recipient.body.encoded).to include(
+      "#{Discourse.base_url}#{post.topic.relative_url}",
+    )
 
-    expect(mail.body.encoded).to include(flagger.username)
-    expect(mail.body.encoded).to include(post.excerpt(300, strip_links: true))
-    expect(mail.body.encoded).to include("#{Discourse.base_url}#{post.topic.relative_url}")
+    mail_to_user2 = ActionMailer::Base.deliveries.find { |m| m.to == [user_2.primary_email.email] }
+
+    expect(mail_to_user2.subject).to include(post.topic.title)
+    expect(mail_to_user2.body.encoded).to include(flagger.username)
+    expect(mail_to_user2.body.encoded).to include(post.excerpt(300, strip_links: true))
+    expect(mail_to_user2.body.encoded).to include("#{Discourse.base_url}#{post.topic.relative_url}")
   end
 end
