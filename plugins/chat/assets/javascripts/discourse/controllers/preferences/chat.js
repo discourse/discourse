@@ -32,8 +32,6 @@ export const HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS = "only_mentions";
 export default class PreferencesChatController extends Controller {
   @service siteSettings;
 
-  subpageTitle = i18n("chat.admin.title");
-
   chatQuickReactionTypes = [
     {
       label: i18n("chat.quick_reaction_type.options.frequent"),

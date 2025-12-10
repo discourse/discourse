@@ -192,8 +192,7 @@ export default class Chat extends Component {
 
         {{#if (eq data.chat_quick_reaction_type "custom")}}
           <form.Field
-            @title={{i18n "chat.quick_reaction_type.title"}}
-            @showTitle={{false}}
+            @title={{i18n "chat.quick_reaction_type.options.custom"}}
             @name="chat_quick_reactions_custom"
             @format="large"
             as |field|
