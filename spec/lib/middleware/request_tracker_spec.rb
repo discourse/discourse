@@ -590,6 +590,133 @@ RSpec.describe Middleware::RequestTracker do
         expect(ApplicationRequest.page_view_anon.first).to eq(nil)
       end
     end
+
+    describe "browser page view logging" do
+      before { SiteSetting.enable_browser_page_view_logging = true }
+
+      it "logs browser page views when tracking page views" do
+        data =
+          Middleware::RequestTracker.get_data(
+            env("HTTP_DISCOURSE_TRACK_VIEW" => "1"),
+            ["200", {}],
+            0.1,
+          )
+
+        expect { Middleware::RequestTracker.log_request(data) }.to change {
+          BrowserPageView.count
+        }.by(1)
+
+        view = BrowserPageView.order(:created_at).last
+        expect(view.http_status).to eq(200)
+        expect(view.is_crawler).to eq(false)
+        expect(view.url).to be_present
+      end
+
+      it "logs browser page views for API requests" do
+        data =
+          Middleware::RequestTracker.get_data(
+            env("_DISCOURSE_API" => "1"),
+            ["200", { "Content-Type" => "text/json" }],
+            0.1,
+          )
+
+        expect { Middleware::RequestTracker.log_request(data) }.to change {
+          BrowserPageView.count
+        }.by(1)
+
+        view = BrowserPageView.order(:created_at).last
+        expect(view.is_api).to eq(true)
+      end
+
+      it "logs browser page views for user API requests" do
+        data =
+          Middleware::RequestTracker.get_data(env("_DISCOURSE_USER_API" => "1"), ["200", {}], 0.1)
+
+        expect { Middleware::RequestTracker.log_request(data) }.to change {
+          BrowserPageView.count
+        }.by(1)
+
+        view = BrowserPageView.order(:created_at).last
+        expect(view.is_user_api).to eq(true)
+      end
+
+      it "logs browser page views for deferred tracking" do
+        data =
+          Middleware::RequestTracker.get_data(
+            env(:path => "/message-bus/abcde/poll", "HTTP_DISCOURSE_DEFERRED_TRACK_VIEW" => "1"),
+            ["200", { "Content-Type" => "text/html" }],
+            0.1,
+          )
+
+        expect { Middleware::RequestTracker.log_request(data) }.to change {
+          BrowserPageView.count
+        }.by(1)
+      end
+
+      it "logs crawler page views" do
+        data =
+          Middleware::RequestTracker.get_data(
+            env("HTTP_USER_AGENT" => "AdsBot-Google (+http://www.google.com/adsbot.html)"),
+            ["200", { "Content-Type" => "text/html" }],
+            0.1,
+          )
+
+        expect { Middleware::RequestTracker.log_request(data) }.to change {
+          BrowserPageView.count
+        }.by(1)
+
+        view = BrowserPageView.order(:created_at).last
+        expect(view.is_crawler).to eq(true)
+      end
+
+      it "does not log when setting is disabled" do
+        SiteSetting.enable_browser_page_view_logging = false
+
+        data =
+          Middleware::RequestTracker.get_data(
+            env("HTTP_DISCOURSE_TRACK_VIEW" => "1"),
+            ["200", {}],
+            0.1,
+          )
+
+        expect { Middleware::RequestTracker.log_request(data) }.not_to change {
+          BrowserPageView.count
+        }
+      end
+
+      it "does not log requests that only increment http_total" do
+        data =
+          Middleware::RequestTracker.get_data(
+            env("HTTP_USER_AGENT" => "kube-probe/1.18", "REQUEST_URI" => "/srv/status"),
+            ["200", { "Content-Type" => "text/plain" }],
+            0.1,
+          )
+
+        expect { Middleware::RequestTracker.log_request(data) }.not_to change {
+          BrowserPageView.count
+        }
+      end
+
+      it "captures url, user_agent, referrer, and route" do
+        data =
+          Middleware::RequestTracker.get_data(
+            env(
+              "HTTP_DISCOURSE_TRACK_VIEW" => "1",
+              "HTTP_REFERER" => "https://google.com/search?q=test",
+              :path => "/t/test-topic/123",
+            ),
+            ["200", {}],
+            0.1,
+          )
+
+        Middleware::RequestTracker.log_request(data)
+
+        view = BrowserPageView.order(:created_at).last
+        expect(view.url).to eq("/t/test-topic/123")
+        expect(view.user_agent).to be_present
+        expect(view.referrer).to eq("https://google.com/search?q=test")
+      end
+    end
   end
 
   describe "rate limiting" do
