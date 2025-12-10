@@ -1,5 +1,3 @@
-// FIXME: This doesn't work in the MiniRacer environment
-import config from "discourse/config/environment";
 import DeprecationWorkflow from "../deprecation-workflow";
 
 const handlers = [];
@@ -50,9 +48,14 @@ export default function deprecated(msg, options = {}) {
 
   handlers.forEach((h) => h(msg, options));
 
+  let config;
+  if (require.has("discourse/config/environment")) {
+    config = require("discourse/config/environment").default;
+  }
+
   if (
     raiseError ||
-    DeprecationWorkflow.shouldThrow(id, config.RAISE_ON_DEPRECATION)
+    (config && DeprecationWorkflow.shouldThrow(id, config.RAISE_ON_DEPRECATION))
   ) {
     throw msg;
   }
