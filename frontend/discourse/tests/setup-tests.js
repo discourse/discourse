@@ -406,8 +406,14 @@ export default function setupTests(config) {
 
   // core tests run without loading plugins or themes
   const isCoreTest = !hasPluginJs && !hasThemeJs;
+  const isPreinstalledPluginTest = !!document.querySelector(
+    `script[data-discourse-plugin="${CSS.escape(target)}"][data-preinstalled="true"]`
+  );
 
-  if (window.EmberENV.RAISE_ON_DEPRECATION ?? isCoreTest) {
+  if (
+    window.EmberENV.RAISE_ON_DEPRECATION ??
+    (isCoreTest || isPreinstalledPluginTest)
+  ) {
     configureRaiseOnDeprecation();
   }
 }
