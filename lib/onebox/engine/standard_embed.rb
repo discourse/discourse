@@ -51,6 +51,7 @@ module Onebox
         set_favicon_data_on_raw
         set_description_on_raw
         enhance_title_with_anchor
+        enhance_description_with_anchor
 
         @raw
       end
@@ -202,6 +203,57 @@ module Onebox
         end
       end
 
+      def enhance_description_with_anchor
+        return unless html_doc
+
+        fragment = extract_url_fragment
+        return if fragment.blank?
+
+        section_description = find_section_description(fragment)
+        return if section_description.blank?
+
+        cleaned_description = clean_section_description(section_description)
+        return if cleaned_description.blank?
+        return if @raw[:description].present? && @raw[:description].include?(cleaned_description)
+
+        if @raw[:description].present?
+          @raw[:description] = "#{cleaned_description} | #{@raw[:description]}"
+        else
+          @raw[:description] = cleaned_description
+        end
+      end
+
+      def find_section_description(fragment)
+        target = find_anchor_target(fragment)
+        return nil unless target
+
+        extract_description_from_target(target)
+      end
+
+      def find_anchor_target(fragment)
+        html_doc.at_xpath("//*[@id='#{fragment.gsub("'", "\\'")}']") ||
+          html_doc.at_xpath("//a[@name='#{fragment.gsub("'", "\\'")}']") ||
+          html_doc.at_css("##{CSS.escape(fragment)}")
+      end
+
+      def extract_description_from_target(target)
+        parent_article = target.ancestors("article, section, details, .docstring").first
+        search_context = parent_article || target.parent || target
+
+        paragraph = search_context.at_css("p:not(.admonition-header)")
+        return paragraph.text.strip if paragraph&.text&.strip.present?
+
+        next_p = target.at_xpath("following-sibling::p[1]") || target.at_xpath("following::p[1]")
+        return next_p.text.strip if next_p&.text&.strip.present?
+
+        nil
+      end
+
+      def clean_section_description(text)
+        cleaned = text.gsub(/\s+/, " ").strip
+        cleaned.truncate(300, separator: " ", omission: "…")
+      end
+
       def enhance_title_with_anchor
         return unless html_doc
         return if @raw[:title].blank?
@@ -230,10 +282,7 @@ module Onebox
       end
 
       def find_section_title(fragment)
-        target =
-          html_doc.at_xpath("//*[@id='#{fragment.gsub("'", "\\'")}']") ||
-            html_doc.at_xpath("//a[@name='#{fragment.gsub("'", "\\'")}']") ||
-            html_doc.at_css("##{CSS.escape(fragment)}")
+        target = find_anchor_target(fragment)
         return nil unless target
 
         return target.text.strip if target.name =~ /^h[1-6]$/i
