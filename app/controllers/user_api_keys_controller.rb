@@ -11,6 +11,8 @@ class UserApiKeysController < ApplicationController
 
   AUTH_API_VERSION = 4
 
+  ALLOWED_PADDING_MODES = %w[pkcs1 oaep].freeze
+
   def new
     if request.head?
       head :ok, auth_api_version: AUTH_API_VERSION
@@ -90,10 +92,7 @@ class UserApiKeysController < ApplicationController
     public_key_str = (@client.public_key.presence || params[:public_key])
     public_key = OpenSSL::PKey::RSA.new(public_key_str)
 
-    # by default, Ruby uses `PKCS1_PADDING` here
-    # see https://docs.ruby-lang.org/en/3.2/OpenSSL/PKey/RSA.html#method-i-public_encrypt
-    # make sure that Node/OpenSSL can use the same padding in your implementation
-    @payload = Base64.encode64(public_key.public_encrypt(@payload))
+    @payload = Base64.encode64(public_key.public_encrypt(@payload, rsa_padding_mode))
 
     if scopes.include?("one_time_password")
       # encrypt one_time_password separately to bypass 128 chars encryption limit
@@ -218,6 +217,18 @@ class UserApiKeysController < ApplicationController
     otp = SecureRandom.hex
     Discourse.redis.setex "otp_#{otp}", 10.minutes, username
 
-    Base64.encode64(public_key.public_encrypt(otp))
+    Base64.encode64(public_key.public_encrypt(otp, rsa_padding_mode))
+  end
+
+  def rsa_padding_mode
+    # OAEP (Optimal Asymmetric Encryption Padding) is recommended for new applications
+    # and is required for FIPS 140-3 compliance. PKCS1 padding is kept as default
+    # for backwards compatibility with existing clients.
+    case params[:padding]
+    when "oaep"
+      OpenSSL::PKey::RSA::PKCS1_OAEP_PADDING
+    else
+      OpenSSL::PKey::RSA::PKCS1_PADDING
+    end
   end
 end

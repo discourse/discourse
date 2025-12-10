@@ -268,6 +268,29 @@ RSpec.describe UserApiKeysController do
       expect(api_key.user_id).to eq(user.id)
     end
 
+    it "encrypts payload with OAEP padding when requested" do
+      # OAEP padding has larger overhead (42 bytes vs 11 for PKCS1), requiring a larger key
+      oaep_private_key = OpenSSL::PKey::RSA.new(2048)
+      oaep_public_key = oaep_private_key.public_key.to_pem
+
+      user = Fabricate(:user, trust_level: TrustLevel[0])
+      sign_in(user)
+
+      oaep_args = args.except(:auth_redirect).merge(padding: "oaep", public_key: oaep_public_key)
+
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      post "/user-api-key.json", params: oaep_args
+      expect(response.status).not_to eq(302)
+      payload = response.parsed_body["payload"]
+      encrypted = Base64.decode64(payload)
+      parsed =
+        JSON.parse(
+          oaep_private_key.private_decrypt(encrypted, OpenSSL::PKey::RSA::PKCS1_OAEP_PADDING),
+        )
+      api_key = UserApiKey.with_key(parsed["key"]).first
+      expect(api_key.user_id).to eq(user.id)
+    end
+
     it "will allow redirect to wildcard urls" do
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect] + "/*"
       args[:auth_redirect] = args[:auth_redirect] + "/bluebirds/fly"
@@ -406,6 +429,29 @@ RSpec.describe UserApiKeysController do
       key = OpenSSL::PKey::RSA.new(private_key)
 
       parsed = key.private_decrypt(encrypted)
+
+      expect(Discourse.redis.get("otp_#{parsed}")).to eq(user.username)
+    end
+
+    it "encrypts one-time-password with OAEP padding when requested" do
+      # OAEP padding has larger overhead, use a larger key for safety
+      oaep_private_key = OpenSSL::PKey::RSA.new(2048)
+      oaep_public_key = oaep_private_key.public_key.to_pem
+
+      SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
+      user = Fabricate(:user, refresh_auto_groups: true)
+      sign_in(user)
+
+      post "/user-api-key/otp", params: otp_args.merge(padding: "oaep", public_key: oaep_public_key)
+      expect(response.status).to eq(302)
+
+      uri = URI.parse(response.redirect_url)
+
+      query = uri.query
+      payload = query.split("oneTimePassword=")[1]
+      encrypted = Base64.decode64(CGI.unescape(payload))
+
+      parsed = oaep_private_key.private_decrypt(encrypted, OpenSSL::PKey::RSA::PKCS1_OAEP_PADDING)
 
       expect(Discourse.redis.get("otp_#{parsed}")).to eq(user.username)
     end
