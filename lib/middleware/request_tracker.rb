@@ -216,10 +216,15 @@ class Middleware::RequestTracker
     is_topic_timings = request.path.start_with?("#{Discourse.base_path}/topics/timings")
 
     # Auth cookie can be used to find the ID for logged in users, but API calls must look up the
-    # current user based on env variables.
+    # current user based on env variables. Note: find_v0_auth_cookie returns a string (just the token),
+    # while find_v1_auth_cookie returns a hash with :user_id, so we check if it's a hash first.
     current_user_id =
       begin
-        (auth_cookie&.[](:user_id) || CurrentUser.lookup_from_env(env)&.id)
+        if auth_cookie.is_a?(Hash)
+          auth_cookie[:user_id]
+        else
+          CurrentUser.lookup_from_env(env)&.id
+        end
       rescue Discourse::InvalidAccess => err
         # This error is raised when the API key is invalid, no need to stop the show.
         Discourse.warn_exception(
