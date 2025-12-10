@@ -291,6 +291,21 @@ RSpec.describe UserApiKeysController do
       expect(api_key.user_id).to eq(user.id)
     end
 
+    it "rejects OAEP requests when payload exceeds maximum size for the key" do
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+
+      sign_in Fabricate(:user, trust_level: TrustLevel[0])
+
+      public_key = OpenSSL::PKey::RSA.new(2048).public_key.to_pem
+      nonce = "x" * 150
+      params = args.except(:auth_redirect).merge(padding: "oaep", public_key:, nonce:)
+
+      post "/user-api-key.json", params: params
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"].first).to include("Payload too large for OAEP")
+    end
+
     it "will allow redirect to wildcard urls" do
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect] + "/*"
       args[:auth_redirect] = args[:auth_redirect] + "/bluebirds/fly"
