@@ -430,5 +430,55 @@ module DiscourseAutomation
             .destroy_all
         end
     end
+
+    def self.handle_flag_created(post_action, creator)
+      name = DiscourseAutomation::Triggers::FLAG_CREATED
+
+      post = post_action.post
+      topic = post&.topic
+
+      DiscourseAutomation::Automation
+        .where(trigger: name, enabled: true)
+        .find_each do |automation|
+          flag_type_field = automation.trigger_field("flag_type")
+          flag_type_id = flag_type_field["value"]
+
+          next if flag_type_id.present? && flag_type_id != post_action.post_action_type_id
+
+          categories = automation.trigger_field("categories")["value"]
+          if categories.present?
+            next if topic.blank? || !categories.include?(topic.category_id)
+          end
+
+          tags = automation.trigger_field("tags")["value"]
+          if tags.present?
+            topic_tag_names = topic&.tags&.map(&:name) || []
+            next if (topic_tag_names & tags).empty?
+          end
+
+          automation.trigger!(
+            "kind" => name,
+            "post_action" => post_action,
+            "post" => post,
+            "placeholders" => {
+              "topic_url" => topic ? "#{Discourse.base_url}#{topic.relative_url}" : nil,
+              "topic_title" => topic&.title,
+              "post_url" => post&.full_url,
+              "post_number" => post&.post_number,
+              "flagger_username" => post_action.user&.username,
+              "flagged_username" => post&.user&.username,
+              "flag_type" => PostActionTypeView.new.names[post_action.post_action_type_id],
+              "category" => topic&.category&.name,
+              "tags" => topic&.tags&.map(&:name)&.join(", "),
+              "post_excerpt" =>
+                begin
+                  Post.excerpt(post, 300, strip_links: true)
+                rescue StandardError
+                  nil
+                end || post&.raw.to_s.truncate(300),
+            },
+          )
+        end
+    end
   end
 end

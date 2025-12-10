@@ -9,6 +9,7 @@ module DiscourseAutomation
     AUTO_TAG_TOPIC = "auto_tag_topic"
     BANNER_TOPIC = "banner_topic"
     CLOSE_TOPIC = "close_topic"
+    EMAIL_ON_FLAG = "email_on_flag"
     FLAG_POST_ON_WORDS = "flag_post_on_words"
     GIFT_EXCHANGE = "gift_exchange"
     GROUP_CATEGORY_NOTIFICATION_DEFAULT = "group_category_notification_default"

@@ -16,6 +16,26 @@ en:
         invalid_field: Field’s component `%{component}` is not usable on `%{target}:%{target_name}`.
         invalid_metadata: Data for `%{field}` is invalid or component `%{component}` is unknown.
     triggerables:
+      flag_created:
+        title: Flag created
+        description: Triggers an automation when a post is flagged
+        flag_types:
+          spam: Spam
+          inappropriate: Inappropriate
+          off_topic: Off-Topic
+          notify_moderators: Something Else
+          notify_user: Notify User
+          illegal: Illegal
+        fields:
+          flag_type:
+            label: Flag type
+            description: Optionally restrict to a specific flag type
+          categories:
+            label: Categories
+            description: Only trigger when the flagged topic belongs to these categories
+          tags:
+            label: Tags
+            description: Only trigger when the flagged topic has any of these tags
       errors:
         custom_fields_or_user_profile_required: "At least one of 'custom_fields' or 'user_profile' must be provided."
       user_badge_granted:
@@ -74,6 +94,31 @@ en:
         title: After user update
         description: When a user updates any information the automation will be triggered
     scriptables:
+      email_on_flag:
+        title: Email on flag
+        description: Send a custom email whenever a flag is created
+        subject: "Flagged post: %{topic_title} (%{flagger_username})"
+        default_template: |-
+          A post has been flagged.
+
+          Topic: %%TOPIC_TITLE%% (%%TOPIC_URL%%)
+          Post: %%POST_URL%% (##%%POST_NUMBER%%)
+          Flag type: %%FLAG_TYPE%%
+          Flagged user: %%FLAGGED_USERNAME%%
+          Flagged by: %%FLAGGER_USERNAME%%
+          Category: %%CATEGORY%%
+          Tags: %%TAGS%%
+
+          --------
+          Post excerpt:
+          %%POST_EXCERPT%%
+        fields:
+          email_template:
+            label: Email template
+            description: Supports automation placeholders
+          recipients:
+            label: Recipients
+            description: Users, groups, or email addresses to notify
       post:
         title: Create a post
         description: Create a post on a specified topic

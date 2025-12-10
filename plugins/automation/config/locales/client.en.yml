@@ -61,6 +61,26 @@ en:
         text:
           label: Text
       triggerables:
+        flag_created:
+          title: Flag created
+          description: Triggers when a flag is raised on a post
+          flag_types:
+            spam: Spam
+            inappropriate: Inappropriate
+            off_topic: Off-Topic
+            notify_moderators: Something Else
+            notify_user: Notify User
+            illegal: Illegal
+          fields:
+            flag_type:
+              label: Flag type
+              description: Optionally limit to a single flag type
+            categories:
+              label: Categories
+              description: Only trigger when the flagged topic is in these categories
+            tags:
+              label: Tags
+              description: Only trigger when the flagged topic has any of these tags
         not_found: Couldn’t find trigger `%{trigger}` for automation `%{automation}`, ensure the associated plugin is installed
         user_badge_granted:
           fields:
@@ -271,6 +291,16 @@ en:
               label: Tags
               description: Optional, will trigger only if the post has any of these tags
       scriptables:
+        email_on_flag:
+          title: Email on flag
+          description: Send a custom email whenever a flag is created
+          fields:
+            email_template:
+              label: Email template
+              description: Supports automation placeholders
+            recipients:
+              label: Recipients
+              description: Users, groups, or email addresses to notify
         not_found: Couldn’t find script `%{script}` for automation `%{automation}`, ensure the associated plugin is installed
         zapier_webhook:
           fields:
