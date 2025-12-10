@@ -61,21 +61,4 @@ describe "EmailOnFlag" do
     expect(mail.body.encoded).to include(post.excerpt(300, strip_links: true))
     expect(mail.body.encoded).to include("#{Discourse.base_url}#{post.topic.relative_url}")
   end
-
-  it "sends an email with placeholders applied" do
-    result = PostActionCreator.spam(flagger, post)
-    expect(result.success).to eq(true)
-
-    expect { run_script(result.post_action) }.to change { ActionMailer::Base.deliveries.size }.by(1)
-
-    email = ActionMailer::Base.deliveries.last
-
-    expect(email.to).to contain_exactly(recipient.email)
-    expect(email.subject).to include(post.topic.title)
-
-    body = email.body.to_s
-    expect(body).to include(flagger.username)
-    expect(body).to include(post.excerpt(300, strip_links: true))
-    expect(body).to include("#{Discourse.base_url}#{post.topic.relative_url}")
-  end
 end
