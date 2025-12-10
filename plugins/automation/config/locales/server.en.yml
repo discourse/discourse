@@ -16,8 +16,8 @@ en:
         invalid_field: Field’s component `%{component}` is not usable on `%{target}:%{target_name}`.
         invalid_metadata: Data for `%{field}` is invalid or component `%{component}` is unknown.
     triggerables:
-      flag_created:
-        title: Flag created
+      post_flag_created:
+        title: Post flag created
         description: Triggers an automation when a post is flagged
         flag_types:
           spam: Spam

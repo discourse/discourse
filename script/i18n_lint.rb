@@ -58,7 +58,7 @@ class LocaleFileValidator
 
   EXEMPTED_DOUBLE_CURLY_BRACKET_KEYS = %w[
     js.discourse_automation.scriptables.auto_responder.fields.word_answer_list.description
-    discourse_automation.scriptables.email_on_flagged_post.default_template,
+    discourse_automation.scriptables.email_on_flagged_post.default_template
   ]
 
   def initialize(filename)
