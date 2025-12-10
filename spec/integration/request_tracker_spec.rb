@@ -62,7 +62,7 @@ RSpec.describe "request tracker" do
       view = BrowserPageView.order(:created_at).last
       expect(view.is_api).to eq(true)
       expect(view.http_status).to eq(200)
-      expect(view.url).to eq("/u/#{api_key.user.username}.json")
+      expect(view.path).to eq("/u/#{api_key.user.username}.json")
       expect(view.route).to eq("users#show")
       expect(view.ip_address).to be_present
     end
@@ -95,7 +95,7 @@ RSpec.describe "request tracker" do
       view = BrowserPageView.order(:created_at).last
       expect(view.is_api).to eq(false)
       expect(view.is_crawler).to eq(false)
-      expect(view.url).to eq("/u/#{user.username}")
+      expect(view.path).to eq("/u/#{user.username}")
       expect(view.route).to eq("users#show")
     end
 

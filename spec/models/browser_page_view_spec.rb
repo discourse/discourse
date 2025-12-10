@@ -6,7 +6,8 @@ RSpec.describe BrowserPageView do
       {
         current_user_id: 1,
         topic_id: 123,
-        url: "/t/test-topic/123",
+        path: "/t/test-topic/123",
+        query_string: "page=2",
         route: "topics#show",
         user_agent: "Mozilla/5.0 Test Browser",
         request_remote_ip: "192.168.1.1",
@@ -25,7 +26,8 @@ RSpec.describe BrowserPageView do
       view = BrowserPageView.order(:created_at).last
       expect(view.user_id).to eq(1)
       expect(view.topic_id).to eq(123)
-      expect(view.url).to eq("/t/test-topic/123")
+      expect(view.path).to eq("/t/test-topic/123")
+      expect(view.query_string).to eq("page=2")
       expect(view.route).to eq("topics#show")
       expect(view.user_agent).to eq("Mozilla/5.0 Test Browser")
       expect(view.ip_address.to_s).to eq("192.168.1.1")
@@ -38,14 +40,24 @@ RSpec.describe BrowserPageView do
       expect(view.created_at).to be_present
     end
 
-    it "truncates long url values" do
-      long_url = "a" * 2000
-      data[:url] = long_url
+    it "truncates long path values" do
+      long_path = "a" * 2000
+      data[:path] = long_path
 
       BrowserPageView.log!(data)
       view = BrowserPageView.order(:created_at).last
 
-      expect(view.url.length).to eq(1024)
+      expect(view.path.length).to eq(1024)
+    end
+
+    it "truncates long query_string values" do
+      long_query = "a" * 2000
+      data[:query_string] = long_query
+
+      BrowserPageView.log!(data)
+      view = BrowserPageView.order(:created_at).last
+
+      expect(view.query_string.length).to eq(1024)
     end
 
     it "truncates long user_agent values" do
@@ -82,7 +94,8 @@ RSpec.describe BrowserPageView do
       view = BrowserPageView.order(:created_at).last
       expect(view.user_id).to be_nil
       expect(view.topic_id).to be_nil
-      expect(view.url).to be_nil
+      expect(view.path).to be_nil
+      expect(view.query_string).to be_nil
       expect(view.route).to be_nil
     end
 
