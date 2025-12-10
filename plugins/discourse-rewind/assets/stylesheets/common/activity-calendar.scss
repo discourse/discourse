@@ -1,0 +1,73 @@
+.--activity-calendar {
+  margin-bottom: 2em;
+
+  .rewind-report-title {
+    border: none;
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  .rewind-card {
+    padding: 0;
+  }
+
+  .rewind-calendar {
+    border-collapse: unset;
+    border-spacing: 3px;
+    width: 100%;
+
+    @media screen and (width <= 475px) {
+      border-spacing: 1px;
+    }
+
+    tr {
+      border: none;
+    }
+  }
+
+  .activity-header-cell {
+    font-size: 10px;
+    font-weight: normal;
+    text-align: left;
+    color: #fff;
+  }
+
+  .rewind-calendar-cell {
+    height: 10px;
+    width: 10px;
+
+    @media screen and (width <= 475px) {
+      height: 5px;
+      width: 5px;
+    }
+
+    &.--empty {
+      background: var(--primary-low);
+    }
+
+    &.--low {
+      background: color-mix(in srgb, var(--rewind-green) 40%, transparent);
+    }
+
+    &.--medium {
+      background: color-mix(in srgb, var(--rewind-green) 70%, transparent);
+    }
+
+    &.--high {
+      background: var(--rewind-green);
+      animation: pulse-high 2s ease-in-out infinite;
+    }
+  }
+}
+
+@keyframes pulse-high {
+  0%,
+  100% {
+    box-shadow: 0 0 0 rgb(0, 255, 0, 0);
+  }
+
+  50% {
+    box-shadow: 0 0 8px 2px var(--rewind-green);
+  }
+}

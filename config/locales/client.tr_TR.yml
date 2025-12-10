@@ -3198,6 +3198,9 @@ tr_TR:
         reset_bump_dates: "Üste sıçratma tarihlerini sıfırla"
         defer: "Okunmamış olarak işaretle"
         delete: "Konuları sil"
+        delete_topics_count:
+          one: "Konuyu Sil"
+          other: "Konuları sil"
         dismiss: "Kapat"
         dismiss_read: "Tüm okunmamışları kapat"
         dismiss_read_with_selected:
@@ -5211,6 +5214,8 @@ tr_TR:
         enabled_for_options:
           everyone: "Herkes"
           staff: "Sadece personel"
+        statuses:
+          experimental: "Deneysel"
         impact_roles:
           admins: "Yöneticiler"
           moderators: "Moderatörler"
@@ -5221,6 +5226,7 @@ tr_TR:
           disabled: "Devre Dışı"
           impact_type_feature: "Özellik"
           impact_type_other: "Diğer"
+          status_experimental: "Deneysel"
       config:
         about:
           title: "Siteniz hakkında"

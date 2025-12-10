@@ -1,0 +1,26 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  js:
+    discourse_rewind:
+      reports:
+        reading_time:
+          title: Час читання
+        chat_usage:
+          messages: повідомлення
+          you: Ви
+          status_online: "● онлайн"
+        invites:
+          title: Запрошення
+          invitee_posts: Дописів створено
+          invitee_likes: Вподобані
+          label_invitations_sent: "Запрошення надіслані:"
+        new_user_interactions:
+          likes_given: Вподобані
+          mentions: Згадки
+        writing_analysis:
+          menu_other: Інше

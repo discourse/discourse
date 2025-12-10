@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 fi:
+  js:
+    github:
+      pr_status:
+        draft: "Luonnos"
+        open: "Avoinna"
+        approved: "Hyväksytty"
+        closed: "Suljettu"
   admin_js:
     admin:
       site_settings:

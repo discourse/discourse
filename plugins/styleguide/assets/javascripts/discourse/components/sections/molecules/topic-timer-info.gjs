@@ -1,10 +1,16 @@
+import Component from "@glimmer/component";
 import TopicTimerInfo from "discourse/components/topic-timer-info";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
-const TopicTimerInfoMolecule = <template>
-  <StyleguideExample @title="<TopicTimerInfo>">
-    <TopicTimerInfo @statusType="reminder" @executeAt={{@dummy.soon}} />
-  </StyleguideExample>
-</template>;
+export default class TopicTimerInfoMolecule extends Component {
+  topicTimerInfoCode = `<TopicTimerInfo @statusType="reminder" @executeAt={{@dummy.soon}} />`;
 
-export default TopicTimerInfoMolecule;
+  <template>
+    <StyleguideExample
+      @title="<TopicTimerInfo>"
+      @code={{this.topicTimerInfoCode}}
+    >
+      <TopicTimerInfo @statusType="reminder" @executeAt={{@dummy.soon}} />
+    </StyleguideExample>
+  </template>
+}

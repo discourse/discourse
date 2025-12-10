@@ -3031,6 +3031,8 @@ ja:
         reset_bump_dates: "バンプ日をリセットする"
         defer: "未読にする"
         delete: "トピックを削除"
+        delete_topics_count:
+          other: "トピックを削除"
         dismiss: "閉じる"
         dismiss_read: "未読をすべて閉じる"
         dismiss_read_with_selected:
@@ -4947,6 +4949,8 @@ ja:
         enabled_for_options:
           everyone: "全員"
           staff: "スタッフのみ"
+        statuses:
+          experimental: "実験的"
         impact_roles:
           admins: "管理者"
           moderators: "モデレーター"
@@ -4957,6 +4961,7 @@ ja:
           disabled: "無効"
           impact_type_feature: "機能"
           impact_type_other: "その他"
+          status_experimental: "実験的"
       config:
         about:
           title: "サイトについて"

@@ -2902,6 +2902,9 @@ sq:
         reset_bump_dates: "Rivendos datat e përplasjes"
         defer: "Shëno si të palexuar"
         delete: "Fshi temat"
+        delete_topics_count:
+          one: "Fshi temën"
+          other: "Fshi temat"
         dismiss: "Hiqe"
         dismiss_read: "Hiq të gjitha temat e palexuara"
         dismiss_read_with_selected:

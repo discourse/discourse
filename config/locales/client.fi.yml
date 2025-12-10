@@ -3198,6 +3198,9 @@ fi:
         reset_bump_dates: "Nollaa nostopäivät"
         defer: "Merkitse lukemattomaksi"
         delete: "Poista ketjut"
+        delete_topics_count:
+          one: "Poista ketju"
+          other: "Poista ketjut"
         dismiss: "Kuittaa"
         dismiss_read: "Kuittaa luetuiksi"
         dismiss_read_with_selected:
@@ -5211,6 +5214,8 @@ fi:
         enabled_for_options:
           everyone: "Kaikki"
           staff: "Vain henkilökunnalle"
+        statuses:
+          experimental: "Kokeellinen"
         impact_roles:
           admins: "Ylläpitäjät"
           moderators: "Valvojat"
@@ -5221,6 +5226,7 @@ fi:
           disabled: "Pois käytöstä"
           impact_type_feature: "Ominaisuus"
           impact_type_other: "Muut"
+          status_experimental: "Kokeellinen"
       config:
         about:
           title: "Tietoa sivustostasi"

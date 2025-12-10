@@ -1,7 +1,6 @@
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
 
 const SignupPageCta = <template>
@@ -24,7 +23,7 @@ const SignupPageCta = <template>
           {{i18n "create_account.already_have_account"}}
         </span>
         <DButton
-          @action={{routeAction "showLogin"}}
+          @action={{@goToLogin}}
           @disabled={{@formSubmitted}}
           @label="log_in"
           class="btn-large btn-flat signup-page-cta__login"

@@ -944,7 +944,9 @@ en:
         claimed_by: "Claimed by %{username} · %{relativeDate}"
         unclaimed_by: "Unclaimed by %{username} · %{relativeDate}"
         reviewed: "Reviewed"
-        reviewed_by: "Reviewed by %{username} · %{relativeDate}"
+        approved_by: "Approved by %{username} · %{relativeDate}"
+        rejected_by: "Rejected by %{username} · %{relativeDate}"
+        ignored_by: "Ignored by %{username} · %{relativeDate}"
         view_conversation: "view PM"
         note_added: "Moderator note"
         note_added_by: "Moderator note by %{username} · %{relativeDate}"
@@ -3515,6 +3517,15 @@ en:
         reset_bump_dates: "Reset bump dates"
         defer: "Mark unread"
         delete: "Delete Topics"
+        delete_topics_count:
+          one: "Delete Topic"
+          other: "Delete Topics"
+        delete_posts_count:
+          one: "Delete Post"
+          other: "Delete Posts"
+        delete_posts_confirmation:
+          one: "Are you sure you want to delete %{count} post?"
+          other: "Are you sure you want to delete %{count} posts?"
         dismiss: "Dismiss"
         dismiss_read: "Dismiss all unread"
         dismiss_read_with_selected:
@@ -5108,6 +5119,7 @@ en:
       add_to_calendar: "Add to calendar"
       google: "Google Calendar"
       ics: "ICS"
+      default_title: "Scheduled Event"
     tagging:
       all_tags: "All tags"
       other_tags: "Other Tags"
@@ -5761,7 +5773,7 @@ en:
             one: "the group %{groupNames}"
             other: "the groups %{groupNames}"
         statuses:
-          pre_alpha: "Pre-Alpha"
+          experimental: "Experimental"
           alpha: "Alpha"
           beta: "Beta"
           stable: "Stable"
@@ -5783,7 +5795,7 @@ en:
           impact_type_feature: "Feature"
           impact_type_other: "Other"
           status_all: "All statuses"
-          status_pre_alpha: "Pre-Alpha"
+          status_experimental: "Experimental"
           status_alpha: "Alpha"
           status_beta: "Beta"
           status_stable: "Stable"
@@ -7139,6 +7151,8 @@ en:
           create_name: "Name"
           save: "Save"
           long_title: "Amend colors, CSS and HTML contents of your site"
+          dark_mode: "%{themeName} dark mode"
+          light_mode: "%{themeName} light mode"
           edit: "Edit"
           edit_confirm: "This is a remote theme, if you edit CSS/HTML your changes will be erased next time you update the theme."
           update_confirm: "These local changes will be erased by the update. Are you sure you want to continue?"

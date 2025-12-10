@@ -9,7 +9,8 @@
       var(--topic-body-width-padding) * 2
   );
 
-  html.anon & {
+  html.anon &,
+  .styleguide-anon & {
     align-items: end;
   }
 

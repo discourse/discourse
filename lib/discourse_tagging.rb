@@ -737,7 +737,8 @@ module DiscourseTagging
       tag_names.uniq!
     end
 
-    opts[:unlimited] ? tag_names : tag_names[0...SiteSetting.max_tags_per_topic]
+    saving_tags = opts[:unlimited] ? tag_names : tag_names[0...SiteSetting.max_tags_per_topic]
+    DiscoursePluginRegistry.apply_modifier(:tags_for_saving, saving_tags, tag_names, guardian, opts)
   end
 
   def self.add_or_create_tags_by_name(taggable, tag_names_arg, opts = {})

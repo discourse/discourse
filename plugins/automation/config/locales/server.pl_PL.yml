@@ -8,6 +8,8 @@ pl_PL:
   site_settings:
     discourse_automation_enabled: "Włącz wtyczkę discourse-automation"
   discourse_automation:
+    staff_action_logs:
+      empty_value: "(puste)"
     models:
       automations:
         validations:

@@ -89,16 +89,20 @@
       @include ellipsis;
       padding-left: 0.5em;
       padding-right: 0.1em; // avoids some overflow cropping
-      text-align: right;
       color: var(--d-sidebar-link-badge-color);
       font-size: var(--font-down-2);
       font-weight: normal;
-      margin-left: auto;
+      flex-shrink: 0;
+
+      &:not(.icon) {
+        margin-left: auto;
+      }
     }
 
     .sidebar-section-link-suffix {
       margin-left: 1em;
       font-size: var(--font-down-4);
+      flex-shrink: 0;
 
       &.icon {
         &.urgent svg {
@@ -113,6 +117,8 @@
 
     .sidebar-section-link-content-text {
       @include ellipsis;
+      min-width: 0;
+      flex: 0 1 auto;
 
       .user-status-message {
         vertical-align: -0.125em;
@@ -181,6 +187,11 @@
       @include viewport.from(sm) {
         .prefix-text {
           font-size: var(--font-0);
+        }
+
+        &.emoji img {
+          width: calc(var(--d-sidebar-section-link-prefix-width) - 2px);
+          height: calc(var(--d-sidebar-section-link-prefix-width) - 2px);
         }
       }
     }

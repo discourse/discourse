@@ -836,6 +836,7 @@ zh_CN:
         flag_volume: "举报量"
         flagged_by_users:
           other: "由 %{count} 位唯一身份用户举报"
+        similar_posts: "过去的违规行为"
         flagged_in_timeframe:
           other: "%{count} 个已确认举报"
         user_activity: "用户信息"
@@ -3089,6 +3090,8 @@ zh_CN:
         reset_bump_dates: "重置顶帖日期"
         defer: "标记为未读"
         delete: "删除话题"
+        delete_topics_count:
+          other: "删除话题"
         dismiss: "忽略"
         dismiss_read: "忽略所有未读话题"
         dismiss_read_with_selected:
@@ -5098,7 +5101,7 @@ zh_CN:
           specific_groups_with_group_names:
             other: "群组 %{groupNames}"
         statuses:
-          pre_alpha: "Pre-Alpha"
+          experimental: "实验性"
           alpha: "Alpha"
           beta: "Beta"
           stable: "稳定"
@@ -5120,7 +5123,7 @@ zh_CN:
           impact_type_feature: "功能"
           impact_type_other: "其他"
           status_all: "所有状态"
-          status_pre_alpha: "Pre-Alpha"
+          status_experimental: "实验性"
           status_alpha: "Alpha"
           status_beta: "Beta"
           status_stable: "稳定"

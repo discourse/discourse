@@ -3209,6 +3209,9 @@ fr:
         reset_bump_dates: "Réinitialiser la date d'actualisation"
         defer: "Marquer comme non lu"
         delete: "Supprimer les sujets"
+        delete_topics_count:
+          one: "Supprimer le sujet"
+          other: "Supprimer les sujets"
         dismiss: "Marquer comme vus"
         dismiss_read: "Marquer tous les sujets comme vus"
         dismiss_read_with_selected:
@@ -5235,6 +5238,8 @@ fr:
         enabled_for_options:
           everyone: "Tout le monde"
           staff: "Responsables seulement"
+        statuses:
+          experimental: "Expérimental"
         impact_roles:
           admins: "Administrateurs "
           moderators: "Modérateurs"
@@ -5245,6 +5250,7 @@ fr:
           disabled: "Désactivé"
           impact_type_feature: "Fonctionnalité"
           impact_type_other: "Autre"
+          status_experimental: "Expérimental"
       config:
         about:
           title: "À propos de votre site"

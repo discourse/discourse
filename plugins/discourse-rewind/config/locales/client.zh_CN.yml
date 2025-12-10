@@ -1,0 +1,26 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  js:
+    discourse_rewind:
+      reports:
+        reading_time:
+          title: 阅读时间
+        chat_usage:
+          messages: 消息
+          you: 您
+          status_online: "● 在线"
+        invites:
+          title: 邀请
+          invitee_posts: 创建的帖子
+          invitee_likes: 点赞
+          label_invitations_sent: "已发送邀请:"
+        new_user_interactions:
+          likes_given: 点赞
+          mentions: 提及
+        writing_analysis:
+          menu_other: 其他
