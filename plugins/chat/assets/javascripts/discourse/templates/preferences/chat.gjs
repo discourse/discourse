@@ -1,13 +1,9 @@
 import Component from "@glimmer/component";
-import { concat, fn } from "@ember/helper";
-import { on } from "@ember/modifier";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import EmojiPicker from "discourse/components/emoji-picker";
 import Form from "discourse/components/form";
-import SaveControls from "discourse/components/save-controls";
-import withEventValue from "discourse/helpers/with-event-value";
-import ComboBox from "discourse/select-kit/components/combo-box";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -31,6 +27,10 @@ export default class Chat extends Component {
       chat_sound: this.args.controller.model.user_option.chat_sound,
       chat_header_indicator_preference:
         this.args.controller.model.user_option.chat_header_indicator_preference,
+      chat_separate_sidebar_mode:
+        this.args.controller.model.user_option.chat_separate_sidebar_mode,
+      chat_send_shortcut:
+        this.args.controller.model.user_option.chat_send_shortcut,
     };
   }
 
@@ -96,6 +96,18 @@ export default class Chat extends Component {
       "user_option.chat_header_indicator_preference",
       data.chat_header_indicator_preference
     );
+    // eslint-disable-next-line no-console
+    console.log("chat separate sidebar mode", data.chat_separate_sidebar_mode);
+    this.args.controller.model.set(
+      "user_option.chat_separate_sidebar_mode",
+      data.chat_separate_sidebar_mode
+    );
+    // eslint-disable-next-line no-console
+    console.log("chat send shortcut", data.chat_send_shortcut);
+    this.args.controller.model.set(
+      "user_option.chat_send_shortcut",
+      data.chat_send_shortcut
+    );
     this.args.controller.save();
   }
 
@@ -155,8 +167,22 @@ export default class Chat extends Component {
           @format="large"
           as |field|
         >
-          <field.Select as |select|>
+          <field.Select @includeNone={{false}} as |select|>
             {{#each @controller.headerIndicatorOptions as |option|}}
+              <select.Option @value={{option.value}}>
+                {{option.name}}
+              </select.Option>
+            {{/each}}
+          </field.Select>
+        </form.Field>
+        <form.Field
+          @title={{i18n "chat.separate_sidebar_mode.title"}}
+          @name="chat_separate_sidebar_mode"
+          @format="large"
+          as |field|
+        >
+          <field.Select @includeNone={{false}} as |select|>
+            {{#each @controller.chatSeparateSidebarModeOptions as |option|}}
               <select.Option @value={{option.value}}>
                 {{option.name}}
               </select.Option>
@@ -201,68 +227,22 @@ export default class Chat extends Component {
             </field.Custom>
           </form.Field>
         {{/if}}
+        <form.Field
+          @title={{i18n "chat.send_shortcut.title"}}
+          @name="chat_send_shortcut"
+          @format="large"
+          as |field|
+        >
+          <field.RadioGroup as |radioGroup|>
+            {{#each @controller.chatSendShortcutOptions as |option|}}
+              <radioGroup.Radio @value={{option.value}}>
+                {{option.label}}
+              </radioGroup.Radio>
+            {{/each}}
+          </field.RadioGroup>
+        </form.Field>
       </form.Section>
       <form.Submit />
     </Form>
-
-    <div
-      class="control-group chat-setting controls-dropdown"
-      data-setting-name="user_chat_separate_sidebar_mode"
-    >
-      <label for="user_chat_separate_sidebar_mode">
-        {{i18n "chat.separate_sidebar_mode.title"}}
-      </label>
-
-      <ComboBox
-        @valueProperty="value"
-        @content={{@controller.chatSeparateSidebarModeOptions}}
-        @value={{@controller.chatSeparateSidebarMode}}
-        @id="user_chat_separate_sidebar_mode"
-        @onChange={{fn
-          (mut @controller.model.user_option.chat_separate_sidebar_mode)
-        }}
-      />
-    </div>
-
-    <div
-      class="control-group chat-setting controls-dropdown"
-      data-setting-name="user_chat_send_shortcut"
-    >
-      <div class="radio-group">
-        {{#each @controller.chatSendShortcutOptions as |option|}}
-          <div class="radio-group-option">
-            <label class="controls">
-              <input
-                type="radio"
-                name="chat_send_shortcut"
-                id={{concat "chat_send_shortcut_" option.value}}
-                value={{option.value}}
-                checked={{eq
-                  @controller.model.user_option.chat_send_shortcut
-                  option.value
-                }}
-                {{on
-                  "change"
-                  (withEventValue
-                    (fn (mut @controller.model.user_option.chat_send_shortcut))
-                  )
-                }}
-              />
-              {{option.label}}
-            </label>
-            <span class="control-instructions">
-              {{option.description}}
-            </span>
-          </div>
-        {{/each}}
-      </div>
-    </div>
-
-    <SaveControls
-      @id="user_chat_preference_save"
-      @model={{@controller.model}}
-      @action={{@controller.save}}
-      @saved={{@controller.saved}}
-    />
   </template>
 }
