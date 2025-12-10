@@ -34,8 +34,7 @@ RSpec.describe SidebarSectionsController do
       expect(response.status).to eq(200)
 
       titles = response.parsed_body["sidebar_sections"].map { |section| section["title"] }
-      expect(titles.first).to eq("Community")
-      expect(titles).to include("Apple")
+      expect(titles).to eq(["Community", "Apple", ...])
     end
   end
 
