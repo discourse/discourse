@@ -58,6 +58,14 @@ populatePreloadStore();
 
 defineModules(null, embroiderCompatModules);
 
+import dialogHolderCompatModules from "discourse/dialog-holder/compat-modules";
+
+defineModules("discourse", dialogHolderCompatModules);
+
+import floatKitCompatModules from "discourse/float-kit/compat-modules";
+
+defineModules("discourse", floatKitCompatModules);
+
 import selectKitCompatModules from "discourse/select-kit/compat-modules";
 
 defineModules("discourse", selectKitCompatModules);
