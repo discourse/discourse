@@ -8,10 +8,6 @@
 # url: https://github.com/discourse/discourse-rewind
 # required_version: 2.7.0
 
-# TODO (martin): Remove this when we are ready to
-# launch rewind for 2025
-hide_plugin
-
 enabled_site_setting :discourse_rewind_enabled
 
 register_svg_icon "repeat"
