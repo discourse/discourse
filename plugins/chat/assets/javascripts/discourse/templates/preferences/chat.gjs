@@ -180,7 +180,7 @@ export default class Chat extends Component {
           @format="large"
           as |field|
         >
-          <field.RadioGroup @name="chat_quick_reaction_type" as |radioGroup|>
+          <field.RadioGroup as |radioGroup|>
             {{#each @controller.chatQuickReactionTypes as |option|}}
               <radioGroup.Radio @value={{option.value}}>
                 {{option.label}}
