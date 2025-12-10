@@ -298,12 +298,12 @@ module Onebox
 
       def find_nearest_heading(element)
         current = element
-        while current
+        while current&.element?
           current.previous_element&.tap do |prev|
             return prev.text.strip if prev.name =~ /^h[1-6]$/i
           end
           current = current.parent
-          return current.text.strip if current&.name =~ /^h[1-6]$/i
+          return current.text.strip if current&.element? && current.name =~ /^h[1-6]$/i
         end
         nil
       end
