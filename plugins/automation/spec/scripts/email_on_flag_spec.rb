@@ -24,7 +24,7 @@ describe "EmailOnFlag" do
       "message",
       {
         value:
-          "Flagged by %%FLAGGER_USERNAME%% on %%TOPIC_TITLE%%\n%%TOPIC_URL%%\n%%POST_EXCERPT%%",
+          "Flagged by {{flagged_username}} on {{topic_title}}\n{{topic_url}}\n{{post_excerpt}}",
       },
     )
     automation.reload

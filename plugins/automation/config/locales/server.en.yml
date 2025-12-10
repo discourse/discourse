@@ -101,17 +101,17 @@ en:
         default_template: |-
           A post has been flagged.
 
-          Topic: %%TOPIC_TITLE%% (%%TOPIC_URL%%)
-          Post: %%POST_URL%% (##%%POST_NUMBER%%)
-          Flag type: %%FLAG_TYPE%%
-          Flagged user: %%FLAGGED_USERNAME%%
-          Flagged by: %%FLAGGER_USERNAME%%
-          Category: %%CATEGORY%%
-          Tags: %%TAGS%%
+          Topic: {{topic_title}} ({{topic_url}})
+          Post: {{post_url}} (##{{post_number}})
+          Flag type: {{flag_type}}
+          Flagged user: {{flagged_username}}
+          Flagged by: {{flagger_username}}
+          Category: {{category}}
+          Tags: {{tags}}
 
           --------
           Post excerpt:
-          %%POST_EXCERPT%%
+          {{post_excerpt}}
         fields:
           email_template:
             label: Email template
