@@ -51,59 +51,43 @@ export default class Chat extends Component {
 
   @action
   handleSubmit(data) {
-    // eslint-disable-next-line no-console
-    console.log("reaction type", data.chat_quick_reaction_type);
     this.args.controller.model.set(
       "user_option.chat_quick_reaction_type",
       data.chat_quick_reaction_type
     );
-    // eslint-disable-next-line no-console
-    console.log("custom reactions", data.chat_quick_reactions_custom);
+
     this.args.controller.model.set(
       "user_option.chat_quick_reactions_custom",
       data.chat_quick_reactions_custom.join("|")
     );
-    // eslint-disable-next-line no-console
-    console.log("only push notifications", data.only_chat_push_notifications);
+
     this.args.controller.model.set(
       "user_option.only_chat_push_notifications",
       data.only_chat_push_notifications
     );
-    // eslint-disable-next-line no-console
-    console.log(
-      "ignore channel wide mention",
-      data.ignore_channel_wide_mention
-    );
+
     this.args.controller.model.set(
       "user_option.chat_enabled",
       data.chat_enabled
     );
-    // eslint-disable-next-line no-console
-    console.log("chat enabled", data.chat_enabled);
+
     this.args.controller.model.set(
       "user_option.ignore_channel_wide_mention",
       data.ignore_channel_wide_mention
     );
-    // eslint-disable-next-line no-console
-    console.log("chat sound", data.chat_sound);
+
     this.args.controller.model.set("user_option.chat_sound", data.chat_sound);
-    // eslint-disable-next-line no-console
-    console.log(
-      "chat header indicator preference",
-      data.chat_header_indicator_preference
-    );
+
     this.args.controller.model.set(
       "user_option.chat_header_indicator_preference",
       data.chat_header_indicator_preference
     );
-    // eslint-disable-next-line no-console
-    console.log("chat separate sidebar mode", data.chat_separate_sidebar_mode);
+
     this.args.controller.model.set(
       "user_option.chat_separate_sidebar_mode",
       data.chat_separate_sidebar_mode
     );
-    // eslint-disable-next-line no-console
-    console.log("chat send shortcut", data.chat_send_shortcut);
+
     this.args.controller.model.set(
       "user_option.chat_send_shortcut",
       data.chat_send_shortcut
