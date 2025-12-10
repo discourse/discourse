@@ -48,6 +48,8 @@ import Composer, {
 import Draft from "discourse/models/draft";
 import PostLocalization from "discourse/models/post-localization";
 import TopicLocalization from "discourse/models/topic-localization";
+import WrapAttributesModal from "discourse/static/prosemirror/components/wrap-attributes-modal";
+import { parseAttributesString } from "discourse/static/prosemirror/lib/wrap-utils";
 import { i18n } from "discourse-i18n";
 
 async function loadDraft(store, opts = {}) {
@@ -468,6 +470,17 @@ export default class ComposerService extends Service {
         })
       );
 
+      options.push(
+        this._setupPopupMenuOption({
+          name: "toggle-wrap",
+          action: this.toggleWrap,
+          icon: "right-to-bracket",
+          label: "composer.apply_wrap_title",
+          showActiveIcon: true,
+          active: ({ state }) => state?.inWrap,
+        })
+      );
+
       return options.concat(
         customPopupMenuOptions
           .map((option) => this._setupPopupMenuOption({ ...option }))
@@ -828,6 +841,32 @@ export default class ComposerService extends Service {
       model: {
         toolbarEvent: this.toolbarEvent,
         tableTokens: null,
+      },
+    });
+  }
+
+  @action
+  toggleWrap(toolbarEvent) {
+    this.modal.show(WrapAttributesModal, {
+      model: {
+        initialAttributes: "",
+        onApply: (attributesString) => {
+          if (toolbarEvent.commands?.insertWrap) {
+            toolbarEvent.commands.insertWrap(
+              parseAttributesString(attributesString)
+            );
+          } else {
+            const wrapTag = attributesString.trim()
+              ? `[wrap ${attributesString}]`
+              : "[wrap]";
+            const selected = toolbarEvent.selected;
+            if (selected && selected.value) {
+              toolbarEvent.addText(`${wrapTag}\n${selected.value}\n[/wrap]`);
+            } else {
+              toolbarEvent.addText(`${wrapTag}\n\n[/wrap]`);
+            }
+          }
+        },
       },
     });
   }

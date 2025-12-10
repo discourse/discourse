@@ -221,6 +221,49 @@
     }
   }
 
+  .composer-wrap-node {
+    position: relative;
+    white-space: normal;
+    border: 2px dashed var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
+    padding-inline: var(--space-2);
+    margin-block: var(--space-4);
+
+    &.ProseMirror-selectednode {
+      outline-offset: -2px;
+      border-radius: calc(var(--d-border-radius) + 2px);
+    }
+
+    .d-wrap-indicator {
+      color: var(--primary-medium);
+      background-color: var(--secondary);
+      border: none;
+      cursor: pointer;
+
+      &:hover {
+        color: var(--primary);
+      }
+
+      &.--inline {
+        font-size: var(--font-down-2);
+        padding: var(--space-half) 0;
+        margin-left: calc(-1 * var(--space-1));
+        margin-right: var(--space-2);
+        vertical-align: text-top;
+        display: inline-block;
+      }
+
+      &.--block {
+        position: absolute;
+        z-index: 1;
+        font-size: var(--font-down-1);
+        left: var(--space-2);
+        top: calc(-1 * var(--space-3) + 1px);
+        padding: 0 var(--space-1);
+      }
+    }
+  }
+
   .onebox-loading {
     border-radius: var(--d-border-radius);
     padding: 0 0.125rem;

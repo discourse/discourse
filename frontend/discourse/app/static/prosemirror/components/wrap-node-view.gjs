@@ -1,0 +1,153 @@
+import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
+import { service } from "@ember/service";
+import { NodeSelection } from "prosemirror-state";
+import { bind } from "discourse/lib/decorators";
+import { parseAttributesString } from "../lib/wrap-utils";
+import WrapAttributesModal from "./wrap-attributes-modal";
+
+export default class WrapNodeView extends Component {
+  @service modal;
+
+  constructor() {
+    super(...arguments);
+    this.args.onSetup?.(this);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+  }
+
+  get isInline() {
+    return this.args.node.type.name === "wrap_inline";
+  }
+
+  get wrapAttributes() {
+    return this.args.node.attrs.data || {};
+  }
+
+  get attributesDisplay() {
+    const attrs = this.wrapAttributes;
+    if (!attrs || Object.keys(attrs).length === 0) {
+      return "[wrap]";
+    }
+
+    // Display only the wrap name if it exists, otherwise show [wrap]
+    if (attrs.wrap) {
+      return `[wrap=${attrs.wrap}]`;
+    }
+
+    return "[wrap]";
+  }
+
+  @action
+  editAttributes() {
+    const currentAttrs = this.wrapAttributes;
+    const attrsString = this.#attributesToString(currentAttrs);
+
+    this.modal.show(WrapAttributesModal, {
+      model: {
+        initialAttributes: attrsString,
+        onApply: this.#updateAttributes.bind(this),
+        onRemove: this.removeWrap.bind(this),
+      },
+    });
+  }
+
+  @action
+  removeWrap() {
+    const pos = this.args.getPos();
+    const node = this.args.node;
+
+    if (node.content.size === 0) {
+      // Empty wrap, just delete it
+      this.args.view.dispatch(
+        this.args.view.state.tr.delete(pos, pos + node.nodeSize)
+      );
+    } else {
+      // Replace wrap with its content
+      const tr = this.args.view.state.tr;
+      tr.replaceWith(pos, pos + node.nodeSize, node.content);
+      this.args.view.dispatch(tr);
+    }
+  }
+
+  #updateAttributes(attrsString) {
+    const pos = this.args.getPos();
+    const attrs = parseAttributesString(attrsString);
+    const tr = this.args.view.state.tr;
+
+    tr.setNodeMarkup(pos, null, { data: attrs });
+    tr.setSelection(NodeSelection.create(tr.doc, pos));
+    this.args.view.dispatch(tr);
+  }
+
+  #attributesToString(attrs) {
+    if (!attrs || Object.keys(attrs).length === 0) {
+      return "";
+    }
+
+    const parts = [];
+    for (const [key, value] of Object.entries(attrs)) {
+      if (key === "wrap") {
+        parts.unshift(`=${value}`);
+      } else {
+        parts.push(`${key}=${value}`);
+      }
+    }
+    return parts.join(" ").trim();
+  }
+
+  @bind
+  ignoreMutation() {
+    // TODO the inline (non-absolute) button is deletable, fix it
+
+    // For PM an atom node is a black box, what happens inside it are of no concern to PM
+    // and should be ignored.
+    // if (this.args.node.type.isAtom) {
+    //   return true;
+    // }
+    //
+    // // donot ignore a selection type mutation
+    // if (mutation.type === 'selection') {
+    //   return false;
+    // }
+    //
+    // // if a child of this.dom (the one handled by PM)
+    // // has any mutation, do not ignore it
+    // if (this.args.dom.contains(mutation.target)) {
+    //   return false;
+    // }
+    //
+    // // <!---THIS CONDITION FIXES THE PROBLEM -->
+    // // if the this.dom itself was the target
+    // // do not ignore it. This is important for schema where
+    // // content: 'inline*' and you end up deleting all the content with backspace
+    // // PM needs to step in and create an empty node for us.
+    // if (mutation.target === this.args.contentDOM) {
+    //   return false;
+    // }
+
+    return true;
+  }
+
+  selectNode() {
+    this.args.dom.classList.add("ProseMirror-selectednode");
+  }
+
+  deselectNode() {
+    this.args.dom.classList.remove("ProseMirror-selectednode");
+  }
+
+  <template>
+    <button
+      type="button"
+      class="d-wrap-indicator btn-flat
+        {{if this.isInline '--inline' '--block'}}"
+      contenteditable="false"
+      {{on "click" this.editAttributes}}
+    >{{~this.attributesDisplay~}}</button>
+    {{~yield~}}
+  </template>
+}
