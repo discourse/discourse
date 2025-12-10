@@ -169,7 +169,7 @@ export default function customProxy({ rewriteHtml = true } = {}) {
       const url = req.url;
       if (
         VITE_PATTERNS.some((pattern) => pattern.test(url)) &&
-        !RAILS_JAVASCRIPTS_ROOTS.some((root) => url.startsWith(root))
+        !RAILS_ROOTS.some((root) => url.startsWith(root))
       ) {
         return url; // skip proxying, let vite handle it
       }
@@ -186,4 +186,11 @@ const VITE_PATTERNS = [
   /^\/@id\//,
   /^\/@embroider\//,
 ];
-const RAILS_JAVASCRIPTS_ROOTS = ["/theme-javascripts/", "/extra-locales/", "/svg-sprite/"];
+const RAILS_ROOTS = [
+  "/theme-javascripts/",
+  "/extra-locales/",
+  "/svg-sprite/",
+  "/highlight-js/",
+  "/images/", // doesn't work?
+  "/uploads/", // doesn't work?
+];
