@@ -110,7 +110,7 @@ RSpec.describe Onebox::Engine::StandardEmbed do
     end
   end
 
-  describe "#enhance_title_with_anchor" do
+  describe "anchor enhancement" do
     let(:anchor_class) do
       Class.new do
         include Onebox::Engine::StandardEmbed
@@ -128,240 +128,125 @@ RSpec.describe Onebox::Engine::StandardEmbed do
       end
     end
 
-    it "extracts fragment from URL" do
-      embed = anchor_class.new("https://example.com/page#my-section")
-      expect(embed.send(:extract_url_fragment)).to eq("my-section")
-    end
-
-    it "URL-decodes the fragment" do
-      embed = anchor_class.new("https://example.com/page#Base.pkgversion-Tuple%7BModule%7D")
-      expect(embed.send(:extract_url_fragment)).to eq("Base.pkgversion-Tuple{Module}")
-    end
-
-    it "returns nil for URLs without fragments" do
-      embed = anchor_class.new("https://example.com/page")
-      expect(embed.send(:extract_url_fragment)).to be_nil
-    end
-
-    it "finds section title from heading element with matching ID" do
-      html = <<~HTML
-        <html><body>
-          <h2 id="my-section">My Section Title</h2>
-          <p>Content here</p>
-        </body></html>
-      HTML
-      embed = anchor_class.new("https://example.com/page#my-section")
+    def embed_with_html(url, html, raw = {})
+      embed = anchor_class.new(url)
       embed.html_doc_override = Nokogiri.HTML(html)
-
-      expect(embed.send(:find_section_title, "my-section")).to eq("My Section Title")
+      embed.instance_variable_set(:@raw, raw)
+      embed
     end
 
-    it "finds section title from code element within target" do
-      html = <<~HTML
-        <html><body>
-          <div id="Base.pkgversion-Tuple{Module}">
-            <code>pkgversion(m::Module)</code>
-            <p>Returns the version of the package.</p>
-          </div>
-        </body></html>
-      HTML
-      embed = anchor_class.new("https://example.com/page#Base.pkgversion-Tuple{Module}")
-      embed.html_doc_override = Nokogiri.HTML(html)
+    describe "#enhance_title_with_anchor" do
+      it "prepends section title from heading with matching ID" do
+        html = "<h2 id='setup'>Setup</h2>"
+        embed = embed_with_html("https://x.com#setup", html, { title: "Docs" })
+        embed.send(:enhance_title_with_anchor)
+        expect(embed.instance_variable_get(:@raw)[:title]).to eq("Setup - Docs")
+      end
 
-      expect(embed.send(:find_section_title, "Base.pkgversion-Tuple{Module}")).to eq(
-        "pkgversion(m::Module)",
-      )
-    end
+      it "finds title from code element within target" do
+        html = "<div id='fn'><code>foo()</code></div>"
+        embed = embed_with_html("https://x.com#fn", html, { title: "API" })
+        embed.send(:enhance_title_with_anchor)
+        expect(embed.instance_variable_get(:@raw)[:title]).to eq("foo() - API")
+      end
 
-    it "does not duplicate title when section title already appears in page title" do
-      html = <<~HTML
-        <html><body>
-          <h2 id="installation">Installation</h2>
-        </body></html>
-      HTML
-      embed = anchor_class.new("https://example.com/page#installation")
-      embed.html_doc_override = Nokogiri.HTML(html)
-      embed.instance_variable_set(:@raw, { title: "Installation Guide - My Project" })
+      it "finds target by a[name] attribute" do
+        html = "<h2>Legacy Section</h2><a name='legacy'></a><p>Content</p>"
+        embed = embed_with_html("https://x.com#legacy", html, { title: "Docs" })
+        embed.send(:enhance_title_with_anchor)
+        expect(embed.instance_variable_get(:@raw)[:title]).to eq("Legacy Section - Docs")
+      end
 
-      embed.send(:enhance_title_with_anchor)
+      it "does not duplicate when section title already in page title" do
+        html = "<h2 id='install'>Install</h2>"
+        embed = embed_with_html("https://x.com#install", html, { title: "Install Guide" })
+        embed.send(:enhance_title_with_anchor)
+        expect(embed.instance_variable_get(:@raw)[:title]).to eq("Install Guide")
+      end
 
-      expect(embed.instance_variable_get(:@raw)[:title]).to eq("Installation Guide - My Project")
-    end
+      it "URL-decodes fragments" do
+        html = "<div id='Foo{Bar}'><code>Foo</code></div>"
+        embed = embed_with_html("https://x.com#Foo%7BBar%7D", html, { title: "Docs" })
+        embed.send(:enhance_title_with_anchor)
+        expect(embed.instance_variable_get(:@raw)[:title]).to eq("Foo - Docs")
+      end
 
-    it "prepends section title to page title" do
-      html = <<~HTML
-        <html><body>
-          <h2 id="getting-started">Getting Started</h2>
-        </body></html>
-      HTML
-      embed = anchor_class.new("https://example.com/page#getting-started")
-      embed.html_doc_override = Nokogiri.HTML(html)
-      embed.instance_variable_set(:@raw, { title: "My Project Documentation" })
+      it "cleans pilcrow, section mark, and hash from titles" do
+        embed = anchor_class.new("https://x.com#x")
+        expect(embed.send(:clean_section_title, "Title ¶ § #")).to eq("Title")
+      end
 
-      embed.send(:enhance_title_with_anchor)
+      it "truncates titles to 80 chars" do
+        embed = anchor_class.new("https://x.com#x")
+        expect(embed.send(:clean_section_title, "A" * 100).length).to be <= 80
+      end
 
-      expect(embed.instance_variable_get(:@raw)[:title]).to eq(
-        "Getting Started - My Project Documentation",
-      )
-    end
+      it "handles anchors with no nearby heading" do
+        html = "<span id='orphan'>text</span>"
+        embed = embed_with_html("https://x.com#orphan", html, { title: "Page" })
+        embed.send(:enhance_title_with_anchor)
+        expect(embed.instance_variable_get(:@raw)[:title]).to eq("Page")
+      end
 
-    it "cleans anchor symbols from section titles" do
-      embed = anchor_class.new("https://example.com/page#test")
-      expect(embed.send(:clean_section_title, "My Section ¶")).to eq("My Section")
-      expect(embed.send(:clean_section_title, "Another § Section")).to eq("Another Section")
-      expect(embed.send(:clean_section_title, "Title #")).to eq("Title")
-    end
-
-    it "truncates long section titles" do
-      embed = anchor_class.new("https://example.com/page#test")
-      long_title = "A" * 100
-      result = embed.send(:clean_section_title, long_title)
-      expect(result.length).to be <= 80
-    end
-  end
-
-  describe "#enhance_description_with_anchor" do
-    let(:anchor_class) do
-      Class.new do
-        include Onebox::Engine::StandardEmbed
-
-        attr_accessor :url, :options, :html_doc_override
-
-        def initialize(url)
-          @url = url
-          @options = {}
-        end
-
-        def html_doc
-          @html_doc_override
-        end
+      it "does nothing without fragment" do
+        embed = embed_with_html("https://x.com", "<h2 id='x'>X</h2>", { title: "Page" })
+        embed.send(:enhance_title_with_anchor)
+        expect(embed.instance_variable_get(:@raw)[:title]).to eq("Page")
       end
     end
 
-    it "extracts description from paragraph within anchored section" do
-      html = <<~HTML
-        <html><body>
-          <article>
-            <summary id="my-function">
-              <code>my_function(x)</code>
-            </summary>
-            <div>
-              <p>Returns the sum of all elements in x.</p>
-            </div>
-          </article>
-        </body></html>
-      HTML
-      embed = anchor_class.new("https://example.com/page#my-function")
-      embed.html_doc_override = Nokogiri.HTML(html)
-      embed.instance_variable_set(:@raw, { description: "Generic page description." })
+    describe "#enhance_description_with_anchor" do
+      it "prepends section description to existing description" do
+        html = "<article><div id='fn'><p>Does something.</p></div></article>"
+        embed = embed_with_html("https://x.com#fn", html, { description: "Generic." })
+        embed.send(:enhance_description_with_anchor)
+        expect(embed.instance_variable_get(:@raw)[:description]).to eq("Does something. | Generic.")
+      end
 
-      embed.send(:enhance_description_with_anchor)
+      it "sets description when none exists" do
+        html = "<section id='intro'><p>Welcome.</p></section>"
+        embed = embed_with_html("https://x.com#intro", html, {})
+        embed.send(:enhance_description_with_anchor)
+        expect(embed.instance_variable_get(:@raw)[:description]).to eq("Welcome.")
+      end
 
-      expect(embed.instance_variable_get(:@raw)[:description]).to eq(
-        "Returns the sum of all elements in x. | Generic page description.",
-      )
-    end
+      it "finds paragraph following anchor element" do
+        html = "<h2 id='feat'>Features</h2><p>Great features.</p>"
+        embed = embed_with_html("https://x.com#feat", html, {})
+        embed.send(:enhance_description_with_anchor)
+        expect(embed.instance_variable_get(:@raw)[:description]).to eq("Great features.")
+      end
 
-    it "extracts description from Julia docs docstring structure" do
-      html = <<~HTML
-        <html><body>
-          <article>
-            <details class="docstring">
-              <summary id="Base.pkgversion-Tuple{Module}">
-                <code>Base.pkgversion</code>
-              </summary>
-              <div>
-                <pre><code>pkgversion(m::Module)</code></pre>
-                <p>Return the version of the package that imported module m.</p>
-              </div>
-            </details>
-          </article>
-        </body></html>
-      HTML
-      embed = anchor_class.new("https://example.com/page#Base.pkgversion-Tuple%7BModule%7D")
-      embed.html_doc_override = Nokogiri.HTML(html)
-      embed.instance_variable_set(:@raw, { description: "Documentation for The Julia Language." })
+      it "extracts from nested docstring structure" do
+        html =
+          "<details class='docstring'><summary id='fn'></summary><p>Returns value.</p></details>"
+        embed = embed_with_html("https://x.com#fn", html, { description: "Docs." })
+        embed.send(:enhance_description_with_anchor)
+        expect(embed.instance_variable_get(:@raw)[:description]).to eq("Returns value. | Docs.")
+      end
 
-      embed.send(:enhance_description_with_anchor)
+      it "does not duplicate when section text already in description" do
+        html = "<div id='x'><p>Same text.</p></div>"
+        embed = embed_with_html("https://x.com#x", html, { description: "Same text." })
+        embed.send(:enhance_description_with_anchor)
+        expect(embed.instance_variable_get(:@raw)[:description]).to eq("Same text.")
+      end
 
-      expect(embed.instance_variable_get(:@raw)[:description]).to eq(
-        "Return the version of the package that imported module m. | Documentation for The Julia Language.",
-      )
-    end
+      it "truncates to 300 chars with ellipsis" do
+        html = "<div id='x'><p>#{"A" * 400}</p></div>"
+        embed = embed_with_html("https://x.com#x", html, {})
+        embed.send(:enhance_description_with_anchor)
+        desc = embed.instance_variable_get(:@raw)[:description]
+        expect(desc.length).to be <= 301
+        expect(desc).to end_with("…")
+      end
 
-    it "sets description when none exists" do
-      html = <<~HTML
-        <html><body>
-          <section id="getting-started">
-            <h2>Getting Started</h2>
-            <p>This guide will help you get started with our library.</p>
-          </section>
-        </body></html>
-      HTML
-      embed = anchor_class.new("https://example.com/page#getting-started")
-      embed.html_doc_override = Nokogiri.HTML(html)
-      embed.instance_variable_set(:@raw, {})
-
-      embed.send(:enhance_description_with_anchor)
-
-      expect(embed.instance_variable_get(:@raw)[:description]).to eq(
-        "This guide will help you get started with our library.",
-      )
-    end
-
-    it "does not duplicate description when section text already appears" do
-      html = <<~HTML
-        <html><body>
-          <div id="intro">
-            <p>Welcome to our documentation.</p>
-          </div>
-        </body></html>
-      HTML
-      embed = anchor_class.new("https://example.com/page#intro")
-      embed.html_doc_override = Nokogiri.HTML(html)
-      embed.instance_variable_set(:@raw, { description: "Welcome to our documentation." })
-
-      embed.send(:enhance_description_with_anchor)
-
-      expect(embed.instance_variable_get(:@raw)[:description]).to eq(
-        "Welcome to our documentation.",
-      )
-    end
-
-    it "truncates very long descriptions" do
-      long_text = "A" * 400
-      html = <<~HTML
-        <html><body>
-          <div id="section">
-            <p>#{long_text}</p>
-          </div>
-        </body></html>
-      HTML
-      embed = anchor_class.new("https://example.com/page#section")
-      embed.html_doc_override = Nokogiri.HTML(html)
-      embed.instance_variable_set(:@raw, {})
-
-      embed.send(:enhance_description_with_anchor)
-
-      expect(embed.instance_variable_get(:@raw)[:description].length).to be <= 301
-    end
-
-    it "finds paragraph following the anchor element" do
-      html = <<~HTML
-        <html><body>
-          <h2 id="features">Features</h2>
-          <p>Here are the main features of our product.</p>
-        </body></html>
-      HTML
-      embed = anchor_class.new("https://example.com/page#features")
-      embed.html_doc_override = Nokogiri.HTML(html)
-      embed.instance_variable_set(:@raw, {})
-
-      embed.send(:enhance_description_with_anchor)
-
-      expect(embed.instance_variable_get(:@raw)[:description]).to eq(
-        "Here are the main features of our product.",
-      )
+      it "normalizes whitespace" do
+        html = "<div id='x'><p>Line one.\n\n   Line two.</p></div>"
+        embed = embed_with_html("https://x.com#x", html, {})
+        embed.send(:enhance_description_with_anchor)
+        expect(embed.instance_variable_get(:@raw)[:description]).to eq("Line one. Line two.")
+      end
     end
   end
 
