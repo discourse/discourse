@@ -17,7 +17,7 @@ module Jobs
         persona = DiscourseAi::Personas::Persona.find_by(user: post.user, id: persona_id)
         raise DiscourseAi::Personas::Bot::BOT_NOT_FOUND if persona.nil?
 
-        llm_model = LlmModel.find_by(id: llm_model_id.to_i) if llm_model_id.to_i > 0
+        llm_model = LlmModel.find_by(id: llm_model_id.to_i) if !llm_model_id.zero?
         bot = DiscourseAi::Personas::Bot.as(bot_user, persona: persona.new, model: llm_model)
 
         DiscourseAi::AiBot::Playground.new(bot).reply_to(

@@ -63,7 +63,7 @@ module DiscourseAi
           reply_post_id: post.id,
         }
 
-        args[:llm_model_id] = llm_model_id.to_i if llm_model_id.to_i.positive?
+        args[:llm_model_id] = llm_model_id.to_i if !llm_model_id.to_i.zero?
 
         Jobs.enqueue(:create_ai_reply, args)
 
