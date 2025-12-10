@@ -33,6 +33,7 @@
     "inherits": "1.0.2",
     "jsonify": "0.0.1",
     "jspreadsheet-ce": "4.13.4",
+    "lightningcss": "1.30.2",
     "line-stream": "0.0.0",
     "messageformat": "0.1.5",
     "regenerator-transform": "0.10.1",
