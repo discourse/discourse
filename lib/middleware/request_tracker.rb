@@ -83,16 +83,16 @@ class Middleware::RequestTracker
   end
 
   def self.log_request(data)
-    did_track = false
+    log_browser_page_view = false
 
     if data[:is_api]
       ApplicationRequest.increment!(:api)
-      did_track = true
+      log_browser_page_view = true
     elsif data[:is_user_api]
       ApplicationRequest.increment!(:user_api)
-      did_track = true
+      log_browser_page_view = true
     elsif data[:track_view]
-      did_track = true
+      log_browser_page_view = true
       if data[:is_crawler]
         ApplicationRequest.increment!(:page_view_crawler)
         WebCrawlerRequest.increment!(data[:user_agent])
@@ -132,7 +132,7 @@ class Middleware::RequestTracker
     # Message-bus requests may include this 'deferred track' header which we use to detect
     # 'real browser' views.
     if data[:deferred_track_view] && !data[:is_crawler]
-      did_track = true
+      log_browser_page_view = true
       if data[:has_auth_cookie]
         ApplicationRequest.increment!(:page_view_logged_in_browser)
         ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
@@ -169,7 +169,9 @@ class Middleware::RequestTracker
       ApplicationRequest.increment!(:http_2xx)
     end
 
-    BrowserPageView.log!(data) if did_track && SiteSetting.enable_browser_page_view_logging
+    if log_browser_page_view && SiteSetting.enable_browser_page_view_logging
+      BrowserPageView.log!(data)
+    end
   end
 
   def self.get_data(env, result, timing, request = nil)
@@ -218,11 +220,12 @@ class Middleware::RequestTracker
     # Auth cookie can be used to find the ID for logged in users, but API calls must look up the
     # current user based on env variables. Note: find_v0_auth_cookie returns a string (just the token),
     # while find_v1_auth_cookie returns a hash with :user_id, so we check if it's a hash first.
+    # We only call CurrentUser.lookup_from_env for API requests to avoid requiring rack.input.
     current_user_id =
       begin
         if auth_cookie.is_a?(Hash)
           auth_cookie[:user_id]
-        else
+        elsif is_api || is_user_api
           CurrentUser.lookup_from_env(env)&.id
         end
       rescue Discourse::InvalidAccess => err
