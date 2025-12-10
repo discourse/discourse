@@ -22,8 +22,6 @@ const CHAT_ATTRS = [
   "chat_quick_reactions_custom",
 ];
 
-export const CHAT_QUICK_REACTIONS_CUSTOM_DEFAULT = "heart|+1|smile";
-
 export const HEADER_INDICATOR_PREFERENCE_NEVER = "never";
 export const HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS = "dm_and_mentions";
 export const HEADER_INDICATOR_PREFERENCE_ALL_NEW = "all_new";
@@ -101,13 +99,6 @@ export default class PreferencesChatController extends Controller {
 
   get chatSendShortcut() {
     return this.model.get("user_option.chat_send_shortcut");
-  }
-
-  get chatQuickReactionsCustom() {
-    const emojis =
-      this.model.get("user_option.chat_quick_reactions_custom") ||
-      CHAT_QUICK_REACTIONS_CUSTOM_DEFAULT;
-    return emojis.split("|");
   }
 
   @discourseComputed
