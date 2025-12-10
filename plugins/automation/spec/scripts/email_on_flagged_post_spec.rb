@@ -39,6 +39,15 @@ describe "EmailOnFlaggedPost" do
     end.to change { Jobs::DiscourseAutomation::SendFlagEmail.jobs.length }.by(0)
   end
 
+  it "deduplicates email addresses" do
+    automation.upsert_field!("recipients", "users", { value: [recipient.email, recipient.email] })
+
+    expect do
+      result = PostActionCreator.spam(flagger, post)
+      expect(result.success).to eq(true)
+    end.to change { Jobs::DiscourseAutomation::SendFlagEmail.jobs.length }.by(1)
+  end
+
   it "enqueues a job per recipient with placeholders applied" do
     automation.upsert_field!("recipients", "users", { value: [recipient.email, user_2.username] })
 

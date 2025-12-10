@@ -20,7 +20,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::EMAIL_ON_FLAGG
     next if recipients.blank?
 
     to_emails = []
-    to_emails = to_emails.concat(recipients.select { |r| r.include?("@") })
+    to_emails = to_emails.concat(recipients.select { |r| Email.is_valid?(r) })
     to_users = recipients - to_emails
 
     if to_users.present?
@@ -28,7 +28,6 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::EMAIL_ON_FLAGG
       to_emails.concat(primary_emails)
     end
 
-    to_emails.select! { |email| Email.is_valid?(email) }
     to_emails.uniq!
 
     automation_email_template_field_id = automation.fields.where(name: "email_template").pick(:id)
