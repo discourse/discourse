@@ -1159,6 +1159,22 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(composer).to have_value("")
     end
 
+    it "allows pasting text when unauthorized to upload" do
+      SiteSetting.authorized_extensions = ""
+
+      cdp.allow_clipboard
+
+      open_composer
+
+      cdp.copy_paste("Just some text")
+
+      expect(rich).to have_css("p", text: "Just some text")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("Just some text")
+    end
+
     it "merges text with link marks created from parsing" do
       cdp.allow_clipboard
       open_composer
