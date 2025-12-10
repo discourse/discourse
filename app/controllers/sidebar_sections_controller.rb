@@ -10,7 +10,7 @@ class SidebarSectionsController < ApplicationController
         .strict_loading
         .includes(:sidebar_urls)
         .where("public OR user_id = ?", current_user.id)
-        .order("(section_type IS NOT NULL) DESC, (public IS TRUE) DESC, title ASC")
+        .order("section_type IS NOT NULL DESC, public DESC, title ASC")
 
     sections =
       ActiveModel::ArraySerializer.new(
