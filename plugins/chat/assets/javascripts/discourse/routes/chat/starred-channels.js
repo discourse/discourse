@@ -3,6 +3,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 
 export default class ChatStarredChannelsRoute extends DiscourseRoute {
   @service chat;
+  @service chatChannelsManager;
   @service router;
   @service site;
 
@@ -11,8 +12,7 @@ export default class ChatStarredChannelsRoute extends DiscourseRoute {
   }
 
   async beforeModel() {
-    // Redirect on desktop fullscreen - starred channels are shown in sidebar
-    if (!this.site.mobileView) {
+    if (this.site.desktopView) {
       const channel = this.chat.activeChannel;
 
       if (channel) {
@@ -20,10 +20,14 @@ export default class ChatStarredChannelsRoute extends DiscourseRoute {
       } else {
         this.router.replaceWith("chat");
       }
-      return;
-    }
+    } else {
+      // Load channels before rendering (mobile only)
+      await this.chat.loadChannels();
 
-    // Load channels before rendering (mobile only)
-    await this.chat.loadChannels();
+      // If there are no starred channels, redirect to all channels
+      if (!this.chatChannelsManager.hasStarredChannels) {
+        this.router.replaceWith("chat.channels");
+      }
+    }
   }
 }
