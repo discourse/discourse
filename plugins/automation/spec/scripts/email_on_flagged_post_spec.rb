@@ -21,6 +21,24 @@ describe "EmailOnFlaggedPost" do
     SiteSetting.disable_emails = "no"
   end
 
+  it "rejects email addresses that are invalid" do
+    automation.upsert_field!("recipients", "users", { value: ["@invalid-email"] })
+
+    expect do
+      result = PostActionCreator.spam(flagger, post)
+      expect(result.success).to eq(true)
+    end.to change { Jobs::DiscourseAutomation::SendFlagEmail.jobs.length }.by(0)
+  end
+
+  it "rejects usernames that do not exist" do
+    automation.upsert_field!("recipients", "users", { value: ["nonexistent_user"] })
+
+    expect do
+      result = PostActionCreator.spam(flagger, post)
+      expect(result.success).to eq(true)
+    end.to change { Jobs::DiscourseAutomation::SendFlagEmail.jobs.length }.by(0)
+  end
+
   it "enqueues a job per recipient with placeholders applied" do
     automation.upsert_field!("recipients", "users", { value: [recipient.email, user_2.username] })
 
