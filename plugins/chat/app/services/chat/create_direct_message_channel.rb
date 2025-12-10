@@ -50,7 +50,7 @@ module Chat
     model :direct_message, :fetch_or_create_direct_message
     model :channel, :fetch_or_create_channel
     step :set_optional_params
-    step :update_memberships
+    step :create_memberships
     step :recompute_users_count
 
     private
@@ -101,7 +101,7 @@ module Chat
       channel.update!(optional_params) if !optional_params.empty?
     end
 
-    def update_memberships(channel:, target_users:)
+    def create_memberships(channel:, target_users:)
       always_level = ::Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always]
 
       memberships =
@@ -110,14 +110,14 @@ module Chat
             user_id: user.id,
             chat_channel_id: channel.id,
             muted: false,
-            following: false,
+            following: true,
             notification_level: always_level,
             created_at: Time.zone.now,
             updated_at: Time.zone.now,
           }
         end
 
-      ::Chat::UserChatChannelMembership.upsert_all(
+      ::Chat::UserChatChannelMembership.insert_all(
         memberships,
         unique_by: %i[user_id chat_channel_id],
       )
