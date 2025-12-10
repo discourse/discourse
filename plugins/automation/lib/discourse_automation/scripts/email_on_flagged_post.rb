@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Scriptable.add("email_on_flagged_post") do
+DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::EMAIL_ON_FLAGGED_POST) do
   version 1
-  run_in_background
+  run_in_background if !Rails.env.test?
 
-  triggerables [DiscourseAutomation::Triggers::FLAG_CREATED]
+  triggerables [DiscourseAutomation::Triggers::FLAG_ON_POST_CREATED]
 
   field :email_template,
         component: :message,
@@ -16,75 +16,30 @@ DiscourseAutomation::Scriptable.add("email_on_flagged_post") do
   field :recipients, component: :email_group_user, required: true
 
   script do |context, fields, automation|
-    post_action = context["post_action"]
-    post = post_action&.post
-    flagger = post_action&.user
-    target_user = post&.user
-    max_excerpt_length = 300
+    recipients = fields.dig("recipients", "value").uniq
+    next if recipients.blank?
 
-    placeholders = {
-      topic_url: "#{Discourse.base_url}#{post&.topic&.relative_url}",
-      post_url: "#{Discourse.base_url}#{post&.url}",
-      topic_title: post&.topic&.title,
-      post_number: post&.post_number,
-      flagger_username: flagger&.username,
-      flagged_username: target_user&.username,
-      flag_type: PostActionTypeView.new.names[post_action&.post_action_type_id],
-      category: post&.topic&.category&.name,
-      tags: post&.topic&.tags&.map(&:name)&.join(", "),
-      site_title: SiteSetting.title,
-      post_excerpt: post&.excerpt(max_excerpt_length, strip_links: true),
-    }.compact
-
-    raw_template = fields.dig("email_template", "value")
-    body = DiscourseAutomation::Scriptable::Utils.apply_placeholders(raw_template, placeholders)
-
-    recipients = Array(fields.dig("recipients", "value")).uniq
-
-    if recipients.blank?
-      Rails.logger.warn "[discourse-automation] Email on flag skipped - no recipients configured"
-      next
-    end
-
-    to_emails = recipients.select { |r| r.include?("@") }
+    to_emails = []
+    to_emails = to_emails.concat(recipients.select { |r| r.include?("@") })
     to_users = recipients - to_emails
 
     if to_users.present?
-      primary_emails =
-        User
-          .where(username: to_users)
-          .map(&:primary_email)
-          .compact
-          .map(&:email)
-          .select { |email| Email.is_valid?(email) }
+      primary_emails = User.includes(:primary_email).filter_by_username(to_users).map(&:email)
       to_emails.concat(primary_emails)
     end
 
     to_emails.select! { |email| Email.is_valid?(email) }
     to_emails.uniq!
 
-    if to_emails.empty?
-      Rails.logger.warn "[discourse-automation] Email on flag skipped - no valid email recipients"
-      next
-    end
-
-    subject =
-      I18n.t(
-        "discourse_automation.scriptables.email_on_flagged_post.subject",
-        topic_title: placeholders[:topic_title] || "",
-        flagger_username: placeholders[:flagger_username] || "",
-      )
+    automation_email_template_field_id = automation.fields.where(name: "email_template").pick(:id)
 
     to_emails.each do |email|
-      begin
-        DiscourseAutomation::FlagMailer.send_flag_email(
-          email,
-          subject: subject,
-          body: body,
-        ).deliver_now
-      rescue => e
-        Rails.logger.warn "[discourse-automation] Failed to send email for automation #{automation.id}: #{e.message}"
-      end
+      Jobs.enqueue(
+        Jobs::DiscourseAutomation::SendFlagEmail,
+        email:,
+        email_template_automation_field_id: automation_email_template_field_id,
+        post_action_id: context["post_action_id"],
+      )
     end
   end
 end

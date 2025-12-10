@@ -5,71 +5,61 @@ describe "EmailOnFlaggedPost" do
   fab!(:user_2, :user)
   fab!(:flagger) { Fabricate(:user, trust_level: TrustLevel[2]) }
   fab!(:second_flagger) { Fabricate(:user, trust_level: TrustLevel[2]) }
-  fab!(:post)
+  fab!(:topic)
+  fab!(:post) { Fabricate(:post, topic: topic) }
 
   fab!(:automation) do
     Fabricate(
       :automation,
       script: DiscourseAutomation::Scripts::EMAIL_ON_FLAGGED_POST,
-      trigger: DiscourseAutomation::Triggers::FLAG_CREATED,
+      trigger: DiscourseAutomation::Triggers::FLAG_ON_POST_CREATED,
     )
   end
 
   before do
     SiteSetting.discourse_automation_enabled = true
     SiteSetting.disable_emails = "no"
+  end
 
+  it "enqueues a job per recipient with placeholders applied" do
     automation.upsert_field!(
       "recipients",
       "email_group_user",
       { value: [recipient.email, user_2.username] },
     )
 
-    automation.upsert_field!(
-      "email_template",
-      "message",
-      {
-        value:
-          "Flagged by {{flagger_username}} on {{topic_title}}\n{{topic_url}}\n{{post_excerpt}}",
+    field =
+      automation.upsert_field!(
+        "email_template",
+        "message",
+        {
+          value: I18n.t("discourse_automation.scriptables.email_on_flagged_post.default_template"),
+        },
+      )
+
+    result = nil
+
+    expect do
+      result = PostActionCreator.spam(flagger, post)
+      expect(result.success).to eq(true)
+    end.to change { Jobs::DiscourseAutomation::SendFlagEmail.jobs.length }.by(2)
+
+    expect_job_enqueued(
+      job: Jobs::DiscourseAutomation::SendFlagEmail,
+      args: {
+        email: recipient.email,
+        email_template_automation_field_id: field.id,
+        post_action_id: result.post_action.id,
       },
     )
-    automation.reload
-    expect(automation.serialized_fields["recipients"]).to be_present
-    expect(automation.scriptable.not_found).to eq(false)
-  end
 
-  def run_script(post_action)
-    fields = automation.serialized_fields
-    flag_type = fields.dig("flag_type", "value")
-    return if flag_type.present? && flag_type != post_action.post_action_type_id
-
-    automation.scriptable.script.call(
-      { "post_action" => post_action, "post" => post_action.post },
-      fields,
-      automation,
+    expect_job_enqueued(
+      job: Jobs::DiscourseAutomation::SendFlagEmail,
+      args: {
+        email: user_2.primary_email.email,
+        email_template_automation_field_id: field.id,
+        post_action_id: result.post_action.id,
+      },
     )
-  end
-
-  it "sends an email with placeholders applied" do
-    result = PostActionCreator.spam(flagger, post)
-    expect(result.success).to eq(true)
-
-    expect { run_script(result.post_action) }.to change { ActionMailer::Base.deliveries.size }.by(2)
-
-    mail_to_recipient = ActionMailer::Base.deliveries.find { |m| m.to == [recipient.email] }
-
-    expect(mail_to_recipient.subject).to include(post.topic.title)
-    expect(mail_to_recipient.body.encoded).to include(flagger.username)
-    expect(mail_to_recipient.body.encoded).to include(post.excerpt(300, strip_links: true))
-    expect(mail_to_recipient.body.encoded).to include(
-      "#{Discourse.base_url}#{post.topic.relative_url}",
-    )
-
-    mail_to_user2 = ActionMailer::Base.deliveries.find { |m| m.to == [user_2.primary_email.email] }
-
-    expect(mail_to_user2.subject).to include(post.topic.title)
-    expect(mail_to_user2.body.encoded).to include(flagger.username)
-    expect(mail_to_user2.body.encoded).to include(post.excerpt(300, strip_links: true))
-    expect(mail_to_user2.body.encoded).to include("#{Discourse.base_url}#{post.topic.relative_url}")
   end
 end

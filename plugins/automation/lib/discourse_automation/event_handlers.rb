@@ -453,7 +453,7 @@ module DiscourseAutomation
             next if tags.present? && (topic.tags.map(&:name) & tags).empty?
           end
 
-          automation.trigger!("kind" => name, "post_action" => post_action, "post" => post)
+          automation.trigger!("kind" => name, "post_action_id" => post_action.id)
         end
     end
   end
