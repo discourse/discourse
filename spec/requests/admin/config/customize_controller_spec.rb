@@ -35,11 +35,11 @@ RSpec.describe Admin::Config::CustomizeController do
       expect(theme_response["color_scheme"]["id"]).to eq(color_scheme.id)
     end
 
-    it "includes screenshot_url in response" do
+    it "includes screenshot_light_url in response" do
       upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
       theme1.set_field(
         target: :common,
-        name: "screenshot",
+        name: "screenshot_light",
         upload_id: upload.id,
         type: :theme_screenshot_upload_var,
       )
@@ -50,7 +50,7 @@ RSpec.describe Admin::Config::CustomizeController do
       expect(response.status).to eq(200)
 
       theme_response = response.parsed_body["themes"].find { |t| t["id"] == theme1.id }
-      expect(theme_response["screenshot_url"]).to eq(upload.url)
+      expect(theme_response["screenshot_light_url"]).to eq(upload.url)
     end
   end
 

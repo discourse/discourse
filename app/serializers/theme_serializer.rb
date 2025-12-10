@@ -15,7 +15,8 @@ class ThemeSerializer < BasicThemeSerializer
              :enabled?,
              :disabled_at,
              :theme_fields,
-             :screenshot_url,
+             :screenshot_dark_url,
+             :screenshot_light_url,
              :system
 
   has_one :color_scheme, serializer: ColorSchemeSerializer, embed: :object

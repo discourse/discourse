@@ -37,44 +37,46 @@ RSpec.describe ThemeSerializer do
     end
   end
 
-  describe "screenshot_url" do
+  describe "screenshot_light_url" do
     fab!(:theme)
     let(:serialized) { ThemeSerializer.new(theme.reload).as_json[:theme] }
 
-    it "should include screenshot_url when there is a theme field with screenshot upload type" do
+    it "should include screenshot_light_url when there is a theme field with screenshot upload type and name 'screenshot_light'" do
       Fabricate(
         :theme_field,
         theme: theme,
         type_id: ThemeField.types[:theme_screenshot_upload_var],
-        name: "theme_screenshot_1",
+        name: "screenshot_light",
         upload: Fabricate(:upload),
       )
-      expect(serialized[:screenshot_url]).to be_present
+      expect(serialized[:screenshot_light_url]).to be_present
     end
 
-    it "should not include screenshot_url when there is no theme field with screenshot upload type" do
-      expect(serialized[:screenshot_url]).to be_nil
+    it "should not include screenshot_light_url/screenshot_dark_url when there is no theme fields of screenshot upload type with names 'screenshot_light' or 'screenshot_dark'" do
+      expect(serialized[:screenshot_light_url]).to be_nil
+      expect(serialized[:screenshot_dark_url]).to be_nil
     end
 
-    it "should handle multiple screenshot fields and use the first one" do
+    it "should handle dark/light screenshot fields and use both" do
       first_upload = Fabricate(:upload)
       second_upload = Fabricate(:upload)
       Fabricate(
         :theme_field,
         theme: theme,
         type_id: ThemeField.types[:theme_screenshot_upload_var],
-        name: "theme_screenshot_1",
+        name: "screenshot_light",
         upload: first_upload,
       )
       Fabricate(
         :theme_field,
         theme: theme,
         type_id: ThemeField.types[:theme_screenshot_upload_var],
-        name: "theme_screenshot_2",
+        name: "screenshot_dark",
         upload: second_upload,
       )
 
-      expect(serialized[:screenshot_url]).to eq(first_upload.url)
+      expect(serialized[:screenshot_light_url]).to eq(first_upload.url)
+      expect(serialized[:screenshot_dark_url]).to eq(second_upload.url)
     end
   end
 
