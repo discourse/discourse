@@ -51,48 +51,20 @@ export default class Chat extends Component {
 
   @action
   handleSubmit(data) {
-    this.args.controller.model.set(
-      "user_option.chat_quick_reaction_type",
-      data.chat_quick_reaction_type
-    );
+    const { chat_quick_reactions_custom, ...userOptions } = data;
+    const shouldReload =
+      userOptions.chat_enabled !==
+      this.args.controller.model.user_option.chat_enabled;
 
     this.args.controller.model.set(
       "user_option.chat_quick_reactions_custom",
-      data.chat_quick_reactions_custom.join("|")
+      chat_quick_reactions_custom.join("|")
     );
 
-    this.args.controller.model.set(
-      "user_option.only_chat_push_notifications",
-      data.only_chat_push_notifications
-    );
-
-    this.args.controller.model.set(
-      "user_option.chat_enabled",
-      data.chat_enabled
-    );
-
-    this.args.controller.model.set(
-      "user_option.ignore_channel_wide_mention",
-      data.ignore_channel_wide_mention
-    );
-
-    this.args.controller.model.set("user_option.chat_sound", data.chat_sound);
-
-    this.args.controller.model.set(
-      "user_option.chat_header_indicator_preference",
-      data.chat_header_indicator_preference
-    );
-
-    this.args.controller.model.set(
-      "user_option.chat_separate_sidebar_mode",
-      data.chat_separate_sidebar_mode
-    );
-
-    this.args.controller.model.set(
-      "user_option.chat_send_shortcut",
-      data.chat_send_shortcut
-    );
-    return this.args.controller.save();
+    for (const [key, value] of Object.entries(userOptions)) {
+      this.args.controller.model.set(`user_option.${key}`, value);
+    }
+    return this.args.controller.save(shouldReload);
   }
 
   <template>

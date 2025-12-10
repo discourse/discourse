@@ -118,12 +118,15 @@ export default class PreferencesChatController extends Controller {
   }
 
   @action
-  save() {
+  save(shouldReload) {
     this.set("saved", false);
     return this.model
       .save(CHAT_ATTRS)
       .then(() => {
         this.set("saved", true);
+        if (shouldReload) {
+          location.reload();
+        }
       })
       .catch(popupAjaxError);
   }
