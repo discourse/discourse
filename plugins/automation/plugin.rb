@@ -52,7 +52,7 @@ after_initialize do
     lib/discourse_automation/scripts/banner_topic
     lib/discourse_automation/scripts/close_topic
     lib/discourse_automation/scripts/flag_post_on_words
-    lib/discourse_automation/scripts/email_on_flag
+    lib/discourse_automation/scripts/email_on_flagged_post
     lib/discourse_automation/scripts/gift_exchange
     lib/discourse_automation/scripts/group_category_notification_default
     lib/discourse_automation/scripts/pin_topic

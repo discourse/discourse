@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "EmailOnFlag" do
+describe "EmailOnFlaggedPost" do
   fab!(:recipient) { Fabricate(:user, email: "recipient@example.com") }
   fab!(:user_2, :user)
   fab!(:flagger) { Fabricate(:user, trust_level: TrustLevel[2]) }
@@ -10,7 +10,7 @@ describe "EmailOnFlag" do
   fab!(:automation) do
     Fabricate(
       :automation,
-      script: "email_on_flag",
+      script: DiscourseAutomation::Scripts::EMAIL_ON_FLAGGED_POST,
       trigger: DiscourseAutomation::Triggers::FLAG_CREATED,
     )
   end

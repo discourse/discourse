@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Scriptable.add("email_on_flag") do
+DiscourseAutomation::Scriptable.add("email_on_flagged_post") do
   version 1
   run_in_background
 
@@ -10,7 +10,8 @@ DiscourseAutomation::Scriptable.add("email_on_flag") do
         component: :message,
         required: true,
         accepts_placeholders: true,
-        default_value: I18n.t("discourse_automation.scriptables.email_on_flag.default_template")
+        default_value:
+          I18n.t("discourse_automation.scriptables.email_on_flagged_post.default_template")
 
   field :recipients, component: :email_group_user, required: true
 
@@ -69,7 +70,7 @@ DiscourseAutomation::Scriptable.add("email_on_flag") do
 
     subject =
       I18n.t(
-        "discourse_automation.scriptables.email_on_flag.subject",
+        "discourse_automation.scriptables.email_on_flagged_post.subject",
         topic_title: placeholders[:topic_title] || "",
         flagger_username: placeholders[:flagger_username] || "",
       )

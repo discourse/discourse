@@ -94,9 +94,9 @@ en:
         title: After user update
         description: When a user updates any information the automation will be triggered
     scriptables:
-      email_on_flag:
-        title: Email on flag
-        description: Send a custom email whenever a flag is created
+      email_on_flagged_post:
+        title: Email on flagged post
+        description: Send a custom email whenever a post is flagged
         subject: "Flagged post: %{topic_title} (%{flagger_username})"
         default_template: |-
           A post has been flagged.
