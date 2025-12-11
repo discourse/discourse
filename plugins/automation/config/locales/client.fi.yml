@@ -66,6 +66,12 @@ fi:
         text:
           label: Teksti
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategoriat
+            tags:
+              label: Tunnisteet
         not_found: Triggeriä %{trigger} automaatiolle %{automation} ei löytynyt. Varmista, että siihen liittyvä lisäosa on asennettuna.
         user_badge_granted:
           fields:

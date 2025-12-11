@@ -2856,6 +2856,7 @@ es:
         zoom_out: "Disminuir el tamaño de la imagen"
         zoom_in: "Aumentar el tamaño de la imagen"
         remove: "Eliminar imagen"
+      image: "imagen"
       image_scale_button: "Escalar imagen a %{percent} %"
       delete_image_button: Eliminar imagen
       toggle_image_grid: Alternar cuadrícula de imágenes

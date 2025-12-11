@@ -157,6 +157,7 @@ pl_PL:
           replies: Odpowiedzi na wpisy
           mentions: Wzmianki
           topics_with_new_users: Tematy z nowymi użytkownikami
+          your_contributions_helped: twój wkład pomógł
         time_of_day_activity:
           title: Codzienny rytm aktywności
           play_button: Odtwórz swoją aktywność jako dźwięk

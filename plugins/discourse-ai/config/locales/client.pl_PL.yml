@@ -386,7 +386,7 @@ pl_PL:
         custom_instructions_help: "Niestandardowe instrukcje specyficzne dla Twojej witryny, aby pomóc sztucznej inteligencji w identyfikacji spamu, np. \"Bądź bardziej agresywny w skanowaniu postów nie w języku angielskim\"."
         last_seven_days: "Ostatnie 7 dni"
         scanned_count: "Przeskanowane posty"
-        false_positives: "Nieprawidłowo oznaczony"
+        false_positives: "Nieprawidłowo oflagowany"
         false_negatives: "Pominięty spam"
         spam_detected: "Wykryto spam"
         custom_instructions_placeholder: "Instrukcje dla AI specyficzne dla witryny, aby pomóc w dokładniejszej identyfikacji spamu"
@@ -1068,6 +1068,6 @@ pl_PL:
     review:
       types:
         reviewable_ai_post:
-          title: "Post oflagowany przez AI"
+          title: "Wpis oflagowany przez AI"
         reviewable_ai_chat_message:
           title: "Wiadomość na czacie oflagowana przez AI"

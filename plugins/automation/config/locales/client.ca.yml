@@ -27,6 +27,12 @@ ca:
         text:
           label: Text
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Categories
+            tags:
+              label: Etiquetes
         user_badge_granted:
           fields:
             badge:
