@@ -42,7 +42,7 @@ jobs:
       TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
       TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
       EMBER_ENV: development
-      LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'chat') && '1' || '0' }}
+      LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       ACTIONS_STEP_DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG }}
 
     strategy:
@@ -50,14 +50,25 @@ jobs:
 
       matrix:
         build_type: [backend, frontend, system]
-        target: [core, core-plugins, official-plugins, themes]
+        target: [core, plugins, themes]
         browser: [Chrome]
         exclude:
           - build_type: backend
             target: themes
+          # Exclude combined plugins from system tests - use split targets instead
+          - build_type: system
+            target: plugins
         include:
+          # Split plugin targets for system tests only
+          - build_type: system
+            target: core-plugins
+            browser: Chrome
+          - build_type: system
+            target: official-plugins
+            browser: Chrome
           - build_type: system
             target: chat
+            browser: Chrome
           # - build_type: frontend
           #   target: core
           #   browser: Firefox Evergreen
@@ -119,11 +130,11 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Checkout official plugins
-        if: matrix.target == 'official-plugins'
+        if: matrix.target == 'official-plugins' || matrix.target == 'plugins'
         run: bin/rake plugin:install_all_official
 
       - name: Symlinking plugin gems from image
-        if: matrix.target == 'core-plugins' || matrix.target == 'official-plugins'
+        if: matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins'
         run: |
           for dir in /var/www/discourse/plugins/*/gems; do
             plugin_name=$(basename "$(dirname "$dir")")
@@ -141,7 +152,7 @@ jobs:
           done
 
       - name: Pull compatible versions of plugins
-        if: matrix.target == 'official-plugins' && (github.ref_name != 'main' && github.base_ref != 'main')
+        if: (matrix.target == 'official-plugins' || matrix.target == 'plugins') && (github.ref_name != 'main' && github.base_ref != 'main')
         run: LOAD_PLUGINS=0 bin/rake plugin:pull_compatible_all
 
       - name: Checkout official themes
@@ -184,7 +195,7 @@ jobs:
 
       - name: Create and migrate database
         env:
-          LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'chat') && '1' || '0' }}
+          LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
         run: |
           bin/rake db:create
           script/silence_successful_output bin/rake db:migrate
@@ -194,7 +205,7 @@ jobs:
           env.USES_PARALLEL_DATABASES == 'true' &&
           steps.app-cache.outputs.cache-hit != 'true'
         env:
-          LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'chat') && '1' || '0' }}
+          LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
         run: |
           bin/rake parallel:create
           script/silence_successful_output bin/rake parallel:migrate
@@ -217,7 +228,7 @@ jobs:
           restore-keys: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-
 
       - name: Check Annotations
-        if: matrix.build_type == 'backend' && (matrix.target == 'core' || matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'chat')
+        if: matrix.build_type == 'backend' && (matrix.target == 'core' || matrix.target == 'plugins')
         run: |
           bin/rake annotate:ensure_all_indexes
 
@@ -280,7 +291,7 @@ jobs:
         run: pnpm test
 
       - name: Split core and official plugins
-        if: matrix.target == 'core-plugins' || matrix.target == 'official-plugins'
+        if: matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins'
         shell: bash
         run: |
           CORE_PLUGINS=`script/list_bundled_plugins | sed 's|.*/||' | paste -sd, -`
@@ -290,25 +301,15 @@ jobs:
           echo "OFFICIAL_PLUGINS=$OFFICIAL_PLUGINS" >> $GITHUB_ENV
           echo "OFFICIAL_PLUGINS_ESCAPED=`echo $OFFICIAL_PLUGINS | sed 's/,/\\\\,/g'`" >> $GITHUB_ENV
 
-      - name: Core Plugins RSpec
-        if: matrix.build_type == 'backend' && matrix.target == 'core-plugins'
+      - name: Plugins RSpec
+        if: matrix.build_type == 'backend' && matrix.target == 'plugins'
         run: |
           bin/rake plugin:turbo_spec['*','--verbose --format=progress --use-runtime-info --profile=50']
 
-      - name: Core Plugins QUnit
-        if: matrix.build_type == 'frontend' && matrix.target == 'core-plugins'
+      - name: Plugins QUnit
+        if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
         run: |
           bin/rake plugin:qunit['*']
-
-      - name: Official Plugins RSpec
-        if: matrix.build_type == 'backend' && matrix.target == 'official-plugins'
-        run: |
-          bin/rake plugin:turbo_spec["${{ env.OFFICIAL_PLUGINS_ESCAPED }}",'--verbose --format=progress --use-runtime-info --profile=50']
-
-      - name: Official Plugins QUnit
-        if: matrix.build_type == 'frontend' && matrix.target == 'official-plugins'
-        run: |
-          bin/rake plugin:qunit["${{ env.OFFICIAL_PLUGINS_ESCAPED }}"]
 
       - name: Theme QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'themes'
