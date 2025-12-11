@@ -109,6 +109,12 @@ class DiscourseTemplateMap {
     return this.templates.get(name);
   }
 
+  /**
+   * Identifies the source (core, plugin, or theme) of a template.
+   *
+   * @param {string} name - The template path to look up
+   * @return {Object|undefined} Source information containing type and name, or undefined if not found
+   */
   identifySource(name) {
     return this.sources.get(name);
   }

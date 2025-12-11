@@ -336,6 +336,13 @@ export function buildResolver(baseName) {
       }
     }
 
+    /**
+     * Identifies the source (core, plugin, or theme) of a template by its parsed name.
+     *
+     * @param {Object} parsedName - The parsed template name object
+     * @param {string} [prefix] - Optional prefix to prepend to the template path
+     * @return {Object|undefined} Source information containing type and name, or undefined if not found
+     */
     findTemplateSource(parsedName, prefix) {
       const { candidates } = this.#buildTemplateCandidates(parsedName, prefix);
 
@@ -402,6 +409,15 @@ export function buildResolver(baseName) {
       }
     }
 
+    /**
+     * Builds a list of template path candidates based on various naming conventions.
+     * Supports legacy naming patterns (underscored, dasherized, etc.) for backwards compatibility.
+     *
+     * @param {Object} parsedName - The parsed template name object
+     * @param {string} [prefix=""] - Optional prefix to prepend to all candidate paths
+     * @return {Object} Object with 'original' path and array of 'candidates' to try
+     * @private
+     */
     #buildTemplateCandidates(parsedName, prefix = "") {
       const withoutType = parsedName.fullNameWithoutType;
       const underscored = decamelize(withoutType).replace(/-/g, "_");

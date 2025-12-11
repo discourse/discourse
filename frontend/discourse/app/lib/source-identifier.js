@@ -50,6 +50,8 @@ export default function identifySource(error) {
 
   let plugin;
 
+  // Build patterns array dynamically to match plugin files in both development and production
+  // Order matters: check more specific patterns (_admin) before general ones
   const patterns = [];
 
   if (DEBUG) {

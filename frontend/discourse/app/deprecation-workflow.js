@@ -174,6 +174,7 @@ export class DiscourseDeprecationWorkflow {
 
   /**
    * Checks if a deprecation should throw an error.
+   *
    * @param {string} deprecationId - ID of the deprecation
    * @param {boolean} [includeUnsilenced=false] - Whether to throw for unsilenced deprecations
    * @return {boolean} True if deprecation should throw
@@ -181,6 +182,8 @@ export class DiscourseDeprecationWorkflow {
   shouldThrow(deprecationId, includeUnsilenced = false) {
     const workflow = this.#find(deprecationId);
 
+    // The "dont-throw" handler prevents raising errors for specific deprecations
+    // even when RAISE_ON_DEPRECATION is enabled (e.g., for test fixtures)
     if (workflow?.handler?.includes("dont-throw")) {
       return false;
     }
@@ -252,7 +255,6 @@ export class DiscourseDeprecationWorkflow {
  * @property {(string|string[])} handler - Handler type(s): "silence", "log", "throw", "dont-throw", and/or "counter"
  * @property {(string|RegExp)} matchId - ID or pattern to match deprecations
  * @property {(string|string[])} [env] - Optional environment(s): "development", "qunit-test", "rails-test", "test", "production", "unset"
- *
  */
 const DeprecationWorkflow = new DiscourseDeprecationWorkflow([
   { handler: "silence", matchId: "template-action" }, // will be removed in Ember 6.0
@@ -274,7 +276,7 @@ const DeprecationWorkflow = new DiscourseDeprecationWorkflow([
     matchId: /fake-deprecation.*/,
     env: "test",
   },
-  // widget-related code should fail on all CI tests including plugins and custom themes
+  // widget-related code should fail on all CI tests, including plugins and custom themes
   {
     handler: "throw",
     matchId: "discourse.widgets-decommissioned",
