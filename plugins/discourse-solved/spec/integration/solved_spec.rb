@@ -649,7 +649,7 @@ RSpec.describe "Managing Posts solved status" do
       expect(accepted_message.data[:accepted_answer][:post_number]).to eq(2)
       expect(accepted_message.data[:accepted_answer][:username]).to eq(user.username)
       expect(accepted_message.data[:accepted_answer][:name]).to eq(user.name)
-      expect(accepted_message.data[:accepted_answer][:excerpt]).to eq(reply.excerpt)
+      expect(accepted_message.data[:accepted_answer][:excerpt]).to eq(reply.cooked)
       expect(accepted_message.data[:accepted_answer][:accepter_name]).to eq(admin.name)
       expect(accepted_message.data[:accepted_answer][:accepter_username]).to eq(admin.username)
 

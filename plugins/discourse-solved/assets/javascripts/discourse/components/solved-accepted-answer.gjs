@@ -1,8 +1,12 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import DButton from "discourse/components/d-button";
 import InterpolatedTranslation from "discourse/components/interpolated-translation";
-import PostQuotedContent from "discourse/components/post/quoted-content";
+import PostCookedHtml from "discourse/components/post/cooked-html";
 import UserLink from "discourse/components/user-link";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
@@ -10,6 +14,8 @@ import { i18n } from "discourse-i18n";
 
 export default class SolvedAcceptedAnswer extends Component {
   @service siteSettings;
+
+  @tracked expanded = false;
 
   get topic() {
     return this.args.post.topic;
@@ -27,7 +33,7 @@ export default class SolvedAcceptedAnswer extends Component {
     return !!this.acceptedAnswer.excerpt;
   }
 
-  get collapsedContent() {
+  get content() {
     if (!this.hasExcerpt) {
       return "";
     }
@@ -76,23 +82,39 @@ export default class SolvedAcceptedAnswer extends Component {
     return `${this.topic.url}/${postNumber}`;
   }
 
+  @action
+  toggleExpanded() {
+    this.expanded = !this.expanded;
+  }
+
+  @action
+  onClickTitle(event) {
+    if (event.target.closest("a") || event.target.closest(".quote-controls")) {
+      return;
+    }
+    this.toggleExpanded();
+  }
+
   <template>
+    {{! template-lint-disable no-unnecessary-concat }}
     {{#if this.acceptedAnswer}}
-      <PostQuotedContent
+      <aside
         class={{concatClass
-          "accepted-answer"
+          "quote accepted-answer"
           (if this.hasExcerpt "accepted-answer--has-excerpt")
-          (unless this.collapsedContent "title-only")
+          (unless this.content "title-only")
         }}
-        @collapsedContent={{this.collapsedContent}}
-        @decoratorState={{@decoratorState}}
-        @id={{this.quoteId}}
-        @post={{@post}}
-        @quotedPostNumber={{this.acceptedAnswer.post_number}}
-        @quotedTopicId={{this.topic.id}}
-        @quotedUsername={{this.acceptedAnswer.username}}
+        data-expanded="{{this.expanded}}"
+        data-username={{this.acceptedAnswer.username}}
+        data-post={{this.acceptedAnswer.post_number}}
+        data-topic={{this.topic.id}}
       >
-        <:title>
+        <div
+          class="title"
+          data-has-quote-controls="true"
+          role={{if this.content "button"}}
+          {{(if this.content (modifier on "click" this.onClickTitle))}}
+        >
           <div class="accepted-answer--solver-accepter">
             <div class="accepted-answer--solver">
               {{#if this.showSolvedBy}}
@@ -110,9 +132,7 @@ export default class SolvedAcceptedAnswer extends Component {
                     <a href={{this.postPath}}>{{this.postNumber}}</a>
                   </Placeholder>
                 </InterpolatedTranslation>
-                <br />
               {{/if}}
-
             </div>
             <div class="accepted-answer--accepter">
               {{#if this.showMarkedBy}}
@@ -129,8 +149,37 @@ export default class SolvedAcceptedAnswer extends Component {
               {{/if}}
             </div>
           </div>
-        </:title>
-      </PostQuotedContent>
+          <div class="quote-controls">
+            {{#if this.content}}
+              <DButton
+                class="btn-flat quote-toggle"
+                @action={{this.toggleExpanded}}
+                @ariaControls={{this.quoteId}}
+                @ariaExpanded={{this.expanded}}
+                @ariaLabel={{if this.expanded "post.collapse" "expand"}}
+                @title={{if this.expanded "post.collapse" "expand"}}
+                @icon={{if this.expanded "chevron-up" "chevron-down"}}
+              />
+            {{/if}}
+            <DButton
+              class="btn-flat back"
+              @href={{this.postPath}}
+              @title="post.follow_quote"
+              @ariaLabel="post.follow_quote"
+              @icon="arrow-down"
+            />
+          </div>
+        </div>
+        {{#if this.content}}
+          <blockquote id={{this.quoteId}}>
+            <PostCookedHtml
+              @post={{@post}}
+              @cooked={{this.content}}
+              @decoratorState={{@decoratorState}}
+            />
+          </blockquote>
+        {{/if}}
+      </aside>
     {{/if}}
   </template>
 }

@@ -12,16 +12,7 @@ module DiscourseSolved::TopicExtension
     answer_post_user = answer_post.user || Discourse.system_user
     accepter = solved.accepter || self.user || Discourse.system_user
 
-    excerpt =
-      if SiteSetting.solved_quote_length > 0
-        PrettyText.excerpt(
-          answer_post.cooked,
-          SiteSetting.solved_quote_length,
-          keep_emoji_images: true,
-        )
-      else
-        nil
-      end
+    excerpt = SiteSetting.solved_quote_length > 0 ? answer_post.cooked : nil
 
     accepted_answer = {
       post_number: answer_post.post_number,
