@@ -37,5 +37,6 @@ module Migrations::Database::IntermediateDB::Enums
     FILE_SIZE_RESTRICTION = 27
     OBJECTS = 28
     LOCALE_ENUM = 29
+    TOPIC = 30
   end
 end
