@@ -28,6 +28,8 @@ RSpec.describe "Sidebar New Topic Button", system: true do
   let(:category_page) { PageObjects::Pages::Category.new }
 
   context "for signed in users" do
+    before { sign_in(user) }
+
     it "renders the new topic button in the sidebar" do
       visit("/latest")
       expect(page).to have_css(".sidebar-new-topic-button__wrapper")
