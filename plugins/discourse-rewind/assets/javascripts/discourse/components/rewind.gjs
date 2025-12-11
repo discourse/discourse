@@ -10,6 +10,7 @@ import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ActivityCalendar from "discourse/plugins/discourse-rewind/discourse/components/reports/activity-calendar";
 import AiUsage from "discourse/plugins/discourse-rewind/discourse/components/reports/ai-usage";
@@ -47,7 +48,7 @@ export default class Rewind extends Component {
   nextReportIndex = 0;
 
   get canShare() {
-    return this.currentUser?.id === this.args.user.id;
+    return this.currentUser.id === this.args.user.id;
   }
 
   @action
@@ -64,7 +65,7 @@ export default class Rewind extends Component {
   @action
   async loadRewind() {
     let url = "/rewinds.json";
-    if (this.args.user.id !== this.currentUser?.id) {
+    if (this.args.user.id !== this.currentUser.id) {
       url += `?for_user_username=${this.args.user.username}`;
     }
 
@@ -128,7 +129,7 @@ export default class Rewind extends Component {
     try {
       while (this.nextReportIndex < targetIndex) {
         let url = `/rewinds/${this.nextReportIndex}.json`;
-        if (this.args.user.id !== this.currentUser?.id) {
+        if (this.args.user.id !== this.currentUser.id) {
           url += `?for_user_username=${this.args.user.username}`;
         }
 
@@ -159,13 +160,13 @@ export default class Rewind extends Component {
 
   @action
   async toggleShareRewind() {
-    if (this.currentUser?.user_option.discourse_rewind_share_publicly) {
+    if (this.currentUser.user_option.discourse_rewind_share_publicly) {
       try {
         const response = await ajax("/rewinds/toggle-share", {
           type: "PUT",
         });
 
-        this.currentUser?.set(
+        this.currentUser.set(
           "user_option.discourse_rewind_share_publicly",
           response.shared
         );
@@ -191,7 +192,7 @@ export default class Rewind extends Component {
           const response = await ajax("/rewinds/toggle-share", {
             type: "PUT",
           });
-          this.currentUser?.set(
+          this.currentUser.set(
             "user_option.discourse_rewind_share_publicly",
             response.shared
           );
@@ -295,12 +296,12 @@ export default class Rewind extends Component {
             <DButton
               class="btn-default rewind__share-btn --special-kbd"
               @title={{if
-                this.currentUser?.user_option.discourse_rewind_share_publicly
+                this.currentUser.user_option.discourse_rewind_share_publicly
                 "discourse_rewind.share.disable_tooltip"
                 "discourse_rewind.share.enable_tooltip"
               }}
               @icon={{if
-                this.currentUser?.user_option.discourse_rewind_share_publicly
+                this.currentUser.user_option.discourse_rewind_share_publicly
                 "link-slash"
                 "link"
               }}
@@ -317,6 +318,15 @@ export default class Rewind extends Component {
             {{didInsert this.registerScrollWrapper}}
             {{willDestroy this.cleanup}}
           >
+            {{#unless (eq this.currentUser.id @user.id)}}
+              <p class="rewind-other-user">{{htmlSafe
+                  (i18n
+                    "discourse_rewind.viewing_other_user"
+                    username=@user.username
+                  )
+                }}</p>
+            {{/unless}}
+
             {{#if this.cannotViewRewind}}
               <div class="rewind-error">
                 {{htmlSafe

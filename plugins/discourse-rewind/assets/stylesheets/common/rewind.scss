@@ -119,10 +119,19 @@
   padding-bottom: var(--safe-area-inset-bottom);
   padding-top: 2em;
 
-  .rewind-error {
+  .rewind-error,
+  .rewind-other-user {
     color: var(--rewind-green);
     font-family: var(--pixel-text);
     text-align: left;
+  }
+
+  .rewind-other-user {
+    font-size: var(--font-down-1);
+    text-align: center;
+  }
+
+  .rewind-error {
     line-height: 1em;
     padding: 2em;
   }

@@ -9,6 +9,7 @@ en:
       placeholder: Discourse Rewind
       title: Rewind
       loading: "Reticulating splines..."
+      viewing_other_user: "You are viewing <strong>%{username}'s</strong> Discourse Rewind report."
       cannot_view_rewind_gibberish: >
         [ACCESS DENIED::REWIND MAINFRAME SUBROUTINE FAILURE]<br><br>
 
@@ -27,7 +28,7 @@ en:
         share_publicly: "Share Discourse Rewind summary publicly. Any forum user will be able to view your Discourse Rewind summary."
       profile_link: "View your %{rewindYear} Discourse Rewind"
       share:
-        confirm: "Are you sure you want to share your Discourse Rewind summary? This will make it visible to all members of this forum. You can unshare at any time by clicking the share button again."
+        confirm: "Are you sure you want to share your Discourse Rewind summary? This will make it visible to all members of this forum. Note that the report may contain private data like personal message excerpts. You can unshare at any time by clicking the share button again."
         enabled_success: "Your Discourse Rewind summary is now shared publicly."
         disabled_success: "Your Discourse Rewind summary is no longer shared publicly."
         disable_tooltip: "Click to unshare your Discourse Rewind summary."
