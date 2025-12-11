@@ -65,8 +65,6 @@ after_initialize do
   end
 
   add_to_serializer(:current_user, :is_rewind_active) do
-    return false if object.user_option&.discourse_rewind_disabled
-
     Rails.env.development? || Date.today.month == 1 || Date.today.month == 12
   end
 
