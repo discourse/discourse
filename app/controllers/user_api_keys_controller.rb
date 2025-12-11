@@ -11,8 +11,6 @@ class UserApiKeysController < ApplicationController
 
   AUTH_API_VERSION = 4
 
-  ALLOWED_PADDING_MODES = %w[pkcs1 oaep].freeze
-
   def new
     if request.head?
       head :ok, auth_api_version: AUTH_API_VERSION
@@ -47,6 +45,7 @@ class UserApiKeysController < ApplicationController
     @push_url = params[:push_url]
     @localized_scopes = params[:scopes].split(",").map { |s| I18n.t("user_api_key.scopes.#{s}") }
     @scopes = params[:scopes]
+    @padding = params[:padding]
   rescue Discourse::InvalidAccess
     @generic_error = true
   end
@@ -138,6 +137,7 @@ class UserApiKeysController < ApplicationController
     @application_name = params[:application_name]
     @public_key = params[:public_key]
     @auth_redirect = params[:auth_redirect]
+    @padding = params[:padding]
   end
 
   def create_otp

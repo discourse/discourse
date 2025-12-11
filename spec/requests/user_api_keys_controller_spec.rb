@@ -1,46 +1,36 @@
 # frozen_string_literal: true
 
 RSpec.describe UserApiKeysController do
-  let :public_key do
-    <<~TXT
-    -----BEGIN PUBLIC KEY-----
-    MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDh7BS7Ey8hfbNhlNAW/47pqT7w
-    IhBz3UyBYzin8JurEQ2pY9jWWlY8CH147KyIZf1fpcsi7ZNxGHeDhVsbtUKZxnFV
-    p16Op3CHLJnnJKKBMNdXMy0yDfCAHZtqxeBOTcCo1Vt/bHpIgiK5kmaekyXIaD0n
-    w0z/BYpOgZ8QwnI5ZwIDAQAB
-    -----END PUBLIC KEY-----
-    TXT
-  end
+  let(:private_key) { OpenSSL::PKey::RSA.new(2048) }
+  let(:public_key) { private_key.public_key.to_pem }
 
-  let :private_key do
-    <<~TXT
-    -----BEGIN RSA PRIVATE KEY-----
-    MIICWwIBAAKBgQDh7BS7Ey8hfbNhlNAW/47pqT7wIhBz3UyBYzin8JurEQ2pY9jW
-    WlY8CH147KyIZf1fpcsi7ZNxGHeDhVsbtUKZxnFVp16Op3CHLJnnJKKBMNdXMy0y
-    DfCAHZtqxeBOTcCo1Vt/bHpIgiK5kmaekyXIaD0nw0z/BYpOgZ8QwnI5ZwIDAQAB
-    AoGAeHesbjzCivc+KbBybXEEQbBPsThY0Y+VdgD0ewif2U4UnNhzDYnKJeTZExwQ
-    vAK2YsRDV3KbhljnkagQduvmgJyCKuV/CxZvbJddwyIs3+U2D4XysQp3e1YZ7ROr
-    YlOIoekHCx1CNm6A4iImqGxB0aJ7Owdk3+QSIaMtGQWaPTECQQDz2UjJ+bomguNs
-    zdcv3ZP7W3U5RG+TpInSHiJXpt2JdNGfHItozGJCxfzDhuKHK5Cb23bgldkvB9Xc
-    p/tngTtNAkEA7S4cqUezA82xS7aYPehpRkKEmqzMwR3e9WeL7nZ2cdjZAHgXe49l
-    3mBhidEyRmtPqbXo1Xix8LDuqik0IdnlgwJAQeYTnLnHS8cNjQbnw4C/ECu8Nzi+
-    aokJ0eXg5A0tS4ttZvGA31Z0q5Tz5SdbqqnkT6p0qub0JZiZfCNNdsBe9QJAaGT5
-    fJDwfGYW+YpfLDCV1bUFhMc2QHITZtSyxL0jmSynJwu02k/duKmXhP+tL02gfMRy
-    vTMorxZRllgYeCXeXQJAEGRXR8/26jwqPtKKJzC7i9BuOYEagqj0nLG2YYfffCMc
-    d3JGCf7DMaUlaUE8bJ08PtHRJFSGkNfDJLhLKSjpbw==
-    -----END RSA PRIVATE KEY-----
-    TXT
-  end
-
-  let :args do
+  let(:args) do
     {
       scopes: "read",
       client_id: "x" * 32,
       auth_redirect: "http://over.the/rainbow",
       application_name: "foo",
-      public_key: public_key,
+      public_key:,
       nonce: SecureRandom.hex,
     }
+  end
+
+  let(:otp_args) do
+    { auth_redirect: "http://somewhere.over.the/rainbow", application_name: "foo", public_key: }
+  end
+
+  def decrypt_payload(encrypted, padding: nil)
+    if padding == "oaep"
+      private_key.private_decrypt(encrypted, OpenSSL::PKey::RSA::PKCS1_OAEP_PADDING)
+    else
+      private_key.private_decrypt(encrypted)
+    end
+  end
+
+  def extract_payload_from_redirect(response, key: "payload")
+    uri = URI.parse(response.redirect_url)
+    payload = uri.query.split("#{key}=")[1]
+    Base64.decode64(CGI.unescape(payload))
   end
 
   describe "#new" do
@@ -48,6 +38,16 @@ RSpec.describe UserApiKeysController do
       head "/user-api-key/new"
       expect(response.status).to eq(200)
       expect(response.headers["Auth-Api-Version"]).to eq("4")
+    end
+
+    it "includes padding parameter in the form only when provided" do
+      sign_in(Fabricate(:user, refresh_auto_groups: true))
+
+      get "/user-api-key/new", params: args
+      expect(response.body).not_to include('name="padding"')
+
+      get "/user-api-key/new", params: args.merge(padding: "oaep")
+      expect(response.body).to include('name="padding"', 'value="oaep"')
     end
   end
 
@@ -63,51 +63,185 @@ RSpec.describe UserApiKeysController do
       expect(response.status).to eq(403)
     end
 
-    it "will allow tokens for staff without TL" do
+    it "allows tokens for staff without meeting TL requirement" do
       SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
-
-      user = Fabricate(:user, trust_level: TrustLevel[1], moderator: true)
-
-      sign_in(user)
+      sign_in(Fabricate(:user, trust_level: TrustLevel[1], moderator: true))
 
       post "/user-api-key.json", params: args
       expect(response.status).to eq(302)
     end
 
-    it "will not create token unless TL is met" do
+    it "does not create token unless TL requirement is met" do
       SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
-
-      user = Fabricate(:user, trust_level: TrustLevel[1])
-      sign_in(user)
+      sign_in(Fabricate(:user, trust_level: TrustLevel[1]))
 
       post "/user-api-key.json", params: args
       expect(response.status).to eq(403)
     end
 
-    it "will deny access if requesting more rights than allowed" do
+    it "denies access if requesting more scopes than allowed" do
       SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
       SiteSetting.allow_user_api_key_scopes = "write"
-
-      user = Fabricate(:user, trust_level: TrustLevel[0])
-      sign_in(user)
+      sign_in(Fabricate(:user, trust_level: TrustLevel[0]))
 
       post "/user-api-key.json", params: args
       expect(response.status).to eq(403)
     end
 
-    it "allows for a revoke with no id" do
-      key = Fabricate(:readonly_user_api_key)
-      post "/user-api-key/revoke.json", headers: { HTTP_USER_API_KEY: key.key }
+    it "does not return push access if push URL not configured" do
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
+      user = Fabricate(:user, trust_level: TrustLevel[0])
+      sign_in(user)
 
-      expect(response.status).to eq(200)
-      key.reload
-      expect(key.revoked_at).not_to eq(nil)
+      post "/user-api-key.json",
+           params: args.merge(scopes: "push,read", push_url: "https://push.it/here")
+      expect(response.status).to eq(302)
+
+      parsed = JSON.parse(decrypt_payload(extract_payload_from_redirect(response)))
+      expect(parsed["push"]).to eq(false)
+      expect(user.user_api_keys.first.scopes.map(&:name)).to include("push")
     end
 
-    it "will not allow readonly api keys to revoke others" do
+    it "redirects with valid encrypted token" do
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
+      SiteSetting.allowed_user_api_push_urls = "https://push.it/here"
+      user = Fabricate(:user, trust_level: TrustLevel[0])
+      sign_in(user)
+
+      post "/user-api-key.json",
+           params:
+             args.merge(
+               scopes: "push,notifications,message_bus,session_info,one_time_password",
+               push_url: "https://push.it/here",
+             )
+      expect(response.status).to eq(302)
+
+      parsed = JSON.parse(decrypt_payload(extract_payload_from_redirect(response)))
+      expect(parsed["nonce"]).to eq(args[:nonce])
+      expect(parsed["push"]).to eq(true)
+      expect(parsed["api"]).to eq(4)
+
+      api_key = UserApiKey.with_key(parsed["key"]).first
+      expect(api_key.user_id).to eq(user.id)
+      expect(api_key.scopes.map(&:name).sort).to eq(
+        %w[message_bus notifications one_time_password push session_info],
+      )
+    end
+
+    it "returns payload without redirect when auth_redirect not provided" do
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      user = Fabricate(:user, trust_level: TrustLevel[0])
+      sign_in(user)
+
+      post "/user-api-key.json", params: args.except(:auth_redirect)
+      expect(response.status).to eq(200)
+
+      encrypted = Base64.decode64(response.parsed_body["payload"])
+      parsed = JSON.parse(decrypt_payload(encrypted))
+      expect(UserApiKey.with_key(parsed["key"]).first.user_id).to eq(user.id)
+    end
+
+    it "encrypts payload with OAEP padding when requested" do
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      user = Fabricate(:user, trust_level: TrustLevel[0])
+      sign_in(user)
+
+      post "/user-api-key.json", params: args.except(:auth_redirect).merge(padding: "oaep")
+      expect(response.status).to eq(200)
+
+      encrypted = Base64.decode64(response.parsed_body["payload"])
+      parsed = JSON.parse(decrypt_payload(encrypted, padding: "oaep"))
+      expect(UserApiKey.with_key(parsed["key"]).first.user_id).to eq(user.id)
+    end
+
+    it "rejects OAEP requests when payload exceeds maximum size for the key" do
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      sign_in(Fabricate(:user, trust_level: TrustLevel[0]))
+
+      post "/user-api-key.json",
+           params: args.except(:auth_redirect).merge(padding: "oaep", nonce: "x" * 150)
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"].first).to include("Payload too large for OAEP")
+    end
+
+    it "allows redirect to wildcard urls" do
+      SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect] + "/*"
+      sign_in(Fabricate(:user, refresh_auto_groups: true))
+
+      post "/user-api-key.json", params: args.merge(auth_redirect: args[:auth_redirect] + "/foo")
+      expect(response.status).to eq(302)
+    end
+
+    it "preserves query params in auth_redirect" do
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect] + "/*"
+      sign_in(Fabricate(:user, trust_level: TrustLevel[0]))
+
+      post "/user-api-key.json", params: args.merge(auth_redirect: args[:auth_redirect] + "/?p=1")
+      expect(response.redirect_url).to include("?p=1")
+    end
+
+    context "with a registered client" do
+      let!(:user) { Fabricate(:user, trust_level: TrustLevel[1]) }
+      let!(:client) do
+        Fabricate(
+          :user_api_key_client,
+          client_id: args[:client_id],
+          application_name: args[:application_name],
+          public_key: public_key,
+          auth_redirect: args[:auth_redirect],
+          scopes: "read",
+        )
+      end
+
+      before { sign_in(user) }
+
+      it "does not require allowed_user_api_auth_redirects site setting" do
+        post "/user-api-key.json", params: args
+        expect(response.status).to eq(302)
+      end
+
+      it "does not require application_name or public_key params" do
+        post "/user-api-key.json", params: args.except(:application_name, :public_key)
+        expect(response.status).to eq(302)
+      end
+
+      it "rejects scopes not allowed by client" do
+        post "/user-api-key.json", params: args.merge(scopes: "write")
+        expect(response.status).to eq(403)
+      end
+    end
+  end
+
+  describe "#revoke" do
+    it "allows revoking via API key header without id" do
+      key = Fabricate(:readonly_user_api_key)
+
+      post "/user-api-key/revoke.json", headers: { HTTP_USER_API_KEY: key.key }
+      expect(response.status).to eq(200)
+      expect(key.reload.revoked_at).not_to be_nil
+    end
+
+    it "allows revoking own key by id" do
+      key = Fabricate(:readonly_user_api_key)
+
+      post "/user-api-key/revoke.json",
+           params: {
+             id: key.id,
+           },
+           headers: {
+             HTTP_USER_API_KEY: key.key,
+           }
+      expect(response.status).to eq(200)
+      expect(key.reload.revoked_at).not_to be_nil
+    end
+
+    it "does not allow revoking another user's key via API key" do
       key1 = Fabricate(:readonly_user_api_key)
       key2 = Fabricate(:readonly_user_api_key)
 
@@ -118,272 +252,33 @@ RSpec.describe UserApiKeysController do
            headers: {
              HTTP_USER_API_KEY: key1.key,
            }
-
       expect(response.status).to eq(403)
     end
 
-    it "will allow readonly api keys to revoke self" do
+    it "does not allow revoking another user's key via session" do
       key = Fabricate(:readonly_user_api_key)
-      post "/user-api-key/revoke.json",
-           params: {
-             id: key.id,
-           },
-           headers: {
-             HTTP_USER_API_KEY: key.key,
-           }
-
-      expect(response.status).to eq(200)
-      key.reload
-      expect(key.revoked_at).not_to eq(nil)
-    end
-
-    it "will not allow revoking another users key" do
-      key = Fabricate(:readonly_user_api_key)
-      acting_user = Fabricate(:user)
-      sign_in(acting_user)
+      sign_in(Fabricate(:user))
 
       post "/user-api-key/revoke.json", params: { id: key.id }
-
       expect(response.status).to eq(403)
-      key.reload
-      expect(key.revoked_at).to eq(nil)
-    end
-
-    it "will not return p access if not yet configured" do
-      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-      SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
-
-      args[:scopes] = "push,read"
-      args[:push_url] = "https://push.it/here"
-
-      user = Fabricate(:user, trust_level: TrustLevel[0])
-      sign_in(user)
-
-      post "/user-api-key.json", params: args
-      expect(response.status).to eq(302)
-
-      uri = URI.parse(response.redirect_url)
-
-      query = uri.query
-      payload = query.split("payload=")[1]
-      encrypted = Base64.decode64(CGI.unescape(payload))
-
-      key = OpenSSL::PKey::RSA.new(private_key)
-
-      parsed = JSON.parse(key.private_decrypt(encrypted))
-
-      expect(parsed["nonce"]).to eq(args[:nonce])
-      expect(parsed["push"]).to eq(false)
-      expect(parsed["api"]).to eq(4)
-
-      key = user.user_api_keys.first
-      expect(key.scopes.map(&:name)).to include("push")
-      expect(key.push_url).to eq("https://push.it/here")
-    end
-
-    it "will redirect correctly with valid token" do
-      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-      SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
-      SiteSetting.allowed_user_api_push_urls = "https://push.it/here"
-
-      args[:scopes] = "push,notifications,message_bus,session_info,one_time_password"
-      args[:push_url] = "https://push.it/here"
-
-      user = Fabricate(:user, trust_level: TrustLevel[0])
-      sign_in(user)
-
-      post "/user-api-key.json", params: args
-      expect(response.status).to eq(302)
-
-      uri = URI.parse(response.redirect_url)
-
-      query = uri.query
-      payload = query.split("payload=")[1]
-      encrypted = Base64.decode64(CGI.unescape(payload))
-
-      key = OpenSSL::PKey::RSA.new(private_key)
-
-      parsed = JSON.parse(key.private_decrypt(encrypted))
-
-      expect(parsed["nonce"]).to eq(args[:nonce])
-      expect(parsed["push"]).to eq(true)
-
-      api_key = UserApiKey.with_key(parsed["key"]).first
-
-      expect(api_key.user_id).to eq(user.id)
-      expect(api_key.scopes.map(&:name).sort).to eq(
-        %w[push message_bus notifications session_info one_time_password].sort,
-      )
-      expect(api_key.push_url).to eq("https://push.it/here")
-
-      uri.query = ""
-      expect(uri.to_s).to eq(args[:auth_redirect] + "?")
-
-      # should overwrite if needed
-      args["access"] = "pr"
-      post "/user-api-key.json", params: args
-
-      expect(response.status).to eq(302)
-
-      one_time_password = query.split("oneTimePassword=")[1]
-      encrypted_otp = Base64.decode64(CGI.unescape(one_time_password))
-
-      parsed_otp = key.private_decrypt(encrypted_otp)
-      redis_key = "otp_#{parsed_otp}"
-
-      expect(Discourse.redis.get(redis_key)).to eq(user.username)
-    end
-
-    it "will just show the payload if no redirect" do
-      user = Fabricate(:user, trust_level: TrustLevel[0])
-      sign_in(user)
-
-      args.delete(:auth_redirect)
-
-      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-      post "/user-api-key", params: args
-      expect(response.status).not_to eq(302)
-      payload = Nokogiri.HTML5(response.body).at("code").content
-      encrypted = Base64.decode64(payload)
-      key = OpenSSL::PKey::RSA.new(private_key)
-      parsed = JSON.parse(key.private_decrypt(encrypted))
-      api_key = UserApiKey.with_key(parsed["key"]).first
-      expect(api_key.user_id).to eq(user.id)
-    end
-
-    it "will just show the JSON payload if no redirect" do
-      user = Fabricate(:user, trust_level: TrustLevel[0])
-      sign_in(user)
-
-      args.delete(:auth_redirect)
-
-      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-      post "/user-api-key.json", params: args
-      expect(response.status).not_to eq(302)
-      payload = response.parsed_body["payload"]
-      encrypted = Base64.decode64(payload)
-      key = OpenSSL::PKey::RSA.new(private_key)
-      parsed = JSON.parse(key.private_decrypt(encrypted))
-      api_key = UserApiKey.with_key(parsed["key"]).first
-      expect(api_key.user_id).to eq(user.id)
-    end
-
-    it "encrypts payload with OAEP padding when requested" do
-      # OAEP padding has larger overhead (42 bytes vs 11 for PKCS1), requiring a larger key
-      oaep_private_key = OpenSSL::PKey::RSA.new(2048)
-      oaep_public_key = oaep_private_key.public_key.to_pem
-
-      user = Fabricate(:user, trust_level: TrustLevel[0])
-      sign_in(user)
-
-      oaep_args = args.except(:auth_redirect).merge(padding: "oaep", public_key: oaep_public_key)
-
-      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-      post "/user-api-key.json", params: oaep_args
-      expect(response.status).not_to eq(302)
-      payload = response.parsed_body["payload"]
-      encrypted = Base64.decode64(payload)
-      parsed =
-        JSON.parse(
-          oaep_private_key.private_decrypt(encrypted, OpenSSL::PKey::RSA::PKCS1_OAEP_PADDING),
-        )
-      api_key = UserApiKey.with_key(parsed["key"]).first
-      expect(api_key.user_id).to eq(user.id)
-    end
-
-    it "rejects OAEP requests when payload exceeds maximum size for the key" do
-      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-
-      sign_in Fabricate(:user, trust_level: TrustLevel[0])
-
-      public_key = OpenSSL::PKey::RSA.new(2048).public_key.to_pem
-      nonce = "x" * 150
-      params = args.except(:auth_redirect).merge(padding: "oaep", public_key:, nonce:)
-
-      post "/user-api-key.json", params: params
-
-      expect(response.status).to eq(400)
-      expect(response.parsed_body["errors"].first).to include("Payload too large for OAEP")
-    end
-
-    it "will allow redirect to wildcard urls" do
-      SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect] + "/*"
-      args[:auth_redirect] = args[:auth_redirect] + "/bluebirds/fly"
-
-      sign_in(Fabricate(:user, refresh_auto_groups: true))
-
-      post "/user-api-key.json", params: args
-      expect(response.status).to eq(302)
-    end
-
-    it "will keep query_params added in auth_redirect" do
-      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-      SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect] + "/*"
-
-      user = Fabricate(:user, trust_level: TrustLevel[0])
-      sign_in(user)
-
-      query_str = "/?param1=val1"
-      args[:auth_redirect] = args[:auth_redirect] + query_str
-
-      post "/user-api-key.json", params: args
-      expect(response.status).to eq(302)
-
-      uri = URI.parse(response.redirect_url)
-      expect(uri.to_s).to include(query_str)
-    end
-
-    context "with a registered client" do
-      let!(:fixed_args) { args }
-      let!(:user) { Fabricate(:user, trust_level: TrustLevel[1]) }
-      let!(:client) do
-        Fabricate(
-          :user_api_key_client,
-          client_id: fixed_args[:client_id],
-          application_name: fixed_args[:application_name],
-          public_key: public_key,
-          auth_redirect: fixed_args[:auth_redirect],
-          scopes: "read",
-        )
-      end
-
-      before { sign_in(user) }
-
-      context "with allowed scopes" do
-        it "does not require allowed_user_api_auth_redirects to contain registered auth_redirect" do
-          post "/user-api-key.json", params: fixed_args
-          expect(response.status).to eq(302)
-        end
-
-        it "does not require application_name or public_key params" do
-          post "/user-api-key.json", params: fixed_args.except(:application_name, :public_key)
-          expect(response.status).to eq(302)
-        end
-      end
-
-      context "without allowed scopes" do
-        let!(:invalid_scope_args) do
-          fixed_args[:scopes] = "write"
-          fixed_args
-        end
-
-        it "returns a 403" do
-          post "/user-api-key.json", params: invalid_scope_args
-          expect(response.status).to eq(403)
-        end
-      end
+      expect(key.reload.revoked_at).to be_nil
     end
   end
 
-  describe "#create-one-time-password" do
-    let :otp_args do
-      {
-        auth_redirect: "http://somewhere.over.the/rainbow",
-        application_name: "foo",
-        public_key: public_key,
-      }
-    end
+  describe "#otp" do
+    it "includes padding parameter in the form only when provided" do
+      SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
+      sign_in(Fabricate(:user, refresh_auto_groups: true))
 
+      get "/user-api-key/otp", params: otp_args
+      expect(response.body).not_to include('name="padding"')
+
+      get "/user-api-key/otp", params: otp_args.merge(padding: "oaep")
+      expect(response.body).to include('name="padding"', 'value="oaep"')
+    end
+  end
+
+  describe "#create_otp" do
     it "does not allow anon" do
       post "/user-api-key/otp", params: otp_args
       expect(response.status).to eq(403)
@@ -395,40 +290,34 @@ RSpec.describe UserApiKeysController do
       expect(response.status).to eq(403)
     end
 
-    it "will allow one-time-password for staff without TL" do
+    it "allows OTP for staff without meeting TL requirement" do
       SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
-
-      user = Fabricate(:user, trust_level: TrustLevel[1], moderator: true)
-
-      sign_in(user)
+      sign_in(Fabricate(:user, trust_level: TrustLevel[1], moderator: true))
 
       post "/user-api-key/otp", params: otp_args
       expect(response.status).to eq(302)
     end
 
-    it "will not allow one-time-password unless TL is met" do
+    it "does not allow OTP unless TL requirement is met" do
       SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
-
-      user = Fabricate(:user, trust_level: TrustLevel[1])
-      sign_in(user)
+      sign_in(Fabricate(:user, trust_level: TrustLevel[1]))
 
       post "/user-api-key/otp", params: otp_args
       expect(response.status).to eq(403)
     end
 
-    it "will not allow one-time-password if one_time_password scope is disallowed" do
+    it "does not allow OTP if one_time_password scope is disabled" do
       SiteSetting.allow_user_api_key_scopes = "read|write"
       SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
-      user = Fabricate(:user)
-      sign_in(user)
+      sign_in(Fabricate(:user))
 
       post "/user-api-key/otp", params: otp_args
       expect(response.status).to eq(403)
     end
 
-    it "will return one-time-password when args are valid" do
+    it "returns encrypted OTP and stores it in Redis" do
       SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
       user = Fabricate(:user, refresh_auto_groups: true)
       sign_in(user)
@@ -436,39 +325,22 @@ RSpec.describe UserApiKeysController do
       post "/user-api-key/otp", params: otp_args
       expect(response.status).to eq(302)
 
-      uri = URI.parse(response.redirect_url)
-
-      query = uri.query
-      payload = query.split("oneTimePassword=")[1]
-      encrypted = Base64.decode64(CGI.unescape(payload))
-      key = OpenSSL::PKey::RSA.new(private_key)
-
-      parsed = key.private_decrypt(encrypted)
-
-      expect(Discourse.redis.get("otp_#{parsed}")).to eq(user.username)
+      encrypted = extract_payload_from_redirect(response, key: "oneTimePassword")
+      otp = decrypt_payload(encrypted)
+      expect(Discourse.redis.get("otp_#{otp}")).to eq(user.username)
     end
 
-    it "encrypts one-time-password with OAEP padding when requested" do
-      # OAEP padding has larger overhead, use a larger key for safety
-      oaep_private_key = OpenSSL::PKey::RSA.new(2048)
-      oaep_public_key = oaep_private_key.public_key.to_pem
-
+    it "encrypts OTP with OAEP padding when requested" do
       SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
       user = Fabricate(:user, refresh_auto_groups: true)
       sign_in(user)
 
-      post "/user-api-key/otp", params: otp_args.merge(padding: "oaep", public_key: oaep_public_key)
+      post "/user-api-key/otp", params: otp_args.merge(padding: "oaep")
       expect(response.status).to eq(302)
 
-      uri = URI.parse(response.redirect_url)
-
-      query = uri.query
-      payload = query.split("oneTimePassword=")[1]
-      encrypted = Base64.decode64(CGI.unescape(payload))
-
-      parsed = oaep_private_key.private_decrypt(encrypted, OpenSSL::PKey::RSA::PKCS1_OAEP_PADDING)
-
-      expect(Discourse.redis.get("otp_#{parsed}")).to eq(user.username)
+      encrypted = extract_payload_from_redirect(response, key: "oneTimePassword")
+      otp = decrypt_payload(encrypted, padding: "oaep")
+      expect(Discourse.redis.get("otp_#{otp}")).to eq(user.username)
     end
   end
 end
