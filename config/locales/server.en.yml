@@ -4418,7 +4418,7 @@ en:
 
     account_suspended:
       title: "Account Suspended"
-      subject_template: "%{email_prefix}: Your account has been suspended"
+      subject_template: "Your account has been suspended"
       text_body_template: |
         You have been suspended from the forum until %{suspended_till}.
 
@@ -4426,7 +4426,7 @@ en:
 
     account_suspended_forever:
       title: "Account Suspended"
-      subject_template: "%{email_prefix}: Your account has been suspended"
+      subject_template: "Your account has been suspended"
       text_body_template: |
         You have been suspended from the forum.
 
@@ -4434,7 +4434,7 @@ en:
 
     account_silenced:
       title: "Account Silenced"
-      subject_template: "%{email_prefix}: Your account has been silenced"
+      subject_template: "Your account has been silenced"
       text_body_template: |
         You have been silenced from the forum until %{silenced_till}.
 
@@ -4442,7 +4442,7 @@ en:
 
     account_silenced_forever:
       title: "Account Silenced"
-      subject_template: "%{email_prefix}: Your account has been silenced"
+      subject_template: "Your account has been silenced"
       text_body_template: |
         You have been silenced from the forum.
 
@@ -4450,7 +4450,7 @@ en:
 
     account_deleted:
       title: "Account Deleted"
-      subject_template: "%{email_prefix}: Your account has been deleted"
+      subject_template: "Your account has been deleted"
       text_body_template: |
         Hello,
 
