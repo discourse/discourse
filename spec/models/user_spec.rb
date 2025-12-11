@@ -2134,7 +2134,7 @@ RSpec.describe User do
           status: Reviewable.statuses[:approved],
         )
 
-        expect(user.number_of_rejected_posts).to eq(0)
+        expect(user.number_of_rejected_posts.to_i).to eq(0)
       end
     end
 
@@ -2158,6 +2158,10 @@ RSpec.describe User do
           Fabricate(:user_history, action: UserHistory.actions[:silence_user], target_user: user)
         end
         expect(user.number_of_silencings).to eq(3)
+
+        # ignores other users' history
+        Fabricate(:user_history, action: UserHistory.actions[:silence_user])
+        expect(user.reload.number_of_silencings).to eq(3)
       end
     end
   end

@@ -92,6 +92,7 @@ class User < ActiveRecord::Base
   has_many :do_not_disturb_timings, dependent: :delete_all
   has_many :reviewable_histories, foreign_key: :created_by_id, dependent: :delete_all
   has_many :sidebar_sections, dependent: :destroy
+  has_many :user_histories, foreign_key: :target_user_id
   has_one :user_status, dependent: :destroy
 
   # dependent deleting handled via before_destroy (special cases)
@@ -1329,7 +1330,7 @@ class User < ActiveRecord::Base
   end
 
   def silenced_record
-    UserHistory.for(self, :silence_user).order("id DESC").first
+    user_histories.where(action: UserHistory.actions[:silence_user]).order("id DESC").first
   end
 
   def silence_reason
@@ -1345,7 +1346,7 @@ class User < ActiveRecord::Base
   end
 
   def suspend_record
-    UserHistory.for(self, :suspend_user).order("id DESC").first
+    user_histories.where(action: UserHistory.actions[:suspend_user]).order("id DESC").first
   end
 
   def full_suspend_reason
@@ -1638,7 +1639,12 @@ class User < ActiveRecord::Base
   end
 
   def number_of_rejected_posts
-    ReviewableQueuedPost.rejected.where(target_created_by_id: self.id).count
+    goldiload do |ids|
+      ReviewableQueuedPost
+        .where(status: "rejected", target_created_by_id: ids)
+        .group(:target_created_by_id)
+        .count
+    end
   end
 
   def number_of_flags_given
@@ -1650,11 +1656,21 @@ class User < ActiveRecord::Base
   end
 
   def number_of_silencings
-    UserHistory.for(self, :silence_user).count
+    goldiload do |ids|
+      UserHistory
+        .where(target_user_id: ids, action: UserHistory.actions[:silence_user])
+        .group(:target_user_id)
+        .count
+    end
   end
 
   def number_of_suspensions
-    UserHistory.for(self, :suspend_user).count
+    goldiload do |ids|
+      UserHistory
+        .where(target_user_id: ids, action: UserHistory.actions[:suspend_user])
+        .group(:target_user_id)
+        .count
+    end
   end
 
   def create_user_profile
