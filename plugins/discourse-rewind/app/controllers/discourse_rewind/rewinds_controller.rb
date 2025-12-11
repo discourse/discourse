@@ -8,6 +8,9 @@ module ::DiscourseRewind
 
     def index
       DiscourseRewind::FetchReports.call(service_params) do
+        on_model_not_found(:for_user) do
+          raise Discourse::NotFound.new(nil, custom_message: "discourse_rewind.user_not_found")
+        end
         on_model_not_found(:year) do
           raise Discourse::NotFound.new(nil, custom_message: "discourse_rewind.invalid_year")
         end
@@ -21,7 +24,10 @@ module ::DiscourseRewind
     end
 
     def show
-      DiscourseRewind::FetchReports.call(service_params) do
+      DiscourseRewind::FetchReport.call(service_params) do
+        on_model_not_found(:for_user) do
+          raise Discourse::NotFound.new(nil, custom_message: "discourse_rewind.user_not_found")
+        end
         on_model_not_found(:year) do
           raise Discourse::NotFound.new(nil, custom_message: "discourse_rewind.invalid_year")
         end

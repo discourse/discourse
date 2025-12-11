@@ -21,6 +21,7 @@ module DiscourseRewind
       guardian.user.user_option.update!(
         discourse_rewind_share_publicly: !guardian.user.user_option.discourse_rewind_share_publicly,
       )
+      context[:shared] = guardian.user.user_option.discourse_rewind_share_publicly
     end
   end
 end

@@ -118,6 +118,14 @@
   flex-direction: column;
   padding-bottom: var(--safe-area-inset-bottom);
   padding-top: 2em;
+
+  .rewind-error {
+    color: var(--rewind-green);
+    font-family: var(--pixel-text);
+    text-align: left;
+    line-height: 1em;
+    padding: 2em;
+  }
 }
 
 // specific to override core

@@ -6,7 +6,7 @@ module DiscourseRewind
   # @example
   #  ::DiscourseRewind::Rewind::Fetch.call(
   #    guardian: guardian,
-  #    params: { for_user_username: 'codinghorror' }
+  #    params: { user: User, for_user_username: 'codinghorror' }
   #  )
   #
   class FetchReports
@@ -43,7 +43,10 @@ module DiscourseRewind
       Action::Invites,
     ]
 
-    params { attribute :for_user_username, :string }
+    params do
+      attribute :user
+      attribute :for_user_username, :string
+    end
 
     model :for_user
     model :year
@@ -61,7 +64,9 @@ module DiscourseRewind
       return if user.nil?
 
       if guardian.user.id != user.id
-        return if !user.user_option.discourse_rewind_share_publicly
+        if !user.user_option.discourse_rewind_share_publicly
+          return if !guardian.user.admin?
+        end
       end
 
       user
@@ -99,7 +104,7 @@ module DiscourseRewind
       if !reports
         reports =
           REPORTS.filter_map do |report|
-            report.call(date:, user: for_user, guardian:)
+            report.call(date:, user: for_user)
           rescue StandardError
             nil
           end
