@@ -100,11 +100,12 @@ export default class DModal extends Component {
       return false;
     }
 
-    // skip when in a form or a textarea element
+    // skip when in a form, textarea, or select-kit element
     if (
       event.target.closest("form") ||
       document.activeElement?.closest("form") ||
-      document.activeElement?.nodeName === "TEXTAREA"
+      document.activeElement?.nodeName === "TEXTAREA" ||
+      document.activeElement?.closest(".select-kit")
     ) {
       return false;
     }

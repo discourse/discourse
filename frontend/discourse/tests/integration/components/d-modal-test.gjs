@@ -222,4 +222,37 @@ module("Integration | Component | d-modal", function (hooks) {
 
     assert.true(actionCalled, "pressing enter triggers the default button");
   });
+
+  test("enter inside select-kit does not trigger default action", async function (assert) {
+    let actionCalled = false;
+    const someAction = () => {
+      actionCalled = true;
+    };
+
+    await render(
+      <template>
+        <DModal @inline={{true}}>
+          <:body>
+            <div class="select-kit">
+              <input class="filter-input" type="text" />
+            </div>
+          </:body>
+          <:footer>
+            <DButton
+              @action={{someAction}}
+              @translatedLabel="Perform action"
+              class="btn-primary"
+            />
+          </:footer>
+        </DModal>
+      </template>
+    );
+
+    await triggerKeyEvent(".filter-input", "keydown", "Enter");
+
+    assert.false(
+      actionCalled,
+      "pressing enter inside select-kit does not trigger the default button"
+    );
+  });
 });
