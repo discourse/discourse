@@ -25,9 +25,9 @@ jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }} # Update fetch-job-id step if changing this
-    runs-on: ${{ (github.repository_owner == 'discourse' && (matrix.target == 'plugins' && matrix.build_type == 'system' && 'debian-12-16core' || 'debian-12-8core')) || 'ubuntu-latest' }}
+    runs-on: ${{ (github.repository_owner == 'discourse' && ((matrix.target == 'core-plugins' || matrix.target == 'official-plugins') && matrix.build_type == 'system' && 'debian-12-16core' || 'debian-12-8core')) || 'ubuntu-latest' }}
     container: discourse/discourse_test:release
-    timeout-minutes: ${{ ((matrix.build_type == 'system' && (matrix.target == 'plugins' || matrix.target == 'core')) && 30) || 20 }}
+    timeout-minutes: ${{ ((matrix.build_type == 'system' && (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'core')) && 30) || 20 }}
 
     env:
       RAILS_ENV: test
@@ -42,7 +42,7 @@ jobs:
       TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
       TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
       EMBER_ENV: development
-      LOAD_PLUGINS: ${{ (matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
+      LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'chat') && '1' || '0' }}
       ACTIONS_STEP_DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG }}
 
     strategy:
@@ -50,7 +50,7 @@ jobs:
 
       matrix:
         build_type: [backend, frontend, system]
-        target: [core, plugins, themes]
+        target: [core, core-plugins, official-plugins, themes]
         browser: [Chrome]
         exclude:
           - build_type: backend
@@ -119,11 +119,11 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Checkout official plugins
-        if: matrix.target == 'plugins'
+        if: matrix.target == 'official-plugins'
         run: bin/rake plugin:install_all_official
 
       - name: Symlinking plugin gems from image
-        if: matrix.target == 'plugins'
+        if: matrix.target == 'core-plugins' || matrix.target == 'official-plugins'
         run: |
           for dir in /var/www/discourse/plugins/*/gems; do
             plugin_name=$(basename "$(dirname "$dir")")
@@ -141,7 +141,7 @@ jobs:
           done
 
       - name: Pull compatible versions of plugins
-        if: matrix.target == 'plugins' && (github.ref_name != 'main' && github.base_ref != 'main')
+        if: matrix.target == 'official-plugins' && (github.ref_name != 'main' && github.base_ref != 'main')
         run: LOAD_PLUGINS=0 bin/rake plugin:pull_compatible_all
 
       - name: Checkout official themes
@@ -184,7 +184,7 @@ jobs:
 
       - name: Create and migrate database
         env:
-          LOAD_PLUGINS: ${{ (matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
+          LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'chat') && '1' || '0' }}
         run: |
           bin/rake db:create
           script/silence_successful_output bin/rake db:migrate
@@ -194,7 +194,7 @@ jobs:
           env.USES_PARALLEL_DATABASES == 'true' &&
           steps.app-cache.outputs.cache-hit != 'true'
         env:
-          LOAD_PLUGINS: ${{ (matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
+          LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'chat') && '1' || '0' }}
         run: |
           bin/rake parallel:create
           script/silence_successful_output bin/rake parallel:migrate
@@ -217,7 +217,7 @@ jobs:
           restore-keys: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-
 
       - name: Check Annotations
-        if: matrix.build_type == 'backend' && (matrix.target == 'core' || matrix.target == 'plugins' || matrix.target == 'chat')
+        if: matrix.build_type == 'backend' && (matrix.target == 'core' || matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'chat')
         run: |
           bin/rake annotate:ensure_all_indexes
 
@@ -270,10 +270,6 @@ jobs:
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: bin/turbo_rspec --use-runtime-info --verbose --format=progress --profile=50
 
-      - name: Plugin RSpec
-        if: matrix.build_type == 'backend' && matrix.target == 'plugins'
-        run: bin/rake plugin:turbo_spec['*','--verbose --format=progress --use-runtime-info --profile=50']
-
       - name: Core QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
         run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
@@ -283,9 +279,36 @@ jobs:
         working-directory: frontend/asset-processor
         run: pnpm test
 
-      - name: Plugin QUnit
-        if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
-        run: bin/rake plugin:qunit['*']
+      - name: Split core and official plugins
+        if: matrix.target == 'core-plugins' || matrix.target == 'official-plugins'
+        shell: bash
+        run: |
+          CORE_PLUGINS=`script/list_bundled_plugins | sed 's|.*/||' | paste -sd, -`
+          echo "CORE_PLUGINS=$CORE_PLUGINS" >> $GITHUB_ENV
+          echo "CORE_PLUGINS_ESCAPED=`echo $CORE_PLUGINS | sed 's/,/\\\\,/g'`" >> $GITHUB_ENV
+          OFFICIAL_PLUGINS=`grep -Fvx -f <(script/list_bundled_plugins | sed 's|.*/||') <(bin/rake plugin:list_official) | paste -sd, -`
+          echo "OFFICIAL_PLUGINS=$OFFICIAL_PLUGINS" >> $GITHUB_ENV
+          echo "OFFICIAL_PLUGINS_ESCAPED=`echo $OFFICIAL_PLUGINS | sed 's/,/\\\\,/g'`" >> $GITHUB_ENV
+
+      - name: Core Plugins RSpec
+        if: matrix.build_type == 'backend' && matrix.target == 'core-plugins'
+        run: |
+          bin/rake plugin:turbo_spec['*','--verbose --format=progress --use-runtime-info --profile=50']
+
+      - name: Core Plugins QUnit
+        if: matrix.build_type == 'frontend' && matrix.target == 'core-plugins'
+        run: |
+          bin/rake plugin:qunit['*']
+
+      - name: Official Plugins RSpec
+        if: matrix.build_type == 'backend' && matrix.target == 'official-plugins'
+        run: |
+          bin/rake plugin:turbo_spec["${{ env.OFFICIAL_PLUGINS_ESCAPED }}",'--verbose --format=progress --use-runtime-info --profile=50']
+
+      - name: Official Plugins QUnit
+        if: matrix.build_type == 'frontend' && matrix.target == 'official-plugins'
+        run: |
+          bin/rake plugin:qunit["${{ env.OFFICIAL_PLUGINS_ESCAPED }}"]
 
       - name: Theme QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'themes'
@@ -311,12 +334,40 @@ jobs:
           CHECKOUT_TIMEOUT: 10
         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system
 
-      - name: Plugin System Tests
-        if: matrix.build_type == 'system' && matrix.target == 'plugins'
+      - name: Core Plugins System Tests
+        if: matrix.build_type == 'system' && matrix.target == 'core-plugins'
         env:
           CHECKOUT_TIMEOUT: 10
         run: |
-          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
+          IFS=',' read -r -a items <<< "${{ env.CORE_PLUGINS }}"
+          matches=()
+          for item in "${items[@]}"; do
+            dir="plugins/$item/spec/system"
+            if [ -d "$dir" ]; then
+              matches+=("$dir")
+            fi
+          done
+
+          echo "Running bin/turbo_rspec on: ${matches[*]}"
+          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation "${matches[@]}"
+        shell: bash
+
+      - name: Official Plugins System Tests
+        if: matrix.build_type == 'system' && matrix.target == 'official-plugins'
+        env:
+          CHECKOUT_TIMEOUT: 10
+        run: |
+          IFS=',' read -r -a items <<< "${{ env.OFFICIAL_PLUGINS }}"
+          matches=()
+          for item in "${items[@]}"; do
+            dir="plugins/$item/spec/system"
+            if [ -d "$dir" ]; then
+              matches+=("$dir")
+            fi
+          done
+
+          echo "Running bin/turbo_rspec on: ${matches[*]}"
+          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation "${matches[@]}"
         shell: bash
 
       - name: Chat System Tests
