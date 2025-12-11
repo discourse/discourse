@@ -33,13 +33,16 @@ module Onebox
       def data
         result = raw(github_auth_header(match[:org])).clone
         result["link"] = link
-        result["pr_status"] = fetch_pr_status(result)
+
+        status_data = fetch_pr_status(result)
+        result["pr_status"] = status_data&.dig(:status)
         result["pr_status_title"] = pr_status_title(result["pr_status"])
 
-        created_at = Time.parse(result["created_at"])
-        result["created_at"] = created_at.strftime("%I:%M%p - %d %b %y %Z")
-        result["created_at_date"] = created_at.strftime("%F")
-        result["created_at_time"] = created_at.strftime("%T")
+        status_timestamp = status_data&.dig(:timestamp) || result["created_at"]
+        status_date = Time.parse(status_timestamp)
+        result["status_date"] = status_date.strftime("%I:%M%p - %d %b %y %Z")
+        result["status_date_date"] = status_date.strftime("%F")
+        result["status_date_time"] = status_date.strftime("%T")
 
         ulink = URI(link)
         _, org, repo = ulink.path.split("/")
@@ -59,6 +62,7 @@ module Onebox
         end
 
         result["i18n"] = i18n
+        result["i18n"]["status_date_label"] = status_date_label(result["pr_status"])
         result["i18n"]["pr_summary"] = I18n.t(
           "onebox.github.pr_summary",
           {
@@ -83,6 +87,11 @@ module Onebox
           comment_by: I18n.t("onebox.github.comment_by"),
           review_by: I18n.t("onebox.github.review_by"),
         }
+      end
+
+      def status_date_label(status)
+        key = status.presence || "opened"
+        I18n.t("onebox.github.status_date.#{key}", default: I18n.t("onebox.github.opened"))
       end
 
       def pr_status_title(status)
@@ -126,30 +135,37 @@ module Onebox
       def fetch_pr_status(pr_data)
         return unless SiteSetting.github_pr_status_enabled
 
-        return "merged" if pr_data["merged"]
-        return "closed" if pr_data["state"] == "closed"
-        return "draft" if pr_data["draft"]
+        return { status: "merged", timestamp: pr_data["merged_at"] } if pr_data["merged"]
+        return { status: "closed", timestamp: pr_data["closed_at"] } if pr_data["state"] == "closed"
+        return { status: "draft", timestamp: pr_data["created_at"] } if pr_data["draft"]
 
         reviews_data = load_json(url + "/reviews")
-        review_states = latest_review_states(reviews_data)
+        latest_reviews = latest_review_states_with_timestamps(reviews_data)
 
-        return "changes_requested" if review_states.include?("CHANGES_REQUESTED")
-        return "approved" if review_states.include?("APPROVED")
+        %w[CHANGES_REQUESTED APPROVED].each do |state|
+          reviews = latest_reviews.select { |r| r[:state] == state }
+          if reviews.present?
+            return { status: state.downcase, timestamp: reviews.map(:timestamp).max }
+          end
+        end
 
-        "open"
+        { status: "open", timestamp: pr_data["created_at"] }
       rescue StandardError => e
         Rails.logger.warn("GitHub PR status fetch error: #{e.message}")
         nil
       end
 
-      def latest_review_states(reviews)
+      def latest_review_states_with_timestamps(reviews)
         return [] if reviews.blank?
 
         reviews
-          .reject { |r| r.dig("user", "id").nil? || %w[PENDING COMMENTED].include?(r["state"]) }
+          .reject do |r|
+            r.dig("user", "id").nil? || !%w[CHANGES_REQUESTED APPROVED].include?(r["state"])
+          end
           .group_by { |r| r.dig("user", "id") }
-          .transform_values { |rs| rs.max_by { |r| r["submitted_at"] }["state"] }
+          .transform_values { |rs| rs.max_by { |r| r["submitted_at"] } }
           .values
+          .map { |r| { state: r["state"], timestamp: r["submitted_at"] } }
       end
     end
   end
