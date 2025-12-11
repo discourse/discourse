@@ -48,7 +48,7 @@ export default apiInitializer((api) => {
           );
 
           toasts.success({
-            duration: 5000,
+            duration: "long",
             data: {
               message: i18n("discourse_ai.translation.schedule_topic_success", {
                 count: result.scheduled_posts,
@@ -61,7 +61,7 @@ export default apiInitializer((api) => {
             i18n("discourse_ai.translation.schedule_topic_error");
 
           toasts.error({
-            duration: 5000,
+            duration: "long",
             data: {
               message: errorMessage,
             },
