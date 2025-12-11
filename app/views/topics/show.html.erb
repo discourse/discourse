@@ -108,18 +108,15 @@
               <span class='post-likes'><%= post.like_count > 0 ? t('post.has_likes', count: post.like_count) : '' %></span>
             </div>
 
-              <% if @topic_view.link_counts[post.id] && @topic_view.link_counts[post.id].filter { |l| l[:reflection] }.length > 0 %>
-                <div class='crawler-linkback-list' itemscope itemtype='http://schema.org/ItemList'>
-                  <% @topic_view.link_counts[post.id].each_with_index do |link, i| %>
-                    <% if link[:reflection] && link[:title].present? %>
-                      <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
-                        <a itemprop='url' href="<%=link[:url]%>"><%=link[:title]%></a>
-                        <meta itemprop='position' content='<%= i+1 %>'>
-                      </div>
-                    <% end %>
+              <% if (linkbacks = @topic_view.linkbacks_for(post)).present? %>
+                <div class='crawler-linkback-list'>
+                  <% linkbacks.each do |link| %>
+                    <div>
+                      <a href="<%=link[:url]%>"><%=link[:title]%></a>
+                    </div>
                   <% end %>
                 </div>
-            <% end %>
+              <% end %>
 
             <%= build_plugin_html "server:topic-show-crawler-post-end", post: post %>
           </div>

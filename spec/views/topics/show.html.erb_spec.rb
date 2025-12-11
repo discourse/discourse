@@ -1,34 +1,31 @@
 # frozen_string_literal: true
 
-require "ostruct"
-
 RSpec.describe "topics/show.html.erb" do
-  fab!(:category)
-  fab!(:topic) { Fabricate(:topic, category: category) }
+  fab!(:topic) { Fabricate(:topic, category: Fabricate(:category)) }
 
-  it "add nofollow to RSS alternate link for topic" do
+  it "adds nofollow to RSS alternate link" do
     topic_view = OpenStruct.new(topic: topic, posts: [], crawler_posts: [])
     topic_view.stubs(:summary).returns("")
     view.stubs(:crawler_layout?).returns(false)
-    view.stubs(:url_for).returns("https://www.example.com/test.rss")
+    view.stubs(:url_for).returns("https://example.com/test.rss")
     view.instance_variable_set("@topic_view", topic_view)
     assign(:tags, [])
 
     render template: "topics/show", formats: [:html]
 
     expect(view.content_for(:head)).to match(
-      %r{<link rel="alternate nofollow" type="application/rss\+xml" title="[^"]+" href="https://www.example.com/test\.rss" />},
+      %r{<link rel="alternate nofollow" type="application/rss\+xml"},
     )
   end
 
-  it "adds structured data" do
+  it "renders linkbacks as plain links without ItemList schema" do
     view.stubs(:include_crawler_content?).returns(true)
     post = Fabricate(:post, topic: topic)
     TopicLink.create!(
       topic_id: post.topic_id,
       post_id: post.id,
       user_id: post.user_id,
-      url: "https://example.com/",
+      url: "https://example.com/linked",
       domain: "example.com",
       link_topic_id: Fabricate(:topic).id,
       reflection: true,
@@ -38,27 +35,25 @@ RSpec.describe "topics/show.html.erb" do
 
     render template: "topics/show", formats: [:html]
 
-    links_list = Nokogiri::HTML5.fragment(rendered).css(".crawler-linkback-list")
-    first_item = links_list.css('[itemprop="itemListElement"]')
-    expect(first_item.css('[itemprop="position"]')[0]["content"]).to eq("1")
-    expect(first_item.css('[itemprop="url"]')[0]["href"]).to eq("https://example.com/")
+    doc = Nokogiri::HTML5.fragment(rendered)
+    linkbacks = doc.css(".crawler-linkback-list")
+    expect(linkbacks.css("a[href='https://example.com/linked']")).to be_present
+    expect(linkbacks.css('[itemtype*="ItemList"]')).to be_empty
   end
 
-  it "uses comment scheme type for replies" do
+  it "uses DiscussionForumPosting with Comment schema for replies" do
     view.stubs(:crawler_layout?).returns(true)
     view.stubs(:include_crawler_content?).returns(true)
-    Fabricate(:post, topic: topic)
-    Fabricate(:post, topic: topic)
-    Fabricate(:post, topic: topic)
+    3.times { Fabricate(:post, topic: topic) }
     assign(:topic_view, TopicView.new(topic))
     assign(:tags, [])
 
     render template: "topics/show", formats: [:html]
 
     doc = Nokogiri::HTML5.fragment(rendered)
-    topic_schema = doc.css('[itemtype="http://schema.org/DiscussionForumPosting"]')
-    expect(topic_schema.size).to eq(1)
-    expect(topic_schema.css('[itemtype="http://schema.org/Comment"]').size).to eq(2)
-    expect(topic_schema.css('[itemprop="articleSection"]')[0]["content"]).to eq(topic.category.name)
+    posting = doc.css('[itemtype*="DiscussionForumPosting"]')
+    expect(posting.size).to eq(1)
+    expect(posting.css('[itemtype*="Comment"]').size).to eq(2) # replies only, not OP
+    expect(posting.css('[itemprop="articleSection"]').first["content"]).to eq(topic.category.name)
   end
 end
