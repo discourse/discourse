@@ -430,5 +430,31 @@ module DiscourseAutomation
             .destroy_all
         end
     end
+
+    def self.handle_post_flag_created(post_action)
+      name = DiscourseAutomation::Triggers::POST_FLAG_CREATED
+
+      post = post_action.post
+      topic = post.topic
+
+      DiscourseAutomation::Automation
+        .where(trigger: name, enabled: true)
+        .find_each do |automation|
+          flag_type_field = automation.trigger_field("flag_type")
+          flag_type_id = flag_type_field["value"]
+
+          next if flag_type_id.present? && flag_type_id != post_action.post_action_type_id
+
+          categories = automation.trigger_field("categories")["value"]
+          next if categories.present? && !categories.include?(topic.category_id)
+
+          if SiteSetting.tagging_enabled?
+            tags = automation.trigger_field("tags")["value"]
+            next if tags.present? && (topic.tags.map(&:name) & tags).empty?
+          end
+
+          automation.trigger!("kind" => name, "post_action_id" => post_action.id)
+        end
+    end
   end
 end
