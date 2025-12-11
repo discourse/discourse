@@ -800,6 +800,30 @@ RSpec.describe SchemaSettingsObjectValidator do
         # only 1 SQL query should be executed to check if upload ids are valid
         expect(queries.length).to eq(1)
       end
+
+      it "should convert multiple upload URLs to IDs and validate successfully" do
+        upload1 = Fabricate(:upload)
+        upload2 = Fabricate(:upload)
+        schema = {
+          name: "section",
+          properties: {
+            upload_property_1: {
+              type: "upload",
+            },
+            upload_property_2: {
+              type: "upload",
+            },
+          },
+        }
+
+        object = { upload_property_1: upload1.url, upload_property_2: upload2.url }
+        validator = described_class.new(schema: schema, object: object)
+        errors = validator.validate
+
+        expect(errors).to eq({})
+        expect(validator.instance_variable_get(:@object)[:upload_property_1]).to eq(upload1.id)
+        expect(validator.instance_variable_get(:@object)[:upload_property_2]).to eq(upload2.id)
+      end
     end
 
     context "for tag properties" do

@@ -80,6 +80,13 @@ class SchemaSettingsObjectValidator
   end
 
   def validate
+    # Convert all upload URLs to IDs before validation
+    @properties.each do |property_name, property_attributes|
+      next if property_attributes[:type] != "upload"
+      normalize_upload_value(property_name, property_attributes)
+    end
+
+    # Validate all properties
     @properties.each do |property_name, property_attributes|
       if property_attributes[:type] == "objects"
         validate_child_objects(
@@ -100,6 +107,15 @@ class SchemaSettingsObjectValidator
   end
 
   private
+
+  def normalize_upload_value(property_name, property_attributes)
+    value = @object[property_name]
+    return unless value.is_a?(String) && value.present?
+
+    if upload = Upload.get_from_url(value)
+      @object[property_name] = upload.id
+    end
+  end
 
   def validate_child_objects(objects, property_name:, schema:)
     return if objects.blank?
@@ -137,18 +153,8 @@ class SchemaSettingsObjectValidator
       when "integer", "topic", "post"
         value.is_a?(Integer)
       when "upload"
-        # Convert upload URLs to IDs like core does
-        if value.is_a?(String)
-          upload = Upload.get_from_url(value)
-          if upload
-            @object[property_name] = upload.id
-            true
-          else
-            false
-          end
-        else
-          value.is_a?(Integer)
-        end
+        # Upload URLs are converted to IDs in normalize_upload_value
+        value.is_a?(Integer)
       when "float"
         value.is_a?(Float) || value.is_a?(Integer)
       when "boolean"
