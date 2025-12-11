@@ -145,7 +145,7 @@ module Onebox
         %w[CHANGES_REQUESTED APPROVED].each do |state|
           reviews = latest_reviews.select { |r| r[:state] == state }
           if reviews.present?
-            return { status: state.downcase, timestamp: reviews.map(:timestamp).max }
+            return { status: state.downcase, timestamp: reviews.map { |r| r[:timestamp] }.max }
           end
         end
 
