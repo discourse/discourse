@@ -75,6 +75,22 @@ RSpec.describe DiscourseRewind::Action::Fbff do
         described_class.new(user: user, date: date).post_query(user, date).map(&:id),
       ).to be_empty
     end
+
+    it "excludes posts by muted users" do
+      MutedUser.create!(user: user, muted_user: other_user)
+
+      expect(
+        described_class.new(user: user, date: date).post_query(user, date).map(&:id),
+      ).to be_empty
+    end
+
+    it "excludes posts by ignored users" do
+      IgnoredUser.create!(user: user, ignored_user: other_user, expiring_at: 1.year.from_now)
+
+      expect(
+        described_class.new(user: user, date: date).post_query(user, date).map(&:id),
+      ).to be_empty
+    end
   end
 
   describe ".like_query" do
@@ -102,17 +118,17 @@ RSpec.describe DiscourseRewind::Action::Fbff do
     end
 
     it "succesfully returns likes for the time period" do
-      expect(described_class.new(user: user, date: date).like_query(date).map(&:id)).to match_array(
-        [like_1.id, like_2.id],
-      )
+      expect(
+        described_class.new(user: user, date: date).like_query(user, date).map(&:id),
+      ).to match_array([like_1.id, like_2.id])
     end
 
     it "does not return likes outside the time period" do
       like_1.update!(created_at: 2.years.ago)
 
-      expect(described_class.new(user: user, date: date).like_query(date).map(&:id)).not_to include(
-        like_1.id,
-      )
+      expect(
+        described_class.new(user: user, date: date).like_query(user, date).map(&:id),
+      ).not_to include(like_1.id)
     end
 
     describe "user_id" do
@@ -120,7 +136,7 @@ RSpec.describe DiscourseRewind::Action::Fbff do
         other_user.deactivate(Discourse.system_user)
 
         expect(
-          described_class.new(user: user, date: date).like_query(date).map(&:id),
+          described_class.new(user: user, date: date).like_query(user, date).map(&:id),
         ).not_to include(like_1.id)
       end
 
@@ -130,7 +146,7 @@ RSpec.describe DiscourseRewind::Action::Fbff do
         other_user.save!
 
         expect(
-          described_class.new(user: user, date: date).like_query(date).map(&:id),
+          described_class.new(user: user, date: date).like_query(user, date).map(&:id),
         ).not_to include(like_1.id)
       end
 
@@ -139,7 +155,7 @@ RSpec.describe DiscourseRewind::Action::Fbff do
         like_1.update!(acting_user: bot)
 
         expect(
-          described_class.new(user: user, date: date).like_query(date).map(&:id),
+          described_class.new(user: user, date: date).like_query(user, date).map(&:id),
         ).not_to include(like_1.id)
       end
     end
@@ -149,7 +165,7 @@ RSpec.describe DiscourseRewind::Action::Fbff do
         user.deactivate(Discourse.system_user)
 
         expect(
-          described_class.new(user: user, date: date).like_query(date).map(&:id),
+          described_class.new(user: user, date: date).like_query(user, date).map(&:id),
         ).not_to include(like_2.id)
       end
 
@@ -159,7 +175,7 @@ RSpec.describe DiscourseRewind::Action::Fbff do
         user.save!
 
         expect(
-          described_class.new(user: user, date: date).like_query(date).map(&:id),
+          described_class.new(user: user, date: date).like_query(user, date).map(&:id),
         ).not_to include(like_2.id)
       end
 
@@ -168,9 +184,25 @@ RSpec.describe DiscourseRewind::Action::Fbff do
         like_2.update!(acting_user: bot)
 
         expect(
-          described_class.new(user: user, date: date).like_query(date).map(&:id),
+          described_class.new(user: user, date: date).like_query(user, date).map(&:id),
         ).not_to include(like_2.id)
       end
+    end
+
+    it "excludes likes involving muted users" do
+      MutedUser.create!(user: user, muted_user: other_user)
+
+      expect(
+        described_class.new(user: user, date: date).like_query(user, date).map(&:id),
+      ).to be_empty
+    end
+
+    it "excludes likes involving ignored users" do
+      IgnoredUser.create!(user: user, ignored_user: other_user, expiring_at: 1.year.from_now)
+
+      expect(
+        described_class.new(user: user, date: date).like_query(user, date).map(&:id),
+      ).to be_empty
     end
   end
 end
