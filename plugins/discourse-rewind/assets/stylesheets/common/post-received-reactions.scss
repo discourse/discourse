@@ -121,30 +121,11 @@
   @media screen and (width <= 475px) {
     .scale {
       width: min-content;
-    }
-
-    .scale:nth-child(1) {
-      padding: 0.15em;
-      display: none;
-    }
-
-    .scale:nth-child(2) {
-      padding: 0.2em;
-      margin-top: 10px;
-    }
-
-    .scale:nth-child(3) {
-      padding: 0.2em;
-      margin-top: 20px;
-    }
-
-    .scale:nth-child(4) {
       padding: 0.2em;
     }
 
     .scale:nth-child(5) {
-      padding: 0.2em;
-      margin-top: 20px;
+      display: none;
     }
   }
 }
