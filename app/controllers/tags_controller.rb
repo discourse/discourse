@@ -273,6 +273,57 @@ class TagsController < ::ApplicationController
     end
   end
 
+  def bulk_create
+    guardian.ensure_can_admin_tags!
+
+    tag_names = params[:tag_names]
+
+    return render_json_error(I18n.t("tags.bulk_create.invalid_params")) if !tag_names.is_a?(Array)
+
+    results = { created: [], existing: [], failed: {} }
+
+    tag_names.each do |raw_name|
+      next if raw_name.blank?
+
+      normalized_input = raw_name.strip.downcase.gsub(/[[:space:]]+/, "-")
+
+      if normalized_input.length > SiteSetting.max_tag_length
+        results[:failed][raw_name] = I18n.t(
+          "tags.bulk_create.tag_too_long",
+          max: SiteSetting.max_tag_length,
+        )
+        next
+      end
+
+      tag_name = DiscourseTagging.clean_tag(raw_name)
+
+      if tag_name.blank?
+        results[:failed][raw_name] = I18n.t("tags.bulk_create.invalid_name")
+        next
+      end
+
+      if tag_name != normalized_input
+        results[:failed][raw_name] = I18n.t("tags.bulk_create.invalid_name")
+        next
+      end
+
+      existing_tag = Tag.find_by_name(tag_name)
+
+      if existing_tag
+        results[:existing] << tag_name
+      else
+        tag = Tag.new(name: tag_name)
+        if tag.save
+          results[:created] << tag_name
+        else
+          results[:failed][raw_name] = tag.errors.full_messages.join(", ")
+        end
+      end
+    end
+
+    render json: results
+  end
+
   def list_unused
     guardian.ensure_can_admin_tags!
     render json: { tags: Tag.unused.pluck(:name) }

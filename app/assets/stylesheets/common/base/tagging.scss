@@ -447,10 +447,54 @@ body.tags-intersection {
 
 .tags-controls {
   display: flex;
+  flex-wrap: wrap;
   margin: 0;
 
+  .bulk-create-tags-form {
+    width: 100%;
+    display: flex;
+    align-items: end;
+    gap: 0.5em;
+    margin-block: 0.5em 1em;
+
+    textarea {
+      box-sizing: border-box;
+      min-height: 2.25em;
+      padding: 0.35em;
+      margin: 0;
+      width: min(20em, 100%);
+      border-radius: var(--d-input-border-radius);
+    }
+  }
+
   h2 {
-    order: -1;
-    margin-right: auto;
+    margin: 0 auto 0 0;
+  }
+}
+
+.bulk-create-results {
+  .result-section {
+    display: flex;
+    align-items: end;
+    gap: var(--space-1);
+
+    h4 {
+      margin: 0;
+    }
+
+    &.--failed {
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+    }
+
+    &:not(:last-child) {
+      margin-bottom: var(--space-1);
+    }
+
+    ul {
+      margin: 0;
+      list-style-type: none;
+    }
   }
 }
