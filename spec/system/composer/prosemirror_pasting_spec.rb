@@ -89,7 +89,7 @@ describe "Composer - ProseMirror - Pasting content", type: :system do
 
   xit "ignores text/html content if Files are present" do
     open_composer
-    composer.paste_and_click_image(cdp)
+    paste_and_click_image(cdp)
     expect(rich).to have_css("img[data-orig-src]", count: 1)
     composer.focus # making sure the toggle click won't be captured as a double click
     composer.toggle_rich_editor

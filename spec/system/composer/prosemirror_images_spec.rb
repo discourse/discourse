@@ -6,7 +6,7 @@ describe "Composer - ProseMirror - Images", type: :system do
   describe "image toolbar" do
     it "allows scaling image down and up via toolbar" do
       open_composer
-      composer.paste_and_click_image(cdp)
+      paste_and_click_image(cdp)
       find(".composer-image-toolbar__zoom-out").click
       expect(rich).to have_selector(".composer-image-node img[data-scale='75']")
       find(".composer-image-toolbar__zoom-out").click
@@ -20,7 +20,7 @@ describe "Composer - ProseMirror - Images", type: :system do
     it "allows removing image via toolbar" do
       open_composer
       composer.type_content("Before")
-      composer.paste_and_click_image(cdp)
+      paste_and_click_image(cdp)
       find(".composer-image-toolbar__trash").click
       expect(rich).to have_no_css(".composer-image-node img")
       expect(rich).to have_content("Before")
@@ -28,7 +28,7 @@ describe "Composer - ProseMirror - Images", type: :system do
 
     it "hides toolbar when clicking outside image" do
       open_composer
-      composer.paste_and_click_image(cdp)
+      paste_and_click_image(cdp)
       expect(page).to have_css("[data-identifier='composer-image-toolbar']")
       rich.find("p").click
       expect(page).to have_no_css("[data-identifier='composer-image-toolbar']")
@@ -85,14 +85,14 @@ describe "Composer - ProseMirror - Images", type: :system do
   describe "image alt text display and editing" do
     it "shows alt text input when image is selected" do
       open_composer
-      composer.paste_and_click_image(cdp)
+      paste_and_click_image(cdp)
       expect(page).to have_css("[data-identifier='composer-image-alt-text']")
       expect(page).to have_css(".image-alt-text-input__display")
     end
 
     it "allows editing alt text by clicking on display" do
       open_composer
-      composer.paste_and_click_image(cdp)
+      paste_and_click_image(cdp)
       find(".image-alt-text-input__display").click
       expect(page).to have_css(".image-alt-text-input.--expanded")
       expect(page).to have_css(".image-alt-text-input__field")
@@ -103,7 +103,7 @@ describe "Composer - ProseMirror - Images", type: :system do
 
     it "saves alt text when leaving the input field" do
       open_composer
-      composer.paste_and_click_image(cdp)
+      paste_and_click_image(cdp)
       find(".image-alt-text-input__display").click
       find(".image-alt-text-input__field").fill_in(with: "new alt text")
       rich.find("p").click
@@ -112,7 +112,7 @@ describe "Composer - ProseMirror - Images", type: :system do
 
     it "displays the placeholder if alt text is empty" do
       open_composer
-      composer.paste_and_click_image(cdp)
+      paste_and_click_image(cdp)
       expect(page).to have_css(".image-alt-text-input__display", text: "image")
       find(".image-alt-text-input__display").click
       find(".image-alt-text-input__field").fill_in(with: "")
