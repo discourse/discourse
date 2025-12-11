@@ -92,7 +92,6 @@ class Middleware::RequestTracker
       ApplicationRequest.increment!(:user_api)
       log_web_request = true
     elsif data[:track_view]
-      log_web_request = true
       if data[:is_crawler]
         ApplicationRequest.increment!(:page_view_crawler)
         WebCrawlerRequest.increment!(data[:user_agent])
@@ -101,6 +100,7 @@ class Middleware::RequestTracker
         ApplicationRequest.increment!(:page_view_logged_in_mobile) if data[:is_mobile]
 
         if data[:explicit_track_view]
+          log_web_request = true
           # Must be a browser if it had this header from our ajax implementation
           ApplicationRequest.increment!(:page_view_logged_in_browser)
           ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
@@ -118,6 +118,7 @@ class Middleware::RequestTracker
         ApplicationRequest.increment!(:page_view_anon_mobile) if data[:is_mobile]
 
         if data[:explicit_track_view]
+          log_web_request = true
           # Must be a browser if it had this header from our ajax implementation
           ApplicationRequest.increment!(:page_view_anon_browser)
           ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
@@ -132,8 +133,8 @@ class Middleware::RequestTracker
     # Message-bus requests may include this 'deferred track' header which we use to detect
     # 'real browser' views.
     if data[:deferred_track_view] && !data[:is_crawler]
-      log_web_request = true
       if data[:has_auth_cookie]
+        log_web_request = true
         ApplicationRequest.increment!(:page_view_logged_in_browser)
         ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
 
@@ -145,6 +146,7 @@ class Middleware::RequestTracker
           )
         end
       elsif !SiteSetting.login_required
+        log_web_request = true
         ApplicationRequest.increment!(:page_view_anon_browser)
         ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
 
@@ -241,6 +243,21 @@ class Middleware::RequestTracker
     # cheaper than doing multiple hash lookups
     route = nil if route == "#"
 
+    # For deferred track view requests, use the original page's path/referrer/query_string
+    # sent via headers instead of the current request's data (which would be /message-bus or /pageview)
+    if view_tracking_data[:deferred_track_view]
+      request_path = env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_PATH"].presence || request.path
+      request_query_string =
+        env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_QUERY_STRING"].presence ||
+          request.query_string.presence
+      request_referrer = env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_REFERRER"].presence
+      status = 200
+    else
+      request_path = view_tracking_data[:path] || request.path
+      request_query_string = request.query_string.presence
+      request_referrer = env["HTTP_REFERER"]
+    end
+
     request_data = {
       status: status,
       is_crawler: helper.is_crawler?,
@@ -254,9 +271,9 @@ class Middleware::RequestTracker
       timing: timing,
       queue_seconds: env["REQUEST_QUEUE_SECONDS"],
       request_remote_ip: request_remote_ip,
-      path: request.path,
-      query_string: request.query_string.presence,
-      referrer: env["HTTP_REFERER"],
+      path: request_path,
+      query_string: request_query_string,
+      referrer: request_referrer,
       user_agent: user_agent,
       route: route,
     }.merge(view_tracking_data)
@@ -626,12 +643,15 @@ class Middleware::RequestTracker
     track_view = !!(explicit_track_view || implicit_track_view)
     browser_page_view = !!(explicit_track_view || deferred_track_view)
 
+    path = env["HTTP_DISCOURSE_TRACK_VIEW_PATH"]
+
     {
       track_view: track_view,
       explicit_track_view: explicit_track_view,
       deferred_track_view: deferred_track_view,
       implicit_track_view: implicit_track_view,
       browser_page_view: browser_page_view,
+      path: path,
     }
   end
 end

@@ -38,7 +38,7 @@ def setup_message_bus_env(env)
       "Access-Control-Allow-Origin" => cors_origin,
       "Access-Control-Allow-Methods" => "GET, POST",
       "Access-Control-Allow-Headers" =>
-        "X-SILENCE-LOGGER, X-Shared-Session-Key, Dont-Chunk, Discourse-Present, Discourse-Deferred-Track-View",
+        "X-SILENCE-LOGGER, X-Shared-Session-Key, Dont-Chunk, Discourse-Present, Discourse-Deferred-Track-View, Discourse-Deferred-Track-View-Topic-Id, Discourse-Deferred-Track-View-Path, Discourse-Deferred-Track-View-Query-String, Discourse-Deferred-Track-View-Referrer",
       "Access-Control-Max-Age" => "7200",
     }
 

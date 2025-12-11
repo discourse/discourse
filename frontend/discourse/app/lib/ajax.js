@@ -103,6 +103,10 @@ export function ajax() {
     if (_trackView && (!args.type || args.type === "GET")) {
       _trackView = false;
       args.headers["Discourse-Track-View"] = "true";
+      if (window.location?.pathname) {
+        args.headers["Discourse-Track-View-Path"] =
+          window.location.pathname.slice(0, 512);
+      }
 
       if (_topicId) {
         args.headers["Discourse-Track-View-Topic-Id"] = _topicId;
