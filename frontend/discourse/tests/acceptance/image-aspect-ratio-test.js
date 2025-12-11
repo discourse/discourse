@@ -7,7 +7,7 @@ acceptance("Image aspect ratio", function () {
     await visit("/t/2480");
 
     assert
-      .dom("#post_3 img[src='/assets/logo.png']")
+      .dom("#post_3 img[src='/images/discourse-logo-sketch.png']")
       .hasStyle({ aspectRatio: "690 / 388" });
   });
 });

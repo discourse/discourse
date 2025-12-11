@@ -48,12 +48,14 @@ export default function deprecated(msg, options = {}) {
 
   handlers.forEach((h) => h(msg, options));
 
+  let config;
+  if (require.has("discourse/config/environment")) {
+    config = require("discourse/config/environment").default;
+  }
+
   if (
     raiseError ||
-    DeprecationWorkflow.shouldThrow(
-      id,
-      globalThis.EmberENV?.RAISE_ON_DEPRECATION
-    )
+    (config && DeprecationWorkflow.shouldThrow(id, config.RAISE_ON_DEPRECATION))
   ) {
     throw msg;
   }

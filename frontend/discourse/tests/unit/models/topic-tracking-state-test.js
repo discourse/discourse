@@ -1,7 +1,6 @@
 import { getProperties } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
-import MessageBus from "message-bus-client";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { NotificationLevels } from "discourse/lib/notification-levels";
@@ -563,7 +562,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
 
   test("establishChannels - /delete MessageBus channel payloads processed", async function (assert) {
     const trackingState = this.store.createRecord("topic-tracking-state", {
-      messageBus: MessageBus,
+      messageBus: window.MessageBus,
     });
     trackingState.establishChannels();
 
@@ -589,7 +588,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
 
   test("establishChannels - /recover MessageBus channel payloads processed", async function (assert) {
     const trackingState = this.store.createRecord("topic-tracking-state", {
-      messageBus: MessageBus,
+      messageBus: window.MessageBus,
     });
     trackingState.establishChannels();
 
@@ -620,7 +619,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
     sinon.stub(DiscourseURL, "redirectTo");
 
     const trackingState = this.store.createRecord("topic-tracking-state", {
-      messageBus: MessageBus,
+      messageBus: window.MessageBus,
     });
     trackingState.establishChannels();
     trackingState.loadStates([
@@ -907,7 +906,7 @@ module("Unit | Model | topic-tracking-state | /unread", function (hooks) {
 
     this.trackingState = store.createRecord("topic-tracking-state", {
       currentUser: this.currentUser,
-      messageBus: MessageBus,
+      messageBus: window.MessageBus,
       siteSettings,
     });
     this.trackingState.establishChannels();
@@ -1160,7 +1159,7 @@ module("Unit | Model | topic-tracking-state | /new", function (hooks) {
 
     this.trackingState = store.createRecord("topic-tracking-state", {
       currentUser: this.currentUser,
-      messageBus: MessageBus,
+      messageBus: window.MessageBus,
       siteSettings,
     });
     this.trackingState.establishChannels();
