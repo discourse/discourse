@@ -191,7 +191,8 @@ module DiscourseAi
         stream_reply: false,
         auto_set_title: false,
         silent_mode: false,
-        feature_name: nil
+        feature_name: nil,
+        attributed_user: nil
       )
         ai_persona = AiPersona.find_by(id: persona_id)
         raise Discourse::InvalidParameters.new(:persona_id) if !ai_persona
@@ -212,6 +213,7 @@ module DiscourseAi
           auto_set_title: auto_set_title,
           silent_mode: silent_mode,
           feature_name: feature_name,
+          attributed_user: attributed_user,
         )
       rescue => e
         if Rails.env.test?
@@ -420,6 +422,7 @@ module DiscourseAi
         feature_name: nil,
         existing_reply_post: nil,
         cancel_manager: nil,
+        attributed_user: nil,
         &blk
       )
         # this is a multithreading issue
@@ -453,6 +456,7 @@ module DiscourseAi
         context =
           DiscourseAi::Personas::BotContext.new(
             post: post,
+            user: attributed_user,
             custom_instructions: custom_instructions,
             feature_name: feature_name,
             messages:

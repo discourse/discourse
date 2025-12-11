@@ -9,6 +9,7 @@ module DiscourseAi
           whisper: whisper,
           silent_mode: silent_mode,
           feature_name: "automation - #{automation&.name}",
+          attributed_user: Discourse.system_user,
         )
       rescue => e
         Discourse.warn_exception(

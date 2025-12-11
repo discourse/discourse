@@ -83,7 +83,7 @@ describe DiscourseAi::Automation::LlmPersonaTriage do
 
     log = AiApiAuditLog.last
     expect(log).to be_present
-    expect(log.user_id).to eq(post.user_id)
+    expect(log.user_id).to eq(Discourse.system_user.id)
     expect(log.feature_name).to eq("automation - #{automation.name}")
 
     topic = post.topic.reload
