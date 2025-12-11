@@ -8,8 +8,10 @@ import identifySource, { consolePrefix } from "discourse/lib/source-identifier";
 let disabled = false;
 let disabledQUnitResult = false;
 
-const preInstalledPlugins = new Set();
-
+/**
+ * Configures deprecation handlers to raise errors when deprecations occur in tests.
+ * This ensures core and preinstalled plugins remain deprecation-free.
+ */
 export function configureRaiseOnDeprecation() {
   if (window.EmberENV.RAISE_ON_DEPRECATION !== undefined) {
     return;
@@ -34,40 +36,14 @@ export function configureRaiseOnDeprecation() {
   });
 }
 
-function isPreInstalledPlugin(name) {
-  if (preInstalledPlugins.has(name)) {
-    return true;
-  }
-
-  const isPreinstalled = !!document.querySelector(
-    `script[data-discourse-plugin="${name}"][data-preinstalled="true"]`
-  );
-
-  if (isPreinstalled) {
-    preInstalledPlugins.add(name);
-  }
-
-  return isPreinstalled;
-}
-
-function skipDeprecationInPlugin(source) {
-  if (!source) {
-    return false;
-  }
-
-  if (source.type !== "plugin") {
-    return false;
-  }
-
-  return !isPreInstalledPlugin(source?.name);
-}
-
+/**
+ * Raises a deprecation error in QUnit tests, including source information.
+ *
+ * @param {string} message - The deprecation message
+ * @param {Object} options - Deprecation options including id and source
+ */
 function raiseDeprecationError(message, options) {
   const source = options?.source ?? identifySource();
-
-  if (skipDeprecationInPlugin(source)) {
-    return;
-  }
 
   const prefix = consolePrefix(null, source);
   const from = isEmpty(prefix)
