@@ -280,6 +280,10 @@ class TagsController < ::ApplicationController
 
     return render_json_error(I18n.t("tags.bulk_create.invalid_params")) if !tag_names.is_a?(Array)
 
+    if tag_names.length > 100
+      return render_json_error(I18n.t("tags.bulk_create.too_many_tags", max: 100))
+    end
+
     results = { created: [], existing: [], failed: {} }
 
     tag_names.each do |raw_name|

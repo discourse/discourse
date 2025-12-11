@@ -1493,6 +1493,19 @@ RSpec.describe TagsController do
         expect(result["failed"][long_tag]).to include("too long")
         expect(result["failed"][long_tag]).to include(SiteSetting.max_tag_length.to_s)
       end
+
+      it "rejects requests with more than 100 tags" do
+        sign_in(moderator)
+        too_many_tags = (1..101).map { |i| "tag#{i}" }
+
+        expect do
+          post "/tags/bulk_create.json", params: { tag_names: too_many_tags }
+        end.not_to change { Tag.count }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"].first).to include("Too many tags")
+        expect(response.parsed_body["errors"].first).to include("100")
+      end
     end
   end
 
