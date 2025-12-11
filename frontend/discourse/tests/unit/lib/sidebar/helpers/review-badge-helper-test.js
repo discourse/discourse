@@ -1,13 +1,13 @@
-import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { getReviewBadgeText } from "discourse/lib/sidebar/helpers/review-badge-helper";
+import { logIn } from "discourse/tests/helpers/qunit-helpers";
 
 module("Unit | Sidebar | Helpers | review-badge-helper", function (hooks) {
   setupTest(hooks);
 
   test("returns undefined when user has no reviewables", function (assert) {
-    const currentUser = getOwner(this).lookup("service:current-user");
+    const currentUser = logIn(this.owner);
     currentUser.set("reviewable_count", 0);
 
     const result = getReviewBadgeText(currentUser);
@@ -16,7 +16,7 @@ module("Unit | Sidebar | Helpers | review-badge-helper", function (hooks) {
   });
 
   test("returns formatted badge text for single reviewable", function (assert) {
-    const currentUser = getOwner(this).lookup("service:current-user");
+    const currentUser = logIn(this.owner);
     currentUser.set("reviewable_count", 1);
 
     const result = getReviewBadgeText(currentUser);
@@ -25,7 +25,7 @@ module("Unit | Sidebar | Helpers | review-badge-helper", function (hooks) {
   });
 
   test("returns formatted badge text for multiple reviewables", function (assert) {
-    const currentUser = getOwner(this).lookup("service:current-user");
+    const currentUser = logIn(this.owner);
     currentUser.set("reviewable_count", 42);
 
     const result = getReviewBadgeText(currentUser);
