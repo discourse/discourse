@@ -14,7 +14,7 @@
 
   &__primary-content {
     position: relative;
-    flex: 0 1 75%;
+    flex: 0 1 70%;
     min-width: 0;
 
     @include viewport.from(sm) {
@@ -60,7 +60,7 @@
   }
 
   &__aside {
-    flex: 0 1 25%;
+    flex: 0 1 30%;
     min-width: 0;
     position: sticky;
     top: var(--header-offset);
@@ -87,6 +87,29 @@
     .dropdown-select-box.reviewable-action-dropdown {
       white-space: wrap;
       text-wrap: pretty;
+    }
+
+    .reviewable-actions-form form {
+      display: grid;
+      gap: 0 var(--space-2);
+      grid-template-areas: "label label" "field button";
+      grid-template-columns: 1fr auto;
+
+      .form-kit__container {
+        display: contents;
+      }
+
+      label {
+        grid-area: label;
+      }
+
+      .form-kit__container-content {
+        grid-area: field;
+      }
+
+      .form-kit__button {
+        grid-area: button;
+      }
     }
 
     &-title {

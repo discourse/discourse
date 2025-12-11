@@ -3,12 +3,19 @@ import DButton from "discourse/components/d-button";
 
 export default class FKSubmit extends Component {
   get label() {
-    return this.args.label ?? "submit";
+    if (this.args.label) {
+      return this.args.label;
+    }
+
+    if (!this.args.icon) {
+      return "submit";
+    }
   }
 
   <template>
     <DButton
       @label={{this.label}}
+      @icon={{@icon}}
       @action={{@onSubmit}}
       @forwardEvent="true"
       class="btn-primary form-kit__button"
