@@ -47,5 +47,5 @@ onmessage = async function (e) {
 };
 
 async function loadLibs(settings) {
-  importScripts(settings.mediaOptimizationBundle);
+  return import(settings.mediaOptimizationBundle);
 }

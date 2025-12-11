@@ -106,7 +106,7 @@ export default defineConfig(({ mode, command }) => {
           discourse: "discourse.js",
           vendor: "vendor.js",
           "start-discourse": "start-discourse.js",
-          // admin: "admin.js",
+          "media-optimization-bundle": "media-optimization-bundle.js",
           ...(shouldBuildTests(mode)
             ? { tests: "tests/index.html" }
             : undefined),
