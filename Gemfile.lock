@@ -715,10 +715,11 @@ GEM
     yaml-lint (0.1.2)
     yard (0.9.38)
     zeitwerk (2.7.3)
-    zendesk_api (1.38.0.rc1)
+    zendesk_api (4.0.0.pre.1)
+      base64
       faraday (> 2.0.0)
       faraday-multipart
-      hashie (>= 3.5.2, < 6.0.0)
+      hashie (>= 3.5.2)
       inflection
       mini_mime
       multipart-post (~> 2.0)
@@ -1248,7 +1249,7 @@ CHECKSUMS
   yaml-lint (0.1.2) sha256=e3960b171766ae187338a169815e99fe10fcb0d9c22b1c539e8d57e114324c8a
   yard (0.9.38) sha256=721fb82afb10532aa49860655f6cc2eaa7130889df291b052e1e6b268283010f
   zeitwerk (2.7.3) sha256=b2e86b4a9b57d26ba68a15230dcc7fe6f040f06831ce64417b0621ad96ba3e85
-  zendesk_api (1.38.0.rc1) sha256=9ebe2575d223ed1c0651b2d10df6c010141cda49d524c38532b472f7e8bb3f7a
+  zendesk_api (4.0.0.pre.1) sha256=18ce566c4731096f2a4812edec3b2f47976fcaf4ad4489011813e36e1b48426f
 
 RUBY VERSION
    ruby 3.3.1p55
