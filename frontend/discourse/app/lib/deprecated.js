@@ -17,13 +17,19 @@ let emberDeprecationSilencer;
  * @param {boolean} [options.raiseError] Raise an error when this deprecation is triggered. Defaults to `false`
  */
 export default function deprecated(msg, options = {}) {
-  const { id, since, dropFrom, url, raiseError, source } = options;
+  const { id, since, dropFrom, url, source } = options;
+  let raiseError =
+    options.raiseError ||
+    DeprecationWorkflow.shouldThrow(
+      id,
+      globalThis.EmberENV?.RAISE_ON_DEPRECATION
+    );
 
   if (isDeprecationSilenced(id)) {
     return;
   }
 
-  msg = ["Deprecation notice:", msg];
+  msg = [raiseError ? "FATAL DEPRECATION:" : "DEPRECATION NOTICE:", msg];
   if (since) {
     msg.push(`[deprecated since Discourse ${since}]`);
   }
@@ -48,13 +54,7 @@ export default function deprecated(msg, options = {}) {
 
   handlers.forEach((h) => h(msg, options));
 
-  if (
-    raiseError ||
-    DeprecationWorkflow.shouldThrow(
-      id,
-      globalThis.EmberENV?.RAISE_ON_DEPRECATION
-    )
-  ) {
+  if (raiseError) {
     throw [consolePrefix, msg].filter(Boolean).join(" ");
   }
 
