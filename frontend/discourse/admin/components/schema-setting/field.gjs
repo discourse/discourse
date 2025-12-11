@@ -59,6 +59,7 @@ export default class SchemaSettingField extends Component {
         <this.component
           @value={{@value}}
           @spec={{@spec}}
+          @name={{@name}}
           @onChange={{@onValueChange}}
           @description={{this.description}}
           @setting={{@setting}}
