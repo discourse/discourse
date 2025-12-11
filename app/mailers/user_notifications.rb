@@ -645,9 +645,9 @@ class UserNotifications < ActionMailer::Base
       subject_pm =
         if opts[:show_group_in_subject] && group.present?
           if group.full_name
-            "#{group.full_name}: "
+            "[#{group.full_name}] "
           else
-            "#{group.name}: "
+            "[#{group.name}] "
           end
         else
           I18n.t("subject_pm")
