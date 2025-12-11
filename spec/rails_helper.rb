@@ -501,8 +501,23 @@ RSpec.configure do |config|
             # Only set the env var if the plugin is preinstalled
             ENV["EMBER_RAISE_ON_DEPRECATION"] = "1" if is_preinstalled
           end
+        elsif example_file_path.include?("/themes/")
+          # Extract theme directory name from path
+          # Path format: .../themes/theme-name/spec/...
+          theme_match = example_file_path.match(%r{/themes/([^/]+)/})
+
+          if theme_match
+            theme_name = theme_match[1]
+            theme_dir = Rails.root.join("themes", theme_name)
+
+            # Check if theme is preinstalled (no .git directory)
+            is_preinstalled = !File.exist?(File.join(theme_dir, ".git"))
+
+            # Only set the env var if the theme is preinstalled
+            ENV["EMBER_RAISE_ON_DEPRECATION"] = "1" if is_preinstalled
+          end
         else
-          # Not a plugin spec, set the env var
+          # Not a plugin or theme spec, set the env var
           ENV["EMBER_RAISE_ON_DEPRECATION"] = "1"
         end
       end
