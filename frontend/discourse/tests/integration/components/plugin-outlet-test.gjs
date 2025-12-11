@@ -20,6 +20,10 @@ import {
   extraConnectorComponent,
 } from "discourse/lib/plugin-connectors";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import {
+  restoreCountingDeprecation,
+  skipCountingDeprecation,
+} from "discourse/tests/helpers/deprecation-counter";
 import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
 import {
   disableRaiseOnDeprecation,
@@ -479,11 +483,19 @@ module("Integration | Component | plugin-outlet", function (hooks) {
     innerHooks.beforeEach(function () {
       this.consoleWarnStub = sinon.stub(console, "warn");
       disableRaiseOnDeprecation();
+
+      skipCountingDeprecation("discourse.plugin-connector.deprecated-arg");
+      skipCountingDeprecation("discourse.plugin-connector.deprecated-arg.test");
     });
 
     innerHooks.afterEach(function () {
       this.consoleWarnStub.restore();
       enableRaiseOnDeprecation();
+
+      restoreCountingDeprecation("discourse.plugin-connector.deprecated-arg");
+      restoreCountingDeprecation(
+        "discourse.plugin-connector.deprecated-arg.test"
+      );
     });
 
     test("deprecated parameters with default message", async function (assert) {
@@ -669,11 +681,21 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
+      skipCountingDeprecation("discourse.plugin-connector.deprecated-arg");
+      skipCountingDeprecation("discourse.plugin-connector.deprecated-arg.test");
+
       registerTemporaryModule(
         `${TEMPLATE_PREFIX}/test-name/my-connector`,
         hbs`
           <span class="outletArgHelloValue">{{@outletArgs.hello}}</span>
           <span class="thisHelloValue">{{this.hello}}</span>`
+      );
+    });
+
+    hooks.afterEach(function () {
+      restoreCountingDeprecation("discourse.plugin-connector.deprecated-arg");
+      restoreCountingDeprecation(
+        "discourse.plugin-connector.deprecated-arg.test"
       );
     });
 

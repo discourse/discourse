@@ -5,6 +5,53 @@ import {
   isDeprecationSilenced,
   registerDeprecationHandler as registerDiscourseDeprecationHandler,
 } from "discourse/lib/deprecated";
+import { isTesting } from "discourse/lib/environment";
+
+/**
+ * Set of deprecation IDs that should be skipped when counting deprecations.
+ * @type {Set<string>}
+ */
+const skipCountIds = new Set();
+
+/**
+ * Marks a deprecation ID to be skipped when counting deprecations during tests.
+ * This is useful when you want to temporarily ignore specific deprecations
+ * without affecting the deprecation counter.
+ *
+ * USE ONLY FOR TESTING PURPOSES
+ *
+ * @param {string} id - The deprecation ID to skip counting
+ * @throws {Error} If called outside of a QUnit test environment
+ * @example
+ * skipCountingDeprecation('my-deprecation-id');
+ */
+export function skipCountingDeprecation(id) {
+  if (!isTesting()) {
+    throw new Error("skipCountingDeprecation can only be used in QUnit tests.");
+  }
+
+  skipCountIds.add(id);
+}
+
+/**
+ * Restores counting for a previously skipped deprecation ID.
+ * Use this to re-enable deprecation counting for a specific ID that was
+ * previously excluded via skipCountingDeprecation.
+ *
+ * USE ONLY FOR TESTING PURPOSES
+ *
+ * @param {string} id - The deprecation ID to restore counting for
+ * @throws {Error} If called outside of a QUnit test environment
+ * @example
+ * restoreCountingDeprecation('my-deprecation-id');
+ */
+export function restoreCountingDeprecation(id) {
+  if (!isTesting()) {
+    throw new Error("resetSkipDeprecations can only be used in QUnit tests.");
+  }
+
+  skipCountIds.delete(id);
+}
 
 export default class DeprecationCounter {
   counts = new Map();
@@ -15,7 +62,11 @@ export default class DeprecationCounter {
   }
 
   shouldCount(id) {
-    return !isDeprecationSilenced(id) && DeprecationWorkflow.shouldCount(id);
+    return (
+      !skipCountIds.has(id) &&
+      !isDeprecationSilenced(id) &&
+      DeprecationWorkflow.shouldCount(id)
+    );
   }
 
   @bind
