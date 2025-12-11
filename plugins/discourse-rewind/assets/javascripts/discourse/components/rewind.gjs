@@ -39,12 +39,16 @@ export default class Rewind extends Component {
   @service toasts;
 
   @tracked rewind = [];
-  @tracked fullScreen = true;
+  @tracked fullScreen = this.currentUser !== null;
   @tracked loadingRewind = false;
   @tracked totalAvailable = 0;
   @tracked isLoadingMore = false;
   @tracked cannotViewRewind = false;
   nextReportIndex = 0;
+
+  get canShare() {
+    return this.currentUser?.id === this.args.user.id;
+  }
 
   @action
   registerScrollWrapper(element) {
@@ -60,7 +64,7 @@ export default class Rewind extends Component {
   @action
   async loadRewind() {
     let url = "/rewinds.json";
-    if (this.args.user.id !== this.currentUser.id) {
+    if (this.args.user.id !== this.currentUser?.id) {
       url += `?for_user_username=${this.args.user.username}`;
     }
 
@@ -71,7 +75,7 @@ export default class Rewind extends Component {
       this.totalAvailable = response.total_available;
       this.nextReportIndex = response.reports.length;
     } catch (err) {
-      if (err.jqXHR.status === 404) {
+      if (err.jqXHR.status === 404 || err.jqXHR.status === 403) {
         this.cannotViewRewind = true;
       } else {
         popupAjaxError(err);
@@ -121,13 +125,13 @@ export default class Rewind extends Component {
 
     this.isLoadingMore = true;
 
-    let url = `/rewinds/${this.nextReportIndex}.json`;
-    if (this.args.user.id !== this.currentUser.id) {
-      url += `?for_user_username=${this.args.user.username}`;
-    }
-
     try {
       while (this.nextReportIndex < targetIndex) {
+        let url = `/rewinds/${this.nextReportIndex}.json`;
+        if (this.args.user.id !== this.currentUser?.id) {
+          url += `?for_user_username=${this.args.user.username}`;
+        }
+
         try {
           const response = await ajax(url, {
             ignoreUnsent: false,
@@ -155,13 +159,13 @@ export default class Rewind extends Component {
 
   @action
   async toggleShareRewind() {
-    if (this.currentUser.user_option.discourse_rewind_share_publicly) {
+    if (this.currentUser?.user_option.discourse_rewind_share_publicly) {
       try {
         const response = await ajax("/rewinds/toggle-share", {
           type: "PUT",
         });
 
-        this.currentUser.set(
+        this.currentUser?.set(
           "user_option.discourse_rewind_share_publicly",
           response.shared
         );
@@ -187,7 +191,7 @@ export default class Rewind extends Component {
           const response = await ajax("/rewinds/toggle-share", {
             type: "PUT",
           });
-          this.currentUser.set(
+          this.currentUser?.set(
             "user_option.discourse_rewind_share_publicly",
             response.shared
           );
@@ -287,31 +291,27 @@ export default class Rewind extends Component {
             </div>
           </div>
         {{else}}
-          {{#unless this.cannotViewRewind}}
+          {{#if this.canShare}}
             <DButton
               class="btn-default rewind__share-btn --special-kbd"
               @title={{if
-                this.currentUser.user_option.discourse_rewind_share_publicly
+                this.currentUser?.user_option.discourse_rewind_share_publicly
                 "discourse_rewind.share.disable_tooltip"
                 "discourse_rewind.share.enable_tooltip"
               }}
               @icon={{if
-                this.currentUser.user_option.discourse_rewind_share_publicly
+                this.currentUser?.user_option.discourse_rewind_share_publicly
                 "link-slash"
                 "link"
               }}
               @action={{this.toggleShareRewind}}
             />
-            <DButton
-              class="btn-default rewind__exit-fullscreen-btn --special-kbd"
-              @icon={{if
-                this.fullScreen
-                "discourse-compress"
-                "discourse-expand"
-              }}
-              @action={{this.toggleFullScreen}}
-            />
-          {{/unless}}
+          {{/if}}
+          <DButton
+            class="btn-default rewind__exit-fullscreen-btn --special-kbd"
+            @icon={{if this.fullScreen "discourse-compress" "discourse-expand"}}
+            @action={{this.toggleFullScreen}}
+          />
           <div
             class="rewind__scroll-wrapper"
             {{didInsert this.registerScrollWrapper}}

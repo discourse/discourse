@@ -2,6 +2,7 @@
 
 module ::DiscourseRewind
   class RewindsController < ::ApplicationController
+    requires_login
     requires_plugin PLUGIN_NAME
 
     requires_login
