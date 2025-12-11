@@ -82,7 +82,7 @@ class SchemaSettingsObjectValidator
   def validate
     # Convert all upload URLs to IDs before validation
     @properties.each do |property_name, property_attributes|
-      next if property_attributes[:type] == "objects"
+      next if property_attributes[:type] != "upload"
       normalize_upload_value(property_name, property_attributes)
     end
 
@@ -109,15 +109,11 @@ class SchemaSettingsObjectValidator
   private
 
   def normalize_upload_value(property_name, property_attributes)
-    return unless property_attributes[:type] == "upload"
-
     value = @object[property_name]
-    return if value.nil?
+    return unless value.is_a?(String) && value.present?
 
-    # Convert upload URL string to ID
-    if value.is_a?(String)
-      upload = Upload.get_from_url(value)
-      @object[property_name] = upload.id if upload
+    if upload = Upload.get_from_url(value)
+      @object[property_name] = upload.id
     end
   end
 
