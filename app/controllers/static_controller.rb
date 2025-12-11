@@ -28,22 +28,23 @@ class StaticController < ApplicationController
   CUSTOM_PAGES = {} # Add via `#add_topic_static_page` in plugin API
 
   def extract_redirect_param
-    redirect_path = params[:redirect]
-    if redirect_path.present?
-      begin
-        forum_host = URI(Discourse.base_url).host
-        uri = URI(redirect_path)
+    return "/" if params[:redirect].blank?
 
-        if uri.path.present? && !uri.path.starts_with?(login_path) &&
-             (uri.host.blank? || uri.host == forum_host) && uri.path =~ %r{\A\/{1}[^\.\s]*\z}
-          return "#{uri.path}#{uri.query ? "?#{uri.query}" : ""}"
-        end
-      rescue URI::Error, ArgumentError
-        # If the URI is invalid, return "/" below
-      end
-    end
+    uri = URI(params[:redirect])
+    return "/" unless valid_redirect_uri?(uri)
 
+    uri.query ? "#{uri.path}?#{uri.query}" : uri.path
+  rescue URI::Error, ArgumentError
     "/"
+  end
+
+  def valid_redirect_uri?(uri)
+    return false if uri.path.blank?
+    return false if uri.path.starts_with?("#{Discourse.base_path}/login")
+    return false if uri.host.present? && uri.host != URI(Discourse.base_url).host
+    return false if !uri.path.match?(%r{\A/[^\.\s]*\z})
+
+    true
   end
 
   def show
@@ -152,14 +153,15 @@ class StaticController < ApplicationController
 
     destination = extract_redirect_param
 
-    allow_other_hosts = false
+    allow_other_host = false
 
     if cookies[:sso_destination_url]
       destination = cookies.delete(:sso_destination_url)
-      allow_other_hosts = true
+      allow_other_host = true
     end
 
-    redirect_to(destination, allow_other_host: allow_other_hosts)
+    destination = path(destination) if destination == "/"
+    redirect_to(destination, allow_other_host:)
   end
 
   FAVICON = -"favicon"

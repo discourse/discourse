@@ -396,6 +396,31 @@ RSpec.describe StaticController do
         expect(response).to redirect_to("/")
       end
     end
+
+    context "with a subfolder" do
+      before { set_subfolder "/sub_test" }
+
+      context "without a redirect path" do
+        it "redirects to the subfolder root" do
+          post "/login.json"
+          expect(response).to redirect_to("/sub_test/")
+        end
+      end
+
+      context "when the redirect path is the login page" do
+        it "redirects to the subfolder root" do
+          post "/login.json", params: { redirect: "#{Discourse.base_path}/login" }
+          expect(response).to redirect_to("/sub_test/")
+        end
+      end
+
+      context "when the redirect path is invalid" do
+        it "redirects to the subfolder root" do
+          post "/login.json", params: { redirect: "test" }
+          expect(response).to redirect_to("/sub_test/")
+        end
+      end
+    end
   end
 
   describe "#service_worker_asset" do
