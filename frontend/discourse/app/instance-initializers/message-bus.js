@@ -9,9 +9,24 @@ const LONG_POLL_AFTER_UNSEEN_TIME = 1200000; // 20 minutes
 
 let _sendDeferredPageview = false;
 let _deferredViewTopicId = null;
+let _deferredViewPath = null;
+let _deferredViewQueryString = null;
+let _deferredViewReferrer = null;
 
 export function sendDeferredPageview() {
   _sendDeferredPageview = true;
+  _deferredViewPath = window.location.pathname.slice(0, 1024);
+
+  const search = window.location.search;
+  if (search && search.length > 1) {
+    _deferredViewQueryString = search.slice(1, 1025).replace(/[\r\n]/g, "");
+  } else {
+    _deferredViewQueryString = null;
+  }
+
+  _deferredViewReferrer = document.referrer
+    ? document.referrer.slice(0, 1024).replace(/[\r\n]/g, "")
+    : null;
 }
 
 function mbAjax(messageBus, opts) {
@@ -37,8 +52,25 @@ function mbAjax(messageBus, opts) {
         _deferredViewTopicId;
     }
 
+    if (_deferredViewPath) {
+      opts.headers["Discourse-Deferred-Track-View-Path"] = _deferredViewPath;
+    }
+
+    if (_deferredViewQueryString) {
+      opts.headers["Discourse-Deferred-Track-View-Query-String"] =
+        _deferredViewQueryString;
+    }
+
+    if (_deferredViewReferrer) {
+      opts.headers["Discourse-Deferred-Track-View-Referrer"] =
+        _deferredViewReferrer;
+    }
+
     _sendDeferredPageview = false;
     _deferredViewTopicId = null;
+    _deferredViewPath = null;
+    _deferredViewQueryString = null;
+    _deferredViewReferrer = null;
   }
 
   const oldComplete = opts.complete;
