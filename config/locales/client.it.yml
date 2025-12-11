@@ -844,7 +844,6 @@ it:
         claimed: "Rivendicato"
         claimed_by: "Rivendicato da %{username} · %{relativeDate}"
         reviewed: "Rivisto"
-        reviewed_by: "Rivisto da %{username} · %{relativeDate}"
         view_conversation: "visualizza PM"
         note_added: "Note del moderatore"
         note_added_by: "Note del moderatore di %{username} · %{relativeDate}"
@@ -2855,6 +2854,7 @@ it:
         zoom_out: "Riduci le dimensioni dell'immagine"
         zoom_in: "Aumenta le dimensioni dell'immagine"
         remove: "Rimuovi immagine"
+      image: "immagine"
       image_scale_button: "Ridimensiona l'immagine a %{percent}%"
       delete_image_button: Cancella immagine
       toggle_image_grid: Attiva/disattiva la griglia dell'immagine

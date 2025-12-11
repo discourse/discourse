@@ -65,6 +65,12 @@ zh_CN:
         text:
           label: 文本
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: 类别
+            tags:
+              label: 标签
         not_found: 找不到用于自动化 `%{automation}` 的触发器 `%{trigger}`，请确保关联插件已安装
         user_badge_granted:
           fields:

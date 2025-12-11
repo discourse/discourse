@@ -10,3 +10,5 @@ pl_PL:
   discourse_rewind:
     report_failed: "Nie udało się wygenerować raportu Discourse Rewind."
     invalid_year: "Rewind można przeprowadzić tylko w styczniu lub grudniu."
+    reports_not_cached: "Raporty nie zostały jeszcze wygenerowane. Odśwież stronę."
+    report_not_found: "Raport nie został znaleziony."

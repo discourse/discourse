@@ -997,7 +997,6 @@ he:
         claimed: "נדרש"
         claimed_by: "נדרש על ידי %{username} · %{relativeDate}"
         reviewed: "נבדק"
-        reviewed_by: "נבדק על ידי %{username} · %{relativeDate}"
         view_conversation: "הצגת הודעה פרטית"
         note_added: "הערת פיקוח"
         note_added_by: "הערת פיקוח מאת %{username} · %{relativeDate}"
@@ -3213,6 +3212,7 @@ he:
         remove: "הסרת התמונה"
         add_to_grid: "הוספה לרשת"
         move_outside_grid: "הוצאה מהרשת"
+      image: "תמונה"
       grid_label: "יוצג כרשת"
       image_scale_button: "שינוי קנה המידה של התמונה לכדי %{percent}%"
       delete_image_button: מחיקת תמונה

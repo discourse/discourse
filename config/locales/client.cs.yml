@@ -1004,7 +1004,6 @@ cs:
         claimed_by: "Nárokováno uživatelem %{username} · %{relativeDate}"
         unclaimed_by: "Zrušil/a nárok %{username} · %{relativeDate}"
         reviewed: "Zkontrolováno"
-        reviewed_by: "Zkontroloval/a %{username} - %{relativeDate}"
         view_conversation: "zobrazit SZ"
         note_added: "Poznámka moderátora"
         note_added_by: "Poznámka moderátora od %{username} · %{relativeDate}"
@@ -3236,6 +3235,7 @@ cs:
         remove: "Odstranit obrázek"
         add_to_grid: "Přidat do mřížky"
         move_outside_grid: "Přesunout mimo mřížku"
+      image: "obrázek"
       grid_label: "Tyto obrázky se zobrazí v mřížce"
       image_scale_button: "Změnit velikost obrázku na %{percent}%"
       delete_image_button: Odstranit obrázek

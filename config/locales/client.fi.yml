@@ -844,7 +844,6 @@ fi:
         claimed: "Omittu"
         claimed_by: "%{username} omi · %{relativeDate}"
         reviewed: "Käsitelty"
-        reviewed_by: "%{username} käsitteli · %{relativeDate}"
         view_conversation: "katso yksityisviesti"
         note_added: "Valvojan huomautus"
         note_added_by: "%{username} lisäsi valvojan huomautuksen · %{relativeDate}"
@@ -2858,6 +2857,7 @@ fi:
         zoom_out: "Pienennä kuvan kokoa"
         zoom_in: "Suurenna kuvan kokoa"
         remove: "Poista kuva"
+      image: "kuva"
       image_scale_button: "Muuta kuvan kokoa %{percent} prosenttiin"
       delete_image_button: Poista kuva
       toggle_image_grid: Kuvaruudukko päälle/pois päältä

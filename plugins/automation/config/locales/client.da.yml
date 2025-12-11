@@ -57,6 +57,12 @@ da:
         text:
           label: Tekst
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategorier
+            tags:
+              label: Mærker
         user_badge_granted:
           fields:
             badge:

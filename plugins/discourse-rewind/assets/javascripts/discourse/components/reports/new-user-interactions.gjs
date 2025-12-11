@@ -14,7 +14,11 @@ export default class NewUserInteractions extends Component {
   <template>
     <div class="rewind-report-page --new-user-interactions">
       <div class="wordart-container">
-        <div class="wordart-text">your contributions helped</div>
+        <div class="wordart-text">
+          {{i18n
+            "discourse_rewind.reports.new_user_interactions.your_contributions_helped"
+          }}
+        </div>
         <div class="wordart-3d">
           {{#each this.wavyWords as |word|}}
             <span class="wordart-word">

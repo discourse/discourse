@@ -9,7 +9,6 @@ RSpec.describe "Starred channels", type: :system do
   before do
     chat_system_bootstrap
     SiteSetting.navigation_menu = "sidebar"
-    SiteSetting.star_chat_channels = true
     sign_in(current_user)
   end
 
@@ -270,31 +269,6 @@ RSpec.describe "Starred channels", type: :system do
     end
   end
 
-  context "when the star_chat_channels setting is disabled" do
-    fab!(:channel_1) { Fabricate(:category_channel, name: "Channel A") }
-
-    before do
-      channel_1.add(current_user)
-      channel_1.membership_for(current_user).update!(starred: true)
-      SiteSetting.star_chat_channels = false
-    end
-
-    it "does not show the Starred Channels section" do
-      visit("/")
-
-      expect(page).to have_no_css("#sidebar-section-content-chat-starred-channels")
-      expect(page.find("#sidebar-section-content-chat-channels")).to have_css(
-        ".channel-#{channel_1.id}",
-      )
-    end
-
-    it "does not show the star button in the channel navbar" do
-      chat_page.visit_channel(channel_1)
-
-      expect(page).to have_no_css(".c-navbar__star-channel-button")
-    end
-  end
-
   context "when using the navbar star button" do
     fab!(:channel_1) { Fabricate(:category_channel, name: "Channel A") }
 
@@ -369,44 +343,59 @@ RSpec.describe "Starred channels", type: :system do
     end
   end
 
-  context "when navigating from starred channels on mobile", mobile: true do
-    fab!(:user_1, :user)
+  context "when opening chat without a known last location" do
     fab!(:channel_1) { Fabricate(:category_channel, name: "Channel A") }
-    fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user, user_1]) }
 
     before do
       channel_1.add(current_user)
       channel_1.membership_for(current_user).update!(starred: true)
-      dm_channel_1.membership_for(current_user).update!(starred: true)
     end
 
-    it "returns to starred channels when clicking back from a regular channel" do
+    it "defaults to starred channels on mobile", mobile: true do
       visit("/")
       chat_page.open_from_header
 
-      expect(page).to have_css("#c-footer-starred")
-      find("#c-footer-starred").click
       expect(page).to have_current_path("/chat/starred-channels")
+    end
 
+    it "defaults to chat index on desktop fullscreen (starred channels in sidebar)" do
+      visit("/")
+      chat_page.prefers_full_page
+      chat_page.open_from_header
+
+      expect(page).to have_current_path("/chat/browse/open")
+    end
+  end
+
+  context "when navigating back from a channel on mobile", mobile: true do
+    fab!(:channel_1) { Fabricate(:category_channel, name: "Channel A") }
+
+    before do
+      channel_1.add(current_user)
+      channel_1.membership_for(current_user).update!(starred: true)
+    end
+
+    it "returns to starred channels when starred channels exist" do
+      visit("/")
+      chat_page.open_from_header
+      find("#c-footer-starred").click
       find(".chat-channel-row[data-chat-channel-id='#{channel_1.id}']").click
-      expect(page).to have_current_path(%r{/chat/c/.*/#{channel_1.id}})
 
       find(".c-navbar__back-button").click
       expect(page).to have_current_path("/chat/starred-channels")
     end
 
-    it "returns to starred channels when clicking back from a DM" do
+    it "redirects to channels list after unstarring the last channel" do
       visit("/")
       chat_page.open_from_header
-
       find("#c-footer-starred").click
-      expect(page).to have_current_path("/chat/starred-channels")
+      find(".chat-channel-row[data-chat-channel-id='#{channel_1.id}']").click
 
-      find(".chat-channel-row[data-chat-channel-id='#{dm_channel_1.id}']").click
-      expect(page).to have_current_path(%r{/chat/c/.*/#{dm_channel_1.id}})
+      find(".c-navbar__star-channel-button").click
+      expect(page).to have_no_css(".c-navbar__star-channel-button.--starred")
 
       find(".c-navbar__back-button").click
-      expect(page).to have_current_path("/chat/starred-channels")
+      expect(page).to have_current_path("/chat/channels")
     end
   end
 end

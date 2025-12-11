@@ -872,7 +872,6 @@ sk:
         claimed: "Nárokované"
         claimed_by: "Nárokované používateľom %{username} · %{relativeDate}"
         reviewed: "Preskúmal"
-        reviewed_by: "Preskúmal %{username} - %{relativeDate}"
         view_conversation: "zobrazenie PM"
         note_added: "Poznámka moderátora"
         note_added_by: "Moderátorská poznámka od %{username} - %{relativeDate}"
@@ -3033,6 +3032,7 @@ sk:
         zoom_out: "Zmenšiť veľkosť obrázka"
         zoom_in: "Zväčšiť veľkosť obrázka"
         remove: "Odstrániť obrázok"
+      image: "Obrázok"
       image_scale_button: "Zmeniť veľkosť obrázka na %{percent}%"
       delete_image_button: Odstrániť obrázok
       toggle_image_grid: Prepnúť mriežku obrázkov

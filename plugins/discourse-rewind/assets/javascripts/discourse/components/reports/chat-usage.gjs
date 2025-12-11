@@ -4,6 +4,7 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import avatar from "discourse/helpers/avatar";
 import number from "discourse/helpers/number";
+import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 const BotMessage = <template>
@@ -137,11 +138,11 @@ export default class ChatUsage extends Component {
                     {{#each this.favoriteChannels as |channel|}}
                       <a
                         class="chat-channel-link"
-                        href={{concat "/chat/c/-/" channel.channel_id}}
+                        href={{getURL (concat "/chat/c/-/" channel.channel_id)}}
                       >
                         <span
                           class="chat-channel-link__name"
-                        >#{{channel.channel_name}}</span>
+                        >#{{channel.channel_slug}}</span>
                         <span class="chat-channel-link__count">
                           {{number channel.message_count}}
                         </span>
@@ -155,7 +156,9 @@ export default class ChatUsage extends Component {
             <div class="chat-message --right">
               <UserMessage @user={{this.currentUser}}>
                 <img
-                  src="/plugins/discourse-rewind/images/dancing_baby.gif"
+                  src={{getURL
+                    "/plugins/discourse-rewind/images/dancing_baby.gif"
+                  }}
                   alt={{i18n
                     "discourse_rewind.reports.chat_usage.dancing_baby_alt"
                   }}

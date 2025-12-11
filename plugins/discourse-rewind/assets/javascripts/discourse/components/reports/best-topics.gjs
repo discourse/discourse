@@ -28,7 +28,9 @@ export default class BestTopics extends Component {
               >
                 <span class="best-topics --rank"></span>
                 <span class="best-topics --rank"></span>
-                <h2 class="best-topics__header">{{topic.title}}</h2>
+                <h2 class="best-topics__header">{{replaceEmoji
+                    topic.title
+                  }}</h2>
                 <span class="best-topics__excerpt">
                   {{replaceEmoji (htmlSafe topic.excerpt)}}
                 </span>

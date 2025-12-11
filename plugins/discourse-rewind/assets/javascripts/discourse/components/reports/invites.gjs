@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import avatar from "discourse/helpers/bound-avatar-template";
 import number from "discourse/helpers/number";
+import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 export default class Invites extends Component {
@@ -103,7 +104,7 @@ export default class Invites extends Component {
               </div>
 
               <a
-                href={{concat "/u/" this.mostActiveInvitee.username}}
+                href={{getURL (concat "/u/" this.mostActiveInvitee.username)}}
                 class="guest-book__signature"
               >
                 {{avatar

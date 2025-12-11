@@ -406,6 +406,7 @@ de:
         no_users: "Keine Benutzernutzungsdaten gefunden"
         no_models: "Keine Modellnutzungsdaten gefunden"
         no_features: "Keine Funktionsnutzungsdaten gefunden"
+        total: "Gesamt"
         subheader_description: "Token sind die Basiseinheiten, die LLM zum Verstehen und Generieren von Text verwenden. Nutzungsdaten können sich auf die Kosten auswirken"
         stat_tooltips:
           total_requests: "Alle Anfragen an LLMs über Discourse"
@@ -714,7 +715,6 @@ de:
           reasoning_tokens: "Anzahl der für die Argumentation verwendeten Token"
           disable_temperature: "Temperatur deaktivieren (einige Denkmodelle unterstützen keine Temperatur)"
           disable_top_p: "Top P deaktivieren (einige Denkmodelle unterstützen Top P nicht)"
-          enable_responses_api: "Aktiviere die Antwort-API (bei bestimmten OpenAI-Modellen erforderlich)"
       related_topics:
         title: "Verwandte Themen"
         pill: "Verwandt"

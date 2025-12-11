@@ -11,6 +11,8 @@ class UserApiKeysController < ApplicationController
 
   AUTH_API_VERSION = 4
 
+  ALLOWED_PADDING_MODES = %w[pkcs1 oaep].freeze
+
   def new
     if request.head?
       head :ok, auth_api_version: AUTH_API_VERSION
@@ -90,10 +92,8 @@ class UserApiKeysController < ApplicationController
     public_key_str = (@client.public_key.presence || params[:public_key])
     public_key = OpenSSL::PKey::RSA.new(public_key_str)
 
-    # by default, Ruby uses `PKCS1_PADDING` here
-    # see https://docs.ruby-lang.org/en/3.2/OpenSSL/PKey/RSA.html#method-i-public_encrypt
-    # make sure that Node/OpenSSL can use the same padding in your implementation
-    @payload = Base64.encode64(public_key.public_encrypt(@payload))
+    validate_payload_size_for_oaep!(@payload, public_key)
+    @payload = Base64.encode64(rsa_encrypt(public_key, @payload))
 
     if scopes.include?("one_time_password")
       # encrypt one_time_password separately to bypass 128 chars encryption limit
@@ -218,6 +218,30 @@ class UserApiKeysController < ApplicationController
     otp = SecureRandom.hex
     Discourse.redis.setex "otp_#{otp}", 10.minutes, username
 
-    Base64.encode64(public_key.public_encrypt(otp))
+    Base64.encode64(rsa_encrypt(public_key, otp))
+  end
+
+  def rsa_encrypt(public_key, data)
+    # OAEP padding is recommended for new applications and required for FIPS 140-3 compliance.
+    # PKCS1 padding is kept as default for backwards compatibility with existing clients.
+    padding_mode = params[:padding] == "oaep" ? "oaep" : "pkcs1"
+    public_key.encrypt(data, { "rsa_padding_mode" => padding_mode })
+  end
+
+  def validate_payload_size_for_oaep!(payload, public_key)
+    return unless params[:padding] == "oaep"
+
+    # RSA-OAEP max payload = key_size_bytes - 2*hash_size_bytes - 2
+    # OpenSSL uses SHA-1 (20 bytes) by default for OAEP
+    key_size_bytes = public_key.n.num_bytes
+    max_payload_size = key_size_bytes - 2 * 20 - 2
+
+    if payload.bytesize > max_payload_size
+      raise Discourse::InvalidParameters.new(
+              "Payload too large for OAEP encryption with this key size. " \
+                "Maximum: #{max_payload_size} bytes, got: #{payload.bytesize} bytes. " \
+                "Try using a shorter nonce or a larger RSA key (minimum 2048-bit recommended).",
+            )
+    end
   end
 end

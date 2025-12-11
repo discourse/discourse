@@ -1034,11 +1034,6 @@ users:
   allow_likes_in_anonymous_mode:
     default: false
     client: true
-  anonymous_posting_min_trust_level:
-    default: 1
-    enum: "TrustLevelSetting"
-    client: true
-    hidden: true
   anonymous_posting_allowed_groups:
     default: "1|2|11" # auto group admins, moderators and trust_level_1
     type: group_list
@@ -1327,10 +1322,6 @@ posting:
     type: category
     default: ""
     area: "posts_and_topics"
-  shared_drafts_min_trust_level:
-    default: "staff"
-    enum: "TrustLevelAndStaffSetting"
-    hidden: true
   shared_drafts_allowed_groups:
     default: "1|2" # auto group admins and moderators
     type: group_list
@@ -1434,10 +1425,6 @@ posting:
   max_here_mentioned:
     default: 10
     area: "posts_and_topics"
-  min_trust_level_for_here_mention:
-    default: "2"
-    enum: "TrustLevelAndStaffSetting"
-    hidden: true
   here_mention_allowed_groups:
     default: "1|2|12" # auto group admins, moderators, trust_level_2
     mandatory_values: "1|2" # auto group admins, moderators
@@ -1569,10 +1556,6 @@ posting:
   approve_post_count:
     default: 0
     area: "posts_and_topics"
-  approve_unless_trust_level:
-    default: 0
-    enum: "TrustLevelSetting"
-    hidden: true
   approve_unless_allowed_groups:
     default: "1|2|10" # auto groups admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
@@ -1580,10 +1563,6 @@ posting:
     allow_any: false
     refresh: true
     area: "group_permissions"
-  approve_new_topics_unless_trust_level:
-    default: 0
-    enum: "TrustLevelSetting"
-    hidden: true
   approve_new_topics_unless_allowed_groups:
     default: "1|2|10" # auto groups admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
@@ -1678,10 +1657,6 @@ posting:
     default: 120
     max: 36500
     area: "posts_and_topics"
-  review_media_unless_trust_level:
-    default: 0
-    enum: "TrustLevelSetting"
-    hidden: true
   skip_review_media_groups:
     default: "1|2|10" # auto groups admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
@@ -1892,10 +1867,6 @@ email:
     default: false
     client: true
     area: "email"
-  email_in_min_trust:
-    default: 2
-    enum: "TrustLevelSetting"
-    hidden: true
   email_in_allowed_groups:
     default: "1|2|12" # auto group admins, moderators, trust_level_2
     mandatory_values: "1|2" # auto group admins, moderators
@@ -2283,11 +2254,6 @@ files:
     client: true
     default: true
   automatically_download_gravatars: true
-  allow_uploaded_avatars:
-    client: true
-    default: "0"
-    enum: "TrustLevelAndStaffAndDisabledSetting"
-    hidden: true
   uploaded_avatars_allowed_groups:
     default: "10"
     type: group_list
@@ -2445,10 +2411,6 @@ trust:
     default: 1
     enum: "TrustLevelSetting"
     area: "trust_levels"
-  min_trust_to_create_topic:
-    default: 0
-    enum: "TrustLevelSetting"
-    hidden: true
   create_topic_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
@@ -2456,10 +2418,6 @@ trust:
     allow_any: false
     refresh: true
     area: "group_permissions"
-  min_trust_to_edit_wiki_post:
-    default: 1
-    enum: "TrustLevelSetting"
-    hidden: true
   edit_wiki_post_allowed_groups:
     default: "1|2|11" # auto group admins, moderators, trust_level_1
     mandatory_values: "1|2" # auto group admins, moderators
@@ -2467,10 +2425,6 @@ trust:
     allow_any: false
     refresh: true
     area: "group_permissions"
-  min_trust_to_edit_post:
-    default: 0
-    enum: "TrustLevelSetting"
-    hidden: true
   edit_post_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
@@ -2478,10 +2432,6 @@ trust:
     allow_any: false
     refresh: true
     area: "group_permissions"
-  min_trust_to_allow_self_wiki:
-    default: 3
-    enum: "TrustLevelSetting"
-    hidden: true
   self_wiki_allowed_groups:
     default: "1|2|13" # auto group admins, moderators, trust_level_3
     mandatory_values: "1|2" # auto group admins, moderators
@@ -2489,10 +2439,6 @@ trust:
     allow_any: false
     refresh: true
     area: "group_permissions"
-  min_trust_to_send_email_messages:
-    default: "4"
-    enum: "TrustLevelAndStaffSetting"
-    hidden: true
   send_email_messages_allowed_groups:
     default: "1|2|14" # auto group admins, moderators, trust_level_4
     mandatory_values: "1|2" # auto group admins, moderators
@@ -2500,10 +2446,6 @@ trust:
     allow_any: false
     refresh: true
     area: "group_permissions"
-  min_trust_to_flag_posts:
-    default: 1
-    enum: "TrustLevelSetting"
-    hidden: true
   flag_post_allowed_groups:
     default: "1|2|11" # auto group admins, moderators, trust_level_1
     mandatory_values: "1|2" # auto group admins, moderators
@@ -2519,10 +2461,6 @@ trust:
     default: ""
     area: "flags"
     client: true
-  min_trust_to_post_links:
-    default: 0
-    enum: "TrustLevelSetting"
-    hidden: true
   post_links_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
@@ -2530,10 +2468,6 @@ trust:
     allow_any: false
     refresh: true
     area: "group_permissions"
-  min_trust_to_post_embedded_media:
-    default: 0
-    enum: "TrustLevelSetting"
-    hidden: true
   embedded_media_post_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
@@ -2541,11 +2475,6 @@ trust:
     allow_any: false
     refresh: true
     area: "group_permissions"
-  min_trust_level_to_allow_profile_background:
-    default: 0
-    client: true
-    enum: "TrustLevelSetting"
-    hidden: true
   profile_background_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
@@ -2553,11 +2482,6 @@ trust:
     allow_any: false
     refresh: true
     area: "group_permissions"
-  min_trust_level_to_allow_user_card_background:
-    default: 0
-    client: true
-    enum: "TrustLevelSetting"
-    hidden: true
   user_card_background_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
@@ -2565,10 +2489,6 @@ trust:
     allow_any: false
     refresh: true
     area: "group_permissions"
-  min_trust_level_to_allow_invite:
-    default: 2
-    enum: "TrustLevelSetting"
-    hidden: true
   invite_allowed_groups:
     default: "1|2|12" # auto group admins, moderators, trust_level_2
     mandatory_values: "1|2" # auto group admins, moderators
@@ -2576,11 +2496,6 @@ trust:
     allow_any: false
     refresh: true
     area: "group_permissions"
-  min_trust_level_to_allow_ignore:
-    default: 2
-    enum: "TrustLevelSetting"
-    client: true
-    hidden: true
   ignore_allowed_groups:
     default: "1|2|12" # auto group admins, moderators, trust_level_2
     mandatory_values: "1|2" # auto group admins, moderators
@@ -2672,11 +2587,6 @@ trust:
   tl3_links_no_follow:
     default: false
     client: true
-    area: "trust_levels"
-  tl4_delete_posts_and_topics:
-    default: false
-    client: true
-    hidden: true
     area: "trust_levels"
   delete_all_posts_and_topics_allowed_groups:
     default: "1|2" # auto group admins, moderators
@@ -4042,10 +3952,6 @@ user_api:
   push_api_secret_key:
     default: ""
     hidden: true
-  min_trust_level_for_user_api_key:
-    default: 0
-    enum: "TrustLevelSetting"
-    hidden: true
   user_api_key_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
@@ -4109,11 +4015,6 @@ tags:
     default: 20
     client: true
     area: "categories_and_tags"
-  min_trust_to_create_tag:
-    default: "3"
-    type: enum
-    enum: "TrustLevelAndStaffSetting"
-    hidden: true
   create_tag_allowed_groups:
     default: "1|2|13" # auto group admins, moderators, trust_level_3
     mandatory_values: "1|2" # auto group admins, moderators
@@ -4128,11 +4029,6 @@ tags:
     allow_any: false
     refresh: true
     area: "group_permissions"
-  min_trust_level_to_tag_topics:
-    default: "0"
-    enum: "TrustLevelAndStaffSetting"
-    client: true
-    hidden: true
   tag_topic_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators

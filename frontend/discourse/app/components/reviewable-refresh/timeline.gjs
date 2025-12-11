@@ -131,15 +131,19 @@ export default class ReviewableTimeline extends Component {
           if (!reviewedEvents.has(reviewedKey)) {
             // Determine icon based on score status
             let reviewIcon;
+            let titleKey;
             switch (score.status) {
               case 1: // approved
                 reviewIcon = "check";
+                titleKey = "review.timeline.approved_by";
                 break;
               case 2: // rejected
-                reviewIcon = "times";
+                reviewIcon = "xmark";
+                titleKey = "review.timeline.rejected_by";
                 break;
               case 3: // ignored
                 reviewIcon = "far-eye-slash";
+                titleKey = "review.timeline.ignored_by";
                 break;
               default:
                 reviewIcon = "check"; // fallback
@@ -150,10 +154,7 @@ export default class ReviewableTimeline extends Component {
               date: score.reviewed_at,
               user: score.reviewed_by,
               icon: reviewIcon,
-              titleKey: "review.timeline.reviewed_by",
-              description: score.reason
-                ? htmlSafe(`<p>${score.reason}</p>`)
-                : undefined,
+              titleKey,
             };
 
             events.push(reviewedEvent);
