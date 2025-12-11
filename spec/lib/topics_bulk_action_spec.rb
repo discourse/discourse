@@ -242,39 +242,44 @@ RSpec.describe TopicsBulkAction do
     end
 
     context "when the user can edit the topic" do
-      it "changes category and creates revision when setting enabled" do
-        SiteSetting.create_revision_on_bulk_topic_moves = true
-        old_category_id = topic.category_id
+      context "when create_revision_on_bulk_topic_moves is enabled" do
+        before { SiteSetting.create_revision_on_bulk_topic_moves = true }
 
-        topic_ids =
-          TopicsBulkAction.new(
-            topic.user,
-            [topic.id],
-            type: "change_category",
-            category_id: category.id,
-          ).perform!
+        it "changes category and creates revision" do
+          old_category_id = topic.category_id
 
-        expect(topic_ids).to eq([topic.id])
-        expect(topic.reload.category).to eq(category)
+          topic_ids =
+            TopicsBulkAction.new(
+              topic.user,
+              [topic.id],
+              type: "change_category",
+              category_id: category.id,
+            ).perform!
 
-        revision = topic.first_post.revisions.last
-        expect(revision.modifications).to eq({ "category_id" => [old_category_id, category.id] })
+          expect(topic_ids).to eq([topic.id])
+          expect(topic.reload.category).to eq(category)
+
+          revision = topic.first_post.revisions.last
+          expect(revision.modifications).to eq({ "category_id" => [old_category_id, category.id] })
+        end
       end
 
-      it "changes category without revision when setting disabled" do
-        SiteSetting.create_revision_on_bulk_topic_moves = false
+      context "when create_revision_on_bulk_topic_moves is disabled" do
+        before { SiteSetting.create_revision_on_bulk_topic_moves = false }
 
-        topic_ids =
-          TopicsBulkAction.new(
-            topic.user,
-            [topic.id],
-            type: "change_category",
-            category_id: category.id,
-          ).perform!
+        it "changes category without revision" do
+          topic_ids =
+            TopicsBulkAction.new(
+              topic.user,
+              [topic.id],
+              type: "change_category",
+              category_id: category.id,
+            ).perform!
 
-        expect(topic_ids).to eq([topic.id])
-        expect(topic.reload.category).to eq(category)
-        expect(topic.first_post.revisions.last).to be_nil
+          expect(topic_ids).to eq([topic.id])
+          expect(topic.reload.category).to eq(category)
+          expect(topic.first_post.revisions.last).to be_nil
+        end
       end
 
       it "does nothing when category stays the same" do
@@ -450,57 +455,65 @@ RSpec.describe TopicsBulkAction do
       topic.tags = [tag1, tag2]
     end
 
-    it "changes tags and creates new ones when permitted" do
-      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+    context "when the user can edit the topic" do
+      context "when permitted to create new tags" do
+        before { SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0] }
 
-      topic_ids =
-        TopicsBulkAction.new(
-          topic.user,
-          [topic.id],
-          type: "change_tags",
-          tags: ["newtag", tag1.name],
-        ).perform!
+        it "changes tags and creates new ones" do
+          topic_ids =
+            TopicsBulkAction.new(
+              topic.user,
+              [topic.id],
+              type: "change_tags",
+              tags: ["newtag", tag1.name],
+            ).perform!
 
-      expect(topic_ids).to eq([topic.id])
-      expect(topic.reload.tags.map(&:name)).to contain_exactly("newtag", tag1.name)
+          expect(topic_ids).to eq([topic.id])
+          expect(topic.reload.tags.map(&:name)).to contain_exactly("newtag", tag1.name)
+        end
+      end
+
+      context "when not permitted to create new tags" do
+        before { SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_4] }
+
+        it "changes to existing tags only" do
+          topic_ids =
+            TopicsBulkAction.new(
+              topic.user,
+              [topic.id],
+              type: "change_tags",
+              tags: ["newtag", tag1.name],
+            ).perform!
+
+          expect(topic_ids).to eq([topic.id])
+          expect(topic.reload.tags.map(&:name)).to contain_exactly(tag1.name)
+        end
+      end
+
+      it "removes all tags with empty array" do
+        topic_ids =
+          TopicsBulkAction.new(topic.user, [topic.id], type: "change_tags", tags: []).perform!
+
+        expect(topic_ids).to eq([topic.id])
+        expect(topic.reload.tags).to be_empty
+      end
     end
 
-    it "changes to existing tags only when can't create new ones" do
-      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+    context "when the user can't edit the topic" do
+      it "doesn't change the tags" do
+        Guardian.any_instance.expects(:can_edit?).returns(false)
 
-      topic_ids =
-        TopicsBulkAction.new(
-          topic.user,
-          [topic.id],
-          type: "change_tags",
-          tags: ["newtag", tag1.name],
-        ).perform!
+        topic_ids =
+          TopicsBulkAction.new(
+            topic.user,
+            [topic.id],
+            type: "change_tags",
+            tags: ["newtag", tag1.name],
+          ).perform!
 
-      expect(topic_ids).to eq([topic.id])
-      expect(topic.reload.tags.map(&:name)).to contain_exactly(tag1.name)
-    end
-
-    it "removes all tags with empty array" do
-      topic_ids =
-        TopicsBulkAction.new(topic.user, [topic.id], type: "change_tags", tags: []).perform!
-
-      expect(topic_ids).to eq([topic.id])
-      expect(topic.reload.tags).to be_empty
-    end
-
-    it "doesn't change tags when user can't edit topic" do
-      Guardian.any_instance.expects(:can_edit?).returns(false)
-
-      topic_ids =
-        TopicsBulkAction.new(
-          topic.user,
-          [topic.id],
-          type: "change_tags",
-          tags: ["newtag", tag1.name],
-        ).perform!
-
-      expect(topic_ids).to eq([])
-      expect(topic.reload.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name)
+        expect(topic_ids).to eq([])
+        expect(topic.reload.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name)
+      end
     end
   end
 
@@ -515,62 +528,70 @@ RSpec.describe TopicsBulkAction do
       topic.tags = [tag1, tag2]
     end
 
-    it "appends new and existing tags when permitted" do
-      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+    context "when the user can edit the topic" do
+      context "when permitted to create new tags" do
+        before { SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0] }
 
-      topic_ids =
-        TopicsBulkAction.new(
-          topic.user,
-          [topic.id],
-          type: "append_tags",
-          tags: [tag1.name, tag3.name, "newtag"],
-        ).perform!
+        it "appends new and existing tags" do
+          topic_ids =
+            TopicsBulkAction.new(
+              topic.user,
+              [topic.id],
+              type: "append_tags",
+              tags: [tag1.name, tag3.name, "newtag"],
+            ).perform!
 
-      expect(topic_ids).to eq([topic.id])
-      expect(topic.reload.tags.map(&:name)).to contain_exactly(
-        tag1.name,
-        tag2.name,
-        tag3.name,
-        "newtag",
-      )
+          expect(topic_ids).to eq([topic.id])
+          expect(topic.reload.tags.map(&:name)).to contain_exactly(
+            tag1.name,
+            tag2.name,
+            tag3.name,
+            "newtag",
+          )
+        end
+      end
+
+      context "when not permitted to create new tags" do
+        before { SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_4] }
+
+        it "appends only existing tags" do
+          topic_ids =
+            TopicsBulkAction.new(
+              topic.user,
+              [topic.id],
+              type: "append_tags",
+              tags: [tag3.name, "newtag"],
+            ).perform!
+
+          expect(topic_ids).to eq([topic.id])
+          expect(topic.reload.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name, tag3.name)
+        end
+      end
+
+      it "keeps existing tags when appending empty array" do
+        topic_ids =
+          TopicsBulkAction.new(topic.user, [topic.id], type: "append_tags", tags: []).perform!
+
+        expect(topic_ids).to eq([topic.id])
+        expect(topic.reload.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name)
+      end
     end
 
-    it "appends only existing tags when can't create new ones" do
-      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+    context "when the user can't edit the topic" do
+      it "doesn't change the tags" do
+        Guardian.any_instance.expects(:can_edit?).returns(false)
 
-      topic_ids =
-        TopicsBulkAction.new(
-          topic.user,
-          [topic.id],
-          type: "append_tags",
-          tags: [tag3.name, "newtag"],
-        ).perform!
+        topic_ids =
+          TopicsBulkAction.new(
+            topic.user,
+            [topic.id],
+            type: "append_tags",
+            tags: ["newtag", tag3.name],
+          ).perform!
 
-      expect(topic_ids).to eq([topic.id])
-      expect(topic.reload.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name, tag3.name)
-    end
-
-    it "keeps existing tags when appending empty array" do
-      topic_ids =
-        TopicsBulkAction.new(topic.user, [topic.id], type: "append_tags", tags: []).perform!
-
-      expect(topic_ids).to eq([topic.id])
-      expect(topic.reload.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name)
-    end
-
-    it "doesn't change tags when user can't edit topic" do
-      Guardian.any_instance.expects(:can_edit?).returns(false)
-
-      topic_ids =
-        TopicsBulkAction.new(
-          topic.user,
-          [topic.id],
-          type: "append_tags",
-          tags: ["newtag", tag3.name],
-        ).perform!
-
-      expect(topic_ids).to eq([])
-      expect(topic.reload.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name)
+        expect(topic_ids).to eq([])
+        expect(topic.reload.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name)
+      end
     end
   end
 
@@ -585,23 +606,27 @@ RSpec.describe TopicsBulkAction do
       TopicTag.create!(topic: topic, tag: tag2)
     end
 
-    it "removes all tags and updates tag counts" do
-      expect(tag1.reload.staff_topic_count).to eq(1)
+    context "when the user can edit the topic" do
+      it "removes all tags and updates tag counts" do
+        expect(tag1.reload.staff_topic_count).to eq(1)
 
-      topic_ids = TopicsBulkAction.new(topic.user, [topic.id], type: "remove_tags").perform!
+        topic_ids = TopicsBulkAction.new(topic.user, [topic.id], type: "remove_tags").perform!
 
-      expect(topic_ids).to eq([topic.id])
-      expect(topic.reload.tags).to be_empty
-      expect(tag1.reload.staff_topic_count).to eq(0)
+        expect(topic_ids).to eq([topic.id])
+        expect(topic.reload.tags).to be_empty
+        expect(tag1.reload.staff_topic_count).to eq(0)
+      end
     end
 
-    it "doesn't remove tags when user can't edit topic" do
-      Guardian.any_instance.expects(:can_edit?).returns(false)
+    context "when the user can't edit the topic" do
+      it "doesn't remove the tags" do
+        Guardian.any_instance.expects(:can_edit?).returns(false)
 
-      topic_ids = TopicsBulkAction.new(topic.user, [topic.id], type: "remove_tags").perform!
+        topic_ids = TopicsBulkAction.new(topic.user, [topic.id], type: "remove_tags").perform!
 
-      expect(topic_ids).to eq([])
-      expect(topic.reload.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name)
+        expect(topic_ids).to eq([])
+        expect(topic.reload.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name)
+      end
     end
   end
 end
