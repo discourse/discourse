@@ -37,6 +37,14 @@ export const ADMIN_NAV_MAP = [
         icon: "gear",
       },
       {
+        name: "admin_review",
+        route: "review",
+        label: "sidebar.sections.community.links.review.content",
+        description: "sidebar.sections.community.links.review.title",
+        icon: "flag",
+        moderator: true,
+      },
+      {
         name: "admin_whats_new",
         route: "admin.whatsNew",
         label: "admin.config.whats_new.title",

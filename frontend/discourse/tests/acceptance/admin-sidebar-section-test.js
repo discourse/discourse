@@ -4,7 +4,11 @@ import { AUTO_GROUPS } from "discourse/lib/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import PreloadStore from "discourse/lib/preload-store";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  loggedInUser,
+  publishToMessageBus,
+} from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 acceptance("Admin Sidebar - Sections", function (needs) {
@@ -99,6 +103,32 @@ acceptance("Admin Sidebar - Sections", function (needs) {
     assert
       .dom(".admin-reports-list .admin-section-landing-item__content")
       .exists({ count: 1 }, "filter is case insensitive");
+  });
+
+  test("review link is shown in root section and displays badge count", async function (assert) {
+    await visit("/admin");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='admin-root'] .sidebar-section-link[data-link-name='admin_review']"
+      )
+      .exists("review link is displayed in the root section");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='admin-root'] .sidebar-section-link[data-link-name='admin_review'] .sidebar-section-link-content-badge"
+      )
+      .doesNotExist("badge is not shown when there are no pending reviewables");
+
+    await publishToMessageBus(`/reviewable_counts/${loggedInUser().id}`, {
+      reviewable_count: 42,
+    });
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='admin-root'] .sidebar-section-link[data-link-name='admin_review'] .sidebar-section-link-content-badge"
+      )
+      .hasText("42 pending", "displays the pending reviewable count");
   });
 });
 

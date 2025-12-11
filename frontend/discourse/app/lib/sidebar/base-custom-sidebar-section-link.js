@@ -71,6 +71,11 @@ export default class BaseCustomSidebarSectionLink {
   get contentComponent() {}
 
   /**
+   * @returns {string} Text for the badge within the link
+   */
+  get badgeText() {}
+
+  /**
    * @returns {Object} Arguments to pass to the content component
    */
   get contentComponentArgs() {}

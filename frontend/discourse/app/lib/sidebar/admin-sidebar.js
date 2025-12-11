@@ -8,6 +8,7 @@ import PreloadStore from "discourse/lib/preload-store";
 import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-panel";
 import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-section";
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
+import { getReviewBadgeText } from "discourse/lib/sidebar/helpers/review-badge-helper";
 import { ADMIN_PANEL } from "discourse/lib/sidebar/panels";
 import { escapeExpression } from "discourse/lib/utilities";
 import I18n, { i18n } from "discourse-i18n";
@@ -102,6 +103,12 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
         navigation: [],
       }
     );
+  }
+
+  get badgeText() {
+    if (this.adminSidebarNavLink.name === "admin_review") {
+      return getReviewBadgeText(this.currentUser);
+    }
   }
 
   get suffixType() {
