@@ -66,6 +66,12 @@ es:
         text:
           label: Texto
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Categorías
+            tags:
+              label: Etiquetas
         not_found: No se ha podido encontrar el activador «%{trigger}» para la automatización «%{automation}», asegúrate de que el plugin asociado está instalado
         user_badge_granted:
           fields:

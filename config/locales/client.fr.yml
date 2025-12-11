@@ -2868,6 +2868,7 @@ fr:
         zoom_out: "Réduire la taille de l'image"
         zoom_in: "Augmenter la taille de l'image"
         remove: "Supprimer l'image"
+      image: "image"
       image_scale_button: "Mettre l'image à l'échelle de %{percent} %"
       delete_image_button: Supprimer l'image
       toggle_image_grid: Activer/désactiver la grille des images

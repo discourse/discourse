@@ -2772,6 +2772,7 @@ zh_CN:
         remove: "移除图片"
         add_to_grid: "添加到网格"
         move_outside_grid: "移出网格"
+      image: "图片"
       grid_label: "这将以网格形式显示"
       image_scale_button: "将图片缩放至 %{percent}%"
       delete_image_button: 删除图片

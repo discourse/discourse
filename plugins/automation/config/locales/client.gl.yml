@@ -27,6 +27,12 @@ gl:
         text:
           label: Texto
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Categorías
+            tags:
+              label: Etiquetas
         user_badge_granted:
           fields:
             badge:

@@ -68,6 +68,12 @@ he:
         text:
           label: טקסט
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: קטגוריות
+            tags:
+              label: תגיות
         not_found: לא ניתן למצוא את גורם ההקפצה `%{trigger}` לאוטומציה `%{automation}`, יש לוודא שהתוסף המשויך מותקן
         user_badge_granted:
           fields:
