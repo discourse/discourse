@@ -16,6 +16,7 @@ export default apiInitializer((api) => {
     route: "admin.dashboardSentiment",
     label: "discourse_ai.sentiments.sidebar.overview",
     icon: "chart-column",
+    moderator: true,
   });
   api.addAdminSidebarSectionLink("reports", {
     name: "sentiment_analysis",
@@ -23,5 +24,6 @@ export default apiInitializer((api) => {
     routeModels: ["sentiment_analysis"],
     label: "discourse_ai.sentiments.sidebar.analysis",
     icon: "chart-pie",
+    moderator: true,
   });
 });
