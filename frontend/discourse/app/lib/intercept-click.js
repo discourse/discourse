@@ -1,8 +1,13 @@
+import EmbedMode from "discourse/lib/embed-mode";
 import DiscourseURL from "discourse/lib/url";
 
 const MOUSE_EVENT_PRIMARY_BUTTON_ID = 0;
 
 export function wantsNewWindow(e) {
+  if (EmbedMode.enabled) {
+    return true;
+  }
+
   return (
     e.defaultPrevented ||
     e.isDefaultPrevented?.() ||

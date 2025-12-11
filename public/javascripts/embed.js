@@ -38,6 +38,10 @@
     queryParams.class_name = DE.className;
   }
 
+  if (DE.fullApp) {
+    queryParams.full_app = "true";
+  }
+
   var src = DE.discourseUrl + "embed/comments";
   var keys = Object.keys(queryParams);
   if (keys.length > 0) {
@@ -57,7 +61,10 @@
   iframe.id = "discourse-embed-frame";
   iframe.width = "100%";
   iframe.frameBorder = "0";
-  iframe.scrolling = "no";
+  iframe.scrolling = DE.fullApp ? "yes" : "no";
+  if (DE.fullApp) {
+    iframe.height = DE.embedHeight || "600px";
+  }
   iframe.referrerPolicy =
     DE.discourseReferrerPolicy || "no-referrer-when-downgrade";
   comments.appendChild(iframe);
