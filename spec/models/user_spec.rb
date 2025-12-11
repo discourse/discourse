@@ -2134,7 +2134,7 @@ RSpec.describe User do
           status: Reviewable.statuses[:approved],
         )
 
-        expect(user.number_of_rejected_posts).to eq(0)
+        expect(user.number_of_rejected_posts.to_i).to eq(0)
       end
     end
 

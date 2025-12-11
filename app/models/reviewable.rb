@@ -468,11 +468,10 @@ class Reviewable < ActiveRecord::Base
                 :primary_email,
                 { topic: :category },
                 :user_histories,
-                :rejected_posts,
                 :user_custom_fields,
               ],
             },
-            { target_created_by: :rejected_posts },
+            { target_created_by: [:user_custom_fields] },
             :reviewable_histories,
           )
           .includes(reviewable_scores: { user: :user_stat, meta_topic: :posts })
