@@ -483,7 +483,8 @@ RSpec.configure do |config|
 
     config.before(:each, type: :system) do |example|
       # Only set ENV["EMBER_RAISE_ON_DEPRECATION"] if not already set
-      if ENV["EMBER_RAISE_ON_DEPRECATION"].nil? && example_file_path = example.metadata[:file_path]
+      if ENV["EMBER_RAISE_ON_DEPRECATION"].nil? &&
+           example_file_path = example.metadata[:rerun_file_path]
         # Check if the example is from a plugin
         if example_file_path.include?("/plugins/")
           # Extract plugin directory name from path
