@@ -603,8 +603,8 @@ importers:
         specifier: ^5.44.1
         version: 5.44.1
       testem:
-        specifier: ^3.16.0
-        version: 3.16.0(handlebars@4.7.8)(underscore@1.13.7)
+        specifier: ^3.17.0
+        version: 3.17.0(handlebars@4.7.8)(underscore@1.13.7)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -2773,8 +2773,8 @@ packages:
   '@types/connect@3.4.38':
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
 
-  '@types/cors@2.8.18':
-    resolution: {integrity: sha512-nX3d0sxJW41CqQvfOzVG1NCTXfFDrDWIghCZncpHeWlVFd81zxB/DLhg7avFg6eHLCRX7ckBmoIIcqa++upvJA==}
+  '@types/cors@2.8.19':
+    resolution: {integrity: sha512-mFNylyeyqN93lfe/9CSxOGREz8cpzAhH+E93xJ4xWQf62V8sQ/24reV2nyzUWM6H6Xji+GGHpkbLe7pVoUEskg==}
 
   '@types/deep-eql@4.0.2':
     resolution: {integrity: sha512-c9h9dVVMigMPc4bwTvC5dxqtqJZwQPePsWjPlpSOnojbor6pGqdk541lfA7AqFQr5pB1BRdq0juY9db81BwyFw==}
@@ -3025,6 +3025,10 @@ packages:
 
   '@xmldom/xmldom@0.8.10':
     resolution: {integrity: sha512-2WALfTl4xo2SkGCYRt6rDTFfk9R1czmBvUQy12gK2KuRKIpWEhcbbzy8EZXtz/jkRqHX8bFEc6FC1HjX4TUWYw==}
+    engines: {node: '>=10.0.0'}
+
+  '@xmldom/xmldom@0.8.11':
+    resolution: {integrity: sha512-cQzWCtO6C8TQiYl1ruKNn2U6Ao4o4WBBcbL61yJl84x+j5sOWWFU9X7DpND8XZG3daDppSsigMdfAIl2upQBRw==}
     engines: {node: '>=10.0.0'}
 
   '@xtuc/ieee754@1.2.0':
@@ -6130,6 +6134,10 @@ packages:
     resolution: {integrity: sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g==}
     hasBin: true
 
+  js-yaml@3.14.2:
+    resolution: {integrity: sha512-PMSmkqxr106Xa156c2M265Z+FTrPl+oxd/rgOQy2tijQeK5TxQ43psO1ZCwhVOSdnn+RzkzlRz/eY4BgJBYVpg==}
+    hasBin: true
+
   js-yaml@4.1.1:
     resolution: {integrity: sha512-qQKT4zQxXl8lLwBtHMWwaTcGfFOZviOJet3Oy/xmGk2gZH677CJM9EvtfdSkgWcATZhj/55JZ0rmy3myCT5lsA==}
     hasBin: true
@@ -8472,6 +8480,11 @@ packages:
 
   testem@3.16.0:
     resolution: {integrity: sha512-TKQ3CuG/u+vDa7IUQgRQHN753wjDlgYMWE45KF5WkXyWjTNxXHPrY0qPBmHWI+kDYWc3zsJqzbS7pdzt5sc33A==}
+    engines: {node: '>= 7.*'}
+    hasBin: true
+
+  testem@3.17.0:
+    resolution: {integrity: sha512-j91I0w9pCVg6P1NU95gUsAujd7RBuAZGcwqQiB0smmXFZvRLaFZ+yZoTE/qK/QRl/x6GBNckM+GDDU59KsHsJg==}
     engines: {node: '>= 7.*'}
     hasBin: true
 
@@ -11436,7 +11449,7 @@ snapshots:
     dependencies:
       '@types/node': 25.0.0
 
-  '@types/cors@2.8.18':
+  '@types/cors@2.8.19':
     dependencies:
       '@types/node': 25.0.0
 
@@ -11774,6 +11787,8 @@ snapshots:
       '@xtuc/long': 4.2.2
 
   '@xmldom/xmldom@0.8.10': {}
+
+  '@xmldom/xmldom@0.8.11': {}
 
   '@xtuc/ieee754@1.2.0': {}
 
@@ -14037,7 +14052,7 @@ snapshots:
 
   engine.io@6.6.4:
     dependencies:
-      '@types/cors': 2.8.18
+      '@types/cors': 2.8.19
       '@types/node': 25.0.0
       accepts: 1.3.8
       base64id: 2.0.0
@@ -15808,6 +15823,11 @@ snapshots:
   js-tokens@4.0.0: {}
 
   js-yaml@3.14.1:
+    dependencies:
+      argparse: 1.0.10
+      esprima: 4.0.1
+
+  js-yaml@3.14.2:
     dependencies:
       argparse: 1.0.10
       esprima: 4.0.1
@@ -18412,7 +18432,7 @@ snapshots:
   tap-parser@7.0.0:
     dependencies:
       events-to-array: 1.1.2
-      js-yaml: 3.14.1
+      js-yaml: 3.14.2
       minipass: 2.9.0
 
   tapable@2.3.0: {}
@@ -18492,6 +18512,90 @@ snapshots:
       glob: 7.2.3
       http-proxy: 1.18.1(patch_hash=ymp5amxobtv5gnuhukua2wla6y)
       js-yaml: 3.14.1
+      lodash: 4.17.21
+      mkdirp: 3.0.1
+      mustache: 4.2.0
+      node-notifier: 10.0.1
+      npmlog: 6.0.2
+      printf: 0.6.1
+      rimraf: 3.0.2
+      socket.io: 4.8.1
+      spawn-args: 0.2.0
+      styled_string: 0.0.1
+      tap-parser: 7.0.0
+      tmp: 0.0.33
+    transitivePeerDependencies:
+      - arc-templates
+      - atpl
+      - babel-core
+      - bracket-template
+      - bufferutil
+      - coffee-script
+      - debug
+      - dot
+      - dust
+      - dustjs-helpers
+      - dustjs-linkedin
+      - eco
+      - ect
+      - ejs
+      - haml-coffee
+      - hamlet
+      - hamljs
+      - handlebars
+      - hogan.js
+      - htmling
+      - jade
+      - jazz
+      - jqtpl
+      - just
+      - liquid-node
+      - liquor
+      - marko
+      - mote
+      - nunjucks
+      - plates
+      - pug
+      - qejs
+      - ractive
+      - razor-tmpl
+      - react
+      - react-dom
+      - slm
+      - squirrelly
+      - supports-color
+      - swig
+      - swig-templates
+      - teacup
+      - templayed
+      - then-jade
+      - then-pug
+      - tinyliquid
+      - toffee
+      - twig
+      - twing
+      - underscore
+      - utf-8-validate
+      - vash
+      - velocityjs
+      - walrus
+      - whiskers
+
+  testem@3.17.0(handlebars@4.7.8)(underscore@1.13.7):
+    dependencies:
+      '@xmldom/xmldom': 0.8.11
+      backbone: 1.6.1
+      bluebird: 3.7.2
+      charm: 1.0.2
+      commander: 2.20.3
+      compression: 1.8.1
+      consolidate: 0.16.0(handlebars@4.7.8)(lodash@4.17.21)(mustache@4.2.0)(underscore@1.13.7)
+      execa: 1.0.0
+      express: 4.22.1
+      fireworm: 0.7.2
+      glob: 7.2.3
+      http-proxy: 1.18.1(patch_hash=ymp5amxobtv5gnuhukua2wla6y)
+      js-yaml: 3.14.2
       lodash: 4.17.21
       mkdirp: 3.0.1
       mustache: 4.2.0
