@@ -136,6 +136,7 @@ en:
           replies: Replies to Posts
           mentions: Mentions
           topics_with_new_users: Topics with New Users
+          your_contributions_helped: your contributions helped
         time_of_day_activity:
           title: Daily Activity Rhythm
           play_button: Play your activity as sound

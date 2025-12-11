@@ -1151,6 +1151,7 @@ class Topic < ActiveRecord::Base
         topic_id: self.id,
         silent: opts[:silent],
         skip_validations: true,
+        skip_guardian: opts[:skip_guardian],
         custom_fields: opts[:custom_fields],
         import_mode: opts[:import_mode],
       )
@@ -1209,13 +1210,14 @@ class Topic < ActiveRecord::Base
       topic_user = topic_allowed_users.find_by(user_id: user.id)
 
       if topic_user
+        topic_user.destroy
+
         if user.id == removed_by&.id
-          add_small_action(removed_by, "user_left", user.username)
+          add_small_action(removed_by, "user_left", user.username, skip_guardian: true)
         else
-          add_small_action(removed_by, "removed_user", user.username)
+          add_small_action(removed_by, "removed_user", user.username, skip_guardian: true)
         end
 
-        topic_user.destroy
         MessageBus.publish("/topic/#{id}", { type: "remove_allowed_user" }, user_ids: [user.id])
         return true
       end

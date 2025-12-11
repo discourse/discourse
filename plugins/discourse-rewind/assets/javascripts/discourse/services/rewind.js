@@ -12,6 +12,10 @@ export default class Rewind extends Service {
   @tracked
   _isDisabled = this.currentUser?.user_option?.discourse_rewind_disabled;
 
+  get active() {
+    return this.currentUser?.is_rewind_active;
+  }
+
   get disabled() {
     return this._isDisabled ?? false;
   }

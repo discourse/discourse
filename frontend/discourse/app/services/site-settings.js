@@ -6,7 +6,8 @@ import i18n from "discourse-i18n";
 export function createSiteSettingsFromPreloaded(
   siteSettings,
   themeSiteSettingOverrides,
-  currentUser
+  currentUser,
+  upcomingChanges
 ) {
   const settings = new TrackedObject(siteSettings);
 
@@ -23,17 +24,18 @@ export function createSiteSettingsFromPreloaded(
     settings.themeSiteSettingOverrides = themeSiteSettingOverrides;
   }
 
-  if (currentUser?.upcoming_changes) {
-    for (const [key, value] of Object.entries(currentUser.upcoming_changes)) {
+  if (upcomingChanges) {
+    for (const [key, value] of Object.entries(upcomingChanges)) {
       settings[key] = value;
     }
     // eslint-disable-next-line no-console
     console.debug(
       "[SiteSettings] Overriding site settings with upcoming changes based on user group permissions:",
-      currentUser.upcoming_changes
+      upcomingChanges
     );
 
-    settings.currentUserUpcomingChanges = currentUser.upcoming_changes;
+    // Includes upcoming changes which apply to the anon user (Everyone changes)
+    settings.currentUserUpcomingChanges = upcomingChanges;
   }
 
   // localize locale names here as they are not localized in the backend
@@ -76,7 +78,8 @@ export default class SiteSettingsService {
     return createSiteSettingsFromPreloaded(
       PreloadStore.get("siteSettings"),
       PreloadStore.get("themeSiteSettingOverrides"),
-      PreloadStore.get("currentUser")
+      PreloadStore.get("currentUser"),
+      PreloadStore.get("upcomingChanges")
     );
   }
 }

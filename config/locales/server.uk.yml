@@ -5292,6 +5292,14 @@ uk:
       review_by: "Відгук від"
       pr_summary: "%{commits} фіксує змінені файли %{changed_files} з додаванням %{additions} та вилученням %{deletions}"
       no_description: "Зробіть свій внесок у розвиток %{repo} , створивши обліковий запис на GitHub."
+      pr_title:
+        default: "Запити до злиття"
+        draft: "Чернетка запиту на злиття"
+        open: "Відкрити запит на злиття"
+        approved: "Схвалений запит на злиття"
+        changes_requested: "Запитані зміни"
+        merged: "Об'єднаний запит на злиття"
+        closed: "Закритий запит на злиття"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} згадав вас у "%{topic}" - %{site_title}'
@@ -5339,9 +5347,13 @@ uk:
     seed_data_topic_deleted: "Тему початкових даних видалено"
     upcoming_changes:
       log_manually_toggled: "Перемикається користувачем вручну"
+      log_promoted: >
+        Ця майбутня зміна досягла статусу "%{change_status}", тому її було автоматично ввімкнено на вашому сайті. Дивіться <a href="%{base_path}/admin/config/upcoming-changes">сторінку майбутніх змін</a> для більш детальної інформації.
   reviewables:
     already_handled: "Дякуємо, але ми вже переглянули цей допис і вирішили, що його не потрібно знову позначати."
     already_handled_and_user_not_exist: "Дякую, але хтось вже переглянув, і цього користувача більше не існує."
+    post_deleted_by_author: "Допис був видалений автором"
+    post_restored_by_author: "Автор відновив публікацію"
     priorities:
       low: "Низький"
       medium: "Сиредній"
