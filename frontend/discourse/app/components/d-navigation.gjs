@@ -324,7 +324,6 @@ export default class DNavigation extends Component {
           tag=this.tag
         }}
       />
-      here
       <CreateTopicButton
         @canCreateTopic={{this.canCreateTopic}}
         @action={{this.clickCreateTopicButton}}
