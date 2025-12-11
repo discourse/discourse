@@ -5567,6 +5567,13 @@ en:
         changes_requested: "Changes Requested"
         merged: "Merged Pull Request"
         closed: "Closed Pull Request"
+      status_date:
+        open: "opened"
+        draft: "drafted"
+        approved: "approved"
+        changes_requested: "changes requested"
+        merged: "merged"
+        closed: "closed"
 
   discourse_push_notifications:
     popup:
@@ -5894,3 +5901,6 @@ en:
 
   discourse_id:
     already_registered: "This site is already registered with Discourse ID"
+    errors:
+      not_configured: "Discourse ID is not configured. Please enable Discourse ID first."
+      regenerate_failed: "Failed to regenerate credentials. Please try again later."

@@ -2864,6 +2864,7 @@ pt:
         zoom_out: "Diminuir tamanho da imagem"
         zoom_in: "Aumentar tamanho da imagem"
         remove: "Remover imagem"
+      image: "imagem"
       image_scale_button: "Escalar imagem para %{percent}%"
       delete_image_button: Excluir Imagem
       toggle_image_grid: Alternar grelha da imagem

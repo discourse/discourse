@@ -2095,6 +2095,7 @@ vi:
       ignore: "Bỏ qua"
       image_alt_text:
         aria_label: Văn bản thay thế cho hình ảnh
+      image: "hình ảnh"
       delete_image_button: Xoá ảnh
     notifications:
       tooltip:

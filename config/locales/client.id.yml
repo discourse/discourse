@@ -1680,6 +1680,7 @@ id:
         shared_draft:
           label: "Konsep Bersama"
       ignore: "Abaikan"
+      image: "gambar"
       toggle_image_grid: Beralih kisi gambar
     notifications:
       tooltip:

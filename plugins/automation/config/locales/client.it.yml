@@ -66,6 +66,12 @@ it:
         text:
           label: Testo
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Categorie
+            tags:
+              label: Etichette
         not_found: 'Impossibile trovare l''azione di attivazione `%{trigger}` per l''automazione `%{automation}`: verifica che il plugin associato sia installato'
         user_badge_granted:
           fields:
