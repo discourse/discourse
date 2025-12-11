@@ -466,9 +466,6 @@ export default class ProsemirrorTextManipulation {
       inOrderedList: inNode(this.view.state, this.schema.nodes.ordered_list),
       inCodeBlock: inNode(this.view.state, this.schema.nodes.code_block),
       inBlockquote: inNode(this.view.state, this.schema.nodes.blockquote),
-      inWrap:
-        inNode(this.view.state, this.schema.nodes.wrap_block) ||
-        inNode(this.view.state, this.schema.nodes.wrap_inline),
       inHeading: !!activeHeadingLevel,
       inHeadingLevel: activeHeadingLevel,
       inParagraph: inNode(this.view.state, this.schema.nodes.paragraph),

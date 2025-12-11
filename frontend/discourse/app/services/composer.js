@@ -847,11 +847,17 @@ export default class ComposerService extends Service {
 
   @action
   toggleWrap(toolbarEvent) {
+    const initialAttributes = toolbarEvent.state?.inWrap
+      ? toolbarEvent.state.wrapAttributes || ""
+      : "";
+
     this.modal.show(WrapAttributesModal, {
       model: {
-        initialAttributes: "",
+        initialAttributes,
         onApply: (attributesString) => {
-          if (toolbarEvent.commands?.insertWrap) {
+          if (toolbarEvent.state?.inWrap) {
+            toolbarEvent.commands?.updateWrap(attributesString);
+          } else if (toolbarEvent.commands?.insertWrap) {
             toolbarEvent.commands.insertWrap(
               parseAttributesString(attributesString)
             );
@@ -859,14 +865,16 @@ export default class ComposerService extends Service {
             const wrapTag = attributesString.trim()
               ? `[wrap ${attributesString}]`
               : "[wrap]";
-            const selected = toolbarEvent.selected;
-            if (selected && selected.value) {
-              toolbarEvent.addText(`${wrapTag}\n${selected.value}\n[/wrap]`);
-            } else {
-              toolbarEvent.addText(`${wrapTag}\n\n[/wrap]`);
-            }
+            toolbarEvent.applySurround(
+              `${wrapTag}\n`,
+              "\n[/wrap]",
+              "wrap_text"
+            );
           }
         },
+        onRemove: toolbarEvent.state?.inWrap
+          ? () => toolbarEvent.commands?.removeWrap()
+          : undefined,
       },
     });
   }

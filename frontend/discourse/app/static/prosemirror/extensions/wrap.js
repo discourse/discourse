@@ -116,7 +116,79 @@ const extension = {
         dispatch?.(tr);
         return true;
       },
+
+    updateWrap: (attributesString) => (state, dispatch) => {
+      const { $from } = state.selection;
+
+      for (let depth = $from.depth; depth >= 0; depth--) {
+        const node = $from.node(depth);
+        if (
+          node.type.name === "wrap_block" ||
+          node.type.name === "wrap_inline"
+        ) {
+          const pos = $from.before(depth);
+          const newAttrs = parseAttributesString(attributesString);
+          const tr = state.tr.setNodeMarkup(pos, null, { data: newAttrs });
+          dispatch?.(tr);
+          return true;
+        }
+      }
+
+      return false;
+    },
+
+    removeWrap: () => (state, dispatch) => {
+      const { $from } = state.selection;
+
+      for (let depth = $from.depth; depth >= 0; depth--) {
+        const node = $from.node(depth);
+        if (
+          node.type.name === "wrap_block" ||
+          node.type.name === "wrap_inline"
+        ) {
+          const pos = $from.before(depth);
+          const tr = state.tr;
+
+          if (node.content.size === 0) {
+            // Empty wrap, just delete it
+            tr.delete(pos, pos + node.nodeSize);
+          } else {
+            // Replace wrap with its content
+            tr.replaceWith(pos, pos + node.nodeSize, node.content);
+          }
+
+          dispatch?.(tr);
+          return true;
+        }
+      }
+
+      return false;
+    },
   }),
+
+  state: ({ utils, schema }, state) => {
+    const inWrap =
+      utils.inNode(state, schema.nodes.wrap_block) ||
+      utils.inNode(state, schema.nodes.wrap_inline);
+
+    if (!inWrap) {
+      return { inWrap: false };
+    }
+
+    const { $from } = state.selection;
+    for (let depth = $from.depth; depth >= 0; depth--) {
+      const node = $from.node(depth);
+      if (node.type.name === "wrap_block" || node.type.name === "wrap_inline") {
+        return {
+          inWrap: true,
+          wrapAttributes: serializeAttributes(node.attrs.data || {}),
+        };
+      }
+    }
+
+    return { inWrap: false };
+  },
+
   nodeSpec: {
     wrap_block: {
       content: "block+",

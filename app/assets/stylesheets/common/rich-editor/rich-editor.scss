@@ -17,7 +17,7 @@
 
   > div:first-child,
   > details:first-child {
-    margin-top: 0.5rem;
+    margin-top: var(--space-4);
 
     // This is hacky, but helps having the leading gapcursor at the right position
     &.ProseMirror-gapcursor {
