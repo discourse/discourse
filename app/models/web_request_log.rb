@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class BrowserPageView < ActiveRecord::Base
+class WebRequestLog < ActiveRecord::Base
   self.primary_key = nil
 
   belongs_to :user, optional: true
@@ -24,13 +24,13 @@ class BrowserPageView < ActiveRecord::Base
       created_at: Time.current,
     )
   rescue => e
-    Discourse.warn_exception(e, message: "Failed to log browser page view")
+    Discourse.warn_exception(e, message: "Failed to log web request")
   end
 end
 
 # == Schema Information
 #
-# Table name: browser_page_views
+# Table name: web_request_logs
 #
 #  http_status  :integer
 #  ip_address   :inet
@@ -49,8 +49,8 @@ end
 #
 # Indexes
 #
-#  index_browser_page_views_on_created_at  (created_at)
-#  index_browser_page_views_on_ip_address  (ip_address)
-#  index_browser_page_views_on_topic_id    (topic_id)
-#  index_browser_page_views_on_user_id     (user_id)
+#  index_web_request_logs_on_created_at  (created_at)
+#  index_web_request_logs_on_ip_address  (ip_address)
+#  index_web_request_logs_on_topic_id    (topic_id)
+#  index_web_request_logs_on_user_id     (user_id)
 #

@@ -49,37 +49,37 @@ RSpec.describe "request tracker" do
     end
   end
 
-  context "when browser page view logging is enabled" do
-    before { SiteSetting.enable_browser_page_view_logging = true }
+  context "when web request logging is enabled" do
+    before { SiteSetting.enable_web_request_logging = true }
 
-    it "logs browser page views for API requests" do
+    it "logs web requests for API requests" do
       expect {
         get "/u/#{api_key.user.username}.json", headers: { HTTP_API_KEY: api_key.key }
-      }.to change { BrowserPageView.count }.by(1)
+      }.to change { WebRequestLog.count }.by(1)
 
       expect(response.status).to eq(200)
 
-      view = BrowserPageView.order(:created_at).last
-      expect(view.is_api).to eq(true)
-      expect(view.http_status).to eq(200)
-      expect(view.path).to eq("/u/#{api_key.user.username}.json")
-      expect(view.route).to eq("users#show")
-      expect(view.ip_address).to be_present
+      log = WebRequestLog.order(:created_at).last
+      expect(log.is_api).to eq(true)
+      expect(log.http_status).to eq(200)
+      expect(log.path).to eq("/u/#{api_key.user.username}.json")
+      expect(log.route).to eq("users#show")
+      expect(log.ip_address).to be_present
     end
 
-    it "logs browser page views for user API requests" do
+    it "logs web requests for user API requests" do
       expect {
         get "/session/current.json", headers: { HTTP_USER_API_KEY: user_api_key.key }
-      }.to change { BrowserPageView.count }.by(1)
+      }.to change { WebRequestLog.count }.by(1)
 
       expect(response.status).to eq(200)
 
-      view = BrowserPageView.order(:created_at).last
-      expect(view.is_user_api).to eq(true)
-      expect(view.route).to eq("session#current")
+      log = WebRequestLog.order(:created_at).last
+      expect(log.is_user_api).to eq(true)
+      expect(log.route).to eq("session#current")
     end
 
-    it "logs browser page views for HTML page requests" do
+    it "logs web requests for HTML page requests" do
       user = Fabricate(:user)
 
       expect {
@@ -88,18 +88,18 @@ RSpec.describe "request tracker" do
               "HTTP_USER_AGENT" =>
                 "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
             }
-      }.to change { BrowserPageView.count }.by(1)
+      }.to change { WebRequestLog.count }.by(1)
 
       expect(response.status).to eq(200)
 
-      view = BrowserPageView.order(:created_at).last
-      expect(view.is_api).to eq(false)
-      expect(view.is_crawler).to eq(false)
-      expect(view.path).to eq("/u/#{user.username}")
-      expect(view.route).to eq("users#show")
+      log = WebRequestLog.order(:created_at).last
+      expect(log.is_api).to eq(false)
+      expect(log.is_crawler).to eq(false)
+      expect(log.path).to eq("/u/#{user.username}")
+      expect(log.route).to eq("users#show")
     end
 
-    it "logs crawler page views" do
+    it "logs crawler requests" do
       user = Fabricate(:user)
 
       expect {
@@ -107,11 +107,11 @@ RSpec.describe "request tracker" do
             headers: {
               "HTTP_USER_AGENT" => "Googlebot/2.1 (+http://www.google.com/bot.html)",
             }
-      }.to change { BrowserPageView.count }.by(1)
+      }.to change { WebRequestLog.count }.by(1)
 
-      view = BrowserPageView.order(:created_at).last
-      expect(view.is_crawler).to eq(true)
-      expect(view.user_agent).to include("Googlebot")
+      log = WebRequestLog.order(:created_at).last
+      expect(log.is_crawler).to eq(true)
+      expect(log.user_agent).to include("Googlebot")
     end
 
     it "captures referrer when present" do
@@ -119,16 +119,16 @@ RSpec.describe "request tracker" do
 
       get "/u/#{user.username}", headers: { "HTTP_REFERER" => "https://google.com/search?q=test" }
 
-      view = BrowserPageView.order(:created_at).last
-      expect(view.referrer).to eq("https://google.com/search?q=test")
+      log = WebRequestLog.order(:created_at).last
+      expect(log.referrer).to eq("https://google.com/search?q=test")
     end
 
     it "does not log when setting is disabled" do
-      SiteSetting.enable_browser_page_view_logging = false
+      SiteSetting.enable_web_request_logging = false
 
       expect {
         get "/u/#{api_key.user.username}.json", headers: { HTTP_API_KEY: api_key.key }
-      }.not_to change { BrowserPageView.count }
+      }.not_to change { WebRequestLog.count }
     end
   end
 end

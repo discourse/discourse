@@ -83,16 +83,16 @@ class Middleware::RequestTracker
   end
 
   def self.log_request(data)
-    log_browser_page_view = false
+    log_web_request = false
 
     if data[:is_api]
       ApplicationRequest.increment!(:api)
-      log_browser_page_view = true
+      log_web_request = true
     elsif data[:is_user_api]
       ApplicationRequest.increment!(:user_api)
-      log_browser_page_view = true
+      log_web_request = true
     elsif data[:track_view]
-      log_browser_page_view = true
+      log_web_request = true
       if data[:is_crawler]
         ApplicationRequest.increment!(:page_view_crawler)
         WebCrawlerRequest.increment!(data[:user_agent])
@@ -132,7 +132,7 @@ class Middleware::RequestTracker
     # Message-bus requests may include this 'deferred track' header which we use to detect
     # 'real browser' views.
     if data[:deferred_track_view] && !data[:is_crawler]
-      log_browser_page_view = true
+      log_web_request = true
       if data[:has_auth_cookie]
         ApplicationRequest.increment!(:page_view_logged_in_browser)
         ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
@@ -169,9 +169,7 @@ class Middleware::RequestTracker
       ApplicationRequest.increment!(:http_2xx)
     end
 
-    if log_browser_page_view && SiteSetting.enable_browser_page_view_logging
-      BrowserPageView.log!(data)
-    end
+    WebRequestLog.log!(data) if log_web_request && SiteSetting.enable_web_request_logging
   end
 
   def self.get_data(env, result, timing, request = nil)
@@ -228,12 +226,10 @@ class Middleware::RequestTracker
         elsif is_api || is_user_api
           CurrentUser.lookup_from_env(env)&.id
         end
-      rescue Discourse::InvalidAccess => err
-        # This error is raised when the API key is invalid, no need to stop the show.
-        Discourse.warn_exception(
-          err,
-          message: "RequestTracker.get_data failed with an invalid API key error",
-        )
+      rescue Discourse::InvalidAccess, RateLimiter::LimitExceeded
+        # default_current_user_provider will raise invalid access on bad token (and potentially on rate limiting)
+        # we don't want to fail the entire request logging for that
+        # we should consider a new .lookup_existing_from_env to avoid potential repeat calls on lookup_from_env logic
         nil
       end
 
@@ -241,10 +237,9 @@ class Middleware::RequestTracker
     user_agent = HttpUserAgentEncoder.ensure_utf8(user_agent) if user_agent
 
     path_params = env[ActionDispatch::Http::Parameters::PARAMETERS_KEY] || {}
-    route =
-      if path_params[:controller].present? && path_params[:action].present?
-        "#{path_params[:controller]}##{path_params[:action]}"
-      end
+    route = "#{path_params[:controller]}##{path_params[:action]}"
+    # cheaper than doing multiple hash lookups
+    route = nil if route == "#"
 
     request_data = {
       status: status,

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-class CreateBrowserPageViews < ActiveRecord::Migration[7.2]
+class CreateWebRequestLogs < ActiveRecord::Migration[7.2]
   def change
-    create_table :browser_page_views, id: false do |t|
+    create_table :web_request_logs, id: false do |t|
       t.integer :user_id
       t.integer :topic_id
       t.string :path, limit: 1024
@@ -19,9 +19,10 @@ class CreateBrowserPageViews < ActiveRecord::Migration[7.2]
       t.datetime :created_at, null: false
     end
 
-    add_index :browser_page_views, :user_id
-    add_index :browser_page_views, :topic_id
-    add_index :browser_page_views, :created_at
-    add_index :browser_page_views, :ip_address
+    add_index :web_request_logs, :user_id
+    add_index :web_request_logs, :topic_id
+    add_index :web_request_logs, :created_at
+    add_index :web_request_logs, :ip_address
+    add_index :web_request_logs, :route
   end
 end

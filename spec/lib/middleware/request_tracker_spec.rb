@@ -591,10 +591,10 @@ RSpec.describe Middleware::RequestTracker do
       end
     end
 
-    describe "browser page view logging" do
-      before { SiteSetting.enable_browser_page_view_logging = true }
+    describe "web request logging" do
+      before { SiteSetting.enable_web_request_logging = true }
 
-      it "logs browser page views when tracking page views" do
+      it "logs web requests when tracking page views" do
         data =
           Middleware::RequestTracker.get_data(
             env("HTTP_DISCOURSE_TRACK_VIEW" => "1"),
@@ -603,16 +603,16 @@ RSpec.describe Middleware::RequestTracker do
           )
 
         expect { Middleware::RequestTracker.log_request(data) }.to change {
-          BrowserPageView.count
+          WebRequestLog.count
         }.by(1)
 
-        view = BrowserPageView.order(:created_at).last
-        expect(view.http_status).to eq(200)
-        expect(view.is_crawler).to eq(false)
-        expect(view.path).to be_present
+        log = WebRequestLog.order(:created_at).last
+        expect(log.http_status).to eq(200)
+        expect(log.is_crawler).to eq(false)
+        expect(log.path).to be_present
       end
 
-      it "logs browser page views for API requests" do
+      it "logs web requests for API requests" do
         data =
           Middleware::RequestTracker.get_data(
             env("_DISCOURSE_API" => "1"),
@@ -621,26 +621,26 @@ RSpec.describe Middleware::RequestTracker do
           )
 
         expect { Middleware::RequestTracker.log_request(data) }.to change {
-          BrowserPageView.count
+          WebRequestLog.count
         }.by(1)
 
-        view = BrowserPageView.order(:created_at).last
-        expect(view.is_api).to eq(true)
+        log = WebRequestLog.order(:created_at).last
+        expect(log.is_api).to eq(true)
       end
 
-      it "logs browser page views for user API requests" do
+      it "logs web requests for user API requests" do
         data =
           Middleware::RequestTracker.get_data(env("_DISCOURSE_USER_API" => "1"), ["200", {}], 0.1)
 
         expect { Middleware::RequestTracker.log_request(data) }.to change {
-          BrowserPageView.count
+          WebRequestLog.count
         }.by(1)
 
-        view = BrowserPageView.order(:created_at).last
-        expect(view.is_user_api).to eq(true)
+        log = WebRequestLog.order(:created_at).last
+        expect(log.is_user_api).to eq(true)
       end
 
-      it "logs browser page views for deferred tracking" do
+      it "logs web requests for deferred tracking" do
         data =
           Middleware::RequestTracker.get_data(
             env(:path => "/message-bus/abcde/poll", "HTTP_DISCOURSE_DEFERRED_TRACK_VIEW" => "1"),
@@ -649,11 +649,11 @@ RSpec.describe Middleware::RequestTracker do
           )
 
         expect { Middleware::RequestTracker.log_request(data) }.to change {
-          BrowserPageView.count
+          WebRequestLog.count
         }.by(1)
       end
 
-      it "logs crawler page views" do
+      it "logs crawler requests" do
         data =
           Middleware::RequestTracker.get_data(
             env("HTTP_USER_AGENT" => "AdsBot-Google (+http://www.google.com/adsbot.html)"),
@@ -662,15 +662,15 @@ RSpec.describe Middleware::RequestTracker do
           )
 
         expect { Middleware::RequestTracker.log_request(data) }.to change {
-          BrowserPageView.count
+          WebRequestLog.count
         }.by(1)
 
-        view = BrowserPageView.order(:created_at).last
-        expect(view.is_crawler).to eq(true)
+        log = WebRequestLog.order(:created_at).last
+        expect(log.is_crawler).to eq(true)
       end
 
       it "does not log when setting is disabled" do
-        SiteSetting.enable_browser_page_view_logging = false
+        SiteSetting.enable_web_request_logging = false
 
         data =
           Middleware::RequestTracker.get_data(
@@ -680,7 +680,7 @@ RSpec.describe Middleware::RequestTracker do
           )
 
         expect { Middleware::RequestTracker.log_request(data) }.not_to change {
-          BrowserPageView.count
+          WebRequestLog.count
         }
       end
 
@@ -693,7 +693,7 @@ RSpec.describe Middleware::RequestTracker do
           )
 
         expect { Middleware::RequestTracker.log_request(data) }.not_to change {
-          BrowserPageView.count
+          WebRequestLog.count
         }
       end
 
@@ -711,11 +711,11 @@ RSpec.describe Middleware::RequestTracker do
 
         Middleware::RequestTracker.log_request(data)
 
-        view = BrowserPageView.order(:created_at).last
-        expect(view.path).to eq("/t/test-topic/123")
-        expect(view.query_string).to eq("page=2&filter=latest")
-        expect(view.user_agent).to be_present
-        expect(view.referrer).to eq("https://google.com/search?q=test")
+        log = WebRequestLog.order(:created_at).last
+        expect(log.path).to eq("/t/test-topic/123")
+        expect(log.query_string).to eq("page=2&filter=latest")
+        expect(log.user_agent).to be_present
+        expect(log.referrer).to eq("https://google.com/search?q=test")
       end
     end
   end

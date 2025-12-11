@@ -4135,7 +4135,7 @@ dashboard:
     hidden: true
     default: false
     client: true
-  enable_browser_page_view_logging:
+  enable_web_request_logging:
     hidden: true
     default: false
 
