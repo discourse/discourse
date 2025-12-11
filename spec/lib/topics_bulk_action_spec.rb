@@ -178,7 +178,7 @@ RSpec.describe TopicsBulkAction do
         )
       end
 
-      shared_examples "silent option suppresses topic watcher notifications" do
+      shared_examples "silent option suppresses notifications" do
         it "notifies topic watchers when silent is false" do
           expect do
             TopicsBulkAction.new(
@@ -201,16 +201,6 @@ RSpec.describe TopicsBulkAction do
             ).perform!
           end.to not_change { Notification.where(user: topic_watcher).count }
         end
-      end
-
-      context "when create_revision_on_bulk_topic_moves is enabled" do
-        SiteSetting.create_revision_on_bulk_topic_moves = true
-        include_examples "silent option suppresses topic watcher notifications"
-      end
-
-      context "when create_revision_on_bulk_topic_moves is disabled" do
-        SiteSetting.create_revision_on_bulk_topic_moves = false
-        include_examples "silent option suppresses topic watcher notifications"
 
         it "notifies category watchers when silent is false" do
           expect do
@@ -238,6 +228,16 @@ RSpec.describe TopicsBulkAction do
             ).perform!
           end.to not_change { Notification.where(user: category_watcher).count }
         end
+      end
+
+      context "when create_revision_on_bulk_topic_moves is enabled" do
+        before { SiteSetting.create_revision_on_bulk_topic_moves = true }
+        include_examples "silent option suppresses notifications"
+      end
+
+      context "when create_revision_on_bulk_topic_moves is disabled" do
+        before { SiteSetting.create_revision_on_bulk_topic_moves = false }
+        include_examples "silent option suppresses notifications"
       end
     end
 
