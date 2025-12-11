@@ -485,37 +485,20 @@ RSpec.configure do |config|
       # Only set ENV["EMBER_RAISE_ON_DEPRECATION"] if not already set
       if ENV["EMBER_RAISE_ON_DEPRECATION"].nil? &&
            example_file_path = example.metadata[:rerun_file_path]
-        # Check if the example is from a plugin
-        if example_file_path.include?("/plugins/")
-          # Extract plugin directory name from path
-          # Path format: .../plugins/plugin-name/spec/...
-          plugin_match = example_file_path.match(%r{/plugins/([^/]+)/})
+        # Check if the example is from a plugin or theme
+        # Path format: .../plugins/name/spec/... or .../themes/name/spec/...
+        external_match = example_file_path.match(%r{/(plugins|themes)/([^/]+)/})
 
-          if plugin_match
-            plugin_name = plugin_match[1]
-            plugin_dir = Rails.root.join("plugins", plugin_name)
+        if external_match
+          type_dir = external_match[1] # "plugins" or "themes"
+          name = external_match[2] # plugin or theme name
+          dir_path = Rails.root.join(type_dir, name)
 
-            # Check if plugin is preinstalled (no .git directory)
-            is_preinstalled = !File.exist?(File.join(plugin_dir, ".git"))
+          # Check if plugin/theme is preinstalled (no .git directory)
+          is_preinstalled = !File.exist?(File.join(dir_path, ".git"))
 
-            # Only set the env var if the plugin is preinstalled
-            ENV["EMBER_RAISE_ON_DEPRECATION"] = "1" if is_preinstalled
-          end
-        elsif example_file_path.include?("/themes/")
-          # Extract theme directory name from path
-          # Path format: .../themes/theme-name/spec/...
-          theme_match = example_file_path.match(%r{/themes/([^/]+)/})
-
-          if theme_match
-            theme_name = theme_match[1]
-            theme_dir = Rails.root.join("themes", theme_name)
-
-            # Check if theme is preinstalled (no .git directory)
-            is_preinstalled = !File.exist?(File.join(theme_dir, ".git"))
-
-            # Only set the env var if the theme is preinstalled
-            ENV["EMBER_RAISE_ON_DEPRECATION"] = "1" if is_preinstalled
-          end
+          # Only set the env var if the plugin/theme is preinstalled
+          ENV["EMBER_RAISE_ON_DEPRECATION"] = "1" if is_preinstalled
         else
           # Not a plugin or theme spec, set the env var
           ENV["EMBER_RAISE_ON_DEPRECATION"] = "1"
