@@ -10,12 +10,14 @@ class PostRevisor
   # changed a value or not. This is needed for things like custom fields.
   class TopicChanges
     attr_reader :topic, :user
+    attr_accessor :silent
 
     def initialize(topic, user)
       @topic = topic
       @user = user
       @changed = {}
       @errored = false
+      @silent = false
     end
 
     def errored?
@@ -96,7 +98,7 @@ class PostRevisor
       end
 
       tc.record_change("category_id", current_category&.id, new_category&.id)
-      tc.check_result(tc.topic.change_category_to_id(new_category_id, silent: @silent))
+      tc.check_result(tc.topic.change_category_to_id(new_category_id, silent: tc.silent))
       create_small_action_for_category_change(
         topic: tc.topic,
         user: tc.user,
@@ -283,6 +285,7 @@ class PostRevisor
 
     @silent = false
     @silent = @opts[:silent] if @opts.has_key?(:silent)
+    @topic_changes.silent = @silent
 
     @post.incoming_email&.update(imap_sync: true) if @post.incoming_email&.imap_uid
 
