@@ -4,6 +4,7 @@ import {
 } from "pretty-text/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
+import { authorizesOneOrMoreImageExtensions } from "discourse/lib/uploads";
 import { isNumeric } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import ImageNodeView from "../components/image-node-view";
@@ -348,6 +349,27 @@ const extension = {
             processingDataURIs.has(dataURI) ||
             pendingUploads.size >= siteSettings.simultaneous_uploads
           ) {
+            return;
+          }
+
+          const staff = getContext().currentUser?.staff;
+          // stop earlier if image extensions aren't allowed
+          if (!authorizesOneOrMoreImageExtensions(staff, siteSettings)) {
+            const tr = view.state.tr;
+            const dataURIMap = dataImageUploader.getState(view.state);
+
+            dataURIMap.get(dataURI)?.forEach((pos) => {
+              const node = view.state.doc.nodeAt(pos);
+              tr.replaceWith(
+                pos,
+                pos + node.nodeSize,
+                view.state.schema.text(i18n("composer.image"))
+              );
+            });
+
+            if (tr.docChanged) {
+              view.dispatch(tr);
+            }
             return;
           }
 
