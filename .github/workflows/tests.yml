@@ -25,9 +25,26 @@ jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }} # Update fetch-job-id step if changing this
-    runs-on: ${{ (github.repository_owner == 'discourse' && ((matrix.target == 'core-plugins' || matrix.target == 'official-plugins') && matrix.build_type == 'system' && 'debian-12-16core' || 'debian-12-8core')) || 'ubuntu-latest' }}
+    runs-on: >-
+      ${{
+        github.repository_owner == 'discourse' && (
+          matrix.build_type == 'system' && (matrix.target == 'core-plugins' || matrix.target == 'official-plugins')
+          && 'debian-12-16core'
+          || 'debian-12-8core'
+        )
+        || 'ubuntu-latest'
+      }}
     container: discourse/discourse_test:release
-    timeout-minutes: ${{ ((matrix.build_type == 'system' && (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'core')) && 30) || 20 }}
+    timeout-minutes: >-
+      ${{
+        matrix.build_type == 'system' && (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'core')
+        && 30
+        || 20
+      }}
+
+    defaults:
+      run:
+        shell: bash
 
     env:
       RAILS_ENV: test
@@ -104,8 +121,7 @@ jobs:
           git config --global user.name "Discourse CI"
 
       - name: Start redis
-        run: |
-          redis-server /etc/redis/redis.conf &
+        run: redis-server /etc/redis/redis.conf &
 
       - name: Start Postgres
         run: |
@@ -134,7 +150,7 @@ jobs:
         run: bin/rake plugin:install_all_official
 
       - name: Symlinking plugin gems from image
-        if: matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins'
+        if: matrix.target == 'plugins' || matrix.target == 'core-plugins' || matrix.target == 'official-plugins'
         run: |
           for dir in /var/www/discourse/plugins/*/gems; do
             plugin_name=$(basename "$(dirname "$dir")")
@@ -194,18 +210,12 @@ jobs:
         run: rm -rf public/uploads && cp -r tmp/app-cache/uploads public/uploads
 
       - name: Create and migrate database
-        env:
-          LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
         run: |
           bin/rake db:create
           script/silence_successful_output bin/rake db:migrate
 
       - name: Create and migrate parallel databases
-        if: >-
-          env.USES_PARALLEL_DATABASES == 'true' &&
-          steps.app-cache.outputs.cache-hit != 'true'
-        env:
-          LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
+        if: env.USES_PARALLEL_DATABASES == 'true' && steps.app-cache.outputs.cache-hit != 'true'
         run: |
           bin/rake parallel:create
           script/silence_successful_output bin/rake parallel:migrate
@@ -291,8 +301,7 @@ jobs:
         run: pnpm test
 
       - name: Split core and official plugins
-        if: matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins'
-        shell: bash
+        if: matrix.build_type == 'system' && (matrix.target == 'core-plugins' || matrix.target == 'official-plugins')
         run: |
           CORE_PLUGINS=`script/list_bundled_plugins | sed 's|.*/||' | paste -sd, -`
           echo "CORE_PLUGINS=$CORE_PLUGINS" >> $GITHUB_ENV
@@ -351,7 +360,6 @@ jobs:
 
           echo "Running bin/turbo_rspec on: ${matches[*]}"
           RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation "${matches[@]}"
-        shell: bash
 
       - name: Official Plugins System Tests
         if: matrix.build_type == 'system' && matrix.target == 'official-plugins'
@@ -369,7 +377,6 @@ jobs:
 
           echo "Running bin/turbo_rspec on: ${matches[*]}"
           RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation "${matches[@]}"
-        shell: bash
 
       - name: Chat System Tests
         if: matrix.build_type == 'system' && matrix.target == 'chat'
@@ -381,9 +388,7 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'themes'
         env:
           CHECKOUT_TIMEOUT: 10
-        run: |
-          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --profile=50 --verbose --format documentation tmp/themes/*/spec/system themes/*/spec/system
-        shell: bash
+        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --profile=50 --verbose --format documentation tmp/themes/*/spec/system themes/*/spec/system
 
       - name: Check for failed system test artifacts
         id: check-failed-system-test-artifacts
@@ -394,7 +399,6 @@ jobs:
           else
             echo "exists=false" >> $GITHUB_OUTPUT
           fi
-        shell: bash
 
       - name: Upload failed system test artifacts
         uses: actions/upload-artifact@v5
@@ -415,7 +419,6 @@ jobs:
           else
             echo "exists=false" >> $GITHUB_OUTPUT
           fi
-        shell: bash
 
       - name: Fetch Job ID
         id: fetch-job-id
