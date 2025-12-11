@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 ug:
+  site_settings:
+    login_with_amazon_client_secret: "Amazon خېرىدار شىفىرلىق ئاچقۇچىدا تىزىمغا كىرىدۇ"

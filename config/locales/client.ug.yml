@@ -5637,6 +5637,8 @@ ug:
           only_experiments: "پەقەت تەجرىبە ئىقتىدارلىرىنىلا كۆرسىتىدۇ"
           experiment_enabled: "تەجرىبە ئىقتىدارىنى قوزغاتتىڭىز."
           experiment_disabled: "تەجرىبە ئىقتىدارىنى چەكلىدىڭىز."
+          feature_enabled: "ئىقتىدارنى قوزغاتتىڭىز."
+          feature_disabled: "ئىقتىدارنى چەكلىدىڭىز."
           experiment_tooltip:
             title_enabled: "تەجرىبە ئىقتىدارىنى تاقايدۇ"
             content_enabled: "بۇ ئۆزگەرتىلسە ھەممە ئىشلەتكۈچىنىڭ مەزكۇر ئىقتىدارى چەكلىنىدۇ."

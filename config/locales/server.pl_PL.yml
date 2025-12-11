@@ -1230,7 +1230,7 @@ pl_PL:
     notify_moderators:
       title: "Coś innego"
       description: 'Ten temat wymaga uwagi moderatora w oparciu o <a href="%{base_path}/guidelines">wytyczne społeczności</a>, <a href="%{tos_url}">warunki użytkowania</a> lub z innego powodu.'
-      long_form: "oznaczył to dla uwagi moderatora"
+      long_form: "oflagowano to dla uwagi moderatora"
       short_description: "Wymaga uwagi personelu z innego powodu."
       email_title: 'Temat "%{title}" wymaga uwagi moderatora'
       email_body: "%{link}\n\n%{message}"
@@ -3368,8 +3368,8 @@ pl_PL:
 
         Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi dla społeczności](%{base_url}/guidelines).
     flags_disagreed:
-      title: "Oznaczony post został przywrócony przez personel"
-      subject_template: "Oznaczony post został przywrócony przez personel"
+      title: "Oflagowany wpis został przywrócony przez personel"
+      subject_template: "Oflagowany wpis został przywrócony przez personel"
       text_body_template: |
         Witaj!
 
@@ -3383,8 +3383,8 @@ pl_PL:
         ```
         [/details]
     flags_agreed_and_post_deleted:
-      title: "Oznaczony post został usunięty przez personel"
-      subject_template: "Oznaczony post został usunięty przez personel"
+      title: "Oflagowany wpis został usunięty przez personel"
+      subject_template: "Oflagowany wpis został usunięty przez personel"
       text_body_template: |
         Witaj!
 
@@ -5015,7 +5015,7 @@ pl_PL:
         Ta odznaka jest przyznawana, gdy po raz pierwszy polubisz wpis poprzez przycisk :heart:. Dokonywanie polubień jest świetnym sposobem aby poinformować członków społeczności, że ich wpis jest naprawdę interesujący, przydatny, fajny, zabawny. Dziel się miłością!
     first_flag:
       name: Pierwsza flaga
-      description: Zgłoszenie wpisu
+      description: Oflagowano wpis
       long_description: |
         Ta odznaka jest przyznawana za pierwszym oflagowaniem posta. Dzięki flagowaniu wszyscy pomagamy utrzymać to miejsce przyjaznym dla wszystkich. Jeśli zauważysz jakiekolwiek posty, które z jakiegokolwiek powodu wymagają uwagi moderatora, nie wahaj się ich oflagować. Jeśli widzisz problem, :flag_black: oflaguj go!
     promoter:

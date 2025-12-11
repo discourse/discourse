@@ -2026,7 +2026,7 @@ fi:
     min_trust_to_send_messages: "VANHENTUNUT, käytä tämän sijaan 'personal message enabled groups' -asetusta. Uusien henkilökohtaisten viestin luomiseen vaadittava vähimmäisluottamustaso."
     min_trust_to_send_email_messages: "Vähimmäisluottamustaso, jolla voi lähettää henkilökohtaisia viestejä sähköpostitse."
     send_email_messages_allowed_groups: "Ryhmät, jotka voivat lähettää henkilökohtaisia viestejä sähköpostitse. Ylläpitäjät ja valvojat voivat aina lähettää henkilökohtaisia viestejä sähköpostitse."
-    min_trust_to_flag_posts: "Vähimmäisluottamustaso, jolla voi merkitä viestejä"
+    min_trust_to_flag_posts: "Vähimmäisluottamustaso, jolla voi liputtaa viestejä"
     flag_post_allowed_groups: "Ryhmät, jotka voivat liputtaa viestejä. Ylläpitäjät ja valvojat voivat aina liputtaa viestejä."
     min_trust_to_post_links: "Vähimmäisluottamustaso, jolla voi lisätä linkkejä viesteihin"
     post_links_allowed_groups: "Ryhmät, jotka voivat lisätä linkkejä viesteihin. Ylläpitäjät ja valvojat voivat aina lisätä linkkejä viesteihin."
