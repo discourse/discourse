@@ -1,36 +1,22 @@
 /**
- * Utilities for working with wrap tokens and their attributes
- */
-
-/**
- * Parse an attributes string into a structured object
- * @param {string} attrsString - The attributes string to parse (e.g., "=name class=foo data-bar=baz")
- * @returns {Object} Parsed attributes with wrap name and key-value pairs
+ * Parse an attributes string into flat object (matches server behavior)
+ * @param {string} attrsString - The attributes string to parse
+ * @returns {Object} Flat object like {wrap: "toc", id: "123"}
  */
 export function parseAttributesString(attrsString) {
-  const attrs = {};
   if (!attrsString.trim()) {
-    return attrs;
+    return {};
   }
 
-  // Parse attributes - split by spaces but respect quotes
-  const matches = attrsString.match(/(?:(\w+)=)?(?:"([^"]*)"|([^\s]+))/g) || [];
+  const attrs = {};
+  const parts = attrsString.trim().split(/\s+/);
 
-  for (const match of matches) {
-    if (match.startsWith("=")) {
-      // This is the main wrap value (=name)
-      attrs.wrap = match.slice(1);
-    } else if (match.includes("=")) {
-      const [key, ...valueParts] = match.split("=");
-      const value = valueParts.join("=").replace(/^"|"$/g, "");
-      if (key === "wrap") {
-        attrs.wrap = value;
-      } else {
-        attrs[key] = value;
-      }
-    } else {
-      // Value without key, treat as wrap value
-      attrs.wrap = match;
+  for (const part of parts) {
+    if (part.startsWith("=")) {
+      attrs.wrap = part.slice(1);
+    } else if (part.includes("=")) {
+      const [key, ...valueParts] = part.split("=");
+      attrs[key] = valueParts.join("=");
     }
   }
 
@@ -38,63 +24,54 @@ export function parseAttributesString(attrsString) {
 }
 
 /**
- * Parse an attributes string into form data structure
- * @param {string} attrsString - The attributes string to parse
- * @returns {Object} Form data with name and attributes array
+ * Serialize flat object back to BBCode format
+ * @param {Object} data - Flat object like {wrap: "toc", id: "123"}
+ * @returns {string} Serialized attributes string
  */
-export function parseAttributesForForm(attrsString) {
-  const data = {
-    name: "",
-    attributes: [],
-  };
-
-  if (!attrsString.trim()) {
-    return data;
+export function serializeAttributes(data) {
+  if (!data || Object.keys(data).length === 0) {
+    return "";
   }
 
-  const parsedAttrs = parseAttributesString(attrsString);
+  let result = "";
 
-  // Extract the wrap name
-  data.name = parsedAttrs.wrap || "";
+  // Handle wrap name first
+  if (data.wrap) {
+    result = `=${data.wrap}`;
+  }
 
-  // Convert remaining attributes to form structure
-  Object.keys(parsedAttrs).forEach((key) => {
-    if (key !== "wrap") {
-      data.attributes.push({
-        key,
-        value: parsedAttrs[key],
-      });
+  // Handle other attributes
+  const otherAttrs = Object.entries(data)
+    .filter(([key]) => key !== "wrap")
+    .map(([key, value]) => `${key}=${value}`)
+    .join(" ");
+
+  if (otherAttrs) {
+    if (result) {
+      result += ` ${otherAttrs}`;
+    } else {
+      result = ` ${otherAttrs}`;
     }
-  });
+  }
 
-  return data;
+  return result;
 }
 
 /**
- * Serialize form data back to an attributes string
- * @param {string} name - The wrap name
+ * Serialize name and attributes array to BBCode format (for modal)
+ * @param {string} name - Wrap name
  * @param {Array} attributes - Array of {key, value} objects
  * @returns {string} Serialized attributes string
  */
-export function serializeAttributes(name, attributes = []) {
-  let attrsString = "";
-
-  if (name?.trim()) {
-    attrsString += `=${name.trim()}`;
+export function serializeFromForm(name, attributes = []) {
+  const data = {};
+  if (name) {
+    data.wrap = name;
   }
-
-  if (attributes?.length) {
-    const attrParts = attributes
-      .filter((attr) => attr.key && attr.value)
-      .map((attr) => `${attr.key}=${attr.value}`);
-
-    if (attrParts.length) {
-      if (attrsString) {
-        attrsString += " ";
-      }
-      attrsString += attrParts.join(" ");
+  for (const attr of attributes) {
+    if (attr.key && attr.value) {
+      data[attr.key] = attr.value;
     }
   }
-
-  return attrsString;
+  return serializeAttributes(data);
 }

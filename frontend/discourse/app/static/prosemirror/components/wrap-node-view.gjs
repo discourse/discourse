@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { NodeSelection } from "prosemirror-state";
 import { bind } from "discourse/lib/decorators";
-import { parseAttributesString } from "../lib/wrap-utils";
+import { parseAttributesString, serializeAttributes } from "../lib/wrap-utils";
 import WrapAttributesModal from "./wrap-attributes-modal";
 
 export default class WrapNodeView extends Component {
@@ -43,8 +43,7 @@ export default class WrapNodeView extends Component {
 
   @action
   editAttributes() {
-    const currentAttrs = this.wrapAttributes;
-    const attrsString = this.#attributesToString(currentAttrs);
+    const attrsString = serializeAttributes(this.wrapAttributes);
 
     this.modal.show(WrapAttributesModal, {
       model: {
@@ -81,22 +80,6 @@ export default class WrapNodeView extends Component {
     tr.setNodeMarkup(pos, null, { data: attrs });
     tr.setSelection(NodeSelection.create(tr.doc, pos));
     this.args.view.dispatch(tr);
-  }
-
-  #attributesToString(attrs) {
-    if (!attrs || Object.keys(attrs).length === 0) {
-      return "";
-    }
-
-    const parts = [];
-    for (const [key, value] of Object.entries(attrs)) {
-      if (key === "wrap") {
-        parts.unshift(`=${value}`);
-      } else {
-        parts.push(`${key}=${value}`);
-      }
-    }
-    return parts.join(" ").trim();
   }
 
   @bind

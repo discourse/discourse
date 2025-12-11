@@ -1,72 +1,21 @@
+import { camelCaseToDash } from "discourse/lib/case-converter";
 import { i18n } from "discourse-i18n";
 import WrapNodeView from "../components/wrap-node-view";
 import GlimmerNodeView from "../lib/glimmer-node-view";
 import { parseAttributesString, serializeAttributes } from "../lib/wrap-utils";
 
-// Helper functions to bridge between DOM/token data and wrap-utils format
-function extractDataset(dom) {
-  const data = { ...dom.dataset };
-  // Don't include the structural CSS class as a data attribute
-  delete data.class;
-  return data;
-}
-
-function buildDataAttributes(data) {
-  const attrs = {};
+const toDataAttrs = (data) => {
   if (!data) {
-    return attrs;
+    return {};
   }
+  const attrs = {};
   for (const [key, value] of Object.entries(data)) {
-    if (value == null || value === "") {
-      continue;
+    if (value != null && value !== "") {
+      attrs[`data-${camelCaseToDash(key)}`] = value;
     }
-    attrs[`data-${key}`] = value;
   }
   return attrs;
-}
-
-function extractTokenDataAttributes(token) {
-  const data = {};
-  if (!token?.attrs) {
-    return data;
-  }
-  for (const [name, value] of token.attrs) {
-    if (name.startsWith("data-")) {
-      // Data attributes: remove data- prefix
-      const key = name.slice(5);
-      data[key] = value;
-    } else if (name === "class" && value === "d-wrap") {
-      // Skip structural CSS class from markdown-it
-      continue;
-    } else {
-      // All other attributes (including wrap) become data attributes
-      data[name] = value;
-    }
-  }
-  return data;
-}
-
-// Convert data object to wrap attribute string format
-function serializeWrapAttributes(data) {
-  if (!data || Object.keys(data).length === 0) {
-    return "";
-  }
-
-  // Convert data object keys to wrap format (extract wrap name if present)
-  const wrapName = data.wrap || "";
-  const attributes = Object.entries(data)
-    .filter(([key]) => key !== "wrap")
-    .map(([key, value]) => ({ key, value }));
-
-  const serialized = serializeAttributes(wrapName, attributes);
-
-  // If we have attributes but no wrap name, we need to add a space at the beginning
-  if (!wrapName && attributes.length > 0 && serialized) {
-    return ` ${serialized}`;
-  }
-
-  return serialized;
-}
+};
 
 const createWrapNodeView =
   ({ getContext }) =>
@@ -180,18 +129,14 @@ const extension = {
       parseDOM: [
         {
           tag: "div.d-wrap",
-          getAttrs(dom) {
-            return { data: extractDataset(dom) };
-          },
+          getAttrs: (dom) => ({ data: { ...dom.dataset } }),
         },
       ],
-      toDOM(node) {
-        const attrs = {
-          class: "d-wrap",
-          ...buildDataAttributes(node.attrs.data),
-        };
-        return ["div", attrs, 0];
-      },
+      toDOM: (node) => [
+        "div",
+        { class: "d-wrap", ...toDataAttrs(node.attrs.data) },
+        0,
+      ],
     },
 
     wrap_inline: {
@@ -205,19 +150,14 @@ const extension = {
       parseDOM: [
         {
           tag: "span.d-wrap",
-          getAttrs(dom) {
-            return { data: extractDataset(dom) };
-          },
+          getAttrs: (dom) => ({ data: { ...dom.dataset } }),
         },
       ],
-      toDOM(node) {
-        const attrs = {
-          class: "d-wrap",
-          contenteditable: "false",
-          ...buildDataAttributes(node.attrs.data),
-        };
-        return ["span", attrs, 0];
-      },
+      toDOM: (node) => [
+        "span",
+        { class: "d-wrap", ...toDataAttrs(node.attrs.data) },
+        0,
+      ],
     },
   },
 
@@ -228,11 +168,16 @@ const extension = {
         ? state.schema.nodes.wrap_inline
         : state.schema.nodes.wrap_block;
 
-      if (!nodeType) {
-        return;
+      const data = {};
+      if (token?.attrs) {
+        for (const [name, value] of token.attrs) {
+          if (name.startsWith("data-")) {
+            data[name.slice(5)] = value;
+          } else if (name !== "class" || value !== "d-wrap") {
+            data[name] = value;
+          }
+        }
       }
-
-      const data = extractTokenDataAttributes(token);
       state.openNode(nodeType, { data });
       return true;
     },
@@ -251,14 +196,14 @@ const extension = {
 
   serializeNode: {
     wrap_block(state, node) {
-      const attrs = serializeWrapAttributes(node.attrs.data);
+      const attrs = serializeAttributes(node.attrs.data);
       state.write(`[wrap${attrs}]\n`);
       state.renderContent(node);
       state.write("[/wrap]\n\n");
     },
 
     wrap_inline(state, node) {
-      const attrs = serializeWrapAttributes(node.attrs.data);
+      const attrs = serializeAttributes(node.attrs.data);
       state.write(`[wrap${attrs}]`);
       state.renderInline(node);
       state.write("[/wrap]");

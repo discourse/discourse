@@ -6,7 +6,7 @@ import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
 import { i18n } from "discourse-i18n";
-import { parseAttributesForForm, serializeAttributes } from "../lib/wrap-utils";
+import { parseAttributesString, serializeFromForm } from "../lib/wrap-utils";
 
 /**
  * @typedef WrapAttributesModalArgs
@@ -30,12 +30,18 @@ export default class WrapAttributesModal extends Component {
 
   get initialData() {
     const initialAttrs = this.args.model?.initialAttributes || "";
-    return parseAttributesForForm(initialAttrs);
+    const parsedAttrs = parseAttributesString(initialAttrs);
+    return {
+      name: parsedAttrs.wrap || "",
+      attributes: Object.entries(parsedAttrs)
+        .filter(([key]) => key !== "wrap")
+        .map(([key, value]) => ({ key, value })),
+    };
   }
 
   @action
   onSubmit(data) {
-    const attrsString = serializeAttributes(data.name, data.attributes);
+    const attrsString = serializeFromForm(data.name, data.attributes);
     this.args.model.onApply(attrsString);
     this.args.closeModal();
   }
