@@ -25,6 +25,40 @@ html:not(.keyboard-visible).mobile-device {
   }
 }
 
+::view-transition-old(.modal) {
+  @include d-animation(modal-exit-mobile, 250ms, ease);
+}
+
+::view-transition-new(.modal) {
+  @include d-animation(modal-enter-mobile, 250ms, ease);
+}
+
+@include viewport.from(sm) {
+  ::view-transition-old(.modal) {
+    @include d-animation(
+      modal-exit-desktop,
+      250ms,
+      cubic-bezier(0.4, 0, 0.2, 1)
+    );
+  }
+
+  ::view-transition-new(.modal) {
+    @include d-animation(
+      modal-enter-desktop,
+      250ms,
+      cubic-bezier(0.4, 0, 0.2, 1)
+    );
+  }
+}
+
+::view-transition-old(modal-backdrop) {
+  @include d-animation(backdrop-fade-out, 250ms, cubic-bezier(0.4, 0, 0.2, 1));
+}
+
+::view-transition-new(modal-backdrop) {
+  animation: fade 0.3s forwards;
+}
+
 // Modal wrappers
 .d-modal {
   pointer-events: none; // Allow clicks through wrappers so they hit the adjacent backdrop element
@@ -36,6 +70,8 @@ html:not(.keyboard-visible).mobile-device {
   top: 0;
   z-index: z("modal", "content");
   overflow: auto;
+  view-transition-name: match-element;
+  view-transition-class: modal;
 
   @include viewport.until(sm) {
     align-items: flex-end;
@@ -68,14 +104,6 @@ html:not(.keyboard-visible).mobile-device {
       width: 100%;
       max-width: 100%;
       max-height: calc(var(--composer-vh, 1dvh) * 85);
-
-      &.is-entering {
-        @include d-animation(modal-enter-mobile, 250ms, ease);
-      }
-
-      &.is-exiting {
-        @include d-animation(modal-exit-mobile, 250ms, ease);
-      }
     }
 
     @include viewport.from(sm) {
@@ -89,22 +117,6 @@ html:not(.keyboard-visible).mobile-device {
 
       .d-modal.-max & {
         max-width: 90vw;
-      }
-
-      &.is-entering {
-        @include d-animation(
-          modal-enter-desktop,
-          250ms,
-          cubic-bezier(0.4, 0, 0.2, 1)
-        );
-      }
-
-      &.is-exiting {
-        @include d-animation(
-          modal-exit-desktop,
-          250ms,
-          cubic-bezier(0.4, 0, 0.2, 1)
-        );
       }
     }
   }
@@ -234,19 +246,8 @@ html:not(.keyboard-visible).mobile-device {
     left: 0;
     z-index: z("modal", "overlay");
     background-color: #000;
-    animation: fade 0.3s forwards;
-
-    @media (prefers-reduced-motion) {
-      animation-duration: 0s;
-    }
-
-    &.is-exiting {
-      @include d-animation(
-        backdrop-fade-out,
-        250ms,
-        cubic-bezier(0.4, 0, 0.2, 1)
-      );
-    }
+    opacity: 0.6;
+    view-transition-name: modal-backdrop;
   }
 
   #modal-alert {
@@ -275,43 +276,6 @@ html:not(.keyboard-visible).mobile-device {
 .input-hint-text {
   margin-left: 0.5em;
   color: var(--secondary-high);
-}
-
-.modal-backdrop {
-  user-select: none;
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: z("modal", "overlay");
-  background-color: #111;
-
-  &.fade {
-    opacity: 0;
-  }
-}
-
-.modal-backdrop,
-.modal-backdrop.fade.in {
-  animation: fade 0.3s;
-  opacity: 0.9;
-  filter: alpha(opacity=90);
-
-  @media (prefers-reduced-motion) {
-    animation-duration: 0s;
-  }
-}
-
-// fade in
-@keyframes fade {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 0.6;
-  }
 }
 
 // Modal animations
