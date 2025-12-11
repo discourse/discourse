@@ -132,7 +132,7 @@
     "discourse-plugins": "workspace:1.0.0",
     "ember-async-data": "^2.0.1",
     "ember-buffered-proxy": "^2.1.1",
-    "ember-cli": "~6.8.1",
+    "ember-cli": "~6.9.0",
     "ember-cli-app-version": "^7.0.0",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-deprecation-workflow": "^3.4.0",

@@ -27,6 +27,12 @@ sq:
         text:
           label: Tekst
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Categories
+            tags:
+              label: Etiketat
         user_badge_granted:
           fields:
             badge:

@@ -1892,6 +1892,7 @@ gl:
           desc: "Responder sen cambiar a data da última resposta"
       reload: "Recargar"
       ignore: "Ignorar"
+      image: "imaxe"
     notifications:
       tooltip:
         regular:

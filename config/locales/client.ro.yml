@@ -840,7 +840,6 @@ ro:
         claimed: "Revendicat"
         claimed_by: "Revendicat de %{username} · %{relativeDate}"
         reviewed: "Revizuit"
-        reviewed_by: "Revizuit de %{username} · %{relativeDate}"
         view_conversation: "vezi MP"
         note_added: "Notă moderator"
         note_added_by: "Notă moderator de la %{username} · %{relativeDate}"
@@ -2333,6 +2332,7 @@ ro:
         zoom_out: "Micșorează dimensiunea imaginii"
         zoom_in: "Mărește dimensiunea imaginii"
         remove: "Înlătură imagine"
+      image: "imagine"
       image_scale_button: "Scalează imaginea la %{percent}%"
       link_toolbar:
         edit: "Editează legătură"

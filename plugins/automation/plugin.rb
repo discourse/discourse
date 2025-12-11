@@ -52,6 +52,7 @@ after_initialize do
     lib/discourse_automation/scripts/banner_topic
     lib/discourse_automation/scripts/close_topic
     lib/discourse_automation/scripts/flag_post_on_words
+    lib/discourse_automation/scripts/email_on_flagged_post
     lib/discourse_automation/scripts/gift_exchange
     lib/discourse_automation/scripts/group_category_notification_default
     lib/discourse_automation/scripts/pin_topic
@@ -71,6 +72,7 @@ after_initialize do
     lib/discourse_automation/triggers/pm_created
     lib/discourse_automation/triggers/point_in_time
     lib/discourse_automation/triggers/post_created_edited
+    lib/discourse_automation/triggers/post_flag_created
     lib/discourse_automation/triggers/recurring
     lib/discourse_automation/triggers/stalled_topic
     lib/discourse_automation/triggers/stalled_wiki
@@ -204,6 +206,10 @@ after_initialize do
 
   on(:post_edited) do |post|
     DiscourseAutomation::EventHandlers.handle_post_created_edited(post, :edit)
+  end
+
+  on(:flag_created) do |post_action|
+    DiscourseAutomation::EventHandlers.handle_post_flag_created(post_action) if post_action.post
   end
 
   on(:category_created) do |category|

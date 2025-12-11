@@ -27,6 +27,12 @@ te:
         text:
           label: వచనం
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: వర్గాలు
+            tags:
+              label: ట్యాగులు
         user_badge_granted:
           fields:
             badge:

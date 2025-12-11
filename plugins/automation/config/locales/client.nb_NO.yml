@@ -27,6 +27,12 @@ nb_NO:
         text:
           label: Tekst
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategorier
+            tags:
+              label: Stikkord
         user_badge_granted:
           fields:
             badge:

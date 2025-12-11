@@ -355,6 +355,7 @@ fi:
         no_users: "Käyttäjien käyttötietoja ei löytynyt"
         no_models: "Mallin käyttötietoja ei löytynyt"
         no_features: "Ominaisuuden käyttötietoja ei löytynyt"
+        total: "Yhteensä"
         subheader_description: "Saneet ovat perusyksiköitä, joita suuret kielimallit käyttävät tekstin ymmärtämiseen ja luomiseen. Käyttötiedot voivat vaikuttaa kustannuksiin"
         stat_tooltips:
           total_requests: "Kaikki suurille kielimalleille Discoursen kautta tehdyt pyynnöt"
@@ -657,7 +658,6 @@ fi:
           reasoning_tokens: "Päättelyyn käytettyjen saneiden määrä"
           disable_temperature: "Poista lämpötila käytöstä (jotkin ajattelumallit eivät tue lämpötilaa)"
           disable_top_p: "Poista top-p käytöstä (jotkin ajattelumallit eivät tue top-p:tä)"
-          enable_responses_api: "Ota vastaus-API käyttöön (vaaditaan tietyissä OpenAI:n malleissa)"
       related_topics:
         title: "Liittyvät ketjut"
         pill: "Liittyy aiheeseen"

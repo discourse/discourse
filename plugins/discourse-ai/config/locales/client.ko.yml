@@ -77,6 +77,7 @@ ko:
         summary: "요약"
         username: "아이디"
         total_requests: "총 요청횟수"
+        total: "합계"
         periods:
           last_day: "지난 24시간"
           custom: "사용자 지정..."

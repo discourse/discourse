@@ -143,7 +143,7 @@ GEM
     discourse-seed-fu (2.3.12)
       activerecord (>= 3.1)
       activesupport (>= 3.1)
-    discourse_ai-tokenizers (0.3.1)
+    discourse_ai-tokenizers (0.3.2)
       activesupport (>= 6.0)
       tiktoken_ruby (~> 0.0.11.1)
       tokenizers (~> 0.5.4)
@@ -355,7 +355,7 @@ GEM
     octokit (5.6.1)
       faraday (>= 1, < 3)
       sawyer (~> 0.9)
-    oj (3.16.13)
+    oj (3.16.12)
       bigdecimal (>= 3.0)
       ostruct (>= 0.2)
     omniauth (2.1.2)
@@ -961,7 +961,7 @@ CHECKSUMS
   discourse-emojis (1.0.44) sha256=63425a32379fb471d58f5eac9a1e931fc5a94efb7d327f71f1580af4dfe4edb3
   discourse-fonts (0.0.19) sha256=78d4ddd671615908303a675427039d8d787c935e6deae184c6e143c18c6e0033
   discourse-seed-fu (2.3.12) sha256=4f61d95c11ed54609046cd04eb3a51b531c5fa863fa86d1bea7d74264e5c75e4
-  discourse_ai-tokenizers (0.3.1) sha256=a7752f2f7b4b29fea148e2c893b287a1478c4dc8828f684c09e51d5a33bbc373
+  discourse_ai-tokenizers (0.3.2) sha256=eba14edf6ac94c5ebe68866bd6eaf1a119bc8019e150e5c4c767b8907e907b21
   discourse_dev_assets (0.0.5) sha256=a09a801a210aa3f7247dd382dfd73b389d4bd02be86be675eca2d451f9898285
   docile (1.4.1) sha256=96159be799bfa73cdb721b840e9802126e4e03dfc26863db73647204c727f21e
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
@@ -1078,7 +1078,7 @@ CHECKSUMS
   oauth-tty (1.0.6) sha256=9e8bd1861d367cce18318d8f214f2e1a1d7cb3898de0a9ea79162b4fdecb3152
   oauth2 (1.4.11) sha256=6739fcc8872bc94f476b0cae3e8bd78a56d8364b1b79b0757794c25e152d5c10
   octokit (5.6.1) sha256=48efb2c2aa83c2c394358f073d35ad71d4ac0f14870cd00ceebd3ef3949fe495
-  oj (3.16.13) sha256=b114bcb83ef884f1736b3112108f77cf9ca90aa8111a775318cc5d7a6a1e0303
+  oj (3.16.12) sha256=ad9fad6a06dabcf4cfe6a420690a4375377685c16eee0ae88e8d38a43ed7b556
   omniauth (2.1.2) sha256=def03277298b8f8a5d3ff16cdb2eb5edb9bffed60ee7dda24cc0c89b3ae6a0ce
   omniauth-facebook (9.0.0) sha256=440ad8dd9edc9ebec1fd6607b787667c8ce70d2969c2030d7e9ca42a271af854
   omniauth-github (2.0.0) sha256=1ca26576125a97e27d3f8dc39cd98853d7382dd0fc04a40d3b9ec345ee378649

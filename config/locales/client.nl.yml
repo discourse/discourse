@@ -844,7 +844,6 @@ nl:
         claimed: "Geclaimd"
         claimed_by: "Geclaimd door %{username} · %{relativeDate}"
         reviewed: "Beoordeeld"
-        reviewed_by: "Beoordeeld door %{username} · %{relativeDate}"
         view_conversation: "PB weergeven"
         note_added: "Moderatoropmerking"
         note_added_by: "Moderatoropmerking door %{username} · %{relativeDate}"
@@ -2858,6 +2857,7 @@ nl:
         zoom_out: "Afbeeldingsgrootte verkleinen"
         zoom_in: "Afbeeldingsgrootte verhogen"
         remove: "Afbeelding verwijderen"
+      image: "afbeelding"
       image_scale_button: "Afbeelding schalen naar %{percent}%"
       delete_image_button: Afbeelding verwijderen
       toggle_image_grid: Afbeeldingsraster schakelen

@@ -110,5 +110,6 @@ Discourse::Application.configure do
     end
   end
 
+  # This is a NGINX specific header
   config.action_dispatch.x_sendfile_header = nil
 end

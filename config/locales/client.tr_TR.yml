@@ -844,7 +844,6 @@ tr_TR:
         claimed: "Alındı"
         claimed_by: "%{username} tarafından alındı · %{relativeDate}"
         reviewed: "İncelendi"
-        reviewed_by: "%{username} tarafından incelendi · %{relativeDate}"
         view_conversation: "kişisel mesajı görüntüle"
         note_added: "Moderatör notu"
         note_added_by: "%{username} tarafından moderatör notu · %{relativeDate}"
@@ -2858,6 +2857,7 @@ tr_TR:
         zoom_out: "Görüntü boyutunu küçült"
         zoom_in: "Görüntü boyutunu artır"
         remove: "Görüntüyü kaldır"
+      image: "resim"
       image_scale_button: "Görüntüyü %%{percent} oranına ölçeklendir"
       delete_image_button: Görüntüyü Sil
       toggle_image_grid: Resim ızgarasını aç/kapat
