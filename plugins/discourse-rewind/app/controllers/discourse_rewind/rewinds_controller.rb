@@ -6,6 +6,11 @@ module ::DiscourseRewind
 
     requires_login
 
+    def dismiss
+      current_user.user_option.update!(discourse_rewind_dismissed_at: Time.current)
+      head :no_content
+    end
+
     def index
       DiscourseRewind::FetchReports.call(service_params) do
         on_model_not_found(:year) do
