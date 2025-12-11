@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -87,16 +88,11 @@ export default class SolvedAcceptedAnswer extends Component {
   }
 
   @action
-  toggleExpanded() {
-    this.expanded = !this.expanded;
-  }
-
-  @action
   onClickTitle(event) {
     if (event.target.closest("a") || event.target.closest(".quote-controls")) {
       return;
     }
-    this.toggleExpanded();
+    this.toggleProperty("expanded");
   }
 
   <template>
@@ -157,7 +153,7 @@ export default class SolvedAcceptedAnswer extends Component {
             {{#if this.content}}
               <DButton
                 class="btn-flat quote-toggle"
-                @action={{this.toggleExpanded}}
+                @action={{fn this.toggleProperty "expanded"}}
                 @ariaControls={{this.quoteId}}
                 @ariaExpanded={{this.expanded}}
                 @ariaLabel={{if this.expanded "post.collapse" "expand"}}

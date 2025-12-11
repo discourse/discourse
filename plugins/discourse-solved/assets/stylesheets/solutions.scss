@@ -122,7 +122,7 @@ aside.quote.accepted-answer {
 aside.quote.accepted-answer[data-expanded="false"] {
   > blockquote {
     position: relative;
-    max-height: 300px;
+    max-height: 20em;
     overflow: hidden;
 
     &::after {
@@ -131,7 +131,7 @@ aside.quote.accepted-answer[data-expanded="false"] {
       bottom: 0;
       left: 0;
       right: 0;
-      height: 50px;
+      height: 3em;
       background: linear-gradient(transparent, var(--secondary));
       pointer-events: none;
     }
