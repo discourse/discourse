@@ -5894,3 +5894,6 @@ en:
 
   discourse_id:
     already_registered: "This site is already registered with Discourse ID"
+    errors:
+      not_configured: "Discourse ID is not configured. Please enable Discourse ID first."
+      regenerate_failed: "Failed to regenerate credentials. Please try again later."
