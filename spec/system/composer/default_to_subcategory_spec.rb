@@ -35,7 +35,7 @@ describe "Default to Subcategory when parent Category doesn't allow posting", ty
               category_page.visit(category)
               expect(category_page).to have_button("New Topic", disabled: false)
 
-              expect(find("#create-topic")).to match_css(".cannot-create-topic")
+              expect(find("#create-topic")).to have_css("can-create-topic")
 
               category_page.new_topic_button.click
               select_kit =
