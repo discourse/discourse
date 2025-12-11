@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UserNotifications do
+  fab!(:category)
   let(:user) { Fabricate(:admin) }
 
   describe "#get_context_posts" do
