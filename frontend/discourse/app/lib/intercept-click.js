@@ -31,7 +31,20 @@ export default function interceptClick(e) {
     return;
   }
 
-  if (wantsNewWindow(e, target) || target.target === "_blank") {
+  if (target.target === "_blank") {
+    return;
+  }
+
+  if (EmbedMode.enabled) {
+    const href = target.getAttribute("href");
+    if (href && !href.startsWith("#")) {
+      e.preventDefault();
+      window.open(href, "_blank");
+    }
+    return;
+  }
+
+  if (wantsNewWindow(e)) {
     return;
   }
 
