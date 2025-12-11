@@ -1,17 +1,34 @@
 @use "lib/viewport";
 
 .chat-channel-icon {
-  flex-shrink: 0;
-  color: var(--primary-medium);
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-shrink: 0;
   font-size: var(--font-up-1);
+  color: var(--primary-medium);
   position: relative;
 
-  .--starred-channels & {
+  // separate otherwise it is used on the channel titles too
+  .direct-message-channels &,
+  .starred-channels & {
     width: var(--channel-list-avatar-size);
     height: var(--channel-list-avatar-size);
+
+    // emoji and icon styling on mobile = smaller + background circle for equalizing with avatars in mixed lists
+    &.--emoji,
+    &.--icon {
+      @include viewport.until(sm) {
+        background: var(--primary-low);
+        border-radius: 100%;
+
+        .emoji,
+        .d-icon:not(.chat-channel-icon__restricted-category-icon) {
+          width: calc(var(--channel-list-avatar-size) * 0.5);
+          height: calc(var(--channel-list-avatar-size) * 0.5);
+        }
+      }
+    }
   }
 
   .chat-message-creator & {
@@ -38,22 +55,6 @@
     }
   }
 
-  &.--emoji,
-  &.--icon {
-    .--starred-channels & {
-      @include viewport.until(sm) {
-        background: var(--primary-low);
-        border-radius: 100%;
-      }
-
-      .emoji,
-      .d-icon:not(.chat-channel-icon__restricted-category-icon) {
-        width: calc(var(--channel-list-avatar-size) * 0.5);
-        height: calc(var(--channel-list-avatar-size) * 0.5);
-      }
-    }
-  }
-
   .chat-user-avatar {
     .avatar {
       .chat-channel-row & {
@@ -75,17 +76,16 @@
     border-radius: 50%;
     padding: 2px 2px 3px;
     color: var(--primary-high);
-    height: 0.5rem;
-    width: 0.5rem;
-    right: -0.5rem;
+    width: calc(var(--channel-list-avatar-size) * 0.35);
+    height: calc(var(--channel-list-avatar-size) * 0.35);
+    right: calc(var(--channel-list-avatar-size) * -0.15);
     top: -0.1rem;
 
-    @include viewport.until(sm) {
-      .--starred-channels & {
-        width: calc(var(--channel-list-avatar-size) * 0.25);
-        height: calc(var(--channel-list-avatar-size) * 0.25);
-        right: -0.25rem;
-      }
+    .chat-channel-title & {
+      width: 50%;
+      height: 50%;
+      right: -20%;
+      top: -20%;
     }
   }
 }
