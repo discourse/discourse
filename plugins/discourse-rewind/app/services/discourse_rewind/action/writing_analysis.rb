@@ -36,11 +36,15 @@ module DiscourseRewind
           post_count.first > 0 ? (total_words.first.to_f / post_count.first).round(2) : 0
 
         # Calculated using the Flesch Reading Ease formula,
-        # with an approximation for syllables since this can
-        # be tricky to get right in SQL.
+        # with a statistical approximation for syllables (1.45 per word,
+        # which is the average for English text). This is more reliable
+        # than regex-based syllable counting which can be thrown off by
+        # URLs, code blocks, and technical terminology.
         #
-        # Tries to handle short sentences or ones without delmiters
+        # Tries to handle short sentences or ones without delimiters
         # and ending with emojis by treating them as a single sentence.
+        #
+        # Scores are bounded between 0-100 to prevent extreme negative values.
         readability_score =
           DB.query_single(<<~SQL, user_id: user.id, start: date.first, end: date.last)
           WITH cleaned AS (
@@ -62,7 +66,7 @@ module DiscourseRewind
               plain,
               word_count AS words,
               regexp_count(plain, '[.!?;:](\s|$)')                   AS sentences_raw,
-              regexp_count(lower(plain), '[aeiouy]+')                AS syllables
+              (word_count * 1.45)                                    AS syllables
             FROM cleaned
           ),
           scores AS (
@@ -79,18 +83,18 @@ module DiscourseRewind
                 ELSE sentences_raw
               END AS sentences_fixed,
 
-              -- Flesch Reading Ease formula
+              -- Flesch Reading Ease formula with bounds (0-100)
               CASE
                 WHEN words = 0 THEN NULL
                 WHEN (CASE WHEN sentences_raw = 0 AND words > 5 THEN 1 ELSE sentences_raw END) = 0 THEN NULL
-                ELSE (
+                ELSE GREATEST(0, LEAST(100,
                   206.835
                   - 1.015 * (
                       words::float /
                       (CASE WHEN sentences_raw = 0 AND words > 5 THEN 1 ELSE sentences_raw END)
                     )
                   - 84.6  * (syllables::float / words)
-                )
+                ))
               END AS readability_score
 
             FROM metrics
