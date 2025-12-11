@@ -1139,6 +1139,8 @@ describe "Composer - ProseMirror editor", type: :system do
     it "avoids triggering upload when unauthorized" do
       SiteSetting.authorized_extensions = ""
 
+      open_composer
+
       cdp.allow_clipboard
       cdp.copy_test_image
       cdp.paste
