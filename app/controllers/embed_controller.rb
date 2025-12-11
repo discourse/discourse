@@ -96,7 +96,7 @@ class EmbedController < ApplicationController
     if params[:full_app].present? && topic_id
       topic = Topic.find_by(id: topic_id)
       raise Discourse::NotFound if topic.blank?
-      redirect_to "#{topic.url}?embed_mode=true", allow_other_host: false
+      redirect_to "#{topic.url}?embed_mode=true", allow_other_host: true
       return
     end
 
