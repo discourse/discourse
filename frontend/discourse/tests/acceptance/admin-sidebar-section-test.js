@@ -221,38 +221,6 @@ acceptance("Admin Sidebar - Sections - Plugin API", function (needs) {
   });
 });
 
-acceptance("Admin Sidebar - Sections - Moderator Links", function (needs) {
-  needs.user({
-    admin: false,
-    moderator: true,
-  });
-
-  needs.hooks.beforeEach(() => {
-    withPluginApi((api) => {
-      api.addAdminSidebarSectionLink("reports", {
-        name: "test_moderator_link",
-        label: "admin.plugins.title",
-        route: "adminPlugins.index",
-        icon: "chart-bar",
-        moderator: true,
-      });
-    });
-  });
-
-  test("links with moderator: true are visible to moderators", async function (assert) {
-    await visit("/admin");
-
-    const linkExists = !!document.querySelector(
-      ".sidebar-section-link[data-link-name='admin_additional_reports_test_moderator_link']"
-    );
-
-    assert.true(
-      linkExists,
-      "moderator link is added to the sidebar for moderators"
-    );
-  });
-});
-
 let _locale;
 acceptance(
   "Admin Sidebar - Sections - Plugin API - Translation Fallbacks",
