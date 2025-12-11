@@ -861,6 +861,8 @@ module ApplicationHelper
         setup_data[:capybara_playwright_debug_client_settled] = true
       end
 
+      # Allow controlling deprecation behavior in tests via environment variable
+      # Used to enforce or disable deprecation throwing for specific test runs
       if ENV["EMBER_RAISE_ON_DEPRECATION"] == "1"
         setup_data[:raise_on_deprecation] = true
       elsif ENV["EMBER_RAISE_ON_DEPRECATION"] == "0"
