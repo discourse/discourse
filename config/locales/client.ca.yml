@@ -1754,6 +1754,7 @@ ca:
           label: "Commuta l'elevació del tema"
           desc: "Respon sense canviar la data més recent de resposta"
       ignore: "Ignora"
+      image: "imatge"
     notifications:
       tooltip:
         regular:

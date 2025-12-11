@@ -2876,6 +2876,7 @@ hu:
         zoom_out: "Képméret csökkentése"
         zoom_in: "Képméret növelése"
         remove: "Kép eltávolítása"
+      image: "kép"
       image_scale_button: "Kép méretezése %{percent}%-ra"
       delete_image_button: Kép törlése
       toggle_image_grid: Képrács be/ki

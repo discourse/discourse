@@ -25,6 +25,12 @@ be:
         group:
           label: група
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: катэгорыі
+            tags:
+              label: Цэтлікі
         user_badge_granted:
           fields:
             badge:

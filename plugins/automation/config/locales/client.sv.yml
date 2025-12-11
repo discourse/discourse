@@ -52,6 +52,12 @@ sv:
         text:
           label: Text
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategorier
+            tags:
+              label: Taggar
         not_found: Kunde inte hitta utlösaren `%{trigger}` för automatisering `%{automation}`, se till att det tillhörande insticksprogrammet är installerat.
         user_badge_granted:
           fields:

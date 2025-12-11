@@ -66,6 +66,12 @@ tr_TR:
         text:
           label: Metin
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategoriler
+            tags:
+              label: Etiketler
         not_found: Otomasyon `%{automation}` için `%{trigger}` tetikleyicisi bulunamadı, ilgili eklentinin kurulu olduğundan emin olun
         user_badge_granted:
           fields:

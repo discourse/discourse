@@ -57,6 +57,12 @@ el:
         text:
           label: Κείμενο
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Κατηγορίες
+            tags:
+              label: Ετικέτες
         user_badge_granted:
           fields:
             badge:

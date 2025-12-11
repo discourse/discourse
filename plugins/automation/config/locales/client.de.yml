@@ -66,6 +66,12 @@ de:
         text:
           label: Text
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategorien
+            tags:
+              label: Schlagwörter
         not_found: Konnte den Auslöser `%{trigger}` für die Automatisierung `%{automation}` nicht finden. Stelle sicher, dass das zugehörige Plug-in installiert ist
         user_badge_granted:
           fields:

@@ -2309,6 +2309,7 @@ te:
       ignore: "విస్మరించండి"
       image_alt_text:
         aria_label: చిత్రం కోసం ప్రత్యామ్నాయ వచనం
+      image: "బొమ్మ"
       delete_image_button: చిత్రాన్ని తొలగించండి
       toggle_image_grid: ఇమేజ్ గ్రిడ్‌ని టోగుల్ చేయండి
       link_toolbar:

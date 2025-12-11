@@ -27,6 +27,12 @@ hr:
         text:
           label: Tekst
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategorije
+            tags:
+              label: Oznake
         user_badge_granted:
           fields:
             badge:

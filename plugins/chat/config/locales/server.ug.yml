@@ -108,7 +108,11 @@ ug:
       actions:
         no_action_message:
           title: "تەدبىر قوللانمىغان"
+        delete_message:
+          title: "ئۇچۇر ئۆچۈر"
+          description: "ئۇچۇرنى مەڭگۈلۈك ئۆچۈرىدۇ."
         restore_message:
+          title: "ئۇچۇرنى ئەسلىگە كەلتۈر"
           description: "ئۇچۇرنى ئىشلەتكۈچى كۆرەلەيدىغان ھالەتتە ئەسلىگە كەلتۈرىدۇ."
         agree:
           title: "قوشۇل…"

@@ -5,11 +5,38 @@
 # https://translate.discourse.org/
 
 uk:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rewind: "Перемотка"
   js:
     discourse_rewind:
+      placeholder: Перемотка
+      title: Перемотай назад.
+      loading: "Збирання сплайнів..."
+      preferences:
+        disable_rewind: "Вимкнути перемотування дискусії. Це приховає звіт про діяльність за кінець року у вашому профілі та на вашому аватарі."
+      profile_link: "Перегляньте свій %{rewindYear} Перемотка дискурсу"
       reports:
+        activity_calendar:
+          title: Календар активностей
+          cell_title:
+            visited_no_posts: "Ви відвідували та стежили за %{date}, але не публікували жодних постів."
+            visited_with_posts:
+              one: "Ви зробили %{count} публікацію на %{date}."
+              few: "Ви зробили %{count} публікації на %{date}."
+              many: "Ви зробили %{count} публікацій на %{date}."
+              other: "Ви зробили %{count} публікацій на %{date}."
+            no_activity: "Вас не було на %{date}."
+        top_words:
+          title: Використання слів
         reading_time:
           title: Час читання
+          book_comparison: "Ви витратили <code>%{readingTitme}</code> на читання нашого сайту! Саме стільки часу знадобиться, щоб прочитати <i>%{bookTitle}</i>"
+        post_used_reactions:
+          title: Найчастіше використовувані реакції в темах
+          total_number: "Загальна кількість реакцій: %{count}"
         ai_usage:
           favorite_models: Найбільш використовувані моделі штучного інтелекту
           wake_up: "Прокинься, %{username}..."
@@ -93,3 +120,8 @@ uk:
           mentions: Згадки
         writing_analysis:
           menu_other: Інше
+          readability_score:
+            over_0:
+              2: "Thomas Pynchon"
+              3: "David Foster Wallace"
+              4: "Федір Достоєвський"

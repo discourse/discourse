@@ -2325,6 +2325,7 @@ sv:
       ignore: "Ignorera"
       image_alt_text:
         aria_label: Alternativ text för bild
+      image: "bild"
       delete_image_button: Radera bild
       toggle_image_grid: Växla bildrutnät
       link_toolbar:

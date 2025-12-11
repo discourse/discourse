@@ -2620,6 +2620,7 @@ el:
         zoom_out: "Μείωση μεγέθους εικόνας"
         zoom_in: "Αύξηση μεγέθους εικόνας"
         remove: "Αφαίρεση εικόνας"
+      image: "εικόνα"
       image_scale_button: "Κλιμάκωση εικόνας σε %{percent}%"
       delete_image_button: Διαγραφή Εικόνας
       toggle_image_grid: Εναλλαγή πλέγματος εικόνας

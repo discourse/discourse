@@ -2574,6 +2574,7 @@ sq:
         title: "Shtoni përshkrimin e imazhit"
       image_toolbar:
         alt_text: "Shtoni përshkrimin e imazhit"
+      image: "imazh"
       image_scale_button: "Shkallezoni imazhin në %{percent}%"
       delete_image_button: Fshini imazhin
       toggle_image_grid: Ndryshoni rrjetin e imazhit

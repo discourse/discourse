@@ -3235,6 +3235,7 @@ cs:
         remove: "Odstranit obrázek"
         add_to_grid: "Přidat do mřížky"
         move_outside_grid: "Přesunout mimo mřížku"
+      image: "obrázek"
       grid_label: "Tyto obrázky se zobrazí v mřížce"
       image_scale_button: "Změnit velikost obrázku na %{percent}%"
       delete_image_button: Odstranit obrázek

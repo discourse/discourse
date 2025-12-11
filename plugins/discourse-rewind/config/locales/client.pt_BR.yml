@@ -7,20 +7,85 @@
 pt_BR:
   js:
     discourse_rewind:
+      profile_link: "Veja seu Discourse Rewind %{rewindYear}"
       reports:
+        activity_calendar:
+          title: Calendário de Atividade
+        top_words:
+          title: Uso de Palavras
         reading_time:
           title: Tempo de leitura
+          book_comparison: "Você passou <code>%{readingTitme}</code> lendo em nosso site! Esse é o tempo que levaria para ler <i>%{bookTitle}</i>"
+        post_used_reactions:
+          title: Reações mais usadas em tópicos
+          total_number: "Número total de reações: %{count}"
+        post_received_reactions:
+          title: Reações mais recebidas em tópicos
+        fbff:
+          title: Seu FBFF (Forum Best Friend Forever)
+        most_viewed_categories:
+          title:
+            one: Sua categoria mais visualizada
+            other: Suas %{count} categorias mais visualizadas
+        most_viewed_tags:
+          title:
+            one: Sua tag mais visualizada
+            other: Suas %{count} tags mais visualizadas
+        best_topics:
+          view_topic: Ver tópico
+          title:
+            one: Seu melhor tópico
+            other: Seus %{count} melhores tópicos
+        best_posts:
+          view_post: Ver postagem
+          title:
+            one: Sua melhor postagem
+            other: Suas %{count} melhores postagens
+        ai_usage:
+          total_requests: Total de Reqs.
+          total_tokens: Total de Tokens
+          success_rate: Taxa de Sucesso
+          wake_up: "Acorda, %{username}..."
+          system_title: "USO DE IA DETECTADO"
+          section_features: "TOP RECURSOS"
+          section_models: "TOP MODELOS"
         chat_usage:
+          unique_dm_channels: Conversas por DM
+          avg_message_length: Tamanho Médio de Mensagem
           messages: mensagens
           you: Você
+          channel_title: "#chat-na-atividade"
           status_online: "● on-line"
+          message_1: "Você enviou <strong>%{count}</strong> mensagens este ano!"
+          reply_1: "kkkk incrível B-)"
+          message_2: "Você teve <strong>%{dm_count}</strong> conversas por DM com <strong>%{channel_count}</strong> pessoas ou grupos diferentes"
+          reply_2: "ShOo0ow :D"
+          message_3: "As pessoas adoraram suas mensagens! Você recebeu <strong>%{count}</strong> reações ❤️"
+          message_4: "O tamanho médio de suas mensagens foi de <strong>%{length}</strong> caracteres"
+          message_5: "Seus canais favoritos:"
         invites:
           title: Convites
           invitee_posts: Postagens criadas
-          invitee_likes: Curtidas dadas
+          invitee_likes: Curtidas Dadas
           label_invitations_sent: "Convites enviados:"
         new_user_interactions:
-          likes_given: Curtidas dadas
+          new_member:
+            one: "%{count} novo membro"
+            other: "%{count} novos membros"
+          likes_given: Curtidas Dadas
           mentions: Menções
+        time_of_day_activity:
+          title: Ritmo de Atividade Diária
         writing_analysis:
+          title: Análise de Escrita
+          menu_file: Arquivo
           menu_other: Outras
+          menu_additional: Adicional
+          menu_opening: ABRINDO
+          help_text: Pressione F1 para ajuda
+          release_info: Versão %{rewindYear} de CDCK
+          total_words: Total de Palavras
+          total_posts: Total de Postagens
+          avg_post_length: Tam. Médio de Post
+          readability_score_label: Score de Legibilidade
+          readability_level: Nível de Legibilidade

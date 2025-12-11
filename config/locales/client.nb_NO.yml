@@ -2502,6 +2502,7 @@ nb_NO:
         title: "Legg til bildebeskrivelse"
       image_toolbar:
         alt_text: "Legg til bildebeskrivelse"
+      image: "bilde"
       image_scale_button: "Skalere bildet til %{percent}%."
       delete_image_button: Slett bilde
       toggle_image_grid: Veksle mellom bilderutenett

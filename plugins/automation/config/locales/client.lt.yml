@@ -27,6 +27,12 @@ lt:
         text:
           label: Tekstas
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategorijos
+            tags:
+              label: Žymos
         user_badge_granted:
           fields:
             badge:

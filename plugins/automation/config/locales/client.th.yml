@@ -23,6 +23,12 @@ th:
         text:
           label: ข้อความ
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: หมวดหมู่
+            tags:
+              label: ป้าย
         user_badge_granted:
           fields:
             badge:

@@ -38,6 +38,12 @@ ur:
         text:
           label: ٹیکسٹ
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: زمرہ جات
+            tags:
+              label: ٹیگز
         not_found: ٹرگر `%{trigger}` آٹومیشن `%{automation}` کے لیے نہیں ملا، براہ کرم یقین دہانی کریں کہ متعلقہ پلگ اِن انسٹال ہے۔
         user_badge_granted:
           fields:

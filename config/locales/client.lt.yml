@@ -2476,6 +2476,7 @@ lt:
           desc: "Atsakykite nekeisdami paskutinės atsakymo datos"
       reload: "Įkelti iš naujo"
       ignore: "Ignoruoti"
+      image: "paveikslėlis"
     notifications:
       tooltip:
         regular:

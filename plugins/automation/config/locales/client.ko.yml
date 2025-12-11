@@ -34,6 +34,12 @@ ko:
         text:
           label: 텍스트
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: 카테고리
+            tags:
+              label: 태그
         user_badge_granted:
           fields:
             badge:

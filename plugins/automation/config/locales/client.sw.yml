@@ -27,6 +27,12 @@ sw:
         text:
           label: Neno
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategoria
+            tags:
+              label: Lebo
         user_badge_granted:
           fields:
             badge:

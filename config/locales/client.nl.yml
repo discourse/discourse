@@ -2857,6 +2857,7 @@ nl:
         zoom_out: "Afbeeldingsgrootte verkleinen"
         zoom_in: "Afbeeldingsgrootte verhogen"
         remove: "Afbeelding verwijderen"
+      image: "afbeelding"
       image_scale_button: "Afbeelding schalen naar %{percent}%"
       delete_image_button: Afbeelding verwijderen
       toggle_image_grid: Afbeeldingsraster schakelen

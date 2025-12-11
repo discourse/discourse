@@ -1318,6 +1318,7 @@ sw:
         shared_draft:
           label: "Mswadajaribio Gawiza"
       ignore: "Puuzia"
+      image: "picha"
     notifications:
       tooltip:
         regular:

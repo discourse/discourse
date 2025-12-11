@@ -1444,6 +1444,7 @@ th:
         toggle_topic_bump:
           desc: "ตอบกลับโดยไม่เปลี่ยนวันที่ตอบกลับล่าสุด"
       ignore: "ไม่สนใจ"
+      image: "รูปภาพ"
     notifications:
       tooltip:
         regular:

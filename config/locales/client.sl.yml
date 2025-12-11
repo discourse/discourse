@@ -2087,6 +2087,7 @@ sl:
           label: "Preklopi izpostavljanje teme"
           desc: "Odgovori brez da spremeniš čas zadnjega odgovora"
       ignore: "Prezri"
+      image: "slika"
       link_toolbar:
         link_copied: "Povezava kopirana!"
     notifications:

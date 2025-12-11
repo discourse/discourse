@@ -3013,6 +3013,7 @@ hr:
         zoom_out: "Smanjite veličinu slike"
         zoom_in: "Povećajte veličinu slike"
         remove: "Uklonite sliku"
+      image: "slika"
       image_scale_button: "Skaliraj sliku na %{percent}%"
       delete_image_button: Izbriši sliku
       toggle_image_grid: Uključi/isključi rešetku slike

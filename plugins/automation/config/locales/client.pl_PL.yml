@@ -69,6 +69,14 @@ pl_PL:
         text:
           label: Tekst
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategorie
+              description: Aktywuj tylko wtedy, gdy oflagowany temat znajduje się w tych kategoriach
+            tags:
+              label: Tagi
+              description: Aktywuj tylko wtedy, gdy oflagowany temat zawiera którykolwiek z tych tagów
         not_found: Nie można znaleźć wyzwalacza `%{trigger}` dla automatyzacji `%{automation}`, upewnij się, że powiązana wtyczka jest zainstalowana.
         user_badge_granted:
           fields:
@@ -279,6 +287,14 @@ pl_PL:
               label: Tagi
               description: Opcjonalne, uruchomi się tylko wtedy, gdy post ma którykolwiek z tych tagów
       scriptables:
+        email_on_flagged_post:
+          fields:
+            email_template:
+              label: Szablon wiadomości e-mail
+              description: Obsługuje symbole zastępcze automatyzacji
+            recipients:
+              label: Odbiorcy
+              description: Użytkownicy lub adresy e-mail, na które należy wysyłać powiadomienia
         not_found: Nie można znaleźć skryptu `%{script}` dla automatyzacji `%{automation}`, upewnij się, że powiązana wtyczka jest zainstalowana.
         zapier_webhook:
           fields:

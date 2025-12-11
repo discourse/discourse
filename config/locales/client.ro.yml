@@ -2332,6 +2332,7 @@ ro:
         zoom_out: "Micșorează dimensiunea imaginii"
         zoom_in: "Mărește dimensiunea imaginii"
         remove: "Înlătură imagine"
+      image: "imagine"
       image_scale_button: "Scalează imaginea la %{percent}%"
       link_toolbar:
         edit: "Editează legătură"

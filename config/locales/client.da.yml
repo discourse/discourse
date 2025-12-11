@@ -2486,6 +2486,7 @@ da:
         title: "Tilføj billedbeskrivelse"
       image_toolbar:
         alt_text: "Tilføj billedbeskrivelse"
+      image: "billede"
       image_scale_button: "Skaler billedet til %{percent}%"
       delete_image_button: Slet Billede
       link_toolbar:

@@ -2582,6 +2582,7 @@ zh_TW:
         title: "新增圖片描述"
       image_toolbar:
         alt_text: "新增圖片描述"
+      image: "圖片"
       image_scale_button: "將影像縮放至 %{percent}%"
       delete_image_button: 刪除圖片
       toggle_image_grid: 切換影像網格

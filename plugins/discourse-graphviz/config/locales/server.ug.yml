@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 ug:
+  site_settings:
+    discourse_graphviz_enabled: "Graphviz قىستۇرمىسىنى قوزغىتىدۇ"

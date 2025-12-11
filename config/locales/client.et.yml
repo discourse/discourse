@@ -1509,6 +1509,7 @@ et:
         shared_draft:
           label: "Jagatud mustand"
       ignore: "Ignoreeri"
+      image: "pilt"
     notifications:
       tooltip:
         regular:

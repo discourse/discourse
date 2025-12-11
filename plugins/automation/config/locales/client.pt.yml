@@ -27,6 +27,12 @@ pt:
         text:
           label: Texto
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Categorias
+            tags:
+              label: Etiquetas
         user_badge_granted:
           fields:
             badge:

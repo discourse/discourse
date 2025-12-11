@@ -66,6 +66,12 @@ hu:
         text:
           label: Szöveg
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategóriák
+            tags:
+              label: Címkék
         not_found: Nem találta a(z) `%{trigger}` kiváltóját a(z) `%{automation}` automatizáláshoz, győződjön meg róla, hogy a kapcsolódó bővítmény telepítve van-e.
         user_badge_granted:
           fields:

@@ -27,6 +27,12 @@ zh_TW:
         text:
           label: 文字
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: 分類
+            tags:
+              label: 標記
         user_badge_granted:
           fields:
             badge:

@@ -2854,6 +2854,7 @@ it:
         zoom_out: "Riduci le dimensioni dell'immagine"
         zoom_in: "Aumenta le dimensioni dell'immagine"
         remove: "Rimuovi immagine"
+      image: "immagine"
       image_scale_button: "Ridimensiona l'immagine a %{percent}%"
       delete_image_button: Cancella immagine
       toggle_image_grid: Attiva/disattiva la griglia dell'immagine

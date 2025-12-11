@@ -3232,6 +3232,7 @@ uk:
         remove: "Видалити зображення"
         add_to_grid: "Додати до сітки"
         move_outside_grid: "Переміщення за межі сітки"
+      image: "зображення"
       grid_label: "Це відображатиметься у вигляді сітки"
       image_scale_button: "Масштабувати зображення до %{percent}%"
       delete_image_button: Видалити зображення

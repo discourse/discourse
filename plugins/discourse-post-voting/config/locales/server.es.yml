@@ -30,11 +30,8 @@ es:
     post_voting_enable_likes_on_answers: "Habilitar el botón «Me gusta» en las respuestas a los temas Votar publicación"
     post_voting_undo_vote_action_window: "Número de minutos en los cuales los usuarios tienen permitido deshacer sus votos en temas Votar publicación (introducir 0 para no poner límite)"
     post_voting_comment_limit_per_post: "Número de comentarios permitidos en cada publicación"
-    min_trust_to_flag_posts_voting_comments: "Nivel de confianza mínimo para denunciar un comentario de votación de publicación"
     flag_posts_voting_comments_allowed_groups: "Grupos autorizados a denunciar un comentario de votación de publicación"
     post_voting_comment_enabled: "Activa los comentarios en publicaciones en temas de Votar publicación"
-    keywords:
-      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
   discourse_post_voting:
     reviewables:
       actions:
