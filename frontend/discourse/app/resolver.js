@@ -416,7 +416,6 @@ export function buildResolver(baseName) {
      * @param {Object} parsedName - The parsed template name object
      * @param {string} [prefix=""] - Optional prefix to prepend to all candidate paths
      * @return {Object} Object with 'original' path and array of 'candidates' to try
-     * @private
      */
     #buildTemplateCandidates(parsedName, prefix = "") {
       const withoutType = parsedName.fullNameWithoutType;
