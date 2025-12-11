@@ -7,14 +7,11 @@ import { i18n } from "discourse-i18n";
 
 export default class RewindCallout extends Component {
   @service router;
-  @service currentUser;
   @service rewind;
 
   get showCallout() {
     return (
-      this.currentUser?.is_rewind_active &&
-      !this.rewind.dismissed &&
-      !this.rewind.disabled
+      this.rewind.active && !this.rewind.dismissed && !this.rewind.disabled
     );
   }
 
