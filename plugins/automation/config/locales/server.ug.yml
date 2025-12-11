@@ -9,6 +9,9 @@ ug:
     discourse_automation_enabled: "discourse-automation قىستۇرمىنى قوزغات"
   discourse_automation:
     models:
+      automations:
+        validations:
+          script_blank: "قوليازما بوش قالمايدۇ"
       fields:
         required_field: '«%{target}:%{target_name}» دىكى «%{name}» بۆلەكنى چوقۇم تولدۇرۇش كېرەك.'
         invalid_field: '«%{component}» بۆلەك بۆلىكى «%{target}:%{target_name}» دا ئىشلەتكىلى بولمايدۇ.'

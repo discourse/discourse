@@ -1730,10 +1730,10 @@ pl_PL:
           many: '<span class="%{className}">%{count}</span> pomocne flagi'
           other: '<span class="%{className}">%{count}</span> pomocne flagi'
         flagged_posts:
-          one: '<span class="%{className}">%{count}</span> oflagowany post'
-          few: '<span class="%{className}">%{count}</span> oflagowane posty'
-          many: '<span class="%{className}">%{count}</span> oflagowanych postów'
-          other: '<span class="%{className}">%{count}</span> oflagowanych postów'
+          one: '<span class="%{className}">%{count}</span> oflagowany wpis'
+          few: '<span class="%{className}">%{count}</span> oflagowane wpisy'
+          many: '<span class="%{className}">%{count}</span> oflagowanych wpisów'
+          other: '<span class="%{className}">%{count}</span> oflagowanych wpisów'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> usunięty post'
           few: '<span class="%{className}">%{count}</span> usunięte posty'
@@ -4345,7 +4345,7 @@ pl_PL:
         edit_action: "Edytuj"
         edit_anonymous: "Przykro nam, ale musisz być zalogowany aby edytować ten wpis."
         flag_action: "Oflaguj"
-        flag: "oznacz ten post prywatnie, aby zwrócić na niego uwagę lub wyślij prywatną wiadomość na jego temat"
+        flag: "oflaguj ten post prywatnie, aby zwrócić na niego uwagę lub wyślij prywatną wiadomość na jego temat"
         anonymous_flag: "wyślij e-mail do personelu, aby oflagować ten post"
         delete_action: "Usuń wpis"
         delete: "usuń ten wpis"
@@ -4432,7 +4432,7 @@ pl_PL:
           illegal: "Oflagowano jako nielegalne"
           notify_moderators: "Oflagowano do moderacji"
           notify_user: "Wysłano wiadomość do tego użytkownika"
-          custom: "Oznaczyłeś ten temat jako %{custom}"
+          custom: "Oflagowano ten temat jako %{custom}"
       delete:
         confirm:
           one: "Czy na pewno chcesz usunąć ten post?"
@@ -5082,7 +5082,7 @@ pl_PL:
         reply_post: "%{shortcut} Odpowiedz na wpis"
         quote_post: "%{shortcut} cytuj wpis"
         like: "%{shortcut} Polub wpis"
-        flag: "%{shortcut} Oznacz wpis"
+        flag: "%{shortcut} Oflaguj wpis"
         bookmark: "%{shortcut} Dodaj wpis do zakładek"
         edit: "%{shortcut} Edytuj wpis"
         delete: "%{shortcut} Usuń wpis"
@@ -8153,7 +8153,7 @@ pl_PL:
           posts_read: "Przeczytane wpisy"
           posts_read_all_time: "Przeczytane wpisy (w sumie)"
           flagged_posts: "Zgłoszonych wpisów"
-          flagged_by_users: "Flagujący Użytkownicy "
+          flagged_by_users: "Flagujący użytkownicy"
           likes_given: "Polubienia"
           likes_received: "Polubienia otrzymane"
           likes_received_days: "Polubienia otrzymane: unikalne dni"
