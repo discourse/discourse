@@ -92,6 +92,14 @@ class EmbedController < ApplicationController
     end
 
     response.headers["X-Robots-Tag"] = "noindex, indexifembedded"
+
+    if params[:full_app].present? && topic_id
+      topic = Topic.find_by(id: topic_id)
+      raise Discourse::NotFound if topic.blank?
+      redirect_to "#{topic.url}?embed_mode=true", allow_other_host: false
+      return
+    end
+
     if topic_id
       @topic_view =
         TopicView.new(
