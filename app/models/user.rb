@@ -1944,13 +1944,7 @@ class User < ActiveRecord::Base
   end
 
   def upcoming_change_enabled?(upcoming_change)
-    setting_enabled = SiteSetting.public_send(upcoming_change)
-
-    if UpcomingChanges.has_groups?(upcoming_change)
-      return setting_enabled && in_any_groups?(UpcomingChanges.group_ids_for(upcoming_change))
-    end
-
-    setting_enabled
+    UpcomingChanges.enabled_for_user?(upcoming_change, self)
   end
 
   protected

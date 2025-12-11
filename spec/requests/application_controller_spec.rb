@@ -1664,6 +1664,7 @@ RSpec.describe ApplicationController do
             "activatedThemes",
             "#{TopicList.new("latest", Fabricate(:anonymous), []).preload_key}",
             "themeSiteSettingOverrides",
+            "upcomingChanges",
           ],
         )
       end
@@ -1692,6 +1693,7 @@ RSpec.describe ApplicationController do
             "themeSiteSettingOverrides",
             "topicTrackingStates",
             "topicTrackingStateMeta",
+            "upcomingChanges",
           ],
         )
       end
@@ -1722,6 +1724,7 @@ RSpec.describe ApplicationController do
             "topicTrackingStateMeta",
             "fontMap",
             "visiblePlugins",
+            "upcomingChanges",
           ],
         )
       end

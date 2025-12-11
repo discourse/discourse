@@ -163,6 +163,7 @@ module TestSetup
     }.each { |k, v| SiteSetting.set(k, v) }
 
     SiteSetting.refresh!(refresh_site_settings: false, refresh_theme_site_settings: true)
+    SiteSetting.refresh_site_setting_group_ids!
 
     # very expensive IO operations
     SiteSetting.automatically_download_gravatars = false

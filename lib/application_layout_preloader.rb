@@ -25,6 +25,8 @@ class ApplicationLayoutPreloader
   def preloaded_data
     preload_anonymous_data
 
+    preload_upcoming_change_data(@guardian.user)
+
     if @guardian.authenticated?
       @guardian.user.sync_notification_channel_position
       preload_current_user_data
@@ -119,6 +121,15 @@ class ApplicationLayoutPreloader
     @preloaded["isReadOnly"] = @readonly_mode.to_json
     @preloaded["isStaffWritesOnly"] = @staff_writes_only_mode.to_json
     @preloaded["activatedThemes"] = activated_themes_json
+  end
+
+  def preload_upcoming_change_data(user)
+    @preloaded["upcomingChanges"] = SiteSetting
+      .upcoming_change_site_settings
+      .each_with_object({}) do |upcoming_change, hash|
+        hash[upcoming_change] = UpcomingChanges.enabled_for_user?(upcoming_change, user)
+      end
+      .to_json
   end
 
   def activated_themes_json

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UpcomingChanges do
-  let(:setting_name) { "enable_upload_debug_mode" }
+  let(:setting_name) { :enable_upload_debug_mode }
 
   before do
     mock_upcoming_change_metadata(
@@ -208,7 +208,7 @@ RSpec.describe UpcomingChanges do
       history = described_class.history_for(setting_name)
 
       expect(history.count).to eq(1)
-      expect(history.first.subject).to eq(setting_name)
+      expect(history.first.subject).to eq(setting_name.to_s)
       expect(history.first.action).to eq(UserHistory.actions[:upcoming_change_toggled])
     end
 
@@ -251,7 +251,7 @@ RSpec.describe UpcomingChanges do
       history = described_class.history_for(setting_name)
 
       expect(history.count).to eq(1)
-      expect(history.first.subject).to eq(setting_name)
+      expect(history.first.subject).to eq(setting_name.to_s)
     end
 
     it "returns only records with upcoming_change_toggled action" do
@@ -278,6 +278,89 @@ RSpec.describe UpcomingChanges do
 
       expect(history.count).to eq(0)
       expect(history).to be_a(ActiveRecord::Relation)
+    end
+  end
+
+  describe ".enabled_for_user?" do
+    context "for logged-in user" do
+      fab!(:user)
+
+      context "when the upcoming change is disabled" do
+        before { SiteSetting.enable_upload_debug_mode = false }
+
+        it "returns false" do
+          expect(UpcomingChanges.enabled_for_user?(setting_name, user)).to eq(false)
+        end
+      end
+
+      context "when the upcoming change is enabled for everyone" do
+        before { SiteSetting.enable_upload_debug_mode = true }
+
+        it "returns true" do
+          expect(UpcomingChanges.enabled_for_user?(setting_name, user)).to eq(true)
+        end
+      end
+
+      context "when the upcoming change is only enabled for certain groups" do
+        before do
+          SiteSetting.enable_upload_debug_mode = true
+          Fabricate(
+            :site_setting_group,
+            name: setting_name,
+            group_ids: Group::AUTO_GROUPS[:trust_level_4].to_s,
+          )
+        end
+
+        it "returns false" do
+          expect(UpcomingChanges.enabled_for_user?(setting_name, user)).to eq(false)
+        end
+
+        context "when the user is in that group" do
+          before do
+            trust_level_4_group = Group.find_by(id: Group::AUTO_GROUPS[:trust_level_4])
+            trust_level_4_group.add(user)
+          end
+
+          it "returns true" do
+            expect(UpcomingChanges.enabled_for_user?(setting_name, user)).to eq(true)
+          end
+        end
+      end
+    end
+
+    context "for anonymous user" do
+      let(:user) { nil }
+
+      context "when the upcoming change is disabled" do
+        before { SiteSetting.enable_upload_debug_mode = false }
+
+        it "returns false" do
+          expect(UpcomingChanges.enabled_for_user?(setting_name, user)).to eq(false)
+        end
+      end
+
+      context "when the upcoming change is enabled for everyone" do
+        before { SiteSetting.enable_upload_debug_mode = true }
+
+        it "returns true" do
+          expect(UpcomingChanges.enabled_for_user?(setting_name, user)).to eq(true)
+        end
+      end
+
+      context "when the upcoming change is only enabled for certain groups" do
+        before do
+          SiteSetting.enable_upload_debug_mode = true
+          Fabricate(
+            :site_setting_group,
+            name: setting_name,
+            group_ids: Group::AUTO_GROUPS[:trust_level_4].to_s,
+          )
+        end
+
+        it "returns false" do
+          expect(UpcomingChanges.enabled_for_user?(setting_name, user)).to eq(false)
+        end
+      end
     end
   end
 end
