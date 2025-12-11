@@ -2841,6 +2841,33 @@ RSpec.describe Search do
       results = Search.execute("in:title status:open Discourse")
       expect(results.posts.length).to eq(1)
     end
+
+    it "sorts by topic bumped_at" do
+      old_bumped_topic =
+        Fabricate(:topic, title: "Old bumped topic about Discourse", bumped_at: 1.day.ago)
+      new_bumped_topic =
+        Fabricate(:topic, title: "New bumped topic about Discourse", bumped_at: 1.hour.ago)
+
+      Fabricate(
+        :post,
+        topic: old_bumped_topic,
+        raw: "This is the first post",
+        created_at: 1.hour.ago,
+      )
+
+      Fabricate(
+        :post,
+        topic: new_bumped_topic,
+        raw: "This is the first post",
+        created_at: 1.day.ago,
+      )
+
+      results = Search.execute("Discourse in:title order:latest")
+      expect(results.posts.map(&:topic_id)).to eq([new_bumped_topic.id, old_bumped_topic.id])
+
+      results = Search.execute("Discourse in:title order:oldest")
+      expect(results.posts.map(&:topic_id)).to eq([old_bumped_topic.id, new_bumped_topic.id])
+    end
   end
 
   describe "include:invisible / include:unlisted" do
