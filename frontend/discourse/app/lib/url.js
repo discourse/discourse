@@ -511,6 +511,7 @@ export function prefixProtocol(url) {
 }
 
 export function getCategoryAndTagUrl(category, subcategories, tag) {
+  console.log("getCategoryAndTagUrl", category, subcategories, tag);
   let url;
 
   if (category) {

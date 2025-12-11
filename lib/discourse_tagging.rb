@@ -640,6 +640,9 @@ module DiscourseTagging
   end
 
   def self.hidden_tag_names(guardian = nil)
+    # this is not great
+    # it is used like this DiscourseTagging.hidden_tag_names(guardian).include?(tag_name)
+    # when it could be passed in to activerecord query directly
     guardian&.is_staff? ? [] : Tag.where.not(id: visible_tags(guardian).select(:id)).pluck(:name)
   end
 

@@ -1647,8 +1647,9 @@ Discourse::Application.routes.draw do
     get ".well-known/apple-app-site-association" => "metadata#app_association_ios", :format => false
     get "opensearch" => "metadata#opensearch", :constraints => { format: :xml }
 
-    scope "/tag/:tag_name" do
+    scope "/tag/:slug/:id" do
       constraints format: :json do
+        # constraints format: %r{(json|html|\*/\*)} do
         get "/" => "tags#show", :as => "tag_show"
         get "/info" => "tags#info"
         get "/notifications" => "tags#notifications"
@@ -1660,6 +1661,29 @@ Discourse::Application.routes.draw do
 
         Discourse.filters.each do |filter|
           get "/l/#{filter}" => "tags#show_#{filter}", :as => "tag_show_#{filter}"
+        end
+      end
+
+      constraints format: :rss do
+        get "/" => "tags#tag_feed"
+      end
+    end
+
+    # backward compatibility
+    # is there a better way to do this instead of dup the whole thing
+    scope "/tag/:tag_name" do
+      constraints format: :json do
+        get "/" => "tags#show", :as => "tag_show_legacy" # i don't like this legacy thing
+        get "/info" => "tags#info"
+        get "/notifications" => "tags#notifications"
+        put "/notifications" => "tags#update_notifications"
+        put "/" => "tags#update"
+        delete "/" => "tags#destroy"
+        post "/synonyms" => "tags#create_synonyms"
+        delete "/synonyms/:synonym_id" => "tags#destroy_synonym"
+
+        Discourse.filters.each do |filter|
+          get "/l/#{filter}" => "tags#show_#{filter}", :as => "tag_show_#{filter}_legacy"
         end
       end
 

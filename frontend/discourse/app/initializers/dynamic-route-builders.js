@@ -58,6 +58,8 @@ export default {
 
     app.register("route:tags.show-category", buildTagRoute());
     app.register("controller:tags.show-category", DiscoveryListController);
+    app.register("route:tag.showLegacy", buildTagRoute());
+    app.register("controller:tag.showLegacy", DiscoveryListController);
     app.register(
       "route:tags.show-category-none",
       buildTagRoute({
@@ -84,6 +86,18 @@ export default {
       );
       app.register(
         `controller:tag.show-${filterDasherized}`,
+        DiscoveryListController
+      );
+
+      // TODO nat CHECK IF WE CAN REMOVE showLegacy routes entirely
+      app.register(
+        `route:tag.showLegacy-${filterDasherized}`,
+        buildTagRoute({
+          navMode: filter,
+        })
+      );
+      app.register(
+        `controller:tag.showLegacy-${filterDasherized}`,
         DiscoveryListController
       );
       app.register(

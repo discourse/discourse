@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "cgi"
+
 class Tag < ActiveRecord::Base
   include Searchable
   include HasDestroyedWebHook
@@ -16,7 +18,9 @@ class Tag < ActiveRecord::Base
   validate :target_tag_validator,
            if: Proc.new { |t| t.new_record? || t.will_save_change_to_target_tag_id? }
   validate :name_validator
+  validate :ensure_slug
   validates :description, length: { maximum: 1000 }
+  validates :slug, uniqueness: { case_sensitive: false }, allow_nil: true
 
   scope :where_name,
         ->(name) do
@@ -57,7 +61,9 @@ class Tag < ActiveRecord::Base
   has_many :embeddable_host_tags
   has_many :embeddable_hosts, through: :embeddable_host_tags
 
+  before_validation :generate_slug_if_blank
   before_save :sanitize_description
+  after_create :ensure_slug_has_id
 
   after_save :index_search
   after_save :update_synonym_associations
@@ -203,14 +209,26 @@ class Tag < ActiveRecord::Base
     SiteSetting.tagging_enabled
   end
 
+  # can kill this one
+  # if we make slug a required field
+  def slug_for_url
+    if slug.present?
+      slug
+    else
+      # use Slug.for to generate slug, defaulting to <id>-tag if generation fails
+      generated_slug = Slug.for(name, "#{id}-tag")
+      (generated_slug.presence || "#{id}-tag")
+    end
+  end
+
   def url
-    "#{Discourse.base_path}/tag/#{UrlHelper.encode_component(self.name)}"
+    "#{Discourse.base_path}/tag/#{slug_for_url}/#{self.id}"
   end
 
   alias_method :relative_url, :url
 
   def full_url
-    "#{Discourse.base_url}/tag/#{UrlHelper.encode_component(self.name)}"
+    "#{Discourse.base_url}/tag/#{slug_for_url}/#{self.id}"
   end
 
   def index_search
@@ -260,6 +278,22 @@ class Tag < ActiveRecord::Base
   end
 
   private
+
+  def generate_slug_if_blank
+    return if slug.present?
+    return if name.blank?
+
+    default = "#{id}-tag"
+    self.slug = Slug.for(name, default)
+  end
+
+  def ensure_slug
+    return if name.blank? # technically should never happen I guess
+
+    errors.add(:slug, :invalid) if slug.blank?
+
+    # also check if slug is dup, similar to category.ensure_slug
+  end
 
   def sanitize_description
     self.description = sanitize_field(self.description) if description_changed?

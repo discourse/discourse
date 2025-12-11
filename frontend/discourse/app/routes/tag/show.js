@@ -88,9 +88,10 @@ export default class TagShowRoute extends DiscourseRoute {
       }
 
       filter += `/${tagId}/l/${topicFilter}`;
+      console.log("filter with category:", filter);
     } else if (additionalTags) {
       filter = `tags/intersection/${tagId}/${additionalTags.join("/")}`;
-
+      console.log("filter with additionalTags:", filter);
       if (transition.to.queryParams["category"]) {
         filteredQueryParams["category"] = transition.to.queryParams["category"];
         category = Category.findBySlugPathWithID(
@@ -99,6 +100,7 @@ export default class TagShowRoute extends DiscourseRoute {
       }
     } else {
       filter = `tag/${tagId}/l/${topicFilter}`;
+      console.log("filter with else:", filter);
     }
 
     if (

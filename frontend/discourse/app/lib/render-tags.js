@@ -25,7 +25,7 @@ export function clearTagsHtmlCallbacks() {
 }
 
 export default function (topic, params) {
-  let tags = topic?.tags || params?.tags;
+  let tags = topic?.get?.("tags") || topic?.tags || params?.tags;
   let buffer = "";
   let tagsForUser = null;
   let tagName;
@@ -71,8 +71,8 @@ export default function (topic, params) {
   const hasContent = (tags && tags.length > 0) || callbackResults.length > 0;
 
   if (hasContent) {
-    buffer = `<div class='discourse-tags' 
-                   role='list' 
+    buffer = `<div class='discourse-tags'
+                   role='list'
                    aria-label=${i18n("tagging.tags")}>`;
 
     let currentIndex = 0;
@@ -82,15 +82,32 @@ export default function (topic, params) {
         const tag = tags[i];
         const tagParams = params ? { ...params } : {};
 
-        if (params?.tagClasses && params?.tagClasses[tag]) {
-          tagParams.extraClass = params.tagClasses[tag];
+        // handle both tag objects {name, id, slug} and string names
+        let tagNameStr;
+        let tagId = null;
+        let tagSlug = null;
+
+        if (typeof tag === "string") {
+          tagNameStr = tag;
+        } else if (tag && typeof tag === "object") {
+          tagNameStr = tag.name || tag.id || String(tag);
+          tagId = tag.id || null;
+          tagSlug = tag.slug || null;
+        } else {
+          tagNameStr = String(tag);
         }
 
-        buffer += renderTag(tag, {
-          description: topic?.tags_descriptions?.[tag],
+        if (params?.tagClasses && params?.tagClasses[tagNameStr]) {
+          tagParams.extraClass = params.tagClasses[tagNameStr];
+        }
+
+        buffer += renderTag(tagNameStr, {
+          description: topic?.tags_descriptions?.[tagNameStr],
           isPrivateMessage,
           tagsForUser,
           tagName,
+          tagId,
+          tagSlug,
           ...tagParams,
         });
 

@@ -157,9 +157,11 @@ export default class TagInfo extends Component {
 
   @action
   finishedEditing() {
-    const oldTagName = this.tag.name;
+    const oldName = this.tag.name;
+    const oldSlug = this.tag.slug;
     const id = this.tag.id;
     this.newTagDescription = this.newTagDescription?.replaceAll("\n", "<br>");
+
     this.tag
       .update({
         id,
@@ -170,10 +172,16 @@ export default class TagInfo extends Component {
         this.set("editing", false);
         this.tagInfo.set("description", this.newTagDescription);
 
-        if (result.responseJson.tag) {
-          this.tag.set("name", result.responseJson.tag.name);
-          if (oldTagName !== result.responseJson.tag.name) {
-            this.router.transitionTo("tag.show", result.responseJson.tag.name);
+        const tag = result.responseJson.tag;
+        if (tag) {
+          this.tag.set("name", tag.name);
+
+          // ok we need to revisit this
+          // if we are routing to /tag/name or /tag/slug/id
+          if (tag.name !== oldName /* and url is by name */) {
+            this.router.transitionTo("tag.show", tag.name);
+          } else if (tag.slug !== oldSlug /* and url is by slug/id */) {
+            this.router.transitionTo("tag.show", tag.slug, tag.id);
           }
         }
       })

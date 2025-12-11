@@ -31,24 +31,32 @@ export default class TagSectionLink extends BaseTagSectionLink {
   }
 
   get models() {
+    // slug+id format if available, otherwise fallback to name
+    // gotta reconfirm if this is necessary if not maintaining both
+    if (this.tag?.slug && this.tag?.id) {
+      return [this.tag.slug, this.tag.id];
+    }
     return [this.tagName];
   }
 
   get route() {
+    const hasSlugAndId = this.tag?.slug && this.tag?.id;
+    const routePrefix = hasSlugAndId ? "tag.show" : "tag.showLegacy";
+
     if (this.currentUser?.sidebarLinkToFilteredList) {
       if (this.#newNewViewEnabled && this.#unreadAndNewCount > 0) {
-        return "tag.showNew";
+        return hasSlugAndId ? "tag.showNew" : "tag.showLegacyNew";
       } else if (this.totalUnread > 0) {
-        return "tag.showUnread";
+        return hasSlugAndId ? "tag.showUnread" : "tag.showLegacyUnread";
       } else if (this.totalNew > 0) {
-        return "tag.showNew";
+        return hasSlugAndId ? "tag.showNew" : "tag.showLegacyNew";
       }
     }
-    return "tag.show";
+    return routePrefix;
   }
 
   get currentWhen() {
-    return "tag.show tag.showNew tag.showUnread tag.showTop tag.showHot tag.showLatest";
+    return "tag.show tag.showNew tag.showUnread tag.showTop tag.showHot tag.showLatest tag.showLegacy tag.showLegacyNew tag.showLegacyUnread tag.showLegacyTop tag.showLegacyHot tag.showLegacyLatest";
   }
 
   get badgeText() {

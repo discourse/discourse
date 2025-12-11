@@ -195,9 +195,17 @@ class TagsController < ::ApplicationController
       @title = I18n.t("rss_by_tag", tag: tag_params.join(" & "))
       @description_meta = Tag.where(name: @tag_name).pick(:description) || @title
 
-      canonical_params = params.slice(:category_slug_path_with_id, :tag_name)
-      canonical_method = url_method(canonical_params)
-      canonical_url "#{Discourse.base_url_no_prefix}#{public_send(canonical_method, *(canonical_params.values.map { |t| t.force_encoding("UTF-8") }))}"
+      # maintain backward compat with old canonical URL structure
+      # /:slug/:id vs /:name
+      if params[:slug] && params[:id]
+        canonical_params = params.slice(:category_slug_path_with_id, :slug, :id)
+        canonical_method = url_method(canonical_params)
+        canonical_url "#{Discourse.base_url_no_prefix}#{public_send(canonical_method, slug: params[:slug], id: params[:id])}"
+      else
+        canonical_params = params.slice(:category_slug_path_with_id, :tag_name)
+        canonical_method = url_method(canonical_params)
+        canonical_url "#{Discourse.base_url_no_prefix}#{public_send(canonical_method, *(canonical_params.values.map { |t| t.force_encoding("UTF-8") }))}"
+      end
 
       if @list.topics.size == 0 && params[:tag_name] != "none" && !Tag.where_name(@tag_name).exists?
         raise Discourse::NotFound.new("tag not found", check_permalinks: true)
@@ -464,8 +472,33 @@ class TagsController < ::ApplicationController
   private
 
   def fetch_tag
-    @tag = Tag.find_by_name(params[:tag_name].force_encoding("UTF-8"))
-    raise Discourse::NotFound unless @tag
+    id = params[:id]
+    slug = params[:slug]
+    name = params[:tag_name]
+    encoded_name = name.force_encoding("UTF-8") # need to confirm if we're always dealing with this version of the string across the backend
+
+    # new /:slug/:id pattern
+    if slug && id
+      @tag = Tag.find_by(id: id)
+      raise Discourse::NotFound unless @tag
+
+      if @tag.slug_for_url != slug
+        # slug mismatch - redirect to correct slug
+        redirect_to tag_show_path(slug: @tag.slug_for_url, id: @tag.id), status: :moved_permanently
+        return
+      end
+      # or legacy /:name pattern (backwards compat)
+    elsif name.present?
+      @tag = Tag.find_by_slug_or_name(encoded_name)
+      raise Discourse::NotFound unless @tag
+      # redirect to /:slug/:id format
+      if @tag.slug.present? || @tag.slug_for_url != name
+        redirect_to tag_show_path(slug: @tag.slug_for_url, id: @tag.id), status: :moved_permanently
+        return
+      end
+    else
+      raise Discourse::NotFound
+    end
   end
 
   def ensure_tags_enabled
@@ -473,9 +506,9 @@ class TagsController < ::ApplicationController
   end
 
   def ensure_visible
-    if DiscourseTagging.hidden_tag_names(guardian).include?(params[:tag_name])
-      raise Discourse::NotFound
-    end
+    tag_name = params[:tag_name]
+
+    raise Discourse::NotFound if DiscourseTagging.hidden_tag_names(guardian).include?(tag_name)
   end
 
   # check usages here for id -> name
@@ -632,6 +665,10 @@ class TagsController < ::ApplicationController
   end
 
   def tag_params
-    Array(params[:tags]).map(&:to_s).concat(Array(@additional_tags))
+    tag_name = params[:tag_name]
+    tags = params[:tags]
+
+    base_tags = tag_name ? [tag_name] : Array(tags).map(&:to_s)
+    base_tags.concat(Array(@additional_tags))
   end
 end

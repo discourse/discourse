@@ -25,9 +25,19 @@ export function defaultRenderTag(tag, params) {
       const username = params.tagsForUser
         ? params.tagsForUser
         : User.current().username;
-      path = `/u/${username}/messages/tags/${tag}`;
+      // slug/id format, otherwise fallback to name
+      if (params.tagSlug && params.tagId) {
+        path = `/u/${username}/messages/tags/${params.tagSlug}/${params.tagId}`;
+      } else {
+        path = `/u/${username}/messages/tags/${tag}`;
+      }
     } else {
-      path = `/tag/${tag}`;
+      // slug/id format, otherwise fallback to name
+      if (params.tagSlug && params.tagId) {
+        path = `/tag/${params.tagSlug}/${params.tagId}`;
+      } else {
+        path = `/tag/${tag}`;
+      }
     }
   }
   const href = path ? ` href='${getURL(path)}' ` : "";

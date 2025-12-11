@@ -219,10 +219,22 @@ export default function () {
   this.route("full-page-search", { path: "/search" });
 
   this.route("tag", function () {
-    this.route("show", { path: "/:tag_name" });
+    // new slug+id pattern
+    this.route("show", { path: "/:slug/:id" });
 
     Site.currentProp("filters").forEach((filter) => {
       this.route("show" + capitalize(filter), {
+        path: "/:slug/:id/l/" + filter,
+      });
+    });
+
+    // hmm showLegacy isn't great but avoids a breaking change for now
+    // also see routes.rb if removing
+    this.route("showLegacy", { path: "/:tag_name" });
+    // this.route("show", { path: "/:tag_name" });
+
+    Site.currentProp("filters").forEach((filter) => {
+      this.route("showLegacy" + capitalize(filter), {
         path: "/:tag_name/l/" + filter,
       });
     });
