@@ -503,7 +503,12 @@ export function prefixProtocol(url) {
     return `https:${url}`;
   }
 
-  if (url.startsWith("/") || url.includes("://") || url.startsWith("mailto:")) {
+  if (
+    url.startsWith("/") ||
+    url.includes("://") ||
+    url.startsWith("mailto:") ||
+    url.startsWith("#")
+  ) {
     return url;
   }
 

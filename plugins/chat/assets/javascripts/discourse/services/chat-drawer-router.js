@@ -160,6 +160,11 @@ const ROUTES = {
   },
   "chat.starred-channels": {
     name: ChatDrawerRoutesStarredChannels,
+    redirect: (context) => {
+      if (!context.chatChannelsManager.hasStarredChannels) {
+        return "/chat/channels";
+      }
+    },
   },
   "chat.threads": {
     name: ChatDrawerRoutesThreads,

@@ -809,7 +809,9 @@ zh_CN:
         claimed_by: "由 %{username} 申领 · %{relativeDate}"
         unclaimed_by: "%{username} 已取消认领 · %{relativeDate}"
         reviewed: "已审核"
-        reviewed_by: "由 %{username} 审核 · %{relativeDate}"
+        approved_by: "由 %{username} · %{relativeDate} 审核"
+        rejected_by: "被 %{username} · %{relativeDate} 拒绝"
+        ignored_by: "被 %{username} · %{relativeDate} 忽略"
         view_conversation: "查看私信"
         note_added: "版主注释"
         note_added_by: "%{username} 的版主注释 · %{relativeDate}"
@@ -2770,6 +2772,7 @@ zh_CN:
         remove: "移除图片"
         add_to_grid: "添加到网格"
         move_outside_grid: "移出网格"
+      image: "图片"
       grid_label: "这将以网格形式显示"
       image_scale_button: "将图片缩放至 %{percent}%"
       delete_image_button: 删除图片
@@ -4510,6 +4513,7 @@ zh_CN:
       add_to_calendar: "添加到日历"
       google: "Google 日历"
       ics: "ICS"
+      default_title: "预定活动"
     tagging:
       all_tags: "所有标签"
       other_tags: "其他标签"
@@ -5916,6 +5920,7 @@ zh_CN:
           user_destroyed: "用户被删除"
           user_suspended: "用户被封禁"
           user_unsuspended: "用户被解除封禁"
+          user_anonymized: "用户已被匿名化"
         reviewable_event:
           group_name: "可审核的事件"
           reviewable_created: "可审核的条目已就绪"

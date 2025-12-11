@@ -61,6 +61,14 @@ en:
         text:
           label: Text
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Categories
+              description: Only trigger when the flagged topic is in these categories
+            tags:
+              label: Tags
+              description: Only trigger when the flagged topic has any of these tags
         not_found: Couldn’t find trigger `%{trigger}` for automation `%{automation}`, ensure the associated plugin is installed
         user_badge_granted:
           fields:
@@ -271,6 +279,14 @@ en:
               label: Tags
               description: Optional, will trigger only if the post has any of these tags
       scriptables:
+        email_on_flagged_post:
+          fields:
+            email_template:
+              label: Email template
+              description: Supports automation placeholders
+            recipients:
+              label: Recipients
+              description: Users or email addresses to notify
         not_found: Couldn’t find script `%{script}` for automation `%{automation}`, ensure the associated plugin is installed
         zapier_webhook:
           fields:

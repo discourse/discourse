@@ -2,6 +2,7 @@
 
 describe "DiscourseRewind | user preferences", type: :system do
   fab!(:current_user, :user)
+  let(:rewind_page) { PageObjects::Pages::Rewind.new }
 
   before do
     SiteSetting.discourse_rewind_enabled = true
@@ -13,9 +14,15 @@ describe "DiscourseRewind | user preferences", type: :system do
 
     context "when discourse_rewind_disabled is false" do
       it "shows the rewind tab" do
-        visit("/my/activity")
+        rewind_page.visit_my_activity
+        expect(rewind_page).to have_rewind_tab
+      end
 
-        expect(page).to have_selector(".user-nav__activity-rewind")
+      it "shows the rewind profile link" do
+        rewind_page.visit_my_activity
+        rewind_page.open_user_menu
+        rewind_page.click_profile_tab
+        expect(rewind_page).to have_rewind_profile_link
       end
     end
 
@@ -23,9 +30,15 @@ describe "DiscourseRewind | user preferences", type: :system do
       before { current_user.user_option.update!(discourse_rewind_disabled: true) }
 
       it "does not show the rewind tab" do
-        visit("/my/activity")
+        rewind_page.visit_my_activity
+        expect(rewind_page).to have_no_rewind_tab
+      end
 
-        expect(page).to have_no_selector(".user-nav__activity-rewind")
+      it "does not show the rewind profile link" do
+        rewind_page.visit_my_activity
+        rewind_page.open_user_menu
+        rewind_page.click_profile_tab
+        expect(rewind_page).to have_no_rewind_profile_link
       end
     end
   end

@@ -1110,7 +1110,6 @@ ar:
         claimed: "تمت المطالبة به"
         claimed_by: "تمت المطالبة به من قِبل %{username} · %{relativeDate}"
         reviewed: "أُجريت مراجعته"
-        reviewed_by: "تمت المراجعة من طرف %{username} · %{relativeDate}"
         view_conversation: "عرض الرسالة الخاصة"
         note_added: "ملاحظة المشرف"
         note_added_by: "ملاحظة المشرف من قِبل %{username} · %{relativeDate}"
@@ -3436,6 +3435,7 @@ ar:
         zoom_out: "تقليل حجم الصورة"
         zoom_in: "زيادة حجم الصورة"
         remove: "إزالة الصورة"
+      image: "صورة"
       image_scale_button: "تغيير حجم الصورة إلى %{percent}%"
       delete_image_button: حذف الصورة
       toggle_image_grid: تشغيل التخطيط الشبكي للصور

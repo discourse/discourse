@@ -5,22 +5,170 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rewind: "Discourse Rewind"
   js:
     discourse_rewind:
+      placeholder: Discourse Rewind
+      title: 回顾
+      loading: "正在重构样条曲线中…"
+      preferences:
+        disable_rewind: "禁用 Discourse Rewind。这将在您的个人资料和头像中隐藏年终活动总结。"
       reports:
+        activity_calendar:
+          title: 活动日历
+          cell_title:
+            visited_no_posts: "你在 %{date} 来潜水了，但没有发帖。"
+            visited_with_posts:
+              other: "你在 %{date} 发了 %{count} 篇帖子。"
+            no_activity: "你在 %{date} 没来过。"
+        top_words:
+          title: 词语使用
         reading_time:
           title: 阅读时间
+          book_comparison: "您在本站上阅读了 <code>%{readingTitme}</code> ！这相当于您阅读完 <i>%{bookTitle}</i> 所需要的时间。"
+        post_used_reactions:
+          title: 话题中最常用的回应
+          total_number: "回应总数： %{count}"
+        post_received_reactions:
+          title: 收到最多回应的主题
+        fbff:
+          title: 你的论坛挚友 (Forum Best FriendForever)
+        most_viewed_categories:
+          title:
+            other: 你最常浏览的 %{count} 个分类
+        most_viewed_tags:
+          title:
+            other: 你最常浏览的 %{count} 个标签
+        best_topics:
+          view_topic: 查看话题
+          title:
+            other: 你最优秀的 %{count} 个话题
+        best_posts:
+          view_post: 查看帖子
+          title:
+            other: 你最优秀的 %{count} 个帖子
+        ai_usage:
+          title: AI 使用
+          total_requests: 总请求数
+          total_tokens: 总词元数
+          success_rate: 成功率
+          favorite_features: 使用最多的功能
+          favorite_models: 最常用的 AI 模型
+          wake_up: "醒醒吧， %{username}..."
+          system_title: "检测到 AI 使用"
+          section_features: "顶级功能"
+          section_models: "顶级模型"
+        assignments:
+          title: 指定
+          total_assigned: 指定给我
+          completed: 指定已完成
+          pending: 待指定的任务
+          assigned_by_user: 已指定的任务
+          completion_rate: 完成率
         chat_usage:
+          title: 聊天活动
+          total_messages: 总消息数
+          dm_messages: DM 消息
+          unique_dm_channels: DM 对话
+          reactions_received: 收到的回应
+          avg_message_length: 平均消息长度
+          favorite_channels: 最喜欢的频道
           messages: 消息
+          bot_name: XxRewindBotxX
           you: 您
+          channel_title: "#聊天活动"
           status_online: "● 在线"
+          message_1: "今年你发送了 <strong>%{count}</strong> 条消息！"
+          reply_1: "lol 超棒的 B-)"
+          reply_2: "酷毙了 :D"
+          message_3: "大家都很喜欢你的留言！你收到了 <strong>%{count}</strong> 个回应 ❤️"
+          reply_3: "r0fl rAwr 8-)"
+          message_4: "你的平均消息长度为 <strong>%{length}</strong> 个字符"
+          message_5: "你最喜欢的频道："
+          dancing_baby_alt: "跳舞宝宝（Dancing Baby）"
+        favorite_gifs:
+          title:
+            other: 你最喜欢的 %{count} GIF
+          total_usage:
+            other: 共使用 %{count} 次
         invites:
           title: 邀请
+          total_invites: 发送的邀请总数
+          redeemed: 已接受的邀请
+          redemption_rate: 接受率
+          avg_trust_level: 平均信任级别
+          invitee_impact: 你的受邀者带来的影响
           invitee_posts: 创建的帖子
+          invitee_topics: 发起的话题数
           invitee_likes: 点赞
+          most_active_invitee: 最活跃的受邀者
+          guest_book_title: 留言簿
+          guest_book_subtitle: 你的社区邀请
           label_invitations_sent: "已发送邀请:"
+          label_guests_joined: "已接受邀请："
+          label_acceptance_rate: "接受率:"
+          section_contributions: 受邀者的贡献
+          label_posts_written: "撰写的帖子："
+          label_topics_started: "发起的话题:"
+          label_likes_given: "点赞数："
+          section_most_active: 最活跃访客
         new_user_interactions:
+          title: 指导新用户
+          subtitle:
+            other: 今年你帮助了 %{count} 位新用户
+          new_member:
+            other: "%{count} 个新成员"
+          total_interactions: 总互动次数
+          unique_new_users: 唯一新用户
           likes_given: 点赞
+          replies: 回复帖子
           mentions: 提及
+          topics_with_new_users: 有新用户的话题
+        time_of_day_activity:
+          title: 每日活动节奏
+          play_button: 以声音播放你的活动
+          stop_button: 停止音频播放
         writing_analysis:
+          title: 写作分析
+          menu_file: 文件
           menu_other: 其他
+          menu_additional: 附加
+          menu_opening: 正在打开
+          help_text: 按 F1 获取帮助
+          app_name: DiscoStar Professional
+          release_info: CDCK 于 %{rewindYear} 发布
+          total_words: 总字数
+          total_posts: 总帖子数
+          avg_post_length: 平均帖子长度
+          readability_score_label: 可读性评分
+          readability_level: 可读性级别
+          readability_score:
+            over_80:
+              1: "Ernest Hemingway（海明威）"
+              2: "Raymond Carver（雷蒙德·卡佛）"
+              3: "Michael Crichton（迈克尔·克莱顿）"
+              4: "Roald Dahl（罗尔德·达尔）"
+            over_60:
+              1: "C.S. Lewis（C.S.刘易斯）"
+              2: "Stephen King（史蒂芬·金）"
+              3: "Agatha Christie（阿加莎·克里斯蒂）"
+              4: "George R.R. Martin（乔治·R·R·马丁）"
+            over_40:
+              1: "George Orwell（乔治·奥威尔）"
+              2: "F. Scott Fitzgerald（菲茨杰拉德）"
+              3: "Aldous Huxley（阿道司·赫胥黎）"
+              4: "Joan Didion（琼·狄迪恩）"
+            over_20:
+              1: "Cormac McCarthy（科马克·麦卡锡）"
+              2: "William Faulkner（威廉·福克纳）"
+              3: "Virgina Woolf（弗吉尼亚·伍尔夫）"
+              4: "Gabriel Garcia Marquez（加夫列尔·加西亚·马尔克斯）"
+            over_0:
+              1: "James Joyce（詹姆斯·乔伊斯）"
+              2: "Thomas Pynchon（托马斯·品钦）"
+              3: "David Foster Wallace（大卫·福斯特·华莱士）"
+              4: "Fyodor Dostoevsky（陀思妥耶夫斯基）"

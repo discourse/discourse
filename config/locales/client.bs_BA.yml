@@ -1759,6 +1759,7 @@ bs_BA:
           label: "Toggle topic bump"
           desc: "Odgovori bez izmjene zadnjeg datuma odgovora"
       ignore: "Zanemari"
+      image: "slika"
     notifications:
       tooltip:
         regular:
