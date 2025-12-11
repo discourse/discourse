@@ -1139,18 +1139,9 @@ describe "Composer - ProseMirror editor", type: :system do
     it "avoids triggering upload when unauthorized" do
       SiteSetting.authorized_extensions = ""
 
-      valid_png_data_uri =
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
-
       cdp.allow_clipboard
-
-      open_composer
-
-      html = <<~HTML
-          <img src="#{valid_png_data_uri}" alt="img1" width="100" height="100">
-        HTML
-
-      cdp.copy_paste(html, html: true)
+      cdp.copy_test_image
+      cdp.paste
 
       expect(rich).to have_no_css("img")
 
