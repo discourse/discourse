@@ -1136,60 +1136,58 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("img[alt='img1'][data-orig-src]", count: 2)
     end
 
-    it "avoids triggering upload for paste when unauthorized" do
-      SiteSetting.authorized_extensions = ""
+    context "when unauthorized to upload" do
+      before { SiteSetting.authorized_extensions = "" }
 
-      open_composer
+      it "allows pasting text" do
+        cdp.allow_clipboard
 
-      cdp.allow_clipboard
-      cdp.copy_test_image
-      cdp.paste
+        open_composer
 
-      expect(rich).to have_no_css("img")
+        cdp.copy_paste("Just some text")
 
-      composer.toggle_rich_editor
+        expect(rich).to have_css("p", text: "Just some text")
 
-      expect(composer).to have_value("")
-    end
+        composer.toggle_rich_editor
 
-    it "avoids triggering upload for base64 when unauthorized" do
-      SiteSetting.authorized_extensions = ""
+        expect(composer).to have_value("Just some text")
+      end
 
-      valid_png_data_uri =
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+      it "avoids triggering upload for paste" do
+        open_composer
 
-      cdp.allow_clipboard
+        cdp.allow_clipboard
+        cdp.copy_test_image
+        cdp.paste
 
-      open_composer
+        expect(rich).to have_no_css("img")
 
-      html = <<~HTML
+        composer.toggle_rich_editor
+
+        expect(composer).to have_value("")
+      end
+
+      it "avoids triggering upload for base64" do
+        valid_png_data_uri =
+          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+
+        cdp.allow_clipboard
+
+        open_composer
+
+        html = <<~HTML
           <img src="#{valid_png_data_uri}" alt="img1" width="100" height="100">
         HTML
 
-      cdp.copy_paste(html, html: true)
+        cdp.copy_paste(html, html: true)
 
-      expect(rich).to have_no_css("img")
-      expect(rich).to have_text("image")
+        expect(rich).to have_no_css("img")
+        expect(rich).to have_text("image")
 
-      composer.toggle_rich_editor
+        composer.toggle_rich_editor
 
-      expect(composer).to have_value("image")
-    end
-
-    it "allows pasting text when unauthorized to upload" do
-      SiteSetting.authorized_extensions = ""
-
-      cdp.allow_clipboard
-
-      open_composer
-
-      cdp.copy_paste("Just some text")
-
-      expect(rich).to have_css("p", text: "Just some text")
-
-      composer.toggle_rich_editor
-
-      expect(composer).to have_value("Just some text")
+        expect(composer).to have_value("image")
+      end
     end
 
     it "merges text with link marks created from parsing" do
