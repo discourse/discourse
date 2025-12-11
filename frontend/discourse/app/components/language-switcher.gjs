@@ -5,7 +5,9 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
-import cookie from "discourse/lib/cookie";
+import cookie, { removeCookie } from "discourse/lib/cookie";
+
+const SHOW_ORIGINAL_COOKIE = "content-localization-show-original";
 
 export default class LanguageSwitcher extends Component {
   @service siteSettings;
@@ -20,6 +22,8 @@ export default class LanguageSwitcher extends Component {
     } else {
       cookie("locale", locale, { path: "/" });
     }
+
+    removeCookie(SHOW_ORIGINAL_COOKIE, { path: "/" });
 
     this.dMenu.close();
     // content should switch immediately,
