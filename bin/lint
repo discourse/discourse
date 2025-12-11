@@ -131,8 +131,8 @@ class LefthookLinter
     end
 
     if files == EVERYTHING
-      # Run fix-staged on all files (no file filtering)
-      run_lefthook_command("fix-staged", [])
+      # Run fix-all on all files (no file filtering)
+      run_lefthook_command("fix-all", [])
     elsif files.empty?
       puts "No files to fix, exiting."
     else
