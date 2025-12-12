@@ -6,6 +6,13 @@ module ::DiscourseRewind
 
     requires_login
 
+    def dismiss
+      DiscourseRewind::Dismiss.call(service_params) do
+        on_success { head :no_content }
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      end
+    end
+
     def index
       DiscourseRewind::FetchReports.call(service_params) do
         on_model_not_found(:year) do

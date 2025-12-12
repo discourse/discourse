@@ -3,10 +3,42 @@
 RSpec.describe DiscourseRewind::RewindsController do
   before { SiteSetting.discourse_rewind_enabled = true }
 
-  describe "#index" do
-    fab!(:current_user, :user)
+  describe "#dismiss" do
+    it "requires login" do
+      post "/rewinds/dismiss.json"
+      expect(response.status).to eq(403)
+    end
 
-    before { sign_in(current_user) }
+    context "when logged in" do
+      fab!(:user)
+      before { sign_in(user) }
+
+      it "sets dismissed_at on user_option" do
+        freeze_time DateTime.parse("2022-12-24 10:00:00")
+
+        post "/rewinds/dismiss.json"
+
+        expect(response.status).to eq(204)
+        expect(user.user_option.reload.discourse_rewind_dismissed_at).to eq_time(Time.current)
+      end
+
+      it "returns dismissed state via session/current endpoint" do
+        freeze_time DateTime.parse("2022-12-24")
+        user.user_option.update!(discourse_rewind_dismissed_at: Time.current)
+
+        get "/session/current.json"
+
+        expect(
+          response.parsed_body.dig("current_user", "user_option", "discourse_rewind_dismissed"),
+        ).to eq(true)
+      end
+    end
+  end
+
+  describe "#index" do
+    fab!(:user)
+
+    before { sign_in(user) }
 
     context "when out of valid month" do
       before { freeze_time DateTime.parse("2022-11-24") }
@@ -51,9 +83,9 @@ RSpec.describe DiscourseRewind::RewindsController do
   end
 
   describe "#show" do
-    fab!(:current_user, :user)
+    fab!(:user)
 
-    before { sign_in(current_user) }
+    before { sign_in(user) }
 
     context "when out of valid month" do
       before { freeze_time DateTime.parse("2022-11-24") }
