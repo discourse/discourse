@@ -478,7 +478,6 @@ class TagsController < ::ApplicationController
     end
   end
 
-  # check usages here for id -> name
   def self.tag_counts_json(tags, guardian)
     show_pm_tags = guardian.can_tag_pms?
     target_tags = Tag.where(id: tags.map(&:target_tag_id).compact.uniq).select(:id, :name)
@@ -489,7 +488,6 @@ class TagsController < ::ApplicationController
 
         next if topic_count == 0 && t.pm_topic_count > 0 && !show_pm_tags
 
-        # let's see what explodes here id -> name
         attrs = {
           id: t.id,
           text: t.name,

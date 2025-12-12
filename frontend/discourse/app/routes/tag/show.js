@@ -163,7 +163,6 @@ export default class TagShowRoute extends DiscourseRoute {
         category: model.category || null,
       };
 
-      // id -> name
       this.searchService.searchContext = tagIntersectionSearchContext;
     } else {
       this.searchService.searchContext = model.tag.searchContext;
