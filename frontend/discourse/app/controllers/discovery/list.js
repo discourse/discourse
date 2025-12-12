@@ -115,9 +115,13 @@ export default class DiscoveryListController extends Controller {
 
   get createTopicDisabled() {
     // We are in a category route, but user does not have permission for the category
-    return (
-      !this.model.category?.canCreateTopic && !this.subcategoryWithPermission
-    );
+    if (!this.model.category) {
+      return false;
+    } else {
+      return (
+        !this.model.category?.canCreateTopic && !this.subcategoryWithPermission
+      );
+    }
   }
 
   get resolvedAscending() {
