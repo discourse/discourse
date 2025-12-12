@@ -40,6 +40,7 @@ export default class EditCategorySecurity extends buildCategoryPanel(
   onSelectGroup(group_name) {
     this.category.addPermission({
       group_name,
+      group_id: AUTO_GROUPS[group_name]?.id,
       permission_type: this.minimumPermission,
     });
   }
