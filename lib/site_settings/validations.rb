@@ -189,7 +189,9 @@ module SiteSettings::Validations
       validate_error(:s3_backup_requires_s3_settings, setting_name: "s3_backup_bucket")
     end
 
-    unless SiteSetting.s3_use_iam_profile
+    # Only validate credentials if user is providing them
+    # If neither provided, AWS SDK will auto-discover (role assumption, instance profile, etc.)
+    if SiteSetting.s3_access_key_id.present? || SiteSetting.s3_secret_access_key.present?
       if SiteSetting.s3_access_key_id.blank?
         validate_error(:s3_backup_requires_s3_settings, setting_name: "s3_access_key_id")
       end
