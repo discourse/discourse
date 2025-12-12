@@ -216,6 +216,12 @@ class TagsController < ::ApplicationController
   end
 
   def update
+    if params[:tag][:id]
+      warning =
+        "Updating a tag name by `id` attribute is unsupported. Use the `name` attribute instead."
+      Discourse.deprecate(warning, since: "2025.12.0-latest", drop_from: "2026.2.0-latest")
+      return render_json_error(warning)
+    end
     tag_name_param = params[:tag_name]
 
     new_tag = params[:tag]

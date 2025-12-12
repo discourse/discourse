@@ -694,6 +694,15 @@ RSpec.describe TagsController do
       sign_in(admin)
     end
 
+    it "shows an unsupported error for tag id parameter" do
+      put "/tag/#{tag.name}.json", params: { tag: { id: "new-id" } }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to include(
+        "Updating a tag name by `id` attribute is unsupported. Use the `name` attribute instead.",
+      )
+    end
+
     it "triggers a extensibility event" do
       event =
         DiscourseEvent
