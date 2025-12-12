@@ -164,7 +164,7 @@ class SearchController < ApplicationController
   protected
 
   def site_overloaded?
-    queue_time = request.env["REQUEST_QUEUE_SECONDS"]
+    queue_time = request.env[Middleware::ProcessingRequest::REQUEST_QUEUE_SECONDS_ENV_KEY]
     if queue_time
       threshold = GlobalSetting.disable_search_queue_threshold.to_f
       threshold > 0 && queue_time > threshold
