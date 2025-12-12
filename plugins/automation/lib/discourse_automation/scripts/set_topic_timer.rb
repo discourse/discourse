@@ -25,7 +25,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::SET_TOPIC_TIME
     timer_type = fields.dig("type", "value")
 
     next if !post.topic
-    next unless topic = Topic.find_by(id: post.topic.id)
+    next unless topic = Topic.find_by(id: post.topic_id)
 
     duration_minutes = fields.dig("duration", "value")
 
