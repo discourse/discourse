@@ -89,7 +89,7 @@ export default {
       return;
     }
 
-    trackNextAjaxAsPageview();
+    trackNextAjaxAsPageview(transition.to);
 
     if (
       transition.to.name === "topic.fromParamsNear" ||

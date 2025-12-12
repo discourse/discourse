@@ -83,14 +83,15 @@ class Middleware::RequestTracker
   end
 
   def self.log_request(data)
-    log_web_request = false
+    log_browser_page_view = false
+    log_api_request = false
 
     if data[:is_api]
       ApplicationRequest.increment!(:api)
-      log_web_request = true
+      log_api_request = true
     elsif data[:is_user_api]
       ApplicationRequest.increment!(:user_api)
-      log_web_request = true
+      log_api_request = true
     elsif data[:track_view]
       if data[:is_crawler]
         ApplicationRequest.increment!(:page_view_crawler)
@@ -100,7 +101,7 @@ class Middleware::RequestTracker
         ApplicationRequest.increment!(:page_view_logged_in_mobile) if data[:is_mobile]
 
         if data[:explicit_track_view]
-          log_web_request = true
+          log_browser_page_view = true
           # Must be a browser if it had this header from our ajax implementation
           ApplicationRequest.increment!(:page_view_logged_in_browser)
           ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
@@ -118,7 +119,7 @@ class Middleware::RequestTracker
         ApplicationRequest.increment!(:page_view_anon_mobile) if data[:is_mobile]
 
         if data[:explicit_track_view]
-          log_web_request = true
+          log_browser_page_view = true
           # Must be a browser if it had this header from our ajax implementation
           ApplicationRequest.increment!(:page_view_anon_browser)
           ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
@@ -134,7 +135,7 @@ class Middleware::RequestTracker
     # 'real browser' views.
     if data[:deferred_track_view] && !data[:is_crawler]
       if data[:has_auth_cookie]
-        log_web_request = true
+        log_browser_page_view = true
         ApplicationRequest.increment!(:page_view_logged_in_browser)
         ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
 
@@ -146,7 +147,7 @@ class Middleware::RequestTracker
           )
         end
       elsif !SiteSetting.login_required
-        log_web_request = true
+        log_browser_page_view = true
         ApplicationRequest.increment!(:page_view_anon_browser)
         ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
 
@@ -171,7 +172,8 @@ class Middleware::RequestTracker
       ApplicationRequest.increment!(:http_2xx)
     end
 
-    WebRequestLog.log!(data) if log_web_request && SiteSetting.enable_web_request_logging
+    BrowserPageView.log!(data) if log_browser_page_view && SiteSetting.enable_page_view_logging
+    ApiRequestLog.log!(data) if log_api_request && SiteSetting.enable_api_request_logging
   end
 
   def self.get_data(env, result, timing, request = nil)
@@ -245,18 +247,40 @@ class Middleware::RequestTracker
 
     # For deferred track view requests, use the original page's path/referrer/query_string
     # sent via headers instead of the current request's data (which would be /message-bus or /pageview)
+    # Also extract session_id and route_name for page view logging
+    session_id = nil
+    route_name = nil
+
     if view_tracking_data[:deferred_track_view]
+      # Extract session_id (MessageBus clientId) from poll URL: /message-bus/{clientId}/poll
+      if is_message_bus
+        parts = request.path.split("/")
+        session_id = parts[-2] if parts.length >= 3 && parts.last == "poll"
+      end
+
       request_path = env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_PATH"].presence || request.path
       request_query_string =
         env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_QUERY_STRING"].presence ||
           request.query_string.presence
       request_referrer = env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_REFERRER"].presence
+      route_name = env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_ROUTE_NAME"]
       status = 200
+    elsif view_tracking_data[:explicit_track_view]
+      # Get session_id from header for explicit (ajax) page views
+      session_id = env["HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID"]
+      request_path = env["HTTP_DISCOURSE_TRACK_VIEW_PATH"].presence || request.path
+      request_query_string =
+        env["HTTP_DISCOURSE_TRACK_VIEW_QUERY_STRING"].presence || request.query_string.presence
+      request_referrer = env["HTTP_DISCOURSE_TRACK_VIEW_REFERRER"].presence
+      route_name = env["HTTP_DISCOURSE_TRACK_VIEW_ROUTE_NAME"]
     else
       request_path = view_tracking_data[:path] || request.path
       request_query_string = request.query_string.presence
       request_referrer = env["HTTP_REFERER"]
     end
+
+    # For API requests, capture the HTTP method
+    http_method = request.request_method if is_api || is_user_api
 
     request_data = {
       status: status,
@@ -276,7 +300,10 @@ class Middleware::RequestTracker
       referrer: request_referrer,
       user_agent: user_agent,
       route: route,
-    }.merge(view_tracking_data)
+      session_id: session_id,
+      route_name: route_name,
+      http_method: http_method,
+    }.merge(view_tracking_data.except(:path))
 
     if request_data[:is_background]
       request_data[:background_type] = if is_message_bus
