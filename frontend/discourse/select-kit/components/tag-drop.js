@@ -1,5 +1,4 @@
 import { action, computed } from "@ember/object";
-import { readOnly } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { classNameBindings, classNames } from "@ember-decorators/component";
 import { setting } from "discourse/lib/computed";
@@ -40,19 +39,19 @@ const MORE_TAGS_COLLECTION = "MORE_TAGS_COLLECTION";
 export default class TagDrop extends ComboBoxComponent {
   @service tagUtils;
 
-  valueProperty = "name";
-  nameProperty = "text";
-
   @setting("max_tag_search_results") maxTagSearchResults;
   @setting("tags_sort_alphabetically") sortTagsAlphabetically;
   @setting("max_tags_in_filter_list") maxTagsInFilterList;
-
-  @readOnly("tagId") value;
 
   init() {
     super.init(...arguments);
 
     this.insertAfterCollection(MAIN_COLLECTION, MORE_TAGS_COLLECTION);
+  }
+
+  @computed("tagName", "tagId")
+  get value() {
+    return this.tagId;
   }
 
   @computed("maxTagsInFilterList", "topTags.[]", "mainCollection.[]")
@@ -79,7 +78,7 @@ export default class TagDrop extends ComboBoxComponent {
   }
 
   modifyNoSelection() {
-    if (this.tagId === NONE_TAG) {
+    if (this.value === NONE_TAG) {
       return this.defaultItem(NO_TAG_ID, i18n("tagging.selector_no_tags"));
     } else {
       return this.defaultItem(ALL_TAGS_ID, i18n("tagging.selector_tags"));
@@ -87,18 +86,18 @@ export default class TagDrop extends ComboBoxComponent {
   }
 
   modifySelection(content) {
-    if (this.tagId === NONE_TAG) {
+    if (this.value === NONE_TAG) {
       content = this.defaultItem(NO_TAG_ID, i18n("tagging.selector_no_tags"));
-    } else if (this.tagId) {
-      content = this.defaultItem(this.tagId, this.tagId);
+    } else if (this.value) {
+      content = this.defaultItem(this.value, this.value);
     }
 
     return content;
   }
 
-  @computed("tagId")
+  @computed("value")
   get tagClass() {
-    return this.tagId ? `tag-${this.tagId}` : "tag_all";
+    return this.value ? `tag-${this.value}` : "tag_all";
   }
 
   modifyComponentForRow() {
@@ -112,23 +111,21 @@ export default class TagDrop extends ComboBoxComponent {
     if (this.tagId) {
       shortcuts.push({
         id: ALL_TAGS_ID,
-        name: ALL_TAGS_ID,
-        text: i18n("tagging.selector_remove_filter"),
+        name: i18n("tagging.selector_remove_filter"),
       });
     }
 
     if (this.tagId !== NONE_TAG) {
       shortcuts.push({
         id: NO_TAG_ID,
-        name: NO_TAG_ID,
-        text: i18n("tagging.selector_no_tags"),
+        name: i18n("tagging.selector_no_tags"),
       });
     }
 
     // If there is a single shortcut, we can have a single "remove filter"
     // option
     if (shortcuts.length === 1 && shortcuts[0].id === ALL_TAGS_ID) {
-      shortcuts[0].text = i18n("tagging.selector_remove_filter");
+      shortcuts[0].name = i18n("tagging.selector_remove_filter");
     }
 
     return shortcuts;
@@ -184,9 +181,6 @@ export default class TagDrop extends ComboBoxComponent {
     } else {
       return (this.content || []).map((tag) => {
         if (tag.id && tag.name) {
-          if (!tag.text) {
-            return { ...tag, text: tag.name };
-          }
           return tag;
         }
         return this.defaultItem(tag, tag);
@@ -203,7 +197,7 @@ export default class TagDrop extends ComboBoxComponent {
     return json.results
       .sort((a, b) => a.name > b.name)
       .map((r) => {
-        const content = this.defaultItem(r.name, r.text);
+        const content = this.defaultItem(r.id, r.name);
         content.targetTagId = r.target_tag || r.name;
         if (!this.currentCategory) {
           content.count = r.count;

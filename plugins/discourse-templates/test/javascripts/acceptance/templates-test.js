@@ -64,7 +64,6 @@ acceptance("discourse-templates", function (needs) {
         {
           name: "cupcakes",
           id: "cupcakes",
-          text: "cupcakes",
         },
       ],
       "filters tags in the dropdown"
@@ -144,7 +143,6 @@ acceptance("discourse-templates", function (needs) {
         {
           name: "lorem",
           id: "lorem",
-          text: "lorem",
         },
       ],
       "filters tags in the dropdown"
@@ -377,7 +375,6 @@ acceptance("discourse-templates | keyboard shortcut", function (needs) {
         {
           name: "lorem",
           id: "lorem",
-          text: "lorem",
         },
       ],
       "filters tags in the dropdown"

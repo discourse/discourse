@@ -247,7 +247,6 @@ export default function selectKit(selector) {
       return [...this.rows()].map((row) => ({
         name: row.getAttribute("data-name"),
         id: row.getAttribute("data-value"),
-        text: row.getAttribute("data-name"), // for components using nameProperty: "text"
       }));
     },
 
