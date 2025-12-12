@@ -9,7 +9,7 @@ plugins:
     choices:
       - mathjax
       - katex
-  discourse_math_zoom_on_hover:
+  discourse_math_zoom_on_click:
     default: false
     client: true
   discourse_math_enable_accessibility:
