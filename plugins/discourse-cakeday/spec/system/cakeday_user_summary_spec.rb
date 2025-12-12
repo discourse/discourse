@@ -7,7 +7,11 @@ RSpec.describe "Cakeday/Birthday emojis" do
   let(:user_page) { PageObjects::Pages::User.new }
   let(:user_menu) { PageObjects::Components::UserMenu.new }
 
-  before { sign_in(current_user) }
+  before do
+    SiteSetting.cakeday_enabled = true
+    SiteSetting.cakeday_birthday_enabled = true
+    sign_in(current_user)
+  end
 
   context "for users with `created_at` and `date_of_birth` dates" do
     fab!(:user_with_cakeday) { Fabricate(:user, created_at: CONTROL_DATE.prev_year) }

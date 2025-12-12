@@ -33,6 +33,9 @@ export default class ChannelsListPublic extends Component {
   }
 
   get channelList() {
+    if (!this.inSidebar) {
+      return this.chatChannelsManager.unstarredPublicMessageChannelsByActivity;
+    }
     return this.chatChannelsManager.publicMessageChannelsByActivity;
   }
 

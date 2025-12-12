@@ -25,7 +25,7 @@ module("Integration | Component | da-post-field", function (hooks) {
         />
       </template>
     );
-    await fillIn("textarea", "Hello World");
+    await fillIn(".d-editor-input", "Hello World");
 
     assert.strictEqual(this.field.metadata.value, "Hello World");
   });

@@ -15,6 +15,7 @@ import {
   addUniqueValueToArray,
   removeValueFromArray,
 } from "discourse/lib/array-tools";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import getURL from "discourse/lib/get-url";
 import Group from "discourse/models/group";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
@@ -101,10 +102,14 @@ export default class PersonaEditor extends Component {
     const groups = await Group.findAll({ include_everyone: true });
 
     // Backwards-compatibility code. TODO(roman): Remove 01-09-2025
-    const hasEveryoneGroup = groups.find((g) => g.id === 0);
+    const hasEveryoneGroup = groups.find(
+      (g) => g.id === AUTO_GROUPS.everyone.id
+    );
     if (!hasEveryoneGroup) {
-      const everyoneGroupName = "everyone";
-      groups.push({ id: 0, name: everyoneGroupName });
+      groups.push({
+        id: AUTO_GROUPS.everyone.id,
+        name: AUTO_GROUPS.everyone.name,
+      });
     }
 
     this.allGroups = groups;
@@ -514,16 +519,6 @@ export default class PersonaEditor extends Component {
           {{/if}}
 
           {{#if (gt data.tools.length 0)}}
-            <form.Field
-              @name="tool_details"
-              @title={{i18n "discourse_ai.ai_persona.tool_details"}}
-              @tooltip={{i18n "discourse_ai.ai_persona.tool_details_help"}}
-              @format="large"
-              as |field|
-            >
-              <field.Checkbox />
-            </form.Field>
-
             <AiPersonaToolOptions
               @form={{form}}
               @data={{data}}
@@ -531,6 +526,16 @@ export default class PersonaEditor extends Component {
               @allTools={{@personas.resultSetMeta.tools}}
             />
           {{/if}}
+
+          <form.Field
+            @name="show_thinking"
+            @title={{i18n "discourse_ai.ai_persona.show_thinking"}}
+            @tooltip={{i18n "discourse_ai.ai_persona.show_thinking_help"}}
+            @format="large"
+            as |field|
+          >
+            <field.Checkbox />
+          </form.Field>
         </form.Section>
 
         {{#if this.siteSettings.ai_embeddings_enabled}}

@@ -303,6 +303,24 @@ describe PostRevisor do
         expect(post.topic.ordered_posts.last.post_type).to eq(Post.types[:whisper])
       end
 
+      it "does not create a small_action or notification when a restricted tag is rejected" do
+        allowed_tag = Fabricate(:tag, name: "allowed-tag")
+
+        post.topic.update!(tags: [allowed_tag])
+
+        category = post.topic.category
+        category.update!(allow_global_tags: false)
+        category.tags = [allowed_tag]
+        category.save!
+
+        expect do
+          post_revisor.revise!(admin, tags: [allowed_tag.name, "disallowed-tag"])
+        end.not_to change { Post.where(topic_id: post.topic_id, action_code: "tags_changed").count }
+
+        expect(post.topic.reload.tags.pluck(:name)).to contain_exactly(allowed_tag.name)
+        expect(Jobs::NotifyTagChange.jobs.size).to eq(0)
+      end
+
       describe "with PMs" do
         fab!(:pm, :private_message_topic)
         let(:first_post) { create_post(user: admin, topic: pm, allow_uncategorized_topics: false) }
@@ -955,6 +973,31 @@ describe PostRevisor do
           PostRevisor.new(second_post).revise!(second_post.user, raw: "Edit the 2nd post")
           topic.reload
         }.to_not change { topic.excerpt }
+      end
+    end
+
+    describe "changing post ownership" do
+      it "does not call Topic.reset_highest when only user_id is changed" do
+        new_owner = Fabricate(:user)
+        Topic.expects(:reset_highest).never
+
+        post_revisor.revise!(admin, user_id: new_owner.id)
+      end
+
+      it "calls Topic.reset_highest when user_id and other fields are changed" do
+        new_owner = Fabricate(:user)
+        Topic.expects(:reset_highest).once
+
+        post_revisor.revise!(admin, user_id: new_owner.id, raw: "updated body")
+      end
+
+      it "does not increment post_edits_count when system user changes ownership" do
+        new_owner = Fabricate(:user)
+        system_user = Discourse.system_user
+
+        expect do post_revisor.revise!(system_user, user_id: new_owner.id) end.not_to change {
+          system_user.user_stat.post_edits_count.to_i
+        }
       end
     end
 

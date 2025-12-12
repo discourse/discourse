@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -109,8 +110,8 @@ export default class ModalDiffModal extends Component {
   updateResult(result) {
     if (isAiCreditLimitError(result)) {
       this.loading = false;
+      this.cleanupAndClose();
       popupAiCreditLimitError(result);
-      this.cleanup();
       return;
     }
 
@@ -149,6 +150,7 @@ export default class ModalDiffModal extends Component {
       this.progressChannel = result.progress_channel;
     } catch (e) {
       if (isAiCreditLimitError(e)) {
+        this.cleanupAndClose();
         popupAiCreditLimitError(e);
       } else {
         popupAjaxError(e);
@@ -182,9 +184,17 @@ export default class ModalDiffModal extends Component {
 
   @action
   cleanupAndClose() {
+    this.cleanup();
     this.#resetState();
     this.loading = false;
     this.args.closeModal();
+  }
+
+  @action
+  focusConfirmBtn(element) {
+    if (!this.primaryBtnDisabled) {
+      element.focus();
+    }
   }
 
   #resetState() {
@@ -242,6 +252,7 @@ export default class ModalDiffModal extends Component {
           @disabled={{this.primaryBtnDisabled}}
           @action={{this.triggerConfirmChanges}}
           @translatedLabel={{this.primaryBtnLabel}}
+          {{didUpdate this.focusConfirmBtn this.isStreaming}}
         >
           {{#if this.loading}}
             <AiIndicatorWave @loading={{this.loading}} />

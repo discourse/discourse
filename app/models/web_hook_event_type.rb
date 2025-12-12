@@ -59,6 +59,7 @@ class WebHookEventType < ActiveRecord::Base
     user_destroyed: 307,
     user_suspended: 308,
     user_unsuspended: 309,
+    user_anonymized: 310,
     group_created: 401,
     group_updated: 402,
     group_destroyed: 403,

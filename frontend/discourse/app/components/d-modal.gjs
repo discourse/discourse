@@ -13,10 +13,7 @@ import FlashMessage from "discourse/components/flash-message";
 import concatClass from "discourse/helpers/concat-class";
 import element from "discourse/helpers/element";
 import htmlClass from "discourse/helpers/html-class";
-import {
-  disableBodyScroll,
-  enableBodyScroll,
-} from "discourse/lib/body-scroll-lock";
+import { lock, unlock } from "discourse/lib/body-scroll-lock";
 import { getMaxAnimationTimeMs } from "discourse/lib/swipe-events";
 import swipe from "discourse/modifiers/swipe";
 import trapTab from "discourse/modifiers/trap-tab";
@@ -31,7 +28,6 @@ export const CLOSE_INITIATED_BY_SWIPE_DOWN = "initiatedBySwipeDown";
 const SWIPE_VELOCITY_THRESHOLD = 0.4;
 
 export default class DModal extends Component {
-  @service capabilities;
   @service modal;
   @service site;
 
@@ -47,22 +43,10 @@ export default class DModal extends Component {
       return;
     }
 
-    let offset, interval;
-    if (this.capabilities.isIOS) {
-      offset = window.pageYOffset;
-      interval = setInterval(() => {
-        window.scrollTo(0, offset);
-      }, 50);
-    }
-
-    disableBodyScroll(el);
+    lock(el);
 
     return () => {
-      if (this.capabilities.isIOS) {
-        clearInterval(interval);
-      }
-
-      enableBodyScroll(el);
+      unlock(el);
     };
   });
 
@@ -70,7 +54,8 @@ export default class DModal extends Component {
   async setupModal(el) {
     document.documentElement.addEventListener(
       "keydown",
-      this.handleDocumentKeydown
+      this.handleDocumentKeydown,
+      { capture: true }
     );
 
     this.wrapperElement = el;
@@ -87,7 +72,8 @@ export default class DModal extends Component {
   cleanupModal() {
     document.documentElement.removeEventListener(
       "keydown",
-      this.handleDocumentKeydown
+      this.handleDocumentKeydown,
+      { capture: true }
     );
   }
 
@@ -114,10 +100,12 @@ export default class DModal extends Component {
       return false;
     }
 
-    // skip when in a form or a textarea element
+    // skip when in a form, textarea, or select-kit element
     if (
       event.target.closest("form") ||
-      document.activeElement?.nodeName === "TEXTAREA"
+      document.activeElement?.closest("form") ||
+      document.activeElement?.nodeName === "TEXTAREA" ||
+      document.activeElement?.closest(".select-kit")
     ) {
       return false;
     }
@@ -204,6 +192,12 @@ export default class DModal extends Component {
   handleDocumentKeydown(event) {
     if (this.args.hidden) {
       return;
+    }
+
+    // Prevent keyboard events from leaking to elements behind the modal
+    if (!this.wrapperElement.contains(document.activeElement)) {
+      event.stopPropagation();
+      event.preventDefault();
     }
 
     if (event.key === "Escape" && this.dismissable) {
@@ -424,8 +418,8 @@ export default class DModal extends Component {
 
           <div
             class={{concatClass "d-modal__body" @bodyClass}}
-            {{this.setupModalBody}}
             tabindex="-1"
+            {{this.setupModalBody}}
           >
             {{#if (has-block "body")}}
               {{yield to="body"}}

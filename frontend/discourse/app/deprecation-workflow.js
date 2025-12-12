@@ -259,93 +259,13 @@ const DeprecationWorkflow = new DiscourseDeprecationWorkflow([
   },
   {
     handler: "log",
-    matchId: "discourse.native-array-extensions.[]",
-  },
-  {
-    handler: "log",
-    matchId: "discourse.native-array-extensions.addObjects",
-  },
-  {
-    handler: "log",
-    matchId: "discourse.native-array-extensions.any",
-  },
-  {
-    handler: "log",
-    matchId: "discourse.native-array-extensions.clear",
-  },
-  {
-    handler: "log",
-    matchId: "discourse.native-array-extensions.compact",
-  },
-  {
-    handler: "log",
-    matchId: "discourse.native-array-extensions.filterBy",
-  },
-  {
-    handler: "log",
-    matchId: "discourse.native-array-extensions.findBy",
-  },
-  {
-    handler: "log",
-    matchId: "discourse.native-array-extensions.get",
-  },
-  {
-    handler: "log",
-    matchId: "discourse.native-array-extensions.isAny",
-  },
-  {
-    handler: "log",
-    matchId: "discourse.native-array-extensions.mapBy",
-  },
-  {
-    handler: "log",
-    matchId: "discourse.native-array-extensions.pushObjects",
-  },
-  {
-    handler: "log",
-    matchId: "discourse.native-array-extensions.reject",
-  },
-  {
-    handler: "log",
-    matchId: "discourse.native-array-extensions.rejectBy",
-  },
-  {
-    handler: "log",
-    matchId: "discourse.native-array-extensions.replace",
-  },
-  {
-    handler: "log",
-    matchId: "discourse.native-array-extensions.set",
-  },
-  {
-    handler: "log",
-    matchId: "discourse.native-array-extensions.sortBy",
-  },
-  {
-    handler: "log",
-    matchId: "discourse.native-array-extensions.toArray",
-  },
-  {
-    handler: "log",
-    matchId: "discourse.native-array-extensions.uniq",
-  },
-  {
-    handler: "log",
-    matchId: "discourse.native-array-extensions.uniqBy",
-  },
-  {
-    handler: "log",
-    matchId: "discourse.native-array-extensions.without",
-  },
-  {
-    handler: ["silence", "counter"],
     matchId: /^discourse\.native-array-extensions\..+$/,
-    env: ["test"],
   },
+  // widget-related code should fail on all CI tests including plugins and custom themes
   {
-    handler: "silence",
-    matchId: /^discourse\.native-array-extensions\..+$/,
-    env: ["development", "production"],
+    handler: "throw",
+    matchId: "discourse.widgets-decommissioned",
+    env: "test",
   },
 ]);
 

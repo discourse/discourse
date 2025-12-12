@@ -80,12 +80,12 @@ module("Integration | Component | DOTP", function (hooks) {
     assert.strictEqual(this.value, "12");
   });
 
-  test("@autofocus", async function (assert) {
+  test("@autoFocus", async function (assert) {
     await render(<template><DOTP /></template>);
 
     assert.dom(".d-otp-slot[data-index='0'].--is-focused").exists();
 
-    await render(<template><DOTP @autofocus={{false}} /></template>);
+    await render(<template><DOTP @autoFocus={{false}} /></template>);
 
     assert.dom(".d-otp-slot[data-index='0'].--is-focused").doesNotExist();
   });

@@ -979,7 +979,7 @@ class BulkImport::Generic < BulkImport::Base
             "[quote]"
           else
             bbcode_parts = []
-            bbcode_parts << name.presence || username
+            bbcode_parts << (name.presence || username)
             bbcode_parts << "post:#{post_number}" if post_number.present?
             bbcode_parts << "topic:#{topic_id}" if topic_id.present?
             bbcode_parts << "username:#{username}" if username.present? && name.present?

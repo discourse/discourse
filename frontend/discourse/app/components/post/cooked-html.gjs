@@ -4,7 +4,10 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import curryComponent from "ember-curry-component";
-import DecoratedHtml from "discourse/components/decorated-html";
+import DecoratedHtml, {
+  applyHtmlDecorators,
+  NON_STREAM_HTML_DECORATOR,
+} from "discourse/components/decorated-html";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { bind } from "discourse/lib/decorators";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
@@ -27,8 +30,9 @@ const POST_COOKED_DECORATORS = [
   decorateMentions,
 ];
 
+export const STREAM_HTML_DECORATOR = Symbol("stream-html-decorator");
+
 export default class PostCookedHtml extends Component {
-  @service appEvents;
   @service currentUser;
 
   #pendingDecoratorCleanup = [];
@@ -131,13 +135,12 @@ export default class PostCookedHtml extends Component {
       }
     });
 
-    this.appEvents.trigger(
-      this.isStreamElement
-        ? "decorate-post-cooked-element"
-        : "decorate-non-stream-cooked-element",
-      element,
-      helper
-    );
+    const cleanUpFns = [
+      ...applyHtmlDecorators(element, helper, NON_STREAM_HTML_DECORATOR),
+      ...applyHtmlDecorators(element, helper, STREAM_HTML_DECORATOR),
+    ];
+
+    this.#pendingDecoratorCleanup.push(...cleanUpFns);
   }
 
   get className() {

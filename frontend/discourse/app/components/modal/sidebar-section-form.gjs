@@ -1,6 +1,5 @@
 /* eslint-disable ember/no-classic-components */
 import { cached, tracked } from "@glimmer/tracking";
-import { A } from "@ember/array";
 import Component, { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
@@ -15,16 +14,18 @@ import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import { SIDEBAR_SECTION, SIDEBAR_URL } from "discourse/lib/constants";
 import { afterRender, bind } from "discourse/lib/decorators";
 import { sanitize } from "discourse/lib/text";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import { and, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 class Section {
   @tracked title;
-  @tracked links;
-  @tracked secondaryLinks;
+  @trackedArray links;
+  @trackedArray secondaryLinks;
 
   constructor({
     title,
@@ -241,26 +242,26 @@ export default class SidebarSectionForm extends Component {
             acc.push(this.initLink(link));
           }
           return acc;
-        }, A()),
+        }, []),
         secondaryLinks: section.links.reduce((acc, link) => {
           if (link.segment === "secondary") {
             this.nextObjectId++;
             acc.push(this.initLink(link));
           }
           return acc;
-        }, A()),
+        }, []),
         id: section.id,
         hideTitleInput: this.model.hideSectionHeader,
       });
     } else {
       return new Section({
-        links: A([
+        links: [
           new SectionLink({
             router: this.router,
             objectId: this.nextObjectId,
             segment: "primary",
           }),
-        ]),
+        ],
       });
     }
   }
@@ -406,28 +407,16 @@ export default class SidebarSectionForm extends Component {
       return;
     }
 
-    if (this.draggedLink.isPrimary) {
-      this.transformedModel.links.removeObject(this.draggedLink);
-    } else {
-      this.transformedModel.secondaryLinks?.removeObject(this.draggedLink);
-    }
+    const links = this.draggedLink.isPrimary
+      ? this.transformedModel.links
+      : this.transformedModel.secondaryLinks;
 
-    if (targetLink.isPrimary) {
-      const toPosition = this.transformedModel.links.indexOf(targetLink);
-      this.draggedLink.segment = "primary";
-      this.transformedModel.links.insertAt(
-        above ? toPosition : toPosition + 1,
-        this.draggedLink
-      );
-    } else {
-      this.draggedLink.segment = "secondary";
-      const toPosition =
-        this.transformedModel.secondaryLinks.indexOf(targetLink);
-      this.transformedModel.secondaryLinks.insertAt(
-        above ? toPosition : toPosition + 1,
-        this.draggedLink
-      );
-    }
+    removeValueFromArray(links, this.draggedLink);
+
+    const toPosition = links.indexOf(targetLink);
+    this.draggedLink.segment = targetLink.isPrimary ? "primary" : "secondary";
+
+    links.splice(above ? toPosition : toPosition + 1, 0, this.draggedLink);
   }
 
   get canDelete() {
@@ -439,18 +428,18 @@ export default class SidebarSectionForm extends Component {
     if (link.id) {
       link._destroy = "1";
     } else {
-      if (link.isPrimary) {
-        this.transformedModel.links.removeObject(link);
-      } else {
-        this.transformedModel.secondaryLinks.removeObject(link);
-      }
+      const links = link.isPrimary
+        ? this.transformedModel.links
+        : this.transformedModel.secondaryLinks;
+
+      removeValueFromArray(links, link);
     }
   }
 
   @action
   addLink() {
     this.nextObjectId = this.nextObjectId + 1;
-    this.transformedModel.links.pushObject(
+    this.transformedModel.links.push(
       new SectionLink({
         router: this.router,
         objectId: this.nextObjectId,
@@ -464,7 +453,7 @@ export default class SidebarSectionForm extends Component {
   @action
   addSecondaryLink() {
     this.nextObjectId = this.nextObjectId + 1;
-    this.transformedModel.secondaryLinks.pushObject(
+    this.transformedModel.secondaryLinks.push(
       new SectionLink({
         router: this.router,
         objectId: this.nextObjectId,
@@ -484,10 +473,8 @@ export default class SidebarSectionForm extends Component {
           type: "PUT",
         })
           .then((data) => {
-            this.currentUser.sidebar_sections.shiftObject();
-            this.currentUser.sidebar_sections.unshiftObject(
-              data["sidebar_section"]
-            );
+            this.currentUser.sidebar_sections.shift();
+            this.currentUser.sidebar_sections.unshift(data["sidebar_section"]);
             this.closeModal();
           })
           .catch((e) => {

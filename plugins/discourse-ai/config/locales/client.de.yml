@@ -289,6 +289,7 @@ de:
           custom_prompt: "Benutzerdefinierte Eingabeaufforderung"
           image_caption: "Bildbeschriftungen"
           translator: "Übersetzer"
+          post_illustrator: "Beitragsillustrator"
         translation:
           name: "Übersetzen"
           description: "Übersetzt Inhalte in unterstützte Sprachen"
@@ -367,6 +368,8 @@ de:
           post_url_label: "Beitrags-URL oder -ID"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 oder Beitrags-ID"
           result: "Ergebnis"
+          llm: "LLM"
+          system_prompt: "System-Eingabeaufforderung"
           scan_log: "Scan-Protokoll"
           run: "Test ausführen"
           spam: "Spam"
@@ -403,6 +406,7 @@ de:
         no_users: "Keine Benutzernutzungsdaten gefunden"
         no_models: "Keine Modellnutzungsdaten gefunden"
         no_features: "Keine Funktionsnutzungsdaten gefunden"
+        total: "Gesamt"
         subheader_description: "Token sind die Basiseinheiten, die LLM zum Verstehen und Generieren von Text verwenden. Nutzungsdaten können sich auf die Kosten auswirken"
         stat_tooltips:
           total_requests: "Alle Anfragen an LLMs über Discourse"
@@ -442,8 +446,6 @@ de:
           low: Niedrige Qualität – am günstigsten (256 x 256)
           medium: Mittlere Qualität (512 x 512)
           high: Hohe Qualität – am langsamsten (1024 x 1024)
-        tool_details: Tool-Details anzeigen
-        tool_details_help: Zeigt den Endnutzern Details darüber, welche Tools das Sprachmodell ausgelöst hat.
         mentionable: Erwähnungen zulassen
         mentionable_help: Wenn diese Funktion aktiviert ist, können Nutzer in erlaubten Gruppen diesen Nutzer in Beiträgen erwähnen und die KI wird als diese Persona antworten.
         user: Benutzer
@@ -600,7 +602,6 @@ de:
         back: "Zurück"
         confirm_delete: Bist du sicher, dass du dieses Modell löschen willst?
         delete: Löschen
-        seeded_warning: "Dieses Modell ist auf deiner Website vorkonfiguriert und kann nicht bearbeitet werden."
         quotas:
           title: "Nutzungskontingente"
           add_title: "Neues Kontingent erstellen"
@@ -635,25 +636,20 @@ de:
           other: "Dieses Modell wird derzeit verwendet von: %{settings}. Wenn es falsch konfiguriert ist, werden die Funktionen nicht wie erwartet funktionieren. "
         model_description:
           none: "Allgemeine Einstellungen, die für die meisten Sprachmodelle funktionieren"
-          anthropic-claude-opus-4-1: "Das intelligenteste Modell von Anthropic"
-          anthropic-claude-sonnet-4-0: "Optimales Gleichgewicht zwischen Geschwindigkeit und Kosten"
-          anthropic-claude-3-7-sonnet-latest: "Optimales Gleichgewicht zwischen Geschwindigkeit und Kosten (vorherige Generation)"
-          anthropic-claude-3-5-haiku-latest: "Schnell und kosteneffizient"
+          anthropic-claude-opus-4-5: "Das intelligenteste Modell von Anthropic"
+          anthropic-claude-sonnet-4-5: "Optimales Gleichgewicht zwischen Geschwindigkeit und Kosten"
+          anthropic-claude-haiku-4-5: "Schnell und kosteneffizient"
           google-gemini-2-5-pro: "Großes multimodales Modell, das eine Vielzahl von Aufgaben bewältigen kann"
-          google-gemini-2-0-flash: "Leicht, schnell und kosteneffizient mit multimodaler Argumentation (vorherige Generation)"
           google-gemini-2-5-flash: "Leicht, schnell und kosteneffizient mit multimodaler Argumentation"
-          google-gemini-2-0-flash-lite: "Kosteneffizientes Modell mit niedriger Latenz"
           google-gemini-2-5-flash-image-preview: "Neuestes Bilderzeugungsmodell mit Bildverarbeitungsfunktionen"
-          open_ai-o3: "OpenAIs leistungsstärkstes Argumentationsmodell"
-          open_ai-o4-mini: "Erweitertes kosteneffizientes Argumentationsmodell"
-          open_ai-gpt-5: "Das Vorzeigemodell von OpenAI. Es ist gut geeignet für Problemlösungen in verschiedenen Bereichen"
+          open_ai-gpt-5-1: "Das Vorzeigemodell von OpenAI. Es ist gut geeignet für Problemlösungen in verschiedenen Bereichen"
           open_ai-gpt-5-mini: "Bietet ein ausgewogenes Verhältnis zwischen Intelligenz, Geschwindigkeit und Kosten, was es zu einem attraktiven Modell für viele Anwendungsfälle macht."
           open_ai-gpt-5-nano: "Das schnellste und kostengünstigste GPT-5-Modell."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Effizientes leichtgewichtiges mehrsprachiges Modell"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "Leistungsstarkes Mehrzweckmodell"
           mistral-mistral-large-latest: "Das leistungsstärkste Modell von Mistral"
           mistral-pixtral-large-latest: "Das leistungsstärkste Modell von Mistral mit Sichtfunktion"
-          open_router-x-ai-grok-3-beta: "Das neueste Modell von xAI"
+          open_router-x-ai-grok-4: "Das neueste Modell von xAI"
           open_router-deepseek-deepseek-r1-0528-free: "DeepSeeks neuestes Argumentationsmodell"
           open_router-meta-llama-3-3-70b-instruct: "Leistungsstarkes mehrsprachiges Modell"
           groq-openai-gpt-oss-120b: "Hochmodernes Open-Weight-Modell von OpenAI"
@@ -684,7 +680,6 @@ de:
           vision_enabled: "Wenn diese Funktion aktiviert ist, versucht die KI, Bilder zu verstehen. Dafür wird ein Modell benötigt, das Sehen unterstützt. Verfügbar in den neuesten Modellen von Anthropic, Google und OpenAI."
           enabled_chat_bot: "Wenn diese Option aktiviert ist, können Benutzer dieses Modell auswählen, wenn sie PN mit dem KI-Bot erstellen"
           cost_input: "Die Kosten für die Eingabe pro 1 Million Token für dieses Modell"
-          cost_cached_input: "Die Kosten für die Eingabe von Zwischengespeichertem pro 1 Million Token für dieses Modell"
           cost_output: "Die Kosten für die Ausgabe pro 1 Million Token für dieses Modell"
           cost_measure: "$/1M Token"
         providers:
@@ -720,7 +715,6 @@ de:
           reasoning_tokens: "Anzahl der für die Argumentation verwendeten Token"
           disable_temperature: "Temperatur deaktivieren (einige Denkmodelle unterstützen keine Temperatur)"
           disable_top_p: "Top P deaktivieren (einige Denkmodelle unterstützen Top P nicht)"
-          enable_responses_api: "Aktiviere die Antwort-API (bei bestimmten OpenAI-Modellen erforderlich)"
       related_topics:
         title: "Verwandte Themen"
         pill: "Verwandt"
@@ -765,6 +759,7 @@ de:
           title: "Vorgeschlagene Miniaturansichten"
           select: "Auswählen"
           selected: "Ausgewählt"
+          try_again: "Erneut versuchen"
         image_caption:
           button_label: "Beschriftung mit KI"
           generating: "Beschriftung wird generiert …"
@@ -847,6 +842,7 @@ de:
         llm: "Modell"
         pm_warning: "KI-Chatbot-Nachrichten werden regelmäßig von Moderatoren überwacht."
         cancel_streaming: "Antwort abbrechen"
+        try_again: "Erneut versuchen"
         default_pm_prefix: "[KI-Bot-PN ohne Titel]"
         shortcut_title: "Starte eine PN mit einem KI-Bot"
         shortcut_link: "KI-Bot"
@@ -966,7 +962,6 @@ de:
         loading_convo: "Unterhaltung wird geladen"
         collapse: "Zuklappen"
         timed_out: "Discobot konnte keine Entdeckungen finden. Irgendetwas ist schief gelaufen."
-        user_setting: "Suchentdeckungen aktivieren"
         tooltip:
           header: "KI-gestützte Suche"
           content: "Natürliche Sprachsuche unterstützt von %{model}"

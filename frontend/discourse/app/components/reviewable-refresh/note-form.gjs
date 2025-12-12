@@ -1,13 +1,14 @@
 import Component from "@glimmer/component";
-import { fn, hash } from "@ember/helper";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ExpandingTextArea from "discourse/components/expanding-text-area";
+import { isEmpty } from "@ember/utils";
 import Form from "discourse/components/form";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -34,6 +35,11 @@ export default class ReviewableNoteForm extends Component {
   @action
   handleInput(setFn, event) {
     setFn(event.target.value);
+  }
+
+  @bind
+  onDirtyCheck() {
+    return !isEmpty(this.formApi.get("content"));
   }
 
   /**
@@ -83,6 +89,7 @@ export default class ReviewableNoteForm extends Component {
         @data={{hash content=""}}
         @onSubmit={{this.onSubmit}}
         @onRegisterApi={{this.registerApi}}
+        @onDirtyCheck={{this.onDirtyCheck}}
         class="reviewable-note-form__form"
         as |form|
       >
@@ -94,16 +101,11 @@ export default class ReviewableNoteForm extends Component {
           as |field|
         >
           <div class="reviewable-note-form__textarea-wrapper">
-            <field.Custom>
-              <ExpandingTextArea
-                @value={{field.value}}
-                @input={{fn this.handleInput field.set}}
-                @name={{field.name}}
-                placeholder={{i18n "review.notes.placeholder"}}
-                class="reviewable-note-form__textarea"
-                rows="1"
-              />
-            </field.Custom>
+            <field.Textarea
+              @height={{80}}
+              placeholder={{i18n "review.notes.placeholder"}}
+              class="reviewable-note-form__textarea"
+            />
             <PluginOutlet
               @name="reviewable-note-form-after-note"
               @connectorTagName="div"

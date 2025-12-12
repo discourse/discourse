@@ -1653,7 +1653,6 @@ de:
     allow_duplicate_topic_titles_category: "Themen mit identischen, doppelten Titeln zulassen, wenn die Kategorie unterschiedlich ist. allow_duplicate_topic_titles muss deaktiviert sein."
     unique_posts_mins: "Minuten, nach denen ein Benutzer denselben Inhalt noch einmal schreiben kann."
     educate_until_posts: "Zeige das Hilfe-Panel im Editor, wenn ein Benutzer einen seiner ersten (n) Beiträge zu schreiben beginnt."
-    title: "Der Name dieser Website. Sichtbar für alle Besucher, einschließlich anonymer Benutzer."
     site_description: "Beschreibe diese Website in einem Satz. Sichtbar für alle Besucher, auch für anonyme Benutzer."
     short_site_description: "Kurze Beschreibung in ein paar Worten. Sichtbar für alle Besucher, auch für anonyme Benutzer."
     contact_email: "E-Mail-Adresse einer verantwortlichen Person für diese Website. Wird verwendet für kritische Benachrichtigungen und unter <a href='%{base_path}/about' target='_blank'>/about</a> angezeigt. Sichtbar für anonyme Benutzer auf öffentlichen Websites."
@@ -2006,35 +2005,22 @@ de:
     tl3_requires_likes_given: "Die Mindestanzahl an „Gefällt mir“, die in den letzten (tl3 time period) Tagen vergeben werden muss, um sich für die Beförderung auf Vertrauensstufe 3 zu qualifizieren."
     tl3_requires_likes_received: "Die Mindestanzahl an „Gefällt mir“, die in den letzten (tl3 time period) Tagen eingehen muss, um sich für die Beförderung auf Vertrauensstufe 3 zu qualifizieren."
     tl3_links_no_follow: "rel=nofollow nicht von Links entfernen, die von Benutzern mit Vertrauensstufe 3 erstellt wurden."
-    tl4_delete_posts_and_topics: "TL4-Benutzern erlauben, Beiträge und Themen zu löschen, die von anderen Benutzern erstellt wurden. TL4-Benutzer können auch gelöschte Themen und Beiträge sehen."
     delete_all_posts_and_topics_allowed_groups: "Gruppen, die Beiträge und Themen löschen dürfen, die von anderen Benutzern erstellt wurden. Diese Gruppen können auch gelöschte Themen und Beiträge sehen."
     edit_all_topic_groups: "Benutzern in dieser Gruppe erlauben, die Thementitel, -schlagwörter und -kategorien anderer Benutzer zu bearbeiten"
     edit_all_post_groups: "Benutzern in dieser Gruppe erlauben, die Beiträge anderer Nutzer zu bearbeiten"
-    min_trust_to_create_topic: "Minimale Vertrauensstufe, um ein neues Thema zu erstellen."
     create_topic_allowed_groups: "Gruppen, denen es erlaubt ist, neue Themen zu erstellen. Administratoren und Moderatoren können immer Themen erstellen."
     allow_flagging_staff: "Wenn aktiviert, können Benutzer auch Beiträge von Team-Konten melden."
-    min_trust_to_edit_wiki_post: "Minimale Vertrauensstufe, um als Wiki markierte Beiträge bearbeiten zu können."
     edit_wiki_post_allowed_groups: "Gruppen, die als Wiki markierte Beiträge bearbeiten dürfen. Administratoren und Moderatoren können als Wiki markierte Beiträge immer bearbeiten."
-    min_trust_to_edit_post: "Minimale Vertrauensstufe, um Beiträge bearbeiten zu können."
     edit_post_allowed_groups: "Gruppen, die Beiträge bearbeiten dürfen. Administratoren und Moderatoren können Beiträge jederzeit bearbeiten."
-    min_trust_to_allow_self_wiki: "Minimale Vertrauensstufe, die ein Benutzer haben muss, um einen eigenen Wiki-Eintrag zu erstellen."
     self_wiki_allowed_groups: "Erlaube Benutzern in diesen Gruppen, ihre Beiträge als Wiki zu markieren. Administratoren und Moderatoren können ihre Beiträge immer als Wiki markieren."
     min_trust_to_send_messages: "VERALTET, stattdessen die Einstellung „personal message enabled groups“ verwenden. Die Mindestvertrauensstufe, die zum Erstellen neuer persönlicher Nachrichten erforderlich ist."
-    min_trust_to_send_email_messages: "Minimale Vertrauensstufe, um persönliche Nachrichten per E-Mail zu versenden."
     send_email_messages_allowed_groups: "Gruppen, denen es erlaubt ist, persönliche Nachrichten per E-Mail zu senden. Administratoren und Moderatoren können immer persönliche Nachrichten per E-Mail versenden."
-    min_trust_to_flag_posts: "Minimale Vertrauensstufe, um Beiträge melden zu können"
     flag_post_allowed_groups: "Gruppen, die Beiträge melden dürfen. Administratoren und Moderatoren können immer Beiträge melden."
-    min_trust_to_post_links: "Minimale Vertrauensstufe, um Links in Beiträge einzufügen"
     post_links_allowed_groups: "Gruppen, die Links in Beiträge einfügen dürfen. Administratoren und Moderatoren dürfen immer Links posten."
-    min_trust_to_post_embedded_media: "Minimale Vertrauensstufe, die zum Einbetten von Medienelementen in einen Beitrag erforderlich ist"
     embedded_media_post_allowed_groups: "Die Benutzer in diesen Gruppen dürfen Medienelemente in einen Beitrag einbetten. Administratoren und Moderatoren können immer Medienelemente einbetten."
-    min_trust_level_to_allow_profile_background: "Minimale Vertrauensstufe, die zum Hochladen eines Profilhintergrunds erforderlich ist"
     profile_background_allowed_groups: "Gruppen, die einen Profilhintergrund hochladen dürfen. Administratoren und Moderatoren können immer einen Profilhintergrund hochladen."
-    min_trust_level_to_allow_user_card_background: "Minimale Vertrauensstufe, die zum Hochladen eines Benutzerkartenhintergrunds erforderlich ist"
     user_card_background_allowed_groups: "Gruppen, die einen Benutzerkartenhintergrund hochladen dürfen. Administratoren und Moderatoren können immer einen Hintergrund für die Benutzerkarte hochladen."
-    min_trust_level_to_allow_invite: "Minimale Vertrauensstufe, die zum Einladen von Benutzern erforderlich ist"
     invite_allowed_groups: "Gruppen, die Benutzer einladen dürfen. Administratoren und Moderatoren können immer Benutzer einladen."
-    min_trust_level_to_allow_ignore: "Minimale Vertrauensstufe, um Benutzer ignorieren zu können"
     ignore_allowed_groups: "Gruppen, denen es erlaubt ist, andere Benutzer zu ignorieren. Administratoren und Moderatoren können andere Benutzer immer ignorieren."
     allowed_link_domains: "Domains, auf die Benutzer verlinken dürfen, auch wenn sie nicht die entsprechende Vertrauensstufe haben, um Links zu setzen."
     newuser_max_links: "Maximale Anzahl der Links, die neue Benutzer Beiträgen hinzufügen dürfen."
@@ -2047,7 +2033,6 @@ de:
     enable_mentions: "Erlaubt es Benutzern, sich gegenseitig in ihren Beiträgen zu markieren oder zu referenzieren, indem sie das „@“-Symbol verwenden."
     here_mention: "Name, der für eine Erwähnung per @ verwendet wird, damit privilegierte Benutzer bis zu „max_here_mentioned“ Personen benachrichtigen können, die an dem Thema teilnehmen. Darf kein bestehender Benutzername sein."
     max_here_mentioned: "Maximale Anzahl der erwähnten Personen per @here."
-    min_trust_level_for_here_mention: "Die Mindestvertrauensstufe, die erforderlich ist, um @here zu erwähnen."
     here_mention_allowed_groups: "Gruppen, die @here erwähnen dürfen. Administratoren und Moderatoren können @here immer erwähnen."
     create_thumbnails: "Erzeuge ein Vorschaubild und eine Lightbox für Bilder, die zu groß sind, um in einem Beitrag angezeigt zu werden."
     email_time_window_mins: "Warte (n) Minuten, bevor eine E-Mail-Benachrichtigung geschickt wird, um Benutzern Gelegenheit zu geben, ihre Beiträge abschließend bearbeiten zu können."
@@ -2117,7 +2102,6 @@ de:
     allow_all_users_to_flag_illegal_content: "Anonyme Benutzer sehen die Information, dass sie den Administratoren eine E-Mail schicken müssen, um illegale Inhalte zu melden. Diese Einstellung hat Vorrang vor „flag post allowed groups“."
     email_address_to_report_illegal_content: "Wenn dieses Feld leer gelassen wird, wird die Standard-E-Mail-Adresse des Website-Administrators verwendet."
     cooldown_hours_until_reflag: "Wie lange Benutzer warten müssen, bevor sie einen Beitrag erneut melden können"
-    slow_mode_prevents_editing: "Verhindert der langsame Modus die Bearbeitung nach editing_grace_period?"
     reply_by_email_enabled: "Aktiviere die Funktion, die es Benutzern ermöglicht, direkt per E-Mail auf Themen zu antworten, anstatt sich auf der Website anmelden zu müssen. Weitere Informationen findest du im <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>Leitfaden auf Meta</a> ."
     reply_by_email_address: "Vorlage für Antwort per E-Mail (eingehende E-Mail-Adresse), zum Beispiel: %%{reply_key}@reply.example.com oder replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Liste der alternativen Vorlagen für die Beantwortung per E-Mail (eingehende E-Mail-Adressen). Beispiel: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -2172,7 +2156,6 @@ de:
     pop3_polling_delete_from_server: "E-Mails vom Server löschen. HINWEIS: Wenn du dies deaktivierst, solltest du deinen E-Mail-Posteingang manuell aufräumen"
     log_mail_processing_failures: "Protokolliere alle Fehler bei der E-Mail-Verarbeitung unter <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Benutzern erlauben, neue Themen per E-Mail zu posten. Nachdem du diese Einstellung aktiviert hast, kannst du eingehende E-Mail-Adressen für Gruppen und Kategorien konfigurieren."
-    email_in_min_trust: "Minimale Vertrauensstufe, um neue Themen per E-Mail erstellen zu können."
     email_in_allowed_groups: "Gruppen, denen es erlaubt ist, neue Themen per E-Mail zu posten. Administratoren und Moderatoren können immer neue Themen per E-Mail posten."
     email_in_authserv_id: "Die Kennung des Dienstes, der Authentifizierungsprüfungen für eingehende E-Mails durchführt. Siehe <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> für Hinweise zur Konfiguration."
     email_in_spam_header: "Wählt den spezifischen E-Mail-Header aus, der zur Identifizierung von Spam verwendet wird. Diese Option kann X-Spam-Flag, X-Spam-Status oder X-SES-Spam-Verdict sein und die E-Mail wird anhand des Werts des Headers als Spam gekennzeichnet. Wenn die gewählte Einstellung zum Beispiel X-Spam-Flag ist, wird eine E-Mail mit dem Header-Wert YES als Spam eingestuft."
@@ -2195,7 +2178,6 @@ de:
     username_change_period: "Die maximale Anzahl von Tagen nach der Registrierung, nach der Konten ihren Benutzernamen ändern können (0 verbietet die Änderung des Benutzernamen)."
     email_editable: "Erlaube Benutzern, ihre E-Mail-Adresse nach der Registrierung zu ändern."
     logout_redirect: "Adresse, auf die der Browser nach dem Abmelden weitergeleitet wird (z. B. https://example.com/logout)"
-    allow_uploaded_avatars: "Benutzer können eigene Profilbilder hochladen."
     uploaded_avatars_allowed_groups: "Lege fest, welche Gruppen eigene Profilbilder hochladen dürfen."
     default_avatars: "URLs zu Avataren, die standardmäßig für neue Benutzer verwendet werden, bis sie diese ändern."
     automatically_download_gravatars: "Gravatars für Benutzer bei Kontoerstellung oder E-Mail-Änderung herunterladen."
@@ -2305,9 +2287,7 @@ de:
     enable_inline_emoji_translation: "Aktiviert die Übersetzung von Inline-Emojis (ohne ein Leerzeichen oder Satzzeichen davor)"
     emoji_deny_list: "Diese Emoji können nicht in Menüs oder Shortcodes verwendet werden."
     approve_post_count: "Anzahl der Beiträge eines neuen Benutzers oder Anwärters, die genehmigt werden müssen"
-    approve_unless_trust_level: "Beiträge, die von Benutzern unterhalb dieser Vertrauensstufe erstellt werden, müssen genehmigt werden"
     approve_unless_allowed_groups: "Beiträge, die von Benutzern erstellt werden, die nicht zu diesen Gruppen gehören, müssen genehmigt werden. Beiträge, die von Administratoren und Moderatoren erstellt werden, werden immer genehmigt."
-    approve_new_topics_unless_trust_level: "Neue Themen, die von Benutzern unterhalb dieser Vertrauensstufe erstellt werden, müssen genehmigt werden"
     approve_new_topics_unless_allowed_groups: "Neue Themen, die von Benutzern erstellt werden, die nicht zu diesen Gruppen gehören, müssen genehmigt werden. Themen, die von Administratoren und Moderatoren erstellt werden, werden immer genehmigt."
     approve_unless_staged: "Neue Themen und Beiträge, die von vorbereiteten Benutzern erstellt werden, müssen genehmigt werden"
     notify_about_queued_posts_after: "Wenn es Beiträge gibt, die länger als diese Anzahl an Stunden auf ihre Überprüfung warten, sende eine Benachrichtigung an alle Moderatoren. Setze die Einstellung auf 0, um diese Benachrichtigungen zu deaktivieren."
@@ -2323,7 +2303,6 @@ de:
     new_user_notice_tl: "Minimale Vertrauensstufe, die für das Sehen von Beitragsnotizen neuer Benutzer erforderlich ist."
     returning_user_notice_tl: "Minimale Vertrauensstufe, die für das Sehen von Beitragsnotizen wiederkehrender Benutzer erforderlich ist."
     returning_users_days: "Wie viele Tage vergehen sollten, bevor ein Benutzer als wiederkehrend betrachtet wird."
-    review_media_unless_trust_level: "Das Team wird Beiträge von Benutzern mit niedrigeren Vertrauensstufen überprüfen, wenn sie eingebettete Medien enthalten."
     skip_review_media_groups: "Beiträge von Benutzern, die keiner dieser Gruppen angehören, werden zur Überprüfung an das Team weitergeleitet, wenn der Beitrag eingebettete Medien enthält. Beiträge, die von Administratoren und Moderatoren erstellt werden, sind immer erlaubt."
     blur_tl0_flagged_posts_media: "Bilder von gemeldeten Beiträgen mit Unschärfe versehen, um potenzielle NSFW-Inhalte auszublenden."
     enable_page_publishing: "Erlaube Team-Mitgliedern, Themen unter neuen URLs mit eigenem Styling zu veröffentlichen."
@@ -2375,9 +2354,6 @@ de:
     revoke_api_keys_unused_days: "Anzahl der Tage seit der letzten Verwendung eines API-Schlüssels, bevor er automatisch widerrufen wird (0 für nie)"
     revoke_api_keys_maxlife_days: "Anzahl der Tage, bevor ein API-Schlüssel automatisch widerrufen wird (0 für nie)"
     allow_user_api_key_scopes: "Liste erlaubter Bereiche für Benutzer-API-Schlüssel"
-    min_trust_level_for_user_api_key: |
-      Vertrauensstufe, die für die Generierung von Benutzer-API-Schlüsseln erforderlich ist.<br>
-      <b>WARNUNG</b>: Die Änderung der Vertrauensstufe verhindert, dass sich Benutzer mit einer niedrigeren Vertrauensstufe über Discourse Hub anmelden können.
     user_api_key_allowed_groups: |
       Die Gruppenzugehörigkeit ist für die Generierung von Benutzer-API-Schlüsseln erforderlich.<br>
       <b>WARNUNG</b>: Wenn du die Vertrauensstufe änderst, können sich Benutzer mit einer niedrigeren Vertrauensstufe nicht mehr über Discourse Hub anmelden.<br>
@@ -2387,7 +2363,6 @@ de:
     revoke_user_api_keys_unused_days: "Anzahl der Tage seit der letzten Verwendung eines Benutzer-API-Schlüssels, bevor er automatisch widerrufen wird (0 für nie)"
     revoke_user_api_keys_maxlife_days: "Anzahl der Tage, bevor ein Benutzer-API-Schlüssel automatisch widerrufen wird (0 für nie)"
     tagging_enabled: "Schlagwörter für Themen aktivieren? Weitere Informationen findest du in der <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Administrator-Anleitung zu Schlagwörtern auf Meta</a>."
-    min_trust_to_create_tag: "Minimale Vertrauensstufe, um ein Schlagwort zu erstellen."
     create_tag_allowed_groups: "Gruppen, die Schlagwörter erstellen dürfen. Administratoren und Moderatoren können immer Schlagwörter erstellen."
     edit_tags_allowed_groups: "Gruppen, die Schlagwörter, Schlagwort-Beschreibungen und -Synonyme bearbeiten dürfen."
     max_tags_per_topic: "Maximale Anzahl an Schlagwörtern, die einem Thema hinzugefügt werden können."
@@ -2400,7 +2375,6 @@ de:
     tags_listed_by_group: "Zeige Schlagwörter auf der <a href='%{base_path}/tags' target='_blank'>Schlagwort-Seite</a> geordnet nach Schlagwortgruppe an."
     tag_style: "Lege das visuelle Erscheinungsbild der Schlagwort-Abzeichen auf der Website fest. Mit dieser Einstellung kannst du die visuelle Darstellung der Schlagwörter in allen Bereichen der Website anpassen und so die Konsistenz des Layouts und die Barrierefreiheit für die Benutzer verbessern."
     pm_tags_allowed_for_groups: "Mitgliedern der einbezogenen Gruppen erlauben, jede persönliche Nachricht mit einem Schlagwort zu versehen"
-    min_trust_level_to_tag_topics: "Minimale Vertrauensstufe, um Schlagwörter zu Themen hinzuzufügen."
     tag_topic_allowed_groups: "Gruppen, die Schlagwörter zu Themen hinzufügen dürfen. Administratoren und Moderatoren können immer Schlagwörter zu Themen hinzufügen."
     suppress_overlapping_tags_in_list: "Schlagwort nicht zeigen, wenn es genauso im Thementitel vorkommt"
     remove_muted_tags_from_latest: "Themen, die nur mit stummgeschalteten Schlagwörtern versehen sind, nicht in der Liste der aktuellen Themen anzeigen"
@@ -2411,7 +2385,6 @@ de:
     governing_law: "Gib die Gerichtsbarkeit an, die für die rechtlichen Aspekte der Website gilt, einschließlich der Nutzungsbedingungen und der Datenschutzerklärung. Dies ist in der Regel das Land oder der Staat, in dem das Unternehmen, das die Website betreibt, registriert ist oder Geschäfte tätigt."
     city_for_disputes: "Gib die Stadt an, die für die Beilegung von Streitigkeiten im Zusammenhang mit der Nutzung dieses Forums zuständig sein soll. Diese Information ist normalerweise in rechtlichen Dokumenten wie den Nutzungsbedingungen des Forums enthalten."
     shared_drafts_category: "Aktiviere die Funktion „Gemeinsame Entwürfe“, indem du eine Kategorie für Themenentwürfe bestimmst. Themen in dieser Kategorie werden in den Themenlisten für Team-Mitglieder unterdrückt."
-    shared_drafts_min_trust_level: "Erlaube Benutzern, gemeinsame Entwürfe einzusehen und zu bearbeiten."
     shared_drafts_allowed_groups: "Erlaube Benutzern in diesen Gruppen, gemeinsame Entwürfe zu sehen und zu bearbeiten."
     push_notifications_prompt: "Zeige Benutzern ein Zustimmungsbanner für Push-Benachrichtigungen. Diese Einstellung löst eine Aufforderung aus, in der die Benutzer um Erlaubnis gebeten werden, ihnen Push-Benachrichtigungen senden zu dürfen. Das Banner wird nur angezeigt, wenn Push-Benachrichtigungen nicht bereits aktiviert sind, vom Gerät des Benutzers unterstützt werden und der Benutzer entweder einen Beitrag erstellt hat oder eine Progressive Web App (PWA) verwendet. Die Aufforderung wird nicht mehr angezeigt, wenn der Benutzer sie bereits abgelehnt oder die Erlaubnis erteilt/verweigert hat."
     push_notifications_icon: "Das Abzeichensymbol, das in der Benachrichtigungsecke angezeigt wird. Ein monochromatisches PNG mit Transparenz (96 × 96) wird empfohlen."
@@ -2423,7 +2396,6 @@ de:
     sitemap_page_size: "Anzahl der URLs, die auf jeder Sitemap-Seite enthalten sein sollen. Max 50.000"
     enable_user_status: "Benutzern erlauben, eine eigene Statusmeldung (Emoji + Beschreibung) einzustellen."
     enable_user_tips: "Tipps für neue Benutzer aktivieren, die diesen die wichtigsten Funktionen näherbringen"
-    short_title: "Der Kurztitel wird beim Benutzer auf dem Startbildschirm, im Startmenü oder an anderen Stellen mit begrenztem Platz verwendet. Er sollte auf 12 Zeichen begrenzt sein."
     dashboard_hidden_reports: "Erlaube das Ausblenden der angegebenen Berichte im Dashboard."
     dashboard_visible_tabs: "Wähle aus, welche Dashboard-Registerkarten sichtbar sind."
     dashboard_general_tab_activity_metrics: "Wähle Berichte aus, die als Aktivitätsmetrik in der Registerkarte „Allgemein“ angezeigt werden."
@@ -2533,7 +2505,6 @@ de:
         other: "Die Liste muss genau %{count} Werte enthalten."
       markdown_linkify_tlds: "Du kannst den Wert „*“ nicht angeben."
       google_oauth2_hd_groups: "Vor Aktivierung dieser Einstellung müssen zuerst alle „google oauth2 hd“-Einstellungen festgelegt werden."
-      discourse_id_credentials: "Du musst die Discourse-ID-Anmeldedaten („discourse_id_client_id“ und „discourse_id_client_secret“) konfigurieren, bevor du diese Einstellung aktivierst."
       linkedin_oidc_credentials: "Du musst die LinkedIn-OIDC-Anmeldedaten („linkedin_oidc_client_id“ und „linkedin_oidc_client_secret“) konfigurieren, bevor du diese Einstellung aktivierst."
       search_tokenize_chinese_enabled: "Du musst „search_tokenize_chinese“ deaktivieren, bevor du diese Einstellung aktivierst."
       search_tokenize_japanese_enabled: "Du musst „search_tokenize_japanese“ deaktivieren, bevor du diese Einstellung aktivierst."
@@ -3630,14 +3601,9 @@ de:
     user_automatically_silenced:
       title: "Benutzer automatisch stummgeschaltet"
       subject_template: "Neuer Benutzer %{username} wurde wegen Community-Meldungen stummgeschaltet"
-      text_body_template: |
-        Dies ist eine automatische Nachricht.
-
-        Der neue Benutzer [%{username}](%{user_url}) wurde automatisch stummgeschaltet, weil mehrere Benutzer Beiträge von %{username} gemeldet haben.
-
-        Bitte [überprüfe die Meldungen](%{base_url}/review). Wenn %{username} fälschlich stummgeschaltet wurde, so klicke die „Stummschaltung aufheben“-Schaltfläche auf der [Administrationsseite dieses Benutzers](%{user_url}).
-
-        Der Schwellenwert kann über die Einstellung `silence_new_user` geändert werden.
+    user_automatically_silenced_with_reason:
+      title: "Benutzer automatisch stummgeschaltet"
+      subject_template: "Neuer Benutzer %{username} wurde wegen Community-Meldungen stummgeschaltet"
     spam_post_blocked:
       title: "Spam-Beitrag blockiert"
       subject_template: "Beiträge des neuen Benutzers %{username} wegen mehrfacher Verlinkung blockiert"
@@ -4756,18 +4722,12 @@ de:
     nice_share:
       name: Schön geteilt
       description: Hat einen Beitrag mit 25 Besuchern geteilt
-      long_description: |
-        Dieses Abzeichen wird verliehen, wenn du einen Link teilst, der von 25 Besuchern angeklickt wurde. Danke, dass du dazu beigetragen hast, unsere Diskussionen und diese Community bekannt zu machen!
     good_share:
       name: Gut geteilt
       description: Hat einen Beitrag mit 300 Besuchern geteilt
-      long_description: |
-        Dieses Abzeichen wird verliehen, wenn du einen Link teilst, der von 300 Besuchern angeklickt wurde. Gute Arbeit! Du hast eine großartige Diskussion einer ganzen Reihe neuer Leute zur Schau gestellt und dieser Community geholfen zu wachsen.
     great_share:
       name: Großartig geteilt
       description: Hat einen Beitrag mit 1000 Besuchern geteilt
-      long_description: |
-        Dieses Abzeichen wird verliehen, wenn du einen Link teilst, der von 1000 Besuchern angeklickt wurde. Wow! Du hast eine interessante Diskussion einer riesigen Leserschaft nähergebracht und unserer Community sehr geholfen zu wachsen!
     first_like:
       name: Erstes „Gefällt mir“
       description: Hat einen Beitrag mit „Gefällt mir“ markiert
@@ -4985,21 +4945,13 @@ de:
   wizard:
     title: "Discourse einrichten"
     step:
-      introduction:
-        title: "Über deine Website"
-        description: "Diese werden bei deiner Anmeldung und auf allen öffentlichen Seiten angezeigt. Du kannst sie später jederzeit ändern."
+      setup:
+        title: "Erste Schritte"
         fields:
           title:
             label: "Name der Community"
-            placeholder: "Erikas Stammtisch"
-          site_description:
-            label: "Beschreibe deine Community in einem Satz"
-            placeholder: "Ein Ort für Erika und ihre Bekannten, um coole Sachen zu besprechen"
           default_locale:
             label: "Sprache"
-      privacy:
-        title: "Zugriff für Mitglieder"
-        fields:
           login_required:
             label: "Sichtbarkeit"
             description: "Ist deine Community öffentlich oder privat?"
@@ -5023,82 +4975,6 @@ de:
                 label: "Nein, neue Mitglieder können sofort beitreten"
               "yes":
                 label: "Ja, neue Mitglieder müssen von Moderatoren genehmigt werden"
-          chat_enabled:
-            placeholder: "Chat aktivieren"
-            extra_description: "Interagiere in Echtzeit mit deinen Mitgliedern"
-      ready:
-        title: "Deine Website ist bereit!"
-        description: "Das war's! Du hast die Grundlagen für die Einrichtung deiner Community geschaffen. Jetzt kannst du dich umsehen, ein Willkommensthema schreiben und Einladungen verschicken!<br><br>Viel Spaß!"
-      styling:
-        title: "Look and Feel"
-        fields:
-          color_scheme:
-            label: "Farbpalette"
-          body_font:
-            label: "Textkörper-Schriftart"
-          site_font:
-            label: "Schriftart"
-          heading_font:
-            label: "Überschrift-Schriftart"
-          styling_preview:
-            label: "Vorschau"
-          homepage_style:
-            label: "Homepage-Stil"
-            choices:
-              latest:
-                label: "Aktuell"
-                description: "Zeigt die zuletzt aktiven Themen in allen Kategorien an, damit die Mitglieder über die Diskussionen, die sie interessieren, auf dem Laufenden bleiben"
-              hot:
-                label: "Heiß"
-                description: "Stellt angesagte Themen dar, indem es die aktuelle und allgemeine Popularität mischt, und zeigt, worüber die Mitglieder in deiner Community gerade sprechen"
-              categories_and_latest_topics:
-                label: "Kategorien mit aktuellen Themen"
-                description: "Kombiniert die zuletzt aktiven Themen über alle Kategorien hinweg mit einer Liste der Kategorien, ihrer Beschreibung und der Gesamtzahl der Themen"
-              categories_boxes:
-                label: "Kategorie-Boxen"
-                description: "Zeigt die Kategorien und ihre Beschreibung in einem Raster an – ideal für Mitglieder, um einen Überblick über die Untergemeinschaften deiner Website zu erhalten"
-      branding:
-        title: "Website-Logo"
-        fields:
-          logo:
-            label: "Hauptlogo"
-            description: "Empfohlene Größe: 600 x 200"
-          logo_small:
-            label: "Quadratisches Logo"
-            description: "Empfohlene Größe: 512 x 512. Wird auch als Favicon und App-Symbol für den Home-Bildschirm von Mobilgeräten verwendet."
-      corporate:
-        title: "Deine Organisation"
-        description: "Die folgenden Informationen werden in deinen Nutzungsbedingungen und auf deinen „Über uns“-Seiten verwendet. Falls es keine Firma gibt, kannst du dies überspringen."
-        fields:
-          company_name:
-            label: "Firmenname"
-            placeholder: "Acme-Organisation"
-          governing_law:
-            label: "Anzuwendendes Recht"
-            placeholder: "Deutsches Recht"
-          contact_url:
-            label: "Webseite"
-            placeholder: "https://www.example.com/contact-us"
-          city_for_disputes:
-            label: "Stadt für Rechtsstreitigkeiten"
-            placeholder: "Berlin"
-          site_contact:
-            label: "Automatische Nachrichten"
-            description: "Alle automatischen persönlichen Discourse-Nachrichten werden von diesem Benutzer geschickt, z. B. Warnungen zu Meldungen und Benachrichtigungen über den Abschluss von Backups."
-          contact_email:
-            label: "Ansprechpartner"
-            placeholder: "example@user.com"
-            description: "E-Mail-Adresse einer verantwortlichen Person für diese Website. Wird verwendet für kritische Benachrichtigungen und auf <a href='%{base_path}/about' target='_blank'>deiner „Über uns“-Seite</a> für dringende Anfragen angezeigt."
-      invites:
-        title: "Team einladen"
-        description: "Du hast es fast geschafft! Lass uns ein paar Leute einladen, die dabei helfen, <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>Diskussionen anzuregen</a> – mit interessanten Themen und Beiträgen, um deine Community in Schwung zu bringen."
-        disabled: "Lokale Anmeldungen sind deaktiviert. Daher ist es nicht möglich, Einladungen zu verschicken. Bitte fahre mit dem nächsten Schritt fort."
-      finished:
-        title: "Dein Discourse ist bereit!"
-        description: |
-          <p>Wenn du jemals Lust hast, diese Einstellungen zu ändern, <b>führe diesen Assistenten jederzeit erneut aus</b> oder besuche <a href='%{base_path}/admin' target='_blank'>deinen Administrator-Bereich</a>; du findest ihn neben dem Schraubenschlüssel-Symbol im Website-Menü.</p>
-          <p>Mit unserem leistungsstarken Theme-System kannst du Discourse noch weiter anpassen. Beispiele findest du unter <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">Top-Themes und -Komponenten</a> auf <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
-          <p>Viel Spaß und viel Erfolg <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>beim Aufbau deiner neuen Community!</a></p>
   search_logs:
     graph_title: "Anzahl Suchen"
   onebox:
@@ -5121,6 +4997,10 @@ de:
       review_by: "Überprüfung durch"
       pr_summary: "%{commits} Commits haben %{changed_files} Dateien durch %{additions} Ergänzungen und %{deletions} Löschungen geändert"
       no_description: "Trage zur Entwicklung von %{repo} bei, indem du ein Konto bei GitHub erstellst."
+      status_date:
+        open: "offen"
+        approved: "genehmigt"
+        closed: "geschlossen"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} hat dich erwähnt in „%{topic}“ – %{site_title}'
@@ -5263,7 +5143,6 @@ de:
         title: "Beitrag verwerfen"
         complete: "Beitrag verworfen."
       revise_and_reject_post:
-        title: "Beitrag überarbeiten …"
         complete: "Beitrag wurde bis zur Überarbeitung abgelehnt."
       ignore:
         title: "Ignorieren"

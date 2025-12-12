@@ -10,7 +10,6 @@ ru:
       sort_options:
         votes: "Голоса"
     topic_voting:
-      title: "Голосование по теме"
       reached_limit: "У вас закончились голоса. Удалите часть голосов."
       list_votes: "Показать ваши голоса"
       votes_nav_help: "Темы с наибольшим количеством голосов"
@@ -21,16 +20,6 @@ ru:
       voted_title: "Проголосовало"
       voting_closed_title: "Закрытое"
       voting_limit: "Лимит"
-      votes_left:
-        one: "У вас остался %{count} голос, см. <a href='%{path}'>ваши голоса</a>."
-        few: "У вас осталось %{count} голоса, см. <a href='%{path}'>ваши голоса</a>."
-        many: "У вас осталось %{count} голосов, см. <a href='%{path}'>ваши голоса</a>."
-        other: "У вас осталось %{count} голоса, см. <a href='%{path}'>ваши голоса</a>."
-      votes_left_button_title:
-        one: "У вас остался %{count} голос."
-        few: "У вас осталось %{count} голоса."
-        many: "У вас осталось %{count} голосов."
-        other: "У вас осталось %{count} голоса."
       votes:
         one: "%{count} голос"
         few: "%{count} голоса"

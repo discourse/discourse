@@ -11,6 +11,7 @@ import BufferedProxy from "ember-buffered-proxy/proxy";
 import DButton from "discourse/components/d-button";
 import RadioButton from "discourse/components/radio-button";
 import TextField from "discourse/components/text-field";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
 import PermissionType from "discourse/models/permission-type";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
@@ -25,7 +26,9 @@ export default class TagGroupsForm extends Component {
   @tracked model;
 
   // All but the "everyone" group
-  allGroups = this.site.groups.filter(({ id }) => id !== 0);
+  allGroups = this.site.groups.filter(
+    ({ id }) => id !== AUTO_GROUPS.everyone.id
+  );
 
   @cached
   @dependentKeyCompat
@@ -47,7 +50,10 @@ export default class TagGroupsForm extends Component {
       // JS object keys are always strings, so we need to convert them to integers
       const id = parseInt(groupId, 10);
 
-      if (id !== 0 && permission === PermissionType.FULL) {
+      if (
+        id !== AUTO_GROUPS.everyone.id &&
+        permission === PermissionType.FULL
+      ) {
         groupIds.push(id);
       }
     }

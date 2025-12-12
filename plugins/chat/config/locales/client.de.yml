@@ -128,7 +128,6 @@ de:
       email_frequency:
         description: "Wir schicken dir nur dann eine E-Mail, wenn wir dich in den letzten 15 Minuten nicht gesehen haben."
         never: "Niemals"
-        title: "E-Mail-Benachrichtigungen"
         when_away: "Nur bei Abwesenheit"
       header_indicator_preference:
         title: "Aktivitätsindikator in der Kopfzeile anzeigen"
@@ -328,6 +327,7 @@ de:
         yesterday: Gestern
       search_view:
         filter_placeholder: Nachrichten durchsuchen
+        sr_instructions: "Drücke die Eingabetaste oder die Leertaste, um die Nachricht zu öffnen. Verwende Tab, um zwischen den Ergebnissen zu navigieren."
       members_view:
         filter_placeholder: Mitglieder finden
         add_member: Mitglied hinzufügen
@@ -500,6 +500,8 @@ de:
           confirm_export: "Dies exportiert alle Nachrichten aus allen Kanälen und schickt dir das Ergebnis in einer persönlichen Nachricht. Bist du sicher, dass du exportieren willst?"
           export_has_started: "Der Export hat begonnen. Du erhältst eine PN, wenn er abgeschlossen ist."
       search:
+        title: Chats durchsuchen
+        aria_label: "Zur Chatsuche wechseln"
         no_results: "Keine Ergebnisse gefunden"
         sort:
           relevance: "Relevanz"

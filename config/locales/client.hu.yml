@@ -291,7 +291,6 @@ hu:
     software_update_prompt:
       message: "Frissítettük ezt az oldalt, <span>frissítse</span> a zökkenőmentes működésért."
       dismiss: "Elvetés"
-    bootstrap_mode: "Első lépések"
     back_button: "Vissza"
     welcome_banner:
       header:
@@ -706,7 +705,7 @@ hu:
       title: "Áttekintés"
       topic: "Téma:"
       filtered_topic: "A jóváhagyandó tartalmakra szűrt egyetlen témában."
-      filtered_user: "Felhasználó"
+      filtered_user: "Megjelölt felhasználó"
       filtered_reviewed_by: "Jóváhagyta:"
       show_all_topics: "összes téma megjelenítése"
       deleted_post: "(bejegyzés törölve)"
@@ -842,7 +841,6 @@ hu:
           noun: "bejegyzéssel"
       flagged_as: "Megjelölt"
       user_label: "Felhasználó"
-      assigned_to: "Hozzárendelve"
       moderator_actions: "Moderátori intézkedések"
       timeline_and_notes: "Idővonal és jegyzetek"
       timeline:
@@ -853,13 +851,11 @@ hu:
         claimed: "Igényelt"
         claimed_by: "%{username} által igényelve · %{relativeDate}"
         reviewed: "Felülvizsgált"
-        reviewed_by: "%{username} által felülvizsgálva · %{relativeDate}"
         view_conversation: "PÜ megtekintése"
         note_added: "Moderátori megjegyzés"
         note_added_by: "%{username} moderátor megjegyzése · %{relativeDate}"
         no_events: "Nincsenek megjeleníthető idővonal-események"
       notes:
-        add_note_description: "Csak a moderátorok láthatják. Ezzel a megjegyzéssel kontextust vagy döntéseket hozhatsz a véleményezéssel kapcsolatban."
         add_note_button: "Megjegyzés hozzáadása"
         placeholder: "Írd ide a jegyzetedet..."
         chars_remaining: "%{count} karakter maradt"
@@ -880,7 +876,6 @@ hu:
           one: "%{count} egyedi felhasználó jelölte meg"
           other: "%{count} egyedi felhasználó jelölte meg"
         activities:
-          new_account: "új fiók"
           trust_level: "bizalmi szint: %{trustLevelName}"
           posts:
             one: "%{count} bejegyzés"
@@ -888,7 +883,6 @@ hu:
         solution_marked: "Megoldás megjelölve"
         topic_has_solution: "A témának van megoldása"
         visibility: "Láthatóság"
-        topic_unlisted: "Ez a téma nem nyilvános. Csak közvetlen linken keresztül érhető el – nem nyilvános."
       help:
         moderation_guide: "Discourse moderálási útmutató"
         flag_priorities: "Felhasználói hírnév kezelése és a prioritások megjelölése"
@@ -1311,7 +1305,6 @@ hu:
         one: "Kategóriák (%{count} további)…"
         other: "Kategóriák (%{count} további)…"
     ip_lookup:
-      title: IP-cím keresése
       hostname: Gépnév
       location: Hely
       location_not_found: (ismeretlen)
@@ -2883,6 +2876,7 @@ hu:
         zoom_out: "Képméret csökkentése"
         zoom_in: "Képméret növelése"
         remove: "Kép eltávolítása"
+      image: "kép"
       image_scale_button: "Kép méretezése %{percent}%-ra"
       delete_image_button: Kép törlése
       toggle_image_grid: Képrács be/ki
@@ -3225,6 +3219,9 @@ hu:
         reset_bump_dates: "Előrehozási dátumok alaphelyzetbe állítása"
         defer: "Megjelölés olvasatlanként"
         delete: "Témák törlése"
+        delete_topics_count:
+          one: "Téma törlése"
+          other: "Témák törlése"
         dismiss: "Elvetés"
         dismiss_read: "Olvasatlan üzenetek elvetése"
         dismiss_read_with_selected:
@@ -3283,7 +3280,6 @@ hu:
         progress:
           one: "Folyamat: <strong>%{count}</strong> téma"
           other: "Folyamat: <strong>%{count}</strong> téma"
-        silent: "A művelet csendes végrehajtása."
         performing: "Tömeges művelet végrehajtása, kis türelmet…"
         completed: "A tömeges műveletek sikeresen befejeződtek!"
       none:
@@ -3453,7 +3449,6 @@ hu:
       jump_reply_button: "Ugrás a bejegyzéshez"
       deleted: "A téma törölve lett"
       slow_mode_update:
-        title: "Lassú mód"
         select: "A felhasználók ennyi időnként csak egyszer tehetnek közzé bejegyzést:"
         description: "A gyorsan változó vagy vitás témák átgondolt megvitatásának elősegítése érdekében a felhasználóknak várniuk kell, mielőtt újra hozzászólnának ebben a témában."
         enable: "Engedélyezés"
@@ -3895,7 +3890,6 @@ hu:
         post_language_selector:
           none: "Egyik sem"
         edit_warning:
-          message: "Ez egy lefordított bejegyzés.<br><br> Az eredeti hozzászólást szeretnéd szerkeszteni a %{language} oldalon, vagy ezt a konkrét fordítást?"
           action_original: "Eredeti bejegyzés szerkesztése"
           action_translation: "A fordítás szerkesztése"
       errors:
@@ -4129,24 +4123,14 @@ hu:
         description: "Az új témáknak címkecsoportokból származó címkékkel kell rendelkezniük:"
         delete: "Törlés"
         add: "Szükséges címkecsoport hozzáadása"
-        placeholder: "címkecsoport kiválasztása…"
+        placeholder: "Címkecsoport kiválasztása…"
       topic_featured_link_allowed: "Kiemelt hivatkozások engedélyezése ebben a kategóriában"
-      delete: "Kategória törlése"
-      create: "Új kategória"
       create_long: "Új kategória létrehozása"
-      save: "Kategória mentése"
-      slug: "Kategória URL-végződés"
       slug_placeholder: "(Nem kötelező) kötőjeles-szavak az URL-hez"
       creation_error: Hiba lépett fel a kategória létrehozása során!
       save_error: Hiba lépett fel a kategória mentése során!
-      name: "Kategória neve"
-      untitled: "Névtelen kategória"
       description: "Leírás"
-      logo: "Kategória képe"
-      logo_dark: "Sötét üzemmód kategórialogó-képe"
       logo_description: "Ajánlott 1:1 képarány, minimum 200px-es méret. Ha üresen hagyja, nem jelenik meg kép."
-      background_image: "Kategória háttérképe"
-      background_image_dark: "Sötét kategória háttérképe"
       style: "Stílusok"
       background_color: "Szín"
       foreground_color: "Szöveg színe"
@@ -4168,7 +4152,6 @@ hu:
       color_placeholder: "Bármilyen webes szín"
       delete_confirm: "Biztos, hogy törli ezt a kategóriát?"
       delete_error: "Hiba történt a kategória törlése során."
-      list: "Kategóriák felsorolása"
       no_description: "Adjon leírást ehhez a kategóriához."
       change_in_category_topic: "Leírás szerkesztése"
       already_used: "Ezt a színt már egy másik kategória is használja."
@@ -4201,23 +4184,15 @@ hu:
       all_topics_wiki: "Új témák wikivé tétele alapértelmezetten"
       allow_unlimited_owner_edits_on_first_post: "Korlátlan számú szerkesztés engedélyezése a tulajdonosnak az első bejegyzésben"
       subcategory_list_style: "Alkategória lista stílusa:"
-      sort_order: "Témakörök csoportosítása:"
-      default_view: "Alapértelmezett témakörök"
-      default_top_period: "Alapértelmezett Legjobb kategória időszak:"
-      default_list_filter: "Alapértelmezett listaszűrő:"
       allow_badges_label: "Kitűzök elnyerésének engedélyezése ebben a kategóriában"
-      edit_permissions: "Jogok szerkesztése"
       reviewable_by_group: "Az ebbe a kategóriába tartozó tartalmakat a stábon kívül a következők is jóváhagyhatják:"
       review_group_name: "csoport neve"
       require_topic_approval: "Minden új téma moderátori jóváhagyása szükséges"
       require_reply_approval: "Minden új válasz moderátori jóváhagyása szükséges"
       this_year: "ez az év"
       position: "Kategóriák oldalon elfoglalt pozíció:"
-      default_position: "Alapértelmezett pozíció"
       position_disabled: "A kategóriák az aktivitás sorrendjében jelennek meg. A kategóriák listákban való sorrendjének szabályozásához engedélyezze a <a href='%{url}'>\"rögzített kategóriapozíciók\"</a> beállítást."
       minimum_required_tags: "A témához szükséges címkék minimális száma:"
-      default_slow_mode: 'A „Lassú üzemmód” engedélyezése a kategória új témáihoz.'
-      parent: "Szülő kategória"
       num_auto_bump_daily: "A naponta automatikusan előrehozandó nyitott témák száma:"
       auto_bump_cooldown_days: "Minimum napok száma, mielőtt újra feldobná ugyanazt a témát:"
       navigate_to_first_post_after_read: "A témák elolvasása után navigáljon az első hozzászóláshoz"
@@ -4239,18 +4214,14 @@ hu:
           title: "Némítás"
           description: "Egyáltalán nem fog kapni semmilyen értesítést ennek a kategóriának a témaköreiről és legújabbak között sem fog szerepelni."
       search_priority:
-        label: "Keresési prioritás"
         options:
           normal: "Normális"
           ignore: "Letiltás"
-          very_low: "Nagyon alacsony"
           low: "Alacsony"
           high: "Magas"
-          very_high: "Nagyon magas"
       sort_options:
         default: "alapértelmezett"
         likes: "Kedvelések"
-        op_likes: "Eredeti bejegyzés kedvelései"
         views: "Megtekintések"
         posts: "Bejegyzések"
         activity: "Aktivitás"
@@ -4270,8 +4241,7 @@ hu:
         appearance: "Megjelenés"
         email: "E-mail:"
       list_filters:
-        all: "minden téma"
-        none: "nincsenek alkategóriák"
+        all: "Minden téma"
       colors_disabled: "Nem választhat színt, mert nincs kategóriastílusa."
     anonymous_flagging:
       title: "Illegális tartalom bejelentése"
@@ -4509,7 +4479,7 @@ hu:
         title: "Népszerű"
         help: "a legaktívabb témakörök az elmúlt évben, hónapban, hétben vagy napban"
         all:
-          title: "Bármikor"
+          title: "Mindenkori"
         yearly:
           title: "Éves"
         quarterly:
@@ -4520,7 +4490,7 @@ hu:
           title: "Heti"
         daily:
           title: "Napi"
-        all_time: "Mindig"
+        all_time: "Mindenkori"
         this_year: "Elmúlt év"
         this_quarter: "Elmúlt 3 hónap"
         this_month: "Utolsó 30 nap"
@@ -4794,18 +4764,13 @@ hu:
           description: "Ezzel a címkével ellátott új témákról nem kap értesítést, és nem jelennek meg az olvasatlan lapján."
       groups:
         back_btn: "Vissza az összes címkéhez"
-        title: "Címcsoportok"
         about_heading: "Válasszon ki címkecsoportot, vagy hozzon létre újat"
         about_heading_empty: "A kezdéshez hozzon létre új címkecsoportot"
         about_description: "A címkecsoportok segítségével számos címke engedélyeit kezelheted egy helyen."
-        new: "Új csoport"
-        new_title: "Új csoport létrehozása"
-        edit_title: "Címkecsoport szerkesztése"
         tags_label: "Címkék ebben a csoportban"
         parent_tag_label: "Szülőcímke"
         parent_tag_description: "A csoport címkéi csak akkor használhatók, ha a szülőcímke jelen van."
         one_per_topic_label: "Témánként legfeljebb egy címke ebből a csoportból"
-        new_name: "Új csoport címke"
         name_placeholder: "Név"
         save: "Mentés"
         delete: "Törlés"
@@ -5294,6 +5259,11 @@ hu:
         show_image: "Kép megjelenítése"
         select_groups: "Csoportok kiválasztása…"
         preview: "Előnézet"
+        enabled_for_options:
+          everyone: "Mindenki"
+          staff: "Csak a stáb"
+        statuses:
+          experimental: "Kísérleti"
         impact_roles:
           admins: "Adminisztrátorok"
           moderators: "Moderátorok"
@@ -5303,6 +5273,7 @@ hu:
           enabled: "Bekapcsolva"
           disabled: "Kikapcsolva"
           impact_type_other: "Egyéb"
+          status_experimental: "Kísérleti"
       config:
         about:
           title: "Az Ön webhelyéről"
@@ -5343,6 +5314,11 @@ hu:
               title: "Közösségi bejelentkezések"
             discourseconnect:
               title: "Discourse Connect"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Tudjon meg többet"
         logo:
           title: "Logó"
           header_description: "A webhelyen használt logók és ikonok testreszabása"
@@ -5429,6 +5405,23 @@ hu:
               other: "Módosította az alapértelmezett szövegméretet. Alkalmazza ezt a módosítást %{count} meglévő felhasználóra?"
             modal_yes: "Igen"
             modal_no: "Nem, csak a jövőben alkalmazandó"
+        welcome_banner:
+          form:
+            text_color:
+              label: "Szöveg színe"
+            page_visibility:
+              options:
+                top_menu_pages: "Felső menüoldalak"
+                all_pages: "Minden oldal"
+            location:
+              label: "Hely"
+              options:
+                above_topic_content: "Téma feletti tartalom"
+                below_site_header: "A webhely fejléce alatt"
+            header_logged_in:
+              placeholder: "Üdv újra itt, %{preferred_display_name}!"
+            header_anonymous:
+              placeholder: "Üdvözöljük a(z) %{site_name} oldalon."
         navigation:
           title: "Navigáció"
           header_description: "Konfigurálja a navigációs hivatkozásokat és a menüelemeket a webhelyéhez. Ide tartozik az elsődleges navigációs menü helye és viselkedése, a kezdőlap tetején található gyorshivatkozások, valamint az adminisztrátori oldalsáv"
@@ -7219,7 +7212,6 @@ hu:
           success: "Siker"
           exists: "Már létezik"
           upload: "Hozzáadás fájlból"
-          upload_successful: "A feltöltés sikeres, egy Word-öt hozzáadtunk."
           case_sensitivity_label: "Nagy- és kisbetű érzékeny"
           case_sensitivity_description: "Csak a megfelelő kis- és nagybetűkkel rendelkező szavak"
           html_label: "HTML"
@@ -7311,10 +7303,7 @@ hu:
             second: "2. opció"
             third: "3. opció"
         edit_category:
-          toggle_freeform: "űrlap sablon letiltva"
-          toggle_form_template: "űrlap sablon engedélyezve"
           select_template: "Űrlapsablonok kiválasztása"
-          select_template_help: "Űrlapsablonok hozzáadása/szerkesztése"
         errors:
           multiple_tags_not_allowed: 'Nem választhat több címkét a "%{tag_name}" közül. A problémák elkerülése érdekében használja az űrlapsablont'
       impersonate:
@@ -8061,79 +8050,3 @@ hu:
           categories: "Kategóriák"
           topics: "Témák"
           replace: "Csere"
-  wizard_js:
-    wizard:
-      jump_in: "Ugorj be!"
-      finish: "Kilépés a beállításból"
-      back: "Vissza"
-      next: "Tovább"
-      configure_more: "További beállítások…"
-      step-text: "Lépés"
-      step: "%{current} / %{total}"
-      upload: "Fájl feltöltése"
-      uploading: "Feltöltés"
-      upload_error: "Sajnáljuk, de hiba lépett fel a fájl feltöltése során. Próbálja újra."
-      staff_count:
-        one: "A közösségében %{count} stábtag van (Ön)."
-        other: "A közösségében Önnel együtt %{count} stábtag van."
-      invites:
-        add_user: "hozzáadás"
-        none_added: "Nem hívott meg egy stábtagot sem. Biztos, hogy tovább lép?"
-        roles:
-          admin: "Adminisztrátor"
-          moderator: "Moderátor"
-          regular: "Felhasználó"
-      homepage_choices:
-        custom:
-          label: "Egyéni"
-          description: "Jelenítsen meg egy %{type}-központú kezdőlapot, ahol a felhasználók a %{landingPage}címre kerülnek"
-        style_type:
-          categories: "kategória"
-          topics: "témával"
-      top_menu_items:
-        new: "Új"
-        unread: "Olvasatlan"
-        top: "Népszerű"
-        latest: "Legutóbbi"
-        hot: "Felkapott"
-        categories: "Kategóriák"
-        unseen: "Nem látott"
-        read: "Olvasott"
-        bookmarks: "Könyvjelzők"
-      previews:
-        topic_title: "Milyen könyveket olvasol?"
-        share_button: "Megosztás"
-        reply_button: "Válasz"
-        topic_preview: "Téma előnézet"
-        homepage_preview: "Kezdőlap előnézete"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "összes kategória"
-        topic_titles:
-          what_books: "Milyen könyveket olvasol?"
-          what_movies: "Milyen filmeket láttál mostanában?"
-          random_fact: "A nap véletlenszerű ténye"
-          tv_show: "Ajánlj egy tévéműsort"
-          what_hobbies: "Mi a hobbija?"
-          what_music: "Mit hallgatsz most?"
-          funniest_thing: "A legviccesebb dolog, amit ma láttál"
-          share_art: "Oszd meg a művészeted!"
-        topic_ops:
-          what_books: |
-            Mindannyian szeretünk olvasni, használjuk ezt a témát arra, hogy megosszuk a
-            aktuális vagy nemrégiben olvasott könyveinket. Én fantasy rajongó vagyok, és a
-            A Gyűrűk Urát olvastam újra, immár 100. alkalommal.
-            És ti?
-        category_descriptions:
-          icebreakers: "Ismerd meg a közösség tagjait szórakoztató kérdésekkel."
-          news: "Beszélje meg a legfrissebb híreket és eseményeket."
-          site_feedback: "Ossza meg gondolatait a közösséggel kapcsolatban, és javasoljon fejlesztéseket."
-        category_names:
-          icebreakers: "Jégtörők"
-          news: "Hírek"
-          site_feedback: "Visszajelzés"
-        table_headers:
-          topic: "Téma"
-          replies: "Válaszok"
-          views: "Megtekintések"
-          activity: "Tevékenység"

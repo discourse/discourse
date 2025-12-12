@@ -2,19 +2,14 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { schedule } from "@ember/runloop";
-import { htmlSafe } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import emoji from "discourse/helpers/emoji";
+import getUrl from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 import WizardField from "./wizard-field";
 
-const READY_STEP_INDEX = 3;
-
 export default class WizardStepComponent extends Component {
-  @tracked saving = false;
+  @tracked hasError = false;
 
   get wizard() {
     return this.args.wizard;
@@ -26,55 +21,6 @@ export default class WizardStepComponent extends Component {
 
   get id() {
     return this.step.id;
-  }
-
-  // We don't want to show the step counter for optional steps after
-  // the "Ready" step.
-  get showStepCounter() {
-    return this.args.step.displayIndex < READY_STEP_INDEX;
-  }
-
-  /**
-   * Step        Back Button?     Primary Action      Secondary Action
-   * ------------------------------------------------------------------
-   * First            No               Next                  N/A
-   * ------------------------------------------------------------------
-   * ...             Yes               Next                  N/A
-   * ------------------------------------------------------------------
-   * Ready           Yes              Jump In          Configure More
-   * ------------------------------------------------------------------
-   * ...             Yes               Next              Exit Setup
-   * ------------------------------------------------------------------
-   * Last            Yes              Jump In                N/A
-   * ------------------------------------------------------------------
-   *
-   * Back Button: without saving, go back to the last page
-   * Next Button: save, and if successful, go to the next page
-   * Configure More: re-skinned next button
-   * Exit Setup: without saving, go to the home page ("finish")
-   * Jump In: on the "ready" page, it exits the setup ("finish"), on the
-   * last page, it saves, and if successful, go to the home page
-   */
-  get isFinalStep() {
-    return this.step.displayIndex === this.wizard.steps.length;
-  }
-
-  get showBackButton() {
-    return this.step.index > 0;
-  }
-
-  get showFinishButton() {
-    const ready = this.wizard.findStep("ready");
-    const isReady = ready && this.step.index > ready.index;
-    return isReady && !this.isFinalStep;
-  }
-
-  get showJumpInButton() {
-    return this.id === "ready" || this.isFinalStep;
-  }
-
-  get includeSidebar() {
-    return !!this.step.fields.find((f) => f.showInSidebar);
   }
 
   get containerFontClasses() {
@@ -92,163 +38,42 @@ export default class WizardStepComponent extends Component {
   }
 
   @action
-  stepChanged() {
-    this.saving = false;
-    this.autoFocus();
-  }
-
-  @action
-  onKeyUp(event) {
-    if (event.key === "Enter") {
-      if (this.showJumpInButton) {
-        this.jumpIn();
-      } else {
-        this.nextStep();
-      }
-    }
-  }
-
-  @action
-  autoFocus() {
-    schedule("afterRender", () => {
-      const firstInvalidElement = document.querySelector(
-        ".wizard-container__input.invalid:nth-of-type(1) .wizard-focusable"
-      );
-
-      if (firstInvalidElement) {
-        return firstInvalidElement.focus();
-      }
-
-      document.querySelector(".wizard-focusable:nth-of-type(1)")?.focus();
-    });
-  }
-
-  async advance() {
-    try {
-      this.saving = true;
-      const response = await this.step.save();
-      this.args.goNext(response);
-    } finally {
-      this.saving = false;
-    }
-  }
-
-  @action
-  finish(event) {
-    event?.preventDefault();
-
-    if (this.saving) {
+  async jumpIn() {
+    const valid = await this.step.validate();
+    if (!valid) {
+      this.hasError = true;
       return;
     }
 
-    this.args.goHome();
-  }
-
-  @action
-  jumpIn(event) {
-    event?.preventDefault();
-
-    if (this.saving) {
-      return;
-    }
-
-    if (this.id === "ready") {
-      this.finish();
-    } else {
-      this.nextStep();
-    }
-  }
-
-  @action
-  backStep(event) {
-    event?.preventDefault();
-
-    if (this.saving) {
-      return;
-    }
-
-    this.args.goBack();
-  }
-
-  @action
-  nextStep(event) {
-    event?.preventDefault();
-
-    if (this.saving) {
-      return;
-    }
-
-    if (this.step.validate()) {
-      this.advance();
-    } else {
-      this.autoFocus();
+    const response = await this.step.save();
+    if (response && response.success) {
+      // We are not using Ember routing here because we always want to reload the app
+      // ensure language, site title are properly set.
+      document.location = getUrl("/");
     }
   }
 
   <template>
-    <div
-      class="wizard-container__step {{@step.id}}"
-      {{didInsert this.autoFocus}}
-      {{didUpdate this.stepChanged @step.id}}
-    >
-      {{#if this.showStepCounter}}
-        <div class="wizard-container__step-counter">
-          <span class="wizard-container__step-text">
-            {{i18n "wizard.step-text"}}
-          </span>
-          <span class="wizard-container__step-count">
-            {{i18n
-              "wizard.step"
-              current=@step.displayIndex
-              total=@wizard.totalSteps
-            }}
-          </span>
-        </div>
-      {{/if}}
-
+    <div class="wizard-container__step {{@step.id}}">
       <div class={{concatClass "wizard-container" this.containerFontClasses}}>
         <div class="wizard-container__step-contents">
           <div class="wizard-container__step-header">
-            {{#if @step.emoji}}
-              <div class="wizard-container__step-header--emoji">
-                {{emoji @step.emoji}}
-              </div>
-            {{/if}}
-            {{#if @step.title}}
-              <h1 class="wizard-container__step-title">{{@step.title}}</h1>
-              {{#if @step.description}}
-                <p class="wizard-container__step-description">
-                  {{htmlSafe @step.description}}
-                </p>
-              {{/if}}
-            {{/if}}
+            <div class="wizard-container__step-header--emoji">
+              {{emoji @step.emoji}}
+            </div>
+            <h1 class="wizard-container__step-title">{{@step.title}}</h1>
           </div>
 
           <div class="wizard-container__step-container">
             {{#if @step.fields}}
               <div class="wizard-container__step-form">
-                {{#if this.includeSidebar}}
-                  <div class="wizard-container__sidebar">
-                    {{#each @step.fields as |field|}}
-                      {{#if field.showInSidebar}}
-                        <WizardField
-                          @field={{field}}
-                          @step={{@step}}
-                          @wizard={{@wizard}}
-                        />
-                      {{/if}}
-                    {{/each}}
-                  </div>
-                {{/if}}
                 <div class="wizard-container__fields">
                   {{#each @step.fields as |field|}}
-                    {{#unless field.showInSidebar}}
-                      <WizardField
-                        @field={{field}}
-                        @step={{@step}}
-                        @wizard={{@wizard}}
-                      />
-                    {{/unless}}
+                    <WizardField
+                      @field={{field}}
+                      @step={{@step}}
+                      @wizard={{@wizard}}
+                    />
                   {{/each}}
                 </div>
               </div>
@@ -257,53 +82,13 @@ export default class WizardStepComponent extends Component {
         </div>
 
         <div class="wizard-container__step-footer">
-          <div class="wizard-container__buttons-left">
-            {{#if this.showBackButton}}
-              <button
-                {{on "click" this.backStep}}
-                disabled={{this.saving}}
-                type="button"
-                class="wizard-container__button btn back btn-transparent"
-              >
-                {{i18n "wizard.back"}}
-              </button>
-            {{/if}}
-          </div>
-
-          <div class="wizard-container__buttons-right">
-            {{#if this.showFinishButton}}
-              <button
-                {{on "click" this.finish}}
-                disabled={{this.saving}}
-                type="button"
-                class="wizard-container__button btn finish btn-primary"
-              >
-                {{i18n "wizard.finish"}}
-              </button>
-            {{/if}}
-
-            {{#if this.showJumpInButton}}
-              <button
-                {{on "click" this.jumpIn}}
-                disabled={{this.saving}}
-                type="button"
-                class="wizard-container__button jump-in btn btn-primary"
-              >
-                {{i18n "wizard.jump_in"}}
-              </button>
-            {{else}}
-              <button
-                {{on "click" this.nextStep}}
-                disabled={{this.saving}}
-                type="button"
-                class="wizard-container__button btn next btn-primary"
-              >
-                {{i18n "wizard.next"}}
-              </button>
-            {{/if}}
-
-          </div>
-
+          <button
+            {{on "click" this.jumpIn}}
+            type="button"
+            class="wizard-container__button jump-in btn btn-primary"
+          >
+            {{i18n "wizard.jump_in"}}
+          </button>
         </div>
       </div>
     </div>

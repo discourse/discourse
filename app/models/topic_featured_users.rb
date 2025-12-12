@@ -88,11 +88,17 @@ SQL
   private
 
   def update_participant_count
-    count =
-      topic
-        .posts
-        .where("NOT hidden AND post_type in (?)", Topic.visible_post_types)
-        .count("distinct user_id")
-    topic.update_columns(participant_count: count)
+    DB.exec(<<~SQL, topic_id: topic.id)
+      UPDATE topics
+      SET participant_count = (
+        SELECT COUNT(DISTINCT user_id)
+        FROM posts
+        WHERE topic_id = :topic_id
+          AND NOT hidden
+          AND post_type IN (#{Topic.visible_post_types.join(",")})
+          AND deleted_at IS NULL
+      )
+      WHERE id = :topic_id
+    SQL
   end
 end

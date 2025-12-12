@@ -18,7 +18,6 @@ hu:
         title: "Sablonok (szövegmezőben)"
         insert_template: "%{shortcut} Sablon beszúrása"
     templates:
-      filter_hint: "Szűrés cím szerint..."
       insert_template: "Sablon beszúrása"
       close_templates: "Sablonválasztó bezárása"
       copy: "Sablon másolása"

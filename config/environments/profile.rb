@@ -43,4 +43,7 @@ Discourse::Application.configure do
 
   # for profiling with perftools
   # config.middleware.use ::Rack::PerftoolsProfiler, default_printer: 'gif'
+
+  # This is a NGINX specific header
+  config.action_dispatch.x_sendfile_header = nil
 end

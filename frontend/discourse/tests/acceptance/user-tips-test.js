@@ -71,6 +71,14 @@ acceptance("User Tips - topic_notification_levels", function (needs) {
     await visit("/t/internationalization-localization/280");
 
     assert
+      .dom(
+        ".notifications-button-footer [data-identifier='notifications-tracking']"
+      )
+      .exists(
+        "the notifications tracking trigger element exists for the user tip to attach to"
+      );
+
+    assert
       .dom(".user-tip__title")
       .hasText(i18n("user_tips.topic_notification_levels.title"));
   });

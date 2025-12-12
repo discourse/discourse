@@ -68,6 +68,7 @@ th:
       usage:
         summary: "สรุป"
         username: "ชื่อผู้ใช้"
+        total: "ทั้งหมด"
         periods:
           last_day: "24 ชั่วโมงที่ผ่านมา"
       ai_persona:
@@ -122,6 +123,8 @@ th:
           copy: "คัดลอก"
           copied: "คัดลอกแล้ว!"
           cancel: "ยกเลิก"
+        thumbnail_suggestions:
+          try_again: "ลองอีกครั้ง"
         image_caption:
           save_caption: "บันทึก"
       embeddings:

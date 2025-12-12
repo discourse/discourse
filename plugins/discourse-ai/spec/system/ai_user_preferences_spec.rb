@@ -36,25 +36,12 @@ RSpec.describe "User AI preferences", type: :system do
     end
 
     context "when discoveries are disabled" do
-      SiteSetting.ai_discover_enabled = false
+      before { SiteSetting.ai_discover_enabled = false }
 
       it "should not have the setting present in the user preferences page" do
         user_preferences_ai_page.visit(user)
         expect(user_preferences_ai_page).to have_no_ai_preference("pref-ai-search-discoveries")
       end
-    end
-  end
-
-  describe "when no settings are available" do
-    before do
-      SiteSetting.ai_helper_enabled = false
-      SiteSetting.ai_bot_enabled = false
-    end
-
-    it "should not have any AI preferences and should show a message" do
-      user_preferences_ai_page.visit(user)
-      expect(user_preferences_ai_page).to have_no_ai_preference("pref-ai-search-discoveries")
-      expect(page).to have_content(I18n.t("js.discourse_ai.user_preferences.empty"))
     end
   end
 end

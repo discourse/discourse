@@ -79,6 +79,7 @@ bg:
         summary: "Сумарно"
         username: "Потребителско име"
         total_requests: "Общо заявки"
+        total: "Общо"
         periods:
           last_day: "Последните 24 часа"
           custom: "Ръчно задаване..."
@@ -147,6 +148,8 @@ bg:
           copy: "Копирай"
           copied: "Копирано!"
           cancel: "Отмени"
+        thumbnail_suggestions:
+          try_again: "Опитайте отново"
         image_caption:
           save_caption: "Запази"
       embeddings:

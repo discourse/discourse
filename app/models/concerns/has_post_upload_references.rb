@@ -6,10 +6,8 @@ module HasPostUploadReferences
   def link_post_uploads(fragments: nil)
     upload_ids = []
 
-    each_upload_url(fragments: fragments) do |src, _, sha1|
-      upload = nil
-      upload = Upload.find_by(sha1: sha1) if sha1.present?
-      upload ||= Upload.get_from_url(src)
+    each_upload_url(fragments: fragments) do |url, _, sha1|
+      upload = Upload.fetch_from(sha1:, url:)
 
       # Link any video thumbnails
       if SiteSetting.video_thumbnails_enabled && upload.present? &&

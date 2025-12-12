@@ -25,11 +25,6 @@
 /public/uploads
 /public/images/emoji
 
-# Ignore the default SQLite database and db dumps
-*.sql
-*.sql.gz
-!/spec/fixtures/**/*.sql
-/db/*.sqlite3
 /db/schema_cache.yml
 
 # Plugins except for the bundled ones
@@ -78,6 +73,7 @@
 !/plugins/discourse-ai
 !/plugins/discourse-cakeday
 !/plugins/fake-custom-theme
+!/plugins/discourse-rewind
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated
@@ -130,3 +126,7 @@ frontend/discourse-types/declarations
 /plugins/discourse-ai/evals/cases
 /plugins/discourse-ai/evals/log
 /plugins/discourse-ai/config/eval-llms.local.yml
+
+# AI customization
+/.claude
+/.cursor

@@ -32,7 +32,7 @@ describe "Admin User Page", type: :system do
     end
   end
 
-  context "when visting a regular user's page" do
+  context "when visiting a regular user's page" do
     fab!(:user) { Fabricate(:user, ip_address: "93.123.44.90") }
     fab!(:similar_user) { Fabricate(:user, ip_address: user.ip_address) }
     fab!(:another_mod) { Fabricate(:moderator, ip_address: user.ip_address) }

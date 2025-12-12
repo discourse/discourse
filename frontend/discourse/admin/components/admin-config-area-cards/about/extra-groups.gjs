@@ -110,7 +110,6 @@ export default class AdminConfigAreasAboutExtraGroups extends Component {
       <form.Field
         @name="aboutPageExtraGroupsShowDescription"
         @title={{i18n "admin.config_areas.about.extra_groups.show_description"}}
-        @validation="required"
         @format="large"
         as |field|
       >

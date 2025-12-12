@@ -10,6 +10,7 @@ ar:
       logs:
         staff_actions:
           actions:
+            update_automation: تحديث الأتمتة
             delete_automation: حذف الأتمتة
     discourse_automation:
       title: الأتمتة
@@ -69,6 +70,12 @@ ar:
         text:
           label: النص
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: الفئات
+            tags:
+              label: الوسوم
         not_found: تعذَّر العثور على المشغِّل `%{trigger}` للأتمتة `%{automation}`، تأكَّد من تثبيت المكوِّن الإضافي ذي الصلة
         user_badge_granted:
           fields:

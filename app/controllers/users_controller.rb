@@ -126,6 +126,7 @@ class UsersController < ApplicationController
     user_serializer = nil
     if !current_user&.staff? && !@user.active?
       user_serializer = InactiveUserSerializer.new(@user, scope: guardian, root: "user")
+      assign_topic_post_count(user_serializer) if for_card
     elsif !guardian.can_see_profile?(@user)
       user_serializer = HiddenProfileSerializer.new(@user, scope: guardian, root: "user")
       assign_topic_post_count(user_serializer) if for_card
@@ -1258,6 +1259,7 @@ class UsersController < ApplicationController
       params[:include_staged_users],
     )
     options[:last_seen_users] = !!ActiveModel::Type::Boolean.new.cast(params[:last_seen_users])
+    options[:can_review] = !!ActiveModel::Type::Boolean.new.cast(params[:can_review])
 
     if limit = fetch_limit_from_params(default: nil, max: SEARCH_USERS_LIMIT)
       options[:limit] = limit

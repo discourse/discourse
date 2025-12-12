@@ -70,11 +70,19 @@ describe Jobs::LocalizeCategories do
 
     DiscourseAi::Translation::CategoryLocalizer
       .expects(:localize)
-      .with(is_a(Category), "pt_BR")
+      .with(
+        is_a(Category),
+        "pt_BR",
+        has_entries(short_text_llm_model: anything, post_raw_llm_model: anything),
+      )
       .times(number_of_categories)
     DiscourseAi::Translation::CategoryLocalizer
       .expects(:localize)
-      .with(is_a(Category), "zh_CN")
+      .with(
+        is_a(Category),
+        "zh_CN",
+        has_entries(short_text_llm_model: anything, post_raw_llm_model: anything),
+      )
       .times(number_of_categories)
 
     job.execute({ limit: 10 })
@@ -88,7 +96,11 @@ describe Jobs::LocalizeCategories do
 
     DiscourseAi::Translation::CategoryLocalizer
       .expects(:localize)
-      .with(is_a(Category), "pt")
+      .with(
+        is_a(Category),
+        "pt",
+        has_entries(short_text_llm_model: anything, post_raw_llm_model: anything),
+      )
       .times(5)
 
     job.execute({ limit: 5 })
@@ -99,11 +111,19 @@ describe Jobs::LocalizeCategories do
 
     DiscourseAi::Translation::CategoryLocalizer
       .expects(:localize)
-      .with(is_a(Category), "pt_BR")
+      .with(
+        is_a(Category),
+        "pt_BR",
+        has_entries(short_text_llm_model: anything, post_raw_llm_model: anything),
+      )
       .never
     DiscourseAi::Translation::CategoryLocalizer
       .expects(:localize)
-      .with(is_a(Category), "zh_CN")
+      .with(
+        is_a(Category),
+        "zh_CN",
+        has_entries(short_text_llm_model: anything, post_raw_llm_model: anything),
+      )
       .never
 
     job.execute({ limit: 10 })
@@ -115,10 +135,21 @@ describe Jobs::LocalizeCategories do
     category1 = Fabricate(:category, name: "First", description: "First description", locale: "en")
     DiscourseAi::Translation::CategoryLocalizer
       .expects(:localize)
-      .with(category1, "pt_BR")
+      .with(
+        category1,
+        "pt_BR",
+        has_entries(short_text_llm_model: anything, post_raw_llm_model: anything),
+      )
       .once
       .raises(StandardError.new("API error"))
-    DiscourseAi::Translation::CategoryLocalizer.expects(:localize).with(category1, "zh_CN").once
+    DiscourseAi::Translation::CategoryLocalizer
+      .expects(:localize)
+      .with(
+        category1,
+        "zh_CN",
+        has_entries(short_text_llm_model: anything, post_raw_llm_model: anything),
+      )
+      .once
 
     expect { job.execute({ limit: 10 }) }.not_to raise_error
   end
@@ -144,10 +175,21 @@ describe Jobs::LocalizeCategories do
   it "skips creating localizations in the same language as the category's locale" do
     Category.update_all(locale: "pt")
 
-    DiscourseAi::Translation::CategoryLocalizer.expects(:localize).with(is_a(Category), "pt").never
     DiscourseAi::Translation::CategoryLocalizer
       .expects(:localize)
-      .with(is_a(Category), "zh_CN")
+      .with(
+        is_a(Category),
+        "pt",
+        has_entries(short_text_llm_model: anything, post_raw_llm_model: anything),
+      )
+      .never
+    DiscourseAi::Translation::CategoryLocalizer
+      .expects(:localize)
+      .with(
+        is_a(Category),
+        "zh_CN",
+        has_entries(short_text_llm_model: anything, post_raw_llm_model: anything),
+      )
       .times(Category.count)
 
     job.execute({ limit: 10 })

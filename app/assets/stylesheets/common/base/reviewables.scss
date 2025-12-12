@@ -219,7 +219,7 @@
       max-width: calc(
         100% - 8em - 1em
       ); // subtracting width of name and margin-right
-      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
   }
 }
@@ -281,15 +281,6 @@
   margin-right: 0;
   align-items: center;
   margin-bottom: 0.5em;
-}
-
-.claimed-by {
-  display: flex;
-  align-items: center;
-
-  .claimed-username {
-    margin-left: 0.5em;
-  }
 }
 
 .reviewable-topics {

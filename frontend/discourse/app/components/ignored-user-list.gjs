@@ -3,6 +3,10 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import {
+  addUniqueValueToArray,
+  removeValueFromArray,
+} from "discourse/lib/array-tools";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 import IgnoredUserListItem from "./ignored-user-list-item";
@@ -13,7 +17,7 @@ export default class IgnoredUserList extends Component {
 
   @action
   async removeIgnoredUser(item) {
-    this.args.items.removeObject(item);
+    removeValueFromArray(this.args.items, item);
 
     try {
       const user = await User.findByUsername(item);
@@ -33,7 +37,7 @@ export default class IgnoredUserList extends Component {
         actingUser: this.args.model,
         ignoredUsername: null,
         onUserIgnored: (username) => {
-          this.args.items.addObject(username);
+          addUniqueValueToArray(this.args.items, username);
         },
       },
     });

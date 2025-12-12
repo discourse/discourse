@@ -10,6 +10,7 @@ import discourseComputed from "discourse/lib/decorators";
 import getUrl from "discourse/lib/get-url";
 import NameValidationHelper from "discourse/lib/name-validation-helper";
 import PasswordValidationHelper from "discourse/lib/password-validation-helper";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import DiscourseURL from "discourse/lib/url";
 import UserFieldsValidationHelper from "discourse/lib/user-fields-validation-helper";
 import UsernameValidationHelper from "discourse/lib/username-validation-helper";
@@ -21,6 +22,8 @@ export default class InvitesShowController extends Controller {
   @tracked accountPassword;
   @tracked accountUsername;
   @tracked isDeveloper;
+  @trackedArray rejectedEmails = [];
+
   queryParams = ["t"];
   nameValidationHelper = new NameValidationHelper(this);
   usernameValidationHelper = new UsernameValidationHelper({
@@ -58,7 +61,6 @@ export default class InvitesShowController extends Controller {
   @not("externalAuthsOnly") passwordRequired;
   errorMessage = null;
   authOptions = null;
-  rejectedEmails = [];
   maskPassword = true;
 
   get userFields() {
@@ -393,7 +395,7 @@ export default class InvitesShowController extends Controller {
             result.errors.email.length > 0 &&
             result.values
           ) {
-            this.rejectedEmails.pushObject(result.values.email);
+            this.rejectedEmails.push(result.values.email);
           }
           if (result.errors?.["user_password.password"]?.length > 0) {
             this.passwordValidationHelper.rejectedPasswords.push(

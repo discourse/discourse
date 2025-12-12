@@ -10,10 +10,6 @@ import { observes } from "@ember-decorators/object";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import { Promise } from "rsvp";
 import DEditorOriginalTranslationPreview from "discourse/components/d-editor-original-translation-preview";
-import {
-  CLOSE_INITIATED_BY_BUTTON,
-  CLOSE_INITIATED_BY_ESC,
-} from "discourse/components/d-modal";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import ChangePostNoticeModal from "discourse/components/modal/change-post-notice";
 import ConvertToPublicTopicModal from "discourse/components/modal/convert-to-public-topic";
@@ -23,7 +19,11 @@ import { MIN_POSTS_COUNT } from "discourse/components/topic-map/topic-map-summar
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { uniqueItemsFromArray } from "discourse/lib/array-tools";
+import {
+  addUniqueValueToArray,
+  removeValueFromArray,
+  uniqueItemsFromArray,
+} from "discourse/lib/array-tools";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
 import discourseComputed, { bind } from "discourse/lib/decorators";
@@ -82,6 +82,7 @@ export default class TopicController extends Controller {
 
   @tracked multiSelect = false;
   @tracked hasScrolled = null;
+  @trackedArray bookmarks = [];
   @trackedArray selectedPostIds = [];
 
   queryParams = ["filter", "username_filters", "replies_to_post_number"];
@@ -92,7 +93,6 @@ export default class TopicController extends Controller {
   @or("model.errorHtml", "model.errorMessage") hasError;
   @not("hasError") noErrorYet;
   @alias("site.categoriesList") categories;
-  @alias("selectedPostIds.length") selectedPostsCount;
   @alias("selectedAllPosts") canDeselectAll;
   @or("model.postStream.loadedAllPosts", "model.postStream.loadingLastPost")
   loadedAllPosts;
@@ -118,11 +118,9 @@ export default class TopicController extends Controller {
     super.init(...arguments);
 
     this.appEvents.on("post:show-revision", this, "_showRevision");
-    this.appEvents.on("post:created", this, () => {
-      this._removeDeleteOnOwnerReplyBookmarks();
-      // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-      this.appEvents.trigger("post-stream:refresh", { force: true });
-    });
+    this.appEvents.on("post:created", this, () =>
+      this._removeDeleteOnOwnerReplyBookmarks()
+    );
   }
 
   willDestroy() {
@@ -136,6 +134,11 @@ export default class TopicController extends Controller {
     return BufferedProxy.create({
       content: this.model,
     });
+  }
+
+  @dependentKeyCompat
+  get selectedPostsCount() {
+    return this.selectedPostIds.length;
   }
 
   get titleIsVisibleOnHeader() {
@@ -173,21 +176,6 @@ export default class TopicController extends Controller {
   @discourseComputed("site.mobileView", "model.posts_count")
   showSelectedPostsAtBottom(mobileView, postsCount) {
     return mobileView && postsCount > 3;
-  }
-
-  // TODO (glimmer-post-stream) this method is not used in the Glimmer Post Stream
-  @discourseComputed(
-    "model.postStream.posts",
-    "model.postStream.postsWithPlaceholders"
-  )
-  postsToRender(posts, postsWithPlaceholders) {
-    return this.capabilities.isAndroid ? posts : postsWithPlaceholders;
-  }
-
-  // TODO (glimmer-post-stream) is this still used?
-  @discourseComputed("model.postStream.loadingFilter")
-  androidLoading(loading) {
-    return this.capabilities.isAndroid && loading;
   }
 
   @discourseComputed("model")
@@ -317,11 +305,6 @@ export default class TopicController extends Controller {
     }
   }
 
-  _forceRefreshPostStream() {
-    // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-    this.appEvents.trigger("post-stream:refresh", { force: true });
-  }
-
   _updateSelectedPostIds(postIds) {
     const smallActionsPostIds = this._smallActionPostIds();
     this.selectedPostIds = Array.from(
@@ -330,7 +313,6 @@ export default class TopicController extends Controller {
         ...postIds.filter((postId) => !smallActionsPostIds.has(postId)),
       ])
     );
-    this._forceRefreshPostStream();
   }
 
   _smallActionPostIds() {
@@ -368,7 +350,7 @@ export default class TopicController extends Controller {
       ),
     })
       .then((result) => {
-        result.post_ids.pushObject(post.get("id"));
+        result.post_ids.push(post.get("id"));
         this._updateSelectedPostIds(result.post_ids);
       })
       .finally(() => {
@@ -377,10 +359,66 @@ export default class TopicController extends Controller {
   }
 
   @action
-  editTopic(event) {
+  async handleTitleClick(event) {
+    this.editTopic?.(event);
+    this.jumpTop?.(event);
+  }
+
+  @action
+  async editTopic(event) {
     event?.preventDefault();
-    if (this.get("model.details.can_edit")) {
-      this.set("editingTopic", true);
+    const canEditTitle = this.get("model.details.can_edit");
+    const canLocalize = this.get("model.can_localize_topic");
+
+    if (!canEditTitle && !canLocalize) {
+      return;
+    }
+
+    const titleLocalized = this.model?.fancy_title_localized;
+    if (!titleLocalized && canEditTitle) {
+      return this.set("editingTopic", true);
+    }
+
+    if (this.composer.isOpen) {
+      return;
+    }
+
+    const topic = this.model;
+    const firstPost = await topic.firstPost();
+
+    if (canEditTitle && !canLocalize) {
+      return this._openComposerForEdit(topic, firstPost);
+    }
+
+    if (titleLocalized && !canEditTitle) {
+      return this._openComposerForEditTranslation(topic, firstPost);
+    }
+
+    if (titleLocalized) {
+      const topicLocale = topic.locale;
+      const language = this.languageNameLookup.getLanguageName(topicLocale);
+      return this.dialog.alert({
+        message: i18n("topic.localizations.title_edit_warning.message", {
+          language,
+        }),
+        buttons: [
+          {
+            label: i18n(
+              "topic.localizations.title_edit_warning.action_original"
+            ),
+            class: "btn-primary",
+            action: () => this._openComposerForEdit(topic, firstPost),
+          },
+          {
+            label: i18n(
+              "topic.localizations.title_edit_warning.action_translation"
+            ),
+            class: "btn-default",
+            action: () =>
+              this._openComposerForEditTranslation(topic, firstPost),
+          },
+        ],
+      });
     }
   }
 
@@ -412,21 +450,18 @@ export default class TopicController extends Controller {
         (postId) => !smallActionsPostIds.has(postId)
       ),
     ];
-    this._forceRefreshPostStream();
   }
 
   @action
   deselectAll(event) {
     event?.preventDefault();
     this.selectedPostIds = [];
-    this._forceRefreshPostStream();
   }
 
   @action
   toggleMultiSelect(event) {
     event?.preventDefault();
     this.toggleProperty("multiSelect");
-    this._forceRefreshPostStream();
   }
 
   @action
@@ -443,7 +478,7 @@ export default class TopicController extends Controller {
   deletePending(pending) {
     return ajax(`/review/${pending.id}`, { type: "DELETE" })
       .then(() => {
-        this.get("model.pending_posts").removeObject(pending);
+        removeValueFromArray(this.model.pending_posts, pending);
       })
       .catch(popupAjaxError);
   }
@@ -466,7 +501,7 @@ export default class TopicController extends Controller {
       ? Promise.resolve(loadedPost)
       : this.get("model.postStream").loadPost(postId);
 
-    return promise.then((post) => {
+    return promise.then(async (post) => {
       const composer = this.composer;
       const viewOpen = composer.get("model.viewOpen");
 
@@ -495,7 +530,6 @@ export default class TopicController extends Controller {
       }
 
       const quotedText = buildQuote(post, buffer, opts);
-      composerOpts.quote = quotedText;
 
       if (composer.get("model.viewOpen")) {
         this.appEvents.trigger("composer:insert-block", quotedText);
@@ -504,6 +538,16 @@ export default class TopicController extends Controller {
         model.set("reply", model.get("reply") + "\n" + quotedText);
         composer.openIfDraft();
       } else {
+        const draftData = await Draft.get(composerOpts.draftKey);
+
+        if (draftData.draft) {
+          const data = JSON.parse(draftData.draft);
+          composerOpts.draftSequence = draftData.draft_sequence;
+          composerOpts.reply = data.reply + "\n" + quotedText;
+        } else {
+          composerOpts.quote = quotedText;
+        }
+
         composer.open(composerOpts);
       }
     });
@@ -585,7 +629,6 @@ export default class TopicController extends Controller {
       postStream.get("canAppendMore")
     ) {
       await postStream.appendMore();
-      // TODO (glimmer-post-stream) the Glimmer Post stream doesn't pass a refresh function
       refresh?.();
     }
   }
@@ -739,24 +782,25 @@ export default class TopicController extends Controller {
         draftSequence: topic.get("draft_sequence"),
       };
 
-      if (quotedText) {
-        opts.quote = quotedText;
-      }
-
       if (post && post.get("post_number") !== 1) {
         opts.post = post;
       } else {
         opts.topic = topic;
       }
 
-      if (!opts.quote) {
-        const draftData = await Draft.get(opts.draftKey);
+      const draftData = await Draft.get(opts.draftKey);
 
-        if (draftData.draft) {
-          const data = JSON.parse(draftData.draft);
+      if (draftData.draft) {
+        const data = JSON.parse(draftData.draft);
+        opts.draftSequence = draftData.draft_sequence;
+
+        if (quotedText) {
+          opts.reply = data.reply + "\n" + quotedText;
+        } else {
           opts.reply = data.reply;
-          opts.draftSequence = draftData.draft_sequence;
         }
+      } else if (quotedText) {
+        opts.quote = quotedText;
       }
 
       composerController.open(opts);
@@ -781,22 +825,16 @@ export default class TopicController extends Controller {
     }
 
     const user = this.currentUser;
-    const refresh = () =>
-      // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-      this.appEvents.trigger("post-stream:refresh");
     const hasReplies = post.get("reply_count") > 0;
     const loadedPosts = this.get("model.postStream.posts");
 
     if (user.get("staff") && hasReplies) {
       ajax(`/posts/${post.id}/reply-ids.json`).then((replies) => {
         if (replies.length === 0) {
-          return post
-            .destroy(user, opts)
-            .then(refresh)
-            .catch((error) => {
-              popupAjaxError(error);
-              post.undoDeleteState();
-            });
+          return post.destroy(user, opts).catch((error) => {
+            popupAjaxError(error);
+            post.undoDeleteState();
+          });
         }
 
         const buttons = [];
@@ -816,9 +854,7 @@ export default class TopicController extends Controller {
                 (p === post || directReplyIds.includes(p.id)) &&
                 p.setDeletedState(user)
             );
-            Post.deleteMany([post.id, ...directReplyIds])
-              .then(refresh)
-              .catch(popupAjaxError);
+            Post.deleteMany([post.id, ...directReplyIds]).catch(popupAjaxError);
           },
         });
 
@@ -833,9 +869,9 @@ export default class TopicController extends Controller {
                   (p === post || replies.some((r) => r.id === p.id)) &&
                   p.setDeletedState(user)
               );
-              Post.deleteMany([post.id, ...replies.map((r) => r.id)])
-                .then(refresh)
-                .catch(popupAjaxError);
+              Post.deleteMany([post.id, ...replies.map((r) => r.id)]).catch(
+                popupAjaxError
+              );
             },
           });
         }
@@ -843,13 +879,10 @@ export default class TopicController extends Controller {
         buttons.push({
           label: i18n("post.controls.delete_replies.just_the_post"),
           action: () => {
-            post
-              .destroy(user, opts)
-              .then(refresh)
-              .catch((error) => {
-                popupAjaxError(error);
-                post.undoDeleteState();
-              });
+            post.destroy(user, opts).catch((error) => {
+              popupAjaxError(error);
+              post.undoDeleteState();
+            });
           },
         });
 
@@ -864,13 +897,10 @@ export default class TopicController extends Controller {
         });
       });
     } else {
-      return post
-        .destroy(user, opts)
-        .then(refresh)
-        .catch((error) => {
-          popupAjaxError(error);
-          post.undoDeleteState();
-        });
+      return post.destroy(user, opts).catch((error) => {
+        popupAjaxError(error);
+        post.undoDeleteState();
+      });
     }
   }
 
@@ -1003,15 +1033,7 @@ export default class TopicController extends Controller {
         post
       );
     } else {
-      return this._toggleTopicLevelBookmark().then((changedIds) => {
-        if (!changedIds) {
-          return;
-        }
-        changedIds.forEach((id) =>
-          // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-          this.appEvents.trigger("post-stream:refresh", { id })
-        );
-      });
+      return this._toggleTopicLevelBookmark();
     }
   }
 
@@ -1083,9 +1105,12 @@ export default class TopicController extends Controller {
   @action
   togglePostSelection(post) {
     const selected = this.selectedPostIds;
-    selected.includes(post.id)
-      ? selected.removeObject(post.id)
-      : selected.addObject(post.id);
+
+    if (selected.includes(post.id)) {
+      removeValueFromArray(selected, post.id);
+    } else {
+      addUniqueValueToArray(selected, post.id);
+    }
   }
 
   @action
@@ -1097,7 +1122,6 @@ export default class TopicController extends Controller {
         post.id,
         ...replyIds,
       ]);
-      this._forceRefreshPostStream();
     });
   }
 
@@ -1497,38 +1521,22 @@ export default class TopicController extends Controller {
   }
 
   _modifyPostBookmark(bookmark, post) {
-    this.modal
-      .show(BookmarkModal, {
-        model: {
-          bookmark: new BookmarkFormData(bookmark),
-          afterSave: (savedData) => {
-            this._syncBookmarks(savedData);
-            this.model.set("bookmarking", false);
-            post.createBookmark(savedData);
-            this.model.afterPostBookmarked(post, savedData);
-            return [post.id];
-          },
-          afterDelete: (topicBookmarked, bookmarkId) => {
-            this.model.removeBookmark(bookmarkId);
-            post.deleteBookmark(topicBookmarked);
-          },
+    this.modal.show(BookmarkModal, {
+      model: {
+        bookmark: new BookmarkFormData(bookmark),
+        afterSave: (savedData) => {
+          this._syncBookmarks(savedData);
+          this.model.set("bookmarking", false);
+          post.createBookmark(savedData);
+          this.model.afterPostBookmarked(post, savedData);
+          return [post.id];
         },
-      })
-      .then((closeData) => {
-        if (!closeData) {
-          return;
-        }
-
-        if (
-          closeData.closeWithoutSaving ||
-          closeData.initiatedBy === CLOSE_INITIATED_BY_ESC ||
-          closeData.initiatedBy === CLOSE_INITIATED_BY_BUTTON
-        ) {
-          post.appEvents.trigger("post-stream:refresh", {
-            id: bookmark.bookmarkable_id,
-          });
-        }
-      });
+        afterDelete: (topicBookmarked, bookmarkId) => {
+          this.model.removeBookmark(bookmarkId);
+          post.deleteBookmark(topicBookmarked);
+        },
+      },
+    });
   }
 
   _syncBookmarks(data) {
@@ -1538,7 +1546,7 @@ export default class TopicController extends Controller {
 
     const bookmark = this.model.bookmarks.find((b) => b.id === data.id);
     if (!bookmark) {
-      this.model.bookmarks.pushObject(Bookmark.create(data));
+      this.model.bookmarks.push(Bookmark.create(data));
     } else {
       bookmark.reminder_at = data.reminder_at;
       bookmark.name = data.name;
@@ -1632,22 +1640,12 @@ export default class TopicController extends Controller {
       : undefined;
   }
 
-  @discourseComputed(
-    "selectedPostsCount",
-    "model.postStream.isMegaTopic",
-    "model.postStream.stream.length",
-    "model.posts_count"
-  )
-  selectedAllPosts(
-    selectedPostsCount,
-    isMegaTopic,
-    postsCount,
-    topicPostsCount
-  ) {
-    if (isMegaTopic) {
-      return selectedPostsCount >= topicPostsCount;
+  @dependentKeyCompat
+  get selectedAllPosts() {
+    if (this.model.postStream.isMegaTopic) {
+      return this.selectedPostsCount >= this.model.posts_count;
     } else {
-      return selectedPostsCount >= postsCount;
+      return this.selectedPostsCount >= this.model.postStream.stream.length;
     }
   }
 
@@ -1825,9 +1823,6 @@ export default class TopicController extends Controller {
   @bind
   onMessage(data) {
     const topic = this.model;
-    const refresh = (args) =>
-      // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-      this.appEvents.trigger("post-stream:refresh", args);
 
     if (isPresent(data.notification_level_change)) {
       topic.set("details.notification_level", data.notification_level_change);
@@ -1857,48 +1852,39 @@ export default class TopicController extends Controller {
 
     switch (data.type) {
       case "acted":
-        postStream
-          .triggerChangedPost(data.id, data.updated_at, {
-            preserveCooked: true,
-          })
-          .then(() => refresh({ id: data.id, refreshLikes: true }));
+        postStream.triggerChangedPost(data.id, data.updated_at, {
+          preserveCooked: true,
+        });
         break;
       case "read": {
-        postStream
-          .triggerReadPost(data.id, data.readers_count)
-          .then(() => refresh({ id: data.id, refreshLikes: true }));
+        postStream.triggerReadPost(data.id, data.readers_count);
         break;
       }
       case "liked":
       case "unliked": {
-        postStream
-          .triggerLikedPost(data.id, data.likes_count, data.user_id, data.type)
-          .then(() => refresh({ id: data.id, refreshLikes: true }));
+        postStream.triggerLikedPost(
+          data.id,
+          data.likes_count,
+          data.user_id,
+          data.type
+        );
         break;
       }
       case "revised":
       case "rebaked": {
-        postStream
-          .triggerChangedPost(data.id, data.updated_at)
-          .then(() => refresh({ id: data.id }));
+        postStream.triggerChangedPost(data.id, data.updated_at);
         break;
       }
       case "deleted": {
-        postStream
-          .triggerDeletedPost(data.id)
-          .then(() => refresh({ id: data.id }));
+        postStream.triggerDeletedPost(data.id);
         break;
       }
       case "destroyed": {
-        postStream
-          .triggerDestroyedPost(data.id)
-          .then(() => refresh({ id: data.id }));
+        postStream.triggerDestroyedPost(data.id);
         break;
       }
       case "recovered": {
-        postStream
-          .triggerRecoveredPost(data.id)
-          .then(() => refresh({ id: data.id }));
+        postStream.triggerRecoveredPost(data.id);
         break;
       }
       case "created": {
@@ -1910,7 +1896,6 @@ export default class TopicController extends Controller {
 
           return postStream
             .triggerNewPostsInStream(postIds, { background: true })
-            .then(() => refresh())
             .catch((e) => {
               this._newPostsInStream = postIds.concat(this._newPostsInStream);
               throw e;
@@ -1946,9 +1931,7 @@ export default class TopicController extends Controller {
         }
 
         if (updateStream) {
-          postStream
-            .triggerChangedTopicStats()
-            .then((firstPostId) => refresh({ id: firstPostId }));
+          postStream.triggerChangedTopicStats();
         }
         break;
       }
@@ -1980,8 +1963,6 @@ export default class TopicController extends Controller {
       postStream.get("posts").forEach((post) => {
         if (!post.read && postNumbers.includes(post.post_number)) {
           post.set("read", true);
-          // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
-          this.appEvents.trigger("post-stream:refresh", { id: post.get("id") });
         }
       });
 

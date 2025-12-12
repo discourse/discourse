@@ -23,7 +23,7 @@ worker_processes (ENV["UNICORN_WORKERS"] || 3).to_i
 listen ENV["UNICORN_LISTENER"] || "#{(ENV["UNICORN_BIND_ALL"] ? "" : "127.0.0.1:")}#{(ENV["UNICORN_PORT"] || 3000).to_i}"
 
 if ENV["RAILS_ENV"] == "production"
-  # nuke workers after 30 seconds instead of 60 seconds (the default)
+  # nuke workers after 30 seconds instead of 20 seconds (the default)
   timeout 30
 else
   # we want a longer timeout in dev cause first request can be really slow
@@ -127,4 +127,13 @@ before_service_worker_ready do |server, service_worker|
       end
     end
   end
+end
+
+after_worker_timeout do |server, worker, timeout_info|
+  message = <<~MSG
+  Pitchfork worker is about to timeout, dumping backtrace for main thread
+  #{timeout_info.thread.backtrace&.join("\n")}
+  MSG
+
+  Rails.logger.error(message)
 end

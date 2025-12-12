@@ -2,13 +2,14 @@
 
 class PostLocalizationUpdater
   def self.update(post_id:, locale:, raw:, user:)
-    Guardian.new(user).ensure_can_localize_content!
+    Guardian.new(user).ensure_can_localize_post!(post_id)
 
     localization = PostLocalization.find_by(post_id: post_id, locale: locale)
     raise Discourse::NotFound unless localization
-
-    post = Post.find_by(id: post_id)
+    post = localization.post
     raise Discourse::NotFound unless post
+
+    return localization if localization.raw == raw
 
     localization.raw = raw
     localization.cooked = PrettyText.cook(raw)

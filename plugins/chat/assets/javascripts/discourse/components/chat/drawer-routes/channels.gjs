@@ -14,6 +14,7 @@ export default class ChatDrawerRoutesChannels extends Component {
       <Navbar @onClick={{this.chat.toggleDrawer}} as |navbar|>
         <navbar.Title @title={{i18n "chat.heading"}} />
         <navbar.Actions as |a|>
+          <a.SearchButton />
           <a.ToggleDrawerButton />
           <a.FullPageButton />
           <a.CloseDrawerButton />

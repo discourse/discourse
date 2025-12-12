@@ -68,4 +68,46 @@ RSpec.describe ThemeSiteSetting do
       end
     end
   end
+
+  describe "creating upload references for type objects settings with upload fields" do
+    fab!(:upload)
+    fab!(:upload2, :upload)
+
+    it "creates upload references for settings with upload fields" do
+      theme_site_setting =
+        ThemeSiteSetting.create!(
+          theme: theme_1,
+          name: "test_objects_with_uploads",
+          data_type: SiteSettings::TypeSupervisor.types[:objects],
+          value:
+            JSON.generate(
+              [
+                { "name" => "object1", "upload_id" => upload.id },
+                { "name" => "object2", "upload_id" => upload2.id },
+              ],
+            ),
+        )
+
+      upload_references = UploadReference.where(target: theme_site_setting)
+      expect(upload_references.pluck(:upload_id)).to contain_exactly(upload.id, upload2.id)
+    end
+
+    it "destroys upload references when the setting is destroyed" do
+      theme_site_setting =
+        ThemeSiteSetting.create!(
+          theme: theme_1,
+          name: "test_objects_with_uploads",
+          data_type: SiteSettings::TypeSupervisor.types[:objects],
+          value:
+            JSON.generate(
+              [
+                { "name" => "object1", "upload_id" => upload.id },
+                { "name" => "object2", "upload_id" => upload2.id },
+              ],
+            ),
+        )
+
+      expect { theme_site_setting.destroy! }.to change { UploadReference.count }.by(-2)
+    end
+  end
 end

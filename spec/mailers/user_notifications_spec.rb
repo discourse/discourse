@@ -645,6 +645,52 @@ RSpec.describe UserNotifications do
       end
     end
 
+    describe "optional placeholders in email body" do
+      it "should render optional_tags, optional_cat, optional_pm, and optional_re in body templates" do
+        custom_body = <<~BODY
+          You got a reply!
+
+          Category: %{optional_cat}
+          Tags: %{optional_tags}
+          PM marker: %{optional_pm}
+          Re marker: %{optional_re}
+
+          %{message}
+        BODY
+
+        TranslationOverride.upsert!(
+          I18n.locale,
+          "user_notifications.user_replied.text_body_template",
+          custom_body,
+        )
+
+        mail =
+          UserNotifications.user_replied(
+            user,
+            post: response,
+            notification_type: notification.notification_type,
+            notification_data_hash: notification.data_hash,
+          )
+
+        body = mail.body.to_s
+
+        expect(body).to include(tag2.name)
+        expect(body).to include(tag3.name)
+        expect(body).to include(category.name)
+
+        expect(body).not_to include("translation missing")
+        expect(body).not_to include("%{optional_tags}")
+        expect(body).not_to include("%{optional_cat}")
+        expect(body).not_to include("%{optional_pm}")
+        expect(body).not_to include("%{optional_re}")
+
+        TranslationOverride.revert!(
+          I18n.locale,
+          ["user_notifications.user_replied.text_body_template"],
+        )
+      end
+    end
+
     it "doesn't include details when private_email is enabled" do
       SiteSetting.private_email = true
       mail =
@@ -1574,6 +1620,63 @@ RSpec.describe UserNotifications do
 
         expect(mail.body).to include(date)
       end
+    end
+  end
+
+  describe ".account_deleted" do
+    fab!(:reviewable) { Fabricate(:reviewable_flagged_post, reviewable_scores: []) }
+
+    it "includes flag reason for standard flags" do
+      Fabricate(
+        :reviewable_score,
+        reviewable: reviewable,
+        reviewable_score_type: PostActionType.types[:spam],
+      )
+
+      reviewable.reload
+      mail = UserNotifications.account_deleted("user@example.com", reviewable)
+
+      expect(mail.body).to include(I18n.t("flag_reasons.spam"))
+      expect(mail.body).to_not include(I18n.t("flag_reasons.illegal"))
+    end
+
+    it "includes flag reason for automated system flags" do
+      Fabricate(
+        :reviewable_score,
+        reviewable: reviewable,
+        reviewable_score_type: ReviewableScore.types[:needs_approval],
+      )
+      reviewable.reload
+
+      mail = UserNotifications.account_deleted("user@example.com", reviewable)
+
+      expect(mail.body).to include(I18n.t("flag_reasons.needs_approval"))
+      expect(mail.body).to_not include(I18n.t("flag_reasons.spam"))
+    end
+
+    it "falls back to the default spam reason if no score is present" do
+      mail = UserNotifications.account_deleted("user@example.com", reviewable)
+
+      expect(mail.body).to include(I18n.t("flag_reasons.spam"))
+      expect(mail.body).to_not include(I18n.t("flag_reasons.illegal"))
+    end
+
+    it "falls back to the flag's description for custom flags" do
+      custom_flag =
+        Fabricate(
+          :flag,
+          name_key: "custom_delete_flag",
+          description: "This is a custom deletion reason.",
+          applies_to: %w[Post],
+        )
+
+      Fabricate(:reviewable_score, reviewable: reviewable, reviewable_score_type: custom_flag.id)
+      reviewable.reload
+
+      mail = UserNotifications.account_deleted("user@example.com", reviewable)
+
+      expect(mail.body).to include(custom_flag.description)
+      expect(mail.body).to_not include(I18n.t("flag_reasons.spam"))
     end
   end
 

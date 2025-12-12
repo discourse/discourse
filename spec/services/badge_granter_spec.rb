@@ -211,19 +211,65 @@ RSpec.describe BadgeGranter do
       }
     end
 
-    it "does not grant sharing badges to deleted users" do
-      post = Fabricate(:post)
-      incoming_links = Fabricate.times(25, :incoming_link, post: post, user: user)
-      user_id = user.id
-      user.destroy!
+    context "for sharing badges" do
+      fab!(:category)
+      fab!(:topic) { Fabricate(:topic, category:) }
+      fab!(:post) { Fabricate(:post, topic:) }
+      fab!(:current_user, :user)
 
-      nice_share = Badge.find(Badge::NiceShare)
-      first_share = Badge.find(Badge::FirstShare)
+      it "grants nice share badge when threshold has been reached" do
+        Fabricate.times(25, :incoming_link, post:, user:)
 
-      BadgeGranter.backfill(nice_share)
-      BadgeGranter.backfill(first_share)
+        BadgeGranter.backfill(Badge.find(Badge::NiceShare))
 
-      expect(UserBadge.where(user_id: user_id).count).to eq(0)
+        expect(UserBadge.where(user_id: user.id, badge_id: Badge::NiceShare).count).to eq(1)
+      end
+
+      it "does not grant nice share badge when duplicates on IP address exists" do
+        Fabricate.times(23, :incoming_link, post:, user:)
+
+        _incoming_link_with_ip_address =
+          Fabricate(:incoming_link, post:, user:, ip_address: "1.1.1.1")
+
+        _incoming_link_with_ip_address_duplicate =
+          Fabricate(:incoming_link, post:, user:, ip_address: "1.1.1.1")
+
+        expect(IncomingLink.where(post:, user:).count).to eq(25)
+
+        BadgeGranter.backfill(Badge.find(Badge::NiceShare))
+
+        expect(UserBadge.where(user_id: user.id, badge_id: Badge::NiceShare).count).to eq(0)
+      end
+
+      it "does not grant nice share badge when duplicates on current_user_id exists" do
+        Fabricate.times(23, :incoming_link, post:, user:, ip_address: nil)
+
+        _incoming_link_with_current_user_id =
+          Fabricate(:incoming_link, post:, user:, current_user_id: current_user.id, ip_address: nil)
+
+        _incoming_link_with_current_user_id_duplicate =
+          Fabricate(:incoming_link, post:, user:, current_user_id: current_user.id, ip_address: nil)
+
+        expect(IncomingLink.where(post:, user:).count).to eq(25)
+
+        BadgeGranter.backfill(Badge.find(Badge::NiceShare))
+
+        expect(UserBadge.where(user_id: user.id, badge_id: Badge::NiceShare).count).to eq(0)
+      end
+
+      it "does not grant sharing badges to deleted users" do
+        incoming_links = Fabricate.times(25, :incoming_link, post: post, user: user)
+        user_id = user.id
+        user.destroy!
+
+        nice_share = Badge.find(Badge::NiceShare)
+        first_share = Badge.find(Badge::FirstShare)
+
+        BadgeGranter.backfill(nice_share)
+        BadgeGranter.backfill(first_share)
+
+        expect(UserBadge.where(user_id: user_id).count).to eq(0)
+      end
     end
 
     it "auto revokes badges from users when badge is set to auto revoke and user no longer satisfy the badge's query" do

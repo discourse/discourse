@@ -31,7 +31,20 @@ module DiscourseAi
       end
 
       def valid_feature_key?(key)
+        custom_keys = %w[custom:prompt custom:pdf_to_text custom:image_to_text custom:edit_artifact]
+        return true if custom_keys.include?(key)
+
         feature_keys.include?(key)
+      end
+
+      def validate_feature!(feature_key)
+        return if feature_key.blank?
+        return if valid_feature_key?(feature_key)
+
+        STDERR.puts(
+          "Unknown feature '#{feature_key}'. Run with --list-features to view valid keys.",
+        )
+        exit 1
       end
 
       private

@@ -19,6 +19,10 @@ import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
+import {
+  addUniqueValueToArray,
+  removeValueFromArray,
+} from "discourse/lib/array-tools";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import {
   applyBehaviorTransformer,
@@ -115,33 +119,62 @@ export default class Item extends Component {
 
   @action
   onBulkSelectToggle(e) {
+    e.stopImmediatePropagation();
+
+    const topicNode = e.target.closest(".topic-list-item");
+
     if (e.target.checked) {
-      this.args.selected.addObject(this.args.topic);
-
-      if (this.args.bulkSelectHelper.lastCheckedElementId && e.shiftKey) {
-        const bulkSelects = [...document.querySelectorAll("input.bulk-select")];
-        const from = bulkSelects.indexOf(e.target);
-        const to = bulkSelects.findIndex(
-          (el) => el.id === this.args.bulkSelectHelper.lastCheckedElementId
-        );
-        const start = Math.min(from, to);
-        const end = Math.max(from, to);
-
-        bulkSelects
-          .slice(start, end)
-          .filter((el) => !el.checked)
-          .forEach((checkbox) => checkbox.click());
-      }
-
-      this.args.bulkSelectHelper.lastCheckedElementId = e.target.id;
+      this.selectTopic(topicNode, e.shiftKey);
     } else {
-      this.args.selected.removeObject(this.args.topic);
-      this.args.bulkSelectHelper.lastCheckedElementId = null;
+      this.unselectTopic(topicNode);
     }
+  }
+
+  unselectTopic(topicNode) {
+    removeValueFromArray(this.args.selected, this.args.topic);
+    this.args.bulkSelectHelper.lastCheckedElementId = null;
+    topicNode.classList.remove("bulk-selected");
+  }
+
+  selectTopic(topicNode, shiftKey) {
+    addUniqueValueToArray(this.args.selected, this.args.topic);
+
+    if (this.args.bulkSelectHelper.lastCheckedElementId && shiftKey) {
+      const topics = Array.from(topicNode.parentNode.children);
+      const from = topics.indexOf(topicNode);
+      const to = topics.findIndex(
+        (el) =>
+          el.dataset.topicId === this.args.bulkSelectHelper.lastCheckedElementId
+      );
+      const start = Math.min(from, to);
+      const end = Math.max(from, to);
+      const bulkSelects = [...document.querySelectorAll("input.bulk-select")];
+      bulkSelects
+        .slice(start, end)
+        .filter((el) => !el.checked)
+        .forEach((checkbox) => checkbox.click());
+    }
+
+    this.args.bulkSelectHelper.lastCheckedElementId = topicNode.dataset.topicId;
+    topicNode.classList.add("bulk-selected");
   }
 
   @action
   click(event) {
+    if (this.args.bulkSelectEnabled) {
+      event.preventDefault();
+
+      const topicNode = event.target.closest(".topic-list-item");
+      const selected = this.args.selected.includes(this.args.topic);
+      if (selected) {
+        this.unselectTopic(topicNode);
+      } else {
+        this.selectTopic(topicNode, event.shiftKey);
+      }
+
+      return;
+    }
+
     applyBehaviorTransformer(
       "topic-list-item-click",
       () => {
@@ -256,6 +289,7 @@ export default class Item extends Component {
         (if @topic.bookmarked "bookmarked")
         (if @topic.pinned "pinned")
         (if @topic.closed "closed")
+        (if @bulkSelectEnabled "bulk-selecting")
         this.tagClassNames
         this.additionalClasses
       }}

@@ -25,7 +25,7 @@ module DiscourseAi
         def translate
           # Gemini complains if we don't alternate model/user roles.
           noop_model_response = { role: "model", parts: { text: "Ok." } }
-          messages = super
+          messages = merge_tool_batches(super)
 
           interleving_messages = []
           previous_message = nil
@@ -109,9 +109,12 @@ module DiscourseAi
           content_array =
             to_encoded_content_array(
               content: content_array,
-              image_encoder: ->(details) { image_node(details) },
+              upload_encoder: ->(details) { upload_node(details) },
               text_encoder: ->(text) { { text: text } },
-              allow_vision: vision_support? && beta_api?,
+              allow_images: vision_support? && beta_api?,
+              allow_documents: true,
+              allowed_attachment_types: llm_model.allowed_attachment_types,
+              upload_filter: ->(encoded) { document_allowed?(encoded) },
             )
 
           if beta_api?
@@ -125,21 +128,32 @@ module DiscourseAi
           { inlineData: { mimeType: details[:mime_type], data: details[:base64] } }
         end
 
+        def upload_node(details)
+          image_node(details)
+        end
+
         def tool_call_msg(msg)
           if native_tool_support?
             call_details = JSON.parse(msg[:content], symbolize_names: true)
-            part = {
-              functionCall: {
-                name: msg[:name] || call_details[:name],
-                args: call_details[:arguments],
-              },
+            function_call = {
+              name: msg[:name] || call_details[:name],
+              args: call_details[:arguments],
             }
 
-            if beta_api?
-              { role: "model", parts: [part] }
-            else
-              { role: "model", parts: part }
+            part = { functionCall: function_call }
+            if (thought_sig = msg.dig(:provider_data, :thought_signature))
+              part[:thoughtSignature] = thought_sig
             end
+
+            message =
+              if beta_api?
+                { role: "model", parts: [part] }
+              else
+                { role: "model", parts: part }
+              end
+            batch_id = msg.dig(:provider_data, :batch_id)
+            message[:batch_id] = batch_id if batch_id
+            message
           else
             super
           end
@@ -156,14 +170,60 @@ module DiscourseAi
               },
             }
 
-            if beta_api?
-              { role: "function", parts: [part] }
-            else
-              { role: "function", parts: part }
-            end
+            message =
+              if beta_api?
+                { role: "function", parts: [part] }
+              else
+                { role: "function", parts: part }
+              end
+            batch_id = msg.dig(:provider_data, :batch_id)
+            message[:batch_id] = batch_id if batch_id
+            message
           else
             super
           end
+        end
+
+        def merge_tool_batches(messages)
+          merged = []
+          existing_batches = {}
+
+          messages.each do |message|
+            batch_id = message.delete(:batch_id)
+            parts = message[:parts]
+
+            if batch_id && parts
+              key = [batch_id, message[:role]]
+              normalized_parts = parts_array(parts)
+
+              if existing_batches[key]
+                existing_batches[key][:parts].concat(normalized_parts)
+                next
+              else
+                message[:parts] = normalized_parts
+                message[:_batch_id] = batch_id
+                existing_batches[key] = message
+              end
+            end
+
+            merged << message
+          end
+
+          merged.each do |message|
+            message.delete(:_batch_id)
+            next if beta_api?
+            if message[:parts].is_a?(Array) && message[:parts].length == 1
+              message[:parts] = message[:parts].first
+            end
+          end
+
+          merged
+        end
+
+        def parts_array(parts)
+          return parts if parts.is_a?(Array)
+
+          [parts]
         end
       end
     end

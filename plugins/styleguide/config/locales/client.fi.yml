@@ -59,8 +59,6 @@ fi:
           title: "Pystynavigointi"
         categories_list:
           title: "Alueluettelo"
-        topic_link:
-          title: "Ketjun linkki"
         topic_list_item:
           title: "Ketjulistauksen osa"
         topic_statuses:

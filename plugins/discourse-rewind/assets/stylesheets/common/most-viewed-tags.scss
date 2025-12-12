@@ -1,0 +1,20 @@
+.--most-viewed-tags {
+  .rewind-report-title {
+    box-sizing: border-box;
+    border: none;
+    width: 100%;
+    margin: 0;
+    text-align: center;
+    margin-bottom: 0.5em;
+  }
+
+  .rewind-report-container {
+    display: flex;
+    gap: 0.5em;
+    flex-wrap: wrap;
+  }
+}
+
+.most-viewed-tags__tag {
+  font-family: var(--pixel-text);
+}

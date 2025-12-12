@@ -1106,10 +1106,6 @@ ro:
     tl3_requires_likes_received: "Numărul minim de aprecieri care trebuie să fie primite în ultimele (tl3 time period) zile pentru promovarea la nivelul de încredere 3."
     tl3_links_no_follow: "Nu scoate parametrul rel=nofollow din linkurile postate de utilizatori cu nivelul de încredere 3."
     delete_all_posts_and_topics_allowed_groups: "Grupurile care pot șterge articolele și subiectele create de alți utilizatori. Aceste grupuri vor putea să și vadă subiectele și articolele șterse."
-    min_trust_to_create_topic: "Nivelul de încredere minim necesar pentru a crea un subiect nou."
-    min_trust_to_edit_wiki_post: "Nivelul de încredere minim necesar pentru a edita o postare marcată ca wiki."
-    min_trust_to_edit_post: "Nivelul de încredere minim necesar pentru a edita postări."
-    min_trust_to_allow_self_wiki: "Nivelul de încredere minim necesar pentru transformarea propriilor mesaje în wiki."
     post_links_allowed_groups: "Grupuri cărora li se permite să includă legături în articole. Administratorii și moderatorii au voie să publice legături întotdeauna."
     newuser_max_links: "Câte linkuri poate adăuga un nou utilizator într-o postare."
     newuser_max_attachments: "Câte atașamente poate adăuga un nou utilizator într-o postare."
@@ -1187,7 +1183,6 @@ ro:
     pop3_polling_openssl_verify: "Verifică certificatul server TLS (Implicit: activat)"
     pop3_polling_username: "Numele de utilizator al contului POP3 pentru retragerea emailurilor."
     pop3_polling_password: "Parola contului de POP3 pentru retragerea emailurilor."
-    email_in_min_trust: "Nivelul minim de încredere de care are nevoie un utilizator pentru a i se permite să posteze noi subiecte prin email."
     email_prefix: "[Eticheta] e folosită în subiectul email-ului. Implicit va fi \"titlul\", dacă nu este setată altfel."
     email_site_title: "Titlul site-ului folosit ca expeditor de email-uri trimise de site. Implicit va fi 'titlu', dacă nu este setat altfel. Dacă 'titlul' conține caractere care nu sunt permise în email, folosiți această setare."
     minimum_topics_similar: "Câte subiecte trebuie să existe deja până ce câmpul subiecte similare este prezent când se compune o discuție nouă."
@@ -1195,7 +1190,6 @@ ro:
     delete_user_max_post_age: "Nu permite ștergerea utilizatorilor a căror prima postare e mai veche de (x) de zile."
     delete_all_posts_max: "Numărul maxim de postări ce pot fi șterse deodată folosind butonul șterge toate postările. Dacă un utilizator are mai multe postări decât această valoare, postările sale nu pot fi șterse dintr-o dată și utilizatorul nu poate fi șters."
     email_editable: "Permite utilizatorilor să își schimbe adresa de email după înregistrare."
-    allow_uploaded_avatars: "Permite utilizatorilor să încarce o poză de profil personalizate."
     uploaded_avatars_allowed_groups: "Specifică grupurile cărora li se permite să încarce imagini de profil personalizate."
     default_avatars: "URL-urile avatarelor care vor fi folosite implicit pentru noii utilizatori până ce aceștia le vor schimba."
     automatically_download_gravatars: "Descarcă Gravatare pentru utilizatori după crearea contului sau schimbarea email-ului."
@@ -1271,14 +1265,12 @@ ro:
     default_categories_watching_first_post: "Lista categoriilor în care prima postare din fiecare topic va fi urmărită activ în mod implicit."
     allow_user_api_key_scopes: "Lista domeniilor pentru care se permit chei API pentru utilizatori"
     allowed_user_api_push_urls: "URL-uri permise pentru serviciul push al serverului la API utilizator"
-    min_trust_to_create_tag: "Nivelul minim de încredere necesar pentru crearea unei etichete."
     edit_tags_allowed_groups: "Grupuri care au permisiunea de a edita etichetele, descrierile etichetelor și sinonimele etichetelor."
     max_tags_per_topic: "Numărul maxim de etichete care pot fi aplicate unui subiect."
     max_tag_length: "Numărul maxim de caractere care poate fi folosit într-o etichetă."
     max_tag_search_results: "La căutarea de etichete, numărul maxim de rezultate care să fie afișat."
     max_tags_in_filter_list: "Numărul maxim de etichete care să se afișeze într-un drop-down filtru. Vor fi afișate etichetele cele mai folosite."
     tags_sort_alphabetically: "Afișează etichetele în ordine alfabetică. Implicit, etichetele sunt afișate în ordinea popularității."
-    min_trust_level_to_tag_topics: "Nivelul minim de încredere necesar pentru a pune etichete pe subiecte."
     suppress_overlapping_tags_in_list: "Dacă etichetele corespund exact cu cuvintele din titlul subiectelor, nu mai afișa aceste etichete."
     shared_drafts_allowed_groups: "Permit utilizatorilor din aceste grupuri să vadă și să editeze ciorne comune."
     enable_user_status: "Permite utilizatorilor să seteze un mesaj de stare personalizat (emoji + descriere)."
@@ -1330,7 +1322,6 @@ ro:
       invalid_regex: "Regex invalid sau nepermis."
       min_username_length_range: "Nu poți seta minimum cu o valoare mai mare decât a maximului."
       max_username_length_range: "Nu poți seta maximum cu o valoare mai mică decât a minimului."
-      discourse_id_credentials: "Trebuie să configurezi datele de conectare Discourse ID ('discourse_id_client_id' și 'discourse_id_client_secret') înainte de a activa această setare."
       content_localization_locale_limit: "Numărul de locale acceptate nu poate depăși %{max}."
       content_localization_language_switcher_requirements: "Comutatorul de limbă necesită ca „setarea localei din cookie” și „permite locala utilizatorului” din setările site-ului să fie activate, și „locale acceptate din localizarea de conținut” să aibă cel puțin o limbă."
       mediaconvert_role_arn_required: "Rolul AWS IAM ARN este necesar atunci când utilizezi AWS MediaConvert pentru conversia video."
@@ -2066,8 +2057,6 @@ ro:
     nice_share:
       name: Distribuție faină
       description: Ai distribuit o postare care a atras 25 de vizitatori unici
-      long_description: |
-        Acest ecuson se acordă pentru distribuirea unui link care a fost accesat de 25 de vizitatori externi. Îți mulțumim că popularizezi discuțiile noastre și informațiile despre această comunitate.
     good_share:
       name: Distribuție mișto
       description: Ai distribuit o postare care a atras 300 de vizitatori unici
@@ -2217,46 +2206,22 @@ ro:
   wizard:
     title: "Configurare Discourse"
     step:
-      introduction:
-        fields:
-          title:
-            placeholder: "Bârlogul Mariei"
-          site_description:
-            placeholder: "Un loc în care Maria și prietenii stau la taifas despre chestii mișto"
-      privacy:
+      setup:
+        title: "Începe"
         fields:
           login_required:
+            label: "Vizibilitate"
             choices:
               public:
                 label: "Public"
               private:
                 label: "Privat"
-      styling:
-        fields:
-          color_scheme:
-            label: "Paletă de culori"
-          site_font:
-            label: "Font"
-          styling_preview:
-            label: "Previzualizează"
-          homepage_style:
-            choices:
-              latest:
-                label: "Ultima"
-      branding:
-        title: "Logo site"
-      corporate:
-        fields:
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
-      invites:
-        title: "Invită membrii echipei"
-        description: "Aproape ai încheiat ! Hai să invităm câțiva prieteni să te ajute <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>cu demararea comunității </a> prin discuții și răspunsuri interesante."
-      finished:
-        title: "Discourse-ul tău e gata!"
   onebox:
     github:
       closed: "închis"
+      status_date:
+        approved: "aprobat"
+        closed: "închis"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} te-a menționat în discuția "%{topic}" - %{site_title}'

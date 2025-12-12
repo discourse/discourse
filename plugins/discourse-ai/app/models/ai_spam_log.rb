@@ -20,6 +20,7 @@ end
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #  error               :string(3000)
+#  reason              :text
 #
 # Indexes
 #

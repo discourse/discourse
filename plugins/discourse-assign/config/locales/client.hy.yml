@@ -17,7 +17,6 @@ hy:
       assigned: "Վերագրված"
       group_everyone: "Բոլորը"
       assigned_to: "Վերագրված է"
-      assigned_to_w_ellipsis: "Վերագրված է..."
       unassign:
         title: "Ետ կանչել վերագրումը"
         title_w_ellipsis: "Ետ կանչել վերագրումը..."

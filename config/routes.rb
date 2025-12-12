@@ -423,6 +423,10 @@ Discourse::Application.routes.draw do
         get "login-and-authentication" => "site_settings#index"
         get "login-and-authentication/authenticators" => "site_settings#index"
         get "login-and-authentication/discourseconnect" => "site_settings#index"
+        get "login-and-authentication/discourse-id" => "discourse_id#show"
+        post "login-and-authentication/discourse-id/regenerate" =>
+               "discourse_id#regenerate_credentials"
+        put "login-and-authentication/discourse-id/settings" => "discourse_id#update_settings"
 
         DiscoursePluginRegistry.admin_config_login_routes.each do |location|
           get "login-and-authentication/#{location}" => "site_settings#index"
@@ -443,6 +447,8 @@ Discourse::Application.routes.draw do
         get "group-permissions" => "site_settings#index"
         get "/logo" => "logo#index"
         get "/fonts" => "fonts#index"
+        get "/welcome-banner/themes-with-setting" => "welcome_banner#themes_with_setting"
+        get "/welcome-banner" => "welcome_banner#index"
         put "/logo" => "logo#update"
         put "/fonts" => "fonts#update"
         get "colors/:id" => "color_palettes#show"

@@ -13,6 +13,11 @@ import {
   TIME_SHORTCUT_TYPES,
   timeShortcuts,
 } from "discourse/lib/time-shortcut";
+import {
+  NO_REMINDER_ICON,
+  NOT_BOOKMARKED,
+  WITH_REMINDER_ICON,
+} from "discourse/models/bookmark";
 import { i18n } from "discourse-i18n";
 
 export default class BookmarkMenu extends Component {
@@ -96,9 +101,11 @@ export default class BookmarkMenu extends Component {
 
   get buttonIcon() {
     if (this.existingBookmark?.reminderAt) {
-      return "discourse-bookmark-clock";
+      return WITH_REMINDER_ICON;
+    } else if (this.existingBookmark) {
+      return NO_REMINDER_ICON;
     } else {
-      return "bookmark";
+      return NOT_BOOKMARKED;
     }
   }
 

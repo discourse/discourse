@@ -14,6 +14,7 @@ export default class ChatDrawerRoutesThreads extends Component {
       <Navbar @onClick={{this.chat.toggleDrawer}} as |navbar|>
         <navbar.Title @title={{i18n "chat.heading"}} />
         <navbar.Actions as |action|>
+          <action.SearchButton />
           <action.ThreadsListButton />
           <action.ToggleDrawerButton />
           <action.FullPageButton />

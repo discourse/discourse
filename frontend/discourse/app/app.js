@@ -277,7 +277,7 @@ function resolveDiscourseInitializer(moduleName, themeId) {
 
 let printedDebugInfo = false;
 function printDebugInfo() {
-  if (printedDebugInfo) {
+  if (printedDebugInfo || isTesting()) {
     return;
   }
 

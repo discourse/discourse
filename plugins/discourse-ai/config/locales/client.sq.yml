@@ -78,6 +78,7 @@ sq:
         summary: "Përmbledhja"
         username: "Emri i përdoruesit"
         total_requests: "Total requests"
+        total: "Total"
         periods:
           custom: "Me porosi..."
       ai_persona:
@@ -147,6 +148,7 @@ sq:
           cancel: "Anulo"
         thumbnail_suggestions:
           select: "Zgjidhni"
+          try_again: "Provoni përsëri"
         image_caption:
           save_caption: "Ruani"
       embeddings:

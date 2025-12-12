@@ -1550,4 +1550,67 @@ RSpec.describe Category do
       )
     end
   end
+
+  describe ".set_permission!" do
+    fab!(:category)
+    fab!(:group)
+    fab!(:user)
+
+    it "sets full permission for admin users" do
+      admin = Fabricate(:admin)
+      guardian = Guardian.new(admin)
+
+      result = Category.set_permission!(guardian, category)
+
+      expect(result).to eq(category)
+      expect(category.permission).to eq(CategoryGroup.permission_types[:full])
+    end
+
+    it "sets full permission for users who can create topics" do
+      category.set_permissions(group => :full)
+      category.save!
+      group.add(user)
+      guardian = Guardian.new(user)
+
+      result = Category.set_permission!(guardian, category)
+
+      expect(result).to eq(category)
+      expect(category.permission).to eq(CategoryGroup.permission_types[:full])
+    end
+
+    it "sets create_post permission for users who can post but not create topics" do
+      category.set_permissions(group => :create_post)
+      category.save!
+      group.add(user)
+      guardian = Guardian.new(user)
+
+      result = Category.set_permission!(guardian, category)
+
+      expect(result).to eq(category)
+      expect(category.permission).to eq(CategoryGroup.permission_types[:create_post])
+    end
+
+    it "sets readonly permission for users who can see but not post" do
+      category.set_permissions(group => :readonly)
+      category.save!
+      group.add(user)
+      guardian = Guardian.new(user)
+
+      result = Category.set_permission!(guardian, category)
+
+      expect(result).to eq(category)
+      expect(category.permission).to eq(CategoryGroup.permission_types[:readonly])
+    end
+
+    it "sets no permission for users who cannot see the category" do
+      category.set_permissions(group => :full)
+      category.save!
+      guardian = Guardian.new(user)
+
+      result = Category.set_permission!(guardian, category)
+
+      expect(result).to eq(category)
+      expect(category.permission).to be_nil
+    end
+  end
 end

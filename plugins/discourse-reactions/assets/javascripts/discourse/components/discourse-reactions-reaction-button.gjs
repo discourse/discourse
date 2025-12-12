@@ -59,6 +59,25 @@ export default class ReactionsReactionButton extends Component {
     this.args.scheduleCollapse("collapseReactionsPicker");
   }
 
+  get likedIcon() {
+    const icon = this.siteSettings.discourse_reactions_like_icon;
+    // Map "heart" to the d-liked alias to follow core replacement pattern
+    if (icon === "heart") {
+      return "d-liked";
+    }
+    return icon;
+  }
+
+  get unlikedIcon() {
+    const icon = this.siteSettings.discourse_reactions_like_icon;
+    // Map "heart" to the d-unliked alias to follow core replacement pattern
+    if (icon === "heart") {
+      return "d-unliked";
+    }
+
+    return `far-${icon}`;
+  }
+
   get title() {
     if (!this.currentUser) {
       return i18n("discourse_reactions.main_reaction.unauthenticated");
@@ -118,7 +137,7 @@ export default class ReactionsReactionButton extends Component {
         <DButton
           class="btn-toggle-reaction-like btn-flat btn-icon no-text reaction-button"
           @translatedTitle={{this.title}}
-          @icon={{this.siteSettings.discourse_reactions_like_icon}}
+          @icon={{this.likedIcon}}
         />
       {{else if @post.current_user_reaction}}
         <DButton
@@ -135,10 +154,7 @@ export default class ReactionsReactionButton extends Component {
         <DButton
           class="btn-toggle-reaction-like btn-flat btn-icon no-text reaction-button"
           @translatedTitle={{this.title}}
-          @icon={{concat
-            "far-"
-            this.siteSettings.discourse_reactions_like_icon
-          }}
+          @icon={{this.unlikedIcon}}
         />
       {{/if}}
     </div>

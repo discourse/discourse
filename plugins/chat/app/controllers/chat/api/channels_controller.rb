@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Chat::Api::ChannelsController < Chat::ApiController
-  CHANNEL_EDITABLE_PARAMS = %i[name description slug threading_enabled]
+  CHANNEL_EDITABLE_PARAMS = %i[name description slug threading_enabled emoji]
   CATEGORY_CHANNEL_EDITABLE_PARAMS = %i[auto_join_users allow_channel_wide_mentions]
 
   def index
@@ -49,6 +49,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
         :description,
         :auto_join_users,
         :threading_enabled,
+        :emoji,
       )
 
     # NOTE: We don't allow creating channels for anything but category chatable types

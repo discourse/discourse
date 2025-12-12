@@ -491,7 +491,7 @@ lv:
       title: "Atkārtoti nosūtīt aktivācijas e-pastu"
   wizard:
     step:
-      privacy:
+      setup:
         fields:
           login_required:
             choices:
@@ -499,17 +499,12 @@ lv:
                 label: "Publisks"
               private:
                 label: "Privāts"
-      styling:
-        fields:
-          styling_preview:
-            label: "Priekšskatījums"
-          homepage_style:
-            choices:
-              latest:
-                label: "Pēdējais"
   onebox:
     github:
       closed: "slēgts"
+      status_date:
+        approved: "apstiprināt"
+        closed: "slēgts"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} pieminēja jūs "%{topic}" - %{site_title}'

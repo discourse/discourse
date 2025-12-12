@@ -6,7 +6,7 @@ describe "Topic page", type: :system do
 
   before { Fabricate(:post, topic: topic, cooked: <<~HTML) }
     <h2 dir="ltr" id="toc-h2-testing" data-d-toc="toc-h2-testing" class="d-toc-post-heading">
-      <a name="toc-h2-testing" class="anchor" href="#toc-h2-testing">x</a>
+      <a name="toc-h2-testing" class="anchor" href="#toc-h2-testing" aria-label="Heading link">x</a>
       Testing
     </h2>
     <p id="test-last-cooked-paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tempor.</p>

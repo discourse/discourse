@@ -18,7 +18,6 @@ ru:
         title: "Шаблоны (в текстовом поле)"
         insert_template: "%{shortcut} Вставить шаблон"
     templates:
-      filter_hint: "Фильтр по названию…"
       insert_template: "Вставить шаблон"
       close_templates: "Закрыть выбор шаблона"
       copy: "Копировать шаблон"

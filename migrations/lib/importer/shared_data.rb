@@ -2,8 +2,26 @@
 
 module Migrations::Importer
   class SharedData
+    LOADERS = {
+      existing_usernames_lower: {
+        type: :set,
+        sql: <<~SQL,
+          SELECT username_lower
+          FROM users
+        SQL
+      },
+      existing_group_names_lower: {
+        type: :set,
+        sql: <<~SQL,
+          SELECT LOWER(name)
+          FROM groups
+        SQL
+      },
+    }.freeze
+
     def initialize(discourse_db)
       @discourse_db = discourse_db
+      @cache = {}
     end
 
     def load_set(sql)
@@ -38,31 +56,20 @@ module Migrations::Importer
       result
     end
 
-    def load(type)
-      case type
-      when :usernames
-        @existing_usernames_lower ||= load_set <<~SQL
-          SELECT username_lower
-          FROM users
-        SQL
-      when :group_names
-        @existing_group_names_lower ||= load_set <<~SQL
-          SELECT LOWER(name)
-          FROM groups
-        SQL
-      else
-        raise "Unknown type: #{type}"
-      end
-    end
+    def [](type)
+      @cache[type] ||= begin
+        loader_config = LOADERS[type]
+        raise "Unknown type: #{type}" unless loader_config
 
-    def unload_shared_data(type)
-      case type
-      when :usernames
-        @existing_usernames_lower = nil
-      when :group_names
-        @existing_group_names_lower = nil
-      else
-        raise "Unknown type: #{type}"
+        sql = loader_config[:sql]
+        case loader_config[:type]
+        when :set
+          load_set(sql)
+        when :mapping
+          load_mapping(sql)
+        else
+          raise "Unknown loader type: #{loader_config[:type]}"
+        end
       end
     end
   end

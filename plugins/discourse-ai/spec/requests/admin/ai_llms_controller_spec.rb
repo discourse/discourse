@@ -140,6 +140,20 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
         expect(model.display_name).to eq(valid_attrs[:display_name])
       end
 
+      it "stores allowed_attachment_types" do
+        attrs = valid_attrs.merge(allowed_attachment_types: %w[pdf docx])
+
+        post "/admin/plugins/discourse-ai/ai-llms.json", params: { ai_llm: attrs }
+
+        expect(response.status).to eq(201)
+        model = LlmModel.last
+        expect(model.allowed_attachment_types).to contain_exactly("pdf", "docx")
+        expect(response.parsed_body["ai_llm"]["allowed_attachment_types"]).to contain_exactly(
+          "pdf",
+          "docx",
+        )
+      end
+
       it "logs staff action when creating an LLM model" do
         # Log the creation
         post "/admin/plugins/discourse-ai/ai-llms.json", params: { ai_llm: valid_attrs }
@@ -499,6 +513,24 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
         expect(response.parsed_body["validation_errors"]).to contain_exactly(
           "Context window is not a number",
         )
+      end
+    end
+
+    context "when testing a seeded model" do
+      fab!(:seeded_llm) { Fabricate(:fake_model, id: -200) }
+
+      it "tests the existing model directly instead of using params" do
+        DiscourseAi::Completions::Llm.with_prepared_responses(["a response"]) do
+          get "/admin/plugins/discourse-ai/ai-llms/test.json",
+              params: {
+                ai_llm: {
+                  id: seeded_llm.id,
+                },
+              }
+
+          expect(response).to be_successful
+          expect(response.parsed_body["success"]).to eq(true)
+        end
       end
     end
   end

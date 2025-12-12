@@ -5,6 +5,9 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
+import DecoratedHtml, {
+  applyHtmlDecorators,
+} from "discourse/components/decorated-html";
 import InterpolatedTranslation from "discourse/components/interpolated-translation";
 import ReviewableFlagReason from "discourse/components/reviewable-refresh/flag-reason";
 import ReviewableNoteForm from "discourse/components/reviewable-refresh/note-form";
@@ -14,9 +17,13 @@ import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { bind } from "discourse/lib/decorators";
 import escape from "discourse/lib/escape";
 import { and, eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+
+const HISTORY_CLAIMED_ID = 3;
+const HISTORY_UNCLAIMED_ID = 4;
 
 /**
  * Timeline component for reviewable items that displays chronological events
@@ -97,7 +104,7 @@ export default class ReviewableTimeline extends Component {
           score.reviewable_conversation.conversation_posts.length > 0
         ) {
           const firstPost = score.reviewable_conversation.conversation_posts[0];
-          flaggedDescription += `<p>${escape(firstPost.excerpt)} (<a href="${escape(
+          flaggedDescription += `<p>${firstPost.excerpt} (<a href="${escape(
             score.reviewable_conversation.permalink
           )}">${i18n("review.timeline.view_conversation")}</a>)</p>`;
         }
@@ -124,15 +131,19 @@ export default class ReviewableTimeline extends Component {
           if (!reviewedEvents.has(reviewedKey)) {
             // Determine icon based on score status
             let reviewIcon;
+            let titleKey;
             switch (score.status) {
               case 1: // approved
                 reviewIcon = "check";
+                titleKey = "review.timeline.approved_by";
                 break;
               case 2: // rejected
-                reviewIcon = "times";
+                reviewIcon = "xmark";
+                titleKey = "review.timeline.rejected_by";
                 break;
               case 3: // ignored
                 reviewIcon = "far-eye-slash";
+                titleKey = "review.timeline.ignored_by";
                 break;
               default:
                 reviewIcon = "check"; // fallback
@@ -143,10 +154,7 @@ export default class ReviewableTimeline extends Component {
               date: score.reviewed_at,
               user: score.reviewed_by,
               icon: reviewIcon,
-              titleKey: "review.timeline.reviewed_by",
-              description: score.reason
-                ? htmlSafe(`<p>${score.reason}</p>`)
-                : undefined,
+              titleKey,
             };
 
             events.push(reviewedEvent);
@@ -172,6 +180,26 @@ export default class ReviewableTimeline extends Component {
           note.user &&
           (this.currentUser.id === note.user.id || this.currentUser.admin),
       });
+    });
+
+    this.args.historyEvents?.forEach((history) => {
+      if (history.reviewable_history_type === HISTORY_CLAIMED_ID) {
+        events.push({
+          type: "claimed",
+          date: history.created_at,
+          user: history.created_by,
+          icon: "user-plus",
+          titleKey: "review.timeline.claimed_by",
+        });
+      } else if (history.reviewable_history_type === HISTORY_UNCLAIMED_ID) {
+        events.push({
+          type: "unclaimed",
+          date: history.created_at,
+          user: history.created_by,
+          icon: "user-xmark",
+          titleKey: "review.timeline.unclaimed_by",
+        });
+      }
     });
 
     return events.sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
@@ -214,6 +242,11 @@ export default class ReviewableTimeline extends Component {
     }
   }
 
+  @bind
+  decorate(element, helper) {
+    applyHtmlDecorators(element, helper);
+  }
+
   <template>
     <div class="reviewable-timeline">
 
@@ -250,9 +283,11 @@ export default class ReviewableTimeline extends Component {
                       </InterpolatedTranslation>
                     </div>
                     {{#if event.description}}
-                      <div class="timeline-event__description">
-                        {{htmlSafe event.description}}
-                      </div>
+                      <DecoratedHtml
+                        @className="timeline-event__description"
+                        @html={{event.description}}
+                        @decorate={{this.decorate}}
+                      />
                     {{/if}}
                   </div>
 
@@ -262,7 +297,7 @@ export default class ReviewableTimeline extends Component {
                         @icon="trash-can"
                         @title="review.notes.delete_note"
                         @action={{fn this.deleteNote event.noteId}}
-                        class="btn-transparent btn-danger timeline-event__delete-note btn-transparent"
+                        class="btn-transparent --danger timeline-event__delete-note btn-transparent"
                       />
                     </div>
                   {{/if}}

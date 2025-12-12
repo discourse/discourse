@@ -254,6 +254,7 @@ sk:
           custom_prompt: "Vlastný prompt"
           image_caption: "Obrázky s popismi"
           translator: "Prekladač"
+          post_illustrator: "Ilustrátor príspevkov"
         translation:
           name: "Preklad"
           description: "Prekladá obsah do podporovaných jazykov"
@@ -319,6 +320,8 @@ sk:
           post_url_label: "URL alebo ID príspevku"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 alebo ID príspevku"
           result: "Výsledok"
+          llm: "LLM"
+          system_prompt: "Systémový výzva"
           scan_log: "Záznam skenovania"
           run: "Spustiť test"
           spam: "Spam"
@@ -355,6 +358,7 @@ sk:
         no_users: "Nenašli sa žiadne údaje o používaní používateľmi"
         no_models: "Nenašli sa žiadne údaje o používaní modelu"
         no_features: "Nenašli sa žiadne údaje o používaní funkcií"
+        total: "Celkom"
         subheader_description: "Tokeny sú základné jednotky, ktoré LLM používajú na pochopenie a generovanie textu, údaje o používaní môžu ovplyvniť náklady."
         stat_tooltips:
           total_requests: "Všetky žiadosti zaslané LLM prostredníctvom Discourse"
@@ -396,8 +400,6 @@ sk:
           low: Nízka kvalita - najlacnejšie (256x256)
           medium: Stredná kvalita (512x512)
           high: Vysoká kvalita - najpomalšie (1024x1024)
-        tool_details: Zobraziť podrobnosti o nástroji
-        tool_details_help: Zobrazí koncovým používateľom podrobnosti o tom, ktoré nástroje jazykový model spustil.
         mentionable: Povoliť zmienky
         mentionable_help: Ak je táto možnosť povolená, používatelia v povolených skupinách môžu v príspevkoch spomenúť tohto používateľa a AI bude reagovať ako táto osoba.
         user: Používateľ
@@ -556,7 +558,6 @@ sk:
         back: "Späť"
         confirm_delete: Naozaj chcete odstrániť tento model?
         delete: Odstrániť
-        seeded_warning: "Tento model je predkonfigurovaný na vašej stránke a nemožno ho upravovať."
         quotas:
           title: "Kvóty používania"
           add_title: "Vytvoriť novú kvótu"
@@ -592,22 +593,18 @@ sk:
           other: "Tento model momentálne používa nasledovné %{settings}. Ak je nesprávne nakonfigurovaný, funkcia nebude fungovať podľa očakávania. "
         model_description:
           none: "Všeobecné nastavenia, ktoré fungujú pre väčšinu jazykových modelov"
-          anthropic-claude-opus-4-1: "Najinteligentnejší model spoločnosti Anthropic"
-          anthropic-claude-sonnet-4-0: "Optimálna rovnováha medzi rýchlosťou a cenou"
-          anthropic-claude-3-7-sonnet-latest: "Optimálna rovnováha medzi rýchlosťou a cenou (predchádzajúca generácia)"
-          anthropic-claude-3-5-haiku-latest: "Rýchle a cenovo výhodné"
+          anthropic-claude-opus-4-5: "Najinteligentnejší model spoločnosti Anthropic"
+          anthropic-claude-sonnet-4-5: "Optimálna rovnováha medzi rýchlosťou a cenou"
+          anthropic-claude-haiku-4-5: "Rýchle a cenovo výhodné"
           google-gemini-2-5-pro: "Veľký multimodálny model schopný širokej škály úloh"
-          google-gemini-2-0-flash: "Ľahký, rýchly a nákladovo efektívny s multimodálnym uvažovaním (predchádzajúca generácia)"
           google-gemini-2-5-flash: "Ľahké, rýchle a nákladovo efektívne multimodálne uvažovanie"
-          google-gemini-2-0-flash-lite: "Nákladovo efektívny model s nízkou latenciou"
-          open_ai-o4-mini: "Pokročilý model nákladovo efektívneho uvažovania"
           open_ai-gpt-5-mini: "Poskytuje rovnováhu medzi inteligenciou, rýchlosťou a nákladmi, ktorá z neho robí atraktívny model pre mnohé prípady použitia."
           open_ai-gpt-5-nano: "Najrýchlejší, cenovo najefektívnejší model GPT-5."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Efektívny ľahký viacjazyčný model"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "Výkonný viacúčelový model"
           mistral-mistral-large-latest: "Najvýkonnejší model spoločnosti Mistral"
           mistral-pixtral-large-latest: "Najvýkonnejší model spoločnosti Mistral schopný vidieť"
-          open_router-x-ai-grok-3-beta: "Najnovší model xAI"
+          open_router-x-ai-grok-4: "Najnovší model xAI"
           open_router-deepseek-deepseek-r1-0528-free: "Najnovší model uvažovania spoločnosti DeepSeek"
           open_router-meta-llama-3-3-70b-instruct: "Vysoko výkonný viacjazyčný model"
         preseeded_model_description: "Predkonfigurovaný model s otvoreným zdrojovým kódom využívajúci %{model}"
@@ -635,7 +632,6 @@ sk:
           vision_enabled: "Ak je táto funkcia zapnutá, AI sa pokúsi porozumieť obrázkom. Závisí to od použitého modelu podporujúceho videnie. Podporované najnovšími modelmi od spoločností Anthropic, Google a OpenAI."
           enabled_chat_bot: "Ak je táto možnosť povolená, používatelia môžu vybrať tento model pri vytváraní PM s botom AI"
           cost_input: "Vstupné náklady na 1 milión tokenov pre tento model"
-          cost_cached_input: "Cena uloženého vstupu na 1 milión tokenov pre tento model"
           cost_output: "Výstupné náklady na 1 milión tokenov pre tento model"
           cost_measure: "Tokeny $/1 milión"
         providers:
@@ -670,7 +666,6 @@ sk:
           reasoning_tokens: "Počet tokenov použitých na uvažovanie"
           disable_temperature: "Zakázať teplotu (niektoré modely myslenia teplotu nepodporujú)"
           disable_top_p: "Zakázať top P (niektoré modely myslenia nepodporujú top P)"
-          enable_responses_api: "Povolenie rozhrania API pre odpovede (vyžaduje sa pri niektorých modeloch OpenAI)"
       related_topics:
         title: "Súvisiace témy"
         pill: "Súvisiace"
@@ -717,6 +712,7 @@ sk:
           title: "Navrhované miniatúry"
           select: "Vyberte"
           selected: "Vybrané"
+          try_again: "Skúsiť znova"
         image_caption:
           button_label: "Titulky s AI"
           generating: "Generovanie titulkov..."
@@ -799,6 +795,7 @@ sk:
         llm: "Model"
         pm_warning: "Správy AI chatbota pravidelne monitorujú moderátori."
         cancel_streaming: "Zastaviť odpoveď"
+        try_again: "Skúste to znova"
         default_pm_prefix: "[Bez názvu AI bot PM]"
         shortcut_title: "Spustenie PM s botom AI"
         shortcut_link: "AI bot"
@@ -913,7 +910,6 @@ sk:
         loading_convo: "Načítanie konverzácie"
         collapse: "Zbaliť"
         timed_out: "Discobot nenašiel žiadne objavy. Niečo sa pokazilo."
-        user_setting: "Povolenie vyhľadávania objavov"
         tooltip:
           header: "Vyhľadávanie na báze umelej inteligencie"
           content: "Vyhľadávanie v prirodzenom jazyku pomocou %{model}"

@@ -196,8 +196,9 @@ class SubscribeUserNotificationsInit {
           }
         }
 
-        oldNotifications.insertAt(
+        oldNotifications.splice(
           insertPosition,
+          0,
           Notification.create(lastNotification)
         );
       }

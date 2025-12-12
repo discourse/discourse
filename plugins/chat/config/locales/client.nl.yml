@@ -128,7 +128,6 @@ nl:
       email_frequency:
         description: "We sturen alleen een e-mail als we je de afgelopen 15 minuten niet hebben gezien."
         never: "Nooit"
-        title: "E-mailmeldingen"
         when_away: "Alleen wanneer afwezig"
       header_indicator_preference:
         title: "Activiteitsindicator weergeven in kop"

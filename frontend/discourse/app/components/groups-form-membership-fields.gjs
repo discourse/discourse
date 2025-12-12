@@ -6,7 +6,6 @@ import { action, computed } from "@ember/object";
 import { not, or as computedOr, readOnly } from "@ember/object/computed";
 import ExpandingTextArea from "discourse/components/expanding-text-area";
 import GroupFlairInputs from "discourse/components/group-flair-inputs";
-import GroupFlairVisibilityWarning from "discourse/components/group-flair-visibility-warning";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
@@ -256,7 +255,7 @@ export default class GroupsFormMembershipFields extends Component {
       <div class="control-group">
         <GroupFlairInputs @model={{this.model}} />
       </div>
-      <GroupFlairVisibilityWarning @model={{this.model}} />
+
     {{/if}}
   </template>
 }

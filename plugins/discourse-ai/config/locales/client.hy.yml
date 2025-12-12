@@ -78,6 +78,7 @@ hy:
         summary: "Ամփոփումը"
         username: "Օգտանուն"
         total_requests: "Ընդհանուր հարցումներ"
+        total: "Ամբողջ"
       ai_persona:
         back: "Ետ"
         name: "Անուն"
@@ -146,6 +147,8 @@ hy:
           copy: "Կրկնօրինակել"
           copied: "Պատճենված է!"
           cancel: "Չեղարկել"
+        thumbnail_suggestions:
+          try_again: "Կրկին Փորձել"
         image_caption:
           save_caption: "Պահպանել"
       embeddings:

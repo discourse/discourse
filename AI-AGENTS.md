@@ -48,25 +48,10 @@ Discourse is large with long history. Understand context before changes.
 bin/rspec [spec/path/file_spec.rb[:123]]
 LOAD_PLUGINS=1 bin/rspec  # Plugin tests
 
-# JavaScript tests
-bin/rake qunit:test # RUN all non plugin tests
-LOAD_PLUGINS=1 TARGET=all FILTER='fill filter here' bin/rake qunit:test # RUN specific tests based on filter
-
-Exmaple filters JavaScript tests:
-
-  emoji-test.js
-    ...
-    acceptance("Emoji" ..
-      test("cooked correctly")
-    ...
-  Filter string is: "Acceptance: Emoji: cooked correctly"
-
-  user-test.js
-    ...
-    module("Unit | Model | user" ..
-      test("staff")
-    ...
-  Filter string is: "Unit | Model | user: staff"
+# JavaScript tests - bin/qunit
+bin/qunit --help # detailed help
+bin/qunit path/to/test-file.js  # Run all tests in file
+bin/qunit path/to/tests/directory # Run all tests in directory
 
 # Linting
 bin/lint path/to/file path/to/another/file
@@ -88,7 +73,7 @@ ALWAYS lint any changes you make
 
 ## Database & Performance
 - ActiveRecord: use `includes()`/`preload()` (N+1), `find_each()`/`in_batches()` (large sets), `update_all`/`delete_all` (bulk), `exists?` over `present?`
-- Migrations: rollback logic, `algorithm: :concurrently` for large tables, deprecate before removing columns
+- Migrations: rollback logic, `algorithm: :concurrently` for large tables, deprecate before removing columns, use `bin/rails generate migration` for new migrations
 - Queries: use `explain`, specify columns, strategic indexing, `counter_cache` for counts
 
 ## HTTP Response Codes

@@ -33,6 +33,16 @@ RSpec.describe Sidekiq::SuppressUserEmailErrors do
           end
         end
       end
+
+      context "when retry_count is nil" do
+        it "does not wrap the exception, allowing normal error logging" do
+          job = { "class" => "Jobs::UserEmail", "retry_count" => nil }
+
+          expect do
+            middleware.call(worker, job, queue) { raise StandardError, "Email send failed" }
+          end.to raise_error(StandardError, "Email send failed")
+        end
+      end
     end
 
     context "with non-UserEmail jobs" do

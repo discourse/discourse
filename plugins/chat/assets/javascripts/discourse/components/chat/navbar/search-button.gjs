@@ -4,7 +4,7 @@ const SearchButton = <template>
   <DButton
     @icon="magnifying-glass"
     @route="chat.search"
-    class="btn-transparent"
+    class="btn-transparent chat-channel-search-btn"
   />
 </template>;
 

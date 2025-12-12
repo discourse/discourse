@@ -7,10 +7,9 @@ import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-import DecoratedHtml from "./decorated-html";
+import DecoratedHtml, { applyHtmlDecorators } from "./decorated-html";
 
 export default class DiscourseBanner extends Component {
-  @service appEvents;
   @service currentUser;
   @service keyValueStore;
   @service site;
@@ -50,11 +49,7 @@ export default class DiscourseBanner extends Component {
 
   @bind
   decorateContent(element, helper) {
-    this.appEvents.trigger(
-      "decorate-non-stream-cooked-element",
-      element,
-      helper
-    );
+    applyHtmlDecorators(element, helper);
   }
 
   @action

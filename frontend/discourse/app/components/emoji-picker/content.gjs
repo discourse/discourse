@@ -19,10 +19,7 @@ import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
-import {
-  disableBodyScroll,
-  enableBodyScroll,
-} from "discourse/lib/body-scroll-lock";
+import { lock, unlock } from "discourse/lib/body-scroll-lock";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
@@ -56,6 +53,7 @@ const tonableEmojiUrl = (emoji, scale) => {
 
 export default class EmojiPicker extends Component {
   @service emojiStore;
+  @service capabilities;
   @service site;
 
   @tracked isFiltering = false;
@@ -72,22 +70,33 @@ export default class EmojiPicker extends Component {
   scrollableNode;
 
   setupSectionsNavScroll = modifierFn((element) => {
-    disableBodyScroll(element);
+    if (!this.capabilities.isIOS || this.capabilities.isIpadOS) {
+      return;
+    }
+
+    lock(element);
 
     return () => {
-      enableBodyScroll(element);
+      unlock(element);
     };
   });
 
   scrollListener = modifierFn((element) => {
     this.scrollableNode = element;
-    disableBodyScroll(element);
+
+    if (this.capabilities.isIOS && !this.capabilities.isIpadOS) {
+      lock(element);
+    }
+
     element.addEventListener("scroll", this._handleScroll);
 
     return () => {
       this.scrollableNode = null;
       element.removeEventListener("scroll", this._handleScroll);
-      enableBodyScroll(element);
+
+      if (this.capabilities.isIOS && !this.capabilities.isIpadOS) {
+        unlock(element);
+      }
     };
   });
 

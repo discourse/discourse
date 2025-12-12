@@ -396,7 +396,6 @@ lv:
       title: "Pārskats"
       topic: "Tēma:"
       filtered_topic: "Jūs esat filtrējis līdz pārskatāmam saturam vienā tēmā."
-      filtered_user: "Lietotājs"
       show_all_topics: "rādīt visas tēmas"
       deleted_post: "(ieraksts dzēsts)"
       deleted_user: "(lietotājs dzēsts)"
@@ -853,7 +852,6 @@ lv:
         week: "nedēļa"
         month: "mēnesis"
     ip_lookup:
-      title: IP adreses meklēšana
       hostname: Resursdatora nosaukums
       location: Atrašanās vieta
       location_not_found: (nezināms)
@@ -1728,6 +1726,7 @@ lv:
         reply: Atbilde
         edit: Labot
       ignore: "Ignorēt"
+      image: "attēls"
     notifications:
       title: "paziņojumi par @vārda pieminēšanu, atbildēm uz jūsu ierakstiem un tēmām, ziņām, utt."
       none: "Pašlaik neizdodas ielādēt paziņojumus."
@@ -1876,6 +1875,10 @@ lv:
         unlist_topics: "Izņemt no sarakstiem tēmas"
         relist_topics: "Atkal padarīt tēmas redzamas sarakstiem"
         delete: "Dzēst tēmas"
+        delete_topics_count:
+          zero: "Dzēst tēmas"
+          one: "Dzēst tēmu"
+          other: "Dzēst tēmas"
         dismiss: "Nerādīt"
         dismiss_read: "Nerādīt visu neizlasīto"
         dismiss_button: "Nerādīt..."
@@ -2343,16 +2346,10 @@ lv:
       tag_groups_placeholder: "(Pēc izvēles) atļauto tagu grupu saraksts"
       required_tag_group:
         delete: "Dzēst"
-      delete: "Dzēst sadaļu"
-      create: "Jauna sadaļa"
       create_long: "Izveidot jaunu sadaļu"
-      save: "Saglabāt sadaļu"
       creation_error: Izveidojot šo sadaļu, notika kļūda.
       save_error: Saglabājot šo sadaļu, notika kļūda.
-      name: "Sadaļas nosaukums"
       description: "Apraksts"
-      logo: "Sadaļas logo attēls"
-      background_image: "Sadaļas fona attēls"
       background_color: "Krāsa"
       styles:
         icon: "Ikona"
@@ -2364,9 +2361,7 @@ lv:
       color_placeholder: "Jebkura interneta krāsa"
       delete_confirm: "Vai tiešām vēlies dzēst šo kategoriju?"
       delete_error: "Dzēšot šo sadaļu, notika kļūda."
-      list: "Uzskaitīt sadaļas"
       no_description: "Lūdzu, pievieno aprakstu šai sadaļai."
-      change_in_category_topic: "Rediģēt aprakstu"
       already_used: "Šī krāsa ir izmantota citai sadaļai"
       security: "Drošība"
       permissions:
@@ -2381,15 +2376,9 @@ lv:
       show_subcategory_list: "Rādīt apakšsadaļu sarakstu virs tēmām šai sadaļā."
       num_featured_topics: "Sadaļu lapā parādīto tēmu skaits:"
       subcategory_list_style: "Apakšsadaļu saraksta stils:"
-      sort_order: "Kārtot tēmu sarakstu pēc:"
-      default_view: "Noklusējuma tēmu saraksts:"
-      default_top_period: "Noklusējuma topa periods:"
       allow_badges_label: "Atļaut apbalvot ar žetoniem šai sadaļā"
-      edit_permissions: "Mainīt atļaujas"
       review_group_name: "grupas nosaukums"
       this_year: "šogad"
-      default_position: "Noklusētā pozīcija"
-      parent: "Vecāksadaļa"
       notifications:
         watching:
           title: "Novērošana"
@@ -2411,7 +2400,6 @@ lv:
       sort_options:
         default: "noklusējuma"
         likes: "Atzinības"
-        op_likes: "Oriģinālā ieraksta atzinības"
         views: "Skatījumi"
         posts: "Ieraksti"
         activity: "Aktivitāte"
@@ -2591,8 +2579,6 @@ lv:
       top:
         title: "Populārākās"
         help: "visaktīvākās tēmas pēdējā gada, mēneša, nedēļas vai dienas laikā"
-        all:
-          title: "Visa laika"
         yearly:
           title: "Gada"
         quarterly:
@@ -2603,7 +2589,6 @@ lv:
           title: "Nedēļas"
         daily:
           title: "Dienas"
-        all_time: "Visa laika"
         this_year: "Gada"
         this_quarter: "Ceturkšņa"
         this_month: "Mēneša"
@@ -2727,12 +2712,9 @@ lv:
         muted:
           title: "Klusināts"
       groups:
-        title: "Tagu grupas"
-        new: "Jauna grupa"
         tags_label: "Tagi šai grupā"
         parent_tag_label: "Vecāktags"
         one_per_topic_label: "No šīs grupas atļaut tikai vienu tagu vienā tēmā"
-        new_name: "Jauna tagu grupa"
         name_placeholder: "Vārds"
         save: "Saglabāt"
         delete: "Dzēst"
@@ -2880,6 +2862,9 @@ lv:
         name: "Vārds"
         enabled: "Ieslēgts"
         preview: "Priekšskatījums"
+        enabled_for_options:
+          everyone: "Ikviens"
+          staff: "Tikai darbiniekiem"
         impact_roles:
           admins: "Administratori"
           moderators: "Moderātori"
@@ -2902,6 +2887,8 @@ lv:
           sub_pages:
             common_settings:
               title: "Iestatījumi"
+        discourse_id:
+          learn_more: "Uzzināt vairāk"
         logo:
           form:
             mobile: "Mobilais"
@@ -2909,6 +2896,12 @@ lv:
         fonts:
           backfill_modal:
             modal_yes: "Jā"
+        welcome_banner:
+          form:
+            location:
+              label: "Atrašanās vieta"
+            header_anonymous:
+              placeholder: "Laipni lūdzam %{site_name}!"
         navigation:
           title: "Pārvietošanās"
         notifications:
@@ -3519,7 +3512,6 @@ lv:
         form:
           add: "Pievienot"
           success: "Veiksmīgi"
-          upload_successful: "Augšupielāde ir veiksmīga. Vārdi ir pievienoti."
           html_label: "HTML"
       form_templates:
         nav_title: "Veidnes"
@@ -3932,41 +3924,3 @@ lv:
         modal:
           categories: "Sadaļas"
           topics: "Tēmas"
-  wizard_js:
-    wizard:
-      back: "Atpakaļ"
-      next: "Nākamais"
-      step-text: "Solis"
-      step: "%{current} no %{total}"
-      upload_error: "Atvainojiet, augšuplādējot šo failu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
-      invites:
-        add_user: "Pievienot"
-        none_added: "Neesi nevienu uzaicinājis. Droši zini ka vēlies turpināt?"
-        roles:
-          admin: "Administrators"
-          moderator: "Moderātors"
-          regular: "Lietotājs"
-      homepage_choices:
-        style_type:
-          categories: "sadaļa"
-          topics: "tēmas"
-      top_menu_items:
-        new: "jauns"
-        unread: "Nelasīts"
-        top: "Populārākās"
-        latest: "Pēdējais"
-        categories: "Sadaļas"
-        unseen: "Neredzēts"
-        read: "Lasīts"
-        bookmarks: "Grāmatzīmes"
-      previews:
-        share_button: "Dalīties"
-        reply_button: "Atbilde"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "visas sadaļas"
-        table_headers:
-          topic: "Tēmas"
-          replies: "Atbildes"
-          views: "Skatījumi"
-          activity: "Aktivitāte"

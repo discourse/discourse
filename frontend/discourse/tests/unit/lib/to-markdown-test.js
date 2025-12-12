@@ -189,7 +189,7 @@ module("Unit | Utility | to-markdown", function (hooks) {
     html = `<img src="${url}" width="100" height="50" title="some title" data-base62-sha1="${base62SHA1}">`;
     assert.strictEqual(
       toMarkdown(html),
-      `![|100x50](upload://${base62SHA1} "some title")`
+      `![|100x50](upload://${base62SHA1}.png "some title")`
     );
 
     html = `<div><span><img src="${url}" alt="description" width="50" height="100" /></span></div>`;
@@ -437,7 +437,7 @@ helloWorld();</code>consectetur.`;
     <span class="filename">sherlock3_sig.jpg</span><span class="informations">5496×3664 2 MB</span><span class="expand"></span>
     </div></a>
     `;
-    markdown = `![sherlock3_sig.jpg|689x459](upload://1frsimI7TOtFJyD2LLyKSHM8JWe)`;
+    markdown = `![sherlock3_sig.jpg|689x459](upload://1frsimI7TOtFJyD2LLyKSHM8JWe.jpeg)`;
 
     assert.strictEqual(toMarkdown(html), markdown);
   });

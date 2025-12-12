@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import { underscore } from "@ember/string";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
@@ -29,11 +30,11 @@ export default class EditCategoryTabsController extends Controller {
   @service router;
 
   @tracked breadcrumbCategories = this.site.get("categoriesList");
+  @trackedArray panels = [];
 
   selectedTab = "general";
   saving = false;
   deleting = false;
-  panels = [];
   showTooltip = false;
   createdCategory = false;
   expandedMenu = false;
@@ -121,17 +122,18 @@ export default class EditCategoryTabsController extends Controller {
     this.model
       .save()
       .then((result) => {
+        const updatedModel = this.site.updateCategory(result.category);
+        updatedModel.setupGroupsAndPermissions();
+
         if (!this.model.id) {
-          const updatedModel = this.site.updateCategory(result.category);
-          updatedModel.setupGroupsAndPermissions();
           this.router.transitionTo(
             "editCategory",
             Category.slugFor(updatedModel)
           );
         }
-        // force a reload of the category list to track changes to style type
+        // ensure breadcrumbs contain the updated category model
         this.breadcrumbCategories = this.site.categoriesList.map((c) =>
-          c.id === this.model.id ? this.model : c
+          c.id === this.model.id ? updatedModel : c
         );
       })
       .catch((error) => {

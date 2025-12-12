@@ -5,6 +5,7 @@ const EmojiList = <template>
     @setting={{@setting}}
     @values={{@value}}
     @setValidationMessage={{@setValidationMessage}}
+    @changeValueCallback={{@changeValueCallback}}
   />
 </template>;
 

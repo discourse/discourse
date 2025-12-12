@@ -59,8 +59,6 @@ nl:
           title: "Navigatie gestapeld"
         categories_list:
           title: "Categorieënlijst"
-        topic_link:
-          title: "Topiclink"
         topic_list_item:
           title: "Topiclijstitem"
         topic_statuses:

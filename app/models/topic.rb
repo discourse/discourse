@@ -16,11 +16,6 @@ class Topic < ActiveRecord::Base
 
   EXTERNAL_ID_MAX_LENGTH = 50
 
-  self.ignored_columns = [
-    "avg_time", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
-    "image_url", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
-  ]
-
   def_delegator :featured_users, :user_ids, :featured_user_ids
   def_delegator :featured_users, :choose, :feature_topic_users
 
@@ -366,7 +361,7 @@ class Topic < ActiveRecord::Base
   scope :exclude_scheduled_bump_topics, -> { where.not(id: TopicTimer.scheduled_bump_topics) }
 
   scope :secured,
-        lambda { |guardian = nil|
+        lambda { |guardian = nil, include_uncategorized: true|
           ids = guardian.secure_category_ids if guardian
 
           # Query conditions
@@ -377,8 +372,10 @@ class Topic < ActiveRecord::Base
               ["NOT read_restricted"]
             end
 
+          uncategorized_condition = "topics.category_id IS NULL OR" if include_uncategorized
+
           where(
-            "topics.category_id IS NULL OR topics.category_id IN (SELECT id FROM categories WHERE #{condition[0]})",
+            "#{uncategorized_condition} topics.category_id IN (SELECT id FROM categories WHERE #{condition[0]})",
             condition[1],
           )
         }
@@ -1154,6 +1151,7 @@ class Topic < ActiveRecord::Base
         topic_id: self.id,
         silent: opts[:silent],
         skip_validations: true,
+        skip_guardian: opts[:skip_guardian],
         custom_fields: opts[:custom_fields],
         import_mode: opts[:import_mode],
       )
@@ -1212,13 +1210,14 @@ class Topic < ActiveRecord::Base
       topic_user = topic_allowed_users.find_by(user_id: user.id)
 
       if topic_user
+        topic_user.destroy
+
         if user.id == removed_by&.id
-          add_small_action(removed_by, "user_left", user.username)
+          add_small_action(removed_by, "user_left", user.username, skip_guardian: true)
         else
-          add_small_action(removed_by, "removed_user", user.username)
+          add_small_action(removed_by, "removed_user", user.username, skip_guardian: true)
         end
 
-        topic_user.destroy
         MessageBus.publish("/topic/#{id}", { type: "remove_allowed_user" }, user_ids: [user.id])
         return true
       end

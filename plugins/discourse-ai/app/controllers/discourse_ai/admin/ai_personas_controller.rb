@@ -258,7 +258,7 @@ module DiscourseAi
             :allow_chat_direct_messages,
             :allow_topic_mentions,
             :allow_personal_messages,
-            :tool_details,
+            :show_thinking,
             :forced_tool_count,
             :force_default_llm,
             allowed_group_ids: [],
@@ -355,7 +355,7 @@ module DiscourseAi
           },
           allow_personal_messages: {
           },
-          tool_details: {
+          show_thinking: {
             type: :large_text,
           },
           forced_tool_count: {

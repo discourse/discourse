@@ -22,11 +22,6 @@ export default class Flag {
     flagModal.args.closeModal();
     postAction
       .act(flagModal.args.model.flagModel, opts)
-      .then(() => {
-        flagModal.appEvents.trigger("post-stream:refresh", {
-          id: flagModal.args.model.flagModel.id,
-        });
-      })
       .catch((error) => popupAjaxError(error));
   }
 }

@@ -2,9 +2,9 @@
 
 class PostLocalizationCreator
   def self.create(post_id:, locale:, raw:, user:)
-    Guardian.new(user).ensure_can_localize_content!
-
     post = Post.find_by(id: post_id)
+
+    Guardian.new(user).ensure_can_localize_post!(post)
     raise Discourse::NotFound unless post
 
     localization =

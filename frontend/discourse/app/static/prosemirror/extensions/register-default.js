@@ -5,6 +5,7 @@ import bulletList from "./bullet-list";
 import code from "./code";
 import codeBlock from "./code-block";
 import emoji from "./emoji";
+import grid from "./grid";
 import hardBreak from "./hard-break";
 import hashtag from "./hashtag";
 import heading from "./heading";
@@ -17,6 +18,7 @@ import markdownPaste from "./markdown-paste";
 import mention from "./mention";
 import onebox from "./onebox";
 import orderedList from "./ordered-list";
+import overrideDragGhost from "./override-drag-ghost";
 import quote from "./quote";
 import strikethrough from "./strikethrough";
 import table from "./table";
@@ -54,7 +56,9 @@ const defaultExtensions = [
   orderedList,
   bulletList,
   trailingInlineSpace,
+  overrideDragGhost,
   hardBreak,
+  grid,
 ];
 
 defaultExtensions.forEach(registerRichEditorExtension);

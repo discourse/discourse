@@ -7,6 +7,7 @@ import { and, reads } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -19,6 +20,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import discourseComputed from "discourse/lib/decorators";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import { i18n } from "discourse-i18n";
@@ -93,7 +95,9 @@ export default class TagInfo extends Component {
         this.set("tagInfo", result);
         this.set(
           "tagInfo.synonyms",
-          result.synonyms.map((s) => this.store.createRecord("tag", s))
+          new TrackedArray(
+            result.synonyms.map((s) => this.store.createRecord("tag", s))
+          )
         );
       })
       .finally(() => this.set("loading", false))
@@ -120,7 +124,7 @@ export default class TagInfo extends Component {
     ajax(`/tag/${this.tagInfo.name}/synonyms/${tag.id}`, {
       type: "DELETE",
     })
-      .then(() => this.tagInfo.synonyms.removeObject(tag))
+      .then(() => removeValueFromArray(this.tagInfo.synonyms, tag))
       .catch(popupAjaxError);
   }
 
@@ -135,7 +139,7 @@ export default class TagInfo extends Component {
       didConfirm: () => {
         return tag
           .destroyRecord()
-          .then(() => this.tagInfo.synonyms.removeObject(tag))
+          .then(() => removeValueFromArray(this.tagInfo.synonyms, tag))
           .catch(popupAjaxError);
       },
     });

@@ -70,6 +70,7 @@ sw:
         summary: "Muhtasari"
         username: "Jina la mtumiaji"
         total_requests: "Jumla ya Maombi"
+        total: "Jumla"
       ai_persona:
         back: "Iliyopita"
         name: "Jina"
@@ -126,6 +127,8 @@ sw:
           close: "Funga"
           copy: "Nakili"
           cancel: "Batili"
+        thumbnail_suggestions:
+          try_again: "Jaribu Tena"
         image_caption:
           save_caption: "Hifadhi"
       embeddings:

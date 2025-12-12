@@ -100,35 +100,21 @@ module Email
     end
 
     def subject
-      if @opts[:template] &&
-           TranslationOverride.exists?(
-             locale: I18n.locale,
-             translation_key: "#{@opts[:template]}.subject_template",
-           )
+      has_override =
+        TranslationOverride.exists?(
+          locale: I18n.locale,
+          translation_key: "#{@opts[:template]}.subject_template",
+        )
+
+      if @opts[:template] && has_override
         augmented_template_args =
           @template_args.merge(
-            {
-              site_name: @template_args[:email_prefix],
-              optional_re: @opts[:add_re_to_subject] ? I18n.t("subject_re") : "",
-              optional_pm: @opts[:private_reply] ? @template_args[:subject_pm] : "",
-              optional_cat:
-                (
-                  if @template_args[:show_category_in_subject]
-                    "[#{@template_args[:show_category_in_subject]}] "
-                  else
-                    ""
-                  end
-                ),
-              optional_tags:
-                (
-                  if @template_args[:show_tags_in_subject]
-                    "#{@template_args[:show_tags_in_subject]} "
-                  else
-                    ""
-                  end
-                ),
-              topic_title: @template_args[:topic_title] ? @template_args[:topic_title] : "",
-            },
+            site_name: @template_args[:email_prefix],
+            optional_re: @opts[:add_re_to_subject] ? I18n.t("subject_re") : "",
+            optional_pm: @opts[:private_reply] ? @template_args[:subject_pm] : "",
+            optional_cat: format_category,
+            optional_tags: format_tags,
+            topic_title: @template_args[:topic_title] ? @template_args[:topic_title] : "",
           )
         subject = I18n.t("#{@opts[:template]}.subject_template", augmented_template_args)
       elsif @opts[:use_site_subject]
@@ -136,23 +122,11 @@ module Email
         subject.gsub!("%{site_name}", @template_args[:email_prefix])
         subject.gsub!("%{optional_re}", @opts[:add_re_to_subject] ? I18n.t("subject_re") : "")
         subject.gsub!("%{optional_pm}", @opts[:private_reply] ? @template_args[:subject_pm] : "")
-        subject.gsub!(
-          "%{optional_cat}",
-          (
-            if @template_args[:show_category_in_subject]
-              "[#{@template_args[:show_category_in_subject]}] "
-            else
-              ""
-            end
-          ),
-        )
-        subject.gsub!(
-          "%{optional_tags}",
-          @template_args[:show_tags_in_subject] ? "#{@template_args[:show_tags_in_subject]} " : "",
-        )
+        subject.gsub!("%{optional_cat}", format_category)
+        subject.gsub!("%{optional_tags}", format_tags)
         if @template_args[:topic_title]
           subject.gsub!("%{topic_title}", @template_args[:topic_title])
-        end # must be last for safety
+        end
       elsif @opts[:use_topic_title_subject]
         subject = @opts[:add_re_to_subject] ? I18n.t("subject_re") : ""
         subject = "#{subject}#{@template_args[:topic_title]}"
@@ -161,6 +135,7 @@ module Email
       else
         subject = @opts[:subject]
       end
+
       DiscoursePluginRegistry.apply_modifier(:message_builder_subject, subject, @opts, @to)
     end
 
@@ -211,15 +186,19 @@ module Email
       body = nil
 
       if @opts[:template]
-        template_args_to_escape = %i[topic_title inviter_name]
-
-        template_args_to_escape.each do |key|
-          next if !@template_args.key?(key)
-
-          @template_args[key] = escaped_template_arg(key)
+        %i[topic_title inviter_name].each do |key|
+          @template_args[key] = escaped_template_arg(key) if @template_args.key?(key)
         end
 
-        body = I18n.t("#{@opts[:template]}.text_body_template", template_args).dup
+        augmented_template_args =
+          @template_args.merge(
+            optional_re: "",
+            optional_pm: "",
+            optional_cat: format_category,
+            optional_tags: format_tags,
+          )
+
+        body = I18n.t("#{@opts[:template]}.text_body_template", augmented_template_args).dup
       else
         body = @opts[:body].dup
       end
@@ -383,6 +362,22 @@ module Email
       # explicitly escaped twice, as Mailers will mark the body as html_safe
       once_escaped = String.new(ERB::Util.html_escape(value))
       ERB::Util.html_escape(once_escaped)
+    end
+
+    def format_category
+      if @template_args[:show_category_in_subject]
+        "[#{@template_args[:show_category_in_subject]}] "
+      else
+        ""
+      end
+    end
+
+    def format_tags
+      if @template_args[:show_tags_in_subject]
+        "#{@template_args[:show_tags_in_subject]} "
+      else
+        ""
+      end
     end
   end
 end

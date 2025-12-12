@@ -28,6 +28,7 @@ module ::DiscourseAutomation
 
   AUTO_RESPONDER_TRIGGERED_IDS = "auto_responder_triggered_ids_json"
   USER_GROUP_MEMBERSHIP_THROUGH_BADGE_BULK_MODIFY_START_COUNT = 1000
+  REMOVE_UPLOAD_MARKUP_FROM_DELETED_POSTS_BATCH_SIZE = 1000
 
   def self.set_active_automation(id)
     Thread.current[:active_automation_id] = id
@@ -51,10 +52,12 @@ after_initialize do
     lib/discourse_automation/scripts/banner_topic
     lib/discourse_automation/scripts/close_topic
     lib/discourse_automation/scripts/flag_post_on_words
+    lib/discourse_automation/scripts/email_on_flagged_post
     lib/discourse_automation/scripts/gift_exchange
     lib/discourse_automation/scripts/group_category_notification_default
     lib/discourse_automation/scripts/pin_topic
     lib/discourse_automation/scripts/post
+    lib/discourse_automation/scripts/remove_upload_markup_from_deleted_posts
     lib/discourse_automation/scripts/topic
     lib/discourse_automation/scripts/send_pms
     lib/discourse_automation/scripts/suspend_user_by_email
@@ -69,6 +72,7 @@ after_initialize do
     lib/discourse_automation/triggers/pm_created
     lib/discourse_automation/triggers/point_in_time
     lib/discourse_automation/triggers/post_created_edited
+    lib/discourse_automation/triggers/post_flag_created
     lib/discourse_automation/triggers/recurring
     lib/discourse_automation/triggers/stalled_topic
     lib/discourse_automation/triggers/stalled_wiki
@@ -202,6 +206,10 @@ after_initialize do
 
   on(:post_edited) do |post|
     DiscourseAutomation::EventHandlers.handle_post_created_edited(post, :edit)
+  end
+
+  on(:flag_created) do |post_action|
+    DiscourseAutomation::EventHandlers.handle_post_flag_created(post_action) if post_action.post
   end
 
   on(:category_created) do |category|

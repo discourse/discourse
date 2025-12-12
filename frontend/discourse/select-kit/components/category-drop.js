@@ -13,6 +13,7 @@ import CategoryDropMoreCollection from "discourse/select-kit/components/category
 import CategoryRow from "discourse/select-kit/components/category-row";
 import ComboBoxComponent from "discourse/select-kit/components/combo-box";
 import {
+  FILTER_VISIBILITY_THRESHOLD,
   MAIN_COLLECTION,
   pluginApiIdentifiers,
   selectKitOptions,
@@ -28,7 +29,6 @@ const MORE_COLLECTION = "MORE_COLLECTION";
 @classNames("category-drop")
 @classNameBindings("noSubcategories:has-selection")
 @selectKitOptions({
-  filterable: true,
   none: "category.all",
   caretDownIcon: "caret-right",
   caretUpIcon: "caret-down",
@@ -43,14 +43,13 @@ const MORE_COLLECTION = "MORE_COLLECTION";
   headerComponent: CategoryDropHeader,
   parentCategory: false,
   allowUncategorized: "allowUncategorized",
-  shouldDisplayIcon: "shouldDisplayIcon",
+  autoFilterable: "autoFilterable",
 })
 @pluginApiIdentifiers(["category-drop"])
 export default class CategoryDrop extends ComboBoxComponent {
   @readOnly("category.id") value;
   @readOnly("categoriesWithShortcuts") content;
   @readOnly("selectKit.options.parentCategory.displayName") parentCategoryName;
-  @readOnly("selectKit.options.shouldDisplayIcon") shouldDisplayIcon;
   @setting("allow_uncategorized_topics") allowUncategorized;
 
   noCategoriesLabel = i18n("categories.no_subcategories");
@@ -88,6 +87,14 @@ export default class CategoryDrop extends ComboBoxComponent {
   @computed
   get hideParentCategory() {
     return this.options.subCategory || false;
+  }
+
+  @computed("content.length", "site.lazy_load_categories")
+  get autoFilterable() {
+    return (
+      this.site.lazy_load_categories ||
+      this.content.length >= FILTER_VISIBILITY_THRESHOLD
+    );
   }
 
   @computed("value", "selectKit.options.{subCategory,noSubcategories}")

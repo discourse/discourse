@@ -41,7 +41,6 @@ zh_CN:
       assigned_topic_to: "将话题指定给 <a href='%{path}'>%{username}</a>"
       assign_post_to: "将 #%{post_number} 指定给 %{username}"
       assign_post_to_multiple: "#%{post_number} 被分配给 %{username}"
-      assigned_to_w_ellipsis: "已指定给…"
       unassign:
         title: "取消指定"
         title_w_ellipsis: "取消指定…"

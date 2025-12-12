@@ -1,27 +1,27 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
-import { alias } from "@ember/object/computed";
 import { service } from "@ember/service";
-import discourseComputed from "discourse/lib/decorators";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 
 export default class AdminEmbeddingIndexController extends Controller {
   @service site;
   @controller adminEmbedding;
 
-  @alias("adminEmbedding.embedding") embedding;
+  get embedding() {
+    return this.adminEmbedding.embedding;
+  }
 
   get showEmbeddingCode() {
     return this.site.desktopView;
   }
 
-  @discourseComputed("embedding.base_url")
-  embeddingCode(baseUrl) {
+  get embeddingCode() {
     const html = `<div id='discourse-comments'></div>
   <meta name='discourse-username' content='DISCOURSE_USERNAME'>
 
   <script type="text/javascript">
     DiscourseEmbed = {
-      discourseUrl: '${baseUrl}/',
+      discourseUrl: '${this.embedding.base_url}/',
       discourseEmbedUrl: 'EMBED_URL',
       // className: 'CLASS_NAME',
     };
@@ -38,6 +38,6 @@ export default class AdminEmbeddingIndexController extends Controller {
 
   @action
   deleteHost(host) {
-    this.get("embedding.embeddable_hosts").removeObject(host);
+    removeValueFromArray(this.embedding.embeddable_hosts, host);
   }
 }

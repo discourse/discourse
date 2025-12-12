@@ -1,17 +1,23 @@
 # frozen_string_literal: true
 module DiscourseAi::Completions
   class OpenAiResponsesMessageProcessor
-    attr_reader :prompt_tokens, :completion_tokens, :cached_tokens
+    PROVIDER_KEY = :open_ai_responses
 
-    def initialize(partial_tool_calls: false)
+    attr_reader :prompt_tokens, :completion_tokens, :cache_read_tokens
+
+    def initialize(partial_tool_calls: false, output_thinking: false)
       @tool = nil # currently streaming ToolCall
       @tool_arguments = +""
       @prompt_tokens = nil
       @completion_tokens = nil
-      @cached_tokens = nil
+      @cache_read_tokens = nil
       @partial_tool_calls = partial_tool_calls
       @streaming_parser = nil # JsonStreamingTracker, if used
       @has_new_data = false
+      @output_thinking = output_thinking
+      @reasoning_contexts = {}
+      @pending_reasonings = []
+      @has_first_summary_part = false
     end
 
     # @param json [Hash] full JSON response from responses.create / retrieve
@@ -19,14 +25,23 @@ module DiscourseAi::Completions
     def process_message(json)
       result = []
 
+      pending_reasonings = []
+
       (json[:output] || []).each do |item|
         type = item[:type]
 
         case type
+        when "reasoning"
+          if @output_thinking
+            thinking = build_thinking_from_reasoning(item)
+            pending_reasonings << thinking
+            result << thinking
+          end
         when "function_call"
           result << build_tool_call_from_item(item)
         when "message"
           text = extract_text(item)
+          attach_message_id_to_reasonings(pending_reasonings, item[:id])
           result << text if text
         end
       end
@@ -45,18 +60,34 @@ module DiscourseAi::Completions
       when "response.output_text.delta"
         delta = json[:delta] || json["delta"]
         rval = delta if !delta.empty?
+      when "response.reasoning_summary_part.added"
+        rval = build_partial_reasoning_delta(json, prefix: "\n\n") if @has_first_summary_part
+      when "response.reasoning_summary_text.delta"
+        rval = build_partial_reasoning_delta(json)
+      when "response.reasoning_summary_part.done"
+        @has_first_summary_part = true
       when "response.output_item.added"
         item = json[:item]
-        if item && item[:type] == "function_call"
-          handle_tool_stream(:start, item) { |finished| rval = finished }
+        if item
+          if item[:type] == "function_call"
+            handle_tool_stream(:start, item) { |finished| rval = finished }
+          elsif item[:type] == "reasoning" && @output_thinking
+            register_reasoning_context(item)
+          end
         end
       when "response.function_call_arguments.delta"
         delta = json[:delta]
         handle_tool_stream(:progress, delta) { |finished| rval = finished } if delta
       when "response.output_item.done"
         item = json[:item]
-        if item && item[:type] == "function_call"
-          handle_tool_stream(:done, item) { |finished| rval = finished }
+        if item
+          if item[:type] == "function_call"
+            handle_tool_stream(:done, item) { |finished| rval = finished }
+          elsif item[:type] == "reasoning" && @output_thinking
+            return finalize_reasoning_context(item)
+          elsif item[:type] == "message"
+            attach_message_id_to_pending_stream_reasonings(item[:id])
+          end
         end
       end
 
@@ -97,6 +128,24 @@ module DiscourseAi::Completions
         .filter { |c| (c[:type] || c["type"]) == "output_text" }
         .map { |c| c[:text] || c["text"] }
         .join
+    end
+
+    def build_thinking_from_reasoning(item)
+      provider_payload = {
+        reasoning_id: item[:id],
+        encrypted_content: item[:encrypted_content],
+      }.compact
+
+      summary_text = (item.dig(:summary) || []).map { |s| s[:text].to_s }.join("\n\n")
+
+      # worth considering if we return multiple Thinking objects for each summary part?
+      Thinking.new(
+        message: summary_text,
+        partial: false,
+        provider_info: {
+          PROVIDER_KEY => provider_payload,
+        },
+      )
     end
 
     def build_tool_call_from_item(item)
@@ -154,7 +203,68 @@ module DiscourseAi::Completions
 
       @prompt_tokens ||= usage[:input_tokens] - cached_tokens
       @completion_tokens ||= usage[:output_tokens]
-      @cached_tokens ||= cached_tokens
+      @cache_read_tokens ||= cached_tokens
+    end
+
+    def build_partial_reasoning_delta(json, prefix: nil)
+      return unless @output_thinking
+
+      delta = json[:delta]
+      context = @reasoning_contexts[json[:item_id]]
+      if context
+        delta = prefix + delta.to_s if prefix
+        context[:summary] << delta.to_s
+      end
+
+      Thinking.new(message: delta, partial: true)
+    end
+
+    def register_reasoning_context(item)
+      @reasoning_contexts[item[:id]] ||= { summary: +"", encrypted_content: nil, thinking: nil }
+    end
+
+    def finalize_reasoning_context(item)
+      context = @reasoning_contexts.delete(item[:id]) || { summary: +"", thinking: nil }
+      summary = context[:summary].presence || item.dig(:summary, 0, :text).to_s || +""
+
+      thinking =
+        Thinking.new(
+          message: summary,
+          partial: false,
+          provider_info: {
+            PROVIDER_KEY => {
+              reasoning_id: item[:id],
+              encrypted_content: item[:encrypted_content],
+            }.compact,
+          },
+        )
+
+      context[:thinking] = thinking
+      @pending_reasonings << context
+      thinking
+    end
+
+    def attach_message_id_to_reasonings(queue, message_id)
+      return if queue.empty? || message_id.blank?
+
+      queue.each { |thinking| assign_message_id(thinking, message_id) }
+
+      queue.clear
+    end
+
+    def attach_message_id_to_pending_stream_reasonings(message_id)
+      return if @pending_reasonings.empty? || message_id.blank?
+
+      while (context = @pending_reasonings.first)
+        break unless context[:thinking]
+        assign_message_id(context[:thinking], message_id)
+        @pending_reasonings.shift
+      end
+    end
+
+    def assign_message_id(thinking, message_id)
+      data = thinking.provider_info[PROVIDER_KEY] ||= {}
+      data[:next_message_id] = message_id
     end
   end
 end

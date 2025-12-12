@@ -8,6 +8,15 @@ import StyleguideExample from "../../styleguide-example";
 export default class MultiSelect extends Component {
   @tracked selection = [{ id: 1, name: "foo" }];
 
+  multiSelectCode = `<DMultiSelect
+  @loadFn={{this.loadDummyData}}
+  @onChange={{this.onChange}}
+  @selection={{this.selection}}
+>
+  <:result as |result|>{{result.name}}</:result>
+  <:selection as |result|>{{result.name}}</:selection>
+</DMultiSelect>`;
+
   @action
   onChange(selection) {
     this.selection = selection;
@@ -27,7 +36,7 @@ export default class MultiSelect extends Component {
   }
 
   <template>
-    <StyleguideExample @title="<DMultiSelect />">
+    <StyleguideExample @title="<DMultiSelect />" @code={{this.multiSelectCode}}>
       <StyleguideComponent @tag="d-multi-select component">
         <:sample>
           <DMultiSelect

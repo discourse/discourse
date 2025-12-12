@@ -37,6 +37,9 @@ acceptance("Local Dates - quoting", function (needs) {
     server.get("/t/280/:post_number.json", () => {
       helper.response(topicResponse);
     });
+    server.get("/drafts/topic_280.json", () => {
+      return helper.response({});
+    });
   });
 
   test("quoting single local dates with basic options", async function (assert) {
@@ -72,6 +75,9 @@ acceptance("Local Dates - quoting range", function (needs) {
       </span></p></div>`;
 
     server.get("/t/280.json", () => helper.response(topicResponse));
+    server.get("/drafts/topic_280.json", () => {
+      return helper.response({});
+    });
     server.get("/t/280/:post_number.json", () => {
       helper.response(topicResponse);
     });
@@ -113,6 +119,9 @@ acceptance(
       </span></p></div>`;
 
       server.get("/t/280.json", () => helper.response(topicResponse));
+      server.get("/drafts/topic_280.json", () => {
+        return helper.response({});
+      });
       server.get("/t/280/:post_number.json", () => {
         helper.response(topicResponse);
       });

@@ -1,0 +1,24 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+be:
+  js:
+    discourse_rewind:
+      reports:
+        reading_time:
+          title: чытанне часу
+        chat_usage:
+          messages: паведамленні
+          you: Вы
+        invites:
+          title: Запрашэнні
+          invitee_posts: паведамленняў створаны
+          invitee_likes: упадабаныя
+        new_user_interactions:
+          likes_given: упадабаныя
+          mentions: Згадкі
+        writing_analysis:
+          menu_other: Іншае

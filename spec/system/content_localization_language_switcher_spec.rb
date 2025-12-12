@@ -2,6 +2,7 @@
 
 describe "Content localization language switcher", type: :system do
   SWITCHER_SELECTOR = "button[data-identifier='language-switcher']"
+  TOGGLE_LOCALIZE_BUTTON_SELECTOR = "button.btn-toggle-localized-content"
 
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:switcher) { PageObjects::Components::DMenu.new(SWITCHER_SELECTOR) }
@@ -41,10 +42,16 @@ describe "Content localization language switcher", type: :system do
     )
   end
 
-  it "only shows the language switcher based on what is in target languages" do
+  it "only shows the language switcher based on enabled state and what is in target languages" do
+    SiteSetting.content_localization_enabled = false
     SiteSetting.content_localization_language_switcher = "anonymous"
-    visit("/")
 
+    visit("/")
+    expect(page).to have_no_css(SWITCHER_SELECTOR)
+
+    SiteSetting.content_localization_enabled = true
+
+    page.refresh
     switcher.expand
     expect(switcher).to have_content("English (US)")
     expect(switcher).to have_content("Japanese (日本語)")
@@ -111,6 +118,34 @@ describe "Content localization language switcher", type: :system do
     expect(topic_list).to have_content("Estrategias de vida de El arte de la guerra")
     I18n.with_locale("es") do
       expect(page.find("#navigation-bar")).to have_content(I18n.t("js.filters.latest.title"))
+    end
+  end
+
+  it "resets localized content toggle after changing languages" do
+    SiteSetting.content_localization_language_switcher = "all"
+
+    visit("/t/#{topic.id}")
+
+    select_language("ja")
+
+    expect(topic_list).to have_content("孫子兵法からの人生戦略")
+    expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
+      I18n.t("js.content_localization.toggle_localized.translated"),
+    )
+
+    page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+    expect(topic_list).to have_content("Life strategies from The Art of War")
+    expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
+      I18n.t("js.content_localization.toggle_localized.not_translated"),
+    )
+
+    select_language("es")
+
+    expect(topic_list).to have_content("Estrategias de vida de El arte de la guerra")
+    I18n.with_locale("es") do
+      expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
+        I18n.t("js.content_localization.toggle_localized.translated"),
+      )
     end
   end
 

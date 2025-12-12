@@ -148,7 +148,13 @@ export default class BulkSelectTopicsDropdown extends Component {
       },
     ];
 
-    return [...options, ..._customButtons].filter(({ visible }) => {
+    const excludedButtonIds = this.args.excludedButtonIds || [];
+    const baseOptions = [...options, ..._customButtons].filter(
+      (button) => !excludedButtonIds.includes(button.id)
+    );
+    const extraButtons = this.args.extraButtons || [];
+
+    return [...baseOptions, ...extraButtons].filter(({ visible }) => {
       if (visible) {
         return visible({
           topics: this.args.bulkSelectHelper.selected,
@@ -287,6 +293,11 @@ export default class BulkSelectTopicsDropdown extends Component {
               setComponent: _customOnSelection[actionId].setComponent,
             }
           );
+          return;
+        }
+
+        if (this.args.onAction) {
+          this.args.onAction(actionId);
         }
     }
   }

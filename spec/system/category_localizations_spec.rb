@@ -205,7 +205,7 @@ describe "Category Localizations", type: :system do
           expect(category_list.category_box(category)).to have_text("Solicitudes")
 
           category_list.category_box(category).click
-          category_dropdown = get_category_dropdown("1")
+          category_dropdown = get_category_dropdown(1)
 
           expect(category_dropdown).to have_selected_name("Solicitudes")
           expect(sidebar).to have_section_link("Solicitudes")
@@ -221,16 +221,13 @@ describe "Category Localizations", type: :system do
           switcher.expand
           switcher.option("[data-menu-option-id='es']").click
 
-          category_dropdown = get_category_dropdown("1")
+          category_dropdown = get_category_dropdown(1)
 
           expect(category_dropdown.component).to have_text(
             I18n.t("js.categories.categories_label", locale: "es"),
           )
           category_dropdown.component.click
-          expect(category_dropdown.component).to have_css(".is-expanded")
-          expect(category_dropdown.component.find(".select-kit-body")).to have_css(
-            ".select-kit-collection",
-          )
+          expect(category_dropdown).to be_expanded
           expect(page.find(".select-kit-collection div[data-name='Solicitudes']")).to have_text(
             "Solicitudes",
           )
@@ -241,7 +238,7 @@ describe "Category Localizations", type: :system do
         it_behaves_like "navigating the site via various category links"
       end
 
-      describe "logged in users" do
+      describe "for logged in users" do
         shared_examples_for "editing category settings" do
           it "shows the original category name in the category edit page" do
             sign_in(admin)
@@ -261,7 +258,7 @@ describe "Category Localizations", type: :system do
           end
         end
 
-        describe "lazy loaded categories" do
+        describe "with lazy loaded categories" do
           before do
             SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
             sign_in(admin)
@@ -272,7 +269,7 @@ describe "Category Localizations", type: :system do
           it_behaves_like "editing category settings"
         end
 
-        describe "no lazy loaded categories" do
+        describe "without lazy loaded categories" do
           before do
             SiteSetting.lazy_load_categories_groups = ""
             sign_in(admin)

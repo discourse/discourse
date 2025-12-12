@@ -122,11 +122,13 @@ id:
         last_seven_days: "7 hari terakhir"
         enable: "Aktifkan"
         test_modal:
+          system_prompt: "Perintah Sistem"
           spam: "Spam"
       usage:
         summary: "Ringkasan"
         model: "Model"
         username: "Nama Pengguna"
+        total: "Jumlah"
         periods:
           last_day: "24 jam terakhir"
       ai_persona:
@@ -207,6 +209,7 @@ id:
         thumbnail_suggestions:
           select: "Pilih"
           selected: "Dipilih"
+          try_again: "Coba Lagi"
         image_caption:
           button_label: "Keterangan dengan AI"
           generating: "Menghasilkan keterangan..."

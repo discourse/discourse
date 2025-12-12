@@ -70,6 +70,11 @@ class UserAnonymizer
       @user.user_associated_accounts.destroy_all
       @user.api_keys.destroy_all
       @user.user_api_keys.destroy_all
+      @user.user_auth_tokens.destroy_all
+      @user.user_second_factors.destroy_all
+      UserSecurityKey.where(user_id: @user.id).delete_all
+      @user.push_subscriptions.destroy_all
+      PostReplyKey.where(user_id: @user.id).delete_all
       @user.user_emails.secondary.destroy_all
 
       @user_history = log_action

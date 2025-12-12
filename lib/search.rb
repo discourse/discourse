@@ -472,6 +472,8 @@ class Search
 
   advanced_filter(/\Ain:first|^f\z/i) { |posts| posts.where("posts.post_number = 1") }
 
+  advanced_filter(/\Ain:replies\z/i) { |posts| posts.where("posts.post_number > 1") }
+
   advanced_filter(/\Ain:pinned\z/i) { |posts| posts.where.not(topics: { pinned_at: nil }) }
 
   advanced_filter(/\Ain:wiki\z/i) { |posts, match| posts.where(wiki: true) }
@@ -842,13 +844,17 @@ class Search
     type_filter: "all_topics"
   )
     if @order == :latest
-      if aggregate_search
+      if @in_title
+        posts = posts.order("topics.bumped_at DESC")
+      elsif aggregate_search
         posts = posts.order("MAX(posts.created_at) DESC")
       else
         posts = posts.reorder("posts.created_at DESC")
       end
     elsif @order == :oldest
-      if aggregate_search
+      if @in_title
+        posts = posts.order("topics.bumped_at ASC")
+      elsif aggregate_search
         posts = posts.order("MAX(posts.created_at) ASC")
       else
         posts = posts.reorder("posts.created_at ASC")
@@ -983,6 +989,9 @@ class Search
           nil
         elsif word =~ /\Ain:all\z/i
           @search_all_topics = true
+          nil
+        elsif word =~ /\Ain:all-posts\z/i
+          @all_posts = true
           nil
         elsif word =~ /\Ain:personal\z/i
           @search_pms = true
@@ -1542,6 +1551,9 @@ class Search
           @search_context.id,
         )
 
+      posts.each { |post| @results.add(post) }
+    elsif @all_posts
+      posts = posts_scope(posts_eager_loads(posts_query(limit)))
       posts.each { |post| @results.add(post) }
     else
       aggregate_search

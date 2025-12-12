@@ -843,13 +843,7 @@ sw:
     tl3_promotion_min_duration: "Siku ambazo lazima zipite kwa mtumiaji aliyepanda cheo kufika kiwango cha 3 cha uaminifu kabla hajarudishwa kwenye kiwango cha 2 cha uaminifu."
     tl3_requires_likes_given: "Kiwango cha chini cha upendo unaotakiwa kutolewa ndani ya siku (tl3 time period) ili mtu afuzu kufika kiwango cha 3 cha uaminifu."
     tl3_requires_likes_received: "Kiwango cha chini cha upendo unaotakiwa kupokelewa ndani ya siku (tl3 time period) ili mtu afuzu kufika kiwango cha 3 cha uaminifu."
-    min_trust_to_create_topic: "kiwango cha chini cha uaminifu kinachohitajika kabla ya kutengeneza mada mpya."
     allow_flagging_staff: "Kama ikiruhusiwa, watumiaji wanaweza kuweka bendera kwenye machapisho kutoka kwenye akaunti za wasaidizi."
-    min_trust_to_edit_wiki_post: "Kiwango cha chini cha uaminifu kinachohitajika kuhariri machapisho ambayo ni wiki."
-    min_trust_to_edit_post: "Kiwango cha chini cha uaminifu kinachohitajika kabla ya kuhariri machapisho."
-    min_trust_to_allow_self_wiki: "Kiwango cha chini cha uaminifu kinachohitajika na mtumiaji kuweza kufanya chapisho lake liwe wiki."
-    min_trust_to_flag_posts: "Kiwango cha chini cha uaminifu kinachohitajika kabla ya kuweka bendera kwenye machapisho."
-    min_trust_to_post_links: "Kiwango cha chini cha uaminifu kinachohitajika kabla ya kuweka viungo kwenye machapisho."
     newuser_max_links: "Viungo vingapi mtumiaji mpya anaweza kuongeza kwenye chapisho."
     newuser_max_attachments: "Viambatanisho vingapi mtumiaji mpya anaweza kuweka kwenye chapisho."
     newuser_max_mentions_per_post: "Namba ya taarifa za @jina mtumiaji mpya anaweza kutumia kwenye chapisho."
@@ -900,11 +894,9 @@ sw:
     default_categories_watching: "Orodha ya kategoria zinazoangaliwa kama chaguo-msingi."
     default_categories_tracking: "Orodha ya kategoria zinazofuatiliwa kama chaguo-msingi."
     default_categories_muted: "Orodha ya kategoria zinazonyamazishwa kama chaguo-msingi."
-    min_trust_to_create_tag: "kiwango cha chini cha uaminifu kinachohitajika kutengeneza lebo."
     max_tags_per_topic: "Kiwango cha juu cha lebo ambazo zinaweza kuwekwa kwenye mada."
     max_tag_length: "kiwango cha juu cha herufi zinazoweza kutumika kwenye lebo."
     max_tag_search_results: "Utafutaji wa lebo, utaonyesha kiwango hiki cha juu cha majibu."
-    min_trust_level_to_tag_topics: "Kiwango cha chini kabisa kinachohitajika kulebo mada"
     suppress_overlapping_tags_in_list: "Kama lebo zina maneno ambayo yapo kwenye vichwa vya mada, usionyeshe lebo"
     errors:
       invalid_email: "Barua pepe batili."
@@ -1349,6 +1341,9 @@ sw:
 
         Kwa mwongozo zaidi, tembelea [mwongozo wa jukwaa](%{base_url}/mwongozo).
     user_automatically_silenced:
+      title: "Mtumiaji Amenyamazishwa"
+      subject_template: "Mtumiaji mpya %{username} amenyamazishwa na bendera za jumuia"
+    user_automatically_silenced_with_reason:
       title: "Mtumiaji Amenyamazishwa"
       subject_template: "Mtumiaji mpya %{username} amenyamazishwa na bendera za jumuia"
     spam_post_blocked:
@@ -1806,8 +1801,6 @@ sw:
     nice_share:
       name: Gawiza Zuri
       description: Gawizo la chapisho kwa watumiaji 25 wa kipekee
-      long_description: |
-        Beji hii inatolewa gawizo la kiungo kikibonyezwa na watu 25 kutoka nje. Asante kwa kusambaza neno kuhusu majadiliano, na jumuiya yetu!
     good_share:
       name: Gawizo Zuri
       description: Gawizo la chapisho kwa watu 300 wa kipekee
@@ -1947,13 +1940,7 @@ sw:
   wizard:
     title: "Mpangilio wa Discourse"
     step:
-      introduction:
-        fields:
-          title:
-            placeholder: "Sehemu ya Jeni ya Kuburudika"
-          site_description:
-            placeholder: "Sehemu ya Jeni na marafiki zake kujadili vitu vizuri"
-      privacy:
+      setup:
         fields:
           login_required:
             label: "Uonekanaji"
@@ -1962,30 +1949,14 @@ sw:
                 label: "Umma"
               private:
                 label: "Binafsi"
-      styling:
-        fields:
-          styling_preview:
-            label: "Kihakiki"
-          homepage_style:
-            choices:
-              latest:
-                label: "Hivi Karibuni"
-      corporate:
-        fields:
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
-          site_contact:
-            description: "Ujumbe wote wa kibinafsi utatumwa kutoka kwa mtumiaji huyu, kama ripoti za onyo na ilani ya umalizaji wa chelezo."
-      invites:
-        title: "Alika Wasaidizi"
-        description: "Una karibia kumaliza! Karibisha watu kadhaa kusaidia <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>kuanzisha majadiliano</a>na mada nzuri na majibu kufanya jumuiya yako ianze."
-      finished:
-        title: "Discourse yako iko Tayari!"
   search_logs:
     graph_title: "Idadi ya Utafiti"
   onebox:
     github:
       closed: "imefungwa"
+      status_date:
+        approved: "wamekubaliwa"
+        closed: "imefungwa"
   discourse_push_notifications:
     popup:
       mentioned: '%{jina la mtumiaji} amekutaja kwenye "%{mada}" - %{jina la_tovuti}'

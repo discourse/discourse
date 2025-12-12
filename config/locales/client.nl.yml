@@ -291,7 +291,6 @@ nl:
     software_update_prompt:
       message: "We hebben deze site bijgewerkt, <span>vernieuw</span> om alles soepel te laten werken."
       dismiss: "Negeren"
-    bootstrap_mode: "Aan de slag"
     back_button: "Terug"
     welcome_banner:
       header:
@@ -697,7 +696,7 @@ nl:
       title: "Beoordelen"
       topic: "Topic:"
       filtered_topic: "Je hebt op beoordeelbare inhoud in één topic gefilterd."
-      filtered_user: "Gebruiker"
+      filtered_user: "Gemarkeerde gebruiker"
       filtered_reviewed_by: "Beoordeeld door"
       show_all_topics: "alle topics weergeven"
       deleted_post: "(bericht verwijderd)"
@@ -835,7 +834,6 @@ nl:
           noun: "bericht"
       flagged_as: "Gemarkeerd als"
       user_label: "Gebruiker"
-      assigned_to: "Toegewezen aan"
       moderator_actions: "Moderatoracties"
       timeline_and_notes: "Tijdlijn en opmerkingen"
       timeline:
@@ -846,13 +844,11 @@ nl:
         claimed: "Geclaimd"
         claimed_by: "Geclaimd door %{username} · %{relativeDate}"
         reviewed: "Beoordeeld"
-        reviewed_by: "Beoordeeld door %{username} · %{relativeDate}"
         view_conversation: "PB weergeven"
         note_added: "Moderatoropmerking"
         note_added_by: "Moderatoropmerking door %{username} · %{relativeDate}"
         no_events: "Geen tijdlijngebeurtenissen om weer te geven"
       notes:
-        add_note_description: "Alleen zichtbaar voor moderators. Gebruik deze opmerking om context of beslissingen over de beoordeling toe te voegen."
         add_note_button: "Opmerking toevoegen"
         placeholder: "Schrijf je opmerking hier..."
         chars_remaining: "%{count} tekens resterend"
@@ -874,7 +870,6 @@ nl:
           one: "Gemarkeerd door %{count} unieke gebruiker"
           other: "Gemarkeerd door %{count} unieke gebruikers"
         activities:
-          new_account: "nieuw account"
           trust_level: "vertrouwensniveau: %{trustLevelName}"
           posts:
             one: "%{count} bericht"
@@ -882,7 +877,6 @@ nl:
         solution_marked: "Oplossing gemarkeerd"
         topic_has_solution: "Dit topic heeft een oplossing"
         visibility: "Zichtbaarheid"
-        topic_unlisted: "Dit topic is niet zichtbaar. Alleen toegankelijk via een directe link – niet openbaar."
       help:
         moderation_guide: "Discourse-moderatiegids"
         flag_priorities: "Beheer van gebruikersreputatie en markeringsprioriteiten"
@@ -1305,7 +1299,6 @@ nl:
         one: "Categorieën (nog %{count})…"
         other: "Categorieën (nog %{count})…"
     ip_lookup:
-      title: IP-adres zoeken
       hostname: Hostnaam
       location: Locatie
       location_not_found: (onbekend)
@@ -2864,6 +2857,7 @@ nl:
         zoom_out: "Afbeeldingsgrootte verkleinen"
         zoom_in: "Afbeeldingsgrootte verhogen"
         remove: "Afbeelding verwijderen"
+      image: "afbeelding"
       image_scale_button: "Afbeelding schalen naar %{percent}%"
       delete_image_button: Afbeelding verwijderen
       toggle_image_grid: Afbeeldingsraster schakelen
@@ -3204,6 +3198,9 @@ nl:
         reset_bump_dates: "Omhoogplaatsingsdatums resetten"
         defer: "Markeren als ongelezen"
         delete: "Topics verwijderen"
+        delete_topics_count:
+          one: "Topic verwijderen"
+          other: "Topics verwijderen"
         dismiss: "Negeren"
         dismiss_read: "Alle ongelezen negeren"
         dismiss_read_with_selected:
@@ -3262,7 +3259,6 @@ nl:
         progress:
           one: "Voortgang: <strong>%{count}</strong> topic"
           other: "Voortgang: <strong>%{count}</strong> topics"
-        silent: "Voer deze actie in stilte uit."
         performing: "Bulkbewerkingen worden uitgevoerd, even geduld…"
         completed: "Bulkbewerkingen voltooid!"
       none:
@@ -3432,7 +3428,6 @@ nl:
       jump_reply_button: "Naar bericht"
       deleted: "Het topic is verwijderd"
       slow_mode_update:
-        title: "Langzame modus"
         select: "Gebruikers mogen slechts een bericht in dit topic plaatsen per:"
         description: "Om een doordachte discussie in snel bewegende of controversiële discussies te stimuleren, moeten gebruikers wachten voordat ze opnieuw een bericht in dit topic kunnen plaatsen."
         enable: "Inschakelen"
@@ -3867,7 +3862,6 @@ nl:
         post_language_selector:
           none: "Geen"
         edit_warning:
-          message: "Dit is een vertaald bericht.<br><br> Wil je het originele bericht in het %{language} of deze specifieke vertaling bewerken?"
           action_original: "Origineel bericht bewerken"
           action_translation: "Deze vertaling bewerken"
       errors:
@@ -4100,24 +4094,14 @@ nl:
         description: "Vereisen dat nieuwe topics tags uit taggroepen hebben:"
         delete: "Verwijderen"
         add: "Vereiste taggroep toevoegen"
-        placeholder: "selecteer taggroep…"
+        placeholder: "Selecteer taggroep…"
       topic_featured_link_allowed: "Uitgelichte links toestaan in deze categorie"
-      delete: "Categorie verwijderen"
-      create: "Nieuwe categorie"
       create_long: "Nieuwe categorie maken"
-      save: "Categorie opslaan"
-      slug: "Slug van categorie"
       slug_placeholder: "(Optioneel) met streepjes verbonden woorden voor URL"
       creation_error: Er is een fout opgetreden bij het maken van de categorie.
       save_error: Er is een fout opgetreden bij het opslaan van de categorie.
-      name: "Categorienaam"
-      untitled: "Categorie zonder titel"
       description: "Beschrijving"
-      logo: "Logoafbeelding van categorie"
-      logo_dark: "Categorielogoafbeelding donkere modus"
       logo_description: "Aanbevolen beeldverhouding 1:1 met een minimale bestandsgrootte van 200 pixels. Als dit leeg wordt gelaten, wordt er geen afbeelding weergegeven."
-      background_image: "Achtergrondafbeelding van categorie"
-      background_image_dark: "Achtergrondafbeelding uit donkere categorie"
       style: "Stijlen"
       background_color: "Kleur"
       foreground_color: "Tekstkleur"
@@ -4170,23 +4154,15 @@ nl:
       all_topics_wiki: "Nieuwe topics standaard wiki maken"
       allow_unlimited_owner_edits_on_first_post: "Onbeperkt bewerking door eigenaar toestaan voor eerste bericht"
       subcategory_list_style: "Stijl van subcategorieënlijst:"
-      sort_order: "Topiclijst sorteren op:"
-      default_view: "Standaard topiclijst:"
-      default_top_period: "Standaard topperiode:"
-      default_list_filter: "Standaard lijstfilter:"
       allow_badges_label: "Toekennen van badges in deze categorie toestaan"
-      edit_permissions: "Toestemmingen bewerken"
       reviewable_by_group: "Naast medewerkers kan inhoud in deze categorie ook worden beoordeeld door:"
       review_group_name: "groepsnaam"
       require_topic_approval: "Goedkeuring van moderator vereisen voor alle nieuwe topics"
       require_reply_approval: "Goedkeuring van moderator vereisen voor alle nieuwe antwoorden"
       this_year: "dit jaar"
       position: "Positie op de categoriepagina:"
-      default_position: "Standaardpositie"
       position_disabled: "Categorieën worden weergegeven op volgorde van activiteit. Schakel de instelling <a href='%{url}'>'Vaste categorieposities'</a> in om de volgorde van categorieën in lijsten te regelen."
       minimum_required_tags: "Minimale aantal tags vereist in een topic:"
-      default_slow_mode: 'Schakel ''Langzame modus'' in voor nieuwe topics in deze categorie.'
-      parent: "Bovenliggende categorie"
       num_auto_bump_daily: "Aantal open topics dat dagelijks automatisch omhoog wordt geplaatst:"
       auto_bump_cooldown_days: "Minimaal aantal dagen voordat hetzelfde topic opnieuw omhoog wordt plaatst:"
       navigate_to_first_post_after_read: "Naar eerste bericht nadat topics zijn gelezen"
@@ -4208,18 +4184,14 @@ nl:
           title: "Gedempt"
           description: "Je ontvangt geen meldingen over nieuwe topics in deze categorie en ze worden niet weergegeven in Nieuwste."
       search_priority:
-        label: "Zoekprioriteit"
         options:
           normal: "Normaal"
           ignore: "Negeren"
-          very_low: "Zeer laag"
           low: "Laag"
           high: "Hoog"
-          very_high: "Zeer hoog"
       sort_options:
         default: "standaard"
         likes: "Likes"
-        op_likes: "Likes op oorspronkelijke bericht"
         views: "Weergaven"
         posts: "Berichten"
         activity: "Activiteit"
@@ -4239,8 +4211,7 @@ nl:
         appearance: "Vormgeving"
         email: "E-mailadres"
       list_filters:
-        all: "alle topics"
-        none: "geen subcategorieën"
+        all: "Alle topics"
       colors_disabled: "Je kunt geen kleuren selecteren omdat je categoriestijl 'none' is."
     anonymous_flagging:
       title: "Illegale content melden"
@@ -4472,7 +4443,7 @@ nl:
         title: "Top"
         help: "de meest actieve topics van het afgelopen jaar, maand, week of dag"
         all:
-          title: "Sinds het begin"
+          title: "Altijd"
         yearly:
           title: "Jaarlijks"
         quarterly:
@@ -4483,7 +4454,7 @@ nl:
           title: "Wekelijks"
         daily:
           title: "Dagelijks"
-        all_time: "Sinds het begin"
+        all_time: "Altijd"
         this_year: "Jaar"
         this_quarter: "Kwartaal"
         this_month: "Maand"
@@ -4755,18 +4726,13 @@ nl:
           description: "Je ontvangt geen meldingen over nieuwe topics met deze tag en ze worden niet weergegeven op je tabblad Ongelezen."
       groups:
         back_btn: "Terug naar alle tags"
-        title: "Taggroepen"
         about_heading: "Selecteer een taggroep of maak een nieuwe"
         about_heading_empty: "Maak een tagroep om te beginnen"
         about_description: "Met taggroepen kun je toestemmingen voor meerdere tags op één plek beheren."
-        new: "Nieuwe groep"
-        new_title: "Nieuwe groep maken"
-        edit_title: "Taggroep bewerken"
         tags_label: "Tags in deze groep"
         parent_tag_label: "Bovenliggende tag"
         parent_tag_description: "Tags in deze groep kunnen alleen worden gebruikt als de bovenliggende tag aanwezig is."
         one_per_topic_label: "Beperken tot 1 tag per topic uit deze groep"
-        new_name: "Nieuwe taggroep"
         name_placeholder: "Naam"
         save: "Opslaan"
         delete: "Verwijderen"
@@ -5245,6 +5211,11 @@ nl:
         enabled: "Ingeschakeld"
         select_groups: "Selecteer groepen…"
         preview: "Voorbeeld"
+        enabled_for_options:
+          everyone: "Iedereen"
+          staff: "Alleen medewerkers"
+        statuses:
+          experimental: "Experimenteel"
         impact_roles:
           admins: "Beheerders"
           moderators: "Moderators"
@@ -5255,6 +5226,7 @@ nl:
           disabled: "Uitgeschakeld"
           impact_type_feature: "Functie"
           impact_type_other: "Anders"
+          status_experimental: "Experimenteel"
       config:
         about:
           title: "Over je site"
@@ -5291,6 +5263,11 @@ nl:
           sub_pages:
             common_settings:
               title: "Instellingen"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Meer info"
         logo:
           title: "Logo"
           header_description: "Configureer de logo's en pictogrammen die op je site worden gebruikt"
@@ -5377,6 +5354,23 @@ nl:
               other: "Je hebt de standaard tekstgrootte bijgewerkt. Wil je deze wijziging toepassen op %{count} bestaande gebruikers?"
             modal_yes: "Ja"
             modal_no: "Nee, alleen vanaf nu toepassen"
+        welcome_banner:
+          form:
+            text_color:
+              label: "Tekstkleur"
+            page_visibility:
+              options:
+                top_menu_pages: "Topmenupagina's"
+                all_pages: "Alle pagina's"
+            location:
+              label: "Locatie"
+              options:
+                above_topic_content: "Boven topiccontent"
+                below_site_header: "Onder sitekop"
+            header_logged_in:
+              placeholder: "Welkom terug, %{preferred_display_name}!"
+            header_anonymous:
+              placeholder: "Welkom bij %{site_name}!"
         navigation:
           title: "Navigatie"
           header_description: "Configureer de navigatielinks en menuopties voor je site. Dit omvat de locatie en het gedrag van het primaire navigatiemenu, de snelle links bovenaan de startpagina en de zijbalk voor beheer"
@@ -7134,7 +7128,6 @@ nl:
           success: "Succes"
           exists: "Bestaat al"
           upload: "Toevoegen vanuit bestand"
-          upload_successful: "Uploaden geslaagd. Woorden zijn toegevoegd."
           case_sensitivity_label: "Is hoofdlettergevoelig"
           case_sensitivity_description: "Alleen woorden met overeenkomend hoofdlettergebruik"
           html_label: "HTML"
@@ -7226,10 +7219,7 @@ nl:
             second: "Optie 2"
             third: "Optie 3"
         edit_category:
-          toggle_freeform: "formuliersjabloon uitgeschakeld"
-          toggle_form_template: "formuliersjabloon ingeschakeld"
           select_template: "Selecteer formuliersjablonen"
-          select_template_help: "Formuliersjablonen toevoegen/bewerken"
         errors:
           multiple_tags_not_allowed: 'Je kunt geen verdere tags selecteren uit de "%{tag_name}". Gebruik een formuliersjabloon om problemen te voorkomen.'
       impersonate:
@@ -7964,76 +7954,3 @@ nl:
   wizard_js:
     wizard:
       jump_in: "Aan de slag!"
-      finish: "Configuratie afsluiten"
-      back: "Terug"
-      next: "Volgende"
-      configure_more: "Meer configureren…"
-      step-text: "Stap"
-      step: "%{current} van %{total}"
-      upload: "Bestand uploaden"
-      uploading: "Uploaden…"
-      upload_error: "Sorry, er is een fout opgetreden bij het uploaden van het bestand. Probeer het opnieuw."
-      staff_count:
-        one: "Je community heeft %{count} medewerker (jij)."
-        other: "Je community heeft %{count} medewerkers, waaronder jij."
-      invites:
-        add_user: "toevoegen"
-        none_added: "Je hebt geen medewerkers uitgenodigd. Weet je zeker dat je door wilt gaan?"
-        roles:
-          admin: "Beheerder"
-          moderator: "Moderator"
-          regular: "Vaste gebruiker"
-      homepage_choices:
-        custom:
-          label: "Aangepast"
-          description: "Geef een startpagina weer gericht op %{type}, waarbij gebruikers terechtkomen op %{landingPage}"
-        style_type:
-          categories: "categorie"
-          topics: "topic"
-      top_menu_items:
-        new: "Nieuw"
-        unread: "Ongelezen"
-        top: "Top"
-        latest: "Nieuwste"
-        hot: "Populair"
-        categories: "Categorieën"
-        unseen: "Ongezien"
-        read: "Gelezen"
-        bookmarks: "Bladwijzers"
-      previews:
-        topic_title: "Welke boeken lees je?"
-        share_button: "Delen"
-        reply_button: "Antwoorden"
-        topic_preview: "Topicvoorbeeld"
-        homepage_preview: "Startpaginavoorbeeld"
-      homepage_preview:
-        nav_buttons:
-          all_categories: "alle categorieën"
-        topic_titles:
-          what_books: "Welke boeken lees je?"
-          what_movies: "Welke films heb je onlangs gezien?"
-          random_fact: "Willekeurig feit van de dag"
-          tv_show: "Beveel een tv-programma aan"
-          what_hobbies: "Wat zijn je hobby's?"
-          what_music: "Waar luister je nu naar?"
-          funniest_thing: "Het grappigste dat je vandaag hebt gezien"
-          share_art: "Deel je kunst!"
-        topic_ops:
-          what_books: |
-            We houden allemaal van lezen. Laten we dit topic gebruiken om onze
-            huidige of recente leeservaringen te delen. Ik ben een fantasyfan en
-            ik heb The Lord of the Rings voor de 100e keer opnieuw gelezen.
-            En jij?
-        category_descriptions:
-          icebreakers: "Leer de communityleden kennen door leuke vragen te stellen."
-          news: "Bespreek het laatste nieuws en gebeurtenissen."
-          site_feedback: "Deel je gedachten over de community en stel verbeteringen voor."
-        category_names:
-          icebreakers: "IJsbrekers"
-          news: "Nieuws"
-          site_feedback: "Feedback op website"
-        table_headers:
-          topic: "Topic"
-          replies: "Antwoorden"
-          views: "Weergaven"
-          activity: "Activiteit"

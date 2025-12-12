@@ -5,7 +5,7 @@ import { buildCategoryPanel } from "discourse/admin/components/edit-category-pan
 import CategoryPermissionRow from "discourse/components/category-permission-row";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
-import discourseComputed from "discourse/lib/decorators";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import PermissionType from "discourse/models/permission-type";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
@@ -17,23 +17,22 @@ export default class EditCategorySecurity extends buildCategoryPanel(
 
   @not("selectedGroup") noGroupSelected;
 
-  @discourseComputed("category.permissions.@each.permission_type")
-  everyonePermission(permissions) {
-    return permissions.find((p) => p.group_name === "everyone");
+  get everyonePermission() {
+    return this.category.permissions.find(
+      (p) => p.group_id === AUTO_GROUPS.everyone.id
+    );
   }
 
-  @discourseComputed("category.permissions.@each.permission_type")
-  everyoneGrantedFull() {
+  get everyoneGrantedFull() {
     return (
       this.everyonePermission &&
       this.everyonePermission.permission_type === PermissionType.FULL
     );
   }
 
-  @discourseComputed("everyonePermission")
-  minimumPermission(everyonePermission) {
-    return everyonePermission
-      ? everyonePermission.permission_type
+  get minimumPermission() {
+    return this.everyonePermission
+      ? this.everyonePermission.permission_type
       : PermissionType.READONLY;
   }
 
@@ -41,6 +40,7 @@ export default class EditCategorySecurity extends buildCategoryPanel(
   onSelectGroup(group_name) {
     this.category.addPermission({
       group_name,
+      group_id: AUTO_GROUPS[group_name]?.id,
       permission_type: this.minimumPermission,
     });
   }
@@ -48,7 +48,7 @@ export default class EditCategorySecurity extends buildCategoryPanel(
   @action
   onChangeEveryonePermission(everyonePermissionType) {
     this.category.permissions.forEach((permission, idx) => {
-      if (permission.group_name === "everyone") {
+      if (permission.group_id === AUTO_GROUPS.everyone.id) {
         return;
       }
 
@@ -88,6 +88,7 @@ export default class EditCategorySecurity extends buildCategoryPanel(
           </div>
           {{#each this.category.permissions as |p|}}
             <CategoryPermissionRow
+              @groupId={{p.group_id}}
               @groupName={{p.group_name}}
               @type={{p.permission_type}}
               @category={{this.category}}

@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class UserProfile < ActiveRecord::Base
-  self.ignored_columns = ["badge_granted_title"] # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
-
   BAKED_VERSION = 1
 
   belongs_to :user, inverse_of: :user_profile

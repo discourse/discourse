@@ -490,7 +490,7 @@ th:
       title: "ส่งอีเมลยืนยันตัวตนอีกครั้ง"
   wizard:
     step:
-      privacy:
+      setup:
         fields:
           login_required:
             choices:
@@ -498,17 +498,12 @@ th:
                 label: "สาธารณะ"
               private:
                 label: "ส่วนตัว"
-      styling:
-        fields:
-          styling_preview:
-            label: "แสดงตัวอย่าง"
-          homepage_style:
-            choices:
-              latest:
-                label: "ล่าสุด"
   onebox:
     github:
       closed: "ปิด"
+      status_date:
+        approved: "อนุมัติแล้ว"
+        closed: "ปิด"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} พูดถึงคุณใน "%{topic}" - %{site_title}'

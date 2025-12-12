@@ -16,7 +16,7 @@ module Jobs
 
       case status
       when :complete
-        if adapter.handle_completion(args[:job_id], args[:output_path], args[:new_sha1])
+        if adapter.handle_completion(args[:job_id], args[:new_sha1])
           # Successfully completed
           Rails.logger.info(
             "Completed video conversion for upload ID #{upload.id} and job ID #{args[:job_id]}",

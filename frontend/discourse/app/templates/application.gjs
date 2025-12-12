@@ -29,6 +29,7 @@ import DialogHolder from "discourse/dialog-holder/components/dialog-holder";
 import DMenus from "discourse/float-kit/components/d-menus";
 import DToasts from "discourse/float-kit/components/d-toasts";
 import DTooltips from "discourse/float-kit/components/d-tooltips";
+import bodyClass from "discourse/helpers/body-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import { eq } from "discourse/truth-helpers";
@@ -39,6 +40,8 @@ export default <template>
 
   <DiscourseRoot {{didInsert @controller.trackDiscoursePainted}}>
     <A11ySkipLinks.Container />
+
+    {{bodyClass @controller.upcomingChangeBodyClasses}}
 
     <DDocument />
     <PageLoadingSlider />
@@ -55,9 +58,6 @@ export default <template>
         @canSignUp={{@controller.canSignUp}}
         @showCreateAccount={{routeAction "showCreateAccount"}}
         @showLogin={{routeAction "showLogin"}}
-        @showKeyboard={{routeAction "showKeyboardShortcutsHelp"}}
-        @toggleMobileView={{routeAction "toggleMobileView"}}
-        @logout={{routeAction "logout"}}
         @sidebarEnabled={{@controller.sidebarEnabled}}
         @showSidebar={{@controller.showSidebar}}
         @toggleSidebar={{@controller.toggleSidebar}}

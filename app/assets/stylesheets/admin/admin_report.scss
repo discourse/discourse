@@ -86,6 +86,7 @@
 
   .main {
     flex: 1;
+    min-width: 0; // allow chart.js to shrink below intrinsic width
   }
 
   .main .report-alert {
@@ -156,7 +157,7 @@
     .chart-groupings {
       display: grid;
       grid-template-columns: repeat(auto-fill, 1fr);
-      grid-gap: 0.5em;
+      gap: 0.5em;
       margin-bottom: 1em;
 
       .chart-grouping.active {

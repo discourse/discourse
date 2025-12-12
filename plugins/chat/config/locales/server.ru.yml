@@ -310,10 +310,8 @@ ru:
         few: "Посмотреть ещё %{count} сообщения"
         many: "Посмотреть ещё %{count} сообщений"
         other: "Посмотреть ещё %{count} сообщений"
-      your_chat_settings: "Настройка частоты рассылки дайджеста чата"
   unsubscribe:
     chat_summary:
-      select_title: "Частота писем со сводками чата:"
       never: Никогда
       when_away: Если вы находитесь офлайн
   category:

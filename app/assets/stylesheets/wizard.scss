@@ -59,7 +59,7 @@ body.wizard {
 
   .discourse-logo svg {
     position: relative;
-    height: 70px;
+    height: 50px;
     width: auto;
 
     @include viewport.until(sm) {
@@ -71,12 +71,6 @@ body.wizard {
         display: none;
       }
     }
-  }
-
-  .wizard-canvas {
-    position: fixed;
-    top: 0;
-    pointer-events: none;
   }
 }
 
@@ -98,8 +92,7 @@ body.wizard {
 
   &__step {
     margin-top: 1em;
-    max-width: 50%;
-    min-width: 35%;
+    max-width: 700px;
     width: 100%;
 
     @include viewport.until(lg) {
@@ -118,28 +111,8 @@ body.wizard {
     width: 100%;
   }
 
-  &__step-counter {
-    text-align: center;
-    font-weight: 700;
-    color: var(--primary-high);
-    text-shadow: 1px 1px 12px var(--secondary);
-  }
-
-  &__step-description {
-    font-size: var(--font-up-2);
-    flex: 1 0 40%;
-
-    @include viewport.until(md) {
-      font-size: var(--font-up-2);
-    }
-  }
-
   &__field {
     margin-bottom: 1em;
-  }
-
-  &__field.checkbox-field {
-    margin-bottom: 1.5em;
   }
 
   &__field.invalid input {
@@ -165,43 +138,19 @@ body.wizard {
     }
   }
 
-  &__sidebar {
-    width: 230px;
-    box-sizing: border-box;
-    margin-right: 1em;
-
-    @media only screen and (width <= 925px) {
-      width: 100%;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    + .wizard-container__fields {
-      padding: 1em;
-      background: var(--primary-very-low);
-      width: auto;
-      border-radius: 0.5em;
-      margin-top: -1em;
-
-      @media only screen and (width <= 925px) {
-        display: none;
-      }
-    }
-  }
-
   &__step-header {
     text-align: center;
     margin-bottom: 3em;
 
     &--emoji img {
-      width: 30px;
-      height: 30px;
+      width: 40px;
+      height: 40px;
       margin-bottom: 1em;
     }
   }
 
   &__step-title {
-    font-size: 2.75em;
+    font-size: 2.5em;
     color: var(--primary);
     line-height: var(--line-height-medium);
     margin: 0 0 0.5em 0;
@@ -224,28 +173,6 @@ body.wizard {
 
     @include viewport.until(sm) {
       min-height: 30em;
-    }
-  }
-
-  &__buttons-left {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1em;
-    align-items: center;
-
-    @include viewport.until(sm) {
-      order: 2;
-    }
-  }
-
-  &__buttons-right {
-    display: flex;
-    align-items: center;
-    font-weight: bold;
-
-    @include viewport.until(sm) {
-      margin-right: 0;
-      flex-direction: column;
     }
   }
 
@@ -300,71 +227,9 @@ body.wizard {
     background-color: var(--primary-medium);
   }
 
-  &__button.finish {
-    @include viewport.until(sm) {
-      order: 2;
-    }
-  }
-
-  &__button.next {
-    min-width: 70px;
-    margin-left: 1em;
-
-    @include viewport.until(sm) {
-      order: 1;
-      margin-left: 0;
-    }
-  }
-
-  &__button.danger {
-    background-color: var(--danger);
-    color: var(--secondary);
-  }
-
-  &__button.danger:hover,
-  &__button.danger:focus {
-    background-color: var(--danger-hover);
-  }
-
-  &__button.danger:active {
-    background-color: var(--danger-medium);
-  }
-
-  &__button.danger:disabled {
-    background-color: var(--danger-low);
-  }
-
-  &__button-upload {
-    display: block;
-    background-color: transparent;
-    margin-top: 1em;
-    border: 1px solid var(--tertiary-high);
-    text-align: center;
-    color: var(--tertiary-high);
-  }
-
-  &__button-upload:hover {
-    background-color: transparent;
-    border-color: var(--tertiary-hover);
-    color: var(--tertiary-hover);
-  }
-
-  &__button-upload svg {
-    margin-left: 0.5em;
-  }
-
-  .wizard-hidden-upload-field {
-    visibility: hidden;
-    position: absolute;
-  }
-
-  &__button:last-child {
-    margin-right: 0;
-  }
-
   &__step-footer {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
 
     @include viewport.until(sm) {
@@ -426,92 +291,6 @@ body.wizard {
 
   &__dropdown .select-kit-header:not(.btn) {
     border-radius: 4px;
-  }
-
-  &__field.checkbox-field .wizard-container__label {
-    cursor: pointer;
-    display: inline-block;
-  }
-
-  &__checkbox-slider {
-    display: inline-block;
-    background: var(--primary-low-mid);
-    border-radius: 16px;
-    width: 50px;
-    height: 28px;
-    margin-right: 0.5em;
-    position: relative;
-    vertical-align: middle;
-    transition: background 0.25s;
-
-    @media only screen and (width <= 568px) {
-      height: 20px;
-      width: 35px;
-    }
-  }
-
-  &__checkbox-slider::before,
-  &__checkbox-slider::after {
-    content: "";
-    display: block;
-    position: absolute;
-  }
-
-  &__checkbox-slider::after {
-    content: "\2713"; // checkmark
-    color: var(--secondary);
-    top: 4px;
-    left: 9px;
-
-    @media only screen and (width <= 568px) {
-      top: 3px;
-      left: 5px;
-      font-size: var(--font-down-3);
-    }
-  }
-
-  &__checkbox-slider::before {
-    background: var(--secondary);
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    top: 4px;
-    left: 4px;
-    transition: left 0.25s;
-
-    @media only screen and (width <= 568px) {
-      height: 12px;
-      width: 12px;
-    }
-  }
-
-  &__field.checkbox-field
-    .wizard-container__label:hover
-    .wizard-container__checkbox-slider::before {
-    background: var(--secondary);
-    box-shadow: 0 0 0 1px rgb(0, 0, 0, 0.15);
-  }
-
-  &__checkbox:checked + .wizard-container__checkbox-slider {
-    background: var(--tertiary);
-  }
-
-  &__checkbox:checked + .wizard-container__checkbox-slider::before {
-    left: 26px;
-
-    @media only screen and (width <= 568px) {
-      left: 20px;
-    }
-  }
-
-  &__checkbox {
-    position: absolute;
-    visibility: hidden;
-  }
-
-  &__checkbox-label {
-    position: relative;
-    top: 2px;
   }
 
   &__radio {

@@ -16,11 +16,9 @@ const User = <template>
     <span class="username">
       {{formatUsername @result.username}}
     </span>
-    {{#if @result.custom_data}}
-      {{#each @result.custom_data as |row|}}
-        <span class="custom-field">{{row.name}}: {{row.value}}</span>
-      {{/each}}
-    {{/if}}
+    {{#each @result.custom_data as |row|}}
+      <span class="custom-field">{{row.name}}: {{row.value}}</span>
+    {{/each}}
   </div>
 </template>;
 

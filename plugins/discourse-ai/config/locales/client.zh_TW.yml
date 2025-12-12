@@ -77,6 +77,7 @@ zh_TW:
         summary: "摘要"
         username: "使用者名稱"
         total_requests: "請求總數"
+        total: "總計"
         periods:
           last_day: "過去 24 小時"
           custom: "自訂..."
@@ -157,6 +158,7 @@ zh_TW:
         thumbnail_suggestions:
           select: "選擇"
           selected: "已選"
+          try_again: "請再試一次"
         image_caption:
           save_caption: "儲存"
       embeddings:

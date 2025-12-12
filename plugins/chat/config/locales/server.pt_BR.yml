@@ -268,10 +268,8 @@ pt_BR:
       view_more:
         one: "Ver mais %{count} mensagem"
         other: "Ver mais %{count} mensagens"
-      your_chat_settings: "preferência de frequência de e-mail do chat"
   unsubscribe:
     chat_summary:
-      select_title: "Defina a frequência de e-mails de resumo do chat para:"
       never: Nunca
       when_away: Só quando estiver ausente
   category:

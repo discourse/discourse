@@ -70,10 +70,6 @@ loaderShim("@messageformat/runtime/lib/cardinals", () =>
 loaderShim("@messageformat/runtime/messages", () =>
   importSync("@messageformat/runtime/messages")
 );
-loaderShim("@popperjs/core", () => importSync("@popperjs/core"));
-loaderShim("@uppy/aws-s3-multipart", () =>
-  importSync("@uppy/aws-s3-multipart")
-);
 loaderShim("@uppy/aws-s3", () => importSync("@uppy/aws-s3"));
 loaderShim("@uppy/core", () => importSync("@uppy/core"));
 loaderShim("@uppy/drop-target", () => importSync("@uppy/drop-target"));
@@ -127,5 +123,5 @@ loaderShim("truth-helpers/helpers/not", () =>
 loaderShim("truth-helpers/helpers/or", () =>
   importSync("truth-helpers/helpers/or")
 );
-loaderShim("virtual-dom", () => importSync("virtual-dom"));
+loaderShim("virtual-dom", () => importSync("discourse/widgets/virtual-dom"));
 loaderShim("xss", () => importSync("xss"));

@@ -26,3 +26,9 @@ pl_PL:
       few: "%{count} głosy nie mogły zostać przeniesione, ponieważ użytkownicy zagłosowali już w innym temacie."
       many: "%{count} głosów nie mogło zostać przeniesionych, ponieważ użytkownicy zagłosowali już w innym temacie."
       other: "%{count} głosów nie mogło zostać przeniesionych, ponieważ użytkownicy zagłosowali już w innym temacie."
+    filter:
+      description:
+        topic_votes_min: "Minimalna liczba głosów w temacie"
+        topic_votes_max: "Maksymalna liczba głosów w temacie"
+        order_topic_votes: "Uporządkuj tematy według największej liczby głosów"
+        order_topic_votes_asc: "Uporządkuj tematy według najmniejszej liczby głosów"

@@ -1577,7 +1577,6 @@ zh_CN:
     allow_duplicate_topic_titles_category: "如果类别不同，允许有相同或重复标题的话题。必须禁用 allow_duplicate_topic_titles。"
     unique_posts_mins: "用户可以再次发布相同内容的帖子前需要等待的分钟数"
     educate_until_posts: "当用户开始输入他们的前几 (n) 个新帖子时，在编辑器中显示弹出式新用户教育面板。"
-    title: "此网站的名称。对包括匿名用户在内的所有访客可见。"
     site_description: "用一句话描述此网站。对包括匿名用户在内的所有访客可见。"
     short_site_description: "几个字的简短描述。对包括匿名用户在内的所有访客可见。"
     contact_email: "负责此网站的主要联系人的电子邮件地址，用于重要通知，也会显示在 <a href='%{base_path}/about' target='_blank'>/about</a> 上。对公共网站上的匿名用户可见。"
@@ -1909,6 +1908,7 @@ zh_CN:
     video_conversion_enabled: "为上传的视频文件启用视频转换。这可以将视频转换为与网页兼容的格式。"
     video_conversion_service: "用于处理所上传视频的视频转换服务。"
     mediaconvert_role_arn: "用于 MediaConvert 服务的 AWS IAM 角色 ARN。使用 AWS MediaConvert 进行视频转换时需要此角色。"
+    mediaconvert_output_subdirectory: "S3 存储桶中的子目录。MediaConvert 会将转码后的视频临时写入此目录，之后再移动到最终的上传位置。"
     min_ratio_to_crop: "用于裁剪高图片的比率。输入宽度/高度的结果。"
     simultaneous_uploads: "可以在编辑器中拖放的最大文件数"
     default_invitee_trust_level: "受邀用户的默认信任级别 (0-4)。"
@@ -1937,35 +1937,22 @@ zh_CN:
     tl3_requires_likes_given: "为了有资格升级到信任级别 3，在过去 (tl3 time period) 天内必须送出的最少赞数。"
     tl3_requires_likes_received: "为了有资格升级到信任级别 3，在过去 (tl3 time period) 天内必须收到的最少赞数。"
     tl3_links_no_follow: "不从信任级别 3 用户发布的链接中移除 rel=nofollow。"
-    tl4_delete_posts_and_topics: "允许 TL4 用户删除其他用户创建的帖子和话题。 TL4 用户还可以查看已删除的话题和帖子。"
     delete_all_posts_and_topics_allowed_groups: "能够删除其他用户创建的帖子和话题的群组。这些群组也可以查看已删除的话题和帖子。"
     edit_all_topic_groups: "允许此群组中的用户编辑其他用户的主题标题、标签和类别"
     edit_all_post_groups: "允许此群组中的用户编辑其他用户的帖子"
-    min_trust_to_create_topic: "创建新话题所需的最低信任级别。"
     create_topic_allowed_groups: "能够创建新话题的群组。管理员和版主始终可以创建话题。"
     allow_flagging_staff: "如果启用，用户可以举报来自管理人员帐户的帖子。"
-    min_trust_to_edit_wiki_post: "编辑标记为 Wiki 的帖子所需的最低信任级别。"
     edit_wiki_post_allowed_groups: "能够编辑标记为 wiki 的帖子的群组。管理员和版主始终可以编辑标记为 wiki 的帖子。"
-    min_trust_to_edit_post: "编辑帖子所需的最低信任级别。"
     edit_post_allowed_groups: "能够编辑帖子的群组。管理员和版主始终可以编辑帖子。"
-    min_trust_to_allow_self_wiki: "制作用户自己的帖子 Wiki 所需的最低信任级别。"
     self_wiki_allowed_groups: "允许这些群组中的用户将他们自己的帖子设为 wiki。管理员和版主始终可以将他们自己的帖子设为 wiki。"
     min_trust_to_send_messages: "已弃用，请改用 'personal message enabled groups' 设置。创建新的个人消息所需的最低信任级别。"
-    min_trust_to_send_email_messages: "通过电子邮件发送个人消息所需的最低信任级别。"
     send_email_messages_allowed_groups: "能够通过电子邮件发送个人消息的群组。管理员和版主始终可以通过电子邮件发送个人消息。"
-    min_trust_to_flag_posts: "举报帖子所需的最低信任级别"
     flag_post_allowed_groups: "能够举报帖子的群组。管理员和版主始终可以举报帖子。"
-    min_trust_to_post_links: "在帖子中包含链接所需的最低信任级别"
     post_links_allowed_groups: "能够在帖子中包含链接的群组。管理员和版主始终可以发布链接。"
-    min_trust_to_post_embedded_media: "在帖子中嵌入媒体条目所需的最低信任级别"
     embedded_media_post_allowed_groups: "这些群组中的用户能够在帖子中嵌入媒体条目。管理员和版主始终可以嵌入媒体条目。"
-    min_trust_level_to_allow_profile_background: "上传个人资料背景所需的最低信任级别"
     profile_background_allowed_groups: "能够上传个人资料背景的群组。管理员和版主始终可以上传个人资料背景。"
-    min_trust_level_to_allow_user_card_background: "上传用户卡背景所需的最低信任级别"
     user_card_background_allowed_groups: "能够上传用户卡片背景的群组。管理员和版主始终可以上传用户卡片背景。"
-    min_trust_level_to_allow_invite: "邀请用户所需的最低信任级别"
     invite_allowed_groups: "能够邀请用户的群组。管理员和版主始终可以邀请用户。"
-    min_trust_level_to_allow_ignore: "忽略用户所需的最低信任级别"
     ignore_allowed_groups: "能够忽略其他用户的群组。管理员和版主始终可以忽略其他用户。"
     allowed_link_domains: "即使用户没有适当的信任级别来发布链接，也可以链接到的网域"
     newuser_max_links: "新用户可以在帖子中添加的链接数量。"
@@ -1978,7 +1965,6 @@ zh_CN:
     enable_mentions: "允许用户使用 '@' 符号在他们的帖子中标记或引用彼此。"
     here_mention: "用于 @ 提及的名称，允许特权用户通知参与话题的 'max_here_mentioned' 人。必须不是一个现有的用户名。"
     max_here_mentioned: "@here 提及的最大人数。"
-    min_trust_level_for_here_mention: "允许提及 @here 的最低信任级别。"
     here_mention_allowed_groups: "能够提及 @here 的群组。管理员和版主始终可以提及 @here。"
     create_thumbnails: "创建太大而无法放入帖子的缩略图和灯箱图片。"
     email_time_window_mins: "在发送任何通知电子邮件之前等待 (n) 分钟，让用户有机会编辑和完成他们的帖子。"
@@ -2040,6 +2026,7 @@ zh_CN:
     auto_silence_fast_typers_on_first_post: "自动禁言未达到 `fast typing threshold` 的用户"
     auto_silence_fast_typers_max_trust_level: "自动禁言输入过快的用户的最高信任级别"
     auto_silence_first_post_regex: "检查用户第一个帖子的大小写不相关的正则表达式。如匹配，用户将被禁言并送至审核队列。示例：raging|a[bc]a 将匹配包含 raging、aba 或者 aca 的所有帖子，因此该用户将被禁言。只对第一个帖子有效。已弃用：改用“禁言关注词”。"
+    moderator_guide_topic: "概述您如何管理您的社区的话题。链接将在审核队列中显示，供版主和管理员使用。"
     reviewable_claiming: "可审核的内容是否需要先声明然后再对其采取行动？"
     reviewable_default_topics: "默认显示按话题分组的可审核内容"
     reviewable_default_visibility: "除非满足此优先级，否则不显示可审核条目"
@@ -2048,7 +2035,7 @@ zh_CN:
     allow_all_users_to_flag_illegal_content: "匿名用户将看到需要通过电子邮件向管理员举报非法内容的信息。此设置优先于“允许举报帖子的群组”。"
     email_address_to_report_illegal_content: "如果留空，将使用默认的网站管理员电子邮件地址。"
     cooldown_hours_until_reflag: "用户需要等待多长时间才能重新举报帖子"
-    slow_mode_prevents_editing: "在 editing_grace_period 之后，“慢速模式”会阻止编辑吗？"
+    slow_mode_prevents_editing: "在 \"编辑宽限期 \"之后，\"慢速模式 \"是否会阻止编辑？"
     reply_by_email_enabled: "激活允许用户直接通过电子邮件回复话题的功能，无需他们登录网站。有关详情，请参阅 <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>Meta 上的指南</a> 。"
     reply_by_email_address: "通过传入电子邮件地址回复的模板。示例：%%{reply_key}@reply.example.com 或 replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "通过传入电子邮件地址回复的备用模板列表。示例：%%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -2103,7 +2090,6 @@ zh_CN:
     pop3_polling_delete_from_server: "从服务器删除电子邮件。注意：如果您禁用此功能，您应该手动清理您的邮件收件箱"
     log_mail_processing_failures: "将所有电子邮件处理失败记录到 <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "允许用户通过电子邮件发布新话题。启用此设置后，您将能够为群组和类别配置传入电子邮件地址。"
-    email_in_min_trust: "用户要被允许通过电子邮件发布新话题所需的最低信任级别。"
     email_in_allowed_groups: "能够通过电子邮件发布新话题的组。管理员和版主始终可以通过电子邮件发布新话题。"
     email_in_authserv_id: "对传入电子邮件进行身份验证检查的服务的标识符。请参阅 <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> 了解配置说明"
     email_in_spam_header: "选择用于识别垃圾邮件的特定电子邮件头。此选项可以是 X-Spam-Flag、X-Spam-Status 或 X-SES-Spam-Verdict，电子邮件会根据头值被标记为垃圾邮件。例如，如果选择的设置是 X-Spam-Flag，则此头值设置为 YES 的电子邮件将被归类为垃圾邮件。"
@@ -2126,7 +2112,6 @@ zh_CN:
     username_change_period: "注册后帐户可以更改其用户名的最大天数（0 表示不允许更改用户名）。"
     email_editable: "允许用户在注册后更改他们的电子邮件地址。"
     logout_redirect: "退出后将浏览器重定向到的位置（例如：https://example.com/logout）"
-    allow_uploaded_avatars: "允许用户上传自定义个人资料照片。"
     uploaded_avatars_allowed_groups: "能够上传自定义个人资料照片的群组。"
     default_avatars: "在更改前新用户默认使用的头像的 URL。"
     automatically_download_gravatars: "在创建帐户或更改电子邮件时为用户下载 Gravatar。"
@@ -2151,6 +2136,7 @@ zh_CN:
     enable_category_group_moderation: "允许群组审核特定类别的内容"
     group_in_subject: "在电子邮件主题中将 %%{optional_pm} 设置为私信中第一个群组的名称，请参阅：<a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>自定义标准电子邮件的主题格式</a>"
     allow_anonymous_mode: "启用可供用户切换到匿名发帖模式的选项。激活后，用户在网站上创建帖子或话题时可以选择隐藏身份。另请参阅 `allow anonymous likes`。"
+    allow_likes_in_anonymous_mode: "启用此设置，允许匿名浏览网站的用户点赞帖子。 激活后，用户在为帖子或话题点赞时，可以选择隐藏其身份。 此设置需要先启用 `允许匿名模式`。"
     anonymous_account_duration_minutes: "为了保护匿名性，每 N 分钟为每个用户创建一个新的匿名帐户。示例：如果设置为 600，则在距离上次发帖 600 分钟且用户切换到匿名时，将创建一个新的匿名帐户。"
     hide_user_profiles_from_public: "禁用匿名用户的用户卡片、用户个人资料和用户目录。"
     hide_new_user_profiles: "向公众隐藏信任级别 1 或更低的用户个人资料，并隐藏信任级别 1 的用户，直到他们首次发帖。此功能在 must_approve_users 和 invite_only 网站上无条件禁用。"
@@ -2236,9 +2222,7 @@ zh_CN:
     enable_inline_emoji_translation: "启用内联表情符号的翻译（之前没有任何空格或标点符号）"
     emoji_deny_list: "这些表情符号将无法在菜单或短代码中使用。"
     approve_post_count: "新用户或基本用户必须接受审批的帖子数量"
-    approve_unless_trust_level: "低于此信任级别的用户创建的帖子必须获得批准"
     approve_unless_allowed_groups: "不属于这些群组的用户所发布的帖子必须经过批准。管理员和版主发布的帖子始终会被批准。"
-    approve_new_topics_unless_trust_level: "低于此信任级别的用户创建的新话题必须获得批准"
     approve_new_topics_unless_allowed_groups: "不属于这些群组的用户所发布的话题必须经过批准。管理员和版主发布的话题始终会被批准。"
     approve_unless_staged: "暂存用户创建的新话题和帖子必须获得批准"
     notify_about_queued_posts_after: "如果有帖子等待审核的小时超过此数值，向所有版主发送通知。设置为 0 将禁用这些通知。"
@@ -2251,10 +2235,10 @@ zh_CN:
     disable_watched_word_checking_in_user_fields: "在用户字段中禁用关注词检查"
     watched_words_regular_expressions: "允许使用正则表达式筛选字词。如果启用，它会根据字词的大小写将敏感词分组。然后，它将所有选定字词编译成一个单一的正则表达式，并为常规关注词添加字词边界。因此，这种基于正则表达式的筛选方法通过支持更复杂的字词模式，对内容审核增加了额外一层控制。该设置还允许轻松地使用选择的替换文本替换原始文本。"
     enable_fast_edit: "在帖子选择菜单中添加一个按钮以内联编辑小部分内容。"
+    old_post_notice_days: "新用户和回访用户发布通知后隐藏的天数。官方发布的通知将始终可见。"
     new_user_notice_tl: "查看新用户帖子通知所需的最低信任级别。"
     returning_user_notice_tl: "查看回访用户帖子通知所需的最低信任级别。"
     returning_users_days: "在用户被视为回访之前应经过的天数。"
-    review_media_unless_trust_level: "如果包含嵌入式媒体，管理人员将审核信任级别较低的用户的帖子。"
     skip_review_media_groups: "如果帖子包含嵌入式媒体，则不属于上述任何群组的用户的帖子将被发送给管理人员进行审核。管理员和版主创建的帖子始终会被允许。"
     blur_tl0_flagged_posts_media: "模糊被举报的帖子图片以隐藏潜在的 NSFW 内容。"
     enable_page_publishing: "允许管理人员使用自己的样式将话题发布到新 URL。"
@@ -2306,9 +2290,6 @@ zh_CN:
     revoke_api_keys_unused_days: "API 密钥最后一次使用后被自动撤销前的天数（0 表示永不撤销）"
     revoke_api_keys_maxlife_days: "API 密钥被自动撤销前的天数（0 表示永不撤销）"
     allow_user_api_key_scopes: "用户 API 密钥允许的范围列表"
-    min_trust_level_for_user_api_key: |
-      生成用户 API 密钥所需的信任级别。<br>
-      <b>警告</b>：更改信任级别将阻止信任级别较低的用户通过 Discourse Hub 登录
     user_api_key_allowed_groups: |
       生成用户 API 密钥需要群组成员资格。<br>
       <b>警告</b>：更改信任级别将阻止信任级别较低的用户通过 Discourse Hub 登录。<br>
@@ -2318,7 +2299,6 @@ zh_CN:
     revoke_user_api_keys_unused_days: "用户 API 密钥最后一次使用后被自动撤销前的天数（0 表示永不撤销）"
     revoke_user_api_keys_maxlife_days: "用户 API 密钥被自动撤销前的天数（0 表示永不撤销）"
     tagging_enabled: "启用话题标签？有关详情，请参阅 <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Meta 上的标签管理员指南</a>。"
-    min_trust_to_create_tag: "创建标签所需的最低信任级别。"
     create_tag_allowed_groups: "能够创建标签的群组。管理员和版主始终可以创建标签。"
     edit_tags_allowed_groups: "能够编辑标签、标签描述和标签同义词的群组。"
     max_tags_per_topic: "可应用于话题的最大标签数。"
@@ -2331,7 +2311,6 @@ zh_CN:
     tags_listed_by_group: "在<a href='%{base_path}/tags' target='_blank'>标签页面</a>上按标签组列出标签。"
     tag_style: "定义网站上标签徽章的视觉外观。通过此设置，您可以自定义标签在网站上所有区域的视觉呈现方式，从而增强布局一致性和用户可访问性。"
     pm_tags_allowed_for_groups: "允许所包含群组的成员为任何个人消息添加标签"
-    min_trust_level_to_tag_topics: "为话题添加标签所需的最低信任级别"
     tag_topic_allowed_groups: "能够为话题添加标签的群组。管理员和版主始终可以为话题添加标签。"
     suppress_overlapping_tags_in_list: "如果标签与话题标题中的字词完全匹配，则不显示标签"
     remove_muted_tags_from_latest: "不在最新话题列表中显示仅使用已被设为免打扰的标签标记的话题。"
@@ -2342,7 +2321,6 @@ zh_CN:
     governing_law: "指定管辖网站法律方面（包括《服务条款》和《隐私政策》）的司法管辖区。这通常是运营网站的公司注册或开展业务的国家/地区或州。"
     city_for_disputes: "指定将用作解决与使用此论坛相关的任何争议的管辖城市。此信息通常包含在法律文件（例如论坛的《服务条款》）中。"
     shared_drafts_category: "通过为话题草稿指定类别来启用共享草稿功能。此类别中的话题将在管理人员用户的话题列表中被禁止。"
-    shared_drafts_min_trust_level: "允许用户查看和编辑共享草稿。"
     shared_drafts_allowed_groups: "允许这些群组中的用户查看和编辑共享草稿。"
     push_notifications_prompt: "显示推送通知的用户同意横幅。此设置会触发一个提示，要求用户同意向其发送推送通知。只有在推送通知尚未启用、用户的设备支持推送通知、用户发布了帖子或正在使用渐进式 Web 应用 (PWA) 时，才会出现该提示。如果用户已经忽略了提示或授予/拒绝了权限，提示将不会再次显示。"
     push_notifications_icon: "出现在通知角的徽章图标。建议使用具有透明度的 96×96 单色 PNG。"
@@ -2354,7 +2332,6 @@ zh_CN:
     sitemap_page_size: "每个网站地图页面中包含的 URL 数量。最大 50.000"
     enable_user_status: "允许用户设置自定义状态消息（表情符号 + 描述）。"
     enable_user_tips: "启用向用户描述关键功能的新用户提示"
-    short_title: "短标题将用于用户的主屏幕、启动器或其他空间可能有限的地方。应被限制为 12 个字符。"
     dashboard_hidden_reports: "允许从信息中心隐藏指定报告。"
     dashboard_visible_tabs: "选择可见的信息中心标签页。"
     dashboard_general_tab_activity_metrics: "选择要在“常规”标签页上显示为活动指标的报告。"
@@ -2385,7 +2362,6 @@ zh_CN:
     show_preview_for_form_templates: "启用表单模板预览功能"
     lazy_load_categories_groups: "只为这些群组的用户延迟加载类别信息。这可以提升有许多类别的网站的性能。"
     experimental_auto_grid_images: "在编辑器中上传 3 张或更多图片后，自动将图像包装在 [grid] 标记中。"
-    experimental_lightbox: "使用 PhotoSwipe 将较大的图像放在灯箱中。"
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
     show_user_menu_avatars: "在用户菜单中显示用户头像"
     about_page_hidden_groups: "不在 /about 页面显示特定群组的成员。"
@@ -2407,6 +2383,7 @@ zh_CN:
       invalid_username: "没有使用该用户名的用户。"
       valid_username: "存在一个使用该用户名的用户。"
       invalid_group: "没有使用该名称的群组。"
+      invalid_topic: "没有与该 ID 匹配的话题。"
       invalid_integer_min_max: "值必须介于 %{min} 和 %{max}之间。"
       invalid_integer_min: "值必须为 %{min} 或更大。"
       invalid_integer_max: "值不能大于 %{max}。"
@@ -2460,7 +2437,7 @@ zh_CN:
         other: "该列表必须恰好包含 %{count} 个值。"
       markdown_linkify_tlds: "您不能包含 '*' 的值。"
       google_oauth2_hd_groups: "在启用此设置之前，您必须配置所有 'google oauth2 hd' 设置。"
-      discourse_id_credentials: "启用此设置前，必须先配置 Discourse ID 凭据 ('discourse_id_client_id' and 'discourse_id_client_secret')。"
+      discourse_id_registration: "使用 Discourse ID 自动注册失败。这可能是由于网络连接问题、防火墙限制或 Discourse ID 服务无法访问造成的。请查看服务器日志了解更多详情或联系技术支持。"
       linkedin_oidc_credentials: "启用此设置前，必须先配置 LinkedIn OIDC 凭据 ('linkedin_oidc_client_id' 和 'linkedin_oidc_client_secret')。"
       search_tokenize_chinese_enabled: "在启用此设置之前，您必须禁用 'search_tokenize_chinese'。"
       search_tokenize_japanese_enabled: "在启用此设置之前，您必须禁用 'search_tokenize_japanese'。"
@@ -2565,6 +2542,8 @@ zh_CN:
       order_views_asc: "按浏览量排序（数量最少的优先）"
       order_read: "按最后阅读时间排序（时间最近的优先）"
       order_read_asc: "按最后阅读时间排序（时间最早的优先）"
+      order_hot: "按热门程度排序（最高优先）"
+      order_hot_asc: "按热门程度排序（最低优先）"
       exclude_users: "排除特定用户的话题"
       locale: "按原始语言过滤话题"
       locale_any: "显示以任何指定语言撰写的原始话题（以逗号分隔）"
@@ -3536,14 +3515,9 @@ zh_CN:
     user_automatically_silenced:
       title: "用户被自动禁言"
       subject_template: "新用户 %{username} 因社区举报被禁言"
-      text_body_template: |
-        这是一封自动发送的邮件。
-
-        由于多个用户举报了 %{username} 的帖子，新用户 [%{username}](%{user_url}) 已被自动禁言。
-
-        请[审核举报](%{base_url}/review)。如果 %{username} 被意外禁言，请点击[此用户的管理页面](%{user_url})上的取消禁言按钮。
-
-        此阈值可以通过 `silence_new_user` 网站设置更改。
+    user_automatically_silenced_with_reason:
+      title: "用户被自动禁言"
+      subject_template: "新用户 %{username} 因社区举报被禁言"
     spam_post_blocked:
       title: "垃圾信息帖子被屏蔽"
       subject_template: "新用户 %{username} 的帖子因重复链接被屏蔽"
@@ -4654,17 +4628,17 @@ zh_CN:
       name: 不错的分享
       description: 与 25 个唯一身份访客分享帖子
       long_description: |
-        当您分享的链接被 25 个外部访客点击时，将授予此徽章。感谢您传播有关我们的讨论和这个社区的信息。
+        当您分享的链接被 25 位独立外部访客点击时，将授予此徽章。感谢您宣传我们的讨论和社区。
     good_share:
       name: 很棒的分享
       description: 与 300 个唯一身份访客分享帖子
       long_description: |
-        当您分享的链接被 300 个外部访客点击时，将授予此徽章。干得漂亮！您向一群新人展示了一场精彩的讨论，并帮助这个社区成长。
+        当您分享的链接被 300 个独立外部访客点击时，将授予此徽章。干得漂亮！您向一群新人展示了一场精彩的讨论，并帮助这个社区成长。
     great_share:
       name: 精彩的分享
       description: 与 1000 个唯一身份访客分享帖子
       long_description: |
-        当您分享的链接被 1000 个外部访客点击时，将授予此徽章。哇！您将一个有趣的讨论介绍给大量新受众，并帮助社区前进了一大步！
+        当您分享的链接被 1000 个独立外部访客点击时，将授予此徽章。哇！您将一个有趣的讨论介绍给大量新受众，并帮助社区前进了一大步！
     first_like:
       name: 第一个赞
       description: 赞了一个帖子
@@ -4876,21 +4850,13 @@ zh_CN:
   wizard:
     title: "Discourse 设置"
     step:
-      introduction:
-        title: "关于您的网站"
-        description: "这些内容将显示在您的登录页面和所有公共页面上。您以后可以随时进行更改。"
+      setup:
+        title: "使用入门"
         fields:
           title:
             label: "社区名称"
-            placeholder: "朱桦的环聊"
-          site_description:
-            label: "用一句话描述您的社区"
-            placeholder: "朱桦和她的朋友讨论新奇事物的地方"
           default_locale:
             label: "语言"
-      privacy:
-        title: "成员访问权限"
-        fields:
           login_required:
             label: "公开范围"
             description: "您的社区是公开还是不公开？"
@@ -4914,82 +4880,6 @@ zh_CN:
                 label: "否，新成员可以立即加入"
               "yes":
                 label: "是，新成员必须经过版主批准"
-          chat_enabled:
-            placeholder: "启用聊天"
-            extra_description: "与您的成员实时互动"
-      ready:
-        title: "您的网站已准备就绪！"
-        description: "就是这样！您已经完成建立社区的基础工作。现在，您可以进去看一看，撰写一个欢迎话题，然后发送邀请！<br><br>玩得开心！"
-      styling:
-        title: "外观"
-        fields:
-          color_scheme:
-            label: "调色板"
-          body_font:
-            label: "正文字体"
-          site_font:
-            label: "字体"
-          heading_font:
-            label: "标题字体"
-          styling_preview:
-            label: "预览"
-          homepage_style:
-            label: "首页样式"
-            choices:
-              latest:
-                label: "最新"
-                description: "显示所有类别中最新的活跃话题，帮助成员及时了解他们关心的讨论的最新动态"
-              hot:
-                label: "热议"
-                description: "通过融合近期和整体人气来显示热门话题，展示社区成员当前正在讨论的内容"
-              categories_and_latest_topics:
-                label: "类别与最新话题"
-                description: "将所有类别中近期活跃的话题与类别列表、其描述和话题总数相结合"
-              categories_boxes:
-                label: "类别框"
-                description: "以网格形式显示类别及其描述，非常适合社区成员查看您的网站子社区的概览"
-      branding:
-        title: "网站徽标"
-        fields:
-          logo:
-            label: "主要徽标"
-            description: "推荐大小：600 x 200"
-          logo_small:
-            label: "方形徽标"
-            description: "推荐大小：512 x 512。也用作网站图标和移动主屏幕应用图标。"
-      corporate:
-        title: "您的组织"
-        description: "以下信息将用于您的“服务条款”和“关于”页面。如果没有公司，请尽管跳过。"
-        fields:
-          company_name:
-            label: "公司名称"
-            placeholder: "Acme 组织"
-          governing_law:
-            label: "适用法律"
-            placeholder: "加州法律"
-          contact_url:
-            label: "网页"
-            placeholder: "https://www.example.com/contact-us"
-          city_for_disputes:
-            label: "争议城市"
-            placeholder: "加利福尼亚州旧金山"
-          site_contact:
-            label: "自动消息"
-            description: "所有自动 Discourse 个人消息都将从此用户发送，例如举报警告和备份完成通知。"
-          contact_email:
-            label: "联系人"
-            placeholder: "example@user.com"
-            description: "负责此网站的主要联系人的电子邮件地址，用于重要通知，也会在<a href='%{base_path}/about' target='_blank'>您的“关于”页面</a>上列出以供紧急联系。"
-      invites:
-        title: "邀请管理人员"
-        description: "即将完成！让我们邀请一些人来使用有趣的话题和回复帮助<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>培育您的讨论</a>以启动您的社区。"
-        disabled: "由于本地登录被禁用，因此无法向任何人发送邀请。请继续下一步。"
-      finished:
-        title: "您的 Discourse 已就绪！"
-        description: |
-          <p>如果您想更改这些设置，请<b>随时重新运行此向导</b>，或访问<a href='%{base_path}/admin' target='_blank'>您的管理员部分</a>；在网站菜单中的扳手图标旁边找到相应设置。</p>
-          <p>使用我们强大的主题系统可以轻松定制您的 Discourse。例如，请查看 <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a> 上的<a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">热门主题和组件</a>。</p>
-          <p>玩得开心，并顺利<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>建立您的新社区</a>！</p>
   search_logs:
     graph_title: "搜索计数"
   onebox:
@@ -5012,6 +4902,12 @@ zh_CN:
       review_by: "审查者"
       pr_summary: "%{commits} 提交了更改的 %{changed_files} 文件，其中包含 %{additions} 项增加和 %{deletions} 项删除"
       no_description: "通过在 GitHub 上创建帐户来为 %{repo} 开发做出贡献。"
+      pr_title:
+        changes_requested: "请求更改"
+      status_date:
+        open: "已打开"
+        approved: "已批准"
+        closed: "已关闭"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} 在“%{topic}”中提及了您 - %{site_title}'
@@ -5029,6 +4925,8 @@ zh_CN:
     json_too_long: "值由于超出列长度限制而未记录"
     not_found: "找不到"
     unknown: "未知"
+    site_setting:
+      update_existing_users: "更新现有用户？ %{value}"
     user_merged: "%{username} 已被合并到此帐户"
     user_delete_self: "被自己从 %{url} 删除"
     webhook_deactivation_reason: "您的网络钩子已自动停用。我们收到了多个 '%{status}' HTTP 状态失败响应。"
@@ -5049,9 +4947,14 @@ zh_CN:
     auto_deleted_hidden_posts: "自动删除隐藏的帖子"
     seed_data_topic_updated: "种子数据话题已更新"
     seed_data_topic_deleted: "种子数据话题已删除"
+    upcoming_changes:
+      log_promoted: >
+        这项即将进行的更改达到了 '%{change_status}' 状态，因此它已在您的网站上自动启用。有关更多详细信息，请参阅 <a href="%{base_path}/admin/config/upcoming-changes">即将进行的更改页面</a> 。
   reviewables:
     already_handled: "谢谢，但我们已经审核该帖子并确定不需要再次举报它。"
     already_handled_and_user_not_exist: "谢谢，但有人已经审核过了，该用户已不存在。"
+    post_deleted_by_author: "帖子被作者删除"
+    post_restored_by_author: "帖子被作者恢复。"
     priorities:
       low: "低"
       medium: "中"
@@ -5151,7 +5054,6 @@ zh_CN:
         title: "舍弃帖子"
         complete: "帖子已被舍弃。"
       revise_and_reject_post:
-        title: "修订帖子…"
         complete: "帖子被拒绝，等待修订。"
       ignore:
         title: "忽略"
@@ -5245,6 +5147,7 @@ zh_CN:
         title: "无行动"
       silence_user:
         title: "禁言用户"
+        description: "禁止该用户发帖"
       suspend_user:
         title: "封禁用户"
       delete_user:

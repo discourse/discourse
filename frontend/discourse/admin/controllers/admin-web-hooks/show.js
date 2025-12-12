@@ -26,7 +26,6 @@ export default class AdminWebHooksShowController extends Controller {
       didConfirm: async () => {
         try {
           await this.model.destroyRecord();
-          this.adminWebHooks.model.removeObject(this.model);
           this.router.transitionTo("adminWebHooks");
         } catch (e) {
           popupAjaxError(e);

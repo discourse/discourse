@@ -10,6 +10,7 @@ ru:
       logs:
         staff_actions:
           actions:
+            update_automation: обновить автоматизацию
             delete_automation: удалить автоматизацию
     discourse_automation:
       title: Автоматизация
@@ -67,6 +68,12 @@ ru:
         text:
           label: Текст
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Категории
+            tags:
+              label: Теги
         not_found: Не удалось найти триггер `%{trigger}` для автоматизации `%{automation}`. Проверьте, установлен ли соответствующий плагин.
         user_badge_granted:
           fields:

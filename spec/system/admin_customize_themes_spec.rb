@@ -10,10 +10,16 @@ describe "Admin Customize Themes", type: :system do
   let(:theme_page) { PageObjects::Pages::AdminCustomizeThemes.new }
   let(:themes_page) { PageObjects::Pages::AdminCustomizeThemesConfigArea.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
+  let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
   before { sign_in(admin) }
 
   describe "when visiting the page to customize a single theme" do
+    it "should keep sidebar navigation link active" do
+      theme_page.visit(theme)
+      expect(sidebar).to have_active_link("admin_themes_and_components")
+    end
+
     it "should allow admin to update the light color scheme of the theme" do
       theme_page.visit(theme)
 
@@ -113,7 +119,7 @@ describe "Admin Customize Themes", type: :system do
     expect(page).to have_no_css(".delete")
   end
 
-  it "hides unecessary sections and buttons for system themes" do
+  it "hides unnecessary sections and buttons for system themes" do
     theme.set_field(
       target: :extra_js,
       name: "discourse/api-initializers/test.js",
@@ -264,7 +270,7 @@ describe "Admin Customize Themes", type: :system do
     end
   end
 
-  context "when visting a component's page" do
+  context "when visiting a component's page" do
     fab!(:component) { Fabricate(:theme, component: true, name: "Cool component 493") }
 
     it "has a link to the components page" do

@@ -78,6 +78,7 @@ sr:
       usage:
         summary: "Rezime"
         username: "Korisničko Ime"
+        total: "Ukupno"
         periods:
           last_day: "Последња 24 сата"
       ai_persona:
@@ -139,6 +140,7 @@ sr:
           cancel: "Odustani"
         thumbnail_suggestions:
           select: "Odaberite"
+          try_again: "Pokušaj ponovno"
         image_caption:
           save_caption: "Sačuvaj"
       embeddings:
