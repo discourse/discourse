@@ -483,25 +483,29 @@ RSpec.configure do |config|
 
     config.before(:each, type: :system) do |example|
       # Only set ENV["EMBER_RAISE_ON_DEPRECATION"] if not already set
-      if ENV["EMBER_RAISE_ON_DEPRECATION"].nil? &&
-           example_file_path = example.metadata[:rerun_file_path]
-        # Check if the example is from a plugin or theme
-        # Path format: .../plugins/name/spec/... or .../themes/name/spec/...
-        external_match = example_file_path.match(%r{/(plugins|themes)/([^/]+)/})
+      if ENV["EMBER_RAISE_ON_DEPRECATION"].nil?
+        example_file_path = example.metadata[:rerun_file_path]
 
-        if external_match
-          type_dir = external_match[1] # "plugins" or "themes"
-          name = external_match[2] # plugin or theme name
-          dir_path = Rails.root.join(type_dir, name)
+        if example_file_path
+          expanded_example_file_path = Pathname.new(example_file_path).expand_path
+          is_within_rails_root = expanded_example_file_path.to_s.start_with?(Rails.root.to_s)
 
-          # Check if plugin/theme is preinstalled (no .git directory)
-          is_preinstalled = !File.exist?(File.join(dir_path, ".git"))
+          if is_within_rails_root
+            extension_match = example_file_path.match(%r{/(plugins|themes)/([^/]+)/})
+            should_set_raise_on_deprecation =
+              if extension_match
+                type_dir, extension_name = extension_match.captures
+                extension_root = Rails.root.join(type_dir, extension_name)
 
-          # Only set the env var if the plugin/theme is preinstalled
-          ENV["EMBER_RAISE_ON_DEPRECATION"] = "1" if is_preinstalled
-        else
-          # Not a plugin or theme spec, set the env var
-          ENV["EMBER_RAISE_ON_DEPRECATION"] = "1"
+                # Preinstalled plugins/themes don't have a .git directory
+                !extension_root.join(".git").exist?
+              else
+                # Not a plugin or theme spec
+                true
+              end
+
+            ENV["EMBER_RAISE_ON_DEPRECATION"] = "1" if should_set_raise_on_deprecation
+          end
         end
       end
 
