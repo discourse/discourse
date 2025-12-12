@@ -24,32 +24,19 @@ module ::DiscourseRewind
     File.expand_path(File.join(__dir__, "public", name))
   end
 
+  def self.rewind_year(date = nil)
+    date ||= Time.zone.now
+    date.month == 1 ? date.year - 1 : date.year
+  end
+
   def self.year_date_range(date_override = nil)
-    if date_override.present?
-      current_date = date_override
-    else
-      current_date = Time.zone.now
-    end
+    current_date = date_override.presence || Time.zone.now
 
-    current_month = current_date.month
-    current_year = current_date.year
+    # Outside December/January, only available in development
+    is_rewind_period = current_date.month == 1 || current_date.month == 12
+    return false if !is_rewind_period && !Rails.env.development?
 
-    case current_month
-    when 1
-      current_year - 1
-    when 12
-      current_year
-    else
-      # Otherwise it's impossible to test in browser locally unless you're
-      # in December or January
-      if Rails.env.development?
-        current_year
-      else
-        false
-      end
-    end
-
-    Date.new(current_year).all_year
+    Date.new(current_date.year).all_year
   end
 end
 
@@ -58,10 +45,13 @@ require_relative "lib/discourse_rewind/engine"
 after_initialize do
   UserUpdater::OPTION_ATTR.push(:discourse_rewind_disabled, :discourse_rewind_share_publicly)
 
-  add_to_serializer(:user_option, :discourse_rewind_disabled) { object.discourse_rewind_disabled }
-
-  add_to_serializer(:current_user_option, :discourse_rewind_disabled) do
-    object.discourse_rewind_disabled
+  %i[user_option current_user_option].each do |serializer|
+    add_to_serializer(serializer, :discourse_rewind_disabled) { object.discourse_rewind_disabled }
+    add_to_serializer(serializer, :discourse_rewind_dismissed) do
+      dismissed_at = object.discourse_rewind_dismissed_at
+      dismissed_at.present? &&
+        DiscourseRewind.rewind_year(dismissed_at) >= DiscourseRewind.rewind_year
+    end
   end
 
   add_to_serializer(:user_option, :discourse_rewind_share_publicly) do
