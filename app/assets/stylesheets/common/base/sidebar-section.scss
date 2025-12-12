@@ -23,7 +23,9 @@
         calc(var(--d-sidebar-row-horizontal-padding) / 3);
 
       .discourse-no-touch & {
-        transition: all 0.25s;
+        transition:
+          opacity 0.25s,
+          background 0.25s;
         opacity: 0;
 
         &:hover {
