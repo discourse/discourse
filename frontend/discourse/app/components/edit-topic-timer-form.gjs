@@ -10,6 +10,7 @@ import {
   BUMP_TYPE,
   CLOSE_AFTER_LAST_POST_STATUS_TYPE,
   CLOSE_STATUS_TYPE,
+  DELETE_AFTER_LAST_POST_STATUS_TYPE,
   DELETE_REPLIES_TYPE,
   DELETE_STATUS_TYPE,
   OPEN_STATUS_TYPE,
@@ -64,7 +65,15 @@ export default class EditTopicTimerForm extends Component {
   }
 
   get useDuration() {
-    return this.autoCloseAfterLastPost || this.autoDeleteReplies;
+    return (
+      this.autoCloseAfterLastPost ||
+      this.autoDeleteAfterLastPost ||
+      this.autoDeleteReplies
+    );
+  }
+
+  get autoDeleteAfterLastPost() {
+    return this.statusType === DELETE_AFTER_LAST_POST_STATUS_TYPE;
   }
 
   get autoCloseAfterLastPost() {
@@ -87,6 +96,11 @@ export default class EditTopicTimerForm extends Component {
       this.args.topicTimer.based_on_last_post
     ) {
       return CLOSE_AFTER_LAST_POST_STATUS_TYPE;
+    } else if (
+      statusType === DELETE_STATUS_TYPE &&
+      this.args.topicTimer.based_on_last_post
+    ) {
+      return DELETE_AFTER_LAST_POST_STATUS_TYPE;
     } else {
       return statusType;
     }
