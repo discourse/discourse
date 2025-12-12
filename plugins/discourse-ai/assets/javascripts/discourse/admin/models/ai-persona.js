@@ -1,5 +1,6 @@
 import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
+import { toPlainObject } from "../../lib/utilities";
 
 const CREATE_ATTRIBUTES = [
   "id",
@@ -141,7 +142,7 @@ export default class AiPersona extends RestModel {
   }
 
   fromPOJO(data) {
-    const dataClone = JSON.parse(JSON.stringify(data));
+    const dataClone = toPlainObject(data);
 
     const persona = AiPersona.create(dataClone);
     persona.tools = this.flattenedToolStructure(dataClone);
@@ -155,6 +156,12 @@ export default class AiPersona extends RestModel {
     attrs.forced_tool_count = this.forced_tool_count || -1;
     attrs.response_format = attrs.response_format || [];
     attrs.examples = attrs.examples || [];
+
+    // FormKit uses Immer proxies which cause issues when passed to upload handlers.
+    // Convert to plain objects to ensure compatibility.
+    if (attrs.rag_uploads?.length > 0) {
+      attrs.rag_uploads = toPlainObject(attrs.rag_uploads);
+    }
 
     return attrs;
   }
