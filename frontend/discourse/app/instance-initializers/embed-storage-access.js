@@ -1,4 +1,5 @@
 import EmbedMode from "discourse/lib/embed-mode";
+import { i18n } from "discourse-i18n";
 
 function isSafari() {
   const ua = navigator.userAgent;
@@ -48,18 +49,33 @@ export default {
     const siteSettings = owner.lookup("service:site-settings");
     const siteName = siteSettings.title || "this forum";
 
+    const promptText = i18n("embed_mode.storage_access_prompt", {
+      site_name: siteName,
+    });
+    const allowText = i18n("embed_mode.allow_access");
+    const guestText = i18n("embed_mode.continue_as_guest");
+
     const overlay = document.createElement("div");
     overlay.className = "embed-storage-access-overlay";
-    overlay.innerHTML = `
-      <div class="embed-storage-access-prompt">
-        <p>Already have a ${siteName} account? Allow access to your session to comment as yourself.</p>
-        <button class="btn btn-primary">Allow Access</button>
-        <button class="btn btn-flat btn-text">Continue as Guest</button>
-      </div>
-    `;
 
-    const primaryBtn = overlay.querySelector(".btn-primary");
-    const guestBtn = overlay.querySelector(".btn-text");
+    const prompt = document.createElement("div");
+    prompt.className = "embed-storage-access-prompt";
+
+    const p = document.createElement("p");
+    p.textContent = promptText;
+
+    const primaryBtn = document.createElement("button");
+    primaryBtn.className = "btn btn-primary";
+    primaryBtn.textContent = allowText;
+
+    const guestBtn = document.createElement("button");
+    guestBtn.className = "btn btn-flat btn-text";
+    guestBtn.textContent = guestText;
+
+    prompt.appendChild(p);
+    prompt.appendChild(primaryBtn);
+    prompt.appendChild(guestBtn);
+    overlay.appendChild(prompt);
 
     primaryBtn.addEventListener("click", async () => {
       try {

@@ -1,13 +1,8 @@
-import EmbedMode from "discourse/lib/embed-mode";
 import DiscourseURL from "discourse/lib/url";
 
 const MOUSE_EVENT_PRIMARY_BUTTON_ID = 0;
 
 export function wantsNewWindow(e) {
-  if (EmbedMode.enabled) {
-    return true;
-  }
-
   return (
     e.defaultPrevented ||
     e.isDefaultPrevented?.() ||
@@ -32,15 +27,6 @@ export default function interceptClick(e) {
   }
 
   if (target.target === "_blank") {
-    return;
-  }
-
-  if (EmbedMode.enabled) {
-    const href = target.getAttribute("href");
-    if (href && !href.startsWith("#")) {
-      e.preventDefault();
-      window.open(href, "_blank");
-    }
     return;
   }
 
