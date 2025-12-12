@@ -173,7 +173,7 @@ export default class BreadCrumbs extends Component {
           <CategoryDrop
             @category={{breadcrumb.category}}
             @categories={{breadcrumb.options}}
-            @tagId={{this.tag.name}}
+            @tag={{this.tag}}
             @editingCategory={{this.editingCategory}}
             @editingCategoryTab={{this.editingCategoryTab}}
             @options={{hash
@@ -206,7 +206,7 @@ export default class BreadCrumbs extends Component {
           <TagDrop
             @currentCategory={{this.category}}
             @noSubcategories={{this.noSubcategories}}
-            @tagId={{this.tag.name}}
+            @tag={{this.tag}}
           />
         </li>
       {{/if}}

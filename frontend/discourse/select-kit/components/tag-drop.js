@@ -39,7 +39,7 @@ const MORE_TAGS_COLLECTION = "MORE_TAGS_COLLECTION";
 export default class TagDrop extends ComboBoxComponent {
   @service tagUtils;
 
-  @readOnly("tagId") value;
+  @readOnly("tag.id") value;
 
   @setting("max_tag_search_results") maxTagSearchResults;
   @setting("tags_sort_alphabetically") sortTagsAlphabetically;
@@ -84,7 +84,11 @@ export default class TagDrop extends ComboBoxComponent {
 
   modifySelection(content) {
     if (this.value === NONE_TAG) {
-      content = this.defaultItem(NO_TAG_ID, i18n("tagging.selector_no_tags"));
+      return this.defaultItem(NO_TAG_ID, i18n("tagging.selector_no_tags"));
+    }
+
+    if (this.value && this.tag?.name) {
+      return this.defaultItem(this.value, this.tag.name);
     }
 
     return content;
@@ -99,18 +103,18 @@ export default class TagDrop extends ComboBoxComponent {
     return TagRow;
   }
 
-  @computed("tagId")
+  @computed("tag.id")
   get shortcuts() {
     const shortcuts = [];
 
-    if (this.tagId) {
+    if (this.tag?.id) {
       shortcuts.push({
         id: ALL_TAGS_ID,
         name: i18n("tagging.selector_remove_filter"),
       });
     }
 
-    if (this.tagId !== NONE_TAG) {
+    if (this.tag?.id !== NONE_TAG) {
       shortcuts.push({
         id: NO_TAG_ID,
         name: i18n("tagging.selector_no_tags"),
