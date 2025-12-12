@@ -143,7 +143,7 @@ module DiscourseUpdates
     end
 
     def new_features(force_refresh: false)
-      update_new_features if force_refresh
+      update_new_features if force_refresh || Rails.env.test?
 
       entries =
         begin
