@@ -336,24 +336,6 @@ export function buildResolver(baseName) {
       }
     }
 
-    /**
-     * Identifies the source (core, plugin, or theme) of a template by its parsed name.
-     *
-     * @param {Object} parsedName - The parsed template name object
-     * @param {string} [prefix] - Optional prefix to prepend to the template path
-     * @return {Object|undefined} Source information containing type and name, or undefined if not found
-     */
-    findTemplateSource(parsedName, prefix) {
-      const { candidates } = this.#buildTemplateCandidates(parsedName, prefix);
-
-      for (const candidate of candidates) {
-        const result = this.discourseTemplateModule(candidate);
-        if (result) {
-          return DiscourseTemplateMap.identifySource(candidate);
-        }
-      }
-    }
-
     // Try to find a template within a special admin namespace, e.g. adminEmail => admin/templates/email
     // (similar to how discourse lays out templates)
     findAdminTemplate(parsedName) {
@@ -397,7 +379,7 @@ export function buildResolver(baseName) {
                 `Looking up '${candidate.fullName}' is no longer permitted. Rename to '${parsedName.fullName}' instead`,
                 {
                   id: "discourse.deprecated-resolver-normalization",
-                  source: this.findTemplateSource(candidate, prefix),
+                  source: this.#findTemplateSource(candidate, prefix),
                 }
               );
             }
@@ -439,6 +421,24 @@ export function buildResolver(baseName) {
           prefix + withoutType.replace(/\//g, "-"),
         ],
       };
+    }
+
+    /**
+     * Identifies the source (core, plugin, or theme) of a template by its parsed name.
+     *
+     * @param {Object} parsedName - The parsed template name object
+     * @param {string} [prefix] - Optional prefix to prepend to the template path
+     * @return {Object|undefined} Source information containing type and name, or undefined if not found
+     */
+    #findTemplateSource(parsedName, prefix) {
+      const { candidates } = this.#buildTemplateCandidates(parsedName, prefix);
+
+      for (const candidate of candidates) {
+        const result = this.discourseTemplateModule(candidate);
+        if (result) {
+          return DiscourseTemplateMap.identifySource(candidate);
+        }
+      }
     }
   };
 }
