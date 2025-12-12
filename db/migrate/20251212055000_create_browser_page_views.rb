@@ -10,6 +10,7 @@ class CreateBrowserPageViews < ActiveRecord::Migration[7.2]
       t.string :query_string, limit: 1024
       t.string :route_name, limit: 256
       t.string :referrer, limit: 1024
+      t.string :previous_path, limit: 1024
       t.inet :ip_address
       t.string :user_agent, limit: 512
       t.boolean :is_mobile, default: false, null: false
