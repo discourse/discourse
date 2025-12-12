@@ -1,5 +1,6 @@
 import { run } from "@ember/runloop";
 import $ from "jquery";
+import MessageBus from "message-bus-client";
 import { isTesting } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
 import userPresent from "discourse/lib/user-presence";
@@ -11,6 +12,7 @@ let _trackView = false;
 let _topicId = null;
 let _transientHeader = null;
 let _logoffCallback;
+let _viewTransition = null;
 
 export function setTransientHeader(key, value) {
   _transientHeader = { key, value };
@@ -20,12 +22,14 @@ export function trackNextAjaxAsTopicView(topicId) {
   _topicId = topicId;
 }
 
-export function trackNextAjaxAsPageview() {
+export function trackNextAjaxAsPageview(to) {
   _trackView = true;
+  _viewTransition = to;
 }
 
 export function resetAjax() {
   _trackView = false;
+  _viewTransition = null;
 }
 
 export function setLogoffCallback(cb) {
@@ -103,15 +107,45 @@ export function ajax() {
     if (_trackView && (!args.type || args.type === "GET")) {
       _trackView = false;
       args.headers["Discourse-Track-View"] = "true";
+
+      // Send session ID (MessageBus clientId)
+      if (MessageBus.clientId) {
+        args.headers["Discourse-Track-View-Session-Id"] = MessageBus.clientId;
+      }
+
+      // Send current path
       if (window.location?.pathname) {
         args.headers["Discourse-Track-View-Path"] =
-          window.location.pathname.slice(0, 512);
+          window.location.pathname.slice(0, 1024);
+      }
+
+      // Send query string
+      const search = window.location.search;
+      if (search && search.length > 1) {
+        args.headers["Discourse-Track-View-Query-String"] = search
+          .slice(1, 1025)
+          .replace(/[\r\n]/g, "");
+      }
+
+      // Send Ember route name
+      if (_viewTransition?.name) {
+        args.headers["Discourse-Track-View-Route-Name"] = _viewTransition.name
+          .toString()
+          .slice(0, 256);
+      }
+
+      // Send referrer
+      if (document.referrer) {
+        args.headers["Discourse-Track-View-Referrer"] = document.referrer
+          .slice(0, 1024)
+          .replace(/[\r\n]/g, "");
       }
 
       if (_topicId) {
         args.headers["Discourse-Track-View-Topic-Id"] = _topicId;
       }
       _topicId = null;
+      _viewTransition = null;
     }
 
     if (userPresent()) {

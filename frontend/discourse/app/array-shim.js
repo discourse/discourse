@@ -1,4 +1,3 @@
-// eslint-disable-next-line discourse/deprecated-imports
 import { NativeArray } from "@ember/array";
 import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
 import escapeRegExp from "discourse/lib/escape-regexp";

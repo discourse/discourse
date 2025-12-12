@@ -12,10 +12,12 @@ let _deferredViewTopicId = null;
 let _deferredViewPath = null;
 let _deferredViewQueryString = null;
 let _deferredViewReferrer = null;
+let _deferredViewRouteName = null;
 
-export function sendDeferredPageview() {
+export function sendDeferredPageview(routeName = null) {
   _sendDeferredPageview = true;
   _deferredViewPath = window.location.pathname.slice(0, 1024);
+  _deferredViewRouteName = routeName?.toString().slice(0, 256) || null;
 
   const search = window.location.search;
   if (search && search.length > 1) {
@@ -66,11 +68,17 @@ function mbAjax(messageBus, opts) {
         _deferredViewReferrer;
     }
 
+    if (_deferredViewRouteName) {
+      opts.headers["Discourse-Deferred-Track-View-Route-Name"] =
+        _deferredViewRouteName;
+    }
+
     _sendDeferredPageview = false;
     _deferredViewTopicId = null;
     _deferredViewPath = null;
     _deferredViewQueryString = null;
     _deferredViewReferrer = null;
+    _deferredViewRouteName = null;
   }
 
   const oldComplete = opts.complete;
@@ -132,6 +140,11 @@ export default {
           router.currentRouteName === "topic.fromParamsNear"
         ) {
           _deferredViewTopicId = router.currentRoute.parent.params.id;
+        }
+
+        // Set the route name for deferred page view tracking
+        if (router.currentRouteName) {
+          _deferredViewRouteName = router.currentRouteName;
         }
 
         clearInterval(interval);
