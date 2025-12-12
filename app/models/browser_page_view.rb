@@ -31,3 +31,28 @@ class BrowserPageView < ActiveRecord::Base
     Discourse.warn_exception(e, message: "Failed to log browser page view")
   end
 end
+
+# == Schema Information
+#
+# Table name: browser_page_views
+#
+#  ip_address   :inet
+#  is_mobile    :boolean          default(FALSE), not null
+#  path         :string(1024)
+#  query_string :string(1024)
+#  referrer     :string(1024)
+#  route_name   :string(256)
+#  user_agent   :string(512)
+#  created_at   :datetime         not null
+#  session_id   :string(36)
+#  topic_id     :integer
+#  user_id      :integer
+#
+# Indexes
+#
+#  index_browser_page_views_on_created_at  (created_at)
+#  index_browser_page_views_on_route_name  (route_name)
+#  index_browser_page_views_on_session_id  (session_id)
+#  index_browser_page_views_on_topic_id    (topic_id)
+#  index_browser_page_views_on_user_id     (user_id)
+#

@@ -26,3 +26,26 @@ class ApiRequestLog < ActiveRecord::Base
     Discourse.warn_exception(e, message: "Failed to log API request")
   end
 end
+
+# == Schema Information
+#
+# Table name: api_request_logs
+#
+#  http_method   :string(10)
+#  http_status   :integer
+#  ip_address    :inet
+#  is_user_api   :boolean          default(FALSE), not null
+#  path          :string(1024)
+#  response_time :float
+#  route         :string(100)
+#  user_agent    :string(512)
+#  created_at    :datetime         not null
+#  user_id       :integer
+#
+# Indexes
+#
+#  index_api_request_logs_on_created_at   (created_at)
+#  index_api_request_logs_on_http_status  (http_status)
+#  index_api_request_logs_on_route        (route)
+#  index_api_request_logs_on_user_id      (user_id)
+#
