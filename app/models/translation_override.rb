@@ -13,6 +13,7 @@ class TranslationOverride < ActiveRecord::Base
       user_notifications.only_reply_by_email
       user_notifications.reply_by_email
       user_notifications.visit_link_to_respond
+      user_notifications.email_preview
       user_notifications.header_instructions
       user_notifications.pm_participants
       unsubscribe_mailing_list

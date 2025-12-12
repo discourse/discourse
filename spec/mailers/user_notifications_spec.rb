@@ -66,6 +66,11 @@ RSpec.describe UserNotifications do
       expect(email.from).to eq([SiteSetting.notification_email])
       expect(email.body).to be_present
     end
+
+    it "shows the correct preview text" do
+      preview_text = I18n.t("user_notifications.signup.preview")
+      expect(email.body.to_s.scan(/#{preview_text}/).count).to eq(1)
+    end
   end
 
   describe ".forgot_password" do
@@ -76,6 +81,19 @@ RSpec.describe UserNotifications do
       expect(email.subject).to be_present
       expect(email.from).to eq([SiteSetting.notification_email])
       expect(email.body).to be_present
+    end
+
+    it "shows the correct preview text in forgot password" do
+      preview_text = I18n.t("user_notifications.forgot_password.preview")
+
+      expect(email.body.to_s.scan(/#{preview_text}/).count).to eq(1)
+    end
+
+    it "shows the correct preview text when setting password" do
+      email = UserNotifications.forgot_password(Fabricate(:user, password: nil))
+      preview_text = I18n.t("user_notifications.set_password.preview")
+
+      expect(email.body.to_s.scan(/#{preview_text}/).count).to eq(1)
     end
   end
 
@@ -133,12 +151,16 @@ RSpec.describe UserNotifications do
         I18n.t("user_notifications.email_login.subject_template", email_prefix: SiteSetting.title),
       )
 
+      preview_text = I18n.t("user_notifications.email_login.preview")
+      expect(email.body.to_s.scan(/#{preview_text}/).count).to eq(1)
+
       expect(email.body.to_s).to match(
         I18n.t(
           "user_notifications.email_login.text_body_template",
           site_name: SiteSetting.title,
           base_url: Discourse.base_url,
           email_token: email_token,
+          email_preview: preview_text,
         ),
       )
     end
@@ -530,6 +552,9 @@ RSpec.describe UserNotifications do
       expect(mail.subject).to match(/Taggie/)
 
       mail_html = mail.html_part.body.to_s
+      preview_text = I18n.t("user_notifications.user_replied.preview")
+
+      expect(mail_html.scan(/#{preview_text}/).count).to eq(1)
 
       expect(mail_html.scan(/My super duper cool topic/).count).to eq(1)
       expect(mail_html.scan(/In Reply To/).count).to eq(1)
@@ -755,6 +780,9 @@ RSpec.describe UserNotifications do
       # subject should not include category name
       expect(mail.subject).not_to match(/Uncategorized/)
 
+      preview_text = I18n.t("user_notifications.user_posted.preview")
+      expect(mail.html_part.body.to_s.scan(/#{preview_text}/).count).to eq(1)
+
       # 1 respond to links as no context by default
       expect(mail.html_part.body.to_s.scan(/to respond/).count).to eq(1)
 
@@ -846,6 +874,10 @@ RSpec.describe UserNotifications do
 
       # subject should include "[PM]"
       expect(mail.subject).to include("[PM] ")
+
+      # note that translation key differs from method name (ie. user_posted_pm)
+      preview_text = I18n.t("user_notifications.user_posted_pm.preview")
+      expect(mail.html_part.body.to_s.scan(/#{preview_text}/).count).to eq(1)
 
       # 1 "visit message" link
       expect(mail.html_part.body.to_s.scan(/Visit Message/).count).to eq(1)

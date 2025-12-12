@@ -263,6 +263,7 @@ module Email
         "-moz-box-sizing:border-box;-ms-text-size-adjust:100%;-webkit-box-sizing:border-box;-webkit-text-size-adjust:100%;box-sizing:border-box;color:#0a0a0a;font-family:Arial,sans-serif;font-size:14px;font-weight:400;line-height:1.3;margin:0;min-width:100%;padding:0;width:100%",
       )
 
+      style(".email-preview", "display: none;")
       style(".previous-discussion", "font-size: 17px; color: #444; margin-bottom:10px;")
       style(
         ".notification-date",

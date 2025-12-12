@@ -20,6 +20,10 @@ module Email
         hostname: Discourse.current_hostname,
       }.merge!(@opts)
 
+      if @opts[:template].present? && I18n.exists?("#{@opts[:template]}.preview")
+        @template_args[:email_preview] ||= I18n.t("#{@opts[:template]}.preview", @template_args)
+      end
+
       return if @template_args[:url].blank?
 
       @template_args[:header_instructions] ||= I18n.t(
@@ -148,6 +152,13 @@ module Email
         html_override.gsub!("%{unsubscribe_instructions}", unsubscribe_instructions)
       else
         html_override.gsub!("%{unsubscribe_instructions}", "")
+      end
+
+      if @template_args[:email_preview].present?
+        email_preview = PrettyText.cook(@template_args[:email_preview], sanitize: false).html_safe
+        html_override.gsub!("%{email_preview}", email_preview)
+      else
+        html_override.gsub!("%{email_preview}", "")
       end
 
       if @template_args[:header_instructions].present?
