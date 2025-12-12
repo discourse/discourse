@@ -29,6 +29,10 @@
   }
 }
 
+#dialog-holder {
+  z-index: 10000;
+}
+
 .rewind-report:last-of-type {
   margin-bottom: 10em;
 }
