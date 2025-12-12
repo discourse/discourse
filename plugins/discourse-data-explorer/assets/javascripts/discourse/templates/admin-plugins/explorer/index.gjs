@@ -5,11 +5,11 @@ import DButton from "discourse/components/d-button";
 import PickFilesButton from "discourse/components/pick-files-button";
 import TableHeaderToggle from "discourse/components/table-header-toggle";
 import TextField from "discourse/components/text-field";
-import boundDate from "discourse/helpers/bound-date";
+import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import icon from "discourse/helpers/d-icon";
 import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import ShareReport from "../../components/share-report";
+import ShareReport from "../../../components/share-report";
 
 export default <template>
   {{#if @controller.disallow}}
@@ -156,11 +156,11 @@ export default <template>
                   </div>
                   {{#if query.last_run_at}}
                     <span>
-                      {{boundDate query.last_run_at}}
+                      {{ageWithTooltip query.last_run_at format="medium"}}
                     </span>
                   {{else if query.created_at}}
                     <span>
-                      {{boundDate query.created_at}}
+                      {{ageWithTooltip query.created_at format="medium"}}
                     </span>
                   {{/if}}
                 </td>

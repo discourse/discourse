@@ -39,7 +39,5 @@ export default class UserNotificationsReactionsReceived extends DiscourseRoute {
       actingUsername: controller.acting_username,
       includeLikes: controller.include_likes,
     });
-
-    this.controllerFor("application").set("showFooter", loadedAll);
   }
 }

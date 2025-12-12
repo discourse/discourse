@@ -50,18 +50,29 @@ export default function identifySource(error) {
 
   let plugin;
 
-  if (DEBUG) {
-    // Development (no fingerprinting)
-    plugin ??= stack.match(/assets\/plugins\/([\w-]+)\.js/)?.[1];
+  // Build patterns array dynamically to match plugin files in both development and production
+  // Order matters: check more specific patterns (_admin) before general ones
+  const patterns = [];
 
-    // Test files:
-    plugin ??= stack.match(/assets\/plugins\/test\/([\w-]+)_tests\.js/)?.[1];
+  if (DEBUG) {
+    patterns.push(
+      /assets\/plugins\/([\w-]+)_admin\.js/, // Admin UI Development (no fingerprinting)
+      /assets\/plugins\/([\w-]+)\.js/, // Development (no fingerprinting)
+      /assets\/plugins\/test\/([\w-]+)_tests\.js/ // Test files
+    );
   }
 
-  // Production (with fingerprints)
-  plugin ??= stack.match(
-    /assets\/plugins\/_?([\w-]+)-[0-9a-f]+(?:\.(?:br|gz))?\.js/
-  )?.[1];
+  patterns.push(
+    /assets\/plugins\/_?([\w-]+)-[0-9a-f]+_admin(?:\.(?:br|gz))?\.js/, // Admin UI Production (with fingerprints)
+    /assets\/plugins\/_?([\w-]+)-[0-9a-f]+(?:\.(?:br|gz))?\.js/ // Production (with fingerprints)
+  );
+
+  for (const pattern of patterns) {
+    plugin = stack.match(pattern)?.[1];
+    if (plugin) {
+      break;
+    }
+  }
 
   if (plugin) {
     return {

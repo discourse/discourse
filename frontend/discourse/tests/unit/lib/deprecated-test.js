@@ -41,7 +41,7 @@ module("Unit | Utility | deprecated", function (hooks) {
     );
     assert.deepEqual(
       this.warnStub.args[0],
-      ["Deprecation notice: My message"],
+      ["DEPRECATION NOTICE: My message"],
       "console.warn is called with the correct arguments"
     );
     assert.strictEqual(
@@ -66,7 +66,7 @@ module("Unit | Utility | deprecated", function (hooks) {
     assert.deepEqual(
       this.warnStub.args[0],
       [
-        "Deprecation notice: My message [deprecation id: discourse.my_deprecation_id]",
+        "DEPRECATION NOTICE: My message [deprecation id: discourse.my_deprecation_id]",
       ],
       "console.warn is called with the correct arguments"
     );
@@ -97,7 +97,7 @@ module("Unit | Utility | deprecated", function (hooks) {
     assert.deepEqual(
       this.warnStub.args[0],
       [
-        "Deprecation notice: My message [deprecated since Discourse v1] [removal in Discourse v100] [deprecation id: discourse.my_deprecation_id] [info: https://example.com]",
+        "DEPRECATION NOTICE: My message [deprecated since Discourse v1] [removal in Discourse v100] [deprecation id: discourse.my_deprecation_id] [info: https://example.com]",
       ],
       "console.warn is called with the correct arguments"
     );
@@ -120,7 +120,7 @@ module("Unit | Utility | deprecated", function (hooks) {
           id: "discourse.my_deprecation_id",
           raiseError: true,
         }),
-      "Deprecation notice: My message [deprecation id: discourse.my_deprecation_id]"
+      "DEPRECATION NOTICE: My message [deprecation id: discourse.my_deprecation_id]"
     );
     assert.strictEqual(
       this.counterStub.callCount,

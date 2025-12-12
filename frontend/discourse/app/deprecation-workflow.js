@@ -21,7 +21,11 @@ const VALID_EMBER_CLI_WORKFLOW_HANDLERS = ["silence", "log", "throw"];
  * Valid handler types for deprecation workflows.
  * @type {string[]}
  */
-const VALID_HANDLERS = [...VALID_EMBER_CLI_WORKFLOW_HANDLERS, "counter"];
+const VALID_HANDLERS = [
+  ...VALID_EMBER_CLI_WORKFLOW_HANDLERS,
+  "dont-throw",
+  "counter",
+];
 
 /**
  * Handles deprecation workflows in Discourse.
@@ -170,12 +174,19 @@ export class DiscourseDeprecationWorkflow {
 
   /**
    * Checks if a deprecation should throw an error.
+   *
    * @param {string} deprecationId - ID of the deprecation
    * @param {boolean} [includeUnsilenced=false] - Whether to throw for unsilenced deprecations
    * @return {boolean} True if deprecation should throw
    */
   shouldThrow(deprecationId, includeUnsilenced = false) {
     const workflow = this.#find(deprecationId);
+
+    // The "dont-throw" handler prevents raising errors for specific deprecations
+    // even when RAISE_ON_DEPRECATION is enabled (e.g., for test fixtures)
+    if (workflow?.handler?.includes("dont-throw")) {
+      return false;
+    }
 
     if (includeUnsilenced) {
       return !this.shouldSilence(deprecationId);
@@ -241,10 +252,9 @@ export class DiscourseDeprecationWorkflow {
  * IMPORTANT: The first match wins, so the order of the workflows is relevant.
  *
  * Each workflow config item should have:
- * @property {(string|string[])} handler - Handler type(s): "silence", "log", "throw", and/or "counter"
+ * @property {(string|string[])} handler - Handler type(s): "silence", "log", "throw", "dont-throw", and/or "counter"
  * @property {(string|RegExp)} matchId - ID or pattern to match deprecations
  * @property {(string|string[])} [env] - Optional environment(s): "development", "qunit-test", "rails-test", "test", "production", "unset"
- *
  */
 const DeprecationWorkflow = new DiscourseDeprecationWorkflow([
   { handler: "silence", matchId: "template-action" }, // will be removed in Ember 6.0
@@ -261,7 +271,12 @@ const DeprecationWorkflow = new DiscourseDeprecationWorkflow([
     handler: "log",
     matchId: /^discourse\.native-array-extensions\..+$/,
   },
-  // widget-related code should fail on all CI tests including plugins and custom themes
+  {
+    handler: "dont-throw",
+    matchId: /fake-deprecation.*/,
+    env: "test",
+  },
+  // widget-related code should fail on all CI tests, including plugins and custom themes
   {
     handler: "throw",
     matchId: "discourse.widgets-decommissioned",

@@ -105,7 +105,7 @@ export default class IpLookup extends Component {
     try {
       await clipboardCopy(text.trim());
       this.toasts.success({
-        duration: 3000,
+        duration: "short",
         data: {
           message: i18n("ip_lookup.copied"),
         },

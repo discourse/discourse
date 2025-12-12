@@ -45,7 +45,7 @@ export default class AdminEditLeaderboard extends Component {
         }
       );
       this.toasts.success({
-        duration: 3000,
+        duration: "short",
         data: {
           message: i18n("gamification.leaderboard.save_success"),
         },

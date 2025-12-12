@@ -46,7 +46,7 @@ export default class ChatIncomingWebhookEditForm extends Component {
         });
 
         this.toasts.success({
-          duration: 3000,
+          duration: "short",
           data: {
             message: i18n("chat.incoming_webhooks.saved"),
           },
@@ -58,7 +58,7 @@ export default class ChatIncomingWebhookEditForm extends Component {
         });
 
         this.toasts.success({
-          duration: 3000,
+          duration: "short",
           data: {
             message: i18n("chat.incoming_webhooks.created"),
           },

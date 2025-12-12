@@ -5,7 +5,7 @@ import DButton from "discourse/components/d-button";
 import TextField from "discourse/components/text-field";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { i18n } from "discourse-i18n";
-import HouseAdsCategorySelector from "../components/house-ads-category-selector";
+import HouseAdsCategorySelector from "../../../components/house-ads-category-selector";
 
 export default <template>
   <section class="edit-house-ad content-body">

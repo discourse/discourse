@@ -13,6 +13,7 @@ const sandboxDisabled =
 class Reporter extends TapReporter {
   failReports = [];
   deprecationCounts = new Map();
+  deprecationCountsByOrigin = new Map();
 
   constructor() {
     super(...arguments);
@@ -29,9 +30,18 @@ class Reporter extends TapReporter {
 
   reportMetadata(tag, metadata) {
     if (tag === "increment-deprecation") {
-      const id = metadata.id;
+      const { id, origin } = metadata;
+
       const currentCount = this.deprecationCounts.get(id) || 0;
       this.deprecationCounts.set(id, currentCount + 1);
+
+      const originKey = origin || "unknown";
+      if (!this.deprecationCountsByOrigin.has(originKey)) {
+        this.deprecationCountsByOrigin.set(originKey, new Map());
+      }
+      const originMap = this.deprecationCountsByOrigin.get(originKey);
+      const originCount = originMap.get(id) || 0;
+      originMap.set(id, originCount + 1);
     } else if (tag === "summary-line") {
       this.out.write(`\n${metadata.message}\n`);
     } else {
@@ -84,8 +94,7 @@ class Reporter extends TapReporter {
       ...Array.from(this.deprecationCounts.keys()).map((k) => k.length)
     );
 
-    let msg = `| ${"id".padEnd(maxIdLength)} | count |\n`;
-    msg += `| ${"".padEnd(maxIdLength, "-")} | ----- |\n`;
+    let msg = this.buildTableHeader(["id", "count"], [maxIdLength, 5]);
 
     for (const [id, count] of this.deprecationCounts.entries()) {
       const countString = count.toString();
@@ -95,23 +104,93 @@ class Reporter extends TapReporter {
     return msg;
   }
 
-  reportDeprecations() {
-    let deprecationMessage = "[Deprecation Counter] ";
-    if (this.deprecationCounts.size > 0) {
-      const table = this.generateDeprecationTable();
-      deprecationMessage += `Test run completed with deprecations:\n\n${table}`;
+  generateDeprecationsByOriginTable() {
+    const allDeprecationIds = this.collectAllDeprecationIds();
+    const maxIdLength = Math.max(
+      ...Array.from(allDeprecationIds).map((id) => id.length)
+    );
+    const origins = Array.from(this.deprecationCountsByOrigin.keys()).sort();
+    const maxOriginLength = Math.max(...origins.map((o) => o.length), 6);
 
-      if (process.env.GITHUB_ACTIONS && process.env.GITHUB_STEP_SUMMARY) {
-        let jobSummary = `### ⚠️ JS Deprecations\n\nTest run completed with deprecations:\n\n`;
-        jobSummary += table;
-        jobSummary += `\n\n`;
+    let msg = this.buildTableHeader(
+      ["origin", "id", "count"],
+      [maxOriginLength, maxIdLength, 5]
+    );
 
-        fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, jobSummary);
+    for (const origin of origins) {
+      const originMap = this.deprecationCountsByOrigin.get(origin);
+      const sortedIds = Array.from(originMap.keys()).sort();
+
+      for (const id of sortedIds) {
+        const count = originMap.get(id);
+        const countString = count.toString();
+        msg += `| ${origin.padEnd(maxOriginLength)} | ${id.padEnd(maxIdLength)} | ${countString.padStart(5)} |\n`;
       }
-    } else {
-      deprecationMessage += "No deprecations logged";
     }
+
+    return msg;
+  }
+
+  collectAllDeprecationIds() {
+    const allIds = new Set();
+    for (const originMap of this.deprecationCountsByOrigin.values()) {
+      for (const id of originMap.keys()) {
+        allIds.add(id);
+      }
+    }
+    return allIds;
+  }
+
+  buildTableHeader(columnNames, columnWidths) {
+    let header = "| ";
+    let separator = "| ";
+
+    for (let i = 0; i < columnNames.length; i++) {
+      const name = columnNames[i];
+      const width = columnWidths[i];
+      header += `${name.padEnd(width)} | `;
+      separator += `${"".padEnd(width, "-")} | `;
+    }
+
+    return header + "\n" + separator + "\n";
+  }
+
+  reportDeprecations() {
+    if (this.deprecationCounts.size === 0) {
+      this.out.write("\n[Deprecation Counter] No deprecations logged\n\n");
+      return;
+    }
+
+    const table = this.generateDeprecationTable();
+    let deprecationMessage =
+      "[Deprecation Counter] Test run completed with deprecations:\n\n" + table;
+
+    let originTable = null;
+    if (this.deprecationCountsByOrigin.size > 0) {
+      originTable = this.generateDeprecationsByOriginTable();
+      deprecationMessage += "\nDeprecations by test origin:\n\n" + originTable;
+    }
+
+    this.writeGitHubSummary(table, originTable);
     this.out.write(`\n${deprecationMessage}\n\n`);
+  }
+
+  writeGitHubSummary(table, originTable) {
+    if (!process.env.GITHUB_ACTIONS || !process.env.GITHUB_STEP_SUMMARY) {
+      return;
+    }
+
+    let jobSummary =
+      "### ⚠️ JS Deprecations\n\nTest run completed with deprecations:\n\n";
+    jobSummary += table;
+
+    if (originTable) {
+      jobSummary += "\n\nDeprecations by test origin:\n\n" + originTable;
+    }
+
+    jobSummary += "\n\n";
+
+    fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, jobSummary);
   }
 
   finish() {

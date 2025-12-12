@@ -277,7 +277,7 @@ export default class AdminWelcomeBannerForm extends Component {
       this.originalFormData = { ...data };
 
       this.toasts.success({
-        duration: 3000,
+        duration: "short",
         data: {
           message: i18n("admin.config.welcome_banner.saved"),
         },
