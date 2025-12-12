@@ -10,3 +10,9 @@ brew 'postgresql'
 
 # install the Redis datastore
 brew 'redis'
+
+brew "pngquant"
+brew "oxipng"
+brew "jhead"
+brew "jpegoptim"
+brew "coreutils"
