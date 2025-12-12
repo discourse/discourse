@@ -21,20 +21,9 @@
     right: 0;
     bottom: 0;
     z-index: 9999;
-    width: calc(100vw - (100vw - 100%) + 2px);
+    width: 100vw;
     height: 100vh;
     position: fixed;
-    background: rgb(var(--secondary-rgb), 0.5);
-    backdrop-filter: blur(4.9px);
-    padding: 2em;
-
-    .rewind {
-      max-width: 1020px;
-    }
-
-    @media (width <= 768px) {
-      padding: 0;
-    }
   }
 }
 
@@ -46,7 +35,6 @@
   width: 100vw;
   height: 100vh;
   max-height: 100%;
-  border-radius: 30px;
   container-type: size;
   position: relative;
   overflow: hidden;
