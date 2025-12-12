@@ -110,7 +110,7 @@ export default class RestAdapter extends EmberObject {
     return payload;
   }
 
-  update(store, type, id, attrs, callback) {
+  update(store, type, id, attrs) {
     const data = {};
     const typeField = underscore(this.apiNameFor(type));
     data[typeField] = attrs;
@@ -119,7 +119,6 @@ export default class RestAdapter extends EmberObject {
       this.pathFor(store, type, id),
       this.getPayload("PUT", data)
     ).then(function (json) {
-      callback(json);
       return new Result(json[typeField], json);
     });
   }
