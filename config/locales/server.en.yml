@@ -4126,7 +4126,6 @@ en:
     in_reply_to: "In Reply To"
 
     header_instructions: ""
-    email_preview: ""
     reply_by_email: "[Visit Topic](%{base_url}%{url}) or reply to this email to respond."
     reply_by_email_pm: "[Visit Message](%{base_url}%{url}) or reply to this email to respond to %{participants}."
     reply_by_email_button_only: "[Visit Topic](%{base_url}%{url})"
