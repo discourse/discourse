@@ -496,5 +496,9 @@ body.tags-intersection {
       margin: 0;
       list-style-type: none;
     }
+
+    li {
+      overflow-wrap: anywhere;
+    }
   }
 }

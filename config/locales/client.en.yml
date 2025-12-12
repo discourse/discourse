@@ -5179,7 +5179,7 @@ en:
       upload_instructions: "One per line, optionally with a tag group in the format 'tag_name,tag_group'."
       upload_successful: "Tags uploaded successfully"
       bulk_create_inline_placeholder: "Create tags (comma-separated)"
-      bulk_create_button: "Create Tags"
+      bulk_create_button: "Create"
       bulk_create_success:
         one: "Created %{count} tag:"
         other: "Created %{count} tags:"

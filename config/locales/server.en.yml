@@ -5453,7 +5453,7 @@ en:
     bulk_create:
       invalid_params: "Invalid parameters. Please provide an array of tag names."
       invalid_name: "Invalid tag name."
-      tag_too_long: "Tag is too long (maximum is %{max} characters)."
+      tag_too_long: "Tag is too long (max %{max} characters)."
       too_many_tags: "Too many tags. You can create up to %{max} tags at once. For larger imports, use the CSV upload feature."
     forbidden:
       invalid:

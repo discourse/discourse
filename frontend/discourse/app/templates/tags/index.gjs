@@ -91,7 +91,8 @@ export default <template>
               @controller.isCreatingTags
               (not @controller.canCreateTags)
             }}
-            @icon="check"
+            @icon="tag"
+            @label="tagging.bulk_create_button"
             class="btn-primary"
           />
         </form>
