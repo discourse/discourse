@@ -7,6 +7,7 @@ RSpec.describe "User chat preferences", type: :system do
   let(:emoji_picker) { PageObjects::Components::EmojiPicker.new }
   let(:chat) { PageObjects::Pages::Chat.new }
   let(:channel) { PageObjects::Pages::ChatChannel.new }
+  let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
 
   before do
     chat_system_bootstrap
@@ -34,17 +35,26 @@ RSpec.describe "User chat preferences", type: :system do
 
   it "can change chat quick reaction type to custom and select emoji" do
     user_preferences_chat_page.visit
-    choose("user_chat_quick_reaction_type", option: "custom")
+    form.field("chat_quick_reaction_type").select("custom")
 
-    expect(user_preferences_chat_page.emoji_picker_triggers.count).to eq 3
-    expect(user_preferences_chat_page.reactions_selected.first).to eq "heart"
+    custom_field = form.field("chat_quick_reactions_custom")
+    expect(custom_field.component).to have_css(".emoji-picker-trigger", count: 3, wait: 5)
 
-    user_preferences_chat_page.reaction_buttons.first.click
+    reaction_buttons = custom_field.component.all("button.emoji-picker-trigger")
+    expect(reaction_buttons.first.find("img")[:title]).to eq "heart"
+
+    reaction_buttons.first.click
     emoji_picker.select_emoji(":sweat_smile:")
-    user_preferences_chat_page.save_changes_and_refresh
+    form.submit
+    user_preferences_chat_page.visit
 
-    expect(page).to have_checked_field("user_chat_quick_reaction_type_custom")
-    expect(user_preferences_chat_page.reactions_selected.first).to eq "sweat_smile"
+    expect(
+      form.field("chat_quick_reaction_type").component.find("input[type='radio'][value='custom']"),
+    ).to be_checked
+
+    custom_field = form.field("chat_quick_reactions_custom")
+    reaction_buttons = custom_field.component.all("button.emoji-picker-trigger")
+    expect(reaction_buttons.first.find("img")[:title]).to eq "sweat_smile"
   end
 
   describe "chat interface" do
@@ -56,8 +66,9 @@ RSpec.describe "User chat preferences", type: :system do
 
       # save custom and look for reaction
       user_preferences_chat_page.visit
-      choose("user_chat_quick_reaction_type", option: "custom")
-      user_preferences_chat_page.save_changes_and_refresh
+      form.field("chat_quick_reaction_type").select("custom")
+      form.submit
+      user_preferences_chat_page.visit
       chat.visit_channel(category_channel_1)
       channel.hover_message(message_1)
 
@@ -65,8 +76,9 @@ RSpec.describe "User chat preferences", type: :system do
 
       # save frequent and look for reaction
       user_preferences_chat_page.visit
-      find("#user_chat_quick_reaction_type_frequent").click
-      user_preferences_chat_page.save_changes_and_refresh
+      form.field("chat_quick_reaction_type").select("frequent")
+      form.submit
+      user_preferences_chat_page.visit
       chat.visit_channel(category_channel_1)
       channel.hover_message(message_1)
 
@@ -77,40 +89,44 @@ RSpec.describe "User chat preferences", type: :system do
   shared_examples "select and save" do
     it "can select and save" do
       user_preferences_chat_page.visit
-      user_preferences_chat_page.select_option_value(sel, val)
-      user_preferences_chat_page.save_changes_and_refresh
+      form.field(field_name).select(val)
+      form.submit
+      user_preferences_chat_page.visit
 
-      expect(user_preferences_chat_page.selected_option_value(sel)).to eq val
+      expect(form.field(field_name).value).to eq val
     end
   end
 
   describe "chat sound" do
     include_examples "select and save" do
-      let(:sel) { "#user_chat_sounds" }
+      let(:field_name) { "chat_sound" }
       let(:val) { "bell" }
     end
   end
 
   describe "header_indicator_preference" do
     include_examples "select and save" do
-      let(:sel) { "#user_chat_header_indicator_preference" }
+      let(:field_name) { "chat_header_indicator_preference" }
       let(:val) { "dm_and_mentions" }
     end
   end
 
   describe "separate sidebar mode" do
     include_examples "select and save" do
-      let(:sel) { "#user_chat_separate_sidebar_mode" }
+      let(:field_name) { "chat_separate_sidebar_mode" }
       let(:val) { "fullscreen" }
     end
   end
 
   it "can select send shorcut sidebar mode" do
     user_preferences_chat_page.visit
-    find("#chat_send_shortcut_meta_enter").click
-    user_preferences_chat_page.save_changes_and_refresh
+    form.field("chat_send_shortcut").select("meta_enter")
+    form.submit
+    user_preferences_chat_page.visit
 
-    expect(page).to have_checked_field("chat_send_shortcut_meta_enter")
+    expect(
+      form.field("chat_send_shortcut").component.find("input[type='radio'][value='meta_enter']"),
+    ).to be_checked
   end
 
   context "as an admin on another user's preferences" do

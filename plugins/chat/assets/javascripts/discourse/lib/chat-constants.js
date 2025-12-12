@@ -15,3 +15,23 @@ export const INDICATOR_PREFERENCES = {
   only_mentions: "only_mentions",
   never: "never",
 };
+export const CHAT_ATTRS = [
+  "chat_enabled",
+  "only_chat_push_notifications",
+  "ignore_channel_wide_mention",
+  "show_thread_title_prompts",
+  "chat_sound",
+  "chat_email_frequency",
+  "chat_header_indicator_preference",
+  "chat_separate_sidebar_mode",
+  "chat_send_shortcut",
+  "chat_quick_reaction_type",
+  "chat_quick_reactions_custom",
+];
+
+export const CHAT_QUICK_REACTIONS_CUSTOM_DEFAULT = "heart|+1|smile";
+
+export const HEADER_INDICATOR_PREFERENCE_NEVER = "never";
+export const HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS = "dm_and_mentions";
+export const HEADER_INDICATOR_PREFERENCE_ALL_NEW = "all_new";
+export const HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS = "only_mentions";
