@@ -107,6 +107,7 @@ module DiscourseAi
                 persona_id: reply_persona_id,
                 whisper: whisper,
                 user: original_user,
+                attributed_user: Discourse.system_user,
               )
             rescue StandardError => e
               Discourse.warn_exception(
