@@ -27,7 +27,7 @@ export default class ActivationControls extends Component {
           @action={{@editActivationEmail}}
           @label="login.change_email"
           @icon="pencil"
-          class="edit-email"
+          class="btn-default edit-email"
         />
       {{/if}}
     </div>
