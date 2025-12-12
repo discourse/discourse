@@ -1,58 +1,67 @@
-@keyframes d-toast-opening {
-  from {
-    transform: translateY(var(--transform-y, 10px));
-  }
-}
-
 .fk-d-toasts {
-  --transform-y: 0;
   position: fixed;
-  top: calc(var(--header-offset) + 0.33rem);
-  right: 5px;
   z-index: z("max");
-  display: flex;
-  flex-direction: column;
-  gap: 5px 0;
-  flex: 1 1 auto;
 
-  .mobile-view & {
-    left: 5px;
+  .d-toast {
+    --toast-padding-x: 0.75rem;
+    --toast-padding-top: 0.75rem;
+    --toast-padding-bottom: 2.75rem;
+    --toast-max-height: 90px;
+    --toast-content-height: calc(
+      max(env(safe-area-inset-top, 0px), var(--toast-padding-top)) +
+        var(--toast-max-height) + var(--toast-padding-bottom)
+    );
+    --toast-border-color: var(--content-border-color);
+    --toast-box-shadow: var(--shadow-dropdown);
+    --toast-border-radius: var(--d-border-radius);
+    --toast-background-color: var(--secondary);
+    --toast-offset: 8px;
+
+    @media (width >= 1000px) {
+      .Toast-view {
+        --toast-padding-x: 0.875rem;
+        --toast-padding-top: 0.875rem;
+        height: var(--toast-content-height);
+      }
+    }
+
+    &-content {
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 560px;
+      height: var(--toast-content-height);
+      background-color: transparent;
+      padding: var(--toast-padding-x);
+      padding-top: max(env(safe-area-inset-top), var(--toast-padding-top));
+      padding-bottom: var(--toast-padding-bottom);
+      display: grid;
+    }
+
+    @media (width >= 1000px) {
+      .fk-d-default-toast-content {
+        max-width: 400px;
+        padding-top: var(--toast-padding-top);
+      }
+    }
+
+    &-inner-content {
+      max-height: var(--toast-max-height);
+      border-radius: var(--toast-border-radius);
+      background-color: var(--toast-background-color);
+      border: 1px solid var(--toast-border-color);
+      box-shadow: var(--toast-box-shadow);
+    }
   }
 
-  .fk-d-toast {
-    box-sizing: border-box;
-    opacity: 1;
-    transition: opacity 0.5s;
-    border-radius: var(--d-border-radius);
-    overflow: hidden;
-    background-color: var(--secondary);
-    border: 1px solid var(--content-border-color);
-    box-shadow: var(--shadow-dropdown);
-    overflow-wrap: break-word;
-    display: flex;
-    animation: d-toast-opening 0.3s ease-in-out;
-    will-change: transform;
-
-    .desktop-view & {
-      margin-left: auto;
+  > div {
+    @for $i from 1 through 10 {
+      &:nth-child(#{$i}) .Sheet-specialWrapperRoot {
+        padding-top: calc(($i - 1) * var(--toast-offset));
+      }
     }
 
-    &:hover {
-      border-color: var(--primary-300);
+    [data-d-sheet~="view"] {
+      transition: top 0.3s ease-out;
     }
-
-    &.-fade-out {
-      opacity: 0;
-    }
-
-    & + .d-toast {
-      margin-top: 0.25rem;
-    }
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .fk-d-toasts {
-    --transform-y: 2vh;
   }
 }

@@ -37,7 +37,7 @@ html {
   font-size: var(--base-font-size);
   line-height: var(--line-height-large);
   background-color: var(--secondary);
-  overflow-y: scroll;
+  scrollbar-gutter: stable;
   direction: ltr;
 
   &.text-size-smallest {

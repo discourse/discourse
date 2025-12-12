@@ -1,7 +1,13 @@
 .fk-d-default-toast {
-  display: flex;
-  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: start;
   padding: 0.5rem;
+  gap: 0.5rem;
+
+  &:not(:has(.fk-d-default-toast__icon-container)) {
+    grid-template-columns: 1fr auto;
+  }
 
   &__close-container {
     width: calc(40px - 0.5rem);
@@ -9,7 +15,6 @@
   }
 
   &__icon-container {
-    flex: 1 0 auto;
     display: flex;
     width: calc(40px - 0.5rem);
     height: calc(1em + (2 * 0.65em));
@@ -70,8 +75,6 @@
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    width: 100%;
-    min-height: calc(1em + (2 * 0.65em));
   }
 
   &__progress-bar {

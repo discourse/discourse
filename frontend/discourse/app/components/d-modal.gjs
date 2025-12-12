@@ -59,13 +59,13 @@ export default class DModal extends Component {
     );
 
     this.wrapperElement = el;
-    this.animating = true;
+    // this.animating = true;
 
-    this.modalContainer.classList.add("is-entering");
-    await this.#waitForAnimationEnd(this.modalContainer);
-    this.modalContainer.classList.remove("is-entering");
+    // this.modalContainer.classList.add("is-entering");
+    // await this.#waitForAnimationEnd(this.modalContainer);
+    // this.modalContainer.classList.remove("is-entering");
 
-    this.animating = false;
+    // this.animating = false;
   }
 
   @action
