@@ -4,7 +4,7 @@ RSpec.describe "Sidebar New Topic Button", system: true do
   let!(:theme) { upload_theme_or_component }
 
   fab!(:group)
-  fab!(:user) { Fabricate(:user, trust_level: 3, groups: [group]) }
+  fab!(:user) { Fabricate(:user, trust_level: 1, groups: [group]) }
   fab!(:private_category) do
     c = Fabricate(:category_with_definition)
     c.set_permissions(group => :readonly)
@@ -66,7 +66,7 @@ RSpec.describe "Sidebar New Topic Button", system: true do
     context "when category has no subcategory where user can post" do
       it "adds cannot-create-topic class to the button" do
         category_page.visit(category_with_no_subcategory)
-        expect(page).to match_css(".sidebar-new-topic-button.cannot-create-topic")
+        expect(page).to have_css(".sidebar-new-topic-button.cannot-create-topic")
         expect(page).to have_no_css(".sidebar-new-topic-button.can-create-topic")
       end
     end
