@@ -250,6 +250,7 @@ class Middleware::RequestTracker
     # Also extract session_id and route_name for page view logging
     session_id = nil
     route_name = nil
+    previous_path = nil
 
     if view_tracking_data[:deferred_track_view]
       # Extract session_id (MessageBus clientId) from poll URL: /message-bus/{clientId}/poll
@@ -258,20 +259,18 @@ class Middleware::RequestTracker
         session_id = parts[-2] if parts.length >= 3 && parts.last == "poll"
       end
 
-      request_path = env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_PATH"].presence || request.path
-      request_query_string =
-        env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_QUERY_STRING"].presence ||
-          request.query_string.presence
+      request_path = env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_PATH"].presence
+      request_query_string = env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_QUERY_STRING"].presence
       request_referrer = env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_REFERRER"].presence
       route_name = env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_ROUTE_NAME"]
       status = 200
     elsif view_tracking_data[:explicit_track_view]
-      # Get session_id from header for explicit (ajax) page views
+      # Get session_id from header for explicit page views (sent via /pageview endpoint)
       session_id = env["HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID"]
-      request_path = env["HTTP_DISCOURSE_TRACK_VIEW_PATH"].presence || request.path
-      request_query_string =
-        env["HTTP_DISCOURSE_TRACK_VIEW_QUERY_STRING"].presence || request.query_string.presence
+      request_path = env["HTTP_DISCOURSE_TRACK_VIEW_PATH"].presence
+      request_query_string = env["HTTP_DISCOURSE_TRACK_VIEW_QUERY_STRING"].presence
       request_referrer = env["HTTP_DISCOURSE_TRACK_VIEW_REFERRER"].presence
+      previous_path = env["HTTP_DISCOURSE_TRACK_VIEW_PREVIOUS_PATH"].presence
       route_name = env["HTTP_DISCOURSE_TRACK_VIEW_ROUTE_NAME"]
     else
       request_path = view_tracking_data[:path] || request.path
@@ -298,6 +297,7 @@ class Middleware::RequestTracker
       path: request_path,
       query_string: request_query_string,
       referrer: request_referrer,
+      previous_path: previous_path,
       user_agent: user_agent,
       route: route,
       session_id: session_id,

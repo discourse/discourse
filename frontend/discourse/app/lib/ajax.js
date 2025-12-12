@@ -12,7 +12,7 @@ let _trackView = false;
 let _topicId = null;
 let _transientHeader = null;
 let _logoffCallback;
-let _viewTransition = null;
+let _viewData = null;
 
 export function setTransientHeader(key, value) {
   _transientHeader = { key, value };
@@ -22,14 +22,22 @@ export function trackNextAjaxAsTopicView(topicId) {
   _topicId = topicId;
 }
 
-export function trackNextAjaxAsPageview(to) {
+/**
+ * Mark the next AJAX request as a page view.
+ * @param {Object} data - URL data captured from the transition
+ * @param {string} data.routeName - The Ember route name
+ * @param {string} data.path - The target path (from transition.intent.url)
+ * @param {string} data.queryString - The target query string (without leading ?)
+ * @param {string} data.previousPath - The previous path for internal referrer tracking
+ */
+export function trackNextAjaxAsPageview(data) {
   _trackView = true;
-  _viewTransition = to;
+  _viewData = data;
 }
 
 export function resetAjax() {
   _trackView = false;
-  _viewTransition = null;
+  _viewData = null;
 }
 
 export function setLogoffCallback(cb) {
@@ -113,28 +121,38 @@ export function ajax() {
         args.headers["Discourse-Track-View-Session-Id"] = MessageBus.clientId;
       }
 
-      // Send current path
-      if (window.location?.pathname) {
-        args.headers["Discourse-Track-View-Path"] =
-          window.location.pathname.slice(0, 1024);
+      // Send path - prefer transition data, fall back to window.location
+      const trackPath = _viewData?.path || window.location?.pathname;
+      if (trackPath) {
+        args.headers["Discourse-Track-View-Path"] = trackPath.slice(0, 1024);
       }
 
-      // Send query string
-      const search = window.location.search;
-      if (search && search.length > 1) {
-        args.headers["Discourse-Track-View-Query-String"] = search
-          .slice(1, 1025)
+      // Send query string - prefer transition data, fall back to window.location
+      const trackQueryString =
+        _viewData?.queryString ||
+        (window.location.search?.length > 1
+          ? window.location.search.slice(1)
+          : null);
+      if (trackQueryString) {
+        args.headers["Discourse-Track-View-Query-String"] = trackQueryString
+          .slice(0, 1024)
           .replace(/[\r\n]/g, "");
       }
 
-      // Send Ember route name
-      if (_viewTransition?.name) {
-        args.headers["Discourse-Track-View-Route-Name"] = _viewTransition.name
+      // Send Ember route name from transition data
+      if (_viewData?.routeName) {
+        args.headers["Discourse-Track-View-Route-Name"] = _viewData.routeName
           .toString()
           .slice(0, 256);
       }
 
-      // Send referrer
+      // Send previous path for internal referrer tracking
+      if (_viewData?.previousPath) {
+        args.headers["Discourse-Track-View-Previous-Path"] =
+          _viewData.previousPath.slice(0, 1024);
+      }
+
+      // Send external referrer (original referrer from outside the site)
       if (document.referrer) {
         args.headers["Discourse-Track-View-Referrer"] = document.referrer
           .slice(0, 1024)
@@ -145,7 +163,7 @@ export function ajax() {
         args.headers["Discourse-Track-View-Topic-Id"] = _topicId;
       }
       _topicId = null;
-      _viewTransition = null;
+      _viewData = null;
     }
 
     if (userPresent()) {
