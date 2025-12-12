@@ -821,6 +821,33 @@ RSpec.describe SchemaSettingsObjectValidator do
 
         expect(errors).to eq({})
       end
+
+      it "should accept and store upload IDs" do
+        upload1 = Fabricate(:upload)
+        upload2 = Fabricate(:upload)
+        schema = {
+          name: "section",
+          properties: {
+            upload_field_1: {
+              type: "upload",
+            },
+            upload_field_2: {
+              type: "upload",
+            },
+          },
+        }
+
+        objects = [{ upload_field_1: upload1.id, upload_field_2: upload2.id }]
+
+        # Validate
+        errors = described_class.validate_objects(schema: schema, objects: objects)
+        expect(errors).to eq([])
+
+        expect(objects.first[:upload_field_1]).to eq(upload1.id)
+        expect(objects.first[:upload_field_2]).to eq(upload2.id)
+        expect(objects.first[:upload_field_1]).to be_a(Integer)
+        expect(objects.first[:upload_field_2]).to be_a(Integer)
+      end
     end
 
     context "for tag properties" do
