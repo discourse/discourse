@@ -271,34 +271,26 @@ const extension = {
     },
   },
 
-  inputRules: ({ pmState: { TextSelection } }) => ({
+  inputRules: () => ({
     match: /\[wrap([^\]]*)]$/,
     handler: (state, match, start, end) => {
       const { schema } = state;
       const isAtStart = state.doc.resolve(start).parentOffset === 0;
 
-      // Parse attributes from the match using the utility function
       const attributeString = match[1] || "";
       const attributes = parseAttributesString(attributeString);
 
       const tr = state.tr;
 
       if (isAtStart) {
-        // Block wrap: create with paragraph containing placeholder text
-        const textNode = schema.text(i18n("composer.wrap_text"));
         const wrapNode = schema.nodes.wrap_block.createAndFill(
           { data: attributes },
-          schema.nodes.paragraph.createAndFill(null, textNode)
+          schema.nodes.paragraph.createAndFill()
         );
 
         tr.replaceWith(start - 1, end, wrapNode);
-
-        // Position cursor with text selected
-        tr.setSelection(
-          TextSelection.create(tr.doc, start + 1, start + 1 + textNode.nodeSize)
-        );
       } else {
-        // Inline wrap: create with placeholder text
+        // Inline wrap: placeholder text
         const textNode = schema.text(i18n("composer.wrap_text"));
         const wrapNode = schema.nodes.wrap_inline.createAndFill(
           { data: attributes },
@@ -306,11 +298,6 @@ const extension = {
         );
 
         tr.replaceWith(start, end, wrapNode);
-
-        // Position cursor with text selected
-        tr.setSelection(
-          TextSelection.create(tr.doc, start + 1, start + 1 + textNode.nodeSize)
-        );
       }
 
       return tr;
