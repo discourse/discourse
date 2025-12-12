@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const headers = {
       "Discourse-Deferred-Track-View": "true",
-      "Discourse-Deferred-Track-View-Referrer": document.referrer,
+      "Discourse-Deferred-Track-View-Referrer": document.referrer || "",
     };
 
     fetch(`${root}/pageview`, {

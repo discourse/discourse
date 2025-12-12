@@ -109,10 +109,7 @@ export function ajax() {
     if (_trackView && (!args.type || args.type === "GET")) {
       _trackView = false;
       args.headers[TRACK_VIEW_HEADER] = "true";
-
-      if (_trackViewReferrer) {
-        args.headers[TRACK_VIEW_REFERRER_HEADER] = _trackViewReferrer;
-      }
+      args.headers[TRACK_VIEW_REFERRER_HEADER] = _trackViewReferrer || "";
       _trackViewReferrer = null;
 
       if (_topicId) {

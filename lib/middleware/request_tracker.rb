@@ -296,7 +296,7 @@ class Middleware::RequestTracker
       end
 
       if @@detailed_request_loggers
-        @@detailed_request_loggers.each { |logger| logger.call(env, data) }
+        @@detailed_request_loggers.each { |logger| logger.call(env, data, headers) }
       end
 
       log_later(data)

@@ -39,9 +39,8 @@ function mbAjax(messageBus, opts) {
   if (_sendDeferredPageview) {
     opts.headers[DEFERRED_TRACK_VIEW_HEADER] = "true";
 
-    if (_deferredViewReferrer) {
-      opts.headers[DEFERRED_TRACK_VIEW_REFERRER_HEADER] = _deferredViewReferrer;
-    }
+    opts.headers[DEFERRED_TRACK_VIEW_REFERRER_HEADER] =
+      _deferredViewReferrer || "";
 
     if (_deferredViewTopicId) {
       opts.headers["Discourse-Deferred-Track-View-Topic-Id"] =

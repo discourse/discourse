@@ -1,16 +1,40 @@
 # frozen_string_literal: true
 
 describe "Request tracking", type: :system do
+  let(:browser_page_view_response_headers) { [] }
+
   before do
     ApplicationRequest.enable
     CachedCounting.reset
     CachedCounting.enable
+
+    @request_logger =
+      lambda do |_env, _data, response_headers|
+        if response_headers["X-Discourse-BrowserPageView"]
+          browser_page_view_response_headers << response_headers
+        end
+      end
+
+    Middleware::RequestTracker.register_detailed_request_logger(@request_logger)
   end
 
   after do
     CachedCounting.reset
     ApplicationRequest.disable
     CachedCounting.disable
+    Middleware::RequestTracker.unregister_detailed_request_logger(@request_logger)
+  end
+
+  def expect_browser_page_view_response_headers_empty
+    expect(browser_page_view_response_headers).to be_empty
+  end
+
+  def expect_browser_page_view_response_headers_present(referrer:)
+    expect(browser_page_view_response_headers.length).to eq(1)
+    response_headers = browser_page_view_response_headers.first
+    expect(response_headers["X-Discourse-BrowserPageView"]).to eq("1")
+    expect(response_headers["X-Discourse-BrowserPageView-Referrer"]).to eq(referrer)
+    browser_page_view_response_headers.clear
   end
 
   describe "pageviews" do
@@ -25,18 +49,23 @@ describe "Request tracking", type: :system do
           "page_view_logged_in_total" => 0,
           "page_view_crawler_total" => 0,
         )
+
+        expect_browser_page_view_response_headers_present(referrer: "")
       end
 
       find(".nav-item_categories a").click
 
       try_until_success do
         CachedCounting.flush
+
         expect(ApplicationRequest.stats).to include(
           "page_view_anon_total" => 2,
           "page_view_anon_browser_total" => 2,
           "page_view_logged_in_total" => 0,
           "page_view_crawler_total" => 0,
         )
+
+        expect_browser_page_view_response_headers_present(referrer: "#{Discourse.base_url}/")
       end
     end
 
@@ -54,6 +83,8 @@ describe "Request tracking", type: :system do
           "page_view_logged_in_total" => 0,
           "page_view_crawler_total" => 1,
         )
+
+        expect_browser_page_view_response_headers_empty
       end
     end
 
@@ -64,6 +95,7 @@ describe "Request tracking", type: :system do
 
       try_until_success do
         CachedCounting.flush
+
         expect(ApplicationRequest.stats).to include(
           "page_view_anon_total" => 0,
           "page_view_anon_browser_total" => 0,
@@ -71,12 +103,15 @@ describe "Request tracking", type: :system do
           "page_view_crawler_total" => 0,
           "page_view_logged_in_browser_total" => 1,
         )
+
+        expect_browser_page_view_response_headers_present(referrer: "")
       end
 
       find(".nav-item_categories a").click
 
       try_until_success do
         CachedCounting.flush
+
         expect(ApplicationRequest.stats).to include(
           "page_view_anon_total" => 0,
           "page_view_anon_browser_total" => 0,
@@ -84,6 +119,8 @@ describe "Request tracking", type: :system do
           "page_view_crawler_total" => 0,
           "page_view_logged_in_browser_total" => 2,
         )
+
+        expect_browser_page_view_response_headers_present(referrer: "#{Discourse.base_url}/")
       end
     end
 
@@ -103,12 +140,15 @@ describe "Request tracking", type: :system do
           "page_view_logged_in_total" => 0,
           "page_view_crawler_total" => 0,
         )
+
+        expect_browser_page_view_response_headers_empty
       end
 
       click_logo
 
       try_until_success do
         CachedCounting.flush
+
         expect(ApplicationRequest.stats).to include(
           "http_4xx_total" => 1,
           "page_view_anon_total" => 1,
@@ -116,6 +156,8 @@ describe "Request tracking", type: :system do
           "page_view_logged_in_total" => 0,
           "page_view_crawler_total" => 0,
         )
+
+        expect_browser_page_view_response_headers_present(referrer: "#{Discourse.base_url}/foobar")
       end
     end
 
@@ -132,6 +174,8 @@ describe "Request tracking", type: :system do
           "page_view_logged_in_total" => 0,
           "page_view_crawler_total" => 0,
         )
+
+        expect_browser_page_view_response_headers_present(referrer: "")
       end
     end
 
@@ -151,6 +195,8 @@ describe "Request tracking", type: :system do
           "page_view_logged_in_total" => 0,
           "page_view_crawler_total" => 0,
         )
+
+        expect_browser_page_view_response_headers_empty
       end
 
       click_logo
@@ -164,11 +210,14 @@ describe "Request tracking", type: :system do
           "page_view_logged_in_total" => 0,
           "page_view_crawler_total" => 0,
         )
+
+        expect_browser_page_view_response_headers_present(referrer: "#{Discourse.base_url}/foobar")
       end
     end
 
     it "tracks published pages correctly" do
       SiteSetting.enable_page_publishing = true
+
       page =
         Fabricate(:published_page, public: true, slug: "some-page", topic: Fabricate(:post).topic)
 
@@ -184,6 +233,8 @@ describe "Request tracking", type: :system do
           "page_view_logged_in_total" => 0,
           "page_view_crawler_total" => 0,
         )
+
+        expect_browser_page_view_response_headers_present(referrer: "")
       end
     end
   end
