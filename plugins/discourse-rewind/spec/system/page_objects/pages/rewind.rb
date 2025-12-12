@@ -90,16 +90,28 @@ module PageObjects
         self
       end
 
-      def has_share_button?
-        has_css?(".rewind__share-btn")
+      def share_toggle
+        PageObjects::Components::DToggleSwitch.new(".rewind__share-toggle")
       end
 
-      def has_no_share_button?
-        has_no_css?(".rewind__share-btn")
+      def has_share_toggle?
+        has_css?(".rewind__share-toggle")
       end
 
-      def click_share_button
-        find(".rewind__share-btn").click
+      def has_no_share_toggle?
+        has_no_css?(".rewind__share-toggle")
+      end
+
+      def has_copy_link_button?
+        has_css?(".rewind__copy-link-btn")
+      end
+
+      def has_no_copy_link_button?
+        has_no_css?(".rewind__copy-link-btn")
+      end
+
+      def click_copy_link_button
+        find(".rewind__copy-link-btn").click
         self
       end
 

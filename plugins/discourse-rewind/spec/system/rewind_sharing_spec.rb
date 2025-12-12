@@ -7,6 +7,7 @@ describe "DiscourseRewind | rewind sharing", type: :system do
 
   let(:rewind_page) { PageObjects::Pages::Rewind.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
+  let(:cdp) { PageObjects::CDP.new }
 
   before { SiteSetting.discourse_rewind_enabled = true }
 
@@ -20,10 +21,12 @@ describe "DiscourseRewind | rewind sharing", type: :system do
       it "shows confirmation dialog and enables sharing" do
         rewind_page.visit_rewind(current_user.username)
 
-        expect(rewind_page).to have_share_button
+        expect(rewind_page).to have_share_toggle
+        expect(rewind_page.share_toggle).to be_unchecked
+        expect(rewind_page).to have_no_copy_link_button
         expect(current_user.user_option.discourse_rewind_share_publicly).to eq(false)
 
-        rewind_page.click_share_button
+        rewind_page.share_toggle.toggle
 
         expect(dialog).to be_open
         expect(dialog).to have_content(I18n.t("js.discourse_rewind.share.confirm"))
@@ -32,15 +35,19 @@ describe "DiscourseRewind | rewind sharing", type: :system do
 
         current_user.reload
         expect(current_user.user_option.discourse_rewind_share_publicly).to eq(true)
+        expect(rewind_page.share_toggle).to be_checked
+        expect(rewind_page).to have_copy_link_button
       end
 
       it "does not enable sharing if user cancels confirmation" do
         rewind_page.visit_rewind(current_user.username)
 
-        expect(rewind_page).to have_share_button
+        expect(rewind_page).to have_share_toggle
+        expect(rewind_page.share_toggle).to be_unchecked
+        expect(rewind_page).to have_no_copy_link_button
         expect(current_user.user_option.discourse_rewind_share_publicly).to eq(false)
 
-        rewind_page.click_share_button
+        rewind_page.share_toggle.toggle
 
         expect(dialog).to be_open
 
@@ -48,6 +55,8 @@ describe "DiscourseRewind | rewind sharing", type: :system do
 
         current_user.reload
         expect(current_user.user_option.discourse_rewind_share_publicly).to eq(false)
+        expect(rewind_page.share_toggle).to be_unchecked
+        expect(rewind_page).to have_no_copy_link_button
       end
 
       it "unshares without confirmation when already shared" do
@@ -55,12 +64,43 @@ describe "DiscourseRewind | rewind sharing", type: :system do
 
         rewind_page.visit_rewind(current_user.username)
 
-        expect(rewind_page).to have_share_button
+        expect(rewind_page).to have_share_toggle
+        expect(rewind_page.share_toggle).to be_checked
+        expect(rewind_page).to have_copy_link_button
 
-        rewind_page.click_share_button
+        rewind_page.share_toggle.toggle
 
         current_user.reload
         expect(current_user.user_option.discourse_rewind_share_publicly).to eq(false)
+        expect(rewind_page.share_toggle).to be_unchecked
+        expect(rewind_page).to have_no_copy_link_button
+      end
+
+      context "when copying rewind link" do
+        before { cdp.allow_clipboard }
+
+        it "copies rewind link to clipboard when link button is clicked" do
+          current_user.user_option.update!(discourse_rewind_share_publicly: true)
+
+          rewind_page.visit_rewind(current_user.username)
+
+          expect(rewind_page).to have_copy_link_button
+
+          rewind_page.click_copy_link_button
+
+          cdp.clipboard_has_text?("/u/#{current_user.username}/activity/rewind", strict: false)
+          expect(PageObjects::Components::Toasts.new).to have_success(
+            I18n.t("js.post.controls.link_copied"),
+          )
+        end
+
+        it "does not show copy link button when sharing is disabled" do
+          current_user.user_option.update!(discourse_rewind_share_publicly: false)
+
+          rewind_page.visit_rewind(current_user.username)
+
+          expect(rewind_page).to have_no_copy_link_button
+        end
       end
     end
 
@@ -75,7 +115,8 @@ describe "DiscourseRewind | rewind sharing", type: :system do
         rewind_page.visit_rewind(current_user.username)
 
         expect(rewind_page).to have_viewing_other_user_message(current_user.username)
-        expect(rewind_page).to have_no_share_button
+        expect(rewind_page).to have_no_share_toggle
+        expect(rewind_page).to have_no_copy_link_button
         expect(rewind_page).to have_no_cannot_view_rewind_error
         expect(rewind_page).to have_rewind_loaded
       end
@@ -92,7 +133,8 @@ describe "DiscourseRewind | rewind sharing", type: :system do
         rewind_page.visit_rewind(current_user.username)
 
         expect(rewind_page).to have_cannot_view_rewind_error
-        expect(rewind_page).to have_no_share_button
+        expect(rewind_page).to have_no_share_toggle
+        expect(rewind_page).to have_no_copy_link_button
       end
 
       it "can view after current_user enables sharing" do
@@ -137,7 +179,8 @@ describe "DiscourseRewind | rewind sharing", type: :system do
         rewind_page.visit_rewind(current_user.username)
 
         expect(rewind_page).to have_viewing_other_user_message(current_user.username)
-        expect(rewind_page).to have_no_share_button
+        expect(rewind_page).to have_no_share_toggle
+        expect(rewind_page).to have_no_copy_link_button
         expect(rewind_page).to have_no_cannot_view_rewind_error
         expect(rewind_page).to have_rewind_loaded
       end
@@ -148,9 +191,30 @@ describe "DiscourseRewind | rewind sharing", type: :system do
         rewind_page.visit_rewind(current_user.username)
 
         expect(rewind_page).to have_viewing_other_user_message(current_user.username)
-        expect(rewind_page).to have_no_share_button
+        expect(rewind_page).to have_no_share_toggle
+        expect(rewind_page).to have_no_copy_link_button
         expect(rewind_page).to have_no_cannot_view_rewind_error
         expect(rewind_page).to have_rewind_loaded
+      end
+    end
+
+    context "when anonymous user attempts to view rewind" do
+      before { freeze_time DateTime.parse("2022-12-22") }
+
+      it "redirects to /latest when user's rewind is shared" do
+        current_user.user_option.update!(discourse_rewind_share_publicly: true)
+
+        rewind_page.visit_rewind(current_user.username)
+
+        expect(page).to have_current_path("/latest")
+      end
+
+      it "redirects to /latest when user's rewind is not shared" do
+        current_user.user_option.update!(discourse_rewind_share_publicly: false)
+
+        rewind_page.visit_rewind(current_user.username)
+
+        expect(page).to have_current_path("/latest")
       end
     end
   end

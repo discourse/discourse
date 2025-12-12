@@ -7,9 +7,12 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
+import DToggleSwitch from "discourse/components/d-toggle-switch";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { getAbsoluteURL } from "discourse/lib/get-url";
+import { clipboardCopy } from "discourse/lib/utilities";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ActivityCalendar from "discourse/plugins/discourse-rewind/discourse/components/reports/activity-calendar";
@@ -36,6 +39,7 @@ const SCROLL_THRESHOLD = 0.7;
 
 export default class Rewind extends Component {
   @service dialog;
+  @service site;
   @service currentUser;
   @service toasts;
 
@@ -156,6 +160,19 @@ export default class Rewind extends Component {
   @action
   toggleFullScreen() {
     this.fullScreen = !this.fullScreen;
+  }
+
+  @action
+  async copyRewindLink() {
+    await clipboardCopy(
+      getAbsoluteURL(`/u/${this.currentUser.username}/activity/rewind`)
+    );
+    this.toasts.success({
+      duration: "short",
+      data: {
+        message: i18n("post.controls.link_copied"),
+      },
+    });
   }
 
   @action
@@ -292,27 +309,52 @@ export default class Rewind extends Component {
             </div>
           </div>
         {{else}}
-          {{#if this.canShare}}
+          <div class="rewind__header-buttons">
+            {{#if this.canShare}}
+              {{#unless this.site.mobileView}}
+                <div class="rewind__share-toggle-wrapper">
+                  <DToggleSwitch
+                    @state={{this.currentUser.user_option.discourse_rewind_share_publicly}}
+                    class="rewind__share-toggle"
+                    {{on "click" this.toggleShareRewind}}
+                  />
+                  {{i18n "discourse_rewind.share.toggle_label"}}
+                </div>
+
+              {{/unless}}
+
+              {{#if
+                this.currentUser.user_option.discourse_rewind_share_publicly
+              }}
+                <DButton
+                  class="btn-default rewind__copy-link-btn --special-kbd"
+                  @title="composer.link_toolbar.copy"
+                  @icon="link"
+                  @action={{this.copyRewindLink}}
+                />
+              {{/if}}
+            {{/if}}
             <DButton
-              class="btn-default rewind__share-btn --special-kbd"
-              @title={{if
-                this.currentUser.user_option.discourse_rewind_share_publicly
-                "discourse_rewind.share.disable_tooltip"
-                "discourse_rewind.share.enable_tooltip"
-              }}
+              class="btn-default rewind__exit-fullscreen-btn --special-kbd"
               @icon={{if
-                this.currentUser.user_option.discourse_rewind_share_publicly
-                "link-slash"
-                "link"
+                this.fullScreen
+                "discourse-compress"
+                "discourse-expand"
               }}
-              @action={{this.toggleShareRewind}}
+              @action={{this.toggleFullScreen}}
             />
+          </div>
+          {{#if this.site.mobileView}}
+            <div class="rewind__share-toggle-wrapper">
+              <DToggleSwitch
+                @state={{this.currentUser.user_option.discourse_rewind_share_publicly}}
+                class="rewind__share-toggle"
+                {{on "click" this.toggleShareRewind}}
+              />
+              {{i18n "discourse_rewind.share.toggle_label"}}
+            </div>
+
           {{/if}}
-          <DButton
-            class="btn-default rewind__exit-fullscreen-btn --special-kbd"
-            @icon={{if this.fullScreen "discourse-compress" "discourse-expand"}}
-            @action={{this.toggleFullScreen}}
-          />
           <div
             class="rewind__scroll-wrapper"
             {{didInsert this.registerScrollWrapper}}

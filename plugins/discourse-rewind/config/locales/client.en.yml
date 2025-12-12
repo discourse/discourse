@@ -25,14 +25,13 @@ en:
         $> _<br><br>
       preferences:
         disable_rewind: "Disable Discourse Rewind. This hides the year-end activity summary in your profile and on your avatar."
-        share_publicly: "Share Discourse Rewind summary publicly. Any forum user will be able to view your Discourse Rewind summary."
+        share_publicly: "Share Discourse Rewind summary with other forum members. Any forum member will be able to view your Discourse Rewind summary."
       profile_link: "View your %{rewindYear} Discourse Rewind"
       share:
+        toggle_label: "Share Discourse Rewind with other members"
         confirm: "Are you sure you want to share your Discourse Rewind summary? This will make it visible to all members of this forum. Note that the report may contain private data like personal message excerpts. You can unshare at any time by clicking the share button again."
-        enabled_success: "Your Discourse Rewind summary is now shared publicly."
-        disabled_success: "Your Discourse Rewind summary is no longer shared publicly."
-        disable_tooltip: "Click to unshare your Discourse Rewind summary."
-        enable_tooltip: "Click to share your Discourse Rewind summary publicly."
+        enabled_success: "Your Discourse Rewind summary is now shared with other forum members."
+        disabled_success: "Your Discourse Rewind summary is no longer shared with other forum members."
       reports:
         activity_calendar:
           title: Activity Calendar
