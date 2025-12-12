@@ -17,6 +17,7 @@ module DiscourseAutomation
     POST = "post"
     REMOVE_UPLOAD_MARKUP_FROM_DELETED_POSTS = "remove_upload_markup_from_deleted_posts"
     SEND_PMS = "send_pms"
+    SET_TOPIC_TIMER = "set_topic_timer"
     SUSPEND_USER_BY_EMAIL = "suspend_user_by_email"
     TOPIC = "topic"
     TOPIC_REQUIRED_WORDS = "topic_required_words"
