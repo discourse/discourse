@@ -5305,6 +5305,11 @@ ur:
           sub_pages:
             common_settings:
               title: "سیٹِنگ"
+            discourse_id:
+              title: "ڈسکورس آئی ڈی"
+        discourse_id:
+          title: "ڈسکورس آئی ڈی"
+          learn_more: "مزید جانیں"
         logo:
           title: "لوگو"
           header_description: "اپنی پوری سائٹ میں استعمال ہونے والے لوگو اور شبیہیں ترتیب دیں"

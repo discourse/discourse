@@ -3096,6 +3096,8 @@ ca:
           sub_pages:
             common_settings:
               title: "Configuració"
+        discourse_id:
+          learn_more: "Per a saber-ne més"
         logo:
           form:
             mobile: "Mòbil"

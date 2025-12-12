@@ -4729,6 +4729,8 @@ zh_TW:
           sub_pages:
             common_settings:
               title: "設定"
+        discourse_id:
+          learn_more: "了解更多"
         logo:
           title: "標誌"
           form:

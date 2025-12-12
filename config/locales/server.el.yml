@@ -2515,6 +2515,9 @@ el:
   onebox:
     github:
       closed: "κλειστό"
+      status_date:
+        approved: "εγκεκριμένο"
+        closed: "κλειστή"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} σε ανέφερε στο "%{topic}" - %{site_title}'

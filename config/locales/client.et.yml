@@ -2752,6 +2752,8 @@ et:
           sub_pages:
             common_settings:
               title: "Seaded"
+        discourse_id:
+          learn_more: "Uuri veel"
         logo:
           form:
             mobile: "Mobiil"

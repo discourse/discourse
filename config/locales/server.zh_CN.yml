@@ -4904,6 +4904,10 @@ zh_CN:
       no_description: "通过在 GitHub 上创建帐户来为 %{repo} 开发做出贡献。"
       pr_title:
         changes_requested: "请求更改"
+      status_date:
+        open: "已打开"
+        approved: "已批准"
+        closed: "已关闭"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} 在“%{topic}”中提及了您 - %{site_title}'

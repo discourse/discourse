@@ -4411,6 +4411,8 @@ te:
           sub_pages:
             common_settings:
               title: "అమరికలు"
+        discourse_id:
+          learn_more: "మరింత తెలుసుకోండి"
         logo:
           form:
             logo:

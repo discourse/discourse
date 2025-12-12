@@ -4591,6 +4591,11 @@ pt:
           sub_pages:
             common_settings:
               title: "Configurações"
+            discourse_id:
+              title: "Id. do Discourse"
+        discourse_id:
+          title: "Id. do Discourse"
+          learn_more: "Saiba mais"
         logo:
           title: "Logótipo"
           header_description: "Configure os logótipos e ícones utilizados no seu ''site''"

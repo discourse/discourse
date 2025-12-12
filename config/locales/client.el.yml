@@ -4691,6 +4691,11 @@ el:
           sub_pages:
             common_settings:
               title: "Ρυθμίσεις"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Μάθετε περισσότερα"
         logo:
           form:
             mobile: "Mobile"

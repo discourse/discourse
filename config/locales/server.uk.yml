@@ -5274,6 +5274,11 @@ uk:
         changes_requested: "Запитані зміни"
         merged: "Об'єднаний запит на злиття"
         closed: "Закритий запит на злиття"
+      status_date:
+        open: "відкрито"
+        approved: "схвалено"
+        merged: "об'єднано"
+        closed: "закриті"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} згадав вас у "%{topic}" - %{site_title}'

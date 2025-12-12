@@ -4938,6 +4938,10 @@ tr_TR:
       review_by: "İnceleyen:"
       pr_summary: "%{commits} işlem %{changed_files} dosyalarını %{additions} eklemeler ve %{deletions} silmelerle değiştirdi"
       no_description: "GitHub'da bir hesap oluşturarak %{repo} geliştirmesine katkıda bulunun."
+      status_date:
+        open: "açıldı"
+        approved: "onaylanmış mı"
+        closed: "kapatıldı"
   discourse_push_notifications:
     popup:
       mentioned: '%{username}, "%{topic}" konusunda sizden bahsetti - %{site_title}'

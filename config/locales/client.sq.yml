@@ -4003,6 +4003,8 @@ sq:
           sub_pages:
             common_settings:
               title: "Rregullimet"
+        discourse_id:
+          learn_more: "Mësoni më shumë"
         logo:
           form:
             mobile: "Mobile"

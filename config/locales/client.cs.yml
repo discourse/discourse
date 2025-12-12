@@ -6026,6 +6026,11 @@ cs:
               title: "Přihlášení přes sociální sítě"
             discourseconnect:
               title: "Discourse Connect"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Zjistit více"
         logo:
           title: "Logo"
           header_description: "Nakonfigurujte loga a ikony používané na celém webu"

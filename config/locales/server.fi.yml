@@ -4882,6 +4882,10 @@ fi:
       review_by: "Tarkistanut"
       pr_summary: "%{commits} solmua muutti %{changed_files} tiedostoa %{additions} lisäyksellä ja %{deletions} poistolla"
       no_description: "Auta tietovaraston %{repo} kehityksessä luomalla tili GitHubissa."
+      status_date:
+        open: "avattu"
+        approved: "hyväksytty"
+        closed: "suljettu"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mainitsi sinut ketjussa "%{topic}" – %{site_title}'

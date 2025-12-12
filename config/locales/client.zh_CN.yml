@@ -5175,6 +5175,11 @@ zh_CN:
               title: "第三方登录"
             discourseconnect:
               title: "Discourse Connect"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "了解详情"
         logo:
           title: "徽标"
           header_description: "配置整个站点使用的徽标和图标"

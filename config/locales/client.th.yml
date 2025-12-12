@@ -2573,6 +2573,8 @@ th:
           sub_pages:
             common_settings:
               title: "การตั้งค่า"
+        discourse_id:
+          learn_more: "เรียนรู้เพิ่มเติม"
         logo:
           form:
             mobile: "โทรศัพท์"

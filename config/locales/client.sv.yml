@@ -4417,6 +4417,8 @@ sv:
           sub_pages:
             common_settings:
               title: "Inställningar"
+        discourse_id:
+          learn_more: "Läs mer"
         logo:
           form:
             logo:

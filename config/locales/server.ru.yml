@@ -5231,6 +5231,10 @@ ru:
       review_by: "Кем проверено"
       pr_summary: "Фиксаций: %{commits}. В них изменено файлов: %{changed_files}. Добавлений: %{additions}. Удалений: %{deletions}."
       no_description: "Внесите свой вклад в развитие %{repo}, создав аккаунт на GitHub."
+      status_date:
+        open: "открытые"
+        approved: "подтверждено"
+        closed: "закрытые"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} упомянул(а) вас в теме «%{topic}» —%{site_title}'

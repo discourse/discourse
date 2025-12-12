@@ -3943,6 +3943,11 @@ ro:
           sub_pages:
             common_settings:
               title: "Setări"
+            discourse_id:
+              title: "ID Discourse"
+        discourse_id:
+          title: "ID Discourse"
+          learn_more: "Află mai multe"
         logo:
           title: "Logo"
           header_description: "Configurează logourile și iconurile utilizate pe întregul tău site"

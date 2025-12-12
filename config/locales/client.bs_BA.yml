@@ -3187,6 +3187,8 @@ bs_BA:
           sub_pages:
             common_settings:
               title: "Postavke"
+        discourse_id:
+          learn_more: "Saznaj više"
         logo:
           form:
             mobile: "Mobilno"

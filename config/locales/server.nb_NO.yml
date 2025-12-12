@@ -1294,6 +1294,9 @@ nb_NO:
   onebox:
     github:
       closed: "lukket"
+      status_date:
+        approved: "godkjent"
+        closed: "lukket"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nevnte deg i "%{topic}" - %{site_title}'

@@ -4997,6 +4997,10 @@ de:
       review_by: "Überprüfung durch"
       pr_summary: "%{commits} Commits haben %{changed_files} Dateien durch %{additions} Ergänzungen und %{deletions} Löschungen geändert"
       no_description: "Trage zur Entwicklung von %{repo} bei, indem du ein Konto bei GitHub erstellst."
+      status_date:
+        open: "offen"
+        approved: "genehmigt"
+        closed: "geschlossen"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} hat dich erwähnt in „%{topic}“ – %{site_title}'

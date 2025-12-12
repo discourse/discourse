@@ -2750,6 +2750,9 @@ hy:
   onebox:
     github:
       closed: "փակված"
+      status_date:
+        approved: "հաստատված է"
+        closed: "փակված է"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} -ը նշել է Ձեզ այստեղ՝ "%{topic}" - %{site_title}'

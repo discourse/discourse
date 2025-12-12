@@ -4927,6 +4927,8 @@ fa_IR:
           sub_pages:
             common_settings:
               title: "تنظیم"
+        discourse_id:
+          learn_more: "بیشتر بدانید"
         logo:
           form:
             logo:

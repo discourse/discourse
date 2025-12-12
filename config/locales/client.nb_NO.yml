@@ -4396,6 +4396,8 @@ nb_NO:
           sub_pages:
             common_settings:
               title: "Innstillinger"
+        discourse_id:
+          learn_more: "Finn ut mer"
         logo:
           form:
             mobile: "Mobil"

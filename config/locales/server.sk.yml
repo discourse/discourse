@@ -5205,6 +5205,10 @@ sk:
       review_by: "Recenzia od"
       pr_summary: "%{commits} revízie zmenili súbory %{changed_files} s pridaním %{additions} a odstránením %{deletions}"
       no_description: "Prispejte k vývoju %{repo} vytvorením účtu na GitHub."
+      status_date:
+        open: "otvorené"
+        approved: "schválený"
+        closed: "hlasovanie ukončené"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} Vás zmienil v "%{topic}" - %{site_title}'

@@ -5407,6 +5407,10 @@ ar:
       review_by: "روجع من قِبل"
       pr_summary: "أدت %{commits} من عمليات التضمين إلى ‎تغيير ‎ %{changed_files}‎ من الملفات بإجراء %{additions} من الإضافات و%{deletions} من الحذوفات"
       no_description: "المساهمة في تطوير‎ %{repo} ‎من خلال إنشاء حساب على‎ GitHub."
+      status_date:
+        open: "مفتوحة"
+        approved: "تمت الموافقة عليها"
+        closed: "مغلقة"
   discourse_push_notifications:
     popup:
       mentioned: 'أشار %{username} إليك في "%{topic}" - %{site_title}'

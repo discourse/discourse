@@ -3545,6 +3545,10 @@ ko:
     github:
       opened: "열림"
       closed: "닫힘"
+      status_date:
+        open: "열림"
+        approved: "승인"
+        closed: "닫힘"
   discourse_push_notifications:
     popup:
       mentioned: '''%{topic}'' - %{site_title}에서 %{username} 님이 나를 멘션했습니다'

@@ -2750,6 +2750,9 @@ ca:
   onebox:
     github:
       closed: "tancat"
+      status_date:
+        approved: "aprovat"
+        closed: "tancat"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} us ha mencionat en "%{topic}" - %{site_title}'

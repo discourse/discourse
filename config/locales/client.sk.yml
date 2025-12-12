@@ -5673,6 +5673,11 @@ sk:
           sub_pages:
             common_settings:
               title: "Nastavení"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Zistite viac"
         logo:
           title: "Logo"
           header_description: "Nakonfigurujte logá a ikony používané na celej vašej stránke"

@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 ug:
+  site_settings:
+    discourse_rewind_enabled: "Discourse ئەسلەتمەسىنى قوزغىتىپ، ئەزالارنىڭ جامائەتتىكى پائالىيىتىنى ئەسلەپ، قىزىقارلىق يىللىق دوكلات تەمىنلەيدۇ."
+  discourse_rewind:
+    report_failed: "Discourse ئەسلەتمە دوكلاتىنى ھاسىل قىلالمىدى."
+    invalid_year: "ئەسلەتمىنى پەقەت يانۋارياكى دېكابىردىلا ھاسىللىغىلى بولىدۇ."
+    reports_not_cached: "دوكلات تېخى ھاسىل قىلىنمىدى. بەتنى يېڭىلاڭ."
+    report_not_found: "توكلات تېپىلمىدى."

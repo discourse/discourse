@@ -6363,6 +6363,11 @@ ar:
           sub_pages:
             common_settings:
               title: "الإعدادان"
+            discourse_id:
+              title: "معرّف Discourse"
+        discourse_id:
+          title: "معرّف Discourse"
+          learn_more: "معرفة المزيد"
         logo:
           title: "الشعار"
           header_description: "ضبط الشعارات والرموز المستخدمة في جميع أنحاء موقعك"

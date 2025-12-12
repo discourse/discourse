@@ -5263,6 +5263,11 @@ fi:
           sub_pages:
             common_settings:
               title: "Asetukset"
+            discourse_id:
+              title: "Discourse-tunnus"
+        discourse_id:
+          title: "Discourse-tunnus"
+          learn_more: "Lue lisää"
         logo:
           title: "Logo"
           header_description: "Määritä koko sivuston logot ja kuvakkeet"

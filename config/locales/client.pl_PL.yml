@@ -6007,6 +6007,19 @@ pl_PL:
               title: "Logowania społecznościowe"
             discourseconnect:
               title: "Discourse Connect"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          stats:
+            total_users: "Łączna liczba użytkowników"
+            signups_30_days: "Rejestracje (30 dni)"
+            logins_30_days: "Logowania (30 dni)"
+          regenerate_credentials: "Wygeneruj ponownie dane uwierzytelniające"
+          regenerate_confirm: "Czy na pewno chcesz ponownie wygenerować dane uwierzytelniające Discourse ID? Spowoduje to wygenerowanie nowego klucza tajnego klienta. Regenerowanie danych uwierzytelniających zazwyczaj nie jest wymagane, ale może być przydatne dla zwiększenia bezpieczeństwa."
+          description: "Discourse ID to usługa jednokrotnego logowania, która umożliwia użytkownikom logowanie się do wielu witryn Discourse za pomocą jednego konta. Popularni dostawcy logowania społecznościowego, tacy jak Google, Facebook, Apple i GitHub, są obsługiwani bez dodatkowej konfiguracji."
+          learn_more: "Dowiedz się więcej"
+          regenerate_success: "Dane uwierzytelniające zostały pomyślnie wygenerowane."
         logo:
           title: "Logo"
           header_description: "Skonfiguruj logo i ikony używane w całej witrynie"
@@ -7907,6 +7920,7 @@ pl_PL:
             stop_impersonating: "przestań się podszywać"
             upcoming_change_toggled: "nadchodząca zmiana przełączona"
             change_site_setting_groups: "zmień grupy ustawień witryny"
+            discourse_id_regenerate_credentials: "wygeneruj ponownie dane uwierzytelniające Discourse ID"
         screened_emails:
           title: "Sprawdzone e-maile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."

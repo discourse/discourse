@@ -2887,6 +2887,8 @@ lv:
           sub_pages:
             common_settings:
               title: "Iestatījumi"
+        discourse_id:
+          learn_more: "Uzzināt vairāk"
         logo:
           form:
             mobile: "Mobilais"

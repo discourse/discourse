@@ -1017,6 +1017,9 @@ bs_BA:
   onebox:
     github:
       closed: "zatvoreno"
+      status_date:
+        approved: "approved"
+        closed: "zatvoreno"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vas je spomenuo/la u "%{topic}" - %{site_title}'

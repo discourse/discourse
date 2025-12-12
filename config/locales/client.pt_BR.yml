@@ -5262,6 +5262,11 @@ pt_BR:
           sub_pages:
             common_settings:
               title: "Definições"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Saiba mais"
         logo:
           title: "Logotipo"
           header_description: "Configure os ícones e logotipos usados no seu site"

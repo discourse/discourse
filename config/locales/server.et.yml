@@ -1033,6 +1033,9 @@ et:
   onebox:
     github:
       closed: "suletud"
+      status_date:
+        approved: "heakskiidetud"
+        closed: "suletud"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mainis Sind teemas "%{topic}" - %{site_title}'

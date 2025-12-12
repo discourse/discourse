@@ -284,6 +284,10 @@ he:
               label: תגיות
               description: הגדרת רשות, יוזנק רק אם לפוסט יש את אחת התגיות הבאות
       scriptables:
+        email_on_flagged_post:
+          fields:
+            email_template:
+              label: תבנית דוא״ל
         not_found: לא ניתן למצוא את הסקריפט `%{script}` לאוטומציה `%{automation}`, יש לוודא שהתוסף המשויך מותקן
         zapier_webhook:
           fields:

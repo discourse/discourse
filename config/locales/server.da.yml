@@ -3121,6 +3121,9 @@ da:
   onebox:
     github:
       closed: "lukket"
+      status_date:
+        approved: "godkendt"
+        closed: "lukket"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nævnte dig i "%{topic}" - %{site_title}'

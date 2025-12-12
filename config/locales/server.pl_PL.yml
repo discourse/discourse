@@ -5321,6 +5321,13 @@ pl_PL:
         changes_requested: "Żądane zmiany"
         merged: "Scalony pull request"
         closed: "Zamknięty pull request"
+      status_date:
+        open: "otwarty"
+        draft: "sporządzono"
+        approved: "zatwierdzony"
+        changes_requested: "żądane zmiany"
+        merged: "scalono"
+        closed: "zamknięte"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} wspomina o tobie w "%{topic}" - %{site_title}'
@@ -5641,6 +5648,9 @@ pl_PL:
       invalid_tag_group: "ma nieprawidłową grupę tagów: %{tag_group_name}"
   discourse_id:
     already_registered: "Ta witryna jest już zarejestrowana w Discourse ID"
+    errors:
+      not_configured: "Discourse ID nie jest skonfigurowane. Najpierw włącz Discourse ID."
+      regenerate_failed: "Nie udało się ponownie wygenerować danych logowania. Spróbuj ponownie później."
   activemodel:
     errors:
       <<: *errors

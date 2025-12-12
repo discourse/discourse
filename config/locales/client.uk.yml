@@ -6014,6 +6014,11 @@ uk:
               title: "Вхід через соціальні мережі"
             discourseconnect:
               title: "Discourse Connect"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Дізнатися більше"
         logo:
           title: "Логотип"
           header_description: "Налаштуйте логотипи та іконки, які використовуються на вашому сайті"

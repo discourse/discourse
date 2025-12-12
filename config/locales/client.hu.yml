@@ -5314,6 +5314,11 @@ hu:
               title: "Közösségi bejelentkezések"
             discourseconnect:
               title: "Discourse Connect"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Tudjon meg többet"
         logo:
           title: "Logó"
           header_description: "A webhelyen használt logók és ikonok testreszabása"
