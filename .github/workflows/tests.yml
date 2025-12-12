@@ -302,13 +302,26 @@ jobs:
 
       - name: Split core and official plugins
         if: matrix.build_type == 'system' && (matrix.target == 'core-plugins' || matrix.target == 'official-plugins')
+        shell: ruby {0}
         run: |
-          CORE_PLUGINS=`script/list_bundled_plugins | sed 's|.*/||' | paste -sd, -`
-          echo "CORE_PLUGINS=$CORE_PLUGINS" >> $GITHUB_ENV
-          echo "CORE_PLUGINS_ESCAPED=`echo $CORE_PLUGINS | sed 's/,/\\\\,/g'`" >> $GITHUB_ENV
-          OFFICIAL_PLUGINS=`grep -Fvx -f <(script/list_bundled_plugins | sed 's|.*/||') <(bin/rake plugin:list_official) | paste -sd, -`
-          echo "OFFICIAL_PLUGINS=$OFFICIAL_PLUGINS" >> $GITHUB_ENV
-          echo "OFFICIAL_PLUGINS_ESCAPED=`echo $OFFICIAL_PLUGINS | sed 's/,/\\\\,/g'`" >> $GITHUB_ENV
+          # Get list of core (bundled) plugins
+          core_plugins = `script/list_bundled_plugins`.split("\n").map { |path| File.basename(path) }
+          core_plugins_str = core_plugins.join(",")
+          core_plugins_escaped = core_plugins_str.gsub(",", "\\,")
+
+          # Get list of official plugins excluding core plugins
+          official_plugin_list = `bin/rake plugin:list_official`.split("\n")
+          official_plugins = official_plugin_list - core_plugins
+          official_plugins_str = official_plugins.join(",")
+          official_plugins_escaped = official_plugins_str.gsub(",", "\\,")
+
+          # Write to GITHUB_ENV
+          File.open(ENV["GITHUB_ENV"], "a") do |f|
+            f.puts "CORE_PLUGINS=#{core_plugins_str}"
+            f.puts "CORE_PLUGINS_ESCAPED=#{core_plugins_escaped}"
+            f.puts "OFFICIAL_PLUGINS=#{official_plugins_str}"
+            f.puts "OFFICIAL_PLUGINS_ESCAPED=#{official_plugins_escaped}"
+          end
 
       - name: Plugins RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'plugins'
@@ -346,37 +359,57 @@ jobs:
 
       - name: Core Plugins System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core-plugins'
+        shell: ruby {0}
         env:
           CHECKOUT_TIMEOUT: 10
         run: |
-          IFS=',' read -r -a items <<< "${{ env.CORE_PLUGINS }}"
-          matches=()
-          for item in "${items[@]}"; do
-            dir="plugins/$item/spec/system"
-            if [ -d "$dir" ]; then
-              matches+=("$dir")
-            fi
-          done
+          # Find plugin directories that have system tests
+          core_plugins = "${{ env.CORE_PLUGINS }}".split(",")
+          matches = core_plugins.map { |plugin| "plugins/#{plugin}/spec/system" }
+                                .select { |dir| Dir.exist?(dir) }
 
-          echo "Running bin/turbo_rspec on: ${matches[*]}"
-          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation "${matches[@]}"
+          puts "Running bin/turbo_rspec on: #{matches.join(" ")}"
+
+          # Run turbo_rspec with the matched directories
+          ENV["RAILS_ENABLE_TEST_LOG"] = "1"
+          ENV["RAILS_TEST_LOG_LEVEL"] = "error"
+
+          exec(
+            "bin/turbo_rspec",
+            "--exclude-pattern=plugins/chat/*",
+            "--use-runtime-info",
+            "--profile=50",
+            "--verbose",
+            "--format", "documentation",
+            *matches
+          )
 
       - name: Official Plugins System Tests
         if: matrix.build_type == 'system' && matrix.target == 'official-plugins'
+        shell: ruby {0}
         env:
           CHECKOUT_TIMEOUT: 10
         run: |
-          IFS=',' read -r -a items <<< "${{ env.OFFICIAL_PLUGINS }}"
-          matches=()
-          for item in "${items[@]}"; do
-            dir="plugins/$item/spec/system"
-            if [ -d "$dir" ]; then
-              matches+=("$dir")
-            fi
-          done
+          # Find plugin directories that have system tests
+          official_plugins = "${{ env.OFFICIAL_PLUGINS }}".split(",")
+          matches = official_plugins.map { |plugin| "plugins/#{plugin}/spec/system" }
+                                    .select { |dir| Dir.exist?(dir) }
 
-          echo "Running bin/turbo_rspec on: ${matches[*]}"
-          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation "${matches[@]}"
+          puts "Running bin/turbo_rspec on: #{matches.join(" ")}"
+
+          # Run turbo_rspec with the matched directories
+          ENV["RAILS_ENABLE_TEST_LOG"] = "1"
+          ENV["RAILS_TEST_LOG_LEVEL"] = "error"
+
+          exec(
+            "bin/turbo_rspec",
+            "--exclude-pattern=plugins/chat/*",
+            "--use-runtime-info",
+            "--profile=50",
+            "--verbose",
+            "--format", "documentation",
+            *matches
+          )
 
       - name: Chat System Tests
         if: matrix.build_type == 'system' && matrix.target == 'chat'
