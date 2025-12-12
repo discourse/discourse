@@ -10,9 +10,13 @@ describe "Admin What's New Page", type: :system do
     sign_in(admin)
   end
 
+  def set_new_features_payload(payload)
+    Discourse.redis.set("new_features", MultiJson.dump(payload))
+  end
+
   it "displays a new feature indicator on the sidebar and clears it when navigating to what's new" do
     DiscourseUpdates.stubs(:has_unseen_features?).returns(true)
-    DiscourseUpdates.stubs(:new_features_payload).returns(
+    set_new_features_payload(
       [
         {
           "id" => 7,
@@ -28,7 +32,7 @@ describe "Admin What's New Page", type: :system do
           "screenshot_url" =>
             "/uploads/default/original/1X/bab053dc94dc4e0d357b0e777e3357bb1ac99e12.jpeg",
         },
-      ].to_json,
+      ],
     )
     visit "/admin"
     sidebar.toggle_all_sections
@@ -42,7 +46,7 @@ describe "Admin What's New Page", type: :system do
   end
 
   it "displays new features with screenshot taking precedence over emoji" do
-    DiscourseUpdates.stubs(:new_features_payload).returns(
+    set_new_features_payload(
       [
         {
           "id" => 7,
@@ -73,7 +77,7 @@ describe "Admin What's New Page", type: :system do
           "screenshot_url" =>
             "/uploads/default/original/1X/bab054dc94dc4e0d357b0e777e3357bb1ac99e13.jpeg",
         },
-      ].to_json,
+      ],
     )
 
     whats_new_page.visit
@@ -94,7 +98,7 @@ describe "Admin What's New Page", type: :system do
   end
 
   it "displays new features with emoji when no screenshot" do
-    DiscourseUpdates.stubs(:new_features_payload).returns(
+    set_new_features_payload(
       [
         {
           "id" => 7,
@@ -108,7 +112,7 @@ describe "Admin What's New Page", type: :system do
           "created_at" => "2023-11-10T02:52:41.462Z",
           "updated_at" => "2023-11-10T04:28:47.020Z",
         },
-      ].to_json,
+      ],
     )
     whats_new_page.visit
     expect(whats_new_page).to have_emoji
@@ -117,7 +121,7 @@ describe "Admin What's New Page", type: :system do
 
   describe "items with a related_site_setting" do
     before do
-      DiscourseUpdates.stubs(:new_features_payload).returns(
+      set_new_features_payload(
         [
           {
             "id" => 7,
@@ -133,7 +137,7 @@ describe "Admin What's New Page", type: :system do
             "related_site_setting" => "experimental_form_templates",
             "experiment" => false,
           },
-        ].to_json,
+        ],
       )
     end
 
@@ -152,7 +156,7 @@ describe "Admin What's New Page", type: :system do
 
   describe "experimental items" do
     it "displays experimental feature toggle and has the correct state" do
-      DiscourseUpdates.stubs(:new_features_payload).returns(
+      set_new_features_payload(
         [
           {
             "id" => 7,
@@ -168,14 +172,14 @@ describe "Admin What's New Page", type: :system do
             "related_site_setting" => "experimental_form_templates",
             "experiment" => false,
           },
-        ].to_json,
+        ],
       )
       whats_new_page.visit
       expect(whats_new_page).to have_toggle_feature_button()
     end
 
     it "displays experimental text next to feature title when feature is experimental" do
-      DiscourseUpdates.stubs(:new_features_payload).returns(
+      set_new_features_payload(
         [
           {
             "id" => 7,
@@ -191,14 +195,14 @@ describe "Admin What's New Page", type: :system do
             "related_site_setting" => "experimental_form_templates",
             "experiment" => true,
           },
-        ].to_json,
+        ],
       )
       whats_new_page.visit
       expect(whats_new_page).to have_experimental_text
     end
 
     it "does not display experimental text next to feature title when feature is not experimental" do
-      DiscourseUpdates.stubs(:new_features_payload).returns(
+      set_new_features_payload(
         [
           {
             "id" => 7,
@@ -212,14 +216,14 @@ describe "Admin What's New Page", type: :system do
             "created_at" => "2023-11-10T02:52:41.462Z",
             "updated_at" => "2023-11-10T04:28:47.020Z",
           },
-        ].to_json,
+        ],
       )
       whats_new_page.visit
       expect(whats_new_page).to have_no_experimental_text
     end
 
     it "allows filtering to only show experimental items" do
-      DiscourseUpdates.stubs(:new_features_payload).returns(
+      set_new_features_payload(
         [
           {
             "id" => 7,
@@ -249,7 +253,7 @@ describe "Admin What's New Page", type: :system do
             "related_site_setting" => nil,
             "experiment" => false,
           },
-        ].to_json,
+        ],
       )
       whats_new_page.visit
       whats_new_page.toggle_experiments_only
