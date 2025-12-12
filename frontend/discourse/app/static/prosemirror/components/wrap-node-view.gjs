@@ -3,7 +3,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { NodeSelection } from "prosemirror-state";
-import { bind } from "discourse/lib/decorators";
 import { parseAttributesString, serializeAttributes } from "../lib/wrap-utils";
 import WrapAttributesModal from "./wrap-attributes-modal";
 
@@ -82,39 +81,6 @@ export default class WrapNodeView extends Component {
     this.args.view.dispatch(tr);
   }
 
-  @bind
-  ignoreMutation() {
-    // TODO the inline (non-absolute) button is deletable, fix it
-
-    // For PM an atom node is a black box, what happens inside it are of no concern to PM
-    // and should be ignored.
-    // if (this.args.node.type.isAtom) {
-    //   return true;
-    // }
-    //
-    // // donot ignore a selection type mutation
-    // if (mutation.type === 'selection') {
-    //   return false;
-    // }
-    //
-    // // if a child of this.dom (the one handled by PM)
-    // // has any mutation, do not ignore it
-    // if (this.args.dom.contains(mutation.target)) {
-    //   return false;
-    // }
-    //
-    // // <!---THIS CONDITION FIXES THE PROBLEM -->
-    // // if the this.dom itself was the target
-    // // do not ignore it. This is important for schema where
-    // // content: 'inline*' and you end up deleting all the content with backspace
-    // // PM needs to step in and create an empty node for us.
-    // if (mutation.target === this.args.contentDOM) {
-    //   return false;
-    // }
-
-    return true;
-  }
-
   selectNode() {
     this.args.dom.classList.add("ProseMirror-selectednode");
   }
@@ -124,13 +90,13 @@ export default class WrapNodeView extends Component {
   }
 
   <template>
-    <button
+    {{~! strip whitespace ~}}<button
       type="button"
       class="d-wrap-indicator btn-flat
         {{if this.isInline '--inline' '--block'}}"
       contenteditable="false"
       {{on "click" this.editAttributes}}
     >{{~this.attributesDisplay~}}</button>
-    {{~yield~}}
+    {{~yield~}}{{~! strip whitespace ~}}
   </template>
 }

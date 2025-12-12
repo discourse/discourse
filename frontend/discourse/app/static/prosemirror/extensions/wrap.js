@@ -44,17 +44,6 @@ const extension = {
         const { selection } = state;
         const { empty, $from, $to } = selection;
 
-        for (let depth = $from.depth; depth >= 0; depth--) {
-          const node = $from.node(depth);
-          if (
-            node.type.name === "wrap_block" ||
-            node.type.name === "wrap_inline"
-          ) {
-            // TODO shouldn't it unwrap?
-            return false;
-          }
-        }
-
         const attrs = { data: attributes };
         const tr = state.tr;
 
