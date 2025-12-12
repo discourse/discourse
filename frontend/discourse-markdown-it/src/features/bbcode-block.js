@@ -34,7 +34,15 @@ function trailingSpaceOnly(src, start, max) {
 
 // Most common quotation marks.
 // More can be found at https://en.wikipedia.org/wiki/Quotation_mark
-const QUOTATION_MARKS = [`""`, `''`, `“”`, `””`, `‘’`, `„“`, `‚’`, `«»`, `‹›`];
+const QUOTATION_MARKS = [`""`, `''`, `""`, `""`, `''`, `„"`, `‚'`, `«»`, `‹›`];
+
+const QUOTATION_MARKS_PATTERN = new RegExp(
+  `[${QUOTATION_MARKS.join("")}]`,
+  "g"
+);
+
+export const stripQuotationMarks = (value) =>
+  (value || "").replace(QUOTATION_MARKS_PATTERN, "");
 
 const QUOTATION_MARKS_NO_MATCH = QUOTATION_MARKS.map(
   ([a, b]) => `${a}[^${b}]+${b}`
