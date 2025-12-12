@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe UserNotifications do
-  fab!(:category)
   let(:user) { Fabricate(:admin) }
 
   describe "#get_context_posts" do
+    fab!(:category)
+
     it "does not include hidden/deleted/user_deleted posts in context" do
       post1 = create_post
       _post2 = Fabricate(:post, topic: post1.topic, deleted_at: 1.day.ago)
@@ -146,7 +147,10 @@ RSpec.describe UserNotifications do
   end
 
   describe ".digest" do
+    fab!(:category)
     subject(:email) { UserNotifications.digest(user) }
+
+    before { SiteSetting.uncategorized_category_id = category.id }
 
     after { Discourse.redis.keys("summary-new-users:*").each { |key| Discourse.redis.del(key) } }
 
