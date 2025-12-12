@@ -51,6 +51,7 @@ import { buildResolver } from "discourse/resolver";
 import { loadSprites } from "../lib/svg-sprite-loader";
 import * as FakerModule from "@faker-js/faker";
 import { setLoadedFaker } from "discourse/lib/load-faker";
+import { isTesting } from "discourse/lib/environment";
 
 const REPORT_MEMORY = false;
 let cancelled = false;
@@ -215,9 +216,11 @@ function writeSummaryLine(message) {
 }
 
 export default function setupTests(config) {
+  const target = getUrlParameter("target") || "core";
+
   disableCloaking();
 
-  setupDeprecationCounter(QUnit);
+  setupDeprecationCounter(QUnit, isTesting() ? target : null);
 
   QUnit.config.hidepassed = true;
   QUnit.config.testTimeout = 60_000;
@@ -378,7 +381,6 @@ export default function setupTests(config) {
 
   handleLegacyParameters();
 
-  const target = getUrlParameter("target") || "core";
   if (target === "theme-qunit") {
     window.location.href = window.location.origin + "/theme-qunit";
   }

@@ -55,8 +55,11 @@ export function restoreCountingDeprecation(id) {
 
 export default class DeprecationCounter {
   counts = new Map();
+  #origin = null;
 
-  start() {
+  start(origin) {
+    this.#origin = origin;
+
     registerDeprecationHandler(this.handleEmberDeprecation);
     registerDiscourseDeprecationHandler(this.handleDiscourseDeprecation);
   }
@@ -92,12 +95,13 @@ export default class DeprecationCounter {
   incrementCount(id) {
     const existingCount = this.counts.get(id) || 0;
     this.counts.set(id, existingCount + 1);
+
     if (window.Testem) {
-      reportDeprecationToTestem(id);
+      reportDeprecationToTestem(id, this.#origin);
     }
     if (isRailsTesting()) {
       // eslint-disable-next-line no-console
-      console.count(`deprecation_id:${id}`); // source will be identified using the spec metadata
+      console.count(`deprecation_id:${id}`); // origin will be identified using the spec metadata
     }
   }
 
@@ -132,18 +136,26 @@ export default class DeprecationCounter {
   }
 }
 
-function reportDeprecationToTestem(id) {
+function reportDeprecationToTestem(id, origin) {
   window.Testem.useCustomAdapter(function (socket) {
     socket.emit("test-metadata", "increment-deprecation", {
       id,
+      origin,
     });
   });
 }
 
-export function setupDeprecationCounter(qunit) {
+export function setupDeprecationCounter(qunit, target) {
   const deprecationCounter = new DeprecationCounter();
 
-  qunit.begin(() => deprecationCounter.start());
+  // for system specs
+  if (isRailsTesting()) {
+    deprecationCounter.start(target);
+    return;
+  }
+
+  // for qunit tests
+  qunit.begin(() => deprecationCounter.start(target));
 
   qunit.done(() => {
     if (window.Testem) {
