@@ -828,6 +828,7 @@ class Group < ActiveRecord::Base
     publish_category_updates(user)
     trigger_user_removed_event(user)
     enqueue_user_removed_from_group_webhook_events(group_user)
+    Notification.remove_for_user_removed_from_group(user.id, self.id)
 
     true
   end
@@ -919,6 +920,7 @@ class Group < ActiveRecord::Base
       group_users_to_be_destroyed.each do |group_user|
         trigger_user_removed_event(group_user.user)
         enqueue_user_removed_from_group_webhook_events(group_user)
+        Notification.remove_for_user_removed_from_group(group_user.user_id, self.id)
       end
     end
 

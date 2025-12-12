@@ -3316,6 +3316,30 @@ RSpec.describe Topic do
         }.by(1)
       end
     end
+
+    it "cleans up notifications for the removed user" do
+      notification = Fabricate(:notification, user: user1, topic: private_topic)
+
+      expect { private_topic.remove_allowed_user(admin, user1) }.to change {
+        Notification.exists?(notification.id)
+      }.from(true).to(false)
+    end
+  end
+
+  describe "#remove_allowed_group" do
+    it "cleans up orphaned notifications for group members" do
+      group = Fabricate(:group)
+      user = Fabricate(:user)
+      group.add(user)
+
+      pm_topic = Fabricate(:private_message_topic)
+      Fabricate(:topic_allowed_group, topic: pm_topic, group: group)
+      notification = Fabricate(:notification, user: user, topic: pm_topic)
+
+      expect { pm_topic.remove_allowed_group(pm_topic.user, group.name) }.to change {
+        Notification.exists?(notification.id)
+      }.from(true).to(false)
+    end
   end
 
   describe "#featured_link_root_domain" do

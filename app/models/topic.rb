@@ -1190,12 +1190,15 @@ class Topic < ActiveRecord::Base
   end
 
   def remove_allowed_group(removed_by, name)
-    if group = Group.find_by(name: name)
-      group_user = topic_allowed_groups.find_by(group_id: group.id)
-      if group_user
+    if group = Group.find_by(name:)
+      if group_user = topic_allowed_groups.find_by(group:)
         group_user.destroy
+
         allowed_groups.reload
         add_small_action(removed_by, "removed_group", group.name)
+
+        Notification.remove_for_group(group.id, id)
+
         return true
       end
     end
@@ -1204,12 +1207,8 @@ class Topic < ActiveRecord::Base
   end
 
   def remove_allowed_user(removed_by, username)
-    user = username.is_a?(User) ? username : User.find_by(username: username)
-
-    if user
-      topic_user = topic_allowed_users.find_by(user_id: user.id)
-
-      if topic_user
+    if user = username.is_a?(User) ? username : User.find_by(username:)
+      if topic_user = topic_allowed_users.find_by(user_id: user.id)
         topic_user.destroy
 
         if user.id == removed_by&.id
@@ -1218,7 +1217,10 @@ class Topic < ActiveRecord::Base
           add_small_action(removed_by, "removed_user", user.username, skip_guardian: true)
         end
 
+        Notification.remove_for(user.id, id)
+
         MessageBus.publish("/topic/#{id}", { type: "remove_allowed_user" }, user_ids: [user.id])
+
         return true
       end
     end
