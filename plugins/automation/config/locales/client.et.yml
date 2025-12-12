@@ -27,6 +27,12 @@ et:
         text:
           label: Tekst
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Liigid
+            tags:
+              label: Sildid
         user_badge_granted:
           fields:
             badge:

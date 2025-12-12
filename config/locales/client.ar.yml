@@ -3435,6 +3435,7 @@ ar:
         zoom_out: "تقليل حجم الصورة"
         zoom_in: "زيادة حجم الصورة"
         remove: "إزالة الصورة"
+      image: "صورة"
       image_scale_button: "تغيير حجم الصورة إلى %{percent}%"
       delete_image_button: حذف الصورة
       toggle_image_grid: تشغيل التخطيط الشبكي للصور
