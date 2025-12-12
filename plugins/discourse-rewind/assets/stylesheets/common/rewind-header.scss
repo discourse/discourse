@@ -40,6 +40,7 @@
   position: sticky;
   z-index: 3;
   color: var(--rewind-black);
+  display: flex;
 
   .rewind-logo {
     margin-bottom: 5px;
@@ -58,7 +59,7 @@
 
     svg {
       grid-area: logo;
-      width: 2.5em;
+      width: 2.15em;
       height: 2.5em;
     }
   }

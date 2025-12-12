@@ -67,5 +67,69 @@ RSpec.describe(DiscourseRewind::FetchReports) do
         expect(DiscourseRewind::Action::TopWords).to have_received(:call)
       end
     end
+
+    context "with for_user_username parameter" do
+      fab!(:other_user, :user)
+      fab!(:admin, :admin)
+
+      before { freeze_time DateTime.parse("2021-12-22") }
+
+      context "when for_user_username is blank" do
+        let(:dependencies) { { guardian:, params: { for_user_username: "" } } }
+
+        it "uses the guardian user" do
+          expect(result).to be_success
+          expect(result.for_user).to eq(current_user)
+        end
+      end
+
+      context "when for_user_username is provided but user does not exist" do
+        let(:dependencies) { { guardian:, params: { for_user_username: "nonexistent" } } }
+
+        it { is_expected.to fail_to_find_a_model(:for_user) }
+      end
+
+      context "when viewing own rewind" do
+        let(:dependencies) { { guardian:, params: { for_user_username: current_user.username } } }
+
+        it "returns the user's reports" do
+          expect(result).to be_success
+          expect(result.for_user).to eq(current_user)
+        end
+      end
+
+      context "when viewing another user's rewind" do
+        context "when the other user has sharing enabled" do
+          before { other_user.user_option.update!(discourse_rewind_share_publicly: true) }
+
+          let(:dependencies) { { guardian:, params: { for_user_username: other_user.username } } }
+
+          it "allows access to the reports" do
+            expect(result).to be_success
+            expect(result.for_user).to eq(other_user)
+          end
+        end
+
+        context "when the other user has sharing disabled" do
+          before { other_user.user_option.update!(discourse_rewind_share_publicly: false) }
+
+          context "when guardian is an admin" do
+            let(:guardian) { Guardian.new(admin) }
+            let(:dependencies) { { guardian:, params: { for_user_username: other_user.username } } }
+
+            it "allows access to the reports" do
+              expect(result).to be_success
+              expect(result.for_user).to eq(other_user)
+            end
+          end
+
+          context "when guardian is not an admin" do
+            let(:dependencies) { { guardian:, params: { for_user_username: other_user.username } } }
+
+            it { is_expected.to fail_to_find_a_model(:for_user) }
+          end
+        end
+      end
+    end
   end
 end

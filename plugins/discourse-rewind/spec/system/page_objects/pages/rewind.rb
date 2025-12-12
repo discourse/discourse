@@ -84,6 +84,52 @@ module PageObjects
       def has_no_rewind_profile_link?
         has_no_css?("#quick-access-profile a[href*='/activity/rewind']")
       end
+
+      def visit_rewind(username)
+        page.visit("/u/#{username}/activity/rewind")
+        self
+      end
+
+      def share_toggle
+        PageObjects::Components::DToggleSwitch.new(".rewind__share-toggle")
+      end
+
+      def has_share_toggle?
+        has_css?(".rewind__share-toggle")
+      end
+
+      def has_no_share_toggle?
+        has_no_css?(".rewind__share-toggle")
+      end
+
+      def has_copy_link_button?
+        has_css?(".rewind__copy-link-btn")
+      end
+
+      def has_no_copy_link_button?
+        has_no_css?(".rewind__copy-link-btn")
+      end
+
+      def click_copy_link_button
+        find(".rewind__copy-link-btn").click
+        self
+      end
+
+      def has_viewing_other_user_message?(username)
+        has_css?(".rewind-other-user", text: username)
+      end
+
+      def has_cannot_view_rewind_error?
+        has_css?(".rewind-error")
+      end
+
+      def has_no_cannot_view_rewind_error?
+        has_no_css?(".rewind-error")
+      end
+
+      def has_rewind_loaded?
+        has_css?(".rewind__scroll-wrapper")
+      end
     end
   end
 end

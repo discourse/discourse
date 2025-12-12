@@ -43,7 +43,7 @@ end
 require_relative "lib/discourse_rewind/engine"
 
 after_initialize do
-  UserUpdater::OPTION_ATTR.push(:discourse_rewind_disabled)
+  UserUpdater::OPTION_ATTR.push(:discourse_rewind_disabled, :discourse_rewind_share_publicly)
 
   %i[user_option current_user_option].each do |serializer|
     add_to_serializer(serializer, :discourse_rewind_disabled) { object.discourse_rewind_disabled }
@@ -52,6 +52,14 @@ after_initialize do
       dismissed_at.present? &&
         DiscourseRewind.rewind_year(dismissed_at) >= DiscourseRewind.rewind_year
     end
+  end
+
+  add_to_serializer(:user_option, :discourse_rewind_share_publicly) do
+    object.discourse_rewind_share_publicly
+  end
+
+  add_to_serializer(:current_user_option, :discourse_rewind_share_publicly) do
+    object.discourse_rewind_share_publicly
   end
 
   add_to_serializer(:current_user, :is_rewind_active) do
