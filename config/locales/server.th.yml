@@ -501,6 +501,9 @@ th:
   onebox:
     github:
       closed: "ปิด"
+      status_date:
+        approved: "อนุมัติแล้ว"
+        closed: "ปิด"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} พูดถึงคุณใน "%{topic}" - %{site_title}'

@@ -5539,6 +5539,11 @@ hr:
           sub_pages:
             common_settings:
               title: "Postavke"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Saznajte više"
         logo:
           title: "Logo"
           header_description: "Konfigurirajte logotipe i ikone koje se koriste na vašoj web stranici"

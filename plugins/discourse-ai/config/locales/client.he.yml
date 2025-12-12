@@ -385,6 +385,7 @@ he:
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 או מזהה פוסט"
           result: "תוצאה"
           llm: "LLM"
+          sent_message: "הודעה שנשלחה"
           system_prompt: "בקשת מערכת"
           scan_log: "יומן סריקה"
           run: "הרצת בדיקה"
@@ -423,6 +424,7 @@ he:
         no_models: "לא נמצאו נתוני שימוש במודל"
         no_features: "לא נמצאו נתוני שימוש ביכולת"
         total: "סך הכל"
+        cost: "עלות"
         subheader_description: "אסימונים הם היחידות הבסיסיות שבהם משתמשים LLMים כדי להבין וליצור טקסט, נתוני שימוש עשויים להשפיע על העלויות"
         stat_tooltips:
           total_requests: "כל הבקשות שהוגשו ל־LLMים דרך Discourse"

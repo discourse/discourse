@@ -5474,6 +5474,15 @@ ug:
               title: "ئىجتىمائىي تاراتقۇدا تىزىمغا كىر"
             discourseconnect:
               title: "Discourse Connect"
+            discourse_id:
+              title: "Discourse كىملىكى"
+        discourse_id:
+          title: "Discourse كىملىكى"
+          stats:
+            total_users: "جەمئىي ئىشلەتكۈچى"
+            signups_30_days: "تىزىملاتقىنى (30 كۈن)"
+            logins_30_days: "تىزىمغا كىرگىنى (30 كۈن)"
+          learn_more: "تېخىمۇ كۆپ بىلدۈرگۈ"
         logo:
           title: "تۇغ"
           header_description: "تور بېكىتىڭىزدە ئىشلىتىدىغان تۇغ ۋە سىنبەلگىنى سەپلەيدۇ"
@@ -5562,6 +5571,11 @@ ug:
             modal_no: "ياق، بۇندىن كېيىنكىسىگىلا قوللان"
         welcome_banner:
           form:
+            enabled_themes:
+              select_label: "ئۆرنەك تاللىنىدۇ"
+            background_image:
+              label: "تەگلىك سۈرىتى"
+              description: "بۇ سۈرەت لەۋھە تېكىستىنىڭ ئارقىسىدا كۆرسىتىلىدۇ."
             text_color:
               label: "تېكىست رەڭگى"
             page_visibility:

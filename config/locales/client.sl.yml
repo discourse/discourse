@@ -3761,6 +3761,8 @@ sl:
           sub_pages:
             common_settings:
               title: "Nastavitve"
+        discourse_id:
+          learn_more: "Več o tem"
         logo:
           form:
             mobile: "Mobilno"

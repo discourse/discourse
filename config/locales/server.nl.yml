@@ -4973,6 +4973,10 @@ nl:
       review_by: "Review door"
       pr_summary: "%{commits} commits hebben %{changed_files} bestanden gewijzigd met %{additions} toevoegingen en %{deletions} verwijderingen"
       no_description: "Draag bij aan de ontwikkeling van %{repo} door een account te maken op GitHub."
+      status_date:
+        open: "geopend"
+        approved: "goedgekeurd"
+        closed: "gesloten"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} heeft je genoemd in ''%{topic}'' - %{site_title}'

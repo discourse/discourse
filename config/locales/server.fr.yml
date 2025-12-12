@@ -4986,6 +4986,10 @@ fr:
       review_by: "Révision par"
       pr_summary: "%{commits} validations ont modifié %{changed_files} fichiers avec %{additions} ajouts et %{deletions} suppressions"
       no_description: "Contribuez au développement de %{repo} en créant un compte sur GitHub."
+      status_date:
+        open: "ouvert"
+        approved: "approuvé "
+        closed: "fermé"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vous a mentionné(e) dans « %{topic} » - %{site_title}'

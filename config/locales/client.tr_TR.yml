@@ -5263,6 +5263,11 @@ tr_TR:
           sub_pages:
             common_settings:
               title: "Ayarlar"
+            discourse_id:
+              title: "Discourse kimliği"
+        discourse_id:
+          title: "Discourse kimliği"
+          learn_more: "Daha fazla bilgi edin"
         logo:
           title: "Logo"
           header_description: "Sitenizde kullanılan logoları ve simgeleri yapılandırın"
