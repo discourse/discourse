@@ -5,8 +5,6 @@ module ::DiscourseRewind
     requires_login
     requires_plugin PLUGIN_NAME
 
-    requires_login
-
     def index
       DiscourseRewind::FetchReports.call(service_params) do
         on_model_not_found(:for_user) do

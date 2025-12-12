@@ -170,17 +170,17 @@ export default class Rewind extends Component {
           "user_option.discourse_rewind_share_publicly",
           response.shared
         );
+
+        this.toasts.success({
+          duration: "short",
+          data: {
+            message: i18n("discourse_rewind.share.disabled_success"),
+          },
+        });
       } catch (err) {
         popupAjaxError(err);
         return;
       }
-
-      this.toasts.success({
-        duration: "short",
-        data: {
-          message: i18n("discourse_rewind.share.disabled_success"),
-        },
-      });
 
       return;
     }
