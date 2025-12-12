@@ -5,7 +5,7 @@ import {
   isDeprecationSilenced,
   registerDeprecationHandler as registerDiscourseDeprecationHandler,
 } from "discourse/lib/deprecated";
-import { isTesting } from "discourse/lib/environment";
+import { isRailsTesting, isTesting } from "discourse/lib/environment";
 
 /**
  * Set of deprecation IDs that should be skipped when counting deprecations.
@@ -94,6 +94,10 @@ export default class DeprecationCounter {
     this.counts.set(id, existingCount + 1);
     if (window.Testem) {
       reportDeprecationToTestem(id);
+    }
+    if (isRailsTesting()) {
+      // eslint-disable-next-line no-console
+      console.count(`deprecation_id:${id}`); // source will be identified using the spec metadata
     }
   }
 
