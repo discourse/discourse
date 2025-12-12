@@ -36,9 +36,8 @@ RSpec.describe LlmCreditAllocation do
       expect(allocation).to be_valid
     end
 
-    it "initializes with empty daily_usage on create" do
+    it "initializes with zero daily_used on create" do
       allocation = Fabricate(:llm_credit_allocation, llm_model: llm_model)
-      expect(allocation.daily_usage).to eq({})
       expect(allocation.daily_used).to eq(0)
     end
   end
@@ -248,7 +247,7 @@ RSpec.describe LlmCreditAllocation do
       expect(allocation.daily_used).to eq(0)
     end
 
-    it "preserves previous day's data" do
+    it "preserves previous day's data in daily_usages table" do
       freeze_time(Time.zone.parse("2025-10-15 14:30:00 UTC"))
       allocation = Fabricate(:llm_credit_allocation, daily_credits: 1000, daily_used: 800)
 
@@ -257,22 +256,12 @@ RSpec.describe LlmCreditAllocation do
       allocation.reload
 
       expect(allocation.daily_used).to eq(200)
-      expect(allocation.daily_usage["2025-10-15"]).to eq(800)
-    end
-
-    it "cleans up old days beyond 90 days" do
-      allocation = Fabricate(:llm_credit_allocation)
-
-      100.times do |i|
-        day_key = (i + 1).days.ago.beginning_of_day.utc.strftime("%Y-%m-%d")
-        allocation.daily_usage[day_key] = 100 * (i + 1)
-      end
-      allocation.save!
-
-      allocation.deduct_credits!(100)
-      allocation.reload
-
-      expect(allocation.daily_usage.keys.size).to be <= 91
+      previous_day_usage =
+        LlmCreditDailyUsage.find_by(
+          llm_model_id: allocation.llm_model_id,
+          usage_date: Date.parse("2025-10-15"),
+        )
+      expect(previous_day_usage.credits_used).to eq(800)
     end
   end
 
