@@ -245,10 +245,7 @@ module Service
 
       def run_step
         contract =
-          class_name.new(
-            **default_values.merge(context[:params].slice(*attributes)),
-            options: context[:options],
-          )
+          class_name.new(**default_values.merge(context[:params]), options: context[:options])
         context[contract_name] = contract
         if contract.invalid?
           context[result_key].fail(errors: contract.errors, parameters: contract.raw_attributes)
@@ -271,11 +268,7 @@ module Service
       def default_values
         return {} unless default_values_from
         model = context[default_values_from]
-        (model.try(:attributes).try(:with_indifferent_access) || model).slice(*attributes)
-      end
-
-      def attributes
-        class_name.attribute_names.map(&:to_sym)
+        model.try(:attributes).try(:with_indifferent_access) || model
       end
     end
 
