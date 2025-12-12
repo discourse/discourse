@@ -10,6 +10,7 @@ class UserApiKeysController < ApplicationController
   skip_before_action :check_xhr, :preload_json
 
   AUTH_API_VERSION = 4
+  ALLOWED_PADDING_MODES = %w[pkcs1 oaep].freeze
 
   def new
     if request.head?
@@ -20,6 +21,7 @@ class UserApiKeysController < ApplicationController
     find_client
     require_params
     validate_params
+    validate_padding!
 
     unless current_user
       cookies[:destination_url] = request.fullpath
@@ -63,6 +65,7 @@ class UserApiKeysController < ApplicationController
     raise Discourse::InvalidAccess unless meets_tl?
 
     validate_params
+    validate_padding!
     scopes = params[:scopes].split(",")
 
     @client = UserApiKeyClient.new(client_id: params[:client_id]) if @client.blank?
@@ -122,6 +125,7 @@ class UserApiKeysController < ApplicationController
 
   def otp
     require_params_otp
+    validate_padding!
 
     unless current_user
       cookies[:destination_url] = request.fullpath
@@ -142,6 +146,7 @@ class UserApiKeysController < ApplicationController
 
   def create_otp
     require_params_otp
+    validate_padding!
 
     if UserApiKeyClient.invalid_auth_redirect?(params[:auth_redirect])
       raise Discourse::InvalidAccess
@@ -243,5 +248,11 @@ class UserApiKeysController < ApplicationController
                 "Try using a shorter nonce or a larger RSA key (minimum 2048-bit recommended).",
             )
     end
+  end
+
+  def validate_padding!
+    return if params[:padding].blank?
+    return if ALLOWED_PADDING_MODES.include?(params[:padding])
+    raise Discourse::InvalidParameters.new(:padding)
   end
 end

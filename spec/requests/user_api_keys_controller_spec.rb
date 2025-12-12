@@ -49,6 +49,13 @@ RSpec.describe UserApiKeysController do
       get "/user-api-key/new", params: args.merge(padding: "oaep")
       expect(response.body).to include('name="padding"', 'value="oaep"')
     end
+
+    it "rejects invalid padding parameter" do
+      sign_in(Fabricate(:user, refresh_auto_groups: true))
+
+      get "/user-api-key/new", params: args.merge(padding: "invalid")
+      expect(response.status).to eq(400)
+    end
   end
 
   describe "#create" do
@@ -169,6 +176,14 @@ RSpec.describe UserApiKeysController do
       expect(response.parsed_body["errors"].first).to include("Payload too large for OAEP")
     end
 
+    it "rejects invalid padding parameter" do
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      sign_in(Fabricate(:user, trust_level: TrustLevel[0]))
+
+      post "/user-api-key.json", params: args.except(:auth_redirect).merge(padding: "invalid")
+      expect(response.status).to eq(400)
+    end
+
     it "allows redirect to wildcard urls" do
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect] + "/*"
       sign_in(Fabricate(:user, refresh_auto_groups: true))
@@ -276,6 +291,13 @@ RSpec.describe UserApiKeysController do
       get "/user-api-key/otp", params: otp_args.merge(padding: "oaep")
       expect(response.body).to include('name="padding"', 'value="oaep"')
     end
+
+    it "rejects invalid padding parameter" do
+      sign_in(Fabricate(:user, refresh_auto_groups: true))
+
+      get "/user-api-key/otp", params: otp_args.merge(padding: "invalid")
+      expect(response.status).to eq(400)
+    end
   end
 
   describe "#create_otp" do
@@ -341,6 +363,14 @@ RSpec.describe UserApiKeysController do
       encrypted = extract_payload_from_redirect(response, key: "oneTimePassword")
       otp = decrypt_payload(encrypted, padding: "oaep")
       expect(Discourse.redis.get("otp_#{otp}")).to eq(user.username)
+    end
+
+    it "rejects invalid padding parameter" do
+      SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
+      sign_in(Fabricate(:user, refresh_auto_groups: true))
+
+      post "/user-api-key/otp", params: otp_args.merge(padding: "invalid")
+      expect(response.status).to eq(400)
     end
   end
 end
