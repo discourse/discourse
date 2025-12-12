@@ -8,11 +8,10 @@ describe "Composer - ProseMirror - Inline and Block Wrap", type: :system do
     composer.type_content("[wrap]")
 
     expect(rich).to have_css(".composer-wrap-node")
-    expect(rich).to have_content("Wrap content")
 
     composer.toggle_rich_editor
 
-    expect(composer).to have_value("[wrap]\nWrap content\n\n[/wrap]\n\n")
+    expect(composer).to have_value("[wrap]\n\n[/wrap]\n\n")
   end
 
   it "supports [wrap=name] to create a named wrap block" do
@@ -20,11 +19,10 @@ describe "Composer - ProseMirror - Inline and Block Wrap", type: :system do
     composer.type_content("[wrap=example]")
 
     expect(rich).to have_css(".composer-wrap-node")
-    expect(rich).to have_content("Wrap content")
 
     composer.toggle_rich_editor
 
-    expect(composer).to have_value("[wrap=example]\nWrap content\n\n[/wrap]\n\n")
+    expect(composer).to have_value("[wrap=example]\n\n[/wrap]\n\n")
   end
 
   it "supports [wrap class=foo] to create a wrap block with attributes" do
@@ -35,7 +33,7 @@ describe "Composer - ProseMirror - Inline and Block Wrap", type: :system do
 
     composer.toggle_rich_editor
 
-    expect(composer).to have_value("[wrap class=highlight]\nWrap content\n\n[/wrap]\n\n")
+    expect(composer).to have_value("[wrap class=highlight]\n\n[/wrap]\n\n")
   end
 
   it "creates inline wrap when not at start of line" do
@@ -56,7 +54,6 @@ describe "Composer - ProseMirror - Inline and Block Wrap", type: :system do
     composer.type_content("[wrap=outer]")
 
     expect(rich).to have_css(".composer-wrap-node")
-    expect(rich).to have_content("Wrap content")
 
     rich.find(".d-wrap-indicator").click
 
@@ -78,7 +75,7 @@ describe "Composer - ProseMirror - Inline and Block Wrap", type: :system do
 
     composer.toggle_rich_editor
 
-    expect(composer).to have_value("[wrap=updated class=highlight]\nWrap content\n\n[/wrap]\n\n")
+    expect(composer).to have_value("[wrap=updated class=highlight]\n\n[/wrap]\n\n")
   end
 
   it "opens edit modal from toolbar when cursor is inside existing wrap" do
@@ -106,6 +103,6 @@ describe "Composer - ProseMirror - Inline and Block Wrap", type: :system do
 
     composer.toggle_rich_editor
 
-    expect(composer).to have_value("[wrap=updated class=highlight]\nWrap content\n\n[/wrap]\n\n")
+    expect(composer).to have_value("[wrap=updated class=highlight]\n\n[/wrap]\n\n")
   end
 end
