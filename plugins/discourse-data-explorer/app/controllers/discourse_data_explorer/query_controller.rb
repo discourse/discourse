@@ -157,7 +157,7 @@ module DiscourseDataExplorer
           params[:params].is_a?(String) ? MultiJson.load(params[:params]) : params[:params]
       end
 
-      opts = { current_user: current_user&.username }
+      opts = { current_user: current_user }
       opts[:explain] = true if params[:explain] == "true"
 
       opts[:limit] = if params[:format] == "csv"

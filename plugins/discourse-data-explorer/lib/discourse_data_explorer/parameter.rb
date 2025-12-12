@@ -34,7 +34,13 @@ module DiscourseDataExplorer
     end
 
     def to_hash
-      { identifier: @identifier, type: @type, default: @default, nullable: @nullable }
+      {
+        identifier: @identifier,
+        type: @type,
+        default: @default,
+        nullable: @nullable,
+        internal: internal?,
+      }
     end
 
     def self.types
@@ -61,7 +67,17 @@ module DiscourseDataExplorer
           :string_list,
           :user_list,
           :group_list,
+          # System-injected (value set by server, not user input)
+          :current_user_id,
         )
+    end
+
+    def self.internal_types
+      @internal_types ||= %i[current_user_id]
+    end
+
+    def internal?
+      self.class.internal_types.include?(@type)
     end
 
     def self.type_aliases
@@ -108,7 +124,20 @@ module DiscourseDataExplorer
       ret_params
     end
 
-    def cast_to_ruby(string)
+    def cast_to_ruby(string, opts = {})
+      # Handle system-injected types first - they ignore user input
+      if @type == :current_user_id
+        current_user = opts[:current_user]
+        if current_user.nil?
+          if @nullable
+            return nil
+          else
+            raise ValidationError.new("Parameter #{identifier} requires a logged in user")
+          end
+        end
+        return current_user.id
+      end
+
       string = @default unless string
       # Since we allow passing a JSON object for the params, the most straightforward way to
       # check that the value is valid is to convert it back to a string.

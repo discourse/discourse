@@ -95,4 +95,23 @@ RSpec.describe "Explorer", type: :system do
       )
     end
   end
+
+  context "with a current_user_id param" do
+    fab!(:query) { Fabricate(:query, name: "My current user query", sql: <<~SQL, user: admin) }
+          -- [params]
+          -- current_user_id :me
+          SELECT id, username FROM users WHERE id = :me
+        SQL
+
+    it "auto-injects the current user's id without showing an input field" do
+      visit("/admin/plugins/explorer/queries/#{query.id}")
+
+      expect(page).to have_no_css(".query-params")
+      find(".query-run .btn-primary").click
+
+      expect(page).to have_css(".query-results .result-header")
+      expect(page).to have_css(".query-results tbody tr", count: 1)
+      expect(page).to have_css(".query-results tbody td", text: admin.username)
+    end
+  end
 end

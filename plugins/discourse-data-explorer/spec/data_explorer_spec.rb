@@ -58,6 +58,57 @@ describe DiscourseDataExplorer::DataExplorer do
       expect(result[:pg_result][0]["id"]).to eq(topic2.id)
     end
 
+    describe "current_user_id parameter" do
+      fab!(:user)
+
+      it "injects the current user's id, ignoring user-provided values" do
+        sql = <<~SQL
+          -- [params]
+          -- current_user_id :me
+          SELECT id FROM users WHERE id = :me
+        SQL
+
+        query = DiscourseDataExplorer::Query.create!(name: "test", sql: sql)
+        other_user = Fabricate(:user)
+
+        result =
+          described_class.run_query(query, { "me" => other_user.id.to_s }, { current_user: user })
+
+        expect(result[:error]).to eq(nil)
+        expect(result[:pg_result][0]["id"]).to eq(user.id)
+      end
+
+      it "returns an error when not nullable and no current user" do
+        sql = <<~SQL
+          -- [params]
+          -- current_user_id :me
+          SELECT id FROM users WHERE id = :me
+        SQL
+
+        query = DiscourseDataExplorer::Query.create!(name: "test", sql: sql)
+
+        result = described_class.run_query(query, {}, {})
+
+        expect(result[:error]).to be_a(DiscourseDataExplorer::ValidationError)
+        expect(result[:error].message).to include("requires a logged in user")
+      end
+
+      it "allows null when nullable and no current user" do
+        sql = <<~SQL
+          -- [params]
+          -- null current_user_id :me
+          SELECT COALESCE(:me, -1) AS user_id
+        SQL
+
+        query = DiscourseDataExplorer::Query.create!(name: "test", sql: sql)
+
+        result = described_class.run_query(query, {}, {})
+
+        expect(result[:error]).to eq(nil)
+        expect(result[:pg_result][0]["user_id"]).to eq(-1)
+      end
+    end
+
     describe ".add_extra_data" do
       it "treats any column with payload in the name as 'json'" do
         Fabricate(:reviewable_queued_post)
