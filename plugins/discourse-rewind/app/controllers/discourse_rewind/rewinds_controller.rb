@@ -7,8 +7,10 @@ module ::DiscourseRewind
     requires_login
 
     def dismiss
-      current_user.user_option.update!(discourse_rewind_dismissed_at: Time.current)
-      head :no_content
+      DiscourseRewind::Dismiss.call(service_params) do
+        on_success { head :no_content }
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      end
     end
 
     def index
