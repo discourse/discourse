@@ -122,8 +122,10 @@ RSpec.describe Middleware::RequestTracker do
 
       expect(status).to eq(200)
       expect(headers["X-Discourse-TrackView"]).to eq("1")
-      expect(headers["X-Discourse-BrowserPageView"]).to eq("1")
-      expect(headers["X-Discourse-BrowserPageView-Referrer"]).to eq("http://referrer.com/latest")
+      expect(headers[Middleware::RequestTracker::BROWSER_PAGE_VIEW_RESPONSE_HEADER]).to eq("1")
+      expect(headers[Middleware::RequestTracker::BROWSER_PAGE_VIEW_REFERRER_RESPONSE_HEADER]).to eq(
+        "http://referrer.com/latest",
+      )
     end
 
     it "adds the appropriate response headers based on implicit tracking (HTML requests)" do
@@ -135,8 +137,10 @@ RSpec.describe Middleware::RequestTracker do
 
       expect(status).to eq(200)
       expect(headers["X-Discourse-TrackView"]).to eq("1")
-      expect(headers["X-Discourse-BrowserPageView"]).to eq(nil)
-      expect(headers["X-Discourse-BrowserPageView-Referrer"]).to eq(nil)
+      expect(headers[Middleware::RequestTracker::BROWSER_PAGE_VIEW_RESPONSE_HEADER]).to eq(nil)
+      expect(headers[Middleware::RequestTracker::BROWSER_PAGE_VIEW_REFERRER_RESPONSE_HEADER]).to eq(
+        nil,
+      )
     end
 
     it "adds the appropriate response headers based on deferred tracking (MessageBus piggyback, BPVs)" do
@@ -152,8 +156,10 @@ RSpec.describe Middleware::RequestTracker do
 
       expect(status).to eq(200)
       expect(headers["X-Discourse-TrackView"]).to eq(nil)
-      expect(headers["X-Discourse-BrowserPageView"]).to eq("1")
-      expect(headers["X-Discourse-BrowserPageView-Referrer"]).to eq("http://example.com/category")
+      expect(headers[Middleware::RequestTracker::BROWSER_PAGE_VIEW_RESPONSE_HEADER]).to eq("1")
+      expect(headers[Middleware::RequestTracker::BROWSER_PAGE_VIEW_REFERRER_RESPONSE_HEADER]).to eq(
+        "http://example.com/category",
+      )
     end
 
     it "adds the appropriate response headers for MessageBus requests with deferred tracking" do
@@ -175,8 +181,10 @@ RSpec.describe Middleware::RequestTracker do
         )
 
       expect(status).to eq(200)
-      expect(headers["X-Discourse-BrowserPageView"]).to eq("1")
-      expect(headers["X-Discourse-BrowserPageView-Referrer"]).to eq("http://example.com/category")
+      expect(headers[Middleware::RequestTracker::BROWSER_PAGE_VIEW_RESPONSE_HEADER]).to eq("1")
+      expect(headers[Middleware::RequestTracker::BROWSER_PAGE_VIEW_REFERRER_RESPONSE_HEADER]).to eq(
+        "http://example.com/category",
+      )
     end
 
     it "adds the appropriate response headers for MessageBus requests with regular tracking" do
@@ -192,7 +200,7 @@ RSpec.describe Middleware::RequestTracker do
         middleware.call(env("HTTP_DISCOURSE_TRACK_VIEW" => "1", :path => "/message-bus/abcde/poll"))
 
       expect(status).to eq(200)
-      expect(headers["X-Discourse-BrowserPageView"]).to eq("1")
+      expect(headers[Middleware::RequestTracker::BROWSER_PAGE_VIEW_RESPONSE_HEADER]).to eq("1")
       expect(headers["X-Discourse-TrackView"]).to eq("1")
     end
 
@@ -215,7 +223,7 @@ RSpec.describe Middleware::RequestTracker do
         )
 
       expect(status).to eq(200)
-      expect(headers["X-Discourse-BrowserPageView"]).to eq(nil)
+      expect(headers[Middleware::RequestTracker::BROWSER_PAGE_VIEW_RESPONSE_HEADER]).to eq(nil)
       expect(headers["X-Discourse-TrackView"]).to eq(nil)
     end
 

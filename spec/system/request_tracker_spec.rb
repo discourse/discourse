@@ -8,21 +8,19 @@ describe "Request tracking", type: :system do
     CachedCounting.reset
     CachedCounting.enable
 
-    @request_logger =
-      lambda do |_env, _data, response_headers|
-        if response_headers["X-Discourse-BrowserPageView"]
-          browser_page_view_response_headers << response_headers
-        end
+    @capture =
+      lambda do |_status, headers, _body|
+        browser_page_view_response_headers << headers if headers["X-Discourse-BrowserPageView"]
       end
 
-    Middleware::RequestTracker.register_detailed_request_logger(@request_logger)
+    ResponseCaptureMiddleware.register_response_capture(@capture)
   end
 
   after do
     CachedCounting.reset
     ApplicationRequest.disable
     CachedCounting.disable
-    Middleware::RequestTracker.unregister_detailed_request_logger(@request_logger)
+    ResponseCaptureMiddleware.unregister_response_capture(@capture)
   end
 
   def expect_browser_page_view_response_headers_empty
@@ -32,8 +30,15 @@ describe "Request tracking", type: :system do
   def expect_browser_page_view_response_headers_present(referrer:)
     expect(browser_page_view_response_headers.length).to eq(1)
     response_headers = browser_page_view_response_headers.first
-    expect(response_headers["X-Discourse-BrowserPageView"]).to eq("1")
-    expect(response_headers["X-Discourse-BrowserPageView-Referrer"]).to eq(referrer)
+
+    expect(response_headers[Middleware::RequestTracker::BROWSER_PAGE_VIEW_RESPONSE_HEADER]).to eq(
+      "1",
+    )
+
+    expect(
+      response_headers[Middleware::RequestTracker::BROWSER_PAGE_VIEW_REFERRER_RESPONSE_HEADER],
+    ).to eq(referrer)
+
     browser_page_view_response_headers.clear
   end
 

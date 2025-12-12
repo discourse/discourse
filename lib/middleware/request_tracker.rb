@@ -5,6 +5,9 @@ require "middleware/anonymous_cache"
 require "http_user_agent_encoder"
 
 class Middleware::RequestTracker
+  BROWSER_PAGE_VIEW_RESPONSE_HEADER = "X-Discourse-BrowserPageView"
+  BROWSER_PAGE_VIEW_REFERRER_RESPONSE_HEADER = "X-Discourse-BrowserPageView-Referrer"
+
   @@detailed_request_loggers = nil
   @@ip_skipper = nil
 
@@ -287,16 +290,16 @@ class Middleware::RequestTracker
         headers["X-Discourse-TrackView"] = "1" if data[:track_view]
 
         if data[:browser_page_view]
-          headers["X-Discourse-BrowserPageView"] = "1"
+          headers[BROWSER_PAGE_VIEW_RESPONSE_HEADER] = "1"
 
           if data[:browser_page_view_referrer]
-            headers["X-Discourse-BrowserPageView-Referrer"] = data[:browser_page_view_referrer]
+            headers[BROWSER_PAGE_VIEW_REFERRER_RESPONSE_HEADER] = data[:browser_page_view_referrer]
           end
         end
       end
 
       if @@detailed_request_loggers
-        @@detailed_request_loggers.each { |logger| logger.call(env, data, headers) }
+        @@detailed_request_loggers.each { |logger| logger.call(env, data) }
       end
 
       log_later(data)

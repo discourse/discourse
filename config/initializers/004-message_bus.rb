@@ -94,12 +94,12 @@ MessageBus.extra_response_headers_lookup do |env|
     headers["X-Discourse-TrackView"] = "1" if view_tracking_data[:track_view]
 
     if view_tracking_data[:browser_page_view]
-      headers["X-Discourse-BrowserPageView"] = "1"
+      headers[Middleware::RequestTracker::BROWSER_PAGE_VIEW_RESPONSE_HEADER] = "1"
 
       if view_tracking_data[:browser_page_view_referrer]
-        headers["X-Discourse-BrowserPageView-Referrer"] = view_tracking_data[
-          :browser_page_view_referrer
-        ]
+        headers[
+          Middleware::RequestTracker::BROWSER_PAGE_VIEW_REFERRER_RESPONSE_HEADER
+        ] = view_tracking_data[:browser_page_view_referrer]
       end
     end
   end
