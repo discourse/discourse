@@ -5,6 +5,7 @@ import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { MENU } from "discourse/float-kit/lib/constants";
 import FloatKitInstance from "discourse/float-kit/lib/float-kit-instance";
+import { animateClosing } from "discourse/lib/animation-utils";
 
 export default class DMenuInstance extends FloatKitInstance {
   @service menu;
@@ -16,7 +17,6 @@ export default class DMenuInstance extends FloatKitInstance {
    * @property {boolean} expanded - Tracks the state of menu expansion, initially set to false.
    */
   @tracked expanded = false;
-
   /**
    * Specifies whether the trigger for opening/closing the menu is detached from the menu itself.
    * This is the case when a menu is trigger programmatically instead of through the <DMenu /> component.
@@ -67,6 +67,8 @@ export default class DMenuInstance extends FloatKitInstance {
     if (getOwner(this).isDestroying) {
       return;
     }
+
+    await animateClosing(this.content);
 
     await super.close(...arguments);
 
