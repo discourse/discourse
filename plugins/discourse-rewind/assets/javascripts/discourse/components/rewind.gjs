@@ -39,7 +39,6 @@ const SCROLL_THRESHOLD = 0.7;
 
 export default class Rewind extends Component {
   @service dialog;
-  @service site;
   @service currentUser;
   @service toasts;
 
@@ -202,8 +201,10 @@ export default class Rewind extends Component {
       return;
     }
 
-    await this.dialog.yesNoConfirm({
+    await this.dialog.confirm({
       message: i18n("discourse_rewind.share.confirm"),
+      confirmButtonLabel: "discourse_rewind.share.confirm_button.enable",
+      cancelButtonLabel: "discourse_rewind.share.confirm_button.disable",
       didConfirm: async () => {
         try {
           const response = await ajax("/rewinds/toggle-share", {
@@ -311,17 +312,16 @@ export default class Rewind extends Component {
         {{else}}
           <div class="rewind__header-buttons">
             {{#if this.canShare}}
-              {{#unless this.site.mobileView}}
-                <div class="rewind__share-toggle-wrapper">
-                  <DToggleSwitch
-                    @state={{this.currentUser.user_option.discourse_rewind_share_publicly}}
-                    class="rewind__share-toggle"
-                    {{on "click" this.toggleShareRewind}}
-                  />
-                  {{i18n "discourse_rewind.share.toggle_label"}}
-                </div>
+              <div class="rewind__share-toggle-wrapper">
+                {{i18n "discourse_rewind.share.toggle_label.private"}}
 
-              {{/unless}}
+                <DToggleSwitch
+                  @state={{this.currentUser.user_option.discourse_rewind_share_publicly}}
+                  class="rewind__share-toggle"
+                  {{on "click" this.toggleShareRewind}}
+                />
+                {{i18n "discourse_rewind.share.toggle_label.public"}}
+              </div>
 
               {{#if
                 this.currentUser.user_option.discourse_rewind_share_publicly
@@ -343,18 +343,9 @@ export default class Rewind extends Component {
               }}
               @action={{this.toggleFullScreen}}
             />
-          </div>
-          {{#if this.site.mobileView}}
-            <div class="rewind__share-toggle-wrapper">
-              <DToggleSwitch
-                @state={{this.currentUser.user_option.discourse_rewind_share_publicly}}
-                class="rewind__share-toggle"
-                {{on "click" this.toggleShareRewind}}
-              />
-              {{i18n "discourse_rewind.share.toggle_label"}}
-            </div>
 
-          {{/if}}
+          </div>
+
           <div
             class="rewind__scroll-wrapper"
             {{didInsert this.registerScrollWrapper}}

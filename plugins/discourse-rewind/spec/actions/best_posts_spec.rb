@@ -62,5 +62,23 @@ RSpec.describe DiscourseRewind::Action::BestPosts do
         expect(call_report[:data].map { |d| d[:post_number] }).not_to include(post_1.post_number)
       end
     end
+
+    context "when a post is in a private message" do
+      fab!(:pm_topic) { Fabricate(:private_message_topic, user: user) }
+      fab!(:pm_post) do
+        Fabricate(
+          :post,
+          created_at: random_datetime,
+          user: user,
+          post_number: 2,
+          topic: pm_topic,
+          like_count: 99,
+        )
+      end
+
+      it "is not included" do
+        expect(call_report[:data].map { |d| d[:topic_id] }).not_to include(pm_topic.id)
+      end
+    end
   end
 end
