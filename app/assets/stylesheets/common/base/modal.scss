@@ -806,3 +806,22 @@ html:not(.keyboard-visible).mobile-device {
     }
   }
 }
+
+.wrap-attributes-modal {
+  .wrap-modal__attribute-row {
+    display: flex;
+    gap: var(--space-2);
+
+    .form-kit__field {
+      flex: 1;
+    }
+
+    .btn {
+      align-self: end;
+    }
+  }
+
+  &__unwrap {
+    margin-left: auto;
+  }
+}
