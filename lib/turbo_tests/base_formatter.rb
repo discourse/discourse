@@ -60,8 +60,8 @@ module TurboTests
     def generate_deprecations_table(totals_by_id)
       max_id_length = totals_by_id.keys.map(&:length).max
 
-      headers = ["id".ljust(max_id_length), "count"]
-      rows = totals_by_id.map { |id, count| [id.ljust(max_id_length), count.to_s.ljust(5)] }
+      headers = ["id".ljust(max_id_length), "count".rjust(5)]
+      rows = totals_by_id.map { |id, count| [id.ljust(max_id_length), count.to_s.rjust(5)] }
 
       build_markdown_table(headers, rows)
     end
@@ -72,7 +72,7 @@ module TurboTests
       origins = totals_by_origin.keys.sort
       max_origin_length = [origins.map(&:length).max, 6].max
 
-      headers = ["origin".ljust(max_origin_length), "id".ljust(max_id_length), "count"]
+      headers = ["origin".ljust(max_origin_length), "id".ljust(max_id_length), "count".rjust(5)]
       rows = []
 
       origins.each do |origin|
@@ -81,7 +81,7 @@ module TurboTests
 
         sorted_ids.each do |id|
           count = origin_deprecations[id]
-          rows += [[origin.ljust(max_origin_length), id.ljust(max_id_length), count.to_s.ljust(5)]]
+          rows += [[origin.ljust(max_origin_length), id.ljust(max_id_length), count.to_s.rjust(5)]]
         end
       end
 

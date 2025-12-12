@@ -7,6 +7,7 @@ import { setIconList } from "discourse/lib/icon-library";
 import PreloadStore from "discourse/lib/preload-store";
 import { setURLContainer } from "discourse/lib/url";
 import Session from "discourse/models/session";
+import { setupDeprecationCounter } from "discourse/tests/helpers/deprecation-counter";
 import I18n from "discourse-i18n";
 
 export default {
@@ -57,11 +58,12 @@ export default {
 
     setupURL(setupData.cdn, setupData.baseUrl, setupData.baseUri);
     setEnvironment(setupData.environment);
-    if (
-      isRailsTesting() &&
-      typeof setupData.raiseOnDeprecation !== "undefined"
-    ) {
-      window.EmberENV.RAISE_ON_DEPRECATION = setupData.raiseOnDeprecation;
+
+    if (isRailsTesting()) {
+      if (typeof setupData.raiseOnDeprecation !== "undefined") {
+        window.EmberENV.RAISE_ON_DEPRECATION = setupData.raiseOnDeprecation;
+      }
+      setupDeprecationCounter();
     }
 
     DeprecationWorkflow.setEnvironment(environment);

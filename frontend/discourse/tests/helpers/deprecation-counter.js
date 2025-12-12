@@ -145,29 +145,31 @@ function reportDeprecationToTestem(id, origin) {
   });
 }
 
-export function setupDeprecationCounter(qunit, target) {
+export function setupDeprecationCounter({ QUnit, origin } = {}) {
   const deprecationCounter = new DeprecationCounter();
 
   // for system specs
   if (isRailsTesting()) {
-    deprecationCounter.start(target);
+    deprecationCounter.start(origin);
     return;
   }
 
-  // for qunit tests
-  qunit.begin(() => deprecationCounter.start(target));
+  if (QUnit) {
+    // for QUnit tests
+    QUnit.begin(() => deprecationCounter.start(origin));
 
-  qunit.done(() => {
-    if (window.Testem) {
-      return;
-    } else if (deprecationCounter.hasDeprecations) {
-      // eslint-disable-next-line no-console
-      console.warn(
-        `[Discourse Deprecation Counter] Test run completed with deprecations:\n\n${deprecationCounter.generateTable()}`
-      );
-    } else {
-      // eslint-disable-next-line no-console
-      console.log("[Discourse Deprecation Counter] No deprecations found");
-    }
-  });
+    QUnit.done(() => {
+      if (window.Testem) {
+        return;
+      } else if (deprecationCounter.hasDeprecations) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          `[Discourse Deprecation Counter] Test run completed with deprecations:\n\n${deprecationCounter.generateTable()}`
+        );
+      } else {
+        // eslint-disable-next-line no-console
+        console.log("[Discourse Deprecation Counter] No deprecations found");
+      }
+    });
+  }
 }

@@ -987,11 +987,10 @@ RSpec.configure do |config|
 
     $playwright_logger&.logs&.each do |log|
       next if log[:level] != "count"
-      deprecation_id = log[:message][/^deprecation_id:(.+?)$/, 1]
+      deprecation_id = log[:message][/^deprecation_id:(.+?):\s*\d+$/, 1]
       next if deprecation_id.nil?
 
-      deprecations = RSpec.current_example.metadata[:js_deprecations] ||= {}
-      deprecations[deprecation_id] ||= 0
+      deprecations = RSpec.current_example.metadata[:js_deprecations] ||= Hash.new(0)
       deprecations[deprecation_id] += 1
     end
 

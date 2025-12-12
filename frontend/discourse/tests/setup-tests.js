@@ -51,7 +51,6 @@ import { buildResolver } from "discourse/resolver";
 import { loadSprites } from "../lib/svg-sprite-loader";
 import * as FakerModule from "@faker-js/faker";
 import { setLoadedFaker } from "discourse/lib/load-faker";
-import { isTesting } from "discourse/lib/environment";
 
 const REPORT_MEMORY = false;
 let cancelled = false;
@@ -220,7 +219,7 @@ export default function setupTests(config) {
 
   disableCloaking();
 
-  setupDeprecationCounter(QUnit, isTesting() ? target : null);
+  setupDeprecationCounter({ QUnit, origin: target });
 
   QUnit.config.hidepassed = true;
   QUnit.config.testTimeout = 60_000;
