@@ -4,6 +4,7 @@ RSpec.describe "Middleware order" do
   let(:expected_middlewares) do
     [
       BlockRequestsMiddleware,
+      ResponseCaptureMiddleware,
       TestMultisiteMiddleware,
       ActionDispatch::RemoteIp,
       Middleware::RequestTracker,

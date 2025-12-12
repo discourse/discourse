@@ -35,6 +35,30 @@ if Rails.env.test?
   Rails.configuration.middleware.unshift TestMultisiteMiddleware,
                                          RailsMultisite::DiscoursePatches.config
 
+  class ResponseCaptureMiddleware
+    @@response_capture_blocks = []
+
+    def self.register_response_capture(block)
+      @@response_capture_blocks << block
+    end
+
+    def self.unregister_response_capture(block)
+      @@response_capture_blocks.delete(block)
+    end
+
+    def initialize(app)
+      @app = app
+    end
+
+    def call(env)
+      result = @app.call(env)
+      @@response_capture_blocks.each { |block| block.call(result[0], result[1], result[2]) }
+      result
+    end
+  end
+
+  Rails.configuration.middleware.unshift ResponseCaptureMiddleware
+
   class BlockRequestsMiddleware
     RSPEC_CURRENT_EXAMPLE_COOKIE_STRING = "rspec_current_example_location"
 
