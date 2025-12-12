@@ -140,6 +140,10 @@
   z-index: 3;
   padding: 1em;
 
+  .--fullscreen & {
+    right: 1em;
+  }
+
   @media (width <= 650px) {
     display: grid;
     grid-template-columns: 1fr auto auto;
