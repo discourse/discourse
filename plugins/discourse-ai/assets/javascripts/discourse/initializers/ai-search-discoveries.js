@@ -1,4 +1,3 @@
-import { action } from "@ember/object";
 import { apiInitializer } from "discourse/lib/api";
 
 const FIELD_NAME = "ai_search_discoveries";
@@ -16,16 +15,14 @@ export default apiInitializer((api) => {
 
   api.addSaveableUserOptionField(FIELD_NAME);
 
-  api.modifyClass(
-    "controller:preferences/interface",
-    (Superclass) =>
-      class extends Superclass {
-        @action
-        save() {
-          this.saveAttrNames.push(FIELD_NAME);
-          return super.save(...arguments);
-        }
+  api.registerValueTransformer(
+    "preferences-save-attributes",
+    ({ value: attrs, context }) => {
+      if (context.page === "interface") {
+        attrs.push(FIELD_NAME);
       }
+      return attrs;
+    }
   );
 
   const discobotDiscoveries = api.container.lookup(

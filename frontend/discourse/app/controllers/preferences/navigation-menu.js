@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 
 export default class extends Controller {
@@ -9,10 +10,13 @@ export default class extends Controller {
 
   subpageTitle = i18n("user.preferences_nav.navigation_menu");
 
-  saveAttrNames = [
-    "sidebar_link_to_filtered_list",
-    "sidebar_show_count_of_new_items",
-  ];
+  get saveAttrNames() {
+    return applyValueTransformer(
+      "preferences-save-attributes",
+      ["sidebar_link_to_filtered_list", "sidebar_show_count_of_new_items"],
+      { page: "navigation-menu" }
+    );
+  }
 
   @action
   save() {
