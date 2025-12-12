@@ -30,7 +30,8 @@
       <%- end %>
     </div>
 
-    <div class='wizard-container__input wizard-container__field text-field <% if @user.errors[:username].present? %>invalid<% end %>'>
+    <%- password_errors = @user.errors[:password] + @user.errors[:"user_password.password"] %>
+    <div class='wizard-container__input wizard-container__field text-field <% if password_errors.present? %>invalid<% end %>'>
       <label for="password">
         <span class="wizard-container__label"><%= t 'js.user.password.title' %></span>
       </label>
@@ -40,7 +41,7 @@
       <div class='input-area'>
         <%= password_field_tag(:password, params[:password], class:"wizard-container__text-input") %>
       </div>
-      <% @user.errors[:password].each do |e| %>
+      <% password_errors.each do |e| %>
         <div class='field-error-description'><%= e.to_s %></div>
       <% end %>
     </div>
