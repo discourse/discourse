@@ -1,6 +1,6 @@
 import { service } from "@ember/service";
 import { Promise } from "rsvp";
-import { SEARCH_PRIORITIES } from "discourse/lib/constants";
+import { AUTO_GROUPS, SEARCH_PRIORITIES } from "discourse/lib/constants";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
@@ -76,7 +76,9 @@ export default class NewCategory extends DiscourseRoute {
   defaultGroupPermissions() {
     return [
       {
-        group_name: this.site.groups.find((g) => g.id === 0).name,
+        group_name: this.site.groups.find(
+          (g) => g.id === AUTO_GROUPS.everyone.id
+        ).name,
         permission_type: 1,
       },
     ];

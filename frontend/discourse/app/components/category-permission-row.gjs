@@ -2,11 +2,10 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import getURL from "discourse/lib/get-url";
 import PermissionType from "discourse/models/permission-type";
 import { i18n } from "discourse-i18n";
-
-const EVERYONE = "everyone";
 
 export default class CategoryPermissionRow extends Component {
   get everyonePermissionType() {
@@ -41,7 +40,7 @@ export default class CategoryPermissionRow extends Component {
   }
 
   get isEveryoneGroup() {
-    return this.args.groupName === EVERYONE;
+    return this.args.groupId === AUTO_GROUPS.everyone.id;
   }
 
   get replyDisabled() {

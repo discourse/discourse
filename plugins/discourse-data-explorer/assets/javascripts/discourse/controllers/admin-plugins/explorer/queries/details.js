@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import QueryHelp from "discourse/plugins/discourse-data-explorer/discourse/components/modal/query-help";
 import { ParamValidationError } from "discourse/plugins/discourse-data-explorer/discourse/components/param-input-form";
@@ -48,7 +49,7 @@ export default class PluginsExplorerController extends Controller {
 
   get groupOptions() {
     return this.groups
-      .filter((g) => g.id !== 0)
+      .filter((g) => g.id !== AUTO_GROUPS.everyone.id)
       .map((g) => {
         return { id: g.id, name: g.name };
       });

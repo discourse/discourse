@@ -32,7 +32,9 @@ export default {
       ],
       auto_close_hours: null,
       auto_close_based_on_last_post: false,
-      group_permissions: [{ permission_type: 1, group_name: "everyone" }],
+      group_permissions: [
+        { permission_type: 1, group_name: "everyone", group_id: 0 },
+      ],
       position: 25,
       cannot_delete_reason:
         "Can't delete this category because it has 2030 topics. Oldest topic is <a href=\"https://localhost:3000/t/when-a-new-post-appears-in-a-topic-the-bookmark-isn-t-updated/39\">When a new post appears in a topic, the bookmark isn't updated</a>.",
@@ -92,7 +94,9 @@ export default {
       ],
       auto_close_hours: null,
       auto_close_based_on_last_post: false,
-      group_permissions: [{ permission_type: 1, group_name: "everyone" }],
+      group_permissions: [
+        { permission_type: 1, group_name: "everyone", group_id: 0 },
+      ],
       email_in: null,
       email_in_allow_strangers: false,
       mailinglist_mirror: false,
@@ -121,7 +125,9 @@ export default {
       slug: "restricted-group",
       read_restricted: true,
       permission: null,
-      group_permissions: [{ permission_type: 1, group_name: "moderators" }],
+      group_permissions: [
+        { permission_type: 1, group_name: "moderators", group_id: 2 },
+      ],
     },
   },
 };

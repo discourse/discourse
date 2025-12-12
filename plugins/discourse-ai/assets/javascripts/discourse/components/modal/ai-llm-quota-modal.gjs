@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { i18n } from "discourse-i18n";
 import DurationSelector from "../ai-quota-duration-selector";
@@ -33,7 +34,9 @@ export default class AiLlmQuotaModal extends Component {
       this.args.model.llm.llm_quotas.map((q) => q.group_id) || [];
 
     return this.site.groups.filter(
-      (group) => !existingQuotaGroupIds.includes(group.id) && group.id !== 0
+      (group) =>
+        !existingQuotaGroupIds.includes(group.id) &&
+        group.id !== AUTO_GROUPS.everyone.id
     );
   }
 

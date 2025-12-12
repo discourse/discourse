@@ -91,13 +91,26 @@ RSpec.describe CategorySerializer do
 
       expect(json[:group_permissions]).to eq(
         [
-          { permission_type: CategoryGroup.permission_types[:readonly], group_name: group.name },
+          {
+            permission_type: CategoryGroup.permission_types[:readonly],
+            group_name: group.name,
+            group_id: group.id,
+          },
           {
             permission_type: CategoryGroup.permission_types[:full],
             group_name: private_group.name,
+            group_id: private_group.id,
           },
-          { permission_type: CategoryGroup.permission_types[:full], group_name: user_group.name },
-          { permission_type: CategoryGroup.permission_types[:readonly], group_name: "everyone" },
+          {
+            permission_type: CategoryGroup.permission_types[:full],
+            group_name: user_group.name,
+            group_id: user_group.id,
+          },
+          {
+            permission_type: CategoryGroup.permission_types[:readonly],
+            group_name: "everyone",
+            group_id: Group::AUTO_GROUPS[:everyone],
+          },
         ],
       )
     end
