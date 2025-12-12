@@ -4394,6 +4394,11 @@ da:
           sub_pages:
             common_settings:
               title: "Indstillinger"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Lær mere"
         logo:
           title: "Logo"
           form:

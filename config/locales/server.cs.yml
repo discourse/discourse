@@ -4475,6 +4475,10 @@ cs:
       truncated_file: "Tento soubor byl zkrácen."
       show_original: "zobrazit originál"
       closed: "uzavřeno"
+      status_date:
+        approved: "schválen"
+        merged: "sloučeno"
+        closed: "zavřeno"
   discourse_push_notifications:
     popup:
       mentioned: 'Uživatel %{username} vás zmínil v "%{topic}" - %{site_title}'

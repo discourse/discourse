@@ -3854,6 +3854,8 @@ hy:
           sub_pages:
             common_settings:
               title: "Կարգավորումներ"
+        discourse_id:
+          learn_more: "Իմանալ ավելին"
         logo:
           form:
             mobile: "Հեռախոսային"

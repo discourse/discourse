@@ -69,8 +69,10 @@ zh_CN:
           fields:
             categories:
               label: 类别
+              description: 仅当举报的话题属于这些类别时才会触发
             tags:
               label: 标签
+              description: 仅当标记的话题包含以下任一标签时才会触发
         not_found: 找不到用于自动化 `%{automation}` 的触发器 `%{trigger}`，请确保关联插件已安装
         user_badge_granted:
           fields:
@@ -281,6 +283,14 @@ zh_CN:
               label: 标签
               description: 可选，仅在帖子具有以下任意标签时触发
       scriptables:
+        email_on_flagged_post:
+          fields:
+            email_template:
+              label: 电子邮件模板
+              description: 支持自动化占位符
+            recipients:
+              label: 收件人
+              description: 要通知的用户或电子邮件地址
         not_found: 找不到用于自动化 `%{automation}` 的脚本 `%{script}`，请确保关联插件已安装
         zapier_webhook:
           fields:

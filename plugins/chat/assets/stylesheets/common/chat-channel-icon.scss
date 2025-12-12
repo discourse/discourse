@@ -76,15 +76,22 @@
     border-radius: 50%;
     padding: 2px 2px 3px;
     color: var(--primary-high);
-    width: calc(var(--channel-list-avatar-size) * 0.35);
-    height: calc(var(--channel-list-avatar-size) * 0.35);
-    right: calc(var(--channel-list-avatar-size) * -0.15);
+    height: 0.5rem;
+    width: 0.5rem;
+    right: -0.5rem;
+
+    .direct-message-channels &,
+    .starred-channels & {
+      width: calc(var(--channel-list-avatar-size) * 0.35);
+      height: calc(var(--channel-list-avatar-size) * 0.35);
+      right: calc(var(--channel-list-avatar-size) * -0.15);
+    }
     top: -0.1rem;
 
     .chat-channel-title & {
-      width: 50%;
-      height: 50%;
-      right: -20%;
+      width: 40%;
+      height: 40%;
+      right: -30%;
       top: -20%;
     }
   }

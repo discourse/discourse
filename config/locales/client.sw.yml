@@ -2429,6 +2429,8 @@ sw:
           sub_pages:
             common_settings:
               title: "Mipangilio"
+        discourse_id:
+          learn_more: "Jifunze zaidi"
         logo:
           form:
             mobile: "Kifaa cha kiganjani"

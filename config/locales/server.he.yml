@@ -2118,6 +2118,7 @@ he:
     selectable_avatars_mode: "לאפשר למשתמשים לבחור תמונה ייצוגית מרשימת selectable_avatars (תמונות ייצוגיות לבחירה) ולהגביל את העלאות התמונות הייצוגיות לדרגת האמון הנבחרת."
     selectable_avatars: "הגדרת אוסף התמונות הייצוגיות ממנו יוכלו משתמשים לבחור את תמונת הפרופיל שלהם. הבחירה תופיע במהלך יצירת פרופיל משתמש או בעת עדכון התמונה הייצוגית של הפרופיל."
     allow_all_attachments_for_group_messages: "אפשרו צירוף קבצים להודעות לקבוצות."
+    image_quality: "הגדרת רמת האיכות של תמונות שעולות לאתר שלך. איכות נמוכה יותר תוביל לכך שהקבצים יהיו קטנים יותר."
     png_to_jpg_quality: "האיכות של קובץ JPG שמומר (1 הנמוכה ביותר, 99 הטובה ביותר, 100 להשבתה)."
     recompress_original_jpg_quality: "איכות קובצי התמונות שנשלחים (1 היא האיכות הנמוכה ביותר, 99 הטובה ביותר, 100 משבית)."
     image_preview_jpg_quality: "איכות קובצי התמונות שגודלם משתנה (1 היא האיכות הנמוכה ביותר, 99 הטובה ביותר, 100 משבית)."
@@ -2130,6 +2131,7 @@ he:
     composer_media_optimization_image_encode_quality: "איכות קידוד JPG המשמשת בתהליך הקידוד מחדש."
     video_conversion_enabled: "הפעלת המרת וידאו עבור קובצי וידאו שהועלו. כך מתאפשר להמיר סרטונים לתסדירים תואמי אינטרנט."
     video_conversion_service: "שירות המרת הווידאו לעיבוד הסרטונים שהועלו."
+    mediaconvert_output_subdirectory: "תת־תיקייה בדלי S3 בה MediaConvert (המרת מדיה) יכתוב זמנית סרטונים שמומרים לפני שהם מועברים לנקודת ההעלאה הסופית."
     min_ratio_to_crop: "יחס לחיתוך תמונות גבוהות. יש להקליד את התוצאה ברוחב / גובה."
     simultaneous_uploads: "מספר הקבצים המרבי שניתן לגרור ולהשליך אל מחבר ההודעות"
     default_invitee_trust_level: "דרגת האמון כברירת המחדל למשתמשים שהוזמנו (0‏-4)"
@@ -2256,6 +2258,7 @@ he:
     allow_all_users_to_flag_illegal_content: "משתמשים אלמוניים יראו מידע שיהיה עליהם לשלוח בדוא״ל להנהלה כדי לדווח על תוכן לא חוקי. ההגדרה הזאת קודמת ל־‚flag post allowed groups’ (קבוצות מורשות לסימון פוסטים)."
     email_address_to_report_illegal_content: "אם השדה יישאר ריק ייעשה שימוש בכתובת דוא״ל ברירת המחדל של הניהול."
     cooldown_hours_until_reflag: "כמה זמן יהיה על משתמשים לחכות לפני שיוכלו לסמן פוסט כספאם פעם נוספת"
+    slow_mode_prevents_editing: "האם ‚מצב אטי’ מונע עריכה לאחר ‚editing_grace_period’ (תקופת חסד לעריכה)?"
     reply_by_email_enabled: "הפעלת היכולת שמאפשרת למשתמשים להגיב לנושאים ישירות דרך דוא״ל במקום לדרוש מהם להיכנס לאתר. מומלץ לעיין ב<a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>מדריך ב־Meta</a> למידע נוסף."
     reply_by_email_address: "תבנית כתובות דוא״ל למענה דרך דוא״ל, למשל: ‎%%{reply_key}@reply.example.com או ‎replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "רשימה של כמה תבניות לתגובות בדוא״ל באמצעות כתובות דוא״ל נכנסות. למשל: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -5228,6 +5231,18 @@ he:
       review_by: "סקירה של"
       pr_summary: "%{commits} הגשות שינו %{changed_files} קבצים עם %{additions} תוספים ו־%{deletions} מחיקות"
       no_description: "אפשר לתרום לפיתוח של %{repo} דרך יצירת חשבון ב־GitHub."
+      pr_title:
+        default: "בקשת משיכה"
+        draft: "טיוטת בקשת משיכה"
+        open: "בקשת משיכה פתוחה"
+        approved: "בקשת משיכה שאושרה"
+        changes_requested: "התבקשו שינויים"
+        merged: "בקשת משיכה ממוזגת"
+        closed: "בקשת משיכה סגורה"
+      status_date:
+        open: "נפתח"
+        approved: "מאושר"
+        closed: "סגור"
   discourse_push_notifications:
     popup:
       mentioned: ' אוזכרת על ידי %{username} בנושא „%{topic}” - %{site_title}'

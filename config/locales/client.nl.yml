@@ -5263,6 +5263,11 @@ nl:
           sub_pages:
             common_settings:
               title: "Instellingen"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Meer info"
         logo:
           title: "Logo"
           header_description: "Configureer de logo's en pictogrammen die op je site worden gebruikt"

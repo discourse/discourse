@@ -2070,6 +2070,9 @@ vi:
   onebox:
     github:
       closed: "đã "
+      status_date:
+        approved: "đã duyệt"
+        closed: "đã "
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nhắc đến bạn trong "%{topic}" - %{site_title}'

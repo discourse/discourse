@@ -2464,6 +2464,10 @@ te:
       commit_by: "ద్వారా కట్టుబడి"
       comment_by: "ద్వారా వ్యాఖ్యా"
       review_by: "ద్వారా సమీక్ష"
+      status_date:
+        open: "తెరిచినవి"
+        approved: "ఆమోదించబడింది"
+        closed: "మూసివేయబడింది"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} మిమ్మల్ని "%{topic}" లో ప్రస్తావించారు - %{site_title}'

@@ -2645,6 +2645,8 @@ sr:
           sub_pages:
             common_settings:
               title: "Podešavanje"
+        discourse_id:
+          learn_more: "Saznaj više"
         logo:
           form:
             email: "Email"

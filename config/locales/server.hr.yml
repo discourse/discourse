@@ -2775,6 +2775,9 @@ hr:
   onebox:
     github:
       closed: "zatvoreno"
+      status_date:
+        approved: "odobrio/la"
+        closed: "zatvoreno"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vas je spomenuo u "%{topic}" - %{site_title}'

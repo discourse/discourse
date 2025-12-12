@@ -4845,6 +4845,10 @@ ja:
       review_by: "レビュー担当者"
       pr_summary: "%{commits} 個のコミットにより %{changed_files} 個のファイルが変更されました。%{additions} 個が追加され、%{deletions} 個が削除されました。"
       no_description: "GitHub でアカウントを作成して %{repo} の開発に貢献してください。"
+      status_date:
+        open: "オープン"
+        approved: "承認"
+        closed: "閉鎖"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} が「%{topic}」であなたをメンションしました - %{site_title}'

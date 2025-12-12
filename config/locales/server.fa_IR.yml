@@ -2782,6 +2782,9 @@ fa_IR:
       user_joined_community: "در %{date} عضو شدن"
     github:
       closed: "بسته"
+      status_date:
+        approved: "تایید شده"
+        closed: "بسته شده"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} در "%{topic}" - %{site_title} به شما اشاره کرد'

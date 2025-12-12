@@ -3801,6 +3801,11 @@ vi:
           sub_pages:
             common_settings:
               title: "Cài đặt"
+            discourse_id:
+              title: "ID Discourse"
+        discourse_id:
+          title: "ID Discourse"
+          learn_more: "Tìm hiểu thêm"
         logo:
           form:
             mobile: "Điện thoại"

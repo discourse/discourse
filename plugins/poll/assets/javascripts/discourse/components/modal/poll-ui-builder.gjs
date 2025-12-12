@@ -16,6 +16,7 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import { removeValueFromArray } from "discourse/lib/array-tools";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import autoFocus from "discourse/modifiers/auto-focus";
@@ -126,7 +127,7 @@ export default class PollUiBuilderModal extends Component {
 
   get siteGroups() {
     // prevents group "everyone" to be listed
-    return this.site.groups.filter((g) => g.id !== 0);
+    return this.site.groups.filter((g) => g.id !== AUTO_GROUPS.everyone.id);
   }
 
   get isPie() {

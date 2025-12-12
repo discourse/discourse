@@ -1589,6 +1589,9 @@ bg:
       user_joined_community: "Присъединен на %{date}"
     github:
       closed: "затворена"
+      status_date:
+        approved: "одобрен"
+        closed: "затворена"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} ви спомена в "%{topic}" - %{site_title}'

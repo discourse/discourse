@@ -4748,6 +4748,10 @@ ug:
       review_by: "تەكشۈرگۈچى"
       pr_summary: "%{commits} تاپشۇرۇش ئۆزگەرتىلگەندىن كېيىنكى %{changed_files} ھۆججەتنى يوللىدى، ئۇنىڭدا %{additions} يېڭىدىن قوشۇلغان ھۆججەت، %{deletions} ئۆچۈرۈلگەن ھۆججەت"
       no_description: "GitHub دا ھېسابات قۇرۇپ %{repo} ئىجادىيىتىگە تۆھپە قوشقىلى بولىدۇ."
+      status_date:
+        open: "ئېچىلدى"
+        approved: "تەستىقلاندى"
+        closed: "تاقالدى"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} سىزنى «%{topic}» - %{site_title} دا ئاتىدى'

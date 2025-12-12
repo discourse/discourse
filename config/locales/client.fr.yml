@@ -5287,6 +5287,11 @@ fr:
           sub_pages:
             common_settings:
               title: "Paramètres"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "En savoir plus…"
         logo:
           title: "Logo"
           header_description: "Configurez les logos et les icônes utilisés sur votre site"
