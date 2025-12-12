@@ -475,8 +475,8 @@ body.tags-intersection {
 .bulk-create-results {
   .result-section {
     display: flex;
-    align-items: end;
     gap: var(--space-1);
+    flex-wrap: wrap;
 
     h4 {
       margin: 0;
