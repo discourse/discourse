@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import CookText from "discourse/components/cook-text";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
@@ -19,6 +20,10 @@ export default class DiscourseNewFeatureItem extends Component {
   @tracked settingEnabled = this.args.item.setting_enabled;
   @tracked toggleSettingDisabled = false;
   @tracked isExperiment = this.args.item.experiment;
+
+  get identifier() {
+    return dasherize(this.args.item.title);
+  }
 
   @action
   async toggleExperiment() {
@@ -42,6 +47,7 @@ export default class DiscourseNewFeatureItem extends Component {
         type: "POST",
         data: {
           setting_name: this.args.item.related_site_setting,
+          enabled: this.settingEnabled,
         },
       });
 
@@ -101,7 +107,10 @@ export default class DiscourseNewFeatureItem extends Component {
   }
 
   <template>
-    <div class="admin-new-feature-item">
+    <div
+      class="admin-new-feature-item"
+      data-new-feature-identifier={{this.identifier}}
+    >
       <div class="admin-new-feature-item__content">
         <div class="admin-new-feature-item__header">
           {{#if (and @item.emoji (not @item.screenshot_url))}}
