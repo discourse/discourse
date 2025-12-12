@@ -1,4 +1,5 @@
 import { action, computed } from "@ember/object";
+import { readOnly } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { classNameBindings, classNames } from "@ember-decorators/component";
 import { setting } from "discourse/lib/computed";
@@ -33,11 +34,12 @@ const MORE_TAGS_COLLECTION = "MORE_TAGS_COLLECTION";
   filterable: true,
   headerComponent: TagDropHeader,
   autoInsertNoneItem: false,
-  valueProperty: "name",
 })
 @pluginApiIdentifiers("tag-drop")
 export default class TagDrop extends ComboBoxComponent {
   @service tagUtils;
+
+  @readOnly("tagId") value;
 
   @setting("max_tag_search_results") maxTagSearchResults;
   @setting("tags_sort_alphabetically") sortTagsAlphabetically;
@@ -47,11 +49,6 @@ export default class TagDrop extends ComboBoxComponent {
     super.init(...arguments);
 
     this.insertAfterCollection(MAIN_COLLECTION, MORE_TAGS_COLLECTION);
-  }
-
-  @computed("tagName", "tagId")
-  get value() {
-    return this.tagId;
   }
 
   @computed("maxTagsInFilterList", "topTags.[]", "mainCollection.[]")
@@ -88,8 +85,6 @@ export default class TagDrop extends ComboBoxComponent {
   modifySelection(content) {
     if (this.value === NONE_TAG) {
       content = this.defaultItem(NO_TAG_ID, i18n("tagging.selector_no_tags"));
-    } else if (this.value) {
-      content = this.defaultItem(this.value, this.value);
     }
 
     return content;
@@ -198,7 +193,6 @@ export default class TagDrop extends ComboBoxComponent {
       .sort((a, b) => a.name > b.name)
       .map((r) => {
         const content = this.defaultItem(r.id, r.name);
-        content.targetTagId = r.target_tag || r.name;
         if (!this.currentCategory) {
           content.count = r.count;
         }
@@ -208,17 +202,19 @@ export default class TagDrop extends ComboBoxComponent {
   }
 
   @action
-  onChange(tagId, tag) {
-    if (tagId === NO_TAG_ID) {
-      tagId = NONE_TAG;
-    } else if (tagId === ALL_TAGS_ID) {
-      tagId = null;
-    } else if (tag && tag.targetTagId) {
-      tagId = tag.targetTagId;
+  onChange(value, tag) {
+    let tagName;
+
+    if (value === NO_TAG_ID) {
+      tagName = NONE_TAG;
+    } else if (value === ALL_TAGS_ID) {
+      tagName = null;
+    } else if (tag && tag.name) {
+      tagName = tag.name;
     }
 
     DiscourseURL.routeToUrl(
-      getCategoryAndTagUrl(this.currentCategory, !this.noSubcategories, tagId)
+      getCategoryAndTagUrl(this.currentCategory, !this.noSubcategories, tagName)
     );
   }
 }
