@@ -265,7 +265,7 @@ class Middleware::RequestTracker
       route_name = env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_ROUTE_NAME"]
       status = 200
     elsif view_tracking_data[:explicit_track_view]
-      # Get session_id from header for explicit page views (sent via /pageview endpoint)
+      # Get session_id from header for explicit page views (AJAX requests with Discourse-Track-View header)
       session_id = env["HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID"]
       request_path = env["HTTP_DISCOURSE_TRACK_VIEW_PATH"].presence
       request_query_string = env["HTTP_DISCOURSE_TRACK_VIEW_QUERY_STRING"].presence
