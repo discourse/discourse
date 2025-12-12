@@ -158,11 +158,9 @@ export default class TagInfo extends Component {
   @action
   finishedEditing() {
     const oldTagName = this.tag.name;
-    const id = this.tag.id;
     this.newTagDescription = this.newTagDescription?.replaceAll("\n", "<br>");
     this.tag
       .update({
-        id,
         name: this.newTagName,
         description: this.newTagDescription,
       })
