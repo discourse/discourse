@@ -20,6 +20,8 @@ class GithubLinkback
   end
 
   def should_enqueue?
+    return false if ignored_category?
+
     !!(
       SiteSetting.github_linkback_enabled? && SiteSetting.enable_discourse_github_plugin? &&
         @post.present? && @post.post_type == Post.types[:regular] && @post.raw =~ /github\.com/ &&
@@ -124,6 +126,13 @@ class GithubLinkback
   end
 
   private
+
+  def ignored_category?
+    return false if @post.blank? || @post.topic.category_id.blank?
+
+    ignored_categories = SiteSetting.github_linkback_ignored_categories.split("|").map(&:to_i)
+    ignored_categories.include?(@post.topic.category_id)
+  end
 
   def post_pr_or_issue(link, type)
     pr_or_issue_number = link.pr_number || link.issue_number
