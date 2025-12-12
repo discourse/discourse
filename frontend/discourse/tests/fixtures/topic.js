@@ -5619,7 +5619,7 @@ export default {
           avatar_template: "/images/avatar.png",
           created_at: "2020-07-24T17:50:17.274Z",
           cooked:
-            "<aside class=\"onebox allowlistedgeneric\" data-onebox-src=\"https://example.com/57350945\"><header class=\"source\"><a href=\"https://example.com/57350945\" target=\"_blank\" rel=\"noopener\">XYZ News Site</a> </header> <article class=\"onebox-body\"> <div class=\"aspect-image\" style=\"--aspect-ratio:690/388;\"><img src=\"/assets/logo.png\" class=\"thumbnail d-lazyload\" width=\"690\" height=\"388\"></div> <h3><a href=\"https://example.com/57350945\" target=\"_blank\" rel=\"noopener\">News Headline</a></h3> <p>Article summary</p> </article> <div class=\"onebox-metadata\"> </div> <div style=\"clear: both\"></div> </aside>",
+            "<aside class=\"onebox allowlistedgeneric\" data-onebox-src=\"https://example.com/57350945\"><header class=\"source\"><a href=\"https://example.com/57350945\" target=\"_blank\" rel=\"noopener\">XYZ News Site</a> </header> <article class=\"onebox-body\"> <div class=\"aspect-image\" style=\"--aspect-ratio:690/388;\"><img src=\"/images/discourse-logo-sketch.png\" class=\"thumbnail d-lazyload\" width=\"690\" height=\"388\"></div> <h3><a href=\"https://example.com/57350945\" target=\"_blank\" rel=\"noopener\">News Headline</a></h3> <p>Article summary</p> </article> <div class=\"onebox-metadata\"> </div> <div style=\"clear: both\"></div> </aside>",
           post_number: 3,
           post_type: 1,
           updated_at: "2020-07-24T17:50:17.274Z",
@@ -5964,7 +5964,7 @@ export default {
           avatar_template: "/images/avatar.png",
           created_at: "2020-07-24T17:50:17.274Z",
           cooked:
-            "<aside class=\"onebox allowlistedgeneric\" data-onebox-src=\"https://example.com/57350945\"><header class=\"source\"><a href=\"https://example.com/57350945\" target=\"_blank\" rel=\"noopener\">XYZ News Site</a> </header> <article class=\"onebox-body\"> <div class=\"aspect-image\" style=\"--aspect-ratio:690/388;\"><img src=\"/assets/logo.png\" class=\"thumbnail d-lazyload\" width=\"690\" height=\"388\"></div> <h3><a href=\"https://example.com/57350945\" target=\"_blank\" rel=\"noopener\">News Headline</a></h3> <p>Article summary</p> </article> <div class=\"onebox-metadata\"> </div> <div style=\"clear: both\"></div> </aside>",
+            "<aside class=\"onebox allowlistedgeneric\" data-onebox-src=\"https://example.com/57350945\"><header class=\"source\"><a href=\"https://example.com/57350945\" target=\"_blank\" rel=\"noopener\">XYZ News Site</a> </header> <article class=\"onebox-body\"> <div class=\"aspect-image\" style=\"--aspect-ratio:690/388;\"><img src=\"/images/discourse-logo-sketch.png\" class=\"thumbnail d-lazyload\" width=\"690\" height=\"388\"></div> <h3><a href=\"https://example.com/57350945\" target=\"_blank\" rel=\"noopener\">News Headline</a></h3> <p>Article summary</p> </article> <div class=\"onebox-metadata\"> </div> <div style=\"clear: both\"></div> </aside>",
           post_number: 3,
           post_type: 1,
           updated_at: "2020-07-24T17:50:17.274Z",
