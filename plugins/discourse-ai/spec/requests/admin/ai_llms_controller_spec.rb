@@ -426,6 +426,49 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
       end
     end
 
+    context "with seeded models" do
+      fab!(:seeded_llm) { Fabricate(:fake_model, id: -200) }
+
+      it "allows updating enabled_chat_bot" do
+        expect(seeded_llm.enabled_chat_bot).to eq(false)
+
+        put "/admin/plugins/discourse-ai/ai-llms/#{seeded_llm.id}.json",
+            params: {
+              ai_llm: {
+                enabled_chat_bot: true,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(seeded_llm.reload.enabled_chat_bot).to eq(true)
+      end
+
+      it "creates a companion user when enabled_chat_bot is set to true" do
+        put "/admin/plugins/discourse-ai/ai-llms/#{seeded_llm.id}.json",
+            params: {
+              ai_llm: {
+                enabled_chat_bot: true,
+              },
+            }
+
+        expect(seeded_llm.reload.user_id).to be_present
+      end
+
+      it "does not allow updating other fields like provider" do
+        original_provider = seeded_llm.provider
+
+        put "/admin/plugins/discourse-ai/ai-llms/#{seeded_llm.id}.json",
+            params: {
+              ai_llm: {
+                provider: "anthropic",
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(seeded_llm.reload.provider).to eq(original_provider)
+      end
+    end
+
     context "with provider-specific params" do
       it "updates provider-specific config params" do
         provider_params = { organization: "Discourse" }

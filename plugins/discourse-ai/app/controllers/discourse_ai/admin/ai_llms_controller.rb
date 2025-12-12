@@ -84,10 +84,21 @@ module DiscourseAi
         handle_feature_credit_costs_update(llm_model)
 
         if llm_model.seeded?
-          # For seeded models, only allow quota/credit updates (already handled above)
-          # Return success with updated model, don't allow other param changes
-          log_llm_model_update(llm_model, initial_attributes, initial_quotas)
-          return render json: LlmModelSerializer.new(llm_model)
+          # For seeded models, only allow quota/credit/enabled_chat_bot updates
+          seeded_params = {}
+          seeded_params[:enabled_chat_bot] = params[:ai_llm][:enabled_chat_bot] if params[
+            :ai_llm
+          ].key?(:enabled_chat_bot)
+
+          if seeded_params.any? && llm_model.update(seeded_params)
+            llm_model.toggle_companion_user
+            log_llm_model_update(llm_model, initial_attributes, initial_quotas)
+            render json: LlmModelSerializer.new(llm_model)
+          else
+            log_llm_model_update(llm_model, initial_attributes, initial_quotas)
+            render json: LlmModelSerializer.new(llm_model)
+          end
+          return
         end
 
         if llm_model.update(ai_llm_params(updating: llm_model))

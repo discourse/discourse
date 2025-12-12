@@ -511,16 +511,6 @@ export default class AiLlmEditorForm extends Component {
           <field.Hint />
         </form.Field>
 
-        <form.Field
-          @name="enabled_chat_bot"
-          @title={{i18n "discourse_ai.llms.enabled_chat_bot"}}
-          @tooltip={{i18n "discourse_ai.llms.hints.enabled_chat_bot"}}
-          @format="large"
-          as |field|
-        >
-          <field.Checkbox />
-        </form.Field>
-
         {{#if @model.user}}
           <form.Container @title={{i18n "discourse_ai.llms.ai_bot_user"}}>
             <a
@@ -536,6 +526,16 @@ export default class AiLlmEditorForm extends Component {
           </form.Container>
         {{/if}}
       {{/unless}}
+
+      <form.Field
+        @name="enabled_chat_bot"
+        @title={{i18n "discourse_ai.llms.enabled_chat_bot"}}
+        @tooltip={{i18n "discourse_ai.llms.hints.enabled_chat_bot"}}
+        @format="large"
+        as |field|
+      >
+        <field.Checkbox />
+      </form.Field>
 
       {{#if (gt data.llm_quotas.length 0)}}
         <form.Container @title={{i18n "discourse_ai.llms.quotas.title"}}>
