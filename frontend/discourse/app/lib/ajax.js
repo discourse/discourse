@@ -7,7 +7,11 @@ import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 
+export const TRACK_VIEW_HEADER = "Discourse-Track-View";
+export const TRACK_VIEW_REFERRER_HEADER = "Discourse-Track-View-Referrer";
+
 let _trackView = false;
+let _trackViewReferrer = null;
 let _topicId = null;
 let _transientHeader = null;
 let _logoffCallback;
@@ -20,12 +24,14 @@ export function trackNextAjaxAsTopicView(topicId) {
   _topicId = topicId;
 }
 
-export function trackNextAjaxAsPageview() {
+export function trackNextAjaxAsPageview(referrer) {
+  _trackViewReferrer = referrer;
   _trackView = true;
 }
 
 export function resetAjax() {
   _trackView = false;
+  _trackViewReferrer = null;
 }
 
 export function setLogoffCallback(cb) {
@@ -102,7 +108,12 @@ export function ajax() {
 
     if (_trackView && (!args.type || args.type === "GET")) {
       _trackView = false;
-      args.headers["Discourse-Track-View"] = "true";
+      args.headers[TRACK_VIEW_HEADER] = "true";
+
+      if (_trackViewReferrer) {
+        args.headers[TRACK_VIEW_REFERRER_HEADER] = _trackViewReferrer;
+      }
+      _trackViewReferrer = null;
 
       if (_topicId) {
         args.headers["Discourse-Track-View-Topic-Id"] = _topicId;

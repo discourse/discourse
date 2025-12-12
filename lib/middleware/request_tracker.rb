@@ -285,7 +285,14 @@ class Middleware::RequestTracker
     if data
       if result && (headers = result[1])
         headers["X-Discourse-TrackView"] = "1" if data[:track_view]
-        headers["X-Discourse-BrowserPageView"] = "1" if data[:browser_page_view]
+
+        if data[:browser_page_view]
+          headers["X-Discourse-BrowserPageView"] = "1"
+
+          if data[:browser_page_view_referrer]
+            headers["X-Discourse-BrowserPageView-Referrer"] = data[:browser_page_view_referrer]
+          end
+        end
       end
 
       if @@detailed_request_loggers
@@ -612,12 +619,19 @@ class Middleware::RequestTracker
     track_view = !!(explicit_track_view || implicit_track_view)
     browser_page_view = !!(explicit_track_view || deferred_track_view)
 
+    browser_page_view_referrer =
+      if browser_page_view
+        env["HTTP_DISCOURSE_TRACK_VIEW_REFERRER"] ||
+          env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_REFERRER"]
+      end
+
     {
       track_view: track_view,
       explicit_track_view: explicit_track_view,
       deferred_track_view: deferred_track_view,
       implicit_track_view: implicit_track_view,
       browser_page_view: browser_page_view,
+      browser_page_view_referrer: browser_page_view_referrer,
     }
   end
 end

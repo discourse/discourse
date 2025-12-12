@@ -7,11 +7,18 @@ import userPresent, { onPresenceChange } from "discourse/lib/user-presence";
 
 const LONG_POLL_AFTER_UNSEEN_TIME = 1200000; // 20 minutes
 
+export const DEFERRED_TRACK_VIEW_HEADER = "Discourse-Deferred-Track-View";
+
+export const DEFERRED_TRACK_VIEW_REFERRER_HEADER =
+  "Discourse-Deferred-Track-View-Referrer";
+
 let _sendDeferredPageview = false;
 let _deferredViewTopicId = null;
+let _deferredViewReferrer = null;
 
-export function sendDeferredPageview() {
+export function sendDeferredPageview(referrer) {
   _sendDeferredPageview = true;
+  _deferredViewReferrer = referrer;
 }
 
 function mbAjax(messageBus, opts) {
@@ -30,7 +37,11 @@ function mbAjax(messageBus, opts) {
   }
 
   if (_sendDeferredPageview) {
-    opts.headers["Discourse-Deferred-Track-View"] = "true";
+    opts.headers[DEFERRED_TRACK_VIEW_HEADER] = "true";
+
+    if (_deferredViewReferrer) {
+      opts.headers[DEFERRED_TRACK_VIEW_REFERRER_HEADER] = _deferredViewReferrer;
+    }
 
     if (_deferredViewTopicId) {
       opts.headers["Discourse-Deferred-Track-View-Topic-Id"] =
@@ -39,6 +50,7 @@ function mbAjax(messageBus, opts) {
 
     _sendDeferredPageview = false;
     _deferredViewTopicId = null;
+    _deferredViewReferrer = null;
   }
 
   const oldComplete = opts.complete;

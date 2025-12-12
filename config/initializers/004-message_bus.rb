@@ -38,7 +38,7 @@ def setup_message_bus_env(env)
       "Access-Control-Allow-Origin" => cors_origin,
       "Access-Control-Allow-Methods" => "GET, POST",
       "Access-Control-Allow-Headers" =>
-        "X-SILENCE-LOGGER, X-Shared-Session-Key, Dont-Chunk, Discourse-Present, Discourse-Deferred-Track-View",
+        "X-SILENCE-LOGGER, X-Shared-Session-Key, Dont-Chunk, Discourse-Present, Discourse-Deferred-Track-View, Discourse-Deferred-Track-View-Referrer",
       "Access-Control-Max-Age" => "7200",
     }
 
@@ -92,8 +92,18 @@ MessageBus.extra_response_headers_lookup do |env|
   headers = env["__mb"][:extra_headers]
   if view_tracking_data = env["discourse.view_tracking_data"]
     headers["X-Discourse-TrackView"] = "1" if view_tracking_data[:track_view]
-    headers["X-Discourse-BrowserPageView"] = "1" if view_tracking_data[:browser_page_view]
+
+    if view_tracking_data[:browser_page_view]
+      headers["X-Discourse-BrowserPageView"] = "1"
+
+      if view_tracking_data[:browser_page_view_referrer]
+        headers["X-Discourse-BrowserPageView-Referrer"] = view_tracking_data[
+          :browser_page_view_referrer
+        ]
+      end
+    end
   end
+
   headers
 end
 
