@@ -85,7 +85,7 @@ class TopicsBulkAction
 
   def dismiss_posts
     highest_number_source_column =
-      @user.whisperer? ? "highest_staff_post_number" : "highest_post_number"
+      @user.whisperer? ? "highest_whisperer_post_number" : "highest_post_number"
 
     sql = <<~SQL
       UPDATE topic_users tu

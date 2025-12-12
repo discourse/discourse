@@ -504,7 +504,7 @@ class TopicTrackingState
   end
 
   def self.highest_post_number_column_select(whisperer)
-    "#{whisperer ? "topics.highest_staff_post_number AS highest_post_number" : "topics.highest_post_number"}"
+    "#{whisperer ? "topics.highest_whisperer_post_number AS highest_post_number" : "topics.highest_post_number"}"
   end
 
   def self.publish_read_indicator_on_write(topic_id, last_read_post_number, user_id)

@@ -552,7 +552,7 @@ class PostMover
       old_topic_id: original_topic.id,
       new_topic_id: destination_topic.id,
       old_highest_post_number: destination_topic.highest_post_number,
-      old_highest_staff_post_number: destination_topic.highest_staff_post_number,
+      old_highest_whisperer_post_number: destination_topic.highest_whisperer_post_number,
     }
 
     DB.exec(<<~SQL, params)
@@ -597,8 +597,8 @@ class PostMover
       ON CONFLICT (topic_id, user_id) DO UPDATE
         SET posted                   = excluded.posted,
             last_read_post_number    = CASE
-                                         WHEN topic_users.last_read_post_number = :old_highest_staff_post_number OR (
-                                             :old_highest_post_number < :old_highest_staff_post_number
+                                         WHEN topic_users.last_read_post_number = :old_highest_whisperer_post_number OR (
+                                             :old_highest_post_number < :old_highest_whisperer_post_number
                                              AND topic_users.last_read_post_number = :old_highest_post_number
                                              AND NOT EXISTS(SELECT 1
                                                             FROM users u
@@ -609,8 +609,8 @@ class PostMover
                                                     excluded.last_read_post_number)
                                          ELSE topic_users.last_read_post_number END,
             last_emailed_post_number = CASE
-                                         WHEN topic_users.last_emailed_post_number = :old_highest_staff_post_number OR (
-                                             :old_highest_post_number < :old_highest_staff_post_number
+                                         WHEN topic_users.last_emailed_post_number = :old_highest_whisperer_post_number OR (
+                                             :old_highest_post_number < :old_highest_whisperer_post_number
                                              AND topic_users.last_emailed_post_number = :old_highest_post_number
                                              AND NOT EXISTS(SELECT 1
                                                             FROM users u
