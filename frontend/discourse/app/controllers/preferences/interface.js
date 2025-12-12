@@ -17,6 +17,7 @@ import {
   listThemes,
   setLocalTheme,
 } from "discourse/lib/theme-selector";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { setDefaultHomepage } from "discourse/lib/utilities";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import { i18n } from "discourse-i18n";
@@ -86,7 +87,9 @@ export default class InterfaceController extends Controller {
       attrs.push("theme_ids");
     }
 
-    return attrs;
+    return applyValueTransformer("preferences-save-attributes", attrs, {
+      page: "interface",
+    });
   }
 
   @discourseComputed()
