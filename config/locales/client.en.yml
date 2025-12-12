@@ -627,6 +627,11 @@ en:
           one: "+%{count} other draft"
           other: "+%{count} other drafts"
 
+    embed_mode:
+      storage_access_prompt: "Already have a %{site_name} account? Allow access to your session to comment as yourself."
+      allow_access: "Allow Access"
+      continue_as_guest: "Continue as Guest"
+
     topic_count_all:
       one: "See %{count} new topic"
       other: "See %{count} new topics"
