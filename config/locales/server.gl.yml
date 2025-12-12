@@ -3426,6 +3426,9 @@ gl:
   onebox:
     github:
       closed: "pechado"
+      status_date:
+        approved: "aprobado"
+        closed: "pechado"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mencionouno en "%{topic}" - %{site_title}'

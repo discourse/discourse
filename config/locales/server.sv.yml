@@ -4114,6 +4114,10 @@ sv:
       comment_by: "Kommentar av"
       review_by: "Granskning av"
       pr_summary: "%{commits} åtaganden ändrade %{changed_files} -filer med %{additions} tillägg och %{deletions} borttagningar"
+      status_date:
+        open: "öppnad"
+        approved: "godkänd"
+        closed: "stängda"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nämnde dig i "%{topic}" - %{site_title}'

@@ -4970,6 +4970,10 @@ hu:
       review_by: "Jóváhagyta:"
       pr_summary: "%{commits} véglegesíti a megváltozott %{changed_files} fájlokat %{additions} kiegészítéssel és %{deletions} törléssel"
       no_description: "Hozzájáruljon a %{repo} fejlesztéséhez a GitHubon való fiók létrehozásával."
+      status_date:
+        open: "nyitott"
+        approved: "jóváhagyott"
+        closed: "lezárva"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} megemlített téged "%{topic}" - %{site_title} témakörben'

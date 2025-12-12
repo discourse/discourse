@@ -2219,6 +2219,9 @@ ro:
   onebox:
     github:
       closed: "închis"
+      status_date:
+        approved: "aprobat"
+        closed: "închis"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} te-a menționat în discuția "%{topic}" - %{site_title}'

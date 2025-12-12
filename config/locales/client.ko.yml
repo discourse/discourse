@@ -3758,6 +3758,8 @@ ko:
           sub_pages:
             common_settings:
               title: "설정"
+        discourse_id:
+          learn_more: "더 보기"
         logo:
           form:
             mobile: "모바일"

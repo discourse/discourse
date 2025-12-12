@@ -3474,6 +3474,8 @@ bg:
           sub_pages:
             common_settings:
               title: "Настройки"
+        discourse_id:
+          learn_more: "Научете повече"
         logo:
           form:
             mobile: "Мобилен"

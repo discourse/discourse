@@ -4961,6 +4961,10 @@ pt_BR:
       review_by: "Revisão por"
       pr_summary: "%{commits} confirma %{changed_files} arquivos alterados com %{additions} adições e %{deletions} exclusões"
       no_description: "Contribua para o desenvolvimento do %{repo} ao criar uma conta no GitHub."
+      status_date:
+        open: "abertos"
+        approved: "aprovada"
+        closed: "fechados"
   discourse_push_notifications:
     popup:
       mentioned: 'Você foi mencionado(a) por %{username} em "%{topic}" - %{site_title}'

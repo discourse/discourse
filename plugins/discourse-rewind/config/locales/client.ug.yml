@@ -19,7 +19,61 @@ ug:
           invitee_likes: بېرىلگەن ياقتۇرۇش
           label_invitations_sent: "تەكلىپ يوللاندى:"
         new_user_interactions:
+          title: يېڭى ئىشلەتكۈچىگە يېتەكچىلىك قىلىش
+          subtitle:
+            one: سىز بۇ يىل %{count} يېڭى ئىشلەتكۈچىگە ياردەم قىلدىڭىز
+            other: سىز بۇ يىل %{count} يېڭى ئىشلەتكۈچىگە ياردەم قىلدىڭىز
+          new_member:
+            one: "%{count} يېڭى ئەزا"
+            other: "%{count} يېڭى ئەزا"
+          total_interactions: جەمئىي تەسىرلىشىش قېتىم سانى
+          unique_new_users: بىردىنبىر يېڭى ئىشلەتكۈچى
           likes_given: بېرىلگەن ياقتۇرۇش
+          replies: يازمىغا جاۋاب
           mentions: ئاتاش
+          topics_with_new_users: يېڭى ئىشلەتكۈچىنىڭ تېمىسى
+          your_contributions_helped: تۆھپىڭىز ياردەم قىلدى
+        time_of_day_activity:
+          title: كۈندىلىك پائالىيەت رېتىمى
+          play_button: پائالىيىتىڭىزنى ئاۋازلىق ياڭرىتىدۇ
+          stop_button: ئاۋاز ياڭرىتىشنى توختات
         writing_analysis:
+          title: يازما تەھلىلى
+          menu_file: ھۆججەت
           menu_other: باشقا
+          menu_additional: قوشۇمچە
+          menu_opening: ئېچىۋاتىدۇ
+          help_text: ياردەم ئۈچۈن F1 بېسىلىدۇ
+          app_name: DiscoStar كەسپىي نەشرى
+          release_info: CDCK نىڭ تارقىتىلغان ۋاقتى %{rewindYear}
+          total_words: جەمئىي سۆز
+          total_posts: جەمئىي يازما
+          avg_post_length: ئوتتۇرىچە يازما ئۇزۇنلۇقى
+          readability_score_label: ئوقۇشچانلىق نومۇرى
+          readability_level: ئوقۇشچانلىق دەرىجىسى
+          readability_score:
+            over_80:
+              1: "ئېرنېست ھېمىڭۋاي"
+              2: "رايموند كارۋېر"
+              3: "مايكول كرىچتون"
+              4: "روئالد داخل"
+            over_60:
+              1: "C.S. لېۋىس"
+              2: "ستېفېن كىڭ"
+              3: "ئاگاتا كرىستى"
+              4: "جورج ر.ر. مارتىن"
+            over_40:
+              1: "جورج ئورۋېل"
+              2: "ف. سكوت فىتزگېرالد"
+              3: "ئالدوئۇس خاكسلېي"
+              4: "جوئان دىدىئون"
+            over_20:
+              1: "كورماك مەككارسى"
+              2: "ۋىللىيام فائۇلكنېر"
+              3: "ۋىرگىنا ۋۇلف"
+              4: "گابرىئېل گارسىيا ماركۇز"
+            over_0:
+              1: "جەمىس جويسې"
+              2: "توماس پىنچون"
+              3: "داۋىد فوستېر ۋاللاس"
+              4: "فيودور دوستوئېۋسكى"

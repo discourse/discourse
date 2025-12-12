@@ -4133,6 +4133,8 @@ lt:
           sub_pages:
             common_settings:
               title: "Nustatymai"
+        discourse_id:
+          learn_more: "Sužinoti daugiau"
         logo:
           form:
             mobile: "Mobilus"

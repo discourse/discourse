@@ -2792,6 +2792,10 @@ zh_TW:
     github:
       opened: "已打開"
       closed: "不公開"
+      status_date:
+        open: "已開啟"
+        approved: "已同意"
+        closed: "已關閉"
   discourse_push_notifications:
     popup:
       mentioned: '%{username}在"%{topic}"提及您 - %{site_title}'

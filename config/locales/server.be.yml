@@ -2257,6 +2257,9 @@ be:
   onebox:
     github:
       closed: "закрыта"
+      status_date:
+        approved: "ухвалена"
+        closed: "закрыта"
   discourse_push_notifications:
     popup:
       mentioned: '% {Імя карыстальніка} згадаў вас у "% {} тэме" -% {SITE_TITLE}'

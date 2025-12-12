@@ -4998,6 +4998,11 @@ ja:
           sub_pages:
             common_settings:
               title: "設定"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "もっと読む"
         logo:
           title: "ロゴ"
           header_description: "サイト全体で使用されるロゴとアイコンを構成します"

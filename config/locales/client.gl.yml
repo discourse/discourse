@@ -3444,6 +3444,8 @@ gl:
           sub_pages:
             common_settings:
               title: "Configuración"
+        discourse_id:
+          learn_more: "Saber máis"
         logo:
           form:
             mobile: "Móbil"
