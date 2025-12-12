@@ -330,8 +330,7 @@ jobs:
 
       - name: Plugins QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
-        run: |
-          bin/rake plugin:qunit['*']
+        run: bin/rake plugin:qunit['*']
 
       - name: Theme QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'themes'

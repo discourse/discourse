@@ -50,7 +50,7 @@ function raiseDeprecationError(message, options) {
     ? ""
     : ` FROM ${prefix.substring(1, prefix.length - 1)}`;
 
-  message = `DEPRECATION${from}: ${message} (deprecation id: ${options.id})\n\nCore and all tre preinstalled plugins tests runs must be deprecation-free. Use ember-deprecation-workflow to silence unresolved deprecations.`;
+  message = `DEPRECATION${from}: ${message} (deprecation id: ${options.id})\n\nCore and all the preinstalled plugins tests runs must be deprecation-free. Use ember-deprecation-workflow to silence unresolved deprecations.`;
 
   if (QUnit.config.current && !disabledQUnitResult) {
     QUnit.assert.pushResult({
