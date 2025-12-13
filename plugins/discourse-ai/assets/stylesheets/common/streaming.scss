@@ -51,117 +51,112 @@ details.ai-thinking.in-progress:not([open]) > summary::after {
       0.25em no-repeat,
     radial-gradient(circle, currentcolor 60%, transparent 61%) 100% 100% /
       0.25em 0.25em no-repeat;
+  animation: ai-thinking-dot-flash 2.8s infinite ease-in-out;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  details.ai-thinking.in-progress:not([open]) > summary::after {
-    animation: ai-thinking-dot-flash 2.8s infinite ease-in-out;
+@keyframes ai-thinking-dot-flash {
+  0%,
+  12%,
+  100% {
+    background:
+      radial-gradient(
+          circle,
+          color-mix(in srgb, currentcolor 25%, transparent) 60%,
+          transparent 61%
+        )
+        0% 100% / 0.25em 0.25em no-repeat,
+      radial-gradient(
+          circle,
+          color-mix(in srgb, currentcolor 25%, transparent) 60%,
+          transparent 61%
+        )
+        50% 100% / 0.25em 0.25em no-repeat,
+      radial-gradient(
+          circle,
+          color-mix(in srgb, currentcolor 25%, transparent) 60%,
+          transparent 61%
+        )
+        100% 100% / 0.25em 0.25em no-repeat;
   }
 
-  @keyframes ai-thinking-dot-flash {
-    0%,
-    12%,
-    100% {
-      background:
-        radial-gradient(
-            circle,
-            color-mix(in srgb, currentcolor 25%, transparent) 60%,
-            transparent 61%
-          )
-          0% 100% / 0.25em 0.25em no-repeat,
-        radial-gradient(
-            circle,
-            color-mix(in srgb, currentcolor 25%, transparent) 60%,
-            transparent 61%
-          )
-          50% 100% / 0.25em 0.25em no-repeat,
-        radial-gradient(
-            circle,
-            color-mix(in srgb, currentcolor 25%, transparent) 60%,
-            transparent 61%
-          )
-          100% 100% / 0.25em 0.25em no-repeat;
-    }
+  20%,
+  32% {
+    background:
+      radial-gradient(circle, currentcolor 60%, transparent 61%) 0% 100% /
+        0.25em 0.25em no-repeat,
+      radial-gradient(
+          circle,
+          color-mix(in srgb, currentcolor 25%, transparent) 60%,
+          transparent 61%
+        )
+        50% 100% / 0.25em 0.25em no-repeat,
+      radial-gradient(
+          circle,
+          color-mix(in srgb, currentcolor 25%, transparent) 60%,
+          transparent 61%
+        )
+        100% 100% / 0.25em 0.25em no-repeat;
+  }
 
-    20%,
-    32% {
-      background:
-        radial-gradient(circle, currentcolor 60%, transparent 61%) 0% 100% /
-          0.25em 0.25em no-repeat,
-        radial-gradient(
-            circle,
-            color-mix(in srgb, currentcolor 25%, transparent) 60%,
-            transparent 61%
-          )
-          50% 100% / 0.25em 0.25em no-repeat,
-        radial-gradient(
-            circle,
-            color-mix(in srgb, currentcolor 25%, transparent) 60%,
-            transparent 61%
-          )
-          100% 100% / 0.25em 0.25em no-repeat;
-    }
+  40%,
+  52% {
+    background:
+      radial-gradient(
+          circle,
+          color-mix(in srgb, currentcolor 25%, transparent) 60%,
+          transparent 61%
+        )
+        0% 100% / 0.25em 0.25em no-repeat,
+      radial-gradient(circle, currentcolor 60%, transparent 61%) 50% 100% /
+        0.25em 0.25em no-repeat,
+      radial-gradient(
+          circle,
+          color-mix(in srgb, currentcolor 25%, transparent) 60%,
+          transparent 61%
+        )
+        100% 100% / 0.25em 0.25em no-repeat;
+  }
 
-    40%,
-    52% {
-      background:
-        radial-gradient(
-            circle,
-            color-mix(in srgb, currentcolor 25%, transparent) 60%,
-            transparent 61%
-          )
-          0% 100% / 0.25em 0.25em no-repeat,
-        radial-gradient(circle, currentcolor 60%, transparent 61%) 50% 100% /
-          0.25em 0.25em no-repeat,
-        radial-gradient(
-            circle,
-            color-mix(in srgb, currentcolor 25%, transparent) 60%,
-            transparent 61%
-          )
-          100% 100% / 0.25em 0.25em no-repeat;
-    }
+  60%,
+  72% {
+    background:
+      radial-gradient(
+          circle,
+          color-mix(in srgb, currentcolor 25%, transparent) 60%,
+          transparent 61%
+        )
+        0% 100% / 0.25em 0.25em no-repeat,
+      radial-gradient(
+          circle,
+          color-mix(in srgb, currentcolor 25%, transparent) 60%,
+          transparent 61%
+        )
+        50% 100% / 0.25em 0.25em no-repeat,
+      radial-gradient(circle, currentcolor 60%, transparent 61%) 100% 100% /
+        0.25em 0.25em no-repeat;
+  }
 
-    60%,
-    72% {
-      background:
-        radial-gradient(
-            circle,
-            color-mix(in srgb, currentcolor 25%, transparent) 60%,
-            transparent 61%
-          )
-          0% 100% / 0.25em 0.25em no-repeat,
-        radial-gradient(
-            circle,
-            color-mix(in srgb, currentcolor 25%, transparent) 60%,
-            transparent 61%
-          )
-          50% 100% / 0.25em 0.25em no-repeat,
-        radial-gradient(circle, currentcolor 60%, transparent 61%) 100% 100% /
-          0.25em 0.25em no-repeat;
-    }
-
-    80%,
-    92% {
-      background:
-        radial-gradient(
-            circle,
-            color-mix(in srgb, currentcolor 25%, transparent) 60%,
-            transparent 61%
-          )
-          0% 100% / 0.25em 0.25em no-repeat,
-        radial-gradient(
-            circle,
-            color-mix(in srgb, currentcolor 25%, transparent) 60%,
-            transparent 61%
-          )
-          50% 100% / 0.25em 0.25em no-repeat,
-        radial-gradient(
-            circle,
-            color-mix(in srgb, currentcolor 25%, transparent) 60%,
-            transparent 61%
-          )
-          100% 100% / 0.25em 0.25em no-repeat;
-    }
+  80%,
+  92% {
+    background:
+      radial-gradient(
+          circle,
+          color-mix(in srgb, currentcolor 25%, transparent) 60%,
+          transparent 61%
+        )
+        0% 100% / 0.25em 0.25em no-repeat,
+      radial-gradient(
+          circle,
+          color-mix(in srgb, currentcolor 25%, transparent) 60%,
+          transparent 61%
+        )
+        50% 100% / 0.25em 0.25em no-repeat,
+      radial-gradient(
+          circle,
+          color-mix(in srgb, currentcolor 25%, transparent) 60%,
+          transparent 61%
+        )
+        100% 100% / 0.25em 0.25em no-repeat;
   }
 }
 
