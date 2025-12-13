@@ -28,7 +28,6 @@ export function trackNextAjaxAsTopicView(topicId) {
  * @param {string} data.routeName - The Ember route name
  * @param {string} data.path - The target path (from transition.intent.url)
  * @param {string} data.queryString - The target query string (without leading ?)
- * @param {string} data.previousPath - The previous path for internal referrer tracking
  */
 export function trackNextAjaxAsPageview(data) {
   _trackView = true;
@@ -144,19 +143,6 @@ export function ajax() {
         args.headers["Discourse-Track-View-Route-Name"] = _viewData.routeName
           .toString()
           .slice(0, 256);
-      }
-
-      // Send previous path for internal referrer tracking
-      if (_viewData?.previousPath) {
-        args.headers["Discourse-Track-View-Previous-Path"] =
-          _viewData.previousPath.slice(0, 1024);
-      }
-
-      // Send external referrer (original referrer from outside the site)
-      if (document.referrer) {
-        args.headers["Discourse-Track-View-Referrer"] = document.referrer
-          .slice(0, 1024)
-          .replace(/[\r\n]/g, "");
       }
 
       if (_topicId) {

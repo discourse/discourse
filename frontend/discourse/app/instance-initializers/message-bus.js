@@ -48,6 +48,10 @@ function mbAjax(messageBus, opts) {
 
   if (_sendDeferredPageview) {
     opts.headers["Discourse-Deferred-Track-View"] = "true";
+    // we can gather this implicitly, but for clarity of logging
+    // sending it explicitly is beneficial
+    opts.headers["Discourse-Deferred-Track-View-Session-Id"] =
+      messageBus.clientId;
 
     if (_deferredViewTopicId) {
       opts.headers["Discourse-Deferred-Track-View-Topic-Id"] =
