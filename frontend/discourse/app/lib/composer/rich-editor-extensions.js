@@ -90,8 +90,8 @@
  *   Markdown-it token parse definition
  * @property {RichPlugin | Array<RichPlugin>} [plugins]
  *    ProseMirror plugins
- * @property {Record<string, import('prosemirror-view').NodeViewConstructor>} [nodeViews]
- *    ProseMirror node views
+ * @property {Record<string, import('prosemirror-view').NodeViewConstructor | { component: any, name?: string }>} [nodeViews]
+ *    ProseMirror node views. Can be a NodeViewConstructor or an object with { component, name } for automatic Glimmer component wrapping
  * @property {RichKeymap} [keymap]
  *   Additional keymap definitions
  * @property {(params: PluginParams) => Record<string, import('prosemirror-state').Command>} [commands]
