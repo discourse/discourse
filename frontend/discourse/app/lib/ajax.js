@@ -1,5 +1,6 @@
 import { run } from "@ember/runloop";
 import $ from "jquery";
+import MessageBus from "message-bus-client";
 import { isTesting } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
 import userPresent from "discourse/lib/user-presence";
@@ -11,6 +12,7 @@ let _trackView = false;
 let _topicId = null;
 let _transientHeader = null;
 let _logoffCallback;
+let _viewData = null;
 
 export function setTransientHeader(key, value) {
   _transientHeader = { key, value };
@@ -20,12 +22,21 @@ export function trackNextAjaxAsTopicView(topicId) {
   _topicId = topicId;
 }
 
-export function trackNextAjaxAsPageview() {
+/**
+ * Mark the next AJAX request as a page view.
+ * @param {Object} data - URL data captured from the transition
+ * @param {string} data.routeName - The Ember route name
+ * @param {string} data.path - The target path (from transition.intent.url)
+ * @param {string} data.queryString - The target query string (without leading ?)
+ */
+export function trackNextAjaxAsPageview(data) {
   _trackView = true;
+  _viewData = data;
 }
 
 export function resetAjax() {
   _trackView = false;
+  _viewData = null;
 }
 
 export function setLogoffCallback(cb) {
@@ -104,10 +115,41 @@ export function ajax() {
       _trackView = false;
       args.headers["Discourse-Track-View"] = "true";
 
+      // Send session ID (MessageBus clientId)
+      if (MessageBus.clientId) {
+        args.headers["Discourse-Track-View-Session-Id"] = MessageBus.clientId;
+      }
+
+      // Send path - prefer transition data, fall back to window.location
+      const trackPath = _viewData?.path || window.location?.pathname;
+      if (trackPath) {
+        args.headers["Discourse-Track-View-Path"] = trackPath.slice(0, 1024);
+      }
+
+      // Send query string - prefer transition data, fall back to window.location
+      const trackQueryString =
+        _viewData?.queryString ||
+        (window.location.search?.length > 1
+          ? window.location.search.slice(1)
+          : null);
+      if (trackQueryString) {
+        args.headers["Discourse-Track-View-Query-String"] = trackQueryString
+          .slice(0, 1024)
+          .replace(/[\r\n]/g, "");
+      }
+
+      // Send Ember route name from transition data
+      if (_viewData?.routeName) {
+        args.headers["Discourse-Track-View-Route-Name"] = _viewData.routeName
+          .toString()
+          .slice(0, 256);
+      }
+
       if (_topicId) {
         args.headers["Discourse-Track-View-Topic-Id"] = _topicId;
       }
       _topicId = null;
+      _viewData = null;
     }
 
     if (userPresent()) {
