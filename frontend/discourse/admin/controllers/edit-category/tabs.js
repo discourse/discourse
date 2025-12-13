@@ -5,6 +5,7 @@ import { and } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { underscore } from "@ember/string";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import DiscourseURL from "discourse/lib/url";
@@ -25,6 +26,7 @@ const FIELD_LIST = [
 ];
 
 export default class EditCategoryTabsController extends Controller {
+  @service currentUser;
   @service dialog;
   @service site;
   @service router;
@@ -110,6 +112,24 @@ export default class EditCategoryTabsController extends Controller {
     return !transition.targetName.startsWith("editCategory.tabs");
   }
 
+  _wouldLoseAccess(category = this.model) {
+    if (this.currentUser.admin) {
+      return false;
+    }
+
+    const permissions = category.permissions;
+    if (!permissions?.length) {
+      return false;
+    }
+
+    const userGroupIds = new Set(this.currentUser.groups.map((g) => g.id));
+
+    return !permissions.some(
+      (p) =>
+        p.group_id === AUTO_GROUPS.everyone.id || userGroupIds.has(p.group_id)
+    );
+  }
+
   @action
   saveCategory(data) {
     if (this.validators.some((validator) => validator())) {
@@ -117,6 +137,19 @@ export default class EditCategoryTabsController extends Controller {
     }
 
     this.model.setProperties(data);
+
+    if (this._wouldLoseAccess()) {
+      this.dialog.yesNoConfirm({
+        message: i18n("category.errors.self_lockout"),
+        didConfirm: () => this._performSave({ lostAccess: true }),
+      });
+      return;
+    }
+
+    this._performSave();
+  }
+
+  _performSave({ lostAccess } = {}) {
     this.set("saving", true);
 
     this.model
@@ -124,6 +157,11 @@ export default class EditCategoryTabsController extends Controller {
       .then((result) => {
         const updatedModel = this.site.updateCategory(result.category);
         updatedModel.setupGroupsAndPermissions();
+
+        if (lostAccess) {
+          DiscourseURL.routeTo("/");
+          return;
+        }
 
         if (!this.model.id) {
           this.router.transitionTo(
