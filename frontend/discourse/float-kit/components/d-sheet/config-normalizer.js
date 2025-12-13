@@ -101,8 +101,11 @@ export function validateTracksPlacement(tracks, contentPlacement) {
     return false;
   }
 
-  // For single-direction tracks, contentPlacement must match
-  if (tracks === "top" && contentPlacement !== "top") {
+  if (
+    tracks === "top" &&
+    contentPlacement !== "top" &&
+    contentPlacement !== "center"
+  ) {
     // eslint-disable-next-line no-console
     console.warn(
       `d-sheet: contentPlacement "${contentPlacement}" cannot be used with tracks="top". ` +
@@ -110,7 +113,11 @@ export function validateTracksPlacement(tracks, contentPlacement) {
     );
     return false;
   }
-  if (tracks === "bottom" && contentPlacement !== "bottom") {
+  if (
+    tracks === "bottom" &&
+    contentPlacement !== "bottom" &&
+    contentPlacement !== "center"
+  ) {
     // eslint-disable-next-line no-console
     console.warn(
       `d-sheet: contentPlacement "${contentPlacement}" cannot be used with tracks="bottom". ` +
@@ -118,7 +125,11 @@ export function validateTracksPlacement(tracks, contentPlacement) {
     );
     return false;
   }
-  if (tracks === "left" && contentPlacement !== "left") {
+  if (
+    tracks === "left" &&
+    contentPlacement !== "left" &&
+    contentPlacement !== "center"
+  ) {
     // eslint-disable-next-line no-console
     console.warn(
       `d-sheet: contentPlacement "${contentPlacement}" cannot be used with tracks="left". ` +
@@ -126,7 +137,11 @@ export function validateTracksPlacement(tracks, contentPlacement) {
     );
     return false;
   }
-  if (tracks === "right" && contentPlacement !== "right") {
+  if (
+    tracks === "right" &&
+    contentPlacement !== "right" &&
+    contentPlacement !== "center"
+  ) {
     // eslint-disable-next-line no-console
     console.warn(
       `d-sheet: contentPlacement "${contentPlacement}" cannot be used with tracks="right". ` +

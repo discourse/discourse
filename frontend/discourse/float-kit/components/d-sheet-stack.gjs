@@ -11,7 +11,7 @@ import { service } from "@ember/service";
  * @component DSheetStackRoot
  * @param {string} componentId - Optional explicit ID for the stack
  */
-class Root extends Component {
+export default class Root extends Component {
   @service sheetStackRegistry;
 
   id = this.args.componentId || guidFor(this);
@@ -29,9 +29,3 @@ class Root extends Component {
 
   <template>{{yield (hash stackId=this.id)}}</template>
 }
-
-const DSheetStack = {
-  Root,
-};
-
-export default DSheetStack;

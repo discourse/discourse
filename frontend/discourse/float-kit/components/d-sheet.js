@@ -12,6 +12,7 @@ import SpecialWrapperContent from "./d-sheet/special-wrapper/content";
 import SpecialWrapperRoot from "./d-sheet/special-wrapper/root";
 import Trigger from "./d-sheet/trigger";
 import View from "./d-sheet/view";
+import StackRoot from "./d-sheet-stack";
 
 const DSheet = {
   Root,
@@ -31,6 +32,9 @@ const DSheet = {
     Root: ScrollRoot,
     View: ScrollView,
     Content: ScrollContent,
+  },
+  Stack: {
+    Root: StackRoot,
   },
 };
 

@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 
@@ -27,7 +28,8 @@ export default class Trigger extends Component {
    *
    * @param {MouseEvent} event
    */
-  handleClick = (event) => {
+  @action
+  handleClick(event) {
     const defaultBehavior = { forceFocus: true, runAction: true };
     let behavior = { ...defaultBehavior };
 
@@ -57,7 +59,7 @@ export default class Trigger extends Component {
     }
 
     this.executeAction();
-  };
+  }
 
   /**
    * The Root component found via forComponent lookup.
@@ -95,8 +97,9 @@ export default class Trigger extends Component {
    * @type {string}
    */
   get actionType() {
-    const action = this.triggerAction;
-    return typeof action === "object" ? action.type : action;
+    return typeof this.triggerAction === "object"
+      ? this.triggerAction.type
+      : this.triggerAction;
   }
 
   /**
@@ -105,8 +108,9 @@ export default class Trigger extends Component {
    * @type {string}
    */
   get stepDirection() {
-    const action = this.triggerAction;
-    return typeof action === "object" ? (action.direction ?? "up") : "up";
+    return typeof this.triggerAction === "object"
+      ? (this.triggerAction.direction ?? "up")
+      : "up";
   }
 
   /**
@@ -115,8 +119,9 @@ export default class Trigger extends Component {
    * @type {number|undefined}
    */
   get stepDetent() {
-    const action = this.triggerAction;
-    return typeof action === "object" ? action.detent : undefined;
+    return typeof this.triggerAction === "object"
+      ? this.triggerAction.detent
+      : undefined;
   }
 
   /**

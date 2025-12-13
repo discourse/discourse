@@ -73,7 +73,7 @@ export default class Controller {
   /** @type {string} */
   @tracked tracks = "bottom";
   /** @type {string} */
-  @tracked contentPlacement = "end";
+  @tracked contentPlacement = "bottom";
   /** @type {boolean} */
   @tracked inertOutside = true;
   /** @type {Array|null} */

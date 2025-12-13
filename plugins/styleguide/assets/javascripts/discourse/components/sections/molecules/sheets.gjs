@@ -11,13 +11,10 @@ import DSheet from "discourse/float-kit/components/d-sheet";
 import DSheetBottom from "discourse/float-kit/components/d-sheet-bottom";
 import DSheetWithDetent from "discourse/float-kit/components/d-sheet-with-detent";
 import DSheetWithKeyboard from "discourse/float-kit/components/d-sheet-with-keyboard";
-import DSheetWithStackingExports from "discourse/float-kit/components/d-sheet-with-stacking";
+import DSheetWithStacking from "discourse/float-kit/components/d-sheet-with-stacking";
 import { eq, includes } from "discourse/truth-helpers";
 import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-
-const { DSheetWithStacking, DSheetWithStackingStack } =
-  DSheetWithStackingExports;
 
 export default class Sheets extends Component {
   @service toasts;
@@ -105,7 +102,7 @@ export default class Sheets extends Component {
               </sheet.Trigger>
             </:root>
             <:content as |sheet|>
-              Card
+
             </:content>
           </DCard>
         </:sample>
@@ -117,60 +114,19 @@ export default class Sheets extends Component {
         </:sample>
       </StyleguideComponent>
 
-      {{!-- <StyleguideComponent @tag="with-stacking">
+      <StyleguideComponent @tag="stacks">
         <:sample>
-          <DSheetWithStackingStack.Root as |stack|>
-            <DSheetWithStacking.Root @stackId={{stack.stackId}} as |root|>
-              <root.Trigger>
-                Open Sheet
-              </root.Trigger>
-              <root.Portal>
-                <root.View as |view|>
-                  <view.Backdrop />
-                  <view.Content>
-                    <div class="sheet-with-stacking-example-content">
-                      <h3>Sheet with Stacking</h3>
-                      <p>
-                        This sheet demonstrates stacking behavior. When you open
-                        a nested sheet, this one animates to create depth.
-                      </p>
-                      <p>
-                        Current placement:
-                        {{root.contentPlacement}}
-                      </p>
-
-                      <DSheetWithStacking.Root
-                        @stackId={{stack.stackId}}
-                        as |nested|
-                      >
-                        <nested.Trigger>
-                          Open Nested Sheet
-                        </nested.Trigger>
-                        <nested.Portal>
-                          <nested.View as |nestedView|>
-                            <nestedView.Backdrop />
-                            <nestedView.Content>
-                              <div class="sheet-with-stacking-example-content">
-                                <h3>Nested Sheet</h3>
-                                <p>
-                                  This is the nested sheet. The first sheet
-                                  should animate (shrink/move) when this opens.
-                                </p>
-                              </div>
-                            </nestedView.Content>
-                          </nested.View>
-                        </nested.Portal>
-                      </DSheetWithStacking.Root>
-                    </div>
-                  </view.Content>
-                </root.View>
-              </root.Portal>
-            </DSheetWithStacking.Root>
-          </DSheetWithStackingStack.Root>
+          <DSheetWithStacking>
+            <:root as |Trigger|>
+              <Trigger>Present</Trigger>
+            </:root>
+            <:content>FIRST</:content>
+            <:nestedContent>SECOND</:nestedContent>
+          </DSheetWithStacking>
         </:sample>
       </StyleguideComponent>
 
-      <StyleguideComponent @tag="with-keyboard">
+      {{!-- <StyleguideComponent @tag="with-keyboard">
         <:sample>
           <DSheetWithKeyboard.Root as |root|>
             <root.Trigger class="ExampleSheetWithKeyboard-presentTrigger">
