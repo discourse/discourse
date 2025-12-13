@@ -12,6 +12,10 @@ module DiscourseAi
           end
         end
 
+        def native_tool_support?
+          true
+        end
+
         def translate
           corrected = super
           corrected.each do |msg|

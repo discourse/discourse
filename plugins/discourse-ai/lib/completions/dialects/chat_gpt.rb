@@ -99,7 +99,7 @@ module DiscourseAi
         end
 
         def tool_msg(msg)
-          if !native_tool_support?
+          if native_tool_support?
             tools_dialect.from_raw_tool(msg)
           else
             super
