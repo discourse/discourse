@@ -15,7 +15,8 @@ module DiscourseAi
 
         VALID_ID_REGEX = /\A[a-zA-Z0-9_]+\z/
         def native_tool_support?
-          llm_model.provider == "open_ai" || llm_model.provider == "azure"
+          (llm_model.provider == "open_ai" || llm_model.provider == "azure") &&
+            !disable_native_tools?
         end
 
         def embed_user_ids?
@@ -41,18 +42,18 @@ module DiscourseAi
           llm_model.max_prompt_tokens - buffer
         end
 
+        private
+
         def disable_native_tools?
           return @disable_native_tools if defined?(@disable_native_tools)
           !!@disable_native_tools = llm_model.lookup_custom_param("disable_native_tools")
         end
 
-        private
-
         def tools_dialect
-          if disable_native_tools?
-            super
-          else
+          if native_tool_support?
             @tools_dialect ||= DiscourseAi::Completions::Dialects::OpenAiTools.new(prompt.tools)
+          else
+            super
           end
         end
 
@@ -72,7 +73,7 @@ module DiscourseAi
 
         def system_msg(msg)
           content = msg[:content]
-          if disable_native_tools? && tools_dialect.instructions.present?
+          if !native_tool_support? && tools_dialect.instructions.present?
             content = content + "\n\n" + tools_dialect.instructions
           end
 
@@ -90,18 +91,18 @@ module DiscourseAi
         end
 
         def tool_call_msg(msg)
-          if disable_native_tools?
-            super
-          else
+          if native_tool_support?
             tools_dialect.from_raw_tool_call(msg)
+          else
+            super
           end
         end
 
         def tool_msg(msg)
-          if disable_native_tools?
-            super
-          else
+          if !native_tool_support?
             tools_dialect.from_raw_tool(msg)
+          else
+            super
           end
         end
 

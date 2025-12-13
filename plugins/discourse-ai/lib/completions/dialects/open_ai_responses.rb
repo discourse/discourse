@@ -14,7 +14,7 @@ module DiscourseAi
         VALID_ID_REGEX = /\A[a-zA-Z0-9_]+\z/
 
         def native_tool_support?
-          true
+          !disable_native_tools?
         end
 
         def max_prompt_tokens
@@ -32,12 +32,12 @@ module DiscourseAi
           hoist_reasoning(super)
         end
 
+        private
+
         def disable_native_tools?
           return @disable_native_tools if defined?(@disable_native_tools)
           !!@disable_native_tools = llm_model.lookup_custom_param("disable_native_tools")
         end
-
-        private
 
         def tools_dialect
           if disable_native_tools?
