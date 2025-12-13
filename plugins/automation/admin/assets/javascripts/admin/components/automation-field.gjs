@@ -94,6 +94,11 @@ export default class AutomationField extends Component {
   }
 
   get description() {
-    return I18n.lookup(this.translationKey);
+    if (
+      I18n.lookup(this.translationKey, { locale: "en" }) ||
+      I18n.lookup(this.translationKey)
+    ) {
+      return i18n(this.translationKey);
+    }
   }
 }
