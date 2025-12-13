@@ -29,6 +29,23 @@ export default class DTemplatesFilterableList extends Component {
   @tracked selectedTag = ALL_TAGS_ID;
   @tracked availableTags = [];
 
+  @computed("availableTags.[]", "selectedTag")
+  get selectedTagObject() {
+    if (!this.selectedTag || this.selectedTag === ALL_TAGS_ID) {
+      return null;
+    }
+
+    if (this.selectedTag === NO_TAG_ID) {
+      return { name: NO_TAG_ID };
+    }
+
+    return (
+      this.availableTags.find((tag) => tag.id === this.selectedTag) || {
+        name: this.selectedTag,
+      }
+    );
+  }
+
   @computed("replies", "selectedTag", "listFilter")
   get filteredReplies() {
     const filterTitle = this.listFilter.toLowerCase();
@@ -142,7 +159,7 @@ export default class DTemplatesFilterableList extends Component {
           {{#if this.siteSettings.tagging_enabled}}
             <TagDrop
               @availableTags={{this.availableTags}}
-              @tagId={{this.selectedTag}}
+              @tag={{this.selectedTagObject}}
               @onChangeSelectedTag={{this.changeSelectedTag}}
             />
           {{/if}}

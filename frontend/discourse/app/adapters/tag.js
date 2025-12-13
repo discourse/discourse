@@ -1,7 +1,9 @@
 import RESTAdapter from "discourse/adapters/rest";
 
 export default class TagAdapter extends RESTAdapter {
-  pathFor(store, type, id) {
-    return id ? `/tag/${id}` : `/tags`;
+  primaryKey = "name";
+
+  pathFor(store, type, tagName) {
+    return tagName ? `/tag/${tagName}` : `/tags`;
   }
 }
