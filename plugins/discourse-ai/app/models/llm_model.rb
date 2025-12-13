@@ -123,9 +123,11 @@ class LlmModel < ActiveRecord::Base
       },
       hugging_face: {
         disable_system_prompt: :checkbox,
+        disable_native_tools: :checkbox,
       },
       vllm: {
         disable_system_prompt: :checkbox,
+        disable_native_tools: :checkbox,
       },
       ollama: {
         disable_system_prompt: :checkbox,

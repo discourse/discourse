@@ -187,7 +187,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       end
 
       expected = <<~TXT.strip
-        <details><summary>#{I18n.t("discourse_ai.ai_bot.thinking")}</summary>
+        <details class='ai-thinking'><summary>#{I18n.t("discourse_ai.ai_bot.thinking")}</summary>
 
         **searching for things**
         did stuff
