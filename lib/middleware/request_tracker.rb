@@ -250,28 +250,27 @@ class Middleware::RequestTracker
     # Also extract session_id and route_name for page view logging
     session_id = nil
     route_name = nil
-    previous_path = nil
 
+    # Sam: I am not sure if we need two concepts here.
+    # Deferred track view and explicit track view are essentially the same
+    # having the explosion of headers makes code a bit more complex than what we need
     if view_tracking_data[:deferred_track_view]
-      # Extract session_id (MessageBus clientId) from poll URL: /message-bus/{clientId}/poll
-      if is_message_bus
-        parts = request.path.split("/")
-        session_id = parts[-2] if parts.length >= 3 && parts.last == "poll"
-      end
-
+      session_id = env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_SESSION_ID"]
       request_path = env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_PATH"].presence
       request_query_string = env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_QUERY_STRING"].presence
       request_referrer = env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_REFERRER"].presence
       route_name = env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_ROUTE_NAME"]
+      # message bus return a 418, we override to 200 here
+      # we are going to need to consider total counts here to see this
+      # header
       status = 200
     elsif view_tracking_data[:explicit_track_view]
-      # Get session_id from header for explicit page views (AJAX requests with Discourse-Track-View header)
       session_id = env["HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID"]
       request_path = env["HTTP_DISCOURSE_TRACK_VIEW_PATH"].presence
       request_query_string = env["HTTP_DISCOURSE_TRACK_VIEW_QUERY_STRING"].presence
       request_referrer = env["HTTP_DISCOURSE_TRACK_VIEW_REFERRER"].presence
-      previous_path = env["HTTP_DISCOURSE_TRACK_VIEW_PREVIOUS_PATH"].presence
       route_name = env["HTTP_DISCOURSE_TRACK_VIEW_ROUTE_NAME"]
+      # status is "sort of correct" in this case given it is a result of ajax that often (but not always) will match what user sees.
     else
       request_path = view_tracking_data[:path] || request.path
       request_query_string = request.query_string.presence
@@ -297,7 +296,6 @@ class Middleware::RequestTracker
       path: request_path,
       query_string: request_query_string,
       referrer: request_referrer,
-      previous_path: previous_path,
       user_agent: user_agent,
       route: route,
       session_id: session_id,

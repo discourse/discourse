@@ -11,7 +11,6 @@ class BrowserPageView < ActiveRecord::Base
   MAX_QUERY_STRING_LENGTH = 1024
   MAX_ROUTE_NAME_LENGTH = 256
   MAX_REFERRER_LENGTH = 1024
-  MAX_PREVIOUS_PATH_LENGTH = 1024
   MAX_USER_AGENT_LENGTH = 512
 
   def self.log!(data)
@@ -23,7 +22,6 @@ class BrowserPageView < ActiveRecord::Base
       query_string: data[:query_string]&.slice(0, MAX_QUERY_STRING_LENGTH),
       route_name: data[:route_name]&.slice(0, MAX_ROUTE_NAME_LENGTH),
       referrer: data[:referrer]&.slice(0, MAX_REFERRER_LENGTH),
-      previous_path: data[:previous_path]&.slice(0, MAX_PREVIOUS_PATH_LENGTH),
       ip_address: data[:request_remote_ip],
       user_agent: data[:user_agent]&.slice(0, MAX_USER_AGENT_LENGTH),
       is_mobile: data[:is_mobile] || false,
@@ -41,7 +39,6 @@ end
 #  ip_address    :inet
 #  is_mobile     :boolean          default(FALSE), not null
 #  path          :string(1024)
-#  previous_path :string(1024)
 #  query_string  :string(1024)
 #  referrer      :string(1024)
 #  route_name    :string(256)

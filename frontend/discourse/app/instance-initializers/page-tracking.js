@@ -10,8 +10,6 @@ import {
 } from "discourse/lib/page-tracker";
 import { sendDeferredPageview } from "./message-bus";
 
-// Track the previous path for internal referrer tracking
-let _previousPath = null;
 let _emberRouter = null; // router:main - has _routerMicrolib for recognizer
 let _routerService = null; // service:router - has urlFor
 
@@ -82,8 +80,6 @@ export default {
       "true";
     if (!isErrorPage) {
       sendDeferredPageview();
-      // Set initial previous path for internal referrer tracking
-      _previousPath = window.location.pathname;
     }
 
     // Tell our AJAX system to track a page transition
@@ -164,13 +160,7 @@ export default {
       routeName: transition.to?.name,
       path: targetPath,
       queryString: targetQueryString,
-      previousPath: _previousPath,
     });
-
-    // Update previous path for next navigation
-    if (targetPath) {
-      _previousPath = targetPath;
-    }
 
     if (
       transition.to.name === "topic.fromParamsNear" ||
@@ -183,7 +173,6 @@ export default {
   teardown() {
     resetPageTracking();
     resetAjax();
-    _previousPath = null;
     _emberRouter = null;
     _routerService = null;
   },

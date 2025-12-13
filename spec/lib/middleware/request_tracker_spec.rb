@@ -713,25 +713,6 @@ RSpec.describe Middleware::RequestTracker do
         expect(log.referrer).to eq("https://google.com")
       end
 
-      it "captures previous_path from headers for explicit views" do
-        data =
-          Middleware::RequestTracker.get_data(
-            env(
-              "HTTP_DISCOURSE_TRACK_VIEW" => "1",
-              "HTTP_DISCOURSE_TRACK_VIEW_PATH" => "/t/new-topic/456",
-              "HTTP_DISCOURSE_TRACK_VIEW_PREVIOUS_PATH" => "/t/old-topic/123",
-            ),
-            ["200", {}],
-            0.1,
-          )
-
-        Middleware::RequestTracker.log_request(data)
-
-        log = BrowserPageView.order(:created_at).last
-        expect(log.path).to eq("/t/new-topic/456")
-        expect(log.previous_path).to eq("/t/old-topic/123")
-      end
-
       it "does not log for API requests" do
         data =
           Middleware::RequestTracker.get_data(
