@@ -50,7 +50,7 @@ module DiscourseAi
           cancel_manager: nil,
           &blk
         )
-          @disable_native_tools = dialect.disable_native_tools?
+          @native_tool_support = dialect.native_tool_support?
           super
         end
 
@@ -156,7 +156,7 @@ module DiscourseAi
         end
 
         def xml_tools_enabled?
-          !!@disable_native_tools
+          !@native_tool_support
         end
 
         private

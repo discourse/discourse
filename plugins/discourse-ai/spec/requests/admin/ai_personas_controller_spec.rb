@@ -968,7 +968,8 @@ RSpec.describe DiscourseAi::Admin::AiPersonasController do
 
       expect(last_post.raw).to end_with("this is the response after the tool")
       # function call is visible in the post
-      expect(last_post.raw[0..8]).to eq("<details>")
+      expect(last_post.raw[0..8]).to eq("<details ")
+      expect(last_post.raw).to include("ai-thinking")
 
       user_post = topic.posts.find_by(post_number: 3)
       expect(user_post.raw).to eq("how are you now?")
