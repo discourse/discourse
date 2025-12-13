@@ -81,6 +81,26 @@ module("Unit | Utility | build-quote", function (hooks) {
     );
   });
 
+  test("strips quotation marks from name", function (assert) {
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+    siteSettings.display_name_on_posts = true;
+    siteSettings.prioritize_username_in_ux = false;
+
+    const store = getOwner(this).lookup("service:store");
+    const post = store.createRecord("post", {
+      cooked: "<p>hello</p>",
+      username: "john",
+      name: `double" single' curly"" guillemets«»`,
+      post_number: 1,
+      topic_id: 2,
+    });
+
+    assert.strictEqual(
+      buildQuote(post, "lorem"),
+      '[quote="double single curly guillemets, post:1, topic:2, username:john"]\nlorem\n[/quote]\n\n'
+    );
+  });
+
   test("applying a value transformation", async function (assert) {
     const store = getOwner(this).lookup("service:store");
     const post = store.createRecord("post", {
