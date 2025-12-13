@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe CategoriesController do
-  let(:admin) { Fabricate(:admin) }
-  let!(:category) { Fabricate(:category, user: admin) }
+  fab!(:admin)
+  fab!(:category) { Fabricate(:category, user: admin) }
   fab!(:user)
 
   describe "#index" do
@@ -246,15 +246,8 @@ RSpec.describe CategoriesController do
         end
 
         it "does not include the sort parameter in more_topics_url" do
-          # we need to create more topics for more_topics_url to be serialized
           SiteSetting.categories_topics = 5
-          Fabricate.times(
-            5,
-            :topic,
-            category: category,
-            created_at: 1.day.ago,
-            bumped_at: 1.day.ago,
-          )
+          Fabricate.times(5, :topic, category:, created_at: 1.day.ago, bumped_at: 1.day.ago)
 
           get "/categories_and_latest.json"
           expect(response.status).to eq(200)
@@ -277,15 +270,8 @@ RSpec.describe CategoriesController do
         end
 
         it "includes the sort parameter in more_topics_url" do
-          # we need to create more topics for more_topics_url to be serialized
           SiteSetting.categories_topics = 5
-          Fabricate.times(
-            5,
-            :topic,
-            category: category,
-            created_at: 1.day.ago,
-            bumped_at: 1.day.ago,
-          )
+          Fabricate.times(5, :topic, category:, created_at: 1.day.ago, bumped_at: 1.day.ago)
 
           get "/categories_and_latest.json"
           expect(response.status).to eq(200)
@@ -349,7 +335,6 @@ RSpec.describe CategoriesController do
       CategoryFeaturedTopic.feature_topics
       SiteSetting.desktop_category_page_style = "categories_with_featured_topics"
 
-      # warmup
       get "/categories.json"
       expect(response.status).to eq(200)
 
@@ -831,6 +816,33 @@ RSpec.describe CategoriesController do
           expect(UserHistory.count).to eq(6)
         end
 
+        it "does not log false permission changes when everyone group name is localized" do
+          Group[:everyone].update!(name: "jeder")
+          category.category_groups.destroy_all
+
+          put "/categories/#{category.id}.json",
+              params: {
+                name: category.name,
+                color: category.color,
+                text_color: category.text_color,
+                slug: category.slug,
+                permissions: {
+                  "jeder" => CategoryGroup.permission_types[:full],
+                },
+              }
+
+          expect(response.status).to eq(200)
+
+          Scheduler::Defer.do_all_work
+
+          expect(
+            UserHistory.exists?(
+              action: UserHistory.actions[:change_category_settings],
+              subject: "permissions",
+            ),
+          ).to eq(false)
+        end
+
         it "updates per-category settings correctly" do
           category.require_topic_approval = false
           category.require_reply_approval = false
@@ -1129,7 +1141,7 @@ RSpec.describe CategoriesController do
   end
 
   describe "#categories_and_topics" do
-    before { 10.times.each { Fabricate(:topic) } }
+    before { 10.times { Fabricate(:topic) } }
 
     it "works when SiteSetting.categories_topics is non-null" do
       SiteSetting.categories_topics = 5
