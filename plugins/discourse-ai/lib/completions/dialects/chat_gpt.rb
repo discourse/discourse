@@ -15,8 +15,7 @@ module DiscourseAi
 
         VALID_ID_REGEX = /\A[a-zA-Z0-9_]+\z/
         def native_tool_support?
-          (llm_model.provider == "open_ai" || llm_model.provider == "azure") &&
-            !disable_native_tools?
+          !disable_native_tools?
         end
 
         def embed_user_ids?
