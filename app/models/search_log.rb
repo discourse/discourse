@@ -39,7 +39,7 @@ class SearchLog < ActiveRecord::Base
     return [:error] if term.blank?
 
     can_log_search =
-      DiscoursePluginRegistry.apply_modifier(:search_log_can_log, term: term, user_id: user_id)
+      DiscoursePluginRegistry.apply_modifier(:search_log_can_log, true, term:, user_id:)
     return if !can_log_search
 
     search_type = search_types[search_type]
