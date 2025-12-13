@@ -169,9 +169,9 @@ export default class TagInfo extends Component {
         this.tagInfo.set("description", this.newTagDescription);
 
         if (result.responseJson.tag) {
-          this.tag.set("name", result.responseJson.tag.name);
-          if (oldTagName !== result.responseJson.tag.name) {
-            this.router.transitionTo("tag.show", result.responseJson.tag.name);
+          const newTagName = result.responseJson.tag.name;
+          if (oldTagName !== newTagName) {
+            this.router.transitionTo("tag.show", newTagName);
           }
         }
       })

@@ -60,11 +60,10 @@ export default class TagShowRoute extends DiscourseRoute {
     const filterType = filterTypeForMode(this.navMode);
 
     let tagNotification;
-    if (tag && tag.name !== NONE && this.currentUser && !additionalTags) {
-      // If logged in, we should get the tag's user settings
+    if (tag && name !== NONE && this.currentUser && !additionalTags) {
       tagNotification = await this.store.find(
         "tagNotification",
-        tag.name.toLowerCase()
+        name.toLowerCase()
       );
     }
 
@@ -76,7 +75,7 @@ export default class TagShowRoute extends DiscourseRoute {
       {}
     );
     const topicFilter = this.navMode;
-    const tagId = tag ? tag.name.toLowerCase() : NONE;
+    const tagId = name ? name.toLowerCase() : NONE;
     let filter;
 
     if (category) {
