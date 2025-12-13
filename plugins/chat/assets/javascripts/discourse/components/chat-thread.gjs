@@ -1,4 +1,3 @@
-import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -11,6 +10,10 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import userPresent, {
+  onPresenceChange,
+  removeOnPresenceChange,
+} from "discourse/lib/user-presence";
 import { i18n } from "discourse-i18n";
 import ChatThreadTitlePrompt from "discourse/plugins/chat/discourse/components/chat-thread-title-prompt";
 import firstVisibleMessageId from "discourse/plugins/chat/discourse/helpers/first-visible-message-id";
@@ -23,6 +26,9 @@ import {
 import ChatMessagesLoader from "discourse/plugins/chat/discourse/lib/chat-messages-loader";
 import DatesSeparatorsPositioner from "discourse/plugins/chat/discourse/lib/dates-separators-positioner";
 import { extractCurrentTopicInfo } from "discourse/plugins/chat/discourse/lib/extract-current-topic-info";
+import PresenceAwareChatPane, {
+  CHAT_PRESENCE_OPTIONS,
+} from "discourse/plugins/chat/discourse/lib/presence-aware-chat-pane";
 import {
   scrollListToBottom,
   scrollListToMessage,
@@ -41,7 +47,7 @@ import ChatSkeleton from "./chat-skeleton";
 import ChatThreadHeading from "./chat-thread-heading";
 import ChatUploadDropZone from "./chat-upload-drop-zone";
 
-export default class ChatThread extends Component {
+export default class ChatThread extends PresenceAwareChatPane {
   @service capabilities;
   @service chat;
   @service chatApi;
@@ -55,10 +61,7 @@ export default class ChatThread extends Component {
 
   @tracked atBottom = true;
   @tracked isScrolling = false;
-  @tracked needsArrow = false;
   @tracked uploadDropZone;
-
-  scroller = null;
 
   @cached
   get messagesLoader() {
@@ -74,6 +77,10 @@ export default class ChatThread extends Component {
     return channel?.isCategoryChannel && !channel?.isFollowing;
   }
 
+  get pendingContextKey() {
+    return this.args.thread?.id ? `thread:${this.args.thread.id}` : null;
+  }
+
   @action
   handleKeydown(event) {
     if (event.key === "Escape") {
@@ -87,6 +94,11 @@ export default class ChatThread extends Component {
   @action
   setup(element) {
     this.uploadDropZone = element;
+    this.userIsPresent = userPresent(CHAT_PRESENCE_OPTIONS);
+    onPresenceChange({
+      callback: this.onPresenceChangeCallback,
+      ...CHAT_PRESENCE_OPTIONS,
+    });
 
     this.messagesManager.clear();
     this.args.thread.draft =
@@ -104,9 +116,11 @@ export default class ChatThread extends Component {
 
   @action
   teardown() {
+    this.resetPendingState();
     this.subscriptionManager.teardown();
+    removeOnPresenceChange(this.onPresenceChangeCallback);
     cancel(this._debouncedFillPaneAttemptHandler);
-    cancel(this._debounceUpdateLastReadMessageHandler);
+    cancel(this._debouncedUpdateLastReadMessageHandler);
   }
 
   @action
@@ -118,12 +132,14 @@ export default class ChatThread extends Component {
 
       DatesSeparatorsPositioner.apply(this.scroller);
 
-      this.needsArrow =
+      const shouldShowArrow =
         (this.messagesLoader.fetchedOnce &&
           this.messagesLoader.canLoadMoreFuture) ||
         (state.distanceToBottom.pixels > 250 && !state.atBottom);
+
+      this.needsArrow = this.computeArrowVisibility(shouldShowArrow);
       this.isScrolling = true;
-      this.debounceUpdateLastReadMessage();
+      this.debouncedUpdateLastReadMessage();
 
       if (
         state.atTop ||
@@ -140,20 +156,25 @@ export default class ChatThread extends Component {
 
   @action
   onScrollEnd(state) {
-    this.needsArrow =
-      (this.messagesLoader.fetchedOnce &&
-        this.messagesLoader.canLoadMoreFuture) ||
-      (state.distanceToBottom.pixels > 250 && !state.atBottom);
     this.isScrolling = false;
     this.atBottom = state.atBottom;
 
     if (state.atBottom) {
+      this.resetPendingState();
+      this.needsArrow = false;
       this.fetchMoreMessages({ direction: FUTURE });
+    } else {
+      const shouldShowArrow =
+        (this.messagesLoader.fetchedOnce &&
+          this.messagesLoader.canLoadMoreFuture) ||
+        state.distanceToBottom.pixels > 250;
+
+      this.needsArrow = this.computeArrowVisibility(shouldShowArrow);
     }
   }
 
-  debounceUpdateLastReadMessage() {
-    this._debounceUpdateLastReadMessageHandler = discourseDebounce(
+  debouncedUpdateLastReadMessage() {
+    this._debouncedUpdateLastReadMessageHandler = discourseDebounce(
       this,
       this.updateLastReadMessage,
       READ_INTERVAL_MS
@@ -162,6 +183,10 @@ export default class ChatThread extends Component {
 
   @bind
   updateLastReadMessage() {
+    if (!this.userIsPresent) {
+      return;
+    }
+
     if (!this.args.thread?.currentUserMembership) {
       return;
     }
@@ -191,11 +216,6 @@ export default class ChatThread extends Component {
   }
 
   @action
-  registerScroller(element) {
-    this.scroller = element;
-  }
-
-  @action
   loadMessages() {
     this.fetchMessages();
     this.subscriptionManager = new ChatChannelThreadSubscriptionManager(
@@ -209,7 +229,7 @@ export default class ChatThread extends Component {
   didResizePane() {
     this._ignoreNextScroll = true;
     this.debounceFillPaneAttempt();
-    this.debounceUpdateLastReadMessage();
+    this.debouncedUpdateLastReadMessage();
     DatesSeparatorsPositioner.apply(this.scroller);
   }
 
@@ -328,13 +348,11 @@ export default class ChatThread extends Component {
 
   @bind
   onNewMessage(message) {
-    if (!this.atBottom) {
-      this.needsArrow = true;
-      this.messagesLoader.canLoadMoreFuture = true;
-      return;
-    }
-
-    this.messagesManager.addMessages([message]);
+    this.handleIncomingMessage({
+      shouldAutoScroll: this.userIsPresent && this.atBottom,
+      addMessage: () => this.messagesManager.addMessages([message]),
+      onAutoAdd: () => this.debouncedUpdateLastReadMessage(),
+    });
   }
 
   @bind
@@ -499,6 +517,8 @@ export default class ChatThread extends Component {
   async scrollToBottom() {
     this._ignoreNextScroll = true;
     await scrollListToBottom(this.scroller);
+    this.resetPendingState();
+    this.needsArrow = false;
   }
 
   @action

@@ -1,4 +1,3 @@
-import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -12,7 +11,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import DiscourseURL from "discourse/lib/url";
-import {
+import userPresent, {
   onPresenceChange,
   removeOnPresenceChange,
 } from "discourse/lib/user-presence";
@@ -30,6 +29,9 @@ import ChatMessagesLoader from "discourse/plugins/chat/discourse/lib/chat-messag
 import { checkMessageTopVisibility } from "discourse/plugins/chat/discourse/lib/check-message-visibility";
 import DatesSeparatorsPositioner from "discourse/plugins/chat/discourse/lib/dates-separators-positioner";
 import { extractCurrentTopicInfo } from "discourse/plugins/chat/discourse/lib/extract-current-topic-info";
+import PresenceAwareChatPane, {
+  CHAT_PRESENCE_OPTIONS,
+} from "discourse/plugins/chat/discourse/lib/presence-aware-chat-pane";
 import {
   scrollListToBottom,
   scrollListToMessage,
@@ -48,7 +50,7 @@ import ChatNotices from "./chat-notices";
 import ChatSkeleton from "./chat-skeleton";
 import ChatUploadDropZone from "./chat-upload-drop-zone";
 
-export default class ChatChannel extends Component {
+export default class ChatChannel extends PresenceAwareChatPane {
   @service capabilities;
   @service chat;
   @service chatApi;
@@ -65,12 +67,9 @@ export default class ChatChannel extends Component {
   @tracked sending = false;
   @tracked showChatQuoteSuccess = false;
   @tracked includeHeader = true;
-  @tracked needsArrow = false;
   @tracked atBottom = true;
   @tracked uploadDropZone;
   @tracked isScrolling = false;
-
-  scroller = null;
   _mentionWarningsSeen = {};
   _unreachableGroupMentions = [];
   _overMembersLimitGroupMentions = [];
@@ -92,9 +91,8 @@ export default class ChatChannel extends Component {
     return !!this.chatChannelScrollPositions.get(this.args.channel.id);
   }
 
-  @action
-  registerScroller(element) {
-    this.scroller = element;
+  get pendingContextKey() {
+    return this.args.channel?.id ? `channel:${this.args.channel.id}` : null;
   }
 
   @action
@@ -103,6 +101,7 @@ export default class ChatChannel extends Component {
     this.#cancelHandlers();
     removeOnPresenceChange(this.onPresenceChangeCallback);
     this.subscriptionManager.teardown();
+    this.resetPendingState();
     this.updateLastReadMessage();
 
     // Cancel any pending search request and debounced calls
@@ -122,7 +121,11 @@ export default class ChatChannel extends Component {
   setup(element) {
     this.uploadDropZone = element;
     document.addEventListener("keydown", this._autoFocus);
-    onPresenceChange({ callback: this.onPresenceChangeCallback });
+    this.userIsPresent = userPresent(CHAT_PRESENCE_OPTIONS);
+    onPresenceChange({
+      callback: this.onPresenceChangeCallback,
+      ...CHAT_PRESENCE_OPTIONS,
+    });
 
     this.messagesManager.clear();
 
@@ -179,21 +182,11 @@ export default class ChatChannel extends Component {
 
   @bind
   onNewMessage(message) {
-    if (!this.atBottom) {
-      this.needsArrow = true;
-      this.messagesLoader.canLoadMoreFuture = true;
-      return;
-    }
-
-    this.messagesManager.addMessages([message]);
-    this.debouncedUpdateLastReadMessage();
-  }
-
-  @bind
-  onPresenceChangeCallback(present) {
-    if (present) {
-      this.debouncedUpdateLastReadMessage();
-    }
+    this.handleIncomingMessage({
+      shouldAutoScroll: this.userIsPresent && this.atBottom,
+      addMessage: () => this.messagesManager.addMessages([message]),
+      onAutoAdd: () => this.debouncedUpdateLastReadMessage(),
+    });
   }
 
   async fetchMessages(findArgs = {}) {
@@ -263,7 +256,11 @@ export default class ChatChannel extends Component {
   async scrollToBottom() {
     this._ignoreNextScroll = true;
     await scrollListToBottom(this.scroller);
-    this.debouncedUpdateLastReadMessage();
+    if (this.userIsPresent) {
+      this.debouncedUpdateLastReadMessage();
+    }
+    this.resetPendingState();
+    this.needsArrow = false;
   }
 
   scrollToMessageId(messageId, options = {}) {
@@ -415,6 +412,10 @@ export default class ChatChannel extends Component {
   }
 
   updateLastReadMessage() {
+    if (!this.userIsPresent) {
+      return;
+    }
+
     if (!this.args.channel.isFollowing) {
       return;
     }
@@ -465,10 +466,12 @@ export default class ChatChannel extends Component {
 
       DatesSeparatorsPositioner.apply(this.scroller);
 
-      this.needsArrow =
+      const shouldShowArrow =
         (this.messagesLoader.fetchedOnce &&
           this.messagesLoader.canLoadMoreFuture) ||
         (state.distanceToBottom.pixels > 250 && !state.atBottom);
+
+      this.needsArrow = this.computeArrowVisibility(shouldShowArrow);
       this.isScrolling = true;
       this.debouncedUpdateLastReadMessage();
 
@@ -487,17 +490,21 @@ export default class ChatChannel extends Component {
 
   @action
   onScrollEnd(state) {
-    this.needsArrow =
-      (this.messagesLoader.fetchedOnce &&
-        this.messagesLoader.canLoadMoreFuture) ||
-      (state.distanceToBottom.pixels > 250 && !state.atBottom);
     this.isScrolling = false;
     this.atBottom = state.atBottom;
 
     if (state.atBottom) {
+      this.resetPendingState();
+      this.needsArrow = false;
       this.fetchMoreMessages({ direction: FUTURE });
       this.chatChannelScrollPositions.delete(this.args.channel.id);
     } else {
+      const shouldShowArrow =
+        (this.messagesLoader.fetchedOnce &&
+          this.messagesLoader.canLoadMoreFuture) ||
+        state.distanceToBottom.pixels > 250;
+
+      this.needsArrow = this.computeArrowVisibility(shouldShowArrow);
       this.chatChannelScrollPositions.set(
         this.args.channel.id,
         state.firstVisibleId
