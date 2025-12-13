@@ -37,30 +37,131 @@
 details.ai-thinking.in-progress:not([open]) > summary::after {
   content: "";
   display: inline-block;
-  width: 1.5em;
-  text-align: left;
-  animation: dots 2s steps(4, end) infinite;
+  inline-size: 1.45em;
+  block-size: 0.35em;
+  margin-inline-start: 0.35em;
+  vertical-align: baseline;
+  position: relative;
+  top: 0.08em;
+  opacity: 0.85;
+  background:
+    radial-gradient(circle, currentcolor 60%, transparent 61%) 0% 100% / 0.25em
+      0.25em no-repeat,
+    radial-gradient(circle, currentcolor 60%, transparent 61%) 50% 100% / 0.25em
+      0.25em no-repeat,
+    radial-gradient(circle, currentcolor 60%, transparent 61%) 100% 100% /
+      0.25em 0.25em no-repeat;
 }
 
-@keyframes dots {
-  0% {
-    content: "";
+@media (prefers-reduced-motion: no-preference) {
+  details.ai-thinking.in-progress:not([open]) > summary::after {
+    animation: ai-thinking-dot-flash 2.8s infinite ease-in-out;
   }
 
-  25% {
-    content: ".";
-  }
+  @keyframes ai-thinking-dot-flash {
+    0%,
+    12%,
+    100% {
+      background:
+        radial-gradient(
+            circle,
+            color-mix(in srgb, currentcolor 25%, transparent) 60%,
+            transparent 61%
+          )
+          0% 100% / 0.25em 0.25em no-repeat,
+        radial-gradient(
+            circle,
+            color-mix(in srgb, currentcolor 25%, transparent) 60%,
+            transparent 61%
+          )
+          50% 100% / 0.25em 0.25em no-repeat,
+        radial-gradient(
+            circle,
+            color-mix(in srgb, currentcolor 25%, transparent) 60%,
+            transparent 61%
+          )
+          100% 100% / 0.25em 0.25em no-repeat;
+    }
 
-  50% {
-    content: "..";
-  }
+    20%,
+    32% {
+      background:
+        radial-gradient(circle, currentcolor 60%, transparent 61%) 0% 100% /
+          0.25em 0.25em no-repeat,
+        radial-gradient(
+            circle,
+            color-mix(in srgb, currentcolor 25%, transparent) 60%,
+            transparent 61%
+          )
+          50% 100% / 0.25em 0.25em no-repeat,
+        radial-gradient(
+            circle,
+            color-mix(in srgb, currentcolor 25%, transparent) 60%,
+            transparent 61%
+          )
+          100% 100% / 0.25em 0.25em no-repeat;
+    }
 
-  75% {
-    content: "...";
-  }
+    40%,
+    52% {
+      background:
+        radial-gradient(
+            circle,
+            color-mix(in srgb, currentcolor 25%, transparent) 60%,
+            transparent 61%
+          )
+          0% 100% / 0.25em 0.25em no-repeat,
+        radial-gradient(circle, currentcolor 60%, transparent 61%) 50% 100% /
+          0.25em 0.25em no-repeat,
+        radial-gradient(
+            circle,
+            color-mix(in srgb, currentcolor 25%, transparent) 60%,
+            transparent 61%
+          )
+          100% 100% / 0.25em 0.25em no-repeat;
+    }
 
-  100% {
-    content: "";
+    60%,
+    72% {
+      background:
+        radial-gradient(
+            circle,
+            color-mix(in srgb, currentcolor 25%, transparent) 60%,
+            transparent 61%
+          )
+          0% 100% / 0.25em 0.25em no-repeat,
+        radial-gradient(
+            circle,
+            color-mix(in srgb, currentcolor 25%, transparent) 60%,
+            transparent 61%
+          )
+          50% 100% / 0.25em 0.25em no-repeat,
+        radial-gradient(circle, currentcolor 60%, transparent 61%) 100% 100% /
+          0.25em 0.25em no-repeat;
+    }
+
+    80%,
+    92% {
+      background:
+        radial-gradient(
+            circle,
+            color-mix(in srgb, currentcolor 25%, transparent) 60%,
+            transparent 61%
+          )
+          0% 100% / 0.25em 0.25em no-repeat,
+        radial-gradient(
+            circle,
+            color-mix(in srgb, currentcolor 25%, transparent) 60%,
+            transparent 61%
+          )
+          50% 100% / 0.25em 0.25em no-repeat,
+        radial-gradient(
+            circle,
+            color-mix(in srgb, currentcolor 25%, transparent) 60%,
+            transparent 61%
+          )
+          100% 100% / 0.25em 0.25em no-repeat;
+    }
   }
 }
 
