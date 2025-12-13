@@ -68,7 +68,7 @@ module("Discourse AI | Unit | Lib | ai-streamer", function () {
     confirmPlaceholder(html, expected, assert);
   });
 
-  test("it does not decortat thinking blocks at middle of stream", function (assert) {
+  test("it does not decorate thinking blocks at middle of stream", function (assert) {
     const html =
       "<details class='ai-thinking'><summary>Thinking ...</summary><p>test</p></details><p>more content</p>";
     const expected =
