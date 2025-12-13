@@ -2434,6 +2434,73 @@ RSpec.describe TopicsFilter do
       expect(scope.pluck(:id)).to contain_exactly(visible_post.topic_id)
     end
 
+    describe "keyword scoping" do
+      before do
+        SearchIndexer.enable
+        @term = "scopedkeyword"
+
+        @first_only_topic = Fabricate(:post, raw: "#{@term} in first post").topic
+        Fabricate(:post, topic: @first_only_topic, raw: "reply without match")
+
+        @reply_only_topic = Fabricate(:post, raw: "unrelated first post").topic
+        Fabricate(:post, topic: @reply_only_topic, raw: "#{@term} inside reply")
+
+        @both_match_topic = Fabricate(:post, raw: "#{@term} everywhere").topic
+        Fabricate(:post, topic: @both_match_topic, raw: "#{@term} reply match as well")
+      end
+
+      it "limits keyword search to first posts when using in:topics" do
+        scope =
+          TopicsFilter.new(guardian: Guardian.new).filter_from_query_string("in:topics #{@term}")
+
+        expect(scope.pluck(:id)).to match_array([@first_only_topic.id, @both_match_topic.id])
+      end
+
+      it "limits keyword search to replies when using in:replies" do
+        scope =
+          TopicsFilter.new(guardian: Guardian.new).filter_from_query_string("in:replies #{@term}")
+
+        expect(scope.pluck(:id)).to match_array([@reply_only_topic.id, @both_match_topic.id])
+      end
+    end
+
+    describe "user filter scoping" do
+      fab!(:target_user, :user)
+      fab!(:other_user, :user)
+
+      fab!(:topic_with_op_only) { Fabricate(:post, user: target_user).topic }
+
+      fab!(:topic_with_reply_only) do
+        topic = Fabricate(:post, user: other_user).topic
+        Fabricate(:post, topic: topic, user: target_user)
+        topic
+      end
+
+      fab!(:topic_with_both) do
+        topic = Fabricate(:post, user: target_user).topic
+        Fabricate(:post, topic: topic, user: target_user)
+        topic
+      end
+
+      it "limits users filter to first posts when using in:topics" do
+        scope =
+          TopicsFilter.new(guardian: Guardian.new).filter_from_query_string(
+            "users:#{target_user.username} in:topics",
+          )
+
+        expect(scope.pluck(:id)).to match_array([topic_with_op_only.id, topic_with_both.id])
+      end
+
+      it "limits users filter to replies when using in:replies" do
+        scope =
+          TopicsFilter.new(guardian: Guardian.new).filter_from_query_string(
+            "users:#{target_user.username} in:replies",
+          )
+
+        expect(scope.pluck(:id)).to match_array([topic_with_reply_only.id, topic_with_both.id])
+      end
+    end
+
     describe "with a custom filter" do
       fab!(:topic)
 
