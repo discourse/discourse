@@ -1,11 +1,14 @@
 import { camelize } from "@ember/string";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import EventNodeView from "../components/event-node-view";
 import { buildEventPreview } from "../initializers/discourse-post-event-decorator";
 
-const EVENT_ATTRIBUTES = {
+export const EVENT_ATTRIBUTES = {
   name: { default: null },
   start: { default: null },
   end: { default: null },
+  location: { default: null },
+  maxAttendees: { default: null },
   reminders: { default: null },
   minimal: { default: null },
   closed: { default: null },
@@ -21,6 +24,13 @@ const EVENT_ATTRIBUTES = {
 
 /** @type {RichEditorExtension} */
 const extension = {
+  nodeViews: {
+    event: {
+      component: EventNodeView,
+      name: "event",
+    },
+  },
+
   nodeSpec: {
     event: {
       attrs: EVENT_ATTRIBUTES,
