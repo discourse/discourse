@@ -34,6 +34,36 @@
   @include progress-dot;
 }
 
+details.ai-thinking.in-progress:not([open]) > summary::after {
+  content: "";
+  display: inline-block;
+  width: 1.5em;
+  text-align: left;
+  animation: dots 2s steps(4, end) infinite;
+}
+
+@keyframes dots {
+  0% {
+    content: "";
+  }
+
+  25% {
+    content: ".";
+  }
+
+  50% {
+    content: "..";
+  }
+
+  75% {
+    content: "...";
+  }
+
+  100% {
+    content: "";
+  }
+}
+
 article.streaming .cooked {
   .progress-dot::after {
     @include progress-dot;

@@ -1,6 +1,6 @@
 import { module, test } from "qunit";
 import {
-  addProgressDot,
+  addProgressDecoration,
   applyProgress,
   MIN_LETTERS_PER_INTERVAL,
 } from "discourse/plugins/discourse-ai/discourse/lib/ai-streamer/progress-handlers";
@@ -54,10 +54,28 @@ module("Discourse AI | Unit | Lib | ai-streamer", function () {
     const expectedElement = document.createElement("div");
     expectedElement.innerHTML = expected;
 
-    addProgressDot(element);
+    addProgressDecoration(element);
 
     assert.equal(element.innerHTML, expectedElement.innerHTML);
   }
+
+  test("it correctly decorates thinking blocks at end of stream", function (assert) {
+    const html =
+      "<details class='ai-thinking'><summary>Thinking ...</summary><p>test</p></details>";
+    const expected =
+      "<details class='ai-thinking in-progress'><summary>Thinking ...</summary><p>test<span class='progress-dot'></span></p></details>";
+
+    confirmPlaceholder(html, expected, assert);
+  });
+
+  test("it does not decortat thinking blocks at middle of stream", function (assert) {
+    const html =
+      "<details class='ai-thinking'><summary>Thinking ...</summary><p>test</p></details><p>more content</p>";
+    const expected =
+      "<details class='ai-thinking'><summary>Thinking ...</summary><p>test</p></details><p>more content<span class='progress-dot'></span></p>";
+
+    confirmPlaceholder(html, expected, assert);
+  });
 
   test("inserts progress span in correct location for simple div", function (assert) {
     const html = "<div>hello world<div>hello 2</div></div>";
