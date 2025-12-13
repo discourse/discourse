@@ -1,18 +1,10 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
-import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import Backdrop from "./backdrop";
 import Controller from "./controller";
-import Description from "./description";
-import Handle from "./handle";
-import Portal from "./portal";
-import Title from "./title";
-import Trigger from "./trigger";
-import View from "./view";
 
 /**
  * Root component for the sheet. Manages presentation and detent state.
@@ -36,11 +28,12 @@ export default class Root extends Component {
   @service themeColorManager;
 
   /**
-   * The sheet controller instance, created fresh each open cycle.
+   * The sheet controller instance. Created immediately and replaced after each close cycle.
    *
-   * @type {Controller|null}
+   * @type {Controller}
    */
-  @tracked sheet = null;
+  @tracked sheet;
+
   /**
    * Track the previous presented value to detect changes.
    *
@@ -58,6 +51,9 @@ export default class Root extends Component {
   constructor(owner, args) {
     super(owner, args);
 
+    this.createController();
+    this.sheet.rootComponent = this;
+
     if (this.args.componentId) {
       this.sheetRegistry.registerRoot(this.args.componentId, this);
     }
@@ -67,14 +63,11 @@ export default class Root extends Component {
         this.sheetRegistry.unregisterRoot(this.args.componentId);
       }
 
-      if (this.sheet) {
-        if (this.sheet.stackId) {
-          this.sheetStackRegistry.unregisterSheetFromStack(this.sheet);
-        }
-        this.sheetRegistry.unregister(this.sheet);
-        this.sheet.cleanup();
-        this.sheet = null;
+      if (this.sheet.stackId) {
+        this.sheetStackRegistry.unregisterSheetFromStack(this.sheet);
       }
+      this.sheetRegistry.unregister(this.sheet);
+      this.sheet.cleanup();
     });
   }
 
@@ -92,15 +85,42 @@ export default class Root extends Component {
   }
 
   /**
+   * Create a new Controller instance with subscriptions and initial configuration.
+   * Called in constructor and after each close cycle to prepare for the next open.
+   *
+   * @private
+   */
+  createController() {
+    this.sheet = new Controller();
+
+    this.sheet.stateMachine.subscribe({
+      timing: "immediate",
+      state: "closed.safe-to-unmount",
+      callback: () => this.handleSheetClosed(),
+    });
+
+    this.sheet.onTravelProgressChange = (progress) => {
+      this.sheetStackRegistry.updateSheetTravelProgress(this.sheet, progress);
+    };
+
+    this.sheet.configure({
+      defaultActiveDetent: this.args.defaultActiveDetent,
+      activeDetent: this.args.activeDetent,
+      onActiveDetentChange: this.args.onActiveDetentChange,
+      role: this.args.role,
+      themeColorManager: this.themeColorManager,
+      sheetStackRegistry: this.sheetStackRegistry,
+      sheetRegistry: this.sheetRegistry,
+    });
+  }
+
+  /**
    * Whether the View should be rendered.
    * True when sheet should be visible OR during exit animation.
    *
    * @type {boolean}
    */
   get shouldRenderView() {
-    if (!this.sheet) {
-      return false;
-    }
     if (this.isControlled) {
       return this.args.presented || !this.sheet.safeToUnmount;
     }
@@ -122,15 +142,13 @@ export default class Root extends Component {
     const previousPresented = this.previousPresented;
     this.previousPresented = presented;
 
-    const safeToUnmount = this.sheet?.safeToUnmount ?? true;
-
-    if (presented && !previousPresented && safeToUnmount) {
+    if (presented && !previousPresented && this.sheet.safeToUnmount) {
       schedule("afterRender", () => {
         this.openSheet();
       });
-    } else if (!presented && previousPresented && this.sheet) {
+    } else if (!presented && previousPresented) {
       schedule("afterRender", () => {
-        this.sheet?.close();
+        this.sheet.close();
       });
     }
   }
@@ -224,28 +242,6 @@ export default class Root extends Component {
    * @private
    */
   doOpenSheet(stackId) {
-    this.sheet = new Controller();
-
-    this.sheet.stateMachine.subscribe({
-      timing: "immediate",
-      state: "closed.safe-to-unmount",
-      callback: () => this.handleSheetClosed(),
-    });
-
-    this.sheet.onTravelProgressChange = (progress) => {
-      this.sheetStackRegistry.updateSheetTravelProgress(this.sheet, progress);
-    };
-
-    this.sheet.configure({
-      defaultActiveDetent: this.args.defaultActiveDetent,
-      activeDetent: this.args.activeDetent,
-      onActiveDetentChange: this.args.onActiveDetentChange,
-      role: this.args.role,
-      themeColorManager: this.themeColorManager,
-      sheetStackRegistry: this.sheetStackRegistry,
-      sheetRegistry: this.sheetRegistry,
-    });
-
     this.sheetRegistry.register(this.sheet);
 
     if (stackId) {
@@ -257,19 +253,19 @@ export default class Root extends Component {
 
   /**
    * Handle sheet closed state for cleanup.
+   * Creates a fresh controller for the next open cycle.
    *
    * @private
    */
   @action
   handleSheetClosed() {
-    if (this.sheet) {
-      if (this.sheet.stackId) {
-        this.sheetStackRegistry.unregisterSheetFromStack(this.sheet);
-      }
-      this.sheetRegistry.unregister(this.sheet);
-      this.sheet.cleanup();
-      this.sheet = null;
+    if (this.sheet.stackId) {
+      this.sheetStackRegistry.unregisterSheetFromStack(this.sheet);
     }
+    this.sheetRegistry.unregister(this.sheet);
+    this.sheet.cleanup();
+    this.createController();
+    this.sheet.rootComponent = this;
 
     if (this.isControlled && this.args.presented) {
       this.args.onPresentedChange?.(false);

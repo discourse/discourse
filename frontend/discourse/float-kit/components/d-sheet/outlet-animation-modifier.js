@@ -128,20 +128,6 @@ function getPropertiesToClean(config) {
 }
 
 /**
- * Default stacking animation applied when sheet is in a stack.
- * @type {Object}
- */
-const DEFAULT_STACKING_ANIMATION = {
-  translateY: ({ progress }) => {
-    return progress <= 1
-      ? `${-1.3 * progress}vh`
-      : `calc(-1.3vh + 0.65vh * ${progress - 1})`;
-  },
-  scale: [1, 0.91],
-  transformOrigin: "50% 0",
-};
-
-/**
  * Modifier that applies both travel and stacking animations to an element.
  *
  * @param {HTMLElement} element - Target element
@@ -173,18 +159,15 @@ export default modifier(
       cleanupFns.push(unregister);
     }
 
-    const effectiveStackingAnimation =
-      stackingAnimation || (sheet.stackId ? DEFAULT_STACKING_ANIMATION : null);
-
-    if (effectiveStackingAnimation) {
-      const stackingProps = getPropertiesToClean(effectiveStackingAnimation);
+    if (stackingAnimation) {
+      const stackingProps = getPropertiesToClean(stackingAnimation);
       stackingProps.forEach((p) => propertiesToClean.add(p));
 
       const unregister = sheet.registerStackingAnimation({
         target: element,
-        config: effectiveStackingAnimation,
+        config: stackingAnimation,
         callback: (progress) => {
-          applyAnimation(element, effectiveStackingAnimation, progress);
+          applyAnimation(element, stackingAnimation, progress);
         },
       });
 

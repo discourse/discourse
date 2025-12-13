@@ -180,6 +180,8 @@ export default class Trigger extends Component {
       default:
         if (this.targetRoot) {
           this.targetRoot.openSheet();
+        } else if (this.sheet?.rootComponent) {
+          this.sheet.rootComponent.openSheet();
         } else {
           this.sheet?.open();
         }
