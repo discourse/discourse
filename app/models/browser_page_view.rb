@@ -36,17 +36,17 @@ end
 #
 # Table name: browser_page_views
 #
-#  ip_address    :inet
-#  is_mobile     :boolean          default(FALSE), not null
-#  path          :string(1024)
-#  query_string  :string(1024)
-#  referrer      :string(1024)
-#  route_name    :string(256)
-#  user_agent    :string(512)
-#  created_at    :datetime         not null
-#  session_id    :string(36)
-#  topic_id      :integer
-#  user_id       :integer
+#  ip_address   :inet
+#  is_mobile    :boolean          default(FALSE), not null
+#  path         :string(1024)
+#  query_string :string(1024)
+#  referrer     :string(1024)
+#  route_name   :string(256)
+#  user_agent   :string(512)
+#  created_at   :datetime         not null
+#  session_id   :string(36)
+#  topic_id     :integer
+#  user_id      :integer
 #
 # Indexes
 #
