@@ -237,7 +237,7 @@ export function addAdminSidebarSectionLink(sectionName, link) {
 }
 
 function pluginAdminRouteLinks(router) {
-  return (PreloadStore.get("visiblePlugins") || [])
+  const pluginLinks = (PreloadStore.get("visiblePlugins") || [])
     .filter((plugin) => {
       if (!plugin.admin_route || !plugin.enabled) {
         return false;
@@ -298,6 +298,17 @@ function pluginAdminRouteLinks(router) {
         links: pluginNavLinks,
       };
     });
+
+  return pluginLinks.sort((a, b) => {
+    const aText = a.label
+      ? i18n(a.label, { translatedFallback: a.text })
+      : a.text;
+    const bText = b.label
+      ? i18n(b.label, { translatedFallback: b.text })
+      : b.text;
+
+    return aText.localeCompare(bText) || a.name.localeCompare(b.name);
+  });
 }
 
 function installedPluginsLinkKeywords() {
