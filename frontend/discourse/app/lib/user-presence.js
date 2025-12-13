@@ -7,8 +7,6 @@ const DEFAULT_BROWSER_HIDDEN_MS = 0;
 
 let browserHiddenAt = null;
 let lastUserActivity = Date.now();
-let userSeenJustNow = false;
-
 let callbackWaitingForPresence = false;
 
 let testPresence = true;
@@ -52,28 +50,28 @@ export function onPresenceChange({
   if (userUnseenTime < DEFAULT_USER_UNSEEN_MS) {
     throw `userUnseenTime must be at least ${DEFAULT_USER_UNSEEN_MS}`;
   }
+  if (browserHiddenTime < 0) {
+    throw "browserHiddenTime must be non-negative";
+  }
   callbacks.push({
     userUnseenTime,
     browserHiddenTime,
-    lastState: true,
+    lastState: userPresent({ userUnseenTime, browserHiddenTime }),
     callback,
   });
 }
 
 export function removeOnPresenceChange(callback) {
   const i = callbacks.findIndex((c) => c.callback === callback);
-  callbacks.splice(i, 1);
+  if (i > -1) {
+    callbacks.splice(i, 1);
+  }
 }
 
 function processChanges() {
   const browserHidden = document.hidden;
   if (!!browserHiddenAt !== browserHidden) {
     browserHiddenAt = browserHidden ? Date.now() : null;
-  }
-
-  if (userSeenJustNow) {
-    lastUserActivity = Date.now();
-    userSeenJustNow = false;
   }
 
   callbackWaitingForPresence = false;
@@ -86,6 +84,10 @@ function processChanges() {
     if (callback.lastState !== currentState) {
       try {
         callback.callback(currentState);
+      } catch (e) {
+        if (window.console && window.console.error) {
+          window.console.error("Error in presence change callback:", e);
+        }
       } finally {
         callback.lastState = currentState;
       }
@@ -98,7 +100,7 @@ function processChanges() {
 }
 
 export function seenUser() {
-  userSeenJustNow = true;
+  lastUserActivity = Date.now();
   if (callbackWaitingForPresence) {
     processChanges();
   }
@@ -127,6 +129,7 @@ if (!isTesting()) {
   // Some of these events occur very frequently. Therefore seenUser() is as fast as possible.
   document.addEventListener("touchmove", seenUser, { passive: true });
   document.addEventListener("click", seenUser, { passive: true });
+  document.addEventListener("keydown", seenUser, { passive: true });
   window.addEventListener("scroll", seenUser, { passive: true });
   window.addEventListener("focus", seenUser, { passive: true });
 
