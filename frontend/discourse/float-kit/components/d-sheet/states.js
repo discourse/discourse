@@ -16,6 +16,36 @@ export const GUARD_NAMES = {
 };
 
 /**
+ * Guard functions for state machine transitions.
+ * Each guard receives (message, messageContext, machineContext) and returns a boolean.
+ *
+ * @type {Object<string, function(Object, Object, Object): boolean>}
+ */
+export const GUARDS = {
+  [GUARD_NAMES.IS_CLOSED]: (msg, msgCtx, machineCtx) => machineCtx.isClosed,
+  [GUARD_NAMES.IS_CLOSED_AND_SKIP_OPENING]: (msg, msgCtx, machineCtx) =>
+    machineCtx.isClosed && machineCtx.skipOpening,
+  [GUARD_NAMES.NOT_SKIP_OPENING]: (msg, msgCtx, machineCtx) =>
+    !machineCtx.skipOpening && !msgCtx.skipOpening,
+  [GUARD_NAMES.NOT_SKIP_CLOSING]: (msg, msgCtx, machineCtx) =>
+    !machineCtx.skipClosing && !msgCtx.skipClosing,
+  [GUARD_NAMES.SKIP_OPENING]: (msg, msgCtx, machineCtx) =>
+    machineCtx.skipOpening || msgCtx.skipOpening,
+  [GUARD_NAMES.SKIP_CLOSING]: (msg, msgCtx, machineCtx) =>
+    machineCtx.skipClosing || msgCtx.skipClosing,
+  [GUARD_NAMES.IS_SAFE_TO_UNMOUNT]: (msg, msgCtx, machineCtx) =>
+    msgCtx.opennessState?.includes("closed.safe-to-unmount"),
+  [GUARD_NAMES.IS_SAFE_TO_UNMOUNT_AND_NOT_SKIP_OPENING]: (
+    msg,
+    msgCtx,
+    machineCtx
+  ) =>
+    msgCtx.opennessState?.includes("closed.safe-to-unmount") &&
+    !machineCtx.skipOpening &&
+    !msgCtx.skipOpening,
+};
+
+/**
  * Position machine tracks stacking position per sheet.
  *
  * States:
@@ -127,7 +157,10 @@ export const STAGING_STATES = {
           { guard: GUARD_NAMES.IS_SAFE_TO_UNMOUNT, target: "open" },
         ],
         OPEN_PREPARED: "opening",
-        ACTUALLY_CLOSE: { guard: GUARD_NAMES.NOT_SKIP_CLOSING, target: "closing" },
+        ACTUALLY_CLOSE: {
+          guard: GUARD_NAMES.NOT_SKIP_CLOSING,
+          target: "closing",
+        },
         ACTUALLY_STEP: "stepping",
         GO_DOWN: [
           { guard: GUARD_NAMES.NOT_SKIP_OPENING, target: "going-down" },
@@ -173,7 +206,9 @@ export const SHEET_STATES = {
         "flushing-to-preparing-opening": {
           on: { FLUSH_COMPLETE: "preparing-opening" },
         },
-        "flushing-to-preparing-open": { on: { FLUSH_COMPLETE: "preparing-open" } },
+        "flushing-to-preparing-open": {
+          on: { FLUSH_COMPLETE: "preparing-open" },
+        },
       },
     },
     "preparing-opening": { on: { PREPARED: "opening" } },

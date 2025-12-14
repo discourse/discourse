@@ -3,12 +3,6 @@ import { schedule } from "@ember/runloop";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 
 /**
- * Hierarchical state machine with support for nested machines and subscriptions.
- * Uses Glimmer tracking for automatic reactivity when state changes.
- *
- * @class StateMachine
- */
-/**
  * @typedef {Object} Subscription
  * @property {Symbol} id - Unique identifier for the subscription
  * @property {"immediate"|"before-paint"|"after-paint"} timing - When to invoke callback
@@ -29,6 +23,17 @@ import { TrackedObject } from "@ember-compat/tracked-built-ins";
  * @property {Object<string, Object>} states - Map of state names to configurations
  */
 
+/**
+ * @typedef {Object} StateMachineOptions
+ * @property {Object<string, function(Object, Object, Object): boolean>} [guards] - Guard functions for transitions (message, messageContext, machineContext) => boolean
+ */
+
+/**
+ * Hierarchical state machine with support for nested machines and subscriptions.
+ * Uses Glimmer tracking for automatic reactivity when state changes.
+ *
+ * @class StateMachine
+ */
 class StateMachine {
   /** @type {string} */
   @tracked current;
@@ -42,58 +47,50 @@ class StateMachine {
   /** @type {TrackedObject<string, string>} */
   nestedMachines = new TrackedObject();
 
-  /** @type {QueuedMessage[]} */
-  messageQueue = [];
-
-  /** @type {boolean} */
-  isProcessingQueue = false;
-
   /** @type {{type: string}|null} */
   lastMessageTreated = null;
+  /** @type {QueuedMessage[]} */
+  #messageQueue = [];
+
+  /** @type {boolean} */
+  #isProcessingQueue = false;
 
   /** @type {Subscription[]} */
-  subscriptions = [];
+  #subscriptions = [];
 
   /** @type {Subscription[]} */
-  entryActions = [];
+  #entryActions = [];
 
   /** @type {Map<string, Object|null>} */
-  stateConfigCache = new Map();
+  #stateConfigCache = new Map();
 
   /**
    * Guard functions for state transitions.
-   * Each guard receives (message, context) and returns a boolean.
+   * Each guard receives (message, messageContext, machineContext) and returns a boolean.
    *
-   * @type {Object<string, function(Object, Object): boolean>}
+   * @type {Object<string, function(Object, Object, Object): boolean>}
+   * @private
    */
-  guards = {
-    isClosed: () => this.context.isClosed,
-    isClosedAndSkipOpening: () =>
-      this.context.isClosed && this.context.skipOpening,
-    notSkipOpening: (_, context) =>
-      !this.context.skipOpening && !context.skipOpening,
-    notSkipClosing: (_, context) =>
-      !this.context.skipClosing && !context.skipClosing,
-    skipOpening: (_, context) =>
-      this.context.skipOpening || context.skipOpening,
-    skipClosing: (_, context) =>
-      this.context.skipClosing || context.skipClosing,
-    isSafeToUnmount: (_, context) =>
-      context.opennessState?.includes("closed.safe-to-unmount"),
-    isSafeToUnmountAndNotSkipOpening: (_, context) =>
-      context.opennessState?.includes("closed.safe-to-unmount") &&
-      !this.context.skipOpening &&
-      !context.skipOpening,
-  };
+  #guards = {};
+
+  /**
+   * Machine definitions for the current state, used for smart nested machine reset.
+   *
+   * @type {Array|null}
+   * @private
+   */
+  #currentStateMachines = null;
 
   /**
    * @param {Object} definition - State machine definition with states and transitions
    * @param {string} initialState - Initial state path (e.g., "closed.safe-to-unmount")
+   * @param {StateMachineOptions} [options] - Optional configuration including guards
    */
-  constructor(definition, initialState) {
+  constructor(definition, initialState, options = {}) {
     this.definition = definition;
     this.current = initialState;
-    this.initializeNestedMachines(this.current);
+    this.#guards = options.guards || {};
+    this.#initializeNestedMachines(this.current);
   }
 
   /**
@@ -111,43 +108,48 @@ class StateMachine {
     const subscription = { id, timing, state, callback, guard };
 
     if (timing === "immediate") {
-      this.entryActions.push(subscription);
+      this.#entryActions.push(subscription);
     } else {
-      this.subscriptions.push(subscription);
+      this.#subscriptions.push(subscription);
     }
 
-    return () => this.unsubscribe(id);
+    return () => this.#unsubscribe(id);
   }
 
   /**
    * Remove a subscription by its id.
    *
    * @param {Symbol} id
+   * @private
    */
-  unsubscribe(id) {
-    this.subscriptions = this.subscriptions.filter((s) => s.id !== id);
-    this.entryActions = this.entryActions.filter((s) => s.id !== id);
+  #unsubscribe(id) {
+    this.#subscriptions = this.#subscriptions.filter((s) => s.id !== id);
+    this.#entryActions = this.#entryActions.filter((s) => s.id !== id);
   }
 
   /**
    * Remove all subscriptions from this machine.
    */
   cleanup() {
-    this.subscriptions = [];
-    this.entryActions = [];
+    this.#subscriptions = [];
+    this.#entryActions = [];
   }
 
   /**
    * Initialize nested machines for a given state.
    *
    * @param {string} statePath
+   * @private
    */
-  initializeNestedMachines(statePath) {
+  #initializeNestedMachines(statePath) {
     const stateConfig = this.getStateConfig(statePath);
     if (stateConfig?.machines) {
+      this.#currentStateMachines = stateConfig.machines;
       for (const machineDef of stateConfig.machines) {
         this.nestedMachines[machineDef.name] = machineDef.initial;
       }
+    } else {
+      this.#currentStateMachines = null;
     }
   }
 
@@ -179,15 +181,15 @@ class StateMachine {
    * @returns {Object|null}
    */
   getStateConfig(statePath) {
-    if (this.stateConfigCache.has(statePath)) {
-      return this.stateConfigCache.get(statePath);
+    if (this.#stateConfigCache.has(statePath)) {
+      return this.#stateConfigCache.get(statePath);
     }
 
     const parts = statePath.split(".");
     let config = this.definition.states[parts[0]];
 
     if (!config) {
-      this.stateConfigCache.set(statePath, null);
+      this.#stateConfigCache.set(statePath, null);
       return null;
     }
 
@@ -202,20 +204,20 @@ class StateMachine {
             config = machineDef.states[machineState];
             i++;
           } else {
-            this.stateConfigCache.set(statePath, null);
+            this.#stateConfigCache.set(statePath, null);
             return null;
           }
         } else {
-          this.stateConfigCache.set(statePath, null);
+          this.#stateConfigCache.set(statePath, null);
           return null;
         }
       } else {
-        this.stateConfigCache.set(statePath, null);
+        this.#stateConfigCache.set(statePath, null);
         return null;
       }
     }
 
-    this.stateConfigCache.set(statePath, config);
+    this.#stateConfigCache.set(statePath, config);
     return config;
   }
 
@@ -249,8 +251,9 @@ class StateMachine {
    *
    * @param {string} machineName
    * @param {string} stateName
+   * @private
    */
-  setNestedMachineState(machineName, stateName) {
+  #setNestedMachineState(machineName, stateName) {
     this.nestedMachines[machineName] = stateName;
   }
 
@@ -259,8 +262,9 @@ class StateMachine {
    *
    * @param {string} statePath
    * @returns {string|null}
+   * @private
    */
-  getParentState(statePath) {
+  #getParentState(statePath) {
     const parts = statePath.split(".");
     return parts.length > 1 ? parts[0] : null;
   }
@@ -276,10 +280,10 @@ class StateMachine {
     const normalizedMessage =
       typeof message === "string" ? { type: message } : message;
 
-    this.messageQueue.push({ message: normalizedMessage, context });
+    this.#messageQueue.push({ message: normalizedMessage, context });
 
-    if (!this.isProcessingQueue) {
-      return this.processQueue();
+    if (!this.#isProcessingQueue) {
+      return this.#processQueue();
     }
 
     return true;
@@ -291,27 +295,63 @@ class StateMachine {
    * @returns {boolean}
    * @private
    */
-  processQueue() {
-    if (this.messageQueue.length === 0) {
-      this.isProcessingQueue = false;
+  #processQueue() {
+    if (this.#messageQueue.length === 0) {
+      this.#isProcessingQueue = false;
       return false;
     }
 
-    this.isProcessingQueue = true;
+    this.#isProcessingQueue = true;
     let anyTransitioned = false;
 
-    while (this.messageQueue.length > 0) {
-      const { message, context } = this.messageQueue.shift();
-      const transitioned = this.processMessage(message, context);
+    while (this.#messageQueue.length > 0) {
+      const { message, context } = this.#messageQueue.shift();
+      const transitioned = this.#processMessage(message, context);
       if (transitioned) {
         anyTransitioned = true;
-        this.notifySubscribers(message);
+        this.#notifySubscribers(message);
       }
       this.lastMessageTreated = message;
     }
 
-    this.isProcessingQueue = false;
+    this.#isProcessingQueue = false;
     return anyTransitioned;
+  }
+
+  /**
+   * Try to execute transitions from a transition list.
+   *
+   * @param {Array|Object|string} transitions - Transition definition(s)
+   * @param {Object} message - The message being processed
+   * @param {Object} context - Context for guards
+   * @param {Function} onSuccess - Callback when a transition succeeds, receives target state
+   * @returns {boolean} Whether a transition was executed
+   * @private
+   */
+  #tryTransitions(transitions, message, context, onSuccess) {
+    const transitionList = Array.isArray(transitions)
+      ? transitions
+      : [transitions];
+
+    for (const transition of transitionList) {
+      if (typeof transition === "string") {
+        onSuccess(transition);
+        return true;
+      }
+
+      if (transition.guard) {
+        if (!this.#checkGuard(transition.guard, message, context)) {
+          continue;
+        }
+      }
+
+      if (transition.target) {
+        onSuccess(transition.target);
+        return true;
+      }
+    }
+
+    return false;
   }
 
   /**
@@ -322,7 +362,7 @@ class StateMachine {
    * @returns {boolean}
    * @private
    */
-  processMessage(message, context = {}) {
+  #processMessage(message, context = {}) {
     const messageType = message.type;
 
     const currentStateConfig = this.getStateConfig(this.current);
@@ -334,27 +374,14 @@ class StateMachine {
         const machineStateConfig = machineDef.states?.[currentMachineState];
 
         if (machineStateConfig?.on?.[messageType]) {
-          const transitions = machineStateConfig.on[messageType];
-          const transitionList = Array.isArray(transitions)
-            ? transitions
-            : [transitions];
-
-          for (const transition of transitionList) {
-            if (typeof transition === "string") {
-              this.setNestedMachineState(machineName, transition);
-              return true;
-            }
-
-            if (transition.guard) {
-              if (!this.checkGuard(transition.guard, message, context)) {
-                continue;
-              }
-            }
-
-            if (transition.target) {
-              this.setNestedMachineState(machineName, transition.target);
-              return true;
-            }
+          const transitioned = this.#tryTransitions(
+            machineStateConfig.on[messageType],
+            message,
+            context,
+            (target) => this.#setNestedMachineState(machineName, target)
+          );
+          if (transitioned) {
+            return true;
           }
         }
       }
@@ -363,7 +390,7 @@ class StateMachine {
     let transitions = currentStateConfig?.on?.[messageType];
 
     if (!transitions) {
-      const parentState = this.getParentState(this.current);
+      const parentState = this.#getParentState(this.current);
       if (parentState) {
         const parentConfig = this.getStateConfig(parentState);
         transitions = parentConfig?.on?.[messageType];
@@ -374,44 +401,52 @@ class StateMachine {
       return false;
     }
 
-    const transitionList = Array.isArray(transitions)
-      ? transitions
-      : [transitions];
-
-    for (const transition of transitionList) {
-      if (typeof transition === "string") {
-        this.transitionToState(transition);
-        return true;
-      }
-
-      if (transition.guard) {
-        if (!this.checkGuard(transition.guard, message, context)) {
-          continue;
-        }
-      }
-
-      if (transition.target) {
-        this.transitionToState(transition.target);
-        return true;
-      }
-    }
-
-    return false;
+    return this.#tryTransitions(transitions, message, context, (target) =>
+      this.#transitionToState(target)
+    );
   }
 
   /**
-   * Transition to a new state, only recreating nestedMachines if needed.
+   * Transition to a new state, only recreating nestedMachines if machine definitions change.
    *
    * @param {string} targetState
    * @private
    */
-  transitionToState(targetState) {
+  #transitionToState(targetState) {
     this.current = targetState;
     const stateConfig = this.getStateConfig(targetState);
-    if (stateConfig?.machines) {
+    const newMachines = stateConfig?.machines || null;
+
+    if (this.#machinesAreDifferent(this.#currentStateMachines, newMachines)) {
       this.nestedMachines = new TrackedObject();
-      this.initializeNestedMachines(targetState);
+      this.#initializeNestedMachines(targetState);
     }
+  }
+
+  /**
+   * Check if two machine definition arrays are different.
+   *
+   * @param {Array|null} oldMachines
+   * @param {Array|null} newMachines
+   * @returns {boolean}
+   * @private
+   */
+  #machinesAreDifferent(oldMachines, newMachines) {
+    if (oldMachines === newMachines) {
+      return false;
+    }
+    if (!oldMachines || !newMachines) {
+      return true;
+    }
+    if (oldMachines.length !== newMachines.length) {
+      return true;
+    }
+    for (let i = 0; i < oldMachines.length; i++) {
+      if (oldMachines[i].name !== newMachines[i].name) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -419,12 +454,46 @@ class StateMachine {
    *
    * @param {string} guardName
    * @param {Object} message
-   * @param {Object} context
+   * @param {Object} messageContext
    * @returns {boolean}
+   * @private
    */
-  checkGuard(guardName, message, context) {
-    const guardFn = this.guards[guardName];
-    return guardFn ? guardFn(message, context) : true;
+  #checkGuard(guardName, message, messageContext) {
+    const guardFn = this.#guards[guardName];
+    return guardFn ? guardFn(message, messageContext, this.context) : true;
+  }
+
+  /**
+   * Check if the machine is in a specific nested state.
+   *
+   * @param {string} state - State pattern with format "parentState.machineName.machineState"
+   * @returns {boolean}
+   * @private
+   */
+  #matchesNestedState(state) {
+    const parts = state.split(".");
+    const parentState = parts[0];
+    const machineName = parts[1];
+    const machineState = parts.slice(2).join(".");
+
+    const isInParentState =
+      this.current === parentState ||
+      this.current.startsWith(`${parentState}.`);
+
+    if (!isInParentState) {
+      return false;
+    }
+
+    const currentMachineState = this.getNestedMachineState(machineName);
+
+    if (currentMachineState === machineState) {
+      return true;
+    }
+
+    return (
+      currentMachineState?.startsWith(machineState) &&
+      currentMachineState?.charAt(machineState.length) === "."
+    );
   }
 
   /**
@@ -440,26 +509,7 @@ class StateMachine {
 
     const parts = state.split(".");
     if (parts.length >= 3) {
-      const parentState = parts[0];
-      const machineName = parts[1];
-      const machineState = parts.slice(2).join(".");
-
-      if (
-        this.current === parentState ||
-        this.current.startsWith(`${parentState}.`)
-      ) {
-        const currentMachineState = this.getNestedMachineState(machineName);
-        if (currentMachineState === machineState) {
-          return true;
-        }
-        if (
-          currentMachineState?.startsWith(machineState) &&
-          currentMachineState?.charAt(machineState.length) === "."
-        ) {
-          return true;
-        }
-      }
-      return false;
+      return this.#matchesNestedState(state);
     }
 
     return (
@@ -484,7 +534,7 @@ class StateMachine {
    * @returns {boolean}
    * @private
    */
-  matchesSubscription(sub) {
+  #matchesSubscription(sub) {
     let stateMatches;
     if (Array.isArray(sub.state)) {
       stateMatches = sub.state.some((s) => this.matches(s));
@@ -502,27 +552,34 @@ class StateMachine {
    * @param {Object} message
    * @private
    */
-  notifySubscribers(message) {
-    for (const sub of this.entryActions) {
-      if (this.matchesSubscription(sub)) {
+  #notifySubscribers(message) {
+    for (const sub of this.#entryActions) {
+      if (this.#matchesSubscription(sub)) {
         sub.callback(message);
       }
     }
 
-    const beforePaint = this.subscriptions.filter(
-      (s) => s.timing === "before-paint" && this.matchesSubscription(s)
-    );
-    for (const sub of beforePaint) {
-      sub.callback(message);
+    let afterPaintSubs = null;
+
+    for (const sub of this.#subscriptions) {
+      if (!this.#matchesSubscription(sub)) {
+        continue;
+      }
+
+      if (sub.timing === "before-paint") {
+        sub.callback(message);
+      } else if (sub.timing === "after-paint") {
+        if (!afterPaintSubs) {
+          afterPaintSubs = [];
+        }
+        afterPaintSubs.push(sub);
+      }
     }
 
-    const afterPaint = this.subscriptions.filter(
-      (s) => s.timing === "after-paint" && this.matchesSubscription(s)
-    );
-    if (afterPaint.length > 0) {
+    if (afterPaintSubs) {
       schedule("afterRender", () => {
-        for (const sub of afterPaint) {
-          if (this.matchesSubscription(sub)) {
+        for (const sub of afterPaintSubs) {
+          if (this.#matchesSubscription(sub)) {
             sub.callback(message);
           }
         }

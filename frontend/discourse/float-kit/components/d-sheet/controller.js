@@ -18,7 +18,12 @@ import ObserverManager from "./observer-manager";
 import StackingAdapter from "./stacking-adapter";
 import StateHelper from "./state-helper";
 import StateMachine from "./state-machine";
-import { POSITION_STATES, SHEET_STATES, STAGING_STATES } from "./states";
+import {
+  GUARDS,
+  POSITION_STATES,
+  SHEET_STATES,
+  STAGING_STATES,
+} from "./states";
 import ThemeColorAdapter from "./theme-color-adapter";
 import TimeoutManager from "./timeout-manager";
 import { TouchHandler } from "./touch-handler";
@@ -96,13 +101,19 @@ export default class Controller {
   role = "dialog";
 
   /** @type {StateMachine} Main state machine for sheet lifecycle */
-  stateMachine = new StateMachine(SHEET_STATES, SHEET_STATES.initial);
+  stateMachine = new StateMachine(SHEET_STATES, SHEET_STATES.initial, {
+    guards: GUARDS,
+  });
 
   /** @type {StateMachine} State machine for staging transitions */
-  stagingMachine = new StateMachine(STAGING_STATES, STAGING_STATES.initial);
+  stagingMachine = new StateMachine(STAGING_STATES, STAGING_STATES.initial, {
+    guards: GUARDS,
+  });
 
   /** @type {StateMachine} State machine for stacking position */
-  positionMachine = new StateMachine(POSITION_STATES, POSITION_STATES.initial);
+  positionMachine = new StateMachine(POSITION_STATES, POSITION_STATES.initial, {
+    guards: GUARDS,
+  });
 
   /** @type {StateMachine} State machine for touch gesture tracking */
   touchMachine = new StateMachine(
@@ -113,7 +124,8 @@ export default class Controller {
         ongoing: { on: { TOUCH_END: "ended" } },
       },
     },
-    "ended"
+    "ended",
+    { guards: null }
   );
 
   /** @type {Object|null} Calculated dimension data */
@@ -292,7 +304,7 @@ export default class Controller {
   themeColorManager = null;
 
   /**
-   * Initialize the controller with helpers and state machines.
+   * Initialize the controller with helpers.
    * Use configure() to set options after construction.
    */
   constructor() {
