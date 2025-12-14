@@ -121,11 +121,23 @@ export class TouchHandler {
       : scrollContainer.scrollHeight - scrollContainer.clientHeight;
 
     const contentPlacement = this.sheet.contentPlacement;
-    const dismissAtMax = contentPlacement === "start";
+    const tracks = this.sheet.tracks;
     const swipeOutDisabled = this.sheet.swipeOutDisabled;
-    const isAtClosedPosition = dismissAtMax
-      ? scrollPos >= scrollMax - SNAP_POSITION_TOLERANCE
-      : scrollPos < SNAP_POSITION_TOLERANCE;
+
+    let isAtClosedPosition;
+    if (contentPlacement === "center") {
+      const isTopOrLeftTrack = tracks === "top" || tracks === "left";
+      if (isTopOrLeftTrack) {
+        isAtClosedPosition = scrollPos >= scrollMax - SNAP_POSITION_TOLERANCE;
+      } else {
+        isAtClosedPosition = scrollPos < SNAP_POSITION_TOLERANCE;
+      }
+    } else {
+      const dismissAtMax = contentPlacement === "start";
+      isAtClosedPosition = dismissAtMax
+        ? scrollPos >= scrollMax - SNAP_POSITION_TOLERANCE
+        : scrollPos < SNAP_POSITION_TOLERANCE;
+    }
 
     if (
       isAtClosedPosition &&

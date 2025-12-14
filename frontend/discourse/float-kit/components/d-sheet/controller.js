@@ -1756,7 +1756,7 @@ export default class Controller {
 
     if (
       this.detentsConfig === undefined &&
-      scrollTop <= 0 &&
+      rawProgress <= 0 &&
       this.isPresented &&
       this.currentState === "open"
     ) {
