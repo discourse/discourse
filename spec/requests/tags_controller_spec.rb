@@ -166,7 +166,7 @@ RSpec.describe TagsController do
           get "/tags.json"
 
           expect(response.parsed_body["tags"]).to match(
-            [include("name" => topic_tag.name, :id => topic_tag.id)],
+            [include(name: topic_tag.name, id: topic_tag.id)],
           )
         end
       end

@@ -18,9 +18,7 @@ module("Integration | Component | select-kit/tag-drop", function (hooks) {
     pretender.get("/tags/filter/search", (params) => {
       if (params.queryParams.q === "dav") {
         return response({
-          results: [
-            { id: 123, text: "David", name: "David", count: 2, pm_only: false },
-          ],
+          results: [{ id: 123, name: "David", count: 2, pm_only: false }],
         });
       }
     });
