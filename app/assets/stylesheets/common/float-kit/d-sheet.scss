@@ -1041,7 +1041,7 @@ html[data-d-sheet-native-page-scroll-replaced="false"]:has(
   margin: 0 !important;
   position: relative !important;
   overflow: visible !important;
-  padding-bottom: env(safe-area-inset-bottom) !important;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 // Like Silk (a11, a11 aNo): content always has pointer-events: auto, even with no-pointer-events
