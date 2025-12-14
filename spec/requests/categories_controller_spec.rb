@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe CategoriesController do
-  fab!(:admin)
-  fab!(:category) { Fabricate(:category, user: admin) }
+  let(:admin) { Fabricate(:admin) }
+  let!(:category) { Fabricate(:category, user: admin) }
   fab!(:user)
 
   describe "#index" do
