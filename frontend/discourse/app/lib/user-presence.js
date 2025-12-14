@@ -10,6 +10,7 @@ let lastUserActivity = Date.now();
 let callbackWaitingForPresence = false;
 
 let testPresence = true;
+let waitingOnAnimationFrame = false;
 
 // Check whether the document is currently visible, and the user is actively using the site
 // Will return false if the browser went into the background more than `browserHiddenTime` milliseconds ago
@@ -69,6 +70,10 @@ export function removeOnPresenceChange(callback) {
 }
 
 function processChanges() {
+  // super unlikely, but maybe we requested an animation frame
+  // and it failed somehow
+  waitingOnAnimationFrame = false;
+
   const browserHidden = document.hidden;
   if (!!browserHiddenAt !== browserHidden) {
     browserHiddenAt = browserHidden ? Date.now() : null;
@@ -100,9 +105,18 @@ function processChanges() {
 }
 
 export function seenUser() {
-  lastUserActivity = Date.now();
-  if (callbackWaitingForPresence) {
-    processChanges();
+  // a boolean check is going to be 10x to 80x faster than Date.now()
+  // scroll, touchmove, click, keydown can all happen very frequently
+  // this debounces to de-risk
+  if (!waitingOnAnimationFrame) {
+    waitingOnAnimationFrame = true;
+    requestAnimationFrame(() => {
+      waitingOnAnimationFrame = false;
+      lastUserActivity = Date.now();
+      if (callbackWaitingForPresence) {
+        processChanges();
+      }
+    });
   }
 }
 
