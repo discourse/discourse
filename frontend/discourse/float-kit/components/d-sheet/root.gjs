@@ -41,6 +41,9 @@ export default class Root extends Component {
   /** @type {boolean} */
   #hasAppliedDefaultPresented = false;
 
+  /** @type {Function|null} */
+  #pendingOpenSubscription = null;
+
   constructor(owner, args) {
     super(owner, args);
 
@@ -52,6 +55,7 @@ export default class Root extends Component {
     }
 
     registerDestructor(this, () => {
+      this.#cleanupPendingOpen();
       if (this.args.componentId) {
         this.sheetRegistry.unregisterRoot(this.args.componentId);
       }
@@ -84,6 +88,18 @@ export default class Root extends Component {
     }
     this.sheetRegistry.unregister(this.sheet);
     this.sheet.cleanup();
+  }
+
+  /**
+   * Cleanup any pending open subscription.
+   *
+   * @private
+   */
+  #cleanupPendingOpen() {
+    if (this.#pendingOpenSubscription) {
+      this.#pendingOpenSubscription();
+      this.#pendingOpenSubscription = null;
+    }
   }
 
   /**
@@ -206,28 +222,27 @@ export default class Root extends Component {
   @action
   openSheet() {
     const stackId = this.stackId;
-    const animatingParent = this.getAnimatingParentSheet(stackId);
 
-    if (animatingParent) {
-      let attempts = 0;
-      const maxAttempts = 60; // ~1 second at 60fps
-
-      const checkAndOpen = () => {
-        if (
-          ++attempts > maxAttempts ||
-          !this.getAnimatingParentSheet(stackId)
-        ) {
-          this.doOpenSheet(stackId);
-        } else {
-          requestAnimationFrame(checkAndOpen);
-        }
-      };
-
-      requestAnimationFrame(checkAndOpen);
+    if (!stackId) {
+      this.doOpenSheet(null);
       return;
     }
 
-    this.doOpenSheet(stackId);
+    const animatingParent = this.getAnimatingParentSheet(stackId);
+
+    if (!animatingParent) {
+      this.doOpenSheet(stackId);
+      return;
+    }
+
+    this.#pendingOpenSubscription = animatingParent.positionMachine.subscribe({
+      timing: "immediate",
+      state: ["front-idle", "covered-idle", "out"],
+      callback: () => {
+        this.#cleanupPendingOpen();
+        this.doOpenSheet(stackId);
+      },
+    });
   }
 
   /**

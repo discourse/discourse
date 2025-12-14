@@ -1,6 +1,6 @@
+import { tracked } from "@glimmer/tracking";
 import { schedule } from "@ember/runloop";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import { tracked } from "@glimmer/tracking";
 
 /**
  * Hierarchical state machine with support for nested machines and subscriptions.
@@ -12,7 +12,7 @@ import { tracked } from "@glimmer/tracking";
  * @typedef {Object} Subscription
  * @property {Symbol} id - Unique identifier for the subscription
  * @property {"immediate"|"before-paint"|"after-paint"} timing - When to invoke callback
- * @property {string} state - State pattern to match
+ * @property {string|string[]} state - State pattern(s) to match
  * @property {function(Object): void} callback - Function to call when state matches
  * @property {function(): boolean|boolean} guard - Guard condition
  */
@@ -101,7 +101,7 @@ class StateMachine {
    *
    * @param {Object} options
    * @param {string} options.timing - "immediate" | "before-paint" | "after-paint"
-   * @param {string} options.state - State pattern to match
+   * @param {string|string[]} options.state - State pattern(s) to match
    * @param {Function} options.callback - Function to call when state matches
    * @param {Function|boolean} [options.guard] - Optional guard condition
    * @returns {Function} Unsubscribe function
@@ -485,7 +485,12 @@ class StateMachine {
    * @private
    */
   matchesSubscription(sub) {
-    const stateMatches = this.matches(sub.state);
+    let stateMatches;
+    if (Array.isArray(sub.state)) {
+      stateMatches = sub.state.some((s) => this.matches(s));
+    } else {
+      stateMatches = this.matches(sub.state);
+    }
     const guardPasses =
       typeof sub.guard === "function" ? sub.guard() : sub.guard;
     return stateMatches && guardPasses;
