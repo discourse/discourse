@@ -1,11 +1,11 @@
 import { getBrowserInfo } from "./browser-detection";
 
 /**
- * @class SheetDimensionCalculator
+ * @class DimensionCalculator
  * Calculates and applies CSS dimensions for sheet positioning and scroll behavior.
  * Handles view/content sizing, detent markers, spacers, and snap accelerators.
  */
-export default class SheetDimensionCalculator {
+export default class DimensionCalculator {
   /** @type {Object} */
   elements;
 

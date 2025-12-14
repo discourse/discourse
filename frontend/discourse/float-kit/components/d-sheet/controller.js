@@ -305,9 +305,6 @@ export default class Controller {
   /** @type {string|null} Original underlying theme color */
   underlyingThemeColor = null;
 
-  /** @type {boolean} Whether a touch gesture is active */
-  touchGestureActive = false;
-
   /**
    * Initialize the controller with helpers and state machines.
    * Use configure() to set options after construction.
