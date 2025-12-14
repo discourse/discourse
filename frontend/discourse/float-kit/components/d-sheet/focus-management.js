@@ -3,7 +3,11 @@
  * Manages focus behavior for sheets: auto-focus, scroll prevention, focusable lookup.
  */
 
-/** @type {string} */
+/**
+ * Selector for focusable elements.
+ *
+ * @type {string}
+ */
 const FOCUSABLE_SELECTOR = [
   "input:not([disabled]):not([type=hidden])",
   "select:not([disabled])",
@@ -21,45 +25,24 @@ const FOCUSABLE_SELECTOR = [
   "[tabindex]:not([disabled])",
 ].join(",");
 
-/** @type {string} */
-const SKIPPABLE_SELECTOR = [
+/**
+ * Base selectors for elements that should be skipped during focus traversal.
+ *
+ * @type {string[]}
+ */
+const SKIPPABLE_SELECTORS = [
   "[aria-hidden='true']",
   "[aria-hidden='true'] *",
   "[inert]",
   "[inert] *",
-].join(",");
+];
 
 /**
- * @param {HTMLElement} element
- * @returns {boolean}
- */
-function isElementVisible(element) {
-  return !!(
-    element.offsetWidth ||
-    element.offsetHeight ||
-    element.getClientRects().length
-  );
-}
-
-/**
- * @param {HTMLElement} element
- * @returns {boolean}
- */
-function isElementTabbable(element) {
-  return element.matches(':not([hidden]):not([tabindex^="-"])');
-}
-
-/**
- * @param {HTMLElement} element
- * @returns {boolean}
- */
-function isElementSkippable(element) {
-  return element.matches(SKIPPABLE_SELECTOR) || !isElementVisible(element);
-}
-
-/**
- * @param {HTMLElement} container
- * @param {string[]} [additionalSkipSelectors]
+ * Get focusable and tabbable elements within a container.
+ * Matches Silk's `eq` function behavior.
+ *
+ * @param {HTMLElement} container - The container element to search within
+ * @param {string[]} [additionalSkipSelectors] - Additional selectors for elements to skip
  * @returns {{ safelyFocusableElements: HTMLElement[], safelyTabbableElements: HTMLElement[] }}
  */
 function getFocusableElements(container, additionalSkipSelectors = []) {
@@ -71,6 +54,11 @@ function getFocusableElements(container, additionalSkipSelectors = []) {
     ? [FOCUSABLE_SELECTOR, ...additionalSkipSelectors].join(",")
     : FOCUSABLE_SELECTOR;
 
+  const skipSelector = [
+    ...additionalSkipSelectors,
+    ...SKIPPABLE_SELECTORS,
+  ].join(",");
+
   const elements = [
     ...(container.matches(selector) ? [container] : []),
     ...container.querySelectorAll(selector),
@@ -78,8 +66,14 @@ function getFocusableElements(container, additionalSkipSelectors = []) {
 
   const elementsWithData = elements.map((element) => ({
     element,
-    tabbable: isElementTabbable(element),
-    skippable: isElementSkippable(element),
+    tabbable: element.matches(':not([hidden]):not([tabindex^="-"])'),
+    skippable:
+      element.matches(skipSelector) ||
+      !(
+        element.offsetWidth ||
+        element.offsetHeight ||
+        element.getClientRects().length
+      ),
   }));
 
   const safelyFocusableElements = elementsWithData
@@ -94,11 +88,13 @@ function getFocusableElements(container, additionalSkipSelectors = []) {
 }
 
 /**
+ * Process an auto-focus handler configuration.
+ *
  * @param {Object} options
- * @param {Event|null} options.nativeEvent
- * @param {Object} options.defaultBehavior
- * @param {Function|Object} [options.handler]
- * @returns {Object}
+ * @param {Event|null} options.nativeEvent - The native event that triggered auto-focus
+ * @param {Object} options.defaultBehavior - Default behavior configuration
+ * @param {Function|Object} [options.handler] - Handler function or configuration object
+ * @returns {Object} The resolved behavior configuration
  */
 function processAutoFocusHandler({ nativeEvent, defaultBehavior, handler }) {
   let result = defaultBehavior;
@@ -123,6 +119,10 @@ function processAutoFocusHandler({ nativeEvent, defaultBehavior, handler }) {
   return result;
 }
 
+/**
+ * Manages focus behavior for sheets including auto-focus on present/dismiss
+ * and scroll prevention during focus changes.
+ */
 export default class FocusManagement {
   /** @type {Object} */
   controller;
@@ -134,14 +134,32 @@ export default class FocusManagement {
   previouslyFocusedElement = null;
 
   /**
-   * @param {Object} controller
+   * @param {Object} controller - The sheet controller instance
    */
   constructor(controller) {
     this.controller = controller;
   }
 
   /**
-   * @returns {void}
+   * Get the view element from controller.
+   *
+   * @returns {HTMLElement|null}
+   */
+  get view() {
+    return this.controller.view;
+  }
+
+  /**
+   * Get the scroll container element from controller.
+   *
+   * @returns {HTMLElement|null}
+   */
+  get scrollContainer() {
+    return this.controller.scrollContainer;
+  }
+
+  /**
+   * Capture the currently focused element before the sheet opens.
    */
   capturePreviouslyFocusedElement() {
     if (typeof document !== "undefined") {
@@ -150,18 +168,19 @@ export default class FocusManagement {
   }
 
   /**
+   * Find the appropriate element to auto-focus when the sheet is presented.
+   *
    * @returns {HTMLElement|null}
    */
   findAutoFocusTarget() {
-    const view = this.controller.view;
-    if (!view) {
+    if (!this.view) {
       return null;
     }
 
     const { safelyFocusableElements, safelyTabbableElements } =
-      getFocusableElements(view, ["[data-d-sheet-autofocus-skip]"]);
+      getFocusableElements(this.view, ["[data-d-sheet-autofocus-skip]"]);
 
-    const explicitTargets = view.querySelectorAll(
+    const explicitTargets = this.view.querySelectorAll(
       "[data-d-sheet-autofocus-target]"
     );
     const safeExplicitTarget = Array.from(explicitTargets).find((target) =>
@@ -172,11 +191,11 @@ export default class FocusManagement {
       return safeExplicitTarget;
     }
 
-    return safelyTabbableElements[0] ?? view;
+    return safelyTabbableElements[0] ?? this.view;
   }
 
   /**
-   * @returns {void}
+   * Execute auto-focus when the sheet is presented.
    */
   executeAutoFocusOnPresent() {
     const behavior = processAutoFocusHandler({
@@ -196,16 +215,16 @@ export default class FocusManagement {
   }
 
   /**
-   * @returns {void}
+   * Execute auto-focus when the sheet is dismissed.
+   * Restores focus to the previously focused element if appropriate.
    */
   executeAutoFocusOnDismiss() {
-    const view = this.controller.view;
     const activeElement = document.activeElement;
 
     // Only restore focus if activeElement is inside view or was removed from document
     if (
-      view &&
-      !view.contains(activeElement) &&
+      this.view &&
+      !this.view.contains(activeElement) &&
       document.contains(activeElement)
     ) {
       this.previouslyFocusedElement = null;
@@ -234,12 +253,13 @@ export default class FocusManagement {
   }
 
   /**
-   * @returns {void}
+   * Set up focus scroll prevention listener on the view.
+   * Prevents scroll container from scrolling when focus changes within the sheet.
    */
   setupFocusScrollPrevention() {
     if (
       !this.controller.nativeFocusScrollPrevention ||
-      !this.controller.view ||
+      !this.view ||
       this.focusScrollPreventionListener ||
       typeof document === "undefined"
     ) {
@@ -247,11 +267,11 @@ export default class FocusManagement {
     }
 
     this.focusScrollPreventionListener = (event) => {
-      if (!this.controller.view?.contains(event.target)) {
+      if (!this.view?.contains(event.target)) {
         return;
       }
 
-      const scrollContainer = this.controller.scrollContainer;
+      const scrollContainer = this.scrollContainer;
       if (!scrollContainer) {
         return;
       }
@@ -267,19 +287,19 @@ export default class FocusManagement {
       });
     };
 
-    this.controller.view.addEventListener(
-      "focus",
-      this.focusScrollPreventionListener,
-      { capture: true }
-    );
+    this.view.addEventListener("focus", this.focusScrollPreventionListener, {
+      capture: true,
+    });
   }
 
   /**
-   * @returns {void}
+   * Clean up focus scroll prevention listener.
+   *
+   * @private
    */
   cleanupFocusScrollPrevention() {
-    if (this.focusScrollPreventionListener && this.controller.view) {
-      this.controller.view.removeEventListener(
+    if (this.focusScrollPreventionListener && this.view) {
+      this.view.removeEventListener(
         "focus",
         this.focusScrollPreventionListener,
         { capture: true }
@@ -289,7 +309,7 @@ export default class FocusManagement {
   }
 
   /**
-   * @returns {void}
+   * Clean up all resources.
    */
   cleanup() {
     this.cleanupFocusScrollPrevention();
