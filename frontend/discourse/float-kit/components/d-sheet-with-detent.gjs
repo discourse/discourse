@@ -54,28 +54,14 @@ class DSheetWithDetent extends Component {
               @action={{if this.reachedLastDetent "dismiss" "step"}}
             />
 
-            <DScrollRoot class="SheetWithDetent-scrollRoot" as |scroll|>
-              <scroll.View
-                class="SheetWithDetent-scrollView"
-                @scrollGesture={{if this.reachedLastDetent "auto" false}}
-                @scrollGestureTrap={{hash yEnd=true}}
-                @safeArea="layout-viewport"
-                @onScrollStart={{hash dismissKeyboard=true}}
-              >
-                <scroll.Content class="SheetWithDetent-scrollContent">
-                  {{#if (has-block "content")}}
-                    {{yield
-                      (hash Trigger=(component DSheet.Trigger sheet=sheet))
-                      to="content"
-                    }}
-                  {{else}}
-                    {{yield
-                      (hash Trigger=(component DSheet.Trigger sheet=sheet))
-                    }}
-                  {{/if}}
-                </scroll.Content>
-              </scroll.View>
-            </DScrollRoot>
+            {{#if (has-block "content")}}
+              {{yield
+                (hash Trigger=(component DSheet.Trigger sheet=sheet))
+                to="content"
+              }}
+            {{else}}
+              {{yield (hash Trigger=(component DSheet.Trigger sheet=sheet))}}
+            {{/if}}
           </DSheet.Content>
         </View>
       </DSheet.Portal>

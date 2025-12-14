@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -82,12 +82,90 @@ export default class Sheets extends Component {
               </sheet.Trigger>
             </:root>
             <:content as |sheet|>
-              <sheet.Trigger @action="step">
+              <input />
+
+              {{log DSheet.Scroll}}
+
+              <DSheet.Scroll.Root as |controller|>
+                <DSheet.Scroll.View
+                  class="SheetWithDetent-scrollView"
+                  @scrollGesture={{if this.reachedLastDetent "auto" false}}
+                  @scrollGestureTrap={{hash yEnd=true}}
+                  @safeArea="layout-viewport"
+                  @onScrollStart={{hash dismissKeyboard=true}}
+                  @controller={{controller}}
+                >
+                  <DSheet.Scroll.Content
+                    class="SheetWithDetent-scrollContent"
+                    @controller={{controller}}
+                  >
+                    <ul>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                      <li>Foo</li>
+                    </ul>
+                  </DSheet.Scroll.Content>
+                </DSheet.Scroll.View>
+              </DSheet.Scroll.Root>
+
+              {{! <sheet.Trigger @action="step">
                 Step
               </sheet.Trigger>
               <sheet.Trigger @action="dismiss">
                 Dismiss
-              </sheet.Trigger>
+              </sheet.Trigger> }}
+
             </:content>
           </DSheetWithDetent>
         </:sample>

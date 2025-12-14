@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { isAndroid, isChromium } from "../d-sheet/browser-detection";
 
 /**
  * GestureTrapHandler - Manages scroll gesture trap via IntersectionObserver for DScroll.View.
@@ -24,7 +25,10 @@ export default class GestureTrapHandler {
   @tracked yTrap = false;
 
   /** @type {boolean} */
-  @tracked touchStarted = false;
+  @tracked keyboardVisible = false;
+
+  /** @type {boolean} */
+  isAndroidChromiumBrowser = false;
 
   /** @type {HTMLElement|null} */
   startSpyElement = null;
@@ -36,7 +40,7 @@ export default class GestureTrapHandler {
   observer = null;
 
   /** @type {Function|null} */
-  touchStartHandler = null;
+  resizeHandler = null;
 
   /**
    * @param {DScrollView} view - The View component instance
@@ -150,17 +154,35 @@ export default class GestureTrapHandler {
    */
   get effectiveYTrap() {
     return (
-      (!this.touchStarted && this.yTrap) ||
-      (this.isAtEnd && !this.swipeTrapIncapable)
+      (!this.isAndroidChromiumBrowser && this.yTrap) ||
+      (this.keyboardVisible && !this.swipeTrapIncapable)
     );
   }
 
   /**
-   * Handle touchstart event to track touch state.
+   * Detect if running on Android Chromium browser (not in PWA/standalone mode).
+   *
+   * @returns {boolean}
    */
-  @action
-  handleTouchStart() {
-    this.touchStarted = true;
+  detectAndroidChromiumBrowser() {
+    return (
+      isAndroid() &&
+      isChromium() &&
+      !window.matchMedia(
+        "(display-mode: standalone), (display-mode: minimal-ui), (display-mode: fullscreen)"
+      ).matches
+    );
+  }
+
+  /**
+   * Check if keyboard is currently visible.
+   * Keyboard is considered visible if visual viewport is 200px smaller than window.
+   *
+   * @returns {boolean}
+   */
+  isKeyboardVisible() {
+    const visualHeight = window.visualViewport?.height ?? window.innerHeight;
+    return window.innerHeight - 200 > visualHeight;
   }
 
   /**
@@ -180,7 +202,6 @@ export default class GestureTrapHandler {
             this.xTrap = values.xStart;
           } else {
             this.yTrap = values.yStart;
-            this.touchStarted = false;
           }
         } else {
           this.isAtStart = false;
@@ -192,7 +213,6 @@ export default class GestureTrapHandler {
             this.xTrap = values.xEnd;
           } else {
             this.yTrap = values.yEnd;
-            this.touchStarted = false;
           }
         } else {
           this.isAtEnd = false;
@@ -200,15 +220,21 @@ export default class GestureTrapHandler {
       }
     }
 
-    // Both visible = no trap (no overflow)
     if (this.isAtStart && this.isAtEnd) {
       if (axis === "x") {
         this.xTrap = false;
       } else {
         this.yTrap = false;
-        this.touchStarted = false;
       }
     }
+  }
+
+  /**
+   * Handle visualViewport resize to track keyboard visibility.
+   */
+  @action
+  handleResize() {
+    this.keyboardVisible = this.isKeyboardVisible();
   }
 
   /**
@@ -222,10 +248,10 @@ export default class GestureTrapHandler {
     this.xTrap = values.xStart;
     this.yTrap = values.yStart;
 
-    if (viewElement) {
-      viewElement.addEventListener("touchstart", this.handleTouchStart, {
-        passive: true,
-      });
+    this.isAndroidChromiumBrowser = this.detectAndroidChromiumBrowser();
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", this.handleResize);
     }
 
     if (!viewElement || !this.needsObserver) {
@@ -301,10 +327,8 @@ export default class GestureTrapHandler {
    * Clean up observer and event listeners.
    */
   cleanup() {
-    const viewElement = this.view.viewElement;
-
-    if (viewElement) {
-      viewElement.removeEventListener("touchstart", this.handleTouchStart);
+    if (window.visualViewport) {
+      window.visualViewport.removeEventListener("resize", this.handleResize);
     }
 
     if (this.observer) {
@@ -314,6 +338,6 @@ export default class GestureTrapHandler {
 
     this.startSpyElement = null;
     this.endSpyElement = null;
-    this.touchStarted = false;
+    this.keyboardVisible = false;
   }
 }
