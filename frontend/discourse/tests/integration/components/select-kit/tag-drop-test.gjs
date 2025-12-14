@@ -13,7 +13,12 @@ module("Integration | Component | select-kit/tag-drop", function (hooks) {
   hooks.beforeEach(function () {
     this.subject = selectKit();
 
-    this.site.top_tags = ["jeff", "neil", "arpit", "régis"];
+    this.site.top_tags = [
+      { id: 1, name: "jeff" },
+      { id: 2, name: "neil" },
+      { id: 3, name: "arpit" },
+      { id: 4, name: "régis" },
+    ];
 
     pretender.get("/tags/filter/search", (params) => {
       if (params.queryParams.q === "dav") {

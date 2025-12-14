@@ -151,17 +151,17 @@ class Tag < ActiveRecord::Base
       )
 
     tag_names_with_counts = DB.query <<~SQL
-      SELECT tags.name as tag_name, SUM(stats.topic_count) AS sum_topic_count
+      SELECT tags.id as tag_id, tags.name as tag_name, SUM(stats.topic_count) AS sum_topic_count
         FROM category_tag_stats stats
         JOIN tags ON stats.tag_id = tags.id AND stats.topic_count > 0
        WHERE stats.category_id in (#{scope_category_ids.join(",")})
        #{filter_sql}
-    GROUP BY tags.name
-    ORDER BY sum_topic_count DESC, tag_name ASC
-       LIMIT #{limit}
+      GROUP BY tags.id, tags.name
+      ORDER BY sum_topic_count DESC, tag_name ASC
+      LIMIT #{limit}
     SQL
 
-    tag_names_with_counts.map { |row| row.tag_name }
+    tag_names_with_counts.map { |row| { id: row.tag_id, name: row.tag_name } }
   end
 
   def self.topic_count_column(guardian)
