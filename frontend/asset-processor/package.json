@@ -17,7 +17,7 @@
     "@rollup/browser": "^4.53.3",
     "@rollup/plugin-babel": "^6.1.0",
     "abort-controller": "^3.0.0",
-    "autoprefixer": "^10.4.22",
+    "autoprefixer": "^10.4.23",
     "babel-plugin-ember-template-compilation": "^3.0.1",
     "content-tag": "^4.0.0",
     "core-js": "^3.47.0",
