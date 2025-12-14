@@ -117,6 +117,11 @@ export default class ChatChannel extends Component {
     this.debounceFillPaneAttempt();
     this.debouncedUpdateLastReadMessage();
     DatesSeparatorsPositioner.apply(this.presenceAwarePane.scroller);
+
+    this.presenceAwarePane.updateArrowVisibilityFromScrollerPosition({
+      fetchedOnce: this.messagesLoader.fetchedOnce,
+      canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
+    });
   }
 
   @action
@@ -468,14 +473,11 @@ export default class ChatChannel extends Component {
       }
 
       DatesSeparatorsPositioner.apply(this.presenceAwarePane.scroller);
-
-      const shouldShowArrow =
-        (this.messagesLoader.fetchedOnce &&
-          this.messagesLoader.canLoadMoreFuture) ||
-        (state.distanceToBottom.pixels > 250 && !state.atBottom);
-
-      this.presenceAwarePane.needsArrow =
-        this.presenceAwarePane.computeArrowVisibility(shouldShowArrow);
+      this.presenceAwarePane.updateArrowVisibilityFromScrollState({
+        fetchedOnce: this.messagesLoader.fetchedOnce,
+        canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
+        state,
+      });
       this.isScrolling = true;
       this.debouncedUpdateLastReadMessage();
 
@@ -503,13 +505,11 @@ export default class ChatChannel extends Component {
       this.fetchMoreMessages({ direction: FUTURE });
       this.chatChannelScrollPositions.delete(this.args.channel.id);
     } else {
-      const shouldShowArrow =
-        (this.messagesLoader.fetchedOnce &&
-          this.messagesLoader.canLoadMoreFuture) ||
-        state.distanceToBottom.pixels > 250;
-
-      this.presenceAwarePane.needsArrow =
-        this.presenceAwarePane.computeArrowVisibility(shouldShowArrow);
+      this.presenceAwarePane.updateArrowVisibilityFromScrollState({
+        fetchedOnce: this.messagesLoader.fetchedOnce,
+        canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
+        state,
+      });
       this.chatChannelScrollPositions.set(
         this.args.channel.id,
         state.firstVisibleId

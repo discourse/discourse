@@ -90,6 +90,107 @@ export default class PresenceAwareChatPane {
   }
 
   /**
+   * @returns {boolean}
+   */
+  get canScroll() {
+    if (!this.scroller) {
+      return false;
+    }
+
+    // Use a small tolerance because `scrollHeight` and `clientHeight` can
+    // occasionally differ by subpixel rounding.
+    return this.scroller.scrollHeight - this.scroller.clientHeight > 1;
+  }
+
+  /**
+   * Computes the base arrow visibility condition from scroll position and
+   * whether there are newer messages available to load.
+   *
+   * @param {object} options
+   * @param {boolean} options.fetchedOnce
+   * @param {boolean} options.canLoadMoreFuture
+   * @param {number} options.distanceToBottomPixels
+   * @param {number} [options.distanceThresholdPixels]
+   * @returns {boolean}
+   */
+  computeShouldShowArrow(options) {
+    const {
+      fetchedOnce,
+      canLoadMoreFuture,
+      distanceToBottomPixels,
+      distanceThresholdPixels = 250,
+    } = options;
+
+    return (
+      (fetchedOnce && canLoadMoreFuture) ||
+      distanceToBottomPixels > distanceThresholdPixels
+    );
+  }
+
+  /**
+   * Updates `needsArrow` based on scroll position and loader state, while still
+   * respecting pending message state and scrollability (see `computeArrowVisibility`).
+   *
+   * @param {object} options
+   * @param {boolean} options.fetchedOnce
+   * @param {boolean} options.canLoadMoreFuture
+   * @param {number} options.distanceToBottomPixels
+   * @param {number} [options.distanceThresholdPixels]
+   */
+  updateArrowVisibility(options) {
+    this.needsArrow = this.computeArrowVisibility(
+      this.computeShouldShowArrow(options)
+    );
+  }
+
+  /**
+   * Convenience helper for scroll handlers that already computed `distanceToBottom`.
+   *
+   * @param {object} options
+   * @param {boolean} options.fetchedOnce
+   * @param {boolean} options.canLoadMoreFuture
+   * @param {{ distanceToBottom?: { pixels: number } }} options.state
+   * @param {number} [options.distanceThresholdPixels]
+   */
+  updateArrowVisibilityFromScrollState(options) {
+    const { fetchedOnce, canLoadMoreFuture, state, distanceThresholdPixels } =
+      options;
+
+    this.updateArrowVisibility({
+      fetchedOnce,
+      canLoadMoreFuture,
+      distanceToBottomPixels: state?.distanceToBottom?.pixels ?? 0,
+      distanceThresholdPixels,
+    });
+  }
+
+  /**
+   * Convenience helper for cases where we need to recompute based on the current
+   * scroller position (e.g. after a resize).
+   *
+   * @param {object} options
+   * @param {boolean} options.fetchedOnce
+   * @param {boolean} options.canLoadMoreFuture
+   * @param {number} [options.distanceThresholdPixels]
+   */
+  updateArrowVisibilityFromScrollerPosition(options) {
+    if (!this.scroller) {
+      this.needsArrow = false;
+      return;
+    }
+
+    const { fetchedOnce, canLoadMoreFuture, distanceThresholdPixels } = options;
+    const distanceToBottomPixels = -this.scroller.scrollTop;
+
+    this.updateArrowVisibility({
+      fetchedOnce,
+      canLoadMoreFuture,
+      distanceToBottomPixels,
+      distanceThresholdPixels,
+    });
+  }
+
+  /**
    * @param {HTMLElement} element
    */
   @bind
@@ -182,7 +283,10 @@ export default class PresenceAwareChatPane {
 
     this.preserveViewportWhile(addMessage);
     this.#incrementPending(messageCount);
-    this.needsArrow = true;
+
+    schedule("afterRender", () => {
+      this.needsArrow = this.computeArrowVisibility(false);
+    });
   }
 
   /**
@@ -190,7 +294,7 @@ export default class PresenceAwareChatPane {
    * @returns {boolean}
    */
   computeArrowVisibility(baseCondition) {
-    return this.hasPendingNewMessages || baseCondition;
+    return this.canScroll && (this.hasPendingNewMessages || baseCondition);
   }
 
   /**

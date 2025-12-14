@@ -128,14 +128,11 @@ export default class ChatThread extends Component {
       }
 
       DatesSeparatorsPositioner.apply(this.presenceAwarePane.scroller);
-
-      const shouldShowArrow =
-        (this.messagesLoader.fetchedOnce &&
-          this.messagesLoader.canLoadMoreFuture) ||
-        (state.distanceToBottom.pixels > 250 && !state.atBottom);
-
-      this.presenceAwarePane.needsArrow =
-        this.presenceAwarePane.computeArrowVisibility(shouldShowArrow);
+      this.presenceAwarePane.updateArrowVisibilityFromScrollState({
+        fetchedOnce: this.messagesLoader.fetchedOnce,
+        canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
+        state,
+      });
       this.isScrolling = true;
       this.debouncedUpdateLastReadMessage();
 
@@ -162,13 +159,11 @@ export default class ChatThread extends Component {
       this.presenceAwarePane.needsArrow = false;
       this.fetchMoreMessages({ direction: FUTURE });
     } else {
-      const shouldShowArrow =
-        (this.messagesLoader.fetchedOnce &&
-          this.messagesLoader.canLoadMoreFuture) ||
-        state.distanceToBottom.pixels > 250;
-
-      this.presenceAwarePane.needsArrow =
-        this.presenceAwarePane.computeArrowVisibility(shouldShowArrow);
+      this.presenceAwarePane.updateArrowVisibilityFromScrollState({
+        fetchedOnce: this.messagesLoader.fetchedOnce,
+        canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
+        state,
+      });
     }
   }
 
@@ -232,6 +227,11 @@ export default class ChatThread extends Component {
     this.debounceFillPaneAttempt();
     this.debouncedUpdateLastReadMessage();
     DatesSeparatorsPositioner.apply(this.presenceAwarePane.scroller);
+
+    this.presenceAwarePane.updateArrowVisibilityFromScrollerPosition({
+      fetchedOnce: this.messagesLoader.fetchedOnce,
+      canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
+    });
   }
 
   async fetchMessages(findArgs = {}) {
