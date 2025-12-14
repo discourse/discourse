@@ -1,17 +1,19 @@
-import { generateAnimationConfig, supportsLinearEasing } from "./animation";
+import {
+  createTweenFunction,
+  generateAnimationConfig,
+  supportsLinearEasing,
+} from "./animation";
 
 /**
- * Interpolates between two values based on progress.
- * @param {string|number} start - Start value
- * @param {string|number} end - End value
- * @param {number} progress - Progress value between 0 and 1
- * @returns {string|number} Interpolated value
+ * Wraps a callback-based function as a Promise.
+ *
+ * @param {Function} callbackFn - Function that accepts a callback as its only argument
+ * @returns {Promise<void>}
  */
-function tween(start, end, progress) {
-  const startNum = typeof start === "string" ? parseFloat(start) : start;
-  const endNum = typeof end === "string" ? parseFloat(end) : end;
-  const unit = typeof start === "string" ? start.replace(/[\d.-]/g, "") : "";
-  return startNum + (endNum - startNum) * Math.min(progress, 1) + unit;
+function wrapAsPromise(callbackFn) {
+  return new Promise((resolve) => {
+    callbackFn(() => resolve());
+  });
 }
 
 /** @type {string[]} CSS transform properties */
@@ -35,13 +37,15 @@ const TRANSFORM_PROPS = [
 
 /**
  * Builds a single keyframe object from config at a given progress.
- * @param {Object} config - Animation config with property values
+ *
+ * @param {Object} config - Animation config with property template functions
  * @param {number} progress - Progress value
  * @returns {Object} Keyframe object for Web Animations API
  */
 function buildKeyframe(config, progress) {
   const keyframe = {};
   const transforms = [];
+  const tween = createTweenFunction(progress);
 
   for (const [property, value] of Object.entries(config)) {
     if (
@@ -54,12 +58,9 @@ function buildKeyframe(config, progress) {
 
     let computedValue;
     if (Array.isArray(value)) {
-      computedValue = tween(value[0], value[1], progress);
+      computedValue = tween(value[0], value[1]);
     } else if (typeof value === "function") {
-      computedValue = value({
-        progress,
-        tween: (s, e) => tween(s, e, progress),
-      });
+      computedValue = value({ progress, tween });
     } else if (typeof value === "string") {
       computedValue = value;
     } else {
@@ -81,7 +82,20 @@ function buildKeyframe(config, progress) {
 }
 
 /**
+ * Converts a camelCase CSS property to kebab-case with vendor prefix handling.
+ *
+ * @param {string} property - camelCase property name
+ * @returns {string} kebab-case property name
+ */
+function toKebabCase(property) {
+  const prefix =
+    property.startsWith("webkit") || property.startsWith("moz") ? "-" : "";
+  return prefix + property.replace(/[A-Z]/g, "-$&").toLowerCase();
+}
+
+/**
  * Builds keyframes array from config and progress values.
+ *
  * @param {Object} config - Animation config
  * @param {number[]} progressValues - Array of progress values
  * @param {boolean} supportsLinear - Whether linear() easing is supported
@@ -121,6 +135,43 @@ function buildKeyframesFromConfig(
 }
 
 /**
+ * Animates a single target element and returns a promise that resolves when complete.
+ * Persists final keyframe styles to the element after animation finishes.
+ *
+ * @param {Object} params - Animation parameters
+ * @param {HTMLElement} params.target - Element to animate
+ * @param {Object[]} params.keyframes - Keyframes array
+ * @param {Object} params.animationOptions - WAAPI animation options
+ * @param {string} [params.transformOrigin] - Optional transform origin
+ * @returns {Promise<void>}
+ */
+function animateTarget({
+  target,
+  keyframes,
+  animationOptions,
+  transformOrigin,
+}) {
+  if (transformOrigin) {
+    target.style.transformOrigin = transformOrigin;
+  }
+
+  const animation = target.animate(keyframes, animationOptions);
+
+  return new Promise((resolve) => {
+    animation.addEventListener("finish", function onFinish() {
+      const finalKeyframe = keyframes[keyframes.length - 1];
+      if (finalKeyframe) {
+        Object.entries(finalKeyframe).forEach(([property, value]) => {
+          target.style.setProperty(toKebabCase(property), value);
+        });
+      }
+      animation.removeEventListener("finish", onFinish);
+      resolve();
+    });
+  });
+}
+
+/**
  * Resolves the destination detent, using active detent as fallback.
  * @param {number|undefined} desiredDetent - Desired detent index
  * @param {number} activeDetent - Current active detent index
@@ -132,6 +183,7 @@ export function resolveDestinationDetent(desiredDetent, activeDetent) {
 
 /**
  * Calculates the scroll position needed to reach a specific detent.
+ *
  * @param {Object} config - Configuration object
  * @param {string} config.trackToTravelOn - Track direction (top, bottom, left, right, horizontal, vertical)
  * @param {number} config.destinationDetent - Target detent index
@@ -141,7 +193,6 @@ export function resolveDestinationDetent(desiredDetent, activeDetent) {
  * @param {string} config.contentPlacement - Content placement (center or edge)
  * @param {Object} config.elementsDimensions - Dimensions of sheet elements
  * @param {number} [config.snapBackAcceleratorSize] - Size of snap-back accelerator
- * @param {number} config.scrollContainerClientHeight - Client height of scroll container
  * @returns {{positionToScrollTo: number|null, scrollAxis: string|null}} Scroll position and axis
  */
 export function calculateScrollPositionForDetent(config) {
@@ -154,50 +205,30 @@ export function calculateScrollPositionForDetent(config) {
     contentPlacement,
     elementsDimensions,
     snapBackAcceleratorSize,
-    scrollContainerClientHeight,
   } = config;
 
-  const hasNoMarkers = !elementsDimensions.detentMarkers?.length;
-
-  if (
-    !hasNoMarkers &&
-    elementsDimensions.detentMarkers.length <= destinationDetent - 1
-  ) {
+  if (elementsDimensions.detentMarkers?.length <= destinationDetent - 1) {
     return {
       positionToScrollTo: null,
       scrollAxis: null,
     };
   }
 
-  if (hasNoMarkers && destinationDetent > 1) {
-    return {
-      positionToScrollTo: null,
-      scrollAxis: null,
-    };
-  }
-
-  const effectiveDetentCount = hasNoMarkers ? 1 : detentCount;
   const isClosedDetent = destinationDetent === 0;
   const isFirstDetent = destinationDetent === 1;
-  const isLastDetent = destinationDetent === effectiveDetentCount;
+  const isLastDetent = destinationDetent === detentCount;
   const isBackTrack =
-    trackToTravelOn === "right" ||
-    trackToTravelOn === "bottom" ||
-    trackToTravelOn === "horizontal" ||
-    trackToTravelOn === "vertical";
+    trackToTravelOn === "right" || trackToTravelOn === "bottom";
 
   const viewSize = elementsDimensions.view.travelAxis.unitless;
   const contentSize = elementsDimensions.content.travelAxis.unitless;
   const acceleratorSize =
-    elementsDimensions.snapOutAccelerator?.travelAxis?.unitless ?? 1;
-
+    elementsDimensions.snapOutAccelerator.travelAxis.unitless;
   const detentMarkers = elementsDimensions.detentMarkers;
-  const markerIndex = Math.min(destinationDetent - 1, detentCount - 1);
-  const detentOffset =
-    isClosedDetent || isLastDetent
-      ? 0
-      : (detentMarkers[markerIndex]?.accumulatedOffsets?.travelAxis?.unitless ??
-        0);
+  const detentOffset = isClosedDetent
+    ? 0
+    : detentMarkers[destinationDetent - 1].accumulatedOffsets.travelAxis
+        .unitless;
 
   let scrollPosition = 0;
 
@@ -215,27 +246,21 @@ export function calculateScrollPositionForDetent(config) {
       scrollPosition = 10000;
     } else if ((swipeOutDisabled && isFirstDetent) || isClosedDetent) {
       scrollPosition = 0;
-    } else if (isFirstDetent && !isClosedDetent) {
-      scrollPosition = detentOffset + acceleratorSize;
-    } else {
+    } else if (
+      !isLastDetent &&
+      !(swipeOutDisabled && isFirstDetent) &&
+      !isClosedDetent
+    ) {
       if (swipeOutDisabled) {
-        const marker = detentMarkers[markerIndex];
         scrollPosition =
-          (marker?.accumulatedOffsets?.travelAxis?.unitless ?? 0) -
-          (detentMarkers[0]?.travelAxis?.unitless ?? 0);
+          detentMarkers[destinationDetent - 1].accumulatedOffsets.travelAxis
+            .unitless - detentMarkers[0].travelAxis.unitless;
       } else {
-        const frontSpacerSize =
-          elementsDimensions.frontSpacer?.travelAxis?.unitless ??
-          scrollContainerClientHeight - viewSize;
-        scrollPosition = frontSpacerSize + detentOffset;
+        scrollPosition = detentOffset + acceleratorSize;
       }
     }
   } else if (trackToTravelOn === "left" || trackToTravelOn === "top") {
-    const effectiveAcceleratorSize =
-      snapBackAcceleratorSize ??
-      elementsDimensions.snapOutAccelerator?.travelAxis?.unitless ??
-      acceleratorSize;
-
+    const effectiveAcceleratorSize = snapBackAcceleratorSize ?? acceleratorSize;
     const acceleratorAdjustment =
       swipeOutDisabled && isFirstDetent
         ? 2 * effectiveAcceleratorSize
@@ -250,10 +275,6 @@ export function calculateScrollPositionForDetent(config) {
           detentOffset +
           acceleratorAdjustment
         : 0;
-    } else if (isLastDetent) {
-      scrollPosition = 0;
-    } else if (isClosedDetent) {
-      scrollPosition = contentSize + acceleratorAdjustment;
     } else {
       scrollPosition = contentSize - detentOffset + acceleratorAdjustment;
     }
@@ -406,12 +427,15 @@ export function executeSheetTravel(config) {
 
   const transformDistance = currentOffset - targetOffset;
 
-  let needsTransform =
+  const needsTransform =
     shouldAnimateContent &&
     !Number.isNaN(transformDistance) &&
     transformDistance !== 0;
 
   const useLinearEasing = supportsLinearEasing();
+  const easingValue = useLinearEasing
+    ? `linear(${filteredProgressValues.join(",")})`
+    : "linear";
 
   const transformKeyframes = needsTransform
     ? useLinearEasing
@@ -450,10 +474,6 @@ export function executeSheetTravel(config) {
       return;
     }
 
-    const easingValue = useLinearEasing
-      ? `linear(${filteredProgressValues.join(",")})`
-      : "linear";
-
     const contentAnimation = contentWrapper.animate(transformKeyframes, {
       duration,
       easing: easingValue,
@@ -471,103 +491,54 @@ export function executeSheetTravel(config) {
       return;
     }
 
-    const useLinearEasingForAnimations = supportsLinearEasing();
-    const easingValue = useLinearEasingForAnimations
-      ? `linear(${filteredProgressValues.join(",")})`
-      : "linear";
+    const animationOptions = { duration, easing: easingValue, delay };
+    const progressValues = useLinearEasing
+      ? [
+          mappedProgressValues[0],
+          mappedProgressValues[mappedProgressValues.length - 1],
+        ]
+      : mappedProgressValues;
 
     const allAnimationPromises = [];
 
     travelAnimations
       .filter((anim) => anim.config && anim.target)
       .forEach((anim) => {
-        const travelProgressValues = useLinearEasingForAnimations
-          ? [
-              mappedProgressValues[0],
-              mappedProgressValues[mappedProgressValues.length - 1],
-            ]
-          : mappedProgressValues;
         const keyframes = buildKeyframesFromConfig(
           anim.config,
-          travelProgressValues,
-          useLinearEasingForAnimations
+          progressValues,
+          useLinearEasing
         );
-
-        if (anim.config.transformOrigin) {
-          anim.target.style.transformOrigin = anim.config.transformOrigin;
-        }
-
-        const travelAnim = anim.target.animate(keyframes, {
-          duration,
-          easing: easingValue,
-          delay,
-        });
-
-        const promise = new Promise((resolve) => {
-          travelAnim.addEventListener("finish", function onFinish() {
-            const finalKeyframe = keyframes[keyframes.length - 1];
-            if (finalKeyframe) {
-              Object.entries(finalKeyframe).forEach(([property, value]) => {
-                const kebabProperty =
-                  (property.startsWith("webkit") || property.startsWith("moz")
-                    ? "-"
-                    : "") + property.replace(/[A-Z]/g, "-$&").toLowerCase();
-                anim.target.style.setProperty(kebabProperty, value);
-              });
-            }
-            travelAnim.removeEventListener("finish", onFinish);
-            resolve();
-          });
-        });
-        allAnimationPromises.push(promise);
+        allAnimationPromises.push(
+          animateTarget({
+            target: anim.target,
+            keyframes,
+            animationOptions,
+            transformOrigin: anim.config.transformOrigin,
+          })
+        );
       });
 
     stackingAnimations
       .filter((anim) => anim.config && anim.target)
       .forEach((anim) => {
-        const stackingProgressValues = useLinearEasingForAnimations
-          ? [
-              mappedProgressValues[0],
-              mappedProgressValues[mappedProgressValues.length - 1],
-            ]
-          : mappedProgressValues;
         const keyframes = buildKeyframesFromConfig(
           anim.config,
-          stackingProgressValues,
-          useLinearEasingForAnimations,
+          progressValues,
+          useLinearEasing,
           {
             reversedStackingIndex: anim.reversedStackingIndex,
             selfAndAboveTravelProgressSum: anim.selfAndAboveTravelProgressSum,
           }
         );
-
-        if (anim.config.transformOrigin) {
-          anim.target.style.transformOrigin = anim.config.transformOrigin;
-        }
-
-        const stackingAnim = anim.target.animate(keyframes, {
-          duration,
-          easing: easingValue,
-          delay,
-        });
-
-        const promise = new Promise((resolve) => {
-          stackingAnim.addEventListener("finish", function onFinish() {
-            const finalKeyframe = keyframes[keyframes.length - 1];
-            if (finalKeyframe) {
-              Object.entries(finalKeyframe).forEach(([property, value]) => {
-                const kebabProperty =
-                  (property.startsWith("webkit") || property.startsWith("moz")
-                    ? "-"
-                    : "") + property.replace(/[A-Z]/g, "-$&").toLowerCase();
-                anim.target.style.setProperty(kebabProperty, value);
-              });
-            }
-            stackingAnim.removeEventListener("finish", onFinish);
-            resolve();
-          });
-        });
-        allAnimationPromises.push(promise);
+        allAnimationPromises.push(
+          animateTarget({
+            target: anim.target,
+            keyframes,
+            animationOptions,
+            transformOrigin: anim.config.transformOrigin,
+          })
+        );
       });
 
     let startTime = null;
@@ -646,8 +617,8 @@ export function executeSheetTravel(config) {
       setScroll();
 
       Promise.all([
-        new Promise((resolve) => animateContent(resolve)),
-        new Promise((resolve) => animateTravelCallbacks(resolve)),
+        wrapAsPromise(animateContent),
+        wrapAsPromise(animateTravelCallbacks),
       ]).then(() => {
         setSegment([destinationDetent, destinationDetent]);
         if (onTravelEnd) {
@@ -745,7 +716,6 @@ export function travelToDetent(config) {
     contentPlacement,
     snapBackAcceleratorSize: snapBackAcceleratorTravelAxisSize,
     elementsDimensions: dimensions,
-    scrollContainerClientHeight: scrollContainer.clientHeight,
   });
 
   const { positionToScrollTo, scrollAxis } = scrollInfo;

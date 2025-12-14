@@ -284,16 +284,14 @@ export function generateAnimationConfig(config) {
 
 /**
  * Create a tween function for interpolating values based on progress.
- * Returns numeric values when both inputs are numbers, otherwise CSS calc expressions.
+ * Always returns CSS calc() expressions to let the browser handle interpolation.
+ * This matches Silk's es() function behavior.
  *
  * @param {number} progress - Progress value (0-1)
- * @returns {Function} Tween function that interpolates between start and end values
+ * @returns {Function} Tween function (start, end) => CSS calc expression
  */
 export function createTweenFunction(progress) {
   return (start, end) => {
-    if (typeof start === "number" && typeof end === "number") {
-      return start + (end - start) * progress;
-    }
     return `calc(${start} + (${end} - ${start}) * ${progress})`;
   };
 }
