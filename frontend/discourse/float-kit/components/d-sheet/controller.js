@@ -5,12 +5,6 @@ import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { createTweenFunction } from "./animation";
 import AnimationTravel from "./animation-travel";
 import {
-  isStandaloneWithBlackTranslucent,
-  isWebKit,
-} from "./browser-detection";
-import {
-  getDefaultTrackForPlacement,
-  normalizeTrack,
   placementToCssClass,
   trackToPlacement,
   validateTracksPlacement,
@@ -24,6 +18,7 @@ import StackingAdapter from "./stacking-adapter";
 import StateHelper from "./state-helper";
 import StateMachine from "./state-machine";
 import { POSITION_STATES, SHEET_STATES, STAGING_STATES } from "./states";
+import ThemeColorAdapter from "./theme-color-adapter";
 import TimeoutManager from "./timeout-manager";
 import { TouchHandler } from "./touch-handler";
 
@@ -287,24 +282,6 @@ export default class Controller {
   /** @type {Object|null} Theme color manager service */
   themeColorManager = null;
 
-  /** @type {boolean|string} Theme color dimming configuration */
-  themeColorDimming = false;
-
-  /** @type {number|null} Alpha value for theme color dimming */
-  themeColorDimmingAlpha = null;
-
-  /** @type {Array} Registered theme color dimming overlays */
-  themeColorDimmingOverlays = [];
-
-  /** @type {HTMLMetaElement|null} Theme color meta tag element */
-  themeColorMetaTag = null;
-
-  /** @type {Object|null} Entry in the theme color stack */
-  themeColorStackEntry = null;
-
-  /** @type {string|null} Original underlying theme color */
-  underlyingThemeColor = null;
-
   /**
    * Initialize the controller with helpers and state machines.
    * Use configure() to set options after construction.
@@ -319,6 +296,7 @@ export default class Controller {
     this.stackingAdapter = new StackingAdapter(this);
     this.stateHelper = new StateHelper(this);
     this.animationTravel = new AnimationTravel(this);
+    this.themeColorAdapter = new ThemeColorAdapter(this);
     this.setupSubscriptions();
   }
 
@@ -550,10 +528,7 @@ export default class Controller {
    * @private
    */
   #configureThemeColor(options) {
-    this.#assignIfDefined(options, [
-      "themeColorDimming",
-      "themeColorDimmingAlpha",
-    ]);
+    this.themeColorAdapter.configure(options);
   }
 
   /**
@@ -728,7 +703,7 @@ export default class Controller {
    * @private
    */
   updateStagingActiveAttribute() {
-    this.domAttributes?.updateStagingActive(this.staging);
+    this.domAttributes.updateStagingActive(this.staging);
   }
 
   /**
@@ -770,16 +745,6 @@ export default class Controller {
    */
   get scrollContainerShouldBePassThrough() {
     return !this.inertOutside && !this.backdropSwipeable;
-  }
-
-  /**
-   * @type {boolean}
-   */
-  get effectiveThemeColorDimming() {
-    if (this.themeColorDimming === "auto") {
-      return isWebKit() && !isStandaloneWithBlackTranslucent();
-    }
-    return Boolean(this.themeColorDimming);
   }
 
   /**
@@ -922,53 +887,6 @@ export default class Controller {
   }
 
   /**
-   * Update the theme color via the theme color manager.
-   *
-   * @param {string} color - New theme color value
-   */
-  @action
-  updateThemeColor(color) {
-    this.themeColorManager?.updateThemeColor(this, color);
-  }
-
-  /**
-   * Set the actual theme color based on current state.
-   */
-  @action
-  setActualThemeColor() {
-    this.themeColorManager?.setActualThemeColor(this);
-  }
-
-  /**
-   * Register a theme color dimming overlay.
-   *
-   * @param {Object} overlay - Overlay configuration
-   * @returns {Object|undefined} Registered overlay handle
-   */
-  @action
-  registerThemeColorDimmingOverlay(overlay) {
-    return this.themeColorManager?.registerThemeColorDimmingOverlay(
-      this,
-      overlay
-    );
-  }
-
-  /**
-   * Release ownership of the theme color.
-   */
-  @action
-  releaseThemeColorOwnership() {
-    this.themeColorManager?.releaseThemeColorOwnership(this);
-  }
-
-  /**
-   * Capture the theme color from the content element.
-   */
-  captureContentThemeColor() {
-    this.themeColorManager?.captureContentThemeColor(this);
-  }
-
-  /**
    * Update travel status and notify callback.
    *
    * @param {string} status - "idleOutside", "idleInside", "travellingIn", "travellingOut", "stepping"
@@ -995,7 +913,7 @@ export default class Controller {
       status === "travellingIn" ||
       status === "travellingOut" ||
       status === "stepping";
-    this.domAttributes?.updateAnimationActive(isAnimating);
+    this.domAttributes.updateAnimationActive(isAnimating);
   }
 
   /**
@@ -1005,7 +923,7 @@ export default class Controller {
    * @private
    */
   handleStackingStateChange(status) {
-    this.stackingAdapter?.handleTravelStatusChange(
+    this.stackingAdapter.handleTravelStatusChange(
       status,
       this.previousTravelStatus
     );
@@ -1181,7 +1099,7 @@ export default class Controller {
     this.isPresented = true;
     this.resetViewStyles();
     this.updateTravelStatus("travellingIn");
-    this.focusManagement?.capturePreviouslyFocusedElement();
+    this.focusManagement.capturePreviouslyFocusedElement();
   }
 
   /**
@@ -1193,7 +1111,7 @@ export default class Controller {
     this.isPresented = true;
     this.resetViewStyles();
     this.updateTravelStatus("idleInside");
-    this.focusManagement?.capturePreviouslyFocusedElement();
+    this.focusManagement.capturePreviouslyFocusedElement();
   }
 
   /**
@@ -1204,7 +1122,7 @@ export default class Controller {
    */
   handleOpening() {
     this.stateHelper.beginEnterAnimation(false);
-    this.stackingAdapter?.notifyParentOfOpening(false);
+    this.stackingAdapter.notifyParentOfOpening(false);
   }
 
   /**
@@ -1269,14 +1187,14 @@ export default class Controller {
   handleClosing() {
     this.stateHelper.beginExitAnimation(false);
     this.updateTravelStatus("travellingOut");
-    this.stackingAdapter?.notifyParentOfClosing();
+    this.stackingAdapter.notifyParentOfClosing();
 
     if (this.closingWithoutAnimation) {
       this.handleClosingWithoutAnimation();
       return;
     }
 
-    this.domAttributes?.disableScrollSnap();
+    this.domAttributes.disableScrollSnap();
     this.animationTravel.animateToDetent(
       0,
       this.animationTravel.exitingAnimationConfig
@@ -1313,10 +1231,10 @@ export default class Controller {
       this.updateTravelStatus("travellingOut");
       this.closingWithoutAnimation = false;
       this.stateHelper.goOut();
-      this.stackingAdapter?.notifyParentOfClosingImmediate();
+      this.stackingAdapter.notifyParentOfClosingImmediate();
 
       const tween = createTweenFunction(0);
-      this.stackingAdapter?.notifyBelowSheets(0, tween);
+      this.stackingAdapter.notifyBelowSheets(0, tween);
     }
 
     this.timeoutManager.schedule(
@@ -1405,7 +1323,7 @@ export default class Controller {
           this.setScrollPositionToDetent(this.targetDetent);
         });
       } else {
-        this.domAttributes?.setHidden();
+        this.domAttributes.setHidden();
 
         requestAnimationFrame(() => {
           this.handleStateTransition({ type: "PREPARED" });
@@ -1478,7 +1396,7 @@ export default class Controller {
    */
   @action
   setupIntersectionObserver() {
-    this.observerManager?.setupIntersectionObserver();
+    this.observerManager.setupIntersectionObserver();
   }
 
   /**
@@ -1486,7 +1404,7 @@ export default class Controller {
    */
   @action
   cleanupIntersectionObserver() {
-    this.observerManager?.cleanupIntersectionObserver();
+    this.observerManager.cleanupIntersectionObserver();
   }
 
   /**
@@ -1507,7 +1425,7 @@ export default class Controller {
    * Set up ResizeObserver to watch view and content elements.
    */
   setupResizeObserver() {
-    this.observerManager?.setupResizeObserver(() => {
+    this.observerManager.setupResizeObserver(() => {
       if (
         this.view &&
         this.content &&
@@ -1559,14 +1477,14 @@ export default class Controller {
    */
   @action
   cleanup() {
-    this.timeoutManager?.cleanup();
-    this.touchHandler?.detach();
-    this.observerManager?.cleanup();
-    this.releaseThemeColorOwnership();
+    this.timeoutManager.cleanup();
+    this.touchHandler.detach();
+    this.observerManager.cleanup();
+    this.themeColorAdapter.cleanup();
 
-    this.domAttributes?.cleanup();
-    this.inertManagement?.cleanup();
-    this.focusManagement?.cleanup();
+    this.domAttributes.cleanup();
+    this.inertManagement.cleanup();
+    this.focusManagement.cleanup();
 
     this.stateMachine.cleanup();
     this.stagingMachine.cleanup();
@@ -1581,7 +1499,7 @@ export default class Controller {
    */
   @action
   findAutoFocusTarget() {
-    return this.focusManagement?.findAutoFocusTarget() ?? null;
+    return this.focusManagement.findAutoFocusTarget() ?? null;
   }
 
   /**
@@ -1589,7 +1507,7 @@ export default class Controller {
    */
   @action
   executeAutoFocusOnPresent() {
-    this.focusManagement?.executeAutoFocusOnPresent();
+    this.focusManagement.executeAutoFocusOnPresent();
   }
 
   /**
@@ -1597,7 +1515,7 @@ export default class Controller {
    */
   @action
   executeAutoFocusOnDismiss() {
-    this.focusManagement?.executeAutoFocusOnDismiss();
+    this.focusManagement.executeAutoFocusOnDismiss();
   }
 
   /**
@@ -1605,7 +1523,7 @@ export default class Controller {
    */
   @action
   setupFocusScrollPrevention() {
-    this.focusManagement?.setupFocusScrollPrevention();
+    this.focusManagement.setupFocusScrollPrevention();
   }
 
   /**
@@ -1613,7 +1531,7 @@ export default class Controller {
    */
   @action
   applyInertOutside() {
-    this.inertManagement?.applyInertOutside();
+    this.inertManagement.applyInertOutside();
     this.sheetRegistry?.updateInertOutside(this, this.inertOutside);
   }
 
@@ -1622,7 +1540,7 @@ export default class Controller {
    */
   @action
   removeInertOutside() {
-    this.inertManagement?.removeInertOutside();
+    this.inertManagement.removeInertOutside();
     this.sheetRegistry?.updateInertOutside(this, false);
   }
 
@@ -1655,7 +1573,7 @@ export default class Controller {
   @action
   registerContent(content) {
     this.content = content;
-    this.captureContentThemeColor();
+    this.themeColorAdapter.captureContentThemeColor();
     this.calculateDimensionsIfReady();
   }
 
@@ -1695,7 +1613,7 @@ export default class Controller {
       return;
     }
 
-    this.domAttributes?.enableScrollSnap();
+    this.domAttributes.enableScrollSnap();
   }
 
   /**
@@ -1825,7 +1743,7 @@ export default class Controller {
       this.isPresented &&
       this.currentState === "open"
     ) {
-      this.domAttributes?.disableScrollSnap();
+      this.domAttributes.disableScrollSnap();
       this.closingWithoutAnimation = true;
       requestAnimationFrame(() => {
         this.handleStateTransition("SWIPE_OUT");
@@ -1840,7 +1758,7 @@ export default class Controller {
   @action
   handleTouchStart() {
     this.touchMachine.send("TOUCH_START");
-    this.touchHandler?.handleScrollStart();
+    this.touchHandler.handleScrollStart();
   }
 
   /**
@@ -1849,7 +1767,7 @@ export default class Controller {
   @action
   handleTouchEnd() {
     this.touchMachine.send("TOUCH_END");
-    this.touchHandler?.handleTouchEnd();
+    this.touchHandler.handleTouchEnd();
   }
 
   /**
@@ -1961,7 +1879,7 @@ export default class Controller {
       typeof travelAnimation === "object" &&
       travelAnimation.opacity === null;
 
-    if (!isDisabled && this.effectiveThemeColorDimming) {
+    if (!isDisabled && this.themeColorAdapter.effectiveThemeColorDimming) {
       const opacityFn =
         typeof travelAnimation === "function"
           ? travelAnimation
@@ -1972,18 +1890,19 @@ export default class Controller {
       const computedStyle = window.getComputedStyle(backdrop);
       const backgroundColor = computedStyle.backgroundColor || "rgb(0, 0, 0)";
 
-      this.themeColorDimmingOverlay = this.registerThemeColorDimmingOverlay({
-        color: backgroundColor,
-        alpha: 0,
-      });
+      const themeColorDimmingOverlay =
+        this.themeColorAdapter.registerThemeColorDimmingOverlay({
+          color: backgroundColor,
+          alpha: 0,
+        });
 
       this.travelAnimations.push({
         target: backdrop,
         isThemeColorDimming: true,
         callback: (progress) => {
           const opacity = opacityFn({ progress });
-          if (this.themeColorDimmingOverlay) {
-            this.themeColorDimmingOverlay.updateAlpha(opacity);
+          if (themeColorDimmingOverlay) {
+            themeColorDimmingOverlay.updateAlpha(opacity);
           }
         },
       });
@@ -2064,7 +1983,7 @@ export default class Controller {
    * @private
    */
   notifyParentPositionMachineNext() {
-    this.stackingAdapter?.notifyParentPositionMachineNext();
+    this.stackingAdapter.notifyParentPositionMachineNext();
   }
 
   /**
@@ -2147,7 +2066,7 @@ export default class Controller {
    */
   @action
   resetViewStyles() {
-    this.domAttributes?.resetViewStyles();
+    this.domAttributes.resetViewStyles();
     this.viewHiddenByObserver = false;
   }
 
