@@ -256,6 +256,9 @@ export default class SheetDimensionCalculator {
           dimensions.detentMarkers?.[0]?.travelAxis?.unitless ?? 0;
         frontSpacerSize =
           contentSize - firstDetentSize + frontSpacerEdgePadding;
+      } else if (contentPlacement === "center") {
+        frontSpacerSize =
+          viewSize - (viewSize - contentSize) / 2 + snapOutAccelerator;
       } else {
         frontSpacerSize = contentSize + snapOutAccelerator;
       }

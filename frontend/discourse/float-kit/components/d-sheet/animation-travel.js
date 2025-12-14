@@ -159,6 +159,12 @@ export default class AnimationTravel {
     const trackToTravelOn =
       (settings && typeof settings === "object" && settings.track) || c.tracks;
 
+    const snapBackAcceleratorTravelAxisSize = c.edgeAlignedNoOvershoot
+      ? c.snapToEndDetentsAcceleration === "auto"
+        ? 10
+        : 1
+      : 0;
+
     travelToDetent({
       destinationDetent: detentIndex,
       currentDetent: c.activeDetent,
@@ -178,6 +184,7 @@ export default class AnimationTravel {
         c.dimensions?.swipeOutDisabledWithDetent ?? false,
       contentPlacement: c.contentPlacement,
       hasOppositeTracks: c.tracks === "horizontal" || c.tracks === "vertical",
+      snapBackAcceleratorTravelAxisSize,
       onTravel: c.onTravel,
       onTravelStart: c.onTravelStart,
       onTravelEnd: () => this.handleTravelEnd(),
