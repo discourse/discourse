@@ -5,6 +5,7 @@ import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { createTweenFunction } from "./animation";
 import AnimationTravel from "./animation-travel";
 import {
+  normalizeTrack,
   placementToCssClass,
   trackToPlacement,
   validateTracksPlacement,
@@ -63,20 +64,28 @@ export default class Controller {
 
   /** @type {boolean} */
   @tracked isPresented = false;
+
   /** @type {boolean} */
   @tracked safeToUnmount = true;
+
   /** @type {string} */
   @tracked tracks = "bottom";
+
   /** @type {string} */
   @tracked contentPlacement = "bottom";
+
   /** @type {boolean} */
   @tracked inertOutside = true;
+
   /** @type {Array|null} */
   @tracked detentsConfig = null;
+
   /** @type {boolean} */
   @tracked swipeOvershoot = true;
+
   /** @type {boolean} */
   @tracked backdropSwipeable = true;
+
   /** @type {TrackedArray<HTMLElement>} */
   detentMarkers = new TrackedArray();
 
@@ -1708,7 +1717,6 @@ export default class Controller {
       if (this.dimensions.swipeOutDisabledWithDetent) {
         const firstMarkerSize =
           this.dimensions.detentMarkers[0]?.travelAxis?.unitless ?? 0;
-        const edgePadding = this.dimensions.frontSpacerEdgePadding ?? 0;
         const scrollOffset = firstMarkerSize - edgePadding;
         segmentProgress = (scrollTop + scrollOffset) / contentSize;
       } else {
