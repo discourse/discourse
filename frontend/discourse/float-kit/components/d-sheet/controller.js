@@ -699,22 +699,19 @@ export default class Controller {
       },
     });
 
-    const stagingStates = [
-      "none",
-      "opening",
-      "open",
-      "stepping",
-      "closing",
-      "going-down",
-      "go-down",
-      "going-up",
-    ];
-    stagingStates.forEach((state) => {
-      this.stagingMachine.subscribe({
-        timing: "immediate",
-        state,
-        callback: () => this.updateStagingActiveAttribute(),
-      });
+    this.stagingMachine.subscribe({
+      timing: "immediate",
+      state: [
+        "none",
+        "opening",
+        "open",
+        "stepping",
+        "closing",
+        "going-down",
+        "go-down",
+        "going-up",
+      ],
+      callback: () => this.updateStagingActiveAttribute(),
     });
   }
 

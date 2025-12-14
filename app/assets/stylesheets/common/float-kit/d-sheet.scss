@@ -1435,7 +1435,7 @@ html[data-d-sheet-native-page-scroll-replaced="false"]:has(
   height: calc(max(100dvh, 100lvh) + 60px);
 }
 
-.SheetWithStacking-view.contentPlacement-right {
+.SheetWithStacking-view.tracks-right {
   height: 100%;
 }
 
@@ -1448,7 +1448,7 @@ html[data-d-sheet-native-page-scroll-replaced="false"]:has(
   display: grid;
 }
 
-.SheetWithStacking-content.contentPlacement-right {
+.SheetWithStacking-content.tracks-right {
   height: 100%;
   width: min(80%, 700px);
   padding: 0.75rem;
