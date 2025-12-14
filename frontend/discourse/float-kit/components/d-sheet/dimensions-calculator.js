@@ -1,6 +1,19 @@
 import { getBrowserInfo } from "./browser-detection";
 
 /**
+ * Parse a CSS dimension value into multiple formats.
+ * @param {string} styleValue - CSS value string (e.g., "100px")
+ * @returns {{px: string, unitless: number, unitlessRoundedDown: number}}
+ */
+function parseDimension(styleValue) {
+  return {
+    px: styleValue,
+    unitless: parseFloat(styleValue),
+    unitlessRoundedDown: parseInt(styleValue, 10),
+  };
+}
+
+/**
  * @class DimensionCalculator
  * Calculates and applies CSS dimensions for sheet positioning and scroll behavior.
  * Handles view/content sizing, detent markers, spacers, and snap accelerators.
@@ -8,15 +21,6 @@ import { getBrowserInfo } from "./browser-detection";
 export default class DimensionCalculator {
   /** @type {Object} */
   elements;
-
-  /** @type {Object} */
-  cache = {};
-
-  /** @type {string|number|Function} */
-  snapOutAcceleration = "auto";
-
-  /** @type {string|number} */
-  snapToEndDetentsAcceleration = "auto";
 
   /**
    * @param {Object} elements - DOM element references
@@ -47,9 +51,6 @@ export default class DimensionCalculator {
       snapToEndDetentsAcceleration = "auto",
     } = options;
 
-    this.snapOutAcceleration = snapOutAcceleration;
-    this.snapToEndDetentsAcceleration = snapToEndDetentsAcceleration;
-
     const viewElement = this.elements.view;
     const contentElement = this.elements.content;
     const detentMarkers = this.elements.detentMarkers;
@@ -61,12 +62,6 @@ export default class DimensionCalculator {
       track === "right" || track === "left" || track === "horizontal";
     const travelProp = isHorizontal ? "width" : "height";
     const crossProp = isHorizontal ? "height" : "width";
-
-    const parseDimension = (styleValue) => ({
-      px: styleValue,
-      unitless: parseFloat(styleValue),
-      unitlessRoundedDown: parseInt(styleValue, 10),
-    });
 
     const viewDimensions = {
       travelAxis: parseDimension(viewStyle.getPropertyValue(travelProp)),
@@ -94,15 +89,17 @@ export default class DimensionCalculator {
       content: contentDimensions,
       detentMarkers: [],
     };
-    this.applyDimensionVariables(
+    this.#applyDimensionVariables(
       preliminaryDimensions,
       viewElement,
       contentPlacement,
       {
         track,
+        isCenteredTrack,
         swipeOutDisabledWithDetent,
         frontSpacerEdgePadding,
         backSpacerEdgePadding,
+        snapOutAcceleration,
       }
     );
 
@@ -111,16 +108,19 @@ export default class DimensionCalculator {
     // so we always have at least 1 marker rendered.
     let n = 0;
     const contentSize = contentDimensions.travelAxis.unitless;
+    const markerCount = detentMarkers.length;
 
     // Read all markers and accumulate their sizes
-    const detentMarkerDimensions = detentMarkers.map((marker) => {
+    const detentMarkerDimensions = detentMarkers.map((marker, index) => {
       const markerStyle = window.getComputedStyle(marker);
       const dims = {
         travelAxis: parseDimension(markerStyle.getPropertyValue(travelProp)),
         crossAxis: parseDimension(markerStyle.getPropertyValue(crossProp)),
       };
 
-      n += dims.travelAxis.unitless;
+      if (index !== markerCount - 1) {
+        n += dims.travelAxis.unitless;
+      }
 
       return {
         ...dims,
@@ -131,36 +131,51 @@ export default class DimensionCalculator {
             unitlessRoundedDown: null,
           },
         },
-        cumulativeSize: n,
       };
     });
 
+    if (detentMarkerDimensions.length > 0) {
+      const lastIndex = detentMarkerDimensions.length - 1;
+      const remainingContentSize = contentSize - n;
+      detentMarkerDimensions[lastIndex] = {
+        travelAxis: {
+          px: `${remainingContentSize}px`,
+          unitless: remainingContentSize,
+          unitlessRoundedDown: null,
+        },
+        crossAxis: {
+          px: "1px",
+          unitless: 1,
+          unitlessRoundedDown: 1,
+        },
+        accumulatedOffsets: {
+          travelAxis: {
+            px: `${n + remainingContentSize}px`,
+            unitless: n + remainingContentSize,
+            unitlessRoundedDown: null,
+          },
+        },
+      };
+    }
+
     // Calculate progress values at each detent (start with closed state, progress = 0)
-    const progressAtDetents = [
-      {
-        before: -2.1 / contentSize,
-        exact: 0,
-        after: 2.1 / contentSize,
-      },
-    ];
+    const createProgressEntry = (baseOffset) => ({
+      before: (baseOffset - 2.1) / contentSize,
+      exact: baseOffset / contentSize,
+      after: (baseOffset + 2.1) / contentSize,
+    });
+
+    const progressAtDetents = [createProgressEntry(0)];
 
     // Add progress entry for each marker EXCEPT the last one.
     // The last marker represents full height, so it doesn't need a separate entry.
     detentMarkerDimensions.slice(0, -1).forEach((marker) => {
       const offset = marker.accumulatedOffsets.travelAxis.unitless;
-      progressAtDetents.push({
-        before: (offset - 2.1) / contentSize,
-        exact: offset / contentSize,
-        after: (offset + 2.1) / contentSize,
-      });
+      progressAtDetents.push(createProgressEntry(offset));
     });
 
     // Final entry for full height (progress = 1.0)
-    progressAtDetents.push({
-      before: (contentSize - 2.1) / contentSize,
-      exact: 1,
-      after: (contentSize + 2.1) / contentSize,
-    });
+    progressAtDetents.push(createProgressEntry(contentSize));
 
     const finalDimensions = {
       view: viewDimensions,
@@ -174,15 +189,17 @@ export default class DimensionCalculator {
     };
 
     // Re-apply with detent markers for front spacer calculation
-    this.applyDimensionVariables(
+    this.#applyDimensionVariables(
       finalDimensions,
       viewElement,
       contentPlacement,
       {
         track,
+        isCenteredTrack,
         swipeOutDisabledWithDetent,
         frontSpacerEdgePadding,
         backSpacerEdgePadding,
+        snapOutAcceleration,
       }
     );
 
@@ -196,22 +213,25 @@ export default class DimensionCalculator {
    * @param {string} [contentPlacement="end"] - Content placement
    * @param {Object} [options={}] - Additional options
    * @param {string} options.track - Track direction
+   * @param {boolean} options.isCenteredTrack - Whether using horizontal/vertical track
    * @param {boolean} [options.swipeOutDisabledWithDetent=false] - Whether swipe out is disabled
    * @param {number} [options.frontSpacerEdgePadding=0] - Front spacer edge padding
    * @param {number} [options.backSpacerEdgePadding=0] - Back spacer edge padding
+   * @param {string|number|Function} [options.snapOutAcceleration="auto"] - Snap out acceleration setting
    * @returns {void}
    */
-  applyDimensionVariables(
+  #applyDimensionVariables(
     dimensions,
     viewElement,
     contentPlacement = "end",
     options = {}
   ) {
     const {
-      track,
+      isCenteredTrack = false,
       swipeOutDisabledWithDetent = false,
       frontSpacerEdgePadding = 0,
       backSpacerEdgePadding = 0,
+      snapOutAcceleration = "auto",
     } = options;
 
     if (dimensions.view) {
@@ -236,21 +256,24 @@ export default class DimensionCalculator {
       );
     }
 
-    // Front spacer calculation
-    if (dimensions.view && dimensions.content) {
-      const viewSize = dimensions.view.travelAxis.unitless;
-      const contentSize = dimensions.content.travelAxis.unitless;
-      const snapOutAccelerator = this.calculateSnapOutAccelerator(
-        viewSize,
-        contentSize,
-        contentPlacement
-      );
+    const viewSize = dimensions.view?.travelAxis?.unitless || 0;
+    const contentSize = dimensions.content?.travelAxis?.unitless || 0;
+    const snapOutAccelerator = this.#calculateSnapOutAccelerator(
+      snapOutAcceleration,
+      viewSize,
+      contentSize,
+      contentPlacement
+    );
 
+    if (dimensions.view && dimensions.content) {
       let frontSpacerSize;
-      const isCenteredTrack = track === "horizontal" || track === "vertical";
 
       if (isCenteredTrack) {
-        frontSpacerSize = 0;
+        frontSpacerSize =
+          viewSize / 2 +
+          viewSize -
+          (viewSize - contentSize) / 2 +
+          snapOutAccelerator;
       } else if (swipeOutDisabledWithDetent) {
         const firstDetentSize =
           dimensions.detentMarkers?.[0]?.travelAxis?.unitless ?? 0;
@@ -276,14 +299,15 @@ export default class DimensionCalculator {
       );
     }
 
-    // Back spacer calculation
     if (dimensions.view && dimensions.content) {
       let backSpacerSize;
-      const viewSize = dimensions.view.travelAxis.unitless;
-      const isCenteredTrack = track === "horizontal" || track === "vertical";
 
       if (isCenteredTrack) {
-        backSpacerSize = 0;
+        backSpacerSize =
+          viewSize / 2 +
+          viewSize -
+          (viewSize - contentSize) / 2 +
+          snapOutAccelerator;
       } else if (backSpacerEdgePadding > 0) {
         backSpacerSize = viewSize + backSpacerEdgePadding;
       } else {
@@ -305,75 +329,73 @@ export default class DimensionCalculator {
     }
 
     // Snap accelerator
-    const snapAcceleratorValue = this.calculateSnapOutAccelerator(
-      dimensions.view?.travelAxis?.unitless || 0,
-      dimensions.content?.travelAxis?.unitless || 0,
-      contentPlacement
-    );
     dimensions.snapOutAccelerator = {
       travelAxis: {
-        px: `${snapAcceleratorValue}px`,
-        unitless: snapAcceleratorValue,
+        px: `${snapOutAccelerator}px`,
+        unitless: snapOutAccelerator,
       },
     };
 
     viewElement.style.setProperty(
       "--d-sheet-snap-accelerator",
-      `${snapAcceleratorValue}px`
+      `${snapOutAccelerator}px`
     );
   }
 
   /**
    * Calculate snap out accelerator value for scroll-snap behavior.
+   * @param {string|number|Function} snapOutAcceleration - Acceleration setting
    * @param {number} viewSize - View size in pixels
    * @param {number} contentSize - Content size in pixels
    * @param {string} [contentPlacement="end"] - Content placement
    * @returns {number} Snap accelerator value in pixels
    */
-  calculateSnapOutAccelerator(viewSize, contentSize, contentPlacement = "end") {
-    // Numeric mode: use value directly
-    if (
-      typeof this.snapOutAcceleration === "number" &&
-      !Number.isNaN(this.snapOutAcceleration)
-    ) {
-      return this.snapOutAcceleration;
+  #calculateSnapOutAccelerator(
+    snapOutAcceleration,
+    viewSize,
+    contentSize,
+    contentPlacement = "end"
+  ) {
+    if (snapOutAcceleration === "auto") {
+      const effectiveSize =
+        contentPlacement === "center"
+          ? contentSize + (viewSize - contentSize) / 2
+          : contentSize;
+
+      const { browserEngine, platform } = getBrowserInfo();
+
+      if (browserEngine === "chromium") {
+        return effectiveSize <= 1440
+          ? 70 + 0.25 * effectiveSize
+          : 0.3 * effectiveSize;
+      }
+
+      if (browserEngine === "webkit") {
+        if (platform === "ios" || platform === "ipados") {
+          return effectiveSize <= 716
+            ? 15 + 0.1 * effectiveSize
+            : 0.12 * effectiveSize;
+        }
+        return 0.5 * effectiveSize;
+      }
+
+      // Gecko (Firefox) or unknown
+      return 10;
     }
 
-    // Initial mode: fixed value of 1
-    if (this.snapOutAcceleration === "initial") {
+    if (typeof snapOutAcceleration === "function") {
+      const result = parseInt(snapOutAcceleration(contentSize), 10);
+      return result < 1
+        ? 1
+        : result > contentSize / 2
+          ? contentSize / 2
+          : result;
+    }
+
+    if (snapOutAcceleration === "initial") {
       return 1;
     }
 
-    // Function mode: call function and clamp result
-    if (typeof this.snapOutAcceleration === "function") {
-      const result = parseInt(this.snapOutAcceleration(contentSize), 10);
-      return Math.max(1, Math.min(result, contentSize / 2));
-    }
-
-    // Auto mode: browser-specific calculation
-    const effectiveSize =
-      contentPlacement === "center"
-        ? contentSize + (viewSize - contentSize) / 2
-        : contentSize;
-
-    const { browserEngine, platform } = getBrowserInfo();
-
-    if (browserEngine === "chromium") {
-      return effectiveSize <= 1440
-        ? 70 + 0.25 * effectiveSize
-        : 0.3 * effectiveSize;
-    }
-
-    if (browserEngine === "webkit") {
-      if (platform === "ios" || platform === "ipados") {
-        return effectiveSize <= 716
-          ? 15 + 0.1 * effectiveSize
-          : 0.12 * effectiveSize;
-      }
-      return 0.5 * effectiveSize;
-    }
-
-    // Gecko (Firefox) or unknown
-    return 10;
+    return undefined;
   }
 }
