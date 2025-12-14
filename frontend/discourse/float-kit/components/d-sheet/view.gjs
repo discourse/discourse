@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { modifier as modifierFn } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
+import effect from "discourse/float-kit/helpers/effect";
 import { eq, not } from "discourse/truth-helpers";
 import Backdrop from "./backdrop";
 import Content from "./content";
@@ -55,7 +56,7 @@ export default class View extends Component {
 
   /**
    * Configure the Controller with behavioral options.
-   * Called during render phase (before any property access) via helper invocation.
+   * Called via effect helper when sheet or any configuration args change.
    *
    * @param {Object} sheet - The sheet controller instance
    */
@@ -102,7 +103,7 @@ export default class View extends Component {
   }
 
   <template>
-    {{(this.configureSheet @sheet)}}
+    {{effect this.configureSheet @sheet}}
 
     <div
       data-d-sheet={{concatClass

@@ -4,6 +4,7 @@ import { registerDestructor } from "@ember/destroyable";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import effect from "discourse/float-kit/helpers/effect";
 import Controller from "./controller";
 
 /**
@@ -34,19 +35,11 @@ export default class Root extends Component {
    */
   @tracked sheet;
 
-  /**
-   * Track the previous presented value to detect changes.
-   *
-   * @type {boolean|undefined}
-   */
-  previousPresented = undefined;
+  /** @type {boolean|undefined} */
+  #previousPresented;
 
-  /**
-   * Track whether defaultPresented has been applied.
-   *
-   * @type {boolean}
-   */
-  hasAppliedDefaultPresented = false;
+  /** @type {boolean} */
+  #hasAppliedDefaultPresented = false;
 
   constructor(owner, args) {
     super(owner, args);
@@ -62,12 +55,7 @@ export default class Root extends Component {
       if (this.args.componentId) {
         this.sheetRegistry.unregisterRoot(this.args.componentId);
       }
-
-      if (this.sheet.stackId) {
-        this.sheetStackRegistry.unregisterSheetFromStack(this.sheet);
-      }
-      this.sheetRegistry.unregister(this.sheet);
-      this.sheet.cleanup();
+      this.#cleanupCurrentSheet();
     });
   }
 
@@ -82,6 +70,20 @@ export default class Root extends Component {
       this.args.presented !== undefined &&
       this.args.onPresentedChange !== undefined
     );
+  }
+
+  /**
+   * Cleanup the current sheet controller.
+   * Unregisters from stack and registry, then calls controller cleanup.
+   *
+   * @private
+   */
+  #cleanupCurrentSheet() {
+    if (this.sheet.stackId) {
+      this.sheetStackRegistry.unregisterSheetFromStack(this.sheet);
+    }
+    this.sheetRegistry.unregister(this.sheet);
+    this.sheet.cleanup();
   }
 
   /**
@@ -128,57 +130,45 @@ export default class Root extends Component {
   }
 
   /**
-   * Reacts to @presented changes in controlled mode.
-   * Called during render via helper invocation.
+   * Reacts to @presented and @defaultPresented changes.
+   * Handles both controlled mode (reacting to @presented) and
+   * uncontrolled mode (applying @defaultPresented once).
    *
-   * @param {boolean} presented
+   * @param {boolean} presented - The controlled presented state
+   * @param {boolean} defaultPresented - The initial presented state for uncontrolled mode
    */
   @action
-  syncPresented(presented) {
-    if (!this.isControlled) {
-      return;
+  syncPresentedState(presented, defaultPresented) {
+    // Controlled mode: react to @presented changes
+    if (this.isControlled) {
+      const previous = this.#previousPresented;
+      this.#previousPresented = presented;
+
+      if (presented && !previous && this.sheet.safeToUnmount) {
+        schedule("afterRender", () => this.openSheet());
+      } else if (!presented && previous) {
+        schedule("afterRender", () => this.sheet.close());
+      }
     }
 
-    const previousPresented = this.previousPresented;
-    this.previousPresented = presented;
-
-    if (presented && !previousPresented && this.sheet.safeToUnmount) {
-      schedule("afterRender", () => {
-        this.openSheet();
-      });
-    } else if (!presented && previousPresented) {
-      schedule("afterRender", () => {
-        this.sheet.close();
-      });
+    // Uncontrolled mode: apply defaultPresented once
+    if (
+      !this.#hasAppliedDefaultPresented &&
+      !this.isControlled &&
+      defaultPresented
+    ) {
+      this.#hasAppliedDefaultPresented = true;
+      schedule("afterRender", () => this.openSheet());
     }
   }
 
   /**
-   * Applies defaultPresented on initial render (uncontrolled mode only).
-   * Called during render via helper invocation.
-   */
-  @action
-  applyDefaultPresented() {
-    if (this.hasAppliedDefaultPresented || this.isControlled) {
-      return;
-    }
-
-    this.hasAppliedDefaultPresented = true;
-
-    if (this.args.defaultPresented) {
-      schedule("afterRender", () => {
-        this.openSheet();
-      });
-    }
-  }
-
-  /**
-   * Resolve the stack ID based on forComponent prop.
+   * The stack ID based on forComponent prop.
    *
-   * @returns {string|null}
+   * @type {string|null}
    */
-  resolveStackId() {
-    return this.args.forComponent || null;
+  get stackId() {
+    return this.args.forComponent ?? null;
   }
 
   /**
@@ -215,13 +205,18 @@ export default class Root extends Component {
    */
   @action
   openSheet() {
-    const stackId = this.resolveStackId();
+    const stackId = this.stackId;
     const animatingParent = this.getAnimatingParentSheet(stackId);
 
     if (animatingParent) {
+      let attempts = 0;
+      const maxAttempts = 60; // ~1 second at 60fps
+
       const checkAndOpen = () => {
-        const stillAnimating = this.getAnimatingParentSheet(stackId);
-        if (!stillAnimating) {
+        if (
+          ++attempts > maxAttempts ||
+          !this.getAnimatingParentSheet(stackId)
+        ) {
           this.doOpenSheet(stackId);
         } else {
           requestAnimationFrame(checkAndOpen);
@@ -259,11 +254,7 @@ export default class Root extends Component {
    */
   @action
   handleSheetClosed() {
-    if (this.sheet.stackId) {
-      this.sheetStackRegistry.unregisterSheetFromStack(this.sheet);
-    }
-    this.sheetRegistry.unregister(this.sheet);
-    this.sheet.cleanup();
+    this.#cleanupCurrentSheet();
     this.createController();
     this.sheet.rootComponent = this;
 
@@ -273,9 +264,7 @@ export default class Root extends Component {
   }
 
   <template>
-    {{(this.syncPresented @presented)}}
-    {{(this.applyDefaultPresented)}}
-
+    {{effect this.syncPresentedState @presented @defaultPresented}}
     {{yield this.sheet}}
   </template>
 }
