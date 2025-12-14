@@ -60,7 +60,22 @@ if dev_mode
   restart = true
   while restart
     restart = false
-    pid = fork { load Gem.bin_path("unicorn", "unicorn") }
+    pid =
+      fork do
+        begin
+          load Gem.bin_path("unicorn", "unicorn")
+        rescue ArgumentError => err
+          if (err.message =~ /Already running on PID/)
+            puts "\n"
+            puts "Unicorn is already running!\n"
+            pid = err.message[/PID:(\d+)/, 1]&.to_i
+            puts "\n"
+            puts "kill -9 #{pid} to stop the existing unicorn master process, then try again."
+          else
+            raise err
+          end
+        end
+      end
     done = false
 
     Signal.trap("INT") do
