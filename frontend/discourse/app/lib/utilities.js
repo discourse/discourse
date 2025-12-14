@@ -35,6 +35,11 @@ export function splitString(str, separator = ",") {
   }
 }
 
+// Strip "Discourse" prefix from plugin names to match server-side humanized_name behavior
+export function stripDiscoursePrefix(text) {
+  return (text || "").replace(/^discourse[\s-]+/i, "");
+}
+
 export function escapeExpression(string) {
   if (!string) {
     return "";
