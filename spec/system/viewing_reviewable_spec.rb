@@ -400,6 +400,7 @@ describe "Viewing reviewable item", type: :system do
 
       refreshed_review_page.visit_reviewable(reviewable_flagged_post)
       expect(refreshed_review_page).to have_history_items(count: 2)
+      expect(refreshed_review_page).to have_created_at_history_item
 
       refreshed_review_page.click_claim_reviewable
       page.refresh

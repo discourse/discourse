@@ -33,14 +33,6 @@ const HISTORY_UNCLAIMED_ID = 4;
  */
 export default class ReviewableTimeline extends Component {
   @service currentUser;
-  @service store;
-
-  /**
-   * The post being reviewed (if applicable)
-   *
-   * @type {Post}
-   */
-  @tracked reviewablePost;
 
   /**
    * Array of notes associated with the reviewable
@@ -53,13 +45,6 @@ export default class ReviewableTimeline extends Component {
     super(...arguments);
 
     this.reviewableNotes = this.args.reviewable.reviewable_notes || [];
-
-    // If we have a post_id but no post, we need to grab it from the store.
-    if (this.args.reviewable.post_id && !this.reviewablePost) {
-      this.store
-        .find("post", this.args.reviewable.post_id)
-        .then((post) => (this.reviewablePost = post));
-    }
   }
 
   /**
@@ -73,10 +58,10 @@ export default class ReviewableTimeline extends Component {
     const reviewedEvents = new Map(); // Track reviewed events to prevent duplicates
 
     // Add target post creation event (when the original post was created)
-    if (this.reviewablePost) {
+    if (this.args.reviewable.target_created_at) {
       events.push({
         type: "target_created",
-        date: this.reviewablePost.created_at,
+        date: this.args.reviewable.target_created_at,
         user: this.args.reviewable.target_created_by,
         icon: "pen-to-square",
         titleKey: "review.timeline.target_created_by",

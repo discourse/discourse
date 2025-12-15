@@ -16,6 +16,12 @@ describe "Viewing reviewable post voting comment", type: :system do
     sign_in(admin)
   end
 
+  it "has created at history item" do
+    refreshed_review_page.visit_reviewable(reviewable)
+    expect(refreshed_review_page).to have_history_items(count: 2)
+    expect(refreshed_review_page).to have_created_at_history_item
+  end
+
   xit "Allows to delete and restore comment" do
     refreshed_review_page.visit_reviewable(reviewable)
 
