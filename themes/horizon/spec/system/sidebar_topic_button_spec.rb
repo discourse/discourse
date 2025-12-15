@@ -50,16 +50,19 @@ RSpec.describe "Sidebar New Topic Button", system: true do
       expect(page).to have_css(".sidebar-new-topic-button__wrapper .topic-drafts-menu-trigger")
     end
 
-    context "when the category has a subcategory where user can post" do
-      it "does not disable button when visiting read-only category and has the can-create-topic class" do
-        category_page.visit(private_category)
+    context "when default_subcategory_on_read_only_category setting enabled and can't post on parent category" do
+      before { SiteSetting.default_subcategory_on_read_only_category = true }
+      context "when the category has a subcategory where user can post" do
+        it "does not disable button when visiting read-only category and has the can-create-topic class" do
+          category_page.visit(private_category)
 
-        expect(page).to have_no_css(".sidebar-new-topic-button[disabled]")
+          expect(page).to have_no_css(".sidebar-new-topic-button[disabled]")
 
-        category_page.visit(category_with_no_subcategory)
+          category_page.visit(category_with_no_subcategory)
 
-        expect(page).to have_no_css(".sidebar-new-topic-button[disabled]")
-        expect(page).to have_css(".sidebar-new-topic-button.can-create-topic")
+          expect(page).to have_no_css(".sidebar-new-topic-button[disabled]")
+          expect(page).to have_css(".sidebar-new-topic-button.can-create-topic")
+        end
       end
     end
 
@@ -95,13 +98,13 @@ RSpec.describe "Sidebar New Topic Button", system: true do
         expect(page).to have_no_css(".sidebar-new-topic-button.can-create-topic")
       end
     end
+  end
 
-    context "for anon" do
-      it "does not render the sidebar button for anons" do
-        visit("/latest")
-        expect(page).not_to have_css(".sidebar-new-topic-button__wrapper")
-        expect(page).not_to have_css(".sidebar-new-topic-button:not(.disabled)")
-      end
+  context "for anon" do
+    it "does not render the sidebar button for anons" do
+      visit("/latest")
+      expect(page).not_to have_css(".sidebar-new-topic-button__wrapper")
+      expect(page).not_to have_css(".sidebar-new-topic-button:not(.disabled)")
     end
   end
 end
