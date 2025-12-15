@@ -239,7 +239,7 @@ export default <template>
                     <span class="edit-topic__wrapper">
                       &nbsp;{{icon "pencil" class="edit-topic"}}
                     </span>
-                  {{/if}}
+                  {{~/if}}
                 </a>
               {{/if}}
 
