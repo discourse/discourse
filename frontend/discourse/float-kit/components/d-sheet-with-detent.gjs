@@ -4,7 +4,6 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import DScrollRoot from "./d-scroll/root";
 import DSheet from "./d-sheet";
 
 class DSheetWithDetent extends Component {
@@ -56,11 +55,19 @@ class DSheetWithDetent extends Component {
 
             {{#if (has-block "content")}}
               {{yield
-                (hash Trigger=(component DSheet.Trigger sheet=sheet))
+                (hash
+                  Trigger=(component DSheet.Trigger sheet=sheet)
+                  reachedLastDetent=this.reachedLastDetent
+                )
                 to="content"
               }}
             {{else}}
-              {{yield (hash Trigger=(component DSheet.Trigger sheet=sheet))}}
+              {{yield
+                (hash
+                  Trigger=(component DSheet.Trigger sheet=sheet)
+                  reachedLastDetent=this.reachedLastDetent
+                )
+              }}
             {{/if}}
           </DSheet.Content>
         </View>

@@ -1,18 +1,14 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn, hash } from "@ember/helper";
-import { on } from "@ember/modifier";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import DCard from "discourse/float-kit/components/d-card";
 import DSheet from "discourse/float-kit/components/d-sheet";
-import DSheetBottom from "discourse/float-kit/components/d-sheet-bottom";
 import DSheetWithDetent from "discourse/float-kit/components/d-sheet-with-detent";
-import DSheetWithKeyboard from "discourse/float-kit/components/d-sheet-with-keyboard";
 import DSheetWithStacking from "discourse/float-kit/components/d-sheet-with-stacking";
-import { eq, includes } from "discourse/truth-helpers";
 import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
@@ -84,12 +80,10 @@ export default class Sheets extends Component {
             <:content as |sheet|>
               <input />
 
-              {{log DSheet.Scroll}}
-
               <DSheet.Scroll.Root as |controller|>
                 <DSheet.Scroll.View
                   class="SheetWithDetent-scrollView"
-                  @scrollGesture={{if this.reachedLastDetent "auto" false}}
+                  @scrollGesture={{if sheet.reachedLastDetent "auto" false}}
                   @scrollGestureTrap={{hash yEnd=true}}
                   @safeArea="layout-viewport"
                   @onScrollStart={{hash dismissKeyboard=true}}

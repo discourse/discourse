@@ -294,6 +294,9 @@ export default class Controller {
   /** @type {boolean} Whether a programmatic scroll is in progress */
   programmaticScrollOngoing = false;
 
+  /** @type {number|null} Last processed progress value for de-duplication */
+  lastProcessedProgress = null;
+
   /** @type {FocusManagement|null} Focus management helper */
   focusManagement = null;
 
@@ -602,6 +605,11 @@ export default class Controller {
     this.stateMachine.subscribe({
       timing: "immediate",
       state: "open",
+      guard: () => {
+        const msg = this.stateMachine.lastMessageTreated;
+        // Only fire for main state entry transitions, not sub-machine transitions
+        return ["ANIMATION_COMPLETE", "PREPARED", "STEP"].includes(msg?.type);
+      },
       callback: (message) => this.handleOpen(message),
     });
 
@@ -1285,6 +1293,7 @@ export default class Controller {
     this.activeDetent = 0;
     this.currentSegment = [0, 0];
     this.dimensions = null;
+    this.lastProcessedProgress = null;
 
     if (this.stateHelper.position !== "out") {
       if (this.stateHelper.isPositionFrontClosing()) {
@@ -1718,6 +1727,10 @@ export default class Controller {
 
     this.notifyTravel(clampedProgress);
 
+    if (this.lastProcessedProgress === clampedProgress) {
+      return;
+    }
+
     if (this.dimensions?.progressValueAtDetents) {
       const detents = this.dimensions.progressValueAtDetents;
       const n = detents.length;
@@ -1752,6 +1765,15 @@ export default class Controller {
           break;
         }
       }
+
+      // Fallback: if segmentProgress >= 1, set to last detent
+      // This handles the case when progress overshoots the last detent's after boundary
+      if (segmentProgress >= 1) {
+        const lastDetent = n - 1;
+        this.setSegment([lastDetent, lastDetent]);
+      }
+
+      this.lastProcessedProgress = clampedProgress;
     }
 
     if (

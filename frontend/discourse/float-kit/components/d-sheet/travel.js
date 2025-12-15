@@ -589,7 +589,12 @@ export function executeSheetTravel(config) {
 
         requestAnimationFrame(progressReportLoop);
       } else {
-        // Loop finished, wait for WAAPI animations to complete
+        const lastDetent = Math.min(
+          (dimensions?.progressValueAtDetents?.length ?? 1) - 1,
+          destinationDetent
+        );
+        setSegment([lastDetent, lastDetent]);
+
         Promise.all(allAnimationPromises).then(() => {
           callback();
         });
@@ -619,7 +624,6 @@ export function executeSheetTravel(config) {
         wrapAsPromise(animateContent),
         wrapAsPromise(animateTravelCallbacks),
       ]).then(() => {
-        setSegment([destinationDetent, destinationDetent]);
         if (onTravelEnd) {
           onTravelEnd();
         }

@@ -1417,10 +1417,7 @@ html[data-d-sheet-native-page-scroll-replaced="false"]:has(
 }
 
 .SheetWithDetent-scrollView {
-  flex: 1;
   min-height: 0;
-  overflow: auto;
-  overscroll-behavior: contain;
 }
 
 .SheetWithDetent-scrollContent {

@@ -198,6 +198,12 @@ export default class AnimationTravel {
   handleTravelEnd() {
     const c = this.controller;
 
+    const exactProgress =
+      c.dimensions?.exactProgressValueAtDetents?.[c.currentSegment[0]];
+    if (exactProgress !== undefined) {
+      c.lastProcessedProgress = exactProgress;
+    }
+
     c.onTravelEnd?.();
 
     const staging = c.stateHelper.staging;
