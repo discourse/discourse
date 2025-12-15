@@ -28,7 +28,6 @@ module Chat
                class_name: "Chat::Message",
                foreign_key: :last_message_id,
                optional: true
-    has_one :icon_upload, class_name: "Upload", foreign_key: :id, primary_key: :icon_upload_id
 
     def last_message
       super || NullMessage.new
