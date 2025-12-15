@@ -69,7 +69,9 @@
     width: var(--d-border-radius-large);
     height: var(--d-border-radius-large);
     background-color: var(--background-color);
-    z-index: 399;
+    z-index: calc(
+      z("base") + 1
+    ); // has to top list-controls, which is sticky in Horizon
     mask: radial-gradient(
       circle at var(--d-border-radius-large) var(--d-border-radius-large),
       transparent var(--d-border-radius-large),
@@ -112,7 +114,9 @@
   &__bottom-bar {
     position: fixed;
     width: 100%;
-    z-index: 399;
+    z-index: calc(
+      z("base") + 1
+    ); // has to top list-controls, which is sticky in Horizon
     background-color: var(--background-color);
     bottom: 0;
     left: var(--left-distance);
