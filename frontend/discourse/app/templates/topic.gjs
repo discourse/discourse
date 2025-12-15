@@ -234,10 +234,11 @@ export default <template>
                   {{on "click" @controller.handleTitleClick}}
                   class="fancy-title"
                 >
-                  {{htmlSafe @controller.model.fancyTitle}}
-
-                  {{#if @controller.model.details.can_edit}}
-                    {{icon "pencil" class="edit-topic"}}
+                  {{htmlSafe @controller.model.fancyTitle~}}
+                  {{~#if @controller.model.details.can_edit~}}
+                    <span class="edit-topic__wrapper">
+                      &nbsp;{{icon "pencil" class="edit-topic"}}
+                    </span>
                   {{/if}}
                 </a>
               {{/if}}
