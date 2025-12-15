@@ -70,7 +70,7 @@ export default class ChatChannel extends Component {
 
   paneState = new ChatPaneState(getOwner(this), {
     contextKey: this.pendingContextKey,
-    onUserPresent: () => this.debouncedUpdateLastReadMessage(),
+    onUserPresent: this.debouncedUpdateLastReadMessage,
   });
 
   _mentionWarningsSeen = {};
@@ -411,6 +411,7 @@ export default class ChatChannel extends Component {
     }
   }
 
+  @bind
   debouncedUpdateLastReadMessage() {
     this._debouncedUpdateLastReadMessageHandler = discourseDebounce(
       this,

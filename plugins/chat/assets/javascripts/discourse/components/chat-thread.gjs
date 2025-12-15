@@ -62,7 +62,7 @@ export default class ChatThread extends Component {
 
   paneState = new ChatPaneState(getOwner(this), {
     contextKey: this.pendingContextKey,
-    onUserPresent: () => this.debouncedUpdateLastReadMessage(),
+    onUserPresent: this.debouncedUpdateLastReadMessage,
   });
 
   @action
@@ -170,6 +170,7 @@ export default class ChatThread extends Component {
     }
   }
 
+  @bind
   debouncedUpdateLastReadMessage() {
     this._debouncedUpdateLastReadMessageHandler = discourseDebounce(
       this,
