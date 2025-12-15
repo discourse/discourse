@@ -237,7 +237,7 @@ export default <template>
                   {{htmlSafe @controller.model.fancyTitle~}}
                   {{~#if @controller.model.details.can_edit~}}
                     <span class="edit-topic__wrapper">
-                      &nbsp;{{icon "pencil" class="edit-topic"}}
+                      {{icon "pencil" class="edit-topic"}}
                     </span>
                   {{~/if}}
                 </a>
