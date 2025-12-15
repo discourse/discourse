@@ -160,8 +160,7 @@ export default class ChatThread extends Component {
     this.atBottom = state.atBottom;
 
     if (state.atBottom) {
-      this.presenceAwarePane.resetPendingState();
-      this.presenceAwarePane.needsArrow = false;
+      this.presenceAwarePane.clearPendingMessages();
       this.fetchMoreMessages({ direction: FUTURE });
     } else {
       this.presenceAwarePane.updateArrowVisibilityFromScrollState({
@@ -523,8 +522,7 @@ export default class ChatThread extends Component {
   async scrollToBottom() {
     this._ignoreNextScroll = true;
     await scrollListToBottom(this.scroller);
-    this.presenceAwarePane.resetPendingState();
-    this.presenceAwarePane.needsArrow = false;
+    this.presenceAwarePane.clearPendingMessages();
   }
 
   @action
@@ -596,7 +594,7 @@ export default class ChatThread extends Component {
 
       <ChatScrollToBottomArrow
         @onScrollToBottom={{this.scrollToLatestMessage}}
-        @isVisible={{this.presenceAwarePane.needsArrow}}
+        @isVisible={{this.presenceAwarePane.hasPendingContentBelow}}
       />
 
       {{#if this.chatThreadPane.selectingMessages}}

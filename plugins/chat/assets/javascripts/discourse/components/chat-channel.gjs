@@ -269,8 +269,7 @@ export default class ChatChannel extends Component {
     if (this.presenceAwarePane.userIsPresent) {
       this.debouncedUpdateLastReadMessage();
     }
-    this.presenceAwarePane.resetPendingState();
-    this.presenceAwarePane.needsArrow = false;
+    this.presenceAwarePane.clearPendingMessages();
   }
 
   scrollToMessageId(messageId, options = {}) {
@@ -502,8 +501,7 @@ export default class ChatChannel extends Component {
     this.atBottom = state.atBottom;
 
     if (state.atBottom) {
-      this.presenceAwarePane.resetPendingState();
-      this.presenceAwarePane.needsArrow = false;
+      this.presenceAwarePane.clearPendingMessages();
       this.fetchMoreMessages({ direction: FUTURE });
       this.chatChannelScrollPositions.delete(this.args.channel.id);
     } else {
@@ -762,7 +760,7 @@ export default class ChatChannel extends Component {
 
       <ChatScrollToBottomArrow
         @onScrollToBottom={{this.scrollToLatestMessage}}
-        @isVisible={{this.presenceAwarePane.needsArrow}}
+        @isVisible={{this.presenceAwarePane.hasPendingContentBelow}}
       />
 
       {{#if this.pane.selectingMessages}}

@@ -14,33 +14,70 @@ const CHAT_PRESENCE_OPTIONS = {
 };
 
 /**
- * Shared state + helpers for chat panes (channel + thread).
+ * Shared state and helpers for chat panes (channel and thread).
  *
- * This is intentionally used via composition rather than inheritance so callers
- * can be explicit about which behaviors they're invoking.
+ * Manages:
+ * - User presence detection (is the user actively viewing the tab?)
+ * - Pending message tracking (messages that arrived while scrolled away)
+ * - Scroll-to-bottom arrow visibility
+ * - Viewport preservation when new messages arrive
+ *
+ * Used via composition rather than inheritance so callers can be explicit
+ * about which behaviors they're invoking.
+ *
+ * @example
+ * ```js
+ * this.presenceAwarePane = new PresenceAwareChatPane(getOwner(this), {
+ *   onUserPresent: this.handleUserReturned,
+ * });
+ * this.presenceAwarePane.contextKey = `channel-${this.channel.id}`;
+ * this.presenceAwarePane.setup();
+ * ```
  */
 export default class PresenceAwareChatPane {
   @service chatPanePendingManager;
 
+  /**
+   * Whether the user is currently present (tab visible and recently active).
+   *
+   * @type {boolean}
+   */
   @tracked userIsPresent = true;
-  @tracked pendingMessageCount = 0;
-  @tracked needsArrow = false;
+
+  /**
+   * Whether the scroll-to-bottom arrow should be shown.
+   * True when there are pending messages or the user is scrolled away.
+   *
+   * @type {boolean}
+   */
+  @tracked hasPendingContentBelow = false;
+
+  /**
+   * Identifier for this chat context (e.g. "channel-123" or "thread-456").
+   * Used to track pending messages per-context in ChatPanePendingManager.
+   *
+   * @type {string | null}
+   */
   @tracked contextKey = null;
 
   /**
+   * Callback invoked when user returns after being away.
+   *
    * @type {(() => void) | null}
    */
   #onUserPresent = null;
 
   /**
+   * Tracks scroll position during viewport preservation.
+   *
    * @type {{ element: HTMLElement; scrollTop: number; scrollHeight: number } | null}
    */
   #pendingScrollAdjustment = null;
 
   /**
-   * @param {object} owner - The Ember owner for DI
-   * @param {object} options
-   * @param {(() => void) | null} [options.onUserPresent]
+   * @param {object} owner - The Ember owner for dependency injection
+   * @param {object} [options]
+   * @param {(() => void) | null} [options.onUserPresent] - Called when user returns
    */
   constructor(owner, options = {}) {
     setOwner(this, owner);
@@ -48,7 +85,7 @@ export default class PresenceAwareChatPane {
   }
 
   /**
-   * Initialize presence tracking. Call from component setup.
+   * Initialize presence tracking. Call from component setup (e.g. constructor or didInsert).
    */
   setup() {
     this.userIsPresent = userPresent(CHAT_PRESENCE_OPTIONS);
@@ -59,21 +96,26 @@ export default class PresenceAwareChatPane {
   }
 
   /**
-   * Cleanup presence tracking. Call from component teardown.
+   * Cleanup presence tracking. Call from component teardown (e.g. willDestroy).
    */
   teardown() {
     removeOnPresenceChange(this.onPresenceChangeCallback);
-    this.resetPendingState();
+    this.clearPendingMessages();
   }
 
   /**
+   * Whether there are pending messages for this context.
+   * Reads from ChatPanePendingManager (the single source of truth).
+   *
    * @returns {boolean}
    */
-  get hasPendingNewMessages() {
-    return this.pendingMessageCount > 0;
+  get hasPendingMessages() {
+    return this.chatPanePendingManager.hasPending(this.contextKey);
   }
 
   /**
+   * Checks if the scroller element has overflow (can scroll).
+   *
    * @param {HTMLElement | null} scroller
    * @returns {boolean}
    */
@@ -82,20 +124,20 @@ export default class PresenceAwareChatPane {
       return false;
     }
 
-    // Use a small tolerance because `scrollHeight` and `clientHeight` can
+    // Use a small tolerance because scrollHeight and clientHeight can
     // occasionally differ by subpixel rounding.
     return scroller.scrollHeight - scroller.clientHeight > 1;
   }
 
   /**
-   * Computes whether the arrow should be shown based on scroll position and
-   * whether there are newer messages available to load.
+   * Computes whether the user is scrolled away from the bottom.
+   * True if there are more messages to load OR they've scrolled up past the threshold.
    *
    * @param {object} options
-   * @param {boolean} options.fetchedOnce
-   * @param {boolean} options.canLoadMoreFuture
-   * @param {number} options.distanceToBottomPixels
-   * @param {number} [options.distanceThresholdPixels]
+   * @param {boolean} options.fetchedOnce - Whether initial fetch has completed
+   * @param {boolean} options.canLoadMoreFuture - Whether more future messages exist
+   * @param {number} options.distanceToBottomPixels - Current distance from bottom
+   * @param {number} [options.distanceThresholdPixels=250] - Threshold to trigger "scrolled away"
    * @returns {boolean}
    */
   #computeIsScrolledAway(options) {
@@ -113,8 +155,7 @@ export default class PresenceAwareChatPane {
   }
 
   /**
-   * Updates `needsArrow` based on scroll position and loader state, while still
-   * respecting pending message state and scrollability.
+   * Updates hasPendingContentBelow based on scroll position and loader state.
    *
    * @param {object} options
    * @param {HTMLElement | null} options.scroller
@@ -126,16 +167,20 @@ export default class PresenceAwareChatPane {
   #updateArrowVisibility(options) {
     const { scroller } = options;
     const isScrolledAway = this.#computeIsScrolledAway(options);
-    this.needsArrow = this.#computeArrowVisibility(scroller, isScrolledAway);
+    this.hasPendingContentBelow = this.#computeArrowVisibility(
+      scroller,
+      isScrolledAway
+    );
   }
 
   /**
-   * Convenience helper for scroll handlers that already computed `distanceToBottom`.
+   * Update arrow visibility from a scroll event's state object.
+   * Use this in scroll handlers that already have distanceToBottom computed.
    *
    * @param {object} options
    * @param {boolean} options.fetchedOnce
    * @param {boolean} options.canLoadMoreFuture
-   * @param {{ distanceToBottom?: { pixels: number } }} options.state
+   * @param {object} options.state - Scroll state with scroller and distanceToBottom
    * @param {number} [options.distanceThresholdPixels]
    */
   updateArrowVisibilityFromScrollState(options) {
@@ -152,8 +197,8 @@ export default class PresenceAwareChatPane {
   }
 
   /**
-   * Convenience helper for cases where we need to recompute based on the current
-   * scroller position (e.g. after a resize).
+   * Update arrow visibility by reading current scroller position.
+   * Use this when you need to recompute after a resize or similar event.
    *
    * @param {object} options
    * @param {HTMLElement | null} options.scroller
@@ -170,7 +215,7 @@ export default class PresenceAwareChatPane {
     } = options;
 
     if (!scroller) {
-      this.needsArrow = false;
+      this.hasPendingContentBelow = false;
       return;
     }
 
@@ -186,6 +231,9 @@ export default class PresenceAwareChatPane {
   }
 
   /**
+   * Callback for presence change events. Updates userIsPresent and
+   * triggers onUserPresent callback when user returns.
+   *
    * @param {boolean} present
    */
   @bind
@@ -197,15 +245,13 @@ export default class PresenceAwareChatPane {
   }
 
   /**
-   * Prevent viewport drift when the list grows while the user is scrolled away
-   * from the bottom.
+   * Prevent viewport drift when the list grows while scrolled away from bottom.
    *
-   * Our chat scroller uses `flex-direction: column-reverse`, which gives us a
-   * "bottom-origin" scroll. In this mode, appending content can change the
-   * visible viewport unless we compensate for the height delta.
+   * Our chat scroller uses flex-direction: column-reverse for bottom-origin scroll.
+   * Appending content can shift the viewport unless we compensate for height changes.
    *
-   * @param {HTMLElement | null} scroller
-   * @param {Function} callback
+   * @param {HTMLElement | null} scroller - The scrollable container
+   * @param {Function} callback - Function that modifies the list content
    */
   preserveViewportWhile(scroller, callback) {
     if (!scroller) {
@@ -246,12 +292,17 @@ export default class PresenceAwareChatPane {
   }
 
   /**
+   * Handle an incoming message by either auto-scrolling or preserving viewport.
+   *
+   * If shouldAutoScroll is true, adds the message and scrolls to show it.
+   * Otherwise, preserves the current scroll position and tracks the message as pending.
+   *
    * @param {object} options
-   * @param {HTMLElement | null} options.scroller
-   * @param {boolean} options.shouldAutoScroll
-   * @param {Function} options.addMessage
-   * @param {Function} [options.onAutoAdd]
-   * @param {number} [options.messageCount]
+   * @param {HTMLElement | null} options.scroller - The scrollable container
+   * @param {boolean} options.shouldAutoScroll - Whether to auto-scroll to the new message
+   * @param {Function} options.addMessage - Function that adds the message to the list
+   * @param {Function} [options.onAutoAdd] - Callback after auto-adding (e.g. to scroll)
+   * @param {number} [options.messageCount=1] - Number of messages being added
    */
   handleIncomingMessage(options = {}) {
     const {
@@ -264,57 +315,53 @@ export default class PresenceAwareChatPane {
 
     if (shouldAutoScroll) {
       addMessage?.();
-      this.resetPendingState();
+      this.clearPendingMessages();
       onAutoAdd?.();
       return;
     }
 
     this.preserveViewportWhile(scroller, addMessage);
-    this.#incrementPending(messageCount);
+    this.addPendingMessages(messageCount);
 
     schedule("afterRender", () => {
-      this.needsArrow = this.#computeArrowVisibility(scroller, false);
+      this.hasPendingContentBelow = this.#computeArrowVisibility(
+        scroller,
+        false
+      );
     });
   }
 
   /**
+   * Compute whether the scroll-to-bottom arrow should be visible.
+   *
    * @param {HTMLElement | null} scroller
-   * @param {boolean} isScrolledAway
+   * @param {boolean} isScrolledAway - Whether user is scrolled away from bottom
    * @returns {boolean}
    */
   #computeArrowVisibility(scroller, isScrolledAway) {
     return (
-      this.#canScroll(scroller) &&
-      (this.hasPendingNewMessages || isScrolledAway)
+      this.#canScroll(scroller) && (this.hasPendingMessages || isScrolledAway)
     );
   }
 
   /**
-   * Clears any pending message state and updates the global pending manager.
+   * Add pending messages to the count for this context.
+   *
+   * @param {number} [count=1] - Number of messages to add
    */
-  resetPendingState() {
-    if (this.pendingMessageCount && this.contextKey) {
-      this.chatPanePendingManager.decrement(
-        this.contextKey,
-        this.pendingMessageCount
-      );
+  addPendingMessages(count = 1) {
+    if (this.contextKey && count > 0) {
+      this.chatPanePendingManager.add(this.contextKey, count);
     }
-
-    this.pendingMessageCount = 0;
   }
 
   /**
-   * @param {number} count
+   * Clear all pending messages for this context and hide the arrow.
    */
-  #incrementPending(count) {
-    if (!count || count < 0) {
-      return;
-    }
-
-    this.pendingMessageCount += count;
-
+  clearPendingMessages() {
     if (this.contextKey) {
-      this.chatPanePendingManager.increment(this.contextKey, count);
+      this.chatPanePendingManager.clear(this.contextKey);
     }
+    this.hasPendingContentBelow = false;
   }
 }
