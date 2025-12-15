@@ -2799,6 +2799,8 @@ nl:
       ulist_title: "Opsommingslijst"
       list_item: "Lijstitem"
       toggle_direction: "Richting schakelen"
+      wrap_modal:
+        apply: "Toepassen"
       help: "Hulp voor Markdown"
       exit_fullscreen_prompt: "Druk op <kbd>ESC</kbd> om het volledige scherm te sluiten"
       modal_ok: "OK"

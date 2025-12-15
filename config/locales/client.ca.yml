@@ -1723,6 +1723,8 @@ ca:
       upload_title: "Carrega"
       upload_description: "escriviu aquí una descripció del fitxer que es carrega"
       list_item: "Element de llista"
+      wrap_modal:
+        apply: "Aplica"
       help: "Ajuda d'edició Markdown"
       modal_ok: "D'acord"
       cant_send_pm: "No podeu enviar cap missatge a %{username}."

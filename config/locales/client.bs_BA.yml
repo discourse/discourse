@@ -1728,6 +1728,8 @@ bs_BA:
       upload_title: "Učitavanje"
       upload_description: "unesi opis učitanog"
       list_item: "Listaj predmet"
+      wrap_modal:
+        apply: "Snimi"
       help: "Pomoć za Markdown"
       modal_ok: "OK"
       cant_send_pm: "Neuspješno, ne možete slati poruke ka %{username}."

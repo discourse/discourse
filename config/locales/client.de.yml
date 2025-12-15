@@ -2834,6 +2834,8 @@ de:
       ulist_title: "Liste mit Aufzählungszeichen"
       list_item: "Listenelement"
       toggle_direction: "Schreibrichtung wechseln"
+      wrap_modal:
+        apply: "Anwenden"
       help: "Hilfe zur Markdown-Formatierung"
       collapse: "Editor minimieren"
       open: "Editor öffnen"

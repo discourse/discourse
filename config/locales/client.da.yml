@@ -2438,6 +2438,8 @@ da:
       ulist_title: "Punktopstilling"
       list_item: "Listepunkt"
       toggle_direction: "Skift retning"
+      wrap_modal:
+        apply: "Anvend"
       help: "Hjælp til Markdown-redigering"
       exit_fullscreen_prompt: "Tryk på <kbd>ESC</kbd> for at afslutte fuld skærm"
       modal_ok: "OK"

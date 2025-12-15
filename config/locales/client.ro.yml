@@ -2289,6 +2289,8 @@ ro:
       ulist_title: "Listă cu buline"
       list_item: "Element listă"
       toggle_direction: "Comută direcția"
+      wrap_modal:
+        apply: "Aplică"
       help: "Ajutor pentru formatarea cu Markdown"
       collapse: "Minimizează panoul de compunere"
       open: "Deschide panoul de compunere"

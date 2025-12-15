@@ -2045,6 +2045,8 @@ ko:
       upload_title: "업로드"
       upload_description: "여기에 업로드 설명을 입력하세요"
       list_item: "목록 항목"
+      wrap_modal:
+        apply: "적용"
       help: "Markdown 편집 도움말"
       exit_fullscreen_prompt: "전체 화면에서 나가려면 <kbd>ESC</kbd>를 누르세요."
       modal_ok: "확인"

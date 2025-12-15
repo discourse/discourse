@@ -2703,6 +2703,8 @@ zh_CN:
       ulist_title: "项目符号列表"
       list_item: "列表条目"
       toggle_direction: "切换方向"
+      wrap_modal:
+        apply: "应用"
       help: "Markdown 编辑帮助"
       collapse: "最小化编辑器面板"
       open: "打开编辑器面板"
