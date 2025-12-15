@@ -725,15 +725,14 @@ RSpec.describe SchemaSettingsObjectValidator do
         )
       end
 
-      it "should convert upload URL to ID and validate successfully" do
+      it "should validate upload ID successfully" do
         upload = Fabricate(:upload)
         schema = { name: "section", properties: { upload_property: { type: "upload" } } }
 
-        validator = described_class.new(schema: schema, object: { upload_property: upload.url })
+        validator = described_class.new(schema: schema, object: { upload_property: upload.id })
         errors = validator.validate
 
         expect(errors).to eq({})
-        expect(validator.instance_variable_get(:@object)[:upload_property]).to eq(upload.id)
       end
 
       it "should return the right hash of error messages when value is an invalid URL string" do
@@ -801,7 +800,7 @@ RSpec.describe SchemaSettingsObjectValidator do
         expect(queries.length).to eq(1)
       end
 
-      it "should convert multiple upload URLs to IDs and validate successfully" do
+      it "should validate multiple upload IDs successfully" do
         upload1 = Fabricate(:upload)
         upload2 = Fabricate(:upload)
         schema = {
@@ -816,13 +815,38 @@ RSpec.describe SchemaSettingsObjectValidator do
           },
         }
 
-        object = { upload_property_1: upload1.url, upload_property_2: upload2.url }
+        object = { upload_property_1: upload1.id, upload_property_2: upload2.id }
         validator = described_class.new(schema: schema, object: object)
         errors = validator.validate
 
         expect(errors).to eq({})
-        expect(validator.instance_variable_get(:@object)[:upload_property_1]).to eq(upload1.id)
-        expect(validator.instance_variable_get(:@object)[:upload_property_2]).to eq(upload2.id)
+      end
+
+      it "should accept and store upload IDs" do
+        upload1 = Fabricate(:upload)
+        upload2 = Fabricate(:upload)
+        schema = {
+          name: "section",
+          properties: {
+            upload_field_1: {
+              type: "upload",
+            },
+            upload_field_2: {
+              type: "upload",
+            },
+          },
+        }
+
+        objects = [{ upload_field_1: upload1.id, upload_field_2: upload2.id }]
+
+        # Validate
+        errors = described_class.validate_objects(schema: schema, objects: objects)
+        expect(errors).to eq([])
+
+        expect(objects.first[:upload_field_1]).to eq(upload1.id)
+        expect(objects.first[:upload_field_2]).to eq(upload2.id)
+        expect(objects.first[:upload_field_1]).to be_a(Integer)
+        expect(objects.first[:upload_field_2]).to be_a(Integer)
       end
     end
 
