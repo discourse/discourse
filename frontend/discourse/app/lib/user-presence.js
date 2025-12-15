@@ -90,9 +90,8 @@ function processChanges() {
       try {
         callback.callback(currentState);
       } catch (e) {
-        if (window.console && window.console.error) {
-          window.console.error("Error in presence change callback:", e);
-        }
+        // eslint-disable-next-line no-console
+        console.error("Error in presence change callback:", e);
       } finally {
         callback.lastState = currentState;
       }
