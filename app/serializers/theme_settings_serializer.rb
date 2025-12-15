@@ -30,7 +30,14 @@ class ThemeSettingsSerializer < ApplicationSerializer
   end
 
   def value
-    object.value
+    val = object.value
+
+    # Hydrate upload IDs to URLs for objects type
+    if object.type == ThemeSetting.types[:objects] && object.schema.present?
+      val = SiteSetting.hydrate_uploads_in_objects(val, object.schema)
+    end
+
+    val
   end
 
   def description

@@ -1383,6 +1383,35 @@ RSpec.describe SiteSettingExtension do
           %Q|{"enable_welcome_banner":true,"search_experience":"search_icon"}|,
         )
       end
+
+      it "hydrates upload IDs to URLs for object settings" do
+        upload1 = Fabricate(:upload)
+        upload2 = Fabricate(:upload)
+
+        schema = {
+          name: "test_item",
+          properties: {
+            upload_field: {
+              type: "upload",
+            },
+            name: {
+              type: "string",
+            },
+          },
+        }
+
+        objects = [
+          { "name" => "item1", "upload_field" => upload1.id },
+          { "name" => "item2", "upload_field" => upload2.id },
+        ]
+
+        # Test the hydration method directly
+        hydrated = SiteSetting.hydrate_uploads_in_objects(objects, schema)
+
+        # Upload IDs should be converted to URLs
+        expect(hydrated[0]["upload_field"]).to eq(upload1.url)
+        expect(hydrated[1]["upload_field"]).to eq(upload2.url)
+      end
     end
   end
 

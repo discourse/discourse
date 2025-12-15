@@ -81,4 +81,51 @@ RSpec.describe ThemeSettingsManager::Objects do
       ).to contain_exactly(category_1, category_2, category_3)
     end
   end
+
+  describe "upload hydration" do
+    fab!(:upload1, :upload)
+    fab!(:upload2, :upload)
+
+    it "hydrates upload IDs to URLs when serialized" do
+      yaml = <<~YAML
+        objects_with_uploads:
+          type: objects
+          default: []
+          schema:
+            name: item
+            properties:
+              name:
+                type: string
+              banner:
+                type: upload
+              nested:
+                type: objects
+                schema:
+                  name: nested_item
+                  properties:
+                    icon:
+                      type: upload
+      YAML
+
+      theme.set_field(target: :settings, name: "yaml", value: yaml)
+      theme.save!
+
+      new_value = [
+        { "name" => "item 1", "banner" => upload1.id, "nested" => [{ "icon" => upload2.id }] },
+      ]
+
+      theme.settings[:objects_with_uploads].value = new_value
+      theme.reload
+
+      # The raw value should still have IDs (not hydrated)
+      raw_value = theme.settings[:objects_with_uploads].value
+      expect(raw_value[0]["banner"]).to eq(upload1.id)
+      expect(raw_value[0]["nested"][0]["icon"]).to eq(upload2.id)
+
+      # But when serialized, upload IDs should be hydrated to URLs
+      serialized = ThemeSettingsSerializer.new(theme.settings[:objects_with_uploads], root: false)
+      expect(serialized.value[0]["banner"]).to eq(upload1.url)
+      expect(serialized.value[0]["nested"][0]["icon"]).to eq(upload2.url)
+    end
+  end
 end

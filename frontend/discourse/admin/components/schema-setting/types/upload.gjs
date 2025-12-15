@@ -5,17 +5,36 @@ import { action } from "@ember/object";
 import FieldInputDescription from "discourse/admin/components/schema-setting/field-input-description";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
 
+// unsaved uploads that haven't been hydrated by the backend yet
+// so we need to look them up in the cache
+const uploadCache = new Map();
+
 export default class SchemaSettingTypeUpload extends Component {
-  @tracked uploadUrl = this.args.value;
+  @tracked uploadUrl = this.#resolveUploadUrl(this.args.value);
+
+  #resolveUploadUrl(value) {
+    if (!value) {
+      return null;
+    }
+    if (typeof value === "number") {
+      const cachedUpload = uploadCache.get(value);
+      return cachedUpload?.url || null;
+    }
+    return value;
+  }
 
   @action
   uploadDone(upload) {
+    uploadCache.set(upload.id, upload);
     this.uploadUrl = upload.url;
     this.args.onChange(upload.id);
   }
 
   @action
   uploadDeleted() {
+    if (typeof this.args.value === "number") {
+      uploadCache.delete(this.args.value);
+    }
     this.uploadUrl = null;
     this.args.onChange(null);
   }

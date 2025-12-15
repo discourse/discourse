@@ -285,7 +285,18 @@ module SiteSettingExtension
       if theme_id.blank?
         MultiJson.dump(ThemeSiteSetting.generate_defaults_map)
       else
-        MultiJson.dump(theme_site_settings[theme_id])
+        settings = theme_site_settings[theme_id].dup
+
+        # Hydrate uploads in object settings for themes
+        settings.each do |name, value|
+          type_hash = type_supervisor.type_hash(name)
+          if type_hash[:type] == "objects" && type_hash[:schema] && value.present?
+            parsed_value = value.is_a?(String) ? JSON.parse(value) : value
+            settings[name] = hydrate_uploads_in_objects(parsed_value, type_hash[:schema])
+          end
+        end
+
+        MultiJson.dump(settings)
       end
     rescue => err
       # If something goes wrong here we really need to be aware of it in tests.
@@ -836,6 +847,40 @@ module SiteSettingExtension
     Set.new(SiteSetting::VALID_AREAS | DiscoursePluginRegistry.site_setting_areas.to_a)
   end
 
+  def hydrate_uploads_in_objects(objects, schema)
+    return objects if objects.blank?
+
+    upload_ids =
+      SchemaSettingsObjectValidator.property_values_of_type(
+        schema: schema,
+        objects: objects,
+        type: "upload",
+      )
+
+    uploads_by_id = Upload.where(id: upload_ids).index_by(&:id)
+    objects.map { |obj| hydrate_uploads_in_object(obj, schema[:properties], uploads_by_id) }
+  end
+
+  def hydrate_uploads_in_object(object, properties, uploads_by_id)
+    properties.each do |prop_key, prop_value|
+      case prop_value[:type]
+      when "upload"
+        key = prop_key.to_s
+        upload_id = object[key]
+        upload = uploads_by_id[upload_id]
+        object[key] = upload.url if upload
+      when "objects"
+        nested_objects = object[prop_key.to_s]
+        if nested_objects.is_a?(Array)
+          nested_objects.each do |nested_obj|
+            hydrate_uploads_in_object(nested_obj, prop_value[:schema][:properties], uploads_by_id)
+          end
+        end
+      end
+    end
+    object
+  end
+
   protected
 
   def clear_cache!(expire_theme_site_setting_cache: false)
@@ -1138,42 +1183,5 @@ module SiteSettingExtension
 
   def logger
     Rails.logger
-  end
-
-  private
-
-  def hydrate_uploads_in_objects(objects, schema)
-    return objects if objects.blank?
-
-    upload_ids =
-      SchemaSettingsObjectValidator.property_values_of_type(
-        schema: schema,
-        objects: objects,
-        type: "upload",
-      )
-
-    uploads_by_id = Upload.where(id: upload_ids).index_by(&:id)
-    objects.map { |obj| hydrate_uploads_in_object(obj, schema[:properties], uploads_by_id) }
-  end
-
-  def hydrate_uploads_in_object(object, properties, uploads_by_id)
-    properties.each do |prop_key, prop_value|
-      case prop_value[:type]
-      when "upload"
-        key = prop_key.to_s
-        upload_id = object[key]
-        upload = uploads_by_id[upload_id]
-        object[key] = upload.url if upload
-      when "objects"
-        nested_objects = object[prop_key.to_s]
-        if nested_objects.is_a?(Array)
-          nested_objects.each do |nested_obj|
-            hydrate_uploads_in_object(nested_obj, prop_value[:schema][:properties], uploads_by_id)
-          end
-        end
-      end
-    end
-
-    object
   end
 end
