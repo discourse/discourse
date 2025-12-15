@@ -26,7 +26,7 @@
 
     &__name {
       font-size: var(--font-up-1-rem);
-      word-break: break-all;
+      word-break: break-word;
 
       &:hover {
         color: var(--primary-very-high);
