@@ -989,12 +989,14 @@ RSpec.configure do |config|
       $playwright_logger
         &.logs
         &.filter_map do |log|
-          JSON.parse(log[:message][/^fatal_deprecation:(.+)$/, 1]) if log[:level] == "trace"
+          if log[:level] == "trace"
+            error = JSON.parse(log[:message][/^fatal_deprecation:(.+)$/, 1])
+            "~~~~~~~ JS ERROR ~~~~~~~\n#{error}\n~~~~~ END JS ERROR ~~~~~"
+          end
         end
         &.first
 
-    expect(deprecation_error).to be_nil,
-    "~~~~~~~ JS ERROR ~~~~~~~\n#{deprecation_error}\n~~~~~ END JS ERROR ~~~~~"
+    expect(deprecation_error).to be_nil, deprecation_error
 
     $playwright_logger&.logs&.each do |log|
       next if log[:level] != "count"
