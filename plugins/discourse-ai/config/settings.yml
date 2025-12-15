@@ -365,6 +365,15 @@ discourse_ai:
     default: false
     client: true
     area: "ai-features/bot"
+  ai_bot_enabled_llms:
+    default: ""
+    client: true
+    type: list
+    list_type: compact
+    allow_any: false
+    enum: "DiscourseAi::Configuration::LlmEnumerator"
+    refresh: true
+    area: "ai-features/bot"
   ai_bot_enable_chat_warning:
     default: false
     client: true

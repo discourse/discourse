@@ -15,7 +15,6 @@ class LlmModelSerializer < ApplicationSerializer
              :tokenizer,
              :api_key,
              :url,
-             :enabled_chat_bot,
              :provider_params,
              :vision_enabled,
              :input_cost,
