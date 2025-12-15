@@ -2799,6 +2799,8 @@ fi:
       ulist_title: "Luettelomerkillinen luettelo"
       list_item: "Luettelokohde"
       toggle_direction: "Vaihda suuntaa"
+      wrap_modal:
+        apply: "Käytä"
       help: "Markdown-muokkausohje"
       exit_fullscreen_prompt: "Poistu koko näytön tilasta painamalla <kbd>Esc</kbd>-näppäintä"
       modal_ok: "OK"

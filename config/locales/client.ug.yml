@@ -2875,6 +2875,8 @@ ug:
       ulist_title: "بەلگە تىزىمى"
       list_item: "تىزىم تۈرى"
       toggle_direction: "يۆنىلىش ئالماشتۇر"
+      wrap_modal:
+        apply: "قوللان"
       help: "Markdown تەھرىر ياردىمى"
       collapse: "تەھرىرلىگۈچ تاختىنى كىچىكلەت"
       open: "تەھرىرلىگۈچ تاختىنى ئاچ"
@@ -5590,10 +5592,14 @@ ug:
               options:
                 above_topic_content: "تېما مەزمۇنىنىڭ ئۈستىدە"
                 below_site_header: "بېكەت بەت قېشىنىڭ ئاستىدا"
+            text_section:
+              title: "ئىختىيارى تېكىست"
             header_logged_in:
               placeholder: "قايتا خۇش كەلدىڭىز، %{preferred_display_name}!"
             header_anonymous:
               placeholder: "%{site_name} غا خۇش كەلدىڭىز!"
+            search_placeholder:
+              placeholder: "تېما ئىزدە…"
         navigation:
           title: "يولباشچى"
           header_description: "تور بېكىتىڭىزنىڭ يولباشچى ئۇلانمىسى ۋە تىزىملىك تۈرىنى سەپلەيدۇ. بۇ ئاساسىي يولباشچى تىزىملىكنىڭ ئورنى ۋە مەشغۇلاتى، باش بەتنىڭ چوققىسىدىكى تېز ئۇلانما، شۇنداقلا باشقۇرغۇچى يان بالداقنى ئۆز ئىچىگە ئالىدۇ."

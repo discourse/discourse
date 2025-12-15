@@ -2810,6 +2810,8 @@ hu:
       ulist_title: "Pontozott lista"
       list_item: "Listaelem"
       toggle_direction: "Irány be/ki"
+      wrap_modal:
+        apply: "Alkalmaz"
       help: "Markdown szerkesztési súgó"
       collapse: "Szerkesztő panel minimalizálása"
       open: "Szerkesztő panel megnyitása"

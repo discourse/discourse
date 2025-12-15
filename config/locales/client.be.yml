@@ -1343,6 +1343,8 @@ be:
       upload_title: "спампаваць"
       upload_description: "увядзіце апісанне загрузкі"
       list_item: "элемент спісу"
+      wrap_modal:
+        apply: "Ужыць"
       help: "Markdown Editing Help"
       modal_ok: "Добра"
       admin_options_title: "Неабавязковыя налады персаналу для гэтай тэмы"

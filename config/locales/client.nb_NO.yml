@@ -2450,6 +2450,8 @@ nb_NO:
       upload_title: "Bilde"
       upload_description: "beskriv bildet her"
       list_item: "Listeelement"
+      wrap_modal:
+        apply: "Bruk"
       help: "Hjelp for redigering i Markdown"
       exit_fullscreen_prompt: "Trykk <kbd>ESC</kbd> for å gå ut av fullskjerm"
       modal_ok: "OK"

@@ -2798,6 +2798,8 @@ es:
       ulist_title: "Lista con viñetas"
       list_item: "Lista de elementos"
       toggle_direction: "Mostrar/ocultar dirección"
+      wrap_modal:
+        apply: "Aplicar"
       help: "Ayuda de edición con Markdown"
       exit_fullscreen_prompt: "Pulsa <kbd>ESC</kbd> para salir del modo pantalla completa"
       modal_ok: "Aceptar"

@@ -2796,6 +2796,8 @@ it:
       ulist_title: "Elenco puntato"
       list_item: "Elemento lista"
       toggle_direction: "Cambia direzione"
+      wrap_modal:
+        apply: "Applica"
       help: "Aiuto Inserimento Markdown"
       exit_fullscreen_prompt: "Premi <kbd>ESC</kbd> per uscire dallo schermo intero."
       modal_ok: "OK"

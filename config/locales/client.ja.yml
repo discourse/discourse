@@ -2655,6 +2655,8 @@ ja:
       ulist_title: "箇条書き"
       list_item: "リスト項目"
       toggle_direction: "方向の切り替え"
+      wrap_modal:
+        apply: "適用"
       help: "Markdown 編集のヘルプ"
       exit_fullscreen_prompt: "<kbd>ESC</kbd> を押して全画面表示を終了"
       modal_ok: "OK"

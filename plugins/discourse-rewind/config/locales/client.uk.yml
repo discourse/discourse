@@ -37,7 +37,31 @@ uk:
         post_used_reactions:
           title: Найчастіше використовувані реакції в темах
           total_number: "Загальна кількість реакцій: %{count}"
+        post_received_reactions:
+          title: Найбільше отриманих реакцій у темах
+        fbff:
+          title: Ваш FBFF (перший форум найкращого друга)
+        most_viewed_categories:
+          title:
+            one: Ваша найпопулярніша категорія
+            few: Ваші %{count} найпопулярніші категорії
+            many: Ваші %{count} найпопулярніших категорій
+            other: Ваші %{count} найпопулярніших категорій
+        best_topics:
+          view_topic: Переглянути тему
+        best_posts:
+          view_post: Переглянути публікацію
+          title:
+            one: Ваш найкращий допис
+            few: Ваші %{count} найкращі дописи
+            many: Ваші %{count} найкращих дописи
+            other: Ваші %{count} найкращі дописи
         ai_usage:
+          title: Використання ШІ
+          total_requests: Всього запитів
+          total_tokens: Всього токенів
+          success_rate: Коефіцієнт успіху
+          favorite_features: Найчастіше використовувані функції
           favorite_models: Найбільш використовувані моделі штучного інтелекту
           wake_up: "Прокинься, %{username}..."
           system_title: "ВИЯВЛЕНО ВИКОРИСТАННЯ ШІ"
@@ -116,10 +140,27 @@ uk:
             few: "%{count} нові учасники"
             many: "%{count} нові учасники"
             other: "%{count} нові учасники"
+          total_interactions: Загальна кількість взаємодій
+          unique_new_users: Унікальні нові користувачі
           likes_given: Вподобані
+          replies: Відповіді на дописи
           mentions: Згадки
+          topics_with_new_users: Теми з новими користувачами
+          your_contributions_helped: ваші внески допомогли
+        time_of_day_activity:
+          title: Ритм щоденної активності
+          play_button: Відтворіть свою діяльність як звук
+          stop_button: Зупинити відтворення аудіо
         writing_analysis:
+          title: Аналіз письма
+          menu_file: Файл
           menu_other: Інше
+          menu_additional: Додатково
+          menu_opening: ВІДКРИТТЯ
+          help_text: Натисніть F1 для отримання довідки
+          app_name: DiscoStar Professional
+          release_info: Реліз %{rewindYear} від CDCK
+          total_words: Всього слів
           readability_score:
             over_0:
               2: "Thomas Pynchon"

@@ -5,22 +5,200 @@
 # https://translate.discourse.org/
 
 cs:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rewind: "Discourse Ohlédnutí"
   js:
     discourse_rewind:
+      placeholder: Discourse Ohlédnutí
+      title: Ohlédnutí
+      loading: "Probíhá výpočet, nepropadejte panice..."
+      preferences:
+        disable_rewind: "Zakázat Discourse Ohlédnutí. Tímto skryjete roční shrnutí aktivity ve vašem profilu a v avataru."
+      profile_link: "Podívej se na svoje ohlédnutí roku %{rewindYear}"
       reports:
+        activity_calendar:
+          title: Kalendář aktivit
+          cell_title:
+            visited_no_posts: "Dne %{date}, jsi se přihlásil/a a nahlédl/a, ale nepřidal/a jsi žádné příspěvky."
+            visited_with_posts:
+              one: "Dne %{date} jsi vytvořil/a %{count} příspěvek."
+              few: "Dne %{date} jsi vytvořil/a %{count} příspěvky."
+              many: "Dne %{date} jsi vytvořil/a %{count} příspěvků."
+              other: "Dne %{date} jsi vytvořil/a %{count} příspěvků."
+            no_activity: "%{date} jsi se neukázal/a."
+        top_words:
+          title: Použití slov
         reading_time:
           title: Čas čtení
+          book_comparison: "Strávila jsi <code>%{readingTitme}</code> čtením na našich stránkách! Tolik času by ti trvalo přečíst <i>%{bookTitle}</i>"
+        post_used_reactions:
+          title: Nejčastěji používané reakce v tématech
+          total_number: "Celkový počet reakcí: %{count}"
+        post_received_reactions:
+          title: Nejvíce obdržených reakcí v tématech
+        fbff:
+          title: Tvůj FBFF (nejlepší kámoš/ka na fóru)
+        most_viewed_categories:
+          title:
+            one: Tvoje nejsledovanější kategorie
+            few: Tvoje %{count} nejsledovanější kategorie
+            many: Tvých %{count} nejsledovanějších kategorií
+            other: Tvých %{count} nejsledovanějších kategorií
+        most_viewed_tags:
+          title:
+            one: Tvůj nejsledovanější štítek
+            few: Tvé %{count} nejsledovanější štítky
+            many: Tvých %{count} nejsledovanějších štítků
+            other: Tvých %{count} nejsledovanějších štítků
+        best_topics:
+          view_topic: Zobrazit téma
+          title:
+            one: Tvé nejlepší téma
+            few: Tvá %{count} nejlepší témata
+            many: Tvých %{count} nejlepších témat
+            other: Tvých %{count} nejlepších témat
+        best_posts:
+          view_post: Zobrazit příspěvek
+          title:
+            one: Tvůj nejlepší příspěvek
+            few: Tvé %{count} nejlepší příspěvky
+            many: Tvých %{count} nejlepších příspěvků
+            other: Tvých %{count} nejlepších příspěvků
+        ai_usage:
+          title: Využití AI
+          total_requests: Celkem žádostí
+          total_tokens: Celkem tokenů
+          success_rate: Míra úspěšnosti
+          favorite_features: Nejpoužívanější funkce
+          favorite_models: Nejpoužívanější AI modely
+          wake_up: "Probuď se, %{username}..."
+          system_title: "ZJIŠTĚNO VYUŽITÍ AI"
+          section_features: "HLAVNÍ VLASTNOSTI"
+          section_models: "TOP MODELY"
+        assignments:
+          title: Úkoly
+          total_assigned: Přiděleno mně
+          completed: Dokončené úkoly
+          pending: Čeká na vyřízení
+          assigned_by_user: Zadané úkoly
+          completion_rate: Míra dokončení
         chat_usage:
+          title: Aktivita chatu
+          total_messages: Celkem zpráv
+          dm_messages: Soukromé zprávy
+          unique_dm_channels: Soukromé konverzace
+          reactions_received: Přijaté reakce
+          avg_message_length: Průměrná délka zprávy
+          favorite_channels: Oblíbené kanály
           messages: zprávy
+          bot_name: XxRewindBotxX
           you: Vy
+          channel_title: "#aktivita-chatu"
           status_online: "● online"
+          message_1: "Letos jsi odeslal/a <strong>%{count}</strong> zpráv!"
+          reply_1: "lol úžasné B-)"
+          message_2: "Poslala/a jsi <strong>%{dm_count}</strong> soukromých zpráv s <strong>%{channel_count}</strong> různými lidmi nebo skupinami"
+          reply_2: "cOo0oL :D"
+          message_3: "Lidem se tvé zprávy moc líbily! Dostal jsi <strong>%{count}</strong> reakcí ❤️"
+          reply_3: "r0fl rAwr 8-)"
+          message_4: "Průměrná délka tvé zprávy byla <strong>%{length}</strong> znaků"
+          message_5: "Tvé oblíbené kanály:"
+          dancing_baby_alt: "Dancing baby"
+        favorite_gifs:
+          title:
+            one: Tvůj oblíbený GIF
+            few: Tvoje %{count} oblíbené GIFy
+            many: Tvých %{count} oblíbených GIFů
+            other: Tvých %{count} oblíbených GIFů
+          total_usage:
+            one: Použito jednou
+            few: Celkem použíto %{count}x
+            many: Celkem použíto %{count}x
+            other: Celkem použíto %{count}x
         invites:
           title: Pozvánky
+          total_invites: Celkový počet odeslaných pozvánek
+          redeemed: Přijaté pozvánky
+          redemption_rate: Míra přijetí
+          avg_trust_level: Průměrná úroveň důvěry
+          invitee_impact: Dopad tvých pozvaných
           invitee_posts: Vytvořeno příspěvků
+          invitee_topics: Zahájená témata
           invitee_likes: Rozdaných 'líbí se'
+          most_active_invitee: Nejaktivnější pozvaný
+          guest_book_title: Kniha hostů
+          guest_book_subtitle: Tvé pozvánky do komunity
           label_invitations_sent: "Pozvánky odeslány:"
+          label_guests_joined: "Přijaté pozvánky:"
+          label_acceptance_rate: "Míra přijetí:"
+          section_contributions: Příspěvky pozvaných
+          label_posts_written: "Napsané příspěvky:"
+          label_topics_started: "Zahájená témata:"
+          label_likes_given: "Rozdaných 'líbí se'"
+          section_most_active: Nejaktivnější host
         new_user_interactions:
+          title: Mentorování nových uživatelů
+          subtitle:
+            one: Letos jsi pomohl/a %{count} novému uživateli
+            few: Letos jsi pomohl/a %{count} novým uživatelům
+            many: Letos jsi pomohl/a %{count} novým uživatelům
+            other: Letos jsi pomohl/a %{count} novým uživatelům
+          new_member:
+            one: "%{count} novému členovi"
+            few: "%{count} novým členům"
+            many: "%{count} novým členům"
+            other: "%{count} novým členům"
+          total_interactions: Celkem interakcí
+          unique_new_users: Unikátní noví uživatelé
           likes_given: Rozdaných 'líbí se'
+          replies: Odpovědi na příspěvky
           mentions: Zmínky
+          topics_with_new_users: Témata s novými uživateli
+          your_contributions_helped: tvé příspěvky pomohly
+        time_of_day_activity:
+          title: Denní rytmus aktivity
+          play_button: Přehraj si aktivitu jako zvuk
+          stop_button: Zastavit přehrávání zvuku
         writing_analysis:
+          title: Analýza psaní
+          menu_file: Soubor
           menu_other: Ostatní
+          menu_additional: Další
+          menu_opening: OTEVÍRÁNÍ
+          help_text: Stiskněte F1 pro nápovědu
+          app_name: DiscoStar Professional
+          release_info: Vydáno CDCK roku  %{rewindYear}
+          total_words: Celkem slov
+          total_posts: Celkem příspěvků
+          avg_post_length: Průměrná délka příspěvku
+          readability_score_label: Skóre čitelnosti
+          readability_level: Úroveň čitelnosti
+          readability_score:
+            over_80:
+              1: "Ernest Hemingway"
+              2: "Raymond Carver"
+              3: "Michael Crichton"
+              4: "Roald Dahl"
+            over_60:
+              1: "C. S. Lewis"
+              2: "Stephen King"
+              3: "Agatha Christie"
+              4: "George R. R. Martin"
+            over_40:
+              1: "George Orwell"
+              2: "F. Scott Fitzgerald"
+              3: "Aldous Huxley"
+              4: "Joan Didionová"
+            over_20:
+              1: "Cormac McCarthy"
+              2: "William Faulkner"
+              3: "Virginia Woolf"
+              4: "Gabriel García Márquez"
+            over_0:
+              1: "James Joyce"
+              2: "Thomas Pynchon"
+              3: "David Foster Wallace"
+              4: "Fjodor Dostojevskij"

@@ -2525,6 +2525,8 @@ sq:
       upload_title: "Ngarko"
       upload_description: "shkruaj përshkrimin e skedarit të ngarkuar këtu"
       list_item: "Element liste"
+      wrap_modal:
+        apply: "Apliko"
       help: "Ndihmë mbi Markdown"
       exit_fullscreen_prompt: "Shtypni <kbd>ESC</kbd> për të dalë nga ekrani i plotë"
       modal_ok: "OK"
