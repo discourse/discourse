@@ -26,9 +26,9 @@ acceptance("Discourse Reactions - Reactions Received Page", function (needs) {
             id: 123,
             created_at: "2024-01-01T00:00:00.000Z",
             topic_id: 1,
-            topic_title: "Test Topic",
+            topic_title: "Test Topic :open_book:",
             topic_slug: "test-topic",
-            topic_html_title: "Test Topic",
+            topic_html_title: "Test Topic :open_book:",
             post_number: 1,
             posts_count: 5,
             post_type: 1,
@@ -52,8 +52,8 @@ acceptance("Discourse Reactions - Reactions Received Page", function (needs) {
             },
             topic: {
               id: 1,
-              title: "Test Topic",
-              fancy_title: "Test Topic",
+              title: "Test Topic :open_book:",
+              fancy_title: "Test Topic :open_book:",
               slug: "test-topic",
               posts_count: 5,
             },
@@ -97,5 +97,20 @@ acceptance("Discourse Reactions - Reactions Received Page", function (needs) {
       mentionText?.includes(" "),
       "mention does not contain spaces (which would indicate a full name)"
     );
+  });
+
+  test("emojis in topic titles are rendered as images", async function (assert) {
+    await visit("/u/eviltrout/notifications/reactions-received");
+
+    assert
+      .dom(".post-list-item .stream-topic-title .title img.emoji")
+      .exists("emoji is rendered as an image in topic title");
+
+    assert
+      .dom(".post-list-item .stream-topic-title .title")
+      .doesNotIncludeText(
+        ":open_book:",
+        "emoji code is not displayed as plain text"
+      );
   });
 });
