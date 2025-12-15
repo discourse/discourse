@@ -273,8 +273,8 @@ class GlobalSetting
         user_name: GlobalSetting.smtp_user_name,
         password: GlobalSetting.smtp_password,
         enable_starttls_auto: !GlobalSetting.smtp_force_tls && GlobalSetting.smtp_enable_start_tls,
-        open_timeout: GlobalSetting.smtp_open_timeout,
-        read_timeout: GlobalSetting.smtp_read_timeout,
+        open_timeout: GlobalSetting.smtp_open_timeout.to_f,
+        read_timeout: GlobalSetting.smtp_read_timeout.to_f,
       }
 
       if settings[:password] || settings[:user_name]
