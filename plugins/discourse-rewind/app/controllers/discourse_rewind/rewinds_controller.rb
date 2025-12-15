@@ -61,6 +61,12 @@ module ::DiscourseRewind
                  status: :ok
         end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failed_policy(:user_not_hiding_profile) do
+          render_json_error(
+            I18n.t("discourse_rewind.cannot_share_when_profile_hidden"),
+            status: 400,
+          )
+        end
       end
     end
   end

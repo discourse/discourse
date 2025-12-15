@@ -206,10 +206,6 @@
     .btn.no-text.--special-kbd {
       grid-row-start: 1;
       justify-self: end;
-
-      &:last-child {
-        margin-right: 1em;
-      }
     }
   }
 }

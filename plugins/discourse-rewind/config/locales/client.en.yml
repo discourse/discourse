@@ -26,6 +26,7 @@ en:
       preferences:
         disable_rewind: "Disable Discourse Rewind. This hides the year-end activity summary in your profile and on your avatar."
         share_publicly: "Share Discourse Rewind summary with other forum members. Any forum member will be able to view your Discourse Rewind summary."
+        cannot_share_when_profile_hidden: "In order to share Rewind you must allow others to view your public profile."
       profile_link: "View your %{rewindYear} Discourse Rewind"
       share:
         toggle_label:

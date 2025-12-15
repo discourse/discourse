@@ -64,7 +64,7 @@ module DiscourseRewind
       return if user.nil?
 
       if guardian.user.id != user.id
-        if !user.user_option.discourse_rewind_share_publicly
+        if !user.discourse_rewind_and_profile_public?
           return if !guardian.user.admin?
         end
       end

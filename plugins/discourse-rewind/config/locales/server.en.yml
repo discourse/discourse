@@ -7,3 +7,4 @@ en:
     user_not_found: "User not found or cannot be viewed."
     reports_not_cached: "Reports have not been generated yet. Please refresh the page."
     report_not_found: "Report not found."
+    cannot_share_when_profile_hidden: "In order to share Rewind you must allow others to view your public profile."

@@ -17,6 +17,12 @@ RSpec.describe(DiscourseRewind::ToggleShare) do
           user.user_option.reload.discourse_rewind_share_publicly
         }.from(false).to(true)
       end
+
+      context "when user has hide_profile set to true" do
+        before { user.user_option.update!(hide_profile: true) }
+
+        it { is_expected.to fail_a_policy(:user_not_hiding_profile) }
+      end
     end
 
     context "when discourse_rewind_share_publicly is true" do
@@ -26,6 +32,16 @@ RSpec.describe(DiscourseRewind::ToggleShare) do
         expect { result }.to change {
           user.user_option.reload.discourse_rewind_share_publicly
         }.from(true).to(false)
+      end
+
+      context "when user has hide_profile set to true" do
+        before { user.user_option.update!(hide_profile: true) }
+
+        it "toggles to false" do
+          expect { result }.to change {
+            user.user_option.reload.discourse_rewind_share_publicly
+          }.from(true).to(false)
+        end
       end
     end
   end

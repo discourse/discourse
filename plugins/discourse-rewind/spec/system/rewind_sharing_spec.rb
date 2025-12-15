@@ -12,9 +12,10 @@ describe "DiscourseRewind | rewind sharing", type: :system do
   before { SiteSetting.discourse_rewind_enabled = true }
 
   describe "sharing functionality" do
-    context "when user shares their rewind" do
+    context "when user shares their rewind if it's not already shared publicly" do
       before do
         sign_in(current_user)
+        current_user.user_option.update!(discourse_rewind_share_publicly: false)
         freeze_time DateTime.parse("2022-12-22")
       end
 

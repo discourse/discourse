@@ -9,6 +9,8 @@ RSpec.describe(DiscourseRewind::FetchReports) do
     let(:guardian) { Guardian.new(current_user) }
     let(:dependencies) { { guardian: } }
 
+    before { SiteSetting.discourse_rewind_enabled = true }
+
     context "when in january" do
       before { freeze_time DateTime.parse("2021-01-22") }
 
@@ -107,6 +109,12 @@ RSpec.describe(DiscourseRewind::FetchReports) do
           it "allows access to the reports" do
             expect(result).to be_success
             expect(result.for_user).to eq(other_user)
+          end
+
+          context "when the other user has hide_profile enabled" do
+            before { other_user.user_option.update!(hide_profile: true) }
+
+            it { is_expected.to fail_to_find_a_model(:for_user) }
           end
         end
 
