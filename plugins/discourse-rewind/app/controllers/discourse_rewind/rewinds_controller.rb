@@ -2,9 +2,8 @@
 
 module ::DiscourseRewind
   class RewindsController < ::ApplicationController
-    requires_plugin PLUGIN_NAME
-
     requires_login
+    requires_plugin PLUGIN_NAME
 
     def dismiss
       DiscourseRewind::Dismiss.call(service_params) do
@@ -15,6 +14,9 @@ module ::DiscourseRewind
 
     def index
       DiscourseRewind::FetchReports.call(service_params) do
+        on_model_not_found(:for_user) do
+          raise Discourse::NotFound.new(nil, custom_message: "discourse_rewind.user_not_found")
+        end
         on_model_not_found(:year) do
           raise Discourse::NotFound.new(nil, custom_message: "discourse_rewind.invalid_year")
         end
@@ -29,6 +31,9 @@ module ::DiscourseRewind
 
     def show
       DiscourseRewind::FetchReport.call(service_params) do
+        on_model_not_found(:for_user) do
+          raise Discourse::NotFound.new(nil, custom_message: "discourse_rewind.user_not_found")
+        end
         on_model_not_found(:year) do
           raise Discourse::NotFound.new(nil, custom_message: "discourse_rewind.invalid_year")
         end
@@ -44,6 +49,24 @@ module ::DiscourseRewind
         end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
         on_success { |report:| render json: { report: }, status: :ok }
+      end
+    end
+
+    def toggle_share
+      DiscourseRewind::ToggleShare.call(service_params) do
+        on_success do |shared:|
+          render json: {
+                   shared: guardian.user.reload.user_option.discourse_rewind_share_publicly,
+                 },
+                 status: :ok
+        end
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failed_policy(:user_not_hiding_profile) do
+          render_json_error(
+            I18n.t("discourse_rewind.cannot_share_when_profile_hidden"),
+            status: 400,
+          )
+        end
       end
     end
   end
