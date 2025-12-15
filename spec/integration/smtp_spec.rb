@@ -12,6 +12,22 @@ RSpec.describe "SMTP Settings Integration" do
     ActionMailer::Base.delivery_method = @original_action_mailer_delivery_method
   end
 
+  it "should disable starttls_auto when tls is enabled" do
+    global_setting :smtp_address, "localhost"
+    global_setting :smtp_port, 465
+    global_setting :smtp_force_tls, true
+
+    expect(GlobalSetting.smtp_settings[:enable_starttls_auto]).to be_falsey
+  end
+
+  it "should leave starttls_auto enabled when tls is not enabled" do
+    global_setting :smtp_address, "localhost"
+    global_setting :smtp_port, 587
+    global_setting :smtp_force_tls, false
+
+    expect(GlobalSetting.smtp_settings[:enable_starttls_auto]).to be_truthy
+  end
+
   it "should attempt to send out an email without raising any SMTP argument errors" do
     global_setting :smtp_address, "1.2.3.4"
     global_setting :smtp_port, 12_345
