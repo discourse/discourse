@@ -67,6 +67,14 @@ module PageObjects
       def has_users_total_row?
         page.has_css?(".ai-usage__users-table .ai-usage__total-row")
       end
+
+      def model_selector
+        PageObjects::Components::SelectKit.new(".ai-usage__model-selector")
+      end
+
+      def feature_selector
+        PageObjects::Components::SelectKit.new(".ai-usage__feature-selector")
+      end
     end
   end
 end
