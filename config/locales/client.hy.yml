@@ -2296,6 +2296,8 @@ hy:
       upload_title: "Վերբեռնել"
       upload_description: "գրեք վերբեռնման նկարագրությունն այստեղ"
       list_item: "Ցանկի տարր"
+      wrap_modal:
+        apply: "Կիրառել"
       help: "Markdown-ի խմբագրման օգնություն"
       modal_ok: "Լավ"
       cant_send_pm: "Ներողություն, Դուք չեք կարող հաղորդագրություն ուղարկել %{username}-ին:"

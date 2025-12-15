@@ -2810,6 +2810,8 @@ fr:
       ulist_title: "Liste à puces"
       list_item: "Élément"
       toggle_direction: "Basculer la section"
+      wrap_modal:
+        apply: "Appliquer"
       help: "Aide à l'édition Markdown"
       exit_fullscreen_prompt: "Appuyez sur <kbd>ÉCHAP</kbd> pour quitter le mode plein écran"
       modal_ok: "OK"

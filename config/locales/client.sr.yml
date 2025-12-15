@@ -1779,6 +1779,8 @@ sr:
       upload_title: "Učitaj"
       upload_description: "Ovde opišite stvar koju učitavate"
       list_item: "Predmet popisa"
+      wrap_modal:
+        apply: "Primeni"
       help: "Markdown pomoć pri izmenama"
       modal_ok: "U redu"
       yourself_confirm:

@@ -2264,6 +2264,8 @@ te:
       upload_title: "ఎగుమతించు"
       upload_description: "ఎగుమతి వివరణ ఇక్కడ రాయండి"
       list_item: "జాబితా అంశం"
+      wrap_modal:
+        apply: "దరఖాస్తు చేసుకోండి"
       help: "మార్క్ డైన్ సవరణ సహాయం"
       exit_fullscreen_prompt: "పూర్తి స్క్రీన్ నుండి నిష్క్రమించడానికి <kbd>ESC</kbd> నొక్కండి"
       modal_ok: "సరే"

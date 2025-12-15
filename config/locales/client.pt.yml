@@ -2804,6 +2804,8 @@ pt:
       ulist_title: "Lista de símbolos"
       list_item: "Item da Lista"
       toggle_direction: "Direção de alternar"
+      wrap_modal:
+        apply: "Aplicar"
       help: "Ajuda de Edição Markdown"
       collapse: "Minimizar o painel de compositor"
       open: "Abrir o painel de compositor"

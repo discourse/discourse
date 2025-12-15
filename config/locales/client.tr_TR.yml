@@ -2799,6 +2799,8 @@ tr_TR:
       ulist_title: "Madde işaretli liste"
       list_item: "Liste ögesi"
       toggle_direction: "Yönü aç/kapat"
+      wrap_modal:
+        apply: "Uygula"
       help: "Markdown Düzenleme Yardımı"
       exit_fullscreen_prompt: "Tam ekrandan çıkmak için <kbd>ESC</kbd> tuşuna basın"
       modal_ok: "Tamam"

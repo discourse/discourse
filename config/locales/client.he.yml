@@ -3153,6 +3153,8 @@ he:
       ulist_title: "רשימת תבליטים"
       list_item: "פריט ברשימה"
       toggle_direction: "הפיכת כיוון"
+      wrap_modal:
+        apply: "החלה"
       help: "עזרה בכתיבת Markdown"
       collapse: "מזעור לוח העריכה"
       open: "פתיחת לוח העריכה"

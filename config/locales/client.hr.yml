@@ -2947,6 +2947,8 @@ hr:
       ulist_title: "Popis s grafičkim oznakama"
       list_item: "Predmet popisa"
       toggle_direction: "Uključi/isključi smjer"
+      wrap_modal:
+        apply: "Primijeni"
       help: "Markdown pomoć pri izmjenama"
       collapse: "Smanji površinu uređivača"
       open: "Otvorite ploču uređivača"

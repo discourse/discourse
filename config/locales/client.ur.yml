@@ -2829,6 +2829,8 @@ ur:
       ulist_title: "گولیوں والی فہرست"
       list_item: "فہرست آئٹم"
       toggle_direction: "سمت ٹوگل کریں"
+      wrap_modal:
+        apply: "لاگو کریں"
       help: "مارکڈائون ترمیم میں مدد"
       collapse: "کمپوزر پینل کو مختصر کریں"
       open: "کمپوزر پینل کھولیں"

@@ -2975,6 +2975,8 @@ sk:
       upload_title: "Upload"
       upload_description: "tu zadajte popis uploadu"
       list_item: "Položka zoznamu"
+      wrap_modal:
+        apply: "Použi"
       help: "Nápoveda úprav pre Markdown"
       exit_fullscreen_prompt: "Stlačením <kbd>ESC</kbd> ukončíte celú obrazovku"
       modal_ok: "OK"

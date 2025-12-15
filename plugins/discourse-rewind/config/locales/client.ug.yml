@@ -8,16 +8,100 @@ ug:
   js:
     discourse_rewind:
       reports:
+        activity_calendar:
+          title: پائالىيەت يىلنامەسى
+        top_words:
+          title: سۆز ئىشلىتىش
         reading_time:
           title: ئوقۇش ۋاقتى
+        fbff:
+          title: يېقىن دوستىڭىز (مۇنبەردىكى ئەڭ يېقىن دوستىڭىز)
+        most_viewed_categories:
+          title:
+            one: سىز ئەڭ كۆپ زىيارەت قىلىدىغان سەھىپە
+            other: سىز ئەڭ كۆپ زىيارەت قىلىدىغان %{count} سەھىپە
+        most_viewed_tags:
+          title:
+            one: سىز ئەڭ كۆپ زىيارەت قىلىدىغان بەلگە
+            other: سىز ئەڭ كۆپ زىيارەت قىلىدىغان %{count} سەھىپە
+        best_topics:
+          view_topic: تېما كۆرسەت
+          title:
+            one: ئەڭ ياخشى تېمىڭىز
+            other: ئەڭ ياخشى %{count} تېمىڭىز
+        best_posts:
+          view_post: يازما كۆرسەت
+          title:
+            one: ئەڭ ياخشى يازمىڭىز
+            other: ئەڭ ياخشى %{count} يازمىڭىز
+        ai_usage:
+          title: سۈنئىي ئەقىل ئىشلىتىلىشى
+          total_requests: جەمئىي ئىلتىماس
+          total_tokens: جەمئىي پەرمان تاختىسى
+          success_rate: مۇۋەپپەقىيەت نىسبىتى
+          favorite_features: ئەڭ كۆپ ئىشلىتىلىدىغان ئىقتىدار
+          favorite_models: ئەڭ كۆپ ئىشلىتىلىدىغان سۈنئىي ئەقىل مودېلى
+          wake_up: "ئويغان، %{username}…"
+          system_title: "سۈنئىي ئەقىل ئىشلىتىلىشى بايقالدى"
+          section_features: "ئالىي ئىقتىدار"
+          section_models: "ئالىي مودېل"
+        assignments:
+          title: تەقسىمات
+          total_assigned: ماڭا تەقسىم قىلىندى
+          completed: تەقسىمات تاماملاندى
+          pending: تەقسىمات كېچىكتۈرۈلدى
+          assigned_by_user: بېرىلگەن تەقسىمات
+          completion_rate: تاماملاش نىسبىتى
         chat_usage:
+          title: سۆھبەت پائالىيىتى
+          total_messages: جەمئىي ئۇچۇر
+          dm_messages: بىۋاسىتە ئۇچۇر
+          unique_dm_channels: بىۋاسىتە ئۇچۇر سۆھبىتى
+          reactions_received: تاپشۇرۇۋالغان ئىنكاس
+          avg_message_length: ئوتتۇرىچە ئۇچۇر ئۇزۇنلۇقى
+          favorite_channels: ياقتۇرىدىغان قانال
           messages: ئۇچۇر
+          bot_name: XxRewindBotxX
+          you: سىز
+          channel_title: "#سۆھبەت پائالىيىتى"
           status_online: "● توردا"
+          message_1: "سىز بۇ يىل <strong>%{count}</strong> ئۇچۇر يوللىدىڭىز!"
+          reply_1: "lol قالتىس B-)"
+          message_2: "سىز پەرقلىق <strong>%{channel_count}</strong> كىشى ياكى گۇرۇپپا بىلەن <strong>%{dm_count}</strong> بىۋاستە ئۇچۇر سۆھبىتى ئۆتكۈزدىڭىز."
+          reply_2: "ئاجايىپ :D"
+          message_3: "كىشىلەر ئۇچۇرىڭىزنى ياقتۇردى! <strong>%{count}</strong> ئىنكاسقا ئېرىشتىڭىز ❤️"
+          reply_3: "r0fl rAwr 8-)"
+          message_4: "سىزنىڭ ئوتتۇرىچە ئۇچۇر ئۇزۇنلۇقىڭىز <strong>%{length}</strong> ھەرپ"
+          message_5: "ياقتۇرىدىغان قانىلىڭىز:"
+          dancing_baby_alt: "ئۇسسۇل ئويناۋاتقان بوۋاق"
+        favorite_gifs:
+          title:
+            one: سىز ئەڭ ياقتۇرىدىغان GIF
+            other: سىز ئەڭ ياقتۇرىدىغان %{count} GIF
+          total_usage:
+            one: '%{count} قېتىم ئىشلەتكەن'
+            other: جەمئىي %{count} قېتىم ئىشلەتكەن
         invites:
           title: تەكلىپ
+          total_invites: جەمئىي يوللانغان تەكلىپ
+          redeemed: قوبۇل قىلىنغان تەكلىپ
+          redemption_rate: قوبۇل قىلىش نىسبىتى
+          avg_trust_level: ئوتتۇرىچە ئىشەنچ دەرىجىسى
+          invitee_impact: تەكلىپ قىلىنغانلارنىڭ تەسىرى
           invitee_posts: قۇرغان يازما
+          invitee_topics: باشلىغان تېما
           invitee_likes: بېرىلگەن ياقتۇرۇش
+          most_active_invitee: ئەڭ ئاكتىپ تەكلىپ قىلىنغانلار
+          guest_book_title: سۆز قالدۇرۇش دەپتىرى
+          guest_book_subtitle: جامائەت تەكلىپىڭىز
           label_invitations_sent: "تەكلىپ يوللاندى:"
+          label_guests_joined: "تەكلىپ قوبۇل قىلىندى:"
+          label_acceptance_rate: "قوبۇل قىلىش نىسبىتى:"
+          section_contributions: تەكلىپ قىلىنغانلارنىڭ تۆھپىسى
+          label_posts_written: "يازغان يازما:"
+          label_topics_started: "باشلىغان تېما:"
+          label_likes_given: "ياقتۇرۇش سانى:"
+          section_most_active: ئەڭ ئاكتىپ مېھمان
         new_user_interactions:
           title: يېڭى ئىشلەتكۈچىگە يېتەكچىلىك قىلىش
           subtitle:
