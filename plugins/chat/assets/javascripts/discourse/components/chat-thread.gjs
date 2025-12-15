@@ -21,9 +21,9 @@ import {
   READ_INTERVAL_MS,
 } from "discourse/plugins/chat/discourse/lib/chat-constants";
 import ChatMessagesLoader from "discourse/plugins/chat/discourse/lib/chat-messages-loader";
+import ChatPaneState from "discourse/plugins/chat/discourse/lib/chat-pane-state";
 import DatesSeparatorsPositioner from "discourse/plugins/chat/discourse/lib/dates-separators-positioner";
 import { extractCurrentTopicInfo } from "discourse/plugins/chat/discourse/lib/extract-current-topic-info";
-import ChatPaneState from "discourse/plugins/chat/discourse/lib/chat-pane-state";
 import {
   scrollListToBottom,
   scrollListToMessage,
