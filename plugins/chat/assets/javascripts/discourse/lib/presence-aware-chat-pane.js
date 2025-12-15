@@ -20,7 +20,7 @@ const CHAT_PRESENCE_OPTIONS = {
  * Manages:
  * - User presence detection (is the user actively viewing the tab?)
  * - Pending message tracking (messages that arrived while scrolled away)
- * - Scroll-to-bottom arrow visibility
+ * - Pending content indicator visibility
  *
  * Used via composition rather than inheritance so callers can be explicit
  * about which behaviors they're invoking.
@@ -45,7 +45,7 @@ export default class PresenceAwareChatPane {
   @tracked userIsPresent = true;
 
   /**
-   * Whether the scroll-to-bottom arrow should be shown.
+   * Whether there is pending content below the current scroll position.
    * True when there are pending messages or the user is scrolled away.
    *
    * @type {boolean}
@@ -153,17 +153,17 @@ export default class PresenceAwareChatPane {
    * @param {number} options.distanceToBottomPixels
    * @param {number} [options.distanceThresholdPixels]
    */
-  #updateArrowVisibility(options) {
+  #updateHasPendingContentBelow(options) {
     const { scroller } = options;
     const isScrolledAway = this.#computeIsScrolledAway(options);
-    this.hasPendingContentBelow = this.#computeArrowVisibility(
+    this.hasPendingContentBelow = this.#computeHasPendingContentBelow(
       scroller,
       isScrolledAway
     );
   }
 
   /**
-   * Update arrow visibility from a scroll event's state object.
+   * Update pending content state from a scroll event's state object.
    * Use this in scroll handlers that already have distanceToBottom computed.
    *
    * @param {object} options
@@ -172,11 +172,11 @@ export default class PresenceAwareChatPane {
    * @param {object} options.state - Scroll state with scroller and distanceToBottom
    * @param {number} [options.distanceThresholdPixels]
    */
-  updateArrowVisibilityFromScrollState(options) {
+  updatePendingContentFromScrollState(options) {
     const { fetchedOnce, canLoadMoreFuture, state, distanceThresholdPixels } =
       options;
 
-    this.#updateArrowVisibility({
+    this.#updateHasPendingContentBelow({
       scroller: state?.scroller,
       fetchedOnce,
       canLoadMoreFuture,
@@ -186,7 +186,7 @@ export default class PresenceAwareChatPane {
   }
 
   /**
-   * Update arrow visibility by reading current scroller position.
+   * Update pending content state by reading current scroller position.
    * Use this when you need to recompute after a resize or similar event.
    *
    * @param {object} options
@@ -195,7 +195,7 @@ export default class PresenceAwareChatPane {
    * @param {boolean} options.canLoadMoreFuture
    * @param {number} [options.distanceThresholdPixels]
    */
-  updateArrowVisibilityFromScrollerPosition(options) {
+  updatePendingContentFromScrollerPosition(options) {
     const {
       scroller,
       fetchedOnce,
@@ -210,7 +210,7 @@ export default class PresenceAwareChatPane {
 
     const distanceToBottomPixels = -scroller.scrollTop;
 
-    this.#updateArrowVisibility({
+    this.#updateHasPendingContentBelow({
       scroller,
       fetchedOnce,
       canLoadMoreFuture,
@@ -266,7 +266,7 @@ export default class PresenceAwareChatPane {
     this.addPendingMessages(messageCount);
 
     schedule("afterRender", () => {
-      this.hasPendingContentBelow = this.#computeArrowVisibility(
+      this.hasPendingContentBelow = this.#computeHasPendingContentBelow(
         scroller,
         false
       );
@@ -274,13 +274,13 @@ export default class PresenceAwareChatPane {
   }
 
   /**
-   * Compute whether the scroll-to-bottom arrow should be visible.
+   * Compute whether there is pending content below the current scroll position.
    *
    * @param {HTMLElement | null} scroller
    * @param {boolean} isScrolledAway - Whether user is scrolled away from bottom
    * @returns {boolean}
    */
-  #computeArrowVisibility(scroller, isScrolledAway) {
+  #computeHasPendingContentBelow(scroller, isScrolledAway) {
     return (
       this.#canScroll(scroller) && (this.hasPendingMessages || isScrolledAway)
     );
@@ -298,7 +298,7 @@ export default class PresenceAwareChatPane {
   }
 
   /**
-   * Clear all pending messages for this context and hide the arrow.
+   * Clear all pending messages for this context and reset pending content state.
    */
   clearPendingMessages() {
     if (this.contextKey) {

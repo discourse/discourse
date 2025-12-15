@@ -123,7 +123,7 @@ export default class ChatChannel extends Component {
     this.debouncedUpdateLastReadMessage();
     DatesSeparatorsPositioner.apply(this.scroller);
 
-    this.presenceAwarePane.updateArrowVisibilityFromScrollerPosition({
+    this.presenceAwarePane.updatePendingContentFromScrollerPosition({
       scroller: this.scroller,
       fetchedOnce: this.messagesLoader.fetchedOnce,
       canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
@@ -473,7 +473,7 @@ export default class ChatChannel extends Component {
       }
 
       DatesSeparatorsPositioner.apply(this.scroller);
-      this.presenceAwarePane.updateArrowVisibilityFromScrollState({
+      this.presenceAwarePane.updatePendingContentFromScrollState({
         fetchedOnce: this.messagesLoader.fetchedOnce,
         canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
         state,
@@ -504,7 +504,7 @@ export default class ChatChannel extends Component {
       this.fetchMoreMessages({ direction: FUTURE });
       this.chatChannelScrollPositions.delete(this.args.channel.id);
     } else {
-      this.presenceAwarePane.updateArrowVisibilityFromScrollState({
+      this.presenceAwarePane.updatePendingContentFromScrollState({
         fetchedOnce: this.messagesLoader.fetchedOnce,
         canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
         state,
