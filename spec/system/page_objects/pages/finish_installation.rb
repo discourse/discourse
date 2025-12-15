@@ -35,6 +35,11 @@ module PageObjects
       def error_message_text
         find(".alert-error").text
       end
+
+      def click_login_with_discourse_id
+        find(".finish-installation__discourse-id").click
+        self
+      end
     end
   end
 end

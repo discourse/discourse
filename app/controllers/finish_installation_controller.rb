@@ -52,6 +52,16 @@ class FinishInstallationController < ApplicationController
     send_signup_email if @user.present?
   end
 
+  def redirect_discourse_id
+    create_admin_users
+
+    # Set a global notice in case the first admin login doesn't get completed
+    SiteSetting.global_notice =
+      "No admins have logged in yet. Please log in using a Discourse ID account with an email that matches the `DISCOURSE_DEVELOPER_EMAILS` environment variable to complete the installation."
+
+    redirect_to("/auth/discourse_id")
+  end
+
   protected
 
   def send_signup_email
@@ -79,8 +89,6 @@ class FinishInstallationController < ApplicationController
       SiteSetting.enable_local_logins = false
       @discourse_id_enabled = true
       @discourse_id_error = nil
-
-      create_admin_users
     rescue StandardError => e
       @discourse_id_enabled = false
       @discourse_id_error = e.message

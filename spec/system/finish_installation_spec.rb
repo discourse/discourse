@@ -32,20 +32,11 @@ RSpec.describe "Finish Installation", type: :system do
         expect(finish_installation_page).to have_no_error_message
       end
 
-      it "creates admin users from developer_emails" do
-        finish_installation_page.visit_page
-
-        user = User.find_by_email("dev@example.com")
-        expect(user).to be_present
-        expect(user.admin).to eq(true)
-        expect(user.trust_level).to eq(TrustLevel[4])
-        expect(user.active).to eq(true)
-      end
-
       it "creates multiple admin users when multiple emails are configured" do
         GlobalSetting.stubs(:developer_emails).returns("dev1@example.com,dev2@example.com")
 
         finish_installation_page.visit_page
+        finish_installation_page.click_login_with_discourse_id
 
         user1 = User.find_by_email("dev1@example.com")
         user2 = User.find_by_email("dev2@example.com")
@@ -54,6 +45,8 @@ RSpec.describe "Finish Installation", type: :system do
         expect(user1.admin).to eq(true)
         expect(user2).to be_present
         expect(user2.admin).to eq(true)
+
+        expect(page.current_url).to include("id.discourse.com")
       end
 
       it "skips creating users that already exist" do
@@ -61,10 +54,13 @@ RSpec.describe "Finish Installation", type: :system do
         initial_user_count = User.count
 
         finish_installation_page.visit_page
+        finish_installation_page.click_login_with_discourse_id
 
         expect(User.count).to eq(initial_user_count)
         existing_user.reload
         expect(existing_user.admin).to eq(false)
+
+        expect(page.current_url).to include("id.discourse.com")
       end
     end
 
@@ -134,7 +130,5 @@ RSpec.describe "Finish Installation", type: :system do
     expect(page).to have_css(".wizard-container__combobox")
     expect(page).to have_css(".input-area")
     expect(page).to have_css(".wizard-container__button")
-
-    # TODO: we could add more steps here to ensure full flow works
   end
 end
