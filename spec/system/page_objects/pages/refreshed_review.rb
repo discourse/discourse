@@ -124,6 +124,11 @@ module PageObjects
         find(".reviewable-claimed-topic .unclaim").click
       end
 
+      def has_created_at_history_item?
+        expect(page).to have_css(".timeline-event__icon .d-icon-pen-to-square")
+        expect(page).to have_text("Post created by")
+      end
+
       def has_claimed_history_item?(user)
         expect(page).to have_css(".timeline-event__icon .d-icon-user-plus")
         expect(page).to have_text("Claimed by")
