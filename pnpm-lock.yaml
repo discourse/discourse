@@ -89,8 +89,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0(ember-template-lint@7.9.3)
       lint-to-the-future-eslint:
-        specifier: ^3.2.0
-        version: 3.2.0(eslint@9.39.2(jiti@2.4.2))
+        specifier: ^3.3.0
+        version: 3.3.0(eslint@9.39.2(jiti@2.4.2))
       playwright:
         specifier: 1.57.0
         version: 1.57.0
@@ -6354,11 +6354,11 @@ packages:
     peerDependencies:
       ember-template-lint: ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
 
-  lint-to-the-future-eslint@3.2.0:
-    resolution: {integrity: sha512-PIW/zL85BglNuNeEwzNOg1pBdQQxN6Xk5LFv1sfqH9v4ZykCtGoz40nOlUN1gCNO5WELCbvVIP/WMYV5PlFkrA==}
+  lint-to-the-future-eslint@3.3.0:
+    resolution: {integrity: sha512-tj/fRddJtlhz7/DWLoeK9ERxJ2OFK0Z6qWY74qu+IFYnIzz24Aal9EXuuUqdD+xT4Cl+pKSsddmoPDDXNMIw7Q==}
     engines: {node: 10.* || >= 12.*}
     peerDependencies:
-      eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
+      eslint: ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0
 
   lint-to-the-future@2.6.4:
     resolution: {integrity: sha512-aSLuYNNCLtkR7+Jlr4hBi6zPiSIldgdhFKfvhw/nS/7pglRYV0sEWoOkSRNPAc5aVSehPBsTQ21lVPZNZ5rjjQ==}
@@ -16106,7 +16106,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  lint-to-the-future-eslint@3.2.0(eslint@9.39.2(jiti@2.4.2)):
+  lint-to-the-future-eslint@3.3.0(eslint@9.39.2(jiti@2.4.2)):
     dependencies:
       eslint: 9.39.2(jiti@2.4.2)
       globby: 14.1.0
