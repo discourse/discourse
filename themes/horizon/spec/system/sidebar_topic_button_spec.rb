@@ -58,10 +58,8 @@ RSpec.describe "Sidebar New Topic Button", system: true do
 
           expect(page).to have_no_css(".sidebar-new-topic-button[disabled]")
 
-          category_page.visit(category_with_no_subcategory)
-
-          expect(page).to have_no_css(".sidebar-new-topic-button[disabled]")
           expect(page).to have_css(".sidebar-new-topic-button.can-create-topic")
+          expect(page).to have_no_css(".sidebar-new-topic-button.cannot-create-topic")
         end
       end
     end
