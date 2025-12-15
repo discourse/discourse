@@ -7,6 +7,7 @@ import userPresent, {
   onPresenceChange,
   removeOnPresenceChange,
 } from "discourse/lib/user-presence";
+import { maintainScrollPosition } from "discourse/plugins/chat/discourse/lib/scroll-helpers";
 
 const CHAT_PRESENCE_OPTIONS = {
   userUnseenTime: 1 * 60 * 1000,
@@ -20,7 +21,6 @@ const CHAT_PRESENCE_OPTIONS = {
  * - User presence detection (is the user actively viewing the tab?)
  * - Pending message tracking (messages that arrived while scrolled away)
  * - Scroll-to-bottom arrow visibility
- * - Viewport preservation when new messages arrive
  *
  * Used via composition rather than inheritance so callers can be explicit
  * about which behaviors they're invoking.
@@ -66,13 +66,6 @@ export default class PresenceAwareChatPane {
    * @type {(() => void) | null}
    */
   #onUserPresent = null;
-
-  /**
-   * Tracks scroll position during viewport preservation.
-   *
-   * @type {{ element: HTMLElement; scrollTop: number; scrollHeight: number } | null}
-   */
-  #pendingScrollAdjustment = null;
 
   /**
    * @param {object} owner - The Ember owner for dependency injection
@@ -241,53 +234,6 @@ export default class PresenceAwareChatPane {
   }
 
   /**
-   * Prevent viewport drift when the list grows while scrolled away from bottom.
-   *
-   * Our chat scroller uses flex-direction: column-reverse for bottom-origin scroll.
-   * Appending content can shift the viewport unless we compensate for height changes.
-   *
-   * @param {HTMLElement | null} scroller - The scrollable container
-   * @param {Function} callback - Function that modifies the list content
-   */
-  preserveViewportWhile(scroller, callback) {
-    if (!scroller) {
-      callback?.();
-      return;
-    }
-
-    if (this.#pendingScrollAdjustment) {
-      this.#pendingScrollAdjustment.scrollTop = scroller.scrollTop;
-      callback?.();
-      return;
-    }
-
-    const adjustment = {
-      element: scroller,
-      scrollTop: scroller.scrollTop,
-      scrollHeight: scroller.scrollHeight,
-    };
-
-    this.#pendingScrollAdjustment = adjustment;
-    callback?.();
-
-    schedule("afterRender", () => {
-      const state = this.#pendingScrollAdjustment;
-      this.#pendingScrollAdjustment = null;
-
-      if (!state?.element) {
-        return;
-      }
-
-      const heightDiff = state.element.scrollHeight - state.scrollHeight;
-      if (!heightDiff || heightDiff < 1) {
-        return;
-      }
-
-      state.element.scrollTop = state.scrollTop - heightDiff;
-    });
-  }
-
-  /**
    * Handle an incoming message by either auto-scrolling or preserving viewport.
    *
    * If shouldAutoScroll is true, adds the message and scrolls to show it.
@@ -316,7 +262,7 @@ export default class PresenceAwareChatPane {
       return;
     }
 
-    this.preserveViewportWhile(scroller, addMessage);
+    maintainScrollPosition(scroller, addMessage);
     this.addPendingMessages(messageCount);
 
     schedule("afterRender", () => {
