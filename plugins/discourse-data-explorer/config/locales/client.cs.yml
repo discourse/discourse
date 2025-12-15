@@ -13,6 +13,7 @@ cs:
         label: "Import"
       help:
         label: "Nápověda"
+        data_types: "<h3>Datové typy</h3> <p>Zde jsou běžné datové typy, které můžete použít:</p> <ul> <li><b>integer</b> - čtyřbajtové celé číslo se znaménkem</li> <li><b>text</b> - řetězec znaků s proměnnou délkou</li> <li><b>boolean</b> – pravda/nepravda</li> <li><b>datum</b> - kalendářní datum (rok, měsíc, den)</li> </ul> <p>Další informace o datových typech naleznete na <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>této webové stránce</a>.</p>"
       schema:
         filter: "Hledat…"
       types:

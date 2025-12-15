@@ -22,6 +22,10 @@ cs:
     overall_sentiment:
       yaxis: "Datum"
   discourse_ai:
+    tools:
+      presets:
+        image_generation:
+          name: "Generátor obrázků Flux (Together.ai)"
     ai_helper:
       prompts:
         translate: Přeložit do %{language}
@@ -32,6 +36,10 @@ cs:
         explain: "Vysvětlit"
         illustrate_post: "Ilustrovat příspěvek"
         replace_dates: "Chytré datumy"
+      painter:
+        attribution:
+          stable_diffusion_xl: "Obrázek od Stable Diffusion XL"
+          dall_e_3: "Obrázek od DALL-E 3"
       image_caption:
         attribution: "Popisek od AI"
     ai_bot:
@@ -41,6 +49,8 @@ cs:
           name: "Vlastní pokyn"
         smart_dates:
           name: "Chytré datumy"
+        post_illustrator:
+          description: "Generuje výzvy StableDiffusion pro funkci ilustračního příspěvku pomocníka."
       topic_not_found: "Souhrn není k dispozici, téma nebylo nalezeno!"
       summarizing: "Vytvářím souhrn tématu"
       tool_summary:
@@ -56,3 +66,6 @@ cs:
     ai_staff_action_logger:
       updated: "aktualizováno"
       removed: "odstraněno"
+  dashboard:
+    problem:
+      ai_llm_status: "Model LLM: %{model_name} má problémy. Zkontrolujte prosím konfigurační stránku modelu <a href='%{url}'></a>."

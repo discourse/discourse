@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 cs:
+  site_settings:
+    min_trust_to_flag_posts_voting_comments: "Minimální úroveň důvěry pro nahlášení komentáře k hlasování v příspěvku"
+    keywords:
+      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
   post_action_types:
     vote:
       title: "Hlasovat"
