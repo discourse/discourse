@@ -13,7 +13,7 @@ module DiscourseAi
         end
 
         def native_tool_support?
-          true
+          !disable_native_tools?
         end
 
         def translate
