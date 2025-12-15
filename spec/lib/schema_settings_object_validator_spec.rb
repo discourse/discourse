@@ -725,16 +725,6 @@ RSpec.describe SchemaSettingsObjectValidator do
         )
       end
 
-      it "should validate upload ID successfully" do
-        upload = Fabricate(:upload)
-        schema = { name: "section", properties: { upload_property: { type: "upload" } } }
-
-        validator = described_class.new(schema: schema, object: { upload_property: upload.id })
-        errors = validator.validate
-
-        expect(errors).to eq({})
-      end
-
       it "should return the right hash of error messages when value is an invalid URL string" do
         schema = { name: "section", properties: { upload_property: { type: "upload" } } }
 

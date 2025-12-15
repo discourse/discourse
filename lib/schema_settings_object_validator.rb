@@ -137,18 +137,7 @@ class SchemaSettingsObjectValidator
       when "integer", "topic", "post"
         value.is_a?(Integer)
       when "upload"
-        # Convert upload URLs to IDs like core does
-        if value.is_a?(String)
-          upload = Upload.get_from_url(value)
-          if upload
-            @object[property_name] = upload.id
-            true
-          else
-            false
-          end
-        else
-          value.is_a?(Integer)
-        end
+        value.is_a?(Integer)
       when "float"
         value.is_a?(Float) || value.is_a?(Integer)
       when "boolean"

@@ -11,7 +11,7 @@ export default class SchemaSettingTypeUpload extends Component {
   @action
   uploadDone(upload) {
     this.uploadUrl = upload.url;
-    this.args.onChange(upload.id);
+    this.args.onChange(upload.url);
   }
 
   @action
