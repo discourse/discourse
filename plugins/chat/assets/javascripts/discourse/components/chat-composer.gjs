@@ -37,6 +37,7 @@ import {
   initUserStatusHtml,
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
+import { optionalRequire } from "discourse/lib/utilities";
 import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
 import DAutocompleteModifier, {
@@ -201,9 +202,9 @@ export default class ChatComposer extends Component {
 
   @action
   insertDiscourseLocalDate() {
-    // JIT import because local-dates isn't necessarily enabled
-    const LocalDatesCreateModal =
-      require("discourse/plugins/discourse-local-dates/discourse/components/modal/local-dates-create").default;
+    const LocalDatesCreateModal = optionalRequire(
+      "discourse/plugins/discourse-local-dates/discourse/components/modal/local-dates-create"
+    );
 
     this.modal.show(LocalDatesCreateModal, {
       model: {
@@ -794,23 +795,17 @@ export default class ChatComposer extends Component {
               />
             </div>
 
-            {{#if this.inlineButtons.length}}
-              {{#each this.inlineButtons as |button|}}
-                <DButton
-                  @icon={{button.icon}}
-                  class="-{{button.id}}"
-                  disabled={{or this.disabled button.disabled}}
-                  tabindex={{if button.disabled -1 0}}
-                  {{on
-                    "click"
-                    (fn this.handleInlineButtonAction button.action)
-                  }}
-                  {{on "focus" (fn this.computeIsFocused true)}}
-                  {{on "blur" (fn this.computeIsFocused false)}}
-                />
-              {{/each}}
-
-            {{/if}}
+            {{#each this.inlineButtons as |button|}}
+              <DButton
+                @icon={{button.icon}}
+                class="-{{button.id}}"
+                disabled={{or this.disabled button.disabled}}
+                tabindex={{if button.disabled -1 0}}
+                {{on "click" (fn this.handleInlineButtonAction button.action)}}
+                {{on "focus" (fn this.computeIsFocused true)}}
+                {{on "blur" (fn this.computeIsFocused false)}}
+              />
+            {{/each}}
 
             <PluginOutlet
               @name="chat-composer-inline-buttons"

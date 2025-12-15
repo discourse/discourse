@@ -5,7 +5,7 @@ import { modifier } from "ember-modifier";
 import DecoratedHtml from "discourse/components/decorated-html";
 import domFromString from "discourse/lib/dom-from-string";
 import lightbox from "discourse/lib/lightbox";
-import { escapeExpression } from "discourse/lib/utilities";
+import { escapeExpression, optionalRequire } from "discourse/lib/utilities";
 import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ChatUpload from "discourse/plugins/chat/discourse/components/chat-upload";
@@ -65,18 +65,18 @@ export default class ChatMessageCollapser extends Component {
   }
 
   get lazyVideoComponent() {
-    const path =
-      "discourse/plugins/discourse-lazy-videos/discourse/components/lazy-video";
-    return require.has(path) && require(path).default;
+    return optionalRequire(
+      "discourse/plugins/discourse-lazy-videos/discourse/components/lazy-video"
+    );
   }
 
   lazyVideoCooked(elements) {
+    const getVideoAttributes = optionalRequire(
+      "discourse/plugins/discourse-lazy-videos/lib/lazy-video-attributes"
+    );
+
     return elements.reduce((acc, e) => {
       if (this.siteSettings.lazy_videos_enabled && lazyVideoPredicate(e)) {
-        const getVideoAttributes = requirejs(
-          "discourse/plugins/discourse-lazy-videos/lib/lazy-video-attributes"
-        ).default;
-
         const videoAttributes = getVideoAttributes(e);
 
         if (this.siteSettings[`lazy_${videoAttributes.providerName}_enabled`]) {

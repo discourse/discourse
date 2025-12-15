@@ -1,4 +1,11 @@
-export function getColors(count, palette) {
+function getCSSColor(varName) {
+  const value = getComputedStyle(document.documentElement)
+    .getPropertyValue(varName)
+    .trim();
+  return value || null;
+}
+
+function generateGradientColors(count, palette) {
   palette = palette || "cool";
   let gradient;
 
@@ -66,4 +73,22 @@ export function getColors(count, palette) {
     previousGradientIndex = baseGradientKeyIndex;
   }
   return colors;
+}
+
+export function getColors(count, palette) {
+  const cssColors = [];
+  for (let i = 1; i <= count; i++) {
+    const color = getCSSColor(`--poll-pie-color-${i}`);
+    if (color) {
+      cssColors.push(color);
+    }
+  }
+
+  if (cssColors.length >= count) {
+    return cssColors.slice(0, count);
+  }
+
+  const remainingCount = count - cssColors.length;
+  const gradientColors = generateGradientColors(remainingCount, palette);
+  return [...cssColors, ...gradientColors];
 }

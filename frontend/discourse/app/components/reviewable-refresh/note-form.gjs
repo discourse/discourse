@@ -1,9 +1,8 @@
 import Component from "@glimmer/component";
-import { fn, hash } from "@ember/helper";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import ExpandingTextArea from "discourse/components/expanding-text-area";
 import Form from "discourse/components/form";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -102,16 +101,11 @@ export default class ReviewableNoteForm extends Component {
           as |field|
         >
           <div class="reviewable-note-form__textarea-wrapper">
-            <field.Custom>
-              <ExpandingTextArea
-                @value={{field.value}}
-                @input={{fn this.handleInput field.set}}
-                @name={{field.name}}
-                placeholder={{i18n "review.notes.placeholder"}}
-                class="reviewable-note-form__textarea"
-                rows="1"
-              />
-            </field.Custom>
+            <field.Textarea
+              @height={{80}}
+              placeholder={{i18n "review.notes.placeholder"}}
+              class="reviewable-note-form__textarea"
+            />
             <PluginOutlet
               @name="reviewable-note-form-after-note"
               @connectorTagName="div"

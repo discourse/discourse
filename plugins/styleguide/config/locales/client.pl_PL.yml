@@ -62,7 +62,7 @@ pl_PL:
         categories_list:
           title: "Lista Kategorii"
         topic_link:
-          title: "Łącze tematu"
+          title: "Link do tematu i status"
         topic_list_item:
           title: "Temat na liście tematów"
         topic_statuses:

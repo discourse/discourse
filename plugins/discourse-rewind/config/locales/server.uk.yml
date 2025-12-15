@@ -1,0 +1,14 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  site_settings:
+    discourse_rewind_enabled: "Увімкніть функцію \"Відмотування дискурсу\" для веселого підбиття підсумків активності учасників у спільноті наприкінці року."
+  discourse_rewind:
+    report_failed: "Не вдалося створити звіт про перемотування дискурсу."
+    invalid_year: "Перемотування можна згенерувати лише у січні або грудні."
+    reports_not_cached: "Звіти ще не створені. Будь ласка, оновіть сторінку."
+    report_not_found: "Звіт не знайдено."

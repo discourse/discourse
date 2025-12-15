@@ -996,8 +996,11 @@ he:
         flagged_as_by: "מסומן בתור %{flagReason} על ידי %{username} · %{relativeDate}"
         claimed: "נדרש"
         claimed_by: "נדרש על ידי %{username} · %{relativeDate}"
+        unclaimed_by: "בוטלה דרישה על ידי %{username} · %{relativeDate}"
         reviewed: "נבדק"
-        reviewed_by: "נבדק על ידי %{username} · %{relativeDate}"
+        approved_by: "אושר על ידי %{username} · %{relativeDate}"
+        rejected_by: "נדחה על ידי %{username} · %{relativeDate}"
+        ignored_by: "הוזנח על ידי %{username} · %{relativeDate}"
         view_conversation: "הצגת הודעה פרטית"
         note_added: "הערת פיקוח"
         note_added_by: "הערת פיקוח מאת %{username} · %{relativeDate}"
@@ -1042,6 +1045,11 @@ he:
             two: "שני פוסטים"
             many: "%{count} פוסטים"
             other: "%{count} פוסטים"
+        moderation_history:
+          label: "היסטוריית פיקוח"
+          silenced: "השתקות: %{count}"
+          suspended: "השעיות: %{count}"
+          rejected_posts: "פוסטים שנדחו: %{count}"
         solution_marked: "סומן פתרון"
         topic_has_solution: "לנושא הזה יש פתרון"
         visibility: "חשיפה"
@@ -3145,6 +3153,8 @@ he:
       ulist_title: "רשימת תבליטים"
       list_item: "פריט ברשימה"
       toggle_direction: "הפיכת כיוון"
+      wrap_modal:
+        apply: "החלה"
       help: "עזרה בכתיבת Markdown"
       collapse: "מזעור לוח העריכה"
       open: "פתיחת לוח העריכה"
@@ -3213,6 +3223,7 @@ he:
         remove: "הסרת התמונה"
         add_to_grid: "הוספה לרשת"
         move_outside_grid: "הוצאה מהרשת"
+      image: "תמונה"
       grid_label: "יוצג כרשת"
       image_scale_button: "שינוי קנה המידה של התמונה לכדי %{percent}%"
       delete_image_button: מחיקת תמונה
@@ -3607,6 +3618,16 @@ he:
           two: "מחיקת נושאים"
           many: "מחיקת נושאים"
           other: "מחיקת נושאים"
+        delete_posts_count:
+          one: "מחיקת פוסט"
+          two: "מחיקת פוסטים"
+          many: "מחיקת פוסטים"
+          other: "מחיקת פוסטים"
+        delete_posts_confirmation:
+          one: "למחוק פוסט?"
+          two: "למחוק שני פוסטים?"
+          many: "למחוק %{count} פוסטים?"
+          other: "למחוק %{count} פוסטים?"
         dismiss: "ביטול"
         dismiss_read: "התעלמות מאלו שלא נקראו"
         dismiss_read_with_selected:
@@ -5251,6 +5272,7 @@ he:
       add_to_calendar: "הוספה ללוח השנה"
       google: "לוח שנה של Google"
       ics: "ICS"
+      default_title: "אירוע מתוכנן"
     tagging:
       all_tags: "כל התגיות"
       other_tags: "תגיות אחרות"
@@ -5905,7 +5927,7 @@ he:
             many: "הקבוצות %{groupNames}"
             other: "הקבוצות %{groupNames}"
         statuses:
-          pre_alpha: "טרום אלפא"
+          experimental: "ניסיוני"
           alpha: "אלפא"
           beta: "בטא"
           stable: "יציב"
@@ -5927,7 +5949,7 @@ he:
           impact_type_feature: "יכולת"
           impact_type_other: "אחר"
           status_all: "כל המצבים"
-          status_pre_alpha: "טרום אלפא"
+          status_experimental: "ניסיוני"
           status_alpha: "אלפא"
           status_beta: "בטא"
           status_stable: "יציב"
@@ -5974,6 +5996,11 @@ he:
               title: "כניסות דרך רשתות חברתיות"
             discourseconnect:
               title: "Discourse Connect"
+            discourse_id:
+              title: "מזהה Discourse"
+        discourse_id:
+          title: "מזהה Discourse"
+          learn_more: "מידע נוסף"
         logo:
           title: "לוגו"
           header_description: "הגדרת הלוגואים והסמלים בהם נעשה שימוש ברחבי האתר שלך"
@@ -6069,6 +6096,7 @@ he:
             enabled_themes:
               label: "פעילה בערכות הנושא…"
               description: "נא לבחור אילו ערכות עיצוב אמורות להציג את הכרזה. רק ערכות עיצוב פעילות מופיעות."
+              select_label: "בחירת ערכות עיצוב"
             background_image:
               label: "תמונת רקע"
               description: "התמונה הזאת תוצג מאחורי טקסט הכרזה."
@@ -7285,6 +7313,8 @@ he:
           create_name: "שם"
           save: "שמירה"
           long_title: "התאמת צבעים, CSS ותכני HTML של האתר שלך"
+          dark_mode: "מצב כהה של %{themeName}"
+          light_mode: "מצב בהיר של %{themeName}"
           edit: "עריכה"
           edit_confirm: "זו ערכת עיצוב מרוחקת, אם ערכת CSS/HTML השינויים שלך יימחקו עם העדכון הבא של ערכת העיצוב."
           update_confirm: "השינויים המקומיים האלה יימחקו על ידי העדכון. להמשיך?"
@@ -8038,6 +8068,8 @@ he:
             second: "אפשרות 2"
             third: "אפשרות 3"
         edit_category:
+          toggle_freeform: "תבנית טופס מושבתת"
+          toggle_form_template: "תבנית טופס פעילה"
           select_template: "בחירת תבניות טופס"
           select_template_help: "הוספת/עריכת תבניות טופס"
         errors:

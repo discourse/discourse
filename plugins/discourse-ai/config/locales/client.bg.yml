@@ -79,6 +79,7 @@ bg:
         summary: "Сумарно"
         username: "Потребителско име"
         total_requests: "Общо заявки"
+        total: "Общо"
         periods:
           last_day: "Последните 24 часа"
           custom: "Ръчно задаване..."

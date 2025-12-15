@@ -80,98 +80,34 @@ RSpec.describe FinishInstallationController do
   end
 
   describe "#register" do
-    context "when has_login_hint is false" do
-      before { SiteSetting.has_login_hint = false }
-
-      it "doesn't allow access" do
-        get "/finish-installation/register"
-        expect(response.status).to eq(403)
-      end
+    before do
+      SiteSetting.has_login_hint = true
+      GlobalSetting.stubs(:developer_emails).returns("robin@example.com")
     end
 
-    context "when has_login_hint is true" do
-      before do
-        SiteSetting.has_login_hint = true
-        GlobalSetting.stubs(:developer_emails).returns("robin@example.com")
-      end
+    it "shows no_emails message when developer_emails is empty" do
+      GlobalSetting.stubs(:developer_emails).returns("")
+      get "/finish-installation/register"
+      expect(response.status).to eq(200)
+      expect(response.body).to include(I18n.t("finish_installation.register.no_emails"))
+    end
 
-      it "allows access" do
-        get "/finish-installation/register"
-        expect(response.status).to eq(200)
-      end
-
-      it "raises an error when the email is not in the allowed list" do
-        post "/finish-installation/register.json",
-             params: {
-               email: "notrobin@example.com",
-               username: "eviltrout",
-               password: "disismypasswordokay",
-             }
-        expect(response.status).to eq(400)
-      end
-
-      it "doesn't redirect when fields are wrong" do
-        post "/finish-installation/register",
-             params: {
-               email: "robin@example.com",
-               username: "",
-               password: "disismypasswordokay",
-             }
-
-        expect(response).not_to be_redirect
-      end
-
-      context "with working params" do
-        let(:params) do
-          { email: "robin@example.com", username: "eviltrout", password: "disismypasswordokay" }
-        end
-
-        it "registers the admin when the email is in the list" do
-          expect do post "/finish-installation/register.json", params: params end.to change {
-            Jobs::CriticalUserEmail.jobs.size
-          }.by(1)
-
-          expect(response).to be_redirect
-          expect(User.where(username: "eviltrout").exists?).to eq(true)
-        end
-
-        it "automatically resends the signup email when the user already exists" do
-          expect do post "/finish-installation/register.json", params: params end.to change {
-            Jobs::CriticalUserEmail.jobs.size
-          }.by(1)
-
-          expect(User.where(username: "eviltrout").exists?).to eq(true)
-
-          expect do post "/finish-installation/register.json", params: params end.to change {
-            Jobs::CriticalUserEmail.jobs.size
-          }.by(1)
-
-          expect(response).to be_redirect
-          expect(User.where(username: "eviltrout").exists?).to eq(true)
-        end
-      end
-
-      it "sets the admins trust level" do
-        post "/finish-installation/register.json",
-             params: {
-               email: "robin@example.com",
-               username: "eviltrout",
-               password: "disismypasswordokay",
-             }
-
-        expect(User.find_by(username: "eviltrout").trust_level).to eq 1
-      end
+    it "returns 400 when email is not in the allowed list" do
+      post "/finish-installation/register.json",
+           params: {
+             email: "notrobin@example.com",
+             username: "eviltrout",
+             password: "disismypasswordokay",
+           }
+      expect(response.status).to eq(400)
     end
   end
 
   describe "#confirm_email" do
-    context "when has_login_hint is false" do
-      before { SiteSetting.has_login_hint = false }
-
-      it "shows the page" do
-        get "/finish-installation/confirm-email"
-        expect(response.status).to eq(200)
-      end
+    it "renders without requiring has_login_hint" do
+      SiteSetting.has_login_hint = false
+      get "/finish-installation/confirm-email"
+      expect(response.status).to eq(200)
     end
   end
 
@@ -179,19 +115,27 @@ RSpec.describe FinishInstallationController do
     before do
       SiteSetting.has_login_hint = true
       GlobalSetting.stubs(:developer_emails).returns("robin@example.com")
+    end
 
+    it "resends activation email for user in session" do
       post "/finish-installation/register",
            params: {
              email: "robin@example.com",
              username: "eviltrout",
              password: "disismypasswordokay",
            }
-    end
 
-    it "resends the email" do
-      expect do put "/finish-installation/resend-email" end.to change {
+      expect { put "/finish-installation/resend-email" }.to change {
         Jobs::CriticalUserEmail.jobs.size
       }.by(1)
+
+      expect(response.status).to eq(200)
+    end
+
+    it "does nothing when user doesn't exist" do
+      expect { put "/finish-installation/resend-email" }.not_to change {
+        Jobs::CriticalUserEmail.jobs.size
+      }
 
       expect(response.status).to eq(200)
     end

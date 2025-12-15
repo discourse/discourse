@@ -8,6 +8,8 @@ he:
   site_settings:
     discourse_automation_enabled: "הפעלת תוסף discourse-automation"
   discourse_automation:
+    staff_action_logs:
+      empty_value: "(ריק)"
     models:
       automations:
         validations:

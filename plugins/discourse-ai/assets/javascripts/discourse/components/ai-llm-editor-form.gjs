@@ -17,6 +17,7 @@ import {
 } from "discourse/lib/array-tools";
 import { eq, gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import AiLlmAttachmentTypes from "discourse/plugins/discourse-ai/discourse/components/ai-llm-attachment-types";
 import DurationSelector from "./ai-quota-duration-selector";
 import AiLlmQuotaModal from "./modal/ai-llm-quota-modal";
 
@@ -62,6 +63,7 @@ export default class AiLlmEditorForm extends Component {
         cached_input_cost: modelInfo.cached_input_cost,
         vision_enabled: modelInfo.vision_enabled || false,
         cache_write_cost: modelInfo.cache_write_cost,
+        allowed_attachment_types: [],
       };
     }
 
@@ -87,6 +89,7 @@ export default class AiLlmEditorForm extends Component {
         model.provider_params
       ),
       llm_quotas: model.llm_quotas,
+      allowed_attachment_types: model.allowed_attachment_types || [],
     };
   }
 
@@ -489,6 +492,23 @@ export default class AiLlmEditorForm extends Component {
           as |field|
         >
           <field.Checkbox />
+        </form.Field>
+
+        <form.Field
+          @name="allowed_attachment_types"
+          @title={{i18n "discourse_ai.llms.allowed_attachment_types"}}
+          @tooltip={{i18n "discourse_ai.llms.hints.allowed_attachment_types"}}
+          @format="large"
+          as |field|
+        >
+          <field.Label />
+          <field.Custom>
+            <AiLlmAttachmentTypes
+              @value={{field.value}}
+              @onChange={{field.set}}
+            />
+          </field.Custom>
+          <field.Hint />
         </form.Field>
 
         <form.Field

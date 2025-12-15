@@ -840,7 +840,6 @@ ro:
         claimed: "Revendicat"
         claimed_by: "Revendicat de %{username} · %{relativeDate}"
         reviewed: "Revizuit"
-        reviewed_by: "Revizuit de %{username} · %{relativeDate}"
         view_conversation: "vezi MP"
         note_added: "Notă moderator"
         note_added_by: "Notă moderator de la %{username} · %{relativeDate}"
@@ -2290,6 +2289,8 @@ ro:
       ulist_title: "Listă cu buline"
       list_item: "Element listă"
       toggle_direction: "Comută direcția"
+      wrap_modal:
+        apply: "Aplică"
       help: "Ajutor pentru formatarea cu Markdown"
       collapse: "Minimizează panoul de compunere"
       open: "Deschide panoul de compunere"
@@ -2333,6 +2334,7 @@ ro:
         zoom_out: "Micșorează dimensiunea imaginii"
         zoom_in: "Mărește dimensiunea imaginii"
         remove: "Înlătură imagine"
+      image: "imagine"
       image_scale_button: "Scalează imaginea la %{percent}%"
       link_toolbar:
         edit: "Editează legătură"
@@ -3901,6 +3903,8 @@ ro:
         enabled_for_options:
           everyone: "Toată lumea"
           staff: "Doar pentru personal"
+        statuses:
+          experimental: "Experimental"
         impact_roles:
           admins: "Admini"
           moderators: "Moderatori"
@@ -3910,6 +3914,7 @@ ro:
           enabled: "Activate"
           disabled: "Dezactivate"
           impact_type_other: "Altele"
+          status_experimental: "Experimental"
       config:
         about:
           title: "Despre site-ul tău"
@@ -3940,6 +3945,11 @@ ro:
           sub_pages:
             common_settings:
               title: "Setări"
+            discourse_id:
+              title: "ID Discourse"
+        discourse_id:
+          title: "ID Discourse"
+          learn_more: "Află mai multe"
         logo:
           title: "Logo"
           header_description: "Configurează logourile și iconurile utilizate pe întregul tău site"

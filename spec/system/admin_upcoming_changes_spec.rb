@@ -11,7 +11,7 @@ describe "Admin upcoming changes", type: :system do
       {
         enable_upload_debug_mode: {
           impact: "other,developers",
-          status: :pre_alpha,
+          status: :experimental,
           impact_type: "other",
           impact_role: "developers",
         },
@@ -79,12 +79,11 @@ describe "Admin upcoming changes", type: :system do
 
     # Add a group to test clearing behavior
     SiteSetting.enable_upload_debug_mode = true
-    SiteSettingGroup.create!(
+    Fabricate(
+      :site_setting_group,
       name: "enable_upload_debug_mode",
       group_ids: Group::AUTO_GROUPS[:trust_level_4].to_s,
     )
-    SiteSetting.refresh_site_setting_group_ids!
-    SiteSetting.notify_changed!
 
     # Refresh after setting up the group
     upcoming_changes_page.visit

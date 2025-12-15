@@ -912,7 +912,6 @@ hr:
         claimed: "Preuzeto"
         claimed_by: "Preuzeo/la %{username} · %{relativeDate}"
         reviewed: "Recenzirano"
-        reviewed_by: "Recenzirao/la %{username} · %{relativeDate}"
         view_conversation: "pogledaj privatnu poruku"
         note_added: "Napomena moderatora"
         note_added_by: "Napomena moderatora od %{username} · %{relativeDate}"
@@ -2948,6 +2947,8 @@ hr:
       ulist_title: "Popis s grafičkim oznakama"
       list_item: "Predmet popisa"
       toggle_direction: "Uključi/isključi smjer"
+      wrap_modal:
+        apply: "Primijeni"
       help: "Markdown pomoć pri izmjenama"
       collapse: "Smanji površinu uređivača"
       open: "Otvorite ploču uređivača"
@@ -3014,6 +3015,7 @@ hr:
         zoom_out: "Smanjite veličinu slike"
         zoom_in: "Povećajte veličinu slike"
         remove: "Uklonite sliku"
+      image: "slika"
       image_scale_button: "Skaliraj sliku na %{percent}%"
       delete_image_button: Izbriši sliku
       toggle_image_grid: Uključi/isključi rešetku slike
@@ -5491,6 +5493,8 @@ hr:
         enabled_for_options:
           everyone: "Svi"
           staff: "Samo osoblje"
+        statuses:
+          experimental: "Eksperimentalno"
         impact_roles:
           admins: "Admini"
           moderators: "Moderatori"
@@ -5500,6 +5504,7 @@ hr:
           enabled: "Omogućeno"
           disabled: "Onemogućeno"
           impact_type_other: "Ostalo"
+          status_experimental: "Eksperimentalno"
       config:
         about:
           title: "O vašoj web stranici"
@@ -5536,6 +5541,11 @@ hr:
           sub_pages:
             common_settings:
               title: "Postavke"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Saznajte više"
         logo:
           title: "Logo"
           header_description: "Konfigurirajte logotipe i ikone koje se koriste na vašoj web stranici"

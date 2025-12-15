@@ -1,0 +1,26 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+da:
+  js:
+    discourse_rewind:
+      reports:
+        reading_time:
+          title: Læsetid
+        chat_usage:
+          messages: beskeder
+          you: Dig
+          status_online: "● online"
+        invites:
+          title: Invitationer
+          invitee_posts: Oprettede indlæg
+          invitee_likes: Likes givet
+          label_invitations_sent: "Invitationer sendt:"
+        new_user_interactions:
+          likes_given: Likes givet
+          mentions: Omtaler
+        writing_analysis:
+          menu_other: Andre

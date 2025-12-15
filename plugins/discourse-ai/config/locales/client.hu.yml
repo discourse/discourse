@@ -90,6 +90,7 @@ hu:
         summary: "Összefoglaló"
         username: "Felhasználónév"
         total_requests: "Összes kérés"
+        total: "Összesen"
         periods:
           last_day: "Elmúlt 24 óra"
           custom: "Egyéni…"

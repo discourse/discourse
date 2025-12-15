@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 ug:
+  site_settings:
+    patreon_donation_prompt_enabled: "ئىئانە ئەسكەرتىشىنى قوزغىتامدۇ؟"

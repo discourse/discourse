@@ -23,9 +23,10 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
           filterFn: () => true,
         },
         {
-          label: i18n("admin.upcoming_changes.filter.status_pre_alpha"),
-          value: "pre_alpha",
-          filterFn: (change) => change.upcoming_change.status === "pre_alpha",
+          label: i18n("admin.upcoming_changes.filter.status_experimental"),
+          value: "experimental",
+          filterFn: (change) =>
+            change.upcoming_change.status === "experimental",
         },
         {
           label: i18n("admin.upcoming_changes.filter.status_alpha"),

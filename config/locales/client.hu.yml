@@ -851,7 +851,6 @@ hu:
         claimed: "Igényelt"
         claimed_by: "%{username} által igényelve · %{relativeDate}"
         reviewed: "Felülvizsgált"
-        reviewed_by: "%{username} által felülvizsgálva · %{relativeDate}"
         view_conversation: "PÜ megtekintése"
         note_added: "Moderátori megjegyzés"
         note_added_by: "%{username} moderátor megjegyzése · %{relativeDate}"
@@ -2811,6 +2810,8 @@ hu:
       ulist_title: "Pontozott lista"
       list_item: "Listaelem"
       toggle_direction: "Irány be/ki"
+      wrap_modal:
+        apply: "Alkalmaz"
       help: "Markdown szerkesztési súgó"
       collapse: "Szerkesztő panel minimalizálása"
       open: "Szerkesztő panel megnyitása"
@@ -2877,6 +2878,7 @@ hu:
         zoom_out: "Képméret csökkentése"
         zoom_in: "Képméret növelése"
         remove: "Kép eltávolítása"
+      image: "kép"
       image_scale_button: "Kép méretezése %{percent}%-ra"
       delete_image_button: Kép törlése
       toggle_image_grid: Képrács be/ki
@@ -5262,6 +5264,8 @@ hu:
         enabled_for_options:
           everyone: "Mindenki"
           staff: "Csak a stáb"
+        statuses:
+          experimental: "Kísérleti"
         impact_roles:
           admins: "Adminisztrátorok"
           moderators: "Moderátorok"
@@ -5271,6 +5275,7 @@ hu:
           enabled: "Bekapcsolva"
           disabled: "Kikapcsolva"
           impact_type_other: "Egyéb"
+          status_experimental: "Kísérleti"
       config:
         about:
           title: "Az Ön webhelyéről"
@@ -5311,6 +5316,11 @@ hu:
               title: "Közösségi bejelentkezések"
             discourseconnect:
               title: "Discourse Connect"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Tudjon meg többet"
         logo:
           title: "Logó"
           header_description: "A webhelyen használt logók és ikonok testreszabása"

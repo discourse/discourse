@@ -28,7 +28,7 @@ import { CANCELLED_STATUS } from "discourse/modifiers/d-autocomplete";
  *  Can also include:
  *
  *  - treatAsTextarea - Whether to anchor the autocompletion to the start of the input and
- *                      ensure the popper is always on top.
+ *                      ensure the floating element is always on top.
  **/
 export function setupHashtagAutocomplete(
   contextualHashtagConfiguration,

@@ -24,7 +24,7 @@ export default class DiscourseReactionsPicker extends Component {
   }
 
   @action
-  pointerOver() {
+  pointerOver(event) {
     if (event.pointerType !== "mouse") {
       return;
     }

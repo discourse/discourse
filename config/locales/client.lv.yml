@@ -1715,6 +1715,8 @@ lv:
       upload_title: "Augšupielādēt"
       upload_description: "pievienojiet faila aprakstu"
       list_item: "Saraksta punkts"
+      wrap_modal:
+        apply: "Pielietot"
       help: "Palīdzība ar formatēšanu, izmantojot Markdown"
       modal_ok: "Labi"
       cant_send_pm: "Atvainojiet, jūs nevarat sūtīt ziņu %{username}."
@@ -1726,6 +1728,7 @@ lv:
         reply: Atbilde
         edit: Labot
       ignore: "Ignorēt"
+      image: "attēls"
     notifications:
       title: "paziņojumi par @vārda pieminēšanu, atbildēm uz jūsu ierakstiem un tēmām, ziņām, utt."
       none: "Pašlaik neizdodas ielādēt paziņojumus."
@@ -2886,6 +2889,8 @@ lv:
           sub_pages:
             common_settings:
               title: "Iestatījumi"
+        discourse_id:
+          learn_more: "Uzzināt vairāk"
         logo:
           form:
             mobile: "Mobilais"

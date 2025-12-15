@@ -20,10 +20,7 @@ export default class ChatFooter extends Component {
   @service chatStateManager;
 
   get includeStarred() {
-    return (
-      this.siteSettings.star_chat_channels &&
-      this.chatChannelsManager.hasStarredChannels
-    );
+    return this.chatChannelsManager.hasStarredChannels;
   }
 
   get includeThreads() {

@@ -122,11 +122,13 @@ id:
         last_seven_days: "7 hari terakhir"
         enable: "Aktifkan"
         test_modal:
+          system_prompt: "Perintah Sistem"
           spam: "Spam"
       usage:
         summary: "Ringkasan"
         model: "Model"
         username: "Nama Pengguna"
+        total: "Jumlah"
         periods:
           last_day: "24 jam terakhir"
       ai_persona:

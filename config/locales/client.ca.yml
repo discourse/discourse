@@ -1723,6 +1723,8 @@ ca:
       upload_title: "Carrega"
       upload_description: "escriviu aquí una descripció del fitxer que es carrega"
       list_item: "Element de llista"
+      wrap_modal:
+        apply: "Aplica"
       help: "Ajuda d'edició Markdown"
       modal_ok: "D'acord"
       cant_send_pm: "No podeu enviar cap missatge a %{username}."
@@ -1754,6 +1756,7 @@ ca:
           label: "Commuta l'elevació del tema"
           desc: "Respon sense canviar la data més recent de resposta"
       ignore: "Ignora"
+      image: "imatge"
     notifications:
       tooltip:
         regular:
@@ -3095,6 +3098,8 @@ ca:
           sub_pages:
             common_settings:
               title: "Configuració"
+        discourse_id:
+          learn_more: "Per a saber-ne més"
         logo:
           form:
             mobile: "Mòbil"

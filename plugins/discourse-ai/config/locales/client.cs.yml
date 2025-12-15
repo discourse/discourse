@@ -106,6 +106,7 @@ cs:
         total_requests: "Celkem požadavků"
         request_tokens: "Tokeny požadavku"
         response_tokens: "Tokeny odpovědi"
+        total: "Celkem"
         periods:
           last_day: "Posledních 24 hodin"
           custom: "Vlastní…"

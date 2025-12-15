@@ -424,6 +424,10 @@ Discourse::Application.routes.draw do
         get "login-and-authentication" => "site_settings#index"
         get "login-and-authentication/authenticators" => "site_settings#index"
         get "login-and-authentication/discourseconnect" => "site_settings#index"
+        get "login-and-authentication/discourse-id" => "discourse_id#show"
+        post "login-and-authentication/discourse-id/regenerate" =>
+               "discourse_id#regenerate_credentials"
+        put "login-and-authentication/discourse-id/settings" => "discourse_id#update_settings"
 
         DiscoursePluginRegistry.admin_config_login_routes.each do |location|
           get "login-and-authentication/#{location}" => "site_settings#index"

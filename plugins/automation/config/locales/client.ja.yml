@@ -10,6 +10,7 @@ ja:
       logs:
         staff_actions:
           actions:
+            update_automation: 自動化を更新
             delete_automation: 自動化を削除
     discourse_automation:
       title: 自動化
@@ -64,6 +65,12 @@ ja:
         text:
           label: テキスト
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: カテゴリ
+            tags:
+              label: タグ
         not_found: 自動化 `%{automation}` のトリガー `%{trigger}` が見つかりませんでした。関連するプラグインがインストールされていることを確認してください。
         user_badge_granted:
           fields:

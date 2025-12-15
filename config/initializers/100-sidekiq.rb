@@ -2,6 +2,7 @@
 
 require "sidekiq/pausable"
 require "sidekiq/discourse_event"
+require "sidekiq/suppress_user_email_errors"
 require "sidekiq_logster_reporter"
 require "sidekiq_long_running_job_logger"
 require "mini_scheduler_long_running_job_logger"

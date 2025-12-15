@@ -2530,6 +2530,8 @@ zh_TW:
       upload_title: "上傳"
       upload_description: "在此輸入上傳的描述"
       list_item: "清單項目"
+      wrap_modal:
+        apply: "套用"
       help: "Markdown 編輯說明"
       exit_fullscreen_prompt: "按<kbd>ESC</kbd>離開全螢幕"
       modal_ok: "確定"
@@ -2582,6 +2584,7 @@ zh_TW:
         title: "新增圖片描述"
       image_toolbar:
         alt_text: "新增圖片描述"
+      image: "圖片"
       image_scale_button: "將影像縮放至 %{percent}%"
       delete_image_button: 刪除圖片
       toggle_image_grid: 切換影像網格
@@ -4684,6 +4687,8 @@ zh_TW:
         enabled_for_options:
           everyone: "所有使用者"
           staff: "只限工作人員"
+        statuses:
+          experimental: "實驗性"
         impact_roles:
           moderators: "板主"
           staff: "管理員"
@@ -4692,6 +4697,7 @@ zh_TW:
           enabled: "啟用"
           disabled: "停用"
           impact_type_other: "其他"
+          status_experimental: "實驗性"
       config:
         about:
           title: "關於您的網站"
@@ -4725,6 +4731,8 @@ zh_TW:
           sub_pages:
             common_settings:
               title: "設定"
+        discourse_id:
+          learn_more: "了解更多"
         logo:
           title: "標誌"
           form:

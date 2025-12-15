@@ -526,6 +526,8 @@ export default class DEditor extends Component {
    * @property {function} addText - Adds text
    * @property {function} applyList - Applies a list format
    * @property {*} selected - The current selection
+   * @property {Object} commands - Available commands
+   * @property {Object} state - Current editor state (inWrap, inBold, etc.)
    */
 
   /**
@@ -540,6 +542,7 @@ export default class DEditor extends Component {
     });
     return {
       commands: this.textManipulation.commands,
+      state: this.textManipulation.state,
       selected,
       selectText: (from, length) =>
         this.textManipulation.selectText(from, length, { scroll: false }),

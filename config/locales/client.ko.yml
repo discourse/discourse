@@ -2045,6 +2045,8 @@ ko:
       upload_title: "업로드"
       upload_description: "여기에 업로드 설명을 입력하세요"
       list_item: "목록 항목"
+      wrap_modal:
+        apply: "적용"
       help: "Markdown 편집 도움말"
       exit_fullscreen_prompt: "전체 화면에서 나가려면 <kbd>ESC</kbd>를 누르세요."
       modal_ok: "확인"
@@ -2088,6 +2090,7 @@ ko:
       ignore: "무시"
       image_alt_text:
         aria_label: 이미지의 대체 텍스트
+      image: "이미지"
       delete_image_button: 이미지 삭제
       link_toolbar:
         copy: "링크 복사"
@@ -3757,6 +3760,8 @@ ko:
           sub_pages:
             common_settings:
               title: "설정"
+        discourse_id:
+          learn_more: "더 보기"
         logo:
           form:
             mobile: "모바일"
