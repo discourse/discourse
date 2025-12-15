@@ -5,11 +5,13 @@ import ComposerTipCloseButton from "discourse/components/composer-tip-close-butt
 const EducationComposerMessage = <template>
   <ComposerTipCloseButton @action={{fn @closeMessage @message}} />
 
-  {{#if @message.title}}
-    <h3>{{@message.title}}</h3>
-  {{/if}}
+  <div class="composer-popup__content">
+    {{#if @message.title}}
+      <h3>{{@message.title}}</h3>
+    {{/if}}
 
-  {{htmlSafe @message.body}}
+    {{htmlSafe @message.body}}
+  </div>
 </template>;
 
 export default EducationComposerMessage;

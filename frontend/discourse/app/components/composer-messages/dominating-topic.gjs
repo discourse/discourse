@@ -10,16 +10,18 @@ export default class DominatingTopicComposerMessage extends Component {
 
   <template>
     <ComposerTipCloseButton @action={{fn @closeMessage @message}} />
+    <div class="composer-popup__content">
 
-    {{htmlSafe @message.body}}
+      {{htmlSafe @message.body}}
 
-    {{#if this.currentUser.can_invite_to_forum}}
-      <DButton
-        @label="footer_nav.share"
-        @icon="link"
-        @action={{@shareModal}}
-        class="btn-primary"
-      />
-    {{/if}}
+      {{#if this.currentUser.can_invite_to_forum}}
+        <DButton
+          @label="footer_nav.share"
+          @icon="link"
+          @action={{@shareModal}}
+          class="btn-primary"
+        />
+      {{/if}}
+    </div>
   </template>
 }

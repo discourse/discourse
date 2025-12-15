@@ -6,7 +6,7 @@ const ComposerTipCloseButton = <template>
     @icon="xmark"
     @label="composer.esc"
     @ariaLabel="composer.esc_label"
-    class="btn-transparent close"
+    class="close"
   />
 </template>;
 
