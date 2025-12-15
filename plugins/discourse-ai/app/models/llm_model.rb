@@ -303,7 +303,6 @@ end
 #  cache_write_cost         :float            default(0.0)
 #  cached_input_cost        :float
 #  display_name             :string
-#  enabled_chat_bot         :boolean          default(FALSE), not null
 #  input_cost               :float
 #  max_output_tokens        :integer
 #  max_prompt_tokens        :integer          not null
