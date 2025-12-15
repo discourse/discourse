@@ -1,6 +1,5 @@
 /* eslint-disable ember/no-jquery */
 import $ from "jquery";
-import EmbedMode from "discourse/lib/embed-mode";
 
 //  Append our CSRF token to AJAX requests when necessary.
 
@@ -22,7 +21,7 @@ export default {
     }
 
     callbacks.add(function (options, originalOptions, xhr) {
-      if (!options.crossDomain || EmbedMode.enabled) {
+      if (!options.crossDomain) {
         xhr.setRequestHeader("X-CSRF-Token", session.get("csrfToken"));
       }
     });

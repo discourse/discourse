@@ -18,35 +18,3 @@ body.embed-mode {
     max-width: 100%;
   }
 }
-
-// Storage Access API prompt for Safari ITP
-.embed-storage-access-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgb(0 0 0 / 50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
-
-.embed-storage-access-prompt {
-  background: var(--secondary);
-  padding: 1.5em 2em;
-  border-radius: 8px;
-  max-width: 400px;
-  text-align: center;
-  box-shadow: 0 4px 20px rgb(0 0 0 / 30%);
-
-  p {
-    margin-bottom: 1em;
-    color: var(--primary);
-  }
-
-  .btn {
-    margin: 0.25em;
-  }
-}
