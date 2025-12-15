@@ -43,11 +43,10 @@ RSpec.describe "Finish Installation", type: :system do
 
       it "enables Discourse ID and shows login button" do
         finish_installation_page.visit_page
-        pause_test
 
-        # expect(finish_installation_page).to have_discourse_id_button
-        # expect(finish_installation_page).to have_no_register_button
-        # expect(finish_installation_page).to have_no_error_message
+        expect(finish_installation_page).to have_discourse_id_button
+        expect(finish_installation_page).to have_no_register_button
+        expect(finish_installation_page).to have_no_error_message
       end
 
       it "creates multiple admin users when multiple emails are configured" do
