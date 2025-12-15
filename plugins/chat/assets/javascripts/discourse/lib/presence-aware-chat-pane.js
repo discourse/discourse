@@ -31,7 +31,7 @@ const CHAT_PRESENCE_OPTIONS = {
  *   contextKey: `channel:${this.channel.id}`,
  *   onUserPresent: this.handleUserReturned,
  * });
- * this.presenceAwarePane.setup();
+ * // Call teardown() when done
  * ```
  */
 export default class PresenceAwareChatPane {
@@ -84,12 +84,6 @@ export default class PresenceAwareChatPane {
     setOwner(this, owner);
     this.contextKey = options.contextKey;
     this.#onUserPresent = options.onUserPresent ?? null;
-  }
-
-  /**
-   * Initialize presence tracking. Call from component setup (e.g. constructor or didInsert).
-   */
-  setup() {
     this.userIsPresent = userPresent(CHAT_PRESENCE_OPTIONS);
     onPresenceChange({
       callback: this.onPresenceChangeCallback,

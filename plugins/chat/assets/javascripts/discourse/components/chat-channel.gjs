@@ -134,7 +134,6 @@ export default class ChatChannel extends Component {
   setup(element) {
     this.uploadDropZone = element;
     document.addEventListener("keydown", this._autoFocus);
-    this.presenceAwarePane.setup();
 
     this.messagesManager.clear();
 

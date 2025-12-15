@@ -101,7 +101,6 @@ export default class ChatThread extends Component {
   @action
   setup(element) {
     this.uploadDropZone = element;
-    this.presenceAwarePane.setup();
 
     this.messagesManager.clear();
     this.args.thread.draft =
