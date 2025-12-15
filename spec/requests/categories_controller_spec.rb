@@ -817,30 +817,36 @@ RSpec.describe CategoriesController do
         end
 
         it "does not log false permission changes when everyone group name is localized" do
-          Group[:everyone].update!(name: "jeder")
-          category.category_groups.destroy_all
+          original_name = Group[:everyone].name
+          localized_name = "jeder"
 
-          put "/categories/#{category.id}.json",
+          Group[:everyone].update!(name: localized_name)
+
+          category_with_no_permissions = Fabricate(:category, user: admin)
+          category_with_no_permissions.category_groups.destroy_all
+
+          put "/categories/#{category_with_no_permissions.id}.json",
               params: {
-                name: category.name,
-                color: category.color,
-                text_color: category.text_color,
-                slug: category.slug,
+                name: category_with_no_permissions.name,
+                color: category_with_no_permissions.color,
+                text_color: category_with_no_permissions.text_color,
+                slug: category_with_no_permissions.slug,
                 permissions: {
-                  "jeder" => CategoryGroup.permission_types[:full],
+                  localized_name => CategoryGroup.permission_types[:full],
                 },
               }
 
           expect(response.status).to eq(200)
 
-          Scheduler::Defer.do_all_work
-
           expect(
             UserHistory.exists?(
               action: UserHistory.actions[:change_category_settings],
+              category_id: category_with_no_permissions.id,
               subject: "permissions",
             ),
           ).to eq(false)
+        ensure
+          Group[:everyone].update!(name: original_name)
         end
 
         it "updates per-category settings correctly" do
