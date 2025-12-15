@@ -47,7 +47,6 @@ export default class ChatThread extends Component {
   @service chat;
   @service chatApi;
   @service chatDraftsManager;
-  @service chatPanePendingManager;
   @service chatThreadComposer;
   @service chatThreadPane;
   @service dialog;
