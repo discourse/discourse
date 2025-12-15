@@ -627,12 +627,14 @@ RSpec.describe Middleware::RequestTracker do
         }.by(1)
       end
 
-      it "extracts session_id from MessageBus poll URL for deferred views" do
+      it "extracts session_id for deferred views" do
         data =
           Middleware::RequestTracker.get_data(
             env(
               :path => "/message-bus/abc12345-1234-5678-9abc-def012345678/poll",
               "HTTP_DISCOURSE_DEFERRED_TRACK_VIEW" => "1",
+              "HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_SESSION_ID" =>
+                "abc12345-1234-5678-9abc-def012345678",
             ),
             ["200", { "Content-Type" => "text/html" }],
             0.1,
