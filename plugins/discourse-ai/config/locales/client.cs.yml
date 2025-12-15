@@ -102,6 +102,8 @@ cs:
         export: "Export"
         import: "Import"
         description: "Popis"
+        tool_details: Zobrazit detaily nástroje
+        tool_details_help: Zobrazí koncovým uživatelům podrobnosti o tom, které nástroje jazykový model spustil.
         user: Uživatel
         save: "Uložit"
         enabled: "Zapnuto?"
@@ -138,6 +140,7 @@ cs:
         edit: "Upravit"
         back: "Zpět"
         delete: Smazat
+        seeded_warning: "Tento model je na vašem webu předem nakonfigurován a nelze jej upravovat."
         quotas:
           group: "Skupina"
           max_usages: "Max. použití"
@@ -153,13 +156,23 @@ cs:
           ai_summarization: "Shrnout"
           ai_spam: "Spam"
         model_description:
+          anthropic-claude-opus-4-1: "Nejinteligentnější model společnosti Anthropic"
+          anthropic-claude-sonnet-4-0: "Optimální poměr rychlosti a nákladů"
+          anthropic-claude-3-7-sonnet-latest: "Optimální rovnováha rychlosti a nákladů (předchozí generace)"
+          anthropic-claude-3-5-haiku-latest: "Rychlé a cenově výhodné"
+          google-gemini-2-0-flash: "Lehký, rychlý a cenově efektivní s multimodálním uvažováním (předchozí generace)"
+          google-gemini-2-0-flash-lite: "Cenově efektivní model s nízkou latencí"
           open_ai-o3: "Nejschopnější model uvažování Open AI"
+          open_ai-o4-mini: "Pokročilý cenově efektivní model uvažování"
           open_ai-gpt-5: "Vlajkový model Open AI. Je vhodný pro řešení problémů napříč oblastmi."
+          open_router-x-ai-grok-3-beta: "Nejnovější model od xAI"
         next:
           title: "Další"
         tests:
           title: "Spustit test"
           success: "Úspěch!"
+        hints:
+          cost_cached_input: "Vstupní náklady na 1 milion tokenů v mezipaměti pro tento model"
         providers:
           aws_bedrock: "AWS Bedrock"
           anthropic: "Anthropic"
@@ -175,6 +188,8 @@ cs:
           mistral: "Mistral"
           open_router: "OpenRouter"
           fake: "Přizpůsobené"
+        provider_fields:
+          enable_responses_api: "Povolit rozhraní API pro odpovědi (vyžadováno u některých modelů OpenAI)"
       related_topics:
         title: "Související témata"
         pill: "Související"
@@ -351,6 +366,7 @@ cs:
       discobot_discoveries:
         regular_results: "Témata"
         collapse: "Sbalit"
+        user_setting: "Povolit vyhledávání"
         tooltip:
           actions:
             disable: "Vypnout"
