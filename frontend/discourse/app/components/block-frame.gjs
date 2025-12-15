@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { concat, hash } from "@ember/helper";
 import { service } from "@ember/service";
 import curryComponent from "ember-curry-component";
+import { _BLOCK_IDENTIFIER } from "discourse/blocks";
 import concatClass from "discourse/helpers/concat-class";
 import { blockConfigs } from "discourse/lib/plugin-api";
 import { or } from "discourse/truth-helpers";
@@ -78,7 +79,7 @@ const WrappedBlock = <template>
       (curryComponent @block.block (or @block.args (hash)))
       as |BlockComponent|
     }}
-      <BlockComponent />
+      <BlockComponent @_block_identifier={{_BLOCK_IDENTIFIER}} />
     {{/let}}
   </div>
 </template>;
