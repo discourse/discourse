@@ -3413,7 +3413,6 @@ en:
           aria_label: Filter using tags
         filters:
           label: Only return topics/posts…
-          none: Select…
           all: Include messages
           title: Matching in title only
           likes: I liked

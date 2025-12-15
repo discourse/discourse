@@ -21,7 +21,9 @@ acceptance("Discourse Assign | Search - Full Page", function (needs) {
   });
 
   test("update in:assigned filter through advanced search ui", async function (assert) {
-    const inSelector = selectKit(".search-advanced-options .select-kit#in");
+    const inSelector = selectKit(
+      ".search-advanced-options .select-kit#search-in-options"
+    );
 
     await visit("/search");
 
@@ -37,7 +39,9 @@ acceptance("Discourse Assign | Search - Full Page", function (needs) {
   });
 
   test("update in:unassigned filter through advanced search ui", async function (assert) {
-    const inSelector = selectKit(".search-advanced-options .select-kit#in");
+    const inSelector = selectKit(
+      ".search-advanced-options .select-kit#search-in-options"
+    );
 
     await visit("/search");
 
