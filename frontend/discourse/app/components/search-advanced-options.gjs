@@ -207,7 +207,7 @@ export default class SearchAdvancedOptions extends Component {
 
     for (const block of blocks) {
       let value = block.replace(REGEXP_IN_PREFIX, "").toLowerCase();
-      // Handle "with:images" -> "images" and "in:personal" -> "messages"
+      // "in:personal" is an alias for "messages"
       if (value === "personal") {
         value = "messages";
       }
@@ -808,7 +808,6 @@ export default class SearchAdvancedOptions extends Component {
               @value={{this.searchedTerms.in}}
               @onChange={{this.onChangeSearchTermForIn}}
               @options={{hash
-                none="search.advanced.filters.none"
                 headerAriaLabel=(i18n "search.advanced.filters.label")
               }}
             />
