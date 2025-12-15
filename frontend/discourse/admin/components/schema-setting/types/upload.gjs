@@ -16,7 +16,7 @@ export default class SchemaSettingTypeUpload extends Component {
     if (!value) {
       return null;
     }
-    if (typeof value === "number") {
+    if (Number.isInteger(value)) {
       const cachedUpload = uploadCache.get(value);
       return cachedUpload?.url || null;
     }
@@ -32,7 +32,7 @@ export default class SchemaSettingTypeUpload extends Component {
 
   @action
   uploadDeleted() {
-    if (typeof this.args.value === "number") {
+    if (Number.isInteger(this.args.value)) {
       uploadCache.delete(this.args.value);
     }
     this.uploadUrl = null;
