@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -22,6 +23,8 @@ import { CHAT_SOUNDS } from "discourse/plugins/chat/discourse/services/chat-audi
 
 export default class Chat extends Component {
   @service chatAudioManager;
+
+  @tracked saved = false;
 
   get chatQuickReactionTypes() {
     return [
@@ -152,7 +155,10 @@ export default class Chat extends Component {
           location.reload();
         }
       })
-      .catch(popupAjaxError);
+      .catch(popupAjaxError)
+      .finally(() => {
+        this.saved = true;
+      });
   }
 
   <template>
@@ -284,7 +290,12 @@ export default class Chat extends Component {
           </field.RadioGroup>
         </form.Field>
       </form.Section>
-      <form.Submit />
+      <div class="save-controls">
+        <form.Submit />
+        {{#if this.saved}}
+          <span class="saved">{{i18n "saved"}}</span>
+        {{/if}}
+      </div>
     </Form>
   </template>
 }
