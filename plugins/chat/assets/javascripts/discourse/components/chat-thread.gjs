@@ -23,7 +23,7 @@ import {
 import ChatMessagesLoader from "discourse/plugins/chat/discourse/lib/chat-messages-loader";
 import DatesSeparatorsPositioner from "discourse/plugins/chat/discourse/lib/dates-separators-positioner";
 import { extractCurrentTopicInfo } from "discourse/plugins/chat/discourse/lib/extract-current-topic-info";
-import PresenceAwareChatPane from "discourse/plugins/chat/discourse/lib/presence-aware-chat-pane";
+import ChatPaneState from "discourse/plugins/chat/discourse/lib/chat-pane-state";
 import {
   scrollListToBottom,
   scrollListToMessage,
@@ -60,7 +60,7 @@ export default class ChatThread extends Component {
 
   scroller = null;
 
-  presenceAwarePane = new PresenceAwareChatPane(getOwner(this), {
+  paneState = new ChatPaneState(getOwner(this), {
     contextKey: this.pendingContextKey,
     onUserPresent: () => this.debouncedUpdateLastReadMessage(),
   });
@@ -118,7 +118,7 @@ export default class ChatThread extends Component {
 
   @action
   teardown() {
-    this.presenceAwarePane.teardown();
+    this.paneState.teardown();
     this.subscriptionManager.teardown();
     cancel(this._debouncedFillPaneAttemptHandler);
     cancel(this._debouncedUpdateLastReadMessageHandler);
@@ -132,7 +132,7 @@ export default class ChatThread extends Component {
       }
 
       DatesSeparatorsPositioner.apply(this.scroller);
-      this.presenceAwarePane.updatePendingContentFromScrollState({
+      this.paneState.updatePendingContentFromScrollState({
         fetchedOnce: this.messagesLoader.fetchedOnce,
         canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
         state,
@@ -159,10 +159,10 @@ export default class ChatThread extends Component {
     this.atBottom = state.atBottom;
 
     if (state.atBottom) {
-      this.presenceAwarePane.clearPendingMessages();
+      this.paneState.clearPendingMessages();
       this.fetchMoreMessages({ direction: FUTURE });
     } else {
-      this.presenceAwarePane.updatePendingContentFromScrollState({
+      this.paneState.updatePendingContentFromScrollState({
         fetchedOnce: this.messagesLoader.fetchedOnce,
         canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
         state,
@@ -180,7 +180,7 @@ export default class ChatThread extends Component {
 
   @bind
   updateLastReadMessage() {
-    if (!this.presenceAwarePane.userIsPresent) {
+    if (!this.paneState.userIsPresent) {
       return;
     }
 
@@ -229,7 +229,7 @@ export default class ChatThread extends Component {
     this.debouncedUpdateLastReadMessage();
     DatesSeparatorsPositioner.apply(this.scroller);
 
-    this.presenceAwarePane.updatePendingContentFromScrollerPosition({
+    this.paneState.updatePendingContentFromScrollerPosition({
       scroller: this.scroller,
       fetchedOnce: this.messagesLoader.fetchedOnce,
       canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
@@ -351,9 +351,9 @@ export default class ChatThread extends Component {
 
   @bind
   onNewMessage(message) {
-    this.presenceAwarePane.handleIncomingMessage({
+    this.paneState.handleIncomingMessage({
       scroller: this.scroller,
-      shouldAutoScroll: this.presenceAwarePane.userIsPresent && this.atBottom,
+      shouldAutoScroll: this.paneState.userIsPresent && this.atBottom,
       addMessage: () => this.messagesManager.addMessages([message]),
       onAutoAdd: () => this.debouncedUpdateLastReadMessage(),
     });
@@ -521,7 +521,7 @@ export default class ChatThread extends Component {
   async scrollToBottom() {
     this._ignoreNextScroll = true;
     await scrollListToBottom(this.scroller);
-    this.presenceAwarePane.clearPendingMessages();
+    this.paneState.clearPendingMessages();
   }
 
   @action
@@ -593,7 +593,7 @@ export default class ChatThread extends Component {
 
       <ChatScrollToBottomArrow
         @onScrollToBottom={{this.scrollToLatestMessage}}
-        @isVisible={{this.presenceAwarePane.hasPendingContentBelow}}
+        @isVisible={{this.paneState.hasPendingContentBelow}}
       />
 
       {{#if this.chatThreadPane.selectingMessages}}

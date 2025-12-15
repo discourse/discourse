@@ -27,14 +27,14 @@ const CHAT_PRESENCE_OPTIONS = {
  *
  * @example
  * ```js
- * this.presenceAwarePane = new PresenceAwareChatPane(getOwner(this), {
+ * this.paneState = new ChatPaneState(getOwner(this), {
  *   contextKey: `channel:${this.channel.id}`,
  *   onUserPresent: this.handleUserReturned,
  * });
  * // Call teardown() when done
  * ```
  */
-export default class PresenceAwareChatPane {
+export default class ChatPaneState {
   @service chatPanePendingManager;
 
   /**

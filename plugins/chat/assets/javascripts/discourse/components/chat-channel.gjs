@@ -26,7 +26,7 @@ import ChatMessagesLoader from "discourse/plugins/chat/discourse/lib/chat-messag
 import { checkMessageTopVisibility } from "discourse/plugins/chat/discourse/lib/check-message-visibility";
 import DatesSeparatorsPositioner from "discourse/plugins/chat/discourse/lib/dates-separators-positioner";
 import { extractCurrentTopicInfo } from "discourse/plugins/chat/discourse/lib/extract-current-topic-info";
-import PresenceAwareChatPane from "discourse/plugins/chat/discourse/lib/presence-aware-chat-pane";
+import ChatPaneState from "discourse/plugins/chat/discourse/lib/chat-pane-state";
 import {
   scrollListToBottom,
   scrollListToMessage,
@@ -68,7 +68,7 @@ export default class ChatChannel extends Component {
 
   scroller = null;
 
-  presenceAwarePane = new PresenceAwareChatPane(getOwner(this), {
+  paneState = new ChatPaneState(getOwner(this), {
     contextKey: this.pendingContextKey,
     onUserPresent: () => this.debouncedUpdateLastReadMessage(),
   });
@@ -107,7 +107,7 @@ export default class ChatChannel extends Component {
   teardown() {
     document.removeEventListener("keydown", this._autoFocus);
     this.#cancelHandlers();
-    this.presenceAwarePane.teardown();
+    this.paneState.teardown();
     this.subscriptionManager.teardown();
     this.updateLastReadMessage();
 
@@ -123,7 +123,7 @@ export default class ChatChannel extends Component {
     this.debouncedUpdateLastReadMessage();
     DatesSeparatorsPositioner.apply(this.scroller);
 
-    this.presenceAwarePane.updatePendingContentFromScrollerPosition({
+    this.paneState.updatePendingContentFromScrollerPosition({
       scroller: this.scroller,
       fetchedOnce: this.messagesLoader.fetchedOnce,
       canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
@@ -190,9 +190,9 @@ export default class ChatChannel extends Component {
 
   @bind
   onNewMessage(message) {
-    this.presenceAwarePane.handleIncomingMessage({
+    this.paneState.handleIncomingMessage({
       scroller: this.scroller,
-      shouldAutoScroll: this.presenceAwarePane.userIsPresent && this.atBottom,
+      shouldAutoScroll: this.paneState.userIsPresent && this.atBottom,
       addMessage: () => this.messagesManager.addMessages([message]),
       onAutoAdd: () => this.debouncedUpdateLastReadMessage(),
     });
@@ -265,10 +265,10 @@ export default class ChatChannel extends Component {
   async scrollToBottom() {
     this._ignoreNextScroll = true;
     await scrollListToBottom(this.scroller);
-    if (this.presenceAwarePane.userIsPresent) {
+    if (this.paneState.userIsPresent) {
       this.debouncedUpdateLastReadMessage();
     }
-    this.presenceAwarePane.clearPendingMessages();
+    this.paneState.clearPendingMessages();
   }
 
   scrollToMessageId(messageId, options = {}) {
@@ -420,7 +420,7 @@ export default class ChatChannel extends Component {
   }
 
   updateLastReadMessage() {
-    if (!this.presenceAwarePane.userIsPresent) {
+    if (!this.paneState.userIsPresent) {
       return;
     }
 
@@ -473,7 +473,7 @@ export default class ChatChannel extends Component {
       }
 
       DatesSeparatorsPositioner.apply(this.scroller);
-      this.presenceAwarePane.updatePendingContentFromScrollState({
+      this.paneState.updatePendingContentFromScrollState({
         fetchedOnce: this.messagesLoader.fetchedOnce,
         canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
         state,
@@ -500,11 +500,11 @@ export default class ChatChannel extends Component {
     this.atBottom = state.atBottom;
 
     if (state.atBottom) {
-      this.presenceAwarePane.clearPendingMessages();
+      this.paneState.clearPendingMessages();
       this.fetchMoreMessages({ direction: FUTURE });
       this.chatChannelScrollPositions.delete(this.args.channel.id);
     } else {
-      this.presenceAwarePane.updatePendingContentFromScrollState({
+      this.paneState.updatePendingContentFromScrollState({
         fetchedOnce: this.messagesLoader.fetchedOnce,
         canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
         state,
@@ -759,7 +759,7 @@ export default class ChatChannel extends Component {
 
       <ChatScrollToBottomArrow
         @onScrollToBottom={{this.scrollToLatestMessage}}
-        @isVisible={{this.presenceAwarePane.hasPendingContentBelow}}
+        @isVisible={{this.paneState.hasPendingContentBelow}}
       />
 
       {{#if this.pane.selectingMessages}}
