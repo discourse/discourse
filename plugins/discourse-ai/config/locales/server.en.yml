@@ -341,7 +341,7 @@ en:
     ai_bot:
       reply_error: "Sorry, it looks like our system encountered an unexpected issue while trying to reply.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Untitled AI bot PM]"
-      thinking: "Thinking..."
+      thinking: "Thinking"
       personas:
         default_llm_required: "Default LLM model is required prior to enabling Chat"
         cannot_delete_system_persona: "System personas cannot be deleted, please disable it instead"

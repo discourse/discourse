@@ -27,6 +27,26 @@ function lastNonEmptyChild(element) {
   return lastChild;
 }
 
+function inProgressThinkingNode(element) {
+  const elem = element.querySelector(".ai-thinking:last-child");
+  if (elem) {
+    // if the next element after this is either empty text or nothing is it in progress
+    let next = elem.nextSibling;
+    while (
+      next &&
+      next.nodeType === Node.TEXT_NODE &&
+      !/\S/.test(next.textContent)
+    ) {
+      next = next.nextSibling;
+    }
+
+    if (!next) {
+      return elem;
+    }
+  }
+  return null;
+}
+
 /**
  * Adds a progress dot (a span element with a "progress-dot" class) at the end of the
  * last non-empty block within a given DOM element. This is used to visually indicate
@@ -34,7 +54,12 @@ function lastNonEmptyChild(element) {
  *
  * @param {HTMLElement} element - The DOM element to which the progress dot will be added.
  */
-export function addProgressDot(element) {
+export function addProgressDecoration(element) {
+  const thinkingNode = inProgressThinkingNode(element);
+  if (thinkingNode) {
+    thinkingNode.classList.add("in-progress");
+  }
+
   let lastBlock = element;
 
   while (true) {
