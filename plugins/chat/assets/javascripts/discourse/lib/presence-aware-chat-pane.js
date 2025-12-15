@@ -28,9 +28,9 @@ const CHAT_PRESENCE_OPTIONS = {
  * @example
  * ```js
  * this.presenceAwarePane = new PresenceAwareChatPane(getOwner(this), {
+ *   contextKey: `channel:${this.channel.id}`,
  *   onUserPresent: this.handleUserReturned,
  * });
- * this.presenceAwarePane.contextKey = `channel-${this.channel.id}`;
  * this.presenceAwarePane.setup();
  * ```
  */
@@ -58,7 +58,7 @@ export default class PresenceAwareChatPane {
    *
    * @type {string | null}
    */
-  @tracked contextKey = null;
+  contextKey = null;
 
   /**
    * Callback invoked when user returns after being away.
@@ -76,11 +76,13 @@ export default class PresenceAwareChatPane {
 
   /**
    * @param {object} owner - The Ember owner for dependency injection
-   * @param {object} [options]
+   * @param {object} options
+   * @param {string} options.contextKey - The context identifier (e.g. "channel-123")
    * @param {(() => void) | null} [options.onUserPresent] - Called when user returns
    */
-  constructor(owner, options = {}) {
+  constructor(owner, options) {
     setOwner(this, owner);
+    this.contextKey = options.contextKey;
     this.#onUserPresent = options.onUserPresent ?? null;
   }
 

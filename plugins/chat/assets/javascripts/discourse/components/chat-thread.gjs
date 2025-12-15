@@ -61,6 +61,7 @@ export default class ChatThread extends Component {
   scroller = null;
 
   presenceAwarePane = new PresenceAwareChatPane(getOwner(this), {
+    contextKey: this.pendingContextKey,
     onUserPresent: () => this.debouncedUpdateLastReadMessage(),
   });
 
@@ -100,7 +101,6 @@ export default class ChatThread extends Component {
   @action
   setup(element) {
     this.uploadDropZone = element;
-    this.presenceAwarePane.contextKey = this.pendingContextKey;
     this.presenceAwarePane.setup();
 
     this.messagesManager.clear();
