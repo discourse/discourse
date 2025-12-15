@@ -47,7 +47,7 @@ export default class ChatPanePendingManager extends Service {
   }
 
   /**
-   * Add to the pending count for a context.
+   * Add to the pending count for a context and trigger notifications.
    *
    * @param {string} contextKey - The context identifier
    * @param {number} [count=1] - Number of messages to add
@@ -58,11 +58,15 @@ export default class ChatPanePendingManager extends Service {
     }
 
     const current = this.#countsByContext.get(contextKey) || 0;
-    this.#setCount(contextKey, current + count);
+    const changed = this.#setCount(contextKey, current + count);
+
+    if (changed) {
+      this.appEvents.trigger("notifications:changed");
+    }
   }
 
   /**
-   * Clear all pending messages for a context.
+   * Clear all pending messages for a context and trigger notifications.
    *
    * @param {string} contextKey - The context identifier
    */
@@ -71,20 +75,25 @@ export default class ChatPanePendingManager extends Service {
       return;
     }
 
-    this.#setCount(contextKey, 0);
+    const changed = this.#setCount(contextKey, 0);
+
+    if (changed) {
+      this.appEvents.trigger("notifications:changed");
+    }
   }
 
   /**
-   * Internal method to update the count for a context and sync the global total.
+   * Update the count for a context and sync the global total.
    *
    * @param {string} contextKey
    * @param {number} newCount
+   * @returns {boolean} Whether the count actually changed
    */
   #setCount(contextKey, newCount) {
     const oldCount = this.#countsByContext.get(contextKey) || 0;
 
     if (newCount === oldCount) {
-      return;
+      return false;
     }
 
     if (newCount > 0) {
@@ -98,6 +107,7 @@ export default class ChatPanePendingManager extends Service {
       0,
       this.totalPendingMessageCount + delta
     );
-    this.appEvents.trigger("notifications:changed");
+
+    return true;
   }
 }
