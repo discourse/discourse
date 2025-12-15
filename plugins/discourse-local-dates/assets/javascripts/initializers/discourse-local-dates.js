@@ -17,7 +17,6 @@ import LocalDatesCreateModal from "../discourse/components/modal/local-dates-cre
 import LocalDateBuilder from "../lib/local-date-builder";
 import richEditorExtension from "../lib/rich-editor-extension";
 
-// Import applyLocalDates from discourse/lib/local-dates instead
 export function applyLocalDates(dates, siteSettings, timezone) {
   if (!siteSettings.discourse_local_dates_enabled) {
     return;
@@ -155,8 +154,9 @@ function initializeDiscourseLocalDates(api) {
 
   api.decorateCookedElement((elem, helper) => {
     const dates = elem.querySelectorAll(".discourse-local-date");
+    const currentUserTimezone = api.getCurrentUser()?.user_option?.timezone;
 
-    applyLocalDates(dates, siteSettings);
+    applyLocalDates(dates, siteSettings, currentUserTimezone);
 
     const topicTitle = helper?.getModel()?.topic?.title;
     dates.forEach((date) => {
@@ -238,12 +238,10 @@ function initializeDiscourseLocalDates(api) {
   });
 }
 
-function buildHtmlPreview(element, siteSettings) {
+function buildHtmlPreview(element, siteSettings, timezone) {
   const opts = buildOptionsFromElement(element, siteSettings);
-  const localDateBuilder = new LocalDateBuilder(
-    opts,
-    moment.tz.guess()
-  ).build();
+  const currentUserTZ = timezone || moment.tz.guess();
+  const localDateBuilder = new LocalDateBuilder(opts, currentUserTZ).build();
 
   const htmlPreviews = localDateBuilder.previews.map((preview) => {
     const previewNode = document.createElement("div");
@@ -349,6 +347,7 @@ function _calculateDuration(element) {
 }
 
 class LocalDatesInit {
+  @service currentUser;
   @service siteSettings;
   @service tooltip;
 
@@ -407,7 +406,13 @@ class LocalDatesInit {
 
     return this.tooltip.show(event.target, {
       identifier: "local-date",
-      content: htmlSafe(buildHtmlPreview(event.target, this.siteSettings)),
+      content: htmlSafe(
+        buildHtmlPreview(
+          event.target,
+          this.siteSettings,
+          this.currentUser?.user_option?.timezone
+        )
+      ),
     });
   }
 
