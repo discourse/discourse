@@ -161,7 +161,11 @@ module(
       const pendingManager = getOwner(this).lookup(
         "service:chat-pane-pending-manager"
       );
-      assert.strictEqual(pendingManager.totalPending, 0, "starts at zero");
+      assert.strictEqual(
+        pendingManager.totalPendingMessageCount,
+        0,
+        "starts at zero"
+      );
 
       publishToMessageBus(`/chat/1`, {
         type: "sent",
@@ -177,7 +181,7 @@ module(
       await settled();
 
       assert.strictEqual(
-        pendingManager.totalPending,
+        pendingManager.totalPendingMessageCount,
         1,
         "increments on new message"
       );
@@ -216,12 +220,16 @@ module(
       });
       await settled();
 
-      assert.strictEqual(pendingManager.totalPending, 1, "has pending message");
+      assert.strictEqual(
+        pendingManager.totalPendingMessageCount,
+        1,
+        "has pending message"
+      );
 
       await click(".chat-scroll-to-bottom__button");
 
       assert.strictEqual(
-        pendingManager.totalPending,
+        pendingManager.totalPendingMessageCount,
         0,
         "clears pending on scroll to bottom"
       );

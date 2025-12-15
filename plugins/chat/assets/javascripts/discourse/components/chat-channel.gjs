@@ -51,7 +51,6 @@ export default class ChatChannel extends Component {
   @service chatApi;
   @service chatChannelsManager;
   @service chatDraftsManager;
-  @service chatPanePendingManager;
   @service chatStateManager;
   @service chatChannelScrollPositions;
   @service("chat-channel-composer") composer;
@@ -67,15 +66,20 @@ export default class ChatChannel extends Component {
   @tracked uploadDropZone;
   @tracked isScrolling = false;
 
-  presenceAwarePane = new PresenceAwareChatPane({
-    chatPanePendingManager: this.chatPanePendingManager,
-    getPendingContextKey: () => this.pendingContextKey,
+  scroller = null;
+
+  presenceAwarePane = new PresenceAwareChatPane(getOwner(this), {
     onUserPresent: () => this.debouncedUpdateLastReadMessage(),
   });
 
   _mentionWarningsSeen = {};
   _unreachableGroupMentions = [];
   _overMembersLimitGroupMentions = [];
+
+  @action
+  registerScroller(element) {
+    this.scroller = element;
+  }
 
   @cached
   get messagesLoader() {
@@ -116,9 +120,10 @@ export default class ChatChannel extends Component {
   didResizePane() {
     this.debounceFillPaneAttempt();
     this.debouncedUpdateLastReadMessage();
-    DatesSeparatorsPositioner.apply(this.presenceAwarePane.scroller);
+    DatesSeparatorsPositioner.apply(this.scroller);
 
     this.presenceAwarePane.updateArrowVisibilityFromScrollerPosition({
+      scroller: this.scroller,
       fetchedOnce: this.messagesLoader.fetchedOnce,
       canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
     });
@@ -128,6 +133,7 @@ export default class ChatChannel extends Component {
   setup(element) {
     this.uploadDropZone = element;
     document.addEventListener("keydown", this._autoFocus);
+    this.presenceAwarePane.contextKey = this.pendingContextKey;
     this.presenceAwarePane.setup();
 
     this.messagesManager.clear();
@@ -186,6 +192,7 @@ export default class ChatChannel extends Component {
   @bind
   onNewMessage(message) {
     this.presenceAwarePane.handleIncomingMessage({
+      scroller: this.scroller,
       shouldAutoScroll: this.presenceAwarePane.userIsPresent && this.atBottom,
       addMessage: () => this.messagesManager.addMessages([message]),
       onAutoAdd: () => this.debouncedUpdateLastReadMessage(),
@@ -258,7 +265,7 @@ export default class ChatChannel extends Component {
   @action
   async scrollToBottom() {
     this._ignoreNextScroll = true;
-    await scrollListToBottom(this.presenceAwarePane.scroller);
+    await scrollListToBottom(this.scroller);
     if (this.presenceAwarePane.userIsPresent) {
       this.debouncedUpdateLastReadMessage();
     }
@@ -269,7 +276,7 @@ export default class ChatChannel extends Component {
   scrollToMessageId(messageId, options = {}) {
     this._ignoreNextScroll = true;
     const message = this.messagesManager.findMessage(messageId);
-    scrollListToMessage(this.presenceAwarePane.scroller, message, options);
+    scrollListToMessage(this.scroller, message, options);
   }
 
   debounceFillPaneAttempt() {
@@ -310,15 +317,12 @@ export default class ChatChannel extends Component {
 
     schedule("afterRender", () => {
       const firstMessageId = this.messagesManager.messages[0]?.id;
-      const messageContainer = this.presenceAwarePane.scroller.querySelector(
+      const messageContainer = this.scroller.querySelector(
         `.chat-message-container[data-id="${firstMessageId}"]`
       );
       if (
         messageContainer &&
-        checkMessageTopVisibility(
-          this.presenceAwarePane.scroller,
-          messageContainer
-        )
+        checkMessageTopVisibility(this.scroller, messageContainer)
       ) {
         this.fetchMoreMessages({ direction: PAST });
       }
@@ -426,9 +430,7 @@ export default class ChatChannel extends Component {
       return;
     }
 
-    const firstFullyVisibleMessageId = firstVisibleMessageId(
-      this.presenceAwarePane.scroller
-    );
+    const firstFullyVisibleMessageId = firstVisibleMessageId(this.scroller);
     if (!firstFullyVisibleMessageId) {
       return;
     }
@@ -472,7 +474,7 @@ export default class ChatChannel extends Component {
         return;
       }
 
-      DatesSeparatorsPositioner.apply(this.presenceAwarePane.scroller);
+      DatesSeparatorsPositioner.apply(this.scroller);
       this.presenceAwarePane.updateArrowVisibilityFromScrollState({
         fetchedOnce: this.messagesLoader.fetchedOnce,
         canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
@@ -730,7 +732,7 @@ export default class ChatChannel extends Component {
       />
 
       <ChatMessagesScroller
-        @onRegisterScroller={{this.presenceAwarePane.registerScroller}}
+        @onRegisterScroller={{this.registerScroller}}
         @onScroll={{this.onScroll}}
         @onScrollEnd={{this.onScrollEnd}}
       >
@@ -780,7 +782,7 @@ export default class ChatChannel extends Component {
             @channel={{@channel}}
             @uploadDropZone={{this.uploadDropZone}}
             @onSendMessage={{this.onSendMessage}}
-            @scroller={{this.presenceAwarePane.scroller}}
+            @scroller={{this.scroller}}
           />
         {{/if}}
       {{/if}}

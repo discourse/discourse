@@ -4,61 +4,58 @@ import Service, { service } from "@ember/service";
 export default class ChatPanePendingManager extends Service {
   @service appEvents;
 
-  @tracked totalPending = 0;
-  #contextTotals = new Map();
+  @tracked totalPendingMessageCount = 0;
+  #countsByContext = new Map();
 
-  increment(key, count = 1) {
-    if (!key || count <= 0) {
+  increment(contextKey, count = 1) {
+    if (!contextKey || count <= 0) {
       return;
     }
 
-    const current = this.#contextTotals.get(key) || 0;
-    this.#contextTotals.set(key, current + count);
-    this.#updateTotal(count);
+    const current = this.#countsByContext.get(contextKey) || 0;
+    this.#setCount(contextKey, current + count);
   }
 
-  decrement(key, count = 1) {
-    if (!key || count <= 0) {
+  decrement(contextKey, count = 1) {
+    if (!contextKey || count <= 0) {
       return;
     }
 
-    const current = this.#contextTotals.get(key);
+    const current = this.#countsByContext.get(contextKey);
     if (!current) {
       return;
     }
 
     const reduction = Math.min(count, current);
-    const next = current - reduction;
+    this.#setCount(contextKey, current - reduction);
+  }
 
-    if (next) {
-      this.#contextTotals.set(key, next);
+  clear(contextKey) {
+    if (!contextKey) {
+      return;
+    }
+
+    this.#setCount(contextKey, 0);
+  }
+
+  #setCount(contextKey, newCount) {
+    const oldCount = this.#countsByContext.get(contextKey) || 0;
+
+    if (newCount === oldCount) {
+      return;
+    }
+
+    if (newCount > 0) {
+      this.#countsByContext.set(contextKey, newCount);
     } else {
-      this.#contextTotals.delete(key);
+      this.#countsByContext.delete(contextKey);
     }
 
-    this.#updateTotal(-reduction);
-  }
-
-  clear(key) {
-    if (!key) {
-      return;
-    }
-
-    const current = this.#contextTotals.get(key);
-    if (!current) {
-      return;
-    }
-
-    this.#contextTotals.delete(key);
-    this.#updateTotal(-current);
-  }
-
-  #updateTotal(delta) {
-    if (!delta) {
-      return;
-    }
-
-    this.totalPending = Math.max(0, this.totalPending + delta);
+    const delta = newCount - oldCount;
+    this.totalPendingMessageCount = Math.max(
+      0,
+      this.totalPendingMessageCount + delta
+    );
     this.appEvents.trigger("notifications:changed");
   }
 }

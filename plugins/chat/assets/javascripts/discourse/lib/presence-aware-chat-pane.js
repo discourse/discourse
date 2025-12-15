@@ -1,5 +1,7 @@
 import { tracked } from "@glimmer/tracking";
+import { setOwner } from "@ember/owner";
 import { schedule } from "@ember/runloop";
+import { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
 import userPresent, {
   onPresenceChange,
@@ -15,45 +17,34 @@ const CHAT_PRESENCE_OPTIONS = {
  * Shared state + helpers for chat panes (channel + thread).
  *
  * This is intentionally used via composition rather than inheritance so callers
- * can be explicit about which behaviors they’re invoking.
+ * can be explicit about which behaviors they're invoking.
  */
 export default class PresenceAwareChatPane {
+  @service chatPanePendingManager;
+
   @tracked userIsPresent = true;
   @tracked pendingMessageCount = 0;
   @tracked needsArrow = false;
+  @tracked contextKey = null;
 
-  /**
-   * @type {HTMLElement | null}
-   */
-  scroller = null;
-
-  /**
-   * @type {import("discourse/plugins/chat/discourse/services/chat-pane-pending-manager").default}
-   */
-  chatPanePendingManager;
-  /**
-   * @type {() => (string | null)}
-   */
-  getPendingContextKey;
   /**
    * @type {(() => void) | null}
    */
-  onUserPresent;
+  #onUserPresent = null;
+
   /**
    * @type {{ element: HTMLElement; scrollTop: number; scrollHeight: number } | null}
    */
-  _pendingScrollAdjustment = null;
+  #pendingScrollAdjustment = null;
 
   /**
+   * @param {object} owner - The Ember owner for DI
    * @param {object} options
-   * @param {import("discourse/plugins/chat/discourse/services/chat-pane-pending-manager").default} options.chatPanePendingManager
-   * @param {() => (string | null)} options.getPendingContextKey
    * @param {(() => void) | null} [options.onUserPresent]
    */
-  constructor(options) {
-    this.chatPanePendingManager = options.chatPanePendingManager;
-    this.getPendingContextKey = options.getPendingContextKey;
-    this.onUserPresent = options.onUserPresent ?? null;
+  constructor(owner, options = {}) {
+    setOwner(this, owner);
+    this.#onUserPresent = options.onUserPresent ?? null;
   }
 
   /**
@@ -76,13 +67,6 @@ export default class PresenceAwareChatPane {
   }
 
   /**
-   * @returns {string | null}
-   */
-  get pendingContextKey() {
-    return this.getPendingContextKey?.() ?? null;
-  }
-
-  /**
    * @returns {boolean}
    */
   get hasPendingNewMessages() {
@@ -90,20 +74,21 @@ export default class PresenceAwareChatPane {
   }
 
   /**
+   * @param {HTMLElement | null} scroller
    * @returns {boolean}
    */
-  get canScroll() {
-    if (!this.scroller) {
+  #canScroll(scroller) {
+    if (!scroller) {
       return false;
     }
 
     // Use a small tolerance because `scrollHeight` and `clientHeight` can
     // occasionally differ by subpixel rounding.
-    return this.scroller.scrollHeight - this.scroller.clientHeight > 1;
+    return scroller.scrollHeight - scroller.clientHeight > 1;
   }
 
   /**
-   * Computes the base arrow visibility condition from scroll position and
+   * Computes whether the arrow should be shown based on scroll position and
    * whether there are newer messages available to load.
    *
    * @param {object} options
@@ -113,7 +98,7 @@ export default class PresenceAwareChatPane {
    * @param {number} [options.distanceThresholdPixels]
    * @returns {boolean}
    */
-  computeShouldShowArrow(options) {
+  #computeIsScrolledAway(options) {
     const {
       fetchedOnce,
       canLoadMoreFuture,
@@ -129,18 +114,19 @@ export default class PresenceAwareChatPane {
 
   /**
    * Updates `needsArrow` based on scroll position and loader state, while still
-   * respecting pending message state and scrollability (see `computeArrowVisibility`).
+   * respecting pending message state and scrollability.
    *
    * @param {object} options
+   * @param {HTMLElement | null} options.scroller
    * @param {boolean} options.fetchedOnce
    * @param {boolean} options.canLoadMoreFuture
    * @param {number} options.distanceToBottomPixels
    * @param {number} [options.distanceThresholdPixels]
    */
-  updateArrowVisibility(options) {
-    this.needsArrow = this.computeArrowVisibility(
-      this.computeShouldShowArrow(options)
-    );
+  #updateArrowVisibility(options) {
+    const { scroller } = options;
+    const isScrolledAway = this.#computeIsScrolledAway(options);
+    this.needsArrow = this.#computeArrowVisibility(scroller, isScrolledAway);
   }
 
   /**
@@ -156,7 +142,8 @@ export default class PresenceAwareChatPane {
     const { fetchedOnce, canLoadMoreFuture, state, distanceThresholdPixels } =
       options;
 
-    this.updateArrowVisibility({
+    this.#updateArrowVisibility({
+      scroller: state?.scroller,
       fetchedOnce,
       canLoadMoreFuture,
       distanceToBottomPixels: state?.distanceToBottom?.pixels ?? 0,
@@ -169,33 +156,33 @@ export default class PresenceAwareChatPane {
    * scroller position (e.g. after a resize).
    *
    * @param {object} options
+   * @param {HTMLElement | null} options.scroller
    * @param {boolean} options.fetchedOnce
    * @param {boolean} options.canLoadMoreFuture
    * @param {number} [options.distanceThresholdPixels]
    */
   updateArrowVisibilityFromScrollerPosition(options) {
-    if (!this.scroller) {
+    const {
+      scroller,
+      fetchedOnce,
+      canLoadMoreFuture,
+      distanceThresholdPixels,
+    } = options;
+
+    if (!scroller) {
       this.needsArrow = false;
       return;
     }
 
-    const { fetchedOnce, canLoadMoreFuture, distanceThresholdPixels } = options;
-    const distanceToBottomPixels = -this.scroller.scrollTop;
+    const distanceToBottomPixels = -scroller.scrollTop;
 
-    this.updateArrowVisibility({
+    this.#updateArrowVisibility({
+      scroller,
       fetchedOnce,
       canLoadMoreFuture,
       distanceToBottomPixels,
       distanceThresholdPixels,
     });
-  }
-
-  /**
-   * @param {HTMLElement} element
-   */
-  @bind
-  registerScroller(element) {
-    this.scroller = element;
   }
 
   /**
@@ -205,7 +192,7 @@ export default class PresenceAwareChatPane {
   onPresenceChangeCallback(present) {
     this.userIsPresent = present;
     if (present) {
-      this.onUserPresent?.();
+      this.#onUserPresent?.();
     }
   }
 
@@ -214,21 +201,20 @@ export default class PresenceAwareChatPane {
    * from the bottom.
    *
    * Our chat scroller uses `flex-direction: column-reverse`, which gives us a
-   * “bottom-origin” scroll. In this mode, appending content can change the
+   * "bottom-origin" scroll. In this mode, appending content can change the
    * visible viewport unless we compensate for the height delta.
    *
+   * @param {HTMLElement | null} scroller
    * @param {Function} callback
    */
-  preserveViewportWhile(callback) {
-    if (!this.scroller) {
+  preserveViewportWhile(scroller, callback) {
+    if (!scroller) {
       callback?.();
       return;
     }
 
-    const scroller = this.scroller;
-
-    if (this._pendingScrollAdjustment) {
-      this._pendingScrollAdjustment.scrollTop = scroller.scrollTop;
+    if (this.#pendingScrollAdjustment) {
+      this.#pendingScrollAdjustment.scrollTop = scroller.scrollTop;
       callback?.();
       return;
     }
@@ -239,12 +225,12 @@ export default class PresenceAwareChatPane {
       scrollHeight: scroller.scrollHeight,
     };
 
-    this._pendingScrollAdjustment = adjustment;
+    this.#pendingScrollAdjustment = adjustment;
     callback?.();
 
     schedule("afterRender", () => {
-      const state = this._pendingScrollAdjustment;
-      this._pendingScrollAdjustment = null;
+      const state = this.#pendingScrollAdjustment;
+      this.#pendingScrollAdjustment = null;
 
       if (!state?.element) {
         return;
@@ -261,6 +247,7 @@ export default class PresenceAwareChatPane {
 
   /**
    * @param {object} options
+   * @param {HTMLElement | null} options.scroller
    * @param {boolean} options.shouldAutoScroll
    * @param {Function} options.addMessage
    * @param {Function} [options.onAutoAdd]
@@ -268,6 +255,7 @@ export default class PresenceAwareChatPane {
    */
   handleIncomingMessage(options = {}) {
     const {
+      scroller,
       shouldAutoScroll,
       addMessage,
       onAutoAdd,
@@ -281,29 +269,33 @@ export default class PresenceAwareChatPane {
       return;
     }
 
-    this.preserveViewportWhile(addMessage);
+    this.preserveViewportWhile(scroller, addMessage);
     this.#incrementPending(messageCount);
 
     schedule("afterRender", () => {
-      this.needsArrow = this.computeArrowVisibility(false);
+      this.needsArrow = this.#computeArrowVisibility(scroller, false);
     });
   }
 
   /**
-   * @param {boolean} baseCondition
+   * @param {HTMLElement | null} scroller
+   * @param {boolean} isScrolledAway
    * @returns {boolean}
    */
-  computeArrowVisibility(baseCondition) {
-    return this.canScroll && (this.hasPendingNewMessages || baseCondition);
+  #computeArrowVisibility(scroller, isScrolledAway) {
+    return (
+      this.#canScroll(scroller) &&
+      (this.hasPendingNewMessages || isScrolledAway)
+    );
   }
 
   /**
    * Clears any pending message state and updates the global pending manager.
    */
   resetPendingState() {
-    if (this.pendingMessageCount && this.pendingContextKey) {
+    if (this.pendingMessageCount && this.contextKey) {
       this.chatPanePendingManager.decrement(
-        this.pendingContextKey,
+        this.contextKey,
         this.pendingMessageCount
       );
     }
@@ -321,8 +313,8 @@ export default class PresenceAwareChatPane {
 
     this.pendingMessageCount += count;
 
-    if (this.pendingContextKey) {
-      this.chatPanePendingManager.increment(this.pendingContextKey, count);
+    if (this.contextKey) {
+      this.chatPanePendingManager.increment(this.contextKey, count);
     }
   }
 }

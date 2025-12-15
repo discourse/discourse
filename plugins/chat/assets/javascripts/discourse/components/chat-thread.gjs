@@ -59,11 +59,16 @@ export default class ChatThread extends Component {
   @tracked isScrolling = false;
   @tracked uploadDropZone;
 
-  presenceAwarePane = new PresenceAwareChatPane({
-    chatPanePendingManager: this.chatPanePendingManager,
-    getPendingContextKey: () => this.pendingContextKey,
+  scroller = null;
+
+  presenceAwarePane = new PresenceAwareChatPane(getOwner(this), {
     onUserPresent: () => this.debouncedUpdateLastReadMessage(),
   });
+
+  @action
+  registerScroller(element) {
+    this.scroller = element;
+  }
 
   @cached
   get messagesLoader() {
@@ -96,6 +101,7 @@ export default class ChatThread extends Component {
   @action
   setup(element) {
     this.uploadDropZone = element;
+    this.presenceAwarePane.contextKey = this.pendingContextKey;
     this.presenceAwarePane.setup();
 
     this.messagesManager.clear();
@@ -127,7 +133,7 @@ export default class ChatThread extends Component {
         return;
       }
 
-      DatesSeparatorsPositioner.apply(this.presenceAwarePane.scroller);
+      DatesSeparatorsPositioner.apply(this.scroller);
       this.presenceAwarePane.updateArrowVisibilityFromScrollState({
         fetchedOnce: this.messagesLoader.fetchedOnce,
         canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
@@ -185,9 +191,7 @@ export default class ChatThread extends Component {
       return;
     }
 
-    const firstFullyVisibleMessageId = firstVisibleMessageId(
-      this.presenceAwarePane.scroller
-    );
+    const firstFullyVisibleMessageId = firstVisibleMessageId(this.scroller);
     if (!firstFullyVisibleMessageId) {
       return;
     }
@@ -226,9 +230,10 @@ export default class ChatThread extends Component {
     this._ignoreNextScroll = true;
     this.debounceFillPaneAttempt();
     this.debouncedUpdateLastReadMessage();
-    DatesSeparatorsPositioner.apply(this.presenceAwarePane.scroller);
+    DatesSeparatorsPositioner.apply(this.scroller);
 
     this.presenceAwarePane.updateArrowVisibilityFromScrollerPosition({
+      scroller: this.scroller,
       fetchedOnce: this.messagesLoader.fetchedOnce,
       canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
     });
@@ -344,12 +349,13 @@ export default class ChatThread extends Component {
   ) {
     this._ignoreNextScroll = true;
     const message = this.messagesManager.findMessage(messageId);
-    scrollListToMessage(this.presenceAwarePane.scroller, message, opts);
+    scrollListToMessage(this.scroller, message, opts);
   }
 
   @bind
   onNewMessage(message) {
     this.presenceAwarePane.handleIncomingMessage({
+      scroller: this.scroller,
       shouldAutoScroll: this.presenceAwarePane.userIsPresent && this.atBottom,
       addMessage: () => this.messagesManager.addMessages([message]),
       onAutoAdd: () => this.debouncedUpdateLastReadMessage(),
@@ -517,7 +523,7 @@ export default class ChatThread extends Component {
   @action
   async scrollToBottom() {
     this._ignoreNextScroll = true;
-    await scrollListToBottom(this.presenceAwarePane.scroller);
+    await scrollListToBottom(this.scroller);
     this.presenceAwarePane.resetPendingState();
     this.presenceAwarePane.needsArrow = false;
   }
@@ -525,7 +531,7 @@ export default class ChatThread extends Component {
   @action
   async scrollToTop() {
     this._ignoreNextScroll = true;
-    await scrollListToTop(this.presenceAwarePane.scroller);
+    await scrollListToTop(this.scroller);
   }
 
   @action
@@ -564,7 +570,7 @@ export default class ChatThread extends Component {
       {{willDestroy this.teardown}}
     >
       <ChatMessagesScroller
-        @onRegisterScroller={{this.presenceAwarePane.registerScroller}}
+        @onRegisterScroller={{this.registerScroller}}
         @onScroll={{this.onScroll}}
         @onScrollEnd={{this.onScrollEnd}}
       >
@@ -608,7 +614,7 @@ export default class ChatThread extends Component {
             @thread={{@thread}}
             @onSendMessage={{this.onSendMessage}}
             @uploadDropZone={{this.uploadDropZone}}
-            @scroller={{this.presenceAwarePane.scroller}}
+            @scroller={{this.scroller}}
           />
         {{/if}}
       {{/if}}

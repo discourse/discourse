@@ -255,7 +255,7 @@ export default class Chat extends Service {
   getDocumentTitleCount() {
     return (
       this.chatTrackingStateManager.allChannelUrgentCount +
-      this.chatPanePendingManager.totalPending
+      this.chatPanePendingManager.totalPendingMessageCount
     );
   }
 
