@@ -271,6 +271,10 @@ export default class ChatPaneState {
     this.addPendingMessages(messageCount);
 
     schedule("afterRender", () => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
       this.hasPendingContentBelow = this.#computeHasPendingContentBelow(
         scroller,
         false
