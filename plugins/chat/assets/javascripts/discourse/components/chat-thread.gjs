@@ -133,6 +133,7 @@ export default class ChatThread extends Component {
 
       DatesSeparatorsPositioner.apply(this.scroller);
       this.paneState.updatePendingContentFromScrollState({
+        scroller: this.scroller,
         fetchedOnce: this.messagesLoader.fetchedOnce,
         canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
         state,
@@ -163,6 +164,7 @@ export default class ChatThread extends Component {
       this.fetchMoreMessages({ direction: FUTURE });
     } else {
       this.paneState.updatePendingContentFromScrollState({
+        scroller: this.scroller,
         fetchedOnce: this.messagesLoader.fetchedOnce,
         canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
         state,

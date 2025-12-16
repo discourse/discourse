@@ -475,6 +475,7 @@ export default class ChatChannel extends Component {
 
       DatesSeparatorsPositioner.apply(this.scroller);
       this.paneState.updatePendingContentFromScrollState({
+        scroller: this.scroller,
         fetchedOnce: this.messagesLoader.fetchedOnce,
         canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
         state,
@@ -506,6 +507,7 @@ export default class ChatChannel extends Component {
       this.chatChannelScrollPositions.delete(this.args.channel.id);
     } else {
       this.paneState.updatePendingContentFromScrollState({
+        scroller: this.scroller,
         fetchedOnce: this.messagesLoader.fetchedOnce,
         canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
         state,
