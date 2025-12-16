@@ -4258,17 +4258,17 @@ cs:
       name: Zdařilé sdílení
       description: Sdílení příspěvku s 25 unikátními návštěvníky
       long_description: |
-        Tento odznak se uděluje za sdílení odkazu, na který kliklo 25 externích návštěvníků. Děkujeme za šíření informací o našich diskusích a o této komunitě.
+        Tento odznak je udělen za sdílení odkazu, na který kliklo 25 externích návštěvníků. Děkujeme za šíření informací o našich diskusích a o této komunitě.
     good_share:
       name: Dobré sdílení
       description: Sdílení příspěvku s 300 unikátními návštěvníky
       long_description: |
-        Tento odznak se uděluje za sdílení odkazu, na který kliklo 300 externích návštěvníků. Dobrá práce! Ukázali jste skvělou diskusi spoustě nových lidí a pomohli jste této komunitě růst.
+        Tento odznak je udělen za sdílení odkazu, na který kliklo 300 externích návštěvníků. Dobrá práce! Ukázali jste skvělou diskusi spoustě nových lidí a pomohli jste této komunitě růst.
     great_share:
       name: Výborné sdílení
       description: Sdílení příspěvku s 1000 unikátními návštěvníky
       long_description: |
-        Tento odznak se uděluje za sdílení odkazu, na který kliklo 1000 externích návštěvníků. Wow! Propagovali jste zajímavou diskusi mezi obrovským množstvím nových čtenářů a pomohli jste nám tak výrazně rozšířit naši komunitu!
+        Tento odznak je udělen za sdílení odkazu, na který kliklo 1000 externích návštěvníků. Wow! Propagovali jste zajímavou diskusi mezi obrovským množstvím nových čtenářů a pomohli jste nám tak výrazně rozšířit naši komunitu!
     first_like:
       name: První Líbí se
       description: Líbil se příspěvek
