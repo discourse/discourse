@@ -248,7 +248,7 @@ export default class AnimationTravel {
       animationState === "stepping" ||
       animationState === "closing"
     ) {
-      c.stateHelper.advanceAnimationState();
+      c.stateHelper.advanceAnimation();
     }
 
     if (c.stateHelper.isPositionFrontOpening()) {

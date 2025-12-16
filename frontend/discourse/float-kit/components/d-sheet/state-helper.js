@@ -39,7 +39,14 @@ export default class StateHelper {
     return this.c.positionMachine;
   }
 
-  // ─── Opening Flow ───────────────────────────────────────────────────
+  /**
+   * Get the touch state machine.
+   *
+   * @returns {Object}
+   */
+  get touchMachine() {
+    return this.c.touchMachine;
+  }
 
   /**
    * Initiate sheet opening.
@@ -77,11 +84,9 @@ export default class StateHelper {
   /**
    * Advance animation state machine to next state.
    */
-  advanceAnimationState() {
+  advanceAnimation() {
     this.animationStateMachine.send("NEXT");
   }
-
-  // ─── Closing Flow ───────────────────────────────────────────────────
 
   /**
    * Initiate sheet closing.
@@ -161,8 +166,6 @@ export default class StateHelper {
     this.stateMachine.send("SWIPE_OUT");
   }
 
-  // ─── Step Flow ──────────────────────────────────────────────────────
-
   /**
    * Begin stepping to next detent.
    *
@@ -173,9 +176,9 @@ export default class StateHelper {
   }
 
   /**
-   * Begin actual stepping animation.
+   * Begin stepping animation.
    */
-  actuallyStep() {
+  stepAnimation() {
     this.animationStateMachine.send("ACTUALLY_STEP", {
       opennessState: this.stateMachine.current,
     });
@@ -195,7 +198,21 @@ export default class StateHelper {
     this.stateMachine.send("MOVE_END");
   }
 
-  // ─── Position Machine ───────────────────────────────────────────────
+  // ─── Touch Flow ────────────────────────────────────────────────────
+
+  /**
+   * Signal touch has started.
+   */
+  touchStart() {
+    this.touchMachine.send("TOUCH_START");
+  }
+
+  /**
+   * Signal touch has ended.
+   */
+  touchEnd() {
+    this.touchMachine.send("TOUCH_END");
+  }
 
   /**
    * Advance position machine to next state.
@@ -207,18 +224,16 @@ export default class StateHelper {
   /**
    * Go to front idle state.
    */
-  gotoFrontIdle() {
+  goToFrontIdle() {
     this.positionMachine.send("GOTO_FRONT_IDLE");
   }
 
   /**
    * Go to covered idle state.
    */
-  gotoCoveredIdle() {
+  goToCoveredIdle() {
     this.positionMachine.send("GOTO_COVERED_IDLE");
   }
-
-  // ─── Animation State Machine ────────────────────────────────────────
 
   /**
    * Signal animation state to go down (for stacking).
@@ -243,7 +258,7 @@ export default class StateHelper {
    *
    * @param {boolean} skipClosing - Whether to skip closing animation
    */
-  beginClosingImmediate(skipClosing = true) {
+  beginImmediateClose(skipClosing = true) {
     this.animationStateMachine.send("ACTUALLY_CLOSE", {
       opennessState: this.stateMachine.current,
       skipClosing,
@@ -269,8 +284,6 @@ export default class StateHelper {
   sendToPosition(message, context = {}) {
     return this.positionMachine.send(message, context);
   }
-
-  // ─── Queries ────────────────────────────────────────────────────────
 
   /**
    * Get current main state.
@@ -400,5 +413,14 @@ export default class StateHelper {
    */
   isInAnimationState(state) {
     return this.animationStateMachine.matches(state);
+  }
+
+  /**
+   * Check if touch is ongoing.
+   *
+   * @returns {boolean}
+   */
+  isTouchOngoing() {
+    return this.touchMachine.current === "ongoing";
   }
 }

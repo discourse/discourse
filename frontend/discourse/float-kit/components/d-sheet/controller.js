@@ -351,7 +351,7 @@ export default class Controller {
           this.stateHelper.isInAnimationState("going-down") ||
           this.stateHelper.isInAnimationState("go-down")
         ) {
-          this.stateHelper.advanceAnimationState();
+          this.stateHelper.advanceAnimation();
         }
       },
     },
@@ -365,7 +365,7 @@ export default class Controller {
       state: "covered-indeterminate",
       callback: () => {
         if (this.stateHelper.isInAnimationState("going-up")) {
-          this.stateHelper.advanceAnimationState();
+          this.stateHelper.advanceAnimation();
         }
 
         const stackId = this.stackId;
@@ -373,12 +373,12 @@ export default class Controller {
           const topmostSheet =
             this.sheetStackRegistry.getTopmostSheetInStack(stackId);
           if (topmostSheet === this) {
-            this.stateHelper.gotoFrontIdle();
+            this.stateHelper.goToFrontIdle();
           } else {
-            this.stateHelper.gotoCoveredIdle();
+            this.stateHelper.goToCoveredIdle();
           }
         } else {
-          this.stateHelper.gotoFrontIdle();
+          this.stateHelper.goToFrontIdle();
         }
       },
     },
@@ -1107,7 +1107,7 @@ export default class Controller {
     this.executeAutoFocusOnPresent();
 
     if (this.stateHelper.isInAnimationState("opening")) {
-      this.stateHelper.advanceAnimationState();
+      this.stateHelper.advanceAnimation();
     }
 
     this.#setupIntersectionObserver();
@@ -1140,7 +1140,7 @@ export default class Controller {
    * @private
    */
   handleStepMessage(message) {
-    this.stateHelper.actuallyStep();
+    this.stateHelper.stepAnimation();
     this.updateTravelStatus("stepping");
 
     if (message.detent !== undefined) {
@@ -1209,7 +1209,7 @@ export default class Controller {
       return;
     }
 
-    this.stateHelper.beginClosingImmediate(true);
+    this.stateHelper.beginImmediateClose(true);
     this.updateTravelStatus("travellingOut");
     this.closingWithoutAnimation = false;
     this.stateHelper.goOut();
@@ -1673,7 +1673,7 @@ export default class Controller {
    */
   @action
   handleTouchStart() {
-    this.touchMachine.send("TOUCH_START");
+    this.stateHelper.touchStart();
     this.touchHandler.handleScrollStart();
   }
 
@@ -1682,7 +1682,7 @@ export default class Controller {
    */
   @action
   handleTouchEnd() {
-    this.touchMachine.send("TOUCH_END");
+    this.stateHelper.touchEnd();
     this.touchHandler.handleScrollEnd();
   }
 
