@@ -147,12 +147,28 @@ export default class Trigger extends Component {
   }
 
   /**
+   * The Root component - either from forComponent lookup or from sheet's reference.
+   *
+   * @type {Object|undefined}
+   */
+  get root() {
+    return this.targetRoot ?? this.sheet?.rootComponent;
+  }
+
+  /**
    * Execute the configured action on the sheet.
+   * Uses Root's present()/dismiss() methods for controlled/uncontrolled handling.
    */
   executeAction() {
+    const root = this.root;
+
     switch (this.actionType) {
       case "dismiss":
-        this.sheet?.close();
+        if (root) {
+          root.dismiss();
+        } else {
+          this.sheet?.close();
+        }
         break;
       case "step":
         if (this.stepDetent !== undefined) {
@@ -165,10 +181,8 @@ export default class Trigger extends Component {
         break;
       case "present":
       default:
-        if (this.targetRoot) {
-          this.targetRoot.openSheet();
-        } else if (this.sheet?.rootComponent) {
-          this.sheet.rootComponent.openSheet();
+        if (root) {
+          root.present();
         } else {
           this.sheet?.open();
         }

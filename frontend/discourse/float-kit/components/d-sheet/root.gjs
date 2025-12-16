@@ -1,21 +1,27 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
+import { helper as helperFn } from "@ember/component/helper";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import effect from "discourse/float-kit/helpers/effect";
 import Controller from "./controller";
 
 /**
  * Root component for the sheet. Manages presentation and detent state.
  * Behavioral/visual props should be passed to View, not Root.
  *
+ * Controlled mode:
+ *   <DSheet.Root @presented={{this.isOpen}} @onPresentedChange={{this.setIsOpen}}>
+ *
+ * Uncontrolled mode:
+ *   <DSheet.Root> or <DSheet.Root @defaultPresented={{true}}>
+ *
  * @component DSheetRoot
  * @param {string} componentId - Optional ID to identify this sheet for forComponent lookups
  * @param {boolean} defaultPresented - Whether the sheet is initially presented (default: false, uncontrolled mode only)
- * @param {boolean} presented - Controls the presented state (required for controlled mode)
- * @param {Function} onPresentedChange - Callback when presented state changes (required for controlled mode)
+ * @param {boolean} presented - Controls the presented state (controlled mode)
+ * @param {Function} onPresentedChange - Callback when presented state changes (controlled mode)
  * @param {number} defaultActiveDetent - Initial detent index (defaults to 1)
  * @param {number} activeDetent - Controlled detent index (for controlled mode)
  * @param {Function} onActiveDetentChange - Callback when active detent changes
@@ -35,20 +41,56 @@ export default class Root extends Component {
    */
   @tracked sheet;
 
-  /** @type {boolean|undefined} */
-  #previousPresented;
+  /**
+   * Internal presented state for uncontrolled mode.
+   *
+   * @type {boolean}
+   */
+  @tracked internalPresented = false;
 
-  /** @type {boolean} */
-  #hasAppliedDefaultPresented = false;
+  /**
+   * Tracks the last presented value we acted upon.
+   *
+   * @type {boolean|undefined}
+   */
+  #lastPresented;
 
   /** @type {Function|null} */
   #pendingOpenSubscription = null;
+
+  /**
+   * Inline helper that syncs presented state changes with the controller.
+   * Runs on each render when effectivePresented changes.
+   */
+  syncPresented = helperFn(([presented]) => {
+    const previous = this.#lastPresented;
+    this.#lastPresented = presented;
+
+    if (previous === undefined) {
+      // Initial render - open if presented
+      if (presented) {
+        schedule("afterRender", () => this.openSheet());
+      }
+      return;
+    }
+
+    if (presented && !previous && this.sheet.safeToUnmount) {
+      schedule("afterRender", () => this.openSheet());
+    } else if (!presented && previous) {
+      schedule("afterRender", () => this.sheet.close());
+    }
+  });
 
   constructor(owner, args) {
     super(owner, args);
 
     this.createController();
     this.sheet.rootComponent = this;
+
+    // Apply defaultPresented for uncontrolled mode
+    if (!this.isControlled && this.args.defaultPresented) {
+      this.internalPresented = true;
+    }
 
     if (this.args.componentId) {
       this.sheetRegistry.registerRoot(this.args.componentId, this);
@@ -65,15 +107,59 @@ export default class Root extends Component {
 
   /**
    * Whether the component is in controlled mode.
-   * Controlled mode requires both @presented and @onPresentedChange.
+   * Controlled mode is active when @presented is provided.
    *
    * @type {boolean}
    */
   get isControlled() {
-    return (
-      this.args.presented !== undefined &&
-      this.args.onPresentedChange !== undefined
-    );
+    return this.args.presented !== undefined;
+  }
+
+  /**
+   * The effective presented state, from either controlled or uncontrolled source.
+   *
+   * @type {boolean}
+   */
+  get effectivePresented() {
+    return this.isControlled ? this.args.presented : this.internalPresented;
+  }
+
+  /**
+   * Whether the View should be rendered.
+   * True when sheet should be visible OR during exit animation.
+   *
+   * @type {boolean}
+   */
+  get shouldRenderView() {
+    return this.effectivePresented || !this.sheet.safeToUnmount;
+  }
+
+  /**
+   * Present the sheet.
+   * In controlled mode, calls onPresentedChange(true).
+   * In uncontrolled mode, sets internal state.
+   */
+  @action
+  present() {
+    if (this.isControlled) {
+      this.args.onPresentedChange?.(true);
+    } else {
+      this.internalPresented = true;
+    }
+  }
+
+  /**
+   * Dismiss the sheet.
+   * In controlled mode, calls onPresentedChange(false).
+   * In uncontrolled mode, sets internal state.
+   */
+  @action
+  dismiss() {
+    if (this.isControlled) {
+      this.args.onPresentedChange?.(false);
+    } else {
+      this.internalPresented = false;
+    }
   }
 
   /**
@@ -130,52 +216,6 @@ export default class Root extends Component {
       sheetStackRegistry: this.sheetStackRegistry,
       sheetRegistry: this.sheetRegistry,
     });
-  }
-
-  /**
-   * Whether the View should be rendered.
-   * True when sheet should be visible OR during exit animation.
-   *
-   * @type {boolean}
-   */
-  get shouldRenderView() {
-    if (this.isControlled) {
-      return this.args.presented || !this.sheet.safeToUnmount;
-    }
-    return !this.sheet.safeToUnmount;
-  }
-
-  /**
-   * Reacts to @presented and @defaultPresented changes.
-   * Handles both controlled mode (reacting to @presented) and
-   * uncontrolled mode (applying @defaultPresented once).
-   *
-   * @param {boolean} presented - The controlled presented state
-   * @param {boolean} defaultPresented - The initial presented state for uncontrolled mode
-   */
-  @action
-  syncPresentedState(presented, defaultPresented) {
-    // Controlled mode: react to @presented changes
-    if (this.isControlled) {
-      const previous = this.#previousPresented;
-      this.#previousPresented = presented;
-
-      if (presented && !previous && this.sheet.safeToUnmount) {
-        schedule("afterRender", () => this.openSheet());
-      } else if (!presented && previous) {
-        schedule("afterRender", () => this.sheet.close());
-      }
-    }
-
-    // Uncontrolled mode: apply defaultPresented once
-    if (
-      !this.#hasAppliedDefaultPresented &&
-      !this.isControlled &&
-      defaultPresented
-    ) {
-      this.#hasAppliedDefaultPresented = true;
-      schedule("afterRender", () => this.openSheet());
-    }
   }
 
   /**
@@ -273,13 +313,11 @@ export default class Root extends Component {
     this.createController();
     this.sheet.rootComponent = this;
 
-    if (this.isControlled && this.args.presented) {
-      this.args.onPresentedChange?.(false);
-    }
+    this.dismiss();
   }
 
   <template>
-    {{effect this.syncPresentedState @presented @defaultPresented}}
+    {{this.syncPresented this.effectivePresented}}
     {{yield this.sheet}}
   </template>
 }
