@@ -5,16 +5,16 @@ import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { createTweenFunction } from "./animation";
 import AnimationTravel from "./animation-travel";
 import {
-  normalizeTrack,
   placementToCssClass,
-  trackToPlacement,
-  validateTracksPlacement,
+  resolveTracksAndPlacement,
 } from "./config-normalizer";
+import DetentManager from "./detent-manager";
 import DimensionCalculator from "./dimensions-calculator";
 import DOMAttributes from "./dom-attributes";
 import FocusManagement from "./focus-management";
 import InertManagement from "./inert-management";
 import ObserverManager from "./observer-manager";
+import ScrollProgressCalculator from "./scroll-progress-calculator";
 import StackingAdapter from "./stacking-adapter";
 import StateHelper from "./state-helper";
 import StateMachine from "./state-machine";
@@ -307,6 +307,119 @@ export default class Controller {
   themeColorManager = null;
 
   /**
+   * Declarative subscription definitions for state machines.
+   */
+  #subscriptionDefinitions = [
+    {
+      machine: "stateMachine",
+      state: "preparing-opening",
+      handler: "handlePreparingOpening",
+    },
+    { machine: "stateMachine", state: "opening", handler: "handleOpening" },
+    {
+      machine: "stateMachine",
+      state: "open",
+      guard: () => {
+        const msg = this.stateMachine.lastMessageTreated;
+        return ["ANIMATION_COMPLETE", "PREPARED", "STEP"].includes(msg?.type);
+      },
+      callback: (message) => this.handleOpen(message),
+    },
+    { machine: "stateMachine", state: "closing", handler: "handleClosing" },
+    {
+      machine: "stateMachine",
+      state: "closed.pending",
+      handler: "handleClosedPending",
+    },
+    {
+      machine: "stateMachine",
+      state: "closed.safe-to-unmount",
+      handler: "handleClosedSafeToUnmount",
+    },
+    {
+      machine: "stateMachine",
+      state: "closed.flushing-to-preparing-opening",
+      timing: "before-paint",
+      callback: () => {
+        this.timeoutManager.clear("pendingFlush");
+        this.stateHelper.flushComplete();
+      },
+    },
+    {
+      machine: "stateMachine",
+      state: "closed.flushing-to-preparing-open",
+      timing: "before-paint",
+      callback: () => {
+        this.timeoutManager.clear("pendingFlush");
+        this.stateHelper.flushComplete();
+      },
+    },
+    {
+      machine: "stateMachine",
+      state: "preparing-open",
+      handler: "handlePreparingOpen",
+    },
+    {
+      machine: "positionMachine",
+      state: "covered-going-down",
+      callback: () => this.stateHelper.goDown(),
+    },
+    {
+      machine: "positionMachine",
+      state: "covered-idle",
+      callback: () => {
+        if (
+          this.stateHelper.isStagingIn("going-down") ||
+          this.stateHelper.isStagingIn("go-down")
+        ) {
+          this.stateHelper.advanceStaging();
+        }
+      },
+    },
+    {
+      machine: "positionMachine",
+      state: "covered-going-up",
+      callback: () => this.stateHelper.goUp(),
+    },
+    {
+      machine: "positionMachine",
+      state: "covered-indeterminate",
+      callback: () => {
+        if (this.stateHelper.isStagingIn("going-up")) {
+          this.stateHelper.advanceStaging();
+        }
+
+        const stackId = this.stackId;
+        if (stackId && this.sheetStackRegistry) {
+          const topmostSheet =
+            this.sheetStackRegistry.getTopmostSheetInStack(stackId);
+          if (topmostSheet === this) {
+            this.stateHelper.gotoFrontIdle();
+          } else {
+            this.stateHelper.gotoCoveredIdle();
+          }
+        } else {
+          this.stateHelper.gotoFrontIdle();
+        }
+      },
+    },
+    {
+      machine: "stagingMachine",
+      state: [
+        "none",
+        "opening",
+        "open",
+        "stepping",
+        "closing",
+        "going-down",
+        "go-down",
+        "going-up",
+      ],
+      handler: "updateStagingActiveAttribute",
+    },
+  ];
+
+  /**
    * Initialize the controller with helpers.
    * Use configure() to set options after construction.
    */
@@ -315,8 +428,10 @@ export default class Controller {
     this.focusManagement = new FocusManagement(this);
     this.inertManagement = new InertManagement(this);
     this.timeoutManager = new TimeoutManager();
+    this.detentManager = new DetentManager(this);
     this.domAttributes = new DOMAttributes(this);
     this.observerManager = new ObserverManager(this);
+    this.scrollProgressCalculator = new ScrollProgressCalculator(this);
     this.stackingAdapter = new StackingAdapter(this);
     this.stateHelper = new StateHelper(this);
     this.animationTravel = new AnimationTravel(this);
@@ -384,7 +499,6 @@ export default class Controller {
    * @param {string} key - The option key to merge
    * @param {Object|Function} currentValue - The current value
    * @returns {Object|Function} The merged value
-   * @private
    */
   #mergeEventHandler(options, key, currentValue) {
     const value = options[key];
@@ -402,7 +516,6 @@ export default class Controller {
    *
    * @param {Object} options - The options object
    * @param {Array<string>} keys - The keys to assign
-   * @private
    */
   #assignIfDefined(options, keys) {
     for (const key of keys) {
@@ -416,7 +529,6 @@ export default class Controller {
    * Configure the ARIA role.
    *
    * @param {Object} options - Configuration options
-   * @private
    */
   #configureRole(options) {
     if (options.role !== undefined) {
@@ -428,7 +540,6 @@ export default class Controller {
    * Configure detent-related options.
    *
    * @param {Object} options - Configuration options
-   * @private
    */
   #configureDetents(options) {
     if (options.activeDetent !== undefined) {
@@ -444,47 +555,22 @@ export default class Controller {
 
   /**
    * Configure tracks and content placement.
-   * Handles all 4 Silk cases:
-   * 1. Only contentPlacement → derive tracks from contentPlacement
-   * 2. Only tracks → derive contentPlacement from tracks
-   * 3. Both provided → use both as-is (validation ensures compatibility)
-   * 4. Neither → keep defaults
    *
    * @param {Object} options - Configuration options
-   * @private
    */
   #configureTracksAndPlacement(options) {
-    const hasPlacement = options.contentPlacement !== undefined;
-    const hasTracks = options.tracks !== undefined;
-
-    if (hasPlacement && !hasTracks) {
-      // Case 1: Only contentPlacement provided
-      // Per Silk: tracks = contentPlacement (or "bottom" if center)
-      this.contentPlacement = options.contentPlacement;
-      this.tracks =
-        options.contentPlacement === "center"
-          ? "bottom"
-          : options.contentPlacement;
-    } else if (hasTracks && !hasPlacement) {
-      // Case 2: Only tracks provided
-      // Per Silk: contentPlacement = tracks (or "center" for arrays)
-      this.tracks = normalizeTrack(options.tracks);
-      this.contentPlacement = trackToPlacement(options.tracks);
-    } else if (hasPlacement && hasTracks) {
-      // Case 3: Both provided - use as-is
-      this.contentPlacement = options.contentPlacement;
-      this.tracks = normalizeTrack(options.tracks);
-    }
-    // Case 4: Neither provided - keep class defaults (tracks="bottom", contentPlacement="end")
-
-    validateTracksPlacement(this.tracks, this.contentPlacement);
+    const result = resolveTracksAndPlacement(options, {
+      tracks: this.tracks,
+      contentPlacement: this.contentPlacement,
+    });
+    this.tracks = result.tracks;
+    this.contentPlacement = result.contentPlacement;
   }
 
   /**
    * Configure swipe and scroll behavior options.
    *
    * @param {Object} options - Configuration options
-   * @private
    */
   #configureSwipe(options) {
     this.#assignIfDefined(options, [
@@ -504,7 +590,6 @@ export default class Controller {
    * Configure event handler options with proper merging.
    *
    * @param {Object} options - Configuration options
-   * @private
    */
   #configureEventHandlers(options) {
     this.onClickOutside = this.#mergeEventHandler(
@@ -533,7 +618,6 @@ export default class Controller {
    * Configure animation settings.
    *
    * @param {Object} options - Configuration options
-   * @private
    */
   #configureAnimation(options) {
     this.#assignIfDefined(options, [
@@ -549,7 +633,6 @@ export default class Controller {
    * Configure theme color settings.
    *
    * @param {Object} options - Configuration options
-   * @private
    */
   #configureThemeColor(options) {
     this.themeColorAdapter.configure(options);
@@ -559,7 +642,6 @@ export default class Controller {
    * Configure travel and detent change callbacks.
    *
    * @param {Object} options - Configuration options
-   * @private
    */
   #configureCallbacks(options) {
     this.#assignIfDefined(options, [
@@ -576,7 +658,6 @@ export default class Controller {
    * Configure registry references.
    *
    * @param {Object} options - Configuration options
-   * @private
    */
   #configureRegistries(options) {
     this.#assignIfDefined(options, [
@@ -590,137 +671,15 @@ export default class Controller {
    * Set up state machine subscriptions for lifecycle management.
    */
   setupSubscriptions() {
-    this.stateMachine.subscribe({
-      timing: "immediate",
-      state: "preparing-opening",
-      callback: () => this.handlePreparingOpening(),
-    });
-
-    this.stateMachine.subscribe({
-      timing: "immediate",
-      state: "opening",
-      callback: () => this.handleOpening(),
-    });
-
-    this.stateMachine.subscribe({
-      timing: "immediate",
-      state: "open",
-      guard: () => {
-        const msg = this.stateMachine.lastMessageTreated;
-        // Only fire for main state entry transitions, not sub-machine transitions
-        return ["ANIMATION_COMPLETE", "PREPARED", "STEP"].includes(msg?.type);
-      },
-      callback: (message) => this.handleOpen(message),
-    });
-
-    this.stateMachine.subscribe({
-      timing: "immediate",
-      state: "closing",
-      callback: () => this.handleClosing(),
-    });
-
-    this.stateMachine.subscribe({
-      timing: "immediate",
-      state: "closed.pending",
-      callback: () => this.handleClosedPending(),
-    });
-
-    this.stateMachine.subscribe({
-      timing: "immediate",
-      state: "closed.safe-to-unmount",
-      callback: () => this.handleClosedSafeToUnmount(),
-    });
-
-    this.stateMachine.subscribe({
-      timing: "before-paint",
-      state: "closed.flushing-to-preparing-opening",
-      callback: () => {
-        this.timeoutManager.clear("pendingFlush");
-        this.stateHelper.flushComplete();
-      },
-    });
-
-    this.stateMachine.subscribe({
-      timing: "before-paint",
-      state: "closed.flushing-to-preparing-open",
-      callback: () => {
-        this.timeoutManager.clear("pendingFlush");
-        this.stateHelper.flushComplete();
-      },
-    });
-
-    this.stateMachine.subscribe({
-      timing: "immediate",
-      state: "preparing-open",
-      callback: () => this.handlePreparingOpen(),
-    });
-
-    this.positionMachine.subscribe({
-      timing: "immediate",
-      state: "covered-going-down",
-      callback: () => {
-        this.stateHelper.goDown();
-      },
-    });
-
-    this.positionMachine.subscribe({
-      timing: "immediate",
-      state: "covered-idle",
-      callback: () => {
-        if (
-          this.stateHelper.isStagingIn("going-down") ||
-          this.stateHelper.isStagingIn("go-down")
-        ) {
-          this.stateHelper.advanceStaging();
-        }
-      },
-    });
-
-    this.positionMachine.subscribe({
-      timing: "immediate",
-      state: "covered-going-up",
-      callback: () => {
-        this.stateHelper.goUp();
-      },
-    });
-
-    this.positionMachine.subscribe({
-      timing: "immediate",
-      state: "covered-indeterminate",
-      callback: () => {
-        if (this.stateHelper.isStagingIn("going-up")) {
-          this.stateHelper.advanceStaging();
-        }
-
-        const stackId = this.stackId;
-        if (stackId && this.sheetStackRegistry) {
-          const topmostSheet =
-            this.sheetStackRegistry.getTopmostSheetInStack(stackId);
-          if (topmostSheet === this) {
-            this.stateHelper.gotoFrontIdle();
-          } else {
-            this.stateHelper.gotoCoveredIdle();
-          }
-        } else {
-          this.stateHelper.gotoFrontIdle();
-        }
-      },
-    });
-
-    this.stagingMachine.subscribe({
-      timing: "immediate",
-      state: [
-        "none",
-        "opening",
-        "open",
-        "stepping",
-        "closing",
-        "going-down",
-        "go-down",
-        "going-up",
-      ],
-      callback: () => this.updateStagingActiveAttribute(),
-    });
+    for (const def of this.#subscriptionDefinitions) {
+      const machine = this[def.machine];
+      machine.subscribe({
+        timing: def.timing || "immediate",
+        state: def.state,
+        guard: def.guard,
+        callback: def.callback || ((msg) => this[def.handler](msg)),
+      });
+    }
   }
 
   /**
@@ -798,14 +757,7 @@ export default class Controller {
    * @type {Array<string>}
    */
   get detents() {
-    const config = this.detentsConfig;
-    if (config === null || config === undefined) {
-      return ["var(--d-sheet-content-travel-axis)"];
-    }
-    if (typeof config === "string") {
-      return [config, "var(--d-sheet-content-travel-axis)"];
-    }
-    return [...config, "var(--d-sheet-content-travel-axis)"];
+    return this.detentManager.effectiveDetents;
   }
 
   /**
@@ -1045,44 +997,22 @@ export default class Controller {
     this.updateTravelRange(segment[0], segment[1]);
 
     if (this.swipeOutDisabled) {
-      const [start, end] = segment;
-      const prevStart = prevSegment?.[0];
-      const prevEnd = prevSegment?.[1];
-      const lastDetent = this.dimensions?.detentMarkers?.length ?? 1;
+      const { backStuck, frontStuck, shouldStep } =
+        this.detentManager.determineStuckPosition(segment, prevSegment);
 
-      if (start !== prevStart || end !== prevEnd) {
-        if (start === 1 && end === 1) {
-          this.backStuck = true;
-
-          if (
-            this.edgeAlignedNoOvershoot &&
-            this.snapToEndDetentsAcceleration === "auto" &&
-            this.stateMachine.matches("open.scroll.ended") &&
-            !this.stateMachine.matches("open.swipe.ongoing") &&
-            this.currentState === "open"
-          ) {
-            this.stepToStuckPosition("back");
-          }
-        } else if (start === lastDetent && end === lastDetent) {
-          this.frontStuck = true;
-
-          if (
-            this.edgeAlignedNoOvershoot &&
-            this.snapToEndDetentsAcceleration === "auto" &&
-            this.stateMachine.matches("open.scroll.ended") &&
-            !this.stateMachine.matches("open.swipe.ongoing") &&
-            this.currentState === "open"
-          ) {
-            this.stepToStuckPosition("front");
-          }
-        } else {
-          if (this.frontStuck) {
-            this.frontStuck = false;
-          }
-          if (this.backStuck) {
-            this.backStuck = false;
-          }
+      if (backStuck) {
+        this.backStuck = true;
+        if (shouldStep === "back") {
+          this.stepToStuckPosition("back");
         }
+      } else if (frontStuck) {
+        this.frontStuck = true;
+        if (shouldStep === "front") {
+          this.stepToStuckPosition("front");
+        }
+      } else {
+        this.frontStuck = false;
+        this.backStuck = false;
       }
     }
 
@@ -1165,9 +1095,6 @@ export default class Controller {
     this.applyInertOutside();
     this.setupFocusScrollPrevention();
     this.executeAutoFocusOnPresent();
-
-    // TODO - is this necessary?
-    // this.scrollContainer?.focus({ preventScroll: true });
 
     if (this.stateHelper.isStagingIn("opening")) {
       this.stateHelper.advanceStaging();
@@ -1671,49 +1598,13 @@ export default class Controller {
       90
     );
 
-    const scrollTop = this.scrollContainer.scrollTop;
-    const contentSize = this.dimensions.content?.travelAxis?.unitless ?? 1;
-    const scrollSize =
-      this.dimensions.scroll?.travelAxis?.unitless ?? contentSize;
-    const effectiveContentSize =
-      this.contentPlacement !== "center"
-        ? contentSize
-        : contentSize + (scrollSize - contentSize) / 2;
-
-    const edgePadding = this.dimensions.frontSpacerEdgePadding ?? 0;
-    const snapAccelerator =
-      this.dimensions.snapOutAccelerator?.travelAxis?.unitless ?? 0;
-
-    const firstDetentProgress =
-      this.swipeOutDisabled && this.detentsConfig !== undefined
-        ? (this.dimensions.progressValueAtDetents?.[1]?.exact ?? 0)
-        : 0;
-
-    let rawProgress;
-    const isTopOrLeft = this.tracks === "top" || this.tracks === "left";
-
-    if (this.contentPlacement === "center") {
-      if (isTopOrLeft) {
-        rawProgress =
-          (effectiveContentSize + edgePadding - scrollTop) /
-          effectiveContentSize;
-      } else {
-        rawProgress = (scrollTop - snapAccelerator) / effectiveContentSize;
-      }
-    } else {
-      if (isTopOrLeft) {
-        rawProgress = (contentSize + edgePadding - scrollTop) / contentSize;
-      } else {
-        rawProgress = (scrollTop - snapAccelerator) / contentSize;
-      }
+    const progress = this.scrollProgressCalculator.calculateProgress();
+    if (!progress) {
+      return;
     }
 
-    const clampedProgress = Math.max(
-      firstDetentProgress,
-      Math.min(1, rawProgress)
-    );
-
-    const stackingProgress = Math.max(0, Math.min(1, rawProgress));
+    const { rawProgress, clampedProgress, stackingProgress, segmentProgress } =
+      progress;
 
     this.aggregatedTravelCallback(clampedProgress);
 
@@ -1731,63 +1622,23 @@ export default class Controller {
       return;
     }
 
-    if (this.dimensions?.progressValueAtDetents) {
-      const detents = this.dimensions.progressValueAtDetents;
-      const n = detents.length;
-
-      let segmentProgress;
-      if (this.dimensions.swipeOutDisabledWithDetent) {
-        const firstMarkerSize =
-          this.dimensions.detentMarkers[0]?.travelAxis?.unitless ?? 0;
-        const scrollOffset = firstMarkerSize - edgePadding;
-        segmentProgress = (scrollTop + scrollOffset) / contentSize;
-      } else {
-        segmentProgress = rawProgress;
-      }
-
-      if (segmentProgress <= 0) {
-        this.setSegment([0, 0]);
+    const segment =
+      this.scrollProgressCalculator.determineSegment(segmentProgress);
+    if (segment) {
+      this.setSegment(segment);
+      if (segment[0] === 0 && segment[1] === 0 && segmentProgress <= 0) {
         return;
       }
-
-      for (let i = 0; i < n; i++) {
-        const detent = detents[i];
-        const after = detent.after;
-        if (
-          segmentProgress > after &&
-          i + 1 < n &&
-          segmentProgress < detents[i + 1].before
-        ) {
-          this.setSegment([i, i + 1]);
-          break;
-        } else if (segmentProgress > detent.before && segmentProgress < after) {
-          this.setSegment([i, i]);
-          break;
-        }
-      }
-
-      // Fallback: if segmentProgress >= 1, set to last detent
-      // This handles the case when progress overshoots the last detent's after boundary
-      if (segmentProgress >= 1) {
-        const lastDetent = n - 1;
-        this.setSegment([lastDetent, lastDetent]);
-      }
-
-      this.lastProcessedProgress = clampedProgress;
     }
 
-    if (
-      this.detentsConfig === undefined &&
-      rawProgress <= 0 &&
-      this.isPresented &&
-      this.currentState === "open"
-    ) {
+    this.lastProcessedProgress = clampedProgress;
+
+    if (this.scrollProgressCalculator.shouldTriggerSwipeOut(rawProgress)) {
       this.domAttributes.disableScrollSnap();
       this.closingWithoutAnimation = true;
       requestAnimationFrame(() => {
         this.handleStateTransition("SWIPE_OUT");
       });
-      return;
     }
   }
 
@@ -2035,20 +1886,10 @@ export default class Controller {
       return;
     }
 
-    const maxDetent = this.detents?.length ?? 1;
-
-    if (maxDetent <= 1) {
-      return;
+    const nextDetent = this.detentManager.calculateNextDetent();
+    if (nextDetent !== null) {
+      this.handleStateTransition({ type: "STEP", detent: nextDetent });
     }
-
-    const nextDetent =
-      this.activeDetent >= maxDetent ? 1 : this.activeDetent + 1;
-
-    if (nextDetent === this.activeDetent) {
-      return;
-    }
-
-    this.handleStateTransition({ type: "STEP", detent: nextDetent });
   }
 
   /**
@@ -2061,20 +1902,10 @@ export default class Controller {
       return;
     }
 
-    const maxDetent = this.detents?.length ?? 1;
-
-    if (maxDetent <= 1) {
-      return;
+    const prevDetent = this.detentManager.calculatePrevDetent();
+    if (prevDetent !== null) {
+      this.handleStateTransition({ type: "STEP", detent: prevDetent });
     }
-
-    const prevDetent =
-      this.activeDetent <= 1 ? maxDetent : this.activeDetent - 1;
-
-    if (prevDetent === this.activeDetent) {
-      return;
-    }
-
-    this.handleStateTransition({ type: "STEP", detent: prevDetent });
   }
 
   /**
@@ -2088,16 +1919,9 @@ export default class Controller {
       return;
     }
 
-    const maxDetent = this.detents?.length ?? 1;
-    if (detent < 1 || detent > maxDetent) {
-      return;
+    if (this.detentManager.isValidDetent(detent)) {
+      this.handleStateTransition({ type: "STEP", detent });
     }
-
-    if (detent === this.activeDetent) {
-      return;
-    }
-
-    this.handleStateTransition({ type: "STEP", detent });
   }
 
   /**

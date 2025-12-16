@@ -57,6 +57,55 @@ export function placementToCssClass(placement) {
 }
 
 /**
+ * Convert content placement to track direction.
+ * Inverse of trackToPlacement - when only contentPlacement is provided.
+ *
+ * @param {string} placement - Content placement value
+ * @returns {string} Track direction
+ */
+export function placementToTrack(placement) {
+  return placement === "center" ? "bottom" : placement;
+}
+
+/**
+ * Resolve tracks and contentPlacement from partial options.
+ * Handles all 4 Silk cases:
+ * 1. Only contentPlacement → derive tracks from contentPlacement
+ * 2. Only tracks → derive contentPlacement from tracks
+ * 3. Both provided → use both as-is (validation ensures compatibility)
+ * 4. Neither → keep defaults
+ *
+ * @param {Object} options - Configuration options
+ * @param {string} [options.tracks] - Track direction
+ * @param {string} [options.contentPlacement] - Content placement
+ * @param {Object} defaults - Default values
+ * @param {string} defaults.tracks - Default track direction
+ * @param {string} defaults.contentPlacement - Default content placement
+ * @returns {{ tracks: string, contentPlacement: string }} Resolved values
+ */
+export function resolveTracksAndPlacement(options, defaults) {
+  const hasPlacement = options.contentPlacement !== undefined;
+  const hasTracks = options.tracks !== undefined;
+
+  let tracks = defaults.tracks;
+  let contentPlacement = defaults.contentPlacement;
+
+  if (hasPlacement && !hasTracks) {
+    contentPlacement = options.contentPlacement;
+    tracks = placementToTrack(options.contentPlacement);
+  } else if (hasTracks && !hasPlacement) {
+    tracks = normalizeTrack(options.tracks);
+    contentPlacement = trackToPlacement(options.tracks);
+  } else if (hasPlacement && hasTracks) {
+    contentPlacement = options.contentPlacement;
+    tracks = normalizeTrack(options.tracks);
+  }
+
+  validateTracksPlacement(tracks, contentPlacement);
+  return { tracks, contentPlacement };
+}
+
+/**
  * Validate that tracks and contentPlacement are compatible.
  * When both are provided, contentPlacement must match tracks (or be "center").
  *
