@@ -39,14 +39,14 @@ export default class HamburgerDropdownWrapper extends Component {
   }
 
   @action
-  async click(e) {
+  click(e) {
     if (e.target.closest(CLOSE_ON_CLICK_SELECTORS)) {
-      await this.toggleNavigation();
+      this.toggleNavigation();
     }
   }
 
   @action
-  async clickOutside(e) {
+  clickOutside(e) {
     let exceptionSelectors = [".sidebar-more-section-content"];
 
     exceptionSelectors = applyValueTransformer(
@@ -87,7 +87,7 @@ export default class HamburgerDropdownWrapper extends Component {
       waitForPromise(panelAnimatePromise);
       waitForPromise(cloakAnimatePromise);
     } else {
-      await this.toggleNavigation();
+      this.toggleNavigation();
     }
   }
 
