@@ -9,6 +9,9 @@ RSpec.describe DiscourseAi::Evals::Workbench do
   subject(:workbench) { described_class.new(output: output) }
 
   let(:output) { StringIO.new }
+  let(:formatter) do
+    instance_double(DiscourseAi::Evals::ConsoleFormatter, announce_start: nil, finalize: nil)
+  end
   let(:recorder) do
     instance_double(
       DiscourseAi::Evals::Recorder,
@@ -43,6 +46,7 @@ RSpec.describe DiscourseAi::Evals::Workbench do
   let(:llm_supports_vision) { true }
 
   before do
+    allow(DiscourseAi::Evals::ConsoleFormatter).to receive(:new).and_return(formatter)
     allow(DiscourseAi::Evals::Recorder).to receive(:with_cassette).and_return(recorder)
     freeze_time
   end
@@ -54,18 +58,27 @@ RSpec.describe DiscourseAi::Evals::Workbench do
         { raw: "output", raw_entries: ["output"], classified: [{ result: :pass }] },
       )
 
-      workbench.run(eval_cases: [eval_case], llms: [llm])
+      workbench.run_evals(eval_cases: [eval_case], llms: [llm])
 
       expect(DiscourseAi::Evals::Recorder).to have_received(:with_cassette).with(
         eval_case,
         output: output,
+        total_targets: 1,
+        persona_key: :default,
+        formatter: formatter,
+        announce_formatter: false,
+        finalize_formatter: false,
       )
       expect(recorder).to have_received(:record_llm_results).with(
         "gpt-4",
         [{ result: :pass }],
         Time.now.utc,
+        raw_entries: ["output"],
+        display_label: "gpt-4",
+        row_prefix: "example-eval",
       )
       expect(recorder).to have_received(:finish)
+      expect(formatter).to have_received(:finalize)
     end
 
     context "when the eval requires vision but the llm does not support it" do
@@ -73,11 +86,13 @@ RSpec.describe DiscourseAi::Evals::Workbench do
       let(:llm_supports_vision) { false }
 
       it "skips the llm and records the reason" do
-        workbench.run(eval_cases: [eval_case], llms: [llm])
+        workbench.run_evals(eval_cases: [eval_case], llms: [llm])
 
         expect(recorder).to have_received(:record_llm_skip).with(
           "gpt-4",
           "LLM does not support vision",
+          display_label: "gpt-4",
+          row_prefix: "example-eval",
         )
         expect(recorder).to have_received(:finish)
       end
@@ -88,12 +103,14 @@ RSpec.describe DiscourseAi::Evals::Workbench do
         error = DiscourseAi::Evals::Eval::EvalError.new("boom", { foo: "bar" })
         allow(workbench).to receive(:execute_eval).and_raise(error) # rubocop:disable RSpec/SubjectStub
 
-        workbench.run(eval_cases: [eval_case], llms: [llm])
+        workbench.run_evals(eval_cases: [eval_case], llms: [llm])
 
         expect(recorder).to have_received(:record_llm_results).with(
           "gpt-4",
           [{ result: :fail, message: "boom", context: { foo: "bar" } }],
           Time.now.utc,
+          display_label: "gpt-4",
+          row_prefix: "example-eval",
         )
         expect(recorder).to have_received(:finish)
       end
@@ -103,12 +120,14 @@ RSpec.describe DiscourseAi::Evals::Workbench do
       it "records the failure with the exception message" do
         allow(workbench).to receive(:execute_eval).and_raise(StandardError.new("kaboom")) # rubocop:disable RSpec/SubjectStub
 
-        workbench.run(eval_cases: [eval_case], llms: [llm])
+        workbench.run_evals(eval_cases: [eval_case], llms: [llm])
 
         expect(recorder).to have_received(:record_llm_results).with(
           "gpt-4",
           [{ message: "kaboom", result: :fail }],
           Time.now.utc,
+          display_label: "gpt-4",
+          row_prefix: "example-eval",
         )
       end
     end
