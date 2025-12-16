@@ -1,7 +1,7 @@
+import { tracked } from "@glimmer/tracking";
 import { setOwner } from "@ember/owner";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import { tracked } from "@glimmer/tracking";
 import { bind } from "discourse/lib/decorators";
 import userPresent, {
   onPresenceChange,
