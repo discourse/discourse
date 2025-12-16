@@ -149,7 +149,7 @@ function ensureEmberDeprecationSilencer() {
  * @param {string} path - The module path to require
  * @returns {any|undefined} The required module if available, undefined otherwise
  */
-export function requireIfAvailable(path) {
+function requireIfAvailable(path) {
   return require.has(path) ? require(path) : undefined;
 }
 
