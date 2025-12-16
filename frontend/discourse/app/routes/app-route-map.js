@@ -253,6 +253,9 @@ export default function () {
     this.route("intersection", {
       path: "intersection/:tag_name/*additional_tags",
     });
+
+    // legacy route
+    this.route("legacyRedirect", { path: "/:tag_name" });
   });
 
   this.route("tagGroups", { path: "/tag_groups" }, function () {

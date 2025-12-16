@@ -472,6 +472,7 @@ export default {
   "route:user-index": "route:user.index",
   "route:badges-show": "route:badges.show",
   "route:badges-index": "route:badges.index",
+  "route:tags-legacy-redirect": "route:tags.legacy-redirect",
   "route:chat-channel-near-message": "route:chat.channel.near-message",
   "route:chat-channel-near-message-with-thread":
     "route:chat.channel.near-message-with-thread",
