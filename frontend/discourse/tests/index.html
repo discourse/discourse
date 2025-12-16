@@ -52,8 +52,8 @@
 
     <script type="module">
       import "ember-testing";
-      import { setEnvironment } from "discourse/lib/environment";
-      setEnvironment("qunit-testing");
+      import { setEnvironment, isTesting } from "discourse/lib/environment";
+      
     
       import "discourse/loader";
       import "discourse/loader-shims";
@@ -80,9 +80,12 @@
         // const config = JSON.parse(
         //   decodeURIComponent(element.getAttribute("content"))
         // );
-        const config = {};
-        const event = new CustomEvent("discourse-init", { detail: config });
-        document.dispatchEvent(event);
+        if(isTesting()){
+          setEnvironment("qunit-testing");
+          const config = {};
+          const event = new CustomEvent("discourse-init", { detail: config });
+          document.dispatchEvent(event);
+        }
       })();
     </script>
 
