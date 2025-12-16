@@ -5190,6 +5190,15 @@ en:
       upload_description: "Upload a csv file to create tags in bulk"
       upload_instructions: "One per line, optionally with a tag group in the format 'tag_name,tag_group'."
       upload_successful: "Tags uploaded successfully"
+      bulk_create_inline_placeholder: "Create tags (comma-separated)"
+      bulk_create_button: "Create"
+      bulk_create_success:
+        one: "Created %{count} tag:"
+        other: "Created %{count} tags:"
+      bulk_create_already_exist:
+        one: "%{count} tag already exists:"
+        other: "%{count} tags already exist:"
+      bulk_create_some_failed: "Some tags failed to create:"
       delete_unused_confirmation:
         one: "%{count} tag will be deleted: %{tags}"
         other: "%{count} tags will be deleted: %{tags}"
