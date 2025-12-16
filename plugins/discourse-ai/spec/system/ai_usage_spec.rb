@@ -4,6 +4,8 @@ RSpec.describe "AI Usage Admin Page", type: :system do
   fab!(:admin)
   fab!(:llm_model)
 
+  let(:ai_usage_page) { PageObjects::Pages::AiUsage.new }
+
   before do
     enable_current_plugin
     sign_in(admin)
@@ -69,6 +71,46 @@ RSpec.describe "AI Usage Admin Page", type: :system do
       sleep(1)
 
       expect(page).to have_css(".ai-usage__summary")
+    end
+  end
+
+  context "when filtering by model" do
+    fab!(:other_model) { Fabricate(:llm_model, display_name: "Other Model", name: "other-model") }
+
+    before do
+      AiApiRequestStat.create!(
+        provider_id: 1,
+        feature_name: "summarize",
+        language_model: llm_model.name,
+        llm_id: llm_model.id,
+        request_tokens: 100,
+        response_tokens: 50,
+        created_at: 1.day.ago,
+      )
+
+      AiApiRequestStat.create!(
+        provider_id: 1,
+        feature_name: "translate",
+        language_model: other_model.name,
+        llm_id: other_model.id,
+        request_tokens: 200,
+        response_tokens: 100,
+        created_at: 1.day.ago,
+      )
+    end
+
+    it "keeps all models in dropdown after selecting a filter" do
+      ai_usage_page.visit
+
+      model_selector = ai_usage_page.model_selector
+      model_selector.expand
+      model_selector.select_row_by_name(llm_model.display_name)
+
+      expect(model_selector).to have_selected_name(llm_model.display_name)
+
+      # Verify other models are still available in the dropdown
+      model_selector.expand
+      expect(model_selector).to have_option_name(other_model.display_name)
     end
   end
 end

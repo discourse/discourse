@@ -2264,6 +2264,8 @@ te:
       upload_title: "ఎగుమతించు"
       upload_description: "ఎగుమతి వివరణ ఇక్కడ రాయండి"
       list_item: "జాబితా అంశం"
+      wrap_modal:
+        apply: "దరఖాస్తు చేసుకోండి"
       help: "మార్క్ డైన్ సవరణ సహాయం"
       exit_fullscreen_prompt: "పూర్తి స్క్రీన్ నుండి నిష్క్రమించడానికి <kbd>ESC</kbd> నొక్కండి"
       modal_ok: "సరే"
@@ -2309,6 +2311,7 @@ te:
       ignore: "విస్మరించండి"
       image_alt_text:
         aria_label: చిత్రం కోసం ప్రత్యామ్నాయ వచనం
+      image: "బొమ్మ"
       delete_image_button: చిత్రాన్ని తొలగించండి
       toggle_image_grid: ఇమేజ్ గ్రిడ్‌ని టోగుల్ చేయండి
       link_toolbar:
@@ -4410,6 +4413,8 @@ te:
           sub_pages:
             common_settings:
               title: "అమరికలు"
+        discourse_id:
+          learn_more: "మరింత తెలుసుకోండి"
         logo:
           form:
             logo:

@@ -100,6 +100,20 @@ fix-staged:
         - "Gemfile"
       run: bundle exec stree write Gemfile {staged_files}
 
+fix-all:
+  parallel: false
+  commands:
+    prettier:
+      run: pnpm lint:prettier:fix
+    eslint:
+      run: pnpm lint:js:fix
+    ember-template-lint:
+      run: pnpm lint:hbs:fix
+    stylelint:
+      run: pnpm lint:css:fix
+    rubocop:
+      run: bundle exec rubocop --force-exclusion -A
+
 lints:
   parallel: true
   commands:

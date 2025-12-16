@@ -1343,6 +1343,8 @@ be:
       upload_title: "спампаваць"
       upload_description: "увядзіце апісанне загрузкі"
       list_item: "элемент спісу"
+      wrap_modal:
+        apply: "Ужыць"
       help: "Markdown Editing Help"
       modal_ok: "Добра"
       admin_options_title: "Неабавязковыя налады персаналу для гэтай тэмы"
@@ -1353,6 +1355,7 @@ be:
           label: "Новае паведамленне"
           desc: "Напісаць новае асабістае паведамленне"
       ignore: "ігнараваць"
+      image: "малюнак"
     notifications:
       watching_first_post_label: "Стварыць новую тэму"
       admin_problems: "Новыя рэкамендацыі на вашым сайце прыборнай панэлі"

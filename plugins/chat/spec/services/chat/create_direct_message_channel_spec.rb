@@ -58,14 +58,14 @@ RSpec.describe Chat::CreateDirectMessageChannel do
         )
       end
 
-      it "makes all target users a member of the channel and updates all users to following" do
+      it "makes all target users a member of the channel and sets new memberships to following" do
         expect { result }.to change { Chat::UserChatChannelMembership.count }.by(3)
         expect(result.channel.user_chat_channel_memberships.pluck(:user_id)).to match_array(
           [current_user.id, user_1.id, user_2.id],
         )
         result.channel.user_chat_channel_memberships.each do |membership|
           expect(membership).to have_attributes(
-            following: false,
+            following: true,
             muted: false,
             notification_level: "always",
           )
@@ -141,11 +141,24 @@ RSpec.describe Chat::CreateDirectMessageChannel do
 
         context "when the channel has one user and no name" do
           let(:target_usernames) { [user_1.username] }
+          let(:existing_channel) { described_class.call(params:, **dependencies).channel }
 
           it "reuses the existing channel" do
-            existing_channel = described_class.call(params:, **dependencies).channel
-
             expect(result.channel.id).to eq(existing_channel.id)
+          end
+
+          it "respects membership settings for existing users" do
+            mention_level = ::Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:mention]
+
+            membership =
+              Chat::UserChatChannelMembership.find_by(
+                user_id: user_1.id,
+                chat_channel_id: existing_channel.id,
+              )
+
+            membership.update!(muted: true, notification_level: mention_level)
+
+            expect { result }.not_to change { membership.reload.attributes }
           end
         end
 

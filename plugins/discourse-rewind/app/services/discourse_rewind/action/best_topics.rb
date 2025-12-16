@@ -13,7 +13,7 @@ module DiscourseRewind
           },
           {
             topic_id: 2,
-            title: "Best practices for database optimization",
+            title: ":file_cabinet: Best practices for database optimization",
             excerpt: "Learn how to optimize your database queries for better performance...",
             yearly_score: 38.2,
           },
@@ -34,6 +34,7 @@ module DiscourseRewind
             .includes(:topic)
             .references(:topic)
             .where(topic: { deleted_at: nil, created_at: date, user_id: user.id })
+            .where.not(topic: { archetype: Archetype.private_message })
             .order("yearly_score DESC NULLS LAST")
             .limit(3)
             .pluck(:topic_id, :title, :excerpt, :yearly_score)

@@ -1004,7 +1004,9 @@ uk:
         claimed_by: "Подано претензію %{username} · %{relativeDate}"
         unclaimed_by: "Не затребувано %{username} · %{relativeDate}"
         reviewed: "Розглянуто"
-        reviewed_by: "Переглянуто %{username} · %{relativeDate}"
+        approved_by: "Схвалено %{username} · %{relativeDate}"
+        rejected_by: "Відхилено %{username} - %{relativeDate}"
+        ignored_by: "Ігноровано %{username} · %{relativeDate}"
         view_conversation: "перегляд ПП"
         note_added: "Нотатка модератора"
         note_added_by: "Примітка модератора %{username} · %{relativeDate}"
@@ -3161,6 +3163,17 @@ uk:
       ulist_title: "Маркований список"
       list_item: "Елемент списку"
       toggle_direction: "Змінити напрямок"
+      apply_wrap_title: "Застосувати загортання"
+      wrap_modal:
+        title: "Редагувати загортання"
+        name_label: "Назва обгортки"
+        attributes_label: "Атрибути"
+        add_attribute: "Додати атрибут"
+        remove_attribute: "Видалити атрибут"
+        apply: "Застосувати"
+        unwrap: "Розгорнути"
+        no_attributes: "Атрибути ще не додано."
+      wrap_text: "Обгортання вмісту"
       help: "Довідка з використання Markdown"
       collapse: "Згорнути панель редактора"
       open: "Відкрити панель редактора"
@@ -3230,6 +3243,7 @@ uk:
         remove: "Видалити зображення"
         add_to_grid: "Додати до сітки"
         move_outside_grid: "Переміщення за межі сітки"
+      image: "зображення"
       grid_label: "Це відображатиметься у вигляді сітки"
       image_scale_button: "Масштабувати зображення до %{percent}%"
       delete_image_button: Видалити зображення
@@ -5283,6 +5297,7 @@ uk:
       add_to_calendar: "Додати до календаря"
       google: "Календар Google"
       ics: "ICS"
+      default_title: "Запланована подія"
     tagging:
       all_tags: "Всі теґи"
       other_tags: "Інші теґи"
@@ -6010,6 +6025,19 @@ uk:
               title: "Вхід через соціальні мережі"
             discourseconnect:
               title: "Discourse Connect"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          stats:
+            total_users: "Всього користувачів"
+            signups_30_days: "Реєстрації (30 днів)"
+            logins_30_days: "Вхід (30 днів)"
+          regenerate_credentials: "Відновити облікові дані"
+          regenerate_confirm: "Ви впевнені, що хочете повторно створити облікові дані Discourse ID? Це створить новий секретний ключ клієнта. Повторне створення облікових даних зазвичай не є обов'язковим, але може бути корисним для підвищення безпеки."
+          description: "Discourse ID - це сервіс єдиного входу, який дозволяє користувачам входити на кілька сайтів Discourse за допомогою одного облікового запису. Підтримуються поширені соціальні сервіси входу, такі як Google, Facebook, Apple та Github, без додаткового налаштування."
+          learn_more: "Дізнатися більше"
+          regenerate_success: "Облікові дані успішно відновлено."
         logo:
           title: "Логотип"
           header_description: "Налаштуйте логотипи та іконки, які використовуються на вашому сайті"
@@ -7330,6 +7358,8 @@ uk:
           create_name: "Ім'я"
           save: "Зберегти"
           long_title: "Стилізація сайту: кольори, CSS та HTML"
+          dark_mode: "%{themeName} темний режим"
+          light_mode: "%{themeName} світлий режим"
           edit: "Редагувати"
           edit_confirm: "Це імпортований стиль. Зміни CSS/HTML загубляться після чергового оновлення стилю."
           update_confirm: "Ці локальні зміни будуть видалені оновленням. Ви впевнені, що хочете продовжити?"
@@ -7908,6 +7938,7 @@ uk:
             stop_impersonating: "припиніть видавати себе за іншу особу"
             upcoming_change_toggled: "майбутню зміну переключено"
             change_site_setting_groups: "змінити групи налаштувань сайту"
+            discourse_id_regenerate_credentials: "відновити облікові дані Discourse ID"
         screened_emails:
           title: "Перевірені адреси електронної пошти"
           description: "Коли хтось намагатиметься створити новий обліковий запис, наступні електронні скриньки буде перевірено, і реєстрацію заблоковано, або вжито якихось інших дій."

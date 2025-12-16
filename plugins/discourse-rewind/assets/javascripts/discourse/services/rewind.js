@@ -1,16 +1,23 @@
 import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
-import KeyValueStore from "discourse/lib/key-value-store";
+import { ajax } from "discourse/lib/ajax";
 
 export default class Rewind extends Service {
   @service currentUser;
 
-  @tracked dismissed = this.store.getObject("_dismissed") ?? false;
-
-  store = new KeyValueStore("discourse_rewind_" + this.fetchRewindYear);
+  @tracked
+  _isDismissed = this.currentUser?.user_option?.discourse_rewind_dismissed;
 
   @tracked
   _isDisabled = this.currentUser?.user_option?.discourse_rewind_disabled;
+
+  get active() {
+    return this.currentUser?.is_rewind_active;
+  }
+
+  get dismissed() {
+    return this._isDismissed ?? false;
+  }
 
   get disabled() {
     return this._isDisabled ?? false;
@@ -20,9 +27,11 @@ export default class Rewind extends Service {
     this._isDisabled = value;
   }
 
-  // We want to show the previous year's rewind in January
-  // but the current year's rewind in any other month (in
-  // reality, only December).
+  /**
+   * We want to show the previous year's rewind in January
+   * but the current year's rewind in any other month (in
+   * reality, only December).
+   */
   get fetchRewindYear() {
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth();
@@ -48,7 +57,7 @@ export default class Rewind extends Service {
   }
 
   dismiss() {
-    this.dismissed = true;
-    this.store.setObject({ key: "_dismissed", value: true });
+    this._isDismissed = true;
+    ajax("/rewinds/dismiss", { type: "POST" });
   }
 }

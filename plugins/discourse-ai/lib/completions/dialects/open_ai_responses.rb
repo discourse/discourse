@@ -14,7 +14,7 @@ module DiscourseAi
         VALID_ID_REGEX = /\A[a-zA-Z0-9_]+\z/
 
         def native_tool_support?
-          true
+          !disable_native_tools?
         end
 
         def max_prompt_tokens
@@ -32,12 +32,12 @@ module DiscourseAi
           hoist_reasoning(super)
         end
 
+        private
+
         def disable_native_tools?
           return @disable_native_tools if defined?(@disable_native_tools)
           !!@disable_native_tools = llm_model.lookup_custom_param("disable_native_tools")
         end
-
-        private
 
         def tools_dialect
           if disable_native_tools?
@@ -46,15 +46,6 @@ module DiscourseAi
             @tools_dialect ||=
               DiscourseAi::Completions::Dialects::OpenAiTools.new(prompt.tools, responses_api: true)
           end
-        end
-
-        def embed_user_ids?
-          return @embed_user_ids if defined?(@embed_user_ids)
-
-          @embed_user_ids ||=
-            prompt.messages.any? do |m|
-              m[:id] && m[:type] == :user && !m[:id].to_s.match?(VALID_ID_REGEX)
-            end
         end
 
         def system_msg(msg)
@@ -98,13 +89,7 @@ module DiscourseAi
 
           user_message = { role: }
 
-          if msg[:id]
-            if embed_user_ids?
-              content_array << "#{msg[:id]}: "
-            else
-              user_message[:name] = msg[:id]
-            end
-          end
+          content_array << "#{msg[:id]}: " if msg[:id]
 
           content_array << msg[:content]
 

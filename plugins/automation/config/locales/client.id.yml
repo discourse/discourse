@@ -22,6 +22,12 @@ id:
           raw:
             label: Konten
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategori
+            tags:
+              label: Label
         stalled_topic:
           durations:
             P2W: "Dua pekan"

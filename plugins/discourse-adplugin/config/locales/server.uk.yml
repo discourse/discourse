@@ -5,6 +5,27 @@
 # https://translate.discourse.org/
 
 uk:
+  reports:
+    ad_plugin_house_ads_performance:
+      title: Покази власних оголошень Adplugin
+      description: "Звіт про покази власних оголошень"
+    ad_plugin_ad_impressions:
+      title: Покази реклами Adplagin
+      description: "Звіт про покази оголошень"
+    ad_plugin_impressions_by_user:
+      title: Покази реклами по користувачам
+      description: "Покази оголошень згруповані за користувачами"
+    ad_plugin_click_through_rate:
+      title: Ефективність конверсії плагінів реклами
+      description: "Звіт про ефективність реклами за оголошенням та місцем розташування"
+    ad_plugin_click_through_rate_by_placement:
+      title: Продуктивність плагінів реклами за місцем розташування
+      description: "Звіт про ефективність оголошень за місцями розташування"
+    ad_plugin_click_through_rate_by_ad_type:
+      title: Ефективність плагінів реклами за типом реклами
+      description: "Звіт про ефективність реклами за типом реклами"
+  errors:
+    already_clicked: "Клік вже записано"
   site_settings:
     discourse_adplugin_enabled: Увімкнути Discourse Adplugin
     no_ads_for_personal_messages: "Не показуйте оголошення під час перегляду особистих повідомлень"

@@ -78,6 +78,7 @@ hy:
         summary: "Ամփոփումը"
         username: "Օգտանուն"
         total_requests: "Ընդհանուր հարցումներ"
+        total: "Ամբողջ"
       ai_persona:
         back: "Ետ"
         name: "Անուն"

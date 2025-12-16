@@ -79,6 +79,7 @@ gl:
         summary: "Resumo"
         username: "Nome de usuario"
         total_requests: "Solicitudes totais"
+        total: "Total"
         periods:
           custom: "Personalizar..."
       ai_persona:

@@ -78,6 +78,7 @@ sr:
       usage:
         summary: "Rezime"
         username: "Korisničko Ime"
+        total: "Ukupno"
         periods:
           last_day: "Последња 24 сата"
       ai_persona:

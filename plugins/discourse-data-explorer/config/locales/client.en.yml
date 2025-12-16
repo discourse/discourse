@@ -43,6 +43,7 @@ en:
           <li><b>text</b> - variable-length character string</li>
           <li><b>boolean</b> – true/false</li>
           <li><b>date</b> - calendar date (year, month, day)</li>
+          <li><b>current_user_id</b> - ID of the user running the query (auto-injected, useful for group reports)</li>
           </ul>
           <p>For more information on data types, visit
           <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>this website</a>.</p>"

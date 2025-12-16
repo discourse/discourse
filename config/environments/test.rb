@@ -91,4 +91,7 @@ Discourse::Application.configure do
       ActiveSupport.on_load(:active_record_postgresqladapter) { self.create_unlogged_tables = true }
     end
   end
+
+  # This is a NGINX specific header
+  config.action_dispatch.x_sendfile_header = nil
 end

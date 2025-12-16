@@ -43,12 +43,13 @@
 
 .rewind-callout {
   position: relative;
-  display: inline-block;
+  display: flex;
   transition: transform 200ms ease;
 
   .btn.no-text.--special-kbd {
-    top: 0.75em;
+    top: 0.5em;
     right: 1em;
+    position: absolute;
     font-size: var(--font-down-3);
 
     @media screen and (width <= 639px) {

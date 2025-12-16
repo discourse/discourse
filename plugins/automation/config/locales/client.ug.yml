@@ -66,6 +66,12 @@ ug:
         text:
           label: تېكىست
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: سەھىپە
+            tags:
+              label: بەلگە
         not_found: ئاپتوماتلاشتۇرۇشقا ئىشلىتىدىغان «%{automation}» نىڭ قوزغاتقۇچ «%{trigger}» نى تاپالمىدى، مۇناسىۋەتلىك قىستۇرمىنىڭ ئورنىتىلغانلىقىنى جەزملەڭ.
         user_badge_granted:
           fields:

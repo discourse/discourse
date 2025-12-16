@@ -8,6 +8,7 @@ export default <template>
     @fetchMorePosts={{@controller.loadMore}}
     @emptyText={{i18n "notifications.empty"}}
     @additionalItemClasses="user-stream-item"
+    @titlePath="titleHtml"
     @showUserInfo={{false}}
     class="user-stream"
   >

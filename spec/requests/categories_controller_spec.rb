@@ -246,15 +246,8 @@ RSpec.describe CategoriesController do
         end
 
         it "does not include the sort parameter in more_topics_url" do
-          # we need to create more topics for more_topics_url to be serialized
           SiteSetting.categories_topics = 5
-          Fabricate.times(
-            5,
-            :topic,
-            category: category,
-            created_at: 1.day.ago,
-            bumped_at: 1.day.ago,
-          )
+          Fabricate.times(5, :topic, category:, created_at: 1.day.ago, bumped_at: 1.day.ago)
 
           get "/categories_and_latest.json"
           expect(response.status).to eq(200)
@@ -277,15 +270,8 @@ RSpec.describe CategoriesController do
         end
 
         it "includes the sort parameter in more_topics_url" do
-          # we need to create more topics for more_topics_url to be serialized
           SiteSetting.categories_topics = 5
-          Fabricate.times(
-            5,
-            :topic,
-            category: category,
-            created_at: 1.day.ago,
-            bumped_at: 1.day.ago,
-          )
+          Fabricate.times(5, :topic, category:, created_at: 1.day.ago, bumped_at: 1.day.ago)
 
           get "/categories_and_latest.json"
           expect(response.status).to eq(200)
@@ -349,7 +335,6 @@ RSpec.describe CategoriesController do
       CategoryFeaturedTopic.feature_topics
       SiteSetting.desktop_category_page_style = "categories_with_featured_topics"
 
-      # warmup
       get "/categories.json"
       expect(response.status).to eq(200)
 
@@ -831,6 +816,39 @@ RSpec.describe CategoriesController do
           expect(UserHistory.count).to eq(6)
         end
 
+        it "does not log false permission changes when everyone group name is localized" do
+          original_name = Group[:everyone].name
+          localized_name = "jeder"
+
+          Group[:everyone].update!(name: localized_name)
+
+          category_with_no_permissions = Fabricate(:category, user: admin)
+          category_with_no_permissions.category_groups.destroy_all
+
+          put "/categories/#{category_with_no_permissions.id}.json",
+              params: {
+                name: category_with_no_permissions.name,
+                color: category_with_no_permissions.color,
+                text_color: category_with_no_permissions.text_color,
+                slug: category_with_no_permissions.slug,
+                permissions: {
+                  localized_name => CategoryGroup.permission_types[:full],
+                },
+              }
+
+          expect(response.status).to eq(200)
+
+          expect(
+            UserHistory.exists?(
+              action: UserHistory.actions[:change_category_settings],
+              category_id: category_with_no_permissions.id,
+              subject: "permissions",
+            ),
+          ).to eq(false)
+        ensure
+          Group[:everyone].update!(name: original_name)
+        end
+
         it "updates per-category settings correctly" do
           category.require_topic_approval = false
           category.require_reply_approval = false
@@ -1129,7 +1147,7 @@ RSpec.describe CategoriesController do
   end
 
   describe "#categories_and_topics" do
-    before { 10.times.each { Fabricate(:topic) } }
+    before { 10.times { Fabricate(:topic) } }
 
     it "works when SiteSetting.categories_topics is non-null" do
       SiteSetting.categories_topics = 5

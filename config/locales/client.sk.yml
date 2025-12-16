@@ -872,7 +872,6 @@ sk:
         claimed: "Nárokované"
         claimed_by: "Nárokované používateľom %{username} · %{relativeDate}"
         reviewed: "Preskúmal"
-        reviewed_by: "Preskúmal %{username} - %{relativeDate}"
         view_conversation: "zobrazenie PM"
         note_added: "Poznámka moderátora"
         note_added_by: "Moderátorská poznámka od %{username} - %{relativeDate}"
@@ -2976,6 +2975,8 @@ sk:
       upload_title: "Upload"
       upload_description: "tu zadajte popis uploadu"
       list_item: "Položka zoznamu"
+      wrap_modal:
+        apply: "Použi"
       help: "Nápoveda úprav pre Markdown"
       exit_fullscreen_prompt: "Stlačením <kbd>ESC</kbd> ukončíte celú obrazovku"
       modal_ok: "OK"
@@ -3033,6 +3034,7 @@ sk:
         zoom_out: "Zmenšiť veľkosť obrázka"
         zoom_in: "Zväčšiť veľkosť obrázka"
         remove: "Odstrániť obrázok"
+      image: "Obrázok"
       image_scale_button: "Zmeniť veľkosť obrázka na %{percent}%"
       delete_image_button: Odstrániť obrázok
       toggle_image_grid: Prepnúť mriežku obrázkov
@@ -5673,6 +5675,11 @@ sk:
           sub_pages:
             common_settings:
               title: "Nastavení"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Zistite viac"
         logo:
           title: "Logo"
           header_description: "Nakonfigurujte logá a ikony používané na celej vašej stránke"

@@ -1447,19 +1447,7 @@ da:
     tl3_requires_max_flagged: "Brugere må ikke have mere end x indlæg anmeldt af x forskellige brugere i løbet a de sidste (tl3 time period) dage for at kvalificere sig til forfremmelse til tillidsniveau 3. Hvor x er indstillingens værdi (0 eller mere)."
     tl3_promotion_min_duration: "Det mindste antal dage, som en forfremmelse til tillidsniveau 3 varer, før en bruger kan degraderes tilbage til tillidsniveau 2."
     tl3_links_no_follow: "Fjern ikke rel=nofollow fra links indsendt af tillidsniveau 3-brugere."
-    min_trust_to_create_topic: "Det mindste tillidsniveau der skal til for at oprette et nyt emne."
     allow_flagging_staff: "Hvis aktiveret, kan brugerne anmelde indlæg fra personalekonti."
-    min_trust_to_edit_wiki_post: "Det mindste tillidsniveau, der kræves for at redigere indlæg markeret som wiki."
-    min_trust_to_edit_post: "Det mindste tillidsniveau, der kræves for at redigere indlæg."
-    min_trust_to_allow_self_wiki: "Det mindste tillidsniveau, der kræves for at gøre brugerens egen post til wiki."
-    min_trust_to_send_email_messages: "Det mindste tillidsniveau, der kræves for at sende personlige beskeder via e-mail."
-    min_trust_to_flag_posts: "Det mindste tillidsniveau, der kræves for at anmelde indlæg"
-    min_trust_to_post_links: "Det mindste tillidsniveau, der kræves for at medtage links i indlæg"
-    min_trust_to_post_embedded_media: "Det mindste tillidsniveau, der kræves for at indlejre medieelementer i et indlæg"
-    min_trust_level_to_allow_profile_background: "Det mindste tillidsniveau, der kræves for at overføre en profilbaggrund"
-    min_trust_level_to_allow_user_card_background: "Det mindste tillidsniveau, der kræves for at overføre en brugerkort baggrund"
-    min_trust_level_to_allow_invite: "Det mindste tillidsniveau, der kræves for at invitere brugere"
-    min_trust_level_to_allow_ignore: "Det mindste tillidsniveau, der kræves for at ignorere brugere"
     allowed_link_domains: "Domæner, som brugere kan linke til, selvom de ikke har det rette tillidsniveau til at sende links"
     newuser_max_links: "Hvor mange links en ny bruger kan føje til et indlæg."
     newuser_max_embedded_media: "Hvor mange integrerede medieelementer en ny bruger kan føje til et indlæg."
@@ -1508,7 +1496,6 @@ da:
     pop3_polling_password: "Adgangskoden til POP3-kontoen til kontrol for e-mail."
     pop3_polling_delete_from_server: "Slet e-mails fra serveren. BEMÆRK: Hvis du deaktiverer dette, skal du manuelt rense din postindbakke"
     log_mail_processing_failures: "Log alle e-mail-behandlingsfejl til <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in_min_trust: "Det mindste tillidsniveau, som en bruger skal have, skal have for have lov til at oprette nye emner via e-mail."
     enable_imap: "Aktiver IMAP til synkronisering af gruppemeddelelser."
     enable_imap_write: "Aktiver to-vejs IMAP-synkronisering. Hvis deaktiveret, er alle skriveoperationer på IMAP-konti deaktiveret."
     enable_imap_idle: "Brug IMAP-IDLE-mekanismen til at vente på nye e-mails."
@@ -1517,7 +1504,6 @@ da:
     delete_all_posts_max: "Det maksimale antal indlæg der kan slettes på én gang med “Slet alle indlæg”-knappen. Hvis en bruger har mere end dette antal indlæg, kan indlæggene ikke slettes på én gang og brugeren kan ikke slettes."
     email_editable: "Lad brugerne skifte deres e-mail-adresse efter oprettelsen."
     logout_redirect: "Placering at omdirigere browseren til efter logout (fx: https://example.dk/logud)"
-    allow_uploaded_avatars: "Tillad brugere at uploade brugerdefinerede profilbilleder."
     default_avatars: "URL'er til avatarer, der vil blive brugt som standard for nye brugere, indtil de ændrer dem."
     automatically_download_gravatars: "Download Gravatars til brugere ved oprettelse af konto eller ændring af e-mail."
     digest_topics: "Maximalt antal af populære emner vist i mails med sammendrag."
@@ -1583,7 +1569,6 @@ da:
     remove_muted_tags_from_latest: "Vis ikke emner, der kun er tagget med tavse tags på den seneste emneliste."
     force_lowercase_tags: "Tving alle nye tags til at kun benytte små bogstaver."
     shared_drafts_category: "Aktiver funktionen Delte kladder ved at angive en kategori for emneudkast. Emner i denne kategori vil blive undertrykt fra emnelister for personalebrugere."
-    shared_drafts_min_trust_level: "Tillad brugere at se og redigere Delte kladder."
     shared_drafts_allowed_groups: "Tillad brugere i disse grupper at se og redigere delte kladder."
     push_notifications_icon: "Emblemikonet, der vises i meddelelseshjørnet. Et monokromatisk PNG på 96×96 med gennemsigtighed anbefales."
     allow_changing_staged_user_tracking: "Tillad, at en forhåndsoprettet brugers kategori- og mærke notifikationsindstillinger ændres af en administratorbruger."
@@ -3136,6 +3121,9 @@ da:
   onebox:
     github:
       closed: "lukket"
+      status_date:
+        approved: "godkendt"
+        closed: "lukket"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nævnte dig i "%{topic}" - %{site_title}'

@@ -80,6 +80,7 @@ nb_NO:
         summary: "Sammendrag"
         username: "Brukernavn"
         total_requests: "Totalt forespørsler"
+        total: "Totalt"
         periods:
           last_day: "Siste 24 timer"
       ai_persona:

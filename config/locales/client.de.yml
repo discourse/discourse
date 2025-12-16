@@ -862,7 +862,6 @@ de:
         claimed: "Übernommen"
         claimed_by: "Übernommen von %{username} · %{relativeDate}"
         reviewed: "Überprüft"
-        reviewed_by: "Überprüft von %{username} · %{relativeDate}"
         view_conversation: "PM anzeigen"
         note_added: "Moderator-Notiz"
         note_added_by: "Moderator-Notiz von %{username} · %{relativeDate}"
@@ -2835,6 +2834,8 @@ de:
       ulist_title: "Liste mit Aufzählungszeichen"
       list_item: "Listenelement"
       toggle_direction: "Schreibrichtung wechseln"
+      wrap_modal:
+        apply: "Anwenden"
       help: "Hilfe zur Markdown-Formatierung"
       collapse: "Editor minimieren"
       open: "Editor öffnen"
@@ -2901,6 +2902,7 @@ de:
         zoom_out: "Bildgröße verkleinern"
         zoom_in: "Bildgröße vergrößern"
         remove: "Bild entfernen"
+      image: "Bild"
       image_scale_button: "Bild auf %{percent} % skalieren"
       delete_image_button: Bild löschen
       toggle_image_grid: Bildraster umschalten
@@ -5348,6 +5350,11 @@ de:
               title: "Soziale Netzwerke"
             discourseconnect:
               title: "Discourse Connect"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Mehr erfahren"
         logo:
           title: "Logo"
           header_description: "Konfiguriere die Logos und Symbole, die auf deiner Website verwendet werden"

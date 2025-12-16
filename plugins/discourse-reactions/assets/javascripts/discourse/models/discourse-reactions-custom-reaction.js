@@ -1,5 +1,7 @@
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
+import { emojiUnescape } from "discourse/lib/text";
+import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Post from "discourse/models/post";
 import RestModel from "discourse/models/rest";
@@ -22,6 +24,7 @@ export default class CustomReaction extends RestModel {
   }
 
   static flattenForPostList(reaction) {
+    const title = reaction.topic.title;
     return {
       // Original reaction data
       ...reaction,
@@ -40,7 +43,8 @@ export default class CustomReaction extends RestModel {
       topic_id: reaction.post.topic_id,
       post_type: reaction.post.post_type,
       url: reaction.post.url,
-      title: reaction.topic.title,
+      title,
+      titleHtml: title && emojiUnescape(escapeExpression(title)),
       category: reaction.category,
       created_at: reaction.created_at,
     };
