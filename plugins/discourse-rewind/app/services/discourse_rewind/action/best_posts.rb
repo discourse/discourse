@@ -36,11 +36,12 @@ module DiscourseRewind
         return FakeData if should_use_fake_data?
         best_posts =
           Post
-            .joins(:topic)
+            .public_posts
+            .joins(topic: :category)
             .where(user_id: user.id)
             .where(posts: { created_at: date, deleted_at: nil })
             .where("post_number > 1")
-            .where.not(topics: { archetype: Archetype.private_message })
+            .where("NOT categories.read_restricted")
             .order("like_count DESC NULLS LAST, posts.created_at ASC")
             .limit(3)
             .select(:post_number, :topic_id, :like_count, :reply_count, :raw, :cooked)
