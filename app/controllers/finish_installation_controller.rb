@@ -91,7 +91,10 @@ class FinishInstallationController < ApplicationController
               )
       end
       SiteSetting.enable_discourse_id = true
+      # Since we're setting up Discourse ID, disable local logins
       SiteSetting.enable_local_logins = false
+      # Let ID set people's usernames
+      SiteSetting.auth_overrides_username = true
       @discourse_id_enabled = true
       @discourse_id_error = nil
     rescue StandardError => e
