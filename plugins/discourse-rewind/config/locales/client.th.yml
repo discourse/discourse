@@ -7,6 +7,10 @@
 th:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "ส่วนตัว"
+          public: "สาธารณะ"
       reports:
         chat_usage:
           messages: ข้อความ

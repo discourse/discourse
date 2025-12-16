@@ -276,7 +276,6 @@ fr:
     ai_bot:
       reply_error: "Il semble que notre système ait rencontré un problème inattendu en essayant de répondre.\n\n[details='Détails de l'erreur']\n%{details}\n[/details]"
       default_pm_prefix: "[MP de robot IA sans titre]"
-      thinking: "Réflexion..."
       personas:
         default_llm_required: "Le modèle LLM par défaut est requis avant d'activer la messagerie instantanée"
         cannot_delete_system_persona: "Les personnages du système ne peuvent pas être supprimés. Veuillez plutôt les désactiver"

@@ -7,6 +7,10 @@
 el:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Ιδιωτική"
+          public: "Δημόσια"
       reports:
         reading_time:
           title: Χρόνος ανάγνωσης

@@ -7,6 +7,10 @@
 lv:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Privāts"
+          public: "Publisks"
       reports:
         chat_usage:
           messages: ziņās

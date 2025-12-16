@@ -7,6 +7,10 @@
 et:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Privaatne"
+          public: "Avalik"
       reports:
         reading_time:
           title: Lugemise aeg

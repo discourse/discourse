@@ -276,7 +276,6 @@ pt_BR:
     ai_bot:
       reply_error: "Desculpe, parece que nosso sistema encontrou um problema inesperado ao tentar responder.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[MP de bot de IA não identificado]"
-      thinking: "Pensando..."
       personas:
         default_llm_required: "É preciso de um modelo de LLM padrão para ativar o bate-papo"
         cannot_delete_system_persona: "Personas de sistema não podem ser excluídas, desative"

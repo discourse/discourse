@@ -7,6 +7,10 @@
 bs_BA:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Privatno"
+          public: "Javno"
       reports:
         chat_usage:
           messages: poruke

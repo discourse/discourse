@@ -7,6 +7,10 @@
 ru:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Закрытое сообщество"
+          public: "Публичное"
       reports:
         reading_time:
           title: Время на прочтение

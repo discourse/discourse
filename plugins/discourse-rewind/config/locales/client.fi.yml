@@ -7,6 +7,10 @@
 fi:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Yksityinen"
+          public: "Julkinen"
       reports:
         reading_time:
           title: Lukuaika

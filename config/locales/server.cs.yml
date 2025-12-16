@@ -4201,12 +4201,18 @@ cs:
     nice_share:
       name: Zdařilé sdílení
       description: Sdílení příspěvku s 25 unikátními návštěvníky
+      long_description: |
+        Tento odznak je udělen za sdílení odkazu, na který kliklo 25 unikátních externích návštěvníků. Děkujeme za šíření informací o našich diskusích a o této komunitě.
     good_share:
       name: Dobré sdílení
       description: Sdílení příspěvku s 300 unikátními návštěvníky
+      long_description: |
+        Tento odznak je udělen za sdílení odkazu, na který kliklo 300 unikátních externích návštěvníků. Dobrá práce! Ukázali jste skvělou diskusi spoustě nových lidí a pomohli jste této komunitě růst.
     great_share:
       name: Výborné sdílení
       description: Sdílení příspěvku s 1000 unikátními návštěvníky
+      long_description: |
+        Tento odznak je udělen za sdílení odkazu, na který kliklo 1000 unikátních externích návštěvníků. Wow! Propagovali jste zajímavou diskusi mezi obrovským množstvím nových čtenářů a pomohli jste nám tak výrazně rozšířit naši komunitu!
     first_like:
       name: První Líbí se
       description: Líbil se příspěvek

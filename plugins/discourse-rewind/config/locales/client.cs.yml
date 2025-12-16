@@ -17,10 +17,14 @@ cs:
       loading: "Probíhá výpočet, nepropadejte panice..."
       preferences:
         disable_rewind: "Zakázat Discourse Ohlédnutí. Tímto skryjete roční shrnutí aktivity ve vašem profilu a v avataru."
-      profile_link: "Podívej se na svoje ohlédnutí roku %{rewindYear}"
+      profile_link: "Tvé ohlédnutí za rokem %{rewindYear}"
+      share:
+        toggle_label:
+          private: "Soukromá"
+          public: "Veřejná"
       reports:
         activity_calendar:
-          title: Kalendář aktivit
+          title: Kalendář činnosti
           cell_title:
             visited_no_posts: "Dne %{date}, jsi se přihlásil/a a nahlédl/a, ale nepřidal/a jsi žádné příspěvky."
             visited_with_posts:
@@ -33,7 +37,7 @@ cs:
           title: Použití slov
         reading_time:
           title: Čas čtení
-          book_comparison: "Strávila jsi <code>%{readingTitme}</code> čtením na našich stránkách! Tolik času by ti trvalo přečíst <i>%{bookTitle}</i>"
+          book_comparison: "Strávil/a jsi <code>%{readingTitme}</code> čtením na našich stránkách! Tolik času by ti trvalo přečíst <i>%{bookTitle}</i>"
         post_used_reactions:
           title: Nejčastěji používané reakce v tématech
           total_number: "Celkový počet reakcí: %{count}"
@@ -159,7 +163,7 @@ cs:
           topics_with_new_users: Témata s novými uživateli
           your_contributions_helped: tvé příspěvky pomohly
         time_of_day_activity:
-          title: Denní rytmus aktivity
+          title: Denní rytmus činnosti
           play_button: Přehraj si aktivitu jako zvuk
           stop_button: Zastavit přehrávání zvuku
         writing_analysis:

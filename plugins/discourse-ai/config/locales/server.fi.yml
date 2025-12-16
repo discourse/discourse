@@ -276,7 +276,6 @@ fi:
     ai_bot:
       reply_error: "Näyttää siltä, että järjestelmässä tapahtui odottamaton ongelma, kun se yritti vastata.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Nimetön tekoälybotin yksityisviesti]"
-      thinking: "Ajattelu käynnissä..."
       personas:
         default_llm_required: "Oletus-LLM-malli vaaditaan ennen chatin käyttöönottoa"
         cannot_delete_system_persona: "Järjestelmäpersoonia ei voi poistaa, poista se sen sijaan käytöstä"

@@ -7,6 +7,10 @@
 id:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Pribadi"
+          public: "Umum"
       reports:
         reading_time:
           title: Waktu bacaan

@@ -7,6 +7,10 @@
 ja:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "非公開"
+          public: "公開"
       reports:
         reading_time:
           title: 閲覧時間

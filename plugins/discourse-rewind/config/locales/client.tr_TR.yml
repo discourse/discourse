@@ -7,6 +7,10 @@
 tr_TR:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Özel"
+          public: "Genel"
       reports:
         reading_time:
           title: Okuma süresi

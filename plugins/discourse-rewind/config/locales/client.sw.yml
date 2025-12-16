@@ -7,6 +7,10 @@
 sw:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Binafsi"
+          public: "Umma"
       reports:
         reading_time:
           title: Mda wa kusoma
