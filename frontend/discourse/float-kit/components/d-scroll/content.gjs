@@ -21,9 +21,13 @@ export default class DScrollContent extends Component {
 
     if (controller?.overflowX) {
       parts.push("overflow-x");
+    } else {
+      parts.push("no-overflow-x");
     }
     if (controller?.overflowY) {
       parts.push("overflow-y");
+    } else {
+      parts.push("no-overflow-y");
     }
     if (controller?.trapX) {
       parts.push("trap-x");

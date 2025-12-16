@@ -266,17 +266,21 @@
   grid-column: 4 !important;
 }
 
-// Like Silk (c3 cCa cIb): content sticky positioning when overflow-x AND trap-x active
+// Like Silk (c3 cCa cIb): content sticky positioning when NO overflow-x AND trap-x active
+// cCa = scrollTrapX:true, cIb = overflowX:false
+// Sticky prevents content shift during overscroll when content is smaller than container
 // Per Silk source.css lines 1616-1620
-[data-d-scroll~="content"][data-d-scroll~="overflow-x"][data-d-scroll~="trap-x"] {
+[data-d-scroll~="content"][data-d-scroll~="no-overflow-x"][data-d-scroll~="trap-x"] {
   position: sticky !important;
   left: 0 !important;
   right: 0 !important;
 }
 
-// Like Silk (c3 cDa cJb): content sticky positioning when overflow-y AND trap-y active
+// Like Silk (c3 cDa cJb): content sticky positioning when NO overflow-y AND trap-y active
+// cDa = scrollTrapY:true, cJb = overflowY:false
+// Sticky prevents content shift during overscroll when content is smaller than container
 // Per Silk source.css lines 1623-1628
-[data-d-scroll~="content"][data-d-scroll~="overflow-y"][data-d-scroll~="trap-y"] {
+[data-d-scroll~="content"][data-d-scroll~="no-overflow-y"][data-d-scroll~="trap-y"] {
   position: sticky !important;
   top: 0 !important;
   bottom: 0 !important;

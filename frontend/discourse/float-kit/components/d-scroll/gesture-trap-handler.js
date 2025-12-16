@@ -205,6 +205,11 @@ export default class GestureTrapHandler {
           }
         } else {
           this.isAtStart = false;
+          if (axis === "x") {
+            this.xTrap = this.isAtEnd ? values.xEnd : false;
+          } else {
+            this.yTrap = this.isAtEnd ? values.yEnd : false;
+          }
         }
       } else if (entry.target === this.endSpyElement) {
         if (entry.isIntersecting) {
@@ -216,6 +221,11 @@ export default class GestureTrapHandler {
           }
         } else {
           this.isAtEnd = false;
+          if (axis === "x") {
+            this.xTrap = this.isAtStart ? values.xStart : false;
+          } else {
+            this.yTrap = this.isAtStart ? values.yStart : false;
+          }
         }
       }
     }
