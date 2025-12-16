@@ -75,7 +75,7 @@ export default class TagShowRoute extends DiscourseRoute {
       {}
     );
     const topicFilter = this.navMode;
-    const tagId = name ? name.toLowerCase() : NONE;
+    const tagName = name ? name.toLowerCase() : NONE;
     let filter;
 
     if (category) {
@@ -86,9 +86,9 @@ export default class TagShowRoute extends DiscourseRoute {
         filter += this.noSubcategories ? `/${NONE}` : `/${ALL}`;
       }
 
-      filter += `/${tagId}/l/${topicFilter}`;
+      filter += `/${tagName}/l/${topicFilter}`;
     } else if (additionalTags) {
-      filter = `tags/intersection/${tagId}/${additionalTags.join("/")}`;
+      filter = `tags/intersection/${tagName}/${additionalTags.join("/")}`;
 
       if (transition.to.queryParams["category"]) {
         filteredQueryParams["category"] = transition.to.queryParams["category"];
@@ -97,7 +97,7 @@ export default class TagShowRoute extends DiscourseRoute {
         );
       }
     } else {
-      filter = `tag/${tagId}/l/${topicFilter}`;
+      filter = `tag/${tagName}/l/${topicFilter}`;
     }
 
     if (
@@ -110,7 +110,7 @@ export default class TagShowRoute extends DiscourseRoute {
       return this.router.replaceWith(
         "tags.showCategoryNone",
         params.category_slug_path_with_id,
-        tagId
+        tagName
       );
     }
 
