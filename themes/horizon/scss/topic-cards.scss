@@ -466,6 +466,10 @@
     svg {
       color: var(--primary-600);
     }
+
+    .number {
+      white-space: nowrap;
+    }
   }
 
   .bulk-select {

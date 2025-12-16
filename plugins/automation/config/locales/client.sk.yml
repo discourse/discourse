@@ -10,6 +10,7 @@ sk:
       logs:
         staff_actions:
           actions:
+            update_automation: aktualizácia automatizácie
             delete_automation: vymazať automatizáciu
     discourse_automation:
       title: Automatizácia
@@ -67,6 +68,12 @@ sk:
         text:
           label: Text
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategórie
+            tags:
+              label: Značky
         not_found: Nepodarilo sa nájsť spúšťač `%{trigger}` pre automatizáciu `%{automation}`, skontrolujte, či je nainštalovaný priradený plugin
         user_badge_granted:
           fields:

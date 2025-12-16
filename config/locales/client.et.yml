@@ -1491,6 +1491,8 @@ et:
       upload_title: "Laadi üles"
       upload_description: "sisesta üleslaaditu kirjeldus siia"
       list_item: "Loendi element"
+      wrap_modal:
+        apply: "Rakenda"
       help: "Markdowni redigeerimisspikker"
       modal_ok: "Sobib"
       cant_send_pm: "Kahjuks ei saa sa kasutajale %{username} sõnumit saata."
@@ -1509,6 +1511,7 @@ et:
         shared_draft:
           label: "Jagatud mustand"
       ignore: "Ignoreeri"
+      image: "pilt"
     notifications:
       tooltip:
         regular:
@@ -1655,6 +1658,9 @@ et:
         clear_all: "Puhasta kõik"
         unlist_topics: "Eemalda teemad loetelust"
         delete: "Kustuta teemad"
+        delete_topics_count:
+          one: "Kustuta teema"
+          other: "Kustuta teemad"
         dismiss: "Ignoreeri"
         dismiss_read: "Ignoreeri lugemata"
         dismiss_button: "Ignoreeri..."
@@ -2748,6 +2754,8 @@ et:
           sub_pages:
             common_settings:
               title: "Seaded"
+        discourse_id:
+          learn_more: "Uuri veel"
         logo:
           form:
             mobile: "Mobiil"

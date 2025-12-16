@@ -2296,6 +2296,8 @@ hy:
       upload_title: "Վերբեռնել"
       upload_description: "գրեք վերբեռնման նկարագրությունն այստեղ"
       list_item: "Ցանկի տարր"
+      wrap_modal:
+        apply: "Կիրառել"
       help: "Markdown-ի խմբագրման օգնություն"
       modal_ok: "Լավ"
       cant_send_pm: "Ներողություն, Դուք չեք կարող հաղորդագրություն ուղարկել %{username}-ին:"
@@ -2328,6 +2330,7 @@ hy:
           label: "Փոխանջատել թեմայի բարձրացումը "
           desc: "Պատասխանել՝ առանց պատասխանի վերջին ամսաթիվը փոխելու"
       ignore: "Անտեսել"
+      image: "նկար"
       link_toolbar:
         copy: "Պատճենել հղումը"
         link_copied: "Հղումը պատճենված է:"
@@ -2548,6 +2551,9 @@ hy:
         unlist_topics: "Թեմաները Ցուցակից Հանել"
         relist_topics: "Վերացանկավորել Թեմաները"
         delete: "Ջնջել Թեմաները"
+        delete_topics_count:
+          one: "Ջնջել Թեման"
+          other: "Ջնջել Թեմաները"
         dismiss: "Չեղարկել"
         dismiss_read: "Չեղարկել բոլոր չկարդացածները"
         dismiss_button: "Չեղարկել..."
@@ -3850,6 +3856,8 @@ hy:
           sub_pages:
             common_settings:
               title: "Կարգավորումներ"
+        discourse_id:
+          learn_more: "Իմանալ ավելին"
         logo:
           form:
             mobile: "Հեռախոսային"

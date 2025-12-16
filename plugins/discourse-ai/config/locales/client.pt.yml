@@ -152,6 +152,7 @@ pt:
         last_seven_days: "Últimos 7 Dias"
         enable: "Ativar"
         test_modal:
+          llm: "LLM"
           spam: "Spam"
       usage:
         summary: "Resumo"
@@ -159,6 +160,7 @@ pt:
         all_features: "Todas as funcionalidades"
         username: "Nome de Utilizador"
         total_requests: "Total de pedidos"
+        total: "Total"
         periods:
           last_day: "Últimas 24 horas"
           custom: "Personalizar..."

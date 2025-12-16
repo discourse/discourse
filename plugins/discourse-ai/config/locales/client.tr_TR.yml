@@ -317,6 +317,8 @@ tr_TR:
           post_url_label: "Gönderi URL'si veya kimliği"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 veya gönderi kimliği"
           result: "Sonuç"
+          llm: "LLM"
+          system_prompt: "Sistem İstemi"
           scan_log: "Tarama günlüğü"
           run: "Testi çalıştır"
           spam: "İstenmeyen içerik"
@@ -353,6 +355,7 @@ tr_TR:
         no_users: "Kullanıcı kullanım verisi bulunamadı"
         no_models: "Model kullanım verisi bulunamadı"
         no_features: "Özellik kullanım verisi bulunamadı"
+        total: "Toplam"
         subheader_description: "Token'lar, LLM'lerin metinleri anlamak ve üretmek için kullandıkları temel birimlerdir, kullanım verileri maliyetleri etkileyebilir"
         stat_tooltips:
           total_requests: "Discourse aracılığıyla LLM'lere gönderilen tüm talepler"
@@ -655,7 +658,6 @@ tr_TR:
           reasoning_tokens: "Muhakeme için kullanılan token sayısı"
           disable_temperature: "Sıcaklığı devre dışı bırakın (bazı düşünme modelleri sıcaklığı desteklemez)"
           disable_top_p: "Üst P'yi devre dışı bırakın (bazı düşünme modelleri üst P'yi desteklemez)"
-          enable_responses_api: "Yanıt API'sini etkinleştirin (belirli OpenAI modellerinde gerekli)"
       related_topics:
         title: "İlgili konular"
         pill: "İlgili"
@@ -783,6 +785,7 @@ tr_TR:
         llm: "Model"
         pm_warning: "YZ sohbet robotu mesajları moderatörler tarafından düzenli olarak izlenir."
         cancel_streaming: "Yanıtı durdur"
+        try_again: "Tekrar deneyin"
         default_pm_prefix: "[Adsız YZ bot kişisel mesajı]"
         shortcut_title: "YZ botuyla kişisel mesaj başlatın"
         shortcut_link: "YZ botu"

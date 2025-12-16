@@ -2450,6 +2450,8 @@ nb_NO:
       upload_title: "Bilde"
       upload_description: "beskriv bildet her"
       list_item: "Listeelement"
+      wrap_modal:
+        apply: "Bruk"
       help: "Hjelp for redigering i Markdown"
       exit_fullscreen_prompt: "Trykk <kbd>ESC</kbd> for å gå ut av fullskjerm"
       modal_ok: "OK"
@@ -2502,6 +2504,7 @@ nb_NO:
         title: "Legg til bildebeskrivelse"
       image_toolbar:
         alt_text: "Legg til bildebeskrivelse"
+      image: "bilde"
       image_scale_button: "Skalere bildet til %{percent}%."
       delete_image_button: Slett bilde
       toggle_image_grid: Veksle mellom bilderutenett
@@ -2826,6 +2829,9 @@ nb_NO:
         reset_bump_dates: "Tilbakestill støtdatoer"
         defer: "Merk ulest"
         delete: "Slett emner"
+        delete_topics_count:
+          one: "Slett emne"
+          other: "Slett emner"
         dismiss: "Avvis"
         dismiss_read: "Avvis alle uleste"
         dismiss_read_with_selected:
@@ -4392,6 +4398,8 @@ nb_NO:
           sub_pages:
             common_settings:
               title: "Innstillinger"
+        discourse_id:
+          learn_more: "Finn ut mer"
         logo:
           form:
             mobile: "Mobil"

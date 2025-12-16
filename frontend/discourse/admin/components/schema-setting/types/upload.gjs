@@ -11,7 +11,7 @@ export default class SchemaSettingTypeUpload extends Component {
   @action
   uploadDone(upload) {
     this.uploadUrl = upload.url;
-    this.args.onChange(upload.url);
+    this.args.onChange(upload.id);
   }
 
   @action
@@ -27,7 +27,7 @@ export default class SchemaSettingTypeUpload extends Component {
       @onUploadDeleted={{this.uploadDeleted}}
       @additionalParams={{hash for_site_setting=true}}
       @type="site_setting"
-      @id={{concat "schema-field-upload-" @setting.setting}}
+      @id={{concat "schema-field-upload-" @setting.setting "-" @name}}
       @allowVideo={{true}}
     />
 

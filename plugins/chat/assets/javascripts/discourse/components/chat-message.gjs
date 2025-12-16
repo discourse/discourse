@@ -63,7 +63,7 @@ export default class ChatMessage extends Component {
   toggleCheckIfPossible = modifier((element) => {
     let addedListener = false;
 
-    const handler = () => {
+    const handler = (event) => {
       if (!this.pane.selectingMessages) {
         return;
       }

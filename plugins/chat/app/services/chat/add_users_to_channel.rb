@@ -48,7 +48,7 @@ module Chat
              class_name: Chat::DirectMessageChannel::Policy::MaxUsersExcess
 
       transaction do
-        step :upsert_memberships
+        step :create_memberships
         step :recompute_users_count
         step :notice_channel
       end
@@ -75,7 +75,7 @@ module Chat
       ) + channel.chatable.users.where.not(id: guardian.user)
     end
 
-    def upsert_memberships(channel:, target_users:)
+    def create_memberships(channel:, target_users:)
       always_level = ::Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always]
 
       memberships =
@@ -97,7 +97,7 @@ module Chat
       end
 
       context[:added_user_ids] = ::Chat::UserChatChannelMembership
-        .upsert_all(
+        .insert_all(
           memberships,
           unique_by: %i[user_id chat_channel_id],
           returning: Arel.sql("user_id, (xmax = '0') as inserted"),
@@ -105,7 +105,7 @@ module Chat
         .select { |row| row["inserted"] }
         .map { |row| row["user_id"] }
 
-      ::Chat::DirectMessageUser.upsert_all(
+      ::Chat::DirectMessageUser.insert_all(
         context.added_user_ids.map do |id|
           {
             user_id: id,

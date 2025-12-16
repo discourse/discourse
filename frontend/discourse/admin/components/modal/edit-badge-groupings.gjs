@@ -51,7 +51,7 @@ export default class EditBadgeGroupings extends Component {
         data: { ids: groupIds, names },
         type: "POST",
       });
-      this.workingCopy.clear();
+      this.workingCopy.length = 0;
       data.badge_groupings.forEach((badgeGroup) => {
         this.workingCopy.push(
           this.store.createRecord("badge-grouping", {

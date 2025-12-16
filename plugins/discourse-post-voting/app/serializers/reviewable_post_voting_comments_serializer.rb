@@ -18,4 +18,8 @@ class ReviewablePostVotingCommentSerializer < ReviewableSerializer
   def comment_cooked
     object.payload["comment_cooked"]
   end
+
+  def include_target_created_at?
+    true
+  end
 end

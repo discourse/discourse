@@ -106,6 +106,7 @@ cs:
         total_requests: "Celkem požadavků"
         request_tokens: "Tokeny požadavku"
         response_tokens: "Tokeny odpovědi"
+        total: "Celkem"
         periods:
           last_day: "Posledních 24 hodin"
           custom: "Vlastní…"
@@ -270,6 +271,7 @@ cs:
       ai_bot:
         pm_warning: "Zprávy chatbotů s umělou inteligencí jsou pravidelně monitorovány moderátory."
         cancel_streaming: "Zastavit odpověď"
+        try_again: "Zkusit znovu"
         default_pm_prefix: "[Nepojmenovaná SZ od AI bota]"
         shortcut_title: "Začněte SZ s AI botem"
         share: "Kopírovat konverzaci s AI"

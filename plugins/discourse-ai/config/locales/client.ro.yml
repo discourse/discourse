@@ -122,6 +122,7 @@ ro:
         summary: "Rezumat"
         username: "Nume utilizator"
         total_requests: "Total cereri"
+        total: "Total"
         periods:
           last_day: "Ultimele 24 de ore"
           custom: "Personalizat..."
@@ -227,6 +228,7 @@ ro:
           google: "Google"
           fake: "Personalizat"
       ai_bot:
+        try_again: "Încearcă din nou"
         exit: "ieșire bot IA"
         debug_ai_modal:
           request: "Cere"

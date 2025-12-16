@@ -809,7 +809,9 @@ zh_CN:
         claimed_by: "由 %{username} 申领 · %{relativeDate}"
         unclaimed_by: "%{username} 已取消认领 · %{relativeDate}"
         reviewed: "已审核"
-        reviewed_by: "由 %{username} 审核 · %{relativeDate}"
+        approved_by: "由 %{username} · %{relativeDate} 审核"
+        rejected_by: "被 %{username} · %{relativeDate} 拒绝"
+        ignored_by: "被 %{username} · %{relativeDate} 忽略"
         view_conversation: "查看私信"
         note_added: "版主注释"
         note_added_by: "%{username} 的版主注释 · %{relativeDate}"
@@ -2701,6 +2703,8 @@ zh_CN:
       ulist_title: "项目符号列表"
       list_item: "列表条目"
       toggle_direction: "切换方向"
+      wrap_modal:
+        apply: "应用"
       help: "Markdown 编辑帮助"
       collapse: "最小化编辑器面板"
       open: "打开编辑器面板"
@@ -2770,6 +2774,7 @@ zh_CN:
         remove: "移除图片"
         add_to_grid: "添加到网格"
         move_outside_grid: "移出网格"
+      image: "图片"
       grid_label: "这将以网格形式显示"
       image_scale_button: "将图片缩放至 %{percent}%"
       delete_image_button: 删除图片
@@ -3090,6 +3095,8 @@ zh_CN:
         reset_bump_dates: "重置顶帖日期"
         defer: "标记为未读"
         delete: "删除话题"
+        delete_topics_count:
+          other: "删除话题"
         dismiss: "忽略"
         dismiss_read: "忽略所有未读话题"
         dismiss_read_with_selected:
@@ -4508,6 +4515,7 @@ zh_CN:
       add_to_calendar: "添加到日历"
       google: "Google 日历"
       ics: "ICS"
+      default_title: "预定活动"
     tagging:
       all_tags: "所有标签"
       other_tags: "其他标签"
@@ -5099,7 +5107,7 @@ zh_CN:
           specific_groups_with_group_names:
             other: "群组 %{groupNames}"
         statuses:
-          pre_alpha: "Pre-Alpha"
+          experimental: "实验性"
           alpha: "Alpha"
           beta: "Beta"
           stable: "稳定"
@@ -5121,7 +5129,7 @@ zh_CN:
           impact_type_feature: "功能"
           impact_type_other: "其他"
           status_all: "所有状态"
-          status_pre_alpha: "Pre-Alpha"
+          status_experimental: "实验性"
           status_alpha: "Alpha"
           status_beta: "Beta"
           status_stable: "稳定"
@@ -5169,6 +5177,11 @@ zh_CN:
               title: "第三方登录"
             discourseconnect:
               title: "Discourse Connect"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "了解详情"
         logo:
           title: "徽标"
           header_description: "配置整个站点使用的徽标和图标"
@@ -5914,6 +5927,7 @@ zh_CN:
           user_destroyed: "用户被删除"
           user_suspended: "用户被封禁"
           user_unsuspended: "用户被解除封禁"
+          user_anonymized: "用户已被匿名化"
         reviewable_event:
           group_name: "可审核的事件"
           reviewable_created: "可审核的条目已就绪"

@@ -2525,6 +2525,8 @@ sq:
       upload_title: "Ngarko"
       upload_description: "shkruaj përshkrimin e skedarit të ngarkuar këtu"
       list_item: "Element liste"
+      wrap_modal:
+        apply: "Apliko"
       help: "Ndihmë mbi Markdown"
       exit_fullscreen_prompt: "Shtypni <kbd>ESC</kbd> për të dalë nga ekrani i plotë"
       modal_ok: "OK"
@@ -2574,6 +2576,7 @@ sq:
         title: "Shtoni përshkrimin e imazhit"
       image_toolbar:
         alt_text: "Shtoni përshkrimin e imazhit"
+      image: "imazh"
       image_scale_button: "Shkallezoni imazhin në %{percent}%"
       delete_image_button: Fshini imazhin
       toggle_image_grid: Ndryshoni rrjetin e imazhit
@@ -2902,6 +2905,9 @@ sq:
         reset_bump_dates: "Rivendos datat e përplasjes"
         defer: "Shëno si të palexuar"
         delete: "Fshi temat"
+        delete_topics_count:
+          one: "Fshi temën"
+          other: "Fshi temat"
         dismiss: "Hiqe"
         dismiss_read: "Hiq të gjitha temat e palexuara"
         dismiss_read_with_selected:
@@ -3999,6 +4005,8 @@ sq:
           sub_pages:
             common_settings:
               title: "Rregullimet"
+        discourse_id:
+          learn_more: "Mësoni më shumë"
         logo:
           form:
             mobile: "Mobile"

@@ -844,7 +844,6 @@ pt_BR:
         claimed: "Reivindicado(a)"
         claimed_by: "Reivindicado(a) por %{username} - %{relativeDate}"
         reviewed: "Revisado(a)"
-        reviewed_by: "Avaliado(a) por %{username} - %{relativeDate}"
         view_conversation: "visualizar MP"
         note_added: "Observação da moderação"
         note_added_by: "Observação da moderação por %{username} - %{relativeDate}"
@@ -2800,6 +2799,8 @@ pt_BR:
       ulist_title: "Lista em tópicos"
       list_item: "Item da lista"
       toggle_direction: "Alternar direção"
+      wrap_modal:
+        apply: "Aplicar"
       help: "Ajuda de edição de redução"
       exit_fullscreen_prompt: "Pressione <kbd>ESC</kbd> para sair da tela cheia"
       modal_ok: "Ok"
@@ -2858,6 +2859,7 @@ pt_BR:
         zoom_out: "Diminuir o tamanho da imagem"
         zoom_in: "Aumentar o tamanho da imagem"
         remove: "Remover imagem"
+      image: "imagem"
       image_scale_button: "Dimensionar imagem para %{percent}%"
       delete_image_button: Excluir Imagem
       toggle_image_grid: Alternar para grade de imagem
@@ -3198,6 +3200,9 @@ pt_BR:
         reset_bump_dates: "Redefinir datas de promoção"
         defer: "Marcar não lido"
         delete: "Excluir tópicos"
+        delete_topics_count:
+          one: "Excluir tópico"
+          other: "Excluir tópicos"
         dismiss: "Descartar"
         dismiss_read: "Descartar todos os não lidos"
         dismiss_read_with_selected:
@@ -5211,6 +5216,8 @@ pt_BR:
         enabled_for_options:
           everyone: "Todos(as)"
           staff: "Somente equipe"
+        statuses:
+          experimental: "Experimental"
         impact_roles:
           moderators: "Moderadores(as)"
           staff: "Equipe"
@@ -5220,6 +5227,7 @@ pt_BR:
           disabled: "Desativados(as)"
           impact_type_feature: "Recurso"
           impact_type_other: "Outras"
+          status_experimental: "Experimental"
       config:
         about:
           title: "Sobre seu site"
@@ -5256,6 +5264,11 @@ pt_BR:
           sub_pages:
             common_settings:
               title: "Definições"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Saiba mais"
         logo:
           title: "Logotipo"
           header_description: "Configure os ícones e logotipos usados no seu site"

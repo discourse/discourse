@@ -74,6 +74,7 @@ vi:
         summary: "Tóm tắt"
         username: "Tên tài khoản"
         total_requests: "Tổng số yêu cầu"
+        total: "Tổng số"
         periods:
           last_day: "24 giờ qua"
           custom: "Tùy chỉnh..."

@@ -319,8 +319,10 @@ uk:
         few: "Переглянути ще %{count} повідомлення"
         many: "Переглянути ще %{count} повідомлень"
         other: "Переглянути ще %{count} повідомлень"
+      your_chat_settings: "налаштування електронної пошти в чаті"
   unsubscribe:
     chat_summary:
+      select_title: "Налаштувати електронні листи зі звітами про чат на:"
       never: Ніколи
       when_away: Тільки коли офлайн
   category:

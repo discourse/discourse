@@ -368,6 +368,8 @@ de:
           post_url_label: "Beitrags-URL oder -ID"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 oder Beitrags-ID"
           result: "Ergebnis"
+          llm: "LLM"
+          system_prompt: "System-Eingabeaufforderung"
           scan_log: "Scan-Protokoll"
           run: "Test ausführen"
           spam: "Spam"
@@ -404,6 +406,7 @@ de:
         no_users: "Keine Benutzernutzungsdaten gefunden"
         no_models: "Keine Modellnutzungsdaten gefunden"
         no_features: "Keine Funktionsnutzungsdaten gefunden"
+        total: "Gesamt"
         subheader_description: "Token sind die Basiseinheiten, die LLM zum Verstehen und Generieren von Text verwenden. Nutzungsdaten können sich auf die Kosten auswirken"
         stat_tooltips:
           total_requests: "Alle Anfragen an LLMs über Discourse"
@@ -712,7 +715,6 @@ de:
           reasoning_tokens: "Anzahl der für die Argumentation verwendeten Token"
           disable_temperature: "Temperatur deaktivieren (einige Denkmodelle unterstützen keine Temperatur)"
           disable_top_p: "Top P deaktivieren (einige Denkmodelle unterstützen Top P nicht)"
-          enable_responses_api: "Aktiviere die Antwort-API (bei bestimmten OpenAI-Modellen erforderlich)"
       related_topics:
         title: "Verwandte Themen"
         pill: "Verwandt"
@@ -840,6 +842,7 @@ de:
         llm: "Modell"
         pm_warning: "KI-Chatbot-Nachrichten werden regelmäßig von Moderatoren überwacht."
         cancel_streaming: "Antwort abbrechen"
+        try_again: "Erneut versuchen"
         default_pm_prefix: "[KI-Bot-PN ohne Titel]"
         shortcut_title: "Starte eine PN mit einem KI-Bot"
         shortcut_link: "KI-Bot"

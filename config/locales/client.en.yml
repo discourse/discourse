@@ -944,7 +944,9 @@ en:
         claimed_by: "Claimed by %{username} · %{relativeDate}"
         unclaimed_by: "Unclaimed by %{username} · %{relativeDate}"
         reviewed: "Reviewed"
-        reviewed_by: "Reviewed by %{username} · %{relativeDate}"
+        approved_by: "Approved by %{username} · %{relativeDate}"
+        rejected_by: "Rejected by %{username} · %{relativeDate}"
+        ignored_by: "Ignored by %{username} · %{relativeDate}"
         view_conversation: "view PM"
         note_added: "Moderator note"
         note_added_by: "Moderator note by %{username} · %{relativeDate}"
@@ -3081,6 +3083,17 @@ en:
       ulist_title: "Bulleted list"
       list_item: "List item"
       toggle_direction: "Toggle direction"
+      apply_wrap_title: "Apply wrap"
+      wrap_modal:
+        title: "Edit Wrap"
+        name_label: "Wrap name"
+        attributes_label: "Attributes"
+        add_attribute: "Add attribute"
+        remove_attribute: "Remove attribute"
+        apply: "Apply"
+        unwrap: "Unwrap"
+        no_attributes: "No attributes added yet."
+      wrap_text: "Wrap content"
       help: "Markdown Editing Help"
       collapse: "Minimize the composer panel"
       open: "Open the composer panel"
@@ -3155,6 +3168,8 @@ en:
         remove: "Remove image"
         add_to_grid: "Add to grid"
         move_outside_grid: "Move outside grid"
+
+      image: "image"
 
       grid_label: "This will be displayed as a grid"
 
@@ -3398,6 +3413,7 @@ en:
           aria_label: Filter using tags
         filters:
           label: Only return topics/posts…
+          all: Include messages
           title: Matching in title only
           likes: I liked
           posted: I posted in
@@ -5117,6 +5133,7 @@ en:
       add_to_calendar: "Add to calendar"
       google: "Google Calendar"
       ics: "ICS"
+      default_title: "Scheduled Event"
     tagging:
       all_tags: "All tags"
       other_tags: "Other Tags"
@@ -5770,7 +5787,7 @@ en:
             one: "the group %{groupNames}"
             other: "the groups %{groupNames}"
         statuses:
-          pre_alpha: "Pre-Alpha"
+          experimental: "Experimental"
           alpha: "Alpha"
           beta: "Beta"
           stable: "Stable"
@@ -5792,7 +5809,7 @@ en:
           impact_type_feature: "Feature"
           impact_type_other: "Other"
           status_all: "All statuses"
-          status_pre_alpha: "Pre-Alpha"
+          status_experimental: "Experimental"
           status_alpha: "Alpha"
           status_beta: "Beta"
           status_stable: "Stable"
@@ -5841,6 +5858,19 @@ en:
               title: "Social logins"
             discourseconnect:
               title: "Discourse Connect"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          stats:
+            total_users: "Total users"
+            signups_30_days: "Signups (30 days)"
+            logins_30_days: "Logins (30 days)"
+          regenerate_credentials: "Regenerate credentials"
+          regenerate_confirm: "Are you sure you want to regenerate your Discourse ID credentials? This will generate a new client secret. Regenerating credentials isn't normally required but can be useful for enhanced security."
+          description: "Discourse ID is a single sign-on service that allows users to log in to multiple Discourse sites using a single account. Common social login providers like Google, Facebook, Apple, and Github are supported without additional configuration."
+          learn_more: "Learn more"
+          regenerate_success: "Credentials regenerated successfully."
         logo:
           title: "Logo"
           header_description: "Configure the logos and icons used throughout your site"
@@ -7148,6 +7178,8 @@ en:
           create_name: "Name"
           save: "Save"
           long_title: "Amend colors, CSS and HTML contents of your site"
+          dark_mode: "%{themeName} dark mode"
+          light_mode: "%{themeName} light mode"
           edit: "Edit"
           edit_confirm: "This is a remote theme, if you edit CSS/HTML your changes will be erased next time you update the theme."
           update_confirm: "These local changes will be erased by the update. Are you sure you want to continue?"
@@ -7716,6 +7748,7 @@ en:
             stop_impersonating: "stop impersonating"
             upcoming_change_toggled: "upcoming change toggled"
             change_site_setting_groups: "change site setting groups"
+            discourse_id_regenerate_credentials: "regenerate Discourse ID credentials"
         screened_emails:
           title: "Screened emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

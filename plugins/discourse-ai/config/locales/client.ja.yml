@@ -314,6 +314,8 @@ ja:
           post_url_label: "投稿の URL または ID"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 または投稿 ID"
           result: "結果"
+          llm: "LLM"
+          system_prompt: "システムプロンプト"
           scan_log: "スキャンログ"
           run: "テストを実行"
           spam: "迷惑"
@@ -350,6 +352,7 @@ ja:
         no_users: "ユーザー使用状況データが見つかりません"
         no_models: "モデル使用状況データが見つかりません"
         no_features: "機能使用状況データが見つかりません"
+        total: "総合"
         subheader_description: "トークンは、LLM がテキストを理解して生成するために使用する基本単位であり、使用状況データがコストに影響する可能性があります"
         stat_tooltips:
           total_requests: "Discourse を通じて LLM に行われたすべてのリクエスト"
@@ -649,7 +652,6 @@ ja:
           reasoning_tokens: "推論に使用されるトークンの数"
           disable_temperature: "Temperature を無効にする (一部の試行モデルは Temperature をサポートしていません)"
           disable_top_p: "Top P を無効にする (一部の試行モデルは Top P をサポートしていません)"
-          enable_responses_api: "レスポンス API を有効にする (特定の OpenAI モデルで必要です)"
       related_topics:
         title: "関連トピック"
         pill: "関連"
@@ -776,6 +778,7 @@ ja:
         llm: "モデル"
         pm_warning: "AI チャットボットのメッセージは、モデレーターによって定期的に監視されます。"
         cancel_streaming: "返信を停止する"
+        try_again: "やり直す"
         default_pm_prefix: "[無題の AI ボット PM]"
         shortcut_title: "AI ボットと PM を開始する"
         shortcut_link: "AI ボット"

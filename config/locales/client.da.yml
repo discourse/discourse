@@ -790,7 +790,6 @@ da:
         claimed: "Påstået"
         claimed_by: "Påstået af %{username} · %{relativeDate}"
         reviewed: "Gennemgået"
-        reviewed_by: "Gennemgået af %{username} · %{relativeDate}"
         note_added: "Moderator note"
       notes:
         add_note_button: "Tilføj note"
@@ -2439,6 +2438,8 @@ da:
       ulist_title: "Punktopstilling"
       list_item: "Listepunkt"
       toggle_direction: "Skift retning"
+      wrap_modal:
+        apply: "Anvend"
       help: "Hjælp til Markdown-redigering"
       exit_fullscreen_prompt: "Tryk på <kbd>ESC</kbd> for at afslutte fuld skærm"
       modal_ok: "OK"
@@ -2487,6 +2488,7 @@ da:
         title: "Tilføj billedbeskrivelse"
       image_toolbar:
         alt_text: "Tilføj billedbeskrivelse"
+      image: "billede"
       image_scale_button: "Skaler billedet til %{percent}%"
       delete_image_button: Slet Billede
       link_toolbar:
@@ -2749,6 +2751,9 @@ da:
         reset_bump_dates: "Nulstil bump datoer"
         defer: "Markér som ulæst"
         delete: "Slet emner"
+        delete_topics_count:
+          one: "Slet emne"
+          other: "Slet emner"
         dismiss: "Skjul"
         dismiss_read: "Afvis alle ulæste"
         dismiss_button: "Afvis..."
@@ -4357,6 +4362,8 @@ da:
         enabled_for_options:
           everyone: "Alle"
           staff: "Kun personale"
+        statuses:
+          experimental: "Eksperimentel"
         impact_roles:
           admins: "Admins"
           moderators: "Moderatorer"
@@ -4366,6 +4373,7 @@ da:
           enabled: "Aktiveret"
           disabled: "Deaktiveret"
           impact_type_other: "Andre"
+          status_experimental: "Eksperimentel"
       config:
         about:
           title: "Om dit websted"
@@ -4388,6 +4396,11 @@ da:
           sub_pages:
             common_settings:
               title: "Indstillinger"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Lær mere"
         logo:
           title: "Logo"
           form:

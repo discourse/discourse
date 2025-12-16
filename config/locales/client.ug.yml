@@ -872,8 +872,11 @@ ug:
         flagged_as_by: "%{username} · %{relativeDate} دە %{flagReason} دەپ پاش قىلغان"
         claimed: "تەلەپ قىلىندى"
         claimed_by: "%{username} · %{relativeDate} تەلەپ قىلدى"
+        unclaimed_by: "%{username} · %{relativeDate} تەلەپنى بىكار قىلدى"
         reviewed: "تەكشۈردى"
-        reviewed_by: "%{username} · %{relativeDate} تەكشۈردى"
+        approved_by: "%{username} · %{relativeDate} تەستىقلىدى"
+        rejected_by: "%{username} · %{relativeDate} رەت قىلدى"
+        ignored_by: "%{username} · %{relativeDate} پەرۋا قىلمىدى"
         view_conversation: "شەخسىي ئۇچۇرنى كۆرسىتىدۇ"
         note_added: "رىياسەتچى ئىزاھاتى"
         note_added_by: "%{username} · %{relativeDate} رىياسەتچى ئىزاھاتى"
@@ -912,10 +915,17 @@ ug:
           posts:
             one: "%{count} يازما"
             other: "%{count} يازما"
+        moderation_history:
+          label: "تەستىق تارىخى"
+          silenced: "ئۈنسىز: %{count}"
+          suspended: "توختىتىلغان: %{count}"
+          rejected_posts: "رەت قىلىنغان يازما: %{count}"
         solution_marked: "ھەل قىلىش چارىسى دەپ بەلگە سېلىندى"
         topic_has_solution: "بۇ تېمىنىڭ ھەل قىلىش چارىسى بار"
         visibility: "كۆرۈنۈشچانلىقى"
+        topic_unlisted: "بۇ تېما تىزىمدىن قالدۇرۇلدى. پەقەت بىۋاسىتە ئۇلانما ئارقىلىقلا زىيارەت قىلغىلى بولىدۇ."
       help:
+        community_moderation_guide: "بۇ جامائەتنىڭ رىياسەتچىلىك يېتەكچىسى"
         moderation_guide: "Discourse رىياسەتچىلىك يېتەكچىسى"
         flag_priorities: "ئىشلەتكۈچىنىڭ ئىناۋىتى ۋە پاش قىلىش ئالدىنلىقىنى باشقۇرىدۇ"
         spam_detection: "ئەخلەت ئۇچۇر بايقاش"
@@ -1337,12 +1347,16 @@ ug:
         one: "سەھىپە (يەنە %{count})…"
         other: "سەھىپە (يەنە %{count})…"
     ip_lookup:
+      title: IP ئادرېس
       hostname: مۇلازىمېتىر ئىسمى
       location: ئورنى
       location_not_found: (يوچۇن)
       organisation: تەشكىلات
       phone: تېلېفون
       other_accounts: "بۇ IP ئادرېسنى ئىشلەتكەن باشقا ھېسابلار:"
+      other_accounts_with_ip:
+        one: "بۇ IP ئادرېسنى ئىشلەتكەن %{count} باشقا ھېساب"
+        other: "بۇ IP ئادرېسنى ئىشلەتكەن %{count} باشقا ھېساب"
       delete_other_accounts:
         one: "%{count} ئۆچۈر"
         other: "%{count} ئۆچۈر"
@@ -2861,6 +2875,8 @@ ug:
       ulist_title: "بەلگە تىزىمى"
       list_item: "تىزىم تۈرى"
       toggle_direction: "يۆنىلىش ئالماشتۇر"
+      wrap_modal:
+        apply: "قوللان"
       help: "Markdown تەھرىر ياردىمى"
       collapse: "تەھرىرلىگۈچ تاختىنى كىچىكلەت"
       open: "تەھرىرلىگۈچ تاختىنى ئاچ"
@@ -2930,6 +2946,7 @@ ug:
         remove: "سۈرەتنى چىقىرىۋېتىدۇ"
         add_to_grid: "شادىغا قوش"
         move_outside_grid: "شادا سىرتىغا يۆتكە"
+      image: "سۈرەت"
       grid_label: "بۇ شادا سۈپىتىدە كۆرسىتىلىدۇ"
       image_scale_button: "سۈرەتنى %%{percent} كە تەڭشە"
       delete_image_button: سۈرەت ئۆچۈر
@@ -3273,6 +3290,15 @@ ug:
         reset_bump_dates: "چوققىلانغان چېسلانى ئەسلىگە قايتۇر"
         defer: "ئوقۇلمىغان بەلگىسى سال"
         delete: "تېما ئۆچۈر"
+        delete_topics_count:
+          one: "تېما ئۆچۈر"
+          other: "تېما ئۆچۈر"
+        delete_posts_count:
+          one: "يازما ئۆچۈر"
+          other: "يازما ئۆچۈر"
+        delete_posts_confirmation:
+          one: "%{count} يازمىنى راستتىنلا ئۆچۈرەمسىز؟"
+          other: "%{count} يازمىنى راستتىنلا ئۆچۈرەمسىز؟"
         dismiss: "پەرۋا قىلما"
         dismiss_read: "ئوقۇلمىغاننىڭ ھەممىسگە پەرۋا قىلما"
         dismiss_read_with_selected:
@@ -3957,6 +3983,7 @@ ug:
         post_language_selector:
           none: "يوق"
         edit_warning:
+          message: "بۇ تەرجىمە قىلىنغان يازما. <br><br>سىز %{language} دىكى ئەسلى يازمىنى تەھرىرلەمسىز ياكى بۇ تەرجىمىنى تەھرىرلەمسىز؟"
           action_original: "ئەسلى يازمىنى تەھرىرلە"
           action_translation: "بۇ تەرجىمىنى تەھرىرلە"
       errors:
@@ -4773,6 +4800,7 @@ ug:
       add_to_calendar: "يىلنامەگە قوش"
       google: "Google يىلنامە"
       ics: "ICS"
+      default_title: "كۈنتەرتىپتىكى پائالىيەت"
     tagging:
       all_tags: "ھەممە بەلگە"
       other_tags: "باشقا بەلگە"
@@ -5371,6 +5399,7 @@ ug:
         opt_in_groups: "قوشۇلىدىغان گۇرۇپپىنى تاللايدۇ"
         opt_in_groups_instructions: "كىرىدىغان گۇرۇپپىنى تاللاش مۇئەييەن ئىشلەتكۈچى گۇرۇپپىسى رەسمىي ئۆزگىرىش ئېلان قىلىنىشتىن ئىلگىرى سىناشقا ئىشلىتەلەيدۇ. ئەسكەرتىش ئۆزگىرىش مۇقىم ھالەتكە كىرگەندىن كېيىن ھەممە ئىشلەتكۈچى ئۆزگىرىشنى قوللىنىدۇ."
         enabled_for_throttle: "بۇ ئۆزگىرىشنى بەك تېز قوزغاتتىڭىز. ئازراق كۈتۈپ ئاندىن قايتا سىناڭ."
+        change_enabled_for_success: "%{enabledFor} نىڭ ئۆزگەرتىشىنى قوزغاتتىڭىز"
         preview: "ئالدىن كۆزەت"
         enabled_for_options:
           no_one: "ھېچكىم"
@@ -5381,6 +5410,7 @@ ug:
             one: "گۇرۇپپا %{groupNames}"
             other: "گۇرۇپپا %{groupNames}"
         statuses:
+          experimental: "تەجرىبە"
           alpha: "ئالفا"
           beta: "سىناق"
           stable: "مۇقىم"
@@ -5400,6 +5430,7 @@ ug:
           impact_type_feature: "ئىقتىدار"
           impact_type_other: "باشقا"
           status_all: "بارلىق ھالەت"
+          status_experimental: "تەجرىبە"
           status_alpha: "ئالفا"
           status_beta: "سىناق"
           status_stable: "مۇقىم"
@@ -5445,6 +5476,15 @@ ug:
               title: "ئىجتىمائىي تاراتقۇدا تىزىمغا كىر"
             discourseconnect:
               title: "Discourse Connect"
+            discourse_id:
+              title: "Discourse كىملىكى"
+        discourse_id:
+          title: "Discourse كىملىكى"
+          stats:
+            total_users: "جەمئىي ئىشلەتكۈچى"
+            signups_30_days: "تىزىملاتقىنى (30 كۈن)"
+            logins_30_days: "تىزىمغا كىرگىنى (30 كۈن)"
+          learn_more: "تېخىمۇ كۆپ بىلدۈرگۈ"
         logo:
           title: "تۇغ"
           header_description: "تور بېكىتىڭىزدە ئىشلىتىدىغان تۇغ ۋە سىنبەلگىنى سەپلەيدۇ"
@@ -5533,21 +5573,33 @@ ug:
             modal_no: "ياق، بۇندىن كېيىنكىسىگىلا قوللان"
         welcome_banner:
           form:
+            enabled_themes:
+              select_label: "ئۆرنەك تاللىنىدۇ"
+            background_image:
+              label: "تەگلىك سۈرىتى"
+              description: "بۇ سۈرەت لەۋھە تېكىستىنىڭ ئارقىسىدا كۆرسىتىلىدۇ."
             text_color:
               label: "تېكىست رەڭگى"
             page_visibility:
+              label: "بەت كۆرۈنۈشچانلىقى"
               options:
                 top_menu_pages: "چوققا تىزىملىك بېتى"
+                homepage: "باش بەتلا"
+                discovery: "بايقاش بېتى"
                 all_pages: "ھەممە بەت"
             location:
               label: "ئورنى"
               options:
                 above_topic_content: "تېما مەزمۇنىنىڭ ئۈستىدە"
                 below_site_header: "بېكەت بەت قېشىنىڭ ئاستىدا"
+            text_section:
+              title: "ئىختىيارى تېكىست"
             header_logged_in:
               placeholder: "قايتا خۇش كەلدىڭىز، %{preferred_display_name}!"
             header_anonymous:
               placeholder: "%{site_name} غا خۇش كەلدىڭىز!"
+            search_placeholder:
+              placeholder: "تېما ئىزدە…"
         navigation:
           title: "يولباشچى"
           header_description: "تور بېكىتىڭىزنىڭ يولباشچى ئۇلانمىسى ۋە تىزىملىك تۈرىنى سەپلەيدۇ. بۇ ئاساسىي يولباشچى تىزىملىكنىڭ ئورنى ۋە مەشغۇلاتى، باش بەتنىڭ چوققىسىدىكى تېز ئۇلانما، شۇنداقلا باشقۇرغۇچى يان بالداقنى ئۆز ئىچىگە ئالىدۇ."
@@ -5799,6 +5851,8 @@ ug:
           only_experiments: "پەقەت تەجرىبە ئىقتىدارلىرىنىلا كۆرسىتىدۇ"
           experiment_enabled: "تەجرىبە ئىقتىدارىنى قوزغاتتىڭىز."
           experiment_disabled: "تەجرىبە ئىقتىدارىنى چەكلىدىڭىز."
+          feature_enabled: "ئىقتىدارنى قوزغاتتىڭىز."
+          feature_disabled: "ئىقتىدارنى چەكلىدىڭىز."
           experiment_tooltip:
             title_enabled: "تەجرىبە ئىقتىدارىنى تاقايدۇ"
             content_enabled: "بۇ ئۆزگەرتىلسە ھەممە ئىشلەتكۈچىنىڭ مەزكۇر ئىقتىدارى چەكلىنىدۇ."
@@ -6674,6 +6728,8 @@ ug:
           create_name: "ئىسمى"
           save: "ساقلا"
           long_title: "تور بېكىتىڭىزنىڭ رەڭ، CSS ۋە HTML مەزمۇنىنى تۈزىتىدۇ"
+          dark_mode: "%{themeName} قاراڭغۇ ھالەت"
+          light_mode: "%{themeName} يورۇق ھالەت"
           edit: "تەھرىر"
           edit_confirm: "بۇ يىراقتىكى ئۆرنەك، ئەگەر سىز CSS/HTML نى تەھرىرلىسىڭىز كېلەر قېتىم ئۆرنەكنى يېڭىلىغاندا ئۆزگەرتىشلىرىڭىز ئۆچۈرۈلىدۇ."
           update_confirm: "يەرلىك ئۆزگەرتىشلەرنى يېڭىلاش ئۆچۈرۈۋېتىدۇ. راستتىنلا داۋاملاشتۇرامسىز؟"
@@ -7407,7 +7463,10 @@ ug:
             second: "2-تاللانما"
             third: "3-تاللانما"
         edit_category:
+          toggle_freeform: "جەدۋەل قېلىپى چەكلەنگەن"
+          toggle_form_template: "جەدۋەل قېلىپى قوزغىتىلدى"
           select_template: "جەدۋەل قېلىپى تاللىنىدۇ"
+          select_template_help: "جەدۋەل قېلىپى قوش/تەھرىرلە"
         errors:
           multiple_tags_not_allowed: '«%{tag_name}» دىن تېخىمۇ كۆپ بەلگە تاللىيالمايسىز. مەسىلىنىڭ ئالدىنى ئېلىش ئۈچۈن، كۆزنەك قېلىپىنى ئىشلىتىڭ'
       impersonate:
@@ -7912,6 +7971,7 @@ ug:
           experimental: "تەجرىبە"
         secret_list:
           invalid_input: "كىرگۈزۈش بۆلىكى بوش قالمايدۇ ياكى تىك تاياقچە ھەرپىنى ئۆز ئىچىگە ئالمايدۇ."
+          already_exists: "%{key} نىڭ تۈرى مەۋجۇت."
         default_categories:
           modal_description:
             one: "بۇ ئۆزگىرىشنى ئەسلىگە قايتۇرامسىز؟ بۇنداق بولغاندا %{count} ئىشلەتكۈچىنىڭ مايىللىقىنى ئۆزگەرتىدۇ."
@@ -8155,3 +8215,6 @@ ug:
           categories: "سەھىپە"
           topics: "تېما"
           replace: "ئالماشتۇر"
+  wizard_js:
+    wizard:
+      jump_in: "باشلايلى!"

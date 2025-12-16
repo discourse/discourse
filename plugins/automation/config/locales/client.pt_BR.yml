@@ -10,6 +10,7 @@ pt_BR:
       logs:
         staff_actions:
           actions:
+            update_automation: atualizar automação
             delete_automation: excluir automação
     discourse_automation:
       title: Automação
@@ -65,6 +66,12 @@ pt_BR:
         text:
           label: Texto
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Categorias
+            tags:
+              label: Etiquetas
         not_found: Não foi possível encontrar o acionador `%{trigger}` para automação `%{automation}`. Verifique se o plugin associado está instalado
         user_badge_granted:
           fields:

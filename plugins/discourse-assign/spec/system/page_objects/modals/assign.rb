@@ -9,6 +9,15 @@ module PageObjects
         find("li[data-value='#{assignee}']").click
       end
 
+      def select_assignee_with_keyboard(assignee)
+        assignee = assignee.is_a?(Group) ? assignee.name : assignee.username
+        input = find(".control-group input")
+        input.fill_in(with: assignee)
+        find("li[data-value='#{assignee}']")
+        input.send_keys(:down)
+        input.send_keys(:enter)
+      end
+
       def status=(status)
         find("#assign-status").click
         find("[data-value='#{status}']").click

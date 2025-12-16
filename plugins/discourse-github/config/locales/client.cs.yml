@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 cs:
+  js:
+    github:
+      pr_status:
+        draft: "Koncept"
+        open: "Otevřeno"
+        approved: "Schváleno"
+        merged: "Sloučeno"
+        closed: "Zavřeno"
   admin_js:
     admin:
       site_settings:

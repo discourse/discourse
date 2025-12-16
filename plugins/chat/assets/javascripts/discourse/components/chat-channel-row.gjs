@@ -152,7 +152,7 @@ export default class ChatChannelRow extends Component {
   }
 
   get #firstDirectMessageUser() {
-    return this.args.channel?.chatable?.users?.firstObject;
+    return this.args.channel?.chatable?.users?.[0];
   }
 
   @action

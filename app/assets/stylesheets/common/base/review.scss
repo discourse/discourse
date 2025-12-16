@@ -71,6 +71,17 @@
       padding-inline: var(--space-4);
     }
 
+    .reviewable-action,
+    .reject-post summary {
+      background-color: var(--d-button-default-bg-color);
+      color: var(--d-button-default-text-color);
+
+      &:hover {
+        background-color: var(--d-button-default-bg-color--hover);
+        color: var(--d-button-default-text-color--hover);
+      }
+    }
+
     @include viewport.from(sm) {
       padding: var(--space-4);
     }

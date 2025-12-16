@@ -197,10 +197,12 @@
       width: 100%;
     }
 
-    .fancy-title {
-      .d-icon-pencil {
-        font-size: var(--font-down-3);
-      }
+    .edit-topic__wrapper {
+      // managing whitespace to prevent the edit icon from wrapping to a new line
+      white-space: nowrap;
+      font-size: var(--font-down-3);
+      vertical-align: 0.125em;
+      margin-left: var(--space-1);
     }
 
     html.discourse-no-touch & {

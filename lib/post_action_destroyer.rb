@@ -53,7 +53,10 @@ class PostActionDestroyer
     ).performed!
 
     post_action.remove_act!(@destroyed_by)
-    post_action.post.unhide! if post_action.staff_took_action
+    if post_action.staff_took_action
+      post_action.post.acting_user = @destroyed_by
+      post_action.post.unhide!
+    end
     if @post_action_type_id == post_action_type_view.types[:like]
       GivenDailyLike.decrement_for(@destroyed_by.id)
     end

@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 vi:
+  js:
+    github:
+      pr_status:
+        draft: "Bản nháp"
+        open: "Mở"
+        approved: "Đã phê duyệt"
+        closed: "Đã "

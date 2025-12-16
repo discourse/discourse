@@ -250,113 +250,117 @@ describe "Post event", type: :system do
   end
 
   context "with DST handling for recurring events" do
-    fab!(:viewer) do
-      user = Fabricate(:user)
-      user.user_option.update!(timezone: "Europe/Paris")
-      user
+    context "when viewer is in Europe/Paris timezone", timezone: "Europe/Paris" do
+      fab!(:viewer) do
+        user = Fabricate(:user)
+        user.user_option.update!(timezone: "Europe/Paris")
+        user
+      end
+
+      it "maintains wall clock time (11:00 AM) in event timezone across all DST transitions" do
+        # Before any DST
+        freeze_time(Time.new(2025, 10, 14, 10, 0, 0, "+02:00")) do
+          post =
+            PostCreator.create!(
+              admin,
+              title: "Weekly recurring event across DST",
+              raw:
+                "[event start='2025-10-15 11:00' timezone='America/New_York' recurrence='every_week']\n[/event]",
+            )
+
+          event = DiscoursePostEvent::Event.find_by(post: post)
+          event.set_next_date
+          sign_in(viewer)
+          visit(post.topic.url)
+
+          expect(page).to have_css(".event-date .month", text: "OCT")
+          expect(page).to have_css(".event-date .day", text: "15")
+          expect(page).to have_css(".discourse-local-date", text: "5:00 PM")
+        end
+
+        # Test 2: After Europe DST
+        freeze_time(Time.new(2025, 10, 28, 10, 0, 0, "+01:00")) do
+          post =
+            PostCreator.create!(
+              admin,
+              title: "Weekly recurring event 2",
+              raw:
+                "[event start='2025-10-15 11:00' timezone='America/New_York' recurrence='every_week']\n[/event]",
+            )
+
+          event = DiscoursePostEvent::Event.find_by(post: post)
+          event.set_next_date
+          sign_in(viewer)
+          visit(post.topic.url)
+
+          expect(page).to have_css(".event-date .month", text: "OCT")
+          expect(page).to have_css(".event-date .day", text: "29")
+          # This is the period where the time CHANGES for European viewers
+          expect(page).to have_css(".discourse-local-date", text: "4:00 PM")
+        end
+
+        # Test 3: After both DST transitions
+        freeze_time(Time.new(2025, 11, 4, 10, 0, 0, "+01:00")) do
+          post =
+            PostCreator.create!(
+              admin,
+              title: "Weekly recurring event 3",
+              raw:
+                "[event start='2025-10-15 11:00' timezone='America/New_York' recurrence='every_week']\n[/event]",
+            )
+
+          event = DiscoursePostEvent::Event.find_by(post: post)
+          event.set_next_date
+          sign_in(viewer)
+          visit(post.topic.url)
+
+          expect(page).to have_css(".event-date .month", text: "NOV")
+          expect(page).to have_css(".event-date .day", text: "5")
+          expect(page).to have_css(".discourse-local-date", text: "5:00 PM")
+        end
+      end
     end
 
-    it "maintains wall clock time (11:00 AM) in event timezone across all DST transitions" do
-      # Before any DST
-      freeze_time(Time.new(2025, 10, 14, 10, 0, 0, "+02:00")) do
-        post =
-          PostCreator.create!(
-            admin,
-            title: "Weekly recurring event across DST",
-            raw:
-              "[event start='2025-10-15 11:00' timezone='America/New_York' recurrence='every_week']\n[/event]",
-          )
+    context "when viewer is in America/New_York timezone", timezone: "America/New_York" do
+      it "event stays at wall clock time (11:00 AM) in its own timezone throughout DST" do
+        us_viewer = Fabricate(:user)
+        us_viewer.user_option.update!(timezone: "America/New_York")
 
-        event = DiscoursePostEvent::Event.find_by(post: post)
-        event.set_next_date
-        sign_in(viewer)
-        visit(post.topic.url)
+        # Before US DST ends
+        freeze_time(Time.new(2025, 10, 28, 10, 0, 0, "-04:00")) do
+          post =
+            PostCreator.create!(
+              admin,
+              title: "Weekly recurring event 4",
+              raw:
+                "[event start='2025-10-15 11:00' timezone='America/New_York' recurrence='every_week']\n[/event]",
+            )
 
-        expect(page).to have_css(".event-date .month", text: "OCT")
-        expect(page).to have_css(".event-date .day", text: "15")
-        expect(page).to have_css(".discourse-local-date", text: "5:00 PM")
-      end
+          event = DiscoursePostEvent::Event.find_by(post: post)
+          event.set_next_date
+          sign_in(us_viewer)
+          visit(post.topic.url)
 
-      # Test 2: After Europe DST
-      freeze_time(Time.new(2025, 10, 28, 10, 0, 0, "+01:00")) do
-        post =
-          PostCreator.create!(
-            admin,
-            title: "Weekly recurring event 2",
-            raw:
-              "[event start='2025-10-15 11:00' timezone='America/New_York' recurrence='every_week']\n[/event]",
-          )
+          expect(page).to have_css(".discourse-local-date", text: "11:00 AM")
+        end
 
-        event = DiscoursePostEvent::Event.find_by(post: post)
-        event.set_next_date
-        sign_in(viewer)
-        visit(post.topic.url)
+        # After US DST ends
+        freeze_time(Time.new(2025, 11, 4, 10, 0, 0, "-05:00")) do
+          post =
+            PostCreator.create!(
+              admin,
+              title: "Weekly recurring event 5",
+              raw:
+                "[event start='2025-10-15 11:00' timezone='America/New_York' recurrence='every_week']\n[/event]",
+            )
 
-        expect(page).to have_css(".event-date .month", text: "OCT")
-        expect(page).to have_css(".event-date .day", text: "29")
-        # This is the period where the time CHANGES for European viewers
-        expect(page).to have_css(".discourse-local-date", text: "4:00 PM")
-      end
+          event = DiscoursePostEvent::Event.find_by(post: post)
+          event.set_next_date
+          sign_in(us_viewer)
+          visit(post.topic.url)
 
-      # Test 3: After both DST transitions
-      freeze_time(Time.new(2025, 11, 4, 10, 0, 0, "+01:00")) do
-        post =
-          PostCreator.create!(
-            admin,
-            title: "Weekly recurring event 3",
-            raw:
-              "[event start='2025-10-15 11:00' timezone='America/New_York' recurrence='every_week']\n[/event]",
-          )
-
-        event = DiscoursePostEvent::Event.find_by(post: post)
-        event.set_next_date
-        sign_in(viewer)
-        visit(post.topic.url)
-
-        expect(page).to have_css(".event-date .month", text: "NOV")
-        expect(page).to have_css(".event-date .day", text: "5")
-        expect(page).to have_css(".discourse-local-date", text: "5:00 PM")
-      end
-    end
-
-    it "event stays at wall clock time (11:00 AM) in its own timezone throughout DST" do
-      us_viewer = Fabricate(:user)
-      us_viewer.user_option.update!(timezone: "America/New_York")
-
-      # Before US DST ends
-      freeze_time(Time.new(2025, 10, 28, 10, 0, 0, "-04:00")) do
-        post =
-          PostCreator.create!(
-            admin,
-            title: "Weekly recurring event 4",
-            raw:
-              "[event start='2025-10-15 11:00' timezone='America/New_York' recurrence='every_week']\n[/event]",
-          )
-
-        event = DiscoursePostEvent::Event.find_by(post: post)
-        event.set_next_date
-        sign_in(us_viewer)
-        visit(post.topic.url)
-
-        expect(page).to have_css(".discourse-local-date", text: "11:00 AM")
-      end
-
-      # After US DST ends
-      freeze_time(Time.new(2025, 11, 4, 10, 0, 0, "-05:00")) do
-        post =
-          PostCreator.create!(
-            admin,
-            title: "Weekly recurring event 5",
-            raw:
-              "[event start='2025-10-15 11:00' timezone='America/New_York' recurrence='every_week']\n[/event]",
-          )
-
-        event = DiscoursePostEvent::Event.find_by(post: post)
-        event.set_next_date
-        sign_in(us_viewer)
-        visit(post.topic.url)
-
-        expect(page).to have_css(".discourse-local-date", text: "11:00 AM")
+          expect(page).to have_css(".discourse-local-date", text: "11:00 AM")
+        end
       end
     end
   end

@@ -59,8 +59,6 @@ ru:
           title: "Панель выбора настроек"
         categories_list:
           title: "Список категорий"
-        topic_link:
-          title: "Ссылка на тему"
         topic_list_item:
           title: "Тема в списке тем"
         topic_statuses:

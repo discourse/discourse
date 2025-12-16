@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  site_settings:
+    discourse_rewind_enabled: "启用 Discourse Rewind，回顾成员们在社区的活动，提供有趣的年终总结。"
+  discourse_rewind:
+    report_failed: "未能生成 Discourse Rewind 报告。"
+    invalid_year: "回顾功能只能在1月或12月生成。"

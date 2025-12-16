@@ -187,10 +187,6 @@ export default class ChatChannelsManager extends Service {
    * @returns {ChatChannel[]} Array of unstarred public channels sorted by activity
    */
   get unstarredPublicMessageChannelsByActivity() {
-    if (!this.siteSettings.star_chat_channels) {
-      return this.publicMessageChannelsByActivity;
-    }
-
     return this.#sortChannelsByActivity(
       this.channels.filter(
         (channel) =>
@@ -226,10 +222,6 @@ export default class ChatChannelsManager extends Service {
    * @returns {ChatChannel[]} Array of starred channels
    */
   get starredChannels() {
-    if (!this.siteSettings.star_chat_channels) {
-      return [];
-    }
-
     const starredPublic = this.channels
       .filter(
         (channel) =>
@@ -268,10 +260,6 @@ export default class ChatChannelsManager extends Service {
    * @returns {ChatChannel[]} Array of starred channels sorted by activity
    */
   get starredChannelsByActivity() {
-    if (!this.siteSettings.star_chat_channels) {
-      return [];
-    }
-
     const starredChannels = this.channels.filter(
       (channel) =>
         channel.currentUserMembership?.following &&
@@ -279,6 +267,10 @@ export default class ChatChannelsManager extends Service {
     );
 
     return starredChannels.sort((a, b) => {
+      if (a.isDirectMessageChannel !== b.isDirectMessageChannel) {
+        return a.isDirectMessageChannel ? 1 : -1;
+      }
+
       const aUrgent = this.#getChannelUrgentCount(a);
       const bUrgent = this.#getChannelUrgentCount(b);
 
@@ -343,10 +335,6 @@ export default class ChatChannelsManager extends Service {
    * @returns {ChatChannel[]} Array of unstarred public channels
    */
   get unstarredPublicMessageChannels() {
-    if (!this.siteSettings.star_chat_channels) {
-      return this.publicMessageChannels;
-    }
-
     return this.#sortChannelsByProperty(
       this.channels.filter(
         (channel) =>
@@ -366,10 +354,6 @@ export default class ChatChannelsManager extends Service {
    * @returns {ChatChannel[]} Array of unstarred DM channels
    */
   get unstarredDirectMessageChannels() {
-    if (!this.siteSettings.star_chat_channels) {
-      return this.directMessageChannels;
-    }
-
     return this.#sortDirectMessageChannels(
       this.channels.filter((channel) => {
         const membership = channel.currentUserMembership;
@@ -447,10 +431,6 @@ export default class ChatChannelsManager extends Service {
    * @returns {number|null} Sort value (-1, 0, 1) or null if no starred sorting needed
    */
   #compareStarredChannels(a, b, property) {
-    if (!this.siteSettings.star_chat_channels) {
-      return null;
-    }
-
     const aStarred = a.currentUserMembership?.starred;
     const bStarred = b.currentUserMembership?.starred;
 

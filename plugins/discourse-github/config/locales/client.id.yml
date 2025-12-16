@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 id:
+  js:
+    github:
+      pr_status:
+        draft: "Konsep"
+        open: "Buka"
+        approved: "Disetujui"
+        closed: "Tertutup"

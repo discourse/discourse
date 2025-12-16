@@ -974,7 +974,6 @@ ru:
         claimed: "Зарезервировано"
         claimed_by: "Зарезервировано пользователем %{username} · %{relativeDate}"
         reviewed: "Проверено"
-        reviewed_by: "Проверено пользователем %{username} · %{relativeDate}"
         view_conversation: "просмотреть ЛС"
         note_added: "Примечание модератора"
         note_added_by: "Примечание модератора %{username} · %{relativeDate}"
@@ -3092,6 +3091,8 @@ ru:
       ulist_title: "Маркированный список"
       list_item: "Элемент списка"
       toggle_direction: "Переключить направление"
+      wrap_modal:
+        apply: "Применить"
       help: "Справка по форматированию (Markdown)"
       collapse: "Свернуть панель редактора"
       open: "Открыть панель редактора"
@@ -3158,6 +3159,7 @@ ru:
         zoom_out: "Уменьшить размер изображения"
         zoom_in: "Увеличить размер изображения"
         remove: "Удалить изображение"
+      image: "изображение"
       image_scale_button: "Масштабировать изображение до %{percent}%"
       delete_image_button: Удалить изображение
       toggle_image_grid: Сетка изображений
@@ -3544,6 +3546,11 @@ ru:
         reset_bump_dates: "Сбросить даты поднятия"
         defer: "Отметить как непрочитанное"
         delete: "Удалить темы"
+        delete_topics_count:
+          one: "Удалить тему"
+          few: "Удалить темы"
+          many: "Удалить темы"
+          other: "Удалить темы"
         dismiss: "Отложить"
         dismiss_read: "Отложить все непрочитанные"
         dismiss_read_with_selected:
@@ -5758,6 +5765,8 @@ ru:
         enabled_for_options:
           everyone: "Все"
           staff: "Только для персонала"
+        statuses:
+          experimental: "Экспериментальная функция"
         impact_roles:
           admins: "Администраторы"
           moderators: "Модераторы"
@@ -5768,6 +5777,7 @@ ru:
           disabled: "Отключен"
           impact_type_feature: "Функция"
           impact_type_other: "Разное"
+          status_experimental: "Экспериментальная функция"
       config:
         about:
           title: "О вашем сайте"
@@ -5804,6 +5814,11 @@ ru:
           sub_pages:
             common_settings:
               title: "настроек"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Подробнее"
         logo:
           title: "Логотип"
           header_description: "Настройте логотипы и значки, используемые на вашем сайте."

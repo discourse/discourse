@@ -10,6 +10,7 @@ da:
       logs:
         staff_actions:
           actions:
+            update_automation: opdater automatisering
             delete_automation: slet automatisering
     discourse_automation:
       title: Automatisering
@@ -56,6 +57,12 @@ da:
         text:
           label: Tekst
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategorier
+            tags:
+              label: Mærker
         user_badge_granted:
           fields:
             badge:

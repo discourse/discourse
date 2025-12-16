@@ -321,6 +321,8 @@ es:
           post_url_label: "URL o ID de la publicación"
           post_url_placeholder: "https://tu-foro.com/t/topic/123/4 o ID de publicación"
           result: "Resultado"
+          llm: "LLM"
+          system_prompt: "Aviso del sistema"
           scan_log: "Registro de escaneo"
           run: "Ejecutar prueba"
           spam: "Spam"
@@ -357,6 +359,7 @@ es:
         no_users: "No se han encontrado datos de uso del usuario"
         no_models: "No se han encontrado datos de uso del modelo"
         no_features: "No se han encontrado datos de uso de características"
+        total: "Total"
         subheader_description: "Los tokens son las unidades básicas que utilizan los LLM para comprender y generar texto, los datos de uso pueden afectar a los costes"
         stat_tooltips:
           total_requests: "Todas las solicitudes realizadas a los LLM a través de Discourse"
@@ -659,7 +662,6 @@ es:
           reasoning_tokens: "Número de tokens utilizados para el razonamiento"
           disable_temperature: "Desactiva la temperatura (algunos modelos pensantes no admiten la temperatura)"
           disable_top_p: "Desactivar top P (algunos modelos no admiten top P)"
-          enable_responses_api: "Activa la API de respuestas (obligatoria en ciertos modelos de OpenAI)"
       related_topics:
         title: "Temas relacionados"
         pill: "Relacionados"
@@ -787,6 +789,7 @@ es:
         llm: "Modelo"
         pm_warning: "Los moderadores supervisan periódicamente los mensajes del chatbot de IA."
         cancel_streaming: "Detener respuesta"
+        try_again: "Intentar de nuevo"
         default_pm_prefix: "[MP de bot de IA sin título]"
         shortcut_title: "Iniciar un MP con un bot de IA"
         shortcut_link: "Bot de IA"

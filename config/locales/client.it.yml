@@ -844,7 +844,6 @@ it:
         claimed: "Rivendicato"
         claimed_by: "Rivendicato da %{username} · %{relativeDate}"
         reviewed: "Rivisto"
-        reviewed_by: "Rivisto da %{username} · %{relativeDate}"
         view_conversation: "visualizza PM"
         note_added: "Note del moderatore"
         note_added_by: "Note del moderatore di %{username} · %{relativeDate}"
@@ -2797,6 +2796,8 @@ it:
       ulist_title: "Elenco puntato"
       list_item: "Elemento lista"
       toggle_direction: "Cambia direzione"
+      wrap_modal:
+        apply: "Applica"
       help: "Aiuto Inserimento Markdown"
       exit_fullscreen_prompt: "Premi <kbd>ESC</kbd> per uscire dallo schermo intero."
       modal_ok: "OK"
@@ -2855,6 +2856,7 @@ it:
         zoom_out: "Riduci le dimensioni dell'immagine"
         zoom_in: "Aumenta le dimensioni dell'immagine"
         remove: "Rimuovi immagine"
+      image: "immagine"
       image_scale_button: "Ridimensiona l'immagine a %{percent}%"
       delete_image_button: Cancella immagine
       toggle_image_grid: Attiva/disattiva la griglia dell'immagine
@@ -3195,6 +3197,9 @@ it:
         reset_bump_dates: "Reimposta la date di riproposizione"
         defer: "Contrassegna come non letto"
         delete: "Elimina argomenti"
+        delete_topics_count:
+          one: "Cancella Argomento"
+          other: "Elimina argomenti"
         dismiss: "Ignora"
         dismiss_read: "Ignora tutti i non letti"
         dismiss_read_with_selected:
@@ -5208,6 +5213,8 @@ it:
         enabled_for_options:
           everyone: "Chiunque"
           staff: "Solo staff"
+        statuses:
+          experimental: "Sperimentale"
         impact_roles:
           admins: "Amministratori"
           moderators: "Moderatori"
@@ -5218,6 +5225,7 @@ it:
           disabled: "Disabilitati"
           impact_type_feature: "Funzionalità"
           impact_type_other: "Altri"
+          status_experimental: "Sperimentale"
       config:
         about:
           title: "Informazioni sul tuo sito"
@@ -5254,6 +5262,11 @@ it:
           sub_pages:
             common_settings:
               title: "Impostazioni"
+            discourse_id:
+              title: "ID Discourse"
+        discourse_id:
+          title: "ID Discourse"
+          learn_more: "Scopri di più"
         logo:
           title: "Logo"
           header_description: "Configura i loghi e le icone utilizzati nel tuo sito"

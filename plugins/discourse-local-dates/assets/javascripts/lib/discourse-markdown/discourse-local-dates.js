@@ -1,6 +1,10 @@
 moment.tz.link(["Asia/Kolkata|IST", "Asia/Seoul|KST", "Asia/Tokyo|JST"]);
 const timezoneNames = moment.tz.names();
 
+function normalizeDateString(dateStr) {
+  return moment(dateStr, "YYYY-M-D").format("YYYY-MM-DD");
+}
+
 function addLocalDate(attributes, state, buffer, applyDataAttributes) {
   if (attributes.timezone) {
     if (!timezoneNames.includes(attributes.timezone)) {
@@ -19,6 +23,14 @@ function addLocalDate(attributes, state, buffer, applyDataAttributes) {
       .split("|")
       .filter((tz) => timezoneNames.includes(tz))
       .join("|");
+  }
+
+  if (attributes._default) {
+    attributes._default = normalizeDateString(attributes._default);
+  }
+
+  if (attributes.date) {
+    attributes.date = normalizeDateString(attributes.date);
   }
 
   const dateTime = moment.tz(

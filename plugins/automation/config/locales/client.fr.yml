@@ -10,6 +10,7 @@ fr:
       logs:
         staff_actions:
           actions:
+            update_automation: mettre à jour l'automatisation
             delete_automation: supprimer l'automatisation
     discourse_automation:
       title: Automatisation
@@ -65,6 +66,12 @@ fr:
         text:
           label: Texte
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Catégories
+            tags:
+              label: Étiquettes
         not_found: Impossible de trouver le déclencheur « %{trigger} » pour l'automatisation « %{automation} ». Assurez-vous que l'extension associée est installée
         user_badge_granted:
           fields:

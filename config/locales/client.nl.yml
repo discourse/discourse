@@ -844,7 +844,6 @@ nl:
         claimed: "Geclaimd"
         claimed_by: "Geclaimd door %{username} · %{relativeDate}"
         reviewed: "Beoordeeld"
-        reviewed_by: "Beoordeeld door %{username} · %{relativeDate}"
         view_conversation: "PB weergeven"
         note_added: "Moderatoropmerking"
         note_added_by: "Moderatoropmerking door %{username} · %{relativeDate}"
@@ -2800,6 +2799,8 @@ nl:
       ulist_title: "Opsommingslijst"
       list_item: "Lijstitem"
       toggle_direction: "Richting schakelen"
+      wrap_modal:
+        apply: "Toepassen"
       help: "Hulp voor Markdown"
       exit_fullscreen_prompt: "Druk op <kbd>ESC</kbd> om het volledige scherm te sluiten"
       modal_ok: "OK"
@@ -2858,6 +2859,7 @@ nl:
         zoom_out: "Afbeeldingsgrootte verkleinen"
         zoom_in: "Afbeeldingsgrootte verhogen"
         remove: "Afbeelding verwijderen"
+      image: "afbeelding"
       image_scale_button: "Afbeelding schalen naar %{percent}%"
       delete_image_button: Afbeelding verwijderen
       toggle_image_grid: Afbeeldingsraster schakelen
@@ -3198,6 +3200,9 @@ nl:
         reset_bump_dates: "Omhoogplaatsingsdatums resetten"
         defer: "Markeren als ongelezen"
         delete: "Topics verwijderen"
+        delete_topics_count:
+          one: "Topic verwijderen"
+          other: "Topics verwijderen"
         dismiss: "Negeren"
         dismiss_read: "Alle ongelezen negeren"
         dismiss_read_with_selected:
@@ -5211,6 +5216,8 @@ nl:
         enabled_for_options:
           everyone: "Iedereen"
           staff: "Alleen medewerkers"
+        statuses:
+          experimental: "Experimenteel"
         impact_roles:
           admins: "Beheerders"
           moderators: "Moderators"
@@ -5221,6 +5228,7 @@ nl:
           disabled: "Uitgeschakeld"
           impact_type_feature: "Functie"
           impact_type_other: "Anders"
+          status_experimental: "Experimenteel"
       config:
         about:
           title: "Over je site"
@@ -5257,6 +5265,11 @@ nl:
           sub_pages:
             common_settings:
               title: "Instellingen"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Meer info"
         logo:
           title: "Logo"
           header_description: "Configureer de logo's en pictogrammen die op je site worden gebruikt"
