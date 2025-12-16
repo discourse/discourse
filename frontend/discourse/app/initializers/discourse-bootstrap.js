@@ -1,3 +1,5 @@
+import { DEBUG } from "@glimmer/env";
+import { importSync } from "@embroider/macros";
 import RSVP from "rsvp";
 import DeprecationWorkflow from "discourse/deprecation-workflow";
 import * as environment from "discourse/lib/environment";
@@ -6,7 +8,6 @@ import { setupS3CDN, setupURL } from "discourse/lib/get-url";
 import { setIconList } from "discourse/lib/icon-library";
 import PreloadStore from "discourse/lib/preload-store";
 import { setURLContainer } from "discourse/lib/url";
-import { optionalRequire } from "discourse/lib/utilities";
 import Session from "discourse/models/session";
 import I18n from "discourse-i18n";
 
@@ -59,17 +60,21 @@ export default {
     setupURL(setupData.cdn, setupData.baseUrl, setupData.baseUri);
     setEnvironment(setupData.environment);
 
-    if (isRailsTesting()) {
+    // the is dDEBUG condition forces this code to be tree-shaken in production builds
+    if (DEBUG && isRailsTesting()) {
       if (typeof setupData.raiseOnDeprecation !== "undefined") {
         window.EmberENV.RAISE_ON_DEPRECATION = setupData.raiseOnDeprecation;
       }
 
-      const setupDeprecationCounter = optionalRequire(
-        "discourse/tests/helpers/deprecation-counter",
-        "setupDeprecationCounter"
+      // the module deprecation-counter is only available in test environments
+      // we need to use importSync to inform Embroider that this module is required dynamically
+      // requireOptional won't here
+      const DeprecationCounterModule = importSync(
+        "discourse/tests/helpers/deprecation-counter"
       );
 
-      setupDeprecationCounter?.();
+      DeprecationCounterModule &&
+        DeprecationCounterModule.setupDeprecationCounter();
     }
 
     DeprecationWorkflow.setEnvironment(environment);
