@@ -42,7 +42,7 @@ const REPLACEMENT_URLS = {};
 
 if (DEBUG) {
   // used in system specs
-  CRITICAL_DEPRECATIONS.push(/fake-deprecation.*/);
+  CRITICAL_DEPRECATIONS.push(/fake.deprecation.*/);
 }
 
 // Deprecation handling APIs don't have any way to unregister handlers, so we set up permanent

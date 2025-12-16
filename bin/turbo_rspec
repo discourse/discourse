@@ -16,7 +16,7 @@ profile_print_slowest_examples_count = 10
 use_runtime_info = nil
 enable_system_tests = nil
 retry_and_log_flaky_tests = ENV["DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS"].to_s == "1"
-exclude_pattern = nil
+exclude_patterns = []
 
 OptionParser
   .new do |opts|
@@ -69,8 +69,8 @@ OptionParser
 
     opts.on(
       "--exclude-pattern=pattern",
-      "Exclude files that matches against the pattern using unix-style pattern matching",
-    ) { |pattern| exclude_pattern = pattern }
+      "Exclude files that matches against the pattern using unix-style pattern matching (comma-separated for multiple patterns)",
+    ) { |pattern| exclude_patterns.concat(pattern.split(",").map(&:strip)) }
   end
   .parse!(ARGV)
 
@@ -101,7 +101,9 @@ else
   use_runtime_info = false if use_runtime_info.nil?
 end
 
-files.reject! { |file| File.fnmatch(exclude_pattern, file) } if exclude_pattern
+if exclude_patterns.any?
+  files.reject! { |file| exclude_patterns.any? { |pattern| File.fnmatch(pattern, file) } }
+end
 
 requires.each { |f| require(f) }
 

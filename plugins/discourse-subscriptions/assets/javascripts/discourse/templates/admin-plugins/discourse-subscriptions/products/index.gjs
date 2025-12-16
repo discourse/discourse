@@ -3,7 +3,7 @@ import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
-import formatUnixDate from "../../helpers/format-unix-date";
+import formatUnixDate from "../../../../helpers/format-unix-date";
 
 export default <template>
   {{#if @controller.model.unconfigured}}

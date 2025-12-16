@@ -7,13 +7,19 @@ import { setIconList } from "discourse/lib/icon-library";
 import PreloadStore from "discourse/lib/preload-store";
 import { setURLContainer } from "discourse/lib/url";
 import Session from "discourse/models/session";
+import { setupDeprecationCounter } from "discourse/tests/helpers/deprecation-counter";
 import I18n from "discourse-i18n";
 
 export default {
   // The very first initializer to run
   initialize(app) {
-    const { isDevelopment, isProduction, isTesting, setEnvironment } =
-      environment;
+    const {
+      isDevelopment,
+      isProduction,
+      isTesting,
+      isRailsTesting,
+      setEnvironment,
+    } = environment;
 
     setURLContainer(app.__container__);
     setDefaultOwner(app.__container__);
@@ -24,6 +30,7 @@ export default {
     }
 
     let setupData;
+
     const setupDataElement = document.getElementById("data-discourse-setup");
     if (setupDataElement) {
       setupData = setupDataElement.dataset;
@@ -51,6 +58,14 @@ export default {
 
     setupURL(setupData.cdn, setupData.baseUrl, setupData.baseUri);
     setEnvironment(setupData.environment);
+
+    if (isRailsTesting()) {
+      if (typeof setupData.raiseOnDeprecation !== "undefined") {
+        window.EmberENV.RAISE_ON_DEPRECATION = setupData.raiseOnDeprecation;
+      }
+      setupDeprecationCounter();
+    }
+
     DeprecationWorkflow.setEnvironment(environment);
 
     I18n.defaultLocale = setupData.defaultLocale;

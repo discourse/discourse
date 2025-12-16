@@ -307,6 +307,30 @@ module("Unit | deprecation-workflow", function (hooks) {
       assert.true(wf.shouldCount("empty"), "empty handler -> count");
     });
 
+    test("shouldCount respects dont-count handler", function (assert) {
+      const wf = new DiscourseDeprecationWorkflow([
+        { handler: "dont-count", matchId: "dc" },
+        { handler: ["log", "dont-count"], matchId: "ldc" },
+        { handler: ["counter", "dont-count"], matchId: "cdc" },
+        { handler: "log", matchId: "l" },
+      ]);
+
+      assert.false(
+        wf.shouldCount("dc"),
+        "dont-count handler prevents counting"
+      );
+      assert.false(
+        wf.shouldCount("ldc"),
+        "dont-count with log still prevents counting"
+      );
+      assert.false(
+        wf.shouldCount("cdc"),
+        "dont-count overrides counter handler"
+      );
+      assert.true(wf.shouldCount("l"), "log only should count");
+      assert.true(wf.shouldCount("unhandled"), "unhandled should count");
+    });
+
     test("shouldThrow handles throw and includeUnsilenced", function (assert) {
       const wf = new DiscourseDeprecationWorkflow([
         { handler: "throw", matchId: "t" },
@@ -348,23 +372,57 @@ module("Unit | deprecation-workflow", function (hooks) {
         "unhandled without includeUnsilenced -> false"
       );
     });
+
+    test("shouldThrow respects dont-throw handler", function (assert) {
+      const wf = new DiscourseDeprecationWorkflow([
+        { handler: "dont-throw", matchId: "dt" },
+        { handler: ["throw", "dont-throw"], matchId: "tdt" },
+        { handler: ["log", "dont-throw"], matchId: "ldt" },
+        { handler: "throw", matchId: "t" },
+      ]);
+
+      assert.false(
+        wf.shouldThrow("dt"),
+        "dont-throw handler prevents throwing"
+      );
+      assert.false(wf.shouldThrow("tdt"), "dont-throw overrides throw handler");
+      assert.false(
+        wf.shouldThrow("ldt"),
+        "dont-throw with log prevents throwing"
+      );
+      assert.true(wf.shouldThrow("t"), "throw handler should throw");
+
+      assert.false(
+        wf.shouldThrow("dt", true),
+        "dont-throw prevents throwing even with includeUnsilenced"
+      );
+      assert.false(
+        wf.shouldThrow("tdt", true),
+        "dont-throw overrides throw even with includeUnsilenced"
+      );
+      assert.false(
+        wf.shouldThrow("ldt", true),
+        "dont-throw with log prevents throwing even with includeUnsilenced"
+      );
+    });
   });
 
   test("emberWorkflowList flattens handlers and filters to Ember CLI-compatible ones", function (assert) {
     const wf = new DiscourseDeprecationWorkflow([
       { handler: ["silence", "counter"], matchId: "x" },
       { handler: ["log", "throw"], matchId: "y" },
+      { handler: ["silence", "dont-throw", "dont-count"], matchId: "z" },
     ]);
 
     const flattened = wf.emberWorkflowList
       .map((w) => `${w.matchId}:${w.handler}`)
       .sort();
 
-    // "counter" is not included in Ember CLI workflow output; others are
+    // "counter", "dont-throw", "dont-count" are not included in Ember CLI workflow output; only Ember CLI handlers are
     assert.deepEqual(
       flattened,
-      ["x:silence", "y:log", "y:throw"].sort(),
-      "outputs one entry per allowed handler and excludes counter"
+      ["x:silence", "y:log", "y:throw", "z:silence"].sort(),
+      "outputs one entry per allowed handler and excludes counter, dont-throw, and dont-count"
     );
   });
 });

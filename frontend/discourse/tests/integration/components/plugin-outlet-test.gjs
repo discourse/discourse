@@ -20,6 +20,10 @@ import {
   extraConnectorComponent,
 } from "discourse/lib/plugin-connectors";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import {
+  restoreCountingDeprecation,
+  skipCountingDeprecation,
+} from "discourse/tests/helpers/deprecation-counter";
 import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
 import {
   disableRaiseOnDeprecation,
@@ -479,11 +483,19 @@ module("Integration | Component | plugin-outlet", function (hooks) {
     innerHooks.beforeEach(function () {
       this.consoleWarnStub = sinon.stub(console, "warn");
       disableRaiseOnDeprecation();
+
+      skipCountingDeprecation("discourse.plugin-connector.deprecated-arg");
+      skipCountingDeprecation("discourse.plugin-connector.deprecated-arg.test");
     });
 
     innerHooks.afterEach(function () {
       this.consoleWarnStub.restore();
       enableRaiseOnDeprecation();
+
+      restoreCountingDeprecation("discourse.plugin-connector.deprecated-arg");
+      restoreCountingDeprecation(
+        "discourse.plugin-connector.deprecated-arg.test"
+      );
     });
 
     test("deprecated parameters with default message", async function (assert) {
@@ -513,7 +525,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
       );
       assert.true(
         this.consoleWarnStub.calledWith(
-          "Deprecation notice: outlet arg `shouldDisplay` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
+          "DEPRECATION NOTICE: outlet arg `shouldDisplay` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
         ),
         "logs the default message to the console"
       );
@@ -669,11 +681,21 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
+      skipCountingDeprecation("discourse.plugin-connector.deprecated-arg");
+      skipCountingDeprecation("discourse.plugin-connector.deprecated-arg.test");
+
       registerTemporaryModule(
         `${TEMPLATE_PREFIX}/test-name/my-connector`,
         hbs`
           <span class="outletArgHelloValue">{{@outletArgs.hello}}</span>
           <span class="thisHelloValue">{{this.hello}}</span>`
+      );
+    });
+
+    hooks.afterEach(function () {
+      restoreCountingDeprecation("discourse.plugin-connector.deprecated-arg");
+      restoreCountingDeprecation(
+        "discourse.plugin-connector.deprecated-arg.test"
       );
     });
 
@@ -849,13 +871,13 @@ module(
         );
         assert.true(
           this.consoleWarnStub.calledWith(
-            "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
+            "DEPRECATION NOTICE: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
           ),
           "logs the expected message for @outletArgs.hello"
         );
         assert.true(
           this.consoleWarnStub.calledWith(
-            "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [used on connector discourse/plugins/some-plugin/templates/connectors/test-name/my-connector] [deprecation id: discourse.plugin-connector.deprecated-arg]"
+            "DEPRECATION NOTICE: outlet arg `hello` is deprecated on the outlet `test-name` [used on connector discourse/plugins/some-plugin/templates/connectors/test-name/my-connector] [deprecation id: discourse.plugin-connector.deprecated-arg]"
           ),
           "logs the expected message for this.hello"
         );
@@ -881,13 +903,13 @@ module(
         );
         assert.true(
           this.consoleWarnStub.calledWith(
-            "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
+            "DEPRECATION NOTICE: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
           ),
           "logs the expected message for @outletArgs.hello"
         );
         assert.false(
           this.consoleWarnStub.calledWith(
-            "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [used on connector discourse/plugins/some-plugin/templates/connectors/test-name/my-connector] [deprecation id: discourse.plugin-connector.deprecated-arg]"
+            "DEPRECATION NOTICE: outlet arg `hello` is deprecated on the outlet `test-name` [used on connector discourse/plugins/some-plugin/templates/connectors/test-name/my-connector] [deprecation id: discourse.plugin-connector.deprecated-arg]"
           ),
           "does not log the message for this.hello"
         );
@@ -919,13 +941,13 @@ module(
         );
         assert.true(
           this.consoleWarnStub.calledWith(
-            "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
+            "DEPRECATION NOTICE: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
           ),
           "logs the expected message for @outletArgs.hello"
         );
         assert.true(
           this.consoleWarnStub.calledWith(
-            "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [used on connector discourse/plugins/some-plugin/connectors/test-name/my-connector] [deprecation id: discourse.plugin-connector.deprecated-arg]"
+            "DEPRECATION NOTICE: outlet arg `hello` is deprecated on the outlet `test-name` [used on connector discourse/plugins/some-plugin/connectors/test-name/my-connector] [deprecation id: discourse.plugin-connector.deprecated-arg]"
           ),
           "logs the expected message for this.hello"
         );
@@ -956,13 +978,13 @@ module(
         );
         assert.true(
           this.consoleWarnStub.calledWith(
-            "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
+            "DEPRECATION NOTICE: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
           ),
           "logs the expected message for @outletArgs.hello"
         );
         assert.true(
           this.consoleWarnStub.calledWith(
-            "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
+            "DEPRECATION NOTICE: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
           ),
           "logs the expected message for this.hello"
         );
@@ -989,7 +1011,7 @@ module(
         );
         assert.true(
           this.consoleWarnStub.calledWith(
-            "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
+            "DEPRECATION NOTICE: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
           ),
           "logs the expected message for @outletArgs.hello"
         );

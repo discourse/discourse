@@ -3,6 +3,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { formatUsername } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
+import UserMenuChatNotificationsList from "../components/user-menu/chat-notifications-list";
 
 export default {
   name: "chat-user-menu",
@@ -150,7 +151,7 @@ export default {
             }
 
             get panelComponent() {
-              return "user-menu/chat-notifications-list";
+              return UserMenuChatNotificationsList;
             }
 
             get icon() {
