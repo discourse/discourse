@@ -24,6 +24,7 @@ export default class HorizontalOverflowNav extends Component {
     activeElement?.scrollIntoView({
       block: "nearest",
       inline: "center",
+      container: "nearest",
     });
   }
 
