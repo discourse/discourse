@@ -14,7 +14,7 @@ class DiscourseId::Register
   step :store_challenge_token
   step :register_with_challenge
   step :store_credentials
-  # step :log_action
+  step :log_action
 
   private
 
@@ -55,13 +55,11 @@ class DiscourseId::Register
     SiteSetting.discourse_id_client_secret = data["client_secret"]
   end
 
-  # def log_action(guardian:, params:, data:)
-  #   return if params.update
-  #   return if guardian.blank?
+  def log_action(params:, data:)
+    return if params.update
 
-  #   StaffActionLogger.new(guardian.user).log_custom(
-  #     "discourse_id_register",
-  #     client_id: data["client_id"],
-  #   )
-  # end
+    user = context[:guardian]&.user || Discourse.system_user
+
+    StaffActionLogger.new(user).log_custom("discourse_id_register", client_id: data["client_id"])
+  end
 end
