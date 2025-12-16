@@ -34,11 +34,15 @@ module DiscourseRewind
         total_messages = messages.count
         return if total_messages == 0
 
-        # Get favorite channels (public channels)
+        # Get favorite channels (public channels only, excluding read-restricted categories)
         channel_usage =
           messages
             .joins(:chat_channel)
+            .joins(
+              "INNER JOIN categories ON categories.id = chat_channels.chatable_id AND chat_channels.chatable_type = 'Category'",
+            )
             .where(chat_channels: { type: "CategoryChannel" })
+            .where(categories: { read_restricted: false })
             .group("chat_channels.id", "chat_channels.slug")
             .count
             .sort_by { |_, count| -count }
