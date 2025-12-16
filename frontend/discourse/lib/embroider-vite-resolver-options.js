@@ -9,6 +9,14 @@ export default function writeResolverConfig(config, extra) {
   };
 
   const resolverPath = path.resolve("./node_modules/.embroider/resolver.json");
+  const embroiderDir = path.resolve("./node_modules/.embroider");
+
+  if (fs.existsSync(embroiderDir)) {
+    fs.rmdirSync(embroiderDir, {
+      recursive: true,
+      force: true,
+    });
+  }
   fs.mkdirSync(path.dirname(resolverPath), { recursive: true });
   fs.writeFileSync(
     resolverPath,
