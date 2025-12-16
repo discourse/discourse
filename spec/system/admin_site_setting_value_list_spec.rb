@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Site Setting Value Lists", type: :system do
+describe "Admin Site Setting Value Lists" do
   fab!(:admin)
   let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
 
