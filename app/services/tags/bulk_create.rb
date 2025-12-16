@@ -25,9 +25,14 @@ class Tags::BulkCreate
   params do
     attribute :tag_names, :array
 
+    validates :tag_names,
+              length: {
+                maximum: 100,
+                message: ->(object, data) { I18n.t("tags.bulk_create.too_many_tags", max: 100) },
+              },
+              if: -> { tag_names.present? }
+
     validate :tag_names_must_be_array
-    validate :tag_names_must_be_strings, if: -> { tag_names.present? }
-    validate :tag_names_limit, if: -> { tag_names.present? }
 
     def tag_names_must_be_array
       raw_value = @attributes["tag_names"].value_before_type_cast
@@ -38,19 +43,11 @@ class Tags::BulkCreate
       return if raw_value.is_a?(Array)
       errors.add(:tag_names, I18n.t("tags.bulk_create.invalid_params"))
     end
-
-    def tag_names_must_be_strings
-      return if tag_names.all? { |name| name.is_a?(String) }
-      errors.add(:tag_names, I18n.t("tags.bulk_create.invalid_params"))
-    end
-
-    def tag_names_limit
-      return if tag_names.length <= 100
-      errors.add(:tag_names, I18n.t("tags.bulk_create.too_many_tags", max: 100))
-    end
   end
 
-  step :process_tags
+  step :extract_raw_tag_names
+  step :normalize_tags
+  step :create_tags
 
   private
 
@@ -58,11 +55,16 @@ class Tags::BulkCreate
     guardian.can_admin_tags?
   end
 
-  def process_tags(params:)
-    results = { created: [], existing: [], failed: {} }
+  def extract_raw_tag_names(params:)
+    raw_values = params.instance_variable_get(:@attributes)["tag_names"].value_before_type_cast
+    context[:raw_tag_names] = raw_values.map(&:to_s) if raw_values.is_a?(Array)
+  end
 
+  def normalize_tags(raw_tag_names:)
+    results = { created: [], existing: [], failed: {} }
     validated_tags = []
-    params.tag_names.each do |raw_name|
+
+    raw_tag_names.each do |raw_name|
       next if raw_name.blank?
 
       normalized_input = raw_name.strip.downcase.gsub(/[[:space:]]+/, "-")
@@ -90,6 +92,11 @@ class Tags::BulkCreate
       validated_tags << { raw_name: raw_name, tag_name: tag_name }
     end
 
+    context[:validated_tags] = validated_tags
+    context[:results] = results
+  end
+
+  def create_tags(validated_tags:, results:)
     tag_names = validated_tags.map { |t| t[:tag_name] }
     existing_tag_names = Tag.where(name: tag_names).pluck(:name).to_set
 
@@ -108,7 +115,5 @@ class Tags::BulkCreate
         end
       end
     end
-
-    context[:results] = results
   end
 end

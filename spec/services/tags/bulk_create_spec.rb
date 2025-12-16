@@ -8,7 +8,7 @@ RSpec.describe(Tags::BulkCreate) do
       expect(contract.errors[:tag_names]).to be_present
     end
 
-    it "validates tag_names is an array of strings" do
+    it "rejects non-array tag_names" do
       contract = described_class.new(tag_names: "not an array")
       expect(contract.valid?).to be false
       expect(contract.errors[:tag_names]).to be_present
@@ -100,6 +100,36 @@ RSpec.describe(Tags::BulkCreate) do
 
       it "returns cleaned names" do
         expect(result.results[:created]).to contain_exactly("tag-with-spaces", "uppercase")
+      end
+    end
+
+    context "when tag names are numbers" do
+      let(:tag_names) { [123, 456, 789] }
+
+      it { is_expected.to run_successfully }
+
+      it "converts numbers to strings and creates tags" do
+        expect { result }.to change { Tag.count }.by(3)
+        expect(Tag.where(name: %w[123 456 789]).count).to eq(3)
+      end
+
+      it "returns the created tags as strings" do
+        expect(result.results[:created]).to contain_exactly("123", "456", "789")
+      end
+    end
+
+    context "when tag names have leading zeros" do
+      let(:tag_names) { %w[0000 0123 00test] }
+
+      it { is_expected.to run_successfully }
+
+      it "preserves leading zeros" do
+        expect { result }.to change { Tag.count }.by(3)
+        expect(Tag.where(name: %w[0000 0123 00test]).count).to eq(3)
+      end
+
+      it "returns tags with leading zeros preserved" do
+        expect(result.results[:created]).to contain_exactly("0000", "0123", "00test")
       end
     end
 
