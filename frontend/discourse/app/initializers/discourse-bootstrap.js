@@ -60,15 +60,16 @@ export default {
     setupURL(setupData.cdn, setupData.baseUrl, setupData.baseUri);
     setEnvironment(setupData.environment);
 
-    // the is dDEBUG condition forces this code to be tree-shaken in production builds
+    // the `if DEBUG` forces the code inside the conditional block to be tree-shaken in
+    // production builds
     if (DEBUG && isRailsTesting()) {
       if (typeof setupData.raiseOnDeprecation !== "undefined") {
         window.EmberENV.RAISE_ON_DEPRECATION = setupData.raiseOnDeprecation;
       }
 
       // the module deprecation-counter is only available in test environments
-      // we need to use importSync to inform Embroider that this module is required dynamically
-      // requireOptional won't here
+      // we need to use importSync to inform Embroider that this module is required
+      // dynamically. `requireOptional` won't work here
       const DeprecationCounterModule = importSync(
         "discourse/tests/helpers/deprecation-counter"
       );
