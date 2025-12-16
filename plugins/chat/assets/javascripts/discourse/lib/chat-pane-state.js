@@ -1,7 +1,7 @@
-import { tracked } from "@glimmer/tracking";
 import { setOwner } from "@ember/owner";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import { tracked } from "@glimmer/tracking";
 import { bind } from "discourse/lib/decorators";
 import userPresent, {
   onPresenceChange,
@@ -173,11 +173,16 @@ export default class ChatPaneState {
    * @param {number} [options.distanceThresholdPixels]
    */
   updatePendingContentFromScrollState(options) {
-    const { fetchedOnce, canLoadMoreFuture, state, distanceThresholdPixels } =
-      options;
+    const {
+      scroller,
+      fetchedOnce,
+      canLoadMoreFuture,
+      state,
+      distanceThresholdPixels,
+    } = options;
 
     this.#updateHasPendingContentBelow({
-      scroller: state?.scroller,
+      scroller,
       fetchedOnce,
       canLoadMoreFuture,
       distanceToBottomPixels: state?.distanceToBottom?.pixels ?? 0,
