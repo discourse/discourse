@@ -16,6 +16,10 @@
   &.-animated {
     @include d-animation(float-down, 0.25s, ease);
 
+    &.-closing {
+      @include d-animation(dissolve-up, 125ms, ease);
+    }
+
     &[data-placement^="bottom"] {
       transform-origin: top center;
     }
@@ -23,6 +27,10 @@
     &[data-placement^="top"] {
       @include d-animation(float-up, 0.25s, ease);
       transform-origin: bottom center;
+
+      &.-closing {
+        @include d-animation(dissolve-down, 125ms, ease);
+      }
     }
 
     &[data-placement^="right"] {
