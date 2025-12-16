@@ -1682,6 +1682,7 @@ Discourse::Application.routes.draw do
             username: RouteFormat.username,
           }
       post "/upload" => "tags#upload"
+      post "/bulk_create" => "tags#bulk_create"
       get "/unused" => "tags#list_unused"
       delete "/unused" => "tags#destroy_unused"
 

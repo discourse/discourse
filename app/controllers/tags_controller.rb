@@ -273,6 +273,16 @@ class TagsController < ::ApplicationController
     end
   end
 
+  def bulk_create
+    Tags::BulkCreate.call(guardian: guardian, params: params.permit(tag_names: [])) do
+      on_success { |results:| render json: results }
+      on_failed_policy(:can_admin_tags) { raise Discourse::InvalidAccess }
+      on_failed_contract do |contract|
+        render_json_error(contract.errors.full_messages.first, status: :unprocessable_entity)
+      end
+    end
+  end
+
   def list_unused
     guardian.ensure_can_admin_tags!
     render json: { tags: Tag.unused.pluck(:name) }
