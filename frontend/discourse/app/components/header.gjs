@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { animateClosing } from "discourse/lib/animation-utils";
 import DAG from "discourse/lib/dag";
 import scrollLock from "discourse/lib/scroll-lock";
 import { scrollTop } from "discourse/lib/scroll-top";
@@ -182,11 +183,23 @@ export default class GlimmerHeader extends Component {
   }
 
   @action
-  async toggleUserMenu() {
-    this.header.userVisible = !this.header.userVisible;
-    if (!this.site.desktopView) {
+  async toggleUserMenu(value) {
+    const wasVisible = this.header.userVisible;
+    const willBeVisible = value ?? !wasVisible;
+    const isClosing = wasVisible && !willBeVisible;
+
+    // If closing and on desktop, animate before closing
+    if (isClosing && this.site.desktopView) {
+      const menuPanel = document.querySelector(".menu-panel.drop-down");
+      if (menuPanel) {
+        await animateClosing(menuPanel);
+      }
+    } else {
+      // this seems to only animate at small widths, so if the site is not desktop view, we need to call this
       this.args.animateMenu();
     }
+
+    this.header.userVisible = willBeVisible;
     this.toggleBodyScrolling(this.header.userVisible);
   }
 
