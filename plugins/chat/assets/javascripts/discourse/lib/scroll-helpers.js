@@ -39,13 +39,10 @@ export function maintainScrollPosition(scroller, callback) {
   callback?.();
 
   schedule("afterRender", () => {
-    if (!scroller.isConnected) {
-      return;
-    }
     const captured = pendingAdjustments.get(scroller);
     pendingAdjustments.delete(scroller);
 
-    if (!captured) {
+    if (!captured || !scroller.isConnected) {
       return;
     }
 
