@@ -55,20 +55,16 @@
   outline: none;
 }
 
-// Like Silk (c2 cAd): y-axis overflow, grid-template, and overscroll-behavior
 [data-d-scroll~="scroll-container"][data-d-scroll~="axis-y"] {
   overflow-x: hidden !important;
   overflow-y: auto !important;
   grid-template-rows: var(--grid-template);
-  overscroll-behavior-y: contain !important;
 }
 
-// Like Silk (c2 cAc): x-axis overflow, grid-template, and overscroll-behavior
 [data-d-scroll~="scroll-container"][data-d-scroll~="axis-x"] {
   overflow-x: auto !important;
   overflow-y: hidden !important;
   grid-template-columns: var(--grid-template);
-  overscroll-behavior-x: contain !important;
 }
 
 // Like Silk (c2 cEb): overshoot prevention
@@ -76,15 +72,12 @@
   overscroll-behavior: none !important;
 }
 
-// Like Silk (c2 cCa cIb / cDa cJb): gesture trap control
-// Per Silk (lines 13390-13391): scrollTrapX/scrollTrapY control overscroll-behavior
-// When trap is active, overscroll-behavior is set to none to prevent scroll chaining
 [data-d-scroll~="scroll-container"][data-d-scroll~="trap-x"] {
-  overscroll-behavior-x: none !important;
+  overscroll-behavior-x: contain !important;
 }
 
 [data-d-scroll~="scroll-container"][data-d-scroll~="trap-y"] {
-  overscroll-behavior-y: none !important;
+  overscroll-behavior-y: contain !important;
 }
 
 // Like Silk (c2 cFa): scrollGesture disabled

@@ -110,7 +110,7 @@ class View extends Component {
     <DSheet.View
       class="SheetWithDetent-view"
       @sheet={{@sheet}}
-      @detents={{@detents}}
+      @detents={{unless @reachedLastDetent @detents}}
       @swipeOvershoot={{false}}
       @onTravelStatusChange={{this.handleTravelStatusChange}}
       @onTravelRangeChange={{this.handleTravelRangeChange}}
