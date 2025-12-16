@@ -29,6 +29,7 @@ export default class Chat extends Service {
   @service router;
   @service chatChannelsManager;
   @service chatTrackingStateManager;
+  @service chatPanePendingManager;
 
   cook = null;
   presenceChannel = null;
@@ -252,7 +253,10 @@ export default class Chat extends Service {
   }
 
   getDocumentTitleCount() {
-    return this.chatTrackingStateManager.allChannelUrgentCount;
+    return (
+      this.chatTrackingStateManager.allChannelUrgentCount +
+      this.chatPanePendingManager.totalPendingMessageCount
+    );
   }
 
   switchChannelUpOrDown(direction, unreadOnly = false) {

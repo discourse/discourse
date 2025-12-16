@@ -75,7 +75,7 @@ export default {
     // present
     // When 20 minutes pass we stop long polling due to "shouldLongPollCallback".
     onPresenceChange({
-      unseenTime: LONG_POLL_AFTER_UNSEEN_TIME,
+      userUnseenTime: LONG_POLL_AFTER_UNSEEN_TIME,
       callback: (present) => {
         if (present && messageBus.onVisibilityChange) {
           messageBus.onVisibilityChange();
