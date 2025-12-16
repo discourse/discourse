@@ -2,11 +2,12 @@ import { SPRING_PRESETS } from "./animation";
 import { travelToDetent } from "./travel";
 
 /**
- * Default exiting animation configuration.
+ * Default animation configuration for exiting transitions.
+ * Uses a stiffer spring for snappy dismiss behavior.
  *
  * @type {Object}
  */
-const EXITING_ANIMATION_CONFIG = {
+const EXITING_ANIMATION_DEFAULTS = {
   easing: "spring",
   stiffness: 520,
   damping: 44,
@@ -14,8 +15,23 @@ const EXITING_ANIMATION_CONFIG = {
 };
 
 /**
- * Animation travel helper for d-sheet.
- * Wraps travel logic and animation configuration resolution.
+ * Set of recognized easing types that indicate valid animation config.
+ * When settings have one of these easings, fallback config is not applied.
+ *
+ * @type {Set<string>}
+ */
+const RECOGNIZED_EASINGS = new Set([
+  "spring",
+  "ease",
+  "ease-in",
+  "ease-out",
+  "ease-in-out",
+  "linear",
+]);
+
+/**
+ * Manages animation travel for d-sheet component.
+ * Handles animation configuration resolution and travel execution.
  *
  * @class AnimationTravel
  */
@@ -28,48 +44,65 @@ export default class AnimationTravel {
   }
 
   /**
-   * Get the exiting animation config.
+   * Default animation config for exiting transitions.
    *
    * @returns {Object}
    */
-  get exitingAnimationConfig() {
-    return EXITING_ANIMATION_CONFIG;
+  get exitingAnimationDefaults() {
+    return EXITING_ANIMATION_DEFAULTS;
   }
 
   /**
-   * Resolve animation settings from string preset or object.
+   * Check if settings have a recognized easing type.
    *
-   * @param {string|Object} settings - Animation settings
-   * @returns {Object|null}
+   * @param {string|Object|null} settings - Animation settings
+   * @param {Object|undefined} preset - Resolved preset if any
+   * @returns {boolean}
    */
-  resolveAnimationSettings(settings) {
-    if (!settings) {
-      return null;
+  #hasRecognizedEasing(settings, preset) {
+    if (preset) {
+      return true;
     }
-
-    if (typeof settings === "string") {
-      const preset = SPRING_PRESETS[settings];
-      if (preset) {
-        return { easing: "spring", ...preset };
-      }
-      return null;
+    if (settings?.easing && RECOGNIZED_EASINGS.has(settings.easing)) {
+      return true;
     }
-
-    if (settings.preset) {
-      const preset = SPRING_PRESETS[settings.preset];
-      if (preset) {
-        return { easing: "spring", ...preset, ...settings };
-      }
-    }
-
-    return settings;
+    return false;
   }
 
   /**
-   * Determine the travel type based on current and destination detent.
+   * Resolve animation settings with fallback.
+   * 1. Start with base { easing: "spring" }
+   * 2. Merge settings object (if not string)
+   * 3. Merge preset values (if preset found)
+   * 4. Merge fallback only if no recognized easing
+   *
+   * @param {string|Object|null} settings - Animation settings (preset name or config object)
+   * @param {Object} fallback - Fallback config when no recognized easing
+   * @returns {Object}
+   */
+  resolveAnimationSettings(settings, fallback) {
+    const isString = typeof settings === "string";
+    const preset = isString
+      ? SPRING_PRESETS[settings]
+      : settings?.preset
+        ? SPRING_PRESETS[settings.preset]
+        : undefined;
+
+    const hasEasing = this.#hasRecognizedEasing(settings, preset);
+
+    return {
+      easing: "spring",
+      ...(isString ? {} : settings),
+      ...(preset ?? {}),
+      ...(hasEasing ? {} : fallback),
+    };
+  }
+
+  /**
+   * Determine travel type based on current and destination detent.
    *
    * @param {number} destinationDetent - Target detent index
-   * @returns {string} Travel type: "entering", "exiting", or "stepping"
+   * @returns {string} "entering", "exiting", or "stepping"
    */
   determineTravelType(destinationDetent) {
     const c = this.controller;
@@ -83,12 +116,13 @@ export default class AnimationTravel {
   }
 
   /**
-   * Get the raw animation settings for a travel type.
+   * Get raw animation settings for a travel type.
+   * For stepping, falls back to entering settings if not specified.
    *
-   * @param {string} travelType - Type of travel: "entering", "exiting", or "stepping"
+   * @param {string} travelType - "entering", "exiting", or "stepping"
    * @returns {string|Object|null}
    */
-  getAnimationSettingsForTravelType(travelType) {
+  getRawAnimationSettings(travelType) {
     const c = this.controller;
 
     switch (travelType) {
@@ -97,42 +131,46 @@ export default class AnimationTravel {
       case "exiting":
         return c.exitingAnimationSettings;
       case "stepping":
-        return c.steppingAnimationSettings;
+        return c.steppingAnimationSettings ?? c.enteringAnimationSettings;
       default:
         return null;
     }
   }
 
   /**
-   * Get animation config for a travel to a destination detent.
+   * Get fallback config for a travel type.
    *
-   * @param {number} destinationDetent - Target detent index
-   * @param {string} [travelType] - Type of travel: "entering", "exiting", or "stepping"
+   * @param {string} travelType - "entering", "exiting", or "stepping"
    * @returns {Object}
    */
-  getAnimationConfigForTravel(destinationDetent, travelType = null) {
-    if (!travelType) {
-      travelType = this.determineTravelType(destinationDetent);
-    }
-
-    const settings = this.getAnimationSettingsForTravelType(travelType);
-    const resolved = this.resolveAnimationSettings(settings);
-
-    if (resolved) {
-      return resolved;
-    }
-
+  #getFallbackForTravelType(travelType) {
     if (travelType === "exiting") {
-      return this.exitingAnimationConfig;
+      return this.exitingAnimationDefaults;
     }
     return SPRING_PRESETS.smooth;
   }
 
   /**
-   * Animate to a specific detent.
+   * Get resolved animation config for traveling to a destination detent.
+   *
+   * @param {number} destinationDetent - Target detent index
+   * @param {string} [travelType] - Override travel type detection
+   * @returns {Object}
+   */
+  getAnimationConfigForTravel(destinationDetent, travelType = null) {
+    const resolvedTravelType =
+      travelType ?? this.determineTravelType(destinationDetent);
+    const settings = this.getRawAnimationSettings(resolvedTravelType);
+    const fallback = this.#getFallbackForTravelType(resolvedTravelType);
+
+    return this.resolveAnimationSettings(settings, fallback);
+  }
+
+  /**
+   * Animate sheet to a specific detent.
    *
    * @param {number} detentIndex - Target detent index
-   * @param {Object} [animationConfig] - Optional animation config override
+   * @param {Object} [animationConfig] - Override animation config
    */
   animateToDetent(detentIndex, animationConfig = null) {
     const c = this.controller;
@@ -155,7 +193,7 @@ export default class AnimationTravel {
       animationConfig ||
       this.getAnimationConfigForTravel(detentIndex, travelType);
 
-    const settings = this.getAnimationSettingsForTravelType(travelType);
+    const settings = this.getRawAnimationSettings(travelType);
     const trackToTravelOn =
       (settings && typeof settings === "object" && settings.track) || c.tracks;
 
@@ -186,16 +224,14 @@ export default class AnimationTravel {
       snapBackAcceleratorTravelAxisSize,
       onTravel: c.onTravel,
       onTravelStart: c.onTravelStart,
-      onTravelEnd: () => this.handleTravelEnd(),
+      onTravelEnd: () => this.#handleTravelEnd(),
     });
   }
 
   /**
-   * Handle travel end callback.
-   *
-   * @private
+   * Handle travel completion and state transitions.
    */
-  handleTravelEnd() {
+  #handleTravelEnd() {
     const c = this.controller;
 
     const exactProgress =
@@ -231,9 +267,9 @@ export default class AnimationTravel {
   }
 
   /**
-   * Travel to detent after resize recalculation.
+   * Travel to detent after resize without animation.
    *
-   * @param {number} detentIndex - Target detent
+   * @param {number} detentIndex - Target detent index
    */
   recalculateAndTravel(detentIndex) {
     const c = this.controller;
@@ -267,10 +303,10 @@ export default class AnimationTravel {
   }
 
   /**
-   * Travel to stuck position (first or last detent) without animation.
+   * Travel to stuck position (first or last detent) instantly.
    *
-   * @param {string} direction - "front" (last detent) or "back" (first detent)
-   * @param {Function} onComplete - Callback on completion
+   * @param {string} direction - "front" for last detent, "back" for first
+   * @param {Function} onComplete - Callback when travel completes
    */
   stepToStuckPosition(direction, onComplete) {
     const c = this.controller;

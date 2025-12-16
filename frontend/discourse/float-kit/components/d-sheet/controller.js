@@ -1223,7 +1223,7 @@ export default class Controller {
     this.domAttributes.disableScrollSnap();
     this.animationTravel.animateToDetent(
       0,
-      this.animationTravel.exitingAnimationConfig
+      this.animationTravel.exitingAnimationDefaults
     );
   }
 
