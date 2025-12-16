@@ -58,7 +58,7 @@ export const GUARDS = {
  * - covered-going-up: Sheet above is closing, this sheet is uncovering
  * - covered-indeterminate: Temporary state to determine final position
  *
- * This machine coordinates with the staging machine to prevent animation conflicts
+ * This machine coordinates with the animation state machine to prevent animation conflicts
  * when opening nested sheets during parent animations.
  */
 export const POSITION_STATES = {
@@ -141,10 +141,10 @@ export const POSITION_STATES = {
 };
 
 /**
- * Staging machine tracks animation state separately from lifecycle.
+ * Animation state machine tracks which animation is currently in progress.
  * This allows the sheet to stay in "open" state while animations run.
  */
-export const STAGING_STATES = {
+export const ANIMATION_STATES = {
   initial: "none",
   states: {
     none: {

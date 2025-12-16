@@ -89,7 +89,7 @@
 // 0ac = scroll-trap-marker (marks scroll-trap elements for focus queries)
 // 0ae = scroll-trap-end (marks root scroll trap for scroll prevention)
 // 0ah = focusable (controlled by nativeFocusScrollPrevention, default true)
-// 0aj = staging-active (when staging !== "none", used for CSS optimization rules)
+// 0aj = animating (when animationState !== "none", used for CSS optimization rules)
 // 0ak = closed-but-visible (openness:closed but still rendering)
 // 0al = scroll-lock-participant (participates in scroll-lock scrollbar compensation)
 // 0af = no-bleeding-background
@@ -230,15 +230,15 @@ html[data-d-sheet-native-page-scroll-replaced="false"]:has(
 
 // Like Silk (0aj + bCa, lines 116-118): During animation with optimization, use overflow:clip.
 // This prevents scroll events during animations for better performance.
-// 0aj = staging-active (when staging is not "none")
-[data-d-sheet~="staging-active"]
+// 0aj = animating (when animationState is not "none")
+[data-d-sheet~="animating"]
   [data-d-sheet~="scroll-trap-root"][data-d-sheet~="scroll-trap-optimised"] {
   overflow: clip !important;
 }
 
 // Like Silk (0aj + bCa, lines 145-148): During animation with optimization, hide ::before.
 // Combined with overflow:clip, this fully disables scroll-trap during animations.
-[data-d-sheet~="staging-active"]
+[data-d-sheet~="animating"]
   [data-d-sheet~="scroll-trap-root"][data-d-sheet~="scroll-trap-optimised"]::before {
   display: none !important;
 }
@@ -246,14 +246,13 @@ html[data-d-sheet-native-page-scroll-replaced="false"]:has(
 // Like Silk (0aj + a6, line 401-403): During animation, disable scrolling on scroll-container.
 // This prevents scroll events from interfering with programmatic animations.
 // Uses [data-d-sheet] for extra specificity (0,3,0) to override track-specific overflow rules.
-[data-d-sheet~="staging-active"]
-  [data-d-sheet~="scroll-container"][data-d-sheet] {
+[data-d-sheet~="animating"] [data-d-sheet~="scroll-container"][data-d-sheet] {
   overflow: hidden;
 }
 
 // Like Silk (0aj + a5 + aNp, lines 302-305): During animation, secondary scroll trap captures touch events.
 // This prevents touch events from propagating to body when sheet isn't ready.
-[data-d-sheet~="staging-active"]
+[data-d-sheet~="animating"]
   [data-d-sheet~="secondary-scroll-trap"][data-d-sheet~="no-pointer-events"] {
   z-index: 1;
   pointer-events: auto !important;

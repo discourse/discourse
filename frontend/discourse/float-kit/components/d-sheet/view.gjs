@@ -112,11 +112,11 @@ export default class View extends Component {
         (if (eq @sheet.currentState "closed") "closed")
         (if (not @sheet.inertOutside) "no-pointer-events")
         @sheet.effectiveSwipeTrapClass
-        (concat "staging-" @sheet.staging)
+        (concat "animation-" @sheet.animationState)
         (concat "openness-" @sheet.openness)
         "sheet-root"
         (if @sheet.isFocusable "focusable")
-        (if @sheet.isStagingActive "staging-active")
+        (if @sheet.isAnimating "animating")
         "scroll-lock-participant"
       }}
       tabindex="-1"

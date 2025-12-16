@@ -22,12 +22,12 @@ export default class StateHelper {
   }
 
   /**
-   * Get the staging state machine.
+   * Get the animation state machine.
    *
    * @returns {Object}
    */
-  get stagingMachine() {
-    return this.c.stagingMachine;
+  get animationStateMachine() {
+    return this.c.animationStateMachine;
   }
 
   /**
@@ -61,7 +61,7 @@ export default class StateHelper {
    * @param {boolean} skipOpening - Whether to skip the opening animation
    */
   beginEnterAnimation(skipOpening = false) {
-    this.stagingMachine.send("OPEN_PREPARED", {
+    this.animationStateMachine.send("OPEN_PREPARED", {
       opennessState: this.stateMachine.current,
     });
     this.positionMachine.send("READY_TO_GO_FRONT", { skipOpening });
@@ -75,10 +75,10 @@ export default class StateHelper {
   }
 
   /**
-   * Advance staging machine to next state.
+   * Advance animation state machine to next state.
    */
-  advanceStaging() {
-    this.stagingMachine.send("NEXT");
+  advanceAnimationState() {
+    this.animationStateMachine.send("NEXT");
   }
 
   // ─── Closing Flow ───────────────────────────────────────────────────
@@ -96,7 +96,7 @@ export default class StateHelper {
    * @param {boolean} skipClosing - Whether to skip closing animation
    */
   beginExitAnimation(skipClosing = false) {
-    this.stagingMachine.send("ACTUALLY_CLOSE", {
+    this.animationStateMachine.send("ACTUALLY_CLOSE", {
       opennessState: this.stateMachine.current,
       skipClosing,
     });
@@ -176,7 +176,7 @@ export default class StateHelper {
    * Begin actual stepping animation.
    */
   actuallyStep() {
-    this.stagingMachine.send("ACTUALLY_STEP", {
+    this.animationStateMachine.send("ACTUALLY_STEP", {
       opennessState: this.stateMachine.current,
     });
   }
@@ -218,22 +218,22 @@ export default class StateHelper {
     this.positionMachine.send("GOTO_COVERED_IDLE");
   }
 
-  // ─── Staging Machine ────────────────────────────────────────────────
+  // ─── Animation State Machine ────────────────────────────────────────
 
   /**
-   * Signal staging to go down (for stacking).
+   * Signal animation state to go down (for stacking).
    */
   goDown() {
-    this.stagingMachine.send("GO_DOWN", {
+    this.animationStateMachine.send("GO_DOWN", {
       opennessState: this.stateMachine.current,
     });
   }
 
   /**
-   * Signal staging to go up (for stacking).
+   * Signal animation state to go up (for stacking).
    */
   goUp() {
-    this.stagingMachine.send("GO_UP", {
+    this.animationStateMachine.send("GO_UP", {
       opennessState: this.stateMachine.current,
     });
   }
@@ -244,7 +244,7 @@ export default class StateHelper {
    * @param {boolean} skipClosing - Whether to skip closing animation
    */
   beginClosingImmediate(skipClosing = true) {
-    this.stagingMachine.send("ACTUALLY_CLOSE", {
+    this.animationStateMachine.send("ACTUALLY_CLOSE", {
       opennessState: this.stateMachine.current,
       skipClosing,
     });
@@ -282,12 +282,12 @@ export default class StateHelper {
   }
 
   /**
-   * Get current staging state.
+   * Get current animation state.
    *
    * @returns {string}
    */
-  get staging() {
-    return this.stagingMachine.current;
+  get animationState() {
+    return this.animationStateMachine.current;
   }
 
   /**
@@ -330,12 +330,12 @@ export default class StateHelper {
   }
 
   /**
-   * Check if staging is active.
+   * Check if an animation is active.
    *
    * @returns {boolean}
    */
-  get isStagingActive() {
-    return this.staging !== "none";
+  get isAnimating() {
+    return this.animationState !== "none";
   }
 
   /**
@@ -393,12 +393,12 @@ export default class StateHelper {
   }
 
   /**
-   * Check if staging is in specific state.
+   * Check if in a specific animation state.
    *
    * @param {string} state - State to check
    * @returns {boolean}
    */
-  isStagingIn(state) {
-    return this.stagingMachine.matches(state);
+  isInAnimationState(state) {
+    return this.animationStateMachine.matches(state);
   }
 }

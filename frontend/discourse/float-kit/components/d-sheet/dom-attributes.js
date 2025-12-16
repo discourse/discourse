@@ -50,29 +50,29 @@ export default class DOMAttributes {
   }
 
   /**
-   * Update the staging-active attribute on the view element.
+   * Update the animating attribute on the view element.
    *
-   * @param {string} staging - Current staging state
+   * @param {string} animationState - Current animation state
    */
-  updateStagingActive(staging) {
+  updateAnimatingAttribute(animationState) {
     if (!this.view) {
       return;
     }
 
     const currentAttr = this.view.getAttribute("data-d-sheet") || "";
-    const hasAttr = currentAttr.split(" ").includes("staging-active");
-    const shouldHaveAttr = staging !== "none";
+    const hasAttr = currentAttr.split(" ").includes("animating");
+    const shouldHaveAttr = animationState !== "none";
 
     if (shouldHaveAttr === hasAttr) {
       return;
     }
 
     if (shouldHaveAttr) {
-      this.view.setAttribute("data-d-sheet", `${currentAttr} staging-active`);
+      this.view.setAttribute("data-d-sheet", `${currentAttr} animating`);
     } else {
       const newAttr = currentAttr
         .split(" ")
-        .filter((s) => s !== "staging-active")
+        .filter((s) => s !== "animating")
         .join(" ");
       this.view.setAttribute("data-d-sheet", newAttr);
     }
@@ -201,4 +201,3 @@ export default class DOMAttributes {
     cancel(this.overflowTimer);
   }
 }
-

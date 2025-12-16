@@ -242,13 +242,13 @@ export default class AnimationTravel {
 
     c.onTravelEnd?.();
 
-    const staging = c.stateHelper.staging;
+    const animationState = c.stateHelper.animationState;
     if (
-      staging === "opening" ||
-      staging === "stepping" ||
-      staging === "closing"
+      animationState === "opening" ||
+      animationState === "stepping" ||
+      animationState === "closing"
     ) {
-      c.stateHelper.advanceStaging();
+      c.stateHelper.advanceAnimationState();
     }
 
     if (c.stateHelper.isPositionFrontOpening()) {
@@ -261,7 +261,10 @@ export default class AnimationTravel {
 
     if (c.stateHelper.isOpening || c.stateHelper.isClosing) {
       c.stateHelper.completeAnimation();
-    } else if (c.stateHelper.isOpen && c.stateHelper.isStagingIn("stepping")) {
+    } else if (
+      c.stateHelper.isOpen &&
+      c.stateHelper.isInAnimationState("stepping")
+    ) {
       c.updateTravelStatus("idleInside");
     }
   }

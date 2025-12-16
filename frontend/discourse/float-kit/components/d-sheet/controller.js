@@ -19,10 +19,10 @@ import StackingAdapter from "./stacking-adapter";
 import StateHelper from "./state-helper";
 import StateMachine from "./state-machine";
 import {
+  ANIMATION_STATES,
   GUARDS,
   POSITION_STATES,
   SHEET_STATES,
-  STAGING_STATES,
 } from "./states";
 import ThemeColorAdapter from "./theme-color-adapter";
 import TimeoutManager from "./timeout-manager";
@@ -73,23 +73,19 @@ export default class Controller {
   /** @type {boolean} */
   @tracked safeToUnmount = true;
 
-  /** @type {string} */
-  @tracked tracks = "bottom";
-
-  /** @type {string} */
-  @tracked contentPlacement = "bottom";
-
   /** @type {boolean} */
   @tracked inertOutside = true;
-
   /** @type {Array|null} */
   @tracked detentsConfig = null;
-
   /** @type {boolean} */
   @tracked swipeOvershoot = true;
-
   /** @type {boolean} */
   @tracked backdropSwipeable = true;
+  /** @type {string} */
+  tracks = "bottom";
+
+  /** @type {string} */
+  contentPlacement = "bottom";
 
   /** @type {TrackedArray<HTMLElement>} */
   detentMarkers = new TrackedArray();
@@ -105,10 +101,14 @@ export default class Controller {
     guards: GUARDS,
   });
 
-  /** @type {StateMachine} State machine for staging transitions */
-  stagingMachine = new StateMachine(STAGING_STATES, STAGING_STATES.initial, {
-    guards: GUARDS,
-  });
+  /** @type {StateMachine} State machine for animation state transitions */
+  animationStateMachine = new StateMachine(
+    ANIMATION_STATES,
+    ANIMATION_STATES.initial,
+    {
+      guards: GUARDS,
+    }
+  );
 
   /** @type {StateMachine} State machine for stacking position */
   positionMachine = new StateMachine(POSITION_STATES, POSITION_STATES.initial, {
@@ -369,10 +369,10 @@ export default class Controller {
       state: "covered-idle",
       callback: () => {
         if (
-          this.stateHelper.isStagingIn("going-down") ||
-          this.stateHelper.isStagingIn("go-down")
+          this.stateHelper.isInAnimationState("going-down") ||
+          this.stateHelper.isInAnimationState("go-down")
         ) {
-          this.stateHelper.advanceStaging();
+          this.stateHelper.advanceAnimationState();
         }
       },
     },
@@ -385,8 +385,8 @@ export default class Controller {
       machine: "positionMachine",
       state: "covered-indeterminate",
       callback: () => {
-        if (this.stateHelper.isStagingIn("going-up")) {
-          this.stateHelper.advanceStaging();
+        if (this.stateHelper.isInAnimationState("going-up")) {
+          this.stateHelper.advanceAnimationState();
         }
 
         const stackId = this.stackId;
@@ -404,7 +404,7 @@ export default class Controller {
       },
     },
     {
-      machine: "stagingMachine",
+      machine: "animationStateMachine",
       state: [
         "none",
         "opening",
@@ -415,7 +415,7 @@ export default class Controller {
         "go-down",
         "going-up",
       ],
-      handler: "updateStagingActiveAttribute",
+      handler: "updateAnimatingAttribute",
     },
   ];
 
@@ -683,12 +683,12 @@ export default class Controller {
   }
 
   /**
-   * Update staging-active attribute on the view element.
+   * Update animating attribute on the view element.
    *
    * @private
    */
-  updateStagingActiveAttribute() {
-    this.domAttributes.updateStagingActive(this.staging);
+  updateAnimatingAttribute() {
+    this.domAttributes.updateAnimatingAttribute(this.animationState);
   }
 
   /**
@@ -803,7 +803,7 @@ export default class Controller {
     }
 
     const isOpen = this.currentState === "open";
-    const isNotClosing = !this.stagingMachine.matches("closing");
+    const isNotClosing = !this.animationStateMachine.matches("closing");
     return isOpen && isNotClosing;
   }
 
@@ -966,8 +966,8 @@ export default class Controller {
   /**
    * @type {string}
    */
-  get staging() {
-    return this.stagingMachine.current;
+  get animationState() {
+    return this.animationStateMachine.current;
   }
 
   /**
@@ -980,8 +980,8 @@ export default class Controller {
   /**
    * @type {boolean}
    */
-  get isStagingActive() {
-    return this.staging !== "none";
+  get isAnimating() {
+    return this.animationState !== "none";
   }
 
   /**
@@ -1096,8 +1096,8 @@ export default class Controller {
     this.setupFocusScrollPrevention();
     this.executeAutoFocusOnPresent();
 
-    if (this.stateHelper.isStagingIn("opening")) {
-      this.stateHelper.advanceStaging();
+    if (this.stateHelper.isInAnimationState("opening")) {
+      this.stateHelper.advanceAnimationState();
     }
 
     if (!this.swipeOutDisabled) {
@@ -1441,7 +1441,7 @@ export default class Controller {
     this.focusManagement.cleanup();
 
     this.stateMachine.cleanup();
-    this.stagingMachine.cleanup();
+    this.animationStateMachine.cleanup();
     this.positionMachine.cleanup();
     this.touchMachine.cleanup();
   }
