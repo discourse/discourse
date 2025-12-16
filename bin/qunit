@@ -249,8 +249,9 @@ class QunitRunner
 
     args = []
 
+    run_build(unless_build_reused: reuse_build)
+
     if @qunit_path
-      run_theme_build(unless_build_reused: reuse_build)
       env["THEME_TEST_PAGES"] = build_theme_test_pages(query)
       args += %w[pnpm testem ci -f testem.js]
       args += ["--parallel", parallel.to_s] if parallel
@@ -260,7 +261,7 @@ class QunitRunner
       args += ["--filter", filter] if filter
       args += ["--file-path", file_path_filter] if file_path_filter
       args += ["--load-balance", "--parallel", parallel.to_s] if parallel
-      args += %w[--path dist] if reuse_build
+      args += %w[--path dist]
       args << "--write-execution-file" if ENV["QUNIT_WRITE_EXECUTION_FILE"]
     end
 
@@ -463,7 +464,7 @@ class QunitRunner
     puts "Rails server is warmed up"
   end
 
-  def run_theme_build(unless_build_reused: false)
+  def run_build(unless_build_reused: false)
     if @dry_run
       puts "[dry-run] skipping ember build for themes"
       return
@@ -471,7 +472,7 @@ class QunitRunner
 
     return if unless_build_reused
 
-    system("pnpm", "ember", "build", chdir: frontend_dir, exception: true)
+    system("pnpm", "vite", "build", "--mode", "development", chdir: frontend_dir, exception: true)
   end
 
   def build_theme_test_pages(query)
