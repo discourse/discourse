@@ -500,20 +500,20 @@ importers:
         specifier: ^4.0.9
         version: 4.0.9
       '@uppy/aws-s3':
-        specifier: ^4.1.3
-        version: 4.3.2(@uppy/core@4.5.3)
+        specifier: 4.1.0
+        version: 4.1.0(@uppy/core@4.2.2)
       '@uppy/core':
-        specifier: ^4.3.0
-        version: 4.5.3
+        specifier: 4.2.2
+        version: 4.2.2
       '@uppy/drop-target':
         specifier: 3.0.1
-        version: 3.0.1(@uppy/core@4.5.3)
+        version: 3.0.1(@uppy/core@4.2.2)
       '@uppy/utils':
-        specifier: ^6.0.5
-        version: 6.2.2
+        specifier: 6.0.3
+        version: 6.0.3
       '@uppy/xhr-upload':
-        specifier: ^4.2.3
-        version: 4.4.2(@uppy/core@4.5.3)
+        specifier: 4.2.1
+        version: 4.2.1(@uppy/core@4.2.2)
       '@vitejs/plugin-basic-ssl':
         specifier: ^2.1.0
         version: 2.1.0(rolldown-vite@7.2.10(@types/node@25.0.0)(esbuild@0.25.12)(jiti@2.4.2)(sass@1.95.1)(terser@5.44.1))
@@ -3135,18 +3135,18 @@ packages:
     peerDependencies:
       typescript: '>=4.8.4 <6.0.0'
 
-  '@uppy/aws-s3@4.3.2':
-    resolution: {integrity: sha512-w3LrMUEI9pXVcn5LZ5oNL92hyocMu8mxfDSVVQIAQKxR+TPi57FfusDBqBB5T33UvxJH8EUGt9a04tuU/LpKqw==}
+  '@uppy/aws-s3@4.1.0':
+    resolution: {integrity: sha512-xRip1Lo3He+3J3fP/SooEFQJKWMCVADTl8J375PzvpaeNnDFKa6W2XLEEl/fGy/K7vI4sH8Znz4+omdtSFCPSQ==}
     peerDependencies:
-      '@uppy/core': ^4.5.2
+      '@uppy/core': ^4.2.0
 
   '@uppy/companion-client@4.5.2':
     resolution: {integrity: sha512-hfUsReHM5COhn+5d7CdZgZaG8BtDvtwj7vjXzg8qmgKI901mYUm/Zh420iOKT7eHiofKVTNoa7oijeGrqUEnyg==}
     peerDependencies:
       '@uppy/core': ^4.5.2
 
-  '@uppy/core@4.5.3':
-    resolution: {integrity: sha512-52VLeBUY/j904h48lpPGykuWikkOOS4Lz/qkmalDiBQfNALb6iB1MOZs079IM3o/uMLYxzZRL80C3sKpkBUYcw==}
+  '@uppy/core@4.2.2':
+    resolution: {integrity: sha512-TfTXngDLHK+gNwbpt1tgKfQ0vQwa7V5ilAnD/VNT+6AGW+/dqGFLZbA6q8xKvVTZ2sUbwDMSWFtqem+G04AhNQ==}
 
   '@uppy/drop-target@3.0.1':
     resolution: {integrity: sha512-nDWXUYtTyyq0Vq7/J0WeRi8eyevGmAIoA5Uy/IJJiKYI5MXP7X3eSIXym161wrsyHZi0ZGUkf0XAwl9e6ZLe/A==}
@@ -3156,13 +3156,16 @@ packages:
   '@uppy/store-default@4.3.2':
     resolution: {integrity: sha512-dnY9R2o8fwmO1bF89D0b5jijD7DGED2qVST5hI/j18JreLWzLKH7u6HuNmOvzok8msrQ/qWzQd5Gx4LDQKhBbw==}
 
+  '@uppy/utils@6.0.3':
+    resolution: {integrity: sha512-GBVzyAIeVKNe/F3TT63rXR80MSL9ov/FG3BbApO+4wbIt4vai7xpOxGCeTXpW2JjEeOwEb50n1fn92zMCdV9Dg==}
+
   '@uppy/utils@6.2.2':
     resolution: {integrity: sha512-9mYJtbcngv2HOJIECkyfmdXTI5dW/ObCyvWP1Iti3E5bKtsa4sMmbx5Yh/tGCj8k/lBNhfvWyZuYnvnjmzNLSQ==}
 
-  '@uppy/xhr-upload@4.4.2':
-    resolution: {integrity: sha512-CU66aVn4yghGklEkepCqFPulc6uygznApy2DpD+jCMLNB5q6yT1RPSrQUgRgXsYhpW1YhutZJWsrEnHEDS+Tcw==}
+  '@uppy/xhr-upload@4.2.1':
+    resolution: {integrity: sha512-pafgk0vLr+FKDHo+xmBMwNncj68oRNoaTnj0por7LPND0QGXV7xwBZnGGkQhiHLooV2MNBEhFQtx93A76cEINg==}
     peerDependencies:
-      '@uppy/core': ^4.5.2
+      '@uppy/core': ^4.2.2
 
   '@vitejs/plugin-basic-ssl@2.1.0':
     resolution: {integrity: sha512-dOxxrhgyDIEUADhb/8OlV9JIqYLgos03YorAueTIeOUskLJSEsfwCByjbu98ctXitUN3znXKp0bYD/WHSudCeA==}
@@ -12156,47 +12159,52 @@ snapshots:
     dependencies:
       typescript: 5.9.3
 
-  '@uppy/aws-s3@4.3.2(@uppy/core@4.5.3)':
+  '@uppy/aws-s3@4.1.0(@uppy/core@4.2.2)':
     dependencies:
-      '@uppy/companion-client': 4.5.2(@uppy/core@4.5.3)
-      '@uppy/core': 4.5.3
-      '@uppy/utils': 6.2.2
+      '@uppy/companion-client': 4.5.2(@uppy/core@4.2.2)
+      '@uppy/core': 4.2.2
+      '@uppy/utils': 6.0.3
 
-  '@uppy/companion-client@4.5.2(@uppy/core@4.5.3)':
+  '@uppy/companion-client@4.5.2(@uppy/core@4.2.2)':
     dependencies:
-      '@uppy/core': 4.5.3
+      '@uppy/core': 4.2.2
       '@uppy/utils': 6.2.2
       namespace-emitter: 2.0.1
       p-retry: 6.2.0
 
-  '@uppy/core@4.5.3':
+  '@uppy/core@4.2.2':
     dependencies:
       '@transloadit/prettier-bytes': 0.3.4
       '@uppy/store-default': 4.3.2
-      '@uppy/utils': 6.2.2
+      '@uppy/utils': 6.0.3
       lodash: 4.17.21
       mime-match: 1.0.2
       namespace-emitter: 2.0.1
       nanoid: 5.1.6
       preact: 10.23.2
 
-  '@uppy/drop-target@3.0.1(@uppy/core@4.5.3)':
+  '@uppy/drop-target@3.0.1(@uppy/core@4.2.2)':
     dependencies:
-      '@uppy/core': 4.5.3
-      '@uppy/utils': 6.2.2
+      '@uppy/core': 4.2.2
+      '@uppy/utils': 6.0.3
 
   '@uppy/store-default@4.3.2': {}
+
+  '@uppy/utils@6.0.3':
+    dependencies:
+      lodash: 4.17.21
+      preact: 10.23.2
 
   '@uppy/utils@6.2.2':
     dependencies:
       lodash: 4.17.21
       preact: 10.23.2
 
-  '@uppy/xhr-upload@4.4.2(@uppy/core@4.5.3)':
+  '@uppy/xhr-upload@4.2.1(@uppy/core@4.2.2)':
     dependencies:
-      '@uppy/companion-client': 4.5.2(@uppy/core@4.5.3)
-      '@uppy/core': 4.5.3
-      '@uppy/utils': 6.2.2
+      '@uppy/companion-client': 4.5.2(@uppy/core@4.2.2)
+      '@uppy/core': 4.2.2
+      '@uppy/utils': 6.0.3
 
   '@vitejs/plugin-basic-ssl@2.1.0(rolldown-vite@7.2.10(@types/node@25.0.0)(esbuild@0.25.12)(jiti@2.4.2)(sass@1.95.1)(terser@5.44.1))':
     dependencies:
