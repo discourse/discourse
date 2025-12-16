@@ -7,6 +7,10 @@
 sv:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Privat"
+          public: "Offentligt"
       reports:
         reading_time:
           title: Lästid

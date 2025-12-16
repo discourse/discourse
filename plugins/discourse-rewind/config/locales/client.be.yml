@@ -7,6 +7,10 @@
 be:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Прыватная"
+          public: "Публічная"
       reports:
         reading_time:
           title: чытанне часу

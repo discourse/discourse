@@ -7,6 +7,10 @@
 nl:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Privé"
+          public: "Openbaar"
       reports:
         reading_time:
           title: Leestijd

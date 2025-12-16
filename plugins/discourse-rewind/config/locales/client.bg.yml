@@ -7,6 +7,10 @@
 bg:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Затворени"
+          public: "Публични"
       reports:
         reading_time:
           title: Време за четене
