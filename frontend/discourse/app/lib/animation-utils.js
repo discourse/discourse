@@ -38,14 +38,3 @@ export async function animateClosing(element, className = "-closing") {
 
   element.classList.remove(className);
 }
-
-export async function animateOpening(element, className = "-opening") {
-  if (!element || prefersReducedMotion() || isTesting()) {
-    return;
-  }
-  element.classList.add(className);
-
-  await waitForPromise(waitForAnimationEnd(element));
-
-  element.classList.remove(className);
-}
