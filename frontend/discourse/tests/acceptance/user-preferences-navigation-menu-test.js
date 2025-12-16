@@ -1,4 +1,4 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, visit, waitFor } from "@ember/test-helpers";
 import { test } from "qunit";
 import Site from "discourse/models/site";
 import {
@@ -61,6 +61,15 @@ acceptance("User Preferences - Navigation Menu", function (needs) {
 
     await click("[data-name='newSidebarShowCountOfNewItems']");
     await click(".save-controls .btn-primary");
+
+    // Wait for the save to complete
+    await waitFor(".save-controls .saved", { timeout: 5000 });
+
+    // Wait for the sidebar to update - wait for the badge to appear
+    await waitFor(
+      `.sidebar-section-link[data-link-name="everything"] .sidebar-section-link-content-badge`,
+      { timeout: 5000 }
+    );
 
     assert
       .dom(
