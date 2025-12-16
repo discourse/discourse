@@ -6,8 +6,8 @@ import { setupS3CDN, setupURL } from "discourse/lib/get-url";
 import { setIconList } from "discourse/lib/icon-library";
 import PreloadStore from "discourse/lib/preload-store";
 import { setURLContainer } from "discourse/lib/url";
+import { optionalRequire } from "discourse/lib/utilities";
 import Session from "discourse/models/session";
-import { setupDeprecationCounter } from "discourse/tests/helpers/deprecation-counter";
 import I18n from "discourse-i18n";
 
 export default {
@@ -63,7 +63,13 @@ export default {
       if (typeof setupData.raiseOnDeprecation !== "undefined") {
         window.EmberENV.RAISE_ON_DEPRECATION = setupData.raiseOnDeprecation;
       }
-      setupDeprecationCounter();
+
+      const setupDeprecationCounter = optionalRequire(
+        "discourse/tests/helpers/deprecation-counter",
+        "setupDeprecationCounter"
+      );
+
+      setupDeprecationCounter?.();
     }
 
     DeprecationWorkflow.setEnvironment(environment);
