@@ -161,13 +161,18 @@ RSpec.describe "Chat channel", type: :system do
   context "when a new message is created" do
     before { Fabricate.times(50, :chat_message, chat_channel: channel_1) }
 
-    it "doesn’t append the message when not at bottom" do
+    # this is skipped cause it is not correct
+    xit "doesn’t append the message when not at bottom" do
       visit("/chat/c/-/#{channel_1.id}/#{message_1.id}")
 
       expect(page).to have_css(".chat-scroll-to-bottom__button.visible")
 
       new_message = Fabricate(:chat_message, chat_channel: channel_1, use_service: true)
 
+      expect(page).to have_css(".chat-scroll-to-bottom__button.visible")
+      # sleep 5 <- this will cause this to consistently fail, cause the message
+      # has always actually been unconditionally appended, we don't have logic to
+      # prevent that yet
       expect(channel_page.messages).to have_no_message(id: new_message.id)
     end
   end
