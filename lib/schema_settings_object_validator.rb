@@ -138,8 +138,7 @@ class SchemaSettingsObjectValidator
         value.is_a?(Integer)
       when "upload"
         if value.is_a?(String)
-          upload = Upload.get_from_url(value)
-          if upload
+          if upload = Upload.get_from_url(value)
             @object[property_name] = upload.id
             # upload already verified via get_from_url, so we can add it to valid ids
             (@valid_ids_lookup["upload"] ||= Set.new) << upload.id
