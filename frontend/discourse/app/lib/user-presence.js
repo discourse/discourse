@@ -104,6 +104,10 @@ export function seenUser() {
   // scroll, touchmove, click, keydown can all happen very frequently
   // this debounces to de-risk
   if (callbackWaitingForPresence) {
+    if (debounceUpdateDateTimeout) {
+      clearTimeout(debounceUpdateDateTimeout);
+      debounceUpdateDateTimeout = null;
+    }
     // we are in the background waiting for presence, do this right away
     lastUserActivity = Date.now();
     processChanges();
