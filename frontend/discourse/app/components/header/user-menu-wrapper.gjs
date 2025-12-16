@@ -3,6 +3,8 @@ import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { service } from "@ember/service";
+import { animateClosing } from "discourse/lib/animation-utils";
 import { isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
 import { isDocumentRTL } from "discourse/lib/text-direction";
@@ -11,6 +13,8 @@ import closeOnClickOutside from "../../modifiers/close-on-click-outside";
 import UserMenu from "../user-menu/menu";
 
 export default class UserMenuWrapper extends Component {
+  @service site;
+
   @tracked userMenuWrapper;
 
   @action
@@ -41,12 +45,15 @@ export default class UserMenuWrapper extends Component {
         easing: "ease-in",
       });
     } else {
+      if (this.site.desktopView) {
+        await animateClosing(this.userMenuWrapper);
+      }
       this.args.toggleUserMenu();
     }
   }
 
   @action
-  setupWrapper(el) {
+  async setupWrapper(el) {
     this.userMenuWrapper = el.querySelector(".menu-panel.drop-down");
   }
 
