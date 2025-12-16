@@ -114,7 +114,7 @@ export default class ChatChannel {
   }
 
   get unreadThreadsCount() {
-    return this.threadsManager.unreadThreadCount;
+    return this.threadingEnabled ? this.threadsManager.unreadThreadCount : 0;
   }
 
   get lastUnreadThreadDate() {
