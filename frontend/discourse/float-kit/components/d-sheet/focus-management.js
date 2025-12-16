@@ -1,9 +1,4 @@
 /**
- * @class FocusManagement
- * Manages focus behavior for sheets: auto-focus, scroll prevention, focusable lookup.
- */
-
-/**
  * Selector for focusable elements.
  *
  * @type {string}
@@ -26,7 +21,7 @@ const FOCUSABLE_SELECTOR = [
 ].join(",");
 
 /**
- * Base selectors for elements that should be skipped during focus traversal.
+ * Selectors for elements that should be skipped during focus traversal.
  *
  * @type {string[]}
  */
@@ -38,8 +33,21 @@ const SKIPPABLE_SELECTORS = [
 ];
 
 /**
+ * Data attribute for elements to skip during auto-focus.
+ *
+ * @type {string}
+ */
+const AUTOFOCUS_SKIP_SELECTOR = "[data-d-sheet-autofocus-skip]";
+
+/**
+ * Data attribute for explicit auto-focus targets.
+ *
+ * @type {string}
+ */
+const AUTOFOCUS_TARGET_SELECTOR = "[data-d-sheet-autofocus-target]";
+
+/**
  * Get focusable and tabbable elements within a container.
- * Matches Silk's `eq` function behavior.
  *
  * @param {HTMLElement} container - The container element to search within
  * @param {string[]} [additionalSkipSelectors] - Additional selectors for elements to skip
@@ -122,16 +130,18 @@ function processAutoFocusHandler({ nativeEvent, defaultBehavior, handler }) {
 /**
  * Manages focus behavior for sheets including auto-focus on present/dismiss
  * and scroll prevention during focus changes.
+ *
+ * @class FocusManagement
  */
 export default class FocusManagement {
   /** @type {Object} */
   controller;
 
   /** @type {Function|null} */
-  focusScrollPreventionListener = null;
+  #focusScrollPreventionListener = null;
 
   /** @type {HTMLElement|null} */
-  previouslyFocusedElement = null;
+  #previouslyFocusedElement = null;
 
   /**
    * @param {Object} controller - The sheet controller instance
@@ -145,7 +155,7 @@ export default class FocusManagement {
    *
    * @returns {HTMLElement|null}
    */
-  get view() {
+  get #view() {
     return this.controller.view;
   }
 
@@ -154,7 +164,7 @@ export default class FocusManagement {
    *
    * @returns {HTMLElement|null}
    */
-  get scrollContainer() {
+  get #scrollContainer() {
     return this.controller.scrollContainer;
   }
 
@@ -163,7 +173,7 @@ export default class FocusManagement {
    */
   capturePreviouslyFocusedElement() {
     if (typeof document !== "undefined") {
-      this.previouslyFocusedElement = document.activeElement;
+      this.#previouslyFocusedElement = document.activeElement;
     }
   }
 
@@ -173,15 +183,15 @@ export default class FocusManagement {
    * @returns {HTMLElement|null}
    */
   findAutoFocusTarget() {
-    if (!this.view) {
+    if (!this.#view) {
       return null;
     }
 
     const { safelyFocusableElements, safelyTabbableElements } =
-      getFocusableElements(this.view, ["[data-d-sheet-autofocus-skip]"]);
+      getFocusableElements(this.#view, [AUTOFOCUS_SKIP_SELECTOR]);
 
-    const explicitTargets = this.view.querySelectorAll(
-      "[data-d-sheet-autofocus-target]"
+    const explicitTargets = this.#view.querySelectorAll(
+      AUTOFOCUS_TARGET_SELECTOR
     );
     const safeExplicitTarget = Array.from(explicitTargets).find((target) =>
       safelyFocusableElements.includes(target)
@@ -191,7 +201,7 @@ export default class FocusManagement {
       return safeExplicitTarget;
     }
 
-    return safelyTabbableElements[0] ?? this.view;
+    return safelyTabbableElements[0] ?? this.#view;
   }
 
   /**
@@ -221,13 +231,12 @@ export default class FocusManagement {
   executeAutoFocusOnDismiss() {
     const activeElement = document.activeElement;
 
-    // Only restore focus if activeElement is inside view or was removed from document
     if (
-      this.view &&
-      !this.view.contains(activeElement) &&
+      this.#view &&
+      !this.#view.contains(activeElement) &&
       document.contains(activeElement)
     ) {
-      this.previouslyFocusedElement = null;
+      this.#previouslyFocusedElement = null;
       return;
     }
 
@@ -238,18 +247,18 @@ export default class FocusManagement {
     });
 
     if (behavior.focus === false) {
-      this.previouslyFocusedElement = null;
+      this.#previouslyFocusedElement = null;
       return;
     }
 
     const target =
-      this.previouslyFocusedElement &&
-      document.contains(this.previouslyFocusedElement)
-        ? this.previouslyFocusedElement
+      this.#previouslyFocusedElement &&
+      document.contains(this.#previouslyFocusedElement)
+        ? this.#previouslyFocusedElement
         : document.body;
 
     target.focus({ preventScroll: true });
-    this.previouslyFocusedElement = null;
+    this.#previouslyFocusedElement = null;
   }
 
   /**
@@ -259,19 +268,19 @@ export default class FocusManagement {
   setupFocusScrollPrevention() {
     if (
       !this.controller.nativeFocusScrollPrevention ||
-      !this.view ||
-      this.focusScrollPreventionListener ||
+      !this.#view ||
+      this.#focusScrollPreventionListener ||
       typeof document === "undefined"
     ) {
       return;
     }
 
-    this.focusScrollPreventionListener = (event) => {
-      if (!this.view?.contains(event.target)) {
+    this.#focusScrollPreventionListener = (event) => {
+      if (!this.#view?.contains(event.target)) {
         return;
       }
 
-      const scrollContainer = this.scrollContainer;
+      const scrollContainer = this.#scrollContainer;
       if (!scrollContainer) {
         return;
       }
@@ -287,32 +296,30 @@ export default class FocusManagement {
       });
     };
 
-    this.view.addEventListener("focus", this.focusScrollPreventionListener, {
+    this.#view.addEventListener("focus", this.#focusScrollPreventionListener, {
       capture: true,
     });
   }
 
   /**
    * Clean up focus scroll prevention listener.
-   *
-   * @private
    */
-  cleanupFocusScrollPrevention() {
-    if (this.focusScrollPreventionListener && this.view) {
-      this.view.removeEventListener(
+  #cleanupFocusScrollPrevention() {
+    if (this.#focusScrollPreventionListener && this.#view) {
+      this.#view.removeEventListener(
         "focus",
-        this.focusScrollPreventionListener,
+        this.#focusScrollPreventionListener,
         { capture: true }
       );
     }
-    this.focusScrollPreventionListener = null;
+    this.#focusScrollPreventionListener = null;
   }
 
   /**
    * Clean up all resources.
    */
   cleanup() {
-    this.cleanupFocusScrollPrevention();
-    this.previouslyFocusedElement = null;
+    this.#cleanupFocusScrollPrevention();
+    this.#previouslyFocusedElement = null;
   }
 }
