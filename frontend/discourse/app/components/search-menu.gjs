@@ -149,10 +149,11 @@ export default class SearchMenu extends Component {
 
   @action
   async close() {
-    await animateClosing(this.searchMenuWrapper);
-
     if (this.args?.onClose) {
+      await animateClosing(this.searchMenuWrapper);
       this.args.onClose();
+    } else {
+      await animateClosing(this.searchMenuWrapper);
     }
 
     this.menuPanelOpen = false;
