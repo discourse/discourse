@@ -193,6 +193,40 @@ RSpec.describe DiscourseAi::Completions::Llm do
 
       expect(Discourse.redis.get(key)).to be_nil
     end
+
+    it "does not try to track failures for unsaved models" do
+      WebMock.stub_request(:post, "https://api.openai.com/v1/chat/completions").to_return(
+        status: 500,
+        body: "fail",
+      )
+
+      redis_key = "ai_llm_status_fast_fail:"
+      Discourse.redis.del(redis_key)
+      Discourse.redis.set(redis_key, DiscourseAi::Completions::Endpoints::Base::FAIL_THRESHOLD - 1)
+
+      unsaved_model =
+        LlmModel.new(
+          display_name: "Test LLM",
+          name: "gpt-3.5-turbo-0301",
+          provider: "open_ai",
+          url: "https://api.openai.com/v1/chat/completions",
+          api_key: "test-key",
+          tokenizer: "DiscourseAi::Tokenizer::OpenAiTokenizer",
+          max_prompt_tokens: 16_000,
+        )
+
+      begin
+        expect do
+          described_class.proxy(unsaved_model).generate(
+            "Hello",
+            user:,
+            feature_name: "llm_validator",
+          )
+        end.to raise_error(DiscourseAi::Completions::Endpoints::Base::CompletionFailed)
+      ensure
+        Discourse.redis.del(redis_key)
+      end
+    end
   end
 
   describe "#generate with fake model" do
