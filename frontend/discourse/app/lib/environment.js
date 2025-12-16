@@ -1,3 +1,4 @@
+import { isTesting as embroiderIsTesting } from "@embroider/macros";
 import deprecated from "discourse/lib/deprecated";
 
 export const INPUT_DELAY = 250;
@@ -12,7 +13,7 @@ export function setEnvironment(e) {
  * Returns true if running in the qunit test harness
  */
 export function isTesting() {
-  return environment === "qunit-testing";
+  return embroiderIsTesting();
 }
 
 /**

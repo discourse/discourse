@@ -77,6 +77,15 @@ export default defineConfig(({ mode, command }) => {
       // Discourse-specific
       // mkcert(),
       visualizer({ emitFile: true }),
+
+      {
+        name: "resolve-external-locales",
+        resolveId(source) {
+          if (source.startsWith("/extra-locales/")) {
+            return { external: true, id: source };
+          }
+        },
+      },
     ],
     server: {
       port: 4200,
@@ -98,6 +107,7 @@ export default defineConfig(({ mode, command }) => {
       },
     },
     build: {
+      minify: false,
       manifest: true,
       outDir: "dist",
       sourcemap: true,
