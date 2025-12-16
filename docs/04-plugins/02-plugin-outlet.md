@@ -32,7 +32,7 @@ When authoring your plugin, look in the discourse handlebars templates (in `.hbs
 > git grep "<PluginOutlet" -- "*.hbs"
 > ```
 
-@RGJ has also written [a theme component](https://meta.discourse.org/t/plugin-outlet-locations-theme-component/100673) to show their locations.
+You can also display the plugin outlets on a Discourse site by turning on the [Discourse Developer Toolbar](https://meta.discourse.org/t/introducing-discourse-developer-toolbar/346215). Just type `enableDevTools()` in the browser console on a Discourse forum and click the plug icon that appears on the left side of the page.
 
 ### Connecting to a Plugin Outlet
 
