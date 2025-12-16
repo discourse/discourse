@@ -80,5 +80,24 @@ RSpec.describe DiscourseRewind::Action::BestPosts do
         expect(call_report[:data].map { |d| d[:topic_id] }).not_to include(pm_topic.id)
       end
     end
+
+    context "when a post is  in a private category" do
+      fab!(:private_category) { Fabricate(:category, read_restricted: true) }
+      fab!(:private_topic) { Fabricate(:topic, category: private_category, user: user) }
+      fab!(:private_category_post) do
+        Fabricate(
+          :post,
+          created_at: random_datetime,
+          user: user,
+          post_number: 2,
+          topic: private_topic,
+          like_count: 99,
+        )
+      end
+
+      it "is not included" do
+        expect(call_report[:data].map { |d| d[:topic_id] }).not_to include(private_topic.id)
+      end
+    end
   end
 end
