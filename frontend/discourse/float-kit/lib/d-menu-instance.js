@@ -17,6 +17,7 @@ export default class DMenuInstance extends FloatKitInstance {
    * @property {boolean} expanded - Tracks the state of menu expansion, initially set to false.
    */
   @tracked expanded = false;
+
   /**
    * Specifies whether the trigger for opening/closing the menu is detached from the menu itself.
    * This is the case when a menu is trigger programmatically instead of through the <DMenu /> component.
