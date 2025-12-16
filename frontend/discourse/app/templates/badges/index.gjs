@@ -1,6 +1,7 @@
 import BadgeCard from "discourse/components/badge-card";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
+import dasherize from "discourse/helpers/dasherize";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -18,7 +19,9 @@ export default <template>
         {{#each @controller.badgeGroups as |bg|}}
           <div class="badge-grouping">
             <div class="title">
-              <h2>{{bg.badgeGrouping.displayName}}</h2>
+              <h2
+                id={{dasherize bg.badgeGrouping.displayName}}
+              >{{bg.badgeGrouping.displayName}}</h2>
             </div>
             <div class="badge-group-list">
               {{#each bg.badges as |b|}}
