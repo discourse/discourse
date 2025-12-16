@@ -5,7 +5,9 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
+import icon from "discourse/helpers/d-icon";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import I18n, { i18n } from "discourse-i18n";
 
 const SHOW_ORIGINAL_COOKIE = "content-localization-show-original";
 
@@ -31,6 +33,10 @@ export default class LanguageSwitcher extends Component {
     window.location.reload();
   }
 
+  get currentLanguageCode() {
+    return I18n.locale.split("_")[0].toUpperCase();
+  }
+
   get content() {
     return this.siteSettings.available_content_localization_locales.map(
       ({ value }) => ({
@@ -48,11 +54,16 @@ export default class LanguageSwitcher extends Component {
   <template>
     <DMenu
       @identifier="language-switcher"
-      title="Language switcher"
-      @icon="language"
-      class="btn-flat btn-icon icon"
+      @title={{i18n "language_switcher.title"}}
+      class="btn-flat"
       @onRegisterApi={{this.onRegisterApi}}
     >
+      <:trigger>
+        <span class="language-switcher__content">
+          {{this.currentLanguageCode}}
+        </span>
+        {{icon "angle-down"}}
+      </:trigger>
       <:content>
         <DropdownMenu as |dropdown|>
           {{#each this.content as |option|}}

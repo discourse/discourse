@@ -92,6 +92,19 @@ describe "Content localization language switcher", type: :system do
     expect(page).to have_css(SWITCHER_SELECTOR)
   end
 
+  it "displays the current language code on the trigger button" do
+    SiteSetting.content_localization_language_switcher = "all"
+
+    visit("/")
+    expect(page.find(SWITCHER_SELECTOR)).to have_content("EN")
+
+    select_language("ja")
+    expect(page.find(SWITCHER_SELECTOR)).to have_content("JA")
+
+    select_language("es")
+    expect(page.find(SWITCHER_SELECTOR)).to have_content("ES")
+  end
+
   it "shows localized content when switching languages (anon, logged in)" do
     SiteSetting.content_localization_language_switcher = "all"
 
