@@ -85,6 +85,11 @@ class FinishInstallationController < ApplicationController
 
   def setup_discourse_id
     begin
+      if find_allowed_emails.empty?
+        raise StandardError.new(
+                "No allowed emails configured in DISCOURSE_DEVELOPER_EMAILS. Cannot continue with site setup. ",
+              )
+      end
       SiteSetting.enable_discourse_id = true
       SiteSetting.enable_local_logins = false
       @discourse_id_enabled = true
@@ -98,7 +103,9 @@ class FinishInstallationController < ApplicationController
   def create_admin_users
     allowed_emails = find_allowed_emails
     if allowed_emails.empty?
-      raise StandardError.new("No allowed emails configured for Discourse ID setup.")
+      raise StandardError.new(
+              "No allowed emails configured in DISCOURSE_DEVELOPER_EMAILS. Cannot continue with site setup. ",
+            )
     end
 
     allowed_emails.each do |email|
