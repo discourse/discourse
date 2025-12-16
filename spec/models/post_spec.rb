@@ -1371,6 +1371,12 @@ RSpec.describe Post do
       post.rebake!(invalidate_oneboxes: true)
     end
 
+    it "does not publish to clients when skip_publish_rebaked_changes is true" do
+      post = create_post
+      post.expects(:publish_change_to_clients!).never
+      post.rebake!(skip_publish_rebaked_changes: true)
+    end
+
     it "uses inline onebox cache by default" do
       Jobs.run_immediately!
       stub_request(:get, "http://testonebox.com/vvf").to_return(status: 200, body: <<~HTML)
