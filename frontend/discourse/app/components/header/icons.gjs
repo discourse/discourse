@@ -19,7 +19,10 @@ function resetHeaderIcons() {
   headerIcons.add("search");
   headerIcons.add("hamburger", undefined, { after: "search" });
   headerIcons.add("user-menu", undefined, { after: "hamburger" });
-  headerIcons.add("interface-color-selector", undefined, { before: "search" });
+  headerIcons.add("interface-color-selector", undefined, {
+    before: "search",
+    after: "language-switcher",
+  });
   headerIcons.add("language-switcher", undefined, { before: "search" });
 }
 
