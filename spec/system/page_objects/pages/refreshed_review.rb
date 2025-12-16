@@ -38,6 +38,10 @@ module PageObjects
         within(reviewable_by_id(reviewable.id)) { page.has_text?("Rejected by") }
       end
 
+      def has_reviewable_with_pending_status?(reviewable)
+        within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--pending") }
+      end
+
       def has_reviewable_with_approved_status?(reviewable)
         within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--approved") }
       end
