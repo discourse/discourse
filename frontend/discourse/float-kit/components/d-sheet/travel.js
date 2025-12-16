@@ -4,20 +4,8 @@ import {
   supportsLinearEasing,
 } from "./animation";
 
-/**
- * Wraps a callback-based function as a Promise.
- *
- * @param {Function} callbackFn - Function that accepts a callback as its only argument
- * @returns {Promise<void>}
- */
-function wrapAsPromise(callbackFn) {
-  return new Promise((resolve) => {
-    callbackFn(() => resolve());
-  });
-}
-
-/** @type {string[]} CSS transform properties */
-const TRANSFORM_PROPS = [
+/** @type {Set<string>} CSS transform properties */
+const TRANSFORM_PROPS = new Set([
   "translate",
   "translateX",
   "translateY",
@@ -33,7 +21,7 @@ const TRANSFORM_PROPS = [
   "skew",
   "skewX",
   "skewY",
-];
+]);
 
 /**
  * Builds a single keyframe object from config at a given progress.
@@ -67,7 +55,7 @@ function buildKeyframe(config, progress) {
       continue;
     }
 
-    if (TRANSFORM_PROPS.includes(property)) {
+    if (TRANSFORM_PROPS.has(property)) {
       transforms.push(`${property}(${computedValue})`);
     } else {
       keyframe[property] = computedValue;
@@ -91,6 +79,23 @@ function toKebabCase(property) {
   const prefix =
     property.startsWith("webkit") || property.startsWith("moz") ? "-" : "";
   return prefix + property.replace(/[A-Z]/g, "-$&").toLowerCase();
+}
+
+/**
+ * Sets the scroll position on a scroll container for a given axis.
+ *
+ * @param {HTMLElement} scrollContainer - The scroll container element
+ * @param {string} scrollAxis - The scroll axis ("x" or "y")
+ * @param {number} position - The position to scroll to
+ */
+function setScrollPosition(scrollContainer, scrollAxis, position) {
+  if (scrollAxis === "x") {
+    scrollContainer.scrollTo({ left: position, top: 0 });
+    scrollContainer.scrollLeft = position;
+  } else {
+    scrollContainer.scrollTo({ left: 0, top: position });
+    scrollContainer.scrollTop = position;
+  }
 }
 
 /**
@@ -426,10 +431,7 @@ export function executeSheetTravel(config) {
 
   const transformDistance = currentOffset - targetOffset;
 
-  const needsTransform =
-    shouldAnimateContent &&
-    !Number.isNaN(transformDistance) &&
-    transformDistance !== 0;
+  const needsTransform = shouldAnimateContent && transformDistance !== 0;
 
   const useLinearEasing = supportsLinearEasing();
   const easingValue = useLinearEasing
@@ -452,42 +454,31 @@ export function executeSheetTravel(config) {
     : [{ transform: "translateY(0px)" }, { transform: "translateY(0px)" }];
 
   const setScroll = () => {
-    if (scrollAxis === "x") {
-      scrollContainer.scrollTo({
-        left: finalScrollPosition,
-        top: 0,
-      });
-      scrollContainer.scrollLeft = finalScrollPosition;
-    } else {
-      scrollContainer.scrollTo({
-        left: 0,
-        top: finalScrollPosition,
-      });
-      scrollContainer.scrollTop = finalScrollPosition;
-    }
+    setScrollPosition(scrollContainer, scrollAxis, finalScrollPosition);
   };
 
-  const animateContent = (callback) => {
+  const animateContent = () => {
     if (!needsTransform || !contentWrapper) {
-      callback();
-      return;
+      return Promise.resolve();
     }
 
-    const contentAnimation = contentWrapper.animate(transformKeyframes, {
-      duration,
-      easing: easingValue,
-      delay,
-    });
+    return new Promise((resolve) => {
+      const contentAnimation = contentWrapper.animate(transformKeyframes, {
+        duration,
+        easing: easingValue,
+        delay,
+      });
 
-    contentAnimation.addEventListener("finish", () => {
-      callback();
+      contentAnimation.addEventListener("finish", function onFinish() {
+        contentAnimation.removeEventListener("finish", onFinish);
+        resolve();
+      });
     });
   };
 
-  const animateTravelCallbacks = (callback) => {
+  const animateTravelCallbacks = () => {
     if (!travelAnimations.length && !stackingAnimations.length && !onTravel) {
-      callback();
-      return;
+      return Promise.resolve();
     }
 
     const animationOptions = { duration, easing: easingValue, delay };
@@ -540,74 +531,72 @@ export function executeSheetTravel(config) {
         );
       });
 
-    let startTime = null;
+    return new Promise((resolve) => {
+      let startTime = null;
 
-    const progressReportLoop = (timestamp) => {
-      if (startTime === null) {
-        startTime = timestamp;
-      }
+      const progressReportLoop = (timestamp) => {
+        if (startTime === null) {
+          startTime = timestamp;
+        }
 
-      const elapsed = timestamp - startTime;
-      const frameIndex = Math.floor(elapsed);
+        const elapsed = timestamp - startTime;
+        const frameIndex = Math.floor(elapsed);
 
-      if (frameIndex < progressValuesArray.length) {
-        const progress =
-          currentProgress + progressDelta * progressValuesArray[frameIndex];
+        if (frameIndex < progressValuesArray.length) {
+          const progress =
+            currentProgress + progressDelta * progressValuesArray[frameIndex];
 
-        let currentSegment = [0, 0];
-        if (progress < 0) {
-          currentSegment = [0, 0];
-          setSegment(currentSegment);
-        } else if (progress > 1) {
-          currentSegment = [1, 1];
-          setSegment(currentSegment);
-        } else if (dimensions?.progressValueAtDetents) {
-          const detents = dimensions.progressValueAtDetents;
-          for (let i = 0; i < detents.length; i++) {
-            const detent = detents[i];
-            if (
-              progress > detent.after &&
-              i + 1 < detents.length &&
-              progress < detents[i + 1].before
-            ) {
-              currentSegment = [i, i + 1];
-              setSegment(currentSegment);
-            } else if (progress > detent.before && progress < detent.after) {
-              currentSegment = [i, i];
-              setSegment(currentSegment);
+          let currentSegment = [0, 0];
+          if (progress < 0) {
+            currentSegment = [0, 0];
+            setSegment(currentSegment);
+          } else if (progress > 1) {
+            currentSegment = [1, 1];
+            setSegment(currentSegment);
+          } else if (dimensions?.progressValueAtDetents) {
+            const detents = dimensions.progressValueAtDetents;
+            for (let i = 0; i < detents.length; i++) {
+              const detent = detents[i];
+              if (
+                progress > detent.after &&
+                i + 1 < detents.length &&
+                progress < detents[i + 1].before
+              ) {
+                currentSegment = [i, i + 1];
+                setSegment(currentSegment);
+              } else if (progress > detent.before && progress < detent.after) {
+                currentSegment = [i, i];
+                setSegment(currentSegment);
+              }
             }
           }
-        }
 
-        if (onTravel) {
-          onTravel({
-            progress,
-            range: { start: currentSegment[0], end: currentSegment[1] },
-            progressAtDetents: dimensions.exactProgressValueAtDetents,
-          });
-        }
+          if (onTravel) {
+            onTravel({
+              progress,
+              range: { start: currentSegment[0], end: currentSegment[1] },
+              progressAtDetents: dimensions.exactProgressValueAtDetents,
+            });
+          }
 
+          requestAnimationFrame(progressReportLoop);
+        } else {
+          const lastDetent = Math.min(
+            (dimensions?.progressValueAtDetents?.length ?? 1) - 1,
+            destinationDetent
+          );
+          setSegment([lastDetent, lastDetent]);
+
+          Promise.all(allAnimationPromises).then(resolve);
+        }
+      };
+
+      if (onTravel || dimensions?.progressValueAtDetents) {
         requestAnimationFrame(progressReportLoop);
       } else {
-        const lastDetent = Math.min(
-          (dimensions?.progressValueAtDetents?.length ?? 1) - 1,
-          destinationDetent
-        );
-        setSegment([lastDetent, lastDetent]);
-
-        Promise.all(allAnimationPromises).then(() => {
-          callback();
-        });
+        Promise.all(allAnimationPromises).then(resolve);
       }
-    };
-
-    if (onTravel || dimensions?.progressValueAtDetents) {
-      requestAnimationFrame(progressReportLoop);
-    } else {
-      Promise.all(allAnimationPromises).then(() => {
-        callback();
-      });
-    }
+    });
   };
 
   requestAnimationFrame(() => {
@@ -620,10 +609,7 @@ export function executeSheetTravel(config) {
 
       setScroll();
 
-      Promise.all([
-        wrapAsPromise(animateContent),
-        wrapAsPromise(animateTravelCallbacks),
-      ]).then(() => {
+      Promise.all([animateContent(), animateTravelCallbacks()]).then(() => {
         if (onTravelEnd) {
           onTravelEnd();
         }
@@ -759,13 +745,7 @@ export function travelToDetent(config) {
       onTravelStart();
     }
 
-    if (scrollAxis === "x") {
-      scrollContainer.scrollTo(positionToScrollTo, 0);
-      scrollContainer.scrollLeft = positionToScrollTo;
-    } else {
-      scrollContainer.scrollTo(0, positionToScrollTo);
-      scrollContainer.scrollTop = positionToScrollTo;
-    }
+    setScrollPosition(scrollContainer, scrollAxis, positionToScrollTo);
 
     setSegment([resolvedDestination, resolvedDestination]);
 
