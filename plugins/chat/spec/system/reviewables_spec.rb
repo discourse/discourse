@@ -31,13 +31,13 @@ describe "Reviewables", type: :system do
     it "does not throw an error" do
       visit("/review?type=Chat%3A%3AReviewableMessage")
 
-      expect(page).to have_selector(".reviewable-item.reviewable-chat-message")
+      expect(page).to have_selector(".review-item__post-content")
     end
 
     it "adds the option to ignore the flag" do
       visit("/review?type=Chat%3A%3AReviewableMessage")
 
-      expect(page).to have_selector(".reviewable-actions .chat-message-ignore")
+      expect(page).to have_text(I18n.t("chat.reviewables.actions.ignore.title"))
     end
   end
 end
