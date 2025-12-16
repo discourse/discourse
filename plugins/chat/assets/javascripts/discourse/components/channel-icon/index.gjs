@@ -37,11 +37,7 @@ export default class ChatChannelIcon extends Component {
 
   <template>
     {{#if @channel.isDirectMessageChannel}}
-      {{#if @channel.iconUploadUrl}}
-        <div class="chat-channel-icon --avatar --custom-icon">
-          <img src={{@channel.iconUploadUrl}} />
-        </div>
-      {{else if this.groupDirectMessage}}
+      {{#if this.groupDirectMessage}}
         <div
           class={{concatClass
             "chat-channel-icon"

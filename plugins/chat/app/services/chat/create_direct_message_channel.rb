@@ -30,7 +30,6 @@ module Chat
       attribute :target_usernames, :array
       attribute :target_groups, :array
       attribute :upsert, :boolean, default: false
-      attribute :icon_upload_id, :integer
 
       validate :target_presence
 
@@ -96,8 +95,7 @@ module Chat
     end
 
     def set_optional_params(channel:, params:)
-      optional_params =
-        params.slice(:name, :icon_upload_id).reject { |_, value| value.nil? || value == "" }
+      optional_params = params.slice(:name).reject { |_, value| value.nil? || value == "" }
       channel.update!(optional_params) if !optional_params.empty?
     end
 

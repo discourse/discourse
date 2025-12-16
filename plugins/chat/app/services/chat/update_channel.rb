@@ -45,7 +45,6 @@ module Chat
       attribute :threading_enabled, :boolean, default: false
       attribute :auto_join_users, :boolean, default: false
       attribute :allow_channel_wide_mentions, :boolean, default: true
-      attribute :icon_upload_id, :integer, default: nil
       attribute :emoji, :string
 
       before_validation do

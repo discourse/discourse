@@ -1,7 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import guid from "pretty-text/guid";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
-import { getURLWithCDN } from "discourse/lib/get-url";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
@@ -98,9 +97,6 @@ export default class ChatChannel {
     this.currentUserMembership = args.current_user_membership;
     this.lastMessage = args.last_message;
     this.meta = args.meta;
-    this.iconUploadUrl = args.icon_upload_url
-      ? getURLWithCDN(args.icon_upload_url)
-      : null;
 
     this.chatable = this.#initChatable(args.chatable ?? []);
     this.tracking = new ChatTrackingState(getOwnerWithFallback(this));

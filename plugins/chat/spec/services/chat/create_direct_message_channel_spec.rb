@@ -40,8 +40,7 @@ RSpec.describe Chat::CreateDirectMessageChannel do
     let(:guardian) { Guardian.new(current_user) }
     let(:target_usernames) { [user_1.username, user_2.username] }
     let(:name) { "" }
-    let(:icon_upload_id) { nil }
-    let(:params) { { target_usernames:, name:, icon_upload_id: } }
+    let(:params) { { target_usernames:, name: } }
     let(:dependencies) { { guardian: } }
 
     context "when all steps pass" do
@@ -181,14 +180,6 @@ RSpec.describe Chat::CreateDirectMessageChannel do
 
         it "sets it as the channel name" do
           expect(result.channel.name).to eq(name)
-        end
-      end
-
-      context "when an icon_upload_id is given" do
-        let(:icon_upload_id) { 2 }
-
-        it "sets it as the channel icon_upload_id" do
-          expect(result.channel.icon_upload_id).to eq(icon_upload_id)
         end
       end
     end
