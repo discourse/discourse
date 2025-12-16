@@ -24,6 +24,7 @@ const VALID_EMBER_CLI_WORKFLOW_HANDLERS = ["silence", "log", "throw"];
 const VALID_HANDLERS = [
   ...VALID_EMBER_CLI_WORKFLOW_HANDLERS,
   "dont-throw",
+  "dont-count",
   "counter",
 ];
 
@@ -157,6 +158,7 @@ export class DiscourseDeprecationWorkflow {
 
   /**
    * Checks if a deprecation should be counted.
+   *
    * @param {string} deprecationId - ID of the deprecation
    * @return {boolean} True if deprecation should be counted
    */
@@ -164,6 +166,12 @@ export class DiscourseDeprecationWorkflow {
     const workflow = this.#find(deprecationId);
     if (!workflow) {
       return true;
+    }
+
+    // The "dont-count" handler prevents counting specific deprecations
+    // even when they would normally be counted (e.g., for test fixtures)
+    if (workflow.handler?.includes("dont-count")) {
+      return false;
     }
 
     const silenced = workflow.handler?.includes("silence") ?? false;
@@ -252,7 +260,7 @@ export class DiscourseDeprecationWorkflow {
  * IMPORTANT: The first match wins, so the order of the workflows is relevant.
  *
  * Each workflow config item should have:
- * @property {(string|string[])} handler - Handler type(s): "silence", "log", "throw", "dont-throw", and/or "counter"
+ * @property {(string|string[])} handler - Handler type(s): "silence", "log", "throw", "dont-throw", "dont-count", and/or "counter"
  * @property {(string|RegExp)} matchId - ID or pattern to match deprecations
  * @property {(string|string[])} [env] - Optional environment(s): "development", "qunit-test", "rails-test", "test", "production", "unset"
  */
@@ -272,8 +280,8 @@ const DeprecationWorkflow = new DiscourseDeprecationWorkflow([
     matchId: /^discourse\.native-array-extensions\..+$/,
   },
   {
-    handler: "dont-throw",
-    matchId: /fake-deprecation.*/,
+    handler: ["dont-count", "dont-throw"],
+    matchId: /fake.deprecation.*/,
     env: "test",
   },
   // widget-related code should fail on all CI tests, including plugins and custom themes
