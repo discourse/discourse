@@ -7,6 +7,10 @@
 lt:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Privatu"
+          public: "Vieša"
       reports:
         reading_time:
           title: Skaitymo laikas

@@ -7,6 +7,10 @@
 te:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "అంతరంగికం"
+          public: "బహిరంగం"
       reports:
         reading_time:
           title: చదివే సమయం

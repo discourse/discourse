@@ -22,7 +22,7 @@ export default class DiscourseNewFeatureItem extends Component {
   @tracked isExperiment = this.args.item.experiment;
 
   get identifier() {
-    return dasherize(this.args.item.title);
+    return this.args.item.title ? dasherize(this.args.item.title) : null;
   }
 
   @action

@@ -34,13 +34,17 @@ module DiscourseRewind
 
       def call
         return FakeData if should_use_fake_data?
+
         best_posts =
           Post
+            .public_posts
+            .joins(topic: :category)
             .where(user_id: user.id)
-            .where(created_at: date)
-            .where(deleted_at: nil)
+            .where(posts: { created_at: date, deleted_at: nil })
             .where("post_number > 1")
-            .order("like_count DESC NULLS LAST, created_at ASC")
+            .where("NOT categories.read_restricted")
+            .where.not(post_type: Post.types[:whisper])
+            .order("like_count DESC NULLS LAST, posts.created_at ASC")
             .limit(3)
             .select(:post_number, :topic_id, :like_count, :reply_count, :raw, :cooked)
             .map do |post|
