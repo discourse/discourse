@@ -3,25 +3,7 @@ import {
   generateAnimationConfig,
   supportsLinearEasing,
 } from "./animation";
-
-/** @type {Set<string>} CSS transform properties */
-const TRANSFORM_PROPS = new Set([
-  "translate",
-  "translateX",
-  "translateY",
-  "translateZ",
-  "scale",
-  "scaleX",
-  "scaleY",
-  "scaleZ",
-  "rotate",
-  "rotateX",
-  "rotateY",
-  "rotateZ",
-  "skew",
-  "skewX",
-  "skewY",
-]);
+import { toKebabCase, TRANSFORM_PROPS } from "./css-utils";
 
 /**
  * Builds a single keyframe object from config at a given progress.
@@ -67,18 +49,6 @@ function buildKeyframe(config, progress) {
   }
 
   return keyframe;
-}
-
-/**
- * Converts a camelCase CSS property to kebab-case with vendor prefix handling.
- *
- * @param {string} property - camelCase property name
- * @returns {string} kebab-case property name
- */
-function toKebabCase(property) {
-  const prefix =
-    property.startsWith("webkit") || property.startsWith("moz") ? "-" : "";
-  return prefix + property.replace(/[A-Z]/g, "-$&").toLowerCase();
 }
 
 /**
