@@ -25,6 +25,7 @@ module DiscourseRewind
               viewed_at: date,
               categories: {
                 id: user.guardian.allowed_category_ids,
+                read_restricted: false,
               },
             )
             .group("categories.id, categories.name")
