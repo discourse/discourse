@@ -38,6 +38,7 @@ export default class Controller {
    * Browser feature detection for scroll-snap and IntersectionObserver.
    *
    * @type {boolean}
+   * @static
    */
   static get browserSupportsRequiredFeatures() {
     const supportsScrollSnap =
@@ -75,17 +76,15 @@ export default class Controller {
 
   /** @type {boolean} */
   @tracked inertOutside = true;
+
   /** @type {Array|null} */
   @tracked detentsConfig = null;
+
   /** @type {boolean} */
   @tracked swipeOvershoot = true;
+
   /** @type {boolean} */
   @tracked backdropSwipeable = true;
-  /** @type {string} */
-  tracks = "bottom";
-
-  /** @type {string} */
-  contentPlacement = "bottom";
 
   /** @type {TrackedArray<HTMLElement>} */
   detentMarkers = new TrackedArray();
@@ -96,26 +95,30 @@ export default class Controller {
   /** @type {string} */
   role = "dialog";
 
-  /** @type {StateMachine} Main state machine for sheet lifecycle */
+  /** @type {string} */
+  tracks = "bottom";
+
+  /** @type {string} */
+  contentPlacement = "bottom";
+
+  /** @type {StateMachine} */
   stateMachine = new StateMachine(SHEET_STATES, SHEET_STATES.initial, {
     guards: GUARDS,
   });
 
-  /** @type {StateMachine} State machine for animation state transitions */
+  /** @type {StateMachine} */
   animationStateMachine = new StateMachine(
     ANIMATION_STATES,
     ANIMATION_STATES.initial,
-    {
-      guards: GUARDS,
-    }
+    { guards: GUARDS }
   );
 
-  /** @type {StateMachine} State machine for stacking position */
+  /** @type {StateMachine} */
   positionMachine = new StateMachine(POSITION_STATES, POSITION_STATES.initial, {
     guards: GUARDS,
   });
 
-  /** @type {StateMachine} State machine for touch gesture tracking */
+  /** @type {StateMachine} */
   touchMachine = new StateMachine(
     {
       initial: "ended",
@@ -128,186 +131,162 @@ export default class Controller {
     { guards: null }
   );
 
-  /** @type {Object|null} Calculated dimension data */
+  /** @type {Object|null} */
   dimensions = null;
 
-  /** @type {boolean} Whether the view was hidden by intersection observer */
-  viewHiddenByObserver = false;
-
-  /** @type {boolean} Flag to skip closing animation */
-  closingWithoutAnimation = false;
-
-  /** @type {number} Currently active detent index */
+  /** @type {number} */
   activeDetent = 0;
 
-  /** @type {number} Target detent for animations */
+  /** @type {number} */
   targetDetent = 1;
 
-  /** @type {Array<number>} Current travel segment [start, end] */
+  /** @type {Array<number>} */
   currentSegment = [0, 0];
 
-  /** @type {boolean} Whether stuck at front (last) detent */
+  /** @type {boolean} */
   frontStuck = false;
 
-  /** @type {boolean} Whether stuck at back (first) detent */
+  /** @type {boolean} */
   backStuck = false;
 
-  /** @type {number} Current travel progress (0-1) */
+  /** @type {number} */
   travelProgress = 0;
 
-  /** @type {string} Current travel status */
+  /** @type {string} */
   travelStatus = "idleOutside";
 
-  /** @type {{start: number, end: number}} Current travel range */
+  /** @type {{start: number, end: number}} */
   travelRange = { start: 0, end: 0 };
 
-  /** @type {string} Previous travel status for comparison */
+  /** @type {string} */
   previousTravelStatus = "idleOutside";
 
-  /** @type {Array<Object>} Registered travel animation callbacks */
+  /** @type {number|null} */
+  lastProcessedProgress = null;
+
+  /** @type {boolean} */
+  programmaticScrollOngoing = false;
+
+  /** @type {Array<Object>} */
   travelAnimations = [];
 
-  /** @type {Array<Object>} Registered stacking animation callbacks */
+  /** @type {Array<Object>} */
   stackingAnimations = [];
 
-  /** @type {Array<Controller>} Sheets below this one in the stack */
+  /** @type {Array<Controller>} */
   belowSheetsInStack = [];
 
-  /**
-   * Aggregated callback for all travel animations.
-   *
-   * @param {number} progress - Travel progress (0-1)
-   * @param {Function} tween - Tween function
-   */
-  aggregatedTravelCallback = (progress, tween) => {
-    for (let i = 0; i < this.travelAnimations.length; i++) {
-      this.travelAnimations[i].callback(progress, tween);
-    }
-  };
-
-  /**
-   * Aggregated callback for all stacking animations.
-   *
-   * @param {number} progress - Stacking progress (0-1)
-   * @param {Function} tween - Tween function
-   */
-  aggregatedStackingCallback = (progress, tween) => {
-    for (let i = 0; i < this.stackingAnimations.length; i++) {
-      this.stackingAnimations[i].callback(progress, tween);
-    }
-  };
-
-  /** @type {number} Index in the sheet stack */
+  /** @type {number} */
   stackingIndex = -1;
 
-  /** @type {string|null} ID of the stack this sheet belongs to */
+  /** @type {string|null} */
   stackId = null;
 
-  /** @type {number} Position within the stack */
+  /** @type {number} */
   myStackPosition = 0;
 
-  /** @type {Object|null} Registry for sheet stacks */
+  /** @type {boolean} */
+  viewHiddenByObserver = false;
+
+  /** @type {boolean} */
+  closingWithoutAnimation = false;
+
+  /** @type {Object|null} */
   sheetStackRegistry = null;
 
-  /** @type {Object|null} Registry for all sheets */
+  /** @type {Object|null} */
   sheetRegistry = null;
 
-  /** @type {Set} Registered outlet elements */
+  /** @type {Object|null} */
+  themeColorManager = null;
+
+  /** @type {Set} */
   outlets = new Set();
 
-  /** @type {Function|null} Callback when travel status changes */
+  /** @type {Function|null} */
   onTravelStatusChange = null;
 
-  /** @type {Function|null} Callback when travel range changes */
+  /** @type {Function|null} */
   onTravelRangeChange = null;
 
-  /** @type {Function|null} Callback during travel with progress */
+  /** @type {Function|null} */
   onTravel = null;
 
-  /** @type {Function|null} Callback when travel starts */
+  /** @type {Function|null} */
   onTravelStart = null;
 
-  /** @type {Function|null} Callback when travel ends */
+  /** @type {Function|null} */
   onTravelEnd = null;
 
-  /** @type {Function|null} Callback when active detent changes */
+  /** @type {Function|null} */
   onActiveDetentChange = null;
 
-  /** @type {Function|null} Callback when travel progress changes */
+  /** @type {Function|null} */
   onTravelProgressChange = null;
 
-  /** @type {boolean} Whether swipe gestures are enabled */
+  /** @type {Function|null} */
+  onSwipeFromEdgeToGoBackAttempt = null;
+
+  /** @type {boolean} */
   swipe = true;
 
-  /** @type {boolean} Whether swipe-to-dismiss is enabled */
+  /** @type {boolean} */
   swipeDismissal = true;
 
-  /** @type {boolean|Object} Swipe trap configuration */
+  /** @type {boolean|Object} */
   swipeTrap = true;
 
-  /** @type {string|Object|null} Animation settings for entering */
+  /** @type {boolean} */
+  nativeEdgeSwipePrevention = false;
+
+  /** @type {boolean} */
+  nativeFocusScrollPrevention = true;
+
+  /** @type {boolean} */
+  pageScroll = false;
+
+  /** @type {string|Object|null} */
   enteringAnimationSettings = null;
 
-  /** @type {string|Object|null} Animation settings for exiting */
+  /** @type {string|Object|null} */
   exitingAnimationSettings = null;
 
-  /** @type {string|Object|null} Animation settings for stepping between detents */
+  /** @type {string|Object|null} */
   steppingAnimationSettings = null;
 
-  /** @type {string|number} Snap-out acceleration configuration */
+  /** @type {string|number} */
   snapOutAcceleration = "auto";
 
-  /** @type {string|number} Snap to end detents acceleration */
+  /** @type {string|number} */
   snapToEndDetentsAcceleration = "auto";
 
-  /** @type {Object} Click outside behavior configuration */
+  /** @type {Object} */
   onClickOutside = {
     dismiss: true,
     stopOverlayPropagation: true,
   };
 
-  /** @type {Object|Function} Escape key behavior configuration */
+  /** @type {Object|Function} */
   onEscapeKeyDown = {
     nativePreventDefault: true,
     dismiss: true,
     stopOverlayPropagation: true,
   };
 
-  /** @type {Object|Function} Auto-focus behavior on present */
+  /** @type {Object|Function} */
   onPresentAutoFocus = { focus: true };
 
-  /** @type {Object|Function} Auto-focus behavior on dismiss */
+  /** @type {Object|Function} */
   onDismissAutoFocus = { focus: true };
 
-  /** @type {boolean} Whether to prevent native edge swipe gestures */
-  nativeEdgeSwipePrevention = false;
-
-  /** @type {boolean} Whether to prevent native focus-induced scrolling */
-  nativeFocusScrollPrevention = true;
-
-  /** @type {boolean} Whether page scroll is enabled */
-  pageScroll = false;
-
-  /** @type {Function|null} Callback for edge swipe attempts */
-  onSwipeFromEdgeToGoBackAttempt = null;
-
-  /** @type {boolean} Whether a programmatic scroll is in progress */
-  programmaticScrollOngoing = false;
-
-  /** @type {number|null} Last processed progress value for de-duplication */
-  lastProcessedProgress = null;
-
-  /** @type {FocusManagement|null} Focus management helper */
+  /** @type {FocusManagement|null} */
   focusManagement = null;
 
-  /** @type {InertManagement|null} Inert management helper */
+  /** @type {InertManagement|null} */
   inertManagement = null;
 
-  /** @type {Object|null} Theme color manager service */
-  themeColorManager = null;
-
   /**
-   * Declarative subscription definitions for state machines.
+   * state machines
    */
   #subscriptionDefinitions = [
     {
@@ -682,10 +661,40 @@ export default class Controller {
     }
   }
 
+  // ═══════════════════════════════════════════════════════════════════════════
+  // Aggregated Animation Callbacks
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /**
+   * Invoke all registered travel animation callbacks.
+   * Uses index-based iteration for performance per Silk implementation.
+   *
+   * @param {number} progress - Travel progress value (0-1)
+   * @param {Function} [tween] - Optional tween function for interpolation
+   */
+  aggregatedTravelCallback(progress, tween) {
+    const animations = this.travelAnimations;
+    for (let i = 0, len = animations.length; i < len; i++) {
+      animations[i].callback(progress, tween);
+    }
+  }
+
+  /**
+   * Invoke all registered stacking animation callbacks.
+   * Uses index-based iteration for performance per Silk implementation.
+   *
+   * @param {number} progress - Stacking progress value (0-1)
+   * @param {Function} tween - Tween function for interpolation
+   */
+  aggregatedStackingCallback(progress, tween) {
+    const animations = this.stackingAnimations;
+    for (let i = 0, len = animations.length; i < len; i++) {
+      animations[i].callback(progress, tween);
+    }
+  }
+
   /**
    * Update animating attribute on the view element.
-   *
-   * @private
    */
   updateAnimatingAttribute() {
     this.domAttributes.updateAnimatingAttribute(this.animationState);
@@ -700,6 +709,8 @@ export default class Controller {
   }
 
   /**
+   * CSS class for the swipe trap based on configuration.
+   *
    * @type {string|null}
    */
   get effectiveSwipeTrapClass() {
@@ -713,11 +724,8 @@ export default class Controller {
       return "swipe-trap-both";
     }
 
-    if (typeof trapValue === "object") {
-      const { x, y } = trapValue;
-      if (x && y) {
-        return "swipe-trap-both";
-      }
+    if (typeof trapValue === "object" && trapValue.x && trapValue.y) {
+      return "swipe-trap-both";
     }
 
     return null;
@@ -780,43 +788,42 @@ export default class Controller {
 
   /**
    * Whether swipe-to-dismiss is disabled.
+   * True when sheet has detents, dismissal is disabled, and sheet is open.
    *
    * @type {boolean}
    */
   get swipeOutDisabled() {
-    const swipeEnabled = this.swipe !== false;
-    const browserSupported = Controller.browserSupportsRequiredFeatures;
-    if (!(swipeEnabled && browserSupported)) {
+    if (this.swipe === false || !Controller.browserSupportsRequiredFeatures) {
       return false;
     }
 
-    const dismissalDisabled =
-      !this.swipeDismissal || this.role === "alertdialog";
-    if (!dismissalDisabled) {
+    if (this.swipeDismissal && this.role !== "alertdialog") {
       return false;
     }
 
-    const hasDetentsConfig =
-      this.detentsConfig !== null && this.detentsConfig !== undefined;
-    if (!hasDetentsConfig) {
+    if (this.detentsConfig === null || this.detentsConfig === undefined) {
       return false;
     }
 
-    const isOpen = this.currentState === "open";
-    const isNotClosing = !this.animationStateMachine.matches("closing");
-    return isOpen && isNotClosing;
+    return (
+      this.currentState === "open" &&
+      !this.animationStateMachine.matches("closing")
+    );
   }
 
   /**
+   * Whether overshoot is disabled for edge-aligned sheets.
+   *
    * @type {boolean}
    */
   get edgeAlignedNoOvershoot() {
-    const dismissalOrAlertDisabled =
+    if (this.swipeOvershoot) {
+      return false;
+    }
+
+    const isDismissalDisabled =
       this.role === "alertdialog" || !this.swipeDismissal;
-    return (
-      (!this.isCenteredTrack || dismissalOrAlertDisabled) &&
-      !this.swipeOvershoot
-    );
+    return !this.isCenteredTrack || isDismissalDisabled;
   }
 
   /**
@@ -856,7 +863,6 @@ export default class Controller {
 
   /**
    * Get the CSS class for content placement.
-   * Converts API values (top/bottom/left/right/center) to CSS values (start/end/center).
    *
    * @type {string}
    */
@@ -869,7 +875,6 @@ export default class Controller {
    *
    * @param {string} status - "idleOutside", "idleInside", "travellingIn", "travellingOut", "stepping"
    */
-  @action
   updateTravelStatus(status) {
     if (this.travelStatus !== status) {
       this.travelStatus = status;
@@ -883,8 +888,9 @@ export default class Controller {
   }
 
   /**
-   * @param {string} status
-   * @private
+   * Update the animation-active data attribute based on travel status.
+   *
+   * @param {string} status - Current travel status
    */
   updateAnimationActiveAttribute(status) {
     const isAnimating =
@@ -896,9 +902,9 @@ export default class Controller {
 
   /**
    * Handle stacking state changes based on travel status.
+   * Delegates to stacking adapter for bookkeeping.
    *
-   * @param {string} status
-   * @private
+   * @param {string} status - Current travel status
    */
   handleStackingStateChange(status) {
     this.stackingAdapter.handleTravelStatusChange(
@@ -910,10 +916,9 @@ export default class Controller {
   /**
    * Update travel range and notify callback.
    *
-   * @param {number} start
-   * @param {number} end
+   * @param {number} start - Start detent index
+   * @param {number} end - End detent index
    */
-  @action
   updateTravelRange(start, end) {
     if (this.travelRange.start !== start || this.travelRange.end !== end) {
       this.travelRange = { start, end };
@@ -924,9 +929,8 @@ export default class Controller {
   /**
    * Notify onTravel callback with current progress.
    *
-   * @param {number} progress
+   * @param {number} progress - Travel progress value (0-1)
    */
-  @action
   notifyTravel(progress) {
     this.onTravel?.({ progress });
   }
@@ -942,28 +946,30 @@ export default class Controller {
 
   /**
    * Simplified openness state for data attributes.
+   * Maps detailed state machine states to UI-friendly values.
    *
    * @type {string}
    */
   get openness() {
     const state = this.stateMachine.current;
 
-    if (state === "open") {
-      return "open";
-    } else if (state === "closing") {
-      return "closing";
-    } else if (
-      state === "opening" ||
-      state === "preparing-opening" ||
-      state === "preparing-open"
-    ) {
-      return "opening";
-    } else {
-      return "closed";
+    switch (state) {
+      case "open":
+        return "open";
+      case "closing":
+        return "closing";
+      case "opening":
+      case "preparing-opening":
+      case "preparing-open":
+        return "opening";
+      default:
+        return "closed";
     }
   }
 
   /**
+   * Current animation state from the animation state machine.
+   *
    * @type {string}
    */
   get animationState() {
@@ -971,6 +977,9 @@ export default class Controller {
   }
 
   /**
+   * Whether the sheet should be focusable.
+   * Enabled when native focus scroll prevention is active.
+   *
    * @type {boolean}
    */
   get isFocusable() {
@@ -978,6 +987,8 @@ export default class Controller {
   }
 
   /**
+   * Whether any animation is currently in progress.
+   *
    * @type {boolean}
    */
   get isAnimating() {
@@ -1086,7 +1097,6 @@ export default class Controller {
    * Sets up scroll behavior, focus, and intersection observer.
    *
    * @param {Object} message - State transition message
-   * @private
    */
   handleOpen(message) {
     this.updateScrollSnapBehavior();
@@ -1100,17 +1110,27 @@ export default class Controller {
       this.stateHelper.advanceAnimationState();
     }
 
-    if (!this.swipeOutDisabled) {
-      requestAnimationFrame(() => {
-        if (this.currentState === "open" && !this.swipeOutDisabled) {
-          this.setupIntersectionObserver();
-        }
-      });
-    }
+    this.#setupIntersectionObserver();
 
-    if (message && message.type === "STEP") {
+    if (message?.type === "STEP") {
       this.handleStepMessage(message);
     }
+  }
+
+  /**
+   * Set up intersection observer if swipe-out is enabled.
+   * Deferred to next frame to ensure DOM is ready.
+   */
+  #setupIntersectionObserver() {
+    if (this.swipeOutDisabled) {
+      return;
+    }
+
+    requestAnimationFrame(() => {
+      if (this.currentState === "open" && !this.swipeOutDisabled) {
+        this.setupIntersectionObserver();
+      }
+    });
   }
 
   /**
@@ -1174,22 +1194,35 @@ export default class Controller {
 
   /**
    * Handle the closed.pending state.
-   * Schedules flush to safe-to-unmount.
-   *
-   * @private
+   * Handles immediate close if needed, then schedules flush to safe-to-unmount.
    */
   handleClosedPending() {
-    if (this.closingWithoutAnimation) {
-      this.stateHelper.beginClosingImmediate(true);
-      this.updateTravelStatus("travellingOut");
-      this.closingWithoutAnimation = false;
-      this.stateHelper.goOut();
-      this.stackingAdapter.notifyParentOfClosingImmediate();
+    this.#handleImmediateCloseIfNeeded();
+    this.#scheduleFlushToSafeToUnmount();
+  }
 
-      const tween = createTweenFunction(0);
-      this.stackingAdapter.notifyBelowSheets(0, tween);
+  /**
+   * Handle immediate close (swipe-out) without animation.
+   */
+  #handleImmediateCloseIfNeeded() {
+    if (!this.closingWithoutAnimation) {
+      return;
     }
 
+    this.stateHelper.beginClosingImmediate(true);
+    this.updateTravelStatus("travellingOut");
+    this.closingWithoutAnimation = false;
+    this.stateHelper.goOut();
+    this.stackingAdapter.notifyParentOfClosingImmediate();
+
+    const tween = createTweenFunction(0);
+    this.stackingAdapter.notifyBelowSheets(0, tween);
+  }
+
+  /**
+   * Schedule the flush to safe-to-unmount state.
+   */
+  #scheduleFlushToSafeToUnmount() {
     this.timeoutManager.schedule(
       "pendingFlush",
       () => {
@@ -1203,31 +1236,35 @@ export default class Controller {
 
   /**
    * Handle the closed.safe-to-unmount state.
-   * Performs final cleanup and resets state.
-   *
-   * @private
+   * Performs final cleanup and resets all state to initial values.
    */
   handleClosedSafeToUnmount() {
+    // Reset presentation flags
     this.isPresented = false;
     this.needsInitialScroll = true;
     this.viewHiddenByObserver = false;
     this.frontStuck = false;
     this.backStuck = false;
 
+    // Perform cleanup and restore focus
     this.cleanup();
     this.executeAutoFocusOnDismiss();
 
+    // Reset travel state
     this.activeDetent = 0;
     this.currentSegment = [0, 0];
     this.dimensions = null;
     this.lastProcessedProgress = null;
 
-    if (this.stateHelper.position !== "out") {
-      if (this.stateHelper.isPositionFrontClosing()) {
-        this.stateHelper.advancePosition();
-      }
+    // Advance position machine if needed
+    if (
+      this.stateHelper.position !== "out" &&
+      this.stateHelper.isPositionFrontClosing()
+    ) {
+      this.stateHelper.advancePosition();
     }
 
+    // Notify travel status change
     this.updateTravelStatus("idleOutside");
     this.updateTravelRange(0, 0);
   }
@@ -1236,7 +1273,6 @@ export default class Controller {
    * Calculate dimensions if all required elements are ready.
    * Triggers dimension calculation and initial animation.
    */
-  @action
   calculateDimensionsIfReady() {
     const isPreparingOpening = this.currentState === "preparing-opening";
     const isPreparingOpen = this.currentState === "preparing-open";
@@ -1290,7 +1326,6 @@ export default class Controller {
   /**
    * Set the initial scroll position based on track direction.
    */
-  @action
   setInitialScrollPosition() {
     if (!this.scrollContainer || !this.dimensions) {
       return;
@@ -1318,7 +1353,6 @@ export default class Controller {
    *
    * @param {number} detentIndex - Target detent index
    */
-  @action
   setScrollPositionToDetent(detentIndex) {
     if (!this.scrollContainer || !this.dimensions) {
       return;
@@ -1348,7 +1382,6 @@ export default class Controller {
   /**
    * Set up the intersection observer for swipe-out detection.
    */
-  @action
   setupIntersectionObserver() {
     this.observerManager.setupIntersectionObserver();
   }
@@ -1356,7 +1389,6 @@ export default class Controller {
   /**
    * Clean up the intersection observer.
    */
-  @action
   cleanupIntersectionObserver() {
     this.observerManager.cleanupIntersectionObserver();
   }
@@ -1427,19 +1459,19 @@ export default class Controller {
   }
 
   /**
-   * Full cleanup of all resources. Idempotent - safe to call multiple times.
+   * Full cleanup of all resources.
+   * Idempotent and safe to call multiple times.
+   * Called when sheet transitions to safe-to-unmount state.
    */
-  @action
   cleanup() {
     this.timeoutManager.cleanup();
+
     this.touchHandler.detach();
     this.observerManager.cleanup();
     this.themeColorAdapter.cleanup();
-
     this.domAttributes.cleanup();
     this.inertManagement.cleanup();
     this.focusManagement.cleanup();
-
     this.stateMachine.cleanup();
     this.animationStateMachine.cleanup();
     this.positionMachine.cleanup();
@@ -1449,9 +1481,8 @@ export default class Controller {
   /**
    * Find the element to auto-focus on present.
    *
-   * @returns {HTMLElement|null}
+   * @returns {HTMLElement|null} The element to focus, or null if none found
    */
-  @action
   findAutoFocusTarget() {
     return this.focusManagement.findAutoFocusTarget() ?? null;
   }
@@ -1459,7 +1490,6 @@ export default class Controller {
   /**
    * Execute auto-focus when the sheet is presented.
    */
-  @action
   executeAutoFocusOnPresent() {
     this.focusManagement.executeAutoFocusOnPresent();
   }
@@ -1467,7 +1497,6 @@ export default class Controller {
   /**
    * Execute auto-focus when the sheet is dismissed.
    */
-  @action
   executeAutoFocusOnDismiss() {
     this.focusManagement.executeAutoFocusOnDismiss();
   }
@@ -1475,7 +1504,6 @@ export default class Controller {
   /**
    * Set up focus scroll prevention.
    */
-  @action
   setupFocusScrollPrevention() {
     this.focusManagement.setupFocusScrollPrevention();
   }
@@ -1483,7 +1511,6 @@ export default class Controller {
   /**
    * Apply inert attribute to elements outside the sheet.
    */
-  @action
   applyInertOutside() {
     this.inertManagement.applyInertOutside();
     this.sheetRegistry?.updateInertOutside(this, this.inertOutside);
@@ -1492,7 +1519,6 @@ export default class Controller {
   /**
    * Remove inert attribute from elements outside the sheet.
    */
-  @action
   removeInertOutside() {
     this.inertManagement.removeInertOutside();
     this.sheetRegistry?.updateInertOutside(this, false);
@@ -1680,17 +1706,17 @@ export default class Controller {
 
   /**
    * Handle touch gesture start.
+   * Called by TouchHandler when a swipe gesture begins.
    */
-  @action
   onTouchGestureStart() {
     this.stateHelper.swipeStart();
   }
 
   /**
    * Handle touch gesture end.
+   * Called by TouchHandler when a swipe gesture ends.
    * May trigger step to stuck position if needed.
    */
-  @action
   onTouchGestureEnd() {
     this.stateHelper.swipeEnd();
 
@@ -1723,7 +1749,6 @@ export default class Controller {
    *
    * @param {string} direction - "front" (last detent) or "back" (first detent)
    */
-  @action
   stepToStuckPosition(direction) {
     this.frontStuck = false;
     this.backStuck = false;
@@ -1859,10 +1884,10 @@ export default class Controller {
   /**
    * Send a message to the position machine.
    *
-   * @param {string|Object} message
-   * @param {Object} context
+   * @param {string|Object} message - Message to send
+   * @param {Object} context - Context for guards
+   * @returns {boolean} Whether a transition occurred
    */
-  @action
   sendToPositionMachine(message, context = {}) {
     return this.stateHelper.sendToPosition(message, context);
   }
@@ -1927,7 +1952,6 @@ export default class Controller {
   /**
    * Reset view styles to default state.
    */
-  @action
   resetViewStyles() {
     this.domAttributes.resetViewStyles();
     this.viewHiddenByObserver = false;
@@ -1936,9 +1960,8 @@ export default class Controller {
   /**
    * Updates the scroll lock state via the sheet registry.
    *
-   * @param {boolean} shouldLock
+   * @param {boolean} shouldLock - Whether to lock scrolling
    */
-  @action
   updateScrollLock(shouldLock) {
     this.sheetRegistry?.updateScrollLock(this, shouldLock);
   }
