@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
+import DSheetTrigger from "discourse/float-kit/components/d-sheet/trigger";
 
 /**
  * DScroll.Trigger - A button that triggers scroll actions.
@@ -14,36 +14,24 @@ import DButton from "discourse/components/d-button";
  */
 export default class DScrollTrigger extends Component {
   @action
-  handlePress(_, event) {
-    const defaultBehavior = { forceFocus: true, runAction: true };
-
+  handlePress(pressEvent) {
     if (this.args.onPress) {
       if (typeof this.args.onPress === "function") {
-        const customEvent = {
-          changeDefault: (changedBehavior) => {
-            Object.assign(defaultBehavior, changedBehavior);
-          },
-          forceFocus: defaultBehavior.forceFocus,
-          runAction: defaultBehavior.runAction,
-          nativeEvent: event,
-        };
-        this.args.onPress(customEvent);
-      } else if (typeof this.args.onPress === "object") {
-        Object.assign(defaultBehavior, this.args.onPress);
+        this.args.onPress(pressEvent);
+      } else {
+        pressEvent.changeDefault(this.args.onPress);
       }
     }
 
-    if (defaultBehavior.forceFocus && event.currentTarget) {
-      event.currentTarget.focus({ preventScroll: true });
-    }
-
-    if (defaultBehavior.runAction && this.args.action && this.args.controller) {
+    if (pressEvent.runAction && this.args.action && this.args.controller) {
       this.executeAction();
     }
 
     if (this.args.onClick) {
-      this.args.onClick(event);
+      this.args.onClick(pressEvent.nativeEvent);
     }
+
+    pressEvent.changeDefault({ runAction: false });
   }
 
   executeAction() {
@@ -65,13 +53,9 @@ export default class DScrollTrigger extends Component {
     {{#if @asChild}}
       {{yield (hash handlePress=this.handlePress)}}
     {{else}}
-      <DButton
-        @action={{this.handlePress}}
-        @forwardEvent={{true}}
-        ...attributes
-      >
+      <DSheetTrigger @onPress={{this.handlePress}} ...attributes>
         {{yield}}
-      </DButton>
+      </DSheetTrigger>
     {{/if}}
   </template>
 }

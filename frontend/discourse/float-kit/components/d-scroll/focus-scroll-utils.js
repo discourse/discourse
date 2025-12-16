@@ -22,27 +22,6 @@ export function isColorOrSelect(element) {
 }
 
 /**
- * Check if element is a clone.
- *
- * @param {Element} element
- * @returns {boolean}
- */
-export function isClone(element) {
-  return element?.getAttribute("data-d-scroll-clone") === "true";
-}
-
-/**
- * Check if keyboard is visible.
- * Keyboard is considered visible if visual viewport is 200px smaller than window.
- *
- * @returns {boolean}
- */
-export function isKeyboardVisible() {
-  const visualHeight = window.visualViewport?.height ?? window.innerHeight;
-  return window.innerHeight - 200 > visualHeight;
-}
-
-/**
  * Check if element is a password-related input.
  *
  * @param {Element} element

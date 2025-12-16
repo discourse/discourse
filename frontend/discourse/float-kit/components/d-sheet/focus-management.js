@@ -1,3 +1,5 @@
+import { processBehavior } from "discourse/float-kit/lib/behavior-handler";
+
 /**
  * Selector for focusable elements.
  *
@@ -96,38 +98,6 @@ function getFocusableElements(container, additionalSkipSelectors = []) {
 }
 
 /**
- * Process an auto-focus handler configuration.
- *
- * @param {Object} options
- * @param {Event|null} options.nativeEvent - The native event that triggered auto-focus
- * @param {Object} options.defaultBehavior - Default behavior configuration
- * @param {Function|Object} [options.handler] - Handler function or configuration object
- * @returns {Object} The resolved behavior configuration
- */
-function processAutoFocusHandler({ nativeEvent, defaultBehavior, handler }) {
-  let result = defaultBehavior;
-
-  if (handler) {
-    if (typeof handler === "function") {
-      const event = {
-        ...defaultBehavior,
-        nativeEvent,
-        changeDefault(changes) {
-          result = { ...defaultBehavior, ...changes };
-          Object.assign(this, changes);
-        },
-      };
-      event.changeDefault = event.changeDefault.bind(event);
-      handler(event);
-    } else {
-      result = { ...defaultBehavior, ...handler };
-    }
-  }
-
-  return result;
-}
-
-/**
  * Manages focus behavior for sheets including auto-focus on present/dismiss
  * and scroll prevention during focus changes.
  *
@@ -208,7 +178,7 @@ export default class FocusManagement {
    * Execute auto-focus when the sheet is presented.
    */
   executeAutoFocusOnPresent() {
-    const behavior = processAutoFocusHandler({
+    const behavior = processBehavior({
       nativeEvent: null,
       defaultBehavior: { focus: true },
       handler: this.controller.onPresentAutoFocus,
@@ -240,7 +210,7 @@ export default class FocusManagement {
       return;
     }
 
-    const behavior = processAutoFocusHandler({
+    const behavior = processBehavior({
       nativeEvent: null,
       defaultBehavior: { focus: true },
       handler: this.controller.onDismissAutoFocus,

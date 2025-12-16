@@ -1,31 +1,7 @@
-import { prefersReducedMotion } from "discourse/lib/utilities";
+import { isCloneElement } from "discourse/float-kit/lib/utils";
+import { getScrollBehavior, isKeyboardVisible } from "discourse/lib/utilities";
 import { capabilities } from "discourse/services/capabilities";
 import isTextInput from "./is-text-input";
-
-/**
- * Check if element is a clone (should be skipped for focus handling).
- *
- * @param {HTMLElement} element
- * @returns {boolean}
- */
-function isCloneElement(element) {
-  return element?.getAttribute("data-d-scroll-clone") === "true";
-}
-
-/**
- * Get appropriate scroll behavior based on platform and user preferences.
- *
- * @returns {"instant" | "smooth"}
- */
-function getScrollBehavior() {
-  if (prefersReducedMotion()) {
-    return "instant";
-  }
-  if (capabilities.isAndroid) {
-    return "instant";
-  }
-  return "smooth";
-}
 
 /**
  * KeyboardFocusHandler - Manages keyboard focus scroll behavior for DScroll.View.
@@ -78,19 +54,6 @@ export default class KeyboardFocusHandler {
   }
 
   /**
-   * Check if keyboard is currently open.
-   *
-   * @returns {boolean}
-   */
-  isKeyboardOpen() {
-    const visualViewport = window.visualViewport;
-    if (!visualViewport) {
-      return false;
-    }
-    return window.innerHeight - 200 > visualViewport.height;
-  }
-
-  /**
    * Handle focus event on text input.
    *
    * @param {FocusEvent} event
@@ -126,7 +89,7 @@ export default class KeyboardFocusHandler {
     this.resizeHandler = () => {
       this.clearTimeouts();
 
-      const keyboardOpen = this.isKeyboardOpen();
+      const keyboardOpen = isKeyboardVisible();
       if (!keyboardOpen) {
         return;
       }

@@ -3,6 +3,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
+import { processBehavior } from "discourse/float-kit/lib/behavior-handler";
 
 /**
  * Trigger button for controlling a sheet.
@@ -30,25 +31,11 @@ export default class Trigger extends Component {
    */
   @action
   handleClick(event) {
-    const defaultBehavior = { forceFocus: true, runAction: true };
-    let behavior = { ...defaultBehavior };
-
-    const onPress = this.args.onPress;
-    if (onPress) {
-      if (typeof onPress === "function") {
-        const customEvent = {
-          nativeEvent: event,
-          ...behavior,
-          changeDefault(changes) {
-            behavior = { ...behavior, ...changes };
-            Object.assign(this, changes);
-          },
-        };
-        onPress(customEvent);
-      } else {
-        behavior = { ...defaultBehavior, ...onPress };
-      }
-    }
+    const behavior = processBehavior({
+      nativeEvent: event,
+      defaultBehavior: { forceFocus: true, runAction: true },
+      handler: this.args.onPress,
+    });
 
     if (behavior.forceFocus) {
       event.currentTarget?.focus({ preventScroll: true });

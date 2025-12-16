@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { isKeyboardVisible } from "discourse/lib/utilities";
 
 /**
  * GestureTrapHandler - Manages scroll gesture trap via IntersectionObserver for DScroll.View.
@@ -138,17 +139,6 @@ export default class GestureTrapHandler {
   }
 
   /**
-   * Check if keyboard is currently visible.
-   * Keyboard is considered visible if visual viewport is 200px smaller than window.
-   *
-   * @returns {boolean}
-   */
-  isKeyboardVisible() {
-    const visualHeight = window.visualViewport?.height ?? window.innerHeight;
-    return window.innerHeight - 200 > visualHeight;
-  }
-
-  /**
    * Handle IntersectionObserver entries.
    * Per Silk (original-source.js lines 12856-12878):
    * - When spy becomes visible: update isAt flag AND set trap value
@@ -200,7 +190,7 @@ export default class GestureTrapHandler {
    */
   @action
   handleResize() {
-    this.keyboardVisible = this.isKeyboardVisible();
+    this.keyboardVisible = isKeyboardVisible();
   }
 
   /**
