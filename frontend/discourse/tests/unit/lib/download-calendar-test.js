@@ -150,6 +150,25 @@ module("Unit | Utility | download-calendar", function (hooks) {
     );
   });
 
+  test("correct url for Google with timezone", function (assert) {
+    // America/New_York is UTC-4 in October, so 18:30 NY = 22:30 UTC
+    downloadGoogle("event", [
+      {
+        startsAt: "2021-10-12T18:30:00",
+        endsAt: "2021-10-12T21:00:00",
+        timezone: "America/New_York",
+      },
+    ]);
+    assert.true(
+      window.open.calledWith(
+        "https://www.google.com/calendar/event?action=TEMPLATE&text=event&dates=20211012T223000Z%2F20211013T010000Z",
+        "_blank",
+        "noopener",
+        "noreferrer"
+      )
+    );
+  });
+
   test("correct url for Google when recurring event", function (assert) {
     downloadGoogle(
       "event",
