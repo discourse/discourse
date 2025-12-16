@@ -2,6 +2,7 @@
 
 module DiscourseAi::ChatBotHelper
   def toggle_enabled_bots(bots: [])
+    SiteSetting.ai_bot_enabled = true if bots.any?
     SiteSetting.ai_bot_enabled_llms = bots.map(&:id).join("|")
     DiscourseAi::AiBot::SiteSettingsExtension.enable_or_disable_ai_bots
   end
