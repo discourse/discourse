@@ -14,7 +14,6 @@ if (isTesting()) {
     },
   };
 } else {
-  console.log("loadConfigFromMeta", loadConfigFromMeta("discourse"));
   output = loadConfigFromMeta("discourse");
 }
 
