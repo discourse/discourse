@@ -7,6 +7,10 @@
 sk:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Súkromné"
+          public: "Verejné"
       reports:
         reading_time:
           title: Doba čítania

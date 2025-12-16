@@ -3497,6 +3497,7 @@ pl_PL:
           aria_label: Filtruj za pomocą tagów
         filters:
           label: Zwracaj tylko tematy/wpisy…
+          all: Dołącz wiadomości
           title: Dopasowanie tylko w tytule
           likes: Lubię
           posted: Opublikowałem w

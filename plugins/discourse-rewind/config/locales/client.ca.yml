@@ -7,6 +7,10 @@
 ca:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Privat"
+          public: "Públic"
       reports:
         reading_time:
           title: Temps de lectura.
