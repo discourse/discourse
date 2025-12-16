@@ -10,9 +10,7 @@ export default class RewindCallout extends Component {
   @service rewind;
 
   get showCallout() {
-    return (
-      this.rewind.active && !this.rewind.dismissed && !this.rewind.disabled
-    );
+    return this.rewind.active && !this.rewind.dismissed && this.rewind.enabled;
   }
 
   @action
