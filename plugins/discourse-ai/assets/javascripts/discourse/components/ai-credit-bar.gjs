@@ -54,6 +54,7 @@ export default class AiCreditBar extends Component {
       day: "numeric",
       hour: "numeric",
       minute: "2-digit",
+      timeZone: "UTC",
     };
     const formattedDate = resetDate.toLocaleString(undefined, options);
 
