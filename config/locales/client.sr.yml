@@ -1779,6 +1779,8 @@ sr:
       upload_title: "Učitaj"
       upload_description: "Ovde opišite stvar koju učitavate"
       list_item: "Predmet popisa"
+      wrap_modal:
+        apply: "Primeni"
       help: "Markdown pomoć pri izmenama"
       modal_ok: "U redu"
       yourself_confirm:
@@ -1791,6 +1793,7 @@ sr:
         reply_as_new_topic:
           desc: Kreiraj novu temu povezanu na ovu temu
           confirm: Imate novi nacrt teme sačuvan, koji će biti obrisan ako stvorite povezanu temu.
+      image: "slika"
     notifications:
       none: "Nemoguće je učitati notifikacije ovog trenutka."
       empty: "Nisu pronađene notifikacije"
@@ -2644,6 +2647,8 @@ sr:
           sub_pages:
             common_settings:
               title: "Podešavanje"
+        discourse_id:
+          learn_more: "Saznaj više"
         logo:
           form:
             email: "Email"

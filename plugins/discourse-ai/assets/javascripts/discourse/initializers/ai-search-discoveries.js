@@ -1,5 +1,7 @@
 import { apiInitializer } from "discourse/lib/api";
 
+const FIELD_NAME = "ai_search_discoveries";
+
 export default apiInitializer((api) => {
   const currentUser = api.getCurrentUser();
   const settings = api.container.lookup("service:site-settings");
@@ -11,7 +13,17 @@ export default apiInitializer((api) => {
     return;
   }
 
-  api.addSaveableUserOptionField("ai_search_discoveries");
+  api.addSaveableUserOptionField(FIELD_NAME);
+
+  api.registerValueTransformer(
+    "preferences-save-attributes",
+    ({ value: attrs, context }) => {
+      if (context.page === "interface") {
+        attrs.push(FIELD_NAME);
+      }
+      return attrs;
+    }
+  );
 
   const discobotDiscoveries = api.container.lookup(
     "service:discobot-discoveries"

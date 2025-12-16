@@ -1,4 +1,11 @@
+import { AUTO_GROUPS } from "discourse/lib/constants";
+
 let _autoGroupFlair, _noAutoFlair;
+
+// All automatic groups except "everyone" (which doesn't have flair)
+const FLAIR_GROUP_NAMES = Object.values(AUTO_GROUPS)
+  .filter((g) => g.id !== AUTO_GROUPS.everyone.id)
+  .map((g) => g.name);
 
 export default function autoGroupFlairForUser(site, user) {
   if (!_autoGroupFlair) {
@@ -42,16 +49,7 @@ function initializeAutoGroupFlair(site) {
   _autoGroupFlair = {};
   _noAutoFlair = true;
 
-  [
-    "admins",
-    "moderators",
-    "staff",
-    "trust_level_0",
-    "trust_level_1",
-    "trust_level_2",
-    "trust_level_3",
-    "trust_level_4",
-  ].forEach((groupName) => {
+  FLAIR_GROUP_NAMES.forEach((groupName) => {
     const group = site.groups?.find((item) => item.name === groupName);
     if (group && group.flair_url) {
       _noAutoFlair = false;

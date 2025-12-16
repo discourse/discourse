@@ -7,6 +7,7 @@ import FeatureTopicOnProfileModal from "discourse/components/modal/feature-topic
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 
 export default class ProfileController extends Controller {
@@ -22,24 +23,30 @@ export default class ProfileController extends Controller {
   @readOnly("model.can_upload_user_card_background")
   canUploadUserCardBackground;
 
-  saveAttrNames = [
-    "bio_raw",
-    "website",
-    "location",
-    "custom_fields",
-    "user_fields",
-    "profile_background_upload_url",
-    "card_background_upload_url",
-    "date_of_birth",
-    "timezone",
-    "default_calendar",
-    "hide_profile",
-  ];
-
   calendarOptions = [
     { name: i18n("download_calendar.google"), value: "google" },
     { name: i18n("download_calendar.ics"), value: "ics" },
   ];
+
+  get saveAttrNames() {
+    return applyValueTransformer(
+      "preferences-save-attributes",
+      [
+        "bio_raw",
+        "website",
+        "location",
+        "custom_fields",
+        "user_fields",
+        "profile_background_upload_url",
+        "card_background_upload_url",
+        "date_of_birth",
+        "timezone",
+        "default_calendar",
+        "hide_profile",
+      ],
+      { page: "profile" }
+    );
+  }
 
   @discourseComputed("model.user_fields.@each.value")
   userFields() {

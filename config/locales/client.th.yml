@@ -1421,6 +1421,8 @@ th:
       upload_title: "อัปโหลด"
       upload_description: "กรอกรายละเอียดการอัปโหลดที่นี่"
       list_item: "รายการ"
+      wrap_modal:
+        apply: "นำไปใช้"
       help: "ช่วยเหลือการจัดรูปแบบ"
       modal_ok: "ตกลง"
       cant_send_pm: "ขออภัย คุณไม่สามารถส่งข้อความหา %{username} ได้"
@@ -1444,6 +1446,7 @@ th:
         toggle_topic_bump:
           desc: "ตอบกลับโดยไม่เปลี่ยนวันที่ตอบกลับล่าสุด"
       ignore: "ไม่สนใจ"
+      image: "รูปภาพ"
     notifications:
       tooltip:
         regular:
@@ -2572,6 +2575,8 @@ th:
           sub_pages:
             common_settings:
               title: "การตั้งค่า"
+        discourse_id:
+          learn_more: "เรียนรู้เพิ่มเติม"
         logo:
           form:
             mobile: "โทรศัพท์"

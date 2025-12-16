@@ -107,12 +107,14 @@ RSpec.describe "Managing LLM configurations", type: :system do
       form.field("provider").select("vllm")
 
       expect(form).to have_field_with_name("provider_params.disable_system_prompt")
-      expect(form).to have_no_field_with_name("provider_params.disable_native_tools")
-
-      form.field("provider").select("open_router")
-
-      expect(form).to have_field_with_name("provider_params.disable_streaming")
       expect(form).to have_field_with_name("provider_params.disable_native_tools")
+
+      form.field("provider").select("aws_bedrock")
+
+      # missing option from bedrock, maybe we should add
+      expect(form).to have_no_field_with_name("provider_params.disable_streaming")
+      expect(form).to have_field_with_name("provider_params.disable_native_tools")
+      expect(form).to have_field_with_name("provider_params.effort")
     end
 
     it "updates if the url can be edited" do

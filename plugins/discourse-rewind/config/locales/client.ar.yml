@@ -7,6 +7,10 @@
 ar:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "خاص"
+          public: "عام"
       reports:
         reading_time:
           title: وقت القراءة

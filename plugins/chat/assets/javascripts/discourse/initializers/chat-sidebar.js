@@ -131,9 +131,7 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
 
     get prefixType() {
       if (this.isDM) {
-        if (this.channel.iconUploadUrl) {
-          return "image";
-        } else if (this.channel.emoji) {
+        if (this.channel.emoji) {
           return "emoji";
         } else if (this.channel.chatable.group) {
           return "text";
@@ -147,9 +145,7 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
 
     get prefixValue() {
       if (this.isDM) {
-        if (this.channel.iconUploadUrl) {
-          return this.channel.iconUploadUrl;
-        } else if (this.channel.emoji) {
+        if (this.channel.emoji) {
           return this.channel.emoji;
         } else if (this.channel.chatable.group) {
           return this.channel.membershipsCount;
@@ -750,9 +746,7 @@ export default {
               }
 
               get prefixType() {
-                if (this.channel.iconUploadUrl) {
-                  return "image";
-                } else if (this.channel.emoji) {
+                if (this.channel.emoji) {
                   return "emoji";
                 } else if (this.channel.chatable.group) {
                   return "text";
@@ -762,9 +756,7 @@ export default {
               }
 
               get prefixValue() {
-                if (this.channel.iconUploadUrl) {
-                  return this.channel.iconUploadUrl;
-                } else if (this.channel.emoji) {
+                if (this.channel.emoji) {
                   return this.channel.emoji;
                 } else if (this.channel.chatable.group) {
                   return this.channel.membershipsCount;

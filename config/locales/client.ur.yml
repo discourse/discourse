@@ -864,7 +864,6 @@ ur:
         claimed: "دعویٰ کیا"
         claimed_by: "%{username} نے %{relativeDate}پر دعویٰ کیا"
         reviewed: "جائزہ لیا گیا"
-        reviewed_by: "%{username} نے%{relativeDate}پر جائزہ لیا"
         view_conversation: "ذاتی پیغام دیکھیں"
         note_added: "نگران کا نوٹ"
         note_added_by: "نگران کا نوٹ بذریعہ %{username} · %{relativeDate}"
@@ -2830,6 +2829,8 @@ ur:
       ulist_title: "گولیوں والی فہرست"
       list_item: "فہرست آئٹم"
       toggle_direction: "سمت ٹوگل کریں"
+      wrap_modal:
+        apply: "لاگو کریں"
       help: "مارکڈائون ترمیم میں مدد"
       collapse: "کمپوزر پینل کو مختصر کریں"
       open: "کمپوزر پینل کھولیں"
@@ -2896,6 +2897,7 @@ ur:
         zoom_out: "تصویر کا سائز کم کریں"
         zoom_in: "تصویر کا سائز بڑھائیں"
         remove: "تصویر کو ہٹا دیں"
+      image: "تصویر"
       image_scale_button: "تصویر کو %{percent}% اسکیل کریں"
       delete_image_button: تصویر کو حذف کریں
       toggle_image_grid: تصویری گرڈ کو ٹوگل کریں
@@ -5305,6 +5307,11 @@ ur:
           sub_pages:
             common_settings:
               title: "سیٹِنگ"
+            discourse_id:
+              title: "ڈسکورس آئی ڈی"
+        discourse_id:
+          title: "ڈسکورس آئی ڈی"
+          learn_more: "مزید جانیں"
         logo:
           title: "لوگو"
           header_description: "اپنی پوری سائٹ میں استعمال ہونے والے لوگو اور شبیہیں ترتیب دیں"

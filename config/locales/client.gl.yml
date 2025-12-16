@@ -1855,6 +1855,8 @@ gl:
       upload_title: "Cargar"
       upload_description: "introducir a descrición da carga aquí"
       list_item: "Elemento da listaxe"
+      wrap_modal:
+        apply: "Aplicar"
       help: "Axuda para a edición con Markdown"
       modal_ok: "De acordo"
       cant_send_pm: "Sentímolo pero non pode enviar unha mensaxe a %{username}."
@@ -1892,6 +1894,7 @@ gl:
           desc: "Responder sen cambiar a data da última resposta"
       reload: "Recargar"
       ignore: "Ignorar"
+      image: "imaxe"
     notifications:
       tooltip:
         regular:
@@ -3443,6 +3446,8 @@ gl:
           sub_pages:
             common_settings:
               title: "Configuración"
+        discourse_id:
+          learn_more: "Saber máis"
         logo:
           form:
             mobile: "Móbil"

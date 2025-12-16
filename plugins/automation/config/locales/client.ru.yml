@@ -68,6 +68,12 @@ ru:
         text:
           label: Текст
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Категории
+            tags:
+              label: Теги
         not_found: Не удалось найти триггер `%{trigger}` для автоматизации `%{automation}`. Проверьте, установлен ли соответствующий плагин.
         user_badge_granted:
           fields:

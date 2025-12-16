@@ -1,5 +1,6 @@
 import { hash } from "@ember/helper";
 import avatar from "discourse/helpers/bound-avatar-template";
+import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 const FBFF = <template>
@@ -20,7 +21,7 @@ const FBFF = <template>
         <div class="fbff-gif-container">
           <img
             class="fbff-gif"
-            src="/plugins/discourse-rewind/images/fbff.gif"
+            src={{getURL "/plugins/discourse-rewind/images/fbff.gif"}}
           />
         </div>
         <div class="fbff-avatar-container">

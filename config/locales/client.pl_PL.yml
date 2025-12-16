@@ -983,8 +983,8 @@ pl_PL:
           title: "Wpis"
           noun: "wpis"
       flagged_as: "Oflagowany jako"
-      post_flagged_as: "Wpis oznaczono jako"
-      chat_flagged_as: "Czat oznaczono jako"
+      post_flagged_as: "Wpis oflagowano jako"
+      chat_flagged_as: "Czat oflagowano jako"
       queued_post_label: "Wpis w kolejce"
       queued_topic_label: "Temat w kolejce"
       user_label: "Użytkownik"
@@ -1000,7 +1000,9 @@ pl_PL:
         claimed_by: "Przejęto przez %{username} - %{relativeDate}"
         unclaimed_by: "Zrezygnowano z przejęcia przez %{username} - %{relativeDate}"
         reviewed: "Przejrzany"
-        reviewed_by: "Przejrzany przez %{username} · %{relativeDate}"
+        approved_by: "Zatwierdzono przez %{username} · %{relativeDate}"
+        rejected_by: "Odrzucono przez %{username} · %{relativeDate}"
+        ignored_by: "Zignorowano przez %{username} · %{relativeDate}"
         view_conversation: "zobacz PW"
         note_added: "Uwaga moderatora"
         note_added_by: "Uwaga moderatora %{username} - %{relativeDate}"
@@ -1773,10 +1775,10 @@ pl_PL:
           many: '<span class="%{className}">%{count}</span> pomocne flagi'
           other: '<span class="%{className}">%{count}</span> pomocne flagi'
         flagged_posts:
-          one: '<span class="%{className}">%{count}</span> oflagowany post'
-          few: '<span class="%{className}">%{count}</span> oflagowane posty'
-          many: '<span class="%{className}">%{count}</span> oflagowanych postów'
-          other: '<span class="%{className}">%{count}</span> oflagowanych postów'
+          one: '<span class="%{className}">%{count}</span> oflagowany wpis'
+          few: '<span class="%{className}">%{count}</span> oflagowane wpisy'
+          many: '<span class="%{className}">%{count}</span> oflagowanych wpisów'
+          other: '<span class="%{className}">%{count}</span> oflagowanych wpisów'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> usunięty post'
           few: '<span class="%{className}">%{count}</span> usunięte posty'
@@ -3156,6 +3158,17 @@ pl_PL:
       ulist_title: "Lista wypunktowana"
       list_item: "Element listy"
       toggle_direction: "Przełącz kierunek"
+      apply_wrap_title: "Zastosuj zawijanie"
+      wrap_modal:
+        title: "Edytuj zawijanie"
+        name_label: "Zawiń nazwę"
+        attributes_label: "Atrybuty"
+        add_attribute: "Dodaj atrybut"
+        remove_attribute: "Usuń atrybut"
+        apply: "Zastosuj"
+        unwrap: "Rozwiń"
+        no_attributes: "Nie dodano jeszcze żadnych atrybutów."
+      wrap_text: "Zawijaj zawartość"
       help: "Pomoc formatowania Markdown"
       collapse: "Zminimalizuj panel kompozytora"
       open: "Otwórz panel kompozytora"
@@ -3225,6 +3238,7 @@ pl_PL:
         remove: "Usuń obraz"
         add_to_grid: "Dodaj do siatki"
         move_outside_grid: "Przenieś poza siatkę"
+      image: "obraz"
       grid_label: "Będzie to wyświetlane jako siatka"
       image_scale_button: "Skaluj obraz do %{percent}%"
       delete_image_button: Usuń obraz
@@ -3483,6 +3497,7 @@ pl_PL:
           aria_label: Filtruj za pomocą tagów
         filters:
           label: Zwracaj tylko tematy/wpisy…
+          all: Dołącz wiadomości
           title: Dopasowanie tylko w tytule
           likes: Lubię
           posted: Opublikowałem w
@@ -4449,7 +4464,7 @@ pl_PL:
         edit_action: "Edytuj"
         edit_anonymous: "Przykro nam, ale musisz być zalogowany aby edytować ten wpis."
         flag_action: "Oflaguj"
-        flag: "oznacz ten post prywatnie, aby zwrócić na niego uwagę lub wyślij prywatną wiadomość na jego temat"
+        flag: "oflaguj ten post prywatnie, aby zwrócić na niego uwagę lub wyślij prywatną wiadomość na jego temat"
         anonymous_flag: "wyślij e-mail do personelu, aby oflagować ten post"
         delete_action: "Usuń wpis"
         delete: "usuń ten wpis"
@@ -4537,7 +4552,7 @@ pl_PL:
           illegal: "Oflagowano jako nielegalne"
           notify_moderators: "Oflagowano do moderacji"
           notify_user: "Wysłano wiadomość do tego użytkownika"
-          custom: "Oznaczyłeś ten temat jako %{custom}"
+          custom: "Oflagowano ten temat jako %{custom}"
       delete:
         confirm:
           one: "Czy na pewno chcesz usunąć ten post?"
@@ -5195,7 +5210,7 @@ pl_PL:
         reply_post: "%{shortcut} Odpowiedz na wpis"
         quote_post: "%{shortcut} cytuj wpis"
         like: "%{shortcut} Polub wpis"
-        flag: "%{shortcut} Oznacz wpis"
+        flag: "%{shortcut} Oflaguj wpis"
         bookmark: "%{shortcut} Dodaj wpis do zakładek"
         edit: "%{shortcut} Edytuj wpis"
         delete: "%{shortcut} Usuń wpis"
@@ -6004,6 +6019,19 @@ pl_PL:
               title: "Logowania społecznościowe"
             discourseconnect:
               title: "Discourse Connect"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          stats:
+            total_users: "Łączna liczba użytkowników"
+            signups_30_days: "Rejestracje (30 dni)"
+            logins_30_days: "Logowania (30 dni)"
+          regenerate_credentials: "Wygeneruj ponownie dane uwierzytelniające"
+          regenerate_confirm: "Czy na pewno chcesz ponownie wygenerować dane uwierzytelniające Discourse ID? Spowoduje to wygenerowanie nowego klucza tajnego klienta. Regenerowanie danych uwierzytelniających zazwyczaj nie jest wymagane, ale może być przydatne dla zwiększenia bezpieczeństwa."
+          description: "Discourse ID to usługa jednokrotnego logowania, która umożliwia użytkownikom logowanie się do wielu witryn Discourse za pomocą jednego konta. Popularni dostawcy logowania społecznościowego, tacy jak Google, Facebook, Apple i GitHub, są obsługiwani bez dodatkowej konfiguracji."
+          learn_more: "Dowiedz się więcej"
+          regenerate_success: "Dane uwierzytelniające zostały pomyślnie wygenerowane."
         logo:
           title: "Logo"
           header_description: "Skonfiguruj logo i ikony używane w całej witrynie"
@@ -7324,6 +7352,8 @@ pl_PL:
           create_name: "Imię"
           save: "Zapisz"
           long_title: "Zmodyfikuj kolory, kod CSS i kod HTML zawartości Twojej strony"
+          dark_mode: "Tryb ciemny %{themeName}"
+          light_mode: "Tryb jasny %{themeName}"
           edit: "Edytuj"
           edit_confirm: "To jest zdalny styl. Jeśli edytujesz CSS/HTML, twoje zmiany zostaną usunięte po ponownej aktualizacji motywu."
           update_confirm: "Te zmiany zostaną usunięte przez aktualizację. Czy na pewno chcesz kontynuować? "
@@ -7902,6 +7932,7 @@ pl_PL:
             stop_impersonating: "przestań się podszywać"
             upcoming_change_toggled: "nadchodząca zmiana przełączona"
             change_site_setting_groups: "zmień grupy ustawień witryny"
+            discourse_id_regenerate_credentials: "wygeneruj ponownie dane uwierzytelniające Discourse ID"
         screened_emails:
           title: "Sprawdzone e-maile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
@@ -8420,7 +8451,7 @@ pl_PL:
           posts_read: "Przeczytane wpisy"
           posts_read_all_time: "Przeczytane wpisy (w sumie)"
           flagged_posts: "Zgłoszonych wpisów"
-          flagged_by_users: "Flagujący Użytkownicy "
+          flagged_by_users: "Flagujący użytkownicy"
           likes_given: "Polubienia"
           likes_received: "Polubienia otrzymane"
           likes_received_days: "Polubienia otrzymane: unikalne dni"

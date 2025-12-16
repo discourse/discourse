@@ -309,7 +309,6 @@ zh_CN:
     ai_bot:
       reply_error: "抱歉，我们的系统在尝试回复时似乎遇到了意外问题。\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[无标题 AI 机器人私信]"
-      thinking: "正在思考…"
       personas:
         default_llm_required: "启用聊天之前需要默认的 LLM 模型"
         cannot_delete_system_persona: "无法删除系统角色，请改为将其禁用"

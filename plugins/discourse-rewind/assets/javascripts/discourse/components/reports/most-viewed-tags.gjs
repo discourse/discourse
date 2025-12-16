@@ -4,6 +4,7 @@ import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import concatClass from "discourse/helpers/concat-class";
+import getURL from "discourse/lib/get-url";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -39,14 +40,14 @@ export default class MostViewedTags extends Component {
                 "folder-wrapper"
                 (if (eq this.openedTag data.name) "--opened" "")
               }}
-              href={{concat "/tag/" data.name}}
+              href={{getURL (concat "/tag/" data.name)}}
               {{on "click" (fn this.handleFolderClick data.name)}}
             >
               <span class="folder-tab"></span>
               <div class="rewind-card">
                 <p
                   class="most-viewed-tags__tag"
-                  href={{concat "/tag/" data.name}}
+                  href={{getURL (concat "/tag/" data.name)}}
                 >
                   #{{data.name}}
                 </p>

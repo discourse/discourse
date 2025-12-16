@@ -780,7 +780,6 @@ ja:
         claimed: "引き受け"
         claimed_by: "%{username} が引き受け · %{relativeDate}"
         reviewed: "レビュー"
-        reviewed_by: "%{username} がレビュー · %{relativeDate}"
         view_conversation: "PM を見る"
         note_added: "モデレーターのメモ"
         note_added_by: "%{username} のモデレーターメモ · %{relativeDate}"
@@ -2656,6 +2655,8 @@ ja:
       ulist_title: "箇条書き"
       list_item: "リスト項目"
       toggle_direction: "方向の切り替え"
+      wrap_modal:
+        apply: "適用"
       help: "Markdown 編集のヘルプ"
       exit_fullscreen_prompt: "<kbd>ESC</kbd> を押して全画面表示を終了"
       modal_ok: "OK"
@@ -2714,6 +2715,7 @@ ja:
         zoom_out: "画像を縮小"
         zoom_in: "画像を拡大"
         remove: "画像の削除"
+      image: "画像"
       image_scale_button: "画像の表示率を %{percent}% に変更"
       delete_image_button: 画像を削除
       toggle_image_grid: 画像グリッドを切り替える
@@ -4998,6 +5000,11 @@ ja:
           sub_pages:
             common_settings:
               title: "設定"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "もっと読む"
         logo:
           title: "ロゴ"
           header_description: "サイト全体で使用されるロゴとアイコンを構成します"

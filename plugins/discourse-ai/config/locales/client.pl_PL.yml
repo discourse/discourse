@@ -386,7 +386,7 @@ pl_PL:
         custom_instructions_help: "Niestandardowe instrukcje specyficzne dla Twojej witryny, aby pomóc sztucznej inteligencji w identyfikacji spamu, np. \"Bądź bardziej agresywny w skanowaniu postów nie w języku angielskim\"."
         last_seven_days: "Ostatnie 7 dni"
         scanned_count: "Przeskanowane posty"
-        false_positives: "Nieprawidłowo oznaczony"
+        false_positives: "Nieprawidłowo oflagowany"
         false_negatives: "Pominięty spam"
         spam_detected: "Wykryto spam"
         custom_instructions_placeholder: "Instrukcje dla AI specyficzne dla witryny, aby pomóc w dokładniejszej identyfikacji spamu"
@@ -428,6 +428,7 @@ pl_PL:
         feature: "Funkcja"
         usage_count: "Liczba użyć"
         model: "Model"
+        credits_remaining: "Pozostałe kredyty"
         models_breakdown: "Wykorzystanie na model"
         users_breakdown: "Wykorzystanie na użytkownika"
         all_features: "Wszystkie funkcje"
@@ -445,6 +446,11 @@ pl_PL:
         no_users: "Nie znaleziono danych użycia użytkownika"
         no_models: "Nie znaleziono danych o użyciu modelu"
         no_features: "Nie znaleziono danych o użyciu funkcji"
+        total: "Łącznie"
+        included_in_plan: "Wliczone w plan"
+        included_models: "Wliczone użycie"
+        billed_models: "Rozliczone użycie"
+        cost: "Koszt"
         subheader_description: "Tokeny są podstawowymi jednostkami, których LLM używa do rozumienia i generowania tekstu, dane dotyczące użytkowania mogą wpływać na koszty"
         stat_tooltips:
           total_requests: "Wszystkie prośby kierowane do LLM za pośrednictwem Discourse"
@@ -639,6 +645,8 @@ pl_PL:
         api_key: "Klucz API usługi hostującej model"
         enabled_chat_bot: "Zezwól na wybór bota AI"
         vision_enabled: "Wizja włączona"
+        allowed_attachment_types: "Dozwolone załączniki"
+        attachment_types_placeholder: "Wybierz lub wpisz rozszerzenia (np. pdf, txt, docx)"
         ai_bot_user: "Użytkownik bota AI"
         cost_input: "Koszt wejściowy"
         cost_cached_input: "Koszt buforowanego wejścia"
@@ -735,6 +743,7 @@ pl_PL:
           display_name: "Nazwa używana do odwoływania się do tego modelu w interfejsie Twojej witryny."
           name: "Uwzględniamy to w wywołaniu API, aby określić, którego modelu będziemy używać"
           vision_enabled: "Po włączeniu tej opcji, sztuczna inteligencja będzie próbować interpretować obrazy. Zależy to od używanego modelu obsługującego widzenie. Obsługiwane są najnowsze modele firm Anthropic, Google i OpenAI."
+          allowed_attachment_types: "Wybierz typy załączników, które mają być przesyłane do modelu. Pozostaw puste, aby zablokować możliwość dodawania załączników. Obrazy są kontrolowane za pomocą wizji."
           enabled_chat_bot: "Jeśli ta opcja jest włączona, użytkownicy mogą wybrać ten model podczas tworzenia wiadomości prywatnych za pomocą bota AI"
           cost_input: "Koszt wejściowy na 1 mln tokenów dla tego modelu"
           cost_cached_input: "Koszt wejścia w pamięci podręcznej na 1 mln tokenów dla tego modelu (przy odczycie z pamięci podręcznej)"
@@ -775,7 +784,6 @@ pl_PL:
           reasoning_tokens: "Liczba tokenów użytych do wnioskowania"
           disable_temperature: "Wyłącz temperaturę (niektóre modele nie obsługują temperatury)"
           disable_top_p: "Wyłącz Top P (niektóre modele myślenia nie obsługują górnego P)"
-          enable_responses_api: "Włącz API odpowiedzi (wymagane w niektórych modelach OpenAI)"
           prompt_caching: "Tryb buforowania monitu"
           prompt_caching_never: "Nigdy – nie używaj buforowania błyskawicznego"
           prompt_caching_tool_results: "Wyniki narzędzi – pamięć podręczna, gdy dostępne są wyniki narzędzi (zalecane)"
@@ -1060,6 +1068,6 @@ pl_PL:
     review:
       types:
         reviewable_ai_post:
-          title: "Post oflagowany przez AI"
+          title: "Wpis oflagowany przez AI"
         reviewable_ai_chat_message:
           title: "Wiadomość na czacie oflagowana przez AI"

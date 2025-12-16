@@ -17,6 +17,13 @@ describe "DiscourseRewind | user preferences", type: :system do
         rewind_page.visit_my_activity
         expect(rewind_page).to have_rewind_tab
       end
+
+      it "shows the rewind profile link" do
+        rewind_page.visit_my_activity
+        rewind_page.open_user_menu
+        rewind_page.click_profile_tab
+        expect(rewind_page).to have_rewind_profile_link
+      end
     end
 
     context "when discourse_rewind_disabled is true" do
@@ -25,6 +32,13 @@ describe "DiscourseRewind | user preferences", type: :system do
       it "does not show the rewind tab" do
         rewind_page.visit_my_activity
         expect(rewind_page).to have_no_rewind_tab
+      end
+
+      it "does not show the rewind profile link" do
+        rewind_page.visit_my_activity
+        rewind_page.open_user_menu
+        rewind_page.click_profile_tab
+        expect(rewind_page).to have_no_rewind_profile_link
       end
     end
   end

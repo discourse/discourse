@@ -862,7 +862,6 @@ pt:
         flagged: "Sinalizado"
         flagged_as_by: "Sinalizado como %{flagReason} por %{username} · %{relativeDate}"
         reviewed: "Revisto"
-        reviewed_by: "Revisto por %{username} · %{relativeDate}"
         view_conversation: "ver PM"
         note_added: "Nota do moderador"
         note_added_by: "Nota do moderador por %{username} · %{relativeDate}"
@@ -2805,6 +2804,8 @@ pt:
       ulist_title: "Lista de símbolos"
       list_item: "Item da Lista"
       toggle_direction: "Direção de alternar"
+      wrap_modal:
+        apply: "Aplicar"
       help: "Ajuda de Edição Markdown"
       collapse: "Minimizar o painel de compositor"
       open: "Abrir o painel de compositor"
@@ -2865,6 +2866,7 @@ pt:
         zoom_out: "Diminuir tamanho da imagem"
         zoom_in: "Aumentar tamanho da imagem"
         remove: "Remover imagem"
+      image: "imagem"
       image_scale_button: "Escalar imagem para %{percent}%"
       delete_image_button: Excluir Imagem
       toggle_image_grid: Alternar grelha da imagem
@@ -4591,6 +4593,11 @@ pt:
           sub_pages:
             common_settings:
               title: "Configurações"
+            discourse_id:
+              title: "Id. do Discourse"
+        discourse_id:
+          title: "Id. do Discourse"
+          learn_more: "Saiba mais"
         logo:
           title: "Logótipo"
           header_description: "Configure os logótipos e ícones utilizados no seu ''site''"
