@@ -1385,6 +1385,11 @@ sq:
                 label: "Publike"
               private:
                 label: "Private"
+  onebox:
+    github:
+      status_date:
+        approved: "aprovuar"
+        closed: "mbyllur"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} ju përmendi në "%{topic}" - %{site_title}'

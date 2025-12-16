@@ -4190,6 +4190,7 @@ experimental:
     type: group_list
     default: ""
     area: "experimental"
+    hidden: true
   reviewable_old_moderator_actions:
     default: true
     hidden: true

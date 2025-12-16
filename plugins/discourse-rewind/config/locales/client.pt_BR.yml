@@ -74,6 +74,7 @@ pt_BR:
             other: "%{count} novos membros"
           likes_given: Curtidas Dadas
           mentions: Menções
+          your_contributions_helped: suas contribuições ajudaram
         time_of_day_activity:
           title: Ritmo de Atividade Diária
         writing_analysis:

@@ -40,11 +40,11 @@ export default class AiUsage extends Component {
 
   constructor() {
     super(...arguments);
-    this.fetchData();
+    this.fetchData({ clearCache: true });
   }
 
   @action
-  async fetchData() {
+  async fetchData({ clearCache = false } = {}) {
     const response = await ajax(
       "/admin/plugins/discourse-ai/ai-usage-report.json",
       {
@@ -60,8 +60,11 @@ export default class AiUsage extends Component {
     );
     this.data = response;
     this.loadingData = false;
-    this._cachedFeatures = null;
-    this._cachedModels = null;
+
+    if (clearCache) {
+      this._cachedFeatures = null;
+      this._cachedModels = null;
+    }
   }
 
   @action
@@ -400,8 +403,6 @@ export default class AiUsage extends Component {
   }
 
   get availableFeatures() {
-    // when you switch we don't want the list to change
-    // only when you switch durations
     this._cachedFeatures =
       this._cachedFeatures ||
       (this.data?.features || []).map((f) => ({
@@ -456,7 +457,7 @@ export default class AiUsage extends Component {
     this.selectedPeriod = period;
     this.isCustomDateActive = false;
     this.setPeriodDates(period);
-    this.fetchData();
+    this.fetchData({ clearCache: true });
   }
 
   @action
@@ -471,7 +472,7 @@ export default class AiUsage extends Component {
   onDateChange() {
     this.isCustomDateActive = true;
     this.selectedPeriod = null;
-    this.fetchData();
+    this.fetchData({ clearCache: true });
   }
 
   @action
@@ -484,7 +485,7 @@ export default class AiUsage extends Component {
   onRefreshDateRange() {
     this.startDate = this._startDate;
     this.endDate = this._endDate;
-    this.fetchData();
+    this.fetchData({ clearCache: true });
     this._startDate = null;
     this._endDate = null;
   }

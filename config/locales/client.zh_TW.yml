@@ -2530,6 +2530,8 @@ zh_TW:
       upload_title: "上傳"
       upload_description: "在此輸入上傳的描述"
       list_item: "清單項目"
+      wrap_modal:
+        apply: "套用"
       help: "Markdown 編輯說明"
       exit_fullscreen_prompt: "按<kbd>ESC</kbd>離開全螢幕"
       modal_ok: "確定"
@@ -4729,6 +4731,8 @@ zh_TW:
           sub_pages:
             common_settings:
               title: "設定"
+        discourse_id:
+          learn_more: "了解更多"
         logo:
           title: "標誌"
           form:

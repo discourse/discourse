@@ -2567,6 +2567,8 @@ el:
       ulist_title: "Λίστα με κουκκίδες"
       list_item: "Στοιχείο Λίστας"
       toggle_direction: "Εναλλαγή κατεύθυνσης"
+      wrap_modal:
+        apply: "Εφαρμογή"
       help: "Βοήθεια Επεξεργασίας Markdown"
       collapse: "Ελαχιστοποίηση του επεξεργαστή κειμένου"
       open: "Άνοιγμα του επεξεργαστή κειμένου"
@@ -4691,6 +4693,11 @@ el:
           sub_pages:
             common_settings:
               title: "Ρυθμίσεις"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Μάθετε περισσότερα"
         logo:
           form:
             mobile: "Mobile"

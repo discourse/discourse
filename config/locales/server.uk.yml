@@ -5274,6 +5274,13 @@ uk:
         changes_requested: "Запитані зміни"
         merged: "Об'єднаний запит на злиття"
         closed: "Закритий запит на злиття"
+      status_date:
+        open: "відкрито"
+        draft: "чернетки"
+        approved: "схвалено"
+        changes_requested: "запитувані зміни"
+        merged: "об'єднано"
+        closed: "закриті"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} згадав вас у "%{topic}" - %{site_title}'
@@ -5594,6 +5601,9 @@ uk:
       invalid_tag_group: "має невірну групу тегів: %{tag_group_name}"
   discourse_id:
     already_registered: "Цей сайт вже зареєстровано з Discourse ID"
+    errors:
+      not_configured: "Discourse ID не встановлено. Спочатку увімкніть Discourse. ID."
+      regenerate_failed: "Не вдалося відновити облікові дані. Будь ласка, спробуйте пізніше."
   activemodel:
     errors:
       <<: *errors

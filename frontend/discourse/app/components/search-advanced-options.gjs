@@ -17,6 +17,7 @@ import withEventValue from "discourse/helpers/with-event-value";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import MultiSelect from "discourse/select-kit/components/multi-select";
 import SearchAdvancedCategoryChooser from "discourse/select-kit/components/search-advanced-category-chooser";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import UserChooser from "discourse/select-kit/components/user-chooser";
@@ -36,11 +37,6 @@ const REGEXP_MAX_VIEWS_PREFIX = /^max_views:/gi;
 const REGEXP_POST_TIME_PREFIX = /^(before|after):/gi;
 const REGEXP_TAGS_REPLACE = /(^(tags?:|#(?=[a-z0-9\-]+::tag))|::tag\s?$)/gi;
 
-const REGEXP_SPECIAL_IN_LIKES_MATCH = /^in:likes$/gi;
-const REGEXP_SPECIAL_IN_TITLE_MATCH = /^in:title$/gi;
-const REGEXP_SPECIAL_IN_MESSAGES_MATCH = /^in:(personal|messages)$/gi;
-const REGEXP_SPECIAL_IN_SEEN_MATCH = /^in:seen$/gi;
-
 const REGEXP_CATEGORY_SLUG = /^(\#[a-zA-Z0-9\-:]+)/gi;
 const REGEXP_CATEGORY_ID = /^(category:[0-9]+)/gi;
 const REGEXP_POST_TIME_WHEN = /^(before|after)/gi;
@@ -49,24 +45,50 @@ const IN_OPTIONS_MAPPING = { images: "with" };
 
 let _extraOptions = [];
 
+function buildFilterOptions(keys, extraOptionsKey) {
+  return keys
+    .map((key) => ({
+      name: i18n(`search.advanced.filters.${key}`),
+      value: key === "private" ? "messages" : key,
+    }))
+    .concat(..._extraOptions.map((eo) => eo[extraOptionsKey]).filter(Boolean));
+}
+
 function inOptionsForUsers() {
-  return [
-    { name: i18n("search.advanced.filters.unseen"), value: "unseen" },
-    { name: i18n("search.advanced.filters.posted"), value: "posted" },
-    { name: i18n("search.advanced.filters.created"), value: "created" },
-    { name: i18n("search.advanced.filters.watching"), value: "watching" },
-    { name: i18n("search.advanced.filters.tracking"), value: "tracking" },
-    { name: i18n("search.advanced.filters.bookmarks"), value: "bookmarks" },
-  ].concat(..._extraOptions.map((eo) => eo.inOptionsForUsers).filter(Boolean));
+  return buildFilterOptions(
+    [
+      // User actions
+      "created",
+      "posted",
+      "likes",
+      "bookmarks",
+      // Read state
+      "seen",
+      "unseen",
+      // Subscriptions
+      "watching",
+      "tracking",
+      // Messages
+      "all",
+      "private",
+      // Search scope
+      "title",
+    ],
+    "inOptionsForUsers"
+  );
 }
 
 function inOptionsForAll() {
-  return [
-    { name: i18n("search.advanced.filters.first"), value: "first" },
-    { name: i18n("search.advanced.filters.pinned"), value: "pinned" },
-    { name: i18n("search.advanced.filters.wiki"), value: "wiki" },
-    { name: i18n("search.advanced.filters.images"), value: "images" },
-  ].concat(..._extraOptions.map((eo) => eo.inOptionsForAll).filter(Boolean));
+  return buildFilterOptions(
+    [
+      // Post properties
+      "first",
+      "pinned",
+      "wiki",
+      "images",
+    ],
+    "inOptionsForAll"
+  );
 }
 
 function statusOptions() {
@@ -111,14 +133,8 @@ export default class SearchAdvancedOptions extends Component {
         username: null,
         category: null,
         tags: null,
-        in: null,
+        in: [],
         special: {
-          in: {
-            title: false,
-            likes: false,
-            messages: false,
-            seen: false,
-          },
           all_tags: false,
         },
         status: null,
@@ -146,35 +162,7 @@ export default class SearchAdvancedOptions extends Component {
     this.setSearchedTermValue("searchedTerms.username", REGEXP_USERNAME_PREFIX);
     this.setSearchedTermValueForCategory();
     this.setSearchedTermValueForTags();
-
-    let regExpInMatch = this.inOptions.map((option) => option.value).join("|");
-    const REGEXP_IN_MATCH = new RegExp(`(in|with):(${regExpInMatch})`, "i");
-
-    this.setSearchedTermValue(
-      "searchedTerms.in",
-      REGEXP_IN_PREFIX,
-      REGEXP_IN_MATCH
-    );
-
-    this.setSearchedTermSpecialInValue(
-      "searchedTerms.special.in.likes",
-      REGEXP_SPECIAL_IN_LIKES_MATCH
-    );
-
-    this.setSearchedTermSpecialInValue(
-      "searchedTerms.special.in.title",
-      REGEXP_SPECIAL_IN_TITLE_MATCH
-    );
-
-    this.setSearchedTermSpecialInValue(
-      "searchedTerms.special.in.messages",
-      REGEXP_SPECIAL_IN_MESSAGES_MATCH
-    );
-
-    this.setSearchedTermSpecialInValue(
-      "searchedTerms.special.in.seen",
-      REGEXP_SPECIAL_IN_SEEN_MATCH
-    );
+    this.setSearchedTermValueForIn();
 
     let regExpStatusMatch = this.statusOptions
       .map((status) => status.value)
@@ -210,6 +198,32 @@ export default class SearchAdvancedOptions extends Component {
       "searchedTerms.max_views",
       REGEXP_MAX_VIEWS_PREFIX
     );
+  }
+
+  setSearchedTermValueForIn() {
+    const validValues = this.inOptions.map((option) => option.value);
+    const blocks = this.filterBlocks(REGEXP_IN_PREFIX);
+    const selectedFilters = [];
+
+    for (const block of blocks) {
+      let value = block.replace(REGEXP_IN_PREFIX, "").toLowerCase();
+      // "in:personal" is an alias for "messages"
+      if (value === "personal") {
+        value = "messages";
+      }
+      if (validValues.includes(value)) {
+        selectedFilters.push(value);
+      }
+    }
+
+    const currentIn = this.get("searchedTerms.in") || [];
+    const hasChanged =
+      selectedFilters.length !== currentIn.length ||
+      !selectedFilters.every((v) => currentIn.includes(v));
+
+    if (hasChanged) {
+      this.set("searchedTerms.in", selectedFilters);
+    }
   }
 
   findSearchTerms() {
@@ -262,18 +276,6 @@ export default class SearchAdvancedOptions extends Component {
       }
     } else if (val && val.length !== 0) {
       this.set(key, null);
-    }
-  }
-
-  setSearchedTermSpecialInValue(key, replaceRegEx) {
-    const match = this.filterBlocks(replaceRegEx);
-
-    if (match.length !== 0) {
-      if (this.get(key) !== true) {
-        this.set(key, true);
-      }
-    } else if (this.get(key) !== false) {
-      this.set(key, false);
     }
   }
 
@@ -371,22 +373,6 @@ export default class SearchAdvancedOptions extends Component {
     }
   }
 
-  updateInRegex(regex, filter) {
-    const match = this.filterBlocks(regex);
-    const inFilter = this.get("searchedTerms.special.in." + filter);
-    let searchTerm = this.searchTerm || "";
-
-    if (inFilter) {
-      if (match.length === 0) {
-        searchTerm += ` in:${filter}`;
-        this._updateSearchTerm(searchTerm);
-      }
-    } else if (match.length !== 0) {
-      searchTerm = searchTerm.replace(match, "");
-      this._updateSearchTerm(searchTerm);
-    }
-  }
-
   @action
   onChangeSearchTermMinPostCount(value) {
     this.set("searchedTerms.min_posts", value.length ? value : null);
@@ -412,8 +398,8 @@ export default class SearchAdvancedOptions extends Component {
   }
 
   @action
-  onChangeSearchTermForIn(value) {
-    this.set("searchedTerms.in", value);
+  onChangeSearchTermForIn(selectedValues) {
+    this.set("searchedTerms.in", selectedValues || []);
     this._updateSearchTermForIn();
   }
 
@@ -469,30 +455,6 @@ export default class SearchAdvancedOptions extends Component {
   onChangeSearchTermForAllTags(event) {
     this.set("searchedTerms.special.all_tags", event.target.checked);
     this._updateSearchTermForTags();
-  }
-
-  @action
-  onChangeSearchTermForSpecialInLikes(event) {
-    this.set("searchedTerms.special.in.likes", event.target.checked);
-    this.updateInRegex(REGEXP_SPECIAL_IN_LIKES_MATCH, "likes");
-  }
-
-  @action
-  onChangeSearchTermForSpecialInMessages(event) {
-    this.set("searchedTerms.special.in.messages", event.target.checked);
-    this.updateInRegex(REGEXP_SPECIAL_IN_MESSAGES_MATCH, "messages");
-  }
-
-  @action
-  onChangeSearchTermForSpecialInSeen(event) {
-    this.set("searchedTerms.special.in.seen", event.target.checked);
-    this.updateInRegex(REGEXP_SPECIAL_IN_SEEN_MATCH, "seen");
-  }
-
-  @action
-  onChangeSearchTermForSpecialInTitle(event) {
-    this.set("searchedTerms.special.in.title", event.target.checked);
-    this.updateInRegex(REGEXP_SPECIAL_IN_TITLE_MATCH, "title");
   }
 
   @action
@@ -626,29 +588,30 @@ export default class SearchAdvancedOptions extends Component {
   }
 
   _updateSearchTermForIn() {
-    let regExpInMatch = this.inOptions.map((option) => option.value).join("|");
-    const REGEXP_IN_MATCH = new RegExp(`(in|with):(${regExpInMatch})`, "i");
-
-    const match = this.filterBlocks(REGEXP_IN_MATCH);
-    const inFilter = this.get("searchedTerms.in");
-    let keyword = "in";
-    if (inFilter in IN_OPTIONS_MAPPING) {
-      keyword = IN_OPTIONS_MAPPING[inFilter];
-    }
     let searchTerm = this.searchTerm || "";
+    const selectedFilters = this.get("searchedTerms.in") || [];
 
-    if (inFilter) {
-      if (match.length !== 0) {
-        searchTerm = searchTerm.replace(match[0], `${keyword}:${inFilter}`);
-      } else {
-        searchTerm += ` ${keyword}:${inFilter}`;
+    // Remove all existing in:/with: filters that match our options
+    const allFilterValues = this.inOptions.map((option) => option.value);
+    // Also include "personal" as an alias for "messages"
+    allFilterValues.push("personal");
+
+    const regExpAllIn = new RegExp(
+      `\\s*(in|with):(${allFilterValues.join("|")})`,
+      "gi"
+    );
+    searchTerm = searchTerm.replace(regExpAllIn, "");
+
+    // Add the selected filters
+    selectedFilters.forEach((filter) => {
+      let keyword = "in";
+      if (filter in IN_OPTIONS_MAPPING) {
+        keyword = IN_OPTIONS_MAPPING[filter];
       }
+      searchTerm += ` ${keyword}:${filter}`;
+    });
 
-      this._updateSearchTerm(searchTerm);
-    } else if (match.length !== 0) {
-      searchTerm = searchTerm.replace(match, "");
-      this._updateSearchTerm(searchTerm);
-    }
+    this._updateSearchTerm(searchTerm);
   }
 
   _updateSearchTermForStatus() {
@@ -834,76 +797,20 @@ export default class SearchAdvancedOptions extends Component {
         {{/if}}
 
         <div class="control-group advanced-search-topics-posts">
+          <label class="control-label">{{i18n
+              "search.advanced.filters.label"
+            }}</label>
           <div class="controls">
-            <fieldset class="grouped-control">
-              <legend class="grouped-control-label">{{i18n
-                  "search.advanced.filters.label"
-                }}</legend>
-
-              {{#if this.currentUser}}
-                <div class="grouped-control-field">
-                  <Input
-                    id="matching-title-only"
-                    @type="checkbox"
-                    class="in-title"
-                    @checked={{this.searchedTerms.special.in.title}}
-                    {{on "click" this.onChangeSearchTermForSpecialInTitle}}
-                  />
-                  <label class="checkbox-label" for="matching-title-only">
-                    {{i18n "search.advanced.filters.title"}}
-                  </label>
-                </div>
-
-                <div class="grouped-control-field">
-                  <Input
-                    id="matching-liked"
-                    @type="checkbox"
-                    class="in-likes"
-                    @checked={{this.searchedTerms.special.in.likes}}
-                    {{on "click" this.onChangeSearchTermForSpecialInLikes}}
-                  />
-                  <label class="checkbox-label" for="matching-liked">{{i18n
-                      "search.advanced.filters.likes"
-                    }}</label>
-                </div>
-
-                <div class="grouped-control-field">
-                  <Input
-                    id="matching-in-messages"
-                    @type="checkbox"
-                    class="in-private"
-                    @checked={{this.searchedTerms.special.in.messages}}
-                    {{on "click" this.onChangeSearchTermForSpecialInMessages}}
-                  />
-                  <label
-                    class="checkbox-label"
-                    for="matching-in-messages"
-                  >{{i18n "search.advanced.filters.private"}}</label>
-                </div>
-
-                <div class="grouped-control-field">
-                  <Input
-                    id="matching-seen"
-                    @type="checkbox"
-                    class="in-seen"
-                    @checked={{this.searchedTerms.special.in.seen}}
-                    {{on "click" this.onChangeSearchTermForSpecialInSeen}}
-                  />
-                  <label class="checkbox-label" for="matching-seen">{{i18n
-                      "search.advanced.filters.seen"
-                    }}</label>
-                </div>
-              {{/if}}
-
-              <ComboBox
-                @id="in"
-                @valueProperty="value"
-                @content={{this.inOptions}}
-                @value={{this.searchedTerms.in}}
-                @onChange={{this.onChangeSearchTermForIn}}
-                @options={{hash none="user.locale.any" clearable=true}}
-              />
-            </fieldset>
+            <MultiSelect
+              @id="search-in-options"
+              @valueProperty="value"
+              @content={{this.inOptions}}
+              @value={{this.searchedTerms.in}}
+              @onChange={{this.onChangeSearchTermForIn}}
+              @options={{hash
+                headerAriaLabel=(i18n "search.advanced.filters.label")
+              }}
+            />
           </div>
         </div>
 

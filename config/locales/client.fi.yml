@@ -2799,6 +2799,8 @@ fi:
       ulist_title: "Luettelomerkillinen luettelo"
       list_item: "Luettelokohde"
       toggle_direction: "Vaihda suuntaa"
+      wrap_modal:
+        apply: "Käytä"
       help: "Markdown-muokkausohje"
       exit_fullscreen_prompt: "Poistu koko näytön tilasta painamalla <kbd>Esc</kbd>-näppäintä"
       modal_ok: "OK"
@@ -5263,6 +5265,11 @@ fi:
           sub_pages:
             common_settings:
               title: "Asetukset"
+            discourse_id:
+              title: "Discourse-tunnus"
+        discourse_id:
+          title: "Discourse-tunnus"
+          learn_more: "Lue lisää"
         logo:
           title: "Logo"
           header_description: "Määritä koko sivuston logot ja kuvakkeet"

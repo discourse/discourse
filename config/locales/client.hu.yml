@@ -2810,6 +2810,8 @@ hu:
       ulist_title: "Pontozott lista"
       list_item: "Listaelem"
       toggle_direction: "Irány be/ki"
+      wrap_modal:
+        apply: "Alkalmaz"
       help: "Markdown szerkesztési súgó"
       collapse: "Szerkesztő panel minimalizálása"
       open: "Szerkesztő panel megnyitása"
@@ -5314,6 +5316,11 @@ hu:
               title: "Közösségi bejelentkezések"
             discourseconnect:
               title: "Discourse Connect"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Tudjon meg többet"
         logo:
           title: "Logó"
           header_description: "A webhelyen használt logók és ikonok testreszabása"

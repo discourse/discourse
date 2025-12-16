@@ -1715,6 +1715,8 @@ lv:
       upload_title: "Augšupielādēt"
       upload_description: "pievienojiet faila aprakstu"
       list_item: "Saraksta punkts"
+      wrap_modal:
+        apply: "Pielietot"
       help: "Palīdzība ar formatēšanu, izmantojot Markdown"
       modal_ok: "Labi"
       cant_send_pm: "Atvainojiet, jūs nevarat sūtīt ziņu %{username}."
@@ -2887,6 +2889,8 @@ lv:
           sub_pages:
             common_settings:
               title: "Iestatījumi"
+        discourse_id:
+          learn_more: "Uzzināt vairāk"
         logo:
           form:
             mobile: "Mobilais"

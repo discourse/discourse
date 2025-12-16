@@ -1491,6 +1491,8 @@ et:
       upload_title: "Laadi üles"
       upload_description: "sisesta üleslaaditu kirjeldus siia"
       list_item: "Loendi element"
+      wrap_modal:
+        apply: "Rakenda"
       help: "Markdowni redigeerimisspikker"
       modal_ok: "Sobib"
       cant_send_pm: "Kahjuks ei saa sa kasutajale %{username} sõnumit saata."
@@ -2752,6 +2754,8 @@ et:
           sub_pages:
             common_settings:
               title: "Seaded"
+        discourse_id:
+          learn_more: "Uuri veel"
         logo:
           form:
             mobile: "Mobiil"

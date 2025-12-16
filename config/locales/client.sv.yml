@@ -2277,6 +2277,8 @@ sv:
       upload_title: "Bild"
       upload_description: "skriv en bildbeskrivning här"
       list_item: "Listobjekt"
+      wrap_modal:
+        apply: "Tillämpa"
       help: "Markdown-redigeringshjälp"
       exit_fullscreen_prompt: "Tryck på <kbd>ESC</kbd> för att lämna helskärmsläget"
       modal_ok: "OK"
@@ -4417,6 +4419,8 @@ sv:
           sub_pages:
             common_settings:
               title: "Inställningar"
+        discourse_id:
+          learn_more: "Läs mer"
         logo:
           form:
             logo:

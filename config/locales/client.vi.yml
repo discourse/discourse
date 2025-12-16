@@ -2050,6 +2050,8 @@ vi:
       upload_title: "Tải lên"
       upload_description: "Nhập mô tả tải lên ở đây"
       list_item: "Danh sách các mục"
+      wrap_modal:
+        apply: "Áp dụng"
       help: "Trợ giúp soạn thảo bằng Markdown"
       modal_ok: "OK"
       cant_send_pm: "Xin lỗi, bạn không thể gởi tin nhắn đến %{username}."
@@ -3801,6 +3803,11 @@ vi:
           sub_pages:
             common_settings:
               title: "Cài đặt"
+            discourse_id:
+              title: "ID Discourse"
+        discourse_id:
+          title: "ID Discourse"
+          learn_more: "Tìm hiểu thêm"
         logo:
           form:
             mobile: "Điện thoại"

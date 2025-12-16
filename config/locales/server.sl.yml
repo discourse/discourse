@@ -1919,6 +1919,9 @@ sl:
   onebox:
     github:
       closed: "zaprto"
+      status_date:
+        approved: "potrjen"
+        closed: "zaprta"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vas je omenil v "%{topic}" - %{site_title}'

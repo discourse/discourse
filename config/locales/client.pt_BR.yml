@@ -2799,6 +2799,8 @@ pt_BR:
       ulist_title: "Lista em tópicos"
       list_item: "Item da lista"
       toggle_direction: "Alternar direção"
+      wrap_modal:
+        apply: "Aplicar"
       help: "Ajuda de edição de redução"
       exit_fullscreen_prompt: "Pressione <kbd>ESC</kbd> para sair da tela cheia"
       modal_ok: "Ok"
@@ -5262,6 +5264,11 @@ pt_BR:
           sub_pages:
             common_settings:
               title: "Definições"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Saiba mais"
         logo:
           title: "Logotipo"
           header_description: "Configure os ícones e logotipos usados no seu site"

@@ -1777,6 +1777,9 @@ id:
       user_joined_community: "Bergabung %{date}"
     github:
       closed: "tertutup"
+      status_date:
+        approved: "disetujui"
+        closed: "tertutup"
   staff_action_logs:
     unknown: "tidak diketahui"
   reviewables:

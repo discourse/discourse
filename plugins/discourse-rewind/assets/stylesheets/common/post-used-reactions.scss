@@ -11,6 +11,20 @@
     width: 100%;
   }
 
+  @media screen and (width <= 600px) {
+    .rewind-report-title {
+      width: 100%;
+      box-sizing: border-box;
+      border-radius: var(--rewind-border-radius) var(--rewind-border-radius) 0 0;
+      padding-top: var(--space-4);
+    }
+
+    .rewind-card {
+      border-radius: 0 0 var(--rewind-border-radius) var(--rewind-border-radius);
+      padding-top: 0;
+    }
+  }
+
   .rewind-reactions-row {
     display: grid;
     grid-template-columns: 25px 50px 1fr;

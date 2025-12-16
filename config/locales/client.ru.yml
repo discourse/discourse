@@ -3091,6 +3091,8 @@ ru:
       ulist_title: "Маркированный список"
       list_item: "Элемент списка"
       toggle_direction: "Переключить направление"
+      wrap_modal:
+        apply: "Применить"
       help: "Справка по форматированию (Markdown)"
       collapse: "Свернуть панель редактора"
       open: "Открыть панель редактора"
@@ -5812,6 +5814,11 @@ ru:
           sub_pages:
             common_settings:
               title: "настроек"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Подробнее"
         logo:
           title: "Логотип"
           header_description: "Настройте логотипы и значки, используемые на вашем сайте."

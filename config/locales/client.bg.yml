@@ -2130,6 +2130,8 @@ bg:
       upload_title: "Качване"
       upload_description: "причина за качването"
       list_item: "Списък"
+      wrap_modal:
+        apply: "Приложи"
       help: "Помощ с Markdown"
       modal_ok: "Ок"
       cant_send_pm: "Съжеляваме, но неможете да изпращате съобщения до %{username}."
@@ -3474,6 +3476,8 @@ bg:
           sub_pages:
             common_settings:
               title: "Настройки"
+        discourse_id:
+          learn_more: "Научете повече"
         logo:
           form:
             mobile: "Мобилен"

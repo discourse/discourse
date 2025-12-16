@@ -2054,6 +2054,8 @@ sl:
       upload_title: "Naloži"
       upload_description: "vnesite opis prenosa tukaj"
       list_item: "Element seznama"
+      wrap_modal:
+        apply: "Uporabi"
       help: "pomoč pri Markdown urejanju"
       modal_ok: "V redu"
       cant_send_pm: "Ne moremo poslati sporočila %{username}."
@@ -3761,6 +3763,8 @@ sl:
           sub_pages:
             common_settings:
               title: "Nastavitve"
+        discourse_id:
+          learn_more: "Več o tem"
         logo:
           form:
             mobile: "Mobilno"
