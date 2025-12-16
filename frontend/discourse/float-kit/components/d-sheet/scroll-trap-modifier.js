@@ -1,5 +1,5 @@
 import { modifier as modifierFn } from "ember-modifier";
-import { isAppleMobile } from "./browser-detection";
+import { capabilities } from "discourse/services/capabilities";
 
 /**
  * Scroll trap modifier for d-sheet.
@@ -22,7 +22,10 @@ export const scrollTrapModifier = modifierFn((element, [active]) => {
     const target = e.currentTarget;
     target.scrollTo(300, 300);
 
-    if (isAppleMobile() && !CSS.supports("overscroll-behavior: contain")) {
+    if (
+      capabilities.isAppleMobile &&
+      !CSS.supports("overscroll-behavior: contain")
+    ) {
       target.style.setProperty("overflow", "hidden");
       setTimeout(() => {
         target.style.setProperty("overflow", "auto");

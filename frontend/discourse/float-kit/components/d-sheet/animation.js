@@ -1,4 +1,4 @@
-import { isWebKit } from "./browser-detection";
+import { capabilities } from "discourse/services/capabilities";
 
 /**
  * Calculate bezier curve value at parameter t.
@@ -303,6 +303,7 @@ export function createTweenFunction(progress) {
  */
 export function supportsLinearEasing() {
   return (
-    CSS.supports("transition-timing-function", "linear(0, 1)") && !isWebKit()
+    CSS.supports("transition-timing-function", "linear(0, 1)") &&
+    !capabilities.isWebKit
   );
 }

@@ -1,6 +1,6 @@
 import { action } from "@ember/object";
 import { prefersReducedMotion } from "discourse/lib/utilities";
-import { isAndroid } from "../d-sheet/browser-detection";
+import { capabilities } from "discourse/services/capabilities";
 
 /**
  * Get appropriate scroll behavior based on platform and user preferences.
@@ -11,7 +11,7 @@ export function getScrollBehavior() {
   if (prefersReducedMotion()) {
     return "instant";
   }
-  if (isAndroid()) {
+  if (capabilities.isAndroid) {
     return "instant";
   }
   return "smooth";

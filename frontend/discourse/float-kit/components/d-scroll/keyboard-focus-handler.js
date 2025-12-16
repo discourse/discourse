@@ -1,5 +1,5 @@
 import { prefersReducedMotion } from "discourse/lib/utilities";
-import { isAndroid } from "../d-sheet/browser-detection";
+import { capabilities } from "discourse/services/capabilities";
 import isTextInput from "./is-text-input";
 
 /**
@@ -21,7 +21,7 @@ function getScrollBehavior() {
   if (prefersReducedMotion()) {
     return "instant";
   }
-  if (isAndroid()) {
+  if (capabilities.isAndroid) {
     return "instant";
   }
   return "smooth";
@@ -231,7 +231,7 @@ export default class KeyboardFocusHandler {
     const scrollPortBottom = this.scrollPortBottom;
 
     const scrollMarginTop = 64;
-    const scrollMarginBottom = isAndroid() ? 102 : 54;
+    const scrollMarginBottom = capabilities.isAndroid ? 102 : 54;
 
     const visibleTop = Math.max(scrollPortTop, viewport.top);
     const visibleBottom = Math.min(scrollPortBottom, viewport.bottom);

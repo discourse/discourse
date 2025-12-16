@@ -1,7 +1,4 @@
-import {
-  isStandaloneWithBlackTranslucent,
-  isWebKit,
-} from "./browser-detection";
+import { capabilities } from "discourse/services/capabilities";
 
 /**
  * Manages theme color behavior for sheets including dimming overlays,
@@ -55,7 +52,9 @@ export default class ThemeColorAdapter {
    */
   get effectiveThemeColorDimming() {
     if (this.themeColorDimming === "auto") {
-      return isWebKit() && !isStandaloneWithBlackTranslucent();
+      return (
+        capabilities.isWebKit && !capabilities.isStandaloneWithBlackTranslucent
+      );
     }
     return Boolean(this.themeColorDimming);
   }

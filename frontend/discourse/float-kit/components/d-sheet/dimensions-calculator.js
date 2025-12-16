@@ -1,4 +1,4 @@
-import { getBrowserInfo } from "./browser-detection";
+import { capabilities } from "discourse/services/capabilities";
 
 /**
  * Tolerance value for progress calculations near detent boundaries.
@@ -533,7 +533,7 @@ export default class DimensionCalculator {
           ? contentSize + (viewSize - contentSize) / 2
           : contentSize;
 
-      const { browserEngine, platform } = getBrowserInfo();
+      const { browserEngine, detectedPlatform } = capabilities;
 
       if (browserEngine === "chromium") {
         return effectiveSize <= CHROMIUM_THRESHOLD
@@ -542,7 +542,7 @@ export default class DimensionCalculator {
       }
 
       if (browserEngine === "webkit") {
-        if (platform === "ios" || platform === "ipados") {
+        if (detectedPlatform === "ios" || detectedPlatform === "ipados") {
           return effectiveSize <= WEBKIT_MOBILE_THRESHOLD
             ? 15 + 0.1 * effectiveSize
             : 0.12 * effectiveSize;

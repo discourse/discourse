@@ -1,5 +1,5 @@
 import { modifier } from "ember-modifier";
-import { isAppleMobile, isWebKit } from "../d-sheet/browser-detection";
+import { capabilities } from "discourse/services/capabilities";
 import {
   findClosestScrollContainer,
   isClone,
@@ -217,7 +217,7 @@ function unregisterPreventer(id) {
  * Sets up or tears down global listeners based on whether any preventers are registered.
  */
 function processPreventersChanges() {
-  if (!isWebKit() || !isAppleMobile()) {
+  if (!capabilities.isWebKit || !capabilities.isAppleMobile) {
     return;
   }
 

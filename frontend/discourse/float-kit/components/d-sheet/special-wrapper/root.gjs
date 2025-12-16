@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import concatClass from "discourse/helpers/concat-class";
-import { isWebKit } from "../browser-detection";
+import { capabilities } from "discourse/services/capabilities";
 import { scrollTrapModifier } from "../scroll-trap-modifier";
 
 /**
@@ -18,7 +18,7 @@ export default class DSheetSpecialWrapperRoot extends Component {
     super(...arguments);
     // Only activate scroll trap on WebKit browsers.
     // Non-WebKit browsers use CSS overscroll-behavior: contain.
-    this.active = isWebKit();
+    this.active = capabilities.isWebKit;
   }
 
   /**
@@ -41,10 +41,7 @@ export default class DSheetSpecialWrapperRoot extends Component {
       data-d-sheet={{concatClass
         "scroll-trap-root"
         "special-wrapper-root"
-        (if
-          this.perpendicularAxis
-          (concat "scroll-" this.perpendicularAxis)
-        )
+        (if this.perpendicularAxis (concat "scroll-" this.perpendicularAxis))
         (if this.active "scroll-trap-active" "scroll-trap-inactive")
         "scroll-trap-optimised"
       }}
