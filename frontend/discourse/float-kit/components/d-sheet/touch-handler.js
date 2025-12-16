@@ -1,46 +1,74 @@
 import { cancel } from "@ember/runloop";
 import discourseLater from "discourse/lib/later";
 
-/** @type {number} How close to target position to consider "snapped" */
+/**
+ * Tolerance in pixels for determining if scroll has snapped to a position.
+ *
+ * @type {number}
+ */
 const SNAP_POSITION_TOLERANCE = 1;
 
-/** @type {number} Timeout fallback when scrollend event is not supported */
+/**
+ * Timeout in ms for scrollend fallback when the native scrollend event
+ * is not supported.
+ *
+ * @type {number}
+ */
 const SCROLL_END_FALLBACK_TIMEOUT = 90;
 
 /**
- * Touch/pointer gesture handler for d-sheet.
- * Tracks touch state and monitors scroll-snap completion as a backup
- * mechanism for the IntersectionObserver-based dismiss detection.
+ * Handles touch/scroll gesture tracking for d-sheet.
+ *
+ * Primary responsibilities:
+ * 1. Track scroll gesture start/end and notify the controller
+ * 2. Monitor scroll-snap completion using native scrollend event or timeout fallback
+ * 3. Provide backup dismiss detection for center-placed sheets
+ *
+ * For non-center placements, IntersectionObserver (via ObserverManager) handles
+ * dismiss detection. This class provides a backup for center-placed sheets where
+ * the IntersectionObserver threshold may not trigger reliably.
  *
  * @class TouchHandler
  */
 export class TouchHandler {
-  /** @type {Object} */
+  /**
+   * Reference to the sheet controller that owns this handler.
+   *
+   * @type {Object}
+   */
   sheet = null;
 
-  /** @type {boolean} */
+  /**
+   * Whether a scroll gesture is currently being tracked.
+   *
+   * @type {boolean}
+   */
   isTrackingScroll = false;
 
-  /** @type {number|null} */
-  snapEndTimeout = null;
-
-  /** @type {Function|null} */
-  boundSnapEndHandler = null;
+  /**
+   * Timeout ID for the scrollend fallback when native event is not supported.
+   *
+   * @type {number|null}
+   */
+  scrollendFallbackTimeout = null;
 
   /**
-   * Creates a new TouchHandler instance.
+   * Bound handler function for the scrollend event.
    *
-   * @param {Object} sheet - The sheet controller instance that owns this handler
+   * @type {Function|null}
+   */
+  scrollendHandler = null;
+
+  /**
+   * @param {Object} sheet - The sheet controller instance
    */
   constructor(sheet) {
     this.sheet = sheet;
   }
 
   /**
-   * Handles the start of a touch/scroll gesture.
-   * Notifies the sheet controller and begins tracking the scroll.
-   *
-   * @returns {void}
+   * Called when a touch/scroll gesture starts.
+   * Notifies the controller and begins tracking.
    */
   handleScrollStart() {
     if (!this.sheet.scrollContainer) {
@@ -51,67 +79,74 @@ export class TouchHandler {
   }
 
   /**
-   * Handles the end of a touch/scroll gesture.
-   * Notifies the sheet controller and starts monitoring for scroll-snap completion.
-   *
-   * @returns {void}
+   * Called when a touch/scroll gesture ends.
+   * Notifies the controller and starts monitoring for scroll-snap completion.
    */
   handleScrollEnd() {
     if (!this.isTrackingScroll) {
       return;
     }
     this.sheet.onTouchGestureEnd?.();
-    this.startSnapMonitor();
+    this.startScrollendMonitor();
     this.isTrackingScroll = false;
   }
 
   /**
    * Starts monitoring for scroll-snap completion.
-   * Uses the native scrollend event when available, otherwise falls back
-   * to a 90ms timeout.
-   *
-   * @returns {void}
+   * Uses the native scrollend event when available, falls back to 90ms timeout.
    */
-  startSnapMonitor() {
-    this.stopSnapMonitor();
+  startScrollendMonitor() {
+    this.stopScrollendMonitor();
 
     if (!this.sheet.scrollContainer) {
       return;
     }
 
-    this.boundSnapEndHandler = () => {
-      this.handleSnapComplete();
+    this.scrollendHandler = () => {
+      this.handleScrollendComplete();
     };
 
     if ("onscrollend" in window) {
       this.sheet.scrollContainer.addEventListener(
         "scrollend",
-        this.boundSnapEndHandler,
+        this.scrollendHandler,
         { once: true }
       );
     } else {
-      this.snapEndTimeout = discourseLater(
-        this.boundSnapEndHandler,
+      this.scrollendFallbackTimeout = discourseLater(
+        this.scrollendHandler,
         SCROLL_END_FALLBACK_TIMEOUT
       );
     }
   }
 
   /**
-   * Handles scroll-snap completion.
-   * Checks if the sheet has snapped to the closed position and triggers
-   * close if swipe-out is enabled. This is a backup mechanism for the
-   * IntersectionObserver-based dismiss detection.
-   *
-   * @returns {void}
+   * Called when scroll-snap completes (via scrollend event or timeout).
+   * For center-placed sheets, checks if the sheet has snapped to the closed
+   * position and triggers dismiss if appropriate.
    */
-  handleSnapComplete() {
+  handleScrollendComplete() {
     const scrollContainer = this.sheet.scrollContainer;
     if (!scrollContainer) {
-      this.stopSnapMonitor();
+      this.stopScrollendMonitor();
       return;
     }
 
+    if (this.sheet.contentPlacement === "center") {
+      this.checkClosedPositionForCenterPlacement(scrollContainer);
+    }
+
+    this.stopScrollendMonitor();
+  }
+
+  /**
+   * Checks if a center-placed sheet has snapped to closed position.
+   * Triggers close if at closed position and swipe-out is enabled.
+   *
+   * @param {HTMLElement} scrollContainer - The scroll container element
+   * @private
+   */
+  checkClosedPositionForCenterPlacement(scrollContainer) {
     const isHorizontal = this.sheet.isHorizontalTrack;
     const scrollPos = isHorizontal
       ? scrollContainer.scrollLeft
@@ -120,16 +155,7 @@ export class TouchHandler {
       ? scrollContainer.scrollWidth - scrollContainer.clientWidth
       : scrollContainer.scrollHeight - scrollContainer.clientHeight;
 
-    const contentPlacement = this.sheet.contentPlacement;
-
-    if (contentPlacement !== "center") {
-      this.stopSnapMonitor();
-      return;
-    }
-
     const tracks = this.sheet.tracks;
-    const swipeOutDisabled = this.sheet.swipeOutDisabled;
-
     const isTopOrLeftTrack = tracks === "top" || tracks === "left";
     const isAtClosedPosition = isTopOrLeftTrack
       ? scrollPos >= scrollMax - SNAP_POSITION_TOLERANCE
@@ -137,54 +163,37 @@ export class TouchHandler {
 
     if (
       isAtClosedPosition &&
-      !swipeOutDisabled &&
+      !this.sheet.swipeOutDisabled &&
       this.sheet.currentState === "open"
     ) {
       this.sheet.close();
     }
-
-    this.stopSnapMonitor();
   }
 
   /**
    * Stops monitoring for scroll-snap completion.
    * Removes the scrollend event listener and cancels any pending timeout.
-   *
-   * @returns {void}
    */
-  stopSnapMonitor() {
-    if (this.boundSnapEndHandler && this.sheet.scrollContainer) {
+  stopScrollendMonitor() {
+    if (this.scrollendHandler && this.sheet.scrollContainer) {
       this.sheet.scrollContainer.removeEventListener(
         "scrollend",
-        this.boundSnapEndHandler
+        this.scrollendHandler
       );
     }
-    this.boundSnapEndHandler = null;
+    this.scrollendHandler = null;
 
-    if (this.snapEndTimeout) {
-      cancel(this.snapEndTimeout);
-      this.snapEndTimeout = null;
+    if (this.scrollendFallbackTimeout) {
+      cancel(this.scrollendFallbackTimeout);
+      this.scrollendFallbackTimeout = null;
     }
   }
 
   /**
-   * Handles touch end events.
-   * Delegates to handleScrollEnd for processing.
-   *
-   * @returns {void}
-   */
-  handleTouchEnd() {
-    this.handleScrollEnd();
-  }
-
-  /**
-   * Detaches the handler and cleans up resources.
-   * Stops snap monitoring and resets tracking state.
-   *
-   * @returns {void}
+   * Detaches the handler and cleans up all resources.
    */
   detach() {
-    this.stopSnapMonitor();
+    this.stopScrollendMonitor();
     this.isTrackingScroll = false;
   }
 }

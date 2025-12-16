@@ -1806,7 +1806,7 @@ export default class Controller {
   @action
   handleTouchEnd() {
     this.touchMachine.send("TOUCH_END");
-    this.touchHandler.handleTouchEnd();
+    this.touchHandler.handleScrollEnd();
   }
 
   /**
