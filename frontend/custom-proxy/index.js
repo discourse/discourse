@@ -36,9 +36,9 @@ function updateScriptReferences({
       // }
 
       const entrypoints = {
-        discourse: "/discourse.js",
-        vendor: "/vendor.js",
-        "start-discourse": "/start-discourse.js",
+        discourse: "/assets/discourse.js",
+        vendor: "/assets/vendor.js",
+        "start-discourse": "/assets/start-discourse.js",
         // admin: "/@vite/admin.js",
       };
 
