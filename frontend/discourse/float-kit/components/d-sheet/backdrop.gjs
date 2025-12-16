@@ -50,7 +50,14 @@ export default class Backdrop extends Component {
       return null;
     }
 
-    return { ...DEFAULT_BACKDROP_TRAVEL_ANIMATION, ...userAnimation };
+    const merged = { ...DEFAULT_BACKDROP_TRAVEL_ANIMATION, ...userAnimation };
+
+    if (Array.isArray(merged.opacity)) {
+      const [start, end] = merged.opacity;
+      merged.opacity = ({ progress }) => start + (end - start) * progress;
+    }
+
+    return merged;
   }
 
   /**

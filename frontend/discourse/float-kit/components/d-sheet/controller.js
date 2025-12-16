@@ -1606,7 +1606,6 @@ export default class Controller {
     }
 
     if (this.programmaticScrollOngoing) {
-      this.programmaticScrollOngoing = false;
       return;
     }
 
