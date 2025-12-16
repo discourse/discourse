@@ -1,11 +1,11 @@
 import { modifier } from "ember-modifier";
+import { isCloneElement } from "discourse/float-kit/lib/utils";
+import { isKeyboardVisible } from "discourse/lib/utilities";
 import { capabilities } from "discourse/services/capabilities";
 import {
   findClosestScrollContainer,
-  isClone,
   isColorOrSelect,
   isInsidePreventionContainer,
-  isKeyboardVisible,
   isNearViewportBottom,
   isPasswordRelatedInput,
 } from "./focus-scroll-utils";
@@ -104,7 +104,7 @@ function setupGlobalListeners() {
 
     if (
       (!isTextInput(relatedTarget) && !isColorOrSelect(relatedTarget)) ||
-      isClone(target)
+      isCloneElement(target)
     ) {
       return;
     }

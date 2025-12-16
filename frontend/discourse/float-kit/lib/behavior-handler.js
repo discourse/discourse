@@ -49,3 +49,4 @@ export function processBehavior({ nativeEvent, defaultBehavior, handler }) {
 
   return result;
 }
+

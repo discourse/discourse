@@ -59,3 +59,4 @@ export default class DScrollTrigger extends Component {
     {{/if}}
   </template>
 }
+
