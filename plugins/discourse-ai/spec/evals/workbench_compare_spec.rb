@@ -20,6 +20,9 @@ RSpec.describe DiscourseAi::Evals::Workbench do
   let(:llm_one) { Fabricate(:fake_model, display_name: "LLM One") }
   let(:llm_two) { Fabricate(:fake_model, display_name: "LLM Two") }
   let(:persona_variants) { [{ key: "default", prompt: nil }, { key: "custom", prompt: "prompt" }] }
+  let(:formatter) do
+    instance_double(DiscourseAi::Evals::ConsoleFormatter, announce_start: nil, finalize: nil)
+  end
 
   describe "#compare with judge in persona mode" do
     let(:judge_llm) { Fabricate(:fake_model) }
@@ -37,6 +40,7 @@ RSpec.describe DiscourseAi::Evals::Workbench do
     end
 
     before do
+      allow(DiscourseAi::Evals::ConsoleFormatter).to receive(:new).and_return(formatter)
       allow(DiscourseAi::Evals::Recorder).to receive(:with_cassette).and_return(recorder)
       allow(workbench).to receive(:execute_eval).and_return(
         { raw: "default out", raw_entries: ["default out"], classified: [{ result: :pass }] },
@@ -58,6 +62,7 @@ RSpec.describe DiscourseAi::Evals::Workbench do
         eval_cases: [eval_case],
         llms: [llm_one],
         persona_variants: persona_variants,
+        formatter: formatter,
       )
 
       expect(recorder).to have_received(:announce_comparison_judged).with(
@@ -73,6 +78,11 @@ RSpec.describe DiscourseAi::Evals::Workbench do
               { candidate: "default", rating: 6, explanation: "ok" },
               { candidate: "custom", rating: 9, explanation: "great" },
             ],
+          ),
+        candidates:
+          a_collection_containing_exactly(
+            a_hash_including(label: "default", display_label: "default"),
+            a_hash_including(label: "custom", display_label: "custom"),
           ),
       )
     end
@@ -95,6 +105,7 @@ RSpec.describe DiscourseAi::Evals::Workbench do
     let(:eval_case) { OpenStruct.new(id: "spam_eval", judge: nil, args: nil, feature: "dummy") }
 
     before do
+      allow(DiscourseAi::Evals::ConsoleFormatter).to receive(:new).and_return(formatter)
       allow(DiscourseAi::Evals::Recorder).to receive(:with_cassette).and_return(recorder)
       allow(DiscourseAi::Evals::Judge).to receive(:new).and_raise("judge should not be called")
       allow(workbench).to receive(:execute_eval).and_return(
@@ -115,6 +126,7 @@ RSpec.describe DiscourseAi::Evals::Workbench do
         eval_cases: [eval_case],
         llms: [llm_one, llm_two],
         persona_variants: [{ key: "default", prompt: nil }],
+        formatter: formatter,
       )
 
       expect(recorder).to have_received(:announce_comparison_expected).with(
@@ -124,6 +136,11 @@ RSpec.describe DiscourseAi::Evals::Workbench do
         winner: "LLM One",
         status_line: "LLM One 🟢 -- LLM Two 🔴",
         failures: [{ label: "LLM Two", expected: "true", actual: "false" }],
+        candidates:
+          a_collection_containing_exactly(
+            a_hash_including(label: "LLM One", display_label: "LLM One"),
+            a_hash_including(label: "LLM Two", display_label: "LLM Two"),
+          ),
       )
       expect(recorder).to have_received(:announce_comparison_aggregate).with(
         mode_label: "LLMs",
