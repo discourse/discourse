@@ -294,7 +294,7 @@ export default class AdminBadgesShow extends Component {
           <field.Toggle />
         </form.Field>
 
-        <form.Section @title="Design">
+        <form.Section @title={{i18n "admin.badges.sections.design"}}>
           <form.ConditionalContent
             @activeName={{if data.image_url "upload-image" "choose-icon"}}
             as |cc|
@@ -412,7 +412,7 @@ export default class AdminBadgesShow extends Component {
         </form.Section>
 
         {{#if this.siteSettings.enable_badge_sql}}
-          <form.Section @title="Query">
+          <form.Section @title={{i18n "admin.badges.sections.query"}}>
             <form.Field
               @name="query"
               @title={{i18n "admin.badges.query"}}
@@ -480,7 +480,7 @@ export default class AdminBadgesShow extends Component {
           </form.Section>
         {{/if}}
 
-        <form.Section @title="Settings">
+        <form.Section @title={{i18n "admin.badges.sections.settings"}}>
           <form.Field
             @name="badge_grouping_id"
             @validation="required"
