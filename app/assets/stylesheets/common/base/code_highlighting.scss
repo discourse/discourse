@@ -19,8 +19,12 @@ code {
   color: var(--primary-very-high);
   background: var(--hljs-bg);
   border-radius: var(--d-border-radius);
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: calc((13 + 4) / 13);
+
+  small & {
+    font-size: 0.875em;
+  }
 }
 
 pre > code {
