@@ -99,5 +99,22 @@ RSpec.describe DiscourseRewind::Action::BestPosts do
         expect(call_report[:data].map { |d| d[:topic_id] }).not_to include(private_topic.id)
       end
     end
+
+    context "when a post is a whisper" do
+      fab!(:whisper_post) do
+        Fabricate(
+          :post,
+          created_at: random_datetime,
+          user: user,
+          post_number: 2,
+          post_type: Post.types[:whisper],
+          like_count: 99,
+        )
+      end
+
+      it "is not included" do
+        expect(call_report[:data].map { |d| d[:topic_id] }).not_to include(whisper_post.topic_id)
+      end
+    end
   end
 end

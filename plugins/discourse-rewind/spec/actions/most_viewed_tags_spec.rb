@@ -48,7 +48,7 @@ RSpec.describe DiscourseRewind::Action::MostViewedTags do
 
       result = call_report
 
-      expect(result[:data]).to eq(
+      expect(result[:data]).to match_array(
         [
           { tag_id: tag_1.id, name: "ruby" },
           { tag_id: tag_2.id, name: "javascript" },
@@ -112,6 +112,65 @@ RSpec.describe DiscourseRewind::Action::MostViewedTags do
       result = call_report
 
       expect(result[:data]).to eq([])
+    end
+
+    describe "only include tags which anon users (meaning everyone) can view" do
+      fab!(:group)
+      fab!(:restricted_tag) { Fabricate(:tag, name: "secret") }
+      fab!(:restricted_topic, :topic)
+
+      let(:everyone) { Group::AUTO_GROUPS[:everyone] }
+      let(:full) { TagGroupPermission.permission_types[:full] }
+
+      before do
+        group.add(user)
+        restricted_topic.tags = [restricted_tag]
+        restricted_topic.save!
+      end
+
+      it "excludes tags in groups restricted to specific groups (not visible to anon)" do
+        tag_group = Fabricate(:tag_group, tags: [restricted_tag])
+        tag_group.permissions = [[group, full]]
+        tag_group.save!
+
+        TopicViewItem.add(restricted_topic.id, "127.0.0.1", user.id, Date.new(2021, 3, 15))
+
+        result = call_report
+        expect(result[:data].map { |t| t[:tag_id] }).not_to include(restricted_tag.id)
+      end
+
+      it "includes tags in groups with everyone permission" do
+        tag_group = Fabricate(:tag_group, tags: [restricted_tag])
+        tag_group.permissions = [[everyone, full]]
+        tag_group.save!
+
+        TopicViewItem.add(restricted_topic.id, "127.0.0.1", user.id, Date.new(2021, 3, 15))
+
+        result = call_report
+        expect(result[:data].map { |t| t[:tag_id] }).to include(restricted_tag.id)
+      end
+
+      it "includes tags not in any tag group (unrestricted)" do
+        TopicViewItem.add(topic_1.id, "127.0.0.1", user.id, Date.new(2021, 3, 15))
+
+        result = call_report
+        expect(result[:data].map { |t| t[:tag_id] }).to include(tag_1.id)
+      end
+
+      it "excludes tags where user has access but anon does not" do
+        tag_group = Fabricate(:tag_group, tags: [restricted_tag])
+        tag_group.permissions = [[group, full]]
+        tag_group.save!
+
+        TopicViewItem.add(restricted_topic.id, "127.0.0.1", user.id, Date.new(2021, 3, 15))
+        TopicViewItem.add(topic_1.id, "127.0.0.2", user.id, Date.new(2021, 4, 20))
+
+        expect(Tag.visible(user.guardian).pluck(:id)).to include(restricted_tag.id)
+        expect(Tag.visible(Guardian.new).pluck(:id)).not_to include(restricted_tag.id)
+
+        result = call_report
+        expect(result[:data].map { |t| t[:tag_id] }).to contain_exactly(tag_1.id)
+      end
     end
   end
 end
