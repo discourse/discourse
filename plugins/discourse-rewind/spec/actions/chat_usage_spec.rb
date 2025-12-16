@@ -3,7 +3,7 @@
 RSpec.describe DiscourseRewind::Action::ChatUsage do
   fab!(:date) { Date.new(2021).all_year }
   fab!(:user)
-  fab!(:public_category) { Fabricate(:category) }
+  fab!(:public_category, :category)
   fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
   fab!(:public_channel) { Fabricate(:category_channel, chatable: public_category) }
   fab!(:private_channel) { Fabricate(:category_channel, chatable: private_category) }
