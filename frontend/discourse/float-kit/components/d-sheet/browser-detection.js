@@ -109,6 +109,21 @@ export function isAndroid() {
 }
 
 /**
+ * Check if running on Android Chromium browser (not in PWA/standalone mode).
+ * Used to disable yTrap on Android Chromium due to pull-to-refresh conflicts.
+ * @returns {boolean}
+ */
+export function isAndroidChromiumBrowser() {
+  return (
+    isAndroid() &&
+    isChromium() &&
+    !window.matchMedia(
+      "(display-mode: standalone), (display-mode: minimal-ui), (display-mode: fullscreen)"
+    ).matches
+  );
+}
+
+/**
  * Check if running in iOS standalone PWA mode with black-translucent status bar.
  * @returns {boolean}
  */

@@ -1,6 +1,5 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { isAndroid, isChromium } from "../d-sheet/browser-detection";
 
 /**
  * GestureTrapHandler - Manages scroll gesture trap via IntersectionObserver for DScroll.View.
@@ -13,22 +12,22 @@ import { isAndroid, isChromium } from "../d-sheet/browser-detection";
  */
 export default class GestureTrapHandler {
   /** @type {boolean} */
-  @tracked isAtStart = true;
-
-  /** @type {boolean} */
-  @tracked isAtEnd = true;
-
-  /** @type {boolean} */
   @tracked xTrap = false;
-
   /** @type {boolean} */
   @tracked yTrap = false;
-
   /** @type {boolean} */
   @tracked keyboardVisible = false;
+  /**
+   * Internal flag tracking if scroll is at start boundary.
+   * @type {boolean}
+   */
+  isAtStart = true;
 
-  /** @type {boolean} */
-  isAndroidChromiumBrowser = false;
+  /**
+   * Internal flag tracking if scroll is at end boundary.
+   * @type {boolean}
+   */
+  isAtEnd = true;
 
   /** @type {HTMLElement|null} */
   startSpyElement = null;
@@ -139,42 +138,6 @@ export default class GestureTrapHandler {
   }
 
   /**
-   * Get the effective X trap state for CSS tokens.
-   *
-   * @returns {boolean}
-   */
-  get effectiveXTrap() {
-    return this.xTrap;
-  }
-
-  /**
-   * Get the effective Y trap state for CSS tokens.
-   *
-   * @returns {boolean}
-   */
-  get effectiveYTrap() {
-    return (
-      (!this.isAndroidChromiumBrowser && this.yTrap) ||
-      (this.keyboardVisible && !this.swipeTrapIncapable)
-    );
-  }
-
-  /**
-   * Detect if running on Android Chromium browser (not in PWA/standalone mode).
-   *
-   * @returns {boolean}
-   */
-  detectAndroidChromiumBrowser() {
-    return (
-      isAndroid() &&
-      isChromium() &&
-      !window.matchMedia(
-        "(display-mode: standalone), (display-mode: minimal-ui), (display-mode: fullscreen)"
-      ).matches
-    );
-  }
-
-  /**
    * Check if keyboard is currently visible.
    * Keyboard is considered visible if visual viewport is 200px smaller than window.
    *
@@ -187,12 +150,15 @@ export default class GestureTrapHandler {
 
   /**
    * Handle IntersectionObserver entries.
+   * Per Silk (original-source.js lines 12856-12878):
+   * - When spy becomes visible: update isAt flag AND set trap value
+   * - When spy becomes invisible: update isAt flag ONLY (trap unchanged)
+   * - After all entries: if both visible, set trap to false
    *
    * @param {string} axis - The scroll axis
    * @param {Object} values - Normalized trap values
    * @param {IntersectionObserverEntry[]} entries - Observer entries
    */
-  @action
   handleIntersection(axis, values, entries) {
     for (const entry of entries) {
       if (entry.target === this.startSpyElement) {
@@ -205,11 +171,6 @@ export default class GestureTrapHandler {
           }
         } else {
           this.isAtStart = false;
-          if (axis === "x") {
-            this.xTrap = this.isAtEnd ? values.xEnd : false;
-          } else {
-            this.yTrap = this.isAtEnd ? values.yEnd : false;
-          }
         }
       } else if (entry.target === this.endSpyElement) {
         if (entry.isIntersecting) {
@@ -221,20 +182,15 @@ export default class GestureTrapHandler {
           }
         } else {
           this.isAtEnd = false;
-          if (axis === "x") {
-            this.xTrap = this.isAtStart ? values.xStart : false;
-          } else {
-            this.yTrap = this.isAtStart ? values.yStart : false;
-          }
         }
       }
-    }
 
-    if (this.isAtStart && this.isAtEnd) {
-      if (axis === "x") {
-        this.xTrap = false;
-      } else {
-        this.yTrap = false;
+      if (this.isAtStart && this.isAtEnd) {
+        if (axis === "x") {
+          this.xTrap = false;
+        } else {
+          this.yTrap = false;
+        }
       }
     }
   }
@@ -248,7 +204,8 @@ export default class GestureTrapHandler {
   }
 
   /**
-   * Set up IntersectionObserver for scroll gesture trap.
+   * Set up IntersectionObserver and keyboard visibility tracking.
+   * Per Silk (original-source.js lines 12848-12893).
    */
   setup() {
     const viewElement = this.view.viewElement;
@@ -257,8 +214,6 @@ export default class GestureTrapHandler {
 
     this.xTrap = values.xStart;
     this.yTrap = values.yStart;
-
-    this.isAndroidChromiumBrowser = this.detectAndroidChromiumBrowser();
 
     if (window.visualViewport) {
       window.visualViewport.addEventListener("resize", this.handleResize);

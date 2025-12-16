@@ -4,6 +4,7 @@ import { registerDestructor } from "@ember/destroyable";
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
+import { isAndroidChromiumBrowser } from "../d-sheet/browser-detection";
 import GestureTrapHandler from "./gesture-trap-handler";
 import isTextInput from "./is-text-input";
 import KeyboardFocusHandler from "./keyboard-focus-handler";
@@ -455,8 +456,11 @@ export default class DScrollView extends Component {
       parts.push("scroll-auto");
     }
 
-    const trapX = this.gestureTrapHandler.effectiveXTrap;
-    const trapY = this.gestureTrapHandler.effectiveYTrap;
+    const trapX = this.gestureTrapHandler.xTrap;
+    const handler = this.gestureTrapHandler;
+    const trapY =
+      (!isAndroidChromiumBrowser() && handler.yTrap) ||
+      (handler.keyboardVisible && !handler.swipeTrapIncapable);
 
     if (trapX) {
       parts.push("trap-x");
