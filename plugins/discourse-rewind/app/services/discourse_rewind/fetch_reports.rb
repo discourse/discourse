@@ -11,6 +11,7 @@ module DiscourseRewind
   #
   class FetchReports
     include Service::Base
+    include DiscourseRewind::FetchReportsHelper
 
     # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
@@ -18,7 +19,6 @@ module DiscourseRewind
     #   @option params [String] :for_user_username (optional) username of the user to see the rewind for, otherwise the guardian user is used
     #   @return [Service::Base::Context]
 
-    CACHE_DURATION = Rails.env.development? ? 10.seconds : 3.days
     INITIAL_REPORT_COUNT = 3
 
     # The order here controls the order of reports in the UI,
@@ -98,8 +98,7 @@ module DiscourseRewind
     end
 
     def fetch_all_reports(date:, for_user:, year:)
-      key = cache_key(for_user.username, year)
-      reports = Discourse.redis.get(key)
+      reports = load_reports_from_cache(for_user.username, year)
 
       if !reports
         reports =
@@ -108,9 +107,7 @@ module DiscourseRewind
           rescue StandardError
             nil
           end
-        Discourse.redis.setex(key, CACHE_DURATION, MultiJson.dump(reports))
-      else
-        reports = MultiJson.load(reports, symbolize_keys: true)
+        cache_reports(for_user.username, year, reports)
       end
 
       reports
@@ -122,10 +119,6 @@ module DiscourseRewind
 
     def fetch_total_available(all_reports:)
       all_reports.size
-    end
-
-    def cache_key(username, year)
-      "rewind:#{username}:#{year}"
     end
   end
 end

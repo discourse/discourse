@@ -11,6 +11,7 @@ module DiscourseRewind
   #
   class FetchReport
     include Service::Base
+    include DiscourseRewind::FetchReportsHelper
 
     # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
@@ -68,11 +69,7 @@ module DiscourseRewind
     end
 
     def fetch_all_reports(for_user:, year:)
-      key = "rewind:#{for_user.username}:#{year}"
-      reports = Discourse.redis.get(key)
-      return nil unless reports
-
-      MultiJson.load(reports, symbolize_keys: true)
+      load_reports_from_cache(for_user.username, year)
     end
 
     def fetch_report(all_reports:, params:)
