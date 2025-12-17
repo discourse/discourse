@@ -10,11 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav(
-        "discourse-subscriptions",
-        [],
-        "far-credit-card"
-      );
+      api.setAdminPluginIcon("discourse-subscriptions", "far-credit-card");
     });
   },
 };

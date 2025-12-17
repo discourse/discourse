@@ -10,11 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav(
-        "discourse-patreon",
-        [],
-        "fab-patreon"
-      );
+      api.setAdminPluginIcon("discourse-patreon", "fab-patreon");
     });
   },
 };
