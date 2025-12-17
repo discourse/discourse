@@ -4,13 +4,23 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseLater from "discourse/lib/later";
-import { eq } from "discourse/truth-helpers";
-import { i18n } from "discourse-i18n";
 
 class ChatChannelSidebarMenuNotificationSubmenu extends Component {
   @service chatApi;
+
+  @action
+  isItemSelected(item) {
+    if (this.args.data.channel.currentUserMembership.muted) {
+      return item === "muted";
+    }
+
+    return (
+      this.args.data.channel.currentUserMembership.notificationLevel === item
+    );
+  }
 
   @action
   async changePushNotifications(setting) {
@@ -50,49 +60,39 @@ class ChatChannelSidebarMenuNotificationSubmenu extends Component {
 
   <template>
     <DropdownMenu as |dropdown|>
-      <dropdown.item class="--text-only">
-        {{i18n "chat.settings.notification_level"}}...
-      </dropdown.item>
-
       <dropdown.item>
         <DButton
           @action={{this.changePushNotifications "never"}}
-          @icon={{if
-            (eq @data.channel.currentUserMembership.notificationLevel "never")
-            "check"
-            ""
-          }}
           @label="chat.notification_levels.never"
           @title="chat.notification_levels.never"
-          class="chat-channel-sidebar-link-menu__notification-level-never"
+          class={{concatClass
+            "chat-channel-sidebar-link-menu__notification-level-never"
+            (if (this.isItemSelected "never") "-selected")
+          }}
         />
       </dropdown.item>
 
       <dropdown.item>
         <DButton
           @action={{this.changePushNotifications "mention"}}
-          @icon={{if
-            (eq @data.channel.currentUserMembership.notificationLevel "mention")
-            "check"
-            ""
-          }}
           @label="chat.notification_levels.mention"
           @title="chat.notification_levels.mention"
-          class="chat-channel-sidebar-link-menu__notification-level-mention"
+          class={{concatClass
+            "chat-channel-sidebar-link-menu__notification-level-mention"
+            (if (this.isItemSelected "mention") "-selected")
+          }}
         />
       </dropdown.item>
 
       <dropdown.item>
         <DButton
           @action={{this.changePushNotifications "always"}}
-          @icon={{if
-            (eq @data.channel.currentUserMembership.notificationLevel "always")
-            "check"
-            ""
-          }}
           @label="chat.notification_levels.always"
           @title="chat.notification_levels.always"
-          class="chat-channel-sidebar-link-menu__notification-level-always"
+          class={{concatClass
+            "chat-channel-sidebar-link-menu__notification-level-always"
+            (if (this.isItemSelected "always") "-selected")
+          }}
         />
       </dropdown.item>
 
@@ -116,7 +116,10 @@ class ChatChannelSidebarMenuNotificationSubmenu extends Component {
             "chat.settings.unmute"
             "chat.settings.mute"
           }}
-          class="chat-channel-sidebar-link-menu__mute-channel"
+          class={{concatClass
+            "chat-channel-sidebar-link-menu__mute-channel"
+            (if (this.isItemSelected "muted") "-selected")
+          }}
         />
       </dropdown.item>
     </DropdownMenu>

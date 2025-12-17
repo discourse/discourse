@@ -42,7 +42,8 @@ export function isHex(input) {
 export default class SectionLink extends Component {
   @service currentUser;
 
-  @tracked hovering;
+  @tracked hovering = false;
+  @tracked hoveringFrozen = false;
 
   constructor() {
     super(...arguments);
@@ -90,6 +91,10 @@ export default class SectionLink extends Component {
       classNames.push("active");
     }
 
+    if (this.hovering || this.hoveringFrozen) {
+      classNames.push("--hovering");
+    }
+
     return classNames.join(" ");
   }
 
@@ -132,12 +137,28 @@ export default class SectionLink extends Component {
 
   @action
   hoveringSectionLink() {
+    this.hoveringFrozen = false;
     this.hovering = true;
   }
 
   @action
   stopHoveringSectionLink() {
     this.hovering = false;
+  }
+
+  @action
+  runHoverAction(event) {
+    const result = this.args.hoverAction(event, (callbackResult) => {
+      if (callbackResult === "unfreezeHover") {
+        this.hoveringFrozen = false;
+      }
+    });
+
+    if (result === "freezeHover") {
+      this.hoveringFrozen = true;
+    } else {
+      this.hoveringFrozen = false;
+    }
   }
 
   @bind
@@ -246,12 +267,12 @@ export default class SectionLink extends Component {
             {{#if @hoverValue}}
               <span class="sidebar-section-link-hover">
                 <button
-                  {{on "click" @hoverAction}}
+                  {{on "click" this.runHoverAction}}
                   type="button"
                   title={{@hoverTitle}}
                   class={{concatClass
                     "sidebar-section-hover-button"
-                    (if this.hovering "--hovering" "")
+                    (if (or this.hoveringFrozen this.hovering) "--hovering" "")
                   }}
                 >
                   {{#if (eq @hoverType "icon")}}

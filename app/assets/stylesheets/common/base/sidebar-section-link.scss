@@ -23,11 +23,11 @@
     width: 100%;
     align-items: center;
     color: var(--d-sidebar-link-color);
-    transition: background-color 0.25s;
     border-radius: var(--d-border-radius);
 
     &:focus-visible,
-    &:hover {
+    &:hover,
+    &.--hovering {
       background: var(--d-sidebar-highlight-background);
       color: var(--d-sidebar-highlight-color);
       outline: none;
@@ -267,9 +267,8 @@
       color: var(--d-sidebar-highlight-color);
       border: none;
       background: transparent;
-      padding: 0 0 0 0.5em;
+      padding: 0 0.5em;
       height: 100%;
-      transition: background-color 0.25s;
 
       &:focus,
       .discourse-no-touch & {

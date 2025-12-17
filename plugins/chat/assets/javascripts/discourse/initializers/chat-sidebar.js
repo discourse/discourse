@@ -387,13 +387,53 @@ export default {
 
       api.addSidebarSection(
         (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
-          const SidebarChatStarredChannelLink = createChannelLink(
+          const BaseStarredChannelLink = createChannelLink(
             BaseCustomSidebarSectionLink,
             {
               showSuffix: false,
               enableHoverForPublicChannels: false,
             }
           );
+
+          const SidebarChatStarredChannelLink = class extends BaseStarredChannelLink {
+            constructor({ menuService }) {
+              super(...arguments);
+              this.menuService = menuService;
+            }
+
+            get hoverValue() {
+              return "ellipsis";
+            }
+
+            get hoverTitle() {
+              return i18n("chat.open_channel_menu");
+            }
+
+            get hoverAction() {
+              return (event, hoverCallbackFn) => {
+                event.stopPropagation();
+                event.preventDefault();
+
+                this.menuService.show(
+                  event.target.closest(".sidebar-section-link"),
+                  {
+                    identifier: this.isDM
+                      ? "chat-direct-message-channel-menu"
+                      : "chat-channel-menu",
+                    component: ChatChannelSidebarLinkMenu,
+                    modalForMobile: true,
+                    placement: "right",
+                    data: { channel: this.channel },
+                    onClose: () => {
+                      hoverCallbackFn("unfreezeHover");
+                    },
+                  }
+                );
+
+                return "freezeHover";
+              };
+            }
+          };
 
           const SidebarChatStarredChannelsSection = class extends BaseCustomSidebarSection {
             @service currentUser;
@@ -410,6 +450,7 @@ export default {
               this.chatChannelsManager = container.lookup(
                 "service:chat-channels-manager"
               );
+              this.menuService = container.lookup("service:menu");
             }
 
             get sectionLinks() {
@@ -421,6 +462,7 @@ export default {
                     currentUser: this.currentUser,
                     siteSettings: this.siteSettings,
                     chatStateManager: this.chatStateManager,
+                    menuService: this.menuService,
                   })
               );
             }
@@ -550,7 +592,7 @@ export default {
               }
 
               get hoverAction() {
-                return (event) => {
+                return (event, hoverCallbackFn) => {
                   event.stopPropagation();
                   event.preventDefault();
 
@@ -562,8 +604,13 @@ export default {
                       modalForMobile: true,
                       placement: "right",
                       data: { channel: this.channel },
+                      onClose: () => {
+                        hoverCallbackFn("unfreezeHover");
+                      },
                     }
                   );
+
+                  return "freezeHover";
                 };
               }
             };
@@ -817,7 +864,7 @@ export default {
               }
 
               get hoverAction() {
-                return (event) => {
+                return (event, hoverCallbackFn) => {
                   event.stopPropagation();
                   event.preventDefault();
 
@@ -829,8 +876,13 @@ export default {
                       modalForMobile: true,
                       placement: "right",
                       data: { channel: this.channel },
+                      onClose: () => {
+                        hoverCallbackFn("unfreezeHover");
+                      },
                     }
                   );
+
+                  return "freezeHover";
                 };
               }
             };
