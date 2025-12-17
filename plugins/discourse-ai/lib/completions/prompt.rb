@@ -91,6 +91,13 @@ module DiscourseAi
             )
           elsif message.is_a?(String)
             push(type: :model, content: message)
+          elsif message.is_a?(ToolResult)
+            push(
+              type: :tool,
+              content: message.content,
+              id: message.tool_call.id,
+              name: message.tool_call.name,
+            )
           else
             raise ArgumentError, "response must be an array of strings, ToolCalls, or Thinkings"
           end
