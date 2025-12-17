@@ -66,6 +66,7 @@ acceptance("User Preferences - Navigation Menu", function (needs) {
     await waitFor(".save-controls .saved", { timeout: 5000 });
 
     // Wait for the sidebar to update - wait for the badge to appear
+
     await waitFor(
       `.sidebar-section-link[data-link-name="everything"] .sidebar-section-link-content-badge`,
       { timeout: 5000 }
