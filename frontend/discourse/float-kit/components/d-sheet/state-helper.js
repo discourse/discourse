@@ -128,16 +128,8 @@ export default class StateHelper {
    * Signal scroll has started.
    */
   scrollStart() {
-    // eslint-disable-next-line no-console
-    console.log(
-      `[scrollStart] current:${this.stateMachine.current} scrollState:${this.stateMachine.getNestedMachineState("scroll")} matches:${this.stateMachine.matches("open.scroll.ongoing")}`
-    );
     if (!this.stateMachine.matches("open.scroll.ongoing")) {
-      const result = this.stateMachine.send("SCROLL_START");
-      // eslint-disable-next-line no-console
-      console.log(
-        `[scrollStart] sent SCROLL_START result:${result} newScrollState:${this.stateMachine.getNestedMachineState("scroll")}`
-      );
+      this.stateMachine.send("SCROLL_START");
     }
   }
 
@@ -145,12 +137,6 @@ export default class StateHelper {
    * Signal scroll has ended.
    */
   scrollEnd() {
-    // eslint-disable-next-line no-console
-    console.log(
-      `[scrollEnd] called, matches:${this.stateMachine.matches("open.scroll.ongoing")}`
-    );
-    // eslint-disable-next-line no-console
-    console.trace("[scrollEnd] trace");
     if (this.stateMachine.matches("open.scroll.ongoing")) {
       this.stateMachine.send("SCROLL_END");
     }
@@ -158,8 +144,6 @@ export default class StateHelper {
 
   /**
    * Signal swipe gesture has started.
-   * Note: In Silk, scroll and swipe are independent states that can both be ongoing.
-   * We don't send SCROLL_END here - scroll ends via the 200ms timeout in #handleScrollEnd.
    */
   swipeStart() {
     this.stateMachine.send("SWIPE_START");
@@ -279,26 +263,6 @@ export default class StateHelper {
   }
 
   /**
-   * Send a message to the main state machine.
-   *
-   * @param {string|Object} message
-   */
-  send(message) {
-    this.stateMachine.send(message);
-  }
-
-  /**
-   * Send a message to the position machine.
-   *
-   * @param {string|Object} message
-   * @param {Object} context
-   * @returns {boolean}
-   */
-  sendToPosition(message, context = {}) {
-    return this.positionMachine.send(message, context);
-  }
-
-  /**
    * Get current main state.
    *
    * @returns {string}
@@ -369,7 +333,7 @@ export default class StateHelper {
    *
    * @returns {boolean}
    */
-  matchesScrollOngoing() {
+  isScrollOngoing() {
     return this.stateMachine.matches("open.scroll.ongoing");
   }
 
@@ -378,7 +342,7 @@ export default class StateHelper {
    *
    * @returns {boolean}
    */
-  matchesScrollEnded() {
+  isScrollEnded() {
     return this.stateMachine.matches("open.scroll.ended");
   }
 
@@ -387,7 +351,7 @@ export default class StateHelper {
    *
    * @returns {boolean}
    */
-  matchesSwipeOngoing() {
+  isSwipeOngoing() {
     return this.stateMachine.matches("open.swipe.ongoing");
   }
 
@@ -396,7 +360,7 @@ export default class StateHelper {
    *
    * @returns {boolean}
    */
-  matchesMoveOngoing() {
+  isMoveOngoing() {
     return this.stateMachine.matches("open.move.ongoing");
   }
 
@@ -405,7 +369,7 @@ export default class StateHelper {
    *
    * @returns {boolean}
    */
-  matchesClosedPending() {
+  isClosedPending() {
     return this.stateMachine.matches("closed.pending");
   }
 

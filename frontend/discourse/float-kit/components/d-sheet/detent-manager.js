@@ -95,8 +95,8 @@ export default class DetentManager {
     return (
       c.edgeAlignedNoOvershoot &&
       c.snapToEndDetentsAcceleration === "auto" &&
-      c.stateMachine.matches("open.scroll.ended") &&
-      !c.stateMachine.matches("open.swipe.ongoing") &&
+      c.stateHelper.isScrollEnded() &&
+      !c.stateHelper.isSwipeOngoing() &&
       c.currentState === "open"
     );
   }

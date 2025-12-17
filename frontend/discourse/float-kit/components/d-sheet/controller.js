@@ -195,13 +195,6 @@ export default class Controller {
   moveOngoingRef = { current: false };
 
   /**
-   * Cancel function for the RAF loop that processes scroll progress.
-   * Set when entering scroll:ongoing, called when exiting.
-   * @type {Function|null}
-   */
-  scrollProcessingCleanup = null;
-
-  /**
    * Progress smoother function like Silk's nB.
    * Initialized when sheet opens with expected detent progress.
    * Prevents large jumps in progress values (e.g., from expected value to spurious 0).
@@ -439,34 +432,20 @@ export default class Controller {
       handler: "updateAnimatingAttribute",
     },
     // Scroll state caching via refs (like Silk's n2.current)
-    // Set scrollOngoingRef.current = true and start RAF loop when entering scroll:ongoing
-    // Guard prevents firing multiple times while already in ongoing state
     {
       machine: "stateMachine",
       state: "open.scroll.ongoing",
       guard: () => !this.scrollOngoingRef.current,
       callback: () => {
-        // eslint-disable-next-line no-console
-        console.log(
-          `[subscription] sheet${this.stackingIndex} scroll:ongoing ENTERED`
-        );
         this.scrollOngoingRef.current = true;
-        this.startScrollProcessingLoop();
       },
     },
-    // Set scrollOngoingRef.current = false and stop RAF loop when entering scroll:ended
-    // Guard prevents firing multiple times while already in ended state
     {
       machine: "stateMachine",
       state: "open.scroll.ended",
       guard: () => this.scrollOngoingRef.current,
       callback: () => {
-        // eslint-disable-next-line no-console
-        console.log(
-          `[subscription] sheet${this.stackingIndex} scroll:ended ENTERED`
-        );
         this.scrollOngoingRef.current = false;
-        this.stopScrollProcessingLoop();
       },
     },
     // Swipe state caching via refs (like Silk's n4.current)
@@ -780,10 +759,6 @@ export default class Controller {
    * @param {Function} [tween] - Optional tween function for interpolation
    */
   aggregatedTravelCallback(progress, tween) {
-    // eslint-disable-next-line no-console
-    console.log(
-      `[aggregatedTravelCallback] sheet${this.stackingIndex} progress:${progress?.toFixed?.(4) ?? progress}`
-    );
     const animations = this.travelAnimations;
     for (let i = 0, len = animations.length; i < len; i++) {
       animations[i].callback(progress, tween);
@@ -1148,13 +1123,13 @@ export default class Controller {
   }
 
   /**
-   * Handle a state transition message via the state helper.
+   * Handle a state transition message.
    *
    * @param {string|Object} message - State transition message
    */
   @action
   handleStateTransition(message) {
-    this.stateHelper.send(message);
+    this.stateMachine.send(message);
   }
 
   /**
@@ -1189,8 +1164,6 @@ export default class Controller {
    * @private
    */
   handleOpening() {
-    // eslint-disable-next-line no-console
-    console.log(`[handleOpening] sheet${this.stackingIndex} longRunning:true`);
     this.longRunningMachine.send("TO_TRUE");
     this.stateHelper.beginEnterAnimation(false);
     this.stackingAdapter.notifyParentOfOpening(false);
@@ -1205,8 +1178,6 @@ export default class Controller {
   handleOpen(message) {
     // Mark longRunning as false when opening animation completes
     if (this.longRunningMachine.current === "true") {
-      // eslint-disable-next-line no-console
-      console.log(`[handleOpen] sheet${this.stackingIndex} longRunning:false`);
       this.longRunningMachine.send("TO_FALSE");
     }
 
@@ -1215,10 +1186,6 @@ export default class Controller {
     const expectedProgress =
       this.dimensions?.progressValueAtDetents?.[this.activeDetent]?.exact ?? 0;
     this.progressSmoother = this.createProgressSmoother(expectedProgress);
-    // eslint-disable-next-line no-console
-    console.log(
-      `[handleOpen] sheet${this.stackingIndex} initialized progressSmoother with:${expectedProgress.toFixed(4)}`
-    );
 
     this.updateScrollSnapBehavior();
     this.updateTravelRange(this.activeDetent, this.activeDetent);
@@ -1318,10 +1285,6 @@ export default class Controller {
    * Handles immediate close if needed, then schedules flush to safe-to-unmount.
    */
   handleClosedPending() {
-    // eslint-disable-next-line no-console
-    console.log(
-      `[handleClosedPending] sheet${this.stackingIndex} longRunning:false`
-    );
     this.longRunningMachine.send("TO_FALSE");
     this.#handleImmediateCloseIfNeeded();
     this.#scheduleFlushToSafeToUnmount();
@@ -1352,7 +1315,7 @@ export default class Controller {
     this.timeoutManager.schedule(
       "pendingFlush",
       () => {
-        if (this.stateHelper.matchesClosedPending()) {
+        if (this.stateHelper.isClosedPending()) {
           this.stateHelper.flushComplete();
         }
       },
@@ -1591,7 +1554,6 @@ export default class Controller {
    */
   cleanup() {
     this.timeoutManager.cleanup();
-    this.stopScrollProcessingLoop();
 
     this.touchHandler.detach();
     this.observerManager.cleanup();
@@ -1726,36 +1688,17 @@ export default class Controller {
 
   /**
    * Handle scroll events by sending state machine messages.
-   * Like Silk's `n` function in `nQ` - ONLY sends messages, does NOT process progress.
-   * Processing is handled by subscription to scroll:ongoing state.
-   * Note: This is only called when state is "open" (handled by scroll-listener-modifier).
    */
   @action
   handleScrollEvent() {
-    // eslint-disable-next-line no-console
-    console.log(
-      `[handleScrollEvent] sheet${this.stackingIndex} state:${this.currentState} scrollOngoingRef:${this.scrollOngoingRef.current}`
-    );
-
     if (!this.scrollContainer || !this.dimensions) {
-      // eslint-disable-next-line no-console
-      console.log(
-        `[handleScrollEvent] sheet${this.stackingIndex} SKIP (no container/dimensions)`
-      );
       return;
     }
 
-    // Send SCROLL_START if not already scrolling (check ref, not state machine - like Silk's n2.current)
     if (!this.scrollOngoingRef.current) {
-      // eslint-disable-next-line no-console
-      console.log(
-        `[handleScrollEvent] sheet${this.stackingIndex} sending SCROLL_START`
-      );
       this.stateHelper.scrollStart();
     }
 
-    // Send SWIPE_START and MOVE_START if not stuck and not already swiping/moving
-    // Like Silk's n0.current (frontStuck), nJ.current (backStuck), n4.current (swipe), n3.current (move)
     if (!this.frontStuck && !this.backStuck) {
       if (!this.swipeOngoingRef.current) {
         this.stateHelper.swipeStart();
@@ -1765,7 +1708,6 @@ export default class Controller {
       }
     }
 
-    // Schedule scroll end detection (200ms like Silk)
     this.timeoutManager.schedule(
       "scrollEnd",
       () => {
@@ -1773,11 +1715,13 @@ export default class Controller {
       },
       200
     );
+
+    // Process scroll progress directly (single RAF loop like Silk's no())
+    this.processScrollProgress();
   }
 
   /**
    * Handle scroll end - send end messages for scroll/swipe/move.
-   * Like Silk's `t` function in `nQ`.
    */
   #handleScrollEnd() {
     this.stateHelper.moveEnd();
@@ -1798,56 +1742,6 @@ export default class Controller {
           }
         }
       }
-    }
-  }
-
-  /**
-   * Start the RAF loop for processing scroll progress.
-   * Like Silk's nW function subscribed to scroll:ongoing state.
-   * Called when entering scroll:ongoing state.
-   */
-  startScrollProcessingLoop() {
-    // Clean up any existing loop
-    this.stopScrollProcessingLoop();
-
-    // eslint-disable-next-line no-console
-    console.log(
-      `[startScrollProcessingLoop] sheet${this.stackingIndex} starting RAF loop`
-    );
-
-    // Create RAF loop like Silk's no() function
-    let rafId = null;
-    const loop = () => {
-      this.processScrollProgress();
-      rafId = requestAnimationFrame(loop);
-    };
-
-    // Schedule the first frame instead of calling immediately
-    // This gives the browser one frame to settle the scroll position
-    // (fixes Firefox issue where scroll position is briefly 0 after WAAPI)
-    rafId = requestAnimationFrame(loop);
-
-    // Store cleanup function
-    this.scrollProcessingCleanup = () => {
-      if (rafId !== null) {
-        cancelAnimationFrame(rafId);
-        rafId = null;
-      }
-    };
-  }
-
-  /**
-   * Stop the RAF loop for processing scroll progress.
-   * Called when exiting scroll:ongoing state.
-   */
-  stopScrollProcessingLoop() {
-    if (this.scrollProcessingCleanup) {
-      // eslint-disable-next-line no-console
-      console.log(
-        `[stopScrollProcessingLoop] sheet${this.stackingIndex} stopping RAF loop`
-      );
-      this.scrollProcessingCleanup();
-      this.scrollProcessingCleanup = null;
     }
   }
 
@@ -1917,10 +1811,6 @@ export default class Controller {
       this.lastProcessedProgress !== null &&
       this.lastProcessedProgress > 0
     ) {
-      // eslint-disable-next-line no-console
-      console.log(
-        `[processScrollProgress] sheet${this.stackingIndex} SKIP spurious 0 (expected:${this.lastProcessedProgress.toFixed(4)})`
-      );
       return;
     }
 
@@ -1935,11 +1825,6 @@ export default class Controller {
     if (this.lastProcessedProgress === smoothedProgress) {
       return;
     }
-
-    // eslint-disable-next-line no-console
-    console.log(
-      `[processScrollProgress] sheet${this.stackingIndex} raw:${clampedProgress.toFixed(4)} smoothed:${smoothedProgress.toFixed(4)}`
-    );
 
     this.lastProcessedProgress = smoothedProgress;
 
@@ -2029,7 +1914,7 @@ export default class Controller {
       this.edgeAlignedNoOvershoot &&
       this.snapToEndDetentsAcceleration === "auto" &&
       this.currentState === "open" &&
-      this.stateHelper.matchesScrollEnded()
+      this.stateHelper.isScrollEnded()
     ) {
       this.timeoutManager.schedule(
         "stuckPosition",
@@ -2194,7 +2079,7 @@ export default class Controller {
    * @returns {boolean} Whether a transition occurred
    */
   sendToPositionMachine(message, context = {}) {
-    return this.stateHelper.sendToPosition(message, context);
+    return this.positionMachine.send(message, context);
   }
 
   /**
