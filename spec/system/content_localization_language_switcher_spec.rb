@@ -162,6 +162,24 @@ describe "Content localization language switcher", type: :system do
     end
   end
 
+  it "marks the current language as selected in the dropdown" do
+    SiteSetting.content_localization_language_switcher = "all"
+
+    visit("/")
+    switcher.expand
+
+    expect(page).to have_css("[data-menu-option-id='en'].--selected")
+    expect(page).to have_no_css("[data-menu-option-id='ja'].--selected")
+    expect(page).to have_no_css("[data-menu-option-id='es'].--selected")
+
+    select_language("ja")
+    switcher.expand
+
+    expect(page).to have_css("[data-menu-option-id='ja'].--selected")
+    expect(page).to have_no_css("[data-menu-option-id='en'].--selected")
+    expect(page).to have_no_css("[data-menu-option-id='es'].--selected")
+  end
+
   def select_language(locale)
     switcher.expand
     switcher.option("[data-menu-option-id='#{locale}']").click
