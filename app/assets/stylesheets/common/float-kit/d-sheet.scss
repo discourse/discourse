@@ -1,22 +1,3 @@
-:where(.siqzoCx)[class] {
-  border-top: 1px solid rgb(0, 0, 0, 0.066);
-  height: 0;
-  width: 100%;
-  bottom: 0;
-  z-index: 231321;
-  position: fixed;
-}
-
-:where(.shkjPLU)[class] {
-  mask-image: linear-gradient(rgb(0, 0, 0, 0.01), transparent);
-  background-color: #fff;
-  height: 5px;
-  width: 100%;
-  bottom: 0;
-  z-index: 10;
-  position: fixed;
-}
-
 // ============================================================================
 // d-sheet Component Styles
 // Following Silk's source.css structure and selector order exactly

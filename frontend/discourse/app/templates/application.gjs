@@ -39,9 +39,6 @@ export default <template>
   <DiscourseRoot {{didInsert @controller.trackDiscoursePainted}}>
     <A11ySkipLinks.Container />
 
-    <div class="shkjPLU"></div>
-    <div class="siqzoCx"></div>
-
     <DDocument />
     <PageLoadingSlider />
     <PluginOutlet
