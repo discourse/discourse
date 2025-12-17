@@ -2081,12 +2081,113 @@ class _PluginApi {
     addAdvancedSearchOptions(options);
   }
 
-  addSaveableUserField(fieldName) {
+  /**
+   * Registers a user field that can be saved via the user preferences API.
+   * User fields are admin-defined profile fields stored in the user_fields table.
+   *
+   * @param {string} fieldName - The name of the user field to save
+   * @param {Object} [options] - Optional configuration
+   * @param {string} [options.page] - The preferences page where this field should be saved.
+   *   Valid pages: "account", "emails", "interface", "navigation-menu", "notifications",
+   *   "profile", "tags", "tracking", "users"
+   *
+   * @example
+   * // Register a user field that will be saved on the emails preferences page
+   * api.addSaveableUserField("newsletter_subscribe", { page: "emails" });
+   */
+  addSaveableUserField(fieldName, options = {}) {
     addSaveableUserField(fieldName);
+
+    if (options.page) {
+      this.registerValueTransformer(
+        "preferences-save-attributes",
+        ({ value: attrs, context }) => {
+          if (context.page === options.page) {
+            attrs.push(fieldName);
+          }
+          return attrs;
+        }
+      );
+    }
   }
 
-  addSaveableUserOptionField(fieldName) {
+  /**
+   * Registers a user option that can be saved via the user preferences API.
+   * User options are preference settings stored in the user_options table.
+   *
+   * @param {string} fieldName - The name of the user option to save
+   * @param {Object} [options] - Optional configuration
+   * @param {string} [options.page] - The preferences page where this option should be saved.
+   *   Valid pages: "account", "emails", "interface", "navigation-menu", "notifications",
+   *   "profile", "tags", "tracking", "users"
+   *
+   * @example
+   * // Register a user option that will be saved on the emails preferences page
+   * api.addSaveableUserOption("chat_email_frequency", { page: "emails" });
+   *
+   * @example
+   * // Register a user option without specifying a page (for use with custom preference pages)
+   * api.addSaveableUserOption("my_custom_setting");
+   */
+  addSaveableUserOption(fieldName, options = {}) {
     addSaveableUserOptionField(fieldName);
+
+    if (options.page) {
+      this.registerValueTransformer(
+        "preferences-save-attributes",
+        ({ value: attrs, context }) => {
+          if (context.page === options.page) {
+            attrs.push(fieldName);
+          }
+          return attrs;
+        }
+      );
+    }
+  }
+
+  /**
+   * @deprecated Use `addSaveableUserOption` instead
+   */
+  addSaveableUserOptionField(fieldName, options = {}) {
+    this.addSaveableUserOption(fieldName, options);
+  }
+
+  /**
+   * Ensures custom_fields are saved on a specific preferences page.
+   * Custom fields are stored in the user_custom_fields table.
+   *
+   * Unlike `addSaveableUserOption` and `addSaveableUserField` which track
+   * individual field names, this method ensures the entire `custom_fields`
+   * object is included in the save payload. Multiple plugins can safely
+   * call this for the same page - `custom_fields` will only be added once.
+   *
+   * @param {Object} options - Configuration options
+   * @param {string} options.page - The preferences page where custom_fields should be saved.
+   *   Valid pages: "account", "emails", "interface", "navigation-menu", "notifications",
+   *   "profile", "tags", "tracking", "users"
+   *
+   * @example
+   * // Ensure custom_fields are saved on the notifications preferences page
+   * api.addSaveableCustomFields({ page: "notifications" });
+   */
+  addSaveableCustomFields(options = {}) {
+    if (!options.page) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        "addSaveableCustomFields requires a `page` option to specify which preferences page should save custom_fields"
+      );
+      return;
+    }
+
+    this.registerValueTransformer(
+      "preferences-save-attributes",
+      ({ value: attrs, context }) => {
+        if (context.page === options.page && !attrs.includes("custom_fields")) {
+          attrs.push("custom_fields");
+        }
+        return attrs;
+      }
+    );
   }
 
   /**
