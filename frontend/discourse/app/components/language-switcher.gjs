@@ -64,7 +64,7 @@ export default class LanguageSwitcher extends Component {
       @onRegisterApi={{this.onRegisterApi}}
     >
       <:trigger>
-        <span class="language-switcher__content">
+        <span class="language-switcher__locale">
           {{this.currentLanguageCode}}
         </span>
         {{icon "angle-down"}}
