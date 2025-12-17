@@ -1,6 +1,6 @@
 let pluginConfigNav = {};
-export function registerAdminPluginConfigNav(pluginId, links) {
-  pluginConfigNav[pluginId] = { links };
+export function registerAdminPluginConfigNav(pluginId, links, icon) {
+  pluginConfigNav[pluginId] = { links, icon };
 }
 export function resetAdminPluginConfigNav() {
   pluginConfigNav = {};

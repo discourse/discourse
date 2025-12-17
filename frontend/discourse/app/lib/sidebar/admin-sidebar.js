@@ -293,7 +293,7 @@ function pluginAdminRouteLinks(router) {
           : [],
         label: plugin.admin_route.label,
         text: plugin.humanized_name,
-        icon: "gear",
+        icon: pluginConfigNav?.icon || "gear",
         description: plugin.description,
         links: pluginNavLinks,
       };

@@ -10,12 +10,16 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav("discourse-gamification", [
-        {
-          label: "gamification.leaderboard.title",
-          route: "adminPlugins.show.discourse-gamification-leaderboards",
-        },
-      ]);
+      api.addAdminPluginConfigurationNav(
+        "discourse-gamification",
+        [
+          {
+            label: "gamification.leaderboard.title",
+            route: "adminPlugins.show.discourse-gamification-leaderboards",
+          },
+        ],
+        "trophy"
+      );
     });
   },
 };

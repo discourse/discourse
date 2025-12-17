@@ -3035,15 +3035,19 @@ class _PluginApi {
    *
    * * route
    * * label OR text
+   *
+   * @param {string} pluginId - The plugin identifier
+   * @param {Array} links - Array of link objects for sub-navigation
+   * @param {string} [icon] - Optional icon name for the main plugin sidebar link
    */
-  addAdminPluginConfigurationNav(pluginId, links) {
+  addAdminPluginConfigurationNav(pluginId, links, icon) {
     if (!pluginId) {
       // eslint-disable-next-line no-console
       console.warn(consolePrefix(), "A pluginId must be provided!");
       return;
     }
 
-    registerAdminPluginConfigNav(pluginId, links);
+    registerAdminPluginConfigNav(pluginId, links, icon);
   }
 
   /**

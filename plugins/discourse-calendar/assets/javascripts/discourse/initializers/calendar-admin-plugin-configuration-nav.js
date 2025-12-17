@@ -10,14 +10,18 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav("discourse-calendar", [
-        {
-          label: "discourse_calendar.holidays.header_title",
-          route: "adminPlugins.show.discourse-calendar-holidays",
-          description:
-            "discourse_calendar.holidays.disabled_holidays_description",
-        },
-      ]);
+      api.addAdminPluginConfigurationNav(
+        "discourse-calendar",
+        [
+          {
+            label: "discourse_calendar.holidays.header_title",
+            route: "adminPlugins.show.discourse-calendar-holidays",
+            description:
+              "discourse_calendar.holidays.disabled_holidays_description",
+          },
+        ],
+        "calendar-days"
+      );
     });
   },
 };
