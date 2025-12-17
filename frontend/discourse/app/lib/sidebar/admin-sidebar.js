@@ -1,6 +1,9 @@
 import { cached } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
-import { configNavForPlugin } from "discourse/lib/admin-plugin-config-nav";
+import {
+  configNavForPlugin,
+  iconForPlugin,
+} from "discourse/lib/admin-plugin-config-nav";
 import { adminRouteValid } from "discourse/lib/admin-utilities";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
@@ -293,7 +296,7 @@ function pluginAdminRouteLinks(router) {
           : [],
         label: plugin.admin_route.label,
         text: plugin.humanized_name,
-        icon: pluginConfigNav?.icon || "gear",
+        icon: iconForPlugin(plugin.name) || "gear",
         description: plugin.description,
         links: pluginNavLinks,
       };

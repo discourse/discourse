@@ -10,7 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav("footnote", [], "asterisk");
+      api.setAdminPluginIcon("footnote", "asterisk");
     });
   },
 };

@@ -51,7 +51,10 @@ import {
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
 import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
-import { registerAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
+import {
+  registerAdminPluginConfigNav,
+  registerAdminPluginIcon,
+} from "discourse/lib/admin-plugin-config-nav";
 import { registerPluginHeaderActionComponent } from "discourse/lib/admin-plugin-header-actions";
 import { registerReportModeComponent } from "discourse/lib/admin-report-additional-modes";
 import classPrepend, {
@@ -3048,6 +3051,32 @@ class _PluginApi {
     }
 
     registerAdminPluginConfigNav(pluginId, links, icon);
+  }
+
+  /**
+   * Sets the icon for a plugin in the admin sidebar.
+   *
+   * @param {string} pluginId - The plugin identifier (must match the plugin name)
+   * @param {string} icon - The icon name (FontAwesome icon without 'd-icon-' prefix)
+   *
+   * Example:
+   *
+   * ```javascript
+   * api.setAdminPluginIcon("discourse-calendar", "calendar-days");
+   * ```
+   */
+  setAdminPluginIcon(pluginId, icon) {
+    if (!pluginId) {
+      // eslint-disable-next-line no-console
+      console.warn(consolePrefix(), "A pluginId must be provided!");
+      return;
+    }
+
+    if (!icon) {
+      return;
+    }
+
+    registerAdminPluginIcon(pluginId, icon);
   }
 
   /**

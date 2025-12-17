@@ -5,7 +5,7 @@
 # meta_topic_id: 32566
 # version: 0.3
 # authors: Riking
-# url: https://github.com/discourse/discourse/tree/main/plugins/discourse-data-explorer
+# url: https://github.com/discourse/discourse-data-explorer
 
 enabled_site_setting :data_explorer_enabled
 

@@ -10,16 +10,13 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav(
-        "automation",
-        [
-          {
-            label: "discourse_automation.title",
-            route: "adminPlugins.show.automation",
-          },
-        ],
-        "wand-magic-sparkles"
-      );
+      api.setAdminPluginIcon("automation", "wand-magic-sparkles");
+      api.addAdminPluginConfigurationNav("automation", [
+        {
+          label: "discourse_automation.title",
+          route: "adminPlugins.show.automation",
+        },
+      ]);
     });
   },
 };

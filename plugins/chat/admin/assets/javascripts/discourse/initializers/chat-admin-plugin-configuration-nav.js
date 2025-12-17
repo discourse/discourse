@@ -11,17 +11,14 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav(
-        "chat",
-        [
-          {
-            label: "chat.incoming_webhooks.title",
-            route: "adminPlugins.show.discourse-chat-incoming-webhooks",
-            description: "chat.incoming_webhooks.header_description",
-          },
-        ],
-        "d-chat"
-      );
+      api.setAdminPluginIcon("chat", "d-chat");
+      api.addAdminPluginConfigurationNav("chat", [
+        {
+          label: "chat.incoming_webhooks.title",
+          route: "adminPlugins.show.discourse-chat-incoming-webhooks",
+          description: "chat.incoming_webhooks.header_description",
+        },
+      ]);
 
       api.registerPluginHeaderActionComponent("chat", ChatAdminPluginActions);
     });

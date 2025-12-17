@@ -1,7 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 export default {
-  name: "poll-admin-plugin-configuration-nav",
+  name: "discourse-lazy-videos-admin-plugin-configuration-nav",
 
   initialize(container) {
     const currentUser = container.lookup("service:current-user");
@@ -10,7 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("poll", "chart-bar");
+      api.setAdminPluginIcon("discourse-lazy-videos", "bed");
     });
   },
 };
