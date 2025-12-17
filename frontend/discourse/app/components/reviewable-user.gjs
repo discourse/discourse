@@ -1,7 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { concat } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
@@ -12,28 +11,16 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 import getUrl from "discourse/lib/get-url";
-import { REJECTED } from "discourse/models/reviewable";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class ReviewableUser extends Component {
-  @service currentUser;
   @service modal;
   @service store;
 
   @discourseComputed("reviewable.user_fields")
   userFields(fields) {
     return this.site.collectUserFields(fields);
-  }
-
-  @discourseComputed("reviewable.status", "currentUser", "isScrubbed")
-  canScrubRejectedUser(status, currentUser, isScrubbed) {
-    return (
-      status === REJECTED &&
-      currentUser.admin &&
-      !isScrubbed &&
-      !currentUser.use_reviewable_ui_refresh
-    );
   }
 
   @discourseComputed("reviewable.payload")
@@ -162,16 +149,5 @@ export default class ReviewableUser extends Component {
 
       {{yield}}
     </div>
-
-    {{#if this.canScrubRejectedUser}}
-      <div class="scrub-rejected-user">
-        <button
-          class="btn btn-danger"
-          {{on "click" this.showScrubRejectedUserModal}}
-        >
-          {{i18n "review.user.scrub_record.button"}}
-        </button>
-      </div>
-    {{/if}}
   </template>
 }

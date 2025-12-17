@@ -402,10 +402,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
     let(:reviewable) { Fabricate(:reviewable_queued_post, target_created_by: user) }
 
     context "when reviewable_ui_refresh feature is enabled" do
-      before do
-        SiteSetting.reviewable_old_moderator_actions = false
-        allow_any_instance_of(Guardian).to receive(:can_see_reviewable_ui_refresh?).and_return(true)
-      end
+      before { SiteSetting.reviewable_old_moderator_actions = false }
 
       it "creates separate bundles for post and user actions" do
         actions = reviewable.actions_for(Guardian.new(admin))
@@ -467,35 +464,6 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           expect(result.success?).to eq(true)
           expect(User.find_by(id: user.id)).to be_nil
         end
-      end
-    end
-
-    # TODO (reviewable-refresh): Remove the tests below when the legacy combined actions are removed
-    context "when reviewable_ui_refresh feature is disabled" do
-      before do
-        allow_any_instance_of(Guardian).to receive(:can_see_reviewable_ui_refresh?).and_return(
-          false,
-        )
-      end
-
-      it "uses legacy bundle structure" do
-        actions = reviewable.actions_for(Guardian.new(admin))
-        bundle_ids = actions.bundles.map(&:id)
-
-        expect(bundle_ids).to include("#{reviewable.id}-reject-post")
-        expect(bundle_ids).not_to include("#{reviewable.id}-post-actions")
-        expect(bundle_ids).not_to include("#{reviewable.id}-user-actions")
-      end
-
-      it "includes legacy actions" do
-        actions = reviewable.actions_for(Guardian.new(admin))
-        action_ids = actions.to_a.map(&:id).map(&:to_s)
-
-        expect(action_ids).to include("approve_post")
-        expect(action_ids).to include("reject_post")
-        expect(action_ids).to include("revise_and_reject_post")
-        expect(action_ids).to include("delete_user")
-        expect(action_ids).to include("delete_user_block")
       end
     end
   end

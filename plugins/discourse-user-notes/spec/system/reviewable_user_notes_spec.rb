@@ -11,7 +11,6 @@ RSpec.describe "Reviewable User Notes", type: :system do
 
   before do
     SiteSetting.user_notes_enabled = true
-    SiteSetting.reviewable_ui_refresh = "staff"
     sign_in(admin)
   end
 

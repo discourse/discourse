@@ -68,10 +68,7 @@ RSpec.describe ReviewablePost do
       let(:guardian) { Guardian.new }
       let(:admin_guardian) { Guardian.new(admin) }
 
-      before do
-        SiteSetting.reviewable_old_moderator_actions = false
-        allow_any_instance_of(Guardian).to receive(:can_see_reviewable_ui_refresh?).and_return(true)
-      end
+      before { SiteSetting.reviewable_old_moderator_actions = false }
 
       it "Does not return available actions when the reviewable is no longer pending" do
         available_actions =
@@ -238,10 +235,7 @@ RSpec.describe ReviewablePost do
     # TODO (reviewable-refresh): Remove the tests above when the legacy combined actions are removed
 
     context "with new separated actions" do
-      before do
-        SiteSetting.reviewable_old_moderator_actions = false
-        allow_any_instance_of(Guardian).to receive(:can_see_reviewable_ui_refresh?).and_return(true)
-      end
+      before { SiteSetting.reviewable_old_moderator_actions = false }
 
       describe "#perform_delete_post" do
         it "deletes the post and transitions to rejected" do

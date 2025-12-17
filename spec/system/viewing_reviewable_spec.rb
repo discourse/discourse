@@ -17,9 +17,8 @@ describe "Viewing reviewable item", type: :system do
   let(:refreshed_review_page) { PageObjects::Pages::RefreshedReview.new }
   let(:review_note_form) { PageObjects::Components::ReviewNoteForm.new }
 
-  describe "when user is part of the groups list of the `reviewable_ui_refresh` site setting" do
+  describe "refreshed reviewable UI" do
     before do
-      SiteSetting.reviewable_ui_refresh = group.name
       SiteSetting.reviewable_old_moderator_actions = false
       group.add(admin)
       sign_in(admin)
@@ -432,7 +431,6 @@ describe "Viewing reviewable item", type: :system do
 
   describe "moderator" do
     before do
-      SiteSetting.reviewable_ui_refresh = group.name
       SiteSetting.reviewable_old_moderator_actions = false
       group.add(admin)
       group.add(moderator)

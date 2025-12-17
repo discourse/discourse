@@ -348,11 +348,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
 
     context "when reviewable_ui_refresh enabled (separated bundles)" do
-      before do
-        SiteSetting.reviewable_old_moderator_actions = false
-        # Stub guardian check on reviewable to simulate feature flag on
-        allow_any_instance_of(Guardian).to receive(:can_see_reviewable_ui_refresh?).and_return(true)
-      end
+      before { SiteSetting.reviewable_old_moderator_actions = false }
 
       it "builds post action bundles" do
         actions = reviewable.actions_for(guardian)

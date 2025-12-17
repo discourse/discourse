@@ -567,12 +567,7 @@ RSpec.describe Reviewable, type: :model do
       fab!(:reviewable, :reviewable_flagged_post)
 
       context "with new UI enabled" do
-        before do
-          SiteSetting.reviewable_old_moderator_actions = false
-          allow_any_instance_of(Guardian).to receive(:can_see_reviewable_ui_refresh?).and_return(
-            true,
-          )
-        end
+        before { SiteSetting.reviewable_old_moderator_actions = false }
 
         it "creates an action log" do
           expect { reviewable.perform(moderator, :edit_post, guardian: guardian) }.to change {
