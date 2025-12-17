@@ -1,14 +1,11 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import { i18n } from "discourse-i18n";
 
 export default class TimeOfDayActivity extends Component {
-  @service currentUser;
-
   @tracked isPlaying = false;
   @tracked playbackProgress = 0;
   @tracked isGlitching = false;
@@ -57,7 +54,7 @@ export default class TimeOfDayActivity extends Component {
   }
 
   get personalizedAudioParams() {
-    const username = this.currentUser?.username || "default";
+    const username = this.args.user?.username || "default";
 
     // convert username to seed
     const hash = (str) => {

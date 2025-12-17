@@ -3,13 +3,10 @@ import { get } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { service } from "@ember/service";
 import number from "discourse/helpers/number";
 import { i18n } from "discourse-i18n";
 
 export default class AiUsage extends Component {
-  @service currentUser;
-
   matrixInterval = null;
 
   get totalRequests() {
@@ -114,7 +111,7 @@ export default class AiUsage extends Component {
               <div class="matrix-subhead">
                 {{i18n
                   "discourse_rewind.reports.ai_usage.wake_up"
-                  username=this.currentUser.username
+                  username=@user.username
                 }}
               </div>
               {{i18n "discourse_rewind.reports.ai_usage.system_title"}}
