@@ -247,7 +247,7 @@
   }
 
   .language-switcher {
-    &__content {
+    &__locale {
       color: var(--header_primary-high);
       font-size: var(--font-down-1);
     }
@@ -273,7 +273,7 @@
         &:hover {
           border: 1px solid var(--header_primary-medium);
 
-          .language-switcher__content {
+          .language-switcher__locale {
             color: var(--header_primary);
           }
 
@@ -286,14 +286,10 @@
   }
 }
 
+.language-switcher-content,
 .fk-d-menu.interface-color-selector-content.-expanded {
   margin-top: -0.75em;
   z-index: z("header");
-  box-shadow: var(--shadow-dropdown);
-
-  .fk-d-menu__inner-content {
-    border-color: transparent;
-  }
 }
 
 .header-sidebar-toggle {

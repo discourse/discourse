@@ -5720,6 +5720,8 @@ en:
       toggle_localized:
         translated: "Page is machine-translated. Click to view original."
         not_translated: "Page is not translated. Click to translate."
+    language_switcher:
+      title: "Change site language"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
