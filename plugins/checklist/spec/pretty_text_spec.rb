@@ -41,10 +41,8 @@ describe PrettyText do
       md = <<~MD
         \\[x] hello [x] world
       MD
-      puts md
 
       cooked = PrettyText.cook(md)
-      puts cooked
 
       expect(cooked.scan("chcklst-box").count).to eq(1)
       expect(cooked).to include("[x] hello")
