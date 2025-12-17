@@ -85,7 +85,8 @@ export default class Site extends RestModel {
   @service siteSettings;
   @service capabilities;
 
-  @tracked is_readonly;
+  @tracked isReadOnly;
+  @tracked isStaffWritesOnly;
   @trackedArray categories = [];
   @trackedArray groups = [];
 
@@ -100,11 +101,6 @@ export default class Site extends RestModel {
     return [...this.categories].sort((a, b) => {
       return (b.topic_count || 0) - (a.topic_count || 0); // topic_count:desc
     });
-  }
-
-  @dependentKeyCompat
-  get isReadOnly() {
-    return this.is_readonly;
   }
 
   @dependentKeyCompat
