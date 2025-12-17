@@ -140,4 +140,32 @@ RSpec.describe FinishInstallationController do
       expect(response.status).to eq(200)
     end
   end
+
+  describe "#redirect_discourse_id" do
+    context "when has_login_hint is true" do
+      before do
+        SiteSetting.has_login_hint = true
+        GlobalSetting.stubs(:developer_emails).returns("info@test.com")
+      end
+
+      it "creates admin users and redirects to Discourse ID auth" do
+        get "/finish-installation/redirect-discourse-id"
+        expect(response.status).to eq(302)
+        expect(response.location).to include("/auth/discourse_id")
+
+        admin_user = User.find_by_email("info@test.com")
+        expect(admin_user).to be_present
+        expect(admin_user.admin).to eq(true)
+      end
+    end
+
+    context "when has_login_hint is false" do
+      before { SiteSetting.has_login_hint = false }
+
+      it "returns 403" do
+        get "/finish-installation/redirect-discourse-id"
+        expect(response.status).to eq(403)
+      end
+    end
+  end
 end

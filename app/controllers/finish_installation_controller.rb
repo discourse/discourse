@@ -53,7 +53,7 @@ class FinishInstallationController < ApplicationController
   end
 
   def redirect_discourse_id
-    create_admin_users
+    seed_admin_users
 
     # Set a global notice in case the first admin login doesn't get completed
     SiteSetting.global_notice =
@@ -103,7 +103,7 @@ class FinishInstallationController < ApplicationController
     end
   end
 
-  def create_admin_users
+  def seed_admin_users
     allowed_emails = find_allowed_emails
     if allowed_emails.empty?
       raise StandardError.new(
@@ -126,8 +126,8 @@ class FinishInstallationController < ApplicationController
           trust_level: TrustLevel[4],
         )
       user.save!(validate: false)
-      Group.refresh_automatic_groups!(:staff, :admins)
     end
+    Group.refresh_automatic_groups!(:staff, :admins)
   end
 
   def ensure_no_admins
