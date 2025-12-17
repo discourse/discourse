@@ -1,4 +1,4 @@
-import { DEBUG } from "@glimmer/env";
+import { importSync } from "@embroider/macros";
 
 /**
  * Valid environment names for deprecation workflows.
@@ -376,7 +376,7 @@ const workflows = [
   { handler: "notify-admin", matchId: "discourse.widgets-end-of-life" },
 ];
 
-if (DEBUG) {
+if (importSync("@glimmer/env")?.DEBUG) {
   // Used in system specs
   workflows.push({
     handler: ["dont-count", "dont-throw", "notify-admin"],
