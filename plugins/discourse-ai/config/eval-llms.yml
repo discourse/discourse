@@ -74,9 +74,24 @@ llms:
     max_prompt_tokens: 200000
     vision_enabled: true
 
-  claude-3.7-sonnet-thinking:
-    display_name: Claude 3.7 Sonnet
-    name: claude-3-7-sonnet-latest
+  claude-4.5-haiku-thinking:
+    display_name: Claude 4.5 Haiku
+    name: claude-haiku-4-5
+    tokenizer: DiscourseAi::Tokenizer::AnthropicTokenizer
+    api_key_env: ANTHROPIC_API_KEY
+    provider: anthropic
+    url: https://api.anthropic.com/v1/messages
+    max_prompt_tokens: 200000
+    vision_enabled: true
+    provider_params:
+      disable_top_p: true
+      disable_temperature: true
+      enable_reasoning: true
+      reasoning_tokens: 1024
+
+  claude-4.5-sonnet-thinking:
+    display_name: Claude 4.5 Sonnet
+    name: claude-sonnet-4-5
     tokenizer: DiscourseAi::Tokenizer::AnthropicTokenizer
     api_key_env: ANTHROPIC_API_KEY
     provider: anthropic
