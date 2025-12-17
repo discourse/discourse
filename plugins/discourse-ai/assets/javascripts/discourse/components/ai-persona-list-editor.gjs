@@ -341,7 +341,7 @@ export default class AiPersonaListEditor extends Component {
                         <LinkTo
                           @route="adminPlugins.show.discourse-ai-personas.edit"
                           @model={{persona}}
-                          class="btn btn-text btn-small"
+                          class="btn btn-default btn-text btn-small"
                         >{{i18n "discourse_ai.ai_persona.edit"}} </LinkTo>
                       </td>
                     </tr>

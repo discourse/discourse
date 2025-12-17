@@ -241,7 +241,7 @@ en:
         no_llm: "No LLM selected"
         no_persona: "Not set"
         no_groups: "None"
-        edit: "Edit"
+        edit: "Settings"
         expand_list:
           one: "(%{count} more)"
           other: "(%{count} more)"
