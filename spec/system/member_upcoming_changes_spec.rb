@@ -2,6 +2,8 @@
 
 RSpec.describe "Member upcoming changes", type: :system do
   fab!(:current_user, :user)
+  fab!(:admin)
+  let(:upcoming_changes_page) { PageObjects::Pages::AdminUpcomingChanges.new }
 
   before do
     SiteSetting.enable_upcoming_changes = true
@@ -44,6 +46,21 @@ RSpec.describe "Member upcoming changes", type: :system do
       group.add(current_user)
       visit "/"
       expect(page).to have_css("body.uc-enable-upload-debug-mode")
+    end
+
+    it "adds and removes the body class based on MessageBus subscription for client site settings" do
+      visit "/"
+      expect(page).to have_css("body.uc-enable-upload-debug-mode")
+
+      using_session(:admin) do
+        sign_in(admin)
+
+        upcoming_changes_page.visit
+        upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("no_one")
+        expect(upcoming_changes_page).to have_disabled_success_toast
+      end
+
+      expect(page).to have_no_css("body.uc-enable-upload-debug-mode")
     end
   end
 
