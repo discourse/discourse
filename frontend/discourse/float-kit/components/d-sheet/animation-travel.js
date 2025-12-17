@@ -216,7 +216,6 @@ export default class AnimationTravel {
       trackToTravelOn,
       animationConfig: resolvedConfig,
       setSegment: c.setSegment,
-      setProgrammaticScrollOngoing: c.setProgrammaticScrollOngoing,
       swipeOutDisabledWithDetent:
         c.dimensions?.swipeOutDisabledWithDetent ?? false,
       contentPlacement: c.contentPlacement,
@@ -295,7 +294,6 @@ export default class AnimationTravel {
       runTravelCallbacksAndAnimations: false,
       runOnTravelStart: false,
       setSegment: c.setSegment,
-      setProgrammaticScrollOngoing: c.setProgrammaticScrollOngoing,
       swipeOutDisabledWithDetent: c.swipeOutDisabled,
       contentPlacement: c.contentPlacement,
       hasOppositeTracks: c.tracks === "horizontal" || c.tracks === "vertical",
@@ -338,7 +336,6 @@ export default class AnimationTravel {
       trackToTravelOn: c.tracks,
       animationConfig: { skip: true },
       setSegment: c.setSegment,
-      setProgrammaticScrollOngoing: c.setProgrammaticScrollOngoing,
       swipeOutDisabledWithDetent:
         c.dimensions?.swipeOutDisabledWithDetent ?? false,
       contentPlacement: c.contentPlacement,

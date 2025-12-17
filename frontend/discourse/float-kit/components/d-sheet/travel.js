@@ -616,7 +616,6 @@ export function executeSheetTravel(config) {
  * @param {number} [config.snapBackAcceleratorTravelAxisSize] - Snap-back accelerator size
  * @param {boolean} config.swipeOutDisabledWithDetent - Whether swipe-out is disabled
  * @param {Function} config.setSegment - Function to update segment
- * @param {Function} [config.setProgrammaticScrollOngoing] - Function to set programmatic scroll flag
  * @param {string} config.contentPlacement - Content placement
  * @param {boolean} config.hasOppositeTracks - Whether sheet has opposite tracks
  * @param {string} [config.behavior] - Travel behavior (smooth or instant)
@@ -645,7 +644,6 @@ export function travelToDetent(config) {
     snapBackAcceleratorTravelAxisSize,
     swipeOutDisabledWithDetent,
     setSegment,
-    setProgrammaticScrollOngoing,
     contentPlacement,
     hasOppositeTracks,
   } = config;
@@ -680,10 +678,6 @@ export function travelToDetent(config) {
 
   if (positionToScrollTo === null || scrollAxis === null) {
     return;
-  }
-
-  if (setProgrammaticScrollOngoing) {
-    setProgrammaticScrollOngoing(true);
   }
 
   const behavior =

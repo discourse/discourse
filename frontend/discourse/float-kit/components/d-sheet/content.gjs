@@ -5,6 +5,7 @@ import { htmlSafe } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import { eq, not } from "discourse/truth-helpers";
 import outletAnimationModifier from "./outlet-animation-modifier";
+import scrollListenerModifier from "./scroll-listener-modifier";
 import { scrollTrapModifier } from "./scroll-trap-modifier";
 
 /**
@@ -54,7 +55,7 @@ export default class Content extends Component {
         (if (not @sheet.inertOutside) "no-pointer-events")
       }}
       {{didInsert @sheet.registerScrollContainer}}
-      {{on "scroll" @sheet.handleScrollForClose passive=true}}
+      {{scrollListenerModifier @sheet.handleScrollForClose @sheet.currentState}}
       {{on "touchstart" @sheet.handleTouchStart passive=true}}
       {{on "touchend" @sheet.handleTouchEnd passive=true}}
     >

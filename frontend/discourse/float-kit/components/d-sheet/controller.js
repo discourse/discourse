@@ -164,9 +164,6 @@ export default class Controller {
   /** @type {number|null} */
   lastProcessedProgress = null;
 
-  /** @type {boolean} */
-  programmaticScrollOngoing = false;
-
   /** @type {Array<Object>} */
   travelAnimations = [];
 
@@ -1037,16 +1034,6 @@ export default class Controller {
   }
 
   /**
-   * Set whether a programmatic scroll is ongoing.
-   *
-   * @param {boolean} value - Whether programmatic scroll is active
-   */
-  @action
-  setProgrammaticScrollOngoing(value) {
-    this.programmaticScrollOngoing = value;
-  }
-
-  /**
    * Handle a state transition message via the state helper.
    *
    * @param {string|Object} message - State transition message
@@ -1598,6 +1585,7 @@ export default class Controller {
 
   /**
    * Handle scroll events to detect close gestures and update travel state.
+   * Note: This is only called when state is "open" (handled by scroll-listener-modifier).
    */
   @action
   handleScrollForClose() {
@@ -1605,11 +1593,11 @@ export default class Controller {
       return;
     }
 
-    if (this.programmaticScrollOngoing) {
-      return;
-    }
+    const isStackAnimating =
+      this.stackId && this.sheetStackRegistry?.isStackAnimating(this.stackId);
+    const isAnimating = this.stateHelper.isAnimating || isStackAnimating;
 
-    if (this.currentState !== "open") {
+    if (isAnimating && !this.stateHelper.isTouchOngoing()) {
       return;
     }
 
