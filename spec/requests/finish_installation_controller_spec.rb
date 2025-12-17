@@ -73,7 +73,9 @@ RSpec.describe FinishInstallationController do
           expect(response.status).to eq(200)
           expect(response.body).not_to include("Login with Discourse ID")
           expect(response.body).to include("alert-error")
-          expect(response.body).to include("No allowed emails configured")
+          expect(response.body).to include(
+            I18n.t("finish_installation.discourse_id.no_allowed_emails"),
+          )
         end
       end
     end

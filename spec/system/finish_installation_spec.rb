@@ -80,7 +80,7 @@ RSpec.describe "Finish Installation", type: :system do
           expect(finish_installation_page).to have_no_register_button
           expect(finish_installation_page).to have_error_message
           expect(finish_installation_page.error_message_text).to include(
-            "No allowed emails configured",
+            I18n.t("finish_installation.discourse_id.no_allowed_emails"),
           )
         end
       end
