@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { registerDestructor } from "@ember/destroyable";
 import { helper as helperFn } from "@ember/component/helper";
+import { registerDestructor } from "@ember/destroyable";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -49,16 +49,6 @@ export default class Root extends Component {
   @tracked internalPresented = false;
 
   /**
-   * Tracks the last presented value we acted upon.
-   *
-   * @type {boolean|undefined}
-   */
-  #lastPresented;
-
-  /** @type {Function|null} */
-  #pendingOpenSubscription = null;
-
-  /**
    * Inline helper that syncs presented state changes with the controller.
    * Runs on each render when effectivePresented changes.
    */
@@ -80,6 +70,15 @@ export default class Root extends Component {
       schedule("afterRender", () => this.sheet.close());
     }
   });
+  /**
+   * Tracks the last presented value we acted upon.
+   *
+   * @type {boolean|undefined}
+   */
+  #lastPresented;
+
+  /** @type {Function|null} */
+  #pendingOpenSubscription = null;
 
   constructor(owner, args) {
     super(owner, args);

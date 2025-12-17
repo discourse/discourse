@@ -216,7 +216,7 @@ export default class Controller {
   stackId = null;
 
   /** @type {number} */
-  myStackPosition = 0;
+  stackPosition = 0;
 
   /** @type {boolean} */
   viewHiddenByObserver = false;
@@ -435,9 +435,11 @@ export default class Controller {
       state: "open.scroll.ongoing",
       guard: () => !this.isScrollOngoing,
       callback: () => {
-        // eslint-disable-next-line no-console
-        console.log("[state] ENTER open.scroll.ongoing");
         this.isScrollOngoing = true;
+        const currentProgress =
+          this.dimensions?.progressValueAtDetents?.[this.activeDetent]?.exact ??
+          0;
+        this.progressSmoother = this.createProgressSmoother(currentProgress);
       },
     },
     {
@@ -1206,12 +1208,6 @@ export default class Controller {
       this.longRunningMachine.send("TO_FALSE");
     }
 
-    // Initialize progress smoother with expected detent progress
-    // Like Silk's nB initialization with progressValueAtDetents[segment[1]].exact
-    const expectedProgress =
-      this.dimensions?.progressValueAtDetents?.[this.activeDetent]?.exact ?? 0;
-    this.progressSmoother = this.createProgressSmoother(expectedProgress);
-
     this.updateScrollSnapBehavior();
     this.updateTravelRange(this.activeDetent, this.activeDetent);
     this.updateTravelStatus("idleInside");
@@ -1545,9 +1541,6 @@ export default class Controller {
    * Recalculate dimensions triggered by ResizeObserver.
    */
   recalculateDimensionsFromResize() {
-    // eslint-disable-next-line no-console
-    console.log("[recalculateDimensionsFromResize] called");
-
     const calculator = new DimensionCalculator({
       view: this.view,
       content: this.content,
@@ -1719,25 +1712,15 @@ export default class Controller {
   }
 
   /**
-   * Handle scroll events by sending state machine messages.
+   * Handle native scroll events - state transitions only.
    */
   @action
-  handleScrollEvent() {
-    const currentScrollTop = this.scrollContainer?.scrollTop;
-    const scrollTopChanged = this.lastScrollTop !== currentScrollTop;
-    if (currentScrollTop !== undefined) {
-      this.lastScrollTop = currentScrollTop;
-    }
-
+  handleScrollStateChange() {
     if (this.currentState !== "open") {
       return;
     }
 
     if (!this.scrollContainer || !this.dimensions) {
-      return;
-    }
-
-    if (!scrollTopChanged) {
       return;
     }
 
@@ -1761,6 +1744,20 @@ export default class Controller {
       },
       200
     );
+  }
+
+  /**
+   * Process a single scroll frame - called by RAF loop.
+   */
+  @action
+  processScrollFrame() {
+    if (this.currentState !== "open") {
+      return;
+    }
+
+    if (!this.scrollContainer || !this.dimensions) {
+      return;
+    }
 
     this.processScrollProgress();
   }
@@ -1840,15 +1837,6 @@ export default class Controller {
       ? this.progressSmoother(clampedProgress)
       : clampedProgress;
 
-    if (this.scrollProgressCalculator.shouldTriggerSwipeOut(rawProgress)) {
-      this.domAttributes.disableScrollSnap();
-      this.closingWithoutAnimation = true;
-      requestAnimationFrame(() => {
-        this.handleStateTransition("SWIPE_OUT");
-      });
-      return;
-    }
-
     if (this.lastProcessedProgress === smoothedProgress) {
       return;
     }
@@ -1874,14 +1862,6 @@ export default class Controller {
       if (segment[0] === 0 && segment[1] === 0 && segmentProgress <= 0) {
         return;
       }
-    }
-
-    if (this.scrollProgressCalculator.shouldTriggerSwipeOut(rawProgress)) {
-      this.domAttributes.disableScrollSnap();
-      this.closingWithoutAnimation = true;
-      requestAnimationFrame(() => {
-        this.handleStateTransition("SWIPE_OUT");
-      });
     }
   }
 

@@ -3,7 +3,7 @@
  * Encapsulates stack bookkeeping and parent-child sheet notifications.
  *
  * This adapter delegates to the SheetStackRegistry service for:
- * - Stack position tracking (myStackPosition)
+ * - Stack position tracking (stackPosition)
  * - Stacking count management (increment/decrement on idle state changes)
  * - Parent sheet notifications (opening, closing, closing immediate)
  * - Travel progress updates
@@ -64,12 +64,12 @@ export default class StackingAdapter {
     const stackingCount = this.registry.getStackingCount(this.stackId);
 
     if (previousStatus !== "stepping" && status === "idleInside") {
-      if (this.controller.myStackPosition === 0) {
-        this.controller.myStackPosition = stackingCount + 1;
+      if (this.controller.stackPosition === 0) {
+        this.controller.stackPosition = stackingCount + 1;
       }
       this.registry.incrementStackingCount(this.stackId);
     } else if (status === "idleOutside") {
-      this.controller.myStackPosition = 0;
+      this.controller.stackPosition = 0;
       this.registry.decrementStackingCount(this.stackId);
     }
 

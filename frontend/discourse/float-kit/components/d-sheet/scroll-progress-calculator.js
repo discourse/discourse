@@ -23,7 +23,10 @@ export default class ScrollProgressCalculator {
       return null;
     }
 
-    const scrollTop = scrollContainer.scrollTop;
+    const isHorizontal = tracks === "left" || tracks === "right";
+    const scrollPosition = isHorizontal
+      ? scrollContainer.scrollLeft
+      : scrollContainer.scrollTop;
     const contentSize = dimensions.content?.travelAxis?.unitless ?? 1;
     const scrollSize = dimensions.scroll?.travelAxis?.unitless ?? contentSize;
     const effectiveContentSize =
@@ -39,7 +42,7 @@ export default class ScrollProgressCalculator {
 
     const isTopOrLeft = tracks === "top" || tracks === "left";
     const rawProgress = this.#calculateRawProgress({
-      scrollTop,
+      scrollPosition,
       contentSize,
       effectiveContentSize,
       edgePadding,
@@ -54,7 +57,7 @@ export default class ScrollProgressCalculator {
     const stackingProgress = Math.max(0, Math.min(1, rawProgress));
 
     const segmentProgress = this.#calculateSegmentProgress({
-      scrollTop,
+      scrollPosition,
       rawProgress,
       edgePadding,
       contentSize,
@@ -89,7 +92,7 @@ export default class ScrollProgressCalculator {
    * @returns {number}
    */
   #calculateRawProgress({
-    scrollTop,
+    scrollPosition,
     contentSize,
     effectiveContentSize,
     edgePadding,
@@ -97,23 +100,25 @@ export default class ScrollProgressCalculator {
     isTopOrLeft,
   }) {
     const { contentPlacement } = this.c;
+    let result;
 
     if (contentPlacement === "center") {
       if (isTopOrLeft) {
-        return (
-          (effectiveContentSize + edgePadding - scrollTop) /
-          effectiveContentSize
-        );
+        result =
+          (effectiveContentSize + edgePadding - scrollPosition) /
+          effectiveContentSize;
       } else {
-        return (scrollTop - snapAccelerator) / effectiveContentSize;
+        result = (scrollPosition - snapAccelerator) / effectiveContentSize;
       }
     } else {
       if (isTopOrLeft) {
-        return (contentSize + edgePadding - scrollTop) / contentSize;
+        result = (contentSize + edgePadding - scrollPosition) / contentSize;
       } else {
-        return (scrollTop - snapAccelerator) / contentSize;
+        result = (scrollPosition - snapAccelerator) / contentSize;
       }
     }
+
+    return result;
   }
 
   /**
@@ -123,7 +128,7 @@ export default class ScrollProgressCalculator {
    * @returns {number}
    */
   #calculateSegmentProgress({
-    scrollTop,
+    scrollPosition,
     rawProgress,
     edgePadding,
     contentSize,
@@ -134,7 +139,7 @@ export default class ScrollProgressCalculator {
       const firstMarkerSize =
         dimensions.detentMarkers[0]?.travelAxis?.unitless ?? 0;
       const scrollOffset = firstMarkerSize - edgePadding;
-      return (scrollTop + scrollOffset) / contentSize;
+      return (scrollPosition + scrollOffset) / contentSize;
     }
     return rawProgress;
   }
@@ -180,22 +185,5 @@ export default class ScrollProgressCalculator {
     }
 
     return null;
-  }
-
-  /**
-   * Check if scroll should trigger swipe-out close.
-   *
-   * @param {number} rawProgress - Raw progress value
-   * @returns {boolean}
-   */
-  shouldTriggerSwipeOut(rawProgress) {
-    const { detentsConfig, isPresented, currentState } = this.c;
-
-    return (
-      detentsConfig === undefined &&
-      rawProgress <= 0 &&
-      isPresented &&
-      currentState === "open"
-    );
   }
 }
