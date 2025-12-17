@@ -2748,6 +2748,7 @@ en:
     content_localization_allow_author_localization: "Allow authors update localizations of their own topics and posts via the post menu."
     enable_upcoming_changes: "Enable upcoming changes"
     fake_upcoming_change: "This is a fake upcoming change for testing purposes. No need to translate this string."
+    floating_dismiss_topics_on_mobile: "Shows a floating 'Dismiss...' button on mobile for the topic list for easier access and to free up space in the top of the topic list"
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
