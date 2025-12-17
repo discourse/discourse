@@ -87,6 +87,11 @@ export default class Controller {
   /** @type {boolean} */
   @tracked backdropSwipeable = true;
 
+  /**
+   * Whether scroll is currently ongoing.
+   * @type {boolean}
+   */
+  @tracked isScrollOngoing = false;
   /** @type {TrackedArray<HTMLElement>} */
   detentMarkers = new TrackedArray();
 
@@ -172,27 +177,20 @@ export default class Controller {
   /** @type {number|null} */
   lastProcessedProgress = null;
 
-  /**
-   * Ref-style object for caching scroll:ongoing state.
-   * Updated via immediate subscriptions like Silk's n2.current.
-   * Used by scroll handler for fast state checking.
-   * @type {{current: boolean}}
-   */
-  scrollOngoingRef = { current: false };
+  /** @type {number|null} */
+  lastScrollTop = null;
 
   /**
-   * Ref-style object for caching swipe:ongoing state.
-   * Like Silk's n4.current.
-   * @type {{current: boolean}}
+   * Whether swipe is currently ongoing.
+   * @type {boolean}
    */
-  swipeOngoingRef = { current: false };
+  isSwipeOngoing = false;
 
   /**
-   * Ref-style object for caching move:ongoing state.
-   * Like Silk's n3.current.
-   * @type {{current: boolean}}
+   * Whether move is currently ongoing.
+   * @type {boolean}
    */
-  moveOngoingRef = { current: false };
+  isMoveOngoing = false;
 
   /**
    * Progress smoother function like Silk's nB.
@@ -435,51 +433,77 @@ export default class Controller {
     {
       machine: "stateMachine",
       state: "open.scroll.ongoing",
-      guard: () => !this.scrollOngoingRef.current,
+      guard: () => !this.isScrollOngoing,
       callback: () => {
-        this.scrollOngoingRef.current = true;
+        // eslint-disable-next-line no-console
+        console.log("[state] ENTER open.scroll.ongoing");
+        this.isScrollOngoing = true;
       },
     },
     {
       machine: "stateMachine",
       state: "open.scroll.ended",
-      guard: () => this.scrollOngoingRef.current,
+      guard: () => this.isScrollOngoing,
       callback: () => {
-        this.scrollOngoingRef.current = false;
+        this.isScrollOngoing = false;
+      },
+    },
+    {
+      machine: "stateMachine",
+      state: "open.scroll.ongoing",
+      type: "exit",
+      callback: () => {
+        this.isScrollOngoing = false;
       },
     },
     // Swipe state caching via refs (like Silk's n4.current)
     {
       machine: "stateMachine",
       state: "open.swipe.ongoing",
-      guard: () => !this.swipeOngoingRef.current,
+      guard: () => !this.isSwipeOngoing,
       callback: () => {
-        this.swipeOngoingRef.current = true;
+        this.isSwipeOngoing = true;
       },
     },
     {
       machine: "stateMachine",
       state: "open.swipe.ended",
-      guard: () => this.swipeOngoingRef.current,
+      guard: () => this.isSwipeOngoing,
       callback: () => {
-        this.swipeOngoingRef.current = false;
+        this.isSwipeOngoing = false;
+      },
+    },
+    {
+      machine: "stateMachine",
+      state: "open.swipe.ongoing",
+      type: "exit",
+      callback: () => {
+        this.isSwipeOngoing = false;
       },
     },
     // Move state caching via refs (like Silk's n3.current)
     {
       machine: "stateMachine",
       state: "open.move.ongoing",
-      guard: () => !this.moveOngoingRef.current,
+      guard: () => !this.isMoveOngoing,
       callback: () => {
-        this.moveOngoingRef.current = true;
+        this.isMoveOngoing = true;
       },
     },
     {
       machine: "stateMachine",
       state: "open.move.ended",
-      guard: () => this.moveOngoingRef.current,
+      guard: () => this.isMoveOngoing,
       callback: () => {
-        this.moveOngoingRef.current = false;
+        this.isMoveOngoing = false;
+      },
+    },
+    {
+      machine: "stateMachine",
+      state: "open.move.ongoing",
+      type: "exit",
+      callback: () => {
+        this.isMoveOngoing = false;
       },
     },
   ];
@@ -743,6 +767,7 @@ export default class Controller {
         state: def.state,
         guard: def.guard,
         callback: def.callback || ((msg) => this[def.handler](msg)),
+        type: def.type,
       });
     }
   }
@@ -1246,6 +1271,8 @@ export default class Controller {
    * @private
    */
   handleClosing() {
+    this.isScrollOngoing = false;
+
     this.stateHelper.beginExitAnimation(false);
     this.updateTravelStatus("travellingOut");
     this.stackingAdapter.notifyParentOfClosing();
@@ -1334,6 +1361,7 @@ export default class Controller {
     this.viewHiddenByObserver = false;
     this.frontStuck = false;
     this.backStuck = false;
+    this.isScrollOngoing = false;
 
     // Perform cleanup and restore focus
     this.cleanup();
@@ -1344,6 +1372,7 @@ export default class Controller {
     this.currentSegment = [0, 0];
     this.dimensions = null;
     this.lastProcessedProgress = null;
+    this.lastScrollTop = null;
 
     // Advance position machine if needed
     if (
@@ -1516,6 +1545,9 @@ export default class Controller {
    * Recalculate dimensions triggered by ResizeObserver.
    */
   recalculateDimensionsFromResize() {
+    // eslint-disable-next-line no-console
+    console.log("[recalculateDimensionsFromResize] called");
+
     const calculator = new DimensionCalculator({
       view: this.view,
       content: this.content,
@@ -1691,19 +1723,33 @@ export default class Controller {
    */
   @action
   handleScrollEvent() {
+    const currentScrollTop = this.scrollContainer?.scrollTop;
+    const scrollTopChanged = this.lastScrollTop !== currentScrollTop;
+    if (currentScrollTop !== undefined) {
+      this.lastScrollTop = currentScrollTop;
+    }
+
+    if (this.currentState !== "open") {
+      return;
+    }
+
     if (!this.scrollContainer || !this.dimensions) {
       return;
     }
 
-    if (!this.scrollOngoingRef.current) {
+    if (!scrollTopChanged) {
+      return;
+    }
+
+    if (!this.isScrollOngoing) {
       this.stateHelper.scrollStart();
     }
 
     if (!this.frontStuck && !this.backStuck) {
-      if (!this.swipeOngoingRef.current) {
+      if (!this.isSwipeOngoing) {
         this.stateHelper.swipeStart();
       }
-      if (!this.moveOngoingRef.current) {
+      if (!this.isMoveOngoing) {
         this.stateHelper.moveStart();
       }
     }
@@ -1716,7 +1762,6 @@ export default class Controller {
       200
     );
 
-    // Process scroll progress directly (single RAF loop like Silk's no())
     this.processScrollProgress();
   }
 
@@ -1726,30 +1771,26 @@ export default class Controller {
   #handleScrollEnd() {
     this.stateHelper.moveEnd();
 
-    // Only end scroll/swipe if at a detent position
     const progress = this.scrollProgressCalculator.calculateProgress();
-    if (progress) {
-      const detents = this.dimensions?.progressValueAtDetents;
-      if (detents) {
-        for (const detent of detents) {
-          if (
-            progress.clampedProgress > detent.exact - 0.01 &&
-            progress.clampedProgress < detent.exact + 0.01
-          ) {
-            this.stateHelper.scrollEnd();
-            this.stateHelper.swipeEnd();
-            break;
-          }
+    const detents = this.dimensions?.progressValueAtDetents;
+
+    if (progress && detents) {
+      for (const detent of detents) {
+        const matches =
+          progress.clampedProgress > detent.exact - 0.01 &&
+          progress.clampedProgress < detent.exact + 0.01;
+
+        if (matches) {
+          this.stateHelper.scrollEnd();
+          this.stateHelper.swipeEnd();
+          break;
         }
       }
     }
   }
 
   /**
-   * Create a progress smoother function like Silk's nB.
-   * This prevents large jumps in progress values, smoothing the transition
-   * and protecting against spurious scroll events (e.g., Firefox reporting
-   * scrollTop=0 briefly after WAAPI animation).
+   * Create a progress smoother function which prevents large jumps in progress values.
    *
    * @param {number} initialProgress - The initial/expected progress value
    * @returns {Function} A smoother function that takes raw progress and returns smoothed progress
@@ -1762,9 +1803,6 @@ export default class Controller {
       let result = newProgress;
       const delta = lastValue - newProgress;
 
-      // Smoothing logic from Silk's nB function:
-      // If delta is 0 or small relative to last delta, and touch is ongoing,
-      // use half of last delta to smooth the transition
       if (
         (delta === 0 || Math.abs(delta) < Math.abs(lastDelta / 2)) &&
         this.stateHelper.isTouchOngoing()
@@ -1772,12 +1810,10 @@ export default class Controller {
         result = lastValue - lastDelta / 2;
       }
 
-      // For medium-sized deltas (0.1 to 0.35), cap the change to 0.1
       if (Math.abs(delta) >= 0.1 && Math.abs(delta) < 0.35) {
         result = delta >= 0 ? lastValue - 0.1 : lastValue + 0.1;
       }
 
-      // Progress cannot go below 0
       if (newProgress <= 0) {
         result = 0;
       }
@@ -1790,8 +1826,6 @@ export default class Controller {
 
   /**
    * Process scroll progress and update callbacks.
-   * Like Silk's logic inside nW - calculates progress and updates callbacks.
-   * Called continuously by RAF loop while in scroll:ongoing state.
    */
   processScrollProgress() {
     const progress = this.scrollProgressCalculator.calculateProgress();
@@ -1802,26 +1836,19 @@ export default class Controller {
     const { rawProgress, clampedProgress, stackingProgress, segmentProgress } =
       progress;
 
-    // Skip spurious 0 values from Firefox
-    // Firefox sometimes reports scrollTop=0 immediately after the sheet opens,
-    // before the scroll position set by setScroll() has been processed.
-    // If we just set lastProcessedProgress to a non-zero value and now see 0, skip it.
-    if (
-      clampedProgress === 0 &&
-      this.lastProcessedProgress !== null &&
-      this.lastProcessedProgress > 0
-    ) {
-      return;
-    }
-
-    // Apply progress smoother like Silk's nB function
-    // This prevents large jumps (e.g., from expected detent to spurious 0)
     const smoothedProgress = this.progressSmoother
       ? this.progressSmoother(clampedProgress)
       : clampedProgress;
 
-    // Like Silk's nW: only process if progress has changed
-    // This prevents calling aggregatedTravelCallback with stale/incorrect values
+    if (this.scrollProgressCalculator.shouldTriggerSwipeOut(rawProgress)) {
+      this.domAttributes.disableScrollSnap();
+      this.closingWithoutAnimation = true;
+      requestAnimationFrame(() => {
+        this.handleStateTransition("SWIPE_OUT");
+      });
+      return;
+    }
+
     if (this.lastProcessedProgress === smoothedProgress) {
       return;
     }

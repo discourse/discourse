@@ -61,6 +61,9 @@ class StateMachine {
   /** @type {Subscription[]} */
   #entryActions = [];
 
+  /** @type {Subscription[]} */
+  #exitActions = [];
+
   /** @type {Map<string, Object|null>} */
   #stateConfigCache = new Map();
 
@@ -101,13 +104,16 @@ class StateMachine {
    * @param {string|string[]} options.state - State pattern(s) to match
    * @param {Function} options.callback - Function to call when state matches
    * @param {Function|boolean} [options.guard] - Optional guard condition
+   * @param {"enter"|"exit"} [options.type] - "enter" (default) or "exit" subscription
    * @returns {Function} Unsubscribe function
    */
-  subscribe({ timing, state, callback, guard = true }) {
+  subscribe({ timing, state, callback, guard = true, type = "enter" }) {
     const id = Symbol();
     const subscription = { id, timing, state, callback, guard };
 
-    if (timing === "immediate") {
+    if (type === "exit") {
+      this.#exitActions.push(subscription);
+    } else if (timing === "immediate") {
       this.#entryActions.push(subscription);
     } else {
       this.#subscriptions.push(subscription);
@@ -125,6 +131,7 @@ class StateMachine {
   #unsubscribe(id) {
     this.#subscriptions = this.#subscriptions.filter((s) => s.id !== id);
     this.#entryActions = this.#entryActions.filter((s) => s.id !== id);
+    this.#exitActions = this.#exitActions.filter((s) => s.id !== id);
   }
 
   /**
@@ -133,6 +140,7 @@ class StateMachine {
   cleanup() {
     this.#subscriptions = [];
     this.#entryActions = [];
+    this.#exitActions = [];
   }
 
   /**
@@ -306,14 +314,12 @@ class StateMachine {
 
     while (this.#messageQueue.length > 0) {
       const { message, context } = this.#messageQueue.shift();
-      const { transitioned, enteredStates } = this.#processMessage(
-        message,
-        context
-      );
+      const { transitioned, enteredStates, exitedStates } =
+        this.#processMessage(message, context);
       if (transitioned) {
         anyTransitioned = true;
-        // Pass enteredStates to notify, so entry actions only fire for entered states (like Silk)
-        this.#notifySubscribers(message, enteredStates);
+        // Pass enteredStates and exitedStates to notify (like Silk)
+        this.#notifySubscribers(message, enteredStates, exitedStates);
       }
       this.lastMessageTreated = message;
     }
@@ -360,11 +366,11 @@ class StateMachine {
 
   /**
    * Process a single message.
-   * Returns an object with transition result and entered states (like Silk's enteredStates).
+   * Returns an object with transition result and entered/exited states (like Silk).
    *
    * @param {Object} message
    * @param {Object} context
-   * @returns {{transitioned: boolean, enteredStates: string[]}}
+   * @returns {{transitioned: boolean, enteredStates: string[], exitedStates: string[]}}
    * @private
    */
   #processMessage(message, context = {}) {
@@ -390,11 +396,15 @@ class StateMachine {
             (target) => this.#setNestedMachineState(machineName, target)
           );
           if (transitioned) {
-            const enteredStates = this.#calculateEnteredStates(
+            const { entered, exited } = this.#calculateStateChanges(
               previousState,
               previousNestedStates
             );
-            return { transitioned: true, enteredStates };
+            return {
+              transitioned: true,
+              enteredStates: entered,
+              exitedStates: exited,
+            };
           }
         }
       }
@@ -411,7 +421,7 @@ class StateMachine {
     }
 
     if (!transitions) {
-      return { transitioned: false, enteredStates: [] };
+      return { transitioned: false, enteredStates: [], exitedStates: [] };
     }
 
     const transitioned = this.#tryTransitions(
@@ -422,45 +432,67 @@ class StateMachine {
     );
 
     if (transitioned) {
-      const enteredStates = this.#calculateEnteredStates(
+      const { entered, exited } = this.#calculateStateChanges(
         previousState,
         previousNestedStates
       );
-      return { transitioned: true, enteredStates };
+      return {
+        transitioned: true,
+        enteredStates: entered,
+        exitedStates: exited,
+      };
     }
 
-    return { transitioned: false, enteredStates: [] };
+    return { transitioned: false, enteredStates: [], exitedStates: [] };
   }
 
   /**
-   * Calculate which states were entered during a transition.
-   * Like Silk's enteredStates calculation.
+   * Calculate which states were entered and exited during a transition.
    *
    * @param {string} previousState - State before transition
    * @param {Object} previousNestedStates - Nested machine states before transition
-   * @returns {string[]} Array of state paths that were entered
+   * @returns {{entered: string[], exited: string[]}} Arrays of state paths that were entered/exited
    * @private
    */
-  #calculateEnteredStates(previousState, previousNestedStates) {
+  #calculateStateChanges(previousState, previousNestedStates) {
     const entered = [];
+    const exited = [];
 
-    // If main state changed, add it
+    const parentState = this.current.split(".")[0];
+    const prevParentState = previousState.split(".")[0];
+
+    // If main state changed
     if (this.current !== previousState) {
       entered.push(this.current);
+      exited.push(previousState);
     }
 
     // Check nested machines for changes
-    const parentState = this.current.split(".")[0];
     for (const [machineName, machineState] of Object.entries(
       this.nestedMachines
     )) {
-      if (previousNestedStates[machineName] !== machineState) {
+      const prevMachineState = previousNestedStates[machineName];
+      if (prevMachineState !== machineState) {
         // Construct the full path like "open.scroll.ongoing"
         entered.push(`${parentState}.${machineName}.${machineState}`);
+        if (prevMachineState) {
+          exited.push(`${prevParentState}.${machineName}.${prevMachineState}`);
+        }
       }
     }
 
-    return entered;
+    // If parent state changed, all nested machines are exited
+    if (parentState !== prevParentState) {
+      for (const [machineName, machineState] of Object.entries(
+        previousNestedStates
+      )) {
+        if (machineState) {
+          exited.push(`${prevParentState}.${machineName}.${machineState}`);
+        }
+      }
+    }
+
+    return { entered, exited };
   }
 
   /**
@@ -625,14 +657,43 @@ class StateMachine {
   }
 
   /**
+   * Check if a subscription's state was exited during this transition.
+   *
+   * @param {Object} sub - Subscription object
+   * @param {string[]} exitedStates - States that were exited in this transition
+   * @returns {boolean}
+   * @private
+   */
+  #wasStateExited(sub, exitedStates) {
+    const subStates = Array.isArray(sub.state) ? sub.state : [sub.state];
+
+    for (const subState of subStates) {
+      if (exitedStates.includes(subState)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
    * Notify all subscribers after a state transition.
-   * Like Silk, entry actions only fire for states that were ENTERED, not all matching states.
    *
    * @param {Object} message
    * @param {string[]} enteredStates - States that were entered in this transition
+   * @param {string[]} exitedStates - States that were exited in this transition
    * @private
    */
-  #notifySubscribers(message, enteredStates) {
+  #notifySubscribers(message, enteredStates, exitedStates) {
+    for (const sub of this.#exitActions) {
+      const wasExited = this.#wasStateExited(sub, exitedStates);
+      const guardPasses =
+        typeof sub.guard === "function" ? sub.guard() : sub.guard;
+
+      if (wasExited && guardPasses) {
+        sub.callback(message);
+      }
+    }
+
     // Entry actions: only fire if the subscription's state was ENTERED (like Silk)
     for (const sub of this.#entryActions) {
       const wasEntered = this.#wasStateEntered(sub, enteredStates);
