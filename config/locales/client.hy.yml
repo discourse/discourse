@@ -3603,6 +3603,7 @@ hy:
       upload_description: "Վերբեռնեք csv ֆայլ՝ զանգվածային կերպով պիտակներ ստեղծելու համար"
       upload_instructions: "Յուրաքանչյուր տեղում մեկ հատ, ըստ ցանկության՝ նաև պիտակների խմբով, 'tag_name,tag_group' ֆորմատով:"
       upload_successful: "Պիտակները հաջողությամբ վերբեռնվել են"
+      bulk_create_button: "Ստեղծել"
       delete_unused_confirmation:
         one: "%{count} պիտակ կջնջվի՝%{tags}"
         other: "%{count} պիտակ կջնջվի՝ %{tags}"
@@ -5195,6 +5196,9 @@ hy:
         no_user_badges: "%{name}-ին ոչ մի կրծքանշան չի շնորհվել:"
         no_badges: 'Շնորհման ենթակա կրծքանշաններ չկան:'
         none_selected: "Ընտրեք կրծքանշան՝ մեկնարկի համար"
+        sections:
+          query: Հարցում
+          settings: Կարգավորումներ
         allow_title: Թույլ տալ, որ կրծքանշանն օգտագործվի որպես վերնագիր
         multiple_grant: Կարող է շնորհվել բազմակի անգամ
         visibility_heading: Տեսանելիություն

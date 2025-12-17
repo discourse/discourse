@@ -4328,6 +4328,7 @@ pt:
       upload_description: "Faça upload de um arquivo csv para criar tags em massa"
       upload_instructions: "Um por linha, opcionalmente com um grupo de tags no formato 'tag_name,tag_group'."
       upload_successful: "Tags carregadas com sucesso"
+      bulk_create_button: "Criar"
       delete_unused_confirmation:
         one: "%{count} tag será excluída: %{tags}"
         other: "%{count} tags serão excluídas: %{tags}"
@@ -5887,6 +5888,8 @@ pt:
         no_user_badges: "%{name} não tem nenhum crachá."
         no_badges: Não existem crachás que possam ser atribuídos.
         none_selected: "Selecione um crachá para começar"
+        sections:
+          settings: Configurações
         allow_title: Permitir que o crachá seja usado como título
         multiple_grant: Pode ser concedido múltiplas vezes
         visibility_heading: Visibilidade

@@ -199,7 +199,7 @@ tr_TR:
         no_llm: "LLM seçilmedi"
         no_persona: "Ayarlanmamış"
         no_groups: "Hiçbiri"
-        edit: "Düzenle"
+        edit: "Ayarlar"
         expand_list:
           one: "(%{count} tane Daha)"
           other: "(%{count} tane Daha)"

@@ -48,6 +48,7 @@ ro:
       joined: "înscris"
       email_frequency:
         never: "Niciodată"
+        title: "Trimite-mi un email când mi se trimite un mesaj direct de discuție sau o discuție de grup"
       header_indicator_preference:
         title: "Afișați indicatorul de activitate în antet"
         all_new: "Toate mesajele noi"

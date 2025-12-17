@@ -3819,6 +3819,7 @@ sq:
       sort_by: "Rendit sipas:"
       sort_by_count: "numri"
       sort_by_name: "emër"
+      bulk_create_button: "Krijo"
       filters:
         without_category: "%{filter} %{tag} temat"
         with_category: "%{filter} %{tag} temat në %{category}"
@@ -4885,6 +4886,8 @@ sq:
         no_user_badges: "%{name} nuk ka marrë ende ndonjë stemë."
         no_badges: Nuk ka stema që mund të atribuohen.
         none_selected: "Si fillim zgjidhni një stemë"
+        sections:
+          settings: Rregullimet
         allow_title: Lejoni stemën të përdoret si titull
         multiple_grant: Mund të akordohet disa herë
         listable: Shfaqni stemën në faqen publike të stemave

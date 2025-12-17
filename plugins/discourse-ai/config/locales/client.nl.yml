@@ -199,7 +199,7 @@ nl:
         no_llm: "Geen LLM geselecteerd"
         no_persona: "Niet ingesteld"
         no_groups: "Geen"
-        edit: "Bewerken"
+        edit: "Instellingen"
         expand_list:
           one: "(Nog %{count})"
           other: "(Nog %{count})"

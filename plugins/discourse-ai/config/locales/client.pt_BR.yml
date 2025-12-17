@@ -199,7 +199,7 @@ pt_BR:
         no_llm: "Nenhum LLM selecionado"
         no_persona: "Não configurado"
         no_groups: "Nenhum"
-        edit: "Editar"
+        edit: "Definições"
         expand_list:
           one: "(mais %{count})"
           other: "(mais %{count})"

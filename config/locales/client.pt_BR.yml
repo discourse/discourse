@@ -4695,6 +4695,7 @@ pt_BR:
       upload_description: "Enviar um arquivo csv para criar etiquetas em massa"
       upload_instructions: "Uma por linha, opcionalmente com um grupo de etiquetas no formato \"nome_etiqueta,grupo_etiqueta\"."
       upload_successful: "Etiquetas enviadas com êxito"
+      bulk_create_button: "Criar"
       delete_unused_confirmation:
         one: "%{count} etiqueta será excluída: %{tags}"
         other: "%{count} etiquetas serão excluídas: %{tags}"
@@ -7780,6 +7781,9 @@ pt_BR:
         no_user_badges: "%{name} não recebeu nenhum emblema."
         no_badges: Não há emblemas que possam ser concedidos.
         none_selected: "Selecione um emblema para começar"
+        sections:
+          query: Consulta
+          settings: Definições
         usage_heading: Uso
         allow_title: Permitir que o emblema seja usado como título
         multiple_grant: Pode ser concedido várias vezes

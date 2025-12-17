@@ -199,7 +199,7 @@ fr:
         no_llm: "Aucun LLM sélectionné"
         no_persona: "Non défini"
         no_groups: "Aucun"
-        edit: "Modifier"
+        edit: "Paramètres"
         expand_list:
           one: "(%{count} autre)"
           other: "(%{count} autres)"

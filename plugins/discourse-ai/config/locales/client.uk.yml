@@ -244,7 +244,7 @@ uk:
         no_llm: "Не вибрано LLM"
         no_persona: "Не встановлено"
         no_groups: "Немає"
-        edit: "Редагувати"
+        edit: "Налаштування"
         expand_list:
           one: "(ще %{count})"
           few: "(ще %{count})"

@@ -40,7 +40,7 @@ te:
         back: "వెనుకకు"
         no_persona: "సెట్ చేయబడలేదు"
         no_groups: "ఏదీ లేదు"
-        edit: "సవరించండి"
+        edit: "అమరికలు"
         expand_list:
           one: "(మరో %{count})"
           other: "(మరో %{count})"
