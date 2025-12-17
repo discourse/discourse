@@ -209,9 +209,7 @@ after_initialize do
     end
 
     def self.op_reactions_data_for_topic(topic, scope)
-      puts "op_reactions_data_for_topic called for topic #{topic.id}"
       return nil unless topic.first_post
-      puts "Found first post #{topic.first_post.id} for topic #{topic.id}"
 
       post = topic.first_post
       like_action =
