@@ -210,7 +210,7 @@ module DiscourseAi
                 nil
               end
             end
-          end
+          end || []
         end
 
         def decode_chunk(chunk)
