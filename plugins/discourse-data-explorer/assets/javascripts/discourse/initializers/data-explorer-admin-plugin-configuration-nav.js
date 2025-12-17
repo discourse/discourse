@@ -10,7 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav("discourse-data-explorer", [], "chart-line");
+      api.setAdminPluginIcon("discourse-data-explorer", "chart-line");
     });
   },
 };

@@ -10,7 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav("discourse-oauth2-basic", [], "key");
+      api.setAdminPluginIcon("discourse-oauth2-basic", "key");
     });
   },
 };

@@ -10,7 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav("discourse-hcaptcha", [], "hand");
+      api.setAdminPluginIcon("discourse-hcaptcha", "hand");
     });
   },
 };

@@ -10,7 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav("discourse-assign", [], "user-plus");
+      api.setAdminPluginIcon("discourse-assign", "user-plus");
     });
   },
 };

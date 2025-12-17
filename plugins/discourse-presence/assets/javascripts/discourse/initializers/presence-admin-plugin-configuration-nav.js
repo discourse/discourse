@@ -10,7 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav("discourse-presence", [], "eye");
+      api.setAdminPluginIcon("discourse-presence", "eye");
     });
   },
 };

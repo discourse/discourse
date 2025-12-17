@@ -10,7 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav("discourse-github", [], "fab-github");
+      api.setAdminPluginIcon("discourse-github", "fab-github");
     });
   },
 };

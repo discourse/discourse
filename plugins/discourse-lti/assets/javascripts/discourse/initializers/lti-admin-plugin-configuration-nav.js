@@ -10,7 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav("discourse-lti", [], "graduation-cap");
+      api.setAdminPluginIcon("discourse-lti", "graduation-cap");
     });
   },
 };

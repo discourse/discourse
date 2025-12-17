@@ -10,7 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav("discourse-lazy-videos", [], "bed");
+      api.setAdminPluginIcon("discourse-lazy-videos", "bed");
     });
   },
 };
