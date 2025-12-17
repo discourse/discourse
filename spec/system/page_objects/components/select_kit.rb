@@ -92,6 +92,11 @@ module PageObjects
         collapsed_component
       end
 
+      def collapse_with_escape
+        expanded_component.send_keys(:escape)
+        collapsed_component
+      end
+
       def has_filter?
         expanded_component.has_css?(".select-kit-filter .filter-input", visible: true)
       end

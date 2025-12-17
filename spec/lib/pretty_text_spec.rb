@@ -2815,7 +2815,7 @@ HTML
       .logger
       .expects(:warn)
       .once
-      .with("[PrettyText] Deprecation notice: Some deprecation message")
+      .with("[PrettyText] DEPRECATION NOTICE: Some deprecation message")
 
     PrettyText.v8.eval <<~JS
       require("discourse/lib/deprecated").default("Some deprecation message");

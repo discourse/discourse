@@ -1109,20 +1109,20 @@ export default class PostStream extends RestModel {
       });
   }
 
-  findPostsByIds(postIds, opts) {
+  async findPostsByIds(postIds, opts) {
     const unloaded = postIds.filter((p) => !this._identityMap[p]);
 
     // Load our unloaded posts by id
-    return this.loadIntoIdentityMap(unloaded, opts).then(() => {
-      return postIds
-        .map((p) => this._identityMap[p])
-        .filter((item) => item != null);
-    });
+    await this.loadIntoIdentityMap(unloaded, opts);
+
+    return postIds
+      .map((p) => this._identityMap[p])
+      .filter((item) => item != null);
   }
 
-  loadIntoIdentityMap(postIds, opts) {
+  async loadIntoIdentityMap(postIds, opts) {
     if (isEmpty(postIds)) {
-      return Promise.resolve([]);
+      return [];
     }
 
     const data = {
@@ -1135,32 +1135,31 @@ export default class PostStream extends RestModel {
       headers["Discourse-Background"] = "true";
     }
 
-    return ajax(`/t/${this.topic.id}/posts.json`, {
-      data,
-      headers,
-    })
-      .then((result) => {
-        this._setSuggestedTopics(result);
-        if (result.user_badges) {
-          this.topic.user_badges ??= {};
-          Object.assign(this.topic.user_badges, result.user_badges);
-        }
-
-        const posts = get(result, "post_stream.posts");
-
-        if (posts) {
-          posts.forEach((p) =>
-            this.storePost(this.store.createRecord("post", p))
-          );
-        }
-      })
-      .catch((error) => {
-        // If we get a 403 error, refresh the window to prevent continuous retries
-        if (error.jqXHR && error.jqXHR.status === 403) {
-          window.location.reload();
-          return;
-        }
+    try {
+      const result = await ajax(`/t/${this.topic.id}/posts.json`, {
+        data,
+        headers,
       });
+
+      this._setSuggestedTopics(result);
+      if (result.user_badges) {
+        this.topic.user_badges ??= {};
+        Object.assign(this.topic.user_badges, result.user_badges);
+      }
+
+      const posts = get(result, "post_stream.posts");
+
+      if (posts) {
+        posts.forEach((p) =>
+          this.storePost(this.store.createRecord("post", p))
+        );
+      }
+    } catch (error) {
+      // If we get a 403 error, refresh the window to prevent continuous retries
+      if (error.jqXHR && error.jqXHR.status === 403) {
+        window.location.reload();
+      }
+    }
   }
 
   backfillExcerpts(streamPosition) {

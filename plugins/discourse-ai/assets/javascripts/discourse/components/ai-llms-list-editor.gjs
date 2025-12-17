@@ -31,6 +31,7 @@ export default class AiLlmsListEditor extends Component {
       day: "numeric",
       hour: "numeric",
       minute: "2-digit",
+      timeZone: "UTC",
     };
     return resetDate.toLocaleString(undefined, options);
   }

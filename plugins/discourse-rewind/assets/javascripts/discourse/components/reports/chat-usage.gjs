@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import avatar from "discourse/helpers/avatar";
 import number from "discourse/helpers/number";
@@ -40,8 +39,6 @@ const UserMessage = <template>
 </template>;
 
 export default class ChatUsage extends Component {
-  @service currentUser;
-
   get favoriteChannels() {
     return this.args.report.data.favorite_channels ?? [];
   }
@@ -82,7 +79,7 @@ export default class ChatUsage extends Component {
             </div>
 
             <div class="chat-message --right">
-              <UserMessage @user={{this.currentUser}} @replyKey="reply_1" />
+              <UserMessage @user={{@user}} @replyKey="reply_1" />
             </div>
 
             <div class="chat-message --left">
@@ -98,7 +95,7 @@ export default class ChatUsage extends Component {
             </div>
 
             <div class="chat-message --right">
-              <UserMessage @user={{this.currentUser}} @replyKey="reply_2" />
+              <UserMessage @user={{@user}} @replyKey="reply_2" />
             </div>
 
             <div class="chat-message --left">
@@ -113,7 +110,7 @@ export default class ChatUsage extends Component {
             </div>
 
             <div class="chat-message --right">
-              <UserMessage @user={{this.currentUser}} @replyKey="reply_3" />
+              <UserMessage @user={{@user}} @replyKey="reply_3" />
             </div>
 
             <div class="chat-message --left">
@@ -154,7 +151,7 @@ export default class ChatUsage extends Component {
             {{/if}}
 
             <div class="chat-message --right">
-              <UserMessage @user={{this.currentUser}}>
+              <UserMessage @user={{@user}}>
                 <img
                   src={{getURL
                     "/plugins/discourse-rewind/images/dancing_baby.gif"

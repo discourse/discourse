@@ -44,7 +44,7 @@ RSpec.describe(DiscourseRewind::FetchReports) do
       end
     end
 
-    context "when reports is cached" do
+    context "when reports are cached" do
       before { freeze_time DateTime.parse("2021-12-22") }
 
       it "returns the cached reports" do
@@ -57,11 +57,8 @@ RSpec.describe(DiscourseRewind::FetchReports) do
       end
     end
 
-    context "when reports is not cached" do
-      before do
-        freeze_time DateTime.parse("2021-01-22")
-        Discourse.redis.del("rewind:#{current_user.username}:2020")
-      end
+    context "when reports are not cached" do
+      before { freeze_time DateTime.parse("2021-01-22") }
 
       it "returns the reports" do
         allow(DiscourseRewind::Action::TopWords).to receive(:call)

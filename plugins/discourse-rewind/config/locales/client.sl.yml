@@ -7,6 +7,10 @@
 sl:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Zasebni"
+          public: "Javni"
       reports:
         reading_time:
           title: Čas branja

@@ -5,17 +5,71 @@ import {
   isDeprecationSilenced,
   registerDeprecationHandler as registerDiscourseDeprecationHandler,
 } from "discourse/lib/deprecated";
+import { isRailsTesting, isTesting } from "discourse/lib/environment";
+
+/**
+ * Set of deprecation IDs that should be skipped when counting deprecations.
+ * @type {Set<string>}
+ */
+const skipCountIds = new Set();
+
+/**
+ * Marks a deprecation ID to be skipped when counting deprecations during tests.
+ * This is useful when you want to temporarily ignore specific deprecations
+ * without affecting the deprecation counter.
+ *
+ * USE ONLY FOR TESTING PURPOSES
+ *
+ * @param {string} id - The deprecation ID to skip counting
+ * @throws {Error} If called outside of a QUnit test environment
+ * @example
+ * skipCountingDeprecation('my-deprecation-id');
+ */
+export function skipCountingDeprecation(id) {
+  if (!isTesting()) {
+    throw new Error("skipCountingDeprecation can only be used in QUnit tests.");
+  }
+
+  skipCountIds.add(id);
+}
+
+/**
+ * Restores counting for a previously skipped deprecation ID.
+ * Use this to re-enable deprecation counting for a specific ID that was
+ * previously excluded via skipCountingDeprecation.
+ *
+ * USE ONLY FOR TESTING PURPOSES
+ *
+ * @param {string} id - The deprecation ID to restore counting for
+ * @throws {Error} If called outside of a QUnit test environment
+ * @example
+ * restoreCountingDeprecation('my-deprecation-id');
+ */
+export function restoreCountingDeprecation(id) {
+  if (!isTesting()) {
+    throw new Error("resetSkipDeprecations can only be used in QUnit tests.");
+  }
+
+  skipCountIds.delete(id);
+}
 
 export default class DeprecationCounter {
   counts = new Map();
+  #origin = null;
 
-  start() {
+  start(origin) {
+    this.#origin = origin;
+
     registerDeprecationHandler(this.handleEmberDeprecation);
     registerDiscourseDeprecationHandler(this.handleDiscourseDeprecation);
   }
 
   shouldCount(id) {
-    return !isDeprecationSilenced(id) && DeprecationWorkflow.shouldCount(id);
+    return (
+      !skipCountIds.has(id) &&
+      !isDeprecationSilenced(id) &&
+      DeprecationWorkflow.shouldCount(id)
+    );
   }
 
   @bind
@@ -41,8 +95,13 @@ export default class DeprecationCounter {
   incrementCount(id) {
     const existingCount = this.counts.get(id) || 0;
     this.counts.set(id, existingCount + 1);
+
     if (window.Testem) {
-      reportDeprecationToTestem(id);
+      reportDeprecationToTestem(id, this.#origin);
+    }
+    if (isRailsTesting()) {
+      // eslint-disable-next-line no-console
+      console.count(`deprecation_id:${id}`); // origin will be identified using the spec metadata
     }
   }
 
@@ -77,30 +136,40 @@ export default class DeprecationCounter {
   }
 }
 
-function reportDeprecationToTestem(id) {
+function reportDeprecationToTestem(id, origin) {
   window.Testem.useCustomAdapter(function (socket) {
     socket.emit("test-metadata", "increment-deprecation", {
       id,
+      origin,
     });
   });
 }
 
-export function setupDeprecationCounter(qunit) {
+export function setupDeprecationCounter({ QUnit, origin } = {}) {
   const deprecationCounter = new DeprecationCounter();
 
-  qunit.begin(() => deprecationCounter.start());
+  // for system specs
+  if (isRailsTesting()) {
+    deprecationCounter.start(origin);
+    return;
+  }
 
-  qunit.done(() => {
-    if (window.Testem) {
-      return;
-    } else if (deprecationCounter.hasDeprecations) {
-      // eslint-disable-next-line no-console
-      console.warn(
-        `[Discourse Deprecation Counter] Test run completed with deprecations:\n\n${deprecationCounter.generateTable()}`
-      );
-    } else {
-      // eslint-disable-next-line no-console
-      console.log("[Discourse Deprecation Counter] No deprecations found");
-    }
-  });
+  if (QUnit) {
+    // for QUnit tests
+    QUnit.begin(() => deprecationCounter.start(origin));
+
+    QUnit.done(() => {
+      if (window.Testem) {
+        return;
+      } else if (deprecationCounter.hasDeprecations) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          `[Discourse Deprecation Counter] Test run completed with deprecations:\n\n${deprecationCounter.generateTable()}`
+        );
+      } else {
+        // eslint-disable-next-line no-console
+        console.log("[Discourse Deprecation Counter] No deprecations found");
+      }
+    });
+  }
 }

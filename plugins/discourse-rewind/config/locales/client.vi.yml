@@ -7,6 +7,10 @@
 vi:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Riêng tư"
+          public: "Công khai"
       reports:
         reading_time:
           title: Thời gian đọc

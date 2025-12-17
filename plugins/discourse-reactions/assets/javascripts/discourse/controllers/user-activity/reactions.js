@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import Controller, { inject as controller } from "@ember/controller";
+import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { addUniqueValuesToArray } from "discourse/lib/array-tools";
@@ -7,7 +7,6 @@ import CustomReaction from "../../models/discourse-reactions-custom-reaction";
 
 export default class UserActivityReactions extends Controller {
   @service siteSettings;
-  @controller application;
 
   @tracked canLoadMore = true;
   @tracked loading = false;

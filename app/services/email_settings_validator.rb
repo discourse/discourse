@@ -74,7 +74,7 @@ class EmailSettingsValidator
     password:,
     domain: nil,
     authentication: nil,
-    enable_starttls_auto: GlobalSetting.smtp_enable_start_tls,
+    enable_starttls_auto: !GlobalSetting.smtp_force_tls && GlobalSetting.smtp_enable_start_tls,
     enable_tls: GlobalSetting.smtp_force_tls,
     openssl_verify_mode: GlobalSetting.smtp_openssl_verify_mode,
     debug: Rails.env.development?
