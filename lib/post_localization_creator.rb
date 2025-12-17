@@ -1,11 +1,8 @@
 # frozen_string_literal: true
 
 class PostLocalizationCreator
-  def self.create(post_id:, locale:, raw:, user:)
-    post = Post.find_by(id: post_id)
-
+  def self.create(post:, locale:, raw:, user:)
     Guardian.new(user).ensure_can_localize_post!(post)
-    raise Discourse::NotFound unless post
 
     localization =
       PostLocalization.create!(

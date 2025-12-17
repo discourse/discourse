@@ -15,7 +15,7 @@ describe TopicLocalizationCreator do
   end
 
   it "creates a topic localization record" do
-    localization = described_class.create(topic_id: topic.id, locale:, title:, user:)
+    localization = described_class.create(topic:, locale:, title:, user:)
 
     expect(TopicLocalization.find(localization.id)).to have_attributes(
       topic_id: topic.id,
@@ -28,7 +28,7 @@ describe TopicLocalizationCreator do
 
   it "raises permission error if user not in allowed groups" do
     group.remove(user)
-    expect { described_class.create(topic_id: topic.id, locale:, title:, user:) }.to raise_error(
+    expect { described_class.create(topic:, locale:, title:, user:) }.to raise_error(
       Discourse::InvalidAccess,
     )
   end
@@ -44,8 +44,7 @@ describe TopicLocalizationCreator do
     end
 
     it "allows topic author to create localization for their own topic" do
-      localization =
-        described_class.create(topic_id: author_topic.id, locale:, title:, user: author)
+      localization = described_class.create(topic: author_topic, locale:, title:, user: author)
 
       expect(localization).to have_attributes(
         topic_id: author_topic.id,
@@ -57,7 +56,7 @@ describe TopicLocalizationCreator do
 
     it "raises permission error if user is not the topic author" do
       expect {
-        described_class.create(topic_id: other_topic.id, locale:, title:, user: author)
+        described_class.create(topic: other_topic, locale:, title:, user: author)
       }.to raise_error(Discourse::InvalidAccess)
     end
   end

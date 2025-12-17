@@ -39,14 +39,17 @@ class PostLocalizationsController < ApplicationController
   def create_or_update
     post_id, locale, raw = params.require(%i[post_id locale raw])
 
-    guardian.ensure_can_localize_post!(post_id)
+    post = Post.find_by(id: post_id)
+    raise Discourse::NotFound unless post
 
-    localization = PostLocalization.find_by(post_id:, locale:)
+    guardian.ensure_can_localize_post!(post)
+
+    localization = PostLocalization.find_by(post_id: post.id, locale:)
     if localization
-      PostLocalizationUpdater.update(post_id: post_id, locale:, raw:, user: current_user)
+      PostLocalizationUpdater.update(post:, locale:, raw:, user: current_user)
       render json: success_json, status: :ok
     else
-      PostLocalizationCreator.create(post_id: post_id, locale:, raw:, user: current_user)
+      PostLocalizationCreator.create(post:, locale:, raw:, user: current_user)
       render json: success_json, status: :created
     end
   end
@@ -54,9 +57,12 @@ class PostLocalizationsController < ApplicationController
   def destroy
     post_id, locale = params.require(%i[post_id locale])
 
-    guardian.ensure_can_localize_post!(post_id)
+    post = Post.find_by(id: post_id)
+    raise Discourse::NotFound unless post
 
-    PostLocalizationDestroyer.destroy(post_id:, locale:, acting_user: current_user)
+    guardian.ensure_can_localize_post!(post)
+
+    PostLocalizationDestroyer.destroy(post:, locale:, acting_user: current_user)
     head :no_content
   end
 end
