@@ -10,11 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav(
-        "discourse-user-notes",
-        [],
-        "pen-to-square"
-      );
+      api.setAdminPluginIcon("discourse-user-notes", "pen-to-square");
     });
   },
 };

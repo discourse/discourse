@@ -10,11 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav(
-        "discourse-templates",
-        [],
-        "far-clipboard"
-      );
+      api.setAdminPluginIcon("discourse-templates", "far-clipboard");
     });
   },
 };

@@ -10,11 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav(
-        "discourse-apple-auth",
-        [],
-        "fab-apple"
-      );
+      api.setAdminPluginIcon("discourse-apple-auth", "fab-apple");
     });
   },
 };

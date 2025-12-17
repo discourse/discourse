@@ -10,11 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav(
-        "discourse-graphviz",
-        [],
-        "diagram-project"
-      );
+      api.setAdminPluginIcon("discourse-graphviz", "diagram-project");
     });
   },
 };

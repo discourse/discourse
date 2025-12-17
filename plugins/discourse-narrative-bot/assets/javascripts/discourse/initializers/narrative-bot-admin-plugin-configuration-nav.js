@@ -10,11 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav(
-        "discourse-narrative-bot",
-        [],
-        "robot"
-      );
+      api.setAdminPluginIcon("discourse-narrative-bot", "robot");
     });
   },
 };

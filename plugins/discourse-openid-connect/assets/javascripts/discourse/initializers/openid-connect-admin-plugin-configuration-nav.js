@@ -10,11 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav(
-        "discourse-openid-connect",
-        [],
-        "id-card"
-      );
+      api.setAdminPluginIcon("discourse-openid-connect", "id-card");
     });
   },
 };

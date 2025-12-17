@@ -10,11 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav(
-        "discourse-topic-voting",
-        [],
-        "check-to-slot"
-      );
+      api.setAdminPluginIcon("discourse-topic-voting", "check-to-slot");
     });
   },
 };

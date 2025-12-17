@@ -10,11 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav(
-        "discourse-local-dates",
-        [],
-        "far-clock"
-      );
+      api.setAdminPluginIcon("discourse-local-dates", "far-clock");
     });
   },
 };

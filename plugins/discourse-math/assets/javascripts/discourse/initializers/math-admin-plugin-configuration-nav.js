@@ -10,11 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav(
-        "discourse-math",
-        [],
-        "square-root-variable"
-      );
+      api.setAdminPluginIcon("discourse-math", "square-root-variable");
     });
   },
 };

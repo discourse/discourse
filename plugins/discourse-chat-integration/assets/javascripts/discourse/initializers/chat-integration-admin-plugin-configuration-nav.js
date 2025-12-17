@@ -10,11 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav(
-        "discourse-chat-integration",
-        [],
-        "plug"
-      );
+      api.setAdminPluginIcon("discourse-chat-integration", "plug");
     });
   },
 };

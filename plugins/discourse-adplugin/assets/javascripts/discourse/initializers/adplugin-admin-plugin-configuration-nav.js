@@ -10,11 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav(
-        "discourse-adplugin",
-        [],
-        "rectangle-ad"
-      );
+      api.setAdminPluginIcon("discourse-adplugin", "rectangle-ad");
     });
   },
 };

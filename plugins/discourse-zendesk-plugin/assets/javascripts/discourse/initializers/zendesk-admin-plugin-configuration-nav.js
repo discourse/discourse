@@ -10,11 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav(
-        "discourse-zendesk-plugin",
-        [],
-        "headset"
-      );
+      api.setAdminPluginIcon("discourse-zendesk-plugin", "headset");
     });
   },
 };

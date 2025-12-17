@@ -10,11 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav(
-        "discourse-cakeday",
-        [],
-        "cake-candles"
-      );
+      api.setAdminPluginIcon("discourse-cakeday", "cake-candles");
     });
   },
 };

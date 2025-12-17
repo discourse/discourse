@@ -10,11 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav(
-        "discourse-policy",
-        [],
-        "file-signature"
-      );
+      api.setAdminPluginIcon("discourse-policy", "file-signature");
     });
   },
 };

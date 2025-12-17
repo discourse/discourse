@@ -10,11 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav(
-        "discourse-affiliate",
-        [],
-        "handshake"
-      );
+      api.setAdminPluginIcon("discourse-affiliate", "handshake");
     });
   },
 };

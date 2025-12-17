@@ -10,11 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav(
-        "discourse-post-voting",
-        [],
-        "arrow-up"
-      );
+      api.setAdminPluginIcon("discourse-post-voting", "arrow-up");
     });
   },
 };

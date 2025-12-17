@@ -10,11 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav(
-        "discourse-solved",
-        [],
-        "far-square-check"
-      );
+      api.setAdminPluginIcon("discourse-solved", "far-square-check");
     });
   },
 };

@@ -10,11 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav(
-        "discourse-reactions",
-        [],
-        "discourse-emojis"
-      );
+      api.setAdminPluginIcon("discourse-reactions", "discourse-emojis");
     });
   },
 };
