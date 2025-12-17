@@ -42,13 +42,23 @@ export default class LanguageSwitcher extends Component {
   }
 
   get content() {
-    return this.siteSettings.available_content_localization_locales.map(
+    const langs = this.siteSettings.available_content_localization_locales.map(
       ({ value }) => ({
         name: this.languageNameLookup.getLanguageName(value),
         value,
         isActive: value === this.currentLocale,
       })
     );
+
+    // Strip (UK) from English (UK) when `en_GB` is the only English variant
+    if (!langs.find((lang) => lang.value === "en")) {
+      const ukLang = langs.find((lang) => lang.value === "en_GB");
+      if (ukLang) {
+        ukLang.name = ukLang.name.replace(" (UK)", "");
+      }
+    }
+
+    return langs;
   }
 
   @action

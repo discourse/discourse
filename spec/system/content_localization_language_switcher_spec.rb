@@ -181,6 +181,16 @@ describe "Content localization language switcher", type: :system do
     expect(page).to have_no_css("[data-menu-option-id='es'].--selected")
   end
 
+  it "strips (UK) from English (UK) when `en_GB` is the only English variant" do
+    SiteSetting.default_locale = "en_GB"
+    SiteSetting.content_localization_language_switcher = "all"
+
+    visit("/")
+    switcher.expand
+    expect(switcher).to have_content("English")
+    expect(switcher).to have_no_content("English (UK)")
+  end
+
   def select_language(locale)
     switcher.expand
     switcher.option("[data-menu-option-id='#{locale}']").click
