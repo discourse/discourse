@@ -13,10 +13,10 @@ describe "User preferences | Navigation Menu", type: :system do
     it "correctly updates the user_option when toggling the checkbox" do
       user_preferences_navigation_menu_page.visit(user)
 
-      expect(form.field("newSidebarLinkToFilteredList")).to be_unchecked
+      expect(form.field("sidebar_link_to_filtered_list")).to be_unchecked
       expect(user.user_option.sidebar_link_to_filtered_list).to eq(false)
 
-      form.field("newSidebarLinkToFilteredList").toggle
+      form.field("sidebar_link_to_filtered_list").toggle
       form.submit
       expect(page).to have_css(".saved")
 
@@ -24,9 +24,9 @@ describe "User preferences | Navigation Menu", type: :system do
 
       page.refresh
 
-      expect(form.field("newSidebarLinkToFilteredList")).to be_checked
+      expect(form.field("sidebar_link_to_filtered_list")).to be_checked
 
-      form.field("newSidebarLinkToFilteredList").toggle
+      form.field("sidebar_link_to_filtered_list").toggle
       form.submit
       expect(page).to have_css(".saved")
 
@@ -34,7 +34,7 @@ describe "User preferences | Navigation Menu", type: :system do
 
       page.refresh
 
-      expect(form.field("newSidebarLinkToFilteredList")).to be_unchecked
+      expect(form.field("sidebar_link_to_filtered_list")).to be_unchecked
     end
   end
 
@@ -42,10 +42,10 @@ describe "User preferences | Navigation Menu", type: :system do
     it "correctly updates the user_option when toggling the checkbox" do
       user_preferences_navigation_menu_page.visit(user)
 
-      expect(form.field("newSidebarShowCountOfNewItems")).to be_unchecked
+      expect(form.field("sidebar_show_count_of_new_items")).to be_unchecked
       expect(user.user_option.sidebar_show_count_of_new_items).to eq(false)
 
-      form.field("newSidebarShowCountOfNewItems").toggle
+      form.field("sidebar_show_count_of_new_items").toggle
       form.submit
       expect(page).to have_css(".saved")
 
@@ -53,9 +53,9 @@ describe "User preferences | Navigation Menu", type: :system do
 
       page.refresh
 
-      expect(form.field("newSidebarShowCountOfNewItems")).to be_checked
+      expect(form.field("sidebar_show_count_of_new_items")).to be_checked
 
-      form.field("newSidebarShowCountOfNewItems").toggle
+      form.field("sidebar_show_count_of_new_items").toggle
       form.submit
       expect(page).to have_css(".saved")
 
@@ -63,7 +63,7 @@ describe "User preferences | Navigation Menu", type: :system do
 
       page.refresh
 
-      expect(form.field("newSidebarShowCountOfNewItems")).to be_unchecked
+      expect(form.field("sidebar_show_count_of_new_items")).to be_unchecked
     end
   end
 end

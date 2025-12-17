@@ -19,10 +19,10 @@ export default class NavigationMenu extends Component {
 
   get formData() {
     return {
-      newSidebarLinkToFilteredList: this.args.model.get(
+      sidebar_link_to_filtered_list: this.args.model.get(
         "user_option.sidebar_link_to_filtered_list"
       ),
-      newSidebarShowCountOfNewItems: this.args.model.get(
+      sidebar_show_count_of_new_items: this.args.model.get(
         "user_option.sidebar_show_count_of_new_items"
       ),
     };
@@ -32,11 +32,11 @@ export default class NavigationMenu extends Component {
   onSubmit(data) {
     this.args.model.set(
       "user_option.sidebar_link_to_filtered_list",
-      data.newSidebarLinkToFilteredList
+      data.sidebar_link_to_filtered_list
     );
     this.args.model.set(
       "user_option.sidebar_show_count_of_new_items",
-      data.newSidebarShowCountOfNewItems
+      data.sidebar_show_count_of_new_items
     );
 
     this.args.model
@@ -56,7 +56,7 @@ export default class NavigationMenu extends Component {
         }}
       >
         <form.Field
-          @name="newSidebarLinkToFilteredList"
+          @name="sidebar_link_to_filtered_list"
           @title={{i18n
             "user.experimental_sidebar.link_to_filtered_list_checkbox_description"
           }}
@@ -67,11 +67,11 @@ export default class NavigationMenu extends Component {
           as |field|
         >
           <field.Checkbox
-            @checked={{this.formData.newSidebarLinkToFilteredList}}
+            @checked={{this.formData.sidebar_link_to_filtered_list}}
           />
         </form.Field>
         <form.Field
-          @name="newSidebarShowCountOfNewItems"
+          @name="sidebar_show_count_of_new_items"
           @title={{i18n
             "user.experimental_sidebar.show_count_new_items_checkbox_description"
           }}
@@ -82,7 +82,7 @@ export default class NavigationMenu extends Component {
           as |field|
         >
           <field.Checkbox
-            @checked={{this.formData.newSidebarShowCountOfNewItems}}
+            @checked={{this.formData.sidebar_show_count_of_new_items}}
           />
         </form.Field>
       </form.Section>
