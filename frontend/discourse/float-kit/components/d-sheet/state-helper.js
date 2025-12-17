@@ -128,8 +128,16 @@ export default class StateHelper {
    * Signal scroll has started.
    */
   scrollStart() {
+    // eslint-disable-next-line no-console
+    console.log(
+      `[scrollStart] current:${this.stateMachine.current} scrollState:${this.stateMachine.getNestedMachineState("scroll")} matches:${this.stateMachine.matches("open.scroll.ongoing")}`
+    );
     if (!this.stateMachine.matches("open.scroll.ongoing")) {
-      this.stateMachine.send("SCROLL_START");
+      const result = this.stateMachine.send("SCROLL_START");
+      // eslint-disable-next-line no-console
+      console.log(
+        `[scrollStart] sent SCROLL_START result:${result} newScrollState:${this.stateMachine.getNestedMachineState("scroll")}`
+      );
     }
   }
 
@@ -137,6 +145,12 @@ export default class StateHelper {
    * Signal scroll has ended.
    */
   scrollEnd() {
+    // eslint-disable-next-line no-console
+    console.log(
+      `[scrollEnd] called, matches:${this.stateMachine.matches("open.scroll.ongoing")}`
+    );
+    // eslint-disable-next-line no-console
+    console.trace("[scrollEnd] trace");
     if (this.stateMachine.matches("open.scroll.ongoing")) {
       this.stateMachine.send("SCROLL_END");
     }
@@ -144,12 +158,11 @@ export default class StateHelper {
 
   /**
    * Signal swipe gesture has started.
+   * Note: In Silk, scroll and swipe are independent states that can both be ongoing.
+   * We don't send SCROLL_END here - scroll ends via the 200ms timeout in #handleScrollEnd.
    */
   swipeStart() {
     this.stateMachine.send("SWIPE_START");
-    if (this.stateMachine.matches("open.scroll.ongoing")) {
-      this.stateMachine.send("SCROLL_END");
-    }
   }
 
   /**
@@ -376,6 +389,15 @@ export default class StateHelper {
    */
   matchesSwipeOngoing() {
     return this.stateMachine.matches("open.swipe.ongoing");
+  }
+
+  /**
+   * Check if move is ongoing.
+   *
+   * @returns {boolean}
+   */
+  matchesMoveOngoing() {
+    return this.stateMachine.matches("open.move.ongoing");
   }
 
   /**

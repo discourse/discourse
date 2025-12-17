@@ -55,7 +55,7 @@ export default class Content extends Component {
         (if (not @sheet.inertOutside) "no-pointer-events")
       }}
       {{didInsert @sheet.registerScrollContainer}}
-      {{scrollListenerModifier @sheet.handleScrollForClose @sheet.currentState}}
+      {{scrollListenerModifier @sheet.handleScrollEvent @sheet.currentState}}
       {{on "touchstart" @sheet.handleTouchStart passive=true}}
       {{on "touchend" @sheet.handleTouchEnd passive=true}}
     >

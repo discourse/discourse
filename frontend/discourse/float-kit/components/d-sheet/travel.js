@@ -135,6 +135,8 @@ function animateTarget({
   return new Promise((resolve) => {
     animation.addEventListener("finish", function onFinish() {
       const finalKeyframe = keyframes[keyframes.length - 1];
+      // eslint-disable-next-line no-console
+      console.log(`[WAAPI finish] finalKeyframe:`, finalKeyframe);
       if (finalKeyframe) {
         Object.entries(finalKeyframe).forEach(([property, value]) => {
           target.style.setProperty(toKebabCase(property), value);

@@ -180,6 +180,21 @@ export const ANIMATION_STATES = {
 };
 
 /**
+ * Long-running state machine tracks whether a "long running" operation is in progress.
+ * Used to persist outlet styles during scroll-based travel and manage focus.
+ *
+ * - Set to `true` when: staging becomes "open" or "opening"
+ * - Set to `false` when: openness becomes "closed"
+ */
+export const LONG_RUNNING_STATES = {
+  initial: "false",
+  states: {
+    false: { on: { TO_TRUE: "true" } },
+    true: { on: { TO_FALSE: "false" } },
+  },
+};
+
+/**
  * Main sheet state machine managing lifecycle.
  * Uses nested states in "closed" to handle pending/safe-to-unmount distinction.
  */
@@ -225,7 +240,19 @@ export const SHEET_STATES = {
           name: "scroll",
           initial: "ended",
           states: {
-            ended: { on: { SCROLL_START: "ongoing" } },
+            ended: {
+              on: { SCROLL_START: "ongoing" },
+              machines: [
+                {
+                  name: "afterPaintEffectsRun",
+                  initial: "false",
+                  states: {
+                    false: { on: { OCCURRED: "true" } },
+                    true: { on: { RESET: "false" } },
+                  },
+                },
+              ],
+            },
             ongoing: { on: { SCROLL_END: "ended" } },
           },
         },
