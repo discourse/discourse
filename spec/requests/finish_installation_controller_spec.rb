@@ -41,7 +41,7 @@ RSpec.describe FinishInstallationController do
           expect(SiteSetting.enable_discourse_id).to eq(true)
           expect(SiteSetting.enable_local_logins).to eq(false)
           expect(response.body).to include("Login with Discourse ID")
-          expect(response.body).to include("/auth/discourse_id")
+          expect(response.body).to include("/finish-installation/redirect-discourse-id")
         end
 
         it "shows error message and no login button on failure" do
