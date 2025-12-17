@@ -56,8 +56,8 @@ class FinishInstallationController < ApplicationController
     seed_admin_users
 
     # Set a global notice in case the first admin login doesn't get completed
-    SiteSetting.global_notice =
-      "No admins have logged in yet. Please log in using a Discourse ID account with an email that matches the `DISCOURSE_DEVELOPER_EMAILS` environment variable to complete the installation."
+    # This gets cleared when an admin successfully actives their account
+    SiteSetting.global_notice = I18n.t("finish_installation.discourse_id.global_notice")
 
     redirect_to("/auth/discourse_id")
   end
@@ -86,9 +86,7 @@ class FinishInstallationController < ApplicationController
   def setup_discourse_id
     begin
       if find_allowed_emails.empty?
-        raise StandardError.new(
-                "No allowed emails configured in DISCOURSE_DEVELOPER_EMAILS. Cannot continue with site setup. ",
-              )
+        raise StandardError.new(I18n.t("finish_installation.discourse_id.no_allowed_emails"))
       end
       SiteSetting.enable_discourse_id = true
       # Since we're setting up Discourse ID, disable local logins
@@ -106,9 +104,7 @@ class FinishInstallationController < ApplicationController
   def seed_admin_users
     allowed_emails = find_allowed_emails
     if allowed_emails.empty?
-      raise StandardError.new(
-              "No allowed emails configured in DISCOURSE_DEVELOPER_EMAILS. Cannot continue with site setup. ",
-            )
+      raise StandardError.new(I18n.t("finish_installation.discourse_id.no_allowed_emails"))
     end
 
     allowed_emails.each do |email|

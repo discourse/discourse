@@ -5493,6 +5493,8 @@ en:
       message: "<p>We've re-sent the activation email to <b>%{email}</b>"
     discourse_id:
       help: "We are now setting up Discourse ID for you."
+      no_allowed_emails: "No allowed emails configured in DISCOURSE_DEVELOPER_EMAILS. Cannot continue with site setup."
+      global_notice: "No admins have logged in yet. Please log in using a Discourse ID account with an email that matches the `DISCOURSE_DEVELOPER_EMAILS` environment variable to complete the installation."
 
   safe_mode:
     title: "Enter safe mode"

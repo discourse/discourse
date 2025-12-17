@@ -71,18 +71,7 @@ RSpec.describe "Finish Installation", type: :system do
       end
 
       context "when developer_emails is empty" do
-        before do
-          GlobalSetting.stubs(:developer_emails).returns("")
-
-          # stub_request(:post, "https://id.discourse.com/challenge").to_return(
-          #   status: 200,
-          #   body: { domain: Discourse.current_hostname, token: "test_token" }.to_json,
-          # )
-          # stub_request(:post, "https://id.discourse.com/register").to_return(
-          #   status: 200,
-          #   body: { client_id: "test_client_id", client_secret: "test_client_secret" }.to_json,
-          # )
-        end
+        before { GlobalSetting.stubs(:developer_emails).returns("") }
 
         it "shows error message about missing allowed emails" do
           finish_installation_page.visit_page
