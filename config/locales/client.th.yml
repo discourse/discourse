@@ -2390,6 +2390,7 @@ th:
       sort_by_name: "ชื่อ"
       upload: "อัปโหลดแท็ก"
       upload_successful: "แท็กถูกอัปโหลดสำเร็จแล้ว"
+      bulk_create_button: "สร้าง"
       delete_unused_confirmation:
         other: "%{count}แท็กจะถูกลบ: %{tags}"
       delete_unused_confirmation_more_tags:
@@ -3372,6 +3373,8 @@ th:
         revoke: เอาออก
         reason: เหตุผล
         edit_badges: แก้ไขเหรียญ
+        sections:
+          settings: การตั้งค่า
         disabled: ปิดใช้งานแล้ว
         icon: ไอคอน
         image: ภาพ

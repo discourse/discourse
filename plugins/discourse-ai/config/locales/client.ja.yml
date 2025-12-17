@@ -197,7 +197,7 @@ ja:
         no_llm: "LLM が選択されていません"
         no_persona: "未設定"
         no_groups: "なし"
-        edit: "編集"
+        edit: "設定"
         expand_list:
           other: "(他 %{count})"
         collapse_list: "(表示を減らす)"

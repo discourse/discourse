@@ -39,7 +39,7 @@ vi:
         disabled: "(vô hiệu hóa)"
         groups: "Nhóm:"
         no_groups: "Không có gì"
-        edit: "Sửa"
+        edit: "Cài đặt"
         expand_list:
           other: "(%{count} khác)"
         collapse_list: "(thu gọn)"

@@ -3522,6 +3522,7 @@ vi:
       upload_description: "Tải lên tệp csv để tạo hàng loạt thẻ"
       upload_instructions: "Một trên mỗi dòng, tùy chọn với một nhóm thẻ ở định dạng 'tag_name, tag_group'."
       upload_successful: "Các thẻ đã được tải lên thành công"
+      bulk_create_button: "Tạo"
       delete_unused_confirmation:
         other: "%{count} thẻ sẽ bị xóa: %{tags}"
       delete_unused_confirmation_more_tags:
@@ -5304,6 +5305,8 @@ vi:
         no_user_badges: "%{name} chưa được cấp bất kỳ huy hiệu nào."
         no_badges: Không có huy hiệu có thể được cấp.
         none_selected: "Chọn một huy hiệu để bắt đầu"
+        sections:
+          settings: Cài đặt
         allow_title: Cho phép huy hiệu được sử dụng như là tên
         multiple_grant: Có thể được cấp nhiều lần
         visibility_heading: Khả năng hiển thị

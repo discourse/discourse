@@ -207,7 +207,7 @@ ar:
         no_llm: "لم يتم تحديد نموذج اللغة الكبير (LLM)"
         no_persona: "غير معيَّن"
         no_groups: "لا يوجد"
-        edit: "تعديل"
+        edit: "الإعدادان"
         expand_list:
           zero: "(%{count} أكثر)"
           one: "(%{count} أكثر)"
