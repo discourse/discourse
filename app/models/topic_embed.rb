@@ -28,11 +28,12 @@ class TopicEmbed < ActiveRecord::Base
   end
 
   def self.normalize_url(url)
-    # downcase
-    # remove trailing forward slash/
-    # remove consecutive hyphens
-    # remove leading and trailing whitespace
-    url.downcase.sub(%r{/\z}, "").sub(/\-+/, "-").strip
+    url
+      .downcase
+      .sub(%r{/\z}, "") # remove trailing slash
+      .sub(/-+/, "-") # remove consecutive hyphens
+      .gsub("`", "") # remove backticks
+      .strip
   end
 
   def self.imported_from_html(url)
@@ -143,6 +144,7 @@ class TopicEmbed < ActiveRecord::Base
   end
 
   def self.find_remote(url)
+    url = normalize_url(url)
     url = UrlHelper.normalized_encode(url)
     URI.parse(url) # ensure url parses, will raise if not
     fd = FinalDestination.new(url, validate_uri: true, max_redirects: 5, follow_canonical: true)

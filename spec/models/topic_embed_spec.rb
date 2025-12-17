@@ -7,6 +7,18 @@ RSpec.describe TopicEmbed do
   it { is_expected.to belong_to :post }
   it { is_expected.to validate_presence_of :embed_url }
 
+  describe ".normalize_url" do
+    it "strips backticks from URLs" do
+      url = "``https://example.com/article``"
+      expect(TopicEmbed.normalize_url(url)).to eq("https://example.com/article")
+    end
+
+    it "handles URLs without backticks" do
+      url = "https://example.com/article"
+      expect(TopicEmbed.normalize_url(url)).to eq("https://example.com/article")
+    end
+  end
+
   describe ".import" do
     fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     let(:title) { "How to turn a fish from good to evil in 30 seconds" }
@@ -679,6 +691,18 @@ RSpec.describe TopicEmbed do
 
       it "doesn’t raise an exception" do
         expect { TopicEmbed.find_remote(url) }.not_to raise_error
+      end
+    end
+
+    context "with backticks in the url" do
+      let(:url) { "``http://example.com/article``" }
+      let(:clean_url) { "http://example.com/article" }
+      let(:contents) { "<title>Test Article</title><body><p>Content here</p></body>" }
+
+      before { stub_request(:get, clean_url).to_return(status: 200, body: contents) }
+
+      it "fetches content" do
+        expect(TopicEmbed.find_remote(url).title).to eq("Test Article")
       end
     end
 
