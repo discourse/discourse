@@ -33,8 +33,12 @@ export default class LanguageSwitcher extends Component {
     window.location.reload();
   }
 
+  get currentLocale() {
+    return I18n.locale;
+  }
+
   get currentLanguageCode() {
-    return I18n.locale.split("_")[0].toUpperCase();
+    return this.currentLocale.split("_")[0].toUpperCase();
   }
 
   get content() {
@@ -42,6 +46,7 @@ export default class LanguageSwitcher extends Component {
       ({ value }) => ({
         name: this.languageNameLookup.getLanguageName(value),
         value,
+        isActive: value === this.currentLocale,
       })
     );
   }
@@ -68,7 +73,7 @@ export default class LanguageSwitcher extends Component {
         <DropdownMenu as |dropdown|>
           {{#each this.content as |option|}}
             <dropdown.item
-              class="locale-options"
+              class="locale-options {{if option.isActive '--selected'}}"
               data-menu-option-id={{option.value}}
             >
               <DButton
