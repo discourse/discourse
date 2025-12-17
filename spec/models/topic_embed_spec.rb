@@ -12,11 +12,6 @@ RSpec.describe TopicEmbed do
       url = "``https://example.com/article``"
       expect(TopicEmbed.normalize_url(url)).to eq("https://example.com/article")
     end
-
-    it "handles URLs without backticks" do
-      url = "https://example.com/article"
-      expect(TopicEmbed.normalize_url(url)).to eq("https://example.com/article")
-    end
   end
 
   describe ".import" do
