@@ -60,7 +60,9 @@ RSpec.describe(DiscourseRewind::FetchReports) do
     context "when reports is not cached" do
       before do
         freeze_time DateTime.parse("2021-01-22")
-        Discourse.redis.del("rewind:#{current_user.username}:2020")
+        Discourse.redis.del(
+          DiscourseRewind::FetchReportsHelper.cache_key(current_user.username, 2020),
+        )
       end
 
       it "returns the reports" do

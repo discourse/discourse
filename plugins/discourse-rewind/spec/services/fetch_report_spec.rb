@@ -13,13 +13,12 @@ RSpec.describe(DiscourseRewind::FetchReport) do
     before do
       SiteSetting.discourse_rewind_enabled = true
       freeze_time DateTime.parse("2021-12-22")
-      key = "rewind:#{current_user.username}:2021"
       reports = [
         { type: "top_words", data: "report 1" },
         { type: "reading_time", data: "report 2" },
         { type: "writing_analysis", data: "report 3" },
       ]
-      Discourse.redis.setex(key, 3600, MultiJson.dump(reports))
+      DiscourseRewind::FetchReportsHelper.cache_reports(current_user.username, 2021, reports)
     end
 
     context "when index is not provided" do
@@ -63,9 +62,8 @@ RSpec.describe(DiscourseRewind::FetchReport) do
     context "when in january" do
       before do
         freeze_time DateTime.parse("2021-01-22")
-        key = "rewind:#{current_user.username}:2020"
         reports = [{ type: "top_words", data: "report 1" }]
-        Discourse.redis.setex(key, 3600, MultiJson.dump(reports))
+        DiscourseRewind::FetchReportsHelper.cache_reports(current_user.username, 2020, reports)
       end
 
       it "fetches reports from the previous year" do
@@ -84,9 +82,8 @@ RSpec.describe(DiscourseRewind::FetchReport) do
       before do
         Rails.env.stubs(:development?).returns(true)
         freeze_time DateTime.parse("2021-06-22")
-        key = "rewind:#{current_user.username}:2021"
         reports = [{ type: "top_words", data: "report 1" }]
-        Discourse.redis.setex(key, 3600, MultiJson.dump(reports))
+        DiscourseRewind::FetchReportsHelper.cache_reports(current_user.username, 2021, reports)
       end
 
       it "finds the year no matter what month" do
@@ -96,7 +93,11 @@ RSpec.describe(DiscourseRewind::FetchReport) do
     end
 
     context "when reports are not cached" do
-      before { Discourse.redis.del("rewind:#{current_user.username}:2021") }
+      before do
+        Discourse.redis.del(
+          DiscourseRewind::FetchReportsHelper.cache_key(current_user.username, 2021),
+        )
+      end
 
       it { is_expected.to fail_to_find_a_model(:all_reports) }
     end
@@ -107,12 +108,11 @@ RSpec.describe(DiscourseRewind::FetchReport) do
 
       before do
         freeze_time DateTime.parse("2021-12-22")
-        key = "rewind:#{other_user.username}:2021"
         reports = [
           { type: "top_words", data: "other user report 1" },
           { type: "reading_time", data: "other user report 2" },
         ]
-        Discourse.redis.setex(key, 3600, MultiJson.dump(reports))
+        DiscourseRewind::FetchReportsHelper.cache_reports(other_user.username, 2021, reports)
       end
 
       context "when for_user_username is blank" do
