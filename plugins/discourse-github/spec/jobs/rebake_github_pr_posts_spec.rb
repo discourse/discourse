@@ -15,9 +15,17 @@ RSpec.describe Jobs::RebakeGithubPrPosts do
   end
 
   describe "#execute" do
+    before { allow(Oneboxer).to receive(:preview) }
+
     it "does nothing with blank or missing pr_url" do
       expect { described_class.new.execute(pr_url: nil) }.not_to raise_error
       expect { described_class.new.execute(pr_url: "") }.not_to raise_error
+    end
+
+    it "invalidates the onebox cache for the PR URL" do
+      described_class.new.execute(pr_url:)
+
+      expect(Oneboxer).to have_received(:preview).with(pr_url, invalidate_oneboxes: true)
     end
 
     it "rebakes posts with full GitHub PR oneboxes" do
@@ -26,8 +34,8 @@ RSpec.describe Jobs::RebakeGithubPrPosts do
       HTML
 
       expect_any_instance_of(Post).to receive(:rebake!).with(
-        invalidate_oneboxes: true,
         priority: :low,
+        skip_publish_rebaked_changes: true,
       )
 
       described_class.new.execute(pr_url:)
@@ -50,8 +58,8 @@ RSpec.describe Jobs::RebakeGithubPrPosts do
       TopicLink.create!(topic:, post:, user:, url: "#{pr_url}/files", domain:)
 
       expect_any_instance_of(Post).to receive(:rebake!).with(
-        invalidate_oneboxes: true,
         priority: :low,
+        skip_publish_rebaked_changes: true,
       )
 
       described_class.new.execute(pr_url:)
@@ -77,7 +85,6 @@ RSpec.describe Jobs::RebakeGithubPrPosts do
         HTML
 
         expect_any_instance_of(Chat::Message).to receive(:rebake!).with(
-          invalidate_oneboxes: true,
           priority: :low,
           skip_notifications: true,
         )

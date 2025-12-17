@@ -5,48 +5,38 @@ module Jobs
     sidekiq_options queue: "low"
 
     def execute(args)
-      pr_url = args[:pr_url]
-      return if pr_url.blank?
+      url = args[:pr_url]
+      return if url.blank?
 
-      rebake_posts(pr_url)
-      rebake_chat_messages(pr_url) if SiteSetting.chat_enabled
+      # invalidate & refresh the onebox cache for this PR URL
+      Oneboxer.preview(url, invalidate_oneboxes: true)
+
+      rebake_posts(url)
+      rebake_chat_messages(url) if SiteSetting.chat_enabled
     end
 
     private
 
-    def rebake_posts(pr_url)
-      post_ids =
-        TopicLink
-          .where(url: pr_url)
-          .or(TopicLink.where("url LIKE ?", "#{pr_url}%"))
-          .select(:post_id)
+    def rebake_posts(url)
+      post_ids = TopicLink.where(url:).or(TopicLink.where("url LIKE ?", "#{url}%")).select(:post_id)
 
       Post
         .where(id: post_ids)
-        .find_each do |post|
-          next unless has_github_pr_onebox?(post.cooked, pr_url)
-          post.rebake!(invalidate_oneboxes: true, priority: :low)
-        end
+        .where("cooked LIKE ?", "%githubpullrequest%#{url}%")
+        .find_each { |post| post.rebake!(priority: :low, skip_publish_rebaked_changes: true) }
     end
 
-    def rebake_chat_messages(pr_url)
+    def rebake_chat_messages(url)
       message_ids =
         ::Chat::MessageLink
-          .where(url: pr_url)
-          .or(::Chat::MessageLink.where("url LIKE ?", "#{pr_url}%"))
+          .where(url:)
+          .or(::Chat::MessageLink.where("url LIKE ?", "#{url}%"))
           .select(:chat_message_id)
 
       ::Chat::Message
         .where(id: message_ids)
-        .find_each do |message|
-          next unless has_github_pr_onebox?(message.cooked, pr_url)
-          message.rebake!(invalidate_oneboxes: true, priority: :low, skip_notifications: true)
-        end
-    end
-
-    def has_github_pr_onebox?(cooked, pr_url)
-      # quick & dirty check to avoid doing unnecessary rebakes
-      cooked.present? && cooked.include?("githubpullrequest") && cooked.include?(pr_url)
+        .where("cooked LIKE ?", "%githubpullrequest%#{url}%")
+        .find_each { |message| message.rebake!(priority: :low, skip_notifications: true) }
     end
   end
 end
