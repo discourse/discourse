@@ -17,7 +17,6 @@ RSpec.describe "Managing LLM configurations", type: :system do
 
     find("[data-llm-id='anthropic-claude-opus-4-5'] button").click()
     form.field("api_key").fill_in("abcd")
-    form.field("enabled_chat_bot").toggle
     form.submit
 
     expect(page).to have_current_path(%r{/admin/plugins/discourse-ai/ai-llms/\d+/edit})
@@ -35,7 +34,6 @@ RSpec.describe "Managing LLM configurations", type: :system do
     expect(llm.max_prompt_tokens.to_i).to eq(model_preset[:tokens])
     expect(llm.provider).to eq("anthropic")
     expect(llm.display_name).to eq(model_preset[:display_name])
-    expect(llm.user_id).not_to be_nil
   end
 
   it "manually configures an LLM" do
@@ -58,7 +56,6 @@ RSpec.describe "Managing LLM configurations", type: :system do
     form.field("tokenizer").select("DiscourseAi::Tokenizer::Llama3Tokenizer")
     form.field("max_output_tokens").fill_in(2000)
     form.field("vision_enabled").toggle
-    form.field("enabled_chat_bot").toggle
     form.submit
 
     expect(page).to have_current_path(%r{/admin/plugins/discourse-ai/ai-llms/\d+/edit})
@@ -84,7 +81,6 @@ RSpec.describe "Managing LLM configurations", type: :system do
     expect(llm.provider).to eq("vllm")
     expect(llm.max_output_tokens.to_i).to eq(2001)
     expect(llm.vision_enabled).to eq(true)
-    expect(llm.user_id).not_to be_nil
 
     expect(LlmModel.count).to eq(llm_count + 1)
   end

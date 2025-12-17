@@ -13,7 +13,6 @@ export default class AiLlm extends RestModel {
       "max_output_tokens",
       "url",
       "api_key",
-      "enabled_chat_bot",
       "provider_params",
       "vision_enabled",
       "input_cost",

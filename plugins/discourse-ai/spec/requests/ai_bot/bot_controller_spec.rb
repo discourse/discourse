@@ -108,7 +108,7 @@ RSpec.describe DiscourseAi::AiBot::BotController do
 
   describe "#retry_response" do
     fab!(:bot_user, :user)
-    let!(:llm_model) { Fabricate(:llm_model, user: bot_user, enabled_chat_bot: true) }
+    let!(:llm_model) { Fabricate(:llm_model, user: bot_user) }
     let!(:ai_persona) do
       Fabricate(
         :ai_persona,
@@ -182,14 +182,7 @@ RSpec.describe DiscourseAi::AiBot::BotController do
     end
 
     it "allows retrying if LLM model has a negative id (seeded)" do
-      seeded_llm_model =
-        Fabricate(
-          :llm_model,
-          id: -9999,
-          user: bot_user,
-          enabled_chat_bot: true,
-          name: "second-model",
-        )
+      seeded_llm_model = Fabricate(:llm_model, id: -9999, user: bot_user, name: "second-model")
 
       bot = DiscourseAi::Personas::Bot.as(bot_user, persona: persona, model: seeded_llm_model)
       DiscourseAi::Completions::Llm.with_prepared_responses(["first try"], llm: seeded_llm_model) do
@@ -218,8 +211,7 @@ RSpec.describe DiscourseAi::AiBot::BotController do
 
     it "uses the original LLM model when retrying even if persona default changed" do
       second_bot_user = Fabricate(:user)
-      second_llm_model =
-        Fabricate(:llm_model, user: second_bot_user, enabled_chat_bot: true, name: "second-model")
+      second_llm_model = Fabricate(:llm_model, user: second_bot_user, name: "second-model")
 
       pm_topic.topic_allowed_users.find_or_create_by!(user: second_bot_user)
 

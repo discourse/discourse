@@ -13,9 +13,7 @@ describe DiscourseAi::AiBot::SiteSettingsExtension do
 
   it "correctly creates/deletes bot accounts as needed" do
     SiteSetting.ai_bot_enabled = true
-    gpt_4.update!(enabled_chat_bot: true)
-    claude_2.update!(enabled_chat_bot: false)
-    gpt_35_turbo.update!(enabled_chat_bot: false)
+    SiteSetting.ai_bot_enabled_llms = gpt_4.id.to_s
 
     DiscourseAi::AiBot::SiteSettingsExtension.enable_or_disable_ai_bots
 
@@ -23,9 +21,7 @@ describe DiscourseAi::AiBot::SiteSettingsExtension do
     expect(user_exists?("gpt-3.5-turbo")).to eq(false)
     expect(user_exists?("claude-2")).to eq(false)
 
-    gpt_4.update!(enabled_chat_bot: false)
-    claude_2.update!(enabled_chat_bot: false)
-    gpt_35_turbo.update!(enabled_chat_bot: true)
+    SiteSetting.ai_bot_enabled_llms = gpt_35_turbo.id.to_s
 
     DiscourseAi::AiBot::SiteSettingsExtension.enable_or_disable_ai_bots
 
@@ -33,9 +29,7 @@ describe DiscourseAi::AiBot::SiteSettingsExtension do
     expect(user_exists?("gpt-3.5-turbo")).to eq(true)
     expect(user_exists?("claude-2")).to eq(false)
 
-    gpt_4.update!(enabled_chat_bot: false)
-    claude_2.update!(enabled_chat_bot: true)
-    gpt_35_turbo.update!(enabled_chat_bot: true)
+    SiteSetting.ai_bot_enabled_llms = "#{claude_2.id}|#{gpt_35_turbo.id}"
 
     DiscourseAi::AiBot::SiteSettingsExtension.enable_or_disable_ai_bots
 
@@ -53,7 +47,7 @@ describe DiscourseAi::AiBot::SiteSettingsExtension do
 
   it "leaves accounts around if they have any posts" do
     SiteSetting.ai_bot_enabled = true
-    gpt_4.update!(enabled_chat_bot: true)
+    SiteSetting.ai_bot_enabled_llms = gpt_4.id.to_s
     DiscourseAi::AiBot::SiteSettingsExtension.enable_or_disable_ai_bots
 
     user = DiscourseAi::AiBot::EntryPoint.find_user_from_model("gpt-4")

@@ -9,7 +9,7 @@ module DiscourseAi
         AiPersona
           .persona_users
           .map { |persona| persona[:user_id] }
-          .concat(LlmModel.where(enabled_chat_bot: true).pluck(:user_id))
+          .concat(LlmModel.where(id: LlmModel.enabled_chat_bot_ids).pluck(:user_id).compact)
       end
 
       def self.find_participant_in(participant_ids)
@@ -31,11 +31,14 @@ module DiscourseAi
       end
 
       def self.enabled_user_ids_and_models_map
-        DB.query_hash(<<~SQL)
+        enabled_ids = LlmModel.enabled_chat_bot_ids
+        return [] if enabled_ids.empty?
+
+        DB.query_hash(<<~SQL, ids: enabled_ids)
           SELECT users.username AS username, users.id AS id, llms.id AS llm_model_id, llms.name AS model_name, llms.display_name AS display_name
           FROM llm_models llms
           INNER JOIN users ON llms.user_id = users.id
-          WHERE llms.enabled_chat_bot
+          WHERE llms.id IN (:ids)
         SQL
       end
 
@@ -109,7 +112,8 @@ module DiscourseAi
         end
 
         plugin.on(:site_setting_changed) do |name, _old_value, _new_value|
-          if name == :ai_bot_enabled || name == :discourse_ai_enabled
+          if name == :ai_bot_enabled || name == :discourse_ai_enabled ||
+               name == :ai_bot_enabled_llms
             DiscourseAi::AiBot::SiteSettingsExtension.enable_or_disable_ai_bots
           end
         end

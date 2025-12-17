@@ -101,7 +101,7 @@ RSpec.describe "AI Bot - Homepage", type: :system do
     pm.custom_fields[DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD] = "t"
     pm.save!
 
-    SiteSetting.ai_bot_enabled = true
+    toggle_enabled_bots(bots: [claude_2, claude_2_dup])
     SiteSetting.navigation_menu = "sidebar"
     Jobs.run_immediately!
     SiteSetting.ai_bot_allowed_groups = "#{Group::AUTO_GROUPS[:trust_level_0]}"
@@ -110,8 +110,9 @@ RSpec.describe "AI Bot - Homepage", type: :system do
 
   context "when mobile", mobile: true do
     it "allows navigating from AI conversation to regular topic, and loads new post stream" do
-      regular_topic = Fabricate(:topic)
-      regular_post = Fabricate(:post, topic: regular_topic)
+      category = Fabricate(:category)
+      regular_topic = Fabricate(:topic, category: category, user: user)
+      regular_post = Fabricate(:post, topic: regular_topic, user: user)
 
       post_url = Topic.relative_url(regular_topic.id, regular_topic.slug)
       post_with_link =

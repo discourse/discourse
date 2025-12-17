@@ -78,7 +78,6 @@ export default class AiLlmEditorForm extends Component {
       display_name: model.display_name,
       name: model.name,
       provider: model.provider,
-      enabled_chat_bot: model.enabled_chat_bot,
       vision_enabled: model.vision_enabled,
       input_cost: model.input_cost,
       output_cost: model.output_cost,
@@ -509,16 +508,6 @@ export default class AiLlmEditorForm extends Component {
             />
           </field.Custom>
           <field.Hint />
-        </form.Field>
-
-        <form.Field
-          @name="enabled_chat_bot"
-          @title={{i18n "discourse_ai.llms.enabled_chat_bot"}}
-          @tooltip={{i18n "discourse_ai.llms.hints.enabled_chat_bot"}}
-          @format="large"
-          as |field|
-        >
-          <field.Checkbox />
         </form.Field>
 
         {{#if @model.user}}

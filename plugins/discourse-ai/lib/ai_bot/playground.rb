@@ -110,7 +110,7 @@ module DiscourseAi
 
         all_llm_users =
           LlmModel
-            .where(enabled_chat_bot: true)
+            .where(id: LlmModel.enabled_chat_bot_ids)
             .joins(:user)
             .pluck("users.id", "users.username_lower")
 

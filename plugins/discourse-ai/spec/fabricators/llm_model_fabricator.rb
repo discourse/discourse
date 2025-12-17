@@ -131,5 +131,4 @@ Fabricator(:seeded_model, from: :llm_model) do
   api_key "DSC"
   tokenizer "DiscourseAi::Tokenizer::OpenAiTokenizer"
   url "https://cdck.test/"
-  enabled_chat_bot true
 end
