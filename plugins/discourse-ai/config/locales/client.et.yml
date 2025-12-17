@@ -39,7 +39,7 @@ et:
         disabled: "(välja lülitatud)"
         groups: "Rühmad:"
         no_groups: "Pole"
-        edit: "Muuda"
+        edit: "Seaded"
         expand_list:
           one: "(veel %{count})"
           other: "(veel %{count})"

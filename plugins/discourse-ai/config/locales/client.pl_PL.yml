@@ -244,7 +244,7 @@ pl_PL:
         no_llm: "Nie wybrano LLM"
         no_persona: "Nie ustawiony"
         no_groups: "Brak"
-        edit: "Edytuj"
+        edit: "Ustawień"
         expand_list:
           one: "(%{count} więcej)"
           few: "(%{count} więcej)"

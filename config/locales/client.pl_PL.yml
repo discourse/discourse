@@ -5362,6 +5362,19 @@ pl_PL:
       upload_description: "Wczytaj plik .csv, by utworzyć wiele tagów naraz"
       upload_instructions: "Jeden na linię, opcjonalnie z grupą tagu, w formacie \"nazwa_tagu,grupa_tagu\"."
       upload_successful: "Tagi wgrane "
+      bulk_create_inline_placeholder: "Utwórz tagi (rozdzielone przecinkami)"
+      bulk_create_button: "Utwórz"
+      bulk_create_success:
+        one: "Utworzono %{count} tag:"
+        few: "Utworzono %{count} tagi:"
+        many: "Utworzono %{count} tagów:"
+        other: "Utworzono %{count} tagów:"
+      bulk_create_already_exist:
+        one: "%{count} tag już istnieje:"
+        few: "%{count} tagi już istnieją:"
+        many: "%{count} tagów już istnieje:"
+        other: "%{count} tagów  już istnieje:"
+      bulk_create_some_failed: "Nie udało się utworzyć niektórych tagów:"
       delete_unused_confirmation:
         one: "%{count} tag zostanie usunięty: %{tags}"
         few: "%{count} tagi zostaną usunięte: %{tags}"
@@ -8718,6 +8731,10 @@ pl_PL:
         no_user_badges: "%{name} nie otrzymał żadnych odznak."
         no_badges: Nie ma odznak, które można by było przyznać.
         none_selected: "Wybierz odznakę, aby rozpocząć"
+        sections:
+          design: Projekt
+          query: Zapytanie
+          settings: Ustawienia
         usage_heading: Użycie
         allow_title: Pozwól wykorzystywać odznakę jako tytuł
         multiple_grant: Może być przyznana wielokrotnie

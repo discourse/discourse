@@ -41,7 +41,7 @@ gl:
         disabled: "(desactivado)"
         groups: "Grupos:"
         no_groups: "Ningunha"
-        edit: "Editar"
+        edit: "Configuración"
         expand_list:
           one: "(%{count} máis)"
           other: "(%{count} máis)"

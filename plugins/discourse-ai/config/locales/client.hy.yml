@@ -39,7 +39,7 @@ hy:
         disabled: "(անջատված)"
         groups: "Խմբեր:"
         no_groups: "Ոչ մի"
-        edit: "Խմբագրել"
+        edit: "Կարգավորումներ"
         expand_list:
           one: "(%{count} ավելի)"
           other: "(%{count} ավելի)"

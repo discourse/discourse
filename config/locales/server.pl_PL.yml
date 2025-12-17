@@ -5199,6 +5199,11 @@ pl_PL:
       many: "Musisz wybrać co najmniej %{count} tagów."
       other: "Musisz wybrać co najmniej %{count} tagów."
     upload_row_too_long: "Plik CSV powinien zawierać jeden tag w każdym wierszu. Opcjonalnie po tagu można umieścić przecinek, a następnie nazwę grupy tagów."
+    bulk_create:
+      invalid_params: "Nieprawidłowe parametry. Podaj tablicę nazw tagów."
+      invalid_name: "Nieprawidłowa nazwa tagu."
+      tag_too_long: "Tag jest za długi (maksymalnie %{max} znaków)."
+      too_many_tags: "Zbyt wiele tagów. Możesz utworzyć maksymalnie %{max} tagów naraz. W przypadku większych importów skorzystaj z funkcji przesyłania pliku CSV."
     forbidden:
       invalid:
         one: "Nie można użyć wybranego tagu"

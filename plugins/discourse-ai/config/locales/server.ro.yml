@@ -51,5 +51,10 @@ ro:
     embeddings:
       configuration:
         model_test_failed: "Nu am reușit să generăm un test încorporat cu acest model. Asigură-te că este configurat corect."
+    llm_models:
+      bedrock_missing_auth: "AWS Bedrock necesită configurarea fie a ID-ului cheii de acces, fie a rolului ARN."
     ai_staff_action_logger:
       updated: "actualizat"
+    translation:
+      errors:
+        all_posts_translated: "Toate postările din acest subiect sunt deja traduse."

@@ -199,7 +199,7 @@ fi:
         no_llm: "LLM:ää ei ole valittu"
         no_persona: "Ei asetettu"
         no_groups: "Ei valittu"
-        edit: "Muokkaa"
+        edit: "Asetukset"
         expand_list:
           one: "(%{count} muuta)"
           other: "(%{count} muuta)"

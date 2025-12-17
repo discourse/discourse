@@ -4695,6 +4695,7 @@ fi:
       upload_description: "Luo iso joukko tunnisteita kerralla lataamalla CSV-tiedosto"
       upload_instructions: "Yksi per rivi, valinnaisesti tunnisteryhmän kanssa muodossa \"tunnisteen_nimi,tunnisteen_ryhmä\"."
       upload_successful: "Tunnisteiden lataaminen onnistui"
+      bulk_create_button: "Luo"
       delete_unused_confirmation:
         one: "%{count} tunniste poistetaan: %{tags}"
         other: "%{count} tunnistetta poistetaan: %{tags}"
@@ -7796,6 +7797,9 @@ fi:
         no_user_badges: "%{name} ei ole saanut yhtään kunniamerkkiä."
         no_badges: Myönnettäviä kunniamerkkejä ei ole.
         none_selected: "Aloita valitsemalla kunniamerkki"
+        sections:
+          query: Kysely
+          settings: Asetukset
         usage_heading: Käyttö
         allow_title: Salli kunniamerkin käyttäminen tittelinä
         multiple_grant: Voidaan myöntää useita kertoja

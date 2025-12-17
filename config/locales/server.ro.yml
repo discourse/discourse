@@ -965,6 +965,7 @@ ro:
     allow_duplicate_topic_titles: "Permite subiecte cu titluri duplicat sau identice."
     unique_posts_mins: "Câte minute până ce un utilizator poate posta din nou o postare cu același conținut"
     educate_until_posts: "Când utilizatorul începe să scrie primele (n) postări, arată panelul de instruire în spațiul pentru scris postarea."
+    title: "Numele acestui site. Vizibil pentru toți vizitatorii, inclusiv utilizatorii anonimi. Reține că schimbarea acestui titlu poate trimite o solicitare utilizatorilor PWA, solicitându-le fie să actualizeze, fie să dezinstaleze aplicația."
     crawl_images: "Recuperează imaginile din URL-uri la distanță pentru a insera dimensiunile corecte de înălțime și lățime."
     download_remote_images_threshold: "Spațiul minim necesar pentru descărcarea imaginilor la distanță pe local (în procente)"
     editing_grace_period: "Pentru (n) secunde după postare, editarea nu va crea o versiune nouă în istoricul postării."
@@ -1274,6 +1275,7 @@ ro:
     suppress_overlapping_tags_in_list: "Dacă etichetele corespund exact cu cuvintele din titlul subiectelor, nu mai afișa aceste etichete."
     shared_drafts_allowed_groups: "Permit utilizatorilor din aceste grupuri să vadă și să editeze ciorne comune."
     enable_user_status: "Permite utilizatorilor să seteze un mesaj de stare personalizat (emoji + descriere)."
+    short_title: "Titlul scurt va fi folosit pe ecranul de pornire al utilizatorului, în lansator sau în alte locuri unde spațiul poate fi limitat. Ar trebui să fie limitat la 12 caractere. Reține că schimbarea acestui titlu poate trimite o solicitare utilizatorilor PWA, solicitându-le fie să actualizeze, fie să dezinstaleze aplicația."
     use_email_for_username_and_name_suggestions: "Folosește prima parte a adreselor de email pentru nume de utilizator și sugestii de nume. Avertisment: acest lucru poate face mai ușor pentru actorii rău intenționat să descopere adresa de email a membrilor tăi (deoarece mulți oameni folosesc furnizori de email obișnuiți precum `gmail.com`)."
     show_bottom_topic_map: "Arată harta subiectului în partea de jos a subiectului atunci când are 10 răspunsuri sau mai multe."
     show_topic_map_in_topics_without_replies: "Arată harta subiectului chiar dacă subiectul nu are răspunsuri."
@@ -1298,6 +1300,8 @@ ro:
     content_localization_supported_locales: "Lista localelor acceptate în care poate fi tradus conținutul. Necesită „localizarea conținutului activată”."
     content_localization_allowed_groups: "Grupuri care pot actualiza conținutul localizat. Necesită „localizarea conținutului activat”."
     content_localization_language_switcher: "Arată un comutator de limbă în antet, permițând vizitatorilor să schimbe între versiunile traduse Discourse și conținutul la care au contribuit utilizatorii. Folosește limbile definite în „locale acceptate din localizarea de conținut”"
+    content_localization_crawler_param: "Servește conținut localizat crawlerelor web atunci când opțiunile „localizare conținut” și „setare locală din parametru” sunt activate. Lista localelor acceptate este definită în secțiunea „locale acceptate în localizarea conținutului”."
+    content_localization_allow_author_localization: "Permite autorilor să actualizeze localizările propriilor subiecte și postări prin intermediul meniului postări."
     fake_upcoming_change: "Aceasta este o modificare viitoare falsă, în scopuri de testare. Nu este nevoie să traduci acest șir."
     errors:
       invalid_email: "Adresă de email invalidă."
@@ -1647,6 +1651,28 @@ ro:
         Poți să continui să răsfoiești, dar nu vei mai putea să răspunzi sau să creezi subiecte până când un [membru al echipei](%{base_url}/about) nu îți verifică postările recente. Ne cerem scuze pentru inconveniență.
 
         Pentru informații suplimentare, te rugăm să citești [ghidul comunității](%{base_url}/guidelines).
+    user_automatically_silenced:
+      text_body_template: |
+        Acesta este un mesaj automat.
+
+        Noul utilizator [%{username}](%{user_url}) a fost redus automat la tăcere.
+
+        Te rog să [revizuiești semnalările](%{base_url}/review). Dacă %{username} a fost redus la tăcere pe nedrept pentru a nu mai posta, dă clic pe butonul de reactivare de pe [pagina de administrare pentru acest utilizator](%{user_url}).
+
+        Acest prag poate fi modificat prin intermediul setărilor `silence_new_user` ale site-ului.
+    user_automatically_silenced_with_reason:
+      title: "Utilizator redus automat la tăcere"
+      subject_template: "Noul utilizator %{username} a fost redus la tăcere de semnalările comunității"
+      text_body_template: |
+        Acesta este un mesaj automat.
+
+        Noul utilizator [%{username}](%{user_url}) a fost redus automat la tăcere.
+
+        Motiv: %{reason}
+
+        Te rog să [revizuiești semnalările](%{base_url}/review). Dacă %{username} a fost redus la tăcere pe nedrept pentru a nu mai posta, dă clic pe butonul de reactivare de pe [pagina de administrare pentru acest utilizator](%{user_url}).
+
+        Acest prag poate fi modificat prin intermediul setărilor `silence_new_user` ale site-ului.
     spam_post_blocked:
       subject_template: "Utilizatorul nou %{username} are postările blocate datorită adreselor repetate"
     unsilenced:
@@ -2292,6 +2318,8 @@ ro:
       disagree:
         title: "Nu"
         complete: "Semnalarea a fost ignorată."
+      revise_and_reject_post:
+        title: "Cere revizuire..."
       ignore:
         title: "Ignoră"
         complete: "Semnalarea a fost ignorată."

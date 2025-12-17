@@ -39,7 +39,7 @@ bs_BA:
         disabled: "(neomogućen)"
         groups: "Grupa:"
         no_groups: "Ništa"
-        edit: "Izmijeni"
+        edit: "Postavke"
         expand_list:
           one: "(još %{count})"
           few: "(još %{count})"

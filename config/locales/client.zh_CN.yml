@@ -4565,6 +4565,13 @@ zh_CN:
       upload_description: "上传 csv 文件以批量创建标签"
       upload_instructions: "每行一个，可以使用 ‘tag_name，tag_group’ 格式附带标签组。"
       upload_successful: "标签上传成功"
+      bulk_create_inline_placeholder: "创建标签（以逗号分隔）"
+      bulk_create_button: "创建"
+      bulk_create_success:
+        other: "创建了 %{count} 个标签："
+      bulk_create_already_exist:
+        other: "%{count} 个标签已经存在："
+      bulk_create_some_failed: "某些标签创建失败："
       delete_unused_confirmation:
         other: "%{count} 个标签将被删除：%{tags}"
       delete_unused_confirmation_more_tags:
@@ -7705,6 +7712,10 @@ zh_CN:
         no_user_badges: "%{name} 尚未被授予任何徽章。"
         no_badges: 没有可供授予的徽章。
         none_selected: "选择一个徽章以开始"
+        sections:
+          design: 设计
+          query: 查询
+          settings: 设置
         usage_heading: 用法
         allow_title: 允许将徽章用作头衔
         multiple_grant: 可以多次授予

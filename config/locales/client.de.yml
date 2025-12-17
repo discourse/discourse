@@ -4765,6 +4765,7 @@ de:
       upload_description: "Lade eine CSV-Datei hoch, um mehrere Schlagwörter auf einmal zu erstellen"
       upload_instructions: "Ein Schlagwort pro Zeile, optional mit einer Schlagwortgruppe nach dem Schema „tag_name,tag_group“."
       upload_successful: "Schlagwörter erfolgreich hochgeladen"
+      bulk_create_button: "Erstellen"
       delete_unused_confirmation:
         one: "%{count} Schlagwort wird gelöscht: %{tags}"
         other: "%{count} Schlagwörter werden gelöscht: %{tags}"
@@ -7907,6 +7908,9 @@ de:
         no_user_badges: "%{name} wurden keine Abzeichen verliehen."
         no_badges: Es gibt keine Abzeichen, die verliehen werden können.
         none_selected: "Wähle ein Abzeichen aus, um loszulegen"
+        sections:
+          query: Anfrage
+          settings: Einstellungen
         usage_heading: Verwendung
         allow_title: Abzeichen darf als Titel verwendet werden
         multiple_grant: Kann mehrfach verliehen werden

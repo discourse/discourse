@@ -239,7 +239,7 @@ ru:
         no_llm: "LLM не выбрана"
         no_persona: "Не установлено"
         no_groups: "Отсутствует"
-        edit: "Изменить"
+        edit: "настроек"
         expand_list:
           one: "(еще %{count})"
           few: "(еще %{count})"

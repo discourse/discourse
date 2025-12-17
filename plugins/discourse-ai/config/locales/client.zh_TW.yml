@@ -42,7 +42,7 @@ zh_TW:
         groups: "群組:"
         no_persona: "未設定"
         no_groups: "無"
-        edit: "編輯"
+        edit: "設定"
         expand_list:
           other: "(%{count} 更多)"
         collapse_list: "(顯示更少)"

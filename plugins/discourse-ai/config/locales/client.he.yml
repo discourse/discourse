@@ -243,7 +243,7 @@ he:
         no_llm: "לא נבחר מש״ג/LLM"
         no_persona: "לא מוגדר"
         no_groups: "ללא"
-        edit: "עריכה"
+        edit: "הגדרות"
         expand_list:
           one: "(עוד %{count})"
           two: "(עוד %{count})"

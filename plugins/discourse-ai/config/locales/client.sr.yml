@@ -39,7 +39,7 @@ sr:
         disabled: "(isključeno)"
         groups: "Grupe:"
         no_groups: "Ništa"
-        edit: "Izmeni"
+        edit: "Podešavanje"
         expand_list:
           one: "(još %{count} članova)"
           few: "(još %{count} člana)"

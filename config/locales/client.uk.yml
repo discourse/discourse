@@ -5369,6 +5369,19 @@ uk:
       upload_description: "Завантажити csv-файл, щоб масово створити теґи"
       upload_instructions: "По одному у рядку, можна з групою теґів у форматі 'tag_name,tag_group'."
       upload_successful: "Теґи завантажено"
+      bulk_create_inline_placeholder: "Створення тегів (через кому)"
+      bulk_create_button: "Створити"
+      bulk_create_success:
+        one: "Створено %{count} місяць тому:"
+        few: "Створено %{count} місяці тому:"
+        many: "Створено %{count} місяців тому:"
+        other: "Створено %{count} місяців тому:"
+      bulk_create_already_exist:
+        one: "%{count} тег вже існує:"
+        few: "%{count} теги вже існують:"
+        many: "%{count} тегів вже існують:"
+        other: "%{count} тегів вже існують:"
+      bulk_create_some_failed: "Не вдалося створити деякі теги:"
       delete_unused_confirmation:
         one: "%{count} теґ буде вилучено: %{tags}"
         few: "%{count} теґи буде вилучено: %{tags}"
@@ -8725,6 +8738,10 @@ uk:
         no_user_badges: "%{name} не отримував жодного ."
         no_badges: Тут немає нагород, які можуть бути надані.
         none_selected: "Виберіть нагороди в списку ліворуч"
+        sections:
+          design: Дизайн
+          query: Запит
+          settings: Налаштування
         usage_heading: Використання
         allow_title: Дозволити використання значків як звань
         multiple_grant: Можуть бути надані декілька разів

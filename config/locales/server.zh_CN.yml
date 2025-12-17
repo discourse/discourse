@@ -4805,6 +4805,11 @@ zh_CN:
     minimum_required_tags:
       other: "您必须至少选择 %{count} 个标签。"
     upload_row_too_long: "CSV 文件的每行应该有一个标签。或者，标签后面可以跟一个逗号，然后是标签组名称。"
+    bulk_create:
+      invalid_params: "参数无效。请提供标签名称数组。"
+      invalid_name: "无效的标签名称。"
+      tag_too_long: "标签过长（最多 %{max} 个字符）。"
+      too_many_tags: "标签太多了。您一次最多可以创建 %{max} 标签。对于较大的导入，请使用 CSV 上传功能。"
     forbidden:
       invalid:
         other: "您选择的标签均无法使用"

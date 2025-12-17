@@ -3975,6 +3975,7 @@ te:
       upload_description: "పెద్దమొత్తంలో ట్యాగ్‌లను సృష్టించడానికి csv ఫైల్‌ను అప్‌లోడ్ చేయండి"
       upload_instructions: "పంక్తికి ఒకటి, ఐచ్ఛికంగా 'tag_name,tag_group' ఆకృతిలో ట్యాగ్ సమూహంతో."
       upload_successful: "ట్యాగ్‌లు విజయవంతంగా అప్‌లోడ్ చేయబడ్డాయి"
+      bulk_create_button: "సృష్టించండి"
       delete_unused_confirmation:
         one: "%{count} ట్యాగ్ తొలగించబడుతుంది: %{tags}"
         other: "%{count} ట్యాగ్‌లు తొలగించబడతాయి: %{tags}"
@@ -6179,6 +6180,8 @@ te:
         no_user_badges: "%{name} కి ఎలాంటి బ్యాడ్జ్‌లు మంజూరు కాలేదు."
         no_badges: మంజూరు చేయగల బ్యాడ్జ్‌లు లేవు.
         none_selected: "ప్రారంభించడానికి బ్యాడ్జ్‌ని ఎంచుకోండి"
+        sections:
+          settings: అమరికలు
         allow_title: బ్యాడ్జ్ను శీర్షికగా ఉపయోగించడానికి అనుమతించండి
         multiple_grant: అనేక సార్లు మంజూరు చేయవచ్చు
         visibility_heading: దృశ్యమానత

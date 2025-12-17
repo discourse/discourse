@@ -2550,6 +2550,7 @@ et:
       sort_by_name: "nimi"
       manage_groups: "Halda sildirühmi"
       manage_groups_description: "Määra siltide organiseerimiseks rühmad"
+      bulk_create_button: "Loo"
       filters:
         without_category: "%{filter} %{tag} teemat"
         with_category: "%{filter} teemad sildiga %{tag} kategoorias %{category}"
@@ -3803,6 +3804,8 @@ et:
         no_user_badges: "%{name} ei ole saanud veel ühtegi märgist."
         no_badges: Ei ole ühtegi märgist, mida saaks anda.
         none_selected: "Vali märgis, et alustada"
+        sections:
+          settings: Seaded
         allow_title: Luba märgise kasutamist tiitlina
         multiple_grant: Võib olla määratud mitmeid kordi
         visibility_heading: Nähtavus

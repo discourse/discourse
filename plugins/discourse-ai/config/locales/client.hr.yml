@@ -42,7 +42,7 @@ hr:
         groups: "Grupe:"
         no_persona: "Nije postavljeno"
         no_groups: "Ništa"
-        edit: "Uredi"
+        edit: "Postavke"
         expand_list:
           one: "(%{count} još)"
           few: "(%{count} još)"

@@ -43,7 +43,7 @@ ko:
         disabled: "(비활성)"
         groups: "그룹:"
         no_groups: "없음"
-        edit: "편집"
+        edit: "설정"
         expand_list:
           other: "(%{count}개 더보기)"
         filters:

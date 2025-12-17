@@ -85,7 +85,7 @@ el:
         groups: "Ομάδες:"
         no_persona: "Δεν έχει οριστεί"
         no_groups: "Κανένα"
-        edit: "Επεξεργασία"
+        edit: "Ρυθμίσεις"
         expand_list:
           one: "(%{count} περισσότερο)"
           other: "(%{count} περισσότερα)"

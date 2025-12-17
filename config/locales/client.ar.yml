@@ -5730,6 +5730,7 @@ ar:
       upload_description: "تحميل ملف CSV لإنشاء الوسوم بشكلٍٍ جماعي"
       upload_instructions: "واحد في كل سطر، مع مجموعة وسوم بالتنسيق 'tag_name,tag_group' بشكلٍٍ اختياري."
       upload_successful: "تم تحميل الوسوم بنجاح"
+      bulk_create_button: "إنشاء"
       delete_unused_confirmation:
         zero: "سيتم حذف %{count} وسم: %{tags}"
         one: "سيتم حذف وسم واحد (%{count}): %{tags}"
@@ -9065,6 +9066,9 @@ ar:
         no_user_badges: "لم يُمنح %{name} أيّ شارة."
         no_badges: لا توجد شارات يمكن منحها.
         none_selected: "تحديد شارة للبدء"
+        sections:
+          query: استعلام
+          settings: الإعدادان
         usage_heading: الاستخدام
         allow_title: السماح للمستخدمين باستخدام الشارة كعنوان
         multiple_grant: يمكن منحها عدة مرات

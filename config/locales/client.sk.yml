@@ -5077,6 +5077,7 @@ sk:
       upload_description: "Nahrávanie súboru csv na hromadné vytváranie značiek"
       upload_instructions: "Jeden na riadok, voliteľne so skupinou značiek vo formáte \"tag_name,tag_group\"."
       upload_successful: "Značky boli úspešne nahrané"
+      bulk_create_button: "Vytvoriť"
       delete_unused_confirmation:
         one: "Značka %{count} bude odstránená: %{tags}"
         few: "%{count} značiek bude odstránených: %{tags}"
@@ -8265,6 +8266,9 @@ sk:
         no_user_badges: "Používateľovi %{name} nebol udelený žiaden odznak."
         no_badges: Nie sú žiadne odznaky, ktoré môžu byť udelené.
         none_selected: "Vyberte odznak, aby ste mohli začať"
+        sections:
+          query: Dopyt
+          settings: Nastavení
         usage_heading: Použitie
         allow_title: Povoliť použitie odznaku namiesto názvu
         multiple_grant: Môže byť udelené viacnásobne

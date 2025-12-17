@@ -235,7 +235,7 @@ de:
         no_llm: "Kein LLM ausgewählt"
         no_persona: "Nicht festgelegt"
         no_groups: "Keine"
-        edit: "Bearbeiten"
+        edit: "Einstellungen"
         expand_list:
           one: "(%{count} weitere)"
           other: "(%{count} weitere)"

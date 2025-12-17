@@ -4857,6 +4857,7 @@ ug:
       upload_description: "توپ بەلگە قۇرۇش ئۈچۈن csv ھۆججەت يۈكلىنىدۇ"
       upload_instructions: "ھەر قۇرغا بىردىن، «'tag_name,tag_group» پىچىمىدا بەلگە توپىنى تاللاشقا بولىدۇ."
       upload_successful: "بەلگە مۇۋەپپەقىيەتلىك يۈكلەندى"
+      bulk_create_button: "قۇر"
       delete_unused_confirmation:
         one: "%{count} بەلگە ئۆچۈرۈلىدۇ: %{tags}"
         other: "%{count} بەلگە ئۆچۈرۈلىدۇ: %{tags}"
@@ -8043,6 +8044,8 @@ ug:
         no_user_badges: "%{name} غا ھېچقانداق تارتۇق بېرىلمىگەن."
         no_badges: بېرىدىغان ھېچقانداق تارتۇق يوق.
         none_selected: "بېرىدىغان تارتۇق تاللىنىدۇ"
+        sections:
+          settings: تەڭشەك
         usage_heading: ئىشلىتىلىشى
         allow_title: تارتۇقنى ئۇنۋان سۈپىتىدە قوللىنىشقا يول قويىدۇ
         multiple_grant: كۆپ قېتىم ئىجازەت بېرىشكە بولىدۇ
