@@ -1,7 +1,6 @@
-import { cached } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import EmberObject, { computed, get } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { alias, sort } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
@@ -86,19 +85,26 @@ export default class Site extends RestModel {
   @service siteSettings;
   @service capabilities;
 
+  @tracked is_readonly;
   @trackedArray categories = [];
   @trackedArray groups = [];
-
-  @alias("is_readonly") isReadOnly;
-
-  @sort("categories", "topicCountDesc") categoriesByCount;
 
   #siteInitialized = false;
 
   init() {
     super.init(...arguments);
+  }
 
-    this.topicCountDesc = ["topic_count:desc"];
+  @dependentKeyCompat
+  get categoriesByCount() {
+    return [...this.categories].sort((a, b) => {
+      return (b.topic_count || 0) - (a.topic_count || 0); // topic_count:desc
+    });
+  }
+
+  @dependentKeyCompat
+  get isReadOnly() {
+    return this.is_readonly;
   }
 
   @dependentKeyCompat

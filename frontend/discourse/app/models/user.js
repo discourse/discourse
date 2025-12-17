@@ -1,7 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { computed, get, getProperties } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { alias, equal, filterBy, gt, mapBy, or } from "@ember/object/computed";
 import Evented from "@ember/object/evented";
 import { getOwner, setOwner } from "@ember/owner";
 import { cancel } from "@ember/runloop";
@@ -17,7 +16,6 @@ import {
   removeValueFromArray,
   uniqueItemsFromArray,
 } from "discourse/lib/array-tools";
-import { url } from "discourse/lib/computed";
 import {
   AUTO_GROUPS,
   INTERFACE_COLOR_MODES,
@@ -224,7 +222,15 @@ export default class User extends RestModel.extend(Evented) {
   @tracked do_not_disturb_until;
   @tracked status;
   @tracked dismissed_banner_key;
+  @tracked can_edit_tags;
+  @tracked can_pick_theme_with_custom_homepage;
+  @tracked id;
+  @tracked private_messages_stats;
+  @tracked sidebar_category_ids;
+  @tracked trust_level;
+  @tracked username;
   @trackedArray associated_accounts;
+  @trackedArray groups;
   @trackedArray ignored_usernames;
   @trackedArray ignored_users;
   @trackedArray secondary_emails;
@@ -254,24 +260,79 @@ export default class User extends RestModel.extend(Evented) {
   @userOption("treat_as_new_topic_start_date") treat_as_new_topic_start_date;
   @userOption("composition_mode") composition_mode;
 
-  @gt("private_messages_stats.all", 0) hasPMs;
-  @gt("private_messages_stats.mine", 0) hasStartedPMs;
-  @gt("private_messages_stats.unread", 0) hasUnreadPMs;
-  @url("id", "username_lower", "/admin/users/%@1/%@2") adminPath;
-  @equal("trust_level", 0) isBasic;
-  @equal("trust_level", 3) isRegular;
-  @equal("trust_level", 4) isLeader;
-  @or("staff", "isLeader") canManageTopic;
-  @alias("sidebar_category_ids") sidebarCategoryIds;
-  @alias("sidebar_sections") sidebarSections;
-  @mapBy("sidebarTags", "name") sidebarTagNames;
-  @filterBy("groups", "has_messages", true) groupsWithMessages;
-  @alias("can_pick_theme_with_custom_homepage") canPickThemeWithCustomHomepage;
-  @alias("can_edit_tags") canEditTags;
-
   numGroupsToDisplay = 2;
 
   statusManager = new UserStatusManager(this);
+
+  @dependentKeyCompat
+  get hasPMs() {
+    return this.private_messages_stats?.all > 0;
+  }
+
+  @dependentKeyCompat
+  get hasStartedPMs() {
+    return this.private_messages_stats?.mine > 0;
+  }
+
+  @dependentKeyCompat
+  get hasUnreadPMs() {
+    return this.private_messages_stats?.unread > 0;
+  }
+
+  @dependentKeyCompat
+  get adminPath() {
+    return getURL(`/admin/users/${this.id}/${this.username_lower}`);
+  }
+
+  @dependentKeyCompat
+  get isBasic() {
+    return this.trust_level === 0;
+  }
+
+  @dependentKeyCompat
+  get isRegular() {
+    return this.trust_level === 3;
+  }
+
+  @dependentKeyCompat
+  get isLeader() {
+    return this.trust_level === 4;
+  }
+
+  @dependentKeyCompat
+  get canManageTopic() {
+    return this.staff || this.isLeader;
+  }
+
+  @dependentKeyCompat
+  get sidebarCategoryIds() {
+    return this.sidebar_category_ids;
+  }
+
+  @dependentKeyCompat
+  get sidebarSections() {
+    return this.sidebar_sections;
+  }
+
+  @dependentKeyCompat
+  get sidebarTagNames() {
+    return this.sidebarTags?.map((tag) => tag.name);
+  }
+
+  @dependentKeyCompat
+  get groupsWithMessages() {
+    return this.groups?.filter((group) => group.has_messages === true);
+  }
+
+  @dependentKeyCompat
+  get canPickThemeWithCustomHomepage() {
+    return this.can_pick_theme_with_custom_homepage;
+  }
+
+  @dependentKeyCompat
+  get canEditTags() {
+    return this.can_edit_tags;
+  }
 
   @discourseComputed("user_option.composition_mode")
   useRichEditor(compositionMode) {

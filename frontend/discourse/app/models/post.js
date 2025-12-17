@@ -1,13 +1,12 @@
 import { cached, tracked } from "@glimmer/tracking";
 import EmberObject, { get } from "@ember/object";
-import { alias, and, equal, not, or } from "@ember/object/computed";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { resolveShareUrl } from "discourse/helpers/share-url";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { propertyEqual } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import { cook } from "discourse/lib/text";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
@@ -217,16 +216,6 @@ export default class Post extends RestModel {
   @trackedPostProperty user_custom_fields;
   @trackedPostProperty post_localizations;
 
-  @alias("can_edit") canEdit; // for compatibility with existing code
-  @equal("trust_level", 0) new_user;
-  @equal("post_number", 1) firstPost;
-  @and("firstPost", "topic.deleted_at") deletedViaTopic; // mark fist post as deleted if topic was deleted
-  @or("deleted_at", "deletedViaTopic") deleted; // post is either highlighted as deleted or hidden/removed from the post stream
-  @not("deleted") notDeleted;
-  @or("deleted_at", "user_deleted") recoverable; // post or content still can be recovered
-  @propertyEqual("topic.details.created_by.id", "user_id") topicOwner;
-  @alias("topic.details.created_by.id") topicCreatedById;
-
   constructor() {
     super(...arguments);
 
@@ -234,6 +223,51 @@ export default class Post extends RestModel {
     pluginTrackedProperties.forEach((propertyKey) => {
       defineTrackedProperty(this, propertyKey);
     });
+  }
+
+  @dependentKeyCompat
+  get canEdit() {
+    return this.can_edit;
+  }
+
+  @dependentKeyCompat
+  get new_user() {
+    return this.trust_level === 0;
+  }
+
+  @dependentKeyCompat
+  get firstPost() {
+    return this.post_number === 1;
+  }
+
+  @dependentKeyCompat
+  get deletedViaTopic() {
+    return this.firstPost && this.topic?.deleted_at;
+  }
+
+  @dependentKeyCompat
+  get deleted() {
+    return this.deleted_at || this.deletedViaTopic;
+  }
+
+  @dependentKeyCompat
+  get notDeleted() {
+    return !this.deleted;
+  }
+
+  @dependentKeyCompat
+  get recoverable() {
+    return this.deleted_at || this.user_deleted;
+  }
+
+  @dependentKeyCompat
+  get topicOwner() {
+    return this.topic?.details?.created_by?.id === this.user_id;
+  }
+
+  @dependentKeyCompat
+  get topicCreatedById() {
+    return this.topic?.details?.created_by?.id;
   }
 
   get shareUrl() {

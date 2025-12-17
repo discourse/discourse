@@ -1,21 +1,20 @@
 import { cached, tracked } from "@glimmer/tracking";
 import EmberObject, { computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { alias, and, equal, notEmpty, or } from "@ember/object/computed";
 import { service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { resolveShareUrl } from "discourse/helpers/share-url";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValuesFromArray } from "discourse/lib/array-tools";
-import { fmt, propertyEqual } from "discourse/lib/computed";
 import { TOPIC_VISIBILITY_REASONS } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { longDate } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
 import { applyModelTransformations } from "discourse/lib/model-transformers";
-import { deepMerge } from "discourse/lib/object";
+import { deepEqual, deepMerge } from "discourse/lib/object";
 import PreloadStore from "discourse/lib/preload-store";
 import { emojiUnescape } from "discourse/lib/text";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
@@ -303,6 +302,7 @@ export default class Topic extends RestModel {
   @service currentUser;
   @service siteSettings;
 
+  @tracked archetype;
   @tracked chunk_size;
   @tracked deleted_at;
   @tracked deleted_by;
@@ -310,36 +310,91 @@ export default class Topic extends RestModel {
   @tracked errorLoading = false;
   @tracked errorMessage;
   @tracked errorTitle;
+  @tracked excerpt;
   @tracked highest_post_number;
+  @tracked id;
   @tracked last_posted_at;
   @tracked last_read_post_number;
   @tracked noRetry;
+  @tracked pinned;
   @tracked posts_count;
   @tracked replies_to_post_number;
+  @tracked slug;
   @tracked suggested_topics;
   @trackedArray bookmarks;
   @trackedArray pending_posts;
 
   message = null;
 
-  @alias("lastPoster.user") lastPosterUser;
-  @alias("lastPoster.primary_group") lastPosterGroup;
-  @alias("details.allowed_groups") allowedGroups;
-  @notEmpty("deleted_at") deleted;
-  @fmt("url", "%@/print") printUrl;
-  @equal("archetype", "private_message") isPrivateMessage;
-  @equal("archetype", "banner") isBanner;
-  @alias("bookmarks.length") bookmarkCount;
-  @and("pinned", "category.isUncategorizedCategory") isPinnedUncategorized;
-  @notEmpty("excerpt") hasExcerpt;
-  @propertyEqual("last_read_post_number", "highest_post_number") readLastPost;
-  @and("pinned", "readLastPost") canClearPin;
-  @or("details.can_edit", "details.can_edit_tags") canEditTags;
-
   @tracked _details = this.store.createRecord("topicDetails", {
     id: this.id,
     topic: this,
   });
+
+  @dependentKeyCompat
+  get lastPosterUser() {
+    return this.lastPoster?.user;
+  }
+
+  @dependentKeyCompat
+  get lastPosterGroup() {
+    return this.lastPoster?.primary_group;
+  }
+
+  @dependentKeyCompat
+  get allowedGroups() {
+    return this.details?.allowed_groups;
+  }
+
+  @dependentKeyCompat
+  get deleted() {
+    return !isEmpty(this.deleted_at);
+  }
+
+  @dependentKeyCompat
+  get printUrl() {
+    return `${this.url}/print`;
+  }
+
+  @dependentKeyCompat
+  get isPrivateMessage() {
+    return this.archetype === "private_message";
+  }
+
+  @dependentKeyCompat
+  get isBanner() {
+    return this.archetype === "banner";
+  }
+
+  @dependentKeyCompat
+  get bookmarkCount() {
+    return this.bookmarks?.length;
+  }
+
+  @dependentKeyCompat
+  get isPinnedUncategorized() {
+    return this.pinned && this.category?.isUncategorizedCategory;
+  }
+
+  @dependentKeyCompat
+  get hasExcerpt() {
+    return !isEmpty(this.excerpt);
+  }
+
+  @dependentKeyCompat
+  get readLastPost() {
+    return deepEqual(this.last_read_post_number, this.highest_post_number);
+  }
+
+  @dependentKeyCompat
+  get canClearPin() {
+    return this.pinned && this.readLastPost;
+  }
+
+  @dependentKeyCompat
+  get canEditTags() {
+    return this.details?.can_edit || this.details?.can_edit_tags;
+  }
 
   @discourseComputed("last_read_post_number", "highest_post_number")
   visited(lastReadPostNumber, highestPostNumber) {

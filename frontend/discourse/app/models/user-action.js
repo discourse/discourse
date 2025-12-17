@@ -1,4 +1,5 @@
-import { equal, or } from "@ember/object/computed";
+import { tracked } from "@glimmer/tracking";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import discourseComputed from "discourse/lib/decorators";
 import { emojiUnescape } from "discourse/lib/text";
@@ -85,18 +86,73 @@ export default class UserAction extends RestModel {
 
   @service currentUser;
 
-  @or("name", "username") presentName;
-  @or("target_name", "target_username") targetDisplayName;
-  @or("acting_name", "acting_username") actingDisplayName;
-  @equal("action_type", UserActionTypes.replies) replyType;
-  @equal("action_type", UserActionTypes.posts) postType;
-  @equal("action_type", UserActionTypes.topics) topicType;
-  @equal("action_type", UserActionTypes.bookmarks) bookmarkType;
-  @equal("action_type", UserActionTypes.messages_sent) messageSentType;
-  @equal("action_type", UserActionTypes.messages_received) messageReceivedType;
-  @equal("action_type", UserActionTypes.mentions) mentionType;
-  @or("messageSentType", "messageReceivedType") isPM;
-  @or("postType", "replyType") postReplyType;
+  @tracked action_type;
+  @tracked acting_name;
+  @tracked acting_username;
+  @tracked name;
+  @tracked target_name;
+  @tracked target_username;
+  @tracked username;
+
+  @dependentKeyCompat
+  get presentName() {
+    return this.name || this.username;
+  }
+
+  @dependentKeyCompat
+  get targetDisplayName() {
+    return this.target_name || this.target_username;
+  }
+
+  @dependentKeyCompat
+  get actingDisplayName() {
+    return this.acting_name || this.acting_username;
+  }
+
+  @dependentKeyCompat
+  get replyType() {
+    return this.action_type === UserActionTypes.replies;
+  }
+
+  @dependentKeyCompat
+  get postType() {
+    return this.action_type === UserActionTypes.posts;
+  }
+
+  @dependentKeyCompat
+  get topicType() {
+    return this.action_type === UserActionTypes.topics;
+  }
+
+  @dependentKeyCompat
+  get bookmarkType() {
+    return this.action_type === UserActionTypes.bookmarks;
+  }
+
+  @dependentKeyCompat
+  get messageSentType() {
+    return this.action_type === UserActionTypes.messages_sent;
+  }
+
+  @dependentKeyCompat
+  get messageReceivedType() {
+    return this.action_type === UserActionTypes.messages_received;
+  }
+
+  @dependentKeyCompat
+  get mentionType() {
+    return this.action_type === UserActionTypes.mentions;
+  }
+
+  @dependentKeyCompat
+  get isPM() {
+    return this.messageSentType || this.messageReceivedType;
+  }
+
+  @dependentKeyCompat
+  get postReplyType() {
+    return this.postType || this.replyType;
+  }
 
   @discourseComputed("category_id")
   category() {

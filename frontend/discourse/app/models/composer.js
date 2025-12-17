@@ -1,7 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { and, equal, not, or, reads } from "@ember/object/computed";
 import { next, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isHTMLSafe } from "@ember/template";
@@ -214,38 +213,110 @@ export default class Composer extends RestModel {
   locale = this.siteSettings.content_localization_enabled
     ? this.post?.locale
     : null;
+  @tracked action;
+  @tracked composeState;
+  @tracked site;
 
   unlistTopic = false;
   noBump = false;
   draftSaving = false;
   draftForceSave = false;
   showFullScreenExitPrompt = false;
-  @reads("site.archetypes") archetypes;
-  @equal("action", CREATE_SHARED_DRAFT) sharedDraft;
-  @equal("action", CREATE_TOPIC) creatingTopic;
-  @equal("action", CREATE_SHARED_DRAFT) creatingSharedDraft;
-  @equal("action", PRIVATE_MESSAGE) creatingPrivateMessage;
-  @not("creatingPrivateMessage") notCreatingPrivateMessage;
-  @not("privateMessage") notPrivateMessage;
-  @or("creatingTopic", "editingFirstPost") topicFirstPost;
-  @equal("composeState", OPEN) viewOpen;
-  @equal("composeState", DRAFT) viewDraft;
-  @equal("composeState", FULLSCREEN) viewFullscreen;
-  @or("viewOpen", "viewFullscreen") viewOpenOrFullscreen;
-  @and("editingPost", "post.firstPost") editingFirstPost;
-
-  @or(
-    "creatingTopic",
-    "creatingPrivateMessage",
-    "editingFirstPost",
-    "creatingSharedDraft"
-  )
-  canEditTitle;
-
-  @and("canEditTitle", "notCreatingPrivateMessage", "notPrivateMessage")
-  canCategorize;
 
   @tracked _categoryId = null;
+
+  @dependentKeyCompat
+  get archetypes() {
+    return this.site.archetypes;
+  }
+
+  @dependentKeyCompat
+  get creatingTopic() {
+    return this.action === CREATE_TOPIC;
+  }
+
+  @dependentKeyCompat
+  get creatingSharedDraft() {
+    return this.action === CREATE_SHARED_DRAFT;
+  }
+
+  @dependentKeyCompat
+  get sharedDraft() {
+    deprecated(
+      "`composer.sharedDraft` is deprecated, use `composer.creatingSharedDraft` instead",
+      {
+        id: "discourse.replace-legacy-property.composer--sharedDraft",
+        since: "2025.12.0",
+        dropFrom: "2026.6.0",
+      }
+    );
+
+    return this.creatingSharedDraft;
+  }
+
+  @dependentKeyCompat
+  get creatingPrivateMessage() {
+    return this.action === PRIVATE_MESSAGE;
+  }
+
+  @dependentKeyCompat
+  get notCreatingPrivateMessage() {
+    return !this.creatingPrivateMessage;
+  }
+
+  @dependentKeyCompat
+  get notPrivateMessage() {
+    return !this.privateMessage;
+  }
+
+  @dependentKeyCompat
+  get topicFirstPost() {
+    return this.creatingTopic || this.editingFirstPost;
+  }
+
+  @dependentKeyCompat
+  get viewOpen() {
+    return this.composeState === OPEN;
+  }
+
+  @dependentKeyCompat
+  get viewDraft() {
+    return this.composeState === DRAFT;
+  }
+
+  @dependentKeyCompat
+  get viewFullscreen() {
+    return this.composeState === FULLSCREEN;
+  }
+
+  @dependentKeyCompat
+  get viewOpenOrFullscreen() {
+    return this.viewOpen || this.viewFullscreen;
+  }
+
+  @dependentKeyCompat
+  get editingFirstPost() {
+    return this.editingPost && this.post?.firstPost;
+  }
+
+  @dependentKeyCompat
+  get canEditTitle() {
+    return (
+      this.creatingTopic ||
+      this.creatingPrivateMessage ||
+      this.editingFirstPost ||
+      this.creatingSharedDraft
+    );
+  }
+
+  @dependentKeyCompat
+  get canCategorize() {
+    return (
+      this.canEditTitle &&
+      this.notCreatingPrivateMessage &&
+      this.notPrivateMessage
+    );
+  }
 
   @discourseComputed("reply", "originalText")
   replyDirty(reply, original) {

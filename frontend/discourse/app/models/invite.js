@@ -1,10 +1,11 @@
 import EmberObject from "@ember/object";
-import { alias } from "@ember/object/computed";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { isNone } from "@ember/utils";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import { userPath } from "discourse/lib/url";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
@@ -54,8 +55,17 @@ export default class Invite extends EmberObject {
     });
   }
 
-  @alias("topics.firstObject.id") topicId;
-  @alias("topics.firstObject.title") topicTitle;
+  @trackedArray topics;
+
+  @dependentKeyCompat
+  get topicId() {
+    return this.topics?.[0]?.id;
+  }
+
+  @dependentKeyCompat
+  get topicTitle() {
+    return this.topics?.[0]?.title;
+  }
 
   save(data) {
     const promise = this.id

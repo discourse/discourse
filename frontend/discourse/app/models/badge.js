@@ -1,5 +1,6 @@
+import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
-import { alias, none } from "@ember/object/computed";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse/lib/decorators";
@@ -67,9 +68,18 @@ export default class Badge extends RestModel {
     );
   }
 
-  @none("id") newBadge;
+  @tracked id;
+  @tracked image_url;
 
-  @alias("image_url") image;
+  @dependentKeyCompat
+  get newBadge() {
+    return this.id == null;
+  }
+
+  @dependentKeyCompat
+  get image() {
+    return this.image_url;
+  }
 
   @discourseComputed
   url() {

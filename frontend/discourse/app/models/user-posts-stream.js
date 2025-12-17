@@ -1,7 +1,8 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { ajax } from "discourse/lib/ajax";
-import { url } from "discourse/lib/computed";
+import getURL from "discourse/lib/get-url";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import UserAction from "discourse/models/user-action";
 
@@ -12,10 +13,15 @@ export default class UserPostsStream extends EmberObject {
   @tracked lastLoadedUrl;
   @tracked loaded = false;
   @tracked loading = false;
+  @tracked user;
   @trackedArray content = [];
 
-  @url("user.username_lower", "filter", "itemsLoaded", "/posts/%@/%@?offset=%@")
-  url;
+  @dependentKeyCompat
+  get url() {
+    return getURL(
+      `/posts/${this.user?.username_lower}/${this.filter}?offset=${this.itemsLoaded}`
+    );
+  }
 
   async filterBy(opts) {
     if (this.loaded && this.filter === opts.filter) {
