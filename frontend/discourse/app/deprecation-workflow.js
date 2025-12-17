@@ -1,5 +1,3 @@
-import { importSync } from "@embroider/macros";
-
 /**
  * Valid environment names for deprecation workflows.
  * @type {string[]}
@@ -374,16 +372,14 @@ const workflows = [
   { handler: "notify-admin", matchId: "discourse.script-tag-hbs" },
   { handler: "notify-admin", matchId: "discourse.widgets-decommissioned" },
   { handler: "notify-admin", matchId: "discourse.widgets-end-of-life" },
-];
 
-if (importSync("@glimmer/env")?.DEBUG) {
-  // Used in system specs
-  workflows.push({
+  // used in system specs
+  {
     handler: ["dont-count", "dont-throw", "notify-admin"],
     matchId: /fake.deprecation.*/,
     env: "test",
-  });
-}
+  },
+];
 
 const DeprecationWorkflow = new DiscourseDeprecationWorkflow(workflows);
 
