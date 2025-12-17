@@ -1,7 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 export default {
-  name: "discourse-post-voting-admin-plugin-configuration-nav",
+  name: "post-voting-admin-plugin-configuration-nav",
 
   initialize(container) {
     const currentUser = container.lookup("service:current-user");

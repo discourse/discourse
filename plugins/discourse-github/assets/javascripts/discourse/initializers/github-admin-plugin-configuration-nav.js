@@ -1,7 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 export default {
-  name: "discourse-github-admin-plugin-configuration-nav",
+  name: "github-admin-plugin-configuration-nav",
 
   initialize(container) {
     const currentUser = container.lookup("service:current-user");

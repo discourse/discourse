@@ -1,7 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 export default {
-  name: "discourse-openid-connect-admin-plugin-configuration-nav",
+  name: "openid-connect-admin-plugin-configuration-nav",
 
   initialize(container) {
     const currentUser = container.lookup("service:current-user");

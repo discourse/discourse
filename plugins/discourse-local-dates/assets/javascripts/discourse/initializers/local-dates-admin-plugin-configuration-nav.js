@@ -1,7 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 export default {
-  name: "discourse-local-dates-admin-plugin-configuration-nav",
+  name: "local-dates-admin-plugin-configuration-nav",
 
   initialize(container) {
     const currentUser = container.lookup("service:current-user");
