@@ -172,7 +172,7 @@ describe "Content localization language switcher", type: :system do
     expect(page).to have_no_css("[data-menu-option-id='ja'].--selected")
     expect(page).to have_no_css("[data-menu-option-id='es'].--selected")
 
-    switcher.close
+    switcher.collapse
     select_language("ja")
     switcher.expand
 
