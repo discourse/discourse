@@ -6,9 +6,7 @@ export default class AvatarDecorator extends Component {
   @service rewind;
 
   get showDecorator() {
-    return (
-      this.rewind.active && !this.rewind.dismissed && !this.rewind.disabled
-    );
+    return this.rewind.active && !this.rewind.dismissed && this.rewind.enabled;
   }
 
   <template>

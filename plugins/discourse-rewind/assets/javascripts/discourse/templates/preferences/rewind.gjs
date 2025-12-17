@@ -7,15 +7,15 @@ export default <template>
 
   <div
     class="control-group rewind-setting"
-    data-setting-name="user_discourse_rewind_disabled"
+    data-setting-name="user_discourse_rewind_enabled"
   >
     <label class="controls">
       <Input
-        id="user_discourse_rewind_disabled"
+        id="user_discourse_rewind_enabled"
         @type="checkbox"
-        @checked={{@controller.model.user_option.discourse_rewind_disabled}}
+        @checked={{@controller.model.user_option.discourse_rewind_enabled}}
       />
-      {{i18n "discourse_rewind.preferences.disable_rewind"}}
+      {{i18n "discourse_rewind.preferences.enable_rewind"}}
     </label>
   </div>
 

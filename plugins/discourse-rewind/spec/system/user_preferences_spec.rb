@@ -12,7 +12,7 @@ describe "DiscourseRewind | user preferences", type: :system do
   context "when in december" do
     before { freeze_time DateTime.parse("2022-12-05") }
 
-    context "when discourse_rewind_disabled is false" do
+    context "when discourse_rewind_enabled is true" do
       it "shows the rewind tab" do
         rewind_page.visit_my_activity
         expect(rewind_page).to have_rewind_tab
@@ -26,8 +26,8 @@ describe "DiscourseRewind | user preferences", type: :system do
       end
     end
 
-    context "when discourse_rewind_disabled is true" do
-      before { current_user.user_option.update!(discourse_rewind_disabled: true) }
+    context "when discourse_rewind_enabled is false" do
+      before { current_user.user_option.update!(discourse_rewind_enabled: false) }
 
       it "does not show the rewind tab" do
         rewind_page.visit_my_activity

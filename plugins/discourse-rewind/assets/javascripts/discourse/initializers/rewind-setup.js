@@ -18,7 +18,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      if (!this.rewind.disabled) {
+      if (this.rewind.enabled) {
         api.addQuickAccessProfileItem({
           icon: "repeat",
           href: "/my/activity/rewind",
