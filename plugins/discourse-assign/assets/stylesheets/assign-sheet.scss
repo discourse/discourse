@@ -1,0 +1,41 @@
+.assign-sheet__inner-content {
+  height: 100%;
+  min-height: 0;
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 10%),
+    0 4px 6px -4px rgb(0 0 0 / 10%);
+  overflow: hidden;
+  overflow: clip;
+  border-radius: var(--d-border-radius);
+  background-color: var(--secondary);
+}
+
+.assign-sheet__content {
+  box-sizing: border-box;
+  height: calc(min(500px, 90svh) + env(safe-area-inset-bottom, 0px));
+  background-color: transparent;
+  padding-inline: 0.5rem;
+  padding-block: 0.5rem max(env(safe-area-inset-bottom, 0px), 0.5rem);
+  display: grid;
+  max-width: 300px;
+  min-width: 300px;
+
+  &[data-d-sheet~="right"] {
+    height: 100%;
+    width: min(80%, 700px);
+    padding: var(--space-2);
+  }
+}
+
+.assign-sheet__view {
+  z-index: z("max");
+  height: calc(max(100dvh, 100lvh) + 60px);
+
+  &[data-d-sheet~="right"] {
+    height: 100%;
+  }
+}
+
+.assign-sheet__backdrop {
+  background-color: #000;
+}

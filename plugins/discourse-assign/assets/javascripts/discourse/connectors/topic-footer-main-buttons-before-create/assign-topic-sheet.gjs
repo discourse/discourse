@@ -1,14 +1,19 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { array, concat, hash } from "@ember/helper";
+import { concat } from "@ember/helper";
 import { action } from "@ember/object";
-import { guidFor } from "@ember/object/internals";
+// import { guidFor } from "@ember/object/internals";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import DSheet from "discourse/float-kit/components/d-sheet";
 import concatClass from "discourse/helpers/concat-class";
 import TrackedMediaQuery from "discourse/lib/tracked-media-query";
-import DSheet from "./d-sheet";
 
-export default class DSheetWithStacking extends Component {
+export default class AssignTopicSheet extends Component {
+  @tracked reachedLastDetent = false;
+
   largeViewport = new TrackedMediaQuery("(min-width: 700px)");
+
+  componentId = "test"; //guidFor(this);
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -19,8 +24,43 @@ export default class DSheetWithStacking extends Component {
     return this.largeViewport.matches ? "right" : "bottom";
   }
 
-  get componentId() {
-    return this.args.componentId ?? guidFor(this);
+  get detents() {
+    return null;
+    // return this.args.detents ?? ["66vh"];
+  }
+
+  @action
+  setReachedLastDetent(value) {
+    this.reachedLastDetent = value;
+  }
+
+  @action
+  handleTravelStatusChange(status) {
+    if (status === "idleOutside") {
+      this.setReachedLastDetent(false);
+    }
+    this.onTravelStatusChange?.(status);
+  }
+
+  @action
+  handleTravelRangeChange(range) {
+    if (range.start === 2 && !this.args.reachedLastDetent) {
+      this.setReachedLastDetent(true);
+    }
+    this.onTravelRangeChange?.(range);
+  }
+
+  @action
+  handleTravel(event) {
+    if (event.progress < 0.999 && this.view) {
+      this.view.focus();
+    }
+    this.args.onTravel?.(event);
+  }
+
+  @action
+  registerView(element) {
+    this.view = element;
   }
 
   get stackingAnimation() {
@@ -45,45 +85,47 @@ export default class DSheetWithStacking extends Component {
 
   <template>
     <DSheet.Stack.Root as |stack|>
+
       <DSheet.Root
         @componentId={{this.componentId}}
         @forComponent={{stack.stackId}}
         as |sheet|
       >
-        <DSheet.Trigger @sheet={{sheet}} @action="present">Test 2</DSheet.Trigger>
+        <DSheet.Trigger @forComponent={{this.componentId}} sheet={{sheet}}>
+          OPEN
+        </DSheet.Trigger>
 
-        {{yield
-          (component
-            DSheet.Trigger action="present" forComponent=this.componentId
-          )
-          to="root"
-        }}
         <DSheet.Portal @sheet={{sheet}}>
           <DSheet.View
-            class={{concatClass
-              "SheetWithStacking-view"
-              (concat "tracks-" this.tracks)
-            }}
+            class="assign-sheet__view"
+            @detents={{unless this.reachedLastDetent this.detents}}
+            @swipeOvershoot={{false}}
+            @onTravelStatusChange={{this.handleTravelStatusChange}}
+            @onTravelRangeChange={{this.handleTravelRangeChange}}
+            @onTravel={{this.handleTravel}}
+            {{didInsert this.registerView}}
             @sheet={{sheet}}
+            @setReachedLastDetent={{this.setReachedLastDetent}}
+            @reachedLastDetent={{this.reachedLastDetent}}
             @tracks={{this.tracks}}
-            @contentPlacement="center"
+            ...attributes
           >
             <DSheet.Backdrop
-              class="SheetWithStacking-backdrop"
+              class="assign-sheet__backdrop"
+              @themeColorDimming="auto"
               @sheet={{sheet}}
-              @travelAnimation={{hash opacity=(array 0 0.2)}}
-              ...attributes
             />
             <DSheet.Content
-              class={{concatClass
-                "SheetWithStacking-content"
-                (concat "tracks-" this.tracks)
-              }}
-              @sheet={{sheet}}
               @stackingAnimation={{this.stackingAnimation}}
+              class="assign-sheet__content"
+              @sheet={{sheet}}
             >
-              <div class="SheetWithStacking-innerContent">
-                {{yield sheet to="content"}}
+              <div class="assign-sheet__inner-content">
+                <DSheet.Handle
+                  class="SheetWithDetent-handle"
+                  @sheet={{sheet}}
+                  @action={{if this.reachedLastDetent "dismiss" "step"}}
+                />
 
                 <DSheet.Root @forComponent={{stack.stackId}} as |nestedSheet|>
                   <DSheet.Trigger
@@ -92,35 +134,27 @@ export default class DSheetWithStacking extends Component {
                   >Test</DSheet.Trigger>
                   <DSheet.Portal @sheet={{nestedSheet}}>
                     <DSheet.View
-                      class={{concatClass
-                        "SheetWithStacking-view"
-                        (concat "tracks-" this.tracks)
-                      }}
+                      class="assign-sheet__view"
                       @sheet={{nestedSheet}}
                       @tracks={{this.tracks}}
                     >
                       <DSheet.Backdrop
-                        class="SheetWithStacking-backdrop"
+                        class="assign-sheet__backdrop"
                         @sheet={{nestedSheet}}
-                        @travelAnimation={{hash opacity=(array 0 0.2)}}
                         ...attributes
                       />
                       <DSheet.Content
-                        class={{concatClass
-                          "SheetWithStacking-content"
-                          (concat "tracks-" this.tracks)
-                        }}
                         @sheet={{nestedSheet}}
                         @stackingAnimation={{this.stackingAnimation}}
+                        class="assign-sheet__content"
                       >
-                        <div class="SheetWithStacking-innerContent">
-                          {{yield nestedSheet to="nestedContent"}}
+                        <div class="assign-sheet__inner-content">
+                          NESTED
                         </div>
                       </DSheet.Content>
                     </DSheet.View>
                   </DSheet.Portal>
                 </DSheet.Root>
-
               </div>
             </DSheet.Content>
           </DSheet.View>

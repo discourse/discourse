@@ -1423,6 +1423,8 @@ html[data-d-sheet-native-page-scroll-replaced="false"]:has(
   padding-inline: 0.5rem;
   padding-block: 0.5rem max(env(safe-area-inset-bottom, 0px), 0.5rem);
   display: grid;
+  max-width: 300px;
+  min-width: 300px;
 }
 
 .SheetWithStacking-content.tracks-right {

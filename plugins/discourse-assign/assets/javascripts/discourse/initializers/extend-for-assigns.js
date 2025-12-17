@@ -73,6 +73,7 @@ function registerTopicFooterButtons(api) {
 
         await taskActions.unassign(this.topic.id, "Topic");
       } else {
+        alert(1);
         await modal.show(EditTopicAssignments, {
           model: {
             topic: this.topic,

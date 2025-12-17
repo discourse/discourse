@@ -196,6 +196,7 @@ export default class Trigger extends Component {
       aria-controls={{this.sheetId}}
       aria-expanded={{this.ariaExpanded}}
       {{on "click" this.handleClick}}
+      class="btn-default"
       ...attributes
     >
       {{yield}}
