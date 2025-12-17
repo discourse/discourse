@@ -59,7 +59,7 @@ acceptance("User Preferences - Navigation Menu", function (needs) {
         "category1 doesn't have badge text before the preference is enabled"
       );
 
-    await click("[data-name='sidebar_show_count_of_new_items']");
+    await click("[data-name='sidebar_show_count_of_new_items'] input");
     await click(".save-controls .btn-primary");
 
     // Wait for the save to complete
@@ -145,7 +145,7 @@ acceptance("User Preferences - Navigation Menu", function (needs) {
         "category1's link href is the latest topics list of the category before the preference is enabled"
       );
 
-    await click("[data-name='sidebar_link_to_filtered_list']");
+    await click("[data-name='sidebar_link_to_filtered_list'] input");
     await click(".save-controls .btn-primary");
 
     assert
