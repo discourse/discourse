@@ -13,6 +13,10 @@ export function addPluginDocumentTitleCounter(counterFunction) {
   pluginCounterFunctions.push(counterFunction);
 }
 
+export function clearPluginDocumentTitleCounters() {
+  pluginCounterFunctions.length = 0;
+}
+
 @tagName("")
 export default class DDocument extends Component {
   @service documentTitle;
