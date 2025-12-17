@@ -48,22 +48,14 @@ module DiscourseRewind
 
     params { attribute :for_user_username, :string }
 
-    model :for_user
-    model :year
+    model :for_user # see FetchReportsHelper#fetch_for_user
+    model :year # see FetchReportsHelper#fetch_year
     model :date
     model :all_reports
     model :reports
     model :total_available
 
     private
-
-    def fetch_for_user(params:, guardian:)
-      rewind_for_user(guardian:, params:)
-    end
-
-    def fetch_year
-      rewind_year
-    end
 
     def fetch_date(params:, year:)
       Date.new(year).all_year

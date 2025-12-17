@@ -21,7 +21,7 @@ module DiscourseRewind
       Discourse.redis.setex(cache_key(username, year), CACHE_DURATION, MultiJson.dump(reports))
     end
 
-    def rewind_for_user(guardian:, params:)
+    def fetch_for_user(guardian:, params:)
       return guardian.user if params.for_user_username.blank?
 
       user = User.find_by(username: params.for_user_username)
@@ -36,7 +36,7 @@ module DiscourseRewind
       user
     end
 
-    def rewind_year
+    def fetch_year
       current_date = Time.zone.now
       current_month = current_date.month
       current_year = current_date.year

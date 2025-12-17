@@ -31,20 +31,12 @@ module DiscourseRewind
       validates :index, presence: true, numericality: { greater_than_or_equal_to: 0 }
     end
 
-    model :for_user
-    model :year
+    model :for_user # see FetchReportsHelper#fetch_for_user
+    model :year # see FetchReportsHelper#fetch_year
     model :all_reports
     model :report
 
     private
-
-    def fetch_for_user(params:, guardian:)
-      rewind_for_user(guardian:, params:)
-    end
-
-    def fetch_year
-      rewind_year
-    end
 
     def fetch_all_reports(for_user:, year:)
       load_reports_from_cache(for_user.username, year)
