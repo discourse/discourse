@@ -164,7 +164,7 @@ export default class Rewind extends Component {
   @action
   async copyRewindLink() {
     await clipboardCopy(
-      getAbsoluteURL(`/u/${this.currentUser.username}/activity/rewind`)
+      getAbsoluteURL(`/u/${this.args.user.username}/activity/rewind`)
     );
     this.toasts.success({
       duration: "short",
@@ -376,7 +376,7 @@ export default class Rewind extends Component {
               }}
                 {{#if ReportComponent}}
                   <div class={{concatClass "rewind-report" report.identifier}}>
-                    <ReportComponent @report={{report}} />
+                    <ReportComponent @report={{report}} @user={{@user}} />
                   </div>
                 {{/if}}
               {{/let}}
