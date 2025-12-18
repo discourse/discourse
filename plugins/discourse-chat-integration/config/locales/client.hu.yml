@@ -71,13 +71,13 @@ hu:
             name:
               title: "Név"
             webhook_url:
-              title: Webhook URL
+              title: Webhook webcíme
         guilded:
           param:
             name:
               title: "Név"
             webhook_url:
-              title: Webhook URL
+              title: Webhook webcíme
         mattermost:
           title: "Mattermost"
           param:
@@ -111,7 +111,7 @@ hu:
             name:
               title: "Név"
             webhook_url:
-              title: "Webhook URL"
+              title: "Webhook webcíme"
         flowdock:
           title: "Flowdock"
         teams:
@@ -119,28 +119,28 @@ hu:
             name:
               title: "Név"
             webhook_url:
-              title: "Webhook URL"
-              help: "Az új bejövő webhook létrehozásakor megadott URL"
+              title: "Webhook webcíme"
+              help: "Az új bejövő webhook létrehozásakor megadott webcím"
         powerautomate:
           param:
             name:
               title: "Név"
             webhook_url:
-              title: "Webhook URL"
+              title: "Webhook webcíme"
               help: "Az új bejövő webhook létrehozásakor megadott URL"
         webex:
           param:
             name:
               title: "Név"
             webhook_url:
-              title: "Webhook URL"
+              title: "Webhook webcíme"
               help: "Az új bejövő webhook létrehozásakor megadott URL"
         google:
           param:
             name:
               title: "Név"
             webhook_url:
-              title: "Webhook URL"
+              title: "Webhook webcíme"
     discourse_automation:
       scriptables:
         send_slack_message:

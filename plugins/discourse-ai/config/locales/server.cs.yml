@@ -44,6 +44,7 @@ cs:
         attribution: "Popisek od AI"
     ai_bot:
       default_pm_prefix: "[Nepojmenovaná SZ od AI bota]"
+      thinking: "Přemýšlím..."
       personas:
         custom_prompt:
           name: "Vlastní pokyn"
