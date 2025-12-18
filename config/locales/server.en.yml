@@ -1233,11 +1233,14 @@ en:
       every_six_months: "every six months"
 
   user_api_key:
-    title: "Authorize application access"
+    title: 'Authorize "%{application_name}"'
     authorize: "Authorize"
+    deny: "Cancel"
     read: "read"
     read_write: "read/write"
-    description: '"%{application_name}" is requesting the following access to your account:'
+    logged_in_as: "Logged in as"
+    permissions_header: 'This will allow "%{application_name}" to:'
+    redirect_warning: "Authorizing will redirect you to"
     instructions: 'We just generated a new user API key for you to use with "%{application_name}", please paste the following key into your application:'
     otp_description: 'Would you like to allow "%{application_name}" to access this site?'
     otp_confirmation:
