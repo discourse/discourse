@@ -43,12 +43,14 @@ describe Jobs::TagsLocaleDetectionBackfill do
   end
 
   it "detects locale for tags with nil locale" do
+    Tag.where.not(id: tag.id).update_all(locale: "en")
     DiscourseAi::Translation::TagLocaleDetector.expects(:detect_locale).with(tag).once
 
     job.execute({})
   end
 
   it "handles detection errors gracefully" do
+    Tag.where.not(id: tag.id).update_all(locale: "en")
     DiscourseAi::Translation::TagLocaleDetector
       .expects(:detect_locale)
       .with(tag)
@@ -59,6 +61,7 @@ describe Jobs::TagsLocaleDetectionBackfill do
   end
 
   it "logs a summary after running" do
+    Tag.where.not(id: tag.id).update_all(locale: "en")
     DiscourseAi::Translation::TagLocaleDetector.stubs(:detect_locale)
     DiscourseAi::Translation::VerboseLogger.expects(:log).with(includes("Detected 1 tag locales"))
 
@@ -71,8 +74,7 @@ describe Jobs::TagsLocaleDetectionBackfill do
 
     before do
       SiteSetting.ai_translation_backfill_limit_to_public_content = true
-      # set the existing tag's locale so it won't be processed
-      tag.update!(locale: "en")
+      Tag.update_all(locale: "en")
     end
 
     it "processes tags not in any tag group" do
@@ -106,7 +108,7 @@ describe Jobs::TagsLocaleDetectionBackfill do
         permission_type: TagGroupPermission.permission_types[:full],
       )
 
-      DiscourseAi::Translation::TagLocaleDetector.expects(:detect_locale).with(restricted_tag).never
+      DiscourseAi::Translation::TagLocaleDetector.expects(:detect_locale).never
 
       job.execute({})
     end
