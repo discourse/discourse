@@ -83,6 +83,8 @@ en:
     ai_nsfw_models: "Models to use for NSFW inference."
 
     ai_spam_detection_enabled: "Enable the AI spam detection module"
+    ai_spam_detection_max_post_count: "Maximum number of posts a user can have before they are no longer scanned for spam"
+    ai_spam_detection_max_trust_level: "Maximum trust level of users to scan for spam"
 
     ai_openai_api_key: "API key for OpenAI API. ONLY used for Image creation and edits. For GPT use the LLM config tab"
     ai_openai_image_generation_url: "URL for OpenAI image generation API"
