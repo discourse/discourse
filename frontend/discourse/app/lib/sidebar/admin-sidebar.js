@@ -10,6 +10,7 @@ import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
 import { getReviewBadgeText } from "discourse/lib/sidebar/helpers/review-badge-helper";
 import { ADMIN_PANEL } from "discourse/lib/sidebar/panels";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import {
   escapeExpression,
   stripDiscoursePrefix,
@@ -297,7 +298,9 @@ function pluginAdminRouteLinks(router) {
           : [],
         label: plugin.admin_route.label,
         text: plugin.humanized_name,
-        icon: "gear",
+        icon: applyValueTransformer("admin-plugin-icon", "gear", {
+          pluginId: plugin.name,
+        }),
         description: plugin.description,
         links: pluginNavLinks,
       };

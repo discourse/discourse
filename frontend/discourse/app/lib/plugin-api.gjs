@@ -3148,6 +3148,30 @@ class _PluginApi {
   }
 
   /**
+   * Sets the icon for a plugin in the admin sidebar.
+   *
+   * @param {string} pluginId - The plugin identifier (must match the plugin name)
+   * @param {string} icon - The icon name (FontAwesome icon without 'd-icon-' prefix)
+   *
+   * Example:
+   *
+   * ```javascript
+   * api.setAdminPluginIcon("discourse-calendar", "calendar-days");
+   * ```
+   */
+  setAdminPluginIcon(pluginId, icon) {
+    if (!pluginId) {
+      // eslint-disable-next-line no-console
+      console.warn(consolePrefix(), "A pluginId must be provided!");
+      return;
+    }
+
+    this.registerValueTransformer("admin-plugin-icon", ({ value, context }) => {
+      return context.pluginId === pluginId ? icon : value;
+    });
+  }
+
+  /**
    * Adds a custom site activity item in the new /about page. Requires using
    * the `register_stat` server-side API to serialize the needed data to the
    * frontend.

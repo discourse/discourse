@@ -8,6 +8,7 @@
 # url: https://github.com/discourse/discourse/tree/main/plugins/discourse-adplugin
 
 register_asset "stylesheets/adplugin.scss"
+register_svg_icon "rectangle-ad"
 
 add_admin_route "admin.adplugin.house_ads.title", "houseAds"
 
