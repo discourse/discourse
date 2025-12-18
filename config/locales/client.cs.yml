@@ -5549,7 +5549,6 @@ cs:
       tags_form_modal:
         title: "Úprava štítků v postranním panelu"
         filter_placeholder: "Filtrovat štítky"
-        no_tags: "Nebyly nalezeny žádné štítky odpovídající danému výrazu."
         subtitle:
           text: "a automaticky zobrazíme nejlepší štítky tohoto webu"
       edit_navigation_modal_form:

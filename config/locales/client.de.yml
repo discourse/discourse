@@ -4917,7 +4917,6 @@ de:
       tags_form_modal:
         title: "Schlagwörter-Navigation bearbeiten"
         filter_placeholder: "Schlagwörter filtern"
-        no_tags: "Es gibt keine Schlagwörter, die dem angegebenen Begriff entsprechen."
         subtitle:
           text: "und wir zeigen automatisch die Top-Schlagwörter dieser Website an"
       edit_navigation_modal_form:

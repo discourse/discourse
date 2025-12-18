@@ -5014,7 +5014,6 @@ ug:
       tags_form_modal:
         title: "بەلگە يولباشچى تەھرىر"
         filter_placeholder: "بەلگە سۈزگۈچ"
-        no_tags: "بېرىلگەن ئاتالغۇغا ماس كېلىدىغان بەلگە يوق."
         subtitle:
           text: "ھەمدە بۇ تور بېكەتتىكى ئاۋات بەلگىنى ئۆزلۈكىدىن كۆرسىتىمىز"
       edit_navigation_modal_form:
