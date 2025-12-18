@@ -50,6 +50,11 @@ module PageObjects
         menu.option(".chat-channel-sidebar-link-menu__channel-settings").click
       end
 
+      def toggle_star_channel(channel)
+        menu = open_channel_hover_menu(channel)
+        menu.option(".chat-channel-sidebar-link-menu__star-channel").click
+      end
+
       def channel_section_link_selector(channel)
         ".sidebar-section-link.channel-#{channel.id}"
       end

@@ -21,6 +21,23 @@ RSpec.describe "Chat channel sidebar context menu", type: :system do
     end
   end
 
+  context "when starring toggling starred channel" do
+    it "stars and unstars a channel" do
+      chat_page.visit_channel(channel_1)
+      chat_sidebar_page.toggle_star_channel(channel_1)
+
+      within(chat_sidebar_page.starred_section) do
+        expect(page).to have_css(".channel-#{channel_1.id}")
+      end
+      expect(channel_1.membership_for(current_user).starred).to be_truthy
+
+      chat_sidebar_page.toggle_star_channel(channel_1)
+
+      expect(chat_sidebar_page).to have_no_starred_channels_section
+      expect(channel_1.membership_for(current_user).starred).to be_falsy
+    end
+  end
+
   context "when leaving a channel" do
     fab!(:channel_2, :chat_channel)
 

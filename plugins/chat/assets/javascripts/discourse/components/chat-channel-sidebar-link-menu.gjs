@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -134,12 +135,37 @@ export default class ChatChannelSidebarLinkMenu extends Component {
   @service chatChannelsManager;
   @service currentUser;
 
+  @tracked isTogglingStarred;
+
   get channel() {
     return this.args.data.channel;
   }
 
   get currentUserMembership() {
     return this.channel?.currentUserMembership;
+  }
+
+  @action
+  async toggleStarred() {
+    if (!this.channel?.currentUserMembership || this.isTogglingStarred) {
+      return;
+    }
+
+    this.isTogglingStarred = true;
+    const newValue = !this.channel.currentUserMembership.starred;
+    const previousValue = this.channel.currentUserMembership.starred;
+
+    try {
+      await this.chatApi.updateCurrentUserChannelMembership(this.channel.id, {
+        starred: newValue,
+      });
+      this.args.close();
+      this.channel.currentUserMembership.starred = newValue;
+    } catch {
+      this.channel.currentUserMembership.starred = previousValue;
+    } finally {
+      this.isTogglingStarred = false;
+    }
   }
 
   @action
@@ -202,8 +228,8 @@ export default class ChatChannelSidebarLinkMenu extends Component {
           @forwardEvent={{true}}
           @icon="bell"
           @suffixIcon="angle-right"
-          @label="chat.channel_settings.notification_settings"
-          @title="chat.channel_settings.notification_settings"
+          @label="chat.channel_settings.notification_settings_context"
+          @title="chat.channel_settings.notification_settings_context"
           class="chat-channel-sidebar-link-menu__open-notification-settings"
         />
       </dropdown.item>
@@ -216,6 +242,27 @@ export default class ChatChannelSidebarLinkMenu extends Component {
           @label="chat.channel_settings.title"
           @title="chat.channel_settings.title"
           class="chat-channel-sidebar-link-menu__channel-settings"
+        />
+      </dropdown.item>
+      <dropdown.item>
+        <DButton
+          @action={{this.toggleStarred}}
+          @icon={{if
+            this.channel.currentUserMembership.starred
+            "far-star"
+            "star"
+          }}
+          @label={{if
+            this.channel.currentUserMembership.starred
+            "chat.channel_settings.unstar_channel"
+            "chat.channel_settings.star_channel"
+          }}
+          @title={{if
+            this.channel.currentUserMembership.starred
+            "chat.channel_settings.unstar_channel"
+            "chat.channel_settings.star_channel"
+          }}
+          class="chat-channel-sidebar-link-menu__star-channel"
         />
       </dropdown.item>
       <dropdown.item>
