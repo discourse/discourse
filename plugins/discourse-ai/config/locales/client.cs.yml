@@ -136,6 +136,7 @@ cs:
           run: "Spustit test"
       llms:
         display_name: "Název"
+        enabled_chat_bot: "Povolit výběr AI bota"
         save: "Uložit"
         edit: "Upravit"
         back: "Zpět"
@@ -172,6 +173,7 @@ cs:
           title: "Spustit test"
           success: "Úspěch!"
         hints:
+          enabled_chat_bot: "Pokud je tato možnost povolena, mohou uživatelé tento model vybrat při vytváření soukromých zpráv pomocí AI bota."
           cost_cached_input: "Vstupní náklady na 1 milion tokenů v mezipaměti pro tento model"
         providers:
           aws_bedrock: "AWS Bedrock"
