@@ -50,15 +50,31 @@ export default class LanguageSwitcher extends Component {
       })
     );
 
-    // Strip (UK) from English (UK) when `en_GB` is the only English variant
+    // Cleanup "English" name when `en_GB` is the only English variant
     if (!langs.find((lang) => lang.value === "en")) {
       const ukLang = langs.find((lang) => lang.value === "en_GB");
       if (ukLang) {
-        ukLang.name = ukLang.name.replace(" (UK)", "");
+        ukLang.name = this.normalizeUKEnglish(ukLang.name);
       }
     }
 
     return langs;
+  }
+
+  normalizeUKEnglish(text) {
+    // strip all variants of "English (region)"
+    let result = text.replace("(English (UK))", "");
+    result = result
+      .replace(/\s*\([^)]*\)/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    // Add back "(English)"
+    if (text.includes("English") && !result.match(/^English/i)) {
+      result += " (English)";
+    }
+
+    return result;
   }
 
   @action

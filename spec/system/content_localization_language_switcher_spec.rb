@@ -191,6 +191,17 @@ describe "Content localization language switcher", type: :system do
     expect(switcher).to have_no_content("English (UK)")
   end
 
+  it "strips (UK) from English (UK) when `en_GB` is the only English variant in other languages too" do
+    SiteSetting.default_locale = "es"
+    SiteSetting.content_localization_supported_locales = "en_GB|es"
+    SiteSetting.content_localization_language_switcher = "all"
+
+    visit("/")
+    switcher.expand
+    expect(switcher).to have_content("Inglés (English)")
+    expect(switcher).to have_no_content("English (UK)")
+  end
+
   it "does not strip (UK) from English (UK) when `en_GB` is not the only English variant" do
     SiteSetting.content_localization_supported_locales = "en|en_GB|ja"
     SiteSetting.content_localization_language_switcher = "all"
