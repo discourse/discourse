@@ -387,9 +387,7 @@
       @include viewport.from(md) {
         position: absolute;
         z-index: z("base");
-        width: auto;
-        right: 50%;
-        transform: translateX(50%);
+        width: 100%;
         font-size: var(--font-down-1-rem);
 
         .alert {
@@ -403,7 +401,8 @@
     .alert {
       align-items: center;
       gap: 0.5em;
-      margin: 0;
+      margin: 0 auto;
+      width: max-content;
       padding: var(--space-2) var(--space-4);
 
       &.loading {
