@@ -175,7 +175,7 @@ en:
       el:
         name: Greek
       en:
-        name: English (US)
+        name: English
       en_GB:
         name: English (UK)
       es:
@@ -4538,6 +4538,8 @@ en:
       slug_placeholder: "(Optional) dashed-words for url"
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
+      errors:
+        self_lockout: "You are about to change category permissions in a way that will remove your own access. Are you sure you want to proceed?"
       name: "Category name"
       untitled: "Untitled category"
       description: "Description"

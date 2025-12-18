@@ -489,7 +489,7 @@ module DiscourseAi
             feature_name: feature_name,
             llm_id: llm_model&.id,
             language_model: llm_model.name,
-            feature_context: feature_context.present? ? feature_context.as_json : nil,
+            feature_context: feature_context.presence&.as_json,
           )
         end
 
@@ -534,6 +534,7 @@ module DiscourseAi
 
           # this is to keep stuff backwards compatible
           response_data = response_data.first if response_data.length == 1
+          response_data = "" if response_data.nil?
 
           response_data
         end

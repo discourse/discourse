@@ -186,7 +186,7 @@ hr:
       el:
         name: grčki
       en:
-        name: engleski (US)
+        name: engleski
       en_GB:
         name: engleski (UK)
       es:
@@ -5111,7 +5111,6 @@ hr:
       tags_form_modal:
         title: "Uredite navigaciju oznaka"
         filter_placeholder: "Filtrirajte oznake"
-        no_tags: "Nema oznaka koje odgovaraju zadanom pojmu."
         subtitle:
           text: "i automatski ćemo prikazati najčešće oznake ove stranice"
       edit_navigation_modal_form:

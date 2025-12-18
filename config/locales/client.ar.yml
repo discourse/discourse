@@ -270,7 +270,7 @@ ar:
       el:
         name: اليونانية
       en:
-        name: الإنجليزية (الولايات المتحدة)
+        name: إنجليزي
       en_GB:
         name: الإنجليزية (المملكة المتحدة)
       es:
@@ -2995,6 +2995,7 @@ ar:
       admin_not_allowed_from_ip_address: "لا يمكنك تسجيل الدخول كمسؤول من عنوان IP هذا."
       resend_activation_email: "انقر هنا لإرسال الرسالة الإلكترونية للتفعيل مرة أخرى."
       omniauth_disallow_totp: "لقد فعَّلت المصادقة الثنائية على حسابك. يُرجى تسجيل الدخول بكلمة المرور."
+      works_with: "يعمل مع"
       activate_account: "تفعيل الحساب"
       resend_title: "إعادة إرسال الرسالة الإلكترونية للتفعيل"
       change_email: "تغيير عنوان البريد الإلكتروني"
@@ -5903,7 +5904,6 @@ ar:
       tags_form_modal:
         title: "يمكنك تعديل التنقل بين الوسوم"
         filter_placeholder: "تصفية الوسوم"
-        no_tags: "لا توجد وسوم مطابقة للمصطلح المحدَّد."
         subtitle:
           text: "وسنعرض تلقائيًا أهم الوسوم على هذا الموقع"
       edit_navigation_modal_form:
@@ -6318,14 +6318,21 @@ ar:
         select_groups: "تحديد المجموعات…"
         preview: "معاينة"
         enabled_for_options:
+          no_one: "لا أحد"
           everyone: "الجميع"
           staff: "لفريق العمل فقط"
         statuses:
           experimental: "تجريبي"
+          alpha: "ألفا"
+          beta: "تجريبي"
+          stable: "مستقر"
+          permanent: "دائم"
         impact_roles:
           admins: "المسؤولون"
           moderators: "المشرفون"
           staff: "فريق العمل"
+          all_members: "جميع الأعضاء"
+          developers: "المطوّرون"
         filter:
           all: "الكل"
           enabled: "مفعَّلة"
@@ -7638,6 +7645,7 @@ ar:
         copy_to_clipboard: "نسخ الى الحافظة"
         copied_to_clipboard: "تم النسخ إلى الحافظة"
         copy_to_clipboard_error: "حدث خطأ في نسخ البيانات إلى الحافظة"
+        theme_owner: "مملوكة من قبل:"
         email_templates:
           title: "البريد الإلكتروني"
           subject: "الموضوع"
@@ -7940,9 +7948,11 @@ ar:
             no_results: "لم يتم العثور على لوحات الألوان"
           default_light_badge:
             text: "فاتح المبدئي"
+            title: "لوحة الألوان الفاتحة الافتراضية"
             reset: "إعادة تعيين عوامل التصفية"
           default_dark_badge:
             text: "داكن المبدئي"
+            title: "لوحة الألوان الداكنة الافتراضية"
           system_palette: "هذه لوحة ألوان مدمجة ضمن النظام، ولا يمكن تعديلها أو حذفها."
           back_to_colors: "الرجوع إلى قائمة لوحات الألوان"
           long_title: "لوحات الألوان"
@@ -8262,6 +8272,8 @@ ar:
             tag_group_change: "تغيير مجموعة الوسوم"
             delete_associated_accounts: "حذف الحسابات المرتبطة"
             change_theme_site_setting: "تغيير إعدادات السمة على مستوى الموقع"
+            stop_impersonating: "توقف عن انتحال الشخصية"
+            change_site_setting_groups: "غيّر مجموعات إعدادات الموقع"
         screened_emails:
           title: "عناوين البريد الإلكتروني الخاضعة للمراقبة"
           description: "عندما يحاول شخص ما إنشاء حساب جديد، سيتم التحقُّق من عناوين البريد الإلكتروني التالية وحظر التسجيل، أو اتخاذ إجراء آخر."
@@ -8451,6 +8463,7 @@ ar:
         help: "استخدم هذه الأداة لانتحال شخصية حساب مستخدم لأغراض تصحيح الأخطاء. عليك تسجيل الخروج بعد الانتهاء."
         not_found: "يتعذَّر العثور على هذا المستخدم."
         invalid: "عذرًا، لا يمكنك انتحال شخصية هذا المستخدم."
+        error: "عذراً، حدث خطأ غير متوقع."
       users:
         title: "المستخدمون"
         description: "عرض المستخدمين وإدراتهم."
@@ -9067,6 +9080,7 @@ ar:
         no_badges: لا توجد شارات يمكن منحها.
         none_selected: "تحديد شارة للبدء"
         sections:
+          design: تصميم
           query: استعلام
           settings: الإعدادان
         usage_heading: الاستخدام

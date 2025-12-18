@@ -10,6 +10,7 @@ export default {
     }
 
     withPluginApi((api) => {
+      api.setAdminPluginIcon("discourse-gamification", "trophy");
       api.addAdminPluginConfigurationNav("discourse-gamification", [
         {
           label: "gamification.leaderboard.title",

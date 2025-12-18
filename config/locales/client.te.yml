@@ -4119,7 +4119,6 @@ te:
       tags_form_modal:
         title: "ట్యాగ్‌ల నావిగేషన్‌ను సవరించండి"
         filter_placeholder: "ఫిల్టర్ ట్యాగ్‌లు"
-        no_tags: "ఇచ్చిన పదానికి సరిపోలే ట్యాగ్‌లు ఏవీ లేవు."
         subtitle:
           text: "మరియు మేము ఈ సైట్ యొక్క అగ్ర ట్యాగ్‌లను స్వయంచాలకంగా చూపుతాము"
       edit_navigation_modal_form:

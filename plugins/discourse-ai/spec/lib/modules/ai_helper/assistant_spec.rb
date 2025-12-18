@@ -233,13 +233,13 @@ RSpec.describe DiscourseAi::AiHelper::Assistant do
     it "is able to perform %LANGUAGE% replacements" do
       assistant.attach_user_context(context, user)
 
-      expect(context.user_language).to eq("English (US)")
+      expect(context.user_language).to eq("English")
     end
 
     it "handles users with empty string locales" do
       assistant.attach_user_context(context, empty_locale_user)
 
-      expect(context.user_language).to eq("English (US)")
+      expect(context.user_language).to eq("English")
     end
 
     context "with temporal context" do

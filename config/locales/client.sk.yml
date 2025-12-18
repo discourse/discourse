@@ -5236,7 +5236,6 @@ sk:
       tags_form_modal:
         title: "Upraviť navigáciu značiek"
         filter_placeholder: "Značky filtra"
-        no_tags: "Neexistujú žiadne značky zodpovedajúce danému výrazu."
         subtitle:
           text: "a my automaticky zobrazíme top značky tejto stránky"
       edit_navigation_modal_form:
