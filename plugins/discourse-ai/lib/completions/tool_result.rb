@@ -15,6 +15,7 @@ module DiscourseAi
       end
 
       def ==(other)
+        return nil if !other.is_a?(ToolResult)
         content == other.content && tool_call == other.tool_call
       end
     end
