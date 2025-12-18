@@ -250,7 +250,7 @@ describe "Admin Customize Themes", type: :system do
 
       theme_translations_picker = PageObjects::Components::SelectKit.new(".translation-selector")
 
-      expect(theme_translations_picker.component).to have_content("English (US)")
+      expect(theme_translations_picker.component).to have_content("English")
     end
   end
 

@@ -281,7 +281,7 @@ describe "Content Localization" do
         expect(post_history_modal.current_locale).to have_content(
           I18n.t("js.post.revisions.locale.locale_removed"),
         )
-        expect(post_history_modal.previous_locale).to have_content("English (US)")
+        expect(post_history_modal.previous_locale).to have_content("English")
       end
     end
 
@@ -512,7 +512,7 @@ describe "Content Localization" do
 
       settings_page.visit("content_localization_supported_locales")
       expect(settings_page.find_setting("content_localization_supported_locales")).to have_content(
-        "English (US), Japanese",
+        "English, Japanese",
       )
 
       settings_page.select_list_values("content_localization_supported_locales", %w[es])

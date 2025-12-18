@@ -53,7 +53,7 @@ describe "Content localization language switcher", type: :system do
 
     page.refresh
     switcher.expand
-    expect(switcher).to have_content("English (US)")
+    expect(switcher).to have_content("English")
     expect(switcher).to have_content("Japanese (日本語)")
     expect(switcher).to have_content("Spanish (Español)")
 

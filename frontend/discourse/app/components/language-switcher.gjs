@@ -42,13 +42,62 @@ export default class LanguageSwitcher extends Component {
   }
 
   get content() {
-    return this.siteSettings.available_content_localization_locales.map(
+    const langs = this.siteSettings.available_content_localization_locales.map(
       ({ value }) => ({
         name: this.languageNameLookup.getLanguageName(value),
         value,
         isActive: value === this.currentLocale,
       })
     );
+
+    // Cleanup "English" name when `en_GB` is the only English variant
+    if (!langs.some(({ value }) => value === "en")) {
+      const ukLang = langs.find((lang) => lang.value === "en_GB");
+      if (ukLang) {
+        ukLang.name = this.normalizeUKEnglish(ukLang.name);
+      }
+    }
+
+    // Cleanup "Português" name when `pt_BR` is the only variant
+    if (!langs.some(({ value }) => value === "pt")) {
+      const ptbrName = langs.find((lang) => lang.value === "pt_BR");
+      if (ptbrName) {
+        ptbrName.name = this.normalizeBRPortuguese(ptbrName.name);
+      }
+    }
+
+    return langs;
+  }
+
+  normalizeUKEnglish(text) {
+    // strip all variants of "English (region)"
+    let result = text.replace("(English (UK))", "");
+    result = result
+      .replace(/\s*\([^)]*\)/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    // Add back "(English)"
+    if (text.includes("English") && !result.match(/^English/i)) {
+      result += " (English)";
+    }
+
+    return result;
+  }
+
+  normalizeBRPortuguese(text) {
+    let result = text.replace("(Português (BR))", "");
+    result = result
+      .replace(/\s*\([^)]*\)/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    // Add back "(Português)"
+    if (text.includes("Português") && !result.match(/^Português/i)) {
+      result += " (Português)";
+    }
+
+    return result;
   }
 
   @action

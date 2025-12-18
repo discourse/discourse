@@ -188,7 +188,7 @@ describe "Post translations", type: :system do
       visit("/latest")
       page.find("#create-topic").click
       post_language_selector.expand
-      expect(post_language_selector).to have_content("English (US)") # default locale
+      expect(post_language_selector).to have_content("English") # default locale
       expect(post_language_selector).to have_content("French (Français)")
       expect(post_language_selector).to have_content("Spanish (Español)")
       expect(post_language_selector).to have_content("Portuguese (Português (BR))")
