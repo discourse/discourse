@@ -178,7 +178,8 @@ module DiscourseAi
 
         def hoist_reasoning(messages)
           new_messages = []
-          messages.each do |msg|
+          # Flatten because tool_call_msg can return arrays (e.g., [reasoning_node, function_call_node])
+          messages.flatten.each do |msg|
             if msg[:content].is_a?(Array)
               reasoning = []
               msg[:content].delete_if do |item|
