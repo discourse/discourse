@@ -385,10 +385,12 @@
   .show-more {
     &.has-topics {
       @include viewport.from(md) {
-        position: sticky;
+        position: absolute;
         z-index: z("base");
         width: fit-content;
-        left: 50%;
+        left: 0;
+        right: 0;
+        margin: auto;
         font-size: var(--font-down-1-rem);
 
         .alert {
