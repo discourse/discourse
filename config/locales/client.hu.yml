@@ -158,7 +158,7 @@ hu:
       el:
         name: Görög
       en:
-        name: Angol (amerikai)
+        name: Angol
       en_GB:
         name: Angol (brit)
       es:
@@ -244,7 +244,7 @@ hu:
       twitter: "Megosztás X-en"
       facebook: "Megosztás Facebookon"
       email: "Küldés e-mailben"
-      url: "URL másolása és megosztása"
+      url: "Webcím másolása és megosztása"
     word_connector:
       comma: ", "
       last_item: "és"
@@ -633,12 +633,12 @@ hu:
       none_found: "Nem találhatók témák."
       title:
         search: "Téma keresése"
-        placeholder: "írja ide a témakör címét, URL-jét vagy azonosítóját"
+        placeholder: "írja ide a témakör címét, webcímét vagy azonosítóját"
     choose_message:
       none_found: "Nem található üzenet."
       title:
         search: "Üzenet keresése"
-        placeholder: "írja ide az üzenet címét, URL-jét vagy azonosítóját"
+        placeholder: "írja ide az üzenet címét, webcímét vagy azonosítóját"
     review:
       show_more: "Több megjelenítése"
       show_less: "Kevesebb megjelenítése"
@@ -7654,7 +7654,7 @@ hu:
           external_username: "Felhasználónév"
           external_name: "Név"
           external_email: "E-mail"
-          external_avatar_url: "Profilkép URL-je"
+          external_avatar_url: "Profilkép webcíme"
           last_payload: "Utolsó rakomány"
           delete_sso_record: "SSO rekord törlése"
           confirm_delete: "Biztos, hogy törölni szeretné ezt a DiscourseConnect rekordot?"
@@ -7772,7 +7772,7 @@ hu:
           one: "A keresés több, mint %{count} találatot adott. Kérlek, pontosítsd a keresést vagy válassz egy kategóriát!"
           other: "A keresés több, mint %{count} találatot adott. Kérlek, pontosítsd a keresést vagy válassz egy kategóriát!"
         clear_filter: "Törlés"
-        add_url: "URL hozzáadása"
+        add_url: "Webcím hozzáadása"
         add_host: "gazdagép hozzáadása"
         add_group: "csoport hozzáadása"
         uploaded_image_list:
@@ -7944,7 +7944,7 @@ hu:
           title: "Válasszon egy jelvényt, vagy hozzon létre egy újat"
           description: "Kezdje egy meglévő jelvény kiválasztásával, vagy hozzon létre egy teljesen új jelvényt."
         mass_award:
-          title: Tömeges díj
+          title: Csoportos megadás
           description: Ugyanazt a jelvényt egyszerre több felhasználónak is odaítélheted.
           no_badge_selected: A kezdéshez válasszon egy jelvényt.
           perform: "Kitüntető jelvény odaítélése a felhasználóknak"
@@ -8023,7 +8023,7 @@ hu:
       permalink:
         title: "Közvetlen hivatkozás"
         description: "A fórum által nem ismert webcímekre történő átirányítások."
-        url: "URL"
+        url: "Webcím"
         topic_id: "Témaazonosító"
         topic_title: "Téma"
         post_id: "Hozzászólás-azonosító"
@@ -8051,7 +8051,7 @@ hu:
           label: "Új:"
           add_header: "Állandó hivatkozás hozzáadása"
           edit_header: "Állandó hivatkozás szerkesztése"
-          filter: "URL keresés vagy cél URL"
+          filter: "Keresési vagy célwebcím"
           url: "Webcím"
           permalink_type: "Állandó hivatkozás típusa"
           save: "Mentés"

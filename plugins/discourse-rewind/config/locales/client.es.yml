@@ -5,26 +5,194 @@
 # https://translate.discourse.org/
 
 es:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rewind: "Discourse Rebobina"
   js:
     discourse_rewind:
+      placeholder: Discourse Rebobina
+      title: Rebobinar
+      loading: "Reticulando splines..."
+      viewing_other_user: "Estás viendo el informe de Discourse Rebobina de <strong>%{username}</strong> ."
+      cannot_view_rewind: >
+        No puedes ver este reporte de Discourse Rebobina. Quizás su propietario no lo ha compartido públicamente? <br><br> $> _<br><br>
+      preferences:
+        enable_rewind: "Activa Discourse Rebobina. Esto muestra el resumen de actividades de fin de año en tu perfil y en tu avatar."
+        share_publicly: "Comparte el resumen de Discourse Rebobina con otros miembros del foro. Cualquier miembro del foro podrá ver tu resumen de Discourse Rebobina."
+        cannot_share_when_profile_hidden: "Para compartir Rebobina debes permitir que otros vean tu perfil público."
+      profile_link: "Mira tu Discourse Rebobina %{rewindYear}"
       share:
         toggle_label:
           private: "Privado"
           public: "Público"
+        confirm: "Asegúrate de revisar tu Rebobina antes de compartirla, ya que puede incluir datos de mensajes personales. Puedes volver a configurarlo como privado en cualquier momento."
+        confirm_button:
+          enable: "Hacer público"
+          disable: "Mantener privado"
+        enabled_success: "Ahora puedes compartir tu Rebobina con otros miembros de la comunidad."
+        disabled_success: "Tu Rebobina ahora es privada."
       reports:
+        activity_calendar:
+          title: Calendario de actividades
+          cell_title:
+            visited_no_posts: "Visitaste y acechaste en %{date}, pero no hiciste ninguna publicación."
+            visited_with_posts:
+              one: "Hiciste %{count} publicación en %{date}."
+              other: "Hiciste %{count} publicaciones en %{date}."
+            no_activity: "No estuviste por aquí en %{date}."
+        top_words:
+          title: Uso de palabras
         reading_time:
           title: Tiempo de lectura
+          book_comparison: "¡Pasaste <code>%{readingTitme}</code> leyendo nuestra comunidad! Ese es el tiempo que te llevaría leer <i>%{bookTitle}</i>"
+        post_used_reactions:
+          title: Reacciones más utilizadas en los temas
+          total_number: "Número total de reacciones: %{count}"
+        post_received_reactions:
+          title: Reacciones más recibidas en temas
+        fbff:
+          title: Tu mejor amigo/a del foro
+        most_viewed_categories:
+          title:
+            one: Tu categoría más vista
+            other: Tus %{count} categorías más vistas
+        most_viewed_tags:
+          title:
+            one: Tu etiqueta más vista
+            other: Tus %{count} etiquetas más vistas
+        best_topics:
+          view_topic: Ver tema
+          title:
+            one: Tu mejor tema
+            other: Tus %{count} mejores temas
+        best_posts:
+          view_post: Ver publicación
+          title:
+            one: Tu mejor publicación
+            other: Tus %{count} mejores publicaciones
+        ai_usage:
+          title: Uso de IA
+          total_requests: Total de solicitudes
+          total_tokens: Total de tokens
+          success_rate: Tasa de éxito
+          favorite_features: Funciones más utilizadas
+          favorite_models: Modelos de IA más utilizados
+          wake_up: "Despierta, %{username}..."
+          system_title: "USO DE AI DETECTADO"
+          section_features: "CARACTERÍSTICAS PRINCIPALES"
+          section_models: "MEJORES MODELOS"
+        assignments:
+          title: Tareas
+          total_assigned: Asignado a mí
+          completed: Tareas completadas
+          pending: Tareas pendientes
+          assigned_by_user: Tareas asignadas
+          completion_rate: Tasa de finalización
         chat_usage:
+          title: Actividad del chat
+          total_messages: Total de mensajes
+          dm_messages: Mensajes privados
+          unique_dm_channels: Conversaciones en mensajes privados
+          reactions_received: Reacciones recibidas
+          avg_message_length: Longitud media de los mensajes
+          favorite_channels: Canales favoritos
           messages: mensajes
           you: Tú
+          channel_title: "#actividad-en-el-chat"
           status_online: "● en línea"
+          message_1: "¡Enviaste <strong>%{count}</strong> mensajes este año!"
+          reply_1: "lol impresionante B-)"
+          message_2: "Tuviste <strong>%{dm_count}</strong> conversaciones privadas con <strong>%{channel_count}</strong> personas o grupos diferentes"
+          reply_2: "MOo0oLa :D"
+          message_3: "¡A la gente le encantaron tus mensajes! Recibiste <strong>%{count}</strong> reacciones ❤️"
+          message_4: "La longitud media de tus mensajes fue de <strong>%{length}</strong> caracteres"
+          message_5: "Tus canales favoritos:"
+        favorite_gifs:
+          title:
+            one: Tu GIF favorito
+            other: Tus %{count} GIF favoritos
+          total_usage:
+            one: Usado %{count} vez
+            other: Usado %{count} veces en total
         invites:
           title: Invitaciones
+          total_invites: Total de invitaciones enviadas
+          redeemed: Invitaciones aceptadas
+          redemption_rate: Tasa de aceptación
+          avg_trust_level: Nivel de confianza promedio
+          invitee_impact: Impacto de tus invitados
           invitee_posts: Publicaciones creadas
+          invitee_topics: Temas creados
           invitee_likes: Me gusta dados
+          most_active_invitee: Invitado más activo
+          guest_book_title: Libro de visitas
+          guest_book_subtitle: Tus invitaciones a la comunidad
           label_invitations_sent: "Invitaciones enviadas:"
+          label_guests_joined: "Invitaciones aceptadas:"
+          label_acceptance_rate: "Tasa de aceptación:"
+          section_contributions: Contribuciones de los invitados
+          label_posts_written: "Publicaciones escritas:"
+          label_topics_started: "Temas creados:"
+          label_likes_given: "Me gusta dados:"
+          section_most_active: Invitado más activo
         new_user_interactions:
+          title: Mentorizando nuevos usuarios
+          subtitle:
+            one: Has ayudado a %{count} nuevo usuario este año
+            other: Has ayudado a %{count} nuevos usuarios este año
+          new_member:
+            one: "%{count} nuevo miembro"
+            other: "%{count} nuevos miembros"
+          total_interactions: Total de interacciones
+          unique_new_users: Nuevos usuarios únicos
           likes_given: Me gusta dados
+          replies: Respuestas a las publicaciones
           mentions: Menciones
+          topics_with_new_users: Temas con nuevos usuarios
+          your_contributions_helped: tus contribuciones ayudaron a
+        time_of_day_activity:
+          title: Ritmo de actividad diaria
+          play_button: Reproduce tu actividad como sonido
+          stop_button: Detener la reproducción de audio
         writing_analysis:
+          title: Análisis de escritura
+          menu_file: Archivo
           menu_other: Otros
+          menu_additional: Adicional
+          menu_opening: APERTURA
+          help_text: Pulsa F1 para obtener ayuda
+          app_name: DiscoStar Profesional
+          release_info: Libera %{rewindYear} del CDCK
+          total_words: Total de palabras
+          total_posts: Total de publicaciones
+          avg_post_length: Longitud media de publicaciones
+          readability_score_label: Puntuación de legibilidad
+          readability_level: Nivel de legibilidad
+          readability_score:
+            over_80:
+              1: "Ernest Hemingway"
+              2: "Raymond Carver"
+              3: "Michael Crichton"
+              4: "Roald Dahl"
+            over_60:
+              1: "C. S. Lewis"
+              2: "Stephen King"
+              3: "Agatha Christie"
+              4: "George R. R. Martin"
+            over_40:
+              1: "George Orwell"
+              2: "F. Scott Fitzgerald"
+              3: "Aldous Huxley"
+              4: "Joan Didion"
+            over_20:
+              1: "Cormac McCarthy"
+              2: "William Faulkner"
+              3: "Virginia Woolf"
+              4: "Gabriel García Márquez"
+            over_0:
+              1: "James Joyce"
+              2: "Thomas Pynchon"
+              3: "David Foster Wallace"
+              4: "Fiódor Dostoievski"

@@ -88,6 +88,8 @@ pl_PL:
     ai_nsfw_flag_threshold_sexy: "Próg uznania obrazu zaklasyfikowanego jako seksowny, aby został uznany za NSFW."
     ai_nsfw_models: "Modele używane do wnioskowania NSFW."
     ai_spam_detection_enabled: "Włącz moduł wykrywania spamu AI"
+    ai_spam_detection_max_post_count: "Maksymalna liczba wpisów, jakie może mieć użytkownik, zanim przestaną być skanowane pod kątem spamu"
+    ai_spam_detection_max_trust_level: "Maksymalny poziom zaufania użytkowników do skanowania w poszukiwaniu spamu"
     ai_openai_api_key: "Klucz API dla OpenAI API. Używany TYLKO do tworzenia i edycji obrazów. W przypadku GPT należy użyć zakładki konfiguracji LLM."
     ai_openai_image_generation_url: "Adres URL interfejsu API generowania obrazów OpenAI"
     ai_openai_image_edit_url: "Adres URL interfejsu API do edycji obrazów OpenAI"
