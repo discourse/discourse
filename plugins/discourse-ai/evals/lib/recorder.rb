@@ -240,7 +240,6 @@ module DiscourseAi
         formatter.finalize if finalize_formatter
 
         detach_thread_loggers
-
         structured_logger.save
 
         output.puts
