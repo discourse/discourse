@@ -387,7 +387,10 @@
       @include viewport.from(md) {
         position: absolute;
         z-index: z("base");
-        width: 100%;
+        width: fit-content;
+        left: 0;
+        right: 0;
+        margin: auto;
         font-size: var(--font-down-1-rem);
 
         .alert {
