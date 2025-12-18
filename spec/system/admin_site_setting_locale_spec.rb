@@ -22,7 +22,7 @@ describe "Admin Site Setting Locales", type: :system do
 
       settings_page.type_in_search("default locale")
       expect(settings_page.find_setting("default_locale")).to have_content(
-        "Inglés (EE. UU.) (English (US))",
+        "Inglés (EE. UU.) (English)",
       )
     end
   end
