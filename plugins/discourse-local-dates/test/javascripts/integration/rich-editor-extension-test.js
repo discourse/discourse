@@ -48,6 +48,115 @@ module(
       );
     });
 
+    test("local date with custom format", async function (assert) {
+      this.siteSettings.rich_editor = true;
+      const markdown =
+        '[date=2021-01-01 time=12:00:00 timezone="America/New_York" format="YYYY-MM-DD HH:mm"]';
+
+      await testMarkdown(
+        assert,
+        markdown,
+        (innerAssert) => {
+          const span = document.querySelector(
+            ".ProseMirror .discourse-local-date"
+          );
+          innerAssert.ok(span);
+          innerAssert.strictEqual(span.dataset.date, "2021-01-01");
+          innerAssert.strictEqual(span.dataset.time, "12:00:00");
+          innerAssert.strictEqual(span.dataset.timezone, "America/New_York");
+          innerAssert.strictEqual(span.dataset.format, "YYYY-MM-DD HH:mm");
+          innerAssert.true(span.textContent.includes("2021-01-01"));
+        },
+        markdown
+      );
+    });
+
+    test("local date with recurring", async function (assert) {
+      this.siteSettings.rich_editor = true;
+      const markdown =
+        '[date=2021-01-01 time=12:00:00 timezone="America/New_York" recurring="1.weeks"]';
+
+      await testMarkdown(
+        assert,
+        markdown,
+        (innerAssert) => {
+          const span = document.querySelector(
+            ".ProseMirror .discourse-local-date"
+          );
+          innerAssert.ok(span);
+          innerAssert.strictEqual(span.dataset.date, "2021-01-01");
+          innerAssert.strictEqual(span.dataset.recurring, "1.weeks");
+        },
+        markdown
+      );
+    });
+
+    test("local date with timezones", async function (assert) {
+      this.siteSettings.rich_editor = true;
+      const markdown =
+        '[date=2021-01-01 time=12:00:00 timezone="America/New_York" timezones="Europe/Paris|Asia/Tokyo"]';
+
+      await testMarkdown(
+        assert,
+        markdown,
+        (innerAssert) => {
+          const span = document.querySelector(
+            ".ProseMirror .discourse-local-date"
+          );
+          innerAssert.ok(span);
+          innerAssert.strictEqual(span.dataset.date, "2021-01-01");
+          innerAssert.strictEqual(
+            span.dataset.timezones,
+            "Europe/Paris|Asia/Tokyo"
+          );
+        },
+        markdown
+      );
+    });
+
+    test("local date with countdown", async function (assert) {
+      this.siteSettings.rich_editor = true;
+      const markdown =
+        '[date=2099-01-01 time=12:00:00 timezone="America/New_York" countdown="true"]';
+
+      await testMarkdown(
+        assert,
+        markdown,
+        (innerAssert) => {
+          const span = document.querySelector(
+            ".ProseMirror .discourse-local-date"
+          );
+          innerAssert.ok(span);
+          innerAssert.strictEqual(span.dataset.date, "2099-01-01");
+          innerAssert.strictEqual(span.dataset.countdown, "true");
+        },
+        markdown
+      );
+    });
+
+    test("local date with displayedTimezone", async function (assert) {
+      this.siteSettings.rich_editor = true;
+      const markdown =
+        '[date=2021-01-01 time=12:00:00 timezone="America/New_York" displayedTimezone="Europe/London"]';
+
+      await testMarkdown(
+        assert,
+        markdown,
+        (innerAssert) => {
+          const span = document.querySelector(
+            ".ProseMirror .discourse-local-date"
+          );
+          innerAssert.ok(span);
+          innerAssert.strictEqual(span.dataset.date, "2021-01-01");
+          innerAssert.strictEqual(
+            span.dataset.displayedTimezone,
+            "Europe/London"
+          );
+        },
+        markdown
+      );
+    });
+
     test("local date range", async function (assert) {
       this.siteSettings.rich_editor = true;
       const markdown = "[date-range from=2021-01-01 to=2021-01-02]";
@@ -98,6 +207,33 @@ module(
             fromSpan.dataset.timezone,
             "America/New_York"
           );
+        },
+        markdown
+      );
+    });
+
+    test("local date range with custom format", async function (assert) {
+      this.siteSettings.rich_editor = true;
+      const markdown =
+        '[date-range from=2021-01-01T12:00:00 to=2021-01-02T13:00:00 timezone="America/New_York" format="YYYY-MM-DD"]';
+
+      await testMarkdown(
+        assert,
+        markdown,
+        (innerAssert) => {
+          const rangeSpan = document.querySelector(
+            ".ProseMirror .discourse-local-date-range"
+          );
+          innerAssert.ok(rangeSpan);
+
+          const fromSpan = rangeSpan.querySelector('[data-range="from"]');
+          const toSpan = rangeSpan.querySelector('[data-range="to"]');
+          innerAssert.ok(fromSpan);
+          innerAssert.ok(toSpan);
+          innerAssert.strictEqual(fromSpan.dataset.format, "YYYY-MM-DD");
+          innerAssert.strictEqual(toSpan.dataset.format, "YYYY-MM-DD");
+          innerAssert.true(fromSpan.textContent.includes("2021-01-01"));
+          innerAssert.true(toSpan.textContent.includes("2021-01-02"));
         },
         markdown
       );
