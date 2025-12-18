@@ -44,10 +44,11 @@ RSpec.describe "Unfollow DM channel", type: :system do
           expect(page).to have_css(".channel-#{dm_channel_1.id}")
         end
 
-        find(".channel-#{dm_channel_1.id}").hover
-        find(".channel-#{dm_channel_1.id} .sidebar-section-link-hover").click
+        chat_sidebar_page.remove_channel(dm_channel_1)
 
-        expect(page).to have_no_css(".channel-#{dm_channel_1.id}")
+        within(chat_sidebar_page.dms_section) do
+          expect(page).to have_no_css(".channel-#{dm_channel_1.id}")
+        end
 
         using_session(:user_1) do
           text = "this is fine"

@@ -119,6 +119,7 @@ RSpec.describe "Chat channel sidebar context menu", type: :system do
       expect(channel_1.membership_for(current_user).reload.notification_level).to eq("always")
     end
 
+    # TODO (martin) Fix this spec, no more check
     it "displays a checkmark next to the current notification level" do
       channel_1.membership_for(current_user).update!(notification_level: "mention")
 
