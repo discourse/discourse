@@ -11,13 +11,41 @@ module DiscourseConnectHelpers
     @provider_port
   end
 
-  def build_discourse_connect_payload(return_url)
-    secret = SiteSetting.discourse_connect_provider_secrets.split("|")[1]
-    nonce = SecureRandom.hex
+  def build_discourse_connect_payload(return_url = nil, data = {})
+    if data.empty?
+      secret = SiteSetting.discourse_connect_provider_secrets.split("|")[1]
+      nonce = SecureRandom.hex
 
-    payload = "nonce=#{CGI.escape(nonce)}&return_sso_url=#{CGI.escape(return_url)}"
-    sso = Base64.strict_encode64(payload)
-    sig = OpenSSL::HMAC.hexdigest("sha256", secret, sso)
+      payload = "nonce=#{CGI.escape(nonce)}&return_sso_url=#{CGI.escape(return_url)}"
+      sso = Base64.strict_encode64(payload)
+      sig = OpenSSL::HMAC.hexdigest("sha256", secret, sso)
+    else
+      secret = SiteSetting.discourse_connect_secret
+      nonce = data[:nonce] || SecureRandom.hex
+
+      response_sso = DiscourseConnectBase.new
+      response_sso.sso_secret = secret
+      response_sso.nonce = nonce
+
+      response_sso.external_id = data[:external_id] if data[:external_id]
+      response_sso.email = data[:email] if data[:email]
+      response_sso.username = data[:username] if data[:username]
+      response_sso.name = data[:name] if data[:name]
+      response_sso.admin = data[:admin] if data.key?(:admin)
+      response_sso.moderator = data[:moderator] if data.key?(:moderator)
+      response_sso.add_groups = data[:add_groups] if data[:add_groups]
+      response_sso.remove_groups = data[:remove_groups] if data[:remove_groups]
+      response_sso.groups = data[:groups] if data[:groups]
+
+      if data[:custom_fields]
+        data[:custom_fields].each { |key, value| response_sso.custom_fields[key] = value }
+      end
+
+      full_payload = response_sso.payload
+      parsed = CGI.parse(full_payload)
+      sso = parsed["sso"][0]
+      sig = parsed["sig"][0]
+    end
 
     [sso, sig]
   end
