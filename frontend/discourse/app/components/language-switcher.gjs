@@ -51,7 +51,7 @@ export default class LanguageSwitcher extends Component {
     );
 
     // Cleanup "English" name when `en_GB` is the only English variant
-    if (!langs.find((lang) => lang.value === "en")) {
+    if (!langs.some(({ value }) => value === "en")) {
       const ukLang = langs.find((lang) => lang.value === "en_GB");
       if (ukLang) {
         ukLang.name = this.normalizeUKEnglish(ukLang.name);
