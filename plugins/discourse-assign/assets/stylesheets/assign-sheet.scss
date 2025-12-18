@@ -8,6 +8,32 @@
   overflow: clip;
   border-radius: var(--d-border-radius);
   background-color: var(--secondary);
+
+  &--nested {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-3);
+  }
+}
+
+.assign-sheet__nested-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  height: 100%;
+
+  .assign-sheet__note-textarea {
+    width: 100%;
+    height: 250px;
+    resize: none;
+    box-sizing: border-box;
+  }
+
+  .assign-sheet__full-width-btn {
+    width: 100%;
+    justify-content: center;
+    margin: 0;
+  }
 }
 
 .assign-sheet__content {
@@ -38,4 +64,80 @@
 
 .assign-sheet__backdrop {
   background-color: #000;
+}
+
+.assign-sheet__wrapper {
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--content-border-color);
+}
+
+.assign-sheet__assignees {
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.assign-sheet__assignee {
+  display: flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  gap: var(--space-3);
+  color: var(--primary);
+  line-height: var(--line-height-medium);
+
+  &:hover,
+  &:focus {
+    background-color: var(--primary-low);
+    outline: none;
+  }
+
+  .assign-sheet__assignee-avatar {
+    flex: 0 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+
+    img.avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+    }
+
+    .d-icon {
+      width: 20px;
+      height: 20px;
+      color: var(--primary-medium);
+    }
+  }
+
+  .assign-sheet__assignee-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+    flex: 1;
+
+    .assign-sheet__assignee-name {
+      font-weight: bold;
+      font-size: var(--font-0);
+
+      @include ellipsis;
+    }
+
+    .assign-sheet__assignee-full-name {
+      font-size: var(--font-down-1);
+      color: var(--primary-medium);
+      font-weight: normal;
+
+      @include ellipsis;
+    }
+  }
 }
