@@ -62,7 +62,7 @@ export default class LanguageSwitcher extends Component {
     if (!langs.find((lang) => lang.value === "pt")) {
       const ptbrName = langs.find((lang) => lang.value === "pt_BR");
       if (ptbrName) {
-        ptbrName.name = ptbrName.name.replace(" (BR)", "").trim();
+        ptbrName.name = this.normalizeBRPortuguese(ptbrName.name);
       }
     }
 
@@ -80,6 +80,21 @@ export default class LanguageSwitcher extends Component {
     // Add back "(English)"
     if (text.includes("English") && !result.match(/^English/i)) {
       result += " (English)";
+    }
+
+    return result;
+  }
+
+  normalizeBRPortuguese(text) {
+    let result = text.replace("(Português (BR))", "");
+    result = result
+      .replace(/\s*\([^)]*\)/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    // Add back "(English)"
+    if (text.includes("Português") && !result.match(/^English/i)) {
+      result += " (Português)";
     }
 
     return result;
