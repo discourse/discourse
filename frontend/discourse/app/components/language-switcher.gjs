@@ -92,8 +92,8 @@ export default class LanguageSwitcher extends Component {
       .replace(/\s+/g, " ")
       .trim();
 
-    // Add back "(English)"
-    if (text.includes("Português") && !result.match(/^English/i)) {
+    // Add back "(Português)"
+    if (text.includes("Português") && !result.match(/^Português/i)) {
       result += " (Português)";
     }
 
