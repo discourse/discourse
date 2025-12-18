@@ -48,13 +48,7 @@ module DiscourseAi
           end
 
           if tool_choice == :none && interleving_messages.length > 0
-            interleving_messages << {
-              role: "user",
-              parts: {
-                text:
-                  "IT IS CRITICAL you Do not use any tools or function calls in your response. JUST REPLY with the best answer you can provide based on your existing knowledge.",
-              },
-            }
+            interleving_messages << { role: "user", parts: { text: no_more_tool_calls_text_user } }
           end
 
           { messages: interleving_messages, system_instruction: system_instruction }

@@ -31,15 +31,6 @@ llms:
     max_prompt_tokens: 131072
     vision_enabled: true
 
-  claude-3.5-haiku:
-    display_name: Claude 3.5 Haiku
-    name: claude-3-5-haiku-latest
-    tokenizer: DiscourseAi::Tokenizer::AnthropicTokenizer
-    api_key_env: ANTHROPIC_API_KEY
-    provider: anthropic
-    url: https://api.anthropic.com/v1/messages
-    max_prompt_tokens: 200000
-    vision_enabled: false
 
   claude-3.5-sonnet:
     display_name: Claude 3.5 Sonnet
@@ -60,6 +51,16 @@ llms:
     url: https://api.anthropic.com/v1/messages
     max_prompt_tokens: 200000
     vision_enabled: true
+
+  claude-4.5-haiku:
+    display_name: Claude 4.5 Haiku
+    name: claude-haiku-4-5
+    tokenizer: DiscourseAi::Tokenizer::AnthropicTokenizer
+    api_key_env: ANTHROPIC_API_KEY
+    provider: anthropic
+    url: https://api.anthropic.com/v1/messages
+    max_prompt_tokens: 200000
+    vision_enabled: false
 
   claude-4.5-haiku-thinking:
     display_name: Claude 4.5 Haiku

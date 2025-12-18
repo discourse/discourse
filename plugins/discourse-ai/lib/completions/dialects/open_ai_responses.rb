@@ -69,7 +69,7 @@ module DiscourseAi
           if disable_native_tools?
             super
           else
-            tools_dialect.from_raw_tool_call(msg)
+            [thinking_signature_node(message: msg), tools_dialect.from_raw_tool_call(msg)].compact
           end
         end
 
