@@ -210,6 +210,8 @@ module DiscourseAi
                 nil
               end
             end
+            # we could get a nil here cause part can be nil
+            # interface expects an array
           end || []
         end
 
