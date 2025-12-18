@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { meta as metaFor } from "@ember/-internals/meta";
+import { meta as metaFor, peekMeta } from "@ember/-internals/meta";
 import { TrackedDescriptor } from "@ember/-internals/metal";
 import { next } from "@ember/runloop";
 import { TrackedArray, TrackedSet } from "@ember-compat/tracked-built-ins";
@@ -187,7 +187,7 @@ export class DeferredTrackedSet {
  *                                         or null/undefined if those values were passed
  * @throws {Error} If value is not an array, TrackedArray, null or undefined
  */
-function ensureTrackedArray(value) {
+function ensureTrackedArray(value, propertyName) {
   if (typeof value === "undefined" || value === null) {
     return value;
   }
@@ -201,7 +201,7 @@ function ensureTrackedArray(value) {
   }
 
   throw new Error(
-    `Expected an array, TrackedArray, null, or undefined, got ${typeof value}. Value received: ${value}`
+    `[${propertyName}]: Expected an array, TrackedArray, null, or undefined, got ${typeof value}. Value received: ${value}`
   );
 }
 
@@ -224,7 +224,7 @@ export function trackedArray(target, key, desc) {
     const originalInitializer = desc.initializer;
     desc.initializer = function () {
       const initialValue = originalInitializer.apply(this);
-      return ensureTrackedArray(initialValue);
+      return ensureTrackedArray(initialValue, key);
     };
   }
 
@@ -236,7 +236,7 @@ export function trackedArray(target, key, desc) {
   });
 
   function trackedArraySetter(value) {
-    set.call(this, ensureTrackedArray(value));
+    set.call(this, ensureTrackedArray(value, key));
   }
 
   // When using EmberObject.create(...), Ember accesses the tracked properties directly
@@ -257,4 +257,52 @@ export function trackedArray(target, key, desc) {
     configurable: true,
     isTracked: true,
   };
+}
+
+/**
+ * Enumerates all tracked property values from an object instance.
+ *
+ * **Warning:** This function uses Ember internal APIs (`peekMeta`, `TrackedDescriptor`)
+ * which are not part of the public API and may change without notice in future Ember versions.
+ *
+ * @param {Object} obj - The object instance to enumerate tracked values from
+ * @returns {Object} An object containing key-value pairs of all tracked properties.
+ *                   Returns an empty object if the object has no prototype or no tracked properties.
+ *
+ * @example
+ * class MyClass {
+ *   @tracked name = "Alice";
+ *   @tracked age = 30;
+ *   regularProp = "not tracked";
+ * }
+ *
+ * const instance = new MyClass();
+ * const trackedValues = enumerateTrackedValues(instance);
+ * // Returns: { name: "Alice", age: 30 }
+ */
+export function enumerateTrackedValues(obj) {
+  const prototype = obj?.constructor?.prototype;
+  if (!prototype) {
+    return Object.create(null);
+  }
+
+  const result = Object.create(null);
+
+  let meta = peekMeta(prototype);
+  while (meta) {
+    const descriptors = meta._descriptors;
+
+    if (descriptors) {
+      Array.from(descriptors.entries())
+        .filter(([, desc]) => desc instanceof TrackedDescriptor)
+        .reduce((acc, [key]) => {
+          acc[key] = obj[key];
+          return acc;
+        }, result);
+    }
+
+    meta = meta.parent; // we need to walk the prototype chain
+  }
+
+  return result;
 }
