@@ -40,6 +40,7 @@
       align-items: center;
       background-color: var(--d-nav-bg-color);
       transition: var(--d-button-transition);
+      white-space: nowrap;
 
       .d-icon {
         margin-right: 5px;
