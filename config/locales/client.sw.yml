@@ -1291,6 +1291,8 @@ sw:
       upload_title: "Pakia"
       upload_description: "Ingiza maelezo kuhusu upakiaji hapa"
       list_item: "Listi kitu"
+      wrap_modal:
+        apply: "Tumia"
       help: "Msaada kwenye kuhariri MarkDown"
       modal_ok: "Sawa"
       cant_send_pm: "Samahani, hauwezi kutuma ujumbe kwenda kwa %{username}."
@@ -1318,6 +1320,7 @@ sw:
         shared_draft:
           label: "Mswadajaribio Gawiza"
       ignore: "Puuzia"
+      image: "picha"
     notifications:
       tooltip:
         regular:
@@ -2235,6 +2238,7 @@ sw:
       sort_by_name: "jina"
       manage_groups: "Dhibiti makundi ya lebo"
       manage_groups_description: "Fasili makundi kwa ajili ya kurakibisha lebo"
+      bulk_create_button: "Tengeneza"
       filters:
         without_category: "mada %{filter}%{tag}"
         with_category: "mada%{filter} %{tag} za %{category}"
@@ -2428,6 +2432,8 @@ sw:
           sub_pages:
             common_settings:
               title: "Mipangilio"
+        discourse_id:
+          learn_more: "Jifunze zaidi"
         logo:
           form:
             mobile: "Kifaa cha kiganjani"
@@ -3465,6 +3471,9 @@ sw:
         no_user_badges: "%{name} hajapewa beji yoyote."
         no_badges: Hakuna beji za kutolewa.
         none_selected: "Chagua beji ya kuanzia"
+        sections:
+          query: Swali
+          settings: Mipangilio
         allow_title: Ruhusu beji iweze kutumika kama cheo
         multiple_grant: Inaweza kutolewa mara nyingi
         visibility_heading: Uonekanaji

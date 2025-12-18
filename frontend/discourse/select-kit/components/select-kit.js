@@ -1027,14 +1027,15 @@ export default class SelectKit extends Component {
         name: "flip",
         fn: (state) => {
           const top =
-            parseInt(
+            this.selectKit.options.verticalOffset +
+            (parseInt(
               document.documentElement.style.getPropertyValue(
                 "--header-offset"
               ),
               10
-            ) || 0;
+            ) || 0);
 
-          let bottom = 0;
+          let bottom = this.selectKit.options.verticalOffset;
           if (this.capabilities.isIOS) {
             bottom +=
               parseInt(

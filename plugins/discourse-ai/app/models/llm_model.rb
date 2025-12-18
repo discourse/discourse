@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class LlmModel < ActiveRecord::Base
+  # TODO: Remove this line after 20251212144720_populate_ai_bot_enabled_llms_setting migration
+  # has been promoted to pre-deploy
+  self.ignored_columns = %w[enabled_chat_bot]
+
   FIRST_BOT_USER_ID = -1200
   BEDROCK_PROVIDER_NAME = "aws_bedrock"
   DEFAULT_ALLOWED_ATTACHMENT_TYPES = [].freeze
@@ -37,6 +41,14 @@ class LlmModel < ActiveRecord::Base
           model_ids = DiscourseAi::Configuration::LlmEnumerator.global_usage.keys
           where(id: model_ids)
         end
+
+  def self.enabled_chat_bot_ids
+    SiteSetting.ai_bot_enabled_llms.split("|").map(&:to_i).reject(&:zero?)
+  end
+
+  def enabled_chat_bot?
+    self.class.enabled_chat_bot_ids.include?(id)
+  end
 
   def self.provider_params
     {
@@ -123,9 +135,11 @@ class LlmModel < ActiveRecord::Base
       },
       hugging_face: {
         disable_system_prompt: :checkbox,
+        disable_native_tools: :checkbox,
       },
       vllm: {
         disable_system_prompt: :checkbox,
+        disable_native_tools: :checkbox,
       },
       ollama: {
         disable_system_prompt: :checkbox,
@@ -154,7 +168,7 @@ class LlmModel < ActiveRecord::Base
   def toggle_companion_user
     return if name == "fake" && Rails.env.production?
 
-    enable_check = SiteSetting.ai_bot_enabled && enabled_chat_bot
+    enable_check = SiteSetting.ai_bot_enabled && enabled_chat_bot?
 
     if enable_check
       if !user
@@ -180,16 +194,22 @@ class LlmModel < ActiveRecord::Base
         user.active = true
         user.save!(validate: false)
       end
-    elsif user
-      # will include deleted
-      has_posts = DB.query_single("SELECT 1 FROM posts WHERE user_id = #{user.id} LIMIT 1").present?
+    else
+      cleanup_companion_user
+    end
+  end
 
-      if has_posts
-        user.update!(active: false) if user.active
-      else
-        user.destroy!
-        self.update!(user: nil)
-      end
+  def cleanup_companion_user
+    return unless user
+
+    # will include deleted
+    has_posts = DB.query_single("SELECT 1 FROM posts WHERE user_id = #{user.id} LIMIT 1").present?
+
+    if has_posts
+      user.update!(active: false) if user.active
+    else
+      user.destroy!
+      self.update!(user: nil)
     end
   end
 
@@ -285,7 +305,6 @@ end
 #  cache_write_cost         :float            default(0.0)
 #  cached_input_cost        :float
 #  display_name             :string
-#  enabled_chat_bot         :boolean          default(FALSE), not null
 #  input_cost               :float
 #  max_output_tokens        :integer
 #  max_prompt_tokens        :integer          not null

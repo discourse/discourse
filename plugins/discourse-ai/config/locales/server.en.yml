@@ -124,6 +124,7 @@ en:
     ai_summary_backfill_maximum_topics_per_hour: "Number of topic summaries to backfill per hour."
 
     ai_bot_enabled: "Enable the AI Bot module."
+    ai_bot_enabled_llms: "LLMs available to select for AI bot conversations"
     ai_bot_enable_chat_warning: "Display a warning when PM chat is initiated. Can be overriden by editing the translation string: discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "When the GPT Bot has access to the PM, it will reply to members of these groups."
     ai_bot_debugging_allowed_groups: "Allow these groups to see a debug button on posts which displays the raw AI request and response"
@@ -341,7 +342,7 @@ en:
     ai_bot:
       reply_error: "Sorry, it looks like our system encountered an unexpected issue while trying to reply.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Untitled AI bot PM]"
-      thinking: "Thinking..."
+      thinking: "Thinking"
       personas:
         default_llm_required: "Default LLM model is required prior to enabling Chat"
         cannot_delete_system_persona: "System personas cannot be deleted, please disable it instead"

@@ -199,7 +199,7 @@ fr:
         no_llm: "Aucun LLM sélectionné"
         no_persona: "Non défini"
         no_groups: "Aucun"
-        edit: "Modifier"
+        edit: "Paramètres"
         expand_list:
           one: "(%{count} autre)"
           other: "(%{count} autres)"
@@ -355,6 +355,7 @@ fr:
         no_users: "Aucune donnée d'utilisation de l'utilisateur n'a été trouvée"
         no_models: "Aucune donnée d'utilisation du modèle n'a été trouvée"
         no_features: "Aucune donnée d'utilisation de la fonctionnalité n'a été trouvée"
+        total: "Total"
         subheader_description: "Les jetons sont les unités de base que les LLM utilisent pour comprendre et générer du texte. Les données d'utilisation peuvent affecter les coûts"
         stat_tooltips:
           total_requests: "Toutes les requêtes adressées aux LLM via Discourse"
@@ -657,7 +658,6 @@ fr:
           reasoning_tokens: "Nombre de jetons utilisés pour le raisonnement"
           disable_temperature: "Désactiver la température (certains modèles ne prennent pas en charge la température)"
           disable_top_p: "Désactiver le top P (certains modèles ne prennent pas en charge le top P)"
-          enable_responses_api: "Activer l'API de réponses (obligatoire sur certains modèles OpenAI)"
       related_topics:
         title: "Sujets connexes"
         pill: "Lié"

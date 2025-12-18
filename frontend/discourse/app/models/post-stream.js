@@ -1,7 +1,6 @@
 import { cached, tracked } from "@glimmer/tracking";
 import { get } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { and, equal, not, or } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
@@ -73,15 +72,47 @@ export default class PostStream extends RestModel {
   @trackedArray stream = [];
   @trackedArray userFilters = [];
 
-  @or("loadingAbove", "loadingBelow", "loadingFilter", "stagingPost") loading;
-  @not("loading") notLoading;
-  @equal("filter", "summary") summary;
-  @and("notLoading", "hasPosts", "lastPostNotLoaded") canAppendMore;
-  @and("notLoading", "hasPosts", "firstPostNotLoaded") canPrependMore;
-  @not("firstPostPresent") firstPostNotLoaded;
-  @not("loadedAllPosts") lastPostNotLoaded;
-
   _identityMap = {};
+
+  @dependentKeyCompat
+  get loading() {
+    return (
+      this.loadingAbove ||
+      this.loadingBelow ||
+      this.loadingFilter ||
+      this.stagingPost
+    );
+  }
+
+  @dependentKeyCompat
+  get notLoading() {
+    return !this.loading;
+  }
+
+  @dependentKeyCompat
+  get firstPostNotLoaded() {
+    return !this.firstPostPresent;
+  }
+
+  @dependentKeyCompat
+  get lastPostNotLoaded() {
+    return !this.loadedAllPosts;
+  }
+
+  @dependentKeyCompat
+  get canAppendMore() {
+    return this.notLoading && this.hasPosts && this.lastPostNotLoaded;
+  }
+
+  @dependentKeyCompat
+  get canPrependMore() {
+    return this.notLoading && this.hasPosts && this.firstPostNotLoaded;
+  }
+
+  @dependentKeyCompat
+  get summary() {
+    return this.filter === "summary";
+  }
 
   @cached
   @dependentKeyCompat
@@ -1109,20 +1140,20 @@ export default class PostStream extends RestModel {
       });
   }
 
-  findPostsByIds(postIds, opts) {
+  async findPostsByIds(postIds, opts) {
     const unloaded = postIds.filter((p) => !this._identityMap[p]);
 
     // Load our unloaded posts by id
-    return this.loadIntoIdentityMap(unloaded, opts).then(() => {
-      return postIds
-        .map((p) => this._identityMap[p])
-        .filter((item) => item != null);
-    });
+    await this.loadIntoIdentityMap(unloaded, opts);
+
+    return postIds
+      .map((p) => this._identityMap[p])
+      .filter((item) => item != null);
   }
 
-  loadIntoIdentityMap(postIds, opts) {
+  async loadIntoIdentityMap(postIds, opts) {
     if (isEmpty(postIds)) {
-      return Promise.resolve([]);
+      return [];
     }
 
     const data = {
@@ -1135,10 +1166,12 @@ export default class PostStream extends RestModel {
       headers["Discourse-Background"] = "true";
     }
 
-    return ajax(`/t/${this.topic.id}/posts.json`, {
-      data,
-      headers,
-    }).then((result) => {
+    try {
+      const result = await ajax(`/t/${this.topic.id}/posts.json`, {
+        data,
+        headers,
+      });
+
       this._setSuggestedTopics(result);
       if (result.user_badges) {
         this.topic.user_badges ??= {};
@@ -1152,7 +1185,12 @@ export default class PostStream extends RestModel {
           this.storePost(this.store.createRecord("post", p))
         );
       }
-    });
+    } catch (error) {
+      // If we get a 403 error, refresh the window to prevent continuous retries
+      if (error.jqXHR && error.jqXHR.status === 403) {
+        window.location.reload();
+      }
+    }
   }
 
   backfillExcerpts(streamPosition) {

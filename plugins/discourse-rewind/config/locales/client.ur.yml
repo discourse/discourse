@@ -7,6 +7,10 @@
 ur:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "نجی"
+          public: "عوامی"
       reports:
         reading_time:
           title: پڑھنے کیلئے وقت

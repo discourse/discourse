@@ -4,7 +4,10 @@ import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 
-const REWIND_ATTRS = ["discourse_rewind_disabled"];
+const REWIND_ATTRS = [
+  "discourse_rewind_enabled",
+  "discourse_rewind_share_publicly",
+];
 
 export default class PreferencesRewindController extends Controller {
   @service rewind;
@@ -18,7 +21,7 @@ export default class PreferencesRewindController extends Controller {
       .save(REWIND_ATTRS)
       .then(() => {
         this.set("saved", true);
-        this.rewind.disabled = this.model.user_option.discourse_rewind_disabled;
+        this.rewind.enabled = this.model.user_option.discourse_rewind_enabled;
       })
       .catch(popupAjaxError);
   }

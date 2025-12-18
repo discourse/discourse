@@ -150,7 +150,7 @@ lt:
         disabled: "(uždrausta)"
         groups: "Grupės:"
         no_groups: "Nieko"
-        edit: "Redaguoti"
+        edit: "Nustatymai"
         expand_list:
           one: "(%{count} daugiau)"
           few: "(%{count}daugiau)"
@@ -250,6 +250,7 @@ lt:
         model: "Modelis"
         username: "Naudotojo vardas"
         total_requests: "Visos užklausos"
+        total: "Viso"
         periods:
           last_day: "Paskutinės 24 valandos"
           custom: "Pasirinktinis..."

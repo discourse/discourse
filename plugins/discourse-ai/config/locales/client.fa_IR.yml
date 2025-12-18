@@ -72,7 +72,7 @@ fa_IR:
         groups: "گروه‌ها:"
         no_persona: "تنظیم نشده"
         no_groups: "هیچ‌کدام"
-        edit: "ویرایش"
+        edit: "تنظیم"
         expand_list:
           one: "(%{count} مورد دیگر)"
           other: "(%{count} مورد دیگر)"
@@ -116,6 +116,7 @@ fa_IR:
         model: "مدل"
         username: "نام‌کاربری"
         total_requests: "مجموع درخواست‌ها"
+        total: "مجموع"
         periods:
           last_day: "۲۴ ساعت گذشته"
           custom: "سفارشی..."

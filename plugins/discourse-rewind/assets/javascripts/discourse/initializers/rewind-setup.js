@@ -13,18 +13,20 @@ export default {
       return;
     }
 
-    if (!this.currentUser.is_rewind_active) {
+    if (!this.rewind.active) {
       return;
     }
 
     withPluginApi((api) => {
-      api.addQuickAccessProfileItem({
-        icon: "repeat",
-        href: "/my/activity/rewind",
-        content: i18n("discourse_rewind.profile_link", {
-          rewindYear: this.rewind.fetchRewindYear,
-        }),
-      });
+      if (this.rewind.enabled) {
+        api.addQuickAccessProfileItem({
+          icon: "repeat",
+          href: "/my/activity/rewind",
+          content: i18n("discourse_rewind.profile_link", {
+            rewindYear: this.rewind.fetchRewindYear,
+          }),
+        });
+      }
     });
   },
 };

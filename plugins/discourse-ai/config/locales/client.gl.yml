@@ -41,7 +41,7 @@ gl:
         disabled: "(desactivado)"
         groups: "Grupos:"
         no_groups: "Ningunha"
-        edit: "Editar"
+        edit: "Configuración"
         expand_list:
           one: "(%{count} máis)"
           other: "(%{count} máis)"
@@ -79,6 +79,7 @@ gl:
         summary: "Resumo"
         username: "Nome de usuario"
         total_requests: "Solicitudes totais"
+        total: "Total"
         periods:
           custom: "Personalizar..."
       ai_persona:

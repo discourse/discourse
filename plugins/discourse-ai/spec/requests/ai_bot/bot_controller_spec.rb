@@ -108,7 +108,7 @@ RSpec.describe DiscourseAi::AiBot::BotController do
 
   describe "#retry_response" do
     fab!(:bot_user, :user)
-    let!(:llm_model) { Fabricate(:llm_model, user: bot_user, enabled_chat_bot: true) }
+    let!(:llm_model) { Fabricate(:llm_model, user: bot_user) }
     let!(:ai_persona) do
       Fabricate(
         :ai_persona,
@@ -179,6 +179,70 @@ RSpec.describe DiscourseAi::AiBot::BotController do
       post "/discourse-ai/ai-bot/post/#{bot_only_post.id}/retry"
 
       expect(response.status).to eq(404)
+    end
+
+    it "allows retrying if LLM model has a negative id (seeded)" do
+      seeded_llm_model = Fabricate(:llm_model, id: -9999, user: bot_user, name: "second-model")
+
+      bot = DiscourseAi::Personas::Bot.as(bot_user, persona: persona, model: seeded_llm_model)
+      DiscourseAi::Completions::Llm.with_prepared_responses(["first try"], llm: seeded_llm_model) do
+        DiscourseAi::AiBot::Playground.new(bot).reply_to(prompt_post)
+      end
+
+      reply = pm_topic.reload.posts.last
+      original_llm_id = reply.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD]
+
+      expect(original_llm_id.to_i).to eq(-9999)
+
+      retry_text = "retry with original model"
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([retry_text], llm: seeded_llm_model) do
+        post "/discourse-ai/ai-bot/post/#{reply.id}/retry"
+
+        job_args = Jobs::CreateAiReply.jobs.last["args"].first
+        expect(job_args["llm_model_id"]).to eq(-9999)
+
+        Jobs::CreateAiReply.new.execute(job_args.symbolize_keys)
+      end
+
+      expect(response.status).to eq(200)
+      expect(reply.reload.raw).to eq(retry_text)
+    end
+
+    it "uses the original LLM model when retrying even if persona default changed" do
+      second_bot_user = Fabricate(:user)
+      second_llm_model = Fabricate(:llm_model, user: second_bot_user, name: "second-model")
+
+      pm_topic.topic_allowed_users.find_or_create_by!(user: second_bot_user)
+
+      original_llm_name = reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD]
+      original_llm_id = reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD]
+
+      expect(original_llm_name).to be_present
+      expect(original_llm_id.to_i).to eq(llm_model.id)
+
+      ai_persona.update!(default_llm_id: second_llm_model.id)
+      AiPersona.persona_cache.flush!
+
+      retry_text = "retry with original model"
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([retry_text], llm: llm_model) do
+        post "/discourse-ai/ai-bot/post/#{reply_post.id}/retry"
+
+        job_args = Jobs::CreateAiReply.jobs.last["args"].first
+        expect(job_args["llm_model_id"]).to eq(llm_model.id)
+
+        Jobs::CreateAiReply.new.execute(job_args.symbolize_keys)
+      end
+
+      expect(response.status).to eq(200)
+      expect(reply_post.reload.raw).to eq(retry_text)
+      expect(reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD]).to eq(
+        original_llm_name,
+      )
+      expect(reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD].to_i).to eq(
+        original_llm_id.to_i,
+      )
     end
   end
 

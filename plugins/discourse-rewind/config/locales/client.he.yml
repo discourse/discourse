@@ -7,6 +7,10 @@
 he:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "פרטי"
+          public: "ציבורי"
       reports:
         reading_time:
           title: זמן קריאה
@@ -24,5 +28,6 @@ he:
         new_user_interactions:
           likes_given: לייקים שהוענקו
           mentions: אזכורים
+          your_contributions_helped: התרומות שלך עזרו
         writing_analysis:
           menu_other: אחר

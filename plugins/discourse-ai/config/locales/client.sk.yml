@@ -199,7 +199,7 @@ sk:
         no_llm: "Nie je vybraný žiadny LLM"
         no_persona: "Nie je nastavené"
         no_groups: "Žiadny"
-        edit: "Upraviť"
+        edit: "Nastavení"
         expand_list:
           one: "(%{count} ďalší)"
           few: "(%{count} ďalšie)"
@@ -358,6 +358,7 @@ sk:
         no_users: "Nenašli sa žiadne údaje o používaní používateľmi"
         no_models: "Nenašli sa žiadne údaje o používaní modelu"
         no_features: "Nenašli sa žiadne údaje o používaní funkcií"
+        total: "Celkom"
         subheader_description: "Tokeny sú základné jednotky, ktoré LLM používajú na pochopenie a generovanie textu, údaje o používaní môžu ovplyvniť náklady."
         stat_tooltips:
           total_requests: "Všetky žiadosti zaslané LLM prostredníctvom Discourse"
@@ -665,7 +666,6 @@ sk:
           reasoning_tokens: "Počet tokenov použitých na uvažovanie"
           disable_temperature: "Zakázať teplotu (niektoré modely myslenia teplotu nepodporujú)"
           disable_top_p: "Zakázať top P (niektoré modely myslenia nepodporujú top P)"
-          enable_responses_api: "Povolenie rozhrania API pre odpovede (vyžaduje sa pri niektorých modeloch OpenAI)"
       related_topics:
         title: "Súvisiace témy"
         pill: "Súvisiace"

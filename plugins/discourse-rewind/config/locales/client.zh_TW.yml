@@ -7,6 +7,10 @@
 zh_TW:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "私密"
+          public: "公開"
       reports:
         reading_time:
           title: 閱讀時間

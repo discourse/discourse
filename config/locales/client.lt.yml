@@ -2438,6 +2438,8 @@ lt:
       upload_title: "Įkelti"
       upload_description: "įveskite čia nuorodos aprašymą"
       list_item: "Įkelti"
+      wrap_modal:
+        apply: "Kandidatuoti"
       help: "Markdown redagavimo pagalba"
       modal_ok: "OK"
       cant_send_pm: "Atsiprašome, bet negalite siųsti žinučių %{username}."
@@ -2476,6 +2478,7 @@ lt:
           desc: "Atsakykite nekeisdami paskutinės atsakymo datos"
       reload: "Įkelti iš naujo"
       ignore: "Ignoruoti"
+      image: "paveikslėlis"
     notifications:
       tooltip:
         regular:
@@ -3859,6 +3862,7 @@ lt:
       upload: "Įkelti žymas"
       upload_description: "Įkelkite csv failą, kad sukurtumėte masines žymas"
       upload_successful: "Žymos sėkmingai įkeltos"
+      bulk_create_button: "Sukurti"
       delete_no_unused_tags: "Nėra nepanaudotų žymių."
       tag_list_joiner: ", "
       delete_unused: "Ištrinkite nepanaudotas žymas"
@@ -4132,6 +4136,8 @@ lt:
           sub_pages:
             common_settings:
               title: "Nustatymai"
+        discourse_id:
+          learn_more: "Sužinoti daugiau"
         logo:
           form:
             mobile: "Mobilus"
@@ -5505,6 +5511,8 @@ lt:
         no_user_badges: "%{name} dar negavo jokių trofėjų"
         no_badges: Nėra jokių trofėjų, kuriuos galima suteikti.
         none_selected: "Pasirinkite ženklelį, kad pradėtumėt"
+        sections:
+          settings: Nustatymai
         allow_title: Leisti naudoti ženklelį kaip antraštę
         multiple_grant: Gali būti suteikta keleta kartų
         visibility_heading: Matomumas

@@ -974,7 +974,6 @@ ru:
         claimed: "Зарезервировано"
         claimed_by: "Зарезервировано пользователем %{username} · %{relativeDate}"
         reviewed: "Проверено"
-        reviewed_by: "Проверено пользователем %{username} · %{relativeDate}"
         view_conversation: "просмотреть ЛС"
         note_added: "Примечание модератора"
         note_added_by: "Примечание модератора %{username} · %{relativeDate}"
@@ -3092,6 +3091,8 @@ ru:
       ulist_title: "Маркированный список"
       list_item: "Элемент списка"
       toggle_direction: "Переключить направление"
+      wrap_modal:
+        apply: "Применить"
       help: "Справка по форматированию (Markdown)"
       collapse: "Свернуть панель редактора"
       open: "Открыть панель редактора"
@@ -3158,6 +3159,7 @@ ru:
         zoom_out: "Уменьшить размер изображения"
         zoom_in: "Увеличить размер изображения"
         remove: "Удалить изображение"
+      image: "изображение"
       image_scale_button: "Масштабировать изображение до %{percent}%"
       delete_image_button: Удалить изображение
       toggle_image_grid: Сетка изображений
@@ -5210,6 +5212,7 @@ ru:
       upload_description: "Загрузить csv-файл для массового создания тегов"
       upload_instructions: "По одному в строке, с необязательным указанием группы тега в формате «tag_name,tag_group»."
       upload_successful: "Теги загружены"
+      bulk_create_button: "Создать"
       delete_unused_confirmation:
         one: "%{count} тег будет удалён: %{tags}"
         few: "%{count} тега будут удалены: %{tags}"
@@ -5812,6 +5815,11 @@ ru:
           sub_pages:
             common_settings:
               title: "настроек"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Подробнее"
         logo:
           title: "Логотип"
           header_description: "Настройте логотипы и значки, используемые на вашем сайте."
@@ -8422,6 +8430,9 @@ ru:
         no_user_badges: "У %{name} нет ни одной награды."
         no_badges: Нет наград, которые можно было бы выдать.
         none_selected: "Выберите награду в списке слева"
+        sections:
+          query: Запрос
+          settings: настроек
         usage_heading: Использование
         allow_title: Разрешить использовать название награды в качестве титула
         multiple_grant: Может быть предоставлена несколько раз

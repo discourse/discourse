@@ -2050,6 +2050,8 @@ vi:
       upload_title: "Tải lên"
       upload_description: "Nhập mô tả tải lên ở đây"
       list_item: "Danh sách các mục"
+      wrap_modal:
+        apply: "Áp dụng"
       help: "Trợ giúp soạn thảo bằng Markdown"
       modal_ok: "OK"
       cant_send_pm: "Xin lỗi, bạn không thể gởi tin nhắn đến %{username}."
@@ -2095,6 +2097,7 @@ vi:
       ignore: "Bỏ qua"
       image_alt_text:
         aria_label: Văn bản thay thế cho hình ảnh
+      image: "hình ảnh"
       delete_image_button: Xoá ảnh
     notifications:
       tooltip:
@@ -3519,6 +3522,7 @@ vi:
       upload_description: "Tải lên tệp csv để tạo hàng loạt thẻ"
       upload_instructions: "Một trên mỗi dòng, tùy chọn với một nhóm thẻ ở định dạng 'tag_name, tag_group'."
       upload_successful: "Các thẻ đã được tải lên thành công"
+      bulk_create_button: "Tạo"
       delete_unused_confirmation:
         other: "%{count} thẻ sẽ bị xóa: %{tags}"
       delete_unused_confirmation_more_tags:
@@ -3800,6 +3804,11 @@ vi:
           sub_pages:
             common_settings:
               title: "Cài đặt"
+            discourse_id:
+              title: "ID Discourse"
+        discourse_id:
+          title: "ID Discourse"
+          learn_more: "Tìm hiểu thêm"
         logo:
           form:
             mobile: "Điện thoại"
@@ -5296,6 +5305,8 @@ vi:
         no_user_badges: "%{name} chưa được cấp bất kỳ huy hiệu nào."
         no_badges: Không có huy hiệu có thể được cấp.
         none_selected: "Chọn một huy hiệu để bắt đầu"
+        sections:
+          settings: Cài đặt
         allow_title: Cho phép huy hiệu được sử dụng như là tên
         multiple_grant: Có thể được cấp nhiều lần
         visibility_heading: Khả năng hiển thị

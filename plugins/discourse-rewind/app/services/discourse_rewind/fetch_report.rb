@@ -3,58 +3,43 @@
 module DiscourseRewind
   # Service responsible to fetch a single report by index.
   #
+  # NOTE: When changing any report implementations, please
+  # also update FetchReportsHelper::REWIND_REPORT_VERSION
+  # to invalidate caches.
+  #
   # @example
   #  ::DiscourseRewind::FetchReport.call(
   #    guardian: guardian,
-  #    params: { index: 3 }
+  #    params: { index: 3, for_user_username: 'codinghorror' }
   #  )
   #
   class FetchReport
     include Service::Base
+    include DiscourseRewind::FetchReportsHelper
 
     # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
     #   @param [Hash] params
     #   @option params [Integer] :index of the report
+    #   @option params [String] :for_user_username (optional) username of the user to see the rewind for, otherwise the guardian user is used
     #   @return [Service::Base::Context]
 
     params do
       attribute :index, :integer
+      attribute :for_user_username, :string
 
       validates :index, presence: true, numericality: { greater_than_or_equal_to: 0 }
     end
 
-    model :year
+    model :for_user # see FetchReportsHelper#fetch_for_user
+    model :year # see FetchReportsHelper#fetch_year
     model :all_reports
     model :report
 
     private
 
-    def fetch_year
-      current_date = Time.zone.now
-      current_month = current_date.month
-      current_year = current_date.year
-
-      case current_month
-      when 1
-        current_year - 1
-      when 12
-        current_year
-      else
-        if Rails.env.development?
-          current_year
-        else
-          false
-        end
-      end
-    end
-
-    def fetch_all_reports(guardian:, year:)
-      key = "rewind:#{guardian.user.username}:#{year}"
-      reports = Discourse.redis.get(key)
-      return nil unless reports
-
-      MultiJson.load(reports, symbolize_keys: true)
+    def fetch_all_reports(for_user:, year:)
+      load_reports_from_cache(for_user.username, year)
     end
 
     def fetch_report(all_reports:, params:)

@@ -199,7 +199,7 @@ nl:
         no_llm: "Geen LLM geselecteerd"
         no_persona: "Niet ingesteld"
         no_groups: "Geen"
-        edit: "Bewerken"
+        edit: "Instellingen"
         expand_list:
           one: "(Nog %{count})"
           other: "(Nog %{count})"
@@ -355,6 +355,7 @@ nl:
         no_users: "Geen gebruikergebruiksgegevens gevonden"
         no_models: "Geen modelgebruiksgegevens gevonden"
         no_features: "Geen functiegebruiksgegevens gevonden"
+        total: "Totaal"
         subheader_description: "Tokens zijn de basiseenheden die LLM's gebruiken om tekst te begrijpen en te genereren. Gebruiksgegevens kunnen de kosten beïnvloeden"
         stat_tooltips:
           total_requests: "Alle verzoeken aan LLM's via Discourse"
@@ -657,7 +658,6 @@ nl:
           reasoning_tokens: "Aantal tokens dat wordt gebruikt voor redeneren"
           disable_temperature: "Temperatuur uitschakelen (sommige denkmodellen ondersteunen geen temperatuur)"
           disable_top_p: "Top P uitschakelen (sommige denkmodellen ondersteunen geen top P)"
-          enable_responses_api: "Respons-API inschakelen (vereist voor bepaalde OpenAI-modellen)"
       related_topics:
         title: "Gerelateerde topics"
         pill: "Gerelateerd"

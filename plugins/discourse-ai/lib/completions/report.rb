@@ -5,6 +5,7 @@ module DiscourseAi
       UNKNOWN_FEATURE = "unknown"
       USER_LIMIT = 50
       LLM_MODEL_JOIN = "LEFT JOIN llm_models ON llm_models.id = ai_api_request_stats.llm_id"
+      LLM_MODEL_ID_PATTERN = /^-?\d+$/
 
       attr_reader :start_date, :end_date, :base_query, :timezone
 
@@ -168,6 +169,28 @@ module DiscourseAi
           )
       end
 
+      def feature_model_breakdown
+        base_query
+          .joins(LLM_MODEL_JOIN)
+          .group(
+            :feature_name,
+            "COALESCE(llm_models.id::text, ai_api_request_stats.language_model)",
+            "COALESCE(llm_models.display_name, ai_api_request_stats.language_model)",
+            "llm_models.input_cost",
+            "llm_models.output_cost",
+            "llm_models.cached_input_cost",
+            "llm_models.cache_write_cost",
+          )
+          .order("feature_name, usage_count DESC")
+          .select(
+            "CASE WHEN COALESCE(feature_name, '') = '' THEN '#{UNKNOWN_FEATURE}' ELSE feature_name END as feature_name",
+            "COALESCE(llm_models.id::text, ai_api_request_stats.language_model) as llm_id",
+            "COALESCE(llm_models.display_name, ai_api_request_stats.language_model) as llm_label",
+            "SUM(usage_count) as usage_count",
+            *token_count_and_total_columns,
+          )
+      end
+
       def tokens_per_hour
         tokens_by_period(:hour)
       end
@@ -190,7 +213,7 @@ module DiscourseAi
       end
 
       def filter_by_model(model_identifier)
-        if model_identifier.to_s.match?(/^-?\d+$/)
+        if model_identifier.to_s.match?(LLM_MODEL_ID_PATTERN)
           model = LlmModel.find_by(id: model_identifier)
           if model
             @base_query =

@@ -5,6 +5,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import discourseComputed from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 
 export default class UsersController extends Controller {
@@ -16,15 +17,17 @@ export default class UsersController extends Controller {
 
   subpageTitle = i18n("user.preferences_nav.users");
 
-  init() {
-    super.init(...arguments);
-
-    this.saveAttrNames = [
-      "allow_private_messages",
-      "muted_usernames",
-      "allowed_pm_usernames",
-      "enable_allowed_pm_users",
-    ];
+  get saveAttrNames() {
+    return applyValueTransformer(
+      "preferences-save-attributes",
+      [
+        "allow_private_messages",
+        "muted_usernames",
+        "allowed_pm_usernames",
+        "enable_allowed_pm_users",
+      ],
+      { page: "users" }
+    );
   }
 
   @computed("model.muted_usernames")

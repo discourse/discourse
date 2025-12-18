@@ -13,6 +13,7 @@ require_relative "runners/spam"
 require_relative "runners/summarization"
 require_relative "judge"
 require_relative "persona_prompt_loader"
+require_relative "console_formatter"
 
 module DiscourseAi
   module Evals
@@ -32,25 +33,61 @@ module DiscourseAi
       end
 
       def run_evals(eval_cases:, llms: nil, persona_variants: nil)
+        persona_variants ||= @persona_variants || [{ key: :default, prompt: nil }]
+
+        formatter =
+          build_formatter(eval_cases: eval_cases, llms: llms, persona_variants: persona_variants)
+        formatter.announce_start
+
         if running_comparisons?
-          compare(eval_cases: eval_cases, llms: llms, persona_variants: persona_variants)
+          compare(
+            eval_cases: eval_cases,
+            llms: llms,
+            persona_variants: persona_variants,
+            formatter: formatter,
+          )
         else
-          run(eval_cases: eval_cases, llms: llms, persona_variants: persona_variants)
+          run(
+            eval_cases: eval_cases,
+            llms: llms,
+            persona_variants: persona_variants,
+            formatter: formatter,
+          )
         end
+      ensure
+        formatter&.finalize
       end
 
-      def compare(eval_cases:, llms:, persona_variants: [{ key: :default, prompt: nil }])
+      def compare(
+        eval_cases:,
+        llms:,
+        persona_variants: [{ key: :default, prompt: nil }],
+        formatter:
+      )
         aggregate_scores = Hash.new { |h, k| h[k] = { passes: 0, evals: eval_cases.length } }
 
         eval_cases.each do |eval_case|
-          recorder = Recorder.with_cassette(eval_case, output: output)
-          candidates = []
           persona_compare = persona_variants.length > 1 && llms.length == 1
+          total_targets = persona_compare ? persona_variants.length : llms.length
+          persona_label = persona_compare ? "multiple" : persona_variants.first&.dig(:key)
+
+          recorder =
+            Recorder.with_cassette(
+              eval_case,
+              output: output,
+              total_targets: total_targets,
+              persona_key: persona_label,
+              formatter: formatter,
+              announce_formatter: false,
+              finalize_formatter: false,
+            )
+          candidates = []
 
           persona_variants.each do |variant|
             llms.each do |llm|
               llm_name = llm.display_name || llm.name
               start_time = Time.now.utc
+              display_label = table_label_for(variant, llm_name, persona_compare)
 
               execution = execute_eval(eval_case, llm, variant, skip_judge: true)
               classified = Array(execution[:classified])
@@ -59,11 +96,20 @@ module DiscourseAi
                 recorder.record_llm_skip(
                   llm_name,
                   classified.first[:message] || "LLM does not support vision",
+                  display_label: display_label,
+                  row_prefix: eval_case.id,
                 )
                 next
               end
 
-              recorder.record_llm_results(llm_name, classified, start_time)
+              recorder.record_llm_results(
+                llm_name,
+                classified,
+                start_time,
+                raw_entries: execution[:raw_entries],
+                display_label: display_label,
+                row_prefix: eval_case.id,
+              )
 
               candidates << build_candidate(
                 eval_case: eval_case,
@@ -71,12 +117,15 @@ module DiscourseAi
                 llm_name: llm_name,
                 execution: execution,
                 persona_compare: persona_compare,
+                display_label: display_label,
               )
             rescue DiscourseAi::Evals::Eval::EvalError => e
               recorder.record_llm_results(
                 llm_name,
                 [{ result: :fail, message: e.message, context: e.context }],
                 start_time,
+                display_label: display_label,
+                row_prefix: eval_case.id,
               )
             rescue StandardError => e
               puts e.backtrace if !Rails.env.test?
@@ -84,6 +133,8 @@ module DiscourseAi
                 llm_name,
                 [{ result: :fail, message: e.message }],
                 start_time,
+                display_label: display_label,
+                row_prefix: eval_case.id,
               )
             end
           end
@@ -101,20 +152,35 @@ module DiscourseAi
         end
       end
 
-      def run(eval_cases:, llms:, persona_variants: [{ key: :default, prompt: nil }])
+      def run(eval_cases:, llms:, persona_variants: [{ key: :default, prompt: nil }], formatter:)
         # We only allow one persona at a time here.
         # If not specified, will contain an element with the default key.
         variant = persona_variants.first
 
         eval_cases.each do |eval_case|
-          recorder = Recorder.with_cassette(eval_case, output: output)
+          recorder =
+            Recorder.with_cassette(
+              eval_case,
+              output: output,
+              total_targets: persona_variants.length * llms.length,
+              persona_key: variant&.dig(:key),
+              formatter: formatter,
+              announce_formatter: false,
+              finalize_formatter: false,
+            )
 
           llms.each do |llm|
             llm_name = llm.display_name || llm.name
             start_time = Time.now.utc
+            display_label = table_label_for(variant, llm_name, false)
 
             if eval_case.vision && !llm.vision_enabled?
-              recorder.record_llm_skip(llm_name, "LLM does not support vision")
+              recorder.record_llm_skip(
+                llm_name,
+                "LLM does not support vision",
+                display_label: display_label,
+                row_prefix: eval_case.id,
+              )
               next
             end
 
@@ -125,16 +191,27 @@ module DiscourseAi
               recorder.record_llm_skip(
                 llm_name,
                 classified.first[:message] || "LLM does not support vision",
+                display_label: display_label,
+                row_prefix: eval_case.id,
               )
               next
             end
 
-            recorder.record_llm_results(llm_name, classified, start_time)
+            recorder.record_llm_results(
+              llm_name,
+              classified,
+              start_time,
+              raw_entries: execution[:raw_entries],
+              display_label: display_label,
+              row_prefix: eval_case.id,
+            )
           rescue DiscourseAi::Evals::Eval::EvalError => e
             recorder.record_llm_results(
               llm_name,
               [{ result: :fail, message: e.message, context: e.context }],
               start_time,
+              display_label: display_label,
+              row_prefix: eval_case.id,
             )
           rescue StandardError => e
             puts e.backtrace if !Rails.env.test?
@@ -142,6 +219,8 @@ module DiscourseAi
               llm_name,
               [{ result: :fail, message: e.message }],
               start_time,
+              display_label: display_label,
+              row_prefix: eval_case.id,
             )
           end
         ensure
@@ -230,6 +309,7 @@ module DiscourseAi
             mode_label: mode_label,
             persona_key: persona_key,
             result: judged,
+            candidates: candidates,
           )
           recorder.announce_comparison_aggregate(
             mode_label: mode_label,
@@ -262,6 +342,7 @@ module DiscourseAi
             winner: winner,
             status_line: status_line,
             failures: failures,
+            candidates: candidates,
           )
           recorder.announce_comparison_aggregate(
             mode_label: mode_label,
@@ -295,6 +376,19 @@ module DiscourseAi
         unique_personas.length > 1 ? "personas" : "LLMs"
       end
 
+      def table_label_for(variant, llm_name, persona_compare)
+        persona_key = variant[:key]
+        persona_label = persona_key.presence || :default
+
+        if persona_compare
+          persona_label
+        elsif persona_label != :default && persona_label != "default"
+          "#{llm_name} (#{persona_label})"
+        else
+          llm_name
+        end
+      end
+
       def update_aggregate_scores(aggregate_scores, candidates)
         candidates.each do |candidate|
           entries = Array(candidate[:classified_entries])
@@ -306,7 +400,14 @@ module DiscourseAi
         end
       end
 
-      def build_candidate(eval_case:, variant:, llm_name:, execution:, persona_compare:)
+      def build_candidate(
+        eval_case:,
+        variant:,
+        llm_name:,
+        execution:,
+        persona_compare:,
+        display_label:
+      )
         output =
           normalize_candidate_output(
             eval_case,
@@ -315,6 +416,7 @@ module DiscourseAi
           )
         {
           label: persona_compare ? variant[:key] : llm_name,
+          display_label: display_label,
           persona_label: variant[:key],
           classified_entries: execution[:classified],
           output: output,
@@ -410,6 +512,27 @@ module DiscourseAi
         end
 
         DiscourseAi::Evals::Judge.new(eval_case: eval_case, judge_llm: judge_llm).evaluate(result)
+      end
+
+      def build_formatter(eval_cases:, llms:, persona_variants:)
+        persona_variants ||= [{ key: :default, prompt: nil }]
+        total_targets =
+          if running_comparisons?
+            persona_compare = persona_variants.length > 1 && llms.length == 1
+            persona_compare ? persona_variants.length : llms.length
+          else
+            persona_variants.length * llms.length
+          end
+
+        run_label = "eval run (#{eval_cases.length} cases)"
+        persona_key = persona_variants.first&.dig(:key)
+
+        DiscourseAi::Evals::ConsoleFormatter.new(
+          label: run_label,
+          output: output,
+          total_targets: total_targets,
+          persona_key: persona_key,
+        )
       end
 
       # Extract text from an image upload by delegating to the ImageToText helper.

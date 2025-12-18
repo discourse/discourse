@@ -110,7 +110,7 @@ module DiscourseAi
 
         all_llm_users =
           LlmModel
-            .where(enabled_chat_bot: true)
+            .where(id: LlmModel.enabled_chat_bot_ids)
             .joins(:user)
             .pluck("users.id", "users.username_lower")
 
@@ -191,7 +191,8 @@ module DiscourseAi
         stream_reply: false,
         auto_set_title: false,
         silent_mode: false,
-        feature_name: nil
+        feature_name: nil,
+        attributed_user: nil
       )
         ai_persona = AiPersona.find_by(id: persona_id)
         raise Discourse::InvalidParameters.new(:persona_id) if !ai_persona
@@ -212,6 +213,7 @@ module DiscourseAi
           auto_set_title: auto_set_title,
           silent_mode: silent_mode,
           feature_name: feature_name,
+          attributed_user: attributed_user,
         )
       rescue => e
         if Rails.env.test?
@@ -420,6 +422,7 @@ module DiscourseAi
         feature_name: nil,
         existing_reply_post: nil,
         cancel_manager: nil,
+        attributed_user: nil,
         &blk
       )
         # this is a multithreading issue
@@ -453,6 +456,7 @@ module DiscourseAi
         context =
           DiscourseAi::Personas::BotContext.new(
             post: post,
+            user: attributed_user,
             custom_instructions: custom_instructions,
             feature_name: feature_name,
             messages:
@@ -515,6 +519,7 @@ module DiscourseAi
                 skip_guardian: true,
                 custom_fields: {
                   DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD => bot.llm.llm_model.display_name,
+                  DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD => bot.llm.llm_model.id,
                   DiscourseAi::AiBot::POST_AI_PERSONA_ID_FIELD => bot.persona.id,
                 },
               )
@@ -524,6 +529,10 @@ module DiscourseAi
             .llm
             .llm_model
             .display_name
+          reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD] = bot
+            .llm
+            .llm_model
+            .id
           reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_PERSONA_ID_FIELD] = bot.persona.id
           reply_post.save_custom_fields
 
@@ -557,7 +566,7 @@ module DiscourseAi
             next if type == :structured_output && !partial.finished?
 
             if should_start_thinking?(partial:, context:, type:, started_thinking:, placeholder:)
-              reply << "<details><summary>#{I18n.t("discourse_ai.ai_bot.thinking")}</summary>\n\n"
+              reply << "<details class='ai-thinking'><summary>#{I18n.t("discourse_ai.ai_bot.thinking")}</summary>\n\n"
               started_thinking = true
             elsif should_stop_thinking?(partial:, context:, type:, started_thinking:, placeholder:)
               reply << "</details>\n\n"
@@ -607,6 +616,7 @@ module DiscourseAi
               skip_guardian: true,
               custom_fields: {
                 DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD => bot.llm.llm_model.display_name,
+                DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD => bot.llm.llm_model.id,
                 DiscourseAi::AiBot::POST_AI_PERSONA_ID_FIELD => bot.persona.id,
               },
             )

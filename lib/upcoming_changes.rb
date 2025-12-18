@@ -26,7 +26,8 @@ module UpcomingChanges
   end
 
   def self.change_metadata(change_setting_name)
-    SiteSetting.upcoming_change_metadata[change_setting_name.to_sym] || {}
+    change_setting_name = change_setting_name.to_sym
+    SiteSetting.upcoming_change_metadata[change_setting_name] || {}
   end
 
   def self.not_yet_stable?(change_setting_name)
@@ -50,6 +51,7 @@ module UpcomingChanges
   end
 
   def self.history_for(change_setting_name)
+    change_setting_name = change_setting_name.to_sym
     UserHistory.where(
       action: UserHistory.actions[:upcoming_change_toggled],
       subject: change_setting_name,
@@ -61,6 +63,25 @@ module UpcomingChanges
   end
 
   def self.group_ids_for(change_setting_name)
+    change_setting_name = change_setting_name.to_sym
     SiteSetting.site_setting_group_ids[change_setting_name].presence || []
+  end
+
+  def self.enabled_for_user?(change_setting_name, user)
+    change_setting_name = change_setting_name.to_sym
+    setting_enabled = SiteSetting.public_send(change_setting_name)
+
+    # Anon users can only have upcoming changes enabled if it's set for Everyone
+    if user.blank?
+      return false if UpcomingChanges.has_groups?(change_setting_name)
+    else
+      if UpcomingChanges.has_groups?(change_setting_name)
+        return(
+          setting_enabled && user.in_any_groups?(UpcomingChanges.group_ids_for(change_setting_name))
+        )
+      end
+    end
+
+    setting_enabled
   end
 end

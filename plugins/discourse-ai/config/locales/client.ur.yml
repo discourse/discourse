@@ -67,7 +67,7 @@ ur:
         disabled: "(غیر فعال)"
         groups: "گروپس:"
         no_groups: "کوئی نہیں"
-        edit: "ترمیم کریں"
+        edit: "سیٹِنگ"
         expand_list:
           one: "(%{count} مزید)"
           other: "(%{count} مزید)"
@@ -113,6 +113,7 @@ ur:
         summary: "Summary"
         username: "اسمِ صارف"
         total_requests: "کُل درخواستیں"
+        total: "حاصل جمع"
         subheader_description: "ٹوکن بنیادی اکائیاں ہیں جنہیں LLMs متن کو سمجھنے اور بنانے کے لیے استعمال کرتے ہیں، استعمال کا ڈیٹا لاگت کو متاثر کر سکتا ہے"
         periods:
           last_day: "پچھلے 24 گھنٹے"

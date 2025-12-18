@@ -9,9 +9,35 @@ en:
       placeholder: Discourse Rewind
       title: Rewind
       loading: "Reticulating splines..."
+      viewing_other_user: "You are viewing <strong>%{username}'s</strong> Discourse Rewind report."
+      cannot_view_rewind_gibberish: >
+        [ACCESS DENIED::REWIND MAINFRAME SUBROUTINE FAILURE]<br><br>
+
+        Bootstrapping anomaly log...<br><br>
+
+        &nbsp;&nbsp;>> quantum buffer underrun ⧛<br>
+        &nbsp;&nbsp;>> cross-node parity drift (Δ=004.33)<br>
+        &nbsp;&nbsp;>> packet ϟ fragment at offset ∇47<br>
+        &nbsp;&nbsp;>> flux conduit handshake TIMED OUT<br><br>
+      cannot_view_rewind: >
+        You cannot view this Discourse Rewind report. Maybe the owner has not shared it publicly?<br><br>
+
+        $> _<br><br>
       preferences:
-        disable_rewind: "Disable Discourse Rewind. This hides the year-end activity summary in your profile and on your avatar."
+        enable_rewind: "Enable Discourse Rewind. This shows the year-end activity summary in your profile and on your avatar."
+        share_publicly: "Share Discourse Rewind summary with other forum members. Any forum member will be able to view your Discourse Rewind summary."
+        cannot_share_when_profile_hidden: "In order to share Rewind you must allow others to view your public profile."
       profile_link: "View your %{rewindYear} Discourse Rewind"
+      share:
+        toggle_label:
+          private: "Private"
+          public: "Public"
+        confirm: "Be sure to review your Rewind before sharing, as it may include data from personal messages. You can make it private again at any time."
+        confirm_button:
+          enable: "Make public"
+          disable: "Keep private"
+        enabled_success: "Your Rewind is now sharable with other forum members."
+        disabled_success: "Your Rewind is now private."
       reports:
         activity_calendar:
           title: Activity Calendar
@@ -133,6 +159,7 @@ en:
           replies: Replies to Posts
           mentions: Mentions
           topics_with_new_users: Topics with New Users
+          your_contributions_helped: your contributions helped
         time_of_day_activity:
           title: Daily Activity Rhythm
           play_button: Play your activity as sound

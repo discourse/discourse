@@ -331,7 +331,7 @@ pl_PL:
     ai_bot:
       reply_error: "Przepraszamy, wygląda na to, że nasz system napotkał nieoczekiwany problem podczas próby udzielenia odpowiedzi.\n\n[details='Szczegóły błędu']\n%{details}\n[/details]"
       default_pm_prefix: "[PW bota AI bez tytułu]"
-      thinking: "Myślenie..."
+      thinking: "Myślenie"
       personas:
         default_llm_required: "Przed włączeniem czatu wymagany jest domyślny model LLM"
         cannot_delete_system_persona: "Person systemowych nie można usunąć, zamiast tego wyłącz je."

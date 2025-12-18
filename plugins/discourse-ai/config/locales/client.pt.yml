@@ -80,7 +80,7 @@ pt:
         no_llm: "Nenhum LLM selecionado"
         no_persona: "Não definido"
         no_groups: "Nenhuma"
-        edit: "Editar"
+        edit: "Configurações"
         expand_list:
           one: "(%{count} mais)"
           other: "(%{count} mais)"
@@ -160,6 +160,7 @@ pt:
         all_features: "Todas as funcionalidades"
         username: "Nome de Utilizador"
         total_requests: "Total de pedidos"
+        total: "Total"
         periods:
           last_day: "Últimas 24 horas"
           custom: "Personalizar..."

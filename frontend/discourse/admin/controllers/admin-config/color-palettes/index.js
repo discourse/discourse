@@ -258,7 +258,7 @@ export default class AdminConfigColorPalettesIndexController extends Controller 
               themeName,
             }),
           },
-          duration: 4000,
+          duration: "short",
         });
       }
     } catch (error) {

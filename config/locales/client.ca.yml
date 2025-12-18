@@ -1723,6 +1723,8 @@ ca:
       upload_title: "Carrega"
       upload_description: "escriviu aquí una descripció del fitxer que es carrega"
       list_item: "Element de llista"
+      wrap_modal:
+        apply: "Aplica"
       help: "Ajuda d'edició Markdown"
       modal_ok: "D'acord"
       cant_send_pm: "No podeu enviar cap missatge a %{username}."
@@ -1754,6 +1756,7 @@ ca:
           label: "Commuta l'elevació del tema"
           desc: "Respon sense canviar la data més recent de resposta"
       ignore: "Ignora"
+      image: "imatge"
     notifications:
       tooltip:
         regular:
@@ -2869,6 +2872,7 @@ ca:
       upload_description: "Carregueu un fitxer CSV per a crear etiquetes a l'engròs"
       upload_instructions: "Una per línia, opcionalment amb un grup d'etiquetes en el format 'tag_name,tag_group'."
       upload_successful: "S'han carregat les etiquetes correctament"
+      bulk_create_button: "Crea"
       delete_unused_confirmation:
         one: "Se suprimirà %{count} etiqueta: %{tags}"
         other: "Se suprimiran %{count}etiquetes: %{tags}"
@@ -3095,6 +3099,8 @@ ca:
           sub_pages:
             common_settings:
               title: "Configuració"
+        discourse_id:
+          learn_more: "Per a saber-ne més"
         logo:
           form:
             mobile: "Mòbil"
@@ -4372,6 +4378,9 @@ ca:
         no_user_badges: "No s'ha atorgat cap insígnia a %{name}."
         no_badges: No hi ha insígnies per a atorgar.
         none_selected: "Tria una insígnia per a començar"
+        sections:
+          query: Consulta
+          settings: Configuració
         allow_title: Permet que es faci servir la insígnia com a títol
         multiple_grant: Pot concedir-se moltes vegades
         visibility_heading: Visibilitat

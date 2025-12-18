@@ -844,7 +844,6 @@ tr_TR:
         claimed: "Alındı"
         claimed_by: "%{username} tarafından alındı · %{relativeDate}"
         reviewed: "İncelendi"
-        reviewed_by: "%{username} tarafından incelendi · %{relativeDate}"
         view_conversation: "kişisel mesajı görüntüle"
         note_added: "Moderatör notu"
         note_added_by: "%{username} tarafından moderatör notu · %{relativeDate}"
@@ -2800,6 +2799,8 @@ tr_TR:
       ulist_title: "Madde işaretli liste"
       list_item: "Liste ögesi"
       toggle_direction: "Yönü aç/kapat"
+      wrap_modal:
+        apply: "Uygula"
       help: "Markdown Düzenleme Yardımı"
       exit_fullscreen_prompt: "Tam ekrandan çıkmak için <kbd>ESC</kbd> tuşuna basın"
       modal_ok: "Tamam"
@@ -2858,6 +2859,7 @@ tr_TR:
         zoom_out: "Görüntü boyutunu küçült"
         zoom_in: "Görüntü boyutunu artır"
         remove: "Görüntüyü kaldır"
+      image: "resim"
       image_scale_button: "Görüntüyü %%{percent} oranına ölçeklendir"
       delete_image_button: Görüntüyü Sil
       toggle_image_grid: Resim ızgarasını aç/kapat
@@ -4693,6 +4695,7 @@ tr_TR:
       upload_description: "Etiketleri toplu olarak oluşturmak için bir csv dosyası yükleyin"
       upload_instructions: "Satır başına bir tane, isteğe bağlı olarak \"tag_name,tag_group\" biçiminde bir etiket grubu ile."
       upload_successful: "Etiketler başarıyla yüklendi"
+      bulk_create_button: "Oluştur"
       delete_unused_confirmation:
         one: "%{count} etiket silinecek: %{tags}"
         other: "%{count} etiket silinecek: %{tags}"
@@ -5263,6 +5266,11 @@ tr_TR:
           sub_pages:
             common_settings:
               title: "Ayarlar"
+            discourse_id:
+              title: "Discourse kimliği"
+        discourse_id:
+          title: "Discourse kimliği"
+          learn_more: "Daha fazla bilgi edin"
         logo:
           title: "Logo"
           header_description: "Sitenizde kullanılan logoları ve simgeleri yapılandırın"
@@ -7774,6 +7782,9 @@ tr_TR:
         no_user_badges: "%{name} adlı kullanıcıya hiç rozet verilmedi."
         no_badges: Verilebilecek rozet yok.
         none_selected: "Başlamak için bir rozet seçin"
+        sections:
+          query: Sorgu
+          settings: Ayarlar
         usage_heading: Kullanım
         allow_title: Rozetin başlık olarak kullanılmasına izin verin
         multiple_grant: Birden çok kez verilebilir

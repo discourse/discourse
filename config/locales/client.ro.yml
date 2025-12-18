@@ -690,6 +690,7 @@ ro:
       filtered_topic: "Ai filtrat până la conținutul care poate fi revizuit într-un singur subiect."
       filtered_user: "Utilizator semnalat"
       filtered_reviewed_by: "Revizuit de"
+      filtered_claimed_by: "Semnalare revendicată de"
       show_all_topics: "arată toate subiectele"
       deleted_post: "(articol șters)"
       deleted_user: "(utilizator șters)"
@@ -767,6 +768,8 @@ ro:
           low: "Scăzut"
           medium: "Medie"
           high: "Ridicată"
+        active_filters: "Filtre active:"
+        clear_filter: "Înlătură %{filter}"
       conversation:
         view_full: "vezi toată conversația"
       scores:
@@ -830,6 +833,7 @@ ro:
       queued_post_label: "Postare în coadă"
       queued_topic_label: "Subiect adăugat în coadă"
       user_label: "Utilizator"
+      assigned_to: "Postare atribuită lui"
       moderator_actions: "Acțiuni moderator"
       timeline_and_notes: "Cronologie și note"
       timeline:
@@ -840,12 +844,12 @@ ro:
         claimed: "Revendicat"
         claimed_by: "Revendicat de %{username} · %{relativeDate}"
         reviewed: "Revizuit"
-        reviewed_by: "Revizuit de %{username} · %{relativeDate}"
         view_conversation: "vezi MP"
         note_added: "Notă moderator"
         note_added_by: "Notă moderator de la %{username} · %{relativeDate}"
         no_events: "Nu există evenimente cronologice de afișat"
       notes:
+        add_note_description: "Adaugă o notă pentru a oferi context celorlalți moderatori."
         add_note_button: "Adaugă notă"
         placeholder: "Scrie-ți nota aici..."
         chars_remaining: "%{count} caractere rămase"
@@ -2290,6 +2294,8 @@ ro:
       ulist_title: "Listă cu buline"
       list_item: "Element listă"
       toggle_direction: "Comută direcția"
+      wrap_modal:
+        apply: "Aplică"
       help: "Ajutor pentru formatarea cu Markdown"
       collapse: "Minimizează panoul de compunere"
       open: "Deschide panoul de compunere"
@@ -2333,6 +2339,10 @@ ro:
         zoom_out: "Micșorează dimensiunea imaginii"
         zoom_in: "Mărește dimensiunea imaginii"
         remove: "Înlătură imagine"
+        add_to_grid: "Adaugă la grilă"
+        move_outside_grid: "Mută în afara grilei"
+      image: "imagine"
+      grid_label: "Acesta va fi afișat ca o grilă"
       image_scale_button: "Scalează imaginea la %{percent}%"
       link_toolbar:
         edit: "Editează legătură"
@@ -2559,6 +2569,7 @@ ro:
         choose_new_tags: "Alege etichete noi pentru aceste subiecte:"
         choose_append_tags: "Alege etichete noi pentru aceste subiecte:"
         changed_tags: "Etichetele pentru aceste subiecte au fost schimbate."
+        notify: "Notifică utilizatorii despre această modificare."
         performing: "Se efectuează operațiuni în masă, te rugăm să aștepți…"
         completed: "Operațiunile în masă s-au finalizat cu succes!"
       none:
@@ -2930,6 +2941,7 @@ ro:
         clear_all: "Șterge tot"
         actions: "Acțiuni în bloc"
     post:
+      heading_anchor: "Legătură din titlu"
       quote_reply: "Citează"
       quote_reply_shortcut: "Citează (sau apasă q)"
       quote_edit: "Editează"
@@ -3459,6 +3471,7 @@ ro:
     lightbox:
       download: "Descărcare"
       image_info: "Informații despre imagine"
+      quote: "Citare imagine"
       counter: "%curr% din %total%"
       zoom: "Zoom (tasta Z)"
       error: "Imaginea nu poate fi încărcată"
@@ -3488,6 +3501,7 @@ ro:
         next_prev: "%{shortcut} Secțiunea următoare/anterioară"
       application:
         title: "Aplicație"
+        create: "%{shortcut} Creează un subiect nou sau un mesaj personal"
         notifications: "%{shortcut} Deschide notificări"
         hamburger_menu: "%{shortcut} Deschide meniul de navigare"
         user_profile_menu: "%{shortcut} Deschide meniu utilizator"
@@ -3600,6 +3614,7 @@ ro:
       sort_by_name: "nume"
       manage_groups: "Gestionare grupuri de etichete"
       manage_groups_description: "Definește grupuri pentru a organiza etichetele"
+      bulk_create_button: "Creează"
       filters:
         without_category: "%{filter} %{tag} subiecte"
         with_category: "%{filter} %{tag} subiecte în %{category}"
@@ -3897,10 +3912,21 @@ ro:
       upcoming_changes:
         name: "Nume"
         enabled: "Activate"
+        enabled_for: "Activate pentru..."
+        add_groups_to_enable: "Adaugă grupuri pentru a activa această funcționalitate"
+        no_changes_to_save: "Nicio modificare de salvat"
+        enabled_for_throttle: "Ai modificat prea repede pentru cine este activată această modificare. Te rog să aștepți câteva secunde înainte de a încerca din nou."
+        change_enabled_for_success: "Ai activat această modificare pentru %{enabledFor}"
         preview: "Previzualizează"
         enabled_for_options:
+          no_one: "Nimeni"
           everyone: "Toată lumea"
           staff: "Doar pentru personal"
+          specific_groups: "Grupuri specifice"
+          specific_groups_with_group_names:
+            one: "grupul %{groupNames}"
+            few: "grupurile %{groupNames}"
+            other: "grupurile %{groupNames}"
         statuses:
           experimental: "Experimental"
         impact_roles:
@@ -3943,6 +3969,11 @@ ro:
           sub_pages:
             common_settings:
               title: "Setări"
+            discourse_id:
+              title: "ID Discourse"
+        discourse_id:
+          title: "ID Discourse"
+          learn_more: "Află mai multe"
         logo:
           title: "Logo"
           header_description: "Configurează logourile și iconurile utilizate pe întregul tău site"
@@ -4405,6 +4436,8 @@ ro:
         groups_filter_instructions: "Webhook-urile relevante vor fi declanșate dacă evenimentul este legat de grupuri specificate. Lasă liber pentru a declanșa webhooks pentru toate grupurile."
         groups_filter: "Grupuri declanșate"
         delete_confirm: "Șterge acest webhook?"
+        user_event:
+          user_anonymized: "Utilizatorul este anonimizat"
         custom_event:
           group_name: "Evenimente personalizate"
         delivery_status:
@@ -5107,6 +5140,7 @@ ro:
         html: "(html)"
         download: Descărcare
         clear_all: Șterge tot
+        invalid_regex_multiple: "Expresii regulate nevalide:"
         actions:
           block: "Blochează"
           censor: "Cenzurează"
@@ -5123,6 +5157,7 @@ ro:
           link_placeholder: "https://example.com"
           add: "Adaugă"
           success: "Succes"
+          upload_successful: "Încărcare reușită. Cuvintele vor fi procesate în scurt timp."
           html_label: "HTML"
           html_description: "Produce HTML în înlocuire"
           words_or_phrases: "cuvinte sau fraze"
@@ -5546,6 +5581,8 @@ ro:
         no_user_badges: "Lui %{name} nu i-a fost acordat niciun ecuson."
         no_badges: Nu există niciun ecuson care poate fi acordat.
         none_selected: "Selectaţi un ecuson pentru a începe"
+        sections:
+          settings: Setări
         allow_title: Permite ca ecusonul să fie folosit ca titlu
         multiple_grant: Poate fi acordat de mai multe ori
         listable: Arată ecuson pe pagina publică a ecusoanelor

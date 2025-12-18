@@ -116,6 +116,34 @@ RSpec.describe DiscourseRewind::Action::TopWords do
         expect(frequent_word_entry[:score]).to be > infrequent_word_entry[:score]
       end
     end
+
+    context "with stemmer workaround words" do
+      before do
+        DiscourseRewind::Action::TopWords
+          .any_instance
+          .stubs(:word_query)
+          .returns(
+            [
+              OpenStruct.new(original_word: "discours", ndoc: 5, nentry: 10),
+              OpenStruct.new(original_word: "topical", ndoc: 3, nentry: 7),
+              OpenStruct.new(original_word: "categori", ndoc: 4, nentry: 6),
+            ],
+          )
+      end
+
+      it "applies STEMMER_WORKAROUNDS to replace stemmed words with preferred forms" do
+        result = call_report
+
+        words = result[:data].map { |w| w[:word] }
+
+        expect(words).to include("discourse")
+        expect(words).to include("topic")
+        expect(words).to include("category")
+        expect(words).not_to include("topical")
+        expect(words).not_to include("categori")
+        expect(words).not_to include("discours")
+      end
+    end
   end
 
   context "when in rails development mode" do

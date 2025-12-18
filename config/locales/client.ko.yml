@@ -2045,6 +2045,8 @@ ko:
       upload_title: "업로드"
       upload_description: "여기에 업로드 설명을 입력하세요"
       list_item: "목록 항목"
+      wrap_modal:
+        apply: "적용"
       help: "Markdown 편집 도움말"
       exit_fullscreen_prompt: "전체 화면에서 나가려면 <kbd>ESC</kbd>를 누르세요."
       modal_ok: "확인"
@@ -2088,6 +2090,7 @@ ko:
       ignore: "무시"
       image_alt_text:
         aria_label: 이미지의 대체 텍스트
+      image: "이미지"
       delete_image_button: 이미지 삭제
       link_toolbar:
         copy: "링크 복사"
@@ -3471,6 +3474,7 @@ ko:
       upload_description: "CSV 파일을 업로드하여 태그 일괄 생성"
       upload_instructions: "한 줄에 하나씩. 'tag_name,tag_group' 형식으로 태그 그룹 추가 가능."
       upload_successful: "태그가 업로드되었습니다"
+      bulk_create_button: "만들기"
       delete_unused_confirmation:
         other: "%{count}개의 태그가 삭제됩니다. %{tags}"
       delete_unused_confirmation_more_tags:
@@ -3757,6 +3761,8 @@ ko:
           sub_pages:
             common_settings:
               title: "설정"
+        discourse_id:
+          learn_more: "더 보기"
         logo:
           form:
             mobile: "모바일"
@@ -5264,6 +5270,9 @@ ko:
         no_user_badges: "%{name} 님은 배지가 없습니다."
         no_badges: 부여할 배지가 없습니다.
         none_selected: "시작하려면 배지를 선택하세요"
+        sections:
+          query: 쿼리
+          settings: 설정
         allow_title: 배지를 타이틀로 사용하도록 허용
         multiple_grant: 중복 부여 가능
         visibility_heading: 시계

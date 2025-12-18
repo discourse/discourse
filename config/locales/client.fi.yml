@@ -844,7 +844,6 @@ fi:
         claimed: "Omittu"
         claimed_by: "%{username} omi · %{relativeDate}"
         reviewed: "Käsitelty"
-        reviewed_by: "%{username} käsitteli · %{relativeDate}"
         view_conversation: "katso yksityisviesti"
         note_added: "Valvojan huomautus"
         note_added_by: "%{username} lisäsi valvojan huomautuksen · %{relativeDate}"
@@ -2800,6 +2799,8 @@ fi:
       ulist_title: "Luettelomerkillinen luettelo"
       list_item: "Luettelokohde"
       toggle_direction: "Vaihda suuntaa"
+      wrap_modal:
+        apply: "Käytä"
       help: "Markdown-muokkausohje"
       exit_fullscreen_prompt: "Poistu koko näytön tilasta painamalla <kbd>Esc</kbd>-näppäintä"
       modal_ok: "OK"
@@ -2858,6 +2859,7 @@ fi:
         zoom_out: "Pienennä kuvan kokoa"
         zoom_in: "Suurenna kuvan kokoa"
         remove: "Poista kuva"
+      image: "kuva"
       image_scale_button: "Muuta kuvan kokoa %{percent} prosenttiin"
       delete_image_button: Poista kuva
       toggle_image_grid: Kuvaruudukko päälle/pois päältä
@@ -4693,6 +4695,7 @@ fi:
       upload_description: "Luo iso joukko tunnisteita kerralla lataamalla CSV-tiedosto"
       upload_instructions: "Yksi per rivi, valinnaisesti tunnisteryhmän kanssa muodossa \"tunnisteen_nimi,tunnisteen_ryhmä\"."
       upload_successful: "Tunnisteiden lataaminen onnistui"
+      bulk_create_button: "Luo"
       delete_unused_confirmation:
         one: "%{count} tunniste poistetaan: %{tags}"
         other: "%{count} tunnistetta poistetaan: %{tags}"
@@ -5263,6 +5266,11 @@ fi:
           sub_pages:
             common_settings:
               title: "Asetukset"
+            discourse_id:
+              title: "Discourse-tunnus"
+        discourse_id:
+          title: "Discourse-tunnus"
+          learn_more: "Lue lisää"
         logo:
           title: "Logo"
           header_description: "Määritä koko sivuston logot ja kuvakkeet"
@@ -7789,6 +7797,9 @@ fi:
         no_user_badges: "%{name} ei ole saanut yhtään kunniamerkkiä."
         no_badges: Myönnettäviä kunniamerkkejä ei ole.
         none_selected: "Aloita valitsemalla kunniamerkki"
+        sections:
+          query: Kysely
+          settings: Asetukset
         usage_heading: Käyttö
         allow_title: Salli kunniamerkin käyttäminen tittelinä
         multiple_grant: Voidaan myöntää useita kertoja

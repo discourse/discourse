@@ -1230,7 +1230,6 @@ id:
     backup_location: "Lokasi penyimpanan cadangan. PENTING: S3 memerlukan kredensial S3 valid yang dimasukkan dalam pengaturan File. Saat mengubahnya ke S3 dari Lokal, Anda harus menjalankan tugas rake `s3:ensure_cors_rules`."
     s3_use_cdn_url_for_all_uploads: "Gunakan URL CDN untuk semua file yang diunggah ke s3, bukan hanya untuk gambar."
     composer_media_optimization_image_encode_quality: "Kualitas penyandian JPG digunakan dalam proses penyandian ulang."
-    tl4_delete_posts_and_topics: "Izinkan pengguna TL4 untuk menghapus posting dan topik yang dibuat oleh pengguna lain. Pengguna TL4 juga akan dapat melihat topik dan postingan yang dihapus."
     edit_all_topic_groups: "Izinkan pengguna di grup ini untuk mengedit judul topik, tag, dan kategori dari pengguna lain"
     edit_all_post_groups: "Izinkan pengguna di grup ini untuk mengedit post pengguna lain"
     dark_mode_none: "Tidak ada"
@@ -1254,9 +1253,6 @@ id:
     default_sidebar_link_to_filtered_list: "Jadikan link menu navigasi terhubung ke daftar yang difilter secara bawaan."
     default_sidebar_show_count_of_new_items: "Jadikan tautan menu navigasi menampilkan jumlah item baru alih-alih lencana secara bawaan."
     retain_web_hook_events_aggregate_days: "Jumlah hari untuk menyimpan catatan agregat peristiwa kait web."
-    min_trust_level_for_user_api_key: |
-      Trust level diperlukan untuk membuat kunci API pengguna.<br>
-      <b>PERINGATAN</b>: Mengubah trust level akan mencegah pengguna dengan tingkat kepercayaan yang lebih rendah untuk masuk melalui Discourse Hub
     enable_max_tags_per_email_subject: "Gunakan max_tags_per_email_subject saat membuat subjek email"
     max_tags_per_email_subject: "Tag maksimum yang dapat dimasukkan ke dalam subjek email"
     enable_user_tips: "Aktifkan kiat pengguna baru yang menjelaskan fitur utama kepada pengguna"
@@ -1781,6 +1777,9 @@ id:
       user_joined_community: "Bergabung %{date}"
     github:
       closed: "tertutup"
+      status_date:
+        approved: "disetujui"
+        closed: "tertutup"
   staff_action_logs:
     unknown: "tidak diketahui"
   reviewables:

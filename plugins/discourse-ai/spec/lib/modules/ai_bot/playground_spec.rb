@@ -187,7 +187,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       end
 
       expected = <<~TXT.strip
-        <details><summary>#{I18n.t("discourse_ai.ai_bot.thinking")}</summary>
+        <details class='ai-thinking'><summary>#{I18n.t("discourse_ai.ai_bot.thinking")}</summary>
 
         **searching for things**
         did stuff
@@ -774,8 +774,8 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       post.topic.custom_fields["ai_persona_id"] = persona.id.to_s
       post.topic.save_custom_fields
 
-      llm2 = Fabricate(:llm_model, enabled_chat_bot: true)
-
+      llm2 = Fabricate(:llm_model)
+      SiteSetting.ai_bot_enabled_llms = llm2.id.to_s
       llm2.toggle_companion_user
 
       DiscourseAi::Completions::Llm.with_prepared_responses(["Hi from bot two"], llm: llm2) do

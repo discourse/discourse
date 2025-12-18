@@ -2264,6 +2264,8 @@ te:
       upload_title: "ఎగుమతించు"
       upload_description: "ఎగుమతి వివరణ ఇక్కడ రాయండి"
       list_item: "జాబితా అంశం"
+      wrap_modal:
+        apply: "దరఖాస్తు చేసుకోండి"
       help: "మార్క్ డైన్ సవరణ సహాయం"
       exit_fullscreen_prompt: "పూర్తి స్క్రీన్ నుండి నిష్క్రమించడానికి <kbd>ESC</kbd> నొక్కండి"
       modal_ok: "సరే"
@@ -2309,6 +2311,7 @@ te:
       ignore: "విస్మరించండి"
       image_alt_text:
         aria_label: చిత్రం కోసం ప్రత్యామ్నాయ వచనం
+      image: "బొమ్మ"
       delete_image_button: చిత్రాన్ని తొలగించండి
       toggle_image_grid: ఇమేజ్ గ్రిడ్‌ని టోగుల్ చేయండి
       link_toolbar:
@@ -3972,6 +3975,7 @@ te:
       upload_description: "పెద్దమొత్తంలో ట్యాగ్‌లను సృష్టించడానికి csv ఫైల్‌ను అప్‌లోడ్ చేయండి"
       upload_instructions: "పంక్తికి ఒకటి, ఐచ్ఛికంగా 'tag_name,tag_group' ఆకృతిలో ట్యాగ్ సమూహంతో."
       upload_successful: "ట్యాగ్‌లు విజయవంతంగా అప్‌లోడ్ చేయబడ్డాయి"
+      bulk_create_button: "సృష్టించండి"
       delete_unused_confirmation:
         one: "%{count} ట్యాగ్ తొలగించబడుతుంది: %{tags}"
         other: "%{count} ట్యాగ్‌లు తొలగించబడతాయి: %{tags}"
@@ -4410,6 +4414,8 @@ te:
           sub_pages:
             common_settings:
               title: "అమరికలు"
+        discourse_id:
+          learn_more: "మరింత తెలుసుకోండి"
         logo:
           form:
             logo:
@@ -6174,6 +6180,8 @@ te:
         no_user_badges: "%{name} కి ఎలాంటి బ్యాడ్జ్‌లు మంజూరు కాలేదు."
         no_badges: మంజూరు చేయగల బ్యాడ్జ్‌లు లేవు.
         none_selected: "ప్రారంభించడానికి బ్యాడ్జ్‌ని ఎంచుకోండి"
+        sections:
+          settings: అమరికలు
         allow_title: బ్యాడ్జ్ను శీర్షికగా ఉపయోగించడానికి అనుమతించండి
         multiple_grant: అనేక సార్లు మంజూరు చేయవచ్చు
         visibility_heading: దృశ్యమానత

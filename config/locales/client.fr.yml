@@ -848,7 +848,6 @@ fr:
         claimed: "Réclamé"
         claimed_by: "Réclamé par %{username} · %{relativeDate}"
         reviewed: "Examiné"
-        reviewed_by: "Examiné par %{username} · %{relativeDate}"
         view_conversation: "voir PM"
         note_added: "Note du modérateur"
         note_added_by: "Note du modérateur par %{username} · %{relativeDate}"
@@ -2811,6 +2810,8 @@ fr:
       ulist_title: "Liste à puces"
       list_item: "Élément"
       toggle_direction: "Basculer la section"
+      wrap_modal:
+        apply: "Appliquer"
       help: "Aide à l'édition Markdown"
       exit_fullscreen_prompt: "Appuyez sur <kbd>ÉCHAP</kbd> pour quitter le mode plein écran"
       modal_ok: "OK"
@@ -2869,6 +2870,7 @@ fr:
         zoom_out: "Réduire la taille de l'image"
         zoom_in: "Augmenter la taille de l'image"
         remove: "Supprimer l'image"
+      image: "image"
       image_scale_button: "Mettre l'image à l'échelle de %{percent} %"
       delete_image_button: Supprimer l'image
       toggle_image_grid: Activer/désactiver la grille des images
@@ -4717,6 +4719,7 @@ fr:
       upload_description: "Téléverser un fichier CSV pour créer des étiquettes en bloc"
       upload_instructions: "Une par ligne, éventuellement avec un groupe d'étiquettes sous la forme « tag_name,tag_group »."
       upload_successful: "Étiquettes envoyées avec succès"
+      bulk_create_button: "Créer"
       delete_unused_confirmation:
         one: "%{count} étiquette sera supprimée : %{tags}"
         other: "%{count} étiquettes seront supprimées : %{tags}"
@@ -5287,6 +5290,11 @@ fr:
           sub_pages:
             common_settings:
               title: "Paramètres"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "En savoir plus…"
         logo:
           title: "Logo"
           header_description: "Configurez les logos et les icônes utilisés sur votre site"
@@ -7798,6 +7806,9 @@ fr:
         no_user_badges: "%{name} ne s'est vu attribuer aucun badge."
         no_badges: Il n'y a aucun badge à attribuer.
         none_selected: "Sélectionnez un badge pour commencer"
+        sections:
+          query: Requête
+          settings: Paramètres
         usage_heading: Utilisation
         allow_title: Permettre d'utiliser ce badge comme titre sur le profil utilisateur
         multiple_grant: Peut être attribué plusieurs fois

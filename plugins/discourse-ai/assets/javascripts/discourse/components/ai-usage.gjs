@@ -14,8 +14,10 @@ import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import DStatTiles from "discourse/components/d-stat-tiles";
 import DateTimeInputRange from "discourse/components/date-time-input-range";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import avatar from "discourse/helpers/avatar";
 import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import { number } from "discourse/lib/formatter";
@@ -38,11 +40,11 @@ export default class AiUsage extends Component {
 
   constructor() {
     super(...arguments);
-    this.fetchData();
+    this.fetchData({ clearCache: true });
   }
 
   @action
-  async fetchData() {
+  async fetchData({ clearCache = false } = {}) {
     const response = await ajax(
       "/admin/plugins/discourse-ai/ai-usage-report.json",
       {
@@ -58,8 +60,11 @@ export default class AiUsage extends Component {
     );
     this.data = response;
     this.loadingData = false;
-    this._cachedFeatures = null;
-    this._cachedModels = null;
+
+    if (clearCache) {
+      this._cachedFeatures = null;
+      this._cachedModels = null;
+    }
   }
 
   @action
@@ -277,18 +282,27 @@ export default class AiUsage extends Component {
 
   get featuresTotals() {
     const features = this.data?.features || [];
-    return {
-      usage_count: features.reduce((sum, f) => sum + (f.usage_count || 0), 0),
-      total_tokens: features.reduce((sum, f) => sum + (f.total_tokens || 0), 0),
-      total_spending: features.reduce(
-        (sum, f) =>
-          sum +
+    let totalSpending = 0;
+
+    features.forEach((f) => {
+      const costType = this.getFeatureCostType(f.feature_name);
+      if (costType === "included") {
+        // Don't add to total - included in plan
+      } else if (costType === "mixed") {
+        totalSpending += this.getCostOnlySpending(f.feature_name);
+      } else {
+        totalSpending +=
           (f.input_spending || 0) +
           (f.cache_read_spending || 0) +
           (f.cache_write_spending || 0) +
-          (f.output_spending || 0),
-        0
-      ),
+          (f.output_spending || 0);
+      }
+    });
+
+    return {
+      usage_count: features.reduce((sum, f) => sum + (f.usage_count || 0), 0),
+      total_tokens: features.reduce((sum, f) => sum + (f.total_tokens || 0), 0),
+      total_spending: totalSpending,
     };
   }
 
@@ -326,13 +340,69 @@ export default class AiUsage extends Component {
     };
   }
 
+  @bind
   formatSpending(value) {
     return `$${(value || 0).toFixed(2)}`;
   }
 
+  @bind
+  getFeatureCostType(featureName) {
+    const models = this.data?.feature_models?.[featureName] || [];
+    if (models.length === 0) {
+      return "cost";
+    }
+
+    const hasIncluded = models.some((m) => m.credit_allocation);
+    const hasCost = models.some((m) => !m.credit_allocation);
+
+    if (hasIncluded && !hasCost) {
+      return "included";
+    }
+    if (!hasIncluded && hasCost) {
+      return "cost";
+    }
+    return "mixed";
+  }
+
+  @bind
+  getIncludedModelsForFeature(featureName) {
+    return (this.data?.feature_models?.[featureName] || []).filter(
+      (m) => m.credit_allocation
+    );
+  }
+
+  @bind
+  getCostModelsForFeature(featureName) {
+    return (this.data?.feature_models?.[featureName] || []).filter(
+      (m) => !m.credit_allocation
+    );
+  }
+
+  @bind
+  getCostOnlySpending(featureName) {
+    const costModels = this.getCostModelsForFeature(featureName);
+    return costModels.reduce(
+      (sum, m) =>
+        sum +
+        (m.input_spending || 0) +
+        (m.cache_read_spending || 0) +
+        (m.cache_write_spending || 0) +
+        (m.output_spending || 0),
+      0
+    );
+  }
+
+  @bind
+  hasIncludedModelsForFeature(featureName) {
+    return this.getIncludedModelsForFeature(featureName).length > 0;
+  }
+
+  @bind
+  hasCostModelsForFeature(featureName) {
+    return this.getCostModelsForFeature(featureName).length > 0;
+  }
+
   get availableFeatures() {
-    // when you switch we don't want the list to change
-    // only when you switch durations
     this._cachedFeatures =
       this._cachedFeatures ||
       (this.data?.features || []).map((f) => ({
@@ -387,7 +457,7 @@ export default class AiUsage extends Component {
     this.selectedPeriod = period;
     this.isCustomDateActive = false;
     this.setPeriodDates(period);
-    this.fetchData();
+    this.fetchData({ clearCache: true });
   }
 
   @action
@@ -402,7 +472,7 @@ export default class AiUsage extends Component {
   onDateChange() {
     this.isCustomDateActive = true;
     this.selectedPeriod = null;
-    this.fetchData();
+    this.fetchData({ clearCache: true });
   }
 
   @action
@@ -415,7 +485,7 @@ export default class AiUsage extends Component {
   onRefreshDateRange() {
     this.startDate = this._startDate;
     this.endDate = this._endDate;
-    this.fetchData();
+    this.fetchData({ clearCache: true });
     this._startDate = null;
     this._endDate = null;
   }
@@ -428,6 +498,7 @@ export default class AiUsage extends Component {
     return this._endDate || this.endDate;
   }
 
+  @bind
   totalSpending(
     inputSpending,
     cacheReadSpending,
@@ -579,13 +650,165 @@ export default class AiUsage extends Component {
                             class="ai-usage__features-cell"
                             title={{feature.total_tokens}}
                           >{{number feature.total_tokens}}</td>
-                          <td>
-                            {{this.totalSpending
-                              feature.input_spending
-                              feature.cache_read_spending
-                              feature.cache_write_spending
-                              feature.output_spending
+                          <td class="ai-usage__features-cell">
+                            {{#if
+                              (eq
+                                (this.getFeatureCostType feature.feature_name)
+                                "included"
+                              )
                             }}
+                              <span class="ai-usage__included-label">
+                                {{i18n "discourse_ai.usage.included_in_plan"}}
+                              </span>
+                            {{else if
+                              (eq
+                                (this.getFeatureCostType feature.feature_name)
+                                "cost"
+                              )
+                            }}
+                              {{this.totalSpending
+                                feature.input_spending
+                                feature.cache_read_spending
+                                feature.cache_write_spending
+                                feature.output_spending
+                              }}
+                            {{else}}
+                              <span class="ai-usage__mixed-cost">
+                                {{this.formatSpending
+                                  (this.getCostOnlySpending
+                                    feature.feature_name
+                                  )
+                                }}
+                                <DTooltip
+                                  @identifier="ai-usage-feature-breakdown"
+                                  @placement="top"
+                                  @interactive={{true}}
+                                  @maxWidth={{600}}
+                                >
+                                  <:trigger>
+                                    {{icon
+                                      "circle-question"
+                                      class="ai-usage__info-icon"
+                                    }}
+                                  </:trigger>
+                                  <:content>
+                                    <div class="ai-usage__cost-breakdown">
+                                      {{#if
+                                        (this.hasIncludedModelsForFeature
+                                          feature.feature_name
+                                        )
+                                      }}
+                                        <div
+                                          class="ai-usage__breakdown-section"
+                                        >
+                                          <h4>{{i18n
+                                              "discourse_ai.usage.included_models"
+                                            }}</h4>
+                                          <table
+                                            class="ai-usage__breakdown-table"
+                                          >
+                                            <thead>
+                                              <tr>
+                                                <th>{{i18n
+                                                    "discourse_ai.usage.model"
+                                                  }}</th>
+                                                <th>{{i18n
+                                                    "discourse_ai.usage.usage_count"
+                                                  }}</th>
+                                                <th>{{i18n
+                                                    "discourse_ai.usage.total_tokens"
+                                                  }}</th>
+                                                <th>{{i18n
+                                                    "discourse_ai.usage.cost"
+                                                  }}</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              {{#each
+                                                (this.getIncludedModelsForFeature
+                                                  feature.feature_name
+                                                )
+                                                as |model|
+                                              }}
+                                                <tr>
+                                                  <td>{{model.llm}}</td>
+                                                  <td>{{number
+                                                      model.usage_count
+                                                    }}</td>
+                                                  <td>{{number
+                                                      model.total_tokens
+                                                    }}</td>
+                                                  <td>{{i18n
+                                                      "discourse_ai.usage.included_in_plan"
+                                                    }}</td>
+                                                </tr>
+                                              {{/each}}
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                      {{/if}}
+                                      {{#if
+                                        (this.hasCostModelsForFeature
+                                          feature.feature_name
+                                        )
+                                      }}
+                                        <div
+                                          class="ai-usage__breakdown-section"
+                                        >
+                                          <h4>{{i18n
+                                              "discourse_ai.usage.billed_models"
+                                            }}</h4>
+                                          <table
+                                            class="ai-usage__breakdown-table"
+                                          >
+                                            <thead>
+                                              <tr>
+                                                <th>{{i18n
+                                                    "discourse_ai.usage.model"
+                                                  }}</th>
+                                                <th>{{i18n
+                                                    "discourse_ai.usage.usage_count"
+                                                  }}</th>
+                                                <th>{{i18n
+                                                    "discourse_ai.usage.total_tokens"
+                                                  }}</th>
+                                                <th>{{i18n
+                                                    "discourse_ai.usage.cost"
+                                                  }}</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              {{#each
+                                                (this.getCostModelsForFeature
+                                                  feature.feature_name
+                                                )
+                                                as |model|
+                                              }}
+                                                <tr>
+                                                  <td>{{model.llm}}</td>
+                                                  <td>{{number
+                                                      model.usage_count
+                                                    }}</td>
+                                                  <td>{{number
+                                                      model.total_tokens
+                                                    }}</td>
+                                                  <td>{{this.totalSpending
+                                                      model.input_spending
+                                                      model.cache_read_spending
+                                                      model.cache_write_spending
+                                                      model.output_spending
+                                                    }}</td>
+                                                </tr>
+                                              {{/each}}
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                      {{/if}}
+                                    </div>
+                                  </:content>
+                                </DTooltip>
+                              </span>
+                            {{/if}}
                           </td>
                         </tr>
                       {{/each}}

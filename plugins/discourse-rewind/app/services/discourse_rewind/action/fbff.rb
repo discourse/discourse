@@ -31,7 +31,7 @@ module DiscourseRewind
         return FakeData if should_use_fake_data?
 
         most_liked_users =
-          like_query(date)
+          like_query(user, date)
             .where(acting_user_id: user.id)
             .group(:user_id)
             .order("COUNT(*) DESC")
@@ -41,7 +41,7 @@ module DiscourseRewind
             .reduce({}, :merge)
 
         most_liked_by_users =
-          like_query(date)
+          like_query(user, date)
             .where(user: user)
             .group(:acting_user_id)
             .order("COUNT(*) DESC")
@@ -120,9 +120,21 @@ module DiscourseRewind
           .where("replies.created_at BETWEEN ? AND ?", date.first, date.last)
           .where("posts.created_at BETWEEN ? AND ?", date.first, date.last)
           .where("replies.user_id <> posts.user_id")
+          .where(<<~SQL, user_id: user.id)
+            NOT EXISTS (
+              SELECT 1 FROM muted_users
+              WHERE muted_users.user_id = :user_id
+              AND muted_users.muted_user_id IN (replies.user_id, posts.user_id)
+            )
+            AND NOT EXISTS (
+              SELECT 1 FROM ignored_users
+              WHERE ignored_users.user_id = :user_id
+              AND ignored_users.ignored_user_id IN (replies.user_id, posts.user_id)
+            )
+          SQL
       end
 
-      def like_query(date)
+      def like_query(user, date)
         UserAction
           .with(eligible_users: User.real.activated.not_suspended.select(:id))
           .joins(:target_topic, :target_post)
@@ -130,6 +142,18 @@ module DiscourseRewind
           .joins("INNER JOIN eligible_users eu2 ON eu2.id = user_actions.acting_user_id")
           .where(created_at: date)
           .where(action_type: UserAction::WAS_LIKED)
+          .where(<<~SQL, user_id: user.id)
+            NOT EXISTS (
+              SELECT 1 FROM muted_users
+              WHERE muted_users.user_id = :user_id
+              AND muted_users.muted_user_id IN (user_actions.user_id, user_actions.acting_user_id)
+            )
+            AND NOT EXISTS (
+              SELECT 1 FROM ignored_users
+              WHERE ignored_users.user_id = :user_id
+              AND ignored_users.ignored_user_id IN (user_actions.user_id, user_actions.acting_user_id)
+            )
+          SQL
       end
 
       def apply_score(users, score)

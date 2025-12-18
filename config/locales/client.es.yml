@@ -844,7 +844,6 @@ es:
         claimed: "Reclamado"
         claimed_by: "Reclamado por %{username} · %{relativeDate}"
         reviewed: "Revisado"
-        reviewed_by: "Revisado por %{username} · %{relativeDate}"
         view_conversation: "ver PM"
         note_added: "Nota del moderador"
         note_added_by: "Nota del moderador creada por %{username} · %{relativeDate}"
@@ -2799,6 +2798,8 @@ es:
       ulist_title: "Lista con viñetas"
       list_item: "Lista de elementos"
       toggle_direction: "Mostrar/ocultar dirección"
+      wrap_modal:
+        apply: "Aplicar"
       help: "Ayuda de edición con Markdown"
       exit_fullscreen_prompt: "Pulsa <kbd>ESC</kbd> para salir del modo pantalla completa"
       modal_ok: "Aceptar"
@@ -2857,6 +2858,7 @@ es:
         zoom_out: "Disminuir el tamaño de la imagen"
         zoom_in: "Aumentar el tamaño de la imagen"
         remove: "Eliminar imagen"
+      image: "imagen"
       image_scale_button: "Escalar imagen a %{percent} %"
       delete_image_button: Eliminar imagen
       toggle_image_grid: Alternar cuadrícula de imágenes
@@ -4692,6 +4694,7 @@ es:
       upload_description: "Sube un archivo csv para crear etiquetas en masa"
       upload_instructions: "Una por línea, opcional con un grupo de etiquetas en el formato «tag_name,tag_group»."
       upload_successful: "Etiquetas subidas con éxito"
+      bulk_create_button: "Crear"
       delete_unused_confirmation:
         one: "%{count} etiqueta será eliminada: %{tags}"
         other: "%{count} etiquetas serán eliminadas: %{tags}"
@@ -5262,6 +5265,11 @@ es:
           sub_pages:
             common_settings:
               title: "Ajustes"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Más información"
         logo:
           title: "Logo"
           header_description: "Configura los logotipos e iconos utilizados en todo tu sitio"
@@ -7791,6 +7799,9 @@ es:
         no_user_badges: "%{name} no ha recibido ninguna medalla."
         no_badges: No hay medallas que se puedan conceder.
         none_selected: "Selecciona una medalla para empezar"
+        sections:
+          query: Consulta
+          settings: Ajustes
         usage_heading: Uso
         allow_title: Permitir que se use la medalla como título
         multiple_grant: Se puede conceder varias veces

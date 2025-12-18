@@ -355,12 +355,9 @@ class GroupsController < ApplicationController
     members = users.limit(limit).offset(offset)
     owners = users.where("group_users.owner")
 
-    group_members_serializer =
-      include_custom_fields ? GroupUserWithCustomFieldsSerializer : GroupUserSerializer
-
     render json: {
-             members: serialize_data(members, group_members_serializer),
-             owners: serialize_data(owners, GroupUserSerializer),
+             members: serialize_data(members, GroupUserWithCustomFieldsSerializer),
+             owners: serialize_data(owners, GroupUserWithCustomFieldsSerializer),
              meta: {
                total: total,
                limit: limit,

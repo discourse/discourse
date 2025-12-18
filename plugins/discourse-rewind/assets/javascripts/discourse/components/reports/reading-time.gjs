@@ -1,5 +1,7 @@
 import Component from "@glimmer/component";
+import { concat } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
+import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 export default class ReadingTime extends Component {
@@ -37,7 +39,13 @@ export default class ReadingTime extends Component {
             <div class="book">
               <img
                 alt=""
-                src="/plugins/discourse-rewind/images/books/{{@report.data.isbn}}.jpg"
+                src={{getURL
+                  (concat
+                    "/plugins/discourse-rewind/images/books/"
+                    @report.data.isbn
+                    ".jpg"
+                  )
+                }}
               />
             </div>
             {{#if @report.data.series}}

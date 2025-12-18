@@ -2296,6 +2296,8 @@ hy:
       upload_title: "Վերբեռնել"
       upload_description: "գրեք վերբեռնման նկարագրությունն այստեղ"
       list_item: "Ցանկի տարր"
+      wrap_modal:
+        apply: "Կիրառել"
       help: "Markdown-ի խմբագրման օգնություն"
       modal_ok: "Լավ"
       cant_send_pm: "Ներողություն, Դուք չեք կարող հաղորդագրություն ուղարկել %{username}-ին:"
@@ -2328,6 +2330,7 @@ hy:
           label: "Փոխանջատել թեմայի բարձրացումը "
           desc: "Պատասխանել՝ առանց պատասխանի վերջին ամսաթիվը փոխելու"
       ignore: "Անտեսել"
+      image: "նկար"
       link_toolbar:
         copy: "Պատճենել հղումը"
         link_copied: "Հղումը պատճենված է:"
@@ -3600,6 +3603,7 @@ hy:
       upload_description: "Վերբեռնեք csv ֆայլ՝ զանգվածային կերպով պիտակներ ստեղծելու համար"
       upload_instructions: "Յուրաքանչյուր տեղում մեկ հատ, ըստ ցանկության՝ նաև պիտակների խմբով, 'tag_name,tag_group' ֆորմատով:"
       upload_successful: "Պիտակները հաջողությամբ վերբեռնվել են"
+      bulk_create_button: "Ստեղծել"
       delete_unused_confirmation:
         one: "%{count} պիտակ կջնջվի՝%{tags}"
         other: "%{count} պիտակ կջնջվի՝ %{tags}"
@@ -3853,6 +3857,8 @@ hy:
           sub_pages:
             common_settings:
               title: "Կարգավորումներ"
+        discourse_id:
+          learn_more: "Իմանալ ավելին"
         logo:
           form:
             mobile: "Հեռախոսային"
@@ -5190,6 +5196,9 @@ hy:
         no_user_badges: "%{name}-ին ոչ մի կրծքանշան չի շնորհվել:"
         no_badges: 'Շնորհման ենթակա կրծքանշաններ չկան:'
         none_selected: "Ընտրեք կրծքանշան՝ մեկնարկի համար"
+        sections:
+          query: Հարցում
+          settings: Կարգավորումներ
         allow_title: Թույլ տալ, որ կրծքանշանն օգտագործվի որպես վերնագիր
         multiple_grant: Կարող է շնորհվել բազմակի անգամ
         visibility_heading: Տեսանելիություն

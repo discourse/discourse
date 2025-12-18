@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { dasherize } from "@ember/string";
 import runAfterFramePaint from "discourse/lib/after-frame-paint";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed from "discourse/lib/decorators";
@@ -15,6 +16,7 @@ export default class ApplicationController extends Controller {
   // eslint-disable-next-line discourse/no-unused-services
   @service router; // used in the route template
   @service sidebarState;
+  @service siteSettings;
 
   queryParams = [{ navigationMenuQueryParamOverride: "navigation_menu" }];
   showTop = true;
@@ -24,6 +26,23 @@ export default class ApplicationController extends Controller {
   showSiteHeader = true;
 
   @tracked _showSidebar;
+
+  get upcomingChangeBodyClasses() {
+    if (!this.siteSettings.currentUserUpcomingChanges) {
+      return "";
+    }
+
+    const classes = [];
+
+    for (const [key, value] of Object.entries(
+      this.siteSettings.currentUserUpcomingChanges
+    )) {
+      if (value) {
+        classes.push(`uc-${dasherize(key)}`);
+      }
+    }
+    return classes.join(" ");
+  }
 
   // Some themes may need to override the default value provided by `calculateShowSidebar` using viewport properties.
   // Accessing the value in a getter prevents static viewport initialization warnings.
@@ -41,7 +60,7 @@ export default class ApplicationController extends Controller {
 
   set showFooter(value) {
     deprecated(
-      "showFooter state is now stored in the `footer` service, and should be controlled by adding the {{hide-application-footer}} helper to an Ember template.",
+      "showFooter state is now stored in the `footer` service, and should be controlled by adding the {{hideApplicationFooter}} helper to an Ember template.",
       { id: "discourse.application-show-footer" }
     );
     this.footer.showFooter = value;

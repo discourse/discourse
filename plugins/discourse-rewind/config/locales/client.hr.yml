@@ -7,6 +7,10 @@
 hr:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "Privatno"
+          public: "Javnost"
       reports:
         reading_time:
           title: Vrijeme čitanja

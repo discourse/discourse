@@ -43,7 +43,7 @@ ko:
         disabled: "(비활성)"
         groups: "그룹:"
         no_groups: "없음"
-        edit: "편집"
+        edit: "설정"
         expand_list:
           other: "(%{count}개 더보기)"
         filters:
@@ -77,6 +77,7 @@ ko:
         summary: "요약"
         username: "아이디"
         total_requests: "총 요청횟수"
+        total: "합계"
         periods:
           last_day: "지난 24시간"
           custom: "사용자 지정..."

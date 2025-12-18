@@ -285,6 +285,12 @@ hu:
       forwarded: "Továbbította a fenti e-mailt"
     topic_admin_menu: "témaműveletek"
     skip_to_main_content: "Ugrás a fő tartalomhoz"
+    skip_links_label: "Navigációs hivatkozások kihagyása"
+    skip_to_post: "Ugrás a bejegyzéshez: %{post_number}"
+    skip_to_where_you_left_off: "Ugrás oda, ahol abbahagyta (bejegyzés: %{post_number})"
+    skip_to_where_you_left_off_last: "Ugrás oda, ahol abbahagyta (utolsó válasz, bejegyzés: %{post_number})"
+    skip_to_last_reply: "Ugrás az utolsó válaszhoz"
+    skip_to_top: "Ugrás a tetejére"
     skip_user_nav: "Ugrás a profil tartalmára"
     emails_are_disabled: "Egy adminisztrátor letiltotta a kimenő e-maileket. Semmilyen értesítő e-mail nem lesz elküldve."
     emails_are_disabled_non_staff: "A kimenő e-mailek le vannak tiltva a nem stábtagok számára."
@@ -294,6 +300,7 @@ hu:
     back_button: "Vissza"
     welcome_banner:
       header:
+        new_members: "Üdvözöljük, %{preferred_display_name}!"
         logged_in_members: "Üdv újra itt, %{preferred_display_name}!"
         anonymous_members: "Üdvözöljük a(z) %{site_name} oldalon."
       search_placeholder: "Keresés"
@@ -851,7 +858,6 @@ hu:
         claimed: "Igényelt"
         claimed_by: "%{username} által igényelve · %{relativeDate}"
         reviewed: "Felülvizsgált"
-        reviewed_by: "%{username} által felülvizsgálva · %{relativeDate}"
         view_conversation: "PÜ megtekintése"
         note_added: "Moderátori megjegyzés"
         note_added_by: "%{username} moderátor megjegyzése · %{relativeDate}"
@@ -2699,7 +2705,10 @@ hu:
         title: "Bejegyzés fordítása"
         select: "Fordítás kiválasztása"
         save: "Fordítás mentése"
+        original: "Eredeti"
+        translation: "Fordítás"
         placeholder: "Adja meg a bejegyzés fordítását…"
+        show_raw_markdown: "Megjelenítés nyersen"
       group_mentioned_limit:
         one: "<b>Figyelem!</b>Megemlítette a(z) <a href='%{group_link}'>%{group}</a> csoportot, azonban ennek a csoportnak több mint %{count} tagja van, amely több, mint a rendszergazda által beállított megemlítési korlát. Senki nem lesz értesítve."
         other: "<b>Figyelem!</b>Megemlítette a(z) <a href='%{group_link}'>%{group}</a> csoportot, azonban ennek a csoportnak több mint %{count} tagja van, amely több, mint a rendszergazda által beállított megemlítési korlát. Senki nem lesz értesítve."
@@ -2811,6 +2820,8 @@ hu:
       ulist_title: "Pontozott lista"
       list_item: "Listaelem"
       toggle_direction: "Irány be/ki"
+      wrap_modal:
+        apply: "Alkalmaz"
       help: "Markdown szerkesztési súgó"
       collapse: "Szerkesztő panel minimalizálása"
       open: "Szerkesztő panel megnyitása"
@@ -2877,6 +2888,7 @@ hu:
         zoom_out: "Képméret csökkentése"
         zoom_in: "Képméret növelése"
         remove: "Kép eltávolítása"
+      image: "kép"
       image_scale_button: "Kép méretezése %{percent}%-ra"
       delete_image_button: Kép törlése
       toggle_image_grid: Képrács be/ki
@@ -4731,6 +4743,7 @@ hu:
       upload_description: "Csv-fájl feltöltése címkék tömeges létrehozásához"
       upload_instructions: "Soronként egy, opcionálisan „tag_name,tag_group” formátumú címkecsoporttal."
       upload_successful: "A címkék sikeresen feltöltve"
+      bulk_create_button: "Létrehozás"
       delete_unused_confirmation:
         one: "%{count} címke törlődik: %{tags}"
         other: "%{count} címke törlődik: %{tags}"
@@ -5314,6 +5327,11 @@ hu:
               title: "Közösségi bejelentkezések"
             discourseconnect:
               title: "Discourse Connect"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Tudjon meg többet"
         logo:
           title: "Logó"
           header_description: "A webhelyen használt logók és ikonok testreszabása"
@@ -7873,6 +7891,9 @@ hu:
         no_user_badges: "%{name} még nem kapott jelvényt."
         no_badges: Nincsenek adományozható jelvények.
         none_selected: "A kezdéshez válasszon egy jelvényt"
+        sections:
+          query: Lekérdezés
+          settings: Beállítások
         usage_heading: Használat
         allow_title: Jelvény címként való használatának engedélyezése
         multiple_grant: Többször is megadható

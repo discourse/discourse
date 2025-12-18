@@ -912,7 +912,6 @@ hr:
         claimed: "Preuzeto"
         claimed_by: "Preuzeo/la %{username} · %{relativeDate}"
         reviewed: "Recenzirano"
-        reviewed_by: "Recenzirao/la %{username} · %{relativeDate}"
         view_conversation: "pogledaj privatnu poruku"
         note_added: "Napomena moderatora"
         note_added_by: "Napomena moderatora od %{username} · %{relativeDate}"
@@ -2948,6 +2947,8 @@ hr:
       ulist_title: "Popis s grafičkim oznakama"
       list_item: "Predmet popisa"
       toggle_direction: "Uključi/isključi smjer"
+      wrap_modal:
+        apply: "Primijeni"
       help: "Markdown pomoć pri izmjenama"
       collapse: "Smanji površinu uređivača"
       open: "Otvorite ploču uređivača"
@@ -3014,6 +3015,7 @@ hr:
         zoom_out: "Smanjite veličinu slike"
         zoom_in: "Povećajte veličinu slike"
         remove: "Uklonite sliku"
+      image: "slika"
       image_scale_button: "Skaliraj sliku na %{percent}%"
       delete_image_button: Izbriši sliku
       toggle_image_grid: Uključi/isključi rešetku slike
@@ -4954,6 +4956,7 @@ hr:
       upload_description: "Prenesite CSV datoteku za skupno stvaranje oznaka"
       upload_instructions: "Jedna u retku, po želji s grupom oznaka u formatu 'tag_name, tag_group'."
       upload_successful: "Oznake su uspješno prenesene"
+      bulk_create_button: "Stvorite"
       delete_unused_confirmation:
         one: "%{count} bit će izbrisana: %{tags}"
         few: "%{count} bit će izbrisana: %{tags}"
@@ -5539,6 +5542,11 @@ hr:
           sub_pages:
             common_settings:
               title: "Postavke"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Saznajte više"
         logo:
           title: "Logo"
           header_description: "Konfigurirajte logotipe i ikone koje se koriste na vašoj web stranici"
@@ -7458,6 +7466,8 @@ hr:
         no_user_badges: "%{name} nije dodijeljena ni jedna značka"
         no_badges: Nema znački za dodijeliti.
         none_selected: "Odaberite značku da počnete"
+        sections:
+          settings: Postavke
         usage_heading: Upotreba
         allow_title: Dopusti da se značka koristi kao titula
         multiple_grant: Može biti dodijeljena više puta

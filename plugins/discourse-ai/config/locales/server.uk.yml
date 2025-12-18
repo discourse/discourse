@@ -12,6 +12,11 @@ uk:
         max_prompt_tokens: "Контекстне вікно"
   dashboard:
     problem:
+      ai_llm_status:
+        one: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> потребує уваги. За останню годину він не зміг відповісти %{failed_calls} з %{total_calls} разів."
+        few: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> потребує уваги. За останні %{count} години він не зміг відповісти %{failed_calls} з %{total_calls} разів."
+        many: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> потребує уваги. За останні %{count} годин він не зміг відповісти %{failed_calls} з %{total_calls} разів."
+        other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> потребує уваги. За %{count} годин він не зміг відповісти %{failed_calls} з %{total_calls} разів."
       ai_credit_soft_limit: "%{model_name} залишилося лише %{percentage_remaining}% кредитів. Кредити буде обнулено %{reset_date}. <a href='%{url}'>Перегляд моделей ШІ</a>"
       ai_credit_hard_limit: "Ви вичерпали кредити ШІ на %{model_name}. Функції ШІ будуть недоступні до %{reset_date}. <a href='%{url}'>Переглянути моделі ШІ</a>"
   discourse_automation:
@@ -146,6 +151,8 @@ uk:
     ai_translation_backfill_max_age_days: "Максимальний вік допису та теми, які потрібно перекласти. Дописи та теми, старіші за цей вік, не будуть перекладені. 0 вимикає зворотне заповнення, але не вимикає переклад нових дописів."
     ai_translation_backfill_hourly_rate: "Кількість дописів і тем для перекладу на годину під час операцій заповнення. Встановіть значення 0, щоб вимкнути автоматичне заповнення перекладів для наявного вмісту."
     ai_translation_max_tokens_multiplier: "Множник для визначення максимальної кількості токенів, які можна використовувати для перекладу. За замовчуванням ми встановлюємо максимальну кількість токенів приблизно в два-п'ять разів більшу за кількість символів у публікації. Цей множник можна налаштувати, щоб врахувати моделі мислення або міркування, які використовуватимуть більше токенів."
+    ai_usage_rollup_after_days: "Кількість днів для зберігання статистики використання ШІ для кожного запиту перед її перетворенням на щоденні зведені дані. Встановіть значення 0, щоб вимкнути зведення."
+    ai_audit_logs_purge_after_days: "Видалити журнали аудиту AI API, старіші за цю кількість днів. За замовчуванням – приблизно 6 місяців. Встановіть значення 0, щоб зберігати необмежений термін."
   reviewables:
     reasons:
       flagged_by_toxicity: Плагін ШІ позначив його, класифікувавши як токсичний.
@@ -275,6 +282,10 @@ uk:
           name: "OpenAI"
         image_generation_gemini:
           name: "Nano Banana"
+        image_generation_flux:
+          name: "FLUX 1.1 Pro"
+        image_generation_flux2:
+          name: "FLUX 2 Pro"
         empty_tool:
           name: "Почніть з чистого аркуша..."
       name:
@@ -320,7 +331,7 @@ uk:
     ai_bot:
       reply_error: "Вибачте, схоже, наша система зіткнулася з несподіваною проблемою під час спроби відповісти.\n\n[details='Деталі помилки']\n%{details}\n[/details]"
       default_pm_prefix: "[ПП від ШІ-бота без назви]"
-      thinking: "Думаю..."
+      thinking: "Мислення"
       personas:
         default_llm_required: "Перед увімкненням чату потрібно встановити модель LLM за замовчуванням"
         cannot_delete_system_persona: "Системні персони не можуть бути видалені, замість цього, будь ласка, вимкніть їх"
@@ -663,6 +674,10 @@ uk:
     translation:
       errors:
         disabled: "Функція перекладу ШІ не повністю налаштована."
+        all_posts_translated: "Усі повідомлення в цій темі вже перекладені."
+    llm_credit_allocation:
+      limit_exceeded_user: "Ця спільнота досягла ліміту кредитів ШІ на сьогодні. Будь ласка, спробуйте ще раз після %{reset_time} або зверніться до адміністратора сайту для отримання додаткової інформації."
+      limit_exceeded_admin: "Ви досягли ліміту кредитів ШІ. Будь ласка, спробуйте ще раз після %{reset_time}."
     errors:
       quota_exceeded: "Ви перевищили квоту для цієї моделі. Будь ласка, спробуйте ще раз через %{relative_time}."
       quota_required: "Ви повинні вказати максимальну кількість токенів або варіантів використання для цієї моделі"

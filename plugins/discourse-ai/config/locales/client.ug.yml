@@ -52,7 +52,7 @@ ug:
         groups: "گۇرۇپپا:"
         no_persona: "تەڭشەلمىدى"
         no_groups: "يوق"
-        edit: "تەھرىر"
+        edit: "تەڭشەك"
         expand_list:
           one: "(%{count} تېخىمۇ كۆپ)"
           other: "(%{count} تېخىمۇ كۆپ)"
@@ -96,6 +96,7 @@ ug:
         summary: "خۇلاسە"
         username: "ئىشلەتكۈچى ئاتى"
         total_requests: "جەمئىي ئىلتىماس"
+        total: "جەمئىي"
         periods:
           custom: "ئىختىيارى..."
       ai_persona:

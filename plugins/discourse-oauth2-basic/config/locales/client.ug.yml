@@ -5,3 +5,15 @@
 # https://translate.discourse.org/
 
 ug:
+  js:
+    login:
+      oauth2_basic:
+        name: "OAuth 2"
+    admin:
+      site_settings:
+        categories:
+          discourse_oauth2_basic: "OAuth2 تىزىمغا كىر"
+      config:
+        login:
+          sub_pages:
+            oauth2: "OAuth2"

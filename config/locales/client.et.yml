@@ -1491,6 +1491,8 @@ et:
       upload_title: "Laadi üles"
       upload_description: "sisesta üleslaaditu kirjeldus siia"
       list_item: "Loendi element"
+      wrap_modal:
+        apply: "Rakenda"
       help: "Markdowni redigeerimisspikker"
       modal_ok: "Sobib"
       cant_send_pm: "Kahjuks ei saa sa kasutajale %{username} sõnumit saata."
@@ -1509,6 +1511,7 @@ et:
         shared_draft:
           label: "Jagatud mustand"
       ignore: "Ignoreeri"
+      image: "pilt"
     notifications:
       tooltip:
         regular:
@@ -2547,6 +2550,7 @@ et:
       sort_by_name: "nimi"
       manage_groups: "Halda sildirühmi"
       manage_groups_description: "Määra siltide organiseerimiseks rühmad"
+      bulk_create_button: "Loo"
       filters:
         without_category: "%{filter} %{tag} teemat"
         with_category: "%{filter} teemad sildiga %{tag} kategoorias %{category}"
@@ -2751,6 +2755,8 @@ et:
           sub_pages:
             common_settings:
               title: "Seaded"
+        discourse_id:
+          learn_more: "Uuri veel"
         logo:
           form:
             mobile: "Mobiil"
@@ -3798,6 +3804,8 @@ et:
         no_user_badges: "%{name} ei ole saanud veel ühtegi märgist."
         no_badges: Ei ole ühtegi märgist, mida saaks anda.
         none_selected: "Vali märgis, et alustada"
+        sections:
+          settings: Seaded
         allow_title: Luba märgise kasutamist tiitlina
         multiple_grant: Võib olla määratud mitmeid kordi
         visibility_heading: Nähtavus

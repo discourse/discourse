@@ -398,6 +398,7 @@ ar:
     topic_admin_menu: "إجراءات الموضوع"
     skip_to_main_content: "تخطي إلى المحتوى الرئيسي"
     skip_links_label: "تخطي روابط التنقل"
+    skip_to_post: "تخطي للمنشور %{post_number}"
     skip_to_top: "تخطي إلى الأعلى"
     skip_user_nav: "التخطي إلى محتوى الملف الشخصي"
     emails_are_disabled: "أوقف أحد المسؤولين البريد الصادر بشكلٍٍ عام. ولن يتم إرسال إشعارات عبر البريد الإلكتروني أيًا كان نوعها."
@@ -1110,7 +1111,6 @@ ar:
         claimed: "تمت المطالبة به"
         claimed_by: "تمت المطالبة به من قِبل %{username} · %{relativeDate}"
         reviewed: "أُجريت مراجعته"
-        reviewed_by: "تمت المراجعة من طرف %{username} · %{relativeDate}"
         view_conversation: "عرض الرسالة الخاصة"
         note_added: "ملاحظة المشرف"
         note_added_by: "ملاحظة المشرف من قِبل %{username} · %{relativeDate}"
@@ -2075,6 +2075,7 @@ ar:
         verify_identity: "للمتابعة، يرجى التحقق من هويتك."
         title: "إعادة تعيين كلمة المرور"
         remove: "إزالة كلمة المرور"
+        remove_disabled: "يجب أن يحتوي الحساب على طريقة تسجيل دخول أخرى واحدة على الأقل (مثل مفتاح مرور أو حساب خارجي مرتبط) قبل إزالة كلمة المرور."
         remove_detail: "لن تتمكن من الوصول إلى حسابك باستخدام كلمة المرور ما لم تُجرَ إعادة تعيين لها."
       second_factor_backup:
         title: "الرموز الاحياطية للمصادقة الثنائية"
@@ -2353,6 +2354,7 @@ ar:
         first_time_and_daily: "أول مرة إعجاب بالمنشور ويوميًا"
         first_time: "أول مرة إعجاب بالمنشور"
         never: "أبدًا"
+      notify_on_linked_posts: "الإشعار عند مشاركة رابط لأحد منشوراتي"
       email_previous_replies:
         title: "تضمين الردود السابقة في أسفل الرسائل الإلكترونية"
         unless_emailed: "ما لم يتم إرسالها مسبقًا"
@@ -3370,6 +3372,8 @@ ar:
       ulist_title: "قائمة منقَّطة"
       list_item: "إدراج عنصر"
       toggle_direction: "تبديل الاتجاه"
+      wrap_modal:
+        apply: "تطبيق"
       help: "مساعدة تحرير Markdown"
       collapse: "صغّر لوحة الإنشاء"
       open: "افتح لوحة الإنشاء"
@@ -3436,6 +3440,7 @@ ar:
         zoom_out: "تقليل حجم الصورة"
         zoom_in: "زيادة حجم الصورة"
         remove: "إزالة الصورة"
+      image: "صورة"
       image_scale_button: "تغيير حجم الصورة إلى %{percent}%"
       delete_image_button: حذف الصورة
       toggle_image_grid: تشغيل التخطيط الشبكي للصور
@@ -5725,6 +5730,7 @@ ar:
       upload_description: "تحميل ملف CSV لإنشاء الوسوم بشكلٍٍ جماعي"
       upload_instructions: "واحد في كل سطر، مع مجموعة وسوم بالتنسيق 'tag_name,tag_group' بشكلٍٍ اختياري."
       upload_successful: "تم تحميل الوسوم بنجاح"
+      bulk_create_button: "إنشاء"
       delete_unused_confirmation:
         zero: "سيتم حذف %{count} وسم: %{tags}"
         one: "سيتم حذف وسم واحد (%{count}): %{tags}"
@@ -6363,6 +6369,11 @@ ar:
           sub_pages:
             common_settings:
               title: "الإعدادان"
+            discourse_id:
+              title: "معرّف Discourse"
+        discourse_id:
+          title: "معرّف Discourse"
+          learn_more: "معرفة المزيد"
         logo:
           title: "الشعار"
           header_description: "ضبط الشعارات والرموز المستخدمة في جميع أنحاء موقعك"
@@ -9020,6 +9031,7 @@ ar:
             prompt: "أنت على وشك تغيير سياسة كلمة المرور الخاصة بك. سيؤثر هذا على جميع المستخدمين الذين يغيرون كلمات المرور الخاصة بهم من الآن فصاعدًا. هل تريد بالتأكيد المتابعة؟"
             confirm: "نعم، تحديث سياسة كلمة المرور"
         job_status:
+          completed: "اكتمل التحديث"
           enqueued: "التحديث قيد التقدم"
       badges:
         status: الحالة
@@ -9054,6 +9066,9 @@ ar:
         no_user_badges: "لم يُمنح %{name} أيّ شارة."
         no_badges: لا توجد شارات يمكن منحها.
         none_selected: "تحديد شارة للبدء"
+        sections:
+          query: استعلام
+          settings: الإعدادان
         usage_heading: الاستخدام
         allow_title: السماح للمستخدمين باستخدام الشارة كعنوان
         multiple_grant: يمكن منحها عدة مرات

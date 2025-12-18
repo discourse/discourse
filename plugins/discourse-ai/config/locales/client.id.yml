@@ -93,7 +93,7 @@ id:
         disabled: "(dinonaktifkan)"
         groups: "Grup:"
         no_groups: "Tidak ada"
-        edit: "Ubah"
+        edit: "Pengaturan"
         expand_list:
           other: "(%{count} lainnya)"
         collapse_list: "(tampilkan lebih sedikit)"
@@ -128,6 +128,7 @@ id:
         summary: "Ringkasan"
         model: "Model"
         username: "Nama Pengguna"
+        total: "Jumlah"
         periods:
           last_day: "24 jam terakhir"
       ai_persona:

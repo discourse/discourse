@@ -39,7 +39,7 @@ sw:
         disabled: "(imezuiwa)"
         groups: "Makundi:"
         no_groups: "Hakuna"
-        edit: "Hariri"
+        edit: "Mipangilio"
         filters:
           all: "Yote"
           reset: "Weka/Anzisha Upya"
@@ -70,6 +70,7 @@ sw:
         summary: "Muhtasari"
         username: "Jina la mtumiaji"
         total_requests: "Jumla ya Maombi"
+        total: "Jumla"
       ai_persona:
         back: "Iliyopita"
         name: "Jina"

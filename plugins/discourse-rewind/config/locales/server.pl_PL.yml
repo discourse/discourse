@@ -10,3 +10,7 @@ pl_PL:
   discourse_rewind:
     report_failed: "Nie udało się wygenerować raportu Discourse Rewind."
     invalid_year: "Rewind można przeprowadzić tylko w styczniu lub grudniu."
+    user_not_found: "Użytkownik nie został znaleziony lub nie można go wyświetlić."
+    reports_not_cached: "Raporty nie zostały jeszcze wygenerowane. Odśwież stronę."
+    report_not_found: "Raport nie został znaleziony."
+    cannot_share_when_profile_hidden: "Aby udostępnić Rewind musisz zezwolić innym na oglądanie Twojego profilu publicznego."

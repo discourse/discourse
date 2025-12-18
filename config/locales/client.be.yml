@@ -1343,6 +1343,8 @@ be:
       upload_title: "спампаваць"
       upload_description: "увядзіце апісанне загрузкі"
       list_item: "элемент спісу"
+      wrap_modal:
+        apply: "Ужыць"
       help: "Markdown Editing Help"
       modal_ok: "Добра"
       admin_options_title: "Неабавязковыя налады персаналу для гэтай тэмы"
@@ -1353,6 +1355,7 @@ be:
           label: "Новае паведамленне"
           desc: "Напісаць новае асабістае паведамленне"
       ignore: "ігнараваць"
+      image: "малюнак"
     notifications:
       watching_first_post_label: "Стварыць новую тэму"
       admin_problems: "Новыя рэкамендацыі на вашым сайце прыборнай панэлі"
@@ -1839,6 +1842,7 @@ be:
       sort_by: "Сартаваць па:"
       sort_by_count: "падлічваць"
       sort_by_name: "Імя"
+      bulk_create_button: "стварыць"
       notifications:
         watching:
           title: "Сачыць"
@@ -2792,6 +2796,8 @@ be:
         grant: Выдаць
         no_user_badges: " %{Name} не атрымліваў ні аднаго."
         no_badges: Тут няма значкоў, якія могуць быць прадастаўлены.
+        sections:
+          settings: Налады
         allow_title: Дазволіць выкарыстанне значкоў як званняў
         disabled: адключана
         icon: Абразка

@@ -62,5 +62,34 @@ RSpec.describe DiscourseRewind::Action::BestTopics do
         expect(call_report[:data].map { |d| d[:topic_id] }).not_to include(topic_1.id)
       end
     end
+
+    context "when a topic is a private message" do
+      fab!(:pm_topic) { Fabricate(:private_message_topic, user: user, created_at: random_datetime) }
+
+      before do
+        TopTopic.refresh!
+        TopTopic.find_by(topic_id: pm_topic.id)&.update!(yearly_score: 99)
+      end
+
+      it "is not included" do
+        expect(call_report[:data].map { |d| d[:topic_id] }).not_to include(pm_topic.id)
+      end
+    end
+
+    context "when topic is in a private category" do
+      fab!(:private_category) { Fabricate(:category, read_restricted: true) }
+      fab!(:private_topic) do
+        Fabricate(:topic, category: private_category, user: user, created_at: random_datetime)
+      end
+
+      before do
+        TopTopic.refresh!
+        TopTopic.find_by(topic_id: private_topic.id)&.update!(yearly_score: 99)
+      end
+
+      it "is not included" do
+        expect(call_report[:data].map { |d| d[:topic_id] }).not_to include(private_topic.id)
+      end
+    end
   end
 end

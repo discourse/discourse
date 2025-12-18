@@ -2609,6 +2609,8 @@ fa_IR:
       upload_title: "بارگذاری"
       upload_description: "توضیح بارگذاری را در اینجا بنویسید"
       list_item: "فهرست موارد"
+      wrap_modal:
+        apply: "اعمال کردن"
       help: "راهنمای ویرایش با Markdown"
       exit_fullscreen_prompt: "برای خروج از تمام صفحه، دکمه <kbd>ESC</kbd> را فشار دهید"
       modal_ok: "تایید"
@@ -2660,6 +2662,7 @@ fa_IR:
         title: "توضیحات تصویر را اضافه کنید"
       image_toolbar:
         alt_text: "توضیحات تصویر را اضافه کنید"
+      image: "تصویر"
       image_scale_button: "تغییر مقیاس تصویر به %{percent}%"
       delete_image_button: حذف تصویر
       toggle_image_grid: تغییر وضعیت شبکه تصویر
@@ -4435,6 +4438,7 @@ fa_IR:
       upload_description: "برای ایجاد تگ ها به صورت دسته جمعی یک فایل csv آپلود کنید"
       upload_instructions: "یکی در هر خط، به صورت اختیاری با یک گروه برچسب؛ در قالب 'نام_تگ, گروه_تگ'."
       upload_successful: "تگ‌ها با موفقیت بارگذاری شد"
+      bulk_create_button: "ایجاد"
       delete_unused_confirmation:
         one: "%{count} برچسب حذف خواهد شد:%{tags}"
         other: "%{count} برچسب حذف خواهد شد: %{tags}"
@@ -4926,6 +4930,8 @@ fa_IR:
           sub_pages:
             common_settings:
               title: "تنظیم"
+        discourse_id:
+          learn_more: "بیشتر بدانید"
         logo:
           form:
             logo:
@@ -7051,6 +7057,8 @@ fa_IR:
         no_user_badges: "%{name} هیچ نشانی دریافت نکرده است."
         no_badges: نشانی برای اعطا کردن وجود ندارد.
         none_selected: "برای شروع یک نشان رو انتخاب کنید"
+        sections:
+          settings: تنظیم
         usage_heading: استفاده
         allow_title: اجازه‌ی استفاده نشان برای عنوان
         multiple_grant: نمی توان چندین بار اعطا کرد

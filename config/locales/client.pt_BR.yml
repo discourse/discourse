@@ -844,7 +844,6 @@ pt_BR:
         claimed: "Reivindicado(a)"
         claimed_by: "Reivindicado(a) por %{username} - %{relativeDate}"
         reviewed: "Revisado(a)"
-        reviewed_by: "Avaliado(a) por %{username} - %{relativeDate}"
         view_conversation: "visualizar MP"
         note_added: "Observação da moderação"
         note_added_by: "Observação da moderação por %{username} - %{relativeDate}"
@@ -2800,6 +2799,8 @@ pt_BR:
       ulist_title: "Lista em tópicos"
       list_item: "Item da lista"
       toggle_direction: "Alternar direção"
+      wrap_modal:
+        apply: "Aplicar"
       help: "Ajuda de edição de redução"
       exit_fullscreen_prompt: "Pressione <kbd>ESC</kbd> para sair da tela cheia"
       modal_ok: "Ok"
@@ -2858,6 +2859,7 @@ pt_BR:
         zoom_out: "Diminuir o tamanho da imagem"
         zoom_in: "Aumentar o tamanho da imagem"
         remove: "Remover imagem"
+      image: "imagem"
       image_scale_button: "Dimensionar imagem para %{percent}%"
       delete_image_button: Excluir Imagem
       toggle_image_grid: Alternar para grade de imagem
@@ -4693,6 +4695,7 @@ pt_BR:
       upload_description: "Enviar um arquivo csv para criar etiquetas em massa"
       upload_instructions: "Uma por linha, opcionalmente com um grupo de etiquetas no formato \"nome_etiqueta,grupo_etiqueta\"."
       upload_successful: "Etiquetas enviadas com êxito"
+      bulk_create_button: "Criar"
       delete_unused_confirmation:
         one: "%{count} etiqueta será excluída: %{tags}"
         other: "%{count} etiquetas serão excluídas: %{tags}"
@@ -5262,6 +5265,11 @@ pt_BR:
           sub_pages:
             common_settings:
               title: "Definições"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Saiba mais"
         logo:
           title: "Logotipo"
           header_description: "Configure os ícones e logotipos usados no seu site"
@@ -7773,6 +7781,9 @@ pt_BR:
         no_user_badges: "%{name} não recebeu nenhum emblema."
         no_badges: Não há emblemas que possam ser concedidos.
         none_selected: "Selecione um emblema para começar"
+        sections:
+          query: Consulta
+          settings: Definições
         usage_heading: Uso
         allow_title: Permitir que o emblema seja usado como título
         multiple_grant: Pode ser concedido várias vezes

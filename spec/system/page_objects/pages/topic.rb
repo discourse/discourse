@@ -198,6 +198,10 @@ module PageObjects
         find("#topic-title .fancy-title").click
       end
 
+      def click_topic_title_submit_edit
+        find("#topic-title .submit-edit").click
+      end
+
       def has_topic_bookmarked?(topic)
         within_topic_footer_buttons do
           has_css?(".bookmark-menu-trigger.bookmarked", text: "Edit Bookmark")
@@ -351,6 +355,11 @@ module PageObjects
 
       def has_filtered_notice_text?(text)
         find(".posts-filtered-notice").has_text?(text, exact: false)
+      end
+
+      def topic_tags
+        tags_selector = ".title-wrapper .topic-category .list-tags .discourse-tags .discourse-tag"
+        all(tags_selector).map(&:text)
       end
 
       private

@@ -10,6 +10,7 @@ import {
   addUniqueValueToArray,
   removeValueFromArray,
 } from "discourse/lib/array-tools";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
@@ -22,7 +23,6 @@ import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import Topic from "./topic";
 
-const STAFF_GROUP_NAME = "staff";
 const CATEGORY_ASYNC_SEARCH_CACHE = {};
 const CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE = {};
 const pluginSaveProperties = new Set();
@@ -841,7 +841,7 @@ export default class Category extends RestModel {
       permissions.forEach((p) => (rval[p.group_name] = p.permission_type));
     } else {
       // empty permissions => staff-only access
-      rval[STAFF_GROUP_NAME] = PermissionType.FULL;
+      rval[AUTO_GROUPS.staff.name] = PermissionType.FULL;
     }
     return rval;
   }

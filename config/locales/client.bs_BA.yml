@@ -1728,6 +1728,8 @@ bs_BA:
       upload_title: "Učitavanje"
       upload_description: "unesi opis učitanog"
       list_item: "Listaj predmet"
+      wrap_modal:
+        apply: "Snimi"
       help: "Pomoć za Markdown"
       modal_ok: "OK"
       cant_send_pm: "Neuspješno, ne možete slati poruke ka %{username}."
@@ -1759,6 +1761,7 @@ bs_BA:
           label: "Toggle topic bump"
           desc: "Odgovori bez izmjene zadnjeg datuma odgovora"
       ignore: "Zanemari"
+      image: "slika"
     notifications:
       tooltip:
         regular:
@@ -2959,6 +2962,7 @@ bs_BA:
       upload_description: "Otpremite csv datoteku da biste grupisali oznake"
       upload_instructions: "Jedan po liniji, opciono sa oznakom grupe u formatu 'tag_name, tag_group'."
       upload_successful: "Oznake koje su uspješno prenesene"
+      bulk_create_button: "napravi"
       delete_unused_confirmation:
         one: "%{count} tag će biti izbrisan: %{tags}"
         few: "Oznake %{count} će biti izbrisane: %{tags}"
@@ -3186,6 +3190,8 @@ bs_BA:
           sub_pages:
             common_settings:
               title: "Postavke"
+        discourse_id:
+          learn_more: "Saznaj više"
         logo:
           form:
             mobile: "Mobilno"
@@ -4447,6 +4453,8 @@ bs_BA:
         no_user_badges: "%{name} has not been granted any badges."
         no_badges: There are no badges that can be granted.
         none_selected: "Izaberite značku za početak"
+        sections:
+          settings: Postavke
         allow_title: Allow badge to be used as a title
         multiple_grant: Can be granted multiple times
         visibility_heading: Vidljivost

@@ -66,6 +66,12 @@ nl:
         text:
           label: Tekst
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Categorieën
+            tags:
+              label: Tags
         not_found: Kon trigger '%{trigger}' voor automatisering '%{automation}' niet vinden. Controleer of de bijbehorende plug-in is geïnstalleerd
         user_badge_granted:
           fields:
