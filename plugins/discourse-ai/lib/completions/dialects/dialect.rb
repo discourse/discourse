@@ -63,11 +63,11 @@ module DiscourseAi
 
         def self.no_more_tool_calls_text
           # note, Anthropic must never prefill with an ending whitespace
-          "I WILL NOT USE TOOLS IN THIS REPLY, user expressed they wanted to stop using tool calls.\nHere is the best, complete, answer I can come up with given the information I have."
+          "Tool budget EXHAUSTED for this response, no more tools will be called in this response.\nHere is the best, complete, answer I can come up with given the information I have to address the original user query."
         end
 
         def self.no_more_tool_calls_text_user
-          "DO NOT USE TOOLS IN YOUR REPLY. Return the best answer you can given the information I supplied you."
+          "IT IS CRITICAL you do not use any tools or function calls in your response. JUST REPLY with the best answer you can provide based on your existing knowledge."
         end
 
         def no_more_tool_calls_text

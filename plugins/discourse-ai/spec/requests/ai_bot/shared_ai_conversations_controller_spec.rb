@@ -356,9 +356,9 @@ RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
     it "renders the shared conversation" do
       get "#{path}/#{shared_conversation.share_key}"
       expect(response).to have_http_status(:success)
-      expect(response.headers["Cache-Control"]).to eq("max-age=60, public")
       expect(response.headers["X-Robots-Tag"]).to eq("noindex")
       expect(response.body).not_to include("Translation missing")
+      expect(response.headers["Cache-Control"]).to eq("max-age=60, public")
     end
 
     it "is also able to render in json format" do

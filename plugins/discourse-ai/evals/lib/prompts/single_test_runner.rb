@@ -14,11 +14,33 @@ class DiscourseAi::Evals::PromptSingleTestRunner
   # @param temperature [Float] the temperature to use when generating completions
   # @param tools [Array<Hash>] an array of tools to use when generating completions
   # @return [Hash] the prompt, message, and result of the test
-  def run_single_test(prompt, message, followups, output_thinking, stream, temperature, tools)
+  def run_single_test(
+    prompt:,
+    message:,
+    followups:,
+    output_thinking:,
+    stream:,
+    temperature:,
+    tools:,
+    tool_results: nil,
+    chain_length: 1,
+    max_tool_calls: nil
+  )
     @c_prompt =
       DiscourseAi::Completions::Prompt.new(prompt, messages: [{ type: :user, content: message }])
     @c_prompt.tools = tools if tools
-    generate_result(temperature, output_thinking, stream)
+    @tool_results = tool_results || {}
+
+    while chain_length > 0
+      generate_result(temperature, output_thinking, stream)
+      chain_length -= 1
+      if chain_length > 0
+        populate_reply(max_tool_calls:)
+        break if @c_prompt.messages.last[:type] != :tool
+      end
+
+      @c_prompt.tool_choice = :none if chain_length == 1
+    end
 
     if followups
       followups.each do |followup|
@@ -31,6 +53,39 @@ class DiscourseAi::Evals::PromptSingleTestRunner
 
   private
 
+  def populate_reply(max_tool_calls:)
+    # @c_prompt contains the prompt
+    # @result contains the last result
+    #
+    # we need to append the result to the prompt so we can proceed with the chain
+
+    current = @result
+    current = [current] if !current.is_a?(Array)
+
+    result = []
+    current.each do |part|
+      if part.is_a?(DiscourseAi::Completions::ToolCall)
+        proposed_result = @tool_results[part.name]
+        raise "No tool result provided for tool #{part.name}" if !proposed_result
+
+        part.parameters.each do |key, value|
+          proposed_result = proposed_result.gsub("{{#{key}}}", value.to_s)
+        end
+
+        break if max_tool_calls && ((max_tool_calls -= 1) < 0)
+
+        result.push(part)
+        result.push(
+          DiscourseAi::Completions::ToolResult.new(content: proposed_result, tool_call: part),
+        )
+      else
+        result.push(part)
+      end
+    end
+
+    @c_prompt.push_model_response(result)
+  end
+
   def generate_followup(followup, output_thinking, stream, temperature)
     @c_prompt.push_model_response(@result)
     followup_message = set_followup_tool(followup)
@@ -40,7 +95,6 @@ class DiscourseAi::Evals::PromptSingleTestRunner
     rescue => e
       # should not happen but it helps debugging...
       puts e
-      result = []
     end
   end
 

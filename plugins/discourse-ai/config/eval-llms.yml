@@ -1,20 +1,29 @@
 llms:
-  o3:
-    display_name: O3
-    name: o3
+  gpt-5-nano:
+    display_name: GPT-5-Nano
+    name: gpt-5-nano
     tokenizer: DiscourseAi::Tokenizer::OpenAiTokenizer
     api_key_env: OPENAI_API_KEY
     provider: open_ai
     url: https://api.openai.com/v1/chat/completions
+    max_prompt_tokens: 131072
+    vision_enabled: true
+
+  gpt-5-nano-thinking:
+    display_name: GPT-5-Nano Thinking
+    name: gpt-5-nano
+    tokenizer: DiscourseAi::Tokenizer::OpenAiTokenizer
+    api_key_env: OPENAI_API_KEY
+    provider: open_ai
+    url: https://api.openai.com/v1/responses
     max_prompt_tokens: 131072
     vision_enabled: true
     provider_params:
-      disable_top_p: true
-      disable_temperature: true
+      reasoning_effort: low
 
-  gpt-41:
-    display_name: GPT-4.1
-    name: gpt-4.1
+  gpt-5.2:
+    display_name: GPT-5.2
+    name: gpt-5.2
     tokenizer: DiscourseAi::Tokenizer::OpenAiTokenizer
     api_key_env: OPENAI_API_KEY
     provider: open_ai
@@ -22,29 +31,9 @@ llms:
     max_prompt_tokens: 131072
     vision_enabled: true
 
-  gpt-4o:
-    display_name: GPT-4o
-    name: gpt-4o
-    tokenizer: DiscourseAi::Tokenizer::OpenAiTokenizer
-    api_key_env: OPENAI_API_KEY
-    provider: open_ai
-    url: https://api.openai.com/v1/chat/completions
-    max_prompt_tokens: 131072
-    vision_enabled: true
-
-  gpt-4o-mini:
-    display_name: GPT-4o-mini
-    name: gpt-4o-mini
-    tokenizer: DiscourseAi::Tokenizer::OpenAiTokenizer
-    api_key_env: OPENAI_API_KEY
-    provider: open_ai
-    url: https://api.openai.com/v1/chat/completions
-    max_prompt_tokens: 131072
-    vision_enabled: true
-
-  claude-3.5-haiku:
-    display_name: Claude 3.5 Haiku
-    name: claude-3-5-haiku-latest
+  claude-4.5-haiku:
+    display_name: Claude 4.5 Haiku
+    name: claude-haiku-4-5
     tokenizer: DiscourseAi::Tokenizer::AnthropicTokenizer
     api_key_env: ANTHROPIC_API_KEY
     provider: anthropic
@@ -52,9 +41,24 @@ llms:
     max_prompt_tokens: 200000
     vision_enabled: false
 
-  claude-3.5-sonnet:
-    display_name: Claude 3.5 Sonnet
-    name: claude-3-5-sonnet-latest
+  claude-4.5-haiku-thinking:
+    display_name: Claude 4.5 Haiku
+    name: claude-haiku-4-5
+    tokenizer: DiscourseAi::Tokenizer::AnthropicTokenizer
+    api_key_env: ANTHROPIC_API_KEY
+    provider: anthropic
+    url: https://api.anthropic.com/v1/messages
+    max_prompt_tokens: 200000
+    vision_enabled: true
+    provider_params:
+      disable_top_p: true
+      disable_temperature: true
+      enable_reasoning: true
+      reasoning_tokens: 1024
+
+  claude-4.5-sonnet:
+    display_name: Claude 4.5 Sonnet
+    name: claude-sonnet-4-5
     tokenizer: DiscourseAi::Tokenizer::AnthropicTokenizer
     api_key_env: ANTHROPIC_API_KEY
     provider: anthropic
@@ -62,19 +66,9 @@ llms:
     max_prompt_tokens: 200000
     vision_enabled: true
 
-  claude-3.7-sonnet:
-    display_name: Claude 3.7 Sonnet
-    name: claude-3-7-sonnet-latest
-    tokenizer: DiscourseAi::Tokenizer::AnthropicTokenizer
-    api_key_env: ANTHROPIC_API_KEY
-    provider: anthropic
-    url: https://api.anthropic.com/v1/messages
-    max_prompt_tokens: 200000
-    vision_enabled: true
-
-  claude-3.7-sonnet-thinking:
-    display_name: Claude 3.7 Sonnet
-    name: claude-3-7-sonnet-latest
+  claude-4.5-sonnet-thinking:
+    display_name: Claude 4.5 Sonnet
+    name: claude-sonnet-4-5
     tokenizer: DiscourseAi::Tokenizer::AnthropicTokenizer
     api_key_env: ANTHROPIC_API_KEY
     provider: anthropic
@@ -110,12 +104,27 @@ llms:
       disable_top_p: true
       disable_temperature: true
 
-  gemini-2.0-pro:
-    display_name: Gemini 2.0 pro
-    name: gemini-2-0-pro
+  gemini-3-flash-thinking:
+    display_name: Gemini 3.0 Flash
+    name: gemini-3-0-flash
     tokenizer: DiscourseAi::Tokenizer::GeminiTokenizer
     api_key_env: GEMINI_API_KEY
     provider: google
-    url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-pro
+    url: https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview
+    max_prompt_tokens: 1000000
+    vision_enabled: true
+    provider_params:
+      disable_top_p: true
+      disable_temperature: true
+      enable_thinking: true
+      thinking_tokens: 1024
+
+  gemini-3-pro:
+    display_name: Gemini 3.0 pro
+    name: gemini-3-pro-preview
+    tokenizer: DiscourseAi::Tokenizer::GeminiTokenizer
+    api_key_env: GEMINI_API_KEY
+    provider: google
+    url: https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-preview
     max_prompt_tokens: 1000000
     vision_enabled: true

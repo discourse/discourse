@@ -47,6 +47,10 @@ module DiscourseAi
             previous_message = message
           end
 
+          if tool_choice == :none && interleving_messages.length > 0
+            interleving_messages << { role: "user", parts: { text: no_more_tool_calls_text_user } }
+          end
+
           { messages: interleving_messages, system_instruction: system_instruction }
         end
 

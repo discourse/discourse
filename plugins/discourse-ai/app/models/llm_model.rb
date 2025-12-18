@@ -126,7 +126,7 @@ class LlmModel < ActiveRecord::Base
         disable_native_tools: :checkbox,
         reasoning_effort: {
           type: :enum,
-          values: %w[default minimal low medium high],
+          values: %w[default minimal low medium high xhigh],
           default: "default",
         },
         disable_temperature: :checkbox,

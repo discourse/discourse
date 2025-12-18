@@ -240,6 +240,12 @@ data: {"type":"response.reasoning_summary_part.added","sequence_number":3,"item_
     expect(partials.first.name).to eq("echo")
     expect(partials.first.parameters).to eq({ string: "hello" })
     expect(partials.first.id).to eq("call_TQyfNmFnKblzXl5rlcGeIsg5")
+    expect(partials.first.provider_data).to include(
+      open_ai_responses: {
+        id: "fc_684910c8b68881a3b43610e1d57ef00702d35c1819a50f63",
+        call_id: "call_TQyfNmFnKblzXl5rlcGeIsg5",
+      },
+    )
   end
 
   it "can handle non streaming tool calls" do
@@ -329,6 +335,12 @@ data: {"type":"response.reasoning_summary_part.added","sequence_number":3,"item_
     expect(result.name).to eq("echo")
     expect(result.parameters).to eq({ string: "sam" })
     expect(result.id).to eq("call_UdxBpinIVc5nRZ0VnWJIgneA")
+    expect(result.provider_data).to include(
+      open_ai_responses: {
+        id: "fc_68491ed75e0c819f87462ff642c58d2e08901d75ebf6c66e",
+        call_id: "call_UdxBpinIVc5nRZ0VnWJIgneA",
+      },
+    )
   end
 
   it "uses reasoning object format for responses API" do
