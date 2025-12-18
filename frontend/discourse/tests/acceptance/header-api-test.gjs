@@ -82,7 +82,7 @@ acceptance("Header API - anonymous", function (needs) {
 });
 
 acceptance("Glimmer Header API - authenticated", function (needs) {
-  needs.user({ groups: AUTO_GROUPS.everyone });
+  needs.user({ groups: [AUTO_GROUPS.everyone] });
 
   test("can add buttons to the header", async function (assert) {
     withPluginApi((api) => {
