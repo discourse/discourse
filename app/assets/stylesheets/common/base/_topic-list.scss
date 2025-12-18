@@ -385,11 +385,10 @@
   .show-more {
     &.has-topics {
       @include viewport.from(md) {
-        position: absolute;
+        position: fixed;
         z-index: z("base");
         width: auto;
-        right: 50%;
-        transform: translateX(50%);
+        left: 50%;
         font-size: var(--font-down-1-rem);
 
         .alert {
