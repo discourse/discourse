@@ -4845,7 +4845,6 @@ es:
       tags_form_modal:
         title: "Editar etiquetas navegación"
         filter_placeholder: "Filtrar etiquetas"
-        no_tags: "No hay etiquetas que coincidan con el término proporcionado."
         subtitle:
           text: "y mostraremos automáticamente las etiquetas principales de este sitio"
       edit_navigation_modal_form:

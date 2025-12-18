@@ -4400,7 +4400,6 @@ zh_TW:
       tags_form_modal:
         title: "編輯標記導航"
         filter_placeholder: "篩選標籤"
-        no_tags: "沒有符合給定詞彙的標籤。"
         subtitle:
           text: "我們將自動顯示此網站的熱門標籤"
       edit_navigation_modal_form:
