@@ -52,7 +52,7 @@ ug:
         groups: "گۇرۇپپا:"
         no_persona: "تەڭشەلمىدى"
         no_groups: "يوق"
-        edit: "تەھرىر"
+        edit: "تەڭشەك"
         expand_list:
           one: "(%{count} تېخىمۇ كۆپ)"
           other: "(%{count} تېخىمۇ كۆپ)"

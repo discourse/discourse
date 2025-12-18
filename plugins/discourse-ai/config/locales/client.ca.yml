@@ -39,7 +39,7 @@ ca:
         disabled: "(desactivat)"
         groups: "Grups:"
         no_groups: "Cap"
-        edit: "Edita"
+        edit: "Configuració"
         expand_list:
           one: "(%{count} més)"
           other: "(%{count} més)"

@@ -3203,6 +3203,7 @@ gl:
       upload_description: "Cargar un ficheiro csv para crear etiquetas en lote"
       upload_instructions: "Unha por liña, opcionalmente cun grupo de etiquetas co formato «etiqueta_nome, etiqueta_grupo»."
       upload_successful: "Etiquetas cargadas correctamente"
+      bulk_create_button: "Crear"
       delete_unused_confirmation:
         one: "Será(n) eliminada(s) %{count}etiqueta(s): %{tags}"
         other: "Eliminaranse %{count}etiquetas: %{tags}"
@@ -4882,6 +4883,8 @@ gl:
         no_user_badges: "A %{name} non se lle concedeu ningunha insignia."
         no_badges: Non hai insignias para conceder.
         none_selected: "Seleccione unha insignia para comezar"
+        sections:
+          settings: Configuración
         allow_title: Permitir que se use a insignia como un título
         multiple_grant: Pode concederse múltiples veces
         visibility_heading: Visibilidade

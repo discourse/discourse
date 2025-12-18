@@ -30,6 +30,10 @@
       color: var(--primary-high);
       font-weight: 700;
     }
+
+    &.--selected .btn {
+      background: var(--d-selected);
+    }
   }
 
   &__divider {

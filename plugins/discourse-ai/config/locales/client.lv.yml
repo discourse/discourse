@@ -39,7 +39,7 @@ lv:
         disabled: "(atslēgt)"
         groups: "Grupas:"
         no_groups: "Nav"
-        edit: "Labot"
+        edit: "Iestatījumi"
         expand_list:
           zero: "(vēl %{count})"
           one: "(vēl %{count})"

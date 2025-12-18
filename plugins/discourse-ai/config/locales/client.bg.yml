@@ -40,7 +40,7 @@ bg:
         groups: "Групи:"
         no_persona: "Не е зададено"
         no_groups: "Без"
-        edit: "Редактирай"
+        edit: "Настройки"
         expand_list:
           one: "(още %{count})"
           other: "(още %{count})"

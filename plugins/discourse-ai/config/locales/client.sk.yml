@@ -199,7 +199,7 @@ sk:
         no_llm: "Nie je vybraný žiadny LLM"
         no_persona: "Nie je nastavené"
         no_groups: "Žiadny"
-        edit: "Upraviť"
+        edit: "Nastavení"
         expand_list:
           one: "(%{count} ďalší)"
           few: "(%{count} ďalšie)"

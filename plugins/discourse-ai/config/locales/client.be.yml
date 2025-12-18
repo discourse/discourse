@@ -38,7 +38,7 @@ be:
         back: "Назад"
         disabled: "(адключана)"
         groups: "групы:"
-        edit: "Рэдагаваць"
+        edit: "Налады"
         filters:
           all: "усе"
           reset: "скінуць"

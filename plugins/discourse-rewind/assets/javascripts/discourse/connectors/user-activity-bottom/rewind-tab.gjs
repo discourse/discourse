@@ -8,7 +8,7 @@ export default class RewindTab extends Component {
   @service rewind;
 
   get showNavTab() {
-    return this.rewind.active && !this.rewind.disabled;
+    return this.rewind.active && this.rewind.enabled;
   }
 
   <template>

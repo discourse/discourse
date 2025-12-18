@@ -2696,6 +2696,7 @@ lv:
       sort_by_name: "vārda"
       manage_groups: "Pārvaldīt tagu grupas"
       manage_groups_description: "Izveidot grupas, lai organizētu tagus"
+      bulk_create_button: "Izveidot"
       filters:
         without_category: "%{filter} %{tag} tēmas"
         with_category: "%{filter} %{tag} tēmas sadaļā %{category}"
@@ -3836,6 +3837,8 @@ lv:
         no_user_badges: "%{name} nav piešķirts neviens žetons."
         no_badges: Nav žetonu, kas var tikt piešķirti.
         none_selected: "Izvēlieties žetonu, lai sāktu"
+        sections:
+          settings: Iestatījumi
         allow_title: Atļaut žetonam parādīties titulā
         multiple_grant: Var tikt piešķirts vairākas reizes
         listable: Rādīt žetonu publisko žeotnu lapā

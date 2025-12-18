@@ -80,7 +80,7 @@ pt:
         no_llm: "Nenhum LLM selecionado"
         no_persona: "Não definido"
         no_groups: "Nenhuma"
-        edit: "Editar"
+        edit: "Configurações"
         expand_list:
           one: "(%{count} mais)"
           other: "(%{count} mais)"

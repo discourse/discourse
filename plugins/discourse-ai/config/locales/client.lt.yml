@@ -150,7 +150,7 @@ lt:
         disabled: "(uždrausta)"
         groups: "Grupės:"
         no_groups: "Nieko"
-        edit: "Redaguoti"
+        edit: "Nustatymai"
         expand_list:
           one: "(%{count} daugiau)"
           few: "(%{count}daugiau)"

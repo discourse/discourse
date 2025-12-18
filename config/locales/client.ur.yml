@@ -4735,6 +4735,7 @@ ur:
       upload_description: "بَلک میں ٹیگز بنانے کیلئے ایک csv فائل اَپ لوڈ کریں"
       upload_instructions: "فی سطر ایک، اختیاری طور پر ایک ٹیگ گروپ کے ساتھ 'tag_name,tag_group' کے فارمیٹ میں۔"
       upload_successful: "ٹیگز کامیابی سے اپ لوڈ ہو گئے"
+      bulk_create_button: "بنائیں"
       delete_unused_confirmation:
         one: "%{count} ٹیگ کومٹادیا جائے گا: %{tags}"
         other: "%{count} ٹیگز کومٹادیا جائے گا: %{tags}"
@@ -7456,6 +7457,9 @@ ur:
         no_user_badges: "%{name} کو کوئی تمغہ نہیں دیا گیا۔"
         no_badges: دیئے کے لیے کوئی تمغہ موجود نہیں۔
         none_selected: "شروع کرنے کے لئے ایک تمغہ منتخب کریں"
+        sections:
+          query: ڈیٹا کمانڈ
+          settings: سیٹِنگ
         allow_title: عنوان کے طور پر تمغوں کے استعمال کی اجازت دیں
         multiple_grant: ایک سے زیادہ مرتبہ عطا کیا جا سکتا ہے
         visibility_heading: نموداری

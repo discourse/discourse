@@ -199,7 +199,7 @@ es:
         no_llm: "No hay LLM seleccionados"
         no_persona: "No establecido"
         no_groups: "Ninguna"
-        edit: "Editar"
+        edit: "Ajustes"
         expand_list:
           one: "(%{count} más)"
           other: "(%{count} más)"

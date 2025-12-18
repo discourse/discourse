@@ -4694,6 +4694,7 @@ es:
       upload_description: "Sube un archivo csv para crear etiquetas en masa"
       upload_instructions: "Una por línea, opcional con un grupo de etiquetas en el formato «tag_name,tag_group»."
       upload_successful: "Etiquetas subidas con éxito"
+      bulk_create_button: "Crear"
       delete_unused_confirmation:
         one: "%{count} etiqueta será eliminada: %{tags}"
         other: "%{count} etiquetas serán eliminadas: %{tags}"
@@ -7798,6 +7799,9 @@ es:
         no_user_badges: "%{name} no ha recibido ninguna medalla."
         no_badges: No hay medallas que se puedan conceder.
         none_selected: "Selecciona una medalla para empezar"
+        sections:
+          query: Consulta
+          settings: Ajustes
         usage_heading: Uso
         allow_title: Permitir que se use la medalla como título
         multiple_grant: Se puede conceder varias veces

@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class TopicLocalizationCreator
-  def self.create(topic_id:, locale:, title:, user:)
-    Guardian.new(user).ensure_can_localize_topic!(topic_id)
+  def self.create(topic:, locale:, title:, user:)
+    Guardian.new(user).ensure_can_localize_topic!(topic)
 
     TopicLocalization.create!(
-      topic_id: topic_id,
+      topic_id: topic.id,
       locale: locale,
       title: title,
       fancy_title: Topic.fancy_title(title),

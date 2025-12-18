@@ -40,7 +40,7 @@ sl:
         groups: "Skupine:"
         no_persona: "Ni nastavljeno"
         no_groups: "Brez"
-        edit: "Uredi"
+        edit: "Nastavitve"
         expand_list:
           one: "(%{count} več)"
           two: "(%{count} več)"

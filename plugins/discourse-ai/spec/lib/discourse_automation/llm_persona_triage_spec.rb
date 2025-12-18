@@ -6,7 +6,7 @@ describe DiscourseAi::Automation::LlmPersonaTriage do
   fab!(:user)
   fab!(:bot_user, :user)
 
-  fab!(:llm_model) { Fabricate(:anthropic_model, name: "claude-3-opus", enabled_chat_bot: true) }
+  fab!(:llm_model) { Fabricate(:anthropic_model, name: "claude-3-opus") }
 
   fab!(:ai_persona) do
     persona =

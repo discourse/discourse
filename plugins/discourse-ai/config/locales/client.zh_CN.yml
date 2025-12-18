@@ -238,7 +238,7 @@ zh_CN:
         no_llm: "未选择 LLM"
         no_persona: "未设置"
         no_groups: "无"
-        edit: "编辑"
+        edit: "设置"
         expand_list:
           other: "（其他 %{count} 个）"
         collapse_list: "（收起）"

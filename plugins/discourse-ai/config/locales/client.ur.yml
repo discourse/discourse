@@ -67,7 +67,7 @@ ur:
         disabled: "(غیر فعال)"
         groups: "گروپس:"
         no_groups: "کوئی نہیں"
-        edit: "ترمیم کریں"
+        edit: "سیٹِنگ"
         expand_list:
           one: "(%{count} مزید)"
           other: "(%{count} مزید)"
