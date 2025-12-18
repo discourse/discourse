@@ -574,7 +574,7 @@ Here, all the API from `ActiveModel` is available. In this example, we define we
 > 💡 Use cast types extensively as they’ll provide you with proper objects before any validation happens.
 >
 > Rails ships with cast types for [`big_integer`](https://api.rubyonrails.org/classes/ActiveModel/Type/BigInteger.html), [`binary`](https://api.rubyonrails.org/classes/ActiveModel/Type/Binary.html), [`boolean`](https://api.rubyonrails.org/classes/ActiveModel/Type/Boolean.html), [`date`](https://api.rubyonrails.org/classes/ActiveModel/Type/Date.html), [`datetime`](https://api.rubyonrails.org/classes/ActiveModel/Type/DateTime.html), [`decimal`](https://api.rubyonrails.org/classes/ActiveModel/Type/Decimal.html), [`float`](https://api.rubyonrails.org/v7.1.4/classes/ActiveModel/Type/Float.html), [`immutable_string`](https://api.rubyonrails.org/v7.1.4/classes/ActiveModel/Type/ImmutableString.html), [`integer`](https://api.rubyonrails.org/v7.1.4/classes/ActiveModel/Type/Integer.html), [`string`](https://api.rubyonrails.org/v7.1.4/classes/ActiveModel/Type/String.html) and [`time`](https://api.rubyonrails.org/v7.1.4/classes/ActiveModel/Type/Time.html).
-> Custom cast types can be defined, we ship one: [`array`](https://github.com/discourse/discourse/blob/main/lib/active_support_type_extensions/array.rb).
+> Custom cast types can be defined, we ship two: [`array`](https://github.com/discourse/discourse/blob/main/lib/active_support_type_extensions/array.rb) and [`symbol`](https://github.com/discourse/discourse/blob/main/lib/active_support_type_extensions/symbol.rb).
 
 > 🙅 Don’t define attributes if you don’t transform them or validate them. The primary purpose of a contract is to validate data, it can also be used to cast or massage data before using it (usually a contract does both).
 
@@ -588,6 +588,83 @@ Some methods have been added to the contract object to make your life a bit easi
 
 - `#slice` and `#merge` are available.
 - `#to_hash` has been implemented, so the contract object will be automatically cast as a hash by Ruby depending on the context. For example, with an ActiveRecord model, you can do this: `user.update(**params)`.
+
+### Nested attributes
+
+It’s fairly common to get nested parameters from an endpoint. This usually helps keeping things organized. Contracts support nested hashes and nested arrays.
+Let’s imagine we have a service that needs to respond to that kind of input:
+
+```json
+{
+  "user": {
+    "id": 2,
+    "username": "new username"
+  },
+  "page": {
+    "sort": "asc",
+    "number": 3
+  }
+}
+```
+
+We can easily define a contract to validate such input:
+
+```rb
+params do
+  attribute :user, :hash do
+    attribute :id, :integer
+    attribute :username, :string
+
+    validates :id, :username, presence: true
+  end
+
+  attribute :page, :hash, default: -> { {} } do
+    attribute :sort, :symbol, default: :asc
+    attribute :number, :integer, default: 1
+
+    validates :sort, inclusion: { in: %i[asc desc] }
+    validates :number, numericality: { only_integer: true, greater_than: 0 }
+  end
+
+  validates :user, presence: true
+end
+```
+
+For each nested attribute we want to validate, we just have to open a block and inside that block, we can define attributes and validations as usual. Inside that block, we have access to another contract object, so everything we can do in the parent contract is available in the nested one.
+
+There are some things to notice:
+
+- Here, before opening the block, we’re using `:hash` to tell our contract to expect another hash. If we had an array of hashes, we would have used `:array` instead.
+- A nested attribute is just an attribute, so if you want to validate its presence, you have to add a validation for it (as done for the `user` attribute). Otherwise, it will be considered as an optional attribute.
+- When using default values, like we do for the `page` attribute, make sure to provide a default value for the whole attribute (here, an empty hash) to avoid `nil` errors when accessing nested attributes.
+
+After validation, errors will be defined directly on the main contract, as usual. We’re using the same approach Rails does for nested attributes in models. For example, if the `username` attribute is blank, the error will be available at `errors[:"user.username"]`. The full message will be `User username can't be blank`.
+
+Now, let’s imagine our input has arrays of hashes, like this:
+
+```json
+{
+  "tags": [{ "name": "tag1" }, { "name": "tag2" }]
+}
+```
+
+A contract to validate that input could look like this:
+
+```rb
+params do
+  attribute :tags, :array do
+    attribute :name, :string
+
+    validates :name, presence: true
+  end
+
+  validates :tags, presence: true
+end
+```
+
+If there are errors, it will use the index of the array to define them. For example, if the second tag has no name, the error will be available at `errors[:"tags[1].name"]`. The full message will be `Tags[1] name can't be blank`.
+
+And of course, you can combine nested hashes and arrays as you see fit.
 
 ### Reusing contracts
 
