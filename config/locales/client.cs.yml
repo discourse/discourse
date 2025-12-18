@@ -214,7 +214,7 @@ cs:
       el:
         name: Řečtina
       en:
-        name: Angličtina (USA)
+        name: Angličtina
       en_GB:
         name: Angličtina (Velká Británie)
       es:
@@ -3508,6 +3508,7 @@ cs:
           aria_label: Filtrování pomocí štítků
         filters:
           label: Pouze v tématech/příspěvcích, které...
+          all: Zahrnout zprávy
           title: mají hledaný text pouze v názvu
           likes: se mi líbí
           posted: obsahují můj příspěvek
@@ -4695,6 +4696,8 @@ cs:
       slug_placeholder: "(Nepovinné) slova s pomlčkou pro URL"
       creation_error: Během vytváření nové kategorie nastala chyba.
       save_error: Během ukládání kategorie nastala chyba.
+      errors:
+        self_lockout: "Chystáte se změnit oprávnění kategorie tak, že odeberete svůj vlastní přístup. Opravdu chcete pokračovat?"
       name: "Název kategorie"
       untitled: "Nepojmenovaná kategorie"
       description: "Popis"
@@ -5384,7 +5387,19 @@ cs:
       upload_description: "Nahrajte soubor csv a vytvořte štítky hromadně"
       upload_instructions: "Jeden na řádek, případně se skupinou štítků ve formátu 'název_štítku,skupina_štítků'."
       upload_successful: "Štítky byly úspěšně nahrány"
+      bulk_create_inline_placeholder: "Vytvořte štítky (oddělené čárkami)"
       bulk_create_button: "Vytvořit"
+      bulk_create_success:
+        one: "Vytvořen %{count} štítek:"
+        few: "Vytvořeny %{count} štítky:"
+        many: "Vytvořeno %{count} štítků:"
+        other: "Vytvořeno %{count} štítků:"
+      bulk_create_already_exist:
+        one: "%{count} štítek již existuje:"
+        few: "%{count} štítky již existují:"
+        many: "%{count} štítků již existuje:"
+        other: "%{count} štítků již existuje:"
+      bulk_create_some_failed: "Některé štítky se nepodařilo vytvořit:"
       delete_unused_confirmation:
         one: "Bude vymazán %{count} štítek: %{tags}"
         few: "Budou vymazány %{count} štítky: %{tags}"
@@ -5549,6 +5564,7 @@ cs:
       tags_form_modal:
         title: "Úprava štítků v postranním panelu"
         filter_placeholder: "Filtrovat štítky"
+        no_tags: "Aktuálním filtrům neodpovídají žádné štítky."
         subtitle:
           text: "a automaticky zobrazíme nejlepší štítky tohoto webu"
       edit_navigation_modal_form:
@@ -5901,6 +5917,8 @@ cs:
       toggle_localized:
         translated: "Stránka je strojově přeložena. Klepnutím zobrazíte originál."
         not_translated: "Stránka není přeložena. Kepnutím ji přeložíte."
+    language_switcher:
+      title: "Změna jazyka webu"
   admin_js:
     type_to_filter: "Text pro filtrování..."
     settings: "Nastavení"
@@ -8751,6 +8769,8 @@ cs:
         no_badges: Nejsou tu žádné odznaky, které by se daly udělit.
         none_selected: "Vyberte odznak, abyste mohli začít"
         sections:
+          design: Vzhled
+          query: Dotaz
           settings: Nastavení
         usage_heading: Použití
         allow_title: Povolit užití odzanku jako titul
