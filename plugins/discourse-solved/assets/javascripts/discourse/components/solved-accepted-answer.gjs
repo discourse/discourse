@@ -112,7 +112,6 @@ export default class SolvedAcceptedAnswer extends Component {
         <div
           class="title"
           data-has-quote-controls="true"
-          role={{if this.content "button"}}
           {{(if this.content (modifier on "click" this.onClickTitle))}}
         >
           <div class="accepted-answer--solver-accepter">
