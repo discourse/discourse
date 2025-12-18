@@ -25,7 +25,8 @@ const VALID_HANDLERS = [
   ...VALID_EMBER_CLI_WORKFLOW_HANDLERS,
   "dont-throw",
   "dont-count",
-  "counter",
+  "count",
+  "notify-admin",
 ];
 
 /**
@@ -45,57 +46,7 @@ export class DiscourseDeprecationWorkflow {
    * @param {(string|string[])} [workflows[].env] - Environment(s) where the workflow applies
    */
   constructor(workflows) {
-    workflows.forEach((workflow) => {
-      // validate the deprecation handlers
-      workflow.handler ||= [];
-      workflow.handler = Array.isArray(workflow.handler)
-        ? workflow.handler
-        : [workflow.handler];
-
-      // throw an error if handler contains an item that is not in VALID_HANDLERS
-      workflow.handler.forEach((handler) => {
-        if (!VALID_HANDLERS.includes(handler)) {
-          throw new Error(
-            `Deprecation Workflow: \`handler\` ${handler} must be one of ${VALID_HANDLERS.join(", ")}`
-          );
-        }
-      });
-
-      // we also need to ensure that `log` and `silence` are not used together
-      if (
-        workflow.handler.includes("log") &&
-        workflow.handler.includes("silence")
-      ) {
-        throw new Error(
-          `Deprecation Workflow: \`handler\` ${workflow.handler} must not include both \`log\` and \`silence\``
-        );
-      }
-
-      // validate the deprecation matchIds
-      if (
-        typeof workflow.matchId !== "string" &&
-        !(workflow.matchId instanceof RegExp)
-      ) {
-        throw new Error(
-          `Deprecation Workflow: \`matchId\` ${workflow.matchId} must be a string or a regex`
-        );
-      }
-
-      // validate the deprecation envs
-      workflow.env ||= [];
-      workflow.env = Array.isArray(workflow.env)
-        ? workflow.env
-        : [workflow.env];
-
-      // throw an error if env contains an item that is not in VALID_ENVS
-      workflow.env.forEach((env) => {
-        if (!VALID_ENVS.includes(env)) {
-          throw new Error(
-            `Deprecation Workflow: \`env\` ${env} must be one of ${VALID_ENVS.join(", ")}`
-          );
-        }
-      });
-    });
+    workflows.forEach(this.#validateWorkflow);
 
     this.#workflows = workflows;
     this.#updateActiveWorkflows();
@@ -175,7 +126,7 @@ export class DiscourseDeprecationWorkflow {
     }
 
     const silenced = workflow.handler?.includes("silence") ?? false;
-    const count = workflow.handler?.includes("counter") ?? false;
+    const count = workflow.handler?.includes("count") ?? false;
 
     return !silenced || count;
   }
@@ -201,6 +152,17 @@ export class DiscourseDeprecationWorkflow {
     }
 
     return !!workflow?.handler?.includes("throw");
+  }
+
+  /**
+   * Checks if a deprecation should notify admins.
+   *
+   * @param {string} deprecationId - ID of the deprecation
+   * @return {boolean} True if deprecation should notify admins
+   */
+  shouldNotifyAdmin(deprecationId) {
+    const workflow = this.#find(deprecationId);
+    return !!workflow?.handler?.includes("notify-admin");
   }
 
   /**
@@ -252,6 +214,78 @@ export class DiscourseDeprecationWorkflow {
       return targetEnvs.includes("development");
     });
   }
+
+  /**
+   * Validates a workflow configuration object.
+   * Ensures handler types, matchId patterns, and environments are valid.
+   * Automatically converts single values to arrays for handler and env properties.
+   *
+   * @param {Object} workflow - The workflow configuration to validate
+   * @param {(string|string[])} workflow.handler - Handler type(s) for the workflow
+   * @param {(string|RegExp)} workflow.matchId - ID or pattern to match deprecations
+   * @param {(string|string[])} [workflow.env] - Environment(s) where the workflow applies
+   * @throws {Error} If handler is not in VALID_HANDLERS list
+   * @throws {Error} If incompatible handler combinations are used (e.g., "log" with "silence")
+   * @throws {Error} If matchId is not a string or RegExp
+   * @throws {Error} If env is not in VALID_ENVS list
+   * @private
+   */
+  #validateWorkflow(workflow) {
+    // validate the deprecation handlers
+    workflow.handler ||= [];
+    workflow.handler = Array.isArray(workflow.handler)
+      ? workflow.handler
+      : [workflow.handler];
+
+    // throw an error if handler contains an item that is not in VALID_HANDLERS
+    workflow.handler.forEach((handler) => {
+      if (!VALID_HANDLERS.includes(handler)) {
+        throw new Error(
+          `Deprecation Workflow: \`handler\` ${handler} must be one of ${VALID_HANDLERS.join(", ")}`
+        );
+      }
+    });
+
+    // validate incompatible handler combinations
+    const incompatiblePairs = [
+      ["log", "silence"],
+      ["notify-admin", "silence"],
+    ];
+
+    for (const [handler1, handler2] of incompatiblePairs) {
+      if (
+        workflow.handler.includes(handler1) &&
+        workflow.handler.includes(handler2)
+      ) {
+        throw new Error(
+          `Deprecation Workflow: \`handler\` ${workflow.handler} must not include both \`${handler1}\` and \`${handler2}\``
+        );
+      }
+    }
+
+    // validate the deprecation matchIds
+    if (
+      typeof workflow.matchId !== "string" &&
+      !(workflow.matchId instanceof RegExp)
+    ) {
+      throw new Error(
+        `Deprecation Workflow: \`matchId\` ${workflow.matchId} must be a string or a regex`
+      );
+    }
+
+    // validate the deprecation envs
+    workflow.env ||= [];
+    workflow.env = Array.isArray(workflow.env) ? workflow.env : [workflow.env];
+
+    // throw an error if env contains an item that is not in VALID_ENVS
+    workflow.env.forEach((env) => {
+      if (!VALID_ENVS.includes(env)) {
+        throw new Error(
+          `Deprecation Workflow: \`env\` ${env} must be one of ${VALID_ENVS.join(", ")}`
+        );
+      }
+    });
+  }
 }
 
 /**
@@ -260,11 +294,20 @@ export class DiscourseDeprecationWorkflow {
  * IMPORTANT: The first match wins, so the order of the workflows is relevant.
  *
  * Each workflow config item should have:
- * @property {(string|string[])} handler - Handler type(s): "silence", "log", "throw", "dont-throw", "dont-count", and/or "counter"
+ * @property {(string|string[])} handler - Handler type(s): "silence", "log", "throw", "dont-throw", "dont-count", "count", and/or "notify-admin"
  * @property {(string|RegExp)} matchId - ID or pattern to match deprecations
  * @property {(string|string[])} [env] - Optional environment(s): "development", "qunit-test", "rails-test", "test", "production", "unset"
+ *
+ * Handler types:
+ * - "silence": Suppress the deprecation warning from logging
+ * - "log": Allow the deprecation to be logged (default behavior)
+ * - "throw": Throw an error when this deprecation occurs
+ * - "dont-throw": Prevent throwing even when RAISE_ON_DEPRECATION is enabled
+ * - "dont-count": Prevent counting this deprecation in metrics
+ * - "count": Count this deprecation even if silenced
+ * - "notify-admin": Display admin notification for this deprecation (incompatible with "silence")
  */
-const DeprecationWorkflow = new DiscourseDeprecationWorkflow([
+const workflows = [
   { handler: "silence", matchId: "template-action" }, // will be removed in Ember 6.0
   { handler: "silence", matchId: "discourse.select-kit" },
   {
@@ -279,17 +322,65 @@ const DeprecationWorkflow = new DiscourseDeprecationWorkflow([
     handler: "log",
     matchId: /^discourse\.native-array-extensions\..+$/,
   },
-  {
-    handler: ["dont-count", "dont-throw"],
-    matchId: /fake.deprecation.*/,
-    env: "test",
-  },
   // widget-related code should fail on all CI tests, including plugins and custom themes
   {
     handler: "throw",
     matchId: "discourse.widgets-decommissioned",
     env: "test",
   },
-]);
+
+  // CRITICAL DEPRECATIONS that should trigger admin warnings,
+  // To keep warnings meaningful and prevent overflowing users with them,
+  // we should only add values here after fixing core and official plugins
+  { handler: "notify-admin", matchId: "discourse.add-flag-property" },
+  { handler: "notify-admin", matchId: "discourse.add-header-panel" },
+  { handler: "notify-admin", matchId: "discourse.bootbox" },
+  { handler: "notify-admin", matchId: "discourse.breadcrumbs.childCategories" },
+  { handler: "notify-admin", matchId: "discourse.breadcrumbs.firstCategory" },
+  {
+    handler: "notify-admin",
+    matchId: "discourse.breadcrumbs.parentCategories",
+  },
+  {
+    handler: "notify-admin",
+    matchId: "discourse.breadcrumbs.parentCategoriesSorted",
+  },
+  { handler: "notify-admin", matchId: "discourse.breadcrumbs.parentCategory" },
+  { handler: "notify-admin", matchId: "discourse.breadcrumbs.secondCategory" },
+  {
+    handler: "notify-admin",
+    matchId: "discourse.component-template-resolving",
+  },
+  { handler: "notify-admin", matchId: "discourse.decorate-plugin-outlet" },
+  { handler: "notify-admin", matchId: "discourse.header-widget-overrides" },
+  { handler: "notify-admin", matchId: "discourse.modal-controllers" },
+  {
+    handler: "notify-admin",
+    matchId: "discourse.plugin-outlet-classic-args-clash",
+  },
+  {
+    handler: "notify-admin",
+    matchId: "discourse.post-stream-widget-overrides",
+  },
+  {
+    handler: "notify-admin",
+    matchId: "discourse.post-stream.trigger-new-post",
+  },
+  { handler: "notify-admin", matchId: "discourse.qunit.acceptance-function" },
+  { handler: "notify-admin", matchId: "discourse.qunit.global-exists" },
+  { handler: "notify-admin", matchId: "discourse.script-tag-discourse-plugin" },
+  { handler: "notify-admin", matchId: "discourse.script-tag-hbs" },
+  { handler: "notify-admin", matchId: "discourse.widgets-decommissioned" },
+  { handler: "notify-admin", matchId: "discourse.widgets-end-of-life" },
+
+  // used in system specs
+  {
+    handler: ["dont-count", "dont-throw", "notify-admin"],
+    matchId: /fake.deprecation.*/,
+    env: "test",
+  },
+];
+
+const DeprecationWorkflow = new DiscourseDeprecationWorkflow(workflows);
 
 export default DeprecationWorkflow;
