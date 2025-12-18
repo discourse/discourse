@@ -9,6 +9,7 @@
   bottom: 0;
   left: 0;
   padding-bottom: env(safe-area-inset-bottom);
+  container-type: inline-size;
 
   html.footer-nav-ipad &,
   html.footer-nav-visible & {
@@ -51,6 +52,8 @@
       margin-right: 0;
       font-size: var(--font-up-2);
       color: inherit;
+      width: 22px;
+      height: 22px;
 
       &.d-icon-discourse-threads {
         font-size: var(--font-up-1); // visual correction
@@ -79,6 +82,16 @@
       &:not(.-urgent) {
         width: 11px;
         height: 11px;
+      }
+    }
+  }
+}
+
+@container (max-width: 400px) {
+  .c-footer {
+    &__item {
+      .d-button-label {
+        display: none;
       }
     }
   }
