@@ -110,6 +110,22 @@ acceptance("discourse-checklist | checklist", function (needs) {
     assert.true(output.includes("[x] nope"));
   });
 
+  test("escaped checkbox syntax is ignored", async function (assert) {
+    const { updated } = await prepare(`
+\\[x] first escaped
+\\[ ] second escaped
+[ ] actual
+    `);
+
+    assert.dom(".chcklst-box").exists({ count: 1 });
+    await click(".chcklst-box");
+
+    const output = await updated;
+    assert.true(output.includes("\\[x] first escaped"));
+    assert.true(output.includes("\\[ ] second escaped"));
+    assert.true(output.includes("[x] actual"));
+  });
+
   test("permanently checked checkbox", async function (assert) {
     const { updated } = await prepare(`
 [X] permanent
@@ -262,5 +278,39 @@ Actual checkboxes:
     assert.dom("ol > li").exists({ count: 1 });
     assert.dom("ol > li").doesNotHaveClass("has-checkbox");
     assert.dom("ol .chcklst-box").doesNotHaveClass("list-item-checkbox");
+  });
+
+  test("does not treat escaped brackets as checkboxes", async function (assert) {
+    const { updated } = await prepare(`
+\\[x] escaped opening
+[x\\] escaped closing
+\\[x\\] both escaped
+[ ] real checkbox
+[x] another real one
+  `);
+
+    assert.dom(".chcklst-box").exists({ count: 2 });
+
+    await click(".chcklst-box");
+
+    const output = await updated;
+
+    assert.true(output.includes("\\[x] escaped opening"));
+    assert.true(output.includes("[x\\] escaped closing"));
+    assert.true(output.includes("\\[x\\] both escaped"));
+
+    assert.true(output.includes("[x] real checkbox"));
+  });
+
+  test("handles escaped checkbox followed by real checkbox", async function (assert) {
+    const { updated } = await prepare(`\\[x] hello [x] world`);
+
+    assert.dom(".chcklst-box").exists({ count: 1 });
+
+    await click(".chcklst-box");
+
+    const output = await updated;
+    assert.true(output.includes("\\[x] hello"));
+    assert.true(output.includes("[ ] world"));
   });
 });

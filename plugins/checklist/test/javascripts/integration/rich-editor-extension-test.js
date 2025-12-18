@@ -51,6 +51,21 @@ module(
         `<p>${unchecked} <em>italics</em> and ${checked} <strong>bold</strong></p>`,
         "[ ] *italics* and [x] **bold**",
       ],
+      "does not render escaped opening bracket as checkbox": [
+        "\\[x] not a checkbox",
+        "<p>[x] not a checkbox</p>",
+        "\\[x\\] not a checkbox",
+      ],
+      "does not render escaped closing bracket as checkbox": [
+        "[x\\] not a checkbox",
+        "<p>[x] not a checkbox</p>",
+        "\\[x\\] not a checkbox",
+      ],
+      "handles escaped checkbox followed by real checkbox": [
+        "\\[x] escaped [x] real",
+        `<p>[x] escaped ${checked} real</p>`,
+        "\\[x\\] escaped [x] real",
+      ],
     }).forEach(([name, [markdown, html, expectedMarkdown]]) => {
       test(name, async function (assert) {
         await testMarkdown(assert, markdown, html, expectedMarkdown);
