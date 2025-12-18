@@ -424,9 +424,7 @@ export default {
                     modalForMobile: true,
                     placement: "right",
                     data: { channel: this.channel },
-                    onClose: () => {
-                      hoverCallbackFn("unfreezeHover");
-                    },
+                    onClose: () => hoverCallbackFn("unfreezeHover"),
                   }
                 );
 
@@ -604,9 +602,7 @@ export default {
                       modalForMobile: true,
                       placement: "right",
                       data: { channel: this.channel },
-                      onClose: () => {
-                        hoverCallbackFn("unfreezeHover");
-                      },
+                      onClose: () => hoverCallbackFn("unfreezeHover"),
                     }
                   );
 
@@ -876,9 +872,7 @@ export default {
                       modalForMobile: true,
                       placement: "right",
                       data: { channel: this.channel },
-                      onClose: () => {
-                        hoverCallbackFn("unfreezeHover");
-                      },
+                      onClose: () => hoverCallbackFn("unfreezeHover"),
                     }
                   );
 
