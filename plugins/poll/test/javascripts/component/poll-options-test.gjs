@@ -185,4 +185,48 @@ module("Poll | Component | poll-options", function (hooks) {
       .dom(".dropdown-menu__item:nth-child(4)")
       .hasText(`3 ${i18n("poll.options.ranked_choice.lowest_priority")}`);
   });
+
+  test("clicking on local date does not select option", async function (assert) {
+    const DATE_OPTIONS = [
+      {
+        id: "1ddc47be0d2315b9711ee8526ca9d83f",
+        html: 'Meeting on <span class="discourse-local-date" data-date="2025-01-15">Jan 15</span>',
+        votes: 0,
+        rank: 0,
+      },
+    ];
+
+    let optionSelected = false;
+    this.setProperties({
+      isCheckbox: false,
+      isRankedChoice: false,
+      options: DATE_OPTIONS,
+      votes: [],
+      sendOptionSelect: () => (optionSelected = true),
+    });
+
+    await render(
+      <template>
+        <PollOptions
+          @isCheckbox={{this.isCheckbox}}
+          @isRankedChoice={{this.isRankedChoice}}
+          @options={{this.options}}
+          @votes={{this.votes}}
+          @sendOptionSelect={{this.sendOptionSelect}}
+        />
+      </template>
+    );
+
+    await click(".discourse-local-date");
+    assert.false(
+      optionSelected,
+      "option should not be selected when clicking on date"
+    );
+
+    await click("li button");
+    assert.true(
+      optionSelected,
+      "option should be selected when clicking on button"
+    );
+  });
 });
