@@ -124,6 +124,7 @@ pl_PL:
     ai_summary_gists_allowed_groups: "Grupy mogą przeglądać sedno dyskusji na liście gorących tematów."
     ai_summary_backfill_maximum_topics_per_hour: "Liczba podsumowań tematów do uzupełnienia na godzinę."
     ai_bot_enabled: "Włącz moduł bota AI."
+    ai_bot_enabled_llms: "Dostępne do wyboru LLM-y do rozmów z botami AI"
     ai_bot_enable_chat_warning: "Wyświetl ostrzeżenie po zainicjowaniu czatu PW. Można je zastąpić, edytując ciąg tłumaczenia: discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "Gdy bot GPT uzyska dostęp do PW, odpowie członkom tych grup."
     ai_bot_debugging_allowed_groups: "Zezwól tym grupom na wyświetlanie przycisku debugowania w postach, który wyświetla surowe żądanie i odpowiedź AI"

@@ -4538,6 +4538,8 @@ en:
       slug_placeholder: "(Optional) dashed-words for url"
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
+      errors:
+        self_lockout: "You are about to change category permissions in a way that will remove your own access. Are you sure you want to proceed?"
       name: "Category name"
       untitled: "Untitled category"
       description: "Description"
@@ -5373,7 +5375,7 @@ en:
       tags_form_modal:
         title: "Edit tags navigation"
         filter_placeholder: "Filter tags"
-        no_tags: "There are no tags matching the given term."
+        no_tags: "There are no tags matching the current filters."
         subtitle:
           text: "and we'll automatically show this site's top tags"
       edit_navigation_modal_form:

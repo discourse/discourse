@@ -4887,7 +4887,6 @@ ur:
       tags_form_modal:
         title: "دہجیوں کی نیویگیشن میں ترمیم کریں"
         filter_placeholder: "دہجیوں کو چھانیے"
-        no_tags: "دی گئی اصطلاح سے مماثل کوئی دہجی نہیں"
         subtitle:
           text: "اور ہم خود بخود اس سائٹ کے ٹاپ دہجیاں دکھائیں گے"
       edit_navigation_modal_form:

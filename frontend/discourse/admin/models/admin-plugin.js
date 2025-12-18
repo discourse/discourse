@@ -1,6 +1,7 @@
 import { cached, tracked } from "@glimmer/tracking";
 import { dasherize } from "@ember/string";
 import { snakeCaseToCamelCase } from "discourse/lib/case-converter";
+import { stripDiscoursePrefix } from "discourse/lib/utilities";
 import I18n, { i18n } from "discourse-i18n";
 
 export default class AdminPlugin {
@@ -50,7 +51,9 @@ export default class AdminPlugin {
 
   @cached
   get nameTitleized() {
-    return this.translatedCategoryName || this.humanizedName;
+    return stripDiscoursePrefix(
+      this.translatedCategoryName || this.humanizedName
+    );
   }
 
   @cached

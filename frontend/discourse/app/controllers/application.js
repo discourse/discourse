@@ -34,13 +34,12 @@ export default class ApplicationController extends Controller {
 
     const classes = [];
 
-    for (const [key, value] of Object.entries(
-      this.siteSettings.currentUserUpcomingChanges
-    )) {
-      if (value) {
+    Object.keys(this.siteSettings.currentUserUpcomingChanges).forEach((key) => {
+      if (this.siteSettings[key]) {
         classes.push(`uc-${dasherize(key)}`);
       }
-    }
+    });
+
     return classes.join(" ");
   }
 

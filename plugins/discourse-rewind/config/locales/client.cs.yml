@@ -15,8 +15,6 @@ cs:
       placeholder: Discourse Ohlédnutí
       title: Ohlédnutí
       loading: "Probíhá výpočet, nepropadejte panice..."
-      preferences:
-        disable_rewind: "Zakázat Discourse Ohlédnutí. Tímto skryjete roční shrnutí aktivity ve vašem profilu a v avataru."
       profile_link: "Tvé ohlédnutí za rokem %{rewindYear}"
       share:
         toggle_label:

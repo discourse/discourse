@@ -28,8 +28,7 @@ describe "Composer - ProseMirror editor - Local Dates extension", type: :system 
       MARKDOWN
 
       expect(rich).to have_css(
-        "span.discourse-local-date[data-timezone='Asia/Singapore']",
-        text: "2022-12-15 14:19:00",
+        "span.discourse-local-date[data-date='2022-12-15'][data-time='14:19:00'][data-timezone='Asia/Singapore']",
       )
     end
 
@@ -44,12 +43,10 @@ describe "Composer - ProseMirror editor - Local Dates extension", type: :system 
 
       expect(rich).to have_css("span.discourse-local-date-range")
       expect(rich).to have_css(
-        "span.discourse-local-date[data-timezone='Asia/Singapore'][data-range='from']",
-        text: "2022-12-15 14:19:00",
+        "span.discourse-local-date[data-date='2022-12-15'][data-time='14:19:00'][data-timezone='Asia/Singapore'][data-range='from']",
       )
       expect(rich).to have_css(
-        "span.discourse-local-date[data-timezone='Asia/Singapore'][data-range='to']",
-        text: "2022-12-16 15:20:00",
+        "span.discourse-local-date[data-date='2022-12-16'][data-time='15:20:00'][data-timezone='Asia/Singapore'][data-range='to']",
       )
     end
   end
