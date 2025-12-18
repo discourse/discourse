@@ -10,5 +10,7 @@ cs:
   discourse_rewind:
     report_failed: "Nepodařilo se vygenerovat zprávu Discourse Ohlédnutí."
     invalid_year: "Ohlédnutí lze vygenerovat pouze v lednu nebo prosinci."
+    user_not_found: "Uživatel nebyl nalezen nebo jej nelze zobrazit."
     reports_not_cached: "Vyhodnocení zatím nebyla vygenerována. Obnovte prosím stránku."
     report_not_found: "Vyhodnocení nebylo nenalezeno."
+    cannot_share_when_profile_hidden: "Abyste mohli sdílet Ohlédnutí, musíte povolit ostatním zobrazení vašeho veřejného profilu."

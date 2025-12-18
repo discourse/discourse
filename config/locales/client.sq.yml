@@ -138,6 +138,9 @@ sq:
       placeholder: data
       from_placeholder: "nga data"
       to_placeholder: "deri më"
+    languages:
+      en:
+        name: Anglisht
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "postimi #%{postNumber} nga @%{username}"

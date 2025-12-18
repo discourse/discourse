@@ -15,11 +15,26 @@ cs:
       placeholder: Discourse Ohlédnutí
       title: Ohlédnutí
       loading: "Probíhá výpočet, nepropadejte panice..."
+      viewing_other_user: "Prohlížíte si zprávu <strong>%{username}od</strong> Discourse Ohlédnutí."
+      cannot_view_rewind_gibberish: >
+        [PŘÍSTUP ZAMÍTNUT::NÁVRATOVÁ SMYČKA JÁDRA SELHALA]<br><br> Inicializační protokol anomálií…<br><br> &nbsp;&nbsp;>> kvantový buffer se vyprázdnil příliš brzy<br> &nbsp;&nbsp;>> uzlová parita se rozchází (Δ=004.33)<br> &nbsp;&nbsp;>> paket ϟ se rozpadl na offsetu ∇47<br> &nbsp;&nbsp;>> handshake tokového kanálu nedorazil včas<br><br>
+      cannot_view_rewind: >
+        Tuto zprávu Discourse Ohlédnutí si nemůžete prohlédnout. Možná ji vlastník nesdílel veřejně?<br><br> $> _<br><br>
+      preferences:
+        enable_rewind: "Povolit Diskuse Ohlédnutí. To zobrazuje shrnutí aktivity na konci roku ve vašem profilu a na vašem avataru."
+        share_publicly: "Sdílejte shrnutí Discourse Ohlédnutí s ostatními členy fóra. Vaše shrnutí Discourse Ohlédnutí si bude moci prohlédnout kterýkoli člen fóra."
+        cannot_share_when_profile_hidden: "Abyste mohli sdílet Ohlédnutí, musíte povolit ostatním zobrazení vašeho veřejného profilu."
       profile_link: "Tvé ohlédnutí za rokem %{rewindYear}"
       share:
         toggle_label:
           private: "Soukromá"
           public: "Veřejná"
+        confirm: "Před sdílením si nezapomeňte svoje Ohlédnutí zkontrolovat, protože může obsahovat data z osobních zpráv. Můžete ho kdykoli znovu nastavit jako soukromý."
+        confirm_button:
+          enable: "Zveřejnit"
+          disable: "Zachovat soukromé"
+        enabled_success: "Vaše Ohlédnutí je nyní možné sdílet s ostatními členy fóra."
+        disabled_success: "Vaše Ohlédnutí je nyní soukromé."
       reports:
         activity_calendar:
           title: Kalendář činnosti
