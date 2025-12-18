@@ -1,4 +1,3 @@
-import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { htmlSafe } from "@ember/template";
 import { renderAvatar } from "discourse/helpers/user-avatar";
@@ -528,17 +527,7 @@ function initialize(api) {
     "group-plus"
   );
 
-  api.modifyClass(
-    "controller:preferences/notifications",
-    (Superclass) =>
-      class extends Superclass {
-        @action
-        save() {
-          this.saveAttrNames.push("custom_fields");
-          super.save(...arguments);
-        }
-      }
-  );
+  api.addSaveableCustomFields("notifications");
 
   api.addKeyboardShortcut("g a", "", { path: "/my/activity/assigned" });
 }
@@ -706,7 +695,9 @@ export default {
 
       api.addUserSearchOption("assignableGroups");
 
-      api.addSaveableUserOptionField("notification_level_when_assigned");
+      api.addSaveableUserOption("notification_level_when_assigned", {
+        page: "tracking",
+      });
 
       api.addBulkActionButton({
         id: "assign-topics",
