@@ -43,12 +43,13 @@ RSpec.describe DiscourseAutomation::Destroy do
       it "logs the action" do
         expect { result }.to change { UserHistory.count }.by(1)
         expect(UserHistory.last).to have_attributes(
-          details: a_string_including(
-            "id: #{automation.id}", 
-            "name: #{automation.name}", 
-            "script: #{automation.script}", 
-            "trigger: #{automation.trigger}",
-          ),
+          details:
+            a_string_including(
+              "id: #{automation.id}",
+              "name: #{automation.name}",
+              "script: #{automation.script}",
+              "trigger: #{automation.trigger}",
+            ),
         )
       end
     end
