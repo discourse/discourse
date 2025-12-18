@@ -9,6 +9,14 @@ module DiscourseAi
         @content = content
         @tool_call = tool_call
       end
+
+      def to_s
+        "ToolResult for #{tool_call.name} (#{tool_call.id}): #{content}"
+      end
+
+      def ==(other)
+        content == other.content && tool_call == other.tool_call
+      end
     end
   end
 end
