@@ -1,5 +1,4 @@
 let pluginConfigNav = {};
-
 export function registerAdminPluginConfigNav(pluginId, links) {
   pluginConfigNav[pluginId] = { links };
 }
