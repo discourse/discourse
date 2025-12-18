@@ -1,12 +1,65 @@
 import formatLocalDate from "./format-local-date";
 
+const OPTIONAL_DATA_ATTRS = [
+  "format",
+  "recurring",
+  "timezones",
+  "countdown",
+  "displayedTimezone",
+];
+
+/**
+ * Adds optional data attributes to a DOM attributes object
+ * @param {Object} attrs - The attributes object to modify
+ * @param {Object} nodeAttrs - The node attributes to read from
+ * @param {string[]} keys - The keys to process
+ */
+function addOptionalDataAttrs(attrs, nodeAttrs, keys = OPTIONAL_DATA_ATTRS) {
+  for (const key of keys) {
+    if (nodeAttrs[key]) {
+      const dataKey =
+        key === "displayedTimezone" ? "data-displayed-timezone" : `data-${key}`;
+      attrs[dataKey] = nodeAttrs[key];
+    }
+  }
+}
+
+/**
+ * Builds format options from node attributes
+ * @param {Object} nodeAttrs - The node attributes
+ * @param {boolean} includeRecurring - Whether to include the recurring option
+ * @returns {Object} The options object for formatLocalDate
+ */
+function buildFormatOptions(nodeAttrs, includeRecurring = false) {
+  const options = {
+    format: nodeAttrs.format,
+    countdown: nodeAttrs.countdown,
+    displayedTimezone: nodeAttrs.displayedTimezone,
+    timezones: nodeAttrs.timezones?.split("|"),
+  };
+  if (includeRecurring) {
+    options.recurring = nodeAttrs.recurring;
+  }
+  return options;
+}
+
+/**
+ * Serializes an optional attribute for markdown output
+ * @param {string|null} value - The attribute value
+ * @param {string} name - The attribute name
+ * @returns {string} The serialized attribute or empty string
+ */
+function serializeAttr(value, name) {
+  return value ? ` ${name}="${value}"` : "";
+}
+
 /** @type {RichEditorExtension} */
 const extension = {
   nodeSpec: {
     local_date: {
       attrs: {
         date: {},
-        time: {},
+        time: { default: null },
         timezone: { default: null },
         format: { default: null },
         recurring: { default: null },
@@ -21,26 +74,20 @@ const extension = {
           tag: "span.discourse-local-date[data-date]",
           getAttrs: (dom) => {
             return {
-              date: dom.getAttribute("data-date"),
-              time: dom.getAttribute("data-time"),
-              timezone: dom.getAttribute("data-timezone"),
-              format: dom.getAttribute("data-format"),
-              recurring: dom.getAttribute("data-recurring"),
-              timezones: dom.getAttribute("data-timezones"),
-              countdown: dom.getAttribute("data-countdown"),
-              displayedTimezone: dom.getAttribute("data-displayed-timezone"),
+              date: dom.dataset.date,
+              time: dom.dataset.time,
+              timezone: dom.dataset.timezone,
+              format: dom.dataset.format,
+              recurring: dom.dataset.recurring,
+              timezones: dom.dataset.timezones,
+              countdown: dom.dataset.countdown,
+              displayedTimezone: dom.dataset.displayedTimezone,
             };
           },
         },
       ],
       toDOM: (node) => {
-        const options = {
-          format: node.attrs.format,
-          recurring: node.attrs.recurring,
-          countdown: node.attrs.countdown,
-          displayedTimezone: node.attrs.displayedTimezone,
-          timezones: node.attrs.timezones?.split("|"),
-        };
+        const options = buildFormatOptions(node.attrs, true);
         const { formatted } = formatLocalDate(
           node.attrs.date,
           node.attrs.time,
@@ -53,21 +100,7 @@ const extension = {
           "data-time": node.attrs.time,
           "data-timezone": node.attrs.timezone,
         };
-        if (node.attrs.format) {
-          attrs["data-format"] = node.attrs.format;
-        }
-        if (node.attrs.recurring) {
-          attrs["data-recurring"] = node.attrs.recurring;
-        }
-        if (node.attrs.timezones) {
-          attrs["data-timezones"] = node.attrs.timezones;
-        }
-        if (node.attrs.countdown) {
-          attrs["data-countdown"] = node.attrs.countdown;
-        }
-        if (node.attrs.displayedTimezone) {
-          attrs["data-displayed-timezone"] = node.attrs.displayedTimezone;
-        }
+        addOptionalDataAttrs(attrs, node.attrs);
         return ["span", attrs, formatted];
       },
     },
@@ -75,8 +108,8 @@ const extension = {
       attrs: {
         fromDate: {},
         toDate: { default: null },
-        fromTime: {},
-        toTime: {},
+        fromTime: { default: null },
+        toTime: { default: null },
         timezone: { default: null },
         format: { default: null },
         timezones: { default: null },
@@ -89,27 +122,27 @@ const extension = {
         {
           tag: "span.discourse-local-date-range",
           getAttrs: (dom) => {
+            const fromSpan = dom.querySelector('[data-range="from"]');
+            const toSpan = dom.querySelector('[data-range="to"]');
+            if (!fromSpan) {
+              return false;
+            }
             return {
-              fromDate: dom.dataset.fromDate,
-              toDate: dom.dataset.toDate,
-              fromTime: dom.dataset.fromTime,
-              toTime: dom.dataset.toTime,
-              timezone: dom.dataset.timezone,
-              format: dom.dataset.format,
-              timezones: dom.dataset.timezones,
-              countdown: dom.dataset.countdown,
-              displayedTimezone: dom.dataset.displayedTimezone,
+              fromDate: fromSpan.dataset.date,
+              toDate: toSpan?.dataset.date,
+              fromTime: fromSpan.dataset.time,
+              toTime: toSpan?.dataset.time,
+              timezone: fromSpan.dataset.timezone,
+              format: fromSpan.dataset.format,
+              timezones: fromSpan.dataset.timezones,
+              countdown: fromSpan.dataset.countdown,
+              displayedTimezone: fromSpan.dataset.displayedTimezone,
             };
           },
         },
       ],
       toDOM: (node) => {
-        const options = {
-          format: node.attrs.format,
-          countdown: node.attrs.countdown,
-          displayedTimezone: node.attrs.displayedTimezone,
-          timezones: node.attrs.timezones?.split("|"),
-        };
+        const options = buildFormatOptions(node.attrs);
         const { formatted: formattedFrom } = formatLocalDate(
           node.attrs.fromDate,
           node.attrs.fromTime,
@@ -122,6 +155,12 @@ const extension = {
           node.attrs.timezone,
           options
         );
+        const rangeAttrs = [
+          "format",
+          "timezones",
+          "countdown",
+          "displayedTimezone",
+        ];
         const fromAttrs = {
           class: "discourse-local-date cooked-date",
           "data-range": "from",
@@ -136,22 +175,8 @@ const extension = {
           "data-time": node.attrs.toTime,
           "data-timezone": node.attrs.timezone,
         };
-        if (node.attrs.format) {
-          fromAttrs["data-format"] = node.attrs.format;
-          toAttrs["data-format"] = node.attrs.format;
-        }
-        if (node.attrs.timezones) {
-          fromAttrs["data-timezones"] = node.attrs.timezones;
-          toAttrs["data-timezones"] = node.attrs.timezones;
-        }
-        if (node.attrs.countdown) {
-          fromAttrs["data-countdown"] = node.attrs.countdown;
-          toAttrs["data-countdown"] = node.attrs.countdown;
-        }
-        if (node.attrs.displayedTimezone) {
-          fromAttrs["data-displayed-timezone"] = node.attrs.displayedTimezone;
-          toAttrs["data-displayed-timezone"] = node.attrs.displayedTimezone;
-        }
+        addOptionalDataAttrs(fromAttrs, node.attrs, rangeAttrs);
+        addOptionalDataAttrs(toAttrs, node.attrs, rangeAttrs);
         return [
           "span",
           { class: "discourse-local-date-range" },
@@ -229,29 +254,17 @@ const extension = {
           state.write(" ");
         }
 
-        const optionalTime = node.attrs.time ? ` time=${node.attrs.time}` : "";
-        const optionalTimezone = node.attrs.timezone
-          ? ` timezone="${node.attrs.timezone}"`
-          : "";
-        const optionalFormat = node.attrs.format
-          ? ` format="${node.attrs.format}"`
-          : "";
-        const optionalRecurring = node.attrs.recurring
-          ? ` recurring="${node.attrs.recurring}"`
-          : "";
-        const optionalTimezones = node.attrs.timezones
-          ? ` timezones="${node.attrs.timezones}"`
-          : "";
-        const optionalCountdown = node.attrs.countdown
-          ? ` countdown="${node.attrs.countdown}"`
-          : "";
-        const optionalDisplayedTimezone = node.attrs.displayedTimezone
-          ? ` displayedTimezone="${node.attrs.displayedTimezone}"`
-          : "";
-
-        state.write(
-          `[date=${node.attrs.date}${optionalTime}${optionalTimezone}${optionalFormat}${optionalRecurring}${optionalTimezones}${optionalCountdown}${optionalDisplayedTimezone}]`
-        );
+        const attrs = node.attrs;
+        const optionalAttrs = [
+          attrs.time ? ` time=${attrs.time}` : "",
+          serializeAttr(attrs.timezone, "timezone"),
+          serializeAttr(attrs.format, "format"),
+          serializeAttr(attrs.recurring, "recurring"),
+          serializeAttr(attrs.timezones, "timezones"),
+          serializeAttr(attrs.countdown, "countdown"),
+          serializeAttr(attrs.displayedTimezone, "displayedTimezone"),
+        ].join("");
+        state.write(`[date=${attrs.date}${optionalAttrs}]`);
 
         const nextSibling =
           parent.childCount > index + 1 ? parent.child(index + 1) : null;
@@ -265,31 +278,18 @@ const extension = {
           state.write(" ");
         }
 
-        const optionalTimezone = node.attrs.timezone
-          ? ` timezone="${node.attrs.timezone}"`
-          : "";
-        const optionalFormat = node.attrs.format
-          ? ` format="${node.attrs.format}"`
-          : "";
-        const optionalTimezones = node.attrs.timezones
-          ? ` timezones="${node.attrs.timezones}"`
-          : "";
-        const optionalCountdown = node.attrs.countdown
-          ? ` countdown="${node.attrs.countdown}"`
-          : "";
-        const optionalDisplayedTimezone = node.attrs.displayedTimezone
-          ? ` displayedTimezone="${node.attrs.displayedTimezone}"`
-          : "";
-
+        const attrs = node.attrs;
         const from =
-          node.attrs.fromDate +
-          (node.attrs.fromTime ? `T${node.attrs.fromTime}` : "");
-        const to =
-          node.attrs.toDate +
-          (node.attrs.toTime ? `T${node.attrs.toTime}` : "");
-        state.write(
-          `[date-range from=${from} to=${to}${optionalTimezone}${optionalFormat}${optionalTimezones}${optionalCountdown}${optionalDisplayedTimezone}]`
-        );
+          attrs.fromDate + (attrs.fromTime ? `T${attrs.fromTime}` : "");
+        const to = attrs.toDate + (attrs.toTime ? `T${attrs.toTime}` : "");
+        const optionalAttrs = [
+          serializeAttr(attrs.timezone, "timezone"),
+          serializeAttr(attrs.format, "format"),
+          serializeAttr(attrs.timezones, "timezones"),
+          serializeAttr(attrs.countdown, "countdown"),
+          serializeAttr(attrs.displayedTimezone, "displayedTimezone"),
+        ].join("");
+        state.write(`[date-range from=${from} to=${to}${optionalAttrs}]`);
 
         const nextSibling =
           parent.childCount > index + 1 ? parent.child(index + 1) : null;

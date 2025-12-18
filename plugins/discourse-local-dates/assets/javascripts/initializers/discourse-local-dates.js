@@ -94,10 +94,7 @@ function buildOptionsFromElement(element, siteSettings) {
     .split("|")
     .filter(Boolean);
   opts.timezone = dataset.timezone;
-  // Disable calendar mode when a custom format is specified, unless explicitly enabled
-  opts.calendar = dataset.calendar
-    ? dataset.calendar === "on"
-    : !dataset.format;
+  opts.calendar = (dataset.calendar || "on") === "on";
   opts.displayedTimezone = dataset.displayedTimezone;
   opts.format = dataset.format || (opts.time ? "LLL" : "LL");
   opts.countdown = dataset.countdown;
@@ -114,10 +111,7 @@ function buildOptionsFromMarkdownTag(element) {
   opts.recurring = element.attributes["data-recurring"];
   opts.timezones = element.attributes["data-timezones"];
   opts.timezone = element.attributes["data-timezone"];
-  // Disable calendar mode when a custom format is specified, unless explicitly enabled
-  opts.calendar = element.attributes["data-calendar"]
-    ? element.attributes["data-calendar"] === "on"
-    : !element.attributes["data-format"];
+  opts.calendar = (element.attributes["data-calendar"] || "on") === "on";
   opts.displayedTimezone = element.attributes["data-displayed-timezone"];
   opts.format = element.attributes["data-format"];
   opts.countdown = element.attributes["data-countdown"];
