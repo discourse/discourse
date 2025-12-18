@@ -34,12 +34,10 @@ class DiscourseAutomation::Destroy
   end
 
   def log_action(automation:, guardian:)
-    details = { id: automation.id }
-    details[:name] = automation.name if automation.name.present?
-    details[:script] = automation.script if automation.script.present?
-    details[:trigger] = automation.trigger if automation.trigger.present?
-
-    StaffActionLogger.new(guardian.user).log_custom("delete_automation", **details)
+    StaffActionLogger.new(guardian.user).log_custom(
+      "delete_automation",
+      automation.slice(:id, :name, :script, :trigger).compact_blank,
+    )
   end
 
   def destroy_automation(automation:)
