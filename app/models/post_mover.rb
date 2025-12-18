@@ -75,6 +75,7 @@ class PostMover
   def move_posts_to(topic)
     Guardian.new(user).ensure_can_see! topic
     @destination_topic = topic
+    ensure_acting_user_is_allowed_in_destination
 
     # when a topic contains some posts after moving posts to another topic we shouldn't close it
     # two types of posts should prevent a topic from closing:
@@ -128,6 +129,16 @@ class PostMover
       original_topic_id: original_topic.id,
     )
     destination_topic
+  end
+
+  def ensure_acting_user_is_allowed_in_destination
+    return if !@move_to_pm
+    return if destination_topic.archetype != Archetype.private_message
+    return if user.id.blank? || user.id < 1
+    return if destination_topic.topic_allowed_users.exists?(user_id: user.id)
+
+    destination_topic.topic_allowed_users.create!(user_id: user.id)
+    destination_topic.notifier.watch!(user.id)
   end
 
   def create_temp_table
