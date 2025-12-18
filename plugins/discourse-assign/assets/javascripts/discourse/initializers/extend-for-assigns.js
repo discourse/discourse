@@ -527,7 +527,7 @@ function initialize(api) {
     "group-plus"
   );
 
-  api.addSaveableCustomFields({ page: "notifications" });
+  api.addSaveableCustomFields("notifications");
 
   api.addKeyboardShortcut("g a", "", { path: "/my/activity/assigned" });
 }

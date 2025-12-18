@@ -62,7 +62,7 @@ import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-
 import deprecated from "discourse/lib/deprecated";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
-import { isTesting } from "discourse/lib/environment";
+import { isDevelopment, isTesting } from "discourse/lib/environment";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { registerHashtagType } from "discourse/lib/hashtag-type-registry";
 import { makeArray } from "discourse/lib/helpers";
@@ -2161,28 +2161,28 @@ class _PluginApi {
    * object is included in the save payload. Multiple plugins can safely
    * call this for the same page - `custom_fields` will only be added once.
    *
-   * @param {Object} options - Configuration options
-   * @param {string} options.page - The preferences page where custom_fields should be saved.
+   * @param {string} page - The preferences page where custom_fields should be saved.
    *   Valid pages: "account", "emails", "interface", "navigation-menu", "notifications",
    *   "profile", "tags", "tracking", "users"
    *
    * @example
    * // Ensure custom_fields are saved on the notifications preferences page
-   * api.addSaveableCustomFields({ page: "notifications" });
+   * api.addSaveableCustomFields("notifications");
    */
-  addSaveableCustomFields(options = {}) {
-    if (!options.page) {
-      // eslint-disable-next-line no-console
-      console.warn(
-        "addSaveableCustomFields requires a `page` option to specify which preferences page should save custom_fields"
-      );
+  addSaveableCustomFields(page) {
+    if (!page) {
+      const message =
+        "addSaveableCustomFields requires a `page` argument to specify which preferences page should save custom_fields";
+      if (isDevelopment() || isTesting()) {
+        throw new Error(message);
+      }
       return;
     }
 
     this.registerValueTransformer(
       "preferences-save-attributes",
       ({ value: attrs, context }) => {
-        if (context.page === options.page && !attrs.includes("custom_fields")) {
+        if (context.page === page && !attrs.includes("custom_fields")) {
           attrs.push("custom_fields");
         }
         return attrs;
