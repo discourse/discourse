@@ -24,6 +24,7 @@ import ComboBox from "discourse/select-kit/components/combo-box";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { and, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import generateCurrentDateMarkup from "discourse/plugins/discourse-local-dates/lib/generate-current-date-markup";
 
 export const BAR_CHART_TYPE = "bar";
 export const PIE_CHART_TYPE = "pie";
@@ -358,7 +359,7 @@ export default class PollUiBuilderModal extends Component {
   }
 
   @action
-  onInputKeydown(index, event) {
+  onInputKeydown(option, index, event) {
     if (event.key === "Enter") {
       event.preventDefault();
       event.stopPropagation();
@@ -366,6 +367,30 @@ export default class PollUiBuilderModal extends Component {
       if (event.target.value !== "") {
         this.addOption(index + 1);
       }
+      return;
+    }
+
+    if (
+      event.code === "Period" &&
+      event.shiftKey &&
+      (event.metaKey || event.ctrlKey) &&
+      this.siteSettings.discourse_local_dates_enabled
+    ) {
+      event.preventDefault();
+      const timezone = this.currentUser.user_option?.timezone;
+      const markup = generateCurrentDateMarkup(timezone);
+
+      const input = event.target;
+      const start = input.selectionStart;
+      const end = input.selectionEnd;
+      const value = option.value || "";
+
+      option.value = value.slice(0, start) + markup + value.slice(end);
+      this.enforceMinMaxValues();
+
+      requestAnimationFrame(() => {
+        input.setSelectionRange(start + markup.length, start + markup.length);
+      });
     }
   }
 
@@ -493,7 +518,7 @@ export default class PollUiBuilderModal extends Component {
                     value={{option.value}}
                     {{autoFocus}}
                     {{on "input" (fn this.updateValue option)}}
-                    {{on "keydown" (fn this.onInputKeydown index)}}
+                    {{on "keydown" (fn this.onInputKeydown option index)}}
                   />
                   {{#if this.canRemoveOption}}
                     <DButton

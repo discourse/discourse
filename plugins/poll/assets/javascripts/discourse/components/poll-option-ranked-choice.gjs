@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import routeAction from "discourse/helpers/route-action";
+import decoratePollOption from "../modifiers/decorate-poll-option";
 import PollOptionRankedChoiceDropdown from "./poll-option-ranked-choice-dropdown";
 
 export default class PollOptionsComponent extends Component {
@@ -35,7 +35,7 @@ export default class PollOptionsComponent extends Component {
           class="btn-default"
         />
       {{/if}}
-      <span class="option-text">{{htmlSafe @option.html}}</span>
+      <span class="option-text" {{decoratePollOption @option.html}}></span>
     </div>
   </template>
 }
