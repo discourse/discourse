@@ -7861,6 +7861,7 @@ ar:
             no_results: "لم يتم العثور على لوحات الألوان"
           default_light_badge:
             text: "فاتح المبدئي"
+            title: "لوحة الألوان الفاتحة الافتراضية"
             reset: "إعادة تعيين عوامل التصفية"
           default_dark_badge:
             text: "داكن المبدئي"
