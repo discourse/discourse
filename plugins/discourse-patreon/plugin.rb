@@ -13,6 +13,7 @@ enabled_site_setting :patreon_enabled
 
 register_asset "stylesheets/patreon.scss"
 
+register_svg_icon "fab-patreon"
 register_svg_icon "patreon-new"
 
 # Site setting validators must be loaded before initialize

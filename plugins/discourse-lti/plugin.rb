@@ -9,6 +9,8 @@
 
 enabled_site_setting :lti_enabled
 
+register_svg_icon "graduation-cap"
+
 module ::DiscourseLti
   PLUGIN_NAME = "discourse-lti"
   CUSTOM_DATA_CLAIM = "https://purl.imsglobal.org/spec/lti/claim/custom"

@@ -8,6 +8,7 @@
 
 enabled_site_setting :lazy_videos_enabled
 
+register_svg_icon "bed"
 register_asset "stylesheets/lazy-videos.scss"
 
 module ::DiscourseLazyVideos

@@ -10,6 +10,7 @@
 enabled_site_setting :discourse_automation_enabled
 
 register_asset "stylesheets/common/discourse-automation.scss"
+register_svg_icon "wand-magic-sparkles"
 
 module ::DiscourseAutomation
   PLUGIN_NAME = "automation"
