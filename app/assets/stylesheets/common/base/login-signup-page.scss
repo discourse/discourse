@@ -251,7 +251,8 @@ body.signup-page {
       position: absolute;
       pointer-events: none;
       left: 1em;
-      right: 1em;
+      width: max-content;
+      max-width: calc(100% - 2em);
       top: 13px;
       box-shadow: 0 0 0 0 rgb(var(--tertiary-rgb), 0);
       transition: 0.2s ease all;
