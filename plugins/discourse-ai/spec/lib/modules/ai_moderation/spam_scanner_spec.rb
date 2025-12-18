@@ -47,6 +47,18 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
       expect(described_class.should_scan_post?(post)).to eq(false)
     end
 
+    it "respects custom max trust level setting" do
+      post.user.trust_level = TrustLevel[2]
+      expect(described_class.should_scan_post?(post)).to eq(false)
+
+      SiteSetting.ai_spam_detection_max_trust_level = 2
+      expect(described_class.should_scan_post?(post)).to eq(true)
+
+      SiteSetting.ai_spam_detection_max_trust_level = 3
+      post.user.trust_level = TrustLevel[3]
+      expect(described_class.should_scan_post?(post)).to eq(true)
+    end
+
     it "returns false for bots" do
       post.user.id = -100
       expect(described_class.should_scan_post?(post)).to eq(false)
@@ -70,6 +82,20 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
       topic = Fabricate(:topic, user: user)
       Fabricate(:post, user: user, topic: topic)
 
+      expect(described_class.should_scan_post?(post)).to eq(false)
+    end
+
+    it "respects custom max post count setting" do
+      3.times { Fabricate(:post, user: user) }
+      expect(described_class.should_scan_post?(post)).to eq(false)
+
+      SiteSetting.ai_spam_detection_max_post_count = 5
+      expect(described_class.should_scan_post?(post)).to eq(true)
+
+      Fabricate(:post, user: user)
+      expect(described_class.should_scan_post?(post)).to eq(true)
+
+      Fabricate(:post, user: user)
       expect(described_class.should_scan_post?(post)).to eq(false)
     end
 
