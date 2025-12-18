@@ -110,10 +110,11 @@ module Chat
           .where(chat_channel_id: channel.id)
 
       if SiteSetting.enable_user_status
-        query = query.includes(user: :user_status)
-        query = query.includes(user_mentions: { user: :user_status })
+        query = query.includes(user: %i[user_status user_option])
+        query = query.includes(user_mentions: { user: %i[user_status user_option] })
       else
-        query = query.includes(user_mentions: :user)
+        query = query.includes(user: :user_option)
+        query = query.includes(user_mentions: { user: :user_option })
       end
 
       query
