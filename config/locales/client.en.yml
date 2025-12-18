@@ -1466,7 +1466,17 @@ en:
       private_message: "Message"
       private_messages: "Messages"
       upcoming_changes:
-        title: "Upcoming change enabled"
+        title: "Upcoming changes"
+        for_user:
+          upcoming_change: "Upcoming change"
+          enabled: "Enabled?"
+          why: "Why?"
+        why_reasons:
+          not_in_specific_groups: "You are not in the specific groups required for this change."
+          in_specific_groups: "You are in the specific groups required for this change."
+          enabled_for_everyone: "This change is being enabled for everyone."
+          enabled_for_no_one: "This change is being disabled for everyone."
+
       user_notifications:
         filters:
           filter_by: "Filter By"
@@ -1810,7 +1820,8 @@ en:
         tags: "Tags"
         interface: "Interface"
         apps: "Apps"
-        navigation_menu: "Navigation Menu"
+        navigation_menu: "Navigation menu"
+        upcoming_changes: "Upcoming changes"
 
       change_password:
         success: "(email sent)"

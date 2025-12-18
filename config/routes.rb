@@ -920,6 +920,10 @@ Discourse::Application.routes.draw do
           :constraints => {
             username: RouteFormat.username,
           }
+      get "#{root_path}/:username/upcoming-changes" => "users#upcoming_changes",
+          :constraints => {
+            username: RouteFormat.username,
+          }
       get "#{root_path}/:username/bookmarks" => "users#bookmarks",
           :constraints => {
             username: RouteFormat.username,

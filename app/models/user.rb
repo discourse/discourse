@@ -1952,6 +1952,41 @@ class User < ActiveRecord::Base
     setting_enabled
   end
 
+  def upcoming_change_stats
+    SiteSetting.upcoming_change_site_settings.map do |upcoming_change|
+      hash = {
+        name: upcoming_change,
+        humanized_name: SiteSetting.humanized_name(upcoming_change),
+        description: SiteSetting.description(upcoming_change),
+        enabled: upcoming_change_enabled?(upcoming_change),
+      }
+
+      if UpcomingChanges.has_groups?(upcoming_change)
+        # TODO (martin) Make sure group security is handled properly here,
+        # some users cant see certain groups
+        hash[:specific_groups] = Group.where(
+          id: UpcomingChanges.group_ids_for(upcoming_change),
+        ).pluck(:name)
+
+        if !hash[:enabled]
+          hash[:reason] = :not_in_specific_groups
+        else
+          hash[:reason] = :in_specific_groups
+        end
+      else
+        hash[:reason] = (
+          if hash[:enabled]
+            :enabled_for_everyone
+          else
+            :enabled_for_no_one
+          end
+        )
+      end
+
+      hash
+    end
+  end
+
   protected
 
   def badge_grant

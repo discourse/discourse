@@ -195,6 +195,11 @@ class UsersController < ApplicationController
     show
   end
 
+  def upcoming_changes
+    raise Discourse::NotFound unless SiteSetting.enable_upcoming_changes
+    show
+  end
+
   def update
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
