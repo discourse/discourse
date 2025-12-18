@@ -59,7 +59,7 @@ export default class LanguageSwitcher extends Component {
     }
 
     // Cleanup "Português" name when `pt_BR` is the only variant
-    if (!langs.find((lang) => lang.value === "pt")) {
+    if (!langs.some(({ value }) => value === "pt")) {
       const ptbrName = langs.find((lang) => lang.value === "pt_BR");
       if (ptbrName) {
         ptbrName.name = this.normalizeBRPortuguese(ptbrName.name);
