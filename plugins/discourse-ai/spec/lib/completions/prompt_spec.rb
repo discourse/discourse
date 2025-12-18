@@ -131,13 +131,11 @@ RSpec.describe DiscourseAi::Completions::Prompt do
   describe "#push_model_response" do
     it "buffers streamed string chunks into a single model message" do
       prompt.push(type: :user, content: user_msg, id: username)
-
       prompt.push_model_response(["Hello", " ", "World"])
-
       expect(prompt.messages.last).to include(type: :model, content: "Hello World")
     end
 
-    it "buffers thinking until the next assistant message arrives" do
+    it "attaches thinking to next response" do
       prompt.push(type: :user, content: user_msg, id: username)
 
       thinking =
@@ -152,13 +150,7 @@ RSpec.describe DiscourseAi::Completions::Prompt do
           },
         )
 
-      prompt.push_model_response(thinking)
-
-      expect(prompt.messages.last).to include(type: :user)
-      expect(prompt.messages.last).not_to have_key(:thinking)
-      expect(prompt.messages.last).not_to have_key(:thinking_provider_info)
-
-      prompt.push_model_response("Hello")
+      prompt.push_model_response([thinking, "Hello"])
 
       expect(prompt.messages.last).to include(type: :model, content: "Hello", thinking: "summary")
       expect(prompt.messages.last[:thinking_provider_info]).to include(

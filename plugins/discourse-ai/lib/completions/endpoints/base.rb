@@ -534,7 +534,7 @@ module DiscourseAi
 
           # this is to keep stuff backwards compatible
           response_data = response_data.first if response_data.length == 1
-          response_data = "" if response_data.length == 0
+          response_data = "" if response_data.nil?
 
           response_data
         end
