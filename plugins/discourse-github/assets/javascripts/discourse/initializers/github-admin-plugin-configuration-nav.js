@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-github";
+
 export default {
   name: "github-admin-plugin-configuration-nav",
 
@@ -10,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("discourse-github", "fab-github");
+      api.setAdminPluginIcon(PLUGIN_ID, "fab-github");
     });
   },
 };

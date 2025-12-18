@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-policy";
+
 export default {
   name: "policy-admin-plugin-configuration-nav",
 
@@ -10,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("discourse-policy", "file-signature");
+      api.setAdminPluginIcon(PLUGIN_ID, "file-signature");
     });
   },
 };

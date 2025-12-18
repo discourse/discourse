@@ -251,6 +251,70 @@ acceptance("Admin Sidebar - Sections - Plugin API", function (needs) {
   });
 });
 
+acceptance("Admin Sidebar - Plugin Icons", function (needs) {
+  needs.user({
+    admin: true,
+    groups: [AUTO_GROUPS.admins],
+  });
+
+  needs.hooks.beforeEach(() => {
+    PreloadStore.store("visiblePlugins", [
+      {
+        name: "discourse-calendar",
+        admin_route: {
+          location: "discourse-calendar",
+          label: "discourse_calendar.title",
+          full_location: "adminPlugins.show",
+          use_new_show_route: true,
+        },
+        enabled: true,
+      },
+      {
+        name: "discourse-akismet",
+        admin_route: {
+          location: "discourse-akismet",
+          label: "discourse_akismet.title",
+          full_location: "adminPlugins.show",
+          use_new_show_route: true,
+        },
+        enabled: true,
+      },
+    ]);
+
+    pretender.get("/admin/config/site_settings.json", () =>
+      response({
+        site_settings: [],
+      })
+    );
+  });
+
+  test("plugin icon can be set via plugin API", async function (assert) {
+    withPluginApi((api) => {
+      api.setAdminPluginIcon("discourse-calendar", "rocket");
+    });
+
+    await visit("/admin");
+    await click(".sidebar-toggle-all-sections");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='admin-plugins'] .sidebar-section-link-wrapper[data-list-item-name='admin_plugin_discourse-calendar'] .d-icon-rocket"
+      )
+      .exists("custom plugin icon is displayed");
+  });
+
+  test("plugin without custom icon shows default gear icon", async function (assert) {
+    await visit("/admin");
+    await click(".sidebar-toggle-all-sections");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='admin-plugins'] .sidebar-section-link-wrapper[data-list-item-name='admin_plugin_discourse-akismet'] .d-icon-gear"
+      )
+      .exists("default gear icon is displayed when no custom icon is set");
+  });
+});
+
 let _locale;
 acceptance(
   "Admin Sidebar - Sections - Plugin API - Translation Fallbacks",

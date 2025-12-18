@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-math";
+
 export default {
   name: "math-admin-plugin-configuration-nav",
 
@@ -10,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("discourse-math", "square-root-variable");
+      api.setAdminPluginIcon(PLUGIN_ID, "square-root-variable");
     });
   },
 };

@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-hcaptcha";
+
 export default {
   name: "hcaptcha-admin-plugin-configuration-nav",
 
@@ -10,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("discourse-hcaptcha", "hand");
+      api.setAdminPluginIcon(PLUGIN_ID, "hand");
     });
   },
 };

@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-cakeday";
+
 export default {
   name: "cakeday-admin-plugin-configuration-nav",
 
@@ -10,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("discourse-cakeday", "cake-candles");
+      api.setAdminPluginIcon(PLUGIN_ID, "cake-candles");
     });
   },
 };

@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-reactions";
+
 export default {
   name: "reactions-admin-plugin-configuration-nav",
 
@@ -10,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("discourse-reactions", "discourse-emojis");
+      api.setAdminPluginIcon(PLUGIN_ID, "discourse-emojis");
     });
   },
 };

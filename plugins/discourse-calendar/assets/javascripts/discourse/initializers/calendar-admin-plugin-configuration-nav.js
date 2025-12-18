@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-calendar";
+
 export default {
   name: "calendar-admin-plugin-configuration-nav",
 
@@ -10,8 +12,9 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("discourse-calendar", "calendar-days");
-      api.addAdminPluginConfigurationNav("discourse-calendar", [
+      api.setAdminPluginIcon(PLUGIN_ID, "calendar-days");
+
+      api.addAdminPluginConfigurationNav(PLUGIN_ID, [
         {
           label: "discourse_calendar.holidays.header_title",
           route: "adminPlugins.show.discourse-calendar-holidays",

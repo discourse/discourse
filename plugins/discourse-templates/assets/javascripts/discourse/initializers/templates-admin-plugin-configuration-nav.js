@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-templates";
+
 export default {
   name: "templates-admin-plugin-configuration-nav",
 
@@ -10,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("discourse-templates", "far-clipboard");
+      api.setAdminPluginIcon(PLUGIN_ID, "far-clipboard");
     });
   },
 };

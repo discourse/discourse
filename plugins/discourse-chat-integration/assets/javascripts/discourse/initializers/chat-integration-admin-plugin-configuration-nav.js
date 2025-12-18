@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-chat-integration";
+
 export default {
   name: "chat-integration-admin-plugin-configuration-nav",
 
@@ -10,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("discourse-chat-integration", "plug");
+      api.setAdminPluginIcon(PLUGIN_ID, "plug");
     });
   },
 };

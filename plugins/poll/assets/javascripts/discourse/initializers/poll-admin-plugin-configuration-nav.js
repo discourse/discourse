@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "poll";
+
 export default {
   name: "poll-admin-plugin-configuration-nav",
 
@@ -10,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("poll", "chart-bar");
+      api.setAdminPluginIcon(PLUGIN_ID, "chart-bar");
     });
   },
 };

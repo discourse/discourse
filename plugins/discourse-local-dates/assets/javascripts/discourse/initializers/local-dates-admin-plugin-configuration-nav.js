@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-local-dates";
+
 export default {
   name: "local-dates-admin-plugin-configuration-nav",
 
@@ -10,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("discourse-local-dates", "far-clock");
+      api.setAdminPluginIcon(PLUGIN_ID, "far-clock");
     });
   },
 };

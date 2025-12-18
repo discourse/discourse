@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-rss-polling";
+
 export default {
   name: "rss-polling-admin-plugin-configuration-nav",
 
@@ -10,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("discourse-rss-polling", "rss");
+      api.setAdminPluginIcon(PLUGIN_ID, "rss");
     });
   },
 };

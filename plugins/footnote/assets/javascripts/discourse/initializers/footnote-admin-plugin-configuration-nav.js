@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "footnote";
+
 export default {
   name: "footnote-admin-plugin-configuration-nav",
 
@@ -10,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("footnote", "asterisk");
+      api.setAdminPluginIcon(PLUGIN_ID, "asterisk");
     });
   },
 };

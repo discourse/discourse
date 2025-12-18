@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-apple-auth";
+
 export default {
   name: "apple-auth-admin-plugin-configuration-nav",
 
@@ -10,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("discourse-apple-auth", "fab-apple");
+      api.setAdminPluginIcon(PLUGIN_ID, "fab-apple");
     });
   },
 };

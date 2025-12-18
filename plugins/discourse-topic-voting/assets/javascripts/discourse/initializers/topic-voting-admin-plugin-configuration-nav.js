@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-topic-voting";
+
 export default {
   name: "topic-voting-admin-plugin-configuration-nav",
 
@@ -10,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("discourse-topic-voting", "check-to-slot");
+      api.setAdminPluginIcon(PLUGIN_ID, "check-to-slot");
     });
   },
 };

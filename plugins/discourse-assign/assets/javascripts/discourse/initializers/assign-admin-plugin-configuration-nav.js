@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-assign";
+
 export default {
   name: "assign-admin-plugin-configuration-nav",
 
@@ -10,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("discourse-assign", "user-plus");
+      api.setAdminPluginIcon(PLUGIN_ID, "user-plus");
     });
   },
 };

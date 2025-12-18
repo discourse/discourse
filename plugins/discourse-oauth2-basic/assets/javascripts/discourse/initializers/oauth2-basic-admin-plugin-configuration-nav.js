@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-oauth2-basic";
+
 export default {
   name: "oauth2-basic-admin-plugin-configuration-nav",
 
@@ -10,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("discourse-oauth2-basic", "key");
+      api.setAdminPluginIcon(PLUGIN_ID, "key");
     });
   },
 };

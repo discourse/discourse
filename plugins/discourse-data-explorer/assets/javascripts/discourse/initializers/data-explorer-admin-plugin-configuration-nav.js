@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-data-explorer";
+
 export default {
   name: "data-explorer-admin-plugin-configuration-nav",
 
@@ -10,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("discourse-data-explorer", "chart-line");
+      api.setAdminPluginIcon(PLUGIN_ID, "chart-line");
     });
   },
 };

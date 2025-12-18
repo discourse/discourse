@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-lazy-videos";
+
 export default {
   name: "lazy-videos-admin-plugin-configuration-nav",
 
@@ -10,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("discourse-lazy-videos", "bed");
+      api.setAdminPluginIcon(PLUGIN_ID, "bed");
     });
   },
 };

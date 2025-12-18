@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-lti";
+
 export default {
   name: "lti-admin-plugin-configuration-nav",
 
@@ -10,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("discourse-lti", "graduation-cap");
+      api.setAdminPluginIcon(PLUGIN_ID, "graduation-cap");
     });
   },
 };

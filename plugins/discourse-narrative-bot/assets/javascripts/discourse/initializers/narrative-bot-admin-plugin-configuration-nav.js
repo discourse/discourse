@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-narrative-bot";
+
 export default {
   name: "narrative-bot-admin-plugin-configuration-nav",
 
@@ -10,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("discourse-narrative-bot", "robot");
+      api.setAdminPluginIcon(PLUGIN_ID, "robot");
     });
   },
 };

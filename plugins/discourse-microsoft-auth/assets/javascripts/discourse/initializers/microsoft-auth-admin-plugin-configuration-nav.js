@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-microsoft-auth";
+
 export default {
   name: "microsoft-auth-admin-plugin-configuration-nav",
 
@@ -10,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("discourse-microsoft-auth", "fab-microsoft");
+      api.setAdminPluginIcon(PLUGIN_ID, "fab-microsoft");
     });
   },
 };

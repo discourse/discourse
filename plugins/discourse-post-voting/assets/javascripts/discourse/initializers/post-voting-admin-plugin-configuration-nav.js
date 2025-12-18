@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-post-voting";
+
 export default {
   name: "post-voting-admin-plugin-configuration-nav",
 
@@ -10,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("discourse-post-voting", "arrow-up");
+      api.setAdminPluginIcon(PLUGIN_ID, "arrow-up");
     });
   },
 };

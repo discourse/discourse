@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-patreon";
+
 export default {
   name: "patreon-admin-plugin-configuration-nav",
 
@@ -10,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("discourse-patreon", "fab-patreon");
+      api.setAdminPluginIcon(PLUGIN_ID, "fab-patreon");
     });
   },
 };

@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-adplugin";
+
 export default {
   name: "adplugin-admin-plugin-configuration-nav",
 
@@ -10,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("discourse-adplugin", "rectangle-ad");
+      api.setAdminPluginIcon(PLUGIN_ID, "rectangle-ad");
     });
   },
 };

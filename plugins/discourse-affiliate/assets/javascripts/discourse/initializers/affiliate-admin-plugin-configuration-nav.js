@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-affiliate";
+
 export default {
   name: "affiliate-admin-plugin-configuration-nav",
 
@@ -10,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("discourse-affiliate", "handshake");
+      api.setAdminPluginIcon(PLUGIN_ID, "handshake");
     });
   },
 };

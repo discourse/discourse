@@ -51,10 +51,7 @@ import {
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
 import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
-import {
-  registerAdminPluginConfigNav,
-  registerAdminPluginIcon,
-} from "discourse/lib/admin-plugin-config-nav";
+import { registerAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { registerPluginHeaderActionComponent } from "discourse/lib/admin-plugin-header-actions";
 import { registerReportModeComponent } from "discourse/lib/admin-report-additional-modes";
 import classPrepend, {
@@ -3068,11 +3065,9 @@ class _PluginApi {
       return;
     }
 
-    if (!icon) {
-      return;
-    }
-
-    registerAdminPluginIcon(pluginId, icon);
+    this.registerValueTransformer("admin-plugin-icon", ({ value, context }) => {
+      return context.pluginId === pluginId ? icon : value;
+    });
   }
 
   /**

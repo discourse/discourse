@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-solved";
+
 export default {
   name: "solved-admin-plugin-configuration-nav",
 
@@ -10,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("discourse-solved", "far-square-check");
+      api.setAdminPluginIcon(PLUGIN_ID, "far-square-check");
     });
   },
 };

@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-zendesk-plugin";
+
 export default {
   name: "zendesk-admin-plugin-configuration-nav",
 
@@ -10,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("discourse-zendesk-plugin", "headset");
+      api.setAdminPluginIcon(PLUGIN_ID, "headset");
     });
   },
 };

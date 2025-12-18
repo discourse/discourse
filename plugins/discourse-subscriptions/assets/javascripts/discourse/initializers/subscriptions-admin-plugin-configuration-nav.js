@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-subscriptions";
+
 export default {
   name: "subscriptions-admin-plugin-configuration-nav",
 
@@ -10,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon("discourse-subscriptions", "far-credit-card");
+      api.setAdminPluginIcon(PLUGIN_ID, "far-credit-card");
     });
   },
 };

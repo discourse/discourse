@@ -1,9 +1,6 @@
 import { cached } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
-import {
-  configNavForPlugin,
-  iconForPlugin,
-} from "discourse/lib/admin-plugin-config-nav";
+import { configNavForPlugin } from "discourse/lib/admin-plugin-config-nav";
 import { adminRouteValid } from "discourse/lib/admin-utilities";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
@@ -13,6 +10,7 @@ import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
 import { getReviewBadgeText } from "discourse/lib/sidebar/helpers/review-badge-helper";
 import { ADMIN_PANEL } from "discourse/lib/sidebar/panels";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { escapeExpression } from "discourse/lib/utilities";
 import I18n, { i18n } from "discourse-i18n";
 
@@ -296,7 +294,9 @@ function pluginAdminRouteLinks(router) {
           : [],
         label: plugin.admin_route.label,
         text: plugin.humanized_name,
-        icon: iconForPlugin(plugin.name) || "gear",
+        icon: applyValueTransformer("admin-plugin-icon", "gear", {
+          pluginId: plugin.name,
+        }),
         description: plugin.description,
         links: pluginNavLinks,
       };
