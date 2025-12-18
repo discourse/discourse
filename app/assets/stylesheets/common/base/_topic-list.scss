@@ -387,7 +387,7 @@
       @include viewport.from(md) {
         position: sticky;
         z-index: z("base");
-        width: auto;
+        width: fit-content;
         left: 50%;
         height: 0;
         font-size: var(--font-down-1-rem);
