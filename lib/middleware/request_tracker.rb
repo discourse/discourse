@@ -237,7 +237,7 @@ class Middleware::RequestTracker
       is_background: is_message_bus || is_topic_timings,
       is_mobile: helper.is_mobile?,
       timing: timing,
-      queue_seconds: env["REQUEST_QUEUE_SECONDS"],
+      queue_seconds: env[Middleware::ProcessingRequest::REQUEST_QUEUE_SECONDS_ENV_KEY],
       request_remote_ip: request_remote_ip,
     }.merge(view_tracking_data)
 
@@ -296,29 +296,10 @@ class Middleware::RequestTracker
     end
   end
 
-  def self.populate_request_queue_seconds!(env)
-    if !env["REQUEST_QUEUE_SECONDS"]
-      if queue_start = env["HTTP_X_REQUEST_START"]
-        queue_start =
-          if queue_start.start_with?("t=")
-            queue_start.split("t=")[1].to_f
-          else
-            queue_start.to_f / 1000.0
-          end
-        queue_time = (Time.now.to_f - queue_start)
-        env["REQUEST_QUEUE_SECONDS"] = queue_time
-      end
-    end
-  end
-
   def call(env)
     result = nil
     info = nil
     gc_stat_timing = nil
-
-    # doing this as early as possible so we have an
-    # accurate counter
-    ::Middleware::RequestTracker.populate_request_queue_seconds!(env)
 
     # Doing this before the app.call will allow us to have this data available
     # in the MessageBus middleware to add headers in the 004-message_bus.rb initializer.
@@ -393,7 +374,7 @@ class Middleware::RequestTracker
           headers["X-Sql-Time"] = "%0.6f" % sql[:duration]
         end
 
-        if queue = env["REQUEST_QUEUE_SECONDS"]
+        if queue = env[Middleware::ProcessingRequest::REQUEST_QUEUE_SECONDS_ENV_KEY]
           headers["X-Queue-Time"] = "%0.6f" % queue
         end
       end
