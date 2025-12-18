@@ -358,10 +358,7 @@ RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
       expect(response).to have_http_status(:success)
       expect(response.headers["X-Robots-Tag"]).to eq("noindex")
       expect(response.body).not_to include("Translation missing")
-
-      # this is failing to be set, which is confusing, but not critical
-      # in tests I am noticing it is being force private
-      # expect(response.headers["Cache-Control"]).to eq("max-age=60, public")
+      expect(response.headers["Cache-Control"]).to eq("max-age=60, public")
     end
 
     it "is also able to render in json format" do
