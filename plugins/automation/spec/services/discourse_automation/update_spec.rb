@@ -94,8 +94,7 @@ RSpec.describe DiscourseAutomation::Update do
       it "clears fields and disables automation" do
         expect(automation.fields).not_to be_empty
         result
-        expect(automation.reload).to have_attributes(enabled: false, trigger: nil)
-        expect(automation.fields).to be_empty
+        expect(automation.reload).to have_attributes(enabled: false, trigger: nil, fields: [])
       end
     end
 

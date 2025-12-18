@@ -50,8 +50,7 @@ module DiscourseAutomation
       end
 
       def format_value(value)
-        return value.to_s if value.in?([true, false])
-        value.presence&.to_s || empty_value
+        value.to_s.presence || empty_value
       end
 
       def field_empty?(field)

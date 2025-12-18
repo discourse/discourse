@@ -85,13 +85,12 @@ class DiscourseAutomation::Update
 
     attributes =
       params
-        .attributes
-        .symbolize_keys
         .slice(:name, :script)
+        .merge(
+          last_updated_by_id: guardian.user.id,
+          trigger: context[:forced_trigger] || params.trigger,
+        )
         .compact_blank
-        .merge(last_updated_by_id: guardian.user.id)
-    attributes[:trigger] = context[:forced_trigger] || params.trigger if context[:forced_trigger] ||
-      params.trigger.present?
     attributes[:trigger] = nil if context[:clear_trigger]
     attributes[:enabled] = params.enabled unless params.enabled.nil?
     attributes[:enabled] = false if context[:force_disable]
