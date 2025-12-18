@@ -119,8 +119,7 @@ RSpec.describe "Chat channel sidebar context menu", type: :system do
       expect(channel_1.membership_for(current_user).reload.notification_level).to eq("always")
     end
 
-    # TODO (martin) Fix this spec, no more check
-    it "displays a checkmark next to the current notification level" do
+    it "highlights the current notification level" do
       channel_1.membership_for(current_user).update!(notification_level: "mention")
 
       chat_page.visit_channel(channel_1)
@@ -128,7 +127,7 @@ RSpec.describe "Chat channel sidebar context menu", type: :system do
       menu = chat_sidebar_page.open_notification_settings(channel_1)
 
       expect(menu).to have_option(
-        ".chat-channel-sidebar-link-menu__notification-level-mention .d-icon-check",
+        ".chat-channel-sidebar-link-menu__notification-level-mention.-selected",
       )
     end
   end
