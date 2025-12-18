@@ -387,13 +387,13 @@
       @include viewport.from(md) {
         position: absolute;
         z-index: z("base");
-        width: auto;
-        right: 50%;
-        transform: translateX(50%);
+        width: 100%;
         font-size: var(--font-down-1-rem);
 
         .alert {
+          width: max-content;
           border-radius: var(--d-border-radius-large);
+          margin: 0 auto;
         }
       }
 
