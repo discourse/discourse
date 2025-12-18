@@ -5,6 +5,7 @@ import { dependentKeyCompat } from "@ember/object/compat";
 import { getOwner, setOwner } from "@ember/owner";
 import { Promise } from "rsvp";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import { enumerateTrackedValues } from "discourse/lib/tracked-tools";
 
 export default class RestModel extends EmberObject {
   // Overwrite and JSON will be passed through here before `create` and `update`
@@ -14,9 +15,12 @@ export default class RestModel extends EmberObject {
 
   static create(args) {
     args = args || {};
-
     args.__munge = this.munge;
-    const createArgs = this.munge(args, args.store);
+
+    const createArgs = this.munge(
+      { ...args, ...enumerateTrackedValues(args) },
+      args.store
+    );
 
     // Some Discourse code calls `model.create()` directly without going through the
     // store. In that case the owner is not set, and injections will fail. This workaround ensures
