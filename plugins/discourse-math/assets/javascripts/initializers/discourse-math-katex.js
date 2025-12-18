@@ -52,7 +52,9 @@ async function katex(elem) {
   // also enable equation labelling and referencing which are disabled by default
   // both of these are enabled in mathjax by default, so now the katex implementation is (more) mathjax compatible
   const katexOpts = {
-    trust: (context) => ["\\htmlId", "\\href"].includes(context.command),
+    trust: (context) =>
+      ["\\htmlId", "\\href"].includes(context.command) &&
+      ["http", "https", "mailto", "_relative"].includes(context.protocol),
     macros: {
       "\\eqref": "\\href{###1}{(\\text{#1})}",
       "\\ref": "\\href{###1}{\\text{#1}}",
