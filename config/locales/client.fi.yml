@@ -4846,7 +4846,6 @@ fi:
       tags_form_modal:
         title: "Muokkaa tunnisteiden navigointia"
         filter_placeholder: "Suodata tunnisteita"
-        no_tags: "Annettua termiä vastaavia tunnisteita ei ole."
         subtitle:
           text: "ja näytämme automaattisesti tämän sivuston suosituimmat tunnisteet"
       edit_navigation_modal_form:

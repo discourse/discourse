@@ -5371,7 +5371,6 @@ ru:
       tags_form_modal:
         title: "Измените навигацию по тегам"
         filter_placeholder: "Фильтрация тегов"
-        no_tags: "Нет тегов, соответствующих запросу."
         subtitle:
           text: "Мы автоматически покажем самые популярные теги сайта"
       edit_navigation_modal_form:

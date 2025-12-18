@@ -5546,7 +5546,6 @@ uk:
       tags_form_modal:
         title: "Редагувати навігацію тегами"
         filter_placeholder: "Теги фільтрів"
-        no_tags: "Немає тегів, що відповідають заданому терміну."
         subtitle:
           text: "і ми автоматично покажемо найпопулярніші теги цього сайту"
       edit_navigation_modal_form:

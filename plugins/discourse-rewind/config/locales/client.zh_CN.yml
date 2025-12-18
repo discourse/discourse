@@ -15,8 +15,6 @@ zh_CN:
       placeholder: Discourse Rewind
       title: 回顾
       loading: "正在重构样条曲线中…"
-      preferences:
-        disable_rewind: "禁用 Discourse Rewind。这将在您的个人资料和头像中隐藏年终活动总结。"
       share:
         toggle_label:
           private: "不公开"
