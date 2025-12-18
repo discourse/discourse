@@ -260,7 +260,7 @@ module Middleware
       ADP = "action_dispatch.request.parameters"
 
       def should_force_anonymous?
-        if (queue_time = @env["REQUEST_QUEUE_SECONDS"]) && get?
+        if (queue_time = @env[Middleware::ProcessingRequest::REQUEST_QUEUE_SECONDS_ENV_KEY]) && get?
           if queue_time > GlobalSetting.force_anonymous_min_queue_seconds
             return check_logged_in_rate_limit!
           elsif queue_time >= MIN_TIME_TO_CHECK
@@ -390,7 +390,8 @@ module Middleware
         helper.force_anonymous!
       end
 
-      if (env["HTTP_DISCOURSE_BACKGROUND"] == "true") && (queue_time = env["REQUEST_QUEUE_SECONDS"])
+      if (env["HTTP_DISCOURSE_BACKGROUND"] == "true") &&
+           (queue_time = env[Middleware::ProcessingRequest::REQUEST_QUEUE_SECONDS_ENV_KEY])
         max_time = GlobalSetting.background_requests_max_queue_length.to_f
         if max_time > 0 && queue_time.to_f > max_time
           return [
