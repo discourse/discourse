@@ -35,9 +35,10 @@ module DiscourseAutomation
     end
 
     def create
-      automation_params = params.require(:automation).permit(:script, :trigger)
-
-      DiscourseAutomation::Create.call(params: automation_params.to_h, guardian:) do
+      DiscourseAutomation::Create.call(
+        params: params.require(:automation).to_unsafe_h,
+        guardian:,
+      ) do
         on_success { |automation:| render_serialized_automation(automation) }
         on_failed_policy(:can_create_automation) { raise Discourse::InvalidAccess }
         on_failed_contract do |contract|
@@ -49,11 +50,8 @@ module DiscourseAutomation
     end
 
     def update
-      automation_params = params.require(:automation).permit(:name, :script, :trigger, :enabled)
-      fields = params[:automation][:fields]&.map(&:to_unsafe_h)
-
       DiscourseAutomation::Update.call(
-        params: automation_params.to_h.merge(automation_id: params[:id], fields: fields),
+        params: params.require(:automation).to_unsafe_h.merge(automation_id: params[:id]),
         guardian:,
       ) do
         on_success { |automation:| render_serialized_automation(automation) }
