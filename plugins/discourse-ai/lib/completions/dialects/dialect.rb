@@ -148,7 +148,7 @@ module DiscourseAi
 
           translated =
             messages
-              .flat_map do |msg|
+              .map do |msg|
                 case msg[:type].to_sym
                 when :system
                   system_msg(msg)
