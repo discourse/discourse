@@ -30,13 +30,12 @@ class DiscourseAi::Evals::PromptSingleTestRunner
       DiscourseAi::Completions::Prompt.new(prompt, messages: [{ type: :user, content: message }])
     @c_prompt.tools = tools if tools
     @tool_results = tool_results || {}
-    @max_tool_calls = max_tool_calls
 
     while chain_length > 0
       generate_result(temperature, output_thinking, stream)
       chain_length -= 1
       if chain_length > 0
-        populate_reply
+        populate_reply(max_tool_calls:)
         break if @c_prompt.messages.last[:type] != :tool
       end
 
@@ -54,7 +53,7 @@ class DiscourseAi::Evals::PromptSingleTestRunner
 
   private
 
-  def populate_reply
+  def populate_reply(max_tool_calls:)
     # @c_prompt contains the prompt
     # @result contains the last result
     #
@@ -73,7 +72,7 @@ class DiscourseAi::Evals::PromptSingleTestRunner
           proposed_result = proposed_result.gsub("{{#{key}}}", value.to_s)
         end
 
-        break if @max_tool_calls && ((@max_tool_calls -= 1) < 0)
+        break if max_tool_calls && ((max_tool_calls -= 1) < 0)
 
         result.push(part)
         result.push(
