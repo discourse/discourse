@@ -15,6 +15,36 @@ RSpec.describe DiscourseReactions::ReactionManager do
   before { SiteSetting.discourse_reactions_reaction_for_like = "clap" }
 
   describe ".toggle!" do
+    context "when switching to the default reaction" do
+      fab!(:topic)
+      fab!(:op_post) { Fabricate(:post, topic: topic) }
+
+      before do
+        SiteSetting.discourse_reactions_enabled_reactions = "+1|heart"
+        SiteSetting.discourse_reactions_reaction_for_like = "+1"
+        SiteSetting.discourse_reactions_like_icon = "thumbs-up"
+      end
+
+      it "persists the default reaction" do
+        reaction_manager = described_class.new(reaction_value: "heart", user: user, post: op_post)
+        reaction_manager.toggle!
+
+        expect(DiscourseReactions::ReactionUser.exists?(user: user, post: op_post)).to be_truthy
+
+        new_reaction_manager = described_class.new(reaction_value: "+1", user: user, post: op_post)
+        new_reaction_manager.toggle!
+
+        expect(
+          DiscourseReactions::ReactionUser.exists?(
+            user: user,
+            post: op_post,
+            reaction: DiscourseReactions::Reaction.find_by(reaction_value: "+1", post: op_post),
+          ),
+        ).to be_truthy
+        expect(PostAction.exists?(user: user, post: op_post)).to be_truthy
+      end
+    end
+
     context "when the user has not yet reacted to the post" do
       context "when the new reaction matches discourse_reactions_reaction_for_like" do
         it "does create a PostAction record" do
