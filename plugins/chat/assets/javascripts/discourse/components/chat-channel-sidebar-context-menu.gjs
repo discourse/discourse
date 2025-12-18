@@ -127,7 +127,7 @@ class ChatChannelSidebarMenuNotificationSubmenu extends Component {
   </template>
 }
 
-export default class ChatChannelSidebarLinkMenu extends Component {
+export default class ChatChannelSidebarContextMenu extends Component {
   @service chatApi;
   @service chat;
   @service menu;
@@ -208,15 +208,16 @@ export default class ChatChannelSidebarLinkMenu extends Component {
 
   @action
   openNotificationSettings(_, event) {
-    this.menu.show(event.target, {
+    const menuTarget = event.target.closest(
+      ".chat-channel-sidebar-link-menu__open-notification-settings"
+    );
+    this.menu.show(menuTarget, {
       identifier: "chat-channel-menu-notification-submenu",
       component: ChatChannelSidebarMenuNotificationSubmenu,
       modalForMobile: true,
       placement: "right-start",
       data: { channel: this.channel },
-      onClose: () => {
-        this.args.close();
-      },
+      onClose: () => this.args.close(),
     });
   }
 
@@ -249,8 +250,8 @@ export default class ChatChannelSidebarLinkMenu extends Component {
           @action={{this.toggleStarred}}
           @icon={{if
             this.channel.currentUserMembership.starred
-            "far-star"
             "star"
+            "far-star"
           }}
           @label={{if
             this.channel.currentUserMembership.starred

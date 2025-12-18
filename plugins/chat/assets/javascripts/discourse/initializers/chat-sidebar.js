@@ -11,7 +11,7 @@ import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
-import ChatChannelSidebarLinkMenu from "discourse/plugins/chat/discourse/components/chat-channel-sidebar-link-menu";
+import ChatChannelSidebarContextMenu from "discourse/plugins/chat/discourse/components/chat-channel-sidebar-context-menu";
 import ChatSidebarIndicators from "discourse/plugins/chat/discourse/components/chat-sidebar-indicators";
 import {
   CHAT_PANEL,
@@ -420,7 +420,7 @@ export default {
                     identifier: this.isDM
                       ? "chat-direct-message-channel-menu"
                       : "chat-channel-menu",
-                    component: ChatChannelSidebarLinkMenu,
+                    component: ChatChannelSidebarContextMenu,
                     modalForMobile: true,
                     placement: "right",
                     data: { channel: this.channel },
@@ -600,7 +600,7 @@ export default {
                     event.target.closest(".sidebar-section-link"),
                     {
                       identifier: "chat-channel-menu",
-                      component: ChatChannelSidebarLinkMenu,
+                      component: ChatChannelSidebarContextMenu,
                       modalForMobile: true,
                       placement: "right",
                       data: { channel: this.channel },
@@ -872,7 +872,7 @@ export default {
                     event.target.closest(".sidebar-section-link"),
                     {
                       identifier: "chat-direct-message-channel-menu",
-                      component: ChatChannelSidebarLinkMenu,
+                      component: ChatChannelSidebarContextMenu,
                       modalForMobile: true,
                       placement: "right",
                       data: { channel: this.channel },
