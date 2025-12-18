@@ -58,6 +58,14 @@ export default class LanguageSwitcher extends Component {
       }
     }
 
+    // Cleanup "Português" name when `pt_BR` is the only variant
+    if (!langs.find((lang) => lang.value === "pt")) {
+      const ptbrName = langs.find((lang) => lang.value === "pt_BR");
+      if (ptbrName) {
+        ptbrName.name = ptbrName.name.replace(" (BR)", "").trim();
+      }
+    }
+
     return langs;
   }
 
