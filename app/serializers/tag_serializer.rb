@@ -3,11 +3,17 @@
 class TagSerializer < ApplicationSerializer
   attributes :id, :name, :topic_count, :staff, :description
 
+  has_many :localizations, serializer: TagLocalizationSerializer, embed: :objects
+
   def topic_count
     object.public_send(Tag.topic_count_column(scope))
   end
 
   def staff
     DiscourseTagging.staff_tag_names.include?(name)
+  end
+
+  def include_localizations?
+    SiteSetting.content_localization_enabled && object.localizations.loaded?
   end
 end
