@@ -130,8 +130,8 @@ RSpec.describe GroupSmtpMailer do
         enable_starttls_auto: true,
         enable_ssl: false,
         return_response: true,
-        open_timeout: GlobalSetting.group_smtp_open_timeout,
-        read_timeout: GlobalSetting.group_smtp_read_timeout,
+        open_timeout: GlobalSetting.group_smtp_open_timeout.to_f,
+        read_timeout: GlobalSetting.group_smtp_read_timeout.to_f,
       },
     )
   end

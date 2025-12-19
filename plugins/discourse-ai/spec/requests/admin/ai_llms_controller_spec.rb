@@ -10,7 +10,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
   end
 
   describe "GET #index" do
-    fab!(:llm_model) { Fabricate(:llm_model, enabled_chat_bot: true) }
+    fab!(:llm_model)
     fab!(:llm_model2, :llm_model)
     fab!(:ai_persona) do
       Fabricate(
@@ -50,6 +50,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
 
     it "lists enabled features on appropriate LLMs" do
       SiteSetting.ai_bot_enabled = true
+      SiteSetting.ai_bot_enabled_llms = llm_model.id.to_s
       fake_model = assign_fake_provider_to(:ai_default_llm_model)
 
       # setting the setting calls the model
@@ -169,15 +170,15 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
         expect(history.subject).to eq(valid_attrs[:display_name]) # Verify subject is set to display_name
       end
 
-      it "creates a companion user" do
-        post "/admin/plugins/discourse-ai/ai-llms.json",
-             params: {
-               ai_llm: valid_attrs.merge(enabled_chat_bot: true),
-             }
+      it "creates a companion user when LLM is in ai_bot_enabled_llms setting" do
+        post "/admin/plugins/discourse-ai/ai-llms.json", params: { ai_llm: valid_attrs }
 
         created_model = LlmModel.last
 
-        expect(created_model.user_id).to be_present
+        SiteSetting.ai_bot_enabled_llms = created_model.id.to_s
+        created_model.toggle_companion_user
+
+        expect(created_model.reload.user_id).to be_present
       end
 
       it "stores provider-specific config params" do
@@ -391,22 +392,27 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
         expect(response.status).to eq(404)
       end
 
-      it "creates a companion user" do
+      it "creates a companion user when LLM is added to ai_bot_enabled_llms setting" do
+        SiteSetting.ai_bot_enabled_llms = llm_model.id.to_s
+
         put "/admin/plugins/discourse-ai/ai-llms/#{llm_model.id}.json",
             params: {
-              ai_llm: update_attrs.merge(enabled_chat_bot: true),
+              ai_llm: update_attrs,
             }
 
         expect(llm_model.reload.user_id).to be_present
       end
 
-      it "removes the companion user when desabling the chat bot option" do
-        llm_model.update!(enabled_chat_bot: true)
+      it "removes the companion user when LLM is removed from ai_bot_enabled_llms setting" do
+        SiteSetting.ai_bot_enabled_llms = llm_model.id.to_s
         llm_model.toggle_companion_user
+        expect(llm_model.reload.user_id).to be_present
+
+        SiteSetting.ai_bot_enabled_llms = ""
 
         put "/admin/plugins/discourse-ai/ai-llms/#{llm_model.id}.json",
             params: {
-              ai_llm: update_attrs.merge(enabled_chat_bot: false),
+              ai_llm: update_attrs,
             }
 
         expect(llm_model.reload.user_id).to be_nil
@@ -576,7 +582,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
     end
 
     it "cleans up companion users before deleting the model" do
-      llm_model.update!(enabled_chat_bot: true)
+      SiteSetting.ai_bot_enabled_llms = llm_model.id.to_s
       llm_model.toggle_companion_user
       companion_user = llm_model.user
 

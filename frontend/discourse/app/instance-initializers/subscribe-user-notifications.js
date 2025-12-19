@@ -270,6 +270,12 @@ class SubscribeUserNotificationsInit {
     }
 
     this.siteSettings[data.name] = data.value;
+
+    if (
+      this.siteSettings.currentUserUpcomingChanges.hasOwnProperty(data.name)
+    ) {
+      this.siteSettings.currentUserUpcomingChanges[data.name] = data.value;
+    }
   }
 
   @bind

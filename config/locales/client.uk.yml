@@ -214,7 +214,7 @@ uk:
       el:
         name: Грецька
       en:
-        name: Англійська (США)
+        name: Англійська
       en_GB:
         name: Англійська (Велика Британія)
       es:
@@ -3502,6 +3502,7 @@ uk:
           aria_label: Фільтруйте за теґами
         filters:
           label: Обмежити пошук по темам/повідомленням...
+          all: Включити повідомлення
           title: Збігам в заголовку
           likes: Мені сподобалося
           posted: В яких я писав
@@ -4689,6 +4690,8 @@ uk:
       slug_placeholder: "(Опція) дефіси в url"
       creation_error: Під час створення розділу сталася помилка.
       save_error: Під час збереження розділу сталася помилка.
+      errors:
+        self_lockout: "Ви збираєтеся змінити дозволи категорії таким чином, що позбавите себе доступу. Ви впевнені, що хочете продовжити?"
       name: "Назва категорії"
       untitled: "Категорія без назви"
       description: "Опис"
@@ -5368,6 +5371,19 @@ uk:
       upload_description: "Завантажити csv-файл, щоб масово створити теґи"
       upload_instructions: "По одному у рядку, можна з групою теґів у форматі 'tag_name,tag_group'."
       upload_successful: "Теґи завантажено"
+      bulk_create_inline_placeholder: "Створення тегів (через кому)"
+      bulk_create_button: "Створити"
+      bulk_create_success:
+        one: "Створено %{count} місяць тому:"
+        few: "Створено %{count} місяці тому:"
+        many: "Створено %{count} місяців тому:"
+        other: "Створено %{count} місяців тому:"
+      bulk_create_already_exist:
+        one: "%{count} тег вже існує:"
+        few: "%{count} теги вже існують:"
+        many: "%{count} тегів вже існують:"
+        other: "%{count} тегів вже існують:"
+      bulk_create_some_failed: "Не вдалося створити деякі теги:"
       delete_unused_confirmation:
         one: "%{count} теґ буде вилучено: %{tags}"
         few: "%{count} теґи буде вилучено: %{tags}"
@@ -5532,7 +5548,7 @@ uk:
       tags_form_modal:
         title: "Редагувати навігацію тегами"
         filter_placeholder: "Теги фільтрів"
-        no_tags: "Немає тегів, що відповідають заданому терміну."
+        no_tags: "Немає тегів, що відповідають поточним фільтрам."
         subtitle:
           text: "і ми автоматично покажемо найпопулярніші теги цього сайту"
       edit_navigation_modal_form:
@@ -5885,6 +5901,8 @@ uk:
       toggle_localized:
         translated: "Сторінку перекладено машинним способом. Натисніть, щоб переглянути оригінал."
         not_translated: "Сторінку не перекладено. Натисніть, щоб перекласти."
+    language_switcher:
+      title: "Змінити мову сайту"
   admin_js:
     type_to_filter: "Текст для пошуку…"
     settings: "Налаштування"
@@ -8724,6 +8742,10 @@ uk:
         no_user_badges: "%{name} не отримував жодного ."
         no_badges: Тут немає нагород, які можуть бути надані.
         none_selected: "Виберіть нагороди в списку ліворуч"
+        sections:
+          design: Дизайн
+          query: Запит
+          settings: Налаштування
         usage_heading: Використання
         allow_title: Дозволити використання значків як звань
         multiple_grant: Можуть бути надані декілька разів

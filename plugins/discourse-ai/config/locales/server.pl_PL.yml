@@ -88,6 +88,8 @@ pl_PL:
     ai_nsfw_flag_threshold_sexy: "Próg uznania obrazu zaklasyfikowanego jako seksowny, aby został uznany za NSFW."
     ai_nsfw_models: "Modele używane do wnioskowania NSFW."
     ai_spam_detection_enabled: "Włącz moduł wykrywania spamu AI"
+    ai_spam_detection_max_post_count: "Maksymalna liczba wpisów, jakie może mieć użytkownik, zanim przestaną być skanowane pod kątem spamu"
+    ai_spam_detection_max_trust_level: "Maksymalny poziom zaufania użytkowników do skanowania w poszukiwaniu spamu"
     ai_openai_api_key: "Klucz API dla OpenAI API. Używany TYLKO do tworzenia i edycji obrazów. W przypadku GPT należy użyć zakładki konfiguracji LLM."
     ai_openai_image_generation_url: "Adres URL interfejsu API generowania obrazów OpenAI"
     ai_openai_image_edit_url: "Adres URL interfejsu API do edycji obrazów OpenAI"
@@ -124,6 +126,7 @@ pl_PL:
     ai_summary_gists_allowed_groups: "Grupy mogą przeglądać sedno dyskusji na liście gorących tematów."
     ai_summary_backfill_maximum_topics_per_hour: "Liczba podsumowań tematów do uzupełnienia na godzinę."
     ai_bot_enabled: "Włącz moduł bota AI."
+    ai_bot_enabled_llms: "Dostępne do wyboru LLM-y do rozmów z botami AI"
     ai_bot_enable_chat_warning: "Wyświetl ostrzeżenie po zainicjowaniu czatu PW. Można je zastąpić, edytując ciąg tłumaczenia: discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "Gdy bot GPT uzyska dostęp do PW, odpowie członkom tych grup."
     ai_bot_debugging_allowed_groups: "Zezwól tym grupom na wyświetlanie przycisku debugowania w postach, który wyświetla surowe żądanie i odpowiedź AI"
@@ -331,7 +334,7 @@ pl_PL:
     ai_bot:
       reply_error: "Przepraszamy, wygląda na to, że nasz system napotkał nieoczekiwany problem podczas próby udzielenia odpowiedzi.\n\n[details='Szczegóły błędu']\n%{details}\n[/details]"
       default_pm_prefix: "[PW bota AI bez tytułu]"
-      thinking: "Myślenie..."
+      thinking: "Myślenie"
       personas:
         default_llm_required: "Przed włączeniem czatu wymagany jest domyślny model LLM"
         cannot_delete_system_persona: "Person systemowych nie można usunąć, zamiast tego wyłącz je."

@@ -158,7 +158,7 @@ es:
       el:
         name: Griego
       en:
-        name: Inglés (EE. UU.)
+        name: Inglés
       en_GB:
         name: Inglés (Reino Unido)
       es:
@@ -4694,6 +4694,7 @@ es:
       upload_description: "Sube un archivo csv para crear etiquetas en masa"
       upload_instructions: "Una por línea, opcional con un grupo de etiquetas en el formato «tag_name,tag_group»."
       upload_successful: "Etiquetas subidas con éxito"
+      bulk_create_button: "Crear"
       delete_unused_confirmation:
         one: "%{count} etiqueta será eliminada: %{tags}"
         other: "%{count} etiquetas serán eliminadas: %{tags}"
@@ -4844,7 +4845,6 @@ es:
       tags_form_modal:
         title: "Editar etiquetas navegación"
         filter_placeholder: "Filtrar etiquetas"
-        no_tags: "No hay etiquetas que coincidan con el término proporcionado."
         subtitle:
           text: "y mostraremos automáticamente las etiquetas principales de este sitio"
       edit_navigation_modal_form:
@@ -7798,6 +7798,9 @@ es:
         no_user_badges: "%{name} no ha recibido ninguna medalla."
         no_badges: No hay medallas que se puedan conceder.
         none_selected: "Selecciona una medalla para empezar"
+        sections:
+          query: Consulta
+          settings: Ajustes
         usage_heading: Uso
         allow_title: Permitir que se use la medalla como título
         multiple_grant: Se puede conceder varias veces

@@ -23,6 +23,10 @@
         }
       }
     }
+
+    &.--selected .btn {
+      background: var(--d-selected);
+    }
   }
 
   &__divider {

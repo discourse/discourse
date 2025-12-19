@@ -1277,6 +1277,10 @@ Discourse::Application.routes.draw do
     post "topic_localizations/create_or_update", to: "topic_localizations#create_or_update"
     delete "topic_localizations/destroy", to: "topic_localizations#destroy"
 
+    get "/tag_localizations/:id" => "tag_localizations#show"
+    post "tag_localizations/create_or_update", to: "tag_localizations#create_or_update"
+    delete "tag_localizations/destroy", to: "tag_localizations#destroy"
+
     resources :bookmarks, only: %i[create destroy update] do
       put "toggle_pin"
     end
@@ -1682,6 +1686,7 @@ Discourse::Application.routes.draw do
             username: RouteFormat.username,
           }
       post "/upload" => "tags#upload"
+      post "/bulk_create" => "tags#bulk_create"
       get "/unused" => "tags#list_unused"
       delete "/unused" => "tags#destroy_unused"
 

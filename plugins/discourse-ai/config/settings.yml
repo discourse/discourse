@@ -365,6 +365,15 @@ discourse_ai:
     default: false
     client: true
     area: "ai-features/bot"
+  ai_bot_enabled_llms:
+    default: ""
+    client: true
+    type: list
+    list_type: compact
+    allow_any: false
+    enum: "DiscourseAi::Configuration::LlmEnumerator"
+    refresh: true
+    area: "ai-features/bot"
   ai_bot_enable_chat_warning:
     default: false
     client: true
@@ -455,6 +464,19 @@ discourse_ai:
   ai_spam_detection_user_id:
     default: ""
     hidden: true
+  ai_spam_detection_max_post_count:
+    default: 3
+    min: 1
+    max: 100
+  ai_spam_detection_max_trust_level:
+    default: 1
+    type: enum
+    choices:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
   ai_rag_images_enabled:
     default: false
     hidden: true

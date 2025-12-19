@@ -41,7 +41,7 @@ export default class AdminPluginsShowDiscourseGamificationLeaderboardsIndexContr
         )
           .then(() => {
             this.toasts.success({
-              duration: 3000,
+              duration: "short",
               data: {
                 message: i18n("gamification.leaderboard.delete_success"),
               },

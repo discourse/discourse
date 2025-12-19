@@ -214,7 +214,7 @@ ru:
       el:
         name: Греческий
       en:
-        name: Английский (США)
+        name: Английский
       en_GB:
         name: Английский (Великобритания)
       es:
@@ -5212,6 +5212,7 @@ ru:
       upload_description: "Загрузить csv-файл для массового создания тегов"
       upload_instructions: "По одному в строке, с необязательным указанием группы тега в формате «tag_name,tag_group»."
       upload_successful: "Теги загружены"
+      bulk_create_button: "Создать"
       delete_unused_confirmation:
         one: "%{count} тег будет удалён: %{tags}"
         few: "%{count} тега будут удалены: %{tags}"
@@ -5370,7 +5371,6 @@ ru:
       tags_form_modal:
         title: "Измените навигацию по тегам"
         filter_placeholder: "Фильтрация тегов"
-        no_tags: "Нет тегов, соответствующих запросу."
         subtitle:
           text: "Мы автоматически покажем самые популярные теги сайта"
       edit_navigation_modal_form:
@@ -8429,6 +8429,9 @@ ru:
         no_user_badges: "У %{name} нет ни одной награды."
         no_badges: Нет наград, которые можно было бы выдать.
         none_selected: "Выберите награду в списке слева"
+        sections:
+          query: Запрос
+          settings: настроек
         usage_heading: Использование
         allow_title: Разрешить использовать название награды в качестве титула
         multiple_grant: Может быть предоставлена несколько раз

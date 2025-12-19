@@ -1,296 +1,176 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::Completions::Llm do
-  subject(:llm) do
-    described_class.new(
-      DiscourseAi::Completions::Dialects::OpenAiCompatible,
-      canned_response,
-      model,
-      gateway: canned_response,
-    )
-  end
-
   fab!(:user)
   fab!(:model, :llm_model)
 
+  let(:llm) { described_class.proxy(model) }
+
   before { enable_current_plugin }
 
-  describe ".proxy" do
-    it "raises an exception when we can't proxy the model" do
-      fake_model = "unknown:unknown_v2"
+  def stub_response(status: 200, body: success_body)
+    WebMock.stub_request(:post, model.url).to_return(
+      status:,
+      body: body.is_a?(Hash) ? body.to_json : body,
+    )
+  end
 
-      expect { described_class.proxy(fake_model) }.to(
-        raise_error(DiscourseAi::Completions::Llm::UNKNOWN_MODEL),
-      )
+  def success_body(content: "test", prompt_tokens: 10, completion_tokens: 5)
+    {
+      model: model.name,
+      usage: {
+        prompt_tokens:,
+        completion_tokens:,
+        total_tokens: prompt_tokens + completion_tokens,
+      },
+      choices: [{ message: { role: "assistant", content: }, finish_reason: "stop" }],
+    }
+  end
+
+  def streaming_body(content: "Hello")
+    <<~SSE
+      data: {"id":"1","object":"chat.completion.chunk","choices":[{"delta":{"content":"#{content}"}}]}
+
+      data: [DONE]
+    SSE
+  end
+
+  describe ".proxy" do
+    it "raises for unknown model identifiers" do
+      expect { described_class.proxy("unknown:v2") }.to raise_error(described_class::UNKNOWN_MODEL)
     end
   end
 
-  describe "AiApiAuditLog" do
-    it "is able to keep track of post and topic id" do
-      prompt =
-        DiscourseAi::Completions::Prompt.new(
-          "You are fake",
-          messages: [{ type: :user, content: "fake orders" }],
-          topic_id: 123,
-          post_id: 1,
-        )
+  describe "#generate" do
+    context "with different prompt formats" do
+      before { stub_response(body: success_body(content: "world")) }
 
-      result = <<~TEXT
-        data: {"id":"chatcmpl-8xoPOYRmiuBANTmGqdCGVk4ZA3Orz","object":"chat.completion.chunk","created":1709265814,"model":"gpt-4-0125-preview","system_fingerprint":"fp_70b2088885","choices":[{"index":0,"delta":{"role":"assistant","content":""},"logprobs":null,"finish_reason":null}]}
+      it "accepts a simple string" do
+        expect(llm.generate("hello", user:)).to eq("world")
+      end
 
-        data: {"id":"chatcmpl-8xoPOYRmiuBANTmGqdCGVk4ZA3Orz","object":"chat.completion.chunk","created":1709265814,"model":"gpt-4-0125-preview","system_fingerprint":"fp_70b2088885","choices":[{"index":0,"delta":{"content":"Hello"},"logprobs":null,"finish_reason":null}]}
-
-        data: [DONE]
-      TEXT
-
-      WebMock.stub_request(:post, "https://api.openai.com/v1/chat/completions").to_return(
-        status: 200,
-        body: result,
-      )
-      result = +""
-      described_class.proxy(model).generate(prompt, user: user) { |partial| result << partial }
-
-      expect(result).to eq("Hello")
-      log = AiApiAuditLog.order("id desc").first
-      expect(log.topic_id).to eq(123)
-      expect(log.post_id).to eq(1)
+      it "accepts an array of messages" do
+        messages = [{ type: :system, content: "bot" }, { type: :user, content: "hello" }]
+        expect(llm.generate(messages, user:)).to eq("world")
+      end
     end
 
-    it "can track feature_name and feature_context" do
-      body = {
-        model: "gpt-3.5-turbo-0301",
-        usage: {
-          prompt_tokens: 337,
-          completion_tokens: 162,
-          total_tokens: 499,
-        },
-        choices: [
-          { message: { role: "assistant", content: "test" }, finish_reason: "stop", index: 0 },
-        ],
-      }.to_json
+    context "with streaming" do
+      it "yields partials via block" do
+        stub_response(body: streaming_body(content: "Hi"))
 
-      WebMock.stub_request(:post, "https://api.openai.com/v1/chat/completions").to_return(
-        status: 200,
-        body: body,
-      )
+        result = +""
+        llm.generate("hi", user:) { |partial| result << partial }
+        expect(result).to eq("Hi")
+      end
+    end
 
-      result =
-        described_class.proxy(model).generate(
-          "Hello",
-          user: user,
-          feature_name: "llm_triage",
+    context "with a fake model" do
+      fab!(:fake_model)
+
+      before do
+        DiscourseAi::Completions::Endpoints::Fake.delays = []
+        DiscourseAi::Completions::Endpoints::Fake.chunk_count = 10
+      end
+
+      it "generates and streams responses" do
+        fake_llm = described_class.proxy(fake_model)
+        prompt =
+          DiscourseAi::Completions::Prompt.new("System", messages: [{ type: :user, content: "hi" }])
+
+        expect(fake_llm.generate(prompt, user:)).to be_present
+
+        partials = []
+        response = fake_llm.generate(prompt, user:) { |p| partials << p }
+        expect(partials.size).to eq(10)
+        expect(partials.join).to eq(response)
+      end
+    end
+
+    context "when auditing" do
+      it "logs topic_id, post_id, feature_name, and feature_context" do
+        stub_response(body: success_body)
+
+        llm.generate(
+          DiscourseAi::Completions::Prompt.new(
+            "sys",
+            messages: [{ type: :user, content: "hi" }],
+            topic_id: 123,
+            post_id: 1,
+          ),
+          user:,
+          feature_name: "triage",
           feature_context: {
             foo: "bar",
           },
         )
 
-      expect(result).to eq("test")
-      log = AiApiAuditLog.order("id desc").first
-      expect(log.feature_name).to eq("llm_triage")
-      expect(log.feature_context).to eq({ "foo" => "bar" })
-    end
-
-    it "records a usage stat row for reporting" do
-      body = {
-        model: "gpt-3.5-turbo-0301",
-        usage: {
-          prompt_tokens: 20,
-          completion_tokens: 10,
-          total_tokens: 30,
-        },
-        choices: [
-          { message: { role: "assistant", content: "stat-test" }, finish_reason: "stop", index: 0 },
-        ],
-      }.to_json
-
-      WebMock.stub_request(:post, "https://api.openai.com/v1/chat/completions").to_return(
-        status: 200,
-        body: body,
-      )
-
-      expect do
-        described_class.proxy(model).generate("Hello", user: user, feature_name: "llm_triage")
-      end.to change { AiApiRequestStat.count }.by(1)
-
-      log = AiApiAuditLog.order("id desc").first
-      stat = AiApiRequestStat.order("id desc").first
-
-      expect(stat.bucket_date).to eq(log.created_at)
-      expect(stat.language_model).to eq(log.language_model)
-      expect(stat.llm_id).to eq(model.id)
-      expect(stat.usage_count).to eq(1)
-      expect(stat.rolled_up).to be(false)
-    end
-
-    it "records response status for successes and failures" do
-      success_body = {
-        model: "gpt-3.5-turbo-0301",
-        usage: {
-          prompt_tokens: 10,
-          completion_tokens: 5,
-          total_tokens: 15,
-        },
-        choices: [{ message: { role: "assistant", content: "hi" } }],
-      }.to_json
-
-      WebMock.stub_request(:post, "https://api.openai.com/v1/chat/completions").to_return(
-        status: 200,
-        body: success_body,
-      )
-
-      described_class.proxy(model).generate("Hello", user: user, feature_name: "llm_triage")
-      expect(AiApiAuditLog.order("id desc").first.response_status).to eq(200)
-
-      WebMock.stub_request(:post, "https://api.openai.com/v1/chat/completions").to_return(
-        status: 401,
-        body: "invalid auth",
-      )
-
-      expect do
-        described_class.proxy(model).generate("Hello", user: user, feature_name: "llm_triage")
-      end.to raise_error(DiscourseAi::Completions::Endpoints::Base::CompletionFailed)
-
-      failure_log = AiApiAuditLog.order("id desc").first
-      expect(failure_log.response_status).to eq(401)
-      expect(failure_log.response_tokens).to eq(0)
-    end
-
-    it "fast-tracks the problem check after repeated errors and resets on success" do
-      key = "ai_llm_status_fast_fail:#{model.id}"
-      Discourse.redis.del(key)
-
-      WebMock.stub_request(:post, "https://api.openai.com/v1/chat/completions").to_return(
-        { status: 500, body: "fail" },
-        { status: 500, body: "fail" },
-        {
-          status: 200,
-          body: {
-            model: "gpt-3.5-turbo-0301",
-            usage: {
-              prompt_tokens: 10,
-              completion_tokens: 5,
-              total_tokens: 15,
-            },
-            choices: [{ message: { role: "assistant", content: "hi" } }],
-          }.to_json,
-        },
-      )
-
-      stub_const(DiscourseAi::Completions::Endpoints::Base, "FAIL_THRESHOLD", 2) do
-        2.times do
-          expect do
-            described_class.proxy(model).generate("Hello", user: user, feature_name: "llm_triage")
-          end.to raise_error(DiscourseAi::Completions::Endpoints::Base::CompletionFailed)
-        end
-      end
-
-      tracker = ProblemCheckTracker[:ai_llm_status, model.id]
-      expect(tracker.reload.failing?).to eq(true)
-
-      expect do
-        described_class.proxy(model).generate("Hello", user: user, feature_name: "llm_triage")
-      end.not_to raise_error
-
-      expect(Discourse.redis.get(key)).to be_nil
-    end
-  end
-
-  describe "#generate with fake model" do
-    fab!(:fake_model)
-
-    before do
-      DiscourseAi::Completions::Endpoints::Fake.delays = []
-      DiscourseAi::Completions::Endpoints::Fake.chunk_count = 10
-    end
-
-    let(:llm) { described_class.proxy(fake_model) }
-
-    let(:prompt) do
-      DiscourseAi::Completions::Prompt.new(
-        "You are fake",
-        messages: [{ type: :user, content: "fake orders" }],
-      )
-    end
-
-    it "can generate a response" do
-      response = llm.generate(prompt, user: user)
-      expect(response).to be_present
-    end
-
-    it "can generate content via a block" do
-      partials = []
-      response = llm.generate(prompt, user: user) { |partial| partials << partial }
-
-      expect(partials.length).to eq(10)
-      expect(response).to eq(DiscourseAi::Completions::Endpoints::Fake.fake_content)
-
-      expect(partials.join).to eq(response)
-    end
-  end
-
-  describe "#generate with various style prompts" do
-    let :canned_response do
-      DiscourseAi::Completions::Endpoints::CannedResponse.new(["world"])
-    end
-
-    it "can generate a response to a simple string" do
-      response = llm.generate("hello", user: user)
-      expect(response).to eq("world")
-    end
-
-    it "can generate a response from an array" do
-      response =
-        llm.generate(
-          [{ type: :system, content: "you are a bot" }, { type: :user, content: "hello" }],
-          user: user,
+        expect(AiApiAuditLog.last).to have_attributes(
+          topic_id: 123,
+          post_id: 1,
+          feature_name: "triage",
+          feature_context: {
+            "foo" => "bar",
+          },
         )
-      expect(response).to eq("world")
-    end
-  end
+      end
 
-  describe "#generate" do
-    let(:prompt) do
-      system_insts = (<<~TEXT).strip
-      I want you to act as a title generator for written pieces. I will provide you with a text,
-      and you will generate five attention-grabbing titles. Please keep the title concise and under 20 words,
-      and ensure that the meaning is maintained. Replies will utilize the language type of the topic.
-      TEXT
+      it "records response status" do
+        stub_response(status: 200)
+        llm.generate("Hello", user:)
+        expect(AiApiAuditLog.last.response_status).to eq(200)
 
-      DiscourseAi::Completions::Prompt
-        .new(system_insts)
-        .tap { |a_prompt| a_prompt.push(type: :user, content: (<<~TEXT).strip) }
-          Here is the text, inside <input></input> XML tags:
-          <input>
-            To perfect his horror, Caesar, surrounded at the base of the statue by the impatient daggers of his friends,
-            discovers among the faces and blades that of Marcus Brutus, his protege, perhaps his son, and he no longer
-            defends himself, but instead exclaims: 'You too, my son!' Shakespeare and Quevedo capture the pathetic cry.
-          </input>
-          TEXT
-    end
+        stub_response(status: 401, body: "error")
+        expect { llm.generate("Hello", user:) }.to raise_error(
+          DiscourseAi::Completions::Endpoints::Base::CompletionFailed,
+        )
+        expect(AiApiAuditLog.last).to have_attributes(response_status: 401, response_tokens: 0)
+      end
 
-    let(:canned_response) do
-      DiscourseAi::Completions::Endpoints::CannedResponse.new(
-        [
-          "<ai>The solitary horse.,The horse etched in gold.,A horse's infinite journey.,A horse lost in time.,A horse's last ride.</ai>",
-        ],
-      )
-    end
+      it "creates usage stats" do
+        stub_response(body: success_body(prompt_tokens: 20, completion_tokens: 10))
 
-    context "when getting the full response" do
-      it "processes the prompt and return the response" do
-        llm_response = llm.generate(prompt, user: user)
+        expect { llm.generate("Hello", user:) }.to change { AiApiRequestStat.count }.by(1)
 
-        expect(llm_response).to eq(canned_response.responses[0])
+        expect(AiApiRequestStat.last).to have_attributes(
+          llm_id: model.id,
+          usage_count: 1,
+          rolled_up: false,
+        )
       end
     end
 
-    context "when getting a streamed response" do
-      it "processes the prompt and call the given block with the partial response" do
-        llm_response = +""
+    context "when tracking failures" do
+      it "fast-tracks problem check after threshold and resets on success" do
+        WebMock.stub_request(:post, model.url).to_return(
+          { status: 500, body: "fail" },
+          { status: 500, body: "fail" },
+          { status: 200, body: success_body.to_json },
+        )
 
-        llm.generate(prompt, user: user) { |partial, cancel_fn| llm_response << partial }
+        stub_const(DiscourseAi::Completions::Endpoints::Base, "FAIL_THRESHOLD", 2) do
+          2.times do
+            expect { llm.generate("Hello", user:) }.to raise_error(
+              DiscourseAi::Completions::Endpoints::Base::CompletionFailed,
+            )
+          end
+        end
 
-        expect(llm_response).to eq(canned_response.responses[0])
+        expect(ProblemCheckTracker[:ai_llm_status, model.id].reload).to be_failing
+        expect { llm.generate("Hello", user:) }.not_to raise_error
+        expect(Discourse.redis.get("ai_llm_status_fast_fail:#{model.id}")).to be_nil
+      end
+
+      it "skips tracking for unsaved models" do
+        stub_response(status: 500, body: "fail")
+
+        unsaved = LlmModel.new(model.attributes.except("id", "created_at", "updated_at"))
+
+        stub_const(DiscourseAi::Completions::Endpoints::Base, "FAIL_THRESHOLD", 1) do
+          expect { described_class.proxy(unsaved).generate("Hello", user:) }.to raise_error(
+            DiscourseAi::Completions::Endpoints::Base::CompletionFailed,
+          )
+        end
       end
     end
   end

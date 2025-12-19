@@ -158,7 +158,7 @@ nl:
       el:
         name: Grieks
       en:
-        name: Engels (VS)
+        name: Engels
       en_GB:
         name: Engels (VK)
       es:
@@ -4695,6 +4695,7 @@ nl:
       upload_description: "Upload een CSV-bestand om bulksgewijs tags te maken"
       upload_instructions: "Eén per regel, optioneel met een taggroep in de notatie 'tagnaam,taggroep'."
       upload_successful: "Tags geüpload"
+      bulk_create_button: "Maken"
       delete_unused_confirmation:
         one: "%{count} tag wordt verwijderd: %{tags}"
         other: "%{count} tags worden verwijderd: %{tags}"
@@ -4845,7 +4846,6 @@ nl:
       tags_form_modal:
         title: "Tagsnavigatie bewerken"
         filter_placeholder: "Filter tags"
-        no_tags: "Er zijn geen tags die overeenkomen met de opgegeven term."
         subtitle:
           text: "en we geven automatisch de toptags van deze site weer"
       edit_navigation_modal_form:
@@ -7781,6 +7781,9 @@ nl:
         no_user_badges: "%{name} heeft nog geen badges toegekend gekregen."
         no_badges: Er zijn geen badges die kunnen worden toegekend.
         none_selected: "Selecteer een badge om te beginnen"
+        sections:
+          query: Query
+          settings: Instellingen
         usage_heading: Gebruik
         allow_title: Badge mag als titel worden gebruikt
         multiple_grant: Kan meerdere malen worden toegekend

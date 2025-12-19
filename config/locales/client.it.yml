@@ -158,7 +158,7 @@ it:
       el:
         name: Greco
       en:
-        name: Inglese (Stati Uniti)
+        name: Inglese
       en_GB:
         name: Inglese (Regno Unito)
       es:
@@ -4692,6 +4692,7 @@ it:
       upload_description: "Carica un file csv per creare numerose Etichette"
       upload_instructions: "Uno per riga, indicando opzionalmente un Gruppo di Etichette con il formato 'nome_etichetta,gruppo_etichetta'"
       upload_successful: "Etichette caricate con successo"
+      bulk_create_button: "Crea"
       delete_unused_confirmation:
         one: "%{count} etichetta sarà eliminata: %{tags}"
         other: "%{count} etichette saranno eliminate: %{tags}"
@@ -4842,7 +4843,6 @@ it:
       tags_form_modal:
         title: "Modifica la navigazione delle etichette"
         filter_placeholder: "Filtra etichette"
-        no_tags: "Non ci sono etichette corrispondenti al termine specificato."
         subtitle:
           text: "e mostreremo automaticamente le etichette principali di questo sito"
       edit_navigation_modal_form:
@@ -7778,6 +7778,9 @@ it:
         no_user_badges: "%{name} non ha ricevuto alcun distintivo."
         no_badges: Non ci sono distintivi da assegnare.
         none_selected: "Seleziona un distintivo per iniziare"
+        sections:
+          query: Query
+          settings: Impostazioni
         usage_heading: Utilizzo
         allow_title: Permetti di utilizzare un distintivo come titolo
         multiple_grant: Può essere assegnato più volte

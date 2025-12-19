@@ -270,6 +270,7 @@ module DiscourseAi
 
           tool_call_message[:thinking] = thinking_message if thinking_message
           tool_call_message[:thinking_provider_info] = provider_payload if provider_payload.present?
+          current_thinking.clear
         end
 
         tool_message = {

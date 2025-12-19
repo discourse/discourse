@@ -3978,6 +3978,7 @@ sv:
       upload_description: "Ladda upp en csv-fil för att skapa taggar på bulk."
       upload_instructions: "En per rad, alternativt med en tagg-grupp i formatet 'tag_name,tag_group'."
       upload_successful: "Lyckad uppladdning av taggar"
+      bulk_create_button: "Skapa"
       delete_unused_confirmation:
         one: "%{count} tagg kommer att raderas: %{tags}"
         other: "%{count} taggar kommer att raderas: %{tags}"
@@ -4121,7 +4122,6 @@ sv:
       tags_form_modal:
         title: "Redigera taggnavigering"
         filter_placeholder: "Filtrera taggar"
-        no_tags: "Det finns inga taggar som matchar den angivna termen."
         subtitle:
           text: "så visar vi automatiskt den här webbplatsens topptaggar"
       edit_navigation_modal_form:
@@ -6192,6 +6192,9 @@ sv:
         no_user_badges: "%{name} har inte beviljats några utmärkelser."
         no_badges: Det finns inga utmärkelser som kan utfärdas.
         none_selected: "Välj en utmärkelse för att komma igång"
+        sections:
+          query: Sökning
+          settings: Inställningar
         allow_title: Tillåt att utmärkelse används som titel
         multiple_grant: Kan utfärdas flera gånger
         visibility_heading: Synlighet

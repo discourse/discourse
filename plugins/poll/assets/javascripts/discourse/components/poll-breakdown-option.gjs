@@ -9,6 +9,7 @@ import discourseComputed from "discourse/lib/decorators";
 import loadChartJS from "discourse/lib/load-chart-js";
 import I18n, { i18n } from "discourse-i18n";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
+import decoratePollOption from "../modifiers/decorate-poll-option";
 
 @tagName("")
 export default class PollBreakdownOption extends Component {
@@ -80,7 +81,10 @@ export default class PollBreakdownOption extends Component {
           {{@option.votes}}
         {{/if}}
       </span>
-      <span class="poll-breakdown-option-text">{{htmlSafe @option.html}}</span>
+      <span
+        class="poll-breakdown-option-text"
+        {{decoratePollOption @option.html}}
+      ></span>
     </li>
   </template>
 }

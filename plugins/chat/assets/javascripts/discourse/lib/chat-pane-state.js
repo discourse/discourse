@@ -173,11 +173,16 @@ export default class ChatPaneState {
    * @param {number} [options.distanceThresholdPixels]
    */
   updatePendingContentFromScrollState(options) {
-    const { fetchedOnce, canLoadMoreFuture, state, distanceThresholdPixels } =
-      options;
+    const {
+      scroller,
+      fetchedOnce,
+      canLoadMoreFuture,
+      state,
+      distanceThresholdPixels,
+    } = options;
 
     this.#updateHasPendingContentBelow({
-      scroller: state?.scroller,
+      scroller,
       fetchedOnce,
       canLoadMoreFuture,
       distanceToBottomPixels: state?.distanceToBottom?.pixels ?? 0,
@@ -266,6 +271,10 @@ export default class ChatPaneState {
     this.addPendingMessages(messageCount);
 
     schedule("afterRender", () => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
       this.hasPendingContentBelow = this.#computeHasPendingContentBelow(
         scroller,
         false

@@ -148,7 +148,7 @@ fa_IR:
       de:
         name: آلمانی
       en:
-        name: انگلیسی (لهجه آمریکایی)
+        name: انگلیسی
       en_GB:
         name: انگلیسی (بریتانیا)
       es:
@@ -4438,6 +4438,7 @@ fa_IR:
       upload_description: "برای ایجاد تگ ها به صورت دسته جمعی یک فایل csv آپلود کنید"
       upload_instructions: "یکی در هر خط، به صورت اختیاری با یک گروه برچسب؛ در قالب 'نام_تگ, گروه_تگ'."
       upload_successful: "تگ‌ها با موفقیت بارگذاری شد"
+      bulk_create_button: "ایجاد"
       delete_unused_confirmation:
         one: "%{count} برچسب حذف خواهد شد:%{tags}"
         other: "%{count} برچسب حذف خواهد شد: %{tags}"
@@ -4587,7 +4588,6 @@ fa_IR:
       tags_form_modal:
         title: "ویرایش ناوبری برچسب‌ها"
         filter_placeholder: "فیلتر کردن برچسب‌ها"
-        no_tags: "هیچ برچسبی مطابق با عبارت داده شده وجود ندارد."
         subtitle:
           text: "و ما به طور خودکار برچسب‌های برتر این سایت را نشان خواهیم داد"
       edit_navigation_modal_form:
@@ -7056,6 +7056,8 @@ fa_IR:
         no_user_badges: "%{name} هیچ نشانی دریافت نکرده است."
         no_badges: نشانی برای اعطا کردن وجود ندارد.
         none_selected: "برای شروع یک نشان رو انتخاب کنید"
+        sections:
+          settings: تنظیم
         usage_heading: استفاده
         allow_title: اجازه‌ی استفاده نشان برای عنوان
         multiple_grant: نمی توان چندین بار اعطا کرد

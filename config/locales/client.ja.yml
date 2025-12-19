@@ -130,7 +130,7 @@ ja:
       el:
         name: ギリシャ語
       en:
-        name: 英語 (米国)
+        name: 英語
       en_GB:
         name: 英語 (英国)
       es:
@@ -4444,6 +4444,7 @@ ja:
       upload_description: "csv ファイルをアップロードしてタグを一括作成します"
       upload_instructions: "1 行に 1 つ、オプションで 'タグ名,タググループ' の形式でタググループを使用します。"
       upload_successful: "タグを正常にアップロードしました"
+      bulk_create_button: "作成"
       delete_unused_confirmation:
         other: "%{count} 個のタグが削除されます: %{tags}"
       delete_unused_confirmation_more_tags:
@@ -4590,7 +4591,6 @@ ja:
       tags_form_modal:
         title: "タグナビゲーションを編集する"
         filter_placeholder: "タグをフィルタする"
-        no_tags: "指定された用語に一致するタグはありません。"
         subtitle:
           text: "このサイトの上位タグを自動的に表示します"
       edit_navigation_modal_form:
@@ -7490,6 +7490,9 @@ ja:
         no_user_badges: "%{name} はバッジを付与されていません。"
         no_badges: 付与できるバッジがありません。
         none_selected: "開始するにはバッジを選択してください"
+        sections:
+          query: クエリ
+          settings: 設定
         usage_heading: 使用方法
         allow_title: バッジをタグラインとして使用することを許可する
         multiple_grant: 何度でも付与できる

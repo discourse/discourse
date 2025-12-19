@@ -7,6 +7,10 @@
 ug:
   js:
     discourse_rewind:
+      share:
+        toggle_label:
+          private: "شەخسىي"
+          public: "ئاممىۋى"
       reports:
         activity_calendar:
           title: پائالىيەت يىلنامەسى

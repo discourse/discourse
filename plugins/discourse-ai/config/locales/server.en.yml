@@ -83,6 +83,8 @@ en:
     ai_nsfw_models: "Models to use for NSFW inference."
 
     ai_spam_detection_enabled: "Enable the AI spam detection module"
+    ai_spam_detection_max_post_count: "Maximum number of posts a user can have before they are no longer scanned for spam"
+    ai_spam_detection_max_trust_level: "Maximum trust level of users to scan for spam"
 
     ai_openai_api_key: "API key for OpenAI API. ONLY used for Image creation and edits. For GPT use the LLM config tab"
     ai_openai_image_generation_url: "URL for OpenAI image generation API"
@@ -124,6 +126,7 @@ en:
     ai_summary_backfill_maximum_topics_per_hour: "Number of topic summaries to backfill per hour."
 
     ai_bot_enabled: "Enable the AI Bot module."
+    ai_bot_enabled_llms: "LLMs available to select for AI bot conversations"
     ai_bot_enable_chat_warning: "Display a warning when PM chat is initiated. Can be overriden by editing the translation string: discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "When the GPT Bot has access to the PM, it will reply to members of these groups."
     ai_bot_debugging_allowed_groups: "Allow these groups to see a debug button on posts which displays the raw AI request and response"

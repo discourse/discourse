@@ -158,7 +158,7 @@ tr_TR:
       el:
         name: Yunanca
       en:
-        name: İngilizce (ABD)
+        name: İngilizce
       en_GB:
         name: İngilizce (BK)
       es:
@@ -4695,6 +4695,7 @@ tr_TR:
       upload_description: "Etiketleri toplu olarak oluşturmak için bir csv dosyası yükleyin"
       upload_instructions: "Satır başına bir tane, isteğe bağlı olarak \"tag_name,tag_group\" biçiminde bir etiket grubu ile."
       upload_successful: "Etiketler başarıyla yüklendi"
+      bulk_create_button: "Oluştur"
       delete_unused_confirmation:
         one: "%{count} etiket silinecek: %{tags}"
         other: "%{count} etiket silinecek: %{tags}"
@@ -4845,7 +4846,6 @@ tr_TR:
       tags_form_modal:
         title: "Etiketlerde gezinmeyi düzenle"
         filter_placeholder: "Etiketleri filtrele"
-        no_tags: "Verilen terimle eşleşen etiket yok."
         subtitle:
           text: "ve bu sitenin en popüler etiketlerini otomatik olarak gösteririz"
       edit_navigation_modal_form:
@@ -7781,6 +7781,9 @@ tr_TR:
         no_user_badges: "%{name} adlı kullanıcıya hiç rozet verilmedi."
         no_badges: Verilebilecek rozet yok.
         none_selected: "Başlamak için bir rozet seçin"
+        sections:
+          query: Sorgu
+          settings: Ayarlar
         usage_heading: Kullanım
         allow_title: Rozetin başlık olarak kullanılmasına izin verin
         multiple_grant: Birden çok kez verilebilir

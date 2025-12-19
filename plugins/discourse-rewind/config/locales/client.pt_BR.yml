@@ -8,6 +8,10 @@ pt_BR:
   js:
     discourse_rewind:
       profile_link: "Veja seu Discourse Rewind %{rewindYear}"
+      share:
+        toggle_label:
+          private: "Privado"
+          public: "Público"
       reports:
         activity_calendar:
           title: Calendário de Atividade

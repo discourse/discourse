@@ -214,7 +214,7 @@ he:
       el:
         name: יוונית
       en:
-        name: אנגלית אמריקאית
+        name: אנגלית
       en_GB:
         name: אנגלית בריטית
       es:
@@ -5343,6 +5343,7 @@ he:
       upload_description: "ניתן להעלות קובץ csv כדי ליצור כמות גדולה של תגיות בבת אחת"
       upload_instructions: "אחת בשורה, אפשר עם קבוצת תגיות בתצורה ‚שם_תגית,קבוצת_תגיות’."
       upload_successful: "התגיות הועלו בהצלחה"
+      bulk_create_button: "יצירה"
       delete_unused_confirmation:
         one: "תגית אחת תימחק: %{tags}"
         two: "%{count} תגיות תימחקנה: %{tags}"
@@ -5507,7 +5508,6 @@ he:
       tags_form_modal:
         title: "עריכת ניווט בתגיות"
         filter_placeholder: "סינון תגיות"
-        no_tags: "אין תגיות שתואמות לביטוי שסופק."
         subtitle:
           text: "ואנו נציג לך את התגיות המובילות באתר אוטומטית"
       edit_navigation_modal_form:
@@ -8672,6 +8672,9 @@ he:
         no_user_badges: "למשתמש %{name} לא הוענקו עיטורים."
         no_badges: אין עיטורים שניתן להעניק.
         none_selected: "נא לבחור עיטור כדי להתחיל"
+        sections:
+          query: שאילתה
+          settings: הגדרות
         usage_heading: שימוש
         allow_title: לאפשר להשתמש בעיטור ככותרת
         multiple_grant: יכולים להינתן מספר פעמים

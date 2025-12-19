@@ -154,7 +154,7 @@ el:
       el:
         name: Ελληνικά
       en:
-        name: Αγγλικά (ΗΠΑ)
+        name: Αγγλικά
       en_GB:
         name: Αγγλικά (Ηνωμένο Βασίλειο)
       es:
@@ -4278,6 +4278,7 @@ el:
       upload_description: "Επιφορτώστε ένα αρχείο csv για να δημιουργήσετε ετικέτες μαζικά"
       upload_instructions: "Μία ανά γραμμή, προαιρετικά με μια ομάδα ετικετών με τη μορφή «tag_name, tag_group»."
       upload_successful: "Οι ετικέτες επιφορτώθηκαν με επιτυχία"
+      bulk_create_button: "Δημιουργία"
       delete_unused_confirmation:
         one: "%{count} ετικέτα θα διαγραφεί: %{tags}"
         other: "%{count} ετικέτες θα διαγραφούν: %{tags}"
@@ -6242,6 +6243,8 @@ el:
         no_user_badges: "Στο χρήστη %{name} δεν έχουν απονεμηθεί παράσημα."
         no_badges: Δεν υπάρχουν παράσημα που να μπορούν να απονεμηθούν.
         none_selected: "Διάλεξε ένα παράσημο για να ξεκινήσεις"
+        sections:
+          settings: Ρυθμίσεις
         allow_title: Το παράσημο μπορεί να χρησιμοποιηθεί σαν τίτλος
         multiple_grant: Μπορεί να απονεμηθεί πολλές φορές
         visibility_heading: Ορατότητα

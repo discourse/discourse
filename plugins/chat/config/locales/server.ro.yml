@@ -69,6 +69,10 @@ ro:
       chat_pm_body: "%{link}\n\n%{message}"
     notify_moderators:
       chat_pm_body: "%{link}\n\n%{message}"
+  user_notifications:
+    chat_summary:
+      your_chat_settings: "preferințe discuții email"
   unsubscribe:
     chat_summary:
+      select_title: "Setează ca rezumatul discuțiilor să se trimită prin email către:"
       never: Niciodată

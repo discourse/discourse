@@ -138,6 +138,9 @@ ca:
       placeholder: data
       from_placeholder: "des de la data"
       to_placeholder: "fins a la data"
+    languages:
+      en:
+        name: Anglès
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "publicació #%{postNumber} de @%{username}"
@@ -2872,6 +2875,7 @@ ca:
       upload_description: "Carregueu un fitxer CSV per a crear etiquetes a l'engròs"
       upload_instructions: "Una per línia, opcionalment amb un grup d'etiquetes en el format 'tag_name,tag_group'."
       upload_successful: "S'han carregat les etiquetes correctament"
+      bulk_create_button: "Crea"
       delete_unused_confirmation:
         one: "Se suprimirà %{count} etiqueta: %{tags}"
         other: "Se suprimiran %{count}etiquetes: %{tags}"
@@ -4377,6 +4381,9 @@ ca:
         no_user_badges: "No s'ha atorgat cap insígnia a %{name}."
         no_badges: No hi ha insígnies per a atorgar.
         none_selected: "Tria una insígnia per a començar"
+        sections:
+          query: Consulta
+          settings: Configuració
         allow_title: Permet que es faci servir la insígnia com a títol
         multiple_grant: Pot concedir-se moltes vegades
         visibility_heading: Visibilitat

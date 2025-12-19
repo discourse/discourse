@@ -43,7 +43,14 @@ end
 require_relative "lib/discourse_rewind/engine"
 
 after_initialize do
-  UserUpdater::OPTION_ATTR.push(:discourse_rewind_disabled, :discourse_rewind_share_publicly)
+  UserUpdater::OPTION_ATTR.push(:discourse_rewind_enabled, :discourse_rewind_share_publicly)
+
+  # TODO: Rename the `discourse_rewind_disabled` column to `discourse_rewind_enabled` and remove these
+  add_to_class(:user_option, :discourse_rewind_enabled) { !discourse_rewind_disabled }
+
+  add_to_class(:user_option, :discourse_rewind_enabled=) do |value|
+    self.discourse_rewind_disabled = !ActiveModel::Type::Boolean.new.cast(value)
+  end
 
   add_to_class(:user, :discourse_rewind_and_profile_public?) do
     self.user_option.discourse_rewind_share_publicly && !self.user_option.hide_profile
@@ -51,7 +58,7 @@ after_initialize do
 
   # add_to_serializer(:current_user) / add_to_serializer(:current_user_option)
   %i[user_option current_user_option].each do |serializer|
-    add_to_serializer(serializer, :discourse_rewind_disabled) { object.discourse_rewind_disabled }
+    add_to_serializer(serializer, :discourse_rewind_enabled) { object.discourse_rewind_enabled }
 
     add_to_serializer(serializer, :discourse_rewind_dismissed) do
       dismissed_at = object.discourse_rewind_dismissed_at

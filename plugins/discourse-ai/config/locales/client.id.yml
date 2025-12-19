@@ -93,7 +93,7 @@ id:
         disabled: "(dinonaktifkan)"
         groups: "Grup:"
         no_groups: "Tidak ada"
-        edit: "Ubah"
+        edit: "Pengaturan"
         expand_list:
           other: "(%{count} lainnya)"
         collapse_list: "(tampilkan lebih sedikit)"

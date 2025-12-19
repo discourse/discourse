@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
-import TopicList from "discourse/components/topic-list";
+import TopicList from "discourse/components/topic-list/list";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
 export default class TopicListOrganism extends Component {
   get topicListCode() {
     return `
-import TopicList from "discourse/components/topic-list";
+import TopicList from "discourse/components/topic-list/list";
 
 <template>
   <TopicList @topics={{@dummy.topics}} @showPosters={{true}} />
@@ -15,7 +15,7 @@ import TopicList from "discourse/components/topic-list";
 
   get topicListHidePostersCode() {
     return `
-import TopicList from "discourse/components/topic-list";
+import TopicList from "discourse/components/topic-list/list";
 
 <template>
   <TopicList @topics={{@dummy.topics}} @showPosters={{false}} />

@@ -175,7 +175,7 @@ en:
       el:
         name: Greek
       en:
-        name: English (US)
+        name: English
       en_GB:
         name: English (UK)
       es:
@@ -4538,6 +4538,8 @@ en:
       slug_placeholder: "(Optional) dashed-words for url"
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
+      errors:
+        self_lockout: "You are about to change category permissions in a way that will remove your own access. Are you sure you want to proceed?"
       name: "Category name"
       untitled: "Untitled category"
       description: "Description"
@@ -5190,6 +5192,15 @@ en:
       upload_description: "Upload a csv file to create tags in bulk"
       upload_instructions: "One per line, optionally with a tag group in the format 'tag_name,tag_group'."
       upload_successful: "Tags uploaded successfully"
+      bulk_create_inline_placeholder: "Create tags (comma-separated)"
+      bulk_create_button: "Create"
+      bulk_create_success:
+        one: "Created %{count} tag:"
+        other: "Created %{count} tags:"
+      bulk_create_already_exist:
+        one: "%{count} tag already exists:"
+        other: "%{count} tags already exist:"
+      bulk_create_some_failed: "Some tags failed to create:"
       delete_unused_confirmation:
         one: "%{count} tag will be deleted: %{tags}"
         other: "%{count} tags will be deleted: %{tags}"
@@ -5364,7 +5375,7 @@ en:
       tags_form_modal:
         title: "Edit tags navigation"
         filter_placeholder: "Filter tags"
-        no_tags: "There are no tags matching the given term."
+        no_tags: "There are no tags matching the current filters."
         subtitle:
           text: "and we'll automatically show this site's top tags"
       edit_navigation_modal_form:
@@ -5711,6 +5722,8 @@ en:
       toggle_localized:
         translated: "Page is machine-translated. Click to view original."
         not_translated: "Page is not translated. Click to translate."
+    language_switcher:
+      title: "Change site language"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
@@ -8537,6 +8550,10 @@ en:
         no_user_badges: "%{name} has not been granted any badges."
         no_badges: There are no badges that can be granted.
         none_selected: "Select a badge to get started"
+        sections:
+          design: Design
+          query: Query
+          settings: Settings
         usage_heading: Usage
         allow_title: Allow badge to be used as a title
         multiple_grant: Can be granted multiple times

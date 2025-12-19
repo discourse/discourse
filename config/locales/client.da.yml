@@ -155,7 +155,7 @@ da:
       el:
         name: Græsk
       en:
-        name: Engelsk (US)
+        name: Engelsk
       en_GB:
         name: Engelsk (UK)
       es:
@@ -3997,6 +3997,7 @@ da:
       upload_description: "Overfør en csv-fil for at masseoprette tags"
       upload_instructions: "Én pr. linje, eventuelt med en mærkegruppe i formatet 'mærkenavn, mærkegruppe'"
       upload_successful: "Vellykket overførsel af tags"
+      bulk_create_button: "Opret"
       delete_unused_confirmation:
         one: "%{count}tag vil blive slettet: %{tags}"
         other: "%{count} tags bliver slettet: %{tags}"
@@ -6214,6 +6215,9 @@ da:
         no_user_badges: "%{name} er ikke blevet tildelt nogen emblemer."
         no_badges: Der er ikke nogen emblemer, der kan tildeles.
         none_selected: "Vælg et emblem for at komme igang"
+        sections:
+          query: Forespørgsel
+          settings: Indstillinger
         allow_title: Tillad at bruge dette emblem som titel
         multiple_grant: Kan tildeles flere gange
         visibility_heading: Synlighed
