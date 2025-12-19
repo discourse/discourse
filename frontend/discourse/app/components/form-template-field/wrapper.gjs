@@ -64,7 +64,7 @@ export default class FormTemplateFieldWrapper extends Component {
 
   async _loadTemplate(templateContent) {
     try {
-      const Yaml = await import("js-yaml").default;
+      const Yaml = (await import("js-yaml")).default;
       this.parsedTemplate = Yaml.load(templateContent);
       this.args.onSelectFormTemplate?.(this.parsedTemplate);
     } catch (e) {
