@@ -74,7 +74,7 @@ acceptance("Search - Full Page", function (needs) {
             allow_title: false,
             multiple_grant: false,
             icon: "certificate",
-            image: null,
+            image_url: null,
             listable: true,
             enabled: true,
             badge_grouping_id: 1,
