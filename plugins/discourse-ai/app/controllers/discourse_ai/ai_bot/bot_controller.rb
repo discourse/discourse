@@ -6,6 +6,8 @@ module DiscourseAi
       requires_plugin ::DiscourseAi::PLUGIN_NAME
       requires_login
 
+      before_action :check_discover_permissions, only: %i[discover discover_continue_convo]
+
       def show_debug_info_by_id
         log = AiApiAuditLog.find(params[:id])
         raise Discourse::NotFound if !log.topic
@@ -46,16 +48,7 @@ module DiscourseAi
       end
 
       def discover
-        ai_persona =
-          AiPersona
-            .all_personas(enabled_only: false)
-            .find { |persona| persona.id == SiteSetting.ai_bot_discover_persona.to_i }
-
-        if ai_persona.nil? || !current_user.in_any_groups?(ai_persona.allowed_group_ids.to_a)
-          raise Discourse::InvalidAccess.new
-        end
-
-        if ai_persona.default_llm_id.blank?
+        if ai_discover_persona.default_llm_id.blank?
           render_json_error "Discover persona is missing a default LLM model.", status: 503
           return
         end
@@ -71,13 +64,17 @@ module DiscourseAi
       end
 
       def discover_continue_convo
-        raise Discourse::InvalidParameters.new("user_id") if !params[:user_id]
         raise Discourse::InvalidParameters.new("query") if !params[:query]
         raise Discourse::InvalidParameters.new("context") if !params[:context]
 
-        user = User.find(params[:user_id])
+        RateLimiter.new(
+          current_user,
+          "ai_discover_#{current_user.id}_continue_convo",
+          3,
+          1.minute,
+        ).performed!
 
-        bot_user_id = AiPersona.find_by(id: SiteSetting.ai_bot_discover_persona).user_id
+        bot_user_id = ai_discover_persona.user_id
         bot_username = User.find_by(id: bot_user_id).username
 
         query = params[:query]
@@ -85,7 +82,7 @@ module DiscourseAi
 
         post =
           PostCreator.create!(
-            user,
+            current_user,
             title:
               I18n.t("discourse_ai.ai_bot.discoveries.continue_conversation.title", query: query),
             raw:
@@ -102,6 +99,19 @@ module DiscourseAi
         render json: success_json.merge(topic_id: post.topic_id)
       rescue StandardError => e
         render json: failed_json.merge(errors: [e.message]), status: 422
+      end
+
+      private
+
+      def ai_discover_persona
+        @discover_persona ||= AiPersona.find_by(id: SiteSetting.ai_bot_discover_persona)
+      end
+
+      def check_discover_permissions
+        if ai_discover_persona.nil? || current_user.nil? ||
+             !current_user.in_any_groups?(ai_discover_persona.allowed_group_ids.to_a)
+          raise Discourse::InvalidAccess.new
+        end
       end
     end
   end
