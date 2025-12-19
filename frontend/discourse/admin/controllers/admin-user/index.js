@@ -663,7 +663,11 @@ export default class AdminUserIndexController extends Controller {
   @action
   showDeletePostsConfirmation() {
     this.modal.show(DeletePostsConfirmationModal, {
-      model: { user: this.model, deleteAllPosts: this.deleteAllPosts },
+      model: {
+        user: this.model,
+        handleDeleteAllPosts: () =>
+          this.adminTools.deletePostsDecider(this.model),
+      },
     });
   }
 

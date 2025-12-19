@@ -79,6 +79,19 @@ class Admin::UsersController < Admin::StaffController
     render json: { posts_deleted: deleted_posts.length }
   end
 
+  def delete_posts_decider
+    @user = User.find_by(id: params[:user_id])
+    post_count = @user.post_count
+    threshold = SiteSetting.delete_all_posts_background_threshold.to_i
+
+    if threshold > 0 && post_count > threshold
+      Jobs.enqueue(:delete_user_posts, user_id: @user.id, admin_id: current_user.id)
+      render json: { job_enqueued: true, post_count: post_count }
+    else
+      render json: { job_enqueued: false, post_count: post_count }
+    end
+  end
+
   # DELETE action to delete penalty history for a user
   def penalty_history
     # We don't delete any history, we merely remove the action type
