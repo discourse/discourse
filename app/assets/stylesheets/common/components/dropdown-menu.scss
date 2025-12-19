@@ -26,6 +26,11 @@
 
     &.--selected .btn {
       background: var(--d-selected);
+
+      &:hover,
+      :focus-visible {
+        background: var(--d-selected-hover);
+      }
     }
   }
 
