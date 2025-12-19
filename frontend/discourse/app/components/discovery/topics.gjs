@@ -264,6 +264,14 @@ export default class DiscoveryTopics extends Component {
       @incomingCount={{this.topicTrackingState.incomingCount}}
       @bulkSelectHelper={{@bulkSelectHelper}}
     >
+      {{#if this.renderNewListHeaderControls}}
+        <NewListHeaderControlsWrapper
+          @current={{@model.params.subset}}
+          @newRepliesCount={{this.newRepliesCount}}
+          @newTopicsCount={{this.newTopicsCount}}
+          @changeNewListSubset={{@changeNewListSubset}}
+        />
+      {{/if}}
       {{#if this.top}}
         <div class="top-lists">
           <PeriodChooser
@@ -297,16 +305,6 @@ export default class DiscoveryTopics extends Component {
           </div>
         {{/if}}
       {{/if}}
-
-      {{#if this.renderNewListHeaderControls}}
-        <NewListHeaderControlsWrapper
-          @current={{@model.params.subset}}
-          @newRepliesCount={{this.newRepliesCount}}
-          @newTopicsCount={{this.newTopicsCount}}
-          @changeNewListSubset={{@changeNewListSubset}}
-        />
-      {{/if}}
-
       <span>
         <PluginOutlet
           @name="before-topic-list"
