@@ -44,7 +44,7 @@ export default class DeletePostsConfirmation extends Component {
       <:footer>
         <DButton
           class="btn-danger"
-          @action={{@model.deleteAllPosts}}
+          @action={{@model.handleDeleteAllPosts}}
           @icon="trash-can"
           @disabled={{this.deleteDisabled}}
           @translatedLabel={{i18n

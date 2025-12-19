@@ -4101,6 +4101,12 @@ en:
 
         Posts from new users were held for moderation and are currently waiting to be reviewed. [Approve or reject them here](%{base_url}/review?type=ReviewableQueuedPost).
 
+    user_posts_deleted:
+      title: "User Posts Deleted"
+      subject_template: "All of %{user}'s posts have been deleted"
+      text_body_template: |
+        %{deleted_posts_count} posts from user %{user} have been deleted by %{staff_user}.
+
   unsubscribe_link: |
     To unsubscribe from these emails, [click here](%{unsubscribe_url}).
 

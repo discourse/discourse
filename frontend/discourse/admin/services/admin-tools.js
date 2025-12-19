@@ -2,6 +2,7 @@ import { action } from "@ember/object";
 import Service, { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { Promise } from "rsvp";
+import DeleteUserPostsProgressModal from "discourse/admin/components/modal/delete-user-posts-progress";
 import PenalizeUserModal from "discourse/admin/components/modal/penalize-user";
 import AdminUser from "discourse/admin/models/admin-user";
 import { ajax } from "discourse/lib/ajax";
@@ -52,6 +53,9 @@ export default class AdminToolsService extends Service {
         user: loadedUser,
         before: opts.before,
         successCallback: opts.successCallback,
+        handleDeleteAllPosts: opts.handleDeleteAllPosts
+          ? opts.handleDeleteAllPosts
+          : null,
       },
     });
   }
@@ -116,6 +120,30 @@ export default class AdminToolsService extends Service {
           },
         });
       });
+    });
+  }
+
+  async deletePostsDecider(user) {
+    const response = await ajax(
+      `/admin/users/${user.id}/delete_posts_decider`,
+      {
+        type: "POST",
+      }
+    );
+
+    if (response.job_enqueued) {
+      this.dialog.alert(i18n("admin.user.delete_posts.all_enqueued"));
+      this.modal.close();
+      return;
+    }
+
+    this.modal.show(DeleteUserPostsProgressModal, {
+      model: {
+        user,
+        updateUserPostCount(count) {
+          user.set("post_count", count);
+        },
+      },
     });
   }
 }
