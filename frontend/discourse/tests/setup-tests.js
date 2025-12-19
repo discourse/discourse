@@ -52,6 +52,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { configureRaiseOnDeprecation } from "discourse/tests/helpers/raise-on-deprecation";
 import { resetSettings } from "discourse/tests/helpers/site-settings";
+import config from "discourse/config/environment";
 
 const REPORT_MEMORY = false;
 let cancelled = false;
@@ -411,10 +412,7 @@ export default function setupTests(config) {
     `script[data-discourse-plugin="${CSS.escape(target)}"][data-preinstalled="true"]`
   );
 
-  if (
-    window.EmberENV.RAISE_ON_DEPRECATION ??
-    (isCoreTest || isPreinstalledPluginTest)
-  ) {
+  if (config.RAISE_ON_DEPRECATION ?? (isCoreTest || isPreinstalledPluginTest)) {
     configureRaiseOnDeprecation();
   }
 }
