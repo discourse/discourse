@@ -169,7 +169,6 @@ export default class AiSearchDiscoveries extends Component {
   @action
   async continueConversation() {
     const data = {
-      user_id: this.currentUser.id,
       query: this.query,
       context: this.discobotDiscoveries.discovery,
     };
