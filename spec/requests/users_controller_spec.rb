@@ -1998,6 +1998,19 @@ RSpec.describe UsersController do
         expect(user.reload.username).to eq(old_username)
       end
 
+      it "raises an error when new_username exceeds maximum length" do
+        put "/u/#{user.username}/preferences/username.json",
+            params: {
+              new_username: "a" * ((UsernameValidator::MAX_CHARS * 3) + 1),
+            }
+
+        expect(response).to be_unprocessable
+        expect(response.parsed_body["errors"].first).to include(
+          I18n.t("user.username.long", count: SiteSetting.max_username_length),
+        )
+        expect(user.reload.username).to eq(old_username)
+      end
+
       it "should succeed in normal circumstances" do
         put "/u/#{user.username}/preferences/username.json", params: { new_username: new_username }
 
