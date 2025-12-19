@@ -21,7 +21,7 @@ class ProblemCheck::AiLlmStatus < ProblemCheck
   end
 
   def self.fast_track_problem!(model, failed_calls, lookback_hours)
-    return if model.blank?
+    return if model.blank? || model.new_record?
 
     tracker = ProblemCheckTracker[:ai_llm_status, model.id]
     details = problem_details(model, failed_calls, failed_calls, lookback_hours)

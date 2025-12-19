@@ -450,7 +450,7 @@ module DiscourseAi
 
         def track_failures(call_status)
           return if call_status == :cancelled
-          return if llm_model.blank? || llm_model.seeded?
+          return if llm_model.blank? || llm_model.seeded? || llm_model.new_record?
           key = "ai_llm_status_fast_fail:#{llm_model.id}"
 
           if call_status == :success
