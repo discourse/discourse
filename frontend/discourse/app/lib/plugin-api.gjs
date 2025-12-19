@@ -1,5 +1,4 @@
 import $ from "jquery";
-import { isBlock } from "discourse/blocks";
 import { addAboutPageActivity } from "discourse/components/about-page";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
 import { addCardClickListenerSelector } from "discourse/components/card-contents-base";
@@ -55,6 +54,7 @@ import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/a
 import { registerAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { registerPluginHeaderActionComponent } from "discourse/lib/admin-plugin-header-actions";
 import { registerReportModeComponent } from "discourse/lib/admin-report-additional-modes";
+import { renderBlocksConfig } from "discourse/lib/blocks";
 import classPrepend, {
   withPrependsRolledBack,
 } from "discourse/lib/class-prepend";
@@ -133,9 +133,6 @@ import { addImageWrapperButton } from "discourse-markdown-it/features/image-cont
 const blockedModifications = ["component:topic-list"];
 
 const appliedModificationIds = new WeakMap();
-
-// TODO: This should be stored in a service instead
-export const blockConfigs = new Map();
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -3318,36 +3315,29 @@ class _PluginApi {
     _addCategoryPropertyForSave(property);
   }
 
-  renderBlocks(frame, blockConfig) {
-    // TODO: Better validation
-    const validateBlock = (block) => {
-      if (!block.block) {
-        throw new Error(`Block in layout ${name} is missing a component`);
-      }
-      if (!isBlock(block.block)) {
-        throw new Error(
-          `Block component ${block.name} (${block.block}) in layout ${frame} is not a valid block`
-        );
-      }
-    };
-
-    blockConfig.forEach((block) => {
-      if (block.group) {
-        block.blocks.forEach(validateBlock);
-      } else if (block.type === "conditional") {
-        block.blocks.forEach((conditionalBlock) => {
-          if (conditionalBlock.group) {
-            conditionalBlock.blocks.forEach(validateBlock);
-          } else {
-            validateBlock(conditionalBlock);
-          }
-        });
-      } else {
-        validateBlock(block);
-      }
-    });
-
-    blockConfigs.set(frame, blockConfig);
+  /**
+   * Renders block components in the specified outlet using the provided configuration.
+   *
+   * This method allows plugins to dynamically render block components in designated outlets
+   * throughout the application.
+   *
+   * @param {string} blockOutlet - The name of the block outlet where components should be rendered
+   * @param {Object} blockConfig - Configuration object defining the blocks to render
+   *
+   * @example
+   * ```javascript
+   * api.renderBlocks('homepage-blocks', {
+   *   blocks: [
+   *     {
+   *       component: MyCustomComponent,
+   *       shouldRender: (context) => context.user.isAdmin
+   *     }
+   *   ]
+   * });
+   * ```
+   */
+  renderBlocks(blockOutlet, blockConfig) {
+    renderBlocksConfig(blockOutlet, blockConfig);
   }
 
   // eslint-disable-next-line no-unused-vars

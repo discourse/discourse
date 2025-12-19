@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { concat, hash } from "@ember/helper";
 import { service } from "@ember/service";
 import curryComponent from "ember-curry-component";
-import { _BLOCK_IDENTIFIER } from "discourse/blocks";
 import concatClass from "discourse/helpers/concat-class";
+import { _BLOCK_IDENTIFIER } from "discourse/lib/blocks";
 import { blockConfigs } from "discourse/lib/plugin-api";
 import { or } from "discourse/truth-helpers";
 
