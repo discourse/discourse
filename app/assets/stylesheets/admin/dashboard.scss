@@ -735,6 +735,12 @@
   }
 }
 
+.admin-new-features {
+  &__group {
+    margin-bottom: 1em;
+  }
+}
+
 .admin-new-feature-item__header-experimental {
   color: var(--tertiary);
   background-color: var(--tertiary-very-low);
