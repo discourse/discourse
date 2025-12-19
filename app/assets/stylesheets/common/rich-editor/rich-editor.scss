@@ -293,7 +293,6 @@
 .fk-d-menu[data-identifier="composer-image-alt-text"] {
   user-select: none;
   z-index: z("composer", "dropdown");
-  animation: fade-in ease 0.25s 1 forwards !important;
 
   .fk-d-menu__inner-content {
     overflow: visible;
