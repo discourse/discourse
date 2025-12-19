@@ -168,7 +168,7 @@
     "testem": "^3.16.0",
     "typescript": "^5.9.3",
     "util": "^0.12.5",
-    "vite": "8.0.0-beta.2",
+    "vite": "npm:rolldown-vite@latest",
     "xss": "^1.0.15",
     "zimmerframe": "^1.1.4"
   },

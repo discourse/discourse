@@ -60,9 +60,6 @@ export default defineConfig(({ mode, command }) => {
       extensions,
       alias: aliases,
     },
-    experimental: {
-      bundledDev: true,
-    },
     plugins: [
       // Standard Ember stuff
 
