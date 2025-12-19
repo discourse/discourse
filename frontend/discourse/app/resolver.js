@@ -155,12 +155,6 @@ export function expireModuleTrieCache() {
 
 export function buildResolver(baseName) {
   return class extends Resolver {
-    static withModules(compatModules) {
-      console.log("WITH MODULES");
-      addModuleShims(compatModules);
-      return super.withModules(compatModules);
-    }
-
     resolveRouter(/* parsedName */) {
       const routerPath = `${baseName}/router`;
       if (requirejs.entries[routerPath]) {
@@ -400,20 +394,6 @@ export function buildResolver(baseName) {
       }
     }
 
-    // addModules(modules) {
-    //   addModuleShims(modules);
-    //   console.log("adding", Object.keys(modules));
-    //   for (let [name, module] of Object.entries(modules)) {
-    //     define(name, [], () => module);
-    //   }
-    //   DiscourseTemplateMap.setModuleNames(Object.keys(requirejs.entries));
-    //   expireModuleTrieCache();
-    //   Object.keys(this._normalizeCache).forEach(
-    //     (key) => delete this._normalizeCache[key]
-    //   );
-    //   super.addModules(modules);
-    // }
-
     /**
      * Builds a list of template path candidates based on various naming conventions.
      * Supports legacy naming patterns (underscored, dasherized, etc.) for backwards compatibility.
@@ -464,13 +444,4 @@ export function buildResolver(baseName) {
       }
     }
   };
-}
-
-function addModuleShims(compatModules) {
-  for (let [name, module] of Object.entries(compatModules)) {
-    console.log(name);
-    if (name.endsWith("-index")) {
-      compatModules[name.replace(/-index$/, "/index")] = module;
-    }
-  }
 }

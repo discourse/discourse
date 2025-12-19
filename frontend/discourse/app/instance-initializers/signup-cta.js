@@ -8,8 +8,7 @@ const PROMPT_HIDE_DURATION = ONE_DAY;
 export default {
   initialize(owner) {
     const appEvents = owner.lookup("service:app-events");
-    // const { canSignUp } = owner.lookup("controller:application");
-    const canSignUp = false;
+    const { canSignUp } = owner.lookup("controller:application");
     const currentUser = owner.lookup("service:current-user");
     const keyValueStore = owner.lookup("service:key-value-store");
     const screenTrack = owner.lookup("service:screen-track");

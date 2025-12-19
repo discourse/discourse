@@ -18,18 +18,6 @@ export default class DiscoveryRoute extends DiscourseRoute {
   };
 
   beforeModel(transition) {
-    if (transition.to.name === "discovery.index") {
-      console.log("discovery index before model");
-      const url = transition.intent.url;
-      const params = url?.split("?", 2)[1];
-      let destination = homepageDestination();
-      if (params) {
-        destination += `&${params}`;
-      }
-      this.router.transitionTo(destination);
-      return;
-    }
-
     const url = transition.intent.url;
     let matches;
     if (

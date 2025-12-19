@@ -20,7 +20,7 @@ function staticReport(reportType) {
 export default class AdminDashboardGeneralController extends AdminDashboardTabController {
   @service router;
   @service siteSettings;
-  // @controller("exception") exceptionController;
+  @controller("exception") exceptionController;
 
   isLoading = false;
   dashboardFetchedAt = null;
@@ -161,7 +161,6 @@ export default class AdminDashboardGeneralController extends AdminDashboardTabCo
           });
         })
         .catch((e) => {
-          // TODO THIS IS BROKEN
           this.exceptionController.set("thrown", e.jqXHR);
           this.router.replaceWith("exception");
         })

@@ -15,7 +15,6 @@ export default class TopicFromParams extends DiscourseRoute {
 
   // Avoid default model hook
   model(params) {
-    console.log("from params model");
     params = params || {};
     params.track_visit = true;
 
