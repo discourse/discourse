@@ -60,6 +60,12 @@ RSpec.describe FinalDestination do
     expect(fd.ignored).to eq(%w[test.localhost google.com meta.discourse.org])
   end
 
+  it "includes the base_url_no_prefix in ignored hostnames by default" do
+    fd = FinalDestination.new("https://meta.discourse.org")
+    hostname = URI.parse(Discourse.base_url_no_prefix).hostname
+    expect(fd.ignored).to eq([hostname])
+  end
+
   it "raises an error when URL is too long to encode" do
     expect {
       FinalDestination.new("https://meta.discourse.org/" + "x" * UrlHelper::MAX_URL_LENGTH)
@@ -106,6 +112,39 @@ RSpec.describe FinalDestination do
     it "ignores redirects" do
       final = FinalDestination.new("https://ignore-me.com/some-url", opts)
       expect(final.resolve.to_s).to eq("https://ignore-me.com/some-url")
+      expect(final.redirected?).to eq(false)
+      expect(final.status).to eq(:resolved)
+    end
+
+    it "does not ignore redirects when hostname does not properly match forum hostname" do
+      invalid_ignore_url = Discourse.base_url_no_prefix + ".baddude.com.au/some-url"
+      fd_stub_request(:head, invalid_ignore_url).to_return(doc_response)
+      FinalDestination::SSRFDetector.expects(:lookup_and_filter_ips).once.returns(["1.2.3.4"])
+      final = FinalDestination.new(invalid_ignore_url, opts)
+      expect(final.resolve.to_s).to eq(invalid_ignore_url)
+      expect(final.redirected?).to eq(false)
+      expect(final.status).to eq(:resolved)
+    end
+
+    it "does not ignore redirects when hostname contains forum hostname as prefix" do
+      base_hostname = URI.parse(Discourse.base_url_no_prefix).hostname
+      invalid_ignore_url = "https://attacker-#{base_hostname}/some-url"
+      fd_stub_request(:head, invalid_ignore_url).to_return(doc_response)
+      FinalDestination::SSRFDetector.expects(:lookup_and_filter_ips).once.returns(["1.2.3.4"])
+      final = FinalDestination.new(invalid_ignore_url, opts)
+      expect(final.resolve.to_s).to eq(invalid_ignore_url)
+      expect(final.redirected?).to eq(false)
+      expect(final.status).to eq(:resolved)
+    end
+
+    it "does not ignore redirects when dots in hostname are replaced with other characters" do
+      base_hostname = URI.parse(Discourse.base_url_no_prefix).hostname
+      mangled_hostname = base_hostname.gsub(".", "-")
+      invalid_ignore_url = "https://#{mangled_hostname}.attacker.com/some-url"
+      fd_stub_request(:head, invalid_ignore_url).to_return(doc_response)
+      FinalDestination::SSRFDetector.expects(:lookup_and_filter_ips).once.returns(["1.2.3.4"])
+      final = FinalDestination.new(invalid_ignore_url, opts)
+      expect(final.resolve.to_s).to eq(invalid_ignore_url)
       expect(final.redirected?).to eq(false)
       expect(final.status).to eq(:resolved)
     end

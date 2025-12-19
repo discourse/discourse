@@ -230,7 +230,7 @@ class FinalDestination
     end
 
     @ignored.each do |host|
-      if @uri&.hostname&.match?(host)
+      if @uri&.hostname == host
         @status = :resolved
         return @uri
       end
