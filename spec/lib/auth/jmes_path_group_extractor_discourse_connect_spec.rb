@@ -64,7 +64,7 @@ RSpec.describe Auth::JmesPathGroupExtractor do
             [
               {
                 provider: "discourse_connect",
-                expression: "\"custom.plan\" == 'enterprise'",
+                expression: "custom_fields.plan == 'enterprise'",
                 groups: ["EnterpriseUsers"],
               },
             ],
@@ -82,12 +82,12 @@ RSpec.describe Auth::JmesPathGroupExtractor do
             [
               {
                 provider: "discourse_connect",
-                expression: "\"custom.department\" == 'Engineering'",
+                expression: "custom_fields.department == 'Engineering'",
                 groups: ["Engineers"],
               },
               {
                 provider: "discourse_connect",
-                expression: "\"custom.plan\" == 'enterprise'",
+                expression: "custom_fields.plan == 'enterprise'",
                 groups: ["EnterpriseUsers"],
               },
               {
@@ -97,7 +97,7 @@ RSpec.describe Auth::JmesPathGroupExtractor do
               },
               {
                 provider: "discourse_connect",
-                expression: "\"custom.plan\" == 'enterprise'",
+                expression: "custom_fields.plan == 'enterprise'",
                 groups: ["DisabledRuleGroup"],
                 enabled: false,
               },
@@ -118,7 +118,7 @@ RSpec.describe Auth::JmesPathGroupExtractor do
             [
               {
                 provider: "discourse_connect",
-                expression: "\"custom.role\" == 'admin'",
+                expression: "custom_fields.role == 'admin'",
                 groups: %w[Administrators Staff Moderators],
               },
             ],
@@ -183,7 +183,7 @@ RSpec.describe Auth::JmesPathGroupExtractor do
             [
               {
                 provider: "discourse_connect",
-                expression: "\"custom.nonexistent_field\"",
+                expression: "custom_fields.nonexistent_field",
                 groups: ["Administrators"],
               },
             ],
@@ -199,7 +199,7 @@ RSpec.describe Auth::JmesPathGroupExtractor do
             [
               {
                 provider: "discourse_connect",
-                expression: "\"custom.department\" == 'Marketing'",
+                expression: "custom_fields.department == 'Marketing'",
                 groups: ["Marketers"],
               },
             ],
@@ -222,7 +222,7 @@ RSpec.describe Auth::JmesPathGroupExtractor do
               },
               {
                 provider: "discourse_connect",
-                expression: "\"custom.plan\" == 'enterprise'",
+                expression: "custom_fields.plan == 'enterprise'",
                 groups: %w[Members EnterpriseUsers],
               },
             ],
