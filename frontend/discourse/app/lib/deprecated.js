@@ -28,12 +28,15 @@ export default function deprecated(msg, options = {}) {
     return;
   }
 
+  let config;
+  if (require.has("discourse/config/environment")) {
+    config = require("discourse/config/environment").default;
+  }
+
   const raiseError =
     options.raiseError ||
-    DeprecationWorkflow.shouldThrow(
-      id,
-      globalThis.EmberENV?.RAISE_ON_DEPRECATION
-    );
+    (config &&
+      DeprecationWorkflow.shouldThrow(id, config.RAISE_ON_DEPRECATION));
 
   const formattedMessage = buildDeprecationMessage(msg, options, raiseError);
   const consolePrefix = getConsolePrefix(source);
