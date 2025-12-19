@@ -535,6 +535,7 @@ en:
           export_has_started: "The export has started. You'll receive a PM when it's ready."
 
       search:
+        short_title: Search
         title: Search chat
         aria_label: "Switch to chat search"
         no_results: "No results found"

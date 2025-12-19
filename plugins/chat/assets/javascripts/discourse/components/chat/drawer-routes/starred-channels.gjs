@@ -14,7 +14,6 @@ export default class ChatDrawerRoutesStarredChannels extends Component {
       <Navbar @onClick={{this.chat.toggleDrawer}} as |navbar|>
         <navbar.Title @title={{i18n "chat.starred"}} />
         <navbar.Actions as |a|>
-          <a.SearchButton />
           <a.ToggleDrawerButton />
           <a.FullPageButton />
           <a.CloseDrawerButton />

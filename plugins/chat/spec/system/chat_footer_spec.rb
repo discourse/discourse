@@ -22,7 +22,7 @@ RSpec.describe "Mobile Chat footer", type: :system, mobile: true do
       chat_page.open_from_header
 
       expect(page).to have_css(".c-footer")
-      expect(page).to have_css(".c-footer__item", count: 2)
+      expect(page).to have_css(".c-footer__item", count: 3)
       expect(page).to have_css("#c-footer-direct-messages")
       expect(page).to have_css("#c-footer-channels")
     end

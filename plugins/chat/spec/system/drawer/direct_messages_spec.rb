@@ -15,9 +15,5 @@ RSpec.describe "Drawer - direct messages", type: :system do
     drawer_page.open_chat_search
 
     expect(drawer_page).to have_open_chat_search
-
-    drawer_page.back
-
-    expect(drawer_page).to have_open_direct_messages
   end
 end

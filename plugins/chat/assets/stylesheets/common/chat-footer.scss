@@ -83,3 +83,24 @@
     }
   }
 }
+
+@container (max-width: 450px) {
+  .c-footer {
+    &__item {
+      .d-button-label {
+        font-size: var(--font-down-2-rem);
+      }
+    }
+  }
+}
+
+// iphone se is 375
+@container (max-width: 374px) {
+  .c-footer {
+    &__item {
+      .d-button-label {
+        display: none;
+      }
+    }
+  }
+}

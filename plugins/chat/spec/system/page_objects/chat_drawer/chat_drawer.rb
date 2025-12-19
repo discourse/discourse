@@ -54,7 +54,7 @@ module PageObjects
       end
 
       def open_chat_search
-        find(".chat-channel-search-btn").click
+        find("#c-footer-search").click
       end
 
       def open_channel(channel)

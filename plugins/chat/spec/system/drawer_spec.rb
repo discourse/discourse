@@ -261,7 +261,7 @@ RSpec.describe "Drawer", type: :system do
       chat_page.open_from_header
 
       expect(page).to have_css(".chat-drawer .c-footer")
-      expect(page).to have_css(".chat-drawer .c-footer__item", count: 2)
+      expect(page).to have_css(".chat-drawer .c-footer__item", count: 3)
     end
 
     it "hides footer nav when only channels are accessible" do

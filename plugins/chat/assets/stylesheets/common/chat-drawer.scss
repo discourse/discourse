@@ -59,6 +59,7 @@ html.rtl {
   min-width: 250px !important; // important to override inline styles
   max-width: calc(100% - var(--composer-right));
   min-height: 300px !important; // important to override inline styles
+  container-type: inline-size;
 
   .chat-search__filters .filter-input-container {
     max-width: 250px;

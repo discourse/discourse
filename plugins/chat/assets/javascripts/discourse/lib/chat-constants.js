@@ -8,6 +8,7 @@ export const FOOTER_NAV_ROUTES = [
   "chat.direct-messages",
   "chat.channels",
   "chat.threads",
+  "chat.search",
 ];
 export const INDICATOR_PREFERENCES = {
   all_new: "all_new",
