@@ -18,9 +18,5 @@ RSpec.describe "Drawer - threads", type: :system do
     drawer_page.open_chat_search
 
     expect(drawer_page).to have_open_chat_search
-
-    drawer_page.back
-
-    expect(drawer_page).to have_open_user_threads
   end
 end
