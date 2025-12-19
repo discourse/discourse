@@ -204,6 +204,7 @@ export default class Composer extends RestModel {
   @service dialog;
   @service siteSettings;
   @service currentUser;
+  @service site;
 
   @tracked topic;
   @tracked post;
@@ -215,7 +216,6 @@ export default class Composer extends RestModel {
     : null;
   @tracked action;
   @tracked composeState;
-  @tracked site;
 
   unlistTopic = false;
   noBump = false;
