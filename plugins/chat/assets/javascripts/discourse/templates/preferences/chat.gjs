@@ -13,7 +13,14 @@ import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import {
   CHAT_ATTRS,
+  CHAT_QUICK_REACTION_TYPE_CUSTOM,
+  CHAT_QUICK_REACTION_TYPE_FREQUENT,
   CHAT_QUICK_REACTIONS_CUSTOM_DEFAULT,
+  CHAT_SEND_SHORTCUT_ENTER,
+  CHAT_SEND_SHORTCUT_META_ENTER,
+  CHAT_SEPARATE_SIDEBAR_MODE_ALWAYS,
+  CHAT_SEPARATE_SIDEBAR_MODE_FULLSCREEN,
+  CHAT_SEPARATE_SIDEBAR_MODE_NEVER,
   HEADER_INDICATOR_PREFERENCE_ALL_NEW,
   HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS,
   HEADER_INDICATOR_PREFERENCE_NEVER,
@@ -30,11 +37,11 @@ export default class Chat extends Component {
     return [
       {
         label: i18n("chat.quick_reaction_type.options.frequent"),
-        value: "frequent",
+        value: CHAT_QUICK_REACTION_TYPE_FREQUENT,
       },
       {
         label: i18n("chat.quick_reaction_type.options.custom"),
-        value: "custom",
+        value: CHAT_QUICK_REACTION_TYPE_CUSTOM,
       },
     ];
   }
@@ -43,13 +50,13 @@ export default class Chat extends Component {
     return [
       {
         label: i18n("chat.send_shortcut.enter.label"),
-        value: "enter",
+        value: CHAT_SEND_SHORTCUT_ENTER,
       },
       {
         label: i18n("chat.send_shortcut.meta_enter.label", {
           meta_key: translateModKey(PLATFORM_KEY_MODIFIER),
         }),
-        value: "meta_enter",
+        value: CHAT_SEND_SHORTCUT_META_ENTER,
       },
     ];
   }
@@ -79,15 +86,15 @@ export default class Chat extends Component {
     return [
       {
         name: i18n("admin.site_settings.chat_separate_sidebar_mode.always"),
-        value: "always",
+        value: CHAT_SEPARATE_SIDEBAR_MODE_ALWAYS,
       },
       {
         name: i18n("admin.site_settings.chat_separate_sidebar_mode.fullscreen"),
-        value: "fullscreen",
+        value: CHAT_SEPARATE_SIDEBAR_MODE_FULLSCREEN,
       },
       {
         name: i18n("admin.site_settings.chat_separate_sidebar_mode.never"),
-        value: "never",
+        value: CHAT_SEPARATE_SIDEBAR_MODE_NEVER,
       },
     ];
   }
@@ -100,10 +107,10 @@ export default class Chat extends Component {
 
   get formData() {
     const userOption = this.args.model.user_option;
-    const rawValue =
+    const emojis = (
       userOption.chat_quick_reactions_custom ||
-      CHAT_QUICK_REACTIONS_CUSTOM_DEFAULT;
-    const emojis = rawValue.split("|");
+      CHAT_QUICK_REACTIONS_CUSTOM_DEFAULT
+    ).split("|");
 
     return {
       chat_enabled: userOption.chat_enabled,
@@ -131,7 +138,7 @@ export default class Chat extends Component {
     if (sound) {
       this.chatAudioManager?.play(sound);
     }
-    set(name, sound);
+    set(name, sound == null ? null : sound);
   }
 
   @action
@@ -201,7 +208,7 @@ export default class Chat extends Component {
           @onSet={{this.handleChatSoundSet}}
           as |field|
         >
-          <field.Select as |select|>
+          <field.Select @includeNone={{true}} as |select|>
             {{#each this.chatSounds as |sound|}}
               <select.Option @value={{sound.value}}>
                 {{sound.name}}
