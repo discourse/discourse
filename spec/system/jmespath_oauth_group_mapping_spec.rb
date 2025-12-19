@@ -145,4 +145,62 @@ describe "JMESPath Oauth Group Mapping", type: :system do
       expect(user.groups.where(automatic: false)).to be_empty
     end
   end
+
+  describe "traditional OAuth provider groups with external IDs" do
+    fab!(:engineering_group) { Fabricate(:group, name: "Engineering") }
+
+    it "does not auto-link OAuth provider groups with external IDs" do
+      # Simulate traditional Google OAuth groups with external Google IDs
+      OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
+        provider: "google_oauth2",
+        uid: "test-uid-traditional",
+        info: OmniAuth::AuthHash::InfoHash.new(email: "user@company.com", name: "Test User"),
+        extra: {
+          raw_info: {
+            email_verified: true,
+          },
+          raw_groups: [
+            {
+              id: "google-group-id-12345", # External ID from Google
+              name: "Engineering", # Same name as Discourse group, but different ID
+            },
+          ],
+        },
+      )
+
+      Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
+
+      authenticator = Auth::GoogleOAuth2Authenticator.new
+      allow(authenticator).to receive(:provides_groups?).and_return(true)
+      allow(authenticator).to receive(:raw_groups).and_return(
+        [{ id: "google-group-id-12345", name: "Engineering" }],
+      )
+      allow(Discourse).to receive(:enabled_authenticators).and_return([authenticator])
+
+      visit("/login")
+      signup_page.click_create_account
+
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
+
+      user = User.find_by_email("user@company.com")
+      expect(user).to be_present
+
+      expect(user.groups.where(automatic: false)).to be_empty
+
+      associated_group =
+        AssociatedGroup.find_by(
+          provider_name: "google_oauth2",
+          provider_id: "google-group-id-12345",
+        )
+      expect(associated_group).to be_present
+      expect(associated_group.name).to eq("Engineering")
+
+      linkage =
+        GroupAssociatedGroup.find_by(
+          group_id: engineering_group.id,
+          associated_group_id: associated_group.id,
+        )
+      expect(linkage).to be_nil
+    end
+  end
 end

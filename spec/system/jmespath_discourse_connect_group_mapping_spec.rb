@@ -135,4 +135,61 @@ describe "JMESPath Discourse Connect Group Mapping", type: :system do
       )
     end
   end
+
+  describe "existing add_groups parameter" do
+    fab!(:support_group) { Fabricate(:group, name: "Support") }
+    fab!(:sales_group) { Fabricate(:group, name: "Sales") }
+
+    let(:add_groups_response_data) do
+      {
+        external_id: "add_groups_test",
+        email: "addgroups@company.com",
+        username: "addgroups_user",
+        add_groups: "Support,Sales",
+      }
+    end
+
+    let!(:sso_port) do
+      setup_test_discourse_connect_server(sso_secret:, response_data: add_groups_response_data)
+    end
+    let(:sso_url) { "http://localhost:#{sso_port}/sso" }
+
+    before do
+      SiteSetting.discourse_connect_url = sso_url
+      SiteSetting.discourse_connect_secret = sso_secret
+      SiteSetting.enable_discourse_connect = true
+    end
+
+    it "still adds user to groups via add_groups parameter when JMESPath is disabled" do
+      SiteSetting.jmespath_group_mapping_enabled = false
+
+      visit("/login")
+
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
+
+      created_user = User.find_by_email("addgroups@company.com")
+      expect(created_user).to be_present
+      expect(created_user.groups.where(automatic: false).pluck(:name)).to contain_exactly(
+        "Support",
+        "Sales",
+      )
+    end
+
+    it "combines add_groups parameter with JMESPath rules when both are present" do
+      SiteSetting.jmespath_group_mapping_enabled = true
+
+      visit("/login")
+
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
+
+      created_user = User.find_by_email("addgroups@company.com")
+      expect(created_user).to be_present
+
+      expect(created_user.groups.where(automatic: false).pluck(:name)).to contain_exactly(
+        "Support",
+        "Sales",
+        "WildcardGroup",
+      )
+    end
+  end
 end
