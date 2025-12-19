@@ -50,7 +50,7 @@ module DiscourseConnectHelpers
     [sso, sig]
   end
 
-  def setup_test_discourse_connect_server(user:, sso_secret:)
+  def setup_test_discourse_connect_server(user: nil, sso_secret:, response_data: nil)
     raise "Provider port not set" unless DiscourseConnectHelpers.provider_port
 
     before_next_spec { shutdown_test_discourse_connect_server }
@@ -70,9 +70,28 @@ module DiscourseConnectHelpers
       response_sso = DiscourseConnectBase.new
       response_sso.nonce = params["nonce"]
       response_sso.sso_secret = sso_secret
-      response_sso.external_id = "foo-bar"
-      response_sso.email = user.email
-      response_sso.username = user.username
+
+      if response_data
+        response_sso.external_id = response_data[:external_id] if response_data[:external_id]
+        response_sso.email = response_data[:email] if response_data[:email]
+        response_sso.username = response_data[:username] if response_data[:username]
+        response_sso.name = response_data[:name] if response_data[:name]
+        response_sso.admin = response_data[:admin] if response_data.key?(:admin)
+        response_sso.moderator = response_data[:moderator] if response_data.key?(:moderator)
+        response_sso.add_groups = response_data[:add_groups] if response_data[:add_groups]
+        response_sso.remove_groups = response_data[:remove_groups] if response_data[:remove_groups]
+        response_sso.groups = response_data[:groups] if response_data[:groups]
+
+        if response_data[:custom_fields]
+          response_data[:custom_fields].each do |key, value|
+            response_sso.custom_fields[key] = value
+          end
+        end
+      else
+        response_sso.external_id = "foo-bar"
+        response_sso.email = user.email
+        response_sso.username = user.username
+      end
 
       res.status = 302
       res["Location"] = "#{params["return_sso_url"]}?#{response_sso.payload}"

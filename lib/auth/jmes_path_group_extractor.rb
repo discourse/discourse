@@ -19,6 +19,22 @@ module Auth
 
       searchable_data = discourse_connect_payload.deep_stringify_keys
 
+      # Discourse connect transforms [custom_field][X] into custom.X keys
+      # We need to transform them back into nested custom_fields structure for JMESPath
+      custom_fields = {}
+      searchable_data =
+        searchable_data.reject do |key, value|
+          if key.start_with?("custom.")
+            field_name = key.sub("custom.", "")
+            custom_fields[field_name] = value
+            true
+          else
+            false
+          end
+        end
+
+      searchable_data["custom_fields"] = custom_fields if custom_fields.present?
+
       extract_groups_from_data(searchable_data, DISCOURSE_CONNECT)
     end
 
