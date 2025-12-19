@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import AboutPageUser from "discourse/components/about-page-user";
+import UserInfo from "discourse/components/user-info";
 
 export default class LegacyAboutPageUsers extends Component {
   get users() {
@@ -8,7 +8,7 @@ export default class LegacyAboutPageUsers extends Component {
 
   <template>
     {{#each this.users as |user|}}
-      <AboutPageUser @user={{user}} />
+      <UserInfo @user={{user}} />
     {{/each}}
   </template>
 }
