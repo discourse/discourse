@@ -112,6 +112,7 @@ export default defineConfig(({ mode, command }) => {
       outDir: "dist",
       sourcemap: true,
       rollupOptions: {
+        preserveEntrySignatures: "strict",
         input: {
           discourse: "discourse.js",
           vendor: "vendor.js",
