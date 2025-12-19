@@ -18,8 +18,6 @@ export default class UserController extends Controller {
   @service dialog;
   @optionalService adminTools;
 
-  @controller("user-notifications") userNotifications;
-
   @setting("moderators_view_emails") canModeratorsViewEmails;
 
   @equal("router.currentRouteName", "user.summary") isSummaryRoute;

@@ -134,7 +134,7 @@ ensure
   FileUtils.rm_f(DOWNLOAD_TEMP_FILE) if File.exist?(DOWNLOAD_TEMP_FILE)
 end
 
-build_cmd = %w[pnpm ember build]
+build_cmd = %w[pnpm vite build]
 build_env = { "CI" => "1" }
 
 if Etc.nprocessors > 2
@@ -149,7 +149,7 @@ if low_memory_environment?
   build_env["JOBS"] = "1"
 end
 
-build_cmd << "-prod" if resolved_ember_env == "production"
+# build_cmd << "-prod" if resolved_ember_env == "production"
 
 core_build_reusable =
   existing_core_build_usable? || (download_prebuild_assets! && existing_core_build_usable?)

@@ -18,6 +18,7 @@
     "ember-template-lint": "7.9.3",
     "esbuild": "^0.25.11",
     "eslint": "9.39.2",
+    "execa": "^9.6.0",
     "jsdoc": "^4.0.5",
     "lefthook": "^2.0.12",
     "licensee": "^11.1.1",
@@ -27,6 +28,7 @@
     "playwright": "1.57.0",
     "prettier": "3.7.3",
     "puppeteer-core": "^24.33.1",
+    "strip-ansi": "^7.1.0",
     "stylelint": "16.26.1",
     "terser": "^5.44.1",
     "typescript": "^5.9.3"
@@ -64,7 +66,9 @@
       "licensee@11.1.1": "patches/licensee@11.1.1.patch",
       "@ember-compat/tracked-built-ins@0.9.1": "patches/@ember-compat__tracked-built-ins@0.9.1.patch",
       "ember-source@6.6.0": "patches/ember-source@6.6.0.patch",
-      "http-proxy@1.18.1": "patches/http-proxy@1.18.1.patch"
+      "http-proxy@1.18.1": "patches/http-proxy@1.18.1.patch",
+      "message-bus-client": "patches/message-bus-client.patch",
+      "ember-buffered-proxy": "patches/ember-buffered-proxy.patch"
     },
     "peerDependencyRules": {
       "allowedVersions": {
@@ -78,6 +82,8 @@
       ]
     },
     "overrides": {
+      "@ember/render-modifiers": "github:jrjohnson/ember-render-modifiers#v2-addon&path:/ember-render-modifiers",
+      "broccoli-babel-transpiler@8.0.0": "^8.0.2",
       "@ember/test-waiters": "4.1.1"
     }
   }
