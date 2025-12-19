@@ -265,6 +265,11 @@ class UsersController < ApplicationController
   def username
     params.require(:new_username)
 
+    # Fast fail for usernames exceeding hardcoded max length
+    if params[:new_username].length > UsernameValidator::MAX_CHARS * 3
+      return render_json_error(I18n.t("user.username.long", count: SiteSetting.max_username_length))
+    end
+
     if clashing_with_existing_route?(params[:new_username]) ||
          (User.reserved_username?(params[:new_username]) && !current_user.admin?)
       return render_json_error(I18n.t("login.reserved_username"))
