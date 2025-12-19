@@ -20,7 +20,21 @@ module PageObjects
 
       def select_bundled_action(reviewable, value)
         within(reviewable_by_id(reviewable.id)) do
-          reviewable_action_dropdown.select_row_by_value(value)
+          dropdown_count = all(REVIEWABLE_ACTION_DROPDOWN).count
+          dropdown_count.times do |index|
+            dropdown_selector = "#{REVIEWABLE_ACTION_DROPDOWN}:nth-of-type(#{index + 1})"
+            dropdown = PageObjects::Components::SelectKit.new(dropdown_selector)
+            dropdown.expand
+            if dropdown.expanded_component.has_css?(
+                 ".select-kit-row[data-value='#{value}']",
+                 wait: 0,
+               )
+              dropdown.select_row_by_value(value)
+              break
+            else
+              dropdown.collapse
+            end
+          end
         end
       end
 
