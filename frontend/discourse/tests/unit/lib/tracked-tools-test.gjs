@@ -6,8 +6,8 @@ import { module, test } from "qunit";
 import {
   dedupeTracked,
   DeferredTrackedSet,
+  enumerateTrackedEntries,
   enumerateTrackedKeys,
-  enumerateTrackedValues,
   trackedArray,
 } from "discourse/lib/tracked-tools";
 
@@ -522,8 +522,8 @@ module("Unit | tracked-tools", function () {
     });
   });
 
-  module("enumerateTrackedValues", function () {
-    test("returns tracked properties from an object", function (assert) {
+  module("enumerateTrackedEntries", function () {
+    test("returns tracked property entries from an object", function (assert) {
       class Person {
         @tracked name = "Alice";
         @tracked age = 30;
@@ -531,51 +531,43 @@ module("Unit | tracked-tools", function () {
       }
 
       const instance = new Person();
-      const result = enumerateTrackedValues(instance);
+      const result = enumerateTrackedEntries(instance);
 
-      assert.strictEqual(result.name, "Alice", "tracked name is included");
-      assert.strictEqual(result.age, 30, "tracked age is included");
-      assert.strictEqual(
-        result.regularProp,
-        undefined,
-        "non-tracked property is not included"
-      );
       assert.deepEqual(
-        Object.keys(result),
-        ["name", "age"],
-        "only tracked properties are enumerated"
+        result,
+        [
+          ["name", "Alice"],
+          ["age", 30],
+        ],
+        "returns entries for tracked properties"
       );
     });
 
-    test("returns empty object for null or undefined", function (assert) {
-      const resultNull = enumerateTrackedValues(null);
-      const resultUndefined = enumerateTrackedValues(undefined);
+    test("returns empty array for null or undefined", function (assert) {
+      const resultNull = enumerateTrackedEntries(null);
+      const resultUndefined = enumerateTrackedEntries(undefined);
 
-      assert.deepEqual(
-        resultNull,
-        Object.create(null),
-        "returns empty object for null"
-      );
+      assert.deepEqual(resultNull, [], "returns empty array for null");
       assert.deepEqual(
         resultUndefined,
-        Object.create(null),
-        "returns empty object for undefined"
+        [],
+        "returns empty array for undefined"
       );
     });
 
-    test("returns empty object for objects without tracked properties", function (assert) {
+    test("returns empty array for objects without tracked properties", function (assert) {
       class SimpleClass {
         prop1 = "value1";
         prop2 = "value2";
       }
 
       const instance = new SimpleClass();
-      const result = enumerateTrackedValues(instance);
+      const result = enumerateTrackedEntries(instance);
 
       assert.deepEqual(
-        Object.keys(result),
+        result,
         [],
-        "returns no keys for non-tracked properties"
+        "returns empty array for non-tracked properties"
       );
     });
 
@@ -587,12 +579,13 @@ module("Unit | tracked-tools", function () {
       }
 
       const instance = new AllTracked();
-      const result = enumerateTrackedValues(instance);
+      const result = enumerateTrackedEntries(instance);
 
-      assert.strictEqual(result.first, "one");
-      assert.strictEqual(result.second, "two");
-      assert.strictEqual(result.third, "three");
-      assert.strictEqual(Object.keys(result).length, 3);
+      assert.strictEqual(result.length, 3, "returns three entries");
+      const obj = Object.fromEntries(result);
+      assert.strictEqual(obj.first, "one");
+      assert.strictEqual(obj.second, "two");
+      assert.strictEqual(obj.third, "three");
     });
 
     test("includes @dedupeTracked properties", function (assert) {
@@ -603,11 +596,12 @@ module("Unit | tracked-tools", function () {
       }
 
       const instance = new TestClass();
-      const result = enumerateTrackedValues(instance);
+      const result = enumerateTrackedEntries(instance);
 
-      assert.strictEqual(result.normalTracked, "normal");
-      assert.strictEqual(result.dedupedTracked, "deduped");
-      assert.strictEqual(result.regularProp, undefined);
+      const obj = Object.fromEntries(result);
+      assert.strictEqual(obj.normalTracked, "normal");
+      assert.strictEqual(obj.dedupedTracked, "deduped");
+      assert.strictEqual(obj.regularProp, undefined);
     });
 
     test("includes @trackedArray properties", function (assert) {
@@ -618,12 +612,13 @@ module("Unit | tracked-tools", function () {
       }
 
       const instance = new TestClass();
-      const result = enumerateTrackedValues(instance);
+      const result = enumerateTrackedEntries(instance);
 
-      assert.strictEqual(result.name, "test");
-      assert.true(result.items instanceof TrackedArray);
-      assert.deepEqual(Array.from(result.items), ["a", "b", "c"]);
-      assert.strictEqual(result.regularProp, undefined);
+      const obj = Object.fromEntries(result);
+      assert.strictEqual(obj.name, "test");
+      assert.true(obj.items instanceof TrackedArray);
+      assert.deepEqual(Array.from(obj.items), ["a", "b", "c"]);
+      assert.strictEqual(obj.regularProp, undefined);
     });
 
     test("handles inherited tracked properties", function (assert) {
@@ -636,22 +631,23 @@ module("Unit | tracked-tools", function () {
       }
 
       const instance = new Child();
-      const result = enumerateTrackedValues(instance);
+      const result = enumerateTrackedEntries(instance);
 
       assert.strictEqual(
-        result.parentProp,
+        result.length,
+        2,
+        "includes both parent and child properties"
+      );
+      const obj = Object.fromEntries(result);
+      assert.strictEqual(
+        obj.parentProp,
         "parent",
         "includes parent tracked property"
       );
       assert.strictEqual(
-        result.childProp,
+        obj.childProp,
         "child",
         "includes child tracked property"
-      );
-      assert.strictEqual(
-        Object.keys(result).length,
-        2,
-        "includes both parent and child properties"
       );
     });
 
@@ -669,12 +665,13 @@ module("Unit | tracked-tools", function () {
       }
 
       const instance = new Child();
-      const result = enumerateTrackedValues(instance);
+      const result = enumerateTrackedEntries(instance);
 
-      assert.strictEqual(result.grandProp, "grand");
-      assert.strictEqual(result.parentProp, "parent");
-      assert.strictEqual(result.childProp, "child");
-      assert.strictEqual(Object.keys(result).length, 3);
+      assert.strictEqual(result.length, 3);
+      const obj = Object.fromEntries(result);
+      assert.strictEqual(obj.grandProp, "grand");
+      assert.strictEqual(obj.parentProp, "parent");
+      assert.strictEqual(obj.childProp, "child");
     });
 
     test("reflects current property values", function (assert) {
@@ -684,21 +681,21 @@ module("Unit | tracked-tools", function () {
 
       const instance = new Counter();
       assert.strictEqual(
-        enumerateTrackedValues(instance).count,
+        Object.fromEntries(enumerateTrackedEntries(instance)).count,
         0,
         "initial value is 0"
       );
 
       instance.count = 5;
       assert.strictEqual(
-        enumerateTrackedValues(instance).count,
+        Object.fromEntries(enumerateTrackedEntries(instance)).count,
         5,
         "updated value is reflected"
       );
 
       instance.count = 100;
       assert.strictEqual(
-        enumerateTrackedValues(instance).count,
+        Object.fromEntries(enumerateTrackedEntries(instance)).count,
         100,
         "further updates are reflected"
       );
@@ -712,18 +709,19 @@ module("Unit | tracked-tools", function () {
       }
 
       const instance = new TestClass();
-      const result = enumerateTrackedValues(instance);
+      const result = enumerateTrackedEntries(instance);
 
-      assert.strictEqual(result.nullProp, null, "null value is preserved");
+      const obj = Object.fromEntries(result);
+      assert.strictEqual(obj.nullProp, null, "null value is preserved");
       assert.strictEqual(
-        result.undefinedProp,
+        obj.undefinedProp,
         undefined,
         "undefined value is preserved"
       );
-      assert.strictEqual(result.stringProp, "value", "string value is correct");
-      assert.true("nullProp" in result, "null property key exists in result");
+      assert.strictEqual(obj.stringProp, "value", "string value is correct");
+      assert.true("nullProp" in obj, "null property key exists in result");
       assert.true(
-        "undefinedProp" in result,
+        "undefinedProp" in obj,
         "undefined property key exists in result"
       );
     });
@@ -738,13 +736,31 @@ module("Unit | tracked-tools", function () {
       }
 
       const instance = new MixedTypes();
-      const result = enumerateTrackedValues(instance);
+      const result = enumerateTrackedEntries(instance);
 
-      assert.strictEqual(result.string, "text");
-      assert.strictEqual(result.number, 42);
-      assert.true(result.boolean);
-      assert.deepEqual(result.object, { nested: "value" });
-      assert.deepEqual(result.array, [1, 2, 3]);
+      const obj = Object.fromEntries(result);
+      assert.strictEqual(obj.string, "text");
+      assert.strictEqual(obj.number, 42);
+      assert.true(obj.boolean);
+      assert.deepEqual(obj.object, { nested: "value" });
+      assert.deepEqual(obj.array, [1, 2, 3]);
+    });
+
+    test("can be converted to object with Object.fromEntries", function (assert) {
+      class TestClass {
+        @tracked firstName = "Alice";
+        @tracked lastName = "Smith";
+      }
+
+      const instance = new TestClass();
+      const entries = enumerateTrackedEntries(instance);
+      const obj = Object.fromEntries(entries);
+
+      assert.deepEqual(
+        obj,
+        { firstName: "Alice", lastName: "Smith" },
+        "entries can be converted back to object"
+      );
     });
   });
 });

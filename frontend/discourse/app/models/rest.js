@@ -5,7 +5,7 @@ import { dependentKeyCompat } from "@ember/object/compat";
 import { getOwner, setOwner } from "@ember/owner";
 import { Promise } from "rsvp";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
-import { enumerateTrackedValues } from "discourse/lib/tracked-tools";
+import { enumerateTrackedEntries } from "discourse/lib/tracked-tools";
 
 export default class RestModel extends EmberObject {
   // Overwrite and JSON will be passed through here before `create` and `update`
@@ -18,7 +18,7 @@ export default class RestModel extends EmberObject {
     args.__munge = this.munge;
 
     const createArgs = this.munge(
-      { ...args, ...enumerateTrackedValues(args) },
+      { ...args, ...Object.fromEntries(enumerateTrackedEntries(args)) },
       args.store
     );
 

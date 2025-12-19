@@ -307,14 +307,14 @@ export function enumerateTrackedKeys(obj) {
 }
 
 /**
- * Enumerates all tracked property values from an object instance.
+ * Enumerates all tracked property entries from an object instance.
  *
  * **Warning:** This function uses Ember internal APIs (`peekMeta`, `TrackedDescriptor`)
  * which are not part of the public API and may change without notice in future Ember versions.
  *
- * @param {Object} obj - The object instance to enumerate tracked values from
- * @returns {Object} An object containing key-value pairs of all tracked properties.
- *                   Returns an empty object if the object has no prototype or no tracked properties.
+ * @param {Object} obj - The object instance to enumerate tracked entries from
+ * @returns {Array<[string, any]>} An array of [key, value] pairs for all tracked properties.
+ *                                  Returns an empty array if the object has no prototype or no tracked properties.
  *
  * @example
  * class MyClass {
@@ -324,16 +324,10 @@ export function enumerateTrackedKeys(obj) {
  * }
  *
  * const instance = new MyClass();
- * const trackedValues = enumerateTrackedValues(instance);
- * // Returns: { name: "Alice", age: 30 }
+ * const trackedEntries = enumerateTrackedEntries(instance);
+ * // Returns: [["name", "Alice"], ["age", 30]]
  */
-export function enumerateTrackedValues(obj) {
+export function enumerateTrackedEntries(obj) {
   const keys = enumerateTrackedKeys(obj);
-  const result = Object.create(null);
-
-  for (const key of keys) {
-    result[key] = obj[key];
-  }
-
-  return result;
+  return keys.map((key) => [key, obj[key]]);
 }
