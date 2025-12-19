@@ -50,6 +50,7 @@ module Chat
     model :channel, :fetch_or_create_channel
     step :set_optional_params
     step :create_memberships
+    step :publish_new_channel
     step :recompute_users_count
 
     private
@@ -119,6 +120,10 @@ module Chat
         memberships,
         unique_by: %i[user_id chat_channel_id],
       )
+    end
+
+    def publish_new_channel(channel:, target_users:)
+      Chat::Publisher.publish_new_channel(channel, target_users.map(&:id))
     end
 
     def recompute_users_count(channel:)
