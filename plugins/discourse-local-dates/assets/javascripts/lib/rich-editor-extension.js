@@ -1,6 +1,7 @@
+import formatLocalDate from "./format-local-date";
+
 /** @type {RichEditorExtension} */
 const extension = {
-  // TODO(renato): the rendered date needs to be localized to better match the cooked content
   nodeSpec: {
     local_date: {
       attrs: { date: {}, time: {}, timezone: { default: null } },
@@ -19,7 +20,11 @@ const extension = {
         },
       ],
       toDOM: (node) => {
-        const optionalTime = node.attrs.time ? ` ${node.attrs.time}` : "";
+        const { formatted } = formatLocalDate(
+          node.attrs.date,
+          node.attrs.time,
+          node.attrs.timezone
+        );
         return [
           "span",
           {
@@ -28,7 +33,7 @@ const extension = {
             "data-time": node.attrs.time,
             "data-timezone": node.attrs.timezone,
           },
-          `${node.attrs.date}${optionalTime}`,
+          formatted,
         ];
       },
     },
@@ -57,10 +62,16 @@ const extension = {
         },
       ],
       toDOM: (node) => {
-        const fromTimeStr = node.attrs.fromTime
-          ? ` ${node.attrs.fromTime}`
-          : "";
-        const toTimeStr = node.attrs.toTime ? ` ${node.attrs.toTime}` : "";
+        const { formatted: formattedFrom } = formatLocalDate(
+          node.attrs.fromDate,
+          node.attrs.fromTime,
+          node.attrs.timezone
+        );
+        const { formatted: formattedTo } = formatLocalDate(
+          node.attrs.toDate,
+          node.attrs.toTime,
+          node.attrs.timezone
+        );
         return [
           "span",
           { class: "discourse-local-date-range" },
@@ -73,7 +84,7 @@ const extension = {
               "data-time": node.attrs.fromTime,
               "data-timezone": node.attrs.timezone,
             },
-            `${node.attrs.fromDate}${fromTimeStr}`,
+            formattedFrom,
           ],
           " → ",
           [
@@ -85,7 +96,7 @@ const extension = {
               "data-time": node.attrs.toTime,
               "data-timezone": node.attrs.timezone,
             },
-            `${node.attrs.toDate}${toTimeStr}`,
+            formattedTo,
           ],
         ];
       },

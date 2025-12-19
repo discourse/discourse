@@ -1,5 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
+const PLUGIN_ID = "discourse-ai";
+
 export default {
   name: "discourse-ai-admin-plugin-configuration-nav",
 
@@ -10,7 +12,8 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.addAdminPluginConfigurationNav("discourse-ai", [
+      api.setAdminPluginIcon(PLUGIN_ID, "discourse-sparkles");
+      api.addAdminPluginConfigurationNav(PLUGIN_ID, [
         {
           label: "discourse_ai.features.short_title",
           route: "adminPlugins.show.discourse-ai-features",

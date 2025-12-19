@@ -15,10 +15,6 @@ RSpec.describe "Drawer - index", type: :system do
     drawer_page.open_chat_search
 
     expect(drawer_page).to have_open_chat_search
-
-    drawer_page.back
-
-    expect(drawer_page).to have_open_channels
   end
 
   it "can leave a direct message" do

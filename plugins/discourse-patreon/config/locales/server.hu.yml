@@ -20,7 +20,7 @@ hu:
     patreon_verbose_log: 'Patreon hasznos adat részletes naplózásának engedélyezése'
     patreon_donation_prompt_enabled: "Engedélyezi az adományozási értesítést?"
     patreon_donation_prompt_show_after_topics: "Adományozási figyelmeztetés megjelenítése n téma után"
-    patreon_donation_prompt_campaign_url: "Adománygyűjtési kampány URL-címe"
+    patreon_donation_prompt_campaign_url: "Adománygyűjtési kampány webcíme"
     errors:
       patreon_creator_username_not_set: "A Patreon bejelentkezés engedélyezése előtt be kell állítanod a Patreon Creator Discourse felhasználónevet."
   dashboard:

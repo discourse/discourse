@@ -127,4 +127,76 @@ RSpec.describe DiscourseAi::Completions::Prompt do
       expect(system_message[:id]).to eq(username)
     end
   end
+
+  describe "#push_model_response" do
+    it "buffers streamed string chunks into a single model message" do
+      prompt.push(type: :user, content: user_msg, id: username)
+      prompt.push_model_response(["Hello", " ", "World"])
+      expect(prompt.messages.last).to include(type: :model, content: "Hello World")
+    end
+
+    it "attaches thinking to next response" do
+      prompt.push(type: :user, content: user_msg, id: username)
+
+      thinking =
+        DiscourseAi::Completions::Thinking.new(
+          message: "summary",
+          partial: false,
+          provider_info: {
+            open_ai_responses: {
+              reasoning_id: "rs_1",
+              encrypted_content: "ENC",
+            },
+          },
+        )
+
+      prompt.push_model_response([thinking, "Hello"])
+
+      expect(prompt.messages.last).to include(type: :model, content: "Hello", thinking: "summary")
+      expect(prompt.messages.last[:thinking_provider_info]).to include(
+        open_ai_responses: include(reasoning_id: "rs_1", encrypted_content: "ENC"),
+      )
+    end
+
+    it "appends additional streamed text to the existing model message" do
+      prompt.push(type: :user, content: user_msg, id: username)
+
+      prompt.push_model_response("Hello")
+      prompt.push_model_response(" World")
+
+      model_messages = prompt.messages.select { |m| m[:type] == :model }
+      expect(model_messages.length).to eq(1)
+      expect(model_messages.first[:content]).to eq("Hello World")
+    end
+
+    it "attaches thinking metadata to the tool call message" do
+      prompt.push(type: :user, content: user_msg, id: username)
+
+      prompt.push_model_response(
+        [
+          DiscourseAi::Completions::Thinking.new(
+            message: "summary",
+            provider_info: {
+              open_ai_responses: {
+                reasoning_id: "rs_1",
+                encrypted_content: "ENC",
+              },
+            },
+          ),
+          DiscourseAi::Completions::ToolCall.new(
+            id: "call_1",
+            name: "echo",
+            parameters: {
+              string: "hello",
+            },
+          ),
+        ],
+      )
+
+      expect(prompt.messages.last).to include(type: :tool_call, thinking: "summary")
+      expect(prompt.messages.last[:thinking_provider_info]).to include(
+        open_ai_responses: include(reasoning_id: "rs_1", encrypted_content: "ENC"),
+      )
+    end
+  end
 end

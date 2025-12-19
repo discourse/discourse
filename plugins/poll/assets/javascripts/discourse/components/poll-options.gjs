@@ -3,11 +3,11 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
+import decoratePollOption from "../modifiers/decorate-poll-option";
 import PollOptionRankedChoice from "./poll-option-ranked-choice";
 
 export default class PollOptionsComponent extends Component {
@@ -18,7 +18,10 @@ export default class PollOptionsComponent extends Component {
   };
 
   @action
-  sendClick(option) {
+  sendClick(option, event) {
+    if (event.target.closest(".discourse-local-date")) {
+      return;
+    }
     this.args.sendOptionSelect(option);
   }
 
@@ -87,7 +90,10 @@ export default class PollOptionsComponent extends Component {
                     {{icon "far-circle"}}
                   {{/if}}
                 {{/if}}
-                <span class="option-text">{{htmlSafe option.html}}</span>
+                <span
+                  class="option-text"
+                  {{decoratePollOption option.html}}
+                ></span>
               </button>
             {{else}}
               <button {{on "click" (routeAction "showLogin")}}>
@@ -104,7 +110,10 @@ export default class PollOptionsComponent extends Component {
                     {{icon "far-circle"}}
                   {{/if}}
                 {{/if}}
-                <span class="option-text">{{htmlSafe option.html}}</span>
+                <span
+                  class="option-text"
+                  {{decoratePollOption option.html}}
+                ></span>
               </button>
             {{/if}}
           </li>

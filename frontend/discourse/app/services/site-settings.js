@@ -36,9 +36,11 @@ export function createSiteSettingsFromPreloaded(
 
     // Includes upcoming changes which apply to the anon user (Everyone changes)
     settings.currentUserUpcomingChanges = upcomingChanges;
+  } else {
+    settings.currentUserUpcomingChanges = {};
   }
 
-  // localize locale names here as they are not localized in the backend
+  // Localize locale names here as they are not localized in the backend
   // due to initialization order and caching
   if (settings.available_locales) {
     const locales = JSON.parse(settings.available_locales);

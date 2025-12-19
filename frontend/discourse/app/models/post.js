@@ -161,9 +161,12 @@ export default class Post extends RestModel {
   @tracked hidden;
   @tracked id;
   @tracked is_auto_generated;
+  @tracked is_localized;
+  @tracked language;
   @tracked last_wiki_edit;
   @tracked likeAction;
   @tracked link_counts;
+  @tracked localization_outdated;
   @tracked locked;
   @tracked moderator;
   @tracked name;

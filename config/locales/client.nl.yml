@@ -158,7 +158,7 @@ nl:
       el:
         name: Grieks
       en:
-        name: Engels (VS)
+        name: Engels
       en_GB:
         name: Engels (VK)
       es:
@@ -4846,7 +4846,6 @@ nl:
       tags_form_modal:
         title: "Tagsnavigatie bewerken"
         filter_placeholder: "Filter tags"
-        no_tags: "Er zijn geen tags die overeenkomen met de opgegeven term."
         subtitle:
           text: "en we geven automatisch de toptags van deze site weer"
       edit_navigation_modal_form:

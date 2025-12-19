@@ -28,6 +28,8 @@ RSpec.describe DiscourseAutomation::Create do
     end
 
     context "when everything's ok" do
+      it { is_expected.to run_successfully }
+
       it "creates the automation" do
         expect { result }.to change { DiscourseAutomation::Automation.count }.by(1)
       end
@@ -36,18 +38,15 @@ RSpec.describe DiscourseAutomation::Create do
         expect { result }.to change {
           UserHistory.where(custom_type: "create_automation").count
         }.by(1)
-
-        user_history = UserHistory.last
-        expect(user_history.details).to include("script: post")
-        expect(user_history.details).to include("trigger: topic")
+        expect(UserHistory.last).to have_attributes(
+          details: a_string_including("script: post", "trigger: topic"),
+        )
       end
 
       it "does not log empty values" do
         params[:trigger] = nil
         result
-
-        user_history = UserHistory.last
-        expect(user_history.details).not_to include("trigger:")
+        expect(UserHistory.last.details).not_to include("trigger:")
       end
     end
 
@@ -65,7 +64,6 @@ RSpec.describe DiscourseAutomation::Create do
       after { DiscourseAutomation::Scriptable.remove(script_name) }
 
       it "applies the forced triggerable" do
-        result
         expect(result[:automation].trigger).to eq("recurring")
       end
     end

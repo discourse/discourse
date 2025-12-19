@@ -1609,7 +1609,7 @@ export default class ComposerService extends Service {
       });
     }
 
-    return tags
+    return tags.content
       .filter((t) => !t.staff)
       .map((t) => t.name)
       .join(",");

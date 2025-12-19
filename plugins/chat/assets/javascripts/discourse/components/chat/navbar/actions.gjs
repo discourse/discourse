@@ -8,7 +8,6 @@ import FullPageButton from "./full-page-button";
 import NewChannelButton from "./new-channel-button";
 import NewDirectMessageButton from "./new-direct-message-button";
 import OpenDrawerButton from "./open-drawer-button";
-import SearchButton from "./search-button";
 import ThreadSettingsButton from "./thread-settings-button";
 import ThreadTrackingDropdown from "./thread-tracking-dropdown";
 import ThreadsListButton from "./threads-list-button";
@@ -31,7 +30,6 @@ const ChatNavbarActions = <template>
         ToggleDrawerButton=ToggleDrawerButton
         FullPageButton=FullPageButton
         Filter=Filter
-        SearchButton=SearchButton
       )
     }}
   </nav>

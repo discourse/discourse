@@ -41,8 +41,13 @@ module DiscourseReactions
     private
 
     def toggle_like
-      remove_reaction if reaction_user.present?
-      @like ? remove_shadow_like : add_shadow_like
+      if reaction_user.present?
+        remove_reaction
+        @reaction = reaction_scope&.first_or_create
+        add_reaction
+      else
+        @like ? remove_shadow_like : add_shadow_like
+      end
     end
 
     def toggle_reaction
@@ -81,7 +86,11 @@ module DiscourseReactions
           user_id: @user.id,
           post_id: @post.id,
         )
-      search_reaction_user.length > 0 ? search_reaction_user.first : create_reaction_user
+      if search_reaction_user.length > 0
+        search_reaction_user.first
+      else
+        create_reaction_user
+      end
     end
 
     def reaction_user

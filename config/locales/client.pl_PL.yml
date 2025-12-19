@@ -214,7 +214,7 @@ pl_PL:
       el:
         name: grecki
       en:
-        name: angielski (USA)
+        name: angielski
       en_GB:
         name: angielski (Wielka Brytania)
       es:
@@ -4685,6 +4685,8 @@ pl_PL:
       slug_placeholder: "(opcjonalne) słowa-z-myślnikiem dla URLi"
       creation_error: Podczas tworzenia tej kategorii wystąpił błąd.
       save_error: Podczas zapisywania tej kategorii wystąpił błąd.
+      errors:
+        self_lockout: "Zamierzasz zmienić uprawnienia kategorii w sposób, który spowoduje utratę Twojego dostępu. Czy na pewno chcesz kontynuować?"
       name: "Nazwa kategorii"
       untitled: "Kategoria bez tytułu"
       description: "Opis"
@@ -5539,7 +5541,7 @@ pl_PL:
       tags_form_modal:
         title: "Edytuj nawigację tagów"
         filter_placeholder: "Filtruj tagi"
-        no_tags: "Brak tagów pasujących do podanego terminu."
+        no_tags: "Brak tagów pasujących do bieżących filtrów."
         subtitle:
           text: "a my automatycznie pokażemy najlepsze tagi tej witryny"
       edit_navigation_modal_form:
@@ -5892,6 +5894,8 @@ pl_PL:
       toggle_localized:
         translated: "Strona jest tłumaczona maszynowo. Kliknij, aby wyświetlić oryginał."
         not_translated: "Strona nie jest przetłumaczona. Kliknij, aby przetłumaczyć."
+    language_switcher:
+      title: "Zmień język witryny"
   admin_js:
     type_to_filter: "Pisz, aby filtrować…"
     settings: "Ustawienia"

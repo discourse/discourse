@@ -11,7 +11,7 @@
     "@glint/ember-tsc": "^1.0.8",
     "@glint/tsserver-plugin": "^2.0.8",
     "@rdil/parallel-prettier": "^3.0.0",
-    "@swc/core": "^1.15.5",
+    "@swc/core": "^1.15.7",
     "chrome-launcher": "^1.2.1",
     "chrome-remote-interface": "^0.33.3",
     "concurrently": "^9.2.1",
@@ -26,7 +26,7 @@
     "lint-to-the-future-eslint": "^3.3.0",
     "playwright": "1.57.0",
     "prettier": "3.7.3",
-    "puppeteer-core": "^24.33.0",
+    "puppeteer-core": "^24.33.1",
     "stylelint": "16.26.1",
     "terser": "^5.44.1",
     "typescript": "^5.9.3"

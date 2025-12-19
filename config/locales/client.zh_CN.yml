@@ -130,7 +130,7 @@ zh_CN:
       el:
         name: 希腊语
       en:
-        name: 英语（美国）
+        name: 英语
       en_GB:
         name: 英语（英国）
       es:
@@ -4724,7 +4724,6 @@ zh_CN:
       tags_form_modal:
         title: "编辑标签导航"
         filter_placeholder: "筛选标签"
-        no_tags: "没有与给定术语匹配的标签。"
         subtitle:
           text: "我们将自动显示此网站的热门标签"
       edit_navigation_modal_form:

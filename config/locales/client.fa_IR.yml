@@ -148,7 +148,7 @@ fa_IR:
       de:
         name: آلمانی
       en:
-        name: انگلیسی (لهجه آمریکایی)
+        name: انگلیسی
       en_GB:
         name: انگلیسی (بریتانیا)
       es:
@@ -4588,7 +4588,6 @@ fa_IR:
       tags_form_modal:
         title: "ویرایش ناوبری برچسب‌ها"
         filter_placeholder: "فیلتر کردن برچسب‌ها"
-        no_tags: "هیچ برچسبی مطابق با عبارت داده شده وجود ندارد."
         subtitle:
           text: "و ما به طور خودکار برچسب‌های برتر این سایت را نشان خواهیم داد"
       edit_navigation_modal_form:
