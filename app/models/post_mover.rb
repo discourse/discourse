@@ -134,7 +134,7 @@ class PostMover
   def ensure_acting_user_is_allowed_in_destination
     return if !@move_to_pm
     return if destination_topic.archetype != Archetype.private_message
-    return if user.id.blank? || user.id < 1
+    return if user.id.blank? || user.bot?
     return if destination_topic.topic_allowed_users.exists?(user_id: user.id)
 
     destination_topic.topic_allowed_users.create!(user_id: user.id)
