@@ -5698,19 +5698,19 @@ en:
         description: "Agree with flag and hide this post + automatically send the user a message urging them to edit it."
         complete: "Post hidden, user has been notified."
       agree_and_edit:
-        title: "Agree and Edit Post"
+        title: "Edit post"
         description: "Agree with flag and open a composer window to edit the post."
         complete: "Flag acknowledged, you can now edit the post."
       delete:
         title: "Delete"
         complete: "Post deleted."
       delete_and_ignore:
-        title: "Ignore flag and delete post"
-        description: "Ignore the flag by removing it from the queue and delete the post; if the first post, delete the topic as well. "
+        title: "Delete post and ignore flag"
+        description: "Delete the post and ignore the flag by removing it from the queue; if the first post, delete the topic as well. "
         complete: "Post deleted."
       delete_and_ignore_replies:
-        title: "Ignore flag, delete post and replies"
-        description: "Ignore the flag by removing it from the queue, delete the post and all of its replies; if the first post, delete the topic as well"
+        title: "Delete post and replies, ignore flag"
+        description: "Delete the post and all of its replies, then ignore the flag by removing it from the queue; if the first post, delete the topic as well"
         confirm: "Are you sure you want to delete the replies to the post as well?"
         complete: "Post and replies deleted."
       delete_and_agree:
@@ -5723,11 +5723,14 @@ en:
         confirm: "Are you sure you want to delete the replies to the post as well?"
         complete: "Post and replies deleted."
       disagree_and_restore:
-        title: "No, restore post"
-        description: "Restore the post so that all users can see it."
+        title: "Restore post"
+        description: "Disagree with flag and restore post"
         complete: "Post restored."
-      disagree:
+      disagree_bundle:
         title: "No"
+      disagree:
+        title: "Keep post"
+        description: "Disagree with flag"
         complete: "Flag ignored."
       discard_post:
         title: "Discard Post"
@@ -5737,6 +5740,7 @@ en:
         complete: "Post rejected pending revision."
       ignore:
         title: "Ignore"
+        description: "Remove it from the queue without taking action."
         complete: "Flag ignored."
       ignore_and_do_nothing:
         title: "Do nothing"
@@ -5746,28 +5750,35 @@ en:
         title: "Approve"
         complete: "Post approved."
       approve_post:
-        title: "Approve Post"
+        title: "Yes"
         complete: "Post approved."
       approve_post_closed:
-        title: "Approve Post"
+        title: "Yes"
         confirm: "This topic is closed. Would you like to create the post anyway?"
         complete: "Post approved."
+      reject_post_bundle:
+        title: "No"
       reject_post:
         title: "Reject Post"
         complete: "Post rejected."
       approve_user:
-        title: "Approve User"
+        title: "Yes"
         complete: "User approved."
       reject_user:
-        title: "Delete User…"
+        title: "No"
         delete:
           title: "Delete User"
-          description: "The user will be deleted from the forum."
+          description: "Delete user without blocking"
           complete: "User deleted."
         block:
           title: "Delete and Block User"
           description: "The user will be deleted, and we'll block their IP and email address."
           complete: "User deleted and blocked."
+      confirm_spam:
+        title: "Yes"
+      not_spam:
+        title: "No"
+        description: "Not spam, approve user"
       reject:
         title: "Reject"
         bundle_title: "Reject…"

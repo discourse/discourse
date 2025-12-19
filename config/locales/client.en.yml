@@ -908,6 +908,9 @@ en:
         is_this_post: "Is this %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "or"
         something_else_wrong: "Is there something wrong with this %{reviewable_type}?"
+        approve_user: "Approve this user?"
+        approve_post: "Approve this post?"
+        approve_topic: "Approve this topic?"
 
       types:
         reviewable_flagged_post:
@@ -926,6 +929,15 @@ en:
         reviewable_post:
           title: "Post"
           noun: "post"
+        reviewable_ai_chat_message:
+          title: "AI-Flagged Chat Message"
+          noun: "chat message"
+        reviewable_ai_post:
+          title: "AI-Flagged Post"
+          noun: "post"
+        reviewable_post_voting_comment:
+          title: "Flagged Comment"
+          noun: "comment"
       flagged_as: "Flagged as"
       post_flagged_as: "Post flagged as"
       chat_flagged_as: "Chat flagged as"

@@ -175,6 +175,11 @@ export default class ReviewableItem extends Component {
     );
   }
 
+  @discourseComputed("reviewable.type")
+  isAiReviewable(type) {
+    return type === "ReviewableAiChatMessage" || type === "ReviewableAiPost";
+  }
+
   @discourseComputed(
     "reviewable.topic",
     "reviewable.topic_id",
@@ -834,6 +839,10 @@ export default class ReviewableItem extends Component {
                 <h3 class="review-item__aside-title">
                   {{#if this.displayContextQuestion}}
                     {{this.reviewable.flaggedReviewableContextQuestion}}
+                  {{else if this.isAiReviewable}}
+                    {{this.reviewable.flaggedReviewableContextQuestion}}
+                  {{else if this.reviewable.userReviewableContextQuestion}}
+                    {{this.reviewable.userReviewableContextQuestion}}
                   {{else}}
                     {{i18n "review.moderator_actions"}}
                   {{/if}}
