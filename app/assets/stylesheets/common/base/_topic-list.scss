@@ -403,9 +403,9 @@
 
     .alert {
       align-items: center;
+      justify-content: center;
       gap: 0.5em;
       margin: 0 auto;
-      width: max-content;
       padding: var(--space-2) var(--space-4);
 
       &.loading {
