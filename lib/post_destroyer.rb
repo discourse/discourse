@@ -195,7 +195,6 @@ class PostDestroyer
         clear_user_posted_flag
       end
 
-      Topic.reset_highest(@post.topic_id)
       trash_public_post_actions
       trash_revisions
       trash_user_actions
@@ -236,6 +235,8 @@ class PostDestroyer
       end
 
       DB.after_commit do
+        Topic.reset_highest(@post.topic_id)
+
         if @opts[:reviewable]
           notify_deletion(
             @opts[:reviewable],
