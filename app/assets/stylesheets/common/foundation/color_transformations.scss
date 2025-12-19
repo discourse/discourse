@@ -104,6 +104,9 @@ $love-low: dark-light-diff($love, $secondary, 85%, -60%) !default;
 // wiki
 $wiki: green !default;
 
+// selected
+$selected-hover: dark-light-diff($selected, $secondary, 20%, 20%) !default;
+
 // blended variants
 $blend-primary-secondary-5: blend-two-colors($primary, $secondary, 5%) !default;
 $primary-med-or-secondary-med: dark-light-choose(
