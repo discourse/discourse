@@ -133,6 +133,7 @@ after_initialize do
       topic ||= Topic.unscoped.find_by(id: post.topic_id)
       return if topic.nil?
       return if topic.solved.nil?
+      return if topic.solved.answer_post_id != post.id
 
       DistributedMutex.synchronize("discourse_solved_toggle_answer_#{topic.id}") do
         solved = topic.solved
