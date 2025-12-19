@@ -771,6 +771,12 @@
     }
   }
 
+  #control-chat_quick_reactions_custom .form-kit__control-custom {
+    display: flex;
+    flex-direction: row;
+    gap: var(--space-2);
+  }
+
   .category-selector,
   .tag-chooser,
   textarea,
