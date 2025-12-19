@@ -26,7 +26,7 @@ module DiscourseCakeday
       @timezone = current_user&.user_option&.timezone
     end
 
-    def cakedays_by(column_sql, at_least_one_year_old: false)
+    def cakedays_by(column_sql, at_least_one_year_old: false, apply_timezone: false)
       more_params = { page: @page + 1, filter: params[:filter] }
 
       today =
@@ -35,6 +35,11 @@ module DiscourseCakeday
         rescue ArgumentError
           Time.zone.now
         end.to_date
+
+      if apply_timezone && @timezone.present? && @timezone != "UTC"
+        quoted_timezone = ActiveRecord::Base.connection.quote(@timezone)
+        column_sql = "#{column_sql} AT TIME ZONE 'UTC' AT TIME ZONE #{quoted_timezone}"
+      end
 
       if at_least_one_year_old
         @users = @users.where("EXTRACT(YEAR FROM #{column_sql}) < ?", today.year)
