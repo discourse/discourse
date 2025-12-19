@@ -260,6 +260,53 @@ export function trackedArray(target, key, desc) {
 }
 
 /**
+ * Enumerates all tracked property keys from an object instance.
+ *
+ * **Warning:** This function uses Ember internal APIs (`peekMeta`, `TrackedDescriptor`)
+ * which are not part of the public API and may change without notice in future Ember versions.
+ *
+ * @param {Object} obj - The object instance to enumerate tracked keys from
+ * @returns {Array<string>} An array of tracked property keys.
+ *                          Returns an empty array if the object has no prototype or no tracked properties.
+ *
+ * @example
+ * class MyClass {
+ *   @tracked name = "Alice";
+ *   @tracked age = 30;
+ *   regularProp = "not tracked";
+ * }
+ *
+ * const instance = new MyClass();
+ * const trackedKeys = enumerateTrackedKeys(instance);
+ * // Returns: ["name", "age"]
+ */
+export function enumerateTrackedKeys(obj) {
+  const prototype = obj?.constructor?.prototype;
+  if (!prototype) {
+    return [];
+  }
+
+  const result = [];
+
+  let meta = peekMeta(prototype);
+  while (meta) {
+    const descriptors = meta._descriptors;
+
+    if (descriptors) {
+      Array.from(descriptors.entries())
+        .filter(([, desc]) => desc instanceof TrackedDescriptor)
+        .forEach(([key]) => {
+          result.push(key);
+        });
+    }
+
+    meta = meta.parent; // we need to walk the prototype chain
+  }
+
+  return result;
+}
+
+/**
  * Enumerates all tracked property values from an object instance.
  *
  * **Warning:** This function uses Ember internal APIs (`peekMeta`, `TrackedDescriptor`)
@@ -281,27 +328,11 @@ export function trackedArray(target, key, desc) {
  * // Returns: { name: "Alice", age: 30 }
  */
 export function enumerateTrackedValues(obj) {
-  const prototype = obj?.constructor?.prototype;
-  if (!prototype) {
-    return Object.create(null);
-  }
-
+  const keys = enumerateTrackedKeys(obj);
   const result = Object.create(null);
 
-  let meta = peekMeta(prototype);
-  while (meta) {
-    const descriptors = meta._descriptors;
-
-    if (descriptors) {
-      Array.from(descriptors.entries())
-        .filter(([, desc]) => desc instanceof TrackedDescriptor)
-        .reduce((acc, [key]) => {
-          acc[key] = obj[key];
-          return acc;
-        }, result);
-    }
-
-    meta = meta.parent; // we need to walk the prototype chain
+  for (const key of keys) {
+    result[key] = obj[key];
   }
 
   return result;
