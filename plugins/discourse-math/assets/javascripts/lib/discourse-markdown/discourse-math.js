@@ -103,8 +103,65 @@ function math_input(state, silent, delimiter_code) {
   return true;
 }
 
+function findClosingDelimiter(src, start, close) {
+  const closeLength = close.length;
+
+  for (let i = start; i <= src.length - closeLength; i++) {
+    if (src.slice(i, i + closeLength) !== close) {
+      continue;
+    }
+
+    let backslashes = 0;
+    let j = i - 1;
+    while (j >= 0 && src.charCodeAt(j) === 92 /* \ */) {
+      backslashes++;
+      j--;
+    }
+
+    if (backslashes % 2 === 0) {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
+function math_input_delimited(state, silent, open, close) {
+  let pos = state.pos;
+  let posMax = state.posMax;
+
+  if (silent || posMax < pos + open.length) {
+    return false;
+  }
+
+  if (state.src.slice(pos, pos + open.length) !== open) {
+    return false;
+  }
+
+  const start = pos + open.length;
+  const end = findClosingDelimiter(state.src, start, close);
+
+  if (end === -1) {
+    return false;
+  }
+
+  let data = state.src.slice(start, end);
+  if (!data) {
+    return false;
+  }
+
+  let token = state.push("html_raw", "", 0);
+  token.content = `<span class='math'>${state.md.utils.escapeHtml(data)}</span>`;
+  state.pos = end + close.length;
+  return true;
+}
+
 function inlineMath(state, silent) {
   return math_input(state, silent, 36 /* $ */);
+}
+
+function inlineMathParen(state, silent) {
+  return math_input_delimited(state, silent, "\\(", "\\)");
 }
 
 function asciiMath(state, silent) {
@@ -134,11 +191,147 @@ function isBlockMarker(state, start, max, md) {
   return true;
 }
 
+function isBracketBlockMarker(state, start, max, md) {
+  if (state.src.charCodeAt(start) !== 92 /* \ */) {
+    return false;
+  }
+
+  if (state.src.charCodeAt(start + 1) !== 91 /* [ */) {
+    return false;
+  }
+
+  start += 2;
+
+  // ensure we only have newlines after our \[
+  for (let i = start; i < max; i++) {
+    if (!md.utils.isSpace(state.src.charCodeAt(i))) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function isBracketBlockEnd(state, start, max, md) {
+  if (state.src.charCodeAt(start) !== 92 /* \ */) {
+    return false;
+  }
+
+  if (state.src.charCodeAt(start + 1) !== 93 /* ] */) {
+    return false;
+  }
+
+  start += 2;
+
+  for (let i = start; i < max; i++) {
+    if (!md.utils.isSpace(state.src.charCodeAt(i))) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 function blockMath(state, startLine, endLine, silent) {
   let start = state.bMarks[startLine] + state.tShift[startLine],
     max = state.eMarks[startLine];
 
+  const strict = state.md.options.discourse.features.strict_mathjax_markdown;
+  const line = state.src.slice(start, max).trim();
+
+  if (
+    !strict &&
+    line.startsWith("$$") &&
+    line.endsWith("$$") &&
+    line.length > 4
+  ) {
+    if (silent) {
+      return true;
+    }
+
+    const content = line.slice(2, -2).trim();
+    if (!content) {
+      return false;
+    }
+
+    let token = state.push("html_raw", "", 0);
+    token.content = `<div class='math'>\n${state.md.utils.escapeHtml(
+      content
+    )}\n</div>\n`;
+    state.line = startLine + 1;
+    return true;
+  }
+
+  if (
+    !strict &&
+    line.startsWith("\\[") &&
+    line.endsWith("\\]") &&
+    line.length > 4
+  ) {
+    if (silent) {
+      return true;
+    }
+
+    const content = line.slice(2, -2).trim();
+    if (!content) {
+      return false;
+    }
+
+    let token = state.push("html_raw", "", 0);
+    token.content = `<div class='math'>\n${state.md.utils.escapeHtml(
+      content
+    )}\n</div>\n`;
+    state.line = startLine + 1;
+    return true;
+  }
+
   if (!isBlockMarker(state, start, max, state.md)) {
+    if (!strict && isBracketBlockMarker(state, start, max, state.md)) {
+      if (silent) {
+        return true;
+      }
+
+      let nextLine = startLine;
+      let closed = false;
+      for (;;) {
+        nextLine++;
+
+        if (nextLine >= endLine) {
+          break;
+        }
+
+        if (
+          isBracketBlockEnd(
+            state,
+            state.bMarks[nextLine] + state.tShift[nextLine],
+            state.eMarks[nextLine],
+            state.md
+          )
+        ) {
+          closed = true;
+          break;
+        }
+      }
+
+      let token = state.push("html_raw", "", 0);
+
+      let endContent = closed
+        ? state.eMarks[nextLine - 1]
+        : state.eMarks[nextLine];
+      let content = state.src.slice(
+        state.bMarks[startLine + 1] + state.tShift[startLine + 1],
+        endContent
+      );
+
+      token.content = `<div class='math'>\n${state.md.utils.escapeHtml(
+        content
+      )}\n</div>\n`;
+
+      state.line = closed ? nextLine + 1 : nextLine;
+
+      return true;
+    }
+
     return false;
   }
 
@@ -193,12 +386,17 @@ export function setup(helper) {
   helper.registerOptions((opts, siteSettings) => {
     opts.features.math = siteSettings.discourse_math_enabled;
     opts.features.asciimath = siteSettings.discourse_math_enable_asciimath;
+    opts.features.strict_mathjax_markdown =
+      siteSettings.strict_mathjax_markdown;
   });
 
   helper.registerPlugin((md) => {
     if (md.options.discourse.features.math) {
       if (md.options.discourse.features.asciimath) {
         md.inline.ruler.after("escape", "asciimath", asciiMath);
+      }
+      if (!md.options.discourse.features.strict_mathjax_markdown) {
+        md.inline.ruler.after("escape", "math-paren", inlineMathParen);
       }
       md.inline.ruler.after("escape", "math", inlineMath);
       md.block.ruler.after("code", "math", blockMath, {

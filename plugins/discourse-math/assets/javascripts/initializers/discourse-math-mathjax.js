@@ -1,6 +1,6 @@
 import { later, next } from "@ember/runloop";
 import { getURLWithCDN } from "discourse/lib/get-url";
-import loadScript from "discourse/lib/load-script";
+import loadMathJax from "discourse/lib/load-mathjax";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 let initializedMathJax = false;
@@ -10,82 +10,146 @@ function initMathJax(opts) {
     return;
   }
 
-  const extensions = ["toMathML.js", "Safe.js"];
-
-  if (opts.enable_accessibility) {
-    extensions.push("[a11y]/accessibility-menu.js");
-  }
-
-  let settings = {
-    jax: ["input/TeX", "input/AsciiMath", "input/MathML", "output/CommonHTML"],
-    TeX: { extensions: ["AMSmath.js", "AMSsymbols.js", "autoload-all.js"] },
-    extensions,
-    showProcessingMessages: false,
-    messageStyle: "none",
-    root: getURLWithCDN("/plugins/discourse-math/mathjax"),
-  };
+  const output = opts.mathjax_output === "svg" ? "svg" : "html";
+  const enableA11y =
+    opts.enable_accessibility === true || opts.enable_accessibility === "true";
+  const menuOptions = {};
 
   if (opts.zoom_on_hover) {
-    settings.menuSettings = { zoom: "Hover" };
-    settings.MathEvents = { hover: 750 };
+    menuOptions.settings = {
+      zoom: "Hover",
+      zscale: "200%",
+    };
   }
-  window.MathJax = settings;
+
+  window.MathJax = {
+    tex: {
+      inlineMath: [["\\(", "\\)"]],
+      displayMath: [["\\[", "\\]"]],
+    },
+    asciimath: {
+      delimiters: [["%", "%"]],
+    },
+    loader: {
+      load: [],
+      paths: {
+        mathjax: getURLWithCDN("/assets/mathjax"),
+      },
+    },
+    ...(output === "html"
+      ? {
+          chtml: {
+            fontURL: getURLWithCDN("/assets/mathjax/woff-v2"),
+            assistiveMml: enableA11y,
+          },
+        }
+      : {
+          svg: {
+            assistiveMml: enableA11y,
+          },
+        }),
+    options: {
+      ...(enableA11y
+        ? {
+            enableAssistiveMml: true,
+            enableExplorer: true,
+            enableSpeech: true,
+            enableBraille: true,
+            enableEnrichment: true,
+          }
+        : {}),
+      ...(Object.keys(menuOptions).length ? { menuOptions } : {}),
+    },
+    ...(enableA11y
+      ? {
+          a11y: {
+            speech: true,
+            braille: true,
+          },
+        }
+      : {}),
+    ...(enableA11y
+      ? {
+          sre: {
+            path: getURLWithCDN("/assets/mathjax/sre"),
+            maps: getURLWithCDN("/assets/mathjax/sre/mathmaps"),
+          },
+        }
+      : {}),
+    startup: {
+      typeset: false,
+      ready() {
+        const MathJax = window.MathJax;
+        if (!enableA11y && MathJax?.config?.options) {
+          const configOptions = MathJax.config.options;
+          configOptions.enableAssistiveMml = false;
+          configOptions.enableExplorer = false;
+          configOptions.enableSpeech = false;
+          configOptions.enableBraille = false;
+          configOptions.enableEnrichment = false;
+          if (configOptions.a11y) {
+            configOptions.a11y.speech = false;
+            configOptions.a11y.braille = false;
+          }
+        }
+
+        const readyResult = MathJax?.startup?.defaultReady?.();
+
+        if (!enableA11y && MathJax?.startup?.document?.options) {
+          const docOptions = MathJax.startup.document.options;
+          docOptions.enableAssistiveMml = false;
+          docOptions.enableExplorer = false;
+          docOptions.enableSpeech = false;
+          docOptions.enableBraille = false;
+          docOptions.enableEnrichment = false;
+          if (docOptions.a11y) {
+            docOptions.a11y.speech = false;
+            docOptions.a11y.braille = false;
+          }
+        }
+
+        return readyResult;
+      },
+    },
+  };
+
   initializedMathJax = true;
 }
 
 function ensureMathJax(opts) {
   initMathJax(opts);
-  return loadScript("/plugins/discourse-math/mathjax/MathJax.2.7.5.js");
+  return loadMathJax({
+    enableAsciimath: opts.enable_asciimath,
+    enableAccessibility: opts.enable_accessibility,
+    output: opts.mathjax_output,
+  });
 }
 
-function decorate(elem, isPreview) {
-  if (elem.dataset.appliedMathjax) {
-    return;
-  }
-
-  elem.dataset.appliedMathjax = true;
-
-  let tag, classList, type;
+function buildWrapper(elem) {
+  let tag, classList, content;
 
   if (elem.classList.contains("math")) {
     tag = elem.tagName === "DIV" ? "div" : "span";
-    const display = tag === "div" ? "; mode=display" : "";
     const displayClass = tag === "div" ? "block-math" : "inline-math";
-    type = `math/tex${display}`;
     classList = `math-container ${displayClass} mathjax-math`;
+    const delimiter = tag === "div" ? ["\\[", "\\]"] : ["\\(", "\\)"];
+    content = `${delimiter[0]}${elem.textContent}${delimiter[1]}`;
   } else if (elem.classList.contains("asciimath")) {
     tag = "span";
-    classList = "math-container inline-math ascii-math";
-    type = "math/asciimath";
+    classList = "math-container inline-math ascii-math mathjax-math";
+    content = `%${elem.textContent}%`;
+  } else {
+    return null;
   }
 
-  const mathScript = document.createElement("script");
-  mathScript.type = type;
-  mathScript.innerText = elem.textContent;
-
   const mathWrapper = document.createElement(tag);
-  mathWrapper.classList.add(classList.split(" "));
+  mathWrapper.classList.add(...classList.split(" "));
   mathWrapper.style.display = "none";
-
-  mathWrapper.appendChild(mathScript);
+  mathWrapper.textContent = content;
 
   elem.after(mathWrapper);
 
-  later(
-    this,
-    () => {
-      window.MathJax.Hub.Queue(() => {
-        // don't bother processing previews removed from DOM
-        if (elem?.parentElement?.offsetParent !== null) {
-          window.MathJax.Hub.Typeset(mathScript, () => {
-            elem.style.display = "none";
-            mathWrapper.style.display = null;
-          });
-        }
-      });
-    },
-    isPreview ? 200 : 0
-  );
+  return mathWrapper;
 }
 
 function mathjax(elem, opts) {
@@ -102,10 +166,55 @@ function mathjax(elem, opts) {
 
   if (mathElems.length > 0) {
     const isPreview = elem.classList.contains("d-editor-preview");
+    const wrappers = [];
 
-    ensureMathJax(opts).then(() => {
-      mathElems.forEach((mathElem) => decorate(mathElem, isPreview));
+    mathElems.forEach((mathElem) => {
+      if (mathElem.dataset.appliedMathjax) {
+        return;
+      }
+
+      mathElem.dataset.appliedMathjax = true;
+      const wrapper = buildWrapper(mathElem);
+
+      if (wrapper) {
+        wrappers.push({ original: mathElem, wrapper });
+      }
     });
+
+    if (!wrappers.length) {
+      return;
+    }
+
+    later(
+      () => {
+        ensureMathJax(opts).then((MathJax) => {
+          const active = wrappers.filter(
+            ({ original, wrapper }) =>
+              wrapper?.isConnected &&
+              original?.parentElement?.offsetParent !== null
+          );
+
+          if (!active.length || !MathJax?.typesetPromise) {
+            return;
+          }
+
+          MathJax.typesetPromise(active.map(({ wrapper }) => wrapper)).then(
+            () => {
+              active.forEach(({ original, wrapper }) => {
+                if (original?.isConnected) {
+                  original.style.display = "none";
+                }
+
+                if (wrapper?.isConnected) {
+                  wrapper.style.display = null;
+                }
+              });
+            }
+          );
+        });
+      },
+      isPreview ? 200 : 0
+    );
   }
 }
 
@@ -139,6 +248,7 @@ export default {
       zoom_on_hover: siteSettings.discourse_math_zoom_on_hover,
       enable_accessibility: siteSettings.discourse_math_enable_accessibility,
       enable_asciimath: siteSettings.discourse_math_enable_asciimath,
+      mathjax_output: siteSettings.discourse_math_mathjax_output,
     };
     if (
       siteSettings.discourse_math_enabled &&

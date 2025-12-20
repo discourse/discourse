@@ -3,6 +3,7 @@
   // this is done to limit the size of the chat message after MathJax has rendered
   // ultimately we would want a better solution to avoid channel jumpyness
   // topics suffer from the same issue
+  mjx-container[display="true"],
   .MJXc-display,
   .MathJax_CHTML {
     margin: 0 !important;
