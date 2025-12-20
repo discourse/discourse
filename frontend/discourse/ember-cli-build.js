@@ -9,6 +9,7 @@ const funnel = require("broccoli-funnel");
 const DeprecationSilencer = require("deprecation-silencer");
 const { compatBuild } = require("@embroider/compat");
 const { Webpack } = require("@embroider/webpack");
+const webpack = require("webpack");
 const { StatsWriterPlugin } = require("webpack-stats-plugin");
 const { RetryChunkLoadPlugin } = require("webpack-retry-chunk-load-plugin");
 const withSideWatch = require("./lib/with-side-watch");
@@ -140,6 +141,19 @@ module.exports = function (defaults) {
   let extraPublicTrees = [
     parsePluginClientSettings(discourseRoot, vendorJs, app),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
+    funnel(
+      path.join(
+        path.dirname(
+          require.resolve("@mathjax/mathjax-newcm-font/package.json")
+        ),
+        "chtml/woff2"
+      ),
+      { destDir: "assets/mathjax/woff-v2" }
+    ),
+    funnel(
+      path.join(path.dirname(require.resolve("mathjax/package.json")), "sre"),
+      { destDir: "assets/mathjax/sre" }
+    ),
     applyTerser(generateScriptsTree(app)),
     pluginTrees,
   ];
@@ -214,6 +228,12 @@ module.exports = function (defaults) {
             }
           },
         ],
+        resolve: {
+          fallback: {
+            // MathJax 4.x's require.mjs uses Node.js 'module' - not needed in browser
+            module: false,
+          },
+        },
         module: {
           parser: {
             javascript: {
@@ -222,6 +242,11 @@ module.exports = function (defaults) {
           },
         },
         plugins: [
+          // MathJax 4.x's require.mjs uses Node.js 'module' - replace with empty module for browser
+          new webpack.NormalModuleReplacementPlugin(
+            /mathjax\/require\.mjs$/,
+            require.resolve("./lib/empty-module.js")
+          ),
           // The server use this output to map each asset to its chunks
           new StatsWriterPlugin({
             filename: "assets.json",

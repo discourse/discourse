@@ -9,6 +9,16 @@ plugins:
     choices:
       - mathjax
       - katex
+  strict_mathjax_markdown:
+    default: false
+    client: true
+  discourse_math_mathjax_output:
+    default: "html"
+    client: true
+    type: enum
+    choices:
+      - html
+      - svg
   discourse_math_zoom_on_hover:
     default: false
     client: true

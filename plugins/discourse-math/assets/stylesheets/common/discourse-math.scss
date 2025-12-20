@@ -8,19 +8,13 @@
     // parent selector. So they don't affect any other elements.
     > {
       div,
-      span {
+      span,
+      mjx-container {
         // Mathjax ships with !important inline;
         display: block !important;
         max-width: 100%;
         margin-bottom: 1em;
 
-        // Inner containers for all renderers
-        // mathjax generic
-        [id*="-Frame"],
-        > nobr,
-        > span,
-        // special handeling for SVG
-        &.MathJax_SVG,
         // special handeling for katex
         .katex-html {
           display: block;
@@ -29,6 +23,14 @@
           padding: 0.25em 0.5em;
           box-sizing: border-box;
         }
+      }
+
+      // MathJax 4 container - overflow only on the container itself
+      mjx-container {
+        overflow-x: auto;
+        max-width: 100%;
+        padding: 0.25em 0.5em;
+        box-sizing: border-box;
       }
     }
 
@@ -68,12 +70,13 @@
             rgb(var(--secondary-rgb), 1) 100%
           );
         }
-
-        .MJXp-mtable,
-        .MJXp-mstyle {
-          padding: 0 0.75em;
-        }
       }
+    }
+  }
+
+  &.block-math {
+    mjx-container[jax="SVG"][display="true"] {
+      font-size: 1.55em;
     }
   }
 }
