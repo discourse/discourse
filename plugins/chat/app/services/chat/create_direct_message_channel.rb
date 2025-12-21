@@ -99,7 +99,7 @@ module Chat
       channel.update!(optional_params) if !optional_params.empty?
     end
 
-    def create_memberships(channel:, target_users:)
+    def create_memberships(channel:, target_users:, guardian:)
       always_level = ::Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always]
 
       memberships =
@@ -108,7 +108,7 @@ module Chat
             user_id: user.id,
             chat_channel_id: channel.id,
             muted: false,
-            following: true,
+            following: user.id == guardian.user.id,
             notification_level: always_level,
             created_at: Time.zone.now,
             updated_at: Time.zone.now,
