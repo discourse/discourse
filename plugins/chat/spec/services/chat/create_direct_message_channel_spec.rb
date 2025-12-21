@@ -63,8 +63,9 @@ RSpec.describe Chat::CreateDirectMessageChannel do
           [current_user.id, user_1.id, user_2.id],
         )
         result.channel.user_chat_channel_memberships.each do |membership|
+          should_follow = membership.user_id == current_user.id
           expect(membership).to have_attributes(
-            following: true,
+            following: should_follow,
             muted: false,
             notification_level: "always",
           )
