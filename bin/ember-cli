@@ -117,12 +117,17 @@ if ARGV.include?("-u") || ARGV.include?("--unicorn")
   end
 
   Thread.new do
-    Open3.popen2e(pnpm_env, "pnpm", "ember-tsc", "-b", "--watch", "--preserveWatchOutput") do |i, oe, t|
+    Open3.popen2e(
+      pnpm_env,
+      "pnpm",
+      "ember-tsc",
+      "-b",
+      "--watch",
+      "--preserveWatchOutput",
+    ) do |i, oe, t|
       tsc_pid = t.pid
       puts "Ember TSC running on PID: #{tsc_pid}"
-      oe.each do |line|
-        puts "[ember-tsc] #{line}"
-      end
+      oe.each { |line| puts "[ember-tsc] #{line}" }
     end
     if process_running?(unicorn_pid)
       puts "[bin/ember-cli] ember-tsc process stopped. Terminating unicorn."
