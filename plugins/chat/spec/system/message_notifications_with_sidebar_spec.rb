@@ -166,10 +166,10 @@ RSpec.describe "Message notifications - with sidebar", type: :system do
 
       context "when a new direct message channel is created" do
         fab!(:other_user, :user)
+        let!(:chat_sidebar) { PageObjects::Components::Chat::Sidebar.new }
 
         it "shows the channel in the sidebar without reload" do
           visit("/")
-          chat_sidebar = PageObjects::Components::Chat::Sidebar.new
 
           expect(chat_sidebar).to have_start_new_dm
 
