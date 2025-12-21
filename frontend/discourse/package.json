@@ -148,7 +148,7 @@
     "pretender": "^3.4.7",
     "qunit": "^2.24.3",
     "qunit-dom": "^3.5.0",
-    "sinon": "^21.0.0",
+    "sinon": "^21.0.1",
     "source-map": "^0.7.6",
     "terser": "^5.44.1",
     "testem": "^3.16.0",
