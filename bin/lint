@@ -4,6 +4,8 @@
 require "optparse"
 require "open3"
 require "shellwords"
+require "yaml"
+require "pathname"
 
 class LefthookLinter
   def initialize(options = {})
@@ -19,25 +21,37 @@ class LefthookLinter
   EVERYTHING = ["ALL FILES"]
 
   def run
-    files_to_lint = determine_files
+    files = determine_files
 
     if @fix
-      run_fix_mode(files_to_lint)
+      run_fix_mode(files)
     else
-      run_check_mode(files_to_lint)
+      run_check_mode(files)
     end
   end
 
   private
 
   def determine_files
-    return recent_files if @recent
-    return staged_files if @staged
-    return unstaged_files if @unstaged
-    return wip_files if @wip
-    return @files if !@files.empty?
+    files =
+      if @recent
+        recent_files
+      elsif @staged
+        staged_files
+      elsif @unstaged
+        unstaged_files
+      elsif @wip
+        wip_files
+      elsif !@files.empty?
+        @files
+      else
+        return EVERYTHING
+      end
 
-    EVERYTHING
+    files
+      .map { |f| normalize_relative_path(f) }
+      .select { |f| File.file?(f) && lintable_file?(f) }
+      .uniq
   end
 
   def recent_files
@@ -46,58 +60,40 @@ class LefthookLinter
 
     log_files = log_output.lines.map(&:strip).reject(&:empty?)
 
-    tracked_out, tracked_status = Open3.capture2("git", "ls-files")
-    untracked_out, untracked_status =
-      Open3.capture2("git", "ls-files", "--others", "--exclude-standard")
-    return [] unless tracked_status.success? && untracked_status.success?
+    tracked_out, _ = Open3.capture2("git", "ls-files")
+    untracked_out, _ = Open3.capture2("git", "ls-files", "--others", "--exclude-standard")
 
     tracked = Set.new(tracked_out.lines.map(&:strip))
     untracked = Set.new(untracked_out.lines.map(&:strip))
 
-    # Only keep log files that are still tracked, then add all untracked
-    candidates = Set.new
+    candidates = []
     log_files.each { |f| candidates << f if tracked.include?(f) }
-    untracked.each { |f| candidates << f }
-
-    candidates.select { |f| File.file?(f) && lintable_file?(f) }
+    candidates + untracked.to_a
   end
 
   def staged_files
     git_output, status = Open3.capture2("git", "diff", "--cached", "--name-only")
     return [] unless status.success?
-
-    git_output.lines.map(&:strip).reject(&:empty?).select { |f| File.file?(f) && lintable_file?(f) }
+    git_output.lines.map(&:strip).reject(&:empty?)
   end
 
   def unstaged_files
     git_output, status = Open3.capture2("git", "diff", "--name-only")
     return [] unless status.success?
-
-    git_output.lines.map(&:strip).reject(&:empty?).select { |f| File.file?(f) && lintable_file?(f) }
+    git_output.lines.map(&:strip).reject(&:empty?)
   end
 
   def wip_files
-    # Get files changed since main branch
-    main_diff_output, main_status = Open3.capture2("git", "diff", "main...HEAD", "--name-only")
-    main_files = main_status.success? ? main_diff_output.lines.map(&:strip).reject(&:empty?) : []
+    main_diff_output, _ = Open3.capture2("git", "diff", "main...HEAD", "--name-only")
+    main_files = main_diff_output.lines.map(&:strip).reject(&:empty?)
 
-    # Get staged files
-    staged_output, staged_status = Open3.capture2("git", "diff", "--cached", "--name-only")
-    staged = staged_status.success? ? staged_output.lines.map(&:strip).reject(&:empty?) : []
-
-    # Get unstaged files
-    unstaged_output, unstaged_status = Open3.capture2("git", "diff", "--name-only")
-    unstaged = unstaged_status.success? ? unstaged_output.lines.map(&:strip).reject(&:empty?) : []
-
-    # Combine all files and remove duplicates
-    all_files = Set.new(main_files + staged + unstaged)
-    all_files.select { |f| File.file?(f) && lintable_file?(f) }
+    main_files + staged_files + unstaged_files
   end
 
   def lintable_file?(file)
     # Skip certain directories and files
     if file.include?("node_modules") || file.include?("vendor") || file.include?("tmp") ||
-         file.include?(".git") || file == "database.yml"
+         file.include?(".git") || file == "config/database.yml"
       return false
     end
 
@@ -157,27 +153,67 @@ class LefthookLinter
     end
   end
 
-  def run_lefthook_command(hook_name, files)
-    cmd = ["pnpm", "lefthook", "run", hook_name]
+  GLOB_FLAGS = File::FNM_PATHNAME | File::FNM_EXTGLOB | File::FNM_CASEFOLD | File::FNM_DOTMATCH
+  LEFTHOOK_CONFIG_PATH = File.expand_path("../lefthook.yml", __dir__)
+  PROJECT_ROOT = File.expand_path("..", __dir__)
 
-    # Only add file arguments if we have specific files
-    # For lints and fix-staged without files, let lefthook handle all files
-    files.each { |file| cmd << "--file" << file } unless files.empty?
+  def run_lefthook_command(hook, files)
+    commands = lefthook_config.dig(hook, "commands")
 
-    # Add verbose flag if requested
+    if !files.empty? && commands
+      normalized = files.map { |f| normalize_relative_path(f) }
+      any = false
+
+      commands.each do |name, config|
+        filtered = filter_files_for_command(normalized, config)
+        next if filtered.empty?
+
+        any = true
+        exec_lefthook(hook, name, filtered)
+      end
+      puts "No matching linters for provided files." if !any && @verbose
+    else
+      exec_lefthook(hook, nil, files)
+    end
+  end
+
+  def exec_lefthook(hook, command, files)
+    cmd = ["pnpm", "lefthook", "run", hook]
+    cmd << "--command" << command if command
+    files.each { |f| cmd << "--file" << f }
     cmd << "--verbose" if @verbose
 
     puts "Running: #{cmd.shelljoin}" if @verbose
+    exit 1 unless system(*cmd)
+  end
 
-    # Use system to preserve colored output and proper exit codes
-    success = system(*cmd)
+  def lefthook_config
+    @lefthook_config ||= YAML.load_file(LEFTHOOK_CONFIG_PATH)
+  end
 
-    unless success
-      puts "❌ Linting failed"
-      exit 1
+  def filter_files_for_command(files, config)
+    globs = Array(config["glob"]).compact
+    excludes = Array(config["exclude"]).compact
+
+    files.select do |file|
+      matches_includes =
+        globs.empty? || globs.any? { |pattern| File.fnmatch?(pattern, file, GLOB_FLAGS) }
+      matches_excludes = excludes.any? { |pattern| File.fnmatch?(pattern, file, GLOB_FLAGS) }
+      matches_includes && !matches_excludes
     end
+  end
 
-    puts "✅ All linting checks passed" if @verbose
+  def normalize_relative_path(file)
+    cleaned = file.start_with?("./") ? file[2..] : file
+    path = Pathname.new(cleaned)
+    if path.absolute?
+      begin
+        path = path.relative_path_from(Pathname.new(PROJECT_ROOT))
+      rescue ArgumentError
+        # leave as is if it's outside the repo
+      end
+    end
+    path.to_s
   end
 end
 
