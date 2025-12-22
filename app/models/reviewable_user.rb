@@ -34,7 +34,12 @@ class ReviewableUser < Reviewable
           end
         end
       else
-        build_action(actions, :approve_user, icon: "user-plus") if guardian.can_approve?(target)
+        if guardian.can_approve?(target)
+          actions.add(:approve_user, bundle: nil) do |a|
+            a.icon = "user-plus"
+            a.label = "reviewables.actions.approve_user.title"
+          end
+        end
         delete_user_actions(actions, require_reject_reason: true)
       end
     end

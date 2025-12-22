@@ -83,7 +83,7 @@ export default class Reviewable extends RestModel {
   userReviewableContextQuestion(resolvedType, scores) {
     if (resolvedType === "ReviewableUser") {
       const isSuspectUser = scores?.some(
-        (score) => score.reason === "suspect_user"
+        (score) => score.reason_type === "suspect_user"
       );
       if (isSuspectUser) {
         return i18n("review.context_question.suspect_user");
