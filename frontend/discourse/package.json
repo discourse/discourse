@@ -56,7 +56,7 @@
     "immer": "^11.1.0",
     "jspreadsheet-ce": "^4.15.0",
     "moment": "2.30.1",
-    "moment-timezone": "0.5.45",
+    "moment-timezone": "0.6.0",
     "morphlex": "^1.0.5",
     "orderedmap": "^2.1.1",
     "photoswipe": "5.4.4",
