@@ -1955,7 +1955,7 @@ export default class Controller {
       return;
     }
 
-    const nextDetent = this.detentManager.calculateNextDetent();
+    const nextDetent = this.detentManager.calculateStep("up");
     if (nextDetent !== null) {
       this.handleStateTransition({ type: "STEP", detent: nextDetent });
     }
@@ -1971,7 +1971,7 @@ export default class Controller {
       return;
     }
 
-    const prevDetent = this.detentManager.calculatePrevDetent();
+    const prevDetent = this.detentManager.calculateStep("down");
     if (prevDetent !== null) {
       this.handleStateTransition({ type: "STEP", detent: prevDetent });
     }
