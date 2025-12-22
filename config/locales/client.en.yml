@@ -8073,6 +8073,8 @@ en:
         penalty_post_actions: "What would you like to do with the associated post?"
         penalty_post_delete: "Delete the post"
         penalty_post_delete_replies: "Delete the post + any replies"
+        penalty_post_delete_all: "Delete all topics by user + any replies"
+        penalty_post_delete_all_confirmation: "<span>This will delete %{topics} topics and %{replies} replies. <b>This cannot be undone!</b> Are you sure you would like to do this?</span>"
         penalty_post_edit: "Edit the post"
         penalty_post_none: "Do nothing"
         penalty_count: "Penalty Count"

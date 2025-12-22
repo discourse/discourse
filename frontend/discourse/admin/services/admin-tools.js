@@ -45,6 +45,7 @@ export default class AdminToolsService extends Service {
     const loadedUser = user.adminUserView
       ? user
       : await AdminUser.find(user.get("id"));
+    const originalSuccessCallback = opts.successCallback;
     return this.modal.show(PenalizeUserModal, {
       model: {
         penaltyType: type,
@@ -52,10 +53,15 @@ export default class AdminToolsService extends Service {
         postEdit: opts.postEdit,
         user: loadedUser,
         before: opts.before,
-        successCallback: opts.successCallback,
-        handleDeleteAllPosts: opts.handleDeleteAllPosts
-          ? opts.handleDeleteAllPosts
-          : null,
+        successCallback: async (result) => {
+          if (originalSuccessCallback) {
+            await originalSuccessCallback(result);
+          }
+
+          if (result?.shouldDeleteAllPosts) {
+            return this.deletePostsDecider(loadedUser);
+          }
+        },
       },
     });
   }
