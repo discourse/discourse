@@ -669,7 +669,6 @@ acceptance(`Composer`, function (needs) {
     // Set the custom field without changing post content
     const composer = this.owner.lookup("service:composer").model;
     composer.set("customTestField", "test_value");
-    // await settled();
 
     await click("#reply-control button.create");
 
