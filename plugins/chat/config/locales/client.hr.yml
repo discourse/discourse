@@ -243,6 +243,7 @@ hr:
           create_export: "Stvori izvoz"
           export_has_started: "Izvoz je počeo. Dobit ćete PM kad bude spreman."
       search:
+        short_title: Pretraživanje
         sort:
           relevance: "Relevantnost"
           latest: "Posljednje"

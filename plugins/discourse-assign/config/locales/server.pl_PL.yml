@@ -14,7 +14,7 @@ pl_PL:
     assign_self_regex: "Wyrażenie regularne, które musi przejść, by możliwe było przypisanie tematu samemu sobie. Przykład: ’moja lista’"
     assign_other_regex: "Wyrażenie regularne, które musi przejść, by możliwe było przypisanie tematów innym użytkownikom dzięki wzmiankom. Przykład: ’twoja lista’"
     unassign_on_group_archive: "Gdy wiadomość zostanie zarchiwizowana przez grupę, anuluj przypisanie wiadomości (przypisz ją ponownie, jeśli została przeniesiona z powrotem do skrzynki odbiorczej)"
-    unassign_on_close: "Gdy temat zostanie zamknięty, usuń przypisanie tematu"
+    unassign_on_close: "Automatycznie anuluj przypisanie tematu po jego zamknięciu. UWAGA: nie zostanie utworzony żaden wpis śledzący."
     reassign_on_open: "Po otwarciu tematu ponownie przypisz wcześniej przypisanych użytkowników/grupy"
     invite_on_assign: "Gdy użytkownikowi lub grupie zostanie przypisana wiadomość osobista, zaproś ich do prywatnej wiadomości, jeśli jeszcze nie są uczestnikami."
     assign_mailer: "Kiedy wysłać powiadomienie e-mailem o zadaniach"

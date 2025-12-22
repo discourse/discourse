@@ -95,6 +95,7 @@ th:
         history_label: "ประวัติ"
         members_label: "สมาชิก"
       search:
+        short_title: ค้นหา
         sort:
           relevance: "เกี่ยวข้อง"
           latest: "ล่าสุด"

@@ -256,6 +256,7 @@ zh_CN:
       greater_than: 必须大于 %{count}
       greater_than_or_equal_to: 必须大于或等于 %{count}
       has_already_been_used: "已被使用"
+      in: 必须在 %{count} 以内
       inclusion: 不包括在列表中
       invalid: 无效
       is_invalid: "似乎不清楚，这是一个完整的句子？"
@@ -1895,6 +1896,7 @@ zh_CN:
     selectable_avatars_mode: "允许用户从 selectable_avatars 列表中选择头像，并将自定义头像上传限制在所选信任级别。"
     selectable_avatars: "指定一组头像，用户可以从中选择自己的个人资料照片。该选择将在用户个人资料创建期间或更新个人资料头像时出现。"
     allow_all_attachments_for_group_messages: "允许群组消息的所有电子邮件附件。"
+    image_quality: "设置上传到您站点图像的质量等级。较低的质量等级将减少文件尺寸。"
     png_to_jpg_quality: "转换后的 JPG 文件的质量（1 为最低质量，99 为最佳质量，100 为禁用）。"
     recompress_original_jpg_quality: "上传的图片文件的质量（1 为最低质量，99 为最佳质量，100 为禁用）。"
     image_preview_jpg_quality: "调整大小的图片文件的质量（1 为最低质量，99 为最佳质量，100 为禁用）。"
@@ -2916,11 +2918,13 @@ zh_CN:
     illegal: "您的帖子被举报为**非法**：社区认为这可能触犯了法律。"
     spam: "您的帖子被举报为**垃圾信息**：社区认为它是广告，像是在过度地推广着什么，而不是预期中与话题有关的内容。"
     notify_moderators: "您的帖子被举报为**需要版主注意**：社区认为帖子需要管理人员手动干预。"
+    needs_approval: "您的帖子被标记为**需要批准**：它已加入审核队列，管理人员将审核它是否满足[我们的社区准则](%{base_path}/guidelines)。"
     responder:
       off_topic: "该帖子被举报为**偏离话题**：鉴于话题标题和第一个帖子，社区认为它不适合该话题。"
       inappropriate: "这个帖子被举报为**不当言论**：社区认为它具有冒犯性、侮辱性、属于仇恨行为或违反了[我们的社区准则](%{base_path}/guidelines)。"
       spam: "该帖子被举报为**垃圾信息**：社区认为这是一个广告，本质上是过度宣传的东西，而不是像预期的那样有用或与话题相关。"
       notify_moderators: "该帖子被举报为**需要版主注意**：社区认为帖子需要管理人员手动干预。"
+      needs_approval: "该帖子被标记为**需要批准**：它已加入审核队列，管理人员将审核它是否满足[我们的社区准则](%{base_path}/guidelines)。"
   flags_dispositions:
     agreed: "感谢通知我们。我们认为这是个问题，正在进行调查。"
     agreed_and_deleted: "感谢通知我们。我们认为这是个问题，并且已将该帖子移除。"
@@ -3515,9 +3519,25 @@ zh_CN:
     user_automatically_silenced:
       title: "用户被自动禁言"
       subject_template: "新用户 %{username} 因社区举报被禁言"
+      text_body_template: |
+        新用户[%{username}](%{user_url})已被系统自动禁言。
+
+        请[审核举报内容](%{base_url}/review)。如果%{username}被错误地禁言，请点击[此用户管理页面](%{user_url})中的解除禁言按钮。
+
+        自动禁言阈值可以通过站点设置中的`silence_new_user`调整。
     user_automatically_silenced_with_reason:
       title: "用户被自动禁言"
       subject_template: "新用户 %{username} 因社区举报被禁言"
+      text_body_template: |
+        这是一条由系统发送的消息。
+
+        新用户[%{username}](%{user_url})已被系统自动禁言。
+
+        原因：%{reason}
+
+        请[审核举报内容](%{base_url}/review)。如果%{username}被错误地禁言，请点击[此用户管理页面](%{user_url})中的解除禁言按钮。
+
+        自动禁言阈值可以通过站点设置中的`silence_new_user`调整。
     spam_post_blocked:
       title: "垃圾信息帖子被屏蔽"
       subject_template: "新用户 %{username} 的帖子因重复链接被屏蔽"
@@ -3880,6 +3900,12 @@ zh_CN:
     account_second_factor_disabled:
       title: "双重身份验证已禁用"
       subject_template: "[%{email_prefix}] 双重身份验证已禁用"
+      text_body_template: |
+        您在 %{site_name} 上的账户的双重身份验证已被停用，现在你可以通过密码登录账户，而无需额外的身份验证码。
+
+        如果您未曾选择禁用双重身份验证，那么您的帐户可能已被他人盗用。
+
+        如果您对此有任何疑问，请[联系网站管理](%{base_url}/about)。
     digest:
       why: "自 %{since} 以来 %{site_link} 的简要摘要"
       since_last_visit: "自从您上次访问以来"
@@ -4077,8 +4103,12 @@ zh_CN:
     title: "糟糕！该页面不存在或者是一个不公开页面。"
     subtitle: "我们找遍了所有地方，但没有找到您要找的页面。"
     popular_topics: "热门话题"
+    recent_topics: "近期话题"
     see_more: "更多"
+    search_title: "尝试搜索感兴趣的话题"
     search_button: "搜索"
+    home: "返回主页"
+    placeholder: "通过标题或关键字搜索话题…"
   offline:
     title: "无法加载应用"
     offline_page_message: "您好像离线了！请检查您的网络连接，然后重试。"
@@ -4857,6 +4887,7 @@ zh_CN:
     step:
       setup:
         title: "使用入门"
+        description: "我们将使用基本设置完成您社区的设置流程，您可以在后续修改这些设置。"
         fields:
           title:
             label: "社区名称"
@@ -5059,6 +5090,7 @@ zh_CN:
         title: "舍弃帖子"
         complete: "帖子已被舍弃。"
       revise_and_reject_post:
+        title: "打回帖子"
         complete: "帖子被拒绝，等待修订。"
       ignore:
         title: "忽略"
@@ -5150,14 +5182,27 @@ zh_CN:
         bundle_title: "您想对这位用户做什么？"
       no_action_user:
         title: "无行动"
+        description: "不执行任何操作"
+        complete: "不执行任何操作"
       silence_user:
         title: "禁言用户"
         description: "禁止该用户发帖"
+        complete: "用户被禁言"
+        reason: "用户通过审核队列被禁言"
       suspend_user:
         title: "封禁用户"
+        description: "封禁用户"
+        complete: "用户被封禁"
+        reason: "用户通过审核队列被封禁"
       delete_user:
         title: "删除用户"
+        description: "删除用户"
+        complete: "用户被删除"
         reason: "已通过审核队列删除"
+      delete_and_block_user:
+        title: "删除并禁止用户"
+        description: "删除用户，并禁止 IP/email"
+        complete: "用户被删除且被禁止"
       delete_user_block:
         title: "删除并屏蔽"
         description: "删除该用户并屏蔽其 IP 地址/邮箱。"
@@ -5204,6 +5249,11 @@ zh_CN:
       reserved_id: "有一个保留关键字 ID：%{id}"
       unsafe_description: "有不安全的 HTML 描述"
       invalid_tag_group: "具有无效的标签组：%{tag_group_name}"
+  discourse_id:
+    already_registered: "该站点已经使用 Discourse ID 注册"
+    errors:
+      not_configured: "Discourse ID 尚未配置，请先启用 Discourse ID 。"
+      regenerate_failed: "重新生成凭据失败，请稍后重试。"
   activemodel:
     errors:
       <<: *errors
