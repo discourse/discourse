@@ -38,7 +38,7 @@ export default class Controller {
   /**
    * Browser feature detection for scroll-snap and IntersectionObserver.
    *
-   * @type {boolean}
+   * @returns {boolean} Whether required features are supported
    * @static
    */
   static get browserSupportsRequiredFeatures() {
@@ -69,6 +69,12 @@ export default class Controller {
   /** @type {HTMLElement|null} */
   @tracked backdrop = null;
 
+  /** @type {TrackedArray<HTMLElement>} */
+  detentMarkers = new TrackedArray();
+
+  /** @type {string} */
+  id = guidFor(this);
+
   /** @type {boolean} */
   @tracked isPresented = false;
 
@@ -76,33 +82,10 @@ export default class Controller {
   @tracked safeToUnmount = true;
 
   /** @type {boolean} */
-  @tracked inertOutside = true;
-
-  /** @type {Array|null} */
-  @tracked detentsConfig = null;
+  viewHiddenByObserver = false;
 
   /** @type {boolean} */
-  @tracked swipeOvershoot = true;
-
-  /** @type {boolean} */
-  @tracked backdropSwipeable = true;
-
-  /**
-   * Whether scroll is currently ongoing.
-   * @type {boolean}
-   */
-  @tracked isScrollOngoing = false;
-  /** @type {TrackedArray<HTMLElement>} */
-  detentMarkers = new TrackedArray();
-
-  /** @type {string} */
-  id = guidFor(this);
-
-  /** @type {string} */
-  role = "dialog";
-
-  /** @type {string} */
-  tracks = "bottom";
+  closingWithoutAnimation = false;
 
   /** @type {string} */
   contentPlacement = "bottom";
@@ -144,6 +127,26 @@ export default class Controller {
     { guards: null }
   );
 
+
+  /** @type {boolean} */
+  @tracked isScrollOngoing = false;
+
+  /** @type {boolean} */
+  isSwipeOngoing = false;
+
+  /** @type {boolean} */
+  isMoveOngoing = false;
+
+  /** @type {boolean} */
+  frontStuck = false;
+
+  /** @type {boolean} */
+  backStuck = false;
+
+  /** @type {number|null} */
+  lastScrollTop = null;
+
+
   /** @type {Object|null} */
   dimensions = null;
 
@@ -156,109 +159,41 @@ export default class Controller {
   /** @type {Array<number>} */
   currentSegment = [0, 0];
 
-  /** @type {boolean} */
-  frontStuck = false;
-
-  /** @type {boolean} */
-  backStuck = false;
-
   /** @type {number} */
   travelProgress = 0;
 
   /** @type {string} */
   travelStatus = "idleOutside";
 
-  /** @type {{start: number, end: number}} */
-  travelRange = { start: 0, end: 0 };
-
   /** @type {string} */
   previousTravelStatus = "idleOutside";
+
+  /** @type {{start: number, end: number}} */
+  travelRange = { start: 0, end: 0 };
 
   /** @type {number|null} */
   lastProcessedProgress = null;
 
-  /** @type {number|null} */
-  lastScrollTop = null;
-
   /**
-   * Whether swipe is currently ongoing.
-   * @type {boolean}
-   */
-  isSwipeOngoing = false;
-
-  /**
-   * Whether move is currently ongoing.
-   * @type {boolean}
-   */
-  isMoveOngoing = false;
-
-  /**
-   * Progress smoother function like Silk's nB.
-   * Initialized when sheet opens with expected detent progress.
-   * Prevents large jumps in progress values (e.g., from expected value to spurious 0).
+   * Progress smoother function initialized when interaction begins.
+   * Prevents large jumps in progress values.
+   *
    * @type {Function|null}
    */
   progressSmoother = null;
 
-  /** @type {Array<Object>} */
-  travelAnimations = [];
 
-  /** @type {Array<Object>} */
-  stackingAnimations = [];
+  /** @type {string} */
+  role = "dialog";
 
-  /** @type {Array<Controller>} */
-  belowSheetsInStack = [];
+  /** @type {string} */
+  tracks = "bottom";
 
-  /** @type {number} */
-  stackingIndex = -1;
+  /** @type {string} */
+  contentPlacement = "bottom";
 
-  /** @type {string|null} */
-  stackId = null;
-
-  /** @type {number} */
-  stackPosition = 0;
-
-  /** @type {boolean} */
-  viewHiddenByObserver = false;
-
-  /** @type {boolean} */
-  closingWithoutAnimation = false;
-
-  /** @type {Object|null} */
-  sheetStackRegistry = null;
-
-  /** @type {Object|null} */
-  sheetRegistry = null;
-
-  /** @type {Object|null} */
-  themeColorManager = null;
-
-  /** @type {Set} */
-  outlets = new Set();
-
-  /** @type {Function|null} */
-  onTravelStatusChange = null;
-
-  /** @type {Function|null} */
-  onTravelRangeChange = null;
-
-  /** @type {Function|null} */
-  onTravel = null;
-
-  /** @type {Function|null} */
-  onTravelStart = null;
-
-  /** @type {Function|null} */
-  onTravelEnd = null;
-
-  /** @type {Function|null} */
-  onActiveDetentChange = null;
-
-  /** @type {Function|null} */
-  onTravelProgressChange = null;
-
-  /** @type {Function|null} */
-  onSwipeFromEdgeToGoBackAttempt = null;
+  /** @type {Array|null} */
+  @tracked detentsConfig = null;
 
   /** @type {boolean} */
   swipe = true;
@@ -266,8 +201,14 @@ export default class Controller {
   /** @type {boolean} */
   swipeDismissal = true;
 
+  /** @type {boolean} */
+  @tracked swipeOvershoot = true;
+
   /** @type {boolean|Object} */
   swipeTrap = true;
+
+  /** @type {boolean} */
+  @tracked backdropSwipeable = true;
 
   /** @type {boolean} */
   nativeEdgeSwipePrevention = false;
@@ -277,6 +218,9 @@ export default class Controller {
 
   /** @type {boolean} */
   pageScroll = false;
+
+  /** @type {boolean} */
+  @tracked inertOutside = true;
 
   /** @type {string|Object|null} */
   enteringAnimationSettings = null;
@@ -312,6 +256,64 @@ export default class Controller {
   /** @type {Object|Function} */
   onDismissAutoFocus = { focus: true };
 
+  // ═══════════════════════════════════════════════════════════════════════════
+  // Stacking & Registries
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /** @type {Array<Controller>} */
+  belowSheetsInStack = [];
+
+  /** @type {number} */
+  stackingIndex = -1;
+
+  /** @type {string|null} */
+  stackId = null;
+
+  /** @type {number} */
+  stackPosition = 0;
+
+  /** @type {Object|null} */
+  sheetStackRegistry = null;
+
+  /** @type {Object|null} */
+  sheetRegistry = null;
+
+  /** @type {Object|null} */
+  themeColorManager = null;
+
+  /** @type {Array<Object>} */
+  travelAnimations = [];
+
+  /** @type {Array<Object>} */
+  stackingAnimations = [];
+
+  /** @type {Set} */
+  outlets = new Set();
+
+  /** @type {Function|null} */
+  onTravelStatusChange = null;
+
+  /** @type {Function|null} */
+  onTravelRangeChange = null;
+
+  /** @type {Function|null} */
+  onTravel = null;
+
+  /** @type {Function|null} */
+  onTravelStart = null;
+
+  /** @type {Function|null} */
+  onTravelEnd = null;
+
+  /** @type {Function|null} */
+  onActiveDetentChange = null;
+
+  /** @type {Function|null} */
+  onTravelProgressChange = null;
+
+  /** @type {Function|null} */
+  onSwipeFromEdgeToGoBackAttempt = null;
+
   /** @type {FocusManagement|null} */
   focusManagement = null;
 
@@ -319,7 +321,7 @@ export default class Controller {
   inertManagement = null;
 
   /**
-   * state machines
+   * Subscription definitions for state machines.
    */
   #subscriptionDefinitions = [
     {
@@ -429,7 +431,6 @@ export default class Controller {
       ],
       handler: "updateAnimatingAttribute",
     },
-    // Scroll state caching via refs (like Silk's n2.current)
     {
       machine: "stateMachine",
       state: "open.scroll.ongoing",
@@ -458,7 +459,6 @@ export default class Controller {
         this.isScrollOngoing = false;
       },
     },
-    // Swipe state caching via refs (like Silk's n4.current)
     {
       machine: "stateMachine",
       state: "open.swipe.ongoing",
@@ -483,7 +483,6 @@ export default class Controller {
         this.isSwipeOngoing = false;
       },
     },
-    // Move state caching via refs (like Silk's n3.current)
     {
       machine: "stateMachine",
       state: "open.move.ongoing",
@@ -534,105 +533,13 @@ export default class Controller {
    * Configure options for the controller.
    * Called by Root after construction and by View when it mounts.
    *
-   * @param {Object} options - Configuration options
-   * @param {string} options.role - ARIA role for the sheet
-   * @param {number} options.activeDetent - Active detent index
-   * @param {number} options.defaultActiveDetent - Default active detent index
-   * @param {string} options.contentPlacement - Placement of content
-   * @param {string} options.tracks - Track content travels on
-   * @param {Array<string>} options.detents - Detent values
-   * @param {boolean} options.swipe - Enable swipe gestures
-   * @param {boolean} options.swipeDismissal - Allow swipe to dismiss
-   * @param {boolean} options.swipeOvershoot - Allow overshoot
-   * @param {boolean|Object} options.swipeTrap - Trap swipes
-   * @param {boolean} options.nativeEdgeSwipePrevention - Prevent edge swipe
-   * @param {boolean} options.nativeFocusScrollPrevention - Prevent focus scroll
-   * @param {boolean} options.pageScroll - Enable page scroll
-   * @param {boolean} options.inertOutside - Inert outside content
-   * @param {Object} options.onClickOutside - Click outside behavior
-   * @param {Object|Function} options.onEscapeKeyDown - Escape key behavior
-   * @param {Object|Function} options.onPresentAutoFocus - Auto-focus on present
-   * @param {Object|Function} options.onDismissAutoFocus - Auto-focus on dismiss
-   * @param {string|Object} options.enteringAnimationSettings - Enter animation
-   * @param {string|Object} options.exitingAnimationSettings - Exit animation
-   * @param {string|Object} options.steppingAnimationSettings - Step animation
-   * @param {number|string} options.snapOutAcceleration - Snap out acceleration
-   * @param {number|string} options.snapToEndDetentsAcceleration - Snap acceleration
-   * @param {boolean|string} options.themeColorDimming - Theme color dimming
-   * @param {number} options.themeColorDimmingAlpha - Dimming alpha
-   * @param {Function} options.onTravelStatusChange - Travel status callback
-   * @param {Function} options.onTravelRangeChange - Travel range callback
-   * @param {Function} options.onTravel - Travel callback
-   * @param {Function} options.onTravelStart - Travel start callback
-   * @param {Function} options.onTravelEnd - Travel end callback
-   * @param {Function} options.onActiveDetentChange - Active detent change callback
-   * @param {Object} options.sheetStackRegistry - Sheet stack registry
-   * @param {Object} options.sheetRegistry - Sheet registry
-   * @param {Object} options.themeColorManager - Theme color manager
+   * @param {Object} [options={}] - Configuration options
    */
   configure(options = {}) {
-    this.#configureRole(options);
-    this.#configureDetents(options);
-    this.#configureTracksAndPlacement(options);
-    this.#configureSwipe(options);
-    this.#configureEventHandlers(options);
-    this.#configureAnimation(options);
-    this.#configureThemeColor(options);
-    this.#configureCallbacks(options);
-    this.#configureRegistries(options);
-  }
-
-  /**
-   * Merge an event handler option with the current value.
-   * Handles function values, object merging, and undefined.
-   *
-   * @param {Object} options - The options object
-   * @param {string} key - The option key to merge
-   * @param {Object|Function} currentValue - The current value
-   * @returns {Object|Function} The merged value
-   */
-  #mergeEventHandler(options, key, currentValue) {
-    const value = options[key];
-    if (value === undefined) {
-      return currentValue;
-    }
-    if (typeof value === "function") {
-      return value;
-    }
-    return { ...currentValue, ...value };
-  }
-
-  /**
-   * Assign option values to this instance if they are defined.
-   *
-   * @param {Object} options - The options object
-   * @param {Array<string>} keys - The keys to assign
-   */
-  #assignIfDefined(options, keys) {
-    for (const key of keys) {
-      if (options[key] !== undefined) {
-        this[key] = options[key];
-      }
-    }
-  }
-
-  /**
-   * Configure the ARIA role.
-   *
-   * @param {Object} options - Configuration options
-   */
-  #configureRole(options) {
     if (options.role !== undefined) {
       this.role = options.role;
     }
-  }
 
-  /**
-   * Configure detent-related options.
-   *
-   * @param {Object} options - Configuration options
-   */
-  #configureDetents(options) {
     if (options.activeDetent !== undefined) {
       this.targetDetent = options.activeDetent;
     } else if (options.defaultActiveDetent !== undefined) {
@@ -642,29 +549,15 @@ export default class Controller {
     if ("detents" in options) {
       this.detentsConfig = options.detents;
     }
-  }
 
-  /**
-   * Configure tracks and content placement.
-   *
-   * @param {Object} options - Configuration options
-   */
-  #configureTracksAndPlacement(options) {
     const result = resolveTracksAndPlacement(options, {
       tracks: this.tracks,
       contentPlacement: this.contentPlacement,
     });
     this.tracks = result.tracks;
     this.contentPlacement = result.contentPlacement;
-  }
 
-  /**
-   * Configure swipe and scroll behavior options.
-   *
-   * @param {Object} options - Configuration options
-   */
-  #configureSwipe(options) {
-    this.#assignIfDefined(options, [
+    const propsToAssign = [
       "swipe",
       "swipeDismissal",
       "swipeOvershoot",
@@ -674,88 +567,46 @@ export default class Controller {
       "nativeFocusScrollPrevention",
       "pageScroll",
       "inertOutside",
-    ]);
-  }
-
-  /**
-   * Configure event handler options with proper merging.
-   *
-   * @param {Object} options - Configuration options
-   */
-  #configureEventHandlers(options) {
-    this.onClickOutside = this.#mergeEventHandler(
-      options,
-      "onClickOutside",
-      this.onClickOutside
-    );
-    this.onEscapeKeyDown = this.#mergeEventHandler(
-      options,
-      "onEscapeKeyDown",
-      this.onEscapeKeyDown
-    );
-    this.onPresentAutoFocus = this.#mergeEventHandler(
-      options,
-      "onPresentAutoFocus",
-      this.onPresentAutoFocus
-    );
-    this.onDismissAutoFocus = this.#mergeEventHandler(
-      options,
-      "onDismissAutoFocus",
-      this.onDismissAutoFocus
-    );
-  }
-
-  /**
-   * Configure animation settings.
-   *
-   * @param {Object} options - Configuration options
-   */
-  #configureAnimation(options) {
-    this.#assignIfDefined(options, [
       "enteringAnimationSettings",
       "exitingAnimationSettings",
       "steppingAnimationSettings",
       "snapOutAcceleration",
       "snapToEndDetentsAcceleration",
-    ]);
-  }
-
-  /**
-   * Configure theme color settings.
-   *
-   * @param {Object} options - Configuration options
-   */
-  #configureThemeColor(options) {
-    this.themeColorAdapter.configure(options);
-  }
-
-  /**
-   * Configure travel and detent change callbacks.
-   *
-   * @param {Object} options - Configuration options
-   */
-  #configureCallbacks(options) {
-    this.#assignIfDefined(options, [
       "onTravelStatusChange",
       "onTravelRangeChange",
       "onTravel",
       "onTravelStart",
       "onTravelEnd",
       "onActiveDetentChange",
-    ]);
-  }
-
-  /**
-   * Configure registry references.
-   *
-   * @param {Object} options - Configuration options
-   */
-  #configureRegistries(options) {
-    this.#assignIfDefined(options, [
       "sheetStackRegistry",
       "sheetRegistry",
       "themeColorManager",
-    ]);
+    ];
+
+    for (const key of propsToAssign) {
+      if (options[key] !== undefined) {
+        this[key] = options[key];
+      }
+    }
+
+    const eventHandlers = [
+      "onClickOutside",
+      "onEscapeKeyDown",
+      "onPresentAutoFocus",
+      "onDismissAutoFocus",
+    ];
+
+    for (const key of eventHandlers) {
+      if (options[key] !== undefined) {
+        if (typeof options[key] === "function") {
+          this[key] = options[key];
+        } else {
+          this[key] = { ...this[key], ...options[key] };
+        }
+      }
+    }
+
+    this.themeColorAdapter.configure(options);
   }
 
   /**
@@ -780,7 +631,6 @@ export default class Controller {
 
   /**
    * Invoke all registered travel animation callbacks.
-   * Uses index-based iteration for performance per Silk implementation.
    *
    * @param {number} progress - Travel progress value (0-1)
    * @param {Function} [tween] - Optional tween function for interpolation
@@ -794,7 +644,6 @@ export default class Controller {
 
   /**
    * Invoke all registered stacking animation callbacks.
-   * Uses index-based iteration for performance per Silk implementation.
    *
    * @param {number} progress - Stacking progress value (0-1)
    * @param {Function} tween - Tween function for interpolation
