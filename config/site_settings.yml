@@ -4191,6 +4191,10 @@ experimental:
     default: ""
     area: "experimental"
     hidden: true
+  force_old_reviewable_ui:
+    client: true
+    default: false
+    hidden: true
   reviewable_old_moderator_actions:
     default: true
     hidden: true
