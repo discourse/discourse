@@ -3,13 +3,11 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
 import icon from "discourse/helpers/d-icon";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
-const DEFAULT_ASPECT_RATIO = "4 / 3";
 const INTERSECTION_THRESHOLD = 0.6;
 
 /**
@@ -26,7 +24,6 @@ const INTERSECTION_THRESHOLD = 0.6;
  * @param {Array<ImageGridCarouselItem>} @data.items
  * @param {string} @data.mode
  * @param {string|null} @data.aspect
- * @param {ImageGridCarouselItem} @data.primaryItem
  */
 export default class ImageGridCarousel extends Component {
   /**
@@ -116,26 +113,6 @@ export default class ImageGridCarousel extends Component {
   }
 
   /**
-   * @returns {string}
-   */
-  get aspect() {
-    const { aspect, primaryItem } = this.args.data;
-    if (aspect) {
-      return aspect.replace(/:/g, " / ");
-    } else if (primaryItem?.width && primaryItem?.height) {
-      return `${primaryItem.width} / ${primaryItem.height}`;
-    }
-    return DEFAULT_ASPECT_RATIO;
-  }
-
-  /**
-   * @returns {import("@ember/template").SafeString}
-   */
-  get aspectStyle() {
-    return htmlSafe(`--image-grid-carousel-aspect: ${this.aspect}`);
-  }
-
-  /**
    * @returns {number}
    */
   get prevIndex() {
@@ -207,7 +184,6 @@ export default class ImageGridCarousel extends Component {
       <div
         class="d-image-grid__track"
         tabindex="0"
-        style={{this.aspectStyle}}
         {{this.setupTrack}}
         {{on "keydown" this.onKeyDown}}
       >
