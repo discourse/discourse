@@ -658,6 +658,7 @@ en:
     deleting: "Deleting…"
 
     save: "Save Changes"
+    short_save: "Save"
     saving: "Saving…"
     saved: "Saved!"
 

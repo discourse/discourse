@@ -19,6 +19,7 @@ import { service } from "@ember/service";
  */
 export default class Handle extends Component {
   @service sheetRegistry;
+
   /**
    * Handle click event with onPress behavior processing.
    *
