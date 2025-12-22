@@ -58,6 +58,7 @@ export default class Post extends Component {
    * @type {boolean}
    */
   @tracked isTogglingReplies = false;
+  @tracked isLoadingMoreReplies = false;
 
   decoratorState = new TrackedMap();
 
@@ -233,20 +234,30 @@ export default class Post extends Component {
 
   @action
   async loadMoreReplies() {
-    const after = this.repliesBelow.length
-      ? this.repliesBelow.at(-1).post_number
-      : 1;
+    if (this.isLoadingMoreReplies) {
+      return;
+    }
 
-    const replies = await this.store.find("post-reply", {
-      postId: this.args.post.id,
-      after,
-    });
+    this.isLoadingMoreReplies = true;
 
-    replies.content.forEach((reply) => {
-      // the components expect a post model instance
-      const replyAsPost = this.store.createRecord("post", reply);
-      this.repliesBelow.push(replyAsPost);
-    });
+    try {
+      const after = this.repliesBelow.length
+        ? this.repliesBelow.at(-1).post_number
+        : 1;
+
+      const replies = await this.store.find("post-reply", {
+        postId: this.args.post.id,
+        after,
+      });
+
+      replies.content.forEach((reply) => {
+        // the components expect a post model instance
+        const replyAsPost = this.store.createRecord("post", reply);
+        this.repliesBelow.push(replyAsPost);
+      });
+    } finally {
+      this.isLoadingMoreReplies = false;
+    }
   }
 
   @action
@@ -665,6 +676,7 @@ export default class Post extends Component {
                               class="post__load-more load-more-replies"
                               @label="post.load_more_replies"
                               @action={{this.loadMoreReplies}}
+                              @disabled={{this.isLoadingMoreReplies}}
                             />
                           {{/if}}
                         </section>
