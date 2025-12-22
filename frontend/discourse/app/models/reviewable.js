@@ -79,9 +79,15 @@ export default class Reviewable extends RestModel {
     });
   }
 
-  @discourseComputed("resolvedType")
-  userReviewableContextQuestion(resolvedType) {
+  @discourseComputed("resolvedType", "reviewable_scores")
+  userReviewableContextQuestion(resolvedType, scores) {
     if (resolvedType === "ReviewableUser") {
+      const isSuspectUser = scores?.some(
+        (score) => score.reason === "suspect_user"
+      );
+      if (isSuspectUser) {
+        return i18n("review.context_question.suspect_user");
+      }
       return i18n("review.context_question.approve_user");
     }
     if (resolvedType === "ReviewableQueuedPost") {
@@ -89,6 +95,9 @@ export default class Reviewable extends RestModel {
     }
     if (resolvedType === "ReviewableQueuedTopic") {
       return i18n("review.context_question.approve_topic");
+    }
+    if (resolvedType === "ReviewablePost") {
+      return i18n("review.context_question.approve_post");
     }
     return null;
   }

@@ -909,6 +909,7 @@ en:
         delimiter: "or"
         something_else_wrong: "Is there something wrong with this %{reviewable_type}?"
         approve_user: "Approve this user?"
+        suspect_user: "Is this user spam?"
         approve_post: "Approve this post?"
         approve_topic: "Approve this topic?"
 

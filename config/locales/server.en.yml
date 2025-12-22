@@ -5747,7 +5747,7 @@ en:
         description: "Ignore the flag by removing it from the queue without taking any action. Hidden posts will stay hidden and be handled by the auto-tools."
         complete: "Flag ignored."
       approve:
-        title: "Approve"
+        title: "Yes"
         complete: "Post approved."
       approve_post:
         title: "Yes"
@@ -5791,16 +5791,20 @@ en:
       reject_and_delete:
         title: "Reject and Delete the post"
         complete: "Post rejected and deleted."
+      reject_and_delete_standalone:
+        title: "No, delete post"
       reject_and_keep_deleted:
         title: "Keep post deleted"
         complete: "Post rejected and kept deleted."
+      reject_and_keep_deleted_standalone:
+        title: "No, keep post deleted"
       scrub:
         title: Scrub record
       approve_and_restore:
-        title: "Approve and Restore post"
+        title: "Yes"
         complete: "Post approved and restored."
       approve_and_unhide:
-        title: "Approve and Unhide post"
+        title: "Yes"
         complete: "Post approved and unhidden"
       # New separated post actions
       post_actions:
