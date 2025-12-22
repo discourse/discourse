@@ -1,5 +1,6 @@
 import { SPRING_PRESETS } from "./animation";
 import { travelToDetent } from "./travel";
+import { prefersReducedMotion } from "discourse/lib/utilities";
 
 /**
  * Default animation configuration for exiting transitions.
@@ -85,6 +86,7 @@ export default class AnimationTravel {
     const hasEasing = this.#hasRecognizedEasing(settings, preset);
 
     return {
+      skip: prefersReducedMotion(),
       easing: "spring",
       ...(isString ? {} : settings),
       ...preset,
@@ -219,6 +221,7 @@ export default class AnimationTravel {
       snapBackAcceleratorTravelAxisSize,
       onTravel: c.onTravel,
       onTravelStart: c.onTravelStart,
+      runOnTravelStart: travelType !== "entering",
       onTravelEnd: () => this.#handleTravelEnd(),
     });
   }
@@ -234,6 +237,7 @@ export default class AnimationTravel {
 
     if (exactProgress !== undefined) {
       c.lastProcessedProgress = exactProgress;
+      c.stackingAdapter?.updateTravelProgress(exactProgress);
     }
 
     c.onTravelEnd?.();

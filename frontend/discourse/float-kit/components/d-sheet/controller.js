@@ -1698,9 +1698,7 @@ export default class Controller {
     this.onTravelProgressChange?.(stackingProgress);
 
     const tween = createTweenFunction(stackingProgress);
-    this.belowSheetsInStack.forEach((belowSheet) => {
-      belowSheet.aggregatedStackingCallback(stackingProgress, tween);
-    });
+    this.stackingAdapter.notifyBelowSheets(stackingProgress, tween);
 
     this.notifyTravel(smoothedProgress);
 
