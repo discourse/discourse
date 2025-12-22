@@ -140,6 +140,7 @@ bg:
       admin:
         title: "Чат"
       search:
+        short_title: Търсене
         sort:
           relevance: "Приложимост"
           latest: "Последни"

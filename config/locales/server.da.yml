@@ -757,8 +757,8 @@ da:
       short_description: "Bogmærk dette indlæg"
     like:
       title: "Like"
-      description: "Du 'Synes godt om' dette indlæg"
-      short_description: "Du 'synes godt om' dette indlæg"
+      description: "Synes godt om dette indlæg"
+      short_description: "Synes godt om dette indlæg"
   draft:
     sequence_conflict_error:
       title: "kladdefejl"

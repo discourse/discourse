@@ -523,7 +523,7 @@ zh_CN:
       bulk_delete: "删除选中内容"
       bulk_delete_confirmation: "删除草稿"
       bulk_delete_message:
-        other: "确定要删除这 %{count} 个帖子吗？"
+        other: "确定要删除 %{count} 个草稿吗？"
       new_topic: "新话题草稿"
       new_private_message: "新个人消息草稿"
       edit_topic: "编辑话题草稿"
@@ -847,6 +847,11 @@ zh_CN:
           trust_level: "信任级别：%{trustLevelName}"
           posts:
             other: "%{count} 个帖子"
+        moderation_history:
+          label: "管理操作记录"
+          silenced: "被禁言：%{count} 次"
+          suspended: "被封禁：%{count} 次"
+          rejected_posts: "帖子被拒绝：%{count} 次"
         solution_marked: "被标记为解决方案"
         topic_has_solution: "此话题有解决方案"
         visibility: "公开范围"
@@ -2704,7 +2709,11 @@ zh_CN:
       list_item: "列表条目"
       toggle_direction: "切换方向"
       wrap_modal:
+        attributes_label: "属性"
+        add_attribute: "添加属性"
+        remove_attribute: "移除属性"
         apply: "应用"
+        no_attributes: "未添加任何属性。"
       help: "Markdown 编辑帮助"
       collapse: "最小化编辑器面板"
       open: "打开编辑器面板"
@@ -3097,6 +3106,10 @@ zh_CN:
         delete: "删除话题"
         delete_topics_count:
           other: "删除话题"
+        delete_posts_count:
+          other: "删除帖子"
+        delete_posts_confirmation:
+          other: "确定要删除 %{count} 个帖子吗？"
         dismiss: "忽略"
         dismiss_read: "忽略所有未读话题"
         dismiss_read_with_selected:
@@ -3725,7 +3738,7 @@ zh_CN:
           edit: "编辑"
           delete: "删除"
         add: "添加新翻译"
-        manage: "管理翻译（现有 %{count}）"
+        manage: "管理翻译（现有 %{count} 种翻译）"
         view:
           other: "查看 %{count} 种已翻译的语言区域"
         modal:
@@ -3970,6 +3983,8 @@ zh_CN:
       slug_placeholder: "（可选）用于 URL 以“-”分隔的字词"
       creation_error: 创建类别时出错。
       save_error: 保存类别时出错。
+      errors:
+        self_lockout: "如果改变此类别权限，您将丢失自己的访问权限，确定要继续吗？"
       name: "类别名称"
       untitled: "无标题类别"
       description: "描述"
@@ -5046,6 +5061,8 @@ zh_CN:
       toggle_localized:
         translated: "此页面为机器翻译。点击查看原文。"
         not_translated: "此页面未翻译。点击进行翻译。"
+    language_switcher:
+      title: "改变站点语言"
   admin_js:
     type_to_filter: "输入以筛选…"
     settings: "设置"
@@ -5187,6 +5204,11 @@ zh_CN:
               title: "Discourse ID"
         discourse_id:
           title: "Discourse ID"
+          stats:
+            total_users: "用户数量"
+            signups_30_days: "注册数量（30天内）"
+            logins_30_days: "登录数量（30天内）"
+          regenerate_credentials: "重新生成凭据"
           learn_more: "了解详情"
         logo:
           title: "徽标"
@@ -5276,19 +5298,29 @@ zh_CN:
         welcome_banner:
           title: "欢迎横幅"
           form:
+            enabled_themes:
+              description: "选择显示在横幅的主题，此处仅显示已启用的主题。"
+              select_label: "选择主题"
             background_image:
               label: "背景图片"
+              description: "该图像将显示在横幅文本后。"
             text_color:
               label: "文本颜色"
             page_visibility:
+              description: "选择横幅显示的位置"
               options:
                 top_menu_pages: "顶部菜单页面"
+                homepage: "仅限主页"
+                discovery: "发现页"
                 all_pages: "所有页面"
             location:
               label: "地点"
+              description: "选择横幅在页面上显示的位置"
               options:
                 above_topic_content: "话题内容上方"
                 below_site_header: "站点标题下方"
+            header_new_members:
+              placeholder: "%{preferred_display_name}，欢迎来到 %{site_name}！"
             header_logged_in:
               placeholder: "欢迎回来，%{preferred_display_name}！"
             header_anonymous:

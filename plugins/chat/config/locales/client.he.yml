@@ -149,10 +149,8 @@ he:
       send_shortcut:
         enter:
           label: "שליחה עם Enter"
-          description: "שורה חדשה עם Shift + Enter"
         meta_enter:
           label: "שליחה עם %{meta_key} + Enter"
-          description: "שורה חדשה עם Enter"
       enable: "הפעלת צ׳אט"
       flag: "סימון"
       emoji: "הוספת אמוג׳י"
@@ -257,10 +255,8 @@ he:
       kicked_from_channel: "אין לך יותר גישה לערוץ הזה."
       only_chat_push_notifications:
         title: "לשלוח התראות בדחיפה על הצ׳אט בלבד"
-        description: "לחסום שליחה של התראות בדחיפה שאינן לגבי הצ׳אט"
       ignore_channel_wide_mention:
         title: "התעלמות מאזכורים לכל הערוץ"
-        description: "לא לשלוח התראות על אזכורים לכל הערוץ (‎@here ו־‎@all)"
       show_thread_title_prompts:
         title: "הצג הנחיות לכותרת השרשור"
         description: "הצג הנחיות להגדרת כותרת לשרשורים חדשים"
@@ -541,6 +537,7 @@ he:
           confirm_export: "מייצא את כל ההודעות מכל הערוצים ושולח אליך את התוצאה בהודעה אישית. לייצא?"
           export_has_started: "הייצוא החל. תישלח אליך הודעה פרטית כשהוא מוכן."
       search:
+        short_title: חיפוש
         title: חיפוש בצ׳אט
         aria_label: "מעבר לחיפוש בצ׳אט"
         no_results: "לא נמצאו תוצאות"

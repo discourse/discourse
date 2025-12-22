@@ -125,6 +125,7 @@ et:
       admin:
         title: "Vestlus"
       search:
+        short_title: Otsi
         no_results: "Ei leidnud midagi"
         sort:
           relevance: "Asjakohasus"
