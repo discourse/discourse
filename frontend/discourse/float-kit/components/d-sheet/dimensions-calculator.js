@@ -2,37 +2,30 @@ import { capabilities } from "discourse/services/capabilities";
 
 /**
  * Tolerance value for progress calculations near detent boundaries.
- * Used to determine "before" and "after" progress thresholds.
- * @type {number}
  */
 const PROGRESS_TOLERANCE = 2.1;
 
 /**
  * Default edge padding applied when using "auto" snap acceleration.
- * @type {number}
  */
 const AUTO_EDGE_PADDING = 10;
 
 /**
  * Chromium browser threshold for snap accelerator calculation.
- * Below this value, a linear formula is used; above, a percentage.
- * @type {number}
  */
 const CHROMIUM_THRESHOLD = 1440;
 
 /**
  * WebKit mobile (iOS/iPadOS) threshold for snap accelerator calculation.
- * @type {number}
  */
 const WEBKIT_MOBILE_THRESHOLD = 716;
 
 /**
- * Parse dimensions from a computed style for both travel and cross axes.
+ * @param {CSSStyleDeclaration} computedStyle
+ * @param {string} travelProp
+ * @param {string} crossProp
  *
- * @param {CSSStyleDeclaration} computedStyle - The computed style object
- * @param {string} travelProp - CSS property for travel axis ("width" or "height")
- * @param {string} crossProp - CSS property for cross axis ("height" or "width")
- * @returns {Object} Dimension object with travelAxis and crossAxis
+ * @returns {Object}
  */
 function parseDimensionsFromStyle(computedStyle, travelProp, crossProp) {
   const travelValue = computedStyle.getPropertyValue(travelProp);
@@ -53,10 +46,9 @@ function parseDimensionsFromStyle(computedStyle, travelProp, crossProp) {
 }
 
 /**
- * Create a dimension value object from a numeric size.
+ * @param {number} size
  *
- * @param {number} size - The size in pixels
- * @returns {Object} Dimension value with px, unitless, and unitlessRoundedDown
+ * @returns {Object}
  */
 function createDimensionValue(size) {
   return {
@@ -67,42 +59,48 @@ function createDimensionValue(size) {
 }
 
 /**
- * Calculates and applies CSS dimensions for sheet positioning and scroll behavior.
- * Handles view/content sizing, detent markers, spacers, and snap accelerators.
- *
- * The calculator performs a two-pass approach:
- * 1. First pass: Apply view/content dimensions so CSS variables can resolve
- * 2. Second pass: Read detent markers and calculate final spacer values
+ * Handles view/content sizing, detent markers, and spacers.
  */
 export default class DimensionCalculator {
-  /** @type {Object} */
   elements;
 
-  /**
-   * Creates a new DimensionCalculator instance.
-   *
-   * @param {Object} elements - DOM element references
-   * @param {HTMLElement} elements.view - The view element (scroll container parent)
-   * @param {HTMLElement} elements.content - The content element
-   * @param {HTMLElement[]} elements.detentMarkers - Array of detent marker elements
-   */
   constructor(elements) {
     this.elements = elements;
   }
 
   /**
-   * Calculate all dimensions needed for sheet positioning.
+   * @param {string} track
+   * @param {string} contentPlacement
+   * @param {Object} options
    *
-   * @param {string} track - Track direction: "bottom", "top", "left", "right", "horizontal", "vertical"
-   * @param {string} contentPlacement - Content placement: "start", "center", "end"
-   * @param {Object} [options={}] - Additional options
-   * @param {boolean} [options.swipeOutDisabled=false] - Disables swipe-to-dismiss
-   * @param {boolean} [options.edgeAlignedNoOvershoot=false] - Prevents overshoot at edges
-   * @param {string|number|Function} [options.snapOutAcceleration="auto"] - Snap out acceleration mode
-   * @param {string} [options.snapToEndDetentsAcceleration="auto"] - Snap to end detents acceleration
-   * @returns {Object} Calculated dimensions including view, content, detentMarkers, and progress values
+   * @returns {Object}
    */
   calculateDimensions(track, contentPlacement, options = {}) {
+    const context = this.#buildContext(track, contentPlacement, options);
+    const dimensions = this.#parseInitialDimensions(context);
+
+    this.#applyVariables(dimensions, context);
+
+    const detents = this.#calculateDetents(dimensions, context);
+    Object.assign(dimensions, detents);
+
+    this.#applyVariables(dimensions, context);
+
+    return dimensions;
+  }
+
+  /**
+   * @param {string} track
+   * @param {string} contentPlacement
+   * @param {Object} options
+   *
+   * @returns {Object}
+   */
+  #buildContext(track, contentPlacement, options) {
+    const isHorizontal =
+      track === "right" || track === "left" || track === "horizontal";
+    const isCenteredTrack = track === "horizontal" || track === "vertical";
+
     const {
       swipeOutDisabled = false,
       edgeAlignedNoOvershoot = false,
@@ -110,114 +108,89 @@ export default class DimensionCalculator {
       snapToEndDetentsAcceleration = "auto",
     } = options;
 
-    const {
-      view: viewElement,
-      content: contentElement,
-      detentMarkers,
-    } = this.elements;
-
-    const isHorizontal = this.#isHorizontalTrack(track);
-    const travelProp = isHorizontal ? "width" : "height";
-    const crossProp = isHorizontal ? "height" : "width";
-
-    const viewDimensions = parseDimensionsFromStyle(
-      window.getComputedStyle(viewElement),
-      travelProp,
-      crossProp
-    );
-
-    const contentDimensions = parseDimensionsFromStyle(
-      window.getComputedStyle(contentElement),
-      travelProp,
-      crossProp
-    );
-
-    const isCenteredTrack = track === "horizontal" || track === "vertical";
-    const swipeOutDisabledWithDetent = !isCenteredTrack && swipeOutDisabled;
-    const backSpacerEdgeAligned = !isCenteredTrack && edgeAlignedNoOvershoot;
-
     const useAutoEdgePadding = snapToEndDetentsAcceleration === "auto";
-    const frontSpacerEdgePadding =
-      swipeOutDisabledWithDetent && useAutoEdgePadding ? AUTO_EDGE_PADDING : 0;
-    const backSpacerEdgePadding =
-      backSpacerEdgeAligned && useAutoEdgePadding ? AUTO_EDGE_PADDING : 0;
 
-    const calculationContext = {
+    return {
       track,
+      contentPlacement,
+      isHorizontal,
       isCenteredTrack,
-      swipeOutDisabledWithDetent,
-      frontSpacerEdgePadding,
-      backSpacerEdgePadding,
+      travelProp: isHorizontal ? "width" : "height",
+      crossProp: isHorizontal ? "height" : "width",
+      swipeOutDisabledWithDetent: !isCenteredTrack && swipeOutDisabled,
+      frontSpacerEdgePadding:
+        !isCenteredTrack && swipeOutDisabled && useAutoEdgePadding
+          ? AUTO_EDGE_PADDING
+          : 0,
+      backSpacerEdgePadding:
+        !isCenteredTrack && edgeAlignedNoOvershoot && useAutoEdgePadding
+          ? AUTO_EDGE_PADDING
+          : 0,
       snapOutAcceleration,
     };
+  }
 
-    // Pass 1: Apply view/content dimensions so detent markers can resolve CSS variables
-    const preliminaryDimensions = {
-      view: viewDimensions,
-      content: contentDimensions,
+  /**
+   * @param {Object} context
+   *
+   * @returns {Object}
+   */
+  #parseInitialDimensions(context) {
+    const { view, content } = this.elements;
+    const { travelProp, crossProp } = context;
+
+    return {
+      view: parseDimensionsFromStyle(
+        window.getComputedStyle(view),
+        travelProp,
+        crossProp
+      ),
+      content: parseDimensionsFromStyle(
+        window.getComputedStyle(content),
+        travelProp,
+        crossProp
+      ),
       detentMarkers: [],
     };
+  }
 
-    this.#applyDimensionVariables(
-      preliminaryDimensions,
-      viewElement,
-      contentPlacement,
-      calculationContext
-    );
+  /**
+   * @param {Object} dimensions
+   * @param {Object} context
+   *
+   * @returns {Object}
+   */
+  #calculateDetents(dimensions, context) {
+    const { detentMarkers } = this.elements;
+    const { travelProp, crossProp } = context;
+    const contentSize = dimensions.content.travelAxis.unitless;
 
-    // Pass 2: Read detent markers and calculate final dimensions
     const detentMarkerDimensions = this.#calculateDetentMarkerDimensions(
       detentMarkers,
       travelProp,
       crossProp,
-      contentDimensions.travelAxis.unitless
+      contentSize
     );
 
     const progressAtDetents = this.#calculateProgressAtDetents(
       detentMarkerDimensions,
-      contentDimensions.travelAxis.unitless
+      contentSize
     );
 
-    const finalDimensions = {
-      view: viewDimensions,
-      content: contentDimensions,
+    return {
       detentMarkers: detentMarkerDimensions,
       progressValueAtDetents: progressAtDetents,
       exactProgressValueAtDetents: progressAtDetents.map((p) => p.exact),
-      swipeOutDisabledWithDetent,
-      frontSpacerEdgePadding,
-      backSpacerEdgePadding,
     };
-
-    // Re-apply with detent markers for front spacer calculation
-    this.#applyDimensionVariables(
-      finalDimensions,
-      viewElement,
-      contentPlacement,
-      calculationContext
-    );
-
-    return finalDimensions;
   }
 
   /**
-   * Check if the track direction is horizontal.
+   * @param {HTMLElement[]} markers
+   * @param {string} travelProp
+   * @param {string} crossProp
+   * @param {number} contentSize
    *
-   * @param {string} track - Track direction
-   * @returns {boolean} True if horizontal track
-   */
-  #isHorizontalTrack(track) {
-    return track === "right" || track === "left" || track === "horizontal";
-  }
-
-  /**
-   * Calculate dimensions for all detent markers.
-   *
-   * @param {HTMLElement[]} markers - Detent marker elements
-   * @param {string} travelProp - CSS property for travel axis
-   * @param {string} crossProp - CSS property for cross axis
-   * @param {number} contentSize - Total content size in pixels
-   * @returns {Object[]} Array of detent marker dimensions with accumulated offsets
+   * @returns {Object[]}
    */
   #calculateDetentMarkerDimensions(
     markers,
@@ -247,7 +220,6 @@ export default class DimensionCalculator {
       };
     });
 
-    // Adjust the last marker to represent remaining content size
     if (dimensions.length > 0) {
       const lastIndex = dimensions.length - 1;
       const remainingContentSize = contentSize - accumulatedOffset;
@@ -267,12 +239,10 @@ export default class DimensionCalculator {
   }
 
   /**
-   * Calculate progress values at each detent position.
-   * Progress ranges from 0 (closed) to 1 (fully open).
+   * @param {Object[]} detentMarkerDimensions
+   * @param {number} contentSize
    *
-   * @param {Object[]} detentMarkerDimensions - Detent marker dimensions
-   * @param {number} contentSize - Total content size in pixels
-   * @returns {Object[]} Array of progress entries with before, exact, and after values
+   * @returns {Object[]}
    */
   #calculateProgressAtDetents(detentMarkerDimensions, contentSize) {
     const createProgressEntry = (baseOffset) => ({
@@ -281,53 +251,37 @@ export default class DimensionCalculator {
       after: (baseOffset + PROGRESS_TOLERANCE) / contentSize,
     });
 
-    // Start with closed state (progress = 0)
     const progressAtDetents = [createProgressEntry(0)];
 
-    // Add progress entry for each marker except the last one
-    // (last marker represents full height)
     detentMarkerDimensions.slice(0, -1).forEach((marker) => {
       const offset = marker.accumulatedOffsets.travelAxis.unitless;
       progressAtDetents.push(createProgressEntry(offset));
     });
 
-    // Final entry for full height (progress = 1.0)
     progressAtDetents.push(createProgressEntry(contentSize));
 
     return progressAtDetents;
   }
 
   /**
-   * Apply CSS custom properties on the view element.
-   *
-   * @param {Object} dimensions - The calculated dimensions
-   * @param {HTMLElement} viewElement - The view element
-   * @param {string} [contentPlacement="end"] - Content placement
-   * @param {Object} context - Calculation context
-   * @param {boolean} context.isCenteredTrack - Whether using horizontal/vertical track
-   * @param {boolean} context.swipeOutDisabledWithDetent - Whether swipe out is disabled with detent
-   * @param {number} context.frontSpacerEdgePadding - Front spacer edge padding
-   * @param {number} context.backSpacerEdgePadding - Back spacer edge padding
-   * @param {string|number|Function} context.snapOutAcceleration - Snap out acceleration setting
+   * @param {Object} dimensions
+   * @param {Object} context
    */
-  #applyDimensionVariables(
-    dimensions,
-    viewElement,
-    contentPlacement = "end",
-    context = {}
-  ) {
+  #applyVariables(dimensions, context) {
+    const { view: viewElement } = this.elements;
     const {
-      isCenteredTrack = false,
-      swipeOutDisabledWithDetent = false,
-      frontSpacerEdgePadding = 0,
-      backSpacerEdgePadding = 0,
-      snapOutAcceleration = "auto",
+      contentPlacement,
+      isCenteredTrack,
+      swipeOutDisabledWithDetent,
+      frontSpacerEdgePadding,
+      backSpacerEdgePadding,
+      snapOutAcceleration,
     } = context;
 
-    this.#applyViewContentVariables(dimensions, viewElement);
+    this.#applyViewContentStyles(dimensions, viewElement);
 
-    const viewSize = dimensions.view?.travelAxis?.unitless || 0;
-    const contentSize = dimensions.content?.travelAxis?.unitless || 0;
+    const viewSize = dimensions.view.travelAxis.unitless;
+    const contentSize = dimensions.content.travelAxis.unitless;
 
     const snapOutAccelerator = this.#calculateSnapOutAccelerator(
       snapOutAcceleration,
@@ -336,43 +290,45 @@ export default class DimensionCalculator {
       contentPlacement
     );
 
-    if (dimensions.view && dimensions.content) {
-      const frontSpacerSize = this.#calculateFrontSpacerSize(
-        viewSize,
-        contentSize,
-        snapOutAccelerator,
-        dimensions.detentMarkers,
-        {
-          isCenteredTrack,
-          swipeOutDisabledWithDetent,
-          frontSpacerEdgePadding,
-          contentPlacement,
-        }
-      );
+    const frontSpacerSize = this.#calculateFrontSpacerSize(
+      viewSize,
+      contentSize,
+      snapOutAccelerator,
+      dimensions.detentMarkers,
+      {
+        isCenteredTrack,
+        swipeOutDisabledWithDetent,
+        frontSpacerEdgePadding,
+        contentPlacement,
+      }
+    );
 
-      dimensions.frontSpacer = {
-        travelAxis: createDimensionValue(frontSpacerSize),
-      };
+    dimensions.frontSpacer = {
+      travelAxis: createDimensionValue(frontSpacerSize),
+    };
 
-      viewElement.style.setProperty(
-        "--d-sheet-front-spacer",
-        `${frontSpacerSize}px`
-      );
+    const backSpacerSize = this.#calculateBackSpacerSize(
+      viewSize,
+      contentSize,
+      snapOutAccelerator,
+      { isCenteredTrack, backSpacerEdgePadding }
+    );
 
-      const backSpacerSize = this.#calculateBackSpacerSize(
-        viewSize,
-        contentSize,
-        snapOutAccelerator,
-        { isCenteredTrack, backSpacerEdgePadding }
-      );
+    dimensions.backSpacer = {
+      travelAxis: createDimensionValue(backSpacerSize),
+    };
 
-      viewElement.style.setProperty(
-        "--d-sheet-back-spacer",
-        `${backSpacerSize}px`
-      );
-    }
+    viewElement.style.setProperty(
+      "--d-sheet-front-spacer",
+      `${frontSpacerSize}px`
+    );
 
-    this.#applyDetentAndAcceleratorVariables(
+    viewElement.style.setProperty(
+      "--d-sheet-back-spacer",
+      `${backSpacerSize}px`
+    );
+
+    this.#applyDetentAcceleratorStyles(
       dimensions,
       viewElement,
       snapOutAccelerator
@@ -380,47 +336,34 @@ export default class DimensionCalculator {
   }
 
   /**
-   * Apply view and content dimension CSS variables.
-   *
-   * @param {Object} dimensions - The dimensions object
-   * @param {HTMLElement} viewElement - The view element
+   * @param {Object} dimensions
+   * @param {HTMLElement} viewElement
    */
-  #applyViewContentVariables(dimensions, viewElement) {
-    if (dimensions.view) {
-      viewElement.style.setProperty(
-        "--d-sheet-view-travel-axis",
-        dimensions.view.travelAxis.px
-      );
-      viewElement.style.setProperty(
-        "--d-sheet-view-cross-axis",
-        dimensions.view.crossAxis.px
-      );
-    }
-
-    if (dimensions.content) {
-      viewElement.style.setProperty(
-        "--d-sheet-content-travel-axis",
-        dimensions.content.travelAxis.px
-      );
-      viewElement.style.setProperty(
-        "--d-sheet-content-cross-axis",
-        dimensions.content.crossAxis.px
-      );
-    }
+  #applyViewContentStyles(dimensions, viewElement) {
+    viewElement.style.setProperty(
+      "--d-sheet-view-travel-axis",
+      dimensions.view.travelAxis.px
+    );
+    viewElement.style.setProperty(
+      "--d-sheet-view-cross-axis",
+      dimensions.view.crossAxis.px
+    );
+    viewElement.style.setProperty(
+      "--d-sheet-content-travel-axis",
+      dimensions.content.travelAxis.px
+    );
+    viewElement.style.setProperty(
+      "--d-sheet-content-cross-axis",
+      dimensions.content.crossAxis.px
+    );
   }
 
   /**
-   * Apply detent and accelerator CSS variables.
-   *
-   * @param {Object} dimensions - The dimensions object
-   * @param {HTMLElement} viewElement - The view element
-   * @param {number} snapOutAccelerator - Calculated snap accelerator value
+   * @param {Object} dimensions
+   * @param {HTMLElement} viewElement
+   * @param {number} snapOutAccelerator
    */
-  #applyDetentAndAcceleratorVariables(
-    dimensions,
-    viewElement,
-    snapOutAccelerator
-  ) {
+  #applyDetentAcceleratorStyles(dimensions, viewElement, snapOutAccelerator) {
     if (dimensions.detentMarkers?.length > 0) {
       viewElement.style.setProperty(
         "--d-sheet-first-detent-size",
@@ -439,14 +382,13 @@ export default class DimensionCalculator {
   }
 
   /**
-   * Calculate the front spacer size based on track type and placement.
+   * @param {number} viewSize
+   * @param {number} contentSize
+   * @param {number} snapOutAccelerator
+   * @param {Object[]} detentMarkers
+   * @param {Object} options
    *
-   * @param {number} viewSize - View size in pixels
-   * @param {number} contentSize - Content size in pixels
-   * @param {number} snapOutAccelerator - Snap accelerator value
-   * @param {Object[]} detentMarkers - Detent marker dimensions
-   * @param {Object} options - Calculation options
-   * @returns {number} Front spacer size in pixels
+   * @returns {number}
    */
   #calculateFrontSpacerSize(
     viewSize,
@@ -484,13 +426,12 @@ export default class DimensionCalculator {
   }
 
   /**
-   * Calculate the back spacer size based on track type and edge padding.
+   * @param {number} viewSize
+   * @param {number} contentSize
+   * @param {number} snapOutAccelerator
+   * @param {Object} options
    *
-   * @param {number} viewSize - View size in pixels
-   * @param {number} contentSize - Content size in pixels
-   * @param {number} snapOutAccelerator - Snap accelerator value
-   * @param {Object} options - Calculation options
-   * @returns {number} Back spacer size in pixels
+   * @returns {number}
    */
   #calculateBackSpacerSize(viewSize, contentSize, snapOutAccelerator, options) {
     const { isCenteredTrack, backSpacerEdgePadding } = options;
@@ -512,14 +453,12 @@ export default class DimensionCalculator {
   }
 
   /**
-   * Calculate snap out accelerator value for scroll-snap behavior.
-   * Browser-specific calculations ensure smooth scroll snapping across platforms.
+   * @param {string|number|Function} snapOutAcceleration
+   * @param {number} viewSize
+   * @param {number} contentSize
+   * @param {string} contentPlacement
    *
-   * @param {string|number|Function} snapOutAcceleration - Acceleration setting
-   * @param {number} viewSize - View size in pixels
-   * @param {number} contentSize - Content size in pixels
-   * @param {string} [contentPlacement="end"] - Content placement
-   * @returns {number} Snap accelerator value in pixels
+   * @returns {number}
    */
   #calculateSnapOutAccelerator(
     snapOutAcceleration,
@@ -550,7 +489,6 @@ export default class DimensionCalculator {
         return 0.5 * effectiveSize;
       }
 
-      // Gecko (Firefox) or unknown browser
       return 10;
     }
 
