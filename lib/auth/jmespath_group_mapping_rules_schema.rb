@@ -9,7 +9,7 @@ module Auth
         items: {
           type: "object",
           title: "JMESPath Group Mapping Rule",
-          required: %w[expression group],
+          required: %w[expression groups],
           properties: {
             provider: {
               type: "string",
@@ -28,7 +28,10 @@ module Auth
               type: "array",
               title: "Discourse Group",
               description: "Name of the Discourse group(s) to assign users to",
-              minLength: 1,
+              minItems: 1,
+              items: {
+                type: "string",
+              },
             },
             enabled: {
               type: "boolean",
