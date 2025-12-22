@@ -38,6 +38,26 @@ const STANDARD_EASINGS = {
 };
 
 /**
+ * Parse a cubic-bezier string into an array of points.
+ *
+ * @param {string} easing - Easing string (e.g., "cubic-bezier(0.1, 0.7, 1.0, 0.1)")
+ * @returns {number[]|null} Array of 4 points or null if invalid
+ */
+function parseCubicBezier(easing) {
+  const prefix = "cubic-bezier(";
+  if (!easing.startsWith(prefix)) {
+    return null;
+  }
+
+  const points = easing
+    .slice(prefix.length, -1)
+    .split(",")
+    .map((p) => parseFloat(p.trim()));
+
+  return points.length === 4 && !points.some(isNaN) ? points : null;
+}
+
+/**
  * Calculate bezier curve value at parameter t.
  *
  * @param {number} t - Parameter value (0-1)
@@ -114,6 +134,40 @@ function binarySubdivide(x, start, end, x1, x2) {
 }
 
 /**
+ * Find the parameter t for a given x value on the bezier curve.
+ *
+ * @param {number} x - Target x value
+ * @param {number} x1 - First control point x
+ * @param {number} x2 - Second control point x
+ * @param {Float32Array|number[]} sampleValues - Sampled x values
+ * @returns {number} Parameter t
+ */
+function getTForX(x, x1, x2, sampleValues) {
+  let i = 1;
+  for (; i < BEZIER_SAMPLE_SIZE - 1 && sampleValues[i] <= x; i++) {}
+  i--;
+
+  const intervalStart = i * BEZIER_SAMPLE_INTERVAL;
+  const dist = (x - sampleValues[i]) / (sampleValues[i + 1] - sampleValues[i]);
+  const guessT = intervalStart + dist * BEZIER_SAMPLE_INTERVAL;
+  const derivative = bezierDerivative(guessT, x1, x2);
+
+  if (derivative >= DERIVATIVE_THRESHOLD) {
+    return newtonRaphsonIterate(x, guessT, x1, x2);
+  } else if (derivative === 0) {
+    return guessT;
+  } else {
+    return binarySubdivide(
+      x,
+      intervalStart,
+      intervalStart + BEZIER_SAMPLE_INTERVAL,
+      x1,
+      x2
+    );
+  }
+}
+
+/**
  * Create a cubic bezier easing function.
  *
  * @param {number} x1 - First control point x
@@ -131,7 +185,11 @@ function createCubicBezierEasing(x1, y1, x2, y2) {
     return (t) => t;
   }
 
-  const sampleValues = new Float32Array(BEZIER_SAMPLE_SIZE);
+  const sampleValues =
+    typeof Float32Array === "function"
+      ? new Float32Array(BEZIER_SAMPLE_SIZE)
+      : new Array(BEZIER_SAMPLE_SIZE);
+
   for (let i = 0; i < BEZIER_SAMPLE_SIZE; i++) {
     sampleValues[i] = bezierValue(i * BEZIER_SAMPLE_INTERVAL, x1, x2);
   }
@@ -141,40 +199,7 @@ function createCubicBezierEasing(x1, y1, x2, y2) {
       return time;
     }
 
-    let intervalStart = 0;
-    for (
-      let i = 1;
-      i < BEZIER_SAMPLE_SIZE && sampleValues[i] <= time;
-      i++
-    ) {
-      intervalStart += BEZIER_SAMPLE_INTERVAL;
-    }
-
-    const intervalIndex = Math.floor(intervalStart * 10);
-    const dist =
-      (time - sampleValues[intervalIndex]) /
-      (sampleValues[intervalIndex + 1] - sampleValues[intervalIndex]);
-    const guessT = intervalStart + dist * BEZIER_SAMPLE_INTERVAL;
-
-    const derivative = bezierDerivative(guessT, x1, x2);
-
-    if (derivative >= DERIVATIVE_THRESHOLD) {
-      return bezierValue(newtonRaphsonIterate(time, guessT, x1, x2), y1, y2);
-    } else if (derivative === 0) {
-      return bezierValue(guessT, y1, y2);
-    } else {
-      return bezierValue(
-        binarySubdivide(
-          time,
-          intervalStart,
-          intervalStart + BEZIER_SAMPLE_INTERVAL,
-          x1,
-          x2
-        ),
-        y1,
-        y2
-      );
-    }
+    return bezierValue(getTForX(time, x1, x2, sampleValues), y1, y2);
   };
 }
 
@@ -285,8 +310,17 @@ export function generateAnimationConfig(config) {
         progressValues.push(isNaN(progress) ? 0 : progress);
       }
     } else {
-      const bezierPoints =
-        STANDARD_EASINGS[animationConfig.easing] || STANDARD_EASINGS.ease;
+      let bezierPoints;
+      if (STANDARD_EASINGS[animationConfig.easing]) {
+        bezierPoints = STANDARD_EASINGS[animationConfig.easing];
+      } else if (
+        animationConfig.easing.startsWith("cubic-bezier") &&
+        parseCubicBezier(animationConfig.easing)
+      ) {
+        bezierPoints = parseCubicBezier(animationConfig.easing);
+      } else {
+        bezierPoints = STANDARD_EASINGS.ease;
+      }
 
       const easing = createCubicBezierEasing(...bezierPoints);
       for (let i = 0; i <= duration; i++) {
