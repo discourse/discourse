@@ -1,5 +1,11 @@
 # frozen_string_literal: true
 
+DiscourseCalendar::Engine.routes.draw do
+  get "/availability" => "team_availability#index"
+  get "/availability/:group_name" => "team_availability#index"
+  get "/availability.json" => "team_availability#index", :constraints => { format: :json }
+end
+
 DiscoursePostEvent::Engine.routes.draw do
   get "/discourse-post-event/events" => "events#index",
       :constraints => {
