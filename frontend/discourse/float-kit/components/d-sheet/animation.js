@@ -1,6 +1,43 @@
 import { capabilities } from "discourse/services/capabilities";
 
 /**
+ * Constants for Bezier curve calculations.
+ */
+const NEWTON_RAPHSON_ITERATIONS = 4;
+const BINARY_SUBDIVISION_THRESHOLD = 1e-7;
+const BINARY_SUBDIVISION_ITERATIONS = 10;
+const BEZIER_SAMPLE_SIZE = 11;
+const BEZIER_SAMPLE_INTERVAL = 0.1;
+const DERIVATIVE_THRESHOLD = 0.001;
+
+/**
+ * Default animation values.
+ */
+const DEFAULT_ANIMATION_DURATION = 250;
+const SPRING_STIFFNESS_DEFAULT = 300;
+const SPRING_DAMPING_DEFAULT = 34;
+const SPRING_MASS_DEFAULT = 1;
+const SPRING_PRECISION_DEFAULT = 0.1;
+
+/**
+ * Spring physics constants.
+ */
+const SPRING_CONSTANT_SCALE = 0.000001;
+const DAMPING_CONSTANT_SCALE = 0.001;
+const VELOCITY_THRESHOLD_SCALE = 22;
+const POSITION_THRESHOLD_SCALE = 10;
+
+/**
+ * Standard CSS easing cubic-bezier points.
+ */
+const STANDARD_EASINGS = {
+  ease: [0.25, 0.1, 0.25, 1],
+  "ease-in": [0.42, 0, 1, 1],
+  "ease-out": [0, 0, 0.58, 1],
+  "ease-in-out": [0.42, 0, 0.58, 1],
+};
+
+/**
  * Calculate bezier curve value at parameter t.
  *
  * @param {number} t - Parameter value (0-1)
@@ -34,7 +71,7 @@ function bezierDerivative(t, p1, p2) {
  * @returns {number} Refined t value
  */
 function newtonRaphsonIterate(x, guessT, x1, x2) {
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < NEWTON_RAPHSON_ITERATIONS; i++) {
     const derivative = bezierDerivative(guessT, x1, x2);
     if (derivative === 0) {
       break;
@@ -68,7 +105,10 @@ function binarySubdivide(x, start, end, x1, x2) {
     } else {
       start = mid;
     }
-  } while (Math.abs(currentX) > 1e-7 && ++iterations < 10);
+  } while (
+    Math.abs(currentX) > BINARY_SUBDIVISION_THRESHOLD &&
+    ++iterations < BINARY_SUBDIVISION_ITERATIONS
+  );
 
   return mid;
 }
@@ -91,9 +131,9 @@ function createCubicBezierEasing(x1, y1, x2, y2) {
     return (t) => t;
   }
 
-  const sampleValues = new Float32Array(11);
-  for (let i = 0; i < 11; i++) {
-    sampleValues[i] = bezierValue(i * 0.1, x1, x2);
+  const sampleValues = new Float32Array(BEZIER_SAMPLE_SIZE);
+  for (let i = 0; i < BEZIER_SAMPLE_SIZE; i++) {
+    sampleValues[i] = bezierValue(i * BEZIER_SAMPLE_INTERVAL, x1, x2);
   }
 
   return (time) => {
@@ -102,25 +142,35 @@ function createCubicBezierEasing(x1, y1, x2, y2) {
     }
 
     let intervalStart = 0;
-    for (let i = 1; i < 11 && sampleValues[i] <= time; i++) {
-      intervalStart += 0.1;
+    for (
+      let i = 1;
+      i < BEZIER_SAMPLE_SIZE && sampleValues[i] <= time;
+      i++
+    ) {
+      intervalStart += BEZIER_SAMPLE_INTERVAL;
     }
 
     const intervalIndex = Math.floor(intervalStart * 10);
     const dist =
       (time - sampleValues[intervalIndex]) /
       (sampleValues[intervalIndex + 1] - sampleValues[intervalIndex]);
-    const guessT = intervalStart + dist * 0.1;
+    const guessT = intervalStart + dist * BEZIER_SAMPLE_INTERVAL;
 
     const derivative = bezierDerivative(guessT, x1, x2);
 
-    if (derivative >= 0.001) {
+    if (derivative >= DERIVATIVE_THRESHOLD) {
       return bezierValue(newtonRaphsonIterate(time, guessT, x1, x2), y1, y2);
     } else if (derivative === 0) {
       return bezierValue(guessT, y1, y2);
     } else {
       return bezierValue(
-        binarySubdivide(time, intervalStart, intervalStart + 0.1, x1, x2),
+        binarySubdivide(
+          time,
+          intervalStart,
+          intervalStart + BEZIER_SAMPLE_INTERVAL,
+          x1,
+          x2
+        ),
         y1,
         y2
       );
@@ -143,13 +193,13 @@ function createCubicBezierEasing(x1, y1, x2, y2) {
  */
 function calculateSpringAnimation(config) {
   const {
-    mass = 1,
-    stiffness = 300,
-    damping = 34,
+    mass = SPRING_MASS_DEFAULT,
+    stiffness = SPRING_STIFFNESS_DEFAULT,
+    damping = SPRING_DAMPING_DEFAULT,
     initialVelocity = 0,
     fromPosition = 0,
     toPosition = 1,
-    precision = 0.1,
+    precision = SPRING_PRECISION_DEFAULT,
   } = config;
 
   const progressValues = [];
@@ -169,10 +219,10 @@ function calculateSpringAnimation(config) {
   let isPositionStable = false;
   let isVelocityStable = false;
 
-  const springConstant = -stiffness * 0.000001;
-  const dampingConstant = -damping * 0.001;
-  const velocityThreshold = precision / 22;
-  const positionThreshold = precision * 10;
+  const springConstant = -stiffness * SPRING_CONSTANT_SCALE;
+  const dampingConstant = -damping * DAMPING_CONSTANT_SCALE;
+  const velocityThreshold = precision / VELOCITY_THRESHOLD_SCALE;
+  const positionThreshold = precision * POSITION_THRESHOLD_SCALE;
 
   while (!(isPositionStable && isVelocityStable)) {
     const springForce = springConstant * (position - distance);
@@ -226,33 +276,17 @@ export function generateAnimationConfig(config) {
   let duration;
 
   if (animationConfig.easing && animationConfig.easing !== "spring") {
+    duration = animationConfig.duration || DEFAULT_ANIMATION_DURATION;
+
     if (animationConfig.easing === "linear") {
-      duration = animationConfig.duration || 250;
       const step = 1 / (duration - 1);
       for (let i = 0; i < duration; i++) {
         const progress = i * step;
         progressValues.push(isNaN(progress) ? 0 : progress);
       }
     } else {
-      duration = animationConfig.duration || 250;
-      let bezierPoints;
-
-      switch (animationConfig.easing) {
-        case "ease":
-          bezierPoints = [0.25, 0.1, 0.25, 1];
-          break;
-        case "ease-in":
-          bezierPoints = [0.42, 0, 1, 1];
-          break;
-        case "ease-out":
-          bezierPoints = [0, 0, 0.58, 1];
-          break;
-        case "ease-in-out":
-          bezierPoints = [0.42, 0, 0.58, 1];
-          break;
-        default:
-          bezierPoints = [0.25, 0.1, 0.25, 1];
-      }
+      const bezierPoints =
+        STANDARD_EASINGS[animationConfig.easing] || STANDARD_EASINGS.ease;
 
       const easing = createCubicBezierEasing(...bezierPoints);
       for (let i = 0; i <= duration; i++) {
@@ -261,11 +295,11 @@ export function generateAnimationConfig(config) {
     }
   } else {
     const springResult = calculateSpringAnimation({
-      stiffness: animationConfig.stiffness || 300,
-      damping: animationConfig.damping || 34,
-      mass: animationConfig.mass || 1,
+      stiffness: animationConfig.stiffness || SPRING_STIFFNESS_DEFAULT,
+      damping: animationConfig.damping || SPRING_DAMPING_DEFAULT,
+      mass: animationConfig.mass || SPRING_MASS_DEFAULT,
       initialVelocity: animationConfig.initialVelocity || 0,
-      precision: animationConfig.precision || 0.1,
+      precision: animationConfig.precision || SPRING_PRECISION_DEFAULT,
       fromPosition: origin,
       toPosition: destination,
     });
@@ -285,7 +319,6 @@ export function generateAnimationConfig(config) {
 /**
  * Create a tween function for interpolating values based on progress.
  * Always returns CSS calc() expressions to let the browser handle interpolation.
- * This matches Silk's es() function behavior.
  *
  * @param {number} progress - Progress value (0-1)
  * @returns {Function} Tween function (start, end) => CSS calc expression

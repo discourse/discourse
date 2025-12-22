@@ -4,8 +4,6 @@ import { travelToDetent } from "./travel";
 /**
  * Default animation configuration for exiting transitions.
  * Uses a stiffer spring for snappy dismiss behavior.
- *
- * @type {Object}
  */
 const EXITING_ANIMATION_DEFAULTS = {
   easing: "spring",
@@ -17,8 +15,6 @@ const EXITING_ANIMATION_DEFAULTS = {
 /**
  * Set of recognized easing types that indicate valid animation config.
  * When settings have one of these easings, fallback config is not applied.
- *
- * @type {Set<string>}
  */
 const RECOGNIZED_EASINGS = new Set([
   "spring",
@@ -32,10 +28,13 @@ const RECOGNIZED_EASINGS = new Set([
 /**
  * Manages animation travel for d-sheet component.
  * Handles animation configuration resolution and travel execution.
- *
- * @class AnimationTravel
  */
 export default class AnimationTravel {
+  /**
+   * @type {Object} The sheet controller instance
+   */
+  controller;
+
   /**
    * @param {Object} controller - The sheet controller instance
    */
@@ -58,15 +57,13 @@ export default class AnimationTravel {
    * @param {string|Object|null} settings - Animation settings
    * @param {Object|undefined} preset - Resolved preset if any
    * @returns {boolean}
+   * @private
    */
   #hasRecognizedEasing(settings, preset) {
     if (preset) {
       return true;
     }
-    if (settings?.easing && RECOGNIZED_EASINGS.has(settings.easing)) {
-      return true;
-    }
-    return false;
+    return RECOGNIZED_EASINGS.has(settings?.easing);
   }
 
   /**
@@ -82,18 +79,15 @@ export default class AnimationTravel {
    */
   resolveAnimationSettings(settings, fallback) {
     const isString = typeof settings === "string";
-    const preset = isString
-      ? SPRING_PRESETS[settings]
-      : settings?.preset
-        ? SPRING_PRESETS[settings.preset]
-        : undefined;
+    const presetName = isString ? settings : settings?.preset;
+    const preset = SPRING_PRESETS[presetName];
 
     const hasEasing = this.#hasRecognizedEasing(settings, preset);
 
     return {
       easing: "spring",
       ...(isString ? {} : settings),
-      ...(preset ?? {}),
+      ...preset,
       ...(hasEasing ? {} : fallback),
     };
   }
@@ -105,11 +99,9 @@ export default class AnimationTravel {
    * @returns {string} "entering", "exiting", or "stepping"
    */
   determineTravelType(destinationDetent) {
-    const c = this.controller;
-
     if (destinationDetent === 0) {
       return "exiting";
-    } else if (c.activeDetent === 0) {
+    } else if (this.controller.activeDetent === 0) {
       return "entering";
     }
     return "stepping";
@@ -123,15 +115,19 @@ export default class AnimationTravel {
    * @returns {string|Object|null}
    */
   getRawAnimationSettings(travelType) {
-    const c = this.controller;
+    const {
+      enteringAnimationSettings,
+      exitingAnimationSettings,
+      steppingAnimationSettings,
+    } = this.controller;
 
     switch (travelType) {
       case "entering":
-        return c.enteringAnimationSettings;
+        return enteringAnimationSettings;
       case "exiting":
-        return c.exitingAnimationSettings;
+        return exitingAnimationSettings;
       case "stepping":
-        return c.steppingAnimationSettings ?? c.enteringAnimationSettings;
+        return steppingAnimationSettings ?? enteringAnimationSettings;
       default:
         return null;
     }
@@ -142,12 +138,12 @@ export default class AnimationTravel {
    *
    * @param {string} travelType - "entering", "exiting", or "stepping"
    * @returns {Object}
+   * @private
    */
   #getFallbackForTravelType(travelType) {
-    if (travelType === "exiting") {
-      return this.exitingAnimationDefaults;
-    }
-    return SPRING_PRESETS.smooth;
+    return travelType === "exiting"
+      ? this.exitingAnimationDefaults
+      : SPRING_PRESETS.smooth;
   }
 
   /**
@@ -195,7 +191,7 @@ export default class AnimationTravel {
 
     const settings = this.getRawAnimationSettings(travelType);
     const trackToTravelOn =
-      (settings && typeof settings === "object" && settings.track) || c.tracks;
+      (typeof settings === "object" && settings?.track) || c.tracks;
 
     const snapBackAcceleratorTravelAxisSize = c.edgeAlignedNoOvershoot
       ? c.snapToEndDetentsAcceleration === "auto"
@@ -229,30 +225,28 @@ export default class AnimationTravel {
 
   /**
    * Handle travel completion and state transitions.
+   * @private
    */
   #handleTravelEnd() {
     const c = this.controller;
     const exactProgress =
       c.dimensions?.exactProgressValueAtDetents?.[c.currentSegment[0]];
+
     if (exactProgress !== undefined) {
       c.lastProcessedProgress = exactProgress;
     }
 
     c.onTravelEnd?.();
 
-    const animationState = c.stateHelper.animationState;
-    if (
-      animationState === "opening" ||
-      animationState === "stepping" ||
-      animationState === "closing"
-    ) {
+    const { animationState } = c.stateHelper;
+    if (["opening", "stepping", "closing"].includes(animationState)) {
       c.stateHelper.advanceAnimation();
     }
 
-    if (c.stateHelper.isPositionFrontOpening()) {
-      c.stateHelper.advancePosition();
-      c.stackingAdapter?.notifyParentPositionMachineNext();
-    } else if (c.stateHelper.isPositionFrontClosing()) {
+    if (
+      c.stateHelper.isPositionFrontOpening() ||
+      c.stateHelper.isPositionFrontClosing()
+    ) {
       c.stateHelper.advancePosition();
       c.stackingAdapter?.notifyParentPositionMachineNext();
     }
