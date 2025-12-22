@@ -13,7 +13,6 @@ import getURL from "discourse/lib/get-url";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 import DeletePostsConfirmationModal from "../../components/modal/delete-posts-confirmation";
-import DeleteUserPostsProgressModal from "../../components/modal/delete-user-posts-progress";
 import MergeUsersConfirmationModal from "../../components/modal/merge-users-confirmation";
 import MergeUsersProgressModal from "../../components/modal/merge-users-progress";
 import MergeUsersPromptModal from "../../components/modal/merge-users-prompt";
@@ -666,21 +665,6 @@ export default class AdminUserIndexController extends Controller {
       model: {
         user: this.model,
         deleteAllPosts: () => this.adminTools.deletePostsDecider(this.model),
-      },
-    });
-  }
-
-  @action
-  updateUserPostCount(count) {
-    this.model.set("post_count", count);
-  }
-
-  @action
-  deleteAllPosts() {
-    this.modal.show(DeleteUserPostsProgressModal, {
-      model: {
-        user: this.model,
-        updateUserPostCount: this.updateUserPostCount,
       },
     });
   }
