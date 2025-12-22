@@ -110,7 +110,6 @@ export default function setupImageGridCarousel(grid, helper) {
     mode = "focus";
   }
   const aspect = grid.dataset.aspect;
-  const primaryItem = items[0];
 
   helper.renderGlimmer(
     grid,
@@ -119,7 +118,6 @@ export default function setupImageGridCarousel(grid, helper) {
       items,
       mode,
       aspect,
-      primaryItem,
     },
     { append: false }
   );
