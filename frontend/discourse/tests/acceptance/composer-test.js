@@ -20,7 +20,10 @@ import Composer, { CREATE_TOPIC } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
 import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
 import TopicFixtures from "discourse/tests/fixtures/topic";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import pretender, {
+  parsePostData,
+  response,
+} from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   metaModifier,
@@ -641,6 +644,44 @@ acceptance(`Composer`, function (needs) {
     assert.false(
       postSaveCalled,
       "post.save() should not be called when only title changes"
+    );
+  });
+
+  test("Editing custom field registered via serializeOnUpdate calls post save", async function (assert) {
+    let postSaveCalled = false;
+    let receivedCustomField = null;
+
+    // Register a custom field like plugins do
+    Composer.serializeOnUpdate("custom_test_field", "customTestField");
+
+    pretender.put("/posts/:post_id", (request) => {
+      postSaveCalled = true;
+      const requestData = parsePostData(request.requestBody);
+      receivedCustomField = requestData.post.custom_test_field;
+      return response(200, { post: { id: 398, post_number: 1 } });
+    });
+
+    await visit("/t/internationalization-localization/280");
+
+    await click(".topic-post[data-post-number='1'] button.show-more-actions");
+    await click(".topic-post[data-post-number='1'] button.edit");
+
+    // Set the custom field without changing post content
+    const composer = this.owner.lookup("service:composer").model;
+    composer.set("customTestField", "test_value");
+    // await settled();
+
+    await click("#reply-control button.create");
+
+    assert.dom(".d-editor-input").doesNotExist("closes the composer");
+    assert.true(
+      postSaveCalled,
+      "post.save() should be called when custom field changes even if content unchanged"
+    );
+    assert.strictEqual(
+      receivedCustomField,
+      "test_value",
+      "custom field should be sent to the server"
     );
   });
 
