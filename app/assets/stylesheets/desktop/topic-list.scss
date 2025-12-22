@@ -272,6 +272,8 @@
 }
 
 .topic-replies-toggle-wrapper {
+  padding: 0 var(--nav-horizontal-padding);
+
   .topics-replies-toggle {
     background: none;
     border: none;
@@ -282,6 +284,10 @@
 
     &.active {
       @include nav-active;
+    }
+
+    &:hover {
+      @include nav-hover;
     }
   }
 }

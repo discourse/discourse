@@ -14,8 +14,8 @@ html.composer-open:not(.has-full-page-chat) {
 
 .grippie {
   cursor: row-resize;
-  padding: 0.25em 0;
-  background: var(--tertiary);
+  padding: var(--space-2) 0 0;
+  background: var(--secondary);
   border-top-left-radius: var(--d-border-radius-large);
   border-top-right-radius: var(--d-border-radius-large);
 
@@ -26,13 +26,22 @@ html.composer-open:not(.has-full-page-chat) {
   &::before {
     content: "";
     display: block;
-    width: 1.5em;
-    margin: auto;
-    border-top: 3px double var(--tertiary-medium);
+    height: var(--space-1);
+    width: 3em;
+    margin-inline: auto;
+    background-color: var(--primary-low-mid);
+    border-radius: 3px;
+    border: none;
+    transition: background-color 0.15s ease;
+  }
+
+  &:hover::before {
+    background-color: var(--primary-high);
   }
 }
 
 #reply-control {
+  border: 1px solid var(--content-border-color);
   position: fixed;
   display: flex;
   flex-direction: column;
