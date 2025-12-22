@@ -837,7 +837,9 @@ export default class ReviewableItem extends Component {
             {{#if this.canPerform}}
               <div class="review-item__moderator-actions">
                 <h3 class="review-item__aside-title">
-                  {{#if this.displayContextQuestion}}
+                  {{#if this.editing}}
+                    {{i18n "review.editing_post"}}
+                  {{else if this.displayContextQuestion}}
                     {{this.reviewable.flaggedReviewableContextQuestion}}
                   {{else if this.isAiReviewable}}
                     {{this.reviewable.flaggedReviewableContextQuestion}}

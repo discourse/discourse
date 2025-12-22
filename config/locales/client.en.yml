@@ -704,6 +704,7 @@ en:
       show_more: "Show more"
       show_less: "Show less"
       back_to_queue: "Back to queue"
+      editing_post: "Editing post…"
       order_by: "Order by"
       date_filter: "Posted between"
       in_reply_to: "in reply to"
