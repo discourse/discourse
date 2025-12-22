@@ -51,6 +51,23 @@ module PageObjects
           @rich_editor.has_css?(".composer-image-grid .composer-image-node img", count: count) &&
           @rich_editor.has_no_css?(".composer-image-grid .composer-image-grid")
       end
+
+      def has_mode_select?
+        @rich_editor.has_css?(".composer-image-grid__mode-select")
+      end
+
+      def select_mode(mode)
+        @rich_editor.find(".composer-image-grid__mode-select").select(mode)
+        self
+      end
+
+      def has_selected_mode?(value)
+        @rich_editor.has_css?(".composer-image-grid__mode-select option[value='#{value}']:checked")
+      end
+
+      def mode_value
+        @rich_editor.find(".composer-image-grid")["data-mode"]
+      end
     end
   end
 end
