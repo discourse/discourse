@@ -7205,7 +7205,7 @@ cs:
             error: "Tento motiv byl automaticky deaktivován, protože není kompatibilní s touto verzí Discourse."
             minimum: "Vyžaduje Discourse verze %{version} nebo vyšší."
             maximum: "Vyžaduje verzi Discourse %{version} nebo nižší."
-          update_to_latest: "Aktualizace na nejnovější verzi"
+          update_to_latest: "Aktualizovat na nejnovější verzi"
           check_for_updates: "Zkontrolovat aktualizace"
           updating: "Probíhá aktualizace…"
           update_success: "Aktualizace %{theme} dokončena"
