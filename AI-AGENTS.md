@@ -43,16 +43,33 @@ Discourse is large with long history. Understand context before changes.
 - Don't assert immediate UI feedback after clicks (tests browser, not app logic)
 
 ### Commands
-```bash
-# Ruby tests
-bin/rspec [spec/path/file_spec.rb[:123]]
-LOAD_PLUGINS=1 bin/rspec  # Plugin tests
 
+#### Ruby RSpec tests
+
+To run all RSpec examples in file use `bin/rspec <path>`. Example:
+
+```bash
+bin/rspec spec/path/file_spec.rb
+```
+
+To run one or more RSpec examples or groups, append the line number to the path. `bin/rspec <path>:<line_number>`. Example:
+
+```bash
+bin/rspec spec/path/file_spec.rb:123
+```
+
+#### JavaScript Tests
+
+```bash
 # JavaScript tests - bin/qunit
 bin/qunit --help # detailed help
 bin/qunit path/to/test-file.js  # Run all tests in file
 bin/qunit path/to/tests/directory # Run all tests in directory
+```
 
+#### Linting
+
+```bash
 # Linting
 bin/lint path/to/file path/to/another/file
 bin/lint --fix path/to/file path/to/another/file
