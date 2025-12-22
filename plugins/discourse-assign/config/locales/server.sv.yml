@@ -14,7 +14,6 @@ sv:
     assign_self_regex: "Regex som måste godkännas för självtilldelning. T.ex. 'min lista'"
     assign_other_regex: "Regex som måste godkännas för att tilldela ämnen till andra via omnämnande. T.ex. 'din lista'."
     unassign_on_group_archive: "När ett meddelande arkiveras av en grupp tas meddelandets tilldelning bort (tilldela igen om det flyttas tillbaka till inkorgen)"
-    unassign_on_close: "När ett ämne stängs tas ämnets tilldelning bort"
     reassign_on_open: "När ett ämne öppnas, återanvisa till tidigare tilldelade användare/grupper"
     assign_mailer: "När ett e-postmeddelande om tilldelningar ska skickas"
     remind_assigns: "Påminn användare om väntande tilldelningar."

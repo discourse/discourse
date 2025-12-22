@@ -99,6 +99,7 @@ lv:
         history_label: "Vēsture"
         members_label: "Dalībnieki"
       search:
+        short_title: Meklēt
         no_results: "Nekas nav atrasts"
         sort:
           relevance: "Nozīmīgums"

@@ -140,10 +140,8 @@ hu:
       send_shortcut:
         enter:
           label: "Küldés Enterrel"
-          description: "Új sor Shift + Enterrel"
         meta_enter:
           label: "Küldés %{meta_key} + Enterrel"
-          description: "Új sor Enterrel"
       enable: "Csevegés engedélyezése"
       flag: "Megjelölés"
       emoji: "Emodzsi beszúrása"
@@ -185,12 +183,11 @@ hu:
       no_public_channels: "Még nem csatlakozott egyetlen csatornához sem!"
       no_public_channels_cta: "Csatornák böngészése"
       kicked_from_channel: "Ezt a csatornát már nem tudja elérni."
+      chat_notifications_title: "Csevegési értesítések"
       only_chat_push_notifications:
         title: "Csak csevegési leküldéses értesítések küldése"
-        description: "Az összes nem csevegési leküldéses értesítés elküldésének letiltása"
       ignore_channel_wide_mention:
         title: "A csatornaszintű említések figyelmen kívül hagyása"
-        description: "Ne küldjön értesítést a csatornaszintű említésekről (@here és @all)"
       show_thread_title_prompts:
         title: "Szál címének megjelenítése"
         description: "Javaslatok az új szálak címének megadásához."
@@ -446,6 +443,7 @@ hu:
           confirm_export: "Ez az összes üzenetet exportálja az összes csatornáról, és az eredményt személyes üzenetben elküldi Önnek. Biztos, hogy exportálni szeretne?"
           export_has_started: "Az export megkezdődött. Kapni fog egy PÜ-t, ha elkészült."
       search:
+        short_title: Keresés
         no_results: "Nincs találat"
         sort:
           relevance: "Relevancia"

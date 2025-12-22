@@ -105,6 +105,7 @@ hy:
         history_label: "Պատմություն"
         members_label: "Անդամներ"
       search:
+        short_title: Որոնում
         sort:
           relevance: "Համապատասխանության"
           latest: "Վերջինը"

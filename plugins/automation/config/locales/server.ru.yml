@@ -8,6 +8,8 @@ ru:
   site_settings:
     discourse_automation_enabled: "Включить плагин «discourse-automation»"
   discourse_automation:
+    staff_action_logs:
+      empty_value: "(пустой)"
     models:
       automations:
         validations:
@@ -78,6 +80,21 @@ ru:
         title: После обновления пользователя
         description: При обновлении пользователем любой информации запускается автоматизация
     scriptables:
+      email_on_flagged_post:
+        default_template: |-
+          Пост был помечен.
+
+          тема: {{topic_title}} ({{topic_url}})
+          запись: {{post_url}} (#{{post_number}})
+          Тип флага: {{flag_type}}
+          Отмеченный пользователем: {{flagged_username}}
+          Отмечено автором {{flagger_username}}
+          Категория: {{category}}
+          Метки: {{tags}}
+
+          --------
+          Выдержка из сообщения:
+          {{post_excerpt}}
       post:
         title: Создать публикацию
         description: Создает публикацию на указанную тему

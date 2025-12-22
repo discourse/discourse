@@ -211,6 +211,7 @@ zh_TW:
           title: "匯出聊天訊息"
           create_export: "建立匯出"
       search:
+        short_title: 搜索
         sort:
           relevance: "最相關"
           latest: "最新版本"

@@ -22,7 +22,7 @@ da:
         cant_remove_reaction: "Du kan ikke længere fjerne din reaktion"
         remove_reaction: "Fjern denne %{reaction} reaktion"
       main_reaction:
-        add: "Du 'synes godt om' dette indlæg"
+        add: "Synes godt om dette indlæg"
         remove: "Fjern dette 'Synes godt om'"
         cant_remove: "Du kan ikke længere fjerne dit 'Synes godt om'"
         unauthenticated: "Tilmeld dig eller log ind for at 'synes godt om' dette indlæg"

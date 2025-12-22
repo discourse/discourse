@@ -154,10 +154,8 @@ uk:
       send_shortcut:
         enter:
           label: "Надіслати за допомогою Enter"
-          description: "Новий рядок за допомогою Shift + Enter"
         meta_enter:
           label: "Надіслати %{meta_key} + Enter"
-          description: "Новий рядок за допомогою Enter"
       enable: "Увімкнути чат"
       flag: "Поскаржитися"
       emoji: "Вставити емодзі"
@@ -272,12 +270,11 @@ uk:
       no_public_channels: "Ви ще не приєдналися до жодного каналу!"
       no_public_channels_cta: "Перегляд каналів"
       kicked_from_channel: "Ви більше не можете отримати доступ до цього каналу."
+      chat_notifications_title: "Сповіщення чату"
       only_chat_push_notifications:
         title: "Надсилати лише push-сповіщення в чаті"
-        description: "Заблокувати всі push-сповіщення, не пов’язані з чатом"
       ignore_channel_wide_mention:
         title: "Ігнорувати на каналі масові згадки"
-        description: "Не надсилати масові сповіщення про згадки на весь канал (@here та @all)"
       show_thread_title_prompts:
         title: "Показувати заголовок списку тем"
         description: "Показати підказки для встановлення заголовка для нових тем"
@@ -580,6 +577,7 @@ uk:
           confirm_export: "Це експортує всі повідомлення з усіх каналів і надсилає результат вам в особистому повідомленні. Ви впевнені, що хочете експортувати?"
           export_has_started: "Експорт почався. Ви отримаєте ПП коли він буде готовий."
       search:
+        short_title: Пошук
         title: Пошук у чаті
         aria_label: "Перейти до пошуку в чаті"
         no_results: "Не знайдено результатів"

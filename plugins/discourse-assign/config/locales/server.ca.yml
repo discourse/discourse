@@ -14,7 +14,6 @@ ca:
     assign_self_regex: "Expressió regular que ha de complir-se per a l'autoassignació. Exemple: &quot;la meva llista&quot;"
     assign_other_regex: "Expressió regular que ha de complir-se per a assignar temes a altres persones mitjançant menció. Exemple: 'la vostra llista'."
     unassign_on_group_archive: "Quan un missatge és arxivat per un grup, desassigna el missatge (reassigna'l si és mogut de nou a la safata d'entrada)."
-    unassign_on_close: "Quan es tanca un tema, desassigna el tema."
     remind_assigns: "Recorda als usuaris les assignacions pendents."
     remind_assigns_frequency: "Freqüència per a fer memòria als usuaris sobre temes assignats."
     max_assigned_topics: "Nombre màxim de temes que es poden assignar a un usuari."

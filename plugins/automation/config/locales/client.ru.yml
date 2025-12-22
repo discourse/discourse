@@ -10,6 +10,7 @@ ru:
       logs:
         staff_actions:
           actions:
+            create_automation: создать автоматизацию
             update_automation: обновить автоматизацию
             delete_automation: удалить автоматизацию
     discourse_automation:
@@ -72,8 +73,10 @@ ru:
           fields:
             categories:
               label: Категории
+              description: Запуск происходит только в том случае, если отмеченная тема относится к указанным категориям.
             tags:
               label: Теги
+              description: Срабатывает только в том случае, если отмеченная тема имеет хотя бы один из этих тегов.
         not_found: Не удалось найти триггер `%{trigger}` для автоматизации `%{automation}`. Проверьте, установлен ли соответствующий плагин.
         user_badge_granted:
           fields:
@@ -284,6 +287,13 @@ ru:
               label: Теги
               description: Необязательно, срабатывает только в том случае, если публикация содержит любой из этих тегов
       scriptables:
+        email_on_flagged_post:
+          fields:
+            email_template:
+              label: Шаблон электронного письма
+            recipients:
+              label: Получатели
+              description: Пользователи или адреса электронной почты для уведомления
         not_found: Не удалось найти скрипт `%{script}` для автоматизации `%{automation}`. Проверьте, установлен ли соответствующий плагин.
         zapier_webhook:
           fields:

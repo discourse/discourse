@@ -217,6 +217,7 @@ da:
         export_messages:
           description: "Dette eksporterer alle beskeder fra alle kanaler."
       search:
+        short_title: Søg
         no_results: "Ingen resultater fundet"
         sort:
           relevance: "Relevans"

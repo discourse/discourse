@@ -37,8 +37,11 @@ ru:
   discourse_post_voting:
     reviewables:
       actions:
+        comment_actions:
+          bundle_title: "Что вы хотите сделать с этим комментарием?"
         no_action_comment:
           title: "Нет действий"
+          description: "Оставить комментарий как есть."
         agree_and_keep_comment:
           title: "Сохранить комментарий"
           description: "Согласиться с жалобой, но оставить комментарий без изменений."

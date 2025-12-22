@@ -172,6 +172,7 @@ pt:
         history_label: "Histórico"
         members_label: "Membros"
       search:
+        short_title: Procurar
         no_results: "Não foi encontrado nenhum resultado"
         sort:
           relevance: "Relevância"

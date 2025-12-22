@@ -140,10 +140,8 @@ fr:
       send_shortcut:
         enter:
           label: "Envoyer par Entrée"
-          description: "Nouvelle ligne avec Maj + Entrée"
         meta_enter:
           label: "Envoyer avec %{meta_key} + Entrée"
-          description: "Nouvelle ligne avec Entrée"
       enable: "Activer la discussion"
       flag: "Signalement"
       emoji: "Insérer un émoji"
@@ -238,12 +236,11 @@ fr:
       no_public_channels: "Vous n'avez encore rejoint aucun canal !"
       no_public_channels_cta: "Parcourir les canaux"
       kicked_from_channel: "Vous ne pouvez plus accéder à ce canal."
+      chat_notifications_title: "Notifications de discussion"
       only_chat_push_notifications:
         title: "Envoyer uniquement des notifications push de discussion"
-        description: "Bloquer l'envoi de toutes les notifications push non liées à la discussion"
       ignore_channel_wide_mention:
         title: "Ignorer les mentions à l'échelle du canal"
-        description: "Ne pas envoyer de notifications pour les mentions à l'échelle du canal (@here et @all)"
       show_thread_title_prompts:
         title: "Afficher les invites relatives au titre du fil de discussion"
         description: "Afficher les invites pour définir un titre pour les nouveaux fils de discussion"
@@ -499,6 +496,7 @@ fr:
           confirm_export: "Cela exporte tous les messages de tous les canaux et vous envoie le résultat dans un message privé. Voulez-vous vraiment exporter ?"
           export_has_started: "L'exportation a commencé. Vous recevrez un MP quand elle sera prête."
       search:
+        short_title: Recherche
         no_results: "Aucun résultat trouvé"
         sort:
           relevance: "Pertinence"

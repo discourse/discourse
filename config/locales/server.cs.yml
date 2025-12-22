@@ -1656,7 +1656,7 @@ cs:
       yaxis: "Počet událostí"
       description: "Počet spuštěných událostí webhooku nebo jejich průměrná doba trvání."
     suspicious_logins:
-      title: "Podezřelé přihlášení"
+      title: "Podezřelá přihlášení"
       labels:
         user: Uživatel
         client_ip: IP klienta

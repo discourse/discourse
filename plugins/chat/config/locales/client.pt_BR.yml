@@ -140,10 +140,8 @@ pt_BR:
       send_shortcut:
         enter:
           label: "Enviar por Enter"
-          description: "Nova linha com Shift+Enter"
         meta_enter:
           label: "Enviar com %{meta_key} + Enter"
-          description: "Nova linha com Enter"
       enable: "Ativar chat"
       flag: "Sinalizar"
       emoji: "Inserir emoji"
@@ -238,12 +236,11 @@ pt_BR:
       no_public_channels: "Você ainda não entrou em nenhum canal!"
       no_public_channels_cta: "Explorar canais"
       kicked_from_channel: "Você não pode mais acessar este canal."
+      chat_notifications_title: "Notificações do chat"
       only_chat_push_notifications:
         title: "Enviar apenas notificações por push"
-        description: "Bloquear envio de todas as notificações por push não relacionadas a chat"
       ignore_channel_wide_mention:
         title: "Ignorar menções em todo o canal"
-        description: "Não envie notificações para menções em todo o canal (@aqui e @todos)"
       show_thread_title_prompts:
         title: "Exibir prompts de título de linha de discussão"
         description: "Exibir prompts para definir um título para novas linhas de discussão"
@@ -499,6 +496,7 @@ pt_BR:
           confirm_export: "Exporta todas as mensagens de todos os canais e envia o resultado a você por mensagem pessoal. Deseja mesmo exportar?"
           export_has_started: "A exportação foi iniciada. Você receberá uma MP quando estiver pronta."
       search:
+        short_title: Pesquisar
         no_results: "Nenhum resultado encontrado"
         sort:
           relevance: "Relevância"

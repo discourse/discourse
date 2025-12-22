@@ -99,6 +99,7 @@ sw:
         history_label: "Historia"
         members_label: "Wanachama"
       search:
+        short_title: Tafuta
         no_results: "Hakuna Majibu Yaliyopatikana"
         sort:
           relevance: "Umuhimu"

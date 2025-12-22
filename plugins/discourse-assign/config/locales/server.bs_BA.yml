@@ -14,7 +14,6 @@ bs_BA:
     assign_self_regex: "Regex koji treba da prođe za samostalno dodeljivanje. Primjer &quot;moja lista&quot;"
     assign_other_regex: "Regex koji treba da prođe za dodeljivanje tema drugima putem spomena. Primjer &#39;vaša lista&#39;."
     unassign_on_group_archive: "Kada se poruka arhivira od strane grupe, opozovite poruku (ponovno dodijelite ako se vratite u mapu s pristiglom poštom)"
-    unassign_on_close: "Kada je tema zatvorena, ne dodijeli temu"
   discourse_assign:
     reminders_frequency:
       never: "nikad"

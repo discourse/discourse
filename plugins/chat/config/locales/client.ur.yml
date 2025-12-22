@@ -140,10 +140,8 @@ ur:
       send_shortcut:
         enter:
           label: "Enter کے ذریعے بھیجیں"
-          description: "Shift + Enter کے ذریعے نئی لائن"
         meta_enter:
           label: "%{meta_key} + Enter کے ذریعے بھیجیں"
-          description: "Enter کے ذریعے نئی لائن"
       enable: "چیٹ کو فعال کریں"
       flag: "فلَیگ"
       emoji: "ایموجی داخل کریں"
@@ -168,10 +166,8 @@ ur:
           unreachable_2: "@%{group1} اور @%{group2} تذکروں کی اجازت نہیں دیتے۔"
       only_chat_push_notifications:
         title: "صرف چیٹ کی اطلاعات بھیجیں"
-        description: "چیٹ کے علاوہ تمام اطلاعات کو روکیں"
       ignore_channel_wide_mention:
         title: "چینل بھر کے تذکروں کو نظر انداز کریں"
-        description: "چینل بھر میں تذکروں کے لئے اطلاعات نہ بھیجیں (@here اور @all)"
       show_thread_title_prompts:
         description: "نئے دھاگوں کے لیے عنوان سیٹ کرنے کے لیے بلا تاخیردکھائیں"
       placeholder_channel: "%{channelName} میں چیٹ کریں"
@@ -320,6 +316,7 @@ ur:
         history_label: "تاریخی"
         members_label: "ممبران"
       search:
+        short_title: تلاش کریں
         sort:
           relevance: "مطابقت"
           latest: "تازہ ترین"

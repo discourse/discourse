@@ -14,7 +14,6 @@ fi:
     assign_self_regex: "Säännöllinen lauseke, jolla osoitetaan itselle. Esimerkiksi 'minun listalle'"
     assign_other_regex: "Säännöllinen lauseke, jolla osoitetaan toiselle maininnan avulla. Esimerkiksi 'sinun listalle'."
     unassign_on_group_archive: "Kun ryhmä arkistoi yksityiskeskustelun, peru viestin osoitus (osoitetaan uudelleen, jos siirretään takaisin saapuneisiin)"
-    unassign_on_close: "Peru ketjun osoitus, kun ketju suljetaan"
     reassign_on_open: "Kun ketju avataan, osoita aikaisemmin osoitetut käyttäjät/ryhmät uudelleen"
     invite_on_assign: "Kun henkilökohtainen viesti osoitetaan käyttäjälle tai ryhmälle, kutsu hänet yksityisviestiin, jos hän ei vielä ole osallistuja."
     assign_mailer: "Milloin lähetetään ilmoituksia osoituksista"

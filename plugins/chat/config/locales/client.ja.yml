@@ -136,10 +136,8 @@ ja:
       send_shortcut:
         enter:
           label: "Enter で送信"
-          description: "Shift + Enter で改行"
         meta_enter:
           label: "%{meta_key} + Enter で送信"
-          description: "Enter で改行"
       enable: "チャットを有効にする"
       flag: "通報する"
       emoji: "絵文字を挿入する"
@@ -224,12 +222,11 @@ ja:
       no_public_channels: "まだチャンネルに参加していません！"
       no_public_channels_cta: "チャンネルを閲覧する"
       kicked_from_channel: "このチャンネルにアクセスできなくなりました。"
+      chat_notifications_title: "チャット通知"
       only_chat_push_notifications:
         title: "チャットのプッシュ通知のみ送信する"
-        description: "チャット以外のすべてのプッシュ通知の送信をブロックします"
       ignore_channel_wide_mention:
         title: "チャンネル全体のメンションを無視する"
-        description: "チャット全体のメンション（@here および @all）の通知を送信しません"
       show_thread_title_prompts:
         title: "スレッドタイトルのプロンプトの表示"
         description: "新しいスレッドのタイトルを設定するプロンプトを表示します"
@@ -469,6 +466,7 @@ ja:
           confirm_export: "これにより、すべてのチャンネルからすべてのメッセージがエクスポートされ、その結果が個人メッセージで送信されます。エクスポートしてもよろしいですか？"
           export_has_started: "エクスポートが開始されました。準備ができたら PM が届きます。"
       search:
+        short_title: 検索
         sort:
           relevance: "関連性の高い項目"
           latest: "最新"

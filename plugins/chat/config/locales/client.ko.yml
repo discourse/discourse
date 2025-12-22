@@ -97,6 +97,7 @@ ko:
         channels_list: "채팅 채널 목록"
       no_public_channels_cta: "채널 찾아보기"
       kicked_from_channel: "더 이상 이 채널에 접근할 수 없습니다."
+      chat_notifications_title: "채팅 알림"
       only_chat_push_notifications:
         title: "채팅 푸시 알림만 보내기"
       open: "채팅 열기"
@@ -250,6 +251,7 @@ ko:
           create_export: "내보내기"
           export_has_started: "내보내기가 시작되었습니다. 준비가 되면 메시지를 받을 것입니다."
       search:
+        short_title: 검색
         no_results: "검색된 결과가 없습니다"
         sort:
           relevance: "관련성"

@@ -107,6 +107,7 @@ vi:
         history_label: "Lịch sử"
         members_label: "Các thành viên"
       search:
+        short_title: Tìm kiếm
         no_results: "Không tìm thấy kết quả"
         sort:
           relevance: "Độ phù hợp"

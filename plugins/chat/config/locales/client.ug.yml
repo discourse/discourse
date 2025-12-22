@@ -141,10 +141,8 @@ ug:
       send_shortcut:
         enter:
           label: "Enter بېسىلسا يوللايدۇ"
-          description: "Shift + Enter بېسىلسا يېڭى قۇردىن باشلايدۇ"
         meta_enter:
           label: "%{meta_key} + Enter بېسىلسا يوللايدۇ"
-          description: "Enter بېسىلسا يېڭى قۇردىن باشلايدۇ"
       enable: "سۆھبەتنى قوزغات"
       flag: "پاش قىل"
       emoji: "چىراي ئىپادە قىستۇر"
@@ -239,12 +237,11 @@ ug:
       no_public_channels: "سىز تېخى ھېچقانداق قانالغا قاتناشمىدىڭىز!"
       no_public_channels_cta: "قانالغا كۆز يۈگۈرت"
       kicked_from_channel: "ئەمدى بۇ قانالنى زىيارەت قىلالمايسىز."
+      chat_notifications_title: "سۆھبەت ئۇقتۇرۇشى"
       only_chat_push_notifications:
         title: "پەقەت سۆھبەت تارقىتىش ئۇقتۇرۇشىنىلا ئەۋەتىدۇ"
-        description: "بارلىق سۆھبەت بولمىغان تارقىتىش ئۇقتۇرۇشى يوللاشنى توسىدۇ"
       ignore_channel_wide_mention:
         title: "قانال دائىرىسىدە ئاتاشقا پەرۋا قىلمايدۇ"
-        description: "قانال دائىرىسىدە ئاتاش (@here ۋە @all) ئۇقتۇرۇشى يوللىمايدۇ"
       show_thread_title_prompts:
         title: "سۆزلىشىش ماۋزۇ ئەسكەرتىشىنى كۆرسەت"
         description: "يېڭى سۆزلىشىش ماۋزۇسىنىڭ ئەسكەرتىشىنى كۆرسەت"
@@ -500,6 +497,7 @@ ug:
           confirm_export: "بارلىق قاناللاردىن ھەممە ئۇچۇرنى چىقىرىپ نەتىجىسىنى شەخسىي ئۇچۇردا سىزگە يوللايدۇ. راستتىنلا چىقىرامسىز؟"
           export_has_started: "چىقىرىش باشلاندى. چىقىرىش تەييار بولغاندا بىر شەخسىي ئۇچۇر تاپشۇرۇۋالىسىز."
       search:
+        short_title: ئىزدە
         title: سۆھبەت ئىزدە
         aria_label: "سۆھبەت ئىزدەشكە يۆتكەل"
         no_results: "ھېچقانداق نەتىجە تېپىلمىدى"

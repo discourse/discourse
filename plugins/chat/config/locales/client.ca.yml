@@ -102,6 +102,7 @@ ca:
         history_label: "Historial"
         members_label: "Membres"
       search:
+        short_title: Cerca
         no_results: "No hi ha resultats"
         sort:
           relevance: "Importància"

@@ -101,6 +101,7 @@ gl:
         history_label: "Historial"
         members_label: "Membros"
       search:
+        short_title: Buscar
         no_results: "Non se atoparon resultados"
         sort:
           relevance: "Relevancia"

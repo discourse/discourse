@@ -15,10 +15,22 @@ zh_CN:
       placeholder: Discourse Rewind
       title: 回顾
       loading: "正在重构样条曲线中…"
+      viewing_other_user: "您正在查看<strong>%{username}</strong>的Discourse Rewind。"
+      cannot_view_rewind: >
+        您无权访问该用户的 Discourse Rewind，可能该用户选择不公开他的回顾内容。<br><br> $> _<br><br>
+      preferences:
+        enable_rewind: "开启 Discourse Rewind。这将在您的个人资料和您的头像框中展示当年度的活动总结。"
+      profile_link: "查看您 %{rewindYear} 年度的 Discourse Rewind"
       share:
         toggle_label:
           private: "不公开"
           public: "公开"
+        confirm: "在分享您的回顾记录前请仔细检查，这可能包含您的隐私信息。您可以随时将其设为私有。"
+        confirm_button:
+          enable: "设为公开"
+          disable: "设为私有"
+        enabled_success: "你的回顾内容现在可与其他论坛成员分享了。"
+        disabled_success: "已设为私有。"
       reports:
         activity_calendar:
           title: 活动日历

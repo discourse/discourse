@@ -218,12 +218,11 @@ sv:
         composer: "Chattkompositör"
         channels_list: "Lista över chattkanaler"
       kicked_from_channel: "Du har inte längre tillgång till den här kanalen."
+      chat_notifications_title: "Chattaviseringar"
       only_chat_push_notifications:
         title: "Skicka bara push-meddelanden för chatt"
-        description: "Blockera alla push-meddelanden som inte är chattmeddelanden från att skickas"
       ignore_channel_wide_mention:
         title: "Ignorera omnämnanden i hela kanalen"
-        description: "Skicka inte meddelanden för kanalövergripande omnämnanden (@here och @all)."
       open: "Öppna chatt"
       open_full_page: "Öppna chatt i helskärmsläge"
       close_full_page: "Stäng helskärmschatt"
@@ -472,6 +471,7 @@ sv:
           create_export: "Skapa export"
           export_has_started: "Exporten har börjat. Du får ett PM när det är klart."
       search:
+        short_title: Sök
         no_results: "Inga resultat hittades"
         sort:
           relevance: "Relevans"
