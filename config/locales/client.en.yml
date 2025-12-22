@@ -1,5 +1,7 @@
 en:
   js:
+    carousel:
+      go_to_slide: "Go to slide %{index}"
     number:
       format:
         # symbol used to separate the integer part from the fractional part of a number
@@ -3175,6 +3177,10 @@ en:
       image: "image"
 
       grid_label: "This will be displayed as a grid"
+      grid_mode_grid: "Grid"
+      grid_mode_focus: "Focus"
+      grid_mode_stage: "Stage"
+      remove_grid: "Remove grid"
 
       image_scale_button: "Scale image to %{percent}%"
       delete_image_button: Delete Image

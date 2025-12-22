@@ -6,6 +6,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import Columns from "discourse/lib/columns";
 import highlightSyntax from "discourse/lib/highlight-syntax";
 import { iconElement, iconHTML } from "discourse/lib/icon-library";
+import setupImageGridCarousel from "discourse/lib/image-grid-carousel";
 import { nativeLazyLoading } from "discourse/lib/lazy-load-images";
 import lightbox from "discourse/lib/lightbox";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -13,6 +14,8 @@ import { parseAsync } from "discourse/lib/text";
 import { setTextDirections } from "discourse/lib/text-direction";
 import { tokenRange } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+
+const CAROUSEL_MODES = new Set(["carousel", "focus", "stage"]);
 
 export default {
   initialize(owner) {
@@ -28,21 +31,32 @@ export default {
       });
 
       api.decorateCookedElement((elem, helper) => {
-        return lightbox(elem, { post: helper.model });
-      });
-
-      api.decorateCookedElement((elem) => {
         const grids = elem.querySelectorAll(".d-image-grid");
+        let needsLightboxAfterRender = false;
 
-        if (!grids.length) {
+        if (grids.length) {
+          grids.forEach((grid) => {
+            if (CAROUSEL_MODES.has(grid.dataset.mode)) {
+              if (setupImageGridCarousel(grid, helper)) {
+                needsLightboxAfterRender = true;
+              }
+              return;
+            }
+
+            return new Columns(grid, {
+              columns: site.mobileView ? 2 : 3,
+            });
+          });
+        }
+
+        if (needsLightboxAfterRender) {
+          schedule("afterRender", () => {
+            lightbox(elem, { post: helper.model });
+          });
           return;
         }
 
-        grids.forEach((grid) => {
-          return new Columns(grid, {
-            columns: site.mobileView ? 2 : 3,
-          });
-        });
+        return lightbox(elem, { post: helper.model });
       });
 
       if (siteSettings.support_mixed_text_direction) {

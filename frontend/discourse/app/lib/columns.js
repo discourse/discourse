@@ -51,28 +51,47 @@ export default class Columns {
   _prepareItems() {
     let targets = [];
 
-    for (let child of this.container.children) {
+    const children = [...this.container.children];
+    for (let child of children) {
       // sometimes children are wrapped in a paragraph
       if (child.nodeName === "P" && child.children.length > 0) {
-        for (let c of child.children) {
-          targets.push(this._wrapDirectImage(c));
+        for (let c of [...child.children]) {
+          const item = this._wrapDirectImage(c);
+          if (item) {
+            targets.push(item);
+          }
         }
       } else {
-        targets.push(this._wrapDirectImage(child));
+        const item = this._wrapDirectImage(child);
+        if (item) {
+          targets.push(item);
+        }
       }
     }
 
-    return targets.filter((item) => !["BR", "P"].includes(item.nodeName));
+    return targets;
   }
 
   _wrapDirectImage(item) {
+    if (["BR", "P"].includes(item.nodeName)) {
+      return null;
+    }
+
     if (item.nodeName !== "IMG") {
+      // If it's already a lightbox wrapper, return it as is
+      if (
+        item.classList.contains("lightbox-wrapper") ||
+        item.classList.contains("lightbox")
+      ) {
+        return item;
+      }
       return item;
     }
 
     const wrapper = document.createElement("span");
     wrapper.classList.add("image-wrapper");
-    wrapper.appendChild(item.cloneNode());
+    // Move the original node to preserve listeners
+    wrapper.appendChild(item);
     return wrapper;
   }
 
@@ -92,8 +111,9 @@ export default class Columns {
 
       // use aspect ratio to compare heights and append to shortest column
       // if element is not an image, assume ratio is 1:1
-      const img = item.querySelector("img") || item;
-      heights[shortest] += img.nodeName === "IMG" ? img.height / img.width : 1;
+      const img =
+        item.querySelector("img") || (item.nodeName === "IMG" ? item : null);
+      heights[shortest] += img && img.width > 0 ? img.height / img.width : 1;
       columns[shortest].append(item);
     });
 

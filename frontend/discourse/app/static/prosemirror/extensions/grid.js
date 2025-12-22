@@ -1,7 +1,10 @@
 import { bind } from "discourse/lib/decorators";
-import { iconHTML } from "discourse/lib/icon-library";
+import { iconElement } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
 
+/**
+ * Node view for image grid blocks in the rich editor.
+ */
 class GridNodeView {
   constructor(node, view, getPos) {
     this.node = node;
@@ -11,26 +14,70 @@ class GridNodeView {
     const div = document.createElement("div");
     div.className = "composer-image-grid";
 
-    const title = document.createElement("div");
-    title.className = "composer-image-grid__title";
-    title.innerHTML = iconHTML("table-cells");
-    title.prepend(document.createTextNode(i18n("composer.grid_label")));
+    const select = document.createElement("select");
+    select.className = "composer-image-grid__mode-select";
+    select.contentEditable = false;
 
-    div.appendChild(title);
+    const options = [
+      { value: "grid", label: i18n("composer.grid_mode_grid") },
+      { value: "focus", label: i18n("composer.grid_mode_focus") },
+      { value: "stage", label: i18n("composer.grid_mode_stage") },
+    ];
+
+    options.forEach((opt) => {
+      const option = document.createElement("option");
+      option.value = opt.value;
+      option.text = opt.label;
+      if (node.attrs.mode === opt.value) {
+        option.selected = true;
+      }
+      select.appendChild(option);
+    });
+
+    select.addEventListener("change", (e) => {
+      const mode = e.target.value;
+      const pos = this.getPos();
+      this.view.dispatch(
+        this.view.state.tr.setNodeMarkup(pos, null, {
+          ...this.node.attrs,
+          mode,
+        })
+      );
+    });
+
+    div.appendChild(select);
 
     const contentDiv = document.createElement("div");
     div.appendChild(contentDiv);
 
+    const removeBtn = document.createElement("button");
+    removeBtn.className = "composer-image-grid__remove-btn btn-flat";
+    removeBtn.appendChild(iconElement("table-cells"));
+    const removeLabel = document.createElement("span");
+    removeLabel.textContent = i18n("composer.remove_grid");
+    removeBtn.appendChild(removeLabel);
+    removeBtn.title = i18n("composer.remove_grid");
+    removeBtn.type = "button";
+    removeBtn.contentEditable = false;
+    removeBtn.addEventListener("click", this.removeClickHandler);
+
+    div.appendChild(removeBtn);
+
     this.dom = div;
     this.contentDOM = contentDiv;
-
-    this.svg = div.querySelector("svg");
-    this.svg.setAttribute("alt", i18n("composer.toggle_image_grid"));
-    this.svg.addEventListener("click", this.iconClickHandler);
   }
 
   @bind
-  iconClickHandler() {
+  /**
+   * Removes the grid node and unwraps its contents.
+   *
+   * @param {MouseEvent} e
+   * @returns {void}
+   */
+  removeClickHandler(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
     const pos = this.getPos();
     const currentNode = this.view.state.doc.nodeAt(pos);
     const tr = this.view.state.tr;
@@ -39,20 +86,42 @@ class GridNodeView {
     this.view.dispatch(tr);
   }
 
+  /**
+   * Applies selection styling to the node view.
+   *
+   * @returns {void}
+   */
   selectNode() {
     this.dom.classList.add("ProseMirror-selectednode");
   }
 
+  /**
+   * Removes selection styling from the node view.
+   *
+   * @returns {void}
+   */
   deselectNode() {
     this.dom.classList.remove("ProseMirror-selectednode");
   }
 
+  /**
+   * Keeps the node view in sync with editor updates.
+   *
+   * @param {Object} node
+   * @returns {boolean}
+   */
   update(node) {
-    return node.type === this.node.type;
-  }
+    if (node.type !== this.node.type) {
+      return false;
+    }
+    this.node = node;
 
-  destroy() {
-    this.svg.removeEventListener("click", this.iconClickHandler);
+    const select = this.dom.querySelector(".composer-image-grid__mode-select");
+    if (select && select.value !== node.attrs.mode) {
+      select.value = node.attrs.mode;
+    }
+
+    return true;
   }
 }
 
@@ -62,13 +131,41 @@ const extension = {
     grid: {
       content: "block+",
       group: "block",
+      attrs: {
+        mode: { default: "grid" },
+        aspect: { default: null },
+      },
       createGapCursor: true,
       parseDOM: [
-        { tag: "div.d-image-grid" },
-        { tag: "div.composer-image-grid" },
+        {
+          tag: "div.d-image-grid",
+          getAttrs(dom) {
+            return {
+              mode: dom.getAttribute("data-mode") || "grid",
+              aspect: dom.getAttribute("data-aspect"),
+            };
+          },
+        },
+        {
+          tag: "div.composer-image-grid",
+          getAttrs(dom) {
+            return {
+              mode: dom.getAttribute("data-mode") || "grid",
+              aspect: dom.getAttribute("data-aspect"),
+            };
+          },
+        },
       ],
-      toDOM() {
-        return ["div", { class: "composer-image-grid" }, 0];
+      toDOM(node) {
+        return [
+          "div",
+          {
+            class: "composer-image-grid",
+            "data-mode": node.attrs.mode,
+            "data-aspect": node.attrs.aspect,
+          },
+          0,
+        ];
       },
     },
   },
@@ -80,7 +177,10 @@ const extension = {
   parse: {
     bbcode_open(state, token) {
       if (token.attrGet("class") === "d-image-grid") {
-        state.openNode(state.schema.nodes.grid);
+        state.openNode(state.schema.nodes.grid, {
+          mode: token.attrGet("data-mode") || "grid",
+          aspect: token.attrGet("data-aspect"),
+        });
         return true;
       }
     },
@@ -94,7 +194,14 @@ const extension = {
 
   serializeNode: {
     grid: (state, node) => {
-      state.write("\n[grid]\n\n");
+      let attrs = "";
+      if (node.attrs.mode && node.attrs.mode !== "grid") {
+        attrs += ` mode=${node.attrs.mode}`;
+      }
+      if (node.attrs.aspect) {
+        attrs += ` aspect=${node.attrs.aspect}`;
+      }
+      state.write(`\n[grid${attrs}]\n\n`);
       state.renderContent(node.content);
       state.write("\n[/grid]\n\n");
     },
