@@ -1,5 +1,7 @@
 /* eslint-disable ember/no-classic-components */
-import Component, { Textarea } from "@ember/component";
+import { tracked } from "@glimmer/tracking";
+import Component, { Input, Textarea } from "@ember/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
@@ -7,20 +9,39 @@ import discourseComputed, { afterRender } from "discourse/lib/decorators";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
 
-const ACTIONS = ["delete", "delete_replies", "edit", "none"];
+const ACTIONS = ["delete", "delete_all", "delete_replies", "edit", "none"];
 
 export default class AdminPenaltyPostAction extends Component {
+  @tracked confirmDeleteAll = false;
+
   postId = null;
   postAction = null;
   postEdit = null;
 
   @equal("postAction", "edit") editing;
+  @equal("postAction", "delete_all") deletingAll;
 
   @discourseComputed
   penaltyActions() {
     return ACTIONS.map((id) => {
       return { id, name: i18n(`admin.user.penalty_post_${id}`) };
     });
+  }
+
+  get topicsCount() {
+    return this.user.topic_count;
+  }
+
+  get repliesCount() {
+    return this.user.post_count - this.user.topic_count;
+  }
+
+  canSubmitDeleteAll() {
+    return this.postAction === "delete_all" && this.confirmDeleteAll;
+  }
+
+  get readyToDeleteAll() {
+    return this.canSubmitDeleteAll();
   }
 
   @action
@@ -31,6 +52,13 @@ export default class AdminPenaltyPostAction extends Component {
     if (postAction === "edit") {
       this._focusEditTextarea();
     }
+  }
+
+  @action
+  toggleConfirmDeleteAll(event) {
+    this.set("confirmDeleteAll", event.target.checked);
+
+    this.onDeleteAllPostsReady?.(this.readyToDeleteAll);
   }
 
   @afterRender
@@ -59,6 +87,23 @@ export default class AdminPenaltyPostAction extends Component {
       <div class="penalty-post-edit">
         <Textarea @value={{this.postEdit}} class="post-editor" />
       </div>
+    {{/if}}
+
+    {{#if this.deletingAll}}
+      <label>
+        <Input
+          @type="checkbox"
+          @checked={{this.confirmDeleteAll}}
+          {{on "click" this.toggleConfirmDeleteAll}}
+        />
+        {{htmlSafe
+          (i18n
+            "admin.user.penalty_post_delete_all_confirmation"
+            topics=this.topicsCount
+            replies=this.repliesCount
+          )
+        }}
+      </label>
     {{/if}}
   </template>
 }
