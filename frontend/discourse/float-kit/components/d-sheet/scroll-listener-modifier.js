@@ -3,7 +3,7 @@ import { modifier } from "ember-modifier";
 /**
  * Modifier that starts RAF polling loop when scroll is ongoing.
  *
- * @param {HTMLElement} element - The scroll container element (not used for events, but passed for context)
+ * @param {HTMLElement} element - The scroll container element
  * @param {Function} handler - The handler function to call on each frame
  * @param {boolean} isScrollOngoing - Whether scroll is currently ongoing
  */

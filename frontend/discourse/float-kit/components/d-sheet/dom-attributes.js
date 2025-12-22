@@ -59,23 +59,21 @@ export default class DOMAttributes {
       return;
     }
 
-    const currentAttr = this.view.getAttribute("data-d-sheet") || "";
-    const hasAttr = currentAttr.split(" ").includes("animating");
+    const currentAttr = this.view.dataset.dSheet || "";
+    const attributes = new Set(currentAttr.split(" ").filter(Boolean));
     const shouldHaveAttr = animationState !== "none";
 
-    if (shouldHaveAttr === hasAttr) {
+    if (shouldHaveAttr === attributes.has("animating")) {
       return;
     }
 
     if (shouldHaveAttr) {
-      this.view.setAttribute("data-d-sheet", `${currentAttr} animating`);
+      attributes.add("animating");
     } else {
-      const newAttr = currentAttr
-        .split(" ")
-        .filter((s) => s !== "animating")
-        .join(" ");
-      this.view.setAttribute("data-d-sheet", newAttr);
+      attributes.delete("animating");
     }
+
+    this.view.dataset.dSheet = Array.from(attributes).join(" ");
   }
 
   /**
@@ -89,15 +87,19 @@ export default class DOMAttributes {
     }
 
     const currentAttr = this.view.dataset.dSheet || "";
-    const hasAttr = currentAttr.includes("animation-active");
+    const attributes = new Set(currentAttr.split(" ").filter(Boolean));
 
-    if (isAnimating === hasAttr) {
+    if (isAnimating === attributes.has("animation-active")) {
       return;
     }
 
-    this.view.dataset.dSheet = isAnimating
-      ? `${currentAttr} animation-active`.trim()
-      : currentAttr.replace(/\s*animation-active\s*/g, " ").trim();
+    if (isAnimating) {
+      attributes.add("animation-active");
+    } else {
+      attributes.delete("animation-active");
+    }
+
+    this.view.dataset.dSheet = Array.from(attributes).join(" ");
   }
 
   /**
@@ -105,7 +107,10 @@ export default class DOMAttributes {
    */
   setHidden() {
     if (this.view) {
-      this.view.dataset.dSheet = this.view.dataset.dSheet + " hidden";
+      const currentAttr = this.view.dataset.dSheet || "";
+      const attributes = new Set(currentAttr.split(" ").filter(Boolean));
+      attributes.add("hidden");
+      this.view.dataset.dSheet = Array.from(attributes).join(" ");
     }
   }
 

@@ -69,11 +69,7 @@ export function placementToTrack(placement) {
 
 /**
  * Resolve tracks and contentPlacement from partial options.
- * Handles all 4 Silk cases:
- * 1. Only contentPlacement → derive tracks from contentPlacement
- * 2. Only tracks → derive contentPlacement from tracks
- * 3. Both provided → use both as-is (validation ensures compatibility)
- * 4. Neither → keep defaults
+ * Handles the logic of deriving missing options from provided ones.
  *
  * @param {Object} options - Configuration options
  * @param {string} [options.tracks] - Track direction

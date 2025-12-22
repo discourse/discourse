@@ -5,10 +5,17 @@
  */
 export default class ScrollProgressCalculator {
   /**
+   * The sheet controller instance.
+   *
+   * @type {Object}
+   */
+  controller;
+
+  /**
    * @param {Object} controller - The sheet controller instance
    */
   constructor(controller) {
-    this.c = controller;
+    this.controller = controller;
   }
 
   /**
@@ -17,7 +24,8 @@ export default class ScrollProgressCalculator {
    * @returns {{ rawProgress: number, clampedProgress: number, stackingProgress: number, segmentProgress: number } | null}
    */
   calculateProgress() {
-    const { scrollContainer, dimensions, contentPlacement, tracks } = this.c;
+    const { scrollContainer, dimensions, contentPlacement, tracks } =
+      this.controller;
 
     if (!scrollContainer || !dimensions) {
       return null;
@@ -77,7 +85,7 @@ export default class ScrollProgressCalculator {
    * @returns {number}
    */
   #getFirstDetentProgress() {
-    const { swipeOutDisabled, detentsConfig, dimensions } = this.c;
+    const { swipeOutDisabled, detentsConfig, dimensions } = this.controller;
 
     if (swipeOutDisabled && detentsConfig !== undefined) {
       return dimensions?.progressValueAtDetents?.[1]?.exact ?? 0;
@@ -99,7 +107,7 @@ export default class ScrollProgressCalculator {
     snapAccelerator,
     isTopOrLeft,
   }) {
-    const { contentPlacement } = this.c;
+    const { contentPlacement } = this.controller;
     let result;
 
     if (contentPlacement === "center") {
@@ -133,7 +141,7 @@ export default class ScrollProgressCalculator {
     edgePadding,
     contentSize,
   }) {
-    const { dimensions } = this.c;
+    const { dimensions } = this.controller;
 
     if (dimensions?.swipeOutDisabledWithDetent) {
       const firstMarkerSize =
@@ -151,7 +159,7 @@ export default class ScrollProgressCalculator {
    * @returns {[number, number] | null} Segment as [start, end] or null if no change
    */
   determineSegment(segmentProgress) {
-    const { dimensions } = this.c;
+    const { dimensions } = this.controller;
 
     if (!dimensions?.progressValueAtDetents) {
       return null;

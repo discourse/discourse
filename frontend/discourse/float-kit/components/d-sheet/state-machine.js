@@ -35,52 +35,94 @@ import { TrackedObject } from "@ember-compat/tracked-built-ins";
  * @class StateMachine
  */
 class StateMachine {
-  /** @type {string} */
+  /**
+   * Current state of the machine.
+   *
+   * @type {string}
+   */
   @tracked current;
 
-  /** @type {StateDefinition} */
+  /**
+   * The state machine definition.
+   *
+   * @type {StateDefinition}
+   */
   definition;
 
-  /** @type {Object<string, *>} */
+  /**
+   * Context data used by guards.
+   *
+   * @type {Object<string, *>}
+   */
   context = {};
 
-  /** @type {TrackedObject<string, string>} */
+  /**
+   * Tracked object containing states of nested machines.
+   *
+   * @type {TrackedObject<string, string>}
+   */
   nestedMachines = new TrackedObject();
 
-  /** @type {{type: string}|null} */
+  /**
+   * The last message that was processed.
+   *
+   * @type {{type: string}|null}
+   */
   lastMessageTreated = null;
-  /** @type {QueuedMessage[]} */
+
+  /**
+   * Queue of messages waiting to be processed.
+   *
+   * @type {QueuedMessage[]}
+   */
   #messageQueue = [];
 
-  /** @type {boolean} */
+  /**
+   * Whether the machine is currently processing the message queue.
+   *
+   * @type {boolean}
+   */
   #isProcessingQueue = false;
 
-  /** @type {Subscription[]} */
+  /**
+   * Active subscriptions for state changes.
+   *
+   * @type {Subscription[]}
+   */
   #subscriptions = [];
 
-  /** @type {Subscription[]} */
+  /**
+   * Actions to execute when entering a state.
+   *
+   * @type {Subscription[]}
+   */
   #entryActions = [];
 
-  /** @type {Subscription[]} */
+  /**
+   * Actions to execute when exiting a state.
+   *
+   * @type {Subscription[]}
+   */
   #exitActions = [];
 
-  /** @type {Map<string, Object|null>} */
+  /**
+   * Cache for state configurations to improve performance.
+   *
+   * @type {Map<string, Object|null>}
+   */
   #stateConfigCache = new Map();
 
   /**
    * Guard functions for state transitions.
-   * Each guard receives (message, messageContext, machineContext) and returns a boolean.
    *
    * @type {Object<string, function(Object, Object, Object): boolean>}
-   * @private
    */
   #guards = {};
 
   /**
-   * Machine definitions for the current state, used for smart nested machine reset.
+   * Machine definitions for the current state.
    *
    * @type {Array|null}
-   * @private
    */
   #currentStateMachines = null;
 
@@ -126,7 +168,6 @@ class StateMachine {
    * Remove a subscription by its id.
    *
    * @param {Symbol} id
-   * @private
    */
   #unsubscribe(id) {
     this.#subscriptions = this.#subscriptions.filter((s) => s.id !== id);
@@ -147,7 +188,6 @@ class StateMachine {
    * Initialize nested machines for a given state.
    *
    * @param {string} statePath
-   * @private
    */
   #initializeNestedMachines(statePath) {
     const stateConfig = this.getStateConfig(statePath);
@@ -183,7 +223,6 @@ class StateMachine {
 
   /**
    * Get the configuration for a given state path.
-   * Results are cached for performance.
    *
    * @param {string} statePath - Dot-notation state path
    * @returns {Object|null}
@@ -259,7 +298,6 @@ class StateMachine {
    *
    * @param {string} machineName
    * @param {string} stateName
-   * @private
    */
   #setNestedMachineState(machineName, stateName) {
     this.nestedMachines[machineName] = stateName;
@@ -270,7 +308,6 @@ class StateMachine {
    *
    * @param {string} statePath
    * @returns {string|null}
-   * @private
    */
   #getParentState(statePath) {
     const parts = statePath.split(".");
@@ -301,7 +338,6 @@ class StateMachine {
    * Process queued messages sequentially.
    *
    * @returns {boolean}
-   * @private
    */
   #processQueue() {
     if (this.#messageQueue.length === 0) {
@@ -318,7 +354,6 @@ class StateMachine {
         this.#processMessage(message, context);
       if (transitioned) {
         anyTransitioned = true;
-        // Pass enteredStates and exitedStates to notify (like Silk)
         this.#notifySubscribers(message, enteredStates, exitedStates);
       }
       this.lastMessageTreated = message;
@@ -336,7 +371,6 @@ class StateMachine {
    * @param {Object} context - Context for guards
    * @param {Function} onSuccess - Callback when a transition succeeds, receives target state
    * @returns {boolean} Whether a transition was executed
-   * @private
    */
   #tryTransitions(transitions, message, context, onSuccess) {
     const transitionList = Array.isArray(transitions)
@@ -366,17 +400,14 @@ class StateMachine {
 
   /**
    * Process a single message.
-   * Returns an object with transition result and entered/exited states (like Silk).
    *
    * @param {Object} message
    * @param {Object} context
    * @returns {{transitioned: boolean, enteredStates: string[], exitedStates: string[]}}
-   * @private
    */
   #processMessage(message, context = {}) {
     const messageType = message.type;
 
-    // Capture state before transition for comparison (like Silk)
     const previousState = this.current;
     const previousNestedStates = { ...this.nestedMachines };
 
@@ -452,7 +483,6 @@ class StateMachine {
    * @param {string} previousState - State before transition
    * @param {Object} previousNestedStates - Nested machine states before transition
    * @returns {{entered: string[], exited: string[]}} Arrays of state paths that were entered/exited
-   * @private
    */
   #calculateStateChanges(previousState, previousNestedStates) {
     const entered = [];
@@ -461,19 +491,16 @@ class StateMachine {
     const parentState = this.current.split(".")[0];
     const prevParentState = previousState.split(".")[0];
 
-    // If main state changed
     if (this.current !== previousState) {
       entered.push(this.current);
       exited.push(previousState);
     }
 
-    // Check nested machines for changes
     for (const [machineName, machineState] of Object.entries(
       this.nestedMachines
     )) {
       const prevMachineState = previousNestedStates[machineName];
       if (prevMachineState !== machineState) {
-        // Construct the full path like "open.scroll.ongoing"
         entered.push(`${parentState}.${machineName}.${machineState}`);
         if (prevMachineState) {
           exited.push(`${prevParentState}.${machineName}.${prevMachineState}`);
@@ -481,7 +508,6 @@ class StateMachine {
       }
     }
 
-    // If parent state changed, all nested machines are exited
     if (parentState !== prevParentState) {
       for (const [machineName, machineState] of Object.entries(
         previousNestedStates
@@ -499,7 +525,6 @@ class StateMachine {
    * Transition to a new state, only recreating nestedMachines if machine definitions change.
    *
    * @param {string} targetState
-   * @private
    */
   #transitionToState(targetState) {
     this.current = targetState;
@@ -518,7 +543,6 @@ class StateMachine {
    * @param {Array|null} oldMachines
    * @param {Array|null} newMachines
    * @returns {boolean}
-   * @private
    */
   #machinesAreDifferent(oldMachines, newMachines) {
     if (oldMachines === newMachines) {
@@ -545,7 +569,6 @@ class StateMachine {
    * @param {Object} message
    * @param {Object} messageContext
    * @returns {boolean}
-   * @private
    */
   #checkGuard(guardName, message, messageContext) {
     const guardFn = this.#guards[guardName];
@@ -557,7 +580,6 @@ class StateMachine {
    *
    * @param {string} state - State pattern with format "parentState.machineName.machineState"
    * @returns {boolean}
-   * @private
    */
   #matchesNestedState(state) {
     const parts = state.split(".");
@@ -621,7 +643,6 @@ class StateMachine {
    *
    * @param {Object} sub
    * @returns {boolean}
-   * @private
    */
   #matchesSubscription(sub) {
     let stateMatches;
@@ -637,18 +658,15 @@ class StateMachine {
 
   /**
    * Check if a subscription's state was entered during this transition.
-   * Like Silk's enteredStates.includes(action.state) check.
    *
    * @param {Object} sub - Subscription object
    * @param {string[]} enteredStates - States that were entered in this transition
    * @returns {boolean}
-   * @private
    */
   #wasStateEntered(sub, enteredStates) {
     const subStates = Array.isArray(sub.state) ? sub.state : [sub.state];
 
     for (const subState of subStates) {
-      // Only exact match - no parent/child matching (like Silk)
       if (enteredStates.includes(subState)) {
         return true;
       }
@@ -662,7 +680,6 @@ class StateMachine {
    * @param {Object} sub - Subscription object
    * @param {string[]} exitedStates - States that were exited in this transition
    * @returns {boolean}
-   * @private
    */
   #wasStateExited(sub, exitedStates) {
     const subStates = Array.isArray(sub.state) ? sub.state : [sub.state];
@@ -681,7 +698,6 @@ class StateMachine {
    * @param {Object} message
    * @param {string[]} enteredStates - States that were entered in this transition
    * @param {string[]} exitedStates - States that were exited in this transition
-   * @private
    */
   #notifySubscribers(message, enteredStates, exitedStates) {
     for (const sub of this.#exitActions) {
@@ -694,7 +710,6 @@ class StateMachine {
       }
     }
 
-    // Entry actions: only fire if the subscription's state was ENTERED (like Silk)
     for (const sub of this.#entryActions) {
       const wasEntered = this.#wasStateEntered(sub, enteredStates);
       const guardPasses =
@@ -707,7 +722,6 @@ class StateMachine {
 
     let afterPaintSubs = null;
 
-    // Other subscriptions: fire if state matches (existing behavior)
     for (const sub of this.#subscriptions) {
       if (!this.#matchesSubscription(sub)) {
         continue;

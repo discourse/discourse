@@ -1,5 +1,6 @@
 /**
  * CSS transform properties that should be combined into a single transform string.
+ *
  * @type {Set<string>}
  */
 export const TRANSFORM_PROPS = new Set([

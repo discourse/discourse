@@ -36,7 +36,7 @@ function needsIOSRubberBandWorkaround() {
 /**
  * Scrolls element to center position within the scroll trap area.
  *
- * @param {HTMLElement} element
+ * @param {HTMLElement} element - The element to scroll
  */
 function scrollToCenter(element) {
   element.scrollTo(SCROLL_CENTER_POSITION, SCROLL_CENTER_POSITION);
@@ -46,7 +46,7 @@ function scrollToCenter(element) {
  * Temporarily disables then re-enables overflow to prevent iOS Safari's
  * rubber-band scrolling from propagating to the page.
  *
- * @param {HTMLElement} element
+ * @param {HTMLElement} element - The element to apply the workaround to
  */
 function applyIOSRubberBandWorkaround(element) {
   element.style.setProperty("overflow", "hidden");

@@ -104,13 +104,25 @@ function getFocusableElements(container, additionalSkipSelectors = []) {
  * @class FocusManagement
  */
 export default class FocusManagement {
-  /** @type {Object} */
+  /**
+   * The sheet controller instance.
+   *
+   * @type {Object}
+   */
   controller;
 
-  /** @type {Function|null} */
+  /**
+   * Listener for focus scroll prevention.
+   *
+   * @type {Function|null}
+   */
   #focusScrollPreventionListener = null;
 
-  /** @type {HTMLElement|null} */
+  /**
+   * The element that was focused before the sheet opened.
+   *
+   * @type {HTMLElement|null}
+   */
   #previouslyFocusedElement = null;
 
   /**

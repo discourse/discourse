@@ -144,7 +144,6 @@ export class TouchHandler {
    * Triggers close if at closed position and swipe-out is enabled.
    *
    * @param {HTMLElement} scrollContainer - The scroll container element
-   * @private
    */
   checkClosedPositionForCenterPlacement(scrollContainer) {
     const isHorizontal = this.sheet.isHorizontalTrack;
