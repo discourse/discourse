@@ -40,12 +40,11 @@ function initMathJax(opts) {
       ? {
           chtml: {
             fontURL: getURLWithCDN("/assets/mathjax/woff-v2"),
-            assistiveMml: enableA11y,
           },
         }
       : {
           svg: {
-            assistiveMml: enableA11y,
+            fontCache: "global",
           },
         }),
     options: {
@@ -56,58 +55,23 @@ function initMathJax(opts) {
             enableSpeech: true,
             enableBraille: true,
             enableEnrichment: true,
+            sre: {
+              path: getURLWithCDN("/assets/mathjax/sre"),
+              maps: getURLWithCDN("/assets/mathjax/sre/mathmaps"),
+            },
+            a11y: {
+              speech: true,
+              braille: true,
+            },
           }
         : {}),
       ...(Object.keys(menuOptions).length ? { menuOptions } : {}),
     },
-    ...(enableA11y
-      ? {
-          a11y: {
-            speech: true,
-            braille: true,
-          },
-        }
-      : {}),
-    ...(enableA11y
-      ? {
-          sre: {
-            path: getURLWithCDN("/assets/mathjax/sre"),
-            maps: getURLWithCDN("/assets/mathjax/sre/mathmaps"),
-          },
-        }
-      : {}),
     startup: {
       typeset: false,
       ready() {
         const MathJax = window.MathJax;
-        if (!enableA11y && MathJax?.config?.options) {
-          const configOptions = MathJax.config.options;
-          configOptions.enableAssistiveMml = false;
-          configOptions.enableExplorer = false;
-          configOptions.enableSpeech = false;
-          configOptions.enableBraille = false;
-          configOptions.enableEnrichment = false;
-          if (configOptions.a11y) {
-            configOptions.a11y.speech = false;
-            configOptions.a11y.braille = false;
-          }
-        }
-
         const readyResult = MathJax?.startup?.defaultReady?.();
-
-        if (!enableA11y && MathJax?.startup?.document?.options) {
-          const docOptions = MathJax.startup.document.options;
-          docOptions.enableAssistiveMml = false;
-          docOptions.enableExplorer = false;
-          docOptions.enableSpeech = false;
-          docOptions.enableBraille = false;
-          docOptions.enableEnrichment = false;
-          if (docOptions.a11y) {
-            docOptions.a11y.speech = false;
-            docOptions.a11y.braille = false;
-          }
-        }
-
         return readyResult;
       },
     },

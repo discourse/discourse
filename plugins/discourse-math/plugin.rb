@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # name: discourse-math
-# about: Uses MathJax 3.2 or KaTeX to render math expressions.
+# about: Uses MathJax 4.1 or KaTeX to render math expressions.
 # meta_topic_id: 65770
 # version: 0.9
 # authors: Sam Saffron (sam)
