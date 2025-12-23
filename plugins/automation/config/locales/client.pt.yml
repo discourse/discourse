@@ -136,6 +136,8 @@ pt:
               label: ID do Tópico
             user:
               label: Utilizador
+        set_topic_timer:
+          title: Definir Temporizador de Tópico
       models:
         trigger:
           name:

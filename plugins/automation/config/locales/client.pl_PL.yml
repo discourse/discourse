@@ -442,6 +442,13 @@ pl_PL:
           fields:
             custom_field_name:
               label: "Nazwa niestandardowego pola użytkownika"
+        set_topic_timer:
+          title: Ustaw minutnik tematu
+          fields:
+            type:
+              label: Typ minutnika
+            duration:
+              label: Czas trwania minutnika
       unnamed_automation: "Automatyzacja bez nazwy"
       models:
         script:

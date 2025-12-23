@@ -138,6 +138,8 @@ nb_NO:
               label: Emne-ID
             user:
               label: Bruker
+        set_topic_timer:
+          title: Sett opp tidsbestemt handling for emne
       models:
         trigger:
           name:

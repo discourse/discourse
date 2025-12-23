@@ -429,6 +429,8 @@ de:
           fields:
             custom_field_name:
               label: "Name des benutzerdefinierten Benutzerfelds"
+        set_topic_timer:
+          title: Themen-Timer einstellen
       unnamed_automation: "Automatisierung ohne Titel"
       models:
         script:

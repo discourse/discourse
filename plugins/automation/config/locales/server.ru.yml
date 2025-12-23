@@ -178,3 +178,5 @@ ru:
       random_assign:
         title: "Случайное назначение"
         description: "Случайным образом назначает темы по группам"
+      set_topic_timer:
+        title: "Установить таймер темы"

@@ -131,6 +131,8 @@ ca:
               label: ID de tema
             user:
               label: Usuari
+        set_topic_timer:
+          title: Estableix el temporitzador del tema
       models:
         trigger:
           name:
