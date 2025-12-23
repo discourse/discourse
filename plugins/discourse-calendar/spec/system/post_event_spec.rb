@@ -18,6 +18,8 @@ describe "Post event", type: :system do
   end
 
   context "with location" do
+    let(:location) { "123 Main St, Brisbane, Australia http://example.com" }
+
     it "can save a location" do
       title = "My test meetup event"
       raw = "[event start='2222-02-22 14:22']\n[/event]"
@@ -25,12 +27,10 @@ describe "Post event", type: :system do
 
       visit(post.topic.url)
       post_event_page.edit
-      post_event_form_page.fill_location("123 Main St, Brisbane, Australia http://example.com")
+      post_event_form_page.fill_location(location)
       post_event_form_page.submit
 
-      expect(post_event_page).to have_location(
-        "123 Main St, Brisbane, Australia http://example.com",
-      )
+      expect(post_event_page).to have_location(location)
       expect(page).to have_css(".event-location a[href='http://example.com']")
     end
   end
@@ -128,8 +128,10 @@ describe "Post event", type: :system do
       end
 
       title = "My FR test meetup event"
-      raw =
-        "[event showLocalTime='true' start='2025-09-07 17:30' timezone='Europe/Paris']\n[/event]"
+      raw = <<~MD
+        [event showLocalTime='true' start='2025-09-07 17:30' timezone='Europe/Paris']
+        [/event]
+      MD
       post = PostCreator.create(admin, title:, raw:)
 
       visit(post.topic.url)
@@ -211,8 +213,10 @@ describe "Post event", type: :system do
 
   it "shows '-' for expired recurring events instead of dates" do
     title = "An expired recurring event"
-    raw =
-      "[event start='2024-01-01 10:00' recurrenceUntil='2025-07-31' recurrence='every_week']\n[/event]"
+    raw = <<~MD
+      [event start='2024-01-01 10:00' recurrenceUntil='2025-07-31' recurrence='every_week']
+      [/event]
+    MD
     post = PostCreator.create!(admin, title:, raw:)
 
     visit(post.topic.url)
@@ -238,17 +242,22 @@ describe "Post event", type: :system do
 
     def verify_event_time(viewer:, time:, expected_month: nil, expected_day: nil, expected_time:)
       freeze_time(time) do
-        page.driver.with_playwright_page { |pw_page| pw_page.clock.install(time:) }
-
-        title = "Weekly recurring event"
-        raw =
-          "[event start='2025-10-15 11:00' timezone='America/New_York' recurrence='every_week']\n[/event]"
+        title = "Weekly recurring event #{SecureRandom.hex(4)}"
+        raw = <<~MD
+          [event start='2025-10-15 11:00' timezone='America/New_York' recurrence='every_week']
+          [/event]
+        MD
         post = PostCreator.create!(admin, title:, raw:)
 
         event = DiscoursePostEvent::Event.find_by(post:)
         event.set_next_date
 
         sign_in(viewer)
+
+        # Install Playwright clock **after** sign_in (which may navigate) but before
+        # visiting the topic, so moment() calls use the frozen time
+        page.driver.with_playwright_page { |pw_page| pw_page.clock.install(time:) }
+
         visit(post.topic.url)
 
         expect(page).to have_css(".event-date .month", text: expected_month) if expected_month
