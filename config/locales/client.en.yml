@@ -6550,6 +6550,7 @@ en:
               recover: Recover a topic.
               read_lists: Read topic lists like top, new, latest, etc. RSS is also supported.
               status: "Update a topic's status. Status: closed, archive, visible, pinned. Enabled: true, false. Specify a category_id here and in the request payload to only allow status changes on topics in that category."
+              change_owner: Change the ownership of posts in a topic.
             posts:
               edit: Edit any post or a specific one.
               delete: Delete a post.
