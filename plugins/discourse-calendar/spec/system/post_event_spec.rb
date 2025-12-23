@@ -266,7 +266,7 @@ describe "Post event", type: :system do
       end
     end
 
-    context "when viewer is in Europe/Paris timezone" do
+    context "when viewer is in Europe/Paris timezone", timezone: "Europe/Paris" do
       it "shows correct time before any DST transition" do
         # Oct 14, 2025 - Both Europe and US are in summer time
         # 11:00 AM EDT = 15:00 UTC = 17:00 CEST = 5:00 PM
@@ -304,7 +304,7 @@ describe "Post event", type: :system do
       end
     end
 
-    context "when viewer is in America/New_York timezone" do
+    context "when viewer is in America/New_York timezone", timezone: "America/New_York" do
       it "shows 11:00 AM before US DST ends" do
         verify_event_time(
           viewer: us_viewer,
