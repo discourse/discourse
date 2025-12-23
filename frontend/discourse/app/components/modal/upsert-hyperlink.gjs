@@ -149,18 +149,22 @@ export default class UpsertHyperlink extends Component {
 
     if (typeof linkUrl === "string") {
       try {
-        linkUrl = encodeURI(decodeURI(linkUrl));
-      } catch {
-        try {
-          let withPercentEncoded = linkUrl.replace(
-            /%(?![0-9A-Fa-f]{2})/g,
-            "%25"
-          );
-          linkUrl = encodeURI(decodeURI(withPercentEncoded));
-        } catch {
-          // give up and do something
-          linkUrl = encodeURI(linkUrl);
+        // Ensure any loose % characters are encoded before passing to URL constructor
+        // this is technically an invalid URL, but err ont the relaxed side
+        const safeLinkUrl = linkUrl.replace(/%(?![0-9A-Fa-f]{2})/g, "%25");
+        const parsed = new URL(safeLinkUrl, window.location.origin);
+        linkUrl = parsed.toString();
+
+        // new URL("https://example.com").toString() -> https://example.com/
+        if (
+          linkUrl.endsWith("/") &&
+          !safeLinkUrl.endsWith("/") &&
+          parsed.pathname === "/"
+        ) {
+          linkUrl = linkUrl.slice(0, -1);
         }
+      } catch {
+        linkUrl = encodeURI(linkUrl);
       }
     }
 
