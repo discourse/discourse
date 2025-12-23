@@ -273,6 +273,15 @@
       width: 100%;
       margin: 0;
     }
+
+    .editing-localization-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.25em;
+      margin: 0.25em;
+      font-size: var(--font-down-1);
+      color: var(--primary-medium);
+    }
   }
 
   .edit-category__wrapper {
