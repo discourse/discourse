@@ -434,6 +434,13 @@ en:
           fields:
             custom_field_name:
               label: "User Custom Field name"
+        set_topic_timer:
+          title: Set Topic Timer
+          fields:
+            type: 
+              label: Timer Type
+            duration:
+              label: Timer Duration
       unnamed_automation: "Unnamed automation"
 
       models:
