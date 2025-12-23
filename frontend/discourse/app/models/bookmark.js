@@ -99,6 +99,10 @@ export default class Bookmark extends RestModel {
 
   @discourseComputed("highest_post_number", "url")
   lastPostUrl(highestPostNumber) {
+    // For bookmarks without topic_id (e.g., plugins), use bookmarkable_url
+    if (!this.topic_id) {
+      return this.bookmarkable_url;
+    }
     return this.urlForPostNumber(highestPostNumber);
   }
 
