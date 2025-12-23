@@ -731,6 +731,13 @@ RSpec.describe Upload do
     end
   end
 
+  describe ".sha1_from_base62_encoded" do
+    it "rejects base62 strings that are too long" do
+      long_base62 = "A" * 1000
+      expect(Upload.sha1_from_base62_encoded(long_base62)).to be_nil
+    end
+  end
+
   def enable_secure_uploads
     setup_s3
     SiteSetting.secure_uploads = true
