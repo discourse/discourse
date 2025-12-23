@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component, { Input } from "@ember/component";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
@@ -10,7 +10,6 @@ import { on as onEvent } from "@ember-decorators/object";
 import GroupImapEmailSettings from "discourse/components/group-imap-email-settings";
 import GroupManageSaveButton from "discourse/components/group-manage-save-button";
 import GroupSmtpEmailSettings from "discourse/components/group-smtp-email-settings";
-import discourseComputed from "discourse/lib/decorators";
 import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -33,29 +32,26 @@ export default class GroupManageEmailSettings extends Component {
     );
   }
 
-  @discourseComputed(
+  @computed(
     "emailSettingsValid",
     "group.smtp_enabled",
     "group.imap_enabled"
   )
-  enableImapSettings(emailSettingsValid, smtpEnabled, imapEnabled) {
-    return smtpEnabled && (emailSettingsValid || imapEnabled);
+  get enableImapSettings() {
+    return this.group?.smtp_enabled && (this.emailSettingsValid || this.group?.imap_enabled);
   }
 
-  @discourseComputed(
+  @computed(
     "smtpSettingsValid",
     "imapSettingsValid",
     "group.smtp_enabled",
     "group.imap_enabled"
   )
-  emailSettingsValid(
-    smtpSettingsValid,
-    imapSettingsValid,
-    smtpEnabled,
-    imapEnabled
+  get emailSettingsValid(
+    
   ) {
     return (
-      (!smtpEnabled || smtpSettingsValid) && (!imapEnabled || imapSettingsValid)
+      (!this.group?.smtp_enabled || this.smtpSettingsValid) && (!this.group?.imap_enabled || this.imapSettingsValid)
     );
   }
 

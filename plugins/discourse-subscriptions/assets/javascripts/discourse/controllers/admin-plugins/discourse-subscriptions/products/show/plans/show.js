@@ -1,8 +1,7 @@
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 import DiscourseURL from "discourse/lib/url";
 
 const RECURRING = "recurring";
@@ -13,24 +12,24 @@ export default class AdminPluginsDiscourseSubscriptionsProductsShowPlansShowCont
   @alias("model.plan.currency") selectedCurrency;
   @alias("model.plan.interval") selectedInterval;
 
-  @discourseComputed("model.plan.metadata.group_name")
-  selectedGroup(groupName) {
-    return groupName || "no-group";
+  @computed("model.plan.metadata.group_name")
+  get selectedGroup() {
+    return this.model?.plan?.metadata?.group_name || "no-group";
   }
 
-  @discourseComputed("model.groups")
-  availableGroups(groups) {
+  @computed("model.groups")
+  get availableGroups() {
     return [
       {
         id: null,
         name: "no-group",
       },
-      ...groups,
+      ...(this.model?.groups || []),
     ];
   }
 
-  @discourseComputed
-  currencies() {
+  @computed
+  get currencies() {
     return [
       { id: "AUD", name: "AUD" },
       { id: "CAD", name: "CAD" },
@@ -50,8 +49,8 @@ export default class AdminPluginsDiscourseSubscriptionsProductsShowPlansShowCont
     ];
   }
 
-  @discourseComputed
-  availableIntervals() {
+  @computed
+  get availableIntervals() {
     return [
       { id: "day", name: "day" },
       { id: "week", name: "week" },
@@ -60,14 +59,14 @@ export default class AdminPluginsDiscourseSubscriptionsProductsShowPlansShowCont
     ];
   }
 
-  @discourseComputed("model.plan.isNew")
-  planFieldDisabled(isNew) {
-    return !isNew;
+  @computed("model.plan.isNew")
+  get planFieldDisabled() {
+    return !this.model?.plan?.isNew;
   }
 
-  @discourseComputed("model.product.id")
-  productId(id) {
-    return id;
+  @computed("model.product.id")
+  get productId() {
+    return this.model?.product?.id;
   }
 
   redirect(product_id) {

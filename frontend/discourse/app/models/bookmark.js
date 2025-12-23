@@ -5,7 +5,6 @@ import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { formattedReminderTime } from "discourse/lib/bookmark";
-import discourseComputed from "discourse/lib/decorators";
 import { longDate } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
 import { applyModelTransformations } from "discourse/lib/model-transformers";
@@ -97,9 +96,9 @@ export default class Bookmark extends RestModel {
     return this.pinned ? "unpin" : "pin";
   }
 
-  @discourseComputed("highest_post_number", "url")
-  lastPostUrl(highestPostNumber) {
-    return this.urlForPostNumber(highestPostNumber);
+  @computed("highest_post_number", "url")
+  get lastPostUrl() {
+    return this.urlForPostNumber(this.highest_post_number);
   }
 
   // Helper to build a Url with a post number
@@ -112,62 +111,62 @@ export default class Bookmark extends RestModel {
   }
 
   // returns createdAt if there's no bumped date
-  @discourseComputed("bumped_at", "createdAt")
-  bumpedAt(bumped_at, createdAt) {
-    if (bumped_at) {
-      return new Date(bumped_at);
+  @computed("bumped_at", "createdAt")
+  get bumpedAt() {
+    if (this.bumped_at) {
+      return new Date(this.bumped_at);
     } else {
-      return createdAt;
+      return this.createdAt;
     }
   }
 
-  @discourseComputed("bumpedAt", "createdAt")
-  bumpedAtTitle(bumpedAt, createdAt) {
+  @computed("bumpedAt", "createdAt")
+  get bumpedAtTitle() {
     const BUMPED_FORMAT = "YYYY-MM-DDTHH:mm:ss";
-    if (moment(bumpedAt).isValid() && moment(createdAt).isValid()) {
-      const bumpedAtStr = moment(bumpedAt).format(BUMPED_FORMAT);
-      const createdAtStr = moment(createdAt).format(BUMPED_FORMAT);
+    if (moment(this.bumpedAt).isValid() && moment(this.createdAt).isValid()) {
+      const bumpedAtStr = moment(this.bumpedAt).format(BUMPED_FORMAT);
+      const createdAtStr = moment(this.createdAt).format(BUMPED_FORMAT);
 
       return bumpedAtStr !== createdAtStr
         ? `${i18n("topic.created_at", {
-            date: longDate(createdAt),
-          })}\n${i18n("topic.bumped_at", { date: longDate(bumpedAt) })}`
-        : i18n("topic.created_at", { date: longDate(createdAt) });
+            date: longDate(this.createdAt),
+          })}\n${i18n("topic.bumped_at", { date: longDate(this.bumpedAt) })}`
+        : i18n("topic.created_at", { date: longDate(this.createdAt) });
     }
   }
 
-  @discourseComputed("name", "reminder_at")
-  reminderTitle(name, reminderAt) {
-    if (!isEmpty(reminderAt)) {
+  @computed("name", "reminder_at")
+  get reminderTitle() {
+    if (!isEmpty(this.reminder_at)) {
       return i18n("bookmarks.created_with_reminder_generic", {
         date: formattedReminderTime(
-          reminderAt,
+          this.reminder_at,
           this.currentUser?.user_option?.timezone || moment.tz.guess()
         ),
-        name: name || "",
+        name: this.name || "",
       });
     }
 
     return i18n("bookmarks.created_generic", {
-      name: name || "",
+      name: this.name || "",
     });
   }
 
-  @discourseComputed("created_at")
-  createdAt(created_at) {
-    return new Date(created_at);
+  @computed("created_at")
+  get createdAt() {
+    return new Date(this.created_at);
   }
 
-  @discourseComputed("tags")
-  visibleListTags(tags) {
-    if (!tags || !this.siteSettings.suppress_overlapping_tags_in_list) {
-      return tags;
+  @computed("tags")
+  get visibleListTags() {
+    if (!this.tags || !this.siteSettings.suppress_overlapping_tags_in_list) {
+      return this.tags;
     }
 
     const title = this.title;
     const newTags = [];
 
-    tags.forEach(function (tag) {
+    this.tags.forEach(function (tag) {
       if (!title.toLowerCase().includes(tag)) {
         newTags.push(tag);
       }
@@ -181,23 +180,23 @@ export default class Bookmark extends RestModel {
     return Category.findById(this.category_id);
   }
 
-  @discourseComputed("reminder_at", "currentUser")
-  formattedReminder(bookmarkReminderAt, currentUser) {
+  @computed("reminder_at", "currentUser")
+  get formattedReminder() {
     return capitalize(
       formattedReminderTime(
-        bookmarkReminderAt,
-        currentUser?.user_option?.timezone || moment.tz.guess()
+        this.reminder_at,
+        this.currentUser?.user_option?.timezone || moment.tz.guess()
       )
     );
   }
 
-  @discourseComputed("reminder_at")
-  reminderAtExpired(bookmarkReminderAt) {
-    return moment(bookmarkReminderAt) < moment();
+  @computed("reminder_at")
+  get reminderAtExpired() {
+    return moment(this.reminder_at) < moment();
   }
 
-  @discourseComputed()
-  topicForList() {
+  @computed()
+  get topicForList() {
     // for topic level bookmarks we want to jump to the last unread post URL,
     // which the topic-link helper does by default if no linked post number is
     // provided
@@ -213,13 +212,13 @@ export default class Bookmark extends RestModel {
     });
   }
 
-  @discourseComputed("bookmarkable_type")
-  bookmarkableTopicAlike(bookmarkable_type) {
-    return ["Topic", "Post"].includes(bookmarkable_type);
+  @computed("bookmarkable_type")
+  get bookmarkableTopicAlike() {
+    return ["Topic", "Post"].includes(this.bookmarkable_type);
   }
 
-  @discourseComputed("reminder_at", "name")
-  hasMetadata() {
+  @computed("reminder_at", "name")
+  get hasMetadata() {
     return this.reminder_at || this.name;
   }
 }

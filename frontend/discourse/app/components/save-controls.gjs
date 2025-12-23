@@ -1,9 +1,9 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { or } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 @classNames("controls", "save-button")
@@ -15,9 +15,9 @@ export default class SaveControls extends Component {
     this.set("saved", false);
   }
 
-  @discourseComputed("model.isSaving")
-  savingText(saving) {
-    return saving ? "saving" : "save";
+  @computed("model.isSaving")
+  get savingText() {
+    return this.model?.isSaving ? "saving" : "save";
   }
 
   <template>

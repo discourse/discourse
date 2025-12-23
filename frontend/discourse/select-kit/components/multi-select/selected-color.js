@@ -1,14 +1,14 @@
+import { computed } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
 import SelectedNameComponent from "discourse/select-kit/components/selected-name";
 
 @classNames("select-kit-selected-color")
 export default class SelectedColor extends SelectedNameComponent {
-  @discourseComputed("name")
-  footerContent(name) {
+  @computed("name")
+  get footerContent() {
     return htmlSafe(
-      `<span class="color-preview" style="background:#${name}"></span>`
+      `<span class="color-preview" style="background:#${this.name}"></span>`
     );
   }
 }

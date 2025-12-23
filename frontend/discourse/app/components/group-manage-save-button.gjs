@@ -1,12 +1,11 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import GroupFlairVisibilityWarning from "discourse/components/group-flair-visibility-warning";
 import GroupDefaultNotificationsModal from "discourse/components/modal/group-default-notifications";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -18,9 +17,9 @@ export default class GroupManageSaveButton extends Component {
   disabled = false;
   updateExistingUsers = null;
 
-  @discourseComputed("saving")
-  savingText(saving) {
-    return saving ? i18n("saving") : i18n("save");
+  @computed("saving")
+  get savingText() {
+    return this.saving ? i18n("saving") : i18n("save");
   }
 
   @action

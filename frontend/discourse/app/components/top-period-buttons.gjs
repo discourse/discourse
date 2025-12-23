@@ -1,17 +1,16 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import periodTitle from "discourse/helpers/period-title";
-import discourseComputed from "discourse/lib/decorators";
 
 @classNames("top-title-buttons")
 export default class TopPeriodButtons extends Component {
-  @discourseComputed("period")
-  periods(period) {
-    return this.site.get("periods").filter((p) => p !== period);
+  @computed("period")
+  get periods() {
+    return this.site.get("periods").filter((p) => p !== this.period);
   }
 
   @action

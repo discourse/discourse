@@ -1,24 +1,26 @@
 import Controller from "@ember/controller";
-import { action, get } from "@ember/object";
+import { action, computed, get } from "@ember/object";
 import discourseDebounce from "discourse/lib/debounce";
-import discourseComputed from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 
 export default class AdminDashboardReportsController extends Controller {
   filter = null;
 
-  @discourseComputed(
-    "model.[]",
-    "filter",
-    "siteSettings.dashboard_hidden_reports"
-  )
-  filteredReports(reports, filter) {
+  @computed("model.[]", "filter", "siteSettings.dashboard_hidden_reports")
+  get filteredReports() {
+    let reports = this.model;
+    const filter = this.filter;
+
     if (filter) {
-      filter = filter.toLowerCase();
+      const lowerCaseFilter = filter.toLowerCase();
       reports = reports.filter((report) => {
         return (
-          (get(report, "title") || "").toLowerCase().includes(filter) ||
-          (get(report, "description") || "").toLowerCase().includes(filter)
+          (get(report, "title") || "")
+            .toLowerCase()
+            .includes(lowerCaseFilter) ||
+          (get(report, "description") || "")
+            .toLowerCase()
+            .includes(lowerCaseFilter)
         );
       });
     }

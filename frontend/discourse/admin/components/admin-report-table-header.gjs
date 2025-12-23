@@ -1,5 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import {
   attributeBindings,
@@ -8,21 +9,20 @@ import {
   tagName,
 } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
-import discourseComputed from "discourse/lib/decorators";
 
 @tagName("th")
 @classNames("admin-report-table-header")
 @classNameBindings("label.mainProperty", "label.type", "isCurrentSort")
 @attributeBindings("label.title:title")
 export default class AdminReportTableHeader extends Component {
-  @discourseComputed("currentSortLabel.sortProperty", "label.sortProperty")
-  isCurrentSort(currentSortField, labelSortField) {
-    return currentSortField === labelSortField;
+  @computed("currentSortLabel.sortProperty", "label.sortProperty")
+  get isCurrentSort() {
+    return this.currentSortLabel?.sortProperty === this.label?.sortProperty;
   }
 
-  @discourseComputed("currentSortDirection")
-  sortIcon(currentSortDirection) {
-    return currentSortDirection === 1 ? "caret-up" : "caret-down";
+  @computed("currentSortDirection")
+  get sortIcon() {
+    return this.currentSortDirection === 1 ? "caret-up" : "caret-down";
   }
 
   <template>

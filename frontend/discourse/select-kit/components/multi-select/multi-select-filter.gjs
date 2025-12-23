@@ -1,21 +1,20 @@
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
-import discourseComputed from "discourse/lib/decorators";
 import SelectKitFilterComponent from "discourse/select-kit/components/select-kit/select-kit-filter";
 
 @classNames("multi-select-filter")
 export default class MultiSelectFilter extends SelectKitFilterComponent {
-  @discourseComputed("placeholder", "selectKit.hasSelection")
-  computedPlaceholder(placeholder, hasSelection) {
-    if (this.hidePlaceholderWithSelection && hasSelection) {
+  @computed("placeholder", "selectKit.hasSelection")
+  get computedPlaceholder() {
+    if (this.hidePlaceholderWithSelection && this.selectKit?.hasSelection) {
       return "";
     }
 
-    return isEmpty(placeholder) ? "" : placeholder;
+    return isEmpty(this.placeholder) ? "" : this.placeholder;
   }
 
   @action

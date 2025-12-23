@@ -8,7 +8,6 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import { fmt, propertyNotEqual, setting } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
@@ -44,30 +43,32 @@ export default class AdminUserIndexController extends Controller {
 
   @fmt("model.username_lower", userPath("%@/preferences")) preferencesPath;
 
-  @discourseComputed("model.customGroups")
-  customGroupIds(customGroups) {
-    return customGroups.map((group) => group.id);
+  @computed("model.customGroups")
+  get customGroupIds() {
+    return this.model?.customGroups?.map((group) => group.id);
   }
 
-  @discourseComputed("customGroupIdsBuffer", "customGroupIds")
-  customGroupsDirty(buffer, original) {
-    if (buffer === null) {
+  @computed("customGroupIdsBuffer", "customGroupIds")
+  get customGroupsDirty() {
+    if (this.customGroupIdsBuffer === null) {
       return false;
     }
 
-    return buffer.length === original.length
-      ? buffer.some((id) => !original.includes(id))
+    return this.customGroupIdsBuffer.length === this.customGroupIds.length
+      ? this.customGroupIdsBuffer.some(
+          (id) => !this.customGroupIds.includes(id)
+        )
       : true;
   }
 
-  @discourseComputed("model.automaticGroups")
-  automaticGroups(automaticGroups) {
-    return automaticGroups
-      .map((group) => {
+  @computed("model.automaticGroups")
+  get automaticGroups() {
+    return this.model?.automaticGroups
+      ?.map((group) => {
         const name = htmlSafe(group.name);
         return `<a href="/g/${name}">${name}</a>`;
       })
-      .join(", ");
+      ?.join(", ");
   }
 
   get associatedAccountsLoaded() {
@@ -80,22 +81,20 @@ export default class AdminUserIndexController extends Controller {
       ?.join(", ");
   }
 
-  @discourseComputed("model.user_fields.[]")
-  userFields(userFields) {
-    return this.site.collectUserFields(userFields);
+  @computed("model.user_fields.[]")
+  get userFields() {
+    return this.site.collectUserFields(this.model?.user_fields);
   }
 
-  @discourseComputed(
-    "model.can_delete_all_posts",
-    "model.admin",
-    "model.post_count"
-  )
-  deleteAllPostsExplanation(canDeleteAllPosts, admin, postCount) {
-    if (canDeleteAllPosts) {
+  @computed("model.can_delete_all_posts", "model.admin", "model.post_count")
+  get deleteAllPostsExplanation() {
+    if (this.model?.can_delete_all_posts) {
       return null;
-    } else if (admin) {
+    } else if (this.model?.admin) {
       return i18n("admin.user.delete_posts_forbidden_because_admin");
-    } else if (postCount > this.siteSettings.delete_all_posts_max) {
+    } else if (
+      this.model?.post_count > this.siteSettings.delete_all_posts_max
+    ) {
       return i18n("admin.user.cant_delete_all_too_many_posts", {
         count: this.siteSettings.delete_all_posts_max,
       });
@@ -106,11 +105,11 @@ export default class AdminUserIndexController extends Controller {
     }
   }
 
-  @discourseComputed("model.canBeDeleted", "model.admin")
-  deleteExplanation(canBeDeleted, admin) {
-    if (canBeDeleted) {
+  @computed("model.canBeDeleted", "model.admin")
+  get deleteExplanation() {
+    if (this.model?.canBeDeleted) {
       return null;
-    } else if (admin) {
+    } else if (this.model?.admin) {
       return i18n("admin.user.delete_forbidden_because_admin");
     } else {
       return i18n("admin.user.delete_forbidden", {
@@ -119,9 +118,9 @@ export default class AdminUserIndexController extends Controller {
     }
   }
 
-  @discourseComputed("model.username")
-  postEditsByEditorFilter(username) {
-    return { editor: username };
+  @computed("model.username")
+  get postEditsByEditorFilter() {
+    return { editor: this.model?.username };
   }
 
   @computed("model.id", "currentUser.id")
@@ -159,9 +158,9 @@ export default class AdminUserIndexController extends Controller {
       .catch(() => this.dialog.alert(i18n("generic_error")));
   }
 
-  @discourseComputed("ssoLastPayload")
-  ssoPayload(lastPayload) {
-    return lastPayload.split("&");
+  @computed("ssoLastPayload")
+  get ssoPayload() {
+    return this.ssoLastPayload.split("&");
   }
 
   @action

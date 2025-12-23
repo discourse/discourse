@@ -1,14 +1,13 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
-import { action } from "@ember/object";
-import discourseComputed from "discourse/lib/decorators";
+import { action, computed } from "@ember/object";
 import TagGroupChooser from "discourse/select-kit/components/tag-group-chooser";
 
 export default class TagGroupList extends Component {
-  @discourseComputed("value")
-  selectedTagGroups(value) {
-    return value.split("|").filter(Boolean);
+  @computed("value")
+  get selectedTagGroups() {
+    return this.value.split("|").filter(Boolean);
   }
 
   @action

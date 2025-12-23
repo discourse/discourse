@@ -1,14 +1,13 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { classNames, tagName } from "@ember-decorators/component";
 import ScreenedIpAddress from "discourse/admin/models/screened-ip-address";
 import DButton from "discourse/components/d-button";
 import TextField from "discourse/components/text-field";
-import discourseComputed from "discourse/lib/decorators";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
 
@@ -31,9 +30,9 @@ export default class ScreenedIpAddressForm extends Component {
   formSubmitted = false;
   actionName = "block";
 
-  @discourseComputed("siteSettings.use_admin_ip_allowlist")
-  actionNames(adminAllowlistEnabled) {
-    if (adminAllowlistEnabled) {
+  @computed("siteSettings.use_admin_ip_allowlist")
+  get actionNames() {
+    if (this.siteSettings?.use_admin_ip_allowlist) {
       return [
         { id: "block", name: i18n("admin.logs.screened_ips.actions.block") },
         {

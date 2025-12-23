@@ -1,13 +1,12 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { classNameBindings } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 @classNameBindings("docked")
@@ -20,33 +19,33 @@ export default class TopicProgress extends Component {
 
   _streamPercentage = null;
 
-  @discourseComputed(
+  @computed(
     "postStream.loaded",
     "topic.currentPost",
     "postStream.filteredPostsCount"
   )
-  hideProgress(loaded, currentPost, filteredPostsCount) {
-    const hideOnShortStream = this.site.desktopView && filteredPostsCount < 2;
-    return !loaded || !currentPost || hideOnShortStream;
+  get hideProgress() {
+    const hideOnShortStream = this.site.desktopView && this.postStream?.filteredPostsCount < 2;
+    return !this.postStream?.loaded || !this.topic?.currentPost || hideOnShortStream;
   }
 
-  @discourseComputed("postStream.filteredPostsCount")
-  hugeNumberOfPosts(filteredPostsCount) {
+  @computed("postStream.filteredPostsCount")
+  get hugeNumberOfPosts() {
     return (
-      filteredPostsCount >= this.siteSettings.short_progress_text_threshold
+      this.postStream?.filteredPostsCount >= this.siteSettings.short_progress_text_threshold
     );
   }
 
-  @discourseComputed("progressPosition", "topic.last_read_post_id")
-  showBackButton(position, lastReadId) {
-    if (!lastReadId) {
+  @computed("progressPosition", "topic.last_read_post_id")
+  get showBackButton() {
+    if (!this.topic?.last_read_post_id) {
       return;
     }
 
     const stream = this.get("postStream.stream");
-    const readPos = stream.indexOf(lastReadId) || 0;
+    const readPos = stream.indexOf(this.topic?.last_read_post_id) || 0;
 
-    return readPos < stream.length - 1 && readPos > position;
+    return readPos < stream.length - 1 && readPos > this.progressPosition;
   }
 
   _topicScrolled(event) {
@@ -63,9 +62,9 @@ export default class TopicProgress extends Component {
     }
   }
 
-  @discourseComputed("_streamPercentage")
-  progressStyle(_streamPercentage) {
-    return `--progress-bg-width: ${_streamPercentage || 0}%`;
+  @computed("_streamPercentage")
+  get progressStyle() {
+    return `--progress-bg-width: ${this._streamPercentage || 0}%`;
   }
 
   didInsertElement() {

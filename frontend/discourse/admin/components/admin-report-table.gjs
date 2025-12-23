@@ -1,13 +1,12 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { classNameBindings, classNames } from "@ember-decorators/component";
 import AdminReportTableHeader from "discourse/admin/components/admin-report-table-header";
 import AdminReportTableRow from "discourse/admin/components/admin-report-table-row";
 import DButton from "discourse/components/d-button";
-import discourseComputed from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
 
@@ -23,82 +22,82 @@ export default class AdminReportTable extends Component {
 
   page = 0;
 
-  @discourseComputed("model.computedLabels.length")
-  twoColumns(labelsLength) {
-    return labelsLength === 2;
+  @computed("model.computedLabels.length")
+  get twoColumns() {
+    return this.model?.computedLabels?.length === 2;
   }
 
-  @discourseComputed(
+  @computed(
     "totalsForSample",
     "options.total",
     "model.dates_filtering"
   )
-  showTotalForSample(totalsForSample, total, datesFiltering) {
+  get showTotalForSample() {
     // check if we have at least one cell which contains a value
-    const sum = totalsForSample
+    const sum = this.totalsForSample
       .map((t) => t.value)
       .filter((item) => item != null)
       .reduce((s, v) => s + v, 0);
 
-    return sum >= 1 && total && datesFiltering;
+    return sum >= 1 && this.options?.total && this.model?.dates_filtering;
   }
 
-  @discourseComputed("model.total", "options.total", "twoColumns")
-  showTotal(reportTotal, total, twoColumns) {
-    return reportTotal && total && twoColumns;
+  @computed("model.total", "options.total", "twoColumns")
+  get showTotal() {
+    return this.model?.total && this.options?.total && this.twoColumns;
   }
 
-  @discourseComputed(
+  @computed(
     "model.{average,data}",
     "totalsForSample.1.value",
     "twoColumns"
   )
-  showAverage(model, sampleTotalValue, hasTwoColumns) {
+  get showAverage() {
     return (
-      model.average &&
-      model.data.length > 0 &&
-      sampleTotalValue &&
-      hasTwoColumns
+      this.model?.average &&
+      this.model?.data.length > 0 &&
+      this.totalsForSample?.[1]?.value &&
+      this.twoColumns
     );
   }
 
-  @discourseComputed("totalsForSample.1.value", "model.data.length")
-  averageForSample(totals, count) {
+  @computed("totalsForSample.1.value", "model.data.length")
+  get averageForSample() {
     const averageLabel = this.model.computedLabels.at(-1);
-    return averageLabel.compute({ y: (totals / count).toFixed(0) })
+    return averageLabel.compute({ y: (this.totalsForSample?.[1]?.value / this.model?.data?.length).toFixed(0) })
       .formattedValue;
   }
 
-  @discourseComputed("model.data.length")
-  showSortingUI(dataLength) {
-    return dataLength >= 5;
+  @computed("model.data.length")
+  get showSortingUI() {
+    return this.model?.data?.length >= 5;
   }
 
-  @discourseComputed("totalsForSampleRow", "model.computedLabels")
-  totalsForSample(row, labels) {
-    return labels.map((label) => {
-      const computedLabel = label.compute(row);
+  @computed("totalsForSampleRow", "model.computedLabels")
+  get totalsForSample() {
+    return this.model?.computedLabels?.map((label) => {
+      const computedLabel = label.compute(this.totalsForSampleRow);
       computedLabel.type = label.type;
       computedLabel.property = label.mainProperty;
       return computedLabel;
     });
   }
 
-  @discourseComputed("model.total", "model.computedLabels")
-  formattedTotal(total, labels) {
-    const totalLabel = labels.at(-1);
-    return totalLabel.compute({ y: total }).formattedValue;
+  @computed("model.total", "model.computedLabels")
+  get formattedTotal() {
+    const totalLabel = this.model?.computedLabels?.at(-1);
+    return totalLabel.compute({ y: this.model?.total }).formattedValue;
   }
 
-  @discourseComputed("model.data", "model.computedLabels")
-  totalsForSampleRow(rows, labels) {
-    if (!rows || !rows.length) {
+  @computed("model.data", "model.computedLabels")
+  get totalsForSampleRow() {
+    if (!this.model?.data || !this.model?.data?.length) {
       return {};
     }
 
     let totalsRow = {};
 
-    labels.forEach((label) => {
+    this.model?.computedLabels?.forEach((label) => {
       const reducer = (sum, row) => {
         const computedLabel = label.compute(row);
         const value = computedLabel.value;
@@ -110,19 +109,19 @@ export default class AdminReportTable extends Component {
         }
       };
 
-      const total = rows.reduce(reducer, 0);
+      const total = this.model?.data?.reduce(reducer, 0);
       totalsRow[label.mainProperty] =
-        label.type === "percent" ? Math.round(total / rows.length) : total;
+        label.type === "percent" ? Math.round(total / this.model?.data?.length) : total;
     });
 
     return totalsRow;
   }
 
-  @discourseComputed("sortLabel", "sortDirection", "model.data.[]")
-  sortedData(sortLabel, sortDirection, data) {
-    data = makeArray(data);
+  @computed("sortLabel", "sortDirection", "model.data.[]")
+  get sortedData() {
+    const data = makeArray(this.model?.data);
 
-    if (sortLabel) {
+    if (this.sortLabel) {
       const compare = (label, direction) => {
         return (a, b) => {
           const aValue = label.compute(a, { useSortProperty: true }).value;
@@ -132,30 +131,30 @@ export default class AdminReportTable extends Component {
         };
       };
 
-      return data.sort(compare(sortLabel, sortDirection));
+      return data.sort(compare(this.sortLabel, this.sortDirection));
     }
 
     return data;
   }
 
-  @discourseComputed("sortedData.[]", "perPage", "page")
-  paginatedData(data, perPage, page) {
-    if (perPage < data.length) {
-      const start = perPage * page;
-      return data.slice(start, start + perPage);
+  @computed("sortedData.[]", "perPage", "page")
+  get paginatedData() {
+    if (this.perPage < this.sortedData?.length) {
+      const start = this.perPage * this.page;
+      return this.sortedData?.slice(start, start + this.perPage);
     }
 
-    return data;
+    return this.sortedData;
   }
 
-  @discourseComputed("model.data", "perPage", "page")
-  pages(data, perPage, page) {
-    if (!data || data.length <= perPage) {
+  @computed("model.data", "perPage", "page")
+  get pages() {
+    if (!this.model?.data || this.model?.data?.length <= this.perPage) {
       return [];
     }
 
     const pagesIndexes = [];
-    for (let i = 0; i < Math.ceil(data.length / perPage); i++) {
+    for (let i = 0; i < Math.ceil(this.model?.data?.length / this.perPage); i++) {
       pagesIndexes.push(i);
     }
 
@@ -163,13 +162,13 @@ export default class AdminReportTable extends Component {
       return {
         page: v + 1,
         index: v,
-        class: v === page ? "is-current" : null,
+        class: v === this.page ? "is-current" : null,
       };
     });
 
     if (pages.length > PAGES_LIMIT) {
-      const before = Math.max(0, page - PAGES_LIMIT / 2);
-      const after = Math.max(PAGES_LIMIT, page + PAGES_LIMIT / 2);
+      const before = Math.max(0, this.page - PAGES_LIMIT / 2);
+      const after = Math.max(PAGES_LIMIT, this.page + PAGES_LIMIT / 2);
       pages = pages.slice(before, after);
     }
 

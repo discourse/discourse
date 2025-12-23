@@ -1,8 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
-import { action } from "@ember/object";
-import discourseComputed from "discourse/lib/decorators";
+import { action, computed } from "@ember/object";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 
 export default class ComposerUserSelector extends Component {
@@ -16,12 +15,12 @@ export default class ComposerUserSelector extends Component {
     }
   }
 
-  @discourseComputed("recipients")
-  splitRecipients(recipients) {
-    if (Array.isArray(recipients)) {
-      return recipients;
+  @computed("recipients")
+  get splitRecipients() {
+    if (Array.isArray(this.recipients)) {
+      return this.recipients;
     }
-    return recipients ? recipients.split(",").filter(Boolean) : [];
+    return this.recipients ? this.recipients.split(",").filter(Boolean) : [];
   }
 
   _updateGroups(selected, newGroups) {

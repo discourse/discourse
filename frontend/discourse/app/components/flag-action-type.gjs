@@ -2,11 +2,11 @@
 import Component, { Input, Textarea } from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { computed } from "@ember/object";
 import { and, equal } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import concatClass from "discourse/helpers/concat-class";
-import discourseComputed from "discourse/lib/decorators";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import { i18n } from "discourse-i18n";
@@ -23,57 +23,57 @@ export default class FlagActionType extends Component {
     });
   }
 
-  @discourseComputed("flag.name_key")
-  wrapperClassNames(nameKey) {
-    return `flag-action-type ${nameKey}`;
+  @computed("flag.name_key")
+  get wrapperClassNames() {
+    return `flag-action-type ${this.flag?.name_key}`;
   }
 
-  @discourseComputed("flag.name_key")
-  customPlaceholder(nameKey) {
+  @computed("flag.name_key")
+  get customPlaceholder() {
     return applyValueTransformer(
       "flag-custom-placeholder",
-      i18n("flagging.custom_placeholder_" + nameKey, {
+      i18n("flagging.custom_placeholder_" + this.flag?.name_key, {
         defaultValue: i18n("flagging.custom_placeholder_notify_moderators"),
       }),
-      { nameKey }
+      { nameKey: this.flag?.name_key }
     );
   }
 
-  @discourseComputed("flag.name", "flag.name_key", "username")
-  formattedName(name, nameKey, username) {
-    if (["notify_user", "notify_moderators"].includes(nameKey)) {
-      return name.replace(/{{username}}|%{username}/, username);
+  @computed("flag.name", "flag.name_key", "username")
+  get formattedName() {
+    if (["notify_user", "notify_moderators"].includes(this.flag?.name_key)) {
+      return this.flag?.name?.replace(/{{username}}|%{username}/, this.username);
     } else {
       return applyValueTransformer(
         "flag-formatted-name",
-        i18n("flagging.formatted_name." + nameKey, {
-          defaultValue: name,
+        i18n("flagging.formatted_name." + this.flag?.name_key, {
+          defaultValue: this.flag?.name,
         }),
-        { nameKey }
+        { nameKey: this.flag?.name_key }
       );
     }
   }
 
-  @discourseComputed("flag", "selectedFlag")
-  selected(flag, selectedFlag) {
-    return flag === selectedFlag;
+  @computed("flag", "selectedFlag")
+  get selected() {
+    return this.flag === this.selectedFlag;
   }
 
-  @discourseComputed("flag.description", "flag.short_description")
-  description(long_description, short_description) {
-    return this.site.mobileView ? short_description : long_description;
+  @computed("flag.description", "flag.short_description")
+  get description() {
+    return this.site.mobileView ? this.flag?.short_description : this.flag?.description;
   }
 
-  @discourseComputed("message.length")
-  customMessageLengthClasses(messageLength) {
-    return messageLength < this.siteSettings.min_personal_message_post_length
+  @computed("message.length")
+  get customMessageLengthClasses() {
+    return this.message?.length < this.siteSettings.min_personal_message_post_length
       ? "too-short"
       : "ok";
   }
 
-  @discourseComputed("message.length")
-  customMessageLength(messageLength) {
-    const len = messageLength || 0;
+  @computed("message.length")
+  get customMessageLength() {
+    const len = this.message?.length || 0;
     const minLen = this.siteSettings.min_personal_message_post_length;
     if (len === 0) {
       return i18n("flagging.custom_message.at_least", { count: minLen });

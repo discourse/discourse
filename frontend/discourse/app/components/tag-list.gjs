@@ -1,11 +1,11 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { sort } from "@ember/object/computed";
 import { classNameBindings } from "@ember-decorators/component";
 import CategoryTitleLink from "discourse/components/category-title-link";
 import icon from "discourse/helpers/d-icon";
 import discourseTag from "discourse/helpers/discourse-tag";
-import discourseComputed from "discourse/lib/decorators";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 
@@ -20,23 +20,24 @@ export default class TagList extends Component {
 
   @sort("tags", "sortProperties") sortedTags;
 
-  @discourseComputed("titleKey")
-  title(titleKey) {
-    return titleKey && i18n(titleKey);
+  @computed("titleKey")
+  get title() {
+    return this.titleKey && i18n(this.titleKey);
   }
 
-  @discourseComputed("categoryId")
-  category(categoryId) {
-    return categoryId && Category.findById(categoryId);
+  @computed("categoryId")
+  get category() {
+    return this.categoryId && Category.findById(this.categoryId);
   }
 
-  @discourseComputed("category.fullSlug")
-  categoryClass(slug) {
-    return slug && `tag-list-${slug}`;
+  @computed("category.fullSlug")
+  get categoryClass() {
+    return this.category?.fullSlug && `tag-list-${this.category?.fullSlug}`;
   }
 
-  @discourseComputed("tagGroupName")
-  tagGroupNameClass(groupName) {
+  @computed("tagGroupName")
+  get tagGroupNameClass() {
+    let groupName = this.tagGroupName;
     if (groupName) {
       groupName = groupName
         .replace(/\s+/g, "-")

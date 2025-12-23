@@ -1,8 +1,8 @@
+import { computed } from "@ember/object";
 import { dasherize, underscore } from "@ember/string";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
-import discourseComputed from "discourse/lib/decorators";
 import RestModel from "discourse/models/rest";
 import I18n, { i18n } from "discourse-i18n";
 import Category from "./category";
@@ -20,37 +20,37 @@ export default class Reviewable extends RestModel {
     return json;
   }
 
-  @discourseComputed("type", "topic")
-  resolvedType(type, topic) {
+  @computed("type", "topic")
+  get resolvedType() {
     // Display "Queued Topic" if the post will create a topic
-    if (type === "ReviewableQueuedPost" && !topic) {
+    if (this.type === "ReviewableQueuedPost" && !this.topic) {
       return "ReviewableQueuedTopic";
     }
 
-    return type;
+    return this.type;
   }
 
-  @discourseComputed("resolvedType")
-  humanType(resolvedType) {
-    return i18n(`review.types.${underscore(resolvedType)}.title`, {
+  @computed("resolvedType")
+  get humanType() {
+    return i18n(`review.types.${underscore(this.resolvedType)}.title`, {
       defaultValue: "",
     });
   }
 
-  @discourseComputed("humanType")
-  humanTypeCssClass(humanType) {
-    return "-" + dasherize(humanType);
+  @computed("humanType")
+  get humanTypeCssClass() {
+    return "-" + dasherize(this.humanType);
   }
 
-  @discourseComputed("resolvedType")
-  humanNoun(resolvedType) {
-    return i18n(`review.types.${underscore(resolvedType)}.noun`, {
+  @computed("resolvedType")
+  get humanNoun() {
+    return i18n(`review.types.${underscore(this.resolvedType)}.noun`, {
       defaultValue: "reviewable",
     });
   }
 
-  @discourseComputed("humanNoun")
-  flaggedReviewableContextQuestion(humanNoun) {
+  @computed("humanNoun")
+  get flaggedReviewableContextQuestion() {
     const uniqueReviewableScores = uniqueItemsFromArray(
       this.reviewable_scores,
       "score_type.type"
@@ -59,7 +59,7 @@ export default class Reviewable extends RestModel {
     if (uniqueReviewableScores.length === 1) {
       if (uniqueReviewableScores[0].score_type.type === "notify_moderators") {
         return i18n("review.context_question.something_else_wrong", {
-          reviewable_type: humanNoun,
+          reviewable_type: this.humanNoun,
         });
       }
     }
@@ -75,12 +75,12 @@ export default class Reviewable extends RestModel {
 
     return i18n("review.context_question.is_this_post", {
       reviewable_human_score_types: listOfQuestions,
-      reviewable_type: humanNoun,
+      reviewable_type: this.humanNoun,
     });
   }
 
-  @discourseComputed("category_id")
-  category() {
+  @computed("category_id")
+  get category() {
     return Category.findById(this.category_id);
   }
 

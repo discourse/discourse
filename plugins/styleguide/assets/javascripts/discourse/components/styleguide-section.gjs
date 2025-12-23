@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { classNameBindings, tagName } from "@ember-decorators/component";
-import computed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import sectionTitle from "discourse/plugins/styleguide/discourse/helpers/section-title";
 
@@ -14,9 +14,9 @@ export default class StyleguideSection extends Component {
   }
 
   @computed("section")
-  sectionClass(section) {
-    if (section) {
-      return `${section.id}-examples`;
+  get sectionClass() {
+    if (this.section) {
+      return `${this.section.id}-examples`;
     }
   }
 

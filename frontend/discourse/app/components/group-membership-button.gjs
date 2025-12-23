@@ -1,11 +1,10 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import RequestGroupMembershipForm from "./modal/request-group-membership-form";
 
@@ -16,24 +15,24 @@ export default class GroupMembershipButton extends Component {
   @service dialog;
   @service modal;
 
-  @discourseComputed("model.public_admission", "userIsGroupUser")
-  canJoinGroup(publicAdmission, userIsGroupUser) {
-    return publicAdmission && !userIsGroupUser;
+  @computed("model.public_admission", "userIsGroupUser")
+  get canJoinGroup() {
+    return this.model?.public_admission && !this.userIsGroupUser;
   }
 
-  @discourseComputed("model.public_exit", "userIsGroupUser")
-  canLeaveGroup(publicExit, userIsGroupUser) {
-    return publicExit && userIsGroupUser;
+  @computed("model.public_exit", "userIsGroupUser")
+  get canLeaveGroup() {
+    return this.model?.public_exit && this.userIsGroupUser;
   }
 
-  @discourseComputed("model.allow_membership_requests", "userIsGroupUser")
-  canRequestMembership(allowMembershipRequests, userIsGroupUser) {
-    return allowMembershipRequests && !userIsGroupUser;
+  @computed("model.allow_membership_requests", "userIsGroupUser")
+  get canRequestMembership() {
+    return this.model?.allow_membership_requests && !this.userIsGroupUser;
   }
 
-  @discourseComputed("model.is_group_user")
-  userIsGroupUser(isGroupUser) {
-    return !!isGroupUser;
+  @computed("model.is_group_user")
+  get userIsGroupUser() {
+    return !!this.model?.is_group_user;
   }
 
   removeFromGroup() {

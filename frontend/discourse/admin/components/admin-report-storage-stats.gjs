@@ -1,12 +1,12 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import { setting } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
 import getUrl from "discourse/lib/get-url";
 import I18n, { i18n } from "discourse-i18n";
 
@@ -18,34 +18,34 @@ export default class AdminReportStorageStats extends Component {
 
   @alias("model.data.uploads") uploadStats;
 
-  @discourseComputed("backupStats")
-  showBackupStats(stats) {
-    return stats && this.currentUser.admin;
+  @computed("backupStats")
+  get showBackupStats() {
+    return this.backupStats && this.currentUser.admin;
   }
 
-  @discourseComputed("backupLocation")
-  backupLocationName(backupLocation) {
-    return i18n(`admin.backups.location.${backupLocation}`);
+  @computed("backupLocation")
+  get backupLocationName() {
+    return i18n(`admin.backups.location.${this.backupLocation}`);
   }
 
-  @discourseComputed("backupStats.used_bytes")
-  usedBackupSpace(bytes) {
-    return I18n.toHumanSize(bytes);
+  @computed("backupStats.used_bytes")
+  get usedBackupSpace() {
+    return I18n.toHumanSize(this.backupStats?.used_bytes);
   }
 
-  @discourseComputed("backupStats.free_bytes")
-  freeBackupSpace(bytes) {
-    return I18n.toHumanSize(bytes);
+  @computed("backupStats.free_bytes")
+  get freeBackupSpace() {
+    return I18n.toHumanSize(this.backupStats?.free_bytes);
   }
 
-  @discourseComputed("uploadStats.used_bytes")
-  usedUploadSpace(bytes) {
-    return I18n.toHumanSize(bytes);
+  @computed("uploadStats.used_bytes")
+  get usedUploadSpace() {
+    return I18n.toHumanSize(this.uploadStats?.used_bytes);
   }
 
-  @discourseComputed("uploadStats.free_bytes")
-  freeUploadSpace(bytes) {
-    return I18n.toHumanSize(bytes);
+  @computed("uploadStats.free_bytes")
+  get freeUploadSpace() {
+    return I18n.toHumanSize(this.uploadStats?.free_bytes);
   }
 
   <template>

@@ -11,7 +11,6 @@ import { htmlSafe } from "@ember/template";
 import AceEditor from "discourse/components/ace-editor";
 import icon from "discourse/helpers/d-icon";
 import { fmt } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { gt, lte } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -76,20 +75,20 @@ export default class AdminThemeEditor extends Component {
     );
   }
 
-  @discourseComputed("currentTargetName", "fieldName")
-  activeSectionMode(targetName, fieldName) {
-    if (fieldName === "color_definitions") {
+  @computed("currentTargetName", "fieldName")
+  get activeSectionMode() {
+    if (this.fieldName === "color_definitions") {
       return "scss";
     }
-    if (fieldName === "js") {
+    if (this.fieldName === "js") {
       return "javascript";
     }
-    return fieldName && fieldName.includes("scss") ? "scss" : "html";
+    return this.fieldName && this.fieldName.includes("scss") ? "scss" : "html";
   }
 
-  @discourseComputed("currentTargetName", "fieldName")
-  placeholder(targetName, fieldName) {
-    if (fieldName && fieldName === "color_definitions") {
+  @computed("currentTargetName", "fieldName")
+  get placeholder() {
+    if (this.fieldName && this.fieldName === "color_definitions") {
       const example =
         ":root {\n" +
         "  --mytheme-tertiary-or-highlight: #{dark-light-choose($tertiary, $highlight)};\n" +
@@ -121,18 +120,18 @@ export default class AdminThemeEditor extends Component {
     this.theme.setField(this.currentTargetName, this.fieldName, value);
   }
 
-  @discourseComputed("maximized")
-  maximizeIcon(maximized) {
-    return maximized ? "discourse-compress" : "discourse-expand";
+  @computed("maximized")
+  get maximizeIcon() {
+    return this.maximized ? "discourse-compress" : "discourse-expand";
   }
 
-  @discourseComputed(
+  @computed(
     "currentTargetName",
     "fieldName",
     "theme.theme_fields.@each.error"
   )
-  error(target, fieldName) {
-    return this.theme.getError(target, fieldName);
+  get error() {
+    return this.theme.getError(this.currentTargetName, this.fieldName);
   }
 
   @action

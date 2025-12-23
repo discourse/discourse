@@ -1,9 +1,8 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { alias, or, readOnly } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import PasswordValidationHelper from "discourse/lib/password-validation-helper";
@@ -34,11 +33,11 @@ export default class PasswordResetController extends Controller {
 
   lockImageUrl = getURL("/images/lock.svg");
 
-  @discourseComputed("securityKeyRequired", "selectedSecondFactorMethod")
-  displaySecurityKeyForm(securityKeyRequired, selectedSecondFactorMethod) {
+  @computed("securityKeyRequired", "selectedSecondFactorMethod")
+  get displaySecurityKeyForm() {
     return (
-      securityKeyRequired &&
-      selectedSecondFactorMethod === SECOND_FACTOR_METHODS.SECURITY_KEY
+      this.securityKeyRequired &&
+      this.selectedSecondFactorMethod === SECOND_FACTOR_METHODS.SECURITY_KEY
     );
   }
 
@@ -59,16 +58,16 @@ export default class PasswordResetController extends Controller {
     return this.passwordValidationHelper.passwordValidation;
   }
 
-  @discourseComputed()
-  continueButtonText() {
+  @computed()
+  get continueButtonText() {
     return i18n("password_reset.continue", {
       site_name: this.siteSettings.title,
     });
   }
 
-  @discourseComputed("redirectTo")
-  redirectHref(redirectTo) {
-    return getURL(redirectTo || "/");
+  @computed("redirectTo")
+  get redirectHref() {
+    return getURL(this.redirectTo || "/");
   }
 
   get showPasswordValidation() {

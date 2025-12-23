@@ -16,7 +16,6 @@ import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { propertyEqual } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { userPath } from "discourse/lib/url";
 import { or } from "discourse/truth-helpers";
@@ -74,9 +73,10 @@ export default class UserStreamItem extends Component {
     );
   }
 
-  @discourseComputed("item.draft_username", "item.username")
-  userUrl(draftUsername, username) {
-    return userPath((draftUsername || username).toLowerCase());
+  @computed("item.draft_username", "item.username")
+  get userUrl() {
+    const username = this.item?.draft_username || this.item?.username;
+    return username ? userPath(username.toLowerCase()) : "";
   }
 
   <template>

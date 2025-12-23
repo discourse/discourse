@@ -1,14 +1,14 @@
+import { computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
 import periodTitle from "discourse/helpers/period-title";
-import discourseComputed from "discourse/lib/decorators";
 import DropdownSelectBoxHeaderComponent from "discourse/select-kit/components/dropdown-select-box/dropdown-select-box-header";
 
 @classNames("period-chooser-header", "btn-flat")
 export default class PeriodChooserHeader extends DropdownSelectBoxHeaderComponent {
-  @discourseComputed("selectKit.isExpanded")
-  caretIcon(isExpanded) {
-    return isExpanded ? "caret-up" : "caret-down";
+  @computed("selectKit.isExpanded")
+  get caretIcon() {
+    return this.selectKit?.isExpanded ? "caret-up" : "caret-down";
   }
 
   <template>

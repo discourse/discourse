@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { alias, or } from "@ember/object/computed";
 import { next, schedule } from "@ember/runloop";
 import { classNames } from "@ember-decorators/component";
@@ -13,7 +13,6 @@ import TextField from "discourse/components/text-field";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
-import discourseComputed from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import { i18n } from "discourse-i18n";
@@ -54,31 +53,27 @@ export default class ComposerTitle extends Component {
     }
   }
 
-  @discourseComputed(
+  @computed(
     "composer.titleLength",
     "composer.missingTitleCharacters",
     "composer.minimumTitleLength",
     "lastValidatedAt",
     "isTitleFocused"
   )
-  validation(
-    titleLength,
-    missingTitleChars,
-    minimumTitleLength,
-    lastValidatedAt,
-    isTitleFocused
+  get validation(
+    
   ) {
     let reason;
-    if (isTitleFocused) {
+    if (this.isTitleFocused) {
       return;
     }
-    if (titleLength < 1) {
+    if (this.composer?.titleLength < 1) {
       reason = i18n("composer.error.title_missing");
-    } else if (missingTitleChars > 0) {
+    } else if (this.composer?.missingTitleCharacters > 0) {
       reason = i18n("composer.error.title_too_short", {
-        count: minimumTitleLength,
+        count: this.composer?.minimumTitleLength,
       });
-    } else if (titleLength > this.siteSettings.max_topic_title_length) {
+    } else if (this.composer?.titleLength > this.siteSettings.max_topic_title_length) {
       reason = i18n("composer.error.title_too_long", {
         count: this.siteSettings.max_topic_title_length,
       });
@@ -88,16 +83,16 @@ export default class ComposerTitle extends Component {
       return EmberObject.create({
         failed: true,
         reason,
-        lastShownAt: lastValidatedAt,
+        lastShownAt: this.lastValidatedAt,
       });
     }
   }
 
-  @discourseComputed("watchForLink")
-  titleMaxLength(watchForLink) {
+  @computed("watchForLink")
+  get titleMaxLength() {
     // maxLength gets in the way of pasting long links, so don't use it if featured links are allowed.
     // Validation will display a message if titles are too long.
-    return watchForLink ? null : this.siteSettings.max_topic_title_length;
+    return this.watchForLink ? null : this.siteSettings.max_topic_title_length;
   }
 
   @observes("composer.titleLength", "watchForLink")
@@ -223,12 +218,12 @@ export default class ComposerTitle extends Component {
     }
   }
 
-  @discourseComputed("composer.title", "composer.titleLength")
-  isAbsoluteUrl(title, titleLength) {
+  @computed("composer.title", "composer.titleLength")
+  get isAbsoluteUrl() {
     return (
-      titleLength > 0 &&
-      /^(https?:)?\/\/[\w\.\-]+/i.test(title) &&
-      !/\s/.test(title)
+      this.composer?.titleLength > 0 &&
+      /^(https?:)?\/\/[\w\.\-]+/i.test(this.composer?.title) &&
+      !/\s/.test(this.composer?.title)
     );
   }
 

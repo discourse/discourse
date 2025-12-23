@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component, { Input } from "@ember/component";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
@@ -11,7 +11,7 @@ import CreateInvite from "discourse/components/modal/create-invite";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ShareSource from "discourse/components/share-source";
 import lazyHash from "discourse/helpers/lazy-hash";
-import discourseComputed, { afterRender } from "discourse/lib/decorators";
+import { afterRender } from "discourse/lib/decorators";
 import { longDateNoYear } from "discourse/lib/formatter";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import Sharing from "discourse/lib/sharing";
@@ -61,30 +61,30 @@ export default class ShareTopicModal extends Component {
     }
   }
 
-  @discourseComputed("post.shareUrl", "topic.shareUrl")
-  url(postUrl, topicUrl) {
-    if (postUrl) {
-      return getAbsoluteURL(postUrl);
-    } else if (topicUrl) {
-      return getAbsoluteURL(topicUrl);
+  @computed("post.shareUrl", "topic.shareUrl")
+  get url() {
+    if (this.post?.shareUrl) {
+      return getAbsoluteURL(this.post?.shareUrl);
+    } else if (this.topic?.shareUrl) {
+      return getAbsoluteURL(this.topic?.shareUrl);
     }
   }
 
-  @discourseComputed("post.created_at", "post.wiki", "post.last_wiki_edit")
-  displayDate(createdAt, wiki, lastWikiEdit) {
-    const date = wiki && lastWikiEdit ? lastWikiEdit : createdAt;
+  @computed("post.created_at", "post.wiki", "post.last_wiki_edit")
+  get displayDate() {
+    const date = this.post?.wiki && this.post?.last_wiki_edit ? this.post?.last_wiki_edit : this.post?.created_at;
     return longDateNoYear(new Date(date));
   }
 
-  @discourseComputed(
+  @computed(
     "topic.{isPrivateMessage,invisible,category.read_restricted}"
   )
-  sources(topic) {
+  get sources() {
     const privateContext =
       this.siteSettings.login_required ||
-      topic?.isPrivateMessage ||
-      topic?.invisible ||
-      topic?.category?.read_restricted;
+      this.topic?.isPrivateMessage ||
+      this.topic?.invisible ||
+      this.topic?.category?.read_restricted;
 
     return Sharing.activeSources(this.siteSettings.share_links, privateContext);
   }

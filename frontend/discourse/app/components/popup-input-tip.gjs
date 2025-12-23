@@ -1,5 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { not, or, reads } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -9,7 +10,6 @@ import {
   tagName,
 } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
-import discourseComputed from "discourse/lib/decorators";
 
 @tagName("a")
 @classNameBindings(":popup-tip", "good", "bad", "lastShownAt::hide")
@@ -24,16 +24,16 @@ export default class PopupInputTip extends Component {
   @reads("validation.failed") bad;
   @not("bad") good;
 
-  @discourseComputed("bad")
-  role(bad) {
-    if (bad) {
+  @computed("bad")
+  get role() {
+    if (this.bad) {
       return "alert";
     }
   }
 
-  @discourseComputed("validation.reason")
-  ariaLabel(reason) {
-    return reason?.replace(/(<([^>]+)>)/gi, "");
+  @computed("validation.reason")
+  get ariaLabel() {
+    return this.validation?.reason?.replace(/(<([^>]+)>)/gi, "");
   }
 
   dismiss() {

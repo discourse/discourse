@@ -1,6 +1,6 @@
+import { computed } from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
 import RSVP from "rsvp";
-import discourseComputed from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import loadScript from "discourse/lib/load-script";
 import AdComponent from "./ad-component";
@@ -111,8 +111,8 @@ export default class AdbutlerAd extends AdComponent {
     scheduleOnce("afterRender", this, this._triggerAds);
   }
 
-  @discourseComputed
-  showAdbutlerAds() {
+  @computed
+  get showAdbutlerAds() {
     if (!this.currentUser) {
       return true;
     }
@@ -120,32 +120,28 @@ export default class AdbutlerAd extends AdComponent {
     return this.currentUser.show_adbutler_ads;
   }
 
-  @discourseComputed(
+  @computed(
     "publisherId",
     "showAdbutlerAds",
     "showToGroups",
     "showAfterPost",
     "showOnCurrentPage"
   )
-  showAd(
-    publisherId,
-    showAdbutlerAds,
-    showToGroups,
-    showAfterPost,
-    showOnCurrentPage
+  get showAd(
+    
   ) {
     return (
-      publisherId &&
-      showAdbutlerAds &&
-      showToGroups &&
-      showAfterPost &&
-      showOnCurrentPage
+      this.publisherId &&
+      this.showAdbutlerAds &&
+      this.showToGroups &&
+      this.showAfterPost &&
+      this.showOnCurrentPage
     );
   }
 
-  @discourseComputed("postNumber")
-  showAfterPost(postNumber) {
-    if (!postNumber) {
+  @computed("postNumber")
+  get showAfterPost() {
+    if (!this.postNumber) {
       return true;
     }
     return this.isNthPost(parseInt(this.siteSettings.adbutler_nth_post, 10));

@@ -1,7 +1,7 @@
+import { computed } from "@ember/object";
 import { and } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import AdComponent from "./ad-component";
 
@@ -145,33 +145,33 @@ export default class AmazonProductLinks extends AdComponent {
     super.init();
   }
 
-  @discourseComputed("amazon_width", "amazon_height")
-  adWrapperStyle(w, h) {
-    return htmlSafe(`width: ${w}px; height: ${h}px;`);
+  @computed("amazon_width", "amazon_height")
+  get adWrapperStyle() {
+    return htmlSafe(`width: ${this.amazon_width}px; height: ${this.amazon_height}px;`);
   }
 
-  @discourseComputed("mobile_amazon_width", "mobile_amazon_height")
-  adWrapperStyleMobile(w, h) {
-    return htmlSafe(`width: ${w}px; height: ${h}px;`);
+  @computed("mobile_amazon_width", "mobile_amazon_height")
+  get adWrapperStyleMobile() {
+    return htmlSafe(`width: ${this.mobile_amazon_width}px; height: ${this.mobile_amazon_height}px;`);
   }
 
-  @discourseComputed("mobile_amazon_width")
-  adTitleStyleMobile(w) {
-    return htmlSafe(`width: ${w}px;`);
+  @computed("mobile_amazon_width")
+  get adTitleStyleMobile() {
+    return htmlSafe(`width: ${this.mobile_amazon_width}px;`);
   }
 
-  @discourseComputed("user_input")
-  userInput(userInput) {
-    return htmlSafe(`${userInput}`);
+  @computed("user_input")
+  get userInput() {
+    return htmlSafe(`${this.user_input}`);
   }
 
-  @discourseComputed("user_input_mobile")
-  userInputMobile(userInput) {
-    return htmlSafe(`${userInput}`);
+  @computed("user_input_mobile")
+  get userInputMobile() {
+    return htmlSafe(`${this.user_input_mobile}`);
   }
 
-  @discourseComputed
-  showAmazonAds() {
+  @computed
+  get showAmazonAds() {
     if (!this.currentUser) {
       return true;
     }
@@ -179,9 +179,9 @@ export default class AmazonProductLinks extends AdComponent {
     return this.currentUser.show_amazon_ads;
   }
 
-  @discourseComputed("postNumber")
-  showAfterPost(postNumber) {
-    if (!postNumber) {
+  @computed("postNumber")
+  get showAfterPost() {
+    if (!this.postNumber) {
       return true;
     }
 

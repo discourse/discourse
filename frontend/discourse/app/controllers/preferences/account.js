@@ -8,7 +8,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
 import { exportUserArchive } from "discourse/lib/export-csv";
 import getURL from "discourse/lib/get-url";
 import { applyValueTransformer } from "discourse/lib/transformer";
@@ -65,8 +64,8 @@ export default class AccountController extends Controller {
     ).canCheckEmails;
   }
 
-  @discourseComputed()
-  nameInstructions() {
+  @computed()
+  get nameInstructions() {
     return i18n(
       this.site.full_name_required_for_signup
         ? "user.name.instructions_required"
@@ -74,10 +73,10 @@ export default class AccountController extends Controller {
     );
   }
 
-  @discourseComputed("model.filteredGroups")
-  canSelectPrimaryGroup(primaryGroupOptions) {
+  @computed("model.filteredGroups")
+  get canSelectPrimaryGroup() {
     return (
-      primaryGroupOptions.length > 0 &&
+      this.model?.filteredGroups?.length > 0 &&
       this.siteSettings.user_selected_primary_groups
     );
   }
@@ -97,32 +96,32 @@ export default class AccountController extends Controller {
       .filter((value) => value.account || value.method.can_connect);
   }
 
-  @discourseComputed(
+  @computed(
     "model.email",
     "model.secondary_emails.[]",
     "model.unconfirmed_emails.[]"
   )
-  emails(primaryEmail, secondaryEmails, unconfirmedEmails) {
+  get emails() {
     const emails = [];
 
-    if (primaryEmail) {
+    if (this.model?.email) {
       emails.push(
         EmberObject.create({
-          email: primaryEmail,
+          email: this.model?.email,
           primary: true,
           confirmed: true,
         })
       );
     }
 
-    if (secondaryEmails) {
-      secondaryEmails.forEach((email) => {
+    if (this.model?.secondary_emails) {
+      this.model?.secondary_emails.forEach((email) => {
         emails.push(EmberObject.create({ email, confirmed: true }));
       });
     }
 
-    if (unconfirmedEmails) {
-      unconfirmedEmails.forEach((email) => {
+    if (this.model?.unconfirmed_emails) {
+      this.model?.unconfirmed_emails.forEach((email) => {
         emails.push(EmberObject.create({ email }));
       });
     }
@@ -130,28 +129,28 @@ export default class AccountController extends Controller {
     return emails.sort((a, b) => a.email.localeCompare(b.email));
   }
 
-  @discourseComputed(
+  @computed(
     "model.second_factor_enabled",
     "canCheckEmails",
     "model.is_anonymous"
   )
-  canUpdateAssociatedAccounts(
-    secondFactorEnabled,
-    canCheckEmails,
-    isAnonymous
-  ) {
-    if (secondFactorEnabled || !canCheckEmails || isAnonymous) {
+  get canUpdateAssociatedAccounts() {
+    if (
+      this.model?.second_factor_enabled ||
+      !this.canCheckEmails ||
+      this.model?.is_anonymous
+    ) {
       return false;
     }
     return findAll().length > 0;
   }
 
-  @discourseComputed(
-    "siteSettings.max_allowed_secondary_emails",
-    "model.can_edit_email"
-  )
-  canAddEmail(maxAllowedSecondaryEmails, canEditEmail) {
-    return maxAllowedSecondaryEmails > 0 && canEditEmail;
+  @computed("siteSettings.max_allowed_secondary_emails", "model.can_edit_email")
+  get canAddEmail() {
+    return (
+      this.siteSettings?.max_allowed_secondary_emails > 0 &&
+      this.model?.can_edit_email
+    );
   }
 
   @action

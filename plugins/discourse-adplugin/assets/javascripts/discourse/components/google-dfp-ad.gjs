@@ -1,9 +1,9 @@
+import { computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import { classNameBindings, classNames } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
 import RSVP from "rsvp";
-import discourseComputed from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import loadScript from "discourse/lib/load-script";
 import { i18n } from "discourse-i18n";
@@ -254,8 +254,8 @@ export default class GoogleDfpAd extends AdComponent {
 
   @alias("size.height") height;
 
-  @discourseComputed
-  size() {
+  @computed
+  get size() {
     return getWidthAndHeight(
       this.get("placement"),
       this.siteSettings,
@@ -263,49 +263,49 @@ export default class GoogleDfpAd extends AdComponent {
     );
   }
 
-  @discourseComputed(
+  @computed(
     "siteSettings.dfp_publisher_id",
     "siteSettings.dfp_publisher_id_mobile",
     "site.mobileView"
   )
-  publisherId(globalId, mobileId, isMobile) {
-    if (isMobile) {
-      return mobileId || globalId;
+  get publisherId() {
+    if (this.site?.mobileView) {
+      return this.siteSettings?.dfp_publisher_id_mobile || this.siteSettings?.dfp_publisher_id;
     } else {
-      return globalId;
+      return this.siteSettings?.dfp_publisher_id;
     }
   }
 
-  @discourseComputed("placement", "postNumber")
-  divId(placement, postNumber) {
+  @computed("placement", "postNumber")
+  get divId() {
     let slotNum = getNextSlotNum();
-    if (postNumber) {
-      return `div-gpt-ad-${slotNum}-${placement}-${postNumber}`;
+    if (this.postNumber) {
+      return `div-gpt-ad-${slotNum}-${this.placement}-${this.postNumber}`;
     } else {
-      return `div-gpt-ad-${slotNum}-${placement}`;
+      return `div-gpt-ad-${slotNum}-${this.placement}`;
     }
   }
 
-  @discourseComputed("placement", "showAd")
-  adUnitClass(placement, showAd) {
-    return showAd ? `dfp-ad-${placement}` : "";
+  @computed("placement", "showAd")
+  get adUnitClass() {
+    return this.showAd ? `dfp-ad-${this.placement}` : "";
   }
 
-  @discourseComputed("width", "height")
-  adWrapperStyle(w, h) {
-    if (w !== "fluid") {
-      return htmlSafe(`width: ${w}px; height: ${h}px;`);
+  @computed("width", "height")
+  get adWrapperStyle() {
+    if (this.width !== "fluid") {
+      return htmlSafe(`width: ${this.width}px; height: ${this.height}px;`);
     }
   }
 
-  @discourseComputed("width")
-  adTitleStyleMobile(w) {
-    if (w !== "fluid") {
-      return htmlSafe(`width: ${w}px;`);
+  @computed("width")
+  get adTitleStyleMobile() {
+    if (this.width !== "fluid") {
+      return htmlSafe(`width: ${this.width}px;`);
     }
   }
 
-  @discourseComputed(
+  @computed(
     "publisherId",
     "showDfpAds",
     "showToGroups",
@@ -313,26 +313,21 @@ export default class GoogleDfpAd extends AdComponent {
     "showOnCurrentPage",
     "size"
   )
-  showAd(
-    publisherId,
-    showDfpAds,
-    showToGroups,
-    showAfterPost,
-    showOnCurrentPage,
-    size
+  get showAd(
+    
   ) {
     return (
-      publisherId &&
-      showDfpAds &&
-      showToGroups &&
-      showAfterPost &&
-      showOnCurrentPage &&
-      size
+      this.publisherId &&
+      this.showDfpAds &&
+      this.showToGroups &&
+      this.showAfterPost &&
+      this.showOnCurrentPage &&
+      this.size
     );
   }
 
-  @discourseComputed
-  showDfpAds() {
+  @computed
+  get showDfpAds() {
     if (!this.currentUser) {
       return true;
     }
@@ -340,9 +335,9 @@ export default class GoogleDfpAd extends AdComponent {
     return this.currentUser.show_dfp_ads;
   }
 
-  @discourseComputed("postNumber")
-  showAfterPost(postNumber) {
-    if (!postNumber) {
+  @computed("postNumber")
+  get showAfterPost() {
+    if (!this.postNumber) {
       return true;
     }
 

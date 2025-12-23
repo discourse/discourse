@@ -3,7 +3,6 @@ import { computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
-import discourseComputed from "discourse/lib/decorators";
 import Group from "discourse/models/group";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
@@ -91,16 +90,16 @@ export default class WebHook extends RestModel {
     return Group.findAll({ term, ignore_automatic: false });
   }
 
-  @discourseComputed("wildcard_web_hook", "web_hook_event_types.[]")
-  description(isWildcardWebHook, types) {
+  @computed("wildcard_web_hook", "web_hook_event_types.[]")
+  get description() {
     let desc = "";
 
-    types.forEach((type) => {
+    this.web_hook_event_types?.forEach((type) => {
       const name = `${type.name.toLowerCase()}_event`;
       desc += desc !== "" ? `, ${name}` : name;
     });
 
-    return isWildcardWebHook ? "*" : desc;
+    return this.wildcard_web_hook ? "*" : desc;
   }
 
   createProperties() {

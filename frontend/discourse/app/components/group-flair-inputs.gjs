@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { fn, hash } from "@ember/helper";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import $ from "jquery";
@@ -11,7 +11,6 @@ import TextField from "discourse/components/text-field";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
-import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { convertIconClass } from "discourse/lib/icon-library";
 import IconPicker from "discourse/select-kit/components/icon-picker";
@@ -20,19 +19,19 @@ import { i18n } from "discourse-i18n";
 
 @classNames("group-flair-inputs")
 export default class GroupFlairInputs extends Component {
-  @discourseComputed
-  demoAvatarUrl() {
+  @computed
+  get demoAvatarUrl() {
     return getURL("/images/avatar.png");
   }
 
-  @discourseComputed("model.flair_type")
-  flairPreviewIcon(flairType) {
-    return flairType && flairType === "icon";
+  @computed("model.flair_type")
+  get flairPreviewIcon() {
+    return this.model?.flair_type && this.model?.flair_type === "icon";
   }
 
-  @discourseComputed("model.flair_icon")
-  flairPreviewIconUrl(flairIcon) {
-    return flairIcon ? convertIconClass(flairIcon) : "";
+  @computed("model.flair_icon")
+  get flairPreviewIconUrl() {
+    return this.model?.flair_icon ? convertIconClass(this.model?.flair_icon) : "";
   }
 
   @on("didInsertElement")
@@ -70,19 +69,19 @@ export default class GroupFlairInputs extends Component {
     }
   }
 
-  @discourseComputed("model.flair_type")
-  flairPreviewImage(flairType) {
-    return flairType && flairType === "image";
+  @computed("model.flair_type")
+  get flairPreviewImage() {
+    return this.model?.flair_type && this.model?.flair_type === "image";
   }
 
-  @discourseComputed("model.flair_url")
-  flairImageUrl(flairUrl) {
-    return flairUrl && flairUrl.includes("/") ? flairUrl : null;
+  @computed("model.flair_url")
+  get flairImageUrl() {
+    return this.model?.flair_url && this.model?.flair_url?.includes("/") ? this.model?.flair_url : null;
   }
 
-  @discourseComputed("flairPreviewImage")
-  flairPreviewLabel(flairPreviewImage) {
-    const key = flairPreviewImage ? "image" : "icon";
+  @computed("flairPreviewImage")
+  get flairPreviewLabel() {
+    const key = this.flairPreviewImage ? "image" : "icon";
     return i18n(`groups.flair_preview_${key}`);
   }
 

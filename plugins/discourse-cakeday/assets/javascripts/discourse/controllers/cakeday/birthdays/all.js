@@ -1,13 +1,12 @@
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
-import computed from "discourse/lib/decorators";
+import { action, computed } from "@ember/object";
 
 export default class CakedayBirthdaysAllController extends Controller {
   queryParams = ["month"];
   month = moment().month() + 1;
 
   @computed
-  months() {
+  get months() {
     return moment.months().map((month, index) => {
       return { name: month, value: index + 1 };
     });

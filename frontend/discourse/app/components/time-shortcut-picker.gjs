@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component, { Input } from "@ember/component";
 import { fn } from "@ember/helper";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { and, equal } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
@@ -10,7 +10,6 @@ import RelativeTimePicker from "discourse/components/relative-time-picker";
 import TapTile from "discourse/components/tap-tile";
 import TapTileGrid from "discourse/components/tap-tile-grid";
 import icon from "discourse/helpers/d-icon";
-import discourseComputed from "discourse/lib/decorators";
 import {
   defaultTimeShortcuts,
   formatTime,
@@ -165,24 +164,24 @@ export default class TimeShortcutPicker extends Component {
     this.selectShortcut(TIME_SHORTCUT_TYPES.CUSTOM);
   }
 
-  @discourseComputed(
+  @computed(
     "timeShortcuts",
     "hiddenOptions",
     "customLabels",
     "userTimezone"
   )
-  options(timeShortcuts, hiddenOptions, customLabels, userTimezone) {
+  get options() {
     this._loadLastUsedCustomDatetime();
 
     let options;
-    if (timeShortcuts && timeShortcuts.length) {
-      options = timeShortcuts;
+    if (this.timeShortcuts && this.timeShortcuts.length) {
+      options = this.timeShortcuts;
     } else {
-      options = defaultTimeShortcuts(userTimezone);
+      options = defaultTimeShortcuts(this.userTimezone);
     }
     options = hideDynamicTimeShortcuts(
       options,
-      userTimezone,
+      this.userTimezone,
       this.siteSettings
     );
 
@@ -197,15 +196,15 @@ export default class TimeShortcutPicker extends Component {
     }
     options = options.concat(specialOptions);
 
-    if (hiddenOptions.length > 0) {
+    if (this.hiddenOptions.length > 0) {
       options.forEach((opt) => {
-        if (hiddenOptions.includes(opt.id)) {
+        if (this.hiddenOptions.includes(opt.id)) {
           opt.hidden = true;
         }
       });
     }
 
-    this._applyCustomLabels(options, customLabels);
+    this._applyCustomLabels(options, this.customLabels);
     options.forEach((o) => (o.timeFormatted = formatTime(o)));
     return options;
   }

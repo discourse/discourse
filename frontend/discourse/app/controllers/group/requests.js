@@ -1,9 +1,9 @@
 import Controller, { inject as controller } from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { observes } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed, { debounce } from "discourse/lib/decorators";
+import { debounce } from "discourse/lib/decorators";
 
 export default class GroupRequestsController extends Controller {
   @controller application;
@@ -56,17 +56,17 @@ export default class GroupRequestsController extends Controller {
     });
   }
 
-  @discourseComputed("order", "asc", "filter")
-  memberParams(order, asc, filter) {
-    return { order, asc, filter };
+  @computed("order", "asc", "filter")
+  get memberParams() {
+    return { order: this.order, asc: this.asc, filter: this.filter };
   }
 
   get hasRequesters() {
     return this.model.requesters?.length > 0;
   }
 
-  @discourseComputed
-  filterPlaceholder() {
+  @computed
+  get filterPlaceholder() {
     if (this.currentUser && this.currentUser.admin) {
       return "groups.members.filter_placeholder_admin";
     } else {

@@ -1,15 +1,14 @@
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse/lib/decorators";
 
 export default class Subscription extends EmberObject {
   static show(id) {
     return ajax(`/s/${id}`, { method: "get" });
   }
 
-  @discourseComputed("status")
-  canceled(status) {
-    return status === "canceled";
+  @computed("status")
+  get canceled() {
+    return this.status === "canceled";
   }
 
   save() {

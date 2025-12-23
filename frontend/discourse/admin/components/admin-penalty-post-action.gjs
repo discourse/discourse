@@ -1,9 +1,9 @@
 /* eslint-disable ember/no-classic-components */
 import Component, { Textarea } from "@ember/component";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
-import discourseComputed, { afterRender } from "discourse/lib/decorators";
+import { afterRender } from "discourse/lib/decorators";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
 
@@ -16,8 +16,8 @@ export default class AdminPenaltyPostAction extends Component {
 
   @equal("postAction", "edit") editing;
 
-  @discourseComputed
-  penaltyActions() {
+  @computed
+  get penaltyActions() {
     return ACTIONS.map((id) => {
       return { id, name: i18n(`admin.user.penalty_post_${id}`) };
     });

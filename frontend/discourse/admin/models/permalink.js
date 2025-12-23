@@ -1,5 +1,5 @@
+import { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse/lib/decorators";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import RestModel from "discourse/models/rest";
@@ -10,18 +10,18 @@ export default class Permalink extends RestModel {
     return data.map((p) => Permalink.create(p));
   }
 
-  @discourseComputed("category_id")
-  category(category_id) {
-    return Category.findById(category_id);
+  @computed("category_id")
+  get category() {
+    return Category.findById(this.category_id);
   }
 
-  @discourseComputed("external_url")
-  linkIsExternal(external_url) {
-    return !DiscourseURL.isInternal(external_url);
+  @computed("external_url")
+  get linkIsExternal() {
+    return !DiscourseURL.isInternal(this.external_url);
   }
 
-  @discourseComputed("url")
-  key(url) {
-    return url.replace("/", "_");
+  @computed("url")
+  get key() {
+    return this.url.replace("/", "_");
   }
 }

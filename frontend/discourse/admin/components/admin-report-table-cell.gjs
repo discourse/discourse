@@ -1,5 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import {
@@ -8,7 +9,6 @@ import {
   classNames,
   tagName,
 } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
 
 @tagName("td")
 @classNames("admin-report-table-cell")
@@ -22,9 +22,9 @@ export default class AdminReportTableCell extends Component {
   @alias("computedLabel.formattedValue") formattedValue;
   @alias("computedLabel.value") value;
 
-  @discourseComputed("label", "data", "options")
-  computedLabel(label, data, options) {
-    return label.compute(data, options || {});
+  @computed("label", "data", "options")
+  get computedLabel() {
+    return this.label.compute(this.data, this.options || {});
   }
 
   <template>{{htmlSafe this.formattedValue}}</template>

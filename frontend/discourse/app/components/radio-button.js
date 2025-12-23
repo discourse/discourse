@@ -1,8 +1,8 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { attributeBindings, tagName } from "@ember-decorators/component";
 import $ from "jquery";
-import discourseComputed from "discourse/lib/decorators";
 
 @tagName("input")
 @attributeBindings(
@@ -28,8 +28,8 @@ export default class RadioButton extends Component {
     }
   }
 
-  @discourseComputed("value", "selection")
-  checked(value, selection) {
-    return value === selection;
+  @computed("value", "selection")
+  get checked() {
+    return this.value === this.selection;
   }
 }

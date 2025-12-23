@@ -6,7 +6,6 @@ import { htmlSafe } from "@ember/template";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
-import discourseComputed from "discourse/lib/decorators";
 import { iconHTML } from "discourse/lib/icon-library";
 import Bookmark from "discourse/models/bookmark";
 import { i18n } from "discourse-i18n";
@@ -37,8 +36,8 @@ export default class UserActivityBookmarksController extends Controller {
     this._searchTerm = value;
   }
 
-  @discourseComputed()
-  emptyStateBody() {
+  @computed()
+  get emptyStateBody() {
     return htmlSafe(
       i18n("user.no_bookmarks_body", {
         icon: iconHTML("bookmark"),
@@ -46,14 +45,14 @@ export default class UserActivityBookmarksController extends Controller {
     );
   }
 
-  @discourseComputed("inSearchMode", "noContent")
-  userDoesNotHaveBookmarks(inSearchMode, noContent) {
-    return !inSearchMode && noContent;
+  @computed("inSearchMode", "noContent")
+  get userDoesNotHaveBookmarks() {
+    return !this.inSearchMode && this.noContent;
   }
 
-  @discourseComputed("inSearchMode", "noContent")
-  nothingFound(inSearchMode, noContent) {
-    return inSearchMode && noContent;
+  @computed("inSearchMode", "noContent")
+  get nothingFound() {
+    return this.inSearchMode && this.noContent;
   }
 
   @action

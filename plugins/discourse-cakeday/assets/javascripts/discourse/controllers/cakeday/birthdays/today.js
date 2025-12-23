@@ -1,11 +1,10 @@
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
-import computed from "discourse/lib/decorators";
+import { action, computed } from "@ember/object";
 import { i18n } from "discourse-i18n";
 
 export default class CakedayBirthdaysTodayController extends Controller {
   @computed
-  title() {
+  get title() {
     return i18n("birthdays.today.title", {
       date: moment().format(i18n("dates.full_no_year_no_time")),
     });

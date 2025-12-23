@@ -1,11 +1,11 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
+import { computed } from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { propertyEqual } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
 import loadChartJS from "discourse/lib/load-chart-js";
 import I18n, { i18n } from "discourse-i18n";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
@@ -34,29 +34,29 @@ export default class PollBreakdownOption extends Component {
     });
   }
 
-  @discourseComputed("option.votes", "totalVotes")
-  percent(votes, total) {
-    return I18n.toNumber((votes / total) * 100.0, { precision: 1 });
+  @computed("option.votes", "totalVotes")
+  get percent() {
+    return I18n.toNumber((this.option?.votes / this.totalVotes) * 100.0, { precision: 1 });
   }
 
-  @discourseComputed("optionsCount")
-  optionColors(optionsCount) {
-    return getColors(optionsCount);
+  @computed("optionsCount")
+  get optionColors() {
+    return getColors(this.optionsCount);
   }
 
-  @discourseComputed("highlighted")
-  colorBackgroundStyle(highlighted) {
-    if (highlighted) {
+  @computed("highlighted")
+  get colorBackgroundStyle() {
+    if (this.highlighted) {
       // TODO: Use CSS variables (#10341)
       return htmlSafe("background: rgba(0, 0, 0, 0.1);");
     }
   }
 
-  @discourseComputed("Chart", "highlighted", "optionColors", "index")
-  colorPreviewStyle(Chart, highlighted, optionColors, index) {
-    const color = highlighted
-      ? Chart?.helpers.getHoverColor(optionColors[index])
-      : optionColors[index];
+  @computed("Chart", "highlighted", "optionColors", "index")
+  get colorPreviewStyle() {
+    const color = this.highlighted
+      ? this.Chart?.helpers.getHoverColor(this.optionColors[this.index])
+      : this.optionColors[this.index];
 
     return htmlSafe(`background: ${color};`);
   }

@@ -1,8 +1,8 @@
+import { computed } from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { classNameBindings } from "@ember-decorators/component";
 import RSVP from "rsvp";
-import discourseComputed from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import loadScript from "discourse/lib/load-script";
 import { i18n } from "discourse-i18n";
@@ -174,40 +174,40 @@ export default class GoogleAdsense extends AdComponent {
     scheduleOnce("afterRender", this, this._triggerAds);
   }
 
-  @discourseComputed("ad_width")
-  isResponsive(adWidth) {
-    return ["auto", "fluid"].includes(adWidth);
+  @computed("ad_width")
+  get isResponsive() {
+    return ["auto", "fluid"].includes(this.ad_width);
   }
 
-  @discourseComputed("ad_width")
-  isFluid(adWidth) {
-    return adWidth === "fluid";
+  @computed("ad_width")
+  get isFluid() {
+    return this.ad_width === "fluid";
   }
 
-  @discourseComputed("placement", "showAd")
-  classForSlot(placement, showAd) {
-    return showAd ? htmlSafe(`adsense-${placement}`) : "";
+  @computed("placement", "showAd")
+  get classForSlot() {
+    return this.showAd ? htmlSafe(`adsense-${this.placement}`) : "";
   }
 
-  @discourseComputed("isResponsive", "isFluid")
-  autoAdFormat(isResponsive, isFluid) {
-    return isResponsive ? htmlSafe(isFluid ? "fluid" : "auto") : false;
+  @computed("isResponsive", "isFluid")
+  get autoAdFormat() {
+    return this.isResponsive ? htmlSafe(this.isFluid ? "fluid" : "auto") : false;
   }
 
-  @discourseComputed("ad_width", "ad_height", "isResponsive")
-  adWrapperStyle(w, h, isResponsive) {
-    return htmlSafe(isResponsive ? "" : `width: ${w}; height: ${h};`);
+  @computed("ad_width", "ad_height", "isResponsive")
+  get adWrapperStyle() {
+    return htmlSafe(this.isResponsive ? "" : `width: ${this.ad_width}; height: ${this.ad_height};`);
   }
 
-  @discourseComputed("adWrapperStyle", "isResponsive")
-  adInsStyle(adWrapperStyle, isResponsive) {
+  @computed("adWrapperStyle", "isResponsive")
+  get adInsStyle() {
     return htmlSafe(
-      `display: ${isResponsive ? "block" : "inline-block"}; ${adWrapperStyle}`
+      `display: ${this.isResponsive ? "block" : "inline-block"}; ${this.adWrapperStyle}`
     );
   }
 
-  @discourseComputed
-  showAdsenseAds() {
+  @computed
+  get showAdsenseAds() {
     if (!this.currentUser) {
       return true;
     }
@@ -215,32 +215,28 @@ export default class GoogleAdsense extends AdComponent {
     return this.currentUser.show_adsense_ads;
   }
 
-  @discourseComputed(
+  @computed(
     "publisher_id",
     "showAdsenseAds",
     "showToGroups",
     "showAfterPost",
     "showOnCurrentPage"
   )
-  showAd(
-    publisherId,
-    showAdsenseAds,
-    showToGroups,
-    showAfterPost,
-    showOnCurrentPage
+  get showAd(
+    
   ) {
     return (
-      publisherId &&
-      showAdsenseAds &&
-      showToGroups &&
-      showAfterPost &&
-      showOnCurrentPage
+      this.publisher_id &&
+      this.showAdsenseAds &&
+      this.showToGroups &&
+      this.showAfterPost &&
+      this.showOnCurrentPage
     );
   }
 
-  @discourseComputed("postNumber")
-  showAfterPost(postNumber) {
-    if (!postNumber) {
+  @computed("postNumber")
+  get showAfterPost() {
+    if (!this.postNumber) {
       return true;
     }
 

@@ -1,21 +1,21 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { concat, fn } from "@ember/helper";
+import { computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class GroupManageLogsFilter extends Component {
-  @discourseComputed("type")
-  label(type) {
-    return i18n(`groups.manage.logs.${type}`);
+  @computed("type")
+  get label() {
+    return i18n(`groups.manage.logs.${this.type}`);
   }
 
-  @discourseComputed("value", "type")
-  filterText(value, type) {
-    return type === "action" ? i18n(`group_histories.actions.${value}`) : value;
+  @computed("value", "type")
+  get filterText() {
+    return this.type === "action" ? i18n(`group_histories.actions.${this.value}`) : this.value;
   }
 
   <template>

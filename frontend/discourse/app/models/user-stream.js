@@ -1,8 +1,8 @@
 import { tracked } from "@glimmer/tracking";
+import { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { url } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
@@ -23,17 +23,17 @@ export default class UserStream extends RestModel {
   )
   baseUrl;
 
-  @discourseComputed("filter")
-  filterParam(filter) {
-    if (filter === UserAction.TYPES.replies) {
+  @computed("filter")
+  get filterParam() {
+    if (this.filter === UserAction.TYPES.replies) {
       return [UserAction.TYPES.replies, UserAction.TYPES.quotes].join(",");
     }
 
-    if (!filter) {
+    if (!this.filter) {
       return [UserAction.TYPES.topics, UserAction.TYPES.posts].join(",");
     }
 
-    return filter;
+    return this.filter;
   }
 
   async filterBy(opts) {
@@ -47,8 +47,8 @@ export default class UserStream extends RestModel {
     return this.findItems();
   }
 
-  @discourseComputed("baseUrl", "filterParam", "actingUsername")
-  nextFindUrl() {
+  @computed("baseUrl", "filterParam", "actingUsername")
+  get nextFindUrl() {
     let findUrl = this.baseUrl;
     if (this.filterParam) {
       findUrl += `&filter=${this.filterParam}`;
@@ -61,13 +61,13 @@ export default class UserStream extends RestModel {
     return findUrl;
   }
 
-  @discourseComputed("loaded", "content.[]")
-  noContent(loaded, content) {
-    return loaded && content.length === 0;
+  @computed("loaded", "content.[]")
+  get noContent() {
+    return this.loaded && this.content?.length === 0;
   }
 
-  @discourseComputed("nextFindUrl", "lastLoadedUrl")
-  canLoadMore() {
+  @computed("nextFindUrl", "lastLoadedUrl")
+  get canLoadMore() {
     return this.nextFindUrl !== this.lastLoadedUrl;
   }
 

@@ -2,7 +2,7 @@
 import Component, { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
-import EmberObject, { action } from "@ember/object";
+import EmberObject, { action, computed } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
@@ -13,7 +13,6 @@ import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 import emailProviderDefaultSettings from "discourse/lib/email-provider-default-settings";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { or } from "discourse/truth-helpers";
@@ -23,29 +22,29 @@ import { i18n } from "discourse-i18n";
 export default class GroupImapEmailSettings extends Component {
   form = null;
 
-  @discourseComputed(
+  @computed(
     "group.email_username",
     "group.email_password",
     "form.imap_server",
     "form.imap_port"
   )
-  missingSettings(email_username, email_password, imap_server, imap_port) {
-    return [email_username, email_password, imap_server, imap_port].some(
+  get missingSettings() {
+    return [this.group?.email_username, this.group?.email_password, this.form?.imap_server, this.form?.imap_port].some(
       (value) => isEmpty(value)
     );
   }
 
-  @discourseComputed("group.imap_mailboxes")
-  mailboxes(imapMailboxes) {
-    if (!imapMailboxes) {
+  @computed("group.imap_mailboxes")
+  get mailboxes() {
+    if (!this.group?.imap_mailboxes) {
       return [];
     }
-    return imapMailboxes.map((mailbox) => ({ name: mailbox, value: mailbox }));
+    return this.group?.imap_mailboxes?.map((mailbox) => ({ name: mailbox, value: mailbox }));
   }
 
-  @discourseComputed("group.imap_mailbox_name", "mailboxes.length")
-  mailboxSelected(mailboxName, mailboxesSize) {
-    return mailboxesSize === 0 || !isEmpty(mailboxName);
+  @computed("group.imap_mailbox_name", "mailboxes.length")
+  get mailboxSelected() {
+    return this.mailboxes?.length === 0 || !isEmpty(this.group?.imap_mailbox_name);
   }
 
   @action

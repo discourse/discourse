@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component, { Textarea } from "@ember/component";
 import { fn, hash } from "@ember/helper";
-import EmberObject, { action } from "@ember/object";
+import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, equal, readOnly } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -11,7 +11,6 @@ import DiscourseLinkedText from "discourse/components/discourse-linked-text";
 import GeneratedInviteLink from "discourse/components/generated-invite-link";
 import TextField from "discourse/components/text-field";
 import { computedI18n } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
 import { getNativeContact } from "discourse/lib/pwa-utils";
 import { emailValid } from "discourse/lib/utilities";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
@@ -60,7 +59,7 @@ export default class InvitePanel extends Component {
     this.reset();
   }
 
-  @discourseComputed(
+  @computed(
     "isAdmin",
     "invitee",
     "invitingToTopic",
@@ -69,45 +68,39 @@ export default class InvitePanel extends Component {
     "inviteModel.saving",
     "inviteModel.details.can_invite_to"
   )
-  disabled(
-    isAdmin,
-    invitee,
-    invitingToTopic,
-    isPrivateTopic,
-    groupIds,
-    saving,
-    can_invite_to
+  get disabled(
+    
   ) {
-    if (saving) {
+    if (this.inviteModel?.saving) {
       return true;
     }
-    if (isEmpty(invitee)) {
+    if (isEmpty(this.invitee)) {
       return true;
     }
 
     // when inviting to forum, email must be valid
-    if (!invitingToTopic && !emailValid(invitee)) {
+    if (!this.invitingToTopic && !emailValid(this.invitee)) {
       return true;
     }
 
     // normal users (not admin) can't invite users to private topic via email
-    if (!isAdmin && isPrivateTopic && emailValid(invitee)) {
+    if (!this.isAdmin && this.isPrivateTopic && emailValid(this.invitee)) {
       return true;
     }
 
     // when inviting to private topic via email, group name must be specified
-    if (isPrivateTopic && isEmpty(groupIds) && emailValid(invitee)) {
+    if (this.isPrivateTopic && isEmpty(this.groupIds) && emailValid(this.invitee)) {
       return true;
     }
 
-    if (can_invite_to) {
+    if (this.inviteModel?.details?.can_invite_to) {
       return false;
     }
 
     return false;
   }
 
-  @discourseComputed(
+  @computed(
     "isAdmin",
     "invitee",
     "inviteModel.saving",
@@ -115,73 +108,68 @@ export default class InvitePanel extends Component {
     "groupIds",
     "hasCustomMessage"
   )
-  disabledCopyLink(
-    isAdmin,
-    invitee,
-    saving,
-    isPrivateTopic,
-    groupIds,
-    hasCustomMessage
+  get disabledCopyLink(
+    
   ) {
-    if (hasCustomMessage) {
+    if (this.hasCustomMessage) {
       return true;
     }
-    if (saving) {
+    if (this.inviteModel?.saving) {
       return true;
     }
-    if (isEmpty(invitee)) {
+    if (isEmpty(this.invitee)) {
       return true;
     }
 
     // email must be valid
-    if (!emailValid(invitee)) {
+    if (!emailValid(this.invitee)) {
       return true;
     }
 
     // normal users (not admin) can't invite users to private topic via email
-    if (!isAdmin && isPrivateTopic && emailValid(invitee)) {
+    if (!this.isAdmin && this.isPrivateTopic && emailValid(this.invitee)) {
       return true;
     }
 
     // when inviting to private topic via email, group name must be specified
-    if (isPrivateTopic && isEmpty(groupIds) && emailValid(invitee)) {
+    if (this.isPrivateTopic && isEmpty(this.groupIds) && emailValid(this.invitee)) {
       return true;
     }
 
     return false;
   }
 
-  @discourseComputed("inviteModel.saving")
-  buttonTitle(saving) {
-    return saving ? "topic.inviting" : "topic.invite_reply.action";
+  @computed("inviteModel.saving")
+  get buttonTitle() {
+    return this.inviteModel?.saving ? "topic.inviting" : "topic.invite_reply.action";
   }
 
   // We are inviting to a topic if the topic isn't the current user.
   // The current user would mean we are inviting to the forum in general.
-  @discourseComputed("inviteModel")
-  invitingToTopic(inviteModel) {
-    return inviteModel !== this.currentUser;
+  @computed("inviteModel")
+  get invitingToTopic() {
+    return this.inviteModel !== this.currentUser;
   }
 
-  @discourseComputed("inviteModel", "inviteModel.details.can_invite_via_email")
-  canInviteViaEmail(inviteModel, canInviteViaEmail) {
-    return inviteModel === this.currentUser ? true : canInviteViaEmail;
+  @computed("inviteModel", "inviteModel.details.can_invite_via_email")
+  get canInviteViaEmail() {
+    return this.inviteModel === this.currentUser ? true : this.inviteModel?.details?.can_invite_via_email;
   }
 
-  @discourseComputed("isPM", "canInviteViaEmail")
-  showCopyInviteButton(isPM, canInviteViaEmail) {
-    return canInviteViaEmail && !isPM;
+  @computed("isPM", "canInviteViaEmail")
+  get showCopyInviteButton() {
+    return this.canInviteViaEmail && !this.isPM;
   }
 
-  @discourseComputed("isAdmin", "inviteModel.group_users")
-  isGroupOwnerOrAdmin(isAdmin, groupUsers) {
+  @computed("isAdmin", "inviteModel.group_users")
+  get isGroupOwnerOrAdmin() {
     return (
-      isAdmin || (groupUsers && groupUsers.some((groupUser) => groupUser.owner))
+      this.isAdmin || (this.inviteModel?.group_users && this.inviteModel?.group_users?.some((groupUser) => groupUser.owner))
     );
   }
 
   // Show Groups? (add invited user to private group)
-  @discourseComputed(
+  @computed(
     "isGroupOwnerOrAdmin",
     "invitee",
     "isPrivateTopic",
@@ -189,29 +177,24 @@ export default class InvitePanel extends Component {
     "invitingToTopic",
     "canInviteViaEmail"
   )
-  showGroups(
-    isGroupOwnerOrAdmin,
-    invitee,
-    isPrivateTopic,
-    isPM,
-    invitingToTopic,
-    canInviteViaEmail
+  get showGroups(
+    
   ) {
     return (
-      isGroupOwnerOrAdmin &&
-      canInviteViaEmail &&
-      !isPM &&
-      (emailValid(invitee) || isPrivateTopic || !invitingToTopic)
+      this.isGroupOwnerOrAdmin &&
+      this.canInviteViaEmail &&
+      !this.isPM &&
+      (emailValid(this.invitee) || this.isPrivateTopic || !this.invitingToTopic)
     );
   }
 
-  @discourseComputed("invitee")
-  showCustomMessage(invitee) {
-    return this.inviteModel === this.currentUser || emailValid(invitee);
+  @computed("invitee")
+  get showCustomMessage() {
+    return this.inviteModel === this.currentUser || emailValid(this.invitee);
   }
 
   // Instructional text for the modal.
-  @discourseComputed(
+  @computed(
     "isPM",
     "invitingToTopic",
     "invitee",
@@ -219,30 +202,25 @@ export default class InvitePanel extends Component {
     "isAdmin",
     "canInviteViaEmail"
   )
-  inviteInstructions(
-    isPM,
-    invitingToTopic,
-    invitee,
-    isPrivateTopic,
-    isAdmin,
-    canInviteViaEmail
+  get inviteInstructions(
+    
   ) {
-    if (!canInviteViaEmail) {
+    if (!this.canInviteViaEmail) {
       // can't invite via email, only existing users
       return i18n("topic.invite_reply.discourse_connect_enabled");
-    } else if (isPM) {
+    } else if (this.isPM) {
       // inviting to a message
       return i18n("topic.invite_private.email_or_username");
-    } else if (invitingToTopic) {
+    } else if (this.invitingToTopic) {
       // inviting to a private/public topic
-      if (isPrivateTopic && !isAdmin) {
+      if (this.isPrivateTopic && !this.isAdmin) {
         // inviting to a private topic and is not admin
         return i18n("topic.invite_reply.to_username");
       } else {
         // when inviting to a topic, display instructions based on provided entity
-        if (isEmpty(invitee)) {
+        if (isEmpty(this.invitee)) {
           return i18n("topic.invite_reply.to_topic_blank");
-        } else if (emailValid(invitee)) {
+        } else if (emailValid(this.invitee)) {
           this.set("inviteIcon", "envelope");
           return i18n("topic.invite_reply.to_topic_email");
         } else {
@@ -256,9 +234,9 @@ export default class InvitePanel extends Component {
     }
   }
 
-  @discourseComputed("isPrivateTopic")
-  showGroupsClass(isPrivateTopic) {
-    return isPrivateTopic ? "required" : "optional";
+  @computed("isPrivateTopic")
+  get showGroupsClass() {
+    return this.isPrivateTopic ? "required" : "optional";
   }
 
   successMessage(invitee) {
@@ -277,19 +255,19 @@ export default class InvitePanel extends Component {
     }
   }
 
-  @discourseComputed("isPM", "ajaxError")
-  errorMessage(isPM, ajaxError) {
-    if (ajaxError) {
-      return ajaxError;
+  @computed("isPM", "ajaxError")
+  get errorMessage() {
+    if (this.ajaxError) {
+      return this.ajaxError;
     }
-    return isPM
+    return this.isPM
       ? i18n("topic.invite_private.error")
       : i18n("topic.invite_reply.error");
   }
 
-  @discourseComputed("canInviteViaEmail")
-  placeholderKey(canInviteViaEmail) {
-    return canInviteViaEmail
+  @computed("canInviteViaEmail")
+  get placeholderKey() {
+    return this.canInviteViaEmail
       ? "topic.invite_private.email_or_username_placeholder"
       : "topic.invite_reply.username_placeholder";
   }

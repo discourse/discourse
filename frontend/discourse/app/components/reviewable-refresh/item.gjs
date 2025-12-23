@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { action, set } from "@ember/object";
+import { action, computed,set } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
@@ -30,7 +30,7 @@ import formatDate from "discourse/helpers/format-date";
 import { newReviewableStatus } from "discourse/helpers/reviewable-status";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed, { bind } from "discourse/lib/decorators";
+import { bind } from "discourse/lib/decorators";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import optionalService from "discourse/lib/optional-service";
 import { showAlert } from "discourse/lib/post-action-feedback";
@@ -120,38 +120,34 @@ export default class ReviewableItem extends Component {
     this.messageBus.unsubscribe("/reviewable_action", this._updateStatus);
   }
 
-  @discourseComputed(
+  @computed(
     "reviewable.type",
     "reviewable.last_performing_username",
     "siteSettings.blur_tl0_flagged_posts_media",
     "reviewable.target_created_by_trust_level",
     "reviewable.deleted_at"
   )
-  customClasses(
-    type,
-    lastPerformingUsername,
-    blurEnabled,
-    trustLevel,
-    deletedAt
+  get customClasses(
+    
   ) {
-    let classes = dasherize(type);
+    let classes = dasherize(this.reviewable?.type);
 
-    if (lastPerformingUsername) {
+    if (this.reviewable?.last_performing_username) {
       classes = `${classes} reviewable-stale`;
     }
 
-    if (blurEnabled && trustLevel === 0) {
+    if (this.siteSettings?.blur_tl0_flagged_posts_media && this.reviewable?.target_created_by_trust_level === 0) {
       classes = `${classes} blur-images`;
     }
 
-    if (deletedAt) {
+    if (this.reviewable?.deleted_at) {
       classes = `${classes} reviewable-deleted`;
     }
 
     return classes;
   }
 
-  @discourseComputed(
+  @computed(
     "reviewable.created_from_flag",
     "reviewable.status",
     "claimOptional",
@@ -159,94 +155,89 @@ export default class ReviewableItem extends Component {
     "reviewable.claimed_by",
     "siteSettings.reviewable_old_moderator_actions"
   )
-  displayContextQuestion(
-    createdFromFlag,
-    status,
-    claimOptional,
-    claimRequired,
-    claimedBy,
-    oldModeratorActions
+  get displayContextQuestion(
+    
   ) {
     return (
-      oldModeratorActions &&
-      createdFromFlag &&
-      status === 0 &&
-      (claimOptional || (claimRequired && claimedBy !== null))
+      this.siteSettings?.reviewable_old_moderator_actions &&
+      this.reviewable?.created_from_flag &&
+      this.reviewable?.status === 0 &&
+      (this.claimOptional || (this.claimRequired && this.reviewable?.claimed_by !== null))
     );
   }
 
-  @discourseComputed(
+  @computed(
     "reviewable.topic",
     "reviewable.topic_id",
     "reviewable.removed_topic_id"
   )
-  topicId(topic, topicId, removedTopicId) {
-    return (topic && topic.id) || topicId || removedTopicId;
+  get topicId() {
+    return (this.reviewable?.topic && this.reviewable?.topic?.id) || this.reviewable?.topic_id || this.reviewable?.removed_topic_id;
   }
 
-  @discourseComputed(
+  @computed(
     "siteSettings.reviewable_claiming",
     "topicId",
     "reviewable.claimed_by.automatic",
     "reviewable.status"
   )
-  claimEnabled(claimMode, topicId, autoClaimed, status) {
+  get claimEnabled() {
     return (
-      (claimMode !== "disabled" || autoClaimed) && !!topicId && status === 0
+      (this.siteSettings?.reviewable_claiming !== "disabled" || this.reviewable?.claimed_by?.automatic) && !!this.topicId && this.reviewable?.status === 0
     );
   }
 
-  @discourseComputed("siteSettings.reviewable_claiming", "claimEnabled")
-  claimOptional(claimMode, claimEnabled) {
-    return !claimEnabled || claimMode === "optional";
+  @computed("siteSettings.reviewable_claiming", "claimEnabled")
+  get claimOptional() {
+    return !this.claimEnabled || this.siteSettings?.reviewable_claiming === "optional";
   }
 
-  @discourseComputed("siteSettings.reviewable_claiming", "claimEnabled")
-  claimRequired(claimMode, claimEnabled) {
-    return claimEnabled && claimMode === "required";
+  @computed("siteSettings.reviewable_claiming", "claimEnabled")
+  get claimRequired() {
+    return this.claimEnabled && this.siteSettings?.reviewable_claiming === "required";
   }
 
-  @discourseComputed(
+  @computed(
     "claimEnabled",
     "siteSettings.reviewable_claiming",
     "reviewable.claimed_by",
     "reviewable.bundled_actions"
   )
-  canPerform(claimEnabled, claimMode, claimedBy, bundledActions) {
-    if (bundledActions?.length === 0) {
+  get canPerform() {
+    if (this.reviewable?.bundled_actions?.length === 0) {
       return false;
     }
-    if (!claimEnabled) {
+    if (!this.claimEnabled) {
       return true;
     }
 
-    if (claimedBy) {
-      return claimedBy.user.id === this.currentUser.id;
+    if (this.reviewable?.claimed_by) {
+      return this.reviewable?.claimed_by?.user.id === this.currentUser.id;
     }
 
-    return claimMode !== "required";
+    return this.siteSettings?.reviewable_claiming !== "required";
   }
 
-  @discourseComputed(
+  @computed(
     "siteSettings.reviewable_claiming",
     "reviewable.claimed_by"
   )
-  claimHelp(claimMode, claimedBy) {
-    if (claimedBy) {
-      if (claimedBy.user.id === this.currentUser.id) {
+  get claimHelp() {
+    if (this.reviewable?.claimed_by) {
+      if (this.reviewable?.claimed_by?.user.id === this.currentUser.id) {
         return i18n("review.claim_help.claimed_by_you");
-      } else if (claimedBy.automatic) {
+      } else if (this.reviewable?.claimed_by?.automatic) {
         return i18n("review.claim_help.automatically_claimed_by", {
-          username: claimedBy.user.username,
+          username: this.reviewable?.claimed_by?.user.username,
         });
       } else {
         return i18n("review.claim_help.claimed_by_other", {
-          username: claimedBy.user.username,
+          username: this.reviewable?.claimed_by?.user.username,
         });
       }
     }
 
-    return claimMode === "optional"
+    return this.siteSettings?.reviewable_claiming === "optional"
       ? i18n("review.claim_help.optional")
       : i18n("review.claim_help.required");
   }
@@ -254,14 +245,14 @@ export default class ReviewableItem extends Component {
   // Find a component to render, if one exists. For example:
   // `ReviewableUser` will return `reviewable/user` or `reviewable-user`.
   // The former is the new reviewable component, so will only be returned if it exists.
-  @discourseComputed("reviewable.type")
-  reviewableComponent(type) {
-    if (_components[type] !== undefined) {
-      return _components[type];
+  @computed("reviewable.type")
+  get reviewableComponent() {
+    if (_components[this.reviewable?.type] !== undefined) {
+      return _components[this.reviewable?.type];
     }
 
     const owner = getOwner(this);
-    const dasherized = dasherize(type);
+    const dasherized = dasherize(this.reviewable?.type);
     const componentNames = [
       dasherized.replace("reviewable-", "reviewable-refresh/"),
       dasherized,
@@ -272,21 +263,21 @@ export default class ReviewableItem extends Component {
         owner.hasRegistration(`component:${componentName}`) ||
         owner.hasRegistration(`template:components/${componentName}`);
       if (componentExists) {
-        _components[type] = componentName;
+        _components[this.reviewable?.type] = componentName;
         break;
       }
     }
-    return _components[type] || null;
+    return _components[this.reviewable?.type] || null;
   }
 
-  @discourseComputed("_updates.category_id", "reviewable.category.id")
-  tagCategoryId(updatedCategoryId, categoryId) {
-    return updatedCategoryId || categoryId;
+  @computed("_updates.category_id", "reviewable.category.id")
+  get tagCategoryId() {
+    return this._updates?.category_id || this.reviewable?.category?.id;
   }
 
-  @discourseComputed("reviewable.reviewable_scores")
-  scoreSummary(scores) {
-    const scoreData = scores.reduce((acc, score) => {
+  @computed("reviewable.reviewable_scores")
+  get scoreSummary() {
+    const scoreData = this.reviewable?.reviewable_scores?.reduce((acc, score) => {
       if (!acc[score.score_type.type]) {
         acc[score.score_type.type] = {
           title: score.score_type.title,
@@ -302,32 +293,32 @@ export default class ReviewableItem extends Component {
     return Object.values(scoreData);
   }
 
-  @discourseComputed(
+  @computed(
     "reviewable.type",
     "reviewable.created_from_flag",
     "topicId"
   )
-  reviewableTypeLabel(type, createdFromFlag, topicId) {
+  get reviewableTypeLabel() {
     // handle plugin types
-    if (reviewableTypeLabels[type]) {
-      return reviewableTypeLabels[type];
+    if (reviewableTypeLabels[this.reviewable?.type]) {
+      return reviewableTypeLabels[this.reviewable?.type];
     }
 
     // core types
-    if (type === "ReviewableUser") {
+    if (this.reviewable?.type === "ReviewableUser") {
       return "review.user_label";
     }
 
-    if (type === "ReviewableQueuedPost") {
+    if (this.reviewable?.type === "ReviewableQueuedPost") {
       // if topic_id is null it's a new topic
-      return topicId ? "review.queued_post_label" : "review.queued_topic_label";
+      return this.topicId ? "review.queued_post_label" : "review.queued_topic_label";
     }
 
-    if (type === "ReviewableChatMessage") {
+    if (this.reviewable?.type === "ReviewableChatMessage") {
       return "review.chat_flagged_as";
     }
 
-    if (createdFromFlag) {
+    if (this.reviewable?.created_from_flag) {
       return "review.post_flagged_as";
     }
 

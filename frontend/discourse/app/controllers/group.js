@@ -1,8 +1,7 @@
 import Controller, { inject as controller } from "@ember/controller";
-import EmberObject, { action } from "@ember/object";
+import EmberObject, { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import GroupDeleteDialog from "discourse/components/dialog-messages/group-delete";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 class Tab extends EmberObject {
@@ -28,26 +27,20 @@ export default class GroupController extends Controller {
   destroying = null;
   showTooltip = false;
 
-  @discourseComputed(
+  @computed(
     "showMessages",
     "model.user_count",
     "model.request_count",
     "canManageGroup",
     "model.allow_membership_requests"
   )
-  tabs(
-    showMessages,
-    userCount,
-    requestCount,
-    canManageGroup,
-    allowMembershipRequests
-  ) {
+  get tabs() {
     const membersTab = Tab.create({
       name: "members",
       route: "group.index",
       icon: "users",
       i18nKey: "members.title",
-      count: userCount,
+      count: this.model?.user_count,
     });
 
     const defaultTabs = [
@@ -55,18 +48,18 @@ export default class GroupController extends Controller {
       Tab.create({ name: "activity", icon: "bars-staggered" }),
     ];
 
-    if (canManageGroup && allowMembershipRequests) {
+    if (this.canManageGroup && this.model?.allow_membership_requests) {
       defaultTabs.push(
         Tab.create({
           name: "requests",
           i18nKey: "requests.title",
           icon: "user-plus",
-          count: requestCount,
+          count: this.model?.request_count,
         })
       );
     }
 
-    if (showMessages) {
+    if (this.showMessages) {
       defaultTabs.push(
         Tab.create({
           name: "messages",
@@ -76,7 +69,7 @@ export default class GroupController extends Controller {
       );
     }
 
-    if (canManageGroup) {
+    if (this.canManageGroup) {
       defaultTabs.push(
         Tab.create({
           name: "manage",
@@ -97,31 +90,33 @@ export default class GroupController extends Controller {
     return defaultTabs;
   }
 
-  @discourseComputed(
+  @computed(
     "model.has_messages",
     "model.is_group_user",
     "currentUser.can_send_private_messages"
   )
-  showMessages(hasMessages, isGroupUser) {
+  get showMessages() {
     if (!this.currentUser?.can_send_private_messages) {
       return false;
     }
 
-    if (!hasMessages) {
+    if (!this.model?.has_messages) {
       return false;
     }
 
-    return isGroupUser || (this.currentUser && this.currentUser.admin);
+    return (
+      this.model?.is_group_user || (this.currentUser && this.currentUser.admin)
+    );
   }
 
-  @discourseComputed("model.messageable")
-  displayGroupMessageButton(messageable) {
-    return this.currentUser && messageable;
+  @computed("model.messageable")
+  get displayGroupMessageButton() {
+    return this.currentUser && this.model?.messageable;
   }
 
-  @discourseComputed("model", "model.automatic")
-  canManageGroup(model) {
-    return this.currentUser?.canManageGroup(model);
+  @computed("model", "model.automatic")
+  get canManageGroup() {
+    return this.currentUser?.canManageGroup(this.model);
   }
 
   @action

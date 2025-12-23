@@ -1,30 +1,30 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
-import discourseComputed from "discourse/lib/decorators";
+import { computed } from "@ember/object";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
 
 export default class RemindAssignsFrequency extends Component {
-  @discourseComputed(
+  @computed(
     "user.custom_fields.remind_assigns_frequency",
     "siteSettings.remind_assigns_frequency"
   )
-  selectedFrequency(userAssignsFrequency, siteDefaultAssignsFrequency) {
+  get selectedFrequency() {
     if (
       this.availableFrequencies
         .map((freq) => freq.value)
-        .includes(userAssignsFrequency)
+        .includes(this.user?.custom_fields?.remind_assigns_frequency)
     ) {
-      return userAssignsFrequency;
+      return this.user?.custom_fields?.remind_assigns_frequency;
     }
 
-    return siteDefaultAssignsFrequency;
+    return this.siteSettings?.remind_assigns_frequency;
   }
 
-  @discourseComputed("user.reminders_frequency")
-  availableFrequencies(userRemindersFrequency) {
-    return userRemindersFrequency.map((freq) => ({
+  @computed("user.reminders_frequency")
+  get availableFrequencies() {
+    return this.user?.reminders_frequency?.map((freq) => ({
       name: i18n(freq.name),
       value: freq.value,
       selected: false,

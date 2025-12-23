@@ -1,3 +1,4 @@
+import { computed } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { isBlank } from "@ember/utils";
 import {
@@ -5,7 +6,6 @@ import {
   classNameBindings,
   classNames,
 } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
 import AdComponent from "./ad-component";
 
 const adIndex = {
@@ -31,38 +31,35 @@ export default class HouseAd extends AdComponent {
     }
   };
 
-  @discourseComputed
-  colspanAttribute() {
+  @computed
+  get colspanAttribute() {
     return this.tagName === "td" ? "5" : null;
   }
 
-  @discourseComputed("placement", "showAd")
-  adUnitClass(placement, showAd) {
-    return showAd ? `house-${placement}` : "";
+  @computed("placement", "showAd")
+  get adUnitClass() {
+    return this.showAd ? `house-${this.placement}` : "";
   }
 
-  @discourseComputed(
+  @computed(
     "showToGroups",
     "showAfterPost",
     "showAfterTopicListItem",
     "showOnCurrentPage"
   )
-  showAd(
-    showToGroups,
-    showAfterPost,
-    showAfterTopicListItem,
-    showOnCurrentPage
+  get showAd(
+    
   ) {
     return (
-      showToGroups &&
-      (showAfterPost || showAfterTopicListItem) &&
-      showOnCurrentPage
+      this.showToGroups &&
+      (this.showAfterPost || this.showAfterTopicListItem) &&
+      this.showOnCurrentPage
     );
   }
 
-  @discourseComputed("postNumber", "placement")
-  showAfterPost(postNumber, placement) {
-    if (!postNumber && placement !== "topic-list-between") {
+  @computed("postNumber", "placement")
+  get showAfterPost() {
+    if (!this.postNumber && this.placement !== "topic-list-between") {
       return true;
     }
 
@@ -71,9 +68,9 @@ export default class HouseAd extends AdComponent {
     );
   }
 
-  @discourseComputed("placement")
-  showAfterTopicListItem(placement) {
-    if (placement !== "topic-list-between") {
+  @computed("placement")
+  get showAfterTopicListItem() {
+    if (this.placement !== "topic-list-between") {
       return true;
     }
 

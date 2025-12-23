@@ -17,7 +17,6 @@ import DMenu from "discourse/float-kit/components/d-menu";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
-import discourseComputed from "discourse/lib/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { getTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 import { getTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
@@ -50,9 +49,9 @@ export default class TopicFooterButtons extends Component {
     return getTopicFooterDropdowns(this);
   }
 
-  @discourseComputed("canSendPms", "topic.isPrivateMessage")
-  canArchive(canSendPms, isPM) {
-    return canSendPms && isPM;
+  @computed("canSendPms", "topic.isPrivateMessage")
+  get canArchive() {
+    return this.canSendPms && this.topic?.isPrivateMessage;
   }
 
   get inlineActionables() {
@@ -83,36 +82,36 @@ export default class TopicFooterButtons extends Component {
     return this.dropdownButtons.length === 1 ? this.dropdownButtons[0] : null;
   }
 
-  @discourseComputed("topic.isPrivateMessage")
-  showNotificationsButton(isPM) {
-    return !isPM || this.canSendPms;
+  @computed("topic.isPrivateMessage")
+  get showNotificationsButton() {
+    return !this.topic?.isPrivateMessage || this.canSendPms;
   }
 
-  @discourseComputed("topic.details.notification_level")
-  showNotificationUserTip(notificationLevel) {
-    return notificationLevel >= NotificationLevels.TRACKING;
+  @computed("topic.details.notification_level")
+  get showNotificationUserTip() {
+    return this.topic?.details?.notification_level >= NotificationLevels.TRACKING;
   }
 
-  @discourseComputed("topic.message_archived")
-  archiveIcon(archived) {
-    return archived ? "envelope" : "folder";
+  @computed("topic.message_archived")
+  get archiveIcon() {
+    return this.topic?.message_archived ? "envelope" : "folder";
   }
 
-  @discourseComputed("topic.message_archived")
-  archiveTitle(archived) {
-    return archived ? "topic.move_to_inbox.help" : "topic.archive_message.help";
+  @computed("topic.message_archived")
+  get archiveTitle() {
+    return this.topic?.message_archived ? "topic.move_to_inbox.help" : "topic.archive_message.help";
   }
 
-  @discourseComputed("topic.message_archived")
-  archiveLabel(archived) {
-    return archived
+  @computed("topic.message_archived")
+  get archiveLabel() {
+    return this.topic?.message_archived
       ? "topic.move_to_inbox.title"
       : "topic.archive_message.title";
   }
 
-  @discourseComputed("topic.isPrivateMessage")
-  showBookmarkLabel(isPM) {
-    return !isPM;
+  @computed("topic.isPrivateMessage")
+  get showBookmarkLabel() {
+    return !this.topic?.isPrivateMessage;
   }
 
   <template>

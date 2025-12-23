@@ -1,13 +1,13 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import noop from "discourse/helpers/noop";
-import discourseComputed, { bind } from "discourse/lib/decorators";
+import { bind } from "discourse/lib/decorators";
 import {
   authorizedExtensions,
   authorizesAllExtensions,
@@ -58,16 +58,16 @@ export default class PickFilesButton extends Component {
     this._filesPicked(files);
   }
 
-  @discourseComputed()
-  acceptsAllFormats() {
+  @computed()
+  get acceptsAllFormats() {
     return (
       this.capabilities.isIOS ||
       authorizesAllExtensions(this.currentUser.staff, this.siteSettings)
     );
   }
 
-  @discourseComputed()
-  acceptedFormats() {
+  @computed()
+  get acceptedFormats() {
     // the acceptedFormatsOverride can be a list of extensions or mime types
     if (!isBlank(this.acceptedFormatsOverride)) {
       return this.acceptedFormatsOverride;

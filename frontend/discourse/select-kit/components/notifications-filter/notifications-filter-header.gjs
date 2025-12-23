@@ -1,7 +1,7 @@
+import { computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
 import { fmt } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
 import DropdownSelectBoxHeaderComponent from "discourse/select-kit/components/dropdown-select-box/dropdown-select-box-header";
 import { i18n } from "discourse-i18n";
 
@@ -9,9 +9,9 @@ import { i18n } from "discourse-i18n";
 export default class NotificationsFilterHeader extends DropdownSelectBoxHeaderComponent {
   @fmt("value", "user.user_notifications.filters.%@") label;
 
-  @discourseComputed("selectKit.isExpanded")
-  caretIcon(isExpanded) {
-    return isExpanded ? "caret-up" : "caret-down";
+  @computed("selectKit.isExpanded")
+  get caretIcon() {
+    return this.selectKit?.isExpanded ? "caret-up" : "caret-down";
   }
 
   <template>

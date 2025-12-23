@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { not } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
@@ -12,7 +12,6 @@ import TextField from "discourse/components/text-field";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
-import discourseComputed from "discourse/lib/decorators";
 import Group from "discourse/models/group";
 import { i18n } from "discourse-i18n";
 
@@ -33,9 +32,9 @@ export default class GroupsFormProfileFields extends Component {
     }
   }
 
-  @discourseComputed("basicNameValidation", "uniqueNameValidation")
-  nameValidation(basicNameValidation, uniqueNameValidation) {
-    return uniqueNameValidation ? uniqueNameValidation : basicNameValidation;
+  @computed("basicNameValidation", "uniqueNameValidation")
+  get nameValidation() {
+    return this.uniqueNameValidation ? this.uniqueNameValidation : this.basicNameValidation;
   }
 
   @observes("nameInput")

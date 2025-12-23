@@ -2,10 +2,9 @@
 import Component, { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import withEventValue from "discourse/helpers/with-event-value";
-import discourseComputed from "discourse/lib/decorators";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
 
@@ -15,8 +14,8 @@ export default class CreateCouponForm extends Component {
   promoCode = null;
   active = false;
 
-  @discourseComputed
-  discountTypes() {
+  @computed
+  get discountTypes() {
     return [
       { id: "amount", name: "Amount" },
       { id: "percent", name: "Percent" },

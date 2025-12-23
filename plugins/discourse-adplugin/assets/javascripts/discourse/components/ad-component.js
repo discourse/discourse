@@ -1,10 +1,10 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { alias, or } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { throwAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 import {
   isNthPost,
   isNthTopicListItem,
@@ -40,23 +40,29 @@ export default class AdComponent extends Component {
     this.trackClick();
   };
 
-  @discourseComputed(
+  @computed(
     "router.currentRoute.attributes.__type",
     "router.currentRoute.attributes.id"
   )
-  topicListTag(type, tag) {
-    if (type === "tag" && tag) {
-      return tag;
+  get topicListTag() {
+    if (
+      this.router?.currentRoute?.attributes?.__type === "tag" &&
+      this.router?.currentRoute?.attributes?.id
+    ) {
+      return this.router?.currentRoute?.attributes?.id;
     }
   }
 
-  @discourseComputed("router.currentRoute.parent.attributes.archetype")
-  isPersonalMessage(topicType) {
-    return topicType === "private_message";
+  @computed("router.currentRoute.parent.attributes.archetype")
+  get isPersonalMessage() {
+    return (
+      this.router?.currentRoute?.parent?.attributes?.archetype ===
+      "private_message"
+    );
   }
 
-  @discourseComputed
-  showToGroups() {
+  @computed
+  get showToGroups() {
     if (!this.currentUser) {
       return true;
     }
@@ -64,32 +70,29 @@ export default class AdComponent extends Component {
     return this.currentUser.show_to_groups;
   }
 
-  @discourseComputed(
+  @computed(
     "currentCategoryId",
     "topicTagsDisableAds",
     "topicListTag",
     "isPersonalMessage",
     "isRestrictedCategory"
   )
-  showOnCurrentPage(
-    categoryId,
-    topicTagsDisableAds,
-    topicListTag,
-    isPersonalMessage,
-    isRestrictedCategory
-  ) {
+  get showOnCurrentPage() {
     return (
-      !topicTagsDisableAds &&
-      (!categoryId ||
+      !this.topicTagsDisableAds &&
+      (!this.currentCategoryId ||
         !this.siteSettings.no_ads_for_categories ||
         !this.siteSettings.no_ads_for_categories
           .split("|")
-          .includes(categoryId.toString())) &&
-      (!topicListTag ||
+          .includes(this.currentCategoryId.toString())) &&
+      (!this.topicListTag ||
         !this.siteSettings.no_ads_for_tags ||
-        !this.siteSettings.no_ads_for_tags.split("|").includes(topicListTag)) &&
-      (!isPersonalMessage || !this.siteSettings.no_ads_for_personal_messages) &&
-      (!isRestrictedCategory ||
+        !this.siteSettings.no_ads_for_tags
+          .split("|")
+          .includes(this.topicListTag)) &&
+      (!this.isPersonalMessage ||
+        !this.siteSettings.no_ads_for_personal_messages) &&
+      (!this.isRestrictedCategory ||
         !this.siteSettings.no_ads_for_restricted_categories)
     );
   }

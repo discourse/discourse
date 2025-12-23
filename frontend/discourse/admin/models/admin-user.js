@@ -1,8 +1,8 @@
+import { computed } from "@ember/object";
 import { filter, gt, lt, not, or } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { propertyNotEqual } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import { userPath } from "discourse/lib/url";
@@ -44,30 +44,30 @@ export default class AdminUser extends User {
   @not("staff") canSuspend;
   @not("staff") canSilence;
 
-  @discourseComputed("bounce_score", "reset_bounce_score_after")
-  bounceScore(bounce_score, reset_bounce_score_after) {
-    if (bounce_score > 0) {
-      return `${bounce_score} - ${moment(reset_bounce_score_after).format(
-        "LL"
-      )}`;
+  @computed("bounce_score", "reset_bounce_score_after")
+  get bounceScore() {
+    if (this.bounce_score > 0) {
+      return `${this.bounce_score} - ${moment(
+        this.reset_bounce_score_after
+      ).format("LL")}`;
     } else {
-      return bounce_score;
+      return this.bounce_score;
     }
   }
 
-  @discourseComputed("bounce_score")
-  bounceScoreExplanation(bounce_score) {
-    if (bounce_score === 0) {
+  @computed("bounce_score")
+  get bounceScoreExplanation() {
+    if (this.bounce_score === 0) {
       return i18n("admin.user.bounce_score_explanation.none");
-    } else if (bounce_score < this.siteSettings.bounce_score_threshold) {
+    } else if (this.bounce_score < this.siteSettings.bounce_score_threshold) {
       return i18n("admin.user.bounce_score_explanation.some");
     } else {
       return i18n("admin.user.bounce_score_explanation.threshold_reached");
     }
   }
 
-  @discourseComputed
-  bounceLink() {
+  @computed
+  get bounceLink() {
     return getURL("/admin/email-logs/bounced");
   }
 
@@ -217,10 +217,10 @@ export default class AdminUser extends User {
     });
   }
 
-  @discourseComputed("suspended_till", "suspended_at")
-  suspendDuration(suspendedTill, suspendedAt) {
-    suspendedAt = moment(suspendedAt);
-    suspendedTill = moment(suspendedTill);
+  @computed("suspended_till", "suspended_at")
+  get suspendDuration() {
+    const suspendedAt = moment(this.suspended_at);
+    const suspendedTill = moment(this.suspended_till);
     return suspendedAt.format("L") + " - " + suspendedTill.format("L");
   }
 
@@ -359,26 +359,26 @@ export default class AdminUser extends User {
     return this;
   }
 
-  @discourseComputed("tl3_requirements")
-  tl3Requirements(requirements) {
-    if (requirements) {
-      return this.store.createRecord("tl3Requirements", requirements);
+  @computed("tl3_requirements")
+  get tl3Requirements() {
+    if (this.tl3_requirements) {
+      return this.store.createRecord("tl3Requirements", this.tl3_requirements);
     }
   }
 
-  @discourseComputed("suspended_by")
-  suspendedBy(user) {
-    return user ? AdminUser.create(user) : null;
+  @computed("suspended_by")
+  get suspendedBy() {
+    return this.suspended_by ? AdminUser.create(this.suspended_by) : null;
   }
 
-  @discourseComputed("silenced_by")
-  silencedBy(user) {
-    return user ? AdminUser.create(user) : null;
+  @computed("silenced_by")
+  get silencedBy() {
+    return this.silenced_by ? AdminUser.create(this.silenced_by) : null;
   }
 
-  @discourseComputed("approved_by")
-  approvedBy(user) {
-    return user ? AdminUser.create(user) : null;
+  @computed("approved_by")
+  get approvedBy() {
+    return this.approved_by ? AdminUser.create(this.approved_by) : null;
   }
 
   deleteSSORecord() {

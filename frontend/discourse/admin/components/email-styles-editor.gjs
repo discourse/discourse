@@ -6,7 +6,6 @@ import { reads } from "@ember/object/computed";
 import { service } from "@ember/service";
 import AceEditor from "discourse/components/ace-editor";
 import DButton from "discourse/components/d-button";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class EmailStylesEditor extends Component {
@@ -14,16 +13,16 @@ export default class EmailStylesEditor extends Component {
 
   @reads("fieldName") editorId;
 
-  @discourseComputed("fieldName")
-  currentEditorMode(fieldName) {
-    return fieldName === "css" ? "scss" : fieldName;
+  @computed("fieldName")
+  get currentEditorMode() {
+    return this.fieldName === "css" ? "scss" : this.fieldName;
   }
 
-  @discourseComputed("fieldName", "styles.html", "styles.css")
-  resetDisabled(fieldName) {
+  @computed("fieldName", "styles.html", "styles.css")
+  get resetDisabled() {
     return (
-      this.get(`styles.${fieldName}`) ===
-      this.get(`styles.default_${fieldName}`)
+      this.get(`styles.${this.fieldName}`) ===
+      this.get(`styles.default_${this.fieldName}`)
     );
   }
 

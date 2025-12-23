@@ -1,9 +1,8 @@
 import { array } from "@ember/helper";
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
 import { isNthPost, isNthTopicListItem } from "../helpers/slot-position";
 import AdComponent from "./ad-component";
 import AdbutlerAd from "./adbutler-ad";
@@ -195,14 +194,14 @@ export default class AdSlot extends AdComponent {
    * For a given ad placement and optionally a post number if in between posts,
    * list all ad network names that are configured to show there.
    */
-  @discourseComputed("placement", "postNumber", "indexNumber")
-  availableAdTypes(placement, postNumber, indexNumber) {
+  @computed("placement", "postNumber", "indexNumber")
+  get availableAdTypes() {
     return slotContenders(
       this.site,
       this.siteSettings,
-      placement,
-      indexNumber,
-      postNumber
+      this.placement,
+      this.indexNumber,
+      this.postNumber
     );
   }
 
@@ -213,15 +212,15 @@ export default class AdSlot extends AdComponent {
    *
    * Depends on `router.currentRoute` so that we refresh ads when navigating around.
    */
-  @discourseComputed("placement", "availableAdTypes", "router.currentRoute")
-  adComponentNames(placement, availableAdTypes) {
+  @computed("placement", "availableAdTypes", "router.currentRoute")
+  get adComponentNames() {
     if (
-      !availableAdTypes.includes("house-ad") ||
-      availableAdTypes.length === 1
+      !this.availableAdTypes.includes("house-ad") ||
+      this.availableAdTypes.length === 1
     ) {
       // Current behaviour is to allow multiple ads from different networks
       // to show in the same place. We could change this to choose one somehow.
-      return availableAdTypes;
+      return this.availableAdTypes;
     }
 
     const houseAds = this.site.get("house_creatives");
@@ -245,7 +244,7 @@ export default class AdSlot extends AdComponent {
       }
     }
 
-    const networkNames = availableAdTypes.filter((x) => x !== "house-ad");
+    const networkNames = this.availableAdTypes.filter((x) => x !== "house-ad");
 
     if (houseAdsSkipped) {
       displayCounts.allAds += networkNames.length;

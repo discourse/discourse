@@ -1,14 +1,14 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
+import { computed } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { tagName } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
 
 @tagName("")
 export default class UserSummaryCategorySearch extends Component {
-  @discourseComputed("user", "category")
-  searchParams() {
+  @computed("user", "category")
+  get searchParams() {
     let query = `@${this.get("user.username")} #${this.get("category.slug")}`;
     if (this.searchOnlyFirstPosts) {
       query += " in:first";

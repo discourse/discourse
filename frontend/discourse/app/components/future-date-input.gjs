@@ -2,12 +2,11 @@
 import Component, { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { and, empty, equal } from "@ember/object/computed";
 import DatePickerFuture from "discourse/components/date-picker-future";
 import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
-import discourseComputed from "discourse/lib/decorators";
 import {
   extendedDefaultTimeShortcuts,
   formatTime,
@@ -62,11 +61,11 @@ export default class FutureDateInput extends Component {
     }
   }
 
-  @discourseComputed("customShortcuts")
-  shortcuts(customShortcuts) {
+  @computed("customShortcuts")
+  get shortcuts() {
     let shortcuts;
-    if (customShortcuts && customShortcuts.length) {
-      shortcuts = customShortcuts;
+    if (this.customShortcuts && this.customShortcuts.length) {
+      shortcuts = this.customShortcuts;
     } else {
       shortcuts = extendedDefaultTimeShortcuts(this.userTimezone);
     }

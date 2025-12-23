@@ -1,5 +1,5 @@
+import { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse/lib/decorators";
 import Plan from "discourse/plugins/discourse-subscriptions/discourse/models/plan";
 
 export default class AdminPlan extends Plan {
@@ -22,10 +22,10 @@ export default class AdminPlan extends Plan {
   intervals = ["day", "week", "month", "year"];
   metadata = {};
 
-  @discourseComputed("trial_period_days")
-  parseTrialPeriodDays(trialDays) {
-    if (trialDays) {
-      return parseInt(0 + trialDays, 10);
+  @computed("trial_period_days")
+  get parseTrialPeriodDays() {
+    if (this.trial_period_days) {
+      return parseInt(0 + this.trial_period_days, 10);
     } else {
       return 0;
     }

@@ -1,10 +1,9 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
-import discourseComputed from "discourse/lib/decorators";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import { i18n } from "discourse-i18n";
 
@@ -14,9 +13,9 @@ export default class SharedDraftControls extends Component {
 
   publishing = false;
 
-  @discourseComputed("topic.destination_category_id")
-  validCategory(destCatId) {
-    return destCatId && destCatId !== this.site.shared_drafts_category_id;
+  @computed("topic.destination_category_id")
+  get validCategory() {
+    return this.topic?.destination_category_id && this.topic?.destination_category_id !== this.site.shared_drafts_category_id;
   }
 
   @action

@@ -1,22 +1,22 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 @classNames("penalty-history")
 export default class AdminPenaltyHistory extends Component {
-  @discourseComputed("user.penalty_counts.suspended")
-  suspendedCountClass(count) {
-    if (count > 0) {
+  @computed("user.penalty_counts.suspended")
+  get suspendedCountClass() {
+    if (this.user?.penalty_counts?.suspended > 0) {
       return "danger";
     }
     return "";
   }
 
-  @discourseComputed("user.penalty_counts.silenced")
-  silencedCountClass(count) {
-    if (count > 0) {
+  @computed("user.penalty_counts.silenced")
+  get silencedCountClass() {
+    if (this.user?.penalty_counts?.silenced > 0) {
       return "danger";
     }
     return "";

@@ -2,7 +2,7 @@
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { cancel, schedule, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -29,7 +29,6 @@ import concatClass from "discourse/helpers/concat-class";
 import Toolbar from "discourse/lib/composer/toolbar";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import discourseDebounce from "discourse/lib/debounce";
-import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { isTesting } from "discourse/lib/environment";
 import { getRegister } from "discourse/lib/get-owner";
@@ -154,16 +153,16 @@ export default class DEditor extends Component {
     });
   }
 
-  @discourseComputed("placeholder")
-  placeholderTranslated(placeholder) {
-    if (placeholder) {
-      return i18n(placeholder);
+  @computed("placeholder")
+  get placeholderTranslated() {
+    if (this.placeholder) {
+      return i18n(this.placeholder);
     }
     return null;
   }
 
-  @discourseComputed("siteSettings.rich_editor", "forceEditorMode")
-  showEditorModeToggle() {
+  @computed("siteSettings.rich_editor", "forceEditorMode")
+  get showEditorModeToggle() {
     return this.siteSettings.rich_editor && isNone(this.forceEditorMode);
   }
 

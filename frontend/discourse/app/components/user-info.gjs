@@ -1,5 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import {
   attributeBindings,
@@ -12,7 +13,6 @@ import avatar from "discourse/helpers/avatar";
 import concatClass from "discourse/helpers/concat-class";
 import formatUsername from "discourse/helpers/format-username";
 import lazyHash from "discourse/helpers/lazy-hash";
-import discourseComputed from "discourse/lib/decorators";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { userPath } from "discourse/lib/url";
 import { and } from "discourse/truth-helpers";
@@ -36,14 +36,14 @@ export default class UserInfo extends Component {
     this.user?.statusManager?.stopTrackingStatus();
   }
 
-  @discourseComputed("user.username")
-  userPath(username) {
-    return userPath(username);
+  @computed("user.username")
+  get userPath() {
+    return userPath(this.user?.username);
   }
 
-  @discourseComputed("user.name")
-  nameFirst(name) {
-    return prioritizeNameInUx(name);
+  @computed("user.name")
+  get nameFirst() {
+    return prioritizeNameInUx(this.user?.name);
   }
 
   <template>

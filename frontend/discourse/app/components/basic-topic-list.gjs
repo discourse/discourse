@@ -1,12 +1,12 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { alias, not } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { observes } from "@ember-decorators/object";
 import $ from "jquery";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import List from "discourse/components/topic-list/list";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class BasicTopicList extends Component {
@@ -24,8 +24,8 @@ export default class BasicTopicList extends Component {
     }
   }
 
-  @discourseComputed("topicList.loaded")
-  loaded() {
+  @computed("topicList.loaded")
+  get loaded() {
     let topicList = this.topicList;
     if (topicList) {
       return topicList.get("loaded");
@@ -46,9 +46,9 @@ export default class BasicTopicList extends Component {
     }
   }
 
-  @discourseComputed("topics")
-  showUnreadIndicator(topics) {
-    return topics.some(
+  @computed("topics")
+  get showUnreadIndicator() {
+    return this.topics.some(
       (topic) => typeof topic.unread_by_group_member !== "undefined"
     );
   }

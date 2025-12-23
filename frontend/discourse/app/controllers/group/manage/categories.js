@@ -1,17 +1,23 @@
 import Controller from "@ember/controller";
-import discourseComputed from "discourse/lib/decorators";
+import { computed } from "@ember/object";
 
 export default class GroupManageCategoriesController extends Controller {
-  @discourseComputed(
+  @computed(
     "model.watchingCategories.[]",
     "model.watchingFirstPostCategories.[]",
     "model.trackingCategories.[]",
     "model.regularCategories.[]",
     "model.mutedCategories.[]"
   )
-  selectedCategories(watching, watchingFirst, tracking, regular, muted) {
+  get selectedCategories() {
     return []
-      .concat(watching, watchingFirst, tracking, regular, muted)
+      .concat(
+        this.model?.watchingCategories,
+        this.model?.watchingFirstPostCategories,
+        this.model?.trackingCategories,
+        this.model?.regularCategories,
+        this.model?.mutedCategories
+      )
       .filter(Boolean);
   }
 }

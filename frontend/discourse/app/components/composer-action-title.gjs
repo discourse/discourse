@@ -1,12 +1,12 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
+import { computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
 import PostLanguageSelector from "discourse/components/post-language-selector";
-import discourseComputed from "discourse/lib/decorators";
 import escape from "discourse/lib/escape";
 import { iconHTML } from "discourse/lib/icon-library";
 import {
@@ -39,32 +39,32 @@ export default class ComposerActionTitle extends Component {
 
   // Note we update when some other attributes like tag/category change to allow
   // text customizations to use those.
-  @discourseComputed("options", "action", "model.tags", "model.category")
-  actionTitle(opts, action) {
+  @computed("options", "action", "model.tags", "model.category")
+  get actionTitle() {
     const result = this.model.customizationFor("actionTitle");
     if (result) {
       return result;
     }
 
-    if (TITLES[action]) {
-      return i18n(TITLES[action]);
+    if (TITLES[this.action]) {
+      return i18n(TITLES[this.action]);
     }
 
-    if (action === REPLY) {
-      if (opts.userAvatar && opts.userLink) {
-        return this._formatReplyToUserPost(opts.userAvatar, opts.userLink);
-      } else if (opts.topicLink) {
-        return this._formatReplyToTopic(opts.topicLink);
+    if (this.action === REPLY) {
+      if (this.options.userAvatar && this.options.userLink) {
+        return this._formatReplyToUserPost(this.options.userAvatar, this.options.userLink);
+      } else if (this.options.topicLink) {
+        return this._formatReplyToTopic(this.options.topicLink);
       }
     }
 
-    if (action === EDIT) {
-      if (opts.userAvatar && opts.userLink && opts.postLink) {
+    if (this.action === EDIT) {
+      if (this.options.userAvatar && this.options.userLink && this.options.postLink) {
         return this._formatEditUserPost(
-          opts.userAvatar,
-          opts.userLink,
-          opts.postLink,
-          opts.originalUser
+          this.options.userAvatar,
+          this.options.userLink,
+          this.options.postLink,
+          this.options.originalUser
         );
       }
     }

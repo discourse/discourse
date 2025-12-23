@@ -1,11 +1,10 @@
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { equal } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { observes } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse/lib/decorators";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import Category from "discourse/models/category";
 import GroupHistory from "discourse/models/group-history";
@@ -49,19 +48,21 @@ export default class Group extends RestModel {
 
   @equal("mentionable_level", 99) canEveryoneMention;
 
-  @discourseComputed("automatic_membership_email_domains")
-  emailDomains(value) {
-    return isEmpty(value) ? "" : value;
+  @computed("automatic_membership_email_domains")
+  get emailDomains() {
+    return isEmpty(this.automatic_membership_email_domains)
+      ? ""
+      : this.automatic_membership_email_domains;
   }
 
-  @discourseComputed("associated_group_ids")
-  associatedGroupIds(value) {
-    return isEmpty(value) ? [] : value;
+  @computed("associated_group_ids")
+  get associatedGroupIds() {
+    return isEmpty(this.associated_group_ids) ? [] : this.associated_group_ids;
   }
 
-  @discourseComputed("automatic")
-  type(automatic) {
-    return automatic ? "automatic" : "custom";
+  @computed("automatic")
+  get type() {
+    return this.automatic ? "automatic" : "custom";
   }
 
   async reloadMembers(params, refresh) {
@@ -183,28 +184,28 @@ export default class Group extends RestModel {
     return this.reloadMembers({ filter: usernames.join(",") });
   }
 
-  @discourseComputed("display_name", "name")
-  displayName(groupDisplayName, name) {
-    return groupDisplayName || name;
+  @computed("display_name", "name")
+  get displayName() {
+    return this.display_name || this.name;
   }
 
-  @discourseComputed("flair_bg_color")
-  flairBackgroundHexColor(flairBgColor) {
-    return flairBgColor
-      ? flairBgColor.replace(new RegExp("[^0-9a-fA-F]", "g"), "")
+  @computed("flair_bg_color")
+  get flairBackgroundHexColor() {
+    return this.flair_bg_color
+      ? this.flair_bg_color.replace(new RegExp("[^0-9a-fA-F]", "g"), "")
       : null;
   }
 
-  @discourseComputed("flair_color")
-  flairHexColor(flairColor) {
-    return flairColor
-      ? flairColor.replace(new RegExp("[^0-9a-fA-F]", "g"), "")
+  @computed("flair_color")
+  get flairHexColor() {
+    return this.flair_color
+      ? this.flair_color.replace(new RegExp("[^0-9a-fA-F]", "g"), "")
       : null;
   }
 
-  @discourseComputed("visibility_level")
-  isPrivate(visibilityLevel) {
-    return visibilityLevel > 1;
+  @computed("visibility_level")
+  get isPrivate() {
+    return this.visibility_level > 1;
   }
 
   @observes("isPrivate", "canEveryoneMention")

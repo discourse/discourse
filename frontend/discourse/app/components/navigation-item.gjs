@@ -1,13 +1,13 @@
 /* eslint-disable ember/no-classic-components */
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import {
   attributeBindings,
   classNameBindings,
   tagName,
 } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 
 @tagName("li")
@@ -31,23 +31,23 @@ export default class NavigationItem extends Component {
     return filterTypeForMode(this.filterMode);
   }
 
-  @discourseComputed("content.filterType", "filterType", "content.active")
-  active(contentFilterType, filterType, active) {
-    if (active !== undefined) {
-      return active;
+  @computed("content.filterType", "filterType", "content.active")
+  get active() {
+    if (this.content?.active !== undefined) {
+      return this.content?.active;
     }
-    return contentFilterType === filterType;
+    return this.content?.filterType === this.filterType;
   }
 
-  @discourseComputed("content.count", "content.name")
-  isHidden(count, name) {
+  @computed("content.count", "content.name")
+  get isHidden() {
     return (
       !this.active &&
       this.currentUser &&
       !this.currentUser.new_new_view_enabled &&
       this.currentUser.trust_level > 0 &&
-      (name === "new" || name === "unread") &&
-      count < 1
+      (this.content?.name === "new" || this.content?.name === "unread") &&
+      this.content?.count < 1
     );
   }
 

@@ -1,10 +1,9 @@
 import { computed } from "@ember/object";
-import discourseComputed from "discourse/lib/decorators";
 import AdminDashboardTabController from "../admin-dashboard-tab";
 
 export default class AdminDashboardModerationController extends AdminDashboardTabController {
-  @discourseComputed
-  flagsStatusOptions() {
+  @computed
+  get flagsStatusOptions() {
     return {
       table: {
         total: false,
@@ -21,8 +20,8 @@ export default class AdminDashboardModerationController extends AdminDashboardTa
       .includes("moderators_activity");
   }
 
-  @discourseComputed
-  userFlaggingRatioOptions() {
+  @computed
+  get userFlaggingRatioOptions() {
     return {
       table: {
         total: false,
@@ -36,14 +35,14 @@ export default class AdminDashboardModerationController extends AdminDashboardTa
     return { startDate: this.startDate, endDate: this.endDate };
   }
 
-  @discourseComputed("endDate")
-  lastWeekFilters(endDate) {
+  @computed("endDate")
+  get lastWeekFilters() {
     const lastWeek = moment()
       .locale("en")
       .utc()
       .endOf("day")
       .subtract(1, "week");
 
-    return { lastWeek, endDate };
+    return { lastWeek, endDate: this.endDate };
   }
 }

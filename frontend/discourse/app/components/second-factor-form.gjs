@@ -1,16 +1,15 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { htmlSafe } from "@ember/template";
-import discourseComputed from "discourse/lib/decorators";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
 export default class SecondFactorForm extends Component {
-  @discourseComputed("secondFactorMethod")
-  secondFactorTitle(secondFactorMethod) {
-    switch (secondFactorMethod) {
+  @computed("secondFactorMethod")
+  get secondFactorTitle() {
+    switch (this.secondFactorMethod) {
       case SECOND_FACTOR_METHODS.TOTP:
         return i18n("login.second_factor_title");
       case SECOND_FACTOR_METHODS.SECURITY_KEY:
@@ -20,9 +19,9 @@ export default class SecondFactorForm extends Component {
     }
   }
 
-  @discourseComputed("secondFactorMethod")
-  secondFactorDescription(secondFactorMethod) {
-    switch (secondFactorMethod) {
+  @computed("secondFactorMethod")
+  get secondFactorDescription() {
+    switch (this.secondFactorMethod) {
       case SECOND_FACTOR_METHODS.TOTP:
         return i18n("login.second_factor_description");
       case SECOND_FACTOR_METHODS.SECURITY_KEY:
@@ -32,25 +31,25 @@ export default class SecondFactorForm extends Component {
     }
   }
 
-  @discourseComputed("secondFactorMethod", "isLogin")
-  linkText(secondFactorMethod, isLogin) {
-    if (isLogin) {
-      return secondFactorMethod === SECOND_FACTOR_METHODS.TOTP
+  @computed("secondFactorMethod", "isLogin")
+  get linkText() {
+    if (this.isLogin) {
+      return this.secondFactorMethod === SECOND_FACTOR_METHODS.TOTP
         ? "login.second_factor_backup"
         : "login.second_factor";
     } else {
-      return secondFactorMethod === SECOND_FACTOR_METHODS.TOTP
+      return this.secondFactorMethod === SECOND_FACTOR_METHODS.TOTP
         ? "user.second_factor_backup.use"
         : "user.second_factor.use";
     }
   }
 
-  @discourseComputed("backupEnabled", "totpEnabled", "secondFactorMethod")
-  showToggleMethodLink(backupEnabled, totpEnabled, secondFactorMethod) {
+  @computed("backupEnabled", "totpEnabled", "secondFactorMethod")
+  get showToggleMethodLink() {
     return (
-      backupEnabled &&
-      totpEnabled &&
-      secondFactorMethod !== SECOND_FACTOR_METHODS.SECURITY_KEY
+      this.backupEnabled &&
+      this.totpEnabled &&
+      this.secondFactorMethod !== SECOND_FACTOR_METHODS.SECURITY_KEY
     );
   }
 

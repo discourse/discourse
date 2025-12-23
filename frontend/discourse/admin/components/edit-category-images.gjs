@@ -1,30 +1,29 @@
-import EmberObject, { action } from "@ember/object";
+import EmberObject, { action, computed } from "@ember/object";
 import { buildCategoryPanel } from "discourse/admin/components/edit-category-panel";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
 import lazyHash from "discourse/helpers/lazy-hash";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class EditCategoryImages extends buildCategoryPanel("images") {
-  @discourseComputed("category.uploaded_background.url")
-  backgroundImageUrl(uploadedBackgroundUrl) {
-    return uploadedBackgroundUrl || "";
+  @computed("category.uploaded_background.url")
+  get backgroundImageUrl() {
+    return this.category?.uploaded_background?.url || "";
   }
 
-  @discourseComputed("category.uploaded_background_dark.url")
-  backgroundDarkImageUrl(uploadedBackgroundDarkUrl) {
-    return uploadedBackgroundDarkUrl || "";
+  @computed("category.uploaded_background_dark.url")
+  get backgroundDarkImageUrl() {
+    return this.category?.uploaded_background_dark?.url || "";
   }
 
-  @discourseComputed("category.uploaded_logo.url")
-  logoImageUrl(uploadedLogoUrl) {
-    return uploadedLogoUrl || "";
+  @computed("category.uploaded_logo.url")
+  get logoImageUrl() {
+    return this.category?.uploaded_logo?.url || "";
   }
 
-  @discourseComputed("category.uploaded_logo_dark.url")
-  logoImageDarkUrl(uploadedLogoDarkUrl) {
-    return uploadedLogoDarkUrl || "";
+  @computed("category.uploaded_logo_dark.url")
+  get logoImageDarkUrl() {
+    return this.category?.uploaded_logo_dark?.url || "";
   }
 
   @action

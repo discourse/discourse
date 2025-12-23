@@ -2,12 +2,12 @@
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { computed } from "@ember/object";
 import { classNameBindings } from "@ember-decorators/component";
 import GoogleIcon from "discourse/components/google-icon";
 import PasskeyLoginButton from "discourse/components/passkey-login-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
-import discourseComputed from "discourse/lib/decorators";
 import { isWebauthnSupported } from "discourse/lib/webauthn";
 import { findAll } from "discourse/models/login-method";
 import { i18n } from "discourse-i18n";
@@ -16,27 +16,27 @@ import { i18n } from "discourse-i18n";
 export default class LoginButtons extends Component {
   elementId = "login-buttons";
 
-  @discourseComputed(
+  @computed(
     "buttons.length",
     "showLoginWithEmailLink",
     "showPasskeysButton"
   )
-  hidden(buttonsCount, showLoginWithEmailLink, showPasskeysButton) {
-    return buttonsCount === 0 && !showLoginWithEmailLink && !showPasskeysButton;
+  get hidden() {
+    return this.buttons?.length === 0 && !this.showLoginWithEmailLink && !this.showPasskeysButton;
   }
 
-  @discourseComputed("buttons.length")
-  multiple(buttonsCount) {
-    return buttonsCount > 1;
+  @computed("buttons.length")
+  get multiple() {
+    return this.buttons?.length > 1;
   }
 
-  @discourseComputed
-  buttons() {
+  @computed
+  get buttons() {
     return findAll();
   }
 
-  @discourseComputed
-  showPasskeysButton() {
+  @computed
+  get showPasskeysButton() {
     return (
       this.siteSettings.enable_local_logins &&
       this.siteSettings.enable_passkeys &&

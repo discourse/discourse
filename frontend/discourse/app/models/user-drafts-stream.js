@@ -1,6 +1,6 @@
+import { computed } from "@ember/object";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse/lib/decorators";
 import { cook, excerpt } from "discourse/lib/text";
 import Category from "discourse/models/category";
 import {
@@ -30,9 +30,9 @@ export default class UserDraftsStream extends RestModel {
     });
   }
 
-  @discourseComputed("content.length", "loading")
-  noContent(contentLength, loading) {
-    return contentLength === 0 && !loading;
+  @computed("content.length", "loading")
+  get noContent() {
+    return this.content?.length === 0 && !this.loading;
   }
 
   remove(draft) {

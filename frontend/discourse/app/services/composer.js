@@ -18,7 +18,6 @@ import {
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import discourseDebounce from "discourse/lib/debounce";
-import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { isRailsTesting } from "discourse/lib/environment";
 import prepareFormTemplateData, {
@@ -245,9 +244,9 @@ export default class ComposerService extends Service {
     this.selectedFormTemplate = formTemplate;
   }
 
-  @discourseComputed("showPreview")
-  toggleText(showPreview) {
-    return showPreview
+  @computed("showPreview")
+  get toggleText() {
+    return this.showPreview
       ? i18n("composer.hide_preview")
       : i18n("composer.show_preview");
   }
@@ -262,27 +261,27 @@ export default class ComposerService extends Service {
     }
   }
 
-  @discourseComputed(
+  @computed(
     "model.replyingToTopic",
     "model.creatingPrivateMessage",
     "model.targetRecipients",
     "model.composeState"
   )
-  focusTarget(replyingToTopic, creatingPM, usernames, composeState) {
+  get focusTarget() {
     // Focus on usernames if it's blank or if it's just you
-    usernames = usernames || "";
+    const usernames = this.model?.targetRecipients || "";
     if (
-      (creatingPM && usernames.length === 0) ||
+      (this.model?.creatingPrivateMessage && usernames.length === 0) ||
       usernames === this.currentUser.username
     ) {
       return "usernames";
     }
 
-    if (replyingToTopic) {
+    if (this.model?.replyingToTopic) {
       return "reply";
     }
 
-    if (composeState === Composer.FULLSCREEN) {
+    if (this.model?.composeState === Composer.FULLSCREEN) {
       return "editor";
     }
 
@@ -310,54 +309,56 @@ export default class ComposerService extends Service {
     });
   }
 
-  @discourseComputed("model.canEditTitle", "model.creatingPrivateMessage")
-  canEditTags(canEditTitle, creatingPrivateMessage) {
+  @computed("model.canEditTitle", "model.creatingPrivateMessage")
+  get canEditTags() {
     const isPrivateMessage =
-      creatingPrivateMessage || this.get("model.topic.isPrivateMessage");
+      this.model?.creatingPrivateMessage ||
+      this.get("model.topic.isPrivateMessage");
     return (
-      canEditTitle &&
+      this.model?.canEditTitle &&
       this.site.can_tag_topics &&
       (!isPrivateMessage || this.site.can_tag_pms)
     );
   }
 
-  @discourseComputed("model.editingPost", "model.topic.details.can_edit")
-  disableCategoryChooser(editingPost, canEditTopic) {
-    return editingPost && !canEditTopic;
+  @computed("model.editingPost", "model.topic.details.can_edit")
+  get disableCategoryChooser() {
+    return this.model?.editingPost && !this.model?.topic?.details?.can_edit;
   }
 
-  @discourseComputed("model.editingPost", "model.topic.canEditTags")
-  disableTagsChooser(editingPost, canEditTags) {
-    return editingPost && !canEditTags;
+  @computed("model.editingPost", "model.topic.canEditTags")
+  get disableTagsChooser() {
+    return this.model?.editingPost && !this.model?.topic?.canEditTags;
   }
 
-  @discourseComputed("canWhisper", "replyingToWhisper")
-  showWhisperToggle(canWhisper, replyingToWhisper) {
-    return canWhisper && !replyingToWhisper;
+  @computed("canWhisper", "replyingToWhisper")
+  get showWhisperToggle() {
+    return this.canWhisper && !this.replyingToWhisper;
   }
 
-  @discourseComputed("model.post")
-  replyingToWhisper(repliedToPost) {
+  @computed("model.post")
+  get replyingToWhisper() {
     return (
-      repliedToPost && repliedToPost.post_type === this.site.post_types.whisper
+      this.model?.post &&
+      this.model?.post?.post_type === this.site.post_types.whisper
     );
   }
 
-  @discourseComputed("model.action", "isWhispering", "model.privateMessage")
-  saveIcon(modelAction, isWhispering, privateMessage) {
-    if (isWhispering) {
+  @computed("model.action", "isWhispering", "model.privateMessage")
+  get saveIcon() {
+    if (this.isWhispering) {
       return "far-eye-slash";
     }
-    if (privateMessage && modelAction === Composer.REPLY) {
+    if (this.model?.privateMessage && this.model?.action === Composer.REPLY) {
       return "envelope";
     }
 
-    return SAVE_ICONS[modelAction];
+    return SAVE_ICONS[this.model?.action];
   }
 
   // Note we update when some other attributes like tag/category change to allow
   // text customizations to use those.
-  @discourseComputed(
+  @computed(
     "model.action",
     "isWhispering",
     "model.editConflict",
@@ -365,26 +366,29 @@ export default class ComposerService extends Service {
     "model.tags",
     "model.category"
   )
-  saveLabel(modelAction, isWhispering, editConflict, privateMessage) {
+  get saveLabel() {
     let result = this.model.customizationFor("saveLabel");
     if (result) {
       return result;
     }
 
-    if (editConflict) {
+    if (this.model?.editConflict) {
       return "composer.overwrite_edit";
-    } else if (isWhispering) {
+    } else if (this.isWhispering) {
       return "composer.create_whisper";
-    } else if (privateMessage && modelAction === Composer.REPLY) {
+    } else if (
+      this.model?.privateMessage &&
+      this.model?.action === Composer.REPLY
+    ) {
       return "composer.create_pm";
     }
 
-    return SAVE_LABELS[modelAction];
+    return SAVE_LABELS[this.model?.action];
   }
 
-  @discourseComputed("whisperer", "model.action")
-  canWhisper(whisperer, modelAction) {
-    return whisperer && modelAction === Composer.REPLY;
+  @computed("whisperer", "model.action")
+  get canWhisper() {
+    return this.whisperer && this.model?.action === Composer.REPLY;
   }
 
   _setupPopupMenuOption(option) {
@@ -413,14 +417,17 @@ export default class ComposerService extends Service {
     return option;
   }
 
-  @discourseComputed("model.requiredCategoryMissing", "model.replyLength")
-  disableTextarea(requiredCategoryMissing, replyLength) {
-    return requiredCategoryMissing && replyLength === 0;
+  @computed("model.requiredCategoryMissing", "model.replyLength")
+  get disableTextarea() {
+    return this.model?.requiredCategoryMissing && this.model?.replyLength === 0;
   }
 
-  @discourseComputed("model.composeState", "model.creatingTopic", "model.post")
-  popupMenuOptions(composeState) {
-    if (composeState === "open" || composeState === "fullscreen") {
+  @computed("model.composeState", "model.creatingTopic", "model.post")
+  get popupMenuOptions() {
+    if (
+      this.model?.composeState === "open" ||
+      this.model?.composeState === "fullscreen"
+    ) {
       const options = [];
 
       options.push(
@@ -489,13 +496,13 @@ export default class ComposerService extends Service {
     }
   }
 
-  @discourseComputed(
+  @computed(
     "model.creatingPrivateMessage",
     "model.targetRecipients",
     "model.warningsDisabled"
   )
-  showWarning(creatingPrivateMessage, usernames, warningsDisabled) {
-    if (!this.get("currentUser.staff") || warningsDisabled) {
+  get showWarning() {
+    if (!this.get("currentUser.staff") || this.model?.warningsDisabled) {
       return false;
     }
 
@@ -503,42 +510,42 @@ export default class ComposerService extends Service {
 
     // We need exactly one user to issue a warning
     if (
-      isEmpty(usernames) ||
-      usernames.split(",").length !== 1 ||
+      isEmpty(this.model?.targetRecipients) ||
+      this.model?.targetRecipients?.split(",")?.length !== 1 ||
       hasTargetGroups
     ) {
       return false;
     }
 
-    return creatingPrivateMessage;
+    return this.model?.creatingPrivateMessage;
   }
 
-  @discourseComputed("model.topic.title")
-  draftTitle(topicTitle) {
-    return emojiUnescape(escapeExpression(topicTitle));
+  @computed("model.topic.title")
+  get draftTitle() {
+    return emojiUnescape(escapeExpression(this.model?.topic?.title));
   }
 
-  @discourseComputed
-  allowUpload() {
+  @computed
+  get allowUpload() {
     return authorizesOneOrMoreExtensions(
       this.currentUser.staff,
       this.siteSettings
     );
   }
 
-  @discourseComputed()
-  uploadIcon() {
+  @computed()
+  get uploadIcon() {
     return uploadIcon(this.currentUser.staff, this.siteSettings);
   }
 
-  @discourseComputed(
+  @computed(
     "model.action",
     "isWhispering",
     "model.privateMessage",
     "model.post.username"
   )
-  ariaLabel(modelAction, isWhispering, privateMessage, postUsername) {
-    switch (modelAction) {
+  get ariaLabel() {
+    switch (this.model?.action) {
       case "createSharedDraft":
         return i18n("composer.create_shared_draft");
       case "editSharedDraft":
@@ -550,17 +557,17 @@ export default class ComposerService extends Service {
       case "edit":
         return i18n("composer.composer_actions.edit");
       case "reply":
-        if (isWhispering) {
+        if (this.isWhispering) {
           return `${i18n("composer.create_whisper")} ${this.site.get(
             "whispers_allowed_groups_names"
           )}`;
         }
-        if (privateMessage) {
+        if (this.model?.privateMessage) {
           return i18n("composer.create_pm");
         }
-        if (postUsername) {
+        if (this.model?.post?.username) {
           return i18n("composer.composer_actions.reply_to_post.label", {
-            postUsername,
+            postUsername: this.model?.post?.username,
           });
         } else {
           return i18n("composer.composer_actions.reply_to_topic.label");
@@ -1824,29 +1831,36 @@ export default class ComposerService extends Service {
     }
   }
 
-  @discourseComputed("model.categoryId", "lastValidatedAt")
-  categoryValidation(categoryId, lastValidatedAt) {
-    if (!this.siteSettings.allow_uncategorized_topics && !categoryId) {
+  @computed("model.categoryId", "lastValidatedAt")
+  get categoryValidation() {
+    if (
+      !this.siteSettings.allow_uncategorized_topics &&
+      !this.model?.categoryId
+    ) {
       return EmberObject.create({
         failed: true,
         reason: i18n("composer.error.category_missing"),
-        lastShownAt: lastValidatedAt,
+        lastShownAt: this.lastValidatedAt,
       });
     }
   }
 
-  @discourseComputed("model.category", "model.tags", "lastValidatedAt")
-  tagValidation(category, tags, lastValidatedAt) {
-    const tagsArray = tags || [];
-    if (this.site.can_tag_topics && !this.currentUser.staff && category) {
+  @computed("model.category", "model.tags", "lastValidatedAt")
+  get tagValidation() {
+    const tagsArray = this.model?.tags || [];
+    if (
+      this.site.can_tag_topics &&
+      !this.currentUser.staff &&
+      this.model?.category
+    ) {
       // category.minimumRequiredTags incorporates both minimum_required_tags, and required_tag_groups
-      if (category.minimumRequiredTags > tagsArray.length) {
+      if (this.model?.category?.minimumRequiredTags > tagsArray.length) {
         return EmberObject.create({
           failed: true,
           reason: i18n("composer.error.tags_missing", {
-            count: category.minimumRequiredTags,
+            count: this.model?.category?.minimumRequiredTags,
           }),
-          lastShownAt: lastValidatedAt,
+          lastShownAt: this.lastValidatedAt,
         });
       }
     }
@@ -1871,9 +1885,13 @@ export default class ComposerService extends Service {
     }
   }
 
-  @discourseComputed("model.viewFullscreen", "model.showFullScreenExitPrompt")
-  showFullScreenPrompt(isFullscreen, showExitPrompt) {
-    return isFullscreen && showExitPrompt && !this.capabilities.touch;
+  @computed("model.viewFullscreen", "model.showFullScreenExitPrompt")
+  get showFullScreenPrompt() {
+    return (
+      this.model?.viewFullscreen &&
+      this.model?.showFullScreenExitPrompt &&
+      !this.capabilities.touch
+    );
   }
 
   close() {
@@ -1893,14 +1911,14 @@ export default class ComposerService extends Service {
     this.set("formTemplateInitialValues", undefined);
   }
 
-  @discourseComputed("model.action")
-  canEdit(modelAction) {
-    return modelAction === "edit" && this.currentUser.can_edit;
+  @computed("model.action")
+  get canEdit() {
+    return this.model?.action === "edit" && this.currentUser.can_edit;
   }
 
-  @discourseComputed("model.composeState")
-  visible(state) {
-    return state && state !== "closed";
+  @computed("model.composeState")
+  get visible() {
+    return this.model?.composeState && this.model?.composeState !== "closed";
   }
 
   clearLastValidatedAt() {

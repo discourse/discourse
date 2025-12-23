@@ -9,7 +9,6 @@ import GroupFlairInputs from "discourse/components/group-flair-inputs";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
-import discourseComputed from "discourse/lib/decorators";
 import AssociatedGroup from "discourse/models/associated-group";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import ListSetting from "discourse/select-kit/components/list-setting";
@@ -49,36 +48,36 @@ export default class GroupsFormMembershipFields extends Component {
     );
   }
 
-  @discourseComputed("model.visibility_level", "model.public_admission")
-  disableMembershipRequestSetting(visibility_level, publicAdmission) {
-    visibility_level = parseInt(visibility_level, 10);
-    return publicAdmission || visibility_level > 1;
+  @computed("model.visibility_level", "model.public_admission")
+  get disableMembershipRequestSetting() {
+    const visibility_level = parseInt(this.model?.visibility_level, 10);
+    return this.model?.public_admission || visibility_level > 1;
   }
 
-  @discourseComputed(
+  @computed(
     "model.visibility_level",
     "model.allow_membership_requests"
   )
-  disablePublicSetting(visibility_level, allowMembershipRequests) {
-    visibility_level = parseInt(visibility_level, 10);
-    return allowMembershipRequests || visibility_level > 1;
+  get disablePublicSetting() {
+    const visibility_level = parseInt(this.model?.visibility_level, 10);
+    return this.model?.allow_membership_requests || visibility_level > 1;
   }
 
-  @discourseComputed(
+  @computed(
     "model.visibility_level",
     "model.primary_group",
     "hasFlair"
   )
-  privateGroupNameNotice(visibilityLevel, isPrimaryGroup, hasFlair) {
-    if (visibilityLevel === 0) {
+  get privateGroupNameNotice() {
+    if (this.model?.visibility_level === 0) {
       return;
     }
 
-    if (isPrimaryGroup) {
+    if (this.model?.primary_group) {
       return i18n("admin.groups.manage.alert.primary_group", {
         group_name: this.model.name,
       });
-    } else if (hasFlair) {
+    } else if (this.hasFlair) {
       return i18n("admin.groups.manage.alert.flair_group", {
         group_name: this.model.name,
       });

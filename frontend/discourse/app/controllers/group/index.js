@@ -1,10 +1,10 @@
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { observes } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
-import discourseComputed, { debounce } from "discourse/lib/decorators";
+import { debounce } from "discourse/lib/decorators";
 import { trackedArray } from "discourse/lib/tracked-tools";
 
 export default class GroupIndexController extends Controller {
@@ -61,18 +61,20 @@ export default class GroupIndexController extends Controller {
     });
   }
 
-  @discourseComputed("order", "asc", "filter")
-  memberParams(order, asc, filter) {
-    return { order, asc, filter };
+  @computed("order", "asc", "filter")
+  get memberParams() {
+    return { order: this.order, asc: this.asc, filter: this.filter };
   }
 
-  @discourseComputed("model")
-  canManageGroup(model) {
-    return this.currentUser?.canManageGroup(model) && !this.model.automatic;
+  @computed("model")
+  get canManageGroup() {
+    return (
+      this.currentUser?.canManageGroup(this.model) && !this.model.automatic
+    );
   }
 
-  @discourseComputed
-  filterPlaceholder() {
+  @computed
+  get filterPlaceholder() {
     if (this.currentUser && this.currentUser.admin) {
       return "groups.members.filter_placeholder_admin";
     } else {
@@ -80,11 +82,11 @@ export default class GroupIndexController extends Controller {
     }
   }
 
-  @discourseComputed("filter", "members", "model.can_see_members")
-  emptyMessageKey(filter, members, canSeeMembers) {
-    if (!canSeeMembers) {
+  @computed("filter", "members", "model.can_see_members")
+  get emptyMessageKey() {
+    if (!this.model?.can_see_members) {
       return "groups.members.forbidden";
-    } else if (filter) {
+    } else if (this.filter) {
       return "groups.members.no_filter_matches";
     } else {
       return "groups.empty.members";
