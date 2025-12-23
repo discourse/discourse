@@ -132,7 +132,7 @@ class SchemaSettingsObjectValidator
 
     is_value_valid =
       case type
-      when "string"
+      when "string", "date"
         value.is_a?(String)
       when "integer", "topic", "post"
         value.is_a?(Integer)
@@ -198,6 +198,15 @@ class SchemaSettingsObjectValidator
 
       if (max = validations&.dig(:max)) && value.length > max
         add_error(property_name, :"#{type}_value_not_valid_max", count: max)
+        return false
+      end
+    when "date"
+      return true if value.blank?
+
+      begin
+        Date.parse(value)
+      rescue ArgumentError, TypeError
+        add_error(property_name, :not_valid_date_value)
         return false
       end
     when "string"

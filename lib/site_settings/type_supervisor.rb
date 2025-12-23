@@ -64,6 +64,7 @@ class SiteSettings::TypeSupervisor
         objects: 28,
         locale_enum: 29,
         topic: 30,
+        date: 31,
       )
   end
 
@@ -170,7 +171,7 @@ class SiteSettings::TypeSupervisor
       nil
     when self.class.types[:enum]
       @defaults_provider[name].is_a?(Integer) ? value.to_i : value.to_s
-    when self.class.types[:string]
+    when self.class.types[:string], self.class.types[:date]
       value.to_s
     else
       return value if self.class.types[type]
@@ -355,6 +356,8 @@ class SiteSettings::TypeSupervisor
       HostListSettingValidator
     when self.class.types[:topic]
       TopicSettingValidator
+    when self.class.types[:date]
+      DateSettingValidator
     else
       nil
     end
