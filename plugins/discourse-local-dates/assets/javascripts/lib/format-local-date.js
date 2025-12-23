@@ -15,26 +15,12 @@ import LocalDateBuilder from "./local-date-builder";
 export default function formatLocalDate(date, time, timezone, options = {}) {
   const localTimezone = moment.tz.guess();
   const builderOptions = {
+    ...options,
     date,
     time,
     timezone: timezone || localTimezone,
     calendar: !options.format, // Use calendar mode only if no custom format specified
   };
-  if (options.format) {
-    builderOptions.format = options.format;
-  }
-  if (options.recurring) {
-    builderOptions.recurring = options.recurring;
-  }
-  if (options.countdown) {
-    builderOptions.countdown = true;
-  }
-  if (options.displayedTimezone) {
-    builderOptions.displayedTimezone = options.displayedTimezone;
-  }
-  if (options.timezones) {
-    builderOptions.timezones = options.timezones;
-  }
   const builder = new LocalDateBuilder(builderOptions, localTimezone);
   const { formatted, pastEvent } = builder.build();
   return { formatted, pastEvent };
