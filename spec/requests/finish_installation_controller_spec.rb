@@ -1,6 +1,86 @@
 # frozen_string_literal: true
 
 RSpec.describe FinishInstallationController do
+  describe "#index" do
+    context "when has_login_hint is false" do
+      before { SiteSetting.has_login_hint = false }
+
+      it "doesn't allow access" do
+        get "/finish-installation"
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context "when has_login_hint is true" do
+      before { SiteSetting.has_login_hint = true }
+
+      it "allows access" do
+        get "/finish-installation"
+        expect(response.status).to eq(200)
+      end
+
+      context "when setting up Discourse ID" do
+        before do
+          allow(ENV).to receive(:[]).and_call_original
+          allow(ENV).to receive(:[]).with("DISCOURSE_SKIP_EMAIL_SETUP").and_return("1")
+          GlobalSetting.stubs(:developer_emails).returns("admin@example.com")
+        end
+
+        it "enables the enable_discourse_id site setting and shows login button on success" do
+          stub_request(:post, "https://id.discourse.com/challenge").to_return(
+            status: 200,
+            body: { domain: Discourse.current_hostname, token: "test_token" }.to_json,
+          )
+          stub_request(:post, "https://id.discourse.com/register").to_return(
+            status: 200,
+            body: { client_id: "test_client_id", client_secret: "test_client_secret" }.to_json,
+          )
+
+          get "/finish-installation"
+          expect(response.status).to eq(200)
+          expect(SiteSetting.enable_discourse_id).to eq(true)
+          expect(SiteSetting.enable_local_logins).to eq(false)
+          expect(response.body).to include("Login with Discourse ID")
+          expect(response.body).to include("/finish-installation/redirect-discourse-id")
+        end
+
+        it "shows error message and no login button on failure" do
+          stub_request(:post, "https://id.discourse.com/challenge").to_return(
+            status: 500,
+            body: "Internal Server Error",
+          )
+
+          get "/finish-installation"
+          expect(response.status).to eq(200)
+          expect(SiteSetting.enable_discourse_id).to eq(false)
+          expect(response.body).not_to include("Login with Discourse ID")
+          expect(response.body).to include("alert-error")
+        end
+
+        it "shows error when developer_emails is empty" do
+          GlobalSetting.stubs(:developer_emails).returns("")
+
+          stub_request(:post, "https://id.discourse.com/challenge").to_return(
+            status: 200,
+            body: { domain: Discourse.current_hostname, token: "test_token" }.to_json,
+          )
+          stub_request(:post, "https://id.discourse.com/register").to_return(
+            status: 200,
+            body: { client_id: "test_client_id", client_secret: "test_client_secret" }.to_json,
+          )
+
+          get "/finish-installation"
+          expect(response.status).to eq(200)
+          expect(response.body).not_to include("Login with Discourse ID")
+          expect(response.body).to include("alert-error")
+          expect(response.body).to include(
+            I18n.t("finish_installation.discourse_id.no_allowed_emails"),
+          )
+        end
+      end
+    end
+  end
+
   describe "#register" do
     before do
       SiteSetting.has_login_hint = true
@@ -60,6 +140,34 @@ RSpec.describe FinishInstallationController do
       }
 
       expect(response.status).to eq(200)
+    end
+  end
+
+  describe "#redirect_discourse_id" do
+    context "when has_login_hint is true" do
+      before do
+        SiteSetting.has_login_hint = true
+        GlobalSetting.stubs(:developer_emails).returns("info@test.com")
+      end
+
+      it "creates admin users and redirects to Discourse ID auth" do
+        get "/finish-installation/redirect-discourse-id"
+        expect(response.status).to eq(302)
+        expect(response.location).to include("/auth/discourse_id")
+
+        admin_user = User.find_by_email("info@test.com")
+        expect(admin_user).to be_present
+        expect(admin_user.admin).to eq(true)
+      end
+    end
+
+    context "when has_login_hint is false" do
+      before { SiteSetting.has_login_hint = false }
+
+      it "returns 403" do
+        get "/finish-installation/redirect-discourse-id"
+        expect(response.status).to eq(403)
+      end
     end
   end
 end

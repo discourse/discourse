@@ -55,13 +55,11 @@ class DiscourseId::Register
     SiteSetting.discourse_id_client_secret = data["client_secret"]
   end
 
-  def log_action(guardian:, params:, data:)
+  def log_action(params:, data:)
     return if params.update
-    return if guardian.blank?
 
-    StaffActionLogger.new(guardian.user).log_custom(
-      "discourse_id_register",
-      client_id: data["client_id"],
-    )
+    user = context[:guardian]&.user || Discourse.system_user
+
+    StaffActionLogger.new(user).log_custom("discourse_id_register", client_id: data["client_id"])
   end
 end

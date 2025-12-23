@@ -2360,6 +2360,7 @@ RSpec.describe User do
   describe ".clear_global_notice_if_needed" do
     fab!(:user)
     fab!(:admin)
+    let!(:inactive_user) { Fabricate(:user, active: false) }
 
     before do
       SiteSetting.has_login_hint = true
@@ -2378,10 +2379,17 @@ RSpec.describe User do
       expect(SiteSetting.global_notice).to eq("some notice")
     end
 
-    it "clears the notice when the admin is saved" do
+    it "clears the notice when an active admin is saved" do
       admin.save
       expect(SiteSetting.has_login_hint).to eq(false)
       expect(SiteSetting.global_notice).to eq("")
+    end
+
+    it "does not clear the notice when an inactive admin is saved" do
+      inactive_user.admin = true
+      inactive_user.save
+      expect(SiteSetting.has_login_hint).to eq(true)
+      expect(SiteSetting.global_notice).to eq("some notice")
     end
   end
 

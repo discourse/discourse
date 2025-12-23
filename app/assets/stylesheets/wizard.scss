@@ -379,10 +379,11 @@ body.wizard {
   }
 }
 
-// Register admin pages
+// New instance setup screens
 // /finish-installation and /finish-installation/register
 .wizard-container-contents.finish-installation {
   font-family: var(--font-family);
+  max-width: min(800px, 90vh);
 
   .wizard-container__combobox {
     background: var(--secondary);
@@ -435,5 +436,13 @@ body.wizard {
     &:disabled {
       background-color: var(--tertiary-low);
     }
+  }
+
+  .alert-error {
+    padding: 0.5em 2.5em 0.5em 1em;
+    background-color: var(--danger-low);
+    color: var(--primary);
+    position: relative;
+    margin-bottom: 1em;
   }
 }
