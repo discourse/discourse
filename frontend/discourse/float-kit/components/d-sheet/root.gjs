@@ -249,8 +249,8 @@ export default class Root extends Component {
 
     const isIdle =
       positionState === "out" ||
-      positionState === "front-idle" ||
-      positionState === "covered-idle";
+      topmostSheet.positionMachine?.matches("front.status:idle") ||
+      topmostSheet.positionMachine?.matches("covered.status:idle");
 
     return isIdle ? null : topmostSheet;
   }
@@ -276,7 +276,7 @@ export default class Root extends Component {
 
     this.#pendingOpenSubscription = animatingParent.positionMachine.subscribe({
       timing: "immediate",
-      state: ["front-idle", "covered-idle", "out"],
+      state: ["out", "front.status:idle", "covered.status:idle"],
       callback: () => {
         this.#cleanupPendingOpen();
         this.doOpenSheet(stackId);

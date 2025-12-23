@@ -128,7 +128,7 @@ export default class StateHelper {
    * Signal scroll has started.
    */
   scrollStart() {
-    if (!this.stateMachine.matches("open.scroll.ongoing")) {
+    if (!this.stateMachine.matches("open.scroll:ongoing")) {
       this.stateMachine.send("SCROLL_START");
     }
   }
@@ -137,7 +137,7 @@ export default class StateHelper {
    * Signal scroll has ended.
    */
   scrollEnd() {
-    if (this.stateMachine.matches("open.scroll.ongoing")) {
+    if (this.stateMachine.matches("open.scroll:ongoing")) {
       this.stateMachine.send("SCROLL_END");
     }
   }
@@ -334,7 +334,7 @@ export default class StateHelper {
    * @returns {boolean}
    */
   isScrollOngoing() {
-    return this.stateMachine.matches("open.scroll.ongoing");
+    return this.stateMachine.matches("open.scroll:ongoing");
   }
 
   /**
@@ -343,7 +343,7 @@ export default class StateHelper {
    * @returns {boolean}
    */
   isScrollEnded() {
-    return this.stateMachine.matches("open.scroll.ended");
+    return this.stateMachine.matches("open.scroll:ended");
   }
 
   /**
@@ -352,7 +352,7 @@ export default class StateHelper {
    * @returns {boolean}
    */
   isSwipeOngoing() {
-    return this.stateMachine.matches("open.swipe.ongoing");
+    return this.stateMachine.matches("open.swipe:ongoing");
   }
 
   /**
@@ -361,7 +361,7 @@ export default class StateHelper {
    * @returns {boolean}
    */
   isMoveOngoing() {
-    return this.stateMachine.matches("open.move.ongoing");
+    return this.stateMachine.matches("open.move:ongoing");
   }
 
   /**
@@ -374,21 +374,75 @@ export default class StateHelper {
   }
 
   /**
-   * Check if position machine is in front-opening state.
+   * Check if position machine is in front.status:opening state.
    *
    * @returns {boolean}
    */
   isPositionFrontOpening() {
-    return this.positionMachine.current === "front-opening";
+    return this.positionMachine.matches("front.status:opening");
   }
 
   /**
-   * Check if position machine is in front-closing state.
+   * Check if position machine is in front.status:closing state.
    *
    * @returns {boolean}
    */
   isPositionFrontClosing() {
-    return this.positionMachine.current === "front-closing";
+    return this.positionMachine.matches("front.status:closing");
+  }
+
+  /**
+   * Check if position is in the "front" parent state.
+   *
+   * @returns {boolean}
+   */
+  isPositionFront() {
+    return this.positionMachine.matches("front");
+  }
+
+  /**
+   * Check if position is in the "covered" parent state.
+   *
+   * @returns {boolean}
+   */
+  isPositionCovered() {
+    return this.positionMachine.matches("covered");
+  }
+
+  /**
+   * Check if position is in covered.status:going-down state.
+   *
+   * @returns {boolean}
+   */
+  isPositionCoveredGoingDown() {
+    return this.positionMachine.matches("covered.status:going-down");
+  }
+
+  /**
+   * Check if position is in covered.status:idle state.
+   *
+   * @returns {boolean}
+   */
+  isPositionCoveredIdle() {
+    return this.positionMachine.matches("covered.status:idle");
+  }
+
+  /**
+   * Check if position is in covered.status:going-up state.
+   *
+   * @returns {boolean}
+   */
+  isPositionCoveredGoingUp() {
+    return this.positionMachine.matches("covered.status:going-up");
+  }
+
+  /**
+   * Check if position is in covered.status:indeterminate state.
+   *
+   * @returns {boolean}
+   */
+  isPositionCoveredIndeterminate() {
+    return this.positionMachine.matches("covered.status:indeterminate");
   }
 
   /**

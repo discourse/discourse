@@ -375,12 +375,12 @@ export default class Controller {
     },
     {
       machine: "positionMachine",
-      state: "covered-going-down",
+      state: "covered.status:going-down",
       callback: () => this.stateHelper.goDown(),
     },
     {
       machine: "positionMachine",
-      state: "covered-idle",
+      state: "covered.status:idle",
       callback: () => {
         if (
           this.stateHelper.isInAnimationState("going-down") ||
@@ -392,12 +392,12 @@ export default class Controller {
     },
     {
       machine: "positionMachine",
-      state: "covered-going-up",
+      state: "covered.status:going-up",
       callback: () => this.stateHelper.goUp(),
     },
     {
       machine: "positionMachine",
-      state: "covered-indeterminate",
+      state: "covered.status:indeterminate",
       callback: () => {
         if (this.stateHelper.isInAnimationState("going-up")) {
           this.stateHelper.advanceAnimation();
@@ -433,7 +433,7 @@ export default class Controller {
     },
     {
       machine: "stateMachine",
-      state: "open.scroll.ongoing",
+      state: "open.scroll:ongoing",
       guard: () => !this.isScrollOngoing,
       callback: () => {
         this.isScrollOngoing = true;
@@ -445,7 +445,7 @@ export default class Controller {
     },
     {
       machine: "stateMachine",
-      state: "open.scroll.ended",
+      state: "open.scroll:ended",
       guard: () => this.isScrollOngoing,
       callback: () => {
         this.isScrollOngoing = false;
@@ -453,7 +453,7 @@ export default class Controller {
     },
     {
       machine: "stateMachine",
-      state: "open.scroll.ongoing",
+      state: "open.scroll:ongoing",
       type: "exit",
       callback: () => {
         this.isScrollOngoing = false;
@@ -461,7 +461,7 @@ export default class Controller {
     },
     {
       machine: "stateMachine",
-      state: "open.swipe.ongoing",
+      state: "open.swipe:ongoing",
       guard: () => !this.isSwipeOngoing,
       callback: () => {
         this.isSwipeOngoing = true;
@@ -469,7 +469,7 @@ export default class Controller {
     },
     {
       machine: "stateMachine",
-      state: "open.swipe.ended",
+      state: "open.swipe:ended",
       guard: () => this.isSwipeOngoing,
       callback: () => {
         this.isSwipeOngoing = false;
@@ -477,7 +477,7 @@ export default class Controller {
     },
     {
       machine: "stateMachine",
-      state: "open.swipe.ongoing",
+      state: "open.swipe:ongoing",
       type: "exit",
       callback: () => {
         this.isSwipeOngoing = false;
@@ -485,7 +485,7 @@ export default class Controller {
     },
     {
       machine: "stateMachine",
-      state: "open.move.ongoing",
+      state: "open.move:ongoing",
       guard: () => !this.isMoveOngoing,
       callback: () => {
         this.isMoveOngoing = true;
@@ -493,7 +493,7 @@ export default class Controller {
     },
     {
       machine: "stateMachine",
-      state: "open.move.ended",
+      state: "open.move:ended",
       guard: () => this.isMoveOngoing,
       callback: () => {
         this.isMoveOngoing = false;
@@ -501,7 +501,7 @@ export default class Controller {
     },
     {
       machine: "stateMachine",
-      state: "open.move.ongoing",
+      state: "open.move:ongoing",
       type: "exit",
       callback: () => {
         this.isMoveOngoing = false;

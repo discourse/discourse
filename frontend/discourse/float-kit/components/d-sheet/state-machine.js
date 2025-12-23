@@ -3,6 +3,32 @@ import { schedule } from "@ember/runloop";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 
 /**
+ * Debug logging flag - enabled via console command debugSheetsStateMachine()
+ */
+let debugEnabled = false;
+
+// Expose global function to enable debugging
+if (typeof window !== "undefined") {
+  window.debugSheetsStateMachine = () => {
+    debugEnabled = true;
+    // eslint-disable-next-line no-console
+    console.log("[StateMachine] Debug logging enabled");
+  };
+}
+
+/**
+ * Log debug messages when debugging is enabled.
+ *
+ * @param {...any} args - Arguments to log
+ */
+function debugLog(...args) {
+  if (debugEnabled) {
+    // eslint-disable-next-line no-console
+    console.log("[StateMachine]", ...args);
+  }
+}
+
+/**
  * @typedef {Object} Subscription
  * @property {Symbol} id - Unique identifier for the subscription
  * @property {"immediate"|"before-paint"|"after-paint"} timing - When to invoke callback
@@ -21,12 +47,21 @@ import { TrackedObject } from "@ember-compat/tracked-built-ins";
  * @typedef {Object} StateDefinition
  * @property {string} initial - Initial state
  * @property {Object<string, Object>} states - Map of state names to configurations
+ * @property {boolean} [silentOnly] - If true, state changes don't trigger reactive updates
  */
 
 /**
  * @typedef {Object} StateMachineOptions
  * @property {Object<string, function(Object, Object, Object): boolean>} [guards] - Guard functions for transitions (message, messageContext, machineContext) => boolean
  */
+
+/**
+ * Empty string message type used for automatic/immediate transitions.
+ * When a state has an empty string handler, it triggers immediately upon entering that state.
+ *
+ * @constant {string}
+ */
+const AUTOMATIC_TRANSITION = "";
 
 /**
  * Hierarchical state machine with support for nested machines and subscriptions.
@@ -127,6 +162,13 @@ class StateMachine {
   #currentStateMachines = null;
 
   /**
+   * Tracks which nested machines are silentOnly (don't trigger reactive updates).
+   *
+   * @type {Set<string>}
+   */
+  #silentMachines = new Set();
+
+  /**
    * @param {Object} definition - State machine definition with states and transitions
    * @param {string} initialState - Initial state path (e.g., "closed.safe-to-unmount")
    * @param {StateMachineOptions} [options] - Optional configuration including guards
@@ -136,6 +178,7 @@ class StateMachine {
     this.current = initialState;
     this.#guards = options.guards || {};
     this.#initializeNestedMachines(this.current);
+    this.#processAutomaticTransitions();
   }
 
   /**
@@ -191,13 +234,104 @@ class StateMachine {
    */
   #initializeNestedMachines(statePath) {
     const stateConfig = this.getStateConfig(statePath);
+    this.#silentMachines.clear();
+
     if (stateConfig?.machines) {
       this.#currentStateMachines = stateConfig.machines;
       for (const machineDef of stateConfig.machines) {
         this.nestedMachines[machineDef.name] = machineDef.initial;
+        if (machineDef.silentOnly) {
+          this.#silentMachines.add(machineDef.name);
+        }
       }
     } else {
       this.#currentStateMachines = null;
+    }
+  }
+
+  /**
+   * Check if a nested machine is silentOnly.
+   *
+   * @param {string} machineName
+   * @returns {boolean}
+   */
+  #isSilentMachine(machineName) {
+    return this.#silentMachines.has(machineName);
+  }
+
+  /**
+   * Process automatic transitions (empty string message type).
+   * Called after entering a new state to check for immediate transitions.
+   */
+  #processAutomaticTransitions() {
+    const currentStateConfig = this.getStateConfig(this.current);
+
+    // Check main state for automatic transitions
+    if (currentStateConfig?.on?.[AUTOMATIC_TRANSITION]) {
+      const previousState = this.current;
+      const previousNestedStates = { ...this.nestedMachines };
+
+      const transitioned = this.#tryTransitions(
+        currentStateConfig.on[AUTOMATIC_TRANSITION],
+        { type: AUTOMATIC_TRANSITION },
+        {},
+        (target) => this.#transitionToState(target)
+      );
+
+      if (transitioned) {
+        const { entered, exited } = this.#calculateStateChanges(
+          previousState,
+          previousNestedStates
+        );
+        this.#notifySubscribers(
+          { type: AUTOMATIC_TRANSITION },
+          entered,
+          exited
+        );
+        // Recursively check for more automatic transitions
+        this.#processAutomaticTransitions();
+        return;
+      }
+    }
+
+    // Check nested machines for automatic transitions
+    if (currentStateConfig?.machines) {
+      for (const machineDef of currentStateConfig.machines) {
+        const machineName = machineDef.name;
+        const currentMachineState =
+          this.getNestedMachineState(machineName) || machineDef.initial;
+        const machineStateConfig = machineDef.states?.[currentMachineState];
+
+        if (machineStateConfig?.on?.[AUTOMATIC_TRANSITION]) {
+          const previousState = this.current;
+          const previousNestedStates = { ...this.nestedMachines };
+
+          const transitioned = this.#tryTransitions(
+            machineStateConfig.on[AUTOMATIC_TRANSITION],
+            { type: AUTOMATIC_TRANSITION },
+            {},
+            (target) => this.#setNestedMachineState(machineName, target)
+          );
+
+          if (transitioned) {
+            const { entered, exited } = this.#calculateStateChanges(
+              previousState,
+              previousNestedStates
+            );
+            // Only notify if not a silent machine
+            if (!this.#isSilentMachine(machineName)) {
+              this.#notifySubscribers(
+                { type: AUTOMATIC_TRANSITION },
+                entered,
+                exited
+              );
+            }
+            // Recursively check for more automatic transitions
+            this.#processAutomaticTransitions();
+            return;
+          }
+        }
+      }
     }
   }
 
@@ -325,6 +459,11 @@ class StateMachine {
     const normalizedMessage =
       typeof message === "string" ? { type: message } : message;
 
+    debugLog(
+      `send: ${normalizedMessage.type}, current: ${this.current}, context:`,
+      context
+    );
+
     this.#messageQueue.push({ message: normalizedMessage, context });
 
     if (!this.#isProcessingQueue) {
@@ -350,13 +489,19 @@ class StateMachine {
 
     while (this.#messageQueue.length > 0) {
       const { message, context } = this.#messageQueue.shift();
-      const { transitioned, enteredStates, exitedStates } =
+      const { transitioned, enteredStates, exitedStates, silent } =
         this.#processMessage(message, context);
+
+      // Set lastMessageTreated BEFORE notifying so guards can access the current message
+      this.lastMessageTreated = message;
+
       if (transitioned) {
         anyTransitioned = true;
-        this.#notifySubscribers(message, enteredStates, exitedStates);
+        // Only notify subscribers if not a silent transition
+        if (!silent) {
+          this.#notifySubscribers(message, enteredStates, exitedStates);
+        }
       }
-      this.lastMessageTreated = message;
     }
 
     this.#isProcessingQueue = false;
@@ -379,23 +524,102 @@ class StateMachine {
 
     for (const transition of transitionList) {
       if (typeof transition === "string") {
+        debugLog(`tryTransitions: direct target "${transition}"`);
         onSuccess(transition);
         return true;
       }
 
       if (transition.guard) {
-        if (!this.#checkGuard(transition.guard, message, context)) {
+        const guardPassed = this.#checkGuard(transition.guard, message, context);
+        debugLog(
+          `tryTransitions: guard "${transition.guard}" -> ${guardPassed}`
+        );
+        if (!guardPassed) {
           continue;
         }
       }
 
       if (transition.target) {
+        debugLog(`tryTransitions: target "${transition.target}"`);
         onSuccess(transition.target);
         return true;
       }
     }
 
+    debugLog(`tryTransitions: no valid transition found`);
     return false;
+  }
+
+  /**
+   * Check if a target state is a cross-level transition (targets a different parent state).
+   *
+   * @param {string} target - Target state path
+   * @param {string} machineName - Current nested machine name
+   * @param {Object} machineDef - Current nested machine definition
+   * @returns {boolean}
+   */
+  #isCrossLevelTransition(target, machineName, machineDef) {
+    // If target contains a dot, it might be a full path like "out" or "front.status:idle"
+    // Check if target is a valid state within the nested machine
+    if (machineDef.states?.[target]) {
+      return false; // Target exists in nested machine, not cross-level
+    }
+    // Target is not in the nested machine, so it's a cross-level transition
+    return true;
+  }
+
+  /**
+   * Process nested machine transitions silently.
+   * This is used after main state transitions to also update silentOnly machines.
+   *
+   * @param {Object} message
+   * @param {Object} context
+   */
+  #processNestedMachinesSilently(message, context) {
+    const messageType = message.type;
+    const currentStateConfig = this.getStateConfig(this.current);
+
+    debugLog(`processNestedMachinesSilently: message=${messageType}`);
+
+    if (!currentStateConfig?.machines) {
+      debugLog(`processNestedMachinesSilently: no machines to process`);
+      return;
+    }
+
+    for (const machineDef of currentStateConfig.machines) {
+      // Only process silentOnly machines here
+      if (!machineDef.silentOnly) {
+        continue;
+      }
+
+      const machineName = machineDef.name;
+      const currentMachineState =
+        this.getNestedMachineState(machineName) || machineDef.initial;
+      const machineStateConfig = machineDef.states?.[currentMachineState];
+
+      debugLog(
+        `processNestedMachinesSilently: checking silentOnly machine "${machineName}", currentState="${currentMachineState}"`
+      );
+
+      if (machineStateConfig?.on?.[messageType]) {
+        debugLog(
+          `processNestedMachinesSilently: "${machineName}" handles "${messageType}"`
+        );
+        this.#tryTransitions(
+          machineStateConfig.on[messageType],
+          message,
+          context,
+          (target) => {
+            debugLog(
+              `processNestedMachinesSilently: "${machineName}" transitioning to "${target}"`
+            );
+            if (!this.#isCrossLevelTransition(target, machineName, machineDef)) {
+              this.#setNestedMachineState(machineName, target);
+            }
+          }
+        );
+      }
+    }
   }
 
   /**
@@ -403,7 +627,7 @@ class StateMachine {
    *
    * @param {Object} message
    * @param {Object} context
-   * @returns {{transitioned: boolean, enteredStates: string[], exitedStates: string[]}}
+   * @returns {{transitioned: boolean, enteredStates: string[], exitedStates: string[], silent: boolean}}
    */
   #processMessage(message, context = {}) {
     const messageType = message.type;
@@ -411,7 +635,59 @@ class StateMachine {
     const previousState = this.current;
     const previousNestedStates = { ...this.nestedMachines };
 
+    debugLog(
+      `processMessage: type=${messageType}, previousState=${previousState}, nestedStates:`,
+      previousNestedStates
+    );
+
     const currentStateConfig = this.getStateConfig(this.current);
+
+    // First, check main state for transitions - main state takes priority
+    let mainStateTransitioned = false;
+    let transitions = currentStateConfig?.on?.[messageType];
+    debugLog(
+      `processMessage: checking main state transitions, found:`,
+      transitions ? "yes" : "no"
+    );
+
+    if (!transitions) {
+      const parentState = this.#getParentState(this.current);
+      if (parentState) {
+        const parentConfig = this.getStateConfig(parentState);
+        transitions = parentConfig?.on?.[messageType];
+      }
+    }
+
+    if (transitions) {
+      mainStateTransitioned = this.#tryTransitions(
+        transitions,
+        message,
+        context,
+        (target) => this.#transitionToState(target)
+      );
+
+      if (mainStateTransitioned) {
+        // Process automatic transitions after main state transition
+        this.#processAutomaticTransitions();
+
+        // Also process silentOnly nested machines so they can track messages
+        // (e.g., evaluateCloseMessage, evaluateStepMessage)
+        this.#processNestedMachinesSilently(message, context);
+
+        const { entered, exited } = this.#calculateStateChanges(
+          previousState,
+          previousNestedStates
+        );
+        return {
+          transitioned: true,
+          enteredStates: entered,
+          exitedStates: exited,
+          silent: false,
+        };
+      }
+    }
+
+    // If main state didn't handle the message, check nested machines
     if (currentStateConfig?.machines) {
       for (const machineDef of currentStateConfig.machines) {
         const machineName = machineDef.name;
@@ -424,57 +700,80 @@ class StateMachine {
             machineStateConfig.on[messageType],
             message,
             context,
-            (target) => this.#setNestedMachineState(machineName, target)
+            (target) => {
+              // Check if this is a cross-level transition to a parent state
+              if (this.#isCrossLevelTransition(target, machineName, machineDef)) {
+                // Transition the main state machine
+                this.#transitionToState(target);
+              } else {
+                // Stay within nested machine
+                this.#setNestedMachineState(machineName, target);
+              }
+            }
           );
           if (transitioned) {
+            // Process automatic transitions in the nested machine's new state
+            this.#processNestedMachineAutomaticTransitions(machineName);
+
             const { entered, exited } = this.#calculateStateChanges(
               previousState,
               previousNestedStates
             );
+            const isSilent = this.#isSilentMachine(machineName);
             return {
               transitioned: true,
               enteredStates: entered,
               exitedStates: exited,
+              silent: isSilent,
             };
           }
         }
       }
     }
 
-    let transitions = currentStateConfig?.on?.[messageType];
+    return {
+      transitioned: false,
+      enteredStates: [],
+      exitedStates: [],
+      silent: false,
+    };
+  }
 
-    if (!transitions) {
-      const parentState = this.#getParentState(this.current);
-      if (parentState) {
-        const parentConfig = this.getStateConfig(parentState);
-        transitions = parentConfig?.on?.[messageType];
+  /**
+   * Process automatic transitions for a specific nested machine.
+   *
+   * @param {string} machineName
+   */
+  #processNestedMachineAutomaticTransitions(machineName) {
+    const currentStateConfig = this.getStateConfig(this.current);
+    if (!currentStateConfig?.machines) {
+      return;
+    }
+
+    const machineDef = currentStateConfig.machines.find(
+      (m) => m.name === machineName
+    );
+    if (!machineDef) {
+      return;
+    }
+
+    const currentMachineState =
+      this.getNestedMachineState(machineName) || machineDef.initial;
+    const machineStateConfig = machineDef.states?.[currentMachineState];
+
+    if (machineStateConfig?.on?.[AUTOMATIC_TRANSITION]) {
+      const transitioned = this.#tryTransitions(
+        machineStateConfig.on[AUTOMATIC_TRANSITION],
+        { type: AUTOMATIC_TRANSITION },
+        {},
+        (target) => this.#setNestedMachineState(machineName, target)
+      );
+
+      if (transitioned) {
+        // Recursively check for more automatic transitions
+        this.#processNestedMachineAutomaticTransitions(machineName);
       }
     }
-
-    if (!transitions) {
-      return { transitioned: false, enteredStates: [], exitedStates: [] };
-    }
-
-    const transitioned = this.#tryTransitions(
-      transitions,
-      message,
-      context,
-      (target) => this.#transitionToState(target)
-    );
-
-    if (transitioned) {
-      const { entered, exited } = this.#calculateStateChanges(
-        previousState,
-        previousNestedStates
-      );
-      return {
-        transitioned: true,
-        enteredStates: entered,
-        exitedStates: exited,
-      };
-    }
-
-    return { transitioned: false, enteredStates: [], exitedStates: [] };
   }
 
   /**
@@ -491,8 +790,15 @@ class StateMachine {
     const parentState = this.current.split(".")[0];
     const prevParentState = previousState.split(".")[0];
 
+    debugLog(
+      `calculateStateChanges: previousState=${previousState}, currentState=${this.current}`
+    );
+
+    // Always add current state to entered when a transition occurs
+    // This handles both state changes AND self-transitions (e.g., STEP staying in "open")
+    entered.push(this.current);
+
     if (this.current !== previousState) {
-      entered.push(this.current);
       exited.push(previousState);
     }
 
@@ -501,9 +807,10 @@ class StateMachine {
     )) {
       const prevMachineState = previousNestedStates[machineName];
       if (prevMachineState !== machineState) {
-        entered.push(`${parentState}.${machineName}.${machineState}`);
+        // Use ":" as separator for nested machine states (e.g., "front.status:idle")
+        entered.push(`${parentState}.${machineName}:${machineState}`);
         if (prevMachineState) {
-          exited.push(`${prevParentState}.${machineName}.${prevMachineState}`);
+          exited.push(`${prevParentState}.${machineName}:${prevMachineState}`);
         }
       }
     }
@@ -513,21 +820,68 @@ class StateMachine {
         previousNestedStates
       )) {
         if (machineState) {
-          exited.push(`${prevParentState}.${machineName}.${machineState}`);
+          // Use ":" as separator for nested machine states
+          exited.push(`${prevParentState}.${machineName}:${machineState}`);
         }
       }
     }
 
+    debugLog(`calculateStateChanges: entered=`, entered, `exited=`, exited);
     return { entered, exited };
   }
 
   /**
    * Transition to a new state, only recreating nestedMachines if machine definitions change.
+   * Handles two types of state paths:
+   * - Nested STATE paths: "closed.pending" - hierarchical states, full path stored in this.current
+   * - Nested MACHINE paths: "front.status:idle" - parent state with nested machine state
    *
-   * @param {string} targetState
+   * @param {string} targetState - Can be a simple state, nested state, or nested machine path
    */
   #transitionToState(targetState) {
+    const previousState = this.current;
+    debugLog(`transitionToState: ${previousState} -> ${targetState}`);
+
+    // Check if this is a nested MACHINE path (contains ":")
+    // Format: "parentState.machineName:machineState"
+    const colonIndex = targetState.indexOf(":");
+
+    if (colonIndex !== -1) {
+      // Nested MACHINE path like "front.status:idle"
+      const dotIndex = targetState.indexOf(".");
+      const mainState = targetState.substring(0, dotIndex);
+      const rest = targetState.substring(dotIndex + 1); // "status:idle"
+
+      debugLog(
+        `transitionToState: nested MACHINE path, mainState=${mainState}`
+      );
+
+      this.current = mainState;
+      const stateConfig = this.getStateConfig(mainState);
+      const newMachines = stateConfig?.machines || null;
+
+      if (this.#machinesAreDifferent(this.#currentStateMachines, newMachines)) {
+        debugLog(`transitionToState: reinitializing nested machines`);
+        this.nestedMachines = new TrackedObject();
+        this.#initializeNestedMachines(mainState);
+      }
+
+      // Parse nested machine state (e.g., "status:idle")
+      const machineColonIndex = rest.indexOf(":");
+      const machineName = rest.substring(0, machineColonIndex); // "status"
+      const machineState = rest.substring(machineColonIndex + 1); // "idle"
+      debugLog(
+        `transitionToState: setting nested machine ${machineName}=${machineState}`
+      );
+      this.#setNestedMachineState(machineName, machineState);
+      return;
+    }
+
+    // No colon - either simple state or nested STATE path
+    // For nested STATE paths like "closed.pending", store the full path
     this.current = targetState;
+
+    // Get config for the full path to check for machines
     const stateConfig = this.getStateConfig(targetState);
     const newMachines = stateConfig?.machines || null;
 
@@ -576,17 +930,26 @@ class StateMachine {
   }
 
   /**
-   * Check if the machine is in a specific nested state.
+   * Check if the machine is in a specific nested machine state.
+   * Handles format "parentState.machineName:machineState"
    *
-   * @param {string} state - State pattern with format "parentState.machineName.machineState"
+   * @param {string} state - State pattern with format "parentState.machineName:machineState"
    * @returns {boolean}
    */
-  #matchesNestedState(state) {
-    const parts = state.split(".");
-    const parentState = parts[0];
-    const machineName = parts[1];
-    const machineState = parts.slice(2).join(".");
+  #matchesNestedMachineState(state) {
+    // Format: "front.status:idle"
+    const dotIndex = state.indexOf(".");
+    const colonIndex = state.indexOf(":");
 
+    if (dotIndex === -1 || colonIndex === -1) {
+      return false;
+    }
+
+    const parentState = state.substring(0, dotIndex); // "front"
+    const machineName = state.substring(dotIndex + 1, colonIndex); // "status"
+    const machineState = state.substring(colonIndex + 1); // "idle"
+
+    // Check if we're in the parent state
     const isInParentState =
       this.current === parentState ||
       this.current.startsWith(`${parentState}.`);
@@ -601,6 +964,7 @@ class StateMachine {
       return true;
     }
 
+    // Check for hierarchical match (e.g., "idle" matches "idle.substatus")
     return (
       currentMachineState?.startsWith(machineState) &&
       currentMachineState?.charAt(machineState.length) === "."
@@ -609,20 +973,26 @@ class StateMachine {
 
   /**
    * Check if the machine is in a specific state.
+   * Handles multiple formats:
+   * - Simple state: "open"
+   * - Nested state: "closed.pending"
+   * - Nested machine state: "front.status:idle"
    *
    * @param {string} state
    * @returns {boolean}
    */
   matches(state) {
+    // Exact match
     if (this.current === state) {
       return true;
     }
 
-    const parts = state.split(".");
-    if (parts.length >= 3) {
-      return this.#matchesNestedState(state);
+    // Check if this is a nested machine state format (contains ":")
+    if (state.includes(":")) {
+      return this.#matchesNestedMachineState(state);
     }
 
+    // Hierarchical state match (e.g., "closed" matches "closed.pending")
     return (
       this.current.startsWith(state) &&
       this.current.charAt(state.length) === "."
@@ -667,7 +1037,13 @@ class StateMachine {
     const subStates = Array.isArray(sub.state) ? sub.state : [sub.state];
 
     for (const subState of subStates) {
-      if (enteredStates.includes(subState)) {
+      const found = enteredStates.includes(subState);
+      debugLog(
+        `wasStateEntered: checking "${subState}" in`,
+        enteredStates,
+        `-> ${found}`
+      );
+      if (found) {
         return true;
       }
     }
@@ -700,12 +1076,26 @@ class StateMachine {
    * @param {string[]} exitedStates - States that were exited in this transition
    */
   #notifySubscribers(message, enteredStates, exitedStates) {
+    debugLog(
+      `notifySubscribers: message=${message.type}, enteredStates=`,
+      enteredStates,
+      `exitedStates=`,
+      exitedStates
+    );
+    debugLog(
+      `notifySubscribers: ${this.#exitActions.length} exit actions, ${this.#entryActions.length} entry actions, ${this.#subscriptions.length} subscriptions`
+    );
+
     for (const sub of this.#exitActions) {
       const wasExited = this.#wasStateExited(sub, exitedStates);
       const guardPasses =
         typeof sub.guard === "function" ? sub.guard() : sub.guard;
 
+      debugLog(
+        `notifySubscribers: exit action for state="${sub.state}", wasExited=${wasExited}, guardPasses=${guardPasses}`
+      );
       if (wasExited && guardPasses) {
+        debugLog(`notifySubscribers: FIRING exit callback for "${sub.state}"`);
         sub.callback(message);
       }
     }
@@ -715,7 +1105,11 @@ class StateMachine {
       const guardPasses =
         typeof sub.guard === "function" ? sub.guard() : sub.guard;
 
+      debugLog(
+        `notifySubscribers: entry action for state="${sub.state}", wasEntered=${wasEntered}, guardPasses=${guardPasses}`
+      );
       if (wasEntered && guardPasses) {
+        debugLog(`notifySubscribers: FIRING entry callback for "${sub.state}"`);
         sub.callback(message);
       }
     }

@@ -47,16 +47,20 @@ export const GUARDS = {
 
 /**
  * Position machine tracks stacking position per sheet.
+ * Uses nested machines for `front` and `covered` states matching Silk's architecture.
  *
  * States:
  * - out: Sheet is closed/not visible
- * - front-opening: Sheet is topmost, opening animation in progress
- * - front-idle: Sheet is topmost, fully open
- * - front-closing: Sheet is topmost, closing animation in progress
- * - covered-going-down: Sheet is being covered by another sheet opening above
- * - covered-idle: Sheet is covered by another sheet
- * - covered-going-up: Sheet above is closing, this sheet is uncovering
- * - covered-indeterminate: Temporary state to determine final position
+ * - front: Sheet is topmost (with nested status machine)
+ *   - status:opening: Opening animation in progress
+ *   - status:idle: Fully open
+ *   - status:closing: Closing animation in progress
+ * - covered: Sheet is covered by another sheet (with nested status machine)
+ *   - status:going-down: Being covered by another sheet opening above
+ *   - status:idle: Covered and stable
+ *   - status:going-up: Sheet above is closing, this sheet is uncovering
+ *   - status:indeterminate: Temporary state to determine final position
+ *   - status:come-back: Immediate transition back to idle
  *
  * This machine coordinates with the animation state machine to prevent animation conflicts
  * when opening nested sheets during parent animations.
@@ -69,76 +73,103 @@ export const POSITION_STATES = {
         READY_TO_GO_FRONT: [
           {
             guard: GUARD_NAMES.SKIP_OPENING,
-            target: "front-idle",
+            target: "front.status:idle",
           },
           {
-            target: "front-opening",
+            target: "front",
           },
         ],
       },
     },
-    "front-opening": {
+    front: {
       on: {
-        NEXT: "front-idle",
         GO_OUT: "out",
       },
-    },
-    "front-idle": {
-      on: {
-        READY_TO_GO_DOWN: [
-          {
-            guard: GUARD_NAMES.SKIP_OPENING,
-            target: "covered-idle",
+      machines: [
+        {
+          name: "status",
+          initial: "opening",
+          states: {
+            opening: {
+              on: {
+                NEXT: "idle",
+              },
+            },
+            closing: {
+              on: {
+                NEXT: "out",
+              },
+            },
+            idle: {
+              on: {
+                READY_TO_GO_DOWN: [
+                  {
+                    guard: GUARD_NAMES.SKIP_OPENING,
+                    target: "covered.status:idle",
+                  },
+                  {
+                    target: "covered",
+                  },
+                ],
+                READY_TO_GO_OUT: "closing",
+              },
+            },
           },
-          {
-            target: "covered-going-down",
+        },
+      ],
+    },
+    covered: {
+      machines: [
+        {
+          name: "status",
+          initial: "going-down",
+          states: {
+            "going-down": {
+              on: {
+                NEXT: "idle",
+                GOTO_FRONT_IDLE: "front.status:idle",
+              },
+            },
+            "going-up": {
+              on: {
+                NEXT: "indeterminate",
+                GOTO_FRONT_IDLE: "front.status:idle",
+              },
+            },
+            indeterminate: {
+              on: {
+                GOTO_COVERED_IDLE: "idle",
+                GOTO_FRONT_IDLE: "front.status:idle",
+              },
+            },
+            idle: {
+              on: {
+                READY_TO_GO_DOWN: [
+                  {
+                    guard: GUARD_NAMES.SKIP_OPENING,
+                    target: "come-back",
+                  },
+                  {
+                    target: "going-down",
+                  },
+                ],
+                READY_TO_GO_UP: "going-up",
+                GO_UP: "indeterminate",
+                GOTO_FRONT_IDLE: "front.status:idle",
+              },
+            },
+            "come-back": {
+              on: {
+                "": "idle",
+              },
+            },
           },
-        ],
-        READY_TO_GO_OUT: "front-closing",
-        GO_OUT: "out",
-      },
-    },
-    "front-closing": {
-      on: {
-        NEXT: "out",
-      },
-    },
-    "covered-going-down": {
-      on: {
-        NEXT: "covered-idle",
-        GOTO_FRONT_IDLE: "front-idle",
-      },
-    },
-    "covered-idle": {
-      on: {
-        READY_TO_GO_DOWN: [
-          {
-            guard: GUARD_NAMES.SKIP_OPENING,
-            target: "covered-idle",
-          },
-          {
-            target: "covered-going-down",
-          },
-        ],
-        READY_TO_GO_UP: "covered-going-up",
-        GO_UP: "covered-indeterminate",
-        GOTO_FRONT_IDLE: "front-idle",
-      },
-    },
-    "covered-going-up": {
-      on: {
-        NEXT: "covered-indeterminate",
-        GOTO_FRONT_IDLE: "front-idle",
-      },
-    },
-    "covered-indeterminate": {
-      on: {
-        GOTO_COVERED_IDLE: "covered-idle",
-        GOTO_FRONT_IDLE: "front-idle",
-      },
+        },
+      ],
     },
   },
 };
+
 
 /**
  * Animation state machine tracks which animation is currently in progress.
@@ -266,11 +297,30 @@ export const SHEET_STATES = {
         },
         {
           name: "swipe",
+          silentOnly: true,
           initial: "unstarted",
           states: {
             unstarted: { on: { SWIPE_START: "ongoing" } },
             ongoing: { on: { SWIPE_END: "ended" } },
             ended: { on: { SWIPE_START: "ongoing", SWIPE_RESET: "unstarted" } },
+          },
+        },
+        {
+          name: "evaluateCloseMessage",
+          silentOnly: true,
+          initial: "false",
+          states: {
+            false: { on: { CLOSE: "true" } },
+            true: { on: { CLOSE: "false" } },
+          },
+        },
+        {
+          name: "evaluateStepMessage",
+          silentOnly: true,
+          initial: "false",
+          states: {
+            false: { on: { STEP: "true" } },
+            true: { on: { STEP: "false" } },
           },
         },
       ],
