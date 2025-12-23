@@ -554,35 +554,7 @@ class Group < ActiveRecord::Base
       group.update!(visibility_level: Group.visibility_levels[:logged_on_users])
     end
 
-    # Remove people from groups they don't belong in.
-    remove_subquery =
-      case name
-      when :admins
-        "SELECT id FROM users WHERE NOT admin OR staged"
-      when :moderators
-        "SELECT id FROM users WHERE NOT moderator OR staged"
-      when :staff
-        "SELECT id FROM users WHERE (NOT admin AND NOT moderator) OR staged"
-      when :trust_level_0, :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
-        "SELECT id FROM users WHERE trust_level < #{id - 10} OR staged"
-      end
-
-    removed_user_ids = DB.query_single <<-SQL
-      DELETE FROM group_users
-            USING (#{remove_subquery}) X
-            WHERE group_id = #{group.id}
-              AND user_id = X.id
-      RETURNING group_users.user_id
-    SQL
-
-    if removed_user_ids.present?
-      Jobs.enqueue(
-        :publish_group_membership_updates,
-        user_ids: removed_user_ids,
-        group_id: group.id,
-        type: AUTO_GROUPS_REMOVE,
-      )
-    end
+    remove_users_from_automatic_group(group:, name:)
 
     # Add people to groups
     insert_subquery =
@@ -664,6 +636,56 @@ class Group < ActiveRecord::Base
     SQL
   end
   private_class_method :reset_groups_user_count!
+
+  def self.remove_users_from_automatic_group(group:, name:)
+    remove_subquery =
+      case name
+      when :admins
+        "SELECT id FROM users WHERE NOT admin OR staged"
+      when :moderators
+        "SELECT id FROM users WHERE NOT moderator OR staged"
+      when :staff
+        "SELECT id FROM users WHERE (NOT admin AND NOT moderator) OR staged"
+      when :trust_level_0, :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
+        "SELECT id FROM users WHERE trust_level < #{group.id - 10} OR staged"
+      end
+
+    removed_user_ids = DB.query_single(<<~SQL)
+        DELETE FROM group_users
+        USING (#{remove_subquery}) X
+        WHERE group_id = #{group.id}
+          AND user_id = X.id
+        RETURNING group_users.user_id
+      SQL
+
+    return if removed_user_ids.blank?
+
+    DB.exec(<<~SQL, group_id: group.id, user_ids: removed_user_ids)
+      UPDATE users
+      SET flair_group_id = NULL
+      WHERE id IN (:user_ids) AND flair_group_id = :group_id
+    SQL
+
+    DB.exec(<<~SQL, group_id: group.id, user_ids: removed_user_ids)
+      UPDATE users
+      SET primary_group_id = NULL
+      WHERE id IN (:user_ids) AND primary_group_id = :group_id
+    SQL
+
+    DB.exec(<<~SQL, user_ids: removed_user_ids, title: group.title) if group.title.present?
+        UPDATE users
+        SET title = NULL
+        WHERE id IN (:user_ids) AND title = :title
+      SQL
+
+    Jobs.enqueue(
+      :publish_group_membership_updates,
+      user_ids: removed_user_ids,
+      group_id: group.id,
+      type: AUTO_GROUPS_REMOVE,
+    )
+  end
+  private_class_method :remove_users_from_automatic_group
 
   def self.refresh_automatic_groups!(*args)
     args = AUTO_GROUPS.keys if args.empty?
