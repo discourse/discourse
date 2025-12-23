@@ -1682,7 +1682,8 @@ posting:
     default: false
     area: "posts_and_topics"
   max_draft_length:
-    default: 400_000
+    default: 150_000
+    max: 150_000
     hidden: true
   max_drafts_per_user:
     default: 10_000
