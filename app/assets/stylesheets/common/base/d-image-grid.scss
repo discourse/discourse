@@ -256,32 +256,31 @@
     gap: 0.75rem;
     padding: 0.5rem 0.75rem;
     background: var(--primary-very-low);
-    border-radius: 999px;
+    border-radius: 1rem;
     border: 1px solid var(--primary-low);
   }
 
   .d-image-grid__dot {
-    width: 0.6rem;
     height: 0.6rem;
+    width: 0.6rem;
     padding: 0;
-    background: transparent;
-    border: 1.5px solid var(--primary-medium);
-    border-radius: 50%;
+    background: var(--primary-low-mid);
+    border: none;
+    border-radius: 1rem;
     cursor: pointer;
-    transition:
-      background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: 0.15s all ease-out;
 
+    // background-color 0.2s cubic-bezier(0.6, 0, 0.2, 1),
+    // width 0.2s cubic-bezier(0.6, 0, 0.2, 1),
+    // border-color 0.2s cubic-bezier(0.6, 0, 0.2, 1);
     &:hover {
-      border-color: var(--primary);
       transform: scale(1.1);
     }
 
     &.active {
-      background: var(--primary);
-      border-color: var(--primary);
-      transform: scale(1.1);
+      background: var(--primary-medium);
+      width: 1.4rem;
+      border-radius: 5px;
     }
   }
 
