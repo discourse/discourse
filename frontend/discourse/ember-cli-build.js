@@ -154,6 +154,16 @@ module.exports = function (defaults) {
       path.join(path.dirname(require.resolve("mathjax/package.json")), "sre"),
       { destDir: "assets/mathjax/sre" }
     ),
+    funnel(path.dirname(require.resolve("mathjax/package.json")), {
+      include: [
+        "*.js",
+        "input/**/*.js",
+        "output/**/*.js",
+        "ui/**/*.js",
+        "a11y/**/*.js",
+      ],
+      destDir: "assets/mathjax",
+    }),
     applyTerser(generateScriptsTree(app)),
     pluginTrees,
   ];
