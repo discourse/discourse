@@ -82,6 +82,7 @@ const CLOSED = "closed",
     original_text: "originalText",
     locale: "locale",
   },
+  _custom_update_fields = new Set(),
   _edit_topic_serializer = {
     title: "topic.title",
     categoryId: "topic.category.id",
@@ -184,6 +185,7 @@ export default class Composer extends RestModel {
       property = fieldName;
     }
     _update_serializer[fieldName] = property;
+    _custom_update_fields.add(fieldName);
   }
 
   static serializedFieldsForUpdate() {
@@ -1139,7 +1141,12 @@ export default class Composer extends RestModel {
     post.setProperties({ cooked, staged: true });
 
     // only save post if content changed as topic metadata is already handled above
-    const skipPostSave = !this.replyDirty && post.post_number === 1;
+    // also check if any custom fields are being saved (e.g., fields added via serializeOnUpdate by plugins)
+    const hasCustomUpdateFields = Object.keys(props).some((key) =>
+      _custom_update_fields.has(key)
+    );
+    const skipPostSave =
+      !this.replyDirty && !hasCustomUpdateFields && post.post_number === 1;
     const savePromise = skipPostSave
       ? Promise.resolve({ target: post, responseJson: { post } })
       : post.save(props);
