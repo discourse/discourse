@@ -429,6 +429,8 @@ tr_TR:
           fields:
             custom_field_name:
               label: "Kullanıcı Özel Alan adı"
+        set_topic_timer:
+          title: Konu Zamanlayıcısını ayarla
       unnamed_automation: "Adsız otomasyon"
       models:
         script:

@@ -6756,6 +6756,7 @@ cs:
               recover: Obnovit téma.
               read_lists: Čtěte seznamy témat, jako jsou nejlepší, nové, nejnovější atd. Podporována je také služba RSS.
               status: "Aktualizujte stav tématu. Stav: uzavřeno, archivováno, viditelné, připnuto. Povoleno: true, false. Zadejte category_id zde a v datové části požadavku, abyste povolili změny stavu pouze u témat v dané kategorii."
+              change_owner: Změna vlastnictví příspěvků v tématu.
             posts:
               edit: Upravte jakýkoli příspěvek nebo konkrétní příspěvek.
               delete: Odstranit příspěvek.
@@ -7515,7 +7516,7 @@ cs:
             error: "Tento motiv byl automaticky deaktivován, protože není kompatibilní s touto verzí Discourse."
             minimum: "Vyžaduje Discourse verze %{version} nebo vyšší."
             maximum: "Vyžaduje verzi Discourse %{version} nebo nižší."
-          update_to_latest: "Aktualizace na nejnovější verzi"
+          update_to_latest: "Aktualizovat na nejnovější verzi"
           check_for_updates: "Zkontrolovat aktualizace"
           updating: "Probíhá aktualizace…"
           update_success: "Aktualizace %{theme} dokončena"

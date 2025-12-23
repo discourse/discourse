@@ -135,6 +135,8 @@ te:
               label: విషయపు ఐడీ
             user:
               label: సభ్యుడు
+        set_topic_timer:
+          title: టాపిక్ టైమర్ ని సెట్ చేయండి
       models:
         trigger:
           name:

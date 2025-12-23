@@ -428,6 +428,8 @@ ja:
           fields:
             custom_field_name:
               label: "ユーザーカスタムフィールド名"
+        set_topic_timer:
+          title: トピックタイマーを設定
       unnamed_automation: "無題の自動化"
       models:
         script:

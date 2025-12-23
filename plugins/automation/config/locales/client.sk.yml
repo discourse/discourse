@@ -431,6 +431,8 @@ sk:
           fields:
             custom_field_name:
               label: "Názov vlastného poľa používateľa"
+        set_topic_timer:
+          title: Nastavenie časovača témy
       unnamed_automation: "Nemenovaná automatizácia"
       models:
         script:

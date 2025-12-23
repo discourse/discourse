@@ -122,6 +122,8 @@ et:
               label: Teema ID
             user:
               label: Kasutaja
+        set_topic_timer:
+          title: Määra teema taimer
       models:
         trigger:
           name:

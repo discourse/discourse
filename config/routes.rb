@@ -71,6 +71,7 @@ Discourse::Application.routes.draw do
     get "finish-installation" => "finish_installation#index"
     get "finish-installation/register" => "finish_installation#register"
     post "finish-installation/register" => "finish_installation#register"
+    get "finish-installation/redirect-discourse-id" => "finish_installation#redirect_discourse_id"
     get "finish-installation/confirm-email" => "finish_installation#confirm_email"
     put "finish-installation/resend-email" => "finish_installation#resend_email"
 
@@ -1274,6 +1275,7 @@ Discourse::Application.routes.draw do
     post "/post_localizations/create_or_update", to: "post_localizations#create_or_update"
     delete "/post_localizations/destroy", to: "post_localizations#destroy"
 
+    get "topic_localizations/:topic_id/:locale" => "topic_localizations#show"
     post "topic_localizations/create_or_update", to: "topic_localizations#create_or_update"
     delete "topic_localizations/destroy", to: "topic_localizations#destroy"
 

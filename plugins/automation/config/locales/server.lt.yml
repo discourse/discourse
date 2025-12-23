@@ -16,3 +16,5 @@ lt:
         title: Uždaryti temą
       append_last_checked_by:
         button_text: Baigta
+      set_topic_timer:
+        title: "Nustatyti temos laikmatį"

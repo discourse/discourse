@@ -438,6 +438,8 @@ zh_CN:
           fields:
             custom_field_name:
               label: "用户自定义字段名称"
+        set_topic_timer:
+          title: 设置话题计时器
       unnamed_automation: "未命名的自动化"
       models:
         script:

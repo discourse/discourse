@@ -182,3 +182,6 @@ en:
       random_assign:
         title: "Random Assign"
         description: "Randomly assign topics to a group"
+      set_topic_timer:
+        title: "Set Topic Timer"
+        description: "Set a topic timer on a topic"

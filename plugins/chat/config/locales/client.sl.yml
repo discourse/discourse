@@ -158,6 +158,7 @@ sl:
         export_messages:
           description: "To izvozi vsa sporočila iz vseh kanalov."
       search:
+        short_title: Išči
         no_results: "Iskanje nima zadetkov"
         sort:
           relevance: "Pomembnosti"

@@ -1656,7 +1656,7 @@ cs:
       yaxis: "Počet událostí"
       description: "Počet spuštěných událostí webhooku nebo jejich průměrná doba trvání."
     suspicious_logins:
-      title: "Podezřelé přihlášení"
+      title: "Podezřelá přihlášení"
       labels:
         user: Uživatel
         client_ip: IP klienta
@@ -2250,6 +2250,7 @@ cs:
     auto_silence_first_post_regex: "Regex nerozlišující velká a malá písmena, který po zadání způsobí, že první příspěvek uživatele bude umlčen a odeslán do fronty na schválení. Příklad: raging|a[bc]a , způsobí, že všechny příspěvky obsahující raging nebo aba nebo aca budou umlčeny jako první. Platí pouze pro první příspěvek. ZRUŠENO: Místo toho použijte Umlčet sledovaná slova."
     reviewable_claiming: "Musí být obsah k revizi nárokován, než na něj bude možné reagovat?"
     reply_by_email_address: "Šablona emailé adresy pro odpověď emailem, např. %%{reply_key}@reply.myforum.com"
+    ignore_by_title: "Ignorovat příchozí e-maily na základě jejich názvu."
     forwarded_emails_behaviour: "Jak zacházet s přeposlaným e-mailem na Discourse. <a href='https://meta.discourse.org/t/-/62977' target='_blank'>Další informace</a>"
     email_total_attachment_size_limit_kb: "Maximální celková velikost souborů připojených k odchozím e-mailům. Nastavením na 0 zakážete odesílání příloh."
     delete_rejected_email_after_days: "Smazat odmítnuté e-maily starší než (n) dnů."

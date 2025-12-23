@@ -14,7 +14,6 @@ it:
     assign_self_regex: "L'espressione regolare che dovrà essere soddisfatta per l'auto-assegnazione. Ad esempio 'la mia lista'"
     assign_other_regex: "L'espressione regolare che dovrà essere soddisfatta per assegnare argomenti ad altri utenti tramite menzione. Ad esempio 'la tua lista'."
     unassign_on_group_archive: "Quando un messaggio viene archiviato da un gruppo, annullare l'assegnazione (riassegnare se viene spostato nuovamente nella posta in arrivo)"
-    unassign_on_close: "Quando un argomento viene chiuso annullare l'assegnazione"
     reassign_on_open: "Quando viene riaperto un argomento, riassegna utenti/gruppi assegnati in precedenza"
     invite_on_assign: "Quando un messaggio personale viene assegnato a un utente o gruppo, invitalo ai MP se non è già un partecipante."
     assign_mailer: "Quando inviare email di notifica per le assegnazioni"

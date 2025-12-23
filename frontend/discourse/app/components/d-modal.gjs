@@ -13,6 +13,7 @@ import FlashMessage from "discourse/components/flash-message";
 import concatClass from "discourse/helpers/concat-class";
 import element from "discourse/helpers/element";
 import htmlClass from "discourse/helpers/html-class";
+import { waitForAnimationEnd } from "discourse/lib/animation-utils";
 import { lock, unlock } from "discourse/lib/body-scroll-lock";
 import { getMaxAnimationTimeMs } from "discourse/lib/swipe-events";
 import swipe from "discourse/modifiers/swipe";
@@ -62,7 +63,7 @@ export default class DModal extends Component {
     this.animating = true;
 
     this.modalContainer.classList.add("is-entering");
-    await this.#waitForAnimationEnd(this.modalContainer);
+    await waitForAnimationEnd(this.modalContainer);
     this.modalContainer.classList.remove("is-entering");
 
     this.animating = false;
@@ -180,7 +181,7 @@ export default class DModal extends Component {
           backdrop.classList.add("is-exiting");
         }
 
-        await this.#waitForAnimationEnd(this.modalContainer);
+        await waitForAnimationEnd(this.modalContainer);
       }
     } finally {
       this.animating = false;
@@ -260,31 +261,6 @@ export default class DModal extends Component {
     );
   }
 
-  #waitForAnimationEnd(el) {
-    return new Promise((resolve) => {
-      const style = window.getComputedStyle(el);
-      const duration = parseFloat(style.animationDuration) * 1000 || 0;
-      const delay = parseFloat(style.animationDelay) * 1000 || 0;
-      const totalTime = duration + delay;
-
-      const timeoutId = setTimeout(
-        () => {
-          el.removeEventListener("animationend", handleAnimationEnd);
-          resolve();
-        },
-        Math.max(totalTime + 50, 50)
-      );
-
-      const handleAnimationEnd = () => {
-        clearTimeout(timeoutId);
-        el.removeEventListener("animationend", handleAnimationEnd);
-        resolve();
-      };
-
-      el.addEventListener("animationend", handleAnimationEnd);
-    });
-  }
-
   async #animatePopOff() {
     const backdrop = this.wrapperElement.nextElementSibling;
 
@@ -297,8 +273,8 @@ export default class DModal extends Component {
 
     await waitForPromise(
       Promise.all([
-        this.#waitForAnimationEnd(this.modalContainer),
-        this.#waitForAnimationEnd(backdrop),
+        waitForAnimationEnd(this.modalContainer),
+        waitForAnimationEnd(backdrop),
       ])
     );
   }

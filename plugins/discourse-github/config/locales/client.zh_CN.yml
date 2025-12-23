@@ -9,8 +9,9 @@ zh_CN:
     github:
       pr_status:
         draft: "草稿"
-        open: "开放"
+        open: "已打开"
         approved: "已批准"
+        merged: "已合并"
         closed: "已关闭"
   admin_js:
     admin:

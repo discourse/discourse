@@ -98,8 +98,8 @@ importers:
         specifier: 3.7.3
         version: 3.7.3
       puppeteer-core:
-        specifier: ^24.33.1
-        version: 24.33.1
+        specifier: ^24.34.0
+        version: 24.34.0
       stylelint:
         specifier: 16.26.1
         version: 16.26.1(typescript@5.9.3)
@@ -125,8 +125,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11(postcss@8.5.6)
       '@rollup/browser':
-        specifier: ^4.53.5
-        version: 4.53.5
+        specifier: ^4.54.0
+        version: 4.54.0
       '@rollup/plugin-babel':
         specifier: ^6.1.0
         version: 6.1.0(@babel/core@7.28.5)(rollup@4.53.5)
@@ -246,7 +246,7 @@ importers:
         version: 6.1.19(@fullcalendar/core@6.1.19)(moment@2.30.1)
       '@fullcalendar/moment-timezone':
         specifier: ^6.1.19
-        version: 6.1.19(@fullcalendar/core@6.1.19)(moment-timezone@0.5.45)
+        version: 6.1.19(@fullcalendar/core@6.1.19)(moment-timezone@0.6.0)
       '@fullcalendar/timegrid':
         specifier: ^6.1.19
         version: 6.1.19(@fullcalendar/core@6.1.19)
@@ -314,8 +314,8 @@ importers:
         specifier: 11.11.1
         version: 11.11.1
       immer:
-        specifier: ^11.0.1
-        version: 11.0.1
+        specifier: ^11.1.0
+        version: 11.1.0
       jspreadsheet-ce:
         specifier: ^4.15.0
         version: 4.15.0
@@ -323,8 +323,8 @@ importers:
         specifier: 2.30.1
         version: 2.30.1
       moment-timezone:
-        specifier: 0.5.45
-        version: 0.5.45
+        specifier: 0.6.0
+        version: 0.6.0
       morphlex:
         specifier: ^1.0.5
         version: 1.0.5
@@ -594,8 +594,8 @@ importers:
         specifier: ^3.5.0
         version: 3.5.0
       sinon:
-        specifier: ^21.0.0
-        version: 21.0.0
+        specifier: ^21.0.1
+        version: 21.0.1
       source-map:
         specifier: ^0.7.6
         version: 0.7.6
@@ -2635,8 +2635,8 @@ packages:
     peerDependencies:
       prettier: 3.x
 
-  '@rollup/browser@4.53.5':
-    resolution: {integrity: sha512-9CgEzoY2IknO3qJAJHI7MtwUNrsYDXOlKFORhbWysPi7gCwwZl1IP+h4aSHbmHHJ6OtXBReZITxOjuwLCJsaWw==}
+  '@rollup/browser@4.54.0':
+    resolution: {integrity: sha512-Jl2QdSIJWJg7s34+XepZBagvdcWmrS+aHp0Sjj30DccyWrqgHJMqRnCHHIg9YAj94RzW8107vpOF7nldSSeqww==}
 
   '@rollup/plugin-babel@6.1.0':
     resolution: {integrity: sha512-dFZNuFD2YRcoomP4oYf+DvQNSUA9ih+A3vUqopQx5EdtPGo3WBnQcI/S8pwpz91UsGfL0HsMSOlaMld8HrbubA==}
@@ -2810,11 +2810,11 @@ packages:
   '@sinonjs/commons@3.0.1':
     resolution: {integrity: sha512-K3mCHKQ9sVh8o1C9cxkwxaOmXoAMlDxC1mYyHrjqOWEcBjYr76t96zL2zlj5dUGZ3HSw240X1qgH3Mjf1yJWpQ==}
 
-  '@sinonjs/fake-timers@13.0.5':
-    resolution: {integrity: sha512-36/hTbH2uaWuGVERyC6da9YwGWnzUZXuPro/F2LfsdOsLnCojz/iSH8MxUt/FD2S5XBSVPhmArFUXcpCQ2Hkiw==}
+  '@sinonjs/fake-timers@15.1.0':
+    resolution: {integrity: sha512-cqfapCxwTGsrR80FEgOoPsTonoefMBY7dnUEbQ+GRcved0jvkJLzvX6F4WtN+HBqbPX/SiFsIRUp+IrCW/2I2w==}
 
-  '@sinonjs/samsam@8.0.2':
-    resolution: {integrity: sha512-v46t/fwnhejRSFTGqbpn9u+LQ9xJDse10gNnPgAcxgdoCDMXj/G2asWAC/8Qs+BAZDicX+MNZouXT1A7c83kVw==}
+  '@sinonjs/samsam@8.0.3':
+    resolution: {integrity: sha512-hw6HbX+GyVZzmaYNh82Ecj1vdGZrqVIn/keDTg63IgAwiQPO+xCz99uG6Woqgb4tM0mUiFENKZ4cqd7IX94AXQ==}
 
   '@socket.io/component-emitter@3.1.2':
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==}
@@ -5915,8 +5915,8 @@ packages:
     resolution: {integrity: sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg==}
     engines: {node: '>= 4'}
 
-  immer@11.0.1:
-    resolution: {integrity: sha512-naDCyggtcBWANtIrjQEajhhBEuL9b0Zg4zmlWK2CzS6xCWSE39/vvf4LqnMjUAWHBhot4m9MHCM/Z+mfWhUkiA==}
+  immer@11.1.0:
+    resolution: {integrity: sha512-dlzb07f5LDY+tzs+iLCSXV2yuhaYfezqyZQc+n6baLECWkOMEWxkECAOnXL0ba7lsA25fM9b2jtzpu/uxo1a7g==}
 
   import-cwd@3.0.0:
     resolution: {integrity: sha512-4pnzH16plW+hgvRECbDWpQl3cqtvSofHWh44met7ESfZ8UZOWWddm8hEyDTqREJ9RbYHY8gi8DqmaelApoOGMg==}
@@ -6584,10 +6584,6 @@ packages:
   lodash.flatten@3.0.2:
     resolution: {integrity: sha512-jCXLoNcqQRbnT/KWZq2fIREHWeczrzpTR0vsycm96l/pu5hGeAntVBG0t7GuM/2wFqmnZs3d1eGptnAH2E8+xQ==}
 
-  lodash.get@4.4.2:
-    resolution: {integrity: sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ==}
-    deprecated: This package is deprecated. Use the optional chaining (?.) operator instead.
-
   lodash.isarguments@3.1.0:
     resolution: {integrity: sha512-chi4NHZlZqZD18a0imDHnZPrDeBbTtVN7GXMwuGdRH9qotxAjYs3aVLKc7zNOG9eddR5Ksd8rvFEBc9SsggPpg==}
 
@@ -6929,8 +6925,8 @@ packages:
     resolution: {integrity: sha512-Q9wJ/xhzeD9Wua1MwDN2v3ah3HENsUVSlzzL9Qw149cL9hHZkXtQGl3Eq36BbdLV+/qUwaP1WtJQ+H/+Oxso8g==}
     engines: {node: 20 || 22 || 24}
 
-  moment-timezone@0.5.45:
-    resolution: {integrity: sha512-HIWmqA86KcmCAhnMAN0wuDOARV/525R2+lOLotuGFzn4HO+FH+/645z2wx0Dt3iDv6/p61SIvKnDstISainhLQ==}
+  moment-timezone@0.6.0:
+    resolution: {integrity: sha512-ldA5lRNm3iJCWZcBCab4pnNL3HSZYXVb/3TYr75/1WCTWYuTqYUb5f/S384pncYjJ88lbO8Z4uPDvmoluHJc8Q==}
 
   moment@2.30.1:
     resolution: {integrity: sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==}
@@ -7741,8 +7737,8 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
-  puppeteer-core@24.33.1:
-    resolution: {integrity: sha512-MZjFLeGMBFbSkc1xKfcv6hjFlfNi1bmQly++HyqxGPYzLIMY0mSYyjqkAzT1PtomTYHq7SEonciIKkeyHExA1g==}
+  puppeteer-core@24.34.0:
+    resolution: {integrity: sha512-24evawO+mUGW4mvS2a2ivwLdX3gk8zRLZr9HP+7+VT2vBQnm0oh9jJEZmUE3ePJhRkYlZ93i7OMpdcoi2qNCLg==}
     engines: {node: '>=18'}
 
   qified@0.5.2:
@@ -8229,8 +8225,8 @@ packages:
   simple-swizzle@0.2.2:
     resolution: {integrity: sha512-JA//kQgZtbuY83m+xT+tXJkmJncGMTFT+C+g2h2R9uxkYIrE2yy9sgmcLhCnw57/WSD+Eh3J97FPEDFnbXnDUg==}
 
-  sinon@21.0.0:
-    resolution: {integrity: sha512-TOgRcwFPbfGtpqvZw+hyqJDvqfapr1qUlOizROIk4bBLjlsjlB00Pg6wMFXNtJRpu+eCZuVOaLatG7M8105kAw==}
+  sinon@21.0.1:
+    resolution: {integrity: sha512-Z0NVCW45W8Mg5oC/27/+fCqIHFnW8kpkFOq0j9XJIev4Ld0mKmERaZv5DMLAb9fGCevjKwaEeIQz5+MBXfZcDw==}
 
   slash@3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
@@ -10885,10 +10881,10 @@ snapshots:
     dependencies:
       '@fullcalendar/core': 6.1.19
 
-  '@fullcalendar/moment-timezone@6.1.19(@fullcalendar/core@6.1.19)(moment-timezone@0.5.45)':
+  '@fullcalendar/moment-timezone@6.1.19(@fullcalendar/core@6.1.19)(moment-timezone@0.6.0)':
     dependencies:
       '@fullcalendar/core': 6.1.19
-      moment-timezone: 0.5.45
+      moment-timezone: 0.6.0
 
   '@fullcalendar/moment@6.1.19(@fullcalendar/core@6.1.19)(moment@2.30.1)':
     dependencies:
@@ -11461,7 +11457,7 @@ snapshots:
       prettier: 3.7.3
       rxjs: 6.6.7
 
-  '@rollup/browser@4.53.5':
+  '@rollup/browser@4.54.0':
     dependencies:
       '@types/estree': 1.0.8
 
@@ -11595,14 +11591,13 @@ snapshots:
     dependencies:
       type-detect: 4.0.8
 
-  '@sinonjs/fake-timers@13.0.5':
+  '@sinonjs/fake-timers@15.1.0':
     dependencies:
       '@sinonjs/commons': 3.0.1
 
-  '@sinonjs/samsam@8.0.2':
+  '@sinonjs/samsam@8.0.3':
     dependencies:
       '@sinonjs/commons': 3.0.1
-      lodash.get: 4.4.2
       type-detect: 4.1.0
 
   '@socket.io/component-emitter@3.1.2': {}
@@ -15752,7 +15747,7 @@ snapshots:
 
   ignore@7.0.5: {}
 
-  immer@11.0.1: {}
+  immer@11.1.0: {}
 
   import-cwd@3.0.0:
     dependencies:
@@ -16447,8 +16442,6 @@ snapshots:
       lodash._baseflatten: 3.1.4
       lodash._isiterateecall: 3.0.9
 
-  lodash.get@4.4.2: {}
-
   lodash.isarguments@3.1.0: {}
 
   lodash.isarray@3.0.4: {}
@@ -16791,7 +16784,7 @@ snapshots:
 
   mktemp@2.0.2: {}
 
-  moment-timezone@0.5.45:
+  moment-timezone@0.6.0:
     dependencies:
       moment: 2.30.1
 
@@ -17628,7 +17621,7 @@ snapshots:
 
   punycode@2.3.1: {}
 
-  puppeteer-core@24.33.1:
+  puppeteer-core@24.34.0:
     dependencies:
       '@puppeteer/browsers': 2.11.0
       chromium-bidi: 12.0.1(devtools-protocol@0.0.1534754)
@@ -18260,12 +18253,12 @@ snapshots:
     dependencies:
       is-arrayish: 0.3.4
 
-  sinon@21.0.0:
+  sinon@21.0.1:
     dependencies:
       '@sinonjs/commons': 3.0.1
-      '@sinonjs/fake-timers': 13.0.5
-      '@sinonjs/samsam': 8.0.2
-      diff: 7.0.0
+      '@sinonjs/fake-timers': 15.1.0
+      '@sinonjs/samsam': 8.0.3
+      diff: 8.0.2
       supports-color: 7.2.0
 
   slash@3.0.0: {}
