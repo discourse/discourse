@@ -230,10 +230,6 @@ html.composer-open:not(.has-full-page-chat) {
         }
       }
 
-      .d-icon {
-        margin-right: 8px;
-      }
-
       img.avatar {
         margin-right: 3px;
       }
@@ -253,7 +249,7 @@ html.composer-open:not(.has-full-page-chat) {
         flex-wrap: wrap;
       }
 
-      .display-edit-reason {
+      .display-edit-reason.--active {
         width: 100%;
       }
 
