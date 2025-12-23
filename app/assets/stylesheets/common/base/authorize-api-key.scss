@@ -1,0 +1,51 @@
+.authorize-api-key {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 1em;
+
+  &__user {
+    display: flex;
+    align-items: center;
+    gap: 0.35em;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    margin-bottom: 1.5em;
+  }
+
+  &__username {
+    color: var(--primary);
+  }
+
+  &__permissions {
+    background-color: var(--primary-very-low);
+    border-radius: 4px;
+    padding: 1em;
+    margin-bottom: 1em;
+  }
+
+  &__permissions-header {
+    margin: 0 0 0.5em;
+  }
+
+  &__scopes {
+    margin: 0;
+    padding-left: 1.25em;
+  }
+
+  &__redirect {
+    background-color: var(--highlight-bg);
+    border-radius: 4px;
+    padding: 1em;
+    margin-bottom: 1.5em;
+  }
+
+  &__redirect-url {
+    margin: 0;
+    word-break: break-all;
+  }
+
+  &__buttons {
+    display: flex;
+    gap: 0.5em;
+  }
+}

@@ -288,7 +288,7 @@ shared_examples "login scenarios" do
         mock_google_auth
         visit("/user-api-key/new?#{args.to_query}")
 
-        expect(page).to have_css(".authorize-api-key .scopes")
+        expect(page).to have_css(".authorize-api-key__scopes")
       end
 
       it "redirects when navigating to login with redirect param" do

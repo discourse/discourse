@@ -44,6 +44,12 @@ class UserApiKeysController < ApplicationController
     @nonce = params[:nonce]
     @client_id = params[:client_id]
     @auth_redirect = params[:auth_redirect]
+    @redirect_uri =
+      begin
+        URI.parse(@auth_redirect)
+      rescue StandardError
+        nil
+      end if @auth_redirect.present?
     @push_url = params[:push_url]
     @localized_scopes = params[:scopes].split(",").map { |s| I18n.t("user_api_key.scopes.#{s}") }
     @scopes = params[:scopes]
