@@ -1,152 +1,212 @@
-import { modifier } from "ember-modifier";
+import Modifier from "ember-modifier";
 import { createTweenFunction } from "./animation";
 import { toKebabCase, TRANSFORM_PROPS } from "./css-utils";
 
 /**
- * Applies animation config to an element at a given progress.
- * Handles CSS properties including transforms, opacity, visibility, etc.
- *
- * @param {HTMLElement} element - Target element
- * @param {Object} config - Animation config with CSS property values
- * @param {number} progress - Animation progress (0 to 1)
- * @param {Function} [tween] - Optional tween function for interpolation
- */
-function applyAnimation(element, config, progress, tween) {
-  if (!config || !element) {
-    return;
-  }
-
-  const tweenFn = tween || createTweenFunction(progress);
-  const transforms = [];
-
-  for (const [property, value] of Object.entries(config)) {
-    if (
-      value === null ||
-      value === undefined ||
-      value === "ignore" ||
-      property === "transformOrigin"
-    ) {
-      continue;
-    }
-
-    let computedValue;
-
-    if (Array.isArray(value)) {
-      computedValue = tweenFn(value[0], value[1]);
-    } else if (typeof value === "function") {
-      computedValue = value({ progress, tween: tweenFn });
-    } else if (typeof value === "string") {
-      computedValue = value;
-    } else {
-      continue;
-    }
-
-    if (TRANSFORM_PROPS.has(property)) {
-      transforms.push(`${property}(${computedValue})`);
-    } else {
-      element.style.setProperty(toKebabCase(property), computedValue);
-    }
-  }
-
-  if (transforms.length > 0) {
-    element.style.setProperty("transform", transforms.join(" "));
-  }
-
-  if (config.transformOrigin) {
-    element.style.setProperty("transform-origin", config.transformOrigin);
-  }
-}
-
-/**
- * Collects CSS property names from config for cleanup.
- *
- * @param {Object} config - Animation config
- * @returns {string[]} Array of kebab-case CSS property names to clean up
- */
-function getPropertiesToClean(config) {
-  if (!config) {
-    return [];
-  }
-
-  const properties = [];
-  let hasTransform = false;
-
-  for (const property of Object.keys(config)) {
-    if (TRANSFORM_PROPS.has(property)) {
-      hasTransform = true;
-    } else if (property !== "transformOrigin") {
-      properties.push(toKebabCase(property));
-    }
-  }
-
-  if (hasTransform) {
-    properties.push("transform");
-  }
-
-  if (config.transformOrigin) {
-    properties.push("transform-origin");
-  }
-
-  return properties;
-}
-
-/**
  * Modifier that applies both travel and stacking animations to an element.
- *
- * @param {HTMLElement} element - Target element
- * @param {Object} sheet - The sheet controller instance
- * @param {Object} [travelAnimation] - Travel animation config (optional)
- * @param {Object} [stackingAnimation] - Stacking animation config (optional)
+ * Optimized to pre-calculate animation callbacks and static styles.
  */
-export default modifier(
-  (element, [sheet, travelAnimation, stackingAnimation]) => {
+export default class OutletAnimationModifier extends Modifier {
+  /** @type {Function[]} */
+  #cleanupFns = [];
+
+  /** @type {Set<string>} */
+  #propertiesToClean = new Set();
+
+  /**
+   * Main lifecycle hook for the modifier.
+   *
+   * @param {HTMLElement} element - Target element
+   * @param {Array} args - Positional arguments [sheet, travelAnimation, stackingAnimation]
+   */
+  modify(element, [sheet, travelAnimation, stackingAnimation]) {
+    this.#cleanup(element);
+
     if (!sheet) {
       return;
     }
 
-    const cleanupFns = [];
-    const propertiesToClean = new Set();
-
     if (travelAnimation) {
-      for (const prop of getPropertiesToClean(travelAnimation)) {
-        propertiesToClean.add(prop);
+      const { animatedProperties, staticStyles, propertiesToClean } =
+        this.#prepareAnimation(travelAnimation);
+
+      this.#applyStaticStyles(element, staticStyles);
+      for (const prop of propertiesToClean) {
+        this.#propertiesToClean.add(prop);
       }
 
       const unregister = sheet.registerTravelAnimation({
         target: element,
         config: travelAnimation,
-        callback: (progress, tween) => {
-          applyAnimation(element, travelAnimation, progress, tween);
-        },
+        callback: this.#createAnimationCallback(element, animatedProperties),
       });
 
-      cleanupFns.push(unregister);
+      this.#cleanupFns.push(unregister);
     }
 
     if (stackingAnimation) {
-      for (const prop of getPropertiesToClean(stackingAnimation)) {
-        propertiesToClean.add(prop);
+      const { animatedProperties, staticStyles, propertiesToClean } =
+        this.#prepareAnimation(stackingAnimation);
+
+      this.#applyStaticStyles(element, staticStyles);
+      for (const prop of propertiesToClean) {
+        this.#propertiesToClean.add(prop);
       }
 
       const unregister = sheet.registerStackingAnimation({
         target: element,
         config: stackingAnimation,
-        callback: (progress, tween) => {
-          applyAnimation(element, stackingAnimation, progress, tween);
-        },
+        callback: this.#createAnimationCallback(element, animatedProperties),
       });
 
-      cleanupFns.push(unregister);
+      this.#cleanupFns.push(unregister);
+    }
+  }
+
+  /**
+   * Prepares animation configuration into executable callbacks and static styles.
+   *
+   * @param {Object} config - Animation configuration
+   * @returns {Object} Prepared animation data
+   */
+  #prepareAnimation(config) {
+    const animatedProperties = [];
+    const staticStyles = new Map();
+    const propertiesToClean = new Set();
+
+    if (!config) {
+      return { animatedProperties, staticStyles, propertiesToClean };
     }
 
-    return () => {
-      for (const fn of cleanupFns) {
-        fn?.();
+    const props = config.properties || config;
+
+    for (const [property, value] of Object.entries(props)) {
+      if (
+        value === null ||
+        value === undefined ||
+        value === "ignore" ||
+        property === "properties"
+      ) {
+        continue;
       }
 
-      for (const prop of propertiesToClean) {
-        element.style.removeProperty(prop);
+      if (property === "transformOrigin") {
+        const kebabProp = "transform-origin";
+        staticStyles.set(kebabProp, value);
+        propertiesToClean.add(kebabProp);
+        continue;
+      }
+
+      if (typeof value === "string") {
+        const kebabProp = toKebabCase(property);
+        staticStyles.set(kebabProp, value);
+        propertiesToClean.add(kebabProp);
+        continue;
+      }
+
+      let animationFn;
+      if (Array.isArray(value)) {
+        if (
+          !property.startsWith("scale") &&
+          (!isNaN(value[0]) || !isNaN(value[1]))
+        ) {
+          throw new Error(
+            "Keyframe values used with a 'transform' property require a unit (e.g. 'px', 'em' or '%')."
+          );
+        }
+
+        animationFn = ({ tween }) => tween(value[0], value[1]);
+      } else if (typeof value === "function") {
+        animationFn = value;
+      } else {
+        continue;
+      }
+
+      if (TRANSFORM_PROPS.has(property) || property === "transform") {
+        const transformName = property === "transform" ? "" : property;
+
+        const existingTransformIndex = animatedProperties.findIndex(
+          ([p]) => p === "transform"
+        );
+
+        const wrappedFn = (params) => {
+          const val = animationFn(params);
+          return transformName ? `${transformName}(${val})` : val;
+        };
+
+        if (existingTransformIndex !== -1) {
+          const prevFn = animatedProperties[existingTransformIndex][1];
+          animatedProperties[existingTransformIndex][1] = (params) =>
+            `${prevFn(params)} ${wrappedFn(params)}`;
+        } else {
+          animatedProperties.push(["transform", wrappedFn]);
+          propertiesToClean.add("transform");
+        }
+      } else {
+        const kebabProp = toKebabCase(property);
+        animatedProperties.push([kebabProp, animationFn]);
+        propertiesToClean.add(kebabProp);
+      }
+    }
+
+    return { animatedProperties, staticStyles, propertiesToClean };
+  }
+
+  /**
+   * Applies static styles to an element immediately.
+   *
+   * @param {HTMLElement} element - Target element
+   * @param {Map<string, string>} staticStyles - Static styles to apply
+   */
+  #applyStaticStyles(element, staticStyles) {
+    for (const [prop, value] of staticStyles) {
+      element.style.setProperty(prop, value);
+    }
+  }
+
+  /**
+   * Creates an optimized animation callback for the element.
+   *
+   * @param {HTMLElement} element - Target element
+   * @param {Array} animatedProperties - Array of [prop, fn] pairs
+   * @returns {Function} Animation callback
+   */
+  #createAnimationCallback(element, animatedProperties) {
+    const len = animatedProperties.length;
+    return (progress, tween) => {
+      const tweenFn = tween || createTweenFunction(progress);
+      const params = { progress, tween: tweenFn };
+
+      for (let i = 0; i < len; i++) {
+        const [prop, fn] = animatedProperties[i];
+        element.style.setProperty(prop, fn(params));
       }
     };
   }
-);
+
+  /**
+   * Cleans up registered animations and resets styles.
+   *
+   * @param {HTMLElement} element - Target element
+   */
+  #cleanup(element) {
+    for (const fn of this.#cleanupFns) {
+      fn?.();
+    }
+    this.#cleanupFns = [];
+
+    if (element) {
+      for (const prop of this.#propertiesToClean) {
+        element.style.removeProperty(prop);
+      }
+    }
+    this.#propertiesToClean.clear();
+  }
+
+  /**
+   * Final cleanup on destruction.
+   */
+  willDestroy() {
+    this.#cleanup();
+  }
+}

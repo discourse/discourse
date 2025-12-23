@@ -1,41 +1,49 @@
 /**
- * @class InertManagement
- * Manages aria-modal on the sheet view.
- * Aria-hidden management is now centralized in sheetRegistry.
+ * Manages accessibility attributes on the sheet view to ensure content
+ * outside the active sheet is handled correctly by assistive technologies.
  */
 export default class InertManagement {
-  /** @type {Object} */
-  controller;
+  /**
+   * @type {Object}
+   */
+  #controller;
 
   /**
-   * @param {Object} controller - The sheet controller instance
+   * @param {Object} controller The sheet controller instance
    */
   constructor(controller) {
-    this.controller = controller;
+    this.#controller = controller;
   }
 
   /**
-   * Apply aria-modal to the view.
+   * Applies the modal attribute to the view to indicate its modal nature.
    */
   applyInertOutside() {
-    if (!this.controller.inertOutside || !this.controller.view) {
+    if (!this.#controller.inertOutside || !this.#controller.view) {
       return;
     }
 
-    this.controller.view.setAttribute("aria-modal", "true");
+    this.#controller.view.setAttribute("aria-modal", "true");
   }
 
   /**
-   * Remove aria-modal from the view.
+   * Removes the modal attribute from the view.
    */
   removeInertOutside() {
-    this.controller.view?.removeAttribute("aria-modal");
+    this.#removeAriaModal();
   }
 
   /**
-   * Cleanup - just removes aria-modal.
+   * Final cleanup of accessibility attributes.
    */
   cleanup() {
-    this.removeInertOutside();
+    this.#removeAriaModal();
+  }
+
+  /**
+   * Internal helper to safely remove the modal attribute from the view.
+   */
+  #removeAriaModal() {
+    this.#controller.view?.removeAttribute("aria-modal");
   }
 }
