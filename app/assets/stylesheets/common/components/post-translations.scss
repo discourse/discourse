@@ -13,8 +13,8 @@
   }
 }
 
-.post-language-selector-trigger {
-  margin-left: 1rem;
+.composer-action-title .post-language-selector-trigger {
+  margin-left: var(--space-2);
 
   .d-button-label {
     text-transform: uppercase;
