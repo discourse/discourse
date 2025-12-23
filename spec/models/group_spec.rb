@@ -358,6 +358,49 @@ RSpec.describe Group do
         expect(publish_event_job_args["group_id"]).to eq(tl0_users.id)
         expect(publish_event_job_args["type"]).to eq("add")
       end
+
+      it "clears flair_group_id when user is removed from an automatic group" do
+        moderators = Group.find(Group::AUTO_GROUPS[:moderators])
+        moderators.update!(flair_icon: "shield-halved")
+        user.update!(moderator: true, flair_group_id: moderators.id)
+
+        Group.refresh_automatic_group!(:moderators)
+        expect(GroupUser.exists?(group: moderators, user: user)).to eq(true)
+        expect(user.reload.flair_group_id).to eq(moderators.id)
+
+        user.update!(moderator: false)
+        Group.refresh_automatic_group!(:moderators)
+
+        expect(GroupUser.exists?(group: moderators, user: user)).to eq(false)
+        expect(user.reload.flair_group_id).to be_nil
+      end
+
+      it "clears primary_group_id when user is removed from an automatic group" do
+        moderators = Group.find(Group::AUTO_GROUPS[:moderators])
+        user.update!(moderator: true, primary_group_id: moderators.id)
+
+        Group.refresh_automatic_group!(:moderators)
+        expect(user.reload.primary_group_id).to eq(moderators.id)
+
+        user.update!(moderator: false)
+        Group.refresh_automatic_group!(:moderators)
+
+        expect(user.reload.primary_group_id).to be_nil
+      end
+
+      it "clears title when user is removed from an automatic group" do
+        moderators = Group.find(Group::AUTO_GROUPS[:moderators])
+        moderators.update!(title: "Moderator")
+        user.update!(moderator: true, title: "Moderator")
+
+        Group.refresh_automatic_group!(:moderators)
+        expect(user.reload.title).to eq("Moderator")
+
+        user.update!(moderator: false)
+        Group.refresh_automatic_group!(:moderators)
+
+        expect(user.reload.title).to be_nil
+      end
     end
 
     it "makes sure the everyone group is not visible except to staff" do
