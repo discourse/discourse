@@ -81,6 +81,8 @@ class Admin::UsersController < Admin::StaffController
 
   def delete_posts_decider
     @user = User.find_by(id: params[:user_id])
+    raise Discourse::NotFound if !@user
+
     post_count = @user.post_count
     threshold = SiteSetting.delete_all_posts_background_threshold.to_i
 
