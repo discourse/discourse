@@ -156,8 +156,16 @@ export default class DToast extends Component {
               (concat "d-toast-" this.contentPlacement)
             }}
           >
-            <DSheet.Content @sheet={{sheet}} class="d-toast-content">
-              <DSheet.SpecialWrapper.Root @sheet={{sheet}}>
+            <DSheet.Content
+              @sheet={{sheet}}
+              @asChild={{true}}
+              as |contentAttrs|
+            >
+              <DSheet.SpecialWrapper.Root
+                @sheet={{sheet}}
+                @contentAttrs={{contentAttrs}}
+                class="d-toast-content"
+              >
                 <DSheet.SpecialWrapper.Content
                   class="d-toast-inner-content"
                   {{on "pointerenter" this.handlePointerEnter}}
@@ -169,6 +177,7 @@ export default class DToast extends Component {
                       {{didInsert this.registerProgressBar}}
                     ></div>
                   {{/if}}
+
                   <DDefaultToast
                     @data={{@toast.options.data}}
                     @sheet={{sheet}}

@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import concatClass from "discourse/helpers/concat-class";
 
 /**
  * Scroll-trap stabilizer for special layouts.
@@ -9,14 +8,7 @@ import concatClass from "discourse/helpers/concat-class";
  */
 export default class DSheetSpecialWrapperContent extends Component {
   <template>
-    <div
-      class={{concatClass "Sheet-specialWrapperContent" @class}}
-      data-d-sheet={{concatClass
-        "scroll-trap-stabilizer"
-        "special-wrapper-content"
-      }}
-      ...attributes
-    >
+    <div data-d-sheet="scroll-trap-stabilizer" ...attributes>
       {{yield}}
     </div>
   </template>

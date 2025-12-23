@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { htmlSafe } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
-import { eq, not } from "discourse/truth-helpers";
+import { not } from "discourse/truth-helpers";
 import outletAnimationModifier from "./outlet-animation-modifier";
 import scrollListenerModifier from "./scroll-listener-modifier";
-import { scrollTrapModifier } from "./scroll-trap-modifier";
 
 /**
  * Content component for d-sheet - renders the scrollable content area with detent markers.
@@ -21,8 +21,7 @@ import { scrollTrapModifier } from "./scroll-trap-modifier";
  *   Supports: opacity, visibility, transforms (translate, scale, rotate, skew variants),
  *   and any CSS property
  * @param {Object} [stackingAnimation] - Custom stacking animation config (same format as travelAnimation)
- * @param {boolean} scrollTrapRoot - Whether content is a scroll trap root
- * @param {string} scrollTrapAxis - Axis for scroll trap ("horizontal" or "vertical")
+ * @param {boolean} asChild - When true, skips rendering the content div and yields attributes for child to apply
  */
 export default class Content extends Component {
   /**
@@ -39,6 +38,26 @@ export default class Content extends Component {
     return htmlSafe(
       `--d-sheet-marker-prev: ${prevDetent}; --d-sheet-marker-current: ${currentDetent}; --d-sheet-marker-index: ${index};`
     );
+  }
+
+  /**
+   * Builds the data-d-sheet attribute string for the content element.
+   * Used when asChild=true to pass attributes to child component.
+   *
+   * @returns {string}
+   */
+  get contentDataDSheet() {
+    const parts = [
+      "content",
+      this.args.sheet?.contentPlacementCssClass,
+      this.args.sheet?.tracks,
+    ];
+
+    if (!this.args.sheet?.inertOutside) {
+      parts.push("no-pointer-events");
+    }
+
+    return parts.filter(Boolean).join(" ");
   }
 
   <template>
@@ -80,29 +99,30 @@ export default class Content extends Component {
         }}
         {{didInsert @sheet.registerContentWrapper}}
       >
-        <div
-          data-d-sheet={{concatClass
-            "content"
-            @sheet.contentPlacementCssClass
-            @sheet.tracks
-            (if @scrollTrapRoot "scroll-trap-root")
-            (if
-              @scrollTrapRoot
-              (if
-                (eq @scrollTrapAxis "horizontal")
-                "scroll-horizontal"
-                "scroll-vertical"
-              )
+        {{#if @asChild}}
+          {{yield
+            (hash
+              dataDSheet=this.contentDataDSheet
+              registerContent=@sheet.registerContent
+              travelAnimation=@travelAnimation
+              stackingAnimation=@stackingAnimation
             )
-            (if (not @sheet.inertOutside) "no-pointer-events")
           }}
-          ...attributes
-          {{didInsert @sheet.registerContent}}
-          {{outletAnimationModifier @sheet @travelAnimation @stackingAnimation}}
-          {{scrollTrapModifier @scrollTrapRoot}}
-        >
-          {{yield}}
-        </div>
+        {{else}}
+          <div
+            data-d-sheet={{concatClass
+              "content"
+              @sheet.contentPlacementCssClass
+              @sheet.tracks
+              (if (not @sheet.inertOutside) "no-pointer-events")
+            }}
+            ...attributes
+            {{didInsert @sheet.registerContent}}
+            {{outletAnimationModifier @sheet @travelAnimation @stackingAnimation}}
+          >
+            {{yield}}
+          </div>
+        {{/if}}
         {{#if @sheet.nativeEdgeSwipePrevention}}
           <div
             data-d-sheet={{concatClass "edge-marker" @sheet.tracks}}

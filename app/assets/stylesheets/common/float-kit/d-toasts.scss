@@ -12,7 +12,7 @@
         var(--toast-max-height) + var(--toast-padding-bottom)
     );
     --toast-border-color: var(--content-border-color);
-    --toast-box-shadow: var(--shadow-dropdown);
+    --toast-box-shadow: var(--shadow-card);
     --toast-border-radius: var(--d-border-radius);
     --toast-background-color: var(--secondary);
     --toast-offset: 8px;
@@ -44,10 +44,6 @@
 
     &-inner-content {
       max-height: var(--toast-max-height);
-      border-radius: var(--toast-border-radius);
-      background-color: var(--toast-background-color);
-      border: 1px solid var(--toast-border-color);
-      box-shadow: var(--toast-box-shadow);
     }
   }
 

@@ -39,7 +39,8 @@ export default class Sheets extends Component {
   showToast() {
     this.toasts.success({
       data: {
-        message: "CONTENT CONTENT CONTENT CONTENT CONTENT ",
+        title: "Hello",
+        message: "This is a toast",
         progressBar: true,
       },
     });
