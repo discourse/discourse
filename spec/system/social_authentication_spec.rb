@@ -41,6 +41,7 @@ shared_examples "social authentication scenarios" do
         mock_google_auth
         visit("/")
 
+        signup_page.open.click_social_button("google_oauth2")
         expect(signup_page).to be_open
         expect(signup_page).to have_no_password_input
         expect(signup_page).to have_valid_username
