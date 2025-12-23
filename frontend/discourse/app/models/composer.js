@@ -1138,17 +1138,12 @@ export default class Composer extends RestModel {
     const cooked = this.getCookedHtml();
     post.setProperties({ cooked, staged: true });
 
-    // only save post if content changed as topic metadata is already handled above
-    const skipPostSave = !this.replyDirty && post.post_number === 1;
-    const savePromise = skipPostSave
-      ? Promise.resolve({ target: post, responseJson: { post } })
-      : post.save(props);
-
     return promise
-      .then(() => savePromise)
-      .then((result) => {
-        this.clearState();
-        return result;
+      .then(() => {
+        return post.save(props).then((result) => {
+          this.clearState();
+          return result;
+        });
       })
       .catch(rollback)
       .finally(() => {
