@@ -5482,6 +5482,9 @@ en:
 
   finish_installation:
     congratulations: "Congratulations, you installed Discourse!"
+    login_with_discourse_id: "Login with Discourse ID"
+    discourse_id_help: "Please log in with Discourse ID using the button below. <br/><br/>Make sure you use a Discourse ID account with a primary email that matches the `DISCOURSE_DEVELOPER_EMAILS` environment variable."
+    discourse_id_error_help: "You have opted to skip setting up email for now. Unfortunately due to the error message above, the setup cannot continue. Please report this issue on <a href='https://meta.discourse.org/'>meta.discourse.org</a>."
     register:
       button: "Register"
       title: "Register Admin Account"
@@ -5493,6 +5496,10 @@ en:
     resend_email:
       title: "Resend Activation Email"
       message: "<p>We've re-sent the activation email to <b>%{email}</b>"
+    discourse_id:
+      help: "We are now setting up Discourse ID for you."
+      no_allowed_emails: "No allowed emails configured in DISCOURSE_DEVELOPER_EMAILS. Cannot continue with site setup."
+      global_notice: "No admins have logged in yet. Please log in using a Discourse ID account with an email that matches the `DISCOURSE_DEVELOPER_EMAILS` environment variable to complete the installation."
 
   safe_mode:
     title: "Enter safe mode"

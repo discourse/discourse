@@ -71,6 +71,7 @@ Discourse::Application.routes.draw do
     get "finish-installation" => "finish_installation#index"
     get "finish-installation/register" => "finish_installation#register"
     post "finish-installation/register" => "finish_installation#register"
+    get "finish-installation/redirect-discourse-id" => "finish_installation#redirect_discourse_id"
     get "finish-installation/confirm-email" => "finish_installation#confirm_email"
     put "finish-installation/resend-email" => "finish_installation#resend_email"
 
