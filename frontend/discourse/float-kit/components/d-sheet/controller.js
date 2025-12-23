@@ -334,7 +334,7 @@ export default class Controller {
       machine: "stateMachine",
       state: "open",
       guard: () => {
-        const msg = this.stateMachine.lastMessageTreated;
+        const msg = this.stateMachine.lastProcessedMessage;
         return ["ANIMATION_COMPLETE", "PREPARED", "STEP"].includes(msg?.type);
       },
       callback: (message) => this.handleOpen(message),

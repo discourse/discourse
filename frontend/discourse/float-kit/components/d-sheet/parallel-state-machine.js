@@ -59,7 +59,7 @@ class ParallelStateMachine {
    *
    * @type {{type: string}|null}
    */
-  @tracked lastMessageTreated = null;
+  @tracked lastProcessedMessage = null;
 
   /**
    * Version counter for reactivity - incremented on state changes.
@@ -209,7 +209,7 @@ class ParallelStateMachine {
       }
     }
 
-    this.lastMessageTreated = normalizedMessage;
+    this.lastProcessedMessage = normalizedMessage;
 
     // Only increment version for reactive changes
     if (anyReactive) {
@@ -243,7 +243,7 @@ class ParallelStateMachine {
       this._version++;
     }
 
-    this.lastMessageTreated = normalizedMessage;
+    this.lastProcessedMessage = normalizedMessage;
     return transitioned;
   }
 
