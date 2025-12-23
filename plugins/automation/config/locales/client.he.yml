@@ -435,6 +435,8 @@ he:
           fields:
             custom_field_name:
               label: "שם שדה מותאם אישית של משתמש"
+        set_topic_timer:
+          title: הגדרת שעון עצר לנושא
       unnamed_automation: "אוטומציה ללא שם"
       models:
         script:

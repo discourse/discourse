@@ -130,6 +130,8 @@ sl:
               label: ID teme
             user:
               label: Uporabnik
+        set_topic_timer:
+          title: Nastavi opomnik teme
       models:
         trigger:
           name:

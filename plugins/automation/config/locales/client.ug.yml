@@ -429,6 +429,8 @@ ug:
           fields:
             custom_field_name:
               label: "ئىشلەتكۈچى ئىختىيارى بۆلەك ئىسمى"
+        set_topic_timer:
+          title: تېما ۋاقىت خاتىرىلىگۈچ تەڭشىكى
       unnamed_automation: "ئاتسىز ئاپتوماتلاشتۇرۇش"
       models:
         script:

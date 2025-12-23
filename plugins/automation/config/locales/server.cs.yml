@@ -27,3 +27,5 @@ cs:
         title: Zavřít téma
       append_last_checked_by:
         button_text: Hotovo
+      set_topic_timer:
+        title: "Nastavení časovače tématu"

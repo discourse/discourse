@@ -16,3 +16,5 @@ nb_NO:
         title: Lukk emne
       append_last_checked_by:
         button_text: Ferdig
+      set_topic_timer:
+        title: "Sett opp tidsbestemt handling for emne"
