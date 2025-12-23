@@ -3,35 +3,43 @@ import discourseLater from "discourse/lib/later";
 /**
  * Centralized observer management for d-sheet.
  * Handles IntersectionObserver, ResizeObserver, and wheel listener lifecycle.
- *
- * @class ObserverManager
  */
 export default class ObserverManager {
   /**
+   * @type {Object}
+   */
+  #controller;
+
+  /**
    * @type {IntersectionObserver|null}
    */
-  intersectionObserver = null;
+  #intersectionObserver = null;
 
   /**
    * @type {ResizeObserver|null}
    */
-  resizeObserver = null;
+  #resizeObserver = null;
 
   /**
    * @type {Function|null}
    */
-  wheelListener = null;
+  #wheelListener = null;
 
   /**
    * @type {boolean}
    */
-  wheelInteractionDetected = false;
+  #wheelInteractionDetected = false;
+
+  /**
+   * @type {Function|null}
+   */
+  #wheelCleanup = null;
 
   /**
    * @param {Object} controller - The sheet controller instance
    */
   constructor(controller) {
-    this.controller = controller;
+    this.#controller = controller;
   }
 
   /**
@@ -40,12 +48,12 @@ export default class ObserverManager {
    */
   updateObservers() {
     const shouldHaveIntersection =
-      this.controller.currentState === "open" &&
-      !this.controller.swipeOutDisabled;
+      this.#controller.currentState === "open" &&
+      !this.#controller.swipeOutDisabled;
 
-    if (shouldHaveIntersection && !this.intersectionObserver) {
+    if (shouldHaveIntersection && !this.#intersectionObserver) {
       this.setupIntersectionObserver();
-    } else if (!shouldHaveIntersection && this.intersectionObserver) {
+    } else if (!shouldHaveIntersection && this.#intersectionObserver) {
       this.cleanupIntersectionObserver();
     }
   }
@@ -54,66 +62,65 @@ export default class ObserverManager {
    * Set up the intersection observer for swipe-out detection.
    */
   setupIntersectionObserver() {
-    const { view, content } = this.controller;
+    const { view, content } = this.#controller;
 
     if (!view || !content) {
       return;
     }
 
-    if (this.controller.swipeOutDisabled) {
+    if (this.#controller.swipeOutDisabled) {
       this.cleanupIntersectionObserver();
       return;
     }
 
     this.cleanupIntersectionObserver();
 
-    this.wheelInteractionDetected = false;
-    this.wheelListener = () => {
-      this.wheelInteractionDetected = true;
+    this.#wheelInteractionDetected = false;
+    this.#wheelListener = () => {
+      this.#wheelInteractionDetected = true;
     };
-    window.addEventListener("wheel", this.wheelListener, {
+    window.addEventListener("wheel", this.#wheelListener, {
       passive: true,
       once: true,
     });
 
-    this.intersectionObserver = new IntersectionObserver(
-      (entries) => this.handleIntersection(entries),
+    this.#intersectionObserver = new IntersectionObserver(
+      (entries) => this.#handleIntersection(entries),
       {
         root: view,
         threshold: [0],
       }
     );
 
-    this.intersectionObserver.observe(content);
+    this.#intersectionObserver.observe(content);
   }
 
   /**
    * Handle intersection observer entries.
    *
    * @param {Array<IntersectionObserverEntry>} entries
-   * @private
    */
-  handleIntersection(entries) {
+  #handleIntersection(entries) {
     for (const entry of entries) {
-      if (!entry.isIntersecting && this.controller.currentState === "open") {
-        this.controller.viewHiddenByObserver = true;
-        this.controller.domAttributes?.hideForSwipeOut();
+      if (!entry.isIntersecting && this.#controller.currentState === "open") {
+        this.#controller.viewHiddenByObserver = true;
+        this.#controller.domAttributes?.hideForSwipeOut();
 
-        if (this.wheelInteractionDetected) {
-          this.handleWheelSwipeOut();
-        } else {
-          this.triggerSwipeOut();
-        }
+        requestAnimationFrame(() => {
+          if (this.#wheelInteractionDetected) {
+            this.#handleWheelSwipeOut();
+          } else {
+            this.#triggerSwipeOut();
+          }
+        });
       }
     }
   }
 
   /**
    * Handle swipe-out when wheel interaction was detected.
-   *
-   * @private
    */
-  handleWheelSwipeOut() {
+  #handleWheelSwipeOut() {
     let lastDeltaY = 100000;
 
     const blockWheel = (e) => {
@@ -127,38 +134,42 @@ export default class ObserverManager {
     };
 
     window.addEventListener("wheel", blockWheel, { passive: false });
+    this.#wheelCleanup = () =>
+      window.removeEventListener("wheel", blockWheel, { passive: false });
 
     discourseLater(() => {
-      window.removeEventListener("wheel", blockWheel, { passive: false });
-      this.triggerSwipeOut();
+      this.#wheelCleanup?.();
+      this.#wheelCleanup = null;
+      this.#triggerSwipeOut();
     }, 100);
   }
 
   /**
    * Trigger the swipe-out transition.
-   *
-   * @private
    */
-  triggerSwipeOut() {
-    this.controller.domAttributes?.disableScrollSnap();
-    this.controller.closingWithoutAnimation = true;
-    requestAnimationFrame(() => {
-      this.controller.handleStateTransition("SWIPE_OUT");
-    });
+  #triggerSwipeOut() {
+    this.#controller.domAttributes?.disableScrollSnap();
+    this.#controller.closingWithoutAnimation = true;
+    this.#controller.handleStateTransition("SWIPE_OUT");
   }
 
   /**
    * Clean up the intersection observer and wheel listener.
    */
   cleanupIntersectionObserver() {
-    if (this.intersectionObserver) {
-      this.intersectionObserver.disconnect();
-      this.intersectionObserver = null;
+    if (this.#intersectionObserver) {
+      this.#intersectionObserver.disconnect();
+      this.#intersectionObserver = null;
     }
 
-    if (this.wheelListener) {
-      window.removeEventListener("wheel", this.wheelListener);
-      this.wheelListener = null;
+    if (this.#wheelListener) {
+      window.removeEventListener("wheel", this.#wheelListener);
+      this.#wheelListener = null;
+    }
+
+    if (this.#wheelCleanup) {
+      this.#wheelCleanup();
+      this.#wheelCleanup = null;
     }
   }
 
@@ -168,16 +179,16 @@ export default class ObserverManager {
    * @param {Function} onResize - Callback to invoke on resize
    */
   setupResizeObserver(onResize) {
-    if (this.resizeObserver) {
-      this.resizeObserver.disconnect();
+    if (this.#resizeObserver) {
+      this.#resizeObserver.disconnect();
     }
 
-    const { view, content } = this.controller;
+    const { view, content } = this.#controller;
 
     let viewFirstObservation = true;
     let contentFirstObservation = true;
 
-    this.resizeObserver = new ResizeObserver((entries) => {
+    this.#resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
         if (entry.target === view) {
           if (viewFirstObservation) {
@@ -187,6 +198,7 @@ export default class ObserverManager {
           onResize();
         } else if (entry.target === content) {
           if (contentFirstObservation) {
+            this.#controller.calculateDimensionsIfReady();
             contentFirstObservation = false;
             continue;
           }
@@ -196,10 +208,10 @@ export default class ObserverManager {
     });
 
     if (view) {
-      this.resizeObserver.observe(view, { box: "border-box" });
+      this.#resizeObserver.observe(view, { box: "border-box" });
     }
     if (content) {
-      this.resizeObserver.observe(content, { box: "border-box" });
+      this.#resizeObserver.observe(content, { box: "border-box" });
     }
   }
 
@@ -209,10 +221,9 @@ export default class ObserverManager {
   cleanup() {
     this.cleanupIntersectionObserver();
 
-    if (this.resizeObserver) {
-      this.resizeObserver.disconnect();
-      this.resizeObserver = null;
+    if (this.#resizeObserver) {
+      this.#resizeObserver.disconnect();
+      this.#resizeObserver = null;
     }
   }
 }
-
