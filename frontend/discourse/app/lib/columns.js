@@ -56,15 +56,13 @@ export default class Columns {
       // sometimes children are wrapped in a paragraph
       if (child.nodeName === "P" && child.children.length > 0) {
         for (let c of [...child.children]) {
-          const item = this._wrapDirectImage(c);
-          if (item) {
-            targets.push(item);
+          if (!["BR", "P"].includes(c.nodeName)) {
+            targets.push(c);
           }
         }
       } else {
-        const item = this._wrapDirectImage(child);
-        if (item) {
-          targets.push(item);
+        if (!["BR", "P"].includes(child.nodeName)) {
+          targets.push(child);
         }
       }
     }
@@ -114,7 +112,9 @@ export default class Columns {
       const img =
         item.querySelector("img") || (item.nodeName === "IMG" ? item : null);
       heights[shortest] += img && img.width > 0 ? img.height / img.width : 1;
-      columns[shortest].append(item);
+
+      const wrappedItem = this._wrapDirectImage(item);
+      columns[shortest].append(wrappedItem);
     });
 
     return columns;
