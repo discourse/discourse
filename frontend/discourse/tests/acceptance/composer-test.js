@@ -598,52 +598,6 @@ acceptance(`Composer`, function (needs) {
       .includesText("This is the new text for the post", "updates the post");
   });
 
-  test("Editing post content calls post save", async function (assert) {
-    let postSaveCalled = false;
-
-    pretender.put("/posts/:post_id", () => {
-      postSaveCalled = true;
-      return response(200, { post: { id: 398, post_number: 1 } });
-    });
-
-    await visit("/t/internationalization-localization/280");
-
-    await click(".topic-post[data-post-number='1'] button.show-more-actions");
-    await click(".topic-post[data-post-number='1'] button.edit");
-
-    await fillIn(".d-editor-input", "This is new post content");
-    await click("#reply-control button.create");
-
-    assert.dom(".d-editor-input").doesNotExist("closes the composer");
-    assert.true(
-      postSaveCalled,
-      "post.save() should be called when content changes"
-    );
-  });
-
-  test("Editing only topic title does not call post save since content is unchanged", async function (assert) {
-    let postSaveCalled = false;
-
-    pretender.put("/posts/:post_id", () => {
-      postSaveCalled = true;
-      return response(200, { post: { id: 398, post_number: 1 } });
-    });
-
-    await visit("/t/internationalization-localization/280");
-
-    await click(".topic-post[data-post-number='1'] button.show-more-actions");
-    await click(".topic-post[data-post-number='1'] button.edit");
-
-    await fillIn("#reply-title", "This is a new title only");
-    await click("#reply-control button.create");
-
-    assert.dom(".d-editor-input").doesNotExist("closes the composer");
-    assert.false(
-      postSaveCalled,
-      "post.save() should not be called when only title changes"
-    );
-  });
-
   test("Editing a post stages new content", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(".topic-post button.show-more-actions");

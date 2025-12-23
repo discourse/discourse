@@ -1274,6 +1274,7 @@ Discourse::Application.routes.draw do
     post "/post_localizations/create_or_update", to: "post_localizations#create_or_update"
     delete "/post_localizations/destroy", to: "post_localizations#destroy"
 
+    get "topic_localizations/:topic_id/:locale" => "topic_localizations#show"
     post "topic_localizations/create_or_update", to: "topic_localizations#create_or_update"
     delete "topic_localizations/destroy", to: "topic_localizations#destroy"
 

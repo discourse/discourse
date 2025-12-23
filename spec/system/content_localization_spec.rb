@@ -208,7 +208,7 @@ describe "Content Localization" do
       context "for topic titles" do
         fab!(:untranslated_topic) { Fabricate(:post).topic }
 
-        it "shows title editor in composer when user can edit localizations" do
+        it "shows inline title editor when user can edit localizations" do
           sign_in(japanese_user)
 
           topic_page.visit_topic(untranslated_topic)
@@ -217,41 +217,79 @@ describe "Content Localization" do
           expect(topic_page).to have_no_topic_title_editor
 
           topic_page.visit_topic(topic)
-          # does not see regular title editor
-          # sent directly to translation composer to edit translation
+
           topic_page.click_topic_edit_title
-          expect(topic_page).to have_no_topic_title_editor
-          expect(translation_composer).to have_translation_title(topic_ja_localization.title)
+          expect(topic_page).to have_topic_title_editor
+          expect(topic_page).to have_editing_localization_indicator
+          expect(page).to have_field("edit-title", with: topic_ja_localization.title)
         end
 
-        it "opens a dialog for choosing which title to edit for admins" do
-          admin.update(locale: "ja") # force the admin to view the jap localizations
+        it "opens a dialog for choosing which title to edit for admins when title is localized" do
+          admin.update(locale: "ja")
 
           sign_in(admin)
 
           topic_page.visit_topic(untranslated_topic)
           topic_page.click_topic_edit_title
           expect(topic_page).to have_topic_title_editor
+          expect(topic_page).to have_no_editing_localization_indicator
+
+          topic_page.click_topic_title_cancel_edit
 
           topic_page.visit_topic(topic)
-          expect(topic_page).to have_topic_title(topic_ja_localization.fancy_title)
+          original_translated_title = topic_ja_localization.fancy_title
+          expect(topic_page).to have_topic_title(original_translated_title)
           topic_page.click_topic_edit_title
-          # does not see regular title editor
-          expect(topic_page).to have_no_topic_title_editor
-          # asked to use composer to edit original title
           expect(edit_localized_post_dialog).to be_open
 
+          # Viewing translation - Edit Original
           edit_localized_post_dialog.click_yes
-          expect(composer).to have_input_title(topic.title)
+          expect(topic_page).to have_topic_title_editor
+          expect(topic_page).to have_no_editing_localization_indicator
+          expect(page).to have_field("edit-title", with: topic.title)
 
-          composer.close
-          expect(composer).to be_closed
+          # Viewing translation - Save original title change and displayed title should NOT update (still viewing translation)
+          find("#edit-title").fill_in(with: "New Original Title")
+          topic_page.click_topic_title_submit_edit
+          expect(topic_page).to have_topic_title(original_translated_title)
 
-          # use translation composer to edit localized title
+          # View original - displayed title should update to new original title
+          page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+          expect(topic_page).to have_topic_title("New Original Title")
+
+          # switch back to Japanese to test translation editing
+          page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+
+          # Viewing translation - Edit translation
           topic_page.click_topic_edit_title
           expect(edit_localized_post_dialog).to be_open
           edit_localized_post_dialog.click_no
-          expect(translation_composer).to have_translation_title(topic_ja_localization.title)
+          expect(topic_page).to have_topic_title_editor
+          expect(topic_page).to have_editing_localization_indicator
+          expect(page).to have_field("edit-title", with: topic_ja_localization.title)
+
+          # Viewing translation - Save translation title change and displayed title should update immediately
+          find("#edit-title").fill_in(with: "New Japanese Title")
+          topic_page.click_topic_title_submit_edit
+          expect(topic_page).to have_topic_title("New Japanese Title")
+          page.refresh
+          expect(topic_page).to have_topic_title("New Japanese Title")
+        end
+
+        it "discards changes when cancelled" do
+          admin.update(locale: "ja")
+          sign_in(admin)
+
+          topic_page.visit_topic(topic)
+          original_title = topic_ja_localization.fancy_title
+
+          topic_page.click_topic_edit_title
+          edit_localized_post_dialog.click_no
+
+          find("#edit-title").fill_in(with: "Changed Title")
+          topic_page.click_topic_title_cancel_edit
+
+          expect(topic_page).to have_topic_title(original_title)
         end
       end
     end

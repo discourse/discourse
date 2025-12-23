@@ -4154,9 +4154,10 @@ en:
       deleted_by_author_simple: "(topic deleted by author)"
       localizations:
         title_edit_warning:
-          message: "This is a translated topic title.<br><br>Do you want to edit the original title in %{language} or edit this specific translation?"
-          action_original: "Edit original topic title"
+          message: "This is a translated topic title.<br><br>Do you want to edit the <b>original</b> category, tags, and title in %{language} or edit this specific <b>translation</b>?"
+          action_original: "Edit original"
           action_translation: "Edit translated topic title"
+        editing_translation: "Editing %{language} translation"
 
     post_list:
       title: "Latest posts"
