@@ -46,7 +46,7 @@ describe "Composer - ProseMirror - Links", type: :system do
     upsert_hyperlink_modal.fill_in_link_url("https://updated-example.com?query=with space")
     upsert_hyperlink_modal.click_primary_button
     expect(rich).to have_css(
-      "a[href='https://updated-example.com?query=with%20space']",
+      "a[href='https://updated-example.com/?query=with%20space']",
       text: "Example",
     )
   end
