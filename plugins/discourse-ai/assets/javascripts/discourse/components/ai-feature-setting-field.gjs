@@ -11,7 +11,10 @@ export default class AiFeatureSettingField extends Component {
     if (!value) {
       return [];
     }
-    return value.toString().split("|").filter(Boolean);
+    return value
+      .toString()
+      .split("|")
+      .filter((id) => id !== "");
   };
 
   serializeListValue = (callback) => {

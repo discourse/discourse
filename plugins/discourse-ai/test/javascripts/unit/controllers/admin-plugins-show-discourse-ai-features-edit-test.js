@@ -145,6 +145,10 @@ module(
         controller.valuesEqual(undefined, undefined),
         "undefined should equal undefined"
       );
+      assert.false(
+        controller.valuesEqual(null, undefined),
+        "null should not equal undefined"
+      );
     });
 
     test("findSetting returns correct setting by name", function (assert) {

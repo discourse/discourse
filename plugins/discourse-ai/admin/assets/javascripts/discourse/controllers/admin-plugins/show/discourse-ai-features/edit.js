@@ -21,6 +21,16 @@ export default class AdminPluginsShowDiscourseAiFeaturesEditController extends C
     return this.settings.find((s) => s.setting === settingName);
   }
 
+  /**
+   * Generates a FormKit validation string for a site setting.
+   *
+   * @param {Object} setting - The site setting object
+   * @param {string} setting.type - The setting type (e.g., "integer", "bool", "string")
+   * @param {number} [setting.min] - Minimum value for integer settings
+   * @param {number} [setting.max] - Maximum value for integer settings
+   * @returns {string|undefined} Validation string in FormKit format (e.g., "number|between:0,100")
+   *                              or undefined if no validation is needed
+   */
   @action
   getValidationFor(setting) {
     const validation = [];
@@ -92,6 +102,12 @@ export default class AdminPluginsShowDiscourseAiFeaturesEditController extends C
   }
 
   valuesEqual(a, b) {
-    return a?.toString() === b?.toString();
+    if (a === b) {
+      return true;
+    }
+    if (a == null || b == null) {
+      return false;
+    }
+    return a.toString() === b.toString();
   }
 }
