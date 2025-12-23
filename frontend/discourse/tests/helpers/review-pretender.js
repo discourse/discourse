@@ -9,7 +9,8 @@ export default function (helpers) {
     score: 3.0,
     target_created_by_id: 1,
     cooked: "<b>cooked content</b>",
-    reviewable_score_ids: [1, 2],
+    reviewable_score_ids: [],
+    reviewable_scores: [],
   };
 
   this.get("/review", () => {
@@ -26,6 +27,7 @@ export default function (helpers) {
           username: "newbie",
           email: "newbie@example.com",
           bundled_action_ids: ["approve", "reject", "reject_user"],
+          reviewable_score_ids: [1, 2],
         },
         {
           id: 4321,
@@ -47,6 +49,7 @@ export default function (helpers) {
             { id: "payload.tags", type: "tags" },
           ],
           bundled_action_ids: ["approve", "reject"],
+          reviewable_score_ids: [1, 2],
         },
         flag,
       ],
@@ -95,7 +98,20 @@ export default function (helpers) {
           require_reject_reason: true,
         },
       ],
-      reviewable_scores: [{ id: 1 }, { id: 2 }],
+      reviewable_scores: [
+        {
+          id: 1,
+          score_type: {
+            type: "spam",
+          },
+        },
+        {
+          id: 2,
+          score_type: {
+            type: "spam",
+          },
+        },
+      ],
       users: [{ id: 1, username: "eviltrout" }],
       meta: {
         total_rows_reviewables: 2,
