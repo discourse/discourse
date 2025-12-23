@@ -53,9 +53,10 @@ describe "JMESPath Oauth Group Mapping", type: :system do
 
     before { SiteSetting.jmes_group_mapping_rules_by_attributes = JSON.generate(rules) }
 
-    it "assigns user to correct groups based on JMESPath rules" do
+    it "creates user and assigns correct groups based on JMESPath rules" do
       mock_google_auth(email: "engineers@company.com")
-      visit("/login")
+
+      signup_page.open.click_social_button("google_oauth2")
       signup_page.click_create_account
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
@@ -107,7 +108,7 @@ describe "JMESPath Oauth Group Mapping", type: :system do
 
       Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
 
-      visit("/login")
+      login_page.open.click_social_button("google_oauth2")
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
 
@@ -135,7 +136,7 @@ describe "JMESPath Oauth Group Mapping", type: :system do
 
       mock_google_auth(email: "user@company.com")
 
-      visit("/login")
+      signup_page.open.click_social_button("google_oauth2")
       signup_page.click_create_account
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
@@ -177,7 +178,7 @@ describe "JMESPath Oauth Group Mapping", type: :system do
       )
       allow(Discourse).to receive(:enabled_authenticators).and_return([authenticator])
 
-      visit("/login")
+      signup_page.open.click_social_button("google_oauth2")
       signup_page.click_create_account
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
