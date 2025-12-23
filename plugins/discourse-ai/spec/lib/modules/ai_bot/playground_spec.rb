@@ -1331,4 +1331,35 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       expect(user_message[:content]).to include("Can you use the custom context tool?")
     end
   end
+
+  it "does not raise 'can't modify frozen attributes' when retrying a reply with thinking" do
+    thinking_progress =
+      DiscourseAi::Completions::Thinking.new(message: "I should say hello", partial: true)
+    anthropic_info = { anthropic: { signature: "thinking-signature-123" } }
+    thinking =
+      DiscourseAi::Completions::Thinking.new(
+        message: "I should say hello",
+        partial: false,
+        provider_info: anthropic_info,
+      )
+
+    # 1. First reply that creates thinking context
+    first_responses = [[thinking_progress, thinking, "Hello Sam"]]
+
+    reply_post = nil
+    DiscourseAi::Completions::Llm.with_prepared_responses(first_responses) do
+      reply_post = playground.reply_to(third_post)
+    end
+
+    expect(PostCustomPrompt.exists?(post_id: reply_post.id)).to eq(true)
+
+    # 2. Retry the same reply (this is what triggers the bug)
+    second_responses = [[thinking_progress, thinking, "Hello again Sam"]]
+
+    expect {
+      DiscourseAi::Completions::Llm.with_prepared_responses(second_responses) do
+        playground.reply_to(third_post, existing_reply_post: reply_post)
+      end
+    }.not_to raise_error
+  end
 end

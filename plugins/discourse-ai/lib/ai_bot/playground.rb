@@ -506,7 +506,7 @@ module DiscourseAi
             end
 
             reply_post.update_columns(raw: "", cooked: "")
-            reply_post.post_custom_prompt&.destroy
+            reply_post.post_custom_prompt = nil
           else
             reply_post =
               PostCreator.create!(
