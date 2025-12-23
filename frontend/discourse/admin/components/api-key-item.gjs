@@ -59,7 +59,7 @@ export default class ApiKeyItem extends Component {
 
   @action
   edit() {
-    this.router.transitionTo("adminApiKeys.show", this.apiKey);
+    this.router.transitionTo("adminApiKeys.show", this.apiKey.id);
   }
 
   <template>
