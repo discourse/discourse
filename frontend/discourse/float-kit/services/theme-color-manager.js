@@ -1,119 +1,107 @@
 import Service from "@ember/service";
 
 /**
- * ThemeColorManager Service
- *
- * Manages theme-color meta tag ownership
- * across multiple sheets. Ensures proper stacking and restoration of theme
- * colors when sheets open/close.
+ * Service to manage the theme-color meta tag.
+ * Handles stacking and dimming across multiple sheets.
+ * Strictly follows the internal implementation for color logic.
  */
 export default class ThemeColorManager extends Service {
-  // ============================================================================
-  // Ownership Stack
-  // ============================================================================
-
   /**
    * Stack of theme color ownership entries.
    * Each entry: { controller, previousContent }
+   * @type {Array<{controller: Object, previousContent: string}>}
    */
   ownershipStack = [];
 
+  /**
+   * Global list of theme color dimming overlays.
+   * @type {Array<{controller: Object, color: number[], alpha: number}>}
+   */
+  dimmingOverlays = [];
+
   // ============================================================================
-  // Color Parsing Utilities
   // ============================================================================
 
   /**
-   * Parse a color string into RGB components and alpha.
-   * Supports hex (#RGB, #RRGGBB) and rgb/rgba formats.
+   * Parses an RGB/RGBA string into an array of [r, g, b].
    *
-   * @param {string} colorStr - Color string to parse
-   * @returns {{ rgb: number[], alpha: number } | null}
+   * @param {string} colorStr
+   * @returns {number[]|null}
    */
-  parseColor(colorStr) {
+  #parseRGB(colorStr) {
     if (!colorStr) {
       return null;
     }
 
-    let r, g, b;
-    let alpha = 1;
-
-    if (colorStr.startsWith("#")) {
-      const hex = colorStr.slice(1);
-      if (hex.length === 3) {
-        r = parseInt(hex[0] + hex[0], 16);
-        g = parseInt(hex[1] + hex[1], 16);
-        b = parseInt(hex[2] + hex[2], 16);
-      } else if (hex.length === 6) {
-        r = parseInt(hex.slice(0, 2), 16);
-        g = parseInt(hex.slice(2, 4), 16);
-        b = parseInt(hex.slice(4, 6), 16);
-      } else {
-        return null;
-      }
-    } else if (colorStr.startsWith("rgb")) {
-      const match = colorStr
-        .replace(/\s+/g, "")
-        .match(/^rgba?\(([\d.]+),([\d.]+),([\d.]+)(?:,([\d.]+))?\)$/i);
-
-      if (!match) {
-        return null;
-      }
-
-      r = parseFloat(match[1]);
-      g = parseFloat(match[2]);
-      b = parseFloat(match[3]);
-      alpha = match[4] !== undefined ? parseFloat(match[4]) : 1;
-    } else {
-      return null;
-    }
-
-    return { rgb: [r, g, b], alpha };
+    return (colorStr.startsWith("rgb(") || colorStr.startsWith("rgba(")) &&
+      colorStr.endsWith(")")
+      ? colorStr
+          .substring(colorStr.indexOf("(") + 1, colorStr.indexOf(")"))
+          .split(",")
+          .map((c) => c.trim())
+          .slice(0, 3)
+          .map((c) => parseFloat(c))
+      : null;
   }
 
   /**
-   * Mix two colors together with a given alpha.
+   * Parses a color string (RGB, RGBA, or Hex) into an array of [r, g, b].
+   * Strictly follows the internal color parsing implementation.
    *
-   * @param {string} baseColorStr - Base color string
-   * @param {string} overlayColorStr - Overlay color string
-   * @param {number} alpha - Mix alpha (0-1)
-   * @returns {string} Mixed color as rgb() string
+   * @param {string} colorStr
+   * @returns {number[]|null}
    */
-  mixColor(baseColorStr, overlayColorStr, alpha) {
-    const base = this.parseColor(baseColorStr);
-    const overlay = this.parseColor(overlayColorStr);
-
-    if (!base || !overlay) {
-      return baseColorStr;
+  #parseColor(colorStr) {
+    if (!colorStr) {
+      return null;
     }
 
-    const mixAlpha = Math.min(Math.max(alpha ?? overlay.alpha ?? 1, 0), 1);
+    let result = null;
+    if (colorStr.startsWith("rgb(") || colorStr.startsWith("rgba(")) {
+      result = this.#parseRGB(colorStr);
+    } else if (colorStr.startsWith("#")) {
+      let hex = colorStr.replace(/^#/, "");
+      let normalizedHex =
+        hex.length === 3 ? hex.split("").map((h) => h + h).join("") : hex;
 
-    const r = Math.round(
-      (1 - mixAlpha) * base.rgb[0] + mixAlpha * overlay.rgb[0]
-    );
-    const g = Math.round(
-      (1 - mixAlpha) * base.rgb[1] + mixAlpha * overlay.rgb[1]
-    );
-    const b = Math.round(
-      (1 - mixAlpha) * base.rgb[2] + mixAlpha * overlay.rgb[2]
-    );
+      result = /^[0-9A-Fa-f]{6}$/.test(normalizedHex)
+        ? [
+            parseInt(normalizedHex.slice(0, 2), 16),
+            parseInt(normalizedHex.slice(2, 4), 16),
+            parseInt(normalizedHex.slice(4, 6), 16),
+          ]
+        : null;
+    }
+    return result;
+  }
 
-    return `rgb(${r}, ${g}, ${b})`;
+  /**
+   * Mixes a base color with multiple overlays.
+   *
+   * @param {number[]} baseColor - [r, g, b]
+   * @param {Array<{color: number[], alpha: number}>} overlays
+   * @returns {string} rgb() string
+   */
+  #mixColors(baseColor, overlays) {
+    let result = [...baseColor];
+    for (let i = 0; i < overlays.length; i++) {
+      const overlay = overlays[i];
+      const alpha = overlay.alpha;
+      for (let j = 0; j < 3; j++) {
+        result[j] = (1 - alpha) * result[j] + alpha * overlay.color[j];
+      }
+    }
+    return `rgb(${result.join(",")})`;
   }
 
   /**
    * Check if a color string is usable for theme color.
-   * Colors with alpha < 1 are not usable.
    *
    * @param {string} colorStr - Color string to check
    * @returns {boolean}
    */
   isUsableThemeColor(colorStr) {
-    const parsed = this.parseColor(colorStr);
-    if (!parsed) {
-      return false;
-    }
-    return parsed.alpha === undefined || parsed.alpha >= 1;
+    return Boolean(this.#parseColor(colorStr));
   }
 
   // ============================================================================
@@ -275,6 +263,11 @@ export default class ThemeColorManager extends Service {
     controller.themeColorStackEntry = null;
     controller.underlyingThemeColor = null;
 
+    // Ensure all overlays for this controller are removed when ownership is released
+    this.dimmingOverlays = this.dimmingOverlays.filter(
+      (o) => o.controller !== controller
+    );
+
     if (wasTop) {
       const nextEntry = this.ownershipStack[this.ownershipStack.length - 1];
 
@@ -326,23 +319,13 @@ export default class ThemeColorManager extends Service {
       controller.underlyingThemeColor = metaTag.getAttribute("content");
     }
 
-    // Calculate target color
-    let targetColor = controller.underlyingThemeColor;
-
-    if (controller.themeColorDimmingOverlays.length > 0 && targetColor) {
-      // Use the last overlay's alpha for dimming
-      const overlay =
-        controller.themeColorDimmingOverlays[
-          controller.themeColorDimmingOverlays.length - 1
-        ];
-      if (overlay) {
-        targetColor = this.mixColor(targetColor, overlay.color, overlay.alpha);
-      }
+    const baseColor = this.#parseColor(controller.underlyingThemeColor);
+    if (!baseColor) {
+      return;
     }
 
-    if (targetColor) {
-      metaTag.setAttribute("content", targetColor);
-    }
+    const targetColorStr = this.#mixColors(baseColor, this.dimmingOverlays);
+    metaTag.setAttribute("content", targetColorStr);
   }
 
   /**
@@ -353,17 +336,24 @@ export default class ThemeColorManager extends Service {
    * @returns {{ updateAlpha: Function, remove: Function }}
    */
   registerThemeColorDimmingOverlay(controller, overlay) {
-    controller.themeColorDimmingOverlays.push(overlay);
+    const overlayEntry = {
+      ...overlay,
+      color: this.#parseColor(overlay.color) || [0, 0, 0],
+      controller,
+    };
+
+    this.dimmingOverlays.push(overlayEntry);
     this.setActualThemeColor(controller);
 
     return {
       updateAlpha: (alpha) => {
-        overlay.alpha = alpha;
+        overlayEntry.alpha = alpha;
         this.setActualThemeColor(controller);
       },
       remove: () => {
-        controller.themeColorDimmingOverlays =
-          controller.themeColorDimmingOverlays.filter((o) => o !== overlay);
+        this.dimmingOverlays = this.dimmingOverlays.filter(
+          (o) => o !== overlayEntry
+        );
         this.setActualThemeColor(controller);
       },
     };
@@ -396,4 +386,3 @@ export default class ThemeColorManager extends Service {
     }
   }
 }
-

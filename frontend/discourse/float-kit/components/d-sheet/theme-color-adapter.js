@@ -7,7 +7,7 @@ import { capabilities } from "discourse/services/capabilities";
  * @class ThemeColorAdapter
  */
 export default class ThemeColorAdapter {
-  /** @type {Object} */
+  /** @type {Object} The sheet controller instance */
   controller;
 
   /** @type {boolean|string} Theme color dimming configuration */
@@ -15,9 +15,6 @@ export default class ThemeColorAdapter {
 
   /** @type {number|null} Alpha value for theme color dimming */
   themeColorDimmingAlpha = null;
-
-  /** @type {Array} Registered theme color dimming overlays */
-  themeColorDimmingOverlays = [];
 
   /** @type {HTMLMetaElement|null} Theme color meta tag element */
   themeColorMetaTag = null;
@@ -42,6 +39,15 @@ export default class ThemeColorAdapter {
    */
   get themeColorManager() {
     return this.controller.themeColorManager;
+  }
+
+  /**
+   * Access to the sheet's content element.
+   *
+   * @type {HTMLElement|null}
+   */
+  get content() {
+    return this.controller.content;
   }
 
   /**

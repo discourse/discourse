@@ -1,7 +1,5 @@
 /**
- * Handles scroll-based progress calculations.
- *
- * @class ScrollProgressCalculator
+ * Handles scroll-based progress calculations for the sheet component.
  */
 export default class ScrollProgressCalculator {
   /**
@@ -21,7 +19,7 @@ export default class ScrollProgressCalculator {
   /**
    * Calculate all progress values from current scroll position.
    *
-   * @returns {{ rawProgress: number, clampedProgress: number, stackingProgress: number, segmentProgress: number } | null}
+   * @returns {Object|null} Progress values or null if elements are missing
    */
   calculateProgress() {
     const { scrollContainer, dimensions, contentPlacement, tracks } =
@@ -35,8 +33,10 @@ export default class ScrollProgressCalculator {
     const scrollPosition = isHorizontal
       ? scrollContainer.scrollLeft
       : scrollContainer.scrollTop;
+
     const contentSize = dimensions.content?.travelAxis?.unitless ?? 1;
     const scrollSize = dimensions.scroll?.travelAxis?.unitless ?? contentSize;
+
     const effectiveContentSize =
       contentPlacement !== "center"
         ? contentSize
@@ -94,10 +94,16 @@ export default class ScrollProgressCalculator {
   }
 
   /**
-   * Calculate raw progress from scroll position.
+   * Calculate raw progress from scroll position based on content placement and track direction.
    *
    * @param {Object} params - Calculation parameters
-   * @returns {number}
+   * @param {number} params.scrollPosition - Current scroll position
+   * @param {number} params.contentSize - Size of the content on travel axis
+   * @param {number} params.effectiveContentSize - Effective size considering placement
+   * @param {number} params.edgePadding - Padding at the edges
+   * @param {number} params.snapAccelerator - Snap out accelerator value
+   * @param {boolean} params.isTopOrLeft - Whether track is top or left
+   * @returns {number} Raw progress value
    */
   #calculateRawProgress({
     scrollPosition,
@@ -108,32 +114,30 @@ export default class ScrollProgressCalculator {
     isTopOrLeft,
   }) {
     const { contentPlacement } = this.controller;
-    let result;
 
-    if (contentPlacement === "center") {
-      if (isTopOrLeft) {
-        result =
-          (effectiveContentSize + edgePadding - scrollPosition) /
-          effectiveContentSize;
-      } else {
-        result = (scrollPosition - snapAccelerator) / effectiveContentSize;
-      }
-    } else {
-      if (isTopOrLeft) {
-        result = (contentSize + edgePadding - scrollPosition) / contentSize;
-      } else {
-        result = (scrollPosition - snapAccelerator) / contentSize;
-      }
+    const divisor =
+      contentPlacement === "center" ? effectiveContentSize : contentSize;
+
+    if (isTopOrLeft) {
+      const numerator =
+        contentPlacement === "center"
+          ? effectiveContentSize + edgePadding - scrollPosition
+          : contentSize + edgePadding - scrollPosition;
+      return numerator / divisor;
     }
 
-    return result;
+    return (scrollPosition - snapAccelerator) / divisor;
   }
 
   /**
    * Calculate segment progress for detent determination.
    *
    * @param {Object} params - Calculation parameters
-   * @returns {number}
+   * @param {number} params.scrollPosition - Current scroll position
+   * @param {number} params.rawProgress - Previously calculated raw progress
+   * @param {number} params.edgePadding - Padding at the edges
+   * @param {number} params.contentSize - Size of the content on travel axis
+   * @returns {number} Segment progress value
    */
   #calculateSegmentProgress({
     scrollPosition,
@@ -154,34 +158,38 @@ export default class ScrollProgressCalculator {
 
   /**
    * Determine the current segment from progress and detents.
+   * Exact boundary checks are preserved to match original implementation.
    *
    * @param {number} segmentProgress - Segment progress value
-   * @returns {[number, number] | null} Segment as [start, end] or null if no change
+   * @returns {Array<number>|null} Segment as [start, end] indices or null if no change
    */
   determineSegment(segmentProgress) {
     const { dimensions } = this.controller;
+    const detents = dimensions?.progressValueAtDetents;
 
-    if (!dimensions?.progressValueAtDetents) {
+    if (!detents) {
       return null;
     }
-
-    const detents = dimensions.progressValueAtDetents;
-    const n = detents.length;
 
     if (segmentProgress <= 0) {
       return [0, 0];
     }
 
+    const n = detents.length;
     for (let i = 0; i < n; i++) {
-      const detent = detents[i];
-      const after = detent.after;
+      const { before, after } = detents[i];
+
+      // Moving between detents
       if (
         segmentProgress > after &&
         i + 1 < n &&
         segmentProgress < detents[i + 1].before
       ) {
         return [i, i + 1];
-      } else if (segmentProgress > detent.before && segmentProgress < after) {
+      }
+
+      // Snapped to detent
+      if (segmentProgress > before && segmentProgress < after) {
         return [i, i];
       }
     }
