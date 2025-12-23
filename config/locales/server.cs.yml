@@ -2265,6 +2265,7 @@ cs:
     reviewable_claiming: "Musí být obsah k revizi nárokován, než na něj bude možné reagovat?"
     slow_mode_prevents_editing: "Zabrání pomalý režim úpravám po uplynutí období editing_grace_period?"
     reply_by_email_address: "Šablona emailé adresy pro odpověď emailem, např. %%{reply_key}@reply.myforum.com"
+    ignore_by_title: "Ignorovat příchozí e-maily na základě jejich názvu."
     forwarded_emails_behaviour: "Jak zacházet s přeposlaným e-mailem na Discourse. <a href='https://meta.discourse.org/t/-/62977' target='_blank'>Další informace</a>"
     email_total_attachment_size_limit_kb: "Maximální celková velikost souborů připojených k odchozím e-mailům. Nastavením na 0 zakážete odesílání příloh."
     delete_rejected_email_after_days: "Smazat odmítnuté e-maily starší než (n) dnů."
