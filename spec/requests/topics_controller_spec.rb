@@ -1092,6 +1092,43 @@ RSpec.describe TopicsController do
           expect(p1.like_count).to eq(0)
         end
       end
+
+      context "with API key" do
+        let(:api_key) { Fabricate(:api_key, user: admin, created_by: admin) }
+
+        it "allows changing ownership with change_owner scope" do
+          ApiKeyScope.create!(resource: "topics", action: "change_owner", api_key_id: api_key.id)
+
+          post "/t/#{topic.id}/change-owner.json",
+               params: {
+                 username: user_a.username_lower,
+                 post_ids: [p1.id],
+               },
+               headers: {
+                 "HTTP_API_KEY" => api_key.key,
+                 "HTTP_API_USERNAME" => api_key.user.username,
+               }
+
+          expect(response.status).to eq(200)
+          expect(p1.reload.user).to eq(user_a)
+        end
+
+        it "denies access without change_owner scope" do
+          ApiKeyScope.create!(resource: "topics", action: "read", api_key_id: api_key.id)
+
+          post "/t/#{topic.id}/change-owner.json",
+               params: {
+                 username: user_a.username_lower,
+                 post_ids: [p1.id],
+               },
+               headers: {
+                 "HTTP_API_KEY" => api_key.key,
+                 "HTTP_API_USERNAME" => api_key.user.username,
+               }
+
+          expect(response.status).to eq(403)
+        end
+      end
     end
   end
 
