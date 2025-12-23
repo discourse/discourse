@@ -2,10 +2,6 @@ import Modifier from "ember-modifier";
 import { createTweenFunction } from "./animation";
 import { toKebabCase, TRANSFORM_PROPS } from "./css-utils";
 
-/**
- * Modifier that applies both travel and stacking animations to an element.
- * Optimized to pre-calculate animation callbacks and static styles.
- */
 export default class OutletAnimationModifier extends Modifier {
   /** @type {Function[]} */
   #cleanupFns = [];
@@ -14,10 +10,8 @@ export default class OutletAnimationModifier extends Modifier {
   #propertiesToClean = new Set();
 
   /**
-   * Main lifecycle hook for the modifier.
-   *
-   * @param {HTMLElement} element - Target element
-   * @param {Array} args - Positional arguments [sheet, travelAnimation, stackingAnimation]
+   * @param {HTMLElement} element
+   * @param {Array} args - [sheet, travelAnimation, stackingAnimation]
    */
   modify(element, [sheet, travelAnimation, stackingAnimation]) {
     this.#cleanup(element);
@@ -26,48 +20,45 @@ export default class OutletAnimationModifier extends Modifier {
       return;
     }
 
-    if (travelAnimation) {
-      const { animatedProperties, staticStyles, propertiesToClean } =
-        this.#prepareAnimation(travelAnimation);
-
-      this.#applyStaticStyles(element, staticStyles);
-      for (const prop of propertiesToClean) {
-        this.#propertiesToClean.add(prop);
-      }
-
-      const unregister = sheet.registerTravelAnimation({
-        target: element,
-        config: travelAnimation,
-        callback: this.#createAnimationCallback(element, animatedProperties),
-      });
-
-      this.#cleanupFns.push(unregister);
-    }
-
-    if (stackingAnimation) {
-      const { animatedProperties, staticStyles, propertiesToClean } =
-        this.#prepareAnimation(stackingAnimation);
-
-      this.#applyStaticStyles(element, staticStyles);
-      for (const prop of propertiesToClean) {
-        this.#propertiesToClean.add(prop);
-      }
-
-      const unregister = sheet.registerStackingAnimation({
-        target: element,
-        config: stackingAnimation,
-        callback: this.#createAnimationCallback(element, animatedProperties),
-      });
-
-      this.#cleanupFns.push(unregister);
-    }
+    this.#registerAnimation(element, sheet, travelAnimation, "travel");
+    this.#registerAnimation(element, sheet, stackingAnimation, "stacking");
   }
 
   /**
-   * Prepares animation configuration into executable callbacks and static styles.
-   *
-   * @param {Object} config - Animation configuration
-   * @returns {Object} Prepared animation data
+   * @param {HTMLElement} element
+   * @param {Object} sheet
+   * @param {Object} animationConfig
+   * @param {"travel"|"stacking"} type
+   */
+  #registerAnimation(element, sheet, animationConfig, type) {
+    if (!animationConfig) {
+      return;
+    }
+
+    const { animatedProperties, staticStyles, propertiesToClean } =
+      this.#prepareAnimation(animationConfig);
+
+    this.#applyStaticStyles(element, staticStyles);
+
+    for (const prop of propertiesToClean) {
+      this.#propertiesToClean.add(prop);
+    }
+
+    const registerMethod =
+      type === "travel" ? "registerTravelAnimation" : "registerStackingAnimation";
+
+    const unregister = sheet[registerMethod]({
+      target: element,
+      config: animationConfig,
+      callback: this.#createAnimationCallback(element, animatedProperties),
+    });
+
+    this.#cleanupFns.push(unregister);
+  }
+
+  /**
+   * @param {Object} config
+   * @returns {{ animatedProperties: Array, staticStyles: Map, propertiesToClean: Set }}
    */
   #prepareAnimation(config) {
     const animatedProperties = [];
@@ -81,19 +72,13 @@ export default class OutletAnimationModifier extends Modifier {
     const props = config.properties || config;
 
     for (const [property, value] of Object.entries(props)) {
-      if (
-        value === null ||
-        value === undefined ||
-        value === "ignore" ||
-        property === "properties"
-      ) {
+      if (this.#shouldSkipProperty(property, value)) {
         continue;
       }
 
       if (property === "transformOrigin") {
-        const kebabProp = "transform-origin";
-        staticStyles.set(kebabProp, value);
-        propertiesToClean.add(kebabProp);
+        staticStyles.set("transform-origin", value);
+        propertiesToClean.add("transform-origin");
         continue;
       }
 
@@ -104,44 +89,18 @@ export default class OutletAnimationModifier extends Modifier {
         continue;
       }
 
-      let animationFn;
-      if (Array.isArray(value)) {
-        if (
-          !property.startsWith("scale") &&
-          (!isNaN(value[0]) || !isNaN(value[1]))
-        ) {
-          throw new Error(
-            "Keyframe values used with a 'transform' property require a unit (e.g. 'px', 'em' or '%')."
-          );
-        }
-
-        animationFn = ({ tween }) => tween(value[0], value[1]);
-      } else if (typeof value === "function") {
-        animationFn = value;
-      } else {
+      const animationFn = this.#createPropertyAnimationFn(property, value);
+      if (!animationFn) {
         continue;
       }
 
       if (TRANSFORM_PROPS.has(property) || property === "transform") {
-        const transformName = property === "transform" ? "" : property;
-
-        const existingTransformIndex = animatedProperties.findIndex(
-          ([p]) => p === "transform"
+        this.#addTransformProperty(
+          animatedProperties,
+          propertiesToClean,
+          property,
+          animationFn
         );
-
-        const wrappedFn = (params) => {
-          const val = animationFn(params);
-          return transformName ? `${transformName}(${val})` : val;
-        };
-
-        if (existingTransformIndex !== -1) {
-          const prevFn = animatedProperties[existingTransformIndex][1];
-          animatedProperties[existingTransformIndex][1] = (params) =>
-            `${prevFn(params)} ${wrappedFn(params)}`;
-        } else {
-          animatedProperties.push(["transform", wrappedFn]);
-          propertiesToClean.add("transform");
-        }
       } else {
         const kebabProp = toKebabCase(property);
         animatedProperties.push([kebabProp, animationFn]);
@@ -153,10 +112,70 @@ export default class OutletAnimationModifier extends Modifier {
   }
 
   /**
-   * Applies static styles to an element immediately.
-   *
-   * @param {HTMLElement} element - Target element
-   * @param {Map<string, string>} staticStyles - Static styles to apply
+   * @param {string} property
+   * @param {*} value
+   * @returns {boolean}
+   */
+  #shouldSkipProperty(property, value) {
+    return (
+      value === null ||
+      value === undefined ||
+      value === "ignore" ||
+      property === "properties"
+    );
+  }
+
+  /**
+   * @param {string} property
+   * @param {Array|Function} value
+   * @returns {Function|null}
+   */
+  #createPropertyAnimationFn(property, value) {
+    if (Array.isArray(value)) {
+      if (!property.startsWith("scale") && (!isNaN(value[0]) || !isNaN(value[1]))) {
+        throw new Error(
+          "Keyframe values used with a 'transform' property require a unit (e.g. 'px', 'em' or '%')."
+        );
+      }
+      return ({ tween }) => tween(value[0], value[1]);
+    }
+
+    if (typeof value === "function") {
+      return value;
+    }
+
+    return null;
+  }
+
+  /**
+   * @param {Array} animatedProperties
+   * @param {Set} propertiesToClean
+   * @param {string} property
+   * @param {Function} animationFn
+   */
+  #addTransformProperty(animatedProperties, propertiesToClean, property, animationFn) {
+    const transformName = property === "transform" ? "" : property;
+
+    const wrappedFn = (params) => {
+      const val = animationFn(params);
+      return transformName ? `${transformName}(${val})` : val;
+    };
+
+    const existingIndex = animatedProperties.findIndex(([p]) => p === "transform");
+
+    if (existingIndex !== -1) {
+      const prevFn = animatedProperties[existingIndex][1];
+      animatedProperties[existingIndex][1] = (params) =>
+        `${prevFn(params)} ${wrappedFn(params)}`;
+    } else {
+      animatedProperties.push(["transform", wrappedFn]);
+      propertiesToClean.add("transform");
+    }
+  }
+
+  /**
+   * @param {HTMLElement} element
+   * @param {Map<string, string>} staticStyles
    */
   #applyStaticStyles(element, staticStyles) {
     for (const [prop, value] of staticStyles) {
@@ -165,14 +184,13 @@ export default class OutletAnimationModifier extends Modifier {
   }
 
   /**
-   * Creates an optimized animation callback for the element.
-   *
-   * @param {HTMLElement} element - Target element
-   * @param {Array} animatedProperties - Array of [prop, fn] pairs
-   * @returns {Function} Animation callback
+   * @param {HTMLElement} element
+   * @param {Array<[string, Function]>} animatedProperties
+   * @returns {Function}
    */
   #createAnimationCallback(element, animatedProperties) {
     const len = animatedProperties.length;
+
     return (progress, tween) => {
       const tweenFn = tween || createTweenFunction(progress);
       const params = { progress, tween: tweenFn };
@@ -184,11 +202,7 @@ export default class OutletAnimationModifier extends Modifier {
     };
   }
 
-  /**
-   * Cleans up registered animations and resets styles.
-   *
-   * @param {HTMLElement} element - Target element
-   */
+  /** @param {HTMLElement} element */
   #cleanup(element) {
     for (const fn of this.#cleanupFns) {
       fn?.();
@@ -203,9 +217,6 @@ export default class OutletAnimationModifier extends Modifier {
     this.#propertiesToClean.clear();
   }
 
-  /**
-   * Final cleanup on destruction.
-   */
   willDestroy() {
     this.#cleanup();
   }
