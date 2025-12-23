@@ -1,12 +1,10 @@
 <div class='authorize-api-key'>
-<% if @no_trust_level %>
   <h1><%= t("user_api_key.title", application_name: @application_name) %></h1>
+<% if @no_trust_level %>
   <p class="error-message"><%= t("user_api_key.no_trust_level") %></p>
 <% elsif @generic_error %>
-  <h1><%= t("user_api_key.title", application_name: @application_name) %></h1>
   <p class="error-message"><%= t("user_api_key.generic_error") %></p>
 <% else %>
-  <h1><%= t("user_api_key.title", application_name: @application_name) %></h1>
 
   <div class="authorize-api-key__user">
     <span class="authorize-api-key__user-label"><%= t("user_api_key.logged_in_as") %></span>
@@ -23,10 +21,9 @@
     </ul>
   </div>
 
-  <% if @auth_redirect %>
-  <% redirect_uri = URI.parse(@auth_redirect) rescue nil %>
+  <% if @redirect_uri %>
   <div class='authorize-api-key__redirect'>
-    <p class="authorize-api-key__redirect-url"><%= t("user_api_key.redirect_warning") %> <strong><%= redirect_uri&.host %><%= ":#{redirect_uri.port}" if redirect_uri&.port && ![80, 443].include?(redirect_uri.port) %></strong></p>
+    <p class="authorize-api-key__redirect-url"><%= t("user_api_key.redirect_warning") %> <strong><%= @redirect_uri.host %><%= ":#{@redirect_uri.port}" if @redirect_uri.port && ![80, 443].include?(@redirect_uri.port) %></strong></p>
   </div>
   <% end %>
 
@@ -37,8 +34,8 @@
     <%= hidden_field_tag 'client_id', @client_id %>
     <%= hidden_field_tag('auth_redirect', @auth_redirect) if @auth_redirect %>
     <%= hidden_field_tag 'push_url', @push_url %>
-    <%= hidden_field_tag 'public_key', @public_key%>
-    <%= hidden_field_tag 'scopes', @scopes%>
+    <%= hidden_field_tag 'public_key', @public_key %>
+    <%= hidden_field_tag 'scopes', @scopes %>
     <%= hidden_field_tag('padding', @padding) if @padding %>
     <div class='authorize-api-key__buttons'>
       <%= submit_tag t('user_api_key.authorize'), class: 'btn btn-primary' %>
@@ -47,5 +44,3 @@
   <% end %>
 <% end %>
 </div>
-
-
