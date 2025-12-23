@@ -40,6 +40,10 @@ export default class AdminPluginsShowDiscourseAiFeaturesEditController extends C
 
   @action
   async save(data) {
+    if (this.formApi) {
+      this.formApi.removeErrors();
+    }
+
     const errors = {};
 
     for (const [key, value] of Object.entries(data)) {
