@@ -146,6 +146,8 @@ ko:
               label: 토픽 ID
             user:
               label: 사용자
+        set_topic_timer:
+          title: 글 타이머 설정
       models:
         trigger:
           name:

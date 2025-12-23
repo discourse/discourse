@@ -16,3 +16,5 @@ gl:
         title: Pechar tema
       append_last_checked_by:
         button_text: Feito
+      set_topic_timer:
+        title: "Estabelecer temporizador do tema"

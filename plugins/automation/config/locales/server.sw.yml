@@ -16,3 +16,5 @@ sw:
         title: Funga Mada
       append_last_checked_by:
         button_text: Imekwisha
+      set_topic_timer:
+        title: "Seti Kipima Mda cha Mada"

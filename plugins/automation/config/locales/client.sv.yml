@@ -290,6 +290,8 @@ sv:
           fields:
             custom_field_name:
               label: "Användaranpassat fältnamn"
+        set_topic_timer:
+          title: Ställ in ämnestimer
       models:
         script:
           name:

@@ -429,6 +429,8 @@ fi:
           fields:
             custom_field_name:
               label: "Käyttäjän mukautetun kentän nimi"
+        set_topic_timer:
+          title: Aseta ajastin ketjulle
       unnamed_automation: "Nimetön automaatio"
       models:
         script:

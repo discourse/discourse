@@ -6733,6 +6733,7 @@ pl_PL:
               recover: Odzyskaj temat.
               read_lists: Czytaj listy tematów, takie jak najpopularniejsze, nowe, najnowsze itp. Obsługiwany jest również format RSS.
               status: "Zaktualizuj status tematu. Status: zamknięty, archiwalny, widoczny, przypięty. Włączone: prawda, fałsz. Określ identyfikator category_id tutaj i w żądaniu payload, aby zezwalać na zmiany statusu tylko w tematach z tej kategorii."
+              change_owner: Zmień właściciela wpisów tematu.
             posts:
               edit: Edytuj dowolny post lub konkretny.
               delete: Usuń wpis.

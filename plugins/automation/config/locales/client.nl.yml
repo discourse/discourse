@@ -429,6 +429,8 @@ nl:
           fields:
             custom_field_name:
               label: "Naam aangepast gebruikersveld"
+        set_topic_timer:
+          title: Topictimer instellen
       unnamed_automation: "Naamloze automatisering"
       models:
         script:

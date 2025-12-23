@@ -158,3 +158,5 @@ nl:
       random_assign:
         title: "Willekeurig toewijzen"
         description: "Wijs topics willekeurig toe aan een groep"
+      set_topic_timer:
+        title: "Topictimer instellen"

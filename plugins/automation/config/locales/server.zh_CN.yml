@@ -160,3 +160,5 @@ zh_CN:
       random_assign:
         title: "随机指定"
         description: "向群组随机指定话题"
+      set_topic_timer:
+        title: "设置话题计时器"

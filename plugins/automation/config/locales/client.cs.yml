@@ -150,6 +150,8 @@ cs:
               label: ID tématu
             user:
               label: Uživatel
+        set_topic_timer:
+          title: Nastavení časovače tématu
       models:
         trigger:
           name:

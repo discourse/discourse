@@ -158,3 +158,5 @@ es:
       random_assign:
         title: "Asignación aleatoria"
         description: "Asignar temas aleatoriamente a un grupo"
+      set_topic_timer:
+        title: "Establecer temporizador de tema"

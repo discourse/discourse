@@ -158,3 +158,5 @@ fr:
       random_assign:
         title: "Attribution aléatoire"
         description: "Attribuez aléatoirement des sujets à un groupe"
+      set_topic_timer:
+        title: "Planifier une action"

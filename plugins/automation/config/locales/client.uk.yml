@@ -442,6 +442,8 @@ uk:
           fields:
             custom_field_name:
               label: "Назва користувальницького поля"
+        set_topic_timer:
+          title: Встановити таймер теми
       unnamed_automation: "Неназвана автоматизація"
       models:
         script:

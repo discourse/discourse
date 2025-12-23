@@ -203,6 +203,8 @@ ro:
               label: ID subiect
             user:
               label: Utilizator
+        set_topic_timer:
+          title: Setează cronometrul subiectului
       unnamed_automation: "Automatizare fără nume"
       models:
         trigger:

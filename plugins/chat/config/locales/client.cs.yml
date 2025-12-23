@@ -152,6 +152,7 @@ cs:
       separate_sidebar_mode:
         title: "Zobrazit samostatné režimy postranního panelu pro fórum a chat"
       send_shortcut:
+        title: "Zkratka pro odeslání"
         enter:
           label: "Odeslat pomocí Enter"
         meta_enter:
@@ -261,6 +262,7 @@ cs:
       chat_notifications_title: "Upozornění chatu"
       only_chat_push_notifications:
         title: "Odesílání pouze push notifikací chatu"
+      personalization_title: "Osobní přizpůsobení"
       ignore_channel_wide_mention:
         title: "Ignorování zmínek v rámci celého kanálu"
       show_thread_title_prompts:

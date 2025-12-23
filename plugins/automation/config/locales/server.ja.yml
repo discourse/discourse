@@ -158,3 +158,5 @@ ja:
       random_assign:
         title: "ランダム割り当て"
         description: "グループにトピックをランダムに割り当てます"
+      set_topic_timer:
+        title: "トピックタイマーを設定"

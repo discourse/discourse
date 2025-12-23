@@ -158,3 +158,5 @@ fi:
       random_assign:
         title: "Satunnainen määritys"
         description: "Määritä ketjuja satunnaisesti ryhmälle"
+      set_topic_timer:
+        title: "Aseta ajastin ketjulle"

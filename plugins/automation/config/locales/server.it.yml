@@ -152,3 +152,5 @@ it:
       random_assign:
         title: "Assegnazione casuale"
         description: "Assegna casualmente argomenti a un gruppo"
+      set_topic_timer:
+        title: "Imposta il timer per l'argomento"

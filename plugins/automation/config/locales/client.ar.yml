@@ -433,6 +433,8 @@ ar:
           fields:
             custom_field_name:
               label: "اسم الحقل المخصَّص للمستخدم"
+        set_topic_timer:
+          title: تعيين مؤقِّت للموضوع
       unnamed_automation: "أتمتة دون اسم"
       models:
         script:

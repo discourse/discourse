@@ -429,6 +429,8 @@ fr:
           fields:
             custom_field_name:
               label: "Nom du champ personnalisé de l'utilisateur"
+        set_topic_timer:
+          title: Planifier une action
       unnamed_automation: "Automatisation sans nom"
       models:
         script:

@@ -163,3 +163,5 @@ he:
       random_assign:
         title: "הקצאה אקראית"
         description: "הקצאת נושאים לקבוצה באופן אקראי"
+      set_topic_timer:
+        title: "הגדרת שעון עצר לנושא"
