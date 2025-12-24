@@ -1,12 +1,13 @@
 import Component from "@glimmer/component";
+import { DEBUG } from "@glimmer/env";
+import { cached } from "@glimmer/tracking";
 import { concat, hash } from "@ember/helper";
-import { service } from "@ember/service";
 import curryComponent from "ember-curry-component";
 import concatClass from "discourse/helpers/concat-class";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/blocks";
+import { consolePrefix } from "discourse/lib/source-identifier";
 import { or } from "discourse/truth-helpers";
 
-// TODO: This should be stored in a service instead
 const blockConfigs = new Map();
 
 // IMPORTANT: do not export these symbols
@@ -22,6 +23,8 @@ const _BLOCK_CONTAINER_FLAG = Symbol("block-container");
  * The decorated component can only be rendered inside BlockOutlets.
  *
  * @param {string} name - The name to assign to the block
+ * @param {Object} [options] - Block options
+ * @param {boolean} [options.container] - Whether this block is a container for other blocks
  * @returns {function(Function): Function} A decorator function that accepts a class/component target
  *
  * @example
@@ -34,21 +37,58 @@ const _BLOCK_CONTAINER_FLAG = Symbol("block-container");
  */
 export function block(name, options = {}) {
   return function (target) {
+    // ensure target is a Glimmer component class
+    if (!(target.prototype instanceof Component)) {
+      throw new Error("@block target must be a Glimmer component class");
+    }
+
     const { container: isContainer = false } = options;
 
     return class extends target {
+      /** @type {string} */
       static blockName = name;
 
+      /** @type {boolean} */
       static [_BLOCK_FLAG] = true;
+
+      /** @type {boolean} */
       static [_BLOCK_CONTAINER_FLAG] = isContainer;
 
       constructor() {
         super(...arguments);
-        if (!this.args[_BLOCK_CONTAINER_FLAG]) {
+
+        if (
+          this.constructor._SKIP_CONTAINMENT_CHECK !== _BLOCK_CONTAINER_FLAG &&
+          !this.args[_BLOCK_CONTAINER_FLAG]
+        ) {
           throw new Error(
             `Block components cannot be used directly in templates. They can only be rendered directly inside BlockOutlets or BlockContainers.`
           );
         }
+      }
+
+      /** @returns {Object} */
+      get config() {
+        return this.args.config;
+      }
+
+      /** @returns {string} */
+      get name() {
+        return this.config.name;
+      }
+
+      /** @returns {Array<Object>|undefined} */
+      @cached
+      get children() {
+        if (!this.config) {
+          return;
+        }
+
+        return isContainer
+          ? this.args.children.map((item) => {
+              return { Component: curryComponent(item.block) };
+            })
+          : undefined;
       }
     };
   };
@@ -64,6 +104,12 @@ export function isBlock(component) {
   return !!component[_BLOCK_FLAG];
 }
 
+/**
+ * Checks if a component is registered as a container block.
+ *
+ * @param {Function} component - The component to check
+ * @returns {boolean} True if the component is registered as a container block, false otherwise
+ */
 function isContainerBlock(component) {
   return !!component[_BLOCK_CONTAINER_FLAG];
 }
@@ -92,9 +138,30 @@ function isContainerBlock(component) {
 export function renderBlocks(outletName, config) {
   validateConfig(outletName, config);
 
-  BlockOutlet.renderInto(outletName, config);
+  if (blockConfigs.has(outletName)) {
+    const errorMessage = [
+      consolePrefix(),
+      `Block outlet ${outletName} already has a configuration registered.`,
+    ].join(" ");
+
+    // block outlets can render only one config per outlet
+    if (DEBUG) {
+      throw new Error(errorMessage);
+    } else {
+      // eslint-disable-next-line no-console
+      console.warn(errorMessage);
+    }
+  }
+
+  blockConfigs.set(outletName, config);
 }
 
+/**
+ * Validates multiple block configurations recursively.
+ *
+ * @param {string} outletName - The name of the outlet these blocks belong to
+ * @param {Array<Object>} blocksConfig - The array of block configurations to validate
+ */
 function validateConfig(outletName, blocksConfig) {
   blocksConfig.forEach((blockConfig) => {
     if (blockConfig.children) {
@@ -141,14 +208,13 @@ function hasConfig(outletName) {
  */
 function validateBlock(config, outletName) {
   if (!BLOCK_OUTLETS.includes(outletName)) {
-    throw new Error(
-      `Block outlet \`${outletName}\` is not registered in the blocks registry`
-    );
+    throw new Error(`Unknown block outlet: ${outletName} `);
   }
 
   if (!config.block) {
     throw new Error(`Block in layout ${outletName} is missing a component`);
   }
+
   if (!isBlock(config.block)) {
     throw new Error(
       `Block component ${config.name} (${config.block}) in layout ${outletName} is not a valid block`
@@ -168,59 +234,53 @@ function validateBlock(config, outletName) {
   }
 }
 
+/**
+ * @component block-outlet
+ * @description Renders a named block outlet where other components can be injected.
+ * @param {string} name - The registered name of the block outlet
+ */
+@block("block-outlet", { isContainer: true })
 export default class BlockOutlet extends Component {
-  @service discovery;
+  /**
+   * The locked name of the outlet.
+   * @type {string}
+   */
+  #name;
 
-  get blocks() {
-    const blocks = blockConfigs.get(this.args.name);
+  /** @type {symbol} */
+  static _SKIP_CONTAINMENT_CHECK = _BLOCK_CONTAINER_FLAG;
 
-    if (!blocks) {
-      return [];
+  constructor() {
+    super(...arguments);
+
+    // locks the initial name argument so it can be changed dynamically later
+    this.#name = this.args.name;
+
+    if (!BLOCK_OUTLETS.includes(this.#name)) {
+      throw new Error(
+        `Block outlet ${this.#name}  is not registered in the blocks registry`
+      );
     }
-
-    const resolvedBlocks = [];
-
-    for (const item of blocks) {
-      if (item.type === "conditional") {
-        const shouldRender =
-          (item.routes.includes("discovery") &&
-            this.discovery.onDiscoveryRoute &&
-            !this.discovery.custom) ||
-          (item.routes.includes("homepage") && this.discovery.custom) ||
-          (item.routes.includes("category") && this.discovery.category) ||
-          (item.routes.includes("top-menu") &&
-            this.discovery.onDiscoveryRoute &&
-            !this.discovery.category &&
-            !this.discovery.tag &&
-            !this.discovery.custom);
-
-        if (shouldRender) {
-          resolvedBlocks.push(...item.blocks);
-        }
-      } else {
-        resolvedBlocks.push(item);
-      }
-    }
-
-    return resolvedBlocks;
   }
 
-  get shouldShow() {
-    return this.blocks.length > 0;
+  /** @returns {Object|undefined} */
+  get config() {
+    return blockConfigs.get(this.#name);
+  }
+
+  /** @returns {string} */
+  get name() {
+    return this.#name;
   }
 
   <template>
     {{yield (hasConfig @name) to="before"}}
-    {{#if this.shouldShow}}
+    {{#if this.children}}
       <div class={{@name}}>
         <div class={{concat @name "__container"}}>
           <div class={{concat @name "__layout"}}>
-            {{#each this.blocks as |config|}}
-              <WrappedBlock
-                @[_BLOCK_CONTAINER_FLAG]={{true}}
-                @outletName={{@name}}
-                @config={{config}}
-              />
+            {{#each this.children as |item|}}
+              <item.Component @block={{item}} @outletName={{this.name}} />
             {{/each}}
           </div>
         </div>
@@ -230,12 +290,12 @@ export default class BlockOutlet extends Component {
   </template>
 }
 
-const WrappedBlock = <template>
+export const WrappedBlock = <template>
   <div
     class={{concatClass
       (concat @blockOutlet "__block ")
-      (concat "block-" @block.block.blockName)
-      @block.customClass
+      (concat "block-" @block.name)
+      @block.classNames
     }}
   >
     {{#let
