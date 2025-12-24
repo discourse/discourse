@@ -8,20 +8,22 @@ import { or } from "discourse/truth-helpers";
 import DSheet from "./d-sheet";
 
 const DDefaultToast = <template>
-  <div
+    <div
     class={{concatClass
       "fk-d-default-toast"
       (concat "-" (or @data.theme "default"))
     }}
     ...attributes
   >
-    <button
-      {{on "click" @sheet.close}}
-      class="fk-d-default-toast__close-btn"
-      aria-label="Close"
-    >
-      {{icon "xmark"}}
-    </button>
+    {{#if @isFront}}
+      <button
+        {{on "click" @sheet.close}}
+        class="fk-d-default-toast__close-btn"
+        aria-label="Close"
+      >
+        {{icon "xmark"}}
+      </button>
+    {{/if}}
 
     {{#if @data.icon}}
       <div class="fk-d-default-toast__icon">

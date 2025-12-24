@@ -1,14 +1,15 @@
+@use "lib/viewport";
+
 .fk-d-default-toast {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
-  padding: var(--space-4);
+  gap: var(--space-2);
+  padding: var(--space-2);
   position: relative;
   border-radius: var(--toast-border-radius);
   background-color: var(--toast-background-color);
   box-shadow: var(--toast-box-shadow);
 
-  // Close button - absolute positioned top-right
   &__close-btn {
     position: absolute;
     top: 0;
@@ -26,7 +27,12 @@
     background: var(--secondary-very-high);
   }
 
-  // Icon container
+  @include viewport.until(sm) {
+    &__close-btn {
+      display: none;
+    }
+  }
+
   &__icon {
     display: flex;
     justify-content: center;
@@ -40,7 +46,6 @@
       height: 1rem;
     }
 
-    // Theme-based icon colors
     .-success & .d-icon {
       color: var(--success);
     }
@@ -58,11 +63,9 @@
     }
   }
 
-  // Content area with title and description
   &__content {
     display: flex;
     flex-direction: column;
-    gap: 0.125rem;
     flex: 1;
     min-width: 0;
   }
@@ -77,6 +80,7 @@
     font-weight: 400;
     line-height: 1.4;
     color: var(--primary-high);
+    font-size: var(--font-down-1);
   }
 
   // Legacy actions array support
@@ -136,7 +140,6 @@
     }
   }
 
-  // Progress bar (kept for backward compatibility)
   &__progress-bar {
     width: 100%;
     height: 5px;

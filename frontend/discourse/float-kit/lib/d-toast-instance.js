@@ -1,5 +1,6 @@
 import { action } from "@ember/object";
 import { setOwner } from "@ember/owner";
+import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import { TOAST } from "discourse/float-kit/lib/constants";
 import uniqueId from "discourse/helpers/unique-id";
@@ -8,6 +9,7 @@ export default class DToastInstance {
   @service site;
   @service toasts;
 
+  @tracked dismissed = false;
   options = null;
   id = uniqueId();
 

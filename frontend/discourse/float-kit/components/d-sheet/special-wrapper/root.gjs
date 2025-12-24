@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -22,10 +23,8 @@ import { scrollTrapModifier } from "../scroll-trap-modifier";
 export default class DSheetSpecialWrapperRoot extends Component {
   @tracked active = false;
 
-  constructor() {
-    super(...arguments);
-    // Only activate scroll trap on WebKit browsers.
-    // Non-WebKit browsers use CSS overscroll-behavior: contain.
+  @action
+  activate() {
     this.active = capabilities.isWebKit;
   }
 
@@ -54,6 +53,7 @@ export default class DSheetSpecialWrapperRoot extends Component {
         "scroll-trap-optimised"
       }}
       {{scrollTrapModifier this.active}}
+      {{didInsert this.activate}}
       {{didInsert @contentAttrs.registerContent}}
       {{outletAnimationModifier
         @sheet

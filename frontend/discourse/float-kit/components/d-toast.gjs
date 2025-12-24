@@ -6,9 +6,11 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel, later } from "@ember/runloop";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import DDefaultToast from "discourse/float-kit/components/d-default-toast";
 import concatClass from "discourse/helpers/concat-class";
 import TrackedMediaQuery from "discourse/lib/tracked-media-query";
+import { eq } from "discourse/truth-helpers";
 import DSheet from "./d-sheet";
 
 export default class DToast extends Component {
@@ -32,9 +34,7 @@ export default class DToast extends Component {
   }
 
   get contentPlacement() {
-    return this.largeViewport.matches || this.capabilities.isAndroid
-      ? "right"
-      : "top";
+    return "top";
   }
 
   get autoCloseDelay() {
@@ -131,16 +131,56 @@ export default class DToast extends Component {
   @action
   handlePresentedChange(presented) {
     this.presented = presented;
+
+    if (!presented) {
+      this.args.toast.dismissed = true;
+    }
+  }
+
+  @action
+  handleClosed() {
+    this.args.toast.close();
   }
 
   get toastsContainers() {
     return document.querySelector(".fk-d-toasts");
   }
 
+  get toastStyles() {
+    const styles = [
+      `--index: ${this.args.index}`,
+      `--toasts-before: ${this.args.index}`,
+      `--z-index: ${this.args.index}`,
+    ];
+
+    return htmlSafe(styles.join("; "));
+  }
+
+  get isFront() {
+    if (this.args.toast.dismissed) {
+      return false;
+    }
+
+    const activeToasts = this.args.toasts.filter((t) => !t.dismissed);
+    return this.args.toast === activeToasts[activeToasts.length - 1];
+  }
+
+  get innerStyles() {
+    const activeToasts = this.args.toasts.filter((t) => !t.dismissed);
+    const indexInActive = activeToasts.indexOf(this.args.toast);
+
+    const distanceFromFront =
+      indexInActive === -1 ? 0 : activeToasts.length - 1 - indexInActive;
+
+    const styles = [`--distance-from-front: ${distanceFromFront}`];
+    return htmlSafe(styles.join("; "));
+  }
+
   <template>
     <DSheet.Root
       @presented={{this.presented}}
       @onPresentedChange={{this.handlePresentedChange}}
+      @onClosed={{this.handleClosed}}
       @role=""
       as |sheet|
     >
@@ -155,6 +195,7 @@ export default class DToast extends Component {
               "d-toast"
               (concat "d-toast-" this.contentPlacement)
             }}
+            style={{this.toastStyles}}
           >
             <DSheet.Content
               @sheet={{sheet}}
@@ -168,6 +209,10 @@ export default class DToast extends Component {
               >
                 <DSheet.SpecialWrapper.Content
                   class="d-toast-inner-content"
+                  data-index={{@index}}
+                  data-front={{if this.isFront "true" "false"}}
+                  data-presented={{if this.presented "true" "false"}}
+                  style={{this.innerStyles}}
                   {{on "pointerenter" this.handlePointerEnter}}
                   {{on "pointerleave" this.handlePointerLeave}}
                 >
@@ -181,6 +226,7 @@ export default class DToast extends Component {
                   <DDefaultToast
                     @data={{@toast.options.data}}
                     @sheet={{sheet}}
+                    @isFront={{this.isFront}}
                   />
                 </DSheet.SpecialWrapper.Content>
               </DSheet.SpecialWrapper.Root>

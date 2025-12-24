@@ -7,8 +7,12 @@ export default class DToasts extends Component {
 
   <template>
     <section class="fk-d-toasts">
-      {{#each this.toasts.activeToasts as |toast|}}
-        <DToast @toast={{toast}} />
+      {{#each this.toasts.activeToasts key="id" as |toast index|}}
+        <DToast
+          @toasts={{this.toasts.activeToasts}}
+          @toast={{toast}}
+          @index={{index}}
+        />
       {{/each}}
     </section>
   </template>

@@ -116,9 +116,13 @@ export default class Content extends Component {
               @sheet.tracks
               (if (not @sheet.inertOutside) "no-pointer-events")
             }}
-            ...attributes
             {{didInsert @sheet.registerContent}}
-            {{outletAnimationModifier @sheet @travelAnimation @stackingAnimation}}
+            {{outletAnimationModifier
+              @sheet
+              @travelAnimation
+              @stackingAnimation
+            }}
+            ...attributes
           >
             {{yield}}
           </div>

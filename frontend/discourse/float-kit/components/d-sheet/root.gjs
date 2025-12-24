@@ -313,6 +313,7 @@ export default class Root extends Component {
     this.sheet.rootComponent = this;
 
     this.dismiss();
+    this.args.onClosed?.();
   }
 
   <template>

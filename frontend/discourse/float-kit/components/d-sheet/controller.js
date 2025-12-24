@@ -69,17 +69,32 @@ export default class Controller {
   /** @type {HTMLElement|null} */
   @tracked backdrop = null;
 
-  /** @type {TrackedArray<HTMLElement>} */
-  detentMarkers = new TrackedArray();
-
-  /** @type {string} */
-  id = guidFor(this);
-
   /** @type {boolean} */
   @tracked isPresented = false;
 
   /** @type {boolean} */
   @tracked safeToUnmount = true;
+
+  /** @type {boolean} */
+  @tracked isScrollOngoing = false;
+
+  /** @type {Array|null} */
+  @tracked detentsConfig = null;
+
+  /** @type {boolean} */
+  @tracked swipeOvershoot = true;
+
+  /** @type {boolean} */
+  @tracked backdropSwipeable = true;
+
+  /** @type {boolean} */
+  @tracked inertOutside = true;
+
+  /** @type {TrackedArray<HTMLElement>} */
+  detentMarkers = new TrackedArray();
+
+  /** @type {string} */
+  id = guidFor(this);
 
   /** @type {boolean} */
   viewHiddenByObserver = false;
@@ -127,10 +142,6 @@ export default class Controller {
     { guards: null }
   );
 
-
-  /** @type {boolean} */
-  @tracked isScrollOngoing = false;
-
   /** @type {boolean} */
   isSwipeOngoing = false;
 
@@ -145,7 +156,6 @@ export default class Controller {
 
   /** @type {number|null} */
   lastScrollTop = null;
-
 
   /** @type {Object|null} */
   dimensions = null;
@@ -182,18 +192,11 @@ export default class Controller {
    */
   progressSmoother = null;
 
-
   /** @type {string} */
   role = "dialog";
 
   /** @type {string} */
   tracks = "bottom";
-
-  /** @type {string} */
-  contentPlacement = "bottom";
-
-  /** @type {Array|null} */
-  @tracked detentsConfig = null;
 
   /** @type {boolean} */
   swipe = true;
@@ -201,14 +204,8 @@ export default class Controller {
   /** @type {boolean} */
   swipeDismissal = true;
 
-  /** @type {boolean} */
-  @tracked swipeOvershoot = true;
-
   /** @type {boolean|Object} */
   swipeTrap = true;
-
-  /** @type {boolean} */
-  @tracked backdropSwipeable = true;
 
   /** @type {boolean} */
   nativeEdgeSwipePrevention = false;
@@ -218,9 +215,6 @@ export default class Controller {
 
   /** @type {boolean} */
   pageScroll = false;
-
-  /** @type {boolean} */
-  @tracked inertOutside = true;
 
   /** @type {string|Object|null} */
   enteringAnimationSettings = null;
@@ -255,10 +249,6 @@ export default class Controller {
 
   /** @type {Object|Function} */
   onDismissAutoFocus = { focus: true };
-
-  // ═══════════════════════════════════════════════════════════════════════════
-  // Stacking & Registries
-  // ═══════════════════════════════════════════════════════════════════════════
 
   /** @type {Array<Controller>} */
   belowSheetsInStack = [];
@@ -624,10 +614,6 @@ export default class Controller {
       });
     }
   }
-
-  // ═══════════════════════════════════════════════════════════════════════════
-  // Aggregated Animation Callbacks
-  // ═══════════════════════════════════════════════════════════════════════════
 
   /**
    * Invoke all registered travel animation callbacks.
@@ -1922,6 +1908,7 @@ export default class Controller {
    */
   @action
   close() {
+    console.trace();
     this.handleStateTransition({ type: "CLOSE" });
   }
 
