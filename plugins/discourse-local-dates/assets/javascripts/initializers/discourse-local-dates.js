@@ -94,10 +94,12 @@ function buildOptionsFromElement(element, siteSettings) {
     .split("|")
     .filter(Boolean);
   opts.timezone = dataset.timezone;
-  opts.calendar = (dataset.calendar || "on") === "on";
   opts.displayedTimezone = dataset.displayedTimezone;
   opts.format = dataset.format || (opts.time ? "LLL" : "LL");
   opts.countdown = dataset.countdown;
+  opts.calendar = dataset.calendar
+    ? dataset.calendar === "on"
+    : !dataset.format;
   return opts;
 }
 
