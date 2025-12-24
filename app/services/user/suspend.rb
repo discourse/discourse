@@ -19,7 +19,7 @@ class User::Suspend
     validates :other_user_ids, length: { maximum: User::MAX_SIMILAR_USERS }
     validates :post_action,
               inclusion: {
-                in: %w[delete delete_replies edit none],
+                in: %w[delete delete_replies delete_all edit none],
               },
               allow_blank: true
   end
