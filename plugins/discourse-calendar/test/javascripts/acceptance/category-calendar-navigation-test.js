@@ -58,6 +58,11 @@ acceptance(
         eventCalls.some((call) => call.category_id === "1"),
         "Fetched events for category 1"
       );
+      assert.strictEqual(
+        eventCalls.length,
+        1,
+        "Only one events fetch after navigation"
+      );
       assert.dom(".fc-event-title").hasText("Event in Cat 1");
 
       eventCalls = [];
@@ -66,6 +71,11 @@ acceptance(
       assert.true(
         eventCalls.some((call) => call.category_id === "2"),
         "Fetched events for category 2 after navigation"
+      );
+      assert.strictEqual(
+        eventCalls.length,
+        1,
+        "Only one events fetch after navigation"
       );
       assert.dom(".fc-event-title").hasText("Event in Cat 2");
     });
