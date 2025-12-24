@@ -1,5 +1,6 @@
 import $ from "jquery";
 import { addAboutPageActivity } from "discourse/components/about-page";
+import { renderBlocks } from "discourse/components/block-outlet";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
 import { addCardClickListenerSelector } from "discourse/components/card-contents-base";
 import {
@@ -54,7 +55,6 @@ import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/a
 import { registerAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { registerPluginHeaderActionComponent } from "discourse/lib/admin-plugin-header-actions";
 import { registerReportModeComponent } from "discourse/lib/admin-report-additional-modes";
-import { renderBlocksConfig } from "discourse/lib/blocks";
 import classPrepend, {
   withPrependsRolledBack,
 } from "discourse/lib/class-prepend";
@@ -3337,7 +3337,7 @@ class _PluginApi {
    * ```
    */
   renderBlocks(blockOutlet, blockConfig) {
-    renderBlocksConfig(blockOutlet, blockConfig);
+    renderBlocks(blockOutlet, blockConfig);
   }
 
   // eslint-disable-next-line no-unused-vars
