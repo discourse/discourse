@@ -54,7 +54,7 @@ export default class PostLinks extends Component {
             <li>
               <PluginOutlet
                 @name="before-internal-link"
-                @outletArgs={{lazyHash post=@post, link=link}}
+                @outletArgs={{lazyHash post=@post link=link}}
               />
               <a
                 class="track-link inbound"
@@ -66,7 +66,7 @@ export default class PostLinks extends Component {
               </a>
               <PluginOutlet
                 @name="after-internal-link"
-                @outletArgs={{lazyHash post=@post, link=link}}
+                @outletArgs={{lazyHash post=@post link=link}}
               />
             </li>
           {{/each}}
