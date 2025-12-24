@@ -421,6 +421,12 @@ en:
             private:
               title: "Private"
               description: "A private event can only be joined by invited users."
+      composer:
+        end_date_placeholder: "Set end date"
+        location_placeholder: "Add location or URL"
+        max_attendees_placeholder: "Set max attendees"
+        description_placeholder: "Add event description"
+
       builder_modal:
         custom_fields:
           label: "Custom Fields"

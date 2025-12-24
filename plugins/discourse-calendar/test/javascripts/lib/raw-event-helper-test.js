@@ -31,5 +31,23 @@ module("Unit | Lib | raw-event-helper", function () {
       "[event ]\n[/event]",
       "handles empty params object"
     );
+
+    assert.strictEqual(
+      replaceRaw(
+        { name: "", location: "Paris" },
+        '[event original="value"]\n[/event]'
+      ),
+      '[event location="Paris"]\n[/event]',
+      "omits empty name parameter"
+    );
+
+    assert.strictEqual(
+      replaceRaw(
+        { name: "   ", location: "Berlin" },
+        '[event original="value"]\n[/event]'
+      ),
+      '[event location="Berlin"]\n[/event]',
+      "omits whitespace-only name parameter"
+    );
   });
 });
