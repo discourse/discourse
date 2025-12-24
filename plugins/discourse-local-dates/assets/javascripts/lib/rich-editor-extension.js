@@ -1,3 +1,4 @@
+import { serializeBBCodeAttr } from "discourse/lib/text";
 import formatLocalDate from "./format-local-date";
 
 const OPTIONAL_DATA_ATTRS = [
@@ -41,16 +42,6 @@ function buildFormatOptions(nodeAttrs, includeRecurring = false) {
     options.recurring = nodeAttrs.recurring;
   }
   return options;
-}
-
-/**
- * Serializes an optional attribute for markdown output
- * @param {string|null} value - The attribute value
- * @param {string} name - The attribute name
- * @returns {string} The serialized attribute or empty string
- */
-function serializeAttr(value, name) {
-  return value ? ` ${name}="${value}"` : "";
 }
 
 /** @type {RichEditorExtension} */
@@ -256,13 +247,13 @@ const extension = {
 
         const attrs = node.attrs;
         const optionalAttrs = [
-          attrs.time ? ` time=${attrs.time}` : "",
-          serializeAttr(attrs.timezone, "timezone"),
-          serializeAttr(attrs.format, "format"),
-          serializeAttr(attrs.recurring, "recurring"),
-          serializeAttr(attrs.timezones, "timezones"),
-          serializeAttr(attrs.countdown, "countdown"),
-          serializeAttr(attrs.displayedTimezone, "displayedTimezone"),
+          serializeBBCodeAttr(attrs.time, "time"),
+          serializeBBCodeAttr(attrs.timezone, "timezone"),
+          serializeBBCodeAttr(attrs.format, "format"),
+          serializeBBCodeAttr(attrs.recurring, "recurring"),
+          serializeBBCodeAttr(attrs.timezones, "timezones"),
+          serializeBBCodeAttr(attrs.countdown, "countdown"),
+          serializeBBCodeAttr(attrs.displayedTimezone, "displayedTimezone"),
         ].join("");
         state.write(`[date=${attrs.date}${optionalAttrs}]`);
 
@@ -283,11 +274,11 @@ const extension = {
           attrs.fromDate + (attrs.fromTime ? `T${attrs.fromTime}` : "");
         const to = attrs.toDate + (attrs.toTime ? `T${attrs.toTime}` : "");
         const optionalAttrs = [
-          serializeAttr(attrs.timezone, "timezone"),
-          serializeAttr(attrs.format, "format"),
-          serializeAttr(attrs.timezones, "timezones"),
-          serializeAttr(attrs.countdown, "countdown"),
-          serializeAttr(attrs.displayedTimezone, "displayedTimezone"),
+          serializeBBCodeAttr(attrs.timezone, "timezone"),
+          serializeBBCodeAttr(attrs.format, "format"),
+          serializeBBCodeAttr(attrs.timezones, "timezones"),
+          serializeBBCodeAttr(attrs.countdown, "countdown"),
+          serializeBBCodeAttr(attrs.displayedTimezone, "displayedTimezone"),
         ].join("");
         state.write(`[date-range from=${from} to=${to}${optionalAttrs}]`);
 

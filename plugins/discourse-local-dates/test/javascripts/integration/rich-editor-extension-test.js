@@ -53,7 +53,7 @@ module(
 
     test("local date with timezone", async function (assert) {
       const markdown =
-        '[date=2021-01-01 time=12:00:00 timezone="America/New_York"]';
+        "[date=2021-01-01 time=12:00:00 timezone=America/New_York]";
 
       await testMarkdown(
         assert,
@@ -82,7 +82,7 @@ module(
     });
 
     test("local date with recurring", async function (assert) {
-      const markdown = '[date=2021-01-01 time=12:00:00 recurring="1.weeks"]';
+      const markdown = "[date=2021-01-01 time=12:00:00 recurring=1.weeks]";
 
       await testMarkdown(
         assert,
@@ -96,7 +96,7 @@ module(
 
     test("local date with timezones", async function (assert) {
       const markdown =
-        '[date=2021-01-01 time=12:00:00 timezones="Europe/Paris|Asia/Tokyo"]';
+        "[date=2021-01-01 time=12:00:00 timezones=Europe/Paris|Asia/Tokyo]";
 
       await testMarkdown(
         assert,
@@ -112,7 +112,7 @@ module(
     });
 
     test("local date with countdown", async function (assert) {
-      const markdown = '[date=2099-01-01 time=12:00:00 countdown="true"]';
+      const markdown = "[date=2099-01-01 time=12:00:00 countdown=true]";
 
       await testMarkdown(
         assert,
@@ -126,7 +126,7 @@ module(
 
     test("local date with displayedTimezone", async function (assert) {
       const markdown =
-        '[date=2021-01-01 time=12:00:00 displayedTimezone="Europe/London"]';
+        "[date=2021-01-01 time=12:00:00 displayedTimezone=Europe/London]";
 
       await testMarkdown(
         assert,
@@ -183,7 +183,7 @@ module(
 
     test("local date range with timezone", async function (assert) {
       const markdown =
-        '[date-range from=2021-01-01 to=2021-01-02 timezone="America/New_York"]';
+        "[date-range from=2021-01-01 to=2021-01-02 timezone=America/New_York]";
 
       await testMarkdown(
         assert,
@@ -202,7 +202,7 @@ module(
 
     test("local date range with format", async function (assert) {
       const markdown =
-        '[date-range from=2021-01-01 to=2021-01-02 format="YYYY-MM-DD"]';
+        "[date-range from=2021-01-01 to=2021-01-02 format=YYYY-MM-DD]";
 
       await testMarkdown(
         assert,
@@ -221,7 +221,7 @@ module(
 
     test("local date range with timezones", async function (assert) {
       const markdown =
-        '[date-range from=2021-01-01 to=2021-01-02 timezones="Europe/Paris|Asia/Tokyo"]';
+        "[date-range from=2021-01-01 to=2021-01-02 timezones=Europe/Paris|Asia/Tokyo]";
 
       await testMarkdown(
         assert,
@@ -246,7 +246,7 @@ module(
 
     test("local date range with countdown", async function (assert) {
       const markdown =
-        '[date-range from=2099-01-01 to=2099-01-02 countdown="true"]';
+        "[date-range from=2099-01-01 to=2099-01-02 countdown=true]";
 
       await testMarkdown(
         assert,
@@ -265,7 +265,7 @@ module(
 
     test("local date range with displayedTimezone", async function (assert) {
       const markdown =
-        '[date-range from=2021-01-01 to=2021-01-02 displayedTimezone="Europe/London"]';
+        "[date-range from=2021-01-01 to=2021-01-02 displayedTimezone=Europe/London]";
 
       await testMarkdown(
         assert,
