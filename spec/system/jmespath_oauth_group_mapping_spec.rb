@@ -57,6 +57,7 @@ describe "JMESPath Oauth Group Mapping", type: :system do
       mock_google_auth(email: "engineers@company.com")
 
       signup_page.open.click_social_button("google_oauth2")
+      expect(signup_page).to be_open
       signup_page.click_create_account
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
@@ -137,6 +138,7 @@ describe "JMESPath Oauth Group Mapping", type: :system do
       mock_google_auth(email: "user@company.com")
 
       signup_page.open.click_social_button("google_oauth2")
+      expect(signup_page).to be_open
       signup_page.click_create_account
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
@@ -179,6 +181,7 @@ describe "JMESPath Oauth Group Mapping", type: :system do
       allow(Discourse).to receive(:enabled_authenticators).and_return([authenticator])
 
       signup_page.open.click_social_button("google_oauth2")
+      expect(signup_page).to be_open
       signup_page.click_create_account
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
