@@ -1060,11 +1060,14 @@ zh_CN:
       every_month: "每月"
       every_six_months: "每六个月"
   user_api_key:
-    title: "授权应用程序访问"
+    title: '授权“%{application_name}”'
     authorize: "授权"
+    deny: "取消"
     read: "读取"
     read_write: "读/写"
-    description: '“%{application_name}”请求对您的帐户进行以下访问：'
+    logged_in_as: "登录为"
+    permissions_header: '这将允许 “%{application_name}”：'
+    redirect_warning: "授权会将您重定向到"
     instructions: '我们刚刚生成了一个新的用户 API 密钥供您与“%{application_name}”搭配使用，请将以下密钥粘贴到您的应用程序中：'
     otp_description: '要允许“%{application_name}”访问此网站吗？'
     otp_confirmation:
@@ -1189,6 +1192,8 @@ zh_CN:
       yaxis: "天"
       description: "对常规 API 密钥和用户 API 密钥的 API 请求。"
     consolidated_page_views_browser_detection:
+      title: "整合页面浏览量并检测浏览器类型（推荐）"
+      title_legacy: "整合页面浏览量并检测浏览器类型（推荐）"
       xaxis:
         page_view_anon_browser: "匿名浏览器"
         page_view_logged_in_browser: "已登录浏览器"
@@ -1504,6 +1509,7 @@ zh_CN:
     problem:
       twitter_login: 'X 登录目前似乎无法使用。请在 <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">网站设置</a>中检查凭据。'
       group_email_credentials: '群组“<a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>”的电子邮件凭据存在问题。在解决此问题之前，不会从群组收件箱发送任何电子邮件。%{error}'
+      upcoming_change_stable_opted_out: '您的网站已选择退出 "%{upcoming_change}" 即将到来的变更。该变更现已进入 "稳定 "状态，可能很快就会被移除或永久化。请访问<a href="%{base_path}/admin/config/upcoming-changes">"即将发生的更改 "页面</a>，查看有关此更改的详细信息。'
       rails_env: "您的服务器正在以%{env}模式运行。"
       host_names: "您的 config/database.yml 文件使用的是默认的 localhost 主机名。请将其更新为您的网站的主机名。"
       sidekiq: 'Sidekiq 未运行。许多任务（例如发送电子邮件）都是由 Sidekiq 异步执行的。请确保至少一个 Sidekiq 进程正在运行。<a href="https://github.com/mperham/sidekiq" target="_blank">在此处了解 Sidekiq</a>。'
@@ -1534,6 +1540,7 @@ zh_CN:
       category_style_deprecated: "您的 Discourse 目前使用的是过时的类别样式，该样式将在 Discourse 3.2 最终测试版发布前移除。请参阅<a href='https://meta.discourse.org/t/282441'>迁移至单一类别样式网站设置</a>，了解如何保留所选类别样式。"
       maxmind_db_configuration: '服务器已被配置为使用 MaxMind 数据库进行反向 IP 查找，但尚未配置有效的 MaxMind 帐户 ID，这可能导致 MaxMind 数据库将来无法下载。<a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">请参阅本指南了解更多详情</a>。'
       admin_sidebar_deprecation: "旧的管理布局已被替换为新的<a href='https://meta.discourse.org/t/-/289281'>边栏布局</a>，旧布局将在下一个版本中移除。您现在可以选择<a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>配置</a>新的边栏布局。"
+      starttls_disabled: "外发电子邮件配置已禁用 STARTTLS。这几乎没有必要。请考虑从您的环境中移除<pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre>。有关详细信息，请参阅<a href='https://meta.discourse.org/t/387286'>此主题</a>。"
     back_from_logster_text: "返回网站"
   site_settings:
     allow_bulk_invite: "允许通过上传 CSV 文件批量邀请"
@@ -1578,6 +1585,7 @@ zh_CN:
     allow_duplicate_topic_titles_category: "如果类别不同，允许有相同或重复标题的话题。必须禁用 allow_duplicate_topic_titles。"
     unique_posts_mins: "用户可以再次发布相同内容的帖子前需要等待的分钟数"
     educate_until_posts: "当用户开始输入他们的前几 (n) 个新帖子时，在编辑器中显示弹出式新用户教育面板。"
+    title: "此站点的名称。所有访客（包括匿名用户）均可见。请注意，更改此标题可能会向 PWA 用户发送提示，要求他们更新或卸载该应用。"
     site_description: "用一句话描述此网站。对包括匿名用户在内的所有访客可见。"
     short_site_description: "几个字的简短描述。对包括匿名用户在内的所有访客可见。"
     contact_email: "负责此网站的主要联系人的电子邮件地址，用于重要通知，也会显示在 <a href='%{base_path}/about' target='_blank'>/about</a> 上。对公共网站上的匿名用户可见。"
@@ -1801,6 +1809,7 @@ zh_CN:
     enable_local_logins_via_email: "允许用户请求通过电子邮件向他们发送一键登录链接。"
     allow_new_registrations: "允许新用户注册。取消选中此项以防止任何人创建新帐户。"
     enable_signup_cta: "向回访匿名用户显示通知，提示他们注册帐户。"
+    enable_discourse_id: "通过 Discourse ID 启用身份验证，这是一种单点登录服务，允许用户使用一个帐户登录多个 Discourse 站点。无需额外配置即可支持 Google、Facebook 和 Twitter 等常见社交登录提供商。如需了解详情，请参阅 <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a>。"
     enable_google_oauth2_logins: "启用 Google Oauth2 身份验证。这是 Google 当前支持的身份验证方法。要求密钥和密钥代码。请参阅<a href='https://meta.discourse.org/t/15858' target='_blank'>为 Discourse 配置 Google 登录</a>。"
     google_oauth2_client_id: "由 Google 应用程序提供的唯一客户端 ID，用于身份验证流程。"
     google_oauth2_client_secret: "您的 Google 应用的客户端密钥。"
@@ -2139,6 +2148,7 @@ zh_CN:
     group_in_subject: "在电子邮件主题中将 %%{optional_pm} 设置为私信中第一个群组的名称，请参阅：<a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>自定义标准电子邮件的主题格式</a>"
     allow_anonymous_mode: "启用可供用户切换到匿名发帖模式的选项。激活后，用户在网站上创建帖子或话题时可以选择隐藏身份。另请参阅 `allow anonymous likes`。"
     allow_likes_in_anonymous_mode: "启用此设置，允许匿名浏览网站的用户点赞帖子。 激活后，用户在为帖子或话题点赞时，可以选择隐藏其身份。 此设置需要先启用 `允许匿名模式`。"
+    anonymous_posting_allowed_groups: "允许匿名发帖的群组。此设置需要启用“允许匿名模式”设置。"
     anonymous_account_duration_minutes: "为了保护匿名性，每 N 分钟为每个用户创建一个新的匿名帐户。示例：如果设置为 600，则在距离上次发帖 600 分钟且用户切换到匿名时，将创建一个新的匿名帐户。"
     hide_user_profiles_from_public: "禁用匿名用户的用户卡片、用户个人资料和用户目录。"
     hide_new_user_profiles: "向公众隐藏信任级别 1 或更低的用户个人资料，并隐藏信任级别 1 的用户，直到他们首次发帖。此功能在 must_approve_users 和 invite_only 网站上无条件禁用。"
@@ -2319,6 +2329,7 @@ zh_CN:
     force_lowercase_tags: "强制所有新标签完全小写。"
     create_post_for_category_and_tag_changes: "当一个话题的类别或标签发生更改时，创建密语帖子，需要启用密语帖子。"
     automatically_clean_unused_tags: "每天自动删除未在任何话题或个人消息中使用的标签。"
+    default_watched_precedence_over_muted: "如果我正在关注的类别或标签中有我已设为免打扰的话题，请通知我。"
     company_name: "您的公司或组织的名称。如果留空，将不会提供样板《服务条款》或《隐私声明》。"
     governing_law: "指定管辖网站法律方面（包括《服务条款》和《隐私政策》）的司法管辖区。这通常是运营网站的公司注册或开展业务的国家/地区或州。"
     city_for_disputes: "指定将用作解决与使用此论坛相关的任何争议的管辖城市。此信息通常包含在法律文件（例如论坛的《服务条款》）中。"
@@ -2334,6 +2345,7 @@ zh_CN:
     sitemap_page_size: "每个网站地图页面中包含的 URL 数量。最大 50.000"
     enable_user_status: "允许用户设置自定义状态消息（表情符号 + 描述）。"
     enable_user_tips: "启用向用户描述关键功能的新用户提示"
+    short_title: "简短标题将显示在用户的主屏幕、启动器或其他空间有限的地方。标题长度应限制在 12 个字符以内。请注意，更改此标题可能会向 PWA 用户发送提示，询问他们是否需要更新或卸载该应用。"
     dashboard_hidden_reports: "允许从信息中心隐藏指定报告。"
     dashboard_visible_tabs: "选择可见的信息中心标签页。"
     dashboard_general_tab_activity_metrics: "选择要在“常规”标签页上显示为活动指标的报告。"
@@ -2364,6 +2376,8 @@ zh_CN:
     show_preview_for_form_templates: "启用表单模板预览功能"
     lazy_load_categories_groups: "只为这些群组的用户延迟加载类别信息。这可以提升有许多类别的网站的性能。"
     experimental_auto_grid_images: "在编辑器中上传 3 张或更多图片后，自动将图像包装在 [grid] 标记中。"
+    experimental_impersonation: "无需注销管理员帐户即可模拟用户。"
+    experimental_impersonation_time_limit_minutes: "模拟会话需要多长时间才能自动结束。"
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
     show_user_menu_avatars: "在用户菜单中显示用户头像"
     about_page_hidden_groups: "不在 /about 页面显示特定群组的成员。"
@@ -2376,9 +2390,16 @@ zh_CN:
     rich_editor: "为输入框启用富文本编辑器，以便所有用户都可以在当前 Markdown 模式和新的富文本编辑器之间切换，从而实现更直观、更人性化的写作体验。"
     default_composition_mode: "设置社区编辑器的默认模式。富文本模式为大多数用户提供了更现代、更熟悉的写作体验，而 Markdown 模式可能更适合技术能力更高的用户。成员可以使用编辑器工具栏中的切换按钮在不同模式之间切换。"
     reviewable_ui_refresh: "可以在审核队列中使用实验性新 UI 的群组。"
+    viewport_based_mobile_mode: "使用视口宽度来确定移动/桌面模式。此设置即将移除。如果您需要将其关闭，请在 Meta 中告知我们 <a href='https://meta.discourse.org/t/384280'></a>。"
     content_localization_enabled: "根据用户的浏览器或语言偏好设置，显示本地化内容。此类内容可能包括类别、标签、帖子和话题。支持的语言环境在 'content localization supported locales' 中设置。"
     content_localization_supported_locales: "用户内容可以翻译成的受支持语言区域列表。要求 'content localization enabled'。"
     content_localization_allowed_groups: "允许更新本地化内容的群组。需要 'content localization enabled'。"
+    content_localization_language_switcher: "在页眉中显示语言切换器，允许访问者在翻译版本的 Discourse 和用户贡献的内容之间切换。使用 \"内容本地化支持的本地语言 \"中定义的语言"
+    content_localization_crawler_param: "启用 \"内容本地化 \"和 \"从参数设置本地化 \"后，向网络爬虫提供本地化内容。支持的本地化语言列表在 \"内容本地化支持的本地化语言 \"中定义。"
+    content_localization_use_default_locale_when_unsupported: "向首选语言未列在 \"内容本地化支持的语言 \"中的用户提供网站默认语言的本地化内容。"
+    content_localization_allow_author_localization: "允许作者通过帖子菜单更新自己主题和帖子的本地化内容。"
+    enable_upcoming_changes: "启用即将到来的更改"
+    fake_upcoming_change: "这是为测试目的即将进行的虚假更改。无需翻译此字符串。"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_email: "无效的电子邮件地址。"
@@ -2448,7 +2469,9 @@ zh_CN:
       invalid_uncategorized_category_setting: '如果“允许未分类话题”设置未启用，则无法选择“未分类”类别。'
       invalid_search_ranking_weights: "该值对于 search_ranking_weights 网站设置无效。示例：'{0.1,0.2,0.3,1.0}'。注意，每个权重的最大值为 1.0。"
       content_localization_locale_limit: "支持的语言环境数量不能超过 %{max} 个。"
+      content_localization_language_switcher_requirements: "语言切换器要求启用 \"从 cookie 设置本地化 \"和 \"允许用户本地化 \"网站设置，并且 \"内容本地化支持的本地化 \"至少有一种语言。"
       mediaconvert_role_arn_required: "使用 AWS MediaConvert 进行视频转换时需要具有 AWS IAM 角色 ARN。"
+      mediaconvert_output_subdirectory_required: "MediaConvert 输出子目录是必填的。"
       s3_credentials_required_for_video_conversion: "需要具有 S3 凭据才能进行视频转换。请配置 S3 访问密钥或启用 IAM 配置文件。"
     keywords:
       clean_up_inactive_users_after_days: "已停用|闲置|未激活"
@@ -2472,6 +2495,7 @@ zh_CN:
   filter:
     description:
       status: "按状态筛选话题"
+      in: "筛选个人列表中的主题"
       order: "按特定字段排列话题"
       category: "显示特定类别中的话题"
       category_any: "显示任意指定类别（以逗号分隔）中的话题"
@@ -2546,7 +2570,13 @@ zh_CN:
       order_read_asc: "按最后阅读时间排序（时间最早的优先）"
       order_hot: "按热门程度排序（最高优先）"
       order_hot_asc: "按热门程度排序（最低优先）"
+      users: "按参与者筛选主题"
+      users_any: "显示任何指定用户的主题（以逗号分隔）"
+      users_all: "显示所有指定用户参与的主题（以加号分隔）"
       exclude_users: "排除特定用户的话题"
+      group: "按群组筛选主题"
+      groups_any: "显示任意指定群组的主题（以逗号分隔）"
+      groups_all: "显示包含所有指定群组的主题（加号分隔）"
       locale: "按原始语言过滤话题"
       locale_any: "显示以任何指定语言撰写的原始话题（以逗号分隔）"
       exclude_locale: "排除最初以特定语言撰写的话题"
@@ -4861,6 +4891,9 @@ zh_CN:
   rss_by_tag: "使用%{tag}标记的话题"
   finish_installation:
     congratulations: "恭喜，您已安装 Discourse！"
+    login_with_discourse_id: "使用 Discourse ID 登录"
+    discourse_id_help: "请使用 Discourse ID 登录。<br/><br/>请确保您使用的 Discourse ID 账户的主电子邮件与 `DISCOURSE_DEVELOPER_EMAILS` 环境变量相匹配。"
+    discourse_id_error_help: "您选择暂时跳过设置电子邮件。不幸的是，由于上述错误信息，设置无法继续。请在<a href='https://meta.discourse.org/'>meta.discourse.org</a> 上报告此问题。"
     register:
       button: "注册"
       title: "注册管理员帐户"
@@ -4872,6 +4905,10 @@ zh_CN:
     resend_email:
       title: "重新发送激活电子邮件"
       message: "<p>我们已将激活电子邮件重新发送至 <b>%{email}</b>"
+    discourse_id:
+      help: "我们正在为您设置 Discourse ID。"
+      no_allowed_emails: "DISCOURSE_DEVELOPER_EMAILS 中未配置允许的电子邮件。无法继续站点设置。"
+      global_notice: "目前还没有管理员登录。请使用与 `DISCOURSE_DEVELOPER_EMAILS` 环境变量中邮箱地址匹配的 Discourse ID 帐户登录，以完成安装。"
   safe_mode:
     title: "进入安全模式"
     description: "安全模式允许您在不加载主题或客户端插件自定义的情况下测试您的网站。服务器端插件自定义保持启用状态。"
@@ -4891,6 +4928,7 @@ zh_CN:
         fields:
           title:
             label: "社区名称"
+            placeholder: "Jane's Hangout"
           default_locale:
             label: "语言"
           login_required:
@@ -4939,10 +4977,19 @@ zh_CN:
       pr_summary: "%{commits} 提交了更改的 %{changed_files} 文件，其中包含 %{additions} 项增加和 %{deletions} 项删除"
       no_description: "通过在 GitHub 上创建帐户来为 %{repo} 开发做出贡献。"
       pr_title:
+        default: "拉取请求"
+        draft: "草稿拉取请求"
+        open: "打开拉取请求"
+        approved: "已批准的拉取请求"
         changes_requested: "请求更改"
+        merged: "合并拉取请求"
+        closed: "已关闭的拉取请求"
       status_date:
         open: "已打开"
+        draft: "草稿"
         approved: "已批准"
+        changes_requested: "请求更改"
+        merged: "已合并"
         closed: "已关闭"
   discourse_push_notifications:
     popup:
@@ -4984,6 +5031,7 @@ zh_CN:
     seed_data_topic_updated: "种子数据话题已更新"
     seed_data_topic_deleted: "种子数据话题已删除"
     upcoming_changes:
+      log_manually_toggled: "用户手动切换"
       log_promoted: >
         这项即将进行的更改达到了 '%{change_status}' 状态，因此它已在您的网站上自动启用。有关更多详细信息，请参阅 <a href="%{base_path}/admin/config/upcoming-changes">即将进行的更改页面</a> 。
   reviewables:

@@ -1132,11 +1132,10 @@ ug:
       every_month: "ھەر ئاي"
       every_six_months: "ھەر ئالتە ئاي"
   user_api_key:
-    title: "دەلىللەنگەن پىروگرامما زىيارىتى"
     authorize: "دەلىللە"
+    deny: "ۋاز كەچ"
     read: "ئوقۇ"
     read_write: "ئوقۇ/ياز"
-    description: '«%{application_name}» ھېساباتىڭىزغا تۆۋەندىكىدەك زىيارەتنى ئىلتىماس قىلدى:'
     instructions: 'بىز «%{application_name}» بىلەن ماسلاشتۇرۇپ ئىشلىتىش ئۈچۈن سىزگە يېڭى ئىشلەتكۈچى API شىفىرلىق ئاچقۇچى ھاسىللىدۇق، تۆۋەندىكى شىفىرلىق ئاچقۇچنى پىروگراممىڭىزغا كۆچۈرۈڭ:'
     otp_description: '«%{application_name}» نىڭ بۇ تور بېكەتنى زىيارەت قىلىشىغا يول قويامسىز؟'
     otp_confirmation:

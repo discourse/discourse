@@ -1284,11 +1284,10 @@ cs:
       every_month: "každý měsíc"
       every_six_months: "každých šest měsíců"
   user_api_key:
-    title: "Autorizovat přístup k aplikaci"
     authorize: "Autorizovat"
+    deny: "Zrušit"
     read: "přečteno"
     read_write: "čtení/zápis"
-    description: '„%{application_name}" požaduje následující přístup k vašemu účtu:'
     instructions: 'Právě jsme pro vás vygenerovali nový uživatelský klíč API, který můžete použít s „%{application_name}“, do své aplikace vložte prosím následující klíč:'
     otp_description: 'Chcete povolit přístup k tomuto webu uživateli „%{application_name}“?'
     otp_confirmation:

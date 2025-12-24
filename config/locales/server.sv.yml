@@ -964,11 +964,10 @@ sv:
       every_month: "varje månad"
       every_six_months: "varje halvår"
   user_api_key:
-    title: "Godkänn programåtkomst"
     authorize: "Godkänn"
+    deny: "Avbryt"
     read: "läs"
     read_write: "läs/skriv"
-    description: '"%{application_name}" begär följande tillträde till ditt konto.'
     instructions: 'Vi genererade precis en ny API-nyckel som du kan använda med "%{application_name}". Klistra in följande nyckel i din applikation:'
     otp_description: 'Vill du tillåta att "%{application_name}" får tillträde till din sida?'
     otp_confirmation:

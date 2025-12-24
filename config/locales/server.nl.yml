@@ -1134,11 +1134,10 @@ nl:
       every_month: "maandelijks"
       every_six_months: "elke zes maanden"
   user_api_key:
-    title: "Toegang tot toepassingen autoriseren"
     authorize: "Autoriseren"
+    deny: "Annuleren"
     read: "lezen"
     read_write: "lezen/schrijven"
-    description: '''%{application_name}'' vraagt de volgende toegang tot je account:'
     instructions: 'We hebben zojuist een nieuwe API-gebruikerssleutel voor je gegenereerd voor gebruik met ''%{application_name}''. Plak de volgende link in je toepassing:'
     otp_description: 'Wil je ''%{application_name}'' toegang tot deze website geven?'
     otp_confirmation:

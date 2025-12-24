@@ -10,6 +10,12 @@ zh_CN:
       llm_model:
         name: "模型 ID"
         max_prompt_tokens: "上下文窗口"
+  dashboard:
+    problem:
+      ai_llm_status:
+        other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> 需要注意。在过去的 %{count} 小时里，它在 %{total_calls} 次中没有回复 %{failed_calls} 次。"
+      ai_credit_soft_limit: "%{model_name} 仅剩余 %{percentage_remaining}% 的积分。积分将在 %{reset_date}时重置。 <a href='%{url}'>查看 AI 模型</a>"
+      ai_credit_hard_limit: "您的 %{model_name}AI 积分已经用完了。AI 功能将在 %{reset_date}之前不可用。 <a href='%{url}'>查看 AI 模型</a>"
   discourse_automation:
     ai:
       flag_types:
@@ -79,6 +85,8 @@ zh_CN:
     ai_nsfw_flag_threshold_sexy: "分类为性感的图片被视为 NSFW 的阈值。"
     ai_nsfw_models: "用于 NSFW 推断的模型。"
     ai_spam_detection_enabled: "启用 AI 垃圾信息检测模块"
+    ai_spam_detection_max_post_count: "用户在不再被扫描为垃圾邮件之前可发表帖子的最大数量"
+    ai_spam_detection_max_trust_level: "用户扫描垃圾邮件的最大信任级别"
     ai_openai_api_key: "OpenAI API 的 API 密钥。仅用于图片创建和编辑。对于 GPT，请使用 LLM 配置标签页"
     ai_openai_image_generation_url: "OpenAI 图片生成 API 的 URL"
     ai_openai_image_edit_url: "OpenAI 图片编辑 API 的 URL"
@@ -115,6 +123,7 @@ zh_CN:
     ai_summary_gists_allowed_groups: "能够查看热门话题列表中的要点的群组。"
     ai_summary_backfill_maximum_topics_per_hour: "每小时回填的话题摘要数。"
     ai_bot_enabled: "启用 AI 机器人模块。"
+    ai_bot_enabled_llms: "用于选择 AI bot 对话的 LLM"
     ai_bot_enable_chat_warning: "启动私信聊天时显示警告。可以通过编辑翻译字符串进行覆盖：discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "当 GPT 机器人可以访问私信时，它将回复这些群组的成员。"
     ai_bot_debugging_allowed_groups: "允许这些群组在帖子上看到显示原始 AI 请求和回答的调试按钮"
@@ -141,6 +150,7 @@ zh_CN:
     ai_translation_max_post_length: "帖子翻译的最大字符数。超过此长度的帖子将不会被翻译。"
     ai_translation_backfill_max_age_days: "待翻译帖子和话题的最长期限。超过此期限的帖子和话题将不进行翻译。0 表示禁用回填，但不会禁用新帖子的翻译。"
     ai_translation_backfill_hourly_rate: "每小时回填翻译的帖子和话题数量。设置为 0 可禁用现有内容的自动翻译回填。"
+    ai_translation_max_tokens_multiplier: "倍数来决定用于翻译的最大令牌数量。 默认情况下，我们将最大令牌设置为帖子中字符数的大约2至5倍。 这个倍数可以调整，以考虑或推理模型使用更多的令牌。"
     ai_usage_rollup_after_days: "每次请求的 AI 使用数据在被汇总为每日统计之前要保留的天数。设为 0 表示不进行汇总。"
     ai_audit_logs_purge_after_days: "删除超过指定天数的 AI API 审计日志。默认值约为 6 个月。设置为 0 则无限期保留。"
   reviewables:
@@ -261,10 +271,14 @@ zh_CN:
           name: "汇率"
         stock_quote:
           name: "股票报价 (AlphaVantage)"
+        image_generation_category:
+          name: "图像生成……"
         image_generation_custom:
           name: "自定义"
         image_generation_openai:
           name: "OpenAI"
+        image_generation_gemini:
+          name: "Nano Banana"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:
@@ -276,6 +290,11 @@ zh_CN:
     ai_helper:
       errors:
         completion_request_failed: "尝试提供建议时出错。请重试。"
+        no_illustrator_persona: "Post Illustrator 角色未配置。请检查您的网站设置。"
+        no_image_generation_tool: "Post Illustrator 角色必须附带图像生成工具。请在管理面板中为该角色配置图像生成工具。"
+        no_image_generated: "图像生成失败。请重试或检查您的工具配置。"
+        llm_model_not_configured: "图像生成未配置任何语言模型。请在您的网站设置中配置默认语言模型。"
+        unknown_error: "生成缩略图时出现意外错误。请重试。"
       prompts:
         translate: 翻译为%{language}
         generate_titles: 建议话题标题
@@ -309,6 +328,7 @@ zh_CN:
     ai_bot:
       reply_error: "抱歉，我们的系统在尝试回复时似乎遇到了意外问题。\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[无标题 AI 机器人私信]"
+      thinking: "正在思考"
       personas:
         default_llm_required: "启用聊天之前需要默认的 LLM 模型"
         cannot_delete_system_persona: "无法删除系统角色，请改为将其禁用"
@@ -376,6 +396,7 @@ zh_CN:
           description: "支持助手的生成 Markdown 表功能的默认角色"
         post_illustrator:
           name: "帖子插图创建器"
+          description: "使用现有的图像生成工具生成用于文章配图的图像"
         proofreader:
           name: "审校"
           description: "支持助手的审校文本功能的默认角色"
@@ -605,9 +626,11 @@ zh_CN:
       configuration:
         disable_embeddings: "您必须先禁用 'ai embeddings enabled'。"
         choose_model: "首先设置 'ai embeddings selected model'。"
+        model_test_failed: "我们无法使用此模型生成测试嵌入向量。请检查设置是否正确。"
     llm_models:
       missing_provider_param: "%{param}不能为空"
       bedrock_invalid_url: "请填写所有字段以使用此模型。"
+      bedrock_missing_auth: "AWS Bedrock 需要配置访问密钥 ID 或角色 ARN。"
     ai_staff_action_logger:
       updated: "已更新"
       set: "已设置"
@@ -616,6 +639,9 @@ zh_CN:
       errors:
         disabled: "人工智能翻译功能未完全配置。"
         all_posts_translated: "此话题中的所有帖子均已翻译。"
+    llm_credit_allocation:
+      limit_exceeded_user: "该社区今天已达到其AI信用额度。请在 %{reset_time} 之后重试或联系您的站点管理员以获取更多信息。"
+      limit_exceeded_admin: "您的AI信用额度已达上限。请在 %{reset_time}后重试。"
     errors:
       quota_exceeded: "您已超出此模型的配额。请在 %{relative_time}后再试。"
       quota_required: "必须为此模型指定最大词元数或使用次数"

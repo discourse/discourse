@@ -10,6 +10,7 @@ zh_CN:
       logs:
         staff_actions:
           actions:
+            create_automation: 创建自动化
             update_automation: 更新自动化
             delete_automation: 删除自动化
     discourse_automation:
@@ -440,6 +441,11 @@ zh_CN:
               label: "用户自定义字段名称"
         set_topic_timer:
           title: 设置话题计时器
+          fields:
+            type:
+              label: 计时器类型
+            duration:
+              label: 计时器持续时间
       unnamed_automation: "未命名的自动化"
       models:
         script:

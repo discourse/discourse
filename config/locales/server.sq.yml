@@ -412,10 +412,9 @@ sq:
       daily: "çdo ditë"
       weekly: "çdo javë"
   user_api_key:
-    title: "Lejo këtë aplikimi të ketë akses në faqe"
     authorize: "Autorizo"
+    deny: "Anulo"
     read: "lexuar"
-    description: '"%{application_name}" po kërkon këto të drejta në lidhje me llogarinë tuaj:'
     otp_confirmation:
       confirm_title: Vazhdo tek %{site_name}
     scopes:

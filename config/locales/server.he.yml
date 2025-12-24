@@ -1279,11 +1279,10 @@ he:
       every_month: "כל חודש"
       every_six_months: "כל שישה חודשים"
   user_api_key:
-    title: "אישור גישת יישומון"
     authorize: "אישור"
+    deny: "ביטול"
     read: "קריאה"
     read_write: "קריאה/כתיבה"
-    description: '„%{application_name}” מבקשת את הגישה הבאה לחשבון שלך:'
     instructions: 'הרגע יצרנו מפתח משתמש API חדש עבורך לטובת שימוש עם „%{application_name}”, נא להדביק את המפתח הבא ליישום שלך:'
     otp_description: 'לאפשר ל־„%{application_name}” לגשת לאתר הזה?'
     otp_confirmation:

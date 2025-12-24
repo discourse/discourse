@@ -4284,9 +4284,10 @@ pl_PL:
       deleted_by_author_simple: "(temat usunięty przez autora)"
       localizations:
         title_edit_warning:
-          message: "To jest przetłumaczony wpis.<br><br>Czy chcesz edytować oryginalny wpis w języku %{language} czy edytować to konkretne tłumaczenie?"
-          action_original: "Edytuj oryginalny tytuł tematu"
+          message: "To jest przetłumaczony tytuł tematu.<br><br>Czy chcesz edytować <b>oryginalną</b> kategorię, tagi i tytuł w %{language} lub edytować to konkretne <b>tłumaczenie</b>?"
+          action_original: "Edytuj oryginał"
           action_translation: "Edytuj przetłumaczony tytuł tematu"
+        editing_translation: "Edycja tłumaczenia %{language}"
     post_list:
       title: "Aktualne wpisy"
       empty: "Brak wpisów"

@@ -808,11 +808,10 @@ lt:
       every_month: "kiekvieną mėnesį"
       every_six_months: "kas šešis mėnesius"
   user_api_key:
-    title: "Suteikite prieigą prie programos"
     authorize: "Leisti"
+    deny: "Atšaukti"
     read: "skaityti"
     read_write: "skaityti/rašyti"
-    description: '„%{application_name}“ prašo šios prieigos prie jūsų paskyros:'
     instructions: 'Ką tik sukūrėme naują vartotojo API raktą, kurį galėsite naudoti su „%{application_name}“, įklijuokite šį raktą į savo programą:'
     otp_description: 'Ar norite leisti „%{application_name}“ pasiekti šią svetainę?'
     otp_confirmation:
