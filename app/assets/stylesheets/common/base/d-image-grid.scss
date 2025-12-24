@@ -117,16 +117,15 @@
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    border-radius: var(--d-border-radius);
 
     &::-webkit-scrollbar {
       display: none;
     }
 
     .--stage & {
-      padding-inline: 8%; // Balanced padding for peeking
+      padding-inline: calc(33% - 10px);
       box-sizing: border-box;
-      gap: 10px; // Explicit 10px gap as requested
+      gap: 10px; // Explicit 10px gap as requested // asked by who? we dont't use px anywhere else
     }
   }
 
@@ -145,32 +144,29 @@
     .--stage & {
       flex: 0 0 auto;
       width: auto;
-      max-width: 84%;
+
+      // max-width: 84%; // think this does nothing?
       transition:
         transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
         opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
         filter 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      opacity: 0.8;
-      transform: scale(0.95);
-      filter: brightness(0.9) saturate(0.9);
-      will-change: transform, opacity, filter;
+      opacity: 0.7;
+      transform: scale(0.9);
+
+      // filter: brightness(0.9) saturate(0.9); // wouldnt do this, just stick w opacity
+      will-change: transform, opacity;
 
       &.is-active {
         opacity: 1;
         transform: scale(1);
-        filter: none;
 
         img {
-          box-shadow: 0 4px 12px rgb(var(--always-black-rgb) / 0.15);
+          box-shadow: 0 6px 24px 2px rgb(var(--always-black-rgb), 0.25);
         }
       }
     }
 
     img:not(.thumbnail, .ytp-thumbnail-image, .emoji) {
-      max-width: 100% !important;
-      max-height: 100% !important;
-      width: auto !important;
-      height: auto !important;
       object-fit: contain !important;
       border-radius: var(--d-border-radius);
       transition: box-shadow 0.4s ease;
@@ -194,6 +190,11 @@
         max-width: 100%;
         max-height: 100%;
         height: 100%;
+        overflow: visible; // for box-shadow on active
+
+        &:hover {
+          box-shadow: none;
+        }
       }
     }
   }
@@ -213,27 +214,20 @@
     width: 2rem;
     height: 2rem;
     border: 0;
-    border-radius: 999px;
     padding: 0;
-    background: var(--primary-low);
+    background: none;
     color: var(--primary-medium);
     cursor: pointer;
-    transition:
-      background-color 0.2s ease-in-out,
-      color 0.2s ease-in-out;
+    font-size: var(--font-down-1);
 
     &:hover {
-      background: var(--primary-low-mid);
+      background: none;
       color: var(--primary);
     }
 
     &:disabled {
       cursor: default;
-      opacity: 0.3;
-    }
-
-    svg {
-      font-size: var(--font-down-1);
+      opacity: 0.6;
     }
   }
 
@@ -244,7 +238,6 @@
     padding: 0.5rem 0.75rem;
     background: var(--primary-very-low);
     border-radius: 1rem;
-    border: 1px solid var(--primary-low);
   }
 
   &__dot {
@@ -271,7 +264,7 @@
   }
 
   &__carousel--single {
-    .d-image-grid__controls {
+    .d-image-carousel__controls {
       display: none;
     }
   }
