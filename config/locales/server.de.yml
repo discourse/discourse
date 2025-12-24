@@ -1134,11 +1134,10 @@ de:
       every_month: "jeden Monat"
       every_six_months: "alle sechs Monate"
   user_api_key:
-    title: "Genehmige Zugriff für Anwendung"
     authorize: "Genehmigen"
+    deny: "Abbrechen"
     read: "Lesen"
     read_write: "Lesen/Schreiben"
-    description: '„%{application_name}“ fordert den folgenden Zugriff auf dein Konto:'
     instructions: 'Wir haben gerade einen neuen Benutzer-API-Schlüssel für dich generiert zur Verwendung mit „%{application_name}“, bitte füge den folgenden Schlüssel in deine Anwendung ein:'
     otp_description: 'Möchtest du „%{application_name}“ erlauben, auf diese Website zuzugreifen?'
     otp_confirmation:

@@ -672,6 +672,7 @@ vi:
       every_month: "mỗi tháng"
       every_six_months: "mỗi sáu tháng"
   user_api_key:
+    deny: "Hủy"
     read: "đã đọc"
     otp_confirmation:
       confirm_title: Tiếp tục tới %{site_name}

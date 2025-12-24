@@ -722,11 +722,10 @@ el:
       every_month: "κάθε μήνα"
       every_six_months: "κάθε έξι μήνες"
   user_api_key:
-    title: "Εξουσιοδότηση πρόσβασης στην εφαρμογή"
     authorize: "Εξουσιοδότηση"
+    deny: "Άκυρο"
     read: "ανάγνωση"
     read_write: "ανάγνωση/εγγραφή"
-    description: '"%{application_name}" ζητά την ακολόλουθη πρόσβαση στον λογαριασμό σου:'
     otp_confirmation:
       confirm_title: Συνεχίστε στην %{site_name}
       logging_in_as: Σύνδεση ως %{username}

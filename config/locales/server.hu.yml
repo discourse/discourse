@@ -1134,11 +1134,10 @@ hu:
       every_month: "minden hónapban"
       every_six_months: "minden hat hónapban"
   user_api_key:
-    title: "Engedélyezze az alkalmazás hozzáférését"
     authorize: "Engedélyezés"
+    deny: "Mégse"
     read: "olvasható"
     read_write: "olvasható/írható"
-    description: '"%{application_name}" a következő hozzáférést kéri az Ön fiókjához:'
     instructions: 'Létrehoztunk egy új felhasználói API-kulcsot, amelyet a "%{application_name} applikációhoz használhat, kérjük, illessze be a következő kulcsot az alkalmazásába:'
     otp_description: 'Szeretné, hogy a(z) „%{application_name}” hozzáférjen ehhez az oldalhoz?'
     otp_confirmation:
