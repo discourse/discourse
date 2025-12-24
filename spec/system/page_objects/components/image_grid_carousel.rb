@@ -27,6 +27,31 @@ module PageObjects
         has_css?("#{carousel_selector} .d-image-grid__slide.is-active")
       end
 
+      def has_active_slide_index?(index)
+        has_css?("#{carousel_selector} .d-image-grid__slide[data-index='#{index}'].is-active")
+      end
+
+      def click_next
+        find("#{carousel_selector} .d-image-grid__nav--next").click
+      end
+
+      def click_prev
+        find("#{carousel_selector} .d-image-grid__nav--prev").click
+      end
+
+      def next_button_disabled?
+        find("#{carousel_selector} .d-image-grid__nav--next").disabled?
+      end
+
+      def prev_button_disabled?
+        find("#{carousel_selector} .d-image-grid__nav--prev").disabled?
+      end
+
+      def focus_track
+        find("#{carousel_selector} .d-image-grid__track").click
+        self
+      end
+
       private
 
       def carousel_selector
