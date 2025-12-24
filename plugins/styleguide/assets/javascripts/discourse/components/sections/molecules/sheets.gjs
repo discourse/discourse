@@ -38,10 +38,10 @@ export default class Sheets extends Component {
   @action
   showToast() {
     this.toasts.success({
+      showProgressBar: true,
       data: {
         title: "Hello",
         message: "This is a toast",
-        progressBar: true,
       },
     });
   }

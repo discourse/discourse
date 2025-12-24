@@ -7,6 +7,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel, later } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import effect from "discourse/float-kit/helpers/effect";
 import DDefaultToast from "discourse/float-kit/components/d-default-toast";
 import concatClass from "discourse/helpers/concat-class";
 import TrackedMediaQuery from "discourse/lib/tracked-media-query";
@@ -19,17 +20,15 @@ export default class DToast extends Component {
   @tracked pointerOver = false;
   @tracked travelStatus = "idleOutside";
   @tracked presented = true;
+  @tracked progressBar = null;
 
   autoCloseTimeout = null;
-  largeViewport = new TrackedMediaQuery("(min-width: 1000px)");
-  progressBar = null;
   progressAnimation = null;
   timeRemaining = null;
 
   willDestroy() {
     super.willDestroy(...arguments);
     this.cancelAutoCloseTimeout();
-    this.largeViewport.teardown();
     this.progressBar = null;
   }
 
@@ -47,17 +46,6 @@ export default class DToast extends Component {
 
     if (status === "idleOutside") {
       this.pointerOver = false;
-      this.cancelAutoCloseTimeout();
-    }
-
-    if (
-      status === "idleInside" &&
-      !this.pointerOver &&
-      this.args.sheet?.isPresented
-    ) {
-      this.startAutoCloseTimeout();
-    } else {
-      this.cancelAutoCloseTimeout();
     }
 
     this.args.onTravelStatusChange?.(status);
@@ -66,7 +54,20 @@ export default class DToast extends Component {
   @action
   registerProgressBar(element) {
     this.progressBar = element;
-    this.startAutoCloseTimeout();
+  }
+
+  @action
+  syncAutoClose() {
+    if (this.travelStatus !== "idleInside" || !this.presented) {
+      return;
+    }
+
+    if (this.isFront && !this.pointerOver) {
+      this.startAutoCloseTimeout();
+    } else {
+      this.pauseProgressAnimation();
+      this.cancelAutoCloseTimeout();
+    }
   }
 
   startProgressAnimation() {
@@ -76,7 +77,6 @@ export default class DToast extends Component {
 
     if (this.progressAnimation) {
       this.progressAnimation.play();
-      this.progressBar.style.opacity = 1;
       return;
     }
 
@@ -95,7 +95,6 @@ export default class DToast extends Component {
     }
 
     this.progressAnimation.pause();
-    this.progressBar.style.opacity = 0.5;
     this.timeRemaining =
       this.autoCloseDelay - this.progressAnimation.currentTime;
   }
@@ -103,14 +102,11 @@ export default class DToast extends Component {
   @action
   handlePointerEnter() {
     this.pointerOver = true;
-    this.pauseProgressAnimation();
-    this.cancelAutoCloseTimeout();
   }
 
   @action
   handlePointerLeave() {
     this.pointerOver = false;
-    this.startAutoCloseTimeout();
   }
 
   startAutoCloseTimeout() {
@@ -177,6 +173,8 @@ export default class DToast extends Component {
   }
 
   <template>
+    {{effect this.syncAutoClose this.isFront this.pointerOver this.travelStatus this.progressBar}}
+
     <DSheet.Root
       @presented={{this.presented}}
       @onPresentedChange={{this.handlePresentedChange}}
@@ -191,6 +189,7 @@ export default class DToast extends Component {
             @contentPlacement={{this.contentPlacement}}
             @inertOutside={{false}}
             @onClickOutside={{hash dismiss=false stopOverlayPropagation=false}}
+            @onTravelStatusChange={{this.handleTravelStatusChange}}
             class={{concatClass
               "d-toast"
               (concat "d-toast-" this.contentPlacement)
@@ -212,11 +211,12 @@ export default class DToast extends Component {
                   data-index={{@index}}
                   data-front={{if this.isFront "true" "false"}}
                   data-presented={{if this.presented "true" "false"}}
+                  data-pointer-over={{if this.pointerOver "true" "false"}}
                   style={{this.innerStyles}}
                   {{on "pointerenter" this.handlePointerEnter}}
                   {{on "pointerleave" this.handlePointerLeave}}
                 >
-                  {{#if @showProgressBar}}
+                  {{#if @toast.options.showProgressBar}}
                     <div
                       class="fk-d-default-toast__progress-bar"
                       {{didInsert this.registerProgressBar}}
