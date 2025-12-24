@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Category moderator self-lockout warning", type: :system do
+describe "Category moderator self-lockout warning" do
   fab!(:moderator)
   fab!(:restricted_group, :group)
   fab!(:category)
@@ -43,7 +43,7 @@ describe "Category moderator self-lockout warning", type: :system do
       category_page.save_settings
       dialog.click_yes
 
-      expect(page).to have_current_path("/")
+      expect(page).to have_current_path("/latest")
       expect(category.reload.category_groups.map(&:group_id)).to contain_exactly(
         restricted_group.id,
       )

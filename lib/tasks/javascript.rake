@@ -77,6 +77,8 @@ task "javascript:update_constants" => :environment do
 
     export const GROUP_SMTP_SSL_MODES = #{Group.smtp_ssl_modes.to_json};
 
+    export const GROUP_VISIBILITY_LEVELS = #{Group.visibility_levels.to_json};
+
     export const MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP = #{Admin::GroupsController::MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP};
 
     export const MAX_NOTIFICATIONS_LIMIT_PARAMS = #{NotificationsController::INDEX_LIMIT};
