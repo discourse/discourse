@@ -58,6 +58,7 @@ describe "JMESPath Oauth Group Mapping", type: :system do
 
       signup_page.open.click_social_button("google_oauth2")
       expect(signup_page).to be_open
+      expect(page).to have_css(".signup-fullpage .btn-primary", visible: true)
       signup_page.click_create_account
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
@@ -139,6 +140,7 @@ describe "JMESPath Oauth Group Mapping", type: :system do
 
       signup_page.open.click_social_button("google_oauth2")
       expect(signup_page).to be_open
+      expect(page).to have_css(".signup-fullpage .btn-primary", visible: true)
       signup_page.click_create_account
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
@@ -182,6 +184,7 @@ describe "JMESPath Oauth Group Mapping", type: :system do
 
       signup_page.open.click_social_button("google_oauth2")
       expect(signup_page).to be_open
+      expect(page).to have_css(".signup-fullpage .btn-primary", visible: true)
       signup_page.click_create_account
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
