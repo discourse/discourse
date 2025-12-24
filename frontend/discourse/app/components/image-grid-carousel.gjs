@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { helper } from "@ember/component/helper";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -10,9 +11,11 @@ import debounce from "discourse/lib/debounce";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
+const plusOne = helper(([val]) => val + 1);
+
 const DEBOUNCE_MS = 30;
 const HYSTERESIS_FACTOR = 0.7;
-const SCROLLEND_FALLBACK_MS = 150;
+const SCROLLEND_FALLBACK_MS = 500;
 
 /**
  * @typedef {Object} ImageGridCarouselItem
@@ -27,7 +30,6 @@ const SCROLLEND_FALLBACK_MS = 150;
  * @param {Object} @data
  * @param {Array<ImageGridCarouselItem>} @data.items
  * @param {string} @data.mode
- * @param {string|null} @data.aspect
  */
 export default class ImageGridCarousel extends Component {
   /**
@@ -124,7 +126,7 @@ export default class ImageGridCarousel extends Component {
       },
       {
         root: element,
-        threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+        threshold: [0, 0.25, 0.5, 1],
       }
     );
 
@@ -236,14 +238,6 @@ export default class ImageGridCarousel extends Component {
 
   /**
    * @param {number} index
-   * @returns {string}
-   */
-  slideAriaLabel(index) {
-    return i18n("carousel.go_to_slide", { index: index + 1 });
-  }
-
-  /**
-   * @param {number} index
    */
   @action
   scrollToIndex(index) {
@@ -318,8 +312,8 @@ export default class ImageGridCarousel extends Component {
           <button
             type="button"
             class="d-image-carousel__nav d-image-carousel__nav--prev"
-            title={{i18n "lightbox.previous"}}
-            aria-label={{i18n "lightbox.previous"}}
+            title={{i18n "carousel.previous"}}
+            aria-label={{i18n "carousel.previous"}}
             disabled={{this.isPrevDisabled}}
             {{on "click" (fn this.scrollToIndex this.prevIndex)}}
           >
@@ -332,7 +326,7 @@ export default class ImageGridCarousel extends Component {
                 type="button"
                 class="d-image-carousel__dot
                   {{if (eq this.currentIndex index) 'active'}}"
-                aria-label={{this.slideAriaLabel index}}
+                aria-label={{i18n "carousel.go_to_slide" index=(plusOne index)}}
                 aria-current={{if (eq this.currentIndex index) "true" "false"}}
                 {{on "click" (fn this.scrollToIndex index)}}
               ></button>
@@ -342,8 +336,8 @@ export default class ImageGridCarousel extends Component {
           <button
             type="button"
             class="d-image-carousel__nav d-image-carousel__nav--next"
-            title={{i18n "lightbox.next"}}
-            aria-label={{i18n "lightbox.next"}}
+            title={{i18n "carousel.next"}}
+            aria-label={{i18n "carousel.next"}}
             disabled={{this.isNextDisabled}}
             {{on "click" (fn this.scrollToIndex this.nextIndex)}}
           >
