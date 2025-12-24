@@ -167,6 +167,10 @@
     }
 
     img:not(.thumbnail, .ytp-thumbnail-image, .emoji) {
+      max-width: 100% !important;
+      max-height: 100% !important;
+      width: auto !important;
+      height: auto !important;
       object-fit: contain !important;
       border-radius: var(--d-border-radius);
       transition: box-shadow 0.4s ease;
