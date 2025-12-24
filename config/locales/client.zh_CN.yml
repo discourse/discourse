@@ -523,7 +523,7 @@ zh_CN:
       bulk_delete: "删除选中内容"
       bulk_delete_confirmation: "删除草稿"
       bulk_delete_message:
-        other: "确定要删除 %{count} 个草稿吗？"
+        other: "您确定要删除 %{count} 个草稿吗？"
       new_topic: "新话题草稿"
       new_private_message: "新个人消息草稿"
       edit_topic: "编辑话题草稿"
@@ -2708,12 +2708,17 @@ zh_CN:
       ulist_title: "项目符号列表"
       list_item: "列表条目"
       toggle_direction: "切换方向"
+      apply_wrap_title: "应用包装"
       wrap_modal:
+        title: "编辑包装"
+        name_label: "包装名称"
         attributes_label: "属性"
         add_attribute: "添加属性"
         remove_attribute: "移除属性"
         apply: "应用"
+        unwrap: "卸载包装"
         no_attributes: "未添加任何属性。"
+      wrap_text: "包装内容"
       help: "Markdown 编辑帮助"
       collapse: "最小化编辑器面板"
       open: "打开编辑器面板"
@@ -2997,6 +3002,7 @@ zh_CN:
           aria_label: 使用标签筛选
         filters:
           label: 仅回访话题/帖子…
+          all: 导入消息
           title: 仅在标题中匹配
           likes: 我赞过
           posted: 我发过帖
@@ -3648,9 +3654,10 @@ zh_CN:
       deleted_by_author_simple: "（话题已被作者删除）"
       localizations:
         title_edit_warning:
-          message: "这是一个翻译后的话题。<br><br>您想编辑 %{language} 原始标题，还是编辑此特定翻译？"
-          action_original: "编辑原话题标题"
+          message: "这是一个翻译后的主题标题。<br><br>您想编辑 <b>原始</b> 类别、标签和标题 %{language} ，还是编辑此特定 <b>翻译</b>？"
+          action_original: "编辑原文"
           action_translation: "编辑翻译后的话题标题"
+        editing_translation: "编辑 %{language} 翻译"
     post_list:
       title: "最新帖子"
       empty: "没有帖子"
@@ -4739,6 +4746,7 @@ zh_CN:
       tags_form_modal:
         title: "编辑标签导航"
         filter_placeholder: "筛选标签"
+        no_tags: "没有匹配当前过滤器的标签。"
         subtitle:
           text: "我们将自动显示此网站的热门标签"
       edit_navigation_modal_form:
@@ -5209,7 +5217,10 @@ zh_CN:
             signups_30_days: "注册数量（30天内）"
             logins_30_days: "登录数量（30天内）"
           regenerate_credentials: "重新生成凭据"
+          regenerate_confirm: "您确定要重新生成您的 Discourse ID 凭据吗？这将生成新的客户端机密。 通常不需要重新生成凭据，但可能有助于增强安全性。"
+          description: "Discourse ID 是一种单点登录服务，允许用户使用一个账户登录多个 Discourse 网站。它支持常见的社交登录提供商，如 Google、Facebook、Apple 和 Github，无需额外配置。"
           learn_more: "了解详情"
+          regenerate_success: "凭证已成功重新生成。"
         logo:
           title: "徽标"
           header_description: "配置整个站点使用的徽标和图标"
@@ -5297,8 +5308,11 @@ zh_CN:
             modal_no: "否，只适用于未来"
         welcome_banner:
           title: "欢迎横幅"
+          header_description: "配置向网站访客显示的包含搜索栏的横幅。"
+          saved: "欢迎横幅设置已成功保存。"
           form:
             enabled_themes:
+              label: "已在主题中启用……"
               description: "选择显示在横幅的主题，此处仅显示已启用的主题。"
               select_label: "选择主题"
             background_image:
@@ -5306,7 +5320,9 @@ zh_CN:
               description: "该图像将显示在横幅文本后。"
             text_color:
               label: "文本颜色"
+              description: "上传上方“背景图片”后，请使用此设置更改横幅文字颜色，以确保其清晰可读。如果留空或未上传背景图片，则颜色由当前主题控制。"
             page_visibility:
+              label: "页面可见性"
               description: "选择横幅显示的位置"
               options:
                 top_menu_pages: "顶部菜单页面"
@@ -5319,12 +5335,30 @@ zh_CN:
               options:
                 above_topic_content: "话题内容上方"
                 below_site_header: "站点标题下方"
+            text_section:
+              title: "自定义文本"
+              variables: "您可以在文本中使用这些变量： <code>&percnt;{preferred_display_name}</code>, <code>&percnt;{site_name}</code>"
             header_new_members:
+              label: "新成员标题"
               placeholder: "%{preferred_display_name}，欢迎来到 %{site_name}！"
             header_logged_in:
+              label: "已登录成员的标题"
               placeholder: "欢迎回来，%{preferred_display_name}！"
             header_anonymous:
+              label: "匿名访客标题"
               placeholder: "欢迎来到 %{site_name}！"
+            subheader_logged_in:
+              label: "已登录成员的子标题"
+              description: "显示在已登录用户标题下方的辅助文本。"
+              placeholder: "看看社区里有哪些新内容"
+            subheader_anonymous:
+              label: "匿名访客的副标题"
+              description: "显示在匿名访问者标题下方的辅助文本。"
+              placeholder: "加入我们的社区参与讨论"
+            search_placeholder:
+              label: "搜索占位符"
+              description: "欢迎横幅中搜索框的占位符文本。"
+              placeholder: "搜索主题……"
         navigation:
           title: "导航"
           header_description: "配置网站的导航链接与菜单项。这包括主导航菜单、首页顶部快速链接以及管理边栏的位置和行为"
@@ -5829,6 +5863,7 @@ zh_CN:
               recover: 恢复一个话题。
               read_lists: 阅读诸如热门、新、最新等话题列表。也支持 RSS。
               status: "更新话题的状态。状态：已关闭、归档、可见已置顶。启用：true、false。在此处和请求负载中指定 category_id，以仅允许该类别中话题的状态更改。"
+              change_owner: 更改主题中帖子的所有权。
             posts:
               edit: 编辑任意帖子或特定帖子。
               delete: 删除帖子。
@@ -6453,6 +6488,8 @@ zh_CN:
           create_name: "名称"
           save: "保存"
           long_title: "修改您的网站的颜色、CSS 和 HTML 内容"
+          dark_mode: "%{themeName} 深色模式"
+          light_mode: "%{themeName} 浅色模式"
           edit: "编辑"
           edit_confirm: "这是一个远程主题，如果您编辑 CSS/HTML，在下一次更新该主题时这些变更将被擦除。"
           update_confirm: "这些本地变更将被更新擦除。确定要继续吗？"
@@ -7010,6 +7047,7 @@ zh_CN:
             stop_impersonating: "停止模拟"
             upcoming_change_toggled: "切换即将到来的更新"
             change_site_setting_groups: "更改站点设置组"
+            discourse_id_regenerate_credentials: "重新生成 Discourse ID 凭证"
         screened_emails:
           title: "已屏蔽的电子邮件地址"
           description: "当有人尝试创建新帐户时，将检查以下电子邮件地址并禁止注册，或执行某些其他操作。"
@@ -7063,6 +7101,7 @@ zh_CN:
         clear_all: 全部清除
         clear_all_confirm: "确定要清除%{action}操作的所有关注词吗？"
         invalid_regex: '关注词“%{word}”是无效的正则表达式。'
+        invalid_regex_multiple: "无效的正则表达式："
         regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">关注词是正则表达式</a>，它们不会自动包含词边界。如果您希望正则表达式匹配整个字词，请在正则表达式的开头和结尾包含 <code>\b</code>'
         actions:
           block: "禁止"
@@ -7187,7 +7226,10 @@ zh_CN:
             second: "选项 2"
             third: "选项 3"
         edit_category:
+          toggle_freeform: "表单模板已禁用"
+          toggle_form_template: "表单模板已启用"
           select_template: "选择表单模板"
+          select_template_help: "添加/编辑表单模板"
         errors:
           multiple_tags_not_allowed: '您不能从“%{tag_name}”中选择更多标签。为避免出现问题，请使用表单模板'
       impersonate:

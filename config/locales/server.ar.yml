@@ -1434,11 +1434,10 @@ ar:
       every_month: "كل شهر"
       every_six_months: "كل ستة اشهر"
   user_api_key:
-    title: "السماح بوصول التطبيق"
     authorize: "السماح"
+    deny: "ألغِ"
     read: "قراءة"
     read_write: "قراءة/كتابة"
-    description: 'يطلب "%{application_name}" إذن الوصول التالي إلى حسابك:'
     instructions: 'لقد أنشأنا للتو مفتاح API جديد للمستخدم لتستخدمه مع "%{application_name}"، يُرجى لصق المفتاح التالي في تطبيقك:'
     otp_description: 'هل ترغب في السماح للتطبيق "%{application_name}" بالوصول إلى هذا الموقع؟'
     otp_confirmation:

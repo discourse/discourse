@@ -34,8 +34,11 @@ zh_CN:
   discourse_post_voting:
     reviewables:
       actions:
+        comment_actions:
+          bundle_title: "你想如何处理这条评论？"
         no_action_comment:
           title: "无行动"
+          description: "请保留原评论。"
         agree_and_keep_comment:
           title: "保留评论"
           description: "同意举报并保持评论不变。"

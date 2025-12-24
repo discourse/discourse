@@ -1282,11 +1282,10 @@ ru:
       every_month: "каждый месяц"
       every_six_months: "каждые шесть месяцев"
   user_api_key:
-    title: "Разрешить доступ для приложения"
     authorize: "Разрешить"
+    deny: "Нет"
     read: "чтение"
     read_write: "чтение и запись"
-    description: 'Приложение «%{application_name}» запрашивает доступ к вашему аккаунту:'
     instructions: 'Мы сгенерировали новый API-ключ пользователя для приложения «%{application_name}». Вставьте этот ключ в приложение:'
     otp_description: 'Разрешить приложению «%{application_name}» доступ к этому сайту?'
     otp_confirmation:

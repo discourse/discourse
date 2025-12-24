@@ -84,6 +84,7 @@ zh_CN:
               help: "例如：#channel、@username。"
           errors:
             action_prohibited: "机器人没有权限在该频道发帖"
+            channel_not_found: "指定的频道在 Slack 上不存在"
         telegram:
           title: "Telegram"
           param:

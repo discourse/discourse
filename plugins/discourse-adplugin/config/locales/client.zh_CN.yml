@@ -18,6 +18,17 @@ zh_CN:
           amazon_plugin: "Amazon"
           carbonads_plugin: "Carbon Ads"
           adbutler_plugin: "AdButler"
+      dashboard:
+        reports:
+          filters:
+            ad_type:
+              label: "广告类型"
+            house_ad_name:
+              label: "房屋广告名称"
+            ad_placement:
+              label: "广告位投放"
+            user_type:
+              label: "用户类型"
       adplugin:
         house_ads:
           title: "自家广告"

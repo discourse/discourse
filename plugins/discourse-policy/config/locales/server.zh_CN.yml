@@ -8,6 +8,7 @@ zh_CN:
   site_settings:
     policy_enabled: "允许策略？"
     policy_restrict_to_staff_posts: "策略可能只适用于管理人员帖子"
+    create_policy_allowed_groups: "需要加入群组才能在帖子中添加政策"
     policy_easy_revoke: "同时显示接受和撤销按钮"
   discourse_policy:
     errors:

@@ -4289,8 +4289,6 @@ uk:
       deleted_by_author_simple: "(тема, видалена автором)"
       localizations:
         title_edit_warning:
-          message: "Це перекладена назва теми.<br><br>Ви хочете редагувати оригінальну назву в %{language} чи редагувати цей конкретний переклад?"
-          action_original: "Редагувати оригінальну назву теми"
           action_translation: "Редагувати перекладену назву теми"
     post_list:
       title: "Останні дописи"

@@ -1285,11 +1285,14 @@ pl_PL:
       every_month: "każdego miesiąca"
       every_six_months: "co 6 miesięcy"
   user_api_key:
-    title: "Zezwolić na dostęp aplikacji"
+    title: 'Autoryzuj "%{application_name}"'
     authorize: "Autoryzuj"
+    deny: "Anuluj"
     read: "odczyt"
     read_write: "odzczyt/zapis"
-    description: '"%{application_name}" prosi o następujący dostęp do twojego konta:'
+    logged_in_as: "Zalogowano jako"
+    permissions_header: 'Pozwoli to "%{application_name}" na:'
+    redirect_warning: "Autoryzacja przekieruje Cię do"
     instructions: 'Wygenerowaliśmy nowy klucz API użytkownika do korzystania z "%{application_name}", skopiuj następujący klucz do swoje aplikacji:'
     otp_description: 'Czy zezwalasz "%{application_name}" na dostęp do tej strony?'
     otp_confirmation:
@@ -5240,6 +5243,9 @@ pl_PL:
   rss_by_tag: "Tematy otagowane %{tag}"
   finish_installation:
     congratulations: "Gratulacje, zainstalowałeś/łaś Discourse!"
+    login_with_discourse_id: "Zaloguj się przez Discourse ID"
+    discourse_id_help: "Zaloguj się przy użyciu identyfikatora Discourse ID, korzystając z poniższego przycisku. <br/><br/>Upewnij się, że używasz konta Discourse ID z głównym adresem e-mail, który odpowiada zmiennej środowiskowej `DISCOURSE_DEVELOPER_EMAILS`."
+    discourse_id_error_help: "Zdecydowałeś się na razie pominąć konfigurację poczty e-mail. Niestety, z powodu powyższego komunikatu o błędzie, konfiguracja nie może być kontynuowana. Zgłoś ten problem na <a href='https://meta.discourse.org/'>meta.discourse.org</a>."
     register:
       button: "Zarejestruj"
       title: "Zarejestrowano konto administratora"
@@ -5251,6 +5257,10 @@ pl_PL:
     resend_email:
       title: "Ponowne przesyłanie emaila aktywacyjnego"
       message: "<p>Powtórnie przesłaliśmy e-maila aktywacyjnego do <b>%{email}</b>"
+    discourse_id:
+      help: "Konfigurujemy teraz Discourse ID."
+      no_allowed_emails: "Brak dozwolonych adresów e-mail skonfigurowanych w DISCOURSE_DEVELOPER_EMAILS. Nie można kontynuować konfiguracji witryny."
+      global_notice: "Żaden administrator jeszcze się nie zalogował. Zaloguj się, używając konta Discourse ID i adresu e-mail zgodnego ze zmienną środowiskową `DISCOURSE_DEVELOPER_EMAILS`, aby dokończyć instalację."
   safe_mode:
     title: "Wejście w tryb bezpieczny"
     description: "Tryb bezpieczny umożliwia testowanie witryny bez ładowania motywów i wtyczek po stronie klienta. Wtyczki po stronie serwera pozostają włączone."

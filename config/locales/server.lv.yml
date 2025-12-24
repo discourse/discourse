@@ -229,6 +229,7 @@ lv:
       every_month: "katru mēnesi"
       every_six_months: "katrus sešus mēnešus"
   user_api_key:
+    deny: "Atcelt"
     read: "izlasīts"
     otp_confirmation:
       confirm_title: Turpināt %{site_name}

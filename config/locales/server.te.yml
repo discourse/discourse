@@ -626,6 +626,7 @@ te:
       every_six_months: "ప్రతి ఆరు నెలలకు"
   user_api_key:
     authorize: "అధికారం ఇవ్వండి"
+    deny: "రద్దుచేయండి"
     read: "చదివిన"
     read_write: "చదవండి/వ్రాయండి"
     otp_confirmation:

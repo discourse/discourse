@@ -495,11 +495,10 @@ sw:
       daily: "kila siku"
       weekly: "kila wiki"
   user_api_key:
-    title: "Idhini ufikivu wa programu-tumizi"
     authorize: "Idhini"
+    deny: "Batili"
     read: "soma"
     read_write: "soma/andika"
-    description: '"%{application_name}" anaomba ufikivu ufuatao kwenye akaunti yako:'
     otp_confirmation:
       confirm_title: Endelea kwenye %{site_name}
     no_trust_level: "Samahani, hauna kiwango cha uaminifu kinachohitajika kufikia API ya mtumiaji"

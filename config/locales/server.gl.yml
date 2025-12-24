@@ -799,11 +799,10 @@ gl:
       every_month: "cada mes"
       every_six_months: "cada seis meses"
   user_api_key:
-    title: "Autorizar acceso á aplicación"
     authorize: "Autorizar"
+    deny: "Cancelar"
     read: "lectura"
     read_write: "lectura/escritura"
-    description: '"%{application_name}" está a solicitar o seguinte acceso á súa conta:'
     instructions: 'Acabamos de xerar unha nova chave API de usuario para que utilice con "%{application_name}"; pegue a seguinte chave na súa aplicación:'
     otp_description: 'Gustaríalle darlle permiso a "%{application_name}" para acceder a este sitio?'
     otp_confirmation:

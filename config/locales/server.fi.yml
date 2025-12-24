@@ -1134,11 +1134,10 @@ fi:
       every_month: "kuukausittain"
       every_six_months: "kuuden kuukauden välein"
   user_api_key:
-    title: "Anna sovellukselle käyttöoikeus"
     authorize: "Anna käyttöoikeus"
+    deny: "Peruuta"
     read: "luku"
     read_write: "luku/kirjoitus"
-    description: '"%{application_name}" pyytää seuraavaa käyttöoikeutta tiliisi:'
     instructions: 'Loimme juuri uuden käyttäjä-API-avaimen, jota voit käyttää sovelluksessa "%{application_name}". Liitä tämä avainkoodi sovellukseesi:'
     otp_description: 'Haluatko sallia sovellukselle "%{application_name}" pääsyn sivustolle?'
     otp_confirmation:

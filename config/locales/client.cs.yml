@@ -4295,8 +4295,6 @@ cs:
       deleted_by_author_simple: "(téma smazáno autorem)"
       localizations:
         title_edit_warning:
-          message: "Tento název tématu je přeložený.<br><br>Chcete upravit původní název v jazyce %{language} nebo upravit tento konkrétní překlad?"
-          action_original: "Upravit původní název tématu"
           action_translation: "Upravit přeložený název tématu"
     post_list:
       title: "Nejnovější příspěvky"

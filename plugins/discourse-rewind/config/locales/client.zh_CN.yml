@@ -16,10 +16,14 @@ zh_CN:
       title: 回顾
       loading: "正在重构样条曲线中…"
       viewing_other_user: "您正在查看<strong>%{username}</strong>的Discourse Rewind。"
+      cannot_view_rewind_gibberish: >
+        [访问被拒绝::主机子程序回滚失败]<br><br> 引导异常日志...<br><br> &nbsp;&nbsp;>> 量子缓冲区欠载 ⧛<br> &nbsp;&nbsp;>> 跨节点奇偶校验漂移 (Δ=004.33)<br> &nbsp;&nbsp;>> 数据包 ϟ 分片偏移量 ∇47<br> &nbsp;&nbsp;>> 通量导管握手超时<br><br>
       cannot_view_rewind: >
         您无权访问该用户的 Discourse Rewind，可能该用户选择不公开他的回顾内容。<br><br> $> _<br><br>
       preferences:
         enable_rewind: "开启 Discourse Rewind。这将在您的个人资料和您的头像框中展示当年度的活动总结。"
+        share_publicly: "与其他论坛成员分享 Discourse Rewind 总结。任何论坛成员都可以查看您的 Discourse Rewind 总结。"
+        cannot_share_when_profile_hidden: "要分享 Rewind，您必须允许其他人查看您的公开个人资料。"
       profile_link: "查看您 %{rewindYear} 年度的 Discourse Rewind"
       share:
         toggle_label:
@@ -98,6 +102,7 @@ zh_CN:
           status_online: "● 在线"
           message_1: "今年你发送了 <strong>%{count}</strong> 条消息！"
           reply_1: "lol 超棒的 B-)"
+          message_2: "你与 <strong>%{channel_count}</strong> 位不同的人进行过 <strong>%{dm_count}</strong> 次 DM 对话"
           reply_2: "酷毙了 :D"
           message_3: "大家都很喜欢你的留言！你收到了 <strong>%{count}</strong> 个回应 ❤️"
           reply_3: "r0fl rAwr 8-)"

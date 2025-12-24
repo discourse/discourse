@@ -1134,11 +1134,10 @@ fr:
       every_month: "tous les mois"
       every_six_months: "tous les six mois"
   user_api_key:
-    title: "Autoriser l'accès d'application"
     authorize: "Autoriser"
+    deny: "Annuler"
     read: "lecture"
     read_write: "lecture/écriture"
-    description: '« %{application_name} » demande l''accès suivant à votre compte :'
     instructions: 'Nous venons de générer une nouvelle clé d''API utilisateur à utiliser avec « %{application_name} ». Veuillez coller cette clé dans votre application :'
     otp_description: 'Voulez-vous autoriser « %{application_name} » à accéder à ce site ?'
     otp_confirmation:

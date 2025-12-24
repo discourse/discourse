@@ -1134,11 +1134,10 @@ tr_TR:
       every_month: "her ay"
       every_six_months: "altı ayda bir"
   user_api_key:
-    title: "Uygulama erişimini yetkilendir"
     authorize: "Yetkilendir"
+    deny: "İptal et"
     read: "oku"
     read_write: "oku/yaz"
-    description: '"%{application_name}" hesabınıza şu erişimi talep ediyor:'
     instructions: '"%{application_name}" ile kullanmanız için yeni bir kullanıcı API anahtarı oluşturduk, lütfen aşağıdaki anahtarı uygulamanıza yapıştırın:'
     otp_description: '"%{application_name}" uygulamasının bu siteye erişmesine izin vermek ister misiniz?'
     otp_confirmation:

@@ -45,6 +45,7 @@ zh_CN:
         title: "区域"
         none: "无"
         use_current_region: "使用当前区域"
+        select_region: "选择一个地区……"
         names:
           ae: "阿拉伯联合酋长国"
           ar: "阿根廷"

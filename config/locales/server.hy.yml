@@ -664,11 +664,10 @@ hy:
       every_month: "ամիսը մեկ"
       every_six_months: "վեց ամիսը մեկ"
   user_api_key:
-    title: "Վավերականացնել հավելվածի հասանելիությունը"
     authorize: "Նույնականացնել"
+    deny: "Չեղարկել"
     read: "կարդացած"
     read_write: "կարդալ/գրել"
-    description: '"%{application_name}" -ը ցանկանում է Ձեր հաշվից ստանալ հետևյալ թույլտվությանը՝ '
     instructions: 'Մենք հենց նոր գեներացրինք նոր օգտատիրոջ API key՝ "%{application_name}" -ի հետ պգտագործելու համար, խնդրում ենք տեղադրել հետևյալ key -ը Ձեր հավելվածում.'
     otp_confirmation:
       confirm_title: Շարունակել դեպի %{site_name}

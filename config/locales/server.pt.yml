@@ -692,11 +692,10 @@ pt:
       every_month: "cada mês"
       every_six_months: "a cada seis meses"
   user_api_key:
-    title: "Autorizar o acesso da aplicação"
     authorize: "Autorizar"
+    deny: "Cancelar"
     read: "ler"
     read_write: "ler/escrever"
-    description: '"%{application_name}" está a requerer o seguinte acesso à sua conta:'
     otp_confirmation:
       confirm_title: Continuar para %{site_name}
       logging_in_as: Fazendo login como %{username}

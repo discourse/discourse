@@ -482,6 +482,7 @@ bg:
       every_month: "всеки месец"
       every_six_months: "на всеки шест месеца"
   user_api_key:
+    deny: "Отмени"
     read: "четене"
     otp_confirmation:
       confirm_title: Продължете към %{site_name}

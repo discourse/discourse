@@ -1032,11 +1032,10 @@ fa_IR:
       every_month: "هر ماه"
       every_six_months: "هر شش ماه"
   user_api_key:
-    title: "اجازه دسترسی به برنامه"
     authorize: "اجازه دادن"
+    deny: "لغو"
     read: "خواندن"
     read_write: "خواندن/نوشتن"
-    description: '"%{application_name}" درخواست دسترسی به حساب کاربری شما را دارد:'
     instructions: 'ما به تازگی یک کلید API کاربر جدید برای استفاده شما با "%{application_name}" ایجاد کردیم. لطفاً کلید زیر را در برنامه خود جایگذاری کنید:'
     otp_description: 'آیا می خواهید به "%{application_name}" اجازه دسترسی به این سایت را بدهید؟'
     otp_confirmation:

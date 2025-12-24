@@ -157,6 +157,8 @@ ug:
         name: گېرمانچە
       el:
         name: گىرېكچە
+      en:
+        name: ئىنگلىزچە
       en_GB:
         name: ئىنگلىزچە (ئەنگلىيە)
       es:
@@ -3869,8 +3871,6 @@ ug:
       deleted_by_author_simple: "(تېمىنى يازغۇچى ئۆچۈردى)"
       localizations:
         title_edit_warning:
-          message: "بۇ تەرجىمە قىلىنغان تېما ماۋزۇسى. <br><br>سىز %{language} دىكى ئەسلى تېما ماۋزۇسىنى تەھرىرلەمسىز ياكى بۇ تەرجىمىنى تەھرىرلەمسىز؟"
-          action_original: "ئەسلى تېما ماۋزۇسىنى تەھرىرلەيدۇ"
           action_translation: "تەرجىمە قىلىنغان تېما ماۋزۇسىنى تەھرىرلەيدۇ"
     post_list:
       title: "ئاخىرقى يازما"

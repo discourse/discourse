@@ -3781,8 +3781,6 @@ fr:
       deleted_by_author_simple: "(sujet supprimé par son auteur)"
       localizations:
         title_edit_warning:
-          message: "Ceci est un titre de sujet traduit.<br><br>Voulez-vous modifier le titre original en %{language} ou modifier cette traduction spécifique ?"
-          action_original: "Modifier le titre original du sujet"
           action_translation: "Modifier le titre du sujet traduit"
     post_list:
       title: "Dernières publications"

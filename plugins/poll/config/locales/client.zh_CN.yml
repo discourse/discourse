@@ -12,6 +12,8 @@ zh_CN:
           poll: "Discourse 投票"
   js:
     poll:
+      dynamic:
+        enabled_hint: "可添加或删除选项。"
       voters:
         other: "投票人"
       total_votes:
@@ -140,6 +142,8 @@ zh_CN:
           step: 步骤
         poll_public:
           label: 显示投票人
+        poll_dynamic:
+          label: 允许在发布后添加或删除选项
         poll_title:
           label: 标题（可选）
         poll_options:

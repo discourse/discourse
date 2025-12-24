@@ -1059,11 +1059,10 @@ ja:
       every_month: "毎月"
       every_six_months: "6 か月毎"
   user_api_key:
-    title: "アプリケーションアクセスの承認"
     authorize: "承認"
+    deny: "キャンセル"
     read: "読み取り"
     read_write: "読み取り/書き込み"
-    description: '"%{application_name}" があなたのアカウントへの次のアクセス権を要求しています:'
     instructions: '"%{application_name}" で使用できる新しいユーザー API キーを生成しました。次のキーをアプリケーションに貼り付けてください。'
     otp_description: '"%{application_name}" にこのサイトへのアクセスを許可しますか？'
     otp_confirmation:

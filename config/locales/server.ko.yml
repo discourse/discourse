@@ -813,11 +813,10 @@ ko:
       every_month: "매월"
       every_six_months: "6개월마다"
   user_api_key:
-    title: "애플리케이션 액세스 인증"
     authorize: "인증"
+    deny: "취소"
     read: "읽기"
     read_write: "읽기/쓰기"
-    description: '"%{application_name}"에서 내 계정에 다음과 같은 액세스를 요청합니다.'
     instructions: '"%{application_name}" 애플리케이션과 함께 사용할 새 사용자 API 키를 생성했습니다. 다음 키를 애플리케이션에 붙여 넣으세요.'
     otp_description: '"%{application_name}"에서 이 사이트에 액세스하도록 허용할까요?'
     otp_confirmation:

@@ -276,6 +276,7 @@ sr:
       every_month: "svaki mesec"
       every_six_months: "svakih šest meseci"
   user_api_key:
+    deny: "Odustani"
     read: "pročitano"
   reports:
     default:

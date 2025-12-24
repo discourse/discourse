@@ -1285,11 +1285,10 @@ uk:
       every_month: "щомісяця"
       every_six_months: "кожні півроку"
   user_api_key:
-    title: "Авторизувати доступ до програми"
     authorize: "Авторизувати"
+    deny: "Скасувати"
     read: "читання"
     read_write: "читання/запис"
-    description: '"%{application_name}" просить наступний доступ до вашого облікового запису:'
     instructions: 'Ми щойно створили новий ключ API користувача для використання з «%{application_name}», додайте наступний ключ у свою програму:'
     otp_description: 'Чи бажаєте ви дозволити "%{application_name}" доступ до цього сайту?'
     otp_confirmation:

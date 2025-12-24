@@ -603,11 +603,10 @@ nb_NO:
       every_month: "hver måned"
       every_six_months: "hver sjette måned"
   user_api_key:
-    title: "Autoriser tilgang fra applikasjon"
     authorize: "Autoriser"
+    deny: "Avbryt"
     read: "les"
     read_write: "les/skriv"
-    description: '"%{application_name}" ber om følgende tilgang til kontoen din:'
     otp_confirmation:
       confirm_title: Fortsett til %{site_name}
       logging_in_as: Logger inn som %{username}
