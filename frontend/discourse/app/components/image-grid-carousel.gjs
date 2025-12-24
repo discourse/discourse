@@ -3,12 +3,16 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { cancel } from "@ember/runloop";
 import { modifier } from "ember-modifier";
 import icon from "discourse/helpers/d-icon";
+import debounce from "discourse/lib/debounce";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
-const INTERSECTION_THRESHOLD = 0.6;
+const DEBOUNCE_MS = 30;
+const HYSTERESIS_FACTOR = 0.7;
+const SCROLLEND_FALLBACK_MS = 150;
 
 /**
  * @typedef {Object} ImageGridCarouselItem
@@ -32,6 +36,11 @@ export default class ImageGridCarousel extends Component {
   @tracked currentIndex = 0;
 
   /**
+   * @type {boolean}
+   */
+  @tracked isProgrammaticScroll = false;
+
+  /**
    * @type {HTMLElement|null}
    */
   trackElement = null;
@@ -52,33 +61,70 @@ export default class ImageGridCarousel extends Component {
     const slides = element.querySelectorAll(".d-image-grid__slide");
     const ratios = new Map();
 
+    const onScrollEnd = () => {
+      if (this.#scrollEndFallbackTimer) {
+        clearTimeout(this.#scrollEndFallbackTimer);
+        this.#scrollEndFallbackTimer = null;
+      }
+      this.isProgrammaticScroll = false;
+    };
+
+    element.addEventListener("scrollend", onScrollEnd);
+
     const observer = new IntersectionObserver(
       (entries) => {
+        if (this.isProgrammaticScroll) {
+          return;
+        }
+
         entries.forEach((entry) => {
           ratios.set(entry.target, entry.intersectionRatio);
         });
 
+        const currentScroll = element.scrollLeft;
+        const maxScroll = element.scrollWidth - element.offsetWidth;
+
         let bestIndex = this.currentIndex;
-        let bestRatio = 0;
+        let minDiff = Infinity;
 
         slides.forEach((slide, index) => {
           const ratio = ratios.get(slide) || 0;
-          if (ratio > bestRatio) {
-            bestRatio = ratio;
-            bestIndex = index;
+          if (ratio > 0) {
+            // Calculate where this slide *wants* to be scrolled to in order to be centered
+            const idealScroll =
+              slide.offsetLeft +
+              slide.offsetWidth / 2 -
+              element.offsetWidth / 2;
+
+            // Clamp to actual possible scroll range so boundaries (start/end) work correctly
+            const clampedTarget = Math.max(0, Math.min(idealScroll, maxScroll));
+
+            let diff = Math.abs(clampedTarget - currentScroll);
+
+            // Selection Hysteresis: Bias the calculation to favor the current slide.
+            // Other slides must be significantly closer to "win" focus. Dividing by
+            // HYSTERESIS_FACTOR (0.7) means they need ~43% less distance to take over.
+            if (index !== this.currentIndex) {
+              diff = diff / HYSTERESIS_FACTOR;
+            }
+
+            if (diff < minDiff) {
+              minDiff = diff;
+              bestIndex = index;
+            }
           }
         });
 
-        if (
-          bestRatio >= INTERSECTION_THRESHOLD &&
-          bestIndex !== this.currentIndex
-        ) {
-          this.currentIndex = bestIndex;
-        }
+        this.#debounceTimer = debounce(
+          this,
+          this.updateActiveIndex,
+          bestIndex,
+          DEBOUNCE_MS
+        );
       },
       {
         root: element,
-        threshold: [0, 0.25, 0.5, 0.75, 1],
+        threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
       }
     );
 
@@ -86,8 +132,36 @@ export default class ImageGridCarousel extends Component {
 
     return () => {
       observer.disconnect();
+      element.removeEventListener("scrollend", onScrollEnd);
+
+      if (this.#debounceTimer) {
+        cancel(this.#debounceTimer);
+        this.#debounceTimer = null;
+      }
+
+      if (this.#scrollEndFallbackTimer) {
+        clearTimeout(this.#scrollEndFallbackTimer);
+        this.#scrollEndFallbackTimer = null;
+      }
     };
   });
+
+  /**
+   * @type {ReturnType<typeof debounce>|null}
+   */
+  #debounceTimer = null;
+
+  /**
+   * @type {ReturnType<typeof setTimeout>|null}
+   */
+  #scrollEndFallbackTimer = null;
+
+  @action
+  updateActiveIndex(index) {
+    if (this.currentIndex !== index && !this.isProgrammaticScroll) {
+      this.currentIndex = index;
+    }
+  }
 
   /**
    * @returns {Array<ImageGridCarouselItem>}
@@ -113,17 +187,30 @@ export default class ImageGridCarousel extends Component {
   }
 
   /**
+   * @returns {boolean}
+   */
+  get wrapsAround() {
+    return this.args.data.mode === "focus" || this.args.data.mode === "stage";
+  }
+
+  /**
    * @returns {number}
    */
   get prevIndex() {
-    return Math.max(0, this.currentIndex - 1);
+    if (this.currentIndex === 0) {
+      return this.wrapsAround ? this.lastIndex : 0;
+    }
+    return this.currentIndex - 1;
   }
 
   /**
    * @returns {number}
    */
   get nextIndex() {
-    return Math.min(this.items.length - 1, this.currentIndex + 1);
+    if (this.currentIndex === this.lastIndex) {
+      return this.wrapsAround ? 0 : this.lastIndex;
+    }
+    return this.currentIndex + 1;
   }
 
   /**
@@ -131,6 +218,20 @@ export default class ImageGridCarousel extends Component {
    */
   get lastIndex() {
     return this.items.length - 1;
+  }
+
+  /**
+   * @returns {boolean}
+   */
+  get isPrevDisabled() {
+    return !this.wrapsAround && this.currentIndex === 0;
+  }
+
+  /**
+   * @returns {boolean}
+   */
+  get isNextDisabled() {
+    return !this.wrapsAround && this.currentIndex === this.lastIndex;
   }
 
   /**
@@ -149,6 +250,18 @@ export default class ImageGridCarousel extends Component {
     const clamped = Math.max(0, Math.min(index, this.items.length - 1));
     const slides = this.trackElement?.querySelectorAll(".d-image-grid__slide");
     if (slides && slides[clamped]) {
+      this.isProgrammaticScroll = true;
+      this.currentIndex = clamped;
+
+      // Fallback for browsers that don't support scrollend event (Safari < 17.4)
+      if (this.#scrollEndFallbackTimer) {
+        clearTimeout(this.#scrollEndFallbackTimer);
+      }
+      this.#scrollEndFallbackTimer = setTimeout(() => {
+        this.isProgrammaticScroll = false;
+        this.#scrollEndFallbackTimer = null;
+      }, SCROLLEND_FALLBACK_MS);
+
       slides[clamped].scrollIntoView({
         behavior: this.scrollBehavior,
         block: "nearest",
@@ -170,9 +283,9 @@ export default class ImageGridCarousel extends Component {
       getComputedStyle(this.trackElement).direction === "rtl" ? -1 : 1;
 
     if (event.key === "ArrowLeft") {
-      this.scrollToIndex(this.currentIndex - direction);
+      this.scrollToIndex(direction === 1 ? this.prevIndex : this.nextIndex);
     } else {
-      this.scrollToIndex(this.currentIndex + direction);
+      this.scrollToIndex(direction === 1 ? this.nextIndex : this.prevIndex);
     }
   }
 
@@ -205,7 +318,7 @@ export default class ImageGridCarousel extends Component {
             class="d-image-grid__nav d-image-grid__nav--prev"
             title={{i18n "lightbox.previous"}}
             aria-label={{i18n "lightbox.previous"}}
-            disabled={{eq this.currentIndex 0}}
+            disabled={{this.isPrevDisabled}}
             {{on "click" (fn this.scrollToIndex this.prevIndex)}}
           >
             {{icon "chevron-left"}}
@@ -229,7 +342,7 @@ export default class ImageGridCarousel extends Component {
             class="d-image-grid__nav d-image-grid__nav--next"
             title={{i18n "lightbox.next"}}
             aria-label={{i18n "lightbox.next"}}
-            disabled={{eq this.currentIndex this.lastIndex}}
+            disabled={{this.isNextDisabled}}
             {{on "click" (fn this.scrollToIndex this.nextIndex)}}
           >
             {{icon "chevron-right"}}

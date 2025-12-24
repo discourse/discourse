@@ -253,6 +253,7 @@
 
   .d-image-grid__dots {
     display: flex;
+    align-items: center;
     gap: 0.75rem;
     padding: 0.5rem 0.75rem;
     background: var(--primary-very-low);
@@ -268,19 +269,18 @@
     border: none;
     border-radius: 1rem;
     cursor: pointer;
-    transition: 0.15s all ease-out;
+    transition:
+      width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+      background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.15s ease-out;
 
-    // background-color 0.2s cubic-bezier(0.6, 0, 0.2, 1),
-    // width 0.2s cubic-bezier(0.6, 0, 0.2, 1),
-    // border-color 0.2s cubic-bezier(0.6, 0, 0.2, 1);
     &:hover {
-      transform: scale(1.1);
+      transform: scale(1.2);
     }
 
     &.active {
       background: var(--primary-medium);
       width: 1.4rem;
-      border-radius: 5px;
     }
   }
 
