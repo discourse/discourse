@@ -6,6 +6,7 @@ class DraftsController < ApplicationController
   skip_before_action :check_xhr, :preload_json
 
   INDEX_LIMIT = 50
+  BULK_DESTROY_LIMIT = 30
 
   def index
     params.permit(:offset)
@@ -38,7 +39,7 @@ class DraftsController < ApplicationController
   def create
     raise Discourse::NotFound.new if params[:draft_key].blank?
 
-    if params[:data].size > SiteSetting.max_draft_length
+    if !params[:data].is_a?(String) || params[:data].size > SiteSetting.max_draft_length
       raise Discourse::InvalidParameters.new(:data)
     end
 
@@ -103,7 +104,7 @@ class DraftsController < ApplicationController
       original_tags = data["original_tags"]
 
       if original_text.present?
-        if post = Post.find_by(id: data["postId"])
+        if post = Draft.allowed_draft_posts_for_user(current_user).find_by(id: data["postId"])
           conflict = original_text != post.raw
 
           if post.post_number == 1
@@ -147,8 +148,8 @@ class DraftsController < ApplicationController
     rescue Draft::OutOfSequence
       # nothing really we can do here, if try clearing a draft that is not ours, just skip it.
       # rendering an error causes issues in the composer
-    rescue StandardError => e
-      return render json: failed_json.merge(errors: e), status: 401
+    rescue StandardError
+      return render json: failed_json, status: :unauthorized
     end
 
     render json: success_json
