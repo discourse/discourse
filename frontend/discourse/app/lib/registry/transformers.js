@@ -13,8 +13,8 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
 // eslint-discourse keep-array-sorted
 export const VALUE_TRANSFORMERS = Object.freeze([
   // use only lowercase names
-  "admin-reports-show-query-params",
   "admin-plugin-icon",
+  "admin-reports-show-query-params",
   "bulk-select-in-nav-controls",
   "category-available-views",
   "category-default-colors",
@@ -26,8 +26,8 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "composer-editor-reply-placeholder",
   "composer-force-editor-mode",
   "composer-message-components",
-  "composer-reply-options-user-link-name",
   "composer-reply-options-user-avatar-template",
+  "composer-reply-options-user-link-name",
   "composer-save-button-label",
   "composer-service-cannot-submit-post",
   "composer-toggles-class",
