@@ -590,6 +590,91 @@ RSpec.describe Middleware::RequestTracker do
         expect(ApplicationRequest.page_view_anon.first).to eq(nil)
       end
     end
+
+    describe "page_visited event" do
+      after { DiscourseEvent.all_off(:page_visited) }
+
+      it "triggers event for anonymous user page views" do
+        events = []
+        DiscourseEvent.on(:page_visited) { |payload| events << payload }
+
+        session_id = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx"
+
+        data =
+          Middleware::RequestTracker.get_data(
+            env(
+              "HTTP_DISCOURSE_TRACK_VIEW" => "1",
+              "HTTP_DISCOURSE_TRACKING_SESSION_ID" => session_id,
+              "HTTP_DISCOURSE_TRACKING_URL" => "https://discourse.org",
+              "HTTP_DISCOURSE_TRACKING_REFERRER" => "https://example.com",
+            ),
+            ["200", { "Content-Type" => "text/html" }],
+            0.2,
+          )
+
+        Middleware::RequestTracker.log_request(data)
+
+        expect(events.length).to eq(1)
+        expect(events[0][:user_id]).to be_nil
+        expect(events[0][:session_id]).to eq(session_id)
+        expect(events[0][:url]).to eq("https://discourse.org")
+        expect(events[0][:referrer]).to eq("https://example.com")
+        expect(events[0]).to have_key(:ip_address)
+        expect(events[0][:user_agent]).to be_present
+      end
+
+      it "triggers event for logged-in user page views" do
+        events = []
+        DiscourseEvent.on(:page_visited) { |payload| events << payload }
+
+        user = Fabricate(:user, active: true)
+        token = UserAuthToken.generate!(user_id: user.id)
+        cookie =
+          create_auth_cookie(
+            token: token.unhashed_auth_token,
+            user_id: user.id,
+            trust_level: user.trust_level,
+            issued_at: 5.minutes.ago,
+          )
+
+        data =
+          Middleware::RequestTracker.get_data(
+            env(
+              "HTTP_DISCOURSE_TRACK_VIEW" => "1",
+              "HTTP_COOKIE" => "_t=#{cookie};",
+              "HTTP_DISCOURSE_TRACKING_URL" => "https://discourse.org",
+              "HTTP_DISCOURSE_TRACKING_REFERRER" => "https://example.com",
+            ),
+            ["200", { "Content-Type" => "text/html" }],
+            0.2,
+          )
+
+        Middleware::RequestTracker.log_request(data)
+
+        expect(events.length).to eq(1)
+        expect(events[0][:user_id]).to eq(user.id)
+        expect(events[0][:url]).to eq("https://discourse.org")
+        expect(events[0][:referrer]).to eq("https://example.com")
+        expect(events[0]).to have_key(:ip_address)
+        expect(events[0][:user_agent]).to be_present
+      end
+
+      it "does not trigger event for crawler page views" do
+        events = []
+        DiscourseEvent.on(:page_visited) { |payload| events << payload }
+
+        data =
+          Middleware::RequestTracker.get_data(
+            env("HTTP_USER_AGENT" => "Googlebot"),
+            ["200", { "Content-Type" => "text/html" }],
+            0.2,
+          )
+
+        Middleware::RequestTracker.log_request(data)
+
+        expect(events.length).to eq(0)
+      end
+    end
   end
 
   describe "rate limiting" do

@@ -1,3 +1,4 @@
+import { getOwner } from "@ember/owner";
 import {
   resetAjax,
   trackNextAjaxAsPageview,
@@ -89,7 +90,31 @@ export default {
       return;
     }
 
-    trackNextAjaxAsPageview();
+    const owner = getOwner(this);
+    const messageBus = owner.lookup("service:message-bus");
+    const router = owner.lookup("service:router");
+
+    let path = transition.intent?.url;
+    if (!path) {
+      try {
+        path = router.urlFor(
+          transition.to.name,
+          ...Object.values(transition.to.params)
+        );
+      } catch {}
+    }
+
+    // The path may not be generated when there is a middle transition leading to another path.
+    // That should not be counted as a page view.
+    if (!path) {
+      return;
+    }
+
+    trackNextAjaxAsPageview(
+      messageBus.clientId,
+      new URL(path, window.location.origin).href,
+      window.location.href
+    );
 
     if (
       transition.to.name === "topic.fromParamsNear" ||

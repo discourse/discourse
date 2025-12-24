@@ -9,6 +9,9 @@ import User from "discourse/models/user";
 
 let _trackView = false;
 let _topicId = null;
+let _trackingSessionId = null;
+let _trackingUrl = null;
+let _trackingReferrer = null;
 let _transientHeader = null;
 let _logoffCallback;
 
@@ -20,12 +23,22 @@ export function trackNextAjaxAsTopicView(topicId) {
   _topicId = topicId;
 }
 
-export function trackNextAjaxAsPageview() {
+export function trackNextAjaxAsPageview(
+  trackingSessionId,
+  trackingUrl,
+  trackingReferrer
+) {
   _trackView = true;
+  _trackingSessionId = trackingSessionId;
+  _trackingUrl = trackingUrl;
+  _trackingReferrer = trackingReferrer;
 }
 
 export function resetAjax() {
   _trackView = false;
+  _trackingSessionId = null;
+  _trackingUrl = null;
+  _trackingReferrer = null;
 }
 
 export function setLogoffCallback(cb) {
@@ -104,10 +117,25 @@ export function ajax() {
       _trackView = false;
       args.headers["Discourse-Track-View"] = "true";
 
+      if (_trackingSessionId) {
+        args.headers["Discourse-Tracking-Session-Id"] = _trackingSessionId;
+        _trackingSessionId = null;
+      }
+
+      if (_trackingUrl) {
+        args.headers["Discourse-Tracking-Url"] = _trackingUrl;
+        _trackingUrl = null;
+      }
+
+      if (_trackingReferrer) {
+        args.headers["Discourse-Tracking-Referrer"] = _trackingReferrer;
+        _trackingReferrer = null;
+      }
+
       if (_topicId) {
         args.headers["Discourse-Track-View-Topic-Id"] = _topicId;
+        _topicId = null;
       }
-      _topicId = null;
     }
 
     if (userPresent()) {

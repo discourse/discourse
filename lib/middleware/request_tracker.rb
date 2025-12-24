@@ -101,6 +101,10 @@ class Middleware::RequestTracker
     end
 
     if data[:browser_page_view] && !data[:is_crawler]
+      DiscourseEvent.trigger(:page_visited, build_page_visited_payload(data))
+    end
+
+    if data[:browser_track_view] && !data[:is_crawler]
       if data[:has_auth_cookie]
         ApplicationRequest.increment!(:page_view_logged_in_browser)
         ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
@@ -181,13 +185,9 @@ class Middleware::RequestTracker
     is_message_bus = request.path.start_with?("#{Discourse.base_path}/message-bus/")
     is_topic_timings = request.path.start_with?("#{Discourse.base_path}/topics/timings")
 
-    # Auth cookie can be used to find the ID for logged in users, but API calls must look up the
-    # current user based on env variables.
-    #
-    # We only care about this for topic views, other pageviews it's enough to know if the user is
-    # logged in or not, and we have separate pageview tracking for API views.
     current_user_id =
-      if topic_id.present?
+      if view_tracking_data[:deferred_track_view] || view_tracking_data[:explicit_track_view] ||
+           view_tracking_data[:implicit_track_view]
         begin
           (auth_cookie&.[](:user_id) || CurrentUser.lookup_from_env(env)&.id)
         rescue Discourse::InvalidAccess => err
@@ -573,6 +573,21 @@ class Middleware::RequestTracker
       deferred_track_view: deferred_track_view,
       implicit_track_view: implicit_track_view,
       browser_page_view: browser_page_view,
+      tracking_url: env["HTTP_DISCOURSE_TRACKING_URL"],
+      tracking_referrer: env["HTTP_DISCOURSE_TRACKING_REFERRER"],
+      tracking_session_id: env["HTTP_DISCOURSE_TRACKING_SESSION_ID"],
+      user_agent: env["HTTP_USER_AGENT"],
+    }
+  end
+
+  def self.build_page_visited_payload(data)
+    {
+      user_id: data[:current_user_id],
+      url: data[:tracking_url],
+      ip_address: data[:request_remote_ip],
+      user_agent: data[:user_agent],
+      referrer: data[:tracking_referrer],
+      session_id: data[:tracking_session_id],
     }
   end
 end

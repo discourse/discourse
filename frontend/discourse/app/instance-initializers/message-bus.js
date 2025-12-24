@@ -31,6 +31,9 @@ function mbAjax(messageBus, opts) {
 
   if (_sendDeferredPageview) {
     opts.headers["Discourse-Deferred-Track-View"] = "true";
+    opts.headers["Discourse-Tracking-Session-Id"] = messageBus.clientId;
+    opts.headers["Discourse-Tracking-Url"] = window.location.href;
+    opts.headers["Discourse-Tracking-Referrer"] = document.referrer;
 
     if (_deferredViewTopicId) {
       opts.headers["Discourse-Deferred-Track-View-Topic-Id"] =

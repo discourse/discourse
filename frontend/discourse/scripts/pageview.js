@@ -11,6 +11,11 @@ document.addEventListener("DOMContentLoaded", function () {
       method: "POST",
       headers: {
         "Discourse-Deferred-Track-View": "true",
+        "Discourse-Tracking-Url": window.location.href,
+        "Discourse-Tracking-Referrer": document.referrer,
+        "Discourse-Tracking-Session-Id": self.crypto
+          .randomUUID()
+          .replace(/-/g, ""),
       },
     });
   }
