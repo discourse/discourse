@@ -7,18 +7,21 @@ export default function generateDateMarkup(
   isRange,
   toDateTime
 ) {
-  const attrs = {
-    format: fromDateTime.format,
-    countdown: options.countdown,
-    timezone: options.timezone,
-    displayedTimezone: options.displayedTimezone,
-    timezones: Array.isArray(options.timezones)
-      ? options.timezones.join("|")
-      : options.timezones,
-  };
+  const attrs = {};
 
   if (!isRange) {
     attrs.time = fromDateTime.time;
+  }
+
+  attrs.format = fromDateTime.format;
+  attrs.timezone = options.timezone;
+  attrs.countdown = options.countdown;
+  attrs.displayedTimezone = options.displayedTimezone;
+  attrs.timezones = Array.isArray(options.timezones)
+    ? options.timezones.join("|")
+    : options.timezones;
+
+  if (!isRange) {
     attrs.recurring = options.recurring;
   }
 

@@ -1,4 +1,4 @@
-import { serializeBBCodeAttr } from "discourse/lib/text";
+import { buildBBCodeAttrs } from "discourse/lib/text";
 import formatLocalDate from "./format-local-date";
 
 const OPTIONAL_DATA_ATTRS = [
@@ -245,17 +245,11 @@ const extension = {
           state.write(" ");
         }
 
-        const attrs = node.attrs;
-        const optionalAttrs = [
-          serializeBBCodeAttr(attrs.time, "time"),
-          serializeBBCodeAttr(attrs.timezone, "timezone"),
-          serializeBBCodeAttr(attrs.format, "format"),
-          serializeBBCodeAttr(attrs.recurring, "recurring"),
-          serializeBBCodeAttr(attrs.timezones, "timezones"),
-          serializeBBCodeAttr(attrs.countdown, "countdown"),
-          serializeBBCodeAttr(attrs.displayedTimezone, "displayedTimezone"),
-        ].join("");
-        state.write(`[date=${attrs.date}${optionalAttrs}]`);
+        const { date, ...rest } = node.attrs;
+        const optionalAttrs = buildBBCodeAttrs(rest);
+        state.write(
+          `[date=${date}${optionalAttrs ? ` ${optionalAttrs}` : ""}]`
+        );
 
         const nextSibling =
           parent.childCount > index + 1 ? parent.child(index + 1) : null;
@@ -269,18 +263,13 @@ const extension = {
           state.write(" ");
         }
 
-        const attrs = node.attrs;
-        const from =
-          attrs.fromDate + (attrs.fromTime ? `T${attrs.fromTime}` : "");
-        const to = attrs.toDate + (attrs.toTime ? `T${attrs.toTime}` : "");
-        const optionalAttrs = [
-          serializeBBCodeAttr(attrs.timezone, "timezone"),
-          serializeBBCodeAttr(attrs.format, "format"),
-          serializeBBCodeAttr(attrs.timezones, "timezones"),
-          serializeBBCodeAttr(attrs.countdown, "countdown"),
-          serializeBBCodeAttr(attrs.displayedTimezone, "displayedTimezone"),
-        ].join("");
-        state.write(`[date-range from=${from} to=${to}${optionalAttrs}]`);
+        const { fromDate, toDate, fromTime, toTime, ...rest } = node.attrs;
+        const from = fromDate + (fromTime ? `T${fromTime}` : "");
+        const to = toDate + (toTime ? `T${toTime}` : "");
+        const optionalAttrs = buildBBCodeAttrs(rest);
+        state.write(
+          `[date-range from=${from} to=${to}${optionalAttrs ? ` ${optionalAttrs}` : ""}]`
+        );
 
         const nextSibling =
           parent.childCount > index + 1 ? parent.child(index + 1) : null;
