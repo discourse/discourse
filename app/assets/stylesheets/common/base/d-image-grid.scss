@@ -104,10 +104,6 @@
   position: relative;
   width: 100%;
 
-  .d-image-grid__items {
-    display: none;
-  }
-
   .d-image-grid__carousel {
     display: flex;
     flex-direction: column;
@@ -127,8 +123,7 @@
     border-radius: var(--d-border-radius);
   }
 
-  .d-image-grid__carousel--focus,
-  .d-image-grid__carousel--carousel {
+  .d-image-grid__carousel--focus {
     .d-image-grid__slide {
       flex: 0 0 100%;
       width: 100%;
@@ -179,16 +174,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-  }
 
-  .d-image-grid__slide img:not(.thumbnail, .ytp-thumbnail-image, .emoji) {
-    max-width: 100% !important;
-    max-height: 100% !important;
-    width: auto !important;
-    height: auto !important;
-    object-fit: contain !important;
-    border-radius: var(--d-border-radius);
-    transition: box-shadow 0.4s ease;
+    img:not(.thumbnail, .ytp-thumbnail-image, .emoji) {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: var(--d-border-radius);
+      transition: box-shadow 0.4s ease;
+    }
   }
 
   .lightbox-wrapper {

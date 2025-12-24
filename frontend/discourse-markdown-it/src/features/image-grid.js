@@ -1,5 +1,7 @@
 import { applyDataAttributes } from "./bbcode-block";
 
+const VALID_MODES = new Set(["grid", "focus", "stage"]);
+
 const gridRule = {
   tag: "grid",
   before(state, tagInfo) {
@@ -7,8 +9,11 @@ const gridRule = {
     token.attrs = [["class", "d-image-grid"]];
 
     if (tagInfo?.attrs) {
-      const { mode, aspect } = tagInfo.attrs;
-      applyDataAttributes(token, { mode, aspect });
+      let { mode } = tagInfo.attrs;
+      if (mode && !VALID_MODES.has(mode)) {
+        mode = "grid";
+      }
+      applyDataAttributes(token, { mode });
     }
   },
 
@@ -18,11 +23,7 @@ const gridRule = {
 };
 
 export function setup(helper) {
-  helper.allowList([
-    "div.d-image-grid",
-    "div.d-image-grid[data-mode]",
-    "div.d-image-grid[data-aspect]",
-  ]);
+  helper.allowList(["div.d-image-grid", "div.d-image-grid[data-mode]"]);
 
   helper.registerPlugin((md) => {
     md.block.bbcode.ruler.push("grid", gridRule);

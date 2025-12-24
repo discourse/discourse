@@ -105,11 +105,7 @@ export default function setupImageGridCarousel(grid, helper) {
   grid.dataset.carouselInitialized = "true";
   grid.classList.add("d-image-grid--carousel");
 
-  let mode = grid.dataset.mode || "focus";
-  if (mode === "carousel") {
-    mode = "focus";
-  }
-  const aspect = grid.dataset.aspect;
+  const mode = grid.dataset.mode || "focus";
 
   helper.renderGlimmer(
     grid,
@@ -117,7 +113,6 @@ export default function setupImageGridCarousel(grid, helper) {
     {
       items,
       mode,
-      aspect,
     },
     { append: false }
   );
