@@ -1,3 +1,4 @@
+// eslint-discourse keep-array-sorted
 export const BEHAVIOR_TRANSFORMERS = Object.freeze([
   // use only lowercase names
   "composer-position:correct-scroll-position",
@@ -9,10 +10,11 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
   "topic-list-item-click",
 ]);
 
+// eslint-discourse keep-array-sorted
 export const VALUE_TRANSFORMERS = Object.freeze([
   // use only lowercase names
-  "admin-plugin-icon",
   "admin-reports-show-query-params",
+  "admin-plugin-icon",
   "bulk-select-in-nav-controls",
   "category-available-views",
   "category-default-colors",

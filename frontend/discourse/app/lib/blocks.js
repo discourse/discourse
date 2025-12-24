@@ -1,6 +1,18 @@
 // This secret symbol allows us to identify block components. We use this to ensure
 // only block components can be rendered inside BlockOutlets, and that block components
 // cannot be rendered in another context.
+import { DEBUG } from "@glimmer/env";
+import { BLOCK_OUTLETS } from "discourse/lib/registry/blocks";
+
+// Performing checks in the blocks registry
+BLOCK_OUTLETS.forEach((name) => {
+  if (DEBUG) {
+    if (name !== name.toLowerCase()) {
+      throw new Error(`Block outlet name "${name}" must be lowercase.`);
+    }
+  }
+});
+
 export const _BLOCK_IDENTIFIER = Symbol("block secret");
 
 // TODO: This should be stored in a service instead
@@ -102,7 +114,7 @@ export function renderBlocksConfig(outletName, config) {
  *
  * @param {Object} config - The block configuration object to validate
  * @param {Function} config.block - The block component to validate
- * @param {string} [config.outletName] - The outletName of the block for error messages
+ * @param {string} outletName - The outletName of the block for error messages
  * @throws {Error} If the block is missing a component or if the component is not a valid block
  *
  * @example
@@ -114,6 +126,12 @@ export function renderBlocksConfig(outletName, config) {
  * ```
  */
 function validateBlockConfig(config, outletName) {
+  if (!BLOCK_OUTLETS.includes(outletName)) {
+    throw new Error(
+      `Block outlet \`${outletName}\` is not registered in the blocks registry`
+    );
+  }
+
   if (!config.block) {
     throw new Error(`Block in layout ${outletName} is missing a component`);
   }
