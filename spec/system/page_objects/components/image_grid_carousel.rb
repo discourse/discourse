@@ -2,7 +2,7 @@
 
 module PageObjects
   module Components
-    class ImageGridCarousel < PageObjects::Components::Base
+    class ImageCarousel < PageObjects::Components::Base
       def initialize(post_number)
         @post_number = post_number
       end
