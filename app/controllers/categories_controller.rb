@@ -141,7 +141,7 @@ class CategoriesController < ApplicationController
     position = category_params.delete(:position)
 
     if category_params[:description].present? &&
-         category_params[:description].bytesize > MAX_DESCRIPTION_PARAM_LENGTH
+         category_params[:description].size > MAX_DESCRIPTION_PARAM_LENGTH
       render json: {
                errors: [
                  I18n.t(

@@ -501,16 +501,17 @@ RSpec.describe CategoriesController do
           expect(response.parsed_body["errors"]).to be_present
         end
 
-        it "rejects description longer than 1000 bytes" do
+        it "rejects too long descriptions" do
+          limit = CategoriesController::MAX_DESCRIPTION_PARAM_LENGTH
           post "/categories.json",
                params: {
                  name: "Long Description Category",
-                 description: "a" * 1001,
+                 description: "a" * (limit + 1),
                }
 
           expect(response.status).to eq(422)
           expect(response.parsed_body["errors"].first).to eq(
-            I18n.t("category.errors.description_too_long", count: 1000),
+            I18n.t("category.errors.description_too_long", count: limit),
           )
         end
       end
