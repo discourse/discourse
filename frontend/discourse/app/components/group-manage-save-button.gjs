@@ -95,7 +95,6 @@ export default class GroupManageSaveButton extends Component {
       }
 
       this.setProperties({
-        saving: false,
         saved: true,
         updateExistingUsers: null,
       });
@@ -104,14 +103,14 @@ export default class GroupManageSaveButton extends Component {
         this.afterSave();
       }
     } catch (error) {
-      this.set("saving", false);
-
       const json = error.jqXHR?.responseJSON;
       if (error.jqXHR?.status === 422 && json?.user_count) {
         this.editGroupNotifications(json);
       } else {
         popupAjaxError(error);
       }
+    } finally {
+      this.set("saving", false);
     }
   }
 
