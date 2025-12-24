@@ -475,10 +475,12 @@ RSpec.describe Admin::EmailTemplatesController do
   end
 
   describe ".email_keys" do
-    it "returns a list that contains all the email templates in the server.en.yml file" do
-      expect(Admin::EmailTemplatesController.email_keys).to contain_exactly(
-        *EmailTemplatesFinder.list,
-      )
+    it "returns all email templates except security-restricted ones" do
+      expected_keys =
+        EmailTemplatesFinder.list.reject do |key|
+          Admin::EmailTemplatesController.restricted_key?(key)
+        end
+      expect(Admin::EmailTemplatesController.email_keys).to contain_exactly(*expected_keys)
     end
   end
 end
