@@ -1,4 +1,4 @@
-import ImageGridCarousel from "discourse/components/image-grid-carousel";
+import ImageCarousel from "discourse/components/image-carousel";
 
 const FALLBACK_WIDTH = 1024;
 const FALLBACK_HEIGHT = 768;
@@ -109,7 +109,7 @@ export default function setupImageGridCarousel(grid, helper) {
 
   helper.renderGlimmer(
     grid,
-    ImageGridCarousel,
+    ImageCarousel,
     {
       items,
       mode,

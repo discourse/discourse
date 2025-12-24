@@ -18,7 +18,7 @@ const HYSTERESIS_FACTOR = 0.7;
 const SCROLLEND_FALLBACK_MS = 500;
 
 /**
- * @typedef {Object} ImageGridCarouselItem
+ * @typedef {Object} ImageCarouselItem
  * @property {HTMLElement} element
  * @property {HTMLImageElement} img
  * @property {number} width
@@ -26,12 +26,12 @@ const SCROLLEND_FALLBACK_MS = 500;
  */
 
 /**
- * @component image-grid-carousel
+ * @component image-carousel
  * @param {Object} @data
- * @param {Array<ImageGridCarouselItem>} @data.items
+ * @param {Array<ImageCarouselItem>} @data.items
  * @param {string} @data.mode
  */
-export default class ImageGridCarousel extends Component {
+export default class ImageCarousel extends Component {
   /**
    * @type {number}
    */
@@ -166,7 +166,7 @@ export default class ImageGridCarousel extends Component {
   }
 
   /**
-   * @returns {Array<ImageGridCarouselItem>}
+   * @returns {Array<ImageCarouselItem>}
    */
   get items() {
     return this.args.data.items || [];
