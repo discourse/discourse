@@ -14,6 +14,34 @@ acceptance(
 
     let eventCalls = [];
 
+    async function assertCategory(assert, { name, id, count = 1 }) {
+      eventCalls = [];
+      await visit(`/c/${name}/${id}`);
+
+      if (count >= 1) {
+        assert.true(
+          eventCalls.some((call) => call.category_id === id),
+          `Fetched events for category ${id}`
+        );
+
+        assert.strictEqual(
+          eventCalls.length,
+          count,
+          `Only ${count} events fetch after navigation`
+        );
+
+        assert.dom(".fc-event-title").hasText(`Event in Cat ${id}`);
+      } else {
+        assert.strictEqual(
+          eventCalls.length,
+          0,
+          `No events fetch for category ${id}`
+        );
+
+        assert.dom(".fc-event-title").doesNotExist();
+      }
+    }
+
     needs.pretender((server, helper) => {
       server.get("/discourse-post-event/events", (request) => {
         eventCalls.push(request.queryParams);
@@ -52,32 +80,18 @@ acceptance(
     });
 
     test("reloads events when navigating between categories", async function (assert) {
-      await visit("/c/bug/1");
+      await assertCategory(assert, { name: "bug", id: "1" });
+      await assertCategory(assert, { name: "feature", id: "2" });
+    });
 
-      assert.true(
-        eventCalls.some((call) => call.category_id === "1"),
-        "Fetched events for category 1"
-      );
-      assert.strictEqual(
-        eventCalls.length,
-        1,
-        "Only one events fetch after navigation"
-      );
-      assert.dom(".fc-event-title").hasText("Event in Cat 1");
+    test("it does not load events for non-calendar categories", async function (assert) {
+      await assertCategory(assert, { name: "dev", id: "7", count: 0 });
+    });
 
-      eventCalls = [];
-      await visit("/c/feature/2");
-
-      assert.true(
-        eventCalls.some((call) => call.category_id === "2"),
-        "Fetched events for category 2 after navigation"
-      );
-      assert.strictEqual(
-        eventCalls.length,
-        1,
-        "Only one events fetch after navigation"
-      );
-      assert.dom(".fc-event-title").hasText("Event in Cat 2");
+    test("it loads events again when returning to a calendar category", async function (assert) {
+      await assertCategory(assert, { name: "bug", id: "1" });
+      await assertCategory(assert, { name: "dev", id: "7", count: 0 });
+      await assertCategory(assert, { name: "feature", id: "2" });
     });
   }
 );
