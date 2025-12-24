@@ -49,7 +49,7 @@ export default class ImageGridCarousel extends Component {
   setupTrack = modifier((element) => {
     this.trackElement = element;
 
-    const slides = element.querySelectorAll(".d-image-grid__slide");
+    const slides = element.querySelectorAll(".d-image-carousel__slide");
     const ratios = new Map();
 
     const observer = new IntersectionObserver(
@@ -147,7 +147,9 @@ export default class ImageGridCarousel extends Component {
   @action
   scrollToIndex(index) {
     const clamped = Math.max(0, Math.min(index, this.items.length - 1));
-    const slides = this.trackElement?.querySelectorAll(".d-image-grid__slide");
+    const slides = this.trackElement?.querySelectorAll(
+      ".d-image-carousel__slide"
+    );
     if (slides && slides[clamped]) {
       slides[clamped].scrollIntoView({
         behavior: this.scrollBehavior,
@@ -178,18 +180,18 @@ export default class ImageGridCarousel extends Component {
 
   <template>
     <div
-      class="d-image-grid__carousel d-image-grid__carousel--{{@data.mode}}
-        {{if this.isSingle 'd-image-grid__carousel--single'}}"
+      class="d-image-carousel --{{@data.mode}}
+        {{if this.isSingle 'd-image-carousel__carousel--single'}}"
     >
       <div
-        class="d-image-grid__track"
+        class="d-image-carousel__track"
         tabindex="0"
         {{this.setupTrack}}
         {{on "keydown" this.onKeyDown}}
       >
         {{#each this.items as |item index|}}
           <div
-            class="d-image-grid__slide
+            class="d-image-carousel__slide
               {{if (eq this.currentIndex index) 'is-active'}}"
             data-index={{index}}
             {{this.mountItem item.element}}
@@ -199,10 +201,10 @@ export default class ImageGridCarousel extends Component {
       </div>
 
       {{#unless this.isSingle}}
-        <div class="d-image-grid__controls">
+        <div class="d-image-carousel__controls">
           <button
             type="button"
-            class="d-image-grid__nav d-image-grid__nav--prev"
+            class="d-image-carousel__nav d-image-carousel__nav--prev"
             title={{i18n "lightbox.previous"}}
             aria-label={{i18n "lightbox.previous"}}
             disabled={{eq this.currentIndex 0}}
@@ -211,11 +213,11 @@ export default class ImageGridCarousel extends Component {
             {{icon "chevron-left"}}
           </button>
 
-          <div class="d-image-grid__dots">
+          <div class="d-image-carousel__dots">
             {{#each this.items as |item index|}}
               <button
                 type="button"
-                class="d-image-grid__dot
+                class="d-image-carousel__dot
                   {{if (eq this.currentIndex index) 'active'}}"
                 aria-label={{this.slideAriaLabel index}}
                 aria-current={{if (eq this.currentIndex index) "true" "false"}}
@@ -226,7 +228,7 @@ export default class ImageGridCarousel extends Component {
 
           <button
             type="button"
-            class="d-image-grid__nav d-image-grid__nav--next"
+            class="d-image-carousel__nav d-image-carousel__nav--next"
             title={{i18n "lightbox.next"}}
             aria-label={{i18n "lightbox.next"}}
             disabled={{eq this.currentIndex this.lastIndex}}
