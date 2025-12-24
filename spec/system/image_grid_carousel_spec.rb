@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Image Grid Carousel", type: :system do
+describe "Image Carousel", type: :system do
   fab!(:current_user, :admin)
   fab!(:upload1) do
     UploadCreator.new(file_from_fixtures("logo.png", "images"), "logo.png").create_for(
@@ -27,7 +27,7 @@ describe "Image Grid Carousel", type: :system do
     MD
 
     topic_page.visit_topic(post.topic, post_number: post.post_number)
-    carousel = PageObjects::Components::ImageGridCarousel.new(post.post_number)
+    carousel = PageObjects::Components::ImageCarousel.new(post.post_number)
 
     expect(carousel).to have_carousel
     expect(carousel).to have_mode("focus")
@@ -44,7 +44,7 @@ describe "Image Grid Carousel", type: :system do
     MD
 
     topic_page.visit_topic(post.topic, post_number: post.post_number)
-    carousel = PageObjects::Components::ImageGridCarousel.new(post.post_number)
+    carousel = PageObjects::Components::ImageCarousel.new(post.post_number)
 
     expect(carousel).to have_mode("stage")
     expect(carousel).to have_active_slide
@@ -59,7 +59,7 @@ describe "Image Grid Carousel", type: :system do
     MD
 
     topic_page.visit_topic(post.topic, post_number: post.post_number)
-    carousel = PageObjects::Components::ImageGridCarousel.new(post.post_number)
+    carousel = PageObjects::Components::ImageCarousel.new(post.post_number)
 
     expect(carousel).to have_active_slide_index(0)
     expect(carousel).not_to be_prev_button_disabled
@@ -87,7 +87,7 @@ describe "Image Grid Carousel", type: :system do
     MD
 
     topic_page.visit_topic(post.topic, post_number: post.post_number)
-    carousel = PageObjects::Components::ImageGridCarousel.new(post.post_number)
+    carousel = PageObjects::Components::ImageCarousel.new(post.post_number)
 
     expect(carousel).to have_active_slide_index(0)
     expect(carousel).not_to be_prev_button_disabled
@@ -108,7 +108,7 @@ describe "Image Grid Carousel", type: :system do
     MD
 
     topic_page.visit_topic(post.topic, post_number: post.post_number)
-    carousel = PageObjects::Components::ImageGridCarousel.new(post.post_number)
+    carousel = PageObjects::Components::ImageCarousel.new(post.post_number)
 
     carousel.focus_track
 
