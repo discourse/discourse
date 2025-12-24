@@ -48,6 +48,26 @@ acceptance("Dashboard", function (needs) {
       .exists("new-contributors report");
   });
 
+  test("custom date range updates period display", async function (assert) {
+    await visit("/admin");
+
+    const periodChooser = selectKit(".period-chooser");
+
+    assert.strictEqual(periodChooser.header().value(), "monthly");
+
+    await click(".custom-date-range-button");
+    await click(".custom-date-range-modal .d-modal__footer .btn");
+
+    assert.strictEqual(periodChooser.header().value(), "custom");
+    assert.dom(".period-chooser-header .date-section").hasText("Custom");
+
+    await periodChooser.expand();
+    await periodChooser.selectRowByValue("yearly");
+
+    assert.strictEqual(periodChooser.header().value(), "yearly");
+    assert.dom(".period-chooser-header .date-section").hasText("Year");
+  });
+
   test("moderation tab", async function (assert) {
     await visit("/admin");
     await click(".dashboard .navigation-item.moderation .navigation-link");

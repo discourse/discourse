@@ -4945,6 +4945,7 @@ en:
         this_month: "Month"
         this_week: "Week"
         today: "Today"
+        custom: "Custom"
 
     custom_homepage:
       admin_message: 'One of your themes has enabled the "custom_homepage" modifier but it does not output anything in the [custom-homepage] connector. (This message is only shown to site administrators.)'

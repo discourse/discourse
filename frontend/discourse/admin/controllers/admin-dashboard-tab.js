@@ -38,6 +38,7 @@ export default class AdminDashboardTabController extends Controller {
 
   @action
   setCustomDateRange(startDate, endDate) {
+    this.set("period", "custom");
     this.startDate = startDate;
     this.endDate = endDate;
     this.filters.startDate = this.startDate;
