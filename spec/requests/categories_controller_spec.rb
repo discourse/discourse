@@ -500,6 +500,20 @@ RSpec.describe CategoriesController do
           expect(response.status).to eq(422)
           expect(response.parsed_body["errors"]).to be_present
         end
+
+        it "rejects too long descriptions" do
+          limit = CategoriesController::MAX_DESCRIPTION_PARAM_LENGTH
+          post "/categories.json",
+               params: {
+                 name: "Long Description Category",
+                 description: "a" * (limit + 1),
+               }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"].first).to eq(
+            I18n.t("category.errors.description_too_long", count: limit),
+          )
+        end
       end
 
       describe "success" do
@@ -540,6 +554,41 @@ RSpec.describe CategoriesController do
             [[Group[:everyone].id, readonly], [Group[:staff].id, create_post]],
           )
           expect(UserHistory.count).to eq(5)
+        end
+
+        it "creates category with description containing markdown" do
+          post "/categories.json",
+               params: {
+                 name: "Test Category",
+                 description: "This is a **test** with [link](https://example.com)",
+               }
+
+          expect(response.status).to eq(200)
+          cat_json = response.parsed_body["category"]
+
+          category = Category.find(cat_json["id"])
+          expect(category.description).to include("<strong>test</strong>")
+          expect(category.description).to include('<a href="https://example.com')
+          expect(category.description).not_to include("**test**")
+          expect(category.topic.first_post.raw).to include("**test**")
+          expect(category.topic.first_post.raw).to include("[link](https://example.com)")
+        end
+
+        it "sanitizes description to prevent XSS" do
+          post "/categories.json",
+               params: {
+                 name: "XSS Test Category",
+                 description:
+                   "This has <script>alert('xss')</script> and <img src=x onerror=alert('xss')>",
+               }
+
+          expect(response.status).to eq(200)
+          cat_json = response.parsed_body["category"]
+
+          category = Category.find(cat_json["id"])
+          expect(category.description).not_to include("<script>")
+          expect(category.description).not_to include("&lt;script&gt;")
+          expect(category.description).to include("&lt;img")
         end
       end
     end
