@@ -75,6 +75,14 @@ export const AUTO_GROUPS = {
 
 export const GROUP_SMTP_SSL_MODES = { none: 0, ssl_tls: 1, starttls: 2 };
 
+export const GROUP_VISIBILITY_LEVELS = {
+  public: 0,
+  logged_on_users: 1,
+  members: 2,
+  staff: 3,
+  owners: 4,
+};
+
 export const MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP = 10;
 
 export const MAX_NOTIFICATIONS_LIMIT_PARAMS = 60;

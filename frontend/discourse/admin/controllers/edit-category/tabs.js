@@ -9,6 +9,7 @@ import { AUTO_GROUPS } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import DiscourseURL from "discourse/lib/url";
+import { defaultHomepage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 
@@ -131,56 +132,55 @@ export default class EditCategoryTabsController extends Controller {
   }
 
   @action
-  saveCategory(data) {
+  async saveCategory(data) {
     if (this.validators.some((validator) => validator())) {
       return;
     }
 
     this.model.setProperties(data);
 
-    if (this._wouldLoseAccess()) {
-      this.dialog.yesNoConfirm({
+    const lostAccess = this._wouldLoseAccess();
+
+    if (lostAccess) {
+      const confirmed = await this.dialog.yesNoConfirm({
         message: i18n("category.errors.self_lockout"),
-        didConfirm: () => this._performSave({ lostAccess: true }),
       });
-      return;
+
+      if (!confirmed) {
+        return;
+      }
     }
 
-    this._performSave();
-  }
-
-  _performSave({ lostAccess } = {}) {
     this.set("saving", true);
 
-    this.model
-      .save()
-      .then((result) => {
-        const updatedModel = this.site.updateCategory(result.category);
-        updatedModel.setupGroupsAndPermissions();
+    try {
+      const result = await this.model.save();
+      const updatedModel = this.site.updateCategory(result.category);
+      updatedModel.setupGroupsAndPermissions();
 
-        if (lostAccess) {
-          DiscourseURL.routeTo("/");
-          return;
-        }
+      if (lostAccess) {
+        this.router.transitionTo(`discovery.${defaultHomepage()}`);
+        return;
+      }
 
-        if (!this.model.id) {
-          this.router.transitionTo(
-            "editCategory",
-            Category.slugFor(updatedModel)
-          );
-        }
-        // ensure breadcrumbs contain the updated category model
-        this.breadcrumbCategories = this.site.categoriesList.map((c) =>
-          c.id === this.model.id ? updatedModel : c
+      this.set("saving", false);
+
+      if (!this.model.id) {
+        this.router.transitionTo(
+          "editCategory",
+          Category.slugFor(updatedModel)
         );
-      })
-      .catch((error) => {
-        popupAjaxError(error);
-        this.model.set("parent_category_id", undefined);
-      })
-      .finally(() => {
-        this.set("saving", false);
-      });
+      }
+
+      // ensure breadcrumbs contain the updated category model
+      this.breadcrumbCategories = this.site.categoriesList.map((c) =>
+        c.id === this.model.id ? updatedModel : c
+      );
+    } catch (error) {
+      this.set("saving", false);
+      popupAjaxError(error);
+      this.model.set("parent_category_id", undefined);
+    }
   }
 
   @action
