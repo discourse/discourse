@@ -49,22 +49,31 @@ class GridNodeView {
 
     const contentDiv = document.createElement("div");
     div.appendChild(contentDiv);
+    this.contentDOM = contentDiv;
 
-    const removeBtn = document.createElement("button");
-    removeBtn.className = "composer-image-grid__remove-btn btn-flat";
-    removeBtn.appendChild(iconElement("table-cells"));
+    this.removeBtn = document.createElement("button");
+    this.removeBtn.className = "composer-image-grid__remove-btn btn-flat";
+    this.removeBtn.appendChild(iconElement("table-cells"));
     const removeLabel = document.createElement("span");
     removeLabel.textContent = i18n("composer.remove_grid");
-    removeBtn.appendChild(removeLabel);
-    removeBtn.title = i18n("composer.remove_grid");
-    removeBtn.type = "button";
-    removeBtn.contentEditable = false;
-    removeBtn.addEventListener("click", this.removeClickHandler);
+    this.removeBtn.appendChild(removeLabel);
+    this.removeBtn.title = i18n("composer.remove_grid");
+    this.removeBtn.type = "button";
+    this.removeBtn.contentEditable = false;
+    this.removeBtn.addEventListener("click", this.removeClickHandler);
 
-    div.appendChild(removeBtn);
+    div.appendChild(this.removeBtn);
 
     this.dom = div;
-    this.contentDOM = contentDiv;
+  }
+
+  /**
+   * Cleans up the node view when it is removed from the editor.
+   *
+   * @returns {void}
+   */
+  destroy() {
+    this.removeBtn.removeEventListener("click", this.removeClickHandler);
   }
 
   @bind
@@ -133,7 +142,6 @@ const extension = {
       group: "block",
       attrs: {
         mode: { default: "grid" },
-        aspect: { default: null },
       },
       createGapCursor: true,
       parseDOM: [
@@ -142,7 +150,6 @@ const extension = {
           getAttrs(dom) {
             return {
               mode: dom.getAttribute("data-mode") || "grid",
-              aspect: dom.getAttribute("data-aspect"),
             };
           },
         },
@@ -151,7 +158,6 @@ const extension = {
           getAttrs(dom) {
             return {
               mode: dom.getAttribute("data-mode") || "grid",
-              aspect: dom.getAttribute("data-aspect"),
             };
           },
         },
@@ -162,7 +168,6 @@ const extension = {
           {
             class: "composer-image-grid",
             "data-mode": node.attrs.mode,
-            "data-aspect": node.attrs.aspect,
           },
           0,
         ];
@@ -179,7 +184,6 @@ const extension = {
       if (token.attrGet("class") === "d-image-grid") {
         state.openNode(state.schema.nodes.grid, {
           mode: token.attrGet("data-mode") || "grid",
-          aspect: token.attrGet("data-aspect"),
         });
         return true;
       }
@@ -197,9 +201,6 @@ const extension = {
       let attrs = "";
       if (node.attrs.mode && node.attrs.mode !== "grid") {
         attrs += ` mode=${node.attrs.mode}`;
-      }
-      if (node.attrs.aspect) {
-        attrs += ` aspect=${node.attrs.aspect}`;
       }
       state.write(`\n[grid${attrs}]\n\n`);
       state.renderContent(node.content);

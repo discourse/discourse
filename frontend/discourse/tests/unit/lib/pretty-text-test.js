@@ -1720,22 +1720,6 @@ var bar = 'bar';
     );
 
     assert.cooked(
-      "[grid mode=carousel]\n![](http://folksy.com/images/folksy-colour.png)\n[/grid]",
-      `<div class="d-image-grid" data-mode="carousel">
-<p><img src="http://folksy.com/images/folksy-colour.png" alt role="presentation"></p>
-</div>`,
-      "image grid carousel mode works"
-    );
-
-    assert.cooked(
-      "[grid mode=carousel aspect=16:9]\n![](http://folksy.com/images/folksy-colour.png)\n[/grid]",
-      `<div class="d-image-grid" data-aspect="16:9" data-mode="carousel">
-<p><img src="http://folksy.com/images/folksy-colour.png" alt role="presentation"></p>
-</div>`,
-      "image grid carousel mode with aspect works"
-    );
-
-    assert.cooked(
       `[grid]
 ![](http://folksy.com/images/folksy-colour.png)
 ![](http://folksy.com/images/folksy-colour2.png)

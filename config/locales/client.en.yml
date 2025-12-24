@@ -2,6 +2,8 @@ en:
   js:
     carousel:
       go_to_slide: "Go to slide %{index}"
+      previous: "Previous slide"
+      next: "Next slide"
     number:
       format:
         # symbol used to separate the integer part from the fractional part of a number
