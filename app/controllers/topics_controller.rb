@@ -933,17 +933,17 @@ class TopicsController < ApplicationController
   end
 
   def change_post_owners
-    params.require(:post_ids)
-    params.require(:topic_id)
-    params.require(:username)
+    post_ids = params.require(:post_ids).map(&:to_i)
+    topic_id = params.require(:topic_id).to_i
+    username = params.require(:username)
 
     guardian.ensure_can_change_post_owner!
 
     begin
       PostOwnerChanger.new(
-        post_ids: params[:post_ids].to_a,
-        topic_id: params[:topic_id].to_i,
-        new_owner: User.find_by(username: params[:username]),
+        post_ids:,
+        topic_id:,
+        new_owner: User.find_by(username:),
         acting_user: current_user,
       ).change_owner!
       render json: success_json
