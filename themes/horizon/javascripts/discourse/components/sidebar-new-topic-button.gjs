@@ -39,16 +39,25 @@ export default class SidebarNewTopicButton extends Component {
   }
 
   get createTopicTargetCategory() {
-    let subcategory;
-
     if (
       !this.category?.canCreateTopic &&
       this.siteSettings.default_subcategory_on_read_only_category
     ) {
-      subcategory = this.category?.subcategoryWithCreateTopicPermission;
+      return this.category?.subcategoryWithCreateTopicPermission;
     }
 
-    return subcategory ?? this.category;
+    return this.category?.canCreateTopic ? this.category : null;
+  }
+
+  get tagRestricted() {
+    return this.tag?.staff || false;
+  }
+
+  get createTopicDisabled() {
+    return (
+      (this.category && !this.createTopicTargetCategory) ||
+      (this.tagRestricted && !this.currentUser.staff)
+    );
   }
 
   @action
@@ -98,6 +107,7 @@ export default class SidebarNewTopicButton extends Component {
           @btnClass="sidebar-new-topic-button"
           @btnTypeClass="btn-primary"
           @showDrafts={{gt this.draftCount 0}}
+          @disabled={{this.createTopicDisabled}}
         />
       </div>
     {{/if}}

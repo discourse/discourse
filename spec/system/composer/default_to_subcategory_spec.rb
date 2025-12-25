@@ -34,6 +34,9 @@ describe "Default to Subcategory when parent Category doesn't allow posting", ty
             it "should have 'New Topic' button enabled and default Subcategory set in the composer" do
               category_page.visit(category)
               expect(category_page).to have_button("New Topic", disabled: false)
+
+              expect(find("#create-topic")).to match_css(".can-create-topic")
+
               category_page.new_topic_button.click
               select_kit =
                 PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
@@ -44,6 +47,8 @@ describe "Default to Subcategory when parent Category doesn't allow posting", ty
             it "should have the 'New Topic' button enabled and no category set in the composer" do
               category_page.visit(category_with_no_subcategory)
               expect(category_page).to have_button("New Topic", disabled: false)
+
+              expect(find("#create-topic")).to match_css(".cannot-create-topic")
 
               category_page.new_topic_button.click
               select_kit =
@@ -57,6 +62,9 @@ describe "Default to Subcategory when parent Category doesn't allow posting", ty
           it "should have the default category set in the composer" do
             page.visit("latest")
             expect(page).to have_button("New Topic", disabled: false)
+
+            expect(find("#create-topic")).to match_css(".can-create-topic")
+
             page.find("#create-topic").click
             select_kit =
               PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
