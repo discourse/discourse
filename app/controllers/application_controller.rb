@@ -53,6 +53,7 @@ class ApplicationController < ActionController::Base
   after_action :add_readonly_header
   after_action :perform_refresh_session
   after_action :conditionally_allow_site_embedding
+  after_action :allow_embed_mode
   after_action :ensure_vary_header
   after_action :add_noindex_header,
                if: -> { is_feed_request? || !SiteSetting.allow_index_in_robots_txt }
@@ -106,6 +107,13 @@ class ApplicationController < ActionController::Base
 
   def conditionally_allow_site_embedding
     response.headers.delete("X-Frame-Options") if SiteSetting.allow_embedding_site_in_an_iframe
+  end
+
+  def allow_embed_mode
+    return if params[:embed_mode].blank?
+    return unless SiteSetting.embed_any_origin? || EmbeddableHost.record_for_url(request.referer)
+
+    response.headers.delete("X-Frame-Options")
   end
 
   def ember_cli_required?

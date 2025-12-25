@@ -1,0 +1,20 @@
+// Styles for the full Ember app when rendered in embed mode (iframe)
+// Activated when ?embed_mode=true is in the URL
+body.embed-mode {
+  // Remove top padding since header is hidden
+  #main-outlet {
+    padding-top: 1em;
+  }
+
+  // Hide elements that don't make sense in embed context
+  .signup-cta,
+  .suggested-topics,
+  .more-topics__container {
+    display: none !important;
+  }
+
+  // Ensure content fills the width
+  #main-outlet-wrapper {
+    max-width: 100%;
+  }
+}
