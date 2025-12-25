@@ -377,7 +377,7 @@ class Reviewable < ActiveRecord::Base
         )
       end
 
-      if !guardian.can_see_reviewable_ui_refresh? || SiteSetting.reviewable_old_moderator_actions
+      if SiteSetting.reviewable_old_moderator_actions
         update_count = transition_to(result.transition_to, performed_by) if result.transition_to
         update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
 

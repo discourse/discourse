@@ -41,6 +41,6 @@ class ReviewableUserSerializer < ReviewableSerializer
   end
 
   def include_target_user?
-    scope.can_see_reviewable_ui_refresh? && object.target
+    object.target.present?
   end
 end

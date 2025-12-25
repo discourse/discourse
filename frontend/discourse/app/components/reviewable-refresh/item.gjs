@@ -706,7 +706,6 @@ export default class ReviewableItem extends Component {
 
   <template>
     <div class="review-container">
-
       <div
         data-reviewable-id={{this.reviewable.id}}
         class="review-item {{this.customClasses}}"

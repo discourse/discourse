@@ -4185,12 +4185,6 @@ experimental:
     list_type: compact
     area: "group_permissions|experimental"
     hidden: true
-  reviewable_ui_refresh:
-    client: true
-    type: group_list
-    default: ""
-    area: "experimental"
-    hidden: true
   force_old_reviewable_ui:
     client: true
     default: false

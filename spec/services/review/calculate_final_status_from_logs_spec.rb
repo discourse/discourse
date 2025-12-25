@@ -8,10 +8,7 @@ RSpec.describe Review::CalculateFinalStatusFromLogs do
     fab!(:reviewable, :reviewable_flagged_post)
     let(:guardian) { Guardian.new(moderator) }
 
-    before do
-      SiteSetting.reviewable_old_moderator_actions = false
-      allow_any_instance_of(Guardian).to receive(:can_see_reviewable_ui_refresh?).and_return(true)
-    end
+    before { SiteSetting.reviewable_old_moderator_actions = false }
 
     context "when all bundles are actioned" do
       fab!(:reviewable_deleted, :reviewable_queued_post)
