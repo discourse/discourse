@@ -52,7 +52,6 @@ export default class PostLinks extends Component {
         <ul class="post-links">
           {{#each this.displayedLinks key="title" as |link|}}
             <li>
-              
               <a
                 class="track-link inbound"
                 data-clicks={{if (gt link.clicks 0) link.clicks}}
