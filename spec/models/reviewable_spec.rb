@@ -844,16 +844,13 @@ RSpec.describe Reviewable, type: :model do
 
     it "gets the bundles and actions for a reviewable" do
       actions = reviewable.actions_for(user.guardian)
-      expect(actions.bundles.map(&:id)).to eq(%w[approve_post reject_post revise_and_reject_post])
+      expect(actions.bundles.map(&:id)).to eq(["approve_post", "#{reviewable.id}-reject-post"])
       expect(actions.bundles.find { |b| b.id == "approve_post" }.actions.map(&:id)).to eq(
         ["approve_post"],
       )
-      expect(actions.bundles.find { |b| b.id == "reject_post" }.actions.map(&:id)).to eq(
-        ["reject_post"],
-      )
-      expect(actions.bundles.find { |b| b.id == "revise_and_reject_post" }.actions.map(&:id)).to eq(
-        ["revise_and_reject_post"],
-      )
+      expect(
+        actions.bundles.find { |b| b.id == "#{reviewable.id}-reject-post" }.actions.map(&:id),
+      ).to eq(%w[reject_post revise_and_reject_post])
     end
 
     describe "handling empty bundles" do
