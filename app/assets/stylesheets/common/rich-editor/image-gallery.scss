@@ -1,0 +1,52 @@
+.composer-image-gallery {
+  &__mode-buttons {
+    position: absolute;
+    right: 0.25rem;
+    top: -0.6rem;
+    display: flex;
+    z-index: 1;
+  }
+
+  &__mode-btn {
+    border: 1px solid var(--content-border-color);
+    background-color: var(--primary-very-low);
+    color: var(--primary-medium);
+    font-size: var(--font-down-1-rem);
+    padding: 0 var(--space-2);
+    cursor: pointer;
+    margin: 0;
+
+    &:first-child {
+      border-top-left-radius: var(--d-border-radius);
+      border-bottom-left-radius: var(--d-border-radius);
+    }
+
+    &:last-child {
+      border-top-right-radius: var(--d-border-radius);
+      border-bottom-right-radius: var(--d-border-radius);
+    }
+
+    &:not(:first-child) {
+      border-left: none;
+    }
+
+    &:hover {
+      color: var(--primary);
+      background-color: var(--primary-low);
+    }
+
+    &.is-active {
+      background-color: var(--tertiary-low);
+      color: var(--tertiary);
+      border-color: var(--tertiary);
+
+      + .composer-image-gallery__mode-btn {
+        border-left-color: var(--tertiary);
+      }
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+}

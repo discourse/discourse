@@ -14,38 +14,48 @@ class GridNodeView {
     const div = document.createElement("div");
     div.className = "composer-image-grid";
 
-    const select = document.createElement("select");
-    select.className = "composer-image-grid__mode-select";
-    select.contentEditable = false;
+    const modeGroup = document.createElement("div");
+    modeGroup.className = "composer-image-gallery__mode-buttons";
+    modeGroup.setAttribute("role", "radiogroup");
+    modeGroup.contentEditable = false;
 
-    const options = [
+    const modes = [
       { value: "grid", label: i18n("composer.grid_mode_grid") },
       { value: "focus", label: i18n("composer.grid_mode_focus") },
       { value: "stage", label: i18n("composer.grid_mode_stage") },
     ];
 
-    options.forEach((opt) => {
-      const option = document.createElement("option");
-      option.value = opt.value;
-      option.text = opt.label;
+    modes.forEach((opt) => {
+      const button = document.createElement("button");
+      button.type = "role";
+      button.className = "composer-image-gallery__mode-btn";
+      button.dataset.mode = opt.value;
+      button.textContent = opt.label;
+      button.ariaLabel = opt.label;
+      button.title = "Set image gallery style to " + opt.label;
       if (node.attrs.mode === opt.value) {
-        option.selected = true;
+        button.classList.add("is-active");
+        button.setAttribute("aria-pressed", "true");
+      } else {
+        button.setAttribute("aria-pressed", "false");
       }
-      select.appendChild(option);
+
+      button.addEventListener("click", (e) => {
+        e.preventDefault();
+        const mode = opt.value;
+        const pos = this.getPos();
+        this.view.dispatch(
+          this.view.state.tr.setNodeMarkup(pos, null, {
+            ...this.node.attrs,
+            mode,
+          })
+        );
+      });
+
+      modeGroup.appendChild(button);
     });
 
-    select.addEventListener("change", (e) => {
-      const mode = e.target.value;
-      const pos = this.getPos();
-      this.view.dispatch(
-        this.view.state.tr.setNodeMarkup(pos, null, {
-          ...this.node.attrs,
-          mode,
-        })
-      );
-    });
-
-    div.appendChild(select);
+    div.appendChild(modeGroup);
 
     const contentDiv = document.createElement("div");
     div.appendChild(contentDiv);
@@ -125,10 +135,16 @@ class GridNodeView {
     }
     this.node = node;
 
-    const select = this.dom.querySelector(".composer-image-grid__mode-select");
-    if (select && select.value !== node.attrs.mode) {
-      select.value = node.attrs.mode;
-    }
+    const buttons = this.dom.querySelectorAll(".composer-image-grid__mode-btn");
+    buttons.forEach((btn) => {
+      if (btn.dataset.mode === node.attrs.mode) {
+        btn.classList.add("is-active");
+        btn.setAttribute("aria-pressed", "true");
+      } else {
+        btn.classList.remove("is-active");
+        btn.setAttribute("aria-pressed", "false");
+      }
+    });
 
     return true;
   }
