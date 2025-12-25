@@ -43,7 +43,9 @@ class GridNodeView {
       button.className = "composer-image-gallery__mode-btn";
       button.dataset.mode = opt.value;
       button.appendChild(iconElement(opt.icon));
-      button.appendChild(document.createTextNode(opt.label));
+      const textLabel = document.createElement("span");
+      textLabel.textContent = opt.label;
+      button.appendChild(textLabel);
       button.ariaLabel = opt.label;
       button.title = "Set image gallery style to " + opt.label;
       if (node.attrs.mode === opt.value) {
@@ -75,8 +77,7 @@ class GridNodeView {
     this.contentDOM = contentDiv;
 
     this.removeBtn = document.createElement("button");
-    this.removeBtn.className = "composer-image-grid__remove-btn btn-flat";
-    this.removeBtn.appendChild(iconElement("table-cells"));
+    this.removeBtn.className = "composer-image-grid__remove-btn";
     const removeLabel = document.createElement("span");
     removeLabel.textContent = i18n("composer.remove_grid");
     this.removeBtn.appendChild(removeLabel);

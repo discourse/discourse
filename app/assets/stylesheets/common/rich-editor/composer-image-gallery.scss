@@ -1,10 +1,9 @@
 .composer-image-gallery {
   &__mode-buttons {
     position: absolute;
-    right: 1rem;
-    top: 1rem;
+    right: var(--space-2);
+    top: var(--space-2);
     display: flex;
-    z-index: 1;
   }
 
   &__mode-btn {
