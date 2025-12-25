@@ -700,7 +700,7 @@ ko:
       edit_columns:
         title: "디렉터리 열 편집"
         save: "저장"
-        reset_to_default: "디폴트로 리셋"
+        reset_to_default: "기본으로 리셋"
       group:
         all: "모든 그룹"
       sort:
@@ -793,8 +793,8 @@ ko:
           access: 액세스
         categories:
           title: 카테고리
-          long_title: "카테고리 디폴트 알림"
-          description: "사용자가 이 그룹에 추가되면 카테고리 알림 설정이 이 디폴트로 설정됩니다. 나중에 변경할 수 있습니다."
+          long_title: "카테고리 기본 알림"
+          description: "사용자가 이 그룹에 추가되면 카테고리 알림 설정이 기본으로 설정됩니다. 나중에 변경할 수 있습니다."
           watched_categories_instructions: "이 카테고리의 모든 주제를 자동으로 봅니다. 그룹 회원에게 모든 새 게시물과 주제에 대한 알림이 전송되며 새 게시물 수도 주제 옆에 표시됩니다."
           tracked_categories_instructions: "이 카테고리의 모든 주제를 자동 추적합니다. 새 게시물 수가 주제 옆에 표시됩니다."
           watching_first_post_categories_instructions: "사용자는 이 카테고리에 있는 각 새 주제의 첫 게시물에 대한 알림을 받습니다."
@@ -802,8 +802,8 @@ ko:
           muted_categories_instructions: "이 카테고리의 새 주제에 대한 알림을 받지 않으며 카테고리 또는 최신 주제 페이지에 나타나지 않습니다."
         tags:
           title: 태그
-          long_title: "태그 디폴트 알림"
-          description: "사용자가 이 그룹에 추가되면 태그 알림 설정이 디폴트로 설정됩니다. 나중에 변경할 수 있습니다."
+          long_title: "태그 기본 알림"
+          description: "사용자가 이 그룹에 추가되면 태그 알림 설정이 기본으로 설정됩니다. 나중에 변경할 수 있습니다."
           watched_tags_instructions: "이 태그의 모든 주제를 자동으로 봅니다. 그룹 회원에게는 모든 새 게시물과 주제에 대한 알림이 전송되며 새 게시물 수도 주제 옆에 표시됩니다."
           tracked_tags_instructions: "이 태그의 모든 주제를 자동 추적합니다. 새 게시물 수가 주제 옆에 표시됩니다."
           watching_first_post_tags_instructions: "사용자는 이 태그가 달린 각 새 주제의 첫 게시물에 대한 알림을 받습니다."
@@ -906,7 +906,7 @@ ko:
       posts: "게시글"
       mentions: "멘션"
       messages: "메시지"
-      notification_level: "그룹 메시지에 대한 디폴트 알림 수준"
+      notification_level: "그룹 메시지에 대한 기본 알림 수준"
       alias_levels:
         mentionable: "누가 이 그룹을 @멘션 할 수 있나요?"
         messageable: "누가 이 그룹에 메시지를 보낼 수 있습니까?"
@@ -944,7 +944,7 @@ ko:
         icon: "아이콘 선택"
         image: "이미지 업로드"
       default_notifications:
-        modal_title: "사용자 디폴트 알림"
+        modal_title: "사용자 기본 알림"
         modal_description:
           other: "이 변경 사항을 일괄 적용 하시겠습니까? 기존 사용자 %{count}명의 환경 설정이 변경됩니다."
         modal_yes: "예"
@@ -1117,10 +1117,10 @@ ko:
       skip_new_user_tips:
         description: "새 사용자 온보딩 팁 및 배지 건너뛰기"
       reset_seen_user_tips: "사용자 팁 다시 보기"
-      theme_default_on_all_devices: "이 테마를 모든 디바이스에서 디폴트 테마로 설정"
+      theme_default_on_all_devices: "이 테마를 모든 기기의 기본 테마로 설정"
       color_scheme: "색상 팔레트"
       color_schemes:
-        default_description: "디폴트 테마"
+        default_description: "기본 테마"
         undo: "리셋"
         dark: "다크 모드"
         interface_modes:
@@ -1129,7 +1129,7 @@ ko:
         picker:
           active: "활성화 사용자"
       dark_mode: "다크 모드"
-      text_size_default_on_all_devices: "모든 디바이스에서 디폴트 텍스트 크기로 설정"
+      text_size_default_on_all_devices: "모든 장치에서 기본 텍스트 크기로 설정"
       allow_private_messages: "다른 사용자가 나에게 개인 메시지 보내기 허용"
       external_links_in_new_tab: "새 탭에서 모든 외부 링크 열기"
       enable_quoting: "하이라이트된 텍스트에 대한 인용 댓글 활성화"
@@ -1209,7 +1209,7 @@ ko:
       api_last_used_at: "마지막 사용:"
       theme: "테마"
       save_to_change_theme: '''%{save_text}''을 클릭하면 테마가 업데이트됩니다'
-      home: "디폴트 홈페이지"
+      home: "기본 홈페이지"
       staged: "스테이징됨"
       staff_counters:
         flagged_posts:
@@ -1369,10 +1369,10 @@ ko:
         use_custom: "또는 아바타 업로드:"
       change_profile_background:
         title: "프로필 헤더"
-        instructions: "프로필 헤더는 중앙에 위치하며 디폴트 너비는 1110px입니다."
+        instructions: "프로필 헤더는 중앙에 위치하며 기본 너비는 1110px입니다."
       change_card_background:
         title: "사용자 카드 배경"
-        instructions: "배경 이미지는 중앙에 위치하며 디폴트 너비는 590px입니다."
+        instructions: "배경 이미지는 중앙에 배치되며 기본 너비는 590px 입니다."
       change_featured_topic:
         title: "추천 주제"
         instructions: "이 글에 대한 링크는 사용자 카드 및 프로필에 있습니다."
@@ -1439,7 +1439,7 @@ ko:
       locale:
         title: "인터페이스 언어"
         instructions: "사용자 인터페이스 언어입니다. 페이지를 새로고침하면 반영됩니다."
-        default: "(디폴트)"
+        default: "(기본)"
         any: "모두"
       homepage:
         default: "(기본)"
@@ -3051,7 +3051,7 @@ ko:
         inherited: '이 권한은 ''everyone''으로부터 상속됩니다'
       special_warning: "경고: 이 카테고리는 사전 생성된 카테고리이기 때문에 보안 설정 편집이 불가합니다. 이 카테고리를 사용하고 싶지 않다면, 편집 대신 삭제하세요."
       uncategorized_security_warning: "특수 카테고리입니다. 카테고리가 없는 주제의 보관 영역으로 사용되므로 보안 설정을 가질 수 없습니다."
-      uncategorized_general_warning: '특수 카테고리입니다. 카테고리를 선택하지 않은 새 주제의 디폴트 카테고리로 사용됩니다. 이 행동을 방지하고 카테고리를 강제로 선택하려면 <a href="%{settingLink}">여기에서 설정을 비활성화하세요</a>. 이름이나 설명을 변경하려면 <a href="%{customizeLink}">사용자 지정 / 텍스트 콘텐츠</a>로 이동하세요.'
+      uncategorized_general_warning: '이 카테고리는 특별합니다. 카테고리를 선택하지 않은 새 주제의 기본 카테고리로 사용됩니다. 이 동작을 방지하고 범주를 강제로 선택 <a href="%{settingLink}">하려면 여기에서 설정을 비활성화하십시오</a> . 이름이나 설명을 변경하려면 <a href="%{customizeLink}">사용자 정의 / 텍스트 내용으로 이동하십시오</a> .'
       pending_permission_change_alert: "이 카테고리에 %{group} 그룹을 추가하지 않았습니다. 이 버튼을 클릭하여 추가하세요."
       images: "이미지"
       email_in: "수신 메일 주소 사용자 지정:"
