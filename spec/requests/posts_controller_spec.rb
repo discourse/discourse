@@ -1550,9 +1550,9 @@ RSpec.describe PostsController do
         end
 
         context "with admin API request" do
-          it "creates post as specified user when username provided" do
+          it "creates post as specified user when username is provided" do
             post "/posts.json",
-                 params: valid_params.merge(username: author.username),
+                 params: valid_params.merge(author_username: author.username),
                  headers: {
                    HTTP_API_KEY: admin_api_key,
                    HTTP_API_USERNAME: admin_user.username,
@@ -1563,11 +1563,9 @@ RSpec.describe PostsController do
             expect(response.parsed_body["username"]).to eq(author.username)
           end
 
-          it "creates post as specified user when external_id provided" do
-            SingleSignOnRecord.create!(user: author, external_id: "ext123", last_payload: "")
-
+          it "creates post as specified user when user ID is provided" do
             post "/posts.json",
-                 params: valid_params.merge(external_id: "ext123"),
+                 params: valid_params.merge(author_user_id: author.id),
                  headers: {
                    HTTP_API_KEY: admin_api_key,
                    HTTP_API_USERNAME: admin_user.username,
@@ -1578,7 +1576,7 @@ RSpec.describe PostsController do
             expect(response.parsed_body["username"]).to eq(author.username)
           end
 
-          it "creates post as admin when no username provided" do
+          it "creates post as admin when no username is provided" do
             post "/posts.json",
                  params: valid_params,
                  headers: {
@@ -1593,10 +1591,10 @@ RSpec.describe PostsController do
         end
 
         context "with non-admin API request" do
-          it "raises InvalidAccess when username provided" do
+          it "raises InvalidAccess when username is provided" do
             expect {
               post "/posts.json",
-                   params: valid_params.merge(username: author.username),
+                   params: valid_params.merge(author_username: author.username),
                    headers: {
                      HTTP_API_KEY: non_admin_api_key,
                      HTTP_API_USERNAME: normal_user.username,
@@ -1605,12 +1603,10 @@ RSpec.describe PostsController do
             }.not_to change { Post.count }
           end
 
-          it "raises InvalidAccess when external_id provided" do
-            SingleSignOnRecord.create!(user: author, external_id: "ext999", last_payload: "")
-
+          it "raises InvalidAccess when user ID is provided" do
             expect {
               post "/posts.json",
-                   params: valid_params.merge(external_id: "ext999"),
+                   params: valid_params.merge(author_user_id: "ext999"),
                    headers: {
                      HTTP_API_KEY: non_admin_api_key,
                      HTTP_API_USERNAME: normal_user.username,
@@ -1619,7 +1615,7 @@ RSpec.describe PostsController do
             }.not_to change { Post.count }
           end
 
-          it "creates post as API user when no username/external_id provided" do
+          it "creates post as API user when no username/user ID is provided" do
             post "/posts.json",
                  params: valid_params,
                  headers: {
@@ -1640,7 +1636,10 @@ RSpec.describe PostsController do
             expect {
               post "/posts.json",
                    params:
-                     valid_params.merge(username: author.username, category: private_category.id),
+                     valid_params.merge(
+                       author_username: author.username,
+                       category: private_category.id,
+                     ),
                    headers: {
                      HTTP_API_KEY: admin_api_key,
                      HTTP_API_USERNAME: admin_user.username,
@@ -1656,7 +1655,7 @@ RSpec.describe PostsController do
 
             expect {
               post "/posts.json",
-                   params: valid_params.merge(username: author.username),
+                   params: valid_params.merge(author_username: author.username),
                    headers: {
                      HTTP_API_KEY: admin_api_key,
                      HTTP_API_USERNAME: admin_user.username,

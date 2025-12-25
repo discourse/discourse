@@ -201,9 +201,20 @@ class PostsController < ApplicationController
   def create
     user =
       if is_api?
-        post_as_another_user = (params[:username].present? || params[:external_id].present?)
+        author_user_id = params[:author_user_id].presence
+        author_username = params[:author_username].presence
+        post_as_another_user = !!(author_user_id || author_username)
+
         if @guardian.is_admin? && post_as_another_user
-          fetch_user_from_params
+          by_user_id = User.find_by(id: author_user_id) if author_user_id
+          by_username = User.find_by(username_lower: author_username.downcase) if author_username
+
+          if by_user_id && by_username && by_user_id.id != by_username.id
+            raise Discourse::InvalidParameters.new
+          end
+          raise Discourse::InvalidParameters.new(:author_username) if !by_user_id && !by_username
+
+          by_user_id || by_username
         elsif post_as_another_user
           raise Discourse::InvalidAccess
         else
