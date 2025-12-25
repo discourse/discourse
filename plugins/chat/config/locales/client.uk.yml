@@ -152,6 +152,7 @@ uk:
       separate_sidebar_mode:
         title: "Показувати окремі режими бічної панелі для форуму і чату"
       send_shortcut:
+        title: "Надіслати ярлик"
         enter:
           label: "Надіслати за допомогою Enter"
         meta_enter:
@@ -273,6 +274,7 @@ uk:
       chat_notifications_title: "Сповіщення чату"
       only_chat_push_notifications:
         title: "Надсилати лише push-сповіщення в чаті"
+      personalization_title: "Персоналізація"
       ignore_channel_wide_mention:
         title: "Ігнорувати на каналі масові згадки"
       show_thread_title_prompts:
