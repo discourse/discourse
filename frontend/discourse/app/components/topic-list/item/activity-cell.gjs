@@ -14,7 +14,7 @@ const ActivityCell = <template>
     }}
     ...attributes
   >
-    <a href={{@topic.recentActivityUrl}} class="post-activity">
+    <a href={{@topic.lastPostUrl}} class="post-activity">
       {{~! no whitespace ~}}
       <PluginOutlet
         @name="topic-list-before-relative-date"
