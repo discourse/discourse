@@ -16,7 +16,7 @@ module PageObjects
       end
 
       def has_mode?(mode)
-        has_css?("#{carousel_selector} .d-image-carousel--#{mode}")
+        has_css?("#{carousel_selector} .d-image-carousel --#{mode}")
       end
 
       def has_slides?(count:)
