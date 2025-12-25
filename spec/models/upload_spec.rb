@@ -92,7 +92,6 @@ RSpec.describe Upload do
       SiteSetting.video_conversion_service = "aws_mediaconvert"
       SiteSetting.mediaconvert_role_arn = "arn:aws:iam::123456789012:role/MediaConvertRole"
       SiteSetting.enable_s3_uploads = true
-      SiteSetting.s3_use_iam_profile = true
       SiteSetting.video_conversion_enabled = true
     end
 
