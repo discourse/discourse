@@ -10,6 +10,7 @@ he:
       logs:
         staff_actions:
           actions:
+            create_automation: יצירת אוטומציה
             update_automation: עדכון אוטומציה
             delete_automation: מחיקת אוטומציה
     discourse_automation:
@@ -288,6 +289,9 @@ he:
           fields:
             email_template:
               label: תבנית דוא״ל
+            recipients:
+              label: נמענים
+              description: משתמשים או כתובת דוא״ל לשליחת התראות
         not_found: לא ניתן למצוא את הסקריפט `%{script}` לאוטומציה `%{automation}`, יש לוודא שהתוסף המשויך מותקן
         zapier_webhook:
           fields:
@@ -437,6 +441,11 @@ he:
               label: "שם שדה מותאם אישית של משתמש"
         set_topic_timer:
           title: הגדרת שעון עצר לנושא
+          fields:
+            type:
+              label: סוג מתזמן
+            duration:
+              label: משך מתזמן
       unnamed_automation: "אוטומציה ללא שם"
       models:
         script:

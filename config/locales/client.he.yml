@@ -1516,6 +1516,11 @@ he:
       organisation: ארגון
       phone: טלפון
       other_accounts: "חשבונות נוספים עם כתובת IP זו:"
+      other_accounts_with_ip:
+        one: "חשבון אחר עם כתובת ה־IP הזאת"
+        two: "שני חשבונות אחרים עם כתובת ה־IP הזאת"
+        many: "%{count} חשבונות אחרים עם כתובת ה־IP הזאת"
+        other: "%{count} חשבונות אחרים עם כתובת ה־IP הזאת"
       delete_other_accounts:
         one: "מחיקה %{count}"
         two: "מחיקה %{count}"
@@ -5342,6 +5347,17 @@ he:
       upload_instructions: "אחת בשורה, אפשר עם קבוצת תגיות בתצורה ‚שם_תגית,קבוצת_תגיות’."
       upload_successful: "התגיות הועלו בהצלחה"
       bulk_create_button: "יצירה"
+      bulk_create_success:
+        one: "נוצרה תגית:"
+        two: "נוצרו שתי תגיות:"
+        many: "נוצרו %{count} תגיות:"
+        other: "נוצרו %{count} תגיות:"
+      bulk_create_already_exist:
+        one: "תגית כבר קיימת:"
+        two: "שתי תגיות כבר קיימות:"
+        many: "%{count} תגיות כבר קיימות:"
+        other: "%{count} תגיות כבר קיימות:"
+      bulk_create_some_failed: "היצירה של חלק מהתגיות נכשלה:"
       delete_unused_confirmation:
         one: "תגית אחת תימחק: %{tags}"
         two: "%{count} תגיות תימחקנה: %{tags}"
@@ -5506,6 +5522,7 @@ he:
       tags_form_modal:
         title: "עריכת ניווט בתגיות"
         filter_placeholder: "סינון תגיות"
+        no_tags: "אין תגיות שתואמות למסננים הנוכחיים."
         subtitle:
           text: "ואנו נציג לך את התגיות המובילות באתר אוטומטית"
       edit_navigation_modal_form:
@@ -5858,6 +5875,8 @@ he:
       toggle_localized:
         translated: "העמוד מתורגם על ידי מכונה. יש ללחוץ כדי לצפות במקור."
         not_translated: "העמוד לא מתורגם. נא ללחוץ כדי לתרגם."
+    language_switcher:
+      title: "החלפת שפת האתר"
   admin_js:
     type_to_filter: "יש להקליד לסינון…"
     settings: "הגדרות"
@@ -5998,6 +6017,11 @@ he:
               title: "מזהה Discourse"
         discourse_id:
           title: "מזהה Discourse"
+          stats:
+            total_users: "סך כל המשתמשים"
+            signups_30_days: "הרשמות (30 יום)"
+            logins_30_days: "כניסות (30 יום)"
+          regenerate_credentials: "יצירת פרטי גישה מחדש"
           learn_more: "מידע נוסף"
         logo:
           title: "לוגו"
@@ -8671,6 +8695,7 @@ he:
         no_badges: אין עיטורים שניתן להעניק.
         none_selected: "נא לבחור עיטור כדי להתחיל"
         sections:
+          design: עיצוב
           query: שאילתה
           settings: הגדרות
         usage_heading: שימוש

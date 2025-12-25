@@ -255,6 +255,7 @@ he:
       kicked_from_channel: "אין לך יותר גישה לערוץ הזה."
       only_chat_push_notifications:
         title: "לשלוח התראות בדחיפה על הצ׳אט בלבד"
+      personalization_title: "התאמה אישית"
       ignore_channel_wide_mention:
         title: "התעלמות מאזכורים לכל הערוץ"
       show_thread_title_prompts:

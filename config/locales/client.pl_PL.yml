@@ -1220,6 +1220,7 @@ pl_PL:
           title: Interakcja
           posting: Wysyłanie
           notification: Powiadomienie
+          self_lockout: "Zamierzasz zmienić widoczność grupy w sposób, który spowoduje utratę Twojego dostępu. Czy na pewno chcesz kontynuować?"
         email:
           title: "E-mail"
           status: "Zsynchronizowane %{old_emails} / %{total_emails} wiadomości e-mail za pośrednictwem IMAP."
@@ -1368,6 +1369,8 @@ pl_PL:
         make_owner_description: "Uczyń <b>%{username}</b> właścicielem tej grupy"
         remove_owner: "Usuń z funkcji właściciela"
         remove_owner_description: "Usuń <b>%{username}</b> z funkcji właściciela tej grupy"
+        remove_member_self_lockout: "Usunięcie się z tej grupy spowoduje cofnięcie dostępu do zarządzania nią. Czy na pewno chcesz kontynuować?"
+        remove_owner_self_lockout: "Usunięcie siebie jako właściciela spowoduje cofnięcie dostępu do zarządzania tą grupą. Czy na pewno chcesz kontynuować?"
         make_primary: "Ustaw jako podstawowe"
         make_primary_description: "Ustaw tę grupę jako podstawową dla <b>%{username}</b>"
         remove_primary: "Usuń jako podstawowy"

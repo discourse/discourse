@@ -999,6 +999,7 @@ zh_CN:
           title: 互动
           posting: 发帖
           notification: 通知
+          self_lockout: "如果改变此群组的公开范围，您将丢失自己的访问权限，确定要继续吗？"
         email:
           title: "电子邮件"
           status: "已通过 IMAP 同步了 %{old_emails}/%{total_emails} 封邮件。"
@@ -1144,6 +1145,8 @@ zh_CN:
         make_owner_description: "将 <b>%{username}</b> 设为此群组的所有者"
         remove_owner: "移除所有者身份"
         remove_owner_description: "将 <b>%{username}</b> 从此群组的所有者中移除"
+        remove_member_self_lockout: "将自己从该群组中移除将撤消您的管理权限。您确定要继续吗？"
+        remove_owner_self_lockout: "取消自己的所有者身份将撤消您管理该群组的权限。您确定要继续吗？"
         make_primary: "设为主要群组"
         make_primary_description: "将此群组设为 <b>%{username}</b> 的主要群组"
         remove_primary: "移除主要群组状态"
