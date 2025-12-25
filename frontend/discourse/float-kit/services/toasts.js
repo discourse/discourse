@@ -8,6 +8,7 @@ import DToastInstance from "discourse/float-kit/lib/d-toast-instance";
 
 export default class Toasts extends Service {
   @tracked activeToasts = new TrackedArray();
+  #stackOrderCounter = 0;
 
   /**
    * Render a toast
@@ -29,6 +30,7 @@ export default class Toasts extends Service {
     });
 
     if (instance.isValidForView) {
+      instance.stackOrder = this.#stackOrderCounter++;
       this.activeToasts.push(instance);
     }
 

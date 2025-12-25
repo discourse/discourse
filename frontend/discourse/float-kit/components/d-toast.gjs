@@ -143,10 +143,11 @@ export default class DToast extends Component {
   }
 
   get toastStyles() {
+    const order = this.args.toast.stackOrder;
     const styles = [
-      `--index: ${this.args.index}`,
-      `--toasts-before: ${this.args.index}`,
-      `--z-index: ${this.args.index}`,
+      `--index: ${order}`,
+      `--toasts-before: ${order}`,
+      `--z-index: ${order}`,
     ];
 
     return htmlSafe(styles.join("; "));
@@ -172,6 +173,19 @@ export default class DToast extends Component {
     return htmlSafe(styles.join("; "));
   }
 
+  get enteringAnimationSettings() {
+    const activeToasts = this.args.toasts.filter((t) => !t.dismissed);
+    const isNewest = this.args.toast === activeToasts[activeToasts.length - 1];
+
+    if (!isNewest) {
+      return {
+        contentMove: false,
+        duration: 400,
+      };
+    }
+    return null;
+  }
+
   <template>
     {{effect this.syncAutoClose this.isFront this.pointerOver this.travelStatus this.progressBar}}
 
@@ -190,6 +204,7 @@ export default class DToast extends Component {
             @inertOutside={{false}}
             @onClickOutside={{hash dismiss=false stopOverlayPropagation=false}}
             @onTravelStatusChange={{this.handleTravelStatusChange}}
+            @enteringAnimationSettings={{this.enteringAnimationSettings}}
             class={{concatClass
               "d-toast"
               (concat "d-toast-" this.contentPlacement)
@@ -208,7 +223,7 @@ export default class DToast extends Component {
               >
                 <DSheet.SpecialWrapper.Content
                   class="d-toast-inner-content"
-                  data-index={{@index}}
+                  data-index={{this.args.toast.stackOrder}}
                   data-front={{if this.isFront "true" "false"}}
                   data-presented={{if this.presented "true" "false"}}
                   data-pointer-over={{if this.pointerOver "true" "false"}}
