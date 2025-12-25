@@ -1,15 +1,13 @@
 import { getOwner } from "@ember/owner";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { ajax } from "discourse/lib/ajax";
+import { ajax, TRACK_VIEW_HEADER } from "discourse/lib/ajax";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-const trackViewHeaderName = "Discourse-Track-View";
-
 function setupPretender(server, helper) {
   server.get("/fake-analytics-endpoint", (request) => {
-    if (request.requestHeaders[trackViewHeaderName]) {
+    if (request.requestHeaders[TRACK_VIEW_HEADER]) {
       throw "Fake analytics endpoint was called with track-view header";
     }
     return helper.response({});
@@ -27,8 +25,9 @@ function assertRequests({ assert, tracked, untracked, message }) {
     untrackedCount = 0;
 
   const requests = pretender.handledRequests;
+
   requests.forEach((request) => {
-    if (request.requestHeaders[trackViewHeaderName]) {
+    if (request.requestHeaders[TRACK_VIEW_HEADER]) {
       trackedCount++;
     } else {
       untrackedCount++;
