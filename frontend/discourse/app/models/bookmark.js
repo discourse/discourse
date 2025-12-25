@@ -97,13 +97,12 @@ export default class Bookmark extends RestModel {
     return this.pinned ? "unpin" : "pin";
   }
 
-  @discourseComputed("highest_post_number", "url")
-  lastPostUrl(highestPostNumber) {
-    // For bookmarks without topic_id (e.g., plugins), use bookmarkable_url
-    if (!this.topic_id) {
-      return this.bookmarkable_url;
+  @discourseComputed("highest_post_number", "bookmarkable_url", "topic_id")
+  recentActivityUrl(highest_post_number, bookmarkable_url, topic_id) {
+    if (!topic_id) {
+      return bookmarkable_url;
     }
-    return this.urlForPostNumber(highestPostNumber);
+    return this.urlForPostNumber(highest_post_number);
   }
 
   // Helper to build a Url with a post number
