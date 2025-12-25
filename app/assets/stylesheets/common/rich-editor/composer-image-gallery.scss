@@ -1,9 +1,16 @@
+@use "lib/viewport";
+
 .composer-image-gallery {
   &__mode-buttons {
     position: absolute;
     right: var(--space-2);
     top: var(--space-2);
     display: flex;
+
+    @include viewport.until(sm) {
+      flex-direction: column;
+      gap: var(--space-2);
+    }
   }
 
   &__mode-btn {
@@ -16,23 +23,29 @@
     font-size: var(--font-down-1-rem);
     padding: var(--space-1) var(--space-2);
 
-    &:first-child {
-      border-top-left-radius: var(--d-border-radius);
-      border-bottom-left-radius: var(--d-border-radius);
+    @include viewport.until(sm) {
+      padding: var(--space-2) var(--space-4);
     }
 
-    &:last-child {
-      border-top-right-radius: var(--d-border-radius);
-      border-bottom-right-radius: var(--d-border-radius);
-    }
+    @include viewport.from(sm) {
+      &:first-child {
+        border-top-left-radius: var(--d-border-radius);
+        border-bottom-left-radius: var(--d-border-radius);
+      }
 
-    &:not(:first-child) {
-      border-left: none;
-    }
+      &:last-child {
+        border-top-right-radius: var(--d-border-radius);
+        border-bottom-right-radius: var(--d-border-radius);
+      }
 
-    &:hover {
-      color: var(--primary);
-      background-color: var(--d-hover);
+      &:not(:first-child) {
+        border-left: none;
+      }
+
+      &:hover {
+        color: var(--primary);
+        background-color: var(--d-hover);
+      }
     }
 
     &.is-active {
