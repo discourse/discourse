@@ -400,6 +400,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
         mysql_query(
           "SELECT id as CommentID,
                 tid as DiscussionID,
+				subject as Subject,
                 text as Body,
                 time as DateInserted,
 				#{optional_youtube_column}
@@ -432,6 +433,12 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
 
         raw = rewrite_legacy_links(raw)
         raw = rewrite_legacy_uploads(raw)
+
+        if comment["Subject"].present?
+          subject = comment["Subject"].to_s
+          first_line = raw.lines.find { |l| !l.strip.empty? }&.strip || ""
+          raw = "**#{subject}**\n\n#{raw}" unless first_line.start_with?(subject)
+        end
 
         {
           id: "comment#" + comment["CommentID"].to_s,
