@@ -197,13 +197,13 @@
       align-items: center;
       gap: var(--space-1);
 
+      @include viewport.until(sm) {
+        padding: var(--space-2) var(--space-4);
+      }
+
       &:hover {
         color: var(--primary);
         background: var(--primary-low);
-      }
-
-      svg {
-        font-size: var(--font-down-1-rem);
       }
     }
 
