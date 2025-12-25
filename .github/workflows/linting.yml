@@ -25,6 +25,10 @@ jobs:
       - name: Set working directory owner
         run: chown root:root .
 
+      
+      - name: Upgrade pnpm
+        run: npm install -g pnpm@10
+
       - uses: actions/checkout@v6
         with:
           fetch-depth: 1
