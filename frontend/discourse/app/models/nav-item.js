@@ -1,7 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { reads } from "@ember/object/computed";
 import { service } from "@ember/service";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
@@ -221,10 +220,13 @@ export default class NavItem extends EmberObject {
   @service currentUser;
 
   @tracked name;
-  @reads("name") filterType;
-
   @tracked _title;
   @tracked _displayName;
+
+  @dependentKeyCompat
+  get filterType() {
+    return this.name;
+  }
 
   @dependentKeyCompat
   get title() {

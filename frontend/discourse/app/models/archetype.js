@@ -1,9 +1,27 @@
-import { gt, not } from "@ember/object/computed";
-import { propertyEqual } from "discourse/lib/computed";
+import { tracked } from "@glimmer/tracking";
+import { dependentKeyCompat } from "@ember/object/compat";
+import { isEmpty } from "@ember/utils";
+import { deepEqual } from "discourse/lib/object";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import RestModel from "discourse/models/rest";
 
 export default class Archetype extends RestModel {
-  @gt("options.length", 0) hasOptions;
-  @propertyEqual("id", "site.default_archetype") isDefault;
-  @not("isDefault") notDefault;
+  @tracked id;
+  @tracked site;
+  @trackedArray options;
+
+  @dependentKeyCompat
+  get isDefault() {
+    return deepEqual(this.id, this.site?.default_archetype);
+  }
+
+  @dependentKeyCompat
+  get hasOptions() {
+    return !isEmpty(this.options);
+  }
+
+  @dependentKeyCompat
+  get notDefault() {
+    return !this.isDefault;
+  }
 }

@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { action } from "@ember/object";
-import { notEmpty } from "@ember/object/computed";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
@@ -126,9 +126,13 @@ export default class TopicList extends RestModel {
   @service session;
 
   @tracked loadingBefore = false;
+  @tracked more_topics_url;
   @trackedArray topics;
 
-  @notEmpty("more_topics_url") canLoadMore;
+  @dependentKeyCompat
+  get canLoadMore() {
+    return !isEmpty(this.more_topics_url);
+  }
 
   forEachNew(topics, callback) {
     const topicIds = new Set();

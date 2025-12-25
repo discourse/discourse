@@ -1,10 +1,11 @@
 import { tracked } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
 import EmberObject from "@ember/object";
-import { equal } from "@ember/object/computed";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { getOwner, setOwner } from "@ember/owner";
 import { Promise } from "rsvp";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import { enumerateTrackedEntries } from "discourse/lib/tracked-tools";
 
 export default class RestModel extends EmberObject {
   // Overwrite and JSON will be passed through here before `create` and `update`
@@ -14,9 +15,12 @@ export default class RestModel extends EmberObject {
 
   static create(args) {
     args = args || {};
-
     args.__munge = this.munge;
-    const createArgs = this.munge(args, args.store);
+
+    const createArgs = this.munge(
+      { ...args, ...Object.fromEntries(enumerateTrackedEntries(args)) },
+      args.store
+    );
 
     // Some Discourse code calls `model.create()` directly without going through the
     // store. In that case the owner is not set, and injections will fail. This workaround ensures
@@ -30,10 +34,17 @@ export default class RestModel extends EmberObject {
   }
 
   @tracked isSaving = false;
-  @equal("__state", "new") isNew;
-  @equal("__state", "created") isCreated;
-
   @tracked __state;
+
+  @dependentKeyCompat
+  get isNew() {
+    return this.__state === "new";
+  }
+
+  @dependentKeyCompat
+  get isCreated() {
+    return this.__state === "created";
+  }
 
   beforeCreate() {}
   afterCreate() {}

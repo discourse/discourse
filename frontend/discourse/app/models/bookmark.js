@@ -1,5 +1,6 @@
+import { tracked } from "@glimmer/tracking";
 import { computed } from "@ember/object";
-import { none } from "@ember/object/computed";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { capitalize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
@@ -59,7 +60,12 @@ export default class Bookmark extends RestModel {
     await applyModelTransformations("bookmark", bookmarks);
   }
 
-  @none("id") newBookmark;
+  @tracked id;
+
+  @dependentKeyCompat
+  get newBookmark() {
+    return this.id == null;
+  }
 
   @computed
   get url() {

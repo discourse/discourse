@@ -1,6 +1,6 @@
+import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { equal } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { observes } from "@ember-decorators/object";
@@ -37,6 +37,7 @@ export default class Group extends RestModel {
     return ajax("/groups/check-name", { data: { group_name: name } });
   }
 
+  @tracked mentionable_level;
   @trackedArray members = [];
   @trackedArray requesters = [];
 
@@ -47,7 +48,10 @@ export default class Group extends RestModel {
   requestersLimit = null;
   requestersOffset = null;
 
-  @equal("mentionable_level", 99) canEveryoneMention;
+  @dependentKeyCompat
+  get canEveryoneMention() {
+    return this.mentionable_level === 99;
+  }
 
   @discourseComputed("automatic_membership_email_domains")
   emailDomains(value) {

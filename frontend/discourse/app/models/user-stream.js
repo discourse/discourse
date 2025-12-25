@@ -1,8 +1,9 @@
 import { tracked } from "@glimmer/tracking";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { ajax } from "discourse/lib/ajax";
 import { removeValueFromArray } from "discourse/lib/array-tools";
-import { url } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
+import getURL from "discourse/lib/get-url";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
@@ -14,14 +15,15 @@ export default class UserStream extends RestModel {
   @tracked loaded = false;
   @tracked loading = false;
   @tracked itemsLoaded = 0;
+  @tracked user;
   @trackedArray content = [];
 
-  @url(
-    "itemsLoaded",
-    "user.username_lower",
-    "/user_actions.json?offset=%@&username=%@"
-  )
-  baseUrl;
+  @dependentKeyCompat
+  get baseUrl() {
+    return getURL(
+      `/user_actions.json?offset=${this.itemsLoaded}&username=${this.user?.username_lower}`
+    );
+  }
 
   @discourseComputed("filter")
   filterParam(filter) {

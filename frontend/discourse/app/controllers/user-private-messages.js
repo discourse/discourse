@@ -95,7 +95,7 @@ export default class extends Controller {
       },
     ];
 
-    this.model.groupsWithMessages.forEach(({ name }) => {
+    this.model.groupsWithMessages?.forEach(({ name }) => {
       let groupName = name;
       let groupMsgsCount = 0;
       groupMsgsCount = ["new", "unread"].reduce((count, type) => {

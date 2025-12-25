@@ -1,17 +1,19 @@
 import { cached, tracked } from "@glimmer/tracking";
 import EmberObject, { get } from "@ember/object";
-import { alias, and, equal, not, or } from "@ember/object/computed";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { resolveShareUrl } from "discourse/helpers/share-url";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { propertyEqual } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import { cook } from "discourse/lib/text";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
-import { defineTrackedProperty } from "discourse/lib/tracked-tools";
+import {
+  defineTrackedProperty,
+  enumerateTrackedKeys,
+} from "discourse/lib/tracked-tools";
 import { userPath } from "discourse/lib/url";
 import { postUrl } from "discourse/lib/utilities";
 import ActionSummary from "discourse/models/action-summary";
@@ -23,7 +25,6 @@ import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
 const pluginTrackedProperties = new Set();
-const trackedPropertiesForPostUpdate = new Set();
 
 /**
  * @internal
@@ -44,22 +45,6 @@ export function _addTrackedPostProperty(propertyKey) {
  */
 export function clearAddedTrackedPostProperties() {
   pluginTrackedProperties.clear();
-}
-
-/**
- * Decorator to mark a property as post property as tracked.
- *
- * It extends the standard Ember @tracked behavior to also keep track of the fields
- * that need to be copied when using `post.updateFromPost`.
- *
- * @param {Object} target - The target object.
- * @param {string} propertyKey - The key of the property to track.
- * @param {PropertyDescriptor} descriptor - The property descriptor.
- * @returns {PropertyDescriptor} The updated property descriptor.
- */
-function trackedPostProperty(target, propertyKey, descriptor) {
-  trackedPropertiesForPostUpdate.add(propertyKey);
-  return tracked(target, propertyKey, descriptor);
 }
 
 export default class Post extends RestModel {
@@ -150,85 +135,69 @@ export default class Post extends RestModel {
   @service currentUser;
   @service site;
 
+  @tracked action_code;
+  @tracked action_code_path;
+  @tracked action_code_who;
+  @tracked actions_summary;
+  @tracked admin;
+  @tracked badges_granted;
+  @tracked bookmarked;
+  @tracked can_delete;
+  @tracked can_edit;
+  @tracked can_permanently_delete;
+  @tracked can_recover;
+  @tracked can_see_hidden_post;
+  @tracked can_view_edit_history;
+  @tracked cooked;
+  @tracked cooked_hidden;
+  @tracked created_at;
   @tracked customShare = null;
-
-  // Use @trackedPostProperty here instead of Glimmer's @tracked because we need to know which properties are tracked
-  // in order to correctly update the post in the updateFromPost method. Currently this is not possible using only
-  // the standard tracked method because these properties are added to the class prototype and are not enumarated by
-  // object.keys().
-  // See https://github.com/emberjs/ember.js/issues/18220
-  @trackedPostProperty action_code;
-  @trackedPostProperty action_code_path;
-  @trackedPostProperty action_code_who;
-  @trackedPostProperty actions_summary;
-  @trackedPostProperty admin;
-  @trackedPostProperty badges_granted;
-  @trackedPostProperty bookmarked;
-  @trackedPostProperty can_delete;
-  @trackedPostProperty can_edit;
-  @trackedPostProperty can_permanently_delete;
-  @trackedPostProperty can_recover;
-  @trackedPostProperty can_see_hidden_post;
-  @trackedPostProperty can_view_edit_history;
-  @trackedPostProperty cooked;
-  @trackedPostProperty cooked_hidden;
-  @trackedPostProperty created_at;
-  @trackedPostProperty deleted_at;
-  @trackedPostProperty deleted_by;
-  @trackedPostProperty excerpt;
-  @trackedPostProperty expandedExcerpt;
-  @trackedPostProperty group_moderator;
-  @trackedPostProperty hasGap;
-  @trackedPostProperty hidden;
-  @trackedPostProperty id;
-  @trackedPostProperty is_auto_generated;
-  @trackedPostProperty last_wiki_edit;
-  @trackedPostProperty likeAction;
-  @trackedPostProperty link_counts;
-  @trackedPostProperty locked;
-  @trackedPostProperty moderator;
-  @trackedPostProperty name;
-  @trackedPostProperty notice;
-  @trackedPostProperty notice_created_by_user;
-  @trackedPostProperty post_number;
-  @trackedPostProperty post_type;
-  @trackedPostProperty primary_group_name;
-  @trackedPostProperty quoted;
-  @trackedPostProperty read;
-  @trackedPostProperty readers_count;
-  @trackedPostProperty reply_count;
-  @trackedPostProperty reply_to_user;
-  @trackedPostProperty staff;
-  @trackedPostProperty staged;
-  @trackedPostProperty title_is_group;
-  @trackedPostProperty topic;
-  @trackedPostProperty topic_id;
-  @trackedPostProperty trust_level;
-  @trackedPostProperty updated_at;
-  @trackedPostProperty user_deleted;
-  @trackedPostProperty user_id;
-  @trackedPostProperty user_suspended;
-  @trackedPostProperty user_title;
-  @trackedPostProperty username;
-  @trackedPostProperty version;
-  @trackedPostProperty via_email;
-  @trackedPostProperty wiki;
-  @trackedPostProperty yours;
-  @trackedPostProperty user_custom_fields;
-  @trackedPostProperty post_localizations;
-  @trackedPostProperty is_localized;
-  @trackedPostProperty language;
-  @trackedPostProperty localization_outdated;
-
-  @alias("can_edit") canEdit; // for compatibility with existing code
-  @equal("trust_level", 0) new_user;
-  @equal("post_number", 1) firstPost;
-  @and("firstPost", "topic.deleted_at") deletedViaTopic; // mark fist post as deleted if topic was deleted
-  @or("deleted_at", "deletedViaTopic") deleted; // post is either highlighted as deleted or hidden/removed from the post stream
-  @not("deleted") notDeleted;
-  @or("deleted_at", "user_deleted") recoverable; // post or content still can be recovered
-  @propertyEqual("topic.details.created_by.id", "user_id") topicOwner;
-  @alias("topic.details.created_by.id") topicCreatedById;
+  @tracked deleted_at;
+  @tracked deleted_by;
+  @tracked excerpt;
+  @tracked expandedExcerpt;
+  @tracked group_moderator;
+  @tracked hasGap;
+  @tracked hidden;
+  @tracked id;
+  @tracked is_auto_generated;
+  @tracked is_localized;
+  @tracked language;
+  @tracked last_wiki_edit;
+  @tracked likeAction;
+  @tracked link_counts;
+  @tracked localization_outdated;
+  @tracked locked;
+  @tracked moderator;
+  @tracked name;
+  @tracked notice;
+  @tracked notice_created_by_user;
+  @tracked post_localizations;
+  @tracked post_number;
+  @tracked post_type;
+  @tracked primary_group_name;
+  @tracked quoted;
+  @tracked read;
+  @tracked readers_count;
+  @tracked reply_count;
+  @tracked reply_to_user;
+  @tracked staff;
+  @tracked staged;
+  @tracked title_is_group;
+  @tracked topic;
+  @tracked topic_id;
+  @tracked trust_level;
+  @tracked updated_at;
+  @tracked user_custom_fields;
+  @tracked user_deleted;
+  @tracked user_id;
+  @tracked user_suspended;
+  @tracked user_title;
+  @tracked username;
+  @tracked version;
+  @tracked via_email;
+  @tracked wiki;
+  @tracked yours;
 
   constructor() {
     super(...arguments);
@@ -237,6 +206,51 @@ export default class Post extends RestModel {
     pluginTrackedProperties.forEach((propertyKey) => {
       defineTrackedProperty(this, propertyKey);
     });
+  }
+
+  @dependentKeyCompat
+  get canEdit() {
+    return this.can_edit;
+  }
+
+  @dependentKeyCompat
+  get new_user() {
+    return this.trust_level === 0;
+  }
+
+  @dependentKeyCompat
+  get firstPost() {
+    return this.post_number === 1;
+  }
+
+  @dependentKeyCompat
+  get deletedViaTopic() {
+    return this.firstPost && this.topic?.deleted_at;
+  }
+
+  @dependentKeyCompat
+  get deleted() {
+    return this.deleted_at || this.deletedViaTopic;
+  }
+
+  @dependentKeyCompat
+  get notDeleted() {
+    return !this.deleted;
+  }
+
+  @dependentKeyCompat
+  get recoverable() {
+    return this.deleted_at || this.user_deleted;
+  }
+
+  @dependentKeyCompat
+  get topicOwner() {
+    return this.topic?.details?.created_by?.id === this.user_id;
+  }
+
+  @dependentKeyCompat
+  get topicCreatedById() {
+    return this.topic?.details?.created_by?.id;
   }
 
   get shareUrl() {
@@ -629,7 +643,7 @@ export default class Post extends RestModel {
   updateFromPost(otherPost) {
     [
       ...Object.keys(otherPost),
-      ...trackedPropertiesForPostUpdate,
+      ...enumerateTrackedKeys(otherPost),
       ...pluginTrackedProperties,
     ].forEach((key) => {
       let value = otherPost[key],
