@@ -1,0 +1,29 @@
+@use "lib/viewport";
+
+.uc-floating-dismiss-topics-on-mobile {
+  @include viewport.until(sm) {
+    .dismiss-container-top {
+      position: fixed;
+      bottom: calc(env(safe-area-inset-bottom) + var(--space-4));
+      right: 50%;
+      transform: translateX(50%);
+      z-index: 2;
+      transition: bottom 0.3s ease;
+
+      .dismiss-read {
+        box-shadow: var(--shadow-dropdown);
+
+        .d-icon {
+          display: none;
+        }
+      }
+
+      .footer-nav-visible & {
+        bottom: calc(
+          var(--footer-nav-height) + env(safe-area-inset-bottom) +
+            var(--space-4)
+        );
+      }
+    }
+  }
+}
