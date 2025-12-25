@@ -1536,6 +1536,139 @@ RSpec.describe PostsController do
         end
       end
 
+      describe "API post creation on behalf of another user" do
+        fab!(:admin_user, :admin)
+        fab!(:admin_user) { Fabricate(:admin, refresh_auto_groups: true) }
+        fab!(:normal_user) { Fabricate(:user, refresh_auto_groups: true) }
+        fab!(:author) { Fabricate(:user, refresh_auto_groups: true) }
+
+        let(:admin_api_key) { Fabricate(:api_key).key }
+        let(:non_admin_api_key) { Fabricate(:api_key, user: normal_user).key }
+
+        let(:valid_params) do
+          { raw: "this is a test topic created by API", title: "this is title for test topic" }
+        end
+
+        context "with admin API request" do
+          it "creates post as specified user when username provided" do
+            post "/posts.json",
+                 params: valid_params.merge(username: author.username),
+                 headers: {
+                   HTTP_API_KEY: admin_api_key,
+                   HTTP_API_USERNAME: admin_user.username,
+                 }
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["raw"]).to eq(valid_params[:raw])
+            expect(response.parsed_body["username"]).to eq(author.username)
+          end
+
+          it "creates post as specified user when external_id provided" do
+            SingleSignOnRecord.create!(user: author, external_id: "ext123", last_payload: "")
+
+            post "/posts.json",
+                 params: valid_params.merge(external_id: "ext123"),
+                 headers: {
+                   HTTP_API_KEY: admin_api_key,
+                   HTTP_API_USERNAME: admin_user.username,
+                 }
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["raw"]).to eq(valid_params[:raw])
+            expect(response.parsed_body["username"]).to eq(author.username)
+          end
+
+          it "creates post as admin when no username provided" do
+            post "/posts.json",
+                 params: valid_params,
+                 headers: {
+                   HTTP_API_KEY: admin_api_key,
+                   HTTP_API_USERNAME: admin_user.username,
+                 }
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["raw"]).to eq(valid_params[:raw])
+            expect(response.parsed_body["username"]).to eq(admin_user.username)
+          end
+        end
+
+        context "with non-admin API request" do
+          it "raises InvalidAccess when username provided" do
+            expect {
+              post "/posts.json",
+                   params: valid_params.merge(username: author.username),
+                   headers: {
+                     HTTP_API_KEY: non_admin_api_key,
+                     HTTP_API_USERNAME: normal_user.username,
+                   }
+              expect(response.status).to eq(403)
+            }.not_to change { Post.count }
+          end
+
+          it "raises InvalidAccess when external_id provided" do
+            SingleSignOnRecord.create!(user: author, external_id: "ext999", last_payload: "")
+
+            expect {
+              post "/posts.json",
+                   params: valid_params.merge(external_id: "ext999"),
+                   headers: {
+                     HTTP_API_KEY: non_admin_api_key,
+                     HTTP_API_USERNAME: normal_user.username,
+                   }
+              expect(response.status).to eq(403)
+            }.not_to change { Post.count }
+          end
+
+          it "creates post as API user when no username/external_id provided" do
+            post "/posts.json",
+                 params: valid_params,
+                 headers: {
+                   HTTP_API_KEY: non_admin_api_key,
+                   HTTP_API_USERNAME: normal_user.username,
+                 }
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["raw"]).to eq(valid_params[:raw])
+            expect(response.parsed_body["username"]).to eq(normal_user.username)
+          end
+        end
+
+        context "when guardian permissions are enforced for target user" do
+          fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+
+          it "fails when target user lacks category permissions" do
+            expect {
+              post "/posts.json",
+                   params:
+                     valid_params.merge(username: author.username, category: private_category.id),
+                   headers: {
+                     HTTP_API_KEY: admin_api_key,
+                     HTTP_API_USERNAME: admin_user.username,
+                   }
+
+              expect(response.status).to eq(403)
+            }.not_to change { Post.count }
+          end
+
+          it "fails when target user is suspended" do
+            author.suspended_till = 1.year.from_now
+            author.save!
+
+            expect {
+              post "/posts.json",
+                   params: valid_params.merge(username: author.username),
+                   headers: {
+                     HTTP_API_KEY: admin_api_key,
+                     HTTP_API_USERNAME: admin_user.username,
+                   }
+
+              expect(response.status).to eq(422)
+              expect(response.parsed_body["errors"]).to include(I18n.t("user_is_suspended"))
+            }.not_to change { Post.count }
+          end
+        end
+      end
+
       context "when adding custom fields to topic via the `topic_custom_fields` param" do
         it "should return a 400 response code when no custom fields has been permitted" do
           sign_in(user)
