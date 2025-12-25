@@ -184,27 +184,6 @@
     padding: var(--space-half) var(--space-2) var(--space-2) var(--space-2);
     margin-block: var(--space-4);
 
-    &__mode-select {
-      position: absolute;
-      right: 0.25rem;
-      top: -0.6rem;
-      border: 1px solid var(--content-border-color);
-      border-radius: var(--d-border-radius);
-      background-color: var(--primary-very-low);
-      color: var(--primary-medium);
-      font-size: var(--font-down-1-rem);
-      padding: 0 var(--space-1);
-      z-index: 1;
-
-      &:hover {
-        color: var(--primary);
-      }
-
-      &:focus {
-        outline: none;
-      }
-    }
-
     &__remove-btn {
       position: absolute;
       bottom: var(--space-1);
