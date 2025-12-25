@@ -1,20 +1,21 @@
 .composer-image-gallery {
   &__mode-buttons {
     position: absolute;
-    right: 0.25rem;
-    top: -0.6rem;
+    right: 1rem;
+    top: 1rem;
     display: flex;
     z-index: 1;
   }
 
   &__mode-btn {
-    border: 1px solid var(--content-border-color);
-    background-color: var(--primary-very-low);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    border: 1px solid var(--primary-low);
+    background: var(--secondary);
     color: var(--primary-medium);
     font-size: var(--font-down-1-rem);
-    padding: 0 var(--space-2);
-    cursor: pointer;
-    margin: 0;
+    padding: var(--space-1) var(--space-2);
 
     &:first-child {
       border-top-left-radius: var(--d-border-radius);
@@ -32,21 +33,17 @@
 
     &:hover {
       color: var(--primary);
-      background-color: var(--primary-low);
+      background-color: var(--d-hover);
     }
 
     &.is-active {
       background-color: var(--tertiary-low);
       color: var(--tertiary);
-      border-color: var(--tertiary);
-
-      + .composer-image-gallery__mode-btn {
-        border-left-color: var(--tertiary);
-      }
+      border-color: var(--tertiary-low);
     }
 
-    &:focus {
-      outline: none;
+    &:focus-visible {
+      outline: 1px auto var(--tertiary);
     }
   }
 }

@@ -20,17 +20,30 @@ class GridNodeView {
     modeGroup.contentEditable = false;
 
     const modes = [
-      { value: "grid", label: i18n("composer.grid_mode_grid") },
-      { value: "focus", label: i18n("composer.grid_mode_focus") },
-      { value: "stage", label: i18n("composer.grid_mode_stage") },
+      {
+        value: "grid",
+        label: i18n("composer.grid_mode_grid"),
+        icon: "table-cells",
+      },
+      {
+        value: "focus",
+        label: i18n("composer.grid_mode_focus"),
+        icon: "image",
+      },
+      {
+        value: "stage",
+        label: i18n("composer.grid_mode_stage"),
+        icon: "images",
+      },
     ];
 
     modes.forEach((opt) => {
-      const button = document.createElement("button");
+      const button = document.createElement("button"); // not using DButton bcs these are special types
       button.type = "role";
       button.className = "composer-image-gallery__mode-btn";
       button.dataset.mode = opt.value;
-      button.textContent = opt.label;
+      button.appendChild(iconElement(opt.icon));
+      button.appendChild(document.createTextNode(opt.label));
       button.ariaLabel = opt.label;
       button.title = "Set image gallery style to " + opt.label;
       if (node.attrs.mode === opt.value) {
@@ -135,7 +148,9 @@ class GridNodeView {
     }
     this.node = node;
 
-    const buttons = this.dom.querySelectorAll(".composer-image-grid__mode-btn");
+    const buttons = this.dom.querySelectorAll(
+      ".composer-image-gallery__mode-btn"
+    );
     buttons.forEach((btn) => {
       if (btn.dataset.mode === node.attrs.mode) {
         btn.classList.add("is-active");
