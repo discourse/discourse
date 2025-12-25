@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { LinkTo } from "@ember/routing";
@@ -39,6 +41,9 @@ export function isHex(input) {
  */
 export default class SectionLink extends Component {
   @service currentUser;
+
+  @tracked hovering = false;
+  @tracked hoveringFrozen = false;
 
   constructor() {
     super(...arguments);
@@ -86,6 +91,10 @@ export default class SectionLink extends Component {
       classNames.push("active");
     }
 
+    if (this.hovering || this.hoveringFrozen) {
+      classNames.push("--hovering");
+    }
+
     return classNames.join(" ");
   }
 
@@ -126,6 +135,32 @@ export default class SectionLink extends Component {
     }
   }
 
+  @action
+  hoveringSectionLink() {
+    this.hoveringFrozen = false;
+    this.hovering = true;
+  }
+
+  @action
+  stopHoveringSectionLink() {
+    this.hovering = false;
+  }
+
+  @action
+  runHoverAction(event) {
+    const result = this.args.hoverAction(event, (callbackResult) => {
+      if (callbackResult === "unfreezeHover") {
+        this.hoveringFrozen = false;
+      }
+    });
+
+    if (result === "freezeHover") {
+      this.hoveringFrozen = true;
+    } else {
+      this.hoveringFrozen = false;
+    }
+  }
+
   @bind
   maybeScrollIntoView(element) {
     if (!this.args.scrollIntoView) {
@@ -150,6 +185,8 @@ export default class SectionLink extends Component {
       <li
         {{didInsert this.maybeScrollIntoView}}
         {{didUpdate this.maybeScrollIntoView @scrollIntoView}}
+        {{on "mouseenter" this.hoveringSectionLink}}
+        {{on "mouseleave" this.stopHoveringSectionLink}}
         data-list-item-name={{@linkName}}
         class="sidebar-section-link-wrapper"
         ...attributes
@@ -230,10 +267,13 @@ export default class SectionLink extends Component {
             {{#if @hoverValue}}
               <span class="sidebar-section-link-hover">
                 <button
-                  {{on "click" @hoverAction}}
+                  {{on "click" this.runHoverAction}}
                   type="button"
                   title={{@hoverTitle}}
-                  class="sidebar-section-hover-button"
+                  class={{concatClass
+                    "sidebar-section-hover-button"
+                    (if (or this.hoveringFrozen this.hovering) "--hovering" "")
+                  }}
                 >
                   {{#if (eq @hoverType "icon")}}
                     {{icon @hoverValue class="hover-icon"}}

@@ -8,7 +8,7 @@ RSpec.describe "Navigation", type: :system do
   fab!(:category_channel)
   fab!(:category_channel_2, :category_channel)
   let(:chat_page) { PageObjects::Pages::Chat.new }
-  let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
+  let(:sidebar_page) { PageObjects::Pages::ChatSidebar.new }
 
   before do
     chat_system_bootstrap(user, [category_channel, category_channel_2])

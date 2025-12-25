@@ -1,0 +1,162 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
+import { service } from "@ember/service";
+import DButton from "discourse/components/d-button";
+import DropdownMenu from "discourse/components/dropdown-menu";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseLater from "discourse/lib/later";
+import ChatChannelSidebarContextNotificationSubmenu from "./chat-channel-sidebar-context-notification-submenu";
+
+export default class ChatChannelSidebarContextMenu extends Component {
+  @service chatApi;
+  @service chat;
+  @service menu;
+  @service router;
+  @service chatChannelsManager;
+  @service currentUser;
+
+  @tracked isTogglingStarred;
+
+  get channel() {
+    return this.args.data.channel;
+  }
+
+  get currentUserMembership() {
+    return this.channel?.currentUserMembership;
+  }
+
+  @action
+  async toggleStarred() {
+    if (!this.channel?.currentUserMembership || this.isTogglingStarred) {
+      return;
+    }
+
+    this.isTogglingStarred = true;
+    const newValue = !this.channel.currentUserMembership.starred;
+    const previousValue = this.channel.currentUserMembership.starred;
+
+    try {
+      await this.chatApi.updateCurrentUserChannelMembership(this.channel.id, {
+        starred: newValue,
+      });
+      this.args.close();
+      this.channel.currentUserMembership.starred = newValue;
+    } catch {
+      this.channel.currentUserMembership.starred = previousValue;
+    } finally {
+      this.isTogglingStarred = false;
+    }
+  }
+
+  @action
+  async leaveChannel() {
+    try {
+      if (this.args.data.channel.chatable.group) {
+        await this.chatApi.leaveChannel(this.args.data.channel.id);
+      } else {
+        await this.chat.unfollowChannel(this.args.data.channel);
+      }
+      this.currentUser.custom_fields.last_chat_channel_id = null;
+    } catch (err) {
+      popupAjaxError(err);
+    }
+    this.args.close();
+
+    this.chatChannelsManager.remove(this.args.data.channel);
+
+    if (this.chatChannelsManager.publicMessageChannels.length) {
+      return this.router.transitionTo(
+        "chat.channel",
+        ...this.chatChannelsManager.publicMessageChannels[0].routeModels
+      );
+    } else if (this.chatChannelsManager.directMessageChannels.length) {
+      return this.router.transitionTo(
+        "chat.channel",
+        ...this.chatChannelsManager.directMessageChannels[0].routeModels
+      );
+    } else {
+      return this.router.transitionTo("chat.browse");
+    }
+  }
+
+  @action
+  closeAfterNav() {
+    discourseLater(() => {
+      this.args.close();
+    }, 100);
+  }
+
+  @action
+  openNotificationSettings(_, event) {
+    const menuTarget = event.target.closest(
+      ".chat-channel-sidebar-link-menu__open-notification-settings"
+    );
+    this.menu.show(menuTarget, {
+      identifier: "chat-channel-menu-notification-submenu",
+      component: ChatChannelSidebarContextNotificationSubmenu,
+      modalForMobile: true,
+      placement: "right-start",
+      data: { channel: this.channel },
+      onClose: () => this.args.close(),
+    });
+  }
+
+  <template>
+    <DropdownMenu as |dropdown|>
+      <dropdown.item>
+        <DButton
+          @action={{this.openNotificationSettings}}
+          @forwardEvent={{true}}
+          @icon="bell"
+          @suffixIcon="angle-right"
+          @label="chat.channel_settings.notification_settings_context"
+          @title="chat.channel_settings.notification_settings_context"
+          class="chat-channel-sidebar-link-menu__open-notification-settings"
+        />
+      </dropdown.item>
+      <dropdown.item>
+        <DButton
+          {{on "click" this.closeAfterNav}}
+          @route="chat.channel.info.settings"
+          @routeModels={{this.channel.routeModels}}
+          @icon="gear"
+          @label="chat.channel_settings.title"
+          @title="chat.channel_settings.title"
+          class="chat-channel-sidebar-link-menu__channel-settings"
+        />
+      </dropdown.item>
+      <dropdown.item>
+        <DButton
+          @action={{this.toggleStarred}}
+          @icon={{if
+            this.channel.currentUserMembership.starred
+            "star"
+            "far-star"
+          }}
+          @label={{if
+            this.channel.currentUserMembership.starred
+            "chat.channel_settings.unstar_channel"
+            "chat.channel_settings.star_channel"
+          }}
+          @title={{if
+            this.channel.currentUserMembership.starred
+            "chat.channel_settings.unstar_channel"
+            "chat.channel_settings.star_channel"
+          }}
+          class="chat-channel-sidebar-link-menu__star-channel"
+        />
+      </dropdown.item>
+      <dropdown.item>
+        <DButton
+          @action={{this.leaveChannel}}
+          @icon="xmark"
+          @label="chat.channel_settings.leave_channel"
+          @title="chat.channel_settings.leave_channel"
+          class="chat-channel-sidebar-link-menu__leave-channel btn-danger"
+        />
+      </dropdown.item>
+    </DropdownMenu>
+  </template>
+}
