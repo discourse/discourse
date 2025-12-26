@@ -109,6 +109,45 @@ describe GithubLinkback do
         expect(GithubLinkback.new(unlisted_post).should_enqueue?).to eq(false)
       end
     end
+
+    describe "ignored categories" do
+      fab!(:category)
+      fab!(:post_in_category) do
+        topic = Fabricate(:topic, category:)
+        Fabricate(:post, topic:, raw: "https://github.com/discourse/discourse/commit/abc123")
+      end
+
+      before { SiteSetting.github_linkback_enabled = true }
+
+      it "doesn't enqueue posts in ignored categories" do
+        SiteSetting.github_linkback_ignored_categories = category.id.to_s
+        expect(GithubLinkback.new(post_in_category).should_enqueue?).to eq(false)
+      end
+
+      it "enqueues posts in non-ignored categories" do
+        other_category = Fabricate(:category)
+        SiteSetting.github_linkback_ignored_categories = other_category.id.to_s
+        expect(GithubLinkback.new(post_in_category).should_enqueue?).to eq(true)
+      end
+
+      it "handles multiple ignored categories" do
+        other_category = Fabricate(:category)
+        SiteSetting.github_linkback_ignored_categories = "#{category.id}|#{other_category.id}"
+        expect(GithubLinkback.new(post_in_category).should_enqueue?).to eq(false)
+      end
+
+      it "enqueues when ignored categories setting is empty" do
+        SiteSetting.github_linkback_ignored_categories = ""
+        expect(GithubLinkback.new(post_in_category).should_enqueue?).to eq(true)
+      end
+
+      it "enqueues posts without a category" do
+        SiteSetting.github_linkback_ignored_categories = category.id.to_s
+        uncategorized_post =
+          Fabricate(:post, raw: "https://github.com/discourse/discourse/commit/abc123")
+        expect(GithubLinkback.new(uncategorized_post).should_enqueue?).to eq(true)
+      end
+    end
   end
 
   describe "#github_links" do
