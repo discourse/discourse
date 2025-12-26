@@ -14,9 +14,9 @@ export default class GroupedBlocks extends Component {
   <template>
     <div
       class={{concatClass
-        (concat @blockOutlet "__group ")
-        (concat "block__group-" @group.group)
-        @block.classNames
+        (concat @outletName "__group")
+        (concat "block__group-" @group)
+        @classNames
       }}
     >
       {{#each this.children as |item|}}

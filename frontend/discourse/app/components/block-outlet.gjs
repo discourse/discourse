@@ -58,8 +58,8 @@ export function block(name, options = {}) {
         super(...arguments);
 
         if (
-          this.constructor._SKIP_CONTAINMENT_CHECK !== __BLOCK_CONTAINER_FLAG && // block-outlet get a special pass
-          !this.args.__block === __BLOCK_CONTAINER_FLAG
+          !this.isRoot && // the block-outlet component gets a special pass
+          !this.args.$block$ === __BLOCK_CONTAINER_FLAG
         ) {
           throw new Error(
             `Block components cannot be used directly in templates. They can only be rendered directly inside BlockOutlets or BlockContainers.`
@@ -67,15 +67,19 @@ export function block(name, options = {}) {
         }
       }
 
+      get isRoot() {
+        return this.constructor.__ROOT_BLOCK === __BLOCK_CONTAINER_FLAG;
+      }
+
       /** @returns {Object} */
       get config() {
-        return super.config ?? this.args.config;
+        return this.isRoot ? super.config : [];
       }
 
       /** @returns {Array<Object>|undefined} */
       @cached
       get children() {
-        const children = this.config?.children;
+        const children = this.isRoot ? super.children : this.args.children;
 
         if (!isContainer || !children) {
           return;
@@ -85,19 +89,37 @@ export function block(name, options = {}) {
 
         return isContainer
           ? children.map((item) => {
-              const { block: blockComponentClass, ...args } = item;
-              const taggedArgs = { ...args, __block: __BLOCK_CONTAINER_FLAG };
-              const BlockWithParameters = curryComponent(
-                blockComponentClass,
-                taggedArgs,
-                owner
-              );
+              const {
+                block: blockComponentClass,
+                args,
+                classNames,
+                children: nestedChildren,
+              } = item;
+
+              const taggedArgs = {
+                ...(args || {}),
+                children: nestedChildren,
+                outletName: this.args.outletName,
+                $block$: __BLOCK_CONTAINER_FLAG,
+              };
 
               return {
                 Component: blockComponentClass[__BLOCK_CONTAINER_FLAG]
-                  ? BlockWithParameters
+                  ? curryComponent(
+                      blockComponentClass,
+                      { ...taggedArgs, classNames },
+                      owner
+                    )
                   : wrapBlockLayput(
-                      { ...item, Component: BlockWithParameters },
+                      {
+                        classNames,
+                        name: blockComponentClass.blockName,
+                        Component: curryComponent(
+                          blockComponentClass,
+                          taggedArgs,
+                          owner
+                        ),
+                      },
                       owner
                     ),
               };
@@ -107,7 +129,7 @@ export function block(name, options = {}) {
 
       /** @returns {string} */
       get name() {
-        return this.config.name;
+        return name;
       }
     };
   };
@@ -252,6 +274,8 @@ function validateBlock(config, outletName) {
       `Block component ${config.name} (${config.block}) in layout ${outletName} must have children`
     );
   }
+
+  // TODO validate reserved names in the args hash (e.g classNames, outletName, and everything that goes into the upper config)
 }
 
 /**
@@ -268,7 +292,7 @@ export default class BlockOutlet extends Component {
   #name;
 
   /** @type {symbol} */
-  static _SKIP_CONTAINMENT_CHECK = __BLOCK_CONTAINER_FLAG;
+  static __ROOT_BLOCK = __BLOCK_CONTAINER_FLAG;
 
   constructor() {
     super(...arguments);
@@ -283,33 +307,29 @@ export default class BlockOutlet extends Component {
     }
   }
 
-  /** @returns {Object|undefined} */
-  get config() {
-    return blockConfigs.get(this.#name);
+  get children() {
+    return blockConfigs.get(this.#name)?.children ?? [];
   }
 
   /** @returns {string} */
-  get name() {
+  get outletName() {
     return this.#name;
   }
 
   <template>
-    {{yield (hasConfig @name) to="before"}}
+    {{yield (hasConfig this.outletName) to="before"}}
     {{#if this.children}}
-      <div class={{@name}}>
-        <div class={{concat @name "__container"}}>
-          <div class={{concat @name "__layout"}}>
+      <div class={{this.outletName}}>
+        <div class={{concat this.outletName "__container"}}>
+          <div class={{concat this.outletName "__layout"}}>
             {{#each this.children as |item|}}
-              <item.Component
-                @block={{item.config}}
-                @outletName={{this.name}}
-              />
+              <item.Component @outletName={{this.outletName}} />
             {{/each}}
           </div>
         </div>
       </div>
     {{/if}}
-    {{yield (hasConfig @name) to="after"}}
+    {{yield (hasConfig this.outletName) to="after"}}
   </template>
 }
 
@@ -320,7 +340,7 @@ function wrapBlockLayput(blockData, owner) {
 const WrappedBlockLayout = <template>
   <div
     class={{concatClass
-      (concat @blockOutlet "__block ")
+      (concat @outletName "__block")
       (concat "block-" @name)
       @classNames
     }}
