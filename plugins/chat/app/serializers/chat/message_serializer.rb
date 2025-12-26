@@ -41,10 +41,8 @@ module Chat
     def mentioned_users
       object
         .user_mentions
-        .includes(user: :user_option)
-        .limit(SiteSetting.max_mentions_per_chat_message)
-        .map(&:user)
-        .compact
+        .first(SiteSetting.max_mentions_per_chat_message)
+        .filter_map(&:user)
         .sort_by(&:id)
         .map { |user| BasicUserSerializer.new(user, root: false, include_status: true) }
         .as_json
@@ -66,9 +64,8 @@ module Chat
     def reactions
       object
         .reactions
-        .includes(user: :user_option)
         .group_by(&:emoji)
-        .map do |emoji, reactions|
+        .filter_map do |emoji, reactions|
           next unless Emoji.exists?(emoji)
 
           users = reactions.take(5).map(&:user)
@@ -81,7 +78,6 @@ module Chat
             reacted: users_reactions.include?(emoji),
           }
         end
-        .compact
     end
 
     def include_reactions?

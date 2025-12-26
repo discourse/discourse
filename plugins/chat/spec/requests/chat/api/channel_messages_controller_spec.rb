@@ -85,6 +85,28 @@ RSpec.describe Chat::Api::ChannelMessagesController do
         end
       end
     end
+
+    context "with user status enabled" do
+      before { SiteSetting.enable_user_status = true }
+
+      it "preloads user_options to avoid N+1 queries" do
+        3.times do
+          user = Fabricate(:user)
+          Fabricate(:user_status, user:)
+          msg = Fabricate(:chat_message, chat_channel: channel, user:)
+          mentioned = Fabricate(:user)
+          Fabricate(:user_status, user: mentioned)
+          Fabricate(:user_chat_mention, chat_message: msg, user: mentioned)
+        end
+
+        get "/chat/api/channels/#{channel.id}/messages"
+
+        queries = track_sql_queries { get "/chat/api/channels/#{channel.id}/messages" }
+        user_option_queries = queries.select { |q| q.include?('"user_options"') }
+
+        expect(user_option_queries.size).to eq(2)
+      end
+    end
   end
 
   describe "#create" do
@@ -127,7 +149,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
           ]
         end
 
-        it "raises invalid acces" do
+        it "raises invalid access" do
           post "/chat/#{channel.id}.json", params: params
 
           expect(response.status).to eq(403)
