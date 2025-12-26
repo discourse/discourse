@@ -264,17 +264,12 @@ export default class DToast extends Component {
                   {{on "pointerup" this.handlePointerUp}}
                   {{on "pointercancel" this.handlePointerUp}}
                 >
-                  {{#if @toast.options.showProgressBar}}
-                    <div
-                      class="fk-d-default-toast__progress-bar"
-                      {{didInsert this.registerProgressBar}}
-                    ></div>
-                  {{/if}}
-
                   <DDefaultToast
                     @data={{@toast.options.data}}
                     @sheet={{sheet}}
                     @isFront={{this.isFront}}
+                    @showProgressBar={{@toast.options.showProgressBar}}
+                    @registerProgressBar={{this.registerProgressBar}}
                   />
                 </DSheet.SpecialWrapper.Content>
               </DSheet.SpecialWrapper.Root>

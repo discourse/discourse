@@ -56,17 +56,6 @@
       &[data-presented="true"] {
         opacity: 1;
       }
-
-      .fk-d-default-toast__progress-bar {
-        opacity: 0.1;
-        transition: opacity 0.4s ease;
-      }
-
-      &[data-front="true"]:not([data-pointer-over="true"]) {
-        .fk-d-default-toast__progress-bar {
-          opacity: 1;
-        }
-      }
     }
   }
 }

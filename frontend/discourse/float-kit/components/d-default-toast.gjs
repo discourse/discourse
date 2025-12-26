@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
@@ -30,6 +31,15 @@ export default class DDefaultToast extends Component {
       }}
       ...attributes
     >
+      {{#if @showProgressBar}}
+        <div class="fk-d-default-toast__progress-wrapper">
+          <div
+            class="fk-d-default-toast__progress-bar"
+            {{didInsert @registerProgressBar}}
+          ></div>
+        </div>
+      {{/if}}
+
       {{#if @isFront}}
         <button
           {{on "click" @sheet.close}}
