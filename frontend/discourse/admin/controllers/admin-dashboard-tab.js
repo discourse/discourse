@@ -1,25 +1,38 @@
-import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import CustomDateRangeModal from "../components/modal/custom-date-range";
 
 export default class AdminDashboardTabController extends Controller {
   @service modal;
 
-  @tracked endDate = moment().locale("en").utc().endOf("day");
-  @tracked startDate = this.calculateStartDate();
-  @tracked
-  filters = new TrackedObject({
-    startDate: this.startDate,
-    endDate: this.endDate,
-  });
-
-  queryParams = ["period"];
+  queryParams = ["period", "start_date", "end_date"];
   period = "monthly";
+  start_date = null;
+  end_date = null;
 
-  calculateStartDate() {
+  get startDate() {
+    if (this.start_date) {
+      return moment(this.start_date).locale("en").utc().startOf("day");
+    }
+    return this.#calculateStartDate();
+  }
+
+  get endDate() {
+    if (this.end_date) {
+      return moment(this.end_date).locale("en").utc().endOf("day");
+    }
+    return moment().locale("en").utc().endOf("day");
+  }
+
+  get filters() {
+    return {
+      startDate: this.startDate,
+      endDate: this.endDate,
+    };
+  }
+
+  #calculateStartDate() {
     const fullDay = moment().locale("en").utc().endOf("day");
 
     switch (this.period) {
@@ -29,8 +42,6 @@ export default class AdminDashboardTabController extends Controller {
         return fullDay.subtract(3, "month").startOf("day");
       case "weekly":
         return fullDay.subtract(6, "days").startOf("day");
-      case "monthly":
-        return fullDay.subtract(1, "month").startOf("day");
       default:
         return fullDay.subtract(1, "month").startOf("day");
     }
@@ -38,18 +49,16 @@ export default class AdminDashboardTabController extends Controller {
 
   @action
   setCustomDateRange(startDate, endDate) {
-    this.startDate = startDate;
-    this.endDate = endDate;
-    this.filters.startDate = this.startDate;
-    this.filters.endDate = this.endDate;
+    this.setProperties({
+      period: "custom",
+      start_date: moment(startDate).format("YYYY-MM-DD"),
+      end_date: moment(endDate).format("YYYY-MM-DD"),
+    });
   }
 
   @action
   setPeriod(period) {
-    this.set("period", period);
-    this.startDate = this.calculateStartDate();
-    this.filters.startDate = this.startDate;
-    this.filters.endDate = this.endDate;
+    this.setProperties({ period, start_date: null, end_date: null });
   }
 
   @action

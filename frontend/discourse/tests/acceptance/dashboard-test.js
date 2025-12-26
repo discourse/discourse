@@ -1,4 +1,4 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -46,6 +46,51 @@ acceptance("Dashboard", function (needs) {
     assert
       .dom(".admin-report.new-contributors")
       .exists("new-contributors report");
+  });
+
+  test("custom date range updates period display", async function (assert) {
+    await visit("/admin");
+
+    const periodChooser = selectKit(".period-chooser");
+
+    assert.strictEqual(periodChooser.header().value(), "monthly");
+
+    await click(".custom-date-range-button");
+    await click(".custom-date-range-modal .d-modal__footer .btn");
+
+    assert.strictEqual(periodChooser.header().value(), "custom");
+    assert.dom(".period-chooser-header .date-section").hasText("Custom");
+
+    await periodChooser.expand();
+    await periodChooser.selectRowByValue("yearly");
+
+    assert.strictEqual(periodChooser.header().value(), "yearly");
+    assert.dom(".period-chooser-header .date-section").hasText("Year");
+  });
+
+  test("custom date range is reflected in URL query params", async function (assert) {
+    await visit("/admin");
+
+    await click(".custom-date-range-button");
+    await click(".custom-date-range-modal .d-modal__footer .btn");
+
+    const url = currentURL();
+    assert.true(url.includes("period=custom"), "period=custom is in URL");
+    assert.true(url.includes("start_date="), "start_date is in URL");
+    assert.true(url.includes("end_date="), "end_date is in URL");
+  });
+
+  test("URL query params restore custom date range", async function (assert) {
+    await visit(
+      "/admin?period=custom&start_date=2024-01-01&end_date=2024-01-31"
+    );
+
+    const periodChooser = selectKit(".period-chooser");
+    assert.strictEqual(periodChooser.header().value(), "custom");
+    assert.dom(".period-chooser-header .date-section").hasText("Custom");
+    // The date range from query params should be displayed (dates may vary slightly due to UTC)
+    assert.dom(".period-chooser-header .top-date-string").exists();
+    assert.dom(".period-chooser-header .top-date-string").includesText("–");
   });
 
   test("moderation tab", async function (assert) {
