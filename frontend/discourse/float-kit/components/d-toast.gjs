@@ -327,7 +327,7 @@ export default class DToast extends Component {
                   {{on "pointerup" this.handlePointerUp}}
                   {{on "pointercancel" this.handlePointerUp}}
                 >
-                  <DDefaultToast
+                  <@toast.options.component
                     @toast={{@toast}}
                     @close={{sheet.close}}
                     @isFront={{this.isFront}}
