@@ -9,11 +9,18 @@ import DToggleSwitch from "discourse/components/d-toggle-switch";
 import { TOAST } from "discourse/float-kit/lib/constants";
 import withEventValue from "discourse/helpers/with-event-value";
 import IconPicker from "discourse/select-kit/components/icon-picker";
-import DummyComponent from "discourse/plugins/styleguide/discourse/components/dummy-component";
 import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
 import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
 import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
+
+const ToastCustomComponent = <template>
+  <div
+    style="background-color: var(--secondary); padding: var(--space-4); border: 1px solid var(--primary-low); border-radius: var(--d-border-radius-large); box-shadow: var(--shadow-card);"
+  >
+    My custom component with foo: {{@toast.options.data.foo}}
+  </div>
+</template>;
 
 export default class Toasts extends Component {
   @service toasts;
@@ -33,7 +40,7 @@ export default class Toasts extends Component {
       duration: this.duration,
       autoClose: this.autoClose,
       class: this.class,
-      component: DummyComponent,
+      component: ToastCustomComponent,
       data: {
         foo: 1,
       },
