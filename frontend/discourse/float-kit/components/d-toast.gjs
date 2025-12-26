@@ -7,11 +7,10 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel, later } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import effect from "discourse/float-kit/helpers/effect";
 import DDefaultToast from "discourse/float-kit/components/d-default-toast";
+import effect from "discourse/float-kit/helpers/effect";
 import concatClass from "discourse/helpers/concat-class";
-import TrackedMediaQuery from "discourse/lib/tracked-media-query";
-import { eq } from "discourse/truth-helpers";
+import { or } from "discourse/truth-helpers";
 import DSheet from "./d-sheet";
 
 export default class DToast extends Component {
@@ -34,6 +33,10 @@ export default class DToast extends Component {
 
   get contentPlacement() {
     return "top";
+  }
+
+  get tracks() {
+    return this.capabilities.isAndroid ? "right" : "top";
   }
 
   get autoCloseDelay() {
@@ -59,6 +62,8 @@ export default class DToast extends Component {
   @action
   syncAutoClose() {
     if (this.travelStatus !== "idleInside" || !this.presented) {
+      this.pauseProgressAnimation();
+      this.cancelAutoCloseTimeout();
       return;
     }
 
@@ -100,13 +105,31 @@ export default class DToast extends Component {
   }
 
   @action
-  handlePointerEnter() {
-    this.pointerOver = true;
+  handlePointerDown(event) {
+    if (event.pointerType === "touch") {
+      this.pointerOver = true;
+    }
   }
 
   @action
-  handlePointerLeave() {
-    this.pointerOver = false;
+  handlePointerUp(event) {
+    if (event.pointerType === "touch") {
+      this.pointerOver = false;
+    }
+  }
+
+  @action
+  handlePointerEnter(event) {
+    if (event.pointerType === "mouse") {
+      this.pointerOver = true;
+    }
+  }
+
+  @action
+  handlePointerLeave(event) {
+    if (event.pointerType === "mouse") {
+      this.pointerOver = false;
+    }
   }
 
   startAutoCloseTimeout() {
@@ -187,7 +210,13 @@ export default class DToast extends Component {
   }
 
   <template>
-    {{effect this.syncAutoClose this.isFront this.pointerOver this.travelStatus this.progressBar}}
+    {{effect
+      this.syncAutoClose
+      this.isFront
+      this.pointerOver
+      this.travelStatus
+      this.progressBar
+    }}
 
     <DSheet.Root
       @presented={{this.presented}}
@@ -201,6 +230,7 @@ export default class DToast extends Component {
           <DSheet.View
             @sheet={{sheet}}
             @contentPlacement={{this.contentPlacement}}
+            @tracks={{this.tracks}}
             @inertOutside={{false}}
             @onClickOutside={{hash dismiss=false stopOverlayPropagation=false}}
             @onTravelStatusChange={{this.handleTravelStatusChange}}
@@ -230,6 +260,9 @@ export default class DToast extends Component {
                   style={{this.innerStyles}}
                   {{on "pointerenter" this.handlePointerEnter}}
                   {{on "pointerleave" this.handlePointerLeave}}
+                  {{on "pointerdown" this.handlePointerDown}}
+                  {{on "pointerup" this.handlePointerUp}}
+                  {{on "pointercancel" this.handlePointerUp}}
                 >
                   {{#if @toast.options.showProgressBar}}
                     <div

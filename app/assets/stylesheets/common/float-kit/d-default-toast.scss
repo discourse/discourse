@@ -91,53 +91,13 @@
     margin-left: auto;
   }
 
-  // Sonner-style action button (primary)
   &__action-btn {
     margin-left: auto;
-    height: 1.5rem;
-    padding: 0 0.5rem;
-    font-size: 0.75rem;
-    font-weight: 500;
-    border: none;
-    border-radius: 0.25rem;
-    background: var(--primary);
-    color: var(--secondary);
-    cursor: pointer;
     flex-shrink: 0;
-    transition: opacity 200ms;
-
-    &:hover {
-      opacity: 0.9;
-    }
-
-    &:focus-visible {
-      outline: 2px solid var(--tertiary);
-      outline-offset: 1px;
-    }
   }
 
-  // Sonner-style cancel button (secondary)
   &__cancel-btn {
-    height: 1.5rem;
-    padding: 0 0.5rem;
-    font-size: 0.75rem;
-    font-weight: 500;
-    border: none;
-    border-radius: 0.25rem;
-    background: var(--primary-low);
-    color: var(--primary);
-    cursor: pointer;
     flex-shrink: 0;
-    transition: opacity 200ms;
-
-    &:hover {
-      opacity: 0.8;
-    }
-
-    &:focus-visible {
-      outline: 2px solid var(--tertiary);
-      outline-offset: 1px;
-    }
   }
 
   &__progress-bar {
@@ -149,9 +109,5 @@
     background-color: var(--success);
     transform-origin: 0 0;
     z-index: 1;
-  }
-
-  &:has(.fk-d-default-toast__progress-bar) {
-    padding-top: calc(1rem + 5px);
   }
 }

@@ -1,92 +1,102 @@
+import Component from "@glimmer/component";
 import { concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { or } from "discourse/truth-helpers";
-import DSheet from "./d-sheet";
+import { i18n } from "discourse-i18n";
 
-const DDefaultToast = <template>
+export default class DDefaultToast extends Component {
+  @action
+  handleAction() {
+    this.args.sheet.close();
+    this.args.data.action.onClick();
+  }
+
+  @action
+  handleCancel() {
+    this.args.sheet.close();
+    this.args.data.cancel.onClick();
+  }
+
+  <template>
     <div
-    class={{concatClass
-      "fk-d-default-toast"
-      (concat "-" (or @data.theme "default"))
-    }}
-    ...attributes
-  >
-    {{#if @isFront}}
-      <button
-        {{on "click" @sheet.close}}
-        class="fk-d-default-toast__close-btn"
-        aria-label="Close"
-      >
-        {{icon "xmark"}}
-      </button>
-    {{/if}}
+      class={{concatClass
+        "fk-d-default-toast"
+        (concat "-" (or @data.theme "default"))
+      }}
+      ...attributes
+    >
+      {{#if @isFront}}
+        <button
+          {{on "click" @sheet.close}}
+          class="fk-d-default-toast__close-btn"
+          aria-label="Close"
+        >
+          {{icon "xmark"}}
+        </button>
+      {{/if}}
 
-    {{#if @data.icon}}
-      <div class="fk-d-default-toast__icon">
-        {{icon @data.icon}}
-      </div>
-    {{/if}}
-
-    <div class="fk-d-default-toast__content">
-      {{#if @data.title}}
-        <div class="fk-d-default-toast__title">
-          {{@data.title}}
+      {{#if @data.icon}}
+        <div class="fk-d-default-toast__icon">
+          {{icon @data.icon}}
         </div>
       {{/if}}
-      {{#if (or @data.message @data.description)}}
-        <div class="fk-d-default-toast__description">
-          {{#if @data.isHtmlMessage}}
-            {{htmlSafe (or @data.message @data.description)}}
-          {{else}}
-            {{or @data.message @data.description}}
-          {{/if}}
+
+      <div class="fk-d-default-toast__content">
+        {{#if @data.title}}
+          <div class="fk-d-default-toast__title">
+            {{@data.title}}
+          </div>
+        {{/if}}
+        {{#if (or @data.message @data.description)}}
+          <div class="fk-d-default-toast__description">
+            {{#if @data.isHtmlMessage}}
+              {{htmlSafe (or @data.message @data.description)}}
+            {{else}}
+              {{or @data.message @data.description}}
+            {{/if}}
+          </div>
+        {{/if}}
+      </div>
+
+      {{! Legacy actions array support }}
+      {{#if @data.actions}}
+        <div class="fk-d-default-toast__actions-legacy">
+          {{#each @data.actions as |toastAction|}}
+            {{#if toastAction.action}}
+              <DButton
+                @icon={{toastAction.icon}}
+                @translatedLabel={{toastAction.label}}
+                @action={{fn toastAction.action (hash data=@data close=@close)}}
+                class={{toastAction.class}}
+                tabindex="0"
+              />
+            {{/if}}
+          {{/each}}
         </div>
+      {{/if}}
+
+      {{#if @data.action}}
+        <DButton
+          class="fk-d-default-toast__action-btn btn-default btn-primary btn-small"
+          {{on "click" this.handleAction}}
+        >
+          {{@data.action.label}}
+        </DButton>
+      {{/if}}
+
+      {{#if @data.cancel}}
+        <DButton
+          class="fk-d-default-toast__cancel-btn btn-default btn-small"
+          {{on "click" this.handleCancel}}
+        >
+          {{or @data.cancel.label (i18n "cancel")}}
+        </DButton>
       {{/if}}
     </div>
-
-    {{! Legacy actions array support }}
-    {{#if @data.actions}}
-      <div class="fk-d-default-toast__actions-legacy">
-        {{#each @data.actions as |toastAction|}}
-          {{#if toastAction.action}}
-            <DButton
-              @icon={{toastAction.icon}}
-              @translatedLabel={{toastAction.label}}
-              @action={{fn toastAction.action (hash data=@data close=@close)}}
-              class={{toastAction.class}}
-              tabindex="0"
-            />
-          {{/if}}
-        {{/each}}
-      </div>
-    {{/if}}
-
-    {{! Sonner-style cancel button }}
-    {{#if @data.cancel}}
-      <button
-        type="button"
-        class="fk-d-default-toast__cancel-btn"
-        {{on "click" (fn @data.cancel.onClick (hash data=@data close=@close))}}
-      >
-        {{@data.cancel.label}}
-      </button>
-    {{/if}}
-
-    {{! Sonner-style action button }}
-    {{#if @data.action}}
-      <button
-        type="button"
-        class="fk-d-default-toast__action-btn"
-        {{on "click" (fn @data.action.onClick (hash data=@data close=@close))}}
-      >
-        {{@data.action.label}}
-      </button>
-    {{/if}}
-  </div>
-</template>;
-
-export default DDefaultToast;
+  </template>
+}

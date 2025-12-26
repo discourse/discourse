@@ -36,10 +36,20 @@ export default class Sheets extends Component {
   }
 
   @action
+  exampleToastAction() {
+    alert("exampleToastAction");
+  }
+
+  @action
   showToast() {
     this.toasts.success({
       showProgressBar: true,
       data: {
+        cancel: true,
+        action: {
+          label: "Action",
+          onClick: this.exampleToastAction,
+        },
         title: "Hello",
         message: "This is a toast",
       },
