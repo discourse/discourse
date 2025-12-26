@@ -5676,7 +5676,6 @@ en:
   reviewables:
     already_handled: "Thanks, but we've already reviewed that post and determined it does not need to be flagged again."
     already_handled_and_user_not_exist: "Thanks, but someone already reviewed and that user no longer exists."
-    post_deleted_by_author: "Post was deleted by the author"
     post_restored_by_author: "Post was restored by the author"
     priorities:
       low: "Low"

@@ -68,4 +68,27 @@ RSpec.describe ReviewableSerializer do
       expect(json[:target_created_by_id]).to eq(reviewable_user.target.id)
     end
   end
+
+  describe "target_deleted_by" do
+    it "serializes when post was staff-deleted" do
+      fp = Fabricate(:reviewable_flagged_post)
+      fp.target.trash!(admin)
+      fp.reload
+
+      json = described_class.new(fp, scope: Guardian.new(admin), root: nil).as_json
+      post = Post.with_deleted.find(fp.target_id)
+      expect(json[:target_deleted_by_id]).to eq(admin.id)
+      expect(json[:target_deleted_at]).to eq(post.deleted_at)
+    end
+
+    it "serializes when post was user-deleted" do
+      fp = Fabricate(:reviewable_flagged_post)
+      fp.target.update!(user_deleted: true)
+      fp.reload
+
+      json = described_class.new(fp, scope: Guardian.new(admin), root: nil).as_json
+      expect(json[:target_deleted_by_id]).to eq(fp.target.user.id)
+      expect(json[:target_deleted_at]).to eq(fp.target.updated_at)
+    end
+  end
 end
