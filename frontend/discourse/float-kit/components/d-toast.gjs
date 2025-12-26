@@ -3,13 +3,13 @@ import { tracked } from "@glimmer/tracking";
 import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel, later } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DDefaultToast from "discourse/float-kit/components/d-default-toast";
 import effect from "discourse/float-kit/helpers/effect";
 import concatClass from "discourse/helpers/concat-class";
+import deprecated from "discourse/lib/deprecated";
 import { or } from "discourse/truth-helpers";
 import DSheet from "./d-sheet";
 
@@ -39,8 +39,21 @@ export default class DToast extends Component {
     return this.capabilities.isAndroid ? "right" : "top";
   }
 
-  get autoCloseDelay() {
-    return this.args.autoCloseDelay ?? 55000;
+  get duration() {
+    const duration = this.args.toast.options.duration;
+
+    if (duration === "long") {
+      return 5000;
+    } else if (duration === "short") {
+      return 3000;
+    } else {
+      deprecated(
+        "Using an integer for the duration property of the d-toast component is deprecated. Use `short` or `long` instead.",
+        { id: "float-kit.d-toast.duration" }
+      );
+
+      return duration;
+    }
   }
 
   @action
@@ -87,21 +100,20 @@ export default class DToast extends Component {
 
     this.progressAnimation = this.progressBar.animate(
       { transform: "scaleX(0)" },
-      { duration: this.autoCloseDelay, fill: "forwards" }
+      { duration: this.duration, fill: "forwards" }
     );
   }
 
   pauseProgressAnimation() {
     if (
       !this.progressAnimation ||
-      this.progressAnimation.currentTime === this.autoCloseDelay
+      this.progressAnimation.currentTime === this.duration
     ) {
       return;
     }
 
     this.progressAnimation.pause();
-    this.timeRemaining =
-      this.autoCloseDelay - this.progressAnimation.currentTime;
+    this.timeRemaining = this.duration - this.progressAnimation.currentTime;
   }
 
   @action
@@ -137,7 +149,7 @@ export default class DToast extends Component {
     this.startProgressAnimation();
     this.autoCloseTimeout = later(() => {
       this.presented = false;
-    }, this.timeRemaining ?? this.autoCloseDelay);
+    }, this.timeRemaining ?? this.duration);
   }
 
   cancelAutoCloseTimeout() {

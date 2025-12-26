@@ -18,7 +18,7 @@
     position: absolute;
     inset-block-start: 0;
     inset-inline-end: 0;
-    transform: translate(35%, -35%);
+    transform: translate(45%, -45%);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -85,13 +85,6 @@
     font-size: var(--font-down-1);
   }
 
-  &__actions-legacy {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-    margin-inline-start: auto;
-  }
-
   &__action-btn {
     margin-inline-start: auto;
     flex-shrink: 0;
@@ -118,6 +111,6 @@
     block-size: 100%;
     background: var(--primary-low);
     border-radius: inherit;
-    transform-origin: inset-inline-start inset-block-start;
+    transform-origin: 0 0;
   }
 }
