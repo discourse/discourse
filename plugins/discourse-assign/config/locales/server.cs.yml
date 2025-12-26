@@ -14,6 +14,7 @@ cs:
     assign_self_regex: "Regulární výraz, který musí vyhovět pro přidělení sobě. Příklad 'můj seznam'"
     assign_other_regex: "Regulární výraz, který musí vyhovět pro přidělení ostatním pomocí zmínky. Příklad 'váš seznam'"
     unassign_on_group_archive: "Pokud je zpráva archivována skupinou, zrušit přidělení zprávy (znovu přidělit, pokud je přesunuta zpět do složky Doručené)"
+    unassign_on_close: "Automaticky zrušit přiřazení tématu po jeho uzavření. POZNÁMKA: Akce nebude zaznamenána do příspěvku."
     reassign_on_open: "Při otevření tématu znovu přidělit dříve přidělené uživatele/skupiny."
     invite_on_assign: "Pokud je uživateli nebo skupině přiřazena osobní zpráva, pozvěte je na soukromé zprávy, pokud ještě nejsou účastníky."
     assign_mailer: "Kdy odeslat e-mail s upozorněním na úkoly"

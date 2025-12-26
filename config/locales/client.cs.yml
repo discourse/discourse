@@ -1224,6 +1224,7 @@ cs:
           title: Interakce
           posting: Přispívání
           notification: Upozornění
+          self_lockout: "Chystáte se změnit viditelnost skupiny způsobem, který vám odebere přístup. Opravdu chcete pokračovat?"
         email:
           title: "Email"
           status: "Synchronizováno %{old_emails} / %{total_emails} e-mailů přes IMAP."
@@ -1372,6 +1373,8 @@ cs:
         make_owner_description: "Udělat z <b>%{username}</b> vlastníka této skupiny"
         remove_owner: "Odstranit vlastníka"
         remove_owner_description: "Odstranit <b>%{username}</b> z role vlastníka této skupiny"
+        remove_member_self_lockout: "Odebráním se z této skupiny zrušíte svůj přístup k její správě. Opravdu chcete pokračovat?"
+        remove_owner_self_lockout: "Odebráním sebe jako vlastníka zrušíte svůj přístup ke správě této skupiny. Opravdu chcete pokračovat?"
         make_primary: "Nastavit jako primární"
         make_primary_description: "Nastavit jako primární skupinu pro <b>%{username}</b>"
         remove_primary: "Odebrat jako primární"
@@ -4295,7 +4298,10 @@ cs:
       deleted_by_author_simple: "(téma smazáno autorem)"
       localizations:
         title_edit_warning:
+          message: "Toto je přeložený název tématu.<br><br>Chcete upravit <b>původní</b> kategorii, štítky a název v jazyce %{language}, nebo upravit tento konkrétní <b>překlad</b>?"
+          action_original: "Upravit originál"
           action_translation: "Upravit přeložený název tématu"
+        editing_translation: "Úprava překladu do %{language}"
     post_list:
       title: "Nejnovější příspěvky"
       empty: "Nejsou zde žádné příspěvky"
