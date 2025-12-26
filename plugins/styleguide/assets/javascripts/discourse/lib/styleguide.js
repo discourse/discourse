@@ -14,7 +14,6 @@ import categories from "../components/sections/molecules/categories";
 import charCounter from "../components/sections/molecules/char-counter";
 import dialog from "../components/sections/molecules/dialog";
 import emptyState from "../components/sections/molecules/empty-state";
-import footerMessage from "../components/sections/molecules/footer-message";
 import menus from "../components/sections/molecules/menus";
 import multiselect from "../components/sections/molecules/multi-select";
 import navigationBar from "../components/sections/molecules/navigation-bar";
@@ -66,7 +65,6 @@ const SECTIONS = [
   { component: categories, category: "molecules", id: "categories" },
   { component: charCounter, category: "molecules", id: "char-counter" },
   { component: emptyState, category: "molecules", id: "empty-state" },
-  { component: footerMessage, category: "molecules", id: "footer-message" },
   { component: navigationBar, category: "molecules", id: "navigation-bar" },
   {
     component: navigationStacked,
