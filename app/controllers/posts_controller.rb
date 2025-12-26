@@ -199,16 +199,37 @@ class PostsController < ApplicationController
   end
 
   def create
+    user =
+      if is_api?
+        author_user_id = params[:author_user_id].presence
+        author_username = params[:author_username].presence
+        post_as_another_user = !!(author_user_id || author_username)
+
+        if @guardian.is_admin? && post_as_another_user
+          by_user_id = User.find_by(id: author_user_id) if author_user_id
+          by_username = User.find_by(username_lower: author_username.downcase) if author_username
+
+          if by_user_id && by_username && by_user_id.id != by_username.id
+            raise Discourse::InvalidParameters.new
+          end
+          raise Discourse::InvalidParameters.new(:author_username) if !by_user_id && !by_username
+
+          by_user_id || by_username
+        elsif post_as_another_user
+          raise Discourse::InvalidAccess
+        else
+          current_user
+        end
+      else
+        current_user
+      end
+
     manager_params = create_params
     manager_params[:first_post_checks] = !is_api?
     manager_params[:advance_draft] = !is_api?
 
     user =
-      DiscoursePluginRegistry.apply_modifier(
-        :posts_controller_create_user,
-        current_user,
-        create_params,
-      )
+      DiscoursePluginRegistry.apply_modifier(:posts_controller_create_user, user, create_params)
     manager = NewPostManager.new(user, manager_params)
 
     json =
