@@ -39,13 +39,10 @@ module Chat
     has_many :uploads, serializer: ::UploadSerializer, embed: :objects
 
     def mentioned_users
-      mentions = object.user_mentions
-      mentions =
-        mentions.take(SiteSetting.max_mentions_per_chat_message) if mentions.respond_to?(:take)
-
-      mentions
-        .map(&:user)
-        .compact
+      object
+        .user_mentions
+        .first(SiteSetting.max_mentions_per_chat_message)
+        .filter_map(&:user)
         .sort_by(&:id)
         .map { |user| BasicUserSerializer.new(user, root: false, include_status: true) }
         .as_json
@@ -68,7 +65,7 @@ module Chat
       object
         .reactions
         .group_by(&:emoji)
-        .map do |emoji, reactions|
+        .filter_map do |emoji, reactions|
           next unless Emoji.exists?(emoji)
 
           users = reactions.take(5).map(&:user)
@@ -81,7 +78,6 @@ module Chat
             reacted: users_reactions.include?(emoji),
           }
         end
-        .compact
     end
 
     def include_reactions?
