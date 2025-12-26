@@ -207,6 +207,40 @@ describe DiscourseAi::Automation::LlmTriage do
     expect(last_post.id).to eq(post.id)
   end
 
+  context "with post images" do
+    fab!(:upload)
+    fab!(:post) { Fabricate(:post, raw: "Here is an image") }
+
+    before { post.uploads << upload }
+
+    def user_message_content(prompts)
+      prompts.first.messages.find { |m| m[:type] == :user }[:content]
+    end
+
+    it "excludes images when vision is disabled" do
+      ai_persona.update!(vision_enabled: false)
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do |_, _, prompts|
+        automation.running_in_background!
+        automation.trigger!({ "post" => post })
+        expect(user_message_content(prompts)).to include(post.raw)
+      end
+    end
+
+    it "includes images when vision is enabled" do
+      ai_persona.update!(vision_enabled: true)
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do |_, _, prompts|
+        automation.running_in_background!
+        automation.trigger!({ "post" => post })
+        expect(user_message_content(prompts)).to contain_exactly(
+          include(post.raw),
+          { upload_id: upload.id },
+        )
+      end
+    end
+  end
+
   context "when the scripts gets triggered repeteadly due to edits" do
     fab!(:post)
 

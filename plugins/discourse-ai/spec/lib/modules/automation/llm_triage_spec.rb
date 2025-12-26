@@ -314,6 +314,7 @@ describe DiscourseAi::Automation::LlmTriage do
   end
 
   it "includes post uploads when triaging" do
+    ai_persona.update!(vision_enabled: true)
     post_upload = Fabricate(:image_upload, posts: [post])
 
     DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
