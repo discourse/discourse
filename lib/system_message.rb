@@ -24,6 +24,10 @@ class SystemMessage
 
     params = defaults.merge(params)
 
+    if I18n.exists?("system_messages.#{type}.preview", @recipient.effective_locale)
+      params[:email_preview] = I18n.t("system_messages.#{type}.preview", params)
+    end
+
     title =
       params[:message_title] ||
         I18n.with_locale(@recipient.effective_locale) do
@@ -102,6 +106,7 @@ class SystemMessage
         end,
       site_password: "",
       base_url: Discourse.base_url,
+      email_preview: "",
     }
   end
 end
