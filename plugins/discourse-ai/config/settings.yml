@@ -117,7 +117,7 @@ discourse_ai:
     default: false
     client: true
     area: "ai-features/ai_helper"
-  ai_helper_model:  # Deprecated. TODO(keegan): Remove 2025-09-01
+  ai_helper_model: # Deprecated. TODO(keegan): Remove 2025-09-01
     default: ""
     allow_any: false
     type: enum
@@ -155,7 +155,7 @@ discourse_ai:
       - "context_menu"
       - "image_caption"
     area: "ai-features/ai_helper"
-  ai_helper_image_caption_model:  # Deprecated. TODO(keegan): Remove 2025-09-01
+  ai_helper_image_caption_model: # Deprecated. TODO(keegan): Remove 2025-09-01
     default: ""
     type: enum
     enum: "DiscourseAi::Configuration::LlmVisionEnumerator"
@@ -263,7 +263,7 @@ discourse_ai:
     default: false
     validator: "DiscourseAi::Configuration::LlmDependencyValidator"
     area: "ai-features/embeddings"
-  ai_embeddings_semantic_search_hyde_model:  # Deprecated. TODO(keegan): Remove 2025-09-01
+  ai_embeddings_semantic_search_hyde_model: # Deprecated. TODO(keegan): Remove 2025-09-01
     hidden: true
     default: ""
     type: enum
@@ -513,7 +513,7 @@ discourse_ai:
     enum: "DiscourseAi::Configuration::PersonaEnumerator"
     area: "ai-features/translation"
   ai_translation_backfill_hourly_rate:
-    default: 0
+    default: 50
     min: 0
     max: 100000
     client: false
