@@ -95,7 +95,7 @@ RSpec.describe Tag do
       let!(:tags) { make_some_tags(tag_a_topic: true) }
 
       it "returns all tags" do
-        expect(Tag.top_tags.sort).to eq(tags.map(&:name).sort)
+        expect(Tag.top_tags).to eq(tags.map { |t| { id: t.id, name: t.name } })
       end
     end
 
@@ -117,20 +117,28 @@ RSpec.describe Tag do
       end
 
       it "works correctly" do
-        expect(Tag.top_tags(category: category1).sort).to eq([tags[0].name].sort)
-        expect(Tag.top_tags(guardian: Guardian.new(Fabricate(:admin))).sort).to eq(
-          [tags[0].name, tags[1].name, tags[2].name].sort,
+        expect(Tag.top_tags(category: category1)).to eq([{ id: tags[0].id, name: tags[0].name }])
+        expect(Tag.top_tags(guardian: Guardian.new(Fabricate(:admin)))).to eq(
+          [
+            { id: tags[0].id, name: tags[0].name },
+            { id: tags[1].id, name: tags[1].name },
+            { id: tags[2].id, name: tags[2].name },
+          ],
         )
         expect(
-          Tag.top_tags(category: private_category, guardian: Guardian.new(Fabricate(:admin))).sort,
-        ).to eq([tags[2].name].sort)
+          Tag.top_tags(category: private_category, guardian: Guardian.new(Fabricate(:admin))),
+        ).to eq([{ id: tags[2].id, name: tags[2].name }])
 
-        expect(Tag.top_tags.sort).to eq([tags[0].name, tags[1].name].sort)
+        expect(Tag.top_tags).to eq(
+          [{ id: tags[0].id, name: tags[0].name }, { id: tags[1].id, name: tags[1].name }],
+        )
         expect(Tag.top_tags(category: private_category)).to be_empty
 
         sub_category = Fabricate(:category, parent_category_id: category1.id)
         Fabricate(:topic, category: sub_category, tags: [tags[1]])
-        expect(Tag.top_tags(category: category1).sort).to eq([tags[0].name, tags[1].name].sort)
+        expect(Tag.top_tags(category: category1)).to eq(
+          [{ id: tags[0].id, name: tags[0].name }, { id: tags[1].id, name: tags[1].name }],
+        )
       end
     end
 
@@ -147,15 +155,23 @@ RSpec.describe Tag do
       end
 
       it "for category with restricted tags, lists those tags" do
-        expect(Tag.top_tags(category: category1)).to eq([tags[0].name])
+        expect(Tag.top_tags(category: category1)).to eq([{ id: tags[0].id, name: tags[0].name }])
       end
 
       it "for category without tags, lists allowed tags" do
-        expect(Tag.top_tags(category: category2).sort).to eq([tags[1].name, tags[2].name].sort)
+        expect(Tag.top_tags(category: category2)).to eq(
+          [{ id: tags[1].id, name: tags[1].name }, { id: tags[2].id, name: tags[2].name }],
+        )
       end
 
       it "for no category arg, lists all tags" do
-        expect(Tag.top_tags.sort).to eq([tags[0].name, tags[1].name, tags[2].name].sort)
+        expect(Tag.top_tags).to eq(
+          [
+            { id: tags[2].id, name: tags[2].name },
+            { id: tags[0].id, name: tags[0].name },
+            { id: tags[1].id, name: tags[1].name },
+          ],
+        )
       end
     end
 
@@ -167,16 +183,18 @@ RSpec.describe Tag do
       let!(:topic2) { Fabricate(:topic, tags: [tag, hidden_tag]) }
 
       it "returns all tags to staff" do
-        expect(Tag.top_tags(guardian: Guardian.new(Fabricate(:admin)))).to include(hidden_tag.name)
+        expect(Tag.top_tags(guardian: Guardian.new(Fabricate(:admin)))).to include(
+          { id: hidden_tag.id, name: hidden_tag.name },
+        )
       end
 
       it "doesn't return hidden tags to anon" do
-        expect(Tag.top_tags).to_not include(hidden_tag.name)
+        expect(Tag.top_tags).to_not include({ id: hidden_tag.id, name: hidden_tag.name })
       end
 
       it "doesn't return hidden tags to non-staff" do
         expect(Tag.top_tags(guardian: Guardian.new(Fabricate(:user)))).to_not include(
-          hidden_tag.name,
+          { id: hidden_tag.id, name: hidden_tag.name },
         )
       end
     end

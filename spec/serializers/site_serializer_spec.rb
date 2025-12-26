@@ -308,7 +308,9 @@ RSpec.describe SiteSerializer do
 
         serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
 
-        expect(serialized[:top_tags]).to eq([tag3.name, tag2.name])
+        expect(serialized[:top_tags]).to eq(
+          [{ id: tag3.id, name: tag3.name }, { id: tag2.id, name: tag2.name }],
+        )
       end
     end
   end
