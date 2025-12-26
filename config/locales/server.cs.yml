@@ -319,6 +319,7 @@ cs:
       greater_than: musí být větší než %{count}
       greater_than_or_equal_to: musí být větší nebo rovno %{count}
       has_already_been_used: "již byl použit"
+      in: musí být v %{count}
       inclusion: není zahrnutý v seznamu
       invalid: je neplatný
       is_invalid: "zdá se to být nejasné, je to kompletní věta?"
@@ -892,6 +893,11 @@ cs:
       email_already_used_in_group: "'%{email}' už je použit pro skupinu '%{group_name}'."
       email_already_used_in_category: "'%{email}' už je použit pro kategorii '%{category_name}'."
       description_incomplete: "Příspěvek s popisem kategorie musí obsahovat alespoň jeden odstavec."
+      description_too_long:
+        one: "Popis je příliš dlouhý (maximálně %{count} znak)."
+        few: "Popis je příliš dlouhý (maximálně %{count} znaky)."
+        many: "Popis je příliš dlouhý (maximálně %{count} znaků)."
+        other: "Popis je příliš dlouhý (maximálně %{count} znaků)."
       permission_conflict: "Každá skupina, která má přístup k podkategorii, musí mít také přístup k nadřazené kategorii. Následující skupiny mají přístup k jedné z podkategorií, ale nemají přístup k nadřazené kategorii: %{group_names}."
       disallowed_topic_tags: "Toto téma obsahuje štítky, které tato kategorie nepovoluje: '%{tags}'"
       disallowed_tags_generic: "Toto téma obsahuje nedovolené štítky."
@@ -1284,10 +1290,14 @@ cs:
       every_month: "každý měsíc"
       every_six_months: "každých šest měsíců"
   user_api_key:
+    title: 'Autorizovat „%{application_name}“'
     authorize: "Autorizovat"
     deny: "Zrušit"
     read: "přečteno"
     read_write: "čtení/zápis"
+    logged_in_as: "Přihlášen jako"
+    permissions_header: 'Toto povolí přístup „%{application_name}“:'
+    redirect_warning: "Ověření vás přesměruje na"
     instructions: 'Právě jsme pro vás vygenerovali nový uživatelský klíč API, který můžete použít s „%{application_name}“, do své aplikace vložte prosím následující klíč:'
     otp_description: 'Chcete povolit přístup k tomuto webu uživateli „%{application_name}“?'
     otp_confirmation:
