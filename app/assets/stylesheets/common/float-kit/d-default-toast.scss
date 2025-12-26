@@ -10,15 +10,14 @@
   background-color: var(--toast-background-color);
   box-shadow: var(--toast-box-shadow);
 
-  &.-has-progress {
-    padding-bottom: var(--space-4);
+  &--has-progress {
+    padding-block-end: var(--space-4);
   }
-
 
   &__close-btn {
     position: absolute;
-    top: 0;
-    right: 0;
+    inset-block-start: 0;
+    inset-inline-end: 0;
     transform: translate(35%, -35%);
     display: flex;
     justify-content: center;
@@ -30,10 +29,8 @@
     color: var(--primary);
     border: none;
     background: var(--secondary-very-high);
-  }
 
-  @include viewport.until(sm) {
-    &__close-btn {
+    @include viewport.until(sm) {
       display: none;
     }
   }
@@ -42,28 +39,28 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 1rem;
-    height: 1rem;
+    inline-size: 1rem;
+    block-size: 1rem;
     flex-shrink: 0;
 
     .d-icon {
-      width: 1rem;
-      height: 1rem;
+      inline-size: 1rem;
+      block-size: 1rem;
     }
 
-    .-success & .d-icon {
+    .fk-d-default-toast--success & .d-icon {
       color: var(--success);
     }
 
-    .-error & .d-icon {
+    .fk-d-default-toast--error & .d-icon {
       color: var(--danger);
     }
 
-    .-warning & .d-icon {
+    .fk-d-default-toast--warning & .d-icon {
       color: var(--highlight);
     }
 
-    .-info & .d-icon {
+    .fk-d-default-toast--info & .d-icon {
       color: var(--tertiary);
     }
   }
@@ -72,7 +69,7 @@
     display: flex;
     flex-direction: column;
     flex: 1;
-    min-width: 0;
+    min-inline-size: 0;
   }
 
   &__title {
@@ -88,16 +85,15 @@
     font-size: var(--font-down-1);
   }
 
-  // Legacy actions array support
   &__actions-legacy {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-left: auto;
+    gap: var(--space-2);
+    margin-inline-start: auto;
   }
 
   &__action-btn {
-    margin-left: auto;
+    margin-inline-start: auto;
     flex-shrink: 0;
   }
 
@@ -107,22 +103,21 @@
 
   &__progress-wrapper {
     position: absolute;
-    bottom: 4px;
-    left: 8px;
-    right: 8px;
-    height: 3px;
+    inset-block-end: 4px;
+    inset-inline: 8px;
+    block-size: 3px;
     background: var(--primary-very-low);
-    border-radius: 10px;
+    border-radius: var(--d-border-radius-large);
     overflow: hidden;
     z-index: 1;
     pointer-events: none;
   }
 
   &__progress-bar {
-    width: 100%;
-    height: 100%;
+    inline-size: 100%;
+    block-size: 100%;
     background: var(--primary-low);
     border-radius: inherit;
-    transform-origin: 0 0;
+    transform-origin: inset-inline-start inset-block-start;
   }
 }

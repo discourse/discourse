@@ -17,7 +17,7 @@ module(
         <template><DDefaultToast @data={{this.toast.options.data}} /></template>
       );
 
-      assert.dom(".fk-d-default-toast__icon-container .d-icon-check").exists();
+      assert.dom(".fk-d-default-toast__icon .d-icon-check").exists();
     });
 
     test("no icon", async function (assert) {
@@ -27,7 +27,7 @@ module(
         <template><DDefaultToast @data={{this.toast.options.data}} /></template>
       );
 
-      assert.dom(".fk-d-default-toast__icon-container").doesNotExist();
+      assert.dom(".fk-d-default-toast__icon").doesNotExist();
     });
 
     test("progress bar", async function (assert) {
@@ -38,7 +38,7 @@ module(
           <DDefaultToast
             @data={{this.toast.options.data}}
             @showProgressBar={{true}}
-            @onRegisterProgressBar={{(noop)}}
+            @registerProgressBar={{(noop)}}
           />
         </template>
       );
@@ -91,7 +91,7 @@ module(
       );
 
       assert
-        .dom(".fk-d-default-toast__message")
+        .dom(".fk-d-default-toast__description")
         .hasText(this.toast.options.data.message);
     });
 
@@ -102,7 +102,7 @@ module(
         <template><DDefaultToast @data={{this.toast.options.data}} /></template>
       );
 
-      assert.dom(".fk-d-default-toast__message").doesNotExist();
+      assert.dom(".fk-d-default-toast__description").doesNotExist();
     });
 
     test("actions", async function (assert) {
@@ -124,7 +124,7 @@ module(
       );
 
       assert
-        .dom(".fk-d-default-toast__actions .btn.btn-danger")
+        .dom(".fk-d-default-toast__actions-legacy .btn.btn-danger")
         .exists()
         .hasText("cancel");
     });

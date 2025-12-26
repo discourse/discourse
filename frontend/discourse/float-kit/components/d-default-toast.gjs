@@ -27,8 +27,8 @@ export default class DDefaultToast extends Component {
     <div
       class={{concatClass
         "fk-d-default-toast"
-        (concat "-" (or @data.theme "default"))
-        (if @showProgressBar "-has-progress")
+        (concat "--" (or @data.theme "default"))
+        (if @showProgressBar "--has-progress")
       }}
       ...attributes
     >
