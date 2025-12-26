@@ -1,5 +1,6 @@
 import $ from "jquery";
 import { addAboutPageActivity } from "discourse/components/about-page";
+import { renderBlocks } from "discourse/components/block-outlet";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
 import { addCardClickListenerSelector } from "discourse/components/card-contents-base";
 import {
@@ -3312,6 +3313,31 @@ class _PluginApi {
    */
   registerCategorySaveProperty(property) {
     _addCategoryPropertyForSave(property);
+  }
+
+  /**
+   * Renders block components in the specified outlet using the provided configuration.
+   *
+   * This method allows plugins to dynamically render block components in designated outlets
+   * throughout the application.
+   *
+   * @param {string} blockOutlet - The name of the block outlet where components should be rendered
+   * @param {Object} blockConfig - Configuration object defining the blocks to render
+   *
+   * @example
+   * ```javascript
+   * api.renderBlocks('homepage-blocks', {
+   *   blocks: [
+   *     {
+   *       component: MyCustomComponent,
+   *       shouldRender: (context) => context.user.isAdmin
+   *     }
+   *   ]
+   * });
+   * ```
+   */
+  renderBlocks(blockOutlet, blockConfig) {
+    renderBlocks(blockOutlet, blockConfig);
   }
 
   // eslint-disable-next-line no-unused-vars
