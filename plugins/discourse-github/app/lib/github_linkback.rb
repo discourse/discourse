@@ -128,7 +128,7 @@ class GithubLinkback
   private
 
   def ignored_category?
-    return false if @post.blank? || @post.topic.category_id.blank?
+    return false if @post&.topic&.category_id.blank?
 
     SiteSetting.github_linkback_ignored_categories_map.include?(@post.topic.category_id)
   end
