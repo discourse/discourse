@@ -10,20 +10,37 @@ import icon from "discourse/helpers/d-icon";
 import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
+/**
+ * The default content component for a toast.
+ * Displays an icon, title, message, and action/cancel buttons.
+ *
+ * @component d-default-toast
+ * @param {DToastInstance} toast - The toast instance
+ * @param {Function} close - Callback to close the toast
+ * @param {boolean} isFront - Whether this toast is at the front
+ * @param {Function} registerProgressBar - Callback to register the progress bar element
+ */
 export default class DDefaultToast extends Component {
-  get action() {
-    if (this.args.data.action) {
-      return this.args.data.action;
+  /**
+   * Returns the primary action for the toast, handling both new and legacy formats.
+   *
+   * @returns {Object|null}
+   */
+  get primaryAction() {
+    const data = this.args.toast.options.data;
+
+    if (data.action) {
+      return data.action;
     }
 
-    const firstLegacyAction = this.args.data.actions?.[0];
+    const firstLegacyAction = data.actions?.[0];
     if (firstLegacyAction) {
       return {
         label: firstLegacyAction.label,
         onClick: () =>
           firstLegacyAction.action({
-            data: this.args.data,
-            close: this.args.sheet.close,
+            data,
+            close: this.args.close,
           }),
       };
     }
@@ -32,27 +49,27 @@ export default class DDefaultToast extends Component {
   }
 
   @action
-  handleAction() {
-    this.args.sheet.close();
-    this.action?.onClick();
+  handlePrimaryAction() {
+    this.args.close();
+    this.primaryAction?.onClick?.();
   }
 
   @action
-  handleCancel() {
-    this.args.sheet.close();
-    this.args.data.cancel.onClick();
+  handleCancelAction() {
+    this.args.close();
+    this.args.toast.options.data.cancel?.onClick?.();
   }
 
   <template>
     <div
       class={{concatClass
         "fk-d-default-toast"
-        (if @data.theme (concat "fk-d-default-toast--" @data.theme))
-        (if @showProgressBar "fk-d-default-toast--has-progress")
+        (if @toast.options.data.theme (concat "fk-d-default-toast--" @toast.options.data.theme))
+        (if @toast.options.showProgressBar "fk-d-default-toast--has-progress")
       }}
       ...attributes
     >
-      {{#if @showProgressBar}}
+      {{#if @toast.options.showProgressBar}}
         <div class="fk-d-default-toast__progress-wrapper">
           <div
             class="fk-d-default-toast__progress-bar"
@@ -63,52 +80,54 @@ export default class DDefaultToast extends Component {
 
       {{#if @isFront}}
         <button
-          {{on "click" @sheet.close}}
+          type="button"
+          {{on "click" @close}}
           class="fk-d-default-toast__close-btn"
-          aria-label="Close"
+          aria-label={{i18n "close"}}
         >
           {{icon "xmark"}}
         </button>
       {{/if}}
 
-      {{#if @data.icon}}
+      {{#if @toast.options.data.icon}}
         <div class="fk-d-default-toast__icon">
-          {{icon @data.icon}}
+          {{icon @toast.options.data.icon}}
         </div>
       {{/if}}
 
       <div class="fk-d-default-toast__content">
-        {{#if @data.title}}
+        {{#if @toast.options.data.title}}
           <div class="fk-d-default-toast__title">
-            {{@data.title}}
+            {{@toast.options.data.title}}
           </div>
         {{/if}}
-        {{#if (or @data.message @data.description)}}
+
+        {{#if (or @toast.options.data.message @toast.options.data.description)}}
           <div class="fk-d-default-toast__description">
-            {{#if @data.isHtmlMessage}}
-              {{htmlSafe (or @data.message @data.description)}}
+            {{#if @toast.options.data.isHtmlMessage}}
+              {{htmlSafe (or @toast.options.data.message @toast.options.data.description)}}
             {{else}}
-              {{or @data.message @data.description}}
+              {{or @toast.options.data.message @toast.options.data.description}}
             {{/if}}
           </div>
         {{/if}}
       </div>
 
-      {{#if this.action}}
+      {{#if this.primaryAction}}
         <DButton
           class="fk-d-default-toast__action-btn btn-default btn-primary btn-small"
-          {{on "click" this.handleAction}}
+          {{on "click" this.handlePrimaryAction}}
         >
-          {{this.action.label}}
+          {{this.primaryAction.label}}
         </DButton>
       {{/if}}
 
-      {{#if @data.cancel}}
+      {{#if @toast.options.data.cancel}}
         <DButton
           class="fk-d-default-toast__cancel-btn btn-default btn-small"
-          {{on "click" this.handleCancel}}
+          {{on "click" this.handleCancelAction}}
         >
-          {{or @data.cancel.label (i18n "cancel")}}
+          {{or @toast.options.data.cancel.label (i18n "cancel")}}
         </DButton>
       {{/if}}
     </div>

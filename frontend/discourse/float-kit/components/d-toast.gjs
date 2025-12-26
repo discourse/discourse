@@ -9,10 +9,18 @@ import { htmlSafe } from "@ember/template";
 import DDefaultToast from "discourse/float-kit/components/d-default-toast";
 import effect from "discourse/float-kit/helpers/effect";
 import concatClass from "discourse/helpers/concat-class";
-import deprecated from "discourse/lib/deprecated";
 import { or } from "discourse/truth-helpers";
 import DSheet from "./d-sheet";
 
+/**
+ * A wrapper component for an individual toast.
+ * Handles auto-close logic, progress bar animation, and stacking styles.
+ *
+ * @component d-toast
+ * @param {DToastInstance} toast - The toast instance to render
+ * @param {TrackedArray<DToastInstance>} toasts - The list of all active toasts
+ * @param {Function} [onTravelStatusChange] - Callback when travel status changes
+ */
 export default class DToast extends Component {
   @service capabilities;
 
@@ -31,29 +39,91 @@ export default class DToast extends Component {
     this.progressBar = null;
   }
 
+  /**
+   * The placement of the toast content.
+   *
+   * @returns {string}
+   */
   get contentPlacement() {
     return "top";
   }
 
+  /**
+   * The track placement for DSheet.
+   *
+   * @returns {string}
+   */
   get tracks() {
     return this.capabilities.isAndroid ? "right" : "top";
   }
 
-  get duration() {
-    const duration = this.args.toast.options.duration;
-
-    if (duration === "long") {
-      return 5000;
-    } else if (duration === "short") {
-      return 3000;
-    } else {
-      deprecated(
-        "Using an integer for the duration property of the d-toast component is deprecated. Use `short` or `long` instead.",
-        { id: "float-kit.d-toast.duration" }
-      );
-
-      return duration;
+  /**
+   * Whether this toast is the front-most toast in the stack.
+   *
+   * @returns {boolean}
+   */
+  get isFront() {
+    if (this.args.toast.dismissed) {
+      return false;
     }
+
+    const activeToasts = this.args.toasts.filter((t) => !t.dismissed);
+    return this.args.toast === activeToasts[activeToasts.length - 1];
+  }
+
+  /**
+   * CSS variables for the toast container.
+   *
+   * @returns {SafeString}
+   */
+  get toastStyles() {
+    const order = this.args.toast.stackOrder;
+    const styles = [
+      `--index: ${order}`,
+      `--toasts-before: ${order}`,
+      `--z-index: ${order}`,
+    ];
+
+    return htmlSafe(styles.join("; "));
+  }
+
+  /**
+   * CSS variables for the inner content, specifically for stacking offset.
+   *
+   * @returns {SafeString}
+   */
+  get innerStyles() {
+    const activeToasts = this.args.toasts.filter((t) => !t.dismissed);
+    const indexInActive = activeToasts.indexOf(this.args.toast);
+
+    const distanceFromFront =
+      indexInActive === -1 ? 0 : activeToasts.length - 1 - indexInActive;
+
+    return htmlSafe(`--distance-from-front: ${distanceFromFront}`);
+  }
+
+  /**
+   * Custom animation settings for the entering transition.
+   *
+   * @returns {Object|null}
+   */
+  get enteringAnimationSettings() {
+    if (!this.isFront) {
+      return {
+        contentMove: false,
+        duration: 400,
+      };
+    }
+    return null;
+  }
+
+  /**
+   * The container for all toasts.
+   *
+   * @returns {HTMLElement|null}
+   */
+  get toastsContainers() {
+    return document.querySelector(".fk-d-toasts");
   }
 
   @action
@@ -72,6 +142,9 @@ export default class DToast extends Component {
     this.progressBar = element;
   }
 
+  /**
+   * Reactive effect to sync auto-close timer and animation based on state.
+   */
   @action
   syncAutoClose() {
     if (this.travelStatus !== "idleInside" || !this.presented) {
@@ -88,32 +161,41 @@ export default class DToast extends Component {
     }
   }
 
+  /**
+   * Starts or resumes the progress bar animation.
+   */
   startProgressAnimation() {
     if (!this.progressBar) {
       return;
     }
 
     if (this.progressAnimation) {
-      this.progressAnimation.play();
+      if (this.progressAnimation.playState === "paused") {
+        this.progressAnimation.play();
+      }
       return;
     }
 
     this.progressAnimation = this.progressBar.animate(
       { transform: "scaleX(0)" },
-      { duration: this.duration, fill: "forwards" }
+      { duration: this.args.toast.duration, fill: "forwards" }
     );
   }
 
+  /**
+   * Pauses the progress bar animation and records remaining time.
+   */
   pauseProgressAnimation() {
     if (
       !this.progressAnimation ||
-      this.progressAnimation.currentTime === this.duration
+      this.progressAnimation.currentTime === this.args.toast.duration
     ) {
       return;
     }
 
     this.progressAnimation.pause();
-    this.timeRemaining = this.duration - this.progressAnimation.currentTime;
+    this.timeRemaining =
+      this.args.toast.duration - this.progressAnimation.currentTime;
   }
 
   @action
@@ -144,14 +226,25 @@ export default class DToast extends Component {
     }
   }
 
+  /**
+   * Starts the auto-close timeout.
+   */
   startAutoCloseTimeout() {
     this.cancelAutoCloseTimeout();
+
+    if (!this.args.toast.options.autoClose) {
+      return;
+    }
+
     this.startProgressAnimation();
     this.autoCloseTimeout = later(() => {
       this.presented = false;
-    }, this.timeRemaining ?? this.duration);
+    }, this.timeRemaining ?? this.args.toast.duration);
   }
 
+  /**
+   * Cancels the auto-close timeout.
+   */
   cancelAutoCloseTimeout() {
     if (this.autoCloseTimeout) {
       cancel(this.autoCloseTimeout);
@@ -171,54 +264,6 @@ export default class DToast extends Component {
   @action
   handleClosed() {
     this.args.toast.close();
-  }
-
-  get toastsContainers() {
-    return document.querySelector(".fk-d-toasts");
-  }
-
-  get toastStyles() {
-    const order = this.args.toast.stackOrder;
-    const styles = [
-      `--index: ${order}`,
-      `--toasts-before: ${order}`,
-      `--z-index: ${order}`,
-    ];
-
-    return htmlSafe(styles.join("; "));
-  }
-
-  get isFront() {
-    if (this.args.toast.dismissed) {
-      return false;
-    }
-
-    const activeToasts = this.args.toasts.filter((t) => !t.dismissed);
-    return this.args.toast === activeToasts[activeToasts.length - 1];
-  }
-
-  get innerStyles() {
-    const activeToasts = this.args.toasts.filter((t) => !t.dismissed);
-    const indexInActive = activeToasts.indexOf(this.args.toast);
-
-    const distanceFromFront =
-      indexInActive === -1 ? 0 : activeToasts.length - 1 - indexInActive;
-
-    const styles = [`--distance-from-front: ${distanceFromFront}`];
-    return htmlSafe(styles.join("; "));
-  }
-
-  get enteringAnimationSettings() {
-    const activeToasts = this.args.toasts.filter((t) => !t.dismissed);
-    const isNewest = this.args.toast === activeToasts[activeToasts.length - 1];
-
-    if (!isNewest) {
-      return {
-        contentMove: false,
-        duration: 400,
-      };
-    }
-    return null;
   }
 
   <template>
@@ -249,7 +294,7 @@ export default class DToast extends Component {
             @enteringAnimationSettings={{this.enteringAnimationSettings}}
             class={{concatClass
               "d-toast"
-              (concat "d-toast-" this.contentPlacement)
+              (concat "d-toast--" this.contentPlacement)
               (if
                 @toast.options.data?.theme
                 (concat "d-toast--" @toast.options.data.theme)
@@ -266,10 +311,10 @@ export default class DToast extends Component {
               <DSheet.SpecialWrapper.Root
                 @sheet={{sheet}}
                 @contentAttrs={{contentAttrs}}
-                class="d-toast-content"
+                class="d-toast__content"
               >
                 <DSheet.SpecialWrapper.Content
-                  class="d-toast-inner-content"
+                  class="d-toast__inner-content"
                   data-index={{this.args.toast.stackOrder}}
                   data-front={{if this.isFront "true" "false"}}
                   data-presented={{if this.presented "true" "false"}}
@@ -283,10 +328,9 @@ export default class DToast extends Component {
                   {{on "pointercancel" this.handlePointerUp}}
                 >
                   <DDefaultToast
-                    @data={{@toast.options.data}}
-                    @sheet={{sheet}}
+                    @toast={{@toast}}
+                    @close={{sheet.close}}
                     @isFront={{this.isFront}}
-                    @showProgressBar={{@toast.options.showProgressBar}}
                     @registerProgressBar={{this.registerProgressBar}}
                   />
                 </DSheet.SpecialWrapper.Content>

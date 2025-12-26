@@ -46,7 +46,11 @@
       height: var(--toast-content-height);
     }
 
-    &-content {
+    &--top {
+      // styles for top placement if needed
+    }
+
+    &__content {
       box-sizing: border-box;
       width: 100%;
       height: var(--toast-content-height);
@@ -62,7 +66,7 @@
       }
     }
 
-    &-inner-content {
+    &__inner-content {
       --scale: calc(1 - var(--distance-from-front) * 0.05);
       --y-offset: calc(var(--distance-from-front) * -8px);
       max-height: var(--toast-max-height);

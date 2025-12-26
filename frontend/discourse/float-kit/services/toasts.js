@@ -113,11 +113,14 @@ export default class Toasts extends Service {
 
   /**
    * Close a toast. Any object containing a valid `id` property can be used as a toast parameter.
+   *
+   * @param {Object} toast - The toast instance or an object with an `id` property
    */
   @action
   close(toast) {
-    this.activeToasts = new TrackedArray(
-      this.activeToasts.filter((activeToast) => activeToast.id !== toast.id)
-    );
+    const index = this.activeToasts.findIndex((t) => t.id === toast.id);
+    if (index !== -1) {
+      this.activeToasts.splice(index, 1);
+    }
   }
 }
