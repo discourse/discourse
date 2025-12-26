@@ -19,8 +19,8 @@ export default class GroupedBlocks extends Component {
         @classNames
       }}
     >
-      {{#each this.children as |item|}}
-        <item.Component @block={{item}} @outletName={{@outletName}} />
+      {{#each this.children as |child|}}
+        <child.Component @block={{child}} @outletName={{@outletName}} />
       {{/each}}
     </div>
   </template>
