@@ -15,7 +15,7 @@ discourse_github:
     min: 1
   github_linkback_ignored_categories:
     default: ""
-    type: list
+    type: category_list
   github_badges_enabled:
     default: false
   github_badges_repos:

@@ -1392,6 +1392,11 @@ RSpec.describe SiteSettingExtension do
       expect(SiteSetting.personal_message_enabled_groups_map).to eq([1, 2])
     end
 
+    it "handles splitting category_list settings" do
+      SiteSetting.digest_suppress_categories = "3|4"
+      expect(SiteSetting.digest_suppress_categories_map).to eq([3, 4])
+    end
+
     it "handles splitting compact list settings" do
       SiteSetting.markdown_linkify_tlds = "com|net"
       expect(SiteSetting.markdown_linkify_tlds_map).to eq(%w[com net])

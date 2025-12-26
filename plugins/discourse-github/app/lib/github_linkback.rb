@@ -130,8 +130,7 @@ class GithubLinkback
   def ignored_category?
     return false if @post.blank? || @post.topic.category_id.blank?
 
-    ignored_categories = SiteSetting.github_linkback_ignored_categories.split("|").map(&:to_i)
-    ignored_categories.include?(@post.topic.category_id)
+    SiteSetting.github_linkback_ignored_categories_map.include?(@post.topic.category_id)
   end
 
   def post_pr_or_issue(link, type)
