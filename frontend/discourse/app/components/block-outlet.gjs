@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { DEBUG } from "@glimmer/env";
 import { cached } from "@glimmer/tracking";
-import { concat, hash } from "@ember/helper";
+import { concat } from "@ember/helper";
+import { getOwner } from "@ember/owner";
 import curryComponent from "ember-curry-component";
 import concatClass from "discourse/helpers/concat-class";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/blocks";
 import { consolePrefix } from "discourse/lib/source-identifier";
-import { or } from "discourse/truth-helpers";
 
 const blockConfigs = new Map();
 
@@ -14,8 +14,8 @@ const blockConfigs = new Map();
 // These secret symbols allow us to identify block components. We use them to ensure
 // only block components can be rendered inside BlockOutlets, and that block components
 // cannot be rendered in another context.
-const _BLOCK_FLAG = Symbol("block");
-const _BLOCK_CONTAINER_FLAG = Symbol("block-container");
+const __BLOCK_FLAG = Symbol("block");
+const __BLOCK_CONTAINER_FLAG = Symbol("block-container");
 
 /**
  * A decorator that registers a component as a block.
@@ -36,30 +36,30 @@ const _BLOCK_CONTAINER_FLAG = Symbol("block-container");
  * ```
  */
 export function block(name, options = {}) {
+  const isContainer = options?.container ?? false;
+
   return function (target) {
     // ensure target is a Glimmer component class
     if (!(target.prototype instanceof Component)) {
       throw new Error("@block target must be a Glimmer component class");
     }
 
-    const { container: isContainer = false } = options;
-
     return class extends target {
       /** @type {string} */
       static blockName = name;
 
       /** @type {boolean} */
-      static [_BLOCK_FLAG] = true;
+      static [__BLOCK_FLAG] = true;
 
       /** @type {boolean} */
-      static [_BLOCK_CONTAINER_FLAG] = isContainer;
+      static [__BLOCK_CONTAINER_FLAG] = isContainer;
 
       constructor() {
         super(...arguments);
 
         if (
-          this.constructor._SKIP_CONTAINMENT_CHECK !== _BLOCK_CONTAINER_FLAG &&
-          !this.args[_BLOCK_CONTAINER_FLAG]
+          this.constructor._SKIP_CONTAINMENT_CHECK !== __BLOCK_CONTAINER_FLAG && // block-outlet get a special pass
+          !this.args.__block === __BLOCK_CONTAINER_FLAG
         ) {
           throw new Error(
             `Block components cannot be used directly in templates. They can only be rendered directly inside BlockOutlets or BlockContainers.`
@@ -69,26 +69,45 @@ export function block(name, options = {}) {
 
       /** @returns {Object} */
       get config() {
-        return this.args.config;
-      }
-
-      /** @returns {string} */
-      get name() {
-        return this.config.name;
+        return super.config ?? this.args.config;
       }
 
       /** @returns {Array<Object>|undefined} */
       @cached
       get children() {
-        if (!this.config) {
+        const children = this.config?.children;
+
+        if (!isContainer || !children) {
           return;
         }
 
+        const owner = getOwner(this);
+
         return isContainer
-          ? this.args.children.map((item) => {
-              return { Component: curryComponent(item.block) };
+          ? children.map((item) => {
+              const { block: blockComponentClass, ...args } = item;
+              const taggedArgs = { ...args, __block: __BLOCK_CONTAINER_FLAG };
+              const BlockWithParameters = curryComponent(
+                blockComponentClass,
+                taggedArgs,
+                owner
+              );
+
+              return {
+                Component: blockComponentClass[__BLOCK_CONTAINER_FLAG]
+                  ? BlockWithParameters
+                  : wrapBlockLayput(
+                      { ...item, Component: BlockWithParameters },
+                      owner
+                    ),
+              };
             })
           : undefined;
+      }
+
+      /** @returns {string} */
+      get name() {
+        return this.config.name;
       }
     };
   };
@@ -101,7 +120,7 @@ export function block(name, options = {}) {
  * @returns {boolean} True if the component is registered as a block, false otherwise
  */
 export function isBlock(component) {
-  return !!component[_BLOCK_FLAG];
+  return !!component[__BLOCK_FLAG];
 }
 
 /**
@@ -111,7 +130,7 @@ export function isBlock(component) {
  * @returns {boolean} True if the component is registered as a container block, false otherwise
  */
 function isContainerBlock(component) {
-  return !!component[_BLOCK_CONTAINER_FLAG];
+  return !!component[__BLOCK_CONTAINER_FLAG];
 }
 
 /**
@@ -136,7 +155,7 @@ function isContainerBlock(component) {
  * ```
  */
 export function renderBlocks(outletName, config) {
-  validateConfig(outletName, config);
+  validateConfig(config, outletName);
 
   if (blockConfigs.has(outletName)) {
     const errorMessage = [
@@ -153,7 +172,7 @@ export function renderBlocks(outletName, config) {
     }
   }
 
-  blockConfigs.set(outletName, config);
+  blockConfigs.set(outletName, { children: config });
 }
 
 /**
@@ -162,10 +181,10 @@ export function renderBlocks(outletName, config) {
  * @param {string} outletName - The name of the outlet these blocks belong to
  * @param {Array<Object>} blocksConfig - The array of block configurations to validate
  */
-function validateConfig(outletName, blocksConfig) {
+function validateConfig(blocksConfig, outletName) {
   blocksConfig.forEach((blockConfig) => {
     if (blockConfig.children) {
-      validateConfig(blockConfig.children);
+      validateConfig(blockConfig.children, outletName);
     } else {
       validateBlock(blockConfig, outletName);
     }
@@ -210,9 +229,10 @@ function validateBlock(config, outletName) {
   if (!BLOCK_OUTLETS.includes(outletName)) {
     throw new Error(`Unknown block outlet: ${outletName} `);
   }
-
   if (!config.block) {
-    throw new Error(`Block in layout ${outletName} is missing a component`);
+    throw new Error(
+      `Block in layout for \`${outletName}\` is missing a component: ${config.toString()}`
+    );
   }
 
   if (!isBlock(config.block)) {
@@ -239,7 +259,7 @@ function validateBlock(config, outletName) {
  * @description Renders a named block outlet where other components can be injected.
  * @param {string} name - The registered name of the block outlet
  */
-@block("block-outlet", { isContainer: true })
+@block("block-outlet", { container: true })
 export default class BlockOutlet extends Component {
   /**
    * The locked name of the outlet.
@@ -248,7 +268,7 @@ export default class BlockOutlet extends Component {
   #name;
 
   /** @type {symbol} */
-  static _SKIP_CONTAINMENT_CHECK = _BLOCK_CONTAINER_FLAG;
+  static _SKIP_CONTAINMENT_CHECK = __BLOCK_CONTAINER_FLAG;
 
   constructor() {
     super(...arguments);
@@ -280,7 +300,10 @@ export default class BlockOutlet extends Component {
         <div class={{concat @name "__container"}}>
           <div class={{concat @name "__layout"}}>
             {{#each this.children as |item|}}
-              <item.Component @block={{item}} @outletName={{this.name}} />
+              <item.Component
+                @block={{item.config}}
+                @outletName={{this.name}}
+              />
             {{/each}}
           </div>
         </div>
@@ -290,19 +313,18 @@ export default class BlockOutlet extends Component {
   </template>
 }
 
-export const WrappedBlock = <template>
+function wrapBlockLayput(blockData, owner) {
+  return curryComponent(WrappedBlockLayout, blockData, owner);
+}
+
+const WrappedBlockLayout = <template>
   <div
     class={{concatClass
       (concat @blockOutlet "__block ")
-      (concat "block-" @block.name)
-      @block.classNames
+      (concat "block-" @name)
+      @classNames
     }}
   >
-    {{#let
-      (curryComponent @block.block (or @block.args (hash)))
-      as |BlockComponent|
-    }}
-      <BlockComponent />
-    {{/let}}
+    <@Component />
   </div>
 </template>;

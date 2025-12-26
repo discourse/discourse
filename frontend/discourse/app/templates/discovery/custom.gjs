@@ -7,7 +7,7 @@ export default <template>
     <:after as |hasBlocks|>
       <PluginOutlet @name="custom-homepage">
         {{#if @controller.currentUser.admin}}
-          {{#unless (hasBlocks)}}
+          {{#unless hasBlocks}}
             <p class="alert alert-info">
               {{i18n "custom_homepage.admin_message"}}
             </p>
