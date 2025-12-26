@@ -166,6 +166,15 @@ export function block(name, options = {}) {
       }
 
       /**
+       * The registered name of this block.
+       *
+       * @returns {string}
+       */
+      get name() {
+        return name;
+      }
+
+      /**
        * Creates a renderable child block from a block configuration.
        * Curries the component with all necessary args and wraps non-container
        * blocks in a layout wrapper for consistent styling.
@@ -232,15 +241,6 @@ export function block(name, options = {}) {
           $block$: __BLOCK_CONTAINER_FLAG,
           ...extra,
         };
-      }
-
-      /**
-       * The registered name of this block.
-       *
-       * @returns {string}
-       */
-      get name() {
-        return name;
       }
     };
   };
