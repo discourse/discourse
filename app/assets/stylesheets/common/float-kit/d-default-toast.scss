@@ -10,6 +10,10 @@
   background-color: var(--toast-background-color);
   box-shadow: var(--toast-box-shadow);
 
+  &.-has-progress {
+    padding-bottom: var(--space-4);
+  }
+
 
   &__close-btn {
     position: absolute;
@@ -103,18 +107,22 @@
 
   &__progress-wrapper {
     position: absolute;
-    inset: 0;
-    border-radius: inherit;
+    bottom: 4px;
+    left: 8px;
+    right: 8px;
+    height: 3px;
+    background: var(--primary-very-low);
+    border-radius: 10px;
     overflow: hidden;
-    z-index: 0;
+    z-index: 1;
     pointer-events: none;
   }
 
   &__progress-bar {
     width: 100%;
     height: 100%;
-    background-color: var(--primary);
-    opacity: 0.03;
+    background: var(--primary-low);
+    border-radius: inherit;
     transform-origin: 0 0;
   }
 }

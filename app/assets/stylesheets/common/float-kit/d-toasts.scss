@@ -44,7 +44,7 @@
 
     &-inner-content {
       --scale: calc(1 - var(--distance-from-front) * 0.05);
-      --y-offset: calc(var(--distance-from-front) * -12px);
+      --y-offset: calc(var(--distance-from-front) * -8px);
       max-height: var(--toast-max-height);
       opacity: 0;
       transform: translateY(var(--y-offset)) scale(var(--scale));
