@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { concat, fn, hash } from "@ember/helper";
+import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -11,10 +11,30 @@ import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class DDefaultToast extends Component {
+  get action() {
+    if (this.args.data.action) {
+      return this.args.data.action;
+    }
+
+    const firstLegacyAction = this.args.data.actions?.[0];
+    if (firstLegacyAction) {
+      return {
+        label: firstLegacyAction.label,
+        onClick: () =>
+          firstLegacyAction.action({
+            data: this.args.data,
+            close: this.args.sheet.close,
+          }),
+      };
+    }
+
+    return null;
+  }
+
   @action
   handleAction() {
     this.args.sheet.close();
-    this.args.data.action.onClick();
+    this.action?.onClick();
   }
 
   @action
@@ -74,29 +94,12 @@ export default class DDefaultToast extends Component {
         {{/if}}
       </div>
 
-      {{! Legacy actions array support }}
-      {{#if @data.actions}}
-        <div class="fk-d-default-toast__actions-legacy">
-          {{#each @data.actions as |toastAction|}}
-            {{#if toastAction.action}}
-              <DButton
-                @icon={{toastAction.icon}}
-                @translatedLabel={{toastAction.label}}
-                @action={{fn toastAction.action (hash data=@data close=@close)}}
-                class={{toastAction.class}}
-                tabindex="0"
-              />
-            {{/if}}
-          {{/each}}
-        </div>
-      {{/if}}
-
-      {{#if @data.action}}
+      {{#if this.action}}
         <DButton
           class="fk-d-default-toast__action-btn btn-default btn-primary btn-small"
           {{on "click" this.handleAction}}
         >
-          {{@data.action.label}}
+          {{this.action.label}}
         </DButton>
       {{/if}}
 
