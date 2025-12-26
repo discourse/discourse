@@ -67,7 +67,7 @@ module DiscourseAi
             strict: SiteSetting.ai_strict_token_counting,
           ) if max_post_tokens.present?
 
-        if post.upload_ids.present?
+        if post.upload_ids.present? && triage_persona.vision_enabled
           input = [input]
           input.concat(post.upload_ids.map { |upload_id| { upload_id: upload_id } })
         end
