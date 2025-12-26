@@ -1300,5 +1300,56 @@ RSpec.describe SchemaSettingsObjectValidator do
         expect(queries.length).to eq(1)
       end
     end
+
+    context "for date properties" do
+      let(:schema) { { name: "section", properties: { date_property: { type: "date" } } } }
+
+      it "should not return any error messages when the value of the property is a valid date" do
+        expect(
+          described_class.new(schema: schema, object: { date_property: "2024-01-15" }).validate,
+        ).to eq({})
+      end
+
+      it "should not return any error messages when the value is not present and it's not required in the schema" do
+        expect(described_class.new(schema: schema, object: {}).validate).to eq({})
+      end
+
+      it "should not return any error messages when the value is an empty string and it's not required" do
+        expect(described_class.new(schema: schema, object: { date_property: "" }).validate).to eq(
+          {},
+        )
+      end
+
+      it "should return the right hash of error messages when value of property is not present and it's required" do
+        schema = {
+          name: "section",
+          properties: {
+            date_property: {
+              type: "date",
+              required: true,
+            },
+          },
+        }
+        errors = described_class.new(schema: schema, object: {}).validate
+
+        expect(errors.keys).to eq(["/date_property"])
+        expect(errors["/date_property"].full_messages).to contain_exactly("must be present")
+      end
+
+      it "should return the right hash of error messages when value of property is not a valid date" do
+        errors =
+          described_class.new(schema: schema, object: { date_property: "not a date" }).validate
+
+        expect(errors.keys).to eq(["/date_property"])
+        expect(errors["/date_property"].full_messages).to contain_exactly("must be a valid date")
+      end
+
+      it "should return the right hash of error messages when value of property is not a string" do
+        errors = described_class.new(schema: schema, object: { date_property: 123 }).validate
+
+        expect(errors.keys).to eq(["/date_property"])
+        expect(errors["/date_property"].full_messages).to contain_exactly("must be a valid date")
+      end
+    end
   end
 end
