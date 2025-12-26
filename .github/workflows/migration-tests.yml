@@ -78,7 +78,7 @@ jobs:
         run: echo "cpu-cores=$(nproc)" >> $GITHUB_OUTPUT
 
       - name: Fetch app state cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: app-cache
         with:
           path: tmp/app-cache
