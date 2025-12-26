@@ -65,7 +65,7 @@ export function block(name, options = {}) {
 
         if (
           !this.isRoot && // the block-outlet component gets a special pass
-          !this.args.$block$ === __BLOCK_CONTAINER_FLAG
+          this.args.$block$ !== __BLOCK_CONTAINER_FLAG
         ) {
           throw new Error(
             `Block components cannot be used directly in templates. They can only be rendered directly inside BlockOutlets or BlockContainers.`
@@ -100,44 +100,42 @@ export function block(name, options = {}) {
 
         const owner = getOwner(this);
 
-        return isContainer
-          ? children.map((item) => {
-              const {
-                block: blockComponentClass,
-                args,
-                classNames,
-                children: nestedChildren,
-              } = item;
+        return children.map((item) => {
+          const {
+            block: blockComponentClass,
+            args,
+            classNames,
+            children: nestedChildren,
+          } = item;
 
-              const taggedArgs = {
-                ...(args || {}),
-                children: nestedChildren,
-                outletName: this.args.outletName,
-                $block$: __BLOCK_CONTAINER_FLAG,
-              };
+          const taggedArgs = {
+            ...(args || {}),
+            children: nestedChildren,
+            outletName: this.args.outletName,
+            $block$: __BLOCK_CONTAINER_FLAG,
+          };
 
-              return {
-                Component: blockComponentClass[__BLOCK_CONTAINER_FLAG]
-                  ? curryComponent(
-                      blockComponentClass,
-                      { ...taggedArgs, classNames },
-                      owner
-                    )
-                  : wrapBlockLayput(
-                      {
-                        classNames,
-                        name: blockComponentClass.blockName,
-                        Component: curryComponent(
-                          blockComponentClass,
-                          taggedArgs,
-                          owner
-                        ),
-                      },
-                      owner
-                    ),
-              };
-            })
-          : undefined;
+          const curriedComponent = curryComponent(
+            blockComponentClass,
+            blockComponentClass[__BLOCK_CONTAINER_FLAG]
+              ? { ...taggedArgs, classNames }
+              : taggedArgs,
+            owner
+          );
+
+          return {
+            Component: blockComponentClass[__BLOCK_CONTAINER_FLAG]
+              ? curriedComponent
+              : wrapBlockLayout(
+                  {
+                    classNames,
+                    name: blockComponentClass.blockName,
+                    Component: curriedComponent,
+                  },
+                  owner
+                ),
+          };
+        });
       }
 
       /**
@@ -268,7 +266,9 @@ function validateBlock(config, outletName) {
   }
   if (!config.block) {
     throw new Error(
-      `Block in layout for \`${outletName}\` is missing a component: ${config.toString()}`
+      `Block in layout for \`${outletName}\` is missing a component: ${JSON.stringify(
+        config
+      )}`
     );
   }
 
@@ -343,8 +343,8 @@ export default class BlockOutlet extends Component {
     {{yield (hasConfig this.outletName) to="before"}}
     {{#if this.children}}
       <div class={{this.outletName}}>
-        <div class={{concat this.outletName "__container"}}>
-          <div class={{concat this.outletName "__layout"}}>
+        <div class="{{this.outletName}}__container">
+          <div class="{{this.outletName}}__layout">
             {{#each this.children as |item|}}
               <item.Component @outletName={{this.outletName}} />
             {{/each}}
@@ -361,7 +361,7 @@ export default class BlockOutlet extends Component {
  * @param {import("@ember/owner").default} owner - The application owner
  * @returns {import("ember-curry-component").CurriedComponent} A curried component
  */
-function wrapBlockLayput(blockData, owner) {
+function wrapBlockLayout(blockData, owner) {
   return curryComponent(WrappedBlockLayout, blockData, owner);
 }
 
