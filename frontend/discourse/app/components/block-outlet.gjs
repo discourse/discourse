@@ -45,13 +45,19 @@ export function block(name, options = {}) {
     }
 
     return class extends target {
-      /** @type {string} */
+      /**
+       * @type {string}
+       */
       static blockName = name;
 
-      /** @type {boolean} */
+      /**
+       * @type {boolean}
+       */
       static [__BLOCK_FLAG] = true;
 
-      /** @type {boolean} */
+      /**
+       * @type {boolean}
+       */
       static [__BLOCK_CONTAINER_FLAG] = isContainer;
 
       constructor() {
@@ -67,16 +73,23 @@ export function block(name, options = {}) {
         }
       }
 
+      /**
+       * @returns {boolean}
+       */
       get isRoot() {
         return this.constructor.__ROOT_BLOCK === __BLOCK_CONTAINER_FLAG;
       }
 
-      /** @returns {Object} */
+      /**
+       * @returns {Object}
+       */
       get config() {
         return this.isRoot ? super.config : [];
       }
 
-      /** @returns {Array<Object>|undefined} */
+      /**
+       * @returns {Array<Object>|undefined}
+       */
       @cached
       get children() {
         const children = this.isRoot ? super.children : this.args.children;
@@ -127,7 +140,9 @@ export function block(name, options = {}) {
           : undefined;
       }
 
-      /** @returns {string} */
+      /**
+       * @returns {string}
+       */
       get name() {
         return name;
       }
@@ -200,8 +215,8 @@ export function renderBlocks(outletName, config) {
 /**
  * Validates multiple block configurations recursively.
  *
- * @param {string} outletName - The name of the outlet these blocks belong to
  * @param {Array<Object>} blocksConfig - The array of block configurations to validate
+ * @param {string} outletName - The name of the outlet these blocks belong to
  */
 function validateConfig(blocksConfig, outletName) {
   blocksConfig.forEach((blockConfig) => {
@@ -281,17 +296,20 @@ function validateBlock(config, outletName) {
 /**
  * @component block-outlet
  * @description Renders a named block outlet where other components can be injected.
- * @param {string} name - The registered name of the block outlet
+ * @param {string} @name - The registered name of the block outlet
  */
 @block("block-outlet", { container: true })
 export default class BlockOutlet extends Component {
   /**
    * The locked name of the outlet.
+   *
    * @type {string}
    */
   #name;
 
-  /** @type {symbol} */
+  /**
+   * @type {symbol}
+   */
   static __ROOT_BLOCK = __BLOCK_CONTAINER_FLAG;
 
   constructor() {
@@ -307,11 +325,16 @@ export default class BlockOutlet extends Component {
     }
   }
 
+  /**
+   * @returns {Array<Object>}
+   */
   get children() {
     return blockConfigs.get(this.#name)?.children ?? [];
   }
 
-  /** @returns {string} */
+  /**
+   * @returns {string}
+   */
   get outletName() {
     return this.#name;
   }
@@ -333,6 +356,11 @@ export default class BlockOutlet extends Component {
   </template>
 }
 
+/**
+ * @param {Object} blockData - Data for the block to be wrapped
+ * @param {import("@ember/owner").default} owner - The application owner
+ * @returns {import("ember-curry-component").CurriedComponent} A curried component
+ */
 function wrapBlockLayput(blockData, owner) {
   return curryComponent(WrappedBlockLayout, blockData, owner);
 }
