@@ -73,14 +73,6 @@ module PageObjects
         post.find(".post-info.edits").click
       end
 
-      def has_edits_indicator?
-        post.has_css?(".post-info.edits")
-      end
-
-      def has_no_edits_indicator?
-        post.has_no_css?(".post-info.edits")
-      end
-
       def mentions_of(user)
         post.all("a.mention[href='/u/#{user.username}']")
       end

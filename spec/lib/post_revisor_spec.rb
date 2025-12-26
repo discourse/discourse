@@ -1415,6 +1415,18 @@ describe PostRevisor do
               expect(post.public_version).to eq(1)
             end
 
+            it "increments public_version when hidden tag added with other visible changes" do
+              post_revisor.revise!(
+                admin,
+                raw: "#{post.raw} with additional content",
+                tags: topic.tags.map(&:name) + ["secret"],
+              )
+              post.reload
+              expect(post.version).to eq(2)
+              expect(post.public_version).to eq(2)
+              expect(post.revisions.first.hidden).to eq(false)
+            end
+
             it "doesn't notify topic owner about hidden tags" do
               PostActionNotifier.enable
               Jobs.run_immediately!
