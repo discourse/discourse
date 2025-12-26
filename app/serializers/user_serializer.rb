@@ -21,7 +21,8 @@ class UserSerializer < UserCardSerializer
              :profile_background_upload_url,
              :can_upload_profile_header,
              :can_upload_user_card_background,
-             :no_password
+             :no_password,
+             :upcoming_changes_stats
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
@@ -352,6 +353,14 @@ class UserSerializer < UserCardSerializer
 
   def include_no_password?
     !object.has_password?
+  end
+
+  def upcoming_changes_stats
+    object.upcoming_change_stats
+  end
+
+  def include_upcoming_changes_stats?
+    SiteSetting.enable_upcoming_changes && (scope.is_admin? || user_is_current_user)
   end
 
   private
