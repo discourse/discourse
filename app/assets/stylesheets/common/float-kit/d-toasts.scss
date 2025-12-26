@@ -20,6 +20,26 @@
     --toast-offset: 8px;
     z-index: var(--z-index);
 
+    &--success {
+      --toast-background-color: var(--success-low);
+      --toast-border-color: var(--success);
+    }
+
+    &--error {
+      --toast-background-color: var(--danger-low);
+      --toast-border-color: var(--danger);
+    }
+
+    &--warning {
+      --toast-background-color: var(--highlight-low);
+      --toast-border-color: var(--highlight);
+    }
+
+    &--info {
+      --toast-background-color: var(--tertiary-low);
+      --toast-border-color: var(--tertiary);
+    }
+
     @media (width >= 1000px) {
       --toast-padding-x: var(--space-4);
       --toast-padding-top: var(--space-4);

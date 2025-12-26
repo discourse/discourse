@@ -238,6 +238,11 @@ export default class DToast extends Component {
             class={{concatClass
               "d-toast"
               (concat "d-toast-" this.contentPlacement)
+              (if
+                @toast.options.data?.theme
+                (concat "d-toast--" @toast.options.data.theme)
+              )
+              @toast.options.class
             }}
             style={{this.toastStyles}}
           >
@@ -257,6 +262,7 @@ export default class DToast extends Component {
                   data-front={{if this.isFront "true" "false"}}
                   data-presented={{if this.presented "true" "false"}}
                   data-pointer-over={{if this.pointerOver "true" "false"}}
+                  data-theme={{or @toast.options.data?.theme "default"}}
                   style={{this.innerStyles}}
                   {{on "pointerenter" this.handlePointerEnter}}
                   {{on "pointerleave" this.handlePointerLeave}}
