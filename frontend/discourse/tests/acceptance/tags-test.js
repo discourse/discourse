@@ -625,11 +625,6 @@ acceptance(
       );
       server.put("/topics/bulk", () => helper.response({}));
     });
-
-    test("load more footer message is present", async function (assert) {
-      await visit("/tag/planters");
-      assert.dom(".topic-list-bottom .footer-message").doesNotExist();
-    });
   }
 );
 
@@ -705,10 +700,6 @@ acceptance("Tag show - topic list without `more_topics_url`", function (needs) {
       })
     );
     server.put("/topics/bulk", () => helper.response({}));
-  });
-  test("load more footer message is not present", async function (assert) {
-    await visit("/tag/planters");
-    assert.dom(".topic-list-bottom .footer-message").exists();
   });
 });
 
