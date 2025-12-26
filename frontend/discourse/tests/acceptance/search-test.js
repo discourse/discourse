@@ -52,7 +52,7 @@ acceptance("Search - Anonymous", function (needs) {
 
     server.get("/tag/important/notifications", () => {
       return helper.response({
-        tag_notification: { id: "important", notification_level: 2 },
+        tag_notification: { id: 1, name: "important", notification_level: 2 },
       });
     });
   });
@@ -809,7 +809,7 @@ acceptance("Search - with tagging enabled", function (needs) {
 
     server.get("/tag/dev/notifications", () => {
       return helper.response({
-        tag_notification: { id: "dev", notification_level: 2 },
+        tag_notification: { id: 1, name: "dev", notification_level: 2 },
       });
     });
 

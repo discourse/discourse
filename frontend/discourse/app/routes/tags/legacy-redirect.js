@@ -7,7 +7,7 @@ export default class TagsLegacyRedirect extends Route {
   beforeModel() {
     this.router.transitionTo(
       "tag.show",
-      this.paramsFor("tags.legacyRedirect").tag_id
+      this.paramsFor("tags.legacyRedirect").tag_name
     );
   }
 }

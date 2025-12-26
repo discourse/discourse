@@ -21,7 +21,7 @@ module("Component | discovery/accessible-discovery-heading", function (hooks) {
   test("it renders the correct label for a single tag", async function (assert) {
     this.setProperties({
       filter: "top",
-      tag: { id: "javascript" },
+      tag: { id: 1, name: "javascript" },
     });
 
     await render(
@@ -40,7 +40,7 @@ module("Component | discovery/accessible-discovery-heading", function (hooks) {
     this.setProperties({
       filter: "latest",
       category: { name: "Development" },
-      tag: { id: "javascript" },
+      tag: { id: 1, name: "javascript" },
     });
 
     await render(
