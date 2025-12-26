@@ -6,12 +6,14 @@ import { classNameBindings, tagName } from "@ember-decorators/component";
 import CategoryLogo from "discourse/components/category-logo";
 import CategoryTitleBefore from "discourse/components/category-title-before";
 import CategoryTitleLink from "discourse/components/category-title-link";
+import DecoratedHtml from "discourse/components/decorated-html";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import borderColor from "discourse/helpers/border-color";
 import categoryColorVariable from "discourse/helpers/category-color-variable";
 import categoryLink, {
   categoryBadgeHTML,
 } from "discourse/helpers/category-link";
+import dirSpan from "discourse/helpers/dir-span";
 import lazyHash from "discourse/helpers/lazy-hash";
 
 @tagName("section")
@@ -78,7 +80,9 @@ export default class CategoriesBoxes extends Component {
 
               {{#unless c.isMuted}}
                 <div class="description">
-                  {{htmlSafe c.description_excerpt}}
+                  <DecoratedHtml
+                    @html={{dirSpan c.description_excerpt htmlSafe="true"}}
+                  />
                 </div>
 
                 {{#if c.isGrandParent}}

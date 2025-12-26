@@ -1,5 +1,6 @@
 import CategoryListItem from "discourse/components/category-list-item";
 import CategoryTitleLink from "discourse/components/category-title-link";
+import DecoratedHtml from "discourse/components/decorated-html";
 import SubCategoryItem from "discourse/components/sub-category-item";
 import borderColor from "discourse/helpers/border-color";
 import dirSpan from "discourse/helpers/dir-span";
@@ -47,7 +48,12 @@ export default class SubCategoryRow extends CategoryListItem {
             <CategoryTitleLink @tagName="h4" @category={{this.category}} />
             {{#if this.category.description_excerpt}}
               <div class="category-description subcategory-description">
-                {{dirSpan this.category.description_excerpt htmlSafe="true"}}
+                <DecoratedHtml
+                  @html={{dirSpan
+                    this.category.description_excerpt
+                    htmlSafe="true"
+                  }}
+                />
               </div>
             {{/if}}
             {{#if this.category.subcategories}}
