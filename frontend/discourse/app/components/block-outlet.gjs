@@ -45,102 +45,87 @@ export function block(name, options = {}) {
     }
 
     return class extends target {
-      /**
-       * @type {string}
-       */
       static blockName = name;
-
-      /**
-       * @type {boolean}
-       */
       static [__BLOCK_FLAG] = true;
-
-      /**
-       * @type {boolean}
-       */
       static [__BLOCK_CONTAINER_FLAG] = isContainer;
 
       constructor() {
         super(...arguments);
+        const isAuthorized =
+          this.isRoot || this.args.$block$ === __BLOCK_CONTAINER_FLAG;
 
-        if (
-          !this.isRoot && // the block-outlet component gets a special pass
-          this.args.$block$ !== __BLOCK_CONTAINER_FLAG
-        ) {
+        if (!isAuthorized) {
           throw new Error(
             `Block components cannot be used directly in templates. They can only be rendered directly inside BlockOutlets or BlockContainers.`
           );
         }
       }
 
-      /**
-       * @returns {boolean}
-       */
       get isRoot() {
         return this.constructor.__ROOT_BLOCK === __BLOCK_CONTAINER_FLAG;
       }
 
-      /**
-       * @returns {Object}
-       */
       get config() {
         return this.isRoot ? super.config : [];
       }
 
-      /**
-       * @returns {Array<Object>|undefined}
-       */
       @cached
       get children() {
-        const children = this.isRoot ? super.children : this.args.children;
-
-        if (!isContainer || !children) {
+        const rawChildren = this.isRoot ? super.children : this.args.children;
+        if (!isContainer || !rawChildren) {
           return;
         }
 
-        const owner = getOwner(this);
-
-        return children.map((item) => {
-          const {
-            block: blockComponentClass,
-            args,
-            classNames,
-            children: nestedChildren,
-          } = item;
-
-          const taggedArgs = {
-            ...(args || {}),
-            children: nestedChildren,
-            outletName: this.args.outletName,
-            $block$: __BLOCK_CONTAINER_FLAG,
-          };
-
-          const curriedComponent = curryComponent(
-            blockComponentClass,
-            blockComponentClass[__BLOCK_CONTAINER_FLAG]
-              ? { ...taggedArgs, classNames }
-              : taggedArgs,
-            owner
-          );
-
-          return {
-            Component: blockComponentClass[__BLOCK_CONTAINER_FLAG]
-              ? curriedComponent
-              : wrapBlockLayout(
-                  {
-                    classNames,
-                    name: blockComponentClass.blockName,
-                    Component: curriedComponent,
-                  },
-                  owner
-                ),
-          };
-        });
+        return this.#mapChildBlocks(rawChildren);
       }
 
-      /**
-       * @returns {string}
-       */
+      #mapChildBlocks(rawChildren) {
+        const owner = getOwner(this);
+        return rawChildren.map((blockConfig) =>
+          this.#createChildBlock(blockConfig, owner)
+        );
+      }
+
+      #createChildBlock(blockConfig, owner) {
+        const {
+          block: ComponentClass,
+          args = {},
+          classNames,
+          children: nestedChildren,
+        } = blockConfig;
+        const isChildContainer = ComponentClass[__BLOCK_CONTAINER_FLAG];
+        const taggedArgs = this.#buildTaggedArgs(
+          args,
+          nestedChildren,
+          classNames,
+          isChildContainer
+        );
+        const curried = curryComponent(ComponentClass, taggedArgs, owner);
+
+        return {
+          Component: isChildContainer
+            ? curried
+            : wrapBlockLayout(
+                {
+                  classNames,
+                  name: ComponentClass.blockName,
+                  Component: curried,
+                },
+                owner
+              ),
+        };
+      }
+
+      #buildTaggedArgs(args, children, classNames, includeClassNames) {
+        const base = {
+          ...args,
+          children,
+          outletName: this.args.outletName,
+          $block$: __BLOCK_CONTAINER_FLAG,
+        };
+        return includeClassNames ? { ...base, classNames } : base;
+      }
+
       get name() {
         return name;
       }
@@ -260,15 +245,16 @@ function hasConfig(outletName) {
  * });
  * ```
  */
+const RESERVED_ARG_NAMES = ["classNames", "outletName", "children", "$block$"];
+
 function validateBlock(config, outletName) {
   if (!BLOCK_OUTLETS.includes(outletName)) {
-    throw new Error(`Unknown block outlet: ${outletName} `);
+    throw new Error(`Unknown block outlet: ${outletName}`);
   }
+
   if (!config.block) {
     throw new Error(
-      `Block in layout for \`${outletName}\` is missing a component: ${JSON.stringify(
-        config
-      )}`
+      `Block in layout for \`${outletName}\` is missing a component: ${JSON.stringify(config)}`
     );
   }
 
@@ -278,19 +264,44 @@ function validateBlock(config, outletName) {
     );
   }
 
-  if (config?.children?.length > 0 && !isContainerBlock(config.block)) {
+  const hasChildren = config.children?.length > 0;
+  const isContainer = isContainerBlock(config.block);
+
+  if (hasChildren && !isContainer) {
     throw new Error(
       `Block component ${config.name} (${config.block}) in layout ${outletName} cannot have children`
     );
   }
 
-  if (isContainerBlock(config.block) && config?.children?.length === 0) {
+  if (isContainer && !hasChildren) {
     throw new Error(
       `Block component ${config.name} (${config.block}) in layout ${outletName} must have children`
     );
   }
 
-  // TODO validate reserved names in the args hash (e.g classNames, outletName, and everything that goes into the upper config)
+  validateReservedArgs(config, outletName);
+}
+
+/**
+ * Validates that block config args don't use reserved names.
+ *
+ * @param {Object} config - The block configuration
+ * @param {string} outletName - The outlet name for error messages
+ */
+function validateReservedArgs(config, outletName) {
+  if (!config.args) {
+    return;
+  }
+
+  const usedReservedArgs = Object.keys(config.args).filter((key) =>
+    RESERVED_ARG_NAMES.includes(key)
+  );
+
+  if (usedReservedArgs.length > 0) {
+    throw new Error(
+      `Block ${config.name} in layout ${outletName} uses reserved arg names: ${usedReservedArgs.join(", ")}`
+    );
+  }
 }
 
 /**
@@ -320,7 +331,7 @@ export default class BlockOutlet extends Component {
 
     if (!BLOCK_OUTLETS.includes(this.#name)) {
       throw new Error(
-        `Block outlet ${this.#name}  is not registered in the blocks registry`
+        `Block outlet ${this.#name} is not registered in the blocks registry`
       );
     }
   }
