@@ -6,7 +6,7 @@ RSpec.describe "AI Bot sidebar navigation" do
   fab!(:channel, :category_channel)
 
   let(:ai_pm_homepage) { PageObjects::Components::AiPmHomepage.new }
-  let(:chat) { PageObjects::Components::Chat.new }
+  let(:chat_page) { PageObjects::Pages::Chat.new }
 
   before do
     enable_current_plugin
@@ -20,7 +20,7 @@ RSpec.describe "AI Bot sidebar navigation" do
   end
 
   it "respects sidebar panel set by destination route" do
-    chat.prefers_full_page
+    chat_page.prefers_full_page
 
     ai_pm_homepage.visit
 
