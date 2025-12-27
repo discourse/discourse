@@ -33,6 +33,7 @@ export default class Toasts extends Component {
   @tracked showProgressBar = TOAST.options.showProgressBar;
   @tracked class;
   @tracked action = true;
+  @tracked cancel = false;
   @tracked icon;
 
   @action
@@ -59,9 +60,18 @@ export default class Toasts extends Component {
         action: (args) => {
           // eslint-disable-next-line no-alert
           alert("Closing toast:" + args.data.title);
-          args.close();
         },
       });
+    }
+
+    let cancel;
+    if (this.cancel) {
+      cancel = {
+        label: "Cancel",
+        onClick: () => {
+          alert("Cancelled toast");
+        },
+      };
     }
 
     this.toasts[theme]({
@@ -74,6 +84,7 @@ export default class Toasts extends Component {
         message: this.message,
         icon: this.icon,
         actions,
+        cancel,
       },
     });
   }
@@ -81,6 +92,11 @@ export default class Toasts extends Component {
   @action
   toggleAction() {
     this.action = !this.action;
+  }
+
+  @action
+  toggleCancel() {
+    this.cancel = !this.cancel;
   }
 
   @action
@@ -208,6 +224,12 @@ export default class Toasts extends Component {
           <DToggleSwitch
             @state={{this.action}}
             {{on "click" this.toggleAction}}
+          />
+        </Row>
+        <Row @name="With a cancel">
+          <DToggleSwitch
+            @state={{this.cancel}}
+            {{on "click" this.toggleCancel}}
           />
         </Row>
       </Controls>
