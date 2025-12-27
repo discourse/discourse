@@ -416,7 +416,7 @@ class BadgeGranter
             #{badge.query}
           ) q ON q.user_id = ub.user_id
           #{post_clause}
-          WHERE ub.badge_id = :id AND q.user_id IS NULL
+          WHERE ub.badge_id = :id AND q.user_id IS NULL AND ub.granted_by_id = -1
         )
         RETURNING user_badges.user_id
       SQL
