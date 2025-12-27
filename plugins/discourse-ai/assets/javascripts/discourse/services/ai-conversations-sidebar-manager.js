@@ -6,7 +6,7 @@ import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
-import { ADMIN_PANEL, MAIN_PANEL } from "discourse/lib/sidebar/panels";
+import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import AiBotSidebarEmptyState from "../components/ai-bot-sidebar-empty-state";
@@ -159,8 +159,11 @@ export default class AiConversationsSidebarManager extends Service {
     document.body.classList.remove("has-ai-conversations-sidebar");
     document.body.classList.remove("has-empty-ai-conversations-sidebar");
 
-    const isAdmin = this.sidebarState.currentPanel?.key === ADMIN_PANEL;
-    if (this.sidebarState.isForcingSidebar && !isAdmin) {
+    // Only reset if no other route has claimed the sidebar in its activate() hook
+    const isStillAiPanel =
+      this.sidebarState.currentPanel?.key === AI_CONVERSATIONS_PANEL;
+
+    if (this.sidebarState.isForcingSidebar && isStillAiPanel) {
       this.sidebarState.setPanel(MAIN_PANEL);
       this.sidebarState.isForcingSidebar = false;
       this.appEvents.trigger("discourse-ai:stop-forcing-conversations-sidebar");
