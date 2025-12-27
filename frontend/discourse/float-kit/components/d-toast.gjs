@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import DDefaultToast from "discourse/float-kit/components/d-default-toast";
+import { modifier } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
 import { or } from "discourse/truth-helpers";
 import DSheet from "./d-sheet";
@@ -21,10 +21,32 @@ import DSheet from "./d-sheet";
  */
 export default class DToast extends Component {
   @service capabilities;
+  @service toasts;
 
   @tracked pointerOver = false;
   @tracked travelStatus = "idleOutside";
   @tracked presented = true;
+
+  /**
+   * Modifier that measures the height of each toast and reports it to the service.
+   * This allows the service to know the height of the front toast at all times.
+   */
+  measureHeight = modifier((element) => {
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        this.toasts.heights.set(this.args.toast.id, entry.target.offsetHeight);
+      }
+    });
+
+    observer.observe(element);
+
+    this.toasts.heights.set(this.args.toast.id, element.offsetHeight);
+
+    return () => {
+      observer.disconnect();
+      this.toasts.heights.delete(this.args.toast.id);
+    };
+  });
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -91,6 +113,20 @@ export default class DToast extends Component {
       indexInActive === -1 ? 0 : activeToasts.length - 1 - indexInActive;
 
     return htmlSafe(`--distance-from-front: ${distanceFromFront}`);
+  }
+
+  /**
+   * CSS variables for clamping background toasts to the height of the front toast.
+   *
+   * @returns {SafeString}
+   */
+  get clampingStyles() {
+    if (!this.isFront && this.toasts.frontToastHeight > 0) {
+      return htmlSafe(
+        `height: ${this.toasts.frontToastHeight}px; overflow: hidden;`
+      );
+    }
+    return htmlSafe("");
   }
 
   /**
@@ -183,16 +219,6 @@ export default class DToast extends Component {
     }
   }
 
-  /**
-   * Starts the auto-close timeout.
-   */
-  startAutoCloseTimeout() {}
-
-  /**
-   * Cancels the auto-close timeout.
-   */
-  cancelAutoCloseTimeout() {}
-
   @action
   handlePresentedChange(presented) {
     this.presented = presented;
@@ -253,20 +279,22 @@ export default class DToast extends Component {
                   data-presented={{if this.presented "true" "false"}}
                   data-pointer-over={{if this.pointerOver "true" "false"}}
                   data-theme={{or @toast.options.data?.theme "default"}}
-                  style={{this.innerStyles}}
+                  style={{concat this.innerStyles "; " this.clampingStyles}}
                   {{on "pointerenter" this.handlePointerEnter}}
                   {{on "pointerleave" this.handlePointerLeave}}
                   {{on "pointerdown" this.handlePointerDown}}
                   {{on "pointerup" this.handlePointerUp}}
                   {{on "pointercancel" this.handlePointerUp}}
                 >
-                  <@toast.options.component
-                    @toast={{@toast}}
-                    @close={{sheet.close}}
-                    @isFront={{this.isFront}}
-                    @progressBarStyle={{this.progressBarStyle}}
-                    @onProgressComplete={{this.handleProgressComplete}}
-                  />
+                  <div style={{this.clampingStyles}} {{this.measureHeight}}>
+                    <@toast.options.component
+                      @toast={{@toast}}
+                      @close={{sheet.close}}
+                      @isFront={{this.isFront}}
+                      @progressBarStyle={{this.progressBarStyle}}
+                      @onProgressComplete={{this.handleProgressComplete}}
+                    />
+                  </div>
                 </DSheet.SpecialWrapper.Content>
               </DSheet.SpecialWrapper.Root>
             </DSheet.Content>
