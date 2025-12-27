@@ -455,11 +455,6 @@ RSpec.describe PostDestroyer do
 
       expect(reply.reload.user_deleted).to eq(true)
       expect(reviewable.reload).to be_ignored
-
-      note = reviewable.reviewable_notes.last
-      expect(note.user).to eq(Discourse.system_user)
-      expect(note.content).to eq(I18n.t("reviewables.post_deleted_by_author"))
-
       expect(reviewable.reviewable_scores.first.reviewed_by_id).to eq(Discourse.system_user.id)
       expect(reviewable.reviewable_scores.first.reviewed_at).to be_present
 
@@ -501,6 +496,44 @@ RSpec.describe PostDestroyer do
 
       expect(reply.reload.user_deleted).to eq(false)
       expect(reviewable.reload).to be_ignored
+    end
+
+    it "does not auto-ignore reviewable when author was silenced for the post" do
+      reply = create_post(topic: post.topic)
+      reviewable = PostActionCreator.spam(coding_horror, reply).reviewable
+
+      UserSilencer.silence(reply.user, moderator, post_id: reply.id)
+      PostDestroyer.new(reply.user, reply).destroy
+
+      expect(reply.reload.user_deleted).to eq(true)
+      expect(reviewable.reload).to be_pending
+
+      PostDestroyer.new(reply.user, reply).recover
+
+      expect(reply.reload.user_deleted).to eq(false)
+      expect(reviewable.reload).to be_pending
+    end
+
+    it "does not auto-ignore reviewable when author was suspended for the post" do
+      reply = create_post(topic: post.topic)
+      reviewable = PostActionCreator.spam(coding_horror, reply).reviewable
+
+      UserSuspender.new(
+        reply.user,
+        suspended_till: 5.days.from_now,
+        reason: "spam",
+        by_user: moderator,
+        post_id: reply.id,
+      ).suspend
+      PostDestroyer.new(reply.user, reply).destroy
+
+      expect(reply.reload.user_deleted).to eq(true)
+      expect(reviewable.reload).to be_pending
+
+      PostDestroyer.new(reply.user, reply).recover
+
+      expect(reply.reload.user_deleted).to eq(false)
+      expect(reviewable.reload).to be_pending
     end
 
     it "when topic is destroyed, it updates user_stats correctly" do
