@@ -168,6 +168,35 @@ RSpec.describe UserNameSuggester do
       expect(suggestion).to eq "William"
     end
 
+    context "with allow_generic_fallback: false" do
+      it "returns nil instead of fallback username when input is empty or invalid" do
+        expect(UserNameSuggester.suggest(nil, allow_generic_fallback: false)).to be_nil
+        expect(UserNameSuggester.suggest("", allow_generic_fallback: false)).to be_nil
+        expect(UserNameSuggester.suggest("---", allow_generic_fallback: false)).to be_nil
+      end
+
+      it "still suggests valid usernames" do
+        expect(UserNameSuggester.suggest("john", allow_generic_fallback: false)).to eq("john")
+      end
+
+      it "still increments valid usernames" do
+        Fabricate(:user, username: "jane")
+        expect(UserNameSuggester.suggest("jane", allow_generic_fallback: false)).to eq("jane1")
+      end
+
+      it "respects use_email_for_username_and_name_suggestions setting" do
+        SiteSetting.use_email_for_username_and_name_suggestions = false
+        expect(
+          UserNameSuggester.suggest("bob@example.com", allow_generic_fallback: false),
+        ).to be_nil
+
+        SiteSetting.use_email_for_username_and_name_suggestions = true
+        expect(UserNameSuggester.suggest("bob@example.com", allow_generic_fallback: false)).to eq(
+          "bob",
+        )
+      end
+    end
+
     context "with Unicode usernames disabled" do
       before { SiteSetting.unicode_usernames = false }
 

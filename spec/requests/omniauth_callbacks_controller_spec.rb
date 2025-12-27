@@ -372,7 +372,8 @@ RSpec.describe Users::OmniauthCallbacksController do
         get "/auth/google_oauth2/callback.json"
         data = JSON.parse(cookies[:authentication_data])
 
-        expect(data["username"]).to eq("user1") # not "billmailbox" that can be extracted from email
+        # leaves field blank for user to choose
+        expect(data["username"]).to eq(nil)
       end
 
       it "uses email for username suggestions if enabled in settings" do
@@ -398,7 +399,8 @@ RSpec.describe Users::OmniauthCallbacksController do
         get "/auth/google_oauth2/callback.json"
         data = JSON.parse(cookies[:authentication_data])
 
-        expect(data["username"]).to eq("user1")
+        # leaves field blank for user to choose
+        expect(data["username"]).to eq(nil)
       end
 
       describe "when site is invite_only" do
