@@ -16,9 +16,10 @@ import StyleguideExample from "discourse/plugins/styleguide/discourse/components
 
 const ToastCustomComponent = <template>
   <div
-    style="background-color: var(--secondary); padding: var(--space-4); border: 1px solid var(--primary-low); border-radius: var(--d-border-radius-large); box-shadow: var(--shadow-card);"
+    style="background-color: var(--secondary); padding: var(--space-4); border-radius: var(--d-border-radius-large); box-shadow: var(--shadow-card);"
   >
-    My custom component with foo: {{@toast.options.data.foo}}
+    My custom component with foo:
+    {{@toast.options.data.foo}}
   </div>
 </template>;
 

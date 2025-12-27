@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
@@ -18,7 +17,8 @@ import { i18n } from "discourse-i18n";
  * @param {DToastInstance} toast - The toast instance
  * @param {Function} close - Callback to close the toast
  * @param {boolean} isFront - Whether this toast is at the front
- * @param {Function} registerProgressBar - Callback to register the progress bar element
+ * @param {SafeString} progressBarStyle - The style to apply to the progress bar
+ * @param {Function} onProgressComplete - Callback when the progress animation completes
  */
 export default class DDefaultToast extends Component {
   /**
@@ -73,7 +73,8 @@ export default class DDefaultToast extends Component {
         <div class="fk-d-default-toast__progress-wrapper">
           <div
             class="fk-d-default-toast__progress-bar"
-            {{didInsert @registerProgressBar}}
+            style={{@progressBarStyle}}
+            {{on "animationend" @onProgressComplete}}
           ></div>
         </div>
       {{/if}}

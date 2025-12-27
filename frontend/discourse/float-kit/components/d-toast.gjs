@@ -3,11 +3,9 @@ import { tracked } from "@glimmer/tracking";
 import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { cancel, later } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DDefaultToast from "discourse/float-kit/components/d-default-toast";
-import effect from "discourse/float-kit/helpers/effect";
 import concatClass from "discourse/helpers/concat-class";
 import { or } from "discourse/truth-helpers";
 import DSheet from "./d-sheet";
@@ -27,16 +25,9 @@ export default class DToast extends Component {
   @tracked pointerOver = false;
   @tracked travelStatus = "idleOutside";
   @tracked presented = true;
-  @tracked progressBar = null;
-
-  autoCloseTimeout = null;
-  progressAnimation = null;
-  timeRemaining = null;
 
   willDestroy() {
     super.willDestroy(...arguments);
-    this.cancelAutoCloseTimeout();
-    this.progressBar = null;
   }
 
   /**
@@ -126,6 +117,33 @@ export default class DToast extends Component {
     return document.querySelector(".fk-d-toasts");
   }
 
+  /**
+   * The style for the progress bar, managing the animation state reactively.
+   *
+   * @returns {SafeString}
+   */
+  get progressBarStyle() {
+    const isPaused =
+      !this.isFront ||
+      this.pointerOver ||
+      this.travelStatus !== "idleInside" ||
+      !this.presented;
+
+    const styles = [
+      `animation-duration: ${this.args.toast.duration}ms`,
+      `animation-play-state: ${isPaused ? "paused" : "running"}`,
+    ];
+
+    return htmlSafe(styles.join("; "));
+  }
+
+  @action
+  handleProgressComplete(event) {
+    if (event.animationName === "d-toast-progress") {
+      this.presented = false;
+    }
+  }
+
   @action
   handleTravelStatusChange(status) {
     this.travelStatus = status;
@@ -135,67 +153,6 @@ export default class DToast extends Component {
     }
 
     this.args.onTravelStatusChange?.(status);
-  }
-
-  @action
-  registerProgressBar(element) {
-    this.progressBar = element;
-  }
-
-  /**
-   * Reactive effect to sync auto-close timer and animation based on state.
-   */
-  @action
-  syncAutoClose() {
-    if (this.travelStatus !== "idleInside" || !this.presented) {
-      this.pauseProgressAnimation();
-      this.cancelAutoCloseTimeout();
-      return;
-    }
-
-    if (this.isFront && !this.pointerOver) {
-      this.startAutoCloseTimeout();
-    } else {
-      this.pauseProgressAnimation();
-      this.cancelAutoCloseTimeout();
-    }
-  }
-
-  /**
-   * Starts or resumes the progress bar animation.
-   */
-  startProgressAnimation() {
-    if (!this.progressBar) {
-      return;
-    }
-
-    if (this.progressAnimation) {
-      if (this.progressAnimation.playState === "paused") {
-        this.progressAnimation.play();
-      }
-      return;
-    }
-
-    this.progressAnimation = this.progressBar.animate(
-      { transform: "scaleX(0)" },
-      { duration: this.args.toast.duration, fill: "forwards" }
-    );
-  }
-
-  /**
-   * Pauses the progress bar animation and records remaining time.
-   */
-  pauseProgressAnimation() {
-    if (
-      !this.progressAnimation ||
-      this.progressAnimation.currentTime === this.args.toast.duration
-    ) {
-      return;
-    }
-
-    this.progressAnimation.pause();
-    this.timeRemaining =
-      this.args.toast.duration - this.progressAnimation.currentTime;
   }
 
   @action
@@ -229,28 +186,12 @@ export default class DToast extends Component {
   /**
    * Starts the auto-close timeout.
    */
-  startAutoCloseTimeout() {
-    this.cancelAutoCloseTimeout();
-
-    if (!this.args.toast.options.autoClose) {
-      return;
-    }
-
-    this.startProgressAnimation();
-    this.autoCloseTimeout = later(() => {
-      this.presented = false;
-    }, this.timeRemaining ?? this.args.toast.duration);
-  }
+  startAutoCloseTimeout() {}
 
   /**
    * Cancels the auto-close timeout.
    */
-  cancelAutoCloseTimeout() {
-    if (this.autoCloseTimeout) {
-      cancel(this.autoCloseTimeout);
-      this.autoCloseTimeout = null;
-    }
-  }
+  cancelAutoCloseTimeout() {}
 
   @action
   handlePresentedChange(presented) {
@@ -267,14 +208,6 @@ export default class DToast extends Component {
   }
 
   <template>
-    {{effect
-      this.syncAutoClose
-      this.isFront
-      this.pointerOver
-      this.travelStatus
-      this.progressBar
-    }}
-
     <DSheet.Root
       @presented={{this.presented}}
       @onPresentedChange={{this.handlePresentedChange}}
@@ -331,7 +264,8 @@ export default class DToast extends Component {
                     @toast={{@toast}}
                     @close={{sheet.close}}
                     @isFront={{this.isFront}}
-                    @registerProgressBar={{this.registerProgressBar}}
+                    @progressBarStyle={{this.progressBarStyle}}
+                    @onProgressComplete={{this.handleProgressComplete}}
                   />
                 </DSheet.SpecialWrapper.Content>
               </DSheet.SpecialWrapper.Root>

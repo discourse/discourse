@@ -112,5 +112,17 @@
     background: var(--primary-low);
     border-radius: inherit;
     transform-origin: 0 0;
+    animation-name: d-toast-progress;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+  }
+}
+
+@keyframes d-toast-progress {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
   }
 }
