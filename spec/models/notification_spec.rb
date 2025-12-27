@@ -858,4 +858,83 @@ RSpec.describe Notification do
       end
     end
   end
+
+  describe ".orphaned_pm_notifications" do
+    fab!(:pm_owner, :user)
+    fab!(:pm_topic) do
+      Fabricate(
+        :private_message_topic,
+        user: pm_owner,
+        topic_allowed_users: [Fabricate.build(:topic_allowed_user, user: pm_owner)],
+      )
+    end
+
+    it "includes notifications for users without access" do
+      notification = Fabricate(:notification, user: Fabricate(:user), topic: pm_topic)
+      expect(Notification.orphaned_pm_notifications).to include(notification)
+    end
+
+    it "excludes notifications for users with direct access" do
+      user = Fabricate(:user)
+      Fabricate(:topic_allowed_user, topic: pm_topic, user: user)
+      notification = Fabricate(:notification, user: user, topic: pm_topic)
+      expect(Notification.orphaned_pm_notifications).not_to include(notification)
+    end
+
+    it "excludes notifications for users with group access" do
+      user = Fabricate(:user)
+      group = Fabricate(:group)
+      group.add(user)
+      Fabricate(:topic_allowed_group, topic: pm_topic, group: group)
+      notification = Fabricate(:notification, user: user, topic: pm_topic)
+      expect(Notification.orphaned_pm_notifications).not_to include(notification)
+    end
+
+    it "excludes notifications for regular topics" do
+      notification = Fabricate(:notification, user: Fabricate(:user), topic: Fabricate(:topic))
+      expect(Notification.orphaned_pm_notifications).not_to include(notification)
+    end
+  end
+
+  describe ".remove_for_group" do
+    it "removes orphaned notifications for group members on the topic" do
+      group = Fabricate(:group)
+      user = Fabricate(:user)
+      group.add(user)
+
+      pm_topic = Fabricate(:private_message_topic)
+      notification = Fabricate(:notification, user: user, topic: pm_topic)
+
+      Notification.remove_for_group(group.id, pm_topic.id)
+
+      expect(Notification.exists?(notification.id)).to eq(false)
+    end
+  end
+
+  describe ".remove_for_user_removed_from_group" do
+    it "removes orphaned notifications for the user on group's PM topics" do
+      group = Fabricate(:group)
+      user = Fabricate(:user)
+
+      pm_topic = Fabricate(:private_message_topic)
+      Fabricate(:topic_allowed_group, topic: pm_topic, group: group)
+      notification = Fabricate(:notification, user: user, topic: pm_topic)
+
+      Notification.remove_for_user_removed_from_group(user.id, group.id)
+
+      expect(Notification.exists?(notification.id)).to eq(false)
+    end
+  end
+
+  describe ".ensure_consistency!" do
+    it "removes orphaned PM notifications" do
+      pm_topic = Fabricate(:private_message_topic)
+      notification =
+        Fabricate(:notification, user: Fabricate(:user), topic: pm_topic, high_priority: false)
+
+      Notification.ensure_consistency!
+
+      expect(Notification.exists?(notification.id)).to eq(false)
+    end
+  end
 end
