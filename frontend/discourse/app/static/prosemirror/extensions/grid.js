@@ -1,7 +1,10 @@
 import { bind } from "discourse/lib/decorators";
-import { iconHTML } from "discourse/lib/icon-library";
+import { iconElement } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
 
+/**
+ * Node view for image grid blocks in the rich editor.
+ */
 class GridNodeView {
   constructor(node, view, getPos) {
     this.node = node;
@@ -11,26 +14,103 @@ class GridNodeView {
     const div = document.createElement("div");
     div.className = "composer-image-grid";
 
-    const title = document.createElement("div");
-    title.className = "composer-image-grid__title";
-    title.innerHTML = iconHTML("table-cells");
-    title.prepend(document.createTextNode(i18n("composer.grid_label")));
+    const modeGroup = document.createElement("div");
+    modeGroup.className = "composer-image-gallery__mode-buttons";
+    modeGroup.setAttribute("role", "radiogroup");
+    modeGroup.contentEditable = false;
 
-    div.appendChild(title);
+    const modes = [
+      {
+        value: "grid",
+        label: i18n("composer.grid_mode_grid"),
+        icon: "table-cells",
+      },
+      {
+        value: "focus",
+        label: i18n("composer.grid_mode_focus"),
+        icon: "image",
+      },
+      {
+        value: "stage",
+        label: i18n("composer.grid_mode_stage"),
+        icon: "images",
+      },
+    ];
+
+    modes.forEach((opt) => {
+      const button = document.createElement("button"); // not using DButton bcs these are special types
+      button.type = "role";
+      button.className = "composer-image-gallery__mode-btn";
+      button.dataset.mode = opt.value;
+      button.appendChild(iconElement(opt.icon));
+      const textLabel = document.createElement("span");
+      textLabel.textContent = opt.label;
+      button.appendChild(textLabel);
+      button.ariaLabel = opt.label;
+      button.title = "Set image gallery style to " + opt.label;
+      if (node.attrs.mode === opt.value) {
+        button.classList.add("is-active");
+        button.setAttribute("aria-pressed", "true");
+      } else {
+        button.setAttribute("aria-pressed", "false");
+      }
+
+      button.addEventListener("click", (e) => {
+        e.preventDefault();
+        const mode = opt.value;
+        const pos = this.getPos();
+        this.view.dispatch(
+          this.view.state.tr.setNodeMarkup(pos, null, {
+            ...this.node.attrs,
+            mode,
+          })
+        );
+      });
+
+      modeGroup.appendChild(button);
+    });
+
+    div.appendChild(modeGroup);
 
     const contentDiv = document.createElement("div");
     div.appendChild(contentDiv);
-
-    this.dom = div;
     this.contentDOM = contentDiv;
 
-    this.svg = div.querySelector("svg");
-    this.svg.setAttribute("alt", i18n("composer.toggle_image_grid"));
-    this.svg.addEventListener("click", this.iconClickHandler);
+    this.removeBtn = document.createElement("button");
+    this.removeBtn.className = "composer-image-grid__remove-btn";
+    const removeLabel = document.createElement("span");
+    removeLabel.textContent = i18n("composer.remove_grid");
+    this.removeBtn.appendChild(removeLabel);
+    this.removeBtn.title = i18n("composer.remove_grid");
+    this.removeBtn.type = "button";
+    this.removeBtn.contentEditable = false;
+    this.removeBtn.addEventListener("click", this.removeClickHandler);
+
+    div.appendChild(this.removeBtn);
+
+    this.dom = div;
+  }
+
+  /**
+   * Cleans up the node view when it is removed from the editor.
+   *
+   * @returns {void}
+   */
+  destroy() {
+    this.removeBtn.removeEventListener("click", this.removeClickHandler);
   }
 
   @bind
-  iconClickHandler() {
+  /**
+   * Removes the grid node and unwraps its contents.
+   *
+   * @param {MouseEvent} e
+   * @returns {void}
+   */
+  removeClickHandler(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
     const pos = this.getPos();
     const currentNode = this.view.state.doc.nodeAt(pos);
     const tr = this.view.state.tr;
@@ -39,20 +119,50 @@ class GridNodeView {
     this.view.dispatch(tr);
   }
 
+  /**
+   * Applies selection styling to the node view.
+   *
+   * @returns {void}
+   */
   selectNode() {
     this.dom.classList.add("ProseMirror-selectednode");
   }
 
+  /**
+   * Removes selection styling from the node view.
+   *
+   * @returns {void}
+   */
   deselectNode() {
     this.dom.classList.remove("ProseMirror-selectednode");
   }
 
+  /**
+   * Keeps the node view in sync with editor updates.
+   *
+   * @param {Object} node
+   * @returns {boolean}
+   */
   update(node) {
-    return node.type === this.node.type;
-  }
+    if (node.type !== this.node.type) {
+      return false;
+    }
+    this.node = node;
 
-  destroy() {
-    this.svg.removeEventListener("click", this.iconClickHandler);
+    const buttons = this.dom.querySelectorAll(
+      ".composer-image-gallery__mode-btn"
+    );
+    buttons.forEach((btn) => {
+      if (btn.dataset.mode === node.attrs.mode) {
+        btn.classList.add("is-active");
+        btn.setAttribute("aria-pressed", "true");
+      } else {
+        btn.classList.remove("is-active");
+        btn.setAttribute("aria-pressed", "false");
+      }
+    });
+
+    return true;
   }
 }
 
@@ -62,13 +172,37 @@ const extension = {
     grid: {
       content: "block+",
       group: "block",
+      attrs: {
+        mode: { default: "grid" },
+      },
       createGapCursor: true,
       parseDOM: [
-        { tag: "div.d-image-grid" },
-        { tag: "div.composer-image-grid" },
+        {
+          tag: "div.d-image-grid",
+          getAttrs(dom) {
+            return {
+              mode: dom.getAttribute("data-mode") || "grid",
+            };
+          },
+        },
+        {
+          tag: "div.composer-image-grid",
+          getAttrs(dom) {
+            return {
+              mode: dom.getAttribute("data-mode") || "grid",
+            };
+          },
+        },
       ],
-      toDOM() {
-        return ["div", { class: "composer-image-grid" }, 0];
+      toDOM(node) {
+        return [
+          "div",
+          {
+            class: "composer-image-grid",
+            "data-mode": node.attrs.mode,
+          },
+          0,
+        ];
       },
     },
   },
@@ -80,7 +214,9 @@ const extension = {
   parse: {
     bbcode_open(state, token) {
       if (token.attrGet("class") === "d-image-grid") {
-        state.openNode(state.schema.nodes.grid);
+        state.openNode(state.schema.nodes.grid, {
+          mode: token.attrGet("data-mode") || "grid",
+        });
         return true;
       }
     },
@@ -94,7 +230,11 @@ const extension = {
 
   serializeNode: {
     grid: (state, node) => {
-      state.write("\n[grid]\n\n");
+      let attrs = "";
+      if (node.attrs.mode && node.attrs.mode !== "grid") {
+        attrs += ` mode=${node.attrs.mode}`;
+      }
+      state.write(`\n[grid${attrs}]\n\n`);
       state.renderContent(node.content);
       state.write("\n[/grid]\n\n");
     },
