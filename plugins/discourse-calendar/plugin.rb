@@ -32,6 +32,7 @@ register_asset "stylesheets/mobile/discourse-post-event.scss", :mobile
 register_asset "stylesheets/colors.scss", :color_definitions
 register_asset "stylesheets/common/user-preferences.scss"
 register_asset "stylesheets/common/upcoming-events-list.scss"
+register_asset "stylesheets/common/team-availability.scss"
 register_svg_icon "calendar-day"
 register_svg_icon "clock"
 register_svg_icon "file-csv"
