@@ -254,8 +254,8 @@ describe "Post event", type: :system do
 
         sign_in(viewer)
 
-        # Install Playwright clock **after** sign_in (which may navigate) but before
-        # visiting the topic, so moment() calls use the frozen time
+        # Freeze browser clock **after** sign_in (which may navigate/reset state)
+        # so moment() uses the same time as the server.
         page.driver.with_playwright_page { |pw_page| pw_page.clock.install(time:) }
 
         visit(post.topic.url)
