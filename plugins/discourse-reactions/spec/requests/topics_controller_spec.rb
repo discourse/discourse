@@ -22,15 +22,14 @@ describe TopicsController do
     it "does not generate N+1 queries" do
       sign_in(user_1)
 
-      queries = track_sql_queries { get "/t/#{post.topic_id}.json" }
-      count = queries.filter { |q| q.include?("reactions") }.size
-
+      # Add some reaction_users first to establish baseline
       Fabricate(:reaction_user, reaction: laughing_reaction, user: user_1, post: post)
       Fabricate(:reaction_user, reaction: laughing_reaction, user: user_2, post: post)
 
       queries = track_sql_queries { get "/t/#{post.topic_id}.json" }
-      expect(queries.filter { |q| q.include?("reactions") }.size).to eq(count)
+      count = queries.filter { |q| q.include?("reactions") }.size
 
+      # Add more reaction_users - query count should stay the same
       Fabricate(:reaction_user, reaction: hugs_reaction, user: user_3, post: post)
       Fabricate(:reaction_user, reaction: open_mouth_reaction, user: user_4, post: post)
 

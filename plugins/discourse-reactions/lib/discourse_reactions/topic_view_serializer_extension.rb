@@ -3,25 +3,6 @@
 module DiscourseReactions::TopicViewSerializerExtension
   include DiscourseReactions::PostsReactionLoader
 
-  def self.load_post_action_reaction_users_for_posts(post_ids)
-    PostAction
-      .joins(
-        "LEFT JOIN discourse_reactions_reaction_users ON discourse_reactions_reaction_users.post_id = post_actions.post_id AND discourse_reactions_reaction_users.user_id = post_actions.user_id",
-      )
-      .where(post_id: post_ids)
-      .where("post_actions.deleted_at IS NULL")
-      .where(post_action_type_id: PostActionType::LIKE_POST_ACTION_ID)
-      .where(
-        "post_actions.post_id IN (#{DiscourseReactions::PostActionExtension.post_action_with_reaction_user_sql})",
-        valid_reactions: DiscourseReactions::Reaction.reactions_counting_as_like,
-      )
-      .reduce({}) do |hash, post_action|
-        hash[post_action.post_id] ||= {}
-        hash[post_action.post_id][post_action.id] = post_action
-        hash
-      end
-  end
-
   def posts
     posts_with_reactions
     super
