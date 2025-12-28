@@ -275,5 +275,21 @@ describe DiscourseAi::Automation::LlmTriage do
 
       expect(scores.size).to eq(1)
     end
+
+    it "makes the reviewable visible to moderators when using review flag types" do
+      DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
+        add_automation_field("flag_type", "review")
+
+        automation.running_in_background!
+        automation.trigger!({ "post" => post })
+      end
+
+      reviewable = ReviewablePost.find_by(target: post)
+      expect(reviewable.reviewable_by_moderator).to eq(true)
+
+      # Verify moderators can actually see it in their review list
+      moderator = Fabricate(:moderator)
+      expect(Reviewable.list_for(moderator)).to include(reviewable)
+    end
   end
 end
