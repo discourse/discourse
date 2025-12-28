@@ -29,10 +29,10 @@
         opacity: 0;
 
         &:hover {
-          background: var(--d-sidebar-highlight-hover-background);
+          background: var(--d-sidebar-highlight-background);
 
           .d-icon {
-            color: var(--d-sidebar-highlight-hover-icon);
+            color: var(--d-sidebar-highlight-color);
           }
         }
 
