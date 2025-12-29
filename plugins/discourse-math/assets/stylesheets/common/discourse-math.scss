@@ -19,6 +19,7 @@
         .katex-html {
           display: block;
           overflow-x: auto;
+          overflow-y: hidden;
           max-width: 100%;
           padding: 0.25em 0.5em;
           box-sizing: border-box;
@@ -28,6 +29,7 @@
       // MathJax 4 container - overflow only on the container itself
       mjx-container {
         overflow-x: auto;
+        overflow-y: hidden;
         max-width: 100%;
         padding: 0.25em 0.5em;
         box-sizing: border-box;
@@ -71,12 +73,6 @@
           );
         }
       }
-    }
-  }
-
-  &.block-math {
-    mjx-container[jax="SVG"][display="true"] {
-      font-size: 1.15em;
     }
   }
 }

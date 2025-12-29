@@ -66,9 +66,14 @@ function math_input(state, silent, delimiter_code) {
     return false;
   }
 
+  const strict = state.md.options.discourse.features.strict_mathjax_markdown;
+
   if (pos > 0) {
     let prev = state.src.charCodeAt(pos - 1);
-    if (!isSafeBoundary(prev, delimiter_code, state.md)) {
+    if (strict && !isSafeBoundary(prev, delimiter_code, state.md)) {
+      return false;
+    }
+    if (prev === delimiter_code) {
       return false;
     }
   }
@@ -88,7 +93,10 @@ function math_input(state, silent, delimiter_code) {
 
   if (found + 1 <= posMax) {
     let next = state.src.charCodeAt(found + 1);
-    if (next && !isSafeBoundary(next, delimiter_code, state.md)) {
+    if (strict && next && !isSafeBoundary(next, delimiter_code, state.md)) {
+      return false;
+    }
+    if (next === delimiter_code) {
       return false;
     }
   }
@@ -396,7 +404,7 @@ export function setup(helper) {
         md.inline.ruler.after("escape", "asciimath", asciiMath);
       }
       if (!md.options.discourse.features.strict_mathjax_markdown) {
-        md.inline.ruler.after("escape", "math-paren", inlineMathParen);
+        md.inline.ruler.before("text", "math-paren", inlineMathParen);
       }
       md.inline.ruler.after("escape", "math", inlineMath);
       md.block.ruler.after("code", "math", blockMath, {

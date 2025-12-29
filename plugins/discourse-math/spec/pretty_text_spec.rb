@@ -10,6 +10,18 @@ describe PrettyText do
       expect(cooked).to eq(html)
     end
 
+    it "can handle inline math with \( \)" do
+      SiteSetting.strict_mathjax_markdown = false
+      cooked = PrettyText.cook('The area is \(A=\pi r^2\).')
+      expect(cooked).to include('<span class="math">A=\pi r^2</span>')
+    end
+
+    it "can handle relaxed inline math with $" do
+      SiteSetting.strict_mathjax_markdown = false
+      expect(PrettyText.cook('word$a$')).to include('<span class="math">a</span>')
+      expect(PrettyText.cook('$a$word')).to include('<span class="math">a</span>')
+    end
+
     it "can correctly ignore bad blocks" do
       cooked = PrettyText.cook <<~MD
         $$a
@@ -27,6 +39,7 @@ describe PrettyText do
     end
 
     it "can handle inline edge cases" do
+      SiteSetting.strict_mathjax_markdown = true
       expect(PrettyText.cook ",$+500\\$").not_to include("math")
       expect(PrettyText.cook "$+500$").to include("math")
       expect(PrettyText.cook ",$+500$,").to include("math")
@@ -34,6 +47,12 @@ describe PrettyText do
       expect(PrettyText.cook ",$+500$x").not_to include("math")
       expect(PrettyText.cook "y$+500$").not_to include("math")
       expect(PrettyText.cook "($ +500 $)").to include("math")
+    end
+
+    it "can handle relaxed inline math" do
+      SiteSetting.strict_mathjax_markdown = false
+      expect(PrettyText.cook "y$+500$").to include("math")
+      expect(PrettyText.cook "200$ + 500$").to include("math")
     end
 
     it "can handle inline math with Chinese punctuation" do
