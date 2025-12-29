@@ -15,9 +15,6 @@ html.composer-open:not(.has-full-page-chat) {
 .grippie {
   cursor: row-resize;
   padding: var(--space-2) 0 0;
-  background: var(--secondary);
-  border-top-left-radius: var(--d-border-radius-large);
-  border-top-right-radius: var(--d-border-radius-large);
 
   @media (pointer: coarse) {
     padding: 0.35em 0;
