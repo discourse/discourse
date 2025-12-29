@@ -89,14 +89,14 @@ end
 # Table name: problem_check_trackers
 #
 #  id              :bigint           not null, primary key
-#  identifier      :string           not null
 #  blips           :integer          default(0), not null
-#  last_run_at     :datetime
-#  next_run_at     :datetime
-#  last_success_at :datetime
-#  last_problem_at :datetime
 #  details         :json
-#  target          :string           default("__NULL__")
+#  identifier      :string           not null
+#  last_problem_at :datetime
+#  last_run_at     :datetime
+#  last_success_at :datetime
+#  next_run_at     :datetime
+#  target          :string           default("__NULL__"), not null
 #
 # Indexes
 #

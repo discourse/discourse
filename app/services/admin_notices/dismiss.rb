@@ -37,6 +37,7 @@ class AdminNotices::Dismiss
   def reset_problem_check(admin_notice:)
     return if admin_notice.blank?
 
-    ProblemCheckTracker.find_by(identifier: admin_notice.identifier)&.reset
+    target = admin_notice.details&.dig("target") || ProblemCheck::NO_TARGET
+    ProblemCheckTracker.find_by(identifier: admin_notice.identifier, target:)&.reset
   end
 end
