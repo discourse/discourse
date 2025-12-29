@@ -22,7 +22,7 @@ module DiscourseAi
         localization.raw = translated_raw
         localization.cooked = post.post_analyzer.cook(translated_raw, post.cooking_options || {})
         localization.post_version = post.version
-        localization.localizer_user_id = Discourse.system_user.id
+        localization.localizer_user_id = Discourse::SYSTEM_USER_ID
         localization.save!
 
         cooked_processor = LocalizedCookedPostProcessor.new(localization, post, {})
