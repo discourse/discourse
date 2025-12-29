@@ -6,11 +6,33 @@ RSpec.describe Admin::ReportsController do
   fab!(:user)
 
   describe "#index" do
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
+
+      it "includes admin-only reports" do
+        get "/admin/reports.json"
+        expect(response.parsed_body["reports"].map { |r| r["type"] }).to include(
+          *Report::ADMIN_ONLY_REPORTS,
+        )
+      end
+    end
+
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      it "excludes admin-only reports" do
+        get "/admin/reports.json"
+        expect(response.parsed_body["reports"].map { |r| r["type"] }).not_to include(
+          *Report::ADMIN_ONLY_REPORTS,
+        )
+      end
+    end
+
     before { sign_in(admin) }
 
     it "excludes page view mobile reports" do
       get "/admin/reports.json"
-      expect(response.parsed_body["reports"].map { |r| r[:type] }).not_to include(
+      expect(response.parsed_body["reports"].map { |r| r["type"] }).not_to include(
         "page_view_anon_browser_mobile_reqs",
         "page_view_logged_in_browser_mobile_reqs",
         "page_view_anon_mobile_reqs",
@@ -20,7 +42,7 @@ RSpec.describe Admin::ReportsController do
 
     it "excludes about and storage stats reports" do
       get "/admin/reports.json"
-      expect(response.parsed_body["reports"].map { |r| r[:type] }).not_to include(
+      expect(response.parsed_body["reports"].map { |r| r["type"] }).not_to include(
         "report_about",
         "report_storage_stats",
       )
@@ -176,6 +198,25 @@ RSpec.describe Admin::ReportsController do
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["reports"].count).to eq(2)
+      end
+
+      it "marks admin-only reports as not_found" do
+        get "/admin/reports/bulk.json",
+            params: {
+              reports: {
+                topics: {
+                  limit: 10,
+                },
+                top_uploads: {
+                  limit: 10,
+                },
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["reports"].count).to eq(2)
+        expect(response.parsed_body["reports"][0]["type"]).to eq("topics")
+        expect(response.parsed_body["reports"][1]).to include("error" => "not_found", "data" => nil)
       end
     end
 
@@ -364,6 +405,13 @@ RSpec.describe Admin::ReportsController do
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["report"]["total"]).to eq(1)
+      end
+
+      it "does not allow accessing admin-only reports" do
+        get "/admin/reports/top_uploads.json"
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
       end
     end
 
