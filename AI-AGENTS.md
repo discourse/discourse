@@ -23,11 +23,8 @@ Discourse is large with long history. Understand context before changes.
 - Use FormKit for forms: https://meta.discourse.org/t/discourse-toolkit-to-render-forms/326439 (`app/assets/javascripts/discourse/app/form-kit`)
 
 ### JSDoc
-- Required for classes, methods, members (except `@service` members, constructors)
-- Multiline format only
-- Components: `@component` name, list params (`this.args` or `@paramname`)
-- Methods: no `@returns` for `@action`, use `@returns` for getters (not `@type`)
-- Members: specify `@type`
+- Do not add JSDoc to any new code you write.
+- If JSDoc already exists, ensure any changes you make keep it accurate and up to date.
 
 ## Testing
 - Do not write unnecessary comments in tests, every single assertion doesn't need a comment
