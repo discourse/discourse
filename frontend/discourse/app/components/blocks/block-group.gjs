@@ -20,7 +20,7 @@ export default class GroupedBlocks extends Component {
       }}
     >
       {{#each this.children as |child|}}
-        <child.Component @block={{child}} @outletName={{@outletName}} />
+        <child.Component @outletName={{@outletName}} />
       {{/each}}
     </div>
   </template>
