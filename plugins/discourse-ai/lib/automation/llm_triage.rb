@@ -179,7 +179,11 @@ module DiscourseAi
               end
             else
               reviewable =
-                ReviewablePost.needs_review!(target: post, created_by: Discourse.system_user)
+                ReviewablePost.needs_review!(
+                  target: post,
+                  created_by: Discourse.system_user,
+                  reviewable_by_moderator: true,
+                )
 
               reviewable.add_score(
                 Discourse.system_user,
