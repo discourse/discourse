@@ -1,26 +1,23 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
-import CustomDateRangeModal from "../components/modal/custom-date-range";
 
 export default class AdminDashboardTabController extends Controller {
-  @service modal;
-
+  @tracked period = "monthly";
+  @tracked start_date = null;
+  @tracked end_date = null;
   queryParams = ["period", "start_date", "end_date"];
-  period = "monthly";
-  start_date = null;
-  end_date = null;
 
   get startDate() {
     if (this.start_date) {
-      return moment(this.start_date).locale("en").utc().startOf("day");
+      return moment.utc(this.start_date).locale("en").startOf("day");
     }
     return this.#calculateStartDate();
   }
 
   get endDate() {
     if (this.end_date) {
-      return moment(this.end_date).locale("en").utc().endOf("day");
+      return moment.utc(this.end_date).locale("en").endOf("day");
     }
     return moment().locale("en").utc().endOf("day");
   }
@@ -49,26 +46,15 @@ export default class AdminDashboardTabController extends Controller {
 
   @action
   setCustomDateRange(startDate, endDate) {
-    this.setProperties({
-      period: "custom",
-      start_date: moment(startDate).format("YYYY-MM-DD"),
-      end_date: moment(endDate).format("YYYY-MM-DD"),
-    });
+    this.period = "custom";
+    this.start_date = moment(startDate).format("YYYY-MM-DD");
+    this.end_date = moment(endDate).format("YYYY-MM-DD");
   }
 
   @action
   setPeriod(period) {
-    this.setProperties({ period, start_date: null, end_date: null });
-  }
-
-  @action
-  openCustomDateRangeModal() {
-    this.modal.show(CustomDateRangeModal, {
-      model: {
-        startDate: this.startDate,
-        endDate: this.endDate,
-        setCustomDateRange: this.setCustomDateRange,
-      },
-    });
+    this.period = period;
+    this.start_date = null;
+    this.end_date = null;
   }
 }
