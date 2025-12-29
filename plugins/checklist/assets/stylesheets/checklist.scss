@@ -1,7 +1,3 @@
-span.chcklst-stroked {
-  text-decoration: line-through;
-}
-
 @mixin checklist-svg-icon($svg) {
   &::before {
     background-color: var(--primary);
@@ -47,6 +43,10 @@ span.chcklst-box {
     }
   }
 
+  &.permanent {
+    cursor: default;
+  }
+
   &.readonly {
     pointer-events: none;
   }
@@ -61,24 +61,6 @@ ul li.has-checkbox {
 
   .list-item-checkbox {
     margin-left: -1.33em;
-  }
-}
-
-.fa-spin {
-  display: inline-flex;
-  vertical-align: text-bottom;
-  animation: fa-spin 2s infinite linear;
-  width: 1em;
-  height: 1em;
-}
-
-@keyframes fa-spin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(1turn);
   }
 }
 

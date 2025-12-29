@@ -1,3 +1,6 @@
 en:
   site_settings:
     checklist_enabled: "Enable checklist plugin?"
+  checklist:
+    invalid_checkbox_offset: "No valid checkbox found at offset %{offset}"
+    permanent_checkbox: "This checkbox is permanent and cannot be toggled"
