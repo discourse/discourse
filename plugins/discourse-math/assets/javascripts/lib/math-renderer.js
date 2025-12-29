@@ -1,21 +1,73 @@
 import { later } from "@ember/runloop";
 import { getURLWithCDN } from "discourse/lib/get-url";
+import loadKaTeX from "discourse/lib/load-katex";
 import loadMathJax from "discourse/lib/load-mathjax";
-import loadScript from "discourse/lib/load-script";
 
 /**
  * @typedef {Object} DiscourseMathOptions
- * @property {boolean} enabled
- * @property {"mathjax" | "katex"} provider
- * @property {boolean} enable_asciimath
- * @property {boolean} enable_accessibility
- * @property {"html" | "svg"} mathjax_output
- * @property {boolean} zoom_on_hover
+ * @property {boolean} enabled - Whether math rendering is enabled
+ * @property {"mathjax" | "katex"} provider - The math rendering provider
+ * @property {boolean} enable_asciimath - Whether ASCII math is enabled
+ * @property {boolean} enable_accessibility - Whether accessibility features are enabled
+ * @property {"html" | "svg"} mathjax_output - MathJax output format
+ * @property {boolean} zoom_on_hover - Whether to enable zoom on hover
  */
 
-let initializedMathJax = false;
+/**
+ * @typedef {Object} MathJaxConfig
+ * @property {Object} tex - TeX configuration
+ * @property {Object} asciimath - AsciiMath configuration
+ * @property {Object} loader - Loader configuration
+ * @property {Object} [chtml] - CHTML output configuration
+ * @property {Object} [svg] - SVG output configuration
+ * @property {Object} options - MathJax options
+ * @property {Object} startup - Startup configuration
+ */
 
 /**
+ * @typedef {Object} MathJaxInstance
+ * @property {function(Element[]): Promise<void>} typesetPromise - Typeset elements
+ * @property {Object} startup - Startup object
+ */
+
+/**
+ * @typedef {Object} KaTeXOptions
+ * @property {function(Object): boolean} trust - Trust callback for commands
+ * @property {Object<string, string>} macros - Custom macros
+ * @property {boolean} displayMode - Whether to render in display mode
+ */
+
+/**
+ * @typedef {Object} RenderOptions
+ * @property {boolean} [force] - Force re-rendering even if already rendered
+ */
+
+/** @type {boolean} */
+let initializedMathJax = false;
+
+/** @type {string|null} */
+let initializedMathJaxConfigHash = null;
+
+/**
+ * CSS class names used for state management (avoid inline styles)
+ */
+const CSS_CLASSES = {
+  HIDDEN: "math-hidden",
+  APPLIED_MATHJAX: "math-applied-mathjax",
+  APPLIED_KATEX: "math-applied-katex",
+};
+
+/**
+ * Generate a simple hash of MathJax configuration to detect changes
+ * @param {DiscourseMathOptions} opts
+ * @returns {string}
+ */
+function getConfigHash(opts) {
+  return `${opts.mathjax_output}-${opts.enable_accessibility}-${opts.zoom_on_hover}-${opts.enable_asciimath}`;
+}
+
+/**
+ * Build math options from site settings
  * @param {import("discourse/services/site-settings").default} siteSettings
  * @returns {DiscourseMathOptions}
  */
@@ -31,17 +83,23 @@ export function buildDiscourseMathOptions(siteSettings) {
 }
 
 /**
+ * Initialize MathJax configuration
  * @param {DiscourseMathOptions} opts
  * @returns {void}
  */
 function initMathJax(opts) {
-  if (initializedMathJax) {
+  const configHash = getConfigHash(opts);
+
+  // Skip if already initialized with the same configuration
+  if (initializedMathJax && initializedMathJaxConfigHash === configHash) {
     return;
   }
 
   const output = opts.mathjax_output === "svg" ? "svg" : "html";
   const enableA11y =
     opts.enable_accessibility === true || opts.enable_accessibility === "true";
+
+  /** @type {Object} */
   const menuOptions = {};
 
   if (opts.zoom_on_hover) {
@@ -51,7 +109,8 @@ function initMathJax(opts) {
     };
   }
 
-  window.MathJax = {
+  /** @type {MathJaxConfig} */
+  const mathJaxConfig = {
     tex: {
       inlineMath: [["\\(", "\\)"]],
       displayMath: [["\\[", "\\]"]],
@@ -100,34 +159,50 @@ function initMathJax(opts) {
       typeset: false,
       ready() {
         const MathJax = window.MathJax;
-        const readyResult = MathJax?.startup?.defaultReady?.();
-        return readyResult;
+        return MathJax?.startup?.defaultReady?.();
       },
     },
   };
 
+  window.MathJax = mathJaxConfig;
   initializedMathJax = true;
+  initializedMathJaxConfigHash = configHash;
 }
 
 /**
+ * Load MathJax and return the MathJax instance
  * @param {DiscourseMathOptions} opts
- * @returns {Promise<unknown>}
+ * @returns {Promise<MathJaxInstance>}
  */
-function ensureMathJax(opts) {
+async function ensureMathJax(opts) {
   initMathJax(opts);
-  return loadMathJax({
-    enableAsciimath: opts.enable_asciimath,
-    enableAccessibility: opts.enable_accessibility,
-    output: opts.mathjax_output,
-  });
+
+  try {
+    const MathJax = await loadMathJax({
+      enableAsciimath: opts.enable_asciimath,
+      enableAccessibility: opts.enable_accessibility,
+      output: opts.mathjax_output,
+    });
+    return MathJax;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Failed to load MathJax:", error);
+    throw error;
+  }
 }
 
 /**
- * @param {Element} elem
- * @returns {HTMLElement | null}
+ * Build a wrapper element for MathJax rendering
+ * @param {Element} elem - The original math element
+ * @returns {HTMLElement | null} - The wrapper element or null if invalid
  */
 function buildMathJaxWrapper(elem) {
-  let tag, classList, content;
+  /** @type {string} */
+  let tag;
+  /** @type {string} */
+  let classList;
+  /** @type {string} */
+  let content;
 
   if (elem.classList.contains("math")) {
     tag = elem.tagName === "DIV" ? "div" : "span";
@@ -144,8 +219,7 @@ function buildMathJaxWrapper(elem) {
   }
 
   const mathWrapper = document.createElement(tag);
-  mathWrapper.classList.add(...classList.split(" "));
-  mathWrapper.style.display = "none";
+  mathWrapper.classList.add(...classList.split(" "), CSS_CLASSES.HIDDEN);
   mathWrapper.textContent = content;
 
   elem.after(mathWrapper);
@@ -154,16 +228,16 @@ function buildMathJaxWrapper(elem) {
 }
 
 /**
- * @param {Element} elem
- * @param {DiscourseMathOptions} opts
+ * Reset MathJax rendering state on elements
+ * @param {Element} elem - Container element
+ * @param {DiscourseMathOptions} opts - Math options
  * @returns {void}
  */
 function resetMathJax(elem, opts) {
   const selector = opts.enable_asciimath ? ".math, .asciimath" : ".math";
 
   elem.querySelectorAll(selector).forEach((mathElem) => {
-    delete mathElem.dataset.appliedMathjax;
-    mathElem.style.display = null;
+    mathElem.classList.remove(CSS_CLASSES.APPLIED_MATHJAX, CSS_CLASSES.HIDDEN);
   });
 
   elem
@@ -172,9 +246,10 @@ function resetMathJax(elem, opts) {
 }
 
 /**
- * @param {Element} elem
- * @param {DiscourseMathOptions} opts
- * @param {{ force?: boolean }} [renderOptions]
+ * Render math expressions using MathJax
+ * @param {Element} elem - Container element to render math in
+ * @param {DiscourseMathOptions} opts - Math rendering options
+ * @param {RenderOptions} [renderOptions] - Additional render options
  * @returns {void}
  */
 export function renderMathJax(elem, opts, renderOptions = {}) {
@@ -186,92 +261,109 @@ export function renderMathJax(elem, opts, renderOptions = {}) {
     resetMathJax(elem, opts);
   }
 
-  let mathElems;
-  if (opts.enable_asciimath) {
-    mathElems = elem.querySelectorAll(".math, .asciimath");
-  } else {
-    mathElems = elem.querySelectorAll(".math");
+  const selector = opts.enable_asciimath ? ".math, .asciimath" : ".math";
+  const mathElems = elem.querySelectorAll(selector);
+
+  if (mathElems.length === 0) {
+    return;
   }
 
-  if (mathElems.length > 0) {
-    const isPreview = elem.classList.contains("d-editor-preview");
-    const wrappers = [];
+  const isPreview = elem.classList.contains("d-editor-preview");
 
-    mathElems.forEach((mathElem) => {
-      if (mathElem.dataset.appliedMathjax) {
-        return;
-      }
+  /** @type {Array<{original: Element, wrapper: HTMLElement}>} */
+  const wrappers = [];
 
-      mathElem.dataset.appliedMathjax = true;
-      const wrapper = buildMathJaxWrapper(mathElem);
-
-      if (wrapper) {
-        wrappers.push({ original: mathElem, wrapper });
-      }
-    });
-
-    if (!wrappers.length) {
+  mathElems.forEach((mathElem) => {
+    if (mathElem.classList.contains(CSS_CLASSES.APPLIED_MATHJAX)) {
       return;
     }
 
-    later(
-      () => {
-        ensureMathJax(opts).then((MathJax) => {
-          const active = wrappers.filter(
-            ({ original, wrapper }) =>
-              wrapper?.isConnected &&
-              original?.parentElement?.offsetParent !== null
-          );
+    mathElem.classList.add(CSS_CLASSES.APPLIED_MATHJAX);
+    const wrapper = buildMathJaxWrapper(mathElem);
 
-          if (!active.length || !MathJax?.typesetPromise) {
-            return;
+    if (wrapper) {
+      wrappers.push({ original: mathElem, wrapper });
+    }
+  });
+
+  if (wrappers.length === 0) {
+    return;
+  }
+
+  later(
+    async () => {
+      try {
+        const MathJax = await ensureMathJax(opts);
+
+        const active = wrappers.filter(
+          ({ original, wrapper }) =>
+            wrapper?.isConnected &&
+            original?.parentElement?.offsetParent !== null
+        );
+
+        if (active.length === 0 || !MathJax?.typesetPromise) {
+          return;
+        }
+
+        await MathJax.typesetPromise(active.map(({ wrapper }) => wrapper));
+
+        active.forEach(({ original, wrapper }) => {
+          if (original?.isConnected) {
+            original.classList.add(CSS_CLASSES.HIDDEN);
           }
 
-          MathJax.typesetPromise(active.map(({ wrapper }) => wrapper)).then(
-            () => {
-              active.forEach(({ original, wrapper }) => {
-                if (original?.isConnected) {
-                  original.style.display = "none";
-                }
-
-                if (wrapper?.isConnected) {
-                  wrapper.style.display = null;
-                }
-              });
-            }
-          );
+          if (wrapper?.isConnected) {
+            wrapper.classList.remove(CSS_CLASSES.HIDDEN);
+          }
         });
-      },
-      isPreview ? 200 : 0
-    );
-  }
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error("MathJax rendering failed:", error);
+
+        // On error, show original elements and remove failed wrappers
+        wrappers.forEach(({ original, wrapper }) => {
+          if (original?.isConnected) {
+            original.classList.remove(
+              CSS_CLASSES.HIDDEN,
+              CSS_CLASSES.APPLIED_MATHJAX
+            );
+          }
+          if (wrapper?.isConnected) {
+            wrapper.remove();
+          }
+        });
+      }
+    },
+    isPreview ? 200 : 0
+  );
 }
 
 /**
+ * Load KaTeX library
  * @returns {Promise<void>}
  */
 async function ensureKaTeX() {
   try {
-    await loadScript("/plugins/discourse-math/katex/katex.min.js");
-    await loadScript("/plugins/discourse-math/katex/katex.min.css", {
-      css: true,
+    await loadKaTeX({
+      enableMhchem: true,
+      enableCopyTex: true,
     });
-    await loadScript("/plugins/discourse-math/katex/mhchem.min.js");
-    await loadScript("/plugins/discourse-math/katex/copy-tex.min.js");
-  } catch (e) {
+  } catch (error) {
     // eslint-disable-next-line no-console
-    console.error("Failed to load KaTeX dependencies.", e);
+    console.error("Failed to load KaTeX dependencies:", error);
+    throw error;
   }
 }
 
 /**
- * @param {Element} elem
+ * Reset KaTeX rendering state on elements
+ * @param {Element} elem - Container element
  * @returns {void}
  */
 function resetKatex(elem) {
   elem.querySelectorAll(".math").forEach((mathElem) => {
-    delete mathElem.dataset.appliedKatex;
     mathElem.classList.remove(
+      CSS_CLASSES.APPLIED_KATEX,
       "math-container",
       "inline-math",
       "block-math",
@@ -281,34 +373,51 @@ function resetKatex(elem) {
 }
 
 /**
- * @param {Element} elem
- * @param {Record<string, unknown>} katexOpts
+ * Decorate an element with KaTeX rendering
+ * @param {Element} elem - The math element to render
+ * @param {KaTeXOptions} katexOpts - KaTeX options
  * @returns {void}
  */
 function decorateKatex(elem, katexOpts) {
-  katexOpts.displayMode = elem.tagName === "DIV";
+  const displayMode = elem.tagName === "DIV";
+  const opts = { ...katexOpts, displayMode };
 
-  if (elem.dataset.appliedKatex) {
+  if (elem.classList.contains(CSS_CLASSES.APPLIED_KATEX)) {
     return;
   }
-
-  elem.dataset.appliedKatex = true;
 
   if (!elem.classList.contains("math")) {
     return;
   }
+
+  elem.classList.add(CSS_CLASSES.APPLIED_KATEX);
 
   const tag = elem.tagName === "DIV" ? "div" : "span";
   const displayClass = tag === "div" ? "block-math" : "inline-math";
   const text = elem.textContent;
   elem.classList.add("math-container", displayClass, "katex-math");
   elem.textContent = "";
-  window.katex.render(text, elem, katexOpts);
+
+  try {
+    window.katex.render(text, elem, opts);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("KaTeX rendering failed for expression:", text, error);
+    // Restore original content on error
+    elem.textContent = text;
+    elem.classList.remove(
+      CSS_CLASSES.APPLIED_KATEX,
+      "math-container",
+      displayClass,
+      "katex-math"
+    );
+  }
 }
 
 /**
- * @param {Element} elem
- * @param {{ force?: boolean }} [renderOptions]
+ * Render math expressions using KaTeX
+ * @param {Element} elem - Container element to render math in
+ * @param {RenderOptions} [renderOptions] - Additional render options
  * @returns {Promise<void>}
  */
 export async function renderKatex(elem, renderOptions = {}) {
@@ -317,7 +426,7 @@ export async function renderKatex(elem, renderOptions = {}) {
   }
 
   const mathElems = elem.querySelectorAll(".math");
-  if (!mathElems.length > 0) {
+  if (mathElems.length === 0) {
     return;
   }
 
@@ -325,11 +434,14 @@ export async function renderKatex(elem, renderOptions = {}) {
     resetKatex(elem);
   }
 
-  await ensureKaTeX();
+  try {
+    await ensureKaTeX();
+  } catch {
+    // Error already logged in ensureKaTeX
+    return;
+  }
 
-  // enable persistent macros with are disabled by default: https://katex.org/docs/api.html#persistent-macros
-  // also enable equation labelling and referencing which are disabled by default
-  // both of these are enabled in mathjax by default, so now the katex implementation is (more) mathjax compatible
+  /** @type {KaTeXOptions} */
   const katexOpts = {
     trust: (context) => ["\\htmlId", "\\href"].includes(context.command),
     macros: {
@@ -344,9 +456,10 @@ export async function renderKatex(elem, renderOptions = {}) {
 }
 
 /**
- * @param {Element} elem
- * @param {DiscourseMathOptions} opts
- * @param {{ force?: boolean }} [renderOptions]
+ * Render math in an element using the configured provider
+ * @param {Element} elem - Container element to render math in
+ * @param {DiscourseMathOptions} opts - Math rendering options
+ * @param {RenderOptions} [renderOptions] - Additional render options
  * @returns {void}
  */
 export function renderMathInElement(elem, opts, renderOptions = {}) {

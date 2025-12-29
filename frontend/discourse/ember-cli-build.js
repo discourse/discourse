@@ -164,6 +164,34 @@ module.exports = function (defaults) {
       ],
       destDir: "assets/mathjax",
     }),
+    // KaTeX assets
+    funnel(
+      path.join(path.dirname(require.resolve("katex/package.json")), "dist"),
+      {
+        include: ["katex.min.js", "katex.min.css"],
+        destDir: "assets/katex",
+      }
+    ),
+    funnel(
+      path.join(
+        path.dirname(require.resolve("katex/package.json")),
+        "dist/contrib"
+      ),
+      {
+        include: ["mhchem.min.js", "copy-tex.min.js"],
+        destDir: "assets/katex/contrib",
+      }
+    ),
+    funnel(
+      path.join(
+        path.dirname(require.resolve("katex/package.json")),
+        "dist/fonts"
+      ),
+      {
+        include: ["*.woff2", "*.woff"],
+        destDir: "assets/katex/fonts",
+      }
+    ),
     applyTerser(generateScriptsTree(app)),
     pluginTrees,
   ];

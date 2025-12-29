@@ -1,9 +1,14 @@
+// Hidden state for math elements during rendering
+.math-hidden {
+  display: none !important;
+}
+
 .math-container {
   &.block-math,
   &.ascii-math {
     display: block;
 
-    // we use tag selectors because MathJax does not provide helpfull classes
+    // we use tag selectors because MathJax does not provide helpful classes
     // and the possible combinations a bit absurd. The styles are scoped by the
     // parent selector. So they don't affect any other elements.
     > {
@@ -15,7 +20,7 @@
         max-width: 100%;
         margin-bottom: 1em;
 
-        // special handeling for katex
+        // special handling for katex
         .katex-html {
           display: block;
           overflow-x: auto;

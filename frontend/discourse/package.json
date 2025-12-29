@@ -55,6 +55,7 @@
     "highlight.js": "11.11.1",
     "immer": "^11.1.0",
     "jspreadsheet-ce": "^4.15.0",
+    "katex": "0.16.27",
     "mathjax": "4.1.0",
     "@mathjax/mathjax-newcm-font": "4.1.0",
     "moment": "2.30.1",
