@@ -138,7 +138,11 @@ export default class AdminToolsService extends Service {
     );
 
     if (response.job_enqueued) {
-      this.dialog.alert(i18n("admin.user.delete_posts.all_enqueued"));
+      this.dialog.alert(
+        i18n("admin.user.delete_posts.all_enqueued", {
+          username: user.username,
+        })
+      );
       this.modal.close();
       return;
     }
