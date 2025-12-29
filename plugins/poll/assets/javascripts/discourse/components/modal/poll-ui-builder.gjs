@@ -19,12 +19,12 @@ import { removeValueFromArray } from "discourse/lib/array-tools";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import { trackedArray } from "discourse/lib/tracked-tools";
+import { optionalRequire } from "discourse/lib/utilities";
 import autoFocus from "discourse/modifiers/auto-focus";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { and, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import generateCurrentDateMarkup from "discourse/plugins/discourse-local-dates/lib/generate-current-date-markup";
 
 export const BAR_CHART_TYPE = "bar";
 export const PIE_CHART_TYPE = "pie";
@@ -376,6 +376,14 @@ export default class PollUiBuilderModal extends Component {
       (event.metaKey || event.ctrlKey) &&
       this.siteSettings.discourse_local_dates_enabled
     ) {
+      const generateCurrentDateMarkup = optionalRequire(
+        "discourse/plugins/discourse-local-dates/lib/generate-current-date-markup"
+      );
+
+      if (!generateCurrentDateMarkup) {
+        return;
+      }
+
       event.preventDefault();
       const timezone = this.currentUser.user_option?.timezone;
       const markup = generateCurrentDateMarkup(timezone);
