@@ -34,6 +34,17 @@ import { consolePrefix } from "discourse/lib/source-identifier";
 const blockConfigs = new Map();
 
 /**
+ * Clears all registered block configurations.
+ *
+ * USE ONLY FOR TESTING PURPOSES.
+ */
+export function resetBlockConfigsForTesting() {
+  if (DEBUG) {
+    blockConfigs.clear();
+  }
+}
+
+/**
  * Reserved argument names that cannot be used in block configurations.
  * These are used internally by the block system and would conflict with
  * user-provided args. Names starting with underscore are also reserved.
@@ -285,7 +296,7 @@ export function block(name, options = {}) {
  * @returns {boolean} True if the component is registered as a block, false otherwise
  */
 export function isBlock(component) {
-  return !!component[__BLOCK_FLAG];
+  return !!component?.[__BLOCK_FLAG];
 }
 
 /**
@@ -295,7 +306,7 @@ export function isBlock(component) {
  * @returns {boolean} True if the component is registered as a container block, false otherwise
  */
 function isContainerBlock(component) {
-  return !!component[__BLOCK_CONTAINER_FLAG];
+  return !!component?.[__BLOCK_CONTAINER_FLAG];
 }
 
 /**

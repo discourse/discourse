@@ -4,10 +4,12 @@ import { block } from "discourse/components/block-outlet";
 import concatClass from "discourse/helpers/concat-class";
 
 /**
- * @component group
- * @description A block that groups multiple children blocks together.
- * @param {Object} group - The group configuration object
- * @param {string} blockOutlet - The name of the outlet this group belongs to
+ * A container block that groups multiple children blocks together.
+ * Rendered children are created by the @block decorator and passed via the children getter.
+ *
+ * @param {string} @outletName - The outlet identifier this group belongs to (passed from parent)
+ * @param {string} [@classNames] - Additional CSS classes for the group wrapper
+ * @param {string} [@group] - Group identifier for BEM class naming (block__group-{group})
  */
 @block("group", { container: true })
 export default class GroupedBlocks extends Component {
