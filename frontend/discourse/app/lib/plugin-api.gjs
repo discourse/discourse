@@ -3321,18 +3321,21 @@ class _PluginApi {
    * Block outlets are extension points where themes and plugins can render custom
    * content layouts. Each block must be decorated with `@block` from "discourse/blocks".
    *
+   * Blocks can have conditions that determine when they render. Conditions support
+   * AND logic (array), OR logic (`any`), and NOT logic (`not`).
+   *
    * @param {string} outletName - The block outlet identifier
    * @param {Array<Object>} blocks - Array of block configurations
    * @param {typeof Component} blocks[].block - Component class decorated with @block
    * @param {Object} [blocks[].args] - Arguments to pass to the block component
    * @param {string} [blocks[].classNames] - Additional CSS classes for the block wrapper
    * @param {Array<Object>} [blocks[].children] - Nested blocks (only for container blocks)
+   * @param {Array<Object>|Object} [blocks[].conditions] - Conditions for rendering the block
    *
    * @example
    * ```javascript
    * import { block } from "discourse/blocks";
-   * import BlockGroup from "discourse/components/blocks/block-group";
-   * import RouteCondition from "discourse/components/blocks/conditional/route-condition";
+   * import { RouteShortcuts } from "discourse/blocks/conditions";
    *
    * @block("my-banner")
    * class MyBanner extends Component {
@@ -3342,22 +3345,81 @@ class _PluginApi {
    * }
    *
    * api.renderBlocks("homepage-blocks", [
+   *   // Simple block without conditions
    *   {
    *     block: MyBanner,
    *     args: { title: "Welcome!" },
    *   },
+   *   // Block with conditions (AND logic - all must pass)
    *   {
-   *     block: RouteCondition,
-   *     args: { routes: ["discovery.latest"] },
-   *     children: [
-   *       { block: MyBanner, args: { title: "Latest Topics" } }
+   *     block: MyBanner,
+   *     args: { title: "Admin Banner" },
+   *     conditions: [
+   *       { type: "route", routes: [RouteShortcuts.DISCOVERY] },
+   *       { type: "user", admin: true }
+   *     ],
+   *   },
+   *   // Block with OR conditions
+   *   {
+   *     block: MyBanner,
+   *     args: { title: "Staff Banner" },
+   *     conditions: [
+   *       { any: [
+   *         { type: "user", admin: true },
+   *         { type: "user", moderator: true }
+   *       ]}
    *     ],
    *   },
    * ]);
    * ```
    */
   renderBlocks(outletName, blocks) {
-    renderBlocks(outletName, blocks);
+    renderBlocks(outletName, blocks, this.container);
+  }
+
+  /**
+   * Registers a custom block condition type.
+   *
+   * Custom conditions must extend `BlockCondition` from "discourse/blocks/conditions"
+   * and implement the `evaluate(args)` method.
+   *
+   * @param {typeof import("discourse/blocks/conditions").BlockCondition} ConditionClass - The condition class
+   *
+   * @example
+   * ```javascript
+   * import { BlockCondition } from "discourse/blocks/conditions";
+   *
+   * class BlockFeatureFlagCondition extends BlockCondition {
+   *   static type = "feature-flag";
+   *
+   *   @service currentUser;
+   *
+   *   validate(args) {
+   *     if (!args.flag) {
+   *       throw new Error("feature-flag condition requires 'flag' argument");
+   *     }
+   *   }
+   *
+   *   evaluate(args) {
+   *     return this.currentUser?.feature_flags?.[args.flag] === true;
+   *   }
+   * }
+   *
+   * api.registerBlockConditionType(BlockFeatureFlagCondition);
+   *
+   * // Then use it in renderBlocks:
+   * api.renderBlocks("homepage-blocks", [
+   *   {
+   *     block: MyBlock,
+   *     conditions: [{ type: "feature-flag", flag: "new_feature" }]
+   *   }
+   * ]);
+   * ```
+   */
+  registerBlockConditionType(ConditionClass) {
+    this.container
+      .lookup("service:block-condition-evaluator")
+      .registerType(ConditionClass);
   }
 
   // eslint-disable-next-line no-unused-vars

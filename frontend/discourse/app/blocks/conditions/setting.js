@@ -1,0 +1,144 @@
+import { service } from "@ember/service";
+import { BlockCondition, raiseBlockValidationError } from "./base";
+
+/**
+ * A condition that evaluates based on site setting values.
+ *
+ * Supports multiple condition types for different setting formats:
+ * - `enabled` - For boolean settings (truthy/falsy check)
+ * - `equals` - For exact value matching (strings, numbers, enums)
+ * - `includes` - When setting is a single value: check if it matches one of YOUR provided options
+ * - `contains` - When setting is a list: check if it contains YOUR single value
+ * - `containsAny` - When setting is a list: check if it contains ANY of YOUR provided values
+ *
+ * **`includes` vs `contains` - Key Difference:**
+ *
+ * | Condition | Setting type | Question answered |
+ * |-----------|--------------|-------------------|
+ * | `includes` | Single value (enum/string) | Is the setting value IN my list? |
+ * | `contains` | List (pipe-separated) | Does the setting list CONTAIN my value? |
+ *
+ * @class BlockSettingCondition
+ * @extends BlockCondition
+ *
+ * @param {string} setting - The site setting name to check (required, must have `client: true`)
+ * @param {boolean} [enabled] - If true, passes when setting is truthy; if false, passes when falsy
+ * @param {*} [equals] - Passes when setting exactly equals this value
+ * @param {Array<*>} [includes] - For single-value settings: passes when setting value is in this array
+ * @param {string} [contains] - For list settings: passes when the setting list contains this value
+ * @param {Array<string>} [containsAny] - For list settings: passes when setting list contains ANY of these
+ *
+ * @example
+ * // Boolean setting check
+ * { type: "setting", setting: "enable_badges", enabled: true }
+ *
+ * @example
+ * // Exact value match
+ * { type: "setting", setting: "desktop_category_page_style", equals: "categories_and_latest_topics" }
+ *
+ * @example
+ * // Setting is one of several values
+ * { type: "setting", setting: "desktop_category_page_style", includes: ["categories_and_latest_topics", "categories_and_top_topics"] }
+ *
+ * @example
+ * // List setting contains value
+ * { type: "setting", setting: "top_menu", contains: "hot" }
+ *
+ * @example
+ * // List setting contains any of values
+ * { type: "setting", setting: "share_links", containsAny: ["twitter", "facebook"] }
+ */
+export default class BlockSettingCondition extends BlockCondition {
+  static type = "setting";
+
+  @service siteSettings;
+
+  validate(args) {
+    const { setting, enabled, equals, includes, contains, containsAny } = args;
+
+    if (!setting) {
+      raiseBlockValidationError(
+        "BlockSettingCondition: `setting` argument is required."
+      );
+    }
+
+    // Check that setting exists (only client: true settings are available)
+    if (!(setting in this.siteSettings)) {
+      raiseBlockValidationError(
+        `BlockSettingCondition: Unknown site setting "${setting}". ` +
+          `Ensure the setting name is correct and has \`client: true\` in site_settings.yml.`
+      );
+    }
+
+    // Check for conflicting conditions
+    const conditionCount = [
+      enabled !== undefined,
+      equals !== undefined,
+      includes?.length > 0,
+      contains !== undefined,
+      containsAny?.length > 0,
+    ].filter(Boolean).length;
+
+    if (conditionCount > 1) {
+      raiseBlockValidationError(
+        "BlockSettingCondition: Cannot use multiple condition types together. " +
+          "Use only one of: `enabled`, `equals`, `includes`, `contains`, or `containsAny`."
+      );
+    }
+  }
+
+  evaluate(args) {
+    const { setting, enabled, equals, includes, contains, containsAny } = args;
+    const value = this.siteSettings[setting];
+
+    // Check enabled/disabled (boolean check)
+    if (enabled !== undefined) {
+      return enabled ? !!value : !value;
+    }
+
+    // Check exact equality
+    if (equals !== undefined) {
+      return value === equals;
+    }
+
+    // Check if value is in the includes array (for enum settings)
+    if (includes?.length) {
+      return includes.includes(value);
+    }
+
+    // Check if list setting contains a specific value
+    if (contains !== undefined) {
+      return this.#settingContains(value, contains);
+    }
+
+    // Check if list setting contains any of the provided values
+    if (containsAny?.length) {
+      return containsAny.some((item) => this.#settingContains(value, item));
+    }
+
+    // No condition specified, check if setting exists and is truthy
+    return !!value;
+  }
+
+  /**
+   * Checks if a list setting contains a specific value.
+   * Handles both array and pipe-separated string formats.
+   *
+   * @param {string|Array} settingValue - The setting value (may be "a|b|c" or ["a", "b", "c"])
+   * @param {string} searchValue - The value to search for
+   * @returns {boolean}
+   */
+  #settingContains(settingValue, searchValue) {
+    if (Array.isArray(settingValue)) {
+      return settingValue.includes(searchValue);
+    }
+
+    if (typeof settingValue === "string") {
+      // List settings are often pipe-separated strings like "latest|new|unread"
+      const items = settingValue.split("|").map((s) => s.trim());
+      return items.includes(searchValue);
+    }
+
+    return false;
+  }
+}

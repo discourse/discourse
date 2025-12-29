@@ -42,8 +42,25 @@ const RESERVED_ARG_NAMES = Object.freeze([
   "classNames",
   "outletName",
   "children",
+  "conditions",
   "$block$",
 ]);
+
+/**
+ * Raises a validation error in dev/test, logs warning in production.
+ * Returns true if validation should halt (in production, continues execution).
+ *
+ * @param {string} message - The error message
+ * @returns {boolean} True if thrown (dev), false if warned (prod)
+ */
+function raiseValidationError(message) {
+  if (DEBUG) {
+    throw new Error(message);
+  } else {
+    // eslint-disable-next-line no-console
+    console.warn(`[Block validation] ${message}`);
+  }
+}
 
 // ============================================================================
 // Security Symbols
@@ -102,7 +119,8 @@ export function block(name, options = {}) {
 
   return function (target) {
     if (!(target.prototype instanceof Component)) {
-      throw new Error("@block target must be a Glimmer component class");
+      raiseValidationError("@block target must be a Glimmer component class");
+      return target; // Return original in production to avoid crash
     }
 
     return class extends target {
@@ -150,6 +168,8 @@ export function block(name, options = {}) {
        * Only container blocks have children. The children are curried components
        * with all necessary args pre-bound.
        *
+       * Blocks with conditions are filtered based on condition evaluation.
+       *
        * @returns {Array<{Component: import("ember-curry-component").CurriedComponent}>|undefined}
        */
       @cached
@@ -160,9 +180,21 @@ export function block(name, options = {}) {
         }
 
         const owner = getOwner(this);
-        return rawChildren.map((blockConfig) =>
-          this.#createChildBlock(blockConfig, owner)
+        const conditionEvaluator = owner.lookup(
+          "service:block-condition-evaluator"
         );
+
+        // Filter children by conditions, then create renderable components
+        return rawChildren
+          .filter((blockConfig) => {
+            // No conditions means always render
+            if (!blockConfig.conditions) {
+              return true;
+            }
+            // Evaluate conditions - only render if they pass
+            return conditionEvaluator.evaluate(blockConfig.conditions);
+          })
+          .map((blockConfig) => this.#createChildBlock(blockConfig, owner));
       }
 
       /**
@@ -280,6 +312,8 @@ function isContainerBlock(component) {
  * @param {Object} [config[].args] - Args to pass to the block component
  * @param {string} [config[].classNames] - Additional CSS classes for the block wrapper
  * @param {Array<Object>} [config[].children] - Nested blocks (only for container blocks)
+ * @param {Array<Object>|Object} [config[].conditions] - Conditions that must pass for block to render
+ * @param {Object} [owner] - The application owner for service lookup (passed from plugin API)
  * @throws {Error} If validation fails or outlet already has a config (in DEBUG mode)
  *
  * @example
@@ -294,12 +328,22 @@ function isContainerBlock(component) {
  *       { block: FeatureCard, args: { icon: "star" } },
  *       { block: FeatureCard, args: { icon: "heart" } },
  *     ]
+ *   },
+ *   {
+ *     block: AdminBanner,
+ *     args: { title: "Admin Only" },
+ *     conditions: [
+ *       { type: "user", admin: true }
+ *     ]
  *   }
  * ]);
  * ```
  */
-export function renderBlocks(outletName, config) {
-  validateConfig(config, outletName);
+export function renderBlocks(outletName, config, owner) {
+  // Get condition evaluator for validation if owner is provided
+  const conditionEvaluator = owner?.lookup("service:block-condition-evaluator");
+
+  validateConfig(config, outletName, conditionEvaluator);
 
   if (blockConfigs.has(outletName)) {
     const errorMessage = [
@@ -325,16 +369,17 @@ export function renderBlocks(outletName, config) {
  *
  * @param {Array<Object>} blocksConfig - Block configurations to validate
  * @param {string} outletName - The outlet these blocks belong to
+ * @param {import("discourse/services/block-condition-evaluator").default} [conditionEvaluator] - Service for validating conditions
  * @throws {Error} If any block configuration is invalid
  */
-function validateConfig(blocksConfig, outletName) {
+function validateConfig(blocksConfig, outletName, conditionEvaluator) {
   for (const blockConfig of blocksConfig) {
     // Validate the block itself (whether it has children or not)
-    validateBlock(blockConfig, outletName);
+    validateBlock(blockConfig, outletName, conditionEvaluator);
 
     // Recursively validate nested children
     if (blockConfig.children) {
-      validateConfig(blockConfig.children, outletName);
+      validateConfig(blockConfig.children, outletName, conditionEvaluator);
     }
   }
 }
@@ -357,48 +402,68 @@ function hasConfig(outletName) {
  * - Block component exists and is decorated with @block
  * - Container/children relationship is valid
  * - No reserved arg names are used
+ * - Conditions are valid (if conditionEvaluator is provided)
  *
  * @param {Object} config - The block configuration object
  * @param {typeof Component} config.block - The block component class
  * @param {string} [config.name] - Display name for error messages
  * @param {Object} [config.args] - Args to pass to the block
  * @param {Array<Object>} [config.children] - Nested block configurations
+ * @param {Array<Object>|Object} [config.conditions] - Conditions for rendering
  * @param {string} outletName - The outlet this block belongs to
+ * @param {import("discourse/services/block-condition-evaluator").default} [conditionEvaluator] - Service for validating conditions
  * @throws {Error} If validation fails
  */
-function validateBlock(config, outletName) {
+function validateBlock(config, outletName, conditionEvaluator) {
   if (!BLOCK_OUTLETS.includes(outletName)) {
-    throw new Error(`Unknown block outlet: ${outletName}`);
+    raiseValidationError(`Unknown block outlet: ${outletName}`);
+    return;
   }
 
   if (!config.block) {
-    throw new Error(
+    raiseValidationError(
       `Block in layout for \`${outletName}\` is missing a component: ${JSON.stringify(config)}`
     );
+    return;
   }
 
   if (!isBlock(config.block)) {
-    throw new Error(
+    raiseValidationError(
       `Block component ${config.name} (${config.block}) in layout ${outletName} is not a valid block`
     );
+    return;
   }
 
   const hasChildren = config.children?.length > 0;
   const isContainer = isContainerBlock(config.block);
 
   if (hasChildren && !isContainer) {
-    throw new Error(
+    raiseValidationError(
       `Block component ${config.name} (${config.block}) in layout ${outletName} cannot have children`
     );
+    return;
   }
 
   if (isContainer && !hasChildren) {
-    throw new Error(
+    raiseValidationError(
       `Block component ${config.name} (${config.block}) in layout ${outletName} must have children`
     );
+    return;
   }
 
   validateReservedArgs(config, outletName);
+
+  // Validate conditions if evaluator is available
+  // In production, conditionEvaluator.validate() logs warnings instead of throwing
+  if (config.conditions && conditionEvaluator) {
+    try {
+      conditionEvaluator.validate(config.conditions);
+    } catch (error) {
+      raiseValidationError(
+        `Invalid conditions for block "${config.block.blockName || config.name}" in outlet "${outletName}": ${error.message}`
+      );
+    }
+  }
 }
 
 /**
@@ -430,7 +495,7 @@ function validateReservedArgs(config, outletName) {
   const usedReservedArgs = Object.keys(config.args).filter(isReservedArgName);
 
   if (usedReservedArgs.length > 0) {
-    throw new Error(
+    raiseValidationError(
       `Block ${config.name} in layout ${outletName} uses reserved arg names: ${usedReservedArgs.join(", ")}. ` +
         `Names starting with underscore are reserved for internal use.`
     );
@@ -484,7 +549,7 @@ export default class BlockOutlet extends Component {
     this.#name = this.args.name;
 
     if (!BLOCK_OUTLETS.includes(this.#name)) {
-      throw new Error(
+      raiseValidationError(
         `Block outlet ${this.#name} is not registered in the blocks registry`
       );
     }
