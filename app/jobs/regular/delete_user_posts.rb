@@ -9,7 +9,6 @@ module Jobs
       admin_user = User.find(args[:admin_id]) if args[:admin_id]
 
       raise Discourse::InvalidAccess unless admin_user&.admin?
-      raise Discourse::NotFound unless user
 
       guardian = Guardian.new(admin_user)
 
