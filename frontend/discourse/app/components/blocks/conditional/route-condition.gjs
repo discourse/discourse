@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { DEBUG } from "@glimmer/env";
 import { service } from "@ember/service";
 import { block } from "discourse/components/block-outlet";
 
@@ -9,6 +10,10 @@ import { block } from "discourse/components/block-outlet";
  * @component RouteCondition
  * @param {Array<string|RegExp>} [routes] - Route patterns to match (renders if ANY match)
  * @param {Array<string|RegExp>} [excludeRoutes] - Route patterns to exclude (renders if NONE match)
+ *
+ * **IMPORTANT:** You must use either `routes` OR `excludeRoutes`, not both.
+ * Providing both arguments will throw an error in development/testing mode and log
+ * a warning in production.
  *
  * Route patterns support:
  * - Exact match: "discovery.latest"
@@ -52,6 +57,11 @@ import { block } from "discourse/components/block-outlet";
 export default class RouteCondition extends Component {
   @service router;
 
+  constructor() {
+    super(...arguments);
+    this.#validateArgs();
+  }
+
   get shouldRender() {
     const currentRoute = this.router.currentRouteName;
 
@@ -71,6 +81,22 @@ export default class RouteCondition extends Component {
 
     // No conditions specified, always render
     return true;
+  }
+
+  #validateArgs() {
+    const { routes, excludeRoutes } = this.args;
+
+    if (routes?.length && excludeRoutes?.length) {
+      const message =
+        "RouteCondition: Cannot use both `routes` and `excludeRoutes` arguments. Use one or the other.";
+
+      if (DEBUG) {
+        throw new Error(message);
+      } else {
+        // eslint-disable-next-line no-console
+        console.warn(message);
+      }
+    }
   }
 
   #matchesAny(currentRoute, patterns) {
