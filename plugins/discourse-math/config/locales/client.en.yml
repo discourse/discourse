@@ -1,0 +1,8 @@
+en:
+  js:
+    discourse_math:
+      edit_math: "Edit math"
+      edit_modal:
+        title: "Edit math"
+        label: "Math"
+        apply: "Apply"

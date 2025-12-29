@@ -76,3 +76,46 @@
     }
   }
 }
+
+.ProseMirror {
+  .composer-math-node {
+    position: relative;
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-half);
+    padding: 0 var(--space-1);
+    border: 1px dashed var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
+    background: var(--primary-very-low);
+    font-family: var(--d-font-family--monospace);
+
+    &.ProseMirror-selectednode {
+      outline-offset: -2px;
+      border-color: var(--tertiary);
+    }
+
+    .math-node-edit-button {
+      color: var(--primary-medium);
+      padding: 0;
+
+      &:hover {
+        color: var(--primary);
+      }
+    }
+
+    .math-node-content {
+      font-size: var(--font-down-1);
+    }
+  }
+
+  div.composer-math-node {
+    display: block;
+    padding: var(--space-2);
+    margin: var(--space-2) 0;
+
+    .math-node-content {
+      display: block;
+      white-space: pre-wrap;
+    }
+  }
+}
