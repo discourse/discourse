@@ -107,7 +107,7 @@ export default class DiscoveryTopics extends Component {
       return this.topicTrackingState.countUnread({
         categoryId: this.args.category?.id,
         noSubcategories: this.args.noSubcategories,
-        tagId: this.args.tag?.id,
+        tagId: this.args.tag?.name,
       });
     } else {
       return 0;
@@ -121,7 +121,7 @@ export default class DiscoveryTopics extends Component {
       return this.topicTrackingState.countNew({
         categoryId: this.args.category?.id,
         noSubcategories: this.args.noSubcategories,
-        tagId: this.args.tag?.id,
+        tagId: this.args.tag?.name,
       });
     } else {
       return 0;
@@ -159,7 +159,7 @@ export default class DiscoveryTopics extends Component {
       }
 
       return i18n("topics.bottom.tag", {
-        tag: tag.id,
+        tag: tag.name,
       });
     } else {
       if (topicsLength === 0) {
