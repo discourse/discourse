@@ -350,6 +350,75 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
+  describe "date setting" do
+    before do
+      settings.setting(:test_date, "2024-01-15", type: :date)
+      settings.refresh!
+    end
+
+    it "should have the correct default" do
+      expect(settings.test_date).to eq("2024-01-15")
+    end
+
+    it "should have a key in all_settings" do
+      expect(settings.all_settings.detect { |s| s[:setting] == :test_date }).to be_present
+    end
+
+    context "when overridden" do
+      after :each do
+        settings.remove_override!(:test_date)
+      end
+
+      it "should have the correct override" do
+        settings.test_date = "2025-12-31"
+        expect(settings.test_date).to eq("2025-12-31")
+      end
+
+      it "should coerce date string correctly" do
+        settings.test_date = "2023-06-15"
+        expect(settings.test_date).to eq("2023-06-15")
+      end
+
+      it "should reject invalid date strings" do
+        expect { settings.test_date = "not a date" }.to raise_error(Discourse::InvalidParameters)
+      end
+
+      it "should reject invalid month" do
+        expect { settings.test_date = "2024-13-01" }.to raise_error(Discourse::InvalidParameters)
+      end
+
+      it "should reject invalid day" do
+        expect { settings.test_date = "2024-01-32" }.to raise_error(Discourse::InvalidParameters)
+      end
+
+      it "should allow blank values" do
+        settings.test_date = ""
+        expect(settings.test_date).to eq("")
+      end
+
+      it "can be overridden with set" do
+        settings.set("test_date", "2026-03-20")
+        expect(settings.test_date).to eq("2026-03-20")
+      end
+
+      it "should not set default when reset" do
+        settings.test_date = "2025-01-01"
+        settings.setting(:test_date, "2024-01-15", type: :date)
+        settings.refresh!
+        expect(settings.test_date).not_to eq("2024-01-15")
+      end
+
+      it "should publish changes to clients" do
+        settings.setting(:test_date, "2024-01-15", type: :date)
+        settings.setting(:test_date, nil, client: true)
+
+        message =
+          MessageBus.track_publish("/client_settings") { settings.test_date = "2025-06-15" }.first
+        expect(message).to be_present
+      end
+    end
+  end
+
   describe "bool setting" do
     before do
       settings.setting(:test_hello?, false)
