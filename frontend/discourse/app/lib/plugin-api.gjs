@@ -3316,28 +3316,48 @@ class _PluginApi {
   }
 
   /**
-   * Renders block components in the specified outlet using the provided configuration.
+   * Registers block components to render in a designated outlet.
    *
-   * This method allows plugins to dynamically render block components in designated outlets
-   * throughout the application.
+   * Block outlets are extension points where themes and plugins can render custom
+   * content layouts. Each block must be decorated with `@block` from "discourse/blocks".
    *
-   * @param {string} blockOutlet - The name of the block outlet where components should be rendered
-   * @param {Object} blockConfig - Configuration object defining the blocks to render
+   * @param {string} outletName - The block outlet identifier
+   * @param {Array<Object>} blocks - Array of block configurations
+   * @param {typeof Component} blocks[].block - Component class decorated with @block
+   * @param {Object} [blocks[].args] - Arguments to pass to the block component
+   * @param {string} [blocks[].classNames] - Additional CSS classes for the block wrapper
+   * @param {Array<Object>} [blocks[].children] - Nested blocks (only for container blocks)
    *
    * @example
    * ```javascript
-   * api.renderBlocks('homepage-blocks', {
-   *   blocks: [
-   *     {
-   *       component: MyCustomComponent,
-   *       shouldRender: (context) => context.user.isAdmin
-   *     }
-   *   ]
-   * });
+   * import { block } from "discourse/blocks";
+   * import BlockGroup from "discourse/components/blocks/block-group";
+   * import RouteCondition from "discourse/components/blocks/conditional/route-condition";
+   *
+   * @block("my-banner")
+   * class MyBanner extends Component {
+   *   <template>
+   *     <h1>{{@title}}</h1>
+   *   </template>
+   * }
+   *
+   * api.renderBlocks("homepage-blocks", [
+   *   {
+   *     block: MyBanner,
+   *     args: { title: "Welcome!" },
+   *   },
+   *   {
+   *     block: RouteCondition,
+   *     args: { routes: ["discovery.latest"] },
+   *     children: [
+   *       { block: MyBanner, args: { title: "Latest Topics" } }
+   *     ],
+   *   },
+   * ]);
    * ```
    */
-  renderBlocks(blockOutlet, blockConfig) {
-    renderBlocks(blockOutlet, blockConfig);
+  renderBlocks(outletName, blocks) {
+    renderBlocks(outletName, blocks);
   }
 
   // eslint-disable-next-line no-unused-vars
