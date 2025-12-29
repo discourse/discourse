@@ -3773,6 +3773,10 @@ en:
       created_at: "Created: %{date}"
       bumped_at: "Latest: %{date}"
 
+      browse_latest_topics: "Browse latest topics"
+      browse_new_replies: "Browse new replies"
+      browse_new_topics: "Browse new topics"
+
       suggest_create_topic: Ready to <a href>start a new conversation?</a>
       jump_reply: "Jump to post's original location"
       jump_reply_aria: "Jump to @%{username}'s post in its original location"
