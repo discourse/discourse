@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { DEBUG } from "@glimmer/env";
 import { service } from "@ember/service";
 import { block } from "discourse/components/block-outlet";
 
@@ -12,6 +13,12 @@ import { block } from "discourse/components/block-outlet";
  *
  * The only exception is the `groups` array itself, which uses OR logic internally
  * (user must be in at least ONE of the specified groups).
+ *
+ * **Validation:** The following argument combinations are invalid and will throw
+ * an error in development and test modes (or log a warning in production):
+ * - `loggedIn: false` with any of: `admin`, `moderator`, `staff`, `minTrustLevel`,
+ *   `maxTrustLevel`, or `groups` (anonymous users cannot have these properties)
+ * - `minTrustLevel` greater than `maxTrustLevel` (no user can satisfy this)
  *
  * @component UserCondition
  * @param {boolean} [loggedIn] - If true, render only for logged-in users; if false, only for anonymous
@@ -56,6 +63,11 @@ import { block } from "discourse/components/block-outlet";
 @block("user-condition", { container: true })
 export default class UserCondition extends Component {
   @service currentUser;
+
+  constructor() {
+    super(...arguments);
+    this.#validateArgs();
+  }
 
   get shouldRender() {
     const {
@@ -125,6 +137,58 @@ export default class UserCondition extends Component {
   #isInAnyGroup(groupNames) {
     const userGroups = this.currentUser.groups?.map((g) => g.name) || [];
     return groupNames.some((name) => userGroups.includes(name));
+  }
+
+  #validateArgs() {
+    const {
+      loggedIn,
+      admin,
+      moderator,
+      staff,
+      minTrustLevel,
+      maxTrustLevel,
+      groups,
+    } = this.args;
+
+    // Check for loggedIn: false with user-specific conditions
+    if (loggedIn === false) {
+      const hasUserConditions =
+        admin !== undefined ||
+        moderator !== undefined ||
+        staff !== undefined ||
+        minTrustLevel !== undefined ||
+        maxTrustLevel !== undefined ||
+        groups?.length;
+
+      if (hasUserConditions) {
+        this.#reportError(
+          "UserCondition: Cannot use `loggedIn: false` with user-specific conditions " +
+            "(admin, moderator, staff, minTrustLevel, maxTrustLevel, groups). " +
+            "Anonymous users cannot have these properties."
+        );
+      }
+    }
+
+    // Check for minTrustLevel > maxTrustLevel
+    if (
+      minTrustLevel !== undefined &&
+      maxTrustLevel !== undefined &&
+      minTrustLevel > maxTrustLevel
+    ) {
+      this.#reportError(
+        `UserCondition: \`minTrustLevel\` (${minTrustLevel}) cannot be greater than ` +
+          `\`maxTrustLevel\` (${maxTrustLevel}). No user can satisfy this condition.`
+      );
+    }
+  }
+
+  #reportError(message) {
+    if (DEBUG) {
+      throw new Error(message);
+    } else {
+      // eslint-disable-next-line no-console
+      console.warn(message);
+    }
   }
 
   <template>
