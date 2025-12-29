@@ -16,7 +16,7 @@ export default apiInitializer((api) => {
 });
 ```
 
-All the available APIs are listed in the [`plugin-api.gjs` source code](https://github.com/discourse/discourse/blob/main/app/assets/javascripts/discourse/app/lib/plugin-api.gjs) in Discourse core, along with a short description and examples.
+All the available APIs are listed in the [`plugin-api.gjs` source code](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/lib/plugin-api.gjs) in Discourse core, along with a short description and examples.
 
 For a full tuturial, including examples of JS API usage, check out:
 
