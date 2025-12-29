@@ -310,7 +310,7 @@ export default <template>
                       {{#each @controller.model.tags as |tag|}}
                         <div class="fps-tag-item">
                           <a href={{tag.url}}>
-                            {{tag.id}}
+                            {{tag.name}}
                           </a>
                         </div>
                       {{/each}}

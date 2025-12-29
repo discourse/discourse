@@ -103,10 +103,12 @@ export function translateResults(results, opts) {
 
   results.tags = results.tags
     .map(function (tag) {
-      const tagName = escapeExpression(tag.name);
+      const id = tag.id;
+      const name = escapeExpression(tag.name);
       return EmberObject.create({
-        id: tagName,
-        url: getURL("/tag/" + tagName),
+        id,
+        name,
+        url: getURL("/tag/" + name),
       });
     })
     .filter((item) => item != null);

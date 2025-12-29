@@ -39,7 +39,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
   needs.pretender((server, helper) => {
     server.get("/tag/:tagId/notifications", (request) => {
       return helper.response({
-        tag_notification: { id: request.params.tagId },
+        tag_notification: { id: 1, name: request.params.tagId },
       });
     });
 

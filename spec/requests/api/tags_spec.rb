@@ -186,9 +186,12 @@ RSpec.describe "tags" do
                      type: :object,
                      properties: {
                        id: {
-                         type: :string,
+                         type: :integer,
                        },
                        text: {
+                         type: :string,
+                       },
+                       name: {
                          type: :string,
                        },
                        count: {

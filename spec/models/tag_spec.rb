@@ -211,7 +211,7 @@ RSpec.describe Tag do
       SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
       tags = Tag.pm_tags(guardian: Guardian.new(admin), allowed_user: regular_user)
       expect(tags.length).to eq(2)
-      expect(tags.map { |t| t[:id] }).to contain_exactly("tag-0", "tag-1")
+      expect(tags.map { |t| t[:name] }).to contain_exactly("tag-0", "tag-1")
     end
   end
 

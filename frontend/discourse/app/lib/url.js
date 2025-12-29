@@ -515,7 +515,7 @@ export function prefixProtocol(url) {
   return `https://${url}`;
 }
 
-export function getCategoryAndTagUrl(category, subcategories, tag) {
+export function getCategoryAndTagUrl(category, subcategories, tagName) {
   let url;
 
   if (category) {
@@ -531,10 +531,10 @@ export function getCategoryAndTagUrl(category, subcategories, tag) {
     }
   }
 
-  if (tag) {
+  if (tagName) {
     url = url
-      ? "/tags" + url + "/" + tag.toLowerCase()
-      : "/tag/" + tag.toLowerCase();
+      ? "/tags" + url + "/" + tagName.toLowerCase()
+      : "/tag/" + tagName.toLowerCase();
   }
 
   return getURL(url || "/");

@@ -13,13 +13,13 @@ export default class TagRow extends SelectKitRowComponent {
   <template>
     {{#if this.isTag}}
       {{discourseTag
-        this.rowValue
+        this.rowName
         noHref=true
         description=this.item.description
         count=this.item.count
       }}
     {{else}}
-      <span class="name">{{this.item.name}}</span>
+      <span class="name">{{this.rowName}}</span>
     {{/if}}
   </template>
 }

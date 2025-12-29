@@ -246,7 +246,7 @@ export default class Topic extends RestModel {
       data.include_subcategories = include_subcategories;
     }
     if (tag) {
-      data.tag_id = tag.id;
+      data.tag_name = tag.name;
     }
     if (topicIds) {
       data.topic_ids = topicIds;
