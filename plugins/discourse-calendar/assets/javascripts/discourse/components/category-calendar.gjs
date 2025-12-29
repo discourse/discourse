@@ -151,6 +151,7 @@ export default class CategoryCalendar extends Component {
         @height="650px"
         @initialView={{this.categorySetting?.defaultView}}
         @weekends={{this.renderWeekends}}
+        @refreshKey={{this.category.id}}
       />
     {{/if}}
   </template>

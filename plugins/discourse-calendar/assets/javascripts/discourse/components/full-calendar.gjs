@@ -168,6 +168,7 @@ export default class FullCalendar extends Component {
   updateCalendar() {
     if (this.calendar) {
       this.calendar.setOption("headerToolbar", this.headerToolbar);
+      this.calendar.refetchEvents();
     }
   }
 
@@ -197,7 +198,12 @@ export default class FullCalendar extends Component {
   <template>
     <div
       {{didInsert this.setupCalendar}}
-      {{didUpdate this.updateCalendar @events this.capabilities.viewport.md}}
+      {{didUpdate
+        this.updateCalendar
+        @events
+        @refreshKey
+        this.capabilities.viewport.md
+      }}
       {{this.forceUpdateSize}}
       ...attributes
     >
