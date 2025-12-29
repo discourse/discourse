@@ -35,6 +35,15 @@ class Report
     page_view_logged_in_reqs
   ]
 
+  ADMIN_ONLY_REPORTS = %w[top_uploads]
+
+  def self.hidden?(type, admin:)
+    return true if !admin && ADMIN_ONLY_REPORTS.include?(type)
+    hidden_reports =
+      SiteSetting.use_legacy_pageviews ? HIDDEN_PAGEVIEW_REPORTS : HIDDEN_LEGACY_PAGEVIEW_REPORTS
+    hidden_reports.include?(type)
+  end
+
   COLORS = {
     turquoise: "#1EB8D1",
     lime: "#9BC53D",

@@ -4,7 +4,7 @@ class Admin::ReportsController < Admin::StaffController
   REPORTS_LIMIT = 50
 
   def index
-    render_json_dump(reports: Reports::ListQuery.call)
+    render_json_dump(reports: Reports::ListQuery.call(admin: current_user.admin?))
   end
 
   def bulk
@@ -17,16 +17,9 @@ class Admin::ReportsController < Admin::StaffController
         report = nil
         report = Report.find_cached(report_type, args) if (report_params[:cache])
 
-        if SiteSetting.use_legacy_pageviews
-          if Report::HIDDEN_PAGEVIEW_REPORTS.include?(report_type)
-            report = Report._get(report_type, args)
-            report.error = :not_found
-          end
-        else
-          if Report::HIDDEN_LEGACY_PAGEVIEW_REPORTS.include?(report_type)
-            report = Report._get(report_type, args)
-            report.error = :not_found
-          end
+        if Report.hidden?(report_type, admin: current_user.admin?)
+          report = Report._get(report_type, args)
+          report.error = :not_found
         end
 
         if report
@@ -53,12 +46,7 @@ class Admin::ReportsController < Admin::StaffController
     report_type = params[:type]
 
     raise Discourse::NotFound unless report_type =~ /\A[a-z0-9\_]+\z/
-
-    if SiteSetting.use_legacy_pageviews
-      raise Discourse::NotFound if Report::HIDDEN_PAGEVIEW_REPORTS.include?(report_type)
-    else
-      raise Discourse::NotFound if Report::HIDDEN_LEGACY_PAGEVIEW_REPORTS.include?(report_type)
-    end
+    raise Discourse::NotFound if Report.hidden?(report_type, admin: current_user.admin?)
 
     args = parse_params(params)
 
