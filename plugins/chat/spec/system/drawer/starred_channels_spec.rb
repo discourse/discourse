@@ -100,13 +100,13 @@ RSpec.describe "Drawer - starred channels", type: :system do
       drawer_page.click_starred_channels
 
       expect(page).to have_css(
-        ".starred-channels .chat-channel-row[data-chat-channel-id='#{channel_1.id}'] .c-unread-indicator",
+        ".starred-channels .chat-channel-row[data-chat-channel-id='#{channel_1.id}'] .chat-channel-unread-indicator",
       )
 
       drawer_page.click_channels
 
       expect(page).to have_css(
-        ".public-channels .chat-channel-row[data-chat-channel-id='#{channel_1.id}'] .c-unread-indicator",
+        ".public-channels .chat-channel-row[data-chat-channel-id='#{channel_1.id}'] .chat-channel-unread-indicator",
       )
     end
 
