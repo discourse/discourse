@@ -5,6 +5,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
+import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
 import icon from "discourse/helpers/d-icon";
 import debounce from "discourse/lib/debounce";
@@ -12,10 +13,13 @@ import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 const plusOne = helper(([val]) => val + 1);
+const getAspectRatio = helper(([width, height]) => {
+  return htmlSafe(`aspect-ratio: ${width} / ${height}`);
+});
 
-const DEBOUNCE_MS = 30;
+const DEBOUNCE_MS = 50;
 const HYSTERESIS_FACTOR = 0.7;
-const SCROLLEND_FALLBACK_MS = 500;
+const SCROLLEND_FALLBACK_MS = 1000;
 
 /**
  * @typedef {Object} ImageCarouselItem
@@ -84,7 +88,7 @@ export default class ImageCarousel extends Component {
         });
 
         const currentScroll = element.scrollLeft;
-        const maxScroll = element.scrollWidth - element.offsetWidth;
+        const maxScroll = element.scrollWidth - element.clientWidth;
 
         let bestIndex = this.currentIndex;
         let minDiff = Infinity;
@@ -96,7 +100,7 @@ export default class ImageCarousel extends Component {
             const idealScroll =
               slide.offsetLeft +
               slide.offsetWidth / 2 -
-              element.offsetWidth / 2;
+              element.clientWidth / 2;
 
             // Clamp to actual possible scroll range so boundaries (start/end) work correctly
             const clampedTarget = Math.max(0, Math.min(idealScroll, maxScroll));
@@ -126,7 +130,7 @@ export default class ImageCarousel extends Component {
       },
       {
         root: element,
-        threshold: [0, 0.25, 0.5, 1],
+        threshold: [0, 0.25, 0.5, 0.75, 1],
       }
     );
 
@@ -246,6 +250,11 @@ export default class ImageCarousel extends Component {
       ".d-image-carousel__slide"
     );
     if (slides && slides[clamped]) {
+      if (this.#debounceTimer) {
+        cancel(this.#debounceTimer);
+        this.#debounceTimer = null;
+      }
+
       this.isProgrammaticScroll = true;
       this.currentIndex = clamped;
 
@@ -301,6 +310,7 @@ export default class ImageCarousel extends Component {
             class="d-image-carousel__slide
               {{if (eq this.currentIndex index) 'is-active'}}"
             data-index={{index}}
+            style={{getAspectRatio item.width item.height}}
             {{this.mountItem item.element}}
           >
           </div>
