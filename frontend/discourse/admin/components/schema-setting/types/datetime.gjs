@@ -7,15 +7,20 @@ import FieldInputDescription from "discourse/admin/components/schema-setting/fie
 import { and, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
-export default class SchemaSettingTypeDate extends Component {
+export default class SchemaSettingTypeDatetime extends Component {
   @tracked touched = false;
   @tracked value = this.args.value || "";
+  @tracked
+  localTime = this.args.value
+    ? moment(this.args.value).local().format(moment.HTML5_FMT.DATETIME_LOCAL)
+    : "";
   required = this.args.spec.required;
 
   @action
   onInput(event) {
     this.touched = true;
     const datetime = event.currentTarget.value;
+    this.localTime = datetime;
 
     if (!datetime) {
       this.args.onChange("");
@@ -27,14 +32,6 @@ export default class SchemaSettingTypeDate extends Component {
     const utcValue = moment(datetime).utc().format();
     this.args.onChange(utcValue);
     this.value = utcValue;
-  }
-
-  get localTime() {
-    if (!this.value) {
-      return "";
-    }
-
-    return moment(this.value).local().format(moment.HTML5_FMT.DATETIME_LOCAL);
   }
 
   get validationErrorMessage() {

@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 
-export default class DateTimeSetting extends Component {
+export default class Datetime extends Component {
   @action
   convertToUniversalTime(event) {
     const datetime = event.target.value;
