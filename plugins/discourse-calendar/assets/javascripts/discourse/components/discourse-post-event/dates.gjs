@@ -138,6 +138,7 @@ export default class DiscoursePostEventDates extends Component {
       format,
       timezone: date.tz(),
       postId: this.args.event.id,
+      calendar: "on",
     };
 
     if (this.args.event.showLocalTime) {

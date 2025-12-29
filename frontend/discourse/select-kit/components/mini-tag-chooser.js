@@ -34,10 +34,15 @@ import TagRow from "./tag-row";
   maximum: "maxTagsPerTopic",
   autoInsertNoneItem: false,
   useHeaderFilter: false,
+  valueProperty: "name",
+  nameProperty: "name",
 })
 @pluginApiIdentifiers(["mini-tag-chooser"])
 export default class MiniTagChooser extends MultiSelectComponent {
   @service tagUtils;
+
+  valueProperty = "name";
+  nameProperty = "name";
 
   @empty("value") noTags;
   @or("allowCreate", "site.can_create_tag") allowAnyTag;
@@ -159,6 +164,6 @@ export default class MiniTagChooser extends MultiSelectComponent {
       this.set("selectKit.options.translatedFilterPlaceholder", null);
     }
 
-    return results.filter((r) => !makeArray(this.tags).includes(r.id));
+    return results.filter((r) => !makeArray(this.tags).includes(r.name));
   }
 }

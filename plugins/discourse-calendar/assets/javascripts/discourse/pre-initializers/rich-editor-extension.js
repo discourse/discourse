@@ -1,5 +1,6 @@
 import { camelize } from "@ember/string";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { buildBBCodeAttrs } from "discourse/lib/text";
 import { buildEventPreview } from "../initializers/discourse-post-event-decorator";
 
 const EVENT_ATTRIBUTES = {
@@ -82,15 +83,8 @@ const extension = {
 
   serializeNode: {
     event(state, node) {
-      state.write("[event");
-
-      Object.entries(node.attrs).forEach(([key, value]) => {
-        if (value !== null) {
-          state.write(` ${key}="${value}"`);
-        }
-      });
-
-      state.write("]\n");
+      const attrs = buildBBCodeAttrs(node.attrs);
+      state.write(`[event${attrs ? ` ${attrs}` : ""}]\n`);
 
       if (node.content.size > 0) {
         state.renderContent(node);

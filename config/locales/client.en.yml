@@ -1152,6 +1152,7 @@ en:
           title: Interaction
           posting: Posting
           notification: Notification
+          self_lockout: "You are about to change group visibility in a way that will remove your own access. Are you sure you want to proceed?"
         email:
           title: "Email"
           status: "Synchronized %{old_emails} / %{total_emails} emails via IMAP."
@@ -1298,6 +1299,8 @@ en:
         make_owner_description: "Make <b>%{username}</b> an owner of this group"
         remove_owner: "Remove as Owner"
         remove_owner_description: "Remove <b>%{username}</b> as an owner of this group"
+        remove_member_self_lockout: "Removing yourself from this group will revoke your access to manage it. Are you sure you want to proceed?"
+        remove_owner_self_lockout: "Removing yourself as owner will revoke your access to manage this group. Are you sure you want to proceed?"
         make_primary: "Make Primary"
         make_primary_description: "Make this the primary group for <b>%{username}</b>"
         remove_primary: "Remove as Primary"
@@ -4942,6 +4945,7 @@ en:
         this_month: "Month"
         this_week: "Week"
         today: "Today"
+        custom: "Custom"
 
     custom_homepage:
       admin_message: 'One of your themes has enabled the "custom_homepage" modifier but it does not output anything in the [custom-homepage] connector. (This message is only shown to site administrators.)'

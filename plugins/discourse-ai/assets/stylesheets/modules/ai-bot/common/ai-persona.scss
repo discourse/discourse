@@ -215,6 +215,26 @@
 .ai-persona-editor {
   padding-left: 0.5em;
 
+  .select-kit.multi-select.is-disabled {
+    height: auto;
+
+    .multi-select-header {
+      height: auto;
+      min-height: var(--d-input-height);
+      overflow: visible;
+
+      .formatted-selection {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: unset;
+      }
+
+      .select-kit-header--filter {
+        height: auto;
+      }
+    }
+  }
+
   &__tool-options {
     padding: 1em;
     border: 1px solid var(--primary-low-mid);

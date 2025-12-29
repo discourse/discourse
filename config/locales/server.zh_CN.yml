@@ -746,6 +746,8 @@ zh_CN:
       email_already_used_in_group: "'%{email}' 已被群组 '%{group_name}' 使用。"
       email_already_used_in_category: "'%{email}' 已被类别 '%{category_name}' 使用。"
       description_incomplete: "类别描述帖子至少要有一段。"
+      description_too_long:
+        other: "描述太长（最多 %{count} 个字符）。"
       permission_conflict: "任何被允许访问子类别的组也必须被允许访问父类别。以下群组可以访问子类别之一，但无法访问父类别：%{group_names}。"
       disallowed_topic_tags: "此话题包含此类别不允许的标签：%{tags}"
       disallowed_tags_generic: "此话题包含禁止的标签。"
