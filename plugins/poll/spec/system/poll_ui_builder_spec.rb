@@ -6,6 +6,12 @@ describe "Poll UI Builder" do
 
     visit "/"
 
-    expect(page).to have_css("#site-logo")
+    errors =
+      $playwright_logger.logs.select do |log|
+        log[:level] == "error" &&
+          log[:message].include?("/discourse-local-dates/lib/generate-current-date-markup")
+      end
+
+    expect(errors).to be_empty
   end
 end
