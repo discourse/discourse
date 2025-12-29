@@ -15,9 +15,26 @@ export default class SchemaSettingTypeDate extends Component {
   @action
   onInput(event) {
     this.touched = true;
-    const newValue = event.currentTarget.value;
-    this.args.onChange(newValue);
-    this.value = newValue;
+    const datetime = event.currentTarget.value;
+
+    if (!datetime) {
+      this.args.onChange("");
+      this.value = "";
+      return;
+    }
+
+    // Convert to UTC ISO string for storage
+    const utcValue = moment(datetime).utc().format();
+    this.args.onChange(utcValue);
+    this.value = utcValue;
+  }
+
+  get localTime() {
+    if (!this.value) {
+      return "";
+    }
+
+    return moment(this.value).local().format(moment.HTML5_FMT.DATETIME_LOCAL);
   }
 
   get validationErrorMessage() {
@@ -32,9 +49,9 @@ export default class SchemaSettingTypeDate extends Component {
 
   <template>
     <Input
-      @type="date"
-      class="--date"
-      @value={{this.value}}
+      @type="datetime-local"
+      class="--datetime"
+      @value={{this.localTime}}
       {{on "input" this.onInput}}
       required={{this.required}}
     />

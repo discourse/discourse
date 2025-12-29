@@ -27,7 +27,7 @@ import { i18n } from "discourse-i18n";
 
 const CUSTOM_TYPES = [
   "bool",
-  "date",
+  "datetime",
   "integer",
   "enum",
   "list",

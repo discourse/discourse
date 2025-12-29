@@ -132,7 +132,7 @@ class SchemaSettingsObjectValidator
 
     is_value_valid =
       case type
-      when "string", "date"
+      when "string", "datetime"
         value.is_a?(String)
       when "integer", "topic", "post"
         value.is_a?(Integer)
@@ -200,13 +200,19 @@ class SchemaSettingsObjectValidator
         add_error(property_name, :"#{type}_value_not_valid_max", count: max)
         return false
       end
-    when "date"
+    when "datetime"
       return true if value.blank?
 
+      # Must contain 'T' (date/time separator) and timezone indicator (Z or offset)
+      if !value.include?("T") || !(value.end_with?("Z") || value.match?(/[+-]\d{2}:\d{2}$/))
+        add_error(property_name, :not_valid_datetime_value)
+        return false
+      end
+
       begin
-        Date.parse(value)
+        DateTime.iso8601(value)
       rescue ArgumentError, TypeError
-        add_error(property_name, :not_valid_date_value)
+        add_error(property_name, :not_valid_datetime_value)
         return false
       end
     when "string"

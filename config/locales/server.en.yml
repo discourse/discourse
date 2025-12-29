@@ -156,8 +156,8 @@ en:
         humanize_not_valid_string_value: "The property at JSON Pointer '%{property_json_pointer}' must be a string."
         not_valid_string_value: "must be a string"
 
-        humanize_not_valid_date_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid date."
-        not_valid_date_value: "must be a valid date"
+        humanize_not_valid_datetime_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid datetime."
+        not_valid_datetime_value: "must be a valid datetime"
 
         humanize_not_valid_integer_value: "The property at JSON Pointer '%{property_json_pointer}' must be an integer."
         not_valid_integer_value: "must be an integer"
@@ -2755,6 +2755,7 @@ en:
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
       invalid_date: "Invalid date format."
+      invalid_datetime: "Invalid datetime format. Use ISO 8601 format (e.g., 2024-12-29T15:30:00Z)."
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
       valid_username: "There's a user with that username."

@@ -350,75 +350,6 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
-  describe "date setting" do
-    before do
-      settings.setting(:test_date, "2024-01-15", type: :date)
-      settings.refresh!
-    end
-
-    it "should have the correct default" do
-      expect(settings.test_date).to eq("2024-01-15")
-    end
-
-    it "should have a key in all_settings" do
-      expect(settings.all_settings.detect { |s| s[:setting] == :test_date }).to be_present
-    end
-
-    context "when overridden" do
-      after :each do
-        settings.remove_override!(:test_date)
-      end
-
-      it "should have the correct override" do
-        settings.test_date = "2025-12-31"
-        expect(settings.test_date).to eq("2025-12-31")
-      end
-
-      it "should coerce date string correctly" do
-        settings.test_date = "2023-06-15"
-        expect(settings.test_date).to eq("2023-06-15")
-      end
-
-      it "should reject invalid date strings" do
-        expect { settings.test_date = "not a date" }.to raise_error(Discourse::InvalidParameters)
-      end
-
-      it "should reject invalid month" do
-        expect { settings.test_date = "2024-13-01" }.to raise_error(Discourse::InvalidParameters)
-      end
-
-      it "should reject invalid day" do
-        expect { settings.test_date = "2024-01-32" }.to raise_error(Discourse::InvalidParameters)
-      end
-
-      it "should allow blank values" do
-        settings.test_date = ""
-        expect(settings.test_date).to eq("")
-      end
-
-      it "can be overridden with set" do
-        settings.set("test_date", "2026-03-20")
-        expect(settings.test_date).to eq("2026-03-20")
-      end
-
-      it "should not set default when reset" do
-        settings.test_date = "2025-01-01"
-        settings.setting(:test_date, "2024-01-15", type: :date)
-        settings.refresh!
-        expect(settings.test_date).not_to eq("2024-01-15")
-      end
-
-      it "should publish changes to clients" do
-        settings.setting(:test_date, "2024-01-15", type: :date)
-        settings.setting(:test_date, nil, client: true)
-
-        message =
-          MessageBus.track_publish("/client_settings") { settings.test_date = "2025-06-15" }.first
-        expect(message).to be_present
-      end
-    end
-  end
-
   describe "bool setting" do
     before do
       settings.setting(:test_hello?, false)
@@ -624,6 +555,58 @@ RSpec.describe SiteSettingExtension do
     it "allows blank values" do
       settings.validated_setting = ""
       expect(settings.validated_setting).to eq("")
+    end
+  end
+
+  describe "datetime setting" do
+    before do
+      settings.setting(:datetime_setting, "2024-01-01T00:00:00Z", type: "datetime")
+      settings.refresh!
+    end
+
+    after :each do
+      settings.remove_override!(:datetime_setting)
+    end
+
+    it "stores valid datetime values" do
+      settings.datetime_setting = "2024-12-29T15:30:00Z"
+      expect(settings.datetime_setting).to eq("2024-12-29T15:30:00Z")
+    end
+
+    it "stores valid datetime values with timezone offset" do
+      settings.datetime_setting = "2024-12-29T15:30:00+05:30"
+      expect(settings.datetime_setting).to eq("2024-12-29T15:30:00+05:30")
+    end
+
+    it "stores valid datetime values with milliseconds" do
+      settings.datetime_setting = "2024-12-29T15:30:00.123Z"
+      expect(settings.datetime_setting).to eq("2024-12-29T15:30:00.123Z")
+    end
+
+    it "rejects date-only strings" do
+      expect { settings.datetime_setting = "2024-12-29" }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+    end
+
+    it "rejects datetime without timezone" do
+      expect { settings.datetime_setting = "2024-12-29T15:30:00" }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+    end
+
+    it "rejects invalid datetime strings" do
+      expect { settings.datetime_setting = "not a datetime" }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+      expect { settings.datetime_setting = "2024-13-01T15:30:00Z" }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+    end
+
+    it "allows blank values" do
+      settings.datetime_setting = ""
+      expect(settings.datetime_setting).to eq("")
     end
   end
 
