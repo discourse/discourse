@@ -43,7 +43,7 @@ export default class SectionLink extends Component {
   @service currentUser;
 
   @tracked hovering = false;
-  @tracked hoveringFrozen = false;
+  @tracked hoverActionActive = false;
 
   constructor() {
     super(...arguments);
@@ -61,6 +61,16 @@ export default class SectionLink extends Component {
     }
 
     return this.args.shouldDisplay;
+  }
+
+  get wrapperClass() {
+    let classNames = ["sidebar-section-link-wrapper"];
+
+    if (this.hovering || this.hoverActionActive) {
+      classNames.push("--hovering");
+    }
+
+    return classNames.join(" ");
   }
 
   get linkClass() {
@@ -89,10 +99,6 @@ export default class SectionLink extends Component {
       this.args.currentWhen
     ) {
       classNames.push("active");
-    }
-
-    if (this.hovering || this.hoveringFrozen) {
-      classNames.push("--hovering");
     }
 
     return classNames.join(" ");
@@ -137,28 +143,27 @@ export default class SectionLink extends Component {
 
   @action
   hoveringSectionLink() {
-    this.hoveringFrozen = false;
+    if (this.hoverActionActive) {
+      return;
+    }
     this.hovering = true;
   }
 
   @action
   stopHoveringSectionLink() {
+    if (this.hoverActionActive) {
+      return;
+    }
     this.hovering = false;
   }
 
   @action
   runHoverAction(event) {
-    const result = this.args.hoverAction(event, (callbackResult) => {
-      if (callbackResult === "unfreezeHover") {
-        this.hoveringFrozen = false;
-      }
+    this.hoverActionActive = true;
+    this.args.hoverAction(event, () => {
+      this.hoverActionActive = false;
+      this.hovering = false;
     });
-
-    if (result === "freezeHover") {
-      this.hoveringFrozen = true;
-    } else {
-      this.hoveringFrozen = false;
-    }
   }
 
   @bind
@@ -188,7 +193,7 @@ export default class SectionLink extends Component {
         {{on "mouseenter" this.hoveringSectionLink}}
         {{on "mouseleave" this.stopHoveringSectionLink}}
         data-list-item-name={{@linkName}}
-        class="sidebar-section-link-wrapper"
+        class={{this.wrapperClass}}
         ...attributes
       >
         {{#if @href}}
@@ -270,10 +275,7 @@ export default class SectionLink extends Component {
                   {{on "click" this.runHoverAction}}
                   type="button"
                   title={{@hoverTitle}}
-                  class={{concatClass
-                    "sidebar-section-hover-button"
-                    (if (or this.hoveringFrozen this.hovering) "--hovering" "")
-                  }}
+                  class="sidebar-section-hover-button"
                 >
                   {{#if (eq @hoverType "icon")}}
                     {{icon @hoverValue class="hover-icon"}}

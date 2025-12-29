@@ -18,6 +18,19 @@
     font-size: var(--font-down-1-rem);
   }
 
+  &.--hovering .sidebar-section-link {
+    background: var(--d-sidebar-highlight-background);
+    color: var(--d-sidebar-highlight-color);
+
+    .prefix-text {
+      background: var(--d-sidebar-highlight-prefix-background);
+    }
+
+    .sidebar-section-link-suffix.icon.unread svg {
+      color: var(--d-sidebar-highlight-suffix-color);
+    }
+  }
+
   .sidebar-section-link {
     display: inline-flex;
     width: 100%;
@@ -26,8 +39,7 @@
     border-radius: var(--d-border-radius);
 
     &:focus-visible,
-    &:hover,
-    &.--hovering {
+    &:hover {
       background: var(--d-sidebar-highlight-background);
       color: var(--d-sidebar-highlight-color);
       outline: none;
@@ -280,11 +292,11 @@
       svg {
         font-size: var(--font-down-1);
       }
-
-      &.--hovering {
-        display: block;
-        background: var(--d-sidebar-highlight-background);
-      }
     }
+  }
+
+  &.--hovering .sidebar-section-hover-button {
+    display: block;
+    background: var(--d-sidebar-highlight-background);
   }
 }

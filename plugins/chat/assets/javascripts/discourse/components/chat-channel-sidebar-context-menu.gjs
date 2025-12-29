@@ -1,12 +1,10 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseLater from "discourse/lib/later";
 import ChatChannelSidebarContextNotificationSubmenu from "./chat-channel-sidebar-context-notification-submenu";
 
 export default class ChatChannelSidebarContextMenu extends Component {
@@ -27,24 +25,40 @@ export default class ChatChannelSidebarContextMenu extends Component {
     return this.channel?.currentUserMembership;
   }
 
+  get starIcon() {
+    return this.currentUserMembership?.starred ? "star" : "far-star";
+  }
+
+  get starLabel() {
+    return this.currentUserMembership?.starred
+      ? "chat.channel_settings.unstar_channel"
+      : "chat.channel_settings.star_channel";
+  }
+
+  get isGroupChannel() {
+    return !!this.channel?.chatable?.group;
+  }
+
   @action
   async toggleStarred() {
-    if (!this.channel?.currentUserMembership || this.isTogglingStarred) {
+    if (!this.currentUserMembership || this.isTogglingStarred) {
       return;
     }
 
     this.isTogglingStarred = true;
-    const newValue = !this.channel.currentUserMembership.starred;
-    const previousValue = this.channel.currentUserMembership.starred;
+    const previousValue = this.currentUserMembership.starred;
+    const newValue = !previousValue;
+
+    this.currentUserMembership.starred = newValue;
 
     try {
       await this.chatApi.updateCurrentUserChannelMembership(this.channel.id, {
         starred: newValue,
       });
       this.args.close();
-      this.channel.currentUserMembership.starred = newValue;
-    } catch {
-      this.channel.currentUserMembership.starred = previousValue;
+    } catch (err) {
+      this.currentUserMembership.starred = previousValue;
+      popupAjaxError(err);
     } finally {
       this.isTogglingStarred = false;
     }
@@ -53,47 +67,49 @@ export default class ChatChannelSidebarContextMenu extends Component {
   @action
   async leaveChannel() {
     try {
-      if (this.args.data.channel.chatable.group) {
-        await this.chatApi.leaveChannel(this.args.data.channel.id);
+      if (this.isGroupChannel) {
+        await this.chatApi.leaveChannel(this.channel.id);
       } else {
-        await this.chat.unfollowChannel(this.args.data.channel);
+        await this.chat.unfollowChannel(this.channel);
       }
       this.currentUser.custom_fields.last_chat_channel_id = null;
+
+      this.args.close();
+      this.chatChannelsManager.remove(this.channel);
+
+      if (this.chatChannelsManager.publicMessageChannels.length) {
+        return this.router.transitionTo(
+          "chat.channel",
+          ...this.chatChannelsManager.publicMessageChannels[0].routeModels
+        );
+      } else if (this.chatChannelsManager.directMessageChannels.length) {
+        return this.router.transitionTo(
+          "chat.channel",
+          ...this.chatChannelsManager.directMessageChannels[0].routeModels
+        );
+      } else {
+        return this.router.transitionTo("chat.browse");
+      }
     } catch (err) {
       popupAjaxError(err);
     }
-    this.args.close();
+  }
 
-    this.chatChannelsManager.remove(this.args.data.channel);
-
-    if (this.chatChannelsManager.publicMessageChannels.length) {
-      return this.router.transitionTo(
-        "chat.channel",
-        ...this.chatChannelsManager.publicMessageChannels[0].routeModels
+  @action
+  async navigateToSettings() {
+    try {
+      await this.router.transitionTo(
+        "chat.channel.info.settings",
+        ...this.channel.routeModels
       );
-    } else if (this.chatChannelsManager.directMessageChannels.length) {
-      return this.router.transitionTo(
-        "chat.channel",
-        ...this.chatChannelsManager.directMessageChannels[0].routeModels
-      );
-    } else {
-      return this.router.transitionTo("chat.browse");
+    } finally {
+      this.args.close();
     }
   }
 
   @action
-  closeAfterNav() {
-    discourseLater(() => {
-      this.args.close();
-    }, 100);
-  }
-
-  @action
-  openNotificationSettings(_, event) {
-    const menuTarget = event.target.closest(
-      ".chat-channel-sidebar-link-menu__open-notification-settings"
-    );
-    this.menu.show(menuTarget, {
+  openNotificationSettings(_actionParam, event) {
+    this.menu.show(event.target, {
       identifier: "chat-channel-menu-notification-submenu",
       component: ChatChannelSidebarContextNotificationSubmenu,
       modalForMobile: true,
@@ -118,9 +134,7 @@ export default class ChatChannelSidebarContextMenu extends Component {
       </dropdown.item>
       <dropdown.item>
         <DButton
-          {{on "click" this.closeAfterNav}}
-          @route="chat.channel.info.settings"
-          @routeModels={{this.channel.routeModels}}
+          @action={{this.navigateToSettings}}
           @icon="gear"
           @label="chat.channel_settings.title"
           @title="chat.channel_settings.title"
@@ -130,21 +144,10 @@ export default class ChatChannelSidebarContextMenu extends Component {
       <dropdown.item>
         <DButton
           @action={{this.toggleStarred}}
-          @icon={{if
-            this.channel.currentUserMembership.starred
-            "star"
-            "far-star"
-          }}
-          @label={{if
-            this.channel.currentUserMembership.starred
-            "chat.channel_settings.unstar_channel"
-            "chat.channel_settings.star_channel"
-          }}
-          @title={{if
-            this.channel.currentUserMembership.starred
-            "chat.channel_settings.unstar_channel"
-            "chat.channel_settings.star_channel"
-          }}
+          @disabled={{this.isTogglingStarred}}
+          @icon={{this.starIcon}}
+          @label={{this.starLabel}}
+          @title={{this.starLabel}}
           class="chat-channel-sidebar-link-menu__star-channel"
         />
       </dropdown.item>

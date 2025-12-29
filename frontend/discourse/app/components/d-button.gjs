@@ -216,7 +216,9 @@ export default class DButton extends Component {
       {{yield}}
 
       {{#if @suffixIcon}}
-        {{~icon @suffixIcon}}
+        <span class="d-button__suffix-icon">
+          {{~icon @suffixIcon~}}
+        </span>
       {{/if}}
     </this.wrapperElement>
   </template>

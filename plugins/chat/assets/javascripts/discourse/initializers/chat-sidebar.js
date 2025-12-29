@@ -410,25 +410,20 @@ export default {
             }
 
             get hoverAction() {
-              return (event, hoverCallbackFn) => {
+              return (event, onMenuClose) => {
                 event.stopPropagation();
                 event.preventDefault();
 
-                this.menuService.show(
-                  event.target.closest(".sidebar-section-link"),
-                  {
-                    identifier: this.isDM
-                      ? "chat-direct-message-channel-menu"
-                      : "chat-channel-menu",
-                    component: ChatChannelSidebarContextMenu,
-                    modalForMobile: true,
-                    placement: "right",
-                    data: { channel: this.channel },
-                    onClose: () => hoverCallbackFn("unfreezeHover"),
-                  }
-                );
-
-                return "freezeHover";
+                this.menuService.show(event.target, {
+                  identifier: this.isDM
+                    ? "chat-direct-message-channel-menu"
+                    : "chat-channel-menu",
+                  component: ChatChannelSidebarContextMenu,
+                  modalForMobile: true,
+                  placement: "right",
+                  data: { channel: this.channel },
+                  onClose: onMenuClose,
+                });
               };
             }
           };
@@ -590,23 +585,18 @@ export default {
               }
 
               get hoverAction() {
-                return (event, hoverCallbackFn) => {
+                return (event, onMenuClose) => {
                   event.stopPropagation();
                   event.preventDefault();
 
-                  this.menuService.show(
-                    event.target.closest(".sidebar-section-link"),
-                    {
-                      identifier: "chat-channel-menu",
-                      component: ChatChannelSidebarContextMenu,
-                      modalForMobile: true,
-                      placement: "right",
-                      data: { channel: this.channel },
-                      onClose: () => hoverCallbackFn("unfreezeHover"),
-                    }
-                  );
-
-                  return "freezeHover";
+                  this.menuService.show(event.target, {
+                    identifier: "chat-channel-menu",
+                    component: ChatChannelSidebarContextMenu,
+                    modalForMobile: true,
+                    placement: "right",
+                    data: { channel: this.channel },
+                    onClose: onMenuClose,
+                  });
                 };
               }
             };
@@ -860,23 +850,18 @@ export default {
               }
 
               get hoverAction() {
-                return (event, hoverCallbackFn) => {
+                return (event, onMenuClose) => {
                   event.stopPropagation();
                   event.preventDefault();
 
-                  this.menuService.show(
-                    event.target.closest(".sidebar-section-link"),
-                    {
-                      identifier: "chat-direct-message-channel-menu",
-                      component: ChatChannelSidebarContextMenu,
-                      modalForMobile: true,
-                      placement: "right",
-                      data: { channel: this.channel },
-                      onClose: () => hoverCallbackFn("unfreezeHover"),
-                    }
-                  );
-
-                  return "freezeHover";
+                  this.menuService.show(event.target, {
+                    identifier: "chat-direct-message-channel-menu",
+                    component: ChatChannelSidebarContextMenu,
+                    modalForMobile: true,
+                    placement: "right",
+                    data: { channel: this.channel },
+                    onClose: onMenuClose,
+                  });
                 };
               }
             };

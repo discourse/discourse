@@ -83,6 +83,10 @@
   transition: var(--d-button-transition);
   border: $border;
 
+  > * {
+    pointer-events: none;
+  }
+
   &:visited {
     /* covers cases where we add button classes to links */
     color: $text-color;
@@ -196,6 +200,14 @@
   padding: $vpad $hpad;
   cursor: pointer;
   line-height: normal;
+
+  .d-button__suffix-icon {
+    margin-left: auto;
+
+    .d-icon {
+      margin-right: 0;
+    }
+  }
 }
 
 /* link button */
