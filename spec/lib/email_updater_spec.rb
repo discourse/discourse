@@ -413,6 +413,16 @@ RSpec.describe EmailUpdater do
     end
   end
 
+  context "when a moderator tries to change another user's email" do
+    let(:moderator) { Fabricate(:moderator) }
+    let(:user) { Fabricate(:user, email: old_email) }
+    let(:updater) { EmailUpdater.new(guardian: moderator.guardian, user: user) }
+
+    it "raises an invalid access error" do
+      expect { updater.change_to(new_email) }.to raise_error(Discourse::InvalidAccess)
+    end
+  end
+
   context "when hide_email_address_taken is enabled" do
     before { SiteSetting.hide_email_address_taken = true }
 
