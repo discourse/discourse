@@ -3,6 +3,7 @@
 module ReleaseUtils
   PRIMARY_RELEASE_TAG = "release"
   RELEASE_TAGS = [PRIMARY_RELEASE_TAG, "beta", "latest-release"].freeze
+  PR_LABEL = "release"
 
   def self.dry_run?
     !!ENV["DRY_RUN"]
@@ -36,6 +37,12 @@ module ReleaseUtils
     stdout
   end
 
+  def self.gh(*args)
+    puts "> gh #{args.inspect}"
+    return true if test_mode?
+    system "gh", *args
+  end
+
   def self.ref_exists?(ref)
     git "rev-parse", "--verify", ref
     true
@@ -44,9 +51,7 @@ module ReleaseUtils
   end
 
   def self.make_pr(base:, branch:)
-    return if test_mode?
-
-    args = [
+    title_and_body = [
       "--title",
       git("log", "-1", branch, "--pretty=%s").strip,
       "--body",
@@ -54,8 +59,8 @@ module ReleaseUtils
     ]
 
     success =
-      system("gh", "pr", "create", "--base", base, "--head", branch, *args) ||
-        system("gh", "pr", "edit", branch, *args)
+      gh("pr", "create", "--base", base, "--head", branch, *title_and_body, "--label", PR_LABEL) ||
+        gh("pr", "edit", branch, *title_and_body, "--add-label", PR_LABEL)
 
     raise "Failed to create or update PR" unless success
   end
