@@ -124,3 +124,15 @@
     }
   }
 }
+
+.math-insert-modal,
+.math-edit-modal {
+  &__toggle {
+    margin-bottom: var(--space-3);
+  }
+
+  &__textarea {
+    min-height: 100px;
+    font-family: var(--d-font-family--monospace);
+  }
+}
