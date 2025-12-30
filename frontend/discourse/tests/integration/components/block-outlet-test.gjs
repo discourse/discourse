@@ -93,6 +93,93 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       assert.dom(".args-test .title").hasText("Hello");
       assert.dom(".args-test .count").hasText("42");
     });
+
+    test("applies default values from metadata when args not provided", async function (assert) {
+      @block("defaults-test-block", {
+        args: {
+          title: { type: "string", default: "Default Title" },
+          count: { type: "number", default: 10 },
+          enabled: { type: "boolean", default: true },
+        },
+      })
+      class DefaultsTestBlock extends Component {
+        <template>
+          <div class="defaults-test">
+            <span class="title">{{@title}}</span>
+            <span class="count">{{@count}}</span>
+            <span class="enabled">{{if @enabled "yes" "no"}}</span>
+          </div>
+        </template>
+      }
+
+      renderBlocks("main-outlet-blocks", [{ block: DefaultsTestBlock }]);
+
+      await render(
+        <template><BlockOutlet @name="main-outlet-blocks" /></template>
+      );
+
+      assert.dom(".defaults-test .title").hasText("Default Title");
+      assert.dom(".defaults-test .count").hasText("10");
+      assert.dom(".defaults-test .enabled").hasText("yes");
+    });
+
+    test("provided args override default values", async function (assert) {
+      @block("override-defaults-block", {
+        args: {
+          title: { type: "string", default: "Default Title" },
+          count: { type: "number", default: 10 },
+        },
+      })
+      class OverrideDefaultsBlock extends Component {
+        <template>
+          <div class="override-test">
+            <span class="title">{{@title}}</span>
+            <span class="count">{{@count}}</span>
+          </div>
+        </template>
+      }
+
+      renderBlocks("hero-blocks", [
+        {
+          block: OverrideDefaultsBlock,
+          args: { title: "Custom Title", count: 99 },
+        },
+      ]);
+
+      await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+
+      assert.dom(".override-test .title").hasText("Custom Title");
+      assert.dom(".override-test .count").hasText("99");
+    });
+
+    test("partial args use defaults for missing values", async function (assert) {
+      @block("partial-defaults-block", {
+        args: {
+          title: { type: "string", default: "Default Title" },
+          subtitle: { type: "string", default: "Default Subtitle" },
+        },
+      })
+      class PartialDefaultsBlock extends Component {
+        <template>
+          <div class="partial-test">
+            <span class="title">{{@title}}</span>
+            <span class="subtitle">{{@subtitle}}</span>
+          </div>
+        </template>
+      }
+
+      renderBlocks("sidebar-blocks", [
+        {
+          block: PartialDefaultsBlock,
+          args: { title: "Custom Title" },
+        },
+      ]);
+
+      await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
+
+      assert.dom(".partial-test .title").hasText("Custom Title");
+      assert.dom(".partial-test .subtitle").hasText("Default Subtitle");
+    });
   });
 
   module("named blocks", function () {

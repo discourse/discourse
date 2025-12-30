@@ -55,6 +55,7 @@ import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/a
 import { registerAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { registerPluginHeaderActionComponent } from "discourse/lib/admin-plugin-header-actions";
 import { registerReportModeComponent } from "discourse/lib/admin-report-additional-modes";
+import { _registerBlock } from "discourse/lib/blocks/registration";
 import classPrepend, {
   withPrependsRolledBack,
 } from "discourse/lib/class-prepend";
@@ -3378,6 +3379,59 @@ class _PluginApi {
   }
 
   /**
+   * Registers a block component for use with `renderBlocks()`.
+   *
+   * **IMPORTANT:** Must be called in a pre-initializer that runs before
+   * `freeze-valid-blocks`. After the registry is frozen, calls will throw an error.
+   *
+   * The block component must be decorated with `@block` decorator.
+   *
+   * @param {typeof import("@glimmer/component").default} BlockClass - The block component class
+   *
+   * @example
+   * ```javascript
+   * // themes/my-theme/javascripts/discourse/pre-initializers/register-blocks.js
+   * import { withPluginApi } from "discourse/lib/plugin-api";
+   * import HeroBanner from "../blocks/hero-banner";
+   * import FeaturedTopics from "../blocks/featured-topics";
+   *
+   * export default {
+   *   before: "freeze-valid-blocks",
+   *   initialize() {
+   *     withPluginApi((api) => {
+   *       api.registerBlock(HeroBanner);
+   *       api.registerBlock(FeaturedTopics);
+   *     });
+   *   },
+   * };
+   * ```
+   *
+   * @example
+   * ```javascript
+   * // Block component with metadata
+   * import Component from "@glimmer/component";
+   * import { block } from "discourse/blocks";
+   *
+   * @block("hero-banner", {
+   *   description: "A hero banner with customizable title and call-to-action",
+   *   args: {
+   *     title: { type: "string", required: true },
+   *     ctaText: { type: "string", default: "Learn More" },
+   *     count: { type: "number" },
+   *     showImage: { type: "boolean" },
+   *     tags: { type: "array", itemType: "string" },
+   *   }
+   * })
+   * export default class HeroBanner extends Component {
+   *   // ...
+   * }
+   * ```
+   */
+  registerBlock(BlockClass) {
+    _registerBlock(BlockClass);
+  }
+
+  /**
    * Registers a custom block condition type.
    *
    * Custom conditions must extend `BlockCondition` from "discourse/blocks/conditions"
@@ -3418,8 +3472,8 @@ class _PluginApi {
    */
   registerBlockConditionType(ConditionClass) {
     this.container
-      .lookup("service:block-condition-evaluator")
-      .registerType(ConditionClass);
+      .lookup("service:blocks")
+      .registerConditionType(ConditionClass);
   }
 
   // eslint-disable-next-line no-unused-vars

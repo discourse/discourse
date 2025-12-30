@@ -2,12 +2,12 @@ import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import BlockGroup from "discourse/blocks/block-group";
 import {
   block,
   isBlock,
   renderBlocks,
 } from "discourse/components/block-outlet";
-import BlockGroup from "discourse/components/blocks/block-group";
 
 module("Unit | Lib | block-outlet", function (hooks) {
   setupTest(hooks);
@@ -61,6 +61,95 @@ module("Unit | Lib | block-outlet", function (hooks) {
       class CheckBlock extends Component {}
 
       assert.true(isBlock(CheckBlock));
+    });
+
+    test("sets blockMetadata with default values", function (assert) {
+      @block("metadata-default")
+      class MetadataDefaultBlock extends Component {}
+
+      assert.deepEqual(MetadataDefaultBlock.blockMetadata, {
+        description: "",
+        container: false,
+        args: null,
+      });
+    });
+
+    test("sets blockMetadata with description", function (assert) {
+      @block("metadata-description", {
+        description: "A test block for metadata",
+      })
+      class MetadataDescriptionBlock extends Component {}
+
+      assert.strictEqual(
+        MetadataDescriptionBlock.blockMetadata.description,
+        "A test block for metadata"
+      );
+    });
+
+    test("sets blockMetadata with container flag", function (assert) {
+      @block("metadata-container", { container: true })
+      class MetadataContainerBlock extends Component {}
+
+      assert.true(MetadataContainerBlock.blockMetadata.container);
+    });
+
+    test("sets blockMetadata with args schema", function (assert) {
+      @block("metadata-args", {
+        args: {
+          title: { type: "string", required: true },
+          count: { type: "number", default: 5 },
+        },
+      })
+      class MetadataArgsBlock extends Component {}
+
+      assert.deepEqual(MetadataArgsBlock.blockMetadata.args, {
+        title: { type: "string", required: true },
+        count: { type: "number", default: 5 },
+      });
+    });
+
+    test("freezes blockMetadata object", function (assert) {
+      @block("metadata-frozen", {
+        description: "Frozen block",
+        args: { title: { type: "string" } },
+      })
+      class MetadataFrozenBlock extends Component {}
+
+      assert.true(Object.isFrozen(MetadataFrozenBlock.blockMetadata));
+      assert.true(Object.isFrozen(MetadataFrozenBlock.blockMetadata.args));
+    });
+
+    test("throws for invalid arg schema - missing type", function (assert) {
+      assert.throws(() => {
+        @block("invalid-schema-no-type", {
+          args: { title: { required: true } },
+        })
+        class InvalidSchemaBlock extends Component {}
+
+        return InvalidSchemaBlock;
+      }, /missing required "type" property/);
+    });
+
+    test("throws for invalid arg schema - invalid type", function (assert) {
+      assert.throws(() => {
+        @block("invalid-schema-bad-type", {
+          args: { title: { type: "invalid" } },
+        })
+        class InvalidTypeBlock extends Component {}
+
+        return InvalidTypeBlock;
+      }, /invalid type "invalid"/);
+    });
+
+    test("throws for invalid arg schema - unknown properties", function (assert) {
+      assert.throws(() => {
+        @block("invalid-schema-unknown-prop", {
+          args: { title: { type: "string", unknownProp: true } },
+        })
+        class UnknownPropBlock extends Component {}
+
+        return UnknownPropBlock;
+      }, /unknown properties/);
     });
   });
 
@@ -298,6 +387,154 @@ module("Unit | Lib | block-outlet", function (hooks) {
       );
 
       assert.true(true, "no error thrown for valid conditions");
+    });
+
+    test("throws for missing required arg", function (assert) {
+      @block("required-arg-block", {
+        args: {
+          title: { type: "string", required: true },
+        },
+      })
+      class RequiredArgBlock extends Component {}
+
+      assert.throws(
+        () =>
+          renderBlocks("hero-blocks", [{ block: RequiredArgBlock, args: {} }]),
+        /missing required arg "title"/
+      );
+    });
+
+    test("throws for invalid arg type - string expected", function (assert) {
+      @block("string-arg-block", {
+        args: {
+          title: { type: "string" },
+        },
+      })
+      class StringArgBlock extends Component {}
+
+      assert.throws(
+        () =>
+          renderBlocks("hero-blocks", [
+            { block: StringArgBlock, args: { title: 123 } },
+          ]),
+        /must be a string/
+      );
+    });
+
+    test("throws for invalid arg type - number expected", function (assert) {
+      @block("number-arg-block", {
+        args: {
+          count: { type: "number" },
+        },
+      })
+      class NumberArgBlock extends Component {}
+
+      assert.throws(
+        () =>
+          renderBlocks("hero-blocks", [
+            { block: NumberArgBlock, args: { count: "five" } },
+          ]),
+        /must be a number/
+      );
+    });
+
+    test("throws for invalid arg type - boolean expected", function (assert) {
+      @block("boolean-arg-block", {
+        args: {
+          enabled: { type: "boolean" },
+        },
+      })
+      class BooleanArgBlock extends Component {}
+
+      assert.throws(
+        () =>
+          renderBlocks("hero-blocks", [
+            { block: BooleanArgBlock, args: { enabled: "yes" } },
+          ]),
+        /must be a boolean/
+      );
+    });
+
+    test("throws for invalid arg type - array expected", function (assert) {
+      @block("array-arg-block", {
+        args: {
+          tags: { type: "array" },
+        },
+      })
+      class ArrayArgBlock extends Component {}
+
+      assert.throws(
+        () =>
+          renderBlocks("hero-blocks", [
+            { block: ArrayArgBlock, args: { tags: "tag1,tag2" } },
+          ]),
+        /must be an array/
+      );
+    });
+
+    test("throws for invalid array item type", function (assert) {
+      @block("array-item-type-block", {
+        args: {
+          tags: { type: "array", itemType: "string" },
+        },
+      })
+      class ArrayItemTypeBlock extends Component {}
+
+      assert.throws(
+        () =>
+          renderBlocks("hero-blocks", [
+            {
+              block: ArrayItemTypeBlock,
+              args: { tags: ["valid", 123, "also-valid"] },
+            },
+          ]),
+        /must be a string/
+      );
+    });
+
+    test("accepts valid args matching schema", function (assert) {
+      @block("valid-schema-args", {
+        args: {
+          title: { type: "string", required: true },
+          count: { type: "number" },
+          enabled: { type: "boolean" },
+          tags: { type: "array", itemType: "string" },
+        },
+      })
+      class ValidSchemaArgsBlock extends Component {}
+
+      renderBlocks("hero-blocks", [
+        {
+          block: ValidSchemaArgsBlock,
+          args: {
+            title: "Hello",
+            count: 5,
+            enabled: true,
+            tags: ["a", "b", "c"],
+          },
+        },
+      ]);
+
+      assert.true(true, "no error thrown for valid args");
+    });
+
+    test("accepts optional args as undefined", function (assert) {
+      @block("optional-args-block", {
+        args: {
+          title: { type: "string", required: true },
+          subtitle: { type: "string" },
+        },
+      })
+      class OptionalArgsBlock extends Component {}
+
+      renderBlocks("hero-blocks", [
+        {
+          block: OptionalArgsBlock,
+          args: { title: "Required Only" },
+        },
+      ]);
+
+      assert.true(true, "no error thrown when optional args missing");
     });
   });
 });

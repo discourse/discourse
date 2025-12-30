@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import BlockGroup from "discourse/blocks/block-group";
 import BlockOutlet, {
   block,
   renderBlocks,
 } from "discourse/components/block-outlet";
-import BlockGroup from "discourse/components/blocks/block-group";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Blocks | BlockGroup", function (hooks) {

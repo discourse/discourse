@@ -1,7 +1,13 @@
 import { DEBUG } from "@glimmer/env";
 import { getOwner, setOwner } from "@ember/owner";
 import Service from "@ember/service";
+import * as coreBlocks from "discourse/blocks";
 import * as conditions from "discourse/blocks/conditions";
+import { isBlock } from "discourse/components/block-outlet";
+import {
+  _registerBlock,
+  blockRegistry,
+} from "discourse/lib/blocks/registration";
 
 /**
  * Raises a validation error in dev/test, logs warning in production.
@@ -13,36 +19,143 @@ function raiseValidationError(message) {
     throw new Error(message);
   } else {
     // eslint-disable-next-line no-console
-    console.warn(`[Block validation] ${message}`);
+    console.warn(`[Blocks service] ${message}`);
   }
 }
 
 /**
- * Service that evaluates block conditions.
+ * Unified service for block registry and condition evaluation.
  *
- * Discovers and registers built-in condition classes automatically via `import *`.
- * Plugins can register custom condition types via `registerType()`.
+ * ## Block Registry
+ *
+ * Provides introspection for registered block components:
+ * - `getBlock(name)` - Get a block by name
+ * - `hasBlock(name)` - Check if a block is registered
+ * - `listBlocks()` - Get all registered blocks
+ * - `listBlocksWithMetadata()` - Get all blocks with their metadata
+ *
+ * Core blocks are auto-discovered from `discourse/blocks`.
+ * Theme/plugin blocks are registered via `api.registerBlock()` in pre-initializers.
+ *
+ * ## Condition Evaluation
+ *
+ * Evaluates block render conditions at runtime:
+ * - `evaluate(conditionSpec)` - Evaluate condition(s)
+ * - `validate(conditionSpec)` - Validate condition(s) at registration time
+ * - `registerConditionType(ConditionClass)` - Register custom condition types
+ *
+ * Built-in condition types are auto-discovered from `discourse/blocks/conditions`.
  *
  * Supports boolean combinators:
  * - Array of conditions: AND logic (all must pass)
  * - `{ any: [...] }`: OR logic (at least one must pass)
  * - `{ not: {...} }`: NOT logic (must fail)
  *
- * @class BlockConditionEvaluator
+ * @class Blocks
  * @extends Service
  */
-export default class BlockConditionEvaluator extends Service {
+export default class Blocks extends Service {
   /**
    * Map of condition type names to their instances.
    *
    * @type {Map<string, import("discourse/blocks/conditions").BlockCondition>}
    */
-  #types = new Map();
+  #conditionTypes = new Map();
 
   constructor() {
     super(...arguments);
+    this.#discoverBuiltInBlocks();
     this.#discoverBuiltInConditions();
   }
+
+  // ============================================================================
+  // Block Registry Methods
+  // ============================================================================
+
+  /**
+   * Auto-discover and register built-in block components.
+   * Iterates over exports from the blocks module and registers
+   * any class decorated with @block.
+   */
+  #discoverBuiltInBlocks() {
+    for (const exported of Object.values(coreBlocks)) {
+      if (typeof exported === "function" && isBlock(exported)) {
+        _registerBlock(exported);
+      }
+    }
+  }
+
+  /**
+   * Gets a registered block by name.
+   *
+   * @param {string} name - The block name (e.g., "hero-banner")
+   * @returns {typeof import("@glimmer/component").default|undefined} The block class, or undefined if not found
+   *
+   * @example
+   * ```javascript
+   * const HeroBanner = this.blocks.getBlock("hero-banner");
+   * ```
+   */
+  getBlock(name) {
+    return blockRegistry.get(name);
+  }
+
+  /**
+   * Checks if a block is registered.
+   *
+   * @param {string} name - The block name
+   * @returns {boolean}
+   *
+   * @example
+   * ```javascript
+   * if (this.blocks.hasBlock("hero-banner")) {
+   *   // Block is available
+   * }
+   * ```
+   */
+  hasBlock(name) {
+    return blockRegistry.has(name);
+  }
+
+  /**
+   * Returns all registered block classes.
+   *
+   * @returns {Array<typeof import("@glimmer/component").default>}
+   *
+   * @example
+   * ```javascript
+   * const allBlocks = this.blocks.listBlocks();
+   * ```
+   */
+  listBlocks() {
+    return Array.from(blockRegistry.values());
+  }
+
+  /**
+   * Returns all registered blocks with their metadata.
+   * Useful for admin UIs and documentation generation.
+   *
+   * @returns {Array<{name: string, component: typeof import("@glimmer/component").default, metadata: Object}>}
+   *
+   * @example
+   * ```javascript
+   * const blocksInfo = this.blocks.listBlocksWithMetadata();
+   * blocksInfo.forEach(({ name, metadata }) => {
+   *   console.log(name, metadata.description, metadata.args);
+   * });
+   * ```
+   */
+  listBlocksWithMetadata() {
+    return Array.from(blockRegistry.entries()).map(([name, component]) => ({
+      name,
+      component,
+      metadata: component.blockMetadata,
+    }));
+  }
+
+  // ============================================================================
+  // Condition Evaluation Methods (moved from BlockConditionEvaluator)
+  // ============================================================================
 
   /**
    * Auto-discover and register built-in condition classes.
@@ -56,18 +169,18 @@ export default class BlockConditionEvaluator extends Service {
         exported.prototype instanceof conditions.BlockCondition &&
         exported !== conditions.BlockCondition
       ) {
-        this.#registerType(exported);
+        this.#registerConditionType(exported);
       }
     }
   }
 
   /**
-   * Internal registration method.
+   * Internal registration method for condition types.
    * Validates the condition class and creates an instance with owner set.
    *
    * @param {typeof import("discourse/blocks/conditions").BlockCondition} ConditionClass
    */
-  #registerType(ConditionClass) {
+  #registerConditionType(ConditionClass) {
     if (!(ConditionClass.prototype instanceof conditions.BlockCondition)) {
       raiseValidationError(`${ConditionClass.name} must extend BlockCondition`);
       return;
@@ -80,7 +193,7 @@ export default class BlockConditionEvaluator extends Service {
       return;
     }
 
-    if (this.#types.has(ConditionClass.type)) {
+    if (this.#conditionTypes.has(ConditionClass.type)) {
       raiseValidationError(
         `Condition type "${ConditionClass.type}" is already registered`
       );
@@ -89,7 +202,7 @@ export default class BlockConditionEvaluator extends Service {
 
     const instance = new ConditionClass();
     setOwner(instance, getOwner(this));
-    this.#types.set(ConditionClass.type, instance);
+    this.#conditionTypes.set(ConditionClass.type, instance);
   }
 
   /**
@@ -107,8 +220,8 @@ export default class BlockConditionEvaluator extends Service {
    * api.registerBlockConditionType(BlockMyCondition);
    * ```
    */
-  registerType(ConditionClass) {
-    this.#registerType(ConditionClass);
+  registerConditionType(ConditionClass) {
+    this.#registerConditionType(ConditionClass);
   }
 
   /**
@@ -170,10 +283,10 @@ export default class BlockConditionEvaluator extends Service {
       return;
     }
 
-    const conditionInstance = this.#types.get(type);
+    const conditionInstance = this.#conditionTypes.get(type);
 
     if (!conditionInstance) {
-      const availableTypes = [...this.#types.keys()].join(", ");
+      const availableTypes = [...this.#conditionTypes.keys()].join(", ");
       raiseValidationError(
         `Unknown block condition type: "${type}". Available types: ${availableTypes}`
       );
@@ -213,7 +326,7 @@ export default class BlockConditionEvaluator extends Service {
 
     // Single condition with type
     const { type, ...args } = conditionSpec;
-    const conditionInstance = this.#types.get(type);
+    const conditionInstance = this.#conditionTypes.get(type);
 
     if (!conditionInstance) {
       // This shouldn't happen if validate() was called first
@@ -230,8 +343,8 @@ export default class BlockConditionEvaluator extends Service {
    * @param {string} type - The condition type name
    * @returns {boolean}
    */
-  hasType(type) {
-    return this.#types.has(type);
+  hasConditionType(type) {
+    return this.#conditionTypes.has(type);
   }
 
   /**
@@ -240,7 +353,7 @@ export default class BlockConditionEvaluator extends Service {
    *
    * @returns {string[]}
    */
-  getRegisteredTypes() {
-    return [...this.#types.keys()];
+  getRegisteredConditionTypes() {
+    return [...this.#conditionTypes.keys()];
   }
 }

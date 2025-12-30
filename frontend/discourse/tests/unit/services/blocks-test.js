@@ -1,3 +1,4 @@
+import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
@@ -5,24 +6,109 @@ import {
   BlockCondition,
   BlockConditionValidationError,
 } from "discourse/blocks/conditions";
+import { block } from "discourse/components/block-outlet";
+import {
+  _registerBlock,
+  withTestBlockRegistration,
+} from "discourse/lib/blocks/registration";
 
-module("Unit | Service | block-condition-evaluator", function (hooks) {
+module("Unit | Service | blocks", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
-    this.evaluator = getOwner(this).lookup("service:block-condition-evaluator");
+    this.blocks = getOwner(this).lookup("service:blocks");
+  });
+
+  module("block registry", function () {
+    test("hasBlock returns true for registered blocks", function (assert) {
+      @block("registry-test-block")
+      class RegistryTestBlock extends Component {}
+
+      withTestBlockRegistration(() => {
+        _registerBlock(RegistryTestBlock);
+      });
+
+      assert.true(this.blocks.hasBlock("registry-test-block"));
+    });
+
+    test("hasBlock returns false for unregistered blocks", function (assert) {
+      assert.false(this.blocks.hasBlock("nonexistent-block"));
+    });
+
+    test("getBlock returns registered block class", function (assert) {
+      @block("get-block-test")
+      class GetBlockTest extends Component {}
+
+      withTestBlockRegistration(() => {
+        _registerBlock(GetBlockTest);
+      });
+
+      const result = this.blocks.getBlock("get-block-test");
+      assert.strictEqual(result.blockName, "get-block-test");
+    });
+
+    test("getBlock returns undefined for unregistered blocks", function (assert) {
+      assert.strictEqual(this.blocks.getBlock("nonexistent"), undefined);
+    });
+
+    test("listBlocks returns all registered blocks", function (assert) {
+      @block("list-block-a")
+      class ListBlockA extends Component {}
+
+      @block("list-block-b")
+      class ListBlockB extends Component {}
+
+      withTestBlockRegistration(() => {
+        _registerBlock(ListBlockA);
+        _registerBlock(ListBlockB);
+      });
+
+      const blocks = this.blocks.listBlocks();
+      const names = blocks.map((b) => b.blockName);
+
+      assert.true(names.includes("list-block-a"));
+      assert.true(names.includes("list-block-b"));
+    });
+
+    test("listBlocksWithMetadata returns blocks with metadata", function (assert) {
+      @block("metadata-list-block", {
+        description: "A test block with metadata",
+        args: {
+          title: { type: "string", required: true },
+        },
+      })
+      class MetadataListBlock extends Component {}
+
+      withTestBlockRegistration(() => {
+        _registerBlock(MetadataListBlock);
+      });
+
+      const blocksWithMeta = this.blocks.listBlocksWithMetadata();
+      const found = blocksWithMeta.find(
+        (b) => b.name === "metadata-list-block"
+      );
+
+      assert.true(!!found, "block found in list");
+      assert.strictEqual(
+        found.metadata.description,
+        "A test block with metadata"
+      );
+      assert.deepEqual(found.metadata.args, {
+        title: { type: "string", required: true },
+      });
+    });
   });
 
   module("built-in conditions", function () {
     test("registers built-in condition types", function (assert) {
-      assert.true(this.evaluator.hasType("route"));
-      assert.true(this.evaluator.hasType("user"));
-      assert.true(this.evaluator.hasType("setting"));
-      assert.true(this.evaluator.hasType("viewport"));
+      assert.true(this.blocks.hasConditionType("route"));
+      assert.true(this.blocks.hasConditionType("user"));
+      assert.true(this.blocks.hasConditionType("setting"));
+      assert.true(this.blocks.hasConditionType("viewport"));
     });
 
-    test("getRegisteredTypes returns all built-in types", function (assert) {
-      const types = this.evaluator.getRegisteredTypes();
+    test("getRegisteredConditionTypes returns all built-in types", function (assert) {
+      const types = this.blocks.getRegisteredConditionTypes();
       assert.true(types.includes("route"));
       assert.true(types.includes("user"));
       assert.true(types.includes("setting"));
@@ -30,7 +116,7 @@ module("Unit | Service | block-condition-evaluator", function (hooks) {
     });
   });
 
-  module("registerType", function () {
+  module("registerConditionType", function () {
     test("registers a custom condition type", function (assert) {
       class BlockTestCondition extends BlockCondition {
         static type = "test-custom";
@@ -40,8 +126,8 @@ module("Unit | Service | block-condition-evaluator", function (hooks) {
         }
       }
 
-      this.evaluator.registerType(BlockTestCondition);
-      assert.true(this.evaluator.hasType("test-custom"));
+      this.blocks.registerConditionType(BlockTestCondition);
+      assert.true(this.blocks.hasConditionType("test-custom"));
     });
 
     test("throws if class does not extend BlockCondition", function (assert) {
@@ -50,7 +136,7 @@ module("Unit | Service | block-condition-evaluator", function (hooks) {
       }
 
       assert.throws(
-        () => this.evaluator.registerType(NotACondition),
+        () => this.blocks.registerConditionType(NotACondition),
         /must extend BlockCondition/
       );
     });
@@ -63,7 +149,7 @@ module("Unit | Service | block-condition-evaluator", function (hooks) {
       }
 
       assert.throws(
-        () => this.evaluator.registerType(BlockNoTypeCondition),
+        () => this.blocks.registerConditionType(BlockNoTypeCondition),
         /must define a static 'type' property/
       );
     });
@@ -78,7 +164,7 @@ module("Unit | Service | block-condition-evaluator", function (hooks) {
       }
 
       assert.throws(
-        () => this.evaluator.registerType(BlockDuplicateCondition),
+        () => this.blocks.registerConditionType(BlockDuplicateCondition),
         /already registered/
       );
     });
@@ -86,20 +172,20 @@ module("Unit | Service | block-condition-evaluator", function (hooks) {
 
   module("validate", function () {
     test("passes for null/undefined conditions", function (assert) {
-      assert.strictEqual(this.evaluator.validate(null), undefined);
-      assert.strictEqual(this.evaluator.validate(undefined), undefined);
+      assert.strictEqual(this.blocks.validate(null), undefined);
+      assert.strictEqual(this.blocks.validate(undefined), undefined);
     });
 
     test("throws for missing type", function (assert) {
       assert.throws(
-        () => this.evaluator.validate({ foo: "bar" }),
+        () => this.blocks.validate({ foo: "bar" }),
         /missing "type" property/
       );
     });
 
     test("throws for unknown type", function (assert) {
       assert.throws(
-        () => this.evaluator.validate({ type: "unknown-type" }),
+        () => this.blocks.validate({ type: "unknown-type" }),
         /Unknown block condition type/
       );
     });
@@ -107,7 +193,7 @@ module("Unit | Service | block-condition-evaluator", function (hooks) {
     test("validates array of conditions (AND)", function (assert) {
       assert.throws(
         () =>
-          this.evaluator.validate([
+          this.blocks.validate([
             { type: "user", loggedIn: true },
             { type: "unknown" },
           ]),
@@ -117,13 +203,13 @@ module("Unit | Service | block-condition-evaluator", function (hooks) {
 
     test("validates 'any' combinator (OR)", function (assert) {
       assert.throws(
-        () => this.evaluator.validate({ any: "not-an-array" }),
+        () => this.blocks.validate({ any: "not-an-array" }),
         /"any" must be an array of conditions/
       );
 
       assert.throws(
         () =>
-          this.evaluator.validate({
+          this.blocks.validate({
             any: [{ type: "user" }, { type: "unknown" }],
           }),
         /Unknown block condition type/
@@ -132,12 +218,12 @@ module("Unit | Service | block-condition-evaluator", function (hooks) {
 
     test("validates 'not' combinator", function (assert) {
       assert.throws(
-        () => this.evaluator.validate({ not: [{ type: "user" }] }),
+        () => this.blocks.validate({ not: [{ type: "user" }] }),
         /"not" must be a single condition object/
       );
 
       assert.throws(
-        () => this.evaluator.validate({ not: { type: "unknown" } }),
+        () => this.blocks.validate({ not: { type: "unknown" } }),
         /Unknown block condition type/
       );
     });
@@ -145,12 +231,12 @@ module("Unit | Service | block-condition-evaluator", function (hooks) {
 
   module("evaluate", function () {
     test("returns true for null/undefined conditions", function (assert) {
-      assert.true(this.evaluator.evaluate(null));
-      assert.true(this.evaluator.evaluate(undefined));
+      assert.true(this.blocks.evaluate(null));
+      assert.true(this.blocks.evaluate(undefined));
     });
 
     test("returns false for unknown type", function (assert) {
-      assert.false(this.evaluator.evaluate({ type: "unknown-type" }));
+      assert.false(this.blocks.evaluate({ type: "unknown-type" }));
     });
 
     test("evaluates array of conditions with AND logic", function (assert) {
@@ -170,18 +256,15 @@ module("Unit | Service | block-condition-evaluator", function (hooks) {
         }
       }
 
-      this.evaluator.registerType(BlockAlwaysTrueCondition);
-      this.evaluator.registerType(BlockAlwaysFalseCondition);
+      this.blocks.registerConditionType(BlockAlwaysTrueCondition);
+      this.blocks.registerConditionType(BlockAlwaysFalseCondition);
 
       assert.true(
-        this.evaluator.evaluate([
-          { type: "always-true" },
-          { type: "always-true" },
-        ])
+        this.blocks.evaluate([{ type: "always-true" }, { type: "always-true" }])
       );
 
       assert.false(
-        this.evaluator.evaluate([
+        this.blocks.evaluate([
           { type: "always-true" },
           { type: "always-false" },
         ])
@@ -205,17 +288,17 @@ module("Unit | Service | block-condition-evaluator", function (hooks) {
         }
       }
 
-      this.evaluator.registerType(BlockAlwaysTrueCondition2);
-      this.evaluator.registerType(BlockAlwaysFalseCondition2);
+      this.blocks.registerConditionType(BlockAlwaysTrueCondition2);
+      this.blocks.registerConditionType(BlockAlwaysFalseCondition2);
 
       assert.true(
-        this.evaluator.evaluate({
+        this.blocks.evaluate({
           any: [{ type: "always-false-2" }, { type: "always-true-2" }],
         })
       );
 
       assert.false(
-        this.evaluator.evaluate({
+        this.blocks.evaluate({
           any: [{ type: "always-false-2" }, { type: "always-false-2" }],
         })
       );
@@ -238,11 +321,11 @@ module("Unit | Service | block-condition-evaluator", function (hooks) {
         }
       }
 
-      this.evaluator.registerType(BlockAlwaysTrueCondition3);
-      this.evaluator.registerType(BlockAlwaysFalseCondition3);
+      this.blocks.registerConditionType(BlockAlwaysTrueCondition3);
+      this.blocks.registerConditionType(BlockAlwaysFalseCondition3);
 
-      assert.false(this.evaluator.evaluate({ not: { type: "always-true-3" } }));
-      assert.true(this.evaluator.evaluate({ not: { type: "always-false-3" } }));
+      assert.false(this.blocks.evaluate({ not: { type: "always-true-3" } }));
+      assert.true(this.blocks.evaluate({ not: { type: "always-false-3" } }));
     });
 
     test("passes args to condition evaluate method", function (assert) {
@@ -257,8 +340,8 @@ module("Unit | Service | block-condition-evaluator", function (hooks) {
         }
       }
 
-      this.evaluator.registerType(BlockArgCapturingCondition);
-      this.evaluator.evaluate({ type: "arg-capturing", foo: "bar", baz: 123 });
+      this.blocks.registerConditionType(BlockArgCapturingCondition);
+      this.blocks.evaluate({ type: "arg-capturing", foo: "bar", baz: 123 });
 
       assert.deepEqual(receivedArgs, { foo: "bar", baz: 123 });
     });
@@ -288,8 +371,8 @@ module("Unit | Service | block-condition-evaluator", function (hooks) {
         }
       );
 
-      this.evaluator.registerType(BlockServiceInjectionCondition);
-      this.evaluator.evaluate({ type: "service-injection-test" });
+      this.blocks.registerConditionType(BlockServiceInjectionCondition);
+      this.blocks.evaluate({ type: "service-injection-test" });
 
       assert.true(!!injectedSiteSettings, "siteSettings was injected");
       assert.strictEqual(typeof injectedSiteSettings.title, "string");

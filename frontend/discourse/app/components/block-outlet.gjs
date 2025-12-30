@@ -22,6 +22,10 @@ import { concat } from "@ember/helper";
 import { getOwner } from "@ember/owner";
 import curryComponent from "ember-curry-component";
 import concatClass from "discourse/helpers/concat-class";
+import {
+  validateArgsSchema,
+  validateBlockArgs,
+} from "discourse/lib/blocks/arg-validation";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/blocks";
 import { consolePrefix } from "discourse/lib/source-identifier";
 
@@ -59,10 +63,8 @@ const RESERVED_ARG_NAMES = Object.freeze([
 
 /**
  * Raises a validation error in dev/test, logs warning in production.
- * Returns true if validation should halt (in production, continues execution).
  *
  * @param {string} message - The error message
- * @returns {boolean} True if thrown (dev), false if warned (prod)
  */
 function raiseValidationError(message) {
   if (DEBUG) {
@@ -101,7 +103,15 @@ const __BLOCK_CONTAINER_FLAG = Symbol("block-container");
  * @param {string} name - Unique identifier for the block (e.g., "hero-banner", "sidebar-panel")
  * @param {Object} [options] - Configuration options
  * @param {boolean} [options.container=false] - If true, this block can contain nested child blocks
+ * @param {string} [options.description] - Human-readable description of the block
+ * @param {Object.<string, ArgSchema>} [options.args] - Schema for block arguments
  * @returns {function(typeof Component): typeof Component} Decorator function
+ *
+ * @typedef {Object} ArgSchema
+ * @property {"string"|"number"|"boolean"|"array"} type - The argument type (required)
+ * @property {boolean} [required=false] - Whether the argument is required
+ * @property {*} [default] - Default value for the argument
+ * @property {"string"|"number"|"boolean"} [itemType] - Item type for array arguments (no nested arrays)
  *
  * @example
  * // Simple block
@@ -124,9 +134,28 @@ const __BLOCK_CONTAINER_FLAG = Symbol("block-container");
  *     </section>
  *   </template>
  * }
+ *
+ * @example
+ * // Block with metadata and arg schema
+ * @block("hero-banner", {
+ *   description: "A hero banner with customizable title and call-to-action",
+ *   args: {
+ *     title: { type: "string", required: true },
+ *     ctaText: { type: "string", default: "Learn More" },
+ *     count: { type: "number" },
+ *     showImage: { type: "boolean" },
+ *     tags: { type: "array", itemType: "string" },
+ *   }
+ * })
+ * class HeroBanner extends Component { ... }
  */
 export function block(name, options = {}) {
   const isContainer = options?.container ?? false;
+  const description = options?.description ?? "";
+  const argsSchema = options?.args ?? null;
+
+  // Validate arg schema at decoration time
+  validateArgsSchema(argsSchema, name);
 
   return function (target) {
     if (!(target.prototype instanceof Component)) {
@@ -136,6 +165,17 @@ export function block(name, options = {}) {
 
     return class extends target {
       static blockName = name;
+      /**
+       * Block metadata including description, container status, and args schema.
+       * Used for introspection, documentation, and runtime validation.
+       *
+       * @type {{description: string, container: boolean, args: Object|null}}
+       */
+      static blockMetadata = Object.freeze({
+        description,
+        container: isContainer,
+        args: argsSchema ? Object.freeze(argsSchema) : null,
+      });
       static [__BLOCK_FLAG] = true;
       static [__BLOCK_CONTAINER_FLAG] = isContainer;
 
@@ -191,9 +231,7 @@ export function block(name, options = {}) {
         }
 
         const owner = getOwner(this);
-        const conditionEvaluator = owner.lookup(
-          "service:block-condition-evaluator"
-        );
+        const blocksService = owner.lookup("service:blocks");
 
         // Filter children by conditions, then create renderable components
         return rawChildren
@@ -203,7 +241,7 @@ export function block(name, options = {}) {
               return true;
             }
             // Evaluate conditions - only render if they pass
-            return conditionEvaluator.evaluate(blockConfig.conditions);
+            return blocksService.evaluate(blockConfig.conditions);
           })
           .map((blockConfig) => this.#createChildBlock(blockConfig, owner));
       }
@@ -239,11 +277,16 @@ export function block(name, options = {}) {
         } = blockConfig;
         const isChildContainer = ComponentClass[__BLOCK_CONTAINER_FLAG];
 
+        // Apply default values from metadata before building args
+        const argsWithDefaults = this.#applyArgDefaults(ComponentClass, args);
+
         // Container blocks receive classNames directly (they handle their own wrapper).
         // Non-container blocks get classNames passed to wrapBlockLayout instead.
         const blockArgs = isChildContainer
-          ? this.#buildBlockArgs(args, nestedChildren, { classNames })
-          : this.#buildBlockArgs(args, nestedChildren);
+          ? this.#buildBlockArgs(argsWithDefaults, nestedChildren, {
+              classNames,
+            })
+          : this.#buildBlockArgs(argsWithDefaults, nestedChildren);
 
         // Curry the component with pre-bound args so it can be rendered
         // without knowing its configuration details
@@ -264,6 +307,29 @@ export function block(name, options = {}) {
                 owner
               ),
         };
+      }
+
+      /**
+       * Applies default values from block metadata to provided args.
+       * Only applies defaults for args that are undefined.
+       *
+       * @param {typeof Component} ComponentClass - The block component class
+       * @param {Object} providedArgs - User-provided args from block config
+       * @returns {Object} Args with defaults applied
+       */
+      #applyArgDefaults(ComponentClass, providedArgs) {
+        const schema = ComponentClass.blockMetadata?.args;
+        if (!schema) {
+          return providedArgs;
+        }
+
+        const result = { ...providedArgs };
+        for (const [argName, argDef] of Object.entries(schema)) {
+          if (result[argName] === undefined && argDef.default !== undefined) {
+            result[argName] = argDef.default;
+          }
+        }
+        return result;
       }
 
       /**
@@ -351,10 +417,10 @@ function isContainerBlock(component) {
  * ```
  */
 export function renderBlocks(outletName, config, owner) {
-  // Get condition evaluator for validation if owner is provided
-  const conditionEvaluator = owner?.lookup("service:block-condition-evaluator");
+  // Get blocks service for condition validation if owner is provided
+  const blocksService = owner?.lookup("service:blocks");
 
-  validateConfig(config, outletName, conditionEvaluator);
+  validateConfig(config, outletName, blocksService);
 
   if (blockConfigs.has(outletName)) {
     const errorMessage = [
@@ -380,17 +446,17 @@ export function renderBlocks(outletName, config, owner) {
  *
  * @param {Array<Object>} blocksConfig - Block configurations to validate
  * @param {string} outletName - The outlet these blocks belong to
- * @param {import("discourse/services/block-condition-evaluator").default} [conditionEvaluator] - Service for validating conditions
+ * @param {import("discourse/services/blocks").default} [blocksService] - Service for validating conditions
  * @throws {Error} If any block configuration is invalid
  */
-function validateConfig(blocksConfig, outletName, conditionEvaluator) {
+function validateConfig(blocksConfig, outletName, blocksService) {
   for (const blockConfig of blocksConfig) {
     // Validate the block itself (whether it has children or not)
-    validateBlock(blockConfig, outletName, conditionEvaluator);
+    validateBlock(blockConfig, outletName, blocksService);
 
     // Recursively validate nested children
     if (blockConfig.children) {
-      validateConfig(blockConfig.children, outletName, conditionEvaluator);
+      validateConfig(blockConfig.children, outletName, blocksService);
     }
   }
 }
@@ -413,7 +479,7 @@ function hasConfig(outletName) {
  * - Block component exists and is decorated with @block
  * - Container/children relationship is valid
  * - No reserved arg names are used
- * - Conditions are valid (if conditionEvaluator is provided)
+ * - Conditions are valid (if blocksService is provided)
  *
  * @param {Object} config - The block configuration object
  * @param {typeof Component} config.block - The block component class
@@ -422,10 +488,10 @@ function hasConfig(outletName) {
  * @param {Array<Object>} [config.children] - Nested block configurations
  * @param {Array<Object>|Object} [config.conditions] - Conditions for rendering
  * @param {string} outletName - The outlet this block belongs to
- * @param {import("discourse/services/block-condition-evaluator").default} [conditionEvaluator] - Service for validating conditions
+ * @param {import("discourse/services/blocks").default} [blocksService] - Service for validating conditions
  * @throws {Error} If validation fails
  */
-function validateBlock(config, outletName, conditionEvaluator) {
+function validateBlock(config, outletName, blocksService) {
   if (!BLOCK_OUTLETS.includes(outletName)) {
     raiseValidationError(`Unknown block outlet: ${outletName}`);
     return;
@@ -464,11 +530,14 @@ function validateBlock(config, outletName, conditionEvaluator) {
 
   validateReservedArgs(config, outletName);
 
-  // Validate conditions if evaluator is available
-  // In production, conditionEvaluator.validate() logs warnings instead of throwing
-  if (config.conditions && conditionEvaluator) {
+  // Validate block args against metadata schema
+  validateBlockArgs(config, outletName);
+
+  // Validate conditions if service is available
+  // In production, blocksService.validate() logs warnings instead of throwing
+  if (config.conditions && blocksService) {
     try {
-      conditionEvaluator.validate(config.conditions);
+      blocksService.validate(config.conditions);
     } catch (error) {
       raiseValidationError(
         `Invalid conditions for block "${config.block.blockName || config.name}" in outlet "${outletName}": ${error.message}`

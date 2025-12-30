@@ -2,12 +2,12 @@ import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import BlockGroup from "discourse/blocks/block-group";
 import { BlockCondition } from "discourse/blocks/conditions";
 import BlockOutlet, {
   block,
   renderBlocks,
 } from "discourse/components/block-outlet";
-import BlockGroup from "discourse/components/blocks/block-group";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 let testOwner;
@@ -18,7 +18,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
   hooks.beforeEach(function () {
     testOwner = getOwner(this);
 
-    const evaluator = testOwner.lookup("service:block-condition-evaluator");
+    const blocks = testOwner.lookup("service:blocks");
 
     class BlockAlwaysTrueCondition extends BlockCondition {
       static type = "always-true";
@@ -36,11 +36,11 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       }
     }
 
-    if (!evaluator.hasType("always-true")) {
-      evaluator.registerType(BlockAlwaysTrueCondition);
+    if (!blocks.hasConditionType("always-true")) {
+      blocks.registerConditionType(BlockAlwaysTrueCondition);
     }
-    if (!evaluator.hasType("always-false")) {
-      evaluator.registerType(BlockAlwaysFalseCondition);
+    if (!blocks.hasConditionType("always-false")) {
+      blocks.registerConditionType(BlockAlwaysFalseCondition);
     }
   });
 
