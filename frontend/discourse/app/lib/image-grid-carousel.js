@@ -80,13 +80,6 @@ function buildCarouselItems(grid) {
     .filter(Boolean);
 }
 
-/**
- * Initializes a snap-point carousel for a cooked image grid.
- *
- * @param {HTMLElement} grid
- * @param {Object} helper
- * @returns {boolean}
- */
 export default function setupImageGridCarousel(grid, helper) {
   if (!grid || grid.dataset.carouselInitialized) {
     return false;

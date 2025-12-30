@@ -2,9 +2,6 @@ import { bind } from "discourse/lib/decorators";
 import { iconElement } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
 
-/**
- * Node view for image grid blocks in the rich editor.
- */
 class GridNodeView {
   constructor(node, view, getPos) {
     this.node = node;
@@ -16,7 +13,7 @@ class GridNodeView {
 
     const modeGroup = document.createElement("div");
     modeGroup.className = "composer-image-gallery__mode-buttons";
-    modeGroup.setAttribute("role", "radiogroup");
+    modeGroup.setAttribute("role", "group");
     modeGroup.contentEditable = false;
 
     const modes = [
@@ -33,8 +30,8 @@ class GridNodeView {
     ];
 
     modes.forEach((opt) => {
-      const button = document.createElement("button"); // not using DButton bcs these are special types
-      button.type = "role";
+      const button = document.createElement("button");
+      button.type = "button";
       button.className = "composer-image-gallery__mode-btn";
       button.dataset.mode = opt.value;
       button.appendChild(iconElement(opt.icon));
@@ -42,7 +39,7 @@ class GridNodeView {
       textLabel.textContent = opt.label;
       button.appendChild(textLabel);
       button.ariaLabel = opt.label;
-      button.title = "Set image gallery style to " + opt.label;
+      button.title = i18n("composer.grid_mode_title", { mode: opt.label });
       if (node.attrs.mode === opt.value) {
         button.classList.add("is-active");
         button.setAttribute("aria-pressed", "true");
@@ -86,22 +83,11 @@ class GridNodeView {
     this.dom = div;
   }
 
-  /**
-   * Cleans up the node view when it is removed from the editor.
-   *
-   * @returns {void}
-   */
   destroy() {
     this.removeBtn.removeEventListener("click", this.removeClickHandler);
   }
 
   @bind
-  /**
-   * Removes the grid node and unwraps its contents.
-   *
-   * @param {MouseEvent} e
-   * @returns {void}
-   */
   removeClickHandler(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -114,30 +100,14 @@ class GridNodeView {
     this.view.dispatch(tr);
   }
 
-  /**
-   * Applies selection styling to the node view.
-   *
-   * @returns {void}
-   */
   selectNode() {
     this.dom.classList.add("ProseMirror-selectednode");
   }
 
-  /**
-   * Removes selection styling from the node view.
-   *
-   * @returns {void}
-   */
   deselectNode() {
     this.dom.classList.remove("ProseMirror-selectednode");
   }
 
-  /**
-   * Keeps the node view in sync with editor updates.
-   *
-   * @param {Object} node
-   * @returns {boolean}
-   */
   update(node) {
     if (node.type !== this.node.type) {
       return false;
@@ -161,7 +131,6 @@ class GridNodeView {
   }
 }
 
-/** @type {RichEditorExtension} */
 const extension = {
   nodeSpec: {
     grid: {
@@ -246,7 +215,6 @@ const extension = {
   plugins({ pmState: { Plugin } }) {
     return new Plugin({
       appendTransaction(transactions, oldState, newState) {
-        // Only process if the document actually changed
         if (!transactions.some((tr) => tr.docChanged)) {
           return null;
         }
@@ -254,7 +222,6 @@ const extension = {
         const tr = newState.tr;
         let modified = false;
 
-        // Process grids from end to beginning to avoid position shifts
         const gridNodes = [];
         newState.doc.descendants((node, pos) => {
           if (node.type.name === "grid") {
@@ -263,7 +230,6 @@ const extension = {
         });
 
         gridNodes.reverse().forEach(({ node, pos }) => {
-          // If grid is completely empty, remove it
           if (node.childCount === 0) {
             tr.delete(pos, pos + node.nodeSize);
             modified = true;
@@ -271,12 +237,11 @@ const extension = {
           }
 
           const changes = [];
-          let currentPos = pos + 1; // Start inside the grid node
+          let currentPos = pos + 1;
 
           node.content.forEach((child) => {
             if (child.type.name === "paragraph") {
               if (child.content.size === 0) {
-                // Only remove empty paragraph if grid has other content
                 if (node.childCount > 1) {
                   changes.push({
                     type: "remove",
@@ -285,7 +250,6 @@ const extension = {
                   });
                 }
               } else {
-                // Split paragraphs with multiple images
                 const images = [];
                 child.content.forEach((grandchild) => {
                   if (grandchild.type.name === "image") {
