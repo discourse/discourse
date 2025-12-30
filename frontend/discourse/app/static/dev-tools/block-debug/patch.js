@@ -1,7 +1,11 @@
 import curryComponent from "ember-curry-component";
-import { _setBlockDebugCallback } from "discourse/components/block-outlet";
-import blockDebugState from "discourse/lib/blocks/debug-state";
+import {
+  _setBlockDebugCallback,
+  _setBlockLoggingCallback,
+  _setBlockOutletBoundaryCallback,
+} from "discourse/components/block-outlet";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import devToolsState from "../state";
 import BlockInfo from "./block-info";
 import GhostBlock from "./ghost-block";
 
@@ -11,10 +15,15 @@ import GhostBlock from "./ghost-block";
  * When visual overlay is enabled, this callback wraps rendered blocks
  * with BlockInfo components and adds GhostBlock placeholders for
  * blocks that fail their conditions.
+ *
+ * Uses devToolsState via closure to check state at invocation time,
+ * following the same pattern as plugin-outlet-debug.
  */
 export function patchBlockRendering() {
+  // Callback for visual overlay - wraps blocks with debug info
   _setBlockDebugCallback((blockData, context) => {
-    if (!blockDebugState.visualOverlay) {
+    // Check state at invocation time (devToolsState is captured in closure)
+    if (!devToolsState.blockVisualOverlay) {
       return blockData;
     }
 
@@ -53,4 +62,9 @@ export function patchBlockRendering() {
       ),
     };
   });
+
+  // Callback for console logging
+  _setBlockLoggingCallback(() => devToolsState.blockDebug);
+  // Callback for outlet boundaries
+  _setBlockOutletBoundaryCallback(() => devToolsState.blockOutletBoundaries);
 }

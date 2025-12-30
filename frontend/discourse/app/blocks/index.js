@@ -16,15 +16,5 @@ export {
   BlockRouteConditionShortcuts,
 } from "discourse/blocks/conditions";
 
-// Debug API
-export {
-  default as blockDebugState,
-  enableBlockDebug,
-  disableBlockDebug,
-  isBlockDebugEnabled,
-  enableBlockVisualOverlay,
-  isBlockVisualOverlayEnabled,
-} from "discourse/lib/blocks/debug-state";
-
 // Core block components (auto-discovered by Blocks service via isBlock check)
 export { default as BlockGroup } from "discourse/blocks/block-group";

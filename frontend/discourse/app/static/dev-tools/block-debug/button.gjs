@@ -4,27 +4,36 @@ import { action } from "@ember/object";
 import DMenu from "discourse/float-kit/components/d-menu";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
-import blockDebugState from "discourse/lib/blocks/debug-state";
+import devToolsState from "../state";
 
 /**
  * Block debug button with dropdown menu.
- * Provides separate toggles for console logging and visual overlay.
+ * Provides separate toggles for console logging, visual overlay, and outlet boundaries.
  *
  * @component BlockDebugButton
  */
 export default class BlockDebugButton extends Component {
   get isActive() {
-    return blockDebugState.enabled || blockDebugState.visualOverlay;
+    return (
+      devToolsState.blockDebug ||
+      devToolsState.blockVisualOverlay ||
+      devToolsState.blockOutletBoundaries
+    );
   }
 
   @action
   toggleConsoleLogging(event) {
-    blockDebugState.enabled = event.target.checked;
+    devToolsState.blockDebug = event.target.checked;
   }
 
   @action
   toggleVisualOverlay(event) {
-    blockDebugState.visualOverlay = event.target.checked;
+    devToolsState.blockVisualOverlay = event.target.checked;
+  }
+
+  @action
+  toggleOutletBoundaries(event) {
+    devToolsState.blockOutletBoundaries = event.target.checked;
   }
 
   <template>
@@ -44,7 +53,7 @@ export default class BlockDebugButton extends Component {
           <label>
             <input
               type="checkbox"
-              checked={{blockDebugState.enabled}}
+              checked={{devToolsState.blockDebug}}
               {{on "change" this.toggleConsoleLogging}}
             />
             Console logging
@@ -52,10 +61,18 @@ export default class BlockDebugButton extends Component {
           <label>
             <input
               type="checkbox"
-              checked={{blockDebugState.visualOverlay}}
+              checked={{devToolsState.blockVisualOverlay}}
               {{on "change" this.toggleVisualOverlay}}
             />
             Visual overlay
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={{devToolsState.blockOutletBoundaries}}
+              {{on "change" this.toggleOutletBoundaries}}
+            />
+            Outlet boundaries
           </label>
         </div>
       </:content>

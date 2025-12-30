@@ -7,15 +7,16 @@
  * @module discourse/lib/blocks/debug-logger
  */
 
+// Pastel color palette for console output
 const STYLES = {
-  blockName: "color: #9c27b0; font-weight: bold",
-  outletName: "color: #2196f3",
-  passed: "color: #4caf50; font-weight: bold",
-  failed: "color: #f44336; font-weight: bold",
-  conditionType: "color: #ff9800",
-  combinator: "color: #607d8b; font-weight: bold",
-  indent: "color: #9e9e9e",
-  args: "color: #607d8b",
+  blockName: "color: #7c6f9b; font-weight: bold", // pastel purple
+  outletName: "color: #6b9b94", // pastel teal
+  passed: "color: #7a9b6b; font-weight: bold", // pastel green
+  failed: "color: #b08080; font-weight: bold", // pastel red/rose
+  conditionType: "color: #9b8f6b", // pastel tan/olive
+  combinator: "color: #6b7a9b; font-weight: bold", // pastel slate blue
+  indent: "color: #a0a0a0", // light gray
+  args: "color: #8b8b8b", // medium gray
 };
 
 const ICONS = {

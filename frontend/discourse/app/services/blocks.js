@@ -2,7 +2,6 @@ import { getOwner, setOwner } from "@ember/owner";
 import Service from "@ember/service";
 import * as conditions from "discourse/blocks/conditions";
 import { blockDebugLogger } from "discourse/lib/blocks/debug-logger";
-import blockDebugState from "discourse/lib/blocks/debug-state";
 import { raiseBlockError } from "discourse/lib/blocks/error";
 import { blockRegistry } from "discourse/lib/blocks/registration";
 
@@ -272,12 +271,12 @@ export default class Blocks extends Service {
    *
    * @param {Object|Array<Object>} conditionSpec - Condition spec(s) to evaluate
    * @param {Object} [context] - Evaluation context
-   * @param {boolean} [context.debug] - Override debug mode (defaults to dev tools state)
+   * @param {boolean} [context.debug] - Enable debug logging for this evaluation
    * @param {number} [context._depth] - Internal: nesting depth for logging
    * @returns {boolean} True if conditions pass, false otherwise
    */
   evaluate(conditionSpec, context = {}) {
-    const debug = context.debug ?? this.#isDebugEnabled();
+    const isLoggingEnabled = context.debug ?? false;
     const depth = context._depth ?? 0;
 
     if (!conditionSpec) {
@@ -286,7 +285,7 @@ export default class Blocks extends Service {
 
     // Array of conditions (AND logic - all must pass)
     if (Array.isArray(conditionSpec)) {
-      if (debug) {
+      if (isLoggingEnabled) {
         blockDebugLogger.logCondition({
           type: "AND",
           args: `${conditionSpec.length} conditions`,
@@ -296,7 +295,10 @@ export default class Blocks extends Service {
       }
 
       for (const condition of conditionSpec) {
-        const result = this.evaluate(condition, { debug, _depth: depth + 1 });
+        const result = this.evaluate(condition, {
+          debug: isLoggingEnabled,
+          _depth: depth + 1,
+        });
         if (!result) {
           return false;
         }
@@ -306,7 +308,7 @@ export default class Blocks extends Service {
 
     // OR combinator (at least one must pass)
     if (conditionSpec.any !== undefined) {
-      if (debug) {
+      if (isLoggingEnabled) {
         blockDebugLogger.logCondition({
           type: "OR",
           args: `${conditionSpec.any.length} conditions`,
@@ -316,10 +318,10 @@ export default class Blocks extends Service {
       }
 
       const passed = conditionSpec.any.some((c) =>
-        this.evaluate(c, { debug, _depth: depth + 1 })
+        this.evaluate(c, { debug: isLoggingEnabled, _depth: depth + 1 })
       );
 
-      if (debug && !passed) {
+      if (isLoggingEnabled && !passed) {
         blockDebugLogger.logCondition({
           type: "OR",
           args: "all branches failed",
@@ -332,7 +334,7 @@ export default class Blocks extends Service {
 
     // NOT combinator (must fail)
     if (conditionSpec.not !== undefined) {
-      if (debug) {
+      if (isLoggingEnabled) {
         blockDebugLogger.logCondition({
           type: "NOT",
           args: null,
@@ -342,7 +344,7 @@ export default class Blocks extends Service {
       }
 
       const innerResult = this.evaluate(conditionSpec.not, {
-        debug,
+        debug: isLoggingEnabled,
         _depth: depth + 1,
       });
       return !innerResult;
@@ -353,7 +355,7 @@ export default class Blocks extends Service {
     const conditionInstance = this.#conditionTypes.get(type);
 
     if (!conditionInstance) {
-      if (debug) {
+      if (isLoggingEnabled) {
         blockDebugLogger.logCondition({
           type: `unknown "${type}"`,
           args,
@@ -365,28 +367,10 @@ export default class Blocks extends Service {
     }
 
     const result = conditionInstance.evaluate(args);
-    if (debug) {
+    if (isLoggingEnabled) {
       blockDebugLogger.logCondition({ type, args, result, depth });
     }
     return result;
-  }
-
-  /**
-   * Checks if debug mode is enabled.
-   *
-   * @returns {boolean}
-   */
-  #isDebugEnabled() {
-    return blockDebugState.enabled;
-  }
-
-  /**
-   * Checks if debug mode is enabled (public accessor for block-outlet).
-   *
-   * @returns {boolean}
-   */
-  isDebugEnabled() {
-    return this.#isDebugEnabled();
   }
 
   /**

@@ -47,6 +47,22 @@ const blockConfigs = new Map();
 let blockDebugCallback = null;
 
 /**
+ * Callback for checking if console logging is enabled.
+ * Set by dev-tools, returns true when block debug logging is active.
+ *
+ * @type {Function|null}
+ */
+let blockLoggingCallback = null;
+
+/**
+ * Callback for checking if outlet boundaries should be shown.
+ * Set by dev-tools, returns true when outlet boundary overlay is active.
+ *
+ * @type {Function|null}
+ */
+let blockOutletBoundaryCallback = null;
+
+/**
  * Sets a callback for debug overlay injection.
  * Called by dev-tools to wrap rendered blocks with debug info.
  *
@@ -54,6 +70,26 @@ let blockDebugCallback = null;
  */
 export function _setBlockDebugCallback(callback) {
   blockDebugCallback = callback;
+}
+
+/**
+ * Sets a callback for checking if console logging is enabled.
+ * Called by dev-tools to provide state access without window globals.
+ *
+ * @param {Function} callback - Callback returning boolean
+ */
+export function _setBlockLoggingCallback(callback) {
+  blockLoggingCallback = callback;
+}
+
+/**
+ * Sets a callback for checking if outlet boundaries should be shown.
+ * Called by dev-tools to provide state access without window globals.
+ *
+ * @param {Function} callback - Callback returning boolean
+ */
+export function _setBlockOutletBoundaryCallback(callback) {
+  blockOutletBoundaryCallback = callback;
 }
 
 /**
@@ -239,7 +275,8 @@ export function block(name, options = {}) {
 
         const owner = getOwner(this);
         const blocksService = owner.lookup("service:blocks");
-        const debug = blocksService.isDebugEnabled();
+        // Use callback to check logging state (set by dev-tools via closure)
+        const isLoggingEnabled = blockLoggingCallback?.() ?? false;
         const outletName = this.args.outletName || name;
         const result = [];
 
@@ -249,13 +286,15 @@ export function block(name, options = {}) {
 
           // Evaluate conditions if present
           if (blockConfig.conditions) {
-            if (debug) {
+            if (isLoggingEnabled) {
               blockDebugLogger.startGroup(blockName, outletName);
             }
 
-            conditionsPassed = blocksService.evaluate(blockConfig.conditions);
+            conditionsPassed = blocksService.evaluate(blockConfig.conditions, {
+              debug: isLoggingEnabled,
+            });
 
-            if (debug) {
+            if (isLoggingEnabled) {
               blockDebugLogger.endGroup(conditionsPassed);
             }
           }
@@ -338,7 +377,9 @@ export function block(name, options = {}) {
         // without knowing its configuration details
         const curried = curryComponent(ComponentClass, blockArgs, owner);
 
-        // Wrap the component appropriately
+        // Container blocks handle their own layout wrapper (they need access
+        // to classNames for their container element). Non-container blocks
+        // get wrapped in WrappedBlockLayout for consistent block styling.
         let wrappedComponent = isChildContainer
           ? curried
           : wrapBlockLayout(
@@ -724,11 +765,36 @@ export default class BlockOutlet extends Component {
     return this.#name;
   }
 
+  /**
+   * Whether to show outlet boundary debug overlay.
+   * Checked via callback to dev-tools state.
+   *
+   * @returns {boolean}
+   */
+  get showOutletBoundary() {
+    return blockOutletBoundaryCallback?.() ?? false;
+  }
+
   <template>
     {{! Yield to :before block with hasConfig boolean for conditional rendering }}
     {{yield (hasConfig this.outletName) to="before"}}
 
-    {{#if this.children}}
+    {{#if this.showOutletBoundary}}
+      <div class="block-outlet-debug">
+        <span class="block-outlet-debug__badge">{{this.outletName}}</span>
+        {{#if this.children}}
+          <div class={{this.outletName}}>
+            <div class="{{this.outletName}}__container">
+              <div class="{{this.outletName}}__layout">
+                {{#each this.children as |item|}}
+                  <item.Component @outletName={{this.outletName}} />
+                {{/each}}
+              </div>
+            </div>
+          </div>
+        {{/if}}
+      </div>
+    {{else if this.children}}
       <div class={{this.outletName}}>
         <div class="{{this.outletName}}__container">
           <div class="{{this.outletName}}__layout">

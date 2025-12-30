@@ -125,14 +125,14 @@
   }
 }
 
-/* Block Debug Overlay */
+/* Block Debug Overlay - warm amber/orange tones (distinct from plugin outlets which use green/blue) */
 .block-debug-info {
   position: relative;
-  border: 2px solid #9c27b0;
+  border: 2px solid #d97706;
   margin: 2px;
 
   &.--rendered {
-    border-color: #4caf50;
+    border-color: #d97706;
   }
 }
 
@@ -146,7 +146,7 @@
   align-items: center;
   gap: 4px;
 
-  background: #4caf50;
+  background: #d97706;
   color: white;
   padding: 2px 6px;
   font-size: 11px;
@@ -161,19 +161,20 @@
   }
 
   &:hover {
-    background: #388e3c;
+    background: #b45309;
   }
 }
 
+/* Ghost blocks - red for hidden/failed conditions */
 .block-debug-ghost {
   position: relative;
-  border: 2px dashed #f44336;
+  border: 2px dashed #dc2626;
   background: repeating-linear-gradient(
     45deg,
     transparent,
     transparent 10px,
-    rgba(244, 67, 54, 0.05) 10px,
-    rgba(244, 67, 54, 0.05) 20px
+    rgba(220, 38, 38, 0.05) 10px,
+    rgba(220, 38, 38, 0.05) 20px
   );
   padding: 8px;
   margin: 2px;
@@ -185,19 +186,40 @@
   align-items: center;
   gap: 4px;
 
-  color: #f44336;
+  color: #dc2626;
   font-size: 11px;
   font-style: italic;
   cursor: pointer;
 
   .d-icon {
-    color: #f44336 !important;
+    color: #dc2626 !important;
     font-size: 11px !important;
   }
 }
 
 .block-debug-ghost__status {
   opacity: 0.7;
+}
+
+/* Block Outlet boundaries - yellow/gold */
+.block-outlet-debug {
+  position: relative;
+  border: 2px dashed #f59e0b;
+  margin: 2px;
+  padding: 4px;
+  min-height: 20px;
+}
+
+.block-outlet-debug__badge {
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  background: #f59e0b;
+  color: white;
+  padding: 1px 4px;
+  font-size: 10px;
+  font-weight: bold;
+  border-radius: 0 0 4px 0;
 }
 
 /* Block Debug Tooltip */
@@ -221,10 +243,10 @@
   align-items: center;
   gap: 6px;
   font-weight: bold;
-  color: #4caf50;
+  color: #d97706;
 
   &.--failed {
-    color: #f44336;
+    color: #dc2626;
   }
 
   .d-icon {
@@ -245,7 +267,7 @@
 .block-debug-tooltip__status {
   font-size: 10px;
   padding: 1px 4px;
-  background: #f44336;
+  background: #dc2626;
   color: white;
   border-radius: 2px;
 }
@@ -337,13 +359,13 @@
 
   &.--passed {
     .block-debug-condition__type {
-      color: #4caf50;
+      color: #d97706;
     }
   }
 
   &.--failed {
     .block-debug-condition__type {
-      color: #f44336;
+      color: #dc2626;
     }
   }
 }
