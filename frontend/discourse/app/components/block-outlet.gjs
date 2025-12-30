@@ -26,8 +26,8 @@ import {
   validateArgsSchema,
   validateBlockArgs,
 } from "discourse/lib/blocks/arg-validation";
+import { raiseBlockError } from "discourse/lib/blocks/error";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/blocks";
-import { consolePrefix } from "discourse/lib/source-identifier";
 
 /**
  * Maps outlet names to their registered block configurations.
@@ -60,20 +60,6 @@ const RESERVED_ARG_NAMES = Object.freeze([
   "conditions",
   "$block$",
 ]);
-
-/**
- * Raises a validation error in dev/test, logs warning in production.
- *
- * @param {string} message - The error message
- */
-function raiseValidationError(message) {
-  if (DEBUG) {
-    throw new Error(message);
-  } else {
-    // eslint-disable-next-line no-console
-    console.warn(`[Block validation] ${message}`);
-  }
-}
 
 // ============================================================================
 // Security Symbols
@@ -159,7 +145,7 @@ export function block(name, options = {}) {
 
   return function (target) {
     if (!(target.prototype instanceof Component)) {
-      raiseValidationError("@block target must be a Glimmer component class");
+      raiseBlockError("@block target must be a Glimmer component class");
       return target; // Return original in production to avoid crash
     }
 
@@ -417,24 +403,21 @@ function isContainerBlock(component) {
  * ```
  */
 export function renderBlocks(outletName, config, owner) {
+  // Lock the block registry on first renderBlocks call.
+  // This prevents themes/plugins from registering new blocks after
+  // the first configuration is set up.
+  const { _lockBlockRegistry } = require("discourse/lib/blocks/registration");
+  _lockBlockRegistry();
+
   // Get blocks service for condition validation if owner is provided
   const blocksService = owner?.lookup("service:blocks");
 
   validateConfig(config, outletName, blocksService);
 
   if (blockConfigs.has(outletName)) {
-    const errorMessage = [
-      consolePrefix(),
-      `Block outlet ${outletName} already has a configuration registered.`,
-    ].join(" ");
-
-    // block outlets can render only one config per outlet
-    if (DEBUG) {
-      throw new Error(errorMessage);
-    } else {
-      // eslint-disable-next-line no-console
-      console.warn(errorMessage);
-    }
+    raiseBlockError(
+      `Block outlet "${outletName}" already has a configuration registered.`
+    );
   }
 
   blockConfigs.set(outletName, { children: config });
@@ -493,20 +476,32 @@ function hasConfig(outletName) {
  */
 function validateBlock(config, outletName, blocksService) {
   if (!BLOCK_OUTLETS.includes(outletName)) {
-    raiseValidationError(`Unknown block outlet: ${outletName}`);
+    raiseBlockError(`Unknown block outlet: ${outletName}`);
     return;
   }
 
   if (!config.block) {
-    raiseValidationError(
+    raiseBlockError(
       `Block in layout for \`${outletName}\` is missing a component: ${JSON.stringify(config)}`
     );
     return;
   }
 
   if (!isBlock(config.block)) {
-    raiseValidationError(
+    raiseBlockError(
       `Block component ${config.name} (${config.block}) in layout ${outletName} is not a valid block`
+    );
+    return;
+  }
+
+  // Verify block is registered (security check - prevents use of unregistered blocks)
+  // Import lazily to avoid circular dependency at module load time
+  const { blockRegistry } = require("discourse/lib/blocks/registration");
+  const blockName = config.block.blockName;
+  if (!blockRegistry.has(blockName)) {
+    raiseBlockError(
+      `Block "${blockName}" is not registered. ` +
+        `Use api.registerBlock() in a pre-initializer before any renderBlocks() configuration.`
     );
     return;
   }
@@ -515,14 +510,14 @@ function validateBlock(config, outletName, blocksService) {
   const isContainer = isContainerBlock(config.block);
 
   if (hasChildren && !isContainer) {
-    raiseValidationError(
+    raiseBlockError(
       `Block component ${config.name} (${config.block}) in layout ${outletName} cannot have children`
     );
     return;
   }
 
   if (isContainer && !hasChildren) {
-    raiseValidationError(
+    raiseBlockError(
       `Block component ${config.name} (${config.block}) in layout ${outletName} must have children`
     );
     return;
@@ -539,7 +534,7 @@ function validateBlock(config, outletName, blocksService) {
     try {
       blocksService.validate(config.conditions);
     } catch (error) {
-      raiseValidationError(
+      raiseBlockError(
         `Invalid conditions for block "${config.block.blockName || config.name}" in outlet "${outletName}": ${error.message}`
       );
     }
@@ -575,7 +570,7 @@ function validateReservedArgs(config, outletName) {
   const usedReservedArgs = Object.keys(config.args).filter(isReservedArgName);
 
   if (usedReservedArgs.length > 0) {
-    raiseValidationError(
+    raiseBlockError(
       `Block ${config.name} in layout ${outletName} uses reserved arg names: ${usedReservedArgs.join(", ")}. ` +
         `Names starting with underscore are reserved for internal use.`
     );
@@ -629,7 +624,7 @@ export default class BlockOutlet extends Component {
     this.#name = this.args.name;
 
     if (!BLOCK_OUTLETS.includes(this.#name)) {
-      raiseValidationError(
+      raiseBlockError(
         `Block outlet ${this.#name} is not registered in the blocks registry`
       );
     }

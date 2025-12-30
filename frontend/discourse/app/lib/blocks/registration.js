@@ -1,5 +1,6 @@
 import { DEBUG } from "@glimmer/env";
-import { consolePrefix } from "discourse/lib/source-identifier";
+import * as coreBlocks from "discourse/blocks/core";
+import { raiseBlockError } from "discourse/lib/blocks/error";
 
 /**
  * Registry of block components registered via `@block` decorator and `api.registerBlock()`.
@@ -10,45 +11,61 @@ import { consolePrefix } from "discourse/lib/source-identifier";
 export const blockRegistry = new Map();
 
 /**
- * Whether the block registry has been frozen.
- * Once frozen, no new blocks can be registered.
+ * Whether the block registry is locked (no new registrations allowed).
+ * Gets locked when the first renderBlocks() config is registered.
  */
-let registryFrozen = false;
+let registryLocked = false;
 
 /**
- * Raises a validation error in dev/test, logs warning in production.
+ * Core block auto-discovery at module load time.
+ * Similar to how transformers initialize validTransformerNames.
  *
- * @param {string} message - The error message
+ * This runs before any initializers, ensuring core blocks are
+ * available immediately when the module is imported.
  */
-function raiseValidationError(message) {
-  const prefixedMessage = `${consolePrefix()} ${message}`;
-  if (DEBUG) {
-    throw new Error(prefixedMessage);
-  } else {
-    // eslint-disable-next-line no-console
-    console.warn(`[Block registry] ${prefixedMessage}`);
+for (const exported of Object.values(coreBlocks)) {
+  // Check if it's a @block-decorated component (has blockName set by decorator)
+  if (typeof exported === "function" && exported.blockName) {
+    blockRegistry.set(exported.blockName, exported);
   }
 }
 
 /**
+ * Locks the registry, preventing further registrations.
+ * Called when the first renderBlocks() config is registered.
+ *
+ * @internal
+ */
+export function _lockBlockRegistry() {
+  registryLocked = true;
+}
+
+/**
+ * Returns whether the block registry is locked.
+ *
+ * @returns {boolean}
+ */
+export function isBlockRegistryLocked() {
+  return registryLocked;
+}
+
+/**
  * Registers a block component in the registry.
- * Must be called in a pre-initializer before `freeze-valid-blocks`.
+ * Must be called before any renderBlocks() configuration is registered.
  *
  * The block component must be decorated with `@block` and have:
  * - `blockName` static property (set by the decorator)
  * - `blockMetadata` static property (set by the decorator)
  *
  * @param {typeof import("@glimmer/component").default} BlockClass - The block component class
- * @throws {Error} If called after registry is frozen, or if block is invalid
+ * @throws {Error} If called after registry is locked, or if block is invalid
  *
  * @example
  * ```javascript
- * // In a pre-initializer (before freeze-valid-blocks)
  * import { withPluginApi } from "discourse/lib/plugin-api";
  * import MyBlock from "../blocks/my-block";
  *
  * export default {
- *   before: "freeze-valid-blocks",
  *   initialize() {
  *     withPluginApi("1.0", (api) => {
  *       api.registerBlock(MyBlock);
@@ -58,26 +75,24 @@ function raiseValidationError(message) {
  * ```
  */
 export function _registerBlock(BlockClass) {
-  if (registryFrozen) {
-    raiseValidationError(
+  if (registryLocked) {
+    raiseBlockError(
       `Cannot register block "${BlockClass?.blockName || BlockClass?.name}": ` +
-        `the block registry is frozen. Move your code to a pre-initializer ` +
-        `that runs before "freeze-valid-blocks".`
+        `the block registry is locked. Blocks must be registered before ` +
+        `any renderBlocks() configuration is set up.`
     );
     return;
   }
 
   if (!BlockClass?.blockName) {
-    raiseValidationError(
+    raiseBlockError(
       `Block class "${BlockClass?.name}" must be decorated with @block to be registered.`
     );
     return;
   }
 
   if (blockRegistry.has(BlockClass.blockName)) {
-    raiseValidationError(
-      `Block "${BlockClass.blockName}" is already registered.`
-    );
+    raiseBlockError(`Block "${BlockClass.blockName}" is already registered.`);
     return;
   }
 
@@ -85,34 +100,13 @@ export function _registerBlock(BlockClass) {
 }
 
 /**
- * Freezes the block registry, preventing further registrations.
- * Called by the `freeze-valid-blocks` initializer.
- *
- * After freezing:
- * - `_registerBlock()` will throw an error
- * - `api.renderBlocks()` can use registered blocks
- */
-export function _freezeBlockRegistry() {
-  registryFrozen = true;
-}
-
-/**
- * Returns whether the block registry is frozen.
- *
- * @returns {boolean}
- */
-export function isBlockRegistryFrozen() {
-  return registryFrozen;
-}
-
-/**
- * Stores the initial frozen state to allow correct reset after tests.
+ * Stores the initial locked state to allow correct reset after tests.
  * @type {boolean | null}
  */
-let testRegistryFrozenState = null;
+let testRegistryLockedState = null;
 
 /**
- * Unfreezes the block registry for testing purposes.
+ * Unlocks the block registry for testing purposes.
  * Call this before registering blocks in tests.
  * Only available in DEBUG mode.
  */
@@ -121,21 +115,21 @@ export function withTestBlockRegistration(callback) {
     return;
   }
 
-  if (testRegistryFrozenState === null) {
-    testRegistryFrozenState = registryFrozen;
+  if (testRegistryLockedState === null) {
+    testRegistryLockedState = registryLocked;
   }
 
-  registryFrozen = false;
+  registryLocked = false;
   try {
     callback();
   } finally {
-    registryFrozen = testRegistryFrozenState;
+    registryLocked = testRegistryLockedState;
   }
 }
 
 /**
  * Resets the block registry for testing purposes.
- * Clears all registered blocks and restores the original frozen state.
+ * Clears all registered blocks and restores the original locked state.
  * Only available in DEBUG mode.
  */
 export function resetBlockRegistryForTesting() {
@@ -145,10 +139,17 @@ export function resetBlockRegistryForTesting() {
 
   blockRegistry.clear();
 
-  if (testRegistryFrozenState !== null) {
-    registryFrozen = testRegistryFrozenState;
-    testRegistryFrozenState = null;
+  // Re-register core blocks
+  for (const exported of Object.values(coreBlocks)) {
+    if (typeof exported === "function" && exported.blockName) {
+      blockRegistry.set(exported.blockName, exported);
+    }
+  }
+
+  if (testRegistryLockedState !== null) {
+    registryLocked = testRegistryLockedState;
+    testRegistryLockedState = null;
   } else {
-    registryFrozen = false;
+    registryLocked = false;
   }
 }

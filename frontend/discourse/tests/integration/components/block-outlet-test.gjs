@@ -5,6 +5,10 @@ import BlockOutlet, {
   block,
   renderBlocks,
 } from "discourse/components/block-outlet";
+import {
+  _registerBlock,
+  withTestBlockRegistration,
+} from "discourse/lib/blocks/registration";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Blocks | BlockOutlet", function (hooks) {
@@ -25,6 +29,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
+      withTestBlockRegistration(() => _registerBlock(RenderTestBlock));
       renderBlocks("homepage-blocks", [{ block: RenderTestBlock }]);
 
       await render(
@@ -43,6 +48,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
+      withTestBlockRegistration(() => _registerBlock(BemTestBlock));
       renderBlocks("sidebar-blocks", [{ block: BemTestBlock }]);
 
       await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
@@ -60,6 +66,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
+      withTestBlockRegistration(() => _registerBlock(WrappedBlock));
       renderBlocks("main-outlet-blocks", [
         { block: WrappedBlock, classNames: "custom-class" },
       ]);
@@ -84,6 +91,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
+      withTestBlockRegistration(() => _registerBlock(ArgsTestBlock));
       renderBlocks("header-blocks", [
         { block: ArgsTestBlock, args: { title: "Hello", count: 42 } },
       ]);
@@ -112,6 +120,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
+      withTestBlockRegistration(() => _registerBlock(DefaultsTestBlock));
       renderBlocks("main-outlet-blocks", [{ block: DefaultsTestBlock }]);
 
       await render(
@@ -139,6 +148,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
+      withTestBlockRegistration(() => _registerBlock(OverrideDefaultsBlock));
       renderBlocks("hero-blocks", [
         {
           block: OverrideDefaultsBlock,
@@ -168,6 +178,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
+      withTestBlockRegistration(() => _registerBlock(PartialDefaultsBlock));
       renderBlocks("sidebar-blocks", [
         {
           block: PartialDefaultsBlock,

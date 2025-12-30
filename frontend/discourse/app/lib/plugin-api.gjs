@@ -3381,8 +3381,8 @@ class _PluginApi {
   /**
    * Registers a block component for use with `renderBlocks()`.
    *
-   * **IMPORTANT:** Must be called in a pre-initializer that runs before
-   * `freeze-valid-blocks`. After the registry is frozen, calls will throw an error.
+   * **IMPORTANT:** Must be called in a pre-initializer before any `renderBlocks()`
+   * configuration is set up. The registry is locked on first configuration.
    *
    * The block component must be decorated with `@block` decorator.
    *
@@ -3396,7 +3396,6 @@ class _PluginApi {
    * import FeaturedTopics from "../blocks/featured-topics";
    *
    * export default {
-   *   before: "freeze-valid-blocks",
    *   initialize() {
    *     withPluginApi((api) => {
    *       api.registerBlock(HeroBanner);

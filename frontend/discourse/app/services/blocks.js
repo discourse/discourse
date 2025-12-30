@@ -1,27 +1,8 @@
-import { DEBUG } from "@glimmer/env";
 import { getOwner, setOwner } from "@ember/owner";
 import Service from "@ember/service";
-import * as coreBlocks from "discourse/blocks";
 import * as conditions from "discourse/blocks/conditions";
-import { isBlock } from "discourse/components/block-outlet";
-import {
-  _registerBlock,
-  blockRegistry,
-} from "discourse/lib/blocks/registration";
-
-/**
- * Raises a validation error in dev/test, logs warning in production.
- *
- * @param {string} message - The error message
- */
-function raiseValidationError(message) {
-  if (DEBUG) {
-    throw new Error(message);
-  } else {
-    // eslint-disable-next-line no-console
-    console.warn(`[Blocks service] ${message}`);
-  }
-}
+import { raiseBlockError } from "discourse/lib/blocks/error";
+import { blockRegistry } from "discourse/lib/blocks/registration";
 
 /**
  * Unified service for block registry and condition evaluation.
@@ -64,26 +45,12 @@ export default class Blocks extends Service {
 
   constructor() {
     super(...arguments);
-    this.#discoverBuiltInBlocks();
     this.#discoverBuiltInConditions();
   }
 
   // ============================================================================
   // Block Registry Methods
   // ============================================================================
-
-  /**
-   * Auto-discover and register built-in block components.
-   * Iterates over exports from the blocks module and registers
-   * any class decorated with @block.
-   */
-  #discoverBuiltInBlocks() {
-    for (const exported of Object.values(coreBlocks)) {
-      if (typeof exported === "function" && isBlock(exported)) {
-        _registerBlock(exported);
-      }
-    }
-  }
 
   /**
    * Gets a registered block by name.
@@ -182,19 +149,19 @@ export default class Blocks extends Service {
    */
   #registerConditionType(ConditionClass) {
     if (!(ConditionClass.prototype instanceof conditions.BlockCondition)) {
-      raiseValidationError(`${ConditionClass.name} must extend BlockCondition`);
+      raiseBlockError(`${ConditionClass.name} must extend BlockCondition`);
       return;
     }
 
     if (!ConditionClass.type || typeof ConditionClass.type !== "string") {
-      raiseValidationError(
+      raiseBlockError(
         `${ConditionClass.name} must define a static 'type' property`
       );
       return;
     }
 
     if (this.#conditionTypes.has(ConditionClass.type)) {
-      raiseValidationError(
+      raiseBlockError(
         `Condition type "${ConditionClass.type}" is already registered`
       );
       return;
@@ -247,7 +214,7 @@ export default class Blocks extends Service {
     // OR combinator
     if (conditionSpec.any !== undefined) {
       if (!Array.isArray(conditionSpec.any)) {
-        raiseValidationError(
+        raiseBlockError(
           'Block condition: "any" must be an array of conditions'
         );
         return;
@@ -264,7 +231,7 @@ export default class Blocks extends Service {
         typeof conditionSpec.not !== "object" ||
         Array.isArray(conditionSpec.not)
       ) {
-        raiseValidationError(
+        raiseBlockError(
           'Block condition: "not" must be a single condition object'
         );
         return;
@@ -277,7 +244,7 @@ export default class Blocks extends Service {
     const { type, ...args } = conditionSpec;
 
     if (!type) {
-      raiseValidationError(
+      raiseBlockError(
         `Block condition is missing "type" property: ${JSON.stringify(conditionSpec)}`
       );
       return;
@@ -287,7 +254,7 @@ export default class Blocks extends Service {
 
     if (!conditionInstance) {
       const availableTypes = [...this.#conditionTypes.keys()].join(", ");
-      raiseValidationError(
+      raiseBlockError(
         `Unknown block condition type: "${type}". Available types: ${availableTypes}`
       );
       return;
@@ -302,26 +269,59 @@ export default class Blocks extends Service {
    * Recursively evaluates nested conditions with AND/OR/NOT logic.
    *
    * @param {Object|Array<Object>} conditionSpec - Condition spec(s) to evaluate
+   * @param {Object} [context] - Evaluation context
+   * @param {boolean} [context.debug] - Override debug mode (defaults to dev tools state)
    * @returns {boolean} True if conditions pass, false otherwise
    */
-  evaluate(conditionSpec) {
+  evaluate(conditionSpec, context = {}) {
+    const debug = context.debug ?? this.#isDebugEnabled();
+
     if (!conditionSpec) {
       return true;
     }
 
     // Array of conditions (AND logic - all must pass)
     if (Array.isArray(conditionSpec)) {
-      return conditionSpec.every((condition) => this.evaluate(condition));
+      for (const condition of conditionSpec) {
+        const result = this.evaluate(condition, { debug });
+        if (!result) {
+          if (debug) {
+            this.#logCondition("AND failed at", condition, false);
+          }
+          return false;
+        }
+      }
+      if (debug) {
+        this.#logCondition(
+          "AND passed",
+          `${conditionSpec.length} conditions`,
+          true
+        );
+      }
+      return true;
     }
 
     // OR combinator (at least one must pass)
     if (conditionSpec.any !== undefined) {
-      return conditionSpec.any.some((condition) => this.evaluate(condition));
+      const passed = conditionSpec.any.some((c) => this.evaluate(c, { debug }));
+      if (debug) {
+        this.#logCondition(
+          passed ? "OR passed" : "OR failed (all branches)",
+          `${conditionSpec.any.length} conditions`,
+          passed
+        );
+      }
+      return passed;
     }
 
     // NOT combinator (must fail)
     if (conditionSpec.not !== undefined) {
-      return !this.evaluate(conditionSpec.not);
+      const innerResult = this.evaluate(conditionSpec.not, { debug });
+      const result = !innerResult;
+      if (debug) {
+        this.#logCondition("NOT", conditionSpec.not, result);
+      }
+      return result;
     }
 
     // Single condition with type
@@ -331,10 +331,42 @@ export default class Blocks extends Service {
     if (!conditionInstance) {
       // This shouldn't happen if validate() was called first
       // but fail closed (don't render) if it does
+      if (debug) {
+        this.#logCondition(`unknown type "${type}"`, args, false);
+      }
       return false;
     }
 
-    return conditionInstance.evaluate(args);
+    const result = conditionInstance.evaluate(args);
+    if (debug) {
+      this.#logCondition(type, args, result);
+    }
+    return result;
+  }
+
+  /**
+   * Checks if debug mode is enabled via dev tools.
+   *
+   * @returns {boolean}
+   */
+  #isDebugEnabled() {
+    if (typeof window !== "undefined" && window.__DEV_TOOLS_STATE__) {
+      return window.__DEV_TOOLS_STATE__.blockConditionDebug;
+    }
+    return false;
+  }
+
+  /**
+   * Logs a condition evaluation result to the console.
+   *
+   * @param {string} label - Description of the condition
+   * @param {*} spec - The condition spec or args
+   * @param {boolean} result - Whether the condition passed
+   */
+  #logCondition(label, spec, result) {
+    const status = result ? "\u2713" : "\u2717";
+    // eslint-disable-next-line no-console
+    console.debug(`[Blocks] ${status} ${label}:`, spec);
   }
 
   /**

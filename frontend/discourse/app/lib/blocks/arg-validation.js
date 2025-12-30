@@ -1,4 +1,4 @@
-import { DEBUG } from "@glimmer/env";
+import { raiseBlockError } from "discourse/lib/blocks/error";
 
 /**
  * Valid arg types for block metadata schema.
@@ -26,20 +26,6 @@ export const VALID_ARG_SCHEMA_PROPERTIES = Object.freeze([
 ]);
 
 /**
- * Raises a validation error in dev/test, logs warning in production.
- *
- * @param {string} message - The error message
- */
-function raiseValidationError(message) {
-  if (DEBUG) {
-    throw new Error(message);
-  } else {
-    // eslint-disable-next-line no-console
-    console.warn(`[Block validation] ${message}`);
-  }
-}
-
-/**
  * Validates the arg schema definition passed to the @block decorator.
  * Enforces strict schema format - unknown properties are not allowed.
  *
@@ -54,7 +40,7 @@ export function validateArgsSchema(argsSchema, blockName) {
 
   for (const [argName, argDef] of Object.entries(argsSchema)) {
     if (!argDef || typeof argDef !== "object") {
-      raiseValidationError(
+      raiseBlockError(
         `Block "${blockName}": arg "${argName}" must be an object with a "type" property.`
       );
       continue;
@@ -65,7 +51,7 @@ export function validateArgsSchema(argsSchema, blockName) {
       (prop) => !VALID_ARG_SCHEMA_PROPERTIES.includes(prop)
     );
     if (unknownProps.length > 0) {
-      raiseValidationError(
+      raiseBlockError(
         `Block "${blockName}": arg "${argName}" has unknown properties: ${unknownProps.join(", ")}. ` +
           `Valid properties are: ${VALID_ARG_SCHEMA_PROPERTIES.join(", ")}.`
       );
@@ -73,7 +59,7 @@ export function validateArgsSchema(argsSchema, blockName) {
 
     // Type is required
     if (!argDef.type) {
-      raiseValidationError(
+      raiseBlockError(
         `Block "${blockName}": arg "${argName}" is missing required "type" property.`
       );
       continue;
@@ -81,7 +67,7 @@ export function validateArgsSchema(argsSchema, blockName) {
 
     // Validate type
     if (!VALID_ARG_TYPES.includes(argDef.type)) {
-      raiseValidationError(
+      raiseBlockError(
         `Block "${blockName}": arg "${argName}" has invalid type "${argDef.type}". ` +
           `Valid types are: ${VALID_ARG_TYPES.join(", ")}.`
       );
@@ -89,7 +75,7 @@ export function validateArgsSchema(argsSchema, blockName) {
 
     // itemType is only valid for array type
     if (argDef.itemType !== undefined && argDef.type !== "array") {
-      raiseValidationError(
+      raiseBlockError(
         `Block "${blockName}": arg "${argName}" has "itemType" but type is "${argDef.type}". ` +
           `"itemType" is only valid for array type.`
       );
@@ -98,7 +84,7 @@ export function validateArgsSchema(argsSchema, blockName) {
     // Validate itemType for arrays
     if (argDef.type === "array" && argDef.itemType !== undefined) {
       if (!VALID_ITEM_TYPES.includes(argDef.itemType)) {
-        raiseValidationError(
+        raiseBlockError(
           `Block "${blockName}": arg "${argName}" has invalid itemType "${argDef.itemType}". ` +
             `Valid item types are: ${VALID_ITEM_TYPES.join(", ")}.`
         );
@@ -107,7 +93,7 @@ export function validateArgsSchema(argsSchema, blockName) {
 
     // Validate required is boolean
     if (argDef.required !== undefined && typeof argDef.required !== "boolean") {
-      raiseValidationError(
+      raiseBlockError(
         `Block "${blockName}": arg "${argName}" has invalid "required" value. Must be a boolean.`
       );
     }
@@ -121,7 +107,7 @@ export function validateArgsSchema(argsSchema, blockName) {
         blockName
       );
       if (defaultError) {
-        raiseValidationError(
+        raiseBlockError(
           `Block "${blockName}": arg "${argName}" has invalid default value. ${defaultError}`
         );
       }
@@ -257,7 +243,7 @@ export function validateBlockArgs(config, outletName) {
 
     // Check required args
     if (argDef.required && value === undefined) {
-      raiseValidationError(
+      raiseBlockError(
         `Block "${blockName}" in outlet "${outletName}" is missing required arg "${argName}".`
       );
       continue;
@@ -267,7 +253,7 @@ export function validateBlockArgs(config, outletName) {
     if (value !== undefined) {
       const typeError = validateArgValue(value, argDef, argName, blockName);
       if (typeError) {
-        raiseValidationError(typeError);
+        raiseBlockError(typeError);
       }
     }
   }

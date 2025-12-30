@@ -76,6 +76,7 @@ module SvgSprite
         copy
         crosshairs
         cube
+        cubes
         desktop
         diagram-project
         discourse-amazon

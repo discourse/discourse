@@ -3,10 +3,10 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { block } from "discourse/components/block-outlet";
 import {
-  _freezeBlockRegistry,
+  _lockBlockRegistry,
   _registerBlock,
   blockRegistry,
-  isBlockRegistryFrozen,
+  isBlockRegistryLocked,
   resetBlockRegistryForTesting,
 } from "discourse/lib/blocks/registration";
 
@@ -54,44 +54,44 @@ module("Unit | Lib | blocks/registration", function (hooks) {
       assert.throws(() => _registerBlock(SecondBlock), /already registered/);
     });
 
-    test("throws after registry is frozen", function (assert) {
-      @block("frozen-test-block")
-      class FrozenTestBlock extends Component {}
+    test("throws after registry is locked", function (assert) {
+      @block("locked-test-block")
+      class LockedTestBlock extends Component {}
 
-      _freezeBlockRegistry();
+      _lockBlockRegistry();
 
       assert.throws(
-        () => _registerBlock(FrozenTestBlock),
-        /registry is frozen/
+        () => _registerBlock(LockedTestBlock),
+        /registry is locked/
       );
     });
   });
 
-  module("_freezeBlockRegistry", function () {
-    test("freezes the registry", function (assert) {
-      assert.false(isBlockRegistryFrozen());
+  module("_lockBlockRegistry", function () {
+    test("locks the registry", function (assert) {
+      assert.false(isBlockRegistryLocked());
 
-      _freezeBlockRegistry();
+      _lockBlockRegistry();
 
-      assert.true(isBlockRegistryFrozen());
+      assert.true(isBlockRegistryLocked());
     });
   });
 
   module("resetBlockRegistryForTesting", function () {
-    test("clears the registry and unfreezes it", function (assert) {
+    test("clears the registry and unlocks it", function (assert) {
       @block("reset-test-block")
       class ResetTestBlock extends Component {}
 
       _registerBlock(ResetTestBlock);
-      _freezeBlockRegistry();
+      _lockBlockRegistry();
 
       assert.true(blockRegistry.has("reset-test-block"));
-      assert.true(isBlockRegistryFrozen());
+      assert.true(isBlockRegistryLocked());
 
       resetBlockRegistryForTesting();
 
       assert.false(blockRegistry.has("reset-test-block"));
-      assert.false(isBlockRegistryFrozen());
+      assert.false(isBlockRegistryLocked());
     });
   });
 });

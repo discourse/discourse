@@ -99,6 +99,6 @@ export function raiseBlockValidationError(message) {
     throw new BlockConditionValidationError(message);
   } else {
     // eslint-disable-next-line no-console
-    console.warn(`[Block validation] ${message}`);
+    console.warn(`[Blocks] ${message}`);
   }
 }
