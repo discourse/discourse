@@ -4823,6 +4823,7 @@ sk:
         this_month: "Mesiac"
         this_week: "Týždeň"
         today: "Dnes"
+        custom: "Vlastné"
     custom_homepage:
       admin_message: 'Jedna z vašich tém má povolený modifikátor "custom_homepage", ale v konektore [custom-homepage] sa nič nevypíše. (Táto správa sa zobrazuje len správcom stránok.)'
     browser_update: 'Bohužiaľ, <a href="https://discourse.org/about#browser">váš prehliadač nie je podporovaný</a>. Pre zobrazenie bohatého obsahu <a href="https://browsehappy.com">prepnite na podporovaný prehliadač</a> , prihláste sa a odpovedzte.'
@@ -8221,16 +8222,12 @@ sk:
             prompt: "Zmena tohto nastavenia môže mať pre vašu stránku ďalekosiahle alebo nezamýšľané dôsledky. Ste si istí, že chcete pokračovať?"
             confirm: "Áno, som si istý/á."
           min_password_length:
-            prompt: "Chystáte sa zmeniť zásady používania hesiel. Odteraz sa to bude týkať všetkých používateľov, ktorí si menia svoje heslá. Ste si istí, že chcete pokračovať?"
             confirm: "Áno, aktualizujte zásady používania hesiel"
           min_admin_password_length:
-            prompt: "Chystáte sa zmeniť zásady používania hesiel. Odteraz sa to bude týkať všetkých administrátorov, ktorí si menia svoje heslá. Ste si istí, že chcete pokračovať?"
             confirm: "Áno, aktualizujte zásady používania hesiel"
           password_unique_charactes:
-            prompt: "Chystáte sa zmeniť zásady používania hesiel. Odteraz sa to bude týkať všetkých používateľov, ktorí si menia svoje heslá. Ste si istí, že chcete pokračovať?"
             confirm: "Áno, aktualizujte zásady používania hesiel"
           block_common_passwords:
-            prompt: "Chystáte sa zmeniť zásady používania hesiel. Odteraz sa to bude týkať všetkých používateľov, ktorí si menia svoje heslá. Ste si istí, že chcete pokračovať?"
             confirm: "Áno, aktualizujte zásady používania hesiel"
       badges:
         status: Stav

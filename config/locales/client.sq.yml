@@ -3727,6 +3727,7 @@ sq:
         this_month: "Këtë muaj"
         this_week: "Këtë javë"
         today: "Sot"
+        custom: "Grupet e krijuara"
     permission_types:
       full: "Krijo / Përgjigju / Shiko"
       create_post: "Përgjigju / Shiko"

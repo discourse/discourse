@@ -2139,6 +2139,7 @@ sw:
         this_month: "Mwezi"
         this_week: "Wiki"
         today: "Leo"
+        custom: "Binafsi"
     permission_types:
       full: "Tengeneza / Jibu / Angalia"
       create_post: "Jibu / Angalia"

@@ -3975,6 +3975,7 @@ nb_NO:
         this_month: "Den siste måneden"
         this_week: "Den siste uken"
         today: "I dag"
+        custom: "Egendefinert"
     permission_types:
       full: "Opprett / Svar / Se"
       create_post: "Svar / Se"

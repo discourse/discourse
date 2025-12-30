@@ -2790,6 +2790,7 @@ bs_BA:
         this_month: "Mjesec"
         this_week: "Sedmica"
         today: "Danas"
+        custom: "Custom"
     permission_types:
       full: "Kreiraj / Odgovori / Vidi"
       create_post: "Odgovori / Vidi"

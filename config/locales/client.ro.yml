@@ -3460,6 +3460,7 @@ ro:
         this_month: "Lună"
         this_week: "Săptămână"
         today: "Astăzi"
+        custom: "Personalizat"
     custom_homepage:
       admin_message: 'Una dintre temele tale a activat modificatorul „custom_homepage”, dar nu afișează nimic în conectorul [custom-homepage]. (Acest mesaj este afișat doar administratorilor de site-uri).'
     browser_update: 'Din păcate, <a href="https://discourse.org/about#browser">navigatorul tău nu este acceptat</a>. Te rugăm să <a href="https://browsehappy.com">treci la un navigator compatibil</a> pentru a vizualiza conținutul bogat, a te conecta și a răspunde.'

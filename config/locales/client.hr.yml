@@ -4711,6 +4711,7 @@ hr:
         this_month: "Mjesec"
         this_week: "Tjedan"
         today: "Danas"
+        custom: "Posebna"
     custom_homepage:
       admin_message: 'Jedna od vaših tema omogućila je modifikator "custom_homepage", ali ne ispisuje ništa u konektoru [custom-homepage]. (Ova poruka se prikazuje samo administratorima web stranice.)'
     browser_update: 'Nažalost, <a href="https://discourse.org/about#browser">vaš preglednik nije podržan</a>. Molimo <a href="https://browsehappy.com">prebacite se na podržani preglednik</a> kako biste pregledali bogati sadržaj, prijavili se i odgovorili.'

@@ -3772,6 +3772,7 @@ te:
         this_month: "ఈ నెల"
         this_week: "వారం"
         today: "ఈ రోజు"
+        custom: "అనురూప"
     permission_types:
       full: "సృష్టించడం / ప్రత్యుత్తరం ఇవ్వడం / చూడడం"
       create_post: "ప్రత్యుత్తరం ఇవ్వండి / చూడండి"

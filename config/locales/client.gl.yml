@@ -3037,6 +3037,7 @@ gl:
         this_month: "Mes"
         this_week: "Semana"
         today: "Hoxe"
+        custom: "Personalizado"
     permission_types:
       full: "Crear / Responder / Ver"
       create_post: "Responder / Ver"

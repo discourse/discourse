@@ -295,6 +295,8 @@ ko:
       retention_reminders:
         short:
           other: "%{count}일"
+        long:
+          other: "채팅 설정이 채널 메시지를 %{count} 일 동안 보관하도록 설정되어 있습니다."
       flagging:
         action: "신고 메시지"
       emoji_picker:

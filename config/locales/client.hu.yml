@@ -4508,6 +4508,7 @@ hu:
         this_month: "Utolsó 30 nap"
         this_week: "Utolsó 7 nap"
         today: "Utolsó 24 óra"
+        custom: "Egyéni"
     custom_homepage:
       admin_message: 'Az egyik téma engedélyezte a "custom_homepage" módosítót, de nem ad ki semmit a [custom-homepage] csatlakozóban. (Ez az üzenet csak az oldal adminisztrátorainak jelenik meg.)'
     browser_update: 'Sajnos <a href="https://discourse.org/about#browser">a böngésződ nem támogatott</a>. Kérlek, <a href="https://browsehappy.com">válts támogatott böngészőre</a> a tartalmak megtekintéséhez, a bejelentkezéshez és a válaszadáshoz.'
@@ -7843,16 +7844,12 @@ hu:
             prompt: "Ennek a beállításnak a megváltoztatása messzemenő vagy nem kívánt következményekkel járhat az Ön webhelyére nézve. Biztos, hogy folytatni szeretné?"
             confirm: "Igen, biztos vagyok benne"
           min_password_length:
-            prompt: "Megváltoztatja a jelszóhasználati szabályzatát. Ez mostantól minden felhasználóra hatással lesz, aki megváltoztatja a jelszavát. Biztos, hogy folytatni akarja?"
             confirm: "Igen, frissítem a jelszószabályzatot"
           min_admin_password_length:
-            prompt: "Megváltoztatja a jelszóhasználati szabályzatát. Ez mostantól minden adminisztrátort érint, aki megváltoztatja a jelszavát. Biztos, hogy folytatni akarja?"
             confirm: "Igen, frissítem a jelszószabályzatot"
           password_unique_charactes:
-            prompt: "Megváltoztatja a jelszóhasználati szabályzatát. Ez mostantól minden felhasználóra hatással lesz, aki megváltoztatja a jelszavát. Biztos, hogy folytatni akarja?"
             confirm: "Igen, frissítem a jelszószabályzatot"
           block_common_passwords:
-            prompt: "Megváltoztatja a jelszóhasználati szabályzatát. Ez mostantól minden felhasználóra hatással lesz, aki megváltoztatja a jelszavát. Biztos, hogy folytatni akarja?"
             confirm: "Igen, frissítem a jelszószabályzatot"
         job_status:
           completed: "Frissítés befejezve"

@@ -3700,6 +3700,7 @@ lt:
         this_month: "Per mėnesį"
         this_week: "Per savaitę"
         today: "Šandien"
+        custom: "Išskirtinės"
     permission_types:
       full: "Kurti / Atsakyti / Peržiūrėti"
       create_post: "Atsakyti / Peržiūrėti"

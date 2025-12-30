@@ -2384,6 +2384,7 @@ sr:
         this_month: "Mesec"
         this_week: "Nedelja"
         today: "Danas"
+        custom: "Posebna"
     permission_types:
       full: "Otvoriti / Odgovori / Pogledaj"
       create_post: "Odgovori / Pogledaj"

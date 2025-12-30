@@ -4050,6 +4050,7 @@ zh_TW:
         this_month: "月"
         this_week: "週"
         today: "今天"
+        custom: "客製"
     custom_homepage:
       admin_message: '您的一個佈景主題已啟用「custom_homepage」修改器，但在 [custom-homepage] 連接器中沒有輸出任何內容。（此消息只顯示給網站管理員。）'
     permission_types:
@@ -6938,16 +6939,12 @@ zh_TW:
             prompt: "更改此設定可能會對您的網站產生深遠或意想不到的後果。確定要繼續嗎？"
             confirm: "是的，我確定"
           min_password_length:
-            prompt: "您即將修改密碼原則。這將影響所有從現在起更改密碼的使用者。確定要繼續嗎？"
             confirm: "是的，更新密碼原則"
           min_admin_password_length:
-            prompt: "您即將修改密碼原則。這將影響所有從現在起更改密碼的管理者。確定要繼續嗎？"
             confirm: "是的，更新密碼原則"
           password_unique_charactes:
-            prompt: "您即將修改密碼原則。這將影響所有從現在起更改密碼的使用者。確定要繼續嗎？"
             confirm: "是的，更新密碼原則"
           block_common_passwords:
-            prompt: "您即將修改密碼原則。這將影響所有從現在起更改密碼的使用者。確定要繼續嗎？"
             confirm: "是的，更新密碼原則"
       badges:
         status: 狀態

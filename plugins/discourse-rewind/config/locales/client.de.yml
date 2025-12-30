@@ -5,16 +5,82 @@
 # https://translate.discourse.org/
 
 de:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rewind: "Discourse Rewind"
   js:
     discourse_rewind:
+      placeholder: Discourse Rewind
+      title: Rewind
+      loading: "Splines werden retikuliert …"
+      viewing_other_user: "Du siehst dir gerade den Discourse-Rewind-Bericht von <strong>%{username}</strong> an."
+      cannot_view_rewind_gibberish: >
+        [ZUGRIFF VERWEIGERT::REWIND-MAINFRAME-SUBROUTINENFEHLER]<br><br> Bootstrapping-Anomalieprotokoll...<br><br> &nbsp;&nbsp;>> Quantenpuffer-Unterlauf ⧛<br> &nbsp;&nbsp;>> Knotenübergreifende Paritätsdrift (Δ=004.33)<br> &nbsp;&nbsp;>> Paket-ϟ-Fragment bei Offset ∇47<br> &nbsp;&nbsp;>> Flux-Leitungs-Handshake ZEITÜBERSCHREITUNG<br><br>
+      cannot_view_rewind: >
+        Du kannst diesen Discourse-Rewind-Bericht nicht anzeigen.  Vielleicht hat der Eigentümer ihn nicht öffentlich freigegeben?<br><br> $> _<br><br>
+      preferences:
+        enable_rewind: "Discourse Rewind aktivieren. Dadurch wird die Jahresübersicht deiner Aktivitäten in deinem Profil und auf deinem Avatar angezeigt."
+        share_publicly: "Discourse-Rewind-Zusammenfassung mit anderen Forenmitgliedern teilen. Jedes Forenmitglied kann deine Discourse-Rewind-Zusammenfassung ansehen."
+        cannot_share_when_profile_hidden: "Um Rewind zu teilen, musst du anderen erlauben, dein öffentliches Profil anzusehen."
+      profile_link: "Dein Discourse Rewind %{rewindYear} ansehen"
       share:
         toggle_label:
           private: "Privat"
           public: "Öffentlich"
+        confirm: "Überprüfe deinen Rewind unbedingt, bevor du ihn teilst, da er Daten aus privaten Nachrichten enthalten kann. Du kannst ihn jederzeit wieder privat machen."
+        confirm_button:
+          enable: "Öffentlich machen"
+          disable: "Privat behalten"
+        enabled_success: "Dein Rewind kann jetzt mit anderen Forenmitgliedern geteilt werden."
+        disabled_success: "Dein Rewind ist jetzt privat."
       reports:
+        activity_calendar:
+          title: Aktivitätskalender
+          cell_title:
+            visited_no_posts: "Du hast am %{date} vorbeigeschaut und mitgelesen, aber keine Beiträge erstellt."
+            visited_with_posts:
+              one: "Du hast am %{date} %{count} Beitrag erstellt."
+              other: "Du hast am %{date} %{count} Beiträge erstellt."
+            no_activity: "Du warst am %{date} nicht online."
+        top_words:
+          title: Wortnutzung
         reading_time:
           title: Lesezeit
+          book_comparison: "Du hast <code>%{readingTitme}</code> auf unserer Seite mit Lesen verbracht! Das entspricht der Zeit, die du benötigen würdest, um <i>%{bookTitle}</i> zu lesen."
+        post_used_reactions:
+          title: Am häufigsten verwendete Reaktionen in Themen
+          total_number: "Gesamtzahl der Reaktionen: %{count}"
+        post_received_reactions:
+          title: Am häufigsten erhaltene Reaktionen in Themen
+        fbff:
+          title: Dein FBFF (Forum-Bester-Freund für immer)
+        best_topics:
+          view_topic: Thema ansehen
+        best_posts:
+          view_post: Beitrag ansehen
+        ai_usage:
+          title: KI-Nutzung
+          total_requests: Gesamtanzahl der Anfragen
+          total_tokens: Gesamtanzahl der Tokens
+          success_rate: Erfolgsquote
+          favorite_features: Top-Funktionen
+          favorite_models: Top-KI-Modelle
+          wake_up: "Wach auf, %{username}…"
+          system_title: "KI-NUTZUNG ERKANNT"
+          section_features: "TOP FUNKTIONEN"
+          section_models: "TOP-KI-MODELLE"
+        assignments:
+          title: Aufgaben
+          total_assigned: Mir zugewiesen
+          completed: Abgeschlossene Aufgaben
+          pending: Ausstehende Aufgaben
+          assigned_by_user: Zugewiesene Aufgaben
+          completion_rate: Erledigungsquote
         chat_usage:
+          title: Chat-Aktivität
+          total_messages: Nachrichten gesamt
           messages: nachrichten
           you: Du
           status_online: "● online"
@@ -27,4 +93,15 @@ de:
           likes_given: Abgegebene „Gefällt mir“
           mentions: Erwähnungen
         writing_analysis:
+          menu_file: Datei
           menu_other: Sonstiges
+          menu_additional: Mehr
+          menu_opening: ÖFFNEN
+          help_text: Drücke F1 für Hilfe
+          app_name: DiscoStar Professional
+          release_info: Veröffentlichung %{rewindYear} von CDCK
+          total_words: Wörter gesamt
+          total_posts: Gesamtbeiträge
+          avg_post_length: Ø Beitragslänge
+          readability_score_label: Lesbarkeitswert
+          readability_level: Lesbarkeitsniveau

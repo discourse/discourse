@@ -5125,6 +5125,7 @@ cs:
         this_month: "Měsíc"
         this_week: "Týden"
         today: "Dnes"
+        custom: "Přizpůsobené"
     custom_homepage:
       admin_message: 'Jeden z vašich motivů má povolený modifikátor "custom_homepage", ale do konektoru [custom-homepage] nic neprodukuje. (Tato zpráva se zobrazuje pouze správcům webu.)'
     browser_update: 'Bohužel, <a href="https://discourse.org/about#browser">váš prohlížeč není podporován</a>. Pro zobrazení bohatého obsahu prosím <a href="https://browsehappy.com">přepněte na podporovaný prohlížeč</a>, přihlaste se a odpovězte.'
@@ -8726,16 +8727,12 @@ cs:
             prompt: "Změna tohoto nastavení může mít pro váš web dalekosáhlé nebo nezamýšlené důsledky. Opravdu chcete pokračovat?"
             confirm: "Ano, jsem si jistý/á"
           min_password_length:
-            prompt: "Chystáte se změnit zásady pro hesla. To ovlivní všechny uživatele, kteří od této chvíle změní svá hesla. Opravdu chcete pokračovat?"
             confirm: "Ano, aktualizovat zásady hesel"
           min_admin_password_length:
-            prompt: "Chystáte se změnit zásady pro hesla. To bude mít vliv na všechny administrátory, kteří si od nynějška změní svá hesla. Opravdu chcete pokračovat?"
             confirm: "Ano, aktualizovat zásady hesel"
           password_unique_charactes:
-            prompt: "Chystáte se změnit zásady pro hesla. To ovlivní všechny uživatele, kteří od této chvíle změní svá hesla. Opravdu chcete pokračovat?"
             confirm: "Ano, aktualizovat zásady hesel"
           block_common_passwords:
-            prompt: "Chystáte se změnit zásady pro hesla. To ovlivní všechny uživatele, kteří od této chvíle změní svá hesla. Opravdu chcete pokračovat?"
             confirm: "Ano, aktualizovat zásady hesel"
         job_status:
           completed: "Aktualizace dokončena"

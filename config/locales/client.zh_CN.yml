@@ -4360,6 +4360,7 @@ zh_CN:
         this_month: "月"
         this_week: "周"
         today: "今天"
+        custom: "自定义"
     custom_homepage:
       admin_message: '您的一个主题已启用“custom_homepage”修改器，但在 [custom-homepage] 连接器中没有输出任何内容。（此消息只显示给网站管理员。）'
     browser_update: '很抱歉，<a href="https://discourse.org/about#browser">您的浏览器不受支持</a>。请<a href="https://browsehappy.com">切换到支持的浏览器</a>以查看富内容、登录并回复。'
@@ -7741,16 +7742,12 @@ zh_CN:
             prompt: "更改此设置可能会对您的网站产生深远或意想不到的后果。确定要继续吗？"
             confirm: "是，我确定"
           min_password_length:
-            prompt: "您即将修改密码策略。这将影响所有从现在起更改密码的用户。确定要继续吗？"
             confirm: "是，更新密码策略"
           min_admin_password_length:
-            prompt: "您即将修改密码策略。这将影响所有从现在起更改密码的管理员。确定要继续吗？"
             confirm: "是，更新密码策略"
           password_unique_charactes:
-            prompt: "您即将修改密码策略。这将影响所有从现在起更改密码的用户。确定要继续吗？"
             confirm: "是，更新密码策略"
           block_common_passwords:
-            prompt: "您即将修改密码策略。这将影响所有从现在起更改密码的用户。确定要继续吗？"
             confirm: "是，更新密码策略"
         job_status:
           completed: "更新完成"
